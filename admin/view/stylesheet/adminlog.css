@@ -1,0 +1,12 @@
+.list .denied, .list .denied,
+.list .clear, .list .clear {	background-color:#ffcccc !important;
+	border-color:#ffcccc;}
+.list .login, .list .login{
+	background-color:#c5e9c2;
+}
+.list .login, .list .ldap_login{
+	background-color:#c5e9c2;
+}
+.list .logout, .list .logout{	background-color:#dddddd;}
+.list .access, .list .access{	background-color:#b2dcff;}
+.list .modify, .list .modify{	background-color:#ffe699;}

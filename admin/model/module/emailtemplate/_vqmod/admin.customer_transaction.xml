@@ -1,0 +1,43 @@
+<file name="admin/model/sale/customer.php">
+	<operation info="method:addTransaction">
+		<search position="after" index="1"><![CDATA[
+            $this->language->get('text_transaction_subject') ]]></search>
+		<add><![CDATA[
+            $template = new EmailTemplate($this->request, $this->registry);
+		
+			$template->addData('amount', $amount);
+			$template->addData('description', $description);
+
+			$template->addData($customer_info, 'customer');
+
+			if($order_id){
+				$this->load->model('sale/order');		
+				$order_info = $this->model_sale_order->getOrder($order_id);
+
+				$template->addData($order_info, 'order');
+			}
+			
+			$template->data['transaction_received'] = sprintf($this->language->get('text_transaction_received'), $this->currency->format($amount, $this->config->get('config_currency')));
+			$template->data['transaction_total'] = sprintf($this->language->get('text_transaction_total'), $this->currency->format($this->getTransactionTotal($customer_id))); ]]></add>
+	</operation>
+	<operation info="method:addTransaction">
+		<search position="replace" index="2"><![CDATA[
+            $mail->send(); ]]></search>
+		<add><![CDATA[
+            $template_data = array('key' =>'admin.customer_transaction');
+			if(isset($customer_info['store_id'])){
+				$template_data['store_id'] = $customer_info['store_id'];
+			}
+			if(isset($customer_info['language_id'])){
+				$template_data['language_id'] = $customer_info['language_id'];
+			}
+
+            $template->load($template_data);
+
+			$mail = $template->hook($mail); 
+
+			$mail->send();
+
+			$template->sent(); ]]></add>
+	</operation>
+</file>

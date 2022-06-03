@@ -1,0 +1,19 @@
+#option-value .block
+{
+	display: none;
+}
+
+#option-value.block .block
+{
+	display: block;
+}
+
+#option-value.block td.block
+{
+	display: table-cell;
+}
+
+#option-value.block .image
+{
+	display: none;
+}

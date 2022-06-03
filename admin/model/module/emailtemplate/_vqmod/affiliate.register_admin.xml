@@ -1,0 +1,18 @@
+<file name="catalog/model/affiliate/affiliate.php">
+	<operation>
+		<search position="after" index="1"><![CDATA[
+            $mail->send();]]></search>
+		<add><![CDATA[
+		$template->addData($data);
+
+		$template->load('affiliate.register_admin');			
+
+		$template->build();
+
+		$mail = $template->hook($mail);
+
+		$mail->send();
+
+		$template->sent(); ]]></add>
+	</operation>
+</file>

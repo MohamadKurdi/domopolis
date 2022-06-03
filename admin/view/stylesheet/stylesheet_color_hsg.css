@@ -1,0 +1,55 @@
+#menu{background:#ef5e67;}
+#menu > ul .selected .top{background: #fa6d76;}
+#menu > ul :hover a.top,#menu > ul .sfhover a.top{background: #fa6d76;}
+#menu > ul .parent{background:url(../image/arrow-hg.png) 1% center no-repeat;border-radius:3px}
+#menu ul li li:hover > a{color:#ef5e67;border-bottom: 1px solid #ef5e67;}
+.warning{background:#cf4a61 url(../image/warning.png) 10px center no-repeat;}
+.htabs a.selected{background:#ef5e67;border-bottom:2px solid #ef5e67;}
+.link_enter{background-color:#ef5e67;}
+.label-danger {background-color: #ef5e67!important;}
+#menu .hover > a{background: #fa6d76;}
+a.active_new {background: #ef5e67;}
+.th_style{background: #ef5e67!important;border: 1px solid #ef5e67!important;}
+.d_img{margin-top: 20px;}
+.filter_bord{border-bottom: 2px solid #ef5e67;}
+.bordSTYLE{background: #ef5e67!important;}
+.fixed_save a{background-color: #ef5e67;border: 2px solid #ef5e67;}
+.fixed_save a:hover{background-color: #fa6d76;border: 2px solid #fa6d76;}
+.pagination .links a {border: 1px solid #fa6d76;color: #fa6d76;}
+.pagination .links b {border: 1px solid #fa6d76;background-color: #fa6d76;}
+.pagination .links {color: #fa6d76;}
+.boarder_style{height:0px;border-top:2px solid #fa6d76;}
+.select_all{background-color: #1f4962;border: 1px solid #1f4962;}
+.select_all:hover{ border: 1px solid #1f4962;background: #1f4962;}
+.remove_selection{color: #1f4962;border: 1px solid #1f4962;}
+.remove_selection:hover{background: #1f4962;color: white;}
+#menu > ul > li > ul > li > a > i {color: #fa6d76;}
+.dashboard-heading {background-color: #ef5e67;}
+
+.online-heading, .online-footer{background-color: #2e3438;}
+.online-body{background-color: #7b7777;}
+.now-footer, .now-heading{background-color: #2e3438;}
+.now-body{background-color: #7b7777;}
+.total-heading, .total-footer{background-color: #2e3438;}
+.total-body{background-color: #7b7777;}
+.customers-heading, .customers-footer{background-color: #2e3438;}
+.customers-body{background-color: #7b7777;}
+
+.home_tabs_style, .admin_button i, .customer_name{color: #ef5e67;}
+
+table.list > thead > tr > th,
+table.history > tbody > tr > th,
+table.form > tbody > tr > th,
+table.ordermain > tbody > tr > th,
+table.orderadress > tbody > tr > th,
+table.list > thead > tr > th,
+table.history > tbody > tr > th,
+table.form > tbody > tr > th{
+    background: #ef5e67;
+}
+
+.blue_heading{background: #ef5e67;}
+
+/*#tab_orders_switch, #tab_waitlist_switch, #tab_calls_switch, #tab_customer_v_history_switch {
+    border-bottom: 2px solid #ef5e67;
+}*/

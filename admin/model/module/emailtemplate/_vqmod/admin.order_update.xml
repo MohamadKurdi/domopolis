@@ -1,0 +1,448 @@
+<file name="admin/controller/sale/order.php">
+<!--	<operation>
+		<search position="after"><![CDATA[
+            $this->data['entry_notify'] = $this->language->get('entry_notify'); ]]></search>
+		<add><![CDATA[
+            $this->data['entry_summary'] = $this->language->get('entry_summary');
+            $this->data['entry_show_products'] = $this->language->get('entry_show_products');
+            $this->data['entry_show_totals'] = $this->language->get('entry_show_totals');
+            $this->data['entry_show_downloads'] = $this->language->get('entry_show_downloads');
+            $this->data['entry_show_vouchers'] = $this->language->get('entry_show_vouchers');
+            $this->data['entry_template'] = $this->language->get('entry_template');
+            $this->data['entry_pdf_attach'] = $this->language->get('entry_pdf_attach');
+            $this->data['text_select'] = $this->language->get('text_select');
+			$this->data['text_preview'] = $this->language->get('text_preview');
+			$this->data['warning_template_content'] = $this->language->get('warning_template_content');
+
+			$this->data['language_id'] = $order_info['language_id'];
+			$this->data['store_id'] = $order_info['store_id'];
+            
+			$this->load->model('localisation/language');
+			$this->load->model('module/emailtemplate');
+
+            $templates = $this->model_module_emailtemplate->getTemplates(array(
+				'emailtemplate_key' => 'admin.order_update'
+			));
+
+			$this->data['templates_options'] = array();
+
+			foreach($templates as $row){
+				$label = $row['emailtemplate_label'];
+
+				if($row['emailtemplate_default']){
+					$label = $this->language->get('text_default') . ' - ' . $label;
+				}
+
+				$this->data['templates_options'][] = array(
+					'value' => $row['emailtemplate_id'],
+					'label' => $label
+				);
+			}
+
+            $this->data['templates_action'] = $this->url->link('module/emailtemplate/fetch_template', 'output=comment&token='.$this->session->data['token'], 'SSL');
+ 
+			$this->data['pdf_download'] = $this->url->link('module/emailtemplate/preview_invoice', 'token='.$this->session->data['token'].'&order_id='.$order_id, 'SSL'); ]]></add>
+	</operation>
+	-->
+	<operation error="skip">
+		<search position="replace"><![CDATA[
+            nl2br($result['comment']) ]]></search>
+		<add trim="true"><![CDATA[
+            (EmailTemplate::isHTML($result['comment'])) ? html_entity_decode($result['comment'], ENT_QUOTES, 'UTF-8') : nl2br($result['comment'], true) ]]></add>
+	</operation>
+	<operation>
+		<search error="skip" position="replace"><![CDATA[
+            nl2br($order_info['comment']) ]]></search>
+		<add trim="true"><![CDATA[
+            (EmailTemplate::isHTML($order_info['comment'])) ? html_entity_decode($order_info['comment'], ENT_QUOTES, 'UTF-8') : nl2br($order_info['comment'], true) ]]></add>
+	</operation>
+</file>
+		
+<file name="admin/view/template/sale/order_info.tpl">
+	<operation>
+		<search position="before"><![CDATA[
+            <?php echo $footer; ?> ]]></search>
+		<add><![CDATA[			
+<script type="text/javascript" src="view/javascript/ckeditor/ckeditor.js"></script>
+<script type="text/javascript"><!--
+(function($){
+
+	// Order history show/hide summary options
+	function showEmailOptions($row, $checkbox){
+		if($checkbox.is(':checked')) { 
+			$row.show(); 
+		} else { 
+			$row.hide(); 
+		}
+	}				
+	
+	$(document).ready(function() {
+		$('input[name=notify]').eq(0).each(function(){
+			showEmailOptions($('.emailOptions'), $(this));
+		}).change(function(){
+			showEmailOptions($('.emailOptions'), $(this));
+		});
+		
+   		$('select#field_templates').change(function(){			
+			var val = $(this).val();
+			if (!val || !confirm("<?php echo $warning_template_content; ?>")) return;
+			$.ajax({
+				url: '<?php echo html_entity_decode($templates_action); ?>',
+	  			type: 'get',
+				data: 'id=' + val + '&store_id=<?php echo $store_id; ?>' + '&language_id=<?php echo $language_id; ?>' + '&order_id=<?php echo $order_id; ?>',
+				dataType: 'html',
+	  			success: function(html) {
+					$('textarea[name=comment]').val(html);
+					if(typeof CKEDITOR !== "undefined"){
+						CKEDITOR.instances['comment'].setData(html);
+					}
+				},
+				error: function(xhr, ajaxOptions, thrownError) {
+					console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+					alert('Error. More details in console.');
+				}
+			});	
+		});
+ 	}); // doc.ready
+})(jQuery);		
+			
+if(typeof CKEDITOR !== "undefined"){
+	CKEDITOR.replace('comment', {
+		filebrowserImageBrowseUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
+		filebrowserUploadUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
+		filebrowserImageUploadUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>'
+	});
+
+	// Output dimensions of images as width and height
+	CKEDITOR.on('instanceReady', function (ev) {
+		ev.editor.dataProcessor.htmlFilter.addRules({
+			elements: {
+				$: function(element){                
+					if (element.name == 'img') {
+						var style = element.attributes.style;
+
+						if (style) {
+							// Get the width from the style.
+							var match = /(?:^|\s)width\s*:\s*(\d+)px/i.exec(style),
+								width = match && match[1];
+
+							// Get the height from the style.
+							match = /(?:^|\s)height\s*:\s*(\d+)px/i.exec(style);
+							var height = match && match[1];
+
+							if (width) {
+								element.attributes.style = element.attributes.style.replace(/(?:^|\s)width\s*:\s*(\d+)px;?/i, '');
+								element.attributes.width = width;
+							}
+
+							if (height) {
+								element.attributes.style = element.attributes.style.replace(/(?:^|\s)height\s*:\s*(\d+)px;?/i, '');
+								element.attributes.height = height;
+							}
+						}
+					}
+
+					if (!element.attributes.style) delete element.attributes.style;
+
+					return element;
+				}
+			}
+		});
+	});
+} // CKEDITOR
+//--></script> ]]></add>
+	</operation>
+	<operation info="Add checkboxes into ajax post data">
+		<search position="replace"><![CDATA[
+            + '&notify=' ]]></search>
+		<add trim="true"><![CDATA[
+            <?php if(!empty($products)){ ?>+ ($('input[name=\'show_products\']').attr('checked') ? '&show_products=1' : '')<?php }
+            if(!empty($downloads)){ ?>+ ($('input[name=\'show_downloads\']').attr('checked') ? '&show_downloads=1' : '')<?php }
+            if(!empty($vouchers)){ ?>+ ($('input[name=\'show_vouchers\']').attr('checked') ? '&show_vouchers=1' : '')<?php } 
+            if(!empty($totals)){ ?>+ ($('input[name=\'show_totals\']').attr('checked') ? '&show_totals=1' : '')<?php } ?>
+            + ($('input[name=\'attach_invoice_pdf\']').attr('checked') ? '&attach_invoice_pdf=1' : '') 
+			+ ($('select[name=\'field_template\']').val() ? '&field_template=' + $('select[name=\'field_template\']').val() : '')
+			+ '&notify=' ]]></add>
+	</operation>
+	<operation error="skip">
+		<search position="after"><![CDATA[
+            $('#button-history').live('click', function() { ]]></search>
+		<add><![CDATA[            if(typeof CKEDITOR !== "undefined")
+									CKEDITOR.instances.comment.updateElement(); ]]></add>
+	</operation>
+	<operation error="skip" info="Old versions opencart">
+		<search position="after"><![CDATA[
+            function history() { ]]></search>
+		<add><![CDATA[            if(typeof CKEDITOR !== "undefined") 
+									CKEDITOR.instances.comment.updateElement(); ]]></add>
+	</operation>
+	<operation error="skip">
+		<search position="before"><![CDATA[
+            $('textarea[name=\'comment\']').val(''); ]]></search>
+		<add><![CDATA[            if(typeof CKEDITOR !== "undefined")
+								  	CKEDITOR.instances.comment.setData('');            
+            $('.emailOptions input[type=checkbox], .emailOptions input[type=radio], input[name=notify]').removeAttr('checked');
+           	$('.emailOptions option').removeAttr('selected');
+           	$('.emailOptions').hide(); ]]></add>
+	</operation>
+	<operation info="Add order summary option">
+		<search position="after"><![CDATA[
+            <td><input type="checkbox" name="notify" value="1" /></td> ]]></search>
+		<add><![CDATA[
+          </tr>
+          <tr class="emailOptions" style="display: none">
+            <td><?php echo $entry_summary; ?></td>
+            <td>
+            	<?php if(!empty($products)){ ?>
+            		<label><input type="checkbox" name="show_products" value="1" style="vertical-align: middle;" /> <?php echo $entry_show_products; ?></label><br />
+           		<?php } ?>
+            	<?php if(!empty($totals)){ ?>
+            		<hr style="border-top: 1px dotted #ccc; background: none; border-bottom: none; border-left: none; border-right: none; margin: 0;" />
+            		<label><input type="checkbox" name="show_totals" value="1" style="vertical-align: middle;" /> <?php echo $entry_show_totals; ?></label><br />
+           		<?php } ?>
+	         	<?php if(!empty($downloads)){ ?>
+	         		<hr style="border-top: 1px dotted #ccc; background: none; border-bottom: none; border-left: none; border-right: none; margin: 0;" />
+	         		<label><input type="checkbox" name="show_downloads" value="1" style="vertical-align: middle;" /> <?php echo $entry_show_downloads; ?></label><br />
+         		<?php } ?>
+	         	<?php if(!empty($vouchers)){ ?>
+	         		<hr style="border-top: 1px dotted #ccc; background: none; border-bottom: none; border-left: none; border-right: none; margin: 0;" />
+	         		<label><input type="checkbox" name="show_vouchers" value="1" style="vertical-align: middle;" /> <?php echo $entry_show_vouchers; ?></label>
+         		<?php } ?>
+   			</td>
+          </tr>
+          <tr class="emailOptions" style="display: none">
+            <td>
+            	<?php echo $entry_pdf_attach; ?><br />
+            	[<a href="<?php echo $pdf_download; ?>" target="_blank"><?php echo $text_preview; ?></a>]
+           	</td>
+            <td>
+         		<label><input type="checkbox" name="attach_invoice_pdf" value="1" style="vertical-align: middle;" /></label>
+			</td>   
+  	 	  <?php if(!empty($templates_options)){ ?>			
+          </tr>
+          <tr class="emailOptions" style="display: none">
+            <td><?php echo $entry_template; ?></td>
+            <td>
+            	<select id="field_templates" name="field_template">
+	 				<option value=''><?php echo $text_select; ?></option>
+	            	<?php foreach($templates_options as $item){ ?>
+	            		<option value="<?php echo $item['value']; ?>"><?php echo $item['label']; ?></option>
+	            	<?php } ?>
+            	</select>
+ 			</td> 
+		  <?php } ?> ]]></add>
+	</operation>
+</file>
+
+<file name="admin/model/sale/order.php">
+	<operation>
+		<search position="after" index="1"><![CDATA[
+            $this->db->query("INSERT INTO " . DB_PREFIX . "order_history ]]></search>
+		<add><![CDATA[		$order_history_id = $this->db->getLastId();]]></add>
+	</operation>
+	<operation>
+		<search position="after"><![CDATA[
+            if ($data['notify']) ]]></search>
+		<add><![CDATA[
+            $template = new EmailTemplate($this->request, $this->registry);
+     
+			$template->data['payment_address'] = EmailTemplate::formatAddress($order_info, 'payment', $order_info['payment_address_format']);
+			
+			$template->data['shipping_address'] = EmailTemplate::formatAddress($order_info, 'shipping', $order_info['shipping_address_format']);			
+			if($template->data['shipping_address'] == ''){
+				$template->data['shipping_address'] = $template->data['payment_address'];
+			}
+
+            $template->data['products'] = array();  
+            if(isset($data['show_products'])){ 
+            	$this->load->model('tool/image');  
+            	$this->load->model('catalog/product');  
+				$products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);	
+				
+				foreach ($products as $product) {
+					$product = array_merge($this->model_catalog_product->getProduct($product['product_id']), $product);
+				
+					// Product Options
+					$option_data = array();	
+					$options = $this->model_sale_order->getOrderOptions($this->request->get['order_id'], $product['order_product_id']);	
+					foreach ($options as $option) {
+						if ($option['type'] != 'file') {
+							$option_data[] = array(
+								'name'  => $option['name'],
+								'value' => $option['value'],
+								'type'  => $option['type']
+							);
+						} else {
+							$option_data[] = array(
+								'name'  => $option['name'],
+								'value' => substr($option['value'], 0, strrpos($option['value'], '.')),
+								'type'  => $option['type'],
+								'href'  => $this->url->link('sale/order/download', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . '&order_option_id=' . $option['order_option_id'], 'SSL')
+							);						
+						}
+					}
+					
+					if (isset($product['image'])) {
+						$image = $this->model_tool_image->resize($product['image'], 50, 50);
+					} else {
+						$image = '';
+					}
+
+					$url = $order_info['store_url'] . '?route=product/product&product_id='.$product['product_id'];
+					
+					if ($product['price_national'] > 0){
+						$price = $this->currency->format($product['price_national'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], '1');
+					} else {
+						$price = $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']);
+					}
+				
+					if ($product['total_national'] > 0){
+						$total = $this->currency->format($product['total_national'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], '1');					
+					} elseif ($product['price_national'] > 0) {
+						$total = $this->currency->format($product['price_national']  * $product['quantity']  + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], '1');
+					} else {
+						$total = $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']);
+					}
+					
+	
+					$template->data['products'][] = array(
+						'url'     		=> $url,
+						'url_tracking' 	=> $template->getTracking($url),
+						'order_product_id' => $product['order_product_id'],
+						'product_id'       => $product['product_id'],
+						'name'    	 	   => $product['name'],
+						'model'    		   => $product['model'],
+						'image'    		   => $image,
+						'option'   		   => $option_data,
+						'quantity'		   => $product['quantity'],
+						'price'    		   => $price,
+						'total'    		   => $total,
+						'href'     		   => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL')
+					);
+				}
+			} // Products
+			
+			$template->data['vouchers'] = array();
+			if(isset($data['show_vouchers'])){
+				$vouchers = $this->model_sale_order->getOrderVouchers($this->request->get['order_id']);			 
+				foreach ($vouchers as $voucher) {
+					$template->data['vouchers'][] = array(
+						'description' => $voucher['description'],
+						'amount'      => $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']),
+						'href'        => $this->url->link('sale/voucher/update', 'token=' . $this->session->data['token'] . '&voucher_id=' . $voucher['voucher_id'], 'SSL')
+					);
+				}
+			} // Vouchers
+			
+			$template->data['totals'] = array();
+			if(isset($data['show_totals'])){
+				$template->data['totals'] = $this->model_sale_order->getOrderTotals($this->request->get['order_id']);
+			} // Totals	
+			
+			$template->data['downloads'] = array();
+			if(isset($data['show_downloads'])){				
+				foreach ($products as $product) {
+					$results = $this->model_sale_order->getOrderDownloads($this->request->get['order_id'], $product['order_product_id']);	
+					foreach ($results as $result) {
+						$template->data['downloads'][] = array(
+							'name'      => $result['name'],
+							'filename'  => $result['mask'],
+							'remaining' => $result['remaining']
+						);
+					}
+				}
+			} // Downloads	
+			
+			$attachments = array();
+			if(isset($data['attach_invoice_pdf'])){
+				$this->load->model('module/emailtemplate/invoice');
+				$template->data['emailtemplate_invoice_pdf'] = $this->model_module_emailtemplate_invoice->getInvoice($this->request->get['order_id'], true);
+				$attachments[] = $template->data['emailtemplate_invoice_pdf'];
+			} ]]></add>
+	</operation>
+	<operation>
+		<search position="after"><![CDATA[
+            $message .= $language->get('text_footer'); ]]></search>
+		<add><![CDATA[  
+            if (!empty($template->data['products'])) {
+            	$message .= "\n" . $language->get('text_products') . "\n"; 
+	            foreach ($template->data['products'] as $product) {
+	                $message .= $product['quantity'] . 'x ' . $product['name'] . ' (' . $product['model'] . ') ' . html_entity_decode($product['total'], ENT_NOQUOTES, 'UTF-8') . "\n";
+	                foreach ($product['option'] as $option) {
+	                    $message .= chr(9) . '-' . $option['name'] . ' ' . (strlen($option['value']) > 20 ? substr($option['value'], 0, 20) . '..' : $option['value']) . "\n";
+	                }
+            	}
+            }
+
+	        if (!empty($template->data['vouchers'])) { 
+	            foreach ($template->data['vouchers'] as $voucher) {
+	                $message .= '1x ' . $voucher['description'] . ' ' . $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']);
+	            }
+            }
+            
+			if (!empty($template->data['totals'])) {
+	            $message .= "\n" . $language->get('text_total') . "\n";	
+	            foreach ($template->data['totals'] as $total) {
+	                $message .= $total['title'] . ': ' . html_entity_decode($total['text'], ENT_NOQUOTES, 'UTF-8') . "\n";
+	            }
+            }
+               
+            if (!empty($template->data['downloads'])) {
+                $message .= "\n" . $language->get('text_download') . "\n";
+                $message .= $order_info['store_url'] . 'index.php?route=account/download' . "\n\n";
+            }
+
+			$template->addData($data);
+
+			$template->addData($order_info);
+             
+            $template->data['new_comment'] = html_entity_decode($data['comment'], ENT_QUOTES, 'UTF-8');
+            $template->data['invoice'] = html_entity_decode($order_info['store_url'] . 'index.php?route=account/order/info&order_id=' . $order_id, ENT_QUOTES, 'UTF-8');
+			$template->data['invoice_tracking'] = $template->getTracking($template->data['invoice']);
+
+			$template->data['date_added'] = date($language->get('date_format_short'), strtotime($order_info['date_added']));
+            
+			if ($order_status_query->num_rows) {
+            	$template->data['order_status'] = $order_status_query->row['name']; 
+			} ]]></add>
+	</operation>
+	<operation>
+		<search position="replace" index="1"><![CDATA[
+            $mail->send(); ]]></search>
+		<add><![CDATA[			$template_data = array('key' =>'admin.order_update');
+			if(!empty($data['field_template'])){
+				$template_data['emailtemplate_id'] = $data['field_template'];
+			}
+			if(!empty($data['order_status_id'])){
+				$template_data['order_status_id'] = $data['order_status_id'];
+			}
+			if(isset($order_info['store_id'])){
+				$template_data['store_id'] = $order_info['store_id'];
+			}
+			if(isset($order_info['language_id'])){
+				$template_data['language_id'] = $order_info['language_id'];
+			}
+
+            $template->load($template_data);
+
+            $mail = $template->hook($mail);
+            foreach($attachments as $attachment){
+            	$mail->addAttachment($attachment);
+            } 
+ 
+			$mail->send();
+
+			$template->sent(); ]]></add>
+	</operation>
+	<operation error="skip">
+		<search position="replace"><![CDATA[
+            comment = '" . $this->db->escape(strip_tags($data['comment'])) . "' ]]></search>
+		<add trim="true"><![CDATA[
+            comment = '" . $this->db->escape($data['comment']) . "' ]]></add>
+	</operation>
+    <operation>
+        <search position="before"><![CDATA[
+            => $order_query->row['payment_firstname'], ]]></search>
+        <add><![CDATA[            	'invoice_filename' 		   => $order_query->row['invoice_filename'], ]]></add>
+	</operation>
+</file>

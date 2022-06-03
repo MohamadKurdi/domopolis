@@ -1,0 +1,130 @@
+#box{outline:none;padding:0;margin:0;width:100%}
+.clr{clear:both}
+.invisible{display:none}
+span.clr{display:block;clear:both}
+#box ul{padding:0;margin:0}
+#box li{list-style-type:none;text-align:center;display:inline-block}
+
+#tab-module .ui-state-default, #tab-module .ui-corner-all, #tab-module .ui-corner-right, #tab-module .ui-corner-br {
+background: #EEE none;
+border-top-left-radius:0;
+border-top-right-radius:0;
+border-bottom-left-radius:0;
+border-bottom-right-radius:0;
+-moz-border-top-left-radius:0;
+-moz-border-top-right-radius:0;
+-moz-border-bottom-left-radius:0;
+-moz-border-bottom-right-radius:0;
+-webkit-border-top-left-radius:0;
+-webkit-border-top-right-radius:0;
+-webkit-border-bottom-left-radius:0;
+-webkit-border-bottom-right-radius:0;
+-moz-border-radius-bottomright:0;
+-khtml-border-bottom-right-radius:0;
+-moz-border-radius-bottomleft:0;
+-khtml-border-bottom-left-radius:0;
+-moz-border-radius-topright:0;
+-khtml-border-top-right-radius:0;
+-moz-border-radius-topleft:0;
+-khtml-border-top-left-radius:0;
+padding: 5px 0 5px 30px
+}
+#tab-module .ui-corner-top, #tab-module .ui-corner-bottom {
+background: #FAFAFA;
+border-top-left-radius:0;
+border-top-right-radius:0;
+border-bottom-left-radius:0;
+border-bottom-right-radius:0;
+-moz-border-top-left-radius:0;
+-moz-border-top-right-radius:0;
+-moz-border-bottom-left-radius:0;
+-moz-border-bottom-right-radius:0;
+-webkit-border-top-left-radius:0;
+-webkit-border-top-right-radius:0;
+-webkit-border-bottom-left-radius:0;
+-webkit-border-bottom-right-radius:0;
+-moz-border-radius-bottomright:0;
+-khtml-border-bottom-right-radius:0;
+-moz-border-radius-bottomleft:0;
+-khtml-border-bottom-left-radius:0;
+-moz-border-radius-topright:0;
+-khtml-border-top-right-radius:0;
+-moz-border-radius-topleft:0;
+-khtml-border-top-left-radius:0;
+padding: 5px 0 5px 30px 
+}
+#tab-module .ui-accordion-header {
+color: #7A7A7A
+}
+#tab-module .ui-state-active {
+font-size: 22px; 
+color: #1C94C4
+}
+div.htabs > a{
+color: #ccc
+}
+div.directory_tab a.all {
+margin-right: 9px
+}
+div.htabs > a.selected {
+color:#000
+}
+div.accordion > div > div, div.directory-1 > div{
+cursor: pointer;
+padding: 1px 5px 1px 10px;
+overflow: hidden;
+float: left;
+clear: both;
+font-size: 17px;
+line-height: 18px
+}
+div.accordion > div > div xmp, div.directory-1 > div xmp {
+margin: 0;
+max-width: 500px;
+overflow: hidden;
+font-weight: normal;
+color: #000;
+font-family: 'Trebuchet MS', Tahoma, Verdana, Arial, sans-serif
+}
+div.directory-1 > div{
+font-family: 'Trebuchet MS', Tahoma, Verdana, Arial, sans-serif;
+margin-left: 35px
+}
+span.file_set {
+border-bottom: 1px solid #FAFAFA
+}
+div.accordion > div > div:hover .file_set, div.directory-1 > div:hover .file_set {
+text-decoration:underline
+}
+span.file_var {
+opacity:0.7
+}
+div.accordion > div > div > span, div.directory-1 > div > span{
+float:left;
+line-height: 21px;
+padding: 4px
+}
+div.accordion > div > div > span.ui-icon, div.directory-1 > div span.ui-icon {
+margin-left: 25px;
+display: none;
+padding: 0;
+margin-top: 7px
+}
+div.accordion > div > div:hover > span.ui-icon, div.directory-1 > div:hover span.ui-icon{
+display: block
+}
+#tab-module  input.file_input {
+display: none;
+margin: 0;
+height: 21px;
+line-height: 21px;
+font-size: 14px;
+max-width: 900px
+}
+
+
+/* infoclose */
+div.infoclose{border:1px solid #dbdbdb;padding:10px;margin:0 0 20px;background:#FDF7F7 none;color:#ef5e67;position:relative;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;}
+div.infoclose button{border:1px solid #FDF7F7;background:#FDF7F7 none;color:#424242;cursor:pointer;position:absolute;right:10px;top:5px}
+div.infoclose button:hover{border:1px solid #DD7E7E;background: #FFF none;color:#F00}
+

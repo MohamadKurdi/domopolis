@@ -1,0 +1,24 @@
+<file name="catalog/model/account/customer.php">
+	<operation>
+		<search position="after"><![CDATA[
+            if ($this->config->get('config_account_mail')) {]]></search>
+		<add><![CDATA[			if((isset($customer_group_info['approval']) && $customer_group_info['approval']) || $this->config->get('config_customer_approval')){
+	            $template->data['text_approve'] = $this->language->get('text_approve');
+	            $template->data['account_approve'] = (defined('HTTP_ADMIN') ? HTTP_ADMIN : HTTP_SERVER.'admin/') . 'index.php?route=sale/customer&filter_approved=0';
+            } ]]></add>
+	</operation>
+	<operation>
+		<search position="replace" index="2"><![CDATA[
+            $mail->send();]]></search>
+		<add><![CDATA[			$template->load('customer.register_admin');
+			$template->build();
+
+			$template->fetch();
+
+			$mail = $template->hook($mail);
+ 
+			$mail->send();
+
+			$template->sent(); ]]></add>
+	</operation>	
+</file>

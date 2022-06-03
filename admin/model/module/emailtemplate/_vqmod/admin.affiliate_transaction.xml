@@ -1,0 +1,19 @@
+<file name="admin/model/sale/affiliate.php">
+	<operation>
+		<search position="after" index="1"><![CDATA[
+			$this->language->get('text_transaction_subject') ]]></search>
+		<add><![CDATA[
+            $template = new EmailTemplate($this->request, $this->registry);
+                        
+			$template->data['text_received'] = sprintf($this->language->get('text_transaction_received'), $this->currency->format($amount, $this->config->get('config_currency')));
+			$template->data['text_total'] = sprintf($this->language->get('text_transaction_total'), $this->currency->format($this->getTransactionTotal($affiliate_id), $this->config->get('config_currency'))); ]]></add>
+	</operation>
+	<operation>
+		<search position="replace" index="2"><![CDATA[
+            $mail->send(); ]]></search>
+		<add><![CDATA[            $template->load('admin.affiliate_transaction');
+			$mail = $template->hook($mail);
+ 			$mail->send();
+			$template->sent(); ]]></add>
+	</operation>
+</file>

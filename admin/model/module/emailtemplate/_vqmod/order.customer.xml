@@ -1,0 +1,211 @@
+<file name="catalog/model/checkout/order.php">
+	<operation>
+		<search position="after"><![CDATA[ 
+			'customer_id'             => $order_query->row['customer_id'], ]]></search>
+		<ignoreif><![CDATA[ 
+			'customer_group_id' => ]]></ignoreif>
+		<add><![CDATA[				'customer_group_id' => (isset($order_query->row['customer_group_id'])) ? $order_query->row['customer_group_id'] : '',
+				'affiliate_id' => (isset($order_query->row['affiliate_id'])) ? $order_query->row['affiliate_id'] : '',]]></add>
+	</operation>
+	<operation>
+		<search position="after"><![CDATA[
+			$order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");]]></search>
+		<add><![CDATA[
+			$customer_group_info = array();
+			if(isset($order_info['customer_group_id']) && $order_info['customer_group_id']){
+            	$this->load->model('account/customer_group');
+				$customer_group_info = $this->model_account_customer_group->getCustomerGroup($order_info['customer_group_id']);
+            }
+
+			$affiliate_info = array();
+            if(isset($order_info['affiliate_id']) && $order_info['affiliate_id']){
+            	$this->load->model('affiliate/affiliate');
+				$affiliate_info = $this->model_affiliate_affiliate->getAffiliate($order_info['affiliate_id']);
+            } ]]></add>
+	</operation>
+	<operation>
+		<search position="replace" index="1"><![CDATA[ $template = new Template(); ]]></search>
+		<add><![CDATA[		
+			$this->load->model('tool/image');
+			$this->load->model('catalog/product');
+
+ 			$template = new EmailTemplate($this->request, $this->registry);
+
+			$template->addData($this->request->post, 'post_data');
+
+			$template->addData($order_info);
+
+			$template->data['affiliate'] = $affiliate_info;
+
+			$template->data['customer_group'] = $customer_group_info;
+
+			$template->data['new_order_status'] = $order_status; ]]></add>
+	</operation>
+	<operation>
+		<search position="after" index="1"><![CDATA[ $template->data['link'] = ]]></search>
+		<add><![CDATA[			$template->data['link_tracking'] = $template->getTracking($template->data['link']); ]]></add>
+	</operation>
+	<operation>
+		<search position="after" index="1"><![CDATA[ $template->data['download'] = ]]></search>
+		<add><![CDATA[			$template->data['download_tracking'] = $template->getTracking($template->data['download']); ]]></add>
+	</operation>
+	<operation>
+		<search position="replace" index="1"><![CDATA[
+			$template->data['products'][] = array( ]]></search>
+		<add><![CDATA[
+				$product_data = $this->model_catalog_product->getProduct($product['product_id']);
+
+				if (isset($product_data['image'])) {
+					$image = $this->model_tool_image->resize($product_data['image'], 50, 50);
+				} else {
+					$image = '';
+				}
+
+				$url = $this->url->link('product/product', 'product_id='.$product['product_id'], 'SSL');
+
+				$template->data['products'][] = array(
+					'product_id'       => $product_data['product_id'],
+					'url'     		   => $url,
+					'url_tracking' 	   => $template->getTracking($url),
+					'image'     	   => $image,
+					'weight'		   => ($product_data['weight'] > 0) ? $this->weight->format($product_data['weight'], $product_data['weight_class_id']) : 0, 
+					'description'      => $product_data['description'],
+					'manufacturer'     => $product_data['manufacturer'],
+					'sku'              => $product_data['sku'],
+					'stock_status'     => $product_data['stock_status'],
+					'stock_subtract'   => $product_data['subtract'],
+					'stock_quantity'   => ($product_data['quantity'] - $product['quantity']),
+]]></add>
+	</operation>
+	<operation error="skip">
+		<search position="replace" index="1"><![CDATA[
+			$template->data['logo'] = $this->config->get('config_url') . 'image/' . $this->config->get('config_logo');]]></search>
+		<add/>
+	</operation>
+	<operation error="skip">
+		<search position="replace" index="1"><![CDATA[
+			$template->data['logo'] = HTTP_IMAGE . $this->config->get('config_logo');]]></search>
+		<add/>
+	</operation>
+	<operation error="skip">
+		<search position="replace" index="1"><![CDATA[
+			$template->data['logo'] = $this->model_tool_image->get($this->config->get('config_logo'));]]></search>
+		<add/>
+	</operation>
+	<operation error="skip" info="1.5.1.3.1">
+		<search position="replace" index="1"><![CDATA[
+			$template->data['logo'] = 'cid:' . md5(basename($this->config->get('config_logo')));]]></search>
+		<add/>
+	</operation>
+	<operation error="skip" info="remove attachedment">
+		<search position="replace"><![CDATA[
+			$mail->addAttachment(DIR_IMAGE . $this->config->get('config_logo'), md5(basename($this->config->get('config_logo'))));]]></search>
+		<add/>
+	</operation>
+	<operation error="skip">
+		<search position="replace" offset="4" index="1"><![CDATA[
+			if ($comment && $notify) {]]></search>
+		<add><![CDATA[
+            if ($order_info['comment']) {
+            	$template->data['comment'] = str_replace(array("\r\n", "\r", "\n"), "<br />", $order_info['comment']);
+            } else {
+            	$template->data['comment'] = '';
+            }
+
+            if ($comment && $notify && $template->data['comment'] != $comment) {
+				$template->data['instruction'] = str_replace(array("\r\n", "\r", "\n"), "<br />", $comment);
+			} else {
+				$template->data['instruction'] = '';
+			}]]></add>
+	</operation>
+	<operation info="offset causing too many issue with linebreaks">
+		<search position="replace" index="1"><![CDATA[
+            $html = $template->fetch($this->config->get('config_template') . '/template/mail/order.tpl');]]></search>
+		<add/>
+	</operation>
+	<operation>
+    	<search position="replace" index="1"><![CDATA[
+            $html = $template->fetch('default/template/mail/order.tpl');]]></search>
+		<add/>
+	</operation>
+	<operation>
+		<search position="after"><![CDATA[
+            $template->data['customer_id'] = $order_info['customer_id']; ]]></search>
+		<add><![CDATA[
+            $template->data['customer_name'] = $order_info['firstname'] . ' ' . $order_info['lastname'];
+            $template->data['customer_firstname'] = $order_info['firstname'];
+            $template->data['customer_lastname'] = $order_info['lastname'];]]></add>
+	</operation>
+	<operation>
+		<search position="replace" index="1"><![CDATA[
+			$mail->setHtml($html);]]></search>
+		<add><![CDATA[			$template_data = array(
+				'key' => 'order.customer',
+				'order_status_id' => $order_status_id
+			);
+
+   			$template->load($template_data);
+
+			$mail = $template->hook($mail); 
+
+   			// Auto update invoice_no if not set
+			if($template->data['emailtemplate']['attach_invoice'] && ($this->config->get('config_complete_status_id') == $order_status_id) && $order_info && $order_info['invoice_no'] == '') {
+				$query = $this->db->query("SELECT MAX(invoice_no) AS invoice_no FROM `" . DB_PREFIX . "order` WHERE invoice_prefix = '" . $this->db->escape($order_info['invoice_prefix']) . "'");
+			
+				if ($query->row['invoice_no']) {
+					$invoice_no = $query->row['invoice_no'] + 1;
+				} else {
+					$invoice_no = 1;
+				}
+				
+				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET invoice_no = '" . (int)$invoice_no . "', invoice_prefix = '" . $this->db->escape($order_info['invoice_prefix']) . "' WHERE order_id = '" . (int)$order_id . "'");
+					
+				$order_info['invoice_no'] = $invoice_no;
+ 			}]]></add>
+	</operation>
+	<operation>
+        <search position="after" index="1"><![CDATA[
+            $mail->send(); ]]></search>
+		<add><![CDATA[            $template->sent(); ]]></add>
+	</operation>
+	<operation error="skip" info="1.5.5.1">
+        <search position="replace"><![CDATA[
+            'value' => (strlen($value) > 20 ? substr($value, 0, 20) . '..' : $value)]]></search>
+		<add trim="true"><![CDATA[
+            'value' => (strlen($value) > 120 ? substr($value, 0, 120) . '..' : $value)]]></add>
+	</operation>
+	<operation error="skip">
+		<search position="replace"><![CDATA[
+            'value' => (strlen($value) > 20 ? substr($value, 0, 20) . '..' : $value)]]></search>
+		<add trim="true"><![CDATA[
+            'value' => (strlen($value) > 120 ? substr($value, 0, 120) . '..' : $value)]]></add>
+	</operation>
+	<operation error="skip" info="1.5.1.3">
+		<search position="replace"><![CDATA[
+            'value' => (strlen($option['value']) > 20 ? substr($option['value'], 0, 20) . '..' : $option['value'])]]></search>
+		<add trim="true"><![CDATA[
+            'value' => (strlen($option['value']) > 120 ? substr($option['value'], 0, 120) . '..' : $option['value'])]]></add>
+	</operation>
+	<operation info="Add product option price">
+		<search position="replace" index="1"><![CDATA[
+            $order_option_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_option WHERE order_id = '" . (int)$order_id . "' AND order_product_id = '" . (int)$product['order_product_id'] . "'");]]></search>
+		<add trim="true"><![CDATA[
+            $order_option_query = $this->db->query("SELECT oo.*, pov.* FROM " . DB_PREFIX . "order_option oo LEFT JOIN " . DB_PREFIX . "product_option_value pov ON (pov.product_option_value_id = oo.product_option_value_id) WHERE oo.order_id = '" . (int)$order_id . "' AND oo.order_product_id = '" . (int)$product['order_product_id'] . "'");]]></add>
+	</operation>
+	<operation info="Add product option price">
+		<search position="before" index="1"><![CDATA[
+            $option_data[] = array(]]></search>
+		<add><![CDATA[					$price = false;
+					if ((float)$option['price']) {
+						$price = $this->currency->format($option['price'], $this->config->get('config_currency'));
+					}]]></add>
+	</operation>
+	<operation info="Add product option price">
+		<search position="after" index="1"><![CDATA[
+            'name'  => $option['name'],]]></search>
+		<add><![CDATA[						'price'  => $price,
+						'price_prefix'  => $option['price_prefix'],
+						'stock_quantity'  => $option['quantity'],
+						'stock_subtract'  => $option['subtract'], ]]></add>
+	</operation>
+</file>

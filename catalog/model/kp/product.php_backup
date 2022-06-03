@@ -1,0 +1,317 @@
+<?php
+	class ModelKPProduct extends Model {
+		private $error = array(); 
+		
+		public function getProductMainCategory($product_id){
+			$query = $this->db->query("SELECT category_id FROM product_to_category WHERE product_id = '" . (int)$product_id . "' ORDER BY main_category DESC LIMIT 1");
+			
+			if (!empty($query->row['category_id'])){
+				return $query->row['category_id'];	
+				} else {
+				return 0;
+			}
+		}
+		
+		public function getBestSellerProductsForCategory($product_info, $limit, $store_id, $stock_in_current = false, $exclude, $use_manufacturer = true) {
+			$product_data = array();
+						
+			$this->load->model('setting/setting');
+			$category_id = $this->getProductMainCategory($product_info['product_id']);
+			
+			$sql = "SELECT op.product_id, COUNT(*) AS total
+			FROM order_product op 
+			LEFT JOIN `order` o ON (op.order_id = o.order_id) 
+			LEFT JOIN `product` p ON (op.product_id = p.product_id) 
+			LEFT JOIN `product_to_store` p2s ON (p.product_id = p2s.product_id) 
+			LEFT JOIN `product_to_category` p2c ON (p2c.product_id = p.product_id)
+			LEFT JOIN `category_path` cp ON (p2c.category_id = cp.category_id)
+			WHERE o.order_status_id > '0'";
+			if ($product_info['manufacturer_id'] && $use_manufacturer){
+				$sql .= " AND p.manufacturer_id = " . (int)$product_info['manufacturer_id'];
+			}
+			if ($product_info['product_id']){
+				$sql .= " AND p.product_id <> " . (int)$product_info['product_id'];
+			}
+			
+			if ($exclude && count($exclude) > 0){
+				$sql .= " AND p.product_id NOT IN (" . implode(',', $exclude) . ")";
+			}
+			
+			$_cqwuery = $this->db->non_cached_query("SHOW COLUMNS FROM product LIKE '" . $this->db->escape($this->model_setting_setting->getKeySettingValue('config', 'config_warehouse_identifier', (int)$store_id)) . "'");
+			
+			if ($_cqwuery->num_rows && $stock_in_current){
+				$_qfield = 'p.`' . $this->model_setting_setting->getKeySettingValue('config', 'config_warehouse_identifier', (int)$store_id).'`';
+				} else {
+				$_qfield = 'p.quantity';
+			}
+			
+			$sql .= " AND p.status = '1'
+			AND " . $_qfield . " > 0 
+			AND stock_status_id <> '" . (int)$this->config->get('config_not_in_stock_status_id') . "' 
+			AND p.date_available <= NOW() AND 
+			cp.path_id = '" . (int)$category_id . "'
+			AND p2s.store_id = '" . (int)$store_id . "' 
+			GROUP BY op.product_id ORDER BY total DESC LIMIT " . (int)$limit;
+			
+			
+			$query = $this->db->non_cached_query($sql);
+			
+			foreach ($query->rows as $result) {
+				$product_data[] = $result['product_id'];
+			}
+			
+			return $product_data;
+		}
+		
+		public function getSimilarProductsByName($product_name, $product_id, $manufacturer_id, $limit, $in_stock = true, $recursive_results = array(), $exclude = array(), $language_id, $store_id){
+			$this->load->model('setting/setting');
+			
+			$product_name = trim(trim($product_name, ',.'));
+			
+			$product_data = array();					
+			
+			$sql = "SELECT DISTINCT pd.product_id FROM " . DB_PREFIX . "product_description pd 
+			LEFT JOIN " . DB_PREFIX . "product p ON (pd.product_id = p.product_id) 
+			LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) 
+			WHERE pd.language_id = '" . $language_id . "' 
+			AND TRIM(LCASE(REPLACE(pd.name, ',', ''))) LIKE ('" . $this->db->escape(trim(mb_strtolower($product_name))) . "%')
+			AND pd.product_id <> '" . (int)$product_id . "'			
+			AND p.status = '1'
+			AND p.quantity > 0
+			AND p.stock_status_id <> '" . (int)$this->config->get('config_not_in_stock_status_id') . "'
+			AND p.date_available <= NOW() 
+			AND p2s.store_id = '" . (int)$store_id . "'";
+			
+			if ($recursive_results){				
+				if ($recursive_results && count($recursive_results) > 0){
+					$sql .= " AND pd.product_id NOT IN (" . implode(',', $recursive_results) . ")";
+				}
+			}
+			
+			if ($exclude){				
+				if ($exclude && count($exclude) > 0){
+					$sql .= " AND pd.product_id NOT IN (" . implode(',', $exclude) . ")";
+				}
+			}
+			
+			//проверяем категории товара
+			$_cssql = $this->db->non_cached_query("SELECT DISTINCT category_id FROM product_to_category WHERE product_id = '" . (int)$product_id . "'");
+			if ($_cssql->num_rows){
+				$sql .= " AND pd.product_id IN (SELECT DISTINCT product_id FROM product_to_category WHERE category_id IN (SELECT DISTINCT category_id FROM product_to_category WHERE product_id = '" . (int)$product_id . "'))";
+			}
+			
+			$_qfield = 'p.quantity';
+			
+			if ($in_stock){
+				$_cqwuery = $this->db->non_cached_query("SHOW COLUMNS FROM product LIKE '" . $this->db->escape($this->model_setting_setting->getKeySettingValue('config', 'config_warehouse_identifier', (int)$store_id)) . "'");
+				
+				if ($_cqwuery->num_rows){
+					$_qfield = 'p.`' . $this->model_setting_setting->getKeySettingValue('config', 'config_warehouse_identifier', (int)$store_id).'`';
+					} else {
+					$_qfield = 'p.quantity';
+				}
+			}
+			
+			$sql .= " AND " . $_qfield . " > 0 AND p.stock_status_id <> '" . (int)$this->config->get('config_not_in_stock_status_id') . "'";
+			
+			$sql .= " ORDER BY p.manufacturer_id = '" . (int)$manufacturer_id . "' DESC, " . $_qfield . " DESC LIMIT " . (int)$limit . "";
+			
+			$query = $this->db->non_cached_query($sql);
+			
+			foreach ($query->rows as $result) {
+				$product_data[] = $result['product_id'];
+			}
+			
+			return $product_data;
+		}
+		
+		
+		public function guessSameProducts($product_name, $product_id, $manufacturer_id, $limit, $in_stock = true, $language_id, $store_id, $exclude){							
+			$exploded = explode(' ', $product_name);
+			
+			$results = array();
+			
+			//Попытка получить по четырем словам
+			if (isset($exploded[0]) && isset($exploded[1]) && isset($exploded[2]) && isset($exploded[3])){
+				$results = $this->getSimilarProductsByName($exploded[0] . ' ' . $exploded[1] . ' ' . $exploded[2] . ' ' . $exploded[3], $product_id, $manufacturer_id, $limit, $in_stock, $exclude, $exclude, $language_id, $store_id);					
+			}
+			
+			//Попытка получить по трем словам
+			if (count($results) < $limit){
+				if (isset($exploded[0]) && isset($exploded[1]) && isset($exploded[2])){	
+					$results = array_merge($this->getSimilarProductsByName($exploded[0] . ' ' . $exploded[1] . ' ' . $exploded[2], $product_id, $manufacturer_id, ($limit - count($results)),  $in_stock, $results, $exclude, $language_id, $store_id), $results);						
+				}
+			}			
+			
+			//Попытка получить по двум словам
+			/*	if (count($results) < $limit){				
+				if (isset($exploded[0]) && isset($exploded[1])){
+				$results = array_merge($this->getSimilarProductsByName($exploded[0] . ' ' . $exploded[1], $product_id, $manufacturer_id, ($limit - count($results)),  $in_stock, $results, $exclude, $language_id, $store_id), $results);	
+				}
+				}
+			*/	
+			/*	//Попытка получить по одному слову
+				if (count($results) < $limit){			
+				if (isset($exploded[0])){
+				$results = array_merge($this->getSimilarProductsByName($exploded[0], $product_id, $manufacturer_id, ($limit - count($results)), $in_stock, $results, $exclude, $language_id, $store_id), $results);	
+				}				
+				}
+			*/
+			
+			return $results;
+		}
+		
+		public function getReplaceProducts($product_id, $order_id, $exclude = array()){
+			$this->load->model('catalog/product');
+			$this->load->model('catalog/category');
+			$this->load->model('account/order');
+			$this->load->model('tool/image');
+			
+			$result = array();
+			
+			$order = $this->model_account_order->getOrder($order_id, true);
+			$product = $this->model_catalog_product->getProduct($product_id);
+			$language_id = $order['language_id'];
+			$store_id = $order['store_id'];		
+			
+			//Такие же названию + наличие + бренд
+			if (count($result) <= 3){
+				$result_product_ids = $this->guessSameProducts($product['name'], $product_id, $product['manufacturer_id'], 3 - count($result), true, $language_id, $store_id, $exclude);
+				foreach ($result_product_ids as $result_id){
+					$product = $this->model_catalog_product->getProduct($result_id);
+					if ($product){
+						$result[$result_id] = $product;
+					}
+				}
+			}
+			
+			//Наличие + категория + бренд
+			if (count($result) <= 3){
+				$result_product_ids = $this->getBestSellerProductsForCategory($product, 3 - count($result), $store_id, true, $exclude);
+				foreach ($result_product_ids as $result_id){
+					$product = $this->model_catalog_product->getProduct($result_id);
+					if ($product){
+						$result[$result_id] = $product;
+					}
+				}
+			}	
+			
+			//Наличие + категория минус бренд
+			if (count($result) <= 3){
+				$result_product_ids = $this->getBestSellerProductsForCategory($product, 3 - count($result), $store_id, true, $exclude, false);
+				foreach ($result_product_ids as $result_id){
+					$product = $this->model_catalog_product->getProduct($result_id);
+					if ($product){
+						$result[$result_id] = $product;
+					}
+				}
+			}			
+			
+			//Наличие + категория минус бренд			
+			if (count($result) <= 3){
+				$result_product_ids = $this->guessSameProducts($product['name'], $product_id, $product['manufacturer_id'], 3 - count($result), false, $language_id, $store_id,$exclude);
+				foreach ($result_product_ids as $result_id){
+					$product = $this->model_catalog_product->getProduct($result_id);
+					if ($product){
+						$result[$result_id] = $product;
+					}
+				}
+			}									
+			
+			if (count($result) <= 3){
+				$result_product_ids = $this->getBestSellerProductsForCategory($product, 3 - count($result), $store_id, false, $exclude);
+				foreach ($result_product_ids as $result_id){
+					$product = $this->model_catalog_product->getProduct($result_id);
+					if ($product){
+						$result[$result_id] = $product;
+					}
+				}
+			}			
+			
+			
+			if (count($result) <= 3){
+				//get_product_categories
+				$categories = $this->model_catalog_product->getProductCategories($product_id);
+				$attributes = $this->model_catalog_product->getProductAttributesByLanguage($product_id, $language_id);
+				
+				$data['main_attributes'] = $this->model_catalog_product->getProductAttributesNamesValuesByLanguage($product_id, $language_id);
+				
+				$data['special_attributes'] = array();
+				
+				foreach ($data['main_attributes'] as $key => $value){
+					if ($value['group_id'] == $this->config->get('config_special_attr_id')){
+						$data['special_attributes'][] = $value;				
+						unset($data['main_attributes'][$key]);	
+					}
+				}
+				
+				//got categories, getting categorie attributes
+				foreach ($categories as $category){
+					$valid_attributes = array();
+					
+					$category_attributes = $this->model_catalog_category->getAttributesByCategory($category);
+					
+					//уберем из атрибутов категории те, которых нет в товаре, а наоборот у нас ситуация и невозможна. в результате поимеем массив атрибутов товара с значениями, похожие надо будет искать
+					foreach ($category_attributes as $ca_id){
+						
+						if (isset($attributes[$ca_id])){
+							$valid_attributes[$ca_id] = $attributes[$ca_id];
+							} else {
+							//пропускаем
+						}								
+						
+					}
+					
+					if (count($valid_attributes) > 0){
+						//ищем товары, которые совпадают по таким же критериям, в той же категории
+						$result_product_ids = $this->model_catalog_product->getSimilarProductsByAttributes($product_id, $category, $language_id, $store_id, $valid_attributes, 3 - count($result), $stock = 1);
+						
+						//таки есть товары
+						if ($result_product_ids){					
+							$products = array();										
+							
+							foreach ($result_product_ids as $result_id){
+								$product = $this->model_catalog_product->getProduct($result_id);
+								if ($product){
+									$result[$result_id] = $product;
+								}
+							}										
+						}
+						
+						if (count($result) <= 3){
+							$result_product_ids = $this->model_catalog_product->getSimilarProductsByAttributes($product_id, $category, $language_id, $store_id, $valid_attributes, 3 - count($result), $stock = 2);
+							
+							if ($result_product_ids){					
+								$products = array();										
+								
+								foreach ($result_product_ids as $result_id){
+									$product = $this->model_catalog_product->getProduct($result_id);
+									if ($product){
+										$result[$result_id] = $product;
+									}
+								}										
+							}
+						}
+					}
+					
+				}	
+			}
+			
+			
+			
+			return $result;
+		}
+		
+		
+		public function getLastUpdate(){
+			$query = $this->db->non_cached_query("SELECT date_modified FROM temp WHERE `key` LIKE('stock_last_sync') LIMIT 1");
+			
+			return $query->row['date_modified'];
+		}
+		
+		public function setLastUpdate(){
+			$query = $this->db->non_cached_query("UPDATE temp SET date_modified = NOW() WHERE `key` LIKE('stock_last_sync')");
+			
+		}
+		
+	}																									

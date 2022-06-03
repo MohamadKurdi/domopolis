@@ -1,0 +1,49 @@
+/* Mixin Elements */
+.border-radius (@radius: 4px) {
+	-webkit-border-radius: 	@radius;
+	-moz-border-radius: 	@radius;
+	-khtml-border-radius: 	@radius;
+	border-radius: 			@radius;
+	-moz-background-clip:    padding;
+	-webkit-background-clip: padding-box;
+	background-clip:         padding-box;
+}
+.opacity (@opacity: 1) {
+	-ms-filter: e(~'progid:DXImageTransform.Microsoft.Alpha(Opacity=' + @opacity * 100 + ')');
+	filter: e(~'alpha(opacity=' + @opacity * 100 + ~')');
+	-moz-opacity:@opacity;
+	-webkit-opacity:@opacity;
+	-khtml-opacity:@opacity;
+	opacity:@opacity;
+}
+.columns (@columns: 1) {
+	-webkit-columns: 	@columns;
+	-moz-columns: 		@columns;
+	columns: 			@columns;
+}
+.transition (@transition: all 0.3s) {
+	-webkit-transition: @transition;  
+	-moz-transition:    @transition;
+	-ms-transition:     @transition; 
+	-o-transition:      @transition;
+	transition:      	@transition;  
+}
+.transform (@string){
+	-webkit-transform:   @string;
+	-moz-transform: 	 @string;
+	-ms-transform: 		 @string;
+	-o-transform: 		 @string;
+	transform: 		 	 @string;
+}
+.box-shadow (@string) {
+	-webkit-box-shadow: @string;
+	-moz-box-shadow:    @string;
+	box-shadow:         @string;
+}
+.box-sizing() {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-o-box-sizing: border-box;
+	box-sizing: border-box;
+}

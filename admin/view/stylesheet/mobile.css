@@ -1,0 +1,304 @@
+#mobile-menu-btn{
+	display: none;
+}
+@media screen and (max-width: 576px){
+	#template_bygroup table tr td {
+		width: 100% !important;
+	}
+	#template_bygroup table tr{
+		display: flex;
+		flex-direction: column;
+	}
+	
+	#header .div1,
+	#menu{
+		min-width: unset;
+	}
+
+	#content{
+		min-width: unset;
+	}
+	#content .tile-heading{
+		font-size: 12px;
+	}
+	#content .tile .tile-body span{
+		font-size: 30px !important;
+	}
+	#content .tile .tile-body i{
+		font-size: 30px !important;
+	}
+	#content .tile .tile-footer {
+	    min-height: 36px !important;
+	}
+	#menu > div:first-of-type{
+		float: right !important;
+	}
+	#menu > ul > li.hover > ul{
+		z-index: 9;
+	}
+	.page-order-list .list thead,
+	.table-admin thead{
+		display: none;
+	}
+	.page-order-list .list tbody tr,
+	.table-admin table tbody tr {
+	    display: block;
+	    margin-bottom: 1rem;
+	    border: 1px solid #E0E0E0;
+	    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.25);
+	    border-radius: 8px;
+  	}
+
+  	.page-order-list .list td,
+  	#template_bygroup .table-admin table td {
+    	display: block;
+    	text-align: right !important;
+    	width: auto !important;
+    	position: relative;
+    	
+  	}
+
+  	#template_bygroup .table-admin table td.status{
+  		padding: 0 !important;
+  	}
+  	.page-order-list .list td,
+  	.table-admin table td,
+  	.table-admin table tfoot td{
+	    white-space: normal;
+  	}
+
+  	.page-order-list .list tbody td table{
+  		margin-left: auto;
+  	}
+
+  	.page-order-list .list tbody td:before,
+  	.table-admin table tbody td:before {
+	    content: attr(aria-label);
+	    float: left;
+	    font-weight: 500;
+	    margin-right: 10px;
+	    color: #4F4F4F;
+	    white-space: pre-wrap;
+    	text-align: left;
+    	position: absolute;
+	    left: 10px;
+	    top: 0;
+	    bottom: 0;
+	    margin: auto;
+	    height: max-content;
+  	}
+  	.status_color {
+	    padding: 10px 5px 10px 5px !important;
+	}
+	#menu {
+	    padding: 0 15px 0 10px;
+	}
+	#menu > ul.left{
+		display: none;
+	}
+	#menu > ul.right{
+		display: none;
+		position: absolute;
+		left: 0;
+		right: 0;
+		z-index: 99;
+		background: #1f4962;
+		width: 100%;
+		top: 100%;
+	}
+	#menu > ul.right.active{
+		display: block;
+		overflow: hidden;
+	}
+	#menu > ul.right li{
+		float: unset;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+
+	}
+	#menu > ul.right li a{
+		display: flex;
+		align-items: center;
+		width: 100%;
+		position: relative;
+	}
+	#menu > ul.right li a .icon_menu {
+	    display: block !important;
+	    font-size: 22px;
+	    margin-bottom: 0;
+	    width: 61px;
+	}
+	#menu > ul li ul{
+		position: unset;
+		width: 100%;
+	}
+	#mobile-menu-btn{
+		display: block;
+	    position: relative;
+	    left: 0;
+	    top: 0;
+	    bottom: 0;
+	    width: 50px;
+	    height: 60px;
+	    float: left;
+	}
+	#mobile-menu-btn .opn-mobile-menu {
+	    display: block;
+	    position: absolute;
+	    left: 10px;
+	    border: 0;
+	    width: 30px;
+	    height: 2px;
+	    background: #fff;
+	    transition: .3s ease-in-out;
+	    bottom: 0;
+	    top: 0;
+	    margin: auto;
+	}
+	#mobile-menu-btn .opn-mobile-menu:focus{
+		outline: none;
+	}
+	#mobile-menu-btn .opn-mobile-menu:before {
+	    content: '';
+	    position: absolute;
+	    top: -8px;
+	    left: 0px;
+	    display: block;
+	    width: 100%;
+	    height: 2px;
+	    background: #fff;
+	    transition: .3s ease-in-out;
+	}
+	#mobile-menu-btn .opn-mobile-menu:after {
+	    content: '';
+	    position: absolute;
+	    bottom: -8px;
+	    left: 0px;
+	    display: block;
+	    width: 100%;
+	    height: 2px;
+	    background: #fff;
+	    transition: .3s ease-in-out;
+	}
+	.menu-open #mobile-menu-btn .opn-mobile-menu {
+	    background: transparent;
+	}
+	.menu-open #mobile-menu-btn .opn-mobile-menu:before {
+	    transform: rotate(45deg);
+	    top: 0;
+	}
+	.menu-open #mobile-menu-btn .opn-mobile-menu:after {
+	    transform: rotate(-45deg);
+	    bottom: 0;
+	}
+	#menu_top {
+	    width: 100%;
+	    float: left;
+        margin: 5px 0 0px;
+	}
+	#menu_top > ul{
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		/*justify-content: space-between;*/
+	}
+	#menu_top > ul a{
+		padding: 0 !important;
+	}
+	#menu_top > ul > li{
+		position: relative;
+		line-height: 3;
+		margin-right: 6px;
+	}
+	#menu_top > ul > li span{
+	    padding: 10px !important;
+		font-size: 13px !important;
+	}
+	#menu_top > ul > li span i{
+		font-size: 16px;
+	}
+	#menu_top > ul > li > ul{
+		top: 100%;
+	}
+	#header .div3{
+		margin-right: 5px !important;
+	}	
+	.page-order-list table:first-of-type input[type='text'], 
+	.page-order-list table:first-of-type input[type='password'], 
+	.page-order-list table:first-of-type input, 
+	.page-order-list table:first-of-type select{
+		width: 100% !important;
+		box-sizing: border-box;
+		height: 36px;
+    	margin-bottom: 5px;
+	}
+	.page-order-list table:first-of-type tbody{
+		display: flex;
+		flex-direction: column;
+	}
+	.page-order-list table:first-of-type tbody tr{
+		display: flex;
+		flex-direction: column;
+	}
+	.page-order-list .content #form{
+		padding: 0 15px;
+	}
+	.page-order-list .box > .heading{
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		height: auto;
+	}
+	.page-order-list .box > .heading > h1{
+		margin-bottom: 10px;
+	}
+	.page-order-list .box > .heading > h1:nth-of-type(2){
+		/*margin-left: 0 !important;*/
+	}
+	.page-order-list .box > .heading > div{
+		float: unset;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		margin-bottom: 10px;
+	}
+	.page-order-list .box > .heading > div #go_to_order{
+		margin: 0;
+		width: calc(100% - 110px) !important;
+		height: 36px;
+	}
+
+}
+@media screen and (max-width: 400px){
+	#template_bygroup table tr td:first-of-type > div:nth-child(-n+2) > div{
+		width: 100% !important;
+		float: unset !important;
+	}
+	#template_bygroup .table-admin #content .tile .tile-footer {
+	    font-size: 13px;
+    	line-height: 1.2;
+	}
+	#template_bygroup .tile{
+		margin-bottom: 3px;
+	}
+	#content .tile .tile-body{
+	    padding: 5px 15px;
+	    color: #FFF;
+	    line-height: 1;
+	}
+	#content .tile .tile-footer {
+	    min-height: unset !important;
+	}
+	.div2 > div > div{
+	    font-size: 12px !important;
+	}
+	.icon_header{
+	    font-size: 25px;
+	}
+	
+}
+
+
+ 	

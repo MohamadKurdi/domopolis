@@ -1,0 +1,32 @@
+<file name="catalog/model/play/order.php" error="skip">
+	<operation info="method:update">
+		<search position="after"><![CDATA[
+			$subject = sprintf($language->get('text_update_subject')]]></search>
+		<add><![CDATA[
+				$template = new EmailTemplate($this->request, $this->registry, $order_info['language_id']);
+				$template->addData($order_info);]]></add>
+	</operation>
+	<operation info="method:update">
+		<search position="after"><![CDATA[
+			$message .= $language->get('text_update_footer');]]></search>
+		<add><![CDATA[
+				$template->data['order_id'] = $order_id;
+				$template->data['order_status_id'] = $order_status_id;
+				$template->data['comment'] = str_replace(array("\r\n", "\r", "\n"), "<br />", $comment);
+				$template->data['new_order_status'] = $order_id;
+				$template->data['link'] = $order_info['store_url'] . 'index.php?route=account/order/info&order_id=' . $order_id;
+				$template->data['link_tracking'] = $template->getTracking($template->data['link']);
+				$template->data['date_added'] = date($language->get('date_format_short'), strtotime($order_info['date_added'])); ]]></add>
+	</operation>
+	<operation info="method:update">
+		<search position="after" index="1"><![CDATA[
+			$mail->setText(]]></search>
+		<add><![CDATA[   				$template->load('play.order');
+						$mail = $template->hook($mail);]]></add>
+	</operation>
+	<operation info="method:update">
+		<search position="after" index="1"><![CDATA[
+			$mail->send(); ]]></search>
+		<add><![CDATA[   				$template->sent(); ]]></add>
+	</operation>
+</file>

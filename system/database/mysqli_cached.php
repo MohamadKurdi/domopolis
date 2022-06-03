@@ -1,0 +1,156 @@
+<?php
+
+	final class DBMySQLi_Cached {
+		private $link;
+		private $cache;
+		private $cachedQuery = false;
+		private $slaveDB = false;
+		private $defaultPort = 3306;
+		private $uncacheableTables = [];				
+		
+		public function __construct($hostname, $username, $password, $database) {
+			$port = $this->defaultPort;
+			
+			if ($hostname && stripos($hostname, 'sock')){
+				$socket = $hostname;
+				$hostname = NULL;
+				} else {
+				$socket = NULL;
+			}
+			
+			if ($hostname && stripos($hostname, ':')){
+				$exploded = explode(':', $hostname);
+				$hostname = $exploded[0];
+				$port = $exploded[1];
+				$socket = NULL;
+			}
+			
+			$this->cache = new Cache(DB_CACHED_EXPIRE);
+			
+			$err_level = error_reporting(0);
+			$this->link = new mysqli($hostname, $username, $password, $database, $port, $socket);
+			
+			if (function_exists('loadJsonConfig')){
+				$jsonConfig = loadJsonConfig('dbcache');
+				$this->uncacheableTables = $jsonConfig['uncacheableTables'];
+			}
+			
+			error_reporting($err_level); 
+			
+			if (mysqli_connect_error()) {
+				throw new ErrorException('Error: Could not make a database link (' . mysqli_connect_errno() . ') ' . mysqli_connect_error());
+			}
+			
+			$this->link->set_charset("utf8");
+			$this->link->query("SET SQL_MODE = ''");
+		}
+		
+		public function loadBalanсerQuery($sql){
+			
+			if (stripos($sql, 'select ') === 0){
+				
+				
+				
+				
+			}
+		}
+		
+		private function validateIfQueryIsCacheable($sql){
+			
+			foreach ($this->uncacheableTables as $table){
+				if (strpos($sql, $table) !== false){
+					return false;
+				}
+			}
+			
+			return true;
+		}
+		
+		public function returnQueryData($sql, $cached){
+			$query = $this->link->query($sql);
+			
+			if (!$this->link->errno){
+				if (isset($query->num_rows)) {
+					$data = array();
+					
+					while ($row = $query->fetch_assoc()) {
+						$data[] = $row;
+					}
+					
+					$result = new stdClass();
+					$result->num_rows = $query->num_rows;
+					$result->row = isset($data[0]) ? $data[0] : array();
+					$result->rows = $data;
+					
+					$result->sql = $sql;	
+					
+					if ($cached){						
+						$md5query = md5($sql);						
+						$this->cache->set('sql.' . $md5query, $result);
+						$result->fromCache = 'cacheable';
+					} else {
+						$result->fromCache = 'noncached';
+					}
+					
+					unset($data);
+					
+					$query->close();
+					
+					return $result;
+					} else{
+					return true;
+				}
+				} else {
+				throw new ErrorException('Error: ' . $this->link->error . '<br />Error No: ' . $this->link->errno . '<br />' . $sql);
+				exit();
+			}	
+		} 
+		
+		public function query($sql) {
+			
+			$md5query = '';
+			if (stripos($sql, 'select ') === 0){
+				
+				if (!$this->validateIfQueryIsCacheable($sql)){
+					return $this->non_cached_query($sql);
+				}
+				
+				$md5query = md5($sql);
+				if ($result = $this->cache->get('sql.' . $md5query)){				
+					if ($result->sql == $sql) {
+						$this->cachedQuery = $result;
+						$result->fromCache = 'cached';
+						return($result);					
+					}				
+				}
+			}
+			
+			return $this->returnQueryData($sql, true);
+			
+		}
+		
+		public function non_cached_query($sql) {
+			return $this->returnQueryData($sql, false);
+		}
+		
+		public function escape($value) {
+			return $this->link->real_escape_string($value);
+		}
+		
+		public function countAffected() {
+			
+			if (isset($this->cachedQuery) && $this->cachedQuery) {
+				return $this->cachedQuery->num_rows;
+			}
+			
+			return $this->link->affected_rows;
+		}
+		
+		public function getLastId() {
+			return $this->link->insert_id;
+		}
+		
+		public function __destruct() {
+			$this->link->close();
+		}
+	}

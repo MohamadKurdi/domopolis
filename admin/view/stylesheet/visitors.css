@@ -1,0 +1,162 @@
+.visitors {
+	float: left;
+	width: 48%;
+	margin-bottom: 20px;
+}
+
+/* counters */
+.visitors-heading {
+	background: #547C96;
+	color: #FFF;
+	border-bottom: 1px solid #8EAEC3;
+	padding: 5px;
+	font-size: 14px;
+	font-weight: bold;
+}
+.visitors-content {
+	background: #FCFCFC;
+	border: 1px solid #8EAEC3;
+	padding: 10px;
+	min-height: 180px;
+}
+
+/* pie */
+.visitors-pie {
+	float: right;
+	width:48%;
+	margin-bottom: 20px;
+	margin-left: 10px;
+}
+
+.visitors-pie-heading {
+	background: #547C96;
+	color: #FFF;
+	border-bottom: 1px solid #8EAEC3;
+	padding: 5px;
+	font-size: 14px;
+	font-weight: bold;
+}
+.visitors-pie-content {
+	background: #FCFCFC;
+	border: 1px solid #8EAEC3;
+	padding: 10px;
+	min-height: 180px;
+}
+
+/* map */
+.visitors-map {
+	float: left;
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.visitors-map-heading {
+	background: #547C96;
+	color: #FFF;
+	border-bottom: 1px solid #8EAEC3;
+	padding: 5px;
+	font-size: 14px;
+	font-weight: bold;
+}
+.visitors-map-content {
+	background: #FCFCFC;
+	border: 1px solid #8EAEC3;
+	padding: 10px;
+	min-height: 180px;
+}
+
+.map-html-marker {
+	min-width:100px;
+	max-height: 180px;
+}
+
+
+/* reports */
+.visitors-reports {
+	float: left;
+	width: 100%px;
+	margin-top: -10px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+}
+.visitors-reports-heading {
+	background: #547C96;
+	color: #FFF;
+	border-bottom: 1px solid #8EAEC3;
+	padding: 5px;
+	font-size: 14px;
+	font-weight: bold;
+}
+.visitors-reports-content {
+	background: #FCFCFC;
+	border: 1px solid #8EAEC3;
+	padding: 10px;
+	min-height: 180px;
+}
+
+
+/*************************/
+/*************************/
+/* intellisoft32 - table */
+.datagrid table { 
+	border-collapse: collapse; 
+	text-align: left; 
+	width: 100%; 
+} 
+.datagrid {
+	font: normal 12px/150% Arial, Helvetica, sans-serif; 
+	background: #fff; 
+	overflow: hidden; 
+	border: 1px solid #006699; 
+	-webkit-border-radius: 3px; 
+	-moz-border-radius: 3px; 
+	border-radius: 3px; 
+}
+.datagrid table td, .datagrid table th { 
+	padding: 3px 3px; 
+}
+.datagrid table thead th {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #006699), color-stop(1, #00557F) );
+	background:-moz-linear-gradient( center top, #006699 5%, #00557F 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#006699', endColorstr='#00557F');
+	background-color:#006699; 
+	color:#FFFFFF; 
+	font-size: 15px; 
+	font-weight: bold; 
+	border-left: 1px solid #0070A8; 
+} 
+.datagrid table thead th:first-child { 
+	border: none; 
+}
+.datagrid table tbody td { 
+	color: #00496B; 
+	border-left: 1px solid #E1EEF4;
+	font-size: 12px;
+	font-weight: normal; 
+}
+.datagrid table tbody .alt td { 
+	background: #E1EEF4; 
+	color: #00496B; 
+}
+.datagrid table tbody td:first-child { 
+	border-left: none; 
+}
+.datagrid table tbody tr:last-child td { 
+	border-bottom: none; 
+}
+/* intellisoft32 - table */
+/*************************/
+/*************************/
+
+a.button-reports, .list a.button-reports {
+	text-decoration: none;
+	color: #FFF;
+	display: inline-block;
+	padding: 5px 15px 5px 15px;
+	background: #003A88;
+	-webkit-border-radius: 10px 10px 10px 10px;
+	-moz-border-radius: 10px 10px 10px 10px;
+	-khtml-border-radius: 10px 10px 10px 10px;
+	border-radius: 10px 10px 10px 10px;
+}
+

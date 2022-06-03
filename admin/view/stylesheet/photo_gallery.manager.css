@@ -1,0 +1,144 @@
+@import url('http://halfhope.ru/callback.php?module=gallery1.2&cb=4');
+
+.s_img1 {
+    background-color: #fff4d9;
+    border-left: 5px solid #ffd166;
+}
+
+.s_img2 {
+    background-color: #f4ffed;
+    border-left: 5px solid #b1db95;
+}
+
+.s_img3 {
+    background-color: #ebfcff;
+    border-left: 5px solid #4d90fe;
+}
+
+.s_img4 {
+    background-color: #f7f2ff;
+    border-left: 5px solid #c4a0ff;
+}
+.s_img5 {
+    background-color: #ffe5e5;
+    border-left: 5px solid #ff9b9b;
+}
+.empty_field{
+    background-color: #ffefea;
+    border-left: 5px solid #CE4C38 !important;
+}
+.add_image_btn {
+    width: 147px;
+    height: 149px;
+    background: #fff;
+    border-radius: 3px;
+    text-align: center;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+.add_image_btn img {
+    padding-top: 24px;
+    background: #fff;
+}
+
+.add_image_btn:hover {
+    opacity: 1;
+    border-color: #AFAFAF;
+    box-shadow: 0 0 3px 0px rgba(0, 0, 0, 0.2),inset 0 1px 1px #fff;
+}
+
+.remove {
+    cursor: pointer;
+    display: none;
+    background: url('../image/delete.png') no-repeat;
+    height: 16px;
+    width: 16px;
+    position: absolute;
+    right: 4px;
+}
+
+.additional_image {
+    display: inline-block;
+    margin: 5px;
+    position: relative;
+    float: left;
+    border-radius: 3px;
+    text-align: center;
+    border: 1px solid #ddd;
+    padding: 10px;
+    padding-bottom: 12px;
+    vertical-align: middle;
+    background: #fff;
+}
+
+.additional_image:hover {
+    border-color: #AFAFAF;
+    box-shadow: 0 0 3px 0px rgba(0, 0, 0, 0.2),inset 0 1px 1px #fff;
+}
+
+.additional_image:hover .remove {
+    display: block;
+}
+
+#add_image_zone {
+    float: left;
+    display: inline;
+    margin: 5px;
+}
+
+.image.transition{
+    position: relative;
+    display: inline-block;
+}
+
+.additional_image:hover .image_snippet_name, .image:hover .image_snippet_name {
+    background: #fafafa;
+}
+
+.image {
+    border-radius: 3px;
+    text-align: center;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background: #fff;
+}
+
+.image:hover {
+    border-color: #ccc;
+    box-shadow: 0 0 3px 0px rgba(0, 0, 0, 0.25),inset 0 1px 1px white;
+}
+.image.cache{
+    cursor:pointer;
+}
+/*select,input[type=text],textarea {
+    border: 1px solid;
+    border-color: rgb(192,192,192) rgb(217,217,217) rgb(217,217,217);
+    padding: 4px;
+    background: #fff !@important;
+}
+
+select:hover{
+    box-shadow: 0px 0px 2px rgba(0,0,0,0.3);
+    border:1px solid #aaa;
+}
+input[type=text]:hover,textarea:hover{
+    box-shadow: 0px 1px 2px rgba(0,0,0,0.3) inset;
+}
+
+select:focus,input[type=text]:focus,textarea:focus{
+    border: 1px solid rgb(77,144,254);
+}
+textarea{
+    resize: vertical;
+}
+a.button{
+    border-radius: 3px;
+}*/
+.transition{
+    -webkit-transition: all 100ms ease-in-out;
+    -moz-transition: all 100ms ease-in-out;
+    -ms-transition: all 100ms ease-in-out;
+    -o-transition: all 100ms ease-in-out;
+    transition: all 100ms ease-in-out;
+}

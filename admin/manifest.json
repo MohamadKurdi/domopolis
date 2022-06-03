@@ -1,0 +1,76 @@
+{
+    "name": "KP ADMIN",
+    "id": "admin.kitchenprofi.ru.twa",
+    "description": "Приложение для доступа в админчасть KP",
+    "short_name": "KP ADMIN",
+    "display": "standalone",
+    "lang": "ru-RU",
+    "orientation": "portrait",
+    
+    "scope": "https://kitchen-profi.ru/admin/",
+    "start_url": "https://kitchen-profi.ru/admin/?xkey=754",
+    
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "prefer_related_applications": true,
+    
+    "icons": [
+        {
+            "src": "https://kitchen-profi.ru/admin/icons/192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+			"purpose": "any maskable"
+        },
+        {
+            "src": "https://kitchen-profi.ru/admin/icons/512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+			"purpose": "any maskable"
+        },
+         {
+            "src": "https://kitchen-profi.ru/admin/icons/96.png",
+            "sizes": "96x96",
+            "type": "image/png",
+			"purpose": "any maskable"
+        },			
+		{
+            "src": "https://kitchen-profi.ru/admin/icons/512-icon-bw.png",
+            "sizes": "512x512",
+            "type": "image/png",
+			"purpose": "monochrome"
+		}
+    ],
+    
+    "screenshots": [
+		{
+			"src": "https://kitchen-profi.ru/admin/icons/kp1.jpg",
+			"type": "image/png",
+			"sizes": "1080x1920"
+		},
+		
+		{
+			"src": "https://kitchen-profi.ru/admin/icons/kp2.jpg",
+			"type": "image/png",
+			"sizes": "1080x1920"
+		},
+		{
+			"src": "https://kitchen-profi.ru/admin/icons/kp3.jpg",
+			"type": "image/png",
+			"sizes": "1080x1920"
+		},
+		{
+			"src": "https://kitchen-profi.ru/admin/icons/kp4.jpg",
+			"type": "image/png",
+			"sizes": "1080x1920"
+		},
+		{
+			"src": "https://kitchen-profi.ru/admin/icons/kp5.jpg",
+			"type": "image/png",
+			"sizes": "1080x1920"
+		}
+
+	],
+
+    
+    "gcm_sender_id": "482941778795"
+}

@@ -1,0 +1,25 @@
+<file name="catalog/controller/account/forgotten.php">
+	<operation>
+		<search position="before"><![CDATA[
+           $mail = new Mail();]]></search>
+		<add><![CDATA[
+			$template = new EmailTemplate($this->request, $this->registry);
+					
+			$template->addData($this->request->post);
+
+			$template->data['password'] = $password;
+			$template->data['account_login'] = $this->url->link('account/login', '', 'SSL');
+			$template->data['account_login_tracking'] = $template->getTracking($template->data['account_login']); ]]></add>
+	</operation>
+	<operation>
+		<search position="after" index="1"><![CDATA[
+				$mail->setText(]]></search>
+		<add><![CDATA[			$template->load('customer.forgotten');
+			$mail = $template->hook($mail); ]]></add>
+	</operation>
+	<operation>
+		<search position="after" index="1"><![CDATA[
+				$mail->send(); ]]></search>
+		<add><![CDATA[			$template->sent(); ]]></add>
+	</operation>
+</file>

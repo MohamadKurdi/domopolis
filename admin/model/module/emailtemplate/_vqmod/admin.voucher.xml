@@ -1,0 +1,41 @@
+<file name="admin/model/sale/voucher.php">
+	<operation>
+	    <search position="replace"><![CDATA[
+	    $template = new Template(); ]]></search>
+	    <add><![CDATA[
+	        $template = new EmailTemplate($this->request, $this->registry);
+			$template->addData($voucher_info); ]]></add>
+	</operation>
+	<operation error="skip" info="OC:1.5.0.5">
+	    <search position="replace"><![CDATA[
+	    $template->data['image'] = 'cid:' . basename($voucher_theme_info['image']); ]]></search>
+	    <add><![CDATA[
+	    $template->data['image'] = HTTP_CATALOG . 'image/' . $voucher_theme_info['image']; ]]></add>
+	</operation>
+	<operation error="skip" info="OC:1.5.1.3">
+	    <search position="replace"><![CDATA[
+	    $template->data['image'] = 'cid:' . md5(basename($voucher_theme_info['image'])); ]]></search>
+	    <add><![CDATA[
+	    $template->data['image'] = HTTP_CATALOG . 'image/' . $voucher_theme_info['image']; ]]></add>
+	</operation>
+	<operation error="skip">
+	    <search position="replace"><![CDATA[
+	    $mail->addAttachment(DIR_IMAGE . $voucher_theme_info['image'], md5(basename($voucher_theme_info['image']))); ]]></search>
+	    <add></add>
+	</operation>
+	<operation>
+	    <search position="replace"><![CDATA[
+	    $mail->setHtml($template->fetch('mail/voucher.tpl')); ]]></search>
+	    <add><![CDATA[list($width, $height) = getimagesize(DIR_IMAGE . $voucher_theme_info['image']);
+			$template->data['image_width'] = $width;
+			$template->data['image_height'] = $height;
+	
+			$template->load(array(
+				'key' => 'admin.voucher',
+				'store_id' => $order_info['store_id'],
+				'language_id' => $order_info['language_id']
+			));
+	
+			$mail = $template->hook($mail); ]]></add>
+	</operation>
+</file>

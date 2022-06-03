@@ -1,0 +1,20 @@
+<file name="catalog/controller/affiliate/forgotten.php">
+	<operation>
+		<search position="before" index="1"><![CDATA[
+            $mail = new Mail();]]></search>
+		<add><![CDATA[            $template = new EmailTemplate($this->request, $this->registry);
+			$template->data['password'] = $password;
+			$template->data['account_login'] = $this->url->link('affiliate/login', '', 'SSL');
+ 			$template->data['account_login_tracking'] = $template->getTracking($template->data['account_login']); ]]></add>
+	</operation>
+	<operation>
+		<search position="replace" index="1"><![CDATA[
+            $mail->send();]]></search>
+		<add><![CDATA[			$template->load('affiliate.forgotten');			
+			$mail = $template->hook($mail);
+
+			$mail->send();
+
+			$template->sent(); ]]></add>
+	</operation>
+</file>

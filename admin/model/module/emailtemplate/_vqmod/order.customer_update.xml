@@ -1,0 +1,36 @@
+<file name="catalog/model/checkout/order.php">
+	<operation info="Method:update">
+		<search position="after" index="1"><![CDATA[
+			$subject = sprintf($language->get('text_update_subject')]]></search>
+		<add><![CDATA[
+            	$template = new EmailTemplate($this->request, $this->registry);
+            	
+				$template->addData($order_info);
+				$template->addData('comment', $comment);
+
+				$template->data['order_url'] = ($order_info['customer_id']) ? ($order_info['store_url'] . 'index.php?route=account/order/info&order_id=' . $order_id) : '';
+				$template->data['order_url_tracking'] = $template->getTracking($template->data['order_url']);
+				$template->data['date_added'] = date($language->get('date_format_short'), strtotime($order_info['date_added']));]]></add>
+	</operation>
+	<operation info="Method:update">
+		<search position="after"><![CDATA[
+            $message .= $order_status_query->row['name']]]></search>
+		<add><![CDATA[					$template->data['order_status'] = $order_status_query->row['name'];]]></add>
+	</operation>
+	<operation info="Method:update">
+		<search position="after" index="3"><![CDATA[
+            $mail->setText(]]></search>
+		<add><![CDATA[				$template_data = array(
+					'key' => 'order.customer_update',
+					'order_status_id' => $order_status_id
+				);
+
+				$template->load($template_data);
+				$mail = $template->hook($mail);]]></add>
+	</operation>
+	<operation info="Method:update">
+		<search position="after" index="3"><![CDATA[
+            $mail->send(); ]]></search>
+		<add><![CDATA[				$template->sent();]]></add>
+	</operation>
+</file>

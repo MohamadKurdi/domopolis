@@ -1,0 +1,25 @@
+.tab-top{
+	vertical-align: top;
+}
+h1, h2, h3 {
+    line-height: 20px;
+}
+.glyphicon {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.glyphicon-time:before {
+  content: "\e023";
+}
+.scrollbox {
+	 width: 80%;
+	 height: 200px;
+}

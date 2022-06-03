@@ -1,0 +1,21 @@
+<file name="catalog/model/affiliate/affiliate.php">
+	<operation>
+		<search position="before" index="1"><![CDATA[
+            $mail = new Mail();]]></search>
+		<add><![CDATA[		$template = new EmailTemplate($this->request, $this->registry);
+		$template->data['url_affiliate_login'] = $this->url->link('affiliate/login', '', 'SSL');
+		$template->data['url_affiliate_login_tracking'] = $template->getTracking($template->data['url_affiliate_login']);
+		]]></add>
+	</operation>
+	<operation>
+		<search position="replace" index="1"><![CDATA[
+            $mail->send();]]></search>
+		<add><![CDATA[		$template->load('affiliate.register');
+
+		$mail = $template->hook($mail);
+
+		$mail->send();
+		
+		$template->sent(); ]]></add>
+	</operation>
+</file>

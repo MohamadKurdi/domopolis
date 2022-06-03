@@ -1,0 +1,49 @@
+<file name="admin/model/sale/customer.php">
+	<operation>
+		<search position="before" index="1"><![CDATA[
+			$this->language->get('text_approve_welcome') ]]></search>
+		<add><![CDATA[
+ 		if ($store_info) {
+			$store_url = ($this->config->get('config_secure') ? $store_info['ssl'] : $store_info['url']);
+			$account_login = ($this->config->get('config_secure') ? $store_info['ssl'] : $store_info['url']) . 'index.php?route=account/login';
+		} else {
+			$store_url = ($this->config->get('config_secure') ? HTTPS_CATALOG : HTTP_CATALOG);
+			$account_login = ($this->config->get('config_secure') ? HTTPS_CATALOG : HTTP_CATALOG) . 'index.php?route=account/login';
+		}
+		]]></add>
+	</operation>		
+	<operation>
+		<search position="replace"><![CDATA[
+            $message .= $store_url . "\n\n"; ]]></search>
+		<add><![CDATA[
+           	$message .= $account_login . "\n\n"; ]]></add>
+	</operation>
+	<operation>
+		<search position="after" index="1"><![CDATA[
+            $this->language->get('text_approve_subject') ]]></search>
+		<add><![CDATA[                        
+            $template = new EmailTemplate($this->request, $this->registry);
+		
+			$template->addData($customer_info, 'customer');
+			            
+			$template->data['text_welcome'] = sprintf($this->language->get('text_approve_welcome'), $store_name);
+
+			$template->data['account_login'] = $account_login;
+			$template->data['account_login_tracking'] = $template->getTracking($account_login); ]]></add>
+        </operation>
+		<operation>
+            <search position="before" index="1"><![CDATA[
+            $mail->send(); ]]></search>
+            <add><![CDATA[            $template_data = array('key' =>'admin.customer_approve');
+			if(isset($customer_info['store_id'])){
+				$template_data['store_id'] = $customer_info['store_id'];
+			}
+			if(isset($customer_info['language_id'])){
+				$template_data['language_id'] = $customer_info['language_id'];
+			}
+
+            $template->load($template_data);
+			
+			$mail = $template->hook($mail); ]]></add>
+        </operation>
+</file>

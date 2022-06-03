@@ -1,0 +1,26 @@
+<file name="admin/model/sale/affiliate.php">
+	<operation>
+		<search position="before"><![CDATA[
+            $message .= $this->config->get('config_name'); ]]></search>
+		<add><![CDATA[
+            $template = new EmailTemplate($this->request, $this->registry);
+            
+			$template->addData($affiliate_info);                      
+			$template->data['text_welcome'] = sprintf($this->language->get('text_approve_welcome'), $this->config->get('config_name'));
+			$template->data['affiliate_login'] = HTTP_CATALOG . 'index.php?route=affiliate/login';
+			$template->data['affiliate_login_tracking'] =  $template->getTracking($template->data['affiliate_login']);]]></add>
+	</operation>
+	<operation>
+		<search position="replace" index="1"><![CDATA[
+            $mail->send(); ]]></search>
+		<add><![CDATA[            $template->load(array(
+				'key' => 'admin.affiliate_approve'
+			));
+			
+			$mail = $template->hook($mail);
+
+ 			$mail->send();
+
+			$template->sent(); ]]></add>
+	</operation>
+</file>

@@ -1,0 +1,63 @@
+<file name="catalog/model/account/return.php">
+	<operation>
+		<search position="after" offset="1" info="insert after query"><![CDATA[
+			public function addReturn($data) {]]></search>
+		<add><![CDATA[
+			$return_id = $this->db->getLastId();
+			
+   			$this->language->load_full('mail/return');
+
+			$template = new EmailTemplate($this->request, $this->registry);
+            
+			$this->load->model('localisation/return_reason');
+
+			// Backwards compatabile with 1.5.1.3
+			if(isset($this->request->post['return_product'])){
+
+				foreach ($this->request->post['return_product'] as $return_product) {
+					$return_reason_info = $this->model_localisation_return_reason->getReturnReason($return_product['return_reason_id']);
+
+					if(isset($return_product['product'])){
+						$name = $return_product['product'];
+					} elseif(isset($return_product['name'])){
+						$name = $return_product['name'];
+					} else {
+						$name = '';
+					}
+
+					$return_product = array(
+						'name' => $name,
+						'model' => $return_product['model'],
+						'quantity' => $return_product['quantity'],
+						'reason' => ($return_reason_info) ? $return_reason_info['name'] : '',
+						'opened' => $return_product['opened'] ? $this->language->get('text_yes') : $this->language->get('text_no'),
+						'comment' => (isset($return_product['comment'])) ? nl2br($return_product['comment']) : ''
+					);
+				}
+
+			} else {
+				$return_reason_info = $this->model_localisation_return_reason->getReturnReason($data['return_reason_id']);
+				$return_product = array(
+					'name' => $data['product'],
+					'model' => $data['model'],
+					'quantity' => $data['quantity'],
+					'reason' => ($return_reason_info) ? $return_reason_info['name'] : '',
+					'opened' => $data['opened'] ? $this->language->get('text_yes') : $this->language->get('text_no'),
+					'comment' => (isset($data['comment'])) ? nl2br($data['comment']) : ''
+				);
+
+			}
+			
+			$template->addData($data);
+
+			$template->data['text_greeting'] = sprintf($this->language->get('text_greeting'), $this->config->get('config_name'));
+			$template->data['order_date'] = date($this->language->get('date_format_short'), strtotime($data['date_ordered']));
+			$template->data['comment'] = (isset($data['comment'])) ? nl2br($data['comment']) : '';
+			$template->data['return_product'] = $return_product;
+			$template->data['return_link'] = (defined('HTTP_ADMIN') ? HTTP_ADMIN : HTTP_SERVER.'admin/') . 'index.php?route=sale/return/info&return_id=' . $return_id;
+
+			$template->load('account.return');
+
+			$template->send(); ]]></add>
+	</operation>
+</file>

@@ -1,0 +1,43 @@
+<file name="catalog/model/ebay/order.php" error="skip">
+	<operation info="method:confirm">
+		<search position="replace"><![CDATA[
+			$template = new Template();]]></search>
+		<add><![CDATA[
+			$template = new EmailTemplate($this->request, $this->registry, $order_info['language_id']);
+			$template->data['new_order_status'] = $order_status; ]]></add>
+	</operation>
+	<operation>
+		<search position="replace" index="1"><![CDATA[
+			$template->data['products'][] = array( ]]></search>
+		<add><![CDATA[if (isset($product['image'])) {
+					$image = $this->model_tool_image->resize($product['image'], 50, 50);
+				} else {
+					$image = '';
+				}
+
+				$template->data['products'][] = array(
+					'image'     	=> $image,
+					'order_product_id'	=> $product['order_product_id'],]]></add>
+	</operation>
+	<operation info="method:confirm">
+		<search position="replace"><![CDATA[
+			$html = $template->fetch($this->config->get('config_template') . '/template/mail/order.tpl');]]></search>
+		<add><![CDATA[ $html = '';]]></add>
+	</operation>
+	<operation info="method:confirm">
+		<search position="replace"><![CDATA[
+			$html = $template->fetch('default/template/mail/order.tpl');]]></search>
+		<add><![CDATA[ $html = '';]]></add>
+	</operation>
+	<operation info="method:confirm">
+		<search position="after" index="2"><![CDATA[
+			$mail->setText(]]></search>
+		<add><![CDATA[				$template->load('ebay.order');
+				$mail = $template->hook($mail);]]></add>
+	</operation>
+	<operation info="method:confirm">
+		<search position="after" index="2"><![CDATA[
+			$mail->send(); ]]></search>
+		<add><![CDATA[   				$template->sent(); ]]></add>
+	</operation>
+</file>

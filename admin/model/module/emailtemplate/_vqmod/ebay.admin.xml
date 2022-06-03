@@ -1,0 +1,16 @@
+<file name="system/library/ebay.php" error="skip">
+	<operation info="method::notifyAdmin">
+		<search position="before" index="1"><![CDATA[
+			$mail->setText($message);]]></search>
+		<add><![CDATA[		$template = new EmailTemplate($this->request, $this->registry);
+		$template->load('ebay.admin');
+		$template->build();
+		$template->fetch(null, $message);
+		$mail = $template->hook($mail);]]></add>
+	</operation>
+	<operation info="method::notifyAdmin">
+		<search position="after" index="1"><![CDATA[
+			$mail->send();]]></search>
+		<add><![CDATA[		$template->sent();]]></add>
+	</operation>
+</file>

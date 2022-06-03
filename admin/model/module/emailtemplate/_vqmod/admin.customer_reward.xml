@@ -1,0 +1,32 @@
+<file name="admin/model/sale/customer.php">
+	<operation info="method:addReward">
+		<search position="after" index="1"><![CDATA[
+            $this->language->get('text_reward_subject') ]]></search>
+		<add><![CDATA[
+            $template = new EmailTemplate($this->request, $this->registry);
+            		
+			$template->addData($customer_info, 'customer');
+			
+			$template->data['reward_received'] = sprintf($this->language->get('text_reward_received'), $points);
+			$template->data['reward_total'] = sprintf($this->language->get('text_reward_total'), $this->getRewardTotal($customer_id));]]></add>
+	</operation>
+	<operation info="method:addReward">
+		<search position="replace" index="3"><![CDATA[
+            $mail->send(); ]]></search>
+		<add><![CDATA[            $template_data = array('key' =>'admin.customer_reward');
+			if(isset($customer_info['store_id'])){
+				$template_data['store_id'] = $customer_info['store_id'];
+			}
+			if(isset($customer_info['language_id'])){
+				$template_data['language_id'] = $customer_info['language_id'];
+			}
+
+            $template->load($template_data);
+			
+			$mail = $template->hook($mail); 
+
+			$mail->send();
+			
+			$template->sent(); ]]></add>
+	</operation>
+</file>

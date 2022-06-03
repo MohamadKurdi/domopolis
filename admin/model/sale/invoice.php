@@ -1,0 +1,6 @@
+<?
+
+class ModelSaleInvoice extends Model {
+	
+	
+}

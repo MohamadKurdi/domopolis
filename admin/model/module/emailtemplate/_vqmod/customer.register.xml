@@ -1,0 +1,55 @@
+<file name="catalog/model/account/customer.php">
+	<operation>
+		<search position="after"><![CDATA[ $this->language->load('mail/customer'); ]]></search>
+		<add><![CDATA[
+		$template = new EmailTemplate($this->request, $this->registry);
+					
+		$template->addData($data); 
+
+		$template->data['newsletter'] = $this->language->get((isset($data['newsletter']) && $data['newsletter'] == 1) ? 'text_yes' : 'text_no');
+		$template->data['account_login'] = $this->url->link('account/login', 'email=' . $data['email'], 'SSL');
+		$template->data['account_login_tracking'] = $template->getTracking($template->data['account_login']);
+		$template->data['customer_group'] = (isset($customer_group_info['name'])) ? $customer_group_info['name'] : '';
+
+		$this->load->model('account/address');
+		$customer_address = $this->model_account_address->getAddressNotLoggedIn($address_id, $customer_id);
+			
+		$template->data['address'] = EmailTemplate::FormatAddress($customer_address, '', $customer_address['address_format']);
+
+        if((isset($customer_group_info['approval']) && $customer_group_info['approval']) || $this->config->get('config_customer_approval')){
+         	$template->data['customer_text'] = $this->language->get('text_approval'); // Backwards compatible with pre OC_ver 1.5.3
+        } else {
+           	$template->data['customer_text'] = $this->language->get('text_login');
+        } ]]></add>
+	</operation>
+	<operation>
+		<search position="replace" index="1"><![CDATA[
+            $mail->send();]]></search>
+		<add><![CDATA[        $template->load('customer.register');
+
+		$mail = $template->hook($mail);
+
+		$mail->send();
+
+		$template->sent(); ]]></add>
+	</operation>
+	<operation>
+		<search position="before"><![CDATA[
+            public function editNewsletter($newsletter)]]></search>
+	  	<ignoreif><![CDATA[ 
+            public function editNewsletterUnsubscribe( ]]></ignoreif>
+		<add><![CDATA[
+            public function editNewsletterUnsubscribe($email){
+            	$query = $this->db->query("SELECT * FROM ".DB_PREFIX."customer WHERE MD5(email) = '" . $this->db->escape($email) . "'");
+
+				if ($query->num_rows) {
+					$this->db->query("UPDATE ".DB_PREFIX."customer SET newsletter = '0' WHERE customer_id = " . (int)$query->row['customer_id'] . "");
+
+					return $query->row;
+				} else {
+					return false;
+				}
+            }
+		]]></add>
+	</operation>
+</file>

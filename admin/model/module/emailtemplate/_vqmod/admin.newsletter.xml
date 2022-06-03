@@ -1,0 +1,393 @@
+<file name="admin/controller/sale/contact.php">
+	<operation> 
+		<search position="replace"><![CDATA[
+            $this->language->load('sale/contact'); ]]></search>
+		<add><![CDATA[
+			$this->language->load_full('sale/contact'); ]]></add>
+	</operation>
+	<operation> 
+		<search position="after"><![CDATA[
+            $this->data['entry_message'] = $this->language->get('entry_message'); ]]></search>
+		<add><![CDATA[
+		$this->data['entry_template'] = $this->language->get('entry_template');
+		$this->data['entry_campaign_name'] = $this->language->get('entry_campaign_name');
+		$this->data['warning_template_content'] = $this->language->get('warning_template_content');
+		$this->data['text_select'] = $this->language->get('text_select');
+
+		$this->load->model('localisation/language');
+		$this->load->model('module/emailtemplate');
+
+        $templates = $this->model_module_emailtemplate->getTemplates(array(
+			'emailtemplate_key' => 'admin.newsletter'
+		));
+
+		$this->data['templates_options'] = array();
+
+		foreach($templates as $row){
+			$label = $row['emailtemplate_label'];
+
+			if($row['emailtemplate_default']){
+				$label = $this->language->get('text_default') . ' - ' . $label;
+			}
+
+			$this->data['templates_options'][] = array(
+				'value' => $row['emailtemplate_id'],
+				'label' => $label
+			);
+		}
+
+		$this->data['languages'] = $this->model_localisation_language->getLanguages();		
+
+		$config = $this->model_module_emailtemplate->getConfig(1, true, true);
+        $this->data['campaign_name'] = $config['tracking_campaign_name'];    
+		 
+        $this->data['templates_action'] = $this->url->link('module/emailtemplate/get_template', 'token='.$this->session->data['token'], 'SSL'); ]]></add>
+	</operation>
+	
+	<operation info="Add extra info into email array">
+		<search position="replace"><![CDATA[
+			$emails[] = $customer_info['email']; ]]></search>
+		<add><![CDATA[ $emails[] = array(
+				   'customer' => $customer_info,
+				   'email' => $customer_info['email'],
+				   'customer_id' => $customer_info['customer_id'],
+				   'store_id' => $customer_info['store_id'],
+				   'language_id' => $customer_info['language_id']
+				  ); ]]></add>
+	</operation>
+	<operation info="Add extra info into email array">
+		<search position="replace"><![CDATA[
+			$emails[$result['customer_id']] = $result['email']; ]]></search>
+		<add><![CDATA[ $emails[$result['customer_id']] = array(
+				 'email' => $result['email'],
+				 'customer_id' => $result['customer_id'],
+				 'store_id' => $result['store_id'],
+				 'language_id' => $result['language_id']
+				); ]]></add>
+	</operation>
+	<operation info="affiliate_all">
+		<search position="replace" index="3"><![CDATA[
+			$emails[] = $result['email']; ]]></search>
+		<add><![CDATA[ $emails[$result['affiliate_id']] = array(
+				 'email' => $result['email'],
+				 'affiliate_id' => $result['affiliate_id']
+				); ]]></add>
+	</operation>
+	<operation info="affiliate">
+		<search position="replace"><![CDATA[
+			$emails[] = $affiliate_info['email']; ]]></search>
+		<add><![CDATA[ $emails[$affiliate_info['affiliate_id']] = array(
+				   'affiliate' => $affiliate_info,
+				   'email' => $affiliate_info['email'],
+				   'affiliate_id' => $affiliate_info['affiliate_id']
+				  ); ]]></add>
+	</operation>
+	<operation info="newsletter, customer_all, product">
+		<search position="replace"><![CDATA[
+			$emails[] = $result['email']; ]]></search>
+		<add><![CDATA[ $emails[$result['customer_id']] = array(
+				 'email' => $result['email'],
+				 'customer_id' => $result['customer_id'],
+				 'store_id' => $result['store_id'],
+				 'language_id' => $result['language_id']
+				); ]]></add>
+	</operation>
+	
+	<operation info="Move message into foreach">
+		<search position="replace"><![CDATA[
+            foreach ($emails as $email) { ]]></search>
+		<add></add>
+	</operation>  
+	<operation>
+		<search position="before"><![CDATA[
+            $message  = '<html  ]]></search>
+		<add><![CDATA[				foreach ($emails as $email) {
+					if(empty($email['customer_id']) && empty($email['affiliate_id'])) continue;
+
+					$template = new EmailTemplate($this->request, $this->registry);
+            
+					if(isset($email['customer'])){
+						$template->addData($email['customer']);
+						unset($email['customer']);
+					} elseif(isset($email['customer_id'])){
+						$customer_info = $this->model_sale_customer->getCustomer($email['customer_id']);
+						$template->addData($customer_info);
+					}
+
+					if(isset($email['affiliate'])){
+						$template->addData($email['affiliate']);
+						unset($email['affiliate']);
+					} elseif(isset($email['affiliate_id'])){
+						$affiliate_info = $this->model_sale_affiliate->getAffiliate($email['affiliate_id']);
+						$template->addData($affiliate_info);
+					}
+
+					if(isset($email['language_id']) && $email['language_id']){
+						$language_id = $email['language_id'];
+					} else {
+						$language_id = $this->config->get('config_language_id');
+					}
+			
+  					// Default store auto select from db
+					if($this->request->post['store_id'] == 0 && isset($email['store_id'])){
+ 						$store_id = $email['store_id'];
+					} else {
+						$store_id = $this->request->post['store_id'];
+					}
+
+					$template_data = array(
+						'key' => 'admin.newsletter',
+						'store_id' => $store_id
+					);
+
+					$template->load($template_data);
+					
+					if(!empty($template->data['emailtemplate']['unsubscribe_text']) && in_array($this->request->post['to'], array('newsletter', 'customer_all', 'customer_group', 'customer'))) {
+						$url = (isset($store_info['url']) ? $store_info['url'] : HTTP_CATALOG) . 'index.php?route=account/newsletter/unsubscribe&code='.md5($email['email']);
+						$template->data['unsubscribe'] = sprintf(html_entity_decode($template->data['emailtemplate']['unsubscribe_text'], ENT_QUOTES, 'UTF-8'), $url);
+				    }
+
+					if(is_array($this->request->post['subject']) && !empty($this->request->post['subject'][$language_id])){
+						$subject = $this->request->post['subject'][$language_id];
+					} elseif(!empty($this->request->post['subject'])){
+						$subject = $this->request->post['subject'];
+					} else {
+						$subject = $store_name;
+					}
+
+					if(is_array($this->request->post['message']) && !empty($this->request->post['message'][$language_id])){
+						$body = $this->request->post['message'][$language_id];
+					} elseif(!empty($this->request->post['message'])){
+						$body = $this->request->post['message'];
+					} else {
+						$body = '';
+					}
+
+					$template->addData($email);
+
+					$template->set('subject', $subject);
+					
+					$template->data['config']['tracking_campaign_name'] = $this->request->post['campaign_name'];
+		]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[
+            <title>' . $this->request->post['subject'] . '</title>' ]]></search>
+		<add trim="true"><![CDATA[ 
+			<title>' . $subject . '</title>' ]]></add>
+	</operation>
+	<operation error="skip">
+		<search position="replace"><![CDATA[
+            $mail->setSubject(html_entity_decode($this->request->post['subject'] ]]></search>
+		<add trim="true"><![CDATA[ 
+			$mail->setSubject(html_entity_decode($subject ]]></add>
+	</operation>
+	<operation error="skip">
+		<search position="replace"><![CDATA[
+            $mail->setSubject($this->request->post['subject'] ]]></search>
+		<add trim="true"><![CDATA[ 
+			$mail->setSubject($subject ]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[
+            html_entity_decode($this->request->post['message']  ]]></search>
+		<add trim="true"><![CDATA[ 
+			html_entity_decode($message ]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[
+            $mail->setHtml($message); ]]></search>
+		<add><![CDATA[$template->build();
+						$template->fetch(null, $body);			
+						$mail = $template->hook($mail); ]]></add>
+	</operation>
+	<operation>
+		<search position="after"><![CDATA[
+            $mail->send(); ]]></search>
+		<add><![CDATA[						$template->sent(); ]]></add>
+	</operation>
+	<operation error="skip">
+		<search position="replace"><![CDATA[
+            $mail->addAttachment($attachment['path'], $attachment['filename']); ]]></search>
+		<add></add>
+	</operation>        
+</file>
+	
+<file name="admin/view/template/sale/contact.tpl">
+	<operation info="Remove subject, add template">
+		<search position="replace"><![CDATA[
+            <td><span class="required">*</span> <?php echo $entry_subject; ?></td> ]]></search>
+		<add><![CDATA[ 
+		<?php if(!empty($templates_options)){ ?>
+            <td><?php echo $entry_template; ?></td> ]]></add>
+	</operation>
+	<operation>
+		<search regex="true" position="replace"><![CDATA[~<td><input type="text" name="subject" value=".*?" /></td>~]]></search>
+		<add><![CDATA[ 
+			<td>
+            	<select id="field_templates" name="email_template">
+					<option value=''><?php echo $text_select; ?></option>
+					<?php foreach($templates_options as $item){ ?>
+						<option value="<?php echo $item['value']; ?>"><?php echo $item['label']; ?></option>
+					<?php } ?>
+				</select>
+			</td>
+		  </tr>
+		  <tr>
+		<?php } ?>           
+            <td><?php echo $entry_campaign_name; ?></td>
+            <td><input value="<?php echo $campaign_name; ?>" name="campaign_name" type="text" /> ]]></add>
+	</operation>
+	<operation info="Remove message">
+		<search position="replace"><![CDATA[
+            <td><span class="required">*</span> <?php echo $entry_message; ?></td> ]]></search>
+		<add></add>
+	</operation>
+	<operation info="Remove message">
+		<search regex="true" position="replace"><![CDATA[~<td><textarea name="message">.*?</textarea>~]]></search>
+		<add><![CDATA[		
+		</tr>
+   </table>
+
+		<div id="languages" class="htabs">
+			<?php foreach ($languages as $language) { ?>
+				<a href="#language<?php echo $language['language_id']; ?>">
+					<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> 
+					<?php echo $language['name']; ?>
+				</a>
+			<?php } ?>
+		</div>
+
+		<?php foreach ($languages as $language) { ?>
+			<div id="language<?php echo $language['language_id']; ?>">
+				<table class="form">
+					<tr>
+						<td><span class="required">*</span> <?php echo $entry_subject; ?></td>
+                		<td><input type="text" name="subject[<?php echo $language['language_id']; ?>]" value="" style="width:100%; max-width:500px" /></td>
+              		</tr>
+              		<tr>
+                		<td><span class="required">*</span> <?php echo $entry_message; ?></td>
+                		<td><textarea name="message[<?php echo $language['language_id']; ?>]" id="message_<?php echo $language['language_id']; ?>"></textarea></td>
+					</tr>
+				</table>
+			</div>
+		<?php } ?>
+	<table class="form">
+		<tr><td> ]]></add>
+	</operation>
+	<operation info="Remove ckeditor so that we can add with languages" error="skip">
+		<search position="replace" offset="7"><![CDATA[
+            CKEDITOR.replace('message', { ]]></search>
+		<add></add>
+	</operation>
+	<operation info="Remove ckeditor so that we can add with languages" error="skip">
+		<search position="replace" offset="7"><![CDATA[
+            $('textarea[name=\'message\']').ckeditor({ ]]></search>
+		<add></add>
+	</operation>
+	<operation error="skip">
+    	<search position="replace"><![CDATA[
+			$('textarea[name="message"]').val(CKEDITOR.instances.message.getData()); ]]></search>
+		<add><![CDATA[			if(typeof CKEDITOR !== "undefined"){
+				for(var instanceName in CKEDITOR.instances){
+					CKEDITOR.instances[instanceName].updateElement();
+				} 
+			} ]]></add>
+	</operation>
+	<operation error="skip">
+		<search position="before"><![CDATA[
+            function send(url) { ]]></search>
+		<add><![CDATA[
+$('#languages a').tabs();
+ 
+if(typeof CKEDITOR !== "undefined"){
+	<?php foreach ($languages as $language) { ?>
+	CKEDITOR.replace('message_<?php echo $language['language_id']; ?>', {
+		filebrowserBrowseUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
+		filebrowserImageBrowseUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
+		filebrowserFlashBrowseUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
+		filebrowserUploadUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
+		filebrowserImageUploadUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
+		filebrowserFlashUploadUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>'
+	});
+	<?php } ?>
+
+	// Output dimensions of images as width and height
+	CKEDITOR.on('instanceReady', function (ev) {
+		ev.editor.dataProcessor.htmlFilter.addRules({
+			elements: {
+				$: function(element){                
+					if (element.name == 'img') {
+						var style = element.attributes.style;
+
+						if (style) {
+							// Get the width from the style.
+							var match = /(?:^|\s)width\s*:\s*(\d+)px/i.exec(style),
+								width = match && match[1];
+
+							// Get the height from the style.
+							match = /(?:^|\s)height\s*:\s*(\d+)px/i.exec(style);
+							var height = match && match[1];
+
+							if (width) {
+								element.attributes.style = element.attributes.style.replace(/(?:^|\s)width\s*:\s*(\d+)px;?/i, '');
+								element.attributes.width = width;
+							}
+
+							if (height) {
+								element.attributes.style = element.attributes.style.replace(/(?:^|\s)height\s*:\s*(\d+)px;?/i, '');
+								element.attributes.height = height;
+							}
+						}
+					}
+
+					if (!element.attributes.style) delete element.attributes.style;
+
+					return element;
+				}
+			}
+		});
+	});
+} // ckeditor
+
+(function($){			
+	$(document).ready(function() {
+				
+		$('select#field_templates').change(function(){
+			var val = $(this).val(), 
+				language_id, 
+				store_id = $('select[name=store_id]').val();
+
+			if(!val || !confirm("<?php echo $warning_template_content; ?>")) return;
+
+			$.ajax({ 
+				url: '<?php echo html_entity_decode($templates_action); ?>',
+				type: 'get',
+				data: 'id=' + val + '&store_id=' + store_id,
+				dataType: 'json',
+				success: function(json) {
+					for(i in json) {
+ 						language_id = json[i]['language_id'];
+						
+ 						if(json[i]['emailtemplate']['subject']){
+							$("input[name='subject[" + language_id + "]']").val(json[i]['emailtemplate']['subject']);
+						}
+
+						$("#message_" + language_id).val(json[i]['emailtemplate']['comment']);
+
+						if(typeof CKEDITOR !== "undefined"){
+							CKEDITOR.instances["message_" + language_id].setData(json[i]['emailtemplate']['comment']);
+						}
+					}
+				},
+				error: function(xhr, ajaxOptions, thrownError) {
+                    console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                    alert('Error. More details in console.');
+            	}
+			});	
+		});
+					
+ });	// doc.ready
+})(jQuery); ]]></add>
+	</operation>
+</file>

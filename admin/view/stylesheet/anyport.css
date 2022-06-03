@@ -1,0 +1,1207 @@
+/* ADMIN PANEL STYLES */
+
+/* iModules */
+
+.ui-widget {
+  font-family: Arial, Helvetica, sans-serif;	
+}
+
+.mainWrapper {
+	background-color: #eeeeee;
+	background-image: none;
+}
+
+.mainWrapper span.cloudHelp {
+	font-size: 12px;
+	color: #4a584e;
+	display: block;
+	margin: 20px 0 0 0;
+	line-height: 20px;
+	font-family: Arial. Verdana, Geneva, sans-serif;
+	background-color: #c8e6d2;
+	border-radius: 4px;
+	border: 1px solid #b2dfc0;
+	padding: 8px 12px;
+}
+
+.mainWrapper span.cloudHelp a.needMoreSize {
+	text-decoration: none;
+	color: #0074B6;
+	background: url("../image/anyPort/linkIcon.png") no-repeat left top;
+	padding: 0 0 0 12px;
+	display: inline-block;
+	margin: 0 0 0 3px;
+	line-height: 20px;
+	height: 20px;
+}
+
+.mainWrapper span.cloudHelp a.needMoreSize:hover {
+	background: url("../image/anyPort/linkIcon.png") no-repeat left top;
+	color: #006097;
+}
+
+.iModuleContent ul, li {
+	list-style:none;
+	padding:0;
+	margin:0;	
+}
+
+.iModuleContent h1 .iModulesTitle {
+	color:#333;
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	display: block;
+	float: left;
+	margin-right:20px;
+}
+
+.iModuleContent .box > .heading h1 {
+	width: 920px;	
+}
+
+ul.iModuleAdminMenu {
+	width: 160px;
+	list-style:none;
+	padding:0;
+	margin:-10px 0 0 -30px;
+	background:#EDEDED;
+	min-height: 319px;
+	float:left;
+	font-family: Trebuchet MS;
+	border-right: 1px solid #CCC;
+	border-bottom: 1px solid #CCC;
+}
+
+.iModuleAdminMenu li {
+	list-style:none;
+	padding:0;
+	margin:0;
+	display:block;
+	height: 38px;
+	margin-bottom: 0px;
+	line-height:38px;
+	padding-left: 30px;
+	font-size: 14px;
+	cursor:pointer;
+	color:#333;
+	text-shadow: #fff 1px 1px 0px;
+}
+
+.iModuleAdminMenu li.selected {
+	background:#CFDE55;
+}
+
+.iModuleAdminMenu li:hover {
+	color:#000;
+}
+
+
+.iModuleAdminSuperMenu {
+	float: left;	
+	margin-left: 19px;
+}
+
+.iModuleAdminSuperMenu li {
+	float: left;	
+	font-size: 14px;
+	line-height:23px;
+	cursor: pointer;
+	color: #333;
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-weight:normal;
+	padding: 0 10px;
+	padding-bottom: 6px;
+	padding-top: 6px;
+	margin-top: -7px;
+	margin-right: 5px;
+	background: #DBDBDB;
+	-webkit-border-top-left-radius: 6px;
+	-webkit-border-top-right-radius: 6px;
+	-moz-border-radius-topleft: 6px;
+	-moz-border-radius-topright: 6px;
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+}
+
+.iModuleAdminSuperMenu li.selected {
+	background:#fff;
+	font-weight:bold;
+	color:#333;
+}
+
+
+.iModuleAdminWrappers {
+	list-style:none;
+	padding:0;
+	margin:0;	
+}
+
+.iModuleAdminWrappers li {
+	list-style:none;
+	padding:0;
+	margin:0;
+	height: 100%;
+	margin-bottom: 15px;
+	padding: 10px;
+	display: none;
+}
+
+.iModuleAdminWrappers hr {
+	border: none;
+	border-bottom: 1px dashed #ccc;
+}
+
+.iModuleAdminWrappers label {
+	min-width: 200px;
+	display:block;
+	float:left;
+	padding-right: 15px;
+}
+
+.iModuleAdminWrappers .iModuleFields > span {
+	float:left !important;	
+}
+
+.iModuleAdminWrappers .iModuleFields table {
+	border-collapse: collapse;
+	padding: 0;
+	margin: 0;
+}
+
+.iModuleAdminWrappers .iModuleFields table td {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	padding: 0 4px 10px 0;
+	margin: 0;
+	vertical-align: top;
+	width: 200px;
+}
+
+.iModuleAdminWrappers .iModuleFields table td label {
+	min-width: 60px;
+}
+
+.iModuleAdminWrappers select, .iModuleAdminWrappers input, .iModuleAdminWrappers textarea {
+	min-width: 180px;	
+}
+
+.iModuleAdminWrappers textarea {
+	min-height:140px;	
+	min-width:400px;
+}
+
+.iModuleAdminWrappers li:first-child {
+	display:block;	
+}
+
+.iModuleWrapperTitle {
+	font-size: 16px;
+	margin-bottom: 15px;	
+}
+
+.iModuleAdminSuperWrappers .content {
+	padding: 0 10px 10px 0;
+	margin-left: 150px;
+	min-height: 320px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.iModuleAdminSuperWrappers .content h1 {
+	font-size: 20px;
+	font-weight: normal;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000;
+	line-height: 26px;
+	padding: 0;
+	margin: 0 0 10px 0;
+}
+
+.iModuleAdminSuperWrappers .content .help {
+	font-size: 12px;
+	font-weight: normal;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #6d6d6d;
+	line-height: 20px;
+	padding: 0;
+	margin: 0 0 20px 0;
+}
+
+.iModuleAdminSuperWrappers .content .help a {
+	text-decoration: none;
+	color: #0074b6;
+	background: url("../image/anyPort/linkIcon.png") no-repeat left top;
+	padding: 0 0 0 12px;
+	display: inline-block;
+	margin: 0 0 0 3px;
+}
+
+.iModuleAdminSuperWrappers .content .help a:hover {
+	color: #006097;
+	background: url("../image/anyPort/linkIcon.png") no-repeat left bottom;
+}
+
+.iModuleAdminSuperWrappers > li {
+	display:none;	
+}
+
+.iModuleAdminSuperWrappers > li:first-child {
+	display: block;
+}
+
+.iModuleContent .clearfix:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+ 
+.iModuleContent .clearfix {
+	display: inline-block;
+}
+ 
+html[xmlns] .iModuleContent .clearfix {
+	display: block;
+}
+ 
+* html .iModuleContent .clearfix {
+	height: 1%;
+}
+
+.iModuleAdminSuperWrappers .iModuleWrapperTitle h2 {
+	color: #000;
+	font-family: Arial, Helvetica, sans-serif;
+	border-bottom:none;
+	text-transform:none;
+	font-size: 24px;
+}
+
+.iModuleAdminSuperWrappers .iModuleWrapperTitle h3 {
+	color: #000;
+	font-family: Arial, Helvetica, sans-serif;
+	border-bottom:none;
+	text-transform:none;
+	font-size: 18px;
+}
+
+.iModuleAdminSuperWrappers .iModuleWrapperText {
+	font-size: 12px;	
+}
+
+.iModuleAdminSuperWrappers .supportUL, .iModuleAdminSuperWrappers .iModuleUL {
+	padding-left: 20px;	
+}
+
+.iModuleAdminSuperWrappers .iModuleSupportButton {
+	background:#51AA68;
+	padding: 10px 20px;
+	color:white;
+	border: 2px solid #fff;
+	outline: 2px solid #4E9660;
+	text-decoration:none;
+	display:inline-block;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	font-size: 16px;
+	
+}
+
+.iModuleAdminSuperWrappers .iModuleSupportButton:hover {
+	background:#4E9660;
+}
+
+.iModuleContent .box .notActivatedContent {
+	padding: 10px;
+	border-left: 1px solid #CCC;
+	border-right: 1px solid #CCC;
+	border-bottom: 1px solid #CCC;
+	min-height: 300px;
+	overflow: auto;	
+	text-align:center;
+	padding-top: 80px;
+}
+
+.iModuleContent .box .notActivatedContent h1 {
+	font-size:28px;
+	
+}
+
+.iModuleContent .iModuleActivateButton {
+	background:#069;
+	padding: 16px 28px;
+	color:white;
+	border: 4px solid #fff;
+	outline: 4px solid #ccc;
+	text-decoration:none;
+	display:inline-block;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	font-size: 34px;
+	
+}
+
+.iModuleContent .iModuleActivateButton:hover {
+	background:#06d;
+}
+
+
+/* AnyPort */
+.colorsLi .colorPreview {
+	width: 18px;
+	height: 18px;
+	background:#ccc;
+	border: 1px solid #aaa;
+}
+
+.colorsLi tr th {
+	color:#333;
+	font-size:13px;
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;	
+	text-align:left;
+	padding-left:10px;
+}
+
+.colorsLi tr td {
+	text-align:left;	
+}
+
+table.form {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 0;
+	padding: 0;	
+}
+
+table.form tbody tr td {
+	margin: 0;
+	padding: 10px 0;
+}
+
+table.tableWrapper {
+	margin:0;
+	padding:0;
+	border-collapse:collapse;	
+}
+
+table.tableWrapper ul {
+	margin: 0 30px 0 0;
+	padding: 20px 25px;
+	background-color: #fcfcfc;
+	border-radius: 10px;
+	width: 440px;
+}
+
+table.tableWrapper ul li {
+	margin: 0 0 25px 0;
+	padding: 0;
+	list-style: none;
+	width: 440px;
+}
+
+table.tableWrapper ul li.sectionHeading h2 {
+	margin: 0;
+	padding: 0;
+	font-size: 22px;
+	line-height: 22px;
+	color: #000;
+	font-family: Arial, Helvetica, sans-serif;
+	text-transform: none;
+	font-weight: normal;
+	border: none;
+}
+
+table.tableWrapper ul li p {
+	margin: 10px 0 0 30px;
+	padding:0;
+	font-size: 13px;
+	line-height: 16px;
+	color: #3a3a3a;
+	font-family: Arial, Helvetica, sans-serif;
+	text-transform: none;
+	font-weight: normal;
+	border: none;
+}
+
+table.tableWrapper ul li input {
+	height: 40px;
+	margin: 0;
+	padding: 0;
+	outline: none;
+}
+
+table.tableWrapper ul li label {
+	margin: 0 0 0 15px;
+	padding: 0;
+	color: #575757;
+	font-size: 20px;
+	font-weight: normal;
+	vertical-align: top;
+	line-height: 40px;
+	outline: 0;
+	border: 0;
+}
+
+table.tableWrapper ul li.dropboxService label  {
+	background: url("../image/anyPort/dropbox.png") no-repeat left;
+	width: 232px;
+	height: 40px;
+	display: inline-block;
+}
+
+table.tableWrapper ul li.googleDriveService label  {
+	background: url("../image/anyPort/googleDrive.png") no-repeat left;
+	width: 232px;
+	height: 40px;
+	display: inline-block;
+}
+
+table.tableWrapper ul li.skyDriveService label  {
+	background: url("../image/anyPort/skyDrive.png") no-repeat left;
+	width: 232px;
+	height: 40px;
+	display: inline-block;
+}
+
+table.tableWrapper ul li.commaSeparatedFile label  {
+	background: url("../image/anyPort/commaSeparatedFile.png") no-repeat left;
+	height: 40px;
+	display: inline-block;
+	padding: 0 0 0 45px;
+}
+
+table.tableWrapper ul li.excelFile label  {
+	background: url("../image/anyPort/excelFile.png") no-repeat left;
+	height: 40px;
+	display: inline-block;
+	padding: 0 0 0 45px;
+}
+
+table.tableWrapper ul li.standardFile label  {
+	background: url("../image/anyPort/zipFile.png") no-repeat left;
+	height: 40px;
+	display: inline-block;
+	padding: 0 0 0 45px;
+}
+
+table.tableWrapper ul li.fullRestore label {
+	background: url("../image/anyPort/fullRestoreIcon.png") no-repeat left;
+	height: 40px;
+	display: inline-block;
+	padding: 0 0 0 45px;
+}
+
+table.tableWrapper ul li.fullBackup label  {
+	background: url("../image/anyPort/fullBackupIcon.png") no-repeat left;
+	height: 40px;
+	display: inline-block;
+	padding: 0 0 0 45px;
+}
+
+table.tableWrapper ul li.customBackup label  {
+	background: url("../image/anyPort/customBackupIcon.png") no-repeat left;
+	height: 40px;
+	display: inline-block;
+	padding: 0 0 0 45px;
+}
+
+table.tableWrapper ul li.databaseRestore label, table.tableWrapper ul li.databaseBackup label {
+	background: url("../image/anyPort/databaseIcon.png") no-repeat left;
+	height: 40px;
+	display: inline-block;
+	padding: 0 0 0 45px;
+}
+
+table.tableWrapper ul li.filesRestore label, table.tableWrapper ul li.filesBackup label {
+	background: url("../image/anyPort/filesIcon.png") no-repeat left;
+	height: 40px;
+	display: inline-block;
+	padding: 0 0 0 45px;
+}
+
+table.tableWrapper ul li.helpMessage {
+	border-top: 1px dotted #ccc;	
+}
+
+table.tableWrapper span.cloudHelp {
+	font-size: 10px;
+	display: block;
+	padding: 8px 0 0 0;
+	line-height: 12px;
+	color: #6d6d6d;
+	background: none;
+	border: none;
+	margin: 0;
+}
+
+table.tableWrapper ul.backupTypesList {
+	width: 880px;
+}
+
+table.tableWrapper ul.backupTypesList li.sectionHeading {
+	float: none;
+	width: 880px;
+}
+
+table.tableWrapper ul.backupTypesList li {
+	float: left;
+}
+
+table.tableWrapper ul.backupTypesList li.clearfix:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+ 
+table.tableWrapper ul.backupTypesList li.clearfix {
+	display: inline-block;
+	float: none;
+	margin: 0;
+	padding: 0;
+	width: 880px;
+}
+ 
+table.tableWrapper ul.backupTypesList li.clearfix .clearfix {
+	display: block;
+}
+ 
+table.tableWrapper ul.backupTypesList li.clearfix .clearfix {
+	height: 1%;
+}
+
+table.tableWrapper ul.databaseTablesList {
+	width: auto;
+}
+
+table.tableWrapper ul.databaseTablesList li {
+	width: 236px;
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	zoom: 1;
+	*display: inline;
+}
+
+table.tableWrapper ul.databaseTablesList li .tableName {
+	width: 230px;
+	padding: 0;
+}
+
+table.tableWrapper ul.databaseTablesList li .tableName input {
+	height: 20px;
+	padding: 0;
+	margin: 0 2px 0 0;	
+}
+
+table.tableWrapper ul.databaseTablesList li .tableName label {
+	margin: 0;
+	padding: 0;
+	color: #575757;
+	font-size: 12px;
+	font-weight: normal;
+	height: 20px;
+	line-height: 20px;
+}
+
+table.tableWrapper ul.databaseTablesList li.actionButtons {
+	display: block;
+	margin-top: 25px;
+}
+
+table.tableWrapper ul.databaseTablesList li.actionButtons a {
+	width: 85px;
+	height: 27px;
+	line-height: 28px;
+	text-decoration: none;
+	text-align: center;
+	display: inline-block;
+	border-radius: 4px;
+	font-size: 12px;
+	padding: 0;
+	margin: 0 7px 0 0;
+}
+
+table.tableWrapper ul.databaseTablesList li.actionButtons a.selectAllTables {
+	color: #fff;
+	border: 1px solid #64cd87;
+	background-color: #7ade9b;
+}
+
+table.tableWrapper ul.databaseTablesList li.actionButtons a.selectAllTables:hover {
+	color: #fff;
+	border: 1px solid #5cdd86;
+	background-color: #6ae994;
+}
+
+table.tableWrapper ul.databaseTablesList li.actionButtons a.deselectAllTables {
+	color: #fff;
+	border: 1px solid #ecbb6d;
+	background-color: #fbc775;
+}
+
+table.tableWrapper ul.databaseTablesList li.actionButtons a.deselectAllTables:hover {
+	color: #fff;
+	border: 1px solid #ebb661;
+	background-color: #fac166;
+}
+
+table.tableWrapper ul li.actionButtons {
+	display: block;
+	margin-top: 25px;
+}
+
+table.tableWrapper ul li.actionButtons a {
+	width: 85px;
+	height: 27px;
+	line-height: 28px;
+	text-decoration: none;
+	text-align: center;
+	display: inline-block;
+	border-radius: 4px;
+	font-size: 12px;
+	padding: 0;
+	margin: 0 7px 0 0;
+}
+
+table.tableWrapper ul li.actionButtons a.selectAllFiles {
+	color: #fff;
+	border: 1px solid #64cd87;
+	background-color: #7ade9b;
+}
+
+table.tableWrapper ul li.actionButtons a.selectAllFiles:hover {
+	color: #fff;
+	border: 1px solid #5cdd86;
+	background-color: #6ae994;
+}
+
+table.tableWrapper ul li.actionButtons a.deselectAllFiles {
+	color: #fff;
+	border: 1px solid #ecbb6d;
+	background-color: #fbc775;
+}
+
+table.tableWrapper ul li.actionButtons a.deselectAllFiles:hover {
+	color: #fff;
+	border: 1px solid #ebb661;
+	background-color: #fac166;
+}
+
+table.form 	td.tableList {
+	margin-top: 0;
+	padding-top: 0;	
+}
+
+table.form > tbody > tr > td:first-child {
+	width: auto;
+}
+
+.tagSelector {
+	margin: 10px 0 0 0;
+}
+
+.tagSelector a {
+	background-color: #e2e2e2;
+	padding: 8px 12px;
+	border-radius: 4px;
+	margin: 0 4px 8px 0;
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000;
+	display: inline-block;
+	
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.tagSelector a.selected {
+	color:#003781;
+	background-color: #fff;
+}
+
+.fileFilePickerDiv .tableWrapper td ul li select {
+	width: 440px;
+	background-color: #fff;
+	border-radius: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	padding: 10px;
+}
+
+.tableWrapper ul.filePickerList {
+	width: 440px;	
+}
+
+.tableWrapper ul.filePickerList li {
+	margin: 0;
+	padding: 0;
+}
+
+.tableWrapper ul.filePickerList li.sectionHeading {
+	margin: 0 0 25px 0;	
+}
+
+table#rootFolders {
+	width: 100%;
+	text-align: left;
+	border-collapse: collapse;
+	margin: 0;
+	padding: 0;	
+}
+
+table#rootFolders tr {
+	margin: 0;
+	padding: 0;
+}
+
+table#rootFolders tr td {
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	height: 20px;
+	vertical-align: middle;
+}
+
+table#rootFolders tr td.checkboxColumn {
+	width: 25px;	
+}
+
+table#rootFolders tr td input {
+	margin: 0;
+	padding: 0;
+	height: 13px;
+}
+
+table#rootFolders tr td.filePickerFolder {
+	margin: 0;
+	padding: 0 6px 0 0;
+	height: 13px;
+	width: 16px;
+	background: url("../image/anyPort/folderPickerIcon.png") no-repeat left 1px;
+}
+
+table#rootFolders tr td.filePickerFile {
+	margin: 0 5px 0 0;
+	padding: 0;
+	height: 13px;
+	width: 16px;
+	background: url("../image/anyPort/filePickerIcon.png") no-repeat left 1px;
+}
+
+table#rootFolders tr td label {
+	font-size: 12px;
+	line-height: 13px;
+	height: 13px;
+	margin: 0;
+	padding: 0;
+	color: #000;
+}
+
+table.form > tbody > tr > td.tablesToBackupContainer {
+	width: 200px;
+}
+
+.tablesToBackupContainer table.tableWrapper ul.databaseTablesList {
+	width: 440px;
+	height: 440px;
+	padding: 20px 25px;
+}
+
+.tablesToBackupContainer table.tableWrapper ul.databaseTablesList li {
+	display: block;
+	margin: 0;
+	padding: 0;
+}
+
+.tablesToBackupContainer table.tableWrapper ul.databaseTablesList li.sectionHeading {
+	display: block;
+	margin-bottom: 20px;	
+}
+
+.tablesToBackupContainer table.tableWrapper ul.databaseTablesList li.tablesToBackupReviewList {
+	overflow-y: scroll;
+	overflow-x:hidden;
+	margin: 0;
+	padding: 0;
+	width: 440px;
+	height: 390px;
+}
+
+.tablesToBackupContainer table.tableWrapper ul.databaseTablesList li.tablesToBackupReviewList::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 11px;
+    height: 11px;
+}
+
+.tablesToBackupContainer table.tableWrapper ul.databaseTablesList li.tablesToBackupReviewList::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 2px solid #FCFCFC;
+    background-color: rgba(0, 0, 0, .5);
+}
+
+.filesToBackupContainer table.tableWrapper ul.filePickerList li.filesToBackupReviewList {
+	overflow-y: scroll;
+	overflow-x:hidden;
+	margin: 0;
+	padding: 0;
+	width: 440px;
+	height: 390px;
+}
+
+.filesToBackupContainer table.tableWrapper ul.filePickerList li.filesToBackupReviewList::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 11px;
+    height: 11px;
+}
+
+.filesToBackupContainer table.tableWrapper ul.filePickerList li.filesToBackupReviewList::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    border: 2px solid #FCFCFC;
+    background-color: rgba(0, 0, 0, .5);
+}
+
+.tablesToBackupContainer table.tableWrapper ul.databaseTablesList li.tablesToBackupReviewList ul.tablesToBackupList {
+	margin: 0;
+	padding: 0;
+	background: none;
+	width: 420px;
+	border-radius: 0;
+}
+
+.tablesToBackupContainer table.tableWrapper ul.databaseTablesList li.tablesToBackupReviewList ul.tablesToBackupList li {
+	margin: 0;
+	display: block;
+	width: 420px;
+	font-size: 12px;
+	padding: 0 0 3px 0;
+}
+
+.tablesToBackupContainer table.tableWrapper ul.databaseTablesList li.tablesToBackupReviewList ul.tablesToBackupList li p {
+	text-align: left;
+	display: block;
+	font-size: 16px;
+	color: #6D6D6D;
+	margin: 0;
+	padding: 0;
+	line-height: 24px;
+}
+
+.filesToBackupContainer table.tableWrapper ul.filePickerList {
+	width: 440px;
+	height: 440px;
+}
+
+.filesToBackupContainer table.tableWrapper ul.filePickerList li.sectionHeading {
+	display: block;
+	margin-bottom: 20px;	
+}
+
+table.filesToBackupList {
+	width: 100%;
+	text-align: left;
+	border-collapse: collapse;
+	margin: 0;
+	padding: 0;	
+}
+
+table.filesToBackupList tr {
+	margin: 0;
+	padding: 0;
+}
+
+table.form tbody tr td table.filesToBackupList tr td {
+	margin: 0;
+	padding: 0 5px 6px 0;
+	text-align: left;
+	height: 13px;
+	vertical-align: top;
+}
+
+table.filesToBackupList tr td.filePickerFolder {
+	margin: 0;
+	padding: 0;
+	height: 13px;
+	width: 16px;
+	background: url("../image/anyPort/folderPickerIcon.png") no-repeat left top;
+}
+
+table.filesToBackupList tr td.filePickerFile {
+	margin: 0;
+	padding: 0;
+	height: 13px;
+	width: 16px;
+	background: url("../image/anyPort/filePickerIcon.png") no-repeat left top;
+}
+
+table.filesToBackupList tr td label {
+	font-size: 12px;
+	line-height: 13px;
+	height: 13px;
+	margin: 0;
+	padding: 0;
+	color: #575757;
+}
+
+table.filesToBackupList tr td p {
+	text-align: left;
+	display: block;
+	font-size: 16px;
+	color: #6D6D6D;
+	margin: 0;
+	padding: 0;
+	line-height: 24px;
+}
+
+table.form td.plusSignImage {
+	width: 101px;
+	margin: 0;
+	padding: 0 30px 0 0;	
+}
+
+table.form td.plusSignImage .plusIcon {
+	background: url("../image/anyPort/plusIcon.png") no-repeat left;
+	width: 101px;
+	height: 100px;
+}
+
+a.continueAction {
+	background: url("../image/anyPort/continueBtn.png") no-repeat left top;
+	height: 42px;
+	width: 157px;
+	color: #fff;
+	font-size: 14px;
+	padding: 0;
+	margin: 15px 0 10px 0;
+	display: block;
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: center;
+	line-height: 42px;
+}
+
+a.continueAction:active {
+	background: url("../image/anyPort/continueBtn.png") no-repeat left bottom;
+}
+
+.tabExportWrapper {
+	padding: 10px 30px 20px 30px;	
+}
+
+.tableWrapper.ChooseRestoreSource #noFiles {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	line-height: 20px;
+	color: #000;
+}
+
+.tableWrapper.ChooseRestoreSource a.AnyPortRefreshButton {	
+	color: #575757;
+	font-size: 12px;
+	font-weight: normal;
+	text-decoration: none;
+	background: url("../image/anyPort/refreshIcon.png") no-repeat left top;
+	height: 20px;
+	line-height: 22px;
+	padding: 0 0 0 14px;
+	margin: 0 0 0 30px;
+}
+
+.tableWrapper.ChooseRestoreSource a.AnyPortRefreshButton:hover {	
+	color: #000;
+	background: url("../image/anyPort/refreshIcon.png") no-repeat left bottom;
+}
+
+#standardFiles {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #6d6d6d;	
+}
+
+.fileSizeInfo {
+	margin-left: 10px;	
+}
+
+#standardFiles a.needMoreSize {
+	text-decoration: none;
+	color: #0074b6;
+	background: url("../image/anyPort/linkIcon.png") no-repeat left top;
+	padding: 0 0 0 12px;
+	display: inline-block;
+	margin: 0 0 0 15px;
+	height: 20px;
+	line-height: 20px;
+}
+
+#standardFiles a.needMoreSize:hover {
+	color: #006097;
+	background: url("../image/anyPort/linkIcon.png") no-repeat left bottom;
+}
+
+
+/*-- AutoBackup Tab Styles --*/
+
+
+#autoBackupPage {
+	padding: 20px;	
+}
+
+#autoBackupPage h1 {
+	font-size: 20px;
+	font-weight: normal;
+	font-family: Arial, Helvetica, sans-serif;
+	color: black;
+	line-height: 26px;
+	padding: 0;
+	margin: 0 0 20px 0;
+}
+
+#autoBackupPage label {
+	font-size: 13px;
+	margin-right: 20px;
+}
+
+#autoBackupPage select {
+	min-width: 150px;
+}
+
+#autoBackupTable table.list {
+	border-collapse: collapse;
+	width: 100%;
+	margin: 30px 0;
+	padding: 0;
+}
+
+#autoBackupTable table.list th {
+	text-align: left;
+	font-size: 14px;
+	font-family: Arial, Helvetica, sans-serif;
+	padding: 10px 5px;
+	margin: 0;
+	border: 1px solid #DDD;
+	font-weight: normal;
+}
+
+
+#autoBackupTable table.list td {
+	text-align: left;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	padding: 7px 5px;
+	margin: 0;
+	border: 1px solid #DDD;
+}
+
+#autoBackupTable table.list td span {
+	height: 12px;
+	margin: 0;
+	padding: 0 0 0 16px;
+	line-height: 12px;
+	display: block;
+}
+
+#autoBackupTable table.list td span.successStatus {
+	background: url("../image/anyPort/statusIcons.png") no-repeat left 0;
+}
+
+#autoBackupTable table.list td span.warningStatus {
+	background: url("../image/anyPort/statusIcons.png") no-repeat left -12px;
+}
+
+#autoBackupTable table.list td a {
+	text-decoration: none;
+	color: #0074B6;
+}
+
+#autoBackupTable table.list td a:hover {
+	text-decoration: underline;
+	color: #006097;
+}
+
+#autoBackupTable .note {
+	font-size: 12px;
+	color: #4A584E;
+	display: block;
+	margin: 20px 0 0 0;
+	line-height: 20px;
+	font-family: Arial. Verdana, Geneva, sans-serif;
+	background-color: #C8E6D2;
+	border-radius: 4px;
+	border: 1px solid #B2DFC0;
+	padding: 8px 12px;	
+}
+
+#autoBackupTable .note a {
+	text-decoration: none;
+	color: #0074B6;
+	background: url("../image/anyPort/linkIcon.png") no-repeat left top;
+	padding: 0 0 0 12px;
+	display: inline-block;
+	margin: 0 0 0 3px;
+}
+
+#autoBackupTable .note a:hover {
+	color: #006097;
+	background: url("../image/anyPort/linkIcon.png") no-repeat left bottom;
+}
+
+/*-- End of AutoBackup --*/
+
+.ui-widget-overlay {
+	background: #000;
+	opacity: .50;
+	filter: Alpha(Opacity=50);	
+}
+
+.ui-dialog {
+	padding: 0;
+	overflow: hidden;		
+	-moz-box-shadow: 0 0 20px -3px #000;
+	-webkit-box-shadow: 0 0 20px -3px #000;
+	box-shadow: 0 0 20px -3px #000;
+	background: #fff !important;
+	border: none;
+}
+
+.ui-dialog .ui-dialog-content {
+	padding: 20px;	
+}
+
+#br-progress-dialog {
+	text-align: center;	
+}
+
+#br-progressinfo {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #000;
+	margin: 10px 0 0 0;
+	line-height: 16px;	
+	width: 530px;
+}
+
+button.br-finishActionButton {
+	width: 94px;
+	height: 34px;
+	background-color: transparent;
+	background-image:url("../image/anyPort/finishActionBtn.png");
+	background-repeat:no-repeat;	
+	background-position:right top;
+	color: white;
+	font-family: Arial, Helvetica;
+	font-size: 12px;
+	border: none;
+	padding: 0;
+	margin: 0;
+	outline: none;
+}
+
+button.br-finishActionButton:active {
+	background:url("../image/anyPort/finishActionBtn.png") no-repeat right bottom;	
+}

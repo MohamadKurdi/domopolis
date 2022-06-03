@@ -1,0 +1,63 @@
+<file name="admin/view/template/sale/customer_form.tpl">
+	<operation>
+		<search position="before" index="1"><![CDATA[
+           <td><?php echo $entry_status; ?></td> ]]></search>
+		<add><![CDATA[					
+                <td><?php echo $entry_notify; ?></td>
+                <td>
+                    <input type="checkbox" name="notify" value="1"<?php if ($notify) { ?> selected="selected" <?php } ?> />
+				</td>
+            </tr>
+			<tr>]]></add>
+	</operation>
+</file>
+
+<file name="admin/controller/sale/customer.php">
+	<operation>
+		<search position="before" index="1"><![CDATA[
+           if (isset($this->request->post['password'])) {  ]]></search>
+		<add><![CDATA[
+		$this->language->load_full('sale/customer');
+		
+		$this->data['entry_notify'] = $this->language->get('entry_notify');
+
+        if (isset($this->request->post['notify'])) { 
+			$this->data['notify'] = 1;
+		} else {
+			$this->data['notify'] = 0;
+		}; ]]></add>
+	</operation>
+</file>
+
+<file name="admin/model/sale/customer.php">
+	<operation>
+		<search position="after" index="1" offset="3"><![CDATA[
+            $this->db->query("UPDATE " . DB_PREFIX . "customer SET address_id = ' ]]></search>
+		<add><![CDATA[
+		if(isset($data['notify'])){
+			$template = new EmailTemplate($this->request, $this->registry);
+			
+			$template->addData($data);
+
+			$template->data['newsletter'] = $this->language->get((isset($data['newsletter']) && $data['newsletter'] == 1) ? 'text_yes' : 'text_no');
+
+			$template->data['account_login'] = $this->url->link('account/login', 'email=' . $data['email'], 'SSL');
+			$template->data['account_login_tracking'] = $template->getTracking($template->data['account_login']);
+
+			if(isset($data['customer_group_id']) && $data['customer_group_id']){
+				$this->load->model('sale/customer_group');		
+				$customer_group_info = $this->model_sale_customer_group->getCustomerGroup($data['customer_group_id']);
+				$template->data['customer_group'] = $customer_group_info['name'];
+			}
+
+			if(isset($address_id)){
+				$address =  $this->getAddress($address_id);
+				$template->data['address'] = EmailTemplate::FormatAddress($address, '', $address['address_format']);
+			}
+
+			$template->load('admin.customer_create');
+
+			$template->send(); 
+  		} // notify ]]></add>
+	</operation>
+</file>

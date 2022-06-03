@@ -1,0 +1,67 @@
+<file name="system/library/openbay.php" error="skip">
+	<operation info="method::newOrderAdminNotify">
+		<search position="after"><![CDATA[
+			$subject = sprintf($language->get('text_new_subject')]]></search>
+		<add><![CDATA[
+		$template = new EmailTemplate($this->request, $this->registry, $order_info['language_id']);
+			
+		$template->addData($order_info);
+		$template->data['order_status_id'] = $order_status_id;
+		$template->data['new_order_status'] = $order_status;
+		$template->data['comment'] = str_replace(array("\r\n", "\r", "\n"), "<br />", $order_info['comment']);
+		$template->data['date_added'] = date($language->get('date_format_short'), strtotime($order_info['date_added'])); ]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[
+			foreach ($order_product_query->rows as $product) {]]></search>
+		<add><![CDATA[$template->data['products'] = array();
+
+		foreach ($order_product_query->rows as $product) {
+			$product['price'] = $this->currency->format($product['price'] + ($this->config->get('config_tax') ? $product['tax'] : 0), $order_info['currency_code'], $order_info['currency_value']);
+			$product['total'] = $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value']);
+			$product['option'] = array();
+		]]></add>
+	</operation>
+	<operation>
+		<search position="before"><![CDATA[
+			$text .= chr(9) . '-' . $option['name'] ]]></search>
+		<add><![CDATA[				$product['option'][] = array(
+					'name'  => $option['name'],			
+       				'value' => (strlen($value) > 120 ? substr($value, 0, 120) . '..' : $value)
+				);]]></add>
+	</operation>
+	<operation info="Add to bottom of prducts loop">
+		<search position="after" offset="1"><![CDATA[
+			$text .= chr(9) . '-' . $option['name'] ]]></search>
+		<add><![CDATA[			$product['url'] = $template->data['store_url'] . '?route=product/product&product_id='.$product['product_id'];
+			$product['url_tracking'] = $template->getTracking($product['url']);
+
+			$template->data['products'][] = $product;]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[
+			foreach ($order_voucher_query->rows as $voucher) {]]></search>
+		<add><![CDATA[$template->data['vouchers'] = array();
+		foreach ($order_voucher_query->rows as $voucher) {
+				$voucher['price'] = $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']);
+				$template->data['vouchers'][] = $voucher; ]]></add>
+	</operation>
+	<operation>
+		<search position="replace"><![CDATA[
+			foreach ($order_total_query->rows as $total) {]]></search>
+		<add><![CDATA[$template->data['totals'] = array();
+		foreach ($order_total_query->rows as $total) {
+				$template->data['totals'][] = $total; ]]></add>
+	</operation>
+	<operation>
+		<search position="after"><![CDATA[
+			$mail->setText( ]]></search>
+		<add><![CDATA[			$template->load('openbay.admin');
+			$mail = $template->hook($mail); ]]></add>
+	</operation>
+	<operation>
+		<search position="after" index="1"><![CDATA[
+			$mail->send(); ]]></search>
+		<add><![CDATA[			$template->sent(); ]]></add>
+	</operation>
+</file>

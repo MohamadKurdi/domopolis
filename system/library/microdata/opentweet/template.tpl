@@ -1,0 +1,1 @@
+<?php if(($this->config->get( 'opengraph_status' )== 1) || ($this->config->get( 'twittercard_status' )== 1)) { ?> <?php foreach( $this->document->getMeta() as $val ) { ?> <meta<?php foreach( $val as $k => $v ) { ?> <?php echo $k; ?>="<?php echo $v; ?>"<?php } ?> /> <?php } ?> <?php } ?>

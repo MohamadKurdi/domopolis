@@ -1,0 +1,46 @@
+<file name="catalog/model/checkout/voucher.php">
+	<operation>
+		<search position="replace" index="1"><![CDATA[
+            $template = new Template();]]></search>
+		<add><![CDATA[$this->load->model('tool/image');
+            	$template = new EmailTemplate($this->request, $this->registry); ]]></add>
+	</operation>
+	<operation error="skip" info="1.5.0.5">
+		<search position="replace"><![CDATA[
+            $template->data['image'] = 'cid:' . basename($voucher['image']);]]></search>
+		<add trim="true"><![CDATA[
+            	$template->data['image'] = $this->model_tool_image->get($voucher['image']);]]></add>
+	</operation>
+	<operation error="skip" info="1.5.1/1.5.1.3">
+		<search position="replace"><![CDATA[
+            $template->data['image'] = 'cid:' . md5(basename($voucher['image']));]]></search>
+		<add trim="true"><![CDATA[
+            	$template->data['image'] = $this->model_tool_image->get($voucher['image']);]]></add>
+	</operation>
+	<operation error="skip" info="Remove attachment">
+		<search position="replace"><![CDATA[
+            $mail->addAttachment(DIR_IMAGE . $voucher['image'], md5(basename($voucher['image'])));]]></search>
+		<add></add>
+	</operation>
+	<operation info="Less error prone to replace each line instead of using offset">
+		<search position="replace"><![CDATA[
+            $html = $template->fetch($this->config->get('config_template') . '/template/mail/voucher.tpl');]]></search>
+		<add></add>
+	</operation>
+    <operation>
+		<search position="replace"><![CDATA[
+            $html = $template->fetch('default/template/mail/voucher.tpl');]]></search>
+		<add></add>
+	</operation>
+	<operation>
+		<search position="replace" index="1"><![CDATA[
+            $mail->setHtml($html);]]></search>
+		<add><![CDATA[$template->load('order.voucher');
+			$mail = $template->hook($mail);]]></add>
+	</operation>
+	<operation>
+		<search position="after" index="1"><![CDATA[
+            $mail->send(); ]]></search>
+		<add><![CDATA[			$template->sent(); ]]></add>
+	</operation>
+</file>
