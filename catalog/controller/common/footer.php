@@ -76,13 +76,7 @@
 			require_once DIR_SYSTEM . '../min/static/lib.php';
 			$static_uri = "/min/static";
 			
-			$general_css = array(
-			"/catalog/view/theme/kp/css/fontawesome/css/all.min.css",			
-			"/catalog/view/theme/kp/css/tooltipster.bundle.css",
-			"/catalog/view/theme/kp/css/tooltipster-follower.min.css",
-			"/catalog/view/theme/kp/css/nprogress.css",
-			);
-			
+			$general_css = prepareEOLArray($this->config->get('config_footer_min_styles'));
 			$query = "f=" . implode(',', $general_css);
 			$this->data['general_minified_css_uri'] = Minify\StaticService\build_uri($static_uri, $query, 'css');
 			
@@ -97,22 +91,7 @@
 			/*---------------- END STYLES -------------*/
 			
 			/*---------------- SCRIPTS -------------*/
-			$general_js = array(
-			"/catalog/view/theme/kp/js/jquery.mask.js",
-			"/catalog/view/theme/kp/js/jquery-ui.min.js",
-			"/catalog/view/theme/kp/js/jquery.visible.min.js",
-			"/catalog/view/theme/kp/js/scrollbooster.min.js",	
-			"/catalog/view/theme/kp/js/swiper.min.js",
-			"/catalog/view/theme/kp/js/readmore.js",
-			"/catalog/view/theme/kp/js/tooltipster.bundle.min.js",
-			"/catalog/view/theme/kp/js/tooltipster-follower.min.js",
-			"/catalog/view/theme/kp/js/mainSer.js",
-			"/catalog/view/theme/kp/js/main.js",
-			"/catalog/view/theme/kp/js/init8.js",
-			"/catalog/view/javascript/social_auth.js",
-			"/catalog/view/theme/kp/js/jquery.menu-aim.js"
-			
-			);
+			$general_js = prepareEOLArray($this->config->get('config_footer_min_scripts'));
 			
 			$this->data['mask'] = $this->config->get('config_phonemask');
 			

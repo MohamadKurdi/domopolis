@@ -360,11 +360,7 @@
 			$static_uri = "/min/static";
 			
 			/*---------------- STYLES -------------*/			
-			$general_css = array(			
-			"/catalog/view/theme/kp/css/reset.css",
-			"/catalog/view/theme/kp/css/swiper.min.css",
-			"/catalog/view/theme/kp/css/style190.css"			
-			);
+			$general_css = prepareEOLArray($this->config->get('config_header_min_styles'));
 			
 			$query = "f=" . implode(',', $general_css);
 			$this->data['general_minified_css_uri'] = Minify\StaticService\build_uri($static_uri, $query, 'css');
@@ -400,11 +396,7 @@
 			
 			
 			//BEGIN SCRIPTS			
-			$general_js = array(
-			'catalog/view/javascript/mf/iscroll.js',
-			'catalog/view/javascript/mf/mega_filter.js',
-			'catalog/view/javascript/jquery/jquery.inputmask.bundle.min.js'
-			);
+			$general_js = prepareEOLArray($this->config->get('config_header_min_scripts'));
 			
 			if ($general_js) {
 				$query = "f=" . implode(',', $general_js);
@@ -419,13 +411,7 @@
 				}
 			}
 			
-			$this->data['excluded_scripts'] = array(			
-			'catalog/view/javascript/jquery/jquery-ui-timepicker-addon.js',		
-			'catalog/view/javascript/easyTooltip.js',
-			'catalog/view/javascript/toastr.min.js',
-			'catalog/view/javascript/simple.js',
-			'catalog/view/javascript/simplecheckout.js'
-			);
+			$this->data['excluded_scripts'] = prepareEOLArray($this->config->get('config_header_excluded_scripts'));
 			
 			/* !!!!!!!!!! */
 			$this->data['incompatible_scripts'] = array(				

@@ -25,6 +25,20 @@
 		];
 	}
 
+	function prepareEOLArray($string){
+		$result = [];
+
+		$array = explode(PHP_EOL, $string);
+
+		foreach ($array as $line){
+			if (trim($line) && mb_strlen(trim($line)) > 0){
+				$result[] = trim($line);
+			}
+		}
+
+		return $result;
+
+	}
 
 	//Функции для обратной совместимости, ебу я где они могут использоваться, но на всякий случай
 	function simple_translit($string)

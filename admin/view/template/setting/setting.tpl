@@ -2427,14 +2427,61 @@
 							</table>
 						</div>
 						<div id="tab-server">
+
 							<table class="form">
 								<tr>
-									<td>
-										<p>Preload Links (от статик-субдомена)</p></td>
-									<td>
+									<td width="50%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Preload Links (от статик-субдомена)</span></p>
 										<textarea name="config_preload_links" cols="100" rows="10"><?php echo $config_preload_links; ?></textarea>
 									</td>
+									<td width="50%">
+									</td>
 								</tr>
+								<tr>
+									<td width="50%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Header SCRIPTS for Minifier</span></p>
+										<textarea name="config_header_min_scripts" cols="100" rows="5"><?php echo $config_header_min_scripts; ?></textarea>
+									</td>
+									<td width="50%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Header EXCLUDED SCRIPTS for Minifier</span></p>
+										<textarea name="config_header_excluded_scripts" cols="100" rows="5"><?php echo $config_header_excluded_scripts; ?></textarea>
+									</td>
+									
+								</tr>
+								<tr>
+									<td width="50%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Header STYLES for Minifier</span></p>
+										<textarea name="config_header_min_styles" cols="100" rows="5"><?php echo $config_header_min_styles; ?></textarea>
+									</td>
+									<td width="50%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Header EXCLUDED STYLES for Minifier</span></p>
+										<textarea name="config_header_excluded_styles" cols="100" rows="5"><?php echo $config_header_excluded_styles; ?></textarea>
+									</td>
+								</tr>
+								<tr>
+									<td width="50%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Footer SCRIPTS for Minifier</span></p>
+										<textarea name="config_footer_min_scripts" cols="100" rows="5"><?php echo $config_footer_min_scripts; ?></textarea>
+									</td>
+									<td width="50%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Footer EXCLUDED SCRIPTS for Minifier</span></p>
+										<textarea name="config_footer_excluded_scripts" cols="100" rows="5"><?php echo $config_footer_excluded_scripts; ?></textarea>
+									</td>
+								</tr>
+								<tr>
+									<td width="50%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Footer STYLES for Minifier</span></p>
+										<textarea name="config_footer_min_styles" cols="100" rows="5"><?php echo $config_footer_min_styles; ?></textarea>
+									</td>
+									<td width="50%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Footer EXCLUDED STYLES for Minifier</span></p>
+										<textarea name="config_footer_excluded_styles" cols="100" rows="5"><?php echo $config_footer_excluded_styles; ?></textarea>
+									</td>
+								</tr>
+							</table>
+
+							<table class="form">
+								
 								<tr>
 									<td><?php echo $entry_secure; ?></td>
 									<td><?php if ($config_secure) { ?>

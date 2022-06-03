@@ -2223,7 +2223,55 @@
 				} else {
 				$this->data['config_preload_links'] = $this->config->get('config_preload_links');
 			}
+
+			if (isset($this->request->post['config_header_min_scripts'])) {
+				$this->data['config_header_min_scripts'] = $this->request->post['config_header_min_scripts']; 
+				} else {
+				$this->data['config_header_min_scripts'] = $this->config->get('config_header_min_scripts');
+			}
+
+
+			if (isset($this->request->post['config_header_excluded_scripts'])) {
+				$this->data['config_header_excluded_scripts'] = $this->request->post['config_header_excluded_scripts']; 
+				} else {
+				$this->data['config_header_excluded_scripts'] = $this->config->get('config_header_excluded_scripts');
+			}
+
+			if (isset($this->request->post['config_header_min_styles'])) {
+				$this->data['config_header_min_styles'] = $this->request->post['config_header_min_styles']; 
+				} else {
+				$this->data['config_header_min_styles'] = $this->config->get('config_header_min_styles');
+			}
+
+			if (isset($this->request->post['config_header_excluded_styles'])) {
+				$this->data['config_header_excluded_styles'] = $this->request->post['config_header_excluded_styles']; 
+				} else {
+				$this->data['config_header_excluded_styles'] = $this->config->get('config_header_excluded_styles');
+			}
+
+			if (isset($this->request->post['config_footer_min_scripts'])) {
+				$this->data['config_footer_min_scripts'] = $this->request->post['config_footer_min_scripts']; 
+				} else {
+				$this->data['config_footer_min_scripts'] = $this->config->get('config_footer_min_scripts');
+			}
 			
+			if (isset($this->request->post['config_footer_min_styles'])) {
+				$this->data['config_footer_min_styles'] = $this->request->post['config_footer_min_styles']; 
+				} else {
+				$this->data['config_footer_min_styles'] = $this->config->get('config_footer_min_styles');
+			}
+
+			if (isset($this->request->post['config_footer_excluded_scripts'])) {
+				$this->data['config_footer_excluded_scripts'] = $this->request->post['config_footer_excluded_scripts']; 
+				} else {
+				$this->data['config_footer_excluded_scripts'] = $this->config->get('config_footer_excluded_scripts');
+			}
+			
+			if (isset($this->request->post['config_footer_excluded_styles'])) {
+				$this->data['config_footer_excluded_styles'] = $this->request->post['config_footer_excluded_styles']; 
+				} else {
+				$this->data['config_footer_excluded_styles'] = $this->config->get('config_footer_excluded_styles');
+			}
 			
 			if (isset($this->request->post['config_sendpulse_script'])) {
 				$this->data['config_sendpulse_script'] = $this->request->post['config_sendpulse_script']; 
