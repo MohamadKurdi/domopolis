@@ -128,8 +128,8 @@ class PageCache{
 				$class = 'bad';
 			} else {
 
-				foreach ($httpResponce->getHeaders() as $name => $value){
-					if ($name == 'X-NO-FPC-TIME'){
+				foreach ($httpResponce->getHeaders() as $name => $value){					
+					if (mb_strtoupper($name) == 'X-NO-FPC-TIME'){
 						$value = $value[0];
 						$body = round($value, 4);																
 
@@ -140,7 +140,7 @@ class PageCache{
 						if ((float)$value > 0.5){
 							$class = 'bad';
 						}
-					} elseif ($name == 'X-FPC-TIME') {
+					} elseif (mb_strtoupper($name) == 'X-FPC-TIME') {
 						$value = $value[0];
 						$body2 = round($value, 3);																
 
@@ -151,7 +151,7 @@ class PageCache{
 						if ((float)$value > 0.01){
 							$class = 'bad';
 						}
-					} elseif ($name == 'X-DEV-ENGINE'){
+					} elseif (mb_strtoupper($name) == 'X-DEV-ENGINE'){
 						$engine = $value[0];
 					} else {
 						continue;
