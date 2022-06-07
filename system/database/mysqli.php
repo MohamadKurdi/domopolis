@@ -50,7 +50,7 @@
 					$result->num_rows = $query->num_rows;
 					$result->row = isset($data[0]) ? $data[0] : array();
 					$result->rows = $data;
-					$result->fromcache = 'uncacheable driver';
+					$result->fromCache = 'uncacheable driver';
 					
 					unset($data);
 					

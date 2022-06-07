@@ -1,10 +1,12 @@
 <?php			
 	define('VERSION', '1.5.6.4');
 	define('IS_HTTPS', true);
+	header('X-ENGINE-ENTRANCE: INDEX'); 
 
 	require_once(dirname(__FILE__) . '/system/jsonconfig.php');
 
 	$apisConfig = loadJsonConfig('api');
+
 	if (!empty($apisConfig['routes'])){
 		if (!empty($_GET['_route_']) && in_array($_GET['_route_'], $apisConfig['routes'])){
 			header('HTTP/1.1 403 Forbidden');

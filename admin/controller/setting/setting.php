@@ -479,6 +479,12 @@
 				} else {
 				$this->data['config_warmode_enable'] = $this->config->get('config_warmode_enable');
 			}
+
+			if (isset($this->request->post['config_no_access_enable'])) {
+				$this->data['config_no_access_enable'] = $this->request->post['config_no_access_enable']; 
+				} else {
+				$this->data['config_no_access_enable'] = $this->config->get('config_no_access_enable');
+			}
 			
 			if (isset($this->request->post['config_ssl'])) {
 				$this->data['config_ssl'] = $this->request->post['config_ssl'];

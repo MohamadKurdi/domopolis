@@ -5,7 +5,7 @@
 		
 		private $sparkPostEventTypes = ['message_event','track_event','unsubscribe_event'];
 		
-		private function validateAuthorization(){			
+		private function validateAuthorization(){		
 			
 			if (!empty($this->request->server['PHP_AUTH_USER']) && 
 			$this->request->server['PHP_AUTH_USER'] == $this->config->get('config_sparkpost_api_user') && 

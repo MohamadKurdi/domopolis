@@ -150,7 +150,7 @@
 						<table class="form">
 							<table class="form">
 								<tr>											
-									<td width="25%">
+									<td width="20%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика цен B2B</span></p>
 										<select name="config_group_price_enable">
 											<?php if ($config_group_price_enable) { ?>
@@ -165,7 +165,7 @@
 										<span class="help">логика нагружает магазин, если реально это не используется, пусть будет отключено</span>
 									</td>
 									
-									<td width="25%">
+									<td width="20%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Монобрендовый магазин</span></p>
 										<select name="config_monobrand">
 											<option value="0">Это не монобрендовый магазин</option>
@@ -182,7 +182,7 @@
 										<span class="help">настройка, позволяющая работать без списка брендов (не уверен что актуально)</span>
 									</td>
 									
-									<td width="25%">
+									<td width="20%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">В брендах только товары</span></p>
 										<select type="select" name="config_show_goods_overload">
 											<? if ($config_show_goods_overload) { ?>
@@ -201,7 +201,7 @@
 										<span class="help">на странице брендов выводятся только товары, без списков коллекций, и.т.д.</span>	
 									</td>
 									
-									<td width="25%">
+									<td width="20%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Режим конфликта</span></p>
 										<select type="select" name="config_warmode_enable">
 											<? if ($config_warmode_enable) { ?>
@@ -217,7 +217,26 @@
 											<? } ?>       
 										</select>
 										<br />
-										<span class="help">будет отключен переключатель стран, и некоторые другие моменты, позволяющие определить наличие магазина в другой стране (кроме того, что домены одинаковые, естественно)</span>	
+										<span class="help">будет отключен переключатель стран, и некоторые другие моменты</span>	
+									</td>
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Режим разработки</span></p>
+										<select type="select" name="config_no_access_enable">
+											<? if ($config_no_access_enable) { ?>
+												
+												<option value="1" selected='selected' >Да</option>
+												<option value="0" >Нет</option>
+												
+											<? } else { ?>
+												
+												<option value="1" >Да</option>
+												<option value="0"  selected='selected' >Нет</option>
+												
+											<? } ?>       
+										</select>
+										<br />
+										<span class="help">Закрыть 403 кодом в случае, если сессия админки не определена</span>	
 									</td>
 
 								</tr>

@@ -3,11 +3,18 @@
 	define('IS_HTTPS', true);
 	define('APPLICATION_DIRECTORY', dirname(__FILE__));
 	define('CONFIG_FILE', 'config.api.php');
+	header('X-ENGINE-ENTRANCE: API');
 
 	require_once(dirname(__FILE__) . '/system/jsonconfig.php');
 
 	$ipsConfig  = loadJsonConfig('ips');
-	$apisConfig = loadJsonConfig('api'); 
+	$apisConfig = loadJsonConfig('api');   	
+
+	var_dump($_GET);
+
+	if (empty($_GET['_route_']) && !empty($_GET['route'])){
+		$_GET['_route_'] = $_GET['route'];		
+	}
 
 	$whitelisted = false;
 	if (!empty($apisConfig['whitelist'])){
@@ -24,7 +31,7 @@
 	}
 
 	if (!empty($apisConfig['routes'])){
-		if (!in_array($_SERVER['QUERY_STRING'], $apisConfig['routes'])){
+		if (empty($_GET['_route_']) || !in_array($_GET['_route_'], $apisConfig['routes'])){
 			header('HTTP/1.1 403 Forbidden');
 			die('NOT AN API ROUTE');
 		}
@@ -55,35 +62,23 @@
 		header("HTTP/1.1 301 Moved Permanently"); 
 		header("Location: " . $newLocation); 
 		exit(); 
-	}
-	
-	//Конфигурационный файл	основной выбор с переназначением
-	$currentConfigFile = false;
-	if (isset($configFiles[$httpHOST])){
-		if (file_exists(APPLICATION_DIRECTORY . '/' . $configFiles[$httpHOST])) {
-			$currentConfigFile = (APPLICATION_DIRECTORY . '/' . $configFiles[$httpHOST]);
-			} else {
-			die ('no config file!');
-		}	
-		} else {
-		die ('ho config file assigned to host');
-	}
-	
-	//Перезагрузка конфигурационного файла для определенных AJAX контроллеров
-	//!!!ЗДЕСЬ НЕ УЧТЕНА ПРИВЯЗКА К ДОМЕНУ, это TODO
-	if (thisIsAjax() && !empty($_GET['route'])){
-		$dbRouter = loadJsonConfig('dbrouting');
-		if (!empty($dbRouter[$_GET['route']]) && file_exists(APPLICATION_DIRECTORY . '/' . $dbRouter[$_GET['route']])){
-			$currentConfigFile = $dbRouter[$_GET['route']];
-		}		
-	}
-	
-	//ЗАГРУЗКА ОСНОВНОГО КОНФИГ-ФАЙЛА
+	}	
+
 	//header('X-CONFIG-USED: ' . $currentConfigFile);
-	if (defined(CONFIG_FILE) && file_exists(APPLICATION_DIRECTORY . '/' . $currentConfigFile)){
-		$currentConfigFile = APPLICATION_DIRECTORY . '/' . $currentConfigFile;
+	if (defined(CONFIG_FILE) && file_exists(APPLICATION_DIRECTORY . '/' . CONFIG_FILE)){
+		$currentConfigFile = APPLICATION_DIRECTORY . '/' . CONFIG_FILE;
+	}
+		
+	if (!empty($apisConfig['configs']) && !empty($apisConfig['configs'][0])){
+		foreach ($apisConfig['configs'][0] as $apiRoute => $apiConfig){
+			if ($_GET['_route_'] == $apiRoute){
+				$currentConfigFile = $apiConfig;
+				break;
+			}
+		}
 	}
 
+	header('X-CONFIG-FILE: ' . $currentConfigFile);
 	require_once($currentConfigFile);
 	
 	if (isset($storesConfig[$httpHOST])){
@@ -297,11 +292,41 @@
 		unset($registry->get('request')->get['_route_']);
 	}
 	
-	$controller->addPreAction(new Action('common/seo_pro'));		
+	$controller->addPreAction(new Action('common/seo_pro'));
+
+	$inputData = array_merge($registry->get('request')->post, $registry->get('request')->get);
+	$inputData = array_map("trim", $inputData);
+
+	//Обязательные параметры
+	$requiredParams = false;
+	if (!empty($apisConfig['params']) && !empty($apisConfig['params'][0])){
+		foreach ($apisConfig['params'][0] as $apiRoute => $apiParams){
+			if ($_GET['_route_'] == $apiRoute){
+				$requiredParams = $apiParams;
+				break;
+			}
+		}
+	}
+
+	$apiParams = [];
+	if (!empty($requiredParams)){
+		foreach ($requiredParams as $param){
+			if (empty($inputData[$param])){
+				header('HTTP/1.1 403 Error No Parameter');
+				die('NO REQUIRED PARAM FOR ' . $_GET['_route_'] . ': ' . $param);
+			} else {
+				$apiParams[$param] = $inputData[$param];
+			}	
+		}
+	}
 	
 	// Router
 	if (isset($registry->get('request')->get['route'])) {
-		$action = new Action($registry->get('request')->get['route']);
+		if ($apiParams){
+			$action = new Action($registry->get('request')->get['route'], $apiParams);
+		} else {
+			$action = new Action($registry->get('request')->get['route']);
+		}
 		} else {
 		$action = new Action('common/home');
 	}
