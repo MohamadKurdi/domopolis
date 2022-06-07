@@ -142,8 +142,12 @@
 
 	if ($registry->get('config')->get('config_no_access_enable')){
 		if (!defined('ADMIN_SESSION_DETECTED') || !ADMIN_SESSION_DETECTED){
-			header('HTTP/1.1 403 No Access Enabled');
-			die('RESOURCE IN DEVELOPMENT');
+			$ipsConfig  = loadJsonConfig('ips');
+
+			if (!in_array($_SERVER['REMOTE_ADDR'], $ipsConfig['whitelist'])){
+				header('HTTP/1.1 403 No Access Enabled');
+				die('RESOURCE IN DEVELOPMENT');
+			}
 		}
 	}
 			
