@@ -3,6 +3,7 @@
 	define('IS_HTTPS', true);
 	define('APPLICATION_DIRECTORY', dirname(__FILE__));
 	define('CONFIG_FILE', 'config.api.php');
+	define('API_SESSION', true);
 	header('X-ENGINE-ENTRANCE: API');
 
 	require_once(dirname(__FILE__) . '/system/jsonconfig.php');

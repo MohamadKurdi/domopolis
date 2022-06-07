@@ -1,6 +1,7 @@
 <?php			
 	define('VERSION', '1.5.6.4');
 	define('IS_HTTPS', true);
+	define('CLI_SESSION', true);
 	ini_set('memory_limit', '4G');
 
 	require_once(dirname(__FILE__) . '/system/jsonconfig.php');
