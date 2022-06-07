@@ -138,6 +138,14 @@
 		$registry->get('config')->set('config_img_server_count', 	HTTPS_IMG_SERVERS_COUNT);			
 		$registry->get('config')->set('config_static_subdomain', 	HTTPS_STATIC_SUBDOMAIN);
 	}
+
+
+	if ($registry->get('config')->get('config_no_access_enable')){
+		if (!defined('ADMIN_SESSION_DETECTED') || !ADMIN_SESSION_DETECTED){
+			header('HTTP/1.1 403 No Access Enabled');
+			die('RESOURCE IN DEVELOPMENT');
+		}
+	}
 			
 	$registry->set('url', new Url($registry->get('config')->get('config_url'), $registry->get('config')->get('config_ssl')));				
 				

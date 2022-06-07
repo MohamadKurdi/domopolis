@@ -160,7 +160,7 @@ class PageCache{
 
 			}
 
-		} catch (\GuzzleHttp\Exception\ConnectException $e){
+		} catch (GuzzleHttp\Exception\ClientException $e){
 
 			$body  = $e->getMessage();
 			$class = 'bad';
