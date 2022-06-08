@@ -315,6 +315,19 @@
 		}
 	}
 
+	unset($apiRoute);
+	unset($apiParams);
+
+	$additionalParams = false;
+	if (!empty($apisConfig['additional']) && !empty($apisConfig['additional'][0])){
+		foreach ($apisConfig['additional'][0] as $apiRoute => $apiParams){
+			if ($_GET['_route_'] == $apiRoute){
+				$additionalParams = $apiParams;
+				break;
+			}
+		}
+	}
+
 	$apiParams = [];
 	if (!empty($requiredParams)){
 		foreach ($requiredParams as $param){
@@ -324,6 +337,16 @@
 			} else {
 				$apiParams[$param] = $inputData[$param];
 			}	
+		}
+	}	
+
+	unset($param);
+
+	if (!empty($additionalParams)){
+		foreach ($additionalParams as $param){
+			if (!empty($inputData[$param])){
+				$apiParams[$param] = $inputData[$param];
+			}
 		}
 	}	
 	
