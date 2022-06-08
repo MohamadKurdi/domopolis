@@ -331,10 +331,46 @@
 	$apiParams = [];
 	if (!empty($requiredParams)){
 		foreach ($requiredParams as $param){
+			$paramType = false;
+			if (count($exploded = explode(':', $param)) == 2){
+				$paramType = trim($exploded[1]);
+				$param 		= trim($exploded[0]);
+			}
+
 			if (empty($inputData[$param])){
 				header('HTTP/1.1 403 Error No Parameter');
 				die('NO REQUIRED PARAM FOR ' . $_GET['_route_'] . ': ' . $param);
 			} else {
+
+				if ($paramType == 'int'){
+					$inputData[$param] = (int)$param;
+				}
+
+				if ($paramType == 'json'){
+
+					if (!json_decode(html_entity_decode($inputData[$param])) && !json_decode($inputData[$param])){
+						$constants = get_defined_constants(true);
+						$json_errors = array();
+						foreach ($constants["json"] as $name => $value) {
+							if (!strncmp($name, "JSON_ERROR_", 11)) {
+								$json_errors[$value] = $name;
+							}
+						}
+
+						header('HTTP/1.1 403 Error JSON DECODE ERROR');
+						die('JSON DECODE ERROR FOR ' . $_GET['_route_'] . ': ' . $param . ': ' . $json_errors[json_last_error()]);
+					}
+
+
+					$inputData[$param] = json_decode(html_entity_decode($inputData[$param]), true);
+
+					if (!$inputData[$param]){
+						$inputData[$param] = json_decode($param, true);
+					}
+
+				}
+
+
 				$apiParams[$param] = $inputData[$param];
 			}	
 		}

@@ -1605,13 +1605,13 @@ class ControllerApiInfo1C extends Controller {
 
 
 
-			public function getFullProductsBySKU($data = array()){
+			public function getFullProductsBySKU($sku_list = array()){
 
 				$result = array();
 
-				if ($data){
+				if ($sku_list){
 					$this->load->model('catalog/product');		
-					foreach ($data as $sku){
+					foreach ($sku_list as $sku){
 						$products = $this->model_catalog_product->getProductsBySKU($sku);		
 
 						$result[trim($sku)] = array();

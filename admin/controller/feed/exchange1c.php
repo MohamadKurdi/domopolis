@@ -207,10 +207,10 @@ class ControllerFeedExchange1c extends Controller {
 		
 	}
 	
-	public function getOrderTransactionsXML($asked_order_id = 0) {
+	public function getOrderTransactionsXML($order_id = 0) {
 		
-		if ($asked_order_id > 0){
-			$order_id = (int)$asked_order_id;
+		if ($order_id > 0){
+			$order_id = (int)$order_id;
 		} elseif (isset($this->request->get['order_id'])) {
 			$order_id = (int)$this->request->get['order_id'];
 		} else {
@@ -228,10 +228,10 @@ class ControllerFeedExchange1c extends Controller {
 		
 	}
 	
-	public function getOrderReturnsXML($asked_order_id = 0) {
+	public function getOrderReturnsXML($order_id = 0) {
 		
-		if ($asked_order_id > 0){
-			$order_id = (int)$asked_order_id;
+		if ($order_id > 0){
+			$order_id = (int)$order_id;
 		} elseif (isset($this->request->get['order_id'])) {
 			$order_id = (int)$this->request->get['order_id'];
 		} else {
@@ -249,10 +249,10 @@ class ControllerFeedExchange1c extends Controller {
 		
 	}
 	
-	public function makeSalesResultXML($asked_order_id = 0) {
+	public function makeSalesResultXML($order_id = 0) {
 		
-		if ($asked_order_id > 0){
-			$order_id = (int)$asked_order_id;
+		if ($order_id > 0){
+			$order_id = (int)$order_id;
 		} elseif (isset($this->request->get['order_id'])) {
 			$order_id = (int)$this->request->get['order_id'];
 		} else {
