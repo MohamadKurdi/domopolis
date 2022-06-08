@@ -3202,6 +3202,47 @@
 								</tr>
 							</table>
 
+							<h2>Bitrix24 BOT API (Чудо-бот)</h2>
+
+							<table class="form">
+								<tr>
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Включить Bitrix24 BOT API</span></p>
+										<select name="config_bitrix_bot_enable">
+											<?php if ($config_bitrix_bot_enable) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</td>
+									
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Bitrix24 Домен</span></p>
+										<input type="text" name="config_bitrix_bot_domain" value="<?php echo $config_bitrix_bot_domain; ?>" size="50" style="width:250px;" />
+									</td>
+									
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Bitrix24 Scope</span></p>
+										<input type="text" name="config_bitrix_bot_scope" value="<?php echo $config_bitrix_bot_scope; ?>" size="50" style="width:250px;" />
+									</td>
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Bitrix24 Client ID</span></p>
+										<input type="text" name="config_bitrix_bot_client_id" value="<?php echo $config_bitrix_bot_client_id; ?>" size="50" style="width:250px;" />
+									</td>
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Bitrix24 Secret</span></p>
+										<input type="text" name="config_bitrix_bot_client_secret" value="<?php echo $config_bitrix_bot_client_secret; ?>" size="50" style="width:250px;" />
+									</td>
+								</tr>
+							</table>
+
+
+
 							<h2>Telegram BOT API (уведомления)</h2>
 
 							<table class="form">

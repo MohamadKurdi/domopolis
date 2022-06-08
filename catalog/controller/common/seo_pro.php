@@ -1032,7 +1032,8 @@
 			'kp/errorreport',
 			'yamarket/api',
 			'kp/sparkpost',
-			'kp/mailgun'
+			'kp/mailgun',
+			'api/'
 			);
 			
 			if( isset( $this->request->get['route'] ) && strpos( $this->request->get['route'], 'module/mega_filter' ) !== false ) {

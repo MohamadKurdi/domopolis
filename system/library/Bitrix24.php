@@ -5,24 +5,30 @@
 		private $log;
 		private $appsConfig;
 		
-		private $bitrixDomain = 'imsgroup.bitrix24.ru';
-		private $bitrixScope = 'task,tasks_extended,imbot,im';
-		private $CLIENT_ID = 'local.5a7b334ad44d81.13028128';
-		private $CLIENT_SECRET = 't4bC1LMfo9dj54X35ZN3zwuyCJP5R96cBw6hLezi3j6PcjpNI8';
+		private $bitrixDomain = null;
+		private $bitrixScope = null;
+		private $CLIENT_ID = null;
+		private $CLIENT_SECRET = null;
 		
 		public function __construct($registry) {
 			
-			$this->request = $registry->get('request');			
-			$this->log = $registry->get('log');
+			$this->request 	= $registry->get('request');			
+			$this->log 		= $registry->get('log');
+			$this->config 	= $registry->get('config');
+
+			$this->bitrixDomain		= $this->config->get('config_bitrix_bot_domain');
+			$this->bitrixScope 		= $this->config->get('config_bitrix_bot_scope');
+			$this->CLIENT_ID 		= $this->config->get('config_bitrix_bot_client_id');
+			$this->CLIENT_SECRET 	= $this->config->get('config_bitrix_bot_client_secret');
 			
 			$appsConfig     = array();
-			$configFileName = '/bitrixbot_config_' . trim(str_replace('.', '_', $this->bitrixDomain)) . '.php';
+			$configFileName = DIR_SYSTEM . 'config/bitrixbot' . trim(str_replace('.', '_', $this->bitrixDomain)) . '.php';
 			
 			//при вызове от бота
 			if (isset($this->request->request['auth'])){
-				$configFileName = '/bitrixbot_config_' . trim(str_replace('.', '_', $this->request->request['auth']['domain'])) . '.php';
-				if (file_exists(__DIR__ . $configFileName)) {
-					include_once __DIR__ . $configFileName;
+				$configFileName = DIR_SYSTEM . 'config/bitrixbot' . trim(str_replace('.', '_', $this->request->request['auth']['domain'])) . '.php';
+				if (file_exists($configFileName)) {
+					include_once $configFileName;
 				}
 				
 				$this->appsConfig = $appsConfig;
@@ -30,8 +36,8 @@
 			//при вызове напрямую
 				} else {
 				
-				if (file_exists(__DIR__ . $configFileName)) {
-					include_once __DIR__ . $configFileName;
+				if (file_exists($configFileName)) {
+					include_once $configFileName;
 				}
 				
 				$this->appsConfig = $appsConfig;
@@ -66,7 +72,7 @@
 			$config = "<?php\n";
 			$config .= "\$appsConfig = " . var_export($params, true) . ";\n";
 			$config .= "?>";
-			$configFileName = '/bitrixbot_config_' . trim(str_replace('.', '_', $_domain)) . '.php';
+			$configFileName = DIR_SYSTEM . 'config/bitrixbot' . trim(str_replace('.', '_', $_domain)) . '.php';
 			file_put_contents(__DIR__ . $configFileName, $config);
 			return true;
 		}

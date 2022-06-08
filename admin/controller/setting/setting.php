@@ -2371,6 +2371,37 @@
 				$this->data['config_odinass_update_local_prices'] = $this->config->get('config_odinass_update_local_prices');
 			}
 
+			//Bitrix24 Bot
+			if (isset($this->request->post['config_bitrix_bot_enable'])) {
+				$this->data['config_bitrix_bot_enable'] = $this->request->post['config_bitrix_bot_enable']; 
+				} else {
+				$this->data['config_bitrix_bot_enable'] = $this->config->get('config_bitrix_bot_enable');
+			}
+
+			if (isset($this->request->post['config_bitrix_bot_domain'])) {
+				$this->data['config_bitrix_bot_domain'] = $this->request->post['config_bitrix_bot_domain']; 
+				} else {
+				$this->data['config_bitrix_bot_domain'] = $this->config->get('config_bitrix_bot_domain');
+			}
+
+			if (isset($this->request->post['config_bitrix_bot_scope'])) {
+				$this->data['config_bitrix_bot_scope'] = $this->request->post['config_bitrix_bot_scope']; 
+				} else {
+				$this->data['config_bitrix_bot_scope'] = $this->config->get('config_bitrix_bot_scope');
+			}
+
+			if (isset($this->request->post['config_bitrix_bot_client_id'])) {
+				$this->data['config_bitrix_bot_client_id'] = $this->request->post['config_bitrix_bot_client_id']; 
+				} else {
+				$this->data['config_bitrix_bot_client_id'] = $this->config->get('config_bitrix_bot_client_id');
+			}
+
+			if (isset($this->request->post['config_bitrix_bot_client_secret'])) {
+				$this->data['config_bitrix_bot_client_secret'] = $this->request->post['config_bitrix_bot_client_secret']; 
+				} else {
+				$this->data['config_bitrix_bot_client_secret'] = $this->config->get('config_bitrix_bot_client_secret');
+			}
+
 			//TELEGRAM
 			if (isset($this->request->post['config_telegram_bot_enable_alerts'])) {
 				$this->data['config_telegram_bot_enable_alerts'] = $this->request->post['config_telegram_bot_enable_alerts']; 

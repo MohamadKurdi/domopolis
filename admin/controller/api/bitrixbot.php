@@ -602,7 +602,7 @@
 			
 			$this->load->model('kp/bitrixBot');
 			
-			$this->model_kp_bitrixBot->sendMessage($message = 'Это я теперь умею писать в чат. Могу отсылать уведомления о пропущенных звонках, например, вместо Валеры.',  $attach = array(), 'chat9667');
+			$this->model_kp_bitrixBot->sendMessage($message = 'Тестовое сообщение',  $attach = array(), 'chat9667');
 		}
 		
 		private function morph($n, $f1, $f2, $f5) {

@@ -11,10 +11,13 @@
 	$ipsConfig  = loadJsonConfig('ips');
 	$apisConfig = loadJsonConfig('api');   	
 
-	var_dump($_GET);
-
 	if (empty($_GET['_route_']) && !empty($_GET['route'])){
 		$_GET['_route_'] = $_GET['route'];		
+	}
+
+	$_GET['_route_'] = ltrim($_GET['_route_'], '/');
+	if (strpos($_GET['_route_'], 'api/') !== 0){
+		$_GET['_route_'] = 'api/' . $_GET['_route_'];
 	}
 
 	$whitelisted = false;
@@ -66,8 +69,8 @@
 	}	
 
 	//header('X-CONFIG-USED: ' . $currentConfigFile);
-	if (defined(CONFIG_FILE) && file_exists(APPLICATION_DIRECTORY . '/' . CONFIG_FILE)){
-		$currentConfigFile = APPLICATION_DIRECTORY . '/' . CONFIG_FILE;
+	if (defined('CONFIG_FILE') && file_exists(APPLICATION_DIRECTORY . '/' . CONFIG_FILE)){
+		$currentConfigFile = CONFIG_FILE;
 	}
 		
 	if (!empty($apisConfig['configs']) && !empty($apisConfig['configs'][0])){
@@ -80,7 +83,7 @@
 	}
 
 	header('X-CONFIG-FILE: ' . $currentConfigFile);
-	require_once($currentConfigFile);
+	require_once(APPLICATION_DIRECTORY . '/' . $currentConfigFile);
 	
 	if (isset($storesConfig[$httpHOST])){
 		$store_id = $storesConfig[$httpHOST];	
@@ -268,6 +271,7 @@
 	$registry->set('weight', 			new Weight($registry));
 	$registry->set('length', 			new Length($registry));
 	$registry->set('cart', 				new Cart($registry));
+	$registry->set('user', 				new User($registry));
 	$registry->set('openbay', 			new Openbay($registry));
 	$registry->set('encryption', 		new Encryption($registry->get('config')->get('config_encryption')));	
 
@@ -293,7 +297,9 @@
 		unset($registry->get('request')->get['_route_']);
 	}
 	
-	$controller->addPreAction(new Action('common/seo_pro'));
+	if (strpos($currentConfigFile, 'admin') === false){
+		$controller->addPreAction(new Action('common/seo_pro'));
+	}
 
 	$inputData = array_merge($registry->get('request')->post, $registry->get('request')->get);
 	$inputData = array_map("trim", $inputData);
@@ -319,7 +325,7 @@
 				$apiParams[$param] = $inputData[$param];
 			}	
 		}
-	}
+	}	
 	
 	// Router
 	if (isset($registry->get('request')->get['route'])) {

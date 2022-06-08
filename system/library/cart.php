@@ -1086,6 +1086,21 @@
 					$percent = $entityReward['percent'];				
 				}
 			}
+
+			if (!$points && !$percent && $product['categories']){
+				$categories = array_map('trim', explode(',', $product['categories']));
+
+				if ($categories){
+					foreach ($categories as $category_id){
+						$entityReward = $this->getEntityReward('c', $category_id, $store_id);
+
+						if ($entityReward['points'] || $entityReward['percent']) {				
+							$points = $entityReward['points'];
+							$percent = $entityReward['percent'];				
+						}
+					}
+				}
+			}
 			
 			if (!$points && !$percent){
 				$points = 0;
