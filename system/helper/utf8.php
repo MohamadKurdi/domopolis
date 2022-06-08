@@ -294,7 +294,7 @@
 		}
 	}
 	
-	function prepareEcommPrice($price){
+	function prepareEcommPrice($price) : float{
 		
 		$hbprice = str_replace('.','',$price);
 		$hbprice = str_replace(',','.',$hbprice);
@@ -302,7 +302,7 @@
 		$hbprice = ltrim($hbprice,'.');
 		$hbprice = rtrim($hbprice,'.');
 		
-		return $hbprice;
+		return (float)$hbprice;
 	}
 	
 	function prepareEcommString($string){
