@@ -41,6 +41,9 @@
 #Статика минификатора
 /min/
 
+#Кэш системного пользователя
+/.cache/
+
 #Шаблоны, языки
 /catalog/view/theme/
 /catalog/language/
