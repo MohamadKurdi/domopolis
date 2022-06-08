@@ -859,7 +859,7 @@ if ($input['mode'] == 'product_list'){
 		}
 	}
 
-	$action = new Action('kp/salary/getManagerKPIFor1C', array('data' => $input));
+	$action = new Action('kp/salary/getManagerKPIFor1C', array('info_type' => $info_type, 'month' => $month, 'year' => $year));
 
 } elseif ($input['mode'] == 'getbmreport'){
 

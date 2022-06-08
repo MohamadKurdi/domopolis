@@ -38,7 +38,7 @@ class ControllerApiInfo1C extends Controller {
 
 	}
 
-	public function getOrderJSON($order_id){
+	public function getOrderJSON($order_id = 0){
 
 		$query = $this->db->query("SELECT * FROM `order` WHERE order_id = '" . (int)$order_id . "'");
 

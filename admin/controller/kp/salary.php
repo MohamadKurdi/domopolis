@@ -149,8 +149,15 @@ class ControllerKPSalary extends Controller
 		}
 
 
-		public function getManagerKPIFor1C($data = array())
+		public function getManagerKPIFor1C($info_type, $month, $year)
 		{
+
+			$data = [
+				'month'		=> $month,
+				'year'		=> $year,
+				'info_type' 	=> $info_type
+			];
+
 			$this->load->model('kp/work');
 
 			if ($data['info_type'] == 'getparams') {

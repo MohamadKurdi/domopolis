@@ -328,6 +328,19 @@
 		}
 	}
 
+	unset($apiRoute);
+	unset($apiParams);
+
+	$paramsValues = false;
+	if (!empty($apisConfig['paramvalues']) && !empty($apisConfig['paramvalues'][0])){
+		foreach ($apisConfig['paramvalues'][0] as $apiRoute => $apiParams){
+			if ($_GET['_route_'] == $apiRoute && !empty($apiParams[0])){
+				$paramsValues = $apiParams[0];
+				break;
+			}
+		}
+	}
+
 	$apiParams = [];
 	if (!empty($requiredParams)){
 		foreach ($requiredParams as $param){
@@ -338,12 +351,29 @@
 			}
 
 			if (empty($inputData[$param])){
+
 				header('HTTP/1.1 403 Error No Parameter');
 				die('NO REQUIRED PARAM FOR ' . $_GET['_route_'] . ': ' . $param);
+
 			} else {
 
+				if (!empty($paramsValues[$param])){
+					if (!in_array($inputData[$param], $paramsValues[$param])){
+						header('HTTP/1.1 403 Error No Parameter');
+						die('INCORRECT PARAM VALUE FOR ' . $_GET['_route_'] . ': ' . $param .', MUST BE ONE OF: ' . implode(',', $paramsValues[$param]));
+					}
+				}
+
 				if ($paramType == 'int'){
-					$inputData[$param] = (int)$param;
+					$inputData[$param] = (int)$inputData[$param];
+				}
+
+				if ($paramType == 'string'){
+					$inputData[$param] = (string)$inputData[$param];
+				}
+
+				if ($paramType == 'float'){
+					$inputData[$param] = (float)$inputData[$param];
 				}
 
 				if ($paramType == 'json'){
@@ -370,8 +400,8 @@
 
 				}
 
-
 				$apiParams[$param] = $inputData[$param];
+
 			}	
 		}
 	}	
