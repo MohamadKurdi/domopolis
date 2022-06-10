@@ -580,8 +580,6 @@ class ControllerApiInfo1C extends Controller {
 
 		$this->response->setOutput(json_encode($return));
 
-
-
 	}
 
 
@@ -2015,6 +2013,34 @@ class ControllerApiInfo1C extends Controller {
 			$result = $this->model_kp_info1c->getStocksFrom1C();
 			
 			$this->updateStockXML($result, $update, $updateStockGroups);											
+		}
+
+
+		public function getOrderCurrentStatusJSON($orders){
+			$this->load->model('sale/order');
+			
+			$orders = explode(',', $orders);
+			
+			$responce = array();
+			
+			foreach ($orders as $order_id){
+				
+				$order_info = $this->db->query("SELECT o.order_id, os.name, os.order_status_id FROM `order` o LEFT JOIN order_status os ON (o.order_status_id = os.order_status_id AND os.language_id = 2) WHERE o.order_id = '" . (int)$order_id . "' LIMIT 1");
+				if (!$order_info->num_rows){
+					$responce[$order_id] = array(				
+						'error' => "true",
+						'error_msg' => 'Order does not exist'
+					);	
+				} else {
+					
+					foreach ($order_info->row as $key => $value){
+						$responce[$order_id][$key] = $value;						
+					}
+					
+				}
+			}
+			
+			$this->response->setOutput(json_encode($responce));
 		}
 		
 		public function getOrderCurrentStatus($orders){

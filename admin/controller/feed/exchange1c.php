@@ -91,27 +91,17 @@ class ControllerFeedExchange1c extends Controller {
 	
 	public function getDeliveriesAndShippings(){
 		
-		if (isset($this->request->get['do_echo']) && $this->request->get['do_echo'] == '1'){
-			$do_echo = true;
-		} else {
-			$do_echo = false;
-		}
 		
 		$this->load->model('feed/exchange1c');
-		$this->model_feed_exchange1c->getDeliveriesAndShippings($do_echo);
+		$this->model_feed_exchange1c->getDeliveriesAndShippings(true);
 				
 	}
 	
 	public function getOrderStatusCodes(){
 		
-		if (isset($this->request->get['do_echo']) && $this->request->get['do_echo'] == '1'){
-			$do_echo = true;
-		} else {
-			$do_echo = false;
-		}
 		
 		$this->load->model('feed/exchange1c');
-		$this->model_feed_exchange1c->getOrderStatusCodes($do_echo);
+		$this->model_feed_exchange1c->getOrderStatusCodes(true);
 	}
 	
 	public function getProductsLeft(){
@@ -170,40 +160,24 @@ class ControllerFeedExchange1c extends Controller {
 
 	public function getDimensions(){
 		
-		if (isset($this->request->get['do_echo']) && $this->request->get['do_echo'] == '1'){
-			$do_echo = true;
-		} else {
-			$do_echo = false;
-		}
 		
 		$this->load->model('feed/exchange1c');
-		$this->model_feed_exchange1c->getDimensions($do_echo);
+		$this->model_feed_exchange1c->getDimensions(true);
 		
 	}
 	
 	public function getCurrencies(){
 		
-		if (isset($this->request->get['do_echo']) && $this->request->get['do_echo'] == '1'){
-			$do_echo = true;
-		} else {
-			$do_echo = false;
-		}
-		
 		$this->load->model('feed/exchange1c');
-		$this->model_feed_exchange1c->getCurrencies($do_echo);
+		$this->model_feed_exchange1c->getCurrencies(true);
 		
 	}
 	
 	public function getCategoriesTree(){
 		
-		if (isset($this->request->get['do_echo']) && $this->request->get['do_echo'] == '1'){
-			$do_echo = true;
-		} else {
-			$do_echo = false;
-		}
 		
 		$this->load->model('feed/exchange1c');
-		$this->model_feed_exchange1c->getCategoriesTree($do_echo);
+		$this->model_feed_exchange1c->getCategoriesTree(true);
 		
 	}
 	
@@ -217,14 +191,8 @@ class ControllerFeedExchange1c extends Controller {
 			$order_id = 0;
 		}
 		
-		if (isset($this->request->get['do_echo']) && $this->request->get['do_echo'] == '1'){
-			$do_echo = true;
-		} else {
-			$do_echo = false;
-		}
-		
 		$this->load->model('feed/exchange1c');
-		$this->model_feed_exchange1c->getOrderTransactionsXML($order_id, $do_echo);
+		$this->model_feed_exchange1c->getOrderTransactionsXML($order_id, true);
 		
 	}
 	
@@ -238,14 +206,9 @@ class ControllerFeedExchange1c extends Controller {
 			$order_id = 0;
 		}
 		
-		if (isset($this->request->get['do_echo']) && $this->request->get['do_echo'] == '1'){
-			$do_echo = true;
-		} else {
-			$do_echo = false;
-		}
 		
 		$this->load->model('feed/exchange1c');
-		$this->model_feed_exchange1c->getOrderReturnsXML($order_id, $do_echo);
+		$this->model_feed_exchange1c->getOrderReturnsXML($order_id, true);
 		
 	}
 	
@@ -259,14 +222,9 @@ class ControllerFeedExchange1c extends Controller {
 			$order_id = 0;
 		}
 		
-		if (isset($this->request->get['do_echo']) && $this->request->get['do_echo'] == '1'){
-			$do_echo = true;
-		} else {
-			$do_echo = false;
-		}
 		
 		$this->load->model('feed/exchange1c');
-		$this->model_feed_exchange1c->makeSalesResultXML($order_id, $do_echo);
+		$this->model_feed_exchange1c->makeSalesResultXML($order_id, true);
 		
 	}
 	
@@ -280,14 +238,9 @@ class ControllerFeedExchange1c extends Controller {
 			$order_id = 0;
 		}
 		
-		if (isset($this->request->get['do_echo']) && $this->request->get['do_echo'] == '1'){
-			$do_echo = true;
-		} else {
-			$do_echo = false;
-		}
 		
 		$this->load->model('feed/exchange1c');
-		$this->model_feed_exchange1c->getOrderXML($order_id, $do_echo);
+		$this->model_feed_exchange1c->getOrderXML($order_id, true);
 		
 	}
 }

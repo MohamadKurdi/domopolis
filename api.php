@@ -22,10 +22,10 @@
 
 	$whitelisted = false;
 	if (!empty($apisConfig['whitelist'])){
-		if (!empty($_GET['_route_']) && in_array($_GET['_route_'], $apisConfig['routes'])){
+		if (!empty($_GET['_route_']) && in_array($_GET['_route_'], $apisConfig['whitelist'])){
 			$whitelisted = true;
 		}
-	}
+	}	
 
 	if (!empty($ipsConfig['whitelist'])){
 		if (!$whitelisted && !in_array($_SERVER['REMOTE_ADDR'], $ipsConfig['whitelist'])){
