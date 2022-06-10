@@ -244,6 +244,37 @@ class ControllerApiInfo1C extends Controller {
 		$this->response->setOutput('SQL EXECUTED:' . $sql);
 	}
 
+	public function getOrdersInCourierServiceJSON(){
+
+		$order_data = array();
+
+			//На пвз
+		$query = $this->db->query("SELECT order_id FROM `order` WHERE order_status_id = '" . $this->config->get('config_in_pickup_status_id') . "'");
+
+		foreach ($query->rows as $row){
+			$order_data[] = $row['order_id'];
+		}
+
+			//Доставляется по москве
+		$query = $this->db->query("SELECT order_id FROM `order` WHERE shipping_country_id = 176 AND 
+			(shipping_city LIKE '%Москва%'
+				OR shipping_city LIKE '%Moscow%'
+				OR shipping_city LIKE '%москва%'
+				)
+			AND order_status_id = 2
+			");
+
+		foreach ($query->rows as $row){
+			$order_data[] = $row['order_id'];
+		}
+
+		$order_data = array_unique($order_data);
+
+		$this->response->setOutput(json_encode($order_data));
+
+
+	}
+
 	public function getOrdersInCourierService(){
 
 		$order_data = array();
@@ -2018,10 +2049,6 @@ class ControllerApiInfo1C extends Controller {
 
 		public function getOrderCurrentStatusJSON($orders){
 			$this->load->model('sale/order');
-			
-			$orders = explode(',', $orders);
-			
-			$responce = array();
 			
 			foreach ($orders as $order_id){
 				

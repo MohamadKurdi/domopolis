@@ -372,6 +372,10 @@
 					$inputData[$param] = (string)$inputData[$param];
 				}
 
+				if ($paramType == 'date'){
+					$inputData[$param] = date('Y-m-d', strtotime($inputData[$param]));
+				}
+
 				if ($paramType == 'float'){
 					$inputData[$param] = (float)$inputData[$param];
 				}
