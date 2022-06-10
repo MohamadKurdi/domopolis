@@ -1666,7 +1666,7 @@
 				
 				if ($actions && count($actions)){
 					if (count($actions) == 1){
-						if ($page == 1 && count($this->data['products'] > 10)){
+						if ($page == 1 && $this->data['products'] && count($this->data['products']) > 10){
 							
 							$action = array_shift($actions);
 							if ($action['image_to_cat']) {
