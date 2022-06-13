@@ -1,6 +1,11 @@
 <?
 	
 	class ControllerKPService extends Controller {
+
+		public function pingAPI($ping){
+			header('HTTP/1.1 200 OK');
+			$this->response->setOutput('OK');			
+		}
 		
 		public function smsQueue(){
 			$this->smsQueue->cron();

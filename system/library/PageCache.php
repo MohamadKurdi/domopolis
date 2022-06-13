@@ -114,6 +114,56 @@ class PageCache{
 		return $json;		
 	}
 
+	public function pingAPI(){
+		$body 	= '';
+		$engine = '';
+		$class  = 'good';
+
+		try {
+			$httpClient = new GuzzleHttp\Client();
+			$httpResponce = $httpClient->request('GET', HTTP_CATALOG . 'api/ping?ping=1');		
+
+			if ($httpResponce->getStatusCode() != 200){
+
+				$body = 'FAIL: ' . $httpResponce->getStatusCode();
+				$class = 'bad';
+
+			} else {
+
+				foreach ($httpResponce->getHeaders() as $name => $value){
+
+					if (mb_strtoupper($name) == 'X-NO-FPC-TIME'){
+						$value = $value[0];
+						$body = round($value, 4);																
+
+						if ((float)$value > 0.2){
+							$class = 'warn';
+						}
+
+						if ((float)$value > 0.5){
+							$class = 'bad';
+						}
+					}
+
+				}
+
+			}
+		} catch (GuzzleHttp\Exception\ClientException $e){
+
+			$body  = $e->getMessage();
+			$class = 'bad';
+
+		}
+
+		$json = [
+			'body'  	=> $body,
+			'engine'	=> $engine,
+			'class' 	=> $class,
+		];
+
+		return $json;
+	}
+
 	public function getServerResponceTime(){
 		$body 	= '';
 		$engine = '';

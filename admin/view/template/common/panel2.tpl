@@ -215,6 +215,18 @@
 				<h2>Наши сервисы</h2>
 
 				<div class="tile-block">
+					<div class="tile info-loader unknown" data-path="common/panel/pingAPI">
+						<div class="tile-heading">OUR API TTFB</div>
+						<div class="tile-body"><i class="fa fa-cog"></i>
+							<span class="tile-result"></span>
+						</div>
+						<div class="tile-footer">
+							<?php echo HTTPS_CATALOG . 'api/ping'; ?>
+						</div>
+					</div>
+				</div>
+
+				<div class="tile-block">
 					<div class="tile info-loader unknown" data-path="common/panel/getServerResponceTime">
 						<div class="tile-heading">TTFB</div>
 						<div class="tile-body"><i class="fa fa-rocket"></i>

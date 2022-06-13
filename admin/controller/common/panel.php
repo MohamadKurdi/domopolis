@@ -156,6 +156,12 @@ class ControllerCommonPanel extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
+	public function pingAPI(){
+		$json = $this->PageCache->pingAPI();	
+
+		$this->response->setOutput(json_encode($json));
+	}
+
 
 	public function getServerResponceTime(){
 		$json = $this->PageCache->getServerResponceTime();	

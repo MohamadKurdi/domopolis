@@ -51,7 +51,7 @@ class ControllerApiInfo1C extends Controller {
 		}
 	}
 
-	public function addTTNHistory($order_id, $ttn, $courierCode){			
+	public function addTTNHistory($order_id, $ttn, $couriercode){			
 		$this->load->model('sale/order');			
 		$ttn = trim($ttn);
 
@@ -72,7 +72,7 @@ class ControllerApiInfo1C extends Controller {
 			}
 		}
 
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "order_ttns` SET	order_id = '" . (int)$order_id . "', ttn = '" . $this->db->escape($ttn) . "', delivery_code = '" . $this->db->escape($courierCode) . "', date_ttn = NOW(), sms_sent = NOW()");	
+		$this->db->query("INSERT INTO `" . DB_PREFIX . "order_ttns` SET	order_id = '" . (int)$order_id . "', ttn = '" . $this->db->escape($ttn) . "', delivery_code = '" . $this->db->escape($couriercode) . "', date_ttn = NOW(), sms_sent = NOW()");	
 		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET `ttn` = '" . $this->db->escape($ttn) . "' WHERE order_id = " . (int)$order_id);	
 
 		$smsTEXT = 'Заказ #' . $order_id . ' отправлен, ТТН ' . $ttn;	
