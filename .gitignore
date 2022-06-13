@@ -7,6 +7,7 @@
 /admin/app/
 /admin/icons/
 /admin/icon/
+/admin/manifest.json
 /admin/browserconfig.xml
 /admin/favicon.ico
 /admin/offline.html
