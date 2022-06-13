@@ -1,0 +1,168 @@
+{
+	"routes":[
+		"api/ping",
+		"api/sparkpost",
+		"api/mailgun",
+		"api/asterisk",
+		"api/bitrixbot",
+		"api/bitrixbot/sendMessageToUser",	
+		"api/describe",
+		"api/info1c/getProductPrice",
+		"api/info1c/getProductPrices",
+		"api/info1c/setProductPrices",
+		"api/info1c/getFullProduct",
+		"api/info1c/getProductImage",
+		"api/info1c/getFullProductsBySKU",
+		"api/info1c/getOrderXML",
+		"api/info1c/getOrderReturnsXML",
+		"api/info1c/getOrderTransactionsXML",
+		"api/info1c/makeSalesResultXML",
+		"api/info1c/getOrderJSON",
+		"api/info1c/getManagerKPIJSON",
+		"api/info1c/getCurrenciesXML",
+		"api/info1c/getDimensionsXML",
+		"api/info1c/getDeliveriesXML",
+		"api/info1c/getOrderStatusListXML",
+		"api/info1c/getCategoriesTreeXML",
+		"api/info1c/getFullWaitlistJSON",
+		"api/info1c/getOrderSalesByDeliveryNumXML",
+		"api/info1c/getOrdersCurrentStatusJSON",
+		"api/info1c/exportOrdersFromToXML",
+		"api/info1c/getOrdersInCourierServiceJSON",
+		"api/info1c/addOrderTTNHistory",
+		"api/info1c/addOrderStatusHistory",
+		"api/info1c/putOrderTrackingInfo",
+		"api/info1c/updateOrdersInCourierService",
+		"api/info1c/describeTableFields",
+		"api/info1c/editOrderFields"		
+	],
+	"configs":[
+		{
+			"api/ping": 								"/admin/config.slave.php",
+			"api/asterisk":								"config.api.php",
+			"api/mailgun": 								"config.api.php",			
+			"api/bitrixbot":							"/admin/config.php",
+			"api/bitrixbot/sendMessageToUser":			"/admin/config.php",
+			"api/info1c/getProductPrice": 				"config.slave.php",
+			"api/info1c/getProductPrices":				"/admin/config.slave.php",
+			"api/info1c/setProductPrices":				"/admin/config.php",
+			"api/info1c/getFullProduct":				"/admin/config.slave.php",
+			"api/info1c/getProductImage":				"/admin/config.slave.php",
+			"api/info1c/getFullProductsBySKU":			"/admin/config.slave.php",
+			"api/info1c/getOrderXML":					"/admin/config.slave.php",
+			"api/info1c/getOrderReturnsXML":			"/admin/config.slave.php",
+			"api/info1c/getOrderTransactionsXML":		"/admin/config.slave.php",
+			"api/info1c/makeSalesResultXML":			"/admin/config.slave.php",
+			"api/info1c/getOrderJSON":					"/admin/config.slave.php",
+			"api/info1c/getManagerKPIJSON":				"/admin/config.slave.php",
+			"api/info1c/getCurrenciesXML":				"/admin/config.slave.php",
+			"api/info1c/getDimensionsXML":				"/admin/config.slave.php",
+			"api/info1c/getDeliveriesXML":				"/admin/config.slave.php",
+			"api/info1c/getOrderStatusListXML":			"/admin/config.slave.php",
+			"api/info1c/getCategoriesTreeXML":			"/admin/config.slave.php",
+			"api/info1c/getFullWaitlistJSON":			"/admin/config.slave.php",
+			"api/info1c/getOrderSalesByDeliveryNumXML":	"/admin/config.slave.php",
+			"api/info1c/getOrdersCurrentStatusJSON":	"/admin/config.slave.php",
+			"api/info1c/exportOrdersFromToXML":			"/admin/config.slave.php",
+			"api/info1c/getOrdersInCourierServiceJSON":	"/admin/config.slave.php",
+			"api/info1c/addOrderTTNHistory":			"/admin/config.php",
+			"api/info1c/addOrderStatusHistory":			"/admin/config.php",
+			"api/info1c/putOrderTrackingInfo":			"/admin/config.php",
+			"api/info1c/updateOrdersInCourierService":	"/admin/config.php",
+			"api/info1c/describeTableFields":			"/admin/config.php",
+			"api/info1c/editOrderFields":				"/admin/config.php"
+		}
+	],
+	"params":[
+		{	
+			"api/ping":											["ping:int"],
+			"api/info1c/getProductPrice":						["product_id:int"],
+			"api/info1c/getProductPrices":						["product_id:int"],
+			"api/info1c/setProductPrices":						["product_id:int", "prices:json"],
+			"api/info1c/getFullProduct":						["product_id:int"],
+			"api/info1c/getProductImage":						["product_id:int"],
+			"api/info1c/getFullProductsBySKU":					["sku_list:json"],
+			"api/info1c/getOrderXML":							["order_id:int"],
+			"api/info1c/getOrderReturnsXML":					["order_id:int"],
+			"api/info1c/getOrderTransactionsXML":				["order_id:int"],
+			"api/info1c/makeSalesResultXML":					["order_id:int"],
+			"api/info1c/getOrderJSON":							["order_id:int"],
+			"api/info1c/getManagerKPIJSON":						["info_type:string", "month:int", "year:int"],
+			"api/info1c/getOrderSalesByDeliveryNumXML":			["order_id:int", "delivery_num:int"],
+			"api/info1c/getOrdersCurrentStatusJSON":			["order_ids:json"],
+			"api/info1c/exportOrdersFromToXML":					["date_from:date", "date_to:date"],
+			"api/bitrixbot/sendMessageToUser":					["user_id:string", "message:string"],
+			"api/info1c/addOrderTTNHistory":					["order_id:int", "ttn:string", "couriercode:string"],
+			"api/info1c/addOrderStatusHistory":					["order_id:int", "order_status_id:int"],
+			"api/info1c/putOrderTrackingInfo":					["tracking_data:json"],
+			"api/info1c/updateOrdersInCourierService":			["courier_data:json"],
+			"api/info1c/editOrderFields":						["order_id:int", "fields:json"],
+			"api/info1c/describeTableFields":					["table:string"]
+		}
+	],
+	"additional":[
+		{
+			"api/info1c/getProductImage":			["width", "height"],
+			"api/info1c/exportOrdersFromToXML":		["only_complete"],
+			"api/bitrixbot/sendMessageToUser":		["message_type"],
+			"api/info1c/addOrderStatusHistory":		["comment", "notify"]
+		}
+	],
+	"paramvalues":[
+		{
+			"api/info1c/getManagerKPIJSON":				[{
+				"info_type": ["getparams", "getvalues"]
+			}],
+			"api/bitrixbot/sendMessageToUser":				[{
+				"message_type": ["info", "question", "info"]
+			}]
+		}
+	],
+	"description":[
+		{
+			"api/ping":								"Тестирование маршрутизации API",
+			"api/sparkpost":						"Webhook почтового сервиса SparkPost",
+			"api/mailgun":							"Webhook почтового сервиса MailGun",
+			"api/asterisk":							"Webhook сервиса телефонии, прием информации о звонках",
+			"api/bitrixbot":						"Webhook для бота Битрикс24 (Хоботун)",			
+			"api/bitrixbot/sendMessageToUser":		"Расширение Webhook для бота Битрикс24, позволяющее отправить пользователю сообщение через API",
+			"api/describe":							"Описание методов API (текущий метод)",
+			"api/info1c/getProductPrice":			"Получение цены товара фронта в валюте текущего магазина, к которому производится запрос",
+			"api/info1c/getProductPrices":			"Получение всех цен товара в JSON",
+			"api/info1c/setProductPrices":			"Установка цен товара",
+			"api/info1c/getFullProduct":			"Получение полной информации о товаре в JSON",
+			"api/info1c/getProductImage":			"Получение картинок товара с заданными размерами",
+			"api/info1c/getFullProductsBySKU":		"Получение полной информации о списке товаров по SKU в JSON",
+			"api/info1c/getOrderXML":				"Получение информации о заказе в XML",
+			"api/info1c/getOrderReturnsXML":		"Получение информации о возвратах заказа в XML",
+			"api/info1c/getOrderTransactionsXML":	"Получение информации о транзкциях заказа в XML",
+			"api/info1c/makeSalesResultXML":		"Получение информации о реализации заказа в XML",
+			"api/info1c/getOrderJSON":				"Получение информации о заказе в JSON (просто табличка order)",
+			"api/info1c/getManagerKPIJSON":			"Получение информации по зарплате и KPI менеджеров в JSON. getparams = получить товары, getvalues = получить значения",
+			"api/info1c/getCurrenciesXML":			"Получение информации о валютах и курсах сайта в XML",
+			"api/info1c/getDimensionsXML":			"Получение информации о единицах измерения в XML",
+			"api/info1c/getDeliveriesXML":			"Получение информации о способах доставки и оплаты в XML",
+			"api/info1c/getOrderStatusListXML":		"Получение списка статусов заказов сайта в XML",
+			"api/info1c/getCategoriesTreeXML":		"Получение дерева категорий сайта в XML",
+			"api/info1c/getFullWaitlistJSON":		"Получение информации о товарах в листе ожидания покупателей в JSON",
+			"api/info1c/getOrderSalesByDeliveryNumXML":		"Получение информации о реализации заказа, учитывая номер поставки покупателю в XML",
+			"api/info1c/getOrdersCurrentStatusJSON":		"Получение информации о текущем статусе заказов в JSON. Можно сразу несколько заказов, тоже в JSON",
+			"api/info1c/exportOrdersFromToXML":				"Выгрузка заказов от даты date_from до даты date_to. В ответе будет относительный путь к директории с XML",
+			"api/info1c/getOrdersInCourierServiceJSON":		"Получить список заказов, которые находятся в пункте самовывоза или доставляются по основному городу",
+			"api/info1c/addOrderTTNHistory":				"Добавить ТТН к заказу с указанием курьерской службы. Также отправляется SMS клиенту",
+			"api/info1c/addOrderStatusHistory":				"Сменить статус заказа и добавить эту запись в историю",
+			"api/info1c/putOrderTrackingInfo":				"Добавить историю к трекингу заказа для клиента и уведомления клиента (если включено)",
+			"api/info1c/updateOrdersInCourierService":		"Обновить информацию о заказах, которые находятся в службе доставки",
+			"api/info1c/describeTableFields":				"Получить описание любой таблички базы данных - названия, тип данных полей и комментарии к ним",
+			"api/info1c/editOrderFields":					"Обновить произвольное поле в табличке заказов. При обновлении выполняется контроль типов данных. Описание таблички можно получить в api/info1c/describeTableFields?table=order"
+
+		}
+	],
+	"whitelist": [
+		"api/ping",
+		"api/sparkpost",
+		"api/mailgun",
+		"api/bitrixbot",
+		"api/describe"
+	]
+}
