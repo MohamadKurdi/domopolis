@@ -112,6 +112,24 @@ class ControllerApiInfo1C extends Controller {
 			$this->model_kp_product->reindexElastic($products);
 			$this->rainforestAmazon->offersParser->PriceLogic->priceUpdaterQueue->cleanQueue();
 		}
+	}
+
+	public function describeTableFields($table){
+
+		$query = $this->db->query("show full columns from `" . $this->db->escape($table) . "`");
+
+		$result = array();
+		foreach ($query->rows as $row){
+
+			$result[] = array(
+				'field' => $row['Field'],
+				'type'  => $row['Type'],
+				'comment'  => $row['Comment'],
+			);
+
+		}
+
+		$this->response->setOutput(json_encode($result));
 
 
 
@@ -194,10 +212,81 @@ class ControllerApiInfo1C extends Controller {
 	}
 
 	public function editOrderFields($order_id, $fields){
+		$jsonResultFields = array();
+		foreach ($fields as $field => $value){
+
+			if (in_array($field, ['order_id', 'ttn'])){
+				die("You can not change $field in ORDER table");
+			}
+
+
+			$check = $this->db->query("SHOW FULL COLUMNS FROM `order` LIKE '" . $this->db->escape($field) . "'");
+
+			if (!$check->num_rows){			
+				die("no $field in ORDER table");
+			}
+
+			if ($check->row['Field'] == 'courier_id'){
+				$check->row['Type'] = 'varchar';
+			}
+
+			if (mb_stripos($check->row['Type'], 'int') !== false){
+
+				if (!is_numeric($value)){
+					die("invalid data type for $field, must be integer");
+				}
+
+				$type = 'int';
+			}
+
+			if (mb_stripos($check->row['Type'], 'varchar') !== false){
+				$type = 'varchar';
+			}
+
+			if (mb_stripos($check->row['Type'], 'text') !== false){
+				$type = 'varchar';
+			}
+
+			if (mb_stripos($check->row['Type'], 'decimal') !== false){
+
+				if (!is_numeric($value)){
+					die("invalid type for $field, must be float");
+				}
+
+				$type = 'decimal';
+			}
+
+			if (mb_stripos($check->row['Type'], 'datetime') !== false){
+
+				if (date('Y-m-d H:i:s', strtotime($value)) != $value){
+					die("invalid data type for $field, must be datetime Y-m-d H:i:s");
+				}
+
+				$type = 'datetime';
+			}
+
+			if (mb_stripos($check->row['Type'], 'date') !== false){
+
+				if (date('Y-m-d', strtotime($value)) != $value){
+					die("invalid data type for $field, must be date Y-m-d");
+				}
+
+				$type = 'date';
+			}
+
+			$jsonResultFields[] = array(
+				'name' 	=> $check->row['Field'],
+				'value'	=> $value,
+				'type'	=> $type
+			);
+
+		}
+
+
 
 		$sql = "UPDATE `order` SET ";
 
-		foreach ($fields as $field){
+		foreach ($jsonResultFields as $field){
 
 			if ($field['name'] == 'courier_id'){
 				$this->load->model('user/user');
@@ -757,21 +846,12 @@ class ControllerApiInfo1C extends Controller {
 						
 					}
 					
-				} else {
-					
-					
-				}
-				
-				
+				} else {					
+					die('No order found');					
+				}								
 			}
 			
-			
-			
-			
-			
 			echo 'parsed';
-			
-			
 			
 		}
 		
@@ -1678,7 +1758,8 @@ class ControllerApiInfo1C extends Controller {
 
 			}		
 
-			public function addOrderHistory($order_id, $order_status_id, $comment, $notify){
+			public function addOrderHistory($order_id, $order_status_id, $comment = '', $notify = false){
+
 				$this->load->model('sale/order');
 				$this->load->model('sale/customer');
 				$this->load->model('localisation/order_status');

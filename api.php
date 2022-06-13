@@ -379,7 +379,7 @@
 				if ($paramType == 'float'){
 					$inputData[$param] = (float)$inputData[$param];
 				}
-
+				
 				if ($paramType == 'json'){
 
 					if (!json_decode(html_entity_decode($inputData[$param])) && !json_decode($inputData[$param])){
@@ -419,6 +419,7 @@
 			}
 		}
 	}	
+
 	
 	// Router
 	if (isset($registry->get('request')->get['route'])) {

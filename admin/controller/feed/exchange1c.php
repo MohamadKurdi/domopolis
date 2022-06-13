@@ -89,8 +89,7 @@ class ControllerFeedExchange1c extends Controller {
 	//	$this->model_setting_setting->editSetting('exchange1c', $config);
 	}
 	
-	public function getDeliveriesAndShippings(){
-		
+	public function getDeliveriesAndShippings(){		
 		
 		$this->load->model('feed/exchange1c');
 		$this->model_feed_exchange1c->getDeliveriesAndShippings(true);
