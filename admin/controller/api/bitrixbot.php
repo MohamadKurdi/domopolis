@@ -865,7 +865,13 @@ public function parseCommand($commands = array(), $param = ''){
 
 			}
 
-			public function sendMessageToUser($data = array()){
+			public function sendMessageToUser($user_id, $message, $message_type = 'info'){
+
+				$data = [
+					'user_id' 		=> $user_id,
+					'message_type' 	=> $message_type,
+					'message' 		=> $message
+				];
 
 				$this->load->model('user/user');
 				$this->load->model('kp/bitrixBot');
