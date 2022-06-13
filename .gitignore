@@ -5,6 +5,10 @@
 /admin/config*.php
 /admin/config.parts/*
 /admin/app/
+/admin/icons/
+/admin/icon/
+/admin/browserconfig.xml
+/admin/favicon.ico
 /admin/offline.html
 
 #Основные конфиги
