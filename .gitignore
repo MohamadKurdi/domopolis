@@ -37,6 +37,8 @@
 /pwa/*
 /offline.html
 /offline.*.html
+/browserconfig.xml
+/favicon.ico
 
 #Статика минификатора
 /min/
