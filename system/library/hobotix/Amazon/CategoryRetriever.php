@@ -2,43 +2,49 @@
 	
 	namespace hobotix\Amazon;
 	
-	class CategoryRetriever
+	class CategoryRetriever extends RainforestRetriever
 	{
-		
-		private $db;	
-		private $config;
-		
-		private $rfClient;
-		
-		public function __construct($registry, $rfClient){
-			
-			$this->config = $registry->get('config');
-			$this->db = $registry->get('db');
-			$this->log = $registry->get('log');
-			$this->rfClient = $rfClient;
-			
-		}
-		
+						
 		const CLASS_NAME = 'hobotix\\Amazon\\CategoryRetriever';
-
 
 		public function getCategories(){
 			$result = [];
 
-			$query = $this->db->query("SELECT c.*, cd.name FROM category c LEFT JOIN category_description cd ON (c.category_id = cd.category_id)  WHERE cd.language_id = '" . $this->config->get('config_language_id') . "' AND c.amazon_sync_enable = 1 AND c.amazon_category_id > 0");
+			$query = $this->db->ncquery("SELECT c.*, cd.name FROM category c LEFT JOIN category_description cd ON (c.category_id = cd.category_id)  WHERE cd.language_id = '" . $this->config->get('config_language_id') . "' AND c.amazon_sync_enable = 1 AND c.amazon_category_id > 0");
 
 			foreach ($query->rows as $row){
 				$result[] = [
 					'category_id' 			=> $row['category_id'],
 					'amazon_category_id' 	=> $row['amazon_category_id'],
-					'name'					=> $row['name'],					
+					'amazon_category_name'	=> $row['amazon_category_name'],
+					'amazon_last_sync'		=> $row['amazon_last_sync'],
+					'amazon_fulfilled'		=> ($row['amazon_last_sync'] != '0000-00-00 00:00:00'),
+					'name'					=> $row['name']						
 				];
 			}
 
 			return $result;
 		}
 
-		
+		public function setLastCategoryUpdateDate($category_id){
+			$this->db->query("UPDATE category SET amazon_last_sync = NOW() WHERE category_id = '" . (int)$category_id . "'");
+			return $this;
+		}
+
+
+		public function getCategoryFromAmazon($params = []){
+			$this->checkIfPossibleToMakeRequest();
+
+			$options = [
+				'type' 			=> 'category',
+				'category_id' 	=> $params['amazon_category_id'],
+				'sort_by'		=> 'most_recent',
+				'page'			=> $params['page']
+
+			];
+
+			return $this->doRequest($options);
+		}
 
 
 

@@ -1,0 +1,34 @@
+<?php
+$_['heading_title']      = 'interkassa ++';
+$_['entry_login']        = 'Идентификатор магазина';
+$_['entry_password1']    = 'Секретный ключ';
+$_['entry_on_status']    = 'Статус заказа после неуспешной или ожидаемой оплаты';
+$_['entry_order_status'] = 'Статус после удачной оплаты';
+$_['entry_geo_zone']     = 'Регион доступности оплаты';
+$_['entry_status']       = 'Статус';
+$_['entry_sort_order']   = 'Сортировка';
+$_['entry_style']         = 'Вид кнопки под стиль темы';
+$_['text_payment']       = 'Оплата';
+$_['text_order']         = 'Заказы';
+$_['status_title']       = 'Оплаченные заказы';
+$_['text_success']       = 'Настройки сохранены';
+$_['text_my']       	 = 'Свой';
+$_['text_default']       = 'По умолчанию';
+$_['entry_interplusplus_instruction'] = 'Инструкция при оформлении заказа:<br/><small>Поддерживает переменные:<br/>$href$ - ссылка на оплату<br/>$orderid$ - номер заказа<br/>$itogo$ - сумма заказа<br/>а также html теги.</small>';
+$_['entry_interplusplus_instruction_tab']      = 'Использвать инструкцию при оформлении заказа?';
+$_['entry_interplusplus_mail_instruction_tab']      = 'Использовать инструкцию в письме с заказом?';
+$_['entry_interplusplus_mail_instruction']      = 'Инструкция в письме с заказом:<br/><small>Поддерживает переменные:<br/>$href$ - ссылка на оплату<br/>$orderid$ - номер заказа<br/>$itogo$ - сумма заказа<br/>а также html теги.</small>';
+$_['entry_interplusplus_success_comment_tab']      = 'Использовать комметарий покупателю в письме о успешной оплате?';
+$_['entry_interplusplus_success_comment']      = 'Комметарий покупателю в письме о успешной оплате:<br/><small>Поддерживает переменные:<br/>$orderid$ - номер заказа<br/>$itogo$ - сумма заказа</small>';
+$_['entry_interplusplus_name_tab']      = 'Текст в название метода оплаты?';
+$_['entry_interplusplus_name']      = 'Название метода оплаты';
+$_['entry_interplusplus_success_alert_admin_tab']      = 'Письмо администратору при успешной оплате';
+$_['entry_interplusplus_success_alert_customer_tab']      = 'Письмо покупателю при успешной оплате';
+$_['entry_interplusplus_success_page_tab']      = 'Свой текст на странице успешной оплаты?';
+$_['entry_interplusplus_success_page_text']      = 'Текст на странице успешной оплаты:<br/><small>Поддерживает переменные:<br/>$orderid$ - номер заказа<br/>$itogo$ - сумма заказа<br/>а также html теги.</small>';
+$_['entry_interplusplus_fail_page_tab']      = 'Свой текст на странице не успешной оплаты?';
+$_['entry_interplusplus_fail_page_text']      = 'Текст на странице не успешной оплаты:<br/><small>Поддерживает переменные:<br/>$href$ - ссылка на оплату<br/>$orderid$ - номер заказа<br/>$itogo$ - сумма заказа<br/>а также html теги.</small>';
+$_['entry_interplusplus_waiting_page_tab']      = 'Свой текст на странице ожидаемой оплаты?';
+$_['entry_interplusplus_waiting_page_text']      = 'Текст на странице ожидаемой оплаты:<br/><small>Поддерживает переменные:<br/>$href$ - ссылка на оплату<br/>$orderid$ - номер заказа<br/>$itogo$ - сумма заказа<br/>а также html теги.</small>';
+$_['entry_button_later']      = 'Кнопка оплатить позже в оформлении заказа';
+?>

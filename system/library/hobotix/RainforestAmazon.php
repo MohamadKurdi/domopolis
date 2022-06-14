@@ -15,6 +15,7 @@ class RainforestAmazon
 	public $infoUpdater;
 	public $simpleProductParser;
 	public $paramsTranslator;
+	public $yandexTranslator;
 
 	private $telegramBot;
 	private $tgAlertChatID = null;
@@ -24,9 +25,9 @@ class RainforestAmazon
 
 	public function __construct($registry){
 
-		$this->config = $registry->get('config');
-		$this->db = $registry->get('db');
-		$this->log = $registry->get('log');
+		$this->config 	= $registry->get('config');
+		$this->db 		= $registry->get('db');
+		$this->log 		= $registry->get('log');
 
 		$this->rfClient = new \CaponicaAmazonRainforest\Client\RainforestClient(['api_key' => trim($this->config->get('config_rainforest_api_key'))]);
 
@@ -43,8 +44,13 @@ class RainforestAmazon
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/CategoryParser.php');
 		$this->categoryParser = new Amazon\CategoryParser($registry, $this->rfClient);
 
+		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/RainforestRetriever.php');
+
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/CategoryRetriever.php');
 		$this->categoryRetriever = new Amazon\CategoryRetriever($registry, $this->rfClient);
+
+		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/ProductsRetriever.php');
+		$this->productsRetriever = new Amazon\ProductsRetriever($registry, $this->rfClient);
 
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/SimpleProductParser.php');
 		$this->simpleProductParser = new Amazon\SimpleProductParser($registry, $this->rfClient);	

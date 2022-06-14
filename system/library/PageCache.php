@@ -121,16 +121,16 @@ class PageCache{
 
 		try {
 			$httpClient = new GuzzleHttp\Client();
-			$httpResponce = $httpClient->request('GET', HTTP_CATALOG . 'api/ping?ping=1');		
+			$httpResponse = $httpClient->request('GET', HTTP_CATALOG . 'api/ping?ping=1');		
 
-			if ($httpResponce->getStatusCode() != 200){
+			if ($httpResponse->getStatusCode() != 200){
 
-				$body = 'FAIL: ' . $httpResponce->getStatusCode();
+				$body = 'FAIL: ' . $httpResponse->getStatusCode();
 				$class = 'bad';
 
 			} else {
 
-				foreach ($httpResponce->getHeaders() as $name => $value){
+				foreach ($httpResponse->getHeaders() as $name => $value){
 
 					if (mb_strtoupper($name) == 'X-NO-FPC-TIME'){
 						$value = $value[0];
@@ -171,14 +171,14 @@ class PageCache{
 
 		try {
 			$httpClient = new GuzzleHttp\Client();
-			$httpResponce = $httpClient->request('GET', HTTP_CATALOG);
+			$httpResponse = $httpClient->request('GET', HTTP_CATALOG);
 
-			if ($httpResponce->getStatusCode() != 200){
-				$body = 'FAIL: ' . $httpResponce->getStatusCode();
+			if ($httpResponse->getStatusCode() != 200){
+				$body = 'FAIL: ' . $httpResponse->getStatusCode();
 				$class = 'bad';
 			} else {
 
-				foreach ($httpResponce->getHeaders() as $name => $value){					
+				foreach ($httpResponse->getHeaders() as $name => $value){					
 					if (mb_strtoupper($name) == 'X-NO-FPC-TIME'){
 						$value = $value[0];
 						$body = round($value, 4);																

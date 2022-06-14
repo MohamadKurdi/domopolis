@@ -1,0 +1,26 @@
+<?php
+// Heading
+$_['heading_title']       = '<b>Популярные с отзывами</b>';
+
+// Text
+$_['text_module']         = 'Модули';
+$_['text_success']        = 'Настройки модуля обновлены!';
+$_['text_content_top']    = 'Верх страницы';
+$_['text_content_bottom'] = 'Низ страницы';
+$_['text_column_left']    = 'Левая колонка';
+$_['text_column_right']   = 'Правая колонка';
+$_['text_custom']         = 'Название блока:<br/><span class="help">Если оставить пустым, то будет выводиться переменная из языковых файлов</span>';
+
+// Entry
+$_['entry_product']       = 'Товары:';
+$_['entry_limit']         = 'Лимит:';
+$_['entry_image']         = 'Изображение (Ш x В):';
+$_['entry_layout']        = 'Макет:';
+$_['entry_position']      = 'Расположение:';
+$_['entry_status']        = 'Статус:';
+$_['entry_sort_order']    = 'Порядок сортировки:';
+
+// Error
+$_['error_permission']    = 'У Вас нет прав для управления этим модулем!';
+$_['error_image']         = 'Необходимо указать размеры изображения!';
+?>

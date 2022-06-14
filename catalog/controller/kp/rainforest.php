@@ -91,8 +91,7 @@ class ControllerKPRainForest extends Controller {
 			die();
 		}
 
-		$this->load->library('hobotix/RainforestAmazon');
-		$this->rainforestAmazon = new \hobotix\RainforestAmazon($this->registry);
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 
 
 		$topCategories = $this->rainforestAmazon->categoryParser->getTopCategories();
@@ -122,8 +121,7 @@ class ControllerKPRainForest extends Controller {
 			die('RNF API NOT ENABLED');
 		}
 
-		$this->load->library('hobotix/RainforestAmazon');
-		$this->rainforestAmazon = new \hobotix\RainforestAmazon($this->registry);
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 
 		$query = $this->db->query("SELECT * FROM product_amzn_data");
 
@@ -146,8 +144,7 @@ class ControllerKPRainForest extends Controller {
 			die('RNF API NOT ENABLED');
 		}
 		
-		$this->load->library('hobotix/RainforestAmazon');
-		$this->rainforestAmazon = new \hobotix\RainforestAmazon($this->registry);
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');
 
 			//Второй шаг, мы проверим товары, у которых нету ASIN, но есть EAN, попробуем получить их с амазона, запишем асин и собственно товар, если не найдем,
@@ -213,12 +210,100 @@ class ControllerKPRainForest extends Controller {
 		if (!$this->config->get('config_rainforest_enable_api')){
 			die('RNF API NOT ENABLED');
 		}
-
-		$this->load->model('catalog/product');
-
 		
+		require_once(DIR_APPLICATION . '../admin/model/catalog/product.php');
+		$this->model_catalog_product = new \ModelCatalogProduct($this->registry);
 
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$this->load->library('Timer');
+		$timer = new FPCTimer();
 
+		$categories = $this->rainforestAmazon->categoryRetriever->getCategories();
+
+		echoLine('[RETRIEVECATCRON] Всего категорий ' . count($categories));
+
+		foreach ($categories as $category){
+			echoLine('[RETRIEVECATCRON] Категория ' . $category['name'] . ': ' . html_entity_decode($category['amazon_category_name']));
+
+			$params = [
+				'amazon_category_id' => $category['amazon_category_id'],
+				'page'				 => 1
+			];
+
+			$rfCategoryObject = $this->rainforestAmazon->categoryRetriever->getCategoryFromAmazon($params);
+			echoLine('[RETRIEVECATCRON] Страница 1' . ', время ' . $timer->getTime());
+
+			$rfCategoryObject = $this->rainforestAmazon->categoryRetriever->getCategoryFromAmazon($params);
+			$rfCategory = $rfCategoryObject->getJsonResult();
+
+			if (!empty($rfCategory['category_results']) && count($rfCategory['category_results'])){
+					$continue = true;				
+					echoLine('[RETRIEVECATCRON] Товаров ' . count($rfCategory['category_results']));
+
+					foreach ($rfCategory['category_results'] as $rfSimpleProduct){
+						echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ': ' . $rfSimpleProduct['title']);
+
+					if (!$this->model_catalog_product->getProductsByAsin($rfSimpleProduct['asin'])){
+						echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' не найден, добавляем, продолжаем парсинг категории');
+						$this->model_catalog_product->addSimpleProductWithOnlyAsin(['asin' => $rfSimpleProduct['asin'], 'category_id' => $category['category_id'], 'name' => $rfSimpleProduct['title'], 'image' => $this->rainforestAmazon->categoryRetriever->getImage($rfSimpleProduct['image'])]);
+
+					} else {
+						echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' найден, останавливаем парсинг категории');
+
+						if ($category['amazon_fulfilled']){
+							$continue = false;						
+							break;
+						}
+					}
+				}		
+			}					
+
+			if (!$continue){
+				continue;
+			}
+
+			while(!empty($rfCategoryObject) && $rfCategoryObject->getJsonResult() && $rfCategoryObject->getNextPage()){
+				echoLine('[RETRIEVECATCRON] Страница ' . $rfCategoryObject->getNextPage() . ', время ' . $timer->getTime());
+
+				$params = [
+					'amazon_category_id' => $category['amazon_category_id'],
+					'page'				 => $rfCategoryObject->getNextPage()
+				];
+
+				$rfCategoryObject = $this->rainforestAmazon->categoryRetriever->getCategoryFromAmazon($params);
+				$rfCategory = $rfCategoryObject->getJsonResult();
+
+				if (!empty($rfCategory['category_results']) && count($rfCategory['category_results'])){
+					$continue = true;
+					echoLine('[RETRIEVECATCRON] Товаров ' . count($rfCategory['category_results']));
+
+					foreach ($rfCategory['category_results'] as $rfSimpleProduct){
+						echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ': ' . $rfSimpleProduct['title']);
+
+						if (!$this->model_catalog_product->getProductsByAsin($rfSimpleProduct['asin'])){
+							echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' не найден, добавляем, продолжаем парсинг категории');
+							$this->model_catalog_product->addSimpleProductWithOnlyAsin(['asin' => $rfSimpleProduct['asin'], 'category_id' => $category['category_id'], 'name' => $rfSimpleProduct['title'], 'image' => $this->rainforestAmazon->categoryRetriever->getImage($rfSimpleProduct['image'])]);
+						} else {
+							echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' найден, останавливаем парсинг категории');
+
+							if ($category['amazon_fulfilled']){
+								$continue = false;
+								break;
+							}
+						}
+					}
+
+					if (!$continue){
+						break;
+					}
+
+				} else {
+					break;					
+				}
+			}
+
+			$this->rainforestAmazon->categoryRetriever->setLastCategoryUpdateDate($category['category_id']);
+		}
 	}
 
 
@@ -231,10 +316,8 @@ class ControllerKPRainForest extends Controller {
 		if (!$this->config->get('config_rainforest_enable_api')){
 			die('RNF API NOT ENABLED');
 		}
-
-
-		$this->load->library('hobotix/RainforestAmazon');
-		$this->rainforestAmazon = new \hobotix\RainforestAmazon($this->registry);
+		
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');
 
 
@@ -302,9 +385,7 @@ class ControllerKPRainForest extends Controller {
 			die('RNF API NOT ENABLED');
 		}
 
-
-		$this->load->library('hobotix/RainforestAmazon');
-		$this->rainforestAmazon = new \hobotix\RainforestAmazon($this->registry);
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');
 	
 		if ($immediately){
