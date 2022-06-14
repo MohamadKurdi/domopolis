@@ -8,16 +8,16 @@ a img{border:0}
 form{margin:0;padding:0}
 label{cursor:pointer}
 .clr{clear:both}
-#header .div1{padding:5px;min-width:900px;box-shadow:inset 0 0 0 #444;background-color:#001d31}
+#header .div1{padding:5px;min-width:900px;box-shadow:inset 0 0 0 #444;background-color:#5d5d5d}
 #header .div2{color:#FFF;float:left}
 #header .div3{font-size:14px;color:#000;text-align:right;float:right;line-height:35px;margin-right:35px!important}
 #header .div2 span{font-weight:700}
 #menu_top{float:left}
-#menu_top .fa-bell{color:#788084}
+#menu_top .fa-bell{color:#5d5d5d}
 #menu_top > ul{margin:0}
 #menu_top > ul > li > ul{position:absolute;z-index:9;top:40px;background-color:#2e3438;padding-left:10px}
 #menu_top > ul > li > ul > li{list-style:none}
-#menu_top > ul a{display:block;color:#fff;text-decoration:none;padding:5px}
+#menu_top > ul a{display:block;color:#5d5d5d !important;text-decoration:none;padding:5px}
 #menu_top > ul > li > ul > li > a{opacity:.6}
 #menu_top > ul > li > ul > li > a:hover{opacity:1}
 #menu_top > ul > li{float:left;list-style:none}
@@ -32,7 +32,7 @@ label{cursor:pointer}
 #menu > ul > li.sfhover > ul{display:block}
 #menu > ul > li > ul > li > ul{display:none}
 #menu > ul > li > ul > li:hover > ul{display:block}
-#menu > ul .top,#menu > ul li li.sfhover{padding:7px;font-size:13px;color:#eee;text-align:center}
+#menu > ul .top,#menu > ul li li.sfhover{padding:7px;font-size:13px;color:#1c1b1b;text-align:center}
 #menu > ul ul li{padding:3px 2px 3px 0}
 #menu > ul .selected .top{color:#fff;opacity:1}
 #menu > ul :hover a.top,#menu > ul .sfhover a.top{color:#fff;opacity:1}
@@ -47,7 +47,7 @@ label{cursor:pointer}
 #menu > ul li li:hover,#menu > ul li li.sfhover{color:#000}
 #container{height:100%}
 body > #container{height:auto;min-height:100%}
-#content{padding:10px 15px 0;min-width:900px;padding-bottom:128px;background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(105,105,105,1) 100%);}
+#content{padding:10px 15px 0;min-width:900px;padding-bottom:128px;background: #f3f3f3 url(/admin/view/image/bg_grey.png) repeat;}
 #footer{text-align:right;font-size:11px;color:#888;position:relative;margin-right:20px;margin-left:20px;clear:both;border-top:1px solid #ccc}
 #footer a{color:#333;text-decoration:underline}
 .breadcrumb,.breadcrumb a{font-size:12px;color:#666;display:none;margin1-bottom:5px}
@@ -126,7 +126,7 @@ table.form > tbody > tr > td{padding:10px}
 .refresh{cursor:pointer;position:relative;top:3px}
 .link_headr{text-decoration:none;color:#788084;border:1px solid #788084;padding:5px;border-radius:5px;cursor:pointer}
 .link_enter{color:#fff;padding:5px;border:1px solid transparent;cursor:pointer}
-.icon_header{font-size:35px;margin-right:5px;vertical-align:2px;color:#788084}
+.icon_header{font-size:35px;margin-right:5px;vertical-align:2px;color:#fff8ef}
 #dashboard{margin-left:0!important}
 #notification a:hover,#callbacks a:hover,#waitlists a:hover,#notification,#callbacks,#waitlists{background:none!important}
 #menu .hover > a{color:#fff;opacity:1}
@@ -155,7 +155,7 @@ a.active_new{color:#fff}
 input[type='text'],input[type='password'],input{padding:3px 10px;line-height:28px;background:#fff;border:1px solid #dbdbdb;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}
 select{padding:8px 10px;line-height:28px;background:#fff;border:1px solid #dbdbdb;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}
 .filter_bord{margin-top:20px}
-.div2 > div > div{color:#788084;font-weight:initial}
+.div2 > div > div{color:#e3e3e2;font-weight:initial}
 .status_color_list{display:block;border-radius:2px;padding:10px 5px}
 .status_color_a{color:#696969;text-decoration:none!important}
 .status_color_a:visited{color:#1e1e1e}
