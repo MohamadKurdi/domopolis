@@ -8,6 +8,7 @@ a img{border:0}
 form{margin:0;padding:0}
 label{cursor:pointer}
 .clr{clear:both}
+#menu_top .label{color: #5d5d5d !important;}
 #header .div1{padding:5px;min-width:900px;box-shadow:inset 0 0 0 #444;background-color:#5d5d5d}
 #header .div2{color:#FFF;float:left}
 #header .div3{font-size:14px;color:#000;text-align:right;float:right;line-height:35px;margin-right:35px!important}
