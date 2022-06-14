@@ -915,6 +915,8 @@
 				} else {
 				$this->db->query("UPDATE customer SET mudak = '0', customer_group_id = '" . (int)$data['customer_group_id'] . "' WHERE customer_id = '" . (int)$data['customer_id'] . "'");
 			}
+
+			$this->customer->addToEMAQueue($data['customer_id']);
 			
 			$this->db->query("UPDATE `customer` SET
 			passport_serie = '" . $this->db->escape($data['passport_serie']) . "',
@@ -3615,6 +3617,8 @@
 				}
 				
 			}
+
+			$this->customer->addToEMAQueue($order_info['customer_id']);
 			
 			//YANDEX MARKET
 			if ($order_info['yam'] && $order_info['yam_id']){
