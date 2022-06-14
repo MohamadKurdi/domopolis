@@ -3344,15 +3344,60 @@
 									</td>									
 								</tr>
 								<tr>
-									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Обновлять категории раз в Х дней</span></p>
-										<input type="number" name="config_rainforest_category_update_period" value="<?php echo $config_rainforest_category_update_period; ?>" size="50" style="width:50px;" />
+
+									<td width="15%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Включить перевод</span></p>
+										<select name="config_rainforest_enable_translation">
+											<?php if ($config_rainforest_enable_translation) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
 									</td>
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Обновлять кат. раз в Х дней</span></p>
+										<input type="number" name="config_rainforest_category_update_period" value="<?php echo $config_rainforest_category_update_period; ?>" size="50" style="width:100px;" />
+									</td>
+								
+									<td width="15%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Язык Amazon</span></p>
+										<select name="config_rainforest_source_language">
+										<?php foreach ($languages as $language) { ?>
+											<?php if ($language['code'] == $config_rainforest_source_language) { ?>
+												<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
+												<?php } else { ?>
+												<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+										</select>
+									</td>
+
+									<?php foreach ($languages as $language) { ?>
+										<?php if ($language['code'] != $config_rainforest_source_language) { ?>
+											<td width="15%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Переводить на <?php echo $language['code']; ?></span></p>
+												<select name="config_rainforest_enable_language_<?php echo $language['code']; ?>">
+													<?php if (${'config_rainforest_enable_language_' . $language['code']}) { ?>
+														<option value="1" selected="selected">Включить</option>
+														<option value="0">Отключить</option>
+													<?php } else { ?>													
+														<option value="1">Включить</option>
+														<option value="0"  selected="selected">Отключить</option>
+													<? } ?>
+												</select>
+											</td>
+										<?php } ?>
+									<?php } ?>
 
 									<td width="20%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">TG группа уведомлений</span></p>
 										<input type="text" name="config_rainforest_tg_alert_group_id" value="<?php echo $config_rainforest_tg_alert_group_id; ?>" size="50" style="width:250px;" />
 									</td>
+
 								</tr>
 							</table>
 

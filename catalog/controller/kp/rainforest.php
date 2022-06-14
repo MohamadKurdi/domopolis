@@ -135,14 +135,6 @@ class ControllerKPRainForest extends Controller {
 			}
 
 		}
-
-
-
-
-
-
-
-
 	}
 
 	public function parseeanscron(){
@@ -209,6 +201,23 @@ class ControllerKPRainForest extends Controller {
 			unset($timer);
 
 		}
+
+	}
+
+
+	public function parsenewproductscron(){
+		if (php_sapi_name() != 'cli'){
+			die();
+		}
+
+		if (!$this->config->get('config_rainforest_enable_api')){
+			die('RNF API NOT ENABLED');
+		}
+
+		$this->load->model('catalog/product');
+
+		
+
 
 	}
 

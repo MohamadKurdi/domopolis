@@ -17,7 +17,7 @@ class RainforestAmazon
 	public $paramsTranslator;
 
 	private $telegramBot;
-	private $tgAlertChatID = '-698960050';
+	private $tgAlertChatID = null;
 
 		//Эта шляпа может использовать в быстром получении категорий
 	public $categoryParser;
