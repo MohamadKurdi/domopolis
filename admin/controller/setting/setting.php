@@ -2453,6 +2453,17 @@
 				$this->data['config_rainforest_update_period'] = $this->config->get('config_rainforest_update_period');
 			}
 
+			if (isset($this->request->post['config_rainforest_category_update_period'])) {
+				$this->data['config_rainforest_category_update_period'] = $this->request->post['config_rainforest_category_update_period']; 
+				} else {
+				$this->data['config_rainforest_category_update_period'] = $this->config->get('config_rainforest_category_update_period');
+			}
+
+			if (isset($this->request->post['config_rainforest_tg_alert_group_id'])) {
+				$this->data['config_rainforest_tg_alert_group_id'] = $this->request->post['config_rainforest_tg_alert_group_id']; 
+				} else {
+				$this->data['config_rainforest_tg_alert_group_id'] = $this->config->get('config_rainforest_tg_alert_group_id');
+			}
 
 			if (isset($this->request->post['config_rainforest_enable_pricing'])) {
 				$this->data['config_rainforest_enable_pricing'] = $this->request->post['config_rainforest_enable_pricing']; 

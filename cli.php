@@ -193,8 +193,9 @@
 	$registry->set('user', 				new User($registry));
 	$registry->set('openbay', 			new Openbay($registry));
 	$registry->set('encryption', 		new Encryption($registry->get('config')->get('config_encryption')));	
+	$registry->set('yandexTranslator', 	new hobotix\yandexTranslator($registry));
 	$registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
-	$registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));	
+	$registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
 	$registry->set('CourierServices', 	new CourierServices());
 
 	$controller = new Front($registry);
@@ -208,7 +209,6 @@
 	} else {
 		$action = new Action($route);
 	}
-
 
 	if (isset($action)){
 

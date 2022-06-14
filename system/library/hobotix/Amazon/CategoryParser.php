@@ -56,23 +56,5 @@
 			return $this->doRequest(['parent_id' => $category_id]);
 	
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
 	}	

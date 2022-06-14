@@ -10,7 +10,7 @@ class RainforestAmazon
 	private $config;		
 	private $rfRequests = [];
 
-	private $rfClient;
+	private $rfClient;	
 	public $offersParser;
 	public $infoUpdater;
 	public $simpleProductParser;
@@ -43,11 +43,15 @@ class RainforestAmazon
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/CategoryParser.php');
 		$this->categoryParser = new Amazon\CategoryParser($registry, $this->rfClient);
 
+		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/CategoryRetriever.php');
+		$this->categoryRetriever = new Amazon\CategoryRetriever($registry, $this->rfClient);
+
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/SimpleProductParser.php');
 		$this->simpleProductParser = new Amazon\SimpleProductParser($registry, $this->rfClient);	
 
-		if ($this->config->get('config_telegram_bot_enable_alerts') && $this->config->get('config_telegram_bot_token')){
+		if ($this->config->get('config_telegram_bot_enable_alerts') && $this->config->get('config_telegram_bot_token') && $this->config->get('config_rainforest_tg_alert_group_id')){
 			$this->telegramBot = new \Longman\TelegramBot\Telegram($this->config->get('config_telegram_bot_token'), $this->config->get('config_telegram_bot_name'));
+			$this->tgAlertChatID = $this->config->get('config_rainforest_tg_alert_group_id');
 		}
 
 	}
