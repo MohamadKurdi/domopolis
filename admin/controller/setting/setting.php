@@ -1904,6 +1904,12 @@
 				} else {
 				$this->data['config_mailwizz_mapping_newsletter_personal'] = $this->config->get('config_mailwizz_mapping_newsletter_personal');
 			}
+
+			if (isset($this->request->post['config_mailwizz_noorder_days'])) {
+				$this->data['config_mailwizz_noorder_days'] = $this->request->post['config_mailwizz_noorder_days'];
+				} else {
+				$this->data['config_mailwizz_noorder_days'] = $this->config->get('config_mailwizz_noorder_days');
+			}
 			
 			if (isset($this->request->post['config_smtp_host'])) {
 				$this->data['config_smtp_host'] = $this->request->post['config_smtp_host'];

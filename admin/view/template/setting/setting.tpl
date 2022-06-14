@@ -2192,6 +2192,15 @@
 										<span class="help">Персональные рекомендации</span>								
 									</td>
 								</tr>
+
+								<tr>
+									<td>Количество дней</td>
+									<td>
+										<input type="number" name="config_mailwizz_noorder_days" value="<?php echo $config_mailwizz_noorder_days; ?>" step="1" />
+										<br />
+										<span class="help">количество дней без заказов для рассылки с информацией о количестве бонусов</span>								
+									</td>
+								</tr>
 							</table>
 							
 							<h2>Настройки отправки транзакционных писем</h2>

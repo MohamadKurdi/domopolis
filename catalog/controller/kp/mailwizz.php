@@ -71,6 +71,11 @@
 		}
 		
 		private function getCustomers($customerIDS){
+
+			if (!$customerIDS){
+				return [];
+			}
+
 			return $this->db->ncquery("SELECT c.*, 
 			(SELECT MAX(date_added) FROM customer_ip ci WHERE (ci.customer_id = c.customer_id)) AS last_date, 
 			(SELECT SUM(points) AS total FROM customer_reward cr WHERE (cr.customer_id = c.customer_id)) as total_reward,
@@ -102,6 +107,9 @@
 			'ORDER_GOOD_FIRST_DATE' 	=> $customer['order_good_first_date'],
 			'ORDER_GOOD_LAST_DATE' 		=> $customer['order_good_last_date'],
 			'ORDER_FIRST_DATE' 			=> $customer['order_first_date'],
+			'ORDER_LAST_DATE' 			=> $customer['order_last_date'],
+			'HAS_ORDERS_IN_DAYS'		=> (int)($customer['order_last_date'] >= date('Y-m-d', strtotime('-' . $this->config->get('config_mailwizz_noorder_days') . ' day'))),
+			'HAS_ORDERS_GOOD_IN_DAYS'	=> (int)($customer['order_good_last_date'] >= date('Y-m-d', strtotime('-' . $this->config->get('config_mailwizz_noorder_days') . ' day'))),
 			'AVG_CHEQUE' 				=> $customer['avg_cheque'],
 			'TOTAL_CHEQUE' 				=> $customer['total_cheque'],
 			'CSI_AVERAGE' 				=> $customer['csi_average'],
@@ -110,11 +118,12 @@
 			'LAST_SITE_ACTION' 			=> (date('Y-m-d', strtotime($customer['last_date']))),
 			
 			//Бонусов на счету
-			'TOTAL_REWARD' 				=> $customer['total_reward'],
+			'TOTAL_REWARD' 				=> (int)($customer['total_reward']),
+			'HAS_REWARD_POINTS' 		=> (int)((int)$customer['total_reward'] > 0),
 			
 			//История поиска
-			'SEARCH_HISTORY' 				=> $customer['search_history']
-			];						
+			'SEARCH_HISTORY' 			=> $customer['search_history']
+			];								
 			
 			return $data;
 		}				
@@ -258,6 +267,9 @@
 				
 			}
 			
-			$this->db->query("DELETE FROM mailwizz_queue WHERE customer_id IN (" . implode(',', $customerIDS) . ")");
+
+			if ($customerIDS){
+				$this->db->query("DELETE FROM mailwizz_queue WHERE customer_id IN (" . implode(',', $customerIDS) . ")");
+			}
 		}
 	}																
