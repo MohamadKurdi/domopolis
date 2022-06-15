@@ -44,7 +44,7 @@
 					return ((int)$this->jsonResult['pagination']['current_page'] + 1);
 				}
 
-				
+
 
 			}
 
@@ -106,6 +106,73 @@
 
 			return $this;
 		}
+
+		public function createRequest($params = []){
+
+			$data = [
+			'api_key' => $this->config->get('config_rainforest_api_key'),
+			'amazon_domain' => $this->config->get('config_rainforest_api_domain_1'),			
+			'customer_zipcode' => $this->config->get('config_rainforest_api_zipcode_1')
+			];
+			
+			$data = array_merge($data, $params);
+			$queryString =  http_build_query($data);			
+			
+			$ch = curl_init('https://api.rainforestapi.com/request?' . $queryString);
+			
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+			curl_setopt($ch, CURLOPT_VERBOSE, false);	
+			
+			return $ch;
+		}
+
+		private function parseResponse($response){
+			$response = json_decode($response, true);	
+			
+			if (!isset($response['request_info']['success'])){
+				return false;								
+			}
+			
+			if ($response['request_info']['success'] == false){
+				return false;
+			}
+			
+			return $response;
+			
+		}
+
+		public function doMultiRequests($requests){
+			$this->checkIfPossibleToMakeRequest();
+
+			$multi = curl_multi_init();
+			$channels 	= [];
+			$results 	= [];
+			
+			foreach ($requests as $request){								
+				$channels[$request['request_id']] = $request['request'];	
+				$results[$request['request_id']] = [];
+				curl_multi_add_handle($multi, $channels[$request['request_id']]);									
+			}			
+			
+			$running = null;
+			do {
+				curl_multi_exec($multi, $running);
+			} while ($running);
+			
+			foreach ($channels as $channel) {
+				curl_multi_remove_handle($multi, $channel);
+			}
+			curl_multi_close($multi);
+			
+			foreach ($channels as $request_id => $channel) {
+				$results[$request_id] = $this->parseResponse(curl_multi_getcontent($channel));				
+			}
+			
+			
+			return $results;
+		}
+
 
 	}
 		

@@ -162,6 +162,11 @@ class ControllerKPRainForest extends Controller {
 		if (!$this->config->get('config_rainforest_enable_api')){
 			die('RNF API NOT ENABLED');
 		}
+
+		if (!$this->config->get('config_rainforest_category_model')){
+			die('RNF Category API Workmode not set');
+		}
+
 		
 		require_once(DIR_APPLICATION . '../admin/model/catalog/product.php');
 		$this->model_catalog_product = new \ModelCatalogProduct($this->registry);
@@ -188,10 +193,6 @@ class ControllerKPRainForest extends Controller {
 			$rfCategory = $rfCategoryObject->getJsonResult();
 
 			$categoryResultIndex = \hobotix\RainforestAmazon::categoryModeResultIndexes[$this->config->get('config_rainforest_category_model')];
-
-			if (!$categoryResultIndex){
-				die('[RETRIEVECATCRON] ERROR PLEASE SELECT WORKMODE IN SETTINGS!');
-			}
 
 			if (!empty($rfCategory[$categoryResultIndex]) && count($rfCategory[$categoryResultIndex])){
 					$continue = true;				
