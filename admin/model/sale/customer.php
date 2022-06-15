@@ -1568,6 +1568,8 @@
 			if ($customer_info){
 				
 				$this->customer->addReward($customer_id, $description, $points, $order_id, $reason_code);
+
+				$this->customer->addToEMAQueue($customer_id);
 				
 				$this->language->load('mail/customer');
 				
