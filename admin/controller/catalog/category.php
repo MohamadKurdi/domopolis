@@ -903,8 +903,14 @@
 			header("Expires: 0");
 			
 			$file = fopen('php://output', 'w');
-		
-			$query = $this->db->query("SELECT * FROM category_amazon_tree WHERE 1");
+			
+			if ($this->config->get('config_rainforest_category_model') == 'standard'){
+				$query = $this->db->query("SELECT * FROM category_amazon_tree WHERE 1");
+			}
+
+			if ($this->config->get('config_rainforest_category_model') == 'bestsellers'){
+				$query = $this->db->query("SELECT * FROM category_amazon_bestseller_tree WHERE 1");
+			}
 		
 			foreach ($query->rows as $row){
 				
@@ -925,7 +931,8 @@
 				$queryString = http_build_query([
 				'api_key' 		=> $this->config->get('config_rainforest_api_key'),
 				'amazon_domain' => $this->config->get('config_rainforest_api_domain_1'),
-				'search_term'	=> $this->request->get['filter_name']
+				'search_term'	=> $this->request->get['filter_name'],
+				'type'			=> $this->config->get('config_rainforest_category_model')
 				]);
 
 				$ch = curl_init('https://api.rainforestapi.com/categories?' . $queryString);

@@ -2453,6 +2453,12 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_rainforest_enable_translation'] = $this->config->get('config_rainforest_enable_translation');
 		}
 
+		if (isset($this->request->post['config_rainforest_category_model'])) {
+			$this->data['config_rainforest_category_model'] = $this->request->post['config_rainforest_category_model']; 
+		} else {
+			$this->data['config_rainforest_category_model'] = $this->config->get('config_rainforest_category_model');
+		}
+
 		if (isset($this->request->post['config_rainforest_source_language'])) {
 			$this->data['config_rainforest_source_language'] = $this->request->post['config_rainforest_source_language']; 
 		} else {

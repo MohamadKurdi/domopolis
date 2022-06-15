@@ -36,7 +36,7 @@
 			$this->checkIfPossibleToMakeRequest();
 
 			$options = [
-				'type' 			=> 'category',
+				'type' 			=> 'categories',
 				'category_id' 	=> $params['amazon_category_id'],
 				'sort_by'		=> 'most_recent',
 				'page'			=> $params['page']

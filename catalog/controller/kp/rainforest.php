@@ -15,99 +15,51 @@ class ControllerKPRainForest extends Controller {
 
 	}
 
-	private function clearTable(){
+	
 
-		$this->db->query("TRUNCATE category_amazon_tree");
+	private function recursiveTree($category_id, $type){
 
-	}
-
-	private function updateFinalCategories(){
-		$query = $this->db->query("SELECT DISTINCT(category_amazon_tree) as parent_id FROM category_amazon_tree");
-
-		$parentIDList = [];
-		foreach ($query->rows as $row){
-			$parentIDList[] = $row['parent_id'];
-		}
-
-		$this->db->query("UPDATE category_amazon_tree SET final_category = 1 WHERE category_id NOT IN (" . implode(',', $parentIDList) . ")");
-			
-	}
-
-	private function createCategory($data){
-
-		if (empty($data['parent_id'])){
-			$data['parent_id'] = 0;
-		}
-
-		$this->db->ncquery("INSERT INTO category_amazon_tree SET 
-			category_id = '" . $this->db->escape($data['id']) . "', 
-			parent_id	= '" . $this->db->escape($data['parent_id']) . "',
-			name = '" . $this->db->escape($data['name']) . "', 
-			full_name = '" . $this->db->escape($data['path']) . "'");
-
-	}
-
-	private function getTopCategories(){
-
-		$query = $this->db->ncquery("SELECT * FROM category_amazon_tree WHERE parent_id = 0");
-
-		return $query->rows;
-
-	}
-
-
-
-	private function getCategoryChildren($category_id){
-		$result = $this->rainforestAmazon->categoryParser->getCategoryChildren($category_id);
-
-		if (empty($result['categories'])){
-			return false;
-		}
-
-		return $result['categories'];
-	}
-
-	private function recursiveTree($category_id){
-
-		$childCategories = $this->getCategoryChildren($category_id);
+		$childCategories = $this->rainforestAmazon->categoryParser->setType($type)->getCategoryChildren($category_id);
 
 		if ($childCategories) {
 			foreach ($childCategories as $childCategory){
 
 				echoLine($childCategory['path']);
 
-				$this->createCategory($childCategory);										
+				$this->rainforestAmazon->categoryParser->createCategory($childCategory);										
 
 				if ($childCategory['has_children']){
-					$this->recursiveTree($childCategory['id']);
+					$this->recursiveTree($childCategory['id'], $type);
 				}
 			}
 		}
 	}
-
-		//
-	public function parsecategoriescron(){
+		
+	public function parsecategoriescron($type = 'standard'){
 		if (php_sapi_name() != 'cli'){
 			die();
 		}
 
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 
+		if ($type == 'standard'){
 
-		$topCategories = $this->rainforestAmazon->categoryParser->getTopCategories();
 
-		foreach ($topCategories['categories'] as $topCategory){
-			$this->createCategory($topCategory);				
+			$topCategories = $this->rainforestAmazon->categoryParser->setType($type)->getTopCategories();
+
+			foreach ($topCategories['categories'] as $topCategory){
+				$this->rainforestAmazon->categoryParser->createCategory($topCategory);				
+			}
 		}
 
 		unset($topCategory);
-		foreach ($this->getTopCategories() as $topCategory){
+		foreach ($this->rainforestAmazon->categoryParser->setType($type)->getTopCategoriesFromDataBase() as $topCategory){
 
-			$this->recursiveTree($topCategory['category_id']);
+			$this->recursiveTree($topCategory['category_id'], $type);
 
 		}
 
-		$this->updateFinalCategories();
+		$this->rainforestAmazon->categoryParser->updateFinalCategories();
 
 	}
 

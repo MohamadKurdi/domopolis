@@ -3322,6 +3322,16 @@
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Обновлять цену раз в Х дней</span></p>
 										<input type="number" name="config_rainforest_update_period" value="<?php echo $config_rainforest_update_period; ?>" size="50" style="width:50px;" />
 									</td>
+
+									<td width="15%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Модель работы</span></p>
+										<select name="config_rainforest_category_model">
+
+											<?php foreach (['standard', 'bestsellers', 'deals'] as $rainforest_model) { ?>
+											<option value="<?php echo $rainforest_model; ?>" <?php if ($rainforest_model == $config_rainforest_category_model) { ?> selected="selected"<?php } ?>><?php echo $rainforest_model; ?></option>
+											<?php } ?>
+										</select>
+									</td>
 									
 									<td width="20%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Фильтры rfAPI - 1</span></p>
@@ -3346,7 +3356,7 @@
 								<tr>
 
 									<td width="15%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Включить перевод</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Переводить</span></p>
 										<select name="config_rainforest_enable_translation">
 											<?php if ($config_rainforest_enable_translation) { ?>
 												<option value="1" selected="selected">Включить</option>
