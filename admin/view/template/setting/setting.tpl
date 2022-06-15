@@ -690,7 +690,7 @@
 							
 							<tr>
 								<td>Переводить эти языки с RU</td>
-								<td><div class="scrollbox" style="height:100px;">
+								<td><div class="scrollbox" style="height:100px; width:100px;">
 									<?php $class = 'odd'; ?>
 									<?php foreach ($languages as $language) { ?>
 										<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
@@ -713,6 +713,56 @@
 								</td>
 							</tr>
 							
+							<tr>
+								<td>Переводить эти языки с DE</td>
+								<td><div class="scrollbox" style="height:100px; width:100px;">
+									<?php $class = 'odd'; ?>
+									<?php foreach ($languages as $language) { ?>
+										<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+										<div class="<?php echo $class; ?>">
+											<?php if (in_array($language['code'], $config_translate_from_de)) { ?>
+												
+												<input id="config_translate_from_de_<?php echo $language['code']; ?>" class="checkbox" type="checkbox" name="config_translate_from_de[]" value="<?php echo $language['code']; ?>" checked="checked" />
+												<label for="config_translate_from_de_<?php echo $language['code']; ?>"><?php echo $language['code']; ?></label>
+												
+												<?php } else { ?>
+												
+												<input id="config_translate_from_de_<?php echo $language['code']; ?>" class="checkbox" type="checkbox" name="config_translate_from_de[]" value="<?php echo $language['code']; ?>" />
+												<label for="config_translate_from_de_<?php echo $language['code']; ?>"><?php echo $language['code']; ?></label>
+												
+											<?php } ?>
+										</div>
+									<?php } ?>
+								</div>
+								<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);">Выделить всё</a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);">Снять выделение</a>
+								</td>
+							</tr>
+
+							<tr>
+								<td>Переводить эти языки с UK</td>
+								<td><div class="scrollbox" style="height:100px; width:100px;">
+									<?php $class = 'odd'; ?>
+									<?php foreach ($languages as $language) { ?>
+										<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+										<div class="<?php echo $class; ?>">
+											<?php if (in_array($language['code'], $config_translate_from_uk)) { ?>
+												
+												<input id="config_translate_from_uk_<?php echo $language['code']; ?>" class="checkbox" type="checkbox" name="config_translate_from_uk[]" value="<?php echo $language['code']; ?>" checked="checked" />
+												<label for="config_translate_from_uk_<?php echo $language['code']; ?>"><?php echo $language['code']; ?></label>
+												
+												<?php } else { ?>
+												
+												<input id="config_translate_from_uk_<?php echo $language['code']; ?>" class="checkbox" type="checkbox" name="config_translate_from_uk[]" value="<?php echo $language['code']; ?>" />
+												<label for="config_translate_from_uk_<?php echo $language['code']; ?>"><?php echo $language['code']; ?></label>
+												
+											<?php } ?>
+										</div>
+									<?php } ?>
+								</div>
+								<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);">Выделить всё</a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);">Снять выделение</a>
+								</td>
+							</tr>
+
 							<tr>
 								<td>Активные способы оплаты<br /><span class="help">выводятся в карте товара, по одному в строке</span></td>
 								<td><textarea name="config_payment_list" cols="40" rows="8"><?php echo $config_payment_list; ?></textarea></td>

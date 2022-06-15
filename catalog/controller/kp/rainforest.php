@@ -184,15 +184,20 @@ class ControllerKPRainForest extends Controller {
 
 			$rfCategoryObject = $this->rainforestAmazon->categoryRetriever->getCategoryFromAmazon($params);
 			echoLine('[RETRIEVECATCRON] Страница 1' . ', время ' . $timer->getTime());
-
-			$rfCategoryObject = $this->rainforestAmazon->categoryRetriever->getCategoryFromAmazon($params);
+			
 			$rfCategory = $rfCategoryObject->getJsonResult();
 
-			if (!empty($rfCategory['category_results']) && count($rfCategory['category_results'])){
-					$continue = true;				
-					echoLine('[RETRIEVECATCRON] Товаров ' . count($rfCategory['category_results']));
+			$categoryResultIndex = \hobotix\RainforestAmazon::categoryModeResultIndexes[$this->config->get('config_rainforest_category_model')];
 
-					foreach ($rfCategory['category_results'] as $rfSimpleProduct){
+			if (!$categoryResultIndex){
+				die('[RETRIEVECATCRON] ERROR PLEASE SELECT WORKMODE IN SETTINGS!');
+			}
+
+			if (!empty($rfCategory[$categoryResultIndex]) && count($rfCategory[$categoryResultIndex])){
+					$continue = true;				
+					echoLine('[RETRIEVECATCRON] Товаров ' . count($rfCategory[$categoryResultIndex]));
+
+					foreach ($rfCategory[$categoryResultIndex] as $rfSimpleProduct){
 						echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ': ' . $rfSimpleProduct['title']);
 
 					if (!$this->model_catalog_product->getProductsByAsin($rfSimpleProduct['asin'])){
@@ -200,17 +205,23 @@ class ControllerKPRainForest extends Controller {
 						$this->model_catalog_product->addSimpleProductWithOnlyAsin(['asin' => $rfSimpleProduct['asin'], 'category_id' => $category['category_id'], 'name' => $rfSimpleProduct['title'], 'image' => $this->rainforestAmazon->categoryRetriever->getImage($rfSimpleProduct['image'])]);
 
 					} else {
-						echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' найден, останавливаем парсинг категории');
+						echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' найден, продолжаем');						
 
-						if ($category['amazon_fulfilled']){
+						//Логика работы с найденными товарами - только в случае стандартной модели
+						if ($this->config->get('config_rainforest_category_model') == 'standard' && $category['amazon_fulfilled']){
+							echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' найден, останавливаем парсинг категории');
 							$continue = false;						
 							break;
 						}
 					}
 				}		
+			} else {
+
+				echoLine('[RETRIEVECATCRON] EMPTY ' . $categoryResultIndex);
+
 			}					
 
-			if (!$continue){
+			if (isset($continue) && !$continue){
 				continue;
 			}
 
@@ -225,32 +236,37 @@ class ControllerKPRainForest extends Controller {
 				$rfCategoryObject = $this->rainforestAmazon->categoryRetriever->getCategoryFromAmazon($params);
 				$rfCategory = $rfCategoryObject->getJsonResult();
 
-				if (!empty($rfCategory['category_results']) && count($rfCategory['category_results'])){
+				if (!empty($rfCategory[$categoryResultIndex]) && count($rfCategory[$categoryResultIndex])){
 					$continue = true;
-					echoLine('[RETRIEVECATCRON] Товаров ' . count($rfCategory['category_results']));
+					echoLine('[RETRIEVECATCRON] Товаров ' . count($rfCategory[$categoryResultIndex]));
 
-					foreach ($rfCategory['category_results'] as $rfSimpleProduct){
+					foreach ($rfCategory[$categoryResultIndex] as $rfSimpleProduct){
 						echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ': ' . $rfSimpleProduct['title']);
 
 						if (!$this->model_catalog_product->getProductsByAsin($rfSimpleProduct['asin'])){
 							echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' не найден, добавляем, продолжаем парсинг категории');
 							$this->model_catalog_product->addSimpleProductWithOnlyAsin(['asin' => $rfSimpleProduct['asin'], 'category_id' => $category['category_id'], 'name' => $rfSimpleProduct['title'], 'image' => $this->rainforestAmazon->categoryRetriever->getImage($rfSimpleProduct['image'])]);
 						} else {
-							echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' найден, останавливаем парсинг категории');
 
-							if ($category['amazon_fulfilled']){
+							echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' найден, продолжаем');							
+
+							//Логика работы с найденными товарами - только в случае стандартной модели
+							if ($this->config->get('config_rainforest_category_model') == 'standard' && $category['amazon_fulfilled']){
+								echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' найден, останавливаем парсинг категории');
 								$continue = false;
 								break;
 							}
 						}
 					}
 
-					if (!$continue){
+					if (isset($continue) && !$continue){
 						break;
 					}
 
 				} else {
-					break;					
+					
+					echoLine('[RETRIEVECATCRON] EMPTY ' . $categoryResultIndex);
+
 				}
 			}
 

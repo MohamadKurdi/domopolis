@@ -820,6 +820,18 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$this->data['config_translate_from_ru'] = $this->config->get('config_translate_from_ru');
 		}
+
+		if (isset($this->request->post['config_translate_from_de'])) {
+			$this->data['config_translate_from_de'] = $this->request->post['config_translate_from_de'];
+		} else {
+			$this->data['config_translate_from_de'] = $this->config->get('config_translate_from_de');
+		}
+
+		if (isset($this->request->post['config_translate_from_uk'])) {
+			$this->data['config_translate_from_uk'] = $this->request->post['config_translate_from_uk'];
+		} else {
+			$this->data['config_translate_from_uk'] = $this->config->get('config_translate_from_uk');
+		}
 		
 		if (isset($this->request->post['config_overprice'])) {
 			$this->data['config_overprice'] = $this->request->post['config_overprice'];

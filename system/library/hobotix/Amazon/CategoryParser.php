@@ -10,8 +10,7 @@ class CategoryParser
 	private $rfClient;
 
 	private $type   = 'standard';
-	private $table  = null;
-	private $tables = ['standard' => 'category_amazon_tree', 'bestsellers' => 'category_amazon_bestseller_tree'];
+	private $table  = null;	
 
 	public function __construct($registry, $rfClient){
 
@@ -20,7 +19,7 @@ class CategoryParser
 		$this->log = $registry->get('log');
 		$this->rfClient = $rfClient;
 
-		$this->table = $this->tables[$this->type];
+		$this->table = \hobotix\RainforestAmazon::categoryModeTables[$this->type];
 	}
 
 	const CLASS_NAME = 'hobotix\\Amazon\\CategoryParser';
@@ -51,7 +50,7 @@ class CategoryParser
 
 	public function setType($type){
 		$this->type = $type;	
-		$this->table = $this->tables[$this->type];
+		$this->table = \hobotix\RainforestAmazon::categoryModeTables[$this->type];
 		return $this;
 	}
 

@@ -40,9 +40,11 @@
 
 			if (!empty($this->jsonResult['pagination'])){
 
-				if ($this->jsonResult['pagination']['current_page'] <= $this->jsonResult['pagination']['total_pages']){
+				if ($this->jsonResult['pagination']['current_page'] < $this->jsonResult['pagination']['total_pages']){
 					return ((int)$this->jsonResult['pagination']['current_page'] + 1);
 				}
+
+				
 
 			}
 

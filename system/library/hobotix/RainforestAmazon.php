@@ -20,6 +20,10 @@ class RainforestAmazon
 	private $telegramBot;
 	private $tgAlertChatID = null;
 
+	public const categoryModeTables 		= ['standard' => 'category_amazon_tree', 'bestsellers' => 'category_amazon_bestseller_tree'];
+	public const categoryModeResultIndexes 	= ['standard' => 'category_results', 'bestsellers' => 'bestsellers'];
+	public const rainforestTypeMapping 		= ['standard' => 'categories', 'bestsellers' => 'bestsellers'];
+
 		//Эта шляпа может использовать в быстром получении категорий
 	public $categoryParser;
 
