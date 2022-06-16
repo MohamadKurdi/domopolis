@@ -370,55 +370,55 @@ class ControllerFeedGoogleSitemap extends Controller {
 				//end informations
 				//-----------------------------------------------------------------------------------			
 				//start news	
-			if (SITE_NAMESPACE == 'KITCHEN') {
-				$output  = '<?xml version="1.0" encoding="UTF-8"?>';
-				$output .= ' <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+			
+			$output  = '<?xml version="1.0" encoding="UTF-8"?>';
+			$output .= ' <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
 
-				xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';	
+			xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';	
 
-				$articles = $this->model_catalog_news->getNews();
+			$articles = $this->model_catalog_news->getNews();
 
-				foreach ($articles as $article) {
-					$output .= '<url>';
-					$output .= '<loc><![CDATA[' . $this->url->link('news/article', 'news_id=' . $article['news_id']) . ']]></loc>';
-					$output .= '<changefreq>weekly</changefreq>';
-					$output .= '<priority>1.0</priority>';
-					$output .= '</url>';   
-				}
+			foreach ($articles as $article) {
+				$output .= '<url>';
+				$output .= '<loc><![CDATA[' . $this->url->link('news/article', 'news_id=' . $article['news_id']) . ']]></loc>';
+				$output .= '<changefreq>weekly</changefreq>';
+				$output .= '<priority>1.0</priority>';
+				$output .= '</url>';   
+			}
 
-				$output .= '</urlset>';
+			$output .= '</urlset>';
 
-				$file = DIR_SITE . DIR_SITEMAPS . 'articles_sitemap_'.$store_id.'.xml';
-				$sitemaps[] = $host . DIR_SITEMAPS . 'articles_sitemap_'.$store_id.'.xml';
+			$file = DIR_SITE . DIR_SITEMAPS . 'articles_sitemap_'.$store_id.'.xml';
+			$sitemaps[] = $host . DIR_SITEMAPS . 'articles_sitemap_'.$store_id.'.xml';
 
-				$handle = fopen($file, 'w+');
-				flock($handle, LOCK_EX);
-				fwrite($handle, $output);
-				flock($handle, LOCK_UN);
-				fclose($handle);	
+			$handle = fopen($file, 'w+');
+			flock($handle, LOCK_EX);
+			fwrite($handle, $output);
+			flock($handle, LOCK_UN);
+			fclose($handle);	
 					//end news
 					//-----------------------------------------------------------------------------------			
 					//start news categories					
-				$output  = '<?xml version="1.0" encoding="UTF-8"?>';
-				$output .= ' <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+			$output  = '<?xml version="1.0" encoding="UTF-8"?>';
+			$output .= ' <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
 
-				xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';
+			xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">';
 
 
-				$output .= $this->model_catalog_supersitemap->getNcategories(0);
+			$output .= $this->model_catalog_supersitemap->getNcategories(0);
 
-				$output .= '</urlset>';
+			$output .= '</urlset>';
 
-				$file = DIR_SITE . DIR_SITEMAPS . 'articles_categories_sitemap_'.$store_id.'.xml';
-				$sitemaps[] = $host . DIR_SITEMAPS . 'articles_categories_sitemap_'.$store_id.'.xml';
+			$file = DIR_SITE . DIR_SITEMAPS . 'articles_categories_sitemap_'.$store_id.'.xml';
+			$sitemaps[] = $host . DIR_SITEMAPS . 'articles_categories_sitemap_'.$store_id.'.xml';
 
-				$handle = fopen($file, 'w+');
-				flock($handle, LOCK_EX);
-				fwrite($handle, $output);
-				flock($handle, LOCK_UN);
-				fclose($handle);	
+			$handle = fopen($file, 'w+');
+			flock($handle, LOCK_EX);
+			fwrite($handle, $output);
+			flock($handle, LOCK_UN);
+			fclose($handle);	
 					//end news categories
-			}
+			
 				//-----------------------------------------------------------------------------------			
 
 			$output  = '<?xml version="1.0" encoding="UTF-8"?>';

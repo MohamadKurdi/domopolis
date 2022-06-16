@@ -660,29 +660,14 @@
 				}
 			}
 			
-			
-			if (SITE_NAMESPACE == 'KITCHEN') {
-				$this->children = array(
+						
+			$this->children = array(
 				'module/language',
 				'module/currency',
 				'module/mmenu',
 				'common/topcontent',
-				);		
-				} elseif (SITE_NAMESPACE == 'HAUSGARTEN') {
-				
-				
-				$this->children = array(
-				'module/language',
-				'module/currency',
-				'module/cart',
-				'module/customermenu',
-				'module/mmenu_left',
-				'common/topcontent',
-				
-				);	
-				
-				
-			}		
+				);					
+			
 			
 			$this->data['logged'] = $this->customer->isLogged();
 			

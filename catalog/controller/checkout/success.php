@@ -29,11 +29,7 @@
 		public function index() { 	
 			
 			if (!isset($this->session->data['order_id']) && IS_DEBUG){
-				if (SITE_NAMESPACE == 'KITCHEN') {
-					$this->session->data['order_id'] = 213196;	
-					} elseif (SITE_NAMESPACE == 'HAUSGARTEN') {
-					$this->session->data['order_id'] = 587158;	
-				}
+				$this->session->data['order_id'] = 213196;
 			}
 			
 			//detecting mobile

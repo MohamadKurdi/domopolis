@@ -124,14 +124,14 @@
 						
 						// Level 1
 						$this->data['categories'][] = array(
-						'name'     => $category['name'],
-						'img'      => $this->model_tool_image->resize($category['image'], 100,100),
-						'children' => $children_data,
-						'menu_icon'=> html_entity_decode($category['menu_icon'], ENT_QUOTES, 'UTF-8'),
+						'name'     		=> $category['name'],
+						'img'      		=> $this->model_tool_image->resize($category['image'], 100,100),
+						'children' 		=> $children_data,
+						'menu_icon'		=> html_entity_decode($category['menu_icon'], ENT_QUOTES, 'UTF-8'),
 						'manufacturers' => $manufacturers_data,
-						'products' => $products_data,
-						'column'   => $category['column'] ? $category['column'] : 1,
-						'href'     => $this->url->link('product/category', 'path=' . $category['category_id'])
+						'products' 		=> $products_data,
+						'column'   		=> $category['column'] ? $category['column'] : 1,
+						'href'     		=> $this->url->link('product/category', 'path=' . $category['category_id'])
 						);
 						
 						

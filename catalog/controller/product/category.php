@@ -754,7 +754,7 @@
 				
 				$results = $this->model_catalog_product->getProducts($data);
 				
-				if (SITE_NAMESPACE == "KITCHEN" && $product_total == 0 && $category_id == GENERAL_DISCOUNT_CATEGORY){
+				if ($product_total == 0 && $category_id == GENERAL_DISCOUNT_CATEGORY){
 					$data = array(
 					'sort'  => $sort,
 					'order' => $order,
@@ -984,7 +984,7 @@
 							$price = $this->currency->format($this->tax->calculate($result['display_price_national'], $result['tax_class_id'], $this->config->get('config_tax')), $result['currency'], 1);
 						}
 						
-						if (SITE_NAMESPACE == 'HAUSGARTEN'){
+						if (false){
 							
 							if ($option_prices = $this->model_catalog_product->getProductOptionPrices($result['product_id'])){
 								if (isset($option_prices['special']) && $option_prices['special']){

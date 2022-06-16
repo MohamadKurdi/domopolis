@@ -123,24 +123,7 @@
 				} else {
 				$route = 'common/home';
 			}		
-			
-			// если настройка магазина (показівать меню слева) то
-			/*
-			if (SITE_NAMESPACE == 'KITCHEN' && $this->config->get('show_menu_in_left') && $route == 'common/home') {
-				
-				if( $extension['code'] != 'mega_filter' ) {
-					unset( $module['_idx'] );
-					$module['layout_id'] = current( $module['layout_id'] );
-				}
-				
-				$module_data[] = array(
-				'code'       => 'mmenu_left',
-				'setting'    => false,
-				'sort_order' => -1000000000000000000000
-				);				
-			}
-			*/
-			
+						
 			
 			foreach ($module_data as $key => $value) {
 				$sort_order[$key] = $value['sort_order'];

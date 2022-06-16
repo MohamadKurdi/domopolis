@@ -1058,21 +1058,7 @@
 					
 					$this->data['show_manufacturer'] = (isset($manufacturer_image['sort_order']) && $manufacturer_image['sort_order'] != '-1');
 					if ($manufacturer_image) {
-						if (SITE_NAMESPACE == 'HAUSGARTEN') {
-							$this->data['manufacturers_img'] = $this->model_tool_image->resize($manufacturer_image['image'],300, 100);
-							} else {
-							$this->data['manufacturers_img'] = $this->model_tool_image->resize($manufacturer_image['image'],50, 50);
-							$this->data['manufacturers_img_90'] = $this->model_tool_image->resize($manufacturer_image['image'],90, 55);
-							$this->data['manufacturers_img_big'] = $this->model_tool_image->resize($manufacturer_image['image'], 100, 100);
-							$this->data['manufacturers_img_260'] = $this->model_tool_image->resize($manufacturer_image['image'], 260, 100);
-							
-							$this->data['manufacturers_img_webp'] = $this->model_tool_image->resize_webp($manufacturer_image['image'],50, 50);
-							$this->data['manufacturers_img_webp_90'] = $this->model_tool_image->resize_webp($manufacturer_image['image'],90, 55);
-							$this->data['manufacturers_img_big_webp'] = $this->model_tool_image->resize_webp($manufacturer_image['image'], 100, 100);
-							$this->data['manufacturers_img_260_webp'] = $this->model_tool_image->resize_webp($manufacturer_image['image'], 260, 100);
-						}
-						} else {
-						$this->data['manufacturers_img'] = false;
+						$this->data['manufacturers_img'] = $this->model_tool_image->resize($manufacturer_image['image'],300, 100);
 					}
 					
 					if ($product_info['image']) {
@@ -1116,40 +1102,11 @@
 						);
 					}
 					
-					
-					if (SITE_NAMESPACE == 'HAUSGARTEN') {
-						
-						$image_exists = false;
-						foreach ($this->data['images'] as $check_image) {
-							if ($this->data['popup'] == $check_image['popup']) {
-								$image_exists = true;
-								break;
-							}
-						}
-						
-						if (!$image_exists && isset($this->data['thumb']) && $this->data['thumb']) {
-							array_unshift($this->data['images'], array(
-							'popup'  => $this->data['popup'],
-							'middle' => $this->data['thumb'],
-							'thumb'  => $this->data['smallimg']
-							));
-						}
-						
-						$this->load->model('catalog/information');
-						$delivery_full = $this->model_catalog_information->getInformation(31);
-						$this->data['delivery_info'] = isset($delivery_full['description'])?html_entity_decode($delivery_full['description'], ENT_QUOTES, 'UTF-8'):'';
-						
-						
-					}
-					
-					if (SITE_NAMESPACE == 'KITCHEN') {
-						
-						$this->load->model('catalog/information');
-						$delivery_full = $this->model_catalog_information->getInformation(41);
-						$this->data['delivery_info'] = isset($delivery_full['description'])?html_entity_decode($delivery_full['description'], ENT_QUOTES, 'UTF-8'):'';
-						
-					}
-					
+																
+					$this->load->model('catalog/information');
+					$delivery_full = $this->model_catalog_information->getInformation(41);
+					$this->data['delivery_info'] = isset($delivery_full['description'])?html_entity_decode($delivery_full['description'], ENT_QUOTES, 'UTF-8'):'';
+											
 					$this->data['youtubes'] = false;
 					
 					if ($product_info['youtube']) {
@@ -2262,9 +2219,6 @@
 					$this->setData('pbo_options', array());
 					//EOF Product Block Option
 					
-					if (SITE_NAMESPACE == 'HAUSGARTEN') {
-						//var_dump($this->template);
-					}
 				}	
 				//Дичайшее решение, но за минуту
 				$this->data['original_data'] = $this->data;
