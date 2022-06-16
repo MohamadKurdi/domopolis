@@ -620,19 +620,32 @@
 
 															<div id="tab-amazon" <?php if (!$this->config->get('config_rainforest_enable_api')) { ?>style="display: none;"<?php } ?>>
 																<table class="form">
-																	<tr>
-																		<td class="left" width="20%">
+																	<tr>																		
+																		<td class="left" width="15%">
 																			<b>ASIN</b>
 																		</td>
-																		<td class="left" width="20%">
+																		<td class="left" width="15%">
 																			<b>EAN (GTIN)</b>
 																		</td>
-																		<td class="left" width="20%">
+																		<td class="left" width="15%">
 																			<b>Данные обновлены</b>
 																		</td>
-																		<td class="left" width="20%">																
+																		<td class="left" width="15%">																
 																		</td>
-																		<td class="left" width="20%">
+
+																		<td class="left" width="15%">
+																			<input type="hidden" name="added_from_amazon" value="<?php echo $added_from_amazon; ?>" />
+																			<?php if ($added_from_amazon) { ?>
+																					
+																				<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(0, 173, 7); color:#FFF"><i class="fa fa-check"></i>Добавлен с Amazon</span>
+
+																			<?php } else {  ?>
+																					<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(207, 74, 97); color:#FFF"><i class="fa fa-exclamation-triangle"></i> Добавлен вручную</span>
+
+																			<?php } ?>
+																		</td>
+
+																		<td class="left" width="15%">
 																			<?php if ($amzn_not_found) { ?>
 																				<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(207, 74, 97); color:#FFF"><i class="fa fa-exclamation-triangle"></i> Товар не найден на Amazon</span>
 																			<?php } else {  ?>
@@ -641,7 +654,7 @@
 																		</td>
 																	</tr>
 																	<tr>
-																		<td class="left" width="20%">
+																		<td class="left" width="15%">
 																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">
 																				<?php if (!empty($asin)) { ?>
 																					<?php echo $asin; ?>
@@ -650,22 +663,37 @@
 																				<?php } ?>
 																			</span>
 																		</td>
-																		<td class="left" width="20%">
+																		<td class="left" width="15%">
 																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">
 																				<?php if (!empty($ean)) { ?>
 																					<?php echo $ean; ?>
 																				<?php } else { ?>
-																					NaN
+																					Не задан
 																				<?php } ?>
 																			</span>
 																		</td>
-																		<td class="left" width="20%">
+																		<td class="left" width="15%">
 																			<input type="text" style="width:100px;" class="date" name="amzn_last_search" value="<?php echo $amzn_last_search; ?>" />
 																		</td>
-																		<td class="left" width="20%">
+																		<td class="left" width="15%">
 																			<a class="button" onclick="$('#amazon_offers').html('<i class=\'fa fa-spinner fa-spin\'></i>');$('#amazon_offers').load('index.php?route=kp/amazon/getProductOffers&token=<?php echo $token; ?>&explicit=1&product_id=<? echo $product_id; ?>');">Загрузить офферы</a>
 																		</td>
-																		<td class="left" width="20%">
+
+																		<td class="left" width="15%">
+
+																			<?php if ($amazon_json) { ?>
+
+																					<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(0, 173, 7); color:#FFF"><i class="fa fa-check"></i>Данные загружены</span>
+
+																			<?php } else { ?>
+
+																					<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(207, 74, 97); color:#FFF"><i class="fa fa-exclamation-triangle"></i> Данные еще не загружены</span>
+
+																			<?php } ?>
+
+																		</td>
+
+																		<td class="left" width="15%">
 
 																			<span class="help"><i class="fa fa-info-circle"></i> если "найден", то это означает, что товар с данным ASIN существует на Amazon и мы можем получить по нему данные, но при этом он не обязательно доступен к покупке</span>
 																		</td>

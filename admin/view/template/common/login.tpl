@@ -1,6 +1,6 @@
 <?php echo $header; ?>
 
-<link rel="stylesheet" type="text/css" href="/catalog/view/theme/kp/css/fontawesome/css/all.css">
+<link rel="stylesheet" type="text/css" href="/catalog/view/theme/<?php echo $this->config->get('config_template'); ?>/css/fontawesome/css/all.css">
 <style type="text/css">
 		.login-entry{
 			position: relative;
@@ -62,7 +62,7 @@
 			<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
 				<table style="width: 100%; max-width:100%;">
 					<tr>
-						<td style="text-align: center; width:100%;"><img style="max-width:100%;" src="view/image/<? echo FILE_LOGO; ?>" alt="<?php echo $text_login; ?>" /></td>
+						<td style="text-align: center; width:100%;"><img style="max-width:100%; max-height:250px;" src="view/image/<? echo FILE_LOGO; ?>" alt="<?php echo $text_login; ?>" /></td>
 					</tr>
 					
 					<tr>

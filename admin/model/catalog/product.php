@@ -102,13 +102,14 @@
 
 		public function addSimpleProductWithOnlyAsin($data) {			
 			$this->db->query("INSERT INTO product SET 
-					model 			= '" . $this->db->escape($data['asin']) . "', 
-					asin 			= '" . $this->db->escape($data['asin']) . "', 
-					image           = '" . $this->db->escape($data['image']) . "', 
-					stock_status_id = '" . $this->config->get('config_stock_status_id') . "',
-					quantity 		= '0',
-					status 			= '0',
-					date_added = NOW()");
+					model 				= '" . $this->db->escape($data['asin']) . "', 
+					asin 				= '" . $this->db->escape($data['asin']) . "', 
+					image           	= '" . $this->db->escape($data['image']) . "', 
+					added_from_amazon 	= '" . $this->db->escape($data['added_from_amazon']) . "', 
+					stock_status_id 	= '" . $this->config->get('config_stock_status_id') . "',
+					quantity 			= '0',
+					status 				= '0',
+					date_added 			= NOW()");
 
 			$product_id = $this->db->getLastId();
 

@@ -203,7 +203,7 @@ class ControllerKPRainForest extends Controller {
 
 					if (!$this->model_catalog_product->getProductsByAsin($rfSimpleProduct['asin'])){
 						echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' не найден, добавляем, продолжаем парсинг категории');
-						$this->model_catalog_product->addSimpleProductWithOnlyAsin(['asin' => $rfSimpleProduct['asin'], 'category_id' => $category['category_id'], 'name' => $rfSimpleProduct['title'], 'image' => $this->rainforestAmazon->categoryRetriever->getImage($rfSimpleProduct['image'])]);
+						$this->model_catalog_product->addSimpleProductWithOnlyAsin(['asin' => $rfSimpleProduct['asin'], 'category_id' => $category['category_id'], 'name' => $rfSimpleProduct['title'], 'image' => $this->rainforestAmazon->categoryRetriever->getImage($rfSimpleProduct['image']), 'added_from_amazon' => 1]);
 
 					} else {
 						echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' найден, продолжаем');						
@@ -246,7 +246,7 @@ class ControllerKPRainForest extends Controller {
 
 						if (!$this->model_catalog_product->getProductsByAsin($rfSimpleProduct['asin'])){
 							echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' не найден, добавляем, продолжаем парсинг категории');
-							$this->model_catalog_product->addSimpleProductWithOnlyAsin(['asin' => $rfSimpleProduct['asin'], 'category_id' => $category['category_id'], 'name' => $rfSimpleProduct['title'], 'image' => $this->rainforestAmazon->categoryRetriever->getImage($rfSimpleProduct['image'])]);
+							$this->model_catalog_product->addSimpleProductWithOnlyAsin(['asin' => $rfSimpleProduct['asin'], 'category_id' => $category['category_id'], 'name' => $rfSimpleProduct['title'], 'image' => $this->rainforestAmazon->categoryRetriever->getImage($rfSimpleProduct['image']), 'added_from_amazon' => 1]);
 						} else {
 
 							echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' найден, продолжаем');							

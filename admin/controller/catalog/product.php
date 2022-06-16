@@ -1237,6 +1237,14 @@ class ControllerCatalogProduct extends Controller {
 			} else {
 				$this->data['amzn_last_offers'] = '';
 			}
+
+			if (isset($this->request->post['added_from_amazon'])) {
+				$this->data['added_from_amazon'] = $this->request->post['added_from_amazon'];
+			} elseif (!empty($product_info)) {
+				$this->data['added_from_amazon'] = $product_info['added_from_amazon'];
+			} else {
+				$this->data['added_from_amazon'] = 0;
+			}
 			
 			//Данные амазона
 			if ($this->data['asin']){
@@ -1287,7 +1295,7 @@ class ControllerCatalogProduct extends Controller {
 				$this->data['amazon_best_price'] = $this->currency->format($product_info['amazon_best_price'], 'EUR', 1);
 				$this->data['amazon_lowest_price'] = $this->currency->format($product_info['amazon_lowest_price'], 'EUR', 1);
 
-			}	
+			}				
 
 			if (isset($this->request->post['amzn_not_found'])) {
 				$this->data['amzn_not_found'] = $this->request->post['amzn_not_found'];
