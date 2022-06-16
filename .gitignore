@@ -63,6 +63,8 @@
 
 #Composer
 /vendor/
+/composer.lock
+/composer.json
 
 #Всякая системная шляпа
 /system/cache
