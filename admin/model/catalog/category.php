@@ -2,36 +2,38 @@
 class ModelCatalogCategory extends Model {
 	public function addCategory($data) {
 		$this->db->query("INSERT INTO " . DB_PREFIX . "category SET 
-			parent_id = '" . (int)$data['parent_id'] . "', 
-			virtual_parent_id = '" . (int)$data['virtual_parent_id'] . "', 
-			`top` = '" . (isset($data['top']) ? (int)$data['top'] : 0) . "', 
-			`column` = '" . (int)$data['column'] . "', 
-			sort_order = '" . (int)$data['sort_order'] . "', 
-			status = '" . (int)$data['status'] . "', 
-			tnved = '" . $this->db->escape($data['tnved']) . "', 
-			menu_icon = '" . $this->db->escape($data['menu_icon']) . "', 
-			overprice = '" . $this->db->escape($data['overprice']) . "', 
-			google_category_id = '" . (int)$data['google_category_id'] . "', 
-			separate_feeds = '" . (int)$data['separate_feeds'] . "', 
-			no_general_feed = '" . (int)$data['no_general_feed'] . "', 
-			deletenotinstock = '" . (int)$data['deletenotinstock'] . "', 
-			intersections = '" . (int)$data['intersections'] . "', 
-			default_weight = '" . (float)$data['default_weight'] . "', 
+			parent_id 				= '" . (int)$data['parent_id'] . "', 
+			virtual_parent_id 		= '" . (int)$data['virtual_parent_id'] . "', 
+			`top` 					= '" . (isset($data['top']) ? (int)$data['top'] : 0) . "', 
+			`column` 				= '" . (int)$data['column'] . "', 
+			sort_order 				= '" . (int)$data['sort_order'] . "', 
+			status 					= '" . (int)$data['status'] . "', 
+			tnved 					= '" . $this->db->escape($data['tnved']) . "', 
+			menu_icon 				= '" . $this->db->escape($data['menu_icon']) . "', 
+			overprice 				= '" . $this->db->escape($data['overprice']) . "', 
+			google_category_id 		= '" . (int)$data['google_category_id'] . "', 
+			separate_feeds 			= '" . (int)$data['separate_feeds'] . "', 
+			no_general_feed 		= '" . (int)$data['no_general_feed'] . "', 
+			deletenotinstock 		= '" . (int)$data['deletenotinstock'] . "', 
+			intersections 			= '" . (int)$data['intersections'] . "', 
+			default_weight 			= '" . (float)$data['default_weight'] . "', 
 			default_weight_class_id = '" . (int)$data['default_weight_class_id'] . "', 
-			default_length = '" . (float)$data['default_length'] . "', 
-			default_width = '" . (float)$data['default_width'] . "', 
-			default_height = '" . (float)$data['default_height'] . "', 
+			default_length 			= '" . (float)$data['default_length'] . "', 
+			default_width 			= '" . (float)$data['default_width'] . "', 
+			default_height 			= '" . (float)$data['default_height'] . "', 
 			default_length_class_id = '" . (int)$data['default_length_class_id'] . "', 
-			priceva_enable = '" . (int)$data['priceva_enable'] . "', 
-			submenu_in_children = '" . (int)$data['submenu_in_children'] . "', 
-			amazon_sync_enable = '" . (int)$data['amazon_sync_enable'] . "', 
-			amazon_last_sync = '" . $this->db->escape($data['amazon_last_sync']) . "', 
-			amazon_category_id = '" . $this->db->escape($data['amazon_category_id']) . "', 
-			amazon_category_name = '" . $this->db->escape($data['amazon_category_name']) . "', 
-			yandex_category_name = '" . $this->db->escape($data['yandex_category_name']) . "',
-			amazon_overprice_rules = '" . $this->db->escape($data['amazon_overprice_rules']) . "', 
-			date_modified = NOW(), 
-			date_added = NOW()");
+			priceva_enable 			= '" . (int)$data['priceva_enable'] . "', 
+			submenu_in_children 	= '" . (int)$data['submenu_in_children'] . "', 
+			amazon_sync_enable 		= '" . (int)$data['amazon_sync_enable'] . "', 
+			amazon_last_sync 		= '" . $this->db->escape($data['amazon_last_sync']) . "', 
+			amazon_category_id 		= '" . $this->db->escape($data['amazon_category_id']) . "', 
+			amazon_category_name 	= '" . $this->db->escape($data['amazon_category_name']) . "', 
+			amazon_parent_category_id 		= '" . $this->db->escape($data['amazon_parent_category_id']) . "', 
+			amazon_parent_category_name 	= '" . $this->db->escape($data['amazon_parent_category_name']) . "',
+			yandex_category_name 	= '" . $this->db->escape($data['yandex_category_name']) . "',
+			amazon_overprice_rules 	= '" . $this->db->escape($data['amazon_overprice_rules']) . "', 
+			date_modified 			= NOW(), 
+			date_added 				= NOW()");
 		
 		$category_id = $this->db->getLastId();
 		
@@ -442,6 +444,11 @@ class ModelCatalogCategory extends Model {
 		}
 	}
 	
+	public function repairAmazonTree(){
+
+		$this->db->query();
+
+	}
 	
 		// Function to repair any erroneous categories that are not in the category path table.
 	public function repairCategories($parent_id = 0) {

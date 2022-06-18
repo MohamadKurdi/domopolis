@@ -23,7 +23,7 @@
 						<tr>
 							<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
 							<td class="left"></td>
-							<td class="left"></td>
+							<td class="left">Картинка</td>
 							<td class="left">Иконка меню</td>	
 							<td class="left"><?php echo $column_name; ?></td>
 							<td class="left"></td>
@@ -32,7 +32,8 @@
 							<td class="left">Меню в дочерних</td>
 							<td class="left">Пересечения</td>
 							<td class="left" width="100px">Google</td>
-							<td class="left" width="100px">Amazon</td>
+							<td class="left" width="100px">Amazon Link</td>
+							<td class="left">Amazon Sync</td>
 							<td class="left" width="100px">Yandex</td>
 							<td class="left">Priceva</td>
 							<td class="left">ТНВЭД</td>	
@@ -122,13 +123,21 @@
 											<br />
 											
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56; color:#FFF; font-size:10px;">
-											<i class="fa fa-amazon"></i> <?php echo $category['amazon_category_id']; ?></span>
+											<?php echo $category['amazon_category_id']; ?></span>
 											
 											
 											<? } else { ?>
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
 										<? } ?>
 									</td>	
+
+									<td class="left">
+										<? if ($category['amazon_sync_enable']) { ?>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
+											<? } else { ?>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+										<? } ?>
+									</td>
 									
 									<td class="left">
 										<? if ($category['yandex_category_name']) { ?>

@@ -13,15 +13,28 @@ class CategoryParser
 	private $type   = 'standard';
 	private $table  = null;	
 
+	public $model_catalog_category 		= null;
+	public $model_localisation_language = null;
+	public $yandexTranslator			= null;
+
 	const CLASS_NAME = 'hobotix\\Amazon\\CategoryParser';
 
 	public function __construct($registry, $rfClient){
 			
 			$this->registry = $registry;
-			$this->config = $registry->get('config');			
-			$this->db = $registry->get('db');
-			$this->log = $registry->get('log');
+			$this->config 	= $registry->get('config');			
+			$this->db 		= $registry->get('db');
+			$this->log 		= $registry->get('log');
 			$this->rfClient = $rfClient;
+
+			require_once(DIR_APPLICATION . '../admin/model/catalog/category.php');
+			$this->model_catalog_category = new \ModelCatalogCategory($this->registry);
+
+			if ($this->config->get('config_rainforest_enable_translation')){
+				require_once(DIR_SYSTEM . 'library/hobotix/YandexTranslator.php');
+				$this->yandexTranslator = new \hobotix\YandexTranslator($this->registry);
+			}
+
 			
 		}
 
@@ -49,6 +62,12 @@ class CategoryParser
 			
 			return json_decode($json, true);
 		}
+
+	private function getLanguages(){
+		$query = $this->db->query("SELECT * FROM language ORDER BY sort_order, name");
+		return $query->rows;
+	}
+
 
 	public function setType($type){
 		$this->type = $type;	
@@ -88,9 +107,69 @@ class CategoryParser
 			$parentIDList[] = $row['parent_id'];
 		}
 
-		$this->db->query("UPDATE " . $this->table . " SET final_category = 1 WHERE parent_id > 0 AND category_id NOT IN (SELECT DISTINCT(parent_id) as parent_id FROM " . $this->table . ")");
-			
+		$this->db->query("UPDATE " . $this->table . " SET final_category = 1 WHERE parent_id > 0 AND category_id NOT IN (SELECT DISTINCT(parent_id) as parent_id FROM " . $this->table . ")");			
 	}
+
+	public function checkIfCategoryExists($amazon_category_id){
+		$query = $this->db->ncquery("SELECT * FROM category WHERE amazon_category_id = '" . $this->db->escape($amazon_category_id) . "'");
+
+		if ($query->num_rows){
+			return $query->row['category_id'];
+		} else {
+			return false;
+		}
+	}
+
+	public function rebuildAmazonTreeToStoreTree(){
+
+		//Дерево
+		$this->db->query("UPDATE category c1 SET c1.parent_id = (SELECT category_id FROM category c2 WHERE NOT ISNULL(c2.amazon_category_id) AND c2.amazon_category_id <> '' AND c2.amazon_category_id = c1.amazon_parent_category_id) WHERE parent_id = 0");
+
+		//Фикс null-родителя
+		$this->db->query("UPDATE category SET parent_id = 0 WHERE ISNULL(parent_id)");
+
+		//Включаем автополучение товаров только для крайних категорий		
+		//$this->db->query("UPDATE category SET amazon_sync_enable = 1 WHERE amazon_category_id AND amazon_category_id IN (SELECT amazon_category_id FROM " . $this->table . " WHERE final_category = 1)");
+
+		//Отключаем автополучение товаров для крайних категорий, у которых отключено хоть у кого-то из родителей
+
+	
+	}
+
+	public function addSimpleCategory($data) {
+		$this->db->query("INSERT INTO category SET 
+
+			parent_id 				= 0, 			
+			top 					= 0, 
+			status 					= 1, 		
+			submenu_in_children 	= 1, 
+			amazon_sync_enable 		= 0,		
+			amazon_category_id 		= '" . $this->db->escape($data['amazon_category_id']) . "', 
+			amazon_category_name 	= '" . $this->db->escape($data['amazon_category_name']) . "', 
+			amazon_parent_category_id 		= '" . $this->db->escape($data['amazon_parent_category_id']) . "',
+			date_modified 			= NOW(), 
+			date_added 				= NOW()");
+		
+		$category_id = $this->db->getLastId();
+
+		$this->db->query("DELETE FROM category_description WHERE category_id = '" . (int)$category_id . "'");
+		foreach ($data['category_description'] as $language_id => $value) {
+			$this->db->query("INSERT INTO category_description SET category_id = '" . (int)$category_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
+		}
+	
+		$level = 0;
+		$this->db->query("INSERT INTO `category_path` SET `category_id` = '" . (int)$category_id . "', `path_id` = '" . (int)$category_id . "', `level` = '0'");
+		
+		if (isset($data['category_store'])) {
+			foreach ($data['category_store'] as $store_id) {
+				$this->db->query("INSERT INTO category_to_store SET category_id = '" . (int)$category_id . "', store_id = '" . (int)$store_id . "'");
+			}
+		}	
+		
+		return $category_id;
+	}
+	
+	
 
 	public function createCategory($data){
 		if (empty($data['parent_id'])){
@@ -106,16 +185,60 @@ class CategoryParser
 		");
 
 		if ($this->config->get('config_rainforest_enable_auto_tree')){
-						
+
+			if (!$this->checkIfCategoryExists($data['id'])){
+				echoLine('[CategoryParser] Категория ' . $data['id'] . ' не существует');
+
+				if (in_array($data['id'], prepareEOLArray($this->config->get('config_rainforest_root_categories')))){
+					echoLine('[CategoryParser] Это корневая категория, ее не добавляем: ' . $data['id']);
+				} else {
+					if (in_array($data['parent_id'], prepareEOLArray($this->config->get('config_rainforest_root_categories')))){
+						echoLine('[CategoryParser] Это категория первого уровня на Amazon, у нас - корневая, ' . $data['id']);
+						$data['parent_id'] = 0;						
+					}
+
+					$category_data = [ 				
+						'amazon_category_id' 		=> $this->db->escape($data['id']), 
+						'amazon_category_name' 		=> $this->db->escape($data['path']),
+						'amazon_parent_category_id' => $data['parent_id'],
+						'category_store'			=> ['0']
+					];
+
+					$category_description = [];
+					foreach ($this->getLanguages() as $language){
+
+						//Дефолтный язык всегда в приоритете
+						if ($language['code'] == $this->config->get('config_rainforest_source_language')){
+							$name = $data['name'];
+						} else {
+							if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $language['code'])){
+								$name = $this->yandexTranslator->translate($data['name'], $this->config->get('config_rainforest_source_language'), $language['code'], true);
+								echoLine('[CategoryParser] Переводчик: ' . $data['name'] . ' -> ' . $name);
+							} else {
+								$name = $data['name'];
+							}
+						}
+
+						$category_description[ $language['language_id'] ] = [
+							'name' => $name
+						];
+					}
+
+					$category_data['category_description'] = $category_description;
+
+					$this->addSimpleCategory($category_data);					
+				}
+
+			} else {
+				echoLine('[CategoryParser] Категория ' . $data['id'] . ' существует');				
+			}
 		}
 	}
 
 	public function createTopCategoryFromSettings($categories){
 
 		foreach ($categories as $category){
-			$result = $this->doRequest(['type' => \hobotix\RainforestAmazon::rainforestTypeMapping[$this->type], 'category_id' => $category], 'request');
-
-			var_dump($result);
+			$result = $this->doRequest(['type' => \hobotix\RainforestAmazon::rainforestTypeMapping[$this->type], 'category_id' => $category], 'request');			
 
 			if (!empty($result[\hobotix\RainforestAmazon::categoryModeInfoIndexes[$this->type]]) && !empty($result[\hobotix\RainforestAmazon::categoryModeInfoIndexes[$this->type]]['current_category'])){
 				$this->createCategory(

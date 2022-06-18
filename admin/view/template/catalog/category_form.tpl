@@ -534,8 +534,7 @@
 							<td style="width:75%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Категория Amazon</span>
 																
-								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF"><a style="color:#FFF;text-decoration:none" href="index.php?route=catalog/category/getAmazonCategoriesCSV&token=<?php echo $token; ?>"><i class="fa fa-amazon"></i> скачать полный список категорий Amazon в CSV</span> <sup style="color:red">NEW</sup>
-						
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF"><a style="color:#FFF;text-decoration:none" href="index.php?route=catalog/category/getAmazonCategoriesCSV&token=<?php echo $token; ?>"><i class="fa fa-amazon"></i> скачать полный список категорий Amazon в CSV</span> <sup style="color:red">NEW</sup>						
 							</td>							
 						</tr>
 						<tr style="border-bottom:1px dashed gray">
@@ -557,6 +556,11 @@
 									<br /><span id="span-alert-no-amazon-id" style="color:#ef5e67"><i class="fa fa-exclamation-triangle"></i> идентификатор не задан, попробуй подбор. Внимание, подбор работает только на НЕМЕЦКОМ языке</span>
 									<?php } else { ?>
 									<br /><span  style="color:#00ad07"><i class="fa fa-check"></i> идентификатор категории <span id="span-alert-amazon-id"><?php echo $amazon_category_id; ?></span></span>
+								<? } ?>
+
+								<?php if ($amazon_parent_category_id) { ?>
+									<br />
+									<span  style="color:#00ad07"><i class="fa fa-check"></i> идентификатор родительской категории <?php echo $amazon_parent_category_id; ?></span>									
 								<? } ?>
 								
 

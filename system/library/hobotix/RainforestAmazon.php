@@ -45,11 +45,11 @@ class RainforestAmazon
 
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/ParamsTranslator.php');
 		$this->paramsTranslator = new Amazon\ParamsTranslator();
-
-		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/RainforestRetriever.php');
-		
+				
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/CategoryParser.php');
 		$this->categoryParser = new Amazon\CategoryParser($registry, $this->rfClient);
+
+		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/RainforestRetriever.php');
 
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/CategoryRetriever.php');
 		$this->categoryRetriever = new Amazon\CategoryRetriever($registry, $this->rfClient);

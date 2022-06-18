@@ -24,7 +24,7 @@ class ControllerKPRainForest extends Controller {
 		if ($childCategories) {
 			foreach ($childCategories as $childCategory){
 
-				echoLine($childCategory['path']);
+				echoLine('[ControllerKPRainForest] Категория ' . $childCategory['path']);
 
 				$this->rainforestAmazon->categoryParser->setType($type)->createCategory($childCategory);										
 
@@ -42,8 +42,7 @@ class ControllerKPRainForest extends Controller {
 
 		$type = $this->config->get('config_rainforest_category_model');
 
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
-
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon'); 
 		
 		if ($type == 'bestsellers') {
 			if (!empty($this->config->get('config_rainforest_root_categories'))){
@@ -70,6 +69,11 @@ class ControllerKPRainForest extends Controller {
 		}
 
 		$this->rainforestAmazon->categoryParser->setType($type)->updateFinalCategories();
+
+		if ($this->config->get('config_rainforest_enable_auto_tree')){
+			$this->rainforestAmazon->categoryParser->setType($type)->rebuildAmazonTreeToStoreTree();
+			$this->rainforestAmazon->categoryParser->setType($type)->model_catalog_category->repairCategories();			
+		}
 
 	}
 

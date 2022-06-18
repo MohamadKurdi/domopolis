@@ -184,6 +184,7 @@
 				'sort_order'  				=> $result['sort_order'],
 				'amazon_category_name'  	=> $real_category['amazon_category_id']?$real_category['amazon_category_name']:false,
 				'amazon_category_id'  		=> $real_category['amazon_category_id'],
+				'amazon_sync_enable'  		=> $real_category['amazon_sync_enable'],
 				'yandex_category_name'  	=> $yandex_category_name,
 				'google_category' 			=> $this->model_catalog_category->getGoogleCategoryByID($real_category['google_category_id']),
 				'tnved'						=> $real_category['tnved'],
@@ -418,6 +419,18 @@
 				$this->data['amazon_category_name'] = $category_info['amazon_category_name'];
 				} else {
 				$this->data['amazon_category_name'] = '';
+			}
+
+			if (!empty($category_info)){
+				$this->data['amazon_parent_category_id'] = $category_info['amazon_parent_category_id'];
+			} else {
+				$this->data['amazon_parent_category_id'] = '';
+			}
+
+			if (!empty($category_info)){
+				$this->data['amazon_parent_category_name'] = $category_info['amazon_parent_category_name'];
+			} else {
+				$this->data['amazon_parent_category_name'] = '';
 			}
 			
 			if (isset($this->request->post['yandex_category_name'])) {
