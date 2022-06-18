@@ -43,9 +43,6 @@
 				if ($this->jsonResult['pagination']['current_page'] < $this->jsonResult['pagination']['total_pages']){
 					return ((int)$this->jsonResult['pagination']['current_page'] + 1);
 				}
-
-
-
 			}
 
 			return false;
@@ -97,7 +94,9 @@
 			$ch = curl_init('https://api.rainforestapi.com/request?' . $queryString);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-			curl_setopt($ch, CURLOPT_VERBOSE, false);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); 
+			curl_setopt($ch, CURLOPT_TIMEOUT, 100);
+			curl_setopt($ch, CURLOPT_VERBOSE, true);
 			
 			$json = curl_exec($ch);		
 			curl_close($ch);

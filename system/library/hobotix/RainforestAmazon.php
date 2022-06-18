@@ -22,7 +22,8 @@ class RainforestAmazon
 
 	public const categoryModeTables 		= ['standard' => 'category_amazon_tree', 'bestsellers' => 'category_amazon_bestseller_tree'];
 	public const categoryModeResultIndexes 	= ['standard' => 'category_results', 'bestsellers' => 'bestsellers'];
-	public const rainforestTypeMapping 		= ['standard' => 'categories', 'bestsellers' => 'bestsellers'];
+	public const categoryModeInfoIndexes 	= ['standard' => 'category_info', 'bestsellers' => 'bestsellers_info'];
+	public const rainforestTypeMapping 		= ['standard' => 'category', 'bestsellers' => 'bestsellers'];
 
 		//Эта шляпа может использовать в быстром получении категорий
 	public $categoryParser;
@@ -45,10 +46,10 @@ class RainforestAmazon
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/ParamsTranslator.php');
 		$this->paramsTranslator = new Amazon\ParamsTranslator();
 
+		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/RainforestRetriever.php');
+		
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/CategoryParser.php');
 		$this->categoryParser = new Amazon\CategoryParser($registry, $this->rfClient);
-
-		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/RainforestRetriever.php');
 
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/CategoryRetriever.php');
 		$this->categoryRetriever = new Amazon\CategoryRetriever($registry, $this->rfClient);

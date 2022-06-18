@@ -3335,7 +3335,7 @@
 							<h2>Rainforest API (получение цен и прочей шляпы из Amazon)</h2>
 							<table class="form">
 								<tr>
-									<td width="20%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Включить rfAPI</span></p>
 										<select name="config_rainforest_enable_api">
 											<?php if ($config_rainforest_enable_api) { ?>
@@ -3348,7 +3348,7 @@
 										</select>
 									</td>
 									
-									<td width="20%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Ключ rfAPI</span></p>
 										<input type="text" name="config_rainforest_api_key" value="<?php echo $config_rainforest_api_key; ?>" size="50" style="width:250px;" />
 									</td>
@@ -3383,7 +3383,7 @@
 										</select>
 									</td>
 									
-									<td width="20%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Фильтры rfAPI - 1</span></p>
 										<div class="scrollbox" style="height:200px;">
 											<?php $class = 'odd'; ?>
@@ -3418,7 +3418,7 @@
 										</select>
 									</td>
 
-									<td width="20%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Обновлять кат. раз в Х дней</span></p>
 										<input type="number" name="config_rainforest_category_update_period" value="<?php echo $config_rainforest_category_update_period; ?>" size="50" style="width:100px;" />
 									</td>
@@ -3436,9 +3436,10 @@
 										</select>
 									</td>
 
+									<td width="15%">
 									<?php foreach ($languages as $language) { ?>
 										<?php if ($language['code'] != $config_rainforest_source_language) { ?>
-											<td width="15%">
+											<div>
 												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Переводить на <?php echo $language['code']; ?></span></p>
 												<select name="config_rainforest_enable_language_<?php echo $language['code']; ?>">
 													<?php if (${'config_rainforest_enable_language_' . $language['code']}) { ?>
@@ -3448,14 +3449,33 @@
 														<option value="1">Включить</option>
 														<option value="0"  selected="selected">Отключить</option>
 													<? } ?>
-												</select>
-											</td>
+												</select>											
+											</div>
 										<?php } ?>
 									<?php } ?>
+									</td>
 
-									<td width="20%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">TG группа уведомлений</span></p>
 										<input type="text" name="config_rainforest_tg_alert_group_id" value="<?php echo $config_rainforest_tg_alert_group_id; ?>" size="50" style="width:250px;" />
+									</td>
+
+									<td width="15%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Автоматическое дерево</span></p>
+										<select name="config_rainforest_enable_auto_tree">
+											<?php if ($config_rainforest_enable_auto_tree) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</td>
+
+									<td width="15%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Корневые категории Amazon</span></p>
+										<textarea name="config_rainforest_root_categories" rows="3"><?php echo $config_rainforest_root_categories; ?></textarea>
 									</td>
 
 								</tr>

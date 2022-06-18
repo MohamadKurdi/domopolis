@@ -2471,6 +2471,18 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_rainforest_category_model'] = $this->config->get('config_rainforest_category_model');
 		}
 
+		if (isset($this->request->post['config_rainforest_enable_auto_tree'])) {
+			$this->data['config_rainforest_enable_auto_tree'] = $this->request->post['config_rainforest_enable_auto_tree']; 
+		} else {
+			$this->data['config_rainforest_enable_auto_tree'] = $this->config->get('config_rainforest_enable_auto_tree');
+		}
+
+		if (isset($this->request->post['config_rainforest_root_categories'])) {
+			$this->data['config_rainforest_root_categories'] = $this->request->post['config_rainforest_root_categories']; 
+		} else {
+			$this->data['config_rainforest_root_categories'] = $this->config->get('config_rainforest_root_categories');
+		}
+
 		if (isset($this->request->post['config_rainforest_source_language'])) {
 			$this->data['config_rainforest_source_language'] = $this->request->post['config_rainforest_source_language']; 
 		} else {
@@ -2514,11 +2526,6 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_rainforest_enable_pricing'] = $this->config->get('config_rainforest_enable_pricing');
 		}
 
-		if (isset($this->request->post['config_rainforest_enable_pricing'])) {
-			$this->data['config_rainforest_enable_pricing'] = $this->request->post['config_rainforest_enable_pricing']; 
-		} else {
-			$this->data['config_rainforest_enable_pricing'] = $this->config->get('config_rainforest_enable_pricing');
-		}
 
 		if (isset($this->request->post['config_rainforest_main_formula'])) {
 			$this->data['config_rainforest_main_formula'] = $this->request->post['config_rainforest_main_formula']; 

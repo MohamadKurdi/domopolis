@@ -26,7 +26,7 @@ class ControllerKPRainForest extends Controller {
 
 				echoLine($childCategory['path']);
 
-				$this->rainforestAmazon->categoryParser->createCategory($childCategory);										
+				$this->rainforestAmazon->categoryParser->setType($type)->createCategory($childCategory);										
 
 				if ($childCategory['has_children']){
 					$this->recursiveTree($childCategory['id'], $type);
@@ -35,31 +35,41 @@ class ControllerKPRainForest extends Controller {
 		}
 	}
 		
-	public function parsecategoriescron($type = 'standard'){
+	public function parsecategoriescron(){
 		if (php_sapi_name() != 'cli'){
 			die();
 		}
 
+		$type = $this->config->get('config_rainforest_category_model');
+
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 
+		
+		if ($type == 'bestsellers') {
+			if (!empty($this->config->get('config_rainforest_root_categories'))){
+				//Если задана корневая категория, то создаем ее, это работает только блять с бестселлерами
+				$this->rainforestAmazon->categoryParser->setType($type)->createTopCategoryFromSettings(prepareEOLArray($this->config->get('config_rainforest_root_categories')));
+			}
+		}
+		
+
+		//Если тип у нас стандартный - то мы создадим корневые категории автоматически.
+		//В случае с бестселлерами это не работает почему-то
 		if ($type == 'standard'){
-
-
 			$topCategories = $this->rainforestAmazon->categoryParser->setType($type)->getTopCategories();
 
 			foreach ($topCategories['categories'] as $topCategory){
-				$this->rainforestAmazon->categoryParser->createCategory($topCategory);				
+				$this->rainforestAmazon->categoryParser->setType($type)->createCategory($topCategory);				
 			}
 		}
+		
 
 		unset($topCategory);
 		foreach ($this->rainforestAmazon->categoryParser->setType($type)->getTopCategoriesFromDataBase() as $topCategory){
-
 			$this->recursiveTree($topCategory['category_id'], $type);
-
 		}
 
-		$this->rainforestAmazon->categoryParser->updateFinalCategories();
+		$this->rainforestAmazon->categoryParser->setType($type)->updateFinalCategories();
 
 	}
 
