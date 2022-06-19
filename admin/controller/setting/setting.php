@@ -1105,11 +1105,20 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$this->data['config_catalog_limit'] = $this->config->get('config_catalog_limit');
 		}	
+
+		$this->load->model('catalog/attribute_group');
+		$this->data['attribute_groups'] = $this->model_catalog_attribute_group->getAttributeGroups(['limit' => 100]);
 		
 		if (isset($this->request->post['config_special_attr_id'])) {
 			$this->data['config_special_attr_id'] = $this->request->post['config_special_attr_id'];
 		} else {
 			$this->data['config_special_attr_id'] = $this->config->get('config_special_attr_id');
+		}	
+
+		if (isset($this->request->post['config_default_attr_id'])) {
+			$this->data['config_default_attr_id'] = $this->request->post['config_default_attr_id'];
+		} else {
+			$this->data['config_default_attr_id'] = $this->config->get('config_default_attr_id');
 		}	
 		
 		if (isset($this->request->post['config_admin_limit'])) {

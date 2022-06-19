@@ -637,7 +637,8 @@
 							
 							<tr>
 								<td><?php echo $entry_language; ?></td>
-								<td><select name="config_language">
+								<td>
+									<select name="config_language">
 									<?php foreach ($languages as $language) { ?>
 										<?php if ($language['code'] == $config_language) { ?>
 											<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
@@ -1145,8 +1146,35 @@
 								
 								<tr>
 									<td width="33%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Идентификатор группы атрибутов "особенности"</span></p>
-										<input type="text" name="config_special_attr_id" value="<?php echo $config_special_attr_id; ?>" size="3" />
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Группа атрибутов "особенности"</span></p>
+
+										<select name="config_special_attr_id">
+											<?php foreach ($attribute_groups as $attribute_group) { ?>
+												<?php if ($attribute_group['attribute_group_id'] == $config_special_attr_id) { ?>
+													<option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>
+										<br />
+										<span class="help">Эти атрибуты не фильтруются, а только показываются в отдельном блоке в карте товара</span>
+									</td>
+
+									<td width="33%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Группа атрибутов по-умолчанию</span></p>
+
+										<select name="config_default_attr_id">
+											<?php foreach ($attribute_groups as $attribute_group) { ?>
+												<?php if ($attribute_group['attribute_group_id'] == $config_default_attr_id) { ?>
+													<option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>
+										<br />
+										<span class="help">В эту группу добавляются характеристики товара с Амазона</span>
 									</td>
 									
 									
