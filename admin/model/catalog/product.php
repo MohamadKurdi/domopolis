@@ -99,35 +99,7 @@
 			
 			return $affected;
 		}
-
-		public function addSimpleProductWithOnlyAsin($data) {			
-			$this->db->query("INSERT INTO product SET 
-					model 				= '" . $this->db->escape($data['asin']) . "', 
-					asin 				= '" . $this->db->escape($data['asin']) . "', 
-					image           	= '" . $this->db->escape($data['image']) . "', 
-					added_from_amazon 	= '" . $this->db->escape($data['added_from_amazon']) . "', 
-					stock_status_id 	= '" . $this->config->get('config_stock_status_id') . "',
-					quantity 			= '0',
-					status 				= '0',
-					date_added 			= NOW()");
-
-			$product_id = $this->db->getLastId();
-
-			$this->db->query("DELETE FROM product_to_store WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("INSERT INTO product_to_store SET product_id = '" . (int)$product_id . "', store_id = '0'");
-
-			$this->db->query("DELETE FROM product_to_category WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("INSERT INTO product_to_category SET product_id = '" . (int)$product_id . "', category_id = '" . (int)$data['category_id'] . "', main_category = 1");
-
-			$this->load->model('localisation/language');
-			$language_id = $this->model_localisation_language->getLanguageByCode($this->config->get('config_rainforest_source_language'));
-
-			$this->db->query("DELETE FROM product_description WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("INSERT INTO product_description SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($data['name']) . "'");
-			$this->db->query("INSERT INTO product_description SET product_id = '" . (int)$product_id . "', language_id = '" . (int)$this->config->get('config_language_id') . "', name = '" . $this->db->escape($data['name']) . "'");
-
-			return $product_id;			
-		}
+		
 		
 		public function addProduct($data) {
 			

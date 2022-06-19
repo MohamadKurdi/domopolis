@@ -13,9 +13,19 @@ class ControllerDPRainForest extends Controller {
 
 		parent::__construct($registry);
 
-	}
+		if (php_sapi_name() != 'cli'){
+			die();
+		}
 
-	
+		if (!$this->config->get('config_rainforest_enable_api')){
+			die('RNF API NOT ENABLED');
+		}
+
+		if (!$this->config->get('config_rainforest_category_model')){
+			die('RNF Category API Workmode not set');
+		}
+
+	}
 
 	private function recursiveTree($category_id, $type){
 
@@ -35,7 +45,7 @@ class ControllerDPRainForest extends Controller {
 		}
 	}
 		
-	public function parsecategoriescron(){
+	public function addcategoriescron(){
 		if (php_sapi_name() != 'cli'){
 			die();
 		}
@@ -76,22 +86,26 @@ class ControllerDPRainForest extends Controller {
 
 	}
 
-	public function parsenewproductscron(){
-		if (php_sapi_name() != 'cli'){
-			die();
-		}
+	public function editfullproductscron(){
 
-		if (!$this->config->get('config_rainforest_enable_api')){
-			die('RNF API NOT ENABLED');
-		}
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$this->load->library('Timer');
+		$timer = new FPCTimer();
 
-		if (!$this->config->get('config_rainforest_category_model')){
-			die('RNF Category API Workmode not set');
-		}
+		$products = $this->rainforestAmazon->productsRetriever->getProducts();
 
-		
-		require_once(DIR_APPLICATION . '../admin/model/catalog/product.php');
-		$this->model_catalog_product = new \ModelCatalogProduct($this->registry);
+		echoLine('[EditFullProducts] Всего товаров ' . count($products));
+
+
+
+
+
+
+
+	}
+
+
+	public function addnewproductscron(){		
 
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');
@@ -99,10 +113,10 @@ class ControllerDPRainForest extends Controller {
 
 		$categories = $this->rainforestAmazon->categoryRetriever->getCategories();
 
-		echoLine('[RETRIEVECATCRON] Всего категорий ' . count($categories));
+		echoLine('[AddNewProducts] Всего категорий ' . count($categories));
 
 		foreach ($categories as $category){
-			echoLine('[RETRIEVECATCRON] Категория ' . $category['name'] . ': ' . html_entity_decode($category['amazon_category_name']));
+			echoLine('[AddNewProducts] Категория ' . $category['name'] . ': ' . html_entity_decode($category['amazon_category_name']));
 
 			$params = [
 				'amazon_category_id' => $category['amazon_category_id'],
@@ -110,7 +124,7 @@ class ControllerDPRainForest extends Controller {
 			];
 
 			$rfCategoryObject = $this->rainforestAmazon->categoryRetriever->getCategoryFromAmazon($params);
-			echoLine('[RETRIEVECATCRON] Страница 1' . ', время ' . $timer->getTime());
+			echoLine('[AddNewProducts] Страница 1' . ', время ' . $timer->getTime());
 			
 			$rfCategory = $rfCategoryObject->getJsonResult();
 
@@ -118,21 +132,30 @@ class ControllerDPRainForest extends Controller {
 
 			if (!empty($rfCategory[$categoryResultIndex]) && count($rfCategory[$categoryResultIndex])){
 					$continue = true;				
-					echoLine('[RETRIEVECATCRON] Товаров ' . count($rfCategory[$categoryResultIndex]));
+					echoLine('[AddNewProducts] Товаров ' . count($rfCategory[$categoryResultIndex]));
 
 					foreach ($rfCategory[$categoryResultIndex] as $rfSimpleProduct){
-						echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ': ' . $rfSimpleProduct['title']);
+						echoLine('[AddNewProducts] Товар ' . $rfSimpleProduct['asin'] . ': ' . $rfSimpleProduct['title']);
 
 					if (!$this->rainforestAmazon->productsRetriever->getProductsByAsin($rfSimpleProduct['asin'])){
-						echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' не найден, добавляем, продолжаем парсинг категории');
-						$this->model_catalog_product->addSimpleProductWithOnlyAsin(['asin' => $rfSimpleProduct['asin'], 'category_id' => $category['category_id'], 'name' => $rfSimpleProduct['title'], 'image' => $this->rainforestAmazon->productsRetriever->getImage($rfSimpleProduct['image']), 'added_from_amazon' => 1]);
+						echoLine('[AddNewProducts] Товар ' . $rfSimpleProduct['asin'] . ' не найден, добавляем, продолжаем парсинг категории');
+						
+						$this->rainforestAmazon->productsRetriever->addSimpleProductWithOnlyAsin(
+							[
+								'asin' 				=> $rfSimpleProduct['asin'], 
+								'category_id' 		=> $category['category_id'], 
+								'name' 				=> $rfSimpleProduct['title'], 
+								'image' 			=> $this->rainforestAmazon->productsRetriever->getImage($rfSimpleProduct['image']), 
+								'added_from_amazon' => 1
+							]
+						);
 
 					} else {
-						echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' найден, продолжаем');						
+						echoLine('[AddNewProducts] Товар ' . $rfSimpleProduct['asin'] . ' найден, продолжаем');						
 
 						//Логика работы с найденными товарами - только в случае стандартной модели
 						if ($this->config->get('config_rainforest_category_model') == 'standard' && $category['amazon_fulfilled']){
-							echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' найден, останавливаем парсинг категории');
+							echoLine('[AddNewProducts] Товар ' . $rfSimpleProduct['asin'] . ' найден, останавливаем парсинг категории');
 							$continue = false;						
 							break;
 						}
@@ -140,7 +163,7 @@ class ControllerDPRainForest extends Controller {
 				}		
 			} else {
 
-				echoLine('[RETRIEVECATCRON] EMPTY ' . $categoryResultIndex);
+				echoLine('[AddNewProducts] EMPTY ' . $categoryResultIndex);
 
 			}					
 
@@ -149,7 +172,7 @@ class ControllerDPRainForest extends Controller {
 			}
 
 			while(!empty($rfCategoryObject) && $rfCategoryObject->getJsonResult() && $rfCategoryObject->getNextPage()){
-				echoLine('[RETRIEVECATCRON] Страница ' . $rfCategoryObject->getNextPage() . ', время ' . $timer->getTime());
+				echoLine('[AddNewProducts] Страница ' . $rfCategoryObject->getNextPage() . ', время ' . $timer->getTime());
 
 				$params = [
 					'amazon_category_id' => $category['amazon_category_id'],
@@ -161,21 +184,30 @@ class ControllerDPRainForest extends Controller {
 
 				if (!empty($rfCategory[$categoryResultIndex]) && count($rfCategory[$categoryResultIndex])){
 					$continue = true;
-					echoLine('[RETRIEVECATCRON] Товаров ' . count($rfCategory[$categoryResultIndex]));
+					echoLine('[AddNewProducts] Товаров ' . count($rfCategory[$categoryResultIndex]));
 
 					foreach ($rfCategory[$categoryResultIndex] as $rfSimpleProduct){
-						echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ': ' . $rfSimpleProduct['title']);
+						echoLine('[AddNewProducts] Товар ' . $rfSimpleProduct['asin'] . ': ' . $rfSimpleProduct['title']);
 
 						if (!$this->rainforestAmazon->productsRetriever->getProductsByAsin($rfSimpleProduct['asin'])){
-							echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' не найден, добавляем, продолжаем парсинг категории');
-							$this->model_catalog_product->addSimpleProductWithOnlyAsin(['asin' => $rfSimpleProduct['asin'], 'category_id' => $category['category_id'], 'name' => $rfSimpleProduct['title'], 'image' => $this->rainforestAmazon->productsRetriever->getImage($rfSimpleProduct['image']), 'added_from_amazon' => 1]);
+							echoLine('[AddNewProducts] Товар ' . $rfSimpleProduct['asin'] . ' не найден, добавляем, продолжаем парсинг категории');
+							
+							$this->rainforestAmazon->productsRetriever->addSimpleProductWithOnlyAsin(
+							[
+								'asin' 				=> $rfSimpleProduct['asin'], 
+								'category_id' 		=> $category['category_id'], 
+								'name' 				=> $rfSimpleProduct['title'], 
+								'image' 			=> $this->rainforestAmazon->productsRetriever->getImage($rfSimpleProduct['image']), 
+								'added_from_amazon' => 1
+							]);
+
 						} else {
 
-							echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' найден, продолжаем');							
+							echoLine('[AddNewProducts] Товар ' . $rfSimpleProduct['asin'] . ' найден, продолжаем');							
 
 							//Логика работы с найденными товарами - только в случае стандартной модели
 							if ($this->config->get('config_rainforest_category_model') == 'standard' && $category['amazon_fulfilled']){
-								echoLine('[RETRIEVECATCRON] Товар ' . $rfSimpleProduct['asin'] . ' найден, останавливаем парсинг категории');
+								echoLine('[AddNewProducts] Товар ' . $rfSimpleProduct['asin'] . ' найден, останавливаем парсинг категории');
 								$continue = false;
 								break;
 							}
@@ -188,7 +220,7 @@ class ControllerDPRainForest extends Controller {
 
 				} else {
 					
-					echoLine('[RETRIEVECATCRON] EMPTY ' . $categoryResultIndex);
+					echoLine('[AddNewProducts] EMPTY ' . $categoryResultIndex);
 
 				}
 			}

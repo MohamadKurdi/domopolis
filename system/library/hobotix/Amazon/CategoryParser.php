@@ -211,8 +211,7 @@ class CategoryParser
 							$name = $data['name'];
 						} else {
 							if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $language['code'])){
-								$name = $this->yandexTranslator->translate($data['name'], $this->config->get('config_rainforest_source_language'), $language['code'], true);
-								echoLine('[CategoryParser] Переводчик: ' . $data['name'] . ' -> ' . $name);
+								$name = $this->yandexTranslator->translate($data['name'], $this->config->get('config_rainforest_source_language'), $language['code'], true);								
 							} else {
 								$name = $data['name'];
 							}

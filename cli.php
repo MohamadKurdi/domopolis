@@ -155,7 +155,10 @@
 		'hreflang'	=> $result['hreflang'],
 		'urlcode'	=> $result['urlcode']
 		);
-	}
+	}	
+
+	//ALL LANGUAGES TO REGISTRY
+	$registry->set('languages', $languages);
 
 	if (!empty($language_code)){
 		$registry->get('config')->set('config_language', $language_code);
@@ -164,6 +167,9 @@
 	$registry->get('config')->set('config_language', 			$languages[$registry->get('config')->get('config_language')]['code']);
 	$registry->get('config')->set('config_language_id', 		$languages[$registry->get('config')->get('config_language')]['language_id']);	
 	$registry->get('config')->set('config_language_hreflang', 	$languages[$registry->get('config')->get('config_language')]['hreflang']);
+
+	//RNF MAIN LANGUAGE
+	$registry->get('config')->set('config_rainforest_source_language_id', $languages[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);
 	
 	$language = new Language($languages[$registry->get('config')->get('config_language')]['directory'], $registry);
 	$language->load($languages[$registry->get('config')->get('config_language')]['filename']);	

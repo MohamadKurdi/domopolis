@@ -9,16 +9,25 @@
 		public $config;		
 		public $endpoint;	
 		public $rfClient;
+
+		public $model_catalog_category = null;
+		public $model_catalog_product = null;
+		public $yandexTranslator = null;
 		
 		public $jsonResult = null;
 
 		public function __construct($registry, $rfClient){
 			
-			$this->registry = $registry;
-			$this->config = $registry->get('config');			
-			$this->db = $registry->get('db');
-			$this->log = $registry->get('log');
-			$this->rfClient = $rfClient;
+			$this->registry 		= $registry;
+			$this->config 			= $registry->get('config');			
+			$this->db 				= $registry->get('db');
+			$this->log 				= $registry->get('log');	
+
+			if ($this->config->get('config_rainforest_enable_translation')){
+				$this->yandexTranslator = $registry->get('yandexTranslator');
+			}		
+
+			$this->rfClient 		= $rfClient;
 			
 		}
 
@@ -96,7 +105,7 @@
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); 
 			curl_setopt($ch, CURLOPT_TIMEOUT, 100);
-			curl_setopt($ch, CURLOPT_VERBOSE, true);
+			curl_setopt($ch, CURLOPT_VERBOSE, false);
 			
 			$json = curl_exec($ch);		
 			curl_close($ch);
@@ -121,6 +130,8 @@
 			
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); 
+			curl_setopt($ch, CURLOPT_TIMEOUT, 100);
 			curl_setopt($ch, CURLOPT_VERBOSE, false);	
 			
 			return $ch;

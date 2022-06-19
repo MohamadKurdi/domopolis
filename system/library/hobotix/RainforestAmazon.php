@@ -14,29 +14,28 @@ class RainforestAmazon
 	public $offersParser;
 	public $infoUpdater;
 	public $simpleProductParser;
-	public $paramsTranslator;
-	public $yandexTranslator;
+	public $paramsTranslator;	
 
 	private $telegramBot;
 	private $tgAlertChatID = null;
 
-	public const categoryModeTables 		= ['standard' => 'category_amazon_tree', 'bestsellers' => 'category_amazon_bestseller_tree'];
-	public const categoryModeResultIndexes 	= ['standard' => 'category_results', 'bestsellers' => 'bestsellers'];
-	public const categoryModeInfoIndexes 	= ['standard' => 'category_info', 'bestsellers' => 'bestsellers_info'];
-	public const rainforestTypeMapping 		= ['standard' => 'category', 'bestsellers' => 'bestsellers'];
+	public const categoryModeTables 		= ['standard' => 'category_amazon_tree', 	'bestsellers' => 'category_amazon_bestseller_tree'];
+	public const categoryModeResultIndexes 	= ['standard' => 'category_results', 		'bestsellers' => 'bestsellers'];
+	public const categoryModeInfoIndexes 	= ['standard' => 'category_info', 			'bestsellers' => 'bestsellers_info'];
+	public const rainforestTypeMapping 		= ['standard' => 'category', 				'bestsellers' => 'bestsellers'];
 
 		//Эта шляпа может использовать в быстром получении категорий
 	public $categoryParser;
 
 	public function __construct($registry){
 
-		$this->config 	= $registry->get('config');
-		$this->db 		= $registry->get('db');
-		$this->log 		= $registry->get('log');
+		$this->config 			= $registry->get('config');
+		$this->db 				= $registry->get('db');
+		$this->log 				= $registry->get('log');
 
 		$this->rfClient = new \CaponicaAmazonRainforest\Client\RainforestClient(['api_key' => trim($this->config->get('config_rainforest_api_key'))]);
 
-			//Loading Classes
+		//Loading Classes
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/OffersParser.php');
 		$this->offersParser = new Amazon\OffersParser($registry);
 

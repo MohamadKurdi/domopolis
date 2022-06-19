@@ -59,6 +59,10 @@ class YandexTranslator
 		if ($returnString){
 			$json = json_decode($result, true);
 			if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
+
+				echoLine('[YandexTranslator] ' . $from . ' -> ' . $to);
+				echoLine('[YandexTranslator] ' . $text . ' -> ' . $json['translations'][0]['text']);
+
 				return $json['translations'][0]['text'];
 			}
 		}
