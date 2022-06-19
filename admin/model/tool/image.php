@@ -1,5 +1,13 @@
 <?php
 	class ModelToolImage extends Model {
+
+		public function video($filename){
+
+			return HTTPS_IMAGE . $filename;
+
+		}
+
+
 		public function resize($filename, $width, $height, $return_real_path = false) {
 			
 			$uri = '';

@@ -119,7 +119,7 @@ class ControllerKPRainForest extends Controller {
 		$this->load->library('Timer');
 
 
-			//Первый шаг, мы проверим все текущие асины и запишем их в базу, плохие асины мы удалим
+		//Первый шаг, мы проверим все текущие асины и запишем их в базу, плохие асины мы удалим
 		$query = $this->db->ncquery("SELECT product_id, asin, ean FROM product WHERE status = 1 AND asin <> '' AND ISNULL(amzn_last_search)");
 
 		$products = [];

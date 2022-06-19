@@ -232,8 +232,8 @@ class ControllerCatalogProduct extends Controller {
 				if(isset($this->request->post['apply']) and $this->request->post['apply']) {
 				//	$this->redirect($this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $this->request->get['product_id'] . $url, 'SSL'));
 				} else {
-					$this->redirect($this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $this->request->get['product_id'] . $url, 'SSL'));
-					$this->redirect($this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+				//	$this->redirect($this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $this->request->get['product_id'] . $url, 'SSL'));
+				//	$this->redirect($this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 				}
 			}
 			
@@ -2363,6 +2363,35 @@ class ControllerCatalogProduct extends Controller {
 			} else {
 				$this->data['product_specials'] = array();
 			}
+
+			// videos
+			if (isset($this->request->post['product_video'])) {
+				$product_videos = $this->request->post['product_video'];
+			} elseif (isset($this->request->get['product_id'])) {
+				$product_videos = $this->model_catalog_product->getProductVideos($this->request->get['product_id']);
+			} else {
+				$product_videos = array();
+			}
+
+			$this->data['product_videos'] = array();
+
+			foreach ($product_videos as $product_video) {
+				if ($product_video['image'] && file_exists(DIR_IMAGE . $product_video['image'])) {
+					$image = $product_video['image'];
+				} else {
+					$image = 'no_image.jpg';
+				}
+				
+				$this->data['product_videos'][] = array(
+					'image'      				=> $image,
+					'video'      				=> $product_video['video'],
+					'play'						=> $this->model_tool_image->video($product_video['video']),
+					'thumb'      				=> $this->model_tool_image->resize($image, 100, 100),					
+					'sort_order' 				=> $product_video['sort_order'],
+					'product_video_description' => $product_video['product_video_description']
+				);
+			}
+
 			
 			// Images
 			if (isset($this->request->post['product_image'])) {

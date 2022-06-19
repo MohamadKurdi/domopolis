@@ -151,7 +151,7 @@ class CategoryParser
 
 		$this->db->query("DELETE FROM category_description WHERE category_id = '" . (int)$category_id . "'");
 		foreach ($data['category_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO category_description SET category_id = '" . (int)$category_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
+			$this->db->query("INSERT INTO category_description SET category_id = '" . (int)$category_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', menu_name = '" . $this->db->escape($value['menu_name']) . "'");
 		}
 	
 		$level = 0;

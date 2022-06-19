@@ -137,17 +137,11 @@ class RainforestAmazon
 		$apiEntities = $this->rfClient->retrieveProducts($rfRequests);
 
 
-		if (!$apiEntities){					
-				//Это значит, что ASIN товара не валидный, удалим его
-			echoLine('[RNF API] ASIN не найден ' . $row['asin']);
-			$this->infoUpdater->updateASINInDatabase(['product_id' => $row['product_id'], 'asin' => '']);
-
+		if (!$apiEntities){									
+			echoLine('[RNF API] ASIN не найден ' . $row['asin']);			
 		} else {
 			echoLine('[RNF API] ASIN найден ' . $row['asin']);
-
 		}
-
-
 
 		return $apiEntities;			
 	}

@@ -374,7 +374,7 @@
 							$path .= '_' . $path_id;
 						}
 						
-						$category_info = $this->model_catalog_category->getCategory($path_id);
+						$category_info = $this->model_catalog_category->getCategory($path_id);					
 						
 						if ($category_info) {
 							$this->data['breadcrumbs'][] = array(

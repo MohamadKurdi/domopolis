@@ -3,7 +3,7 @@
 class ControllerDPRainForest extends Controller {	
 	private $maxSteps = 10;
 
-	private $productRequestLimits = 30;
+	private $productRequestLimits = 1;
 	private $offerRequestLimits = 30;
 	private $rainforestAmazon;
 
@@ -34,7 +34,7 @@ class ControllerDPRainForest extends Controller {
 		if ($childCategories) {
 			foreach ($childCategories as $childCategory){
 
-				echoLine('[ControllerKPRainForest] Категория ' . $childCategory['path']);
+				echoLine('[ControllerDPRainForest] Категория ' . $childCategory['path']);
 
 				$this->rainforestAmazon->categoryParser->setType($type)->createCategory($childCategory);										
 
@@ -96,9 +96,37 @@ class ControllerDPRainForest extends Controller {
 
 		echoLine('[EditFullProducts] Всего товаров ' . count($products));
 
+		$total = count($products);
+		$iterations = ceil($total/$this->productRequestLimits);
 
+		for ($i = 1; $i <= $iterations; $i++){
+			$timer = new FPCTimer();
+			echoLine('[EditFullProducts] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . ($this->productRequestLimits * ($i-1)) . ' по ' . $this->productRequestLimits * $i);
 
+			$slice = array_slice($products, $this->productRequestLimits * ($i-1), $this->productRequestLimits);
 
+			$results = $this->rainforestAmazon->simpleProductParser->getProductByASINS($slice);
+
+			foreach ($results as $product_id => $result){
+				$this->rainforestAmazon->infoUpdater->updateProductAmazonLastSearch($product_id);
+
+				if ($result){
+					echoLine('[EditFullProducts] Товар ' . $product_id . ', найден, ASIN ' . $result['asin']);				
+
+					$this->rainforestAmazon->productsRetriever->editFullProduct($product_id, $result);
+
+				} else {
+
+					echoLine('[EditFullProducts] Товар ' . $product_id . ', не найден, ASIN ' . $result['asin']);
+					$this->rainforestAmazon->infoUpdater->updateASINInDatabase(['product_id' => $product_id, 'asin' => '']);
+
+				}
+
+			}
+
+			echoLine('[EditFullProducts] Времени на итерацию: ' . $timer->getTime() . ' сек.');
+			unset($timer);
+		}
 
 
 

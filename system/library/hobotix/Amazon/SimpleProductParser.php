@@ -1,4 +1,8 @@
 <?
+
+	/*
+		Class for work only with products asyncronyously		
+	*/
 	
 	namespace hobotix\Amazon;
 	
@@ -26,8 +30,8 @@
 			$data = [
 			'api_key' 			=> $this->config->get('config_rainforest_api_key'),
 			'amazon_domain' 	=> $this->config->get('config_rainforest_api_domain_1'),
+			'customer_zipcode' 	=> $this->config->get('config_rainforest_api_zipcode_1'),
 			'type' 				=> 'product',
-			'customer_zipcode' 	=> $this->config->get('config_rainforest_api_zipcode_1')
 			];
 			
 			$data = array_merge($data, $params);
@@ -38,6 +42,8 @@
 			
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); 
+			curl_setopt($ch, CURLOPT_TIMEOUT, 100);
 			curl_setopt($ch, CURLOPT_VERBOSE, false);	
 			
 			return $ch;

@@ -40,14 +40,10 @@
 					<a href="#tab-general" style="background-color:#ff7815; color:#FFF;">Текст</a>
 					<a href="#tab-data" style="background-color:#ff7815; color:#FFF;">Товар</a>
 					<a href="#tab-price" style="background-color:#00ad07; color:#FFF;">Цены</a>
+					
+					<a href="#tab-priceva" style="background-color:#7F00FF; color:#FFF;"><i class="fa fa-product-hunt"></i> Конкуренты</a>					
+					<a href="#tab-amazon" style="background-color:#FF9900; color:#FFF;"><i class="fa fa-amazon"></i> Amazon</a>
 
-					<?php if ($this->config->get('config_priceva_enable_api')) { ?>
-						<a href="#tab-priceva" style="background-color:#7F00FF; color:#FFF;"><i class="fa fa-product-hunt"></i> Конкуренты</a>
-					<?php } ?>
-
-					<?php if ($this->config->get('config_rainforest_enable_api')) { ?>
-						<a href="#tab-amazon" style="background-color:#FF9900; color:#FFF;"><i class="fa fa-amazon"></i> Amazon</a>
-					<?php } ?>
 
 					<a href="#tab-yandex-market" style="background-color:#cf4a61; color:#FFF;"><i class="fa fa-yahoo"></i> Yandex.Market</a>
 					<a href="#tab-special" style="background-color:#00ad07; color:#FFF;">Скидки</a>
@@ -63,6 +59,7 @@
 					<a href="#tab-option" style="background-color:#ff7815; color:#FFF;"><?php echo $tab_option; ?></a>
 					<a href="#tab-product-option" style="background-color:#ff7815; color:#FFF;">Товар-опция</a>				
 					<a href="#tab-image" style="background-color:#ff7815; color:#FFF;">Картинки</a>
+					<a href="#tab-videos" style="background-color:#ff7815; color:#FFF;">Видео</a>
 					<? /*	<a href="#tab-profile" style="display:none;">РП</a> */ ?>
 					<? /* <a href="#tab-design" style="display:none;">МКТ</a> */ ?>
 					<div class="clr"></div>
@@ -328,6 +325,7 @@
 											</div>
 										<?php } ?>
 									</div>
+
 									<div id="tab-data">
 										<table class="form">
 											<tr><th colspan='4'>Основная информация</th></tr>
@@ -545,22 +543,24 @@
 																<div class="image"><img src="<?php echo $thumb; ?>" alt="" id="thumb" /><br />
 																	<input type="hidden" name="image" value="<?php echo $image; ?>" id="image" />
 																	<a onclick="image_upload('image', 'thumb');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb').attr('src', '<?php echo $no_image; ?>'); $('#image').attr('value', '');"><?php echo $text_clear; ?></a></div>
+																</td>
 
 																	<td><?php echo $entry_keyword; ?></td>
-																	<td><?php foreach ($languages as $language) { ?>
+																	<td>
+																		<?php foreach ($languages as $language) { ?>
 																		<input type="text" name="keyword[<?php echo $language['language_id']; ?>]" value="<?php  if (isset($keyword[$language['language_id']])) { echo $keyword[$language['language_id']]; } ?>" />
 																		<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
-																		<?php } ?></td>
+																		<?php } ?>
 																	</td>
-																</tr>
+																	</td>
+															</tr>
 
 
-															</table>
-														</div>
+														</table>
+												</div>
 
 														<div id="tab-priceva">
 															<?php if ($priceva) { ?>			
-
 																<?php foreach ($priceva as $store_name => $priceva_data) { ?>
 																	<h2 style="color:#7F00FF"><i class="fa fa-product-hunt"></i> Данные о конкурентах с ценами <?php echo $store_name; ?> (Priceva API)</h2>
 
@@ -615,7 +615,6 @@
 																		</table>
 																	<?php } ?>
 																<?php } ?>
-
 															</div>
 
 															<div id="tab-amazon" <?php if (!$this->config->get('config_rainforest_enable_api')) { ?>style="display: none;"<?php } ?>>
@@ -1318,97 +1317,99 @@
 																					<div><span style="display:inline-block; width:120px;">Ширина / Width:</span> <input type="text" name="width" value="<?php echo $width; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
 																					<div><span style="display:inline-block; width:120px;">Высота / Height:</span> <input type="text" name="height" value="<?php echo $height; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
 																				</td>					
-																				<td style="width:350px;"><select name="length_class_id">
-																					<?php foreach ($length_classes as $length_class) { ?>
-																						<?php if ($length_class['length_class_id'] == $length_class_id) { ?>
-																							<option value="<?php echo $length_class['length_class_id']; ?>" selected="selected"><?php echo $length_class['title']; ?></option>
-																						<?php } else { ?>
-																							<option value="<?php echo $length_class['length_class_id']; ?>"><?php echo $length_class['title']; ?></option>
-																						<?php } ?>
-																					<?php } ?>
-																				</select>
-																			</td>
-																			<td>
-																				<div>
-																					<i class="fa fa-amazon"></i> <input type="text" name="length_amazon_key" value="<?php echo $length_amazon_key; ?>" size="100" style="width:250px; margin-bottom:3px;" />
-																				</div>
-																			</td>
-																		</tr>
-
-																		<tr>
-																			<td style="width:350px;">
-																				<div><span style="display:inline-block; width:120px;">Вес / Weight:</span> <input type="text" name="weight" value="<?php echo $weight; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
-																			</td>	
-																			<td style="width:350px;">							
-																				<div>
-																					<select name="weight_class_id">
-																						<?php foreach ($weight_classes as $weight_class) { ?>
-																							<?php if ($weight_class['weight_class_id'] == $weight_class_id) { ?>
-																								<option value="<?php echo $weight_class['weight_class_id']; ?>" selected="selected"><?php echo $weight_class['title']; ?></option>
+																				<td style="width:350px;">
+																					<select name="length_class_id">
+																						<?php foreach ($length_classes as $length_class) { ?>
+																							<?php if ($length_class['length_class_id'] == $length_class_id) { ?>
+																								<option value="<?php echo $length_class['length_class_id']; ?>" selected="selected"><?php echo $length_class['title']; ?></option>
 																							<?php } else { ?>
-																								<option value="<?php echo $weight_class['weight_class_id']; ?>"><?php echo $weight_class['title']; ?></option>
+																								<option value="<?php echo $length_class['length_class_id']; ?>"><?php echo $length_class['title']; ?></option>
 																							<?php } ?>
 																						<?php } ?>
 																					</select>
-																				</div>														
-																			</td>
-																			<td>
-																				<div>
-																					<i class="fa fa-amazon"></i> <input type="text" name="weight_amazon_key" value="<?php echo $weight_amazon_key; ?>" size="100" style="width:250px; margin-bottom:3px;" />
-																				</div>
-																			</td>
-																		</tr>
-																		<tr><th colspan='4'>Размер, вес упаковки товара / БРУТТО</th></tr>
-																		<tr>
-																			<td style="width:350px;">
-																				<div><span style="display:inline-block; width:120px;">Длина / Length:</span> <input type="text" name="pack_length" value="<?php echo $pack_length; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
-																				<div><span style="display:inline-block; width:120px;">Ширина / Width:</span> <input type="text" name="pack_width" value="<?php echo $pack_width; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
-																				<div><span style="display:inline-block; width:120px;">Высота / Height:</span> <input type="text" name="pack_height" value="<?php echo $pack_height; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
-																			</td>					
-																			<td style="width:350px;"><select name="pack_length_class_id">
-																				<?php foreach ($length_classes as $length_class) { ?>
-																					<?php if ($length_class['length_class_id'] == $pack_length_class_id) { ?>
-																						<option value="<?php echo $length_class['length_class_id']; ?>" selected="selected"><?php echo $length_class['title']; ?></option>
-																					<?php } else { ?>
-																						<option value="<?php echo $length_class['length_class_id']; ?>"><?php echo $length_class['title']; ?></option>
-																					<?php } ?>
-																				<?php } ?>
-																			</select>
-																		</td>
-																		<td>
-																			<div>
-																				<i class="fa fa-amazon"></i> <input type="text" name="pack_length_amazon_key" value="<?php echo $pack_length_amazon_key; ?>" size="100" style="width:250px; margin-bottom:3px;" />
-																			</div>
-																		</td>
-																	</tr>
+																				</td>
+																				<td>
+																					<div>
+																						<i class="fa fa-amazon"></i> <input type="text" name="length_amazon_key" value="<?php echo $length_amazon_key; ?>" size="100" style="width:250px; margin-bottom:3px;" />
+																					</div>
+																				</td>
+																			</tr>
 
-																	<tr>
-																		<td style="width:350px;">
-																			<div><span style="display:inline-block; width:120px;">Вес / Weight:</span> <input type="text" name="pack_weight" value="<?php echo $pack_weight; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
-																		</td>	
-																		<td style="width:350px;">							
-																			<div>
-																				<select name="pack_weight_class_id">
-																					<?php foreach ($weight_classes as $weight_class) { ?>
-																						<?php if ($weight_class['weight_class_id'] == $pack_weight_class_id) { ?>
-																							<option value="<?php echo $weight_class['weight_class_id']; ?>" selected="selected"><?php echo $weight_class['title']; ?></option>
-																						<?php } else { ?>
-																							<option value="<?php echo $weight_class['weight_class_id']; ?>"><?php echo $weight_class['title']; ?></option>
+																			<tr>
+																				<td style="width:350px;">
+																					<div><span style="display:inline-block; width:120px;">Вес / Weight:</span> <input type="text" name="weight" value="<?php echo $weight; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
+																				</td>	
+																				<td style="width:350px;">							
+																					<div>
+																						<select name="weight_class_id">
+																							<?php foreach ($weight_classes as $weight_class) { ?>
+																								<?php if ($weight_class['weight_class_id'] == $weight_class_id) { ?>
+																									<option value="<?php echo $weight_class['weight_class_id']; ?>" selected="selected"><?php echo $weight_class['title']; ?></option>
+																								<?php } else { ?>
+																									<option value="<?php echo $weight_class['weight_class_id']; ?>"><?php echo $weight_class['title']; ?></option>
+																								<?php } ?>
+																							<?php } ?>
+																						</select>
+																					</div>														
+																				</td>
+																				<td>
+																					<div>
+																						<i class="fa fa-amazon"></i> <input type="text" name="weight_amazon_key" value="<?php echo $weight_amazon_key; ?>" size="100" style="width:250px; margin-bottom:3px;" />
+																					</div>
+																				</td>
+																			</tr>
+																			<tr><th colspan='4'>Размер, вес упаковки товара / БРУТТО</th></tr>
+																			<tr>
+																				<td style="width:350px;">
+																					<div><span style="display:inline-block; width:120px;">Длина / Length:</span> <input type="text" name="pack_length" value="<?php echo $pack_length; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
+																					<div><span style="display:inline-block; width:120px;">Ширина / Width:</span> <input type="text" name="pack_width" value="<?php echo $pack_width; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
+																					<div><span style="display:inline-block; width:120px;">Высота / Height:</span> <input type="text" name="pack_height" value="<?php echo $pack_height; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
+																				</td>					
+																				<td style="width:350px;">
+																					<select name="pack_length_class_id">
+																						<?php foreach ($length_classes as $length_class) { ?>
+																							<?php if ($length_class['length_class_id'] == $pack_length_class_id) { ?>
+																								<option value="<?php echo $length_class['length_class_id']; ?>" selected="selected"><?php echo $length_class['title']; ?></option>
+																							<?php } else { ?>
+																								<option value="<?php echo $length_class['length_class_id']; ?>"><?php echo $length_class['title']; ?></option>
+																							<?php } ?>
 																						<?php } ?>
-																					<?php } ?>
-																				</select>
-																			</div>														
-																		</td>
-																		<td>
-																			<div>
-																				<i class="fa fa-amazon"></i> <input type="text" name="pack_weight_amazon_key" value="<?php echo $pack_weight_amazon_key; ?>" size="100" style="width:250px; margin-bottom:3px;" />
-																			</div>
-																		</td>
-																	</tr>
-																</table>
-															</div>
-															<div id="tab-links">
+																					</select>
+																				</td>
+																				<td>
+																					<div>
+																						<i class="fa fa-amazon"></i> <input type="text" name="pack_length_amazon_key" value="<?php echo $pack_length_amazon_key; ?>" size="100" style="width:250px; margin-bottom:3px;" />
+																					</div>
+																				</td>
+																			</tr>
 
+																			<tr>
+																				<td style="width:350px;">
+																					<div><span style="display:inline-block; width:120px;">Вес / Weight:</span> <input type="text" name="pack_weight" value="<?php echo $pack_weight; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
+																				</td>	
+																				<td style="width:350px;">							
+																					<div>
+																						<select name="pack_weight_class_id">
+																							<?php foreach ($weight_classes as $weight_class) { ?>
+																								<?php if ($weight_class['weight_class_id'] == $pack_weight_class_id) { ?>
+																									<option value="<?php echo $weight_class['weight_class_id']; ?>" selected="selected"><?php echo $weight_class['title']; ?></option>
+																								<?php } else { ?>
+																									<option value="<?php echo $weight_class['weight_class_id']; ?>"><?php echo $weight_class['title']; ?></option>
+																								<?php } ?>
+																							<?php } ?>
+																						</select>
+																					</div>														
+																				</td>
+																				<td>
+																					<div>
+																						<i class="fa fa-amazon"></i> <input type="text" name="pack_weight_amazon_key" value="<?php echo $pack_weight_amazon_key; ?>" size="100" style="width:250px; margin-bottom:3px;" />
+																					</div>
+																				</td>
+																			</tr>
+																		</table>
+																	</div>
+
+															<div id="tab-links">
 																<table class="form">
 																	<tr>
 																		<td style="width:33%">
@@ -1588,6 +1589,8 @@
 
 																		</table>
 																	</div>
+
+
 																	<div id="tab-attribute">
 																		<table id="attribute" class="list">
 																			<thead>
@@ -2301,13 +2304,72 @@
 																												</td>
 																											</tr>
 																										</tfoot>
-																									</table>
+																									</table>																									
+																								</div>
+																								<div id="tab-videos">
+
+																									<table id="videos" class="list">
+																										<thead>
+																											<tr>
+																												<td class="left"style="width:150px;">Превьюшка</td>
+																												<td class="left" style="width:200px;">Видео</td>
+																												<td class="right">Заголовок</td>																					
+																												<td class="right" style="width:50px;">Сортировка</td>
+																												<td style="width:100px;"></td>
+																											</tr>
+																										</thead>
+																										<?php $video_row = 0; ?>
+																										<?php foreach ($product_videos as $product_video) { ?>
+																											<tbody id="video-row<?php echo $video_row; ?>">
+																												<tr>
+																													<td class="left">
+																														<div class="video">
+																															<img src="<?php echo $product_video['thumb']; ?>" alt="" id="videothumb<?php echo $video_row; ?>" />
+																															<input type="hidden" name="product_video[<?php echo $video_row; ?>][image]" value="<?php echo $product_video['image']; ?>" id="videoimage<?php echo $video_row; ?>" />
+																															<br />
+																															<a onclick="image_upload('videoimage<?php echo $video_row; ?>', 'videothumb<?php echo $video_row; ?>');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb<?php echo $video_row; ?>').attr('src', '<?php echo $no_image; ?>'); $('#videoimage<?php echo $video_row; ?>').attr('value', '');"><?php echo $text_clear; ?></a>
+																														</div>
+																														</td>
+
+																														<td class="right">
+																															<textarea name="product_video[<?php echo $video_row; ?>][video]" rows="4" cols="50"><?php echo $product_video['video']; ?></textarea>
+
+																															<br />
+																															<a href="<?php echo $product_video['play'] ?>" target="_blank"><i class="fa fa-play"></i> <?php echo $product_video['play']; ?></a>
+																														</td>
+
+																														<td class="right">
+																															<?php foreach ($languages as $language) { ?>
+																																<input style="width:90%;" type="text" name="product_video[<?php echo $video_row; ?>][product_video_description][<?php echo $language['language_id'] ?>][title];" 
+																																value="<?php if (isset($product_video['product_video_description'][$language['language_id']])) { echo $product_video['product_video_description'][$language['language_id']]['title']; } ?>" />
+																																<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
+																															<?php } ?>
+																														</td>
+
+																														<td class="right">
+																															<input type="text" name="product_video[<?php echo $video_row; ?>][sort_order]" value="<?php echo $product_video['sort_order']; ?>" size="2" />
+																														</td>
+
+																														<td class="left">
+																															<a onclick="$('#video-row<?php echo $video_row; ?>').remove();" class="button"><?php echo $button_remove; ?></a>
+																														</td>
+																													</tr>
+																												</tbody>
+																												<?php $video_row++; ?>
+																											<?php } ?>
+																											<tfoot>
+																												<tr>
+																													<td class="right" colspan="5">
+																														<a onclick="addvideo();" class="button">Добавить видео</a>																										
+																													</td>
+																												</tr>
+																											</tfoot>
+																										</table>
+
 																									<table class="list">
-																										<tr>
+																										<tr>																											
 																											<td>
-																												Видео
-																											</td>
-																											<td>
+																												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Youtube Видео (старая логика, работает только с Youtube)</span>
 																												<textarea name="youtube" cols="200" rows="3"><?php echo $youtube; ?></textarea>
 																												<span class="help">
 																													Например, Mf8YQR9n47U<br />
@@ -2316,6 +2378,8 @@
 																											</td>
 																										</tr>
 																									</table>
+
+
 																								</div>
 																								<div id="tab-reward">
 																									<table class="form" style="display:none;">
@@ -2531,20 +2595,7 @@
 																				<?php } ?>
 																				//--></script> 
 																				<!--Additional offer-->
-<? /*
-	<script type="text/javascript"><!--
-	<?php $ao = 0; foreach($product_additional_offer as $product_ao) { ?>
-	CKEDITOR.replace('ao-description<?php echo $ao; ?>', {
-	filebrowserBrowseUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
-	filebrowserImageBrowseUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
-	filebrowserFlashBrowseUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
-	filebrowserUploadUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
-	filebrowserImageUploadUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
-	filebrowserFlashUploadUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>'
-	});
-	<?php $ao++; } ?>
-	//--></script> 
-*/ ?>
+
 <!--Additional offer-->
 <script type="text/javascript"><!--
 $.widget('custom.catcomplete', $.ui.autocomplete, {
@@ -3281,6 +3332,35 @@ $('input[name=\'collection\']').autocomplete({
 		});
 	};
 	//--></script> 
+
+	<script type="text/javascript"><!--
+	var video_row = <?php echo $video_row; ?>;
+	
+	function addvideo() {
+		html  = '<tbody id="video-row' + video_row + '">';
+		html += '  <tr>';
+		html += '    <td class="left"><div class="video"><img src="<?php echo $no_image; ?>" alt="" id="videothumb' + video_row + '" /><input type="hidden" name="product_video[' + video_row + '][image]" value="" id="videoimage' + video_row + '" /><br /><a onclick="image_upload(\'videoimage' + video_row + '\', \'videothumb' + video_row + '\');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$(\'#videothumb' + video_row + '\').attr(\'src\', \'<?php echo $no_image; ?>\'); $(\'#video' + video_row + '\').attr(\'value\', \'\');"><?php echo $text_clear; ?></a></div></td>';
+
+		html +='<td class="right">';
+		html +='<textarea name="product_video[' + video_row + '][video]" rows="4" cols="50"></textarea>';
+		html +='</td>';
+		html +='	<td class="right">';
+		<?php foreach ($languages as $language) { ?>
+		html += '<input style="width:90%;" type="text" name="product_video[' + video_row + '][product_video_description][<?php echo $language['language_id'] ?>][title];" value="" /><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br/>';
+		<?php } ?>
+		html +='	</td>';
+		html += '    <td class="right"><input type="text" name="product_video[' + video_row + '][sort_order]" value="" size="2" /></td>';
+		html += '    <td class="right"><a onclick="$(\'#video-row' + video_row  + '\').remove();" class="button"><?php echo $button_remove; ?></a></td>';
+		html += '  </tr>';
+		html += '</tbody>';
+		
+		$('#videos tfoot').before(html);
+		
+		video_row++;
+	}
+	//--></script> 
+
+
 	<script type="text/javascript"><!--
 	var image_row = <?php echo $image_row; ?>;
 	

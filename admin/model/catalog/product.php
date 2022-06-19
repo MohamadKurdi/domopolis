@@ -236,6 +236,24 @@
 					$this->db->query("INSERT INTO product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($product_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$product_image['sort_order'] . "'");
 				}
 			}
+
+			if (isset($data['product_video'])) {
+
+
+				foreach ($data['product_video'] as $product_video) {									
+					$this->db->query("INSERT INTO product_video SET product_id = '" . (int)$product_id . "', video = '" . $this->db->escape(html_entity_decode($product_video['video'], ENT_QUOTES, 'UTF-8')) . "', image = '" . $this->db->escape(html_entity_decode($product_video['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$product_video['sort_order'] . "'");
+
+					$product_video_id = $this->db->getLastId();
+
+					foreach ($product_video['product_video_description'] as $language_id => $value) {
+						$this->db->query("INSERT INTO product_video_description SET 
+							product_video_id 	= '" . (int)$product_video_id . "',
+							language_id 		= '" . (int)$language_id . "',
+							product_id 			= '" . (int)$product_id . "',
+							title 				= '" . $this->db->escape($value['title']) . "'");
+					}
+				}
+			}
 			
 			$this->db->query("DELETE FROM ocfilter_option_value_to_product WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM ocfilter_option_value_to_product_description WHERE product_id = '" . (int)$product_id . "'");
@@ -669,6 +687,25 @@
 					if ($this->config->get('pim_deletedef') && isset($data['def_img']) && $data['def_img'] == $product_image['image']) { continue;}
 					
 					$this->db->query("INSERT INTO product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($product_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$product_image['sort_order'] . "'");
+				}
+			}
+
+			$this->db->query("DELETE FROM product_video WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_video_description WHERE product_id = '" . (int)$product_id . "'");
+			
+			if (isset($data['product_video'])) {
+				foreach ($data['product_video'] as $product_video) {
+					$this->db->query("INSERT INTO product_video SET product_id = '" . (int)$product_id . "', video = '" . $this->db->escape(html_entity_decode($product_video['video'], ENT_QUOTES, 'UTF-8')) . "', image = '" . $this->db->escape(html_entity_decode($product_video['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$product_video['sort_order'] . "'");
+
+					$product_video_id = $this->db->getLastId();
+
+					foreach ($product_video['product_video_description'] as $language_id => $value) {
+						$this->db->query("INSERT INTO product_video_description SET 
+							product_video_id 	= '" . (int)$product_video_id . "',
+							language_id 		= '" . (int)$language_id . "',
+							product_id 			= '" . (int)$product_id . "',
+							title 				= '" . $this->db->escape($value['title']) . "'");
+					}
 				}
 			}
 			
@@ -1745,6 +1782,42 @@
 			$query = $this->db->query("SELECT * FROM product_image WHERE product_id = '" . (int)$product_id . "' ORDER BY sort_order ASC");
 			
 			return $query->rows;
+		}
+
+		public function getProductVideos($product_id) {
+			$query = $this->db->query("SELECT * FROM product_video WHERE product_id = '" . (int)$product_id . "' ORDER BY sort_order ASC");
+
+			$product_video_data = [];
+			foreach ($query->rows as $row){
+
+				$product_video_data[] = [
+					'image'						=> $row['image'],
+					'video'						=> $row['video'],
+					'sort_order' 				=> $row['sort_order'],
+					'product_video_description' => $this->getProductVideosDescriptions($row['product_video_id'])
+				];
+
+			}
+			
+			return $product_video_data;
+		}
+
+		public function getProductVideosDescriptions($product_video_id) {
+
+			$sql = "SELECT * FROM product_video_description WHERE product_video_id = '" . (int)$product_video_id . "'";
+			$query = $this->db->query($sql);
+					
+			$product_video_description_data = [];
+
+			foreach ($query->rows as $row){
+
+				$product_video_description_data[$row['language_id']] = [
+					'title' => $row['title']
+				];
+
+			}
+
+			return $product_video_description_data;
 		}
 		
 		public function getProductImage($product_id) {
