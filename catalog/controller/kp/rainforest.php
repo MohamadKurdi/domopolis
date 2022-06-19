@@ -15,8 +15,6 @@ class ControllerKPRainForest extends Controller {
 
 	}
 		
-
-
 	public function updateproductdimensions(){
 		if (php_sapi_name() != 'cli'){
 			die();
@@ -257,12 +255,5 @@ class ControllerKPRainForest extends Controller {
 
 
 	}
-
-
-
-
-
-
-
 
 }

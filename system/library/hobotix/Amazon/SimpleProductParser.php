@@ -24,10 +24,10 @@
 		private function createRequest($params = []){
 			
 			$data = [
-			'api_key' => $this->config->get('config_rainforest_api_key'),
-			'amazon_domain' => $this->config->get('config_rainforest_api_domain_1'),
-			'type' => 'product',
-			'customer_zipcode' => $this->config->get('config_rainforest_api_zipcode_1')
+			'api_key' 			=> $this->config->get('config_rainforest_api_key'),
+			'amazon_domain' 	=> $this->config->get('config_rainforest_api_domain_1'),
+			'type' 				=> 'product',
+			'customer_zipcode' 	=> $this->config->get('config_rainforest_api_zipcode_1')
 			];
 			
 			$data = array_merge($data, $params);
