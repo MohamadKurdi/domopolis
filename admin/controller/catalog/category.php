@@ -185,6 +185,8 @@
 				'amazon_category_name'  	=> $real_category['amazon_category_id']?$real_category['amazon_category_name']:false,
 				'amazon_category_id'  		=> $real_category['amazon_category_id'],
 				'amazon_sync_enable'  		=> $real_category['amazon_sync_enable'],
+				'amazon_final_category'  	=> $real_category['amazon_final_category'],
+				'amazon_category_link'  	=> $real_category['amazon_category_link'],
 				'yandex_category_name'  	=> $yandex_category_name,
 				'google_category' 			=> $this->model_catalog_category->getGoogleCategoryByID($real_category['google_category_id']),
 				'tnved'						=> $real_category['tnved'],
@@ -404,6 +406,14 @@
 				} else {
 				$this->data['amazon_sync_enable'] = false;
 			}
+
+			if (isset($this->request->post['amazon_final_category'])) {
+				$this->data['amazon_final_category'] = $this->request->post['amazon_final_category'];
+				} elseif (!empty($category_info)) {
+				$this->data['amazon_final_category'] = $category_info['amazon_final_category'];
+				} else {
+				$this->data['amazon_final_category'] = false;
+			}
 			
 			if (isset($this->request->post['amazon_category_id'])) {
 				$this->data['amazon_category_id'] = $this->request->post['amazon_category_id'];
@@ -421,9 +431,11 @@
 				$this->data['amazon_category_name'] = '';
 			}
 
-			if (!empty($category_info)){
+			if (isset($this->request->post['amazon_parent_category_id'])) {
+				$this->data['amazon_parent_category_id'] = $this->request->post['amazon_parent_category_id'];
+				} elseif (!empty($category_info)) {
 				$this->data['amazon_parent_category_id'] = $category_info['amazon_parent_category_id'];
-			} else {
+				} else {
 				$this->data['amazon_parent_category_id'] = '';
 			}
 
@@ -431,6 +443,12 @@
 				$this->data['amazon_parent_category_name'] = $category_info['amazon_parent_category_name'];
 			} else {
 				$this->data['amazon_parent_category_name'] = '';
+			}
+
+			if (!empty($category_info)){
+				$this->data['amazon_category_link'] = $category_info['amazon_category_link'];
+			} else {
+				$this->data['amazon_category_link'] = '';
 			}
 			
 			if (isset($this->request->post['yandex_category_name'])) {

@@ -24,21 +24,22 @@
 							<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
 							<td class="left"></td>
 							<td class="left">Картинка</td>
-							<td class="left">Иконка меню</td>	
-							<td class="left"><?php echo $column_name; ?></td>
+							<td class="left" style="width:50px;">Иконка меню</td>	
+							<td class="left" style="width:200px;"><?php echo $column_name; ?></td>
 							<td class="left"></td>
 							<td class="left">Габариты</td>
-							<td class="left">Уд. нал</td>
-							<td class="left">Меню в дочерних</td>
-							<td class="left">Пересечения</td>
+							<td class="left" style="width:50px;">Уд. нал</td>
+							<td class="left" style="width:50px;">Меню в дочерних</td>
+							<td class="left" style="width:50px;">Пересечения</td>
 							<td class="left" width="100px">Google</td>
 							<td class="left" width="100px">Amazon Link</td>
-							<td class="left">Amazon Sync</td>
+							<td class="left" style="width:50px;">Amazon Sync</td>
+							<td class="left" style="width:50px;">Amazon Final</td>
 							<td class="left" width="100px">Yandex</td>
-							<td class="left">Priceva</td>
-							<td class="left">ТНВЭД</td>	
-							<td class="right"><?php echo $column_sort_order; ?></td>
-							<td class="right"><?php echo $column_action; ?></td>
+							<td class="left" style="width:50px;">Priceva</td>
+							<td class="left" width="100px">ТНВЭД</td>	
+							<td class="right" width="50px"><?php echo $column_sort_order; ?></td>
+							<td class="right"  width="100px"><?php echo $column_action; ?></td>
 						</tr>
 					</thead>
 					<tbody>
@@ -57,7 +58,7 @@
 										<img src="<?php echo $category['image']; ?>" height="50px" width="50px" />									
 									</td>			  
 									<td>
-										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62 62" width="100" height="100">
+										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62 62" width="50" height="50">
 											<? echo $category['menu_icon']; ?>
 										</svg>  
 									</td>	
@@ -118,21 +119,40 @@
 									
 									<td class="left">
 										<? if ($category['amazon_category_name']) { ?>
-											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56; color:#FFF; font-size:10px;"><?php echo $category['amazon_category_name']; ?></span>
-											
-											<br />
-											
+
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56; color:#FFF; font-size:10px;">
-											<?php echo $category['amazon_category_id']; ?></span>
-											
-											
-											<? } else { ?>
-											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-										<? } ?>
+												<?php if ($category['amazon_category_link']) { ?>
+													<a href="<?php echo $category['amazon_category_link']; ?>" target="_blank" style="color:white;text-decoration:none;">
+													<?php } ?>
+
+													<?php echo $category['amazon_category_name']; ?>
+
+													<?php if ($category['amazon_category_link']) { ?>
+														<i class="fa fa-external-link"></i></a>
+													<?php } ?>
+												</span>
+
+												<br />
+
+												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56; color:#FFF; font-size:10px;">
+													<?php echo $category['amazon_category_id']; ?></span>
+
+
+												<? } else { ?>
+													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+												<? } ?>
 									</td>	
 
 									<td class="left">
 										<? if ($category['amazon_sync_enable']) { ?>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
+											<? } else { ?>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+										<? } ?>
+									</td>
+
+									<td class="left">
+										<? if ($category['amazon_final_category']) { ?>
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
 											<? } else { ?>
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
@@ -161,8 +181,11 @@
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF"><?php echo $category['tnved']; ?></span>
 											<? } else { ?>
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-										<? } ?></td>
-										<td class="right"><?php echo $category['sort_order']; ?></td>
+										<? } ?>
+									</td>
+									<td class="right">
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#000; color:#FFF"><?php echo $category['sort_order']; ?></span>										
+									</td>
 										<? /*	<td class="right" style="word-wrap: normal; min-width:100px;">
 										<?php if ($category['feeds']) { ?>
 										<? foreach ($category['feeds'] as $_feed) { ?>  

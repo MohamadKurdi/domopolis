@@ -41,7 +41,6 @@ class ControllerKPRainForest extends Controller {
 		}
 
 		$type = $this->config->get('config_rainforest_category_model');
-
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon'); 
 		
 		if ($type == 'bestsellers') {

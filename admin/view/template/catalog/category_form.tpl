@@ -528,17 +528,20 @@
 					
 					<table class="form">
 						<tr>
-							<td style="width:25%">
+							<td style="width:20%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Включить синхронизацию</span>									
 							</td>
-							<td style="width:75%">
+							<td style="width:20%">
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Конечная категория Amazon</span>									
+							</td>
+							<td style="width:60%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Категория Amazon</span>
 																
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF"><a style="color:#FFF;text-decoration:none" href="index.php?route=catalog/category/getAmazonCategoriesCSV&token=<?php echo $token; ?>"><i class="fa fa-amazon"></i> скачать полный список категорий Amazon в CSV</span> <sup style="color:red">NEW</sup>						
 							</td>							
 						</tr>
 						<tr style="border-bottom:1px dashed gray">
-							<td style="width:25%">
+							<td style="width:20%">
 								<select name="amazon_sync_enable">
 									<?php if ($amazon_sync_enable) { ?>
 										<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
@@ -549,20 +552,30 @@
 									<?php } ?>
 								</select>
 							</td>
+
+							<td style="width:20%">
+								<select name="amazon_final_category">
+									<?php if ($amazon_final_category) { ?>
+										<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+										<option value="0"><?php echo $text_disabled; ?></option>
+										<?php } else { ?>
+										<option value="1"><?php echo $text_enabled; ?></option>
+										<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+									<?php } ?>
+								</select>
+							</td>
 							
-							<td style="width:75%">
+							<td style="width:60%">
 								<input type="text" name="amazon_category_name" value="<?php echo $amazon_category_name; ?>" style="width:90%;" />
 								<?php if (!$amazon_category_id) { ?>
 									<br /><span id="span-alert-no-amazon-id" style="color:#ef5e67"><i class="fa fa-exclamation-triangle"></i> идентификатор не задан, попробуй подбор. Внимание, подбор работает только на НЕМЕЦКОМ языке</span>
 									<?php } else { ?>
 									<br /><span  style="color:#00ad07"><i class="fa fa-check"></i> идентификатор категории <span id="span-alert-amazon-id"><?php echo $amazon_category_id; ?></span></span>
-								<? } ?>
+								<? } ?>			
 
-								<?php if ($amazon_parent_category_id) { ?>
-									<br />
-									<span  style="color:#00ad07"><i class="fa fa-check"></i> идентификатор родительской категории <?php echo $amazon_parent_category_id; ?></span>									
-								<? } ?>
-								
+								<?php if ($amazon_category_id && $amazon_category_link) { ?>
+									<br /><span  style="color:#00ad07"><i class="fa fa-check"></i> ccылка категории <a href="<?php echo $amazon_category_link; ?>" target="_blank"><?php echo $amazon_category_link; ?></a></span>
+								<?php } ?>													
 
 								<input type="hidden" name="amazon_category_id" value="<?php echo $amazon_category_id; ?>" style="width:90%;" />
 								
@@ -693,9 +706,25 @@
 					<table class="form">
 						<tr>
 							<td><?php echo $entry_parent; ?></td>
-							<td><input type="text" name="path" value="<?php echo $path; ?>" size="100" />
-							<input type="hidden" name="parent_id" value="<?php echo $parent_id; ?>" /></td>
+							<td>
+								<input type="text" name="path" value="<?php echo $path; ?>" size="100" />
+								<input type="hidden" name="parent_id" value="<?php echo $parent_id; ?>" />
+							</td>
 						</tr>
+
+						<?php if ($this->config->get('config_rainforest_enable_api')) { ?>
+						<tr>
+							<td>Родительская Amazon</td>
+							<td>
+								<input type="text" name="amazon_parent_category_id" value="<?php echo $amazon_parent_category_id; ?>" size="100" />
+								<br />
+								<span class="help" style="color:#cf4a61"><i class="fa fa-exclamation-triangle"></i> При смене родительской категории магазина НЕОБХОДИМО очистить это поле, иначе категория привяжется заново</span>
+								<?php if ($amazon_parent_category_name) { ?>
+									<br /><span  style="color:#00ad07"><i class="fa fa-check"></i> родительская Amazon <?php echo $amazon_parent_category_name; ?></span>
+								<?php } ?>
+							</td>
+						</tr>
+						<?php } ?>
 						
 						<tr><th colspan="2">Акции</th></tr>
 						<tr>

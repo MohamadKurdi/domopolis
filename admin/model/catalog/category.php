@@ -30,6 +30,7 @@ class ModelCatalogCategory extends Model {
 			amazon_category_name 	= '" . $this->db->escape($data['amazon_category_name']) . "', 
 			amazon_parent_category_id 		= '" . $this->db->escape($data['amazon_parent_category_id']) . "', 
 			amazon_parent_category_name 	= '" . $this->db->escape($data['amazon_parent_category_name']) . "',
+			amazon_final_category 	= '" . $this->db->escape($data['amazon_final_category']) . "',
 			yandex_category_name 	= '" . $this->db->escape($data['yandex_category_name']) . "',
 			amazon_overprice_rules 	= '" . $this->db->escape($data['amazon_overprice_rules']) . "', 
 			date_modified 			= NOW(), 
@@ -147,6 +148,9 @@ class ModelCatalogCategory extends Model {
 			amazon_category_name = '" . $this->db->escape($data['amazon_category_name']) . "', 
 			yandex_category_name = '" . $this->db->escape($data['yandex_category_name']) . "',
 			amazon_overprice_rules = '" . $this->db->escape($data['amazon_overprice_rules']) . "', 
+			amazon_parent_category_id 		= '" . $this->db->escape($data['amazon_parent_category_id']) . "', 
+			amazon_parent_category_name 	= '" . $this->db->escape($data['amazon_parent_category_name']) . "',
+			amazon_final_category 	= '" . $this->db->escape($data['amazon_final_category']) . "',
 			date_modified = NOW() WHERE category_id = '" . (int)$category_id . "'");
 		
 		if (isset($data['image'])) {

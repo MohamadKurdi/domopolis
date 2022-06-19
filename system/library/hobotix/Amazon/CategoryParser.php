@@ -100,14 +100,7 @@ class CategoryParser
 	}
 
 	public function updateFinalCategories(){
-		$query = $this->db->query("SELECT DISTINCT(parent_id) as parent_id FROM " . $this->table);
-
-		$parentIDList = [];
-		foreach ($query->rows as $row){
-			$parentIDList[] = $row['parent_id'];
-		}
-
-		$this->db->query("UPDATE " . $this->table . " SET final_category = 1 WHERE parent_id > 0 AND category_id NOT IN (SELECT DISTINCT(parent_id) as parent_id FROM " . $this->table . ")");			
+		$this->db->query("UPDATE " . $this->table . " SET final_category = 1 WHERE parent_id != '0' AND category_id NOT IN (SELECT DISTINCT(parent_id) as parent_id FROM " . $this->table . ")");			
 	}
 
 	public function checkIfCategoryExists($amazon_category_id){
@@ -128,10 +121,14 @@ class CategoryParser
 		//Фикс null-родителя
 		$this->db->query("UPDATE category SET parent_id = 0 WHERE ISNULL(parent_id)");
 
-		//Включаем автополучение товаров только для крайних категорий		
-		//$this->db->query("UPDATE category SET amazon_sync_enable = 1 WHERE amazon_category_id AND amazon_category_id IN (SELECT amazon_category_id FROM " . $this->table . " WHERE final_category = 1)");
+		//Синхронизация финальных категорий
+		$this->db->query("UPDATE category SET amazon_final_category = 1 WHERE amazon_category_id IN (SELECT category_id FROM " . $this->table . " WHERE final_category = 1)");
 
-		//Отключаем автополучение товаров для крайних категорий, у которых отключено хоть у кого-то из родителей
+		//Синхронизация названий родительских категорий
+		$this->db->query("UPDATE category SET amazon_parent_category_name = (SELECT name FROM " . $this->table . " WHERE category_id = category.amazon_parent_category_id LIMIT 1)");
+
+		//Синхронизация ссылок категорий
+		$this->db->query("UPDATE category SET amazon_category_link = (SELECT link FROM " . $this->table . " WHERE category_id = category.amazon_category_id LIMIT 1)");
 
 	
 	}
@@ -181,6 +178,8 @@ class CategoryParser
 			parent_id		= '" . $this->db->escape($data['parent_id']) . "',
 			name 			= '" . $this->db->escape($data['name']) . "', 
 			full_name 		= '" . $this->db->escape($data['path']) . "',
+			link			= '" . $this->db->escape($data['link']) . "'
+			ON DUPLICATE KEY UPDATE
 			link			= '" . $this->db->escape($data['link']) . "'
 		");
 
@@ -238,7 +237,7 @@ class CategoryParser
 	public function createTopCategoryFromSettings($categories){
 
 		foreach ($categories as $category){
-			$result = $this->doRequest(['type' => \hobotix\RainforestAmazon::rainforestTypeMapping[$this->type], 'category_id' => $category], 'request');			
+			$result = $this->doRequest(['type' => \hobotix\RainforestAmazon::rainforestTypeMapping[$this->type], 'category_id' => $category], 'request');		
 
 			if (!empty($result[\hobotix\RainforestAmazon::categoryModeInfoIndexes[$this->type]]) && !empty($result[\hobotix\RainforestAmazon::categoryModeInfoIndexes[$this->type]]['current_category'])){
 				$this->createCategory(
