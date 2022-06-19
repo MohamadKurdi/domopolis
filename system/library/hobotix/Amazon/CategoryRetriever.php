@@ -50,20 +50,4 @@
 			return $this->doRequest($options);
 		}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	}
