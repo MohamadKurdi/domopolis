@@ -3,9 +3,32 @@
 	namespace hobotix\Amazon;
 	
 	class ProductsRetriever extends RainforestRetriever
-	{
+	{	
+		private $attributesArray = [];
+		private $manufacturersArray = [];
+
+		private $passTranslateAttributes = [
+			'Marke'
+		];
+
+		private $mapAmazonToStoreFieldsSpecifications = [
+			'Modellnummer' 			=> 'sku',
+			'Artikelnummer' 		=> 'sku',
+			'Herstellerreferenz' 	=> 'sku'
+		];
+
+		private $passAttributestAndSpecifications = [
+			'Produktabmessungen',
+			'Im Angebot von Amazon.de seit',
+			'Marke',
+			'Amazon Bestseller-Rang',
+			'Auslaufartikel (Produktion durch Hersteller eingestellt)',
+			'Durchschnittliche Kundenbewertung',
+			'ASIN'			
+		];
+
 		
-		const CLASS_NAME = 'hobotix\\Amazon\\ProductsRetriever';	
+		const CLASS_NAME = 'hobotix\\Amazon\\ProductsRetriever';
 		
 		public function getProducts(){
 			
@@ -36,14 +59,25 @@
 			return $results;
 		}
 		
-		public function getManufacturer($name){
-			$query = $this->db->query("SELECT manufacturer_id FROM manufacturer WHERE name LIKE ('" . $this->db->escape($name) . "')");
-			
-			if ($query->num_rows){
-				return (int)$query->row['manufacturer_id'];
+		public function getManufacturer($name, $recursive = false){
+
+			if ($this->manufacturersArray || $recursive){
+				if (!empty($this->manufacturersArray[$name])){
+					return $this->manufacturersArray[$name];
 				} else {
-				return false;
-			}
+					return false;
+				}
+			} else {
+
+				$query = $this->db->query("SELECT * FROM manufacturer WHERE name LIKE ('" . $this->db->escape($name) . "')");
+
+					foreach ($query->rows as $row){
+						$this->manufacturersArray[$row['name']] = $row['manufacturer_id'];
+					}
+
+					return $this->getManufacturer($name, true);
+
+				}
 		}
 		
 		public function addManufacturer($name){
@@ -57,6 +91,8 @@
 			foreach ($this->registry->get('languages') as $language_code => $language) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_description SET manufacturer_id = '" . (int)$manufacturer_id . "', language_id = '" . (int)$language['language_id'] . "', seo_title = '" . $this->db->escape($name) . "'");
 			}
+
+			$this->manufacturersArray[$name] = (int)$manufacturer_id;
 			
 			return (int)$manufacturer_id;
 		}
@@ -131,12 +167,6 @@
 
 		}
 		
-		public function editProductAttributes($product_id, $data){
-			
-			
-			
-		}
-		
 		public function editProductDescriptions($product_id, $data){			
 			foreach ($data as $language_id => $value) {
 				$this->db->query("UPDATE product_description SET 
@@ -146,15 +176,55 @@
 			}
 		}
 		
-		public function getAttribute($name){
-			$query = $this->db->query("SELECT attribute_id FROM attribute_description WHERE name LIKE ('" . $this->db->escape($name) . "') AND language_id = '" . $this->config->get('config_rainforest_source_language_id') . "'");
-			
-			if ($query->num_rows){
-				return $query->row['attribute_id'];
+		public function getAttribute($name, $recursive = false){
+			if ($this->attributesArray || $recursive){
+				if (!empty($this->attributesArray[$name])){
+					return $this->attributesArray[$name];
 				} else {
-				return false;
-			}
-			
+					return false;
+				}
+			} else {
+				$query = $this->db->query("SELECT * FROM attribute_description WHERE language_id = '" . $this->config->get('config_rainforest_source_language_id') . "'");
+
+				foreach ($query->rows as $row){
+					$this->attributesArray[$row['name']] = $row['attribute_id'];
+				}
+
+				return $this->getAttribute($name, true);
+			}	
+		}
+
+		public function addAttribute($data){
+			$this->db->query("INSERT INTO " . DB_PREFIX . "attribute SET attribute_group_id = '" . (int)$data['attribute_group_id'] . "'");
+
+			$attribute_id = $this->db->getLastId();
+
+			foreach ($data['attribute_description'] as $language_id => $value) {
+				$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_description SET attribute_id = '" . (int)$attribute_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
+
+				if ($language_id == $this->config->get('config_rainforest_source_language_id')){
+					$name = $value['name'];
+				}
+
+			}	
+
+			$this->attributesArray[$name] = (int)$attribute_id;
+		
+			return (int)$attribute_id;
+		}
+
+		public function editProductAttributes($product_id, $data){
+			$this->db->query("DELETE FROM product_attribute WHERE product_id = '" . (int)$product_id . "'");
+
+			foreach ($data as $product_attribute) {
+				if ($product_attribute['attribute_id']) {
+					$this->db->query("DELETE FROM product_attribute WHERE product_id = '" . (int)$product_id . "' AND attribute_id = '" . (int)$product_attribute['attribute_id'] . "'");
+
+					foreach ($product_attribute['product_attribute_description'] as $language_id => $product_attribute_description) {				
+						$this->db->query("INSERT INTO product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$product_attribute['attribute_id'] . "', language_id = '" . (int)$language_id . "', text = '" .  $this->db->escape($product_attribute_description['text']) . "'");
+					}
+				}
+			}			
 		}
 		
 		
@@ -171,6 +241,8 @@
 			
 			//Бренд
 			if (!empty($product['brand'])){
+				$product['brand'] = atrim($product['brand']);
+
 				echoLine('[editFullProduct] Бренд: ' . $product['brand']);
 				$manufacturer_id = $this->getManufacturer($product['brand']);			
 				if (!$manufacturer_id){
@@ -185,6 +257,8 @@
 			if (!empty($product['description'])){
 				$product_description = [];			
 				foreach ($this->registry->get('languages') as $language_code => $language) {
+					$product['description'] = atrim($product['description']);
+
 					if ($language_code == $this->config->get('config_rainforest_source_language')){
 						$description = $product['description'];	
 						$translated = true;
@@ -240,6 +314,8 @@
 				$product_video_description = [];
 				foreach ($product['videos'] as $video){
 					foreach ($this->registry->get('languages') as $language_code => $language) {
+						$video['title'] = atrim($video['title']);
+
 						if ($language_code == $this->config->get('config_rainforest_source_language')){
 							$title = $video['title'];	
 							$translated = true;
@@ -273,7 +349,178 @@
 
 				}
 			}
-			
+
+			//Особенности, специальная группа атрибутов
+			$product_attribute = [];
+			if (!empty($product['feature_bullets'])){				
+				$feature_bullets_counter = 1;
+				foreach ($product['feature_bullets'] as $feature_bullet){
+					echoLine('[editFullProduct] Особенности: ' . $feature_bullets_counter);
+
+					$attribute_id = $this->getAttribute($this->config->get('config_special_attr_name') . ' ' . $feature_bullets_counter);
+					if (!$attribute_id){
+						$attribute_description = [];
+						foreach ($this->registry->get('languages') as $language_code => $language) {
+							$attribute_description[$language['language_id']] = [
+								'name' => $this->config->get('config_special_attr_name') . ' ' . $feature_bullets_counter
+							];
+						}
+						$attribute = [
+							'attribute_group_id' 	=> $this->config->get('config_special_attr_id'),
+							'attribute_description' => $attribute_description
+						];
+						$attribute_id = $this->addAttribute($attribute);
+					}
+
+					$product_attribute_description = [];
+					foreach ($this->registry->get('languages') as $language_code => $language) {
+						$feature_bullet = atrim($feature_bullet);
+
+						if ($language_code == $this->config->get('config_rainforest_source_language')){
+							$text = $feature_bullet;	
+							$translated = true;
+						} else {
+							if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $language['code'])){
+								$text = $this->yandexTranslator->translate($feature_bullet, $this->config->get('config_rainforest_source_language'), $language_code, true);
+							} else {
+								$text = $feature_bullet;
+								$translated = false;
+							}
+						}
+
+						$product_attribute_description[$language['language_id']] = [
+							'text' => $text
+						];
+					}
+
+					$product_attribute[] = [
+						'attribute_id' 					=> $attribute_id,
+						'product_attribute_description' => $product_attribute_description
+					];
+
+					$feature_bullets_counter++;
+				}
+				
+			}
+
+
+			//Атрибуты и спецификации
+			if (!empty($product['attributes']) || !empty($product['specifications'])){
+
+				//Репарсим массивы атрибутов и спецификаций
+				$mergedProductAttributes = [];
+
+				if (!empty($product['attributes'])){
+					foreach ($product['attributes'] as $temp){
+						$temp['name'] = atrim($temp['name']);
+						$temp['value'] = atrim($temp['value']);
+
+						$mergedProductAttributes[clean_string($temp['name'])] = [
+							'name' 	=> $temp['name'],
+							'value' => $temp['value']
+						];
+					}
+				}
+
+				unset($temp);
+				if (!empty($product['specifications'])){
+					foreach ($product['specifications'] as $temp){
+						$temp['name'] = atrim($temp['name']);
+						$temp['value'] = atrim($temp['value']);
+
+						$mergedProductAttributes[clean_string($temp['name'])] = [
+							'name' 	=> $temp['name'],
+							'value' => $temp['value']
+						];
+					}
+				}
+
+				//И удаляем те, которые нам вообще не вперлись
+				foreach ($this->passAttributestAndSpecifications as $pass){
+					if (!empty($mergedProductAttributes[clean_string($pass)])){
+						unset($mergedProductAttributes[clean_string($pass)]);
+					}
+				}
+
+				foreach ($mergedProductAttributes as $attribute){
+					echoLine('[editFullProduct] Атрибуты: ' . $attribute['name']);
+					$attribute['name'] = atrim($attribute['name']);
+					$attribute['value'] = atrim($attribute['value']);	
+
+					if (!empty($this->mapAmazonToStoreFieldsSpecifications[clean_string($attribute['name'])])){
+
+						echoLine('[editFullProduct] Атрибут ' . $attribute['name'] . ' -> ' . $this->mapAmazonToStoreFieldsSpecifications[$attribute['name']]);
+						$this->editProductFields($product_id, [['name' => $this->mapAmazonToStoreFieldsSpecifications[$attribute['name']], 'type' => 'varchar', 'value' => $attribute['value']]]);
+
+					} else {
+
+
+						$attribute_id = $this->getAttribute($attribute['name']);
+
+						if (!$attribute_id){
+							$attribute_description = [];
+							foreach ($this->registry->get('languages') as $language_code => $language) {						
+
+								if ($language_code == $this->config->get('config_rainforest_source_language')){
+									$name = $attribute['name'];	
+									$translated = true;
+								} else {
+									if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $language['code'])){
+										$name = $this->yandexTranslator->translate($attribute['name'], $this->config->get('config_rainforest_source_language'), $language_code, true);
+									} else {
+										$name = $feature_bullet;
+										$translated = false;
+									}
+								}
+
+								$attribute_description[$language['language_id']] = [
+									'name' => $name
+								];
+							}
+							$attribute = [
+								'attribute_group_id' 	=> $this->config->get('config_default_attr_id'),
+								'attribute_description' => $attribute_description
+							];
+
+							$attribute_id = $this->addAttribute($attribute);
+						}
+
+						$product_attribute_description = [];
+						foreach ($this->registry->get('languages') as $language_code => $language) {						
+
+							if ($language_code == $this->config->get('config_rainforest_source_language') || in_array($attribute['name'], $this->passTranslateAttributes)){
+								$text = $attribute['value'];	
+								$translated = true;
+							} else {
+								if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $language['code'])){
+									$text = $this->yandexTranslator->translate($attribute['value'], $this->config->get('config_rainforest_source_language'), $language_code, true);
+								} else {
+									$text = $attribute['value'];
+									$translated = false;
+								}
+							}
+
+							$product_attribute_description[$language['language_id']] = [
+								'text' => $text
+							];
+						}
+
+						$product_attribute[] = [
+							'attribute_id' 					=> $attribute_id,
+							'product_attribute_description' => $product_attribute_description
+						];
+					}
+				}
+			}
+
+			if ($product_attribute){
+				$this->editProductAttributes($product_id, $product_attribute);
+			}
+
+
+			//Размеры, готовая функция
+			$this->registry->get('rainforestAmazon')->infoUpdater->parseAndUpdateProductDimensions($product);
+						
 			
 			die();
 		}

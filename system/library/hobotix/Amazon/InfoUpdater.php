@@ -35,14 +35,12 @@ class InfoUpdater
 			json = '" . $this->db->escape($product['json']) . "'");
 
 
-		$this->parseAndUpdateProductDimensions($product);
+		$this->parseAndUpdateProductDimensions($product['json']);
 
 		return $this;
 	}
 
 	public function setDimensionsCache(){
-
-
 		if (!$this->weightCache) {
 			$this->weightCache = [];
 
@@ -62,21 +60,20 @@ class InfoUpdater
 				$this->lengthCache[$row['amazon_key']] = $row;
 			}
 		}
-
-
 	}
 
 	public function parseDimesionsString($string){
+		$string = atrim($string);
 		$exploded1 = explode(';', $string);
 
 		if (count($exploded1) != 2){
 			return false;
 		}
 
-		$exploded_length = explode('x', trim($exploded1[0]));
+		$exploded_length = explode('x', atrim($exploded1[0]));
 
-		$exploded_weight_class = explode(' ', trim($exploded1[1]));
-		$exploded_length_class = explode(' ', trim($exploded_length[2]));
+		$exploded_weight_class = explode(' ', atrim($exploded1[1]));
+		$exploded_length_class = explode(' ', atrim($exploded_length[2]));
 
 		if (count($exploded_length) != 3 || count($exploded_weight_class) != 2 || count($exploded_length_class) != 2){
 			return false;
@@ -84,26 +81,26 @@ class InfoUpdater
 
 		$length_class_id = 0;
 		$weight_class_id = 0;
-		if (!empty($this->weightCache[trim($exploded_weight_class[1])])){
-			$weight_class_id = $this->weightCache[trim($exploded_weight_class[1])]['weight_class_id'];
+		if (!empty($this->weightCache[atrim($exploded_weight_class[1])])){
+			$weight_class_id = $this->weightCache[atrim($exploded_weight_class[1])]['weight_class_id'];
 		}
 
-		if (!empty($this->lengthCache[trim($exploded_length_class[1])])){
-			$length_class_id = $this->lengthCache[trim($exploded_length_class[1])]['length_class_id'];
+		if (!empty($this->lengthCache[atrim($exploded_length_class[1])])){
+			$length_class_id = $this->lengthCache[atrim($exploded_length_class[1])]['length_class_id'];
 		}
 
-		$weight = (float)trim($exploded_weight_class[0]);
+		$weight = (float)atrim($exploded_weight_class[0]);
 		if (!$weight_class_id){
-			echoLine('Не найдена единица измерения веса: ' . trim($exploded_weight_class[1]));
+			echoLine('Не найдена единица измерения веса: ' . atrim($exploded_weight_class[1]));
 			$weight = 0;
 		}
 
-		$length = (float)trim($exploded_length[0]);
-		$width 	= (float)trim($exploded_length[1]);
-		$height = (float)trim($exploded_length[2]);
+		$length = (float)atrim($exploded_length[0]);
+		$width 	= (float)atrim($exploded_length[1]);
+		$height = (float)atrim($exploded_length[2]);
 
 		if (!$length_class_id){
-			echoLine('Не найдена единица измерения размера: ' . trim($exploded_length_class[1]));
+			echoLine('Не найдена единица измерения размера: ' . atrim($exploded_length_class[1]));
 
 			$length = 0;
 			$width 	= 0;
@@ -114,7 +111,7 @@ class InfoUpdater
 			'length' 			=> $length,
 			'width' 			=> $width,
 			'height' 			=> $height,
-			'weight'			=> (float)trim($exploded_weight_class[0]),
+			'weight'			=> (float)atrim($exploded_weight_class[0]),
 			'length_class_id' 	=> $length_class_id,
 			'weight_class_id' 	=> $weight_class_id,
 		];
@@ -122,9 +119,7 @@ class InfoUpdater
 
 	}
 
-	public function parseAndUpdateProductDimensions($product){	
-
-		$json = json_decode($product['json'], true);
+	public function parseAndUpdateProductDimensions($json){			
 
 		if (!$json || empty($json['dimensions'])){
 			return false;
@@ -145,7 +140,7 @@ class InfoUpdater
 				pack_weight 			= '" . (float)$data['weight'] . "',
 				pack_length_class_id 	= '" . (int)$data['length_class_id'] . "',
 				pack_weight_class_id 	= '" . (int)$data['weight_class_id'] . "'
-				WHERE asin = '" . $this->db->escape($product['asin']) . "'");
+				WHERE asin = '" . $this->db->escape($json['asin']) . "'");
 
 			return true;
 

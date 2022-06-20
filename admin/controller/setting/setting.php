@@ -1120,6 +1120,24 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$this->data['config_default_attr_id'] = $this->config->get('config_default_attr_id');
 		}	
+
+		if (isset($this->request->post['config_special_attr_name'])) {
+			$this->data['config_special_attr_name'] = $this->request->post['config_special_attr_name'];
+		} else {
+			$this->data['config_special_attr_name'] = $this->config->get('config_special_attr_name');
+		}	
+
+		if (isset($this->request->post['config_specifications_attr_id'])) {
+			$this->data['config_specifications_attr_id'] = $this->request->post['config_specifications_attr_id'];
+		} else {
+			$this->data['config_specifications_attr_id'] = $this->config->get('config_specifications_attr_id');
+		}	
+
+		if (isset($this->request->post['config_specifications_attr_name'])) {
+			$this->data['config_specifications_attr_name'] = $this->request->post['config_specifications_attr_name'];
+		} else {
+			$this->data['config_specifications_attr_name'] = $this->config->get('config_specifications_attr_name');
+		}
 		
 		if (isset($this->request->post['config_admin_limit'])) {
 			$this->data['config_admin_limit'] = $this->request->post['config_admin_limit'];

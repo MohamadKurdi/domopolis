@@ -45,6 +45,7 @@
 								<td width="1" style="text-align: center;">L</td>	
 							<?php } ?>
 							<td class="left" >Название</td>
+							<td class="left" style="width:30px;">Статус</td>
 							<td class="left" style="width:200px;">Amzn Link</td>
 							<td class="left" style="width:30px;">Amzn Sync</td>
 							<td class="left" style="width:30px;">Amzn Final</td>
@@ -73,7 +74,9 @@
 										<input type="checkbox" name="selected[]" value="<?php echo $category['category_id']; ?>" />
 									<?php } ?></td>
 									<td class="left">
-										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF"><?php echo $category['category_id']; ?></span>									
+
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:<?php if ($rollup_enabled) { ?><?php echo $levels[$category['level']]; ?><?php } else { ?>#4ea24e<?php } ?>; color:#FFF"><?php echo $category['category_id']; ?></span>									
+									
 									</td>		
 									<?php if ($rollup_enabled) { ?>
 									<td class="left" style="font-size:18px;">
@@ -94,6 +97,14 @@
 										<?php if ($category['menu_name']) { ?>
 											<br /><small class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF"><?php echo $category['menu_name']; ?></small>
 										<?php } ?>
+									</td>
+
+									<td class="right">
+										<? if ($category['status']) { ?>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Вкл</span>
+											<? } else { ?>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Выкл</span>
+										<? } ?>
 									</td>
 
 									<td class="left">
@@ -222,10 +233,12 @@
 											<? } else { ?>
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
 										<? } ?>
-									</td>
+									</td>									
+
 									<td class="right">
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#000; color:#FFF"><?php echo $category['sort_order']; ?></span>										
 									</td>
+
 									<td class="right"><?php foreach ($category['action'] as $action) { ?>
 										<a class="button" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>				
 									<?php } ?></td>

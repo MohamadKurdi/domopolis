@@ -13,9 +13,6 @@ class ControllerKPRainForest extends Controller {
 
 		parent::__construct($registry);
 
-	}
-		
-	public function updateproductdimensions(){
 		if (php_sapi_name() != 'cli'){
 			die();
 		}
@@ -24,12 +21,17 @@ class ControllerKPRainForest extends Controller {
 			die('RNF API NOT ENABLED');
 		}
 
+	}
+		
+	public function updateproductdimensions(){
+
+
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 
 		$query = $this->db->query("SELECT * FROM product_amzn_data");
 
 		foreach ($query->rows as $row){
-			if ($this->rainforestAmazon->infoUpdater->parseAndUpdateProductDimensions($row)){
+			if ($this->rainforestAmazon->infoUpdater->parseAndUpdateProductDimensions($row['json'])){
 				echoLine('ОК: Товар ' . $row['product_id'] . ', ASIN: ' );
 			} else {
 				echoLine('FAIL: Товар ' . $row['product_id'] . ', ASIN: ' );
@@ -39,13 +41,6 @@ class ControllerKPRainForest extends Controller {
 	}
 
 	public function parseeanscron(){
-		if (php_sapi_name() != 'cli'){
-			die();
-		}
-
-		if (!$this->config->get('config_rainforest_enable_api')){
-			die('RNF API NOT ENABLED');
-		}
 		
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');
@@ -107,13 +102,6 @@ class ControllerKPRainForest extends Controller {
 
 	
 	public function parseasinscron(){
-		if (php_sapi_name() != 'cli'){
-			die();
-		}
-
-		if (!$this->config->get('config_rainforest_enable_api')){
-			die('RNF API NOT ENABLED');
-		}
 		
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');
@@ -174,14 +162,6 @@ class ControllerKPRainForest extends Controller {
 
 
 	public function parseofferscron($immediately = false){
-
-		if (php_sapi_name() != 'cli'){
-			die();
-		}
-
-		if (!$this->config->get('config_rainforest_enable_api')){
-			die('RNF API NOT ENABLED');
-		}
 
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');

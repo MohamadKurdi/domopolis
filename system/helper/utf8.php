@@ -25,6 +25,19 @@
 		];
 	}
 
+	function atrim($string){
+		$string = preg_replace('/(\x{200e}|\x{200f})/u', '', $string);
+		$string = trim($string);
+
+		return $string;
+	}
+
+	function clean_string( $string ) {
+   	 	$string = preg_replace( "/[^a-zA-ZА-Яа-я0-9\s]/", '', $string );
+
+    	return $string;
+	}
+
 	function prepareEOLArray($string){
 		$result = [];
 

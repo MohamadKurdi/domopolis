@@ -1057,10 +1057,8 @@
 						</table>
 						
 						<table class="form">
-							<tr>
-								
-								
-								<td width="20%">
+							<tr>																
+								<td width="15%">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Счетчик количества</span></p>
 									<select name="config_product_count">
 										<?php if ($config_product_count) { ?>
@@ -1073,7 +1071,7 @@
 									</select>									
 								</td>
 								
-								<td width="20%">
+								<td width="15%">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Разрешить отзывы</span></p>
 									<select name="config_review_status">
 										<?php if ($config_review_status) { ?>
@@ -1086,7 +1084,7 @@
 									</select>
 								</td>
 								
-								<td width="20%">
+								<td width="15%">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Разрешить скачивание файлов</span></p>
 									<select name="config_download">
 										<?php if ($config_download) { ?>
@@ -1098,11 +1096,8 @@
 										<? } ?>
 									</select>
 								</td>
-								
-								
-								<tr>
-									
-									<td width="33%">
+
+								<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Прятать артикул в карте</span></p>
 										<select name="config_product_hide_sku">
 											<?php if ($config_product_hide_sku) { ?>
@@ -1118,7 +1113,7 @@
 										<span class="help">Отключает вывод артикула в карте товара</span>
 									</td>
 									
-									<td width="33%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Подменять SKU/MODEL на код товара на выводе</span></p>
 										<select name="config_product_replace_sku_with_product_id">
 											<?php if ($config_product_replace_sku_with_product_id) { ?>
@@ -1134,18 +1129,18 @@
 										<span class="help"><i class="fa fa-info-circle"></i> Глобальная подмена на фронте артикула на внутренний код товара (целое число). Пожалуйста, используйте с большой осторожностью. Это заменит SKU везде, и в микроразметке в том числе. Поиск затронут не будет</span>
 									</td>
 									
-									<td width="33%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Добавлять префикс к коду товара/SKU при использовании подмены</span></p>
 										<input type="text" name="config_product_use_sku_prefix" value="<?php echo $config_product_use_sku_prefix; ?>" size="10" />
 										
 										<br />
 										<span class="help"><i class="fa fa-info-circle"></i> Если включена предыдущая настройка, и задан этот префикс, то артикул будет равен префикса+код товара. Например, KP123646</span>
 									</td>
-									
-								</tr>
+
+								</tr>	
 								
 								<tr>
-									<td width="33%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Группа атрибутов "особенности"</span></p>
 
 										<select name="config_special_attr_id">
@@ -1153,7 +1148,7 @@
 												<?php if ($attribute_group['attribute_group_id'] == $config_special_attr_id) { ?>
 													<option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
 												<?php } else { ?>
-													<option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
+													<option value="<?php echo $attribute_group['attribute_group_id']; ?>"><?php echo $attribute_group['name']; ?></option>
 												<?php } ?>
 											<?php } ?>
 										</select>
@@ -1161,22 +1156,50 @@
 										<span class="help">Эти атрибуты не фильтруются, а только показываются в отдельном блоке в карте товара</span>
 									</td>
 
-									<td width="33%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Группа атрибутов по-умолчанию</span></p>
 
+									<td width="15%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Группа атрибутов "Спецификации"</span></p>
+										<select name="config_specifications_attr_id">
+											<?php foreach ($attribute_groups as $attribute_group) { ?>
+												<?php if ($attribute_group['attribute_group_id'] == $config_specifications_attr_id) { ?>
+													<option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $attribute_group['attribute_group_id']; ?>"><?php echo $attribute_group['name']; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>
+										<br />
+										<span class="help">Эти атрибуты не фильтруются, а только показываются в отдельном блоке в карте товара</span>
+									</td>
+
+									<td width="15%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Группа атрибутов по-умолчанию</span></p>
 										<select name="config_default_attr_id">
 											<?php foreach ($attribute_groups as $attribute_group) { ?>
 												<?php if ($attribute_group['attribute_group_id'] == $config_default_attr_id) { ?>
 													<option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
 												<?php } else { ?>
-													<option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
+													<option value="<?php echo $attribute_group['attribute_group_id']; ?>"><?php echo $attribute_group['name']; ?></option>
 												<?php } ?>
 											<?php } ?>
 										</select>
 										<br />
-										<span class="help">В эту группу добавляются характеристики товара с Амазона</span>
+										<span class="help">В эту группу добавляются атрибуты товара с Амазона</span>
 									</td>
+
 									
+									<td width="15%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Название атрибутов - особенностей</span></p>
+										<input type="text" name="config_special_attr_name" value="<?php echo $config_special_attr_name; ?>" size="30" />										
+									</td>
+
+									<td width="15%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Название атрибутов - cпецификаций</span></p>
+										<input type="text" name="config_specifications_attr_name" value="<?php echo $config_specifications_attr_name; ?>" size="30" />										
+									</td>
+
+									<td width="15%">
+									</td>
 									
 								</tr>
 								

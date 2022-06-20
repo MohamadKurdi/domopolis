@@ -247,6 +247,7 @@ class ControllerCatalogCategory extends Controller {
 				'default_height'			=> $real_category['default_height'],
 				'default_weight'			=> $real_category['default_weight'],
 				'intersections'				=> $real_category['intersections'],
+				'status'					=> $real_category['status'],
 				'selected'    				=> isset($this->request->post['selected']) && in_array($result['category_id'], $this->request->post['selected']),
 				'action'      				=> $action
 			);
