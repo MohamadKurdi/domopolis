@@ -1,7 +1,7 @@
 <?php
 	class ModelLocalisationLanguage extends Model {
 		public function addLanguage($data) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "language SET name = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', urlcode = '" . $this->db->escape($data['urlcode']) . "', hreflang = '" . $this->db->escape($data['hreflang']) . "', locale = '" . $this->db->escape($data['locale']) . "', directory = '" . $this->db->escape($data['directory']) . "', filename = '" . $this->db->escape($data['filename']) . "', image = '" . $this->db->escape($data['image']) . "', sort_order = '" . $this->db->escape($data['sort_order']) . "', status = '" . (int)$data['status'] . "'");
+			$this->db->query("INSERT INTO " . DB_PREFIX . "language SET name = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', urlcode = '" . $this->db->escape($data['urlcode']) . "', hreflang = '" . $this->db->escape($data['hreflang']) . "', switch = '" . $this->db->escape($data['switch']) . "', locale = '" . $this->db->escape($data['locale']) . "', directory = '" . $this->db->escape($data['directory']) . "', filename = '" . $this->db->escape($data['filename']) . "', image = '" . $this->db->escape($data['image']) . "', sort_order = '" . $this->db->escape($data['sort_order']) . "', status = '" . (int)$data['status'] . "'");
 			
 			$this->cache->delete('language');
 			
@@ -200,7 +200,7 @@
 		}
 		
 		public function editLanguage($language_id, $data) {
-			$this->db->query("UPDATE " . DB_PREFIX . "language SET name = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', hreflang = '" . $this->db->escape($data['hreflang']) . "', urlcode = '" . $this->db->escape($data['urlcode']) . "', locale = '" . $this->db->escape($data['locale']) . "', directory = '" . $this->db->escape($data['directory']) . "', filename = '" . $this->db->escape($data['filename']) . "', image = '" . $this->db->escape($data['image']) . "', sort_order = '" . $this->db->escape($data['sort_order']) . "', status = '" . (int)$data['status'] . "', fasttranslate = '" . $this->db->escape($data['fasttranslate']) . "' WHERE language_id = '" . (int)$language_id . "'");
+			$this->db->query("UPDATE " . DB_PREFIX . "language SET name = '" . $this->db->escape($data['name']) . "', code = '" . $this->db->escape($data['code']) . "', hreflang = '" . $this->db->escape($data['hreflang']) . "', switch = '" . $this->db->escape($data['switch']) . "', urlcode = '" . $this->db->escape($data['urlcode']) . "', locale = '" . $this->db->escape($data['locale']) . "', directory = '" . $this->db->escape($data['directory']) . "', filename = '" . $this->db->escape($data['filename']) . "', image = '" . $this->db->escape($data['image']) . "', sort_order = '" . $this->db->escape($data['sort_order']) . "', status = '" . (int)$data['status'] . "', fasttranslate = '" . $this->db->escape($data['fasttranslate']) . "' WHERE language_id = '" . (int)$language_id . "'");
 			
 			$this->cache->delete('language');
 		}

@@ -93,7 +93,7 @@
 					foreach ($query->rows as $row){
 						
 						$name = $row['DescriptionRu'];
-						if ($this->config->get('config_language_id') == 6){
+						if ($this->config->get('config_language_id') == $this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id']){
 							$name = $row['Description'];
 						}
 						
@@ -174,7 +174,7 @@
 					$row = $dbQuery->row;
 					
 					$name = $row['Index1'] . ', ' . $row['AreaDescriptionRu'] . ', ' . $row['SettlementTypeDescriptionRu'] .' '. $row['DescriptionRu'];
-					if ($this->config->get('config_language_id') == 6){
+					if ($this->config->get('config_language_id') == $this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id']){
 						$name = $row['Index1'] . ', ' . $row['AreaDescription'] . ', ' . $row['SettlementTypeDescription'] .' '. $row['Description'];
 					}
 					
@@ -220,7 +220,7 @@
 						foreach ($dbQuery->rows as $row){
 							
 							$name = $row['DescriptionRu'];
-							if ($this->config->get('config_language_id') == 6 && $row['Description']){
+							if ($this->config->get('config_language_id') == $this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id'] && $row['Description']){
 								$name = $row['Description'];
 							}
 							
@@ -242,7 +242,7 @@
 							foreach ($dbQuery->rows as $row){
 								
 								$name = $row['DescriptionRu'] . ' (' . $row['AreaDescriptionRu'] . ')';
-								if ($this->config->get('config_language_id') == 6 && $row['Description']){
+								if ($this->config->get('config_language_id') == $this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id'] && $row['Description']){
 									$name = $row['Description'] . ' (' . $row['AreaDescription'] . ')';
 								}
 								

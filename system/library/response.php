@@ -18,14 +18,7 @@
 				$this->language = $registry->get('language');
 				
 				if (defined('THIS_IS_CATALOG') && $this->db && $this->cache && $this->config && $this->config->get('config_language_id')){
-					
-					if (!$this->fastTranslate = $this->cache->get('fast.translate.' . $this->config->get('config_language_id'))){
-						
-						$fastTranslateQuery = $this->db->query("SELECT fasttranslate FROM language WHERE language_id = '" . (int)$this->config->get('config_language_id') . "' LIMIT 1");
-						$this->fastTranslate = $this->prepareFastTranslateArray($fastTranslateQuery->row['fasttranslate']);	
-						$this->cache->set('fast.translate.' . $this->config->get('config_language_id'), $this->fastTranslate);
-						
-					}
+					$this->fastTranslate = $this->prepareFastTranslateArray($registry->get('languages')[$this->config->get('config_language')]['fasttranslate']);
 				}
 				
 			}

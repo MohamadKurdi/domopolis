@@ -614,23 +614,18 @@
 			$this->data['language_switcher'] = array();
 			if ($this->config->get('config_second_language')){
 				$this->load->model('kp/urldecode');
+
 				foreach (($hreflangs = $this->model_kp_urldecode->decodeURI()) as $language_id => $link){				
-					if (in_array($link['code'], array('ua', 'uk'))){						
+					if (in_array($link['code'], $this->config->get('config_supported_languages'))){						
 
-						if ($link['code'] == 'uk'){
-							$text_code = 'УКР';
-						}
-
-						if ($link['code'] == 'ua'){
-							$text_code = 'РУС';
-						}						
+						$text_code = $this->registry->get('languages')[$link['code']]['switch'];
 						
 						$this->data['language_switcher'][] = array(
 						'code' 		=> $link['code'],
 						'text_code' => $text_code,
 						'href' 		=> $link['link'], //addQueryArgs(['setlang' => $link['code']], $link['link']),
 						'active' 	=> ($language_id == $this->config->get('config_language_id'))
-						);
+						);						
 
 						$this->data['language_switcher'] = array_reverse($this->data['language_switcher']);
 					}

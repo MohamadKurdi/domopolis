@@ -157,6 +157,9 @@
 	foreach ($query->rows as $result) {
 		$languages[$result['code']] = $result;
 	}
+
+	$registry->set('languages', $languages);
+	$registry->get('config')->set('config_supported_languages', [$registry->get('config')->get('config_language'), $registry->get('config')->get('config_second_language')]);
 	
 	//FROM URL
 	if ($registry->get('config')->get('config_second_language')){					

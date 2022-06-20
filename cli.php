@@ -145,20 +145,12 @@
 	$query = $registry->get('db')->query("SELECT * FROM `" . DB_PREFIX . "language` WHERE status = '1'"); 
 
 	foreach ($query->rows as $result) {
-		$languages[$result['code']] = array(
-		'language_id'	=> $result['language_id'],
-		'name'		=> $result['name'],
-		'code'		=> $result['code'],
-		'locale'	=> $result['locale'],
-		'directory'	=> $result['directory'],
-		'filename'	=> $result['filename'],
-		'hreflang'	=> $result['hreflang'],
-		'urlcode'	=> $result['urlcode']
-		);
+		$languages[$result['code']] = $result;
 	}	
 
 	//ALL LANGUAGES TO REGISTRY
 	$registry->set('languages', $languages);
+	$registry->get('config')->set('config_supported_languages', [$registry->get('config')->get('config_language'), $registry->get('config')->get('config_second_language')]);
 
 	if (!empty($language_code)){
 		$registry->get('config')->set('config_language', $language_code);

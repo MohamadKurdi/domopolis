@@ -278,7 +278,7 @@
 				
 				if ($query->num_rows){
 					$name = $query->row['DescriptionRu']?$query->row['DescriptionRu']:$query->row['Description'];
-					if ($this->config->get('config_language_id') == 6){
+					if ($this->config->get('config_language_id') == $this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id']){
 						$name = $query->row['Description']?$query->row['Description']:$query->row['DescriptionRu'];
 					}
 					
@@ -291,7 +291,7 @@
 					
 					if ($query->num_rows){
 						$name = $query->row['DescriptionRu']?$query->row['DescriptionRu']:$query->row['Description'];
-						if ($this->config->get('config_language_id') == 6){
+						if ($this->config->get('config_language_id') == $this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id']){
 							$name = $query->row['Description']?$query->row['Description']:$query->row['DescriptionRu'];
 						}
 						
@@ -325,7 +325,7 @@
 				
 				if ($query->num_rows){                    
 					$name = $query->row['DescriptionRu']?$query->row['DescriptionRu']:$query->row['Description'];
-					if ($this->config->get('config_language_id') == 6){
+					if ($this->config->get('config_language_id') == $this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id']){
 						$name = $query->row['Description']?$query->row['Description']:$query->row['DescriptionRu'];
 					}
 					
@@ -336,7 +336,7 @@
 				
 				if ($query->num_rows){                    
 					$name = $query->row['DescriptionRu']?$query->row['DescriptionRu']:$query->row['Description'];
-					if ($this->config->get('config_language_id') == 6){
+					if ($this->config->get('config_language_id') == $this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id']){
 						$name = $query->row['Description']?$query->row['Description']:$query->row['DescriptionRu'];
 					}
 					
@@ -387,7 +387,7 @@
 			foreach ($query->rows as $row){
 				
 				$name = $row['DescrRU'];
-				if ($this->config->get('config_language_id') == 6){
+				if ($this->config->get('config_language_id') == $this->registry->get('languages')[$this->config->get('config_justin_ua_language')]['language_id']){
 					$name = $row['Descr'];
 				}
 				
@@ -463,7 +463,7 @@
 			foreach ($query->rows as $row){
 				
 				$name = $row['DescriptionRu'];
-				if ($this->config->get('config_language_id') == 6){
+				if ($this->config->get('config_language_id') == $this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id']){
 					$name = $row['Description'];
 				}
 				

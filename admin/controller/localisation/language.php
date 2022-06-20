@@ -601,6 +601,14 @@
 				} else {
 				$this->data['hreflang'] = '';
 			}
+
+			if (isset($this->request->post['switch'])) {
+				$this->data['switch'] = $this->request->post['switch'];
+				} elseif (!empty($language_info)) {
+				$this->data['switch'] = $language_info['switch'];
+				} else {
+				$this->data['switch'] = '';
+			}
 			
 			if (isset($this->request->post['urlcode'])) {
 				$this->data['urlcode'] = $this->request->post['urlcode'];

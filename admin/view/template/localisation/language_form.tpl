@@ -44,6 +44,11 @@
                             </td>
                         </tr>
                         <tr>
+                            <td>Свитчер</td>
+                            <td><input type="text" name="switch" value="<?php echo $switch; ?>" />
+                            </td>
+                        </tr>
+                        <tr>
                             <td>URL CODE</td>
                             <td><input type="text" name="urlcode" value="<?php echo $urlcode; ?>" />
                             </td>
