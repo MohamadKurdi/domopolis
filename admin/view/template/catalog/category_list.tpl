@@ -40,7 +40,10 @@
 							<td width="1" style="text-align: center;">
 								<input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" />
 							</td>
-							<td class="left" style="width:70px;">ID</td>	
+							<td class="left" style="width:70px;">ID</td>
+							<?php if ($rollup_enabled) { ?>
+								<td width="1" style="text-align: center;">L</td>	
+							<?php } ?>
 							<td class="left" >Название</td>
 							<td class="left" style="width:200px;">Amzn Link</td>
 							<td class="left" style="width:30px;">Amzn Sync</td>
@@ -71,7 +74,15 @@
 									<?php } ?></td>
 									<td class="left">
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF"><?php echo $category['category_id']; ?></span>									
-									</td>										
+									</td>		
+									<?php if ($rollup_enabled) { ?>
+									<td class="left" style="font-size:18px;">
+										
+										<b style="color:<?php echo $levels[$category['level']]; ?>">L<?php echo $category['level']; ?></b>
+
+									</td>
+									<?php } ?>
+
 									<td class="left" style="<?php if ($category['indent']) { ?>padding-left:<?php echo $category['indent']; ?>px;<?php } ?> <?php if ($category['mark']) { ?>border-left:2px solid #f91c02;<?php } ?>">
 										
 											<?php if ($category['href']) { ?>

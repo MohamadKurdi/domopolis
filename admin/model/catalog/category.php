@@ -678,6 +678,7 @@ class ModelCatalogCategory extends Model {
 		public function getCategoriesByParentId($parent_id = 0) {
 			$query = $this->db->query("SELECT *, 
 				(SELECT COUNT(parent_id) FROM category WHERE parent_id = c.category_id) AS children,
+				(SELECT COUNT(path_id) FROM category_path WHERE category_id = c.category_id) AS level,
 				(SELECT name FROM category_description cd3 WHERE cd3.category_id = c.parent_id AND cd3.language_id = '" . (int)$this->config->get('config_language_id') . "' LIMIT 1) as parent_name
 				FROM category c
 				LEFT JOIN category_description cd ON (c.category_id = cd.category_id) WHERE c.parent_id = '" . (int)$parent_id . "' 

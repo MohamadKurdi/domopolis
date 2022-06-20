@@ -3,6 +3,9 @@ class ControllerCatalogCategory extends Controller {
 	private $error = array();	
 	private $category_id = 0;
 	private $path = array();
+	private $levels = [
+		'#34913e','#ff7815','#64a1e1','#7f00ff','#3276c2','#24a4c1','#f91c02'
+	];
 
 	public function index() {
 		$this->language->load('catalog/category');
@@ -205,7 +208,7 @@ class ControllerCatalogCategory extends Controller {
 					$name = $result['parent_name'] . ' > ' . $result['name'];				
 				} else {
 					$name = $result['name'];
-				}
+				}				
 
 				if ($category_id == $result['category_id']){
 					$name = '<b>' . $name . '</b>';	
@@ -221,6 +224,7 @@ class ControllerCatalogCategory extends Controller {
 				'name'        				=> $name,
 				'indent'					=> $indent,
 				'mark'						=> $mark,
+				'level'						=> (!empty($result['level']))?($result['level'] - 2):false,		
 				'alternate_name' 			=> $result['alternate_name'],
 				'image'       				=> $image,
 				'menu_name'   				=> $result['menu_name'],
@@ -258,6 +262,8 @@ class ControllerCatalogCategory extends Controller {
 
 	protected function getList() {
 		$this->load->model('tool/image');
+
+		$this->data['levels'] = $this->levels;
 
 		if (isset($this->request->get['page'])) {
 			$page = $this->request->get['page'];
