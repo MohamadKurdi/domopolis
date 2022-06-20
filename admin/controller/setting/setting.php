@@ -1030,12 +1030,23 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_novaposhta_default_city_guid'] = $this->config->get('config_novaposhta_default_city_guid');
 		}
 
+		if (isset($this->request->post['config_novaposhta_ru_language'])) {
+			$this->data['config_novaposhta_ru_language'] = $this->request->post['config_novaposhta_ru_language'];
+		} else {
+			$this->data['config_novaposhta_ru_language'] = $this->config->get('config_novaposhta_ru_language');
+		}
+
+		if (isset($this->request->post['config_novaposhta_ua_language'])) {
+			$this->data['config_novaposhta_ua_language'] = $this->request->post['config_novaposhta_ua_language'];
+		} else {
+			$this->data['config_novaposhta_ua_language'] = $this->config->get('config_novaposhta_ua_language');
+		}
+
 		if (isset($this->request->post['config_justin_api_key'])) {
 			$this->data['config_justin_api_key'] = $this->request->post['config_justin_api_key'];
 		} else {
 			$this->data['config_justin_api_key'] = $this->config->get('config_justin_api_key');
 		}
-
 
 		if (isset($this->request->post['config_justin_api_login'])) {
 			$this->data['config_justin_api_login'] = $this->request->post['config_justin_api_login'];
@@ -1043,6 +1054,41 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_justin_api_login'] = $this->config->get('config_justin_api_login');
 		}
 
+		if (isset($this->request->post['config_justin_ru_language'])) {
+			$this->data['config_justin_ru_language'] = $this->request->post['config_justin_ru_language'];
+		} else {
+			$this->data['config_justin_ru_language'] = $this->config->get('config_justin_ru_language');
+		}
+
+		if (isset($this->request->post['config_justin_ua_language'])) {
+			$this->data['config_justin_ua_language'] = $this->request->post['config_justin_ua_language'];
+		} else {
+			$this->data['config_justin_ua_language'] = $this->config->get('config_justin_ua_language');
+		}
+
+		if (isset($this->request->post['config_ukrposhta_api_bearer'])) {
+			$this->data['config_ukrposhta_api_bearer'] = $this->request->post['config_ukrposhta_api_bearer'];
+		} else {
+			$this->data['config_ukrposhta_api_bearer'] = $this->config->get('config_ukrposhta_api_bearer');
+		}
+
+		if (isset($this->request->post['config_ukrposhta_api_token'])) {
+			$this->data['config_ukrposhta_api_token'] = $this->request->post['config_ukrposhta_api_token'];
+		} else {
+			$this->data['config_ukrposhta_api_token'] = $this->config->get('config_ukrposhta_api_token');
+		}
+
+		if (isset($this->request->post['config_ukrposhta_ru_language'])) {
+			$this->data['config_ukrposhta_ru_language'] = $this->request->post['config_ukrposhta_ru_language'];
+		} else {
+			$this->data['config_ukrposhta_ru_language'] = $this->config->get('config_ukrposhta_ru_language');
+		}
+
+		if (isset($this->request->post['config_ukrposhta_ua_language'])) {
+			$this->data['config_ukrposhta_ua_language'] = $this->request->post['config_ukrposhta_ua_language'];
+		} else {
+			$this->data['config_ukrposhta_ua_language'] = $this->config->get('config_ukrposhta_ua_language');
+		}
 
 		
 		if (isset($this->request->post['config_group_price_enable'])) {

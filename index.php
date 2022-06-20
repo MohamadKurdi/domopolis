@@ -160,6 +160,9 @@
 	foreach ($query->rows as $result) {
 		$languages[$result['code']] = $result;
 	}
+
+	//ALL LANGUAGES TO REGISTRY
+	$registry->set('languages', $languages);
 	
 	//FROM URL
 	if ($registry->get('config')->get('config_second_language')){					

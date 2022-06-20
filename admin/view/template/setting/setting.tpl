@@ -3205,18 +3205,43 @@
 							<h2>Новая Почта API</h2>
 							<table class="form">
 								<tr>
-									<td width="33%">
+									<td width="25%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">API KEY</span></p>
 										<input type="text" name="config_novaposhta_api_key" value="<?php echo $config_novaposhta_api_key; ?>" size="50" style="width:300px;" />
 									</td>
 									
-									<td width="33%">
+									<td width="25%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">GUID По-умолчанию</span></p>
 										<input type="text" name="config_novaposhta_default_city_guid" value="<?php echo $config_novaposhta_default_city_guid; ?>" size="50" style="width:300px;" />
 									</td>
 
-									<td width="33%">
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">UA Язык для Новой Почты</span></p>
+										<select name="config_novaposhta_ua_language">
+										<?php foreach ($languages as $language) { ?>
+											<?php if ($language['code'] == $config_novaposhta_ua_language) { ?>
+												<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
+												<?php } else { ?>
+												<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+										</select>
 									</td>
+
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">RU Язык для Новой Почты</span></p>
+										<select name="config_novaposhta_ru_language">
+										<?php foreach ($languages as $language) { ?>
+											<?php if ($language['code'] == $config_novaposhta_ru_language) { ?>
+												<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
+												<?php } else { ?>
+												<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+										</select>
+									</td>
+
+									
 								</tr>
 							</table>
 
@@ -3224,17 +3249,81 @@
 							<h2>JUSTIN API</h2>
 							<table class="form">
 								<tr>
-									<td width="33%">
+									<td width="25%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">API KEY</span></p>
 										<input type="text" name="config_justin_api_key" value="<?php echo $config_justin_api_key; ?>" size="50" style="width:300px;" />
 									</td>
 									
-									<td width="33%">
+									<td width="25%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">API USER</span></p>
 										<input type="text" name="config_justin_api_login" value="<?php echo $config_justin_api_login; ?>" size="50" style="width:300px;" />
 									</td>
 
-									<td width="33%">
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">UA Язык для Justin</span></p>
+										<select name="config_justin_ua_language">
+										<?php foreach ($languages as $language) { ?>
+											<?php if ($language['code'] == $config_justin_ua_language) { ?>
+												<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
+												<?php } else { ?>
+												<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+										</select>
+									</td>
+
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">RU Язык для Justin</span></p>
+										<select name="config_justin_ru_language">
+										<?php foreach ($languages as $language) { ?>
+											<?php if ($language['code'] == $config_justin_ru_language) { ?>
+												<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
+												<?php } else { ?>
+												<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+										</select>
+									</td>
+								</tr>
+							</table>
+
+							<h2>Укрпочта API</h2>
+							<table class="form">
+								<tr>
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">API BEARER</span></p>
+										<input type="text" name="config_ukrposhta_api_bearer" value="<?php echo $config_ukrposhta_api_bearer; ?>" size="50" style="width:300px;" />
+									</td>
+									
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">API TOKEN</span></p>
+										<input type="text" name="config_ukrposhta_api_token" value="<?php echo $config_ukrposhta_api_token; ?>" size="50" style="width:300px;" />
+									</td>
+
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">UA Язык для УкрПочты</span></p>
+										<select name="config_ukrposhta_ua_language">
+										<?php foreach ($languages as $language) { ?>
+											<?php if ($language['code'] == $config_ukrposhta_ua_language) { ?>
+												<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
+												<?php } else { ?>
+												<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+										</select>
+									</td>
+
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">RU Язык для УкрПочты</span></p>
+										<select name="config_ukrposhta_ru_language">
+										<?php foreach ($languages as $language) { ?>
+											<?php if ($language['code'] == $config_ukrposhta_ru_language) { ?>
+												<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
+												<?php } else { ?>
+												<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+										</select>
 									</td>
 								</tr>
 							</table>
