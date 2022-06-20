@@ -156,13 +156,12 @@ class ControllerCatalogCategory extends Controller {
 			//$results = $this->model_catalog_category->getCategories(['filter_parent_id' => $parent_id]);
 
 		} else {
-			$data = array(
+			$filter = array(
 				'start' => ($page - 1) * $this->config->get('config_admin_limit'),
 				'limit' => $this->config->get('config_admin_limit')				
 			);
-
-			$category_total = $this->model_catalog_category->getTotalCategories();
-			$results = $this->model_catalog_category->getCategories($data);
+			
+			$results = $this->model_catalog_category->getCategories($filter);
 		}		
 
 		$data = [];
@@ -338,14 +337,22 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['success'] = '';
 		}
 
-		$pagination = new Pagination();
-		$pagination->total = $category_total;
-		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_admin_limit');
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('catalog/category', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+		if (!$this->session->data['category_rollup']){
 
-		$this->data['pagination'] = $pagination->render();
+			$category_total = $this->model_catalog_category->getTotalCategories();
+
+			$pagination = new Pagination();
+			$pagination->total = $category_total;
+			$pagination->page = $page;
+			$pagination->limit = $this->config->get('config_admin_limit');
+			$pagination->text = $this->language->get('text_pagination');
+			$pagination->url = $this->url->link('catalog/category', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+
+			$this->data['pagination'] = $pagination->render();
+
+		} else {
+			$this->data['pagination'] = '';
+		}
 
 		$this->template = 'catalog/category_list.tpl';
 		$this->children = array(

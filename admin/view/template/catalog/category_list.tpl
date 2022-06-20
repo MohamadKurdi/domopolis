@@ -42,7 +42,7 @@
 							</td>
 							<td class="left" style="width:70px;">ID</td>	
 							<td class="left" >Название</td>
-							<td class="left" style="width:100px;">Amzn Link</td>
+							<td class="left" style="width:200px;">Amzn Link</td>
 							<td class="left" style="width:30px;">Amzn Sync</td>
 							<td class="left" style="width:30px;">Amzn Final</td>
 							<td class="left" style="width:100px;">Google</td>
@@ -165,7 +165,7 @@
 											<? } else { ?>
 											<small class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Вес не задан</small>
 										<? } ?>
-										<br /><br />
+										<br />
 										<? if ((float)$category['default_length'] && (float)$category['default_width'] && (float)$category['default_height']) { ?>
 											<small class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Размер: <?php echo (int)$category['default_length']; ?> / <?php echo (int)$category['default_width']; ?> / <?php echo (int)$category['default_height']; ?></small>
 											<? } else { ?>
