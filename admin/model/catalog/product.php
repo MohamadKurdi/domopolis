@@ -1131,9 +1131,15 @@
 		public function getProducts($data = array()) {
 			$sql = "SELECT * FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id)";
 			
+			if (!empty($data['filter_category'])) {
+					$data['filter_category_id'] = $data['filter_category'];
+			}
+
 			if (!empty($data['filter_category_id'])) {
 				$sql .= " LEFT JOIN product_to_category p2c ON (p.product_id = p2c.product_id)";			
 			}
+
+
 			
 			$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'"; 
 			

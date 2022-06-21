@@ -56,9 +56,20 @@
 	//find http host
 	$httpHOST 			= str_replace('www.', '', $_SERVER['HTTP_HOST']);
 	$storesConfig		= loadJsonConfig('stores');
-	$configFiles 		= loadJsonConfig('configs');
+	$configFiles 		= loadJsonConfig('configs');	
 	$domainRedirects 	= loadJsonConfig('domainredirect');
 	
+	if (empty($configFiles[$httpHOST])){
+		header("HTTP/1.1 500 Not served HTTP_HOST");
+		die('Not served HTTP_HOST');
+	} else {
+		$configFilesPrefix = false;
+		if (count($configFileExploded = explode('.', $configFiles[$httpHOST])) == 3){
+			if (mb_strlen($configFileExploded[1]) == 2){
+				$configFilesPrefix = trim($configFileExploded[1]);
+			}
+		}
+	}
 	
 	//Редиректы доменов, из конфига domainredirect
 	if (isset($domainRedirects[$httpHOST])){		
@@ -82,7 +93,17 @@
 		}
 	}
 
+	if ($configFilesPrefix){
+		$currentConfigFile = str_replace('config.', 'config.' . $configFilesPrefix . '.', $currentConfigFile);
+	}
+
+	//FALLBACK TO MAIN FILE
+	if (!file_exists(APPLICATION_DIRECTORY . '/' . $currentConfigFile)){
+		$currentConfigFile = $configFiles[$httpHOST];
+	}
+
 	header('X-CONFIG-FILE: ' . $currentConfigFile);
+
 	require_once(APPLICATION_DIRECTORY . '/' . $currentConfigFile);
 	
 	if (isset($storesConfig[$httpHOST])){

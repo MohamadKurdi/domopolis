@@ -225,7 +225,7 @@ class ModelCatalogProductExt extends Model {
 
                 $this->load->model('catalog/category');
 
-                $categories = $this->model_catalog_category->getCategories($data['filter_category']);
+                $categories = $this->model_catalog_category->getCategoriesByParentId($data['filter_category']);
 
                 foreach ($categories as $category) {
                     if ($data['filter_category'] != '*')
@@ -299,6 +299,8 @@ class ModelCatalogProductExt extends Model {
 
             $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
+
+        $this->log->debugsql($sql);
 
         $query = $this->db->query($sql);
 
