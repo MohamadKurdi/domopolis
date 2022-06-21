@@ -137,7 +137,7 @@
 			
 			$this->load->model('user/user');
 			foreach ($results as $result) {	
-			
+
 
 				if (!empty($filter_asin)){
 					$result['asin'] = str_replace($filter_asin, '<b>' . $filter_asin . '</b>', $result['asin']);
