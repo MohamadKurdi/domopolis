@@ -55,7 +55,8 @@
 							<td class="left" >Название</td>
 							<td class="left">Ссылка на Amazon</td>
 							<td class="center" style="width:100px;">Конечная категория Amazon</td>	
-							<td class="center" style="width:100px;">Синхронизация с Amazon</td>						
+							<td class="center" style="width:100px;">Синхронизация с Amazon</td>
+							<td class="right" style="width:50px;">Товары</td>				
 							<td class="right" style="width:30px;">Сортировка</td>
 							<td class="left" style="width:30px;">Статус</td>
 							<td class="right" style="width:50px;"></td>
@@ -118,8 +119,21 @@
 											</td>		
 
 											<td class="right">
+												<?php if ($category['count']) { ?>
+													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">
+														<a style="color:#FFF; text-decoration:none" href="<?php echo $category['filter']; ?>" target="_blank"><?php echo $category['count']; ?> 
+														<i class="fa fa-filter"></i>
+													</span>										
+												<?php } else { ?>
+													<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><?php echo $category['count']; ?></span>	
+												<?php }?>
+											</td>
+
+											<td class="right">
 												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#000; color:#FFF"><?php echo $category['sort_order']; ?></span>										
 											</td>
+
+
 
 
 											<td class="right">

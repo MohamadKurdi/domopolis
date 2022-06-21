@@ -1059,6 +1059,7 @@
 					$this->data['show_manufacturer'] = (isset($manufacturer_image['sort_order']) && $manufacturer_image['sort_order'] != '-1');
 					if ($manufacturer_image) {
 						$this->data['manufacturers_img'] = $this->model_tool_image->resize($manufacturer_image['image'],300, 100);
+						$this->data['manufacturers_img_260'] = $this->model_tool_image->resize($manufacturer_image['image'], 260, 90);
 					}
 					
 					if ($product_info['image']) {

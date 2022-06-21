@@ -46,9 +46,6 @@ class ControllerDPRainForest extends Controller {
 	}
 		
 	public function addcategoriescron(){
-		if (php_sapi_name() != 'cli'){
-			die();
-		}
 
 		$type = $this->config->get('config_rainforest_category_model');
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon'); 
