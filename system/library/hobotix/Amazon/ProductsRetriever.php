@@ -226,6 +226,20 @@
 				}
 			}			
 		}
+
+		public function editProductRelated($product_id, $data){
+
+			$this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_related WHERE related_id = '" . (int)$product_id . "'");
+			
+			foreach ($data['product_related'] as $related_id) {
+				$this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$product_id . "' AND related_id = '" . (int)$related_id . "'");
+				$this->db->query("INSERT INTO product_related SET product_id = '" . (int)$product_id . "', related_id = '" . (int)$related_id . "'");
+				$this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$related_id . "' AND related_id = '" . (int)$product_id . "'");
+				$this->db->query("INSERT INTO product_related SET product_id = '" . (int)$related_id . "', related_id = '" . (int)$product_id . "'");
+			}
+
+		}
 		
 		
 		
@@ -517,9 +531,26 @@
 				$this->editProductAttributes($product_id, $product_attribute);
 			}
 
-
-			//Размеры, готовая функция
+			//Размеры, готовая функция из InfoUpdater
 			$this->registry->get('rainforestAmazon')->infoUpdater->parseAndUpdateProductDimensions($product);
+
+			//Related Products
+			if (!empty($product['frequently_bought_together']) && !empty($product['frequently_bought_together']['products'])){
+				$product_related = [];
+				foreach ($product['frequently_bought_together']['products'] as $bought_together){
+					if ($related = $this->getProductsByAsin($bought_together['asin'])){
+
+						foreach ($related as $related_id){
+							$product_related[] = $related_id;
+						}
+
+					}
+				}
+
+				if ($product_related){
+					$this->editProductRelated($product_id, $product_related);
+				}
+			}
 						
 			
 			die();

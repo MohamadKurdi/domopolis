@@ -2483,6 +2483,27 @@ class ControllerCatalogProduct extends Controller {
 					);
 				}
 			}
+
+			if (isset($this->request->post['product_similar'])) {
+				$products = $this->request->post['product_similar'];
+			} elseif (isset($this->request->get['product_id'])) {		
+				$products = $this->model_catalog_product->getProductSimilar($this->request->get['product_id']);
+			} else {
+				$products = array();
+			}
+			
+			$this->data['product_similar'] = array();
+			
+			foreach ($products as $product_id) {
+				$similar_info = $this->model_catalog_product->getProduct($product_id);
+				
+				if ($similar_info) {
+					$this->data['product_similar'][] = array(
+						'product_id' => $similar_info['product_id'],
+						'name'       => $similar_info['name']
+					);
+				}
+			}
 			
 			if (isset($this->request->post['product_child'])) {
 				$с_products = $this->request->post['product_child'];

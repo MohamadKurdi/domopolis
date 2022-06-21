@@ -1422,7 +1422,7 @@
 																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Основная категория</span>
 																		</td>
 																	</tr>
-																	<tr>
+																	<tr style="border-bottom: 1px dotted #000;">
 																		<td style="width:33%">
 																			<input type="text" name="manufacturer" value="<?php echo $manufacturer ?>" />
 																			<input type="hidden" name="manufacturer_id" value="<?php echo $manufacturer_id; ?>" />
@@ -1464,10 +1464,24 @@
 
 
 																<table class="form">
+
 																	<tr>
-																		<td><?php echo $entry_category; ?></td>
-																		<td><input type="text" name="category" value="" /><br /><br />
-																			<div id="product-category" class="scrollbox" style="min-height: 100px;">
+																		<td style="width:33%">
+																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Показывать в категориях</span>
+																		</td>
+																		<td style="width:33%">
+																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Включить в магазинах</span>
+																		</td>
+																		<td style="width:33%">
+																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Сервиз или набор</span>
+																		</td>
+																	</tr>
+
+																	<tr style="border-bottom: 1px dotted #000;">
+
+																		<td style="width:33%">																			
+																			<input type="text" name="category" value="" /><br /><br />
+																			<div id="product-category" class="scrollbox" style="min-height: 200px;">
 																				<?php $class = 'odd'; ?>
 																				<?php foreach ($product_categories as $product_category) { ?>
 																					<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
@@ -1477,31 +1491,32 @@
 																				<?php } ?>
 																			</div>	
 																		</td>
-																		<td><?php echo $entry_store; ?></td>
-																		<td><div class="scrollbox" style="min-height: 100px;">
-																			<?php $class = 'even'; ?>
-																			<?php foreach ($stores as $store) { ?>
-																				<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-																				<div class="<?php echo $class; ?>">
-																					<?php if (in_array($store['store_id'], $product_store)) { ?>
-																						<input id="store_<?php echo $store['store_id']; ?>" class="checkbox" type="checkbox" name="product_store[]" value="<?php echo $store['store_id']; ?>" checked="checked" />
-																						<label for="store_<?php echo $store['store_id']; ?>"><?php echo $store['name']; ?></label>
-																					<?php } else { ?>
-																						<input id="store_<?php echo $store['store_id']; ?>" class="checkbox" type="checkbox" name="product_store[]" value="<?php echo $store['store_id']; ?>" />
-																						<label for="store_<?php echo $store['store_id']; ?>"><?php echo $store['name']; ?></label>
-																					<?php } ?>
-																				</div>
-																			<?php } ?>
+																		
+																		<td style="width:33%">																			
+																			<div class="scrollbox" style="min-height: 200px;">
+																				<?php $class = 'even'; ?>
+																				<?php foreach ($stores as $store) { ?>
+																					<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+																					<div class="<?php echo $class; ?>">
+																						<?php if (in_array($store['store_id'], $product_store)) { ?>
+																							<input id="store_<?php echo $store['store_id']; ?>" class="checkbox" type="checkbox" name="product_store[]" value="<?php echo $store['store_id']; ?>" checked="checked" />
+																							<label for="store_<?php echo $store['store_id']; ?>"><?php echo $store['name']; ?></label>
+																						<?php } else { ?>
+																							<input id="store_<?php echo $store['store_id']; ?>" class="checkbox" type="checkbox" name="product_store[]" value="<?php echo $store['store_id']; ?>" />
+																							<label for="store_<?php echo $store['store_id']; ?>"><?php echo $store['name']; ?></label>
+																						<?php } ?>
+																					</div>
+																				<?php } ?>
 
+																			</div>
+																			<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);">Выделить всё</a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);">Снять выделение</a>
+																		</td>
+
+																		<td style="width:33%">					
+																		<div>														
+																			<input id="has_child" class="checkbox" name="has_child" value="1" <? if ($has_child) { ?>checked="checked"<? } ?> type="checkbox" />
+																			<label for="has_child">Включить сервиз/набор</label>
 																		</div>
-																		<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);">Выделить всё</a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);">Снять выделение</a>
-																	</td>
-																</tr>
-																<tr>
-																	<td>Этот товар состоит из<br /><span class="help">(Автодополнение)</span></td>
-																	<td>
-																		<input id="has_child" class="checkbox" name="has_child" value="1" <? if ($has_child) { ?>checked="checked"<? } ?> type="checkbox" />
-																		<label for="has_child">Сервиз</label>
 																		<input type="text" name="child" value="" /> 
 																		<br /><br />
 																		<div id="product-child" class="scrollbox" style="min-height: 200px;">
@@ -1512,10 +1527,40 @@
 																					<input type="hidden" name="product_child[]" value="<?php echo $product_child['product_id']; ?>" />
 																				</div>
 																			<?php } ?>
-																		</div></td>
+																		</div>
+																	</td>
 
-																		<td><?php echo $entry_related; ?></td>
-																		<td><input type="text" name="related" value="" /><br /><br />
+																	
+																</tr>
+
+																<tr>
+																	<td style="width:33%">
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Похожие или замена</span>
+																	</td>
+																	<td style="width:33%">
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Сопутствующие</span>
+																	</td>
+																	<td style="width:33%">
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Группы</span>
+																	</td>
+																</tr>
+
+																<tr style="border-bottom: 1px dotted #000;">
+																	<td style="width:33%">																			
+																		<input type="text" name="similar" value="" /><br /><br />
+																		<div id="product-similar" class="scrollbox" style="min-height: 200px;">
+																			<?php $class = 'odd'; ?>
+																			<?php foreach ($product_similar as $product_similar) { ?>
+																				<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+																				<div id="product-similar<?php echo $product_related['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product_similar['name']; ?><img src="view/image/delete.png" alt="" />
+																					<input type="hidden" name="product_similar[]" value="<?php echo $product_similar['product_id']; ?>" />
+																				</div>
+																			<?php } ?>
+																		</div>
+																	</td>
+
+																		<td style="width:33%">																			
+																			<input type="text" name="related" value="" /><br /><br />
 																			<div id="product-related" class="scrollbox" style="min-height: 200px;">
 																				<?php $class = 'odd'; ?>
 																				<?php foreach ($product_related as $product_related) { ?>
@@ -1524,11 +1569,13 @@
 																						<input type="hidden" name="product_related[]" value="<?php echo $product_related['product_id']; ?>" />
 																					</div>
 																				<?php } ?>
-																			</div></td>
-																		</tr>
-																		<tr>						
-																			<td><?php echo $show_fa_in_product; ?></td>
-																			<td><div class="scrollbox facats">
+																			</div>
+																		</td>
+
+																		<td>
+																			<div>
+																			<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Принадлежит к группам</span></p>
+																			<div class="scrollbox facats">
 																				<?php $class = 'odd'; ?>
 																				<?php foreach ($faproduct_facategory_all as $category) { ?>
 																					<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
@@ -1544,10 +1591,11 @@
 																				<?php } ?>
 																			</div>														
 																			<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);">Выделить всё</a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);">Снять выделение</a>
-																		</td>
-																		<td>
-																			<?php echo $show_group; ?></td><td>
-																				<select name="facategory_show">
+																			</div>
+
+																			<div>
+																			<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Показать в карте товары группы</span></p>
+																			<select name="facategory_show">
 																					<option value="0" selected="selected"><?php echo $text_none; ?></option>
 																					<?php foreach ($faproduct_facategory_all as $category) { ?>
 																						<?php if ($category['facategory_id'] == $facategory_show) { ?>
@@ -1557,12 +1605,14 @@
 																						<?php } ?>
 																					<?php } ?>
 																				</select>
+																			</div>
+																		</td>
 
-																			</td>
-																		</tr>
+																</tr>
 																		<tr>
-																			<td><?php echo $entry_filter; ?></td>
-																			<td><input type="text" name="filter" value="" /><br /><br />
+																			<td style="width:33%">
+																				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Фильтры</span></p>
+																				<input type="text" name="filter" value="" /><br /><br />
 																				<div id="product-filter" class="scrollbox" style="min-height: 200px;">
 																					<?php $class = 'odd'; ?>
 																					<?php foreach ($product_filters as $product_filter) { ?>
@@ -1572,10 +1622,11 @@
 																						</div>
 																					<?php } ?>
 																				</div>
-
 																			</td>
-																			<td><?php echo $entry_download; ?></td>
-																			<td><input type="text" name="download" value="" /><br /><br />
+																		
+																			<td style="width:33%">
+																				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Загрузки</span></p>
+																				<input type="text" name="download" value="" /><br /><br />
 																				<div id="product-download" class="scrollbox" style="min-height: 200px;">
 																					<?php $class = 'odd'; ?>
 																					<?php foreach ($product_downloads as $product_download) { ?>
@@ -1586,7 +1637,6 @@
 																					<?php } ?>
 																				</div></td>
 																			</tr>
-
 																		</table>
 																	</div>
 
@@ -2858,6 +2908,45 @@ $('input[name=\'collection\']').autocomplete({
 		
 		$('#product-related div:odd').attr('class', 'odd');
 		$('#product-related div:even').attr('class', 'even');	
+	});
+	
+	// similar
+	$('input[name=\'similar\']').autocomplete({
+		delay: 500,
+		source: function(request, response) {
+			$.ajax({
+				url: 'index.php?route=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+				dataType: 'json',
+				success: function(json) {		
+					response($.map(json, function(item) {
+						return {
+							label: item.name,
+							value: item.product_id
+						}
+					}));
+				}
+			});
+		}, 
+		select: function(event, ui) {
+			$('#product-similar' + ui.item.value).remove();
+			
+			$('#product-similar').append('<div id="product-similar' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="product_similar[]" value="' + ui.item.value + '" /></div>');
+			
+			$('#product-similar div:odd').attr('class', 'odd');
+			$('#product-similar div:even').attr('class', 'even');
+			
+			return false;
+		},
+		focus: function(event, ui) {
+			return false;
+		}
+	});
+	
+	$('#product-similar div img').live('click', function() {
+		$(this).parent().remove();
+		
+		$('#product-similar div:odd').attr('class', 'odd');
+		$('#product-similar div:even').attr('class', 'even');	
 	});
 	
 	// Child

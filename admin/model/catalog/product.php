@@ -326,6 +326,15 @@
 				}
 			}
 			
+			if (isset($data['product_similar'])) {
+				foreach ($data['product_similar'] as $similar_id) {
+					$this->db->query("DELETE FROM product_similar WHERE product_id = '" . (int)$product_id . "' AND similar_id = '" . (int)$similar_id . "'");
+					$this->db->query("INSERT INTO product_similar SET product_id = '" . (int)$product_id . "', similar_id = '" . (int)$similar_id . "'");
+					$this->db->query("DELETE FROM product_similar WHERE product_id = '" . (int)$similar_id . "' AND similar_id = '" . (int)$product_id . "'");
+					$this->db->query("INSERT INTO product_similar SET product_id = '" . (int)$similar_id . "', similar_id = '" . (int)$product_id . "'");
+				}
+			}
+			
 			$this->db->query("DELETE FROM product_child WHERE product_id = '" . (int)$product_id . "'");
 			if (isset($data['product_child'])) {									
 				foreach ($data['product_child'] as $child_id) {
@@ -763,6 +772,18 @@
 					$this->db->query("INSERT INTO product_related SET product_id = '" . (int)$product_id . "', related_id = '" . (int)$related_id . "'");
 					$this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$related_id . "' AND related_id = '" . (int)$product_id . "'");
 					$this->db->query("INSERT INTO product_related SET product_id = '" . (int)$related_id . "', related_id = '" . (int)$product_id . "'");
+				}
+			}
+
+			$this->db->query("DELETE FROM product_similar WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_similar WHERE similar_id = '" . (int)$product_id . "'");
+			
+			if (isset($data['product_similar'])) {
+				foreach ($data['product_similar'] as $similar_id) {
+					$this->db->query("DELETE FROM product_similar WHERE product_id = '" . (int)$product_id . "' AND similar_id = '" . (int)$similar_id . "'");
+					$this->db->query("INSERT INTO product_similar SET product_id = '" . (int)$product_id . "', similar_id = '" . (int)$similar_id . "'");
+					$this->db->query("DELETE FROM product_similar WHERE product_id = '" . (int)$similar_id . "' AND similar_id = '" . (int)$product_id . "'");
+					$this->db->query("INSERT INTO product_similar SET product_id = '" . (int)$similar_id . "', similar_id = '" . (int)$product_id . "'");
 				}
 			}
 			
@@ -2056,6 +2077,18 @@
 			}
 			
 			return $product_related_data;
+		}
+
+		public function getProductSimilar($product_id) {
+			$product_similar_data = array();
+			
+			$query = $this->db->query("SELECT * FROM product_similar WHERE product_id = '" . (int)$product_id . "'");
+			
+			foreach ($query->rows as $result) {
+				$product_similar_data[] = $result['similar_id'];
+			}
+			
+			return $product_similar_data;
 		}
 		
 		public function getProductChild($product_id) {
