@@ -999,7 +999,7 @@
 				$query = $this->db->query("SELECT p.asin, pd.name FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id AND language_id = 26) WHERE p.product_id = '" . (int)$product_id . "' LIMIT 1");
 
 				if ($query->num_rows && !empty($query->row['asin'])){
-					$this->db->query("INSERT IGNORE INTO deleted_asins SET asin = '" . $this->db->escape($query->row['asin']) . "', name = '" . $this->db->escape($query->row['name']) . "'");
+					$this->db->query("INSERT IGNORE INTO deleted_asins SET asin = '" . $this->db->escape($query->row['asin']) . "', name = '" . $this->db->escape($query->row['name']) . "', date_added = NOW(), user_id = '" . $this->user->getID() . "'");
 				}
 			}
 

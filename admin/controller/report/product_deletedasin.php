@@ -1,13 +1,18 @@
 <?php
 	class ControllerReportProductDeletedASIN extends Controller {
+
+		public function index() {
+
+			$this->getList();
+		}
 	
 		public function delete() {			
 			$this->load->model('report/product');
 			$url = '';
 			
 		
-			if (isset($this->request->get['filter_sku'])) {
-				$url .= '&filter_sku=' . $this->request->get['filter_sku'];
+			if (isset($this->request->get['filter_asin'])) {
+				$url .= '&filter_asin=' . $this->request->get['filter_asin'];
 			}
 			
 			if (isset($this->request->get['filter_name'])) {
@@ -28,13 +33,13 @@
 			
 			if (isset($this->request->post['selected'])) {							
 			
-				foreach ($this->request->post['selected'] as $sku) {
-					$this->model_report_product->deleteDeletedSKU($sku);
+				foreach ($this->request->post['selected'] as $asin) {
+					$this->model_report_product->deleteDeletedASIN($asin);
 				}
 				$this->session->data['success'] = 'Успешно обновили список исключенных ASIN';
 			}
 			
-			$this->response->redirect($this->url->link('report/product_deletedasin', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+			$this->getList();
 		}
 		
 		public function add() {
@@ -42,8 +47,8 @@
 			
 			$url = '';
 			
-			if (isset($this->request->get['filter_sku'])) {
-				$url .= '&filter_sku=' . $this->request->get['filter_sku'];
+			if (isset($this->request->get['filter_asin'])) {
+				$url .= '&filter_asin=' . $this->request->get['filter_asin'];
 			}
 			
 			if (isset($this->request->get['filter_name'])) {
@@ -71,12 +76,12 @@
 		}
 
 		
-		public function index() {
+		protected function getList() {
 			$this->load->language('report/product_viewed');
 			
 			$this->document->setTitle('Исключенные ASIN');
 			
-			$filter_sku = isset($this->request->get['filter_sku']) ? $this->request->get['filter_sku'] : null;
+			$filter_asin = isset($this->request->get['filter_asin']) ? $this->request->get['filter_asin'] : null;
 			$filter_name = isset($this->request->get['filter_name']) ? $this->request->get['filter_name'] : null;
 			
 			if (isset($this->request->get['page'])) {
@@ -85,7 +90,7 @@
 				$page = 1;
 			}
 			
-			$data['token'] = $this->session->data['token'];
+			$this->data['token'] = $this->session->data['token'];
 			
 			$url = '';
 			
@@ -93,22 +98,22 @@
 				$url .= '&page=' . $this->request->get['page'];
 			}
 			
-			if (isset($this->request->get['filter_sku'])) {
-				$url .= '&filter_sku=' . $this->request->get['filter_sku'];
+			if (isset($this->request->get['filter_asin'])) {
+				$url .= '&filter_asin=' . $this->request->get['filter_asin'];
 			}
 			
 			if (isset($this->request->get['filter_name'])) {
 				$url .= '&filter_name=' . $this->request->get['filter_name'];
 			}
 			
-			$data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = array();
 			
-			$data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_home'),
 			'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], true)
 			);
 			
-			$data['breadcrumbs'][] = array(
+			$this->data['breadcrumbs'][] = array(
 			'text' => 'Исключенные ASIN',
 			'href' => $this->url->link('report/product_deletedasin', 'token=' . $this->session->data['token'] . $url, true)
 			);
@@ -119,54 +124,50 @@
 			$this->config->set('config_limit_admin', 100);
 			
 			$filter_data = array(
-			'filter_sku' 	=> $filter_sku,
+			'filter_asin' 	=> $filter_asin,
 			'filter_name' 	=> $filter_name,
 			'start' 		=> ($page - 1) * $this->config->get('config_limit_admin'),
 			'limit' 		=> $this->config->get('config_limit_admin')
 			);
 			
-			$data['skus'] = array();
+			$this->data['asins'] = array();
 					
-			$product_total = $this->model_report_product->getTotalProductsDeletedSKU($filter_data);
+			$product_total = $this->model_report_product->getTotalProductsDeletedASIN($filter_data);			
+			$results = $this->model_report_product->getProductsDeletedASIN($filter_data);
 			
-			$results = $this->model_report_product->getProductsDeletedSKU($filter_data);
+			$this->load->model('user/user');
+			foreach ($results as $result) {	
 			
-			foreach ($results as $result) {		
-				
-				$result['nfsku'] = $result['sku'];
-				
-				if (!empty($filter_sku)){
-					$result['sku'] = str_replace($filter_sku, '<b>' . $filter_sku . '</b>', $result['sku']);
+
+				if (!empty($filter_asin)){
+					$result['asin'] = str_replace($filter_asin, '<b>' . $filter_asin . '</b>', $result['asin']);
 				}
 				
 				if (!empty($filter_name)){
 					$result['name'] = str_replace($filter_name, '<b>' . $filter_name . '</b>', $result['name']);
 				}
-
-				$product = $this->model_report_product->getProductBySKU($result['sku']);
 			
 			
-				$data['skus'][] = array(
-				'nfsku'	 		=> $result['nfsku'],
-				'sku'    		=> $result['sku'],
+				$this->data['asins'][] = array(
+				'asin'    		=> $result['asin'],
 				'name'	 		=> $result['name'],
-				'pname'  		=> $product?$product['name']:false,
-				'parchive'  	=> $product?$product['archive']:false,
+				'date_added'	=> date('Y-m-d H:i:s', strtotime($result['date_added'])),			
+				'user'			=> $this->model_user_user->getRealUserNameById($result['user_id'])
 				);
 			}
 			
-			$data['heading_title'] = $this->language->get('heading_title');
+			$this->data['heading_title'] = 'Исключенные ASIN';
 			
-			$data['text_list'] = $this->language->get('text_list');
-			$data['text_no_results'] = $this->language->get('text_no_results');
-			$data['text_confirm'] = $this->language->get('text_confirm');
+			$this->data['text_list'] = $this->language->get('text_list');
+			$this->data['text_no_results'] = $this->language->get('text_no_results');
+			$this->data['text_confirm'] = $this->language->get('text_confirm');
 			
-			$data['column_name'] = $this->language->get('column_name');
-			$data['column_model'] = $this->language->get('column_model');
-			$data['column_viewed'] = $this->language->get('column_viewed');
-			$data['column_percent'] = $this->language->get('column_percent');
+			$this->data['column_name'] = $this->language->get('column_name');
+			$this->data['column_model'] = $this->language->get('column_model');
+			$this->data['column_viewed'] = $this->language->get('column_viewed');
+			$this->data['column_percent'] = $this->language->get('column_percent');
 			
-			$data['button_reset'] = $this->language->get('button_reset');
+			$this->data['button_reset'] = $this->language->get('button_reset');
 			
 			$url = '';
 			
@@ -174,59 +175,55 @@
 				$url .= '&page=' . $this->request->get['page'];
 			}
 			
-			if (isset($this->request->get['filter_sku'])) {
-				$url .= '&filter_sku=' . $this->request->get['filter_sku'];
+			if (isset($this->request->get['filter_asin'])) {
+				$url .= '&filter_asin=' . $this->request->get['filter_asin'];
 			}
 			
 			if (isset($this->request->get['filter_name'])) {
 				$url .= '&filter_name=' . $this->request->get['filter_name'];
 			}
-			
-			$data['reset'] = $this->url->link('report/product_deletedasin', 'token=' . $this->session->data['token'] . $url, true);
-			
-			
-			$data['cancel'] = $this->url->link('report/product_deletedasin', 'token=' . $this->session->data['token'], 'SSL');	
-			$data['delete'] = $this->url->link('report/product_deletedasin/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
-			$data['save'] = $this->url->link('report/product_deletedasin/add', 'token=' . $this->session->data['token'] . $url, 'SSL');			
+						
+			$this->data['delete'] = $this->url->link('report/product_deletedasin/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['save'] = $this->url->link('report/product_deletedasin/add', 'token=' . $this->session->data['token'] . $url, 'SSL');			
 			
 			if (isset($this->session->data['error'])) {
-				$data['error_warning'] = $this->session->data['error'];
+				$this->data['error_warning'] = $this->session->data['error'];
 				
 				unset($this->session->data['error']);
 				} elseif (isset($this->error['warning'])) {
-				$data['error_warning'] = $this->error['warning'];
+				$this->data['error_warning'] = $this->error['warning'];
 				} else {
-				$data['error_warning'] = '';
+				$this->data['error_warning'] = '';
 			}
 			
 			if (isset($this->session->data['success'])) {
-				$data['success'] = $this->session->data['success'];
+				$this->data['success'] = $this->session->data['success'];
 				
 				unset($this->session->data['success']);
 				} else {
-				$data['success'] = '';
+				$this->data['success'] = '';
 			}
 			
 			$pagination = new Pagination();
 			$pagination->total = $product_total;
 			$pagination->page = $page;
-			$pagination->limit = $this->config->get('config_limit_admin');
-			$pagination->url = $this->url->link('report/product_deletedasin', 'token=' . $this->session->data['token'] . '&page={page}', true);
+			$pagination->limit = $this->config->get('config_admin_limit');
+			$pagination->text = $this->language->get('text_pagination');
+			$pagination->url = $this->url->link('report/product_deletedasin',  'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 			
-			$data['filter_sku'] = $filter_sku;
-			$data['filter_name'] = $filter_name;
-			$data['sort'] = $sort;
-			$data['order'] = $order;
+			$this->data['pagination'] = $pagination->render();
+
+
+			$this->data['filter_asin'] = $filter_asin;
+			$this->data['filter_name'] = $filter_name;			
+
+			$this->template = 'report/product_deletedasin.tpl';
+			$this->children = array(
+			'common/header',
+			'common/footer'
+			);
 			
-			$data['pagination'] = $pagination->render();
-			
-			$data['results'] = sprintf($this->language->get('text_pagination'), ($product_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($product_total - $this->config->get('config_limit_admin'))) ? $product_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $product_total, ceil($product_total / $this->config->get('config_limit_admin')));
-			
-			$data['header'] = $this->load->controller('common/header');
-			$data['column_left'] = $this->load->controller('common/column_left');
-			$data['footer'] = $this->load->controller('common/footer');
-			
-			$this->response->setOutput($this->load->view('report/product_deletedasin', $data));
+			$this->response->setOutput($this->render());
 		}
 		
 	}	
