@@ -996,10 +996,10 @@
 
 
 			if ($this->config->get('config_rainforest_asin_deletion_mode')){
-				$query = $this->db->query("SELECT asin FROM product WHERE product_id = '" . (int)$product_id . "'");
+				$query = $this->db->query("SELECT p.asin, pd.name FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id AND language_id = 26) WHERE p.product_id = '" . (int)$product_id . "' LIMIT 1");
 
 				if ($query->num_rows && !empty($query->row['asin'])){
-					$this->db->query("INSERT IGNORE INTO deleted_asins SET asin = '" . $this->db->escape($query->row['asin']) . "'");
+					$this->db->query("INSERT IGNORE INTO deleted_asins SET asin = '" . $this->db->escape($query->row['asin']) . "', name = '" . $this->db->escape($query->row['name']) . "'");
 				}
 			}
 
