@@ -5,6 +5,13 @@
 	a.link_headr{margin-left:5px;color: white!important;}
 </style>
 
+<?php if ($this->user->getUserGroup() == 1) { ?>
+
+	<a class="link_headr <? if ($asinDeletionMode) { ?>link_enter cache-button-bad<? } else { ?> cache-button-good<?php } ?>" onclick="$('#asinDMode').load('<? echo $setAsinDeletionMode ?>');" >
+		<i class="fa fa-amazon" aria-hidden="true"></i> ASIN <span id="asinDMode"></span>
+	</a>
+
+<? } ?>
 
 <a class="link_headr cache-button-warn" onclick="$('#clearCacheR').load('<? echo $clear_memcache ?>');" >
 	<i class="fa fa-eraser" aria-hidden="true"></i> БД <span id="clearCacheR"></span>

@@ -993,6 +993,16 @@
 		}
 		
 		public function deleteProduct($product_id) {
+
+
+			if ($this->config->get('config_rainforest_asin_deletion_mode')){
+				$query = $this->db->query("SELECT asin FROM product WHERE product_id = '" . (int)$product_id . "'");
+
+				if ($query->num_rows && !empty($query->row['asin'])){
+					$this->db->query("INSERT IGNORE INTO deleted_asins SET asin = '" . $this->db->escape($query->row['asin']) . "'");
+				}
+			}
+
 			$this->db->query("DELETE FROM product WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM ocfilter_option_value_to_product WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_attribute WHERE product_id = '" . (int)$product_id . "'");
