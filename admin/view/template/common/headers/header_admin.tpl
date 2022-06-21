@@ -252,8 +252,9 @@
 							<ul>
 								<li><a class="home_icon_style" href="<?php echo $category; ?>"><i class="fa fa-minus"></i><span><?php echo $text_category; ?></span></a></li>								
 								<li><a class="home_icon_style" href="<?php echo $product; ?>"><i class="fa fa-cubes"></i><span><?php echo $text_product; ?></span></a></li>	
-								<li><a class="home_icon_style" href="<?php echo $ocfilter; ?>"><i class="fa fa-cubes"></i><span><?php echo $text_ocfilter; ?> <sup style="color:red">(NEW)</sup></span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $ocfilter_page; ?>"><i class="fa fa-cubes"></i><span>Посадочные страницы <sup style="color:red">(NEW)</sup></span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $product_deletedasin; ?>"><i class="fa fa-amazon"></i><span>Исключенные ASIN  <sup style="color:red">(DEV)</sup></span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $ocfilter; ?>"><i class="fa fa-cubes"></i><span><?php echo $text_ocfilter; ?> <sup style="color:red">(DEV)</sup></span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $ocfilter_page; ?>"><i class="fa fa-cubes"></i><span>Посадочные страницы <sup style="color:red">(DEV)</sup></span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $batch_editor_link; ?>"><i class="fa fa-pencil-square-o"></i><span>Batch Editor v.023</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $batch_editor_link2; ?>"><i class="fa fa-pencil-square-o"></i><span>Batch Editor v.047</span></a></li>
 								
@@ -267,7 +268,7 @@
 								<li><a class="home_icon_style" href="<?php echo $option; ?>"><i class="fa fa-sliders"></i><span><?php echo $text_option; ?></span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $manufacturer; ?>"><i class="fa fa-barcode"></i><span>Бренды</span></a></li>
 								
-								<li><a class="home_icon_style" href="<?php echo $countrybrands_link; ?>"><i class="fa fa-flag"></i><span>Бренды по странам <sup style="color:red">(NEW)</sup></span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $countrybrands_link; ?>"><i class="fa fa-flag"></i><span>Бренды по странам</span></a></li>
 								
 								<li><a class="home_icon_style" href="<?php echo $collections_link; ?>"><i class="fa fa-linode"></i><span>Коллекции</span></a></li>
 								
