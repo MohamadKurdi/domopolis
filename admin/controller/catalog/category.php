@@ -234,6 +234,8 @@ class ControllerCatalogCategory extends Controller {
 				'name'        				=> $name,
 				'indent'					=> $indent,
 				'mark'						=> $mark,
+				'count'       				=> $this->model_catalog_category->getTotalProductInCategory($result['category_id']),
+				'filter'					=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_category=' . $result['category_id'], 'SSL'),
 				'level'						=> (!empty($result['level']))?($result['level'] - 2):false,		
 				'alternate_name' 			=> $result['alternate_name'],
 				'image'       				=> $image,
