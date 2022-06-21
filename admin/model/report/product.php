@@ -1,5 +1,69 @@
 <?php
 	class ModelReportProduct extends Model {
+
+
+		public function getProductsDeletedASIN($data = array()) {
+			$sql = "SELECT * FROM deleted_asins WHERE 1 ";
+			
+			if (isset($data['filter_asin'])){
+				$sql .= " AND asin LIKE ('%" . $this->db->escape($data['filter_asin']) . "%')";
+			}
+			
+			if (isset($data['filter_name'])){
+				$sql .= " AND LOWER(name) LIKE ('%" . $this->db->escape(mb_strtolower($data['filter_name'])) . "%')";
+			}
+			
+			$sql .= " ORDER BY name DESC";
+			
+			if (isset($data['start']) || isset($data['limit'])) {
+				if ($data['start'] < 0) {
+					$data['start'] = 0;
+				}
+				
+				if ($data['limit'] < 1) {
+					$data['limit'] = 20;
+				}
+				
+				$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+			}
+			
+			$query = $this->db->query($sql);
+			
+			return $query->rows;
+		}
+		
+		public function deleteDeletedASIN($asin) {
+			
+			if (trim($asin)){
+				$this->db->query("DELETE FROM deleted_asins WHERE asin = '" . $this->db->escape($asin) . "'");
+			}
+			
+		}
+		
+		public function insertDeletedASIN($data) {
+			
+			if (trim($data['asin'])){
+				$this->db->query("INSERT IGNORE INTO sku_deleted SET asin = '" . $this->db->escape($data['asin']) . "', `name` = '" . $this->db->escape($data['name']) . "'");
+			}
+			
+		}
+		
+		public function getTotalProductsDeletedASIN($data) {
+			$sql = "SELECT COUNT(*) AS total FROM deleted_asins WHERE 1 ";
+			
+			if (isset($data['filter_asin'])){
+				$sql .= " AND asin LIKE ('%" . $this->db->escape($data['filter_asin']) . "%')";
+			}
+			
+			if (isset($data['filter_name'])){
+				$sql .= " AND LOWER(name) LIKE ('%" . $this->db->escape(mb_strtolower($data['filter_name'])) . "%')";
+			}
+			
+			$query = $this->db->query($sql);
+			
+			return $query->row['total'];
+		}
+
 	
 		private $good_warehouses = array(
 				'quantity_stock' => '18',
@@ -10,7 +74,7 @@
 		public function getProductsViewed($data = array()) {
 			$sql = "SELECT sv.entity_id as product_id, pd.name, p.model, p.ean, p.price, p.actual_cost, p.actual_cost_date, p.image, m.name as manufacturer, SUM(sv.times) as viewed, ";
 			
-			$sql .= " (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = sv.entity_id 
+			$sql .= " (SELECT price FROM product_special ps WHERE ps.product_id = sv.entity_id 
 			AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) 
 			AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW()))";
 			
@@ -59,10 +123,10 @@
 			$sql .= ") as bought";
 			
 			
-			$sql .= " FROM " . DB_PREFIX . "superstat_viewed sv
-			LEFT JOIN " . DB_PREFIX . "product p ON (p.product_id = sv.entity_id) 
-			LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "')
-			LEFT JOIN " . DB_PREFIX . "manufacturer m ON (m.manufacturer_id = p.manufacturer_id)";
+			$sql .= " FROM superstat_viewed sv
+			LEFT JOIN product p ON (p.product_id = sv.entity_id) 
+			LEFT JOIN product_description pd ON (p.product_id = pd.product_id AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "')
+			LEFT JOIN manufacturer m ON (m.manufacturer_id = p.manufacturer_id)";
 			
 			$sql .= " WHERE (entity_type = 'p'";
 			
@@ -161,7 +225,7 @@
 		}				
 		
 		public function getProductViewedByDays($data = array()){
-			$sql = "SELECT SUM(sv.times) as viewed FROM " . DB_PREFIX . "superstat_viewed sv
+			$sql = "SELECT SUM(sv.times) as viewed FROM superstat_viewed sv
 			WHERE entity_type = 'p'
 			AND entity_id = '" . $this->db->escape($data['product_id']) . "'
 			AND date >= '" . $this->db->escape($data['date_from']) . "'
@@ -179,8 +243,8 @@
 		}
 		
 		public function getTotalProductsViewed($data = array()) {
-			$sql = "SELECT COUNT(DISTINCT entity_id) as total FROM " . DB_PREFIX . "superstat_viewed sv
-			LEFT JOIN " . DB_PREFIX . "product p ON (p.product_id = sv.entity_id) 						
+			$sql = "SELECT COUNT(DISTINCT entity_id) as total FROM superstat_viewed sv
+			LEFT JOIN product p ON (p.product_id = sv.entity_id) 						
 			";
 			
 			$sql .= " WHERE entity_type = 'p'";
@@ -211,17 +275,17 @@
 		}
 		
 		public function getTotalProductViews() {
-			$query = $this->db->query("SELECT SUM(viewed) AS total FROM " . DB_PREFIX . "product");
+			$query = $this->db->query("SELECT SUM(viewed) AS total FROM product");
 			
 			return $query->row['total'];
 		}
 		
 		public function reset() {
-			$this->db->query("UPDATE " . DB_PREFIX . "product SET viewed = '0'");
+			$this->db->query("UPDATE product SET viewed = '0'");
 		}
 		
 		public function getPurchased($data = array()) {
-			$sql = "SELECT op.name, op.model, SUM(op.quantity) AS quantity, SUM(op.total + op.total * op.tax / 100) AS total FROM " . DB_PREFIX . "order_product op LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id)";
+			$sql = "SELECT op.name, op.model, SUM(op.quantity) AS quantity, SUM(op.total + op.total * op.tax / 100) AS total FROM order_product op LEFT JOIN `order` o ON (op.order_id = o.order_id)";
 			
 			if (!empty($data['filter_order_status_id'])) {
 				$sql .= " WHERE o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -257,7 +321,7 @@
 		}
 		
 		public function getTotalPurchased($data) {
-			$sql = "SELECT COUNT(DISTINCT op.model) AS total FROM `" . DB_PREFIX . "order_product` op LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id)";
+			$sql = "SELECT COUNT(DISTINCT op.model) AS total FROM `order_product` op LEFT JOIN `order` o ON (op.order_id = o.order_id)";
 			
 			if (!empty($data['filter_order_status_id'])) {
 				$sql .= " WHERE o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -290,7 +354,7 @@
 			p.image, 
 			p.*, ";
 			
-			$sql .= " (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = op.product_id 
+			$sql .= " (SELECT price FROM product_special ps WHERE ps.product_id = op.product_id 
 			AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) 
 			AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW()))";						
 			
@@ -302,8 +366,8 @@
 			
 			$sql .=	" ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special";
 			
-			$sql .= " FROM " . DB_PREFIX . "order_product op 
-			LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id)";
+			$sql .= " FROM order_product op 
+			LEFT JOIN `order` o ON (op.order_id = o.order_id)";
 			
 			$sql .= " LEFT JOIN product p ON op.product_id = p.product_id";			
 			$sql .= " LEFT JOIN manufacturer m ON p.manufacturer_id = m.manufacturer_id";
@@ -403,8 +467,8 @@
 			
 			$this->db->query("UPDATE order_product op SET date_added_fo = (SELECT date_added FROM `order` o WHERE o.order_id = op.order_id LIMIT 1) WHERE ISNULL(op.date_added_fo)");
 			
-			$sql = "SELECT COUNT(DISTINCT op.product_id) AS total FROM `" . DB_PREFIX . "order_product` op 
-			LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id)";
+			$sql = "SELECT COUNT(DISTINCT op.product_id) AS total FROM `order_product` op 
+			LEFT JOIN `order` o ON (op.order_id = o.order_id)";
 			
 			$sql .= " LEFT JOIN product p ON op.product_id = p.product_id";		
 			$sql .= " LEFT JOIN manufacturer m ON p.manufacturer_id = m.manufacturer_id";
@@ -487,8 +551,8 @@
 		
 		public function getTotalBoughtByProductID($data = array()) {
 			
-			$sql = "SELECT SUM(op.quantity) AS total FROM `" . DB_PREFIX . "order_product` op 
-			LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id)";
+			$sql = "SELECT SUM(op.quantity) AS total FROM `order_product` op 
+			LEFT JOIN `order` o ON (op.order_id = o.order_id)";
 			
 			$sql .= " WHERE o.order_status_id > 0 AND op.product_id = '" . $data['product_id'] . "'";					
 			
@@ -520,8 +584,8 @@
 		public function getAverageBoughtByProductID($data = array()) {
 			
 			$sql = "SELECT AVG(total_by_period) as average FROM ( 
-			SELECT SUM(op.quantity) AS total_by_period FROM `" . DB_PREFIX . "order_product` op 
-			LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id)";
+			SELECT SUM(op.quantity) AS total_by_period FROM `order_product` op 
+			LEFT JOIN `order` o ON (op.order_id = o.order_id)";
 			
 			$sql .= " WHERE o.order_status_id > 0 AND op.product_id = '" . $data['product_id'] . "'";					
 			
@@ -560,8 +624,8 @@
 		
 		public function getAverageInOrderByProductID($data = array()) {
 			
-			$sql = "SELECT AVG(op.quantity) AS average FROM `" . DB_PREFIX . "order_product` op 
-			LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id)";
+			$sql = "SELECT AVG(op.quantity) AS average FROM `order_product` op 
+			LEFT JOIN `order` o ON (op.order_id = o.order_id)";
 			
 			$sql .= " WHERE o.order_status_id > 0 AND op.product_id = '" . $data['product_id'] . "'";					
 			
@@ -592,8 +656,8 @@
 		
 		public function getLastDateOrderByProductID($data = array()) {
 			
-			$sql = "SELECT MAX(op.date_added_fo) as maxdate FROM `" . DB_PREFIX . "order_product` op 
-			LEFT JOIN `" . DB_PREFIX . "order` o ON (op.order_id = o.order_id)";
+			$sql = "SELECT MAX(op.date_added_fo) as maxdate FROM `order_product` op 
+			LEFT JOIN `order` o ON (op.order_id = o.order_id)";
 			
 			$sql .= " WHERE o.order_status_id > 0 AND op.product_id = '" . (int)$data['product_id'] . "'";					
 			
@@ -641,21 +705,3 @@
 		
 		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
