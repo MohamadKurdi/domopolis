@@ -702,11 +702,4 @@
 			return $product_id;
 		}
 		
-		
-		
-		
-		
-		
-		
-		
 	}	
