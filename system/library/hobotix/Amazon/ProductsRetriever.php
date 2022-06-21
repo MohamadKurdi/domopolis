@@ -644,8 +644,23 @@
 			die();
 		}
 		
+
+		private function checkIfAsinIsDeleted($asin){
+
+			$query = $this->db->query("SELECT asin FROM deleted_asins WHERE asin LIKE ('" . $this->db->escape($asin) . "')");
+
+			return $query->num_rows;
+
+		}
 		
 		public function addSimpleProductWithOnlyAsin($data) {			
+
+			if ($this->checkIfAsinIsDeleted($data['asin'])){
+				echoLine('[RainforestRetriever] ASIN удален, пропускаем!');				
+				return 0;
+			}
+
+
 			$this->db->query("INSERT INTO product SET 
 			model 				= '" . $this->db->escape($data['asin']) . "', 
 			asin 				= '" . $this->db->escape($data['asin']) . "', 

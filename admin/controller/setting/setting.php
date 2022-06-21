@@ -3,9 +3,15 @@ class ControllerSettingSetting extends Controller {
 	private $error = array();
 	
 	public function getFPCINFO(){
+
+
 		if (!$this->user->isLogged() || !isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])) { 
 			
 		} else {
+			$this->load->model('setting/setting');
+
+			$this->data['asinDeletionMode'] = $this->model_setting_setting->getKeySettingValue('config', 'config_rainforest_asin_deletion_mode');
+			$this->data['setAsinDeletionMode'] = $this->url->link('setting/setting/setAsinDeletionMode' , 'token=' . $this->session->data['token'], 'SSL');
 			
 			$this->data['clear_memcache'] = $this->url->link('common/home/clearMemCache' , 'token=' . $this->session->data['token'], 'SSL');
 			
@@ -33,6 +39,25 @@ class ControllerSettingSetting extends Controller {
 			$this->template = 'common/cachebuttons.tpl';
 			
 			$this->response->setOutput($this->render());
+		}
+	}
+
+	public function setAsinDeletionMode(){
+		$this->load->model('setting/setting');
+
+		if ($this->user->getUserGroup() == 1) {
+
+			if ($this->config->get('config_rainforest_asin_deletion_mode')){
+				$this->model_setting_setting->editSettingValue('config', 'config_rainforest_asin_deletion_mode', 0);
+				$this->config->set('config_rainforest_asin_deletion_mode', 0);
+			} else {
+				$this->model_setting_setting->editSettingValue('config', 'config_rainforest_asin_deletion_mode', 1);
+				$this->config->set('config_rainforest_asin_deletion_mode', 1);
+			}
+
+			echo ($this->model_setting_setting->getKeySettingValue('config', 'config_rainforest_asin_deletion_mode')?'Вкл':'Выкл');
+		}  else {
+			echo 'Недоступно';
 		}
 	}
 	
@@ -2518,6 +2543,12 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_rainforest_enable_api'] = $this->request->post['config_rainforest_enable_api']; 
 		} else {
 			$this->data['config_rainforest_enable_api'] = $this->config->get('config_rainforest_enable_api');
+		}
+
+		if (isset($this->request->post['config_rainforest_asin_deletion_mode'])) {
+			$this->data['config_rainforest_asin_deletion_mode'] = $this->request->post['config_rainforest_asin_deletion_mode']; 
+		} else {
+			$this->data['config_rainforest_asin_deletion_mode'] = $this->config->get('config_rainforest_asin_deletion_mode');
 		}
 		
 		if (isset($this->request->post['config_rainforest_api_key'])) {
