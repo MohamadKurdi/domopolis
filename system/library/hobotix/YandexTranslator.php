@@ -29,6 +29,10 @@ class YandexTranslator
 	public function translate($text, $from, $to, $returnString = false){
 
 		$result = false;
+
+		if (!mb_strlen($text)){
+			return '';
+		}
 		
 		if (mb_strlen($text, 'UTF-8') > $this->symbolLimit){
 			$translationResult = '';

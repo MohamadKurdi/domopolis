@@ -62,6 +62,14 @@
 			if ($response['request_info']['success'] == false){
 				return false;
 			}
+
+			if (!empty($response['frequently_bought_together'])){
+				$response['product']['frequently_bought_together'] = $response['frequently_bought_together'];
+			}
+
+			if (!empty($response['compare_with_similar'])){
+				$response['product']['compare_with_similar'] = $response['compare_with_similar'];
+			}
 			
 			return $response['product'];
 			
