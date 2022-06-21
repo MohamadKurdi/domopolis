@@ -226,11 +226,47 @@
 				}
 			}			
 		}
+
+		public function editProductRelated($product_id, $data){
+
+			$this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_related WHERE related_id = '" . (int)$product_id . "'");
+			
+			foreach ($data as $related_id) {
+				$this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$product_id . "' AND related_id = '" . (int)$related_id . "'");
+				$this->db->query("INSERT INTO product_related SET product_id = '" . (int)$product_id . "', related_id = '" . (int)$related_id . "'");
+				$this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$related_id . "' AND related_id = '" . (int)$product_id . "'");
+				$this->db->query("INSERT INTO product_related SET product_id = '" . (int)$related_id . "', related_id = '" . (int)$product_id . "'");
+			}
+
+		}
+
+		public function editProductSimilar($product_id, $data){
+
+			$this->db->query("DELETE FROM product_similar WHERE product_id = '" . (int)$product_id . "'");			
+			
+			foreach ($data as $similar_id) {
+				$this->db->query("DELETE FROM product_similar WHERE product_id = '" . (int)$product_id . "' AND similar_id = '" . (int)$similar_id . "'");
+				$this->db->query("INSERT INTO product_similar SET product_id = '" . (int)$product_id . "', similar_id = '" . (int)$similar_id . "'");
+				$this->db->query("DELETE FROM product_similar WHERE product_id = '" . (int)$similar_id . "' AND similar_id = '" . (int)$product_id . "'");
+				$this->db->query("INSERT INTO product_similar SET product_id = '" . (int)$similar_id . "', similar_id = '" . (int)$product_id . "'");
+			}
+		}
+		
+		public function getCurrentProductCategory($product_id){
+
+			$query = $this->db->query("SELECT category_id FROM product_to_category WHERE product_id = '" . (int)$product_id . "' AND main_category = 1 LIMIT 1");
+
+			if ($query->num_rows){
+				return $query->row['category_id'];
+			} else {
+				return $this->config->get('config_rainforest_default_technical_category_id');				
+			}
+
+		}
 		
 		
-		
-		
-		public function editFullProduct($product_id, $product){
+		public function editFullProduct($product_id, $product, $recursive_add_similar = true){
 			//Load Library model/catalog/product
 			require_once(DIR_APPLICATION . '../admin/model/catalog/product.php');
 			$this->model_catalog_product = new \ModelCatalogProduct($this->registry);
@@ -477,12 +513,12 @@
 									'name' => $name
 								];
 							}
-							$attribute = [
+							$attribute_data = [
 								'attribute_group_id' 	=> $this->config->get('config_default_attr_id'),
 								'attribute_description' => $attribute_description
 							];
 
-							$attribute_id = $this->addAttribute($attribute);
+							$attribute_id = $this->addAttribute($attribute_data);
 						}
 
 						$product_attribute_description = [];
@@ -517,10 +553,93 @@
 				$this->editProductAttributes($product_id, $product_attribute);
 			}
 
-
-			//Размеры, готовая функция
+			//Размеры, готовая функция из InfoUpdater
 			$this->registry->get('rainforestAmazon')->infoUpdater->parseAndUpdateProductDimensions($product);
+
+			//Related Products
+			if (!empty($product['frequently_bought_together']) && !empty($product['frequently_bought_together']['products'])){
+				$product_related = [];
+				foreach ($product['frequently_bought_together']['products'] as $bought_together){
+					if ($related = $this->getProductsByAsin($bought_together['asin'])){
+
+						foreach ($related as $related_id){
+							echoLine('[editFullProduct] Покупают вместе: ' . $related_id);
+
+							$product_related[] = $related_id;
+						}
+
+					} else {
+
+						if ($this->config->get('config_rainforest_enable_recursive_adding')){
+
+							echoLine('[editFullProduct] Новый покупают вместе товар: ' . $bought_together['asin'] . ' ' . $bought_together['title']);
+
+							$new_related_id = $this->addSimpleProductWithOnlyAsin([
+								'asin' 				=> $bought_together['asin'], 
+								'category_id' 		=> $this->config->get('config_rainforest_default_technical_category_id'), 
+								'name' 				=> $bought_together['title'], 
+								'image' 			=> $this->getImage($bought_together['image']), 
+								'added_from_amazon' => 1
+							]);							
+
+							$product_similar[] = $new_related_id;
+
+						}
+
+					}
+				}
+
+				if ($product_related){
+					$this->editProductRelated($product_id, $product_related);
+				}
+			}
 						
+
+			//Similar Products
+			if (!empty($product['compare_with_similar'])){
+				$product_similar = [];
+				foreach ($product['compare_with_similar'] as $compare_with_similar){
+					if ($similar = $this->getProductsByAsin($compare_with_similar['asin'])){
+
+						foreach ($similar as $similar_id){
+							echoLine('[editFullProduct] Похожий товар: ' . $similar_id);
+
+							$product_similar[] = $similar_id;
+						}
+
+					} else {
+						if ($this->config->get('config_rainforest_enable_recursive_adding')){
+
+							echoLine('[editFullProduct] Новый похожий товар: ' . $compare_with_similar['asin'] . ' ' . $compare_with_similar['title']);
+
+							$new_similar_id = $this->addSimpleProductWithOnlyAsin([
+								'asin' 				=> $compare_with_similar['asin'], 
+								'category_id' 		=> $this->getCurrentProductCategory($product_id), 
+								'name' 				=> $compare_with_similar['title'], 
+								'image' 			=> $this->getImage($compare_with_similar['image']), 
+								'added_from_amazon' => 1
+							]);							
+
+							$product_similar[] = $new_similar_id;
+
+						}
+					}
+
+				}
+
+				if ($product_similar){
+					$this->editProductSimilar($product_id, $product_similar);
+				}
+			}
+
+			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmazonLastSearch($product_id);
+			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmznData([
+						'product_id' 	=> $product_id, 
+						'asin' 			=> $product['asin'], 
+						'json' 			=> json_encode($product)
+			]);
+
+
 			
 			die();
 		}

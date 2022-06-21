@@ -3514,6 +3514,9 @@
 									</td>
 
 									<td width="15%">
+
+										<div>
+
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Модель работы</span></p>
 										<select name="config_rainforest_category_model">
 
@@ -3521,6 +3524,27 @@
 											<option value="<?php echo $rainforest_model; ?>" <?php if ($rainforest_model == $config_rainforest_category_model) { ?> selected="selected"<?php } ?>><?php echo $rainforest_model; ?></option>
 											<?php } ?>
 										</select>
+
+									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Рекурсивно добавлять товар</span></p>
+										<select name="config_rainforest_enable_recursive_adding">
+											<?php if ($config_rainforest_enable_recursive_adding) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ID технической категории</span></p>
+										<input type="number" name="config_rainforest_default_technical_category_id" value="<?php echo $config_rainforest_default_technical_category_id; ?>" size="50" style="width:90px;" />
+
+
 									</td>
 									
 									<td width="15%">

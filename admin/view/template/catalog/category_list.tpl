@@ -15,16 +15,25 @@
 		<div class="heading order_head">
 			<h1><img src="view/image/category.png" alt="" /> <?php echo $heading_title; ?></h1>
 			<div class="buttons">
+
+				<a href="<?php echo $simpleview; ?>" class="button">
+					<?php if ($simpleview_enabled) { ?>
+						<i class="fa fa-refresh"></i> Страшное и сложное отображение
+					<?php } else { ?>
+						<i class="fa fa-refresh"></i> Простое отображение
+					<?php } ?>
+				</a>
+
 				<a href="<?php echo $rollup; ?>" class="button">
 					<?php if ($rollup_enabled) { ?>
-						Отключить свёртывание
+						<i class="fa fa-caret-square-o-up" aria-hidden="true"></i> Отключить свёртывание
 					<?php } else { ?>
-						Включить свёртывание
+						<i class="fa fa-caret-square-o-down" aria-hidden="true"></i> Включить свёртывание
 					<?php } ?>
 				</a>
 
 				<?php if ($rollup_enabled) { ?>
-					<a href="<?php echo $rollup_all; ?>" class="button">Свернуть всё</a>
+					<a href="<?php echo $rollup_all; ?>" class="button"><i class="fa fa-caret-square-o-down" aria-hidden="true"></i> Свернуть всё</a>
 				<?php } ?>
 
 				<a href="<?php echo $repair; ?>" class="button"><?php echo $button_repair; ?></a>

@@ -112,6 +112,16 @@ class ControllerCatalogCategory extends Controller {
 		$this->redirect($this->url->link('catalog/category', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 	}
 
+	public function simpleview() {
+		if (empty($this->session->data['simpleview']) || $this->session->data['simpleview'] == 0){
+			$this->session->data['simpleview'] = 1;
+		} else {
+			$this->session->data['simpleview'] = 0;
+		}
+
+		$this->redirect($this->url->link('catalog/category', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+	}
+
 	public function repair() {
 		$this->language->load('catalog/category');
 
@@ -296,9 +306,11 @@ class ControllerCatalogCategory extends Controller {
 		$this->data['delete'] = $this->url->link('catalog/category/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['repair'] = $this->url->link('catalog/category/repair', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['rollup'] = $this->url->link('catalog/category/rollup', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['simpleview'] = $this->url->link('catalog/category/simpleview', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['rollup_all'] = $this->url->link('catalog/category/rollup_all', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
 		$this->data['rollup_enabled'] = !empty($this->session->data['category_rollup']);
+		$this->data['simpleview_enabled'] = !empty($this->session->data['simpleview']);
 
 		if (isset($this->request->get['path'])) {
 			if ($this->request->get['path'] != '') {
@@ -361,7 +373,11 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['pagination'] = '';
 		}
 
-		$this->template = 'catalog/category_list.tpl';
+		if ($this->data['simpleview_enabled']){
+			$this->template = 'catalog/category_list_simpleview.tpl';
+		} else {
+			$this->template = 'catalog/category_list.tpl';
+		}
 		$this->children = array(
 			'common/header',
 			'common/footer'

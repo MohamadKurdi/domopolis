@@ -1,38 +1,40 @@
 <?php
 // Heading
-$_['heading_title'] = 'Планировщик заданий';
+$_['heading_title'] = 'Планувальник завдань';
 $_['heading_title_normal'] = 'CSV Price Pro import/export 3';
 
 // Text global
-$_['text_module'] = 'Модули';
-$_['text_default'] = ' <b>(По умолчанию)</b>';
+$_['text_module'] = 'Модулі';
+$_['text_default'] = ' <b>(За замовчуванням)</b>';
 $_['text_yes'] = 'Да';
-$_['text_no'] = 'Нет';
+$_['text_no'] = 'Немає';
+$_['text_none'] = 'Не обрано';
 $_['text_enabled'] = 'Включено';
-$_['text_disabled'] = 'Отключено';
-$_['text_select_all'] = 'Выделить все';
-$_['text_unselect_all'] = 'Снять выделение';
-$_['text_select'] = 'Выбрать';
-$_['text_show_all'] = 'Показать все';
-$_['text_hide_all'] = 'Скрыть не отмеченные';
-$_['text_all'] = 'Все';
-$_['text_no_results'] = 'Нет данных!';
-$_['text_none'] = ' --- Не выбрано --- ';
-$_['text_confirm_delete'] = 'Удаление невозможно отменить! Вы уверены, что хотите это сделать?';
+$_['text_disabled'] = 'Відключено';
+$_['text_select_all'] = 'Виділити все';
+$_['text_unselect_all'] = 'Зняти виділення';
+$_['text_select'] = 'Виділити';
+$_['text_show_all'] = 'Показати все';
+$_['text_hide_all'] = 'Приховати не позначені';
+$_['text_all'] = 'Всі';
+$_['text_no_results'] = 'Немає даних!';
+$_['text_none'] = ' --- Не вибрано --- ';
+$_['text_as'] = 'У вигляді %s';
+$_['text_confirm_delete'] = 'Видалення неможливо скасувати! Ви впевнені, що бажаєте це зробити?';
 
 // Text
-$_['text_job_type_import'] = 'Импорт';
-$_['text_job_type_export'] = 'Экспорт';
-$_['text_edit'] = 'Изменить';
-$_['text_delete'] = 'Удалить';
-$_['text_success'] = 'Настройки успешно обновлены!';
+$_['text_job_type_import'] = 'Імпорт';
+$_['text_job_type_export'] = 'Експорт';
+$_['text_edit'] = 'Редагувати';
+$_['text_delete'] = 'Видалити';
+$_['text_success'] = 'Налаштування вдало оновлені!';
 
 // Butons
-$_['button_save'] = 'Сохранить';
-$_['button_cancel'] = 'Отменить';
-$_['button_delete'] = 'Удалить';
-$_['button_insert'] = 'Добавить';
-$_['button_view'] = 'Просмотр';
+$_['button_save'] = 'Зберегти';
+$_['button_cancel'] = 'Скасувати';
+$_['button_delete'] = 'Видалити';
+$_['button_insert'] = 'Додати';
+$_['button_view'] = 'Перегляд';
 
 // Column
 $_['column_job_id'] = 'id';
@@ -45,31 +47,31 @@ $_['column_status'] = 'Статус';
 // Entry
 $_['entry_job_id'] = 'id';
 $_['entry_job_type'] = 'Тип';
-$_['entry_profile'] = 'Профиль';
-$_['entry_file_location'] = 'Источник/Назначение';
-$_['entry_time_start'] = 'Время запуска';
+$_['entry_profile'] = 'Профіль';
+$_['entry_file_location'] = 'Джерело / Призначення';
+$_['entry_time_start'] = 'Час запуску';
 $_['entry_ftp_host'] = 'FTP хост';
-$_['entry_ftp_user'] = 'FTP логин';
+$_['entry_ftp_user'] = 'FTP логін';
 $_['entry_ftp_passwd'] = 'FTP пароль';
-$_['entry_file_path'] = 'Путь к файлу/URL';
+$_['entry_file_path'] = 'Шлях до файлу/URL';
 $_['entry_status'] = 'Статус';
-$_['entry_job_offline'] = 'Запуск по времени';
+$_['entry_job_offline'] = 'Запуск за часом';
 
 // Cli
-$_['cli_error_file_location_unknown'] = 'Incorrect source/destination path';
-$_['cli_error_file_not_writable'] = 'File is not within the allowed path';
-$_['cli_error_profile_not_found'] = 'The profile of the job can not be found';
-$_['cli_error_path_not_found'] = 'The file path can not be found';
-$_['cli_error_copy_file'] = 'ERROR: Cannot copy file from: %s';
-$_['cli_error_login_failure'] = 'Logon failure: unknown user name or bad password';
-$_['cli_error_ftp_connect'] = 'Cannot connect to the FTP server';
-$_['cli_error_url_entered'] = 'Bad URL entered';
-$_['cli_error_curl_not_installed'] = 'The CURL extension is not installed on this server';
-$_['cli_error_curl_download'] = 'ERROR: The URL does not exsist: %s Return code: %s';
-$_['cli_error_ftp_download'] = 'Error download file from FTP server';
-$_['cli_error_download_file'] = 'Error downloading file, the file size is null';
-$_['error_import_field_caption'] = 'Incorrect CSV header';
-$_['cli_clear_cache'] = 'Clear system/cache: done';
+$_['cli_error_file_location_unknown'] = 'Шлях до файлу не знайдено';
+$_['cli_error_file_not_writable'] = 'Файл не є в межах допустимого шляху';
+$_['cli_error_profile_not_found'] = 'Робочий профіль не знайдено';
+$_['cli_error_path_not_found'] = 'Шлях до файлу не знайдено';
+$_['cli_error_copy_file'] = 'ПОМИЛКА: Не можливо скопіювать з: %s';
+$_['cli_error_login_failure'] = 'Помилка входу в систему: невідоме ім\'я користувача або невірний пароль';
+$_['cli_error_ftp_connect'] = 'Неможливо підключитися до FTP серверу';
+$_['cli_error_url_entered'] = 'Введено невірний URL';
+$_['cli_error_curl_not_installed'] = 'Розширення CURL не встановлені на цьому сервері';
+$_['cli_error_curl_download'] = 'ПОМИЛКА: URL-адреса не існує: %s Код повернення: %s';
+$_['cli_error_ftp_download'] = 'Помилка завантаження файлу з FTP сервера';
+$_['cli_error_download_file'] = 'Помилка завантаження файлу, розмір файлу є недійсним';
+$_['error_import_field_caption'] = 'Не знайдено рядок із заголовками CSV';
+$_['cli_clear_cache'] = 'Видалити кеш';
 
 // Error
-$_['error_permission'] = 'У Вас нет прав для управления этим модулем!';
+$_['error_permission'] = 'Ви не маєте права користиватися модулем!';
