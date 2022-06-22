@@ -53,13 +53,14 @@
 					<a href="#tab-reward" style="background-color:#00ad07; color:#FFF;">Бонусы</a>
 					<a href="#tab-parsing" style="background-color:#7F00FF; color:#FFF;">Фиды, парсинг</a>
 					<a href="#tab-stock" style="background-color:#7F00FF; color:#FFF;">Склад</a>
-					<a href="#tab-size" style="background-color:#7F00FF; color:#FFF;">Габариты</a>
-					<a href="#tab-links" style="background-color:#ff7815; color:#FFF;"><?php echo $tab_links; ?></a>
-					<a href="#tab-attribute" style="background-color:#ff7815; color:#FFF;"><?php echo $tab_attribute; ?></a>
-					<a href="#tab-option" style="background-color:#ff7815; color:#FFF;"><?php echo $tab_option; ?></a>
-					<a href="#tab-product-option" style="background-color:#ff7815; color:#FFF;">Товар-опция</a>				
+					<a href="#tab-size" style="background-color:#7F00FF; color:#FFF;">Габариты, цвет</a>
+					<a href="#tab-variants" style="background-color:#ff7815; color:#FFF;">Варианты</a>
+					<a href="#tab-links" style="background-color:#ff7815; color:#FFF;">Связи</a>
+					<a href="#tab-attribute" style="background-color:#ff7815; color:#FFF;">Атрибуты</a>						
 					<a href="#tab-image" style="background-color:#ff7815; color:#FFF;">Картинки</a>
 					<a href="#tab-videos" style="background-color:#ff7815; color:#FFF;">Видео</a>
+					<? /*<a href="#tab-option" style="background-color:#ff7815; color:#FFF;">ОП</a>*/ ?>
+					<? /*<a href="#tab-product-option" style="background-color:#ff7815; color:#FFF;">ТоП</a>	*/ ?>	
 					<? /*	<a href="#tab-profile" style="display:none;">РП</a> */ ?>
 					<? /* <a href="#tab-design" style="display:none;">МКТ</a> */ ?>
 					<div class="clr"></div>
@@ -1310,104 +1311,240 @@
 																	</div>
 																	<div id="tab-size">
 																		<table class="form">
-																			<tr><th colspan='4'>Размер, вес товара  / НЕТТО</th></tr>	
 																			<tr>
-																				<td style="width:350px;">
-																					<div><span style="display:inline-block; width:120px;">Длина / Length:</span> <input type="text" name="length" value="<?php echo $length; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
-																					<div><span style="display:inline-block; width:120px;">Ширина / Width:</span> <input type="text" name="width" value="<?php echo $width; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
-																					<div><span style="display:inline-block; width:120px;">Высота / Height:</span> <input type="text" name="height" value="<?php echo $height; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
-																				</td>					
-																				<td style="width:350px;">
-																					<select name="length_class_id">
-																						<?php foreach ($length_classes as $length_class) { ?>
-																							<?php if ($length_class['length_class_id'] == $length_class_id) { ?>
-																								<option value="<?php echo $length_class['length_class_id']; ?>" selected="selected"><?php echo $length_class['title']; ?></option>
-																							<?php } else { ?>
-																								<option value="<?php echo $length_class['length_class_id']; ?>"><?php echo $length_class['title']; ?></option>
-																							<?php } ?>
-																						<?php } ?>
-																					</select>
+																				<td style="width:50%">
+																					<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Цвет</span>
 																				</td>
-																				<td>
-																					<div>
-																						<i class="fa fa-amazon"></i> <input type="text" name="length_amazon_key" value="<?php echo $length_amazon_key; ?>" size="100" style="width:250px; margin-bottom:3px;" />
-																					</div>
+																				<td style="width:50%">
+																					<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Материал</span>
 																				</td>
 																			</tr>
-
 																			<tr>
-																				<td style="width:350px;">
-																					<div><span style="display:inline-block; width:120px;">Вес / Weight:</span> <input type="text" name="weight" value="<?php echo $weight; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
-																				</td>	
-																				<td style="width:350px;">							
-																					<div>
-																						<select name="weight_class_id">
-																							<?php foreach ($weight_classes as $weight_class) { ?>
-																								<?php if ($weight_class['weight_class_id'] == $weight_class_id) { ?>
-																									<option value="<?php echo $weight_class['weight_class_id']; ?>" selected="selected"><?php echo $weight_class['title']; ?></option>
-																								<?php } else { ?>
-																									<option value="<?php echo $weight_class['weight_class_id']; ?>"><?php echo $weight_class['title']; ?></option>
-																								<?php } ?>
-																							<?php } ?>
-																						</select>
-																					</div>														
+																				<td>
+																					<?php foreach ($languages as $language) { ?>
+																						<input type="text" name="product_description[<?php echo $language['language_id']; ?>][color]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['color'] : ''; ?>" size="90%" />
+																						<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
+																					<?php } ?>
 																				</td>
 																				<td>
-																					<div>
-																						<i class="fa fa-amazon"></i> <input type="text" name="weight_amazon_key" value="<?php echo $weight_amazon_key; ?>" size="100" style="width:250px; margin-bottom:3px;" />
-																					</div>
+																					<?php foreach ($languages as $language) { ?>
+																						<input type="text" name="product_description[<?php echo $language['language_id']; ?>][material]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['material'] : ''; ?>" size="90%" />
+																						<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
+																					<?php } ?>
 																				</td>
-																			</tr>
-																			<tr><th colspan='4'>Размер, вес упаковки товара / БРУТТО</th></tr>
-																			<tr>
-																				<td style="width:350px;">
-																					<div><span style="display:inline-block; width:120px;">Длина / Length:</span> <input type="text" name="pack_length" value="<?php echo $pack_length; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
-																					<div><span style="display:inline-block; width:120px;">Ширина / Width:</span> <input type="text" name="pack_width" value="<?php echo $pack_width; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
-																					<div><span style="display:inline-block; width:120px;">Высота / Height:</span> <input type="text" name="pack_height" value="<?php echo $pack_height; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
-																				</td>					
-																				<td style="width:350px;">
-																					<select name="pack_length_class_id">
-																						<?php foreach ($length_classes as $length_class) { ?>
-																							<?php if ($length_class['length_class_id'] == $pack_length_class_id) { ?>
-																								<option value="<?php echo $length_class['length_class_id']; ?>" selected="selected"><?php echo $length_class['title']; ?></option>
-																							<?php } else { ?>
-																								<option value="<?php echo $length_class['length_class_id']; ?>"><?php echo $length_class['title']; ?></option>
-																							<?php } ?>
-																						<?php } ?>
-																					</select>
-																				</td>
-																				<td>
-																					<div>
-																						<i class="fa fa-amazon"></i> <input type="text" name="pack_length_amazon_key" value="<?php echo $pack_length_amazon_key; ?>" size="100" style="width:250px; margin-bottom:3px;" />
-																					</div>
-																				</td>
-																			</tr>
-
-																			<tr>
-																				<td style="width:350px;">
-																					<div><span style="display:inline-block; width:120px;">Вес / Weight:</span> <input type="text" name="pack_weight" value="<?php echo $pack_weight; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
-																				</td>	
-																				<td style="width:350px;">							
-																					<div>
-																						<select name="pack_weight_class_id">
-																							<?php foreach ($weight_classes as $weight_class) { ?>
-																								<?php if ($weight_class['weight_class_id'] == $pack_weight_class_id) { ?>
-																									<option value="<?php echo $weight_class['weight_class_id']; ?>" selected="selected"><?php echo $weight_class['title']; ?></option>
-																								<?php } else { ?>
-																									<option value="<?php echo $weight_class['weight_class_id']; ?>"><?php echo $weight_class['title']; ?></option>
-																								<?php } ?>
-																							<?php } ?>
-																						</select>
-																					</div>														
-																				</td>
-																				<td>
-																					<div>
-																						<i class="fa fa-amazon"></i> <input type="text" name="pack_weight_amazon_key" value="<?php echo $pack_weight_amazon_key; ?>" size="100" style="width:250px; margin-bottom:3px;" />
-																					</div>
-																				</td>
-																			</tr>
+																			</tr>	
 																		</table>
-																	</div>
+																<table class="form">
+																	<tr>
+																		<td style="width:50%">
+																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">НЕТТО (без упаковки)</span>
+																		</td>
+																		<td style="width:50%">
+																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">БРУТТО (с упаковкой)</span>
+																		</td>
+																	</tr>	
+																	<tr>
+																		<td>
+																			<table>
+																				<tr>																				
+																					<td style="width:350px;">
+																						<div><span style="display:inline-block; width:120px;">Длина / Length:</span> <input type="text" name="length" value="<?php echo $length; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
+																						<div><span style="display:inline-block; width:120px;">Ширина / Width:</span> <input type="text" name="width" value="<?php echo $width; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
+																						<div><span style="display:inline-block; width:120px;">Высота / Height:</span> <input type="text" name="height" value="<?php echo $height; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
+																					</td>					
+																					<td style="width:350px;">
+																						<div style="margin-bottom:10px;">
+																							<i class="fa fa-bars"></i>
+																							<select name="length_class_id" style="width:250px;">
+																								<?php foreach ($length_classes as $length_class) { ?>
+																									<?php if ($length_class['length_class_id'] == $length_class_id) { ?>
+																										<option value="<?php echo $length_class['length_class_id']; ?>" selected="selected"><?php echo $length_class['title']; ?></option>
+																									<?php } else { ?>
+																										<option value="<?php echo $length_class['length_class_id']; ?>"><?php echo $length_class['title']; ?></option>
+																									<?php } ?>
+																								<?php } ?>
+																							</select>
+																						</div>
+																						<div>
+																							<i class="fa fa-amazon"></i> <input type="text" name="length_amazon_key" value="<?php echo $length_amazon_key; ?>" size="100" style="width:250px; margin-bottom:3px;" />
+																						</div>
+																					</td>
+																				</tr>
+																				<tr>
+																					<td style="width:350px;">
+																						<div><span style="display:inline-block; width:120px;">Вес / Weight:</span> <input type="text" name="weight" value="<?php echo $weight; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
+																					</td>	
+																					<td style="width:350px;">							
+																						<div style="margin-bottom:10px;">
+																							<i class="fa fa-bars"></i>
+																							<select name="weight_class_id" style="width:250px;">
+																								<?php foreach ($weight_classes as $weight_class) { ?>
+																									<?php if ($weight_class['weight_class_id'] == $weight_class_id) { ?>
+																										<option value="<?php echo $weight_class['weight_class_id']; ?>" selected="selected"><?php echo $weight_class['title']; ?></option>
+																									<?php } else { ?>
+																										<option value="<?php echo $weight_class['weight_class_id']; ?>"><?php echo $weight_class['title']; ?></option>
+																									<?php } ?>
+																								<?php } ?>
+																							</select>
+																						</div>		
+
+																						<div>
+																							<i class="fa fa-amazon"></i> <input type="text" name="weight_amazon_key" value="<?php echo $weight_amazon_key; ?>" size="100" style="width:250px; margin-bottom:3px;" />
+																						</div>												
+																					</td>
+																				</tr>																						
+																			</table>
+																		</td>
+																		<td>
+																			<table>
+																				<tr>
+																					<td style="width:350px;">
+																						<div><span style="display:inline-block; width:120px;">Длина / Length:</span> <input type="text" name="pack_length" value="<?php echo $pack_length; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
+																						<div><span style="display:inline-block; width:120px;">Ширина / Width:</span> <input type="text" name="pack_width" value="<?php echo $pack_width; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
+																						<div><span style="display:inline-block; width:120px;">Высота / Height:</span> <input type="text" name="pack_height" value="<?php echo $pack_height; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
+																					</td>					
+																					<td style="width:350px;">
+																						<div style="margin-bottom:10px;">
+																							<i class="fa fa-bars"></i>																							
+																						<select name="pack_length_class_id" style="width:250px;">
+																							<?php foreach ($length_classes as $length_class) { ?>
+																								<?php if ($length_class['length_class_id'] == $pack_length_class_id) { ?>
+																									<option value="<?php echo $length_class['length_class_id']; ?>" selected="selected"><?php echo $length_class['title']; ?></option>
+																								<?php } else { ?>
+																									<option value="<?php echo $length_class['length_class_id']; ?>"><?php echo $length_class['title']; ?></option>
+																								<?php } ?>
+																							<?php } ?>
+																						</select>
+																						</div>
+																						<div>
+																							<i class="fa fa-amazon"></i> <input type="text" name="pack_length_amazon_key" value="<?php echo $pack_length_amazon_key; ?>" size="100" style="width:250px; margin-bottom:3px;" />
+																						</div>
+																					</td>
+																				</tr>
+
+																				<tr>
+																					<td style="width:350px;">
+																						<div><span style="display:inline-block; width:120px;">Вес / Weight:</span> <input type="text" name="pack_weight" value="<?php echo $pack_weight; ?>" size="4" style="width:150px; margin-bottom:3px;" /></div>
+																					</td>	
+																					<td style="width:350px;">
+																							<i class="fa fa-bars"></i>							
+																						<div style="margin-bottom:10px;">
+																							<select name="pack_weight_class_id" style="width:250px;">
+																								<?php foreach ($weight_classes as $weight_class) { ?>
+																									<?php if ($weight_class['weight_class_id'] == $pack_weight_class_id) { ?>
+																										<option value="<?php echo $weight_class['weight_class_id']; ?>" selected="selected"><?php echo $weight_class['title']; ?></option>
+																									<?php } else { ?>
+																										<option value="<?php echo $weight_class['weight_class_id']; ?>"><?php echo $weight_class['title']; ?></option>
+																									<?php } ?>
+																								<?php } ?>
+																							</select>
+																						</div>	
+																						<div>
+																							<i class="fa fa-amazon"></i> <input type="text" name="pack_weight_amazon_key" value="<?php echo $pack_weight_amazon_key; ?>" size="100" style="width:250px; margin-bottom:3px;" />
+																						</div>													
+																					</td>
+																				</tr>
+																			</table>
+																		</td>
+																	</tr>
+																</table>
+															</div>
+
+															<div id="tab-variants">
+																<table class="form">
+																	<tr>
+																		<td style="width:50%">
+																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Основной товар варианта</span>
+																		</td>
+																		<td style="width:50%">
+																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">В любом случае отобразить на фронте</span>
+																		</td>																	
+																	</tr>
+																	<tr>
+																		<td>
+																			<input id="main_variant_product" value="<?php echo $main_variant_product; ?>" name="main_variant_product" type="text" style="width:80%;" /> 
+																			<span style="border-bottom:1px dashed black;" onclick="$('#main_variant_product').val(''); $('#main_variant_id').val('');">очистить</span>
+																			<br />
+																			<span class="help">автоподбор</span>
+																			<input  id="main_variant_id" name="main_variant_id" value="<?php echo $main_variant_id; ?>" type="hidden" />
+																		</td>
+																		<td>
+																			<select name="display_in_catalog">
+																				<?php if ($display_in_catalog) { ?>
+																					<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+																					<option value="0"><?php echo $text_disabled; ?></option>
+																				<?php } else { ?>
+																					<option value="1"><?php echo $text_enabled; ?></option>
+																					<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+																				<?php } ?>
+																			</select>
+																			<br />
+																			<span class="help">Эта карта товара будет отображена на фронте в любом случае, даже если является вариантом другого товара</span>
+																		</td>																	
+																	</tr>																	
+																</table>
+																<table class="form">
+																	<tr>
+																		<td style="width:33%">
+																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Полное название варианта</span>
+																		</td>
+																		<td style="width:33%">
+																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Группа - 1</span>
+																		</td>	
+																		<td style="width:33%">
+																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Группа - 2</span>
+																		</td>																
+																	</tr>
+																	<tr>
+																		<td style="width:33%" valign="top">
+																			<?php foreach ($languages as $language) { ?>
+																				<input type="text" name="product_description[<?php echo $language['language_id']; ?>][variant_name]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['variant_name'] : ''; ?>" size="90%" />
+																						<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
+																			<?php } ?>
+																		</td>
+																		<td style="width:33%">
+																			<?php foreach ($languages as $language) { ?>
+																				<input type="text" name="product_description[<?php echo $language['language_id']; ?>][variant_name_1]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['variant_name_1'] : ''; ?>" size="90%" />
+																					<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
+																			<?php } ?>
+
+																			<br />
+																			<br />
+																			<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Группа - 1 определяет цвет</span></p>
+																			<select name="variant_1_is_color">
+																				<?php if ($variant_1_is_color) { ?>
+																					<option value="1" selected="selected"><?php echo $text_yes; ?></option>
+																					<option value="0"><?php echo $text_no; ?></option>
+																				<?php } else { ?>
+																					<option value="1"><?php echo $text_yes; ?></option>
+																					<option value="0" selected="selected"><?php echo $text_no; ?></option>
+																				<?php } ?>
+																			</select>
+
+																		</td>	
+																		<td style="width:33%">
+																			<?php foreach ($languages as $language) { ?>
+																				<input type="text" name="product_description[<?php echo $language['language_id']; ?>][variant_name_2]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['variant_name_2'] : ''; ?>" size="90%" />
+																						<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
+																			<?php } ?>
+
+																			<br />
+																			<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Группа - 2 определяет цвет</span></p>
+																			<select name="variant_2_is_color">
+																				<?php if ($variant_2_is_color) { ?>
+																					<option value="1" selected="selected"><?php echo $text_yes; ?></option>
+																					<option value="0"><?php echo $text_no; ?></option>
+																				<?php } else { ?>
+																					<option value="1"><?php echo $text_yes; ?></option>
+																					<option value="0" selected="selected"><?php echo $text_no; ?></option>
+																				<?php } ?>
+																			</select>
+
+																		</td>																
+																	</tr>
+																</table>
+															</div>
+
 
 															<div id="tab-links">
 																<table class="form">
@@ -1673,7 +1810,7 @@
 																					</tfoot>
 																				</table>
 																			</div>				
-																			<div id="tab-option">
+																			<div id="tab-option" style="display:none;">
 																				<div id="vtab-option" class="vtabs">
 																					<?php $option_row = 0; ?>
 																					<?php foreach ($product_options as $product_option) { ?>
@@ -1946,7 +2083,7 @@
 																						</tfoot>
 																					</table>
 																				</div>
-																				<div id="tab-product-option">
+																				<div id="tab-product-option" style="display:none;">
 																					<div id="vtab-product-option" class="vtabs">
 																						<?php $product_product_option_row = 0; ?>
 																						<?php foreach ($product_product_options as $product_product_option) { ?>
@@ -2842,6 +2979,33 @@ $('input[name=\'collection\']').autocomplete({
 		
 		$('#product-download div:odd').attr('class', 'odd');
 		$('#product-download div:even').attr('class', 'even');	
+	});
+
+	// Related
+	$('input[name=\'main_variant_product\']').autocomplete({
+		delay: 500,
+		source: function(request, response) {
+			$.ajax({
+				url: 'index.php?route=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+				dataType: 'json',
+				success: function(json) {		
+					response($.map(json, function(item) {
+						return {
+							label: item.name,
+							value: item.product_id
+						}
+					}));
+				}
+			});
+		}, 
+		select: function(event, ui) {
+			$('input[name=\'main_variant_id\']').val(ui.item.value);
+			$('input[name=\'main_variant_product\']').val(ui.item.label);
+			return false;
+		},
+		focus: function(event, ui) {
+			return false;
+		}
 	});
 	
 	// Related

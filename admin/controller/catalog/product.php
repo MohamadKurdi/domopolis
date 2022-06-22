@@ -1934,6 +1934,45 @@ class ControllerCatalogProduct extends Controller {
 			} else {
 				$this->data['markdown_product'] = '';
 			}
+
+			if (isset($this->request->post['display_in_catalog'])) {
+				$this->data['display_in_catalog'] = $this->request->post['display_in_catalog'];
+			} elseif (!empty($product_info)) {
+				$this->data['display_in_catalog'] = $product_info['display_in_catalog'];
+			} else {
+				$this->data['display_in_catalog'] = 0;
+			}
+
+			if (isset($this->request->post['main_variant_id'])) {
+				$this->data['main_variant_id'] = $this->request->post['main_variant_id'];
+			} elseif (!empty($product_info)) {
+				$this->data['main_variant_id'] = $product_info['main_variant_id'];
+			} else {
+				$this->data['main_variant_id'] = 0;
+			}
+			
+			if (isset($this->request->post['variant_1_is_color'])) {
+				$this->data['variant_1_is_color'] = $this->request->post['variant_1_is_color'];
+			} elseif (!empty($product_info)) {
+				$this->data['variant_1_is_color'] = $product_info['variant_1_is_color'];
+			} else {
+				$this->data['variant_1_is_color'] = 0;
+			}
+
+			if (isset($this->request->post['variant_2_is_color'])) {
+				$this->data['variant_2_is_color'] = $this->request->post['variant_2_is_color'];
+			} elseif (!empty($product_info)) {
+				$this->data['variant_2_is_color'] = $product_info['variant_2_is_color'];
+			} else {
+				$this->data['variant_2_is_color'] = 0;
+			}
+
+			if ($this->data['main_variant_id']){
+				$main_variant_product = $this->model_catalog_product->getProduct($this->data['main_variant_id']);
+				$this->data['main_variant_product'] = $main_variant_product['name'];
+			} else {
+				$this->data['main_variant_product'] = '';
+			}
 			
 			if (isset($this->request->post['weight'])) {
 				$this->data['weight'] = $this->request->post['weight'];

@@ -172,13 +172,29 @@
 			}			
 
 		}
+
+		public function editProductColor($product_id, $data){
+			foreach ($data as $language_id => $value) {
+				$this->db->query("UPDATE product_description SET 
+				color 	= '" . $this->db->escape($value['color']) . "'				
+				WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
+			}			
+		}
+
+		public function editProductMaterial($product_id, $data){
+			foreach ($data as $language_id => $value) {
+				$this->db->query("UPDATE product_description SET 
+				material 	= '" . $this->db->escape($value['material']) . "'				
+				WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
+			}			
+		}
 		
 		public function editProductDescriptions($product_id, $data){			
 			foreach ($data as $language_id => $value) {
 				$this->db->query("UPDATE product_description SET 
-				description = '" . $this->db->escape($value['description']) . "',
-				translated = '" . (int)$value['translated'] . "'
-				WHERE  product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
+				description 	= '" . $this->db->escape($value['description']) . "',				
+				translated 		= '" . (int)$value['translated'] . "'
+				WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
 			}
 		}
 		
@@ -320,6 +336,71 @@
 				}
 			}
 		}
+
+		public function parseProductColor($product_id, $product){
+
+			if (!empty($product['color'])){
+				$product_color = [];			
+				foreach ($this->registry->get('languages') as $language_code => $language) {
+					$product['color'] = atrim($product['color']);
+
+					if ($language_code == $this->config->get('config_rainforest_source_language')){
+						$color = $product['color'];	
+						$translated = true;
+					} else {
+						if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $language['code'])){
+							$color = $this->yandexTranslator->translate($product['color'], $this->config->get('config_rainforest_source_language'), $language_code, true);
+							$translated = true;
+						} else {
+							$color = $product['color'];
+							$translated = false;
+						}
+					}
+					
+					
+					$product_color[$language['language_id']] = [
+						'color' => $color,
+					];
+				}
+				
+				$this->editProductColor($product_id, $product_color);
+			}
+
+
+		}
+
+		public function parseProductMaterial($product_id, $product){
+
+			if (!empty($product['material'])){
+				$product_material = [];			
+				foreach ($this->registry->get('languages') as $language_code => $language) {
+					$product['material'] = atrim($product['material']);
+
+					if ($language_code == $this->config->get('config_rainforest_source_language')){
+						$material = $product['material'];	
+						$translated = true;
+					} else {
+						if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $language['code'])){
+							$material = $this->yandexTranslator->translate($product['material'], $this->config->get('config_rainforest_source_language'), $language_code, true);
+							$translated = true;
+						} else {
+							$material = $product['material'];
+							$translated = false;
+						}
+					}
+					
+					
+					$product_material[$language['language_id']] = [
+						'material' => $material,
+					];
+				}
+				
+				$this->editProductMaterial($product_id, $product_material);
+			}
+
+		}
+
+
 		
 		
 		public function editFullProduct($product_id, $product, $recursive_add_similar = true){
@@ -375,6 +456,14 @@
 			}
 			//Описание END
 
+
+			//Цвет, отдельным полем
+			$this->parseProductColor($product_id, $product);
+
+			//Материал, отдельным полем
+			$this->parseProductMaterial($product_id, $product);
+			
+
 			//Картинки
 			if (!empty($product['images'])){
 				$images = [];
@@ -398,8 +487,7 @@
 			//Картинки END
 
 			//Видео
-			$this->parseProductVideos($product_id, $product);
-			
+			$this->parseProductVideos($product_id, $product);			
 
 			//Особенности, специальная группа атрибутов
 			$product_attribute = [];
