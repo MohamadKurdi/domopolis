@@ -22,6 +22,16 @@ class ControllerKPRainForest extends Controller {
 		}
 
 	}
+
+	public function updateproductvideos(){
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+
+		$query = $this->db->query("SELECT * FROM product_amzn_data WHERE 1");		
+
+		foreach ($query->rows as $row){
+			$this->rainforestAmazon->productsRetriever->parseProductVideos($row['product_id'], json_decode($row['json'],true));
+		}
+	}
 		
 	public function updateproductdimensions(){
 
@@ -105,6 +115,7 @@ class ControllerKPRainForest extends Controller {
 		
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');
+		$this->load->model('catalog/product');
 
 
 		//Первый шаг, мы проверим все текущие асины и запишем их в базу, плохие асины мы удалим
@@ -141,6 +152,11 @@ class ControllerKPRainForest extends Controller {
 						'json' => json_encode($result)
 					]
 				);
+
+
+				if (!$this->model_catalog_product->getProductVideos($product_id)){
+					$this->rainforestAmazon->productsRetriever->parseProductVideos($product_id, $result);	
+				}
 
 				} else {
 					echoLine('[PARSEASINSCRON] Товар ' . $product_id . ', не найден, ASIN ' . $products[$product_id]['asin']);

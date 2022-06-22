@@ -7,6 +7,12 @@
 		private $attributesArray = [];
 		private $manufacturersArray = [];
 
+		private $mapLanguages = [
+			'ua' => 'ru',
+			'kz' => 'ru',
+			'by' => 'ru'
+		];
+
 		private $passTranslateAttributes = [
 			'Marke'
 		];
@@ -262,7 +268,57 @@
 			} else {
 				return $this->config->get('config_rainforest_default_technical_category_id');				
 			}
+		}
 
+		public function parseProductVideos($product_id, $product){
+			if (!empty($product['videos'])){
+				$videos = [];
+				$sort_order = 0;
+
+
+				$product_video_description = [];
+				foreach ($product['videos'] as $video){
+					foreach ($this->registry->get('languages') as $language_code => $language) {
+						$video['title'] = atrim($video['title']);
+
+						$real_language_code = $language_code;
+						if (!empty($this->mapLanguages[$language_code])){							
+							$real_language_code = $this->mapLanguages[$language_code];
+						}
+
+						if ($language_code == $this->config->get('config_rainforest_source_language')){
+							$title = $video['title'];	
+							$translated = true;
+						} else {
+							if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $language['code'])){
+								$title = $this->yandexTranslator->translate($video['title'], $this->config->get('config_rainforest_source_language'), $real_language_code, true);
+							} else {
+								$title = $video['title'];
+								$translated = false;
+							}
+						}
+
+
+						$product_video_description[$language['language_id']] = [
+							'title' => $title,
+						];
+					}
+
+					if ($video['link']){
+						$videos[] = [
+							'video' 					=> $this->getImage($video['link']),
+							'image'						=> $video['thumbnail']?$this->getImage($video['thumbnail']):'',
+							'sort_order'				=> $sort_order,
+							'product_video_description' => $product_video_description
+						];						
+					}
+
+					$this->editProductVideos($product_id, $videos);
+
+					$sort_order++;
+
+				}
+			}
 		}
 		
 		
@@ -342,49 +398,8 @@
 			//Картинки END
 
 			//Видео
-			if (!empty($product['videos'])){
-				$videos = [];
-				$sort_order = 0;
-
-
-				$product_video_description = [];
-				foreach ($product['videos'] as $video){
-					foreach ($this->registry->get('languages') as $language_code => $language) {
-						$video['title'] = atrim($video['title']);
-
-						if ($language_code == $this->config->get('config_rainforest_source_language')){
-							$title = $video['title'];	
-							$translated = true;
-						} else {
-							if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $language['code'])){
-								$title = $this->yandexTranslator->translate($video['title'], $this->config->get('config_rainforest_source_language'), $language_code, true);
-							} else {
-								$title = $video['title'];
-								$translated = false;
-							}
-						}
-
-
-						$product_video_description[$language['language_id']] = [
-							'title' => $title,
-						];
-					}
-
-					if ($video['link']){
-						$videos[] = [
-							'video' 					=> $this->getImage($video['link']),
-							'image'						=> $video['thumbnail']?$this->getImage($video['thumbnail']):'',
-							'sort_order'				=> $sort_order,
-							'product_video_description' => $product_video_description
-						];						
-					}
-
-					$this->editProductVideos($product_id, $videos);
-
-					$sort_order++;
-
-				}
-			}
+			$this->parseProductVideos($product_id, $product);
+			
 
 			//Особенности, специальная группа атрибутов
 			$product_attribute = [];
