@@ -39,7 +39,7 @@
 		public function getProducts(){
 			
 			$result = [];
-			$sql = "SELECT p.*, pd.name FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id)  WHERE pd.language_id = '" . $this->config->get('config_language_id') . "' AND added_from_amazon = 1 AND p.product_id NOT IN (SELECT product_id FROM product_amzn_data) AND (NOT ISNULL(p.asin) OR p.asin <> '') AND asin IN ('B073FLPM49','B09JX21WJH','B09TVMYDC5')";
+			$sql = "SELECT p.*, pd.name FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id)  WHERE pd.language_id = '" . $this->config->get('config_language_id') . "' AND added_from_amazon = 1 AND p.product_id NOT IN (SELECT product_id FROM product_amzn_data) AND (NOT ISNULL(p.asin) OR p.asin <> '') AND asin IN ('B073FLPM49','B09JX21WJH','B09TVMYDC5', 'B06XGNM7R2')";
 			
 			$query = $this->db->ncquery($sql);
 			
@@ -75,7 +75,7 @@
 				}
 			} else {
 
-				$query = $this->db->query("SELECT * FROM manufacturer WHERE name LIKE ('" . $this->db->escape($name) . "')");
+				$query = $this->db->query("SELECT * FROM manufacturer WHERE 1");
 
 					foreach ($query->rows as $row){
 						$this->manufacturersArray[$row['name']] = $row['manufacturer_id'];
