@@ -8,7 +8,6 @@
 		public $db;	
 		public $config;		
 		public $endpoint;	
-		public $rfClient;
 
 		public $model_catalog_category = null;
 		public $model_catalog_product = null;
@@ -16,7 +15,7 @@
 		
 		public $jsonResult = null;
 
-		public function __construct($registry, $rfClient){
+		public function __construct($registry){
 			
 			$this->registry 		= $registry;
 			$this->config 			= $registry->get('config');			
@@ -26,8 +25,6 @@
 			if ($this->config->get('config_rainforest_enable_translation')){
 				$this->yandexTranslator = $registry->get('yandexTranslator');
 			}		
-
-			$this->rfClient 		= $rfClient;
 			
 		}
 

@@ -150,6 +150,8 @@
 					variant_name = '" . $this->db->escape($value['variant_name']) . "', 
 					variant_name_1  = '" . $this->db->escape($value['variant_name_1']) . "', 
 					variant_name_2 = '" . $this->db->escape($value['variant_name_2']) . "', 
+					variant_value_1  = '" . $this->db->escape($value['variant_value_1']) . "', 
+					variant_value_2 = '" . $this->db->escape($value['variant_value_2']) . "',
 					markdown_appearance = '" . $this->db->escape($value['markdown_appearance']) . "', 
 					markdown_condition = '" . $this->db->escape($value['markdown_condition']) . "', 
 					markdown_pack = '" . $this->db->escape($value['markdown_pack']) . "', 
@@ -476,7 +478,9 @@
 					material = '" . $this->db->escape($value['material']) . "', 
 					variant_name = '" . $this->db->escape($value['variant_name']) . "', 
 					variant_name_1  = '" . $this->db->escape($value['variant_name_1']) . "', 
-					variant_name_2 = '" . $this->db->escape($value['variant_name_2']) . "', 
+					variant_name_2 = '" . $this->db->escape($value['variant_name_2']) . "',
+					variant_value_1  = '" . $this->db->escape($value['variant_value_1']) . "', 
+					variant_value_2 = '" . $this->db->escape($value['variant_value_2']) . "',
 					markdown_appearance = '" . $this->db->escape($value['markdown_appearance']) . "', 
 					markdown_condition = '" . $this->db->escape($value['markdown_condition']) . "', 
 					markdown_pack = '" . $this->db->escape($value['markdown_pack']) . "', 
@@ -1661,6 +1665,14 @@
 			
 			return $query->rows;
 		} 
+
+		public function getOtherVariantProducts($product_id){
+			$sql = "SELECT * FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE main_variant_id = '" . (int)$product_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
+			$query = $this->db->query($sql);
+			return $query->rows;
+
+		}
 		
 		
 		public function getProductTNVEDByCategory($product_id){
@@ -1695,6 +1707,8 @@
 				'variant_name'              => $result['variant_name'],
 				'variant_name_1'            => $result['variant_name_1'],
 				'variant_name_2'            => $result['variant_name_2'],
+				'variant_value_1'            => $result['variant_value_1'],
+				'variant_value_2'            => $result['variant_value_2'],
 				'translated'			=> $result['translated'],
 				'markdown_appearance'  	=> $result['markdown_appearance'],
 				'markdown_condition' 	=> $result['markdown_condition'],

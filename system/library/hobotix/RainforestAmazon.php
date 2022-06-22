@@ -51,10 +51,10 @@ class RainforestAmazon
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/RainforestRetriever.php');
 
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/CategoryRetriever.php');
-		$this->categoryRetriever = new Amazon\CategoryRetriever($registry, $this->rfClient);
+		$this->categoryRetriever = new Amazon\CategoryRetriever($registry);
 
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/ProductsRetriever.php');
-		$this->productsRetriever = new Amazon\ProductsRetriever($registry, $this->rfClient);
+		$this->productsRetriever = new Amazon\ProductsRetriever($registry);
 
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/SimpleProductParser.php');
 		$this->simpleProductParser = new Amazon\SimpleProductParser($registry, $this->rfClient);	

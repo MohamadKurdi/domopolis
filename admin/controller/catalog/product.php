@@ -1968,10 +1968,38 @@ class ControllerCatalogProduct extends Controller {
 			}
 
 			if ($this->data['main_variant_id']){
-				$main_variant_product = $this->model_catalog_product->getProduct($this->data['main_variant_id']);
+				$main_variant_product = $this->model_catalog_product->getProduct($this->data['main_variant_id']);				
 				$this->data['main_variant_product'] = $main_variant_product['name'];
 			} else {
 				$this->data['main_variant_product'] = '';
+			}
+
+			$this->data['other_variant_products'] = [];
+			$other_variant_products = [];
+			if ($this->data['main_variant_id']){
+				$other_variant_products = $this->model_catalog_product->getOtherVariantProducts($this->data['main_variant_id']);
+			} elseif ($this->request->get['product_id']) {
+				$other_variant_products = $this->model_catalog_product->getOtherVariantProducts($this->request->get['product_id']);
+			}
+
+			if ($other_variant_products){
+
+				foreach ($other_variant_products as $other_variant_product){
+
+					$this->data['other_variant_products'][] = [
+						'asin'				=> $other_variant_product['asin'],
+						'name'				=> $other_variant_product['name'],
+						'variant_name'		=> $other_variant_product['variant_name'],
+						'variant_name_1'	=> $other_variant_product['variant_name_1'],
+						'variant_name_2'	=> $other_variant_product['variant_name_2'],
+						'variant_value_1'	=> $other_variant_product['variant_value_1'],
+						'variant_value_2'	=> $other_variant_product['variant_value_2'],
+						'thumb'				=> $this->model_tool_image->resize($other_variant_product['image'], 50, 50),
+						'link'				=> $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $other_variant_product['product_id'], 'SSL')
+					];
+
+				}
+
 			}
 			
 			if (isset($this->request->post['weight'])) {

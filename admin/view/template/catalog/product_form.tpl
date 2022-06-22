@@ -1489,28 +1489,30 @@
 																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Полное название варианта</span>
 																		</td>
 																		<td style="width:33%">
-																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Группа - 1</span>
+																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Характеристика - 1</span>
 																		</td>	
 																		<td style="width:33%">
-																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Группа - 2</span>
+																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Характеристика - 2</span>
 																		</td>																
 																	</tr>
 																	<tr>
 																		<td style="width:33%" valign="top">
 																			<?php foreach ($languages as $language) { ?>
-																				<input type="text" name="product_description[<?php echo $language['language_id']; ?>][variant_name]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['variant_name'] : ''; ?>" size="90%" />
+																				<input type="text" name="product_description[<?php echo $language['language_id']; ?>][variant_name]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['variant_name'] : ''; ?>" style="width: 90%" />
 																						<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
 																			<?php } ?>
 																		</td>
 																		<td style="width:33%">
 																			<?php foreach ($languages as $language) { ?>
-																				<input type="text" name="product_description[<?php echo $language['language_id']; ?>][variant_name_1]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['variant_name_1'] : ''; ?>" size="90%" />
+																				<input type="text" name="product_description[<?php echo $language['language_id']; ?>][variant_name_1]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['variant_name_1'] : ''; ?>" style="width: 40%" /> 
+																				<i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+																				<input type="text" name="product_description[<?php echo $language['language_id']; ?>][variant_value_1]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['variant_value_1'] : ''; ?>" style="width: 40%" />
+
 																					<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
 																			<?php } ?>
 
-																			<br />
-																			<br />
-																			<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Группа - 1 определяет цвет</span></p>
+																			<br />		
+																			<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Характеристика - 1 определяет цвет</span></p>
 																			<select name="variant_1_is_color">
 																				<?php if ($variant_1_is_color) { ?>
 																					<option value="1" selected="selected"><?php echo $text_yes; ?></option>
@@ -1524,7 +1526,11 @@
 																		</td>	
 																		<td style="width:33%">
 																			<?php foreach ($languages as $language) { ?>
-																				<input type="text" name="product_description[<?php echo $language['language_id']; ?>][variant_name_2]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['variant_name_2'] : ''; ?>" size="90%" />
+																				<input type="text" name="product_description[<?php echo $language['language_id']; ?>][variant_name_2]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['variant_name_2'] : ''; ?>" style="width: 40%" />
+
+																				<i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+																				<input type="text" name="product_description[<?php echo $language['language_id']; ?>][variant_value_2]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['variant_value_2'] : ''; ?>" style="width: 40%" />
+
 																						<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
 																			<?php } ?>
 
@@ -1543,6 +1549,37 @@
 																		</td>																
 																	</tr>
 																</table>
+
+																<?php if ($other_variant_products) { ?>
+																	<hr />
+																	<table class="list">
+																		<?php foreach ($other_variant_products as $other_variant_product) { ?>
+																			<tr>
+																				<td>
+																					<img src="<?echo $other_variant_product['thumb']; ?>">
+																				</td>
+																				<td>
+																					<b><?echo $other_variant_product['asin']; ?></b>
+																				</td>
+																				<td>
+																					<?echo $other_variant_product['name']; ?>
+																				</td>
+																				<td>
+																					<?echo $other_variant_product['variant_name']; ?>
+																				</td>
+																				<td>
+																					<?echo $other_variant_product['variant_name_1']; ?>: <?echo $other_variant_product['variant_value_1']; ?>
+																				</td>
+																				<td>
+																					<?echo $other_variant_product['variant_name_2']; ?>: <?echo $other_variant_product['variant_value_2']; ?>
+																				</td>
+																				<td>
+																					<a href="<?php echo $other_variant_product['link']; ?>" target='_blank'><i class="fa fa-edit"></i></a>
+																				</td>
+																			</tr>
+																		<?php } ?>
+																	</table>
+																<?php } ?>
 															</div>
 
 
