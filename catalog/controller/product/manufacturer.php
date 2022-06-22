@@ -170,20 +170,13 @@
 					
 					$mcategories = array_slice($mcategories, 0, 5);
 					
-					
-					if (SITE_NAMESPACE == 'HAUSGARTEN'){
-						$image = $this->model_tool_image->resize($result['image'], 200, 200);
-						$image_webp = $this->model_tool_image->resize_webp($result['image'], 200, 200);
-						$image_mime = $this->model_tool_image->getMime($result['image'], 200, 200);
-						} else {
-						$image = $this->model_tool_image->resize($result['image'], 300, 300);
-						$image_webp = $this->model_tool_image->resize_webp($result['image'], 300, 300);
-						$image_mime = $this->model_tool_image->getMime($result['image']);
+					$image = $this->model_tool_image->resize($result['image'], 300, 300);
+					$image_webp = $this->model_tool_image->resize_webp($result['image'], 300, 300);
+					$image_mime = $this->model_tool_image->getMime($result['image']);
 						
-						$back_image = $this->model_tool_image->resize($result['back_image'], 300, 300);
-						$back_image_webp = $this->model_tool_image->resize_webp($result['back_image'], 300, 300);
-						$back_image_mime = $this->model_tool_image->getMime($result['back_image']);
-					}
+					$back_image = $this->model_tool_image->resize($result['back_image'], 300, 300);
+					$back_image_webp = $this->model_tool_image->resize_webp($result['back_image'], 300, 300);
+					$back_image_mime = $this->model_tool_image->getMime($result['back_image']);
 					
 					$this->data['categories'][$key]['manufacturer'][] = array(
 					'name' => $result['name'],

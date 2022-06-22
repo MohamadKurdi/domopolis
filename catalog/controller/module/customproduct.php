@@ -106,9 +106,7 @@
 							}
 							
 							
-							if (SITE_NAMESPACE == 'HAUSGARTEN'){
-								
-								if ($option_prices = $this->model_catalog_product->getProductOptionPrices($product_info['product_id'])){
+							if ($option_prices = $this->model_catalog_product->getProductOptionPrices($product_info['product_id'])){
 									if (isset($option_prices['special']) && $option_prices['special']){
 										$special = $option_prices['special'];
 										} else {
@@ -124,8 +122,6 @@
 										$product_info['special'] = $option_prices['result']['special'];
 									}
 								}
-								
-							}
 							
 							$_description = '';
 
@@ -146,8 +142,8 @@
 							'rating'     	=> $product_info['rating'],
 							'minimum' 		=> $product_info['minimum'],
 							'count_reviews' => $product_info['reviews'],
-							'colors'	  => (SITE_NAMESPACE == 'HAUSGARTEN')?$this->model_catalog_product->getProductColorsByGroup($product_info['product_id'], $product_info['color_group']):false,
-							'options'	  => (SITE_NAMESPACE == 'HAUSGARTEN')?$this->model_catalog_product->getProductOptionsForCatalog($product_info['product_id']):false,
+							'colors'	  	=> $this->model_catalog_product->getProductColorsByGroup($product_info['product_id'], $product_info['color_group']),
+							'options'	  	=> $this->model_catalog_product->getProductOptionsForCatalog($product_info['product_id']),
 							'reviews'    => sprintf($this->language->get('text_reviews'), (int)$product_info['reviews']),
 							'saving'      => round((($product_info['price'] - $product_info['special'])/($product_info['price'] + 0.01))*100, 0),
 							'can_not_buy' => ($product_info['stock_status_id'] == $this->config->get('config_not_in_stock_status_id')),

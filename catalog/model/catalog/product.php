@@ -248,25 +248,21 @@
 					$price = $this->currency->format($this->tax->calculate($result['display_price_national'], $result['tax_class_id'], $this->config->get('config_tax')), $result['currency'], 1);
 				}
 				
-				if (SITE_NAMESPACE == 'HAUSGARTEN'){
-					
-					if ($option_prices = $this->getProductOptionPrices($result['product_id'])){
-						if (isset($option_prices['special']) && $option_prices['special']){
-							$special = $option_prices['special'];
-							} else {
-							$special = false;
-						}
-						
-						if (isset($option_prices['price']) && $option_prices['price']){
-							$price = $option_prices['price'];
-						}
-						
-						if ($option_prices['result']){
-							$result['price'] = $option_prices['result']['price'];
-							$result['special'] = $option_prices['result']['special'];
-						}
+				if ($option_prices = $this->getProductOptionPrices($result['product_id'])){
+					if (isset($option_prices['special']) && $option_prices['special']){
+						$special = $option_prices['special'];
+					} else {
+						$special = false;
 					}
-					
+
+					if (isset($option_prices['price']) && $option_prices['price']){
+						$price = $option_prices['price'];
+					}
+
+					if ($option_prices['result']){
+						$result['price'] = $option_prices['result']['price'];
+						$result['special'] = $option_prices['result']['special'];
+					}
 				}
 				
 				if ($this->config->get('config_review_status')) {
@@ -322,8 +318,8 @@
 				'price'       				=> $price,
 				'special'     				=> $special,
 				'points'	  				=> $this->currency->formatBonus($result['reward'], true),
-				'colors'	 				=> (SITE_NAMESPACE == 'HAUSGARTEN')?$this->getProductColorsByGroup($result['product_id'], $result['color_group']):false,
-				'options'	  				=> (SITE_NAMESPACE == 'HAUSGARTEN')?$this->getProductOptionsForCatalog($result['product_id']):false,
+				'colors'	 				=> $this->getProductColorsByGroup($result['product_id'], $result['color_group']),
+				'options'	  				=> $this->getProductOptionsForCatalog($result['product_id']),
 				'saving'      				=> round((($result['price'] - $result['special'])/($result['price'] + 0.01))*100, 0),
 				'tax'         				=> $tax,
 				'rating'      				=> $result['rating'],

@@ -101,21 +101,12 @@
 						$manufacturers_data = array();
 						
 						foreach ($results as $result) {
-							if (SITE_NAMESPACE == 'HAUSGARTEN') {
-								if ((!empty($result['image']))) {
-									$image = $this->model_tool_image->resize($result['image'], 70, 70);
-									} else {
-									$image = $this->model_tool_image->resize('no_image.jpg', 70, 70);
-								}
-								} else {
-								
-								if ((!empty($result['image']))) {
+							if ((!empty($result['image']))) {
 									$image = $this->model_tool_image->resize($result['image'], 50, 50);
 									} else {
 									$image = $this->model_tool_image->resize('no_image.jpg', 50, 50);
-								}
-								
 							}
+
 							if ($result['sort_order'] != -1) {
 								$manufacturers_data[] = array(
 								'manufacturer_id' => $result['manufacturer_id'],
@@ -166,17 +157,10 @@
 					if($manufacturers){
 						foreach($manufacturers as $manufacturer){
 							
-							if (SITE_NAMESPACE == 'HAUSGARTEN') {
-								$dimensions = array(
-								'w' => 120,
-								'h' => 120
-								);
-								} else {
-								$dimensions = array(
+							$dimensions = array(
 								'w' => 50,
 								'h' => 50
 								);
-							};
 							
 							/*$dimensions = array(
 								'w' => 50,
@@ -186,7 +170,7 @@
 							if ($manufacturer['image']) {
 								$img = $this->model_tool_image->resize($manufacturer['image'],  $dimensions['w'], $dimensions['h']);
 								} else {
-								$img = 'catalog/view/theme/mattimeo/image/img_not_found.png';
+								$img = $this->model_tool_image->resize('no_image.png',  $dimensions['w'], $dimensions['h']);
 							};
 							
 							

@@ -136,9 +136,7 @@
 							$special = false;
 						}
 						
-						if (SITE_NAMESPACE == 'HAUSGARTEN'){
-							
-							if ($option_prices = $this->model_catalog_product->getProductOptionPrices($result['product_id'])){
+						if ($option_prices = $this->model_catalog_product->getProductOptionPrices($result['product_id'])){
 								if (isset($option_prices['special']) && $option_prices['special']){
 									$special = $option_prices['special'];
 									} else {
@@ -153,8 +151,6 @@
 									$result['price'] = $option_prices['result']['price'];
 									$result['special'] = $option_prices['result']['special'];
 								}
-							}
-							
 						}
 						
 						if ($this->config->get('config_review_status')) {
