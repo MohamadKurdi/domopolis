@@ -61,7 +61,7 @@
 		public function getImage($amazonImage){
 
 			$localImageName 		= md5($amazonImage) . '.' . pathinfo($amazonImage,  PATHINFO_EXTENSION);
-			$localImageDir  		= 'data/amazon/' . mb_substr($localImageName, 0, 3) . '/' . mb_substr($localImageName, 4, 6) . '/';
+			$localImageDir  		= 'data/source/' . mb_substr($localImageName, 0, 3) . '/' . mb_substr($localImageName, 4, 6) . '/';
 			$localImagePath 		= DIR_IMAGE . $localImageDir;
 			$fullLocalImagePath 	= $localImagePath . $localImageName;
 			$relativeLocalImagePath = $localImageDir . $localImageName;
