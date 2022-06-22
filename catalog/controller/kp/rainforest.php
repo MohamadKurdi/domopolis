@@ -180,7 +180,7 @@ class ControllerKPRainForest extends Controller {
 			WHERE status = 1 
 			AND amzn_ignore = 0		
 			AND is_virtual = 0
-			AND stock_status_id <> '" . $this->config->get('config_not_in_stock_status_id') . "'
+			AND stock_status_id <> '" . $this->config->get('config_not_in_stock_status_id') . "'			
 			AND (" . $this->rainforestAmazon->offersParser->PriceLogic->buildStockQueryField() . " = 0)
 			AND asin <> ''";
 			$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -'" . $this->config->get('config_rainforest_update_period') . "' DAY)))";

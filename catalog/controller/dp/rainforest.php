@@ -3,7 +3,7 @@
 class ControllerDPRainForest extends Controller {	
 	private $maxSteps = 10;
 
-	private $productRequestLimits = 1;
+	private $productRequestLimits = 30;
 	private $offerRequestLimits = 30;
 	private $rainforestAmazon;
 

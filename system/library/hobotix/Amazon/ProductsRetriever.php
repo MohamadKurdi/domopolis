@@ -33,7 +33,7 @@
 		public function getProducts(){
 			
 			$result = [];
-			$sql = "SELECT p.*, pd.name FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id)  WHERE pd.language_id = '" . $this->config->get('config_language_id') . "' AND added_from_amazon = 1 AND p.product_id NOT IN (SELECT product_id FROM product_amzn_data) AND (NOT ISNULL(p.asin) OR p.asin <> '')";
+			$sql = "SELECT p.*, pd.name FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id)  WHERE pd.language_id = '" . $this->config->get('config_language_id') . "' AND added_from_amazon = 1 AND p.product_id NOT IN (SELECT product_id FROM product_amzn_data) AND (NOT ISNULL(p.asin) OR p.asin <> '') AND asin IN ('B073FLPM49','B09JX21WJH','B09TVMYDC5')";
 			
 			$query = $this->db->ncquery($sql);
 			
@@ -641,7 +641,7 @@
 
 
 			
-			die();
+		//	die();
 		}
 		
 

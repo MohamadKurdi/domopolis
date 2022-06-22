@@ -327,12 +327,12 @@
 			}
 			
 			
-            $this->document->addStyle('catalog/view/theme/kp/js/cloud-zoom-new/cloudzoom.css');
-			$this->document->addStyle('catalog/view/theme/kp/js/liFixar/liFixar.css');
+            $this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/js/cloud-zoom-new/cloudzoom.css');
+			$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/js/liFixar/liFixar.css');
 			$this->document->addStyle('catalog/view/javascript/countdown/jquery.countdown.css');
-			$this->document->addStyle('catalog/view/theme/kp/css/product/product.css');
-			$this->document->addScript('catalog/view/theme/kp/js/cloud-zoom-new/cloudzoom.js');
-			$this->document->addScript('catalog/view/theme/kp/js/liFixar/jquery.liFixar.js');
+			$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/css/product/product.css');
+			$this->document->addScript('catalog/view/theme/' . $this->config->get('config_template') . '/js/cloud-zoom-new/cloudzoom.js');
+			$this->document->addScript('catalog/view/theme/' . $this->config->get('config_template') . '/js/liFixar/jquery.liFixar.js');
 			$this->document->addScript('catalog/view/javascript/countdown/jquery.countdown.js');
 			$this->document->addScript('catalog/view/javascript/jquery/jquery.inputmask.bundle.min.js');
 			$this->data['page_type'] = 'product';
@@ -348,6 +348,7 @@
 			$this->load->model('catalog/manufacturer');
 			$this->load->model('catalog/review');						
 			$this->load->model('tool/image');	
+			$this->load->model('tool/video');
 			
 			if (!$just_price){
 				if (isset($this->request->get['product_id']) && ((!isset($this->request->get['path']) && $this->config->get('full_product_path_breadcrumbs') == '1')
@@ -465,8 +466,13 @@
 						}
 					}
 					
-					if (isset($manufacturer_info['name'])) {
-						$mbname = $category_info['name'] . ' ' . $manufacturer_info['name'];
+					$mbname = '';
+					if (!empty($category_info['name'])) {
+						$mbname = $category_info['name'];
+					}
+
+					if (!empty($manufacturer_info['name'])){
+						$mbname = trim($mbname . ' ' . $manufacturer_info['name']);
 					}
 					
 					
@@ -1102,6 +1108,22 @@
 						'thumb'  => $this->model_tool_image->resize($result['image'],$this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'))
 						);
 					}
+
+
+					$this->data['videos'] = array();
+					
+					$results = $this->model_catalog_product->getProductVideos($this->request->get['product_id']);
+
+					foreach ($results as $result) {
+						$this->data['videos'][] = array(
+							'thumb'  => $this->model_tool_image->resize($result['image'],$this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height')),
+							'middle' => $this->model_tool_image->resize($result['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
+							'title'  => $result['title'],
+							'video'	 => $this->model_tool_video->getPath($result['video'])
+						);
+					}
+
+					$this->log->debug($this->data['videos']);
 					
 																
 					$this->load->model('catalog/information');

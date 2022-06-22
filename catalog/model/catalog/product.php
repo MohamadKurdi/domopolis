@@ -2011,6 +2011,13 @@
 			
 			return $query->rows;
 		}
+
+		public function getProductVideos($product_id)
+		{
+			$query = $this->db->query("SELECT pv.*, pd.title FROM product_video pv LEFT JOIN product_video_description pd ON (pv.product_video_id = pd.product_video_id) WHERE pv.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . $this->config->get('config_language_id') . "' ORDER BY sort_order ASC");
+			
+			return $query->rows;
+		}
 		
 		
 		public function getProductRelated($product_id)
