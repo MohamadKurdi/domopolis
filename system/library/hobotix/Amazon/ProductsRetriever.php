@@ -18,9 +18,9 @@
 		];
 
 		private $mapAmazonToStoreFieldsSpecifications = [
-			'Modellnummer' 			=> 'sku',
-			'Artikelnummer' 		=> 'sku',
-			'Herstellerreferenz' 	=> 'sku'
+			'Modellnummer' 			=> ['sku', 'model'],
+			'Artikelnummer' 		=> ['sku', 'model'],
+			'Herstellerreferenz' 	=> ['sku', 'model']
 		];
 
 		private $passAttributestAndSpecifications = [
@@ -500,8 +500,12 @@
 
 					if (!empty($this->mapAmazonToStoreFieldsSpecifications[clean_string($attribute['name'])])){
 
-						echoLine('[editFullProduct] Атрибут ' . $attribute['name'] . ' -> ' . $this->mapAmazonToStoreFieldsSpecifications[$attribute['name']]);
-						$this->editProductFields($product_id, [['name' => $this->mapAmazonToStoreFieldsSpecifications[$attribute['name']], 'type' => 'varchar', 'value' => $attribute['value']]]);
+						foreach ($this->mapAmazonToStoreFieldsSpecifications[clean_string($attribute['name'])] as $fieldToChange){
+
+							echoLine('[editFullProduct] Атрибут ' . $attribute['name'] . ' -> ' . $fieldToChange);
+							$this->editProductFields($product_id, [['name' => $fieldToChange, 'type' => 'varchar', 'value' => $attribute['value']]]);
+
+						}
 
 					} else {
 
