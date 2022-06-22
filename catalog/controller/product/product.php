@@ -1116,8 +1116,7 @@
 
 					foreach ($results as $result) {
 						$this->data['videos'][] = array(
-							'thumb'  => $this->model_tool_image->resize($result['image'],$this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height')),
-							'middle' => $this->model_tool_image->resize($result['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height')),
+							'thumb'  => $this->model_tool_image->resize($result['image'], 700, 400),						
 							'title'  => $result['title'],
 							'video'	 => $this->model_tool_video->getPath($result['video'])
 						);
