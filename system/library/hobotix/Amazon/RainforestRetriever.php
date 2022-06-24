@@ -8,7 +8,6 @@
 		public $db;	
 		public $config;		
 		public $endpoint;	
-		public $rfClient;
 
 		public $model_catalog_category = null;
 		public $model_catalog_product = null;
@@ -16,7 +15,7 @@
 		
 		public $jsonResult = null;
 
-		public function __construct($registry, $rfClient){
+		public function __construct($registry){
 			
 			$this->registry 		= $registry;
 			$this->config 			= $registry->get('config');			
@@ -27,7 +26,7 @@
 				$this->yandexTranslator = $registry->get('yandexTranslator');
 			}		
 
-			$this->rfClient 		= $rfClient;
+			require_once(DIR_SYSTEM . 'library/hobotix/Amazon/models/hoboModel.php');
 			
 		}
 
