@@ -145,6 +145,22 @@ class ControllerDPRainForest extends Controller {
 		}
 	}
 
+
+	public function updatenamesfromamazon(){
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoNameTranslations();
+
+	}
+
+	public function updateimagesfromamazon(){
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoImages();
+
+		foreach ($products as $product_id => $amazon_product_image){
+			$this->rainforestAmazon->productsRetriever->model_product_edit->editProductFields($product_id, [['name' => 'image', 'type' => 'varchar', 'value' => $this->rainforestAmazon->productsRetriever->getImage($amazon_product_image)]]);
+		}
+	}
+
 	public function parseCategoryPage($category_id, $rfCategory){
 		$categoryResultIndex = \hobotix\RainforestAmazon::categoryModeResultIndexes[$this->config->get('config_rainforest_category_model')];
 
@@ -168,8 +184,9 @@ class ControllerDPRainForest extends Controller {
 							'asin' 					=> $rfSimpleProduct['asin'], 
 							'category_id' 			=> $category_id, 
 							'name' 					=> $rfSimpleProduct['title'], 
-							'amazon_product_link' 	=> $rfSimpleProduct['link'], 
-							'image' 				=> $this->rainforestAmazon->productsRetriever->getImage($rfSimpleProduct['image']), 
+							'amazon_product_link' 	=> $rfSimpleProduct['link'],
+							'amazon_product_image'  => $rfSimpleProduct['image'], 
+						//	'image' 				=> $this->rainforestAmazon->productsRetriever->getImage($rfSimpleProduct['image']), 
 							'added_from_amazon' 	=> 1
 						]
 					);
@@ -267,10 +284,10 @@ class ControllerDPRainForest extends Controller {
 			}
 		}
 
-
+		$this->updateimagesfromamazon();
 	}
 
-
+	//OLD SLOW DEPRECATED FUNCTION
 	public function addnewproductscron(){		
 
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
@@ -394,18 +411,5 @@ class ControllerDPRainForest extends Controller {
 			$this->rainforestAmazon->categoryRetriever->setLastCategoryUpdateDate($category['category_id']);
 		}
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

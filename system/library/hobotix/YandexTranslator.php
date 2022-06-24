@@ -31,6 +31,15 @@ class YandexTranslator
 		$this->debug = $debug;
 	}
 
+	public function translateMulti($data = []){
+
+		
+
+
+
+
+
+	}
 
 	public function translate($text, $from, $to, $returnString = false){
 

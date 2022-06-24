@@ -720,16 +720,17 @@
 
 
 			$this->db->query("INSERT INTO product SET 
-			model 				= '" . $this->db->escape($data['asin']) . "', 
-			asin 				= '" . $this->db->escape($data['asin']) . "', 
-			image           	= '" . $this->db->escape($data['image']) . "', 			
-			added_from_amazon 	= '1', 
-			main_variant_id     = '" . (!empty($data['main_variant_id'])?(int)$data['main_variant_id']:0) . "',
-			amazon_product_link = '" . (!empty($data['amazon_product_link'])?$this->db->escape($data['amazon_product_link']):'') . "',
-			stock_status_id 	= '" . $this->config->get('config_stock_status_id') . "',
-			quantity 			= '0',
-			status 				= '0',
-			date_added 			= NOW()");
+			model 					= '" . $this->db->escape($data['asin']) . "', 
+			asin 					= '" . $this->db->escape($data['asin']) . "', 
+			image           		= '" . (!empty($data['image'])?$this->db->escape($data['image']):'') . "', 			
+			added_from_amazon 		= '1', 
+			main_variant_id     	= '" . (!empty($data['main_variant_id'])?(int)$data['main_variant_id']:0) . "',
+			amazon_product_link  	= '" . (!empty($data['amazon_product_link'])?$this->db->escape($data['amazon_product_link']):'') . "',
+			amazon_product_image 	= '" . (!empty($data['amazon_product_image'])?$this->db->escape($data['amazon_product_image']):'') . "',
+			stock_status_id 		= '" . $this->config->get('config_stock_status_id') . "',
+			quantity 				= '0',
+			status 					= '0',
+			date_added 				= NOW()");
 			
 			$product_id = $this->db->getLastId();
 			
