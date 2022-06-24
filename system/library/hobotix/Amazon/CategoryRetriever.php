@@ -50,4 +50,12 @@
 			return $this->doRequest($options);
 		}
 
+		public function getCategoriesFromAmazonAsync($categories){
+
+
+
+
+
+		}
+
 	}
