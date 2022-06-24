@@ -163,9 +163,7 @@ class ControllerDPRainForest extends Controller {
 						echoLine('[AddNewProducts] Товар ' . $rfSimpleProduct['asin'] . ': ' . $rfSimpleProduct['title']);
 
 					if (!$this->rainforestAmazon->productsRetriever->getProductsByAsin($rfSimpleProduct['asin'])){
-						echoLine('[AddNewProducts] Товар ' . $rfSimpleProduct['asin'] . ' не найден, добавляем, продолжаем парсинг категории');
-						
-
+						echoLine('[AddNewProducts] Товар ' . $rfSimpleProduct['asin'] . ' не найден, добавляем, продолжаем парсинг категории');						
 						
 						$this->rainforestAmazon->productsRetriever->addSimpleProductWithOnlyAsin(
 							[

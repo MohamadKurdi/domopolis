@@ -25,8 +25,6 @@
 			if ($this->config->get('config_rainforest_enable_translation')){
 				$this->yandexTranslator = $registry->get('yandexTranslator');
 			}		
-
-			require_once(DIR_SYSTEM . 'library/hobotix/Amazon/models/hoboModel.php');
 			
 		}
 
@@ -57,7 +55,7 @@
 
 		}
 
-		public function getImage($amazonImage){
+		public function getImage($amazonImage, $secondAttempt = false){
 
 			$localImageName 		= md5($amazonImage) . '.' . pathinfo($amazonImage,  PATHINFO_EXTENSION);
 			$localImageDir  		= 'data/source/' . mb_substr($localImageName, 0, 3) . '/' . mb_substr($localImageName, 4, 6) . '/';
@@ -81,6 +79,16 @@
 				} catch (GuzzleHttp\Exception\ClientException $e){
 					echoLine('[RainforestRetriever]: Не могу получить картинку ' . $e->getMessage());
 					return '';
+				} catch (RuntimeException $re){
+
+					if (!$secondAttempt){
+						echoLine('[RainforestRetriever]: Не могу получить картинку, скорее всего таймаут ' . $re->getMessage());
+						sleep(mt_rand(3, 5));
+						$this->getImage($amazonImage, true);
+
+					} else {
+						return '';
+					}
 				}
 			}
 
@@ -115,5 +123,31 @@
 
 			return $this;
 		}		
+
+
+		private function createRequest($params = []){
+			
+			$data = [
+			'api_key' 			=> $this->config->get('config_rainforest_api_key'),
+			'amazon_domain' 	=> $this->config->get('config_rainforest_api_domain_1'),
+			'customer_zipcode' 	=> $this->config->get('config_rainforest_api_zipcode_1')
+			];
+			
+			$data = array_merge($data, $params);
+			$queryString =  http_build_query($data);
+			
+			
+			$ch = curl_init('https://api.rainforestapi.com/request?' . $queryString);
+			
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); 
+			curl_setopt($ch, CURLOPT_TIMEOUT, 100);
+			curl_setopt($ch, CURLOPT_VERBOSE, false);	
+			
+			return $ch;
+			
+		}		
+
 	}
 		

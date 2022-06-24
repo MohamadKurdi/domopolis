@@ -3,7 +3,12 @@
 	namespace hobotix\Amazon;
 	
 	class ProductsRetriever extends RainforestRetriever
-	{	
+	{			
+
+		private $productsPartAdder = null;
+		private $productsPartParser = null;
+		private $productRequestLimits = 30;
+
 		private $attributesArray = [];
 		private $manufacturersArray = [];
 
@@ -17,10 +22,23 @@
 			'Marke'
 		];
 
+		private $dimensionIsColor = [
+			'farbe', 			
+			'цвет', 
+			'колір', 
+			'color'
+		];
+
 		private $mapAmazonToStoreFieldsSpecifications = [
-			'Modellnummer' 			=> ['sku', 'model'],
-			'Artikelnummer' 		=> ['sku', 'model'],
-			'Herstellerreferenz' 	=> ['sku', 'model']
+			'Modellnummer' 			=> ['sku'],
+			'Artikelnummer' 		=> ['sku'],
+			'Herstellerreferenz' 	=> ['sku']
+		];
+
+		private $mapAmazonToStoreFieldsSpecificationsRev = [
+			'Modellnummer' 			=> ['model'],
+			'Artikelnummer' 		=> ['model'],
+			'Herstellerreferenz' 	=> ['model']
 		];
 
 		private $passAttributestAndSpecifications = [
@@ -39,7 +57,7 @@
 		public function getProducts(){
 			
 			$result = [];
-			$sql = "SELECT p.*, pd.name FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id)  WHERE pd.language_id = '" . $this->config->get('config_language_id') . "' AND added_from_amazon = 1 AND p.product_id NOT IN (SELECT product_id FROM product_amzn_data) AND (NOT ISNULL(p.asin) OR p.asin <> '') AND asin IN ('B073FLPM49','B09JX21WJH','B09TVMYDC5', 'B06XGNM7R2')";
+			$sql = "SELECT p.*, pd.name FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id)  WHERE pd.language_id = '" . $this->config->get('config_language_id') . "' AND added_from_amazon = 1 AND p.product_id NOT IN (SELECT product_id FROM product_amzn_data) AND (NOT ISNULL(p.asin) OR p.asin <> '') AND asin IN ('B07ZBRMW89')";
 			
 			$query = $this->db->ncquery($sql);
 			
@@ -56,7 +74,7 @@
 		
 		public function getProductsByAsin($asin){
 			$results = [];
-			$query = $this->db->query("SELECT product_id FROM product WHERE asin LIKE ('" . $this->db->escape($asin) . "')");
+			$query = $this->db->ncquery("SELECT product_id FROM product WHERE asin LIKE ('" . $this->db->escape($asin) . "')");
 			
 			foreach ($query->rows as $row){
 				$results[] = $row['product_id'];
@@ -172,13 +190,53 @@
 			}			
 
 		}
+
+		public function editProductColor($product_id, $data){
+			foreach ($data as $language_id => $value) {
+				$this->db->query("UPDATE product_description SET 
+				color 	= '" . $this->db->escape($value['color']) . "'				
+				WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
+			}			
+		}
+
+		public function editProductMaterial($product_id, $data){
+			foreach ($data as $language_id => $value) {
+				$this->db->query("UPDATE product_description SET 
+				material 	= '" . $this->db->escape($value['material']) . "'				
+				WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
+			}			
+		}
 		
 		public function editProductDescriptions($product_id, $data){			
 			foreach ($data as $language_id => $value) {
 				$this->db->query("UPDATE product_description SET 
-				description = '" . $this->db->escape($value['description']) . "',
-				translated = '" . (int)$value['translated'] . "'
-				WHERE  product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
+				description 	= '" . $this->db->escape($value['description']) . "',				
+				translated 		= '" . (int)$value['translated'] . "'
+				WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
+			}
+		}
+
+		public function editProductVariantsDescriptions($product_id, $data){			
+			foreach ($data as $language_id => $value) {
+				$this->db->query("UPDATE product_description SET 
+				variant_name = '" . $this->db->escape($value['variant_name']) . "', 
+				variant_name_1  = '" . $this->db->escape($value['variant_name_1']) . "', 
+				variant_name_2 = '" . $this->db->escape($value['variant_name_2']) . "', 
+				variant_value_1  = '" . $this->db->escape($value['variant_value_1']) . "', 
+				variant_value_2 = '" . $this->db->escape($value['variant_value_2']) . "'
+				WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
+			}			
+		}
+
+		public function guessIfDimensionIsColor($product_id, $data){
+			foreach ($data as $language_id => $value) {
+				if ($language_id == $this->config->get('config_rainforest_source_language_id')){
+					if (in_array($value['variant_name_1'], $this->dimensionIsColor)){
+						$this->db->query("UPDATE product SET variant_1_is_color = 1 WHERE product_id = '" . (int)$product_id . "'");
+					} elseif (in_array($value['variant_name_2'], $this->dimensionIsColor)) {
+						$this->db->query("UPDATE product SET variant_2_is_color = 1 WHERE product_id = '" . (int)$product_id . "'");
+					}
+				}
 			}
 		}
 		
@@ -320,6 +378,158 @@
 				}
 			}
 		}
+
+		public function parseProductColor($product_id, $product){
+
+			if (!empty($product['color'])){
+				$product_color = [];			
+				foreach ($this->registry->get('languages') as $language_code => $language) {
+					$product_color[$language['language_id']] = [
+						'color' => $this->translateWithCheck($product['color'], $language_code)
+					];
+				}
+				
+				$this->editProductColor($product_id, $product_color);
+			}
+
+
+		}
+
+		public function parseProductMaterial($product_id, $product){
+			if (!empty($product['material'])){
+				$product_material = [];			
+				foreach ($this->registry->get('languages') as $language_code => $language) {
+					$product_material[$language['language_id']] = [
+						'material' => $this->translateWithCheck($product['material'], $language_code)
+					];
+				}
+				
+				$this->editProductMaterial($product_id, $product_material);
+			}
+		}
+
+		public function parseProductVariants($product_id, $product){
+			if (!empty($product['variants'])){
+				foreach ($product['variants'] as $variant){
+					if ($variant['is_current_product']){
+						$product_variants_description = [];
+						foreach ($this->registry->get('languages') as $language_code => $language) {						
+							$variant_name_1 = $variant_name_2 = $variant_value_1 = $variant_value_2 = '';
+
+							if (!empty($variant['dimensions'][0])){
+								$variant_name_1  = $this->translateWithCheck($variant['dimensions'][0]['name'], $language_code);
+								$variant_value_1 = $this->translateWithCheck($variant['dimensions'][0]['value'], $language_code);
+							}
+
+							if (!empty($variant['dimensions'][1])){
+								$variant_name_2  = $this->translateWithCheck($variant['dimensions'][1]['name'], $language_code);
+								$variant_value_2 = $this->translateWithCheck($variant['dimensions'][1]['value'], $language_code);
+							}
+
+							if ($language_code == $this->config->get('config_rainforest_source_language')){
+								$current_dimensions   = $variant['dimensions'];
+							}
+
+							$product_variants_description[$language['language_id']] = [
+								'variant_name' 		=> $this->translateWithCheck($variant['title'], $language_code), 
+								'variant_name_1'  	=> mb_strtolower($variant_name_1), 
+								'variant_name_2' 	=> mb_strtolower($variant_name_2), 
+								'variant_value_1'  	=> mb_strtolower($variant_value_1), 
+								'variant_value_2' 	=> mb_strtolower($variant_value_2)
+							];
+						}
+
+						$this->editProductVariantsDescriptions($product_id, $product_variants_description);
+						$this->guessIfDimensionIsColor($product_id, $product_variants_description);
+					}
+				}
+
+				//
+				unset($variant);
+				$new_product_ids = [];
+				foreach ($product['variants'] as $variant){
+					if (!$this->getProductsByAsin($variant['asin'])){
+
+					//Убираем из названия основного товара названия вариантов
+						$new_product_name = atrim($product['title']);
+						foreach ($current_dimensions as $current_dimension){
+							$new_product_name = str_ireplace($current_dimension['value'] . ',' , '', $new_product_name);
+							$new_product_name = str_ireplace($current_dimension['value'], '', $new_product_name);
+							$new_product_name = str_ireplace(['()', '(,)', '(, )'], '', $new_product_name);
+							$new_product_name = atrim($new_product_name);
+						}
+
+						if (!empty($variant['dimensions'])){
+							$dimensions_name_array = [];
+							foreach ($variant['dimensions'] as $dimension){
+								$dimensions_name_array[] = $dimension['value'];
+							}
+						}
+
+						if ($dimensions_name_array){
+							$new_product_name .= (' (' . implode(', ', $dimensions_name_array) . ') ');
+						}
+
+						echoLine('[editFullProduct] Новый вариант: ' . $new_product_name);
+
+						$new_product_ids[] = [
+							'product_id' => $this->addSimpleProductWithOnlyAsin([
+								'asin' 				=> $variant['asin'], 
+								'category_id' 		=> $this->getCurrentProductCategory($product_id), 
+								'main_variant_id'	=> $product_id,
+								'name' 				=> $new_product_name,
+								'image' 			=> $this->getImage($variant['main_image']), 
+								'added_from_amazon' => 1
+							]),
+							'asin' => $variant['asin']
+						];
+					}
+				}
+
+
+				if ($new_product_ids){
+
+					$total = count($new_product_ids);
+					$iterations = ceil($total/$this->productRequestLimits);
+
+					for ($i = 1; $i <= $iterations; $i++){
+						$slice = array_slice($new_product_ids, $this->productRequestLimits * ($i-1), $this->productRequestLimits);
+						$results = $this->registry->get('rainforestAmazon')->simpleProductParser->getProductByASINS($slice);
+
+						foreach ($results as $product_id => $result){
+							$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmazonLastSearch($product_id);
+
+							if ($result){
+								echoLine('[EditFullProducts] Товар ' . $product_id . ', найден, ASIN ' . $result['asin']);				
+
+								$this->registry->get('rainforestAmazon')->productsRetriever->editFullProduct($product_id, $result);
+
+							} else {
+								echoLine('[EditFullProducts] Товар ' . $product_id . ', найден, ASIN ' . $result['asin']);
+							}
+						}
+
+					}
+				}
+			}
+		}
+
+
+		public function translateWithCheck($text, $language_code){
+			$text = atrim($text);
+
+			if ($language_code == $this->config->get('config_rainforest_source_language')){
+				$text = $text;	
+			} else {
+				if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $language_code)){
+					$text = $this->yandexTranslator->translate($text, $this->config->get('config_rainforest_source_language'), $language_code, true);
+				} else {
+					$text = $text;
+				}
+			}
+
+			return $text;
+		}
 		
 		
 		public function editFullProduct($product_id, $product, $recursive_add_similar = true){
@@ -330,7 +540,8 @@
 			//Product Link
 			$this->editProductFields($product_id, [['name' => 'amazon_product_link', 'type' => 'varchar', 'value' => $product['link']]]);
 			//Product Link End
-			
+
+		
 			//Бренд
 			if (!empty($product['brand'])){
 				$product['brand'] = atrim($product['brand']);
@@ -375,6 +586,14 @@
 			}
 			//Описание END
 
+
+			//Цвет, отдельным полем
+			$this->parseProductColor($product_id, $product);
+
+			//Материал, отдельным полем
+			$this->parseProductMaterial($product_id, $product);
+			
+
 			//Картинки
 			if (!empty($product['images'])){
 				$images = [];
@@ -398,8 +617,7 @@
 			//Картинки END
 
 			//Видео
-			$this->parseProductVideos($product_id, $product);
-			
+			$this->parseProductVideos($product_id, $product);			
 
 			//Особенности, специальная группа атрибутов
 			$product_attribute = [];
@@ -425,22 +643,8 @@
 
 					$product_attribute_description = [];
 					foreach ($this->registry->get('languages') as $language_code => $language) {
-						$feature_bullet = atrim($feature_bullet);
-
-						if ($language_code == $this->config->get('config_rainforest_source_language')){
-							$text = $feature_bullet;	
-							$translated = true;
-						} else {
-							if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $language['code'])){
-								$text = $this->yandexTranslator->translate($feature_bullet, $this->config->get('config_rainforest_source_language'), $language_code, true);
-							} else {
-								$text = $feature_bullet;
-								$translated = false;
-							}
-						}
-
 						$product_attribute_description[$language['language_id']] = [
-							'text' => $text
+							'text' => $this->translateWithCheck($feature_bullet, $language_code)
 						];
 					}
 
@@ -501,12 +705,15 @@
 					if (!empty($this->mapAmazonToStoreFieldsSpecifications[clean_string($attribute['name'])])){
 
 						foreach ($this->mapAmazonToStoreFieldsSpecifications[clean_string($attribute['name'])] as $fieldToChange){
-
 							echoLine('[editFullProduct] Атрибут ' . $attribute['name'] . ' -> ' . $fieldToChange);
 							$this->editProductFields($product_id, [['name' => $fieldToChange, 'type' => 'varchar', 'value' => $attribute['value']]]);
-
 						}
+					} elseif (!empty($this->mapAmazonToStoreFieldsSpecificationsRev[clean_string($attribute['name'])])){
 
+						foreach ($this->mapAmazonToStoreFieldsSpecificationsRev[clean_string($attribute['name'])] as $fieldToChange){
+							echoLine('[editFullProduct] Атрибут ' . $attribute['name'] . ' -> ' . $fieldToChange);
+							$this->editProductFields($product_id, [['name' => $fieldToChange, 'type' => 'varchar', 'value' => strrev($attribute['value'])]]);
+						}
 					} else {
 
 
@@ -515,21 +722,8 @@
 						if (!$attribute_id){
 							$attribute_description = [];
 							foreach ($this->registry->get('languages') as $language_code => $language) {						
-
-								if ($language_code == $this->config->get('config_rainforest_source_language')){
-									$name = $attribute['name'];	
-									$translated = true;
-								} else {
-									if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $language['code'])){
-										$name = $this->yandexTranslator->translate($attribute['name'], $this->config->get('config_rainforest_source_language'), $language_code, true);
-									} else {
-										$name = $feature_bullet;
-										$translated = false;
-									}
-								}
-
 								$attribute_description[$language['language_id']] = [
-									'name' => $name
+									'name' => $this->translateWithCheck($attribute['name'], $language_code)
 								];
 							}
 							$attribute_data = [
@@ -542,21 +736,8 @@
 
 						$product_attribute_description = [];
 						foreach ($this->registry->get('languages') as $language_code => $language) {						
-
-							if ($language_code == $this->config->get('config_rainforest_source_language') || in_array($attribute['name'], $this->passTranslateAttributes)){
-								$text = $attribute['value'];	
-								$translated = true;
-							} else {
-								if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $language['code'])){
-									$text = $this->yandexTranslator->translate($attribute['value'], $this->config->get('config_rainforest_source_language'), $language_code, true);
-								} else {
-									$text = $attribute['value'];
-									$translated = false;
-								}
-							}
-
 							$product_attribute_description[$language['language_id']] = [
-								'text' => $text
+								'text' => $this->translateWithCheck($attribute['value'], $language_code)
 							];
 						}
 
@@ -643,7 +824,6 @@
 
 						}
 					}
-
 				}
 
 				if ($product_similar){
@@ -651,16 +831,15 @@
 				}
 			}
 
+			//Варианты
+			$this->parseProductVariants($product_id, $product);			
+			
 			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmazonLastSearch($product_id);
 			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmznData([
 						'product_id' 	=> $product_id, 
 						'asin' 			=> $product['asin'], 
 						'json' 			=> json_encode($product)
 			]);
-
-
-			
-		//	die();
 		}
 		
 
@@ -685,6 +864,7 @@
 			asin 				= '" . $this->db->escape($data['asin']) . "', 
 			image           	= '" . $this->db->escape($data['image']) . "', 
 			added_from_amazon 	= '1', 
+			main_variant_id     = '" . (!empty($data['main_variant_id'])?(int)$data['main_variant_id']:0) . "',
 			stock_status_id 	= '" . $this->config->get('config_stock_status_id') . "',
 			quantity 			= '0',
 			status 				= '0',
