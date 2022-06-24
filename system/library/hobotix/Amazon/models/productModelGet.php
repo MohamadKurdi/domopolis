@@ -10,7 +10,15 @@ class productModelGet extends hoboModel{
 	public function getProducts(){
 
 		$result = [];
-		$sql = "SELECT p.*, pd.name FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id)  WHERE pd.language_id = '" . $this->config->get('config_language_id') . "' AND added_from_amazon = 1 AND p.product_id NOT IN (SELECT product_id FROM product_amzn_data) AND (NOT ISNULL(p.asin) OR p.asin <> '') AND asin IN ('B09KCK82NF')";
+		$sql = "SELECT 
+		p.*, pd.name 
+		FROM product p 
+		LEFT JOIN product_description pd ON (p.product_id = pd.product_id) 
+		WHERE pd.language_id = '" . $this->config->get('config_language_id') . "' 
+		AND p.added_from_amazon = 1 
+		AND p.product_id NOT IN (SELECT product_id FROM product_amzn_data) AND (NOT ISNULL(p.asin) OR p.asin <> '') 
+		AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE amazon_can_get_full = 1)) 
+		AND asin IN ('B09KCK82NF')";
 
 		$query = $this->db->ncquery($sql);
 
@@ -26,19 +34,19 @@ class productModelGet extends hoboModel{
 	}
 
 
-		public function getProductsWithNoImages(){
-			$result = [];
-			$query = $this->db->ncquery("SELECT product_id, amazon_product_image FROM product WHERE LENGTH(amazon_product_image) > 0 AND LENGTH(image) = 0");
+	public function getProductsWithNoImages(){
+		$result = [];
+		$query = $this->db->ncquery("SELECT product_id, amazon_product_image FROM product WHERE LENGTH(amazon_product_image) > 0 AND LENGTH(image) = 0");
 
-			foreach ($query->rows as $row){
-				$result[$row['product_id']] = $row['amazon_product_image'];					
-			}
-
-			return $result;
+		foreach ($query->rows as $row){
+			$result[$row['product_id']] = $row['amazon_product_image'];					
 		}
 
+		return $result;
+	}
 
-		public function getProductsByAsin($asin){
+
+	public function getProductsByAsin($asin){
 		$results = [];
 		$query = $this->db->ncquery("SELECT product_id FROM product WHERE asin LIKE ('" . $this->db->escape($asin) . "')");
 			
@@ -76,14 +84,4 @@ class productModelGet extends hoboModel{
 				return $query->num_rows;
 
 			}
-
-
-
-
-
-
-
-
-
-
 		}

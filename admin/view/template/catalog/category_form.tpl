@@ -528,20 +528,23 @@
 					
 					<table class="form">
 						<tr>
-							<td style="width:20%">
-								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Включить синхронизацию</span>									
+							<td style="width:15%">
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Разрешить загрузку информации о новых товарах</span>									
 							</td>
-							<td style="width:20%">
+							<td style="width:15%">
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Разрешить загрузку полной информации о товарах</span>									
+							</td>
+							<td style="width:15%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Конечная категория Amazon</span>									
 							</td>
-							<td style="width:60%">
+							<td style="width:55%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Категория Amazon</span>
 																
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF"><a style="color:#FFF;text-decoration:none" href="index.php?route=catalog/category/getAmazonCategoriesCSV&token=<?php echo $token; ?>"><i class="fa fa-amazon"></i> скачать полный список категорий Amazon в CSV</span> <sup style="color:red">NEW</sup>						
 							</td>							
 						</tr>
 						<tr style="border-bottom:1px dashed gray">
-							<td style="width:20%">
+							<td style="width:15%">
 								<select name="amazon_sync_enable">
 									<?php if ($amazon_sync_enable) { ?>
 										<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
@@ -553,7 +556,20 @@
 								</select>
 							</td>
 
-							<td style="width:20%">
+
+							<td style="width:15%">
+								<select name="amazon_can_get_full">
+									<?php if ($amazon_can_get_full) { ?>
+										<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+										<option value="0"><?php echo $text_disabled; ?></option>
+										<?php } else { ?>
+										<option value="1"><?php echo $text_enabled; ?></option>
+										<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+									<?php } ?>
+								</select>
+							</td>
+
+							<td style="width:15%">
 								<select name="amazon_final_category">
 									<?php if ($amazon_final_category) { ?>
 										<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
@@ -565,7 +581,7 @@
 								</select>
 							</td>
 							
-							<td style="width:60%">
+							<td style="width:55%">
 								<input type="text" name="amazon_category_name" value="<?php echo $amazon_category_name; ?>" style="width:90%;" />
 								<?php if (!$amazon_category_id) { ?>
 									<br /><span id="span-alert-no-amazon-id" style="color:#ef5e67"><i class="fa fa-exclamation-triangle"></i> идентификатор не задан, попробуй подбор. Внимание, подбор работает только на НЕМЕЦКОМ языке</span>
