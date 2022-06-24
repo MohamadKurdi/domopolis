@@ -624,6 +624,9 @@
 																		<td class="left" width="15%">
 																			<b>ASIN</b>
 																		</td>
+																		<td class="left" width="10%">
+																			<b>Ссылка</b>
+																		</td>
 																		<td class="left" width="15%">
 																			<b>EAN (GTIN)</b>
 																		</td>
@@ -662,6 +665,11 @@
 																					Не задан
 																				<?php } ?>
 																			</span>
+																		</td>
+																		<td class="left" width="15%">
+																			<?php if ($amazon_product_link) { ?>
+																				<a href="<? echo $amazon_product_link; ?>" target="_blank"><? echo $amazon_product_link; ?></a>
+																			<?php } ?>
 																		</td>
 																		<td class="left" width="15%">
 																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">

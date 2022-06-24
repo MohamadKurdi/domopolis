@@ -10,6 +10,8 @@ class YandexTranslator
 	private $config;
 	private $cloud = null;
 
+	private $debug = false;
+
 
 	private $symbolLimit = 9999;
 	private $sentensesDelimiter = '.';
@@ -23,6 +25,10 @@ class YandexTranslator
 		} catch (\Panda\Yandex\TranslateSdk\Exception\ClientException $e) {
 			echoLine($e->getMessage());				
 		}
+	}
+
+	public function setDebug($debug){
+		$this->debug = $debug;
 	}
 
 
@@ -64,8 +70,10 @@ class YandexTranslator
 			$json = json_decode($result, true);
 			if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
 
-				echoLine('[YandexTranslator] ' . $from . ' -> ' . $to);
-				echoLine('[YandexTranslator] ' . $text . ' -> ' . $json['translations'][0]['text']);
+				if ($this->debug){
+					echoLine('[YandexTranslator] ' . $from . ' -> ' . $to);
+					echoLine('[YandexTranslator] ' . $text . ' -> ' . $json['translations'][0]['text']);
+				}
 
 				return $json['translations'][0]['text'];
 			}

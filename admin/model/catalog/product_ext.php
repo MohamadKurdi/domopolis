@@ -173,6 +173,7 @@ class ModelCatalogProductExt extends Model {
 
         $anywhere_filters = array(
             'sku'       => 'p.sku',
+            'asin'      => 'p.asin',
             'upc'       => 'p.upc',
             'ean'       => 'p.ean',
             'jan'       => 'p.jan',
