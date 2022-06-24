@@ -129,6 +129,37 @@ class ControllerDPRainForest extends Controller {
 
 	}
 
+	public function addnewproductscron2(){
+
+
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$this->load->library('Timer');
+		$timer = new FPCTimer();
+
+		$categories = $this->rainforestAmazon->categoryRetriever->getCategories();
+
+		$total = count($categories);
+		$iterations = ceil($total/$this->productRequestLimits);
+		echoLine('[OFFERS] Всего ' . $total . ' категорий!');		
+
+		for ($i = 1; $i <= $iterations; $i++){
+			$timer = new FPCTimer();
+			echoLine('[AddNewProducts] Итерация ' . $i . ' из ' . $iterations . ', категории с ' . ($this->productRequestLimits * ($i-1)) . ' по ' . $this->productRequestLimits * $i);
+			
+
+			
+
+
+
+
+
+
+		}
+
+
+
+	}
+
 
 	public function addnewproductscron(){		
 

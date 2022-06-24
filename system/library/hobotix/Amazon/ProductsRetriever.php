@@ -36,19 +36,18 @@
 		];
 
 		private $mapAmazonToStoreFieldsSpecificationsRev = [
-			'Modellnummer' 			=> ['model'],
+			'ASIN' 					=> ['model'],
 			'Artikelnummer' 		=> ['model'],
 			'Herstellerreferenz' 	=> ['model']
 		];
 
-		private $passAttributestAndSpecifications = [
+		private $passAttributesAndSpecifications = [
 			'Produktabmessungen',
 			'Im Angebot von Amazon.de seit',
 			'Marke',
 			'Amazon Bestseller-Rang',
 			'Auslaufartikel (Produktion durch Hersteller eingestellt)',
-			'Durchschnittliche Kundenbewertung',
-			'ASIN'			
+			'Durchschnittliche Kundenbewertung'			
 		];
 
 		
@@ -81,6 +80,12 @@
 			}
 			
 			return $results;
+		}
+
+		public function getIfProductIsFullFilled($product_id){
+			$query = $this->db->ncquery("SELECT product_id FROM product_amzn_data WHERE product_id = '" . (int)$product_id . "'");
+
+			return $query->num_rows;
 		}
 		
 		public function getManufacturer($name, $recursive = false){
@@ -408,7 +413,7 @@
 			}
 		}
 
-		public function parseProductVariants($product_id, $product){
+		public function parseProductVariants($product_id, $product, $variants = true){
 			if (!empty($product['variants'])){
 				foreach ($product['variants'] as $variant){
 					if ($variant['is_current_product']){
@@ -448,7 +453,9 @@
 				unset($variant);
 				$new_product_ids = [];
 				foreach ($product['variants'] as $variant){
-					if (!$this->getProductsByAsin($variant['asin'])){
+					//Если вариант не существует, то мы его добавляем
+					$existentVariants = $this->getProductsByAsin($variant['asin']);
+					if ($variants && !$existentVariants){
 
 					//Убираем из названия основного товара названия вариантов
 						$new_product_name = atrim($product['title']);
@@ -483,6 +490,18 @@
 							]),
 							'asin' => $variant['asin']
 						];
+					} elseif ($variants && $existentVariants) {
+
+						//Если задан параметр парсить варианты (только если мы работаем с корневым товаром, и варианты не обработаны, например, в случае вылета)
+						foreach ($existentVariants as $existentVariantID){
+							if (!$this->getIfProductIsFullFilled($existentVariantID)){
+								$new_product_ids[] = [
+									'product_id' => $existentVariantID,
+									'asin'		 => $variant['asin']
+								];
+							}
+						}
+
 					}
 				}
 
@@ -502,7 +521,7 @@
 							if ($result){
 								echoLine('[EditFullProducts] Товар ' . $product_id . ', найден, ASIN ' . $result['asin']);				
 
-								$this->registry->get('rainforestAmazon')->productsRetriever->editFullProduct($product_id, $result);
+								$this->registry->get('rainforestAmazon')->productsRetriever->editFullProduct($product_id, $result, true, false);
 
 							} else {
 								echoLine('[EditFullProducts] Товар ' . $product_id . ', найден, ASIN ' . $result['asin']);
@@ -532,7 +551,7 @@
 		}
 		
 		
-		public function editFullProduct($product_id, $product, $recursive_add_similar = true){
+		public function editFullProduct($product_id, $product, $recursive_add_similar = true, $variants = true){
 			//Load Library model/catalog/product
 			require_once(DIR_APPLICATION . '../admin/model/catalog/product.php');
 			$this->model_catalog_product = new \ModelCatalogProduct($this->registry);
@@ -541,7 +560,6 @@
 			$this->editProductFields($product_id, [['name' => 'amazon_product_link', 'type' => 'varchar', 'value' => $product['link']]]);
 			//Product Link End
 
-		
 			//Бренд
 			if (!empty($product['brand'])){
 				$product['brand'] = atrim($product['brand']);
@@ -691,7 +709,7 @@
 				}
 
 				//И удаляем те, которые нам вообще не вперлись
-				foreach ($this->passAttributestAndSpecifications as $pass){
+				foreach ($this->passAttributesAndSpecifications as $pass){
 					if (!empty($mergedProductAttributes[clean_string($pass)])){
 						unset($mergedProductAttributes[clean_string($pass)]);
 					}
@@ -702,20 +720,26 @@
 					$attribute['name'] = atrim($attribute['name']);
 					$attribute['value'] = atrim($attribute['value']);	
 
+					$mappedAttribute = false;
 					if (!empty($this->mapAmazonToStoreFieldsSpecifications[clean_string($attribute['name'])])){
+						$mappedAttribute = true;
 
 						foreach ($this->mapAmazonToStoreFieldsSpecifications[clean_string($attribute['name'])] as $fieldToChange){
 							echoLine('[editFullProduct] Атрибут ' . $attribute['name'] . ' -> ' . $fieldToChange);
 							$this->editProductFields($product_id, [['name' => $fieldToChange, 'type' => 'varchar', 'value' => $attribute['value']]]);
 						}
-					} elseif (!empty($this->mapAmazonToStoreFieldsSpecificationsRev[clean_string($attribute['name'])])){
+					} 
+
+					if (!empty($this->mapAmazonToStoreFieldsSpecificationsRev[clean_string($attribute['name'])])){
+						$mappedAttribute = true;
 
 						foreach ($this->mapAmazonToStoreFieldsSpecificationsRev[clean_string($attribute['name'])] as $fieldToChange){
 							echoLine('[editFullProduct] Атрибут ' . $attribute['name'] . ' -> ' . $fieldToChange);
 							$this->editProductFields($product_id, [['name' => $fieldToChange, 'type' => 'varchar', 'value' => strrev($attribute['value'])]]);
 						}
-					} else {
+					} 
 
+					if (!$mappedAttribute) {
 
 						$attribute_id = $this->getAttribute($attribute['name']);
 
@@ -832,7 +856,7 @@
 			}
 
 			//Варианты
-			$this->parseProductVariants($product_id, $product);			
+			$this->parseProductVariants($product_id, $product, $variants);			
 			
 			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmazonLastSearch($product_id);
 			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmznData([
