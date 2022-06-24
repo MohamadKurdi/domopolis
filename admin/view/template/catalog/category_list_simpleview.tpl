@@ -56,6 +56,7 @@
 							<td class="left">Ссылка на Amazon</td>
 							<td class="center" style="width:100px;">Конечная категория Amazon</td>	
 							<td class="center" style="width:100px;">Синхронизация с Amazon</td>
+							<td class="center" style="width:100px;">Разрешить полную загрузку товаров</td>
 							<td class="right" style="width:50px;">Товары</td>				
 							<td class="right" style="width:30px;">Сортировка</td>
 							<td class="left" style="width:30px;">Статус</td>
@@ -116,7 +117,15 @@
 												<? } else { ?>
 													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
 												<? } ?>
-											</td>		
+											</td>
+
+											<td class="left">
+												<? if ($category['amazon_can_get_full']) { ?>
+													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
+												<? } else { ?>
+													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+												<? } ?>
+											</td>			
 
 											<td class="right">
 												<?php if ($category['count']) { ?>

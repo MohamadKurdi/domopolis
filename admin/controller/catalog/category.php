@@ -246,6 +246,7 @@ class ControllerCatalogCategory extends Controller {
 				'amazon_category_id'  		=> $real_category['amazon_category_id'],
 				'amazon_sync_enable'  		=> $real_category['amazon_sync_enable'],
 				'amazon_final_category'  	=> $real_category['amazon_final_category'],
+				'amazon_can_get_full'  		=> $real_category['amazon_can_get_full'],
 				'amazon_category_link'  	=> $real_category['amazon_category_link'],
 				'yandex_category_name'  	=> $yandex_category_name,
 				'google_category' 			=> $this->model_catalog_category->getGoogleCategoryByID($real_category['google_category_id']),
@@ -549,6 +550,14 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['amazon_final_category'] = $category_info['amazon_final_category'];
 		} else {
 			$this->data['amazon_final_category'] = false;
+		}
+
+		if (isset($this->request->post['amazon_can_get_full'])) {
+			$this->data['amazon_can_get_full'] = $this->request->post['amazon_can_get_full'];
+		} elseif (!empty($category_info)) {
+			$this->data['amazon_can_get_full'] = $category_info['amazon_can_get_full'];
+		} else {
+			$this->data['amazon_can_get_full'] = false;
 		}
 
 		if (isset($this->request->post['amazon_category_id'])) {

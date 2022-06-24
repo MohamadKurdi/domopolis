@@ -58,6 +58,7 @@
 							<td class="left" style="width:200px;">Amzn Link</td>
 							<td class="left" style="width:30px;">Amzn Sync</td>
 							<td class="left" style="width:30px;">Amzn Final</td>
+							<td class="left" style="width:30px;">Amzn Allow Full</td>
 							<td class="left" style="width:100px;">Google</td>
 							<td class="left" style="width:100px;">Yandex</td>
 							<td class="left" style="width:60px;">Картинка</td>
@@ -157,7 +158,15 @@
 													<? } else { ?>
 														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
 													<? } ?>
-												</td>			
+												</td>		
+
+												<td class="left">
+													<? if ($category['amazon_can_get_full']) { ?>
+														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
+													<? } else { ?>
+														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+													<? } ?>
+												</td>	
 
 												<td class="left">
 													<? if ($category['google_category']) { ?>
