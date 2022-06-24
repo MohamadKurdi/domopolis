@@ -107,7 +107,6 @@
 		}
 		
 		public function getProductByASINS($asins){
-
 			
 			$multi = curl_multi_init();
 			$channels 	= [];

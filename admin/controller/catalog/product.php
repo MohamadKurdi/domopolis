@@ -1262,8 +1262,10 @@ class ControllerCatalogProduct extends Controller {
 					}	
 
 					$this->data['amazon_json'] = json_encode($this->data['amazon_json'], JSON_PRETTY_PRINT);
+					$this->data['amazon_product_link'] = $product_info['amazon_product_link'];
 				} else {
 					$this->data['amazon_json'] = false;
+					$this->data['amazon_product_link'] = false;
 				}
 
 				$this->data['offers'] = [];

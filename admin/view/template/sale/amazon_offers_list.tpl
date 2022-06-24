@@ -132,5 +132,5 @@
 
 	</table>
 	<? } else { ?>
-	<div style="font-size:24px; text-align: center; color:red;"><i class="fa fa-exclamation-triangle"></i> Нет офферов на амазоне</div>
+	<div style="color:rgb(207, 74, 97); font-size:28px; text-align:center;"><i class="fa fa-exclamation-triangle"></i><br /> Нет офферов на Amazon</div>
 	<?php } ?>

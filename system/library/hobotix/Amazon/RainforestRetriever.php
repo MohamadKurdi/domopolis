@@ -11,6 +11,9 @@
 
 		public $model_catalog_category = null;
 		public $model_catalog_product = null;
+
+		public $model_product_add = null;
+
 		public $yandexTranslator = null;
 		
 		public $jsonResult = null;
@@ -24,7 +27,15 @@
 
 			if ($this->config->get('config_rainforest_enable_translation')){
 				$this->yandexTranslator = $registry->get('yandexTranslator');
-			}		
+			}	
+
+			//models
+			require_once(DIR_SYSTEM . 'library/hobotix/Amazon/models/hoboModel.php');	
+			require_once(DIR_SYSTEM . 'library/hobotix/Amazon/models/productModelEdit.php');
+			require_once(DIR_SYSTEM . 'library/hobotix/Amazon/models/productModelGet.php');
+
+			$this->model_product_edit = new productModelEdit($registry);
+			$this->model_product_get = new productModelGet($registry);
 			
 		}
 
@@ -42,6 +53,26 @@
 			return $this->jsonResult;			
 		}
 
+		public function getTotalPages(){
+
+			if (!empty($this->jsonResult['pagination'])){
+				return $this->jsonResult['pagination']['total_pages'];				
+			}
+
+			return false;
+
+		}
+
+		public function getCurrentPages(){
+
+			if (!empty($this->jsonResult['pagination'])){
+				return $this->jsonResult['pagination']['current_page'];				
+			}
+
+			return false;
+
+		}
+
 		public function getNextPage(){
 
 			if (!empty($this->jsonResult['pagination'])){
@@ -52,7 +83,6 @@
 			}
 
 			return false;
-
 		}
 
 		public function getImage($amazonImage, $secondAttempt = false){
@@ -79,7 +109,7 @@
 				} catch (GuzzleHttp\Exception\ClientException $e){
 					echoLine('[RainforestRetriever]: Не могу получить картинку ' . $e->getMessage());
 					return '';
-				} catch (RuntimeException $re){
+				} catch (\Exception $re){
 
 					if (!$secondAttempt){
 						echoLine('[RainforestRetriever]: Не могу получить картинку, скорее всего таймаут ' . $re->getMessage());
@@ -96,6 +126,22 @@
 
 			return $localImageDir . $localImageName;
 		}	
+
+		public function parseResponse($response){
+			$response = json_decode($response, true);	
+			
+			if (!isset($response['request_info']['success'])){
+				throw new \Exception($response);
+				die('Что-то пошло не так!');				
+			}
+			
+			if ($response['request_info']['success'] == false){
+				throw new \Exception($response);
+				return false;
+			}
+
+			return $response;			
+		}
 
 		public function doRequest($params = []){
 		
@@ -125,7 +171,7 @@
 		}		
 
 
-		private function createRequest($params = []){
+		public function createRequest($params = []){
 			
 			$data = [
 			'api_key' 			=> $this->config->get('config_rainforest_api_key'),
@@ -147,7 +193,7 @@
 			
 			return $ch;
 			
-		}		
+		}				
 
 	}
 		

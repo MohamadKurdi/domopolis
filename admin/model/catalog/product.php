@@ -1066,6 +1066,7 @@
 			$this->db->query("DELETE FROM product_to_download WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_to_layout WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_to_store WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_amzn_data WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM `product_profile` WHERE `product_id` = " . (int)$product_id);
 			$this->db->query("DELETE FROM review WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_product_option WHERE product_id = '" . (int)$product_id . "'");

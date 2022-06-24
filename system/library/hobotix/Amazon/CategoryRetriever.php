@@ -17,7 +17,7 @@
 			$query = $this->db->ncquery($sql);
 
 			foreach ($query->rows as $row){
-				$result[] = [
+				$result[$row['category_id']] = [
 					'category_id' 			=> $row['category_id'],
 					'amazon_category_id' 	=> $row['amazon_category_id'],
 					'amazon_category_name'	=> $row['amazon_category_name'],
@@ -52,7 +52,40 @@
 
 		public function getCategoriesFromAmazonAsync($categories){
 
+			$multi = curl_multi_init();
+			$channels 	= [];
+			$results 	= [];
+			
+			foreach ($categories as $category){
 
+				$options = [
+					'type' 			=> \hobotix\RainforestAmazon::rainforestTypeMapping[$this->config->get('config_rainforest_category_model')],
+					'category_id' 	=> $category['amazon_category_id'],
+					'sort_by'		=> 'most_recent',
+					'page'			=> $category['page']
+				];
+
+				$channels[$category['category_id']] = $this->createRequest($options);	
+				$results[$category['category_id']] = [];
+				curl_multi_add_handle($multi, $channels[$category['category_id']]);									
+			}			
+			
+			$running = null;
+			do {
+				curl_multi_exec($multi, $running);
+			} while ($running);
+			
+			foreach ($channels as $channel) {
+				curl_multi_remove_handle($multi, $channel);
+			}
+			curl_multi_close($multi);
+			
+			foreach ($channels as $category_id => $channel) {
+				$results[$category_id] = $this->parseResponse(curl_multi_getcontent($channel));				
+			}
+			
+			
+			return $results;
 
 
 
