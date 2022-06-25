@@ -9,6 +9,14 @@ class ControllerSettingSetting extends Controller {
 			
 		} else {
 			$this->load->model('setting/setting');
+			$this->load->model('catalog/product');
+
+			$this->data['totalProducts'] = $this->model_catalog_product->getTotalProducts();
+			$this->data['product_ext'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'], 'SSL');
+
+			if ($this->config->get('config_rainforest_default_technical_category_id')){
+				$this->data['totalProductsInTechnicalCategory'] = $this->model_catalog_product->getTotalProducts(['filter_category_id' => $this->config->get('config_rainforest_default_technical_category_id')]);
+			}
 
 			$this->data['asinDeletionMode'] = $this->model_setting_setting->getKeySettingValue('config', 'config_rainforest_asin_deletion_mode');
 			$this->data['setAsinDeletionMode'] = $this->url->link('setting/setting/setAsinDeletionMode' , 'token=' . $this->session->data['token'], 'SSL');

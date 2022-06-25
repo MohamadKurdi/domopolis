@@ -178,19 +178,19 @@ class productModelEdit extends hoboModel{
 
 		foreach ($data as $related_id) {
 			$this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$product_id . "' AND related_id = '" . (int)$related_id . "'");
-			$this->db->query("INSERT INTO product_related SET product_id = '" . (int)$product_id . "', related_id = '" . (int)$related_id . "'");
+			$this->db->query("INSERT IGNORE INTO product_related SET product_id = '" . (int)$product_id . "', related_id = '" . (int)$related_id . "'");
 			$this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$related_id . "' AND related_id = '" . (int)$product_id . "'");
-			$this->db->query("INSERT INTO product_related SET product_id = '" . (int)$related_id . "', related_id = '" . (int)$product_id . "'");
+			$this->db->query("INSERT IGNORE INTO product_related SET product_id = '" . (int)$related_id . "', related_id = '" . (int)$product_id . "'");
 		}
 
 	}
 
 	public function editProductSponsored($product_id, $data){
 
-		$this->db->query("DELETE FROM product_sponsored WHERE product_id = '" . (int)$product_id . "'");		
+		$this->db->query("DELETE FROM product_sponsored WHERE product_id = '" . (int)$product_id . "'");
 
 		foreach ($data as $sponsored_id) {			
-			$this->db->query("INSERT INTO product_sponsored SET product_id = '" . (int)$product_id . "', sponsored_id = '" . (int)$sponsored_id . "'");
+			$this->db->query("INSERT IGNORE INTO product_sponsored SET product_id = '" . (int)$product_id . "', sponsored_id = '" . (int)$sponsored_id . "'");			
 		}
 
 	}
@@ -200,9 +200,9 @@ class productModelEdit extends hoboModel{
 		$this->db->query("DELETE FROM product_similar WHERE product_id = '" . (int)$product_id . "'");			
 
 		foreach ($data as $similar_id) {			
-			$this->db->query("INSERT INTO product_similar SET product_id = '" . (int)$product_id . "', similar_id = '" . (int)$similar_id . "'");
+			$this->db->query("INSERT IGNORE INTO product_similar SET product_id = '" . (int)$product_id . "', similar_id = '" . (int)$similar_id . "'");
 			$this->db->query("DELETE FROM product_similar WHERE product_id = '" . (int)$similar_id . "' AND similar_id = '" . (int)$product_id . "'");
-			$this->db->query("INSERT INTO product_similar SET product_id = '" . (int)$similar_id . "', similar_id = '" . (int)$product_id . "'");
+			$this->db->query("INSERT IGNORE INTO product_similar SET product_id = '" . (int)$similar_id . "', similar_id = '" . (int)$product_id . "'");
 		}
 	}
 
