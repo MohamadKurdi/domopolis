@@ -145,19 +145,44 @@ class ControllerDPRainForest extends Controller {
 		}
 	}
 
-
-	public function updatenamesfromamazon(){
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
-		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoNameTranslations();
-
-	}
-
 	public function updateimagesfromamazon(){
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoImages();
 
 		foreach ($products as $product_id => $amazon_product_image){
 			$this->rainforestAmazon->productsRetriever->model_product_edit->editProductFields($product_id, [['name' => 'image', 'type' => 'varchar', 'value' => $this->rainforestAmazon->productsRetriever->getImage($amazon_product_image)]]);
+		}
+	}
+
+	public function updatenametranslations(){
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$this->rainforestAmazon->productsRetriever->yandexTranslator->setDebug(true);
+		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoTranslation();
+
+
+		foreach ($products as $product){
+			foreach ($this->registry->get('languages') as $language_code => $language) {
+				$source_name = atrim($product['source_name']);
+
+				if ($product['language_id'] == $language['language_id'] && $this->config->get('config_rainforest_enable_language_' . $language_code)){					
+					$name = $this->rainforestAmazon->productsRetriever->yandexTranslator->translate($source_name, $this->config->get('config_rainforest_source_language'), $language_code, true);
+
+					$translated = false;
+					if ($name && $name != atrim($source_name)){
+						$translated = true;
+					}
+
+					$product_name_data[$language['language_id']] = [
+						'name' 			=> $name,
+						'translated' 	=> $translated
+					];
+
+
+					$this->rainforestAmazon->productsRetriever->model_product_edit->editProductNames($product['product_id'], $product_name_data);
+				}
+			}
+
+			
 		}
 	}
 
@@ -186,7 +211,7 @@ class ControllerDPRainForest extends Controller {
 							'name' 					=> $rfSimpleProduct['title'], 
 							'amazon_product_link' 	=> $rfSimpleProduct['link'],
 							'amazon_product_image'  => $rfSimpleProduct['image'], 
-						//	'image' 				=> $this->rainforestAmazon->productsRetriever->getImage($rfSimpleProduct['image']), 
+							'image' 				=> $this->rainforestAmazon->productsRetriever->getImage($rfSimpleProduct['image']), 
 							'added_from_amazon' 	=> 1
 						]
 					);
@@ -285,6 +310,7 @@ class ControllerDPRainForest extends Controller {
 		}
 
 		$this->updateimagesfromamazon();
+		$this->updatenametranslations();
 	}
 
 	//OLD SLOW DEPRECATED FUNCTION

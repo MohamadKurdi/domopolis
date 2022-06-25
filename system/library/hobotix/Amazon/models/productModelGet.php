@@ -17,8 +17,8 @@ class productModelGet extends hoboModel{
 		WHERE pd.language_id = '" . $this->config->get('config_language_id') . "' 
 		AND p.added_from_amazon = 1 
 		AND p.product_id NOT IN (SELECT product_id FROM product_amzn_data) AND (NOT ISNULL(p.asin) OR p.asin <> '') 
-		AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE amazon_can_get_full = 1)) 
-		AND asin IN ('B09KCK82NF')";
+		AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE amazon_can_get_full = 1))
+		";
 
 		$query = $this->db->ncquery($sql);
 
@@ -40,6 +40,25 @@ class productModelGet extends hoboModel{
 
 		foreach ($query->rows as $row){
 			$result[$row['product_id']] = $row['amazon_product_image'];					
+		}
+
+		return $result;
+	}
+
+	public function getProductsWithNoTranslation(){
+		$result = [];
+		$query = $this->db->ncquery("SELECT pd.product_id, pd.language_id,
+			(SELECT pd2.name FROM product_description pd2 WHERE pd2.product_id = pd.product_id AND language_id = '" . (int)$this->config->get('config_rainforest_source_language_id') . "') as source_name
+		FROM product_description pd WHERE pd.translated = 0 AND pd.language_id <> '" . (int)$this->config->get('config_rainforest_source_language_id') . "'");
+
+		foreach ($query->rows as $row){
+			if ($row['source_name']){
+				$result[] = [
+					'product_id' 			=> $row['product_id'],
+					'language_id'			=> $row['language_id'],
+					'source_name' 			=> $row['source_name']
+				];
+			}
 		}
 
 		return $result;
