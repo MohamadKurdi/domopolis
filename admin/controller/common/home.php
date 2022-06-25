@@ -382,10 +382,24 @@
 
 		public function loadProductStats(){
 			$this->load->model('catalog/product');
+			$this->load->model('catalog/category');
+
+			$this->data['total_products'] 			= $this->model_catalog_product->getTotalProducts();
+			$this->data['total_product_enabled'] 	= $this->model_catalog_product->getTotalProducts(['filter_status' => 1]);
+			$this->data['total_product_parsed'] 	= $this->model_catalog_product->getTotalProductsParsed();
+			$this->data['total_products_in_tech'] 	= $this->model_catalog_product->getTotalProducts(['filter_category_id' => $this->config->get('config_rainforest_default_technical_category_id')]);
+
+			$this->data['total_products_added_today'] 		= $this->model_catalog_product->getTotalProductsAdded(date('Y-m-d'));
+			$this->data['total_products_added_yesterday'] 	= $this->model_catalog_product->getTotalProductsAdded(date('Y-m-d', strtotime('-1 day')));
+			$this->data['total_products_added_week'] 		= $this->model_catalog_product->getTotalProductsAdded(['from' => date('Y-m-d', strtotime('-1 week')), 'to' => date('Y-m-d')]);
+
+			$this->data['total_categories'] 						= $this->model_catalog_category->getTotalCategories();
+			$this->data['total_categories_final'] 					= $this->model_catalog_category->getTotalCategoriesAmazonFinal();
+			$this->data['total_categories_enable_load'] 			= $this->model_catalog_category->getTotalCategoriesEnableLoad();
+			$this->data['total_categories_enable_full_load'] 		= $this->model_catalog_category->getTotalCategoriesEnableFullLoad();
 
 
-			$this->template = 'homestats/productstats.tpl';
-			
+			$this->template = 'homestats/productstats.tpl';			
 			$this->response->setOutput($this->render());
 		}
 		

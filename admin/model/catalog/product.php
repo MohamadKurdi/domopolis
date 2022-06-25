@@ -2252,6 +2252,32 @@
 		public function getProfiles($product_id) {
 			return $this->db->query("SELECT * FROM `product_profile` WHERE product_id = " . (int)$product_id)->rows;
 		}
+
+		public function getTotalProductsParsed() {
+			$query = $this->db->query("SELECT COUNT(product_id) as total FROM product_amzn_data WHERE 1");
+			
+			return $query->row['total'];
+		}
+
+		public function getTotalProductsModified($date) {
+			if (is_array($date) && !empty($date['from']) && !empty($date['to'])){
+				$query = $this->db->query("SELECT COUNT(product_id) as total FROM product LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'  AND DATE(date_modified) >= DATE('" . $date['from'] . "') AND DATE(date_added) <= DATE('" . $date['to'] . "')");
+			} else {
+				$query = $this->db->query("SELECT COUNT(product_id) as total FROM product LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'  AND DATE(date_modified) = DATE('" . $date . "')");
+			}
+			
+			return $query->row['total'];
+		}
+
+		public function getTotalProductsAdded($date) {
+			if (is_array($date) && !empty($date['from']) && !empty($date['to'])){
+				$query = $this->db->query("SELECT COUNT(p.product_id) as total FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'  AND DATE(date_added) >= DATE('" . $date['from'] . "') AND DATE(date_added) <= DATE('" . $date['to'] . "')");
+			} else {
+				$query = $this->db->query("SELECT COUNT(p.product_id) as total FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'  AND DATE(date_added) = DATE('" . $date . "')");
+			}
+			
+			return $query->row['total'];
+		}
 		
 		public function getTotalProducts($data = array()) {
 			$sql = "SELECT COUNT(DISTINCT p.product_id) AS total FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id)";
