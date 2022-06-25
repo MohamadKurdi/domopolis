@@ -1123,6 +1123,11 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_ukrposhta_ua_language'] = $this->config->get('config_ukrposhta_ua_language');
 		}
 
+		if (isset($this->request->post['config_amazon_product_stats_enable'])) {
+			$this->data['config_amazon_product_stats_enable'] = $this->request->post['config_amazon_product_stats_enable'];
+		} else {
+			$this->data['config_amazon_product_stats_enable'] = $this->config->get('config_amazon_product_stats_enable');
+		}
 		
 		if (isset($this->request->post['config_group_price_enable'])) {
 			$this->data['config_group_price_enable'] = $this->request->post['config_group_price_enable'];

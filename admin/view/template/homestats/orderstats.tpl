@@ -5,8 +5,10 @@
 	.list.big tbody td.discount{font-size:11px;color:red;font-weight:700;}
 	.list.big tbody td.percent{font-size:11px;color:#ff7815;font-weight:700;}
 </style>
+
+
 <?php foreach ($order_filters as $order_filter) { ?>
-	<div style="width:48%; float:left; margin-bottom:15px; margin-left:5px;">
+	<div style="width:<?php if ($stores_count == 1) { ?>100%<?php } else { ?>48%<?php } ?>; float:left; margin-bottom:15px; margin-left:5px;">
 		<div class="dashboard-heading">
 			<img src="view/image/flags/<? echo mb_strtolower($order_filter['language']) ?>.png" /> <?php echo $order_filter['name']; ?> <a href="<?php echo $order_filter['filter_href']; ?>" style="float:right; margin-right:10px;">посмотреть все</a>
 		</div>

@@ -149,8 +149,23 @@
 					<div id="tab-store">
 						<table class="form">
 							<table class="form">
-								<tr>											
-									<td width="20%">
+								<tr>	
+									<td style="width:15%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Статистика товаров и категорий в админке</span></p>
+										<select name="config_amazon_product_stats_enable">
+											<?php if ($config_amazon_product_stats_enable) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+										<br />
+										<span class="help">показать на главной странице в админке счетчики категорий, товаров и процесса обработки данных, загруженных из amazon</span>
+									</td>
+
+									<td style="width:15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика цен B2B</span></p>
 										<select name="config_group_price_enable">
 											<?php if ($config_group_price_enable) { ?>
@@ -165,7 +180,7 @@
 										<span class="help">логика нагружает магазин, если реально это не используется, пусть будет отключено</span>
 									</td>
 									
-									<td width="20%">
+									<td style="width:15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Монобрендовый магазин</span></p>
 										<select name="config_monobrand">
 											<option value="0">Это не монобрендовый магазин</option>
@@ -182,7 +197,7 @@
 										<span class="help">настройка, позволяющая работать без списка брендов (не уверен что актуально)</span>
 									</td>
 									
-									<td width="20%">
+									<td style="width:15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">В брендах только товары</span></p>
 										<select type="select" name="config_show_goods_overload">
 											<? if ($config_show_goods_overload) { ?>
@@ -201,7 +216,7 @@
 										<span class="help">на странице брендов выводятся только товары, без списков коллекций, и.т.д.</span>	
 									</td>
 									
-									<td width="20%">
+									<td style="width:15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Режим конфликта</span></p>
 										<select type="select" name="config_warmode_enable">
 											<? if ($config_warmode_enable) { ?>
@@ -220,7 +235,7 @@
 										<span class="help">будет отключен переключатель стран, и некоторые другие моменты</span>	
 									</td>
 
-									<td width="20%">
+									<td style="width:15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Режим разработки</span></p>
 										<select type="select" name="config_no_access_enable">
 											<? if ($config_no_access_enable) { ?>
