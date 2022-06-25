@@ -46,8 +46,9 @@ class productModelEdit extends hoboModel{
 		$this->db->query("UPDATE product SET main_variant_id = 	'" . (int)$main_variant_id . "'	WHERE product_id = '" . (int)$product_id . "'");
 	}
 
-	public function resetUnexsitentVariants(){
+	public function resetUnexsistentVariants(){
 		$this->db->query("UPDATE product SET main_variant_id = 	0 WHERE main_variant_id > 0 AND (NOT ISNULL(main_variant_id)) AND main_variant_id NOT IN (SELECT product_id FROM product)");
+		$this->db->query("UPDATE product SET main_variant_id = 	0 WHERE main_variant_id = product_id");
 	}
 
 

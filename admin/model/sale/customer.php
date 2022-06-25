@@ -742,7 +742,8 @@
 				$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 			}
 			
-			//print $sql."<br>";
+			$this->log->debugsql($sql);
+
 			$query = $this->db->query($sql);
 			return $query->rows;
 		}

@@ -321,9 +321,9 @@
 			}
 		}
 
-		public function parseProductAttributes($product_id, $product){
-			$product_attribute = [];
-			if (!empty($product['feature_bullets'])){				
+		public function parseProductAttributes($product_id, $product, $main_variant_id = false){
+			$product_attribute = [];			
+			if (!empty($product['feature_bullets']) && ($main_variant_id === false || $main_variant_id == $product_id)){				
 				$feature_bullets_counter = 1;
 				foreach ($product['feature_bullets'] as $feature_bullet){
 					echoLine('[editFullProduct] Особенности: ' . $feature_bullets_counter);
@@ -358,6 +358,9 @@
 					$feature_bullets_counter++;
 				}
 				
+			} elseif ($main_variant_id && $main_variant_id != $product_id){
+				echoLine('[editFullProduct] Копируем feature_bullets с основного товара: ' . $main_variant_id);
+				$product_attribute = $this->model_product_get->getProductFeatureBullets($main_variant_id);
 			}
 
 
@@ -456,9 +459,15 @@
 				}
 			}
 
+
 			if ($product_attribute){
 				$this->model_product_edit->editProductAttributes($product_id, $product_attribute);
 			}			
+
+			if ($main_variant_id && !$main_variant_id == $product_id){
+				var_dump($product_attribute);
+				die();
+			}
 		}
 
 		public function parseProductRelatedProducts($product_id, $product){
@@ -710,7 +719,9 @@
 			}
 		}
 		
-		public function editFullProduct($product_id, $product, $variants = true){			
+		public function editFullProduct($product_id, $product, $variants = true){	
+			$this->yandexTranslator->setDebug(false);
+
 			//Product Link
 			$this->model_product_edit->editProductFields($product_id, [['name' => 'amazon_product_link', 'type' => 'varchar', 'value' => $product['link']]]);			
 
@@ -718,7 +729,14 @@
 			$this->parseProductManufacturer($product_id, $product);
 			
 			//Описание
-			$this->parseProductDescriptions($product_id, $product);
+			//Если этот товар - вариант другого товара, то описание мы копируем тупо с родительского
+			$main_variant_id = $this->model_product_get->checkIfProductIsVariant($product_id);
+			if ($main_variant_id && $main_variant_id != $product_id){
+				echoLine('[editFullProduct] Копируем описание с основного товара: ' . $main_variant_id);
+				$this->model_product_edit->editProductDescriptions($product_id, $this->model_product_get->getProductDescriptions($main_variant_id));					
+			} else {
+				$this->parseProductDescriptions($product_id, $product);
+			}
 
 			//Цвет, отдельным полем
 			$this->parseProductColor($product_id, $product);
@@ -733,7 +751,7 @@
 			$this->parseProductVideos($product_id, $product);			
 
 			//Атрибуты, фичер баллетс и спецификации
-			$this->parseProductAttributes($product_id, $product);
+			$this->parseProductAttributes($product_id, $product, $main_variant_id);
 			
 			//Размеры, готовая функция из InfoUpdater
 			$this->registry->get('rainforestAmazon')->infoUpdater->parseAndUpdateProductDimensions($product);
@@ -751,7 +769,7 @@
 			$this->parseProductCategories($product_id, $product);
 
 			//Варианты
-			$this->model_product_edit->resetUnexsitentVariants();
+			$this->model_product_edit->resetUnexsistentVariants();
 			$this->parseProductVariants($product_id, $product, $variants);			
 			
 			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmazonLastSearch($product_id);
@@ -792,9 +810,7 @@
 			if ($this->model_product_get->checkIfAsinIsDeleted($data['asin'])){
 				echoLine('[RainforestRetriever] ASIN удален, пропускаем!');				
 				return 0;
-			}
-
-			$this->yandexTranslator->setDebug(true);
+			}			
 
 			$this->db->query("INSERT INTO product SET 
 			model 					= '" . $this->db->escape($data['asin']) . "', 

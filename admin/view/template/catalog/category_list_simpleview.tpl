@@ -57,7 +57,7 @@
 							<td class="center" style="width:100px;">Конечная категория Amazon</td>	
 							<td class="center" style="width:100px;">Синхронизация с Amazon</td>
 							<td class="center" style="width:100px;">Разрешить полную загрузку товаров</td>
-							<td class="right" style="width:50px;">Товары</td>				
+							<td class="right" style="width:100px;">Товары</td>				
 							<td class="right" style="width:30px;">Сортировка</td>
 							<td class="left" style="width:30px;">Статус</td>
 							<td class="right" style="width:50px;"></td>
