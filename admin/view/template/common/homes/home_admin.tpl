@@ -18,12 +18,12 @@
 		<td class="table-admin" style="width:60%;">
 
 			<?php if ($this->config->get('config_amazon_product_stats_enable')) { ?>
-				<div id="amazon_stats" style="width:48%; float:left;" class="amazonstats delayed-load" data-route='common/home/loadProductStats'>
+				<div id="amazon_stats" style="width:49%; float:left;" class="amazonstats delayed-load" data-route='common/home/loadProductStats'>
 				</div>
 			<?php } ?>
 
 
-			<div id="order_filters" <?php if ($stores_count == 1) { ?>style="width:48%; float:right;"<?php } ?> class="filters delayed-load" data-route='common/home/loadOrderStats'>
+			<div id="order_filters" <?php if ($stores_count == 1) { ?>style="width:50%; float:right;"<?php } ?> class="filters delayed-load" data-route='common/home/loadOrderStats'>
 			</div>
 
 			<div style="clear:both; height:10px;">
