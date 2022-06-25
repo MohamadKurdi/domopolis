@@ -9,6 +9,7 @@
 
 		private $attributesArray = [];
 		private $manufacturersArray = [];
+		private $categoriesArray = [];
 
 		private $mapLanguages = [
 			'ua' => 'ru',
@@ -34,9 +35,7 @@
 		];
 
 		private $mapAmazonToStoreFieldsSpecificationsRev = [
-			'ASIN' 					=> ['model'],
-			'Artikelnummer' 		=> ['model'],
-			'Herstellerreferenz' 	=> ['model']
+			'ASIN' 					=> ['model']
 		];
 
 		private $passAttributesAndSpecifications = [
@@ -76,6 +75,22 @@
 
 			return $text;
 		}		
+
+		public function getCategory($name, $recursive = false){
+			if ($this->categoriesArray || $recursive){
+				if (!empty($this->categoriesArray[$name])){
+					return $this->categoriesArray[$name];
+				} else {
+					return false;
+				}
+			} else {
+				$query = $this->db->ncquery("SELECT cd.category_id, cd.name FROM category_description cd LEFT JOIN category c ON (cd.category_id = c.category_id) WHERE c.amazon_final_category = 1 AND cd.language_id = '" . $this->config->get('config_rainforest_source_language_id') . "'");
+					foreach ($query->rows as $row){
+						$this->categoriesArray[$row['name']] = $row['category_id'];
+					}
+					return $this->getCategory($name, true);
+				}
+		}
 		
 		public function getManufacturer($name, $recursive = false){
 			if ($this->manufacturersArray || $recursive){
@@ -482,6 +497,45 @@
 			}
 		}
 
+		public function parseProductSponsoredProducts($product_id, $product){
+			if (!empty($product['sponsored_products'])){
+				$product_related = [];
+				foreach ($product['sponsored_products'] as $sponsored_product){
+					if ($sponsored = $this->getProductsByAsin($sponsored_product['asin'])){
+
+						foreach ($sponsored as $sponsored_id){
+							echoLine('[editFullProduct] Sponsored: ' . $sponsored_id);
+
+							$product_sponsored[] = $sponsored_id;
+						}
+
+					} else {
+
+						if ($this->config->get('config_rainforest_enable_recursive_adding')){
+
+							echoLine('[editFullProduct] Новый sponsored товар: ' . $sponsored_product['asin'] . ' ' . $sponsored_product['title']);
+
+							$new_sponsored_id = $this->addSimpleProductWithOnlyAsin([
+								'asin' 				=> $sponsored_product['asin'], 
+								'category_id' 		=> $this->config->get('config_rainforest_default_technical_category_id'), 
+								'name' 				=> $sponsored_product['title'], 
+								'image' 			=> $this->getImage($sponsored_product['image']), 
+								'added_from_amazon' => 1
+							]);							
+
+							$product_sponsored[] = $new_sponsored_id;
+
+						}
+
+					}
+				}
+
+				if ($product_sponsored){
+					$this->model_product_edit->editProductSponsored($product_id, $product_sponsored);
+				}
+			}
+		}
+
 		public function parseProductSimilarProducts($product_id, $product){
 			if (!empty($product['compare_with_similar'])){
 				$product_similar = [];
@@ -514,6 +568,19 @@
 
 				if ($product_similar){
 					$this->model_product_edit->editProductSimilar($product_id, $product_similar);
+				}
+			}
+		}
+
+		public function parseProductCategories($product_id, $product){
+			if (!empty($product['categories'])){
+				if ($this->model_product_get->getCurrentProductCategory($product_id) == $this->config->get('config_rainforest_default_technical_category_id')){
+					$name = $product['categories'][count($product['categories']) - 1];
+
+					if ($category_id = $this->getCategory(atrim($name))){
+						echoLine('[editFullProduct] Нашли категорию: ' . $name . ': ' . $category_id);
+						$this->model_product_edit->editProductCategory($product_id, [$category_id]);
+					}
 				}
 			}
 		}
@@ -672,7 +739,13 @@
 			$this->parseProductRelatedProducts($product_id, $product);
 						
 			//Similar Products
-			$this->parseProductSimilarProducts($product_id, $product);			
+			$this->parseProductSimilarProducts($product_id, $product);
+
+			//Similar Products
+			$this->parseProductSponsoredProducts($product_id, $product);
+
+			//Parse product categories if not set
+			$this->parseProductCategories($product_id, $product);
 
 			//Варианты
 			$this->model_product_edit->resetUnexsitentVariants();
@@ -718,6 +791,7 @@
 				return 0;
 			}
 
+			$this->yandexTranslator->setDebug(true);
 
 			$this->db->query("INSERT INTO product SET 
 			model 					= '" . $this->db->escape($data['asin']) . "', 
@@ -741,23 +815,23 @@
 			$this->db->query("INSERT INTO product_to_category SET product_id = '" . (int)$product_id . "', category_id = '" . (int)$data['category_id'] . "', main_category = 1");
 			
 			$this->db->query("DELETE FROM product_description WHERE product_id = '" . (int)$product_id . "'");
-			
+
+			$product_name_data = [];		
 			foreach ($this->registry->get('languages') as $language_code => $language) {
-				
-				if ($language_code == $this->config->get('config_rainforest_source_language')){
-					$name = $data['name'];	
-					$translated = true;				
-					} else {
-					if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $language['code'])){
-						$name = $this->yandexTranslator->translate($data['name'], $this->config->get('config_rainforest_source_language'), $language_code, true);
-						$translated = true;
-						} else {
-						$name = $data['name'];
-						$translated = false;
-					}
+
+				$name = $this->translateWithCheck($data['name'], $language['code']);
+
+				$translated = false;
+				if ($name && $name != atrim($data['name'])){
+					$translated = true;
 				}
+
+				$product_name_data[$language['language_id']] = [
+					'name' 			=> $name,
+					'translated' 	=> $translated
+				];
 				
-				$this->db->query("INSERT INTO product_description SET product_id = '" . (int)$product_id . "', translated = '" . (int)$translated . "', language_id = '" . (int)$language['language_id'] . "', name = '" . $this->db->escape($name) . "'");
+				$this->model_product_edit->addProductNames($product_id, $product_name_data);
 			}
 			
 			return $product_id;

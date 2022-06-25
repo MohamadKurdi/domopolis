@@ -1720,10 +1720,10 @@
 																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Похожие или замена</span>
 																	</td>
 																	<td style="width:33%">
-																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Сопутствующие</span>
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Sponsored Products</span>
 																	</td>
 																	<td style="width:33%">
-																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Группы</span>
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Сопутствующие</span>
 																	</td>
 																</tr>
 
@@ -1741,20 +1741,38 @@
 																		</div>
 																	</td>
 
-																		<td style="width:33%">																			
-																			<input type="text" name="related" value="" /><br /><br />
-																			<div id="product-related" class="scrollbox" style="min-height: 200px;">
-																				<?php $class = 'odd'; ?>
-																				<?php foreach ($product_related as $product_related) { ?>
-																					<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-																					<div id="product-related<?php echo $product_related['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product_related['name']; ?><img src="view/image/delete.png" alt="" />
-																						<input type="hidden" name="product_related[]" value="<?php echo $product_related['product_id']; ?>" />
-																					</div>
-																				<?php } ?>
-																			</div>
-																		</td>
+																	<td style="width:33%">																			
+																		<input type="text" name="sponsored" value="" /><br /><br />
+																		<div id="product-sponsored" class="scrollbox" style="min-height: 200px;">
+																			<?php $class = 'odd'; ?>
+																			<?php foreach ($product_sponsored as $product_sponsored) { ?>
+																				<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+																				<div id="product-sponsored<?php echo $product_sponsored['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product_sponsored['name']; ?><img src="view/image/delete.png" alt="" />
+																					<input type="hidden" name="product_sponsored[]" value="<?php echo $product_sponsored['product_id']; ?>" />
+																				</div>
+																			<?php } ?>
+																		</div>
+																	</td>
 
-																		<td>
+																	<td style="width:33%">																			
+																		<input type="text" name="related" value="" /><br /><br />
+																		<div id="product-related" class="scrollbox" style="min-height: 200px;">
+																			<?php $class = 'odd'; ?>
+																			<?php foreach ($product_related as $product_related) { ?>
+																				<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+																				<div id="product-related<?php echo $product_related['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product_related['name']; ?><img src="view/image/delete.png" alt="" />
+																					<input type="hidden" name="product_related[]" value="<?php echo $product_related['product_id']; ?>" />
+																				</div>
+																			<?php } ?>
+																		</div>
+																	</td>
+
+
+																</tr>
+																		<tr>
+
+
+																		<td style="width:33%">
 																			<div>
 																			<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Принадлежит к группам</span></p>
 																			<div class="scrollbox facats">
@@ -1790,8 +1808,6 @@
 																			</div>
 																		</td>
 
-																</tr>
-																		<tr>
 																			<td style="width:33%">
 																				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Фильтры</span></p>
 																				<input type="text" name="filter" value="" /><br /><br />
@@ -3156,6 +3172,45 @@ $('input[name=\'collection\']').autocomplete({
 		
 		$('#product-similar div:odd').attr('class', 'odd');
 		$('#product-similar div:even').attr('class', 'even');	
+	});
+
+	// sponsored
+	$('input[name=\'sponsored\']').autocomplete({
+		delay: 500,
+		source: function(request, response) {
+			$.ajax({
+				url: 'index.php?route=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+				dataType: 'json',
+				success: function(json) {		
+					response($.map(json, function(item) {
+						return {
+							label: item.name,
+							value: item.product_id
+						}
+					}));
+				}
+			});
+		}, 
+		select: function(event, ui) {
+			$('#product-sponsored' + ui.item.value).remove();
+			
+			$('#product-sponsored').append('<div id="product-sponsored' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="product_sponsored[]" value="' + ui.item.value + '" /></div>');
+			
+			$('#product-sponsored div:odd').attr('class', 'odd');
+			$('#product-sponsored div:even').attr('class', 'even');
+			
+			return false;
+		},
+		focus: function(event, ui) {
+			return false;
+		}
+	});
+	
+	$('#product-sponsored div img').live('click', function() {
+		$(this).parent().remove();
+		
+		$('#product-sponsored div:odd').attr('class', 'odd');
+		$('#product-sponsored div:even').attr('class', 'even');	
 	});
 	
 	// Child

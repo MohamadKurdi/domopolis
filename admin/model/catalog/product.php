@@ -357,6 +357,15 @@
 					$this->db->query("INSERT INTO product_similar SET product_id = '" . (int)$similar_id . "', similar_id = '" . (int)$product_id . "'");
 				}
 			}
+
+			if (isset($data['product_sponsored'])) {
+				foreach ($data['product_sponsored'] as $sponsored_id) {
+					$this->db->query("DELETE FROM product_sponsored WHERE product_id = '" . (int)$product_id . "' AND sponsored_id = '" . (int)$sponsored_id . "'");
+					$this->db->query("INSERT INTO product_sponsored SET product_id = '" . (int)$product_id . "', sponsored_id = '" . (int)$sponsored_id . "'");
+					$this->db->query("DELETE FROM product_sponsored WHERE product_id = '" . (int)$sponsored_id . "' AND sponsored_id = '" . (int)$product_id . "'");
+					$this->db->query("INSERT INTO product_sponsored SET product_id = '" . (int)$sponsored_id . "', sponsored_id = '" . (int)$product_id . "'");
+				}
+			}
 			
 			$this->db->query("DELETE FROM product_child WHERE product_id = '" . (int)$product_id . "'");
 			if (isset($data['product_child'])) {									
@@ -832,6 +841,18 @@
 					$this->db->query("INSERT INTO product_similar SET product_id = '" . (int)$similar_id . "', similar_id = '" . (int)$product_id . "'");
 				}
 			}
+
+			$this->db->query("DELETE FROM product_sponsored WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_sponsored WHERE sponsored_id = '" . (int)$product_id . "'");
+			
+			if (isset($data['product_sponsored'])) {
+				foreach ($data['product_sponsored'] as $sponsored_id) {
+					$this->db->query("DELETE FROM product_sponsored WHERE product_id = '" . (int)$product_id . "' AND sponsored_id = '" . (int)$sponsored_id . "'");
+					$this->db->query("INSERT INTO product_sponsored SET product_id = '" . (int)$product_id . "', sponsored_id = '" . (int)$sponsored_id . "'");
+					$this->db->query("DELETE FROM product_sponsored WHERE product_id = '" . (int)$sponsored_id . "' AND sponsored_id = '" . (int)$product_id . "'");
+					$this->db->query("INSERT INTO product_sponsored SET product_id = '" . (int)$sponsored_id . "', sponsored_id = '" . (int)$product_id . "'");
+				}
+			}
 			
 			
 			$this->db->query("DELETE FROM product_child WHERE product_id = '" . (int)$product_id . "'");
@@ -1060,6 +1081,10 @@
 			$this->db->query("DELETE FROM product_option_value WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_related WHERE related_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_sponsored WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_sponsored WHERE sponsored_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_similar WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_similar WHERE similar_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_reward WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_special WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_to_category WHERE product_id = '" . (int)$product_id . "'");
@@ -2168,6 +2193,18 @@
 			}
 			
 			return $product_similar_data;
+		}
+
+		public function getProductSponsored($product_id) {
+			$product_sponsored_data = array();
+			
+			$query = $this->db->query("SELECT * FROM product_sponsored WHERE product_id = '" . (int)$product_id . "'");
+			
+			foreach ($query->rows as $result) {
+				$product_sponsored_data[] = $result['sponsored_id'];
+			}
+			
+			return $product_sponsored_data;
 		}
 		
 		public function getProductChild($product_id) {

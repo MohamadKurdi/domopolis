@@ -2573,6 +2573,27 @@ class ControllerCatalogProduct extends Controller {
 					);
 				}
 			}
+
+			if (isset($this->request->post['product_sponsored'])) {
+				$products = $this->request->post['product_sponsored'];
+			} elseif (isset($this->request->get['product_id'])) {		
+				$products = $this->model_catalog_product->getProductSponsored($this->request->get['product_id']);
+			} else {
+				$products = array();
+			}
+			
+			$this->data['product_sponsored'] = array();
+			
+			foreach ($products as $product_id) {
+				$sponsored_info = $this->model_catalog_product->getProduct($product_id);
+				
+				if ($sponsored_info) {
+					$this->data['product_sponsored'][] = array(
+						'product_id' => $sponsored_info['product_id'],
+						'name'       => $sponsored_info['name']
+					);
+				}
+			}
 			
 			if (isset($this->request->post['product_child'])) {
 				$с_products = $this->request->post['product_child'];

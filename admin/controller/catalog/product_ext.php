@@ -373,7 +373,9 @@ class ControllerCatalogProductExt extends Controller {
                                 $category = $this->model_catalog_category->getCategory($cat);
 								if (isset($category['path']) && isset($category['name'])){
 									$category_paths[] = (($category['path']) ? $category['path'] . ' &gt; ' : '') . $category['name'];
-								}
+								} elseif (isset($category['name'])){
+                                    $category_paths[] = $category['name'];
+                                }
                             }
                             $columns[$column] = implode("<br />", $category_paths);
                         } else if ($column == 'store') {
