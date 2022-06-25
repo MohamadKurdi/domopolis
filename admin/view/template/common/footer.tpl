@@ -95,7 +95,7 @@
 	</script>	
 	<style>
 		<?php $colors = array(
-			'#00ad07','#0054b3','#fa4934','#ffcc00'
+			'#ff7815','#64a1e1','#32bd38','#ec74ae', '#fa4934'
 		);?>
 		.delayed-load{			
 		margin:0 auto;

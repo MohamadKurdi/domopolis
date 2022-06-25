@@ -70,6 +70,10 @@
 			if (!empty($response['compare_with_similar'])){
 				$response['product']['compare_with_similar'] = $response['compare_with_similar'];
 			}
+
+			if (!empty($response['sponsored_products'])){
+				$response['product']['sponsored_products'] = $response['sponsored_products'];
+			}
 			
 			return $response['product'];
 			

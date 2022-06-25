@@ -379,6 +379,15 @@
 			
 			$this->response->setOutput($this->render());
 		}
+
+		public function loadProductStats(){
+			$this->load->model('catalog/product');
+
+
+			$this->template = 'homestats/productstats.tpl';
+			
+			$this->response->setOutput($this->render());
+		}
 		
 		public function loadOrderStats(){
 			
@@ -389,6 +398,9 @@
 			
 			$this->data['order_filters'] = array();
 			$this->data['fast_counters'] = array();
+
+			$this->data['stores_count'] = count($this->model_setting_store->getStores());
+
 			foreach ($this->model_setting_store->getStores() as $store){
 				
 				
@@ -515,7 +527,8 @@
 		
 		public function index() {
 			$this->language->load('common/home');
-			
+			$this->load->model('setting/store');
+
 			$this->document->setTitle($this->language->get('heading_title'));
 			
 			if ($this->user->getUserGroup() == 26 && !isset($this->request->get['no_redirect'])){
@@ -523,6 +536,8 @@
 			}
 			
 			$this->data['heading_title'] = $this->language->get('heading_title');
+
+			$this->data['stores_count'] = count($this->model_setting_store->getStores());
 			
 			$this->data['text_overview'] = $this->language->get('text_overview');
 			$this->data['text_statistics'] = $this->language->get('text_statistics');

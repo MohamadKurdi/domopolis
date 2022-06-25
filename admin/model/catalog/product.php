@@ -2304,6 +2304,10 @@
 					
 				}
 			}
+
+			if (!empty($data['filter_category_id'])) {
+				$sql .= " AND p2c.category_id = '" . (int)$data['filter_category_id'] . "'";
+			}
 			
 			if (!empty($data['filter_price'])) {
 				$sql .= " AND p.price LIKE '" . $this->db->escape($data['filter_price']) . "%'";

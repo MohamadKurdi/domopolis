@@ -40,6 +40,7 @@
 
 		private $passAttributesAndSpecifications = [
 			'Produktabmessungen',
+			'Hersteller',
 			'Im Angebot von Amazon.de seit',
 			'Marke',
 			'Amazon Bestseller-Rang',
@@ -77,6 +78,8 @@
 		}		
 
 		public function getCategory($name, $recursive = false){
+			$name = atrim($name);
+
 			if ($this->categoriesArray || $recursive){
 				if (!empty($this->categoriesArray[$name])){
 					return $this->categoriesArray[$name];
@@ -497,9 +500,9 @@
 			}
 		}
 
-		public function parseProductSponsoredProducts($product_id, $product){
+		public function parseProductSponsoredProducts($product_id, $product){	
 			if (!empty($product['sponsored_products'])){
-				$product_related = [];
+				$product_sponsored = [];
 				foreach ($product['sponsored_products'] as $sponsored_product){
 					if ($sponsored = $this->getProductsByAsin($sponsored_product['asin'])){
 
@@ -575,7 +578,7 @@
 		public function parseProductCategories($product_id, $product){
 			if (!empty($product['categories'])){
 				if ($this->model_product_get->getCurrentProductCategory($product_id) == $this->config->get('config_rainforest_default_technical_category_id')){
-					$name = $product['categories'][count($product['categories']) - 1];
+					$name = $product['categories'][count($product['categories']) - 1]['name'];
 
 					if ($category_id = $this->getCategory(atrim($name))){
 						echoLine('[editFullProduct] Нашли категорию: ' . $name . ': ' . $category_id);
@@ -741,7 +744,7 @@
 			//Similar Products
 			$this->parseProductSimilarProducts($product_id, $product);
 
-			//Similar Products
+			//Sponsored Products
 			$this->parseProductSponsoredProducts($product_id, $product);
 
 			//Parse product categories if not set
