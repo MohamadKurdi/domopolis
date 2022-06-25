@@ -64,6 +64,51 @@ class productModelGet extends hoboModel{
 		return $result;
 	}
 
+	public function getProductFeatureBullets($product_id) {
+		$product_attribute_data = array();
+
+		$product_attribute_query = $this->db->ncquery("SELECT attribute_id FROM product_attribute WHERE product_id = '" . (int)$product_id . "'  AND attribute_id IN (SELECT attribute_id FROM attribute WHERE attribute_group_id = '" . $this->config->get('config_special_attr_id') . "') GROUP BY attribute_id");
+
+		foreach ($product_attribute_query->rows as $product_attribute) {
+			$product_attribute_description_data = array();
+
+			$product_attribute_description_query = $this->db->ncquery("SELECT * FROM product_attribute WHERE product_id = '" . (int)$product_id . "' AND attribute_id = '" . (int)$product_attribute['attribute_id'] . "'");
+
+			foreach ($product_attribute_description_query->rows as $product_attribute_description) {
+				$product_attribute_description_data[$product_attribute_description['language_id']] = array('text' => $product_attribute_description['text']);
+			}
+
+			$product_attribute_data[] = array(
+				'attribute_id'                  => $product_attribute['attribute_id'],
+				'product_attribute_description' => $product_attribute_description_data
+			);
+		}
+
+		return $product_attribute_data;
+	}
+
+
+	public function getProductDescriptions($product_id) {
+		$product_description_data = array();
+			
+		$query = $this->db->query("SELECT * FROM product_description WHERE product_id = '" . (int)$product_id . "'");
+
+		foreach ($query->rows as $result) {
+			$product_description_data[$result['language_id']] = array(
+				'description'      	=> $result['description'],
+				'translated'		=> $result['translated']									
+			);
+		}
+			
+		return $product_description_data;
+
+	}
+
+	public function checkIfProductIsVariant($product_id){
+		$query = $this->db->query("SELECT main_variant_id FROM product WHERE product_id = '" . (int)$product_id . "'");
+
+		return (int)$query->row['main_variant_id'];
+	}
 
 	public function getProductsByAsin($asin){
 		$results = [];
