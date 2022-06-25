@@ -11,12 +11,14 @@
 		<i class="fa fa-amazon" aria-hidden="true"></i> ASIN <span id="asinDMode"></span>
 	</a>
 
+	<?php if ($this->config->get('config_amazon_product_stats_enable')) { ?>
 	<a class="link_headr link_enter cache-button-good" href="<? echo $product_ext; ?>" >
 		<i class="fa fa-list" aria-hidden="true"></i> <?php echo $totalProducts; ?>
 		<?php if (!empty($totalProductsInTechnicalCategory)) { ?>
 			/ <?php echo $totalProductsInTechnicalCategory; ?>
 		<?php } ?>
 	</a>
+	<?php } ?>
 
 <? } ?>
 

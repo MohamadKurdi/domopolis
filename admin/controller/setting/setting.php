@@ -11,11 +11,13 @@ class ControllerSettingSetting extends Controller {
 			$this->load->model('setting/setting');
 			$this->load->model('catalog/product');
 
-			$this->data['totalProducts'] = $this->model_catalog_product->getTotalProducts();
-			$this->data['product_ext'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'], 'SSL');
+			if ($this->config->get('config_amazon_product_stats_enable')) {
+				$this->data['totalProducts'] = $this->model_catalog_product->getTotalProducts();
+				$this->data['product_ext'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'], 'SSL');
 
-			if ($this->config->get('config_rainforest_default_technical_category_id')){
-				$this->data['totalProductsInTechnicalCategory'] = $this->model_catalog_product->getTotalProducts(['filter_category_id' => $this->config->get('config_rainforest_default_technical_category_id')]);
+				if ($this->config->get('config_rainforest_default_technical_category_id')){
+					$this->data['totalProductsInTechnicalCategory'] = $this->model_catalog_product->getTotalProducts(['filter_category_id' => $this->config->get('config_rainforest_default_technical_category_id')]);
+				}
 			}
 
 			$this->data['asinDeletionMode'] = $this->model_setting_setting->getKeySettingValue('config', 'config_rainforest_asin_deletion_mode');
