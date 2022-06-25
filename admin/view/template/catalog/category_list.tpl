@@ -70,7 +70,7 @@
 							<td class="left" style="width:30px;">Пересеч.</td>
 							<td class="left" style="width:30px;">Priceva</td>
 							<td class="left" style="width:30px;">ТНВЭД</td>
-							<td class="right" style="width:30px;">Товары</td>	
+							<td class="right" style="width:100px;">Товары</td>	
 							<td class="right" style="width:30px;">Сортировка</td>
 							<td class="right" style="width:50px;"></td>
 						</tr>
