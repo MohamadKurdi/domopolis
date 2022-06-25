@@ -22,7 +22,7 @@
 		die();
 	}
 
-	echoLine('[CLI] Приветствую тебя, мой друг, в CLI. Версия PHP: ' . phpversion());
+	echoLine('[CLI] Йобані очі, це ж ми в CLI. Версия PHP: ' . phpversion());
 
 	//Первый параметр: admin, catalog, для выбора приложения
 	if (!isset($argv[1])){
