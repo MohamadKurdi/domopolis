@@ -1,24 +1,27 @@
 <?php
-class ModelCatalogProductExt extends Model {
+class ModelCatalogProductExt extends Model
+{
     protected $productCount = 0;
 
-    public function getProducts($data = array()) {
+    public function getProducts($data = array())
+    {
         $cp_cols = $this->config->get('aqe_catalog_products');
 
         if (!is_array($cp_cols)) {
             $columns = array('image', 'name', 'model', 'price', 'quantity', 'status');
         } else {
             $columns = array();
-            foreach($cp_cols as $column => $attr) {
-                if ($attr['display'])
+            foreach ($cp_cols as $column => $attr) {
+                if ($attr['display']) {
                     $columns[] = $column;
+                }
             }
         }
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS p.*, pd.*";
 
         if (in_array("seo", $columns)) {
-            $sql .= ", (SELECT keyword FROM " . DB_PREFIX . "url_alias WHERE query = CONCAT('product_id=', p.product_id)) AS seo";
+            $sql .= ", (SELECT keyword FROM url_alias WHERE query = CONCAT('product_id=', p.product_id)) AS seo";
         }
 
         if (in_array("manufacturer", $columns)) {
@@ -41,46 +44,46 @@ class ModelCatalogProductExt extends Model {
             $sql .= ", wcd.title AS weight_class";
         }
 
-        $sql .= " FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id)";
+        $sql .= " FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id)";
 
         if (!empty($data['filter_price_special']) && in_array($data['filter_price_special'], array("active", "expired", "future"))) {
-            $sql .= " LEFT JOIN " . DB_PREFIX . "product_special ps ON (ps.product_id = p.product_id)";
+            $sql .= " LEFT JOIN product_special ps ON (ps.product_id = p.product_id)";
         }
 
         if (in_array("manufacturer", $columns)) {
-            $sql .= " LEFT JOIN " . DB_PREFIX . "manufacturer m ON (m.manufacturer_id = p.manufacturer_id)";
+            $sql .= " LEFT JOIN manufacturer m ON (m.manufacturer_id = p.manufacturer_id)";
         }
 
         if (in_array("filter", $columns)) {
-            $sql .= " LEFT JOIN " . DB_PREFIX . "product_filter p2f ON (p.product_id = p2f.product_id) LEFT JOIN " . DB_PREFIX . "filter_description fd ON (fd.filter_id = p2f.filter_id AND fd.language_id = '" . (int)$this->config->get('config_language_id') . "')";
+            $sql .= " LEFT JOIN product_filter p2f ON (p.product_id = p2f.product_id) LEFT JOIN filter_description fd ON (fd.filter_id = p2f.filter_id AND fd.language_id = '" . (int)$this->config->get('config_language_id') . "')";
         }
 
         if (in_array("download", $columns)) {
-            $sql .= " LEFT JOIN " . DB_PREFIX . "product_to_download p2d ON (p.product_id = p2d.product_id) LEFT JOIN " . DB_PREFIX . "download_description dd ON (dd.download_id = p2d.download_id AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "')";
+            $sql .= " LEFT JOIN product_to_download p2d ON (p.product_id = p2d.product_id) LEFT JOIN download_description dd ON (dd.download_id = p2d.download_id AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "')";
         }
 
         if (in_array("tax_class", $columns)) {
-            $sql .= " LEFT JOIN " . DB_PREFIX . "tax_class tc ON (tc.tax_class_id = p.tax_class_id)";
+            $sql .= " LEFT JOIN tax_class tc ON (tc.tax_class_id = p.tax_class_id)";
         }
 
         if (in_array("stock_status", $columns)) {
-            $sql .= " LEFT JOIN " . DB_PREFIX . "stock_status ss ON (ss.stock_status_id = p.stock_status_id)";
+            $sql .= " LEFT JOIN stock_status ss ON (ss.stock_status_id = p.stock_status_id)";
         }
 
         if (in_array("length_class", $columns)) {
-            $sql .= " LEFT JOIN " . DB_PREFIX . "length_class lc ON (lc.length_class_id = p.length_class_id) LEFT JOIN " . DB_PREFIX . "length_class_description lcd ON (lcd.length_class_id = lc.length_class_id)";
+            $sql .= " LEFT JOIN length_class lc ON (lc.length_class_id = p.length_class_id) LEFT JOIN length_class_description lcd ON (lcd.length_class_id = lc.length_class_id)";
         }
 
         if (in_array("weight_class", $columns)) {
-            $sql .= " LEFT JOIN " . DB_PREFIX . "weight_class wc ON (wc.weight_class_id = p.weight_class_id) LEFT JOIN " . DB_PREFIX . "weight_class_description wcd ON (wcd.weight_class_id = wc.weight_class_id)";
+            $sql .= " LEFT JOIN weight_class wc ON (wc.weight_class_id = p.weight_class_id) LEFT JOIN weight_class_description wcd ON (wcd.weight_class_id = wc.weight_class_id)";
         }
 
         if (!empty($data['filter_category'])) {
-            $sql .= " LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id)";
+            $sql .= " LEFT JOIN product_to_category p2c ON (p.product_id = p2c.product_id)";
         }
 
         if (isset($data['filter_store'])) {
-            $sql .= " LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id)";
+            $sql .= " LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id)";
         }
 
         $sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
@@ -198,9 +201,9 @@ class ModelCatalogProductExt extends Model {
 
         if (!empty($data['filter_seo'])) {
             if ($this->config->get('aqe_match_anywhere')) {
-                $sql .= " AND (SELECT LCASE(keyword) FROM " . DB_PREFIX . "url_alias WHERE query = CONCAT('product_id=', p.product_id)) LIKE '%" . $this->db->escape(utf8_strtolower($data['filter_seo'])) . "%'";
+                $sql .= " AND (SELECT LCASE(keyword) FROM url_alias WHERE query = CONCAT('product_id=', p.product_id)) LIKE '%" . $this->db->escape(utf8_strtolower($data['filter_seo'])) . "%'";
             } else {
-                $sql .= " AND (SELECT LCASE(keyword) FROM " . DB_PREFIX . "url_alias WHERE query = CONCAT('product_id=', p.product_id)) LIKE '" . $this->db->escape(utf8_strtolower($data['filter_seo'])) . "%'";
+                $sql .= " AND (SELECT LCASE(keyword) FROM url_alias WHERE query = CONCAT('product_id=', p.product_id)) LIKE '" . $this->db->escape(utf8_strtolower($data['filter_seo'])) . "%'";
             }
         }
 
@@ -209,36 +212,40 @@ class ModelCatalogProductExt extends Model {
         }
 
         if (isset($data['filter_store'])) {
-            if ($data['filter_store'] == '*')
+            if ($data['filter_store'] == '*') {
                 $sql .= " AND p2s.store_id IS NULL";
-            else
+            } else {
                 $sql .= " AND p2s.store_id = '" . (int)$data['filter_store'] . "'";
+            }
         }
 
         if (!empty($data['filter_category'])) {
             if (!empty($data['filter_sub_category'])) {
                 $implode_data = array();
 
-                if ($data['filter_category'] == '*')
+                if ($data['filter_category'] == '*') {
                     $implode_data[] = "p2c.category_id IS NULL";
-                else
+                } else {
                     $implode_data[] = "p2c.category_id = '" . (int)$data['filter_category'] . "'";
+                }
 
                 $this->load->model('catalog/category');
 
                 $categories = $this->model_catalog_category->getCategoriesByParentId($data['filter_category']);
 
                 foreach ($categories as $category) {
-                    if ($data['filter_category'] != '*')
+                    if ($data['filter_category'] != '*') {
                         $implode_data[] = "p2c.category_id = '" . (int)$category['category_id'] . "'";
+                    }
                 }
 
                 $sql .= " AND (" . implode(' OR ', $implode_data) . ")";
             } else {
-                if ($data['filter_category'] == '*')
+                if ($data['filter_category'] == '*') {
                     $sql .= " AND p2c.category_id IS NULL";
-                else
+                } else {
                     $sql .= " AND p2c.category_id = '" . (int)$data['filter_category'] . "'";
+                }
             }
         }
 
@@ -311,164 +318,168 @@ class ModelCatalogProductExt extends Model {
         return $query->rows;
     }
 
-    public function getTotalProducts() {
+    public function getTotalProducts()
+    {
         return $this->productCount;
     }
 
-    public function quickEditProduct($product_id, $column, $value, $lang_id=null, $data=null) {
+    public function quickEditProduct($product_id, $column, $value, $lang_id = null, $data = null)
+    {
         $editable = array('manufacturer', 'image', 'name', 'tag', 'model', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'location', 'quantity', 'price', 'weight', 'status', 'sort_order', 'tax_class', 'minimum', 'subtract', 'stock_status', 'shipping', 'date_available', 'length', 'width', 'height', 'length_class', 'weight_class', 'points');
         $result = false;
         if (in_array($column, $editable)) {
-            if (in_array($column, array('image', 'model', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'location', 'date_available')))
-                $result = $this->db->query("UPDATE " . DB_PREFIX . "product SET " . $column . " = '" . $this->db->escape($value) . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
-            else if (in_array($column, array('quantity', 'sort_order', 'status', 'minimum', 'subtract', 'shipping', 'points')))
-                $result = $this->db->query("UPDATE " . DB_PREFIX . "product SET " . $column . " = '" . (int)$value . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
-            else if (in_array($column, array('manufacturer', 'tax_class', 'stock_status', 'length_class', 'weight_class')))
-                $result = $this->db->query("UPDATE " . DB_PREFIX . "product SET " . $column . "_id = '" . (int)$value . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
-            else if (in_array($column, array('name', 'tag')))
-                $result = $this->db->query("UPDATE " . DB_PREFIX . "product_description SET " . $column . " = '" . $this->db->escape($value) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$lang_id . "'");
-            else
-                $result = $this->db->query("UPDATE " . DB_PREFIX . "product SET " . $column . " = '" . (float)$value . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
-        } else if ($column == 'seo') {
-            $this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'product_id=" . (int)$product_id. "'");
-            if (!empty($value))
-                $result = $this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($value) . "'");
-            else
+            if (in_array($column, array('image', 'model', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'location', 'date_available'))) {
+                $result = $this->db->query("UPDATE product SET " . $column . " = '" . $this->db->escape($value) . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
+            } elseif (in_array($column, array('quantity', 'sort_order', 'status', 'minimum', 'subtract', 'shipping', 'points'))) {
+                $result = $this->db->query("UPDATE product SET " . $column . " = '" . (int)$value . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
+            } elseif (in_array($column, array('manufacturer', 'tax_class', 'stock_status', 'length_class', 'weight_class'))) {
+                $result = $this->db->query("UPDATE product SET " . $column . "_id = '" . (int)$value . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
+            } elseif (in_array($column, array('name', 'tag'))) {
+                $result = $this->db->query("UPDATE product_description SET " . $column . " = '" . $this->db->escape($value) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$lang_id . "'");
+            } else {
+                $result = $this->db->query("UPDATE product SET " . $column . " = '" . (float)$value . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
+            }
+        } elseif ($column == 'seo') {
+            $this->db->query("DELETE FROM url_alias WHERE query = 'product_id=" . (int)$product_id. "'");
+            if (!empty($value)) {
+                $result = $this->db->query("INSERT INTO url_alias SET query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($value) . "'");
+            } else {
                 $result = 1;
-        } else if ($column == 'category') {
-            $this->db->query("DELETE FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "'");
+            }
+        } elseif ($column == 'category') {
+            $this->db->query("DELETE FROM product_to_category WHERE product_id = '" . (int)$product_id . "'");
 
             if (isset($data['p_c'])) {
                 foreach ((array)$data['p_c'] as $category_id) {
-                    $this->db->query("INSERT INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int)$product_id . "', category_id = '" . (int)$category_id . "'");
+                    $this->db->query("INSERT INTO product_to_category SET product_id = '" . (int)$product_id . "', category_id = '" . (int)$category_id . "'");
                 }
             }
             $result = 1;
-        } else if ($column == 'store') {
-            $this->db->query("DELETE FROM " . DB_PREFIX . "product_to_store WHERE product_id = '" . (int)$product_id . "'");
+        } elseif ($column == 'store') {
+            $this->db->query("DELETE FROM product_to_store WHERE product_id = '" . (int)$product_id . "'");
 
             if (isset($data['p_s'])) {
                 foreach ((array)$data['p_s'] as $store_id) {
-                    $this->db->query("INSERT INTO " . DB_PREFIX . "product_to_store SET product_id = '" . (int)$product_id . "', store_id = '" . (int)$store_id . "'");
+                    $this->db->query("INSERT INTO product_to_store SET product_id = '" . (int)$product_id . "', store_id = '" . (int)$store_id . "'");
                 }
             }
             $result = 1;
-        } else if ($column == 'filter') {
-            $this->db->query("DELETE FROM " . DB_PREFIX . "product_filter WHERE product_id = '" . (int)$product_id . "'");
+        } elseif ($column == 'filter') {
+            $this->db->query("DELETE FROM product_filter WHERE product_id = '" . (int)$product_id . "'");
 
             if (isset($data['p_f'])) {
                 foreach ((array)$data['p_f'] as $filter_id) {
-                    $this->db->query("INSERT INTO " . DB_PREFIX . "product_filter SET product_id = '" . (int)$product_id . "', filter_id = '" . (int)$filter_id . "'");
+                    $this->db->query("INSERT INTO product_filter SET product_id = '" . (int)$product_id . "', filter_id = '" . (int)$filter_id . "'");
                 }
             }
             $result = 1;
-        } else if ($column == 'download') {
-            $this->db->query("DELETE FROM " . DB_PREFIX . "product_to_download WHERE product_id = '" . (int)$product_id . "'");
+        } elseif ($column == 'download') {
+            $this->db->query("DELETE FROM product_to_download WHERE product_id = '" . (int)$product_id . "'");
 
             if (isset($data['p_d'])) {
                 foreach ((array)$data['p_d'] as $download_id) {
-                    $this->db->query("INSERT INTO " . DB_PREFIX . "product_to_download SET product_id = '" . (int)$product_id . "', download_id = '" . (int)$download_id . "'");
+                    $this->db->query("INSERT INTO product_to_download SET product_id = '" . (int)$product_id . "', download_id = '" . (int)$download_id . "'");
                 }
             }
             $result = 1;
-        } else if ($column == 'attributes') {
-            $this->db->query("DELETE FROM " . DB_PREFIX . "product_attribute WHERE product_id = '" . (int)$product_id . "'");
+        } elseif ($column == 'attributes') {
+            $this->db->query("DELETE FROM product_attribute WHERE product_id = '" . (int)$product_id . "'");
 
             if (!empty($data['product_attribute'])) {
                 foreach ((array)$data['product_attribute'] as $product_attribute) {
                     if ($product_attribute['attribute_id']) {
-                        $this->db->query("DELETE FROM " . DB_PREFIX . "product_attribute WHERE product_id = '" . (int)$product_id . "' AND attribute_id = '" . (int)$product_attribute['attribute_id'] . "'");
+                        $this->db->query("DELETE FROM product_attribute WHERE product_id = '" . (int)$product_id . "' AND attribute_id = '" . (int)$product_attribute['attribute_id'] . "'");
 
                         foreach ($product_attribute['product_attribute_description'] as $language_id => $product_attribute_description) {
-                            $this->db->query("INSERT INTO " . DB_PREFIX . "product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$product_attribute['attribute_id'] . "', language_id = '" . (int)$language_id . "', text = '" .  $this->db->escape($product_attribute_description['text']) . "'");
+                            $this->db->query("INSERT INTO product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$product_attribute['attribute_id'] . "', language_id = '" . (int)$language_id . "', text = '" .  $this->db->escape($product_attribute_description['text']) . "'");
                         }
                     }
                 }
             }
             $result = 1;
-        } else if ($column == 'discounts') {
-            $this->db->query("DELETE FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$product_id . "'");
+        } elseif ($column == 'discounts') {
+            $this->db->query("DELETE FROM product_discount WHERE product_id = '" . (int)$product_id . "'");
 
             if (isset($data['product_discount'])) {
                 foreach ((array)$data['product_discount'] as $product_discount) {
-                    $this->db->query("INSERT INTO " . DB_PREFIX . "product_discount SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$product_discount['customer_group_id'] . "', quantity = '" . (int)$product_discount['quantity'] . "', priority = '" . (int)$product_discount['priority'] . "', price = '" . (float)$product_discount['price'] . "', date_start = '" . $this->db->escape($product_discount['date_start']) . "', date_end = '" . $this->db->escape($product_discount['date_end']) . "'");
+                    $this->db->query("INSERT INTO product_discount SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$product_discount['customer_group_id'] . "', quantity = '" . (int)$product_discount['quantity'] . "', priority = '" . (int)$product_discount['priority'] . "', price = '" . (float)$product_discount['price'] . "', date_start = '" . $this->db->escape($product_discount['date_start']) . "', date_end = '" . $this->db->escape($product_discount['date_end']) . "'");
                 }
             }
             $result = 1;
-        } else if ($column == 'images') {
-            $this->db->query("DELETE FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "'");
+        } elseif ($column == 'images') {
+            $this->db->query("DELETE FROM product_image WHERE product_id = '" . (int)$product_id . "'");
 
             if (isset($data['product_image'])) {
                 foreach ((array)$data['product_image'] as $product_image) {
-                    $this->db->query("INSERT INTO " . DB_PREFIX . "product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($product_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$product_image['sort_order'] . "'");
+                    $this->db->query("INSERT INTO product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($product_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$product_image['sort_order'] . "'");
                 }
             }
             $result = 1;
-        } else if ($column == 'options') {
-            $this->db->query("DELETE FROM " . DB_PREFIX . "product_option WHERE product_id = '" . (int)$product_id . "'");
-            $this->db->query("DELETE FROM " . DB_PREFIX . "product_option_value WHERE product_id = '" . (int)$product_id . "'");
+        } elseif ($column == 'options') {
+            $this->db->query("DELETE FROM product_option WHERE product_id = '" . (int)$product_id . "'");
+            $this->db->query("DELETE FROM product_option_value WHERE product_id = '" . (int)$product_id . "'");
 
             if (isset($data['product_option'])) {
                 foreach ((array)$data['product_option'] as $product_option) {
                     if ($product_option['type'] == 'select' || $product_option['type'] == 'radio' || $product_option['type'] == 'checkbox' || $product_option['type'] == 'image') {
-                        $this->db->query("INSERT INTO " . DB_PREFIX . "product_option SET product_option_id = '" . (int)$product_option['product_option_id'] . "', product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', required = '" . (int)$product_option['required'] . "'");
+                        $this->db->query("INSERT INTO product_option SET product_option_id = '" . (int)$product_option['product_option_id'] . "', product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', required = '" . (int)$product_option['required'] . "'");
 
                         $product_option_id = $this->db->getLastId();
 
                         if (isset($product_option['product_option_value'])) {
                             foreach ((array)$product_option['product_option_value'] as $product_option_value) {
-                                $this->db->query("INSERT INTO " . DB_PREFIX . "product_option_value SET product_option_value_id = '" . (int)$product_option_value['product_option_value_id'] . "', product_option_id = '" . (int)$product_option_id . "', product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', option_value_id = '" . (int)$product_option_value['option_value_id'] . "', quantity = '" . (int)$product_option_value['quantity'] . "', subtract = '" . (int)$product_option_value['subtract'] . "', price = '" . (float)$product_option_value['price'] . "', price_prefix = '" . $this->db->escape($product_option_value['price_prefix']) . "', points = '" . (int)$product_option_value['points'] . "', points_prefix = '" . $this->db->escape($product_option_value['points_prefix']) . "', weight = '" . (float)$product_option_value['weight'] . "', weight_prefix = '" . $this->db->escape($product_option_value['weight_prefix']) . "'");
+                                $this->db->query("INSERT INTO product_option_value SET product_option_value_id = '" . (int)$product_option_value['product_option_value_id'] . "', product_option_id = '" . (int)$product_option_id . "', product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', option_value_id = '" . (int)$product_option_value['option_value_id'] . "', quantity = '" . (int)$product_option_value['quantity'] . "', subtract = '" . (int)$product_option_value['subtract'] . "', price = '" . (float)$product_option_value['price'] . "', price_prefix = '" . $this->db->escape($product_option_value['price_prefix']) . "', points = '" . (int)$product_option_value['points'] . "', points_prefix = '" . $this->db->escape($product_option_value['points_prefix']) . "', weight = '" . (float)$product_option_value['weight'] . "', weight_prefix = '" . $this->db->escape($product_option_value['weight_prefix']) . "'");
                             }
                         }
                     } else {
-                        $this->db->query("INSERT INTO " . DB_PREFIX . "product_option SET product_option_id = '" . (int)$product_option['product_option_id'] . "', product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', option_value = '" . $this->db->escape($product_option['option_value']) . "', required = '" . (int)$product_option['required'] . "'");
+                        $this->db->query("INSERT INTO product_option SET product_option_id = '" . (int)$product_option['product_option_id'] . "', product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', option_value = '" . $this->db->escape($product_option['option_value']) . "', required = '" . (int)$product_option['required'] . "'");
                     }
                 }
             }
             $result = 1;
-        } else if ($column == 'profiles') {
-            $this->db->query("DELETE FROM " . DB_PREFIX . "product_profile WHERE product_id = '" . (int)$product_id . "'");
+        } elseif ($column == 'profiles') {
+            $this->db->query("DELETE FROM product_profile WHERE product_id = '" . (int)$product_id . "'");
 
             if (isset($data['product_profiles'])) {
                 foreach ((array)$data['product_profiles'] as $product_profile) {
-                    $this->db->query("INSERT INTO " . DB_PREFIX . "product_profile SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$product_profile['customer_group_id'] . "', profile_id = '" . (int)$product_profile['profile_id'] . "'");
+                    $this->db->query("INSERT INTO product_profile SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$product_profile['customer_group_id'] . "', profile_id = '" . (int)$product_profile['profile_id'] . "'");
                 }
             }
             $result = 1;
-        } else if ($column == 'specials') {
-            $this->db->query("DELETE FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int)$product_id . "'");
+        } elseif ($column == 'specials') {
+            $this->db->query("DELETE FROM product_special WHERE product_id = '" . (int)$product_id . "'");
 
             if (isset($data['product_special'])) {
                 foreach ((array)$data['product_special'] as $product_special) {
-                    $this->db->query("INSERT INTO " . DB_PREFIX . "product_special SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$product_special['customer_group_id'] . "', priority = '" . (int)$product_special['priority'] . "', price = '" . (float)$product_special['price'] . "', date_start = '" . $this->db->escape($product_special['date_start']) . "', date_end = '" . $this->db->escape($product_special['date_end']) . "'");
+                    $this->db->query("INSERT INTO product_special SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$product_special['customer_group_id'] . "', priority = '" . (int)$product_special['priority'] . "', price = '" . (float)$product_special['price'] . "', date_start = '" . $this->db->escape($product_special['date_start']) . "', date_end = '" . $this->db->escape($product_special['date_end']) . "'");
                 }
             }
             $result = 1;
-        } else if ($column == 'filters') {
-            $this->db->query("DELETE FROM " . DB_PREFIX . "product_filter WHERE product_id = '" . (int)$product_id . "'");
+        } elseif ($column == 'filters') {
+            $this->db->query("DELETE FROM product_filter WHERE product_id = '" . (int)$product_id . "'");
 
             if (isset($data['product_filters'])) {
                 foreach ((array)$data['product_filters'] as $filter_id) {
-                    $this->db->query("INSERT INTO " . DB_PREFIX . "product_filter SET product_id = '" . (int)$product_id . "', filter_id = '" . (int)$filter_id . "'");
+                    $this->db->query("INSERT INTO product_filter SET product_id = '" . (int)$product_id . "', filter_id = '" . (int)$filter_id . "'");
                 }
             }
             $result = 1;
-        } else if ($column == 'related') {
-            $this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE product_id = '" . (int)$product_id . "'");
-            $this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE related_id = '" . (int)$product_id . "'");
+        } elseif ($column == 'related') {
+            $this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$product_id . "'");
+            $this->db->query("DELETE FROM product_related WHERE related_id = '" . (int)$product_id . "'");
 
             if (isset($data['product_related'])) {
                 foreach ((array)$data['product_related'] as $related_id) {
-                    $this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE product_id = '" . (int)$product_id . "' AND related_id = '" . (int)$related_id . "'");
-                    $this->db->query("INSERT INTO " . DB_PREFIX . "product_related SET product_id = '" . (int)$product_id . "', related_id = '" . (int)$related_id . "'");
-                    $this->db->query("DELETE FROM " . DB_PREFIX . "product_related WHERE product_id = '" . (int)$related_id . "' AND related_id = '" . (int)$product_id . "'");
-                    $this->db->query("INSERT INTO " . DB_PREFIX . "product_related SET product_id = '" . (int)$related_id . "', related_id = '" . (int)$product_id . "'");
+                    $this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$product_id . "' AND related_id = '" . (int)$related_id . "'");
+                    $this->db->query("INSERT INTO product_related SET product_id = '" . (int)$product_id . "', related_id = '" . (int)$related_id . "'");
+                    $this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$related_id . "' AND related_id = '" . (int)$product_id . "'");
+                    $this->db->query("INSERT INTO product_related SET product_id = '" . (int)$related_id . "', related_id = '" . (int)$product_id . "'");
                 }
             }
             $result = 1;
-        } else if ($column == 'descriptions') {
+        } elseif ($column == 'descriptions') {
             foreach ((array)$data['product_description'] as $language_id => $value) {
-                $this->db->query("UPDATE " . DB_PREFIX . "product_description SET description = '" . $this->db->escape($value['description']) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
+                $this->db->query("UPDATE product_description SET description = '" . $this->db->escape($value['description']) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
             }
             $result = 1;
         }
@@ -478,8 +489,9 @@ class ModelCatalogProductExt extends Model {
         return $result;
     }
 
-    public function urlAliasExists($product_id, $keyword) {
-        $query = $this->db->query("SELECT 1 FROM " . DB_PREFIX . "url_alias WHERE keyword = '" . $this->db->escape($keyword) . "' AND query <> 'product_id=" . (int)$product_id . "'");
+    public function urlAliasExists($product_id, $keyword)
+    {
+        $query = $this->db->query("SELECT 1 FROM url_alias WHERE keyword = '" . $this->db->escape($keyword) . "' AND query <> 'product_id=" . (int)$product_id . "'");
 
         if ($query->row) {
             return true;
@@ -488,17 +500,18 @@ class ModelCatalogProductExt extends Model {
         }
     }
 
-    public function filterInterval($filter, $field, $date=false) {
+    public function filterInterval($filter, $field, $date = false)
+    {
         if ($date) {
             if (preg_match('/^(!=|<>)\s*(\d{2,4}-\d{1,2}-\d{1,2})$/', html_entity_decode(trim($filter)), $matches) && count($matches) == 3) {
                 return "DATE($field) <> DATE('" . $matches[2] . "')";
-            } else if (preg_match('/^(\d{2,4}-\d{1,2}-\d{1,2})\s*(<|<=)\s*(\d{2,4}-\d{1,2}-\d{1,2})$/', html_entity_decode(trim($filter)), $matches) && count($matches) == 4 && strtotime($matches[1]) <= strtotime($matches[3])) {
+            } elseif (preg_match('/^(\d{2,4}-\d{1,2}-\d{1,2})\s*(<|<=)\s*(\d{2,4}-\d{1,2}-\d{1,2})$/', html_entity_decode(trim($filter)), $matches) && count($matches) == 4 && strtotime($matches[1]) <= strtotime($matches[3])) {
                 return "DATE('" . $matches[1] . "') ${matches[2]} DATE($field) AND DATE($field) ${matches[2]} DATE('" . $matches[3] . "')";
-            } else if (preg_match('/^(\d{2,4}-\d{1,2}-\d{1,2})\s*(>|>=)\s*(\d{2,4}-\d{1,2}-\d{1,2})$/', html_entity_decode(trim($filter)), $matches) && count($matches) == 4 && strtotime($matches[1]) >= strtotime($matches[3])) {
+            } elseif (preg_match('/^(\d{2,4}-\d{1,2}-\d{1,2})\s*(>|>=)\s*(\d{2,4}-\d{1,2}-\d{1,2})$/', html_entity_decode(trim($filter)), $matches) && count($matches) == 4 && strtotime($matches[1]) >= strtotime($matches[3])) {
                 return "DATE('" . $matches[1] . "') ${matches[2]} DATE($field) AND DATE($field) ${matches[2]} DATE('" . $matches[3] . "')";
-            } else if (preg_match('/^(<|<=|>|>=)\s*(\d{2,4}-\d{1,2}-\d{1,2})$/', html_entity_decode(trim($filter)), $matches) && count($matches) == 3) {
+            } elseif (preg_match('/^(<|<=|>|>=)\s*(\d{2,4}-\d{1,2}-\d{1,2})$/', html_entity_decode(trim($filter)), $matches) && count($matches) == 3) {
                 return "DATE($field) ${matches[1]} DATE('" . $matches[2] . "')";
-            } else if (preg_match('/^(\d{2,4}-\d{1,2}-\d{1,2})\s*(>|>=|<|<=)$/', html_entity_decode(trim($filter)), $matches) && count($matches) == 3) {
+            } elseif (preg_match('/^(\d{2,4}-\d{1,2}-\d{1,2})\s*(>|>=|<|<=)$/', html_entity_decode(trim($filter)), $matches) && count($matches) == 3) {
                 return "DATE('" . $matches[1] . "') ${matches[2]} DATE($field)";
             } else {
                 return "DATE(${field}) = DATE('${filter}')";
@@ -506,13 +519,13 @@ class ModelCatalogProductExt extends Model {
         } else {
             if (preg_match('/^(!=|<>)\s*(-?\d+\.?\d*)$/', html_entity_decode(trim(str_replace(",", ".", $filter))), $matches) && count($matches) == 3) {
                 return "$field <> '" . (float)$matches[2] . "'";
-            } else if (preg_match('/^(-?\d+\.?\d*)\s*(<|<=)\s*(-?\d+\.?\d*)$/', html_entity_decode(trim(str_replace(",", ".", $filter))), $matches) && count($matches) == 4 && (float)$matches[1] <= (float)$matches[3]) {
+            } elseif (preg_match('/^(-?\d+\.?\d*)\s*(<|<=)\s*(-?\d+\.?\d*)$/', html_entity_decode(trim(str_replace(",", ".", $filter))), $matches) && count($matches) == 4 && (float)$matches[1] <= (float)$matches[3]) {
                 return "'" . (float)$matches[1] . "' ${matches[2]} $field AND $field ${matches[2]} '" . (float)$matches[3] . "'";
-            } else if (preg_match('/^(-?\d+\.?\d*)\s*(>|>=)\s*(-?\d+\.?\d*)$/', html_entity_decode(trim(str_replace(",", ".", $filter))), $matches) && count($matches) == 4 && (float)$matches[1] >= (float)$matches[3]) {
+            } elseif (preg_match('/^(-?\d+\.?\d*)\s*(>|>=)\s*(-?\d+\.?\d*)$/', html_entity_decode(trim(str_replace(",", ".", $filter))), $matches) && count($matches) == 4 && (float)$matches[1] >= (float)$matches[3]) {
                 return "'" . (float)$matches[1] . "' ${matches[2]} $field AND $field ${matches[2]} '" . (float)$matches[3] . "'";
-            } else if (preg_match('/^(<|<=|>|>=)\s*(-?\d+\.?\d*)$/', html_entity_decode(trim(str_replace(",", ".", $filter))), $matches) && count($matches) == 3) {
+            } elseif (preg_match('/^(<|<=|>|>=)\s*(-?\d+\.?\d*)$/', html_entity_decode(trim(str_replace(",", ".", $filter))), $matches) && count($matches) == 3) {
                 return "$field ${matches[1]} '" . (float)$matches[2] . "'";
-            } else if (preg_match('/^(-?\d+\.?\d*)\s*(>|>=|<|<=)$/', html_entity_decode(trim(str_replace(",", ".", $filter))), $matches) && count($matches) == 3) {
+            } elseif (preg_match('/^(-?\d+\.?\d*)\s*(>|>=|<|<=)$/', html_entity_decode(trim(str_replace(",", ".", $filter))), $matches) && count($matches) == 3) {
                 return "'" . (float)$matches[1] . "' ${matches[2]} $field";
             } else {
                 return $field . " = '" . (int)$filter . "'";
@@ -520,4 +533,3 @@ class ModelCatalogProductExt extends Model {
         }
     }
 }
-?>

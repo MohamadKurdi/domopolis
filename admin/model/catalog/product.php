@@ -1070,6 +1070,10 @@
 				}
 			}
 
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_variant_edition_mode')){
+
+			}
+
 			$this->db->query("DELETE FROM product WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM ocfilter_option_value_to_product WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_attribute WHERE product_id = '" . (int)$product_id . "'");
@@ -1092,12 +1096,11 @@
 			$this->db->query("DELETE FROM product_to_layout WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_to_store WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_amzn_data WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM `product_profile` WHERE `product_id` = " . (int)$product_id);
+			$this->db->query("DELETE FROM product_profile WHERE `product_id` = " . (int)$product_id);
 			$this->db->query("DELETE FROM review WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_product_option WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_product_option_value WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_additional_offer WHERE product_id = '" . (int)$product_id . "'");
-			
+			$this->db->query("DELETE FROM product_additional_offer WHERE product_id = '" . (int)$product_id . "'");			
 			$this->db->query("DELETE FROM faproduct_to_facategory WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM facategory_to_faproduct WHERE product_id = '" . (int)$product_id . "'");
 			
