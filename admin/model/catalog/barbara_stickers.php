@@ -1,13 +1,11 @@
 <?php
-class ModelCatalogbarbaraStickers extends Model
-{
+class ModelCatalogbarbaraStickers extends Model {
 
-    public function getStickers($product_id)
-    {
-        $query = $this->db->query("SELECT * FROM product_sticker WHERE product_id = '" . (int)$product_id . "' ORDER BY sort_order");
-        $result = array();
-        foreach ($query->rows as $sticker) {
-            $result[] = array(
+    public function getStickers($product_id) {
+      $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_sticker WHERE product_id = '" . (int)$product_id . "' ORDER BY sort_order");
+      $result = array();
+      foreach ($query->rows as $sticker) {
+        $result[] = array(
             'langdata'    => unserialize($sticker['langdata']),
             'image'       => $sticker['image'],
             'priority'    => $sticker['priority'],
@@ -15,26 +13,23 @@ class ModelCatalogbarbaraStickers extends Model
             'available'   => $sticker['available'],
             'type'        => $sticker['type'],
             'sort_order'  => $sticker['sort_order']
-            );
-        }
-        return $result;
+        );
+      }
+      return $result;
     }
 
-    public function getList()
-    {
+    public function getList() {
         return $this->db->query('SELECT * FROM '.DB_PREFIX.'barbara_stickers ORDER BY sort_order')->rows;
     }
 
-    public function getGroupStickers($stickers_id)
-    {
+    public function getGroupStickers($stickers_id) {
         return $this->db->query('SELECT * FROM '.DB_PREFIX.'barbara_stickers WHERE stickers_id = "' . (int)$stickers_id . '"')->row;
     }
 
-    public function addStickers($data)
-    {
+    public function addStickers($data) {
         $sql = "
             INSERT INTO
-                barbara_stickers
+                " . DB_PREFIX . "barbara_stickers
             SET
                 langdata = '" . $this->db->escape(serialize($data['langdata'])) . "',
                 image = '" . $this->db->escape($data['image']) . "',
@@ -45,17 +40,16 @@ class ModelCatalogbarbaraStickers extends Model
                 objects_type = '" . (int)$data['objects_type'] . "',
                 categories = '" . $this->db->escape(trim($data['categories'], ', ')) . "',
                 products = '" . $this->db->escape(trim($data['products'], ', ')) . "',
-                manufacturers = '" . $this->db->escape(implode(',', isset($data['manufacturers']) ? $data['manufacturers'] : array())) . "',
+                manufacturers = '" . $this->db->escape(implode(',', isset($data['manufacturers']) ? $data['manufacturers'] : array() )) . "',
                 enabled = '" . (int)$data['enabled'] . "',
                 sort_order = '" . (int)$data['sort_order'] ."'";
         $this->db->query($sql);
     }
 
-    public function editStickers($stickers_id, $data)
-    {
+    public function editStickers($stickers_id, $data) {
         $sql = "
             UPDATE
-                barbara_stickers
+                " . DB_PREFIX . "barbara_stickers
             SET
                 langdata = '" . $this->db->escape(serialize($data['langdata'])) . "',
                 image = '" . $this->db->escape($data['image']) . "',
@@ -66,7 +60,7 @@ class ModelCatalogbarbaraStickers extends Model
                 objects_type = '" . (int)$data['objects_type'] . "',
                 categories = '" . $this->db->escape(trim($data['categories'], ', ')) . "',
                 products = '" . $this->db->escape(trim($data['products'], ', ')) . "',
-                manufacturers = '" . $this->db->escape(implode(',', isset($data['manufacturers']) ? $data['manufacturers'] : array())) . "',
+                manufacturers = '" . $this->db->escape(implode(',', isset($data['manufacturers']) ? $data['manufacturers'] : array() )) . "',
                 enabled = '" . (int)$data['enabled'] . "',
                 sort_order = '" . (int)$data['sort_order'] ."'
             WHERE
@@ -74,14 +68,12 @@ class ModelCatalogbarbaraStickers extends Model
         $this->db->query($sql);
     }
 
-    public function deleteStickers($stickers_id)
-    {
+    public function deleteStickers($stickers_id) {
         $sql = "DELETE FROM ". DB_PREFIX . "barbara_stickers WHERE stickers_id = '" . (int)$stickers_id . "'";
         $this->db->query($sql);
     }
 
-    public function applyStickers()
-    {
+    public function applyStickers() {
         $cnt = 0;
 
         $sql = "DELETE FROM ". DB_PREFIX . "product_sticker WHERE priority >= 0";
@@ -96,15 +88,15 @@ class ModelCatalogbarbaraStickers extends Model
             $products = array();
             if ($sticker['objects_type'] == 1) {
                 $category_ids = explode(',', $sticker['categories']);
-                foreach ($category_ids as $category_id) {
+                foreach ($category_ids as $category_id){
                     $products_category = $this->model_catalog_product->getProductsByCategoryId($category_id);
                     $products = array_udiff($products, $products_category, array($this, 'compareProductIds')); //Отсекаем от основного массива дубли товаров
                     $products = array_merge($products, $products_category); //Добавляем товары из новой категории
                 }
-            } elseif ($sticker['objects_type'] == 2) {
+            } else if ($sticker['objects_type'] == 2) {
                 $this->load->model('catalog/barbara_product');
                 $products = $this->model_catalog_barbara_product->getProducts(explode(',', $sticker['products']));
-            } elseif ($sticker['objects_type'] == 3) {
+            } else if ($sticker['objects_type'] == 3) {
                 $this->load->model('catalog/barbara_product');
                 $products = $this->model_catalog_barbara_product->getProductsByManufacturersId(explode(',', $sticker['manufacturers']));
             } else {
@@ -114,7 +106,7 @@ class ModelCatalogbarbaraStickers extends Model
             $cnt += count($products);
 
             if (is_array($products)) {
-                foreach ($products as $product) {
+                foreach ($products as $product){
                     $sql = "INSERT INTO " .
                                 DB_PREFIX . "product_sticker
                             SET
@@ -138,10 +130,9 @@ class ModelCatalogbarbaraStickers extends Model
         return $cnt;
     }
 
-    public function makeInstall()
-    {
-        $this->install();
-        $this->db->query("CREATE TABLE IF NOT EXISTS `barbara_stickers` (
+    public function makeInstall() {
+       $this->install();
+       $this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "barbara_stickers` (
           `stickers_id` int(11) NOT NULL AUTO_INCREMENT,
           `langdata` TEXT NOT NULL,
           `image` varchar(255) NOT NULL,
@@ -160,20 +151,19 @@ class ModelCatalogbarbaraStickers extends Model
 
         $query = $this->db->query('SHOW INDEXES FROM '.DB_PREFIX.'product');
         $found = false;
-        foreach ($query->rows as $row) {
-            if ($row['Column_name'] == 'manufacturer_id') {
+        foreach ($query->rows as $row){
+            if ($row['Column_name'] == 'manufacturer_id'){
                 $found = true;
                 break;
             }
         }
-        if (!$found) {
+        if (!$found){
             $this->db->query('ALTER TABLE '.DB_PREFIX.'product ADD INDEX IDX_manufacturer_id (manufacturer_id)');
         }
     }
 
-    public function install()
-    {
-        $this->db->query("CREATE TABLE IF NOT EXISTS `product_sticker` (
+    public function install() {
+        $this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "product_sticker` (
                           `product_sticker_id` int(11) NOT NULL auto_increment,
                           `product_id` int(11) NOT NULL,
                           `langdata` TEXT NOT NULL,
@@ -189,13 +179,12 @@ class ModelCatalogbarbaraStickers extends Model
                         ");
     }
 
-    protected function getAllProducts()
-    {
-        return $this->db->query("SELECT product_id FROM `product`")->rows;
+    protected function getAllProducts() {
+        return $this->db->query("SELECT product_id FROM `" . DB_PREFIX . "product`")->rows;
     }
 
-    function compareProductIds($a, $b)
-    {
+    function compareProductIds($a, $b) {
         return ($a['product_id'] - $b['product_id']);
     }
 }
+?>
