@@ -20,8 +20,14 @@ class ControllerSettingSetting extends Controller {
 				}
 			}
 
-			$this->data['asinDeletionMode'] = $this->model_setting_setting->getKeySettingValue('config', 'config_rainforest_asin_deletion_mode');
-			$this->data['setAsinDeletionMode'] = $this->url->link('setting/setting/setAsinDeletionMode' , 'token=' . $this->session->data['token'], 'SSL');
+
+			if ($this->config->get('config_enable_amazon_specific_modes')){
+				$this->data['asinDeletionMode'] = $this->model_setting_setting->getKeySettingValue('config', 'config_rainforest_asin_deletion_mode');
+				$this->data['setAsinDeletionMode'] = $this->url->link('setting/setting/setAsinDeletionMode' , 'token=' . $this->session->data['token'], 'SSL');
+
+				$this->data['variantEditionMode'] = $this->model_setting_setting->getKeySettingValue('config', 'config_rainforest_variant_edition_mode');
+				$this->data['setVariantEditionMode'] = $this->url->link('setting/setting/setVariantEditionMode' , 'token=' . $this->session->data['token'], 'SSL');
+			}
 			
 			$this->data['clear_memcache'] = $this->url->link('common/home/clearMemCache' , 'token=' . $this->session->data['token'], 'SSL');
 			
@@ -52,10 +58,22 @@ class ControllerSettingSetting extends Controller {
 		}
 	}
 
-	public function setAsinDeletionMode(){
+	public function setVariantEditionMode(){
 		$this->load->model('setting/setting');
 
-		if ($this->user->getUserGroup() == 1) {
+			if ($this->config->get('config_rainforest_variant_edition_mode')){
+				$this->model_setting_setting->editSettingValue('config', 'config_rainforest_variant_edition_mode', 0);
+				$this->config->set('config_rainforest_variant_edition_mode', 0);
+			} else {
+				$this->model_setting_setting->editSettingValue('config', 'config_rainforest_variant_edition_mode', 1);
+				$this->config->set('config_rainforest_variant_edition_mode', 1);
+			}
+
+			echo ($this->model_setting_setting->getKeySettingValue('config', 'config_rainforest_variant_edition_mode')?'Вкл':'Выкл');
+	}
+
+	public function setAsinDeletionMode(){
+		$this->load->model('setting/setting');
 
 			if ($this->config->get('config_rainforest_asin_deletion_mode')){
 				$this->model_setting_setting->editSettingValue('config', 'config_rainforest_asin_deletion_mode', 0);
@@ -66,9 +84,6 @@ class ControllerSettingSetting extends Controller {
 			}
 
 			echo ($this->model_setting_setting->getKeySettingValue('config', 'config_rainforest_asin_deletion_mode')?'Вкл':'Выкл');
-		}  else {
-			echo 'Недоступно';
-		}
 	}
 	
 	public function setNoPageCacheMode(){
@@ -2560,10 +2575,24 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_rainforest_enable_api'] = $this->config->get('config_rainforest_enable_api');
 		}
 
+		if (isset($this->request->post['config_enable_amazon_specific_modes'])) {
+			$this->data['config_enable_amazon_specific_modes'] = $this->request->post['config_enable_amazon_specific_modes']; 
+		} else {
+			$this->data['config_enable_amazon_specific_modes'] = $this->config->get('config_enable_amazon_specific_modes');
+		}
+
 		if (isset($this->request->post['config_rainforest_asin_deletion_mode'])) {
 			$this->data['config_rainforest_asin_deletion_mode'] = $this->request->post['config_rainforest_asin_deletion_mode']; 
 		} else {
 			$this->data['config_rainforest_asin_deletion_mode'] = $this->config->get('config_rainforest_asin_deletion_mode');
+		}
+
+		$this->data['product_deletedasin'] = $this->url->link('report/product_deletedasin', 'token=' . $this->session->data['token'], 'SSL');
+
+		if (isset($this->request->post['config_rainforest_variant_edition_mode'])) {
+			$this->data['config_rainforest_variant_edition_mode'] = $this->request->post['config_rainforest_variant_edition_mode']; 
+		} else {
+			$this->data['config_rainforest_variant_edition_mode'] = $this->config->get('config_rainforest_variant_edition_mode');
 		}
 		
 		if (isset($this->request->post['config_rainforest_api_key'])) {
