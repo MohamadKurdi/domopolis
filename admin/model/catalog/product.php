@@ -1072,7 +1072,7 @@
 		public function deleteProduct($product_id, $recursion = true) {
 
 
-			if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_asin_deletion_mode')){
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_asin_deletion_mode']){
 				$query = $this->db->query("SELECT p.asin, pd.name FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id AND language_id = 26) WHERE p.product_id = '" . (int)$product_id . "' LIMIT 1");
 
 				if ($query->num_rows && !empty($query->row['asin'])){
@@ -1080,7 +1080,7 @@
 				}
 			}
 
-			if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_variant_edition_mode')){
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']){
 				if ($recursion){
 					$main_variant_id = false;
 					$products_to_delete = [];

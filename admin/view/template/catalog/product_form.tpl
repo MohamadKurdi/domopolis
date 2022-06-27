@@ -27,6 +27,19 @@
 	<div class="box">
 		<div class="heading order_head">
 			<h1><img src="view/image/product.png" alt="" /> <?php echo $product_id; ?> / <? echo $model; ?></h1>
+
+			<div style="float:left; padding-left:30px;">
+				<?php if ($this->session->data['config_rainforest_asin_deletion_mode']) { ?>
+					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Включен режим исключения ASIN. Товары, которые будут удалены - никогда более не будут добавлены с Amazon!</small>
+				<?php } ?>
+				<?php if ($this->session->data['config_rainforest_variant_edition_mode']) { ?>
+					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Включен режим группового редактирования вариантов. Удаление одного варианта удалит и остальные!</small>
+				<?php } ?>
+				<?php if ($this->session->data['config_rainforest_translate_edition_mode']) { ?>
+					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Включен режим коррекции переводов. Одинаковые значения атрибутов будут перезаписаны!</small>
+				<?php } ?>
+			</div>
+			
 			<div class="buttons"><a onclick="apply()" class="button"><span>Применить</span></a>
 				<script language="javascript">
 					function apply(){
@@ -1849,13 +1862,16 @@
 																			<?php foreach ($product_attributes as $product_attribute) { ?>
 																				<tbody id="attribute-row<?php echo $attribute_row; ?>">
 																					<tr>
-																						<td class="left"><input type="text" name="product_attribute[<?php echo $attribute_row; ?>][name]" value="<?php echo $product_attribute['name']; ?>" />
+																						<td class="left" style="width:300px;">
+																							<input style="width:90%" type="text" name="product_attribute[<?php echo $attribute_row; ?>][name]" value="<?php echo $product_attribute['name']; ?>" />
 																							<input type="hidden" name="product_attribute[<?php echo $attribute_row; ?>][attribute_id]" value="<?php echo $product_attribute['attribute_id']; ?>" /></td>
-																							<td class="left"><?php foreach ($languages as $language) { ?>
-																								<textarea name="product_attribute[<?php echo $attribute_row; ?>][product_attribute_description][<?php echo $language['language_id']; ?>][text]" cols="40" rows="5"><?php echo isset($product_attribute['product_attribute_description'][$language['language_id']]) ? $product_attribute['product_attribute_description'][$language['language_id']]['text'] : ''; ?></textarea>
-																								<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" align="top" /><br />
-																								<?php } ?></td>
-																								<td class="left"><a onclick="$('#attribute-row<?php echo $attribute_row; ?>').remove();" class="button"><?php echo $button_remove; ?></a></td>
+																						<td class="left"><?php foreach ($languages as $language) { ?>
+																							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" align="top" />
+																								<textarea name="product_attribute[<?php echo $attribute_row; ?>][product_attribute_description][<?php echo $language['language_id']; ?>][text]" rows="2" style="width:90%"><?php echo isset($product_attribute['product_attribute_description'][$language['language_id']]) ? $product_attribute['product_attribute_description'][$language['language_id']]['text'] : ''; ?></textarea>
+																								<br />
+																								<?php } ?>
+																						</td>
+																						<td class="left" style="width:100px;"><a onclick="$('#attribute-row<?php echo $attribute_row; ?>').remove();" class="button"><?php echo $button_remove; ?></a></td>
 																							</tr>
 																						</tbody>
 																						<?php $attribute_row++; ?>

@@ -1,19 +1,17 @@
 <style>
 	.cache-button-good{background:#00ad07; border-color:#00ad07; color: white;}
 	.cache-button-warn{background:#ff7815; border-color:#ff7815;color:white;}
-	.cache-button-bad{background:#cf4a61; border-color:#f91c02;color: white;}
+	.cache-button-bad{background:#cf4a61; border-color:#cf4a61;color: white;}
 	a.link_headr{margin-left:5px;color: white!important;}
 </style>
 
 <?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
 
-	<a class="link_headr <? if ($asinDeletionMode) { ?>link_enter cache-button-bad<? } else { ?> cache-button-good<?php } ?>" onclick="$('#asinDMode').load('<? echo $setAsinDeletionMode ?>');" >
-		<i class="fa fa-amazon" aria-hidden="true"></i> ASIN <span id="asinDMode"></span>
+	<?php foreach ($admin_modes as $mode_name => $mode_config) { ?>
+	<a class="link_headr <? if (${$mode_name}) { ?>link_enter cache-button-bad<? } else { ?> cache-button-good<?php } ?>" onclick="$('#<?php echo $mode_name; ?>').load('<? echo ${'set_' . $mode_name}; ?>');" >
+		<i class="fa <?php echo $mode_config['icon']; ?>" aria-hidden="true"></i> <?php echo $mode_config['btn_text']; ?> <span id="<?php echo $mode_name; ?>"></span>
 	</a>
-
-	<a class="link_headr <? if ($variantEditionMode) { ?>link_enter cache-button-bad<? } else { ?> cache-button-good<?php } ?>" onclick="$('#variantEMode').load('<? echo $setVariantEditionMode ?>');" >
-		<i class="fa fa-amazon" aria-hidden="true"></i> VAR <span id="variantEMode"></span>
-	</a>
+	<?php } ?>
 
 	<?php if ($this->config->get('config_amazon_product_stats_enable')) { ?>
 	<a class="link_headr link_enter cache-button-good" href="<? echo $product_ext; ?>" >

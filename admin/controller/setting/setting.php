@@ -1,6 +1,21 @@
 <?php
 class ControllerSettingSetting extends Controller {
 	private $error = array();
+
+	private $admin_modes = [
+		'config_rainforest_asin_deletion_mode' => [
+			'icon' 		=> 'fa-amazon',
+			'btn_text' 	=> 'ASIN'
+		],
+		'config_rainforest_variant_edition_mode' => [
+			'icon' 		=> 'fa-amazon',
+			'btn_text' 	=> 'VAR'
+		],
+		'config_rainforest_translate_edition_mode' => [
+			'icon' 		=> 'fa-refresh',
+			'btn_text' 	=> 'TRNSL'
+		],
+	];
 	
 	public function getFPCINFO(){
 
@@ -10,6 +25,12 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$this->load->model('setting/setting');
 			$this->load->model('catalog/product');
+
+			foreach ($this->admin_modes as $mode => $mode_config){
+				if (!isset($this->session->data[$mode])){
+					$this->session->data[$mode] = $this->config->get($mode);
+				}
+			}
 
 			if ($this->config->get('config_amazon_product_stats_enable')) {
 				$this->data['totalProducts'] = $this->model_catalog_product->getTotalProducts();
@@ -22,12 +43,13 @@ class ControllerSettingSetting extends Controller {
 
 
 			if ($this->config->get('config_enable_amazon_specific_modes')){
-				$this->data['asinDeletionMode'] = $this->model_setting_setting->getKeySettingValue('config', 'config_rainforest_asin_deletion_mode');
-				$this->data['setAsinDeletionMode'] = $this->url->link('setting/setting/setAsinDeletionMode' , 'token=' . $this->session->data['token'], 'SSL');
-
-				$this->data['variantEditionMode'] = $this->model_setting_setting->getKeySettingValue('config', 'config_rainforest_variant_edition_mode');
-				$this->data['setVariantEditionMode'] = $this->url->link('setting/setting/setVariantEditionMode' , 'token=' . $this->session->data['token'], 'SSL');
+				foreach ($this->admin_modes as $mode => $mode_config){					
+					$this->data[$mode] = isset($this->session->data[$mode])?$this->session->data[$mode]:0;
+					$this->data['set_' . $mode] = $this->url->link('setting/setting/setworkmode' , 'token=' . $this->session->data['token'] . '&mode=' . $mode, 'SSL');
+				}
 			}
+
+			$this->data['admin_modes'] = $this->admin_modes;
 			
 			$this->data['clear_memcache'] = $this->url->link('common/home/clearMemCache' , 'token=' . $this->session->data['token'], 'SSL');
 			
@@ -58,32 +80,20 @@ class ControllerSettingSetting extends Controller {
 		}
 	}
 
-	public function setVariantEditionMode(){
-		$this->load->model('setting/setting');
+	public function setworkmode(){
+		$mode = $this->request->get['mode'];
 
-			if ($this->config->get('config_rainforest_variant_edition_mode')){
-				$this->model_setting_setting->editSettingValue('config', 'config_rainforest_variant_edition_mode', 0);
-				$this->config->set('config_rainforest_variant_edition_mode', 0);
-			} else {
-				$this->model_setting_setting->editSettingValue('config', 'config_rainforest_variant_edition_mode', 1);
-				$this->config->set('config_rainforest_variant_edition_mode', 1);
-			}
+		if (!empty($this->admin_modes[$mode])){
+				if ($this->session->data[$mode] == '1'){
+					$this->session->data[$mode] = 0;
+				} else {
+					$this->session->data[$mode] = 1;
+				}
 
-			echo ($this->model_setting_setting->getKeySettingValue('config', 'config_rainforest_variant_edition_mode')?'Вкл':'Выкл');
-	}
-
-	public function setAsinDeletionMode(){
-		$this->load->model('setting/setting');
-
-			if ($this->config->get('config_rainforest_asin_deletion_mode')){
-				$this->model_setting_setting->editSettingValue('config', 'config_rainforest_asin_deletion_mode', 0);
-				$this->config->set('config_rainforest_asin_deletion_mode', 0);
-			} else {
-				$this->model_setting_setting->editSettingValue('config', 'config_rainforest_asin_deletion_mode', 1);
-				$this->config->set('config_rainforest_asin_deletion_mode', 1);
-			}
-
-			echo ($this->model_setting_setting->getKeySettingValue('config', 'config_rainforest_asin_deletion_mode')?'Вкл':'Выкл');
+				$this->response->setOutput($this->session->data[$mode]?'Вкл':'Выкл');
+		} else {
+			$this->response->setOutput('INVALID MODE');
+		}
 	}
 	
 	public function setNoPageCacheMode(){
@@ -2593,6 +2603,12 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_rainforest_variant_edition_mode'] = $this->request->post['config_rainforest_variant_edition_mode']; 
 		} else {
 			$this->data['config_rainforest_variant_edition_mode'] = $this->config->get('config_rainforest_variant_edition_mode');
+		}
+
+		if (isset($this->request->post['config_rainforest_translate_edition_mode'])) {
+			$this->data['config_rainforest_translate_edition_mode'] = $this->request->post['config_rainforest_translate_edition_mode']; 
+		} else {
+			$this->data['config_rainforest_translate_edition_mode'] = $this->config->get('config_rainforest_translate_edition_mode');
 		}
 		
 		if (isset($this->request->post['config_rainforest_api_key'])) {

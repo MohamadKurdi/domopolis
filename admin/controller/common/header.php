@@ -177,6 +177,9 @@
 				
 				$this->data['home'] = $this->url->link('common/login', '', 'SSL');
 				} else {
+
+
+				
 				
 				
 				$this->data['logged'] = sprintf($this->language->get('text_logged'), $this->user->getUserName());

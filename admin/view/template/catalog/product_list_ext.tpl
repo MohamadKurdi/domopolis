@@ -23,6 +23,19 @@
 	<div class="box">
 		<div class="heading order_head">
 			<h1><img src="view/image/product.png" alt="" /> <?php echo $heading_title; ?></h1>
+
+			<div style="float:left; padding-left:30px;">
+				<?php if ($this->session->data['config_rainforest_asin_deletion_mode']) { ?>
+					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Включен режим исключения ASIN. Товары, которые будут удалены - никогда более не будут добавлены с Amazon!</small>
+				<?php } ?>
+				<?php if ($this->session->data['config_rainforest_variant_edition_mode']) { ?>
+					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Включен режим группового редактирования вариантов. Удаление одного варианта удалит и остальные!</small>
+				<?php } ?>
+				<?php if ($this->session->data['config_rainforest_translate_edition_mode']) { ?>
+					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Включен режим коррекции переводов. Одинаковые значения атрибутов будут перезаписаны!</small>
+				<?php } ?>
+			</div>
+
 			<div class="buttons">
 				<? /*  
 					<span>Последн. деактуализация истории цен: <b><? echo $this->model_setting_setting->getKeySettingValue('history_prices', 'date_last_historical_price_update'); ?></b>
@@ -30,16 +43,23 @@
 					</span>
 				*/ ?>	
 				
+				<?php if ($this->user->getUserGroup() == 12 ) { ?>
 				
-				<a class="button" onclick="$('#success_').show(); $('#success_').html('Подожди, выполняю...'); $('#success_').load('index.php?route=catalog/product/setNewPrices&token=<? echo $token; ?>')">Создать цены из закупочной цены!
-				</a>
+					<a class="button" onclick="$('#success_').show(); $('#success_').html('Подожди, выполняю...'); $('#success_').load('index.php?route=catalog/product/setNewPrices&token=<? echo $token; ?>')">Создать цены из закупочной цены!
+					</a>
 				
-				<a class="button" onclick="$('#success_').show(); $('#success_').html('Подожди, выполняю...'); $('#success_').load('index.php?route=catalog/product/roundPrices&token=<? echo $token; ?>')">Округлить цены!
-				</a>
+					<a class="button" onclick="$('#success_').show(); $('#success_').html('Подожди, выполняю...'); $('#success_').load('index.php?route=catalog/product/roundPrices&token=<? echo $token; ?>')">Округлить цены!
+					</a>
+
+					<a onclick="$('#form').attr('action', '<?php echo $copy; ?>'); $('#form').submit();" class="button">Копировать ТОЛЬКО В СТОК</a>
+				<?php } ?>
 				
 				
-			<a href="<?php echo $insert; ?>" class="button"><?php echo $button_insert; ?></a><a onclick="$('#form').attr('action', '<?php echo $copy; ?>'); $('#form').submit();" class="button">Копировать ТОЛЬКО В СТОК</a><a onclick="$('#form').attr('action', '<?php echo $copynostock; ?>'); $('#form').submit();" class="button">Просто копировать</a><a onclick="$('form').submit();" class="button"><?php echo $button_delete; ?></a></div>
-		</div>
+			<a href="<?php echo $insert; ?>" class="button"><?php echo $button_insert; ?></a>
+			<a onclick="$('#form').attr('action', '<?php echo $copynostock; ?>'); $('#form').submit();" class="button">Копировать</a>
+			<a onclick="$('form').submit();" class="button"><?php echo $button_delete; ?></a></div>
+		</div>		
+
 		<div class="content">
 			<form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
 				<table class="list">
