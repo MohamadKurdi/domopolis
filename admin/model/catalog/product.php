@@ -422,6 +422,15 @@
 			
 			return (int)$product_id;
 		}
+
+		public function editProductVariantDescriptions($products, $data){
+
+
+
+
+
+
+		}
 		
 		public function editProduct($product_id, $data) {
 			
@@ -1058,8 +1067,9 @@
 				return $new_product_id;
 			}
 		}
+
 		
-		public function deleteProduct($product_id) {
+		public function deleteProduct($product_id, $recursion = true) {
 
 
 			if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_asin_deletion_mode')){
@@ -1071,8 +1081,48 @@
 			}
 
 			if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_variant_edition_mode')){
+				if ($recursion){
+					$main_variant_id = false;
+					$products_to_delete = [];
 
+				//Это товар - вариант с привязанным родителем
+					$query = $this->db->query("SELECT main_variant_id FROM product WHERE product_id = '" . (int)$product_id . "' LIMIT 1");
+					if ($query->row['main_variant_id']){
+						$main_variant_id = $query->row['main_variant_id'];
+						$products_to_delete[] = $main_variant_id;
+					}
+
+					if ($main_variant_id){					
+						$query = $this->db->query("SELECT product_id FROM product WHERE main_variant_id = '" . (int)$main_variant_id . "'");
+
+						if ($query->num_rows){
+							foreach ($query->rows as $row){
+								$products_to_delete[] = $row['product_id'];
+							}
+						}
+
+					} else {
+					//Возможно этот товар и есть главный вариант
+						$query = $this->db->query("SELECT product_id FROM product WHERE main_variant_id = '" . (int)$product_id . "'");
+
+						if ($query->num_rows){
+							foreach ($query->rows as $row){
+								$products_to_delete[] = $row['product_id'];
+							}
+						}
+					}
+
+				//Recursive deletion for variants
+					if ($products_to_delete){
+						foreach ($products_to_delete as $product_id_to_delete){
+							if ((int)$product_id_to_delete){
+								$this->deleteProduct($product_id_to_delete, false);
+							}
+						}
+					}
+				}
 			}
+
 
 			$this->db->query("DELETE FROM product WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM ocfilter_option_value_to_product WHERE product_id = '" . (int)$product_id . "'");
@@ -1096,7 +1146,7 @@
 			$this->db->query("DELETE FROM product_to_layout WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_to_store WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_amzn_data WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_profile WHERE `product_id` = " . (int)$product_id);
+			$this->db->query("DELETE FROM product_profile WHERE product_id = " . (int)$product_id);
 			$this->db->query("DELETE FROM review WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_product_option WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_product_option_value WHERE product_id = '" . (int)$product_id . "'");

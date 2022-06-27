@@ -64,13 +64,18 @@
 		public function translateWithCheck($text, $language_code){
 			$text = atrim($text);
 
+			$real_language_code = $language_code;
+			if (!empty($this->mapLanguages[$language_code])){							
+				$real_language_code = $this->mapLanguages[$language_code];
+			}
+
 			if ($language_code == $this->config->get('config_rainforest_source_language')){
 				$text = $text;	
 			} else {
-				if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $language_code)){
-					$text = $this->yandexTranslator->translate($text, $this->config->get('config_rainforest_source_language'), $language_code, true);
+				if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $real_language_code)){
+					$text = $this->yandexTranslator->translate($text, $this->config->get('config_rainforest_source_language'), $real_language_code, true);
 				} else {
-					$text = $text;
+					$text = '';
 				}
 			}
 
@@ -197,19 +202,7 @@
 				foreach ($this->registry->get('languages') as $language_code => $language) {
 					$product['description'] = atrim($product['description']);
 
-					if ($language_code == $this->config->get('config_rainforest_source_language')){
-						$description = $product['description'];	
-						$translated = true;
-						} else {
-						if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $language['code'])){
-							$description = $this->yandexTranslator->translate($product['description'], $this->config->get('config_rainforest_source_language'), $language_code, true);
-							$translated = true;
-							} else {
-							$description = $product['description'];
-							$translated = false;
-						}
-					}
-					
+					$description = $this->translateWithCheck($product['description'], $language_code);				
 					
 					$product_description[$language['language_id']] = [
 					'description' => $description,
@@ -230,25 +223,9 @@
 				$product_video_description = [];
 				foreach ($product['videos'] as $video){
 					foreach ($this->registry->get('languages') as $language_code => $language) {
-						$video['title'] = atrim($video['title']);
+						$video['title'] = atrim($video['title']);						
 
-						$real_language_code = $language_code;
-						if (!empty($this->mapLanguages[$language_code])){							
-							$real_language_code = $this->mapLanguages[$language_code];
-						}
-
-						if ($language_code == $this->config->get('config_rainforest_source_language')){
-							$title = $video['title'];	
-							$translated = true;
-						} else {
-							if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $language['code'])){
-								$title = $this->yandexTranslator->translate($video['title'], $this->config->get('config_rainforest_source_language'), $real_language_code, true);
-							} else {
-								$title = $video['title'];
-								$translated = false;
-							}
-						}
-
+						$title = $this->translateWithCheck($video['title'], $language_code);
 
 						$product_video_description[$language['language_id']] = [
 							'title' => $title,

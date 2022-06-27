@@ -26,7 +26,7 @@
 
 	<div class="box">
 		<div class="heading order_head">
-			<h1><img src="view/image/product.png" alt="" /> <?php echo $short_name; ?> / <? echo $model; ?></h1>
+			<h1><img src="view/image/product.png" alt="" /> <?php echo $product_id; ?> / <? echo $model; ?></h1>
 			<div class="buttons"><a onclick="apply()" class="button"><span>Применить</span></a>
 				<script language="javascript">
 					function apply(){
@@ -39,12 +39,9 @@
 				<div id="tabs" class="htabs">
 					<a href="#tab-general" style="background-color:#ff7815; color:#FFF;">Текст</a>
 					<a href="#tab-data" style="background-color:#ff7815; color:#FFF;">Товар</a>
-					<a href="#tab-price" style="background-color:#00ad07; color:#FFF;">Цены</a>
-					
+					<a href="#tab-price" style="background-color:#00ad07; color:#FFF;">Цены</a>					
 					<a href="#tab-priceva" style="background-color:#7F00FF; color:#FFF;"><i class="fa fa-product-hunt"></i> Конкуренты</a>					
 					<a href="#tab-amazon" style="background-color:#FF9900; color:#FFF;"><i class="fa fa-amazon"></i> Amazon</a>
-
-
 					<a href="#tab-yandex-market" style="background-color:#cf4a61; color:#FFF;"><i class="fa fa-yahoo"></i> Yandex.Market</a>
 					<a href="#tab-special" style="background-color:#00ad07; color:#FFF;">Скидки</a>
 					<a href="#tab-markdown" style="background-color:#00ad07; color:#FFF;">Уценка</a>
@@ -109,7 +106,7 @@
 														Перевести <img src="view/image/flags/fr.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 													</a>
 												<?php } ?>
-											</div>
+											</div>											
 
 											<input type="text" name="product_description[<?php echo $language['language_id']; ?>][name]" size="100" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['name'] : ''; ?>" />
 
@@ -1564,6 +1561,9 @@
 																		<?php foreach ($other_variant_products as $other_variant_product) { ?>
 																			<tr>
 																				<td>
+																					<a href="<?php echo $other_variant_product['link']; ?>" target='_blank'><?echo $other_variant_product['product_id']; ?> <i class="fa fa-edit"></i></a>
+																				</td>
+																				<td>
 																					<img src="<?echo $other_variant_product['thumb']; ?>">
 																				</td>
 																				<td>
@@ -1580,9 +1580,6 @@
 																				</td>
 																				<td>
 																					<?echo $other_variant_product['variant_name_2']; ?>: <?echo $other_variant_product['variant_value_2']; ?>
-																				</td>
-																				<td>
-																					<a href="<?php echo $other_variant_product['link']; ?>" target='_blank'><i class="fa fa-edit"></i></a>
 																				</td>
 																			</tr>
 																		<?php } ?>

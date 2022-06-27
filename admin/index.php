@@ -36,7 +36,7 @@
 		define('IS_DEBUG', true);
 		} else {
 		
-		if ($_SERVER['REMOTE_ADDR'] == '31.43.104.37' && $_SERVER['REMOTE_ADDR'] == '185.41.249.201' || $_SERVER['REMOTE_ADDR'] == '95.67.113.206' || $_SERVER['REMOTE_ADDR'] == '135.181.195.119'){
+		if ($_SERVER['REMOTE_ADDR'] == '31.43.104.37' && $_SERVER['REMOTE_ADDR'] == '172.68.238.76' || $_SERVER['REMOTE_ADDR'] == '95.67.113.206' || $_SERVER['REMOTE_ADDR'] == '135.181.195.119'){
 			define('IS_DEBUG', false);
 			} else {
 			define('IS_DEBUG', false);

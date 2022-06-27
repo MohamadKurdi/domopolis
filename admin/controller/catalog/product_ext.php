@@ -26,12 +26,13 @@ class ControllerCatalogProductExt extends Controller {
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('catalog/product');
+  //      $this->load->model('kp/product');
         $this->load->model('catalog/product_ext');
 
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             foreach ($this->request->post['selected'] as $product_id) {
                 $this->model_catalog_product->deleteProduct($product_id);
-                $this->openbay->deleteProduct($product_id);
+//                $this->model_kp_product->deleteElastic($product_id);    
             }
 
             $this->session->data['success'] = $this->language->get('text_success');

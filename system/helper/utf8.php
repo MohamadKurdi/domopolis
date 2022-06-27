@@ -27,6 +27,7 @@
 
 	function atrim($string){	
 		$string = preg_replace('/(\x{200e}|\x{200f})/u', '', $string);
+		$string = str_replace('"', "'", $string);
 		$string = trim($string);
 
 		return $string;
