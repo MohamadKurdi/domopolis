@@ -1,72 +1,35 @@
 <?php
-class ModelCatalogNcomments extends Model {
-	public function addComment($data) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "ncomments SET author = '" . $this->db->escape($data['author']) . "', news_id = '" . $this->db->escape($data['news_id']) . "', text = '" . $this->db->escape(strip_tags($data['text'])) . "', status = '" . (int)$data['status'] . "', language_id = '" . (int)$data['language_id'] . "', date_added = NOW()");
+class ModelCatalogNcomments extends Model {		
+	public function addComment($news_id, $data) {
+		$this->db->query("INSERT INTO ncomments SET author = '" . $this->db->escape($data['name']) . "', reply_id = '" . (int)$data['reply_id'] . "', news_id = '" . (int)$news_id . "', text = '" . $this->db->escape(strip_tags($data['text'])) . "', language_id = '" . (int)$this->config->get('config_language_id') . "', date_added = NOW()");
 	}
-	
-	public function editComment($ncomment_id, $data) {
-		$this->db->query("UPDATE " . DB_PREFIX . "ncomments SET author = '" . $this->db->escape($data['author']) . "', news_id = '" . $this->db->escape($data['news_id']) . "', text = '" . $this->db->escape(strip_tags($data['text'])) . "', status = '" . (int)$data['status'] . "', language_id = '" . (int)$data['language_id'] . "', date_added = NOW() WHERE ncomment_id = '" . (int)$ncomment_id . "'");
-	}
-	
-	public function deleteComment($ncomment_id) {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "ncomments WHERE ncomment_id = '" . (int)$ncomment_id . "'");
-	}
-	
-	public function getComment($ncomment_id) {
-		$query = $this->db->query("SELECT DISTINCT *, (SELECT bd.title FROM " . DB_PREFIX . "news_description bd WHERE bd.news_id = n.news_id AND bd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS article FROM " . DB_PREFIX . "ncomments n WHERE n.ncomment_id = '" . (int)$ncomment_id . "'");
 		
-		return $query->row;
-	}
-
-	public function getComments($data = array()) {
-		$sql = "SELECT n.ncomment_id, bd.title, n.author, n.status, n.date_added FROM " . DB_PREFIX . "ncomments n LEFT JOIN " . DB_PREFIX . "news_description bd ON (n.news_id = bd.news_id) WHERE bd.language_id = '" . (int)$this->config->get('config_language_id') . "'";																																					  
-		
-		$sort_data = array(
-			'bd.title',
-			'n.author',
-			'n.status',
-			'n.date_added'
-		);	
-			
-		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-			$sql .= " ORDER BY " . $data['sort'];	
-		} else {
-			$sql .= " ORDER BY n.date_added";	
-		}
-			
-		if (isset($data['order']) && ($data['order'] == 'DESC')) {
-			$sql .= " DESC";
-		} else {
-			$sql .= " ASC";
+	public function getCommentsByNewsId($news_id, $start = 0, $limit = 20, $reply_id = 0) {
+	    if ($start < 0) {
+			$start = 0;
 		}
 		
-		if (isset($data['start']) || isset($data['limit'])) {
-			if ($data['start'] < 0) {
-				$data['start'] = 0;
-			}			
-
-			if ($data['limit'] < 1) {
-				$data['limit'] = 20;
-			}	
-			
-			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
-		}																																							  
-																																							  
-		$query = $this->db->query($sql);																																				
+		if ($limit < 1) {
+			$limit = 20;
+		}
+		$query = $this->db->query("SELECT n.ncomment_id, n.author, n.text, b.news_id, bd.title, n.date_added FROM ncomments n LEFT JOIN news b ON (n.news_id = b.news_id) LEFT JOIN news_description bd ON (b.news_id = bd.news_id) WHERE b.news_id = '" . (int)$news_id . "' AND b.status  = '1' AND n.status = '1' AND n.reply_id = " . (int)$reply_id . " AND n.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY n.date_added DESC LIMIT " . (int)$start . "," . (int)$limit);
 		
-		return $query->rows;	
+		return $query->rows;
 	}
-	
 	public function getTotalComments() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "ncomments");
+		$query = $this->db->query("SELECT COUNT(*) AS total FROM ncomments n LEFT JOIN news b ON (n.newa_id = b.news_id) WHERE b.status = '1' AND n.language_id = '" . (int)$this->config->get('config_language_id') . "' AND n.status = '1'");
 		
 		return $query->row['total'];
 	}
-	
-	public function getTotalCommentsAwaitingApproval() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "ncomments WHERE status = '0'");
+
+	public function getTotalNcommentsByNewsId($news_id) {
+		$query = $this->db->query("SELECT COUNT(*) AS total FROM ncomments n LEFT JOIN news b ON (n.news_id = b.news_id) LEFT JOIN news_description bd ON (b.news_id = bd.news_id) WHERE b.news_id = '" . (int)$news_id . "' AND b.status = '1' AND n.status = '1' AND n.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 		
 		return $query->row['total'];
-	}	
+	}
+	public function getTotalJNcommentsByNewsId($news_id, $reply_id = 0) {
+		$query = $this->db->query("SELECT COUNT(*) AS total FROM ncomments n LEFT JOIN news b ON (n.news_id = b.news_id) LEFT JOIN news_description bd ON (b.news_id = bd.news_id) WHERE b.news_id = '" . (int)$news_id . "' AND b.status = '1' AND n.reply_id = " . (int)$reply_id . " AND n.status = '1' AND n.language_id = '" . (int)$this->config->get('config_language_id') . "' AND bd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+		
+		return $query->row['total'];
+	}
 }
-?>

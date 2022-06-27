@@ -1,18 +1,10 @@
 <?php
 	class ModelCatalogShopRating extends Model {
+		private $fields = array('comment', 'good', 'bad');
 		
-		public function getAllRatings(){
-			
-			$sql = "SELECT * FROM " . DB_PREFIX . "shop_rating ORDER BY date_added DESC";
-			
-			$query = $this->db->query($sql);
-			
-			return $query->rows;
-			
-		}
 		public function getCustomTypes(){
 			
-			$sql = "SELECT * FROM " . DB_PREFIX . "shop_rating_custom_types ORDER BY id";
+			$sql = "SELECT * FROM shop_rating_custom_types WHERE status = '1' ORDER BY id";
 			
 			$query = $this->db->query($sql);
 			
@@ -24,7 +16,7 @@
 			
 			$rates= array();
 			foreach($customs as $custom){
-				$sql = "SELECT * FROM " . DB_PREFIX . "shop_rating_custom_values WHERE custom_id = '".$custom['id']."' AND rate_id = '".$rate_id."' ORDER BY id";
+				$sql = "SELECT * FROM shop_rating_custom_values WHERE custom_id = '".$custom['id']."' AND rate_id = '".$rate_id."' ORDER BY id";
 				$query = $this->db->query($sql);
 				$result = $query->row;
 				
@@ -41,42 +33,106 @@
 			
 		}
 		
-		public function getRating($rate_id){
+		public function getStoreRatings($data = array()){
 			
-			$sql = "SELECT * FROM " . DB_PREFIX . "shop_rating WHERE rate_id = '".$rate_id."'";
 			
-			$query = $this->db->query($sql);
+			$store_id = $this->config->get('config_store_id');
 			
-			return $query->row;
+			$sql = "SELECT s.*,
+			sd.comment as comment_overload,
+			sd.good as good_overload,
+			sd.bad as bad_overload
+			FROM shop_rating s
+			LEFT JOIN shop_rating_description sd ON (s.rate_id = sd.rate_id) 
+			WHERE  		
+			rate_status = '1' 
+			AND sd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			ORDER BY  date_added DESC";
 			
-		}
-		public function getRatingAnswer($rate_id){
-			
-			$sql = "SELECT * FROM " . DB_PREFIX . "shop_rating_answers WHERE rate_id = '".$rate_id."'";
-			
-			$query = $this->db->query($sql);
-			
-			return $query->row;
-			
-		}
-		public function getRatingAnswers(){
-			
-			$sql = "SELECT id, rate_id FROM " . DB_PREFIX . "shop_rating_answers WHERE comment <> ''";
-			
-			$query = $this->db->query($sql);
-			
-			$arr = array();
-			foreach($query->rows as $ans){
-				$arr[$ans['rate_id']] = $ans['id'];
+			if (isset($data['start']) || isset($data['limit'])) {
+				if ($data['start'] < 0) {
+					$data['start'] = 0;
+				}
+				
+				if ($data['limit'] < 1) {
+					$data['limit'] = 20;
+				}
+				
+				$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 			}
-			return $arr;
+			
+			$query = $this->db->query($sql);
+			
+			foreach ($query->rows as &$row){
+				
+				foreach ($this->fields as $field){
+					if (!empty(trim($row[$field . '_overload']))){
+						$row[$field] = $row[$field . '_overload'];
+					}				
+				}	
+			}
+			
+			return $query->rows;
 			
 		}
-		public function customerRatingsCount($customer_id){
+		public function getStoreRatingsAll(){
 			
 			$store_id =$this->config->get('config_store_id');
 			
-			$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "shop_rating WHERE store_id ='" . $store_id . "' AND customer_id = '".$customer_id."'";
+			$sql = "SELECT s.*,
+			sd.comment as comment_overload,
+			sd.good as good_overload,
+			sd.bad as bad_overload
+			FROM shop_rating s
+			LEFT JOIN shop_rating_description sd ON (s.rate_id = sd.rate_id) 
+			WHERE  		
+			rate_status = '1' 
+			AND sd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			ORDER BY  date_added DESC";
+			
+						
+			$query = $this->db->query($sql);
+			
+			foreach ($query->rows as &$row){
+				
+				foreach ($this->fields as $field){
+					if (!empty(trim($row[$field . '_overload']))){
+						$row[$field] = $row[$field . '_overload'];
+					}				
+				}	
+			}
+
+			
+			return $query->rows;
+			
+		}
+		
+		public function getStoreRatingScore(){
+			
+			$store_id =$this->config->get('config_store_id');
+			
+			$sql = "SELECT AVG(shop_rate) as shop_rte FROM shop_rating WHERE rate_status = '1' ORDER BY  date_added DESC";
+			
+			
+			$query = $this->db->query($sql);
+			
+			return $query->row['shop_rte'];
+			
+		}
+		
+		public function getCategoryRatingScore($category_id){
+			
+		}
+		
+		public function getManufacturerRatingScore($manufacturer_id){
+			
+		}
+		
+		public function getStoreRatingsTotal(){
+			
+			$store_id =$this->config->get('config_store_id');
+			
+			$sql = "SELECT COUNT(*) AS total FROM shop_rating WHERE rate_status = '1' ORDER BY  rate_id DESC";
 			
 			
 			$query = $this->db->query($sql);
@@ -84,201 +140,197 @@
 			return $query->row['total'];
 			
 		}
-		
-		public function addAnswer($rate_id, $answer)
-		{
+		public function customerRatingsCount($customer_id){
+			
+			$store_id =$this->config->get('config_store_id');
+			
+			$sql = "SELECT COUNT(*) AS total FROM shop_rating WHERE customer_id = '".$customer_id."'";
 			
 			
-			if ($answer['answer_id']) {
-				$sql = "UPDATE " . DB_PREFIX . "shop_rating_answers SET comment='" . $answer['answer'] . "' WHERE id = '" . $answer['answer_id'] . "'";
-				$this->db->query($sql);
-				$answer_id=$answer['answer_id'];
-				} else {
+			$query = $this->db->query($sql);
+			
+			return $query->row['total'];
+			
+		}
+		public function getLastStoreRatings($limit){
+			
+			$store_id =$this->config->get('config_store_id');
+			
+			$sql = "SELECT s.*,
+			sd.comment as comment_overload,
+			sd.good as good_overload,
+			sd.bad as bad_overload
+			FROM shop_rating s
+			LEFT JOIN shop_rating_description sd ON (s.rate_id = sd.rate_id) 
+			WHERE  		
+			rate_status = '1' 
+			AND sd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			ORDER BY date_added DESC LIMIT $limit";
+			
+			$query = $this->db->query($sql);
+			
+			foreach ($query->rows as &$row){
 				
-				$this->db->query("INSERT INTO " . DB_PREFIX . "shop_rating_answers SET rate_id = '" . $rate_id . "', user_id = '" . (int)$this->user->getId() . "', date_added =  NOW(), comment = '" . $this->db->escape($answer['answer']) . "'");
-				$answer_id = $this->db->getLastId();
-				
+				foreach ($this->fields as $field){
+					if (!empty(trim($row[$field . '_overload']))){
+						$row[$field] = $row[$field . '_overload'];
+					}				
+				}	
 			}
-			if($answer_id && $this->config->get('shop_rating_notify') && $answer['answer']){
-				$answer_item = $this->getRatingAnswer($rate_id);
+
+			
+			return $query->rows;
+			
+		}
+		public function getRatingAnswers(){
+			
+			$sql = "SELECT rate_id, comment FROM shop_rating_answers ";
+			
+			$query = $this->db->query($sql);
+			
+			$arr = array();
+			foreach($query->rows as $ans){
+				$arr[$ans['rate_id']] = $ans['comment'];
+			}
+			return $arr;
+			
+		}
+		
+		public function addRating($data){
+			//$this->event->trigger('pre.shop_rating.add', $data);
+			$store_id =$this->config->get('config_store_id');
+			if($this->config->get('shop_rating_moderate')){
+				$status = 0;
+				}else{
+				$status = 1;
+			}
+			if(isset($data['shop_rate-input'])){
+				if((int)$data['shop_rate-input'] < 0){
+					$shop_rate = 0;
+					}else if((int)$data['shop_rate-input'] > 5){
+					$shop_rate = 5;
+					}else{
+					$shop_rate = (int)$data['shop_rate-input'];
+				}
+				}else{
+				$shop_rate = null;
+			}
+			if(isset($data['site_rate-input'])){
+				if((int)$data['site_rate-input'] < 0){
+					$site_rate = 0;
+					}else if((int)$data['site_rate-input'] > 5){
+					$site_rate = 5;
+					}else{
+					$site_rate = (int)$data['site_rate-input'];
+				}
 				
-				if ($answer_item['notified'] != 1) {
-					$rating = $this->getRating($rate_id);
-					$this->load->language('catalog/shop_rating');
-					
-					$subject = sprintf($this->language->get('text_mail_subject'), html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
-					
-					$message = sprintf($this->language->get('text_mail_subject'), html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8')) . "\n";
-					$message .= $this->language->get('text_mail_comment') . "\n";
-					$message .= html_entity_decode($answer['answer'], ENT_QUOTES, 'UTF-8') . "\n\n";
-					
-					$mail = new Mail();
-					$mail->protocol = $this->config->get('config_mail_protocol');
-					$mail->parameter = $this->config->get('config_mail_parameter');
-					$mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
-					$mail->smtp_username = $this->config->get('config_mail_smtp_username');
-					$mail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
-					$mail->smtp_port = $this->config->get('config_mail_smtp_port');
-					$mail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
-					
-					
-					$mail->setTo($rating['customer_email']);
-					$mail->setFrom($this->config->get('config_email'));
-					
-					$mail->setSender(html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
-					$mail->setSubject($subject);
-					$mail->setText($message);
-					$mail->send();
-					
-					
-					$emails = explode(',', $this->config->get('config_mail_alert'));
-					
-					foreach ($emails as $email) {
-						if ($email && preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $email)) {
-							$mail->setTo($email);
-							$mail->send();
+				}else{
+				$site_rate = null;
+			}
+			if(isset($data['good'])){
+				$good = $this->db->escape($data['good']);
+				}else{
+				$good = null;
+			}
+			if(isset($data['bad'])){
+				$bad = $this->db->escape($data['bad']);
+				}else{
+				$bad = null;
+			}
+			
+			$this->db->query("INSERT INTO shop_rating SET store_id = '" . $store_id . "', customer_id = '" . (int)$this->customer->getId() . "', date_added =  NOW(), rate_status = '". $status ."', customer_name = '" . $this->db->escape($data['name']) . "', customer_email= '" . $this->db->escape($data['email']) . "', shop_rate= '" . $shop_rate . "', site_rate= '" . $site_rate . "', comment= '" . $this->db->escape($data['comment']) . "', good= '" . $good . "', bad= '" . $bad . "'");
+			
+			$rating_id = $this->db->getLastId();
+			
+			if ($rating_id) {
+				$customs =$this->getCustomTypes();
+				
+				foreach($customs as $custom){
+					if(isset($data['custom_'.$custom['id'].'_rate-input'])){
+						if((int)$data['custom_'.$custom['id'].'_rate-input'] < 0 ){
+							$rate = 0;
+							}else{
+							$rate = (int)$data['custom_'.$custom['id'].'_rate-input'];
 						}
+						
+						$this->db->query("INSERT INTO shop_rating_custom_values SET custom_id = '" . $custom['id'] . "', rate_id = '" . $rating_id . "', custom_value =  '". $rate ."'");
+						
 					}
 					
 					
-					$sql = "UPDATE " . DB_PREFIX . "shop_rating_answers SET notified='1' WHERE id = '" . $answer_id . "'";
-					$this->db->query($sql);
+				}
+				
+				
+				
+				
+				$this->load->language('information/shop_rating');
+				
+				$subject = sprintf($this->language->get('text_mail_subject'), html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
+				
+				$message  = $this->language->get('text_mail_waiting') . "\n";
+				$message .= sprintf($this->language->get('text_mail_reviewer'), html_entity_decode($data['name'], ENT_QUOTES, 'UTF-8')) . "\n";
+				if($shop_rate){
+					$message .= sprintf($this->language->get('text_mail_shop_rating'), $shop_rate) . "\n";
+				}
+				if($site_rate){
+					$message .= sprintf($this->language->get('text_mail_site_rating'), $site_rate) . "\n";
+				}
+				$message .= $this->language->get('text_mail_comment') . "\n";
+				$message .= html_entity_decode($data['comment'], ENT_QUOTES, 'UTF-8') . "\n\n";
+				if($good) {
+					$message .= $this->language->get('text_mail_good') . "\n";
+					$message .= html_entity_decode($good, ENT_QUOTES, 'UTF-8') . "\n\n";
+				}
+				if($bad){
+					$message .= $this->language->get('text_mail_bad') . "\n";
+					$message .= html_entity_decode($bad, ENT_QUOTES, 'UTF-8') . "\n\n";
+				}
+				
+				$mail = new Mail();
+				$mail->protocol = $this->config->get('config_mail_protocol');
+				$mail->parameter = $this->config->get('config_mail_parameter');
+				$mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
+				$mail->smtp_username = $this->config->get('config_mail_smtp_username');
+				$mail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
+				$mail->smtp_port = $this->config->get('config_mail_smtp_port');
+				$mail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
+				
+				
+				if($this->config->get('shop_rating_email')){
+					$mail->setTo($this->config->get('shop_rating_email'));
+					}else{
+					$mail->setTo($this->config->get('config_email'));
+				}
+				$mail->setFrom($this->config->get('config_email'));
+				
+				$mail->setSender(html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
+				$mail->setSubject($subject);
+				$mail->setText($message);
+				$mail->send();
+				
+				// Send to additional alert emails
+				$emails = explode(',', $this->config->get('config_mail_alert'));
+				
+				foreach ($emails as $email) {
+					if ($email && preg_match('/^[^\@]+@.*.[a-z]{2,15}$/i', $email)) {
+						$mail->setTo($email);
+						$mail->send();
+					}
 				}
 			}
 			
+			//addAlert
+			$data = array(
+			'type' => 'warning',
+			'text' => 'Новый отзыв о магазине!', 
+			'entity_type' => 'rating', 
+			'entity_id'=> $rating_id
+			);
+			
+			$this->mAlert->insertAlertForGroup('admins', $data);
+			$this->mAlert->insertAlertForGroup('content', $data);
+			
+			return $rating_id;
 		}
-		
-		
-		public  function createCustomType($title){
-			$this->db->query("INSERT INTO " . DB_PREFIX . "shop_rating_custom_types SET title = '" . $this->db->escape($title) . "', status = '0' ");
-			return array('id' => $this->db->getLastId(), 'title' => $title);
-			
-		}
-		public  function statusCustomType($type_id){
-			$sql = "UPDATE " . DB_PREFIX . "shop_rating_custom_types SET status=IF(status=0, 1, 0) WHERE id = '".$type_id."'";
-			if($this->db->query($sql)){
-				return array('id' => $type_id, 'status' => 'success');
-				}else{
-				return array('id' => $type_id, 'status' => 'error');
-			}
-		}
-		public  function removeCustomType($type_id){
-			$sql = "DELETE FROM " . DB_PREFIX . "shop_rating_custom_types WHERE id = '".$type_id."'";
-			if($this->db->query($sql)){
-				return array('id' => $type_id, 'status' => 'success');
-				}else{
-				return array('id' => $type_id, 'status' => 'error');
-			}
-		}
-		public  function changeStatus($rate_id){
-			$sql = "UPDATE " . DB_PREFIX . "shop_rating SET rate_status=IF(rate_status=0, 1, 0) WHERE rate_id = '".$rate_id."'";
-			
-			if($this->db->query($sql)){
-				return 'OK';
-				}else{
-				return 'DB Error';
-			}
-			
-			
-		}
-		public  function changeDate($rate_id, $new_date){
-			
-			$date = date('Y-m-d H:i', strtotime($new_date)).':00';
-			
-			$sql = "UPDATE " . DB_PREFIX . "shop_rating SET date_added='".$date."' WHERE rate_id = '".$rate_id."'";
-			$this->db->query($sql);
-			
-		}
-		
-		
-		public  function changeComment($rate_id, $rating_params){
-			
-			$sql = "UPDATE " . DB_PREFIX . "shop_rating SET ";
-			
-			$act = false;
-			
-			if(isset($rating_params['comment'])){
-				$sql .= " comment='". $rating_params['comment'] . "'";
-				$act = true;
-			}
-			
-			if(isset($rating_params['good'])){
-				if($act){
-					$sql .= ',';
-				}
-				$sql .= " good='" . $rating_params['good'] . "'";
-				$act = true;
-			}
-			
-			if(isset($rating_params['bad'])){
-				if($act){
-					$sql .= ',';
-				}
-				$sql .= " bad='" . $rating_params['bad'] . "'";
-				$act = true;
-			}
-			
-			$sql .= "  WHERE rate_id = '".$rate_id."'";
-			
-			if($act){
-				$this->db->query($sql);
-			}
-			
-						
-			$this->db->query("DELETE FROM " . DB_PREFIX . "shop_rating_description WHERE rate_id = '" . (int)$rate_id . "'");
-			foreach ($rating_params['shop_rating_description'] as $language_id => $value) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "shop_rating_description SET 
-				rate_id = '" . (int)$rate_id . "', 
-				language_id = '" . (int)$language_id . "',
-				comment = '" . $this->db->escape(strip_tags($value['comment'])) . "',
-				good = '" . $this->db->escape(strip_tags($value['good'])) . "',
-				bad = '" . $this->db->escape(strip_tags($value['bads'])) . "'");
-			}
-			
-		}
-		
-		public function getShopRatingDescriptions($rate_id) {
-			$shop_rating_description_description_data = array();
-			
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "shop_rating_description WHERE rate_id = '" . (int)$rate_id . "'");
-			
-			foreach ($query->rows as $result) {
-				$shop_rating_description_description_data[$result['language_id']] = array(
-				'comment'     	=> $result['comment'],
-				'good' 			=> $result['good'],
-				'bad' 			=> $result['bad'],		
-				'answer' 			=> $result['answer'],
-				);
-			}
-			
-			return $shop_rating_description_description_data;
-		}
-		
-		
-		
-		public function update() {
-		}
-		public function install() {
-		}
-		public function uninstall() {
-			
-		}
-		
-		
-		public function toogleEvent($set) {
-			
-			$sql = "SELECT COUNT(*) AS srrm FROM " . DB_PREFIX . "event WHERE `code` = 'shop_rating_request_mail'" ;
-			$events = $this->db->query($sql);
-			
-			
-			if($events->row['srrm'] == 0 && $set == 1){
-				$this->load->model('extension/event');
-				$this->model_extension_event->addEvent('shop_rating_request_mail', 'post.order.history.add', 'information/shop_rating/request_mail');
-				}elseif($events->row['srrm'] != 0 && $set == 0){
-				$this->load->model('extension/event');
-				$this->model_extension_event->deleteEvent('shop_rating_request_mail');
-			}
-		}
-		
 		
 	}	
