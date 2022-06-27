@@ -14,7 +14,7 @@ label{cursor:pointer}
 #header .div2 span{font-weight:700}
 #menu_top{float:left}
 #menu_top .fa-bell{color:#5d5d5d}
-#menu_top > ul{margin:0}
+#menu_top > ul{margin:0; padding-top: 5px;}
 #menu_top > ul > li > ul{position:absolute;z-index:9;top:40px;background-color:#2e3438;padding-left:10px}
 #menu_top > ul > li > ul > li{list-style:none}
 #menu_top > ul a{display:block;color:#5d5d5d !important;text-decoration:none;padding:5px}
@@ -271,4 +271,4 @@ border-radius: 2px;}
 .tooltip.bottom .tooltip-arrow{top:0;left:50%;margin-left:-5px;border-width:0 5px 5px;border-bottom-color:#000}
 .tooltip.bottom-left .tooltip-arrow{top:0;right:5px;margin-top:-5px;border-width:0 5px 5px;border-bottom-color:#000}
 .tooltip.bottom-right .tooltip-arrow{top:0;left:5px;margin-top:-5px;border-width:0 5px 5px;border-bottom-color:#000}
-#menu_top > ul a .label,#menu_top .label{color: #5d5d5d !important;}
+#menu_top > ul a .label,#menu_top .label{color: #5d5d5d !important;padding: 5px 7px;}
