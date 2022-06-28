@@ -42,13 +42,6 @@
 			$query = $this->db->query($sql);
 			
 			return $query->rows;
-			
-			
-			
-			
-			
-			
-			
 		}
 		
 		public function getCategories($parent_id = 0, $limit = false) {

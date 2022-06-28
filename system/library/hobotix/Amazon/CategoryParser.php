@@ -27,8 +27,8 @@ class CategoryParser
 			$this->log 		= $registry->get('log');
 			$this->rfClient = $rfClient;
 
-			require_once(DIR_APPLICATION . '../admin/model/catalog/category.php');
-			$this->model_catalog_category = new \ModelCatalogCategory($this->registry);
+			loadAndRenameAnyModels(DIR_APPLICATION . '../admin/model/catalog/category.php', 'ModelCatalogCategory', 'ModelAdminCatalogCategory');
+			$this->model_catalog_category = new \ModelAdminCatalogCategory($this->registry);
 
 			if ($this->config->get('config_rainforest_enable_translation')){
 				require_once(DIR_SYSTEM . 'library/hobotix/YandexTranslator.php');

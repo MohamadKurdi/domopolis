@@ -150,6 +150,17 @@
 		
 		eval($modelCatalogProductContents);
 	}
+
+	function loadAndRenameAnyModels($path, $className, $classNameTo){
+		
+		$modelCatalogProductContents = file_get_contents($path);
+		
+		$modelCatalogProductContents = str_replace($className, $classNameTo, $modelCatalogProductContents);
+		$modelCatalogProductContents = str_replace('<?php', '', $modelCatalogProductContents);
+		$modelCatalogProductContents = str_replace('<?', '', $modelCatalogProductContents);
+		
+		eval($modelCatalogProductContents);
+	}
 	
 	function getFreeDeliveryInfo($shippingSettings){
 		
