@@ -246,11 +246,11 @@ class ControllerDPRainForest extends Controller {
 			$this->categoriesData[$category_id]['page'] = 1;
 		}
 
-		$total = count($this->categoriesData);
+		$total = count($this->categoriesData);		
 		$this->iterations = $iterations = ceil($total/\hobotix\RainforestAmazon::categoryRequestLimits);
 		echoLine('[OFFERS] Всего ' . $total . ' категорий!');		
 
-		$otherPageRequests = [];
+		$otherPageRequests = [];		
 		for ($i = 1; $i <= $iterations; $i++){
 			$timer = new FPCTimer();
 			$this->current_iteration = $i;
@@ -281,7 +281,6 @@ class ControllerDPRainForest extends Controller {
 					}
 				}
 			}
-
 		}
 
 		$total = count($otherPageRequests);

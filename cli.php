@@ -224,4 +224,4 @@
 		echoLine('[CLI] Action не определена, це пізда');
 	}
 
-	$registry->get('simpleProcess')->startProcess();
+	$registry->get('simpleProcess')->stopProcess();

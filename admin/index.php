@@ -23,13 +23,6 @@
 		}
 	}
 	
-	$ips = array(
-	'176.38.155.116',
-	'37.229.204.114',
-	'109.251.240.90',
-	'95.135.25.39',
-	'91.239.232.49'
-	);
 	
 	//define DEBUG Session
 	if (isset($_GET['hello']) && $_GET['hello'] == 'world'){
@@ -44,13 +37,14 @@
 	}
 	
 	//find http host
-	$http_host = str_replace('www.', '', $_SERVER['HTTP_HOST']);
-	$configs = loadJsonConfig('configs');	
+	$httpHost 		= str_replace('www.', '', $_SERVER['HTTP_HOST']);
+	$configFiles 	= loadJsonConfig('configs');	
 	
 	// Configuration	
-	if (isset($configs[$http_host])){		
-		if (file_exists($configs[$http_host])) {
-			require_once($configs[$http_host]);
+	if (isset($configFiles[$httpHost])){		
+		if (file_exists($configFiles[$httpHost])) {
+			$configFile = $configFiles[$httpHost];
+			require_once($configFiles[$httpHost]);
 			} else {
 			die ('no config file!');
 		}
@@ -59,7 +53,7 @@
 		die ('ho config file assigned to host');
 	}	
 
-	if ($http_host != parse_url(HTTPS_CATALOG, PHP_URL_HOST)){
+	if ($httpHost != parse_url(HTTPS_CATALOG, PHP_URL_HOST)){
 		die('sorry');
 	}
 	
@@ -120,6 +114,14 @@
 			$config->set($setting['key'], unserialize($setting['value']));
 		}
 	}
+	
+	$configFilesPrefix = '';
+	if (count($configFileExploded = explode('.', $configFile)) == 3){
+		if (mb_strlen($configFileExploded[1]) == 2){
+			$configFilesPrefix = trim($configFileExploded[1]);
+		}
+	}
+	$registry->get('config')->set('config_config_file_prefix', $configFilesPrefix);
 	
 	
 	// Url

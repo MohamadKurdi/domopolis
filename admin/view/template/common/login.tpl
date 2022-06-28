@@ -118,7 +118,7 @@
 					<?php if ($this->config->get('config_android_application_link')) { ?>
 					<tr>
 						<td style="text-align: center; width:100%; padding-top:20px">
-							<i class="fa fa-android" aria-hidden="true" style="color:#02760e;"></i> <a style="width:90%; padding:5px 7px; color:#02760e;" href="<?php echo $this->config->get('config_android_application_link');?>">установить приложение KP ADMIN для Android</a>
+							<i class="fa fa-android" aria-hidden="true" style="color:#02760e;"></i> <a style="width:90%; padding:5px 7px; color:#02760e;" href="<?php echo $this->config->get('config_android_application_link');?>">установить приложение для Android</a>
 						</td>
 					</tr>
 					<?php } ?>
