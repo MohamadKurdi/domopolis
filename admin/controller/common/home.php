@@ -94,6 +94,12 @@
 			
 			
 		}
+
+		public function getCronStats(){
+
+
+			$this->template = 'homestats/cronstats.tpl';
+		}
 		
 		public function getLastTwentyOrders(){
 			$this->data['token'] = $this->session->data['token'];
