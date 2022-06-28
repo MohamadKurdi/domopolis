@@ -27,6 +27,9 @@
 								Процесс
 							</td>
 							<td>
+								pid файл
+							</td>
+							<td>
 								Контроллер
 							</td>
 							<td>
@@ -67,6 +70,9 @@
 							</td>
 							<td>
 								<b><? echo $process['name']; ?></b>
+							</td>
+							<td>
+								<? echo $process['file']; ?>
 							</td>
 							<td>
 								<? echo $process['route']; ?>
