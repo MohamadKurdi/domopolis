@@ -180,7 +180,9 @@
 	}
 
 	$registry->set('languages', $languages);
+	
 	$registry->get('config')->set('config_supported_languages', [$registry->get('config')->get('config_language'), $registry->get('config')->get('config_second_language')]);
+	$registry->get('config')->set('config_rainforest_source_language_id', $languages[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);
 	
 	//FROM URL
 	if ($registry->get('config')->get('config_second_language')){					

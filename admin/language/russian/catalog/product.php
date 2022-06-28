@@ -73,6 +73,7 @@ $_['column_stock_status']       = 'Склад';
 $_['column_requires_shipping']  = 'Requires Shipping';
 $_['column_date_available']     = 'Date Available';
 $_['column_date_modified']      = 'Date Modified';
+$_['column_date_added']      = 'Создан';
 $_['column_length']             = 'Length';
 $_['column_width']              = 'Width';
 $_['column_height']             = 'Height';

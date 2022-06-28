@@ -25,8 +25,8 @@ class ModelCatalogAttribute extends Model {
 	public function deleteAttribute($attribute_id) {
 		$this->db->query("DELETE FROM " . DB_PREFIX . "attribute WHERE attribute_id = '" . (int)$attribute_id . "'");
 		$this->db->query("DELETE FROM " . DB_PREFIX . "attribute_description WHERE attribute_id = '" . (int)$attribute_id . "'");
+		$this->db->query("DELETE FROM " . DB_PREFIX . "product_attribute WHERE attribute_id = '" . (int)$attribute_id . "'");
         $this->db->query("DELETE FROM " . DB_PREFIX . "attribute_value_image WHERE attribute_id = '" . (int)$attribute_id . "'");
-
     }
 
 	public function getAttribute($attribute_id) {
@@ -213,4 +213,3 @@ class ModelCatalogAttribute extends Model {
 		return $query->row['total'];
 	}		
 }
-?>

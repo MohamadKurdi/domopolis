@@ -425,11 +425,6 @@
 
 		public function editProductVariantDescriptions($products, $data){
 
-
-
-
-
-
 		}
 		
 		public function editProduct($product_id, $data) {
@@ -521,11 +516,34 @@
 					if ($product_attribute['attribute_id']) {
 						$this->db->query("DELETE FROM product_attribute WHERE product_id = '" . (int)$product_id . "' AND attribute_id = '" . (int)$product_attribute['attribute_id'] . "'");
 						
+						$copy_product_attribute_description = [];
 						foreach ($product_attribute['product_attribute_description'] as $language_id => $product_attribute_description) {				
 							$this->db->query("INSERT INTO product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$product_attribute['attribute_id'] . "', language_id = '" . (int)$language_id . "', text = '" .  $this->db->escape($product_attribute_description['text']) . "'");
+
+							if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_translate_edition_mode']){
+								if ($language_id == $this->config->get('config_rainforest_source_language_id')){
+									$rainforest_source_text = $product_attribute_description['text'];
+								} else {
+									$copy_product_attribute_description[$language_id] = [
+										'text' => $product_attribute_description['text']
+									];
+								}
+							}
 						}
-					}
-				}
+
+						if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_translate_edition_mode'] && !empty($rainforest_source_text)){
+							foreach ($copy_product_attribute_description as $language_id => $copy_attribute_description) {	
+								$sql = "UPDATE product_attribute SET text = '" . $this->db->escape($copy_attribute_description['text']) . "' 
+									WHERE product_id IN 
+									(SELECT p2.product_id FROM product_attribute p2 WHERE p2.attribute_id = '" . (int)$product_attribute['attribute_id'] . "' AND p2.language_id = '" . $this->config->get('config_rainforest_source_language_id') . "' AND p2.text LIKE ('" . $this->db->escape($rainforest_source_text) . "')) 
+									AND attribute_id = '" . (int)(int)$product_attribute['attribute_id'] . "' AND language_id = '" . (int)$language_id . "'";
+
+								$this->db->query($sql);
+							}
+						}
+
+					}				
+				}			
 			}
 			
 			$this->db->query("DELETE FROM product_price_to_store WHERE product_id = '" . (int)$product_id . "'");

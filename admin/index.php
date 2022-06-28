@@ -230,7 +230,9 @@
 		$languages[$result['code']] = $result;
 	}
 	
-	$config->set('config_language_id', $languages[$config->get('config_admin_language')]['language_id']);
+	$registry->set('languages', $languages);
+	$registry->get('config')->set('config_language_id', $languages[$config->get('config_admin_language')]['language_id']);
+	$registry->get('config')->set('config_rainforest_source_language_id', $languages[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);
 	
 	// Language	
 	$language = new Language($languages[$config->get('config_admin_language')]['directory'], $registry);

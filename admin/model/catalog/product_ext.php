@@ -114,6 +114,7 @@ class ModelCatalogProductExt extends Model {
         $date_filters = array(
             'date_available'    => 'p.date_available',
             'date_modified'     => 'p.date_modified',
+            'date_added'        => 'p.date_added',
             );
 
         foreach ($date_filters as $key => $value) {

@@ -61,8 +61,8 @@ $_['txt_ed']                 = 'E';
 	// Filter by category ADD
 	$_['column_category']        = 'Category';
 	// End add
-	$_['column_price']           = 'Цена на сайте';
-	$_['column_quantity']        = 'Количество';
+	$_['column_price']           = 'Цена';
+	$_['column_quantity']        = 'Кол.';
 	$_['column_status']          = 'Статус';
 	$_['column_action']          = 'Действие';
 
@@ -72,6 +72,7 @@ $_['column_subtract']           = 'Subtract Stock';
 $_['column_stock_status']       = 'Склад';
 $_['column_requires_shipping']  = 'Requires Shipping';
 $_['column_date_available']     = 'Date Available';
+$_['column_date_added']      	= 'Создан';
 $_['column_date_modified']      = 'Date Modified';
 $_['column_length']             = 'Length';
 $_['column_width']              = 'Width';

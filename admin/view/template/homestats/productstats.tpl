@@ -5,6 +5,7 @@
 	.list.big tbody td.discount{font-size:11px;color:red;font-weight:700;}
 	.list.big tbody td.percent{font-size:11px;color:#ff7815;font-weight:700;}
 	.list.small-bottom-margin{margin-bottom: 10px;}
+	.list tbody td a{text-decoration: none; color: gray;}
 </style>
 
 
@@ -28,8 +29,8 @@
 				</thead>
 				<tr>
 					<td><?php echo $total_products; ?></td>
-					<td><?php echo $total_product_enabled; ?></td>
-					<td><?php echo $total_products_in_tech; ?></td>
+					<td><a href="<?php echo $filter_total_products_enabled; ?>"><?php echo $total_product_enabled; ?> <i class="fa fa-filter"></i></a></td>
+					<td><a href="<?php echo $filter_total_products_in_tech; ?>"><?php echo $total_products_in_tech; ?> <i class="fa fa-filter"></i></a></td>
 					<td><?php echo $total_product_parsed; ?></td>
 				</tr>
 
@@ -50,8 +51,8 @@
 						<td style="color:#24a4c1"><i class="fa fa-plus" aria-hidden="true"></i> Неделя</td>						
 					</tr>
 					<tr>
-						<td><?php echo $total_products_added_today; ?></td>
-						<td><?php echo $total_products_added_yesterday; ?></td>
+						<td><a href="<?php echo $filter_total_products_added_today; ?>"><?php echo $total_products_added_today; ?> <i class="fa fa-filter"></i></a> </td>
+						<td><a href="<?php echo $filter_total_products_added_yesterday; ?>"><?php echo $total_products_added_yesterday; ?><i class="fa fa-filter"></i></a> </td>
 						<td><?php echo $total_products_added_week; ?></td>
 					</tr>
 				</thead>
