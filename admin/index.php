@@ -93,8 +93,7 @@
 	require_once(DIR_SYSTEM . 'library/hobotix/EmailBlackList.php');
 	require_once(DIR_SYSTEM . 'library/hobotix/RainforestAmazon.php');
 	require_once(DIR_SYSTEM . 'library/hobotix/PricevaAdaptor.php');
-	
-	
+	require_once(DIR_SYSTEM . 'library/hobotix/simpleProcess.php');	
 	
 	// Registry
 	$registry = new Registry();
@@ -220,6 +219,7 @@
 	
 	
 	$registry->set('mobileDetect', new Mobile_Detect);
+	$registry->set('simpleProcess', new hobotix\simpleProcess());
 	
 	// Language
 	$languages = array();

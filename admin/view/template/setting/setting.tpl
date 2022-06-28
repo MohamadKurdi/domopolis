@@ -213,6 +213,7 @@
 								</td>
 
 								<td style="width:20%">
+									<div>
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Статистика товаров и категорий в админке</span></p>
 									<select name="config_amazon_product_stats_enable">
 										<?php if ($config_amazon_product_stats_enable) { ?>
@@ -225,6 +226,19 @@
 									</select>
 									<br />
 									<span class="help">показать на главной странице в админке счетчики категорий, товаров и процесса обработки данных, загруженных из amazon</span>
+									</div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Монитор cron на главной</span></p>
+									<select name="config_cron_stats_display_enable">
+										<?php if ($config_cron_stats_display_enable) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+									<br />
+									<span class="help">показать на главной странице в админке монитор регулярных задач</span>
 								</td>
 							</tr>
 						</table>

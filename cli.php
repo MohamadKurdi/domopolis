@@ -195,12 +195,15 @@
 	$registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
 	$registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
 	$registry->set('CourierServices', 	new CourierServices());
+	$registry->set('simpleProcess', 	new hobotix\simpleProcess(['route' => $route, 'config' => $configFile, 'args' => $functionArguments]));
 
 	$controller = new Front($registry);
 
 	if ($application != 'admin'){
 		$controller->addPreAction(new Action('common/seo_pro'));
 	}
+
+	$registry->get('simpleProcess')->startProcess();
 
 	if ($functionArguments){
 		$action = new Action($route, $functionArguments);
@@ -209,13 +212,16 @@
 	}
 
 	if (isset($action)){
-
 		if ($action->getFile()){
 			echoLine('[CLI] Action File found: ' . $action->getFile());
 			$controller->dispatch($action, new Action('kp/errorreport/error'));
 		} else {
+			$registry->get('simpleProcess')->dropProcess();
 			echoLine('[CLI] Action File not found, це пізда');			
 		}	
 	} else {
+		$registry->get('simpleProcess')->dropProcess();
 		echoLine('[CLI] Action не определена, це пізда');
 	}
+
+	$registry->get('simpleProcess')->startProcess();

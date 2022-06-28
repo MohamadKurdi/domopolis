@@ -1155,6 +1155,12 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$this->data['config_amazon_product_stats_enable'] = $this->config->get('config_amazon_product_stats_enable');
 		}
+
+		if (isset($this->request->post['config_cron_stats_display_enable'])) {
+			$this->data['config_cron_stats_display_enable'] = $this->request->post['config_cron_stats_display_enable'];
+		} else {
+			$this->data['config_cron_stats_display_enable'] = $this->config->get('config_cron_stats_display_enable');
+		}
 		
 		if (isset($this->request->post['config_group_price_enable'])) {
 			$this->data['config_group_price_enable'] = $this->request->post['config_group_price_enable'];

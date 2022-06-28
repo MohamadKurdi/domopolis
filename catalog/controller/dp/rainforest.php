@@ -9,7 +9,6 @@ class ControllerDPRainForest extends Controller {
 	private $current_category = null;
 
 	private $existentAsins = [];
-
 	private $rainforestAmazon = null;
 
 	public function __construct($registry){

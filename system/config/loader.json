@@ -28,6 +28,7 @@
 		"/hobotix/RainforestAmazon",
 		"/hobotix/PricevaAdaptor",
 		"/hobotix/YandexTranslator",
+		"/hobotix/simpleProcess",
 		"XML2Array",
 		"ElasticSearch",
 		"CourierServices"
