@@ -85,7 +85,6 @@
 											</td>
 										<?php } ?>
 
-										<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
 
 											<td class="left" style="<?php if ($category['indent']) { ?>padding-left:<?php echo $category['indent']; ?>px;<?php } ?> <?php if ($category['mark']) { ?>border-left:2px solid #f91c02;<?php } ?>">
 
@@ -95,6 +94,7 @@
 													<?php echo $category['name']; ?>
 												<?php } ?>
 											</td>
+								<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
 
 											<td class="left">
 												<? if ($category['amazon_category_name']) { ?>
