@@ -124,6 +124,7 @@ class productModelEdit extends hoboModel{
 		}
 	}
 
+
 	public function addProductNames($product_id, $data){			
 		foreach ($data as $language_id => $value) {
 			$this->db->query("INSERT INTO product_description SET 

@@ -121,7 +121,7 @@
 												<?php } ?>
 											</div>											
 
-											<input type="text" name="product_description[<?php echo $language['language_id']; ?>][name]" size="100" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['name'] : ''; ?>" />
+											<input type="text" name="product_description[<?php echo $language['language_id']; ?>][name]" size="100" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['name'] : ''; ?>" />											
 
 											<select name="product_description[<?php echo $language['language_id']; ?>][translated]">
 												<?php if (isset($product_description[$language['language_id']]) && $product_description[$language['language_id']]['translated']) { ?>
@@ -132,6 +132,8 @@
 													<option value="0" selected="selected">Надо переводить</option>
 												<?php } ?>
 											</select>
+
+											<span class="error"><?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['name'] : ''; ?></span>
 
 											<?php if (isset($error_name[$language['language_id']])) { ?>
 												<span class="error"><?php echo $error_name[$language['language_id']]; ?></span>

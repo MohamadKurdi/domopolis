@@ -22,7 +22,7 @@
 		die();
 	}
 
-	echoLine('[CLI] Йобані очі, це ж ми в CLI. Версия PHP: ' . phpversion());
+	echoLine('[CLI] Йобані очі, це ж ми в CLI. Версия PHP: ' . phpversion() . ', время ' . date('Y-m-d H:i:s'));
 
 	//Первый параметр: admin, catalog, для выбора приложения
 	if (!isset($argv[1])){
@@ -213,11 +213,11 @@
 
 	if (isset($action)){
 		if ($action->getFile()){
-			echoLine('[CLI] Action File found: ' . $action->getFile());
+			echoLine('[CLI] Action файл найден: ' . $action->getFile());
 			$controller->dispatch($action, new Action('kp/errorreport/error'));
 		} else {
 			$registry->get('simpleProcess')->dropProcess();
-			echoLine('[CLI] Action File not found, це пізда');			
+			echoLine('[CLI] Action файл не найден, це пізда');			
 		}	
 	} else {
 		$registry->get('simpleProcess')->dropProcess();
