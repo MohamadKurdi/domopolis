@@ -1,7 +1,7 @@
 <?php echo $header; ?>
 
 <style>
-	.list.big1 thead td{font-size:14px; font-weight:700;}
+	.list.big1 thead td{font-size:16px; padding: 10px 3px; font-weight:700;}
 	.list.big1 tbody td{font-size:16px;padding: 5px 3px;}	
 	.list.big1 tbody td i{font-size:24px;}
 	.list tbody td a{text-decoration: none; color: gray;}
