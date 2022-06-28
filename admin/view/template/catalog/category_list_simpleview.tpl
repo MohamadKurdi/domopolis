@@ -53,11 +53,16 @@
 								<td width="1" style="text-align: center;">L</td>	
 							<?php } ?>
 							<td class="left" >Название</td>
-							<td class="left">Ссылка на Amazon</td>
-							<td class="center" style="width:100px;">Конечная категория Amazon</td>	
-							<td class="center" style="width:100px;">Синхронизация с Amazon</td>
-							<td class="center" style="width:100px;">Разрешить полную загрузку товаров</td>
-							<td class="right" style="width:100px;">Товары</td>				
+							<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
+								<td class="left">Ссылка на Amazon</td>
+								<td class="center" style="width:100px;">Конечная категория Amazon</td>	
+								<td class="center" style="width:100px;">Синхронизация с Amazon</td>
+								<td class="center" style="width:100px;">Разрешить полную загрузку товаров</td>
+							<?php } ?>
+							<td class="right" style="width:100px;">Товары</td>		
+							<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>		
+								<td class="right" style="width:100px;">Загружено</td>
+							<?php } ?>
 							<td class="right" style="width:30px;">Сортировка</td>
 							<td class="left" style="width:30px;">Статус</td>
 							<td class="right" style="width:50px;"></td>
@@ -80,52 +85,55 @@
 											</td>
 										<?php } ?>
 
-										<td class="left" style="<?php if ($category['indent']) { ?>padding-left:<?php echo $category['indent']; ?>px;<?php } ?> <?php if ($category['mark']) { ?>border-left:2px solid #f91c02;<?php } ?>">
+										<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
 
-											<?php if ($category['href']) { ?>
-												<a href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a>
-											<?php } else { ?>
-												<?php echo $category['name']; ?>
-											<?php } ?>
-										</td>
+											<td class="left" style="<?php if ($category['indent']) { ?>padding-left:<?php echo $category['indent']; ?>px;<?php } ?> <?php if ($category['mark']) { ?>border-left:2px solid #f91c02;<?php } ?>">
 
-										<td class="left">
-											<? if ($category['amazon_category_name']) { ?>
-												<?php if ($category['amazon_category_link']) { ?>
-													<a href="<?php echo $category['amazon_category_link']; ?>" target="_blank" style="text-decoration:none;">
-													<?php } ?>
-
-													<?php echo $category['amazon_category_name']; ?>
-
-													<?php if ($category['amazon_category_link']) { ?>
-														<i class="fa fa-external-link"></i></a>
-													<?php } ?>
+												<?php if ($category['href']) { ?>
+													<a href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a>
+												<?php } else { ?>
+													<?php echo $category['name']; ?>
 												<?php } ?>
-											</td>	
-
-											<td class="left">
-												<? if ($category['amazon_final_category']) { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-												<? } else { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-												<? } ?>
-											</td>	
-
-											<td class="left">
-												<? if ($category['amazon_sync_enable']) { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-												<? } else { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-												<? } ?>
 											</td>
 
 											<td class="left">
-												<? if ($category['amazon_can_get_full']) { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-												<? } else { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-												<? } ?>
-											</td>			
+												<? if ($category['amazon_category_name']) { ?>
+													<?php if ($category['amazon_category_link']) { ?>
+														<a href="<?php echo $category['amazon_category_link']; ?>" target="_blank" style="text-decoration:none;">
+														<?php } ?>
+
+														<?php echo $category['amazon_category_name']; ?>
+
+														<?php if ($category['amazon_category_link']) { ?>
+															<i class="fa fa-external-link"></i></a>
+														<?php } ?>
+													<?php } ?>
+												</td>	
+
+												<td class="left">
+													<? if ($category['amazon_final_category']) { ?>
+														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
+													<? } else { ?>
+														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+													<? } ?>
+												</td>	
+
+												<td class="left">
+													<? if ($category['amazon_sync_enable']) { ?>
+														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
+													<? } else { ?>
+														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+													<? } ?>
+												</td>
+
+												<td class="left">
+													<? if ($category['amazon_can_get_full']) { ?>
+														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
+													<? } else { ?>
+														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+													<? } ?>
+												</td>			
+											<?php } ?>
 
 											<td class="right">
 												<?php if ($category['count']) { ?>
@@ -137,6 +145,20 @@
 													<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><?php echo $category['count']; ?></span>	
 												<?php }?>
 											</td>
+
+											<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
+												<td class="right">
+													<?php if ($category['filled']) { ?>
+														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">
+															<a style="color:#FFF; text-decoration:none" href="<?php echo $category['filter_filled']; ?>" target="_blank"><?php echo $category['filled']; ?> 
+															<i class="fa fa-filter"></i>
+														</span>										
+													<?php } else { ?>
+														<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><?php echo $category['filled']; ?></span>	
+													<?php }?>
+												</td>
+
+											<?php } ?>
 
 											<td class="right">
 												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#000; color:#FFF"><?php echo $category['sort_order']; ?></span>										

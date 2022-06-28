@@ -24,14 +24,14 @@
 						<td style="color:#66c7a3"><i class="fa fa-list" aria-hidden="true"></i> В базе</td>
 						<td style="color:#fa4934"><i class="fa fa-check" aria-hidden="true"></i> Включено</td>
 						<td style="color:#3276c2"><i class="fa fa-spinner" aria-hidden="true"></i> В тех.кат.</td>
-						<td style="color:#24a4c1"><i class="fa fa-refresh" aria-hidden="true"></i> Получены</td>						
+						<td style="color:#24a4c1"><i class="fa fa-refresh" aria-hidden="true"></i> Загружены</td>						
 					</tr>
 				</thead>
 				<tr>
 					<td><?php echo $total_products; ?></td>
 					<td><a href="<?php echo $filter_total_products_enabled; ?>"><?php echo $total_product_enabled; ?> <i class="fa fa-filter"></i></a></td>
 					<td><a href="<?php echo $filter_total_products_in_tech; ?>"><?php echo $total_products_in_tech; ?> <i class="fa fa-filter"></i></a></td>
-					<td><?php echo $total_product_parsed; ?></td>
+					<td><a href="<?php echo $filter_total_product_parsed; ?>"><?php echo $total_product_parsed; ?> <i class="fa fa-filter"></i></a></td>
 				</tr>
 
 			</table>

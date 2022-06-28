@@ -102,6 +102,7 @@ class ModelCatalogProductExt extends Model {
             'subtract'          => 'p.subtract',
             'id'                => 'p.product_id',
             'status'            => 'p.status',
+            'filled_from_amazon'=> 'p.filled_from_amazon',
             'requires_shipping' => 'p.shipping',
             );
 

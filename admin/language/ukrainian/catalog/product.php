@@ -81,6 +81,7 @@ $_['column_length_class']       = 'Length Class';
 $_['column_weight_class']       = 'Weight Class';
 $_['column_points']             = 'Points';
 $_['column_sort_order']         = 'Сортировка';
+$_['column_filled_from_amazon']         = 'Загружен';
 $_['column_tag']                = 'Product Tags';
 $_['column_sku']                = 'SKU';
 $_['column_asin']               = 'ASIN';
@@ -114,6 +115,11 @@ $_['column_filter']             = 'Filters';
 	$_['text_type_select']           = 'Список';
 	$_['text_type_checkbox']         = 'Флажок';
 	
+	$_['text_enabled']			= 'Вкл';
+	$_['text_disabled']			= 'Откл';
+
+	$_['text_yes']			= 'Да';
+	$_['text_no']			= 'Нет';
 	
 	// Entry
 	$_['entry_seo_title']        = 'Custom title:<br/><span class="help">Leave empty if you want the default title to be displayed</span>';

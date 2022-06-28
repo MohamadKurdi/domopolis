@@ -55,10 +55,12 @@
 							<?php } ?>
 							<td class="left" >Название</td>
 							<td class="left" style="width:30px;">Статус</td>
-							<td class="left" style="width:200px;">Amzn Link</td>
-							<td class="left" style="width:30px;">Amzn Sync</td>
-							<td class="left" style="width:30px;">Amzn Final</td>
-							<td class="left" style="width:30px;">Amzn Allow Full</td>
+							<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
+								<td class="left" style="width:200px;">Amzn Link</td>
+								<td class="left" style="width:30px;">Amzn Sync</td>
+								<td class="left" style="width:30px;">Amzn Final</td>
+								<td class="left" style="width:30px;">Amzn Allow Full</td>
+							<?php } ?>
 							<td class="left" style="width:100px;">Google</td>
 							<td class="left" style="width:100px;">Yandex</td>
 							<td class="left" style="width:60px;">Картинка</td>
@@ -70,7 +72,10 @@
 							<td class="left" style="width:30px;">Пересеч.</td>
 							<td class="left" style="width:30px;">Priceva</td>
 							<td class="left" style="width:30px;">ТНВЭД</td>
-							<td class="right" style="width:100px;">Товары</td>	
+							<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
+								<td class="right" style="width:100px;">Товары</td>	
+								<td class="right" style="width:100px;">Загружено</td>
+							<?php } ?>
 							<td class="right" style="width:30px;">Сортировка</td>
 							<td class="right" style="width:50px;"></td>
 						</tr>
@@ -117,6 +122,8 @@
 												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Выкл</span>
 											<? } ?>
 										</td>
+
+									<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>	
 
 										<td class="left">
 											<? if ($category['amazon_category_name']) { ?>
@@ -167,6 +174,7 @@
 														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
 													<? } ?>
 												</td>	
+								<?php } ?>
 
 												<td class="left">
 													<? if ($category['google_category']) { ?>
@@ -264,6 +272,20 @@
 													<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><?php echo $category['count']; ?></span>	
 												<?php }?>
 											</td>
+
+											<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
+												<td class="right">
+													<?php if ($category['filled']) { ?>
+														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">
+															<a style="color:#FFF; text-decoration:none" href="<?php echo $category['filter_filled']; ?>" target="_blank"><?php echo $category['filled']; ?> 
+															<i class="fa fa-filter"></i>
+														</span>										
+													<?php } else { ?>
+														<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><?php echo $category['filled']; ?></span>	
+													<?php }?>
+												</td>
+
+											<?php } ?>
 
 												<td class="right">
 													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#000; color:#FFF"><?php echo $category['sort_order']; ?></span>										

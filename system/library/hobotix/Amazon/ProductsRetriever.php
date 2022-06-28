@@ -206,7 +206,7 @@
 					
 					$product_description[$language['language_id']] = [
 					'description' => $description,
-					'translated'  => $translated
+					'translated'  => (int)(mb_strlen($description)>0)					
 					];
 				}
 				
@@ -750,11 +750,12 @@
 			$this->parseProductVariants($product_id, $product, $variants);			
 			
 			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmazonLastSearch($product_id);
+			$this->registry->get('rainforestAmazon')->infoUpdater->setProductIsFilledFromAmazon($product_id);
 			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmznData([
 						'product_id' 	=> $product_id, 
 						'asin' 			=> $product['asin'], 
 						'json' 			=> json_encode($product)
-			]);
+			], false);
 		}
 		
 		public function editFullProductsAsyncWithNoVariantParser($product_data){

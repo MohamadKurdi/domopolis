@@ -672,13 +672,19 @@ class ModelCatalogCategory extends Model {
 		}
 
 		public function getTotalCategoriesEnableFullLoad() {
-			$query = $this->db->query("SELECT COUNT(*) AS total FROM category WHERE amazon_can_get_full = 1");
+			$query = $this->db->query("SELECT COUNT(*) AS total FROM category WHERE amazon_can_get_full = 1 AND status = 1");
 			
 			return $query->row['total'];
 		}
 		
 		public function getTotalProductInCategory($category_id) {
 			$query = $this->db->query("SELECT COUNT(DISTINCT product_id) AS total FROM product_to_category WHERE category_id = '" .(int)$category_id. "'");
+			
+			return $query->row['total'];
+		}	
+
+		public function getTotalFilledProductInCategory($category_id) {
+			$query = $this->db->query("SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE p.filled_from_amazon = 1 AND category_id = '" .(int)$category_id. "'");
 			
 			return $query->row['total'];
 		}	

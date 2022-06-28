@@ -418,6 +418,8 @@
 
 
 			$this->data['total_product_parsed'] 	= $this->model_catalog_product->getTotalProductsParsed();
+			$this->data['filter_total_product_parsed'] 	= $this->url->link('catalog/product_ext', 'filter_filled_from_amazon=1&token=' . $this->session->data['token'], 'SSL');
+
 			$this->data['total_products_in_tech'] 	= $this->model_catalog_product->getTotalProducts(['filter_category_id' => $this->config->get('config_rainforest_default_technical_category_id')]);
 			$this->data['filter_total_products_in_tech'] 	= $this->url->link('catalog/product_ext', 'filter_category=' . $this->config->get('config_rainforest_default_technical_category_id') . '&token=' . $this->session->data['token'], 'SSL');
 
@@ -427,7 +429,7 @@
 			$this->data['total_products_added_yesterday'] 			= $this->model_catalog_product->getTotalProductsAdded(date('Y-m-d', strtotime('-1 day')));
 			$this->data['filter_total_products_added_yesterday'] 	= $this->url->link('catalog/product_ext', 'filter_date_added=' . date('Y-m-d', strtotime('-1 day')) . '&token=' . $this->session->data['token'], 'SSL');
 
-			$this->data['total_products_added_week'] 			= $this->model_catalog_product->getTotalProductsAdded(['from' => date('Y-m-d', strtotime('-1 week')), 'to' => date('Y-m-d')]);
+			$this->data['total_products_added_week'] 				= $this->model_catalog_product->getTotalProductsAdded(['from' => date('Y-m-d', strtotime('-1 week')), 'to' => date('Y-m-d')]);
 
 			$this->data['total_categories'] 						= $this->model_catalog_category->getTotalCategories();
 			$this->data['total_categories_final'] 					= $this->model_catalog_category->getTotalCategoriesAmazonFinal();

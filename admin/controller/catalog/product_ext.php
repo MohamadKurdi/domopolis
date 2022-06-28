@@ -353,6 +353,7 @@ class ControllerCatalogProductExt extends Controller {
                 $columns['special'] = $special;
                 $columns['image'] = $result['image'];
                 $columns['status'] = ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled'));
+                $columns['filled_from_amazon'] = ($result['filled_from_amazon'] ? $this->language->get('text_yes') : $this->language->get('text_no'));
                 $columns['quantity'] = $result['quantity'];
             } else {
                 foreach($cp_cols as $column => $attr) {
@@ -408,11 +409,17 @@ class ControllerCatalogProductExt extends Controller {
                             if ((int)$result['status'] || !$this->config->get('aqe_highlight_status')) {
                                 $columns[$column] = ((int)$result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled'));
                             } else {
-                                $columns[$column] = ((int)$result['status'] ? $this->language->get('text_enabled') : '<span style="color:#FF0000;">' . $this->language->get('text_disabled') . '</span>');
+                                $columns[$column] = ((int)$result['status'] ? $this->language->get('text_enabled') : '<span style="color:#cf4a61;">' . $this->language->get('text_disabled') . '</span>');
                             }
+                        } elseif ($column == 'filled_from_amazon') {
+                            if ((int)$result['filled_from_amazon'] || !$this->config->get('aqe_highlight_status')) {
+                                $columns[$column] = ((int)$result['filled_from_amazon'] ? $this->language->get('text_yes') : $this->language->get('text_no'));
+                            } else {
+                                $columns[$column] = ((int)$result['filled_from_amazon'] ? $this->language->get('text_yes') : '<span style="color:#cf4a61;">' . $this->language->get('text_no') . '</span>');
+                            }                        
                         } else if ($column == 'quantity') {
                             if ((int)$result['quantity'] < 0) {
-                                $columns[$column] = '<span style="color:#FF0000;">' . $result['quantity'] . '</span>';
+                                $columns[$column] = '<span style="color:#cf4a61;">' . $result['quantity'] . '</span>';
                             } else if ((int)$result['quantity'] <= 5) {
                                 $columns[$column] = '<span style="color:#FFA500;">' . $result['quantity'] . '</span>';
                             } else {
@@ -1168,7 +1175,7 @@ class ControllerCatalogProductExt extends Controller {
                     if ((int)$value || !$this->config->get('aqe_highlight_status')) {
                         $json['value'] = ((int)$value) ? $this->language->get('text_enabled') : $this->language->get('text_disabled');
                     } else {
-                        $json['value'] = ((int)$value) ? $this->language->get('text_enabled') : '<span style="color:#FF0000;">' . $this->language->get('text_disabled') . '</span>';
+                        $json['value'] = ((int)$value) ? $this->language->get('text_enabled') : '<span style="color:#cf4a61;">' . $this->language->get('text_disabled') . '</span>';
                     }
                 } else if ($column == 'image') {
                     $this->load->model('tool/image');
@@ -1217,7 +1224,7 @@ class ControllerCatalogProductExt extends Controller {
                     $this->openbay->putStockUpdateBulk(array($id));
                     $value = (int)$value;
                     if ($value <= 0)
-                        $ret = '<span style="color: #FF0000;">' . (int)$value . '</span>';
+                        $ret = '<span style="color: #cf4a61;">' . (int)$value . '</span>';
                     elseif ($value <= 5)
                         $ret = '<span style="color: #FFA500;">' . (int)$value . '</span>';
                     else

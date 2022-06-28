@@ -24,7 +24,12 @@ class InfoUpdater
 
 	}
 
-	public function updateProductAmznData($product){
+
+	public function setProductIsFilledFromAmazon($product_id){
+		$this->db->query("UPDATE product SET filled_from_amazon = 1 WHERE product_id = '" . (int)$product_id . "'");
+	}
+
+	public function updateProductAmznData($product, $updateDimensions = true){
 		
 		$this->db->query("INSERT INTO product_amzn_data SET
 			product_id = '" . (int)$product['product_id'] . "', 
@@ -34,8 +39,9 @@ class InfoUpdater
 			asin = '" . $this->db->escape($product['asin']) . "',
 			json = '" . $this->db->escape($product['json']) . "'");
 
-
-		$this->parseAndUpdateProductDimensions($product['json']);
+		if ($updateDimensions){
+			$this->parseAndUpdateProductDimensions($product['json']);
+		}
 
 		return $this;
 	}

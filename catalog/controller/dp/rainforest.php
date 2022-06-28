@@ -163,7 +163,10 @@ class ControllerDPRainForest extends Controller {
 			foreach ($this->registry->get('languages') as $language_code => $language) {
 				$source_name = atrim($product['source_name']);
 
-				if ($product['language_id'] == $language['language_id'] && $this->config->get('config_rainforest_enable_language_' . $language_code)){					
+				if ($product['language_id'] == $language['language_id'] && $this->config->get('config_rainforest_enable_language_' . $language_code)){	
+
+					echoLine('[updatenametranslations] Товар: ' . $product['product_id']);
+
 					$name = $this->rainforestAmazon->productsRetriever->yandexTranslator->translate($source_name, $this->config->get('config_rainforest_source_language'), $language_code, true);
 
 					$translated = false;
@@ -248,7 +251,7 @@ class ControllerDPRainForest extends Controller {
 
 		$total = count($this->categoriesData);		
 		$this->iterations = $iterations = ceil($total/\hobotix\RainforestAmazon::categoryRequestLimits);
-		echoLine('[OFFERS] Всего ' . $total . ' категорий!');		
+		echoLine('[AddNewProducts2] Всего ' . $total . ' категорий!');		
 
 		$otherPageRequests = [];		
 		for ($i = 1; $i <= $iterations; $i++){
@@ -285,7 +288,7 @@ class ControllerDPRainForest extends Controller {
 
 		$total = count($otherPageRequests);
 		$this->iterations = $iterations = ceil($total/\hobotix\RainforestAmazon::categoryRequestLimits);
-		echoLine('[OFFERS] Всего eще ' . $total . ' запросов!');
+		echoLine('[AddNewProducts2] Всего eще ' . $total . ' запросов!');
 		for ($i = 1; $i <= $iterations; $i++){
 			$this->current_iteration = $i;
 			echoLine('[AddNewProducts2] Шаг 2 Итерация ' . $i . ' из ' . $iterations . ', категории с ' . (\hobotix\RainforestAmazon::categoryRequestLimits * ($i-1)) . ' по ' . \hobotix\RainforestAmazon::categoryRequestLimits * $i);
@@ -308,7 +311,7 @@ class ControllerDPRainForest extends Controller {
 		}
 
 		$this->updateimagesfromamazon();
-		$this->updatenametranslations();
+	//	$this->updatenametranslations();
 	}
 
 	//OLD SLOW DEPRECATED FUNCTION
