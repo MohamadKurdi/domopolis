@@ -1,5 +1,6 @@
 #Роботс
 /robots*.txt
+/README.md
 
 #Админка
 /admin/config*.php
