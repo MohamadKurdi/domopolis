@@ -96,7 +96,7 @@
 		}
 
 		public function getCronStats(){
-			$cronSettings = loadJSONConfig('cron');
+			$cronSettings = $this->simpleProcess->getCronConfig();
 
 			$this->data['processes'] = [];
 			foreach ($cronSettings as $cronRoute => $cronParams){
@@ -115,7 +115,7 @@
 					'finished'			=> $result['finished'],
 					'failed'			=> $result['failed'],
 					'start'				=> $result['start'],
-					'stop'				=> (!empty($result['stop'])?$result['stop']:false)
+					'stop'				=> $result['stop']
 				];
 			}
 
@@ -417,7 +417,7 @@
 			$this->data['filter_total_products_enabled'] 	= $this->url->link('catalog/product_ext', 'filter_status=1&token=' . $this->session->data['token'], 'SSL');
 
 
-			$this->data['total_product_parsed'] 	= $this->model_catalog_product->getTotalProductsParsed();
+			$this->data['total_product_parsed'] 	= $this->model_catalog_product->getTotalProductsFilled();
 			$this->data['filter_total_product_parsed'] 	= $this->url->link('catalog/product_ext', 'filter_filled_from_amazon=1&token=' . $this->session->data['token'], 'SSL');
 
 			$this->data['total_products_in_tech'] 	= $this->model_catalog_product->getTotalProducts(['filter_category_id' => $this->config->get('config_rainforest_default_technical_category_id')]);

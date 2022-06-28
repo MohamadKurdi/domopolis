@@ -190,6 +190,7 @@
 				
 				$this->data['home'] = $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL');
 				$this->data['panel'] = $this->url->link('common/panel', 'token=' . $this->session->data['token'], 'SSL');
+				$this->data['cronmon'] = $this->url->link('common/cronmon', 'token=' . $this->session->data['token'], 'SSL');
 				$this->data['affiliate'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'], 'SSL');
 				$this->data['attribute'] = $this->url->link('catalog/attribute', 'token=' . $this->session->data['token'], 'SSL');
 				$this->data['attribute_group'] = $this->url->link('catalog/attribute_group', 'token=' . $this->session->data['token'], 'SSL');

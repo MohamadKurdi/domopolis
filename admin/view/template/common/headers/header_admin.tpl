@@ -237,6 +237,9 @@
 							<li id="panel">
 								<a class="top" href="<?php echo $panel; ?>"><i class="fa fa-bell icon_menu"></i>Панель</a>
 							</li>
+							<li id="cronmon">
+								<a class="top" href="<?php echo $cronmon; ?>"><i class="fa fa-refresh icon_menu"></i>Cron</a>
+							</li>
 							<? if (in_array($this->user->getID(), array(2, 3))) { ?>
 								<li id="worktime"><a class="top"><i class="fa fa-eye icon_menu"></i>Работа</a>
 									<ul>

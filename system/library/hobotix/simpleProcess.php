@@ -9,11 +9,14 @@ class simpleProcess
    private $route    = null;
    private $params   = null;
    private $config   = null;
+   private $cronConfig = null;
 
    public function __construct($params = []){
       if (!is_dir(DIR_PIDS)){
          mkdir(DIR_PIDS, 0755, true);
       }
+
+      $this->cronConfig = loadJSONConfig('cron');
 
       if (is_cli() && $params){
          $this->pid           = getmypid();
@@ -32,7 +35,6 @@ class simpleProcess
 
          echoLine('[CLI] Процесс начат, pid: ' . $this->pid);
          echoLine('[CLI] Процесс начат, file: ' . $this->file);
-
       }
    }
 
@@ -88,40 +90,49 @@ class simpleProcess
    }
 
 
-   public function getProcess($params = []){
-      $file = DIR_PIDS . md5(json_encode($params)) . '.pid';
+   public function getProcess($params = [], $file = false){
+
+      if (!$file){
+         $file = DIR_PIDS . md5(json_encode($params)) . '.pid';
+      }
       
       $result = [];
       if (file_exists($file)){
          $result = json_decode(file_get_contents($file), true);         
 
          $result['success']         = true;
-          $result['never']          = false;
+         $result['never']           = false;
+         $result['file']            = basename($file);
+         $result['name']            = (!empty($this->cronConfig[$result['route']]))?$this->cronConfig[$result['route']]['name']:$result['route'];
          $result['finished']        = ($result['status'] == 'finished');
-         $result['running']         = posix_getpgid($result['pid']);
+         $result['running']         = (posix_getpgid($result['pid']) && posix_getpgid($result['pid']) == $result['pid']);
          $result['failed']          = ($result['status'] == 'started' && !$result['running']);
+         $result['stop']            = (!empty($result['stop'])?$result['stop']:false);
 
 
       } else {
-         $result['success'] = false;
-         $result['never'] = true;
+         $result['success']   = false;
+         $result['file']      = $file;
+         $result['never']     = true;
       }
 
       return $result;
    }
 
+   public function getCronConfig(){
+      return $this->cronConfig;
+   }
+
     public function getProcesses(){
          $files = glob(DIR_PIDS . '*.pid');
-
+         
+         $results = [];
          foreach($files as $file){
-
+            $results[] = $this->getProcess([], $file);
          }
 
+         return $results;
     }
-
-
-
-
 
 
 
