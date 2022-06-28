@@ -8,7 +8,7 @@
 		private $priceSuggestMappings = [];
 		
 		private $excluded_names = [];
-		private $offerPriceLimit = 999;
+		private $offerPriceLimit = 499;
 		
 		private $skuStatsLimit = 499;
 		
@@ -404,8 +404,10 @@
 					
 					$slice = array_slice($products, $this->skuStatsLimit * ($i-1), $this->skuStatsLimit);
 					
-					foreach ($slice as $product){						
-						$jsonArray['shopSkus'][] = $product['yam_product_id'];
+					foreach ($slice as $product){		
+						if ($product['yam_product_id']){
+							$jsonArray['shopSkus'][] = $product['yam_product_id'];
+						}
 					}
 					
 					$statsResponse = $statsClient->getStatsBySkus($this->config->get('config_yam_fbs_campaign_id'), $jsonArray);
@@ -575,8 +577,10 @@
 					
 					$slice = array_slice($products, $this->offerPriceLimit * ($i-1), $this->offerPriceLimit);
 					
-					foreach ($slice as $product){						
-						$jsonArray['offers'][] = ['offerId' => $product['yam_product_id']];
+					foreach ($slice as $product){		
+						if ($product['yam_product_id']){				
+							$jsonArray['offers'][] = ['offerId' => $product['yam_product_id']];
+						}
 					}
 					
 					$offersResponseResult = $hobotixYamClient->getRecommendedPrices($this->config->get('config_yam_fbs_campaign_id'), $jsonArray);
