@@ -1,6 +1,8 @@
 <?php
 
 function loadJsonConfig($config){
+		$json = false;
+
 		if (defined('DIR_SYSTEM') && @file_exists(DIR_SYSTEM . 'config/' . $config . '.json')){
 			$json = file_get_contents(DIR_SYSTEM . 'config/' . $config . '.json');			
 		} elseif (@file_exists(dirname(__FILE__) . '/config/' . $config . '.json')) {
