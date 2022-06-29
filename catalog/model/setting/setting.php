@@ -28,8 +28,21 @@
 			$this->config->set('config_language_id', $languages[$this->config->get('config_language')]['language_id']);
 			$this->currency->set($this->config->get('config_regional_currency'));						
 			
-			return $this;
-			
+			return $this;	
+		}
+
+		public function getExclusiveSettingValue($key){
+
+			$query = $this->db->non_cached_query("SELECT * FROM setting WHERE `key` = '" . $this->db->escape($key) . "'");	
+
+			foreach ($query->rows as $row){
+				if ($row['value']){
+					return $row['value'];
+				}
+			}
+
+			return false;
+
 		}
 
 		
