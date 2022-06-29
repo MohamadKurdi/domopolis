@@ -15,8 +15,19 @@ class ControllerCommonCronMon extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];		
 
-		$this->data['processes'] = [];
-		$this->data['processes'] = $this->simpleProcess->getProcesses();
+		$this->data['groups'] = [];
+		$processes = $this->simpleProcess->getProcesses();
+
+		foreach ($processes as $route => $process){
+
+			if (empty($this->data['groups'][$process['group']])){
+				$this->data['groups'][$process['group']] = [];				
+			}
+
+			$this->data['groups'][$process['group']][] = $process;
+		}
+
+
 		$this->template = 'common/cronmon.tpl';
 		$this->children = array(
 			'common/header',

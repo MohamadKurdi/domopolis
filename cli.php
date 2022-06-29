@@ -62,18 +62,22 @@
 	$route = trim($argv[3]);
 
 	$functionArguments = [];
+	$allArguments	   = [];
 	for ($i=4; $i<=20; $i++){
 		if (isset($argv[$i])){
 			$argv[$i] = trim($argv[$i]);
 
 			if (strpos($argv[$i], 'store_id=') !== false){
 				$store_id = getCliParamValue($argv[$i]);
+				$allArguments[] = $argv[$i];
 				echoLine('[CLI] Мы работаем в магазине: ' . $store_id);
 			} elseif (strpos($argv[$i], 'language_code=') !== false){
 				$language_code = getCliParamValue($argv[$i]);
+				$allArguments[] = $argv[$i];
 				echoLine('[CLI] Мы работаем с языком: ' . $language_code);
 			} else {
 				$functionArguments[] = trim($argv[$i]);
+				$allArguments[] = trim($argv[$i]);
 			}
 		}
 	}
@@ -195,7 +199,7 @@
 	$registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
 	$registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
 	$registry->set('CourierServices', 	new CourierServices());
-	$registry->set('simpleProcess', 	new hobotix\simpleProcess(['route' => $route, 'config' => $configFile, 'args' => $functionArguments]));
+	$registry->set('simpleProcess', 	new hobotix\simpleProcess(['route' => $route, 'config' => $configFile, 'args' => $allArguments]));
 
 	$controller = new Front($registry);
 

@@ -103,6 +103,8 @@ class simpleProcess
          $result['success']         = true;
          $result['never']           = false;
          $result['file']            = basename($file);
+         $result['main']            = (!empty($this->cronConfig[$result['route']]))?$this->cronConfig[$result['route']]['main']:false;
+         $result['group']           = (!empty($this->cronConfig[$result['route']]))?$this->cronConfig[$result['route']]['group']:'';
          $result['name']            = (!empty($this->cronConfig[$result['route']]))?$this->cronConfig[$result['route']]['name']:$result['route'];
          $result['finished']        = ($result['status'] == 'finished');
          $result['running']         = posix_getpgid($result['pid']);

@@ -35,7 +35,7 @@
 							<td>
 								Конфиг
 							</td>
-							<td>
+							<td style="width:150px;">
 								Параметры
 							</td>
 							<td>
@@ -49,66 +49,72 @@
 							</td>
 						</tr>
 					</thead>
-					<?php foreach ($processes as $process) { ?>
+					<?php foreach ($groups as $group => $processes) { ?>
 						<tr>
-							<td class="center" style="width:50px;">
-								<?php if ($process['running']) { ?>
-									<i class="fa fa-spinner fa-spin" style="color:#32bd38"></i>
-								<?php } ?>
+							<td class="left" colspan="9" style="padding-left: 10px;color:#64a1e1; font-weight: 700; font-size:18px;"><?php echo $group?$group:'Нет описания в cron.json'; ?></td>
+						</tr>	
 
-								<?php if ($process['failed']) { ?>
-									<i class="fa fa-exclamation-circle" style="color:#fa4934"></i>
-								<?php } ?>
+						<?php foreach ($processes as $process) { ?>
+							<tr>
+								<td class="center" style="width:50px;">
+									<?php if ($process['running']) { ?>
+										<i class="fa fa-spinner fa-spin" style="color:#32bd38"></i>
+									<?php } ?>
 
-								<?php if ($process['finished']) { ?>
-									<i class="fa fa-check" style="color:#32bd38"></i>
-								<?php } ?>
+									<?php if ($process['failed']) { ?>
+										<i class="fa fa-exclamation-circle" style="color:#fa4934"></i>
+									<?php } ?>
 
-								<?php if (!$process['start']) { ?>
-									<i class="fa fa-hourglass" style="color:#7f00ff"></i>
-								<?php } ?>
-							</td>
-							<td>
-								<b><? echo $process['name']; ?></b>
-							</td>
-							<td>
-								<b style="color:#7F00FF"><? echo $process['route']; ?></b>
-							</td>
-							<td>
-								<? echo $process['file']; ?>
-							</td>							
-							<td>
-								<? echo $process['config']; ?>
-							</td>
-							<td>
-								<?php if ($process['args']) { ?>
-									<? print_r($process['args']); ?>
-								<? } else { ?>
-								<? } ?>
-							</td>
-							<td>
-								<? echo $process['start']; ?>
-							</td>
-							<td>
-								<? if ($process['stop']) { ?>
-									<?php echo $process['stop'] ?>
-								<? } else { ?>
+									<?php if ($process['finished']) { ?>
+										<i class="fa fa-check" style="color:#32bd38"></i>
+									<?php } ?>
 
-									<? if ($process['running']) { ?>
-										<span style="color:#32bd38">работает</span>
+									<?php if (!$process['start']) { ?>
+										<i class="fa fa-hourglass" style="color:#7f00ff"></i>
+									<?php } ?>
+								</td>
+								<td>
+									<b><? echo $process['name']; ?></b>
+								</td>
+								<td>
+									<b style="color:#7F00FF"><? echo $process['route']; ?></b>
+								</td>
+								<td>
+									<? echo $process['file']; ?>
+								</td>							
+								<td>
+									<? echo $process['config']; ?>
+								</td>
+								<td>
+									<?php if ($process['args']) { ?>
+										<b><?php echo implode(' ', $process['args']); ?></b>
 									<? } else { ?>
-										<? if ($process['never']) { ?>
-											<span style="color:#7f00ff">ждет</span>
+									<? } ?>
+								</td>
+								<td>
+									<? echo $process['start']; ?>
+								</td>
+								<td>
+									<? if ($process['stop']) { ?>
+										<?php echo $process['stop'] ?>
+									<? } else { ?>
+
+										<? if ($process['running']) { ?>
+											<span style="color:#32bd38">работает</span>
 										<? } else { ?>
-											<span style="color:#fa4934">сбой</span>
+											<? if ($process['never']) { ?>
+												<span style="color:#7f00ff">ждет</span>
+											<? } else { ?>
+												<span style="color:#fa4934">сбой</span>
+											<? } ?>
 										<? } ?>
 									<? } ?>
-								<? } ?>
-							</td>
-							<td>
-								<? echo $process['status']; ?>					
-							</td>
-						</tr>
+								</td>
+								<td>
+									<? echo $process['status']; ?>					
+								</td>
+							</tr>
+						<?php } ?>
 					<?php } ?>
 				</tbody>
 			</table>

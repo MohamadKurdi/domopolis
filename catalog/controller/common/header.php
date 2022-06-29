@@ -615,7 +615,10 @@
 			if ($this->config->get('config_second_language')){
 				$this->load->model('kp/urldecode');
 
-				foreach (($hreflangs = $this->model_kp_urldecode->decodeURI()) as $language_id => $link){				
+				$hreflangs = $this->model_kp_urldecode->decodeURI();				
+
+				foreach ($hreflangs as $language_id => $link){
+
 					if (in_array($link['code'], $this->config->get('config_supported_languages'))){						
 
 						$text_code = $this->registry->get('languages')[$link['code']]['switch'];
