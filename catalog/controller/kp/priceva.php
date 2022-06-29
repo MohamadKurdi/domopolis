@@ -6,8 +6,8 @@ class ControllerKPPriceva extends Controller {
 	private $pricevaAdaptor = null;
 
 
-	private $sleeps = [30, 50];
-	private $limit = 1000;
+	private $sleeps = [60, 120];
+	private $limit = 900;
 
 
 	public function __construct($registry){
@@ -22,19 +22,13 @@ class ControllerKPPriceva extends Controller {
 				if ($apiKey = $this->config->get('config_priceva_api_key_' . $store_id)){
 
 					try{
-
 						$this->pricevaAPIS[$store_id] = new Priceva\PricevaAPI($apiKey);
 						$this->pricevaAPIS[$store_id]->main_ping();
-
 					}catch( \Exception $e ){
-
+						echoLine('[PRICEVA] Ошибка на стадии PING');
 						die($e->getMessage());
-
 					}
-
 				}
-
-
 			}
 
 		} else {
@@ -94,7 +88,6 @@ class ControllerKPPriceva extends Controller {
 				$count = $total_count = (int)$reports->get_result()->pagination->pages_cnt;
 
 				$products = $reports->get_result()->objects;
-
 				$this->pricevaAdaptor->updateProductData($store_id, $products);
 
 				echoLine('[PRICEVA] Всего страниц: ' . $count);
