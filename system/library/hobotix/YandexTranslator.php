@@ -12,7 +12,7 @@ class YandexTranslator
 
 	private $debug = false;
 
-	private $hourLimit = 1000000;
+	private $hourLimit = 10000000;
 	private $symbolLimit = 9999;
 	private $sentensesDelimiter = '.';
 

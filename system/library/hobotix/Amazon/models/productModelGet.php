@@ -16,7 +16,8 @@ class productModelGet extends hoboModel{
 		LEFT JOIN product_description pd ON (p.product_id = pd.product_id) 
 		WHERE pd.language_id = '" . $this->config->get('config_language_id') . "' 
 		AND p.added_from_amazon = 1 
-		AND p.product_id NOT IN (SELECT product_id FROM product_amzn_data) AND (NOT ISNULL(p.asin) OR p.asin <> '') 
+		AND p.product_id NOT IN (SELECT product_id FROM product_amzn_data) 
+		AND (NOT ISNULL(p.asin) OR p.asin <> '') 
 		AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1 AND amazon_can_get_full = 1))
 		ORDER BY RAND() LIMIT " . (int)\hobotix\RainforestAmazon::fullProductParserLimit;
 
@@ -26,6 +27,58 @@ class productModelGet extends hoboModel{
 			$result[] = [
 				'product_id' 			=> $row['product_id'],
 				'asin' 					=> $row['asin']								
+			];
+		}
+
+		return $result;
+	}
+
+	public function getProductsFromTechCategory(){
+		$result = [];
+		$sql = "SELECT 
+		p.*, pd.name 
+		FROM product p 
+		LEFT JOIN product_description pd ON (p.product_id = pd.product_id) 
+		WHERE pd.language_id = '" . $this->config->get('config_language_id') . "' 
+		AND p.added_from_amazon = 1 		
+		AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id = '" . (int)$this->config->get('config_rainforest_default_technical_category_id') . "')
+		ORDER BY RAND() LIMIT " . (int)\hobotix\RainforestAmazon::fullProductParserLimit;
+
+		$query = $this->db->ncquery($sql);
+
+		foreach ($query->rows as $row){
+			$result[] = [
+				'product_id' 			=> $row['product_id'],
+				'asin' 					=> $row['asin']								
+			];
+		}
+
+		return $result;
+	}
+
+	public function getProductsWithFullDataButNotFullfilled(){
+
+		$result = [];
+		$sql = "SELECT 
+		p.product_id, pd.name, pad.asin, pad.json
+		FROM product p 
+		LEFT JOIN product_description pd ON (p.product_id = pd.product_id) 
+		LEFT JOIN product_amzn_data pad ON (p.product_id = pad.product_id)
+		WHERE pd.language_id = '" . $this->config->get('config_language_id') . "' 		
+		AND p.added_from_amazon = 1 
+		AND p.filled_from_amazon = 0
+		AND p.product_id IN (SELECT product_id FROM product_amzn_data) 
+		AND (NOT ISNULL(p.asin) OR p.asin <> '') 
+		AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1 AND amazon_can_get_full = 1))
+		ORDER BY RAND() LIMIT " . (int)\hobotix\RainforestAmazon::fullProductParserLimit;
+
+		$query = $this->db->ncquery($sql);
+
+		foreach ($query->rows as $row){
+			$result[] = [
+				'product_id' 			=> $row['product_id'],
+				'asin' 					=> $row['asin'],
+				'json'					=> $row['json']							
 			];
 		}
 

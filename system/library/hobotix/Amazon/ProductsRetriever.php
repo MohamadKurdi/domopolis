@@ -54,8 +54,17 @@
 		//TODO: refactor
 		public function getProducts(){
 			return $this->model_product_get->getProducts();
+		}
+
+
+		public function getProductsFromTechCategory(){
+			return $this->model_product_get->getProductsFromTechCategory();
 		}	
 		
+		public function getProductsWithFullDataButNotFullfilled(){
+			return $this->model_product_get->getProductsWithFullDataButNotFullfilled();
+		}
+
 		//TODO: refactor
 		public function getProductsByAsin($asin){
 			return $this->model_product_get->getProductsByAsin($asin);
@@ -569,6 +578,11 @@
 					if ($category_id = $this->getCategory(atrim($name))){
 						echoLine('[editFullProduct] Нашли категорию: ' . $name . ': ' . $category_id);
 						$this->model_product_edit->editProductCategory($product_id, [$category_id]);
+					} else {
+
+						echoLine('[editFullProduct] Не нашли категорию: ' . $name . ', уходит в неизвестную');
+						$this->model_product_edit->editProductCategory($product_id, [$this->config->get('config_rainforest_default_unknown_category_id')]);
+
 					}
 				}
 			}
@@ -694,6 +708,17 @@
 					$this->editFullProductsAsyncWithNoVariantParser($new_product_data);
 				}
 			}
+		}
+
+		public function editJustProductCategory($product_id, $product){			
+			$this->parseProductCategories($product_id, $product);
+
+			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmazonLastSearch($product_id);			
+			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmznData([
+						'product_id' 	=> $product_id, 
+						'asin' 			=> $product['asin'], 
+						'json' 			=> json_encode($product)
+			], false);
 		}
 		
 		public function editFullProduct($product_id, $product, $variants = true){	

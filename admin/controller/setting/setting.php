@@ -2646,12 +2646,17 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$this->data['config_rainforest_enable_recursive_adding'] = $this->config->get('config_rainforest_enable_recursive_adding');
 		}
-		
 
 		if (isset($this->request->post['config_rainforest_default_technical_category_id'])) {
 			$this->data['config_rainforest_default_technical_category_id'] = $this->request->post['config_rainforest_default_technical_category_id']; 
 		} else {
 			$this->data['config_rainforest_default_technical_category_id'] = $this->config->get('config_rainforest_default_technical_category_id');
+		}
+
+		if (isset($this->request->post['config_rainforest_default_unknown_category_id'])) {
+			$this->data['config_rainforest_default_unknown_category_id'] = $this->request->post['config_rainforest_default_unknown_category_id']; 
+		} else {
+			$this->data['config_rainforest_default_unknown_category_id'] = $this->config->get('config_rainforest_default_unknown_category_id');
 		}
 
 		if (isset($this->request->post['config_rainforest_enable_auto_tree'])) {
