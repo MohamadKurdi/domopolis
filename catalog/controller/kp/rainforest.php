@@ -192,19 +192,19 @@ class ControllerKPRainForest extends Controller {
 
 			$this->db->query("UPDATE product SET asin = TRIM(asin) WHERE 1");
 
-			$sql = " FROM product 
+			$sql = " FROM product p
 			WHERE status = 1 
 			AND amzn_ignore = 0		
 			AND is_virtual = 0
 			AND stock_status_id <> '" . $this->config->get('config_not_in_stock_status_id') . "'			
 			AND (" . $this->rainforestAmazon->offersParser->PriceLogic->buildStockQueryField() . " = 0)
-			AND asin <> ''";
+			AND (NOT ISNULL(p.asin) OR p.asin <> '')";
 			$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -'" . $this->config->get('config_rainforest_update_period') . "' DAY)))";
 
 			$total = $this->db->ncquery("SELECT COUNT(DISTINCT(asin)) as total " . $sql . "")->row['total'];
 			echoLine('[OFFERS] Всего товаров которые надо обновлять: ' . $total);
 
-			$query = $this->db->ncquery("SELECT DISTINCT(asin) " . $sql . " ORDER BY amzn_last_offers ASC LIMIT 2000");
+			$query = $this->db->ncquery("SELECT DISTINCT(asin) " . $sql . " ORDER BY amzn_last_offers ASC LIMIT " . (int)\hobotix\RainforestAmazon::offerParserLimit);
 
 		}
 

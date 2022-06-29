@@ -230,7 +230,7 @@ class PriceLogic
 
 									$newPrice = $this->mainFormula($amazonBestPrice, $productWeight, $weightCoefficient);
 
-									$logString = 'Товар: asin:' . $asin . ', product_id: ' . $product_id . ', вес: ' . $productWeight . ', новая цена для магазина ' . $store_id . ' = ' . $newPrice . ' EUR';
+									$logString = 'Товар: ' . $product_id . ', ' . $asin . ', вес: ' . $productWeight . ', цена для магазина ' . $store_id . ' = ' . $newPrice . ' EUR';
 									$this->log->write($logString);
 									echoLine($logString);
 
