@@ -334,6 +334,7 @@
 			
 			$this->data['yam_orders_total'] = $this->model_setting_setting->getYAMOrdersTotal();
 			$this->data['yam_comission'] = ($this->data['yam_orders_total'] / 100) * 12;
+			$this->data['yam_comission'] = formatLongNumber($this->data['yam_comission']);
 			
 			//$this->data['yam_comission1'] = $this->currency->format($this->data['yam_comission'], 'RUB', '1');
 			$this->data['yam_orders_total'] = $this->currency->format($this->data['yam_orders_total'], 'RUB', '1');

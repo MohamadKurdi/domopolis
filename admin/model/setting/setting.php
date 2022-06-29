@@ -136,19 +136,19 @@ class ModelSettingSetting extends Model {
 	}
 
 	public function getTranslatedTotalHour(){
-		return $this->db->query("SELECT SUM(amount) as total FROM translate_stats WHERE  time >= '" . date('Y-m-d', strtotime('-1 hour')) . "'")->row['total'];
+		return $this->db->query("SELECT SUM(amount) as total FROM translate_stats WHERE  time >= '" . date('Y-m-d H:i:s', strtotime('-1 hour')) . "'")->row['total'];
 	}
 
 	public function getTranslatedTotalYesterday(){
-		return $this->db->query("SELECT SUM(amount) as total FROM translate_stats WHERE  time >= '" . date('Y-m-d', strtotime('-1 day')) . "'")->row['total'];
+		return $this->db->query("SELECT SUM(amount) as total FROM translate_stats WHERE  DATE(time) = '" . date('Y-m-d', strtotime('-1 day')) . "'")->row['total'];
 	}
 
 	public function getTranslatedTotalWeek(){
-		return $this->db->query("SELECT SUM(amount) as total FROM translate_stats WHERE  time >= '" . date('Y-m-d', strtotime('-1 week')) . "'")->row['total'];
+		return $this->db->query("SELECT SUM(amount) as total FROM translate_stats WHERE  time >= '" . date('Y-m-d H:i:s', strtotime('-1 week')) . "'")->row['total'];
 	}
 
 	public function getTranslatedTotalMonth(){
-		return $this->db->query("SELECT SUM(amount) as total FROM translate_stats WHERE  time >= '" . date('Y-m-d', strtotime('-1 month')) . "'")->row['total'];
+		return $this->db->query("SELECT SUM(amount) as total FROM translate_stats WHERE  time >= '" . date('Y-m-d H:i:s', strtotime('-1 month')) . "'")->row['total'];
 	}
 	
 	
