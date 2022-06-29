@@ -2419,7 +2419,13 @@
 		}
 
 		public function getTotalProductsFilled() {
-			$query = $this->db->query("SELECT COUNT(product_id) as total FROM product WHERE filled_from_amazon = 1");
+			$query = $this->db->query("SELECT COUNT(product_id) as total FROM product WHERE filled_from_amazon = 1 AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE amazon_can_get_full = 1))");
+			
+			return $query->row['total'];
+		}
+
+		public function getTotalProductsNeedToBeFilled() {
+			$query = $this->db->query("SELECT COUNT(DISTINCT product_id) as total FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE amazon_can_get_full = 1)");
 			
 			return $query->row['total'];
 		}

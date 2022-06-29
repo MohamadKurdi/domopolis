@@ -363,6 +363,7 @@
 
 
 			$this->data['total_product_parsed'] 			= $this->model_catalog_product->getTotalProductsFilled();
+			$this->data['total_product_need_to_be_parsed'] 	= $this->model_catalog_product->getTotalProductsNeedToBeFilled();
 			$this->data['filter_total_product_parsed'] 		= $this->url->link('catalog/product_ext', 'filter_filled_from_amazon=1&token=' . $this->session->data['token'], 'SSL');
 
 			$this->data['total_products_in_tech'] 			= $this->model_catalog_product->getTotalProducts(['filter_category_id' => $this->config->get('config_rainforest_default_technical_category_id')]);
