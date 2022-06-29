@@ -135,7 +135,7 @@
 	</style>
 	<script type="text/javascript">
 		
-		function loadDelayedLoad(element){
+		function loadDelayedLoad(element, spinner = true){
 			
 			let route = element.attr('data-route');
 			$.ajax({
@@ -143,10 +143,12 @@
 				type: "GET",
 				async: true,
 				beforeSend: function(){
-					if (element.hasClass('short-delayed-load')){
-						element.html("<i class='fa fa-spinner fa-spin'></i>");
+					if (spinner){
+						if (element.hasClass('short-delayed-load')){
+							element.html("<i class='fa fa-spinner fa-spin'></i>");
 						} else {
-						element.html("<div style='height:200px;padding-top:60px;text-align:center;'><div class='lds-hourglass'></div></div>");
+							element.html("<div style='height:200px;padding-top:60px;text-align:center;'><div class='lds-hourglass'></div></div>");
+						}
 					}
 				},
 				success: function(html){
@@ -160,7 +162,13 @@
 		
 		$(document).ready(function() {
 			$('.delayed-load').each(function(){
-				loadDelayedLoad($(this));								
+				let current = $(this);
+				loadDelayedLoad(current);	
+
+				if (current.attr('data-reload')){
+					setInterval(function(){ loadDelayedLoad(current, false); }, parseInt(current.attr('data-reload')));
+				}
+
 			});
 		});
 	</script>

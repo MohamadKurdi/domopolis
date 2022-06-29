@@ -11,6 +11,7 @@ class ControllerDPRainForest extends Controller {
 	private $existentAsins = [];
 	private $rainforestAmazon = null;
 
+	
 	public function __construct($registry){
 		ini_set('memory_limit', '2G');
 
@@ -152,41 +153,102 @@ class ControllerDPRainForest extends Controller {
 			$this->rainforestAmazon->productsRetriever->model_product_edit->editProductFields($product_id, [['name' => 'image', 'type' => 'varchar', 'value' => $this->rainforestAmazon->productsRetriever->getImage($amazon_product_image)]]);
 		}
 	}
+	
 
-	public function updatenametranslations(){
+	public function fixtranslations(){
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->rainforestAmazon->productsRetriever->yandexTranslator->setDebug(true);
-		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoTranslation();
+		$this->rainforestAmazon->productsRetriever->model_product_edit->cleanFailedTranslations();
 
+	
+		//1. product_description
+		foreach (hobotix\Amazon\productModelEdit::descriptionFields as $field) {
+			echoLine('[fixtranslations] Исправление перевода: ' . $field);
+			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoFieldTranslation($field);
 
-		foreach ($products as $product){
-			foreach ($this->registry->get('languages') as $language_code => $language) {
-				$source_name = atrim($product['source_name']);
+			$i = 1;
+			$total = count($products);
+			foreach ($products as $product){
+				$product_translate_data = [];
+				foreach ($this->registry->get('languages') as $language_code => $language) {
+					$source = atrim($product['source_' . $field]);
 
-				if ($product['language_id'] == $language['language_id'] && $this->config->get('config_rainforest_enable_language_' . $language_code)){	
+					if ($product['language_id'] == $language['language_id'] && $this->config->get('config_rainforest_enable_language_' . $language_code)){	
+						echoLine('[fixtranslations] Товар: ' . $product['product_id'] . ', ' . $i . '/' . $total);
 
-					echoLine('[updatenametranslations] Товар: ' . $product['product_id']);
+						$translated = $this->rainforestAmazon->productsRetriever->yandexTranslator->translate($source, $this->config->get('config_rainforest_source_language'), $language_code, true);
 
-					$name = $this->rainforestAmazon->productsRetriever->yandexTranslator->translate($source_name, $this->config->get('config_rainforest_source_language'), $language_code, true);
-
-					$translated = false;
-					if ($name && $name != atrim($source_name)){
-						$translated = true;
+						$product_translate_data[$language['language_id']] = [
+							$field 			=> $translated						
+						];
 					}
+				}
 
-					$product_name_data[$language['language_id']] = [
-						'name' 			=> $name,
-						'translated' 	=> $translated
+				if ($product_translate_data){
+					$this->rainforestAmazon->productsRetriever->model_product_edit->editProductDescriptionField($product['product_id'], $field, $product_translate_data);		
+				}	
+
+				$i++;			
+			}
+		}
+
+		//2. product_attribute
+		$attributes = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoAttributeTranslation();
+
+		$i = 1;
+		$total = count($attributes);
+		foreach ($attributes as $attribute){
+			$attribute_translate_data = [];
+			foreach ($this->registry->get('languages') as $language_code => $language) {
+				$source = atrim($attribute['source_text']);
+
+				if ($attribute['language_id'] == $language['language_id'] && $this->config->get('config_rainforest_enable_language_' . $language_code)){
+					echoLine('[fixtranslations] Атрибут: ' . $attribute['product_id'] . ':' . $attribute['attribute_id'] . ', ' . $i . '/' . $total);
+
+					$translated = $this->rainforestAmazon->productsRetriever->yandexTranslator->translate($source, $this->config->get('config_rainforest_source_language'), $language_code, true);
+
+					$attribute_translate_data[$language['language_id']] = [
+							'text' 			=> $translated						
 					];
-
-
-					$this->rainforestAmazon->productsRetriever->model_product_edit->editProductNames($product['product_id'], $product_name_data);
 				}
 			}
 
+			if ($attribute_translate_data){
+				$this->rainforestAmazon->productsRetriever->model_product_edit->editProductAttributeText($attribute['product_id'], $attribute['attribute_id'], $attribute_translate_data);		
+			}
 			
+			$i++;
 		}
+
+		//3. product_video_titles
+		$videos = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoVideoTitleTranslation();
+
+		$i = 1;
+		$total = count($videos);
+		foreach ($videos as $video){
+			$video_translate_data = [];
+			foreach ($this->registry->get('languages') as $language_code => $language) {
+				$source = atrim($video['source_title']);
+
+				if ($video['language_id'] == $language['language_id'] && $this->config->get('config_rainforest_enable_language_' . $language_code)){
+					echoLine('[fixtranslations] Видео: ' . $video['product_id'] . ':' . $video['product_video_id'] . ', ' . $i . '/' . $total);
+
+					$translated = $this->rainforestAmazon->productsRetriever->yandexTranslator->translate($source, $this->config->get('config_rainforest_source_language'), $language_code, true);
+
+					$video_translate_data[$language['language_id']] = [
+							'title' 			=> $translated						
+					];
+				}
+			}			
+
+			if ($video_translate_data){
+				$this->rainforestAmazon->productsRetriever->model_product_edit->editProductVideoTitle($video['product_video_id'], $video_translate_data);		
+			}
+			
+			$i++;
+		}	
 	}
+
 
 	public function parseCategoryPage($category_id, $rfCategory){
 		$categoryResultIndex = \hobotix\RainforestAmazon::categoryModeResultIndexes[$this->config->get('config_rainforest_category_model')];
@@ -310,8 +372,7 @@ class ControllerDPRainForest extends Controller {
 			}
 		}
 
-		$this->updateimagesfromamazon();
-	//	$this->updatenametranslations();
+		$this->updateimagesfromamazon();	
 	}
 
 	//OLD SLOW DEPRECATED FUNCTION

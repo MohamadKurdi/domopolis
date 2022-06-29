@@ -22,7 +22,7 @@
 		die();
 	}
 
-	echoLine('[CLI] Йобані очі, це ж ми в CLI. Версия PHP: ' . phpversion() . ', время ' . date('Y-m-d H:i:s'));
+	echoLine('[CLI] Йобані очі, це ж ми в CLI. Версия PHP: ' . phpversion() . ', время ' . date('Y-m-d H:i:s'));	
 
 	//Первый параметр: admin, catalog, для выбора приложения
 	if (!isset($argv[1])){

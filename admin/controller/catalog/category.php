@@ -94,6 +94,16 @@ class ControllerCatalogCategory extends Controller {
 		$this->getList();
 	}
 
+	public function hidedisabled() {
+		if (empty($this->session->data['category_hidedisabled']) || $this->session->data['category_hidedisabled'] == 0){
+			$this->session->data['category_hidedisabled'] = 1;
+		} else {
+			$this->session->data['category_hidedisabled'] = 0;
+		}
+
+		$this->redirect($this->url->link('catalog/category', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+	}
+
 	public function rollup() {
 		if (empty($this->session->data['category_rollup']) || $this->session->data['category_rollup'] == 0){
 			$this->session->data['category_rollup'] = 1;
@@ -171,8 +181,12 @@ class ControllerCatalogCategory extends Controller {
 		} else {
 			$filter = array(
 				'start' => ($page - 1) * $this->config->get('config_admin_limit'),
-				'limit' => $this->config->get('config_admin_limit')				
+				'limit' => $this->config->get('config_admin_limit'),				
 			);
+
+			if ($this->session->data['category_hidedisabled']){
+				$filter['filter_status'] = 1;
+			}
 			
 			$results = $this->model_catalog_category->getCategories($filter);
 		}		
@@ -228,47 +242,52 @@ class ControllerCatalogCategory extends Controller {
 				$name = $result['name'];
 			}
 
-			$data[$result['category_id']] = array(
-				'category_id' 				=> $result['category_id'],
-				'href'						=> $href,
-				'name'        				=> $name,
-				'indent'					=> $indent,
-				'mark'						=> $mark,
-				'count'       				=> $this->model_catalog_category->getTotalProductInCategory($result['category_id']),
-				'filled'       				=> $this->model_catalog_category->getTotalFilledProductInCategory($result['category_id']),
-				'filter'					=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_category=' . $result['category_id'], 'SSL'),
-				'filter_filled'				=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_filled_from_amazon=1&filter_category=' . $result['category_id'], 'SSL'),
-				'level'						=> (!empty($result['level']))?($result['level'] - 2):false,		
-				'alternate_name' 			=> $result['alternate_name'],
-				'image'       				=> $image,
-				'menu_name'   				=> $result['menu_name'],
-				'menu_icon'   				=> html_entity_decode($result['menu_icon'], ENT_QUOTES, 'UTF-8'),
-				'sort_order'  				=> $result['sort_order'],
-				'amazon_category_name'  	=> $real_category['amazon_category_id']?$real_category['amazon_category_name']:false,
-				'amazon_category_id'  		=> $real_category['amazon_category_id'],
-				'amazon_sync_enable'  		=> $real_category['amazon_sync_enable'],
-				'amazon_final_category'  	=> $real_category['amazon_final_category'],
-				'amazon_can_get_full'  		=> $real_category['amazon_can_get_full'],
-				'amazon_category_link'  	=> $real_category['amazon_category_link'],
-				'yandex_category_name'  	=> $yandex_category_name,
-				'google_category' 			=> $this->model_catalog_category->getGoogleCategoryByID($real_category['google_category_id']),
-				'tnved'						=> $real_category['tnved'],
-				'deletenotinstock'			=> $real_category['deletenotinstock'],
-				'priceva_enable'			=> $real_category['priceva_enable'],
-				'submenu_in_children'		=> $real_category['submenu_in_children'],
-				'intersections'				=> $real_category['intersections'],
-				'default_length'			=> $real_category['default_length'],
-				'default_width'				=> $real_category['default_width'],
-				'default_height'			=> $real_category['default_height'],
-				'default_weight'			=> $real_category['default_weight'],
-				'intersections'				=> $real_category['intersections'],
-				'status'					=> $real_category['status'],
-				'selected'    				=> isset($this->request->post['selected']) && in_array($result['category_id'], $this->request->post['selected']),
-				'action'      				=> $action
-			);
+			if ($this->session->data['category_hidedisabled'] && !$result['status']){
+				continue;
+			} else {
 
-			if (!empty($this->session->data['category_rollup']) && $category_id == $result['category_id']) {
-				$data += $this->getCategories($result['category_id'], $path . '_', ($indent + 25));
+				$data[$result['category_id']] = array(
+					'category_id' 				=> $result['category_id'],
+					'href'						=> $href,
+					'name'        				=> $name,
+					'indent'					=> $indent,
+					'mark'						=> $mark,
+					'count'       				=> $this->model_catalog_category->getTotalProductInCategory($result['category_id']),
+					'filled'       				=> $this->model_catalog_category->getTotalFilledProductInCategory($result['category_id']),
+					'filter'					=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_category=' . $result['category_id'], 'SSL'),
+					'filter_filled'				=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_filled_from_amazon=1&filter_category=' . $result['category_id'], 'SSL'),
+					'level'						=> (!empty($result['level']))?($result['level'] - 2):false,		
+					'alternate_name' 			=> $result['alternate_name'],
+					'image'       				=> $image,
+					'menu_name'   				=> $result['menu_name'],
+					'menu_icon'   				=> html_entity_decode($result['menu_icon'], ENT_QUOTES, 'UTF-8'),
+					'sort_order'  				=> $result['sort_order'],
+					'amazon_category_name'  	=> $real_category['amazon_category_id']?$real_category['amazon_category_name']:false,
+					'amazon_category_id'  		=> $real_category['amazon_category_id'],
+					'amazon_sync_enable'  		=> $real_category['amazon_sync_enable'],
+					'amazon_final_category'  	=> $real_category['amazon_final_category'],
+					'amazon_can_get_full'  		=> $real_category['amazon_can_get_full'],
+					'amazon_category_link'  	=> $real_category['amazon_category_link'],
+					'yandex_category_name'  	=> $yandex_category_name,
+					'google_category' 			=> $this->model_catalog_category->getGoogleCategoryByID($real_category['google_category_id']),
+					'tnved'						=> $real_category['tnved'],
+					'deletenotinstock'			=> $real_category['deletenotinstock'],
+					'priceva_enable'			=> $real_category['priceva_enable'],
+					'submenu_in_children'		=> $real_category['submenu_in_children'],
+					'intersections'				=> $real_category['intersections'],
+					'default_length'			=> $real_category['default_length'],
+					'default_width'				=> $real_category['default_width'],
+					'default_height'			=> $real_category['default_height'],
+					'default_weight'			=> $real_category['default_weight'],
+					'intersections'				=> $real_category['intersections'],
+					'status'					=> $real_category['status'],
+					'selected'    				=> isset($this->request->post['selected']) && in_array($result['category_id'], $this->request->post['selected']),
+					'action'      				=> $action
+				);
+
+				if (!empty($this->session->data['category_rollup']) && $category_id == $result['category_id']) {
+					$data += $this->getCategories($result['category_id'], $path . '_', ($indent + 25));
+				}
 			}
 		}
 
@@ -311,10 +330,12 @@ class ControllerCatalogCategory extends Controller {
 		$this->data['delete'] = $this->url->link('catalog/category/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['repair'] = $this->url->link('catalog/category/repair', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['rollup'] = $this->url->link('catalog/category/rollup', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['hidedisabled'] = $this->url->link('catalog/category/hidedisabled', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['simpleview'] = $this->url->link('catalog/category/simpleview', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['rollup_all'] = $this->url->link('catalog/category/rollup_all', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
 		$this->data['rollup_enabled'] = !empty($this->session->data['category_rollup']);
+		$this->data['hidedisabled_enabled'] = !empty($this->session->data['category_hidedisabled']);
 		$this->data['simpleview_enabled'] = !empty($this->session->data['simpleview']);
 
 		if (isset($this->request->get['path'])) {

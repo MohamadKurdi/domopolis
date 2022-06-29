@@ -32,6 +32,14 @@
 					<?php } ?>
 				</a>
 
+				<a href="<?php echo $hidedisabled; ?>" class="button">
+					<?php if ($hidedisabled_enabled) { ?>
+						<i class="fa fa-eye-slash" aria-hidden="true"></i> Спрятать выключенные
+					<?php } else { ?>
+						<i class="fa fa-eye" aria-hidden="true"></i> Показать выключенные
+					<?php } ?>
+				</a>
+
 				<?php if ($rollup_enabled) { ?>
 					<a href="<?php echo $rollup_all; ?>" class="button"><i class="fa fa-caret-square-o-down" aria-hidden="true"></i> Свернуть всё</a>
 				<?php } ?>

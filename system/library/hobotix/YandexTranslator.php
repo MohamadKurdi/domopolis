@@ -48,6 +48,11 @@ class YandexTranslator
 		if (!mb_strlen($text)){
 			return '';
 		}
+
+		if ($this->getHourlyAmount() >= ($this->hourLimit*0.95)){
+			echoLine('[YandexTranslator] Лимит на часовой перевод почти достигнут, надо поспать минуту!');
+			sleep(mt_rand(50,60));
+		}
 		
 		if (mb_strlen($text, 'UTF-8') > $this->symbolLimit){
 			$translationResult = '';
@@ -72,7 +77,7 @@ class YandexTranslator
 			$translate->setSourceLang($from)->setTargetLang($to)->setFormat(\Panda\Yandex\TranslateSdk\Format::HTML);
 			$result = $this->cloud->request($translate);
 
-			$this->addStats($translate);
+			$this->addStats($text);
 
 		} catch (\Panda\Yandex\TranslateSdk\Exception\ClientException $e) {
 			echoLine($e->getMessage());			
@@ -94,6 +99,10 @@ class YandexTranslator
 		
 		return $result;
 	}		
+
+	private function getHourlyAmount(){
+		return $this->db->ncquery("SELECT SUM(amount) as total FROM translate_stats WHERE  time >= '" . date('Y-m-d', strtotime('-1 hour')) . "'")->row['total'];
+	}
 
 	private function addStats($text){
 		$this->db->query("INSERT INTO translate_stats SET time = NOW(), amount = '" . (int)mb_strlen($text) . "'");

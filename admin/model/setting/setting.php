@@ -126,6 +126,30 @@ class ModelSettingSetting extends Model {
 		return $query->row['total'];
 	
 	}
+
+	public function getTranslatedTotal(){
+		return $this->db->query("SELECT SUM(amount) as total FROM translate_stats")->row['total'];
+	}
+
+	public function getTranslatedTotalToday(){
+		return $this->db->query("SELECT SUM(amount) as total FROM translate_stats WHERE DATE(time) = DATE(NOW())")->row['total'];
+	}
+
+	public function getTranslatedTotalHour(){
+		return $this->db->query("SELECT SUM(amount) as total FROM translate_stats WHERE  time >= '" . date('Y-m-d', strtotime('-1 hour')) . "'")->row['total'];
+	}
+
+	public function getTranslatedTotalYesterday(){
+		return $this->db->query("SELECT SUM(amount) as total FROM translate_stats WHERE  time >= '" . date('Y-m-d', strtotime('-1 day')) . "'")->row['total'];
+	}
+
+	public function getTranslatedTotalWeek(){
+		return $this->db->query("SELECT SUM(amount) as total FROM translate_stats WHERE  time >= '" . date('Y-m-d', strtotime('-1 week')) . "'")->row['total'];
+	}
+
+	public function getTranslatedTotalMonth(){
+		return $this->db->query("SELECT SUM(amount) as total FROM translate_stats WHERE  time >= '" . date('Y-m-d', strtotime('-1 month')) . "'")->row['total'];
+	}
 	
 	
 	public function getKeySettingValue($group, $key, $store_id = 0) {

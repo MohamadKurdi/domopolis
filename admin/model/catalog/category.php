@@ -528,6 +528,10 @@ class ModelCatalogCategory extends Model {
 			if (isset($data['filter_parent_id'])) {
 				$sql .= " AND c.parent_id = '" . (int)$data['filter_parent_id'] . "'";
 			}
+
+			if (isset($data['filter_status'])) {
+				$sql .= " AND c.status = '1'";
+			}
 			
 			$sql .= " GROUP BY cp.category_id ORDER BY name";
 			
@@ -654,7 +658,13 @@ class ModelCatalogCategory extends Model {
 		}
 		
 		public function getTotalCategories() {
-			$query = $this->db->query("SELECT COUNT(*) AS total FROM category");
+			$sql = "SELECT COUNT(*) AS total FROM category WHERE 1";
+
+			if (isset($data['filter_status'])) {
+				$sql .= " AND c.status = '1'";
+			}
+
+			$query = $this->db->query($sql);	
 			
 			return $query->row['total'];
 		}	

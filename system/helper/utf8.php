@@ -25,6 +25,24 @@
 		];
 	}
 
+	function formatLongNumber($number){
+
+		if ($number > 1000000000000) {
+			return round($number / 1000000000000, 1) . 'T';
+		} elseif ($number > 1000000000) {
+			return round($number / 1000000000, 1) . 'B';
+		} elseif ($number > 1000000) {
+			return round($number / 1000000, 1) . 'M';
+		} elseif ($number > 1000) {
+			return round($number / 1000, 1) . 'K';
+		} else {
+			return $number;
+		}
+
+		return $number;
+
+	}
+
 	function atrim($string){	
 		$string = preg_replace('/(\x{200e}|\x{200f})/u', '', $string);
 		$string = str_replace(['"', '“', '„'], "'", $string);

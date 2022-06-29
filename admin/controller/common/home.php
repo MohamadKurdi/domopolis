@@ -18,7 +18,7 @@
 			$this->data['token'] = $this->session->data['token'];
 			$this->language->load('common/header');
 			
-			/* Admin Header Notices 1.0 */
+			
 			$this->data['text_new_customer'] = $this->language->get('text_new_customer');
 			$this->data['text_pending_customer'] = $this->language->get('text_pending_customer');
 			$this->data['text_new_order'] = $this->language->get('text_new_order');
@@ -28,30 +28,22 @@
 			$this->data['text_notification'] = $this->language->get('text_notification');
 			$this->data['text_stockout'] = $this->language->get('text_stockout');
 			$this->data['text_return'] = $this->language->get('text_return');
-			/* Admin Header Notices 1.0 */
 			
-			//new customer by today
 			$this->load->model('sale/customer');
 			$customer_total_data = array('filter_date_added' => date('Y-m-d')); // 2013-10-10
 			$this->data['total_new_customer'] = $this->model_sale_customer->getTotalCustomers($customer_total_data);
 			$this->data['total_customer_approval'] = $this->model_sale_customer->getTotalCustomersAwaitingApproval();			
 			
-			//new order by today
+			
 			$this->load->model('sale/order');
 			$total_order_data = array('filter_date_added' => date('Y-m-d')); // 2013-10-10
 			$this->data['total_new_order'] = $this->model_sale_order->getTotalOrders($total_order_data);
 			$this->data['total_pending_order'] = $this->model_sale_order->getTotalOrdersByOrderStatusId($this->config->get('config_order_status_id'));
 			
-			//return
 			$this->load->model('sale/return');
 			$total_return_data = array('filter_date_added' => date('Y-m-d')); // 2013-10-10
 			$this->data['total_new_return'] = $this->model_sale_return->getTotalReturns($total_return_data);
-			
-			
-			//stock
-		//	$this->load->model('catalog/product');
-		//	$total_product_data = array('filter_quantity' => '0');
-		//	$this->data['total_stockout'] = $this->model_catalog_product->getTotalProducts($total_product_data);
+
 			$this->data['total_stockout'] = 0;
 			
 			$this->load->model('sale/callback');
@@ -67,9 +59,7 @@
 			$this->data['total_affiliate_approval'] = $this->model_sale_affiliate->getTotalAffiliatesAwaitingApproval();
 			
 			$this->data['total_notification'] = $this->data['total_new_return'] + $this->data['total_stockout'] + $this->data['total_new_customer'] + $this->data['total_customer_approval'] + $this->data['total_new_order'] + $this->data['total_pending_order'] + $this->data['total_review_approval'] + $this->data['total_affiliate_approval'];
-			/* Admin Header Notices 1.0 */
-			
-			//waitlist ready
+
 			$this->load->model('catalog/product');
 			$this->data['total_waitlist_ready'] = $this->model_catalog_product->getTotalProductsWaitList(array('filter_supplier_has' => 1));
 			$this->data['total_waitlist_prewaits'] = $this->model_catalog_product->getProductsWaitListTotalPreWaits();
@@ -90,9 +80,7 @@
 			
 			$this->template = 'homestats/headernotifications.tpl';
 			
-			$this->response->setOutput($this->render());
-			
-			
+			$this->response->setOutput($this->render());		
 		}
 
 		public function getCronStats(){
@@ -263,8 +251,7 @@
 			
 			$this->template = 'homestats/homecharts.tpl';
 			
-			$this->response->setOutput($this->render());
-			
+			$this->response->setOutput($this->render());			
 		}
 		
 		
@@ -292,17 +279,7 @@
 			$this->data['orders_diff'] = ($this->data['orders_now'] - $this->data['orders_last_year']);
 			
 			$order_total = $this->model_sale_order->getTotalSales();
-			if ($order_total > 1000000000000) {
-				$this->data['order_total'] = round($order_total / 1000000000000, 1) . 'T';
-				} elseif ($order_total > 1000000000) {
-				$this->data['order_total'] = round($order_total / 1000000000, 1) . 'B';
-				} elseif ($order_total > 1000000) {
-				$this->data['order_total'] = round($order_total / 1000000, 1) . 'M';
-				} elseif ($order_total > 1000) {
-				$this->data['order_total'] = round($order_total / 1000, 1) . 'K';
-				} else {
-				$this->data['order_total'] = $order_total;
-			}
+			$this->data['order_total'] = formatLongNumber($order_total);
 			
 			$date_first_order = $this->model_sale_order->getFirstOrderDate();
 			$this->data['date_first_order'] = date('d.m.Y', strtotime($date_first_order));
@@ -311,37 +288,10 @@
 			$this->data['customers_now'] = $this->model_sale_customer->getTotalInvolvedCustomers();
 			$this->data['customers_yesterday'] = $this->model_sale_customer->getTotalInvolvedCustomersLastWeek();
 			$this->data['customers_diff'] = abs($this->data['customers_now'] - $this->data['customers_yesterday']);
-			/*	
-				if ($this->data['customers_now'] > 1000000000000) {
-				$this->data['customers_now'] = round($this->data['customers_now'] / 1000000000000, 1) . 'T';
-				} elseif ($this->data['customers_now'] > 1000000000) {
-				$this->data['customers_now'] = round($this->data['customers_now'] / 1000000000, 1) . 'B';
-				} elseif ($this->data['customers_now'] > 1000000) {
-				$this->data['customers_now'] = round($this->data['customers_now'] / 1000000, 1) . 'M';
-				} elseif ($this->data['customers_now'] > 1000) {
-				$this->data['customers_now'] = round($this->data['customers_now'] / 1000, 1) . 'K';
-				} else {
-				$this->data['customers_now'] = $this->data['customers_now'];
-				}
-			*/
 			
 			$this->data['loyal_customers'] = $this->model_sale_customer->getTotalLoyalCustomers();
 			$this->data['loyal_customers_last_week'] = $this->model_sale_customer->getTotalLoyalCustomersLastWeek();
 			$this->data['loyal_customers_diff'] = abs($this->data['loyal_customers_last_week']);
-			
-			/*	
-				if ($this->data['loyal_customers'] > 1000000000000) {
-				$this->data['loyal_customers'] = round($this->data['loyal_customers'] / 1000000000000, 1) . 'T';
-				} elseif ($this->data['loyal_customers'] > 1000000000) {
-				$this->data['loyal_customers'] = round($this->data['loyal_customers'] / 1000000000, 1) . 'B';
-				} elseif ($this->data['loyal_customers'] > 1000000) {
-				$this->data['loyal_customers'] = round($this->data['loyal_customers'] / 1000000, 1) . 'M';
-				} elseif ($this->data['loyal_customers'] > 1000) {
-				$this->data['loyal_customers'] = round($this->data['loyal_customers'] / 1000, 1) . 'K';
-				} else {
-				$this->data['loyal_customers'] = $this->data['loyal_customers'];
-				}
-			*/
 			
 			$this->data['loyal_orders_last_month'] = $this->model_sale_customer->getTotalLoyalOrdersLastMonth();
 			$this->data['loyal_orders_percent'] = round((($this->data['loyal_orders_last_month'] / $this->data['orders_now']) * 100), 1);
@@ -387,20 +337,7 @@
 			
 			//$this->data['yam_comission1'] = $this->currency->format($this->data['yam_comission'], 'RUB', '1');
 			$this->data['yam_orders_total'] = $this->currency->format($this->data['yam_orders_total'], 'RUB', '1');
-			
-			
-			if ($this->data['yam_comission'] > 1000000000000) {
-				$this->data['yam_comission'] = round($this->data['yam_comission'] / 1000000000000, 1) . 'T';
-				} elseif ($this->data['yam_comission'] > 1000000000) {
-				$this->data['yam_comission'] = round($this->data['yam_comission'] / 1000000000, 1) . 'B';
-				} elseif ($this->data['yam_comission'] > 1000000) {
-				$this->data['yam_comission'] = round($this->data['yam_comission'] / 1000000, 1) . 'M';
-				} elseif ($this->data['yam_comission'] > 1000) {
-				$this->data['yam_comission'] = round($this->data['yam_comission'] / 1000, 1) . 'K';
-				} else {
-				$this->data['yam_comission'] = $this->data['yam_comission'];
-			}
-			
+			$this->data['yam_orders_total'] = formatLongNumber($this->data['yam_orders_total']);
 			
 			
 			$this->template = 'homestats/prettystats.tpl';
@@ -411,16 +348,24 @@
 		public function loadProductStats(){
 			$this->load->model('catalog/product');
 			$this->load->model('catalog/category');
+			$this->load->model('setting/setting');
 
-			$this->data['total_products'] 			= $this->model_catalog_product->getTotalProducts();
-			$this->data['total_product_enabled'] 	= $this->model_catalog_product->getTotalProducts(['filter_status' => 1]);
+			$this->data['translated_total']					= formatLongNumber($this->model_setting_setting->getTranslatedTotal());
+			$this->data['translated_total_hour']			= formatLongNumber($this->model_setting_setting->getTranslatedTotalHour());
+			$this->data['translated_total_today']			= formatLongNumber($this->model_setting_setting->getTranslatedTotalToday());
+			$this->data['translated_total_yesterday']		= formatLongNumber($this->model_setting_setting->getTranslatedTotalYesterday());
+			$this->data['translated_total_week']			= formatLongNumber($this->model_setting_setting->getTranslatedTotalWeek());
+			$this->data['translated_total_month']			= formatLongNumber($this->model_setting_setting->getTranslatedTotalMonth());
+
+			$this->data['total_products'] 					= $this->model_catalog_product->getTotalProducts();
+			$this->data['total_product_enabled'] 			= $this->model_catalog_product->getTotalProducts(['filter_status' => 1]);
 			$this->data['filter_total_products_enabled'] 	= $this->url->link('catalog/product_ext', 'filter_status=1&token=' . $this->session->data['token'], 'SSL');
 
 
-			$this->data['total_product_parsed'] 	= $this->model_catalog_product->getTotalProductsFilled();
-			$this->data['filter_total_product_parsed'] 	= $this->url->link('catalog/product_ext', 'filter_filled_from_amazon=1&token=' . $this->session->data['token'], 'SSL');
+			$this->data['total_product_parsed'] 			= $this->model_catalog_product->getTotalProductsFilled();
+			$this->data['filter_total_product_parsed'] 		= $this->url->link('catalog/product_ext', 'filter_filled_from_amazon=1&token=' . $this->session->data['token'], 'SSL');
 
-			$this->data['total_products_in_tech'] 	= $this->model_catalog_product->getTotalProducts(['filter_category_id' => $this->config->get('config_rainforest_default_technical_category_id')]);
+			$this->data['total_products_in_tech'] 			= $this->model_catalog_product->getTotalProducts(['filter_category_id' => $this->config->get('config_rainforest_default_technical_category_id')]);
 			$this->data['filter_total_products_in_tech'] 	= $this->url->link('catalog/product_ext', 'filter_category=' . $this->config->get('config_rainforest_default_technical_category_id') . '&token=' . $this->session->data['token'], 'SSL');
 
 			$this->data['total_products_added_today'] 			= $this->model_catalog_product->getTotalProductsAdded(date('Y-m-d'));
@@ -430,6 +375,7 @@
 			$this->data['filter_total_products_added_yesterday'] 	= $this->url->link('catalog/product_ext', 'filter_date_added=' . date('Y-m-d', strtotime('-1 day')) . '&token=' . $this->session->data['token'], 'SSL');
 
 			$this->data['total_products_added_week'] 				= $this->model_catalog_product->getTotalProductsAdded(['from' => date('Y-m-d', strtotime('-1 week')), 'to' => date('Y-m-d')]);
+			$this->data['total_products_added_month'] 				= $this->model_catalog_product->getTotalProductsAdded(['from' => date('Y-m-d', strtotime('-1 month')), 'to' => date('Y-m-d')]);
 
 			$this->data['total_categories'] 						= $this->model_catalog_category->getTotalCategories();
 			$this->data['total_categories_final'] 					= $this->model_catalog_category->getTotalCategoriesAmazonFinal();

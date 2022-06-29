@@ -30,9 +30,32 @@ class productModelGet extends hoboModel{
 		}
 
 		return $result;
-
 	}
 
+	public function checkIfProductIsVariant($product_id){
+		$query = $this->db->query("SELECT main_variant_id FROM product WHERE product_id = '" . (int)$product_id . "'");
+
+		return (int)$query->row['main_variant_id'];
+	}
+
+	public function getIfProductIsFullFilled($product_id){
+		return $this->db->ncquery("SELECT product_id FROM product_amzn_data WHERE product_id = '" . (int)$product_id . "'")->num_rows;
+	}
+
+	public function getCurrentProductCategory($product_id){
+
+		$query = $this->db->query("SELECT category_id FROM product_to_category WHERE product_id = '" . (int)$product_id . "' AND main_category = 1 LIMIT 1");
+
+		if ($query->num_rows){
+			return $query->row['category_id'];
+		} else {
+			return $this->config->get('config_rainforest_default_technical_category_id');				
+		}
+	}
+
+	public function checkIfAsinIsDeleted($asin){
+		return $this->db->query("SELECT asin FROM deleted_asins WHERE asin LIKE ('" . $this->db->escape($asin) . "')")->num_rows;
+	}
 
 	public function getProductsWithNoImages(){
 		$result = [];
@@ -45,21 +68,95 @@ class productModelGet extends hoboModel{
 		return $result;
 	}
 
-	public function getProductsWithNoTranslation(){
+	public function getProductsWithNoFieldTranslation($field){
 		$result = [];
-		$query = $this->db->ncquery("SELECT pd.product_id, pd.language_id,
-			(SELECT pd2.name FROM product_description pd2 WHERE pd2.product_id = pd.product_id AND language_id = '" . (int)$this->config->get('config_rainforest_source_language_id') . "') as source_name
-		FROM product_description pd WHERE pd.translated = 0 AND pd.language_id <> '" . (int)$this->config->get('config_rainforest_source_language_id') . "'");
 
-		foreach ($query->rows as $row){
-			if ($row['source_name']){
-				$result[] = [
-					'product_id' 			=> $row['product_id'],
-					'language_id'			=> $row['language_id'],
-					'source_name' 			=> $row['source_name']
-				];
+		foreach ($this->registry->get('languages') as $language_code => $language) {
+
+			if ($this->config->get('config_rainforest_enable_language_' . $language_code)){
+
+				$query = $this->db->ncquery("SELECT pd.product_id, pd.language_id,
+					(SELECT pd2." . $field . " FROM product_description pd2 WHERE pd2.product_id = pd.product_id AND language_id = '" . (int)$this->config->get('config_rainforest_source_language_id') . "') as source_" . $field . "
+						FROM product_description pd WHERE 
+						LENGTH(" . $field . ") = 0 
+						AND 
+						LENGTH((SELECT pd2." . $field . " FROM product_description pd2 WHERE pd2.product_id = pd.product_id AND language_id = '" . (int)$this->config->get('config_rainforest_source_language_id') . "')) > 0 
+						AND
+						pd.language_id = '" . (int)$language['language_id'] . "'");
+
+					foreach ($query->rows as $row){
+						if ($row['source_' . $field]){
+							$result[] = [
+								'product_id' 			=> $row['product_id'],
+								'language_id'			=> $row['language_id'],
+								'source_' . $field 		=> $row['source_' . $field]
+							];
+						}
+					}
+				}
 			}
-		}
+
+		return $result;
+	}
+
+	public function getProductsWithNoVideoTitleTranslation(){
+		$result = [];
+
+		foreach ($this->registry->get('languages') as $language_code => $language) {		
+			if ($this->config->get('config_rainforest_enable_language_' . $language_code)){
+				$sql = "SELECT pvd.product_id, pvd.product_video_id, pvd.language_id,
+					(SELECT pvd2.title FROM product_video_description pvd2 WHERE pvd2.product_video_id = pvd.product_video_id AND pvd2.language_id = '" . (int)$this->config->get('config_rainforest_source_language_id') . "') as source_title
+						FROM product_video_description pvd 
+						WHERE 
+						LENGTH(pvd.title) = 0 AND 
+						LENGTH((SELECT pvd2.title FROM product_video_description pvd2 WHERE pvd2.product_video_id = pvd.product_video_id AND pvd2.language_id = '" . (int)$this->config->get('config_rainforest_source_language_id') . "')) > 0 
+						AND pvd.language_id = '" . (int)$language['language_id'] . "'";
+						
+					$query = $this->db->ncquery($sql);
+
+					foreach ($query->rows as $row){
+						if ($row['source_title']){
+							$result[] = [
+								'product_video_id' 		=> $row['product_video_id'],
+								'product_id'			=> $row['product_id'],
+								'language_id'			=> $row['language_id'],								
+								'source_title' 			=> $row['source_title']
+							];
+						}
+					}
+				}
+			}
+
+		return $result;
+	}
+
+	public function getProductsWithNoAttributeTranslation(){
+		$result = [];
+
+		foreach ($this->registry->get('languages') as $language_code => $language) {		
+			if ($this->config->get('config_rainforest_enable_language_' . $language_code)){
+				$sql = "SELECT pa.product_id, pa.attribute_id, pa.language_id,
+					(SELECT pa2.text FROM product_attribute pa2 WHERE pa2.product_id = pa.product_id AND pa2.attribute_id = pa.attribute_id AND pa2.language_id = '" . (int)$this->config->get('config_rainforest_source_language_id') . "') as source_text
+						FROM product_attribute pa 
+						WHERE 
+						LENGTH(pa.text) = 0 AND 
+						LENGTH((SELECT pa2.text FROM product_attribute pa2 WHERE pa2.product_id = pa.product_id AND pa2.attribute_id = pa.attribute_id AND pa2.language_id = '" . (int)$this->config->get('config_rainforest_source_language_id') . "')) > 0 
+						AND pa.language_id = '" . (int)$language['language_id'] . "'";
+
+					$query = $this->db->ncquery($sql);
+
+					foreach ($query->rows as $row){
+						if ($row['source_text']){
+							$result[] = [
+								'product_id' 			=> $row['product_id'],
+								'language_id'			=> $row['language_id'],
+								'attribute_id'			=> $row['attribute_id'],
+								'source_text' 			=> $row['source_text']
+							];
+						}
+					}
+				}
+			}
 
 		return $result;
 	}
@@ -87,7 +184,6 @@ class productModelGet extends hoboModel{
 		return $product_attribute_data;
 	}
 
-
 	public function getProductDescriptions($product_id) {
 		$product_description_data = array();
 			
@@ -101,51 +197,18 @@ class productModelGet extends hoboModel{
 		}
 			
 		return $product_description_data;
-
 	}
 
-	public function checkIfProductIsVariant($product_id){
-		$query = $this->db->query("SELECT main_variant_id FROM product WHERE product_id = '" . (int)$product_id . "'");
-
-		return (int)$query->row['main_variant_id'];
-	}
 
 	public function getProductsByAsin($asin){
 		$results = [];
 		$query = $this->db->ncquery("SELECT product_id FROM product WHERE asin LIKE ('" . $this->db->escape($asin) . "')");
 			
-			foreach ($query->rows as $row){
-				$results[] = $row['product_id'];
-			}
+		foreach ($query->rows as $row){
+			$results[] = $row['product_id'];
+		}
 			
-			return $results;
-		}	
+		return $results;
+	}	
 
-		
-		public function getCurrentProductCategory($product_id){
-
-			$query = $this->db->query("SELECT category_id FROM product_to_category WHERE product_id = '" . (int)$product_id . "' AND main_category = 1 LIMIT 1");
-
-			if ($query->num_rows){
-				return $query->row['category_id'];
-			} else {
-				return $this->config->get('config_rainforest_default_technical_category_id');				
-			}
-		}
-
-
-		public function getIfProductIsFullFilled($product_id){
-			$query = $this->db->ncquery("SELECT product_id FROM product_amzn_data WHERE product_id = '" . (int)$product_id . "'");
-
-			return $query->num_rows;
-		}
-
-
-		public function checkIfAsinIsDeleted($asin){
-
-			$query = $this->db->query("SELECT asin FROM deleted_asins WHERE asin LIKE ('" . $this->db->escape($asin) . "')");
-
-				return $query->num_rows;
-
-			}
-		}
+}

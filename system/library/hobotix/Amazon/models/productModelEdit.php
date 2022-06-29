@@ -4,6 +4,19 @@ namespace hobotix\Amazon;
 
 class productModelEdit extends hoboModel{
 
+	public const descriptionFields = [
+		'name',
+		'description',
+		'variant_name',
+		'variant_name_1',
+		'variant_name_2',
+		'variant_value_1',
+		'variant_value_2',
+		'color',
+		'material'
+	];
+
+
 
 	public function editProductFields($product_id, $fields){
 		$sql = "UPDATE `product` SET ";
@@ -39,7 +52,6 @@ class productModelEdit extends hoboModel{
 		$sql .= " WHERE product_id = '" . (int)$product_id . "'";
 
 		$this->db->query($sql);
-
 	}
 
 	public function updateProductMainVariantId($product_id, $main_variant_id){
@@ -51,6 +63,31 @@ class productModelEdit extends hoboModel{
 		$this->db->query("UPDATE product SET main_variant_id = 	0 WHERE main_variant_id = product_id");
 	}
 
+	public function cleanFailedTranslations(){
+		foreach (self::descriptionFields as $field){
+			$this->db->query("UPDATE product_description SET `". $field ."` = '' WHERE `". $field ."` LIKE('%limit on units was exceeded%')");		
+		}
+
+		$this->db->query("UPDATE product_attribute SET text = '' WHERE text LIKE('%limit on units was exceeded%')");
+		$this->db->query("UPDATE product_video_description SET title = '' WHERE title LIKE('%limit on units was exceeded%')");
+	} 
+
+	public function setProductTranslated($product_id, $language_id){			
+		$this->db->query("UPDATE product_description SET translated = 1	WHERE product_id 	= '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
+	}
+
+	public function addProductNames($product_id, $data){			
+		foreach ($data as $language_id => $value) {
+			$this->db->query("INSERT INTO product_description SET 
+				name 				= '" . $this->db->escape($value['name']) . "',				
+				translated 			= '" . (int)$value['translated'] . "',
+				product_id 			= '" . (int)$product_id . "',
+				language_id 		= '" . (int)$language_id . "'
+				ON DUPLICATE KEY UPDATE
+				name 				= '" . $this->db->escape($value['name']) . "',				
+				translated 			= '" . (int)$value['translated'] . "'");
+		}
+	}
 
 	public function editProductImages($product_id, $data){
 		$this->db->query("DELETE FROM product_image WHERE product_id = '" . (int)$product_id . "'");
@@ -60,7 +97,6 @@ class productModelEdit extends hoboModel{
 				$this->db->query("INSERT INTO product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($product_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$product_image['sort_order'] . "'");
 			}
 		}
-
 	}
 
 	public function editProductVideos($product_id, $data){
@@ -82,7 +118,6 @@ class productModelEdit extends hoboModel{
 				}
 			}
 		}			
-
 	}
 
 	public function editProductColor($product_id, $data){
@@ -121,20 +156,6 @@ class productModelEdit extends hoboModel{
 				description 		= '" . $this->db->escape($value['description']) . "',				
 				translated 			= '" . (int)$value['translated'] . "'
 				WHERE product_id 	= '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
-		}
-	}
-
-
-	public function addProductNames($product_id, $data){			
-		foreach ($data as $language_id => $value) {
-			$this->db->query("INSERT INTO product_description SET 
-				name 				= '" . $this->db->escape($value['name']) . "',				
-				translated 			= '" . (int)$value['translated'] . "',
-				product_id 			= '" . (int)$product_id . "',
-				language_id 		= '" . (int)$language_id . "'
-				ON DUPLICATE KEY UPDATE
-				name 				= '" . $this->db->escape($value['name']) . "',				
-				translated 			= '" . (int)$value['translated'] . "'");
 		}
 	}
 
@@ -184,7 +205,6 @@ class productModelEdit extends hoboModel{
 			$this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$related_id . "' AND related_id = '" . (int)$product_id . "'");
 			$this->db->query("INSERT IGNORE INTO product_related SET product_id = '" . (int)$related_id . "', related_id = '" . (int)$product_id . "'");
 		}
-
 	}
 
 	public function editProductSponsored($product_id, $data){
@@ -194,7 +214,6 @@ class productModelEdit extends hoboModel{
 		foreach ($data as $sponsored_id) {			
 			$this->db->query("INSERT IGNORE INTO product_sponsored SET product_id = '" . (int)$product_id . "', sponsored_id = '" . (int)$sponsored_id . "'");			
 		}
-
 	}
 
 	public function editProductSimilar($product_id, $data){
@@ -205,6 +224,31 @@ class productModelEdit extends hoboModel{
 			$this->db->query("INSERT IGNORE INTO product_similar SET product_id = '" . (int)$product_id . "', similar_id = '" . (int)$similar_id . "'");
 			$this->db->query("DELETE FROM product_similar WHERE product_id = '" . (int)$similar_id . "' AND similar_id = '" . (int)$product_id . "'");
 			$this->db->query("INSERT IGNORE INTO product_similar SET product_id = '" . (int)$similar_id . "', similar_id = '" . (int)$product_id . "'");
+		}
+	}
+
+
+	public function editProductDescriptionField($product_id, $field, $data){			
+		foreach ($data as $language_id => $value) {
+			$this->db->query("UPDATE product_description SET 
+				`" . $field . "` 				= '" . $this->db->escape($value[$field]) . "'								
+				WHERE product_id 	= '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
+		}
+	}
+
+	public function editProductAttributeText($product_id, $attribute_id, $data){
+		foreach ($data as $language_id => $value) {
+			$this->db->query("UPDATE product_attribute SET 
+				text 				= '" . $this->db->escape($value['text']) . "'								
+				WHERE product_id 	= '" . (int)$product_id . "' AND attribute_id = '" . (int)$attribute_id . "' AND language_id = '" . (int)$language_id . "'");
+		}
+	}
+
+	public function editProductVideoTitle($product_video_id, $data){
+		foreach ($data as $language_id => $value) {
+			$this->db->query("UPDATE product_video_description SET 
+				title 				= '" . $this->db->escape($value['title']) . "'								
+				WHERE product_video_id 	= '" . (int)$product_video_id . "' AND language_id = '" . (int)$language_id . "'");
 		}
 	}
 
