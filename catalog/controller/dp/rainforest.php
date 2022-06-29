@@ -265,7 +265,7 @@ class ControllerDPRainForest extends Controller {
 				$counters .= ($this->current_category . '/' . \hobotix\RainforestAmazon::categoryRequestLimits . ' : ');
 				$counters .= ($i . '/' . $total);
 
-				if (!$this->asinExists($rfSimpleProduct['asin'])){					
+				if (!$this->rainforestAmazon->productsRetriever->getProductsByAsin($rfSimpleProduct['asin'])){					
 					echoLine('[parseCategoryPage] Товар ' . $rfSimpleProduct['asin'] . ' не найден, ' . $counters);						
 
 					$this->rainforestAmazon->productsRetriever->addSimpleProductWithOnlyAsin(
