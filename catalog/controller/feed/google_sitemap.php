@@ -3,6 +3,15 @@ class ControllerFeedGoogleSitemap extends Controller {
 	private $limit 					= 2000;
 	private $exclude_language_id 	= 6;
 
+	public function __construct($registry){
+		parent::__construct($registry);
+
+		$this->load->model('setting/setting');
+
+		$exclude_language_code = $this->model_setting_setting->getExclusiveSettingValue('config_second_language');
+		$this->exclude_language_id = (int)$this->registry->get('languages')[$exclude_language_code]['language_id'];		
+	}
+
 	private function getStoreID(){
 
 		$store_id = $this->config->get('config_store_id');

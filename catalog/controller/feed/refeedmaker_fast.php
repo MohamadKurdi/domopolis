@@ -1,8 +1,8 @@
 <?
 class ControllerFeedReFeedMakerFast extends Controller { 
 	private $steps = array(0, 100, 500, 1000, 2000, 5000, 7000, 10000, 15000, 20000, 25000, 1000000000);
-	private $exclude_language_id = 6;
-	private $language_id = 0;
+	private $exclude_language_id = null;
+	private $language_id = 6;
 	private $languages = [];
 	private $urlcode = '';
 	private $eanLog = false;
@@ -12,6 +12,7 @@ class ControllerFeedReFeedMakerFast extends Controller {
 		2 => array(9),
 		5 => array(8),
 	);
+
 
 	private function loadSettings($store_id){
 
