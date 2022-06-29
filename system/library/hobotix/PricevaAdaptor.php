@@ -49,8 +49,6 @@ final class PricevaAdaptor
 		return $query->rows;
 	}
 
-
-
 	private function addCompetitorURLS($store_id, $product_id, &$competitors){
 		if (!empty($this->oldLogicCompetitorFieldMapping[$store_id])){
 
@@ -72,7 +70,7 @@ final class PricevaAdaptor
 
 	private function recalculateDiscountOnProduct(&$source){
 
-		if ((float)$source->discount){
+		if (!empty($source->discount) && (float)$source->discount){
 
 			echoLine('Скидка: ' . $source->discount);
 			echoLine('Цена: ' . $source->price);
@@ -99,7 +97,7 @@ final class PricevaAdaptor
 
 		foreach ($products as $product){
 			
-		//	echoLine('[PricevaAdaptor] Товар ' . $product->client_code . ', ' . $product->name);
+			echoLine('[PricevaAdaptor] Товар ' . $product->client_code . ', ' . $product->name);
 
 			$this->db->query("INSERT INTO priceva_data SET
 				store_id 			= '" . (int)$store_id . "',
@@ -140,13 +138,13 @@ final class PricevaAdaptor
 						region_name			= '" . $this->db->escape($source->region_name) . "',
 						active				= '" . (int)$source->active . "',
 						status				= '" . (int)$source->status . "',
-						in_stock			= '" . (int)$source->in_stock . "',						
-						currency			= '" . $this->db->escape($source->currency) . "',
-						last_check_date		= '" . date('Y-m-d H:i:s', $source->last_check_date). "',
-						relevance_status	= '" . (int)$source->relevance_status . "',
-						price				= '" . (float)($source->price) . "',
-						discount 			= '" . (float)($source->discount) . "',
-						discount_type 		= '" . (int)($source->discount_type) . "'");
+						in_stock			= '" . (int)(!empty($source->in_stock)?$source->in_stock:'0') . "',						
+						currency			= '" . $this->db->escape(!empty($source->currency)?$source->currency:'') . "',
+						last_check_date		= '" . (!empty($source->last_check_date)?date('Y-m-d H:i:s', $source->last_check_date):'0000-00-00 00:00:00') . "',
+						relevance_status	= '" . (int)(!empty($source->relevance_status)?$source->relevance_status:'0') . "',
+						price				= '" . (float)(!empty($source->price)?$source->price:'0') . "',
+						discount 			= '" . (float)(!empty($source->discount)?$source->discount:'0') . "',
+						discount_type 		= '" . (int)(!empty($source->discount_type)?$source->discount_type:'0') . "'");
 
 						$competitors[] = $source->url;
 

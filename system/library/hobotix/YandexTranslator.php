@@ -6,13 +6,13 @@ namespace hobotix;
 class YandexTranslator
 {
 
-	private $db;	
-	private $config;
-	private $cloud = null;
+	private $db 	= null;	
+	private $config = null;
+	private $cloud 	= null;
 
 	private $debug = false;
 
-
+	private $hourLimit = 1000000;
 	private $symbolLimit = 9999;
 	private $sentensesDelimiter = '.';
 
@@ -71,6 +71,9 @@ class YandexTranslator
 			$translate = new \Panda\Yandex\TranslateSdk\Translate($text);
 			$translate->setSourceLang($from)->setTargetLang($to)->setFormat(\Panda\Yandex\TranslateSdk\Format::HTML);
 			$result = $this->cloud->request($translate);
+
+			$this->addStats($translate);
+
 		} catch (\Panda\Yandex\TranslateSdk\Exception\ClientException $e) {
 			echoLine($e->getMessage());			
 		}
@@ -91,6 +94,10 @@ class YandexTranslator
 		
 		return $result;
 	}		
+
+	private function addStats($text){
+		$this->db->query("INSERT INTO translate_stats SET time = NOW(), amount = '" . (int)mb_strlen($text) . "'");
+	}
 
 	//Service functions
 	private function toSentenses ($text) {
