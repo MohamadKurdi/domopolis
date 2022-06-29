@@ -30,14 +30,14 @@ class ControllerCommonPanel extends Controller {
 	}
 
 	public function getPricevaInfo(){
+		$store_id = (int)$this->request->get['store_id'];
 		$body = '';
 		$class= 'good';
 
-		if ($this->config->get('config_priceva_api_key_0')){
-
+		if ($this->config->get('config_priceva_api_key_' . $store_id)){
 			try{
 
-				$priceva = new Priceva\PricevaAPI($this->config->get('config_priceva_api_key_0'));
+				$priceva = new Priceva\PricevaAPI($this->config->get('config_priceva_api_key_' . $store_id));
 				$result = $priceva->main_ping();
 
 				if ($result->get_result()){
@@ -70,8 +70,6 @@ class ControllerCommonPanel extends Controller {
 		];
 
 		$this->response->setOutput(json_encode($json));	
-
-
 	}
 
 	public function getJustinInfo(){

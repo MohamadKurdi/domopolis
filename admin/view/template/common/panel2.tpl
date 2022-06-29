@@ -93,13 +93,25 @@
 				</div>
 
 				<div class="tile-block">
-					<div class="tile info-loader unknown" data-path="common/panel/getPricevaInfo" data-update-interval="10000">
-						<div class="tile-heading">Priceva API</div>
+					<div class="tile info-loader unknown" data-path="common/panel/getPricevaInfo&store_id=0" data-update-interval="10000">
+						<div class="tile-heading">Priceva API RU Кампания</div>
 						<div class="tile-body"><i class="fa fa-eur"></i>
 							<span class="tile-result"></span>
 						</div>
 						<div class="tile-footer">
-							цены конкурентов
+							цены конкурентов рф
+						</div>
+					</div>
+				</div>
+
+				<div class="tile-block">
+					<div class="tile info-loader unknown" data-path="common/panel/getPricevaInfo&store_id=1" data-update-interval="10000">
+						<div class="tile-heading">Priceva API UA Кампания</div>
+						<div class="tile-body"><i class="fa fa-eur"></i>
+							<span class="tile-result"></span>
+						</div>
+						<div class="tile-footer">
+							цены конкурентов Украина
 						</div>
 					</div>
 				</div>

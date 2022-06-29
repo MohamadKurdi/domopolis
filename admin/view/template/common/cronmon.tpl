@@ -27,11 +27,11 @@
 								Процесс
 							</td>
 							<td>
-								pid файл
-							</td>
-							<td>
 								Контроллер
 							</td>
+							<td>
+								pid файл
+							</td>							
 							<td>
 								Конфиг
 							</td>
@@ -72,16 +72,19 @@
 								<b><? echo $process['name']; ?></b>
 							</td>
 							<td>
-								<? echo $process['file']; ?>
+								<b style="color:#7F00FF"><? echo $process['route']; ?></b>
 							</td>
 							<td>
-								<? echo $process['route']; ?>
-							</td>
+								<? echo $process['file']; ?>
+							</td>							
 							<td>
 								<? echo $process['config']; ?>
 							</td>
 							<td>
-								<? print_r($process['args']); ?>
+								<?php if ($process['args']) { ?>
+									<? print_r($process['args']); ?>
+								<? } else { ?>
+								<? } ?>
 							</td>
 							<td>
 								<? echo $process['start']; ?>
