@@ -562,7 +562,20 @@
 			
 			$this->db->query("DELETE FROM product_description WHERE product_id = '" . (int)$product_id . "'");
 			
-			foreach ($data['product_description'] as $language_id => $value) {
+			$fields_to_copy = [
+					'color',
+					'material',
+					'variant_name',
+					'variant_name_1',
+					'variant_name_2',
+					'variant_value_1',
+					'variant_value_2'
+				];			
+
+			$copy_product_description 	= [];
+			$rainforest_source_text		= [];
+			foreach ($data['product_description'] as $language_id => $value) {					
+
 				$this->db->query("INSERT INTO product_description SET 
 					product_id = '" . (int)$product_id . "', 
 					language_id = '" . (int)$language_id . "', 
@@ -587,7 +600,47 @@
 					markdown_pack = '" . $this->db->escape($value['markdown_pack']) . "', 
 					markdown_equipment = '" . $this->db->escape($value['markdown_equipment']) . "', 
 					translated = '" . (int)$value['translated'] . "'");
+
+				if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']){
+					$variants = $this->getProductVariantsIds($product_id);
+					if ($variants){
+					$this->db->query("UPDATE product_description SET
+						description = '" . $this->db->escape($value['description']) . "',						
+						variant_name_1  = '" . $this->db->escape($value['variant_name_1']) . "',
+						variant_name_2 = '" . $this->db->escape($value['variant_name_2']) . "'
+						WHERE product_id IN (" . implode(',', $variants) . ") AND language_id = '" . (int)$language_id . "'");
+					}
+				}
+
+				if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_translate_edition_mode']){
+					foreach ($fields_to_copy as $field){						
+						if (!empty($value[$field])){
+							if ($language_id == $this->config->get('config_rainforest_source_language_id')){
+								$rainforest_source_text[$field] = $value[$field];								
+							} else {
+								$copy_product_description[$field][$language_id] = $value[$field];
+							}
+						}
+					}
+				}
 			}
+
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_translate_edition_mode'] && !empty($rainforest_source_text)){
+				foreach ($fields_to_copy as $field){
+
+					foreach ($copy_product_description[$field] as $language_id => $value){
+						if (!empty($value) && !empty($rainforest_source_text[$field])){
+						$sql = "UPDATE product_description SET `" . $field . "` = '" . $this->db->escape($value) . "' 
+									WHERE product_id IN 
+									(SELECT p2.product_id FROM product_description p2 WHERE p2.language_id = '" . $this->config->get('config_rainforest_source_language_id') . "' 
+									AND p2.`" . $field . "` LIKE ('" . $this->db->escape($rainforest_source_text[$field]) . "')) 
+									AND language_id = '" . (int)$language_id . "'";
+						}
+
+						$this->db->query($sql);
+					}
+				}
+			}		
 			
 			$this->db->query("DELETE FROM product_to_store WHERE product_id = '" . (int)$product_id . "'");
 			

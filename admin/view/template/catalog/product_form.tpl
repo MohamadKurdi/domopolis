@@ -36,7 +36,7 @@
 					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Включен режим группового редактирования вариантов. Удаление одного варианта удалит и остальные!</small>
 				<?php } ?>
 				<?php if ($this->session->data['config_rainforest_translate_edition_mode']) { ?>
-					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Включен режим коррекции переводов. Одинаковые значения атрибутов будут перезаписаны!</small>
+					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Включен режим коррекции переводов. Одинаковые значения цветов, материалов, атрибутов будут перезаписаны!</small>
 				<?php } ?>
 			</div>
 			
