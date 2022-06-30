@@ -232,6 +232,14 @@
 									<?php } ?></td>
 									<?php foreach($column_order as $col) {
 										switch ($col) {
+										case 'id': ?>
+										<td class="<?php echo $column_info[$col]['align']; ?><?php echo ($column_info[$col]['qe_status']) ? ' ' . $column_info[$col]['qe_type'] : ''; ?>" id="<?php echo $col . "-" . $product['product_id']; ?>">	
+											<b><?php echo $product[$col]; ?></b>
+											<?php if ($product['variants']) { ?>
+												<br /><span style="color:#cf4a61;font-weight:700;">+<?php echo $product['variants']; ?></span>
+											<? } ?>
+										</td>
+										<?php break;
 										case 'image': ?>
 										<td class="<?php echo $column_info[$col]['align']; ?><?php echo ($column_info[$col]['qe_status']) ? ' ' . $column_info[$col]['qe_type'] : ''; ?>" id="<?php echo $col . "-" . $product['product_id']; ?>">
 											<img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" style="padding: 1px; border: 1px solid #DDDDDD;" data-id="<?php echo $product['product_id']; ?>" data-image="<?php echo $product['image']; ?>" />

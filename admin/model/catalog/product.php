@@ -1243,6 +1243,10 @@
 			
 		}
 
+		public function countVariantProducts($product_id){
+			return $this->db->query("SELECT COUNT(product_id) as total FROM product WHERE main_variant_id = '" . (int)$product_id . "'")->row['total'];
+		}
+
 		public function getOtherVariantProducts($product_id){
 			$sql = "SELECT * FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE main_variant_id = '" . (int)$product_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
@@ -1272,14 +1276,17 @@
 			}
 
 			if ($main_variant_id){
-				$query = $this->db->query("SELECT product_id FROM product WHERE main_variant_id IN(" . (int)$product_id . ", " . (int)$main_variant_id . ")");
-
-				if ($query->num_rows){
-					foreach ($query->rows as $row){
-						$variants[] = $row['product_id'];
-					}						
-				}
+				$query = $this->db->query("SELECT product_id FROM product WHERE main_variant_id IN(" . (int)$product_id . ", " . (int)$main_variant_id . ")");				
+			} else {
+				$query = $this->db->query("SELECT product_id FROM product WHERE main_variant_id = '" . (int)$product_id . "'");
 			}
+
+			if ($query->num_rows){
+				foreach ($query->rows as $row){
+					$variants[] = $row['product_id'];
+				}						
+			}
+
 
 			$variants = array_unique($variants);
 

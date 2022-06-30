@@ -1570,8 +1570,20 @@
 																	</tr>
 																</table>
 
-																<?php if ($other_variant_products) { ?>
-																	<hr />
+																<?php if ($other_variant_products) { ?>	
+																	<div style="clear:both; height:10px;"></div>																
+																	<div style="float:left; width:90%;">
+																		<?php foreach ($languages as $language) { ?>
+																			<?php if ($language['code'] == $this->config->get('config_admin_language')) { ?>
+																				<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
+																				<textarea id="main_variant_name_editor_<?php echo $$language['language_id']; ?>" style="width:90%"><?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['name'] : ''; ?></textarea>
+																			<? } ?>
+																		<?php } ?>
+																	</div>
+																	<div style="float:right; width:10%; padding-top: 30px;">
+																		<i class="fa fa-hourglass" style="font-size:26px;"></i>
+																	</div>
+																	<div style="clear:both; height:20px;"></div>																
 																	<table class="list">
 																		<?php foreach ($other_variant_products as $other_variant_product) { ?>
 																			<tr>

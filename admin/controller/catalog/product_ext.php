@@ -526,6 +526,10 @@ class ControllerCatalogProductExt extends Controller {
                     }
                 }
             }
+
+            //CountVariants
+            $columns['variants'] = $this->model_catalog_product->countVariantProducts($result['product_id']);
+
             $this->data['products'][] = $columns;
         }
 

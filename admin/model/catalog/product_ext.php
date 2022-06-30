@@ -85,6 +85,10 @@ class ModelCatalogProductExt extends Model {
 
         $sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
+        if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
+            $sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
+        }
+
         if (in_array("length_class", $columns)) {
             $sql .= " AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
         }
