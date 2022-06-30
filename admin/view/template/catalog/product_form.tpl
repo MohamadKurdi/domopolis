@@ -26,7 +26,7 @@
 
 	<div class="box">
 		<div class="heading order_head">
-			<h1><img src="view/image/product.png" alt="" /> <?php echo $product_id; ?> / <? echo $model; ?></h1>
+			<h1><img src="view/image/product.png" alt="" /> <?php echo $product_id; ?> / <? echo $model; ?> <?php if ($asin) { ?> / <?php echo $asin; ?> <? } ?></h1>
 
 			<div style="float:left; padding-left:30px;">
 				<?php if ($this->session->data['config_rainforest_asin_deletion_mode']) { ?>
@@ -1584,18 +1584,24 @@
 																				<td>
 																					<b><?echo $other_variant_product['asin']; ?></b>
 																				</td>
-																				<td>
-																					<?echo $other_variant_product['name']; ?>
+																				<td style="width:60%">
+																					<textarea cols="2" style="width:98%" name="variant_description[<?echo $other_variant_product['product_id']; ?>][<?php echo $this->config->get['config_language_id'];?>]['name']"><?echo $other_variant_product['name']; ?></textarea>
 																				</td>
-																				<td>
-																					<?echo $other_variant_product['variant_name']; ?>
+																				<td style="width:150px">
+																					<textarea cols="2" style="width:98%" name="variant_description[<?echo $other_variant_product['product_id']; ?>][<?php echo $this->config->get['config_language_id'];?>]['variant_name']"><?echo $other_variant_product['variant_name']; ?></textarea>	
 																				</td>
-																				<td>
-																					<?echo $other_variant_product['variant_name_1']; ?>: <?echo $other_variant_product['variant_value_1']; ?>
+																				<td style="width:100px">
+																					<textarea cols="2" style="width:98%" name="variant_description[<?echo $other_variant_product['product_id']; ?>][<?php echo $this->config->get['config_language_id'];?>]['variant_name_1']"><?echo $other_variant_product['variant_name_1']; ?></textarea>										
 																				</td>
-																				<td>
-																					<?echo $other_variant_product['variant_name_2']; ?>: <?echo $other_variant_product['variant_value_2']; ?>
+																				<td style="width:100px">
+																					<textarea cols="2" style="width:98%" name="variant_description[<?echo $other_variant_product['product_id']; ?>][<?php echo $this->config->get['config_language_id'];?>]['variant_value_1']"><?echo $other_variant_product['variant_value_1']; ?></textarea>										
 																				</td>
+																				<td style="width:100px">
+																					<textarea cols="2" style="width:98%" name="variant_description[<?echo $other_variant_product['product_id']; ?>][<?php echo $this->config->get['config_language_id'];?>]['variant_name_2']"><?echo $other_variant_product['variant_name_2']; ?></textarea>										
+																				</td>
+																				<td style="width:100px">
+																					<textarea cols="2" style="width:98%" name="variant_description[<?echo $other_variant_product['product_id']; ?>][<?php echo $this->config->get['config_language_id'];?>]['variant_value_2']"><?echo $other_variant_product['variant_value_2']; ?></textarea>										
+																				</td>							
 																			</tr>
 																		<?php } ?>
 																	</table>

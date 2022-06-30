@@ -20,6 +20,58 @@ class ControllerCatalogProductExt extends Controller {
         $this->getList();
     }
 
+    public function setpicsize(){
+        if (!empty($this->session->data['aqe_list_view_image_width'])){
+            $this->config->set('aqe_list_view_image_width', $this->session->data['aqe_list_view_image_width']);
+        }
+
+        if (!empty($this->session->data['aqe_list_view_image_height'])){
+            $this->config->set('aqe_list_view_image_height', $this->session->data['aqe_list_view_image_height']);
+        }
+
+        if ($this->request->get['resize'] == 'plus'){
+            $this->session->data['aqe_list_view_image_width'] = $this->config->get('aqe_list_view_image_width') + 50;
+            $this->session->data['aqe_list_view_image_height'] = $this->config->get('aqe_list_view_image_height') + 50;
+        }
+
+        if ($this->request->get['resize'] == 'minus'){
+            $this->session->data['aqe_list_view_image_width'] = $this->config->get('aqe_list_view_image_width') - 50;
+            $this->session->data['aqe_list_view_image_height'] = $this->config->get('aqe_list_view_image_height') - 50;
+        }
+
+        $url = '';
+
+        foreach($this->config->get('aqe_catalog_products') as $column => $attr) {
+            if ($attr['filter']['show'] && isset($this->request->get['filter_' . $column])) {
+                $url .= '&filter_' . $column . '=' . urlencode(html_entity_decode($this->request->get['filter_' . $column], ENT_QUOTES, 'UTF-8'));
+            }
+        }
+
+        if (isset($this->request->get['filter_sub_category'])) {
+            $url .= '&filter_sub_category=' . urlencode(html_entity_decode($this->request->get['filter_sub_category'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['filter_price_special'])) {
+            $url .= '&filter_price_special=' . urlencode(html_entity_decode($this->request->get['filter_price_special'], ENT_QUOTES, 'UTF-8'));
+        }
+
+        if (isset($this->request->get['sort'])) {
+            $url .= '&sort=' . $this->request->get['sort'];
+        }
+
+        if (isset($this->request->get['order'])) {
+            $url .= '&order=' . $this->request->get['order'];
+        }
+
+        if (isset($this->request->get['page'])) {
+            $url .= '&page=' . $this->request->get['page'];
+        }
+
+        $this->redirect($this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+
+
+    }
+
     public function delete() {
         $this->data = array_merge($this->data, $this->language->load('catalog/product'));
 
@@ -251,6 +303,8 @@ class ControllerCatalogProductExt extends Controller {
 		$this->data['copynostock'] = $this->url->link('catalog/product_ext/copynostock', 'token=' . $this->session->data['token'] . $url, 'SSL');
         $this->data['delete'] = $this->url->link('catalog/product_ext/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
+        $this->data['resize'] = $this->url->link('catalog/product_ext/setpicsize', 'token=' . $this->session->data['token'] . $url, 'SSL');
+
         $this->load->model('setting/store');
 
         $stores = $this->model_setting_store->getStores();
@@ -285,6 +339,17 @@ class ControllerCatalogProductExt extends Controller {
         }
 
         $this->load->model('tool/image');
+
+        if (!empty($this->session->data['aqe_list_view_image_width'])){
+            $this->config->set('aqe_list_view_image_width', $this->session->data['aqe_list_view_image_width']);
+        }
+
+        if (!empty($this->session->data['aqe_list_view_image_height'])){
+            $this->config->set('aqe_list_view_image_height', $this->session->data['aqe_list_view_image_height']);
+        }
+
+        $this->data['aqe_list_view_image_width'] = $this->config->get('aqe_list_view_image_width');
+        $this->data['aqe_list_view_image_height'] = $this->config->get('aqe_list_view_image_height');
 
         $results = $this->model_catalog_product_ext->getProducts($data);
 

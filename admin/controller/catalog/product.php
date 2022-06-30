@@ -1976,11 +1976,10 @@ class ControllerCatalogProduct extends Controller {
 			}
 
 			$this->data['other_variant_products'] = [];
+
 			$other_variant_products = [];
-			if ($this->data['main_variant_id']){
-				$other_variant_products = $this->model_catalog_product->getOtherVariantProducts($this->data['main_variant_id']);
-			} elseif ($this->request->get['product_id']) {
-				$other_variant_products = $this->model_catalog_product->getOtherVariantProducts($this->request->get['product_id']);
+			if (!empty($this->request->get['product_id'])){
+				$other_variant_products = $this->model_catalog_product->getAllProductVariants($this->request->get['product_id']);			
 			}
 
 			if ($other_variant_products){

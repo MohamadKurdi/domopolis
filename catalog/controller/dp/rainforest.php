@@ -100,13 +100,34 @@ class ControllerDPRainForest extends Controller {
 			$this->rainforestAmazon->categoryParser->setType($type)->rebuildAmazonTreeToStoreTree();
 			$this->rainforestAmazon->categoryParser->setType($type)->model_catalog_category->repairCategories();			
 		}
-	}
-
+	}	
 
 	public function parsetechcategory(){
 		if ($this->config->get('config_rainforest_default_technical_category_id') && $this->config->get('config_rainforest_default_unknown_category_id')){
 			$this->editfullproductscron(true);
 		}
+	}
+
+	public function setbuyboxprice(){
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$this->load->library('Timer');
+		$timer = new FPCTimer();
+
+		$products = $this->rainforestAmazon->productsRetriever->getProductsWithFullData();
+
+		if ($products){
+			$i = 1;
+			$total = count($products);
+			echoLine('[setbuyboxprice] Всего товаров: ' . $total);
+
+			foreach ($products as $product){
+				echoLine('[setbuyboxprice] Товар ' . $product['product_id'] . '/' . $product['asin'] . ' ' . $i . '/' . $total);
+
+				$this->rainforestAmazon->productsRetriever->parseProductBuyBoxWinner($product['product_id'], json_decode($product['json'], true));
+				$i++;				
+			}
+
+		}		
 	}
 
 	public function editfullproductscronl2(){

@@ -85,6 +85,24 @@ class productModelGet extends hoboModel{
 		return $result;
 	}
 
+	public function getProductsWithFullData(){
+		$result = [];
+
+		$sql = "SELECT * FROM product_amzn_data WHERE product_id IN (SELECT product_id FROM product WHERE amazon_best_price = 0) LIMIT 3000";		
+
+		$query = $this->db->ncquery($sql);
+
+		foreach ($query->rows as $row){
+			$result[] = [
+				'product_id' 			=> $row['product_id'],
+				'asin' 					=> $row['asin'],
+				'json'					=> $row['json']							
+			];
+		}
+
+		return $result;
+	}
+
 	public function checkIfProductIsVariant($product_id){
 		$query = $this->db->query("SELECT main_variant_id FROM product WHERE product_id = '" . (int)$product_id . "'");
 

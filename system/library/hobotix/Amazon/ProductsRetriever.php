@@ -54,8 +54,7 @@
 		//TODO: refactor
 		public function getProducts(){
 			return $this->model_product_get->getProducts();
-		}
-
+		}		
 
 		public function getProductsFromTechCategory(){
 			return $this->model_product_get->getProductsFromTechCategory();
@@ -63,6 +62,10 @@
 		
 		public function getProductsWithFullDataButNotFullfilled(){
 			return $this->model_product_get->getProductsWithFullDataButNotFullfilled();
+		}
+
+		public function getProductsWithFullData(){
+			return $this->model_product_get->getProductsWithFullData();
 		}
 
 		//TODO: refactor
@@ -710,6 +713,14 @@
 			}
 		}
 
+		public function parseProductBuyBoxWinner($product_id, $product){
+			if (!empty($product['buybox_winner'])){
+				if (!empty($product['buybox_winner']['price']) && $product['buybox_winner']['price']['currency'] == 'EUR'){					
+					$this->model_product_edit->editProductFields($product_id, [['name' => 'amazon_best_price', 'type' => 'decimal', 'value' => $product['buybox_winner']['price']['value']]]);
+				}
+			}
+		}
+
 		public function editJustProductCategory($product_id, $product){			
 			$this->parseProductCategories($product_id, $product);
 
@@ -769,6 +780,9 @@
 
 			//Parse product categories if not set
 			$this->parseProductCategories($product_id, $product);
+
+			//Parse product buybox winner to amazon best price
+			$this->parseProductBuyBoxWinner($product_id, $product);
 
 			//Варианты
 			$this->model_product_edit->resetUnexsistentVariants();

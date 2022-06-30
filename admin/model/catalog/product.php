@@ -1188,40 +1188,12 @@
 
 			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']){
 				if ($recursion){
-					$main_variant_id = false;
-					$products_to_delete = [];
-
-				//Это товар - вариант с привязанным родителем
-					$query = $this->db->query("SELECT main_variant_id FROM product WHERE product_id = '" . (int)$product_id . "' LIMIT 1");
-					if ($query->row['main_variant_id']){
-						$main_variant_id = $query->row['main_variant_id'];
-						$products_to_delete[] = $main_variant_id;
-					}
-
-					if ($main_variant_id){					
-						$query = $this->db->query("SELECT product_id FROM product WHERE main_variant_id = '" . (int)$main_variant_id . "'");
-
-						if ($query->num_rows){
-							foreach ($query->rows as $row){
-								$products_to_delete[] = $row['product_id'];
-							}
-						}
-
-					} else {
-					//Возможно этот товар и есть главный вариант
-						$query = $this->db->query("SELECT product_id FROM product WHERE main_variant_id = '" . (int)$product_id . "'");
-
-						if ($query->num_rows){
-							foreach ($query->rows as $row){
-								$products_to_delete[] = $row['product_id'];
-							}
-						}
-					}
+					$product_id_to_delete = $this->getProductVariantsIds($product_id);
 
 				//Recursive deletion for variants
 					if ($products_to_delete){
 						foreach ($products_to_delete as $product_id_to_delete){
-							if ((int)$product_id_to_delete){
+							if ((int)$product_id_to_delete && !($product_id == $product_id_to_delete)){
 								$this->deleteProduct($product_id_to_delete, false);
 							}
 						}
@@ -1269,6 +1241,49 @@
 			}
 			$this->db->query("DELETE FROM url_alias WHERE query = 'product_id=" . (int)$product_id. "'");
 			
+		}
+
+		public function getOtherVariantProducts($product_id){
+			$sql = "SELECT * FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE main_variant_id = '" . (int)$product_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
+			$query = $this->db->query($sql);
+			return $query->rows;
+		}
+
+
+		public function getAllProductVariants($product_id){
+			$variants = $this->getProductVariantsIds($product_id);
+
+			$sql = "SELECT * FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE p.product_id IN (". implode(',', $variants) .") AND language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY pd.name DESC";
+
+			$query = $this->db->query($sql);
+			return $query->rows;
+		}
+		
+
+		public function getProductVariantsIds($product_id){
+			$variants = [$product_id];
+			$main_variant_id = 0;
+
+			$query = $this->db->query("SELECT main_variant_id FROM product WHERE product_id = '" . (int)$product_id . "' LIMIT 1");
+			if ($query->num_rows && !empty($query->row['main_variant_id'])){
+				$main_variant_id = $query->row['main_variant_id'];
+				$variants[] = $main_variant_id;
+			}
+
+			if ($main_variant_id){
+				$query = $this->db->query("SELECT product_id FROM product WHERE main_variant_id IN(" . (int)$product_id . ", " . (int)$main_variant_id . ")");
+
+				if ($query->num_rows){
+					foreach ($query->rows as $row){
+						$variants[] = $row['product_id'];
+					}						
+				}
+			}
+
+			$variants = array_unique($variants);
+
+			return $variants;
 		}
 		
 		public function getProduct($product_id) {
@@ -1849,16 +1864,7 @@
 			$query = $this->db->query("SELECT * FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id) LEFT JOIN product_to_category p2c ON (p.product_id = p2c.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p2c.category_id = '" . (int)$category_id . "' ORDER BY pd.name ASC");
 			
 			return $query->rows;
-		} 
-
-		public function getOtherVariantProducts($product_id){
-			$sql = "SELECT * FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE main_variant_id = '" . (int)$product_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'";
-
-			$query = $this->db->query($sql);
-			return $query->rows;
-
-		}
-		
+		} 		
 		
 		public function getProductTNVEDByCategory($product_id){
 			$query = $this->db->query("SELECT tnved FROM category WHERE LENGTH(tnved) > 1 AND category_id IN (SELECT DISTINCT category_id FROM product_to_category WHERE product_id = '" . (int)$product_id . "') LIMIT 1");

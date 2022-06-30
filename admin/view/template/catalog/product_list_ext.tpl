@@ -89,6 +89,12 @@
 									</select>
 								</td>
 								<?php break;
+								case 'image': ?>
+								<td class="<?php echo $column_info[$col]['align']; ?>">
+									<a href="<?php echo $resize; ?>&resize=plus" style="color:#00ad07"><i class="fa fa-plus-circle"></i></a>&nbsp;
+									<a href="<?php echo $resize; ?>&resize=minus" style="color:#cf4a61"><i class="fa fa-minus-circle"></i></a>&nbsp;
+								</td>
+								<?php break;
 								case 'filled_from_amazon': ?>
 								<td class="<?php echo $column_info[$col]['align']; ?>">
 									<select name="filter_<?php echo $col; ?>" class="filter <?php echo $col; ?>">
@@ -193,6 +199,13 @@
 											<button type="button" title="<?php echo $text_special_expired; ?>" class="btn btn-mini<?php echo ($filters['price_special'] == 'expired') ? ' active' : ''; ?>" data-value="expired">E</button>
 											<button type="button" title="<?php echo $text_special_future; ?>" class="btn btn-mini<?php echo ($filters['price_special'] == 'future') ? ' active' : ''; ?>" data-value="future">F</button>
 										</div>
+									</div>
+								</td>
+								<?php break;
+								case 'amazon_best_price': ?>
+								<td class="<?php echo $column_info[$col]['align']; ?>">
+									<div>
+										<input type="text" name="filter_<?php echo $col; ?>" value="<?php echo $filters[$col]; ?>" class="filter price <?php echo $col; ?>"<?php echo ($column_info[$col]['filter']['autocomplete']) ? ' placeholder="' . $text_autocomplete . '"' : ''; ?> />										
 									</div>
 								</td>
 								<?php break;

@@ -129,11 +129,12 @@ class ModelCatalogProductExt extends Model {
         }
 
         $float_interval_filters = array(
-            'length'    => 'p.length',
-            'width'     => 'p.width',
-            'height'    => 'p.height',
-            'weight'    => 'p.weight',
-            'price'     => 'p.price',
+            'length'            => 'p.length',
+            'width'             => 'p.width',
+            'height'            => 'p.height',
+            'weight'            => 'p.weight',
+            'price'             => 'p.price',
+            'amazon_best_price' => 'p.amazon_best_price'
             );
 
         foreach ($float_interval_filters as $key => $value) {
@@ -274,6 +275,7 @@ class ModelCatalogProductExt extends Model {
             'pd.name',
             'p.model',
             'p.price',
+            'p.amazon_best_price',
             'p.quantity',
             'p.status',
             'p.sort_order'
@@ -522,4 +524,3 @@ class ModelCatalogProductExt extends Model {
         }
     }
 }
-?>
