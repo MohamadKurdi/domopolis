@@ -1,15 +1,25 @@
 <?php   
 class ControllerCommonCronMon extends Controller {   
+
+	public function delete(){
+		$file = $this->request->get['file'];
+
+		$this->simpleProcess->dropPidFile($file);
+		$url = $this->url->link('common/cronmon', 'token=' . $this->session->data['token'], 'SSL');
+
+		$this->response->redirect(str_replace('&amp;','&',$url));
+	}
+
 	public function index() {
 		$this->language->load('common/home');
 
-		$this->document->setTitle('Монитор cron');
+		$this->document->setTitle('Монитор Cron заданий');
 
 		$this->data['breadcrumbs'] = array();
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => 'Монитор cron',
-			'href'      => $this->url->link('common/panel', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/cronmon', 'token=' . $this->session->data['token'], 'SSL'),
 			'separator' => false
 		);
 

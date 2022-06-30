@@ -39,11 +39,9 @@ if (!function_exists('loadJsonConfig')){
 
 if (!function_exists('echoLine')){
 	function echoLine($line){
-
 		if (php_sapi_name() === 'cli'){
 			echo $line . PHP_EOL;
 		}
-
 	}
 }
 

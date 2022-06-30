@@ -1,16 +1,6 @@
 <?php
 class ControllerFeedGoogleSitemap extends Controller {
-	private $limit 					= 2000;
-	private $exclude_language_id 	= 6;
-
-	public function __construct($registry){
-		parent::__construct($registry);
-
-		$this->load->model('setting/setting');
-
-		$exclude_language_code = $this->model_setting_setting->getExclusiveSettingValue('config_second_language');
-		$this->exclude_language_id = (int)$this->registry->get('languages')[$exclude_language_code]['language_id'];		
-	}
+	private $limit 					= 2000;	
 
 	private function getStoreID(){
 
@@ -98,15 +88,8 @@ class ControllerFeedGoogleSitemap extends Controller {
 	}
 
 	public function makeAllExceptExcludedLanguageCron(){
-		$query = $this->db->non_cached_query("SELECT * FROM " . DB_PREFIX . "store ORDER BY store_id ASC");
-
-		$stores = [0];
-		foreach ($query->rows as $row){
-			$stores[] = $row['store_id'];
-		}
-
-		foreach ($stores as $store_id){
-			if ($store_id == 18 || $this->config->get('config_language_id') == $this->exclude_language_id){
+		foreach ($this->registry->get('stores') as $store_id){
+			if ($store_id == 18 || $this->config->get('config_language_id') == $this->registry->get('excluded_language_id')){
 				continue;
 			}
 
@@ -115,7 +98,6 @@ class ControllerFeedGoogleSitemap extends Controller {
 			echoLine('[CRON2] Магазин ' . $store_id . ', язык ' . $this->config->get('config_language'));
 			$this->makeFeedsCron();
 		}
-
 	}
 
 	public function makeFeedsCron() {

@@ -89,6 +89,10 @@ class simpleProcess
       unlink($this->file);
    }
 
+   public function dropPidFile($file){
+      unlink(DIR_PIDS . $file);
+   }
+
 
    public function getProcess($params = [], $file = false){
 

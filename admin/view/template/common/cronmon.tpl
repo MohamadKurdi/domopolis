@@ -80,7 +80,7 @@
 									<b style="color:#7F00FF"><? echo $process['route']; ?></b>
 								</td>
 								<td>
-									<? echo $process['file']; ?>
+									<? echo $process['file']; ?> <a href="index.php?route=common/cronmon/delete&file=<? echo $process['file']; ?>&token=<?php echo $token; ?>" style="color:#fa4934"><i class="fa fa-times"></i></a>
 								</td>							
 								<td>
 									<? echo $process['config']; ?>

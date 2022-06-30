@@ -145,8 +145,8 @@
 	$registry->set('url', new Url($registry->get('config')->get('config_url'), $registry->get('config')->get('config_ssl')));				
 				
 	//Определение языка
-	$languages = array();
-	$query = $registry->get('db')->query("SELECT * FROM `" . DB_PREFIX . "language` WHERE status = '1'"); 
+	$languages = [];
+	$query = $registry->get('db')->query("SELECT * FROM `language` WHERE status = '1'"); 
 
 	foreach ($query->rows as $result) {
 		$languages[$result['code']] = $result;
@@ -166,7 +166,40 @@
 
 	//RNF MAIN LANGUAGE
 	$registry->get('config')->set('config_rainforest_source_language_id', $languages[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);
-	
+
+	//Stores and languages mapping to registry
+	$stores = [0];
+	$query = $registry->get('db')->query("SELECT * FROM store WHERE 1");
+	foreach ($query->rows as $store){
+		$stores[] = $store['store_id'];
+	}
+
+	//All stores to registry
+	$registry->set('stores', $stores);
+
+	$supported_language_codes 	= [];
+	$supported_language_ids		= [];
+	foreach ($stores as $store_id){
+		$supported_language_codes[$store_id] 	= [];
+		$supported_language_ids[$store_id] 		= [];
+		$query = $registry->get('db')->query("SELECT `key`, `value` FROM setting WHERE (`key` = 'config_language' OR `key` = 'config_second_language') AND store_id = '" . (int)$store_id . "'");
+
+		foreach ($query->rows as $row){
+			if ($row['value']){
+				$supported_language_codes[$store_id][] 	= $row['value'];
+				$supported_language_ids[$store_id][] 	= $languages[$row['value']]['language_id'];
+			}
+
+			if ($row['key'] == 'config_second_language'){
+				$registry->set('excluded_language_id', $row['value']);
+			}
+		}
+	}
+
+	$registry->set('supported_language_codes', $supported_language_codes);
+	$registry->set('supported_language_ids', $supported_language_ids);
+
+	//Setting Language
 	$language = new Language($languages[$registry->get('config')->get('config_language')]['directory'], $registry);
 	$language->load($languages[$registry->get('config')->get('config_language')]['filename']);	
 	$registry->set('language', $language);
