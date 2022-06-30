@@ -1482,11 +1482,19 @@
 																	</tr>
 																	<tr>
 																		<td>
+																		<?php if ($other_variant_products && !$main_variant_id) { ?>
+
+																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><i class="fa fa-info-circle"></i> Текущий товар - основной</span>
+
+																		<?php } else { ?>
+
 																			<input id="main_variant_product" value="<?php echo $main_variant_product; ?>" name="main_variant_product" type="text" style="width:80%;" /> 
 																			<span style="border-bottom:1px dashed black;" onclick="$('#main_variant_product').val(''); $('#main_variant_id').val('');">очистить</span>
 																			<br />
 																			<span class="help">автоподбор</span>
-																			<input  id="main_variant_id" name="main_variant_id" value="<?php echo $main_variant_id; ?>" type="hidden" />
+																			
+																		<? } ?>
+																		<input  id="main_variant_id" name="main_variant_id" value="<?php echo $main_variant_id; ?>" type="hidden" />
 																		</td>
 																		<td>
 																			<select name="display_in_catalog">
@@ -1571,59 +1579,62 @@
 																</table>
 
 																<?php if ($other_variant_products) { ?>	
-																	<div style="clear:both; height:10px;"></div>																
-																	<div style="float:left; width:90%;">
-																		<?php foreach ($languages as $language) { ?>
-																			<?php if ($language['code'] == $this->config->get('config_admin_language')) { ?>
-																				<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
-																				<textarea id="main_variant_name_editor_<?php echo $language['language_id']; ?>" style="width:90%"><?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['name'] : ''; ?></textarea>
-																			<? } ?>
-																		<?php } ?>
 
-																		<?php if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) { ?>
-																			<script>
-																				<?php foreach ($languages as $language) { ?>
-																					<?php if ($language['code'] == $this->config->get('config_admin_language')) { ?>
+																	<?php if (!$main_variant_id) { ?>	
+																		<div style="clear:both; height:10px;"></div>																
+																		<div style="float:left; width:90%;">
+																			<?php foreach ($languages as $language) { ?>
+																				<?php if ($language['code'] == $this->config->get('config_admin_language')) { ?>
+																					<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+																					<textarea id="main_variant_name_editor_<?php echo $language['language_id']; ?>" style="width:90%"><?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['name'] : ''; ?></textarea>
+																				<? } ?>
+																			<?php } ?>
 
-																						$('#main_variant_name_editor_<?php echo $language['language_id']; ?>').on('focusout, change', function(){
-																							let value = $(this).val();
-																							let main_textarea = $(this);
-																							
-																							$.ajax({
-																								url : 'index.php?route=catalog/product/parsevariantnames&token=<?php echo $token; ?>',
-																								data: {
-																									product_id: <?php echo $product_id; ?>,
-																									name: value,
-																									language_id: '<?php echo $language['language_id']; ?>'
-																								},
-																								type: 'POST',
-																								dataType: 'json',
-																								beforeSend: function(){
-																									$('#variants-editor-status').html('<i class="fa fa-spinner fa-spin"></i>');
-																								},
-																								success: function (json){
-																									$('#variants-editor-status').html('<i class="fa fa-check"></i>');
-																									main_textarea.val(json.main_name);
+																			<?php if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) { ?>
+																				<script>
+																					<?php foreach ($languages as $language) { ?>
+																						<?php if ($language['code'] == $this->config->get('config_admin_language')) { ?>
 
-																									$.each(json.variants, function(i, item) {
-    																									$('#variant_name_'+item.product_id+'_'+<?php echo $language['language_id']; ?>).val(item.name);
-																									});
+																							$('#main_variant_name_editor_<?php echo $language['language_id']; ?>').on('focusout, change', function(){
+																								let value = $(this).val();
+																								let main_textarea = $(this);
 
-																								}
+																								$.ajax({
+																									url : 'index.php?route=catalog/product/parsevariantnames&token=<?php echo $token; ?>',
+																									data: {
+																										product_id: <?php echo $product_id; ?>,
+																										name: value,
+																										language_id: '<?php echo $language['language_id']; ?>'
+																									},
+																									type: 'POST',
+																									dataType: 'json',
+																									beforeSend: function(){
+																										$('#variants-editor-status').html('<i class="fa fa-spinner fa-spin"></i>');
+																									},
+																									success: function (json){
+																										$('#variants-editor-status').html('<i class="fa fa-check"></i>');
+																										main_textarea.val(json.main_name);
+
+																										$.each(json.variants, function(i, item) {
+																											$('#variant_name_'+item.product_id+'_'+<?php echo $language['language_id']; ?>).val(item.name);
+																										});
+
+																									}
+																								});
+
+
 																							});
 
-
-																						});
-
+																						<?php } ?>
 																					<?php } ?>
-																				<?php } ?>
-																			</script>
-																		<?php } ?>
+																				</script>
+																			<?php } ?>
 
-																	</div>
-																	<div id="variants-editor-status" style="float:right; width:10%; font-size:26px; padding-top: 30px;">
-																		<i class="fa fa-hourglass"></i>
-																	</div>
+																		</div>
+																		<div id="variants-editor-status" style="float:right; width:10%; font-size:26px; padding-top: 30px;">
+																			<i class="fa fa-hourglass"></i>
+																		</div>
+																	<?php } ?>
 																	<div style="clear:both; height:20px;"></div>																
 																	<table class="list">
 																		<?php foreach ($other_variant_products as $other_variant_product) { ?>																			
