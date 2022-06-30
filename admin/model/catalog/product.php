@@ -1244,11 +1244,20 @@
 		}
 
 		public function countVariantProducts($product_id){
-			return $this->db->query("SELECT COUNT(product_id) as total FROM product WHERE main_variant_id = '" . (int)$product_id . "'")->row['total'];
+			return $this->db->query("SELECT COUNT(product_id) as total FROM product WHERE main_variant_id = '" . (int)$product_id . "' AND product_id <> '" . (int)$product_id . "'")->row['total'];
+		}
+
+		public function getVariantProducts($product_id, $language_id){
+
+			$sql = "SELECT * FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE main_variant_id = '" . (int)$product_id . "' AND p.product_id <> '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'";
+
+			$query = $this->db->query($sql);
+			return $query->rows;
+
 		}
 
 		public function getOtherVariantProducts($product_id){
-			$sql = "SELECT * FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE main_variant_id = '" . (int)$product_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'";
+			$sql = "SELECT * FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE main_variant_id = '" . (int)$product_id . "' AND p.product_id <> '" . (int)$product_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'";
 
 			$query = $this->db->query($sql);
 			return $query->rows;
@@ -1258,7 +1267,7 @@
 		public function getAllProductVariants($product_id){
 			$variants = $this->getProductVariantsIds($product_id);
 
-			$sql = "SELECT * FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE p.product_id IN (". implode(',', $variants) .") AND language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY pd.name DESC";
+			$sql = "SELECT * FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE p.product_id IN (". implode(',', $variants) .") AND p.product_id <> '" . (int)$product_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY pd.name DESC";
 
 			$query = $this->db->query($sql);
 			return $query->rows;

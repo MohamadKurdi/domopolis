@@ -1575,17 +1575,58 @@
 																	<div style="float:left; width:90%;">
 																		<?php foreach ($languages as $language) { ?>
 																			<?php if ($language['code'] == $this->config->get('config_admin_language')) { ?>
-																				<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
-																				<textarea id="main_variant_name_editor_<?php echo $$language['language_id']; ?>" style="width:90%"><?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['name'] : ''; ?></textarea>
+																				<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+																				<textarea id="main_variant_name_editor_<?php echo $language['language_id']; ?>" style="width:90%"><?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['name'] : ''; ?></textarea>
 																			<? } ?>
 																		<?php } ?>
+
+																		<?php if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) { ?>
+																			<script>
+																				<?php foreach ($languages as $language) { ?>
+																					<?php if ($language['code'] == $this->config->get('config_admin_language')) { ?>
+
+																						$('#main_variant_name_editor_<?php echo $language['language_id']; ?>').on('focusout, change', function(){
+																							let value = $(this).val();
+																							let main_textarea = $(this);
+																							
+																							$.ajax({
+																								url : 'index.php?route=catalog/product/parsevariantnames&token=<?php echo $token; ?>',
+																								data: {
+																									product_id: <?php echo $product_id; ?>,
+																									name: value,
+																									language_id: '<?php echo $language['language_id']; ?>'
+																								},
+																								type: 'POST',
+																								dataType: 'json',
+																								beforeSend: function(){
+																									$('#variants-editor-status').html('<i class="fa fa-spinner fa-spin"></i>');
+																								},
+																								success: function (json){
+																									$('#variants-editor-status').html('<i class="fa fa-check"></i>');
+																									main_textarea.val(json.main_name);
+
+																									$.each(json.variants, function(i, item) {
+    																									$('#variant_name_'+item.product_id+'_'+<?php echo $language['language_id']; ?>).val(item.name);
+																									});
+
+																								}
+																							});
+
+
+																						});
+
+																					<?php } ?>
+																				<?php } ?>
+																			</script>
+																		<?php } ?>
+
 																	</div>
-																	<div style="float:right; width:10%; padding-top: 30px;">
-																		<i class="fa fa-hourglass" style="font-size:26px;"></i>
+																	<div id="variants-editor-status" style="float:right; width:10%; font-size:26px; padding-top: 30px;">
+																		<i class="fa fa-hourglass"></i>
 																	</div>
 																	<div style="clear:both; height:20px;"></div>																
 																	<table class="list">
-																		<?php foreach ($other_variant_products as $other_variant_product) { ?>
+																		<?php foreach ($other_variant_products as $other_variant_product) { ?>																			
 																			<tr>
 																				<td>
 																					<a href="<?php echo $other_variant_product['link']; ?>" target='_blank'><?echo $other_variant_product['product_id']; ?> <i class="fa fa-edit"></i></a>
@@ -1597,22 +1638,52 @@
 																					<b><?echo $other_variant_product['asin']; ?></b>
 																				</td>
 																				<td style="width:60%">
-																					<textarea cols="2" style="width:98%" name="variant_description[<?echo $other_variant_product['product_id']; ?>][<?php echo $this->config->get['config_language_id'];?>]['name']"><?echo $other_variant_product['name']; ?></textarea>
+																					<?php foreach ($languages as $language) { ?>
+																						<?php if ($language['code'] == $this->config->get('config_admin_language')) { ?>
+																							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+																							<textarea cols="2" style="width:98%" id="variant_name_<?echo $other_variant_product['product_id']; ?>_<?php echo $language['language_id'];?>" name="variant_description[<?echo $other_variant_product['product_id']; ?>][<?php echo $language['language_id'];?>]['name']"><?echo $other_variant_product['name']; ?></textarea>
+																						<?php } ?>
+																					<?php } ?>
 																				</td>
 																				<td style="width:150px">
-																					<textarea cols="2" style="width:98%" name="variant_description[<?echo $other_variant_product['product_id']; ?>][<?php echo $this->config->get['config_language_id'];?>]['variant_name']"><?echo $other_variant_product['variant_name']; ?></textarea>	
+																					<?php foreach ($languages as $language) { ?>
+																						<?php if ($language['code'] == $this->config->get('config_admin_language')) { ?>
+																							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+																							<textarea cols="2" style="width:98%" name="variant_description[<?echo $other_variant_product['product_id']; ?>][<?php echo $language['language_id'];?>]['variant_name']"><?echo $other_variant_product['variant_name']; ?></textarea>	
+																						<?php } ?>
+																					<?php } ?>
 																				</td>
 																				<td style="width:100px">
-																					<textarea cols="2" style="width:98%" name="variant_description[<?echo $other_variant_product['product_id']; ?>][<?php echo $this->config->get['config_language_id'];?>]['variant_name_1']"><?echo $other_variant_product['variant_name_1']; ?></textarea>										
+																					<?php foreach ($languages as $language) { ?>
+																						<?php if ($language['code'] == $this->config->get('config_admin_language')) { ?>
+																							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+																							<textarea cols="2" style="width:98%" name="variant_description[<?echo $other_variant_product['product_id']; ?>][<?php echo $language['language_id'];?>]['variant_name_1']"><?echo $other_variant_product['variant_name_1']; ?></textarea>	
+																						<?php } ?>
+																					<?php } ?>									
 																				</td>
 																				<td style="width:100px">
-																					<textarea cols="2" style="width:98%" name="variant_description[<?echo $other_variant_product['product_id']; ?>][<?php echo $this->config->get['config_language_id'];?>]['variant_value_1']"><?echo $other_variant_product['variant_value_1']; ?></textarea>										
+																					<?php foreach ($languages as $language) { ?>
+																						<?php if ($language['code'] == $this->config->get('config_admin_language')) { ?>
+																							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+																							<textarea cols="2" style="width:98%" name="variant_description[<?echo $other_variant_product['product_id']; ?>][<?php echo $language['language_id'];?>]['variant_value_1']"><?echo $other_variant_product['variant_value_1']; ?></textarea>	
+																						<?php } ?>
+																					<?php } ?>									
 																				</td>
 																				<td style="width:100px">
-																					<textarea cols="2" style="width:98%" name="variant_description[<?echo $other_variant_product['product_id']; ?>][<?php echo $this->config->get['config_language_id'];?>]['variant_name_2']"><?echo $other_variant_product['variant_name_2']; ?></textarea>										
+																					<?php foreach ($languages as $language) { ?>
+																						<?php if ($language['code'] == $this->config->get('config_admin_language')) { ?>
+																							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+																							<textarea cols="2" style="width:98%" name="variant_description[<?echo $other_variant_product['product_id']; ?>][<?php echo $language['language_id'];?>]['variant_name_2']"><?echo $other_variant_product['variant_name_2']; ?></textarea>
+																						<?php } ?>
+																					<?php } ?>										
 																				</td>
 																				<td style="width:100px">
-																					<textarea cols="2" style="width:98%" name="variant_description[<?echo $other_variant_product['product_id']; ?>][<?php echo $this->config->get['config_language_id'];?>]['variant_value_2']"><?echo $other_variant_product['variant_value_2']; ?></textarea>										
+																					<?php foreach ($languages as $language) { ?>
+																						<?php if ($language['code'] == $this->config->get('config_admin_language')) { ?>
+																							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+																							<textarea cols="2" style="width:98%" name="variant_description[<?echo $other_variant_product['product_id']; ?>][<?php echo $language['language_id'];?>]['variant_value_2']"><?echo $other_variant_product['variant_value_2']; ?></textarea>		
+																						<?php } ?>
+																					<?php } ?>								
 																				</td>							
 																			</tr>
 																		<?php } ?>
