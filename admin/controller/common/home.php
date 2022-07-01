@@ -88,23 +88,26 @@
 
 			$this->data['processes'] = [];
 			foreach ($cronSettings as $cronRoute => $cronParams){
+				if ($cronParams['main']){
 
-				if ($this->config->get('config_config_file_prefix')){
-					$cronParams['config'] = str_replace('config.', 'config.' . $this->config->get('config_config_file_prefix') . '.', $cronParams['config']);
+					if ($this->config->get('config_config_file_prefix')){
+						$cronParams['config'] = str_replace('config.', 'config.' . $this->config->get('config_config_file_prefix') . '.', $cronParams['config']);
+					}
+
+					$result = $this->simpleProcess->getProcess(['route' => $cronRoute, 'config' => $cronParams['config'], 'args' => $cronParams['args']]);
+					
+
+					$this->data['processes'][] = [
+						'name' 				=> $cronParams['name'],
+						'status' 			=> $result['status'],
+						'running'			=> $result['running'],
+						'never'				=> $result['never'],
+						'finished'			=> $result['finished'],
+						'failed'			=> $result['failed'],
+						'start'				=> $result['start'],
+						'stop'				=> $result['stop']
+					];
 				}
-
-				$result = $this->simpleProcess->getProcess(['route' => $cronRoute, 'config' => $cronParams['config'], 'args' => $cronParams['args']]);
-				
-				$this->data['processes'][] = [
-					'name' 				=> $cronParams['name'],
-					'status' 			=> $result['status'],
-					'running'			=> $result['running'],
-					'never'				=> $result['never'],
-					'finished'			=> $result['finished'],
-					'failed'			=> $result['failed'],
-					'start'				=> $result['start'],
-					'stop'				=> $result['stop']
-				];
 			}
 
 			$this->template = 'homestats/cronstats.tpl';

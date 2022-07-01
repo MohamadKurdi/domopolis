@@ -55,7 +55,7 @@
 			
 			if (!isset($response['request_info']['success'])){
 				var_dump($response);
-				die('Что-то пошло не так!');
+				die('[RNF API] Не получается распарсить ответ, останавливаем работу!');
 				
 			}
 			

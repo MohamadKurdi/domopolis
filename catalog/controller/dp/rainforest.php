@@ -65,248 +65,6 @@ class ControllerDPRainForest extends Controller {
 			}
 		}
 	}
-		
-	public function addcategoriescron(){
-		$type = $this->config->get('config_rainforest_category_model');
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon'); 
-		
-		if ($type == 'bestsellers') {
-			if (!empty($this->config->get('config_rainforest_root_categories'))){
-				//Если задана корневая категория, то создаем ее, это работает только блять с бестселлерами
-				$this->rainforestAmazon->categoryParser->setType($type)->createTopCategoryFromSettings(prepareEOLArray($this->config->get('config_rainforest_root_categories')));
-			}
-		}
-		
-
-		//Если тип у нас стандартный - то мы создадим корневые категории автоматически.
-		//В случае с бестселлерами это не работает почему-то
-		if ($type == 'standard'){
-			$topCategories = $this->rainforestAmazon->categoryParser->setType($type)->getTopCategories();
-
-			foreach ($topCategories['categories'] as $topCategory){
-				$this->rainforestAmazon->categoryParser->setType($type)->createCategory($topCategory);				
-			}
-		}
-		
-
-		unset($topCategory);
-		foreach ($this->rainforestAmazon->categoryParser->setType($type)->getTopCategoriesFromDataBase() as $topCategory){
-			$this->recursiveTree($topCategory['category_id'], $type);
-		}
-
-		$this->rainforestAmazon->categoryParser->setType($type)->updateFinalCategories();
-
-		if ($this->config->get('config_rainforest_enable_auto_tree')){
-			$this->rainforestAmazon->categoryParser->setType($type)->rebuildAmazonTreeToStoreTree();
-			$this->rainforestAmazon->categoryParser->setType($type)->model_catalog_category->repairCategories();			
-		}
-	}	
-
-	public function parsetechcategory(){
-		if ($this->config->get('config_rainforest_default_technical_category_id') && $this->config->get('config_rainforest_default_unknown_category_id')){
-			$this->editfullproductscron(true);
-		}
-	}
-
-	public function setbuyboxprice(){
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
-		$this->load->library('Timer');
-		$timer = new FPCTimer();
-
-		$products = $this->rainforestAmazon->productsRetriever->getProductsWithFullData();
-
-		if ($products){
-			$i = 1;
-			$total = count($products);
-			echoLine('[setbuyboxprice] Всего товаров: ' . $total);
-
-			foreach ($products as $product){
-				echoLine('[setbuyboxprice] Товар ' . $product['product_id'] . '/' . $product['asin'] . ' ' . $i . '/' . $total);
-
-				$this->rainforestAmazon->productsRetriever->parseProductBuyBoxWinner($product['product_id'], json_decode($product['json'], true));
-				$i++;				
-			}
-
-		}		
-	}
-
-	public function editfullproductscronl2(){
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
-		$this->load->library('Timer');
-		$timer = new FPCTimer();
-
-		$products = $this->rainforestAmazon->productsRetriever->getProductsWithFullDataButNotFullfilled();
-
-		if ($products){
-			$i = 1;
-			$total = count($products);
-			echoLine('[editfullproductscronl2] Всего товаров: ' . $total);
-
-			foreach ($products as $product){
-				echoLine('[editfullproductscronl2] Товар ' . $product['asin'] . ' ' . $i . '/' . $total);
-
-				$this->rainforestAmazon->productsRetriever->editFullProduct($product['product_id'], json_decode($product['json'], true));
-				$i++;
-			}
-
-		}
-	}
-
-	public function editfullproductscron($parsetechcategory = false){
-
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
-		$this->load->library('Timer');
-		$timer = new FPCTimer();
-
-		if ($parsetechcategory){
-			$products = $this->rainforestAmazon->productsRetriever->getProductsFromTechCategory();
-		} else {
-			$products = $this->rainforestAmazon->productsRetriever->getProducts();		
-		}
-
-		echoLine('[EditFullProducts] Всего товаров ' . count($products));
-
-		$total = count($products);
-		$iterations = ceil($total/\hobotix\RainforestAmazon::productRequestLimits);
-
-		for ($i = 1; $i <= $iterations; $i++){
-			$timer = new FPCTimer();
-			echoLine('[EditFullProducts] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . (\hobotix\RainforestAmazon::productRequestLimits * ($i-1)) . ' по ' . \hobotix\RainforestAmazon::productRequestLimits * $i);
-
-			$slice = array_slice($products, \hobotix\RainforestAmazon::productRequestLimits * ($i-1), \hobotix\RainforestAmazon::productRequestLimits);
-
-			$results = $this->rainforestAmazon->simpleProductParser->getProductByASINS($slice);
-
-			foreach ($results as $product_id => $result){				
-				$this->rainforestAmazon->infoUpdater->updateProductAmazonLastSearch($product_id);
-
-				if ($result){
-					echoLine('[EditFullProducts] Товар ' . $product_id . ', найден, ASIN ' . $result['asin']);				
-
-					if ($parsetechcategory){
-						$this->rainforestAmazon->productsRetriever->editJustProductCategory($product_id, $result);
-					} else {
-						$this->rainforestAmazon->productsRetriever->editFullProduct($product_id, $result);
-					}
-
-				} else {
-
-					echoLine('[EditFullProducts] Товар ' . $product_id . ', не найден, ASIN ' . $result['asin']);
-					$this->rainforestAmazon->infoUpdater->updateASINInDatabase(['product_id' => $product_id, 'asin' => '']);
-
-				}
-
-			}
-
-			echoLine('[EditFullProducts] Времени на итерацию: ' . $timer->getTime() . ' сек.');
-			unset($timer);
-		}
-	}
-
-	public function updateimagesfromamazon(){
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
-		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoImages();
-
-		foreach ($products as $product_id => $amazon_product_image){
-			$this->rainforestAmazon->productsRetriever->model_product_edit->editProductFields($product_id, [['name' => 'image', 'type' => 'varchar', 'value' => $this->rainforestAmazon->productsRetriever->getImage($amazon_product_image)]]);
-		}
-	}
-	
-
-	public function fixtranslations(){
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
-		$this->rainforestAmazon->productsRetriever->yandexTranslator->setDebug(true);
-		$this->rainforestAmazon->productsRetriever->model_product_edit->cleanFailedTranslations();
-
-	
-		//1. product_description
-		foreach (hobotix\Amazon\productModelEdit::descriptionFields as $field) {
-			echoLine('[fixtranslations] Исправление перевода: ' . $field);
-			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoFieldTranslation($field);
-
-			$i = 1;
-			$total = count($products);
-			foreach ($products as $product){
-				$product_translate_data = [];
-				foreach ($this->registry->get('languages') as $language_code => $language) {
-					$source = atrim($product['source_' . $field]);
-
-					if ($product['language_id'] == $language['language_id'] && $this->config->get('config_rainforest_enable_language_' . $language_code)){	
-						echoLine('[fixtranslations] Товар: ' . $product['product_id'] . ', ' . $i . '/' . $total);
-
-						$translated = $this->rainforestAmazon->productsRetriever->yandexTranslator->translate($source, $this->config->get('config_rainforest_source_language'), $language_code, true);
-
-						$product_translate_data[$language['language_id']] = [
-							$field 			=> $translated						
-						];
-					}
-				}
-
-				if ($product_translate_data){
-					$this->rainforestAmazon->productsRetriever->model_product_edit->editProductDescriptionField($product['product_id'], $field, $product_translate_data);		
-				}	
-
-				$i++;			
-			}
-		}
-
-		//2. product_attribute
-		$attributes = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoAttributeTranslation();
-
-		$i = 1;
-		$total = count($attributes);
-		foreach ($attributes as $attribute){
-			$attribute_translate_data = [];
-			foreach ($this->registry->get('languages') as $language_code => $language) {
-				$source = atrim($attribute['source_text']);
-
-				if ($attribute['language_id'] == $language['language_id'] && $this->config->get('config_rainforest_enable_language_' . $language_code)){
-					echoLine('[fixtranslations] Атрибут: ' . $attribute['product_id'] . ':' . $attribute['attribute_id'] . ', ' . $i . '/' . $total);
-
-					$translated = $this->rainforestAmazon->productsRetriever->yandexTranslator->translate($source, $this->config->get('config_rainforest_source_language'), $language_code, true);
-
-					$attribute_translate_data[$language['language_id']] = [
-							'text' 			=> $translated						
-					];
-				}
-			}
-
-			if ($attribute_translate_data){
-				$this->rainforestAmazon->productsRetriever->model_product_edit->editProductAttributeText($attribute['product_id'], $attribute['attribute_id'], $attribute_translate_data);		
-			}
-			
-			$i++;
-		}
-
-		//3. product_video_titles
-		$videos = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoVideoTitleTranslation();
-
-		$i = 1;
-		$total = count($videos);
-		foreach ($videos as $video){
-			$video_translate_data = [];
-			foreach ($this->registry->get('languages') as $language_code => $language) {
-				$source = atrim($video['source_title']);
-
-				if ($video['language_id'] == $language['language_id'] && $this->config->get('config_rainforest_enable_language_' . $language_code)){
-					echoLine('[fixtranslations] Видео: ' . $video['product_id'] . ':' . $video['product_video_id'] . ', ' . $i . '/' . $total);
-
-					$translated = $this->rainforestAmazon->productsRetriever->yandexTranslator->translate($source, $this->config->get('config_rainforest_source_language'), $language_code, true);
-
-					$video_translate_data[$language['language_id']] = [
-							'title' 			=> $translated						
-					];
-				}
-			}			
-
-			if ($video_translate_data){
-				$this->rainforestAmazon->productsRetriever->model_product_edit->editProductVideoTitle($video['product_video_id'], $video_translate_data);		
-			}
-			
-			$i++;
-		}	
-	}
-
 
 	public function parseCategoryPage($category_id, $rfCategory){
 		$categoryResultIndex = \hobotix\RainforestAmazon::categoryModeResultIndexes[$this->config->get('config_rainforest_category_model')];
@@ -358,7 +116,42 @@ class ControllerDPRainForest extends Controller {
 		return $continue;
 	}
 
-	public function addnewproductscron2(){
+	public function addcategoriescron(){
+		$type = $this->config->get('config_rainforest_category_model');
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon'); 
+		
+		if ($type == 'bestsellers') {
+			if (!empty($this->config->get('config_rainforest_root_categories'))){
+				//Если задана корневая категория, то создаем ее, это работает только блять с бестселлерами
+				$this->rainforestAmazon->categoryParser->setType($type)->createTopCategoryFromSettings(prepareEOLArray($this->config->get('config_rainforest_root_categories')));
+			}
+		}	
+
+		//Если тип у нас стандартный - то мы создадим корневые категории автоматически.
+		//В случае с бестселлерами это не работает почему-то
+		if ($type == 'standard'){
+			$topCategories = $this->rainforestAmazon->categoryParser->setType($type)->getTopCategories();
+
+			foreach ($topCategories['categories'] as $topCategory){
+				$this->rainforestAmazon->categoryParser->setType($type)->createCategory($topCategory);				
+			}
+		}
+		
+
+		unset($topCategory);
+		foreach ($this->rainforestAmazon->categoryParser->setType($type)->getTopCategoriesFromDataBase() as $topCategory){
+			$this->recursiveTree($topCategory['category_id'], $type);
+		}
+
+		$this->rainforestAmazon->categoryParser->setType($type)->updateFinalCategories();
+
+		if ($this->config->get('config_rainforest_enable_auto_tree')){
+			$this->rainforestAmazon->categoryParser->setType($type)->rebuildAmazonTreeToStoreTree();
+			$this->rainforestAmazon->categoryParser->setType($type)->model_catalog_category->repairCategories();			
+		}
+	}	
+
+	public function addnewproductscron(){
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');
 		$timer = new FPCTimer();
@@ -433,6 +226,220 @@ class ControllerDPRainForest extends Controller {
 		$this->updateimagesfromamazon();	
 	}
 
+	public function editfullproductscron($parsetechcategory = false){
+
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$this->load->library('Timer');
+		$timer = new FPCTimer();
+
+		if ($parsetechcategory){
+			$products = $this->rainforestAmazon->productsRetriever->getProductsFromTechCategory();
+		} else {
+			$products = $this->rainforestAmazon->productsRetriever->getProducts();		
+		}
+
+		echoLine('[EditFullProducts] Всего товаров ' . count($products));
+
+		$total = count($products);
+		$iterations = ceil($total/\hobotix\RainforestAmazon::productRequestLimits);
+
+		for ($i = 1; $i <= $iterations; $i++){
+			$timer = new FPCTimer();
+			echoLine('[EditFullProducts] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . (\hobotix\RainforestAmazon::productRequestLimits * ($i-1)) . ' по ' . \hobotix\RainforestAmazon::productRequestLimits * $i);
+
+			$slice = array_slice($products, \hobotix\RainforestAmazon::productRequestLimits * ($i-1), \hobotix\RainforestAmazon::productRequestLimits);
+
+			$results = $this->rainforestAmazon->simpleProductParser->getProductByASINS($slice);
+
+			foreach ($results as $product_id => $result){				
+				$this->rainforestAmazon->infoUpdater->updateProductAmazonLastSearch($product_id);
+
+				if ($result){
+					echoLine('[EditFullProducts] Товар ' . $product_id . ', найден, ASIN ' . $result['asin']);				
+
+					if ($parsetechcategory){
+						$this->rainforestAmazon->productsRetriever->editJustProductCategory($product_id, $result);
+					} else {
+						$this->rainforestAmazon->productsRetriever->editFullProduct($product_id, $result);
+					}
+
+				} else {
+
+					echoLine('[EditFullProducts] Товар ' . $product_id . ', не найден, ASIN ');
+					$this->rainforestAmazon->infoUpdater->updateASINInDatabase(['product_id' => $product_id, 'asin' => 'INVALID']);
+
+				}
+
+			}
+
+			echoLine('[EditFullProducts] Времени на итерацию: ' . $timer->getTime() . ' сек.');
+			unset($timer);
+		}
+	}
+
+	public function parsetechcategory(){
+		if ($this->config->get('config_rainforest_default_technical_category_id') && $this->config->get('config_rainforest_default_unknown_category_id')){
+			$this->editfullproductscron(true);
+		}
+	}
+
+	public function editfullproductscronl2(){
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$this->load->library('Timer');
+		$timer = new FPCTimer();
+
+		$products = $this->rainforestAmazon->productsRetriever->getProductsWithFullDataButNotFullfilled();
+
+		if ($products){
+			$i = 1;
+			$total = count($products);
+			echoLine('[editfullproductscronl2] Всего товаров: ' . $total);
+
+			foreach ($products as $product){
+				echoLine('[editfullproductscronl2] Товар ' . $product['asin'] . ' ' . $i . '/' . $total);
+
+				$this->rainforestAmazon->productsRetriever->editFullProduct($product['product_id'], json_decode($product['json'], true));
+				$i++;
+			}
+		}
+	}
+
+	public function parsetechcategory_fork(){
+		$this->parsetechcategory();
+	}
+
+	public function editfullproductscron_fork(){
+		$this->editfullproductscron();
+	}
+
+	public function editfullproductscronl2_fork(){
+		$this->editfullproductscronl2();
+	}
+
 	
+	public function setbuyboxprice(){
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$this->load->library('Timer');
+		$timer = new FPCTimer();
+
+		$products = $this->rainforestAmazon->productsRetriever->getProductsWithFullData();
+
+		if ($products){
+			$i = 1;
+			$total = count($products);
+			echoLine('[setbuyboxprice] Всего товаров: ' . $total);
+
+			foreach ($products as $product){
+				echoLine('[setbuyboxprice] Товар ' . $product['product_id'] . '/' . $product['asin'] . ' ' . $i . '/' . $total);
+
+				$this->rainforestAmazon->productsRetriever->parseProductBuyBoxWinner($product['product_id'], json_decode($product['json'], true));
+				$i++;				
+			}
+
+		}		
+	}
+
+	public function fixtranslations(){
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$this->rainforestAmazon->productsRetriever->yandexTranslator->setDebug(true);
+		$this->rainforestAmazon->productsRetriever->model_product_edit->cleanFailedTranslations();
+
+
+		//1. product_description
+		foreach (hobotix\Amazon\productModelEdit::descriptionFields as $field) {
+			echoLine('[fixtranslations] Исправление перевода: ' . $field);
+			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoFieldTranslation($field);
+
+			$i = 1;
+			$total = count($products);
+			foreach ($products as $product){
+				$product_translate_data = [];
+				foreach ($this->registry->get('languages') as $language_code => $language) {
+					$source = atrim($product['source_' . $field]);
+
+					if ($product['language_id'] == $language['language_id'] && $this->config->get('config_rainforest_enable_language_' . $language_code)){	
+						echoLine('[fixtranslations] Товар: ' . $product['product_id'] . ', ' . $i . '/' . $total);
+
+						$translated = $this->rainforestAmazon->productsRetriever->yandexTranslator->translate($source, $this->config->get('config_rainforest_source_language'), $language_code, true);
+
+						$product_translate_data[$language['language_id']] = [
+							$field 			=> $translated						
+						];
+					}
+				}
+
+				if ($product_translate_data){
+					$this->rainforestAmazon->productsRetriever->model_product_edit->editProductDescriptionField($product['product_id'], $field, $product_translate_data);		
+				}	
+
+				$i++;			
+			}
+		}
+
+		//2. product_attribute
+		$attributes = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoAttributeTranslation();
+
+		$i = 1;
+		$total = count($attributes);
+		foreach ($attributes as $attribute){
+			$attribute_translate_data = [];
+			foreach ($this->registry->get('languages') as $language_code => $language) {
+				$source = atrim($attribute['source_text']);
+
+				if ($attribute['language_id'] == $language['language_id'] && $this->config->get('config_rainforest_enable_language_' . $language_code)){
+					echoLine('[fixtranslations] Атрибут: ' . $attribute['product_id'] . ':' . $attribute['attribute_id'] . ', ' . $i . '/' . $total);
+
+					$translated = $this->rainforestAmazon->productsRetriever->yandexTranslator->translate($source, $this->config->get('config_rainforest_source_language'), $language_code, true);
+
+					$attribute_translate_data[$language['language_id']] = [
+						'text' 			=> $translated						
+					];
+				}
+			}
+
+			if ($attribute_translate_data){
+				$this->rainforestAmazon->productsRetriever->model_product_edit->editProductAttributeText($attribute['product_id'], $attribute['attribute_id'], $attribute_translate_data);		
+			}
+			
+			$i++;
+		}
+
+		//3. product_video_titles
+		$videos = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoVideoTitleTranslation();
+
+		$i = 1;
+		$total = count($videos);
+		foreach ($videos as $video){
+			$video_translate_data = [];
+			foreach ($this->registry->get('languages') as $language_code => $language) {
+				$source = atrim($video['source_title']);
+
+				if ($video['language_id'] == $language['language_id'] && $this->config->get('config_rainforest_enable_language_' . $language_code)){
+					echoLine('[fixtranslations] Видео: ' . $video['product_id'] . ':' . $video['product_video_id'] . ', ' . $i . '/' . $total);
+
+					$translated = $this->rainforestAmazon->productsRetriever->yandexTranslator->translate($source, $this->config->get('config_rainforest_source_language'), $language_code, true);
+
+					$video_translate_data[$language['language_id']] = [
+						'title' 			=> $translated						
+					];
+				}
+			}			
+
+			if ($video_translate_data){
+				$this->rainforestAmazon->productsRetriever->model_product_edit->editProductVideoTitle($video['product_video_id'], $video_translate_data);		
+			}
+			
+			$i++;
+		}	
+	}
+
+	public function updateimagesfromamazon(){
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoImages();
+
+		foreach ($products as $product_id => $amazon_product_image){
+			$this->rainforestAmazon->productsRetriever->model_product_edit->editProductFields($product_id, [['name' => 'image', 'type' => 'varchar', 'value' => $this->rainforestAmazon->productsRetriever->getImage($amazon_product_image)]]);
+		}
+	}
 
 }
