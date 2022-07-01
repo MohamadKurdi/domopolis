@@ -3,6 +3,11 @@ class ControllerCatalogProduct extends Controller {
 	private $error = array(); 
 	private $modelCatalogProduct;
 
+	public function cli_deleteproduct($product_id = 0){
+		$this->load->model('catalog/product');
+		$this->model_catalog_product->deleteProduct($product_id);
+	}
+
 	public function ob_category() {
 		$this->load->model('catalog/product');
 

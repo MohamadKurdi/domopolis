@@ -2690,6 +2690,18 @@ class ControllerSettingSetting extends Controller {
 
 		}
 
+		if (isset($this->request->post['config_rainforest_max_variants'])) {
+			$this->data['config_rainforest_max_variants'] = $this->request->post['config_rainforest_max_variants']; 
+		} else {
+			$this->data['config_rainforest_max_variants'] = $this->config->get('config_rainforest_max_variants');
+		}
+
+		if (isset($this->request->post['config_rainforest_skip_variants'])) {
+			$this->data['config_rainforest_skip_variants'] = $this->request->post['config_rainforest_skip_variants']; 
+		} else {
+			$this->data['config_rainforest_skip_variants'] = $this->config->get('config_rainforest_skip_variants');
+		}
+
 		if (isset($this->request->post['config_rainforest_update_period'])) {
 			$this->data['config_rainforest_update_period'] = $this->request->post['config_rainforest_update_period']; 
 		} else {

@@ -105,6 +105,7 @@ class ModelCatalogProductExt extends Model {
             'stock_status'      => 'p.stock_status_id',
             'subtract'          => 'p.subtract',
             'id'                => 'p.product_id',
+            'main_variant_id'   => 'p.main_variant_id',
             'status'            => 'p.status',
             'filled_from_amazon'=> 'p.filled_from_amazon',
             'requires_shipping' => 'p.shipping',
@@ -253,6 +254,7 @@ class ModelCatalogProductExt extends Model {
 
         $sort_data = array(
             'p.product_id',
+            'p.main_variant_id',
             'tc.title',
             'p.minimum',
             'p.subtract',

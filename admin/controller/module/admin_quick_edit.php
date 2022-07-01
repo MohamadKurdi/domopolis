@@ -54,6 +54,7 @@ class ControllerModuleAdminQuickEdit extends Controller {
     private $column_defaults = array(
         'aqe_catalog_products'      => array(
         'id'                => array('display' => 0, 'qe_status' => 0, 'editable' => 0, 'sortable' => 1, 'index' =>  0, 'align' =>   'left', 'qe_type' =>                   '', 'sort' => 'p.product_id'     , 'filter' => array('show' => 1, 'type' => 0, 'autocomplete' => false)),
+        'main_variant_id'                => array('display' => 0, 'qe_status' => 0, 'editable' => 0, 'sortable' => 1, 'index' =>  0, 'align' =>   'left', 'qe_type' =>                   '', 'sort' => 'p.main_variant_id'     , 'filter' => array('show' => 1, 'type' => 0, 'autocomplete' => false)),
         'image'             => array('display' => 1, 'qe_status' => 0, 'editable' => 1, 'sortable' => 1, 'index' =>  1, 'align' => 'center', 'qe_type' =>   'image_quick_edit', 'sort' => ''                 , 'filter' => array('show' => 0, 'type' => 0, 'autocomplete' => false)),
         'category'          => array('display' => 0, 'qe_status' => 0, 'editable' => 1, 'sortable' => 1, 'index' =>  2, 'align' =>   'left', 'qe_type' =>     'cat_quick_edit', 'sort' => ''                 , 'filter' => array('show' => 1, 'type' => 1, 'autocomplete' => false)),
         'manufacturer'      => array('display' => 0, 'qe_status' => 0, 'editable' => 1, 'sortable' => 1, 'index' =>  3, 'align' =>   'left', 'qe_type' => 'manufac_quick_edit', 'sort' => 'm.name'           , 'filter' => array('show' => 1, 'type' => 1, 'autocomplete' => false)),

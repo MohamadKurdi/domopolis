@@ -12,6 +12,8 @@ class YandexTranslator
 
 	private $debug = false;
 
+	private $enableCheck = false;
+
 	private $hourLimit = 10000000;
 	private $symbolLimit = 9999;
 	private $sentensesDelimiter = '.';
@@ -49,9 +51,12 @@ class YandexTranslator
 			return '';
 		}
 
-		if ($this->getHourlyAmount() >= ($this->hourLimit*0.95)){
-			echoLine('[YandexTranslator] Лимит на часовой перевод почти достигнут, надо поспать минуту!');
-			sleep(mt_rand(50,60));
+
+		if ($this->enableCheck){
+			if ($this->getHourlyAmount() >= ($this->hourLimit*0.95)){
+				echoLine('[YandexTranslator] Лимит на часовой перевод почти достигнут, надо поспать минуту!');
+				sleep(mt_rand(50,60));
+			}
 		}
 		
 		if (mb_strlen($text, 'UTF-8') > $this->symbolLimit){

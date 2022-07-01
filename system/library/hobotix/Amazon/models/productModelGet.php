@@ -7,6 +7,16 @@ class productModelGet extends hoboModel{
 	private $asinsArray = [];
 
 
+	public function checkIfProductIsVariant($product_id){
+		$query = $this->db->ncquery("SELECT main_variant_id FROM product WHERE product_id = '" . (int)$product_id . "'");
+
+		return (int)$query->row['main_variant_id'];
+	}
+
+	public function checkIfAsinIsDeleted($asin){
+		return $this->db->ncquery("SELECT asin FROM deleted_asins WHERE asin LIKE ('" . $this->db->escape($asin) . "')")->num_rows;
+	}
+
 	public function getProducts(){
 
 		$result = [];
@@ -17,7 +27,7 @@ class productModelGet extends hoboModel{
 		WHERE pd.language_id = '" . $this->config->get('config_language_id') . "' 
 		AND p.added_from_amazon = 1 
 		AND p.product_id NOT IN (SELECT product_id FROM product_amzn_data) 
-		AND (NOT ISNULL(p.asin) OR p.asin <> '') 
+		AND (NOT ISNULL(p.asin) OR p.asin <> '')
 		AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1 AND amazon_can_get_full = 1))
 		ORDER BY RAND() LIMIT " . (int)\hobotix\RainforestAmazon::fullProductParserLimit;
 
@@ -103,12 +113,6 @@ class productModelGet extends hoboModel{
 		return $result;
 	}
 
-	public function checkIfProductIsVariant($product_id){
-		$query = $this->db->query("SELECT main_variant_id FROM product WHERE product_id = '" . (int)$product_id . "'");
-
-		return (int)$query->row['main_variant_id'];
-	}
-
 	public function getIfProductIsFullFilled($product_id){
 		return $this->db->ncquery("SELECT product_id FROM product_amzn_data WHERE product_id = '" . (int)$product_id . "'")->num_rows;
 	}
@@ -122,10 +126,6 @@ class productModelGet extends hoboModel{
 		} else {
 			return $this->config->get('config_rainforest_default_technical_category_id');				
 		}
-	}
-
-	public function checkIfAsinIsDeleted($asin){
-		return $this->db->query("SELECT asin FROM deleted_asins WHERE asin LIKE ('" . $this->db->escape($asin) . "')")->num_rows;
 	}
 
 	public function getProductsWithNoImages(){

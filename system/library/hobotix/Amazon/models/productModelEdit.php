@@ -227,7 +227,6 @@ class productModelEdit extends hoboModel{
 		}
 	}
 
-
 	public function editProductDescriptionField($product_id, $field, $data){			
 		foreach ($data as $language_id => $value) {
 			$this->db->query("UPDATE product_description SET 
@@ -252,9 +251,66 @@ class productModelEdit extends hoboModel{
 		}
 	}
 
+	public function addManufacturer($name){		
+		$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer SET name = '" . $this->db->escape($name) . "'");
+		$manufacturer_id = $this->db->getLastId();
 
+		$this->db->query("DELETE FROM manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		$this->db->query("INSERT INTO manufacturer_to_store SET manufacturer_id = '" . (int)$manufacturer_id . "', store_id = '0'");
 
+		$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		foreach ($this->registry->get('languages') as $language_code => $language) {
+			$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_description SET manufacturer_id = '" . (int)$manufacturer_id . "', language_id = '" . (int)$language['language_id'] . "', seo_title = '" . $this->db->escape($name) . "'");
+		}
 
+		return (int)$manufacturer_id;
+	}
+
+	public function addAttribute($data){
+		$this->db->query("INSERT INTO " . DB_PREFIX . "attribute SET attribute_group_id = '" . (int)$data['attribute_group_id'] . "'");
+
+		$attribute_id = $this->db->getLastId();
+
+		foreach ($data['attribute_description'] as $language_id => $value) {
+			$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_description SET attribute_id = '" . (int)$attribute_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
+
+			if ($language_id == $this->config->get('config_rainforest_source_language_id')){
+				$name = $value['name'];
+			}
+
+		}	
+		
+		return (int)$attribute_id;
+	}
+
+	public function deleteProduct($product_id, $product){
+
+		$this->db->query("INSERT IGNORE INTO deleted_asins SET asin = '" . $this->db->escape($product['asin']) . "', name = '" . $this->db->escape($product['title']) . "', date_added = NOW(), user_id = '195'");
+
+		$this->db->query("DELETE FROM product WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM ocfilter_option_value_to_product WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_attribute WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_description WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_discount WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_filter WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_image WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_option WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_option_value WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_related WHERE related_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_sponsored WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_sponsored WHERE sponsored_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_similar WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_similar WHERE similar_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_reward WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_special WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_to_category WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_to_download WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_to_layout WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_to_store WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_amzn_data WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM url_alias WHERE query = 'product_id=" . (int)$product_id. "'");
+	}
 
 
 

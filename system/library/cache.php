@@ -60,8 +60,8 @@
 		} 	
 		
 		
-	public function get($key) {
-		if (defined('IS_DEBUG') && IS_DEBUG){
+	public function get($key, $explicit = false) {
+		if (defined('IS_DEBUG') && IS_DEBUG && !$explicit){
 			return false;
 		}
 		

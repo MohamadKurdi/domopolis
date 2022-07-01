@@ -1232,7 +1232,7 @@
 
 
 			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_asin_deletion_mode']){
-				$query = $this->db->query("SELECT p.asin, pd.name FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id AND language_id = 26) WHERE p.product_id = '" . (int)$product_id . "' LIMIT 1");
+				$query = $this->db->query("SELECT p.asin, pd.name FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id AND language_id = '26') WHERE p.product_id = '" . (int)$product_id . "' LIMIT 1");
 
 				if ($query->num_rows && !empty($query->row['asin'])){
 					$this->db->query("INSERT IGNORE INTO deleted_asins SET asin = '" . $this->db->escape($query->row['asin']) . "', name = '" . $this->db->escape($query->row['name']) . "', date_added = NOW(), user_id = '" . $this->user->getID() . "'");
@@ -1241,19 +1241,18 @@
 
 			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']){
 				if ($recursion){
-					$product_id_to_delete = $this->getProductVariantsIds($product_id);
+					$products_to_delete = $this->getProductVariantsIds($product_id);
 
 				//Recursive deletion for variants
 					if ($products_to_delete){
 						foreach ($products_to_delete as $product_id_to_delete){
-							if ((int)$product_id_to_delete && !($product_id == $product_id_to_delete)){
+							if ((int)$product_id_to_delete && $product_id != $product_id_to_delete){							
 								$this->deleteProduct($product_id_to_delete, false);
 							}
 						}
 					}
 				}
-			}
-
+			}			
 
 			$this->db->query("DELETE FROM product WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM ocfilter_option_value_to_product WHERE product_id = '" . (int)$product_id . "'");

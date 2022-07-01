@@ -21,7 +21,7 @@
 		public function __construct($registry){
 			
 			$this->registry 		= $registry;
-			$this->config 			= $registry->get('config');			
+			$this->config 			= $registry->get('config');
 			$this->db 				= $registry->get('db');
 			$this->log 				= $registry->get('log');	
 
@@ -33,9 +33,11 @@
 			require_once(DIR_SYSTEM . 'library/hobotix/Amazon/models/hoboModel.php');	
 			require_once(DIR_SYSTEM . 'library/hobotix/Amazon/models/productModelEdit.php');
 			require_once(DIR_SYSTEM . 'library/hobotix/Amazon/models/productModelGet.php');
+			require_once(DIR_SYSTEM . 'library/hobotix/Amazon/models/productModelCachedGet.php');
 
-			$this->model_product_edit = new productModelEdit($registry);
-			$this->model_product_get = new productModelGet($registry);
+			$this->model_product_edit 		= new productModelEdit($registry);
+			$this->model_product_get 		= new productModelGet($registry);
+			$this->model_product_cached_get = new productModelCachedGet($registry);
 			
 		}
 

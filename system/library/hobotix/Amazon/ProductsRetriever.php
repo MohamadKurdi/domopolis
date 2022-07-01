@@ -29,9 +29,11 @@
 		];
 
 		private $mapAmazonToStoreFieldsSpecifications = [
-			'Modellnummer' 			=> ['sku'],
-			'Artikelnummer' 		=> ['sku'],
-			'Herstellerreferenz' 	=> ['sku']
+			'Modellnummer' 							=> ['sku'],
+			'Artikelnummer' 						=> ['sku'],
+			'Herstellerreferenz' 					=> ['sku'],
+			'UPC'									=> ['upc'],
+			'UWeltweite Artikelidentnummer (GTIN)'	=> ['ean']
 		];
 
 		private $mapAmazonToStoreFieldsSpecificationsRev = [
@@ -56,14 +58,17 @@
 			return $this->model_product_get->getProducts();
 		}		
 
+		//TODO: refactor
 		public function getProductsFromTechCategory(){
 			return $this->model_product_get->getProductsFromTechCategory();
 		}	
 		
+		//TODO: refactor
 		public function getProductsWithFullDataButNotFullfilled(){
 			return $this->model_product_get->getProductsWithFullDataButNotFullfilled();
 		}
 
+		//TODO: refactor
 		public function getProductsWithFullData(){
 			return $this->model_product_get->getProductsWithFullData();
 		}
@@ -92,95 +97,7 @@
 			}
 
 			return $text;
-		}		
-
-		public function getCategory($name, $recursive = false){
-			$name = atrim($name);
-
-			if ($this->categoriesArray || $recursive){
-				if (!empty($this->categoriesArray[$name])){
-					return $this->categoriesArray[$name];
-				} else {
-					return false;
-				}
-			} else {
-				$query = $this->db->ncquery("SELECT cd.category_id, cd.name FROM category_description cd LEFT JOIN category c ON (cd.category_id = c.category_id) WHERE c.amazon_final_category = 1 AND cd.language_id = '" . $this->config->get('config_rainforest_source_language_id') . "'");
-					foreach ($query->rows as $row){
-						$this->categoriesArray[$row['name']] = $row['category_id'];
-					}
-					return $this->getCategory($name, true);
-				}
-		}
-		
-		public function getManufacturer($name, $recursive = false){
-			if ($this->manufacturersArray || $recursive){
-				if (!empty($this->manufacturersArray[$name])){
-					return $this->manufacturersArray[$name];
-				} else {
-					return false;
-				}
-			} else {
-				$query = $this->db->ncquery("SELECT * FROM manufacturer WHERE 1");
-					foreach ($query->rows as $row){
-						$this->manufacturersArray[$row['name']] = $row['manufacturer_id'];
-					}
-					return $this->getManufacturer($name, true);
-				}
-		}
-		
-		public function addManufacturer($name){		
-			$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer SET name = '" . $this->db->escape($name) . "'");
-			$manufacturer_id = $this->db->getLastId();
-			
-			$this->db->query("DELETE FROM manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
-			$this->db->query("INSERT INTO manufacturer_to_store SET manufacturer_id = '" . (int)$manufacturer_id . "', store_id = '0'");
-			
-			$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
-			foreach ($this->registry->get('languages') as $language_code => $language) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_description SET manufacturer_id = '" . (int)$manufacturer_id . "', language_id = '" . (int)$language['language_id'] . "', seo_title = '" . $this->db->escape($name) . "'");
-			}
-
-			$this->manufacturersArray[$name] = (int)$manufacturer_id;
-			
-			return (int)$manufacturer_id;
-		}
-						
-		public function getAttribute($name, $recursive = false){
-			if ($this->attributesArray || $recursive){
-				if (!empty($this->attributesArray[$name])){
-					return $this->attributesArray[$name];
-				} else {
-					return false;
-				}
-			} else {
-				$query = $this->db->ncquery("SELECT * FROM attribute_description WHERE language_id = '" . $this->config->get('config_rainforest_source_language_id') . "'");
-
-				foreach ($query->rows as $row){
-					$this->attributesArray[$row['name']] = $row['attribute_id'];
-				}
-
-				return $this->getAttribute($name, true);
-			}	
-		}
-
-		public function addAttribute($data){
-			$this->db->query("INSERT INTO " . DB_PREFIX . "attribute SET attribute_group_id = '" . (int)$data['attribute_group_id'] . "'");
-
-			$attribute_id = $this->db->getLastId();
-
-			foreach ($data['attribute_description'] as $language_id => $value) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_description SET attribute_id = '" . (int)$attribute_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
-
-				if ($language_id == $this->config->get('config_rainforest_source_language_id')){
-					$name = $value['name'];
-				}
-
-			}	
-
-			$this->attributesArray[$name] = (int)$attribute_id;
-		
-			return (int)$attribute_id;
-		}
+		}								
 
 		public function guessIfDimensionIsColor($product_id, $data){
 			foreach ($data as $language_id => $value) {
@@ -199,10 +116,10 @@
 				$product['brand'] = atrim($product['brand']);
 
 				echoLine('[editFullProduct] Бренд: ' . $product['brand']);
-				$manufacturer_id = $this->getManufacturer($product['brand']);			
+				$manufacturer_id = $this->model_product_cached_get->getManufacturer($product['brand']);			
 				if (!$manufacturer_id){
 					echoLine('[editFullProduct] Бренд не существует, добавляем:' . $product['brand']);
-					$manufacturer_id = $this->addManufacturer($product['brand']);
+					$manufacturer_id = $this->model_product_edit->addManufacturer($product['brand']);
 				}
 				$this->model_product_edit->editProductFields($product_id, [['name' => 'manufacturer_id', 'type' => 'int', 'value' => $manufacturer_id]]);
 			}				
@@ -317,7 +234,7 @@
 				foreach ($product['feature_bullets'] as $feature_bullet){
 					echoLine('[editFullProduct] Особенности: ' . $feature_bullets_counter);
 
-					$attribute_id = $this->getAttribute($this->config->get('config_special_attr_name') . ' ' . $feature_bullets_counter);
+					$attribute_id = $this->model_product_cached_get->getAttribute($this->config->get('config_special_attr_name') . ' ' . $feature_bullets_counter);
 					if (!$attribute_id){
 						$attribute_description = [];
 						foreach ($this->registry->get('languages') as $language_code => $language) {
@@ -329,7 +246,7 @@
 							'attribute_group_id' 	=> $this->config->get('config_special_attr_id'),
 							'attribute_description' => $attribute_description
 						];
-						$attribute_id = $this->addAttribute($attribute);
+						$attribute_id = $this->model_product_edit->addAttribute($attribute);
 					}
 
 					$product_attribute_description = [];
@@ -416,7 +333,7 @@
 
 					if (!$mappedAttribute) {
 
-						$attribute_id = $this->getAttribute($attribute['name']);
+						$attribute_id = $this->model_product_cached_get->getAttribute($attribute['name']);
 
 						if (!$attribute_id){
 							$attribute_description = [];
@@ -430,7 +347,7 @@
 								'attribute_description' => $attribute_description
 							];
 
-							$attribute_id = $this->addAttribute($attribute_data);
+							$attribute_id = $this->model_product_edit->addAttribute($attribute_data);
 						}
 
 						$product_attribute_description = [];
@@ -454,8 +371,7 @@
 			}			
 
 			if ($main_variant_id && !$main_variant_id == $product_id){
-				var_dump($product_attribute);
-				die();
+	
 			}
 		}
 
@@ -578,7 +494,7 @@
 				if ($this->model_product_get->getCurrentProductCategory($product_id) == $this->config->get('config_rainforest_default_technical_category_id')){
 					$name = $product['categories'][count($product['categories']) - 1]['name'];
 
-					if ($category_id = $this->getCategory(atrim($name))){
+					if ($category_id = $this->model_product_cached_get->getCategory(atrim($name))){
 						echoLine('[editFullProduct] Нашли категорию: ' . $name . ': ' . $category_id);
 						$this->model_product_edit->editProductCategory($product_id, [$category_id]);
 					} else {
@@ -662,10 +578,23 @@
 			return $new_product_name;
 		}
 
+		public function checkProductsVariants($product_id, $product){
+			if ($this->config->get('config_rainforest_skip_variants') && !empty($product['variants'])){
+				return (count($product['variants']) <= (int)$this->config->get('config_rainforest_skip_variants'));
+			}
+
+			return true;
+		}
+
 		public function parseProductVariants($product_id, $product, $variants = true){
 			$this->parseProductVariantDimensions($product_id, $product);
 
-			if (!empty($product['variants'])){										
+			if (!empty($product['variants'])){	
+
+				if ($this->config->get('config_rainforest_max_variants')){					
+					$product['variants'] = array_slice($product['variants'], 0, (int)$this->config->get('config_rainforest_max_variants'));
+				}				
+
 				$new_product_data = [];
 				foreach ($product['variants'] as $variant){
 					
@@ -735,6 +664,12 @@
 		public function editFullProduct($product_id, $product, $variants = true){	
 			$this->yandexTranslator->setDebug(false);
 
+			if (!$this->checkProductsVariants($product_id, $product)){
+				echoLine('[editFullProduct] У товара ' . count($product['variants']) . ' вариантов, удаляем');
+				$this->model_product_edit->deleteProduct($product_id, $product);
+				return;
+			}
+
 			//Product Link
 			$this->model_product_edit->editProductFields($product_id, [['name' => 'amazon_product_link', 'type' => 'varchar', 'value' => $product['link']]]);			
 
@@ -779,7 +714,7 @@
 			$this->parseProductSponsoredProducts($product_id, $product);
 
 			//Parse product categories if not set
-			$this->parseProductCategories($product_id, $product);
+			$this->parseProductCategories($product_id, $product);			
 
 			//Parse product buybox winner to amazon best price
 			$this->parseProductBuyBoxWinner($product_id, $product);
