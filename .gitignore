@@ -1,6 +1,7 @@
 #Роботс
 /robots*.txt
 /README.md
+/.bash_history
 
 #Админка
 /admin/config*.php
