@@ -1234,7 +1234,7 @@ class ControllerCatalogProductExt extends Controller {
             $result = $this->model_catalog_product_ext->quickEditProduct($id, $column, $value, $lang_id, $this->request->post);
             if ($result) {
                 $json['success'] = $this->language->get('text_success');
-                if (in_array($column, array('model', 'sku', 'upc', 'location', 'seo', 'attributes', 'discounts', 'images', 'options', 'profiles', 'related', 'specials', 'descriptions')))
+                if (in_array($column, array('model', 'sku', 'upc', 'asin', 'location', 'seo', 'attributes', 'discounts', 'images', 'options', 'profiles', 'related', 'specials', 'descriptions')))
                     $json['value'] = $value;
                 else if (in_array($column, array('sort_order', 'points', 'minimum')))
                     $json['value'] = (int)$value;

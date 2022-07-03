@@ -326,10 +326,10 @@ class ModelCatalogProductExt extends Model {
     }
 
     public function quickEditProduct($product_id, $column, $value, $lang_id=null, $data=null) {
-        $editable = array('manufacturer', 'image', 'name', 'tag', 'model', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'location', 'quantity', 'price', 'weight', 'status', 'sort_order', 'tax_class', 'minimum', 'subtract', 'stock_status', 'shipping', 'date_available', 'length', 'width', 'height', 'length_class', 'weight_class', 'points');
+        $editable = array('manufacturer', 'image', 'name', 'tag', 'model', 'sku', 'asin', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'location', 'quantity', 'price', 'weight', 'status', 'sort_order', 'tax_class', 'minimum', 'subtract', 'stock_status', 'shipping', 'date_available', 'length', 'width', 'height', 'length_class', 'weight_class', 'points');
         $result = false;
         if (in_array($column, $editable)) {
-            if (in_array($column, array('image', 'model', 'sku', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'location', 'date_available')))
+            if (in_array($column, array('image', 'model', 'sku', 'upc', 'asin', 'ean', 'jan', 'mpn', 'isbn', 'location', 'date_available')))
                 $result = $this->db->query("UPDATE " . DB_PREFIX . "product SET " . $column . " = '" . $this->db->escape($value) . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
             else if (in_array($column, array('quantity', 'sort_order', 'status', 'minimum', 'subtract', 'shipping', 'points')))
                 $result = $this->db->query("UPDATE " . DB_PREFIX . "product SET " . $column . " = '" . (int)$value . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");

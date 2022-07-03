@@ -54,12 +54,56 @@ class productModelEdit extends hoboModel{
 		$this->db->query($sql);
 	}
 
+	public function updateProductMainVariantIdByAsins($main_variant_id, $asins){
+		$this->db->query("UPDATE product SET main_variant_id = 	'" . (int)$main_variant_id . "'	WHERE asin IN ('" . implode("','", $asins) . "')");
+	}
+
+	public function updateProductMainVariantIdByParentAsin($product_id, $asin){		
+		$this->db->query("UPDATE product p SET main_variant_id = (SELECT product_id FROM product p2 WHERE p2.asin = '" . $this->db->escape($asin) . "' LIMIT 1) WHERE product_id = '" . (int)$product_id . "'");
+	}
+
 	public function updateProductMainVariantId($product_id, $main_variant_id){
 		$this->db->query("UPDATE product SET main_variant_id = 	'" . (int)$main_variant_id . "'	WHERE product_id = '" . (int)$product_id . "'");
 	}
 
+	public function setProductVariants($product){
+		if (!empty($product['variants'])){
+
+			//Проверяем, возможно этот товар уже добавлен как вариант, в таком случае мы его пропускаем
+			$query = $this->db->ncquery("SELECT main_asin FROM product_variants WHERE variant_asin = '" . $this->db->escape($product['asin']) . "'");
+			
+			if ($query->num_rows){
+				echoLine('[updateProductVariants] ' . $product['asin'] . ' уже вариант у ' . $query->row['main_asin']);
+			} else {
+
+			$this->db->query("INSERT IGNORE INTO product_variants SET main_asin = '" . $this->db->escape($product['asin']) . "', variant_asin = '" . $this->db->escape($product['asin']) . "'");
+			foreach ($product['variants'] as $variant){										
+					$this->db->query("INSERT IGNORE INTO product_variants SET main_asin = '" . $this->db->escape($product['asin']) . "', variant_asin = '" . $this->db->escape($variant['asin']) . "'");
+				}
+			}
+		}
+	}
+
+	public function clearAsinVariantsTable(){
+		$this->db->query("TRUNCATE product_variants");
+	}
+
+	public function clearIdsVariantsTable(){
+		$this->db->query("TRUNCATE product_variants_ids");
+	}
+
+
+	public function insertVariantToVariantsTable($product_id, $asins){		
+		$this->db->query("INSERT IGNORE INTO product_variants_ids (product_id, variant_id) SELECT '" . (int)$product_id . "', product_id FROM product WHERE asin IN ('" . implode("','", $asins) . "')");
+	}
+
+	public function deNormalizeVariantsTable(){
+		$this->db->query("UPDATE product p SET main_variant_id = (SELECT product_id FROM product_variants_ids WHERE variant_id = p.product_id)");
+	}
+
 	public function resetUnexsistentVariants(){
-		$this->db->query("UPDATE product SET main_variant_id = 	0 WHERE main_variant_id > 0 AND (NOT ISNULL(main_variant_id)) AND main_variant_id NOT IN (SELECT product_id FROM product)");
+		$this->db->query("UPDATE product SET main_variant_id = 	0 WHERE main_variant_id > 0 AND main_variant_id NOT IN (SELECT product_id FROM product)");
+		$this->db->query("UPDATE product SET main_variant_id = 	0 WHERE asin IN (SELECT main_asin FROM product_variants)");
 		$this->db->query("UPDATE product SET main_variant_id = 	0 WHERE main_variant_id = product_id");
 	}
 

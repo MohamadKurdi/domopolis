@@ -5,21 +5,20 @@ namespace hobotix\Amazon;
 class productModelGet extends hoboModel{
 
 	private $asinsArray = [];
-
-
-	public function checkIfProductIsVariant($product_id){
-		$query = $this->db->ncquery("SELECT main_variant_id FROM product WHERE product_id = '" . (int)$product_id . "'");
-
-		return (int)$query->row['main_variant_id'];
-	}
+	private $testAsin = 'B07H2WTMZL';
 
 	public function checkIfAsinIsDeleted($asin){
 		return $this->db->ncquery("SELECT asin FROM deleted_asins WHERE asin LIKE ('" . $this->db->escape($asin) . "')")->num_rows;
 	}
 
 	public function getProducts(){
-
 		$result = [];
+
+		if ($this->testAsin){
+			$this->db->query("DELETE FROM product_amzn_data WHERE asin LIKE '" . $this->db->escape($this->testAsin) . "'");
+			$this->db->query("UPDATE product SET filled_from_amazon = 0 WHERE asin LIKE '" . $this->db->escape($this->testAsin) . "'");
+		}
+
 		$sql = "SELECT 
 		p.*, pd.name 
 		FROM product p 
@@ -27,10 +26,15 @@ class productModelGet extends hoboModel{
 		WHERE pd.language_id = '" . $this->config->get('config_language_id') . "' 
 		AND p.added_from_amazon = 1 
 		AND p.product_id NOT IN (SELECT product_id FROM product_amzn_data) 
+		AND p.filled_from_amazon = 0
 		AND (NOT ISNULL(p.asin) OR p.asin <> '')
-		AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1 AND amazon_can_get_full = 1))
-		ORDER BY RAND() LIMIT " . (int)\hobotix\RainforestAmazon::fullProductParserLimit;
+		AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1 AND amazon_can_get_full = 1))";
 
+		if ($this->testAsin){
+			$sql .= " AND p.asin = '" . $this->testAsin . "'";
+		}
+
+		$sql .= " ORDER BY RAND() LIMIT " . (int)\hobotix\RainforestAmazon::fullProductParserLimit;
 		$query = $this->db->ncquery($sql);
 
 		foreach ($query->rows as $row){
@@ -95,10 +99,16 @@ class productModelGet extends hoboModel{
 		return $result;
 	}
 
-	public function getProductsWithFullData(){
+	public function getTotalProductsWithFullData(){
+		$sql = "SELECT COUNT(product_id) as total FROM product_amzn_data WHERE 1";
+
+		return $this->db->ncquery($sql)->row['total'];
+	}
+
+	public function getProductsWithFullData($start){
 		$result = [];
 
-		$sql = "SELECT * FROM product_amzn_data WHERE product_id IN (SELECT product_id FROM product WHERE amazon_best_price = 0) LIMIT 3000";		
+		$sql = "SELECT * FROM product_amzn_data WHERE 1 ORDER BY product_id ASC limit " . (int)$start . ", 3000";		
 
 		$query = $this->db->ncquery($sql);
 
@@ -113,7 +123,7 @@ class productModelGet extends hoboModel{
 		return $result;
 	}
 
-	public function getIfProductIsFullFilled($product_id){
+	public function getIfProductHasFullData($product_id){
 		return $this->db->ncquery("SELECT product_id FROM product_amzn_data WHERE product_id = '" . (int)$product_id . "'")->num_rows;
 	}
 
@@ -268,6 +278,47 @@ class productModelGet extends hoboModel{
 		}
 			
 		return $product_description_data;
+	}
+
+
+	public function checkIfProductIsVariantWithFilledParent($asin){
+		$query = $this->db->ncquery("SELECT p.product_id, p.asin, p.description_filled_from_amazon FROM product p WHERE p.asin = (SELECT main_asin FROM product_variants WHERE main_asin <> '" . $this->db->escape($asin) . "' AND variant_asin = '" . $this->db->escape($asin) . "' LIMIT 1)");	
+
+		if ($query->num_rows && !empty($query->row['description_filled_from_amazon'])){
+			return [
+				'main_variant_id' 					=> (int)$query->row['product_id'],
+				'main_variant_asin'					=> $query->row['asin'],
+				'description_filled_from_amazon'	=> (!empty($row['description_filled_from_amazon']))?$row['description_filled_from_amazon']:false,
+			];
+		} else {
+			return false;
+		}
+	}
+
+	public function getOtherProductVariantsByAsin($asin){
+		$results = [];
+
+		$sql = "SELECT pv.variant_asin, pv.main_asin, p.product_id, p.filled_from_amazon 
+			FROM product_variants pv 
+			LEFT JOIN product p ON (pv.variant_asin = p.asin) 
+			WHERE main_asin = (SELECT main_asin FROM product_variants pv2 WHERE variant_asin = '" . $this->db->escape($asin) . "' LIMIT 1) 
+			ORDER BY variant_asin DESC LIMIT 0, " . ((int)$this->config->get('config_rainforest_max_variants') + 1);
+		$query = $this->db->ncquery($sql);
+
+		if ($query->num_rows){
+			foreach ($query->rows as $row){
+				if ($row['variant_asin'] <> $asin){
+					$results[] = [
+						'asin'		 			=> $row['variant_asin'],
+						'main_asin'				=> $row['main_asin'],
+						'product_id'			=> (!empty($row['product_id']))?$row['product_id']:false,
+						'filled_from_amazon'	=> (!empty($row['filled_from_amazon']))?$row['filled_from_amazon']:false,
+					];
+				}
+			}
+		}
+
+		return $results;	
 	}
 
 

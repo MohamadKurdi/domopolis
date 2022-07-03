@@ -3,16 +3,18 @@
 	if (!class_exists('DB')){
 		class DB {
 			private $connection;
-			private $mySQLReInitException = 'Error: MySQL server has gone away';
+			private $mySQLReInitException = ['Error: MySQL server has gone away', 'Error: Deadlock found when trying to get lock'];		
 			private $driver = '';
 			private $hostname = '';
 			private $username = '';
 			private $password = '';
 			private $database = '';
 			
-			private function validateMySQLReINIT($e){			
-				if (strpos($e->getMessage(), $this->mySQLReInitException) === 0){
-					return true;
+			private function validateMySQLReINIT($e){
+				foreach ($this->mySQLReInitException as $mySQLReInitException){
+					if (strpos($e->getMessage(), $mySQLReInitException) === 0){
+						return true;
+					}
 				}
 				
 				return false;			

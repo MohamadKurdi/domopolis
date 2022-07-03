@@ -246,10 +246,6 @@ class ControllerKPRainForest extends Controller {
 		if ($immediately){
 			$query = $this->db->ncquery("TRUNCATE amzn_product_queue");
 		}
-
-
-
-
 	}
 
 }

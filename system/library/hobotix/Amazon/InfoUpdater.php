@@ -29,6 +29,10 @@ class InfoUpdater
 		$this->db->query("UPDATE product SET filled_from_amazon = 1 WHERE product_id = '" . (int)$product_id . "'");
 	}
 
+	public function setDescriptionIsFilledFromAmazon($product_id){
+		$this->db->query("UPDATE product SET description_filled_from_amazon = 1 WHERE product_id = '" . (int)$product_id . "'");
+	}
+
 	public function updateProductAmznData($product, $updateDimensions = true){
 		
 		$this->db->query("INSERT INTO product_amzn_data SET
@@ -121,8 +125,6 @@ class InfoUpdater
 			'length_class_id' 	=> $length_class_id,
 			'weight_class_id' 	=> $weight_class_id,
 		];
-		
-
 	}
 
 	public function parseAndUpdateProductDimensions($json){			
@@ -157,7 +159,6 @@ class InfoUpdater
 		}
 
 		return false;
-
 	}
 
 		//Работа с справочником товаров
@@ -165,8 +166,7 @@ class InfoUpdater
 
 		$this->db->query("UPDATE product SET amzn_not_found = 1 WHERE product_id = '" . $product_id . "'");			
 
-		return $this;
-		
+		return $this;		
 	}
 
 	public function updateProductAmazonLastSearch($product_id){
@@ -211,12 +211,6 @@ class InfoUpdater
 
 
 		return $product;
-
 	}
-
-
-
-
-
 
 }		

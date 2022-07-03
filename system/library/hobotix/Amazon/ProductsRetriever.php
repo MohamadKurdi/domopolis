@@ -545,11 +545,27 @@
 			if (!empty($variants)){
 				foreach ($variants as $variant){
 					if ($variant['is_current_product']){
-						foreach ($this->registry->get('languages') as $language_code => $language) {	
-							if ($language_code == $this->config->get('config_rainforest_source_language')){
-								return $variant['dimensions'];
-							}
-						}
+						return $variant['dimensions'];
+					}
+				}
+			}
+		}
+
+		public function getVariantDimensionsByAsin($variants, $asin){
+			if (!empty($variants)){
+				foreach ($variants as $variant){
+					if ($variant['asin'] == $asin){
+						return $variant['dimensions'];
+					}
+				}
+			}
+		}
+
+		public function getVariantImageByAsin($variants, $asin){
+			if (!empty($variants)){
+				foreach ($variants as $variant){
+					if ($variant['asin'] == $asin){
+						return $variant['main_image'];
 					}
 				}
 			}
@@ -586,26 +602,37 @@
 			return true;
 		}
 
-		public function parseProductVariants($product_id, $product, $variants = true){
-			$this->parseProductVariantDimensions($product_id, $product);
+		public function parseProductVariants($product_id, $product, $do_adding_new_variants = true){			
+			$this->parseProductVariantDimensions($product_id, $product);		
 
-			if (!empty($product['variants'])){	
-
-				if ($this->config->get('config_rainforest_max_variants')){					
-					$product['variants'] = array_slice($product['variants'], 0, (int)$this->config->get('config_rainforest_max_variants'));
-				}				
-
+			if (!empty($product['variants']) && $do_adding_new_variants){	
+				//У нас 2 варианта, либо текущий товар - основной, либо текущий - не основной
+				//В любом случае в табличке вариантов уже есть записи, они добавлены либо из текущего товара, либо из не_текущего, в любом случае мы отбираем все варианты
+				//И да, список всегда будет одинаковый, потому что записан, сука
+				$variants = $this->model_product_get->getOtherProductVariantsByAsin($product['asin']);				
 				$new_product_data = [];
-				foreach ($product['variants'] as $variant){
-					
-					//Проверим, существует ли такой вариант как товар в базе
-					$existentVariants = $this->getProductsByAsin($variant['asin']);
-					
-					//Если мы обрабатываем варианты, и такой вариант не существует, то мы его добавляем, с привязкой к текущему родителю
-					if ($variants && !$existentVariants){
+				foreach ($variants as $variant){
+					//Товар уже существует
+					if ($variant['product_id']){
+						//Товар существует и уже полностью обновлен, записан, и ваще у него всё хорошо
+						if ($variant['filled_from_amazon']){
+							//Просто обновляем привязку родителя по асину
+							echoLine('[parseProductVariants] Обновляем привязку родителя по асину:' . $variant['asin'] . ':' . $variant['main_asin']);
+							$this->model_product_edit->updateProductMainVariantIdByParentAsin($variant['product_id'], $variant['main_asin']);
+						} else {
+							//Отправляем товар на полную загрузку
+							echoLine('[parseProductVariants] Заполняем товар-вариант:' . $variant['asin']);
+							$new_product_data[] = [
+									'product_id' => $variant['product_id'],
+									'asin'		 => $variant['asin']
+							];
+						}
+					} else {
+						//Товара не существует вообще
+						echoLine('[parseProductVariants] Новый товар-вариант:' . $variant['asin']);
 
-						$new_product_name = $this->trimProductNameWithoutVariant($product['title'], $this->getCurrentVariantDimensions($product['variants']), $variant['dimensions']);
-						echoLine('[editFullProduct] Новый вариант: ' . $new_product_name);
+						$new_product_name = $this->trimProductNameWithoutVariant($product['title'], $this->getCurrentVariantDimensions($product['variants']), $this->getVariantDimensionsByAsin($product['variants'], $variant['asin']));
+						echoLine('[editFullProduct] Новый вариант: ' . $new_product_name);						
 
 						$new_product_data[] = [
 							'product_id' => $this->addSimpleProductWithOnlyAsin([
@@ -613,26 +640,11 @@
 								'category_id' 		=> $this->model_product_get->getCurrentProductCategory($product_id), 
 								'main_variant_id'	=> $product_id,
 								'name' 				=> $new_product_name,
-								'image' 			=> $this->getImage($variant['main_image']), 
+								'image' 			=> $this->getImage($this->getVariantImageByAsin($product['variants'], $variant['asin'])), 
 								'added_from_amazon' => 1
 							]),
 							'asin' => $variant['asin']
 						];
-
-					//Если мы обрабатываем варианты, и такой вариант существует, он мог быть добавлен хрен пойми откуда, например из похожих
-					} elseif ($variants && $existentVariants) {						
-						foreach ($existentVariants as $existent_variant_id){
-							//Обновляем привязку родителя
-							$this->model_product_edit->updateProductMainVariantId($existent_variant_id, $product_id);
-
-							//Проверяем, заполнен ли вариант, и если не, то отправляем его на полную загрузку
-							if (!$this->model_product_get->getIfProductIsFullFilled($existent_variant_id)){
-								$new_product_data[] = [
-									'product_id' => $existent_variant_id,
-									'asin'		 => $variant['asin']
-								];
-							}
-						}
 					}
 				}
 
@@ -640,6 +652,7 @@
 					$this->editFullProductsAsyncWithNoVariantParser($new_product_data);
 				}
 			}
+
 		}
 
 		public function parseProductBuyBoxWinner($product_id, $product){
@@ -661,14 +674,16 @@
 			], false);
 		}
 		
-		public function editFullProduct($product_id, $product, $variants = true){	
+		public function editFullProduct($product_id, $product, $do_adding_new_variants = true){	
 			$this->yandexTranslator->setDebug(false);
 
 			if (!$this->checkProductsVariants($product_id, $product)){
 				echoLine('[editFullProduct] У товара ' . count($product['variants']) . ' вариантов, удаляем');
 				$this->model_product_edit->deleteProduct($product_id, $product);
 				return;
-			}
+			} else {
+				$this->model_product_edit->setProductVariants($product);
+			}			
 
 			//Product Link
 			$this->model_product_edit->editProductFields($product_id, [['name' => 'amazon_product_link', 'type' => 'varchar', 'value' => $product['link']]]);			
@@ -678,12 +693,27 @@
 			
 			//Описание
 			//Если этот товар - вариант другого товара, то описание мы копируем тупо с родительского
-			$main_variant_id = $this->model_product_get->checkIfProductIsVariant($product_id);
-			if ($main_variant_id && $main_variant_id != $product_id){
-				echoLine('[editFullProduct] Копируем описание с основного товара: ' . $main_variant_id);
-				$this->model_product_edit->editProductDescriptions($product_id, $this->model_product_get->getProductDescriptions($main_variant_id));					
+			//Рефактор логики 02.07.2022, теперь мы всегда смотрим на заполненную табличку асинов
+			//UPD! Это делается только в том случае, если основной товар уже заполнен! Мы можем по какой-то причине начать с товара - варианта
+			$main_variant = $this->model_product_get->checkIfProductIsVariantWithFilledParent($product['asin']);					
+
+			if ($main_variant){
+
+				if ($main_variant['main_variant_id'] && $main_variant['main_variant_id'] != $product_id){
+					echoLine('[parseProductVariants] Обновляем привязку родителя по product_id:' . $product_id . ':' . $main_variant['main_variant_id']);
+					$this->model_product_edit->updateProductMainVariantId($product_id, $main_variant['main_variant_id']);
+
+					if ($main_variant['description_filled_from_amazon']){
+						echoLine('[editFullProduct] Копируем описание с основного товара: ' . $main_variant['main_variant_id']);
+						$this->model_product_edit->editProductDescriptions($product_id, $this->model_product_get->getProductDescriptions($main_variant['main_variant_id']));	
+					}
+				}
+
+												
 			} else {
 				$this->parseProductDescriptions($product_id, $product);
+				echoLine('[editFullProduct] Ставим маркер получения описаний: ' . $product_id);
+				$this->registry->get('rainforestAmazon')->infoUpdater->setDescriptionIsFilledFromAmazon($product_id);
 			}
 
 			//Цвет, отдельным полем
@@ -699,7 +729,7 @@
 			$this->parseProductVideos($product_id, $product);			
 
 			//Атрибуты, фичер баллетс и спецификации
-			$this->parseProductAttributes($product_id, $product, $main_variant_id);
+			$this->parseProductAttributes($product_id, $product, $main_variant?$main_variant['main_variant_id']:false);
 			
 			//Размеры, готовая функция из InfoUpdater
 			$this->registry->get('rainforestAmazon')->infoUpdater->parseAndUpdateProductDimensions($product);
@@ -720,9 +750,8 @@
 			$this->parseProductBuyBoxWinner($product_id, $product);
 
 			//Варианты
-			$this->model_product_edit->resetUnexsistentVariants();
-			$this->parseProductVariants($product_id, $product, $variants);			
-			
+			$this->parseProductVariants($product_id, $product, $do_adding_new_variants);
+
 			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmazonLastSearch($product_id);
 			$this->registry->get('rainforestAmazon')->infoUpdater->setProductIsFilledFromAmazon($product_id);
 			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmznData([
@@ -732,25 +761,25 @@
 			], false);
 		}
 		
-		public function editFullProductsAsyncWithNoVariantParser($product_data){
-			if ($product_data){
-				$total = count($product_data);
+		public function editFullProductsAsyncWithNoVariantParser($products){
+			if ($products){
+				$total = count($products);
 				$iterations = ceil($total/\hobotix\RainforestAmazon::productRequestLimits);
 
 				for ($i = 1; $i <= $iterations; $i++){
-					$slice = array_slice($product_data, \hobotix\RainforestAmazon::productRequestLimits * ($i-1), \hobotix\RainforestAmazon::productRequestLimits);
+					$slice = array_slice($products, \hobotix\RainforestAmazon::productRequestLimits * ($i-1), \hobotix\RainforestAmazon::productRequestLimits);
 					$results = $this->registry->get('rainforestAmazon')->simpleProductParser->getProductByASINS($slice);
 
 					foreach ($results as $product_id => $result){
 						$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmazonLastSearch($product_id);
 
 						if ($result){
-							echoLine('[EditFullProducts] Товар ' . $product_id . ', найден, ASIN ' . $result['asin']);				
+							echoLine('[editFullProductsWNP] Товар ' . $product_id . ', найден, ASIN ' . $result['asin']);				
 
 							$this->editFullProduct($product_id, $result, false);
 
 						} else {
-							echoLine('[EditFullProducts] Товар ' . $product_id . ', найден, ASIN ' . $result['asin']);
+							echoLine('[editFullProductsWNP] Товар ' . $product_id . ', не найден, ASIN ' . $result['asin']);
 						}
 					}
 				}

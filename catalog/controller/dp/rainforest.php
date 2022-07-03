@@ -275,6 +275,8 @@ class ControllerDPRainForest extends Controller {
 			echoLine('[EditFullProducts] Времени на итерацию: ' . $timer->getTime() . ' сек.');
 			unset($timer);
 		}
+
+		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();
 	}
 
 	public function parsetechcategory(){
@@ -302,6 +304,8 @@ class ControllerDPRainForest extends Controller {
 				$i++;
 			}
 		}
+
+		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();
 	}
 
 	public function parsetechcategory_fork(){
@@ -316,28 +320,6 @@ class ControllerDPRainForest extends Controller {
 		$this->editfullproductscronl2();
 	}
 
-	
-	public function setbuyboxprice(){
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
-		$this->load->library('Timer');
-		$timer = new FPCTimer();
-
-		$products = $this->rainforestAmazon->productsRetriever->getProductsWithFullData();
-
-		if ($products){
-			$i = 1;
-			$total = count($products);
-			echoLine('[setbuyboxprice] Всего товаров: ' . $total);
-
-			foreach ($products as $product){
-				echoLine('[setbuyboxprice] Товар ' . $product['product_id'] . '/' . $product['asin'] . ' ' . $i . '/' . $total);
-
-				$this->rainforestAmazon->productsRetriever->parseProductBuyBoxWinner($product['product_id'], json_decode($product['json'], true));
-				$i++;				
-			}
-
-		}		
-	}
 
 	public function fixtranslations(){
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
@@ -431,6 +413,60 @@ class ControllerDPRainForest extends Controller {
 			
 			$i++;
 		}	
+	}
+
+	/*
+	Фиксит привязки вариантов методом записи в табличку с айдишками
+	*/
+	public function fixvariantsbyids(){
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFullData();
+
+		$this->rainforestAmazon->productsRetriever->model_product_edit->clearIdsVariantsTable();
+
+		$iterations = ceil($total/3000);
+		echoLine('[fixvariants] Всего товаров: ' . $total);
+		$k = 1;	
+
+		for ($i = 1; $i <= $iterations; $i++){
+			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullData(($i-1) * 3000);
+			if ($products){		
+				foreach ($products as $product){
+					echoLine('[fixvariants] Товар ' . $product['product_id'] . '/' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
+
+					$this->rainforestAmazon->productsRetriever->fixProductVariants($product['product_id'], json_decode($product['json'], true), false);
+					$k++;			
+				}
+			}	
+		}
+
+		$this->rainforestAmazon->productsRetriever->model_product_edit->deNormalizeVariantsTable();
+		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();						
+	}
+
+	/*
+	Начальное заполнение таблички вариантов, v2 логика вариантов на асинах
+	*/
+	public function fixvariants(){
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFullData();		
+
+		$iterations = ceil($total/3000);
+		echoLine('[fixvariants] Всего товаров: ' . $total);
+		$k = 1;	
+
+		for ($i = 1; $i <= $iterations; $i++){
+			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullData(($i-1) * 3000);
+			if ($products){		
+				foreach ($products as $product){
+					echoLine('[fixvariants] Товар ' . $product['product_id'] . '/' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
+
+					$this->rainforestAmazon->productsRetriever->model_product_edit->setProductVariants(json_decode($product['json'], true));
+					$k++;			
+				}
+			}	
+		}		
+		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();						
 	}
 
 	public function updateimagesfromamazon(){
