@@ -5,7 +5,8 @@ namespace hobotix\Amazon;
 class productModelGet extends hoboModel{
 
 	private $asinsArray = [];
-	private $testAsin = 'B07H2WTMZL';
+	//private $testAsin = 'B07H2WTMZL';
+	private $testAsin = false;
 
 	public function checkIfAsinIsDeleted($asin){
 		return $this->db->ncquery("SELECT asin FROM deleted_asins WHERE asin LIKE ('" . $this->db->escape($asin) . "')")->num_rows;
