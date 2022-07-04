@@ -16,8 +16,8 @@
 			
 			//Перегрузка simple-полей в поля заказа
 			
-			//1. Доставка курьером по городам Киев, МСК, Минск
-			if (!empty($data['shipping_code']) && ($data['shipping_code'] == 'dostavkaplus.sh1' || $data['shipping_code'] == 'dostavkaplus.sh2' || $data['shipping_code'] == 'dostavkaplus.sh7')){
+			//1. Доставка курьером по городам Киев, МСК, Минск, НурСултан
+			if (!empty($data['shipping_code']) && ($data['shipping_code'] == 'dostavkaplus.sh1' || $data['shipping_code'] == 'dostavkaplus.sh2' || $data['shipping_code'] == 'dostavkaplus.sh7' || $data['shipping_code'] == 'dostavkaplus.sh8')){
 				if (!empty($data['courier_city_shipping_address'])){
 					$data['shipping_address_1'] = $data['courier_city_shipping_address'];
 					$data['payment_address_1'] = $data['courier_city_shipping_address'];
