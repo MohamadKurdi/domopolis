@@ -73,7 +73,7 @@
 			$config .= "\$appsConfig = " . var_export($params, true) . ";\n";
 			$config .= "?>";
 			$configFileName = DIR_SYSTEM . 'config/bitrixbot' . trim(str_replace('.', '_', $_domain)) . '.php';
-			file_put_contents(__DIR__ . $configFileName, $config);
+			file_put_contents($configFileName, $config);
 			return true;
 		}
 		

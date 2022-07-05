@@ -81,6 +81,16 @@
 					</tr>
 					
 					<tr>
+						<td>Крипто-пара</td>
+						<td><input type="text" name="cryptopair" value="<?php echo $cryptopair; ?>" /></td>
+					</tr>
+
+					<tr>
+						<td>Цена крипто-пары</td>
+						<td><input type="text" name="cryptopair_value" value="<?php echo $cryptopair_value; ?>" /></td>
+					</tr>
+
+					<tr>
 						<td>Автоматом добавлять % к курсу на витрину</td>
 						<td>
 							<input type="text" name="auto_percent" value="<?php echo $auto_percent; ?>" />	

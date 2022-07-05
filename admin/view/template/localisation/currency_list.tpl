@@ -29,22 +29,24 @@
 							<?php } ?></td>
 							
 							<td class="left"><?php if ($sort == 'code') { ?>
-								<a href="<?php echo $sort_code; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_code; ?></a>
+								<a href="<?php echo $sort_code; ?>" class="<?php echo strtolower($order); ?>">ISO3</a>
 								<?php } else { ?>
-								<a href="<?php echo $sort_code; ?>"><?php echo $column_code; ?></a>
+								<a href="<?php echo $sort_code; ?>">ISO3</a>
 							<?php } ?></td>	
+							<td>Крипто-пара</td>
 							<td></td>
 							<td class="left">Вн. курс к UAH</td>
 							<td class="left">Вн. курс к UAH продажа</td>
 							<td class="left">Вн. курс к RUB</td>
 							<td class="right"><?php if ($sort == 'value') { ?>
-								<a href="<?php echo $sort_value; ?>" class="<?php echo strtolower($order); ?>">Внутр. курс к €</a>
+								<a href="<?php echo $sort_value; ?>" class="<?php echo strtolower($order); ?>">Внутр к €</a>
 								<?php } else { ?>
-								<a href="<?php echo $sort_value; ?>">Внутренний курс к €</a>
+								<a href="<?php echo $sort_value; ?>">Внутр к €</a>
 							<?php } ?></td>
 							<td></td>
-							<td class="right">Реальный курс к €</td>
+							<td class="right">Реальный €</td>
 							<td class="right">ЕЦБ курс к €</td>
+							<td class="right">Курс крипто</td>
 							<td class="right">Наценка, %</td>
 							<td class="right">Авто Плюс, %</td>
 							<td class="right">Минимальный порог</td>
@@ -70,6 +72,7 @@
 									<td class="left"><?php echo $currency['title']; ?><br />
 									<span class="help"><? echo $currency['morph']; ?></span></td>
 									<td class="left"><?php echo $currency['code']; ?></td>
+									<td class="left"><?php echo $currency['cryptopair']; ?></td>
 									<td class="left"><? if (isset($currency['flag'])) { ?><img src="<? echo HTTPS_CATALOG ?>/image/flags/<?php echo $currency['flag']; ?>" /><? } ?></td>			 
 									<td class="left"><?php echo $currency['mc']; ?> = <?php echo $currency['rc']; ?></td>
 									<td class="left"><?php echo $currency['mc']; ?> = <?php echo $currency['value_uah_unreal']; ?> грн.</td>
@@ -85,7 +88,8 @@
 											<? } ?>
 											</td>
 											<td class="right"><?php echo $currency['value_real']; ?></td> 
-											<td class="right"><?php echo $currency['value_eur_official']; ?></td> 	
+											<td class="right"><?php echo $currency['value_eur_official']; ?></td> 
+											<td class="right"><?php echo (float)$currency['cryptopair_value']?$currency['cryptopair_value']:''; ?></td>	
 											<td class="right">
 												<? if ($currency['plus_percent']) { ?>
 													<span class="status_color_padding" style="background:#ff7f00; color:white;"><?php echo $currency['plus_percent']; ?></span>

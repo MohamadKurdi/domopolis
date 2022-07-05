@@ -295,13 +295,15 @@
 			foreach ($currencies as $currency) {
 				
 				$document['Документ']['СписокВалют']['Валюта' . $currency_counter] = array(
-				'ИД'   => $currency['currency_id']
-				,'КодISO' => $currency['code']
-				,'Наименование' =>	$currency['title']
-				,'ЭтоВалютаПоУмолчанию' =>	(($currency['code'] == $this->config->get('config_currency'))?'Истина':'Ложь')
-				,'КурсВнутренний'         => number_format($currency['value'],2,'.',' ')
-				//	,'КурсБанковский'    => number_format($currency['value_real'],2,'.',' ')
-				,'ДатаИзменения' => date('Y.m.d H:i:s', strtotime($currency['date_modified']))
+				'ИД'   						=> $currency['currency_id']
+				,'КодISO' 					=> $currency['code']
+				,'Наименование' 			=> $currency['title']
+				,'КриптоПара'         		=> (($currency['cryptopair'])?$currency['cryptopair']:'Ложь')
+				,'ЭтоВалютаПоУмолчанию' 	=> (($currency['code'] == $this->config->get('config_currency'))?'Истина':'Ложь')
+				,'КурсВнутренний'         	=> number_format($currency['value'],2,'.',' ')
+				,'КурсБанковский'    		=> number_format($currency['value_real'],2,'.',' ')				
+				,'КурсКрипто'         		=> (($currency['cryptopair'])?number_format($currency['cryptopair_value'],4,'.',' '):'Ложь')
+				,'ДатаИзменения' 			=> date('Y.m.d H:i:s', strtotime($currency['date_modified']))
 				);
 				
 				$currency_counter++;

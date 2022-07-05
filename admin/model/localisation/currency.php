@@ -1,7 +1,7 @@
 <?php
 	class ModelLocalisationCurrency extends Model {
 		public function addCurrency($data) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "currency SET 
+			$this->db->query("INSERT INTO currency SET 
 			title = '" . $this->db->escape($data['title']) . "',
 			morph = '" . $this->db->escape($data['morph']) . "', 
 			code = '" . $this->db->escape($data['code']) . "',
@@ -14,6 +14,8 @@
 			value_uah_unreal = '" . (float)$data['value_uah_unreal'] . "',
 			value_minimal = '" . (float)$data['value_minimal'] . "',
 			value_eur_official = '" . (float)$data['value_eur_official'] . "',
+			cryptopair = '" . $this->db->escape($data['cryptopair']) . "',
+			cryptopair_value = '" . (float)$data['cryptopair_value'] . "',
 			plus_percent = '" . $this->db->escape($data['plus_percent']) . "',
 			auto_percent = '" . (int)$data['auto_percent'] . "', 
 			status = '" . (int)$data['status'] . "',
@@ -27,7 +29,7 @@
 		}
 		
 		public function editCurrency($currency_id, $data) {
-			$this->db->query("UPDATE " . DB_PREFIX . "currency SET 
+			$this->db->query("UPDATE currency SET 
 			title = '" . $this->db->escape($data['title']) . "', 
 			morph = '" . $this->db->escape($data['morph']) . "', 
 			code = '" . $this->db->escape($data['code']) . "', 
@@ -40,6 +42,8 @@
 			value_minimal = '" . (float)$data['value_minimal'] . "',
 			value_uah_unreal = '" . (float)$data['value_uah_unreal'] . "',
 			value_eur_official = '" . (float)$data['value_eur_official'] . "',
+			cryptopair = '" . $this->db->escape($data['cryptopair']) . "',
+			cryptopair_value = '" . (float)$data['cryptopair_value'] . "',
 			plus_percent = '" . $this->db->escape($data['plus_percent']) . "', 
 			auto_percent = '" . (int)$data['auto_percent'] . "', 
 			status = '" . (int)$data['status'] . "',
@@ -49,44 +53,44 @@
 		}
 		
 		public function deleteCurrency($currency_id) {
-			$this->db->query("DELETE FROM " . DB_PREFIX . "currency WHERE currency_id = '" . (int)$currency_id . "'");
+			$this->db->query("DELETE FROM currency WHERE currency_id = '" . (int)$currency_id . "'");
 			
 			$this->cache->delete('currency');
 		}
 		
 		public function getCurrency($currency_id) {
-			$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "currency WHERE currency_id = '" . (int)$currency_id . "'");
+			$query = $this->db->query("SELECT DISTINCT * FROM currency WHERE currency_id = '" . (int)$currency_id . "'");
 			
 			return $query->row;
 		}
 		
 		public function getCurrencyCodeById($currency_id) {
-			$query = $this->db->query("SELECT code FROM " . DB_PREFIX . "currency WHERE currency_id = '" . (int)$currency_id . "'");
+			$query = $this->db->query("SELECT code FROM currency WHERE currency_id = '" . (int)$currency_id . "'");
 			
 			return $query->row['code'];
 		}
 		
 		public function getCurrencyByCode($currency) {
-			$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "currency WHERE code = '" . $this->db->escape($currency) . "'");
+			$query = $this->db->query("SELECT DISTINCT * FROM currency WHERE code = '" . $this->db->escape($currency) . "'");
 			
 			return $query->row;
 		}
 
 		public function getCurrencySignByCode($currency) {
-			$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "currency WHERE code = '" . $this->db->escape($currency) . "'");
+			$query = $this->db->query("SELECT DISTINCT * FROM currency WHERE code = '" . $this->db->escape($currency) . "'");
 			
 			return $query->row['symbol_left'];
 		}
 		
 		public function getCurrencyNameByCode($currency) {
-			$query = $this->db->query("SELECT title as name FROM " . DB_PREFIX . "currency WHERE code = '" . $this->db->escape($currency) . "'");
+			$query = $this->db->query("SELECT title as name FROM currency WHERE code = '" . $this->db->escape($currency) . "'");
 			
 			return $query->row['name'];
 		}
 		
 		public function getCurrencies($data = array()) {
 			if ($data) {
-				$sql = "SELECT * FROM " . DB_PREFIX . "currency";
+				$sql = "SELECT * FROM currency";
 				
 				$sort_data = array(
 				'title',
@@ -123,12 +127,10 @@
 				
 				return $query->rows;
 				} else {
-				$currency_data = $this->cache->get('currency');
 				
-				if (!$currency_data) {
 					$currency_data = array();
 					
-					$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency ORDER BY title ASC");
+					$query = $this->db->query("SELECT * FROM currency ORDER BY title ASC");
 					
 					foreach ($query->rows as $result) {
 						$currency_data[$result['code']] = array(
@@ -143,14 +145,13 @@
 						'value'         => $result['value'],
 						'value_real'    => $result['value_real'],
 						'value_uah_unreal' => $result['value_uah_unreal'],
+						'cryptopair' 		=> $result['cryptopair'],
+						'cryptopair_value' 	=> $result['cryptopair_value'],
 						'plus_percent'  => $result['plus_percent'],
 						'status'        => $result['status'],
 						'date_modified' => $result['date_modified']
 						);
 					}
-					
-					$this->cache->set('currency', $currency_data);
-				}
 				
 				return $currency_data;
 			}
@@ -168,13 +169,30 @@
 			$force = true;
 			
 			if ($force) {
-				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE code != '" . $this->db->escape($this->config->get('config_currency')) . "'");
+				$query = $this->db->query("SELECT * FROM currency WHERE code != '" . $this->db->escape($this->config->get('config_currency')) . "'");
 				} else {
-				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE code != '" . $this->db->escape($this->config->get('config_currency')) . "' AND date_modified < '" .  $this->db->escape(date('Y-m-d H:i:s', strtotime('-1 day'))) . "'");
+				$query = $this->db->query("SELECT * FROM currency WHERE code != '" . $this->db->escape($this->config->get('config_currency')) . "' AND date_modified < '" .  $this->db->escape(date('Y-m-d H:i:s', strtotime('-1 day'))) . "'");
 			}
 			
-			$current_values_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE 1");
+			$current_values_query = $this->db->query("SELECT * FROM currency WHERE 1");
 			$current_values = array();
+
+			foreach ($current_values_query->rows as $crypto){
+				if ($crypto['cryptopair']){
+					$json = json_decode(file_get_contents('https://api.binance.com/api/v3/avgPrice?symbol=' . $crypto['cryptopair']), true);
+
+					if (!empty($json['price']) && is_numeric($json['price'])){
+						echoLine($crypto['cryptopair'] . ': ' . $json['price']);
+						if (strpos($crypto['cryptopair'], $crypto['code']) === 0){							
+							$json['price'] = 1/$json['price'];
+						}
+
+						$this->db->query("UPDATE currency SET cryptopair_value = '" . (float)$json['price'] . "' WHERE code = '" . $this->db->escape($crypto['code']) . "'");
+					}
+				}
+			}
+
+			die();
 			
 			foreach ($current_values_query->rows as $cvq){
 				
@@ -245,11 +263,11 @@
 					}
 					
 					if ($currency_code == 'BYN'){
-						$this->db->query("UPDATE " . DB_PREFIX . "currency SET value_real = '" . (float)$rate . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('BYN') . "'");
-						$this->db->query("UPDATE " . DB_PREFIX . "currency SET value_eur_official = '" . (float)$rate . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('BYN') . "'");
+						$this->db->query("UPDATE currency SET value_real = '" . (float)$rate . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('BYN') . "'");
+						$this->db->query("UPDATE currency SET value_eur_official = '" . (float)$rate . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('BYN') . "'");
 						} else {
-						$this->db->query("UPDATE " . DB_PREFIX . "currency SET value_real = '" . (float)$rate . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape($currency_code) . "'");
-						$this->db->query("UPDATE " . DB_PREFIX . "currency SET value_eur_official = '" . (float)$rate . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape($currency_code) . "'");
+						$this->db->query("UPDATE currency SET value_real = '" . (float)$rate . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape($currency_code) . "'");
+						$this->db->query("UPDATE currency SET value_eur_official = '" . (float)$rate . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape($currency_code) . "'");
 					}
 				}
 				
@@ -293,10 +311,10 @@
 				
 				if ($cron){ echo '-> Реальный курс KZT - EUR: ' . (float)$c . PHP_EOL; }
 				
-				$this->db->query("UPDATE " . DB_PREFIX . "currency SET value_real = '" . (float)$value_real . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('KZT') . "'");
+				$this->db->query("UPDATE currency SET value_real = '" . (float)$value_real . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('KZT') . "'");
 				
 				//ТЕКУЩИЕ ЗНАЧЕНИЯ
-				$real_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE code = '" . $this->db->escape('KZT') . "' LIMIT 1");
+				$real_query = $this->db->query("SELECT * FROM currency WHERE code = '" . $this->db->escape('KZT') . "' LIMIT 1");
 				$old_value_real = $real_query->row['old_value_real'];
 				
 				$diff = false;
@@ -353,10 +371,10 @@
 				}
 				
 				if ($do_autoupdate){
-					$this->db->query("UPDATE " . DB_PREFIX . "currency SET value = '" . (float)$new_value . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('KZT') . "'");
+					$this->db->query("UPDATE currency SET value = '" . (float)$new_value . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('KZT') . "'");
 				}
 				
-				$real_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE code = '" . $this->db->escape('KZT') . "' LIMIT 1");
+				$real_query = $this->db->query("SELECT * FROM currency WHERE code = '" . $this->db->escape('KZT') . "' LIMIT 1");
 				$current_values['KZT']['value'] = $real_query->row['value'];
 				
 				
@@ -431,10 +449,10 @@
 						
 						if ($cron){ echo '-> Реальный курс UAH - EUR: ' . (float)$value_real . PHP_EOL; }
 						
-						$this->db->query("UPDATE " . DB_PREFIX . "currency SET value_real = '" . (float)$value_real . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('UAH') . "'");
+						$this->db->query("UPDATE currency SET value_real = '" . (float)$value_real . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('UAH') . "'");
 						
 						//ТЕКУЩИЕ ЗНАЧЕНИЯ
-						$real_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE code = '" . $this->db->escape('UAH') . "' LIMIT 1");
+						$real_query = $this->db->query("SELECT * FROM currency WHERE code = '" . $this->db->escape('UAH') . "' LIMIT 1");
 						$old_value_real = $real_query->row['old_value_real'];
 						
 						$diff = false;
@@ -491,10 +509,10 @@
 						}
 						
 						if ($do_autoupdate){
-							$this->db->query("UPDATE " . DB_PREFIX . "currency SET value = '" . (float)$new_value . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('UAH') . "'");
+							$this->db->query("UPDATE currency SET value = '" . (float)$new_value . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('UAH') . "'");
 						}
 						
-						$real_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE code = '" . $this->db->escape('UAH') . "' LIMIT 1");
+						$real_query = $this->db->query("SELECT * FROM currency WHERE code = '" . $this->db->escape('UAH') . "' LIMIT 1");
 						$current_values['UAH']['value'] = $real_query->row['value'];
 						
 						if ($bot) {
@@ -592,10 +610,10 @@
 				
 				if ($cron){ echo '-> Реальный курс BYR - EUR: ' . (float)$c . PHP_EOL; }
 				
-				$this->db->query("UPDATE " . DB_PREFIX . "currency SET value_real = '" . (float)$value_real . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('BYN') . "'");
+				$this->db->query("UPDATE currency SET value_real = '" . (float)$value_real . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('BYN') . "'");
 				
 				//ТЕКУЩИЕ ЗНАЧЕНИЯ
-				$real_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE code = '" . $this->db->escape('BYN') . "' LIMIT 1");
+				$real_query = $this->db->query("SELECT * FROM currency WHERE code = '" . $this->db->escape('BYN') . "' LIMIT 1");
 				$old_value_real = $real_query->row['old_value_real'];
 				
 				$diff = false;
@@ -652,10 +670,10 @@
 				}
 				
 				if ($do_autoupdate){
-					$this->db->query("UPDATE " . DB_PREFIX . "currency SET value = '" . (float)$new_value . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('BYN') . "'");
+					$this->db->query("UPDATE currency SET value = '" . (float)$new_value . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('BYN') . "'");
 				}
 				
-				$real_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE code = '" . $this->db->escape('BYN') . "' LIMIT 1");
+				$real_query = $this->db->query("SELECT * FROM currency WHERE code = '" . $this->db->escape('BYN') . "' LIMIT 1");
 				$current_values['BYN']['value'] = $real_query->row['value'];
 				
 				if ($bot) {
@@ -747,10 +765,10 @@
 				
 				if ($cron){ echo '-> Реальный курс RUB - EUR: ' . (float)$c . PHP_EOL; }
 				
-				$this->db->query("UPDATE " . DB_PREFIX . "currency SET value_real = '" . (float)$value_real . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('RUB') . "'");
+				$this->db->query("UPDATE currency SET value_real = '" . (float)$value_real . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('RUB') . "'");
 				
 				//ТЕКУЩИЕ ЗНАЧЕНИЯ
-				$real_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE code = '" . $this->db->escape('RUB') . "' LIMIT 1");
+				$real_query = $this->db->query("SELECT * FROM currency WHERE code = '" . $this->db->escape('RUB') . "' LIMIT 1");
 				$old_value_real = $real_query->row['old_value_real'];
 				
 				$diff = false;
@@ -807,10 +825,10 @@
 				}
 				
 				if ($do_autoupdate){
-					$this->db->query("UPDATE " . DB_PREFIX . "currency SET value = '" . (float)$new_value . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('RUB') . "'");
+					$this->db->query("UPDATE currency SET value = '" . (float)$new_value . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('RUB') . "'");
 				}
 				
-				$real_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE code = '" . $this->db->escape('RUB') . "' LIMIT 1");
+				$real_query = $this->db->query("SELECT * FROM currency WHERE code = '" . $this->db->escape('RUB') . "' LIMIT 1");
 				$current_values['RUB']['value'] = $real_query->row['value'];
 				
 				if ($bot) {
@@ -852,7 +870,7 @@
 					);
 				}
 				
-				$this->db->query("UPDATE " . DB_PREFIX . "currency SET value_real = '" . (float)$c . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('RUB') . "'");
+				$this->db->query("UPDATE currency SET value_real = '" . (float)$c . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape('RUB') . "'");
 				}  else {
 				
 				if ($bot) {
@@ -865,9 +883,9 @@
 				
 			}
 			
-			$this->db->query("UPDATE " . DB_PREFIX . "currency SET value_real = '1.00000', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape($this->config->get('config_currency')) . "'");
-			$this->db->query("UPDATE " . DB_PREFIX . "currency SET old_value_real = value_real WHERE 1");
-			$this->db->query("UPDATE " . DB_PREFIX . "currency SET old_value = value WHERE 1");
+			$this->db->query("UPDATE currency SET value_real = '1.00000', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape($this->config->get('config_currency')) . "'");
+			$this->db->query("UPDATE currency SET old_value_real = value_real WHERE 1");
+			$this->db->query("UPDATE currency SET old_value = value WHERE 1");
 			
 			$attach[] = Array("DELIMITER" => Array(
 			'SIZE' => 200,
@@ -905,7 +923,7 @@
 		}
 		
 		public function getTotalCurrencies() {
-			$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "currency");
+			$query = $this->db->query("SELECT COUNT(*) AS total FROM currency");
 			
 			return $query->row['total'];
 		}

@@ -227,6 +227,8 @@
 				'value_uah_unreal'  	=> number_format($result['value_uah_unreal'],2,'.',' '),
 				'value_minimal'  		=> number_format($result['value_minimal'],2,'.',' '),
 				'value_eur_official'  	=> number_format($result['value_eur_official'],2,'.',' '),
+				'cryptopair'  			=> $result['cryptopair'],
+				'cryptopair_value'  	=> number_format($result['cryptopair_value'],2,'.',' '),
 				'plus_percent'  		=> $result['plus_percent'],
 				'auto_percent'  		=> $result['auto_percent'],			
 				'date_modified' 		=> date('Y.m.d в H:i:s', strtotime($result['date_modified'])),
@@ -490,6 +492,22 @@
 				$this->data['value'] = $currency_info['value'];
 				} else {
 				$this->data['value'] = '';
+			}
+
+			if (isset($this->request->post['cryptopair'])) {
+				$this->data['cryptopair'] = $this->request->post['cryptopair'];
+				} elseif (!empty($currency_info)) {
+				$this->data['cryptopair'] = $currency_info['cryptopair'];
+				} else {
+				$this->data['cryptopair'] = '';
+			}
+
+			if (isset($this->request->post['cryptopair_value'])) {
+				$this->data['cryptopair_value'] = $this->request->post['cryptopair_value'];
+				} elseif (!empty($currency_info)) {
+				$this->data['cryptopair_value'] = $currency_info['cryptopair_value'];
+				} else {
+				$this->data['cryptopair_value'] = '';
 			}
 			
 			if (isset($this->request->post['plus_percent'])) {
