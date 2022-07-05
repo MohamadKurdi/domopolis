@@ -9,6 +9,8 @@ class OffersParser
 	
 	private $db;	
 	private $config;
+	private $log;
+
 	public $Suppliers;
 	public $PriceLogic;
 
@@ -18,6 +20,7 @@ class OffersParser
 
 		$this->config = $registry->get('config');
 		$this->db = $registry->get('db');
+		$this->log = $registry->get('log');
 
 		require_once(dirname(__FILE__) . '/Suppliers.php');
 		$this->Suppliers = new Suppliers($registry);
@@ -71,18 +74,21 @@ class OffersParser
 		$rfOffersTMP = [];
 
 		foreach ($rfOffers as $key => $rfOffer){
+
+			$this->log->debug($rfOffer);
+
 			$addThisOffer = true;
 
 			$this->Suppliers->addSupplier($rfOffer->getSellerName());
 
 			if ($supplier = $this->Suppliers->getSupplier($rfOffer->getSellerName())){
 				//Не обрабатывать офферы от поставщиков, если ручной рейтинг ниже 500
-				if (isset($supplier['amzn_coefficient']) && (int)$supplier['amzn_coefficient'] < $this->Suppliers->supplierMinInnerRatingForUse){
+				if (!empty($supplier['amzn_coefficient']) && (int)$supplier['amzn_coefficient'] < $this->Suppliers->supplierMinInnerRatingForUse){
 					$addThisOffer = false;
 				}
 			}
 
-			if ($rfOffer->getSellerRating50() < $this->Suppliers->supplierMinRatingForUse){
+			if ($rfOffer->getSellerRating50()>0 && $rfOffer->getSellerRating50() < $this->Suppliers->supplierMinRatingForUse){
 				$addThisOffer = false;
 			}
 

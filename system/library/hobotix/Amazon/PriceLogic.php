@@ -156,6 +156,21 @@ class PriceLogic
 		}
 	}
 
+	private function getProductsByAsinExplicit($asin){
+		$query = $this->db->query("SELECT *, (SELECT category_id FROM product_to_category p2cm WHERE p2cm.product_id = p.product_id AND category_id NOT IN (" . implode(',', $this->excluded_categories) . ") ORDER BY main_category DESC LIMIT 1) as main_category_id FROM product p WHERE asin = '" . $this->db->escape($asin) . "' AND is_markdown = 0");
+
+			$results = [];
+			if ($query->num_rows){
+				foreach($query->rows as $row){
+					$results[$row['product_id']] = $row;
+				}
+
+				return $results;
+			}
+
+			return false;
+	}
+
 
 	private function getProductsByAsin($asin){
 		$query = $this->db->query("SELECT *, (SELECT category_id FROM product_to_category p2cm WHERE p2cm.product_id = p.product_id AND category_id NOT IN (" . implode(',', $this->excluded_categories) . ") ORDER BY main_category DESC LIMIT 1) as main_category_id FROM product p WHERE asin = '" . $this->db->escape($asin) . "' AND is_markdown = 0 AND status = 1");
@@ -187,7 +202,7 @@ class PriceLogic
 	}
 
 	public function updateProductPriceInDatabase($product_id, $price){
-		$this->db->query("UPDATE product SET price = '" . (float)$price . "' WHERE product_id = '" . (int)$product_id . "' AND is_markdown = 0 AND status = 1");
+		$this->db->query("UPDATE product SET price = '" . (float)$price . "' WHERE product_id = '" . (int)$product_id . "' AND is_markdown = 0");
 
 		$this->priceUpdaterQueue->addToQueue($product_id);
 	}
@@ -208,16 +223,21 @@ class PriceLogic
 		$this->priceUpdaterQueue->addToQueue($product_id);
 	}
 
-	public function updateProductPrices($asin, $amazonBestPrice){
-			//Если включена настройка "ценообразование из рейнфорест"
+	public function updateProductPrices($asin, $amazonBestPrice, $explicit = false){
+		//Если включена настройка "ценообразование из рейнфорест"
 		if ($this->config->get('config_rainforest_enable_pricing')){
 
-				//Если найдены по ASIN товары
-			if ($products = $this->getProductsByAsin($asin)){
-				foreach ($products as $product_id => $product){
-					echoLine('Код: ' . $product_id);
+			//Если найдены по ASIN товары
 
-						//Если у товара есть вес, классификатор единицы веса
+			if ($explicit){
+				$products = $this->getProductsByAsinExplicit($asin);
+			} else {
+				$products = $this->getProductsByAsin($asin);
+			}
+
+			if ($products){
+				foreach ($products as $product_id => $product){					
+					//Если у товара есть вес, классификатор единицы веса
 					$productWeight = $this->getProductWeight($product);
 					if ($productWeight && !$product['amzn_ignore']){
 						//Для всех настроек магазинов проверяем наличие на складе
