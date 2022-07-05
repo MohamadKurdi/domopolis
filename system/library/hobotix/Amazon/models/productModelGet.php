@@ -5,8 +5,8 @@ namespace hobotix\Amazon;
 class productModelGet extends hoboModel{
 
 	private $asinsArray = [];
-	//private $testAsin = 'B07H2WTMZL';
-	private $testAsin = false;
+	private $testAsin = 'B09SV52SYV';
+	//private $testAsin = false;
 
 	public function checkIfAsinIsDeleted($asin){
 		return $this->db->ncquery("SELECT asin FROM deleted_asins WHERE asin LIKE ('" . $this->db->escape($asin) . "')")->num_rows;
@@ -118,6 +118,30 @@ class productModelGet extends hoboModel{
 				'product_id' 			=> $row['product_id'],
 				'asin' 					=> $row['asin'],
 				'json'					=> $row['json']							
+			];
+		}
+
+		return $result;
+	}
+
+	public function getTotalProductsWithVariantsSet(){
+		$sql = "SELECT COUNT(main_asin) as total FROM product_variants WHERE 1";
+
+		return $this->db->ncquery($sql)->row['total'];
+	}
+
+	public function getProductsWithVariantsSet($start){
+
+		$result = [];
+
+		$sql = "SELECT * FROM product_variants WHERE 1 limit " . (int)$start . ", 10000";		
+
+		$query = $this->db->ncquery($sql);
+
+		foreach ($query->rows as $row){			
+			$result[] = [
+				'main_asin' 	=> $row['main_asin'],
+				'variant_asin'	=> $row['variant_asin']						
 			];
 		}
 

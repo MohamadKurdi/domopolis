@@ -62,6 +62,14 @@ class productModelEdit extends hoboModel{
 		$this->db->query("UPDATE product p SET main_variant_id = (SELECT product_id FROM product p2 WHERE p2.asin = '" . $this->db->escape($asin) . "' LIMIT 1) WHERE product_id = '" . (int)$product_id . "'");
 	}
 
+	public function updateProductMainVariantIdByParentAsinByAsin($product_asin, $main_variant_asin){		
+		$this->db->query("UPDATE product p SET main_variant_id = (SELECT product_id FROM product p2 WHERE p2.asin = '" . $this->db->escape($main_variant_asin) . "' LIMIT 1) WHERE asin LIKE '" . $this->db->escape($product_asin) . "'");
+	}
+
+	public function updateProductMainVariantIdByAsin($asin, $main_variant_id){
+		$this->db->query("UPDATE product SET main_variant_id = 	'" . (int)$main_variant_id . "'	WHERE  asin LIKE '" . $this->db->escape($asin) . "'");
+	}
+
 	public function updateProductMainVariantId($product_id, $main_variant_id){
 		$this->db->query("UPDATE product SET main_variant_id = 	'" . (int)$main_variant_id . "'	WHERE product_id = '" . (int)$product_id . "'");
 	}

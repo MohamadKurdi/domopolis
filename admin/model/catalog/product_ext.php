@@ -329,6 +329,16 @@ class ModelCatalogProductExt extends Model {
         $editable = array('manufacturer', 'image', 'name', 'tag', 'model', 'sku', 'asin', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'location', 'quantity', 'price', 'weight', 'status', 'sort_order', 'tax_class', 'minimum', 'subtract', 'stock_status', 'shipping', 'date_available', 'length', 'width', 'height', 'length_class', 'weight_class', 'points');
         $result = false;
         if (in_array($column, $editable)) {
+
+
+            if ($column == 'status'){
+                if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']){
+                    $this->db->query("UPDATE product SET status = '" . (int)$data['status'] . "' WHERE main_variant_id = '" . (int)$product_id . "'");              
+                    $this->db->query("UPDATE product SET minimum = '" . (int)$data['minimum'] . "' WHERE main_variant_id = '" . (int)$product_id . "'");
+                    $this->db->query("UPDATE product SET shipping = '" . (int)$data['shipping'] . "' WHERE main_variant_id = '" . (int)$product_id . "'");
+                }
+            }
+
             if (in_array($column, array('image', 'model', 'sku', 'upc', 'asin', 'ean', 'jan', 'mpn', 'isbn', 'location', 'date_available')))
                 $result = $this->db->query("UPDATE " . DB_PREFIX . "product SET " . $column . " = '" . $this->db->escape($value) . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
             else if (in_array($column, array('quantity', 'sort_order', 'status', 'minimum', 'subtract', 'shipping', 'points')))
@@ -481,9 +491,7 @@ class ModelCatalogProductExt extends Model {
                 $this->db->query("UPDATE " . DB_PREFIX . "product_description SET description = '" . $this->db->escape($value['description']) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
             }
             $result = 1;
-        }
-
-        $this->cache->delete('product');
+        }        
 
         return $result;
     }

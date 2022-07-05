@@ -33,7 +33,9 @@
 			'Artikelnummer' 						=> ['sku'],
 			'Herstellerreferenz' 					=> ['sku'],
 			'UPC'									=> ['upc'],
-			'UWeltweite Artikelidentnummer (GTIN)'	=> ['ean']
+			'UWeltweite Artikelidentnummer (GTIN)'	=> ['ean'],
+			'GTIN'									=> ['ean'],
+			'EAN'									=> ['ean']
 		];
 
 		private $mapAmazonToStoreFieldsSpecificationsRev = [
@@ -626,23 +628,31 @@
 									'product_id' => $variant['product_id'],
 									'asin'		 => $variant['asin']
 							];
+
+							echoLine('[parseProductVariants] Обновляем привязку родителя по асину:' . $variant['asin'] . ':' . $variant['main_asin']);
+							$this->model_product_edit->updateProductMainVariantIdByParentAsin($variant['product_id'], $variant['main_asin']);
 						}
 					} else {
 						//Товара не существует вообще
 						echoLine('[parseProductVariants] Новый товар-вариант:' . $variant['asin']);
 
 						$new_product_name = $this->trimProductNameWithoutVariant($product['title'], $this->getCurrentVariantDimensions($product['variants']), $this->getVariantDimensionsByAsin($product['variants'], $variant['asin']));
-						echoLine('[editFullProduct] Новый вариант: ' . $new_product_name);						
+						echoLine('[editFullProduct] Новый вариант: ' . $new_product_name);	
 
-						$new_product_data[] = [
-							'product_id' => $this->addSimpleProductWithOnlyAsin([
+						$new_product_id = $this->addSimpleProductWithOnlyAsin([
 								'asin' 				=> $variant['asin'], 
 								'category_id' 		=> $this->model_product_get->getCurrentProductCategory($product_id), 
 								'main_variant_id'	=> $product_id,
 								'name' 				=> $new_product_name,
 								'image' 			=> $this->getImage($this->getVariantImageByAsin($product['variants'], $variant['asin'])), 
 								'added_from_amazon' => 1
-							]),
+							]);
+
+						echoLine('[parseProductVariants] Обновляем привязку родителя по асину:' . $variant['asin'] . ':' . $variant['main_asin']);
+						$this->model_product_edit->updateProductMainVariantIdByParentAsin($new_product_id, $variant['main_asin']);					
+
+						$new_product_data[] = [
+							'product_id' => $new_product_id,
 							'asin' => $variant['asin']
 						];
 					}

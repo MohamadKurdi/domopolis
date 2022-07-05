@@ -447,7 +447,7 @@ class ControllerDPRainForest extends Controller {
 	/*
 	Начальное заполнение таблички вариантов, v2 логика вариантов на асинах
 	*/
-	public function fixvariants(){
+	public function setvariants(){
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFullData();		
 
@@ -468,6 +468,36 @@ class ControllerDPRainForest extends Controller {
 		}		
 		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();						
 	}
+
+	public function fixvariants(){
+
+
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithVariantsSet();		
+
+		$iterations = ceil($total/10000);
+		echoLine('[fixvariants] Всего товаров: ' . $total);
+		$k = 1;	
+
+		for ($i = 1; $i <= $iterations; $i++){
+			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithVariantsSet(($i-1) * 10000);
+			if ($products){		
+				foreach ($products as $product){
+					echoLine('[fixvariants] Товар ' . $product['main_asin'] . ' -> ' . $product['variant_asin'] . ' ' . $i . '/' . $k . '/' . $total);
+
+					if ($product['main_asin'] == $product['variant_asin']){
+						$this->rainforestAmazon->productsRetriever->model_product_edit->updateProductMainVariantIdByAsin($product['main_asin'], 0);						
+					} else {
+						$this->rainforestAmazon->productsRetriever->model_product_edit->updateProductMainVariantIdByParentAsinByAsin($product['variant_asin'], $product['main_asin']);		
+					}
+					
+					$k++;	
+				}
+			}	
+		}		
+		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();						
+	}
+
 
 	public function updateimagesfromamazon(){
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');

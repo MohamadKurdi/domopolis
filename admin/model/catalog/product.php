@@ -547,6 +547,12 @@
 				amzn_last_offers 		= '" . $this->db->escape($data['amzn_last_offers']) . "',  
 				date_modified 			= NOW() 
 				WHERE product_id = '" . (int)$product_id . "'");
+
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']){
+				$this->db->query("UPDATE product SET status = '" . (int)$data['status'] . "' 	WHERE main_variant_id = '" . (int)$product_id . "'");              
+                $this->db->query("UPDATE product SET minimum = '" . (int)$data['minimum'] . "' 	WHERE main_variant_id = '" . (int)$product_id . "'");
+                $this->db->query("UPDATE product SET shipping = '" . (int)$data['shipping'] . "' WHERE main_variant_id = '" . (int)$product_id . "'");				
+			}
 			
 			if (isset($data['image'])) {
 				$this->db->query("UPDATE product SET image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' WHERE product_id = '" . (int)$product_id . "'");
