@@ -124,6 +124,31 @@ class productModelGet extends hoboModel{
 		return $result;
 	}
 
+	public function getTotalProductsWithFastPrice(){
+		$result = [];
+
+		$sql = "SELECT COUNT(product_id) as total FROM product WHERE amazon_best_price > 0 AND filled_from_amazon = 1 ORDER BY product_id ASC limit " . (int)$start . ", 3000";		
+
+		return $this->db->ncquery($sql)->row['total'];		
+	}
+
+	public function getProductsWithFastPrice($start){
+		$result = [];
+
+		$sql = "SELECT * FROM product WHERE amazon_best_price > 0 AND filled_from_amazon = 1 ORDER BY product_id ASC limit " . (int)$start . ", 3000";		
+
+		$query = $this->db->ncquery($sql);
+
+		foreach ($query->rows as $row){
+			$result[] = [
+				'product_id' 			=> $row['product_id'],
+				'asin' 					=> $row['asin']									
+			];
+		}
+
+		return $result;
+	}
+
 	public function getTotalProductsWithVariantsSet(){
 		$sql = "SELECT COUNT(main_asin) as total FROM product_variants WHERE 1";
 
