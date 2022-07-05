@@ -4,7 +4,10 @@ class ControllerKPAmazon extends Controller {
 
 	public function getProductOffers(){
 		$product_id = (int)$this->request->get['product_id'];
-		$order_id = (int)$this->request->get['order_id'];	
+
+		if (!empty($this->request->get['order_id'])){
+			$order_id = (int)$this->request->get['order_id'];	
+		}
 
 		if (!empty($this->request->get['explicit'])){	
 			$explicit = (int)$this->request->get['explicit'];		
@@ -47,7 +50,7 @@ class ControllerKPAmazon extends Controller {
 					'rating'				=> (int)$offer['sellerRating50'] / 10,
 					'positive'				=> (int)$offer['sellerPositiveRatings100'],
 					'date_added'			=> date('Y-m-d H:i:s', strtotime($offer['date_added'])),
-					'link'					=> $offer['sellerLink']?$offer['sellerLink']:$this->rainforestAmazon->createLinkToAmazonSearchPage($this->data['asin']),
+					'link'					=> $offer['sellerLink']?$offer['sellerLink']:$this->rainforestAmazon->createLinkToAmazonSearchPage($product['asin']),
 					'link2'					=> $this->rainforestAmazon->createLinkToAmazonSearchPage($offer['asin'])
 				];
 			}
