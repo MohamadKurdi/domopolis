@@ -4,10 +4,9 @@
 		private $image;
 		private $info;
 		
-		public function __construct($file) {
+		public function __construct($file) {			
 			if (file_exists($file)) {
-				$this->file = $file;
-				
+				$this->file = $file;							
 				$info = getimagesize($file);
 				
 				$this->info = array(
@@ -46,6 +45,8 @@
 			try {  
 				if ($mime == 'image/gif') {
 					return imagecreatefromgif($image);
+				} elseif ($mime == 'image/webp') {
+					return imagecreatefromwebp($image);
 					} elseif ($mime == 'image/png') {
 					return imagecreatefrompng($image);
 					} elseif ($mime == 'image/jpeg') {			
@@ -77,6 +78,8 @@
 			if (is_object($this->image) || is_resource($this->image)) {
 				if ($extension == 'jpeg' || $extension == 'jpg') {
 					imagejpeg($this->image, $file, $quality);
+					} elseif($extension == 'webp') {
+					imagewebp($this->image, $file);
 					} elseif($extension == 'png') {
 					imagepng($this->image, $file);
 					} elseif($extension == 'gif') {

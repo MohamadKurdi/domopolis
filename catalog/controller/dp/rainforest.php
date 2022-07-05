@@ -30,7 +30,21 @@ class ControllerDPRainForest extends Controller {
 		}
 
 		$this->fullFillExistentAsins();
+	}
 
+	/*
+	Second workers (tried, but unneded, because of db slow latency)
+	*/
+	public function parsetechcategory_fork(){
+		$this->parsetechcategory();
+	}
+
+	public function editfullproductscron_fork(){
+		$this->editfullproductscron();
+	}
+
+	public function editfullproductscronl2_fork(){
+		$this->editfullproductscronl2();
 	}
 
 	private function fullFillExistentAsins(){
@@ -308,19 +322,43 @@ class ControllerDPRainForest extends Controller {
 		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();
 	}
 
-	public function parsetechcategory_fork(){
-		$this->parsetechcategory();
+
+	public function fiximages(){
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoImages();
+
+		foreach ($products as $product_id => $amazon_product_image){
+			$this->rainforestAmazon->productsRetriever->model_product_edit->editProductFields($product_id, [['name' => 'image', 'type' => 'varchar', 'value' => $this->rainforestAmazon->productsRetriever->getImage($amazon_product_image)]]);
+		}
 	}
 
-	public function editfullproductscron_fork(){
-		$this->editfullproductscron();
+	public function setpricesfast(){
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFastPrice();		
+
+		$iterations = ceil($total/3000);
+		echoLine('[setpricesfast] Всего товаров: ' . $total);
+		$k = 1;		
+
+		for ($i = 1; $i <= $iterations; $i++){
+			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFastPrice(($i-1) * 3000);
+			if ($products){		
+				foreach ($products as $product){
+					echoLine('[setpricesfast] Товар ' . $product['product_id'] . ' / ' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
+						
+					$this->rainforestAmazon->offersParser->PriceLogic->updateProductPrices($product['asin'], $product['amazon_best_price'], true);
+					$k++;	
+				}
+			}	
+		}		
+
+
 	}
+	
 
-	public function editfullproductscronl2_fork(){
-		$this->editfullproductscronl2();
-	}
-
-
+	/*
+	Фиксит переводы строк
+	*/
 	public function fixtranslations(){
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->rainforestAmazon->productsRetriever->yandexTranslator->setDebug(true);
@@ -469,6 +507,9 @@ class ControllerDPRainForest extends Controller {
 		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();						
 	}
 
+	/*
+	Фиксит привязки вариантов методом прохода таблички c asin
+	*/
 	public function fixvariants(){
 
 
@@ -496,16 +537,6 @@ class ControllerDPRainForest extends Controller {
 			}	
 		}		
 		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();						
-	}
-
-
-	public function updateimagesfromamazon(){
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
-		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoImages();
-
-		foreach ($products as $product_id => $amazon_product_image){
-			$this->rainforestAmazon->productsRetriever->model_product_edit->editProductFields($product_id, [['name' => 'image', 'type' => 'varchar', 'value' => $this->rainforestAmazon->productsRetriever->getImage($amazon_product_image)]]);
-		}
 	}
 
 }

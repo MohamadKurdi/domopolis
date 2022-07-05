@@ -1122,8 +1122,6 @@
 						);
 					}
 
-					$this->log->debug($this->data['videos']);
-					
 																
 					$this->load->model('catalog/information');
 					$delivery_full = $this->model_catalog_information->getInformation(41);
@@ -1218,7 +1216,7 @@
 				$shippingSettings = $this->config->get('dostavkaplus_module');
 				
 				
-				if ($this->config->get('config_store_id') == 0){
+				if ($this->config->get('config_country_id') == 176){
 				
 					$freeDelivery = getFreeDeliveryInfo($shippingSettings[1]);
 				
@@ -1233,13 +1231,9 @@
 					}
 				}
 				
-				if ($this->config->get('config_store_id') == 1){
+				if ($this->config->get('config_country_id') == 220){
 					
 					$freeDelivery = getFreeDeliveryInfo($shippingSettings[2]);
-					
-					if ($product_id == 2428169){
-					//	$this->log->debug($freeDelivery);
-					}
 				
 					if ((int)$final_price >= $freeDelivery){
 						$free_delivery = 'kyiv';
@@ -1254,6 +1248,9 @@
 				
 				$this->data['free_delivery'] = $free_delivery;
 				
+				/* Варианты */
+				$variants = $this->model_catalog_product->getVariants($this->request->get['product_id']);
+				$this->data['variants'] = $this->model_catalog_product->prepareProductToArray($variants);
 				
                 /*Additional offer*/
                 $additional_offers_results = $this->model_catalog_product->getProductAdditionalOffer($this->request->get['product_id']);

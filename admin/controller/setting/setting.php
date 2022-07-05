@@ -2775,6 +2775,14 @@ class ControllerSettingSetting extends Controller {
 			}
 		}
 
+		foreach ($stores as $store){
+			if (isset($this->request->post['config_rainforest_default_multiplier_' . $store['store_id']])) {
+				$this->data['config_rainforest_default_multiplier_' . $store['store_id']] = $this->request->post['config_rainforest_default_multiplier_' . $store['store_id']]; 
+			} else {
+				$this->data['config_rainforest_default_multiplier_' . $store['store_id']] = $this->config->get('config_rainforest_default_multiplier_' . $store['store_id']);
+			}
+		}
+
 		
 		if (isset($this->request->post['config_priceva_enable_api'])) {
 			$this->data['config_priceva_enable_api'] = $this->request->post['config_priceva_enable_api']; 

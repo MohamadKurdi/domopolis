@@ -194,9 +194,18 @@ class PriceLogic
 	}
 
 	//Это прямо самая важная функция)))
-	public function mainFormula($amazonBestPrice, $productWeight, $weightCoefficient){
-		$mainFormula = str_replace(['PRICE','WEIGHT','KG_LOGISTIC','PLUS', 'MULTIPLY', 'DIVIDE'], [$amazonBestPrice, $productWeight, $weightCoefficient, '+', '*', '/'], $this->config->get('config_rainforest_main_formula'));
-		$resultPrice = eval('return ' . $mainFormula . ';');
+	public function mainFormula($amazonBestPrice, $productWeight, $weightCoefficient, $defaultMultiplier){
+
+		if ($productWeight){
+
+			$mainFormula = str_replace(['PRICE','WEIGHT','KG_LOGISTIC','PLUS', 'MULTIPLY', 'DIVIDE'], [$amazonBestPrice, $productWeight, $weightCoefficient, '+', '*', '/'], $this->config->get('config_rainforest_main_formula'));
+			$resultPrice = eval('return ' . $mainFormula . ';');
+
+		} else {
+
+			$resultPrice = $amazonBestPrice * $defaultMultiplier;
+
+		}		
 
 		return $resultPrice;
 	}
@@ -238,17 +247,17 @@ class PriceLogic
 			if ($products){
 				foreach ($products as $product_id => $product){					
 					//Если у товара есть вес, классификатор единицы веса
-					$productWeight = $this->getProductWeight($product);
+					$productWeight = $this->getProductWeight($product);					
 					if ($productWeight && !$product['amzn_ignore']){
 						//Для всех настроек магазинов проверяем наличие на складе
 						foreach ($this->storesWarehouses as $store_id => $storeWarehouses){
 							$warehouse_identifier = $storeWarehouses['config_warehouse_identifier_local'];
 
 							//Если товара нет на текущем складе или он не едет
-							if ($weightCoefficient = $this->config->get('config_rainforest_kg_price_' . $store_id)){
+							if ($weightCoefficient = $this->config->get('config_rainforest_kg_price_' . $store_id) || $defaultMultiplier = $this->config->get('config_rainforest_default_multiplier_' . $store_id)){
 								if (!$this->checkIfProductIsOnWarehouse($product_id, $warehouse_identifier)){
 
-									$newPrice = $this->mainFormula($amazonBestPrice, $productWeight, $weightCoefficient);
+									$newPrice = $this->mainFormula($amazonBestPrice, $productWeight, $weightCoefficient, $defaultMultiplier);
 
 									$logString = 'Товар: ' . $product_id . ', ' . $asin . ', вес: ' . $productWeight . ', цена для магазина ' . $store_id . ' = ' . $newPrice . ' EUR';
 									$this->log->write($logString);
