@@ -260,15 +260,11 @@ class RainforestAmazon
 		$apiOffers = [];
 		foreach ($apiEntitiesTMP as $key => $rfOfferList) {
 
-			foreach ($rfOfferList->getOffers() as $apiOffer){				
-					//$this->log->debug($apiOffer);
-
+			foreach ($rfOfferList->getOffers() as $apiOffer){								
 				$apiOffers[] = $apiOffer;
-			}
-
+			}		
 
 			if ($rfOfferList->hasMorePages()){
-
 				$options['page'] = $rfOfferList->getCurrentPage() + 1;
 				$rfRequests = [new \CaponicaAmazonRainforest\Request\OfferRequest($this->config->get('config_rainforest_api_domain_1'), $product['asin'], $options)];
 				$apiEntitiesPage = $this->rfClient->retrieveOffers($rfRequests);
@@ -293,7 +289,6 @@ class RainforestAmazon
 				}	
 			}								
 		}
-
 		return $apiOffers;
 	}
 
