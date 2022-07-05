@@ -508,6 +508,7 @@
 			$this->data['account'] = $this->url->link('account/account', '', 'SSL');
 			$this->data['shopping_cart'] = $this->url->link('checkout/cart');
 			$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
+			$this->data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
 			
 			$this->data['all_actions'] = $this->url->link('information/actions', '', 'SSL');
 			$this->data['product_new'] = $this->url->link('product/product_new', '', 'SSL');
