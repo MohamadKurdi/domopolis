@@ -3839,7 +3839,7 @@
 
 								</tr>
 							</table>
-							<table>
+							<table class="form">
 								<tr>									
 									<?php foreach ($stores as $store) { ?>
 										<td width="<?php echo (int)(100/count($stores))?>%">
@@ -3854,7 +3854,7 @@
 								</tr>
 							</table>
 
-							<table>
+							<table class="form">
 								<tr>									
 									<?php foreach ($stores as $store) { ?>
 										<td width="<?php echo (int)(100/count($stores))?>%">
