@@ -323,7 +323,7 @@ class ControllerDPRainForest extends Controller {
 	}
 
 
-	public function fiximages(){
+	public function updateimagesfromamazon(){
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoImages();
 
