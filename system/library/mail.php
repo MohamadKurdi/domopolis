@@ -95,6 +95,10 @@ class Mail {
 
 		if (!strpos($this->to, '@')){
 			return 0;
+		}		
+
+		if ($this->to == $this->config->get('config_email')){
+			$this->protocol = 'mail';
 		}
 
 		$transmission_id = $this->_send();
@@ -254,7 +258,7 @@ class Mail {
 		ini_set('sendmail_from', $this->from);
 
 		if ($this->parameter) {
-			mail($this->to, '=?UTF-8?B?' . base64_encode($this->subject) . '?=', $this->message, $this->header, $this->parameter);
+			mail($this->to, '=?UTF-8?B?' . base64_encode($this->subject) . '?=', $this->message, $this->header, $this->config->get('config_mail_parameter'));
 		} else {
 			mail($this->to, '=?UTF-8?B?' . base64_encode($this->subject) . '?=',  $this->message, $this->header);
 		}

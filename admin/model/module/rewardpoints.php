@@ -16,6 +16,8 @@ class ModelModuleRewardPoints extends Model {
 	}
 	
 	public function sendEmailReminders() {
+		$this->load->model('setting/setting');
+
 		$total_dispatched = 0;
 		$content = $this->config->get('rewardpoints_email_content');
 		$lang = $this->config->get('config_language_id'); 
@@ -40,17 +42,10 @@ class ModelModuleRewardPoints extends Model {
 				$message = str_replace('{review_bonus}',  $this->config->get('rewardpoints_review_bonus'), $message);
 				$message = str_replace('{review_limit}',  $this->config->get('rewardpoints_review_limit'), $message);
 				
-				$mail = new Mail();
-				$mail->protocol = $this->config->get('config_mail_protocol');
-				$mail->parameter = $this->config->get('config_mail_parameter');
-				$mail->hostname = $this->config->get('config_smtp_host');
-				$mail->username = $this->config->get('config_smtp_username');
-				$mail->password = $this->config->get('config_smtp_password');
-				$mail->port = $this->config->get('config_smtp_port');
-				$mail->timeout = $this->config->get('config_smtp_timeout');	
+				$mail = new Mail($this->registry); 
 				$mail->setTo($reminder['email']);
-				$mail->setFrom($this->config->get('config_email'));
-				$mail->setSender($this->config->get('config_name'));
+				$mail->setFrom($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$reminders['store_id']));
+				$mail->setSender($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$reminders['store_id']));
 				$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
 				$mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
 				$mail->send();
@@ -80,20 +75,12 @@ class ModelModuleRewardPoints extends Model {
 		$message = str_replace('{review_bonus}',  $this->config->get('rewardpoints_review_bonus'), $message);
 		$message = str_replace('{review_limit}',  $this->config->get('rewardpoints_review_limit'), $message);
 		
-		$mail = new Mail();
-		$mail->protocol = $this->config->get('config_mail_protocol');
-		$mail->parameter = $this->config->get('config_mail_parameter');
-		$mail->hostname = $this->config->get('config_smtp_host');
-		$mail->username = $this->config->get('config_smtp_username');
-		$mail->password = $this->config->get('config_smtp_password');
-		$mail->port = $this->config->get('config_smtp_port');
-		$mail->timeout = $this->config->get('config_smtp_timeout');	
+		$mail = new Mail($this->registry); 
 		$mail->setTo($this->config->get('rewardpoints_email_test'));
 		$mail->setFrom($this->config->get('config_email'));
-		$mail->setSender($this->config->get('config_name'));
+		$mail->setSender($this->config->get('config_mail_trigger_name_from'));
 		$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
 		$mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
 		$mail->send();
 	}	
 }
-?>

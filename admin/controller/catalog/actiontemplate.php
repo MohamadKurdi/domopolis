@@ -521,15 +521,8 @@
 			$data = array_merge($data, $template, $customer, $mail_info);
 			
 			
-			$mail = new Mail();
+			$mail = new Mail($this->registry); 
 			$mail->setEmailTemplate(new EmailTemplate($this->request, $this->registry));
-			$mail->protocol = $this->config->get('config_mail_protocol');
-			$mail->parameter = $this->config->get('config_mail_parameter');
-			$mail->hostname = $this->config->get('config_smtp_host');
-			$mail->username = $this->config->get('config_smtp_username');
-			$mail->password = $this->config->get('config_smtp_password');
-			$mail->port = $this->config->get('config_smtp_port');
-			$mail->timeout = $this->config->get('config_smtp_timeout');
 			$mail->setFrom($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$customer['store_id']));
 			$mail->setSender($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$customer['store_id']));
 			$mail->setSubject($template['title']);
@@ -544,10 +537,7 @@
 				);
 				$this->response->setOutput(json_encode($responce));				
 			}
-			
-			
-			
-			
+											
 		}
 		
 				

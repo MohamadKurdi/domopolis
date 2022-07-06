@@ -749,6 +749,8 @@
 		}
 		
 		public function approve($customer_id) {
+			$this->load->model('setting/setting');
+
 			$customer_info = $this->getCustomer($customer_id);
 			
 			if ($customer_info) {
@@ -762,10 +764,9 @@
 				
 				if ($store_info) {
 					$store_name = $store_info['name'];
-					$store_url = $store_info['url'] . 'index.php?route=account/login';
+					$store_url 	= $store_info['url'] . 'index.php?route=account/login';
 					} else {
-					$store_name = $this->config->get('config_name');
-					$store_url = HTTP_CATALOG . 'index.php?route=account/login';
+					return;
 				}
 				
 				if ($store_info) {
@@ -783,21 +784,16 @@
 				$message .= $this->language->get('text_approve_thanks') . "\n";
 				$message .= $store_name;
 				
-				$mail = new Mail();
-				$mail->protocol = $this->config->get('config_mail_protocol');
-				$mail->parameter = $this->config->get('config_mail_parameter');
-				$mail->hostname = $this->config->get('config_smtp_host');
-				$mail->username = $this->config->get('config_smtp_username');
-				$mail->password = $this->config->get('config_smtp_password');
-				$mail->port = $this->config->get('config_smtp_port');
-				$mail->timeout = $this->config->get('config_smtp_timeout');
+				$mail = new Mail($this->registry); 
 				$mail->setTo($customer_info['email']);
-				$mail->setFrom($this->config->get('config_email'));
-				$mail->setSender($store_name);
-				$mail->setSubject(html_entity_decode(sprintf($this->language->get('text_approve_subject'), $store_name), ENT_QUOTES, 'UTF-8'));
+				$mail->setFrom($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$customer_info['store_id']));
+				$mail->setSender($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$customer_info['store_id']));
+
+				$mail->setSubject(html_entity_decode(sprintf($this->language->get('text_approve_subject'), $this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$customer_info['store_id'])), ENT_QUOTES, 'UTF-8'));
+
 				$template = new EmailTemplate($this->request, $this->registry);				
 				$template->addData($customer_info, 'customer');				
-				$template->data['text_welcome'] = sprintf($this->language->get('text_approve_welcome'), $store_name);				
+				$template->data['text_welcome'] = sprintf($this->language->get('text_approve_welcome'), $this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$customer_info['store_id']));				
 				$template->data['account_login'] = $account_login;
 				$template->data['account_login_tracking'] = $template->getTracking($account_login);
 				$mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
@@ -810,6 +806,8 @@
 				}
 				$template->load($template_data);			
 				$mail = $template->hook($mail);
+
+				$mail->setTo($customer_info['email']);
 				$mail->send();
 			}
 		}
@@ -1445,14 +1443,7 @@
 				$this->model_feed_exchange1c->addOrderToQueue($order_id);
 				$this->model_feed_exchange1c->getOrderTransactionsXML($order_id);
 				
-				$mail = new Mail();
-				$mail->protocol = $this->config->get('config_mail_protocol');
-				$mail->parameter = $this->config->get('config_mail_parameter');
-				$mail->hostname = $this->config->get('config_smtp_host');
-				$mail->username = $this->config->get('config_smtp_username');
-				$mail->password = $this->config->get('config_smtp_password');
-				$mail->port = $this->config->get('config_smtp_port');
-				$mail->timeout = $this->config->get('config_smtp_timeout');
+				$mail = new Mail($this->registry); 
 				$mail->setTo($customer_info['email']);
 				$mail->setFrom($this->config->get('config_email'));
 				$mail->setSender($store_name);
@@ -1563,6 +1554,7 @@
 		
 		
 		public function addReward($customer_id, $description = '', $points = 0, $order_id = 0, $reason_code = 'UNKNOWN') {
+			$this->load->model('setting/setting');
 			
 			$customer_info 	= $this->getCustomer($customer_id);
 			
@@ -1582,33 +1574,30 @@
 					if ($order_info) {
 						$store_name = $order_info['store_name'];
 						} else {
-						$store_name = $this->config->get('config_name');
+						$store_name = $this->config->get('config_mail_trigger_name_from');
 					}
 					} else {
-					$store_name = $this->config->get('config_name');
+					$store_name = $this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$customer_info['store_id']);
 				}
 				
 				$message  = sprintf($this->language->get('text_reward_received'), $points) . "\n\n";
 				$message .= sprintf($this->language->get('text_reward_total'), $this->getRewardTotal($customer_id));
 				
-				$mail = new Mail();
-				$mail->protocol = $this->config->get('config_mail_protocol');
-				$mail->parameter = $this->config->get('config_mail_parameter');
-				$mail->hostname = $this->config->get('config_smtp_host');
-				$mail->username = $this->config->get('config_smtp_username');
-				$mail->password = $this->config->get('config_smtp_password');
-				$mail->port = $this->config->get('config_smtp_port');
-				$mail->timeout = $this->config->get('config_smtp_timeout');
+				$mail = new Mail($this->registry); 
 				$mail->setTo($customer_info['email']);
-				$mail->setFrom($this->config->get('config_email'));
-				$mail->setSender($store_name);
+				$mail->setFrom($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$customer_info['store_id']));
+				$mail->setSender($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$customer_info['store_id']));
+				
 				$mail->setSubject(html_entity_decode(sprintf($this->language->get('text_reward_subject'), $store_name), ENT_QUOTES, 'UTF-8'));
+				
 				$template = new EmailTemplate($this->request, $this->registry);				
 				$template->addData($customer_info, 'customer');			
 				$template->data['reward_received'] = sprintf($this->language->get('text_reward_received'), $points);
 				$template->data['reward_total'] = sprintf($this->language->get('text_reward_total'), $this->getRewardTotal($customer_id));
+
 				$mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
 				$template_data = array('key' =>'admin.customer_reward');
+
 				if(isset($customer_info['store_id'])){
 					$template_data['store_id'] = $customer_info['store_id'];
 				}
@@ -1616,7 +1605,9 @@
 					$template_data['language_id'] = $customer_info['language_id'];
 				}				
 				$template->load($template_data);				
-				$mail = $template->hook($mail); 				
+				$mail = $template->hook($mail); 	
+
+				$mail->setTo($customer_info['email']);			
 				$mail->send();				
 				$template->sent();
 			}

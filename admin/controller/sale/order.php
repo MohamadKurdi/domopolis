@@ -8874,9 +8874,9 @@
 			
 			$order_info = $this->model_sale_order->getOrder($this->request->get['order_id']);
 			$data = array(
-			'store_id' => $order_info['store_id'],
-			'language_id' => $order_info['language_id'],
-			'customer_id' => $order_info['customer_id'],
+			'store_id' 			=> $order_info['store_id'],
+			'language_id' 		=> $order_info['language_id'],
+			'customer_id' 		=> $order_info['customer_id'],
 			'emailtemplate_key' => 'order.admin',
 			);
 			
@@ -8888,17 +8888,12 @@
 			if ($order_info['bill_file2']){
 				$attachments[] = DIR_BILLS . $order_info['bill_file2'];
 			}
-			
+						
+
 			$template = $this->model_module_emailtemplate->getCompleteOrderEmail($this->request->get['order_id'], $data);
 			
-			$mail = new Mail();
-			$mail->protocol = $this->config->get('config_mail_protocol');
-			$mail->parameter = $this->config->get('config_mail_parameter');
-			$mail->hostname = $this->config->get('config_smtp_host');
-			$mail->username = $this->config->get('config_smtp_username');
-			$mail->password = $this->config->get('config_smtp_password');
-			$mail->port = $this->config->get('config_smtp_port');
-			$mail->timeout = $this->config->get('config_smtp_timeout');
+			$mail = new Mail($this->registry);
+			$mail->setTo($order_info['email']);
 			$mail->setFrom($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$order_info['store_id']));
 			$mail->setSender($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$order_info['store_id']));
 			$mail->setSubject($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$order_info['store_id']));
@@ -8909,11 +8904,13 @@
 				$mail->addAttachment($attachment);
 			} 	
 			$mail->setText($template->getPlainText());				
+			
 			$mail->setTo($order_info['email']);
+
 			$mail->send();
 			$template->sent();
 			
-			$this->session->data['success'] = 'Письмо-подтверждение отправлено покупателю на почту '.$order_info['email'];
+			$this->session->data['success'] = 'Письмо-подтверждение отправлено покупателю на почту ' . $order_info['email'];
 			
 			$this->redirect($this->url->link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'], 'SSL'));
 		}
@@ -8950,14 +8947,7 @@
 			
 			$template = $this->model_module_emailtemplate->getCompleteOrderEmail($this->request->get['order_id'], $data);				
 			
-			$mail = new Mail();
-			$mail->protocol = $this->config->get('config_mail_protocol');
-			$mail->parameter = $this->config->get('config_mail_parameter');
-			$mail->hostname = $this->config->get('config_smtp_host');
-			$mail->username = $this->config->get('config_smtp_username');
-			$mail->password = $this->config->get('config_smtp_password');
-			$mail->port = $this->config->get('config_smtp_port');
-			$mail->timeout = $this->config->get('config_smtp_timeout');
+			$mail = new Mail($this->registry); 
 			$mail->setFrom($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$order_info['store_id']));
 			$mail->setSender($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$order_info['store_id']));
 			$mail->setSubject($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$order_info['store_id']));
@@ -8968,8 +8958,7 @@
 				$mail->addAttachment($attachment);
 			} 				
 			$mail->setText($template->getPlainText());			
-			$mail->setTo($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$order_info['store_id']));
-			//$mail->setTo('v.zaichikov@gmail.com');
+			$mail->setTo($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$order_info['store_id']));			
 			$mail->send();
 			
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -8997,7 +8986,8 @@
 			
 			$template = $this->model_module_emailtemplate->getCompleteOrderEmail($this->request->get['order_id'], $data);	
 			
-			$mail = new Mail();
+			$mail = new Mail($this->registry); 
+			$mail->setTo($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$order_info['store_id']));
 			$mail->setFrom($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$order_info['store_id']));
 			$mail->setSender($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$order_info['store_id']));
 			$mail->setSubject($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$order_info['store_id']));
@@ -9006,7 +8996,7 @@
 			$template->build();
 			$mail = $template->hook($mail);
 			$mail->setText($template->getPlainText());			
-			$mail->setTo($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$order_info['store_id']));
+			
 			
 			
 			echo ($mail->getHtml());
@@ -9031,16 +9021,15 @@
 			
 			$template = $this->model_module_emailtemplate->getCompleteOrderEmail($this->request->get['order_id'], $data);	
 			
-			$mail = new Mail();
+			$mail = new Mail($this->registry);
+			$mail->setTo($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$order_info['store_id']));
 			$mail->setFrom($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$order_info['store_id']));
 			$mail->setSender($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$order_info['store_id']));
 			$mail->setSubject($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$order_info['store_id']));
 			$template->load('order.admin');
 			$template->build();
 			$mail = $template->hook($mail);
-			$mail->setText($template->getPlainText());			
-			$mail->setTo($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$order_info['store_id']));
-			
+			$mail->setText($template->getPlainText());									
 		}
 		
 		public function getOrderPrepayNational($order_id){

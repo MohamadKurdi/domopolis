@@ -1695,29 +1695,26 @@
 			* Send Test Email with demo template
 		*/
 		public function sendTestEmail($toAddress, $store_id = 0, $language_id = 1){
+			$this->load->model('setting/setting');
+
 			$language_id = intval($language_id);
 			$store_id = intval($store_id);
 			
-			$result = $this->db->non_cached_query("SELECT `order_id` FROM `" . DB_PREFIX . "order` WHERE (`store_id` = '{$store_id}' OR `store_id` = 0) AND (`language_id` = '{$language_id}' OR `language_id` > 0) AND order_status_id > '0' ORDER BY `order_id` DESC LIMIT 1");
+			$result = $this->db->non_cached_query("SELECT * FROM `" . DB_PREFIX . "order` WHERE (`store_id` = '{$store_id}' OR `store_id` = 0) AND (`language_id` = '{$language_id}' OR `language_id` > 0) AND order_status_id > '0' ORDER BY `order_id` DESC LIMIT 1");
 			if(!$result->row){
-				$result = $this->db->non_cached_query("SELECT `order_id` FROM `" . DB_PREFIX . "order` WHERE order_status_id > '0' ORDER BY `order_id` DESC LIMIT 1");
+				$result = $this->db->non_cached_query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_status_id > '0' ORDER BY `order_id` DESC LIMIT 1");
 			}
 			
 			if($result->row){
 				$template = $this->getCompleteOrderEmail($result->row['order_id']);
 				
-				$mail = new Mail();
-				$mail->protocol = $this->config->get('config_mail_protocol');
-				$mail->parameter = $this->config->get('config_mail_parameter');
-				$mail->hostname = $this->config->get('config_smtp_host');
-				$mail->username = $this->config->get('config_smtp_username');
-				$mail->password = $this->config->get('config_smtp_password');
-				$mail->port = $this->config->get('config_smtp_port');
-				$mail->timeout = $this->config->get('config_smtp_timeout');
-				$mail->setFrom($this->config->get('config_email'));
-				$mail->setSender($this->config->get('config_name'));
+				$mail = new Mail($this->registry); 
+				
+				$mail->setFrom($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$result->row['store_id']));
+				$mail->setSender($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$result->row['store_id']));
+
 				$mail = $template->hook($mail);
-				$mail->setSubject('TEST - ' . $this->config->get('config_name'));
+				$mail->setSubject('TEST - ' . $this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$result->row['store_id']));
 				$mail->setText($template->getPlainText());
 				$mail->setTo($toAddress);
 				if($mail->send()){
@@ -2339,7 +2336,7 @@
 				$inserts = $this->_build_query($cols, $logData);
 				if (empty($inserts)) return false;
 				
-				$query = "INSERT IGNORE INTO {$p}emailtemplate_logs SET ".implode($inserts,", ");
+				$query = "INSERT IGNORE INTO {$p}emailtemplate_logs SET ". implode(", ", $inserts);
 				
 				$this->db->non_cached_query($query);
 				

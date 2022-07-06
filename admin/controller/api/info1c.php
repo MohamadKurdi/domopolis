@@ -1763,6 +1763,8 @@ class ControllerApiInfo1C extends Controller {
 				$this->load->model('sale/order');
 				$this->load->model('sale/customer');
 				$this->load->model('localisation/order_status');
+				$this->load->model('setting/setting');
+
 			//check order
 				$order_info = $this->model_sale_order->getOrder($order_id);
 
@@ -2063,17 +2065,12 @@ class ControllerApiInfo1C extends Controller {
 								$template->data['order_status'] = $order_status_query->row['name']; 
 							}
 							
-							$mail = new Mail();
-							$mail->protocol = $this->config->get('config_mail_protocol');
-							$mail->parameter = $this->config->get('config_mail_parameter');
-							$mail->hostname = $this->config->get('config_smtp_host');
-							$mail->username = $this->config->get('config_smtp_username');
-							$mail->password = $this->config->get('config_smtp_password');
-							$mail->port = $this->config->get('config_smtp_port');
-							$mail->timeout = $this->config->get('config_smtp_timeout');
+							$mail = new Mail($this->registry); 
 							$mail->setTo($order_info['email']);
-							$mail->setFrom($this->config->get('config_email'));
-							$mail->setSender($order_info['store_name']);
+							
+							$mail->setFrom($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$order_info['store_id']));
+							$mail->setSender($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$order_info['store_id']));
+							
 							$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
 							$mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
 							$template_data = array('key' =>'admin.order_update');
@@ -2100,6 +2097,7 @@ class ControllerApiInfo1C extends Controller {
 								$mail->addAttachment($attachment);
 							} 
 							
+							$mail->setTo($order_info['email']);
 							$mail->send();
 							
 							$template->sent();

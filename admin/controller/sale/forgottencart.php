@@ -209,22 +209,6 @@ class ControllerSaleForgottenCart extends Controller {
 		$this->db->non_cached_query("UPDATE `temp` SET `value` = '" . $this->db->escape($html) . "', date_modified = NOW() WHERE `key` = 'orders_result'");
 	
 /*	
-		$mail = new Mail();
-		$mail->protocol = 'mail';
-		$mail->parameter = $this->config->get('config_mail_parameter');
-		$mail->hostname = $this->config->get('config_smtp_host');
-		$mail->username = $this->config->get('config_smtp_username');
-		$mail->password = $this->config->get('config_smtp_password');
-		$mail->port = $this->config->get('config_smtp_port');
-		$mail->timeout = $this->config->get('config_smtp_timeout');
-		$mail->setFrom('ttnscan@ims-group.de');
-		$mail->setSender('ttnscan@ims-group.de');
-		$mail->setSubject('Анализ незавершенных заказов '.date('Y:m:d H:i:s'));
-		$mail->setHTML($html);				
-		
-		$mail->setTo('it@ims-group.de');						
-		$mail->send();
-
 //подготовка шаблона для отправки писем		
 		$order_info = $this->model_sale_order->getOrder($order_id);
 		
@@ -236,14 +220,7 @@ class ControllerSaleForgottenCart extends Controller {
 		
 		$template = $this->model_module_emailtemplate->getCompleteOrderEmail($order_id, $data);
 						
-		$mail = new Mail();
-		$mail->protocol = $this->config->get('config_mail_protocol');
-		$mail->parameter = $this->config->get('config_mail_parameter');
-		$mail->hostname = $this->config->get('config_smtp_host');
-		$mail->username = $this->config->get('config_smtp_username');
-		$mail->password = $this->config->get('config_smtp_password');
-		$mail->port = $this->config->get('config_smtp_port');
-		$mail->timeout = $this->config->get('config_smtp_timeout');
+		$mail = new Mail($this->registry); 
 		$mail->setFrom($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$order_info['store_id']));
 		$mail->setSender($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$order_info['store_id']));
 		$mail->setSubject($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$order_info['store_id']));
@@ -251,7 +228,7 @@ class ControllerSaleForgottenCart extends Controller {
 		$template->build();
 		$mail = $template->hook($mail);			
 		$mail->setText($template->getPlainText());					
-		$mail->setTo('it@ims-group.de');
+		$mail->setTo($order_info['email']);
 		$mail->send();
 		
 	*/	
