@@ -191,8 +191,6 @@
 					}
 				}
 			}
-
-			die();
 			
 			foreach ($current_values_query->rows as $cvq){
 				
@@ -302,7 +300,7 @@
 			curl_close($curl);
 			
 			$content = json_decode($content, true);						
-			$c = $content['data']['currencyHistory'][0]['cards']['EUR/KZT']['sell'];			
+			$c = $content['data']['currencyHistory'][2]['cards']['EUR/KZT']['sell'];			
 			
 			if ((float)$c){
 				
