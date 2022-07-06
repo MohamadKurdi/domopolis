@@ -183,16 +183,13 @@
 		}
 		
 		private function sendTriggerMail(){
-			$mail = new Mail();
+			$mail = new Mail($this->registry);
 
 			if ($this->config->get('config_mail_trigger_protocol') == 'sparkpost'){
 				$mail->protocol 	= 'sparkpost';
 				$mail->hostname 	= $this->config->get('config_sparkpost_api_url');
 				$mail->username 	= $this->config->get('config_mail_trigger_mail_from');
 				$mail->password 	= $this->config->get('config_sparkpost_api_key');
-				$mail->port 		= 2525;
-				$mail->parameter 	= '';			
-				$mail->timeout 		= 0;
 			}
 				
 			

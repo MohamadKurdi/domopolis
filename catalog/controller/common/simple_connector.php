@@ -496,49 +496,11 @@ class ControllerCommonSimpleConnector extends Controller {
     private function send_mail($to, $subject, $message) {
         $opencartVersion = $this->getOpencartVersion();
 
-        if ($opencartVersion < 200) {
-            $mail = new Mail();
-            $mail->protocol = $this->config->get('config_mail_protocol');
-            $mail->parameter = $this->config->get('config_mail_parameter');
-            $mail->hostname = $this->config->get('config_smtp_host');
-            $mail->username = $this->config->get('config_smtp_username');
-            $mail->password = $this->config->get('config_smtp_password');
-            $mail->port = $this->config->get('config_smtp_port');
-            $mail->timeout = $this->config->get('config_smtp_timeout');             
-            $mail->setTo($to);
-            $mail->setFrom($this->config->get('config_email'));
-            $mail->setSender($this->config->get('config_name'));
-            $mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
-            $mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
-            $mail->send();
-        } elseif($opencartVersion < 203) {
-            $mail = new Mail($this->config->get('config_mail'));
-            $mail->setTo($to);
-            $mail->setFrom($this->config->get('config_email'));
-            $mail->setSender($this->config->get('config_name'));
-            $mail->setSubject($subject);
-            $mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
-            $mail->send();
-        } else {
-            if ($opencartVersion < 300) {
-                $mail = new Mail();
-                $mail->protocol = $this->config->get('config_mail_protocol');
-            } else {
-                $mail = new Mail($this->config->get('config_mail_engine'));
-            }          
-            $mail->parameter = $this->config->get('config_mail_parameter');
-            $mail->smtp_hostname = $this->config->get('config_mail_smtp_hostname');
-            $mail->smtp_username = $this->config->get('config_mail_smtp_username');
-            $mail->smtp_password = html_entity_decode($this->config->get('config_mail_smtp_password'), ENT_QUOTES, 'UTF-8');
-            $mail->smtp_port = $this->config->get('config_mail_smtp_port');
-            $mail->smtp_timeout = $this->config->get('config_mail_smtp_timeout');
-            $mail->setTo($to);
-            $mail->setFrom($this->config->get('config_email'));
-            $mail->setSender(html_entity_decode($this->config->get('config_name'), ENT_QUOTES, 'UTF-8'));
-            $mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
-            $mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
-            $mail->send();
-        }
+        $mail = new Mail($this->registry);        
+        $mail->setTo($to);
+        $mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
+        $mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
+        $mail->send();
     }
 
     private function getOpencartVersion() {

@@ -280,21 +280,12 @@ class ControllerPaymentShoputilsPsb extends Controller {
 					$xlog = new Log('psb_alert.txt');
 						$xlog->write($title . ' - '. $html);				
 
-					$mail = new Mail();
-						$mail->protocol = $this->config->get('config_mail_protocol');
-						$mail->parameter = $this->config->get('config_mail_parameter');			
-						$mail->hostname = $this->config->get('config_smtp_host');
-						$mail->username = $this->config->get('config_smtp_username');
-						$mail->password = $this->config->get('config_smtp_password');
-						$mail->port = $this->config->get('config_smtp_port');
-						$mail->timeout = $this->config->get('config_smtp_timeout');
-						$mail->setFrom($this->config->get('config_payment_mail_from'));
-						$mail->setSender($this->config->get('config_payment_mail_from'));
-						$mail->setSubject(html_entity_decode($title, ENT_QUOTES, 'UTF-8'));
-						$mail->setHtml($html);
-						
-						$mail->setTo($this->config->get('config_payment_mail_to'));						
-						$mail->send();					
+					$mail = new Mail($this->registry); 
+					$mail->setTo($this->config->get('config_payment_mail_to'));	
+					$mail->setSubject(html_entity_decode($title, ENT_QUOTES, 'UTF-8'));
+					$mail->setHtml($html);						
+											
+					$mail->send();					
 
 				} else {
 					$this->model_checkout_order->update($this->order['order_id'],
@@ -373,14 +364,7 @@ class ControllerPaymentShoputilsPsb extends Controller {
 						$xlog->write($title . ' - '. $html);
 									
 									
-						$mail = new Mail();
-						$mail->protocol = $this->config->get('config_mail_protocol');
-						$mail->parameter = $this->config->get('config_mail_parameter');			
-						$mail->hostname = $this->config->get('config_smtp_host');
-						$mail->username = $this->config->get('config_smtp_username');
-						$mail->password = $this->config->get('config_smtp_password');
-						$mail->port = $this->config->get('config_smtp_port');
-						$mail->timeout = $this->config->get('config_smtp_timeout');
+						$mail = new Mail($this->registry); 
 						$mail->setFrom($this->config->get('config_payment_mail_from'));
 						$mail->setSender($this->config->get('config_payment_mail_from'));
 						$mail->setSubject(html_entity_decode($title, ENT_QUOTES, 'UTF-8'));
@@ -767,14 +751,7 @@ class ControllerPaymentShoputilsPsb extends Controller {
 					$this->model_checkout_order->addOrderSmsHistory($order['order_id'], $sms_data, $sms_status, $sms_id);	
 					
 					
-					$mail = new Mail();
-					$mail->protocol = $this->config->get('config_mail_protocol');
-					$mail->parameter = $this->config->get('config_mail_parameter');			
-					$mail->hostname = $this->config->get('config_smtp_host');
-					$mail->username = $this->config->get('config_smtp_username');
-					$mail->password = $this->config->get('config_smtp_password');
-					$mail->port = $this->config->get('config_smtp_port');
-					$mail->timeout = $this->config->get('config_smtp_timeout');
+					$mail = new Mail($this->registry); 					
 					$mail->setFrom($this->config->get('config_payment_mail_from'));
 					$mail->setSender($this->config->get('config_payment_mail_from'));
 					$mail->setSubject(html_entity_decode($title, ENT_QUOTES, 'UTF-8'));
@@ -945,17 +922,8 @@ class ControllerPaymentShoputilsPsb extends Controller {
 				$message .= '  <body>' . $content . '</body>' . "\n";
 				$message .= '</html>' . "\n";
 
-				$mail = new Mail();
-				$mail->protocol = $this->config->get('config_mail_protocol');
-				$mail->parameter = $this->config->get('config_mail_parameter');
-				$mail->hostname = $this->config->get('config_smtp_host');
-				$mail->username = $this->config->get('config_smtp_username');
-				$mail->password = $this->config->get('config_smtp_password');
-				$mail->port = $this->config->get('config_smtp_port');
-				$mail->timeout = $this->config->get('config_smtp_timeout');
+				$mail = new Mail($this->registry); 				
 				$mail->setTo($to);
-				$mail->setFrom($this->config->get('config_email'));
-				$mail->setSender($this->config->get('config_name'));
 				$mail->setSubject($subject);
 				$mail->setHtml($message);		
 				$mail->send();				

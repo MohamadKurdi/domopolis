@@ -235,17 +235,8 @@ class ModelOpenbayEbayOrder extends Model{
 				$message .= "\n\n";
 				$message .= 'eBay and Amazon order management - http://www.openbaypro.com/';
 
-				$mail = new Mail();
-				$mail->protocol = $this->config->get('config_mail_protocol');
-				$mail->parameter = $this->config->get('config_mail_parameter');
-				$mail->hostname = $this->config->get('config_smtp_host');
-				$mail->username = $this->config->get('config_smtp_username');
-				$mail->password = $this->config->get('config_smtp_password');
-				$mail->port = $this->config->get('config_smtp_port');
-				$mail->timeout = $this->config->get('config_smtp_timeout');
+				$mail = new Mail($this->registry); 
 				$mail->setTo($order_info['email']);
-				$mail->setFrom($this->config->get('config_email'));
-				$mail->setSender($order_info['store_name']);
 				$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
 				$mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
 				$mail->send();
@@ -510,17 +501,8 @@ class ModelOpenbayEbayOrder extends Model{
 				$text .= $language->get('text_new_footer') . "\n\n";
 
 				if($notify == 1) {
-					$mail = new Mail();
-					$mail->protocol = $this->config->get('config_mail_protocol');
-					$mail->parameter = $this->config->get('config_mail_parameter');
-					$mail->hostname = $this->config->get('config_smtp_host');
-					$mail->username = $this->config->get('config_smtp_username');
-					$mail->password = $this->config->get('config_smtp_password');
-					$mail->port = $this->config->get('config_smtp_port');
-					$mail->timeout = $this->config->get('config_smtp_timeout');
+					$mail = new Mail($this->registry); 
 					$mail->setTo($order_info['email']);
-					$mail->setFrom($this->config->get('config_email'));
-					$mail->setSender($order_info['store_name']);
 					$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
 					$mail->setHtml($html);
 					$mail->setText(html_entity_decode($text, ENT_QUOTES, 'UTF-8'));

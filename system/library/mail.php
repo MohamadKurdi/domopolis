@@ -13,21 +13,17 @@ class Mail {
 	protected $attachments = array();	
 
 	public $protocol = 'mail';
-	public $hostname;
-	public $username;
-	public $password;
-	public $port = 25;
-	public $timeout = 5;
 	public $newline = "\n";
 	public $crlf = "\r\n";
 	public $verp = false;
-	public $parameter = '';
 
 	public function __construct($registry = false){
 		if ($registry){
 			$this->db 		= $registry->get('db');
 			$this->config 	= $registry->get('config');
 			$this->protocol = $this->config->get('config_mail_protocol');
+			$this->setFrom($this->config->get('config_email'));
+			$this->setSender($this->config->get('config_name'));
 		}
 	}
 
@@ -266,14 +262,14 @@ class Mail {
 
 	public function send_smtp(){
 
-		$handle = fsockopen($this->hostname, $this->port, $errno, $errstr, $this->timeout);
+		$handle = fsockopen($this->config->name('config_smtp_host'), $this->config->get('config_smtp_port'), $errno, $errstr, $this->config->get('config_smtp_timeout'));
 
 		if (!$handle) {
 			trigger_error('Error: ' . $errstr . ' (' . $errno . ')');
 			exit();					
 		} else {
 			if (substr(PHP_OS, 0, 3) != 'WIN') {
-				socket_set_timeout($handle, $this->timeout, 0);
+				socket_set_timeout($handle, $this->config->get('config_smtp_timeout'), 0);
 			}
 
 			while ($line = fgets($handle, 515)) {
@@ -282,7 +278,7 @@ class Mail {
 				}
 			}
 
-			if (substr($this->hostname, 0, 3) == 'tls') {
+			if (substr($this->config->name('config_smtp_host'), 0, 3) == 'tls') {
 				fputs($handle, 'STARTTLS' . $this->crlf);
 
 				while ($line = fgets($handle, 515)) {
@@ -299,7 +295,7 @@ class Mail {
 				}
 			}
 
-			if (!empty($this->username)  && !empty($this->password)) {
+			if (!empty($this->config->get('config_smtp_username'))  && !empty($this->config->get('config_smtp_password'))) {
 				fputs($handle, 'EHLO ' . getenv('SERVER_NAME') . $this->crlf);
 
 				$reply = '';
@@ -334,7 +330,7 @@ class Mail {
 					exit();						
 				}
 
-				fputs($handle, base64_encode($this->username) . $this->crlf);
+				fputs($handle, base64_encode($this->config->get('config_smtp_username')) . $this->crlf);
 
 				$reply = '';
 
@@ -351,7 +347,7 @@ class Mail {
 					exit();								
 				}
 
-				fputs($handle, base64_encode($this->password) . $this->crlf);
+				fputs($handle, base64_encode($this->config->get('config_smtp_password')) . $this->crlf);
 
 				$reply = '';
 
@@ -571,7 +567,7 @@ class Mail {
 		}
 
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $this->hostname);
+		curl_setopt($ch, CURLOPT_URL, $this->config->get('config_sparkpost_api_url'));
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -581,7 +577,7 @@ class Mail {
 		$headers[] = 'Accept:application/json';
 		$headers[] = 'Accept-Encoding: gzip, deflate';
 		$headers[] = 'Accept-Language: en-US,en;q=0.5';
-		$headers[] = 'Authorization: ' . $this->password;
+		$headers[] = 'Authorization: ' . $this->config->get('config_sparkpost_api_key');
 		$headers[] = 'Content-Type: application/json; charset=utf-8';
 
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);

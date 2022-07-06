@@ -43,14 +43,7 @@
 				$template->data['enquiry'] = html_entity_decode(str_replace("\n", "<br />", $this->request->post['enquiry']), ENT_QUOTES, 'UTF-8');
 				$template->data['user_tracking'] = $tracking;
 				
-				$mail = new Mail();
-				$mail->protocol = $this->config->get('config_mail_protocol');
-				$mail->parameter = $this->config->get('config_mail_parameter');
-				$mail->hostname = $this->config->get('config_smtp_host');
-				$mail->username = $this->config->get('config_smtp_username');
-				$mail->password = $this->config->get('config_smtp_password');
-				$mail->port = $this->config->get('config_smtp_port');
-				$mail->timeout = $this->config->get('config_smtp_timeout');				
+				$mail = new Mail($this->registry); 					
 				$mail->setTo($this->config->get('config_email'));
 				$mail->setFrom($this->request->post['email']);
 				$mail->setSender($this->request->post['name']);
