@@ -105,7 +105,7 @@
 		
 		private function _send() {
 			
-			if ($this->to == 'order@kitchen-profi.de' || $this->to == 'info@kitchen-profi.de' || $this->to == 'order@hausgarten.ru' || $this->to == 'info@hausgarten.ru'){
+			if ($this->to == 'order@kitchen-profi.de' || $this->to == 'info@kitchen-profi.de'){
 				$this->protocol = 'mail';
 			}			
 			

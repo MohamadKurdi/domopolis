@@ -995,7 +995,7 @@
 				$sql .= " AND p.is_option_with_id = '0' ";
 			}
 
-			$sql .= " AND p.main_variant_id = '0' ";
+			$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
 			
 			if (!empty($data['filter_category_id'])) {
 				if (!empty($data['filter_sub_category'])) {
@@ -2231,7 +2231,7 @@
 				$sql .= " AND p.is_option_with_id = '0' ";
 			}
 
-			$sql .= " AND p.main_variant_id = '0' ";
+			$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
 			
 			if (!empty($data['filter_category_id'])) {
 				if (!empty($data['filter_sub_category'])) {
@@ -2454,7 +2454,10 @@
 				
 				$category = $this->db->query("SELECT category_id FROM product_to_category WHERE product_id = '" . (int)$product_id . "' ORDER BY main_category DESC LIMIT 1")->row;
 				
-				$path = $this->getPath($category['category_id']);
+				$path = $string = '';
+				if (!empty($category['category_id'])){				
+					$path = $this->getPath($category['category_id']);
+				}
 				
 				if ($path) {
 					$string = '';

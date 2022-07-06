@@ -244,7 +244,7 @@
 				
 				if ($collection_info['banner']) {
 					$this->data['banner'] = $this->model_tool_image->resize($collection_info['banner'], 276, 276, '', 100, true); 	
-					$this->data['banner_ohuevshiy'] = $this->model_tool_image->resize($collection_info['banner_ohuevshiy'], 1000, 1000, '', 100, true); 		
+					$this->data['banner_ohuevshiy'] = $this->model_tool_image->resize($collection_info['banner'], 1000, 1000, '', 100, true); 		
 					} else {
 					$this->data['banner_ohuevshiy'] = $this->data['banner'] = false;
 				}
@@ -345,7 +345,7 @@
 				
 				$data = array(
 				'filter_collection_id' 	 => $collection_id, 
-				'no_child'      	=> true, 
+				'no_child'      		 => true, 
 				'sort'                   => $sort,
 				'order'                  => $order,
 				'start'                  => ($page - 1) * $limit,
@@ -354,33 +354,18 @@
 				
 				
 				$product_total = $this->model_catalog_product->getTotalProducts($data);
-				
-				
-				
-				$current_store = (int)$this->config->get('config_store_id');
-				$current_lang  = (int)$this->config->get('config_language_id');
-				$current_curr  = (int)$this->currency->getId();
-				
-				$this->bcache->SetFile('products.'.$collection_id.md5(serialize($data)).'.tpl', 'collections'.$current_store.$current_lang.$current_curr);
-				if ($this->bcache->CheckFile() && false) {
-					$this->data['products'] = $this->bcache->ReturnFileContent(true);
-					} else {
+
+				$bestseller_limit = (int)($product_total / 4);			
+				$bestsellers = $this->model_catalog_product->getBestSellerProductsForCollection($bestseller_limit, $collection_id, false, true);									
 					
-					$bestseller_limit = (int)($product_total / 4);			
-					$bestsellers = $this->model_catalog_product->getBestSellerProductsForCollection($bestseller_limit, $collection_id, false, true);									
+				$results = $this->model_catalog_product->getProducts($data);		
 					
-					$results = $this->model_catalog_product->getProducts($data);		
+				$this->data['dimensions'] = array(
+				'w' => $this->config->get('config_image_product_width'),
+				'h' => $this->config->get('config_image_product_height')
+				);
 					
-					$this->data['dimensions'] = array(
-					'w' => $this->config->get('config_image_product_width'),
-					'h' => $this->config->get('config_image_product_height')
-					);
-					
-					$this->data['products'] = $this->model_catalog_product->prepareProductToArray($results, $bestsellers);
-					
-					$this->bcache->WriteFile($this->data['products'], true);
-				}
-				
+				$this->data['products'] = $this->model_catalog_product->prepareProductToArray($results, $bestsellers);
 				
 				
 				$url = '';

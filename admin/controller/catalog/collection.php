@@ -75,7 +75,6 @@ class ControllerCatalogCollection extends Controller {
 
 				$this->db->query("UPDATE product SET collection_id='" . (int)$collection_id . "' WHERE mpn LIKE '". $this->db->escape($row['mpn']) ."'");
 
-
 				$query4 = $this->db->query("SELECT collection_id, manufacturer_id, image FROM product WHERE collection_id = '". $collection_id ."' AND manufacturer_id > 0 AND LENGTH(image) > 0 ORDER BY sort_order DESC LIMIT 1");
 
 				foreach ($query4->rows as $row){
