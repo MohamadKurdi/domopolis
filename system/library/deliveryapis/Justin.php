@@ -235,8 +235,7 @@
 				Sunday = '" . $this->db->escape($shedule['Sunday']) . "',
 				`" . $this->descriptionField . "` = '" . $this->db->escape($warehouse['descr']) . "',
 				CityUuid = '" . $this->db->escape($warehouse['city']['uuid']) . "',
-				`City" . $this->descriptionField . "` = '" . $this->db->escape($warehouse['city']['descr']) . "',
-				`City" . $this->descriptionField . "` = '" . $this->db->escape($warehouse['city']['descr']) . "',
+				`City" . $this->descriptionField . "` = '" . $this->db->escape($warehouse['city']['descr']) . "',				
 				StatusDepart = '" . (int)$warehouse['StatusDepart'] . "'				
 				ON DUPLICATE KEY UPDATE
 				Code = '" . $this->db->escape($warehouse['code']) . "',

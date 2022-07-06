@@ -265,6 +265,13 @@
 						if ($city->getCityUuid()){
 							$emptyResponse = false;
 						}
+
+						try{
+							$region = $city->getRegion();
+						} catch (TypeError  $e){
+							echoLine($e->getMessage());
+							$region = $row['region'];
+						}
 						
 						echoLine('[CD]	 Город ' . $city->getCityName());
 						
@@ -277,7 +284,7 @@
 						country_code = '" . $this->db->escape($city->getCountryCodeISO()) . "',
 						country = '" . $this->db->escape($city->getCountry()) . "',
 						country_id = '" . $this->db->escape($this->countryMapping[$row['country_code']]) . "',
-						region = '" . $this->db->escape($city->getRegion()) . "',
+						region = '" . $this->db->escape($region) . "',
 						region_code = '" . $this->db->escape($row['region_code']) . "',												
 						sub_region = '" . $this->db->escape($city->getSubRegion()) . "',
 						postal_codes = '" . $this->db->escape($city->getFiasGuid()) . "',
@@ -292,7 +299,7 @@
 						country_code = '" . $this->db->escape($city->getCountryCodeISO()) . "',
 						country = '" . $this->db->escape($city->getCountry()) . "',
 						country_id = '" . $this->db->escape($this->countryMapping[$row['country_code']]) . "',
-						region = '" . $this->db->escape($city->getRegion()) . "',
+						region = '" . $this->db->escape($region) . "',
 						region_code = '" . $this->db->escape($row['region_code']) . "',												
 						sub_region = '" . $this->db->escape($city->getSubRegion()) . "',
 						postal_codes = '" . $this->db->escape($city->getFiasGuid()) . "',
