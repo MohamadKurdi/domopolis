@@ -2192,11 +2192,37 @@
 								</tr>
 							</table>
 
-							<h2>Триггерные письма</h2>
+							<h2>Отправка почты</h2>
 
 							<table class="form">
-								<tr>								
-									<td width="33%">
+								<tr>		
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Протокол для транзакций</span></p>
+										<select name="config_mail_protocol">
+										<?php if ($config_mail_protocol == 'mail') { ?>
+											<option value="mail" selected="selected"><?php echo $text_mail; ?></option>
+											<?php } else { ?>
+											<option value="mail"><?php echo $text_mail; ?></option>
+										<?php } ?>
+										<?php if ($config_mail_protocol == 'smtp') { ?>
+											<option value="smtp" selected="selected"><?php echo $text_smtp; ?></option>
+											<?php } else { ?>
+											<option value="smtp"><?php echo $text_smtp; ?></option>
+										<?php } ?>
+										<?php if ($config_mail_protocol == 'sparkpost') { ?>
+											<option value="sparkpost" selected="selected">СпаркПост веб апи</option>
+											<?php } else { ?>
+											<option value="sparkpost">СпаркПост веб апи</option>
+										<?php } ?>
+										<?php if ($config_mail_protocol == 'mailgun') { ?>
+											<option value="mailgun" selected="selected">MailGun веб апи</option>
+											<?php } else { ?>
+											<option value="mailgun">MailGun веб апи</option>
+										<?php } ?>
+									</select>
+									</td>
+
+									<td width="25%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Протокол для триггеров</span></p>
 										<select name="config_mail_trigger_protocol">
 										<?php if ($config_mail_trigger_protocol == 'mail') { ?>
@@ -2221,12 +2247,12 @@
 										<?php } ?>
 									</select></td>
 
-									<td width="33%">
+									<td width="25%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Имя отправителя</span></p>
 										<input type="text" name="config_mail_trigger_name_from" value="<?php echo $config_mail_trigger_name_from; ?>" size="50" />								
 									</td>
 									
-									<td width="33%">
+									<td width="25%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Почта отправителя</span></p>
 										<input type="text" name="config_mail_trigger_mail_from" value="<?php echo $config_mail_trigger_mail_from; ?>" size="50" />								
 									</td>
@@ -2234,7 +2260,7 @@
 							</table>
 
 
-							<h2>Интерграция с SparkPost, MailGun</h2>
+							<h2>Интерграция с SparkPost</h2>
 							
 							<table class="form">
 								<tr>
@@ -2271,7 +2297,11 @@
 											<input type="text" name="config_sparkpost_api_user" value="<?php echo $config_sparkpost_api_user; ?>" size="50" />								
 										</td>
 									</tr>
+							</table>
 
+							<h2>Интерграция с MailGun</h2>
+
+							<table class="form">
 									<td>Включить синхронизацию Suppression List из MailGun</td>
 									<td>
 										<select name="config_mailgun_bounce_enable">
@@ -2284,6 +2314,13 @@
 											<? } ?>
 										</select>
 									</td>
+
+									<tr>
+										<td>Домен для транзакционных</td>
+										<td>
+											<input type="text" name="config_mailgun_api_transaction_domain" value="<?php echo $config_mailgun_api_transaction_domain; ?>" size="50" />								
+										</td>
+									</tr>
 
 									<tr>
 										<td>MailGun API URL (EU/US)</td>
@@ -2393,35 +2430,10 @@
 								</tr>
 							</table>
 							
-							<h2>Настройки отправки транзакционных писем</h2>
+							<h2>Настройки SendMail</h2>
 							<table class="form">
 								<tr>
-									<td><?php echo $entry_mail_protocol; ?></td>
-									<td><select name="config_mail_protocol">
-										<?php if ($config_mail_protocol == 'mail') { ?>
-											<option value="mail" selected="selected"><?php echo $text_mail; ?></option>
-											<?php } else { ?>
-											<option value="mail"><?php echo $text_mail; ?></option>
-										<?php } ?>
-										<?php if ($config_mail_protocol == 'smtp') { ?>
-											<option value="smtp" selected="selected"><?php echo $text_smtp; ?></option>
-											<?php } else { ?>
-											<option value="smtp"><?php echo $text_smtp; ?></option>
-										<?php } ?>
-										<?php if ($config_mail_protocol == 'sparkpost') { ?>
-											<option value="sparkpost" selected="selected">СпаркПост веб апи</option>
-											<?php } else { ?>
-											<option value="sparkpost">СпаркПост веб апи</option>
-										<?php } ?>
-										<?php if ($config_mail_protocol == 'mailgun') { ?>
-											<option value="mailgun" selected="selected">MailGun веб апи</option>
-											<?php } else { ?>
-											<option value="mailgun">MailGun веб апи</option>
-										<?php } ?>
-									</select></td>
-								</tr>
-								<tr>
-									<td><?php echo $entry_mail_parameter; ?></td>
+									<td>Параметры функции mail</td>
 									<td><input type="text" name="config_mail_parameter" value="<?php echo $config_mail_parameter; ?>" style="width:300px;" /></td>
 								</tr>
 								<tr>

@@ -28,7 +28,6 @@
 				<a href="#tab-local"><i class="fa fa-bars"></i> <?php echo $tab_local; ?></a>
 				<a href="#tab-option"><i class="fa fa-cogs"></i> <?php echo $tab_option; ?></a>
 				<a href="#tab-image"><i class="fa fa-cogs"></i> <?php echo $tab_image; ?></a>			
-				<a href="#tab-mail"><i class="fa fa-envelope"></i> Почта</a>
 				<a href="#tab-server"><i class="fa fa-cogs"></i> <?php echo $tab_server; ?></a>
 				<a href="#tab-telephony"><i class="fa fa-phone"></i> АТС</a>
 				<a href="#tab-google-ya-fb-vk"><i class="fa fa-google"></i> <span style="color:#57AC79;">Google</span>, <span style="color:red;">Ya</span>, <span style="color:#7F00FF;">FB</span>, <span style="color:#3F6AD8;">VK</span></a>
@@ -1059,70 +1058,7 @@
 												<?php } ?></td>
 										</tr>
 									</table>
-								</div>
-								<div id="tab-mail">
-									<table class="form">
-										<tr>
-											<td><?php echo $entry_mail_protocol; ?></td>
-											<td><select name="config_mail_protocol">
-												<option value="mail"<?php if ($config_mail_protocol == 'mail') { ?> selected="selected"<?php } ?>><?php echo $text_mail; ?></option>
-												<option value="smtp"<?php if ($config_mail_protocol == 'smtp') { ?> selected="selected"<?php } ?>><?php echo $text_smtp; ?></option>			
-												<option value="sparkpost"<?php if ($config_mail_protocol == 'sparkpost') { ?> selected="selected"<?php } ?>>СпаркПост веб апи</option>
-												<option value="mailgun"<?php if ($config_mail_protocol == 'mailgun') { ?> selected="selected"<?php } ?>>MailGun веб апи</option>
-											</select></td>
-										</tr>
-										<tr>
-											<td><?php echo $entry_mail_parameter; ?></td>
-											<td><input type="text" name="config_mail_parameter" value="<?php echo $config_mail_parameter; ?>" style="width:300px;" /></td>
-										</tr>
-										<tr>
-											<td><?php echo $entry_smtp_host; ?></td>
-											<td><input type="text" name="config_smtp_host" value="<?php echo $config_smtp_host; ?>" style="width:300px;" /></td>
-										</tr>
-										<tr>
-											<td><?php echo $entry_smtp_username; ?></td>
-											<td><input type="text" name="config_smtp_username" value="<?php echo $config_smtp_username; ?>" style="width:300px;" /></td>
-										</tr>
-										<tr>
-											<td><?php echo $entry_smtp_password; ?></td>
-											<td><input type="text" name="config_smtp_password" value="<?php echo $config_smtp_password; ?>" style="width:300px;" /></td>
-										</tr>
-										<tr>
-											<td><?php echo $entry_smtp_port; ?></td>
-											<td><input type="text" name="config_smtp_port" value="<?php echo $config_smtp_port; ?>" /></td>
-										</tr>
-										<tr>
-											<td><?php echo $entry_smtp_timeout; ?></td>
-											<td><input type="text" name="config_smtp_timeout" value="<?php echo $config_smtp_timeout; ?>" /></td>
-										</tr>
-										<tr>
-											<td><?php echo $entry_alert_mail; ?></td>
-											<td><label>
-												<input type="radio" name="config_alert_mail" value="1"<?php if ($config_alert_mail) { ?> checked="checked" <?php } ?> />
-												<?php echo $text_yes; ?>
-											</label>
-											<label>
-												<input type="radio" name="config_alert_mail" value="0"<?php if (!$config_alert_mail) { ?> checked="checked" <?php } ?> />
-												<?php echo $text_no; ?>
-											</label></td>
-										</tr>
-										<tr>
-											<td><?php echo $entry_account_mail; ?></td>
-											<td><label>
-												<input type="radio" name="config_account_mail" value="1"<?php if ($config_account_mail) { ?> checked="checked" <?php } ?> />
-												<?php echo $text_yes; ?>
-											</label>
-											<label>
-												<input type="radio" name="config_account_mail" value="0"<?php if (!$config_account_mail) { ?> checked="checked" <?php } ?> />
-												<?php echo $text_no; ?>
-											</label></td>
-										</tr>
-										<tr>
-											<td><?php echo $entry_alert_emails; ?></td>
-											<td><textarea name="config_alert_emails" cols="40" rows="5"><?php echo $config_alert_emails; ?></textarea></td>
-										</tr>
-									</table>
-								</div>
+								</div>								
 								<div id="tab-server">
 									<table class="form">
 										<tr>

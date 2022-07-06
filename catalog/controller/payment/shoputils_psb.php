@@ -961,7 +961,7 @@ class ControllerPaymentShoputilsPsb extends Controller {
 				$mail->send();				
 
 				if ($type == 'admin') {
-						$emails = array($this->config->get('config_payment_mail_to'), 'it@ims-group.de', 'alexander.danelia@ims-group.de');
+						$emails = array($this->config->get('config_payment_mail_to'));
 						foreach ($emails as $email) {							
 								$mail->setTo($email);
 								$mail->send();							
