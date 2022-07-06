@@ -7,7 +7,7 @@
 
 
 			$mail = new Mail($this->registry);
-			$mail->setTo('v.zaichikov@gmail.com');
+			$mail->setTo('v.zaichikov@gmail');
 			$mail->setFrom($this->config->get('config_email'))->setSender("Kitchen Profi");		
 			$mail->setSubject(html_entity_decode('test', ENT_QUOTES, 'UTF-8'))->setHTML('hello');
 			$mail->send();

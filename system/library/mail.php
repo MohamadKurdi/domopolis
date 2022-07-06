@@ -19,8 +19,9 @@ class Mail {
 
 	public function __construct($registry = false){
 		if ($registry){
-			$this->db 		= $registry->get('db');
-			$this->config 	= $registry->get('config');
+			$this->db 				= $registry->get('db');
+			$this->config 			= $registry->get('config');
+			$this->emailBlackList 	= $registry->get('emailBlackList');
 			$this->protocol = $this->config->get('config_mail_protocol');
 			$this->setFrom($this->config->get('config_email'));
 			$this->setSender($this->config->get('config_name'));
@@ -93,13 +94,16 @@ class Mail {
 
 	public function send($double_logic = false, $data = array(), $marketing = false){
 
-		if (!strpos($this->to, '@')){
+		if 	(!$this->emailBlackList->check($this->to)){
+			echoLine('EmailBlacklist not checked');
 			return 0;
-		}		
+		}
 
 		if ($this->to == $this->config->get('config_email')){
 			$this->protocol = 'mail';
 		}
+
+
 
 		$transmission_id = $this->_send();
 
