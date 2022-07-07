@@ -150,7 +150,7 @@
 						<h2>Настройки режимов работы админки. </h2>
 						<table class="form">
 							<tr>
-								<td style="width:20%">
+								<td style="width:15%">
 								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Режим работы с Amazon</span></p>
 										<select name="config_enable_amazon_specific_modes">
 											<?php if ($config_enable_amazon_specific_modes) { ?>
@@ -165,7 +165,7 @@
 									<span class="help">Если включено, то актуальны режимы ASIN, VAR и TRNSL. В настройках устанавливаются режимы по-умолчанию, далее каждый контент-менеджер переключает их для себя по мере необходимости</span>
 								</td>
 
-								<td style="width:20%">
+								<td style="width:15%">
 								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Включить хранение данных в файлах</span></p>
 										<select name="config_enable_amazon_asin_file_cache">
 											<?php if ($config_enable_amazon_asin_file_cache) { ?>
@@ -196,23 +196,8 @@
 									<a href="<?php echo $product_deletedasin; ?>">Посмотреть список удаленных<i class="fa fa-external-link"></i></a></span>
 								</td>
 
-
 								<td style="width:20%">
-								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Режим редактирования вариантов</span></p>
-										<select name="config_rainforest_variant_edition_mode">
-											<?php if ($config_rainforest_variant_edition_mode) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select><a class="link_headr cache-button-good"><i class="fa fa-amazon" aria-hidden="true"></i> VAR</a> <a class="link_headr cache-button-bad"><i class="fa fa-amazon" aria-hidden="true"></i> VAR</a>
-									<br />
-									<span class="help">Если включено, то описания вариантов будут отредактированы одновременно. Также при удалении товара будут удалены все его варианты</span>
-								</td>
-								
-								<td style="width:20%">
+								<div>
 								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Режим коррекции перевода</span></p>
 										<select name="config_rainforest_translate_edition_mode">
 											<?php if ($config_rainforest_translate_edition_mode) { ?>
@@ -225,9 +210,24 @@
 										</select> <a class="link_headr cache-button-good"><i class="fa fa-refresh" aria-hidden="true"></i> TRNSL</a> <a class="link_headr cache-button-bad"><i class="fa fa-refresh" aria-hidden="true"></i> TRNSL</a>
 									<br />
 									<span class="help">Если включено, то при коррекции значений атрибутов одного товара заменяются значения атрибутов у всех товаров, имеющих равные значения на основном языке Amazon</span>
+								</div>
+								<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Режим редактирования вариантов</span></p>
+										<select name="config_rainforest_variant_edition_mode">
+											<?php if ($config_rainforest_variant_edition_mode) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select><a class="link_headr cache-button-good"><i class="fa fa-amazon" aria-hidden="true"></i> VAR</a> <a class="link_headr cache-button-bad"><i class="fa fa-amazon" aria-hidden="true"></i> VAR</a>
+									<br />
+									<span class="help">Если включено, то описания вариантов будут отредактированы одновременно. Также при удалении товара будут удалены все его варианты</span>
+								</div>
 								</td>
 
-								<td style="width:20%">
+								<td style="width:15%">
 									<div>
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Статистика товаров и категорий в админке</span></p>
 									<select name="config_amazon_product_stats_enable">
