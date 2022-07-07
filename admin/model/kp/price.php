@@ -1,5 +1,67 @@
 <?
 	class ModelKpPrice extends Model {
+
+
+
+		public function roundPrices(){
+			$affected = 0;
+			
+			$query = $this->db->query("UPDATE product SET price=IF((price-FLOOR(price)<=0.3), FLOOR(price), CEILING(price)) WHERE price < 30 AND price > 5");
+			$affected += $this->db->countAffected();
+			
+			$query = $this->db->query("UPDATE product SET price=IF((price-FLOOR(price)<0.5), FLOOR(price), CEILING(price)) WHERE price >= 30");
+			$affected += $this->db->countAffected();
+			/*	
+				$query = $this->db->query("UPDATE product SET historical_price=IF((historical_price-FLOOR(historical_price)<=0.3), FLOOR(historical_price), CEILING(historical_price)) WHERE historical_price < 30 AND historical_price > 5");
+				$query = $this->db->query("UPDATE product SET historical_price=IF((historical_price-FLOOR(historical_price)<0.5), FLOOR(historical_price), CEILING(historical_price)) WHERE historical_price >= 30");
+			*/
+			return $affected;
+		}
+
+		public function setNewPrices() {
+			
+			if ($this->config->get('config_enable_overprice')){
+
+				$cs = explode(';', $this->config->get('config_overprice'));
+
+				$affected = 0;			
+				foreach ($cs as $c) {
+					$real_c = explode(':', $c);
+
+				// Цена
+					$price = $real_c[0];
+
+				// Коефициент
+					$coef = $real_c[1];
+
+				// Устанавливаем цену. Закупочная цена умноженная на коефициент
+					$sql = "UPDATE product SET price = (cost *" . (float)$coef . ") WHERE cost AND cost > ". (float)$price . " AND (price = 0 OR ISNULL(price)) AND ignore_parse = 0";			
+					$this->db->query($sql);		
+
+				
+					if ($this->db->countAffected() > 0){		
+						$affected += $this->db->countAffected();
+					}					
+				}
+
+				$query = "UPDATE product SET historical_cost = cost WHERE cost > 0";
+				$this->db->query($query);
+
+				$query = "UPDATE product SET stock_status_id = '" .(int)$this->config->get('config_stock_status_id'). "' WHERE cost > 0 AND ignore_parse = 0";
+				$this->db->query($query);
+
+				$query = "UPDATE product SET cost = '' WHERE cost > 0";
+				$this->db->query($query);
+
+
+				$query = "UPDATE product SET quantity = 0 WHERE quantity < 0";
+				$this->db->query($query);
+				$this->roundPrices();			
+
+				return $affected;
+			}
+		}
+
 		
 		public function guessPrice($price){
 			

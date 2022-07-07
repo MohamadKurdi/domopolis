@@ -892,6 +892,12 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$this->data['config_translate_from_uk'] = $this->config->get('config_translate_from_uk');
 		}
+
+		if (isset($this->request->post['config_enable_overprice'])) {
+			$this->data['config_enable_overprice'] = $this->request->post['config_enable_overprice'];
+		} else {
+			$this->data['config_enable_overprice'] = $this->config->get('config_enable_overprice');
+		}
 		
 		if (isset($this->request->post['config_overprice'])) {
 			$this->data['config_overprice'] = $this->request->post['config_overprice'];

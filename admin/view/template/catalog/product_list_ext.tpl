@@ -42,12 +42,15 @@
 					&nbsp;&nbsp;<span style='cursor:pointer;border-bottom:1px dashed black; display:inline-block;' onclick="if (confirm('Точно сделать?')) { $('#updatehisprice').load('index.php?route=catalog/product/setHistoricalPriceToPrice&token=<? echo $token; ?>'); }">Деактуализировать историю!</span><span id="updatehisprice"></span>&nbsp;&nbsp;|&nbsp;&nbsp;
 					</span>
 				*/ ?>	
-				
-				<?php if ($this->user->getUserGroup() == 12 ) { ?>
-				
-					<a class="button" onclick="$('#success_').show(); $('#success_').html('Подожди, выполняю...'); $('#success_').load('index.php?route=catalog/product/setNewPrices&token=<? echo $token; ?>')">Создать цены из закупочной цены!
+
+				<?php if ($this->user->getUserGroup() == 1 && $this->config->get('config_enable_overprice')) { ?>
+					<a class="button" style="background-color: #ff7815; color:#FFF;" onclick="$('#success_').show(); $('#success_').html('Подожди, выполняю...'); $('#success_').load('index.php?route=catalog/product/setNewPrices&token=<? echo $token; ?>')"><i class="fa fa-refresh"></i> Создать цены из закупочной цены
 					</a>
+				<?php } ?>
+
+
 				
+				<?php if ($this->user->getUserGroup() == 123 ) { ?>													
 					<a class="button" onclick="$('#success_').show(); $('#success_').html('Подожди, выполняю...'); $('#success_').load('index.php?route=catalog/product/roundPrices&token=<? echo $token; ?>')">Округлить цены!
 					</a>
 

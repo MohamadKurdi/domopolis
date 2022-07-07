@@ -73,10 +73,7 @@ class OffersParser
 	public function reparseOffersToSkip($rfOffers){
 		$rfOffersTMP = [];
 
-		foreach ($rfOffers as $key => $rfOffer){
-
-			$this->log->debug($rfOffer);
-
+		foreach ($rfOffers as $key => $rfOffer){		
 			$addThisOffer = true;
 
 			$this->Suppliers->addSupplier($rfOffer->getSellerName());

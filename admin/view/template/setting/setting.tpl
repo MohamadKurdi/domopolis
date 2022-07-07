@@ -857,11 +857,6 @@
 								<td>Активные способы оплаты<br /><span class="help">выводятся в карте товара, по одному в строке</span></td>
 								<td><textarea name="config_payment_list" cols="40" rows="8"><?php echo $config_payment_list; ?></textarea></td>
 							</tr>
-							
-							<tr>
-								<td>Наценка<br /><span class="help">Для подсчета и анализа</span></td>
-								<td><textarea name="config_overprice" cols="40" rows="5"><?php echo $config_overprice; ?></textarea></td>
-							</tr>
 							<tr>
 								<td><?php echo $entry_currency; ?></td>
 								<td><select name="config_currency">
@@ -873,7 +868,7 @@
 										<?php } ?>
 									<?php } ?>
 								</select></td>
-							</tr>
+							</tr>							
 							<tr>
 								<td>Валюта отображения<br />
 									<span class="help">Валюта, в которой отображаются цены в региональном магазине</span>
@@ -996,25 +991,45 @@
 							
 						</table>
 						
-						<table class="form">	
-							<h2>Начисление бонусов</h2>
-							
+						<h2>Начисление бонусов</h2>
+						<table class="form">														
 							<tr>
-								<td><b>Бонусов за установку приложения</b></td>
-								<td>
+								<td style="width:50%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бонусов за установку приложения</span></p>
 									<input type="text" name="rewardpoints_appinstall" value="<?php echo $rewardpoints_appinstall; ?>" size="5" />
 									<span class="help">количество бонусов в национальной валюте, начисляемое при установке приложения, код APPINSTALL_POINTS_ADD,бонусы с этим кодом могут быть начислены только один раз одному покупателю</span>
 								</td>
-							</tr>
-							
-							<tr>
-								<td><b>Бонусов на день рождения</b></td>
-								<td>
+	
+								<td style="width:50%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бонусов на день рождения</span></p>
 									<input type="text" name="rewardpoints_birthday" value="<?php echo $rewardpoints_birthday; ?>" size="5" />
 									<span class="help">количество бонусов в национальной валюте, начисляемое на день рождения, код BIRTHDAY_POINTS_ADD, бонусы с этим кодом могут быть начислены не чаще чем раз в 365 дней</span>
 								</td>
 							</tr>
 						</table>
+
+						<h2>Простое ценообразование</h2>
+						<table class="form">			
+							<tr>
+								<td style="width:50%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включить простое ценообразование</span></p>
+									<select name="config_enable_overprice">
+										<?php if ($config_enable_overprice) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>	
+								</td>
+								<td style="width:50%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Наценка</span></p>
+									<textarea name="config_overprice" cols="40" rows="5"><?php echo $config_overprice; ?></textarea>
+									<span class="help">Для подсчета и анализа</span>
+								</td>
+							</tr>
+						</table>	
 						
 						
 						<h2>Отзывы</h2>
@@ -1028,7 +1043,8 @@
 										<?php } else { ?>
 										<input type="radio" name="config_review_bad" value="1" />Да
 										<input type="radio" name="config_review_bad" value="0" checked="checked" />Нет
-									<?php } ?></td>
+									<?php } ?>
+								</td>
 							</tr>
 							<tr>
 								<td>Поле достоинств</td>

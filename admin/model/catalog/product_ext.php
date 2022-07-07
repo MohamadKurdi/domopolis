@@ -139,6 +139,7 @@ class ModelCatalogProductExt extends Model {
             'height'            => 'p.height',
             'weight'            => 'p.weight',
             'price'             => 'p.price',
+            'cost'              => 'p.cost',
             'amazon_best_price' => 'p.amazon_best_price'
             );
 
@@ -281,6 +282,7 @@ class ModelCatalogProductExt extends Model {
             'pd.name',
             'p.model',
             'p.price',
+            'p.cost',
             'p.amazon_best_price',
             'p.quantity',
             'p.status',
@@ -326,7 +328,7 @@ class ModelCatalogProductExt extends Model {
     }
 
     public function quickEditProduct($product_id, $column, $value, $lang_id=null, $data=null) {
-        $editable = array('manufacturer', 'image', 'name', 'tag', 'model', 'sku', 'asin', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'location', 'quantity', 'price', 'weight', 'status', 'sort_order', 'tax_class', 'minimum', 'subtract', 'stock_status', 'shipping', 'date_available', 'length', 'width', 'height', 'length_class', 'weight_class', 'points');
+        $editable = array('manufacturer', 'image', 'name', 'tag', 'model', 'sku', 'asin', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'location', 'quantity', 'price', 'cost', 'weight', 'status', 'sort_order', 'tax_class', 'minimum', 'subtract', 'stock_status', 'shipping', 'date_available', 'length', 'width', 'height', 'length_class', 'weight_class', 'points');
         $result = false;
         if (in_array($column, $editable)) {
 

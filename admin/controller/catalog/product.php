@@ -327,7 +327,7 @@ class ControllerCatalogProduct extends Controller {
 
 		if ($check_ord_query->row['total'] >= $count_orders){
 
-			$this->db->query("INSERT IGNORE INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int)$product_id . "', category_id = 6475");				
+			$this->db->query("INSERT IGNORE INTO product_to_category SET product_id = '" . (int)$product_id . "', category_id = 6475");				
 			$log->write('Добавлен  '.$product_id.' в подарочный');
 			echo '>> Добавлен  '.$product_id.' в подарочный' . PHP_EOL;
 		} else {
@@ -342,7 +342,7 @@ class ControllerCatalogProduct extends Controller {
 
 		$log = new Log('copy_to_stock.txt');
 
-		$check_in_pa_query = $this->db->query("SELECT product_id FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "' AND category_id = 6475");			
+		$check_in_pa_query = $this->db->query("SELECT product_id FROM product_to_category WHERE product_id = '" . (int)$product_id . "' AND category_id = 6475");			
 		$check_ord_query = $this->db->query("SELECT COUNT(*) as total FROM order_product op
 			LEFT JOIN `order` o ON (op.order_id = o.order_id) 
 			WHERE op.product_id = '" . (int)$product_id . "'
@@ -351,10 +351,10 @@ class ControllerCatalogProduct extends Controller {
 
 		if ($check_in_pa_query->num_rows == 0 && $check_ord_query->row['total'] <= $count_orders){
 
-			$check_query = $this->db->query("SELECT product_id FROM " . DB_PREFIX . "product WHERE stock_product_id = '" . (int)$product_id . "'");
+			$check_query = $this->db->query("SELECT product_id FROM product WHERE stock_product_id = '" . (int)$product_id . "'");
 			if ($check_query->num_rows){
 					//включаем товар на стоке
-				$this->db->query("UPDATE `" . DB_PREFIX . "product` SET 
+				$this->db->query("UPDATE `product` SET 
 					status = 1, 
 					stock_status_id = '" . $this->config->get('config_stock_status_id') . "', 
 					ean = '', 
@@ -369,22 +369,22 @@ class ControllerCatalogProduct extends Controller {
 
 				if ($add_to_present) {
 					echo '>> Включен  '.$product_id.' в подарочный:)' . PHP_EOL;
-					$this->db->query("INSERT IGNORE INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int)$new_product_id . "', category_id = 6475");
+					$this->db->query("INSERT IGNORE INTO product_to_category SET product_id = '" . (int)$new_product_id . "', category_id = 6475");
 				}
 
 			} else {
 					//копируем товар и включаем..
 				$new_product_id = $this->model_catalog_product->copyProduct($product_id);
 
-				$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" .(int)$new_product_id. "'");
-				$this->db->query("INSERT IGNORE INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int)$new_product_id . "', category_id = 6474");
+				$this->db->query("DELETE FROM product_to_category WHERE product_id = '" .(int)$new_product_id. "'");
+				$this->db->query("INSERT IGNORE INTO product_to_category SET product_id = '" . (int)$new_product_id . "', category_id = 6474");
 
 				if ($add_to_present) {
 					echo '>> Включен  '.$product_id.' в подарочный:)' . PHP_EOL;
-					$this->db->query("INSERT IGNORE INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int)$new_product_id . "', category_id = 6475");		
+					$this->db->query("INSERT IGNORE INTO product_to_category SET product_id = '" . (int)$new_product_id . "', category_id = 6475");		
 				}
 
-				$this->db->query("UPDATE " . DB_PREFIX . "product SET 
+				$this->db->query("UPDATE product SET 
 					stock_product_id = '" . (int)$product_id . "',
 					stock_status_id = '" . $this->config->get('config_stock_status_id') . "', 
 					ean = '', 
@@ -406,20 +406,20 @@ class ControllerCatalogProduct extends Controller {
 
 
 				//обновляем цену товара на стоке
-			$this->db->query("DELETE FROM " . DB_PREFIX . "product_special WHERE product_id = '" .(int)$new_product_id. "'");
+			$this->db->query("DELETE FROM product_special WHERE product_id = '" .(int)$new_product_id. "'");
 
 			$special = $this->model_catalog_product->getProductSpecialOne($product_id);
 
 
 			if ($special){
 
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_special SET product_id = '" . (int)$new_product_id . "', customer_group_id = '1', priority = '1', price = '" . (float)($special * (100 - $percent) / 100) . "', date_start = '" . $this->db->escape('2005-12-12') . "', date_end = '" . $this->db->escape('2020-12-12') . "'");
+				$this->db->query("INSERT INTO product_special SET product_id = '" . (int)$new_product_id . "', customer_group_id = '1', priority = '1', price = '" . (float)($special * (100 - $percent) / 100) . "', date_start = '" . $this->db->escape('2005-12-12') . "', date_end = '" . $this->db->escape('2020-12-12') . "'");
 
 			} else {
 
 				$price = $this->model_catalog_product->getProductPrice($product_id);
 
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_special SET product_id = '" . (int)$new_product_id . "', customer_group_id = '1', priority = '1', price = '" . (float)($price * (100 - $percent) / 100) . "', date_start = '" . $this->db->escape('2005-12-12') . "', date_end = '" . $this->db->escape('2020-12-12') . "'");
+				$this->db->query("INSERT INTO product_special SET product_id = '" . (int)$new_product_id . "', customer_group_id = '1', priority = '1', price = '" . (float)($price * (100 - $percent) / 100) . "', date_start = '" . $this->db->escape('2005-12-12') . "', date_end = '" . $this->db->escape('2020-12-12') . "'");
 
 			}
 
@@ -2718,28 +2718,28 @@ class ControllerCatalogProduct extends Controller {
 
 	public function roundPrices(){
 
-		$this->load->model('catalog/product');
-		$affected = $this->model_catalog_product->roundPrices();
+		$this->load->model('kp/price');
+		$affected = $this->model_kp_price->roundPrices();
 
-		echo 'Цены округлены! Сбрось кэш!';		
+		$this->response->setOutput('Округлили цену для ' . $affected . ' товаров.');		
 	}
 
 	public function setNewPrices(){
 
-		$this->load->model('catalog/product');
-		$affected = $this->model_catalog_product->setNewPrices();
+		$this->load->model('kp/price');
+		$affected = $this->model_kp_price->setNewPrices();
 
-		echo 'Цены обновлены и округлены! Сбрось кэш!';		
+		$this->response->setOutput('Обновили и округлили цену для ' . $affected . ' товаров.');		
 	}
 
 	public function setHistoricalPriceToPrice(){
 
-		$query = $this->db->query("UPDATE " . DB_PREFIX . "product SET historical_price = price WHERE 1");
-		$query = $this->db->query("UPDATE " . DB_PREFIX . "product SET isbn = 0 WHERE 1");
+		$query = $this->db->query("UPDATE product SET historical_price = price WHERE 1");
+		$query = $this->db->query("UPDATE product SET isbn = 0 WHERE 1");
 		$this->load->model('setting/setting');
 		$this->model_setting_setting->editSettingValue('history_prices', 'date_last_historical_price_update', date("Y-m-d H:i:s"));
 
-		echo ' ОК!';		
+		$this->response->setOutput(' ОК!');		
 	}
 
 	public function autocomplete() {
