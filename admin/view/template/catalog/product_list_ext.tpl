@@ -43,7 +43,7 @@
 					</span>
 				*/ ?>	
 
-				<?php if ($this->user->getUserGroup() == 1 && $this->config->get('config_enable_overprice')) { ?>
+				<?php if ($this->config->get('config_enable_overprice')) { ?>
 					<a class="button" style="background-color: #ff7815; color:#FFF;" onclick="$('#success_').show(); $('#success_').html('Подожди, выполняю...'); $('#success_').load('index.php?route=catalog/product/setNewPrices&token=<? echo $token; ?>')"><i class="fa fa-refresh"></i> Создать цены из закупочной цены
 					</a>
 				<?php } ?>
