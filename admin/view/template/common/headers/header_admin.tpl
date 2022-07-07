@@ -203,7 +203,7 @@
 							
 							$(document).ready(function() {
 								loadCacheButtons();
-								setInterval(function() { loadCacheButtons(); }, 5000);   				
+								setInterval(function() { loadCacheButtons(); }, 10000);   				
 							});
 						</script>
 					<? } ?>
