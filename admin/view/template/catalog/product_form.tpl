@@ -655,6 +655,7 @@
 																				<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(0, 173, 7); color:#FFF"><i class="fa fa-check"></i>Добавлен с Amazon</span>
 
 																			<?php } else {  ?>
+
 																					<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(207, 74, 97); color:#FFF"><i class="fa fa-exclamation-triangle"></i> Добавлен вручную</span>
 
 																			<?php } ?>
@@ -701,14 +702,17 @@
 
 																		<td class="left" width="15%">
 
-																			<?php if ($amazon_json) { ?>
-
-																					<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(0, 173, 7); color:#FFF"><i class="fa fa-check"></i>Данные загружены</span>
-
+																			<?php if (!empty($description_filled_from_amazon)) { ?>
+																					<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(0, 173, 7); color:#FFF"><i class="fa fa-check"></i>Описания загружены</span>
 																			<?php } else { ?>
+																					<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(207, 74, 97); color:#FFF"><i class="fa fa-exclamation-triangle"></i> Описания еще не загружены</span>
+																			<?php } ?>
+																			<br />
 
+																			<?php if (!empty($filled_from_amazon)) { ?>
+																					<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(0, 173, 7); color:#FFF"><i class="fa fa-check"></i>Данные загружены</span>
+																			<?php } else { ?>
 																					<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(207, 74, 97); color:#FFF"><i class="fa fa-exclamation-triangle"></i> Данные еще не загружены</span>
-
 																			<?php } ?>
 
 																		</td>
