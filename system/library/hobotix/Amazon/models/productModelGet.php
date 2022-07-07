@@ -17,7 +17,7 @@ class productModelGet extends hoboModel{
 
 		if ($this->testAsin){
 			$this->db->query("DELETE FROM product_amzn_data WHERE asin LIKE '" . $this->db->escape($this->testAsin) . "'");
-			$this->db->query("UPDATE product SET filled_from_amazon = 0 WHERE asin LIKE '" . $this->db->escape($this->testAsin) . "'");
+			$this->db->query("UPDATE product SET filled_from_amazon = 0, fill_from_amazon = 1 WHERE asin LIKE '" . $this->db->escape($this->testAsin) . "'");
 		}
 
 		$sql = "SELECT 
@@ -26,7 +26,8 @@ class productModelGet extends hoboModel{
 		LEFT JOIN product_description pd ON (p.product_id = pd.product_id) 
 		WHERE pd.language_id = '" . $this->config->get('config_language_id') . "' 
 		AND p.added_from_amazon = 1 
-		AND p.product_id NOT IN (SELECT product_id FROM product_amzn_data) 
+		AND p.product_id NOT IN (SELECT product_id FROM product_amzn_data)
+		AND p.fill_from_amazon = 1
 		AND p.filled_from_amazon = 0
 		AND (NOT ISNULL(p.asin) OR p.asin <> '')
 		AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1 AND amazon_can_get_full = 1))";

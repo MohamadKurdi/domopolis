@@ -96,11 +96,12 @@ class ControllerDPRainForest extends Controller {
 				$counters .= ($i . '/' . $total);
 
 				if (!$this->rainforestAmazon->productsRetriever->getProductsByAsin($rfSimpleProduct['asin'])){					
-					echoLine('[parseCategoryPage] Товар ' . $rfSimpleProduct['asin'] . ' не найден, ' . $counters);						
-
+					echoLine('[parseCategoryPage] Товар ' . $rfSimpleProduct['asin'] . ' не найден, ' . $counters);		
+				
 					$this->rainforestAmazon->productsRetriever->addSimpleProductWithOnlyAsin(
 						[
 							'asin' 					=> $rfSimpleProduct['asin'], 
+							'amazon_best_price' 	=> (!empty($rfSimpleProduct['price']))?$rfSimpleProduct['price']['value']:'0',
 							'category_id' 			=> $category_id, 
 							'name' 					=> $rfSimpleProduct['title'], 
 							'amazon_product_link' 	=> $rfSimpleProduct['link'],
@@ -108,7 +109,7 @@ class ControllerDPRainForest extends Controller {
 							'image' 				=> $this->rainforestAmazon->productsRetriever->getImage($rfSimpleProduct['image']), 
 							'added_from_amazon' 	=> 1
 						]
-					);
+					);										
 
 					$this->addExistentAsin($rfSimpleProduct['asin']);
 
@@ -272,7 +273,7 @@ class ControllerDPRainForest extends Controller {
 					echoLine('[EditFullProducts] Товар ' . $product_id . ', найден, ASIN ' . $result['asin']);				
 
 					if ($parsetechcategory){
-						$this->rainforestAmazon->productsRetriever->editJustProductCategory($product_id, $result);
+						$this->rainforestAmazon->productsRetriever->editJustProductCategory($product_id, $result);					
 					} else {
 						$this->rainforestAmazon->productsRetriever->editFullProduct($product_id, $result);
 					}

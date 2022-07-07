@@ -98,6 +98,15 @@
 									<a href="<?php echo $resize; ?>&resize=minus" style="color:#cf4a61"><i class="fa fa-minus-circle"></i></a>&nbsp;
 								</td>
 								<?php break;
+								case 'fill_from_amazon': ?>
+								<td class="<?php echo $column_info[$col]['align']; ?>">
+									<select name="filter_<?php echo $col; ?>" class="filter <?php echo $col; ?>">
+										<option value="*"></option>
+										<option value="1"<?php echo ($filters[$col]) ? ' selected="selected"' : ''; ?>><?php echo $text_yes; ?></option>
+										<option value="0"<?php echo (!is_null($filters[$col]) && !$filters[$col]) ? ' selected="selected"' : ''; ?>><?php echo $text_no; ?></option>
+									</select>
+								</td>
+								<?php break;								
 								case 'filled_from_amazon': ?>
 								<td class="<?php echo $column_info[$col]['align']; ?>">
 									<select name="filter_<?php echo $col; ?>" class="filter <?php echo $col; ?>">

@@ -83,6 +83,7 @@ $_['column_points']             = 'Points';
 $_['column_sort_order']         = 'Сортировка';
 $_['column_filled_from_amazon'] = 'Загружен <i class="fa fa-amazon"></i>';
 $_['column_amazon_best_price']	= 'Цена <i class="fa fa-amazon"></i>';
+$_['column_fill_from_amazon'] 	= 'Загружать <i class="fa fa-amazon"></i>';
 $_['column_tag']                = 'Product Tags';
 $_['column_sku']                = 'SKU';
 $_['column_asin']               = 'ASIN';

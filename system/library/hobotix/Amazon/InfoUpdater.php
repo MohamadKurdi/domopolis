@@ -33,15 +33,60 @@ class InfoUpdater
 		$this->db->query("UPDATE product SET description_filled_from_amazon = 1 WHERE product_id = '" . (int)$product_id . "'");
 	}
 
+	public function deleteLoadedAmazonData($asin){
+		$this->db->query("DELETE FROM product_amzn_data WHERE asin LIKE ('" . $this->db->escape($asin) . "')");
+	}
+
+	public function createAsinCacheFileName($asin){
+		$directory = DIR_CACHE . 'asin/' . substr($asin,0,3) . '/' . substr($asin, 3, 6) . '/';
+
+		if (!is_dir($directory)){
+			mkdir($directory, 0755, true);
+		}
+
+		$filename  = $asin . '.json'; 
+
+		return $directory . $filename;
+	}
+
+	public function putAsinDataToFileCache($asin, $json){
+
+		$file = $this->createAsinCacheFileName($asin);
+		file_put_contents($file, $json);
+
+		return $file;
+
+	}
+
 	public function updateProductAmznData($product, $updateDimensions = true){
 		
-		$this->db->query("INSERT INTO product_amzn_data SET
+		if ($this->config->get('config_enable_amazon_asin_file_cache')){
+
+			$file = $this->putAsinDataToFileCache($product['asin'], $product['json']);
+
+			$sql = "INSERT INTO product_amzn_data SET
+			product_id = '" . (int)$product['product_id'] . "', 
+			asin = '" . $this->db->escape($product['asin']) . "',
+			file = '" . $file . "',
+			json = ''
+			ON DUPLICATE KEY UPDATE
+			asin = '" . $this->db->escape($product['asin']) . "',
+			file = '" . $file . "',
+			json = ''";
+
+		} else {
+
+			$sql = "INSERT INTO product_amzn_data SET
 			product_id = '" . (int)$product['product_id'] . "', 
 			asin = '" . $this->db->escape($product['asin']) . "',
 			json = '" . $this->db->escape($product['json']) . "'
 			ON DUPLICATE KEY UPDATE
 			asin = '" . $this->db->escape($product['asin']) . "',
-			json = '" . $this->db->escape($product['json']) . "'");
+			json = '" . $this->db->escape($product['json']) . "'";
+
+		}
+
+		$this->db->query($sql);
 
 		if ($updateDimensions){
 			$this->parseAndUpdateProductDimensions($product['json']);

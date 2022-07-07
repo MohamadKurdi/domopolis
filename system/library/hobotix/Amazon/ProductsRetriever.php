@@ -396,7 +396,8 @@
 							echoLine('[editFullProduct] Новый покупают вместе товар: ' . $bought_together['asin'] . ' ' . $bought_together['title']);
 
 							$new_related_id = $this->addSimpleProductWithOnlyAsin([
-								'asin' 				=> $bought_together['asin'], 
+								'asin' 				=> $bought_together['asin'],
+								'amazon_best_price' => (!empty($bought_together['price']))?$bought_together['price']['value']:'0', 
 								'category_id' 		=> $this->config->get('config_rainforest_default_technical_category_id'), 
 								'name' 				=> $bought_together['title'], 
 								'image' 			=> $this->getImage($bought_together['image']), 
@@ -435,7 +436,8 @@
 							echoLine('[editFullProduct] Новый sponsored товар: ' . $sponsored_product['asin'] . ' ' . $sponsored_product['title']);
 
 							$new_sponsored_id = $this->addSimpleProductWithOnlyAsin([
-								'asin' 				=> $sponsored_product['asin'], 
+								'asin' 				=> $sponsored_product['asin'],
+								'amazon_best_price' => (!empty($sponsored_product['price']))?$sponsored_product['price']['value']:'0',
 								'category_id' 		=> $this->config->get('config_rainforest_default_technical_category_id'), 
 								'name' 				=> $sponsored_product['title'], 
 								'image' 			=> $this->getImage($sponsored_product['image']), 
@@ -472,7 +474,8 @@
 							echoLine('[editFullProduct] Новый похожий товар: ' . $compare_with_similar['asin'] . ' ' . $compare_with_similar['title']);
 
 							$new_similar_id = $this->addSimpleProductWithOnlyAsin([
-								'asin' 				=> $compare_with_similar['asin'], 
+								'asin' 				=> $compare_with_similar['asin'],
+								'amazon_best_price' => (!empty($compare_with_similar['price']))?$compare_with_similar['price']['value']:'0',
 								'category_id' 		=> $this->model_product_get->getCurrentProductCategory($product_id), 
 								'name' 				=> $compare_with_similar['title'], 
 								'image' 			=> $this->getImage($compare_with_similar['image']), 
@@ -676,12 +679,7 @@
 		public function editJustProductCategory($product_id, $product){			
 			$this->parseProductCategories($product_id, $product);
 
-			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmazonLastSearch($product_id);			
-			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmznData([
-						'product_id' 	=> $product_id, 
-						'asin' 			=> $product['asin'], 
-						'json' 			=> json_encode($product)
-			], false);
+			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmazonLastSearch($product_id);
 		}
 		
 		public function editFullProduct($product_id, $product, $do_adding_new_variants = true){	
@@ -808,6 +806,7 @@
 			asin 					= '" . $this->db->escape($data['asin']) . "', 
 			image           		= '" . (!empty($data['image'])?$this->db->escape($data['image']):'') . "', 			
 			added_from_amazon 		= '1', 
+			amazon_best_price     	= '" . (!empty($data['amazon_best_price'])?(float)$data['amazon_best_price']:0) . "',
 			main_variant_id     	= '" . (!empty($data['main_variant_id'])?(int)$data['main_variant_id']:0) . "',
 			amazon_product_link  	= '" . (!empty($data['amazon_product_link'])?$this->db->escape($data['amazon_product_link']):'') . "',
 			amazon_product_image 	= '" . (!empty($data['amazon_product_image'])?$this->db->escape($data['amazon_product_image']):'') . "',

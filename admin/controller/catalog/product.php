@@ -1248,6 +1248,14 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['added_from_amazon'] = 0;
 		}
 
+		if (isset($this->request->post['fill_from_amazon'])) {
+			$this->data['fill_from_amazon'] = $this->request->post['fill_from_amazon'];
+		} elseif (!empty($product_info)) {
+			$this->data['fill_from_amazon'] = $product_info['fill_from_amazon'];
+		} else {
+			$this->data['fill_from_amazon'] = 0;
+		}
+
 			//Данные амазона
 		if ($this->data['asin']){
 			$this->load->model('kp/product');

@@ -17,7 +17,6 @@ class productModelEdit extends hoboModel{
 	];
 
 
-
 	public function editProductFields($product_id, $fields){
 		$sql = "UPDATE `product` SET ";
 
@@ -52,7 +51,7 @@ class productModelEdit extends hoboModel{
 		$sql .= " WHERE product_id = '" . (int)$product_id . "'";
 
 		$this->db->query($sql);
-	}
+	}	
 
 	public function updateProductMainVariantIdByAsins($main_variant_id, $asins){
 		$this->db->query("UPDATE product SET main_variant_id = 	'" . (int)$main_variant_id . "'	WHERE asin IN ('" . implode("','", $asins) . "')");

@@ -2609,6 +2609,12 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_enable_amazon_specific_modes'] = $this->config->get('config_enable_amazon_specific_modes');
 		}
 
+		if (isset($this->request->post['config_enable_amazon_asin_file_cache'])) {
+			$this->data['config_enable_amazon_asin_file_cache'] = $this->request->post['config_enable_amazon_asin_file_cache']; 
+		} else {
+			$this->data['config_enable_amazon_asin_file_cache'] = $this->config->get('config_enable_amazon_asin_file_cache');
+		}
+
 		if (isset($this->request->post['config_rainforest_asin_deletion_mode'])) {
 			$this->data['config_rainforest_asin_deletion_mode'] = $this->request->post['config_rainforest_asin_deletion_mode']; 
 		} else {

@@ -519,7 +519,15 @@ class ModelCatalogCategory extends Model {
 		}
 		
 		public function getCategories($data) {
-			$sql = "SELECT cp.category_id AS category_id, c.tnved, c.priceva_enable, c.deletenotinstock, c.intersections, c.google_category_id, cd2.menu_name, cd2.alternate_name, (SELECT menu_icon FROM category c4 WHERE c4.category_id = cp.category_id) as menu_icon, (SELECT image FROM category c5 WHERE c5.category_id = cp.category_id) as image, GROUP_CONCAT(cd1.name ORDER BY cp.level SEPARATOR ' &gt; ') AS name, c.parent_id, c.sort_order FROM category_path cp LEFT JOIN category c ON (cp.path_id = c.category_id) LEFT JOIN category_description cd1 ON (c.category_id = cd1.category_id) LEFT JOIN category_description cd2 ON (cp.category_id = cd2.category_id) WHERE cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+			$sql = "SELECT cp.category_id AS category_id, c.tnved, c.priceva_enable, c.deletenotinstock, c.intersections, c.google_category_id, cd2.menu_name, cd2.alternate_name, c.parent_id, c.sort_order,
+			(SELECT menu_icon FROM category c4 WHERE c4.category_id = cp.category_id) as menu_icon, 
+			(SELECT image FROM category c5 WHERE c5.category_id = cp.category_id) as image, GROUP_CONCAT(cd1.name ORDER BY cp.level SEPARATOR ' &gt; ') AS name 
+			FROM category_path cp 
+			LEFT JOIN category c ON (cp.path_id = c.category_id) 
+			LEFT JOIN category_description cd1 ON (c.category_id = cd1.category_id) 
+			LEFT JOIN category_description cd2 ON (cp.category_id = cd2.category_id) 
+			WHERE cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+			AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 			
 			if (!empty($data['filter_name'])) {
 				$sql .= " AND cd2.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
@@ -530,7 +538,7 @@ class ModelCatalogCategory extends Model {
 			}
 
 			if (isset($data['filter_status'])) {
-				$sql .= " AND c.status = '1'";
+				$sql .= " AND c.status = '1'";			
 			}
 			
 			$sql .= " GROUP BY cp.category_id ORDER BY name";
@@ -547,6 +555,7 @@ class ModelCatalogCategory extends Model {
 				$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 			}
 			
+			$this->log->debugsql($sql);
 			
 			$query = $this->db->query($sql);
 			

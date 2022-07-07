@@ -445,6 +445,7 @@
 				priceva_disable 		= '" . (int)$data['priceva_disable'] . "', 
 				amzn_last_search 		= '" . $this->db->escape($data['amzn_last_search']) . "', 
 				amzn_ignore 			= '" . (int)$data['amzn_ignore'] . "',  
+				fill_from_amazon 		= '" . (int)$data['fill_from_amazon'] . "', 
 				amzn_last_offers 		= '" . $this->db->escape($data['amzn_last_offers']) . "',  
 				date_modified 			= NOW() 
 				WHERE product_id = '" . (int)$product_id . "'");

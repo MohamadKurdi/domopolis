@@ -166,6 +166,21 @@
 								</td>
 
 								<td style="width:20%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Включить хранение данных в файлах</span></p>
+										<select name="config_enable_amazon_asin_file_cache">
+											<?php if ($config_enable_amazon_asin_file_cache) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									<br />
+									<span class="help">Большое количество данных (более 10-20к записей в базу) очень сильно тормозит БД, нужно использовать файловый кэш</span>
+								</td>
+
+								<td style="width:20%">
 								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Режим удаления ASIN</span></p>
 										<select name="config_rainforest_asin_deletion_mode">
 											<?php if ($config_rainforest_asin_deletion_mode) { ?>

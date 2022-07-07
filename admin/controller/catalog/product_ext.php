@@ -419,6 +419,7 @@ class ControllerCatalogProductExt extends Controller {
                 $columns['image'] = $result['image'];
                 $columns['status'] = ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled'));
                 $columns['filled_from_amazon'] = ($result['filled_from_amazon'] ? $this->language->get('text_yes') : $this->language->get('text_no'));
+                $columns['fill_from_amazon'] = ($result['fill_from_amazon'] ? $this->language->get('text_yes') : $this->language->get('text_no'));
                 $columns['quantity'] = $result['quantity'];
             } else {
                 foreach($cp_cols as $column => $attr) {
@@ -481,7 +482,13 @@ class ControllerCatalogProductExt extends Controller {
                                 $columns[$column] = ((int)$result['filled_from_amazon'] ? $this->language->get('text_yes') : $this->language->get('text_no'));
                             } else {
                                 $columns[$column] = ((int)$result['filled_from_amazon'] ? $this->language->get('text_yes') : '<span style="color:#cf4a61;">' . $this->language->get('text_no') . '</span>');
-                            }                        
+                            } 
+                        } elseif ($column == 'fill_from_amazon') {
+                            if ((int)$result['fill_from_amazon'] || !$this->config->get('aqe_highlight_status')) {
+                                $columns[$column] = ((int)$result['fill_from_amazon'] ? $this->language->get('text_yes') : $this->language->get('text_no'));
+                            } else {
+                                $columns[$column] = ((int)$result['fill_from_amazon'] ? $this->language->get('text_yes') : '<span style="color:#cf4a61;">' . $this->language->get('text_no') . '</span>');
+                            }                         
                         } else if ($column == 'quantity') {
                             if ((int)$result['quantity'] < 0) {
                                 $columns[$column] = '<span style="color:#cf4a61;">' . $result['quantity'] . '</span>';
@@ -630,7 +637,7 @@ class ControllerCatalogProductExt extends Controller {
 
         if (in_array("category", $column_order)) {
             $this->load->model('catalog/category');
-            $this->data['categories'] = $this->model_catalog_category->getCategories(0);
+            $this->data['categories'] = $this->model_catalog_category->getCategories(['filter_status' => 1]);
         }
 
         if (in_array("download", $column_order)) {
@@ -903,7 +910,7 @@ class ControllerCatalogProductExt extends Controller {
             switch ($this->data['parameter']) {
                 case "category":
                     $this->load->model('catalog/category');
-                    $this->data['categories'] = $this->model_catalog_category->getCategories(0);
+                    $this->data['categories'] = $this->model_catalog_category->getCategories(['filter_status' => 1]);
                     $this->load->model('catalog/product');
                     $this->data['product_category'] = $this->model_catalog_product->getProductCategories($this->data['product_id']);
                     $json['title'] = $this->language->get('entry_category');
@@ -1077,7 +1084,7 @@ class ControllerCatalogProductExt extends Controller {
                     break;
                 case "related":
                     $this->load->model('catalog/category');
-                    $this->data['categories'] = $this->model_catalog_category->getCategories(0);
+                    $this->data['categories'] = $this->model_catalog_category->getCategories(['filter_status' => 1]);
                     $this->load->model('catalog/product');
                     $products = $this->model_catalog_product->getProductRelated($this->data['product_id']);
                     $this->data['product_related'] = array();
@@ -1246,6 +1253,12 @@ class ControllerCatalogProductExt extends Controller {
                     } else {
                         $json['value'] = ((int)$value) ? $this->language->get('text_enabled') : '<span style="color:#cf4a61;">' . $this->language->get('text_disabled') . '</span>';
                     }
+                } else if ($column == 'fill_from_amazon') {
+                    if ((int)$value || !$this->config->get('aqe_highlight_status')) {
+                        $json['value'] = ((int)$value) ? $this->language->get('text_yes') : $this->language->get('text_no');
+                    } else {
+                        $json['value'] = ((int)$value) ? $this->language->get('text_yes') : '<span style="color:#cf4a61;">' . $this->language->get('text_no') . '</span>';
+                    }
                 } else if ($column == 'image') {
                     $this->load->model('tool/image');
                     if ($value && file_exists(DIR_IMAGE . $value)) {
@@ -1311,7 +1324,7 @@ class ControllerCatalogProductExt extends Controller {
                         $this->request->post['p_c'] = (array)$this->request->post['p_c'];
 
                         $this->load->model('catalog/category');
-                        $categories = $this->model_catalog_category->getCategories(0);
+                        $categories = $this->model_catalog_category->getCategories(['filter_status' => 1]);
 
                         $category_names = array();
 
