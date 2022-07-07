@@ -323,7 +323,6 @@ class ControllerDPRainForest extends Controller {
 		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();
 	}
 
-
 	public function updateimagesfromamazon(){
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoImages();
@@ -352,8 +351,31 @@ class ControllerDPRainForest extends Controller {
 				}
 			}	
 		}		
+	}
 
+	public function puttofilecache(){
 
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFullDataInDB();		
+
+		$iterations = ceil($total/3000);
+		echoLine('[puttofilecache] Всего товаров: ' . $total);
+		$k = 1;		
+
+		for ($i = 1; $i <= $iterations; $i++){
+			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullDataInDB(($i-1) * 3000);
+			if ($products){		
+				foreach ($products as $product){
+
+					if ($product['json']){
+						echoLine('[puttofilecache] Товар ' . $product['product_id'] . ' / ' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
+						
+						$this->rainforestAmazon->infoUpdater->updateProductAmznData($product, false);
+						$k++;	
+					}
+				}
+			}	
+		}
 	}
 	
 

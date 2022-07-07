@@ -679,7 +679,12 @@
 		public function editJustProductCategory($product_id, $product){			
 			$this->parseProductCategories($product_id, $product);
 
-			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmazonLastSearch($product_id);
+			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmazonLastSearch($product_id);			
+			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmznData([
+						'product_id' 	=> $product_id, 
+						'asin' 			=> $product['asin'], 
+						'json' 			=> json_encode($product)
+			], false);
 		}
 		
 		public function editFullProduct($product_id, $product, $do_adding_new_variants = true){	
@@ -713,7 +718,8 @@
 
 					if ($main_variant['description_filled_from_amazon']){
 						echoLine('[editFullProduct] Копируем описание с основного товара: ' . $main_variant['main_variant_id']);
-						$this->model_product_edit->editProductDescriptions($product_id, $this->model_product_get->getProductDescriptions($main_variant['main_variant_id']));	
+						$this->model_product_edit->editProductDescriptions($product_id, $this->model_product_get->getProductDescriptions($main_variant['main_variant_id']));
+						$this->registry->get('rainforestAmazon')->infoUpdater->setDescriptionIsFilledFromAmazon($product_id);
 					}
 				}
 

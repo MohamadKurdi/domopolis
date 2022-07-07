@@ -1259,24 +1259,10 @@ class ControllerCatalogProduct extends Controller {
 			//Данные амазона
 		if ($this->data['asin']){
 			$this->load->model('kp/product');
-			$amzn_data = $this->model_kp_product->getProductAmazonFullData($this->request->get['product_id']);				
-
-			if (!empty($amzn_data['json'])){
-
-				$this->data['amazon_json'] = (json_decode($amzn_data['json'], true));
-
-				if (!empty($this->data['amazon_json']['top_reviews'])){
-					foreach ($this->data['amazon_json']['top_reviews'] as &$__review){
-						$__review['body_html'] = strip_tags($__review['body_html']);
-					}
-				}	
-
-				$this->data['amazon_json'] = json_encode($this->data['amazon_json'], JSON_PRETTY_PRINT);
-				$this->data['amazon_product_link'] = $product_info['amazon_product_link'];
-			} else {
-				$this->data['amazon_json'] = false;
-				$this->data['amazon_product_link'] = false;
-			}
+			
+			$this->data['amazon_product_link'] = $product_info['amazon_product_link'];
+			$this->data['filled_from_amazon'] = $product_info['filled_from_amazon'];
+			$this->data['description_filled_from_amazon'] = $product_info['description_filled_from_amazon'];
 
 			$this->data['offers'] = [];
 			$offers = $this->model_kp_product->getProductAmazonOffers($this->data['asin']);

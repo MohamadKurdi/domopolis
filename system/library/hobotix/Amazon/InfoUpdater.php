@@ -38,7 +38,8 @@ class InfoUpdater
 	}
 
 	public function createAsinCacheFileName($asin){
-		$directory = DIR_CACHE . 'asin/' . substr($asin,0,3) . '/' . substr($asin, 3, 6) . '/';
+		$path      = 'asin/' . substr($asin,0,3) . '/' . substr($asin, 3, 3) . '/';
+		$directory = DIR_CACHE . $path;
 
 		if (!is_dir($directory)){
 			mkdir($directory, 0755, true);
@@ -46,15 +47,18 @@ class InfoUpdater
 
 		$filename  = $asin . '.json'; 
 
-		return $directory . $filename;
+		return [
+			'full' => $directory . $filename,
+			'path' => $path . $filename
+		];
 	}
 
 	public function putAsinDataToFileCache($asin, $json){
 
 		$file = $this->createAsinCacheFileName($asin);
-		file_put_contents($file, $json);
+		file_put_contents($file['full'], $json);
 
-		return $file;
+		return $file['path'];
 
 	}
 
@@ -67,12 +71,12 @@ class InfoUpdater
 			$sql = "INSERT INTO product_amzn_data SET
 			product_id = '" . (int)$product['product_id'] . "', 
 			asin = '" . $this->db->escape($product['asin']) . "',
-			file = '" . $file . "',
-			json = ''
+			file = '" . $this->db->escape($file) . "',
+			json = NULL
 			ON DUPLICATE KEY UPDATE
 			asin = '" . $this->db->escape($product['asin']) . "',
-			file = '" . $file . "',
-			json = ''";
+			file = '" . $this->db->escape($file) . "',
+			json = NULL";
 
 		} else {
 

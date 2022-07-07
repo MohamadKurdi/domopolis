@@ -1147,6 +1147,19 @@
 				}
 			}
 
+
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_enable_amazon_asin_file_cache')){
+				$query = $this->db->query("SELECT p.asin FROM product p WHERE p.product_id = '" . (int)$product_id . "' LIMIT 1");
+
+				if ($query->num_rows && !empty($query->row['asin'])){
+					$file = $this->registry->get('rainforestAmazon')->infoUpdater->createAsinCacheFileName($query->row['asin'])['full'];
+					echo $file;
+					if ($file && file_exists($file)){
+						unlink($file);
+					}				
+				}
+			}
+
 			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']){
 				if ($recursion){
 					$products_to_delete = $this->getProductVariantsIds($product_id);
@@ -1160,7 +1173,7 @@
 						}
 					}
 				}
-			}			
+			}		
 
 			$this->db->query("DELETE FROM product WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM ocfilter_option_value_to_product WHERE product_id = '" . (int)$product_id . "'");

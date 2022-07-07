@@ -5,8 +5,8 @@ namespace hobotix\Amazon;
 class productModelGet extends hoboModel{
 
 	private $asinsArray = [];
-	//private $testAsin = 'B09SV52SYV';
-	private $testAsin = false;
+	private $testAsin = 'B07ZGHHC7T';
+	//private $testAsin = false;
 
 	public function checkIfAsinIsDeleted($asin){
 		return $this->db->ncquery("SELECT asin FROM deleted_asins WHERE asin LIKE ('" . $this->db->escape($asin) . "')")->num_rows;
@@ -76,12 +76,13 @@ class productModelGet extends hoboModel{
 
 		$result = [];
 		$sql = "SELECT 
-		p.product_id, pd.name, pad.asin, pad.json
+		p.product_id, pd.name, pad.asin, pad.json, pad.file
 		FROM product p 
 		LEFT JOIN product_description pd ON (p.product_id = pd.product_id) 
 		LEFT JOIN product_amzn_data pad ON (p.product_id = pad.product_id)
 		WHERE pd.language_id = '" . $this->config->get('config_language_id') . "' 		
-		AND p.added_from_amazon = 1 
+		AND p.added_from_amazon = 1
+		AND p.fill_from_amazon = 1	
 		AND p.filled_from_amazon = 0
 		AND p.product_id IN (SELECT product_id FROM product_amzn_data) 
 		AND (NOT ISNULL(p.asin) OR p.asin <> '') 
@@ -91,11 +92,20 @@ class productModelGet extends hoboModel{
 		$query = $this->db->ncquery($sql);
 
 		foreach ($query->rows as $row){
-			$result[] = [
-				'product_id' 			=> $row['product_id'],
-				'asin' 					=> $row['asin'],
-				'json'					=> $row['json']							
-			];
+
+			if ($this->config->get('config_enable_amazon_asin_file_cache')){
+				if (!empty($row['file']) && file_exists(DIR_CACHE . $row['file'])){
+					$row['json'] = file_get_contents(DIR_CACHE . $row['file']);
+				}
+			}
+
+			if ($row['json']){
+				$result[] = [
+					'product_id' 			=> $row['product_id'],
+					'asin' 					=> $row['asin'],
+					'json'					=> $row['json']							
+				];
+			}
 		}
 
 		return $result;
@@ -115,10 +125,43 @@ class productModelGet extends hoboModel{
 		$query = $this->db->ncquery($sql);
 
 		foreach ($query->rows as $row){
+
+			if ($this->config->get('config_enable_amazon_asin_file_cache')){
+				if (!empty($row['file']) && file_exists(DIR_CACHE . $row['file'])){
+					$row['json'] = file_get_contents(DIR_CACHE . $row['file']);
+				}
+			}
+
+			if ($row['json']){
+				$result[] = [
+					'product_id' 			=> $row['product_id'],
+					'asin' 					=> $row['asin'],
+					'json'					=> $row['json']							
+				];
+			}
+		}
+
+		return $result;
+	}
+
+	public function getTotalProductsWithFullDataInDB(){
+		$sql = "SELECT COUNT(product_id) as total FROM product_amzn_data WHERE file = '' AND NOT ISNULL(json)";
+
+		return $this->db->ncquery($sql)->row['total'];
+	}
+
+	public function getProductsWithFullDataInDB($start){
+		$result = [];
+
+		$sql = "SELECT * FROM product_amzn_data WHERE file = '' AND NOT ISNULL(json) ORDER BY product_id ASC limit " . (int)$start . ", 3000";		
+
+		$query = $this->db->ncquery($sql);
+
+		foreach ($query->rows as $row){
 			$result[] = [
 				'product_id' 			=> $row['product_id'],
 				'asin' 					=> $row['asin'],
-				'json'					=> $row['json']							
+				'json'					=> $row['json'],					
 			];
 		}
 
