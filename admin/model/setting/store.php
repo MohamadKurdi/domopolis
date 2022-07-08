@@ -64,6 +64,7 @@
 			
 			foreach ($store_data as &$store){
 				$store['name'] = trim(str_replace($this->config->get('config_owner') . ' | ', '', $store['name']));
+				$store['url'] = $this->model_setting_setting->getKeySettingValue('config', 'config_url', $store['store_id']);
 				$store['language'] = $this->model_setting_setting->getKeySettingValue('config', 'config_language', $store['store_id']);
 			}
 			

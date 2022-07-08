@@ -67,8 +67,7 @@
 			return 'Ложь';
 		}
 		
-		private function rms($st, $uuml = false, $rmspace = false)
-		{
+		private function rms($st, $uuml = false, $rmspace = false){
 			$st = str_replace('&Auml;','Ä',$st);
 			$st = str_replace('&auml;','ä',$st);
 			$st = str_replace('&Uuml;','Ü',$st);
@@ -137,10 +136,6 @@
 		}
 		
 		public function index() {
-			
-			
-			
-			
 		}
 		
 		public function processTimes($order_id){
@@ -176,8 +171,7 @@
 			'date_accepted' => $date_accepted,
 			'date_closed'   => $date_closed,
 			'date_cancelled'   => $date_cancelled
-			);
-			
+			);			
 		}		
 		
 		public function addOrderToQueue($order_id){
@@ -474,8 +468,7 @@
 		public function initiateOrdersFromDateToDateXML(){
 			if (isset($this->request->get['date_from'])){
 				$date_from = date('' ,strtotime($this->request->get['date_from']));
-			}
-			
+			}			
 		}
 		
 		
@@ -1063,17 +1056,9 @@
 			}
 		}
 		
-		public function getCustomerRewardsHistoryXML($customer_id = 0, $do_echo = false, $dir = false, $do_iconv = false){
-			
+		public function getCustomerRewardsHistoryXML($customer_id = 0, $do_echo = false, $dir = false, $do_iconv = false){			
 			$this->load->model('sale/customer');
 			$this->load->model('sale/order');
-			
-			
-			
-			
-			
-			
-			
 		}
 		
 		
@@ -2527,8 +2512,7 @@
 					$content = mb_convert_encoding($content, 'CP1251', 'UTF-8'); 
 				} 
 				
-				print_r($content);
-				exit();
+				print_r($content);				
 			}
 			
 			if (!$dir) {
@@ -2544,21 +2528,12 @@
 				
 				file_put_contents(DIR_EXPORT . 'odinass/orders2/' . $_fname . '.xml', $content);
 				chmod(DIR_EXPORT . 'odinass/orders2/' . $_fname . '.xml', 0777);
-				
-				if (!is_dir(DIR_EXPORT . 'odinass/orders_backup/' . date('Y'))){
-					mkdir(DIR_EXPORT . 'odinass/orders_backup/' . date('Y'));
-				}
-				
-				if (!is_dir(DIR_EXPORT . 'odinass/orders_backup/' . date('Y') . '/' . date('m'))){
-					mkdir(DIR_EXPORT . 'odinass/orders_backup/' . date('Y') . '/' . date('m'));
-				}
-				
+
 				if (!is_dir(DIR_EXPORT . 'odinass/orders_backup/' . date('Y') . '/' . date('m') . '/' . date('d'))){
-					mkdir(DIR_EXPORT . 'odinass/orders_backup/' . date('Y') . '/' . date('m') . '/' . date('d'));
+					mkdir(DIR_EXPORT . 'odinass/orders_backup/' . date('Y') . '/' . date('m') . '/' . date('d'), 0755, true);
 				}
 				
 				file_put_contents(DIR_EXPORT . 'odinass/orders_backup/' . date('Y') . '/' . date('m') . '/' . date('d') . '/' . (int)$order['order_id'] . '_' . date('H_i_s') .'.xml', $content);
-				
 				
 				$odinass_log = new Log('export2odinass.log.txt');
 				$odinass_log->write('Экспортирован заказ '.(int)$order['order_id'] . ', статус: ' .  $order_status['name'] . '(' . $order_status['order_status_id'] . ')');

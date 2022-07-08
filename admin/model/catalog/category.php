@@ -555,7 +555,7 @@ class ModelCatalogCategory extends Model {
 				$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 			}
 			
-			$this->log->debugsql($sql);
+		//	$this->log->debugsql($sql);
 			
 			$query = $this->db->query($sql);
 			

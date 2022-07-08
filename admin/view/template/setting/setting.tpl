@@ -3640,7 +3640,7 @@
 									
 									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ZipCode rfAPI - 1</span></p>
-										<input type="text" name="config_rainforest_api_zipcode_1" value="<?php echo $config_rainforest_api_zipcode_1; ?>" size="50" style="width:50px;" />
+										<input type="text" name="config_rainforest_api_zipcode_1" value="<?php echo $config_rainforest_api_zipcode_1; ?>" size="50" style="width:100px;" />
 									</td>
 
 									<td width="15%">

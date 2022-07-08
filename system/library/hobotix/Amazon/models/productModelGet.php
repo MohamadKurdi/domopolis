@@ -120,7 +120,7 @@ class productModelGet extends hoboModel{
 	public function getProductsWithFullData($start){
 		$result = [];
 
-		$sql = "SELECT * FROM product_amzn_data WHERE 1 ORDER BY product_id ASC limit " . (int)$start . ", 3000";		
+		$sql = "SELECT * FROM product_amzn_data WHERE 1 ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
 
 		$query = $this->db->ncquery($sql);
 
@@ -153,7 +153,7 @@ class productModelGet extends hoboModel{
 	public function getProductsWithFullDataInDB($start){
 		$result = [];
 
-		$sql = "SELECT * FROM product_amzn_data WHERE file = '' AND NOT ISNULL(json) ORDER BY product_id ASC limit " . (int)$start . ", 3000";		
+		$sql = "SELECT * FROM product_amzn_data WHERE file = '' AND NOT ISNULL(json) ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;	
 
 		$query = $this->db->ncquery($sql);
 
@@ -179,7 +179,7 @@ class productModelGet extends hoboModel{
 	public function getProductsWithFastPrice($start){
 		$result = [];
 
-		$sql = "SELECT * FROM product WHERE amazon_best_price > 0 AND filled_from_amazon = 1 ORDER BY product_id ASC limit " . (int)$start . ", 3000";		
+		$sql = "SELECT * FROM product WHERE amazon_best_price > 0 AND filled_from_amazon = 1 ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
 
 		$query = $this->db->ncquery($sql);
 
@@ -204,7 +204,7 @@ class productModelGet extends hoboModel{
 
 		$result = [];
 
-		$sql = "SELECT * FROM product_variants WHERE 1 limit " . (int)$start . ", 10000";		
+		$sql = "SELECT * FROM product_variants WHERE 1 limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
 
 		$query = $this->db->ncquery($sql);
 

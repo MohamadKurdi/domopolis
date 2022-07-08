@@ -336,12 +336,12 @@ class ControllerDPRainForest extends Controller {
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFastPrice();		
 
-		$iterations = ceil($total/3000);
+		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 		echoLine('[setpricesfast] Всего товаров: ' . $total);
 		$k = 1;		
 
 		for ($i = 1; $i <= $iterations; $i++){
-			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFastPrice(($i-1) * 3000);
+			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFastPrice(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 			if ($products){		
 				foreach ($products as $product){
 					echoLine('[setpricesfast] Товар ' . $product['product_id'] . ' / ' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
@@ -358,12 +358,12 @@ class ControllerDPRainForest extends Controller {
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFullDataInDB();		
 
-		$iterations = ceil($total/3000);
+		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 		echoLine('[puttofilecache] Всего товаров: ' . $total);
 		$k = 1;		
 
 		for ($i = 1; $i <= $iterations; $i++){
-			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullDataInDB(($i-1) * 3000);
+			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullDataInDB(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 			if ($products){		
 				foreach ($products as $product){
 
@@ -485,12 +485,12 @@ class ControllerDPRainForest extends Controller {
 
 		$this->rainforestAmazon->productsRetriever->model_product_edit->clearIdsVariantsTable();
 
-		$iterations = ceil($total/3000);
+		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 		echoLine('[fixvariants] Всего товаров: ' . $total);
 		$k = 1;	
 
 		for ($i = 1; $i <= $iterations; $i++){
-			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullData(($i-1) * 3000);
+			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullData(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 			if ($products){		
 				foreach ($products as $product){
 					echoLine('[fixvariants] Товар ' . $product['product_id'] . '/' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
@@ -512,12 +512,12 @@ class ControllerDPRainForest extends Controller {
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFullData();		
 
-		$iterations = ceil($total/3000);
+		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 		echoLine('[fixvariants] Всего товаров: ' . $total);
 		$k = 1;	
 
 		for ($i = 1; $i <= $iterations; $i++){
-			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullData(($i-1) * 3000);
+			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullData(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 			if ($products){		
 				foreach ($products as $product){
 					echoLine('[fixvariants] Товар ' . $product['product_id'] . '/' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
@@ -539,12 +539,12 @@ class ControllerDPRainForest extends Controller {
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithVariantsSet();		
 
-		$iterations = ceil($total/10000);
+		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 		echoLine('[fixvariants] Всего товаров: ' . $total);
 		$k = 1;	
 
 		for ($i = 1; $i <= $iterations; $i++){
-			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithVariantsSet(($i-1) * 10000);
+			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithVariantsSet(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 			if ($products){		
 				foreach ($products as $product){
 					echoLine('[fixvariants] Товар ' . $product['main_asin'] . ' -> ' . $product['variant_asin'] . ' ' . $i . '/' . $k . '/' . $total);

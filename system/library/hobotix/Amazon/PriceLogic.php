@@ -262,7 +262,7 @@ class PriceLogic
 
 									$logString = 'Товар: ' . $product_id . ', ' . $asin . ', вес: ' . $productWeight . ', цена для магазина ' . $store_id . ' = ' . $newPrice . ' EUR';
 									$this->log->write($logString);
-									echoLine($logString);
+									echoLine('[PriceLogic]' . $logString);
 
 									if ($this->config->get('config_rainforest_default_store_id') != -1 && $store_id == $this->config->get('config_rainforest_default_store_id')){
 										$this->updateProductPriceInDatabase($product_id, $newPrice);

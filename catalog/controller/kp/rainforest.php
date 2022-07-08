@@ -1,10 +1,7 @@
 <?
 
 class ControllerKPRainForest extends Controller {	
-	private $maxSteps = 10;
-
-	private $productRequestLimits = 30;
-	private $offerRequestLimits = 30;
+	private $maxSteps = 10;	
 	private $rainforestAmazon;
 
 
@@ -20,7 +17,6 @@ class ControllerKPRainForest extends Controller {
 		if (!$this->config->get('config_rainforest_enable_api')){
 			die('RNF API NOT ENABLED');
 		}
-
 	}
 
 	public function updateproductvideos(){
@@ -34,8 +30,6 @@ class ControllerKPRainForest extends Controller {
 	}
 		
 	public function updateproductdimensions(){
-
-
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 
 		$query = $this->db->query("SELECT * FROM product_amzn_data");
@@ -65,16 +59,16 @@ class ControllerKPRainForest extends Controller {
 		}
 
 		$total = count($products);
-		$iterations = ceil($total/$this->productRequestLimits);
+		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::productRequestLimits);
 		echoLine('[PARSEASINSCRON] Всего ' . $total . ' товаров!');
 
 		for ($i = 1; $i <= $iterations; $i++){
 			$timer = new FPCTimer();
 			$jsonArray = [];
 
-			echoLine('[PARSEEANSCRON] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . ($this->productRequestLimits * ($i-1)) . ' по ' . $this->productRequestLimits * $i);
+			echoLine('[PARSEEANSCRON] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . ((int)\hobotix\RainforestAmazon::productRequestLimits * ($i-1)) . ' по ' . (int)\hobotix\RainforestAmazon::productRequestLimits * $i);
 
-			$slice = array_slice($products, $this->productRequestLimits * ($i-1), $this->productRequestLimits);
+			$slice = array_slice($products, (int)\hobotix\RainforestAmazon::productRequestLimits * ($i-1), (int)\hobotix\RainforestAmazon::productRequestLimits);
 
 			$results = $this->rainforestAmazon->simpleProductParser->getProductByGTIN($slice);
 
@@ -106,13 +100,9 @@ class ControllerKPRainForest extends Controller {
 			unset($timer);
 
 		}
-
 	}
-
-
 	
-	public function parseasinscron(){
-		
+	public function parseasinscron(){		
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');
 		$this->load->model('catalog/product');
@@ -127,16 +117,16 @@ class ControllerKPRainForest extends Controller {
 		}
 
 		$total = count($products);
-		$iterations = ceil($total/$this->productRequestLimits);
+		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::productRequestLimits);
 		echoLine('[PARSEASINSCRON] Всего ' . $total . ' товаров!');
 
 		for ($i = 1; $i <= $iterations; $i++){
 			$timer = new FPCTimer();
 			$jsonArray = [];
 
-			echoLine('[PARSEASINSCRON] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . ($this->productRequestLimits * ($i-1)) . ' по ' . $this->productRequestLimits * $i);
+			echoLine('[PARSEASINSCRON] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . ((int)\hobotix\RainforestAmazon::productRequestLimits * ($i-1)) . ' по ' . (int)\hobotix\RainforestAmazon::productRequestLimits * $i);
 
-			$slice = array_slice($products, $this->productRequestLimits * ($i-1), $this->productRequestLimits);
+			$slice = array_slice($products, (int)\hobotix\RainforestAmazon::productRequestLimits * ($i-1), (int)\hobotix\RainforestAmazon::productRequestLimits);
 
 			$results = $this->rainforestAmazon->simpleProductParser->getProductByASINS($slice);
 
@@ -168,84 +158,75 @@ class ControllerKPRainForest extends Controller {
 			echoLine('[PARSEASINSCRON] Времени на итерацию: ' . $timer->getTime() . ' сек.');
 			unset($timer);
 		}
-
-
-	}
-
-	public function parseoffersorderscron(){
 	}
 
 
+	public function parseoffersqueuecron(){
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$this->load->library('Timer');
 
-	public function parseofferscron($immediately = false){
+		echoLine('Работаем с очередью');		
+		$products = $this->rainforestAmazon->offersParser->getProductsAmazonQueue();
+		$this->rainforestAmazon->offersParser->clearProductsAmazonQueue();
+
+		$total = count($products);
+		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::offerRequestLimits);
+		echoLine('[parseofferscron] Всего ' . $total . ' товаров!');
+
+		$i=1;
+		$timer = new FPCTimer();		
+		for ($i = 1; $i <= $iterations; $i++){
+			$timer = new FPCTimer();
+
+			$slice = array_slice($products, (int)\hobotix\RainforestAmazon::offerRequestLimits * ($i-1), (int)\hobotix\RainforestAmazon::offerRequestLimits);
+			$results = $this->rainforestAmazon->getProductsOffersASYNC($slice);
+
+			if ($results){
+				foreach ($results as $asin => $offers){				
+					$this->rainforestAmazon->offersParser->addOffersForASIN($asin, $offers);					
+				}
+			}
+
+			echoLine('[parseofferscron] Времени на итерацию: ' . $i . ' из ' . $iterations .': ' . $timer->getTime() . ' сек.');
+			unset($timer);
+		}
+
+		$this->rainforestAmazon->offersParser->clearProductsAmazonQueue();
+	}
+
+
+	public function parseofferscron(){
 
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');
-	
-		if ($immediately){
-
-			echoLine('Работаем с очередью');
-			$query = $this->db->ncquery("SELECT DISTINCT(asin) FROM amzn_product_queue");
-			$this->db->ncquery("TRUNCATE amzn_product_queue");
-
-		} else {
-
-			$this->db->query("UPDATE product SET asin = TRIM(asin) WHERE 1");
-
-			$sql = " FROM product p
-			WHERE status = 1 
-			AND amzn_ignore = 0		
-			AND is_virtual = 0
-			AND stock_status_id <> '" . $this->config->get('config_not_in_stock_status_id') . "'			
-			AND (" . $this->rainforestAmazon->offersParser->PriceLogic->buildStockQueryField() . " = 0)
-			AND (NOT ISNULL(p.asin) OR p.asin <> '')";
-			$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -'" . $this->config->get('config_rainforest_update_period') . "' DAY)))";
-
-			$total = $this->db->ncquery("SELECT COUNT(DISTINCT(asin)) as total " . $sql . "")->row['total'];
-			echoLine('[OFFERS] Всего товаров которые надо обновлять: ' . $total);
-
-			$query = $this->db->ncquery("SELECT DISTINCT(asin) " . $sql . " ORDER BY amzn_last_offers ASC LIMIT " . (int)\hobotix\RainforestAmazon::offerParserLimit);
-
-		}
-
-		$products = [];
-		foreach ($query->rows as $row){
-			if (trim($row['asin'])){
-				$products[] = $row['asin'];
-			}
-		}
+							
+		$products = $this->rainforestAmazon->offersParser->getProductsToGetOffers();			
 
 		$total = count($products);
-		$iterations = ceil($total/$this->offerRequestLimits);
-		echoLine('[OFFERS] Всего ' . $total . ' товаров!');
+		echoLine('[parseofferscron] Всего товаров которые надо обновлять: ' . $total);
+		
+		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::offerRequestLimits);
+		echoLine('[parseofferscron] Всего ' . $total . ' товаров!');
 
 		$i=1;
-		$timer = new FPCTimer();
-		
+		$timer = new FPCTimer();		
 
 		for ($i = 1; $i <= $iterations; $i++){
 			$timer = new FPCTimer();
 
-			$slice = array_slice($products, $this->offerRequestLimits * ($i-1), $this->offerRequestLimits);
+			$slice = array_slice($products, (int)\hobotix\RainforestAmazon::offerRequestLimits * ($i-1), (int)\hobotix\RainforestAmazon::offerRequestLimits);
 			$results = $this->rainforestAmazon->getProductsOffersASYNC($slice);
 
 			if ($results){
 				foreach ($results as $asin => $offers){				
 					$this->rainforestAmazon->offersParser->addOffersForASIN($asin, $offers);
-					$this->db->query("DELETE FROM amzn_product_queue WHERE asin = '" . $this->db->escape($asin) . "'");
+					$this->rainforestAmazon->offersParser->clearProductsAmazonQueue($asin);
 				}
 
 			}
 
-			echoLine('[OFFERS] Времени на итерацию: ' . $i . ' из ' . $iterations .': ' . $timer->getTime() . ' сек.');
+			echoLine('[parseofferscron] Времени на итерацию: ' . $i . ' из ' . $iterations .': ' . $timer->getTime() . ' сек.');
 			unset($timer);
-
-		}
-
-
-		if ($immediately){
-			$query = $this->db->ncquery("TRUNCATE amzn_product_queue");
 		}
 	}
-
 }

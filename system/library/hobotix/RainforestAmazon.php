@@ -23,6 +23,8 @@ class RainforestAmazon
 	public const categoryRequestLimits 	= 100;
 	public const offerRequestLimits 	= 30;
 
+	public const generalDBQueryLimit	= 3000;
+
 	public const offerParserLimit 		= 2000;
 	public const fullProductParserLimit = 90;
 

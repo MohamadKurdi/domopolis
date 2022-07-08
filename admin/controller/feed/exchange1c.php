@@ -82,11 +82,6 @@ class ControllerFeedExchange1c extends Controller {
 		
 		$this->load->model('feed/exchange1c');
 		$this->model_feed_exchange1c->getOrderXML(0, true, $dir, $order_ids_list, true);
-		
-		$this->load->model('setting/setting');
-		$config = $this->model_setting_setting->getSetting('exchange1c');
-		$config['exchange1c_order_date'] = date('Y-m-d H:i:s');
-	//	$this->model_setting_setting->editSetting('exchange1c', $config);
 	}
 	
 	public function getDeliveriesAndShippings(){		

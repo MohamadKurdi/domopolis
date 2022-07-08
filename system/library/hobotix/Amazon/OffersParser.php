@@ -27,9 +27,72 @@ class OffersParser
 
 		require_once(dirname(__FILE__) . '/PriceLogic.php');
 		$this->PriceLogic = new PriceLogic($registry);
-
 	}
+
+	public function getTotalProductsToGetOffers(){
+		$result = [];
+		
+		$this->db->query("UPDATE product SET asin = TRIM(asin) WHERE 1");
+
+		$sql = " FROM product p
+			WHERE status = 1 
+			AND amzn_ignore = 0		
+			AND is_virtual = 0
+			AND stock_status_id <> '" . $this->config->get('config_not_in_stock_status_id') . "'			
+			AND (" . $this->PriceLogic->buildStockQueryField() . " = 0)
+			AND (NOT ISNULL(p.asin) OR p.asin <> '')";
+		$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -'" . $this->config->get('config_rainforest_update_period') . "' DAY)))";
+
+		$query = $this->db->ncquery("SELECT COUNT(DISTINCT(asin)) as total " . $sql . "");
+
+		return $query->row['total'];
+	}	
 	
+	public function getProductsToGetOffers(){
+		$result = [];
+		
+		$this->db->query("UPDATE product SET asin = TRIM(asin) WHERE 1");
+
+		$sql = " FROM product p
+			WHERE status = 1 
+			AND amzn_ignore = 0		
+			AND is_virtual = 0
+			AND stock_status_id <> '" . $this->config->get('config_not_in_stock_status_id') . "'			
+			AND (" . $this->PriceLogic->buildStockQueryField() . " = 0)
+			AND (NOT ISNULL(p.asin) OR p.asin <> '')";
+		$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -'" . $this->config->get('config_rainforest_update_period') . "' DAY)))";
+
+		$query = $this->db->ncquery("SELECT DISTINCT(asin) " . $sql . " ORDER BY amzn_last_offers ASC LIMIT " . (int)\hobotix\RainforestAmazon::offerParserLimit);
+
+		foreach ($query->rows as $row){
+			if (trim($row['asin'])){
+				$result[] = $row['asin'];
+			}
+		}
+
+		return $result;
+	}	
+
+	public function getProductsAmazonQueue(){
+		$result = [];
+		$query = $this->db->ncquery("SELECT DISTINCT(asin) FROM amzn_product_queue");
+
+		foreach ($query->rows as $row){
+			if (trim($row['asin'])){
+				$result[] = $row['asin'];
+			}
+		}
+
+		return $result;
+	}
+
+	public function clearProductsAmazonQueue($asin = false){
+		if ($asin){
+			$this->db->query("DELETE FROM amzn_product_queue WHERE asin = '" . $this->db->escape($asin) . "'");
+		} else {
+			$this->db->ncquery("TRUNCATE amzn_product_queue");		
+		}
+	}
 
 	public function clearOffersForASIN($asin){
 		$this->db->query("DELETE FROM product_amzn_offers WHERE asin LIKE '" . $this->db->escape($asin) . "'");
@@ -58,7 +121,6 @@ class OffersParser
 
 		return $this;
 	}
-
 
 	//Обработка не обязательно новых, которые рнф видит как новые
 	public static function checkIfOfferReallyIsNew($rfOffer){
