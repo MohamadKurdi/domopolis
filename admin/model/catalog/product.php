@@ -1152,8 +1152,7 @@
 				$query = $this->db->query("SELECT p.asin FROM product p WHERE p.product_id = '" . (int)$product_id . "' LIMIT 1");
 
 				if ($query->num_rows && !empty($query->row['asin'])){
-					$file = $this->registry->get('rainforestAmazon')->infoUpdater->createAsinCacheFileName($query->row['asin'])['full'];
-					echo $file;
+					$file = $this->registry->get('rainforestAmazon')->infoUpdater->createAsinCacheFileName($query->row['asin'])['full'];					
 					if ($file && file_exists($file)){
 						unlink($file);
 					}				
