@@ -44,6 +44,32 @@
 					<td><?php echo $total_products_in_tech; ?> </td>
 					<td><?php echo $total_product_parsed; ?> из <?php echo $total_product_need_to_be_parsed; ?></td>
 				</tr>				
+			</table>
+
+			<table class="list big small-bottom-margin">
+				<thead>
+					<tr>
+						<td colspan="6" class="left">
+							Офферы
+						</td>
+					</tr>					
+				</thead>
+				<tr class="small">
+					<td style="color:#3276c2"><i class="fa fa-hourglass" aria-hidden="true"></i> Ждет</td>
+					<td style="color:#24a4c1">Σ Всего</td>
+					<td style="color:#3276c2"><i class="fa fa-refresh" aria-hidden="true"></i> Сегодня</td>
+					<td style="color:#3276c2"><i class="fa fa-refresh" aria-hidden="true"></i> Вчера</td>
+					<td style="color:#66c7a3"><i class="fa fa-thumbs-up" aria-hidden="true"></i> <a style="color:#66c7a3" href="<?php echo $filter_total_product_have_offers; ?>">В нал <i class="fa fa-filter"></i></a></td>		
+					<td style="color:#fa4934"><i class="fa fa-thumbs-down" aria-hidden="true"></i> <a style="color:#fa4934" href="<?php echo $filter_total_product_have_no_offers; ?>">Нету <i class="fa fa-filter"></i></a></td>				
+				</tr>
+				<tr class="small">
+					<td><?php echo $total_product_to_get_offers; ?></td>
+					<td><?php echo $total_product_got_offers; ?></td>
+					<td><?php echo $total_product_got_offers_today; ?></td>
+					<td><?php echo $total_product_got_offers_yesterday; ?></td>
+					<td><?php echo $total_product_have_offers; ?></td>
+					<td><?php echo $total_product_have_no_offers; ?></td>
+				</tr>		
 			</table>			
 
 			<table class="list big small-bottom-margin no-top-border">

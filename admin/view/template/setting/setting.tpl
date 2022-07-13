@@ -261,7 +261,7 @@
 						<table class="form">
 							<tr>	
 							
-								<td style="width:20%">
+								<td style="width:18%">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика цен B2B</span></p>
 									<select name="config_group_price_enable">
 										<?php if ($config_group_price_enable) { ?>
@@ -276,10 +276,10 @@
 									<span class="help">логика нагружает магазин, если реально это не используется, пусть будет отключено</span>
 								</td>
 
-								<td style="width:20%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Монобрендовый магазин</span></p>
-									<select name="config_monobrand">
-										<option value="0">Это не монобрендовый магазин</option>
+								<td style="width:18%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF;">Монобрендовый магазин</span></p>
+									<select name="config_monobrand" style=" width:150px;">
+										<option value="0">Нет</option>
 
 										<? foreach ($manufacturers as $manufacturer) { ?>
 											<?php if ($manufacturer['manufacturer_id'] == $config_monobrand) { ?>
@@ -290,10 +290,10 @@
 										<? } ?>
 									</select>	
 									<br />
-									<span class="help">настройка, позволяющая работать без списка брендов (не уверен что актуально)</span>
+									<span class="help">настройка, позволяющая работать без списка брендов (неактуальная настройка)</span>
 								</td>
 
-								<td style="width:20%">
+								<td style="width:18%">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">В брендах только товары</span></p>
 									<select type="select" name="config_show_goods_overload">
 										<? if ($config_show_goods_overload) { ?>
@@ -312,7 +312,7 @@
 									<span class="help">на странице брендов выводятся только товары, без списков коллекций, и.т.д.</span>	
 								</td>
 
-								<td style="width:20%">
+								<td style="width:18%">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Режим конфликта</span></p>
 									<select type="select" name="config_warmode_enable">
 										<? if ($config_warmode_enable) { ?>
@@ -331,7 +331,7 @@
 									<span class="help">будет отключен переключатель стран, и некоторые другие моменты</span>	
 								</td>
 
-								<td style="width:20%">
+								<td style="width:18%">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Режим разработки</span></p>
 									<select type="select" name="config_no_access_enable">
 										<? if ($config_no_access_enable) { ?>
@@ -344,6 +344,21 @@
 									</select>
 									<br />
 									<span class="help">Если включено, фронт будет закрыт 403 кодом в случае, если сессия админки не определена</span>	
+								</td>
+
+								<td style="width:18%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Обязательная цена</span></p>
+									<select type="select" name="config_no_zeroprice">
+										<? if ($config_no_zeroprice) { ?>
+											<option value="1" selected='selected' >Да</option>
+											<option value="0" >Нет</option>
+										<? } else { ?>
+											<option value="1" >Да</option>
+											<option value="0"  selected='selected' >Нет</option>
+										<? } ?>       
+									</select>
+									<br />
+									<span class="help">Если включено, то из отборов фронта исключаются товары без заданной основной цены</span>	
 								</td>
 
 							</tr>

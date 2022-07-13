@@ -2412,6 +2412,30 @@
 			return $query->row['total'];
 		}
 
+		public function getTotalProductsGotOffers() {
+			$query = $this->db->query("SELECT COUNT(product_id) as total FROM product WHERE asin <> '' AND amzn_last_offers != '0000-00-00 00:00:00'");
+			
+			return $query->row['total'];
+		}
+
+		public function getTotalProductsHaveOffers() {
+			$query = $this->db->query("SELECT COUNT(product_id) as total FROM product WHERE asin <> '' AND amzn_last_offers != '0000-00-00 00:00:00' AND amzn_no_offers = 0");
+			
+			return $query->row['total'];
+		}
+
+		public function getTotalProductsHaveNoOffers() {
+			$query = $this->db->query("SELECT COUNT(product_id) as total FROM product WHERE asin <> '' AND amzn_last_offers != '0000-00-00 00:00:00' AND amzn_no_offers = 1");
+			
+			return $query->row['total'];
+		}
+
+		public function getTotalProductsGotOffersByDate($date) {
+			$query = $this->db->query("SELECT COUNT(product_id) as total FROM product WHERE asin <> '' AND DATE(amzn_last_offers) = '" . $this->db->escape($date) . "'");
+			
+			return $query->row['total'];
+		}
+
 		public function getTotalProductsFilled() {
 			$query = $this->db->query("SELECT COUNT(product_id) as total FROM product WHERE filled_from_amazon = 1 AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE amazon_can_get_full = 1))");
 			
@@ -2419,7 +2443,7 @@
 		}
 
 		public function getTotalProductsNeedToBeFilled() {
-			$query = $this->db->query("SELECT COUNT(DISTINCT product_id) as total FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE amazon_can_get_full = 1)");
+			$query = $this->db->query("SELECT COUNT(DISTINCT p2c.product_id) as total FROM product_to_category p2c LEFT JOIN product p ON (p.product_id = p2c.product_id) WHERE category_id IN (SELECT category_id FROM category WHERE amazon_can_get_full = 1) AND fill_from_amazon = 1");
 			
 			return $query->row['total'];
 		}

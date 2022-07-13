@@ -995,7 +995,11 @@
 				$sql .= " AND p.is_option_with_id = '0' ";
 			}
 
-			$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
+			$sql .= " AND ((p.main_variant_id = '0' OR ISNULL(p.main_variant_id)) OR p.display_in_catalog = 1)";
+
+			if ($this->config->get('config_no_zeroprice')){
+				$sql .= " AND p.price > 0";
+			}		
 			
 			if (!empty($data['filter_category_id'])) {
 				if (!empty($data['filter_sub_category'])) {
@@ -2231,7 +2235,11 @@
 				$sql .= " AND p.is_option_with_id = '0' ";
 			}
 
-			$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
+			$sql .= " AND ((p.main_variant_id = '0' OR ISNULL(p.main_variant_id)) OR p.display_in_catalog = 1)";	
+
+			if ($this->config->get('config_no_zeroprice')){
+				$sql .= " AND p.price > 0";
+			}		
 			
 			if (!empty($data['filter_category_id'])) {
 				if (!empty($data['filter_sub_category'])) {
@@ -2924,7 +2932,15 @@
 		}
 
 		public function getTotalVariants($product_id){
-			return $this->db->query("SELECT COUNT(product_id) as total FROM product WHERE main_variant_id = '" . (int)$product_id . "'")->row['total'];
+
+			$sql = "SELECT COUNT(product_id) as total FROM product WHERE main_variant_id = '" . (int)$product_id . "'";
+
+
+			if ($this->config->get('config_no_zeroprice')){
+				$sql .= " AND price > 0";
+			}
+
+			return $this->db->query($sql)->row['total'];
 		}
 
 		public function getVariants($product_id){
@@ -2933,11 +2949,17 @@
 			LEFT JOIN product_description pd ON (p.product_id = pd.product_id) 
 			LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
 			WHERE p.status = '1' 
-			AND p.is_markdown = '0'
-			AND p.main_variant_id = '" . (int)$product_id . "'
-			AND p.date_available <= NOW() 
+			AND p.is_markdown = '0'			
+			AND p.main_variant_id = '" . (int)$product_id . "'";
+
+			if ($this->config->get('config_no_zeroprice')){
+				$sql .= " AND p.price > 0";
+			}
+
+			$sql .= " AND p.date_available <= NOW()
 			AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'									
 			AND (pd.language_id = '" . (int)$this->config->get('config_language_id') . "')";
+
 
 			$query = $this->db->query($sql);
 

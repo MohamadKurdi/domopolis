@@ -21,12 +21,12 @@ class RainforestAmazon
 
 	public const productRequestLimits 	= 30;
 	public const categoryRequestLimits 	= 100;
-	public const offerRequestLimits 	= 30;
+	public const offerRequestLimits 	= 40;
 
 	public const generalDBQueryLimit	= 3000;
 
 	public const offerParserLimit 		= 2000;
-	public const fullProductParserLimit = 90;
+	public const fullProductParserLimit = 300;
 
 	public const categoryModeTables 		= ['standard' => 'category_amazon_tree', 	'bestsellers' => 'category_amazon_bestseller_tree'];
 	public const categoryModeResultIndexes 	= ['standard' => 'category_results', 		'bestsellers' => 'bestsellers'];

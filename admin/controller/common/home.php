@@ -373,6 +373,16 @@
 			$this->data['total_products_in_tech'] 			= $this->model_catalog_product->getTotalProducts(['filter_category_id' => $this->config->get('config_rainforest_default_technical_category_id')]);
 			$this->data['filter_total_products_in_tech'] 	= $this->url->link('catalog/product_ext', 'filter_category=' . $this->config->get('config_rainforest_default_technical_category_id') . '&token=' . $this->session->data['token'], 'SSL');
 
+			$this->data['total_product_got_offers']				= $this->model_catalog_product->getTotalProductsGotOffers();
+			$this->data['total_product_to_get_offers']			= $this->registry->get('rainforestAmazon')->offersParser->getTotalProductsToGetOffers();
+			$this->data['total_product_got_offers_today']		= $this->model_catalog_product->getTotalProductsGotOffersByDate(date('Y-m-d'));
+			$this->data['total_product_got_offers_yesterday']	= $this->model_catalog_product->getTotalProductsGotOffersByDate(date('Y-m-d', strtotime('-1 day')));
+
+			$this->data['total_product_have_offers']			= $this->model_catalog_product->getTotalProductsHaveOffers();
+			$this->data['filter_total_product_have_offers'] 	= $this->url->link('catalog/product_ext', 'filter_stock_status=' . $this->config->get('config_stock_status_id') . '&token=' . $this->session->data['token'], 'SSL');
+			$this->data['total_product_have_no_offers']			= $this->model_catalog_product->getTotalProductsHaveNoOffers();
+			$this->data['filter_total_product_have_no_offers'] 	= $this->url->link('catalog/product_ext', 'filter_stock_status=' . $this->config->get('config_rainforest_nooffers_status_id') . '&token=' . $this->session->data['token'], 'SSL');
+
 			$this->data['total_products_added_today'] 			= $this->model_catalog_product->getTotalProductsAdded(date('Y-m-d'));
 			$this->data['filter_total_products_added_today'] 	= $this->url->link('catalog/product_ext', 'filter_date_added=' . date('Y-m-d') . '&token=' . $this->session->data['token'], 'SSL');
 

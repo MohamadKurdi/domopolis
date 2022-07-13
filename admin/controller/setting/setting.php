@@ -540,6 +540,12 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_warmode_enable'] = $this->config->get('config_warmode_enable');
 		}
 
+		if (isset($this->request->post['config_no_zeroprice'])) {
+			$this->data['config_no_zeroprice'] = $this->request->post['config_no_zeroprice']; 
+		} else {
+			$this->data['config_no_zeroprice'] = $this->config->get('config_no_zeroprice');
+		}
+
 		if (isset($this->request->post['config_no_access_enable'])) {
 			$this->data['config_no_access_enable'] = $this->request->post['config_no_access_enable']; 
 		} else {
