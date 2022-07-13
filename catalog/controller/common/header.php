@@ -474,7 +474,7 @@
 			
 			//SVG бонусов
 			if ($this->config->get('config_reward_logosvg')){
-				$this->data['points_svg'] = trim($this->config->get('config_static_subdomain')) . 'catalog/view/theme/kp/img/' . $this->config->get('config_reward_logosvg');
+				$this->data['points_svg'] = trim($this->config->get('config_static_subdomain')) . 'catalog/view/theme/' . $this->config->get('config_template') . '/img/' . $this->config->get('config_reward_logosvg');
 			}
 			
 			
