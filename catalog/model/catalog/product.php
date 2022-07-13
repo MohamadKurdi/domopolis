@@ -968,8 +968,10 @@
 				) as stock_status_id, ";
 
 			}
+			
 			$sql .= " (SELECT AVG(rating) AS total FROM review r1 WHERE r1.product_id = p.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, (SELECT price FROM product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.quantity = '1' AND price > 0 AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) AND pd2.customer_group_id = '" . (int)$customer_group_id . "' ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, 
 			(SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price,
+			(SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_national_overload_price,
 			(SELECT price FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ps.customer_group_id = '" . (int)$customer_group_id . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special,
 			(SELECT currency_scode FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ps.customer_group_id = '" . (int)$customer_group_id . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS currency_scode";
 			
@@ -998,8 +1000,14 @@
 			$sql .= " AND ((p.main_variant_id = '0' OR ISNULL(p.main_variant_id)) OR p.display_in_catalog = 1)";
 
 			if ($this->config->get('config_no_zeroprice')){
-				$sql .= " AND p.price > 0";
-			}		
+				$sql .= " AND (p.price > 0 OR p.price_national > 0)";
+			} else {
+				$sql .= " AND (";
+				$sql .= " p.price > 0 OR p.price_national > 0";
+				$sql .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+				$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+				$sql .= ")";
+			}
 			
 			if (!empty($data['filter_category_id'])) {
 				if (!empty($data['filter_sub_category'])) {
@@ -2238,7 +2246,13 @@
 			$sql .= " AND ((p.main_variant_id = '0' OR ISNULL(p.main_variant_id)) OR p.display_in_catalog = 1)";	
 
 			if ($this->config->get('config_no_zeroprice')){
-				$sql .= " AND p.price > 0";
+				$sql .= " AND (p.price > 0 OR p.price_national > 0)";
+			} else {
+				$sql .= " AND (";
+				$sql .= " p.price > 0 OR p.price_national > 0";
+				$sql .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+				$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+				$sql .= ")";
 			}		
 			
 			if (!empty($data['filter_category_id'])) {
@@ -2933,11 +2947,16 @@
 
 		public function getTotalVariants($product_id){
 
-			$sql = "SELECT COUNT(product_id) as total FROM product WHERE main_variant_id = '" . (int)$product_id . "'";
-
+			$sql = "SELECT COUNT(product_id) as total FROM product p WHERE main_variant_id = '" . (int)$product_id . "'";
 
 			if ($this->config->get('config_no_zeroprice')){
-				$sql .= " AND price > 0";
+				$sql .= " AND (p.price > 0 OR p.price_national > 0)";
+			} else {
+				$sql .= " AND (";
+				$sql .= " p.price > 0 OR p.price_national > 0";
+				$sql .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+				$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+				$sql .= ")";
 			}
 
 			return $this->db->query($sql)->row['total'];
@@ -2953,7 +2972,13 @@
 			AND p.main_variant_id = '" . (int)$product_id . "'";
 
 			if ($this->config->get('config_no_zeroprice')){
-				$sql .= " AND p.price > 0";
+				$sql .= " AND (p.price > 0 OR p.price_national > 0)";
+			} else {
+				$sql .= " AND (";
+				$sql .= " p.price > 0 OR p.price_national > 0";
+				$sql .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+				$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+				$sql .= ")";
 			}
 
 			$sql .= " AND p.date_available <= NOW()

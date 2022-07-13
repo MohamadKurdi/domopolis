@@ -25,7 +25,7 @@ class RainforestAmazon
 
 	public const generalDBQueryLimit	= 3000;
 
-	public const offerParserLimit 		= 2000;
+	public const offerParserLimit 		= 3000;
 	public const fullProductParserLimit = 300;
 
 	public const categoryModeTables 		= ['standard' => 'category_amazon_tree', 	'bestsellers' => 'category_amazon_bestseller_tree'];
