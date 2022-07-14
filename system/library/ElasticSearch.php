@@ -2,16 +2,13 @@
 	
 	use Elasticsearch\ClientBuilder;
 	
-	class ElasticSearch{
-		private static $languages = array(2 => 'ru', 5 => 'ua', 6 => 'uk', 9 => 'kz', 8 => 'by');
-		private static $stores = array(0 => 'ru', 1 => 'ua', 2 => 'kz', 5 => 'by');
-		
-		
+	class ElasticSearch{				
 		public $elastic;
 		private $db;
 		private $log;
 		private $cache;
 		private $config;
+		private $registry;
 		private $settings = array();
 		
 		const CATEGORY_PRIORITY = 20;
@@ -32,12 +29,12 @@
 			}
 			
 			$this->settings = loadJsonConfig('search');				
-			
+			$this->registry	= $registry;
+
 			$this->db 		= $registry->get('db');
 			$this->cache 	= $registry->get('cache');
 			$this->config 	= $registry->get('config');
 			$this->log 		= $registry->get('log');
-
 			
 		}
 		
@@ -48,8 +45,8 @@
 		public function buildField($field){
 			
 			$result = $field . '_ru';
-			if (!empty(self::$languages[$this->config->get('config_language_id')])){
-				$result = $field . '_' . self::$languages[$this->config->get('config_language_id')];
+			if (!empty($this->registry->get('languages_id_code_mapping')[$this->config->get('config_language_id')])){
+				$result = $field . '_' . $this->registry->get('languages_id_code_mapping')[$this->config->get('config_language_id')];
 			}
 			
 			return trim($result);
@@ -280,10 +277,10 @@
 			return $m;		
 		}
 		
-		public static function makeTextNumbers(&$params){
+		public function makeTextNumbers(&$params){
 			$tmp = $params;
 			
-			foreach (self::$languages as $language_id => $language_code){
+			foreach ($this->registry->get('languages_id_code_mapping') as $language_id => $language_code){
 				if (!empty($tmp['body']['names_' . $language_code])){
 					foreach ($tmp['body']['names_' . $language_code] as $tmp_name){
 						for ($i=100; $i>=1; $i--){
@@ -301,7 +298,7 @@
 			
 		}
 		
-		public static function prepareProductManufacturerIndex($namequery, $manquery, &$params){
+		public function prepareProductManufacturerIndex($namequery, $manquery, &$params){
 			$mapping = self::createMappingToIDS($namequery, 'language_id', 'name');
 			
 			$manmapping = self::createMappingToIDS($manquery, 'language_id', 'name');
@@ -309,7 +306,7 @@
 			self::remapAlternateMapping($altmapping);
 			
 			
-			foreach (self::$languages as $language_id => $language_code){
+			foreach ($this->registry->get('languages_id_code_mapping') as $language_id => $language_code){
 				if (!empty($mapping[$language_id]) && !empty($manmapping[$language_id]) && !empty($altmapping[$language_id])){
 					foreach ($altmapping[$language_id] as $altManufacturer){
 						
@@ -333,7 +330,7 @@
 			}
 		}
 		
-		public static function prepareProductManufacturerCollectionIndex($namequery, $manquery, $colquery, &$params){
+		public function prepareProductManufacturerCollectionIndex($namequery, $manquery, $colquery, &$params){
 			$mapping = self::createMappingToIDS($namequery, 'language_id', 'name');
 			
 			$manmapping = self::createMappingToIDS($manquery, 'language_id', 'name');
@@ -345,7 +342,7 @@
 			self::remapAlternateMapping($altcolmapping);
 			
 			
-			foreach (self::$languages as $language_id => $language_code){
+			foreach ($this->registry->get('languages_id_code_mapping') as $language_id => $language_code){
 				if (!empty($mapping[$language_id]) && !empty($manmapping[$language_id]) && !empty($altmapping[$language_id]) && !empty($colmapping[$language_id]) && !empty($altcolmapping[$language_id])){
 					foreach ($altmapping[$language_id] as $altManufacturer){
 						
@@ -377,11 +374,11 @@
 			}
 		}
 		
-		public static function prepareProductIndex($namequery, &$params){
+		public function prepareProductIndex($namequery, &$params){
 			$mapping = self::createMappingToIDS($namequery, 'language_id', 'name');
 			$desmapping = self::createMappingToIDS($namequery, 'language_id', 'description');		
 			
-			foreach (self::$languages as $language_id => $language_code){
+			foreach ($this->registry->get('languages_id_code_mapping') as $language_id => $language_code){
 				if (!empty($mapping[$language_id])){
 					if ($language_id == 6) {
 						if (empty($mapping[5])){
@@ -408,7 +405,7 @@
 			}	
 		}
 		
-		public static function prepareCategoryManufacturerIndex($namequery, $idc, $idm, $idcc, &$params){
+		public function prepareCategoryManufacturerIndex($namequery, $idc, $idm, $idcc, &$params){
 			$mapping = self::createMappingToIDS($namequery, 'language_id', 'name');
 			$altmapping = self::createMappingToIDS($namequery, 'language_id', 'alternate_name');			
 			self::remapAlternateMapping($altmapping);
@@ -417,7 +414,7 @@
 			$params['body']['manufacturer_id'] = $idm;
 			$params['body']['collection_id'] = $idcc;
 			
-			foreach (self::$languages as $language_id => $language_code){
+			foreach ($this->registry->get('languages_id_code_mapping') as $language_id => $language_code){
 				if (!empty($mapping[$language_id])){
 					$params['body']['name_' . $language_code] = $mapping[$language_id];
 					
@@ -442,7 +439,7 @@
 			}	
 		}
 		
-		public static function prepareCategoryManufacturerInterSectionIndex($namequery, $namequery2, &$params, $collectionLogic = false){
+		public function prepareCategoryManufacturerInterSectionIndex($namequery, $namequery2, &$params, $collectionLogic = false){
 			$manufacturerMapping 	= self::createMappingToIDS($namequery, 'language_id', 'name');
 			$manufacturerAltMapping = self::createMappingToIDS($namequery, 'language_id', 'alternate_name');
 			self::remapAlternateMapping($manufacturerAltMapping);
@@ -451,7 +448,7 @@
 			$categoryAltMapping = self::createMappingToIDS($namequery2, 'language_id', 'alternate_name');
 			self::remapAlternateMapping($categoryAltMapping);		
 			
-			foreach (self::$languages as $language_id => $language_code){
+			foreach ($this->registry->get('languages_id_code_mapping') as $language_id => $language_code){
 				if (!empty($manufacturerMapping[$language_id]) && !empty($categoryMapping[$language_id])){									
 					
 					$categoryMapping[$language_id] = trim(str_replace($manufacturerMapping[$language_id], '', $categoryMapping[$language_id]));
@@ -537,11 +534,11 @@
 		}
 		
 		
-		public static function createStoreIndexArray($mapping, $index, &$params){
+		public function createStoreIndexArray($mapping, $index, &$params){
 			
 			$params['body'][$index] = array();
 			
-			foreach (self::$stores as $store_id => $language_code){
+			foreach ($this->registry->get('stores_to_main_language_mapping') as $store_id => $language_code){
 				if (!empty($mapping[$store_id])){
 					$params['body'][$index][] = $store_id;
 				}
@@ -580,7 +577,7 @@
 			[ '_script' => ['order' => 'desc', 'type' => 'number', 
 			'script' => [
 			'lang'   => 'painless',
-			'source' => "if(doc['" . $this->config->get('config_warehouse_identifier') . "'].value==0){return -1;}else{return _score}",
+			'source' => "if(doc['" . $this->config->get('config_warehouse_identifier') . ".keyword'].value==0){return -1;}else{return _score}",
 			] ] ]								
 			],
 			'query' 	=> [
@@ -803,11 +800,11 @@
 				die('cli only');	
 			}	
 			
-			
+				
 			$deleteParams = [
 			'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix')
 			];
-			$response = $this->elastic->indices()->delete($deleteParams);
+			//$response = $this->elastic->indices()->delete($deleteParams);
 			
 			$createParams = [
 			'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix'),
@@ -860,7 +857,7 @@
 			$deleteParams = [
 			'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix')
 			];
-		//	$response = $this->elastic->indices()->delete($deleteParams);
+			$response = $this->elastic->indices()->delete($deleteParams);
 			
 			$createParams = [
 			'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix'),
@@ -920,20 +917,20 @@
 			'sku'				=> [ 'type' => 'text', 'analyzer' => 'identifier', 'index' => 'true' ],
 			'ean'				=> [ 'type' => 'text', 'analyzer' => 'identifier', 'index' => 'true' ],
 			'identifier'		=> [ 'type' => 'text', 'analyzer' => 'identifier', 'index' => 'true' ],
-			'stock_status_id'	=> [ 'type' => 'integer', 'index' => 'true' ],
-			'status'			=> [ 'type' => 'integer', 'index' => 'true' ],
-			'quantity'			=> [ 'type' => 'integer', 'index' => 'true' ],
-			'quantity_stock'	=> [ 'type' => 'integer', 'index' => 'true' ],
-			'quantity_stockM'	=> [ 'type' => 'integer', 'index' => 'true' ],
-			'quantity_stockK'	=> [ 'type' => 'integer', 'index' => 'true' ],
-			'quantity_stockMN'	=> [ 'type' => 'integer', 'index' => 'true' ],
-			'quantity_stockAS'	=> [ 'type' => 'integer', 'index' => 'true' ],
+			'stock_status_id'	=> [ 'type' => 'integer', 'index' => 'true', 'fields' => ['keyword' => ['type' => 'keyword', 'index' => 'true']] ],
+			'status'			=> [ 'type' => 'integer', 'index' => 'true', 'fields' => ['keyword' => ['type' => 'keyword', 'index' => 'true']] ],
+			'quantity'			=> [ 'type' => 'integer', 'index' => 'true', 'fields' => ['keyword' => ['type' => 'keyword', 'index' => 'true']] ],
+			'quantity_stock'	=> [ 'type' => 'integer', 'index' => 'true', 'fields' => ['keyword' => ['type' => 'keyword', 'index' => 'true']] ],
+			'quantity_stockM'	=> [ 'type' => 'integer', 'index' => 'true', 'fields' => ['keyword' => ['type' => 'keyword', 'index' => 'true']] ],
+			'quantity_stockK'	=> [ 'type' => 'integer', 'index' => 'true', 'fields' => ['keyword' => ['type' => 'keyword', 'index' => 'true']] ],
+			'quantity_stockMN'	=> [ 'type' => 'integer', 'index' => 'true', 'fields' => ['keyword' => ['type' => 'keyword', 'index' => 'true']] ],
+			'quantity_stockAS'	=> [ 'type' => 'integer', 'index' => 'true', 'fields' => ['keyword' => ['type' => 'keyword', 'index' => 'true']] ],
 			'stores'  			=> [ 'type' => 'integer', 'index' => 'true' ],
 			'categories'  		=> [ 'type' => 'integer', 'index' => 'true' ],
 			] ]
 			] ];
 			
-		//	$response = $this->elastic->indices()->create($createParams);		
+			$response = $this->elastic->indices()->create($createParams);		
 			
 			return $this;
 			
@@ -959,12 +956,12 @@
 				
 				//Индексация названий
 				$namequery = $this->db->query("SELECT name as name, alternate_name as alternate_name, language_id FROM category_description WHERE category_id = '" . (int)$category_id['category_id'] . "'");						
-				ElasticSearch::prepareCategoryManufacturerIndex($namequery, $category_id['category_id'], 0, 0, $params);				
+				$this->prepareCategoryManufacturerIndex($namequery, $category_id['category_id'], 0, 0, $params);				
 				
 				//Привязка к магазинам
 				$storequery = $this->db->query("SELECT store_id FROM category_to_store WHERE category_id = '" . (int)$category_id['category_id'] . "'");
 				$mapping = ElasticSearch::createMappingToNonEmpty($storequery, 'store_id');
-				ElasticSearch::createStoreIndexArray($mapping, 'stores', $params);
+				$this->createStoreIndexArray($mapping, 'stores', $params);
 				
 				$response = $this->elastic->index($params);
 				//	print_r($response);
@@ -987,12 +984,12 @@
 				
 				//Индексация названий
 				$namequery = $this->db->query("SELECT m.manufacturer_id, m.name as name, md.alternate_name as alternate_name, md.language_id FROM manufacturer m LEFT JOIN manufacturer_description md ON m.manufacturer_id = md.manufacturer_id WHERE m.manufacturer_id = '" . (int)$manufacturer_id['manufacturer_id'] . "'");						
-				ElasticSearch::prepareCategoryManufacturerIndex($namequery, 0, $manufacturer_id['manufacturer_id'], 0, $params);				
+				$this->prepareCategoryManufacturerIndex($namequery, 0, $manufacturer_id['manufacturer_id'], 0, $params);				
 				
 				//Привязка к магазинам
 				$storequery = $this->db->query("SELECT store_id FROM manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id['manufacturer_id'] . "'");
 				$mapping = ElasticSearch::createMappingToNonEmpty($storequery, 'store_id');
-				ElasticSearch::createStoreIndexArray($mapping, 'stores', $params);								
+				$this->createStoreIndexArray($mapping, 'stores', $params);								
 				
 				$response = $this->elastic->index($params);
 				//	print_r($response);
@@ -1024,12 +1021,12 @@
 						
 						$namequery3 = $this->db->query("SELECT name as name, alternate_name as alternate_name, language_id FROM category_description WHERE category_id = '" . (int)$row['category_id'] . "'");
 						
-						ElasticSearch::prepareCategoryManufacturerInterSectionIndex($namequery, $namequery3, $params);					
+						$this->prepareCategoryManufacturerInterSectionIndex($namequery, $namequery3, $params);					
 						
 						//Привязка к магазинам
 						$storequery = $this->db->query("SELECT store_id FROM manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id['manufacturer_id'] . "' AND store_id IN (SELECT store_id FROM category_to_store WHERE category_id = '" . $namequery2->row['category_id'] . "')");
 						$mapping = ElasticSearch::createMappingToNonEmpty($storequery, 'store_id');
-						ElasticSearch::createStoreIndexArray($mapping, 'stores', $params);	
+						$this->createStoreIndexArray($mapping, 'stores', $params);	
 						
 						$response = $this->elastic->index($params);
 						//	print_r($response);
@@ -1066,7 +1063,7 @@
 						//Привязка к магазинам
 						$storequery = $this->db->query("SELECT store_id FROM collection_to_store WHERE collection_id = '" . $namequery2->row['collection_id'] . "'");
 						$mapping = ElasticSearch::createMappingToNonEmpty($storequery, 'store_id');
-						ElasticSearch::createStoreIndexArray($mapping, 'stores', $params);	
+						$this->createStoreIndexArray($mapping, 'stores', $params);	
 						
 						$response = $this->elastic->index($params);
 					}
@@ -1132,16 +1129,16 @@
 
 				//Индексация названий
 			$namequery = $this->db->query("SELECT name as name, description as description, language_id FROM product_description WHERE product_id = '" . (int)$product['product_id'] . "'");		
-			self::prepareProductIndex($namequery, $params);	
+			$this->prepareProductIndex($namequery, $params);	
 
 			$manquery = $this->db->query("SELECT m.name, md.alternate_name as alternate_name, md.language_id FROM manufacturer_description md LEFT JOIN manufacturer m ON (m.manufacturer_id = md.manufacturer_id) WHERE md.manufacturer_id = '" . (int)$product['manufacturer_id'] . "'");
-			self::prepareProductManufacturerIndex($namequery, $manquery, $params);
+			$this->prepareProductManufacturerIndex($namequery, $manquery, $params);
 
 			$colquery = $this->db->query("SELECT c.name as name, cd.alternate_name as alternate_name, cd.language_id FROM collection_description cd LEFT JOIN collection c ON (c.collection_id = cd.collection_id) WHERE cd.collection_id = '" . (int)$product['collection_id'] . "'");
-			self::prepareProductManufacturerIndex($namequery, $colquery, $params);
-			self::prepareProductManufacturerCollectionIndex($namequery, $manquery, $colquery, $params);
+			$this->prepareProductManufacturerIndex($namequery, $colquery, $params);
+			$this->prepareProductManufacturerCollectionIndex($namequery, $manquery, $colquery, $params);
 
-			self::makeTextNumbers($params);
+			$this->makeTextNumbers($params);
 
 
 				//Привязка к категориям

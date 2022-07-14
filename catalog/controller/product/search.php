@@ -378,23 +378,23 @@ class ControllerProductSearch extends Controller {
 				$field4 = $this->elasticSearch->buildField('suggest');
 
 
-				$product_total = $this->elasticSearch->fuzzyP('products', $query, $field, $field2, $field3, ['getTotal' => true]);				
-				$resultsE = $this->elasticSearch->fuzzyP('products', $query, $field, $field2, $field3, ['start' => (($page - 1) * $limit), 'limit' => $limit, 'filter_manufacturer_id' => $filter_manufacturer_id, 'filter_category_id' => $filter_category_id, 'sort' => $sort, 'order' => $order]);
+				$product_total = $this->elasticSearch->fuzzyP('products' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field2, $field3, ['getTotal' => true]);				
+				$resultsE = $this->elasticSearch->fuzzyP('products' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field2, $field3, ['start' => (($page - 1) * $limit), 'limit' => $limit, 'filter_manufacturer_id' => $filter_manufacturer_id, 'filter_category_id' => $filter_category_id, 'sort' => $sort, 'order' => $order]);
 				$results = $this->elasticResults($resultsE, $field);
 
-				$resultAggregations = $this->elasticSearch->fuzzyP('products', $query, $field, $field2, $field3, ['count' => true]);
+				$resultAggregations = $this->elasticSearch->fuzzyP('products' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field2, $field3, ['count' => true]);
 				$this->data['intersections'] = $this->prepareManufacturers(Elasticsearch::validateAggregationResult($resultAggregations, 'manufacturers'));
 				$this->data['intersections2'] = $this->prepareCategories(Elasticsearch::validateAggregationResult($resultAggregations, 'categories'));
 
 					//Поиск категорий, брендов и связок
 					//Самый первый запрос, просто поиск по названию, надеюсь в большинстве случаев его достаточно
 				$exact = true;
-				$resultsCMA = $this->elasticSearch->fuzzy('categories', $query, $field, $field4, ['limit' => 30]);	
+				$resultsCMA = $this->elasticSearch->fuzzy('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field4, ['limit' => 30]);	
 
 					//Запрос к альтернативному набору
 				if (!ElasticSearch::validateResult($resultsCMA)){
 					$exact = false;
-					$resultsCMA = $this->elasticSearch->fuzzy('categories', $query, $field2, $field4, ['limit' => 30]);
+					$resultsCMA = $this->elasticSearch->fuzzy('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field2, $field4, ['limit' => 30]);
 				}
 
 				$this->data['top_found_cmas'] = $this->elasticResultsCMA($resultsCMA, $field, $exact);

@@ -114,7 +114,7 @@
 	$registry->get('config')->set('config_store_id', $store_id);	
 	$settings = $registry->get('cache')->get('settings.structure'.(int)$registry->get('config')->get('config_store_id'));
 	if (!$settings) {	
-		$query = $registry->get('db')->query("SELECT * FROM " . DB_PREFIX . "setting WHERE store_id = '0' OR store_id = '" . (int)$registry->get('config')->get('config_store_id') . "' ORDER BY store_id ASC");		
+		$query = $registry->get('db')->query("SELECT * FROM setting WHERE store_id = '0' OR store_id = '" . (int)$registry->get('config')->get('config_store_id') . "' ORDER BY store_id ASC");		
 		$settings = $query->rows;
 		$registry->get('cache')->set('settings.structure'.(int)$registry->get('config')->get('config_store_id'), $settings);
 	}
@@ -151,18 +151,30 @@
 		}
 	}
 			
-	$registry->set('url', new Url($registry->get('config')->get('config_url'), $registry->get('config')->get('config_ssl')));				
+	$registry->set('url', new Url($registry->get('config')->get('config_url'), $registry->get('config')->get('config_ssl')));		
+
+	//Stores main language config to registry (need for ElasticSearch and some other)
+	$stores_to_main_language_mapping = [];
+	$query = $registry->get('db')->query("SELECT store_id, value FROM `setting` WHERE `key` = 'config_language'");
+	foreach ($query->rows as $result) {
+		$stores_to_main_language_mapping[$result['store_id']] = $result['value'];
+	}
+
+	$registry->set('stores_to_main_language_mapping', $stores_to_main_language_mapping);
 				
 	//Определение языка
-	$languages = array();
-	$query = $registry->get('db')->query("SELECT * FROM `" . DB_PREFIX . "language` WHERE status = '1'"); 
+	$languages = [];
+	$languages_id_code_mapping = [];
+	$query = $registry->get('db')->query("SELECT * FROM `language` WHERE status = '1'"); 
 	
 	foreach ($query->rows as $result) {
 		$languages[$result['code']] = $result;
+		$languages_id_code_mapping[$result['language_id']] = $result['code'];
 	}
 
 	//ALL LANGUAGES TO REGISTRY
 	$registry->set('languages', $languages);
+	$registry->set('languages_id_code_mapping', $languages_id_code_mapping);
 	$registry->get('config')->set('config_supported_languages', [$registry->get('config')->get('config_language'), $registry->get('config')->get('config_second_language')]);
 	$registry->get('config')->set('config_rainforest_source_language_id', $languages[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);
 	

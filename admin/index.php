@@ -222,16 +222,19 @@
 	$registry->set('mobileDetect', new Mobile_Detect);
 	$registry->set('simpleProcess', new hobotix\simpleProcess());
 	
-	// Language
-	$languages = array();
-	
-	$query = $db->query("SELECT * FROM `" . DB_PREFIX . "language`"); 
-	
+	//Определение языка
+	$languages = [];
+	$languages_id_code_mapping = [];
+	$query = $registry->get('db')->query("SELECT * FROM `language` WHERE status = '1'"); 
+
 	foreach ($query->rows as $result) {
 		$languages[$result['code']] = $result;
+		$languages_id_code_mapping[$result['language_id']] = $language['code'];
 	}
-	
+
+	//ALL LANGUAGES TO REGISTRY
 	$registry->set('languages', $languages);
+	$registry->set('languages_id_code_mapping', $languages_id_code_mapping);
 	$registry->get('config')->set('config_language_id', $languages[$config->get('config_admin_language')]['language_id']);
 	$registry->get('config')->set('config_rainforest_source_language_id', $languages[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);
 	
