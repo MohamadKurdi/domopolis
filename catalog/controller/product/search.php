@@ -424,7 +424,7 @@ class ControllerProductSearch extends Controller {
 
 					$this->data['products'] = $this->model_catalog_product->prepareProductToArray($results['product_data'], $bestsellers);
 
-					if (($total_results = ($product_total + count($this->data['intersections']) + count($this->data['intersections2']) + count($this->data['top_found_cmas']))) == 0){
+					if (!empty($this->data['intersections']) && !empty($this->data['intersections2']) && !empty($this->data['top_found_cmas']) && ($total_results = ($product_total + count($this->data['intersections']) + count($this->data['intersections2']) + count($this->data['top_found_cmas']))) == 0){
 					//NOTHING FOUND
 						$this->data['nothing_found'] = true;
 

@@ -605,11 +605,12 @@
 
 			if ($this->config->get('config_elasticsearch_use_local_stock')){
 				$params['body']['sort'] = [
-					[ '_script' => ['order' => 'desc', 'type' => 'number', 
+					[ '_script' => ['order' => 'desc', 'type' => 'number',
 					'script' => [
 						'lang'   => 'painless',
-						'source' => "if(doc['" . $this->config->get('config_warehouse_identifier') . ".keyword'].value==0){return -1;}else{return _score}",
-					] ] ]								
+						'source' => "if(doc['" . $this->config->get('config_warehouse_identifier') . ".keyword'].value =='0'){-1}else{ _score}",
+					] ],					
+					],						
 				];
 			} else {
 				$params['body']['sort'] = [
@@ -617,14 +618,14 @@
 					[ $this->config->get('config_warehouse_identifier').'.keyword' => 'desc' ],										
 					[ '_score' => 'desc' ],
 				];
-			}			
+			}		
 			
 			if (!empty($data['sort'])){
 				if ($data['sort'] == 'p.price'){
 					if ($data['order'] == 'DESC'){
 						$params['body']['sort'] = [
-						[ $this->config->get('config_warehouse_identifier').'.keyword' => 'desc' ],	
-						[ 'stock_status_id'.'keyword' => 'asc' ],			
+						[ 'stock_status_id'.'keyword' => 'asc' ],							
+						[ $this->config->get('config_warehouse_identifier').'.keyword' => 'desc' ],										
 						[ 'price' => 'desc' ],
 						[ '_score' => 'desc' ],
 						];
@@ -632,6 +633,7 @@
 					
 					if ($data['order'] == 'ASC'){
 						$params['body']['sort'] = [
+						[ 'stock_status_id'.'keyword' => 'asc' ],
 						[ $this->config->get('config_warehouse_identifier').'.keyword' => 'desc' ],				
 						[ 'stock_status_id'.'keyword' => 'asc' ],
 						[ 'price' => 'asc' ],
@@ -670,8 +672,12 @@
 				unset($params['body']['highlight']);
 				return $this->elastic->search($params);
 			}
+
+			$results = $this->elastic->search($params);
 			
-			return $this->elastic->search($params);			
+			$this->log->debug($results);
+			
+			return $results;			
 		}
 		
 		public function sku($query){
