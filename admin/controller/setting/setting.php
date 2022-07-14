@@ -800,8 +800,7 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_country_id'] = $this->config->get('config_country_id');
 		}
 		
-		$this->load->model('localisation/country');
-		
+		$this->load->model('localisation/country');		
 		$this->data['countries'] = $this->model_localisation_country->getCountries();
 		
 		if (isset($this->request->post['config_zone_id'])) {
@@ -809,6 +808,9 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$this->data['config_zone_id'] = $this->config->get('config_zone_id');
 		}
+
+		$this->load->model('localisation/zone');		
+		$this->data['zones'] = $this->model_localisation_zone->getZonesByCountryId($this->data['config_country_id']);
 		
 		if (isset($this->request->post['config_countryname'])) {
 			$this->data['config_countryname'] = $this->request->post['config_countryname'];

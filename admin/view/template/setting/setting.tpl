@@ -732,8 +732,18 @@
 							</tr>
 							<tr>
 								<td><?php echo $entry_zone; ?></td>
-								<td><select name="config_zone_id">
-								</select></td>
+								<td>
+								<select name="config_zone_id">
+									<?php foreach ($zones as $zone) { ?>
+										<?php if ($zone['zone_id'] == $config_zone_id) { ?>
+											<option value="<?php echo $zone['zone_id']; ?>" selected="selected"><?php echo $zone['name']; ?></option>
+											<?php } else { ?>
+											<option value="<?php echo $zone['zone_id']; ?>"><?php echo $zone['name']; ?></option>
+										<?php } ?>
+									<?php } ?>
+
+								</select>
+								</td>
 							</tr>
 							
 							<tr>
@@ -4367,7 +4377,7 @@
 				});
 			});
 			
-			$('select[name=\'config_country_id\']').trigger('change');
+		//	$('select[name=\'config_country_id\']').trigger('change');
 		//--></script> 
 		<script type="text/javascript"><!--
 			function image_upload(field, thumb) {
