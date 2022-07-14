@@ -92,6 +92,7 @@
 					</div>
 				</div>
 
+			<?php if ($this->config->get('config_country_id') == 176) { ?>
 				<div class="tile-block">
 					<div class="tile info-loader unknown" data-path="common/panel/getPricevaInfo&store_id=0" data-update-interval="10000">
 						<div class="tile-heading">Priceva API RU Кампания</div>
@@ -103,6 +104,7 @@
 						</div>
 					</div>
 				</div>
+			<?php } ?>
 
 				<div class="tile-block">
 					<div class="tile info-loader unknown" data-path="common/panel/getPricevaInfo&store_id=1" data-update-interval="10000">
@@ -128,6 +130,7 @@
 					</div>
 				</div>
 
+			<?php if ($this->config->get('config_country_id') == 176) { ?>
 				<div class="tile-block">
 					<div class="tile info-loader unknown" data-path="common/panel/getYandexAPIInfo" data-update-interval="600000">
 						<div class="tile-heading">YAM API</div>
@@ -139,6 +142,7 @@
 						</div>
 					</div>
 				</div>
+			<?php } ?>
 
 				<div class="tile-block">
 					<div class="tile info-loader unknown" data-path="common/panel/getIpapiInfo" data-update-interval="600000">
@@ -188,6 +192,7 @@
 					</div>
 				</div>
 
+			<?php if ($this->config->get('config_country_id') == 176) { ?>
 				<div class="tile-block">
 					<div class="tile info-loader unknown" data-path="common/panel/getCDEKInfo" data-update-interval="300000">
 						<div class="tile-heading">CDEK</div>
@@ -199,6 +204,7 @@
 						</div>
 					</div>
 				</div>
+			<?php } ?>
 
 				<div class="tile-block">
 					<div class="tile info-loader unknown" data-path="common/panel/getNovaPoshtaInfo" data-update-interval="300000">
@@ -385,29 +391,31 @@
 					</div>
 				</div>
 
-				<div class="tile-block">
-					<div class="tile info-loader unknown" data-path="common/queues/countYandexStockQueue">
-						<div class="tile-heading">YAM Наличие</div>
-						<div class="tile-body"><i class="fa fa-yahoo"></i>
-							<span class="tile-result"></span>
+				<?php if ($this->config->get('config_country_id') == 176) { ?>
+					<div class="tile-block">
+						<div class="tile info-loader unknown" data-path="common/queues/countYandexStockQueue">
+							<div class="tile-heading">YAM Наличие</div>
+							<div class="tile-body"><i class="fa fa-yahoo"></i>
+								<span class="tile-result"></span>
+							</div>
+							<div class="tile-footer">
+								товаров на обновление наличия
+							</div>
 						</div>
-						<div class="tile-footer">
-							товаров на обновление наличия
-						</div>
-					</div>
-				</div>
+					</div>				
 
-				<div class="tile-block">
-					<div class="tile info-loader unknown" data-path="common/queues/countYandexOrderQueue">
-						<div class="tile-heading">YAM Заказы</div>
-						<div class="tile-body"><i class="fa fa-yahoo"></i>
-							<span class="tile-result"></span>
-						</div>
-						<div class="tile-footer">
-							заказов на обновление статуса
+					<div class="tile-block">
+						<div class="tile info-loader unknown" data-path="common/queues/countYandexOrderQueue">
+							<div class="tile-heading">YAM Заказы</div>
+							<div class="tile-body"><i class="fa fa-yahoo"></i>
+								<span class="tile-result"></span>
+							</div>
+							<div class="tile-footer">
+								заказов на обновление статуса
+							</div>
 						</div>
 					</div>
-				</div>
+				<?php } ?>
 
 				<div class="tile-block">
 					<div class="tile info-loader unknown" data-path="common/queues/countOrderTo1CQueue">

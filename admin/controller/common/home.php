@@ -297,7 +297,7 @@
 			$this->data['loyal_customers_diff'] = abs($this->data['loyal_customers_last_week']);
 			
 			$this->data['loyal_orders_last_month'] = $this->model_sale_customer->getTotalLoyalOrdersLastMonth();
-			$this->data['loyal_orders_percent'] = round((($this->data['loyal_orders_last_month'] / $this->data['orders_now']) * 100), 1);
+			$this->data['loyal_orders_percent'] = $this->data['orders_now']?round((($this->data['loyal_orders_last_month'] / $this->data['orders_now']) * 100), 1):0;
 			
 			
 			$this->data['total_installs'] = $this->model_setting_setting->getCounterTotal('pwainstall');
@@ -310,7 +310,7 @@
 			'filter_order_status_notnull' 	=> true
 			);
 			$this->data['orders_pwa_now'] = $this->model_sale_order->getTotalOrders($data);
-			$this->data['pwa_percent_for_last_month'] = round((($this->data['orders_pwa_now'] / $this->data['orders_now']) * 100), 1);
+			$this->data['pwa_percent_for_last_month'] = $this->data['orders_now']?round((($this->data['orders_pwa_now'] / $this->data['orders_now']) * 100), 1):0;
 			
 			
 			$this->data['total_yam_orders'] = $this->model_setting_setting->getYAMTotalOrders();
@@ -333,7 +333,7 @@
 			'filter_order_store_id'			=> 0
 			);
 			$this->data['orders_ru_now'] = $this->model_sale_order->getTotalOrders($data);
-			$this->data['yam_percent_for_last_month'] = round((($this->data['orders_yam_now'] / $this->data['orders_ru_now']) * 100), 1);
+			$this->data['yam_percent_for_last_month'] = $this->data['orders_ru_now']?round((($this->data['orders_yam_now'] / $this->data['orders_ru_now']) * 100), 1):0;
 			
 			$this->data['yam_orders_total'] = $this->model_setting_setting->getYAMOrdersTotal();
 			$this->data['yam_comission'] = ($this->data['yam_orders_total'] / 100) * 12;

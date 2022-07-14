@@ -77,6 +77,7 @@
 	</div>
 </div>
 
+<?php if ($this->config->get('config_country_id') == 176) { ?>
 <div>
 	
 	<div style="width:49%;float:left;">
@@ -101,9 +102,9 @@
 				<span>12%, сумма <? echo $yam_orders_total; ?></span>
 			</div>
 		</div>
-	</div>
-	
+	</div>	
 </div>
+<?php } ?>
 
 <div>
 	

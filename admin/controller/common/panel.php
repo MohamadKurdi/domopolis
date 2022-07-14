@@ -217,7 +217,7 @@ class ControllerCommonPanel extends Controller {
 		$body = '';
 		$class= 'good';
 
-		if ($this->config->get('config_mailwizz_enable') && $this->config->get('config_mailgun_api_private_key')){
+		if ($this->config->get('config_mailgun_bounce_enable') && $this->config->get('config_mailgun_api_private_key')){
 
 			try{
 				$configurator = new \Mailgun\HttpClient\HttpClientConfigurator();
@@ -460,40 +460,49 @@ class ControllerCommonPanel extends Controller {
 		$password = $this->config->get('config_goip4_passwd');
 		$server = $this->config->get('config_goip4_uri');
 
-		try{
+		if ($server){
 
-			$httpClient = new GuzzleHttp\Client();
-			$httpResponce = $httpClient->request('GET', "http://$login:$password@$server/default/en_US/status.xml?u=$login&p=$password", ['timeout' => 10]);			 	
+			try{
 
-			if ($httpResponce->getStatusCode() == 200 && $a = xml2array($httpResponce->getBody(), 0)){
+				$httpClient = new GuzzleHttp\Client();
+				$httpResponce = $httpClient->request('GET', "http://$login:$password@$server/default/en_US/status.xml?u=$login&p=$password", ['timeout' => 10]);			 	
 
-				if (isset($a["status"])){
-					$body = '';			
-					for ($i = 1; $i <= $this->config->get('config_goip4_simnumber');  $i++ ){
-						$body .= ($a["status"]["l$i"."_gsm_sim"] . $a["status"]["l$i"."_gsm_status"] . $a["status"]["l$i"."_status_line"]);
+				if ($httpResponce->getStatusCode() == 200 && $a = xml2array($httpResponce->getBody(), 0)){
 
-						if ($a["status"]["l$i"."_gsm_sim"] != 'Y' || $a["status"]["l$i"."_gsm_status"] != 'Y' || $a["status"]["l$i"."_status_line"] != 'Y'){
-							$class = 'bad';
+					if (isset($a["status"])){
+						$body = '';			
+						for ($i = 1; $i <= $this->config->get('config_goip4_simnumber');  $i++ ){
+							$body .= ($a["status"]["l$i"."_gsm_sim"] . $a["status"]["l$i"."_gsm_status"] . $a["status"]["l$i"."_status_line"]);
+
+							if ($a["status"]["l$i"."_gsm_sim"] != 'Y' || $a["status"]["l$i"."_gsm_status"] != 'Y' || $a["status"]["l$i"."_status_line"] != 'Y'){
+								$class = 'bad';
+							}
 						}
+					} else {
+
+						$body = 'FAIL';
+						$class= 'bad';
+
 					}
+
 				} else {
 
-					$body = 'FAIL';
+					$body = 'FAIL: ' . $httpResponce->getStatusCode();
 					$class= 'bad';
 
 				}
 
-			} else {
+			} catch (\GuzzleHttp\Exception\ConnectException $e){
 
-				$body = 'FAIL: ' . $httpResponce->getStatusCode();
-				$class= 'bad';
+				$body = $e->getMessage();
+				$class = 'bad';
 
 			}
 
-		} catch (\GuzzleHttp\Exception\ConnectException $e){
+		} else {
 
-			$body = $e->getMessage();
-			$class = 'bad';
+			$body = 'OFF';
+			$class= 'warn';
 
 		}
 
@@ -641,33 +650,42 @@ class ControllerCommonPanel extends Controller {
 		$body = '';
 		$class= 'good';
 
-		$socket = fsockopen($this->config->get('config_asterisk_ami_host'), "5038", $errno, $errstr, 10);
+		if ($this->config->get('config_asterisk_ami_host')){
 
-		if (!$socket){
+			$socket = fsockopen($this->config->get('config_asterisk_ami_host'), "5038", $errno, $errstr, 10);
 
-			$body = $errstr;
-			$class= 'bad';
+			if (!$socket){
+
+				$body = $errstr;
+				$class= 'bad';
+
+			} else {
+
+				fputs($socket, "Action: Login\r\n");
+				fputs($socket, "UserName: ".$this->config->get('config_asterisk_ami_user')."\r\n");
+				fputs($socket, "Secret: ".$this->config->get('config_asterisk_ami_pass')."\r\n\r\n");
+
+				$status = '';
+				$status .= fgets($socket);
+
+				$body = $status;
+				$class= 'good';
+
+				fclose($socket);
+				
+
+			}
 
 		} else {
 
-			fputs($socket, "Action: Login\r\n");
-			fputs($socket, "UserName: ".$this->config->get('config_asterisk_ami_user')."\r\n");
-			fputs($socket, "Secret: ".$this->config->get('config_asterisk_ami_pass')."\r\n\r\n");
-	
-			$status = '';
-			$status .= fgets($socket);
-
-			$body = $status;
-			$class= 'good';
-
-			fclose($socket);
-				
+			$body = 'OFF';
+			$class= 'warn';
 
 		}
 
 		$json = [
-		'body'  	=> $body,
-		'class' 	=> $class,
+			'body'  	=> $body,
+			'class' 	=> $class,
 		];
 
 		$this->response->setOutput(json_encode($json));	
@@ -703,7 +721,7 @@ class ControllerCommonPanel extends Controller {
 
 	}  else {
 
-		$body = 'FAIL: ERR';
+		$body = 'OFF';
 		$class= 'warn';
 
 	}
