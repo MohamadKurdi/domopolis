@@ -581,14 +581,7 @@
 			'index' => $index,
 			'body'  	=> [
 			'from' 		=> $data['start'],
-			'size'		=> $data['limit'],
-			'sort' => [
-			[ '_script' => ['order' => 'desc', 'type' => 'number', 
-			'script' => [
-			'lang'   => 'painless',
-			'source' => "if(doc['" . $this->config->get('config_warehouse_identifier') . ".keyword'].value==0){return -1;}else{return _score}",
-			] ] ]								
-			],
+			'size'		=> $data['limit'],			
 			'query' 	=> [
 			'bool' 		=>  [
 			'must' 		=>  [ 'multi_match' => [ 'fields' => [$field1.'^10', $field2.'^8', 'identifier^5'], 'query' => $query, 'type' => 'best_fields', 'fuzziness' => $fuzziness, 'max_expansions' => 100, 'prefix_length' => 2, 'operator' => 'AND' ]	],
@@ -608,13 +601,30 @@
 			$field1 => [ 'require_field_match' => 'false', 'fragment_size' => 400,  'number_of_fragments' => 1 ],  
 			$field2 => [ 'require_field_match' => 'false', 'fragment_size' => 400,  'number_of_fragments' => 1 ]			
 			] ],
-			] ];				
+			] ];		
+
+			if ($this->config->get('config_elasticsearch_use_local_stock')){
+				$params['body']['sort'] = [
+					[ '_script' => ['order' => 'desc', 'type' => 'number', 
+					'script' => [
+						'lang'   => 'painless',
+						'source' => "if(doc['" . $this->config->get('config_warehouse_identifier') . ".keyword'].value==0){return -1;}else{return _score}",
+					] ] ]								
+				];
+			} else {
+				$params['body']['sort'] = [
+					[ 'stock_status_id'.'.keyword' => 'asc' ],
+					[ $this->config->get('config_warehouse_identifier').'.keyword' => 'desc' ],										
+					[ '_score' => 'desc' ],
+				];
+			}
 			
 			if (!empty($data['sort'])){
 				if ($data['sort'] == 'p.price'){
 					if ($data['order'] == 'DESC'){
 						$params['body']['sort'] = [
-						[ $this->config->get('config_warehouse_identifier') => 'desc' ],				
+						[ $this->config->get('config_warehouse_identifier').'.keyword' => 'desc' ],	
+						[ 'stock_status_id'.'keyword' => 'asc' ],			
 						[ 'price' => 'desc' ],
 						[ '_score' => 'desc' ],
 						];
@@ -622,7 +632,8 @@
 					
 					if ($data['order'] == 'ASC'){
 						$params['body']['sort'] = [
-						[ $this->config->get('config_warehouse_identifier') => 'desc' ],				
+						[ $this->config->get('config_warehouse_identifier').'.keyword' => 'desc' ],				
+						[ 'stock_status_id'.'keyword' => 'asc' ],
 						[ 'price' => 'asc' ],
 						[ '_score' => 'desc' ],
 						];

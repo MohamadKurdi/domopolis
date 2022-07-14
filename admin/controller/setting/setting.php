@@ -3029,6 +3029,12 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_elasticsearch_index_suffix'] = $this->config->get('config_elasticsearch_index_suffix');
 		}
 
+		if (isset($this->request->post['config_elasticsearch_use_local_stock'])) {
+			$this->data['config_elasticsearch_use_local_stock'] = $this->request->post['config_elasticsearch_use_local_stock']; 
+		} else {
+			$this->data['config_elasticsearch_use_local_stock'] = $this->config->get('config_elasticsearch_use_local_stock');
+		}
+
 
 		//OZON
 		if (isset($this->request->post['config_ozon_enable_price_yam'])) {
