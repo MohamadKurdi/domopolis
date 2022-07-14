@@ -370,6 +370,13 @@
 			
 			
 		}
+
+		public function productindexer($product_id){
+			
+			$this->elasticSearch->reindexproduct($product_id);
+			
+			
+		}
 		
 		
 		

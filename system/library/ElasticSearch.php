@@ -280,15 +280,22 @@
 		public function makeTextNumbers(&$params){
 			$tmp = $params;
 			
-			foreach ($this->registry->get('languages_id_code_mapping') as $language_id => $language_code){
+			foreach ($this->registry->get('languages_id_code_mapping') as $language_id => $language_code){				
 				if (!empty($tmp['body']['names_' . $language_code])){
 					foreach ($tmp['body']['names_' . $language_code] as $tmp_name){
 						for ($i=100; $i>=1; $i--){
-							if (strpos($tmp_name, ' ' . $i . ' ') !== false){
-								
-								foreach (self::transformNumber($i, $language_code) as $numberCases){								
-									$params['body']['names_' . $language_code][] = str_replace(' ' . $i . ' ', ' ' . $numberCases . ' ', $tmp_name);
-									echoLine($tmp_name . ' -> ' . str_replace(' ' . $i . ' ', ' ' . $numberCases . ' ', $tmp_name));
+							if (strpos($tmp_name, ' ' . $i . ' ') !== false){								
+								foreach (self::transformNumber($i, $language_code) as $numberCases){		
+									$new_name = str_replace(' ' . $i . ' ', ' ' . $numberCases . ' ', $tmp_name);
+
+									$params['body']['names_' . $language_code][] = $new_name;
+									echoLine($tmp_name . ' -> ' . $new_name);
+
+									//Убрать апостроф из цифр на Украинском
+									if ($language_code == 'uk'){
+										$params['body']['names_' . $language_code][] = str_replace("'", '', $new_name);
+										echoLine($tmp_name . ' -> ' . str_replace("'", '', $new_name));
+									}
 								}
 							}					
 						}
@@ -385,9 +392,13 @@
 							$mapping[5] = $mapping[6];
 						}					
 						
-						$params['body']['name_' . $language_code] = array_values(array_unique(array_merge(array($mapping[$language_id]), array($mapping[5]))));						
+						$params['body']['name_' . $language_code] = array_values(array_unique(array_merge(array($mapping[$language_id]), array($mapping[5]))));	
+						$params['body']['names_' . $language_code] = array_values(array_unique(array_merge(array($mapping[$language_id]), array($mapping[5]))));					
+						
 						} else {
+
 						$params['body']['name_' . $language_code] = $mapping[$language_id];
+						$params['body']['names_' . $language_code] = [$mapping[$language_id]];
 					}
 				}
 				
@@ -528,9 +539,7 @@
 			
 			foreach ($mapping as $key => $value){
 				$params['body'][$index][] = $key;
-			}
-			
-			
+			}						
 		}
 		
 		
@@ -588,8 +597,7 @@
 			],
 			'filter' 	=> [ 
 			[ 'term'  => [ 'stores' => $store_id ] ], 
-			[ 'term'  => [ 'status' => 1 ] ],
-		//	[ 'range' => [ 'quantity' => [ 'gte' => 0 ] ] ], 
+			[ 'term'  => [ 'status' => 1 ] ],		
 			[ 'range' => [ 'stock_status_id' => [ 'lte' => 9 ] ] ]
 			],
 			'minimum_should_match' => 0	],
@@ -652,8 +660,7 @@
 				return $this->elastic->search($params);
 			}
 			
-			return $this->elastic->search($params);
-			
+			return $this->elastic->search($params);			
 		}
 		
 		public function sku($query){
@@ -677,10 +684,7 @@
 			 			],
 			 			'filter' 	=> [ 'term' => [ 'stores' => $this->config->get('config_store_id') ], 'term' => [ 'status' => 1 ] ],			 
 						],			
-			] ] ];
-
-		//	$this->log->debug($this->elastic->search($params));
-			
+			] ] ];				
 			return $this->elastic->search($params);
 		}
 		
@@ -803,7 +807,6 @@
 			'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix')
 			];
 			$response = $this->elastic->indices()->delete($deleteParams);
-
 		}
 		
 		////////////// ФУНКЦИИ ИНДЕКСИРОВАНИЯ ///////////////////////////
@@ -879,7 +882,7 @@
 				$deleteParams = [
 					'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix')
 				];
-				$response = $this->elastic->indices()->delete($deleteParams);
+				//$response = $this->elastic->indices()->delete($deleteParams);
 			} catch (Exception $e){
 				echoLine($e->getMessage());
 			}
@@ -961,8 +964,7 @@
 				echoLine($e->getMessage());
 			}
 			
-			return $this;
-			
+			return $this;			
 		}
 		
 		public function indexer(){
@@ -1109,8 +1111,7 @@
 			$response = $this->elastic->get($params);
 			print_r($response);
 			
-			return $this;
-			
+			return $this;			
 		}
 
 		public function deleteproduct($product_id){
@@ -1190,7 +1191,7 @@
 
 			if ($query->num_rows){
 				$this->indexproduct($query->row);
-				//$this->getProductByID($product_id);
+				$this->getProductByID($product_id);
 			}
 
 		}
