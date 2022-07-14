@@ -617,7 +617,7 @@
 					[ $this->config->get('config_warehouse_identifier').'.keyword' => 'desc' ],										
 					[ '_score' => 'desc' ],
 				];
-			}
+			}			
 			
 			if (!empty($data['sort'])){
 				if ($data['sort'] == 'p.price'){
