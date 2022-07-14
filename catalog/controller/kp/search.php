@@ -281,7 +281,7 @@
 				
 				if ($length <= 3){
 					
-					$results = $this->elasticSearch->completition('categories', $query, $field, $field4);
+					$results = $this->elasticSearch->completition('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field4);
 					$r1 = $this->prepareResults($results, $field, true, $query);
 					
 					
@@ -291,7 +291,7 @@
 					
 					//Самый первый запрос, просто поиск по названию, надеюсь в большинстве случаев его достаточно
 					$exact = true;
-					$results = $this->elasticSearch->fuzzy('categories', $query, $field, $field4);	
+					$results = $this->elasticSearch->fuzzy('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field4);	
 					
 					//	$this->log->debug(json_encode($results));
 					//die();
@@ -299,14 +299,14 @@
 					//Запрос к альтернативному набору
 					if (!ElasticSearch::validateResult($results, true)){
 						$exact = false;
-						$results = $this->elasticSearch->fuzzy('categories', $query, $field2, $field4);
+						$results = $this->elasticSearch->fuzzy('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field2, $field4);
 					}		
 					
 					//TRY TO FIND BY SKU										
 					if (Elasticsearch::validateResult($resultsP = $this->elasticSearch->sku($query)) == 1){				
 						} else {
 						
-						$resultsP = $this->elasticSearch->fuzzyP('products', $query, $field, $field2, $field3);		
+						$resultsP = $this->elasticSearch->fuzzyP('products' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field2, $field3);		
 						
 						if (!ElasticSearch::validateResult($resultsP)){
 							$resultsP = $this->elasticSearch->sku($query);

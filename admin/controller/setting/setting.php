@@ -3023,6 +3023,14 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_elasticsearch_fuzziness_autcocomplete'] = $this->config->get('config_elasticsearch_fuzziness_autcocomplete');
 		}
 
+		if (isset($this->request->post['config_elasticsearch_index_suffix'])) {
+			$this->data['config_elasticsearch_index_suffix'] = $this->request->post['config_elasticsearch_index_suffix']; 
+		} else {
+			$this->data['config_elasticsearch_index_suffix'] = $this->config->get('config_elasticsearch_index_suffix');
+		}
+
+
+		//OZON
 		if (isset($this->request->post['config_ozon_enable_price_yam'])) {
 			$this->data['config_ozon_enable_price_yam'] = $this->request->post['config_ozon_enable_price_yam']; 
 		} else {

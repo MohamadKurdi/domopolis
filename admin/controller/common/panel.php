@@ -620,7 +620,7 @@ class ControllerCommonPanel extends Controller {
 				$field2 = $elasticSearch->buildField('names');
 				$field3 = $elasticSearch->buildField('description');
 
-				$product_total = $elasticSearch->fuzzyP('products', 'тарелка', $field, $field2, $field3, ['getTotal' => true]);
+				$product_total = $elasticSearch->fuzzyP('products' . $this->config->get('config_elasticsearch_index_suffix'), 'тарелка', $field, $field2, $field3, ['getTotal' => true]);
 
 				$body =  $product_total;
 

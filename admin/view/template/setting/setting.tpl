@@ -4039,7 +4039,7 @@
 							
 							<table class="form">
 								<tr>
-									<td width="33%">
+									<td width="25%">
 									
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><i class="fa fa-search"></i> FUZZY параметр для подбора товаров</span></p>
 										<input type="number" step="0.1" name="config_elasticsearch_fuzziness_product" value="<?php echo $config_elasticsearch_fuzziness_product; ?>" size="3" style="width:100px;" />
@@ -4048,7 +4048,7 @@
 										<span class="help"><i class="fa fa-search"></i> чем это значение больше, тем больше будет нечетких результатов подбора, при этом поиск будет более широкий, но возможны неверные срабатывания</span>
 									</td>
 									
-									<td width="33%">
+									<td width="25%">
 									
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><i class="fa fa-search"></i> FUZZY параметр для подбора категорий</span></p>
 										<input type="number" step="0.1" name="config_elasticsearch_fuzziness_category" value="<?php echo $config_elasticsearch_fuzziness_category; ?>" size="3" style="width:100px;" />
@@ -4057,7 +4057,7 @@
 										<span class="help"><i class="fa fa-search"></i> чем это значение больше, тем больше будет нечетких результатов подбора, при этом поиск будет более широкий, но возможны неверные срабатывания</span>
 									</td>
 									
-									<td width="33%">
+									<td width="25%">
 									
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><i class="fa fa-search"></i> FUZZY параметр для автокомплита</span></p>
 										<input type="number" step="0.1" name="config_elasticsearch_fuzziness_autcocomplete" value="<?php echo $config_elasticsearch_fuzziness_autcocomplete; ?>" size="3" style="width:100px;" />
@@ -4066,6 +4066,16 @@
 										<span class="help"><i class="fa fa-search"></i> чем это значение больше, тем больше будет нечетких результатов подбора, при этом поиск будет более широкий, но возможны неверные срабатывания</span>
 										
 									</td>
+
+									<td width="25%">
+									
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><i class="fa fa-search"></i> Суффикс именования индексов</span></p>
+										<input type="text" name="config_elasticsearch_index_suffix" value="<?php echo $config_elasticsearch_index_suffix; ?>" size="20" style="width:100px;" />
+										
+										<br />
+										<span class="help"><i class="fa fa-search"></i> в случае работы нескольки магазинов на одном движке</span>
+										
+									</td>>
 								</tr>
 							</table>
 

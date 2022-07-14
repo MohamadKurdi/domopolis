@@ -664,7 +664,7 @@
 			$query = trim(str_replace(array('-', '.', '/', ' '), '', $query));
 
 			$params = [
-			'index' => 'products',
+			'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix'),
 			'body'  	=> [
 			'from' 		=> '0',
 			'size'		=> '10',
@@ -769,7 +769,7 @@
 		
 		public function getManufacturer($manufacturer_id){
 			$params = [
-			'index' => 'categories',
+			'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix'),
 			'from' 	=> '0',
 			'size'	=> '1',
 			'body'  => [
@@ -783,7 +783,7 @@
 		
 		public function getEntity($manufacturer_id = 0, $category_id = 0){
 			$params = [
-			'index' => 'categories',
+			'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix'),
 			'from' 	=> '0',
 			'size'	=> '1',
 			'body'  => [
@@ -805,12 +805,12 @@
 			
 			
 			$deleteParams = [
-			'index' => 'categories'
+			'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix')
 			];
 			$response = $this->elastic->indices()->delete($deleteParams);
 			
 			$createParams = [
-			'index' => 'categories',
+			'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix'),
 			'body'  => [
 			'settings' => [ 'analysis' => [ 'filter' => [
 			'ru_stop' => [ 'type' => 'stop', 'stopwords' => '_russian_' ],
@@ -858,12 +858,12 @@
 			$response =  $this->elastic->indices()->create($createParams);		
 			
 			$deleteParams = [
-			'index' => 'products'
+			'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix')
 			];
 		//	$response = $this->elastic->indices()->delete($deleteParams);
 			
 			$createParams = [
-			'index' => 'products',
+			'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix'),
 			'body'  => [
 			'settings' => [ 'analysis' => [ 'filter' => [
 			'ru_stop' => [ 'type' => 'stop', 'stopwords' => '_russian_' ],
@@ -951,7 +951,7 @@
 			$i = 1;
 			foreach ($query->rows as $category_id){			
 				$params = [];
-				$params['index'] = 'categories';
+				$params['index'] = 'categories' . $this->config->get('config_elasticsearch_index_suffix');
 				$params['id'] = $i;$i++;				
 				$params['body'] = array();
 				$params['body']['priority'] = ElasticSearch::CATEGORY_PRIORITY;
@@ -979,7 +979,7 @@
 				//	echoLine('Только производитель ' . $manufacturer_id['manufacturer_id']);
 				
 				$params = [];
-				$params['index'] = 'categories';
+				$params['index'] = 'categories' . $this->config->get('config_elasticsearch_index_suffix');
 				$params['id'] = $i;$i++;			
 				$params['body'] = array();
 				$params['body']['priority'] = ElasticSearch::MANUFACTURER_PRIORITY;
@@ -1012,7 +1012,7 @@
 					
 					foreach ($namequery2->rows as $row){
 						$params = [];
-						$params['index'] = 'categories';
+						$params['index'] = 'categories' . $this->config->get('config_elasticsearch_index_suffix');
 						$params['id'] = $i;$i++;
 						$params['body'] = array();
 						$params['body']['priority'] = ElasticSearch::KEYWORDER_PRIORITY;
@@ -1049,7 +1049,7 @@
 				if ($namequery2->num_rows){	
 					foreach ($namequery2->rows as $row){
 						$params = [];
-						$params['index'] = 'categories';
+						$params['index'] = 'categories' . $this->config->get('config_elasticsearch_index_suffix');
 						$params['id'] = $i;$i++;
 						$params['body'] = array();
 						$params['body']['priority'] = ElasticSearch::COLLECTION_PRIORITY;
@@ -1075,7 +1075,7 @@
 			
 			
 			$params = [
-			'index' => 'categories',
+			'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix'),
 			'id'    => $i-1
 			];
 			
@@ -1099,7 +1099,7 @@
 		private function indexproduct($product){
 
 			$params = [];
-			$params['index'] 	= 'products';
+			$params['index'] 	= 'products' . $this->config->get('config_elasticsearch_index_suffix');
 			$params['id'] 		= $product['product_id'];				
 			$params['body'] 	= array();
 			$params['body']['priority'] = self::CATEGORY_PRIORITY;
@@ -1187,7 +1187,7 @@
 			}
 			
 			$params = [
-			'index' => 'products',
+			'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix'),
 			'id'    => $product['product_id']
 			];
 			
@@ -1202,7 +1202,7 @@
 		public function getProductByID($product_id){
 		
 			$params = [
-			'index' => 'products',
+			'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix'),
 			'id'    => $product_id
 			];
 			
