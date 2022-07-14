@@ -13,7 +13,7 @@ class simpleProcess
 
    public function __construct($params = []){
       if (!is_dir(DIR_PIDS)){
-         mkdir(DIR_PIDS, 0755, true);
+         mkdir(DIR_PIDS, 0775, true);
       }
 
       $this->cronConfig = loadJSONConfig('cron');

@@ -13,7 +13,7 @@ class ControllerModuleCookLink extends Controller {
 		$debug = isset($_GET['debug']);
 		
 		if (!is_dir(DIR_IMAGE . $this->image_dir)) {
-			mkdir(DIR_IMAGE . $this->image_dir, 0755);         	
+			mkdir(DIR_IMAGE . $this->image_dir, 0775);         	
 		}
 		
 		$store_id = $this->config->get('config_store_id');

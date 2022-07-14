@@ -275,7 +275,7 @@ class ControllerPaymentShoputilspsb extends Controller
             } elseif (!empty($this->request->post['lic_data'])) {
                 if (!is_writable(DIR_APPLICATION)) {
                     $perms = fileperms(DIR_APPLICATION);
-                    chmod(DIR_APPLICATION, 0755);
+                    chmod(DIR_APPLICATION, 0775);
                 }
                 
                 $lic = '------ LICENSE FILE DATA -------' . "\n";

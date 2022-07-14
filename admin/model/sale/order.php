@@ -45,7 +45,7 @@
 				$_dir = DIR_EXPORT . 'payment_qr/' . date('Y') . '/' . date('m') . '/' . date('d') . '/';
 				
 				if (!is_dir($_dir)){
-					mkdir($_dir, 0755, $recursive = true);
+					mkdir($_dir, 0775, $recursive = true);
 				}							
 				
 				$qr_file = $_dir . 'payment_' . $qr_payment_code . '_qr_' . $order_id . $currency . '.png';
@@ -97,7 +97,7 @@
 				$_dir = DIR_EXPORT . 'payment_qr/' . date('Y') . '/' . date('m') . '/' . date('d') . '/';
 				
 				if (!is_dir($_dir)){
-					mkdir($_dir, 0755, $recursive = true);
+					mkdir($_dir, 0775, $recursive = true);
 				}							
 				
 				$qr_file = $_dir . 'payment_' . $qr_payment_code . '_qr_' . $order_id . $currency . '.png';

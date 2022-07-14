@@ -77,7 +77,7 @@ class ControllerFeedExchange1c extends Controller {
 		
 		$dir = DIR_EXPORT . 'odinass/orders_to_commerceml/'.date('Y_m_d_H_i_s');
 		if (!is_dir($dir)){
-			mkdir($dir, 0755, $recursive = true);
+			mkdir($dir, 0775, $recursive = true);
 		}
 		
 		$this->load->model('feed/exchange1c');

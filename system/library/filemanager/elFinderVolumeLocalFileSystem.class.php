@@ -33,8 +33,8 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver {
 	 **/
 	public function __construct() {
 		$this->options['alias']    = '';              // alias to replace root dir name
-		$this->options['dirMode']  = 0755;            // new dirs mode
-		$this->options['fileMode'] = 0644;            // new files mode
+		$this->options['dirMode']  = 0775;            // new dirs mode
+		$this->options['fileMode'] = 0664;            // new files mode
 		$this->options['quarantine'] = '.quarantine';  // quarantine folder name - required to check archive (must be hidden)
 		$this->options['maxArcFilesSize'] = 0;        // max allowed archive files size (0 - no limit)
 	}

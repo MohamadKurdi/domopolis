@@ -8202,7 +8202,7 @@
 			$filename .= '.pdf';
 			
 			if (!is_dir($dir)){
-				mkdir($dir, 0755, $recursive = true);
+				mkdir($dir, 0775, $recursive = true);
 			}
 			
 			$mpdf = new \Mpdf\Mpdf([

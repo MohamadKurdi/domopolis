@@ -327,7 +327,7 @@ class PageCache{
 		$cacheDir .= $cacheRouteString[4] . $cacheRouteString[5] . '/';
 
 		if ($check && !is_dir($cacheDir)){
-			mkdir($cacheDir, 0755, true);
+			mkdir($cacheDir, 0775, true);
 		}
 
 		return $cacheDir . $cacheRouteString . '.cache';

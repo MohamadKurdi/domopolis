@@ -42,7 +42,7 @@ class InfoUpdater
 		$directory = DIR_CACHE . $path;
 
 		if (!is_dir($directory)){
-			mkdir($directory, 0755, true);
+			mkdir($directory, 0775, true);
 		}
 
 		$filename  = $asin . '.json'; 

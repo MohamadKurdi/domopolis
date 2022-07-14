@@ -12,17 +12,17 @@
 			//Check FirstAfterRestartRun
 			$d = DIR_CACHE . BCACHE_DIR;
 			if (!is_dir($d)) {
-				mkdir($d, 0755);         	
+				mkdir($d, 0775);         	
 			}
 			
 			$d = DIR_CACHE . BCACHE_DIR .'/js';
 			if (!is_dir($d)) {
-				mkdir($d, 0755);         	
+				mkdir($d, 0775);         	
 			}
 			
 			$d = DIR_CACHE . BCACHE_DIR . '/css';
 			if (!is_dir($d)) {
-				mkdir($d, 0755);         	
+				mkdir($d, 0775);         	
 			}
 			
 			$this->nocache_mode = file_exists(DIR_CACHE . BCACHE_DIR . '/nocache') || file_exists(DIR_CACHE . PAGECACHE_DIR . '/nopagecache');

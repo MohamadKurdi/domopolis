@@ -33,7 +33,7 @@
 			$relative_image_path 	= DIR_IMAGECACHE_NAME . substr($md5, 0, 5) . '/' . $image_name;
 			
 			if (!is_dir($directory)){
-				mkdir($directory, 0755, true);
+				mkdir($directory, 0775, true);
 			}
 			
 			return ['full_path' => $full_image_path, 'relative_path' => $relative_image_path];

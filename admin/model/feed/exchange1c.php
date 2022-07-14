@@ -2530,7 +2530,7 @@
 				chmod(DIR_EXPORT . 'odinass/orders2/' . $_fname . '.xml', 0777);
 
 				if (!is_dir(DIR_EXPORT . 'odinass/orders_backup/' . date('Y') . '/' . date('m') . '/' . date('d'))){
-					mkdir(DIR_EXPORT . 'odinass/orders_backup/' . date('Y') . '/' . date('m') . '/' . date('d'), 0755, true);
+					mkdir(DIR_EXPORT . 'odinass/orders_backup/' . date('Y') . '/' . date('m') . '/' . date('d'), 0775, true);
 				}
 				
 				file_put_contents(DIR_EXPORT . 'odinass/orders_backup/' . date('Y') . '/' . date('m') . '/' . date('d') . '/' . (int)$order['order_id'] . '_' . date('H_i_s') .'.xml', $content);
