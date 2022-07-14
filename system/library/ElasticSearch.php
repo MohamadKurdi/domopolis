@@ -791,6 +791,20 @@
 			
 			return $this->elastic->search($params);
 		}
+
+		public function deleteIndexes(){
+
+			$deleteParams = [
+			'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix')
+			];
+			$response = $this->elastic->indices()->delete($deleteParams);
+
+			$deleteParams = [
+			'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix')
+			];
+			$response = $this->elastic->indices()->delete($deleteParams);
+
+		}
 		
 		////////////// ФУНКЦИИ ИНДЕКСИРОВАНИЯ ///////////////////////////
 		
@@ -800,11 +814,14 @@
 				die('cli only');	
 			}	
 			
-				
-			$deleteParams = [
-			'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix')
-			];
-			//$response = $this->elastic->indices()->delete($deleteParams);
+			try{
+				$deleteParams = [
+				'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix')
+				];
+				$response = $this->elastic->indices()->delete($deleteParams);
+			} catch (Exception $e){
+				echoLine($e->getMessage());
+			}
 			
 			$createParams = [
 			'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix'),
@@ -852,12 +869,20 @@
 			] ]
 			] ];
 			
-			$response =  $this->elastic->indices()->create($createParams);		
+			try{
+				$response =  $this->elastic->indices()->create($createParams);	
+			} catch (Exception $e){
+				echoLine($e->getMessage());
+			}	
 			
-			$deleteParams = [
-			'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix')
-			];
-			$response = $this->elastic->indices()->delete($deleteParams);
+			try{
+				$deleteParams = [
+					'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix')
+				];
+				$response = $this->elastic->indices()->delete($deleteParams);
+			} catch (Exception $e){
+				echoLine($e->getMessage());
+			}
 			
 			$createParams = [
 			'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix'),
@@ -930,7 +955,11 @@
 			] ]
 			] ];
 			
-			$response = $this->elastic->indices()->create($createParams);		
+			try {
+				$response = $this->elastic->indices()->create($createParams);		
+			} catch (Exception $e){
+				echoLine($e->getMessage());
+			}
 			
 			return $this;
 			
