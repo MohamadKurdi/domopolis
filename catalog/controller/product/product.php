@@ -1249,7 +1249,7 @@
 				$this->data['free_delivery'] = $free_delivery;
 				
 				/* Варианты */
-				$variants = $this->model_catalog_product->getVariants($this->request->get['product_id']);
+				$variants = $this->model_catalog_product->getProductVariants($this->request->get['product_id']);
 				$this->data['variants'] = $this->model_catalog_product->prepareProductToArray($variants);
 				
                 /*Additional offer*/
@@ -1813,8 +1813,7 @@
 					$this->data['special_attribute_group_id'] = $this->config->get('config_special_attr_id');
 					$this->data['attribute_groups_special'] = $this->model_catalog_product->getProductAttributesByGroupId($this->request->get['product_id'],
 					$this->data['special_attribute_group_id']);
-					
-					//	var_dump($this->data['attribute_groups_special']);
+									
 					
 					$this->data['color_grouped_products'] = array();
 					if ($product_info['color_group']) {
@@ -1836,123 +1835,40 @@
 						}
 					}
 					
-					if ($product_info['collection_id'] > 0) {
+					if ($product_info['collection_id']) {
 						$this->load->model('catalog/collection');
 						
 						$_collection = $this->model_catalog_collection->getCollection($product_info['collection_id']);
 						if ($_collection) {
 							$this->data['collection_name'] = $_collection['name'];
-							} else {
+						} else {
 							$this->data['collection_name'] = $product_info['mpn'];
 						}
-						$this->data['collection_link'] = $this->url->link('product/collection',
-						'collection_id=' . $product_info['collection_id']);
+						$this->data['collection_link'] = $this->url->link('product/collection','collection_id=' . $product_info['collection_id']);
 						
-						$this->data['collection'] = array();
+						$this->data['collection_dimensions'] = array(
+							'w' => $this->config->get('config_image_related_width'),
+							'h' => $this->config->get('config_image_related_height')
+						);
 						
-						$current_store = (int)$this->config->get('config_store_id');
-						$current_lang = (int)$this->config->get('config_language_id');
-						$current_curr = (int)$this->currency->getId();
-						
-						$this->bcache->SetFile('products.' . $product_info['collection_id'] . '.tpl',
-						'c_in_prod' . $current_store . $current_lang . $current_curr);
-						if ($this->bcache->CheckFile()) {
-							$this->data['collection'] = $this->bcache->ReturnFileContent(true);
-							} else {
-							
-							$cdata = array(
+						$cfilter_data = array(
 							'filter_collection_id' => $product_info['collection_id'],
 							'no_child'             => true,
 							'start'                => 0,
 							'limit'                => 50,
-							);
-							$results = $this->model_catalog_product->getProducts($cdata);
-							
-							$this->data['collection_dimensions'] = array(
-							'w' => $this->config->get('config_image_related_width'),
-							'h' => $this->config->get('config_image_related_height')
-							);
-							
-							foreach ($results as $result) {
-								if ($result['image']) {
-									$image = $this->model_tool_image->resize($result['image'], $this->data['collection_dimensions']['w'], $this->data['collection_dimensions']['h']);
-									$image_webp = $this->model_tool_image->resize_webp($result['image'], $this->data['collection_dimensions']['w'], $this->data['collection_dimensions']['h']);
-									$image_mime = $this->model_tool_image->getMime($result['image']);
-									} else {
-									$image = false;
-									$image_webp = false;
-									$image_mime = false;
-								}
-								
-								if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-									$price = $this->currency->format($this->tax->calculate($result['price'],
-									$result['tax_class_id'], $this->config->get('config_tax')));
-									} else {
-									$price = false;
-								}
-								
-								if ((float)$result['special']) {
-									$special = $this->currency->format($this->tax->calculate($result['special'],
-									$result['tax_class_id'], $this->config->get('config_tax')));
-									} else {
-									$special = false;
-								}
-								
-								if ($this->config->get('config_review_status')) {
-									$rating = (int)$result['rating'];
-									} else {
-									$rating = false;
-								}
-								
-								if ($result['minimum']) {
-									$p_minimum = $result['minimum'];
-									} else {
-									$p_minimum = 1;
-								}
-								
-								$stock_data = $this->model_catalog_product->parseProductStockData($result);
-								
-								if (!($result['stock_status_id'] == $this->config->get('config_not_in_stock_status_id'))) {
-									$this->data['collection'][] = array(
-									'product_id'   			=> $result['product_id'],
-									'stock_type'  			=> $stock_data['stock_type'],	
-									'stock_text'  			=> $result['stock_text'],
-									'show_delivery_terms' 	=> $stock_data['show_delivery_terms'],
-									'thumb'   	 			=> $image,
-									'thumb_webp' 			=> $image_webp,
-									'thumb_mime' 			=> $image_mime,
-									'name'         			=> $result['name'],
-									'description'  			=> utf8_substr(strip_tags(html_entity_decode($result['description'],
-									ENT_QUOTES, 'UTF-8')), 0, 100) . '..',
-									'price'        			=> $price,
-									'minimum'      			=> $p_minimum,
-									'text_minimum' 			=> sprintf($this->language->get('text_minimum'), $p_minimum),
-									'special'      			=> $special,
-									'rating'       			=> $rating,
-									'count_reviews' 		=> $result['reviews'],
-									'sku'      	  			=> $result['model']?$result['model']:$result['sku'],
-									'saving'	 			=> round((($result['price'] - $result['special'])/($result['price'] + 0.01))*100, 0),
-									'can_not_buy'  			=> ($result['stock_status_id'] == $this->config->get('config_not_in_stock_status_id')),
-									'need_ask_about_stock' 	=> ($result['stock_status_id'] == $this->config->get('config_partly_in_stock_status_id')),
-									'stock_status' 			=> $result['stock_status'],
-									'reviews'      			=> sprintf($this->language->get('text_reviews'),	(int)$result['reviews']),
-									'href'         			=> $this->url->link('product/product', 'product_id=' . $result['product_id'])
-									);
-								}
-							}
-							$this->bcache->WriteFile($this->data['collection'], true);
-						}
+							'filter_not_bad'	   => true
+						);
+
+						$results = $this->model_catalog_product->getProducts($cfilter_data);
+						$this->data['collection'] = $this->model_catalog_product->prepareProductToArray($results);						
 					}
 					
 					$this->data['child_products'] = array();
 					
 					$this->data['has_child'] = false;
-					if ($product_info['has_child']) {
-						
-						$results = $this->model_catalog_product->getProductChild($this->request->get['product_id']);
-						
-						$this->data['child_products'] = $this->model_catalog_product->prepareProductToArray($results, $bestsellers);
-						
+					if ($product_info['has_child']) {						
+						$results = $this->model_catalog_product->getProductChild($this->request->get['product_id']);						
+						$this->data['child_products'] = $this->model_catalog_product->prepareProductToArray($results, $bestsellers);					
 						if ($this->data['child_products']){
 							$this->data['has_child'] = true;
 						}
@@ -1961,27 +1877,34 @@
 					
 					//нет в наличии в стране, подбираем что-то похожее со склада
 					$this->data['products_same_onstock'] = array();
-					if ($this->data['stock_type'] <> 'in_stock_in_country'){
-						
+					if ($this->data['stock_type'] <> 'in_stock_in_country'){						
 						$results = $this->model_catalog_product->guessSameProducts($product_info['name'], $product_info['product_id'], 12, true);
-						
-						//$results = array();
-						
 						$this->data['products_same_onstock'] = $this->model_catalog_product->prepareProductToArray($results);
 					}
-					
-					
-					//related
-					$this->data['products'] = array();
-					
-					$results = $this->model_catalog_product->getProductRelated($this->request->get['product_id']);
-					
+
+
 					$this->data['dimensions'] = array(
 					'w' => $this->config->get('config_image_related_width'),
 					'h' => $this->config->get('config_image_related_height')
 					);
 					
+					
+					
+					//related
+					$this->data['products'] = array();					
+					$results = $this->model_catalog_product->getProductRelated($this->request->get['product_id']);
 					$this->data['products'] = $this->model_catalog_product->prepareProductToArray($results);
+
+
+					//similar
+					$this->data['products_similar'] = array();					
+					$results = $this->model_catalog_product->getProductSimilar($this->request->get['product_id']);
+					$this->data['products_similar'] = $this->model_catalog_product->prepareProductToArray($results);
+
+					//sponsored
+					$this->data['products_sponsored'] = array();					
+					$results = $this->model_catalog_product->getProductSponsored($this->request->get['product_id']);
+					$this->data['products_sponsored'] = $this->model_catalog_product->prepareProductToArray($results);
 					
 					
 					

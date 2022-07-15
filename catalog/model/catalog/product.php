@@ -2039,16 +2039,136 @@
 			
 			return $query->rows;
 		}
+
+		public function getProductVariants($product_id){
+			$product_data = [];
+			
+			$sql = "SELECT p.product_id FROM product p 		
+			LEFT JOIN product_description pd ON (p.product_id = pd.product_id) 
+			LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
+			WHERE p.status = '1' 
+			AND p.is_markdown = '0'			
+			AND p.main_variant_id = '" . (int)$product_id . "'";
+
+			if ($this->config->get('config_no_zeroprice')){
+				$sql .= " AND (p.price > 0 OR p.price_national > 0)";
+			} else {
+				$sql .= " AND (";
+				$sql .= " p.price > 0 OR p.price_national > 0";
+				$sql .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+				$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+				$sql .= ")";
+			}
+
+			$sql .= " AND p.date_available <= NOW()
+			AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'									
+			AND (pd.language_id = '" . (int)$this->config->get('config_language_id') . "')";
+
+
+			$query = $this->db->query($sql);
+
+			foreach ($query->rows as $result) {
+				$product_data[] = $this->getProduct($result['product_id']);
+			}
+			
+			return $product_data;
+		}
 		
 		
 		public function getProductRelated($product_id)
 		{
 			$product_data = array();
 			
-			$query = $this->db->query("SELECT * FROM product_related pr LEFT JOIN product p ON (pr.related_id = p.product_id) LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pr.product_id = '" . (int)$product_id . "' AND p.status = '1' AND quantity > 0 AND is_markdown = 0 AND stock_status_id <> '" . (int)$this->config->get('config_not_in_stock_status_id') . "' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'");
+			$sql = "SELECT * FROM product_related pr 
+				LEFT JOIN product p ON (pr.related_id = p.product_id) 
+				LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
+				WHERE pr.product_id = '" . (int)$product_id . "' AND p.status = '1' AND quantity > 0 AND is_markdown = 0 
+				AND stock_status_id <> '" . (int)$this->config->get('config_not_in_stock_status_id') . "' 
+				AND p.date_available <= NOW() 
+				AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+
+			if ($this->config->get('config_no_zeroprice')){
+				$sql .= " AND (p.price > 0 OR p.price_national > 0)";
+			} else {
+				$sql .= " AND (";
+				$sql .= " p.price > 0 OR p.price_national > 0";
+				$sql .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+				$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+				$sql .= ")";
+			}
+
+			$query = $this->db->query($sql);
 			
 			foreach ($query->rows as $result) {
 				$product_data[$result['related_id']] = $this->getProduct($result['related_id']);
+			}
+			
+			return $product_data;
+		}
+
+		public function getProductSimilar($product_id)
+		{
+			$product_data = array();
+			
+			$sql = "SELECT * FROM product_similar ps 
+				LEFT JOIN product p ON (ps.similar_id = p.product_id) 
+				LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
+				WHERE ps.product_id = '" . (int)$product_id . "' 
+				AND p.status = '1' 
+				AND quantity > 0 
+				AND is_markdown = 0 
+				AND stock_status_id <> '" . (int)$this->config->get('config_not_in_stock_status_id') . "' 
+				AND p.date_available <= NOW() 
+				AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+
+			if ($this->config->get('config_no_zeroprice')){
+				$sql .= " AND (p.price > 0 OR p.price_national > 0)";
+			} else {
+				$sql .= " AND (";
+				$sql .= " p.price > 0 OR p.price_national > 0";
+				$sql .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+				$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+				$sql .= ")";
+			}
+
+			$query = $this->db->query($sql);
+			
+			foreach ($query->rows as $result) {
+				$product_data[$result['similar_id']] = $this->getProduct($result['similar_id']);
+			}
+			
+			return $product_data;
+		}
+
+		public function getProductSponsored($product_id)
+		{
+			$product_data = array();
+			
+			$sql = "SELECT * FROM product_sponsored ps 
+				LEFT JOIN product p ON (ps.sponsored_id = p.product_id) 
+				LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
+				WHERE ps.product_id = '" . (int)$product_id . "' 
+				AND p.status = '1' 
+				AND quantity > 0 
+				AND is_markdown = 0 
+				AND stock_status_id <> '" . (int)$this->config->get('config_not_in_stock_status_id') . "' 
+				AND p.date_available <= NOW() 
+				AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+
+			if ($this->config->get('config_no_zeroprice')){
+				$sql .= " AND (p.price > 0 OR p.price_national > 0)";
+			} else {
+				$sql .= " AND (";
+				$sql .= " p.price > 0 OR p.price_national > 0";
+				$sql .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+				$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+				$sql .= ")";
+			}
+
+			$query = $this->db->query($sql);
+			
+			foreach ($query->rows as $result) {
+				$product_data[$result['sponsored_id']] = $this->getProduct($result['sponsored_id']);
 			}
 			
 			return $product_data;
@@ -2962,38 +3082,6 @@
 			return $this->db->query($sql)->row['total'];
 		}
 
-		public function getVariants($product_id){
-			
-			$sql = "SELECT p.product_id FROM product p 		
-			LEFT JOIN product_description pd ON (p.product_id = pd.product_id) 
-			LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
-			WHERE p.status = '1' 
-			AND p.is_markdown = '0'			
-			AND p.main_variant_id = '" . (int)$product_id . "'";
-
-			if ($this->config->get('config_no_zeroprice')){
-				$sql .= " AND (p.price > 0 OR p.price_national > 0)";
-			} else {
-				$sql .= " AND (";
-				$sql .= " p.price > 0 OR p.price_national > 0";
-				$sql .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
-				$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
-				$sql .= ")";
-			}
-
-			$sql .= " AND p.date_available <= NOW()
-			AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'									
-			AND (pd.language_id = '" . (int)$this->config->get('config_language_id') . "')";
-
-
-			$query = $this->db->query($sql);
-
-			foreach ($query->rows as $result) {
-				$product_data[] = $this->getProduct($result['product_id']);
-			}
-			
-			return $product_data;
-		}
 		
 		public function getProductAttributesByGroupId($product_id, $a_group_id)
 		{
