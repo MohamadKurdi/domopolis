@@ -28,7 +28,7 @@
 					<div class="mail content-heading">
 						<span class="heading"><?php echo $heading_templates; ?></span>
 
-						<div class="buttons" style="float:right; margin:0 10px">
+						<div class="buttons" style="float:right; margin:0 12px">
 							<a href="<?php echo $new_template; ?>" class="button button-secondary"><span><?php echo $button_insert_template; ?></span></a>
 						</div>
 					</div>
