@@ -227,10 +227,16 @@ class ControllerCommonPanel extends Controller {
 				$mgClient = new \Mailgun\Mailgun($configurator, new \Mailgun\Hydrator\ArrayHydrator());
 				$result = $mgClient->domains()->index();
 
-				if (!empty($result['items'][0]['name'])){
-					$body  = $result['items'][0]['name'];
-					$class = 'good';
-				} else {
+				$found = false;
+				foreach ($result['items'] as $item){
+					if ($item == 'config_mailgun_api_transaction_domain'){
+						$body  = $item;
+						$class = 'good';
+						$found = true;
+					}
+				}
+
+				if (!$found){
 					$body  = 'FAIL';
 					$class = 'bad';
 				}
