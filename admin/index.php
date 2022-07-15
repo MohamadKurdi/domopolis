@@ -229,7 +229,7 @@
 
 	foreach ($query->rows as $result) {
 		$languages[$result['code']] = $result;
-		$languages_id_code_mapping[$result['language_id']] = $language['code'];
+		$languages_id_code_mapping[$result['language_id']] = $result['code'];
 	}
 
 	//ALL LANGUAGES TO REGISTRY
