@@ -36,12 +36,16 @@
 			        <table class="list" id="template_list">
 						<thead>
 							<tr>
-								<td class="left"><a href="<?php echo $sort_label; ?>" class="<?php if ($sort == 'label') echo strtolower($order); ?>"><?php echo $column_label; ?></a> // <a href="<?php echo $sort_key; ?>" class="<?php if ($sort == 'key') echo strtolower($order); ?>"><?php echo $column_key; ?></a></td>
+								<td class="left"><a href="<?php echo $sort_label; ?>" class="<?php if ($sort == 'label') echo strtolower($order); ?>"><?php echo $column_label; ?></a></td>
+
+								<td class="left"> <a href="<?php echo $sort_key; ?>" class="<?php if ($sort == 'key') echo strtolower($order); ?>"><?php echo $column_key; ?></a></td>
+
 			              		<?php if(count($stores) > 1){ ?><td class="center" width="150"><a href="<?php echo $sort_store; ?>" class="<?php if ($sort == 'store') echo strtolower($order); ?>"><?php echo $column_store; ?></a></td><?php } ?>
 			              		<?php if($templates_customer_group_id == '' && count($customer_groups) > 1){ ?><td class="center" width="120"><a href="<?php echo $sort_customer_group; ?>" class="<?php if ($sort == 'customer_group') echo strtolower($order); ?>"><?php echo $column_customer_group; ?></a></td><?php } ?>
 			              		<td class="center" width="80"><a href="<?php echo $sort_modified; ?>" class="<?php if ($sort == 'modified') echo strtolower($order); ?>"><?php echo $column_modified; ?></a></td>
 			              		<td class="center" width="40"><a href="<?php echo $sort_shortcodes; ?>" class="<?php if ($sort == 'shortcodes') echo strtolower($order); ?>"><?php echo $column_tested; ?></a></td>
 			              		<td class="center" width="30"><a href="<?php echo $sort_status; ?>" class="<?php if ($sort == 'status') echo strtolower($order); ?>"><?php echo $column_status; ?></a></td>
+								<td class="right" width="45"><?php echo $column_action; ?></td>
 								<td class="right" width="45"><?php echo $column_action; ?></td>
 			            	</tr>
 			          	</thead>
@@ -49,15 +53,26 @@
 						<?php if ($templates) { ?>
 			            <?php foreach ($templates as $template) { ?>
 			            	<tr<?php if($template['action']){ ?> data-href="<?php echo $template['action']; ?>" style="cursor:pointer"<?php } ?>>
-			              		<td class="left"><?php echo $template['label'] . ($template['custom_count'] ? ' (' . $template['custom_count'] . ')': '') . (($template['label'] && $template['key']) ? ' - ' : ' '); ?><b><?php echo $template['key']; ?></b></td>
+			              		<td class="left"><b><?php echo str_replace(':', ':</b>', $template['label']) . ($template['custom_count'] ? ' (' . $template['custom_count'] . ')': ''); ?></td>
+
+			              		<td class="left"><b><?php echo $template['key']; ?></b></td>
+
 		              			<?php if(count($stores) > 1){ ?><td class="center"><?php echo isset($template['store']['store_name']) ? $template['store']['store_name'] : '-'; ?></td><?php } ?>
 		              			<?php if($templates_customer_group_id == '' && count($customer_groups) > 1){ ?><td class="center"><?php echo isset($template['customer_group']) ? $template['customer_group']['name'] : '-'; ?></td><?php } ?>
+		              			
 		              			<td class="center"><?php echo $template['modified']; ?></td>
+
 		              			<td class="center"><span class="status_icon status-<?php echo $template['shortcodes']; ?>"><?php echo $template['shortcodes']; ?></span></td>
 		              			<td class="center"><span class="status_icon status-<?php echo strtolower($template['status']); ?>"><?php echo $template['status']; ?></span></td>
 			              		<td class="right">
-			              			<?php if($template['action']){ ?><a href="<?php echo $template['action']; ?>" class="action-icon-edit action-icons" title="<?php echo $text_edit; ?>"><?php echo $text_edit; ?></a><?php } ?>
-			              			<?php if($template['action_delete']){ ?><a href="<?php echo $template['action_delete']; ?>" class="action-icon-delete action-icons" title="<?php echo $button_delete; ?>" onclick="return confirm('<?php echo sprintf($text_delete_confirm, $template['name']); ?>')"><?php echo $button_delete; ?></a><?php } ?>
+			              			
+			              			<?php if($template['action']){ ?>
+			              				<a href="<?php echo $template['action']; ?>" class="button" title="Редактировать">Редактировать</a>
+			              			<?php } ?>
+			              		</td>
+			              		
+			              		<td class="right">	
+			              			<?php if($template['action_delete']){ ?><a href="<?php echo $template['action_delete']; ?>" class="button" title="Удалить" onclick="return confirm('<?php echo sprintf($text_delete_confirm, $template['name']); ?>')">Удалить</a><?php } ?>
 		              			</td>
 			            	</tr>
 			            <?php } ?>
@@ -110,7 +125,7 @@
 					</div>
 		    	</div>
 
-				<div id="body-config" style="margin-top: 20px">
+				<div id="body-config" style="margin-top: 20px; width:49%; float: left;">
 					<div class="setting content-heading content-heading-a">
 						<a href="<?php echo $config_url; ?>">
 							<span class="heading"><?php echo $heading_config; ?></span>
@@ -119,7 +134,7 @@
 					</div>
 				</div>
 
-				<div id="body-config" style="margin-top: 20px">
+				<div id="body-config" style="margin-top: 20px; width:49%; float: right;">
 					<div class="logs content-heading content-heading-a">
 						<a href="<?php echo $logs_url; ?>">
 							<span class="heading"><?php echo $heading_logs; ?></span>
@@ -127,55 +142,7 @@
 						</a>
 					</div>
 				</div>
-
-				<div id="body-language" style="margin-top: 15px;">
-					<div class="language content-heading content-heading-a">
-						<a href="<?php echo $language_url; ?>">
-							<span class="heading"><?php echo $heading_language; ?></span>
-							<span class="info"><?php echo $text_language_info; ?></span>
-						</a>
-					</div>
-				</div>
-
-				<div id="body-dev" style="margin-top: 15px;">
-					<div class="vqmod content-heading content-heading-a">
-						<a href="<?php echo $test_url; ?>" style="padding-left: 55px">
-							<span class="heading"><?php echo $text_vqmod; ?></span>
-							<span class="info"><?php echo $text_test_info; ?></span>
-						</a>
-					</div>
-				</div>
 			</div>
-
-			<br />
-
-			<div id="version-update" style="display:none; margin-top: 15px">
-				<h3 style="display: inline"><a href="https://www.opencart.com/index.php?route=extension/purchase&extension_id=12744" target="_blank" style="text-decoration:none"><?php echo $heading_update; ?></a></h3>
-				- <p style="display: inline" class="info"></p>
-			</div>
-
-			<div class="support">
-				<h3 style="display: inline">Documentation</h3>
-				- <p style="display: inline">Please make sure you check the documentation before contacting us with support queries, all common issues are included in the FAQ.</p>
-				<hr />
-
-				<h3>Feedback</h3>
-				<ol>
-					<li>If you have any suggests for improvements or features you would like adding please open a <a href="<?php echo $support_url; ?>" target="_blank">support ticket</a> and we will let you know if its possible. </li>
-					<li><b>Please dont forget to rate the extension</b> by clicking the start rating on the <a href="http://www.opencart.com/index.php?route=account/extension/update&extension_id=12744" target="_blank">extension page</a></li>
-				</ol>
-				<hr />
-
-				<h3>Extension not working correct? - <a href="<?php echo $support_url; ?>">Open support ticket!</a></h3>
-				<ol>
-					<li>Check you are using the latest version of <a href="http://code.google.com/p/vqmod/downloads/list" target="_blank">vqmod</a></li>
-					<li>Do you have any vqmod errors(vqmod/vqmod.log OR vqmod/log/)? <span class="help">You can install <a href="http://www.opencart.com/index.php?route=extension/extension/info&extension_id=2969" target="_blank">vQmod manager</a> to help you check for vqmod errors</span></li>
-					<li>Is the correct file appearing in the vqmod cache(vqmod/vqcache), try deleteing all of the cached files. Are these files re-generated?</li>
-				</ol>
-
-				<p>Error message are the most useful information you can provide when opening a <a href="<?php echo $support_url; ?>" target="_blank">support ticket</a> and will help in getting your issue resolved quicker.</p><p>This Extension is brought to you by: Opencart-templates</p>
-			</div>
-
 		</div>
 	</form>
 </div>

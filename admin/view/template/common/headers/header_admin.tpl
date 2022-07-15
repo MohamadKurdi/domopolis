@@ -391,8 +391,7 @@
 										<li><a href="<?php echo $mod_featuredreview; ?>"><i class="fa fa-comment"></i><span>Последние с отзывами (авто)</span></a></li>
 									</ul>										
 								</li>		
-								<li><a class="home_icon_style" href="<?php echo $notify_bar; ?>"><i class="fa fa-cog"></i><span>Верхняя полоса</span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $mattimeotheme; ?>"><i class="fa fa-cog"></i><span>Настройки шаблона</span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $notify_bar; ?>"><i class="fa fa-cog"></i><span>Верхняя полоса</span></a></li>								
 								<li><a class="home_icon_style" href="<?php echo $etemplate; ?>"><i class="fa fa-cog"></i><span>Настройка шаблонов EMail</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $shipping; ?>"><i class="fa fa-truck"></i><span><?php echo $text_shipping; ?></span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $payment; ?>"><i class="fa fa-credit-card"></i><span><?php echo $text_payment; ?></span></a></li>

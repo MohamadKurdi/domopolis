@@ -951,7 +951,7 @@
 			} else {
 				$default_stock_status = $this->config->get('config_stock_status_id');
 			}
-			
+
 			$sql = "SELECT DISTINCT p.product_id, p.is_option_for_product_id, ";
 
 

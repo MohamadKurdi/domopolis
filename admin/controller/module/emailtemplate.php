@@ -1461,13 +1461,13 @@ class ControllerModuleEmailtemplate extends Controller {
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];
 		} else {
-			$sort = 'modified';
+			$sort = 'label';
 		}
 
 		if (isset($this->request->get['order'])) {
 			$order = $this->request->get['order'];
 		} else {
-			$order = 'DESC';
+			$order = 'ASC';
 		}
 
 		if (isset($this->request->get['page'])) {
@@ -1476,7 +1476,7 @@ class ControllerModuleEmailtemplate extends Controller {
 			$page = 1;
 		}
 
-		$limit = 15;
+		$limit = $this->config->get('config_admin_limit');
 		$filter = array(
 			'language_id' => $this->config->get('config_language_id'),
 			'store_id' => $this->data['templates_store_id'],
