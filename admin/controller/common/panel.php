@@ -229,7 +229,7 @@ class ControllerCommonPanel extends Controller {
 
 				$found = false;
 				foreach ($result['items'] as $item){
-					if ($item == 'config_mailgun_api_transaction_domain'){
+					if ($item == $this->config->get('config_mailgun_api_transaction_domain')){
 						$body  = $item;
 						$class = 'good';
 						$found = true;
