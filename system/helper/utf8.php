@@ -131,6 +131,14 @@
 			if ($request['route'] == 'product/product' && !empty($request['product_id'])){
 				return 'product';
 			}
+
+			if ($request['route'] == 'product/manufacturer' && !empty($request['manufacturer_id'])){
+				return 'manufacturer';
+			}
+
+			if ($request['route'] == 'product/collection' && !empty($request['collection_id'])){
+				return 'collection';
+			}
 		
 			if ($request['route'] == 'product/category' && !empty($request['path'])){
 				return 'category';

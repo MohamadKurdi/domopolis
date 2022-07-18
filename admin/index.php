@@ -1,5 +1,7 @@
 <?php
-	// Version
+	
+	ini_set('session.name', ini_get('session.name') . 'A');
+
 	define('VERSION', '1.5.6.4');
 	set_error_handler('error_handler');
 

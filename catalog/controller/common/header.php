@@ -648,14 +648,24 @@
 			$this->data['robots'] = $this->document->getRobots();
 			
 			if (ADMIN_SESSION_DETECTED){
-				
-				if (!empty($this->session->data['user_id']) && !empty($this->session->data['token'])){
-					$this->load->model('user/user');
-				
-					$this->data['admin_user_id'] 	= $this->session->data['user_id']; 
-					$this->data['admin_token']  	= $this->session->data['token'];
-					
-					$this->data['user'] = $this->model_user_user->getUser($this->data['admin_user_id']);
+				if (!empty($this->request->cookie['PHPSESSIDA'])){
+					if (defined('DB_SESSION_HOSTNAME') && class_exists('Hobotix\SessionHandler\SessionHandler')){
+						$handler = new \Hobotix\SessionHandler\SessionHandler();
+						$handler->setDbDetails(DB_SESSION_HOSTNAME, DB_SESSION_USERNAME, DB_SESSION_PASSWORD, DB_SESSION_DATABASE);
+						$handler->setDbTable(DB_SESSION_TABLE);
+
+						if ($adminSessionData = $handler->read($this->request->cookie['PHPSESSIDA'])){
+							$adminSessionData = \Hobotix\SessionHandler\SessionHandler::unserialize($adminSessionData);
+
+							if ($adminSessionData){
+								$this->load->model('user/user');
+								$this->data['admin_user_id'] 	= !empty($adminSessionData['user_id'])?$adminSessionData['user_id']:false; 
+								$this->data['admin_token']  	= !empty($adminSessionData['token'])?$adminSessionData['token']:false;
+						
+								$this->data['user'] = $this->model_user_user->getUser($this->data['admin_user_id']);
+							}
+						}
+					}
 				}
 			}
 			

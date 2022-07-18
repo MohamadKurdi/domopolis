@@ -32,10 +32,9 @@
 				unset($this->session->data['voucher']);
 				unset($this->session->data['vouchers']);
 				
-				$customer_info = $this->model_account_customer->getCustomerByToken($this->request->get['token']);							
+				$customer_info = $this->model_account_customer->getCustomerByToken($this->request->get['token']);					
 				
 				if ($customer_info && $this->customer->login($customer_info['email'], '', true)) {
-					// Default Addresses
 					$this->load->model('account/address');
 					
 					$address_info = $this->model_account_address->getAddress($this->customer->getAddressId());

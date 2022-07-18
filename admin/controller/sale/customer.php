@@ -2962,7 +2962,7 @@
 				$token = md5(mt_rand());
 				
 				$this->model_sale_customer->editToken($customer_id, $token);
-				
+
 				if (isset($this->request->get['store_id'])) {
 					$store_id = $this->request->get['store_id'];
 					} else {
@@ -2972,12 +2972,14 @@
 				$this->load->model('setting/store');
 				
 				$store_info = $this->model_setting_store->getStore($store_id);
+
 				
 				if ($store_info) {
-					$this->redirect($store_info['url'] . 'index.php?route=account/login&token=' . $token);
+					$this->redirect($store_info['url'] . 'account/login&token=' . $token);
 					} else {
-					$this->redirect(HTTP_CATALOG . 'index.php?route=account/login&token=' . $token);
+					$this->redirect(HTTPS_CATALOG . 'account/login&token=' . $token);
 				}
+
 				} else {
 				$this->language->load('error/not_found');
 				

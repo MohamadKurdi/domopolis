@@ -86,11 +86,7 @@
 			$this->data['points_active_formatted'] = $this->currency->formatBonus($this->data['points_active']);
 			$this->data['points_active_formatted_as_currency'] = $this->currency->format($this->data['points_active'], $this->config->get('config_regional_currency'), 1);
 			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/account.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/module/account.tpl';
-				} else {
-				$this->template = 'default/template/module/account.tpl';
-			}
+			$this->template = $this->config->get('config_template') . '/template/module/account.tpl';
 			
 			$this->render();
 		}

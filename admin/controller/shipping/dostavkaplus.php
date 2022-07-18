@@ -165,12 +165,8 @@ class ControllerShippingDostavkaPlus extends Controller {
             foreach ($this->request->post[$this->name.'_module'] as $key => $val) {
                 foreach ($val['title'] as $language_id => $value) {
                     if (!$value) {
-                        $this->error['title'][$key][$language_id] = $this->language->get('error_title');
+                        $this->error['title'][$key][$language_id] = $this->language->get('error_title') .' '. $this->name.'_module';
                     }
-                }
-
-                if (!isset($val['store']) or (isset($val['store']) and count($val['store']) == 0)) {
-                    $this->error['store'][$key] = $this->language->get('error_store');
                 }
 
             }

@@ -5,7 +5,12 @@
 		
 		public function __construct($registry){
 			parent::__construct($registry);
-			$this->geoReader = new GeoIp2\Database\Reader('/var/lib/GeoIP/GeoLite2-City.mmdb');
+
+			try{
+				$this->geoReader = new GeoIp2\Database\Reader('/var/lib/GeoIP/GeoLite2-City.mmdb');
+			} catch (InvalidArgumentException $e){
+				$this->geoReader = false;
+			}
 		}
 		
 		public function getCityByIpAddr($ip){
@@ -13,6 +18,11 @@
 			if (!$ip){
 				return false;
 			}
+
+			if (!$this->geoReader){
+				return false;
+			}
+
 			try{
 				$record = $this->geoReader->city($ip);	
 				
