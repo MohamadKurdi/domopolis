@@ -2210,6 +2210,18 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$this->data['config_seo_url_postfix'] = $this->config->get('config_seo_url_postfix');
 		}
+
+		if (isset($this->request->post['config_seo_url_postfix'])) {
+			$this->data['config_seo_url_postfix'] = $this->request->post['config_seo_url_postfix'];
+		} else {
+			$this->data['config_seo_url_postfix'] = $this->config->get('config_seo_url_postfix');
+		}
+
+		if (isset($this->request->post['config_seo_url_from_id'])) {
+			$this->data['config_seo_url_from_id'] = $this->request->post['config_seo_url_from_id'];
+		} else {
+			$this->data['config_seo_url_from_id'] = $this->config->get('config_seo_url_from_id');
+		}
 		
 		if (isset($this->request->post['config_file_extension_allowed'])) {
 			$this->data['config_file_extension_allowed'] = $this->request->post['config_file_extension_allowed'];

@@ -2770,31 +2770,31 @@
 								
 								<tr>
 									<td><?php echo $entry_secure; ?></td>
-									<td><?php if ($config_secure) { ?>
-										<input type="radio" name="config_secure" value="1" checked="checked" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_secure" value="0" />
-										<?php echo $text_no; ?>
-										<?php } else { ?>
-										<input type="radio" name="config_secure" value="1" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_secure" value="0" checked="checked" />
-										<?php echo $text_no; ?>
-									<?php } ?></td>
+									<td>
+										<select name="config_secure">
+											<?php if ($config_secure) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</td>
 								</tr>
 								<tr>
 									<td><?php echo $entry_shared; ?></td>
-									<td><?php if ($config_shared) { ?>
-										<input type="radio" name="config_shared" value="1" checked="checked" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_shared" value="0" />
-										<?php echo $text_no; ?>
-										<?php } else { ?>
-										<input type="radio" name="config_shared" value="1" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_shared" value="0" checked="checked" />
-										<?php echo $text_no; ?>
-									<?php } ?></td>
+									<td>
+										<select name="config_shared">
+											<?php if ($config_shared) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</td>
 								</tr>
 								<tr>
 									<td><?php echo $entry_robots; ?></td>
@@ -2802,48 +2802,66 @@
 								</tr>                    
 								<tr>
 									<td>SEO URL</td>
-									<td><?php if ($config_seo_url) { ?>
-										<input type="radio" name="config_seo_url" value="1" checked="checked" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_seo_url" value="0" />
-										<?php echo $text_no; ?>
-										<?php } else { ?>
-										<input type="radio" name="config_seo_url" value="1" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_seo_url" value="0" checked="checked" />
-										<?php echo $text_no; ?>
-									<?php } ?></td>
+									<td>
+										<select name="config_seo_url">
+											<?php if ($config_seo_url) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</td>
 								</tr>
 								<tr>
 									<td><?php echo $entry_seo_url_type; ?></td>
-									<td><select name="config_seo_url_type">
-										<?php foreach ($seo_types as $seo_type) { ?>
-											<?php if ($seo_type['type'] == $config_seo_url_type) { ?>
-												<option value="<?php echo $seo_type['type']; ?>" selected="selected"><?php echo $seo_type['name']; ?></option>
+									<td>
+										<select name="config_seo_url_type">
+											<?php foreach ($seo_types as $seo_type) { ?>
+												<?php if ($seo_type['type'] == $config_seo_url_type) { ?>
+													<option value="<?php echo $seo_type['type']; ?>" selected="selected"><?php echo $seo_type['name']; ?></option>
 												<?php } else { ?>
-												<option value="<?php echo $seo_type['type']; ?>"><?php echo $seo_type['name']; ?></option>
+													<option value="<?php echo $seo_type['type']; ?>"><?php echo $seo_type['name']; ?></option>
+												<?php } ?>
 											<?php } ?>
-										<?php } ?>
-									</select></td>
+										</select>
+									</td>
 								</tr>
 								<tr>
 									<td><?php echo $entry_seo_url_include_path; ?></td>
-									<td><?php if ($config_seo_url_include_path) { ?>
-										<input type="radio" name="config_seo_url_include_path" value="1" checked="checked" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_seo_url_include_path" value="0" />
-										<?php echo $text_no; ?>
-										<?php } else { ?>
-										<input type="radio" name="config_seo_url_include_path" value="1" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_seo_url_include_path" value="0" checked="checked" />
-										<?php echo $text_no; ?>
-									<?php } ?></td>
+									<td>
+										<select name="config_seo_url_include_path">
+											<?php if ($config_seo_url_include_path) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</td>
 								</tr>
 								<tr>
 									<td><?php echo $entry_seo_url_postfix; ?></td>
 									<td><input type="text" name="config_seo_url_postfix" value="<?php echo $config_seo_url_postfix; ?>" size="3" /></td>
 								</tr>
+
+								<tr>
+									<td>SEO-URL из id</td>
+									<td>
+										<select name="config_seo_url_from_id">
+											<?php if ($config_seo_url_from_id) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</td>
+								</tr>
+
 								<tr>
 									<td><?php echo $entry_file_extension_allowed; ?></td>
 									<td><textarea name="config_file_extension_allowed" cols="40" rows="5"><?php echo $config_file_extension_allowed; ?></textarea></td>
@@ -2854,80 +2872,81 @@
 								</tr>              
 								<tr>
 									<td><?php echo $entry_maintenance; ?></td>
-									<td><?php if ($config_maintenance) { ?>
-										<input type="radio" name="config_maintenance" value="1" checked="checked" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_maintenance" value="0" />
-										<?php echo $text_no; ?>
-										<?php } else { ?>
-										<input type="radio" name="config_maintenance" value="1" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_maintenance" value="0" checked="checked" />
-										<?php echo $text_no; ?>
-									<?php } ?></td>
+									<td>
+										<select name="config_maintenance">
+											<?php if ($config_maintenance) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+
+									</td>
 								</tr>
 								<tr>
 									<td><?php echo $entry_password; ?></td>
-									<td><?php if ($config_password) { ?>
-										<input type="radio" name="config_password" value="1" checked="checked" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_password" value="0" />
-										<?php echo $text_no; ?>
-										<?php } else { ?>
-										<input type="radio" name="config_password" value="1" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_password" value="0" checked="checked" />
-										<?php echo $text_no; ?>
-									<?php } ?></td>
+									<td>
+										<select name="config_password">
+											<?php if ($config_password) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</td>
 								</tr>            
 								<tr>
 									<td><?php echo $entry_encryption; ?></td>
 									<td><input type="text" name="config_encryption" value="<?php echo $config_encryption; ?>" />
 										<?php if ($error_encryption) { ?>
 											<span class="error"><?php echo $error_encryption; ?></span>
-										<?php } ?></td>
-								</tr>
-								<tr>
-									<td><?php echo $entry_compression; ?></td>
-									<td><input type="text" name="config_compression" value="<?php echo $config_compression; ?>" size="3" /></td>
-								</tr>
-								<tr>
-									<td><?php echo $entry_error_display; ?></td>
-									<td><?php if ($config_error_display) { ?>
-										<input type="radio" name="config_error_display" value="1" checked="checked" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_error_display" value="0" />
-										<?php echo $text_no; ?>
-										<?php } else { ?>
-										<input type="radio" name="config_error_display" value="1" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_error_display" value="0" checked="checked" />
-										<?php echo $text_no; ?>
-									<?php } ?></td>
-								</tr>
-								<tr>
-									<td><?php echo $entry_error_log; ?></td>
-									<td><?php if ($config_error_log) { ?>
-										<input type="radio" name="config_error_log" value="1" checked="checked" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_error_log" value="0" />
-										<?php echo $text_no; ?>
-										<?php } else { ?>
-										<input type="radio" name="config_error_log" value="1" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_error_log" value="0" checked="checked" />
-										<?php echo $text_no; ?>
-									<?php } ?></td>
-								</tr>
-								<tr>
-									<td><span class="required">*</span> <?php echo $entry_error_filename; ?></td>
-									<td><input type="text" name="config_error_filename" value="<?php echo $config_error_filename; ?>" />
-										<?php if ($error_error_filename) { ?>
-											<span class="error"><?php echo $error_error_filename; ?></span>
-										<?php } ?></td>
-								</tr>											
-							</table>
-						</div>
+											<?php } ?></td>
+										</tr>
+										<tr>
+											<td><?php echo $entry_compression; ?></td>
+											<td><input type="text" name="config_compression" value="<?php echo $config_compression; ?>" size="3" /></td>
+										</tr>
+										<tr>
+											<td><?php echo $entry_error_display; ?></td>
+											<td>
+												<select name="config_error_display">
+													<?php if ($config_error_display) { ?>
+														<option value="1" selected="selected">Включить</option>
+														<option value="0">Отключить</option>
+													<?php } else { ?>													
+														<option value="1">Включить</option>
+														<option value="0"  selected="selected">Отключить</option>
+													<? } ?>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td><?php echo $entry_error_log; ?></td>
+											<td>
+												<select name="config_error_log">
+													<?php if ($config_error_log) { ?>
+														<option value="1" selected="selected">Включить</option>
+														<option value="0">Отключить</option>
+													<?php } else { ?>													
+														<option value="1">Включить</option>
+														<option value="0"  selected="selected">Отключить</option>
+													<? } ?>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td><span class="required">*</span> <?php echo $entry_error_filename; ?></td>
+											<td><input type="text" name="config_error_filename" value="<?php echo $config_error_filename; ?>" />
+												<?php if ($error_error_filename) { ?>
+													<span class="error"><?php echo $error_error_filename; ?></span>
+													<?php } ?></td>
+												</tr>											
+											</table>
+										</div>
 						
 						<div id="tab-telephony">
 							<table class="form">

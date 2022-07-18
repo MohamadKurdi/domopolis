@@ -128,7 +128,12 @@
 					foreach ($all_categories_query->rows as $row){				
 						if (!isset($cae[$row['category_id']])){
 							//now urlify
-							$keyword = URLify::filter($this->rms($row['name']), 80, $language['code']);
+							if ($this->config->get('config_seo_url_from_id')){
+								$keyword = URLify::filter($this->rms('c' . $row['category_id']), 80, $language['code']);
+							} else {
+								$keyword = URLify::filter($this->rms($row['name']), 80, $language['code']);
+							}
+
 							//check for duplicate
 							if (in_array($keyword, $cae)){						
 								$keyword = substr(md5(time()), 0, 3).'-'.(int)$row['category_id'].'-'.$keyword;
@@ -418,7 +423,12 @@
 					foreach ($all_informations_query->rows as $row){				
 						if (!isset($cae[$row['product_id']])){
 							//now urlify
-							$keyword = URLify::filter($this->rms($row['name']), 80, $language['code']);
+							if ($this->config->get('config_seo_url_from_id')){
+								$keyword = URLify::filter($this->rms('p' . $row['product_id']), 80, $language['code']);
+							} else {
+								$keyword = URLify::filter($this->rms($row['name']), 80, $language['code']);
+							}
+
 							//check for duplicate
 							if (in_array($keyword, $cae)){						
 								$keyword = substr(md5(time()), 0, 3).'-'.(int)$row['product_id'].'-'.$keyword;
