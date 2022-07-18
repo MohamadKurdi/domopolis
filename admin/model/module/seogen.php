@@ -197,7 +197,8 @@
 		
 		private function generateCategory($category, $data) {
 			$tags = array(
-			'[category_name]' => $category['name'],
+			'[category_name]' 	=> $category['name'],
+			'[category_id]' 	=> $category['category_id'],
 			'[category_description]' => strip_tags(html_entity_decode($category['description'], ENT_QUOTES, 'UTF-8')),
 			);
 			
@@ -251,6 +252,7 @@
 			
 			$tags = array(
 			'[product_name]' => $product['name'],
+			'[product_id]' => $product['product_id'],
 			'[product_description]' => strip_tags(html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8')),
 			'[model_name]' => $product['model'],
 			'[manufacturer_name]' => $product['manufacturer']?$product['manufacturer'].'.':'',
