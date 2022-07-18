@@ -173,6 +173,9 @@
 		
 		
 		public function optimizeCustomerDB(){
+			$this->load->model('setting/setting');
+			$this->load->model('setting/store');
+
 			echo 'Нормализуем поля...' . PHP_EOL;
 			
 			echo '>> Нормализация пустых имен...'  . PHP_EOL;
@@ -187,6 +190,13 @@
 			$this->db->query("UPDATE address SET address_1 = REPLACE(address_1, 'г.', '')");
 			$this->db->query("UPDATE address SET address_2 = REPLACE(address_2, 'г.', '')");
 			$this->db->query("UPDATE address SET city = REPLACE(city, 'г.', '')");
+
+			$this->db->query("UPDATE address SET address_1 = REPLACE(address_1, 'м ', '')");
+			$this->db->query("UPDATE address SET address_2 = REPLACE(address_2, 'м ', '')");
+			$this->db->query("UPDATE address SET city = REPLACE(city, 'м ', '')");
+			$this->db->query("UPDATE address SET address_1 = REPLACE(address_1, 'м.', '')");
+			$this->db->query("UPDATE address SET address_2 = REPLACE(address_2, 'м.', '')");
+			$this->db->query("UPDATE address SET city = REPLACE(city, 'м.', '')");
 			
 			
 			echo '>> TRIM полей...'  . PHP_EOL;
@@ -204,19 +214,10 @@
 			$this->db->query("UPDATE customer SET utoken = md5(md5(concat(email,email))) WHERE 1");
 			echo PHP_EOL;
 			
-			echo '>> Привязка языка...' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer SET language_id = 2 WHERE store_id = 0" . PHP_EOL;
-			$this->db->query("UPDATE customer SET language_id = 2 WHERE store_id = 0");
-			echo PHP_EOL;
 			
 			echo '>> Убрать хреновую почту...' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer SET email = telephone WHERE email = 'order@kitchen-profi.de'" . PHP_EOL;
-			$this->db->query("UPDATE customer SET email = telephone WHERE email = 'order@kitchen-profi.de'");
-			echo PHP_EOL;
-			
-			echo '>> Привязка языка...' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer SET language_id = 5 WHERE store_id = 1" . PHP_EOL;
-			$this->db->query("UPDATE customer SET language_id = 5 WHERE store_id = 1");
+			echo 'QUERY:' . "UPDATE customer SET email = telephone WHERE email = '" . $this->config->get('config_email') . "'" . PHP_EOL;
+			$this->db->query("UPDATE customer SET email = telephone WHERE email = '" . $this->config->get('config_email') . "'");
 			echo PHP_EOL;
 			
 			echo '>> Нормализация телефона...' . PHP_EOL;
@@ -336,21 +337,19 @@
 			
 			
 			echo '>> Перестройка стран...' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer c SET country_id = 176 WHERE store_id = 0" . PHP_EOL;
-			$this->db->query("UPDATE customer c SET country_id = 176 WHERE store_id = 0");
-			$this->db->query("UPDATE customer c SET country_id = 220 WHERE store_id = 1");
-			$this->db->query("UPDATE customer c SET country_id = 109 WHERE store_id = 2");
-			$this->db->query("UPDATE customer c SET country_id = 20 WHERE store_id = 5");
-			echo PHP_EOL;
-			
-			echo '>> Перестройка адресов...' . PHP_EOL;
-			$this->db->query("UPDATE address SET country_id = 176 WHERE customer_id IN (SELECT customer_id FROM customer WHERE store_id = 0) AND country_id = 0");
-			$this->db->query("UPDATE address SET country_id = 220 WHERE customer_id IN (SELECT customer_id FROM customer WHERE store_id = 1) AND country_id = 0");
-			$this->db->query("UPDATE address SET country_id = 109 WHERE customer_id IN (SELECT customer_id FROM customer WHERE store_id = 2) AND country_id = 0");
-			$this->db->query("UPDATE address SET country_id = 20 WHERE customer_id IN (SELECT customer_id FROM customer WHERE store_id = 5) AND country_id = 0");
+			foreach ($this->model_setting_store->getStores() as $store){
+				$sql = "UPDATE customer c SET country_id = '" . (int)$this->model_setting_setting->getKeyValue('config_country_id', $store['store_id']) . "' WHERE store_id = '" . $store['store_id'] . "'";
+				echoLine('[optimizeCustomerDB] ' . $sql);
+				$this->db->query($sql);
+
+				$sql = "UPDATE address SET country_id = '" . (int)$this->model_setting_setting->getKeyValue('config_country_id', $store['store_id']) . "' WHERE customer_id IN (SELECT customer_id FROM customer WHERE store_id = '" . (int)$store['store_id'] . "') AND country_id = 0";
+
+				echoLine('[optimizeCustomerDB] ' . $sql);
+				$this->db->query($sql);
+			}			
 			
 			echo '>> Копирование города...' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE customer c SET city = (SELECT city FROM `address` a WHERE a.address_id = c.address_id LIMIT 1)s" . PHP_EOL;
+			echo 'QUERY:' . "UPDATE customer c SET city = (SELECT city FROM `address` a WHERE a.address_id = c.address_id LIMIT 1)" . PHP_EOL;
 			$this->db->query("UPDATE customer c SET city = (SELECT city FROM `address` a WHERE a.address_id = c.address_id LIMIT 1)");
 			echo PHP_EOL;
 			
