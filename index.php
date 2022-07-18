@@ -178,6 +178,7 @@
 	$registry->get('config')->set('config_supported_languages', [$registry->get('config')->get('config_language'), $registry->get('config')->get('config_second_language')]);
 	$registry->get('config')->set('config_rainforest_source_language_id', $languages[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);
 	
+
 	//FROM URL
 	if ($registry->get('config')->get('config_second_language')){					
 		$language_from_url = explode("/", $registry->get('request')->server['REQUEST_URI']);
@@ -195,7 +196,7 @@
 			}
 			if ($break) break;
 		}		
-	}		
+	}	
 	
 	if (thisIsAjax($registry->get('request')) || thisIsUnroutedURI($registry->get('request'))){
 		$code_from_url = false;
@@ -229,8 +230,21 @@
 		$code = $detect;
 		} else {
 		$code = $registry->get('config')->get('config_language');
-	}
+	}	
 	
+	//REDIRECTION FOR UKRAINIAN LAWS IF PREVIOUS CONFIG WAS BAD, LIKE (/ua, /uk)
+	if ((!defined('CRAWLER_SESSION_DETECTED') || !CRAWLER_SESSION_DETECTED) && (!defined('PAGESPEED_SESSION_DETECTED') || !PAGESPEED_SESSION_DETECTED)){
+		if ($registry->get('config')->get('config_second_language') && $registry->get('config')->get('config_do_redirection_to_second_language')){
+
+			//ONLY FIRST CUSTOMER COMING, NO SESSION AND NO COOKIE
+			if ((empty($registry->get('session')->data['language'])) && empty($registry->get('request')->cookie['language'])){
+				//MAIN LANGUAGE SET NOW AND IT ISN'T SECOND LANGUAGE
+				if ($code != $registry->get('config')->get('config_second_language')){
+					$registry->set('perform_redirect_to_second_language', true);
+				}				
+			}
+		}
+	}
 	
 	if (!$registry->get('config')->get('config_second_language')){
 		$code = $registry->get('config')->get('config_language');
@@ -315,8 +329,10 @@
 		$registry->get('request')->get['route'] = $registry->get('request')->get['_route_'] = $routes[$registry->get('request')->get["_route_"]];
 		unset($registry->get('request')->get['_route_']);
 	}
-	
-	$controller->addPreAction(new Action('common/seo_pro'));		
+
+	//Implementation of different redirect modes and|or modules
+	$controller->addPreAction(new Action('common/hoboseo'));
+	$controller->addPreAction(new Action('common/seo_pro'));
 	
 	// Router
 	if (isset($registry->get('request')->get['route'])) {
@@ -325,7 +341,7 @@
 		$action = new Action('common/home');
 	}
 	
-	// Dispatch
+	//Dispatch
 	$controller->dispatch($action, new Action('error/not_found'));
 	
 	if ($PageCache->validateIfToCache()){

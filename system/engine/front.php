@@ -14,13 +14,10 @@ final class Front {
 
 	public function dispatch($action, $error) {
 		$this->error = $error;
-
-		foreach ($this->pre_action as $pre_action) {
+		foreach ($this->pre_action as $pre_action) {			
 			$result = $this->execute($pre_action);
-
 			if ($result) {
 				$action = $result;
-
 				break;
 			}
 		}
@@ -35,15 +32,19 @@ final class Front {
 
 		foreach ($this->pre_action as $pre_action) {
 			$result = $this->execute($pre_action);
-
 			if ($result) {
 				$action = $result;
-
 				break;
 			}
 		}
 
 		while ($action) {
+			$action = $this->execute($action);
+		}
+	}
+
+	public function dispatchWithNoPreActions($action){
+		if ($action){
 			$action = $this->execute($action);
 		}
 	}

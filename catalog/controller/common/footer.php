@@ -355,13 +355,8 @@
 			//	'common/footer_info_buttons'
 			);
 			
-			
-			$this->load->model('kp/urldecode');
-			
-			foreach (($hreflangs = $this->model_kp_urldecode->decodeURI()) as $link){				
-				$this->document->addLink($link['link'], 'alternate', $link['hreflang']);			
-			}
-			
+
+			$hreflangs = $this->document->getHrefLangs();		
 			$this->data['href_ru'] = !empty($hreflangs[2]['link'])?$hreflangs[2]['link']:'';
 			$this->data['href_kz'] = !empty($hreflangs[9]['link'])?$hreflangs[9]['link']:'';
 			$this->data['href_by'] = !empty($hreflangs[8]['link'])?$hreflangs[8]['link']:'';
@@ -397,14 +392,15 @@
 				$this->data['text_retranslate_app_block'] = sprintf($this->data['text_retranslate_app_block_reward'], $this->currency->format($this->config->get('rewardpoints_appinstall'), $this->config->get('config_currency_national'), 1));
 			}
 			
+			//TRY TO FOUND ADMIN SESSION
 			if (ADMIN_SESSION_DETECTED){
-				if (!empty($this->request->cookie['PHPSESSIDA'])){
+				if (!empty($this->request->cookie[ini_get('session.name') . 'A'])){
 					if (defined('DB_SESSION_HOSTNAME') && class_exists('Hobotix\SessionHandler\SessionHandler')){
 						$handler = new \Hobotix\SessionHandler\SessionHandler();
 						$handler->setDbDetails(DB_SESSION_HOSTNAME, DB_SESSION_USERNAME, DB_SESSION_PASSWORD, DB_SESSION_DATABASE);
 						$handler->setDbTable(DB_SESSION_TABLE);
 
-						if ($adminSessionData = $handler->read($this->request->cookie['PHPSESSIDA'])){
+						if ($adminSessionData = $handler->read($this->request->cookie[ini_get('session.name') . 'A'])){
 							$adminSessionData = \Hobotix\SessionHandler\SessionHandler::unserialize($adminSessionData);
 
 							if ($adminSessionData){

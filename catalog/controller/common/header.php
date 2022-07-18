@@ -8,50 +8,33 @@
 				$this->session->data[$this->top_block_id] = '1';
 			}	
 		}
+				
 		
-		private function checkIfNowIsNewVersion(){
-			
-			return ($this->config->get('config_template') == 'kp');
-			
-		}
-		
-		private function buildNewVersionURI(){
-			$url = 'https://' . $this->request->server['HTTP_HOST'] . $this->request->server['REQUEST_URI'];
-			
-			$url_parts = parse_url($url);
-			// If URL doesn't have a query string.
-			if (isset($url_parts['query'])) { // Avoid 'Undefined index: query'
-				parse_str($url_parts['query'], $params);
-				} else {
-				$params = array();
-			}					
-			
-			$params['switch'] = 'template';     // Overwrite if exists
-			
-			// Note that this will url_encode all values
-			$url_parts['query'] = http_build_query($params);
-			
-			// If you have pecl_http
-			//return http_build_url($url_parts);
-			
-			// If not
-			return $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'] . '?' . $url_parts['query'];		
-			
-		}
-		
-		protected function simpleheader(){					
-			
-			$this->index('header_simple');
-			
+		protected function simpleheader(){								
+			$this->index('header_simple');			
 		}				
+
+		private function setHrefLangsAndTryToRedirect(){
+			$this->load->model('kp/urldecode');
+			$hreflangs = $this->model_kp_urldecode->decodeURI();			
+			$this->document->setHrefLangs($hreflangs);
+
+			$this->log->debug($hreflangs);
+
+			if ($this->registry->get('perform_redirect_to_second_language')){
+				header('X-UA-REDIRECT: Slava Ukraini!');
+
+				foreach ($hreflangs as $hreflang){
+					if ($hreflang['code'] == $this->config->get('config_second_language')){
+						header('Location: ' . str_replace('&amp;', '&', $hreflang['link']), true, 301);
+					}
+				}
+			}
+		}
 		
 		protected function index($template_overload = false) {
-			
-			//NEWVERSION
-			$this->data['newversion'] = $this->checkIfNowIsNewVersion();
-			$this->data['newversion_href'] = $this->buildNewVersionURI();
-			
-			
+			$this->setHrefLangsAndTryToRedirect();
+					
 			if (IS_HTTPS) {
 				$this->data['static_domain_url'] = $this->config->get('config_img_ssl');
 				} else {
@@ -119,37 +102,7 @@
 			}			
 			//}
 			
-			$new_page = false;
 			
-			$bad_get_params = array(
-			'categoryID'
-			);
-			
-			foreach ($bad_get_params as $_bad_param){
-				if (isset($this->request->get[$_bad_param])){
-					$new_page = str_replace('&amp;' . $_bad_param . '=' . $this->request->get[$_bad_param], '', $_SERVER['REQUEST_URI']);
-					$new_page = str_replace('&' . $_bad_param . '=' . $this->request->get[$_bad_param], '', $new_page);
-					$new_page = str_replace('?' . $_bad_param . '=' . $this->request->get[$_bad_param], '', $new_page);
-					$new_page = str_replace('' . $_bad_param . '=' . $this->request->get[$_bad_param], '', $new_page);
-				}			
-			}
-			
-			
-			if (isset($this->request->get['utm_term']) && filter_var($this->request->get['utm_term'], FILTER_VALIDATE_EMAIL)){
-				$new_page = str_replace('&utm_term=' . $this->request->get['utm_term'], '', $_SERVER['REQUEST_URI']);
-				$new_page = str_replace('?utm_term=' . $this->request->get['utm_term'], '', $new_page);
-				$new_page = str_replace('utm_term=' . $this->request->get['utm_term'], '', $new_page);
-			}
-			
-			if (isset($this->request->get['page']) && $this->request->get['page'] == '1'){
-				$new_page = str_replace('&amp;page=1', '', $_SERVER['REQUEST_URI']);
-				$new_page = str_replace('&page=1', '', $new_page);
-				$new_page = str_replace('?page=1', '', $new_page);						
-			}
-			
-			if ($new_page){
-				header('Location: ' . str_replace('&amp;', '&', $new_page), true, 301);
-			}
 			
 			//Количество просмотров ПОЛНЫХ СТРАНИЦ
 			if (!isset($this->session->data['pages_viewed'])){
@@ -157,97 +110,6 @@
 				} else {
 				$this->session->data['pages_viewed']++;
 			}
-			
-			
-			//ЛОГИКА КОРОТКИХ УРЛОВ
-			$request_query = $this->request->server['REQUEST_URI'];
-			if (strpos($request_query, '?')){
-				$query_string = substr($request_query, (strpos($request_query, '?')+1));						
-			}
-			
-			//удаляем query_string
-			if (isset($query_string) && strlen($query_string)>0){
-				$request_query = substr($request_query, 0, -1*(strlen($query_string)+1));						
-			}
-			
-			//удаляем первый и последний слэш, если он есть	
-			if (substr($request_query, -1) == '/') {
-				$request_query = substr($request_query, 0, -1);
-			}
-			
-			if (strlen($request_query)>0 && $request_query[0] == '/') {						
-				$request_query = substr($request_query, 1);
-			}
-			
-			if (mb_strlen($request_query) > 3){								
-				if ($alias = $this->shortAlias->getURL($request_query, true)) {																		
-					header('Location: ' . str_replace('&amp;', '&', $alias), true, 301);
-					exit();
-				}
-			}
-			
-			
-			//REDIRECT MANAGER
-			if ($this->config->get('redirect_manager_status')) {
-				
-				$request_query = $this->request->server['REQUEST_URI'];
-				$http_server = $this->request->server['HTTP_HOST'];
-				
-				if (strpos($request_query, '?')){
-					$query_string = substr($request_query, (strpos($request_query, '?')+1));						
-				}
-				
-				//удаляем query_string
-				if (isset($query_string) && strlen($query_string)>0){
-					$request_query = substr($request_query, 0, -1*(strlen($query_string)+1));						
-				}
-				
-				//удаляем первый и последний слэш, если он есть	
-				if (substr($request_query, -1) == '/') {
-					$request_query = substr($request_query, 0, -1);
-				}
-				
-				if (strlen($request_query)>0 && $request_query[0] == '/') {						
-					$request_query = substr($request_query, 1);
-				}
-				
-				$search_query = $this->db->query(
-				"SELECT * FROM `redirect` 
-				WHERE (
-				from_url LIKE ('" . $this->db->escape($request_query) . "') OR 
-				from_url LIKE ('" . $this->db->escape($request_query) . "/') OR 
-				from_url LIKE ('/" . $this->db->escape($request_query) ."') OR 
-				from_url LIKE ('/" . $this->db->escape($request_query) ."/'))
-				AND (active = 1)"
-				);	
-				
-				if ($search_query->num_rows) {																		
-					$this->db->query("UPDATE `redirect` SET times_used = times_used+1 WHERE redirect_id = " . (int)$search_query->row['redirect_id']);
-					
-					$to_url = $search_query->row['to_url'];
-					
-					if (substr($to_url, -1) == '/') {
-						$to_url = substr($to_url, 0, -1);
-					}
-					
-					if (strlen($to_url)>0 && $to_url[0] == '/') {
-						$to_url = substr($to_url, 1);
-					}
-					
-					if (isset($query_string) && strlen($query_string)>0){
-						if (strpos($to_url, '?')){
-							$to = '/' . $to_url . '&' . $query_string;							
-							} else {
-							$to = '/' . $to_url . '?' . $query_string;								
-						}										
-						} else {
-						$to = '/' . $to_url;							
-					}
-					header('Location: ' . str_replace('&amp;', '&', $to), true, $search_query->row['response_code']);
-					exit();
-				}						
-			}		
-			//REDIRECT MANAGER END
 			
 			$this->data['title'] = $this->document->getTitle();
 			$this->data['config_title'] = $this->config->get('config_title');
@@ -263,22 +125,17 @@
 						break;
 					}
 				}
-			}
+			}			
 			
-			
-			if (IS_HTTPS) {
-				$server = $this->config->get('config_ssl');
-				} else {
-				$server = $this->config->get('config_url');
-			}
+			$server = $this->config->get('config_ssl');
+
 			if (isset($this->session->data['error']) && !empty($this->session->data['error'])) {
 				$this->data['error'] = $this->session->data['error'];
 				unset($this->session->data['error']);
 				} else {
 				$this->data['error'] = '';
 			}
-			
-			
+						
 			$this->data['base'] = $server;
 			$this->data['description'] = $this->document->getDescription();
 			$this->data['keywords'] = $this->document->getKeywords();
@@ -455,10 +312,7 @@
 				$this->data['icon'] = $server . DIR_IMAGE_NAME . $this->config->get('config_icon');
 				} else {
 				$this->data['icon'] = '';
-			}
-			
-			
-			
+			}									
 			
 			foreach ($this->language->loadRetranslate('common/header') as $translationСode => $translationText){
 				$this->data[$translationСode] = $translationText;
@@ -612,14 +466,10 @@
 			
 			$this->data['google_ecommerce_enable'] = (int)$this->config->get('config_google_ecommerce_enable');
 			
+			//Language Switcher
 			$this->data['language_switcher'] = array();
 			if ($this->config->get('config_second_language')){
-				$this->load->model('kp/urldecode');
-
-				$hreflangs = $this->model_kp_urldecode->decodeURI();				
-
-				foreach ($hreflangs as $language_id => $link){
-
+				foreach (($hreflangs = $this->document->getHrefLangs()) as $language_id => $link){
 					if (in_array($link['code'], $this->config->get('config_supported_languages'))){						
 
 						$text_code = $this->registry->get('languages')[$link['code']]['switch'];
@@ -627,7 +477,7 @@
 						$this->data['language_switcher'][] = array(
 						'code' 		=> $link['code'],
 						'text_code' => $text_code,
-						'href' 		=> $link['link'], //addQueryArgs(['setlang' => $link['code']], $link['link']),
+						'href' 		=> $link['link'],
 						'active' 	=> ($language_id == $this->config->get('config_language_id'))
 						);						
 
@@ -643,9 +493,9 @@
 			}
 			
 			
-			$this->data['links'] = $this->document->getLinks();	
-			$this->data['extra_tags'] = $this->document->getExtraTags();					
-			$this->data['robots'] = $this->document->getRobots();
+			$this->data['links'] 		= $this->document->getLinks();	
+			$this->data['extra_tags'] 	= $this->document->getExtraTags();					
+			$this->data['robots'] 		= $this->document->getRobots();
 			
 			if (ADMIN_SESSION_DETECTED){
 				if (!empty($this->request->cookie['PHPSESSIDA'])){
@@ -675,7 +525,7 @@
 				'module/currency',
 				'module/mmenu',
 				'common/topcontent',
-				);					
+			);					
 			
 			
 			$this->data['logged'] = $this->customer->isLogged();
@@ -847,14 +697,3 @@
 			
 			
 		}
-		
-		
-		
-		
-		
-		
-	
-	
-	
-	
-	

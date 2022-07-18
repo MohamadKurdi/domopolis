@@ -426,10 +426,13 @@
 				}
 				
 				$this->validate();
-				
-				if (isset($this->request->get['route'])) {
-					return $this->forward($this->request->get['route']);
+
+				if (empty($this->request->get['route'])){
+					$this->request->get['route'] = 'common/home';
 				}
+									
+				return $this->forward($this->request->get['route']);
+				
 			}
 		}
 		

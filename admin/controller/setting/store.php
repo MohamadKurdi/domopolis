@@ -858,6 +858,14 @@
 				} else {
 				$this->data['config_second_language'] = $this->config->get('config_second_language');
 			}
+
+			if (isset($this->request->post['config_do_redirection_to_second_language'])) {
+				$this->data['config_do_redirection_to_second_language'] = $this->request->post['config_do_redirection_to_second_language'];
+				} elseif (isset($store_info['config_do_redirection_to_second_language'])) {
+				$this->data['config_do_redirection_to_second_language'] = $store_info['config_do_redirection_to_second_language'];			
+				} else {
+				$this->data['config_do_redirection_to_second_language'] = $this->config->get('config_do_redirection_to_second_language');
+			}
 			
 			$this->load->model('localisation/language');
 			

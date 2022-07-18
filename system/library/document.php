@@ -1,17 +1,18 @@
 <?php
 	class Document {
-		private $title;
-		private $description;
-		private $keywords;
-		private $noindex = false;
-		private $links = array();		
-		private $styles = array();
-		private $scripts = array();
-		private $opengraph = array();
-		private $extra_tags = array();
-		private $_meta = array();
-		private $robots = '';
-		private $robots_meta = array();
+		private $title 			= '';
+		private $description 	= '';
+		private $keywords 		= '';
+		private $noindex 		= false;
+		private $robots 		= '';
+		private $links 			= [];		
+		private $styles 		= [];
+		private $scripts 		= [];
+		private $opengraph 		= [];
+		private $extra_tags 	= [];
+		private $_meta 			= [];
+		private $robots_meta 	= [];
+		private $hreflangs 		= [];
 		
 		
 		public function setTitle($title) {
@@ -25,6 +26,18 @@
 		
 		public function getTitle() {
 			return $this->title;
+		}
+
+		public function setHrefLangs($hreflangs) {
+			$this->hreflangs = $hreflangs;
+
+			foreach ($hreflangs as $link){				
+				$this->addLink($link['link'], 'alternate', $link['hreflang']);			
+			}
+		}
+		
+		public function getHrefLangs() {
+			return $this->hreflangs;
 		}
 		
 		public function setDescription($description) {

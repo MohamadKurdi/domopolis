@@ -39,6 +39,10 @@
 			if ($idParam['key'] == 'collection_id'){
 				return $this->validateCollection($idParam['value']);
 			}
+
+			if ($idParam['key'] == 'intersection_id'){
+				return $this->validateCategory($idParam['value']);
+			}
 			
 			if ($idParam['key'] == 'path'){
 				$parts = explode('_', (string)$idParam['value']);
@@ -75,11 +79,11 @@
 		
 		private function findIDparam(){
 			
-			$idParam = array();		
+			$idParams = [];		
 			
-			foreach ($this->request->get as $key => $value){				
+			foreach ($this->request->get as $key => $value){	
 				if (stripos($key, '_id')){
-					$idParam = array(
+					$idParams[] = array(
 					'key' 	=> $key,
 					'value' => $value
 					);
@@ -89,7 +93,7 @@
 			if (!$idParam){
 				foreach ($this->request->get as $key => $value){				
 					if (stripos($key, 'path') !== false){
-						$idParam = array(
+						$idParams[] = array(
 						'key' 	=> $key,
 						'value' => $value
 						);
@@ -97,7 +101,7 @@
 				}
 			}
 			
-			return $idParam;
+			return array_reverse($idParams);
 		}
 		
 		private function getStoresByLanguageID($code){
@@ -170,10 +174,22 @@
 						
 						$this->config->set('config_ssl', $store_url .'/'. $urlcode);
 						
-						if ($idParam = $this->findIDparam()){
-							if ($this->validateIDParam($idParam)){
-								$link = $this->url->link($this->request->get['route'], $idParam['key'] . '=' . $idParam['value'], 'SSL', $language['language_id']);
+						if ($idParams = $this->findIDparam()){
+
+							$validatedParams = [];
+							foreach ($idParams as $idParam){
+								if ($this->validateIDParam($idParam)){
+									$validatedParams[] = ($idParam['key'] . '=' . $idParam['value']);
+								}
 							}
+
+							if (count($validatedParams) == 1){
+								$link = $this->url->link($this->request->get['route'], $validatedParams[0], 'SSL', $language['language_id']);
+							} else {
+								$link = $this->url->link($this->request->get['route'], implode('&', $validatedParams), 'SSL', $language['language_id']);
+							}
+
+
 							} else {
 							$link = $this->url->link($this->request->get['route'], '', 'SSL', $language['language_id']);
 						}
@@ -185,7 +201,7 @@
 						
 						if ($link && !$this->thisIsUnroutedURI($link)){
 							$links[$language['language_id']] = array(
-							'link' 			=> $this->rebuildURI($link),
+							'link' 			=> trim($this->rebuildURI($link), '/'),
 							'code'			=> $language['code'],
 							'hreflang'		=> $language['hreflang'],
 							'language_id' 	=> $language['language_id'] 

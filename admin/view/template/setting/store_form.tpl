@@ -653,6 +653,23 @@
 												<?php } ?>
 											</select></td>
 										</tr>
+
+										<tr>
+											<td>Делать редирект на второй язык</td>
+											<td>
+												<select name="config_do_redirection_to_second_language">
+													<?php if ($config_do_redirection_to_second_language) { ?>
+														<option value="1" selected="selected">Включить</option>
+														<option value="0">Отключить</option>
+														<?php } else { ?>													
+														<option value="1">Включить</option>
+														<option value="0"  selected="selected">Отключить</option>
+													<? } ?>
+												</select>
+												<br />
+												<span class="help">Переадресовывать клиентов на второй язык (законы Украины о обязательном Украинском языке)</span>
+											</td>
+										</tr>
 										
 										<tr>
 											<td><?php echo $entry_currency; ?></td>
