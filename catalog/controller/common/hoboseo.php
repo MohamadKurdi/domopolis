@@ -131,6 +131,16 @@
 			return $this;			
 		}
 
+		public function switcher(){
+			$language = $this->request->post['language'];
+			$redirect = $this->request->post['redirect'];
+
+			if ($language && array_key_exists($language, $this->registry->get('languages'))){				
+				$registry->get('session')->data['language'] = $language;
+				setcookie('language', $language, time() + 60 * 60 * 24 * 30, '/', $registry->get('request')->server['HTTP_HOST']);
+			}
+		}
+
 		public function index(){			
 			$this->checkBadURIParams()->shortAliasImplementation()->redirectManagerImplementation();
 			return false;

@@ -231,6 +231,19 @@
 		} else {
 		$code = $registry->get('config')->get('config_language');
 	}	
+
+/*
+	if (isset($registry->get('session')->data['language']) && array_key_exists($registry->get('session')->data['language'], $languages) && $languages[$registry->get('session')->data['language']]['status']) {
+		$code = $registry->get('session')->data['language'];
+		} elseif (isset($registry->get('request')->cookie['language']) && array_key_exists($registry->get('request')->cookie['language'], $languages) && $languages[$registry->get('request')->cookie['language']]['status']) {
+		$code = $registry->get('request')->cookie['language'];
+		} elseif (!empty($code_from_url) && array_key_exists($code_from_url, $languages)){
+		$code = $code_from_url;		
+		} elseif ($detect) {
+		$code = $detect;
+		} else {
+		$code = $registry->get('config')->get('config_language');
+	}*/
 	
 	//REDIRECTION FOR UKRAINIAN LAWS IF PREVIOUS CONFIG WAS BAD, LIKE (/ua, /uk)
 	if ((!defined('CRAWLER_SESSION_DETECTED') || !CRAWLER_SESSION_DETECTED) && (!defined('PAGESPEED_SESSION_DETECTED') || !PAGESPEED_SESSION_DETECTED)){
