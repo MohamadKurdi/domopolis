@@ -1097,10 +1097,10 @@ class MegaFilterCore {
 		if ($this->_ctrl->config->get('config_no_zeroprice')){
 			array_unshift($conditions, "(p.price > 0 OR p.price_national > 0)");
 		} else {
-			$notNullPriceCondition .= " AND (";
+			$notNullPriceCondition = " (";
 			$notNullPriceCondition .= " p.price > 0 OR p.price_national > 0";
-			$notNullPriceCondition .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
-			$notNullPriceCondition .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+			$notNullPriceCondition .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->_ctrl->config->get('config_store_id') . "' LIMIT 1) > 0";
+			$notNullPriceCondition .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->_ctrl->config->get('config_store_id') . "' LIMIT 1) > 0";
 			$notNullPriceCondition .= ")";
 			array_unshift($conditions, $notNullPriceCondition);
 		}	
