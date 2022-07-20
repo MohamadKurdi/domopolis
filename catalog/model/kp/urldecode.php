@@ -90,15 +90,13 @@
 				}			
 			}
 			
-			if (!$idParams){
-				foreach ($this->request->get as $key => $value){				
-					if (stripos($key, 'path') !== false){
-						$idParams[] = array(
-						'key' 	=> $key,
-						'value' => $value
-						);
-					}			
-				}
+			foreach ($this->request->get as $key => $value){				
+				if (stripos($key, 'path') !== false){
+					$idParams[] = array(
+					'key' 	=> $key,
+					'value' => $value
+					);
+				}			
 			}
 			
 			return array_reverse($idParams);

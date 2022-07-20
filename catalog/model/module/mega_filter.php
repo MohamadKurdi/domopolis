@@ -1360,7 +1360,7 @@ class MegaFilterCore {
 			$this->_createSQL( $columns, $conditionsIn, array() ), $conditions
 		);				
 
-		$this->_ctrl->log->debug($sql);	
+		//$this->_ctrl->log->debug($sql);	
 		
 		$query = $this->_ctrl->db->query( $sql );
 		
