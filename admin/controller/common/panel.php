@@ -833,6 +833,12 @@ public function getRedisInfo(){
 	$this->response->setOutput(json_encode($json));			
 }
 
+public function getPageCacheInfo(){
+	$json = $this->PageCache->getPageCacheInfo();
+
+	$this->response->setOutput(json_encode($json));
+}
+
 
 public function getZadarmaBalance(){						
 	$key = $this->config->get('config_zadarma_api_key');

@@ -269,6 +269,18 @@
 				</div>
 
 				<div class="tile-block">
+					<div class="tile info-loader unknown" data-path="common/panel/getPageCacheInfo">
+						<div class="tile-heading">Данные PageCache</div>
+						<div class="tile-body"><i class="fa fa-cogs"></i>
+							<span class="tile-result small"></span>
+						</div>
+						<div class="tile-footer">
+							объемы данных PageCache
+						</div>
+					</div>
+				</div>
+
+				<div class="tile-block">
 					<div class="tile info-loader unknown" data-path="common/panel/getAsteriskInfo">
 						<div class="tile-heading">Asterisk</div>
 						<div class="tile-body"><i class="fa fa-phone"></i>

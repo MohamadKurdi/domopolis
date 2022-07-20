@@ -80,14 +80,56 @@ class PageCache{
 	}
 
 	private function loadSettings(){
-
 		$setting = @file_get_contents(DIR_SYSTEM . 'config/pagecache.json');	
 		$setting = json_decode($setting, true);
 
 		foreach ($setting as $key => $value){
 			$this->{$key} = $value;
 		}
+	}
 
+	private static function formatBytes($size, $precision = 2)
+	{
+    	$base = log($size, 1024);
+    	$suffixes = array('', 'K', 'M', 'G', 'T');   
+
+    	return round(pow(1024, $base - floor($base)), $precision) .' '. $suffixes[floor($base)];
+	}
+
+	public function getPageCacheInfo(){
+		if (!empty($this->mounted)){
+			$total_space = disk_total_space(DIR_CACHE . PAGECACHE_DIR);
+			$free_space  = disk_free_space(DIR_CACHE . PAGECACHE_DIR);
+			$used_space  = ($total_space - $free_space);
+			
+			$body  = 'Used ' . ' ' . self::formatBytes($used_space, 0) . ' of ' . self::formatBytes($total_space, 0); 
+			$class = 'good';
+
+			//Занято больше половины
+			if (($total_space*0.5 < $used_space)){
+				$class = 'warn';
+			}
+
+			//Занято больше 75%
+			if (($total_space*0.75 < $used_space)){
+				$class = 'bad';
+			}
+
+		} else {
+
+			$body = 'NOT MOUNTED';
+			$class = 'warn';
+
+		}
+
+		$json = [
+			'body'  	=> $body,
+			'used'		=> self::formatBytes($used_space, 0),
+			'total'		=> self::formatBytes($total_space, 0),
+			'class' 	=> $class,
+		];
+
+		return $json;
 	}
 
 	public function getRedisInfo(){
@@ -104,7 +146,6 @@ class PageCache{
 			$class = 'bad';
 
 		};	
-
 
 		$json = [
 			'body'  	=> $body,

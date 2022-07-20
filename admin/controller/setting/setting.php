@@ -49,8 +49,7 @@ class ControllerSettingSetting extends Controller {
 				}
 			}
 
-			$this->data['admin_modes'] = $this->admin_modes;
-			
+			$this->data['admin_modes'] = $this->admin_modes;			
 			$this->data['clear_memcache'] = $this->url->link('common/home/clearMemCache' , 'token=' . $this->session->data['token'], 'SSL');
 			
 			$this->data['noCacheModeLink'] = $this->url->link('setting/setting/setNoCacheMode', 'token=' . $this->session->data['token'], 'SSL');
@@ -71,7 +70,8 @@ class ControllerSettingSetting extends Controller {
 
 			$this->data['panelLink'] = $this->url->link('common/panel', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['serverResponceTime'] = $this->PageCache->getServerResponceTime();
-			$this->data['redisMem'] = $this->PageCache->getRedisInfo();
+			$this->data['redisMem'] 		= $this->PageCache->getRedisInfo();
+			$this->data['pageCacheInfo'] 	= $this->PageCache->getPageCacheInfo();
 
 			
 			$this->template = 'common/cachebuttons.tpl';

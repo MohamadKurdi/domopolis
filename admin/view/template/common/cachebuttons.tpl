@@ -32,8 +32,16 @@
 <?php if ($this->user->getUserGroup() == 1) { ?>
 
 	<a class="link_headr <? if ($noCacheMode) { ?>link_enter cache-button-bad<? } else { ?> cache-button-good<?php } ?>" onclick="$('#noCacheR').load('<? echo $noCacheModeLink ?>');">L1 <span id='noCacheR'><? echo ($noCacheMode?'OFF':'ON'); ?> <?php if (!empty($noCacheModeDuration)) { ?><i class="fa fa-clock-o"></i> <? echo $noCacheModeDuration ?><? } ?></span></a>
+	
 	<a class="link_headr <? if ($noPageCacheMode) { ?>link_enter cache-button-bad<? } else { ?> cache-button-good<?php } ?>" onclick="$('#noPageCacheR').load('<? echo $noPageCacheModeLink ?>');">FPC <span id='noPageCacheR'><? echo ($noPageCacheMode?'OFF':'ON'); ?> <?php if (!empty($noPageCacheModeDuration)) { ?><i class="fa fa-clock-o"></i> <? echo $noPageCacheModeDuration ?> / <? } ?> <?php echo $noPageCacheModeTTL; ?></span>
 	</a>
-	<a class="link_headr cache-button-<?php echo $serverResponceTime['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-rocket"></i> <?php echo $serverResponceTime['body'];?></a><a class="hidden-xs link_headr cache-button-<?php echo $redisMem['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-cog" aria-hidden="true"></i> <?php echo $redisMem['body'];?></a><a class="hidden-xs link_headr cache-button-<?php echo $serverResponceTime['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-code" aria-hidden="true"></i> <?php echo $serverResponceTime['engine'];?></a>
+
+	<a class="link_headr cache-button-<?php echo $pageCacheInfo['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-server"></i> <?php echo $pageCacheInfo['used'] . ' of ' . $pageCacheInfo['total'];?></a>
+
+	<a class="link_headr cache-button-<?php echo $serverResponceTime['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-rocket"></i> <?php echo $serverResponceTime['body'];?></a>
+
+	<a class="hidden-xs link_headr cache-button-<?php echo $redisMem['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-cog" aria-hidden="true"></i> <?php echo $redisMem['body'];?></a>
+
+	<a class="hidden-xs link_headr cache-button-<?php echo $serverResponceTime['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-code" aria-hidden="true"></i> <?php echo $serverResponceTime['engine'];?></a>
 
 <?php } ?>
