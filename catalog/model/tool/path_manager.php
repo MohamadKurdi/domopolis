@@ -1,5 +1,26 @@
 <?php
 class ModelToolPathManager extends Model {
+
+	public function getFullCategoryPath($category_id, $breadcrumbs_mode = false){		
+		$path = [];
+
+		$category = $this->db->query("SELECT category_id, parent_id FROM category WHERE category_id = '" . $category_id. "'")->row;
+			
+		while ($category['parent_id']){		
+			array_unshift($path, $category['parent_id']);
+			$category = $this->db->query("SELECT category_id, parent_id FROM category WHERE category_id = '" . $category['parent_id']. "'")->row;
+		}
+
+		if (!$path || !count($path)) return null;
+
+		if($breadcrumbs_mode) {
+			return implode('_', $path);
+		} else {
+			return array('path' => $path);
+		}
+
+	}
+
  
 	public function getFullProductPath($product_id, $breadcrumbs_mode = false) {
 		$path_mode = 'full_product_path_mode';

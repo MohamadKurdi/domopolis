@@ -351,14 +351,11 @@
 			$this->load->model('tool/video');
 			
 			if (!$just_price){
-				if (isset($this->request->get['product_id']) && ((!isset($this->request->get['path']) && $this->config->get('full_product_path_breadcrumbs') == '1')
-				/*	||  ($this->config->get('full_product_path_breadcrumbs') == '2') */)
-				) {
-					
+				if (!empty($this->request->get['product_id']) && $this->config->get('full_product_path_breadcrumbs') == '1')
+				{					
 					$this->load->model('tool/path_manager');
 					unset($this->request->get['path']);
-					$this->request->get['path'] = $this->model_tool_path_manager->getFullProductPath($this->request->get['product_id'],
-					true);
+					$this->request->get['path'] = $this->model_tool_path_manager->getFullProductPath($this->request->get['product_id'],	true);
 				}
 				
 				if (isset($this->request->get['path'])) {
@@ -387,8 +384,7 @@
 					}
 					
 					// Set the last category breadcrumb
-					$category_info = $this->model_catalog_category->getCategory($category_id);
-					
+					$category_info = $this->model_catalog_category->getCategory($category_id);					
 					if ($category_info) {
 						$url = '';
 						

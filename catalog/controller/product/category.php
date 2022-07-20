@@ -92,9 +92,7 @@
 		}
 		
 		
-		public function index($args = array()) {
-			//	public function index() {
-			
+		public function index($args = array()) {						
 			$this->language->load('product/category');
 			
 			foreach ($this->language->loadRetranslate('product/single') as $translationСode => $translationText){
@@ -105,6 +103,7 @@
 			$this->load->model('catalog/manufacturer');
 			$this->load->model('catalog/product');
 			$this->load->model('catalog/set');
+			$this->load->model('tool/path_manager');
 			
 			$this->load->model('tool/image'); 
 			
@@ -362,10 +361,12 @@
 				
 				$path = '';
 				
-				$parts = explode('_', (string)$this->request->get['path']);
-				
+				$parts = explode('_', (string)$this->request->get['path']);				
 				$category_id = (int)array_pop($parts);
-				
+								
+				$this->request->get['path'] = $this->model_tool_path_manager->getFullCategoryPath($category_id, true);				
+				$parts = explode('_', (string)$this->request->get['path']);	
+
 				foreach ($parts as $path_id) {
 					if (!$path) {
 						$path = (int)$path_id;
@@ -539,9 +540,6 @@
 					$url .= '&manufacturer_id=' . $this->request->get['manufacturer_id'];
 				}
 				
-				$current_store = (int)$this->config->get('config_store_id');
-				$current_lang  = (int)$this->config->get('config_language_id');
-				$current_curr  = (int)$this->currency->getId();
 				$current_manufacturer = (isset($this->request->get['manufacturer_id']))?$this->request->get['manufacturer_id']:0;
 				
 				$fmSettings = $this->config->get('mega_filter_settings');
@@ -553,10 +551,10 @@
 				}
 				
 				$this->data['categories'] = array();
-				
-				if (!$current_manufacturer && !$category_info['parent_id']){
+
+				if (!$current_manufacturer && (!$category_info['parent_id'] || $this->config->get('config_display_subcategory_in_all_categories'))){
 					
-					$this->data['categories'] = $this->cache->get('subcategories.'.$current_manufacturer.$category_id.$current_lang.$current_curr.$current_store);			
+					$this->data['categories'] = $this->cache->get('subcategories.' . $current_manufacturer . $category_id . (int)$this->config->get('config_language_id') . (int)$this->currency->getId() . (int)$this->config->get('config_store_id'));			
 					if (!$this->data['categories']) {	
 						
 						$fmSettings = $this->config->get('mega_filter_settings');
@@ -574,7 +572,7 @@
 						
 						
 						$this->data['categories'] = array();
-						if (isset($this->request->get['manufacturer_id'])){						
+						if (!empty($this->request->get['manufacturer_id'])){						
 							$results = $this->model_catalog_manufacturer->getTreeCategoriesByManufacturer($this->request->get['manufacturer_id'], $category_id);
 							$manufacturer = $this->model_catalog_manufacturer->getManufacturer($this->request->get['manufacturer_id']);
 							
@@ -608,6 +606,7 @@
 							} else {
 							
 							$results = $this->model_catalog_category->getCategories($category_id);
+
 							foreach ($results as $result) {								
 
 								if ($result['menu_name']){
@@ -625,7 +624,7 @@
 								}
 
 								$children = [];
-								if ($this->config->get('config_second_level_subcategory')){
+								if ($this->config->get('config_second_level_subcategory_in_categories')){
 									$child_results = $this->model_catalog_category->getCategories($result['category_id']);
 
 									foreach ($child_results as $child_result) {								
@@ -656,7 +655,7 @@
 							}
 							
 						}
-						$this->cache->set('subcategories.'.$current_manufacturer.$category_id.$current_lang.$current_curr.$current_store, $this->data['categories']);
+						$this->cache->set('subcategories.' . $current_manufacturer . $category_id . (int)$this->config->get('config_language_id') . (int)$this->currency->getId() . (int)$this->config->get('config_store_id'), $this->data['categories']);
 					}
 				}
 				

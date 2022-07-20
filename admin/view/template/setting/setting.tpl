@@ -1345,9 +1345,15 @@
 								</td>
 
 								<td style="width:15%">
+																
+								</td>
+							</tr>	
+							<tr>
+
+								<td style="width:15%">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Второй уровень подкатегорий в категориях</span></p>
-									<select name="config_second_level_subcategory">
-										<?php if ($config_second_level_subcategory) { ?>
+									<select name="config_second_level_subcategory_in_categories">
+										<?php if ($config_second_level_subcategory_in_categories) { ?>
 											<option value="1" selected="selected">Включить</option>
 											<option value="0">Отключить</option>
 										<?php } else { ?>													
@@ -1355,8 +1361,26 @@
 											<option value="0"  selected="selected">Отключить</option>
 										<? } ?>
 									</select>
+									<br />
+									<span class="help">Если выключено - то выводится только один уровень</span>
 								</td>
-							</tr>							
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Отображать подкатегории во всех категориях</span></p>
+									<select name="config_display_subcategory_in_all_categories">
+										<?php if ($config_display_subcategory_in_all_categories) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+									<br />
+									<span class="help">Если выключено - то подкатегории выводятся только в корневых</span>
+								</td>
+
+							</tr>						
 						</table>
 							<h2><?php echo $text_voucher; ?></h2>
 							<table class="form">

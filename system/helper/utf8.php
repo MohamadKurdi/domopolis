@@ -356,12 +356,14 @@
 		return (float)$hbprice;
 	}
 	
-	function prepareEcommString($string){
-		$string = str_replace('&amp;', '&', $string);
-		$string = str_replace("'", "`", $string);
-		$string = str_replace('"', "`", $string);
-		
-		return $string;
+	function prepareEcommString($string) : string{
+		if ($string){
+			$string = str_replace('&amp;', '&', $string);
+			$string = str_replace("'", "`", $string);
+			$string = str_replace('"', "`", $string);
+		}
+
+		return (string)$string;
 	}
 	
 	if (extension_loaded('mbstring')) {
