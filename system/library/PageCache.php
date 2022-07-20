@@ -93,14 +93,14 @@ class PageCache{
     	$base = log($size, 1024);
     	$suffixes = array('', 'K', 'M', 'G', 'T');   
 
-    	return round(pow(1024, $base - floor($base)), $precision) .' '. $suffixes[floor($base)];
+    	return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
 	}
 
 	public function getPageCacheInfo(){
 		$total_space = disk_total_space(DIR_CACHE . PAGECACHE_DIR);
 		$free_space  = disk_free_space(DIR_CACHE . PAGECACHE_DIR);
 		$used_space  = ($total_space - $free_space);
-		
+
 		$body  = 'Used ' . ' ' . self::formatBytes($used_space, 0) . ' of ' . self::formatBytes($total_space, 0); 
 		$class = 'good';
 
