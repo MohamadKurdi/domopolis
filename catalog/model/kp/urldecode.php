@@ -90,7 +90,7 @@
 				}			
 			}
 			
-			if (!$idParam){
+			if (!$idParams){
 				foreach ($this->request->get as $key => $value){				
 					if (stripos($key, 'path') !== false){
 						$idParams[] = array(

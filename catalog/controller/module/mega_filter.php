@@ -12,12 +12,6 @@
 		}
 		
 		private function _setCache( $name, $value ) {
-			/*	if( ! is_dir( DIR_SYSTEM . MFPCACHE_DIR ) || ! is_writable( DIR_SYSTEM . MFPCACHE_DIR ) ) return false;
-			
-			file_put_contents( DIR_SYSTEM . MFPCACHE_DIR . $name, serialize( $value ) );
-			file_put_contents( DIR_SYSTEM . MFPCACHE_DIR . $name . '.time', time() + 60 * 60 * 24 );
-			*/
-			
 			$this->cache->set($name, serialize( $value ));
 			
 			return true;
@@ -30,31 +24,6 @@
 			} else {
 				return false;
 			}
-		
-		/*
-			$dir		= DIR_SYSTEM . MFPCACHE_DIR;
-			$file		= $dir . $name;
-			$file_time	= $file . '.time';
-			
-			if( ! file_exists( $file ) ) {
-				return NULL;
-			}
-			
-			if( ! file_exists( $file_time ) ) {
-				return NULL;
-			}
-			
-			$time = (float) file_get_contents( $file_time );
-			
-			if( $time < time() ) {
-				@ unlink( $file );
-				@ unlink( $file_time );
-				
-				return false;
-			}
-			
-			return unserialize( file_get_contents( $file ) );
-		*/
 		}
 		
 		protected function index( $setting ) {

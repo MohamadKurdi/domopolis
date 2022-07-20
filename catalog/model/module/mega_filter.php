@@ -1093,6 +1093,17 @@ class MegaFilterCore {
 		array_unshift( $conditions, "`p`.`status` = '1'");
 		array_unshift( $conditions, "`p`.`stock_status_id` <> '" . $this->_ctrl->config->get('config_not_in_stock_status_id') . "'");
 		array_unshift( $conditions, "`p`.`date_available` <= NOW()" );
+
+		if ($this->_ctrl->config->get('config_no_zeroprice')){
+			array_unshift($conditions, "(p.price > 0 OR p.price_national > 0)");
+		} else {
+			$notNullPriceCondition .= " AND (";
+			$notNullPriceCondition .= " p.price > 0 OR p.price_national > 0";
+			$notNullPriceCondition .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+			$notNullPriceCondition .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+			$notNullPriceCondition .= ")";
+			array_unshift($conditions, $notNullPriceCondition);
+		}	
 		
 		if( ! empty( $this->_data['filter_category_id'] ) ) {
 		//	$__current_category = $this->load->model('catalog/category');
@@ -1340,14 +1351,16 @@ class MegaFilterCore {
 		if( in_array( $this->route(), self::$_specialRoute ) ) {
 			$columns[] = $this->_specialCol();
 			$conditions[] = '`special` IS NOT NULL';
-		}
+		}		
 		
 		$conditions = $conditions ? ' WHERE ' . implode( ' AND ', $conditions ) : '';
 		
 		$sql = sprintf( 
 			'SELECT MIN(`price`) AS `p_min`, MAX(`price`) AS `p_max` FROM( SELECT ' . $sel . ' AS `price` FROM( %s ) AS `tmp` %s ) AS `tmp` ' . $this->_conditionsToSQL( $conditionsOut ),
 			$this->_createSQL( $columns, $conditionsIn, array() ), $conditions
-		);					
+		);				
+
+		$this->_ctrl->log->debug($sql);	
 		
 		$query = $this->_ctrl->db->query( $sql );
 		
