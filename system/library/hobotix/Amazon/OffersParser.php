@@ -37,7 +37,7 @@ class OffersParser
 		$sql = " FROM product p
 			WHERE status = 1 
 			AND amzn_ignore = 0		
-			AND is_virtual = 0
+			AND is_virtual = 0			
 			AND stock_status_id <> '" . $this->config->get('config_not_in_stock_status_id') . "'			
 			AND (" . $this->PriceLogic->buildStockQueryField() . " = 0)
 			AND (NOT ISNULL(p.asin) OR p.asin <> '')";
@@ -56,7 +56,7 @@ class OffersParser
 		$sql = " FROM product p
 			WHERE status = 1 
 			AND amzn_ignore = 0		
-			AND is_virtual = 0
+			AND is_virtual = 0			
 			AND stock_status_id <> '" . $this->config->get('config_not_in_stock_status_id') . "'			
 			AND (" . $this->PriceLogic->buildStockQueryField() . " = 0)
 			AND (NOT ISNULL(p.asin) OR p.asin <> '')";

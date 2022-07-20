@@ -579,11 +579,6 @@
 							$manufacturer = $this->model_catalog_manufacturer->getManufacturer($this->request->get['manufacturer_id']);
 							
 							foreach ($results as $result) {
-								$data = array(
-								'filter_category_id'  => $result['category_id'],
-								'filter_sub_category' => true
-								);
-								
 								if ($result['image']) {
 									$image = $this->model_tool_image->resize($result['image'], $this->data['dimensions']['w'], $this->data['dimensions']['h']);
 									} else {
@@ -599,43 +594,67 @@
 									$url_s .= '&manufacturer_id=' . $this->request->get['manufacturer_id'];
 								}
 								
-								//	$product_total = $this->model_catalog_product->getTotalProducts($data);				
+								if ($this->config->get('config_product_count')){
+									$product_total = $this->model_catalog_product->getTotalProducts(['filter_category_id'  => $result['category_id'],'filter_sub_category' => true]);	
+								}			
 								
-								$this->data['categories'][] = array(
+								$this->data['categories'][] = [
 								'thumb'   	 => $image,
 								'name'  => $result['name'] . ' ' . $manufacturer['name'] . ($this->config->get('config_product_count') ? ' (' . $product_total . ')' : ''),
 								'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url_s)
-								);					
+								];					
 							}
 							
 							} else {
 							
 							$results = $this->model_catalog_category->getCategories($category_id);
-							foreach ($results as $result) {
-								$data = array(
-								'filter_category_id'  => $result['category_id'],
-								'filter_sub_category' => true
-								);
+							foreach ($results as $result) {								
+
 								if ($result['menu_name']){
 									$result['name'] = $result['menu_name'];
 								}
 								
 								if ($result['image']) {
-									$image = $this->model_tool_image->resize($result['image'], $this->data['dimensions']['w'], $this->data['dimensions']['h']);
-									
+									$image = $this->model_tool_image->resize($result['image'], $this->data['dimensions']['w'], $this->data['dimensions']['h']);									
 									} else {
-									$image = false;
-									
+									$image = $this->model_tool_image->resize('no_image.png', $this->data['dimensions']['w'], $this->data['dimensions']['h']);									
 								}
 								
-								//	$product_total = $this->model_catalog_product->getTotalProducts($data);										
+								if ($this->config->get('config_product_count')){
+									$product_total = $this->model_catalog_product->getTotalProducts(['filter_category_id'  => $result['category_id'],'filter_sub_category' => true]);	
+								}
+
+								$children = [];
+								if ($this->config->get('config_second_level_subcategory')){
+									$child_results = $this->model_catalog_category->getCategories($result['category_id']);
+
+									foreach ($child_results as $child_result) {								
+										if ($child_result['menu_name']){
+											$child_result['name'] = $child_result['menu_name'];
+										}
+
+										if ($child_result['image']) {
+											$child_image = $this->model_tool_image->resize($child_result['image'], $this->data['dimensions']['w'], $this->data['dimensions']['h']);									
+										} else {
+											$child_image = $this->model_tool_image->resize('no_image.png', $this->data['dimensions']['w'], $this->data['dimensions']['h']);								
+										}
+
+										$children[] = [
+											'thumb'   	=> $child_image,
+											'name'  	=> $child_result['name'] . ($this->config->get('config_product_count') ? ' (' . $product_total . ')' : ''),
+											'href'  	=> $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . '_' . $child_result['category_id'])
+										];
+									}
+								}						
 								
-								$this->data['categories'][] = array(
-								'thumb'   	 => $image,
-								
-								'name'  => $result['name'] . ($this->config->get('config_product_count') ? ' (' . $product_total . ')' : ''),
-								'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'])
-								);					
+								$this->data['categories'][] = [
+								'thumb'   	=> $image,								
+								'children'	=> $children,
+								'name'  	=> $result['name'] . ($this->config->get('config_product_count') ? ' (' . $product_total . ')' : ''),
+								'href'  	=> $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'])
+								];			
+
+								$this->log->debug($this->data['categories']);		
 							}
 							
 						}
