@@ -97,29 +97,21 @@ class PageCache{
 	}
 
 	public function getPageCacheInfo(){
-		if (!empty($this->mounted)){
-			$total_space = disk_total_space(DIR_CACHE . PAGECACHE_DIR);
-			$free_space  = disk_free_space(DIR_CACHE . PAGECACHE_DIR);
-			$used_space  = ($total_space - $free_space);
-			
-			$body  = 'Used ' . ' ' . self::formatBytes($used_space, 0) . ' of ' . self::formatBytes($total_space, 0); 
-			$class = 'good';
+		$total_space = disk_total_space(DIR_CACHE . PAGECACHE_DIR);
+		$free_space  = disk_free_space(DIR_CACHE . PAGECACHE_DIR);
+		$used_space  = ($total_space - $free_space);
+		
+		$body  = 'Used ' . ' ' . self::formatBytes($used_space, 0) . ' of ' . self::formatBytes($total_space, 0); 
+		$class = 'good';
 
 			//Занято больше половины
-			if (($total_space*0.5 < $used_space)){
-				$class = 'warn';
-			}
+		if (($total_space*0.5 < $used_space)){
+			$class = 'warn';
+		}
 
 			//Занято больше 75%
-			if (($total_space*0.75 < $used_space)){
-				$class = 'bad';
-			}
-
-		} else {
-
-			$body = 'NOT MOUNTED';
-			$class = 'warn';
-
+		if (($total_space*0.75 < $used_space)){
+			$class = 'bad';
 		}
 
 		$json = [
