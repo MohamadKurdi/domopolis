@@ -2535,6 +2535,10 @@
 			if (isset($data['filter_quantity_stockM']) && !is_null($data['filter_quantity_stockM'])) {
 				$sql .= " AND p.quantity_stockM > 0";
 			}
+
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
+            	$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
+        	}
 			
 			if (isset($data['filter_status']) && !is_null($data['filter_status'])) {
 				$sql .= " AND p.status = '" . (int)$data['filter_status'] . "'";

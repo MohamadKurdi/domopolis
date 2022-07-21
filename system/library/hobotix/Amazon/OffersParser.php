@@ -37,10 +37,18 @@ class OffersParser
 		$sql = " FROM product p
 			WHERE status = 1 
 			AND amzn_ignore = 0		
-			AND is_virtual = 0			
+			AND is_virtual = 0
+			AND is_markdown = 0			
 			AND stock_status_id <> '" . $this->config->get('config_not_in_stock_status_id') . "'			
 			AND (" . $this->PriceLogic->buildStockQueryField() . " = 0)
 			AND (NOT ISNULL(p.asin) OR p.asin <> '')";
+
+		if ($this->config->get('config_rainforest_enable_offers_only_for_filled')){
+			$sql .= "AND p.filled_from_amazon = 1";
+		}
+
+
+		$sql .= " AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1))";
 		$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -'" . $this->config->get('config_rainforest_update_period') . "' DAY)))";
 
 		$query = $this->db->ncquery("SELECT COUNT(DISTINCT(asin)) as total " . $sql . "");
@@ -56,10 +64,17 @@ class OffersParser
 		$sql = " FROM product p
 			WHERE status = 1 
 			AND amzn_ignore = 0		
-			AND is_virtual = 0			
+			AND is_virtual = 0
+			AND is_markdown = 0		
 			AND stock_status_id <> '" . $this->config->get('config_not_in_stock_status_id') . "'			
 			AND (" . $this->PriceLogic->buildStockQueryField() . " = 0)
 			AND (NOT ISNULL(p.asin) OR p.asin <> '')";
+
+		if ($this->config->get('config_rainforest_enable_offers_only_for_filled')){
+			$sql .= "AND p.filled_from_amazon = 1";
+		}
+
+		$sql .= " AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1))";
 		$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -'" . $this->config->get('config_rainforest_update_period') . "' DAY)))";
 
 		$query = $this->db->ncquery("SELECT DISTINCT(asin) " . $sql . " ORDER BY amzn_last_offers ASC LIMIT " . (int)\hobotix\RainforestAmazon::offerParserLimit);

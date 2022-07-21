@@ -42,6 +42,7 @@
 				<a href="#tab-telephony"><span style="color:#7F00FF;"><i class="fa fa-phone"></i> АТС, LDAP</span></a>
 				<a href="#tab-google-ya-fb-vk"><i class="fa fa-google"></i> <span style="color:#57AC79;">Google</span>, <span style="color:red;">Ya</span>, <span style="color:#7F00FF;">FB</span>, <span style="color:#3F6AD8;">VK</span></a>
 				<a href="#tab-ya-market"><span style="color:red;"><i class="fa fa-yahoo"></i> Yandex.Market, Ozon.Seller</span></a>
+				<a href="#tab-rainforest"><span style="color:#7F00FF;"><i class="fa fa-amazon"></i> Rainforest API</span></a>
 				<a href="#tab-apis"><span style="color:#7F00FF;"><i class="fa fa-cogs"></i> Разные API</span></a>
 				
 			<div class="clr"></div></div>
@@ -3542,144 +3543,8 @@
 							<span class="help">Настройки изменяются в Модулях доставки -> СДЭК. Причина в том, что СДЭК интегрирован фреймворком</span>
 
 						</div>
-						
-						<div id="tab-apis">
 
-							<h2>Yandex Translate (Cloud) API</h2>
-							<table class="form">
-								<tr>
-
-									<td width="33%">	
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Включить Yandex Translate</span></p>
-										<select name="config_yandex_translate_api_enable">
-											<?php if ($config_yandex_translate_api_enable) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>									
-									</td>
-									
-									<td width="33%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">API KEY</span></p>
-										<input type="text" name="config_yandex_translate_api_key" value="<?php echo $config_yandex_translate_api_key; ?>" size="50" style="width:250px;" />
-									</td>
-									
-									<td width="33%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">API ID</span></p>
-										<input type="text" name="config_yandex_translate_api_id" value="<?php echo $config_yandex_translate_api_id; ?>" size="50" style="width:250px;" />
-									</td>
-
-									
-								</tr>
-							</table>
-
-							<h2>Подключение к 1С (SOAP API)</h2>
-							<table class="form">
-								<tr>
-									
-									<td width="25%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">SOAP URI</span></p>
-										<input type="text" name="config_odinass_soap_uri" value="<?php echo $config_odinass_soap_uri; ?>" size="50" style="width:250px;" />
-									</td>
-									
-									<td width="25%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">SOAP USER</span></p>
-										<input type="text" name="config_odinass_soap_user" value="<?php echo $config_odinass_soap_user; ?>" size="50" style="width:250px;" />
-									</td>
-
-									<td width="25%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">SOAP PASSWD</span></p>
-										<input type="text" name="config_odinass_soap_passwd" value="<?php echo $config_odinass_soap_passwd; ?>" size="50" style="width:250px;" />
-									</td>
-
-									<td width="25%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">Загружать РРЦ</span></p>
-										<select name="config_odinass_update_local_prices">
-											<?php if ($config_odinass_update_local_prices) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-									</td>
-								</tr>
-							</table>
-
-							<h2>Bitrix24 BOT API (Чудо-бот)</h2>
-
-							<table class="form">
-								<tr>
-									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Включить Bitrix24 BOT API</span></p>
-										<select name="config_bitrix_bot_enable">
-											<?php if ($config_bitrix_bot_enable) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-									</td>
-									
-									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Bitrix24 Домен</span></p>
-										<input type="text" name="config_bitrix_bot_domain" value="<?php echo $config_bitrix_bot_domain; ?>" size="50" style="width:250px;" />
-									</td>
-									
-									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Bitrix24 Scope</span></p>
-										<input type="text" name="config_bitrix_bot_scope" value="<?php echo $config_bitrix_bot_scope; ?>" size="50" style="width:250px;" />
-									</td>
-
-									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Bitrix24 Client ID</span></p>
-										<input type="text" name="config_bitrix_bot_client_id" value="<?php echo $config_bitrix_bot_client_id; ?>" size="50" style="width:250px;" />
-									</td>
-
-									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Bitrix24 Secret</span></p>
-										<input type="text" name="config_bitrix_bot_client_secret" value="<?php echo $config_bitrix_bot_client_secret; ?>" size="50" style="width:250px;" />
-									</td>
-								</tr>
-							</table>
-
-
-
-							<h2>Telegram BOT API (уведомления)</h2>
-
-							<table class="form">
-								<tr>
-									<td width="33%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Включить TG Bot API</span></p>
-										<select name="config_telegram_bot_enable_alerts">
-											<?php if ($config_telegram_bot_enable_alerts) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-									</td>
-									
-									<td width="33%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Ключ TG Bot API</span></p>
-										<input type="text" name="config_telegram_bot_token" value="<?php echo $config_telegram_bot_token; ?>" size="50" style="width:250px;" />
-									</td>
-									
-									<td width="33%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Имя бота</span></p>
-										<input type="text" name="config_telegram_bot_name" value="<?php echo $config_telegram_bot_name; ?>" size="50" style="width:250px;" />
-									</td>
-								</tr>
-							</table>
-
+						<div id="tab-rainforest">
 
 							<h2>Rainforest API (получение цен и прочей шляпы из Amazon)</h2>
 							<table class="form">
@@ -3956,6 +3821,21 @@
 										<span class="help"><i class="fa fa-exclamation-circle"></i> установить этот статус товару, если на амазоне нет предложений</span>
 									</td>
 
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Получать офферы только для полностью загруженных</span></p>
+										<select name="config_rainforest_enable_offers_only_for_filled">
+											<?php if ($config_rainforest_enable_offers_only_for_filled) { ?>
+												<option value="1" selected="selected">Да</option>
+												<option value="0">Нет, для всех</option>
+												<?php } else { ?>													
+												<option value="1">Да</option>
+												<option value="0"  selected="selected">Нет, для всех</option>
+											<? } ?>
+										</select>
+										<br />
+										<span class="help"><i class="fa fa-exclamation-circle"></i> в противном случае - для всех асинов</span>
+									</td>
+
 
 								</tr>
 							</table>
@@ -4008,6 +3888,146 @@
 										</td>
 								</tr>
 							</table>
+
+						</div>
+						
+						<div id="tab-apis">
+
+							<h2>Yandex Translate (Cloud) API</h2>
+							<table class="form">
+								<tr>
+
+									<td width="33%">	
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Включить Yandex Translate</span></p>
+										<select name="config_yandex_translate_api_enable">
+											<?php if ($config_yandex_translate_api_enable) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>									
+									</td>
+									
+									<td width="33%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">API KEY</span></p>
+										<input type="text" name="config_yandex_translate_api_key" value="<?php echo $config_yandex_translate_api_key; ?>" size="50" style="width:250px;" />
+									</td>
+									
+									<td width="33%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">API ID</span></p>
+										<input type="text" name="config_yandex_translate_api_id" value="<?php echo $config_yandex_translate_api_id; ?>" size="50" style="width:250px;" />
+									</td>
+
+									
+								</tr>
+							</table>
+
+							<h2>Подключение к 1С (SOAP API)</h2>
+							<table class="form">
+								<tr>
+									
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">SOAP URI</span></p>
+										<input type="text" name="config_odinass_soap_uri" value="<?php echo $config_odinass_soap_uri; ?>" size="50" style="width:250px;" />
+									</td>
+									
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">SOAP USER</span></p>
+										<input type="text" name="config_odinass_soap_user" value="<?php echo $config_odinass_soap_user; ?>" size="50" style="width:250px;" />
+									</td>
+
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">SOAP PASSWD</span></p>
+										<input type="text" name="config_odinass_soap_passwd" value="<?php echo $config_odinass_soap_passwd; ?>" size="50" style="width:250px;" />
+									</td>
+
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">Загружать РРЦ</span></p>
+										<select name="config_odinass_update_local_prices">
+											<?php if ($config_odinass_update_local_prices) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</td>
+								</tr>
+							</table>
+
+							<h2>Bitrix24 BOT API (Чудо-бот)</h2>
+
+							<table class="form">
+								<tr>
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Включить Bitrix24 BOT API</span></p>
+										<select name="config_bitrix_bot_enable">
+											<?php if ($config_bitrix_bot_enable) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</td>
+									
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Bitrix24 Домен</span></p>
+										<input type="text" name="config_bitrix_bot_domain" value="<?php echo $config_bitrix_bot_domain; ?>" size="50" style="width:250px;" />
+									</td>
+									
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Bitrix24 Scope</span></p>
+										<input type="text" name="config_bitrix_bot_scope" value="<?php echo $config_bitrix_bot_scope; ?>" size="50" style="width:250px;" />
+									</td>
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Bitrix24 Client ID</span></p>
+										<input type="text" name="config_bitrix_bot_client_id" value="<?php echo $config_bitrix_bot_client_id; ?>" size="50" style="width:250px;" />
+									</td>
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Bitrix24 Secret</span></p>
+										<input type="text" name="config_bitrix_bot_client_secret" value="<?php echo $config_bitrix_bot_client_secret; ?>" size="50" style="width:250px;" />
+									</td>
+								</tr>
+							</table>
+
+
+
+							<h2>Telegram BOT API (уведомления)</h2>
+
+							<table class="form">
+								<tr>
+									<td width="33%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Включить TG Bot API</span></p>
+										<select name="config_telegram_bot_enable_alerts">
+											<?php if ($config_telegram_bot_enable_alerts) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</td>
+									
+									<td width="33%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Ключ TG Bot API</span></p>
+										<input type="text" name="config_telegram_bot_token" value="<?php echo $config_telegram_bot_token; ?>" size="50" style="width:250px;" />
+									</td>
+									
+									<td width="33%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Имя бота</span></p>
+										<input type="text" name="config_telegram_bot_name" value="<?php echo $config_telegram_bot_name; ?>" size="50" style="width:250px;" />
+									</td>
+								</tr>
+							</table>
+							
 							
 							<h2><i class="fa fa-search"></i> Priceva API (подбор и мониторинг цен конкурентов)</h2>
 							

@@ -847,7 +847,29 @@
 									<option value="1"><?php echo $text_enabled; ?></option>
 									<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
 								<?php } ?>
-							</select></td>
+							</select>
+							</td>
+						</tr>
+						<tr>
+							<td style="color:red;">Выключить или включить дерево</td>
+							<td>
+								<i class="fa fa-exclamation-triangle"></i>
+								<select name="status_tree">
+								<option value="0" selected="selected">Не трогать дерево при нажатии кнопки сохранить</option>
+								<option value="1">Выключить/включить всё дерево ниже при нажатии кнопки сохранить</option>
+							</select>
+							</td>
+						</tr>
+
+						<tr>
+							<td style="color:red;">Выключить или включить дочерние</td>
+							<td>
+							<i class="fa fa-exclamation-triangle"></i>
+							<select name="status_children">
+								<option value="0" selected="selected">Не трогать дочерние при нажатии кнопки сохранить</option>
+								<option value="1">Выключить/включить только дочерние при нажатии кнопки сохранить</option>
+							</select>
+							</td>
 						</tr>
 					</table>
 				</div>

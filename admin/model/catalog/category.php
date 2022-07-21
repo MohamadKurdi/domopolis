@@ -274,6 +274,16 @@ class ModelCatalogCategory extends Model {
 			
 			$this->db->query("REPLACE INTO `category_path` SET category_id = '" . (int)$category_id . "', `path_id` = '" . (int)$category_id . "', level = '" . (int)$level . "'");
 		}
+
+
+		if ($data['status_tree']){
+			$this->db->query("UPDATE category SET status = '" . (int)$data['status'] . "' WHERE category_id IN (SELECT category_id FROM category_path WHERE category_id = '" . (int)$category_id . "')");
+		}
+
+		if ($data['status_children']){
+			$this->db->query("UPDATE category SET status = '" . (int)$data['status'] . "' WHERE category_id IN (SELECT category_id FROM category WHERE parent_id = '" . (int)$category_id . "')");
+		}
+
 		
 		$this->db->query("DELETE FROM category_filter WHERE category_id = '" . (int)$category_id . "'");
 		

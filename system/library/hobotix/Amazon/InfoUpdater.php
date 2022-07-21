@@ -24,6 +24,23 @@ class InfoUpdater
 
 	}
 
+	public function normalizeProductName($name){
+		//Убираем все кавычки, из-за них потом проблемы
+		$name = str_replace(["'", '"'], ['', ''], $name);
+
+		//Убираем двойные пробелы
+		$name = str_replace(['  '], [' '], $name);
+
+
+
+
+
+
+
+
+
+	}
+
 
 	public function setProductIsFilledFromAmazon($product_id){
 		$this->db->query("UPDATE product SET filled_from_amazon = 1 WHERE product_id = '" . (int)$product_id . "'");

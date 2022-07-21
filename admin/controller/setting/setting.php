@@ -2776,6 +2776,12 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_rainforest_enable_pricing'] = $this->config->get('config_rainforest_enable_pricing');
 		}
 
+		if (isset($this->request->post['config_rainforest_enable_offers_only_for_filled'])) {
+			$this->data['config_rainforest_enable_offers_only_for_filled'] = $this->request->post['config_rainforest_enable_offers_only_for_filled']; 
+		} else {
+			$this->data['config_rainforest_enable_offers_only_for_filled'] = $this->config->get('config_rainforest_enable_offers_only_for_filled');
+		}
+
 
 		if (isset($this->request->post['config_rainforest_main_formula'])) {
 			$this->data['config_rainforest_main_formula'] = $this->request->post['config_rainforest_main_formula']; 

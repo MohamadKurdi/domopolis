@@ -62,6 +62,7 @@
 								<td width="1" style="text-align: center;">L</td>	
 							<?php } ?>
 							<td class="left" >Название</td>					
+							<td class="left" style="width: 60px;">id</td>
 							<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
 								<td class="center" style="width:100px;">Конечная категория Amazon</td>	
 								<td class="center" style="width:100px;">Синхронизация с Amazon</td>
@@ -114,6 +115,8 @@
 										<?php } ?>
 
 									</td>
+
+									<td><?php echo $category['category_id']; ?></td>
 
 									<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
 											<td class="left">
