@@ -364,9 +364,8 @@
 				$parts = explode('_', (string)$this->request->get['path']);				
 				$category_id = (int)array_pop($parts);
 								
-				$this->request->get['path'] = $this->model_tool_path_manager->getFullCategoryPath($category_id, true);				
-				$parts = explode('_', (string)$this->request->get['path']);	
-
+								
+				$parts = explode('_', (string)$this->model_tool_path_manager->getFullCategoryPath($category_id, true));	
 				foreach ($parts as $path_id) {
 					if (!$path) {
 						$path = (int)$path_id;

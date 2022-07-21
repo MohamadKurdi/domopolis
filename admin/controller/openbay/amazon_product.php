@@ -568,4 +568,3 @@ class ControllerOpenbayAmazonProduct extends Controller {
 		return $text;
 	}
 }
-?>

@@ -562,4 +562,27 @@ class ControllerDPRainForest extends Controller {
 		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();						
 	}
 
+
+	/*
+	Фиксит названия товаров функцией normalizeProductName из InfoUpdater
+	*/
+	public function fixnames(){
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+
+		$total = $this->rainforestAmazon->infoUpdater->getTotalNames();
+		$iterations = ceil($total/(int)\hobotix\Amazon\InfoUpdater::descriptionsQueryLimit);
+		echoLine('[fixnames] Всего товаров: ' . $total);
+		$k = 1;			
+
+		for ($i = 1; $i <= $iterations; $i++){
+			$products = $this->rainforestAmazon->infoUpdater->getNames(($i-1) * (int)\hobotix\Amazon\InfoUpdater::descriptionsQueryLimit);
+			if ($products){		
+				foreach ($products as $product){
+					echoLine($product['name']);
+					echoLine($this->rainforestAmazon->infoUpdater->normalizeProductName($product['name']));
+					echoLine('');	
+				}
+			}	
+		}		
+	}
 }

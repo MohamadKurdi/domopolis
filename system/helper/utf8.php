@@ -365,6 +365,20 @@
 
 		return (string)$string;
 	}
+
+	if (!function_exists('mb_ucfirst')){
+			function mb_ucfirst($string, string $encoding = null): string
+			{
+
+				if ($encoding === null) {
+					$encoding = mb_internal_encoding();
+				}
+				
+				$firstChar = mb_substr($string, 0, 1, $encoding);
+				$then = mb_substr($string, 1, null, $encoding);
+				return mb_strtoupper($firstChar, $encoding) . $then;
+			}
+		}
 	
 	if (extension_loaded('mbstring')) {
 		mb_internal_encoding('UTF-8');
@@ -416,8 +430,8 @@
 				return iconv_substr($string, $offset, $length, 'UTF-8');
 			}
 		}
-		
-		
+
+			
 		function utf8_strtolower($string) {
 			static $upper_to_lower;
 			

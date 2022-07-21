@@ -10,7 +10,18 @@ class InfoUpdater
 	private $db;	
 	private $config;
 	private $lengthCache = false;
-	private $weightCache = false;
+	private $weightCache = false;	
+
+	private $removeFromName = [
+		'N/A',
+		'1x',
+		'1X',
+		'включаючи ПДВ',
+		'1 шт.',
+		'1 шт'
+	];
+
+	public const descriptionsQueryLimit = 5000;
 
 	private $rfClient;
 
@@ -24,21 +35,78 @@ class InfoUpdater
 
 	}
 
+	public function getTotalNames(){
+		return $this->db->query("SELECT COUNT(*) as total FROM product_description WHERE language_id = '" . $this->config->get('config_language_id') . "' AND name <> ''")->row['total'];
+	}
+
+	public function getNames($start){
+		$sql = "SELECT product_id, name, language_id FROM product_description WHERE name <> '' AND language_id = '" . $this->config->get('config_language_id') . "' ORDER BY product_id ASC limit " . (int)$start . ", " . (int)self::descriptionsQueryLimit;		
+		$query = $this->db->ncquery($sql);
+
+		return $query->rows;
+	}
+
+	public function updateName($data){
+		$this->db->query("UPDATE product_description SET name = '" . $this->db->escape($data['name']) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
+	}
+
 	public function normalizeProductName($name){
-		//Убираем все кавычки, из-за них потом проблемы
-		$name = str_replace(["'", '"'], ['', ''], $name);
+		//Убираем все кавычки, и другие непонятные спецсимволы, из-за них потом проблемы
+		$name = str_replace(['"', ',,', '?'], '', $name);
+
+		//Кавычки и другие символы, одинарная кавычка только с пробелом, потому что иначе это апостроф
+		$name = str_replace(["&amp;", "' "], ['&', ' '], $name);
+
+		//Кавычка в начале - точно не апостроф
+		$name = ltrim($name, "'");
+
+		//Заданные строки
+		$name = str_ireplace($this->removeFromName, [''], $name);
+		
+		//Убрать всё остальное кроме нужных букв, цифр и символов
+		$name = preg_replace('/[^a-zA-Z0-9а-щА-ЩЬьЮюЯяЇїІіЄєҐґ()\-,&Ø\'\.\/\* ]/mui', '', $name, -1);
 
 		//Убираем двойные пробелы
 		$name = str_replace(['  '], [' '], $name);
+		$name = trim($name);
 
+		//Находим первое вхождение кириллических символов или цифр
+		$cyrfirst = strpbrk($name, 'АаБбВвГгҐґДдЕеЄєЖжЗзИиІіЇїЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЬьЮюЯя0123456789абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ');
+		
+		//Если есть, то обрезаем строку с начала до конца (типа убираем латиницу из начала)
+		if ($cyrfirst){
+			$name = $cyrfirst;
+		}
 
+		//Обрезать пробелы
+		$name = trim($name);
 
+		//Первая буква - большая, функция своя, в хелпере utf8
+		$name = \mb_ucfirst($name);
+		
+		//Логика штук
+		$array_from = [];
+		$array_to	= [];
+		for($i=100; $i>=2; $i--){
+			$array_from[] = $i . ' шт';
+			$array_from[] = $i . 'шт';
+			$array_from[] = $i . ' штук';
+			$array_from[] = $i . 'X ';
+			$array_from[] = $i . 'x ';
 
+			$array_to[]   = $i . ' ' . ' шт. ';
+			$array_to[]   = $i . ' ' . ' шт. ';
+			$array_to[]   = $i . ' ' . ' шт. ';
+			$array_to[]   = $i . ' ' . ' шт. ';
+			$array_to[]   = $i . ' ' . ' шт. ';			
+		}
 
+		$name = str_ireplace($array_from, $array_to, $name);
+		$name = str_replace(['..'], ['.'], $name);		
+		$name = str_replace(['. .'], ['.'], $name);
+		$name = str_replace(['  '], [' '], $name);
 
-
-
-
+		return $name;
 	}
 
 
