@@ -1008,6 +1008,10 @@
 				$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
 				$sql .= ")";
 			}
+
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_show_only_filled_products_in_catalog')){
+				$sql .= " AND ((p.added_from_amazon = 0) OR (p.added_from_amazon = 1 AND p.filled_from_amazon = 1))";	
+			}
 			
 			if (!empty($data['filter_category_id'])) {
 				if (!empty($data['filter_sub_category'])) {
@@ -2374,6 +2378,10 @@
 				$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
 				$sql .= ")";
 			}		
+
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_show_only_filled_products_in_catalog')){
+				$sql .= " AND ((p.added_from_amazon = 0) OR (p.added_from_amazon = 1 AND p.filled_from_amazon = 1))";	
+			}
 			
 			if (!empty($data['filter_category_id'])) {
 				if (!empty($data['filter_sub_category'])) {

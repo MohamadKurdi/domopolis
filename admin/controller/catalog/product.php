@@ -1264,6 +1264,15 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['filled_from_amazon'] = $product_info['filled_from_amazon'];
 			$this->data['description_filled_from_amazon'] = $product_info['description_filled_from_amazon'];
 
+			$amazon_product_data = $this->model_kp_product->getProductAmazonFullData($this->data['asin']);
+			if ($this->config->get('config_enable_amazon_asin_file_cache')){	
+				if (file_exists(DIR_CACHE . $amazon_product_data['file'])){
+					$this->data['amazon_product_json'] = HTTPS_CATALOG . DIR_CACHE_NAME . $amazon_product_data['file'];				
+				}
+			} else {
+				$this->data['amazon_product_json'] = 'IN DB';
+			}
+
 			$this->data['offers'] = [];
 			$offers = $this->model_kp_product->getProductAmazonOffers($this->data['asin']);
 

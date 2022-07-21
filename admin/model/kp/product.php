@@ -80,12 +80,12 @@ class ModelKPProduct extends Model {
 	}
 
 
-	public function getProductAmazonFullData($product_id){
+	public function getProductAmazonFullData($asin){
 		
-		$sql = "SELECT * FROM " . DB_PREFIX . "product_amzn_data WHERE product_id = '" . (int)$product_id . "' LIMIT 1";
+		$sql = "SELECT * FROM " . DB_PREFIX . "product_amzn_data WHERE asin = '" . $this->db->escape($asin) . "' LIMIT 1";
 		$query = $this->db->query($sql);
 		
-		if ($query->num_rows){				
+		if ($query->num_rows){						
 			return $query->row;			
 		} else {
 			return false;

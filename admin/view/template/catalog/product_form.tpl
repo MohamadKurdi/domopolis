@@ -723,6 +723,12 @@
 
 																			<?php if (!empty($filled_from_amazon)) { ?>
 																					<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(0, 173, 7); color:#FFF"><i class="fa fa-check"></i>Данные загружены</span>
+
+																					<?php if (!empty($amazon_product_json)) { ?>
+																						<a href="<?php echo $amazon_product_json; ?>" target="_blank"><i class="fa fa-download"></i></a>
+																					<?php } else { ?>																					
+																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(207, 74, 97); color:#FFF"><i class="fa fa-check"></i>Данные проебаны</span>
+																					<?php } ?>	
 																			<?php } else { ?>
 																					<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(207, 74, 97); color:#FFF"><i class="fa fa-exclamation-triangle"></i> Данные еще не загружены</span>
 																			<?php } ?>
@@ -792,15 +798,6 @@
 
 																<div style="margin-top:10px" id="amazon_offers">
 																	<?php require_once(DIR_TEMPLATE . 'sale/amazon_offers_list.tpl'); ?>
-																</div>
-
-
-																<div style="max-height:500px; overflow-y:scroll" id="amazon_json">
-																	<? if (!empty($amazon_json)) { ?>
-																		<pre><?php // echo $amazon_json; ?></pre>
-																	<?php } else { ?>					
-																		<div style="color:rgb(207, 74, 97); font-size:28px; text-align:center;"><i class="fa fa-exclamation-triangle"></i><br /> Нет данных с Amazon</div>
-																	<? } ?>
 																</div>
 
 															</div>

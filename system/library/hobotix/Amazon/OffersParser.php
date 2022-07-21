@@ -115,7 +115,7 @@ class OffersParser
 	}
 
 	public function setProductNoOffers($asin){
-		$this->db->query("UPDATE product SET amzn_no_offers = 1 WHERE asin LIKE '" . $this->db->escape($asin) . "'");
+		$this->db->query("UPDATE product SET amzn_no_offers = 1, quantity = 0 WHERE asin LIKE '" . $this->db->escape($asin) . "'");
 
 		$this->clearOffersForASIN($asin);
 		$this->PriceLogic->setProductNoOffers($asin);
@@ -124,7 +124,7 @@ class OffersParser
 	}
 
 	public function setProductOffers($asin){
-		$this->db->query("UPDATE product SET amzn_no_offers = 0 WHERE asin LIKE '" . $this->db->escape($asin) . "'");	
+		$this->db->query("UPDATE product SET amzn_no_offers = 0, quantity = 9999 WHERE asin LIKE '" . $this->db->escape($asin) . "'");	
 
 		$this->PriceLogic->setProductOffers($asin);
 

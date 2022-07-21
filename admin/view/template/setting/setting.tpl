@@ -1381,6 +1381,21 @@
 									<span class="help">Если выключено - то подкатегории выводятся только в корневых</span>
 								</td>
 
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Отображать только товары с полной инфой</span></p>
+									<select name="config_rainforest_show_only_filled_products_in_catalog">
+										<?php if ($config_rainforest_show_only_filled_products_in_catalog) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+									<br />
+									<span class="help">Если включены специфические режимы амазона - будут показаны только заполненные товары</span>
+								</td>
+
 							</tr>						
 						</table>
 							<h2><?php echo $text_voucher; ?></h2>

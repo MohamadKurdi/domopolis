@@ -2666,6 +2666,12 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$this->data['config_rainforest_translate_edition_mode'] = $this->config->get('config_rainforest_translate_edition_mode');
 		}
+
+		if (isset($this->request->post['config_rainforest_show_only_filled_products_in_catalog'])) {
+			$this->data['config_rainforest_show_only_filled_products_in_catalog'] = $this->request->post['config_rainforest_show_only_filled_products_in_catalog']; 
+		} else {
+			$this->data['config_rainforest_show_only_filled_products_in_catalog'] = $this->config->get('config_rainforest_show_only_filled_products_in_catalog');
+		}
 		
 		if (isset($this->request->post['config_rainforest_api_key'])) {
 			$this->data['config_rainforest_api_key'] = $this->request->post['config_rainforest_api_key']; 

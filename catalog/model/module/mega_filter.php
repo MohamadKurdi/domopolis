@@ -1104,6 +1104,10 @@ class MegaFilterCore {
 			$notNullPriceCondition .= ")";
 			array_unshift($conditions, $notNullPriceCondition);
 		}	
+
+		if ($this->_ctrl->config->get('config_enable_amazon_specific_modes') && $this->_ctrl->config->get('config_rainforest_show_only_filled_products_in_catalog')){
+			array_unshift($conditions, "((p.added_from_amazon = 0) OR (p.added_from_amazon = 1 AND p.filled_from_amazon = 1))");			
+		}
 		
 		if( ! empty( $this->_data['filter_category_id'] ) ) {
 		//	$__current_category = $this->load->model('catalog/category');
