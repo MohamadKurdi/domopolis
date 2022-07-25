@@ -165,6 +165,10 @@ class ControllerKPRainForest extends Controller {
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');
 
+		if (!$this->config->get('config_rainforest_enable_pricing')){
+			die('[parseofferscron] RNF AMAZON PRICING NOT ENABLED');
+		}
+
 		echoLine('Работаем с очередью');		
 		$products = $this->rainforestAmazon->offersParser->getProductsAmazonQueue();
 		$this->rainforestAmazon->offersParser->clearProductsAmazonQueue();
@@ -199,6 +203,10 @@ class ControllerKPRainForest extends Controller {
 
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');
+
+		if (!$this->config->get('config_rainforest_enable_pricing')){
+			die('[parseofferscron] RNF AMAZON PRICING NOT ENABLED');
+		}
 							
 		$products = $this->rainforestAmazon->offersParser->getProductsToGetOffers();			
 
