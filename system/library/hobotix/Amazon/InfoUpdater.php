@@ -111,14 +111,26 @@ class InfoUpdater
 
 	public function setProductIsFilledFromAmazon($product_id){
 		$this->db->query("UPDATE product SET filled_from_amazon = 1 WHERE product_id = '" . (int)$product_id . "'");
+
+		return $this;
+	}
+
+	public function enableProduct($product_id){
+		$this->db->query("UPDATE product SET status = 1 WHERE product_id = '" . (int)$product_id . "' AND filled_from_amazon = 1 AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1))");
+
+		return $this;
 	}
 
 	public function setDescriptionIsFilledFromAmazon($product_id){
 		$this->db->query("UPDATE product SET description_filled_from_amazon = 1 WHERE product_id = '" . (int)$product_id . "'");
+
+		return $this;
 	}
 
 	public function deleteLoadedAmazonData($asin){
 		$this->db->query("DELETE FROM product_amzn_data WHERE asin LIKE ('" . $this->db->escape($asin) . "')");
+
+		return $this;
 	}
 
 	public function createAsinCacheFileName($asin){

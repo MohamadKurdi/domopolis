@@ -232,16 +232,8 @@ class ModelCatalogProductExt extends Model {
                 if ($data['filter_category'] == '*')
                     $implode_data[] = "p2c.category_id IS NULL";
                 else
-                    $implode_data[] = "p2c.category_id = '" . (int)$data['filter_category'] . "'";
-
-                $this->load->model('catalog/category');
-
-                $categories = $this->model_catalog_category->getCategoriesByParentId($data['filter_category']);
-
-                foreach ($categories as $category) {
-                    if ($data['filter_category'] != '*')
-                        $implode_data[] = "p2c.category_id = '" . (int)$category['category_id'] . "'";
-                }
+                    $implode_data[] = "p2c.category_id IN (SELECT category_id FROM category_path WHERE path_id = '" . (int)$data['filter_category'] . "')";
+                
 
                 $sql .= " AND (" . implode(' OR ', $implode_data) . ")";
             } else {
@@ -314,7 +306,7 @@ class ModelCatalogProductExt extends Model {
             $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
 
-//        $this->log->debugsql($sql);
+    //   $this->log->debugsql($sql);
 
         $query = $this->db->query($sql);
 

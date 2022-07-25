@@ -706,14 +706,110 @@ class ModelCatalogCategory extends Model {
 			return $query->row['total'];
 		}
 		
+
+		/*
+			Получить количество товаров в категории с прямой привязкой
+			Скорее всего функция уже нигде не используется
+		*/
 		public function getTotalProductInCategory($category_id) {
-			$query = $this->db->query("SELECT COUNT(DISTINCT product_id) AS total FROM product_to_category WHERE category_id = '" .(int)$category_id. "'");
+			$sql = "SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE 1 ";
+			
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
+				$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
+			}
+
+			$sql .= " AND category_id = '" .(int)$category_id. "'";
+
+			$query = $this->db->query($sql);
 			
 			return $query->row['total'];
 		}	
 
+		/*
+			Получить количество загруженных товаров в категории с прямой привязкой
+			Скорее всего функция уже нигде не используется
+		*/
 		public function getTotalFilledProductInCategory($category_id) {
-			$query = $this->db->query("SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE p.filled_from_amazon = 1 AND category_id = '" .(int)$category_id. "'");
+			$sql = "SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE 1 ";
+			
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
+				$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
+			}
+
+			$sql .= " AND p.filled_from_amazon = 1";
+
+			$sql .= " AND category_id = '" .(int)$category_id. "'";
+
+			$query = $this->db->query($sql);
+			
+			return $query->row['total'];
+		}	
+
+
+		/*
+			Получить количество товаров в категории с всеми дочерними
+		*/
+		public function getTotalProductInCategoryWithSubcategories($category_id) {
+			$sql = "SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE 1 ";
+			
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
+				$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
+			}
+
+			$sql .= " AND category_id IN (SELECT category_id FROM category_path WHERE path_id = '" . (int)$category_id . "')";			
+			
+			$query = $this->db->query($sql);
+
+			return $query->row['total'];
+		}
+
+		/*
+			Получить количество товаров с ненулевой ценой в категории с всеми дочерними
+		*/
+		public function getTotalProductNoZeroPriceInCategoryWithSubcategories($category_id) {
+			$sql = "SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE 1 ";
+			
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
+				$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
+			}
+
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_show_only_filled_products_in_catalog')) {
+				$sql .= " AND p.filled_from_amazon = 1";
+			}
+
+			$sql .= " AND p.price > 0";
+			$sql .= " AND category_id IN (SELECT category_id FROM category_path WHERE path_id = '" . (int)$category_id . "')";			
+			
+			$query = $this->db->query($sql);
+			
+			return $query->row['total'];
+		}
+
+		/*
+			Получить количество товаров с ненулевой ценой и включенных в категории с всеми дочерними
+		*/
+		public function getTotalProductNoZeroPriceAndEnabledInCategoryWithSubcategories($category_id) {
+			$sql = "SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE 1 ";
+			
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
+				$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
+			}
+
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_show_only_filled_products_in_catalog')) {
+				$sql .= " AND p.filled_from_amazon = 1";
+			}
+
+			$sql .= " AND p.price > 0 AND p.status = 1";
+			$sql .= " AND category_id IN (SELECT category_id FROM category_path WHERE path_id = '" . (int)$category_id . "')";			
+			
+			$query = $this->db->query($sql);
+			
+			return $query->row['total'];
+		}
+
+
+		public function getTotalFilledProductInCategoryWithSubcategories($category_id) {
+			$query = $this->db->query("SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE p.filled_from_amazon = 1 AND category_id IN (SELECT category_id FROM category_path WHERE path_id = '" . (int)$category_id . "')");
 			
 			return $query->row['total'];
 		}	

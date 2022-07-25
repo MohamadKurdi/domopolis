@@ -2715,6 +2715,24 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_rainforest_default_unknown_category_id'] = $this->config->get('config_rainforest_default_unknown_category_id');
 		}
 
+		if (isset($this->request->post['config_rainforest_enable_similar_adding'])) {
+			$this->data['config_rainforest_enable_similar_adding'] = $this->request->post['config_rainforest_enable_similar_adding']; 
+		} else {
+			$this->data['config_rainforest_enable_similar_adding'] = $this->config->get('config_rainforest_enable_similar_adding');
+		}
+
+		if (isset($this->request->post['config_rainforest_enable_related_adding'])) {
+			$this->data['config_rainforest_enable_related_adding'] = $this->request->post['config_rainforest_enable_related_adding']; 
+		} else {
+			$this->data['config_rainforest_enable_related_adding'] = $this->config->get('config_rainforest_enable_related_adding');
+		}
+
+		if (isset($this->request->post['config_rainforest_enable_sponsored_adding'])) {
+			$this->data['config_rainforest_enable_sponsored_adding'] = $this->request->post['config_rainforest_enable_sponsored_adding']; 
+		} else {
+			$this->data['config_rainforest_enable_sponsored_adding'] = $this->config->get('config_rainforest_enable_sponsored_adding');
+		}
+
 		if (isset($this->request->post['config_rainforest_enable_auto_tree'])) {
 			$this->data['config_rainforest_enable_auto_tree'] = $this->request->post['config_rainforest_enable_auto_tree']; 
 		} else {

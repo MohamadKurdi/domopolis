@@ -123,6 +123,7 @@ class CategoryParser
 
 		//Синхронизация финальных категорий
 		$this->db->query("UPDATE category SET amazon_final_category = 1 WHERE amazon_category_id IN (SELECT category_id FROM " . $this->table . " WHERE final_category = 1)");
+		$this->db->query("UPDATE category SET amazon_final_category = 0 WHERE amazon_category_id IN (SELECT category_id FROM " . $this->table . " WHERE final_category = 0)");
 
 		//Синхронизация названий родительских категорий
 		$this->db->query("UPDATE category SET amazon_parent_category_name = (SELECT name FROM " . $this->table . " WHERE category_id = category.amazon_parent_category_id LIMIT 1)");

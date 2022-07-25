@@ -14,8 +14,23 @@
 	<div class="box">
 		<div class="heading order_head">
 			<h1><img src="view/image/category.png" alt="" /> <?php echo $heading_title; ?></h1>
-			<div class="buttons">
 
+
+			<div style="float:left; padding-left:30px;">
+				<?php if ($this->config->get('config_rainforest_show_only_filled_products_in_catalog')) { ?>
+					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> На фронте включен режим "не отображать незагруженные товары. Подсчет товаров в категориях ведется с учётом этого - в нём не участвуют неполностью загруженные с Amazon товары</small>
+				<?php } ?>
+
+				<?php if ($this->session->data['config_rainforest_variant_edition_mode']) { ?>
+					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Включен режим работы с вариантами. Подсчёт товаров в категориях ведется с учётом свёртывания вариантов (если товаров 10 и у каждого 30 вариантов - то в результате будет 10)</small>
+				<?php } else { ?>				
+					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Выключен режим работы с вариантами. Подсчёт товаров в категориях ведется без учёта свёртывания вариантов (если товаров 10 и у каждого 30 вариантов - то в результате здесь будет 300, но на фронте - 10)</small>
+				<?php } ?>
+			</div>
+
+
+
+			<div class="buttons">
 				<a href="<?php echo $simpleview; ?>" class="button">
 					<?php if ($simpleview_enabled) { ?>
 						<i class="fa fa-refresh"></i> Страшное и сложное отображение
@@ -68,10 +83,12 @@
 								<td class="center" style="width:100px;">Синхронизация с Amazon</td>
 								<td class="center" style="width:100px;">Разрешить полную загрузку товаров</td>
 								<td class="left">Ссылка на Amazon</td>
-							<?php } ?>		
-							<td class="right" style="width:100px;">Товары</td>		
-							<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>		
-								<td class="right" style="width:100px;">Загружено</td>
+							<?php } ?>											
+							<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
+								<td class="right" style="width:100px;"><b>Товары -></b></td>	
+								<td class="right" style="width:100px;"><b>Загружено -></b></td>
+								<td class="right" style="width:100px;"><b>Есть цена -></b></td>
+								<td class="right" style="width:100px;"><b>Включено</b></td>
 							<?php } ?>
 							<td class="right" style="width:30px;">Сортировка</td>							
 							<td class="right" style="width:50px;"></td>
@@ -162,7 +179,7 @@
 									<?php } ?>
 
 									
-
+									<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
 										<td class="right">
 											<?php if ($category['count']) { ?>
 												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">
@@ -174,19 +191,40 @@
 											<?php }?>
 										</td>
 
-										<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
-											<td class="right">
-												<?php if ($category['filled']) { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">
-														<a style="color:#FFF; text-decoration:none" href="<?php echo $category['filter_filled']; ?>" target="_blank"><?php echo $category['filled']; ?> 
-														<i class="fa fa-filter"></i>
-													</span>										
-												<?php } else { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><?php echo $category['filled']; ?></span>	
-												<?php }?>
-											</td>
+										<td class="right">
+											<?php if ($category['filled']) { ?>
+												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">
+													<a style="color:#FFF; text-decoration:none" href="<?php echo $category['filter_filled']; ?>" target="_blank"><?php echo $category['filled']; ?> 
+													<i class="fa fa-filter"></i>
+												</span>										
+											<?php } else { ?>
+												<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><?php echo $category['filled']; ?></span>	
+											<?php }?>
+										</td>		
 
-										<?php } ?>
+										<td class="right">
+											<?php if ($category['has_price']) { ?>
+												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffd632; color:#FFF">
+													<a style="color:#FFF; text-decoration:none" href="<?php echo $category['filter_has_price']; ?>" target="_blank"><?php echo $category['has_price']; ?> 
+													<i class="fa fa-filter"></i>
+												</span>										
+											<?php } else { ?>
+												<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><?php echo $category['has_price']; ?></span>	
+											<?php }?>
+										</td>
+
+										<td class="right">
+											<?php if ($category['enabled']) { ?>
+												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#32bd38; color:#FFF">
+													<a style="color:#FFF; text-decoration:none" href="<?php echo $category['filter_enabled']; ?>" target="_blank"><?php echo $category['enabled']; ?> 
+													<i class="fa fa-filter"></i>
+												</span>										
+											<?php } else { ?>
+												<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><?php echo $category['enabled']; ?></span>	
+											<?php }?>
+										</td>
+
+									<?php } ?>
 
 										<td class="right">
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#000; color:#FFF"><?php echo $category['sort_order']; ?></span>										

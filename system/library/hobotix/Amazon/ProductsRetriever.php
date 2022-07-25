@@ -378,118 +378,125 @@
 		}
 
 		public function parseProductRelatedProducts($product_id, $product){
-			if (!empty($product['frequently_bought_together']) && !empty($product['frequently_bought_together']['products'])){
-				$product_related = [];
-				foreach ($product['frequently_bought_together']['products'] as $bought_together){
-					if ($related = $this->getProductsByAsin($bought_together['asin'])){
+			if ($this->config->get('config_rainforest_enable_related_adding')){
 
-						foreach ($related as $related_id){
-							echoLine('[editFullProduct] Покупают вместе: ' . $related_id);
+				if (!empty($product['frequently_bought_together']) && !empty($product['frequently_bought_together']['products'])){
+					$product_related = [];
+					foreach ($product['frequently_bought_together']['products'] as $bought_together){
+						if ($related = $this->getProductsByAsin($bought_together['asin'])){
 
-							$product_related[] = $related_id;
+							foreach ($related as $related_id){
+								echoLine('[editFullProduct] Покупают вместе: ' . $related_id);
+
+								$product_related[] = $related_id;
+							}
+
+						} else {
+
+							if ($this->config->get('config_rainforest_enable_recursive_adding')){
+
+								echoLine('[editFullProduct] Новый покупают вместе товар: ' . $bought_together['asin'] . ' ' . $bought_together['title']);
+
+								$new_related_id = $this->addSimpleProductWithOnlyAsin([
+									'asin' 				=> $bought_together['asin'],
+									'amazon_best_price' => (!empty($bought_together['price']))?$bought_together['price']['value']:'0', 
+									'category_id' 		=> $this->config->get('config_rainforest_default_technical_category_id'), 
+									'name' 				=> $bought_together['title'], 
+									'image' 			=> $this->getImage($bought_together['image']), 
+									'added_from_amazon' => 1
+								]);							
+
+								$product_similar[] = $new_related_id;
+
+							}
+
 						}
-
-					} else {
-
-						if ($this->config->get('config_rainforest_enable_recursive_adding')){
-
-							echoLine('[editFullProduct] Новый покупают вместе товар: ' . $bought_together['asin'] . ' ' . $bought_together['title']);
-
-							$new_related_id = $this->addSimpleProductWithOnlyAsin([
-								'asin' 				=> $bought_together['asin'],
-								'amazon_best_price' => (!empty($bought_together['price']))?$bought_together['price']['value']:'0', 
-								'category_id' 		=> $this->config->get('config_rainforest_default_technical_category_id'), 
-								'name' 				=> $bought_together['title'], 
-								'image' 			=> $this->getImage($bought_together['image']), 
-								'added_from_amazon' => 1
-							]);							
-
-							$product_similar[] = $new_related_id;
-
-						}
-
 					}
-				}
 
-				if ($product_related){
-					$this->model_product_edit->editProductRelated($product_id, $product_related);
+					if ($product_related){
+						$this->model_product_edit->editProductRelated($product_id, $product_related);
+					}
 				}
 			}
 		}
 
 		public function parseProductSponsoredProducts($product_id, $product){	
-			if (!empty($product['sponsored_products'])){
-				$product_sponsored = [];
-				foreach ($product['sponsored_products'] as $sponsored_product){
-					if ($sponsored = $this->getProductsByAsin($sponsored_product['asin'])){
+			if ($this->config->get('config_rainforest_enable_sponsored_adding')){
+				if (!empty($product['sponsored_products'])){
+					$product_sponsored = [];
+					foreach ($product['sponsored_products'] as $sponsored_product){
+						if ($sponsored = $this->getProductsByAsin($sponsored_product['asin'])){
 
-						foreach ($sponsored as $sponsored_id){
-							echoLine('[editFullProduct] Sponsored: ' . $sponsored_id);
+							foreach ($sponsored as $sponsored_id){
+								echoLine('[editFullProduct] Sponsored: ' . $sponsored_id);
 
-							$product_sponsored[] = $sponsored_id;
+								$product_sponsored[] = $sponsored_id;
+							}
+
+						} else {
+
+							if ($this->config->get('config_rainforest_enable_recursive_adding')){
+
+								echoLine('[editFullProduct] Новый sponsored товар: ' . $sponsored_product['asin'] . ' ' . $sponsored_product['title']);
+
+								$new_sponsored_id = $this->addSimpleProductWithOnlyAsin([
+									'asin' 				=> $sponsored_product['asin'],
+									'amazon_best_price' => (!empty($sponsored_product['price']))?$sponsored_product['price']['value']:'0',
+									'category_id' 		=> $this->config->get('config_rainforest_default_technical_category_id'), 
+									'name' 				=> $sponsored_product['title'], 
+									'image' 			=> $this->getImage($sponsored_product['image']), 
+									'added_from_amazon' => 1
+								]);							
+
+								$product_sponsored[] = $new_sponsored_id;
+
+							}
+
 						}
-
-					} else {
-
-						if ($this->config->get('config_rainforest_enable_recursive_adding')){
-
-							echoLine('[editFullProduct] Новый sponsored товар: ' . $sponsored_product['asin'] . ' ' . $sponsored_product['title']);
-
-							$new_sponsored_id = $this->addSimpleProductWithOnlyAsin([
-								'asin' 				=> $sponsored_product['asin'],
-								'amazon_best_price' => (!empty($sponsored_product['price']))?$sponsored_product['price']['value']:'0',
-								'category_id' 		=> $this->config->get('config_rainforest_default_technical_category_id'), 
-								'name' 				=> $sponsored_product['title'], 
-								'image' 			=> $this->getImage($sponsored_product['image']), 
-								'added_from_amazon' => 1
-							]);							
-
-							$product_sponsored[] = $new_sponsored_id;
-
-						}
-
 					}
-				}
 
-				if ($product_sponsored){
-					$this->model_product_edit->editProductSponsored($product_id, $product_sponsored);
+					if ($product_sponsored){
+						$this->model_product_edit->editProductSponsored($product_id, $product_sponsored);
+					}
 				}
 			}
 		}
 
 		public function parseProductSimilarProducts($product_id, $product){
-			if (!empty($product['compare_with_similar'])){
-				$product_similar = [];
-				foreach ($product['compare_with_similar'] as $compare_with_similar){
-					if ($similar = $this->getProductsByAsin($compare_with_similar['asin'])){
+			if ($this->config->get('config_rainforest_enable_similar_adding')){
+				if (!empty($product['compare_with_similar'])){
+					$product_similar = [];
+					foreach ($product['compare_with_similar'] as $compare_with_similar){
+						if ($similar = $this->getProductsByAsin($compare_with_similar['asin'])){
 
-						foreach ($similar as $similar_id){
-							echoLine('[editFullProduct] Похожий товар: ' . $similar_id);
+							foreach ($similar as $similar_id){
+								echoLine('[editFullProduct] Похожий товар: ' . $similar_id);
 
-							$product_similar[] = $similar_id;
-						}
+								$product_similar[] = $similar_id;
+							}
 
-					} else {
-						if ($this->config->get('config_rainforest_enable_recursive_adding')){
-							echoLine('[editFullProduct] Новый похожий товар: ' . $compare_with_similar['asin'] . ' ' . $compare_with_similar['title']);
+						} else {
+							if ($this->config->get('config_rainforest_enable_recursive_adding')){
+								echoLine('[editFullProduct] Новый похожий товар: ' . $compare_with_similar['asin'] . ' ' . $compare_with_similar['title']);
 
-							$new_similar_id = $this->addSimpleProductWithOnlyAsin([
-								'asin' 				=> $compare_with_similar['asin'],
-								'amazon_best_price' => (!empty($compare_with_similar['price']))?$compare_with_similar['price']['value']:'0',
-								'category_id' 		=> $this->model_product_get->getCurrentProductCategory($product_id), 
-								'name' 				=> $compare_with_similar['title'], 
-								'image' 			=> $this->getImage($compare_with_similar['image']), 
-								'added_from_amazon' => 1
-							]);							
+								$new_similar_id = $this->addSimpleProductWithOnlyAsin([
+									'asin' 				=> $compare_with_similar['asin'],
+									'amazon_best_price' => (!empty($compare_with_similar['price']))?$compare_with_similar['price']['value']:'0',
+									'category_id' 		=> $this->model_product_get->getCurrentProductCategory($product_id), 
+									'name' 				=> $compare_with_similar['title'], 
+									'image' 			=> $this->getImage($compare_with_similar['image']), 
+									'added_from_amazon' => 1
+								]);							
 
-							$product_similar[] = $new_similar_id;
+								$product_similar[] = $new_similar_id;
 
+							}
 						}
 					}
-				}
 
-				if ($product_similar){
-					$this->model_product_edit->editProductSimilar($product_id, $product_similar);
+					if ($product_similar){
+						$this->model_product_edit->editProductSimilar($product_id, $product_similar);
+					}
 				}
 			}
 		}
@@ -767,7 +774,7 @@
 			$this->parseProductVariants($product_id, $product, $do_adding_new_variants);
 
 			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmazonLastSearch($product_id);
-			$this->registry->get('rainforestAmazon')->infoUpdater->setProductIsFilledFromAmazon($product_id);
+			$this->registry->get('rainforestAmazon')->infoUpdater->setProductIsFilledFromAmazon($product_id)->enableProduct($product_id);
 			$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmznData([
 						'product_id' 	=> $product_id, 
 						'asin' 			=> $product['asin'], 

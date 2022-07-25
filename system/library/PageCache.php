@@ -97,8 +97,8 @@ class PageCache{
 	}
 
 	public function getPageCacheInfo(){
-		$total_space = disk_total_space(DIR_CACHE . PAGECACHE_DIR);
-		$free_space  = disk_free_space(DIR_CACHE . PAGECACHE_DIR);
+		$total_space = disk_total_space(DIR_CACHE);
+		$free_space  = disk_free_space(DIR_CACHE);
 		$used_space  = ($total_space - $free_space);
 
 		$body  = 'Used ' . ' ' . self::formatBytes($used_space, 0) . ' of ' . self::formatBytes($total_space, 0); 

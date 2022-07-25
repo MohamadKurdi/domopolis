@@ -81,8 +81,9 @@
 							<td class="left" style="width:30px;">Priceva</td>
 							<td class="left" style="width:30px;">ТНВЭД</td>
 							<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
-								<td class="right" style="width:100px;">Товары</td>	
-								<td class="right" style="width:100px;">Загружено</td>
+								<td class="right" style="width:100px;">Товары -></td>	
+								<td class="right" style="width:100px;">Загружено -></td>
+								<td class="right" style="width:100px;">Есть цена</td>
 							<?php } ?>
 							<td class="right" style="width:30px;">Сортировка</td>
 							<td class="right" style="width:50px;"></td>
@@ -182,7 +183,7 @@
 														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
 													<? } ?>
 												</td>	
-								<?php } ?>
+											<?php } ?>
 
 												<td class="left">
 													<? if ($category['google_category']) { ?>
@@ -270,30 +271,45 @@
 													<? } ?>
 												</td>									
 
-												<td class="right">
-												<?php if ($category['count']) { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">
-														<a style="color:#FFF; text-decoration:none" href="<?php echo $category['filter']; ?>" target="_blank"><?php echo $category['count']; ?> 
-														<i class="fa fa-filter"></i>
-													</span>										
-												<?php } else { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><?php echo $category['count']; ?></span>	
-												<?php }?>
-											</td>
+												<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
+													
+													<td class="right">
+														<?php if ($category['count']) { ?>
+															<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">
+																<a style="color:#FFF; text-decoration:none" href="<?php echo $category['filter']; ?>" target="_blank"><?php echo $category['count']; ?> 
+																<i class="fa fa-filter"></i>
+															</span>										
+														<?php } else { ?>
+															<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><?php echo $category['count']; ?></span>	
+														<?php }?>
+													</td>
 
-											<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
-												<td class="right">
-													<?php if ($category['filled']) { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">
-															<a style="color:#FFF; text-decoration:none" href="<?php echo $category['filter_filled']; ?>" target="_blank"><?php echo $category['filled']; ?> 
-															<i class="fa fa-filter"></i>
-														</span>										
-													<?php } else { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><?php echo $category['filled']; ?></span>	
-													<?php }?>
-												</td>
+													
+													<td class="right">
+														<?php if ($category['filled']) { ?>
+															<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">
+																<a style="color:#FFF; text-decoration:none" href="<?php echo $category['filter_filled']; ?>" target="_blank"><?php echo $category['filled']; ?> 
+																<i class="fa fa-filter"></i>
+															</span>										
+														<?php } else { ?>
+															<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><?php echo $category['filled']; ?></span>	
+														<?php }?>
+													</td>
 
-											<?php } ?>
+												<?php } ?>
+
+												<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>												
+													<td class="right">
+														<?php if ($category['has_price']) { ?>
+															<span class="status_color" style="display:inline-block; padding:3px 5px; background:#32bd38; color:#FFF">
+																<a style="color:#FFF; text-decoration:none" href="<?php echo $category['filter_has_price']; ?>" target="_blank"><?php echo $category['has_price']; ?> 
+																<i class="fa fa-filter"></i>
+															</span>										
+														<?php } else { ?>
+															<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><?php echo $category['has_price']; ?></span>	
+														<?php }?>
+													</td>
+												<?php } ?>
 
 												<td class="right">
 													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#000; color:#FFF"><?php echo $category['sort_order']; ?></span>										

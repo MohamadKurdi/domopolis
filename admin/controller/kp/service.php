@@ -40,6 +40,12 @@
 			echo '>> Формирование категории уценки...'  . PHP_EOL;
 			$this->db->non_cached_query("DELETE FROM product_to_category WHERE category_id = '" . GENERAL_MARKDOWN_CATEGORY . "'");
 			$this->db->non_cached_query("DELETE FROM product_to_category WHERE product_id IN (SELECT product_id FROM product WHERE is_markdown = 1)");
+
+			echo '>> Коррекция маркеров амазона...'  . PHP_EOL;
+			$this->db->non_cached_query("UPDATE product p SET fill_from_amazon = 1 WHERE filled_from_amazon = 1 AND (fill_from_amazon = 0 OR ISNULL(fill_from_amazon))");
+
+			echo '>> Включение полностью полученных товаров в включенных категориях...'  . PHP_EOL;
+			$this->db->non_cached_query("UPDATE product SET status = 1 WHERE filled_from_amazon = 1 AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1))");
 			
 			echo '>> Очистка неликвида...'  . PHP_EOL;
 			$this->db->non_cached_query("UPDATE product p SET is_illiquid = 0 WHERE quantity_stock = 0 AND quantity_stockK = 0 AND quantity_stockM = 0");

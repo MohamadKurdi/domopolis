@@ -1,8 +1,7 @@
 <?php   
 	class ControllerCommonHome extends Controller {  
 		
-		public function session(){
-			
+		public function session(){			
 			if ($this->user->isLogged() && isset($this->session->data['token'])) {				
 				$this->data['token'] = $this->session->data['token'];
 				} else {
@@ -255,8 +254,7 @@
 			$this->template = 'homestats/homecharts.tpl';
 			
 			$this->response->setOutput($this->render());			
-		}
-		
+		}		
 		
 		public function loadPrettyStats(){
 			$this->data['token'] = $this->session->data['token'];

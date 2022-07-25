@@ -3586,18 +3586,64 @@
 									</td>
 									
 									<td style="width:15%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Домен rfAPI - 1</span></p>
-										<select name="config_rainforest_api_domain_1">
-											<?php foreach ($amazon_domains as $amazon_domain) { ?>
-												<option value="<?php echo $amazon_domain?>" <?php if ($config_rainforest_api_domain_1 == $amazon_domain) { ?>selected="selected"<?php }?>><?php echo $amazon_domain?></option>
-												
-											<?php } ?>
-										</select>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Домен rfAPI - 1</span></p>
+											<select name="config_rainforest_api_domain_1">
+												<?php foreach ($amazon_domains as $amazon_domain) { ?>
+													<option value="<?php echo $amazon_domain?>" <?php if ($config_rainforest_api_domain_1 == $amazon_domain) { ?>selected="selected"<?php }?>><?php echo $amazon_domain?></option>
+
+												<?php } ?>
+											</select>
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ZipCode rfAPI - 1</span></p>
+											<input type="text" name="config_rainforest_api_zipcode_1" value="<?php echo $config_rainforest_api_zipcode_1; ?>" size="50" style="width:100px;" />
+										</div>
 									</td>
 									
 									<td style="width:15%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ZipCode rfAPI - 1</span></p>
-										<input type="text" name="config_rainforest_api_zipcode_1" value="<?php echo $config_rainforest_api_zipcode_1; ?>" size="50" style="width:100px;" />
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Добавлять SIMILAR</span></p>
+											<select name="config_rainforest_enable_similar_adding">
+												<?php if ($config_rainforest_enable_similar_adding) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+											<br />
+											<span class="help">похожие товары, сразу же в категорию основного товара</span>										
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Добавлять RELATED</span></p>
+											<select name="config_rainforest_enable_related_adding">
+												<?php if ($config_rainforest_enable_related_adding) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+											<br />
+											<span class="help">товары, которые покупают вместе</span>	
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Добавлять SPONSORED</span></p>
+											<select name="config_rainforest_enable_sponsored_adding">
+												<?php if ($config_rainforest_enable_sponsored_adding) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+											<br />
+											<span class="help">рекламный блок на амазоне</span>
+										</div>
 									</td>
 
 									<td style="width:15%">
@@ -3612,42 +3658,38 @@
 									</td>
 
 									<td style="width:15%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Модель работы</span></p>
+											<select name="config_rainforest_category_model">
+
+												<?php foreach (['standard', 'bestsellers', 'deals'] as $rainforest_model) { ?>
+													<option value="<?php echo $rainforest_model; ?>" <?php if ($rainforest_model == $config_rainforest_category_model) { ?> selected="selected"<?php } ?>><?php echo $rainforest_model; ?></option>
+												<?php } ?>
+											</select>
+
+										</div>
 
 										<div>
-
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Модель работы</span></p>
-										<select name="config_rainforest_category_model">
-
-											<?php foreach (['standard', 'bestsellers', 'deals'] as $rainforest_model) { ?>
-											<option value="<?php echo $rainforest_model; ?>" <?php if ($rainforest_model == $config_rainforest_category_model) { ?> selected="selected"<?php } ?>><?php echo $rainforest_model; ?></option>
-											<?php } ?>
-										</select>
-
-									</div>
-
-									<div>
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Рекурсивно добавлять товар</span></p>
-										<select name="config_rainforest_enable_recursive_adding">
-											<?php if ($config_rainforest_enable_recursive_adding) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Рекурсивно добавлять товар</span></p>
+											<select name="config_rainforest_enable_recursive_adding">
+												<?php if ($config_rainforest_enable_recursive_adding) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
 												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-									</div>
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ID технической категории</span></p>
+											<input type="number" name="config_rainforest_default_technical_category_id" value="<?php echo $config_rainforest_default_technical_category_id; ?>" size="50" style="width:90px;" />
+										</div>
 
-									<div>
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ID технической категории</span></p>
-										<input type="number" name="config_rainforest_default_technical_category_id" value="<?php echo $config_rainforest_default_technical_category_id; ?>" size="50" style="width:90px;" />
-									</div>
-
-									<div>
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ID неопределенной категории</span></p>
-										<input type="number" name="config_rainforest_default_unknown_category_id" value="<?php echo $config_rainforest_default_unknown_category_id; ?>" size="50" style="width:90px;" />
-									</div>
-
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ID неопределенной категории</span></p>
+											<input type="number" name="config_rainforest_default_unknown_category_id" value="<?php echo $config_rainforest_default_unknown_category_id; ?>" size="50" style="width:90px;" />
+										</div>
 									</td>
 									
 									<td style="width:15%">
