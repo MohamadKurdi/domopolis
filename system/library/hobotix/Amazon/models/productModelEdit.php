@@ -140,6 +140,11 @@ class productModelEdit extends hoboModel{
 		}
 	}
 
+	public function updateProductName($product_id, $data){
+		$this->db->query("UPDATE product_description SET name = '" . $this->db->escape($data['name']) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$data['language_id'] . "'");
+	}
+
+
 	public function editProductImages($product_id, $data){
 		$this->db->query("DELETE FROM product_image WHERE product_id = '" . (int)$product_id . "'");
 

@@ -45,17 +45,14 @@ class InfoUpdater
 
 		return $query->rows;
 	}
-
-	public function updateName($data){
-		$this->db->query("UPDATE product_description SET name = '" . $this->db->escape($data['name']) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
-	}
-
+	
 	public function normalizeProductName($name){
+		echoLine('[InfoUpdater] O: ' . $name);
 		//Убираем все кавычки, и другие непонятные спецсимволы, из-за них потом проблемы
 		$name = str_replace(['"', ',,', '?'], '', $name);
 
 		//Кавычки и другие символы, одинарная кавычка только с пробелом, потому что иначе это апостроф
-		$name = str_replace(["&amp;", "' "], ['&', ' '], $name);
+		$name = str_replace(["&amp;", "' ", "( "], ['&', ' ', '('], $name);
 
 		//Кавычка в начале - точно не апостроф
 		$name = ltrim($name, "'");
@@ -105,6 +102,8 @@ class InfoUpdater
 		$name = str_replace(['..'], ['.'], $name);		
 		$name = str_replace(['. .'], ['.'], $name);
 		$name = str_replace(['  '], [' '], $name);
+
+		echoLine('[InfoUpdater] N: ' . $name);
 
 		return $name;
 	}

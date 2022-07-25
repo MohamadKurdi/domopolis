@@ -578,9 +578,13 @@ class ControllerDPRainForest extends Controller {
 			$products = $this->rainforestAmazon->infoUpdater->getNames(($i-1) * (int)\hobotix\Amazon\InfoUpdater::descriptionsQueryLimit);
 			if ($products){		
 				foreach ($products as $product){
-					echoLine($product['name']);
-					echoLine($this->rainforestAmazon->infoUpdater->normalizeProductName($product['name']));
-					echoLine('');	
+					echoLine('[fixnames] ' . $i . '/' . $iterations);					
+
+					$this->rainforestAmazon->productsRetriever->model_product_edit->updateProductName($product['product_id'], [
+						'name' 			=>	$this->rainforestAmazon->infoUpdater->normalizeProductName($product['name']),						
+						'language_id'	=>	$product['language_id']
+					]);
+					
 				}
 			}	
 		}		

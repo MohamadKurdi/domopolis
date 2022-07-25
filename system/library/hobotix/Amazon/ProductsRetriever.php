@@ -845,9 +845,13 @@
 					'name' 			=> $name,
 					'translated' 	=> $translated
 				];
+
+				if ($language['code'] != $this->config->get('config_rainforest_source_language') && $name){
+					$product_name_data[$language['language_id']]['name'] = $this->registry->get('rainforestAmazon')->infoUpdater->normalizeProductName($name);
+				}
 				
 				$this->model_product_edit->addProductNames($product_id, $product_name_data);
-			}
+			}			
 			
 			return $product_id;
 		}
