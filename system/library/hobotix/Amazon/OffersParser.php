@@ -17,7 +17,6 @@ class OffersParser
 
 	
 	public function __construct($registry){
-
 		$this->config = $registry->get('config');
 		$this->db = $registry->get('db');
 		$this->log = $registry->get('log');
@@ -27,6 +26,7 @@ class OffersParser
 
 		require_once(dirname(__FILE__) . '/PriceLogic.php');
 		$this->PriceLogic = new PriceLogic($registry);
+
 	}
 
 	public function getTotalProductsToGetOffers(){
@@ -114,7 +114,15 @@ class OffersParser
 	}
 
 	public function setProductNoOffers($asin){
-		$this->db->query("UPDATE product SET amzn_no_offers = 1, quantity = 0 WHERE asin LIKE '" . $this->db->escape($asin) . "'");
+		$sql = "UPDATE product SET amzn_no_offers = 1 ";
+
+		if ($this->config->get('config_rainforest_nooffers_action')  && $this->config->get('config_rainforest_nooffers_quantity')){
+			$sql .= ", quantity = 0 ";
+		}
+
+		$sql .= " WHERE asin LIKE '" . $this->db->escape($asin) . "'";
+
+		$this->db->query($sql);
 
 		$this->clearOffersForASIN($asin);
 		$this->PriceLogic->setProductNoOffers($asin);
@@ -123,7 +131,14 @@ class OffersParser
 	}
 
 	public function setProductOffers($asin){
-		$this->db->query("UPDATE product SET amzn_no_offers = 0, quantity = 9999 WHERE asin LIKE '" . $this->db->escape($asin) . "'");	
+		$sql = "UPDATE product SET amzn_no_offers = 0 ";
+		if ($this->config->get('config_rainforest_nooffers_action') && $this->config->get('config_rainforest_nooffers_quantity')){
+			$sql .= ", quantity = 9999 ";
+		}
+
+		$sql .= " WHERE asin LIKE '" . $this->db->escape($asin) . "'";	
+
+		$this->db->query($sql);
 
 		$this->PriceLogic->setProductOffers($asin);
 
@@ -179,8 +194,7 @@ class OffersParser
 		$rfOffers = $this->reparseOffersToSkip($rfOffers);
 
 		$minKey  	= $this->getMinPriceOffer($rfOffers);
-		$ratingKeys = $this->calculateOffersRatings($rfOffers); 		
-
+		$ratingKeys = $this->calculateOffersRatings($rfOffers);
 
 		if (!$rfOffers){
 			$this->setProductNoOffers($asin);

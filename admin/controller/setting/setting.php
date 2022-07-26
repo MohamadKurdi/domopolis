@@ -2831,6 +2831,12 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_rainforest_default_store_id'] = $this->config->get('config_rainforest_default_store_id');
 		}
 
+		if (isset($this->request->post['config_rainforest_nooffers_quantity'])) {
+			$this->data['config_rainforest_nooffers_quantity'] = $this->request->post['config_rainforest_nooffers_quantity']; 
+		} else {
+			$this->data['config_rainforest_nooffers_quantity'] = $this->config->get('config_rainforest_nooffers_quantity');
+		}
+
 		if (isset($this->request->post['config_rainforest_nooffers_action'])) {
 			$this->data['config_rainforest_nooffers_action'] = $this->request->post['config_rainforest_nooffers_action']; 
 		} else {

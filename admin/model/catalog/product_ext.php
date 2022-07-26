@@ -109,6 +109,7 @@ class ModelCatalogProductExt extends Model {
             'status'            => 'p.status',
             'fill_from_amazon'  => 'p.fill_from_amazon',
             'filled_from_amazon'=> 'p.filled_from_amazon',
+            'amzn_no_offers'    => 'p.amzn_no_offers',
             'requires_shipping' => 'p.shipping',
             );
 

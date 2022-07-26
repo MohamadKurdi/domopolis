@@ -115,6 +115,15 @@
 										<option value="0"<?php echo (!is_null($filters[$col]) && !$filters[$col]) ? ' selected="selected"' : ''; ?>><?php echo $text_no; ?></option>
 									</select>
 								</td>
+								<?php break;								
+								case 'amzn_no_offers': ?>
+								<td class="<?php echo $column_info[$col]['align']; ?>">
+									<select name="filter_<?php echo $col; ?>" class="filter <?php echo $col; ?>">
+										<option value="*"></option>
+										<option value="1"<?php echo ($filters[$col]) ? ' selected="selected"' : ''; ?>><?php echo $text_yes; ?></option>
+										<option value="0"<?php echo (!is_null($filters[$col]) && !$filters[$col]) ? ' selected="selected"' : ''; ?>><?php echo $text_no; ?></option>
+									</select>
+								</td>
 								<?php break;
 								case 'manufacturer': ?>
 								<td class="<?php echo $column_info[$col]['align']; ?>">
@@ -251,6 +260,17 @@
 												<br /><span style="color:#cf4a61;font-weight:700;">+<?php echo $product['variants']; ?></span>
 											<? } ?>
 										</td>
+
+										<?php break;
+										case 'amzn_no_offers': ?>
+										<td class="<?php echo $column_info[$col]['align']; ?><?php echo ($column_info[$col]['qe_status']) ? ' ' . $column_info[$col]['qe_type'] : ''; ?>" id="<?php echo $col . "-" . $product['product_id']; ?>">
+											<?php if ($product['amzn_no_offers']) { ?>
+												<i class="fa fa-exclamation-triangle" style="color:#fa4934"></i>
+											<?php } else { ?>
+												<i class="fa fa-thumbs-up" style="color:#66c7a3"></i>
+											<?php } ?>
+										</td>
+
 										<?php break;
 										case 'image': ?>
 										<td class="<?php echo $column_info[$col]['align']; ?><?php echo ($column_info[$col]['qe_status']) ? ' ' . $column_info[$col]['qe_type'] : ''; ?>" id="<?php echo $col . "-" . $product['product_id']; ?>">

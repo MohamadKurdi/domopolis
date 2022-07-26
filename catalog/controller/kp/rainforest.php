@@ -109,7 +109,7 @@ class ControllerKPRainForest extends Controller {
 
 
 		//Первый шаг, мы проверим все текущие асины и запишем их в базу, плохие асины мы удалим
-		$query = $this->db->ncquery("SELECT product_id, asin, ean FROM product WHERE status = 1 AND asin <> '' AND ISNULL(amzn_last_search)");
+		$query = $this->db->ncquery("SELECT product_id, asin, ean FROM product WHERE status = 1 AND asin <> 'INVALID' AND asin <> '' AND ISNULL(amzn_last_search)");
 
 		$products = [];
 		foreach ($query->rows as $row){
@@ -150,7 +150,7 @@ class ControllerKPRainForest extends Controller {
 
 				} else {
 					echoLine('[PARSEASINSCRON] Товар ' . $product_id . ', не найден, ASIN ' . $products[$product_id]['asin']);
-					$this->rainforestAmazon->infoUpdater->updateASINInDatabase(['product_id' => $product_id, 'asin' => '']);
+					$this->rainforestAmazon->infoUpdater->updateASINInDatabase(['product_id' => $product_id, 'asin' => 'INVALID']);
 
 				}
 			}
@@ -159,7 +159,6 @@ class ControllerKPRainForest extends Controller {
 			unset($timer);
 		}
 	}
-
 
 	public function parseoffersqueuecron(){
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
@@ -197,7 +196,6 @@ class ControllerKPRainForest extends Controller {
 
 		$this->rainforestAmazon->offersParser->clearProductsAmazonQueue();
 	}
-
 
 	public function parseofferscron(){
 

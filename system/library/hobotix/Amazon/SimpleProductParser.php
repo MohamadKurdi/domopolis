@@ -46,8 +46,7 @@
 			curl_setopt($ch, CURLOPT_TIMEOUT, 100);
 			curl_setopt($ch, CURLOPT_VERBOSE, false);	
 			
-			return $ch;
-			
+			return $ch;			
 		}		
 		
 		private function parseResponse($response){
@@ -75,8 +74,7 @@
 				$response['product']['sponsored_products'] = $response['sponsored_products'];
 			}
 			
-			return $response['product'];
-			
+			return $response['product'];			
 		}
 		
 		public function getProductByGTIN($gtins){
@@ -106,8 +104,7 @@
 			}
 			
 			
-			return $results;
-			
+			return $results;			
 		}
 		
 		public function getProductByASINS($asins){
@@ -137,8 +134,7 @@
 			}
 			
 			
-			return $results;
-			
+			return $results;		
 		}
 		
 		

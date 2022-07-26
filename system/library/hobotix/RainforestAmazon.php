@@ -56,7 +56,10 @@ class RainforestAmazon
 		$this->db 				= $registry->get('db');
 		$this->log 				= $registry->get('log');
 
-		$this->rfClient = new \CaponicaAmazonRainforest\Client\RainforestClient(['api_key' => trim($this->config->get('config_rainforest_api_key'))]);
+		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/RainforestLogger.php');
+		$rainforestLogger = new Amazon\RainforestLogger($registry);
+
+		$this->rfClient = new \CaponicaAmazonRainforest\Client\RainforestClient(['api_key' => trim($this->config->get('config_rainforest_api_key'))], $rainforestLogger);
 
 		//Loading Classes
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/OffersParser.php');
@@ -86,7 +89,6 @@ class RainforestAmazon
 			$this->telegramBot = new \Longman\TelegramBot\Telegram($this->config->get('config_telegram_bot_token'), $this->config->get('config_telegram_bot_name'));
 			$this->tgAlertChatID = $this->config->get('config_rainforest_tg_alert_group_id');
 		}
-
 	}
 
 	public function  getValidAmazonSitesArray(){
@@ -110,7 +112,6 @@ class RainforestAmazon
 		} catch (\Longman\TelegramBot\Exception\TelegramException $e) {
 			echoLine($e->getMessage());
 		}
-
 	}
 
 	public function checkIfPossibleToMakeRequest(){
@@ -168,7 +169,6 @@ class RainforestAmazon
 
 		return $apiEntities;			
 	}
-	
 
 	public function getProductsOffersASYNC($products){
 
@@ -192,7 +192,7 @@ class RainforestAmazon
 		
 		$results = [];
 		$retrievedProducts = [];
-		unset($rfOfferList);			
+		unset($rfOfferList);					
 
 		foreach ($apiEntities as $key => $rfOfferList){
 			$retrievedProducts[] = $rfOfferList->getASIN();
@@ -307,7 +307,6 @@ class RainforestAmazon
 		}
 		return $apiOffers;
 	}
-
 
 	public function getOffers($data){}
 

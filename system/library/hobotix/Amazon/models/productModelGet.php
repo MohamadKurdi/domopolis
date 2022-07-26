@@ -30,6 +30,7 @@ class productModelGet extends hoboModel{
 		AND p.fill_from_amazon = 1
 		AND p.filled_from_amazon = 0
 		AND (NOT ISNULL(p.asin) OR p.asin <> '')
+		AND p.asin <> 'INVALID'
 		AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1 AND amazon_can_get_full = 1))";
 
 		if ($this->testAsin){
@@ -56,7 +57,8 @@ class productModelGet extends hoboModel{
 		FROM product p 
 		LEFT JOIN product_description pd ON (p.product_id = pd.product_id) 
 		WHERE pd.language_id = '" . $this->config->get('config_language_id') . "' 
-		AND p.added_from_amazon = 1 		
+		AND p.added_from_amazon = 1 
+		AND p.asin <> 'INVALID'	
 		AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id = '" . (int)$this->config->get('config_rainforest_default_technical_category_id') . "')
 		ORDER BY RAND() LIMIT " . (int)\hobotix\RainforestAmazon::fullProductParserLimit;
 
@@ -85,7 +87,8 @@ class productModelGet extends hoboModel{
 		AND p.fill_from_amazon = 1	
 		AND p.filled_from_amazon = 0
 		AND p.product_id IN (SELECT product_id FROM product_amzn_data) 
-		AND (NOT ISNULL(p.asin) OR p.asin <> '') 
+		AND (NOT ISNULL(p.asin) OR p.asin <> '')
+		AND p.asin <> 'INVALID' 
 		AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1 AND amazon_can_get_full = 1))
 		ORDER BY RAND() LIMIT " . (int)\hobotix\RainforestAmazon::fullProductParserLimit;
 

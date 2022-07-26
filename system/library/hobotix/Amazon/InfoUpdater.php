@@ -320,6 +320,13 @@ class InfoUpdater
 		return $this;
 	}	
 
+	public function setInvalidASIN($asin){
+		$this->db->query("UPDATE product SET old_asin = asin WHERE asin = '" . $this->db->escape($asin) . "'");		
+		$this->db->query("UPDATE product SET asin = 'INVALID' WHERE asin = '" .$this->db->escape($asin) . "'");
+
+		return $this;
+	}
+
 	public function updateASINInDatabase($product){
 
 		if ($product['asin'] == 'INVALID'){

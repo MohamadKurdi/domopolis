@@ -3821,7 +3821,7 @@
 
 							<table class="form">
 								<tr>
-									<td width="20%">
+									<td style="width:15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Включить ценообразование A+rfAPI</span></p>
 										<select name="config_rainforest_enable_pricing">
 											<?php if ($config_rainforest_enable_pricing) { ?>
@@ -3836,7 +3836,7 @@
 										<span class="help"><i class="fa fa-exclamation-circle"></i> в случае неоплаты - лучше отключить</span>
 									</td>
 
-									<td width="20%">
+									<td style="width:15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Цена для этой страны ставится по-умолчанию</span></p>
 											<select name="config_rainforest_default_store_id">
 												<option value="-1" <?php if (-1 == $config_rainforest_default_store_id) { ?>selected="selected"<? } ?>>Переназначать все страны</option>
@@ -3848,7 +3848,7 @@
 										<span class="help"><i class="fa fa-info"></i> если задано, то цена для этого магазина будет ценой по-умолчанию</span>
 									</td>
 
-									<td width="20%">
+									<td style="width:15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Если нет офферов</span></p>
 										<select name="config_rainforest_nooffers_action">
 											<?php if ($config_rainforest_nooffers_action) { ?>
@@ -3863,7 +3863,7 @@
 										<span class="help"><i class="fa fa-exclamation-circle"></i> что делать при обновлении, если на амазоне нет предложений</span>
 									</td>
 
-									<td width="20%">
+									<td style="width:15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Статус, если нет офферов</span></p>
 										<select name="config_rainforest_nooffers_status_id">
 										<?php foreach ($stock_statuses as $stock_status) { ?>
@@ -3878,7 +3878,22 @@
 										<span class="help"><i class="fa fa-exclamation-circle"></i> установить этот статус товару, если на амазоне нет предложений</span>
 									</td>
 
-									<td width="20%">
+									<td style="width:15%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Также изменять количество</span></p>
+										<select name="config_rainforest_nooffers_quantity">
+											<?php if ($config_rainforest_nooffers_quantity) { ?>
+												<option value="1" selected="selected">Менять количество</option>
+												<option value="0">Нихуя не делать</option>
+												<?php } else { ?>													
+												<option value="1">Менять количество</option>
+												<option value="0"  selected="selected">Нихуя не делать</option>
+											<? } ?>
+										</select>
+										<br />
+										<span class="help"><i class="fa fa-exclamation-circle"></i> количество будет изменяться 0-9999</span>
+									</td>
+
+									<td style="width:15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Получать офферы только для полностью загруженных</span></p>
 										<select name="config_rainforest_enable_offers_only_for_filled">
 											<?php if ($config_rainforest_enable_offers_only_for_filled) { ?>
