@@ -16,11 +16,25 @@
 			
 			echo '>> Очистка несуществующих записей'  . PHP_EOL;
 			$this->db->query("DELETE FROM product_description WHERE product_id NOT IN (SELECT product_id FROM product)");
+
+			echo '>> Удаление товаров у которых нет на амазоне офферов...' . PHP_EOL;
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_delete_no_offers') && $this->config->get('config_rainforest_delete_no_offers_counter')){
+				$this->load->model('catalog/product');
+
+				$query = $this->db->query("SELECT product_id FROM product WHERE amzn_no_offers = 1 AND amzn_no_offers_counter >= '" . (int)$this->config->get('config_rainforest_delete_no_offers_counter') . "' AND asin <> '' AND amzn_last_offers != '0000-00-00 00:00:00'");
+
+				foreach ($query->rows as $row){
+					echo '>> Удаляем товар ' . $row['product_id'] . PHP_EOL;
+					$this->model_catalog_product->deleteProduct($row['product_id'], false, true);
+				}
+			}
 			
 			echo '>> Подсчет количества продаж за неделю...'  . PHP_EOL;
 			echo 'QUERY:' .  "UPDATE product p SET bought_for_week = (SELECT SUM(quantity) FROM order_product op WHERE op.product_id = p.product_id AND op.order_id IN (SELECT o.order_id FROM `order` o WHERE o.order_status_id > 0 AND DATE(o.date_added) >= DATE(DATE_SUB(NOW(),INTERVAL 7 DAY))))" . PHP_EOL;
 			$this->db->query("UPDATE product p SET bought_for_week = (SELECT SUM(quantity) FROM order_product op WHERE op.product_id = p.product_id AND op.order_id IN (SELECT o.order_id FROM `order` o WHERE o.order_status_id > 0 AND  DATE(o.date_added) >= DATE(DATE_SUB(NOW(),INTERVAL 7 DAY))))");
 			echo PHP_EOL;
+
+			
 			
 			echo '>> Подсчет количества продаж за месяц...'  . PHP_EOL;
 			echo 'QUERY:' .  "UPDATE product p SET bought_for_month = (SELECT SUM(quantity) FROM order_product op WHERE op.product_id = p.product_id AND op.order_id IN (SELECT o.order_id FROM `order` o WHERE o.order_status_id > 0 AND  DATE(o.date_added) >= DATE(DATE_SUB(NOW(),INTERVAL 30 DAY))))" . PHP_EOL;
@@ -45,7 +59,9 @@
 			$this->db->non_cached_query("UPDATE product p SET fill_from_amazon = 1 WHERE filled_from_amazon = 1 AND (fill_from_amazon = 0 OR ISNULL(fill_from_amazon))");
 
 			echo '>> Включение полностью полученных товаров в включенных категориях...'  . PHP_EOL;
-			$this->db->non_cached_query("UPDATE product SET status = 1 WHERE filled_from_amazon = 1 AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1))");
+			if ($this->config->get('config_enable_amazon_specific_modes')){
+				$this->db->non_cached_query("UPDATE product SET status = 1 WHERE filled_from_amazon = 1 AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1))");
+			}
 			
 			echo '>> Очистка неликвида...'  . PHP_EOL;
 			$this->db->non_cached_query("UPDATE product p SET is_illiquid = 0 WHERE quantity_stock = 0 AND quantity_stockK = 0 AND quantity_stockM = 0");

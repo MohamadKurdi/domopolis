@@ -2848,6 +2848,18 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$this->data['config_rainforest_nooffers_status_id'] = $this->config->get('config_rainforest_nooffers_status_id');
 		}
+
+		if (isset($this->request->post['config_rainforest_delete_no_offers'])) {
+			$this->data['config_rainforest_delete_no_offers'] = $this->request->post['config_rainforest_delete_no_offers']; 
+		} else {
+			$this->data['config_rainforest_delete_no_offers'] = $this->config->get('config_rainforest_delete_no_offers');
+		}
+
+		if (isset($this->request->post['config_rainforest_delete_no_offers_counter'])) {
+			$this->data['config_rainforest_delete_no_offers_counter'] = $this->request->post['config_rainforest_delete_no_offers_counter']; 
+		} else {
+			$this->data['config_rainforest_delete_no_offers_counter'] = $this->config->get('config_rainforest_delete_no_offers_counter');
+		}
 		
 
 		$this->load->model('setting/store');

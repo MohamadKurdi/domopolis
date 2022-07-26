@@ -753,32 +753,37 @@
 
 																<table class="form">
 																	<tr>
-																		<td class="left" width="20%">
+																		<td class="left" width="15%">
 																			<b>Предложения обновлены</b>
 																		</td>
-																		<td class="left" width="20%">
+																		<td class="left" width="15%">
 																			<b style="color:#cf4a61">Не парсить Amazon</b>
 																		</td>
-																		<td class="left" width="20%">
+																		<td class="left" width="15%">
 																			<b style="color:#cf4a61">Цена BEST OFFER</b>
 																		</td>
-																		<td class="left" width="20%">
+																		<td class="left" width="15%">
 																			<b style="color:#cf4a61">Цена LOWEST OFFER</b>
 																		</td>
-																		<td class="left" width="20%">
+																		<td class="left" width="15%">
 																			<?php if ($amzn_no_offers) { ?>
 																				<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(207, 74, 97); color:#FFF"><i class="fa fa-exclamation-triangle"></i> Нет предложений на Amazon</span>
 																			<?php } else {  ?>
 																				<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(0, 173, 7); color:#FFF"><i class="fa fa-check"></i>Есть предложения на Amazon</span>
 																			<?php } ?>
 																		</td>
+																		<td class="left" width="15%">
+																			<?php if ($amzn_no_offers) { ?>
+																				<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(207, 74, 97); color:#FFF"><i class="fa fa-exclamation-triangle"></i> Счетчик: <?php echo $amzn_no_offers_counter; ?></span>
+																			<?php } ?>
+																		</td>
 																	</tr>
 
 																	<tr>
-																		<td class="left" width="20%">
+																		<td class="left" width="15%">
 																			<input type="text" style="width:150px;" class="datetime" name="amzn_last_offers" value="<?php echo $amzn_last_offers; ?>" />
 																		</td>
-																		<td class="left" width="20%">
+																		<td class="left" width="15%">
 																			<select name="amzn_ignore">
 																				<?php if ($amzn_ignore) { ?>
 																					<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
@@ -789,16 +794,16 @@
 																				<?php } ?>
 																			</select>
 																		</td>
-																		<td class="left" width="20%">
+																		<td class="left" width="15%">
 																			<b><?php echo $amazon_best_price; ?></b>
 																		</td>
-																		<td class="left" width="20%">
+																		<td class="left" width="15%">
 																			<b><?php echo $amazon_lowest_price; ?></b>
 																		</td>
-																		<td class="left" width="20%">
+																		<td class="left" width="15%">
 																			<span class="help"><i class="fa fa-info-circle"></i> маркер НЕ ПАРСИТЬ можно устанавливать в любом случае, даже если предложения есть, в случае если, например, товар поставляется только с локальных складов и не планируется закупка с Amazon</span>
 																		</td>
-																		<td class="left" width="20%">
+																		<td class="left" width="15%">
 																			<span class="help"><i class="fa fa-info-circle"></i> если нет предложений, то это значит, что на данный момент товар находится в статусе Currently unavailable. We don't know when or if this item will be back in stock. Нужно принять решение, сканировать ли далее этот товар или нет. Если нет - нужно установить маркер "Не парсить Амазон"</span>
 																		</td>
 																	</tr>

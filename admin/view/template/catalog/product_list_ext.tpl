@@ -266,6 +266,7 @@
 										<td class="<?php echo $column_info[$col]['align']; ?><?php echo ($column_info[$col]['qe_status']) ? ' ' . $column_info[$col]['qe_type'] : ''; ?>" id="<?php echo $col . "-" . $product['product_id']; ?>">
 											<?php if ($product['amzn_no_offers']) { ?>
 												<i class="fa fa-exclamation-triangle" style="color:#fa4934"></i>
+												<span style="color:#fa4934"><?php echo $product['amzn_no_offers_counter']; ?></span>
 											<?php } else { ?>
 												<i class="fa fa-thumbs-up" style="color:#66c7a3"></i>
 											<?php } ?>

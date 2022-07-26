@@ -114,7 +114,7 @@ class OffersParser
 	}
 
 	public function setProductNoOffers($asin){
-		$sql = "UPDATE product SET amzn_no_offers = 1 ";
+		$sql = "UPDATE product SET amzn_no_offers = 1, amzn_no_offers_counter = (amzn_no_offers_counter + 1) ";
 
 		if ($this->config->get('config_rainforest_nooffers_action')  && $this->config->get('config_rainforest_nooffers_quantity')){
 			$sql .= ", quantity = 0 ";
@@ -131,7 +131,7 @@ class OffersParser
 	}
 
 	public function setProductOffers($asin){
-		$sql = "UPDATE product SET amzn_no_offers = 0 ";
+		$sql = "UPDATE product SET amzn_no_offers = 0, amzn_no_offers_counter = 0 ";
 		if ($this->config->get('config_rainforest_nooffers_action') && $this->config->get('config_rainforest_nooffers_quantity')){
 			$sql .= ", quantity = 9999 ";
 		}

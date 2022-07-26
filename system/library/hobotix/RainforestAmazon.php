@@ -215,7 +215,8 @@ class RainforestAmazon
 				$results[$rfOfferList->getASIN()][] = $apiOffer;
 			}
 
-			if ($rfOfferList->hasMorePages()){
+			if ($rfOfferList->hasMorePages() && count($results[$rfOfferList->getASIN()]) == 10){
+				echoLine('[RainforestAmazon] Страница 2 ' . $rfOfferList->hasMorePages());
 
 				$options['page'] = $rfOfferList->getCurrentPage() + 1;
 				$rfRequests = [new \CaponicaAmazonRainforest\Request\OfferRequest($this->config->get('config_rainforest_api_domain_1'), $asin, $options)];

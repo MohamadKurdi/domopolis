@@ -1309,6 +1309,7 @@ class ControllerCatalogProduct extends Controller {
 
 			$this->data['amazon_best_price'] = $this->currency->format($product_info['amazon_best_price'], 'EUR', 1);
 			$this->data['amazon_lowest_price'] = $this->currency->format($product_info['amazon_lowest_price'], 'EUR', 1);
+			$this->data['amzn_no_offers_counter'] = $product_info['amzn_no_offers_counter'];
 
 		}				
 

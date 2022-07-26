@@ -162,7 +162,7 @@
 			if ($query->row){
 				return $query->row['realname'];
 				} else {
-				return 'Неизв.';
+				return 'Авто';
 			}
 		}
 		

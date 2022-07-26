@@ -3849,33 +3849,58 @@
 									</td>
 
 									<td style="width:15%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Если нет офферов</span></p>
-										<select name="config_rainforest_nooffers_action">
-											<?php if ($config_rainforest_nooffers_action) { ?>
-												<option value="1" selected="selected">Менять статус</option>
-												<option value="0">Нихуя не делать</option>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Если нет офферов</span></p>
+											<select name="config_rainforest_nooffers_action">
+												<?php if ($config_rainforest_nooffers_action) { ?>
+													<option value="1" selected="selected">Менять статус</option>
+													<option value="0">Нихуя не делать</option>
 												<?php } else { ?>													
-												<option value="1">Менять статус</option>
-												<option value="0"  selected="selected">Нихуя не делать</option>
-											<? } ?>
-										</select>
-										<br />
-										<span class="help"><i class="fa fa-exclamation-circle"></i> что делать при обновлении, если на амазоне нет предложений</span>
+													<option value="1">Менять статус</option>
+													<option value="0"  selected="selected">Нихуя не делать</option>
+												<? } ?>
+											</select>
+											<br />
+											<span class="help"><i class="fa fa-exclamation-circle"></i> что делать при обновлении, если на амазоне нет предложений</span>
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Статус, если нет офферов</span></p>
+											<select name="config_rainforest_nooffers_status_id">
+												<?php foreach ($stock_statuses as $stock_status) { ?>
+													<?php if ($stock_status['stock_status_id'] == $config_rainforest_nooffers_status_id) { ?>
+														<option value="<?php echo $stock_status['stock_status_id']; ?>" selected="selected"><?php echo $stock_status['name']; ?></option>
+													<?php } else { ?>
+														<option value="<?php echo $stock_status['stock_status_id']; ?>"><?php echo $stock_status['name']; ?></option>
+													<?php } ?>
+												<?php } ?>
+											</select>
+											<br />
+											<span class="help"><i class="fa fa-exclamation-circle"></i> установить этот статус товару, если на амазоне нет предложений</span>	
+										</div>
 									</td>
 
 									<td style="width:15%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Статус, если нет офферов</span></p>
-										<select name="config_rainforest_nooffers_status_id">
-										<?php foreach ($stock_statuses as $stock_status) { ?>
-											<?php if ($stock_status['stock_status_id'] == $config_rainforest_nooffers_status_id) { ?>
-												<option value="<?php echo $stock_status['stock_status_id']; ?>" selected="selected"><?php echo $stock_status['name']; ?></option>
-												<?php } else { ?>
-												<option value="<?php echo $stock_status['stock_status_id']; ?>"><?php echo $stock_status['name']; ?></option>
-											<?php } ?>
-										<?php } ?>
-									</select>
-										<br />
-										<span class="help"><i class="fa fa-exclamation-circle"></i> установить этот статус товару, если на амазоне нет предложений</span>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Удалять если нет офферов</span></p>
+											<select name="config_rainforest_delete_no_offers">
+												<?php if ($config_rainforest_delete_no_offers) { ?>
+													<option value="1" selected="selected">Удалять</option>
+													<option value="0">Нихуя не делать</option>
+												<?php } else { ?>													
+													<option value="1">Удалять</option>
+													<option value="0"  selected="selected">Нихуя не делать</option>
+												<? } ?>
+											</select>
+											<br />
+											<span class="help"><i class="fa fa-exclamation-circle"></i> если офферов нету, удалять товар</span>	
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Порог "нет офферов"</span></p>
+											<input type="number" name="config_rainforest_delete_no_offers_counter" value="<?php echo $config_rainforest_delete_no_offers_counter; ?>" size="50" style="width:100px;" />
+											<br />
+											<span class="help"><i class="fa fa-exclamation-circle"></i> если включено удаление то удаляются товары у которых не было офферов Х раз</span>
+										</div>
+									
 									</td>
 
 									<td style="width:15%">

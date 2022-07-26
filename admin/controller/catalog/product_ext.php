@@ -536,6 +536,7 @@ class ControllerCatalogProductExt extends Controller {
 
             //CountVariants
             $columns['variants'] = $this->model_catalog_product->countVariantProducts($result['product_id']);
+            $columns['amzn_no_offers_counter'] = $result['amzn_no_offers_counter'];
 
             $this->data['products'][] = $columns;
         }

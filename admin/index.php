@@ -140,10 +140,6 @@
 	//pushQueue
 	$pushQueue = new pushQueue($registry);
 	$registry->set('pushQueue', $pushQueue);
-	
-	
-	$rainforestAmazon = new hobotix\RainforestAmazon($registry);
-	$registry->set('rainforestAmazon', $rainforestAmazon);
 
 	$pricevaAdaptor = new hobotix\PricevaAdaptor($registry);
 	$registry->set('pricevaAdaptor', $pricevaAdaptor);
@@ -219,8 +215,7 @@
 	
 	$Bitrix24 = new Bitrix24($registry);
 	$registry->set('Bitrix24', $Bitrix24);
-	
-	
+		
 	$registry->set('mobileDetect', new Mobile_Detect);
 	$registry->set('simpleProcess', new hobotix\simpleProcess());
 	
@@ -245,29 +240,20 @@
 	$language->load($languages[$config->get('config_admin_language')]['filename']);	
 	$registry->set('language', $language);
 	
-	// Document
+
 	$registry->set('document', new Document()); 		
-	
-	// Currency
 	$registry->set('currency', new Currency($registry));		
-	
-	// Weight
 	$registry->set('weight', new Weight($registry));
-	
-	// Length
 	$registry->set('length', new Length($registry));
-	
-	// User
 	$registry->set('user', new User($registry));
-	
-	//cart
 	$registry->set('cart', new Cart($registry));
-	
-	//OpenBay Pro
 	$registry->set('openbay', new Openbay($registry));
 	
 	$emailBlackList = new hobotix\EmailBlackList($registry);
 	$registry->set('emailBlackList', $emailBlackList);
+			
+	$rainforestAmazon = new hobotix\RainforestAmazon($registry);
+	$registry->set('rainforestAmazon', $rainforestAmazon);
 	
 	// Customer
 	$registry->set('customer', new Customer($registry));
