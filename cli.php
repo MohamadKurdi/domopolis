@@ -246,6 +246,17 @@
 	$registry->set('CourierServices', 	new CourierServices());
 	$registry->set('simpleProcess', 	new hobotix\simpleProcess(['route' => $route, 'config' => $configFile, 'args' => $allArguments]));
 
+	//AMAZON_CONFIG FROM JSON. Очень важная настройка, в БД какого-то чёрта иногда сбоит
+	$amazonConfig = loadJsonConfig('amazon');
+
+	if (!empty($amazonConfig['domain_1'])){
+		$registry->get('config')->set('config_rainforest_api_domain_1', $amazonConfig['domain_1']);
+	}
+
+	if (!empty($amazonConfig['zipcode_1'])){			
+		$registry->get('config')->set('config_rainforest_api_zipcode_1', $amazonConfig['zipcode_1']);
+	}
+
 	$controller = new Front($registry);
 
 	if ($application != 'admin'){

@@ -19,21 +19,35 @@ class RainforestAmazon
 	private $telegramBot;
 	private $tgAlertChatID = null;
 
-	public const productRequestLimits 	= 30;
+	/*
+		Лимит для парсера категорий, сколько в параллели
+	*/
 	public const categoryRequestLimits 	= 100;
-	public const offerRequestLimits 	= 40;
-
+	
+	/*
+		Лимит для отбора пост-обработок
+	*/
 	public const generalDBQueryLimit	= 3000;
 
-	public const offerParserLimit 		= 3000;
+	/*
+		offerParserLimit = Сколько отбирать товаров для получения офферов за один запуск
+		offerRequestLimits = Сколько запросов в параллели
+	*/
+	public const offerParserLimit 		= 300;
+	public const offerRequestLimits 	= 30;
+
+	/*
+		fullProductParserLimit = Сколько отбирать товаров для получения полной информации за один запуск
+		productRequestLimits   = Сколько запросов в параллели
+	*/
 	public const fullProductParserLimit = 300;
+	public const productRequestLimits 	= 30;
 
 	public const categoryModeTables 		= ['standard' => 'category_amazon_tree', 	'bestsellers' => 'category_amazon_bestseller_tree'];
 	public const categoryModeResultIndexes 	= ['standard' => 'category_results', 		'bestsellers' => 'bestsellers'];
 	public const categoryModeInfoIndexes 	= ['standard' => 'category_info', 			'bestsellers' => 'bestsellers_info'];
 	public const rainforestTypeMapping 		= ['standard' => 'category', 				'bestsellers' => 'bestsellers'];
-
-		//Эта шляпа может использовать в быстром получении категорий
+		
 	public $categoryParser;
 
 	public function __construct($registry){

@@ -321,6 +321,11 @@ class InfoUpdater
 	}	
 
 	public function updateASINInDatabase($product){
+
+		if ($product['asin'] == 'INVALID'){
+			$this->db->query("UPDATE product SET old_asin = asin WHERE product_id = '" . $product['product_id'] . "'");
+		}
+
 		$this->db->query("UPDATE product SET asin = '" . $this->db->escape($product['asin']) . "' WHERE product_id = '" . $product['product_id'] . "'");				
 
 		return $this;

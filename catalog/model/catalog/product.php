@@ -394,8 +394,7 @@
 			return $this->getProduct($product_id, false);
 		}
 		
-		public function getProduct($product_id, $cached = true)
-		{
+		public function getProduct($product_id, $cached = true)	{
 			
 			$this->load->model('catalog/group_price');
 			$this->load->model('kp/product');
@@ -422,9 +421,22 @@
 				
 				$sql = "SELECT DISTINCT *, pd.name AS name, pd.alt_image, pd.title_image, m.image as manufacturer_img,
 				(SELECT st.set_id FROM `set` st WHERE p.product_id = st.product_id LIMIT 1) as set_id,
-				(SELECT COUNT(*) FROM product_additional_offer pao LEFT JOIN product_additional_offer_to_store pao2s ON (pao.product_additional_offer_id = pao2s.product_additional_offer_id) WHERE  pao.product_id = p.product_id AND pao.date_end > NOW() AND (ISNULL(pao2s.store_id) OR pao2s.store_id = '" . (int)$this->config->get('config_store_id') . "')) AS additional_offer_count,				
-				(SELECT COUNT(p3.product_id) FROM product p3 LEFT JOIN product_to_store p32s ON (p3.product_id = p32s.product_id) WHERE p3.main_variant_id = p.product_id AND p3.status = 1 AND p3.is_markdown = 0 AND p32s.store_id = '" . (int)$this->config->get('config_store_id') . "') AS variants_count,
-				(SELECT ao_product_id FROM product_additional_offer pao LEFT JOIN product_additional_offer_to_store pao2s ON (pao.product_additional_offer_id = pao2s.product_additional_offer_id) WHERE pao.product_id = p.product_id AND pao.date_end > NOW() AND pao.percent = 100 AND (ISNULL(pao2s.store_id) OR pao2s.store_id = '" . (int)$this->config->get('config_store_id') . "')  ORDER BY priority ASC LIMIT 1) AS additional_offer_product_id,
+				(SELECT COUNT(*) FROM product_additional_offer pao LEFT JOIN product_additional_offer_to_store pao2s ON (pao.product_additional_offer_id = pao2s.product_additional_offer_id) WHERE  pao.product_id = p.product_id AND pao.date_end > NOW() AND (ISNULL(pao2s.store_id) OR pao2s.store_id = '" . (int)$this->config->get('config_store_id') . "')) AS additional_offer_count,";
+
+				if ($this->config->get('config_no_zeroprice')){
+					$sql .= " (SELECT COUNT(p3.product_id) FROM product p3 LEFT JOIN product_to_store p32s ON (p3.product_id = p32s.product_id) WHERE p3.main_variant_id = p.product_id  AND (p3.price > 0 OR p3.price_national > 0) AND p3.status = 1 AND p3.is_markdown = 0 AND p32s.store_id = '" . (int)$this->config->get('config_store_id') . "')";
+				} else {
+
+					$sql .= " (SELECT COUNT(p3.product_id) FROM product p3 LEFT JOIN product_to_store p32s ON (p3.product_id = p32s.product_id) WHERE p3.main_variant_id = p.product_id  AND (p3.price > 0 OR p3.price_national > 0) AND p3.status = 1 AND p3.is_markdown = 0 AND p32s.store_id = '" . (int)$this->config->get('config_store_id') . "')";
+					$sql .= " AND (";
+					$sql .= " p3.price > 0 OR p3.price_national > 0";
+					$sql .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p3.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+					$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p3.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+					$sql .= "))";
+				}
+
+				$sql .= " AS variants_count, ";
+				$sql .= " (SELECT ao_product_id FROM product_additional_offer pao LEFT JOIN product_additional_offer_to_store pao2s ON (pao.product_additional_offer_id = pao2s.product_additional_offer_id) WHERE pao.product_id = p.product_id AND pao.date_end > NOW() AND pao.percent = 100 AND (ISNULL(pao2s.store_id) OR pao2s.store_id = '" . (int)$this->config->get('config_store_id') . "')  ORDER BY priority ASC LIMIT 1) AS additional_offer_product_id,
 				(SELECT GROUP_CONCAT(category_id) FROM product_to_category WHERE product_id = p.product_id GROUP BY product_id) as categories,
 				p.image, 
 				m.name AS manufacturer, 
@@ -767,8 +779,7 @@
 			return $product_data;
 		}
 		
-		public function getProductOptionPrices($product_id)
-		{
+		public function getProductOptionPrices($product_id)	{
 			
 			if ($this->customer->isLogged()) {
 				$customer_group_id = $this->customer->getCustomerGroupId();
@@ -929,8 +940,7 @@
 		}
 		
 		
-		public function getProducts($data = array())
-		{
+		public function getProducts($data = array()) {
 			
 			if (!isset($data['no_child'])) {
 				$data['no_child'] = false;

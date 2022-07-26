@@ -253,14 +253,14 @@ class ControllerDPRainForest extends Controller {
 			$products = $this->rainforestAmazon->productsRetriever->getProducts();		
 		}
 
-		echoLine('[EditFullProducts] Всего товаров ' . count($products));
+		echoLine('[editfullproductscron] Всего товаров ' . count($products));
 
 		$total = count($products);
 		$iterations = ceil($total/\hobotix\RainforestAmazon::productRequestLimits);
 
 		for ($i = 1; $i <= $iterations; $i++){
 			$timer = new FPCTimer();
-			echoLine('[EditFullProducts] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . (\hobotix\RainforestAmazon::productRequestLimits * ($i-1)) . ' по ' . \hobotix\RainforestAmazon::productRequestLimits * $i);
+			echoLine('[editfullproductscron] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . (\hobotix\RainforestAmazon::productRequestLimits * ($i-1)) . ' по ' . \hobotix\RainforestAmazon::productRequestLimits * $i);
 
 			$slice = array_slice($products, \hobotix\RainforestAmazon::productRequestLimits * ($i-1), \hobotix\RainforestAmazon::productRequestLimits);
 
@@ -270,7 +270,7 @@ class ControllerDPRainForest extends Controller {
 				$this->rainforestAmazon->infoUpdater->updateProductAmazonLastSearch($product_id);
 
 				if ($result){
-					echoLine('[EditFullProducts] Товар ' . $product_id . ', найден, ASIN ' . $result['asin']);				
+					echoLine('[editfullproductscron] Товар ' . $product_id . ', найден, ASIN ' . $result['asin']);				
 
 					if ($parsetechcategory){
 						$this->rainforestAmazon->productsRetriever->editJustProductCategory($product_id, $result);					

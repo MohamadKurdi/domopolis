@@ -1224,6 +1224,14 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['asin'] = '';
 		}
 
+		if (isset($this->request->post['old_asin'])) {
+			$this->data['old_asin'] = $this->request->post['old_asin'];
+		} elseif (!empty($product_info)) {
+			$this->data['old_asin'] = $product_info['old_asin'];
+		} else {
+			$this->data['old_asin'] = '';
+		}
+
 		if (isset($this->request->post['amzn_last_search'])) {
 			$this->data['amzn_last_search'] = $this->request->post['amzn_last_search'];
 		} elseif (!empty($product_info)) {

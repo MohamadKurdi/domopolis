@@ -367,6 +367,7 @@
 				ean 					= '" . $this->db->escape($data['ean']) . "', jan = '" . $this->db->escape($data['jan']) . "', 
 				isbn 					= '" . $this->db->escape($data['isbn']) . "', mpn = '" . $this->db->escape($data['mpn']) . "', 
 				asin 					= '" . $this->db->escape($data['asin']) . "', 
+				old_asin 				= '" . $this->db->escape($data['old_asin']) . "', 
 				color_group 			= '" . $this->db->escape($data['color_group']) . "', 
 				location 				= '" . $this->db->escape($data['location']) . "', 
 				source 					= '" . $this->db->escape($data['source']) . "', 

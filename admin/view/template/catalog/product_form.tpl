@@ -376,8 +376,10 @@
 													<tr>
 														<td><?php echo $entry_mpn; ?></td>
 														<td><input type="text" name="mpn" value="<?php echo $mpn; ?>" /></td>
-														<td></td>
-														<td></td>
+														<td><b>OLD ASIN</b>
+														<br /><span class="help">поле не изменять</span>
+														</td>
+														<td><input type="text" name="old_asin" value="<?php echo $old_asin; ?>" /></td>
 													</tr>
 
 													<tr>
@@ -678,6 +680,13 @@
 																					Не задан
 																				<?php } ?>
 																			</span>
+
+																			
+																			<?php if (!empty($old_asin)) { ?>
+																				<br />
+																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">																<?php echo $old_asin; ?>								
+																			</span>
+																			<?php } ?>
 																		</td>
 																		<td class="left" width="14%">
 																			<?php if ($amazon_product_link) { ?>

@@ -31,9 +31,7 @@ class OffersParser
 
 	public function getTotalProductsToGetOffers(){
 		$result = [];
-		
-		$this->db->query("UPDATE product SET asin = TRIM(asin) WHERE 1");
-
+				
 		$sql = " FROM product p
 			WHERE status = 1 
 			AND amzn_ignore = 0		
@@ -57,9 +55,7 @@ class OffersParser
 	}	
 	
 	public function getProductsToGetOffers(){
-		$result = [];
-		
-		$this->db->query("UPDATE product SET asin = TRIM(asin) WHERE 1");
+		$result = [];		
 
 		$sql = " FROM product p
 			WHERE status = 1 

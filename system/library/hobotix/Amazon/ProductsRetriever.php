@@ -824,7 +824,7 @@
 			amazon_product_link  	= '" . (!empty($data['amazon_product_link'])?$this->db->escape($data['amazon_product_link']):'') . "',
 			amazon_product_image 	= '" . (!empty($data['amazon_product_image'])?$this->db->escape($data['amazon_product_image']):'') . "',
 			stock_status_id 		= '" . $this->config->get('config_partly_in_stock_status_id') . "',
-			quantity 				= '0',
+			quantity 				= '9999',
 			status 					= '0',
 			date_added 				= NOW()");
 			
