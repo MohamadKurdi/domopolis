@@ -15,7 +15,8 @@ class ControllerKPRainForest extends Controller {
 		}
 
 		if (!$this->config->get('config_rainforest_enable_api')){
-			die('RNF API NOT ENABLED');
+			echoLine('[parseofferscron] RNF API NOT ENABLED');
+			return;
 		}
 	}
 
@@ -165,7 +166,8 @@ class ControllerKPRainForest extends Controller {
 		$this->load->library('Timer');
 
 		if (!$this->config->get('config_rainforest_enable_pricing')){
-			die('[parseofferscron] RNF AMAZON PRICING NOT ENABLED');
+			echoLine('[parseofferscron] RNF AMAZON PRICING NOT ENABLED');
+			return;
 		}
 
 		echoLine('Работаем с очередью');		
@@ -203,7 +205,8 @@ class ControllerKPRainForest extends Controller {
 		$this->load->library('Timer');
 
 		if (!$this->config->get('config_rainforest_enable_pricing')){
-			die('[parseofferscron] RNF AMAZON PRICING NOT ENABLED');
+			echoLine('[parseofferscron] RNF AMAZON PRICING NOT ENABLED');
+			return;
 		}
 							
 		$products = $this->rainforestAmazon->offersParser->getProductsToGetOffers();			

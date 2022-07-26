@@ -5,18 +5,27 @@ class ControllerCommonQueues extends Controller {
 
 
 	public function countRainforestQueue(){
-		$query = $this->db->query("SELECT count(*) as total FROM amzn_product_queue WHERE 1");
-		$count = $query->row['total'];
 
-		$body = $count;
-		$class= 'good';
 
-		if ($count > 10){
-			$class = 'warn';
-		}
+		if (!$this->config->get('config_rainforest_enable_pricing')){
 
-		if ($count > 20){
-			$class = 'bad';
+			$body = 'OFF';
+			$class= 'warn';
+
+		} else {
+			$query = $this->db->query("SELECT count(*) as total FROM amzn_product_queue WHERE 1");
+			$count = $query->row['total'];
+
+			$body = $count;
+			$class= 'good';
+
+			if ($count > 10){
+				$class = 'warn';
+			}
+
+			if ($count > 20){
+				$class = 'bad';
+			}
 		}
 
 		$json = [

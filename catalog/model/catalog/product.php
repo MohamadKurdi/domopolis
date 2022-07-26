@@ -429,10 +429,10 @@
 
 					$sql .= " (SELECT COUNT(p3.product_id) FROM product p3 LEFT JOIN product_to_store p32s ON (p3.product_id = p32s.product_id) WHERE p3.main_variant_id = p.product_id  AND (p3.price > 0 OR p3.price_national > 0) AND p3.status = 1 AND p3.is_markdown = 0 AND p32s.store_id = '" . (int)$this->config->get('config_store_id') . "')";
 					$sql .= " AND (";
-					$sql .= " p3.price > 0 OR p3.price_national > 0";
-					$sql .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p3.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
-					$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p3.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
-					$sql .= "))";
+					$sql .= " p.price > 0 OR p.price_national > 0";
+					$sql .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+					$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+					$sql .= ")";
 				}
 
 				$sql .= " AS variants_count, ";
