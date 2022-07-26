@@ -683,8 +683,8 @@
 
 																			
 																			<?php if (!empty($old_asin)) { ?>
-																				<br />
-																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">																<?php echo $old_asin; ?>								
+																				<br /><br />
+																			<span class="status_color" style="display:inline-block; padding:3px 5px; background:rgb(207, 74, 97); color:#FFF">																<?php echo $old_asin; ?>								
 																			</span>
 																			<?php } ?>
 																		</td>

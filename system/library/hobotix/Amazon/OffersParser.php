@@ -39,7 +39,9 @@ class OffersParser
 			AND is_markdown = 0			
 			AND stock_status_id <> '" . $this->config->get('config_not_in_stock_status_id') . "'			
 			AND (" . $this->PriceLogic->buildStockQueryField() . " = 0)
-			AND (NOT ISNULL(p.asin) OR p.asin <> '')";
+			AND (NOT ISNULL(p.asin) OR p.asin <> '')
+			AND p.asin <> 'INVALID'";
+			
 
 		if ($this->config->get('config_rainforest_enable_offers_only_for_filled')){
 			$sql .= "AND p.filled_from_amazon = 1";
@@ -64,7 +66,8 @@ class OffersParser
 			AND is_markdown = 0		
 			AND stock_status_id <> '" . $this->config->get('config_not_in_stock_status_id') . "'			
 			AND (" . $this->PriceLogic->buildStockQueryField() . " = 0)
-			AND (NOT ISNULL(p.asin) OR p.asin <> '')";
+			AND (NOT ISNULL(p.asin) OR p.asin <> '')
+			AND p.asin <> 'INVALID'";
 
 		if ($this->config->get('config_rainforest_enable_offers_only_for_filled')){
 			$sql .= "AND p.filled_from_amazon = 1";

@@ -2407,6 +2407,12 @@
 			return $this->db->query("SELECT * FROM `product_profile` WHERE product_id = " . (int)$product_id)->rows;
 		}
 
+		public function getTotalProductsWithInvalidAsin() {
+			$query = $this->db->query("SELECT COUNT(product_id) as total FROM product WHERE asin = 'INVALID'");
+			
+			return $query->row['total'];
+		}
+
 		public function getTotalProductsParsed() {
 			$query = $this->db->query("SELECT COUNT(product_id) as total FROM product_amzn_data WHERE 1");
 			

@@ -359,6 +359,9 @@
 			$this->data['translated_total_week']			= formatLongNumber($this->model_setting_setting->getTranslatedTotalWeek());
 			$this->data['translated_total_month']			= formatLongNumber($this->model_setting_setting->getTranslatedTotalMonth());
 
+			$this->data['total_products_invalid_asin']			= $this->model_catalog_product->getTotalProductsWithInvalidAsin();
+			$this->data['filter_total_products_invalid_asin'] 	= $this->url->link('catalog/product_ext', 'filter_asin=INVALID&token=' . $this->session->data['token'], 'SSL');
+
 			$this->data['total_products'] 					= $this->model_catalog_product->getTotalProducts();
 			$this->data['total_product_enabled'] 			= $this->model_catalog_product->getTotalProducts(['filter_status' => 1]);
 			$this->data['filter_total_products_enabled'] 	= $this->url->link('catalog/product_ext', 'filter_status=1&token=' . $this->session->data['token'], 'SSL');
