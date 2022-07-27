@@ -146,14 +146,18 @@ class OffersParser
 	}
 
 	public function setProductOffersCount($asin, $count){
-		$this->db->query("UPDATE product SET amzn_no_offers = 1, amzn_offers_count = '" . (int)$count . "' WHERE asin LIKE '" . $this->db->escape($asin) . "'");
+		if ($count == 0){		
+			$this->db->query("UPDATE product SET amzn_no_offers = '1', amzn_offers_count = '" . (int)$count . "' WHERE asin LIKE '" . $this->db->escape($asin) . "'");
+		} else {
+			$this->db->query("UPDATE product SET amzn_no_offers = '0', amzn_no_offers_counter = '0', amzn_offers_count = '" . (int)$count . "' WHERE asin LIKE '" . $this->db->escape($asin) . "'");
+		}
 
 		return $this;
 
 	}
 
 	public function setProductOffers($asin){
-		$sql = "UPDATE product SET amzn_no_offers = 0, amzn_no_offers_counter = 0 ";
+		$sql = "UPDATE product SET amzn_no_offers = '0', amzn_no_offers_counter = '0' ";
 		if ($this->config->get('config_rainforest_nooffers_action') && $this->config->get('config_rainforest_nooffers_quantity')){
 			$sql .= ", quantity = 9999 ";
 		}
