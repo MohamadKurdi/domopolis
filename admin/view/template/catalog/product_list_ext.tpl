@@ -24,7 +24,7 @@
 		<div class="heading order_head">
 			<h1><img src="view/image/product.png" alt="" /> <?php echo $heading_title; ?></h1>
 
-			<div style="float:left; padding-left:30px;">
+			<div style="float:left; padding-left:30px; max-width: 40%;">
 				<?php if ($this->session->data['config_rainforest_asin_deletion_mode']) { ?>
 					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Включен режим исключения ASIN. Товары, которые будут удалены - никогда более не будут добавлены с Amazon!</small>
 				<?php } ?>
@@ -35,6 +35,15 @@
 					<small style="color:#cf4a61;display: block;"><i class="fa fa-info-circle"></i> Включен режим коррекции переводов. Одинаковые значения атрибутов будут перезаписаны!</small>
 				<?php } ?>
 			</div>
+
+			<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
+				<div style="float:left; padding-left:30px; max-width: 30%;">
+					<small style="display: block;"><i class="fa fa-exclamation-triangle" style="color:#fa4934"></i><span style="color:#fa4934">Нету</span> - офферов совсем нет</small>
+					<small style="display: block;"><i class="fa fa-refresh" style="color:#7f00ff"></i><span style="color:#7f00ff">Ждёт</span> - еще не получали офферы</small>
+					<small style="display: block;"><i class="fa fa-question-circle" style="color:#ff7815"></i><span style="color:#ff7815">2</span> - от 2 до 4 офферов</small>
+					<small style="display: block;"><i class="fa fa-check" style="color:#32bd38"></i><span style="color:#32bd38">7</span> - больше 4 офферов</small>
+				</div>
+			<?php }	?>
 
 			<div class="buttons">
 				<? /*  
@@ -223,6 +232,13 @@
 									</div>
 								</td>
 								<?php break;
+								case 'amzn_offers_count': ?>
+								<td class="<?php echo $column_info[$col]['align']; ?>">
+									<div>
+										<input type="text" name="filter_<?php echo $col; ?>" value="<?php echo $filters[$col]; ?>" class="filter price <?php echo $col; ?>"<?php echo ($column_info[$col]['filter']['autocomplete']) ? ' placeholder="' . $text_autocomplete . '"' : ''; ?> />										
+									</div>
+								</td>
+								<?php break;
 								case 'amazon_best_price': ?>
 								<td class="<?php echo $column_info[$col]['align']; ?>">
 									<div>
@@ -270,6 +286,37 @@
 											<?php } else { ?>
 												<i class="fa fa-thumbs-up" style="color:#66c7a3"></i>
 											<?php } ?>
+										</td>
+
+										<?php break;
+										case 'amzn_offers_count': ?>
+										<td class="<?php echo $column_info[$col]['align']; ?><?php echo ($column_info[$col]['qe_status']) ? ' ' . $column_info[$col]['qe_type'] : ''; ?>" id="<?php echo $col . "-" . $product['product_id']; ?>">	
+											<?php /* ТОЧНО НЕТ ОФФЕРОВ НА ДАННЫЙ МОМЕНТ */ ?>	
+											<?php if ($product['amzn_no_offers'] == 1 && $product['amzn_offers_count'] == 0) { ?>
+												<i class="fa fa-exclamation-triangle" style="color:#fa4934"></i>
+												<span style="color:#fa4934">Нету</span>
+											<?php } ?>
+											
+											<?php if ($product['amzn_no_offers'] == 0 && $product['amzn_offers_count'] == 0) { ?>
+												<i class="fa fa-refresh" style="color:#7f00ff"></i>
+												<span style="color:#7f00ff">Ждёт</span>
+											<?php } ?>
+
+											<?php if ($product['amzn_offers_count'] == 1) { ?>
+												<i class="fa fa-exclamation-triangle" style="color:#fa4934"></i>
+												<span style="color:#fa4934">Один</span>
+											<?php } ?>
+
+											<?php if ($product['amzn_offers_count']>1 && $product['amzn_offers_count'] <= 4) { ?>
+												<i class="fa fa-question-circle" style="color:#ff7815"></i>
+												<span style="color:#ff7815"><?php echo $product['amzn_offers_count']; ?></span>
+											<?php } ?>
+
+											<?php if ($product['amzn_offers_count'] > 4) { ?>
+												<i class="fa fa-check" style="color:#32bd38"></i>
+												<span style="color:#32bd38"><?php echo $product['amzn_offers_count']; ?></span>
+											<?php } ?>
+
 										</td>
 
 										<?php break;

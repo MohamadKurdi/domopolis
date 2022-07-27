@@ -153,7 +153,7 @@ a.active_new{color:#fff}
 .order_head h1{font-size:26px;font-weight:400;color:#404040}
 .order_head img,.order_head > h1 > i{display:none!important}
 input[type='text'],input[type='password'],input{padding:3px 10px;line-height:28px;background:#fff;border:1px solid #dbdbdb;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}
-select{padding:8px 10px;line-height:28px;background:#fff;border:1px solid #dbdbdb;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}
+select{padding:5px 5px;line-height:28px;background:#fff;border:1px solid #dbdbdb;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px;-webkit-box-shadow:none;-moz-box-shadow:none;box-shadow:none}
 .filter_bord{margin-top:20px}
 .div2 > div > div{color:#e3e3e2;font-weight:initial}
 .status_color_list{display:block;border-radius:2px;padding:10px 5px}

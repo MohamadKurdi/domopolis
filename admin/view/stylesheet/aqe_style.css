@@ -20,7 +20,7 @@ input.filter.date_ordered,
 input.filter.date_modified,
 input.filter.date_available,
 input.filter.price,
-input.filter.postcode {width:60px;}
+input.filter.postcode {width:40px;}
 select.filter{max-width:100px;}
 .list .center {padding:3px;}
 td.view_store {width:100px;}

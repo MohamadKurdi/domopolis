@@ -142,7 +142,8 @@ class ModelCatalogProductExt extends Model {
             'weight'            => 'p.weight',
             'price'             => 'p.price',
             'cost'              => 'p.cost',
-            'amazon_best_price' => 'p.amazon_best_price'
+            'amazon_best_price' => 'p.amazon_best_price',
+            'amzn_offers_count' => 'p.amzn_offers_count'
             );
 
         foreach ($float_interval_filters as $key => $value) {
@@ -278,6 +279,8 @@ class ModelCatalogProductExt extends Model {
             'p.price',
             'p.cost',
             'p.amazon_best_price',
+            'p.amzn_offers_count',
+            'p.amzn_no_offers',
             'p.quantity',
             'p.status',
             'p.sort_order'
