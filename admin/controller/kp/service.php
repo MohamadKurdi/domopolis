@@ -28,6 +28,9 @@
 					$this->model_catalog_product->deleteProduct($row['product_id'], false, true);
 				}
 			}
+
+			echo '>> Выравнивание количества офферов...' . PHP_EOL;
+			$this->db->query("UPDATE product SET product.amzn_offers_count = (SELECT COUNT(*) FROM product_amzn_offers WHERE product_amzn_offers.asin = product.asin)");
 			
 			echo '>> Подсчет количества продаж за неделю...'  . PHP_EOL;
 			echo 'QUERY:' .  "UPDATE product p SET bought_for_week = (SELECT SUM(quantity) FROM order_product op WHERE op.product_id = p.product_id AND op.order_id IN (SELECT o.order_id FROM `order` o WHERE o.order_status_id > 0 AND DATE(o.date_added) >= DATE(DATE_SUB(NOW(),INTERVAL 7 DAY))))" . PHP_EOL;
@@ -92,9 +95,7 @@
 			AND ps.price <= p.price*0.9
 			AND ps.price > 0
 			);
-			");
-			
-			
+			");			
 		}
 		
 		
@@ -175,21 +176,6 @@
 			echo ''. PHP_EOL;
 			$this->db->query("UPDATE user_worktime uw SET problem_order_count = (SELECT COUNT(DISTINCT order_id) as count FROM `order` WHERE (order_status_id IN (" . implode(',', $this->config->get('config_problem_order_status_id')) . ") OR (probably_cancel=1 OR probably_close=1 OR probably_problem=1) AND order_status_id > '0') AND manager_id = uw.user_id) WHERE date = DATE(NOW())");
 			echo PHP_EOL;
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 		}
 		
 		
@@ -424,8 +410,7 @@
 			$this->db->query("UPDATE segments s SET avg_csi = (SELECT AVG(csi_average) FROM customer WHERE customer_id IN( SELECT customer_id FROM customer_segments WHERE segment_id = s.segment_id ) AND csi_average > 0)");
 			
 			$this->db->query("UPDATE segments s SET order_good_to_bad = (order_bad_count/order_good_count)*100");
-			echo PHP_EOL;
-			
+			echo PHP_EOL;			
 		}
 		
 		
@@ -532,8 +517,7 @@
 			$this->db->query("OPTIMIZE table order_save_history");
 			
 			echo '[OТ] Оптимизация таблицы order...'  . PHP_EOL;
-			$this->db->query("OPTIMIZE table `order`");
-						
+			$this->db->query("OPTIMIZE table `order`");					
 		}
 
 	}	

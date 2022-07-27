@@ -33,7 +33,7 @@ class RainforestAmazon
 		offerParserLimit = Сколько отбирать товаров для получения офферов за один запуск
 		offerRequestLimits = Сколько запросов в параллели
 	*/
-	public const offerParserLimit 		= 300;
+	public const offerParserLimit 		= 3000;
 	public const offerRequestLimits 	= 30;
 
 	/*
@@ -93,6 +93,17 @@ class RainforestAmazon
 
 	public function  getValidAmazonSitesArray(){
 		return $this->rfClient->getValidAmazonSitesArray();
+	}
+
+	public static function getAsinFromRequest($key, $rfOfferList){
+		if (!$rfOfferList->getASIN()){
+			preg_match('/(?<=~)([\s\S]+?)(?=~)/u', $key, $asin);
+			$asin = $asin[0];
+		} else {
+			$asin = $rfOfferList->getASIN();
+		}
+
+		return $asin;
 	}
 
 	public function createLinkToAmazonSearchPage($asin){			
@@ -188,18 +199,19 @@ class RainforestAmazon
 			$rfRequests[] = new \CaponicaAmazonRainforest\Request\OfferRequest($this->config->get('config_rainforest_api_domain_1'), $asin, $options);
 		}
 
-		$apiEntities = $this->rfClient->retrieveOffers($rfRequests);			
+		$apiEntities = $this->rfClient->retrieveOffers($rfRequests);	
 		
 		$results = [];
 		$retrievedProducts = [];
 		unset($rfOfferList);					
 
-		foreach ($apiEntities as $key => $rfOfferList){
-			$retrievedProducts[] = $rfOfferList->getASIN();
+		foreach ($apiEntities as $key => $rfOfferList){	
+			$rfAsin = self::getAsinFromRequest($key, $rfOfferList);
+			$retrievedProducts[] = $rfAsin;
 
 			if ($rfOfferList->getOfferCount()){
-				$this->offersParser->setLastOffersDate($rfOfferList->getASIN())->setProductOffers($rfOfferList->getASIN());
-				echoLine('[RainforestAmazon] ' . $rfOfferList->getASIN() . ': ' . $rfOfferList->getOfferCount() . ' предложений');					
+				$this->offersParser->setLastOffersDate($rfAsin)->setProductOffers($rfAsin);
+				echoLine('[RainforestAmazon] ' . $rfAsin . ': ' . $rfOfferList->getOfferCount() . ' предложений');					
 			}
 		}
 
@@ -209,13 +221,15 @@ class RainforestAmazon
 		}
 
 		foreach ($apiEntities as $key => $rfOfferList){
-			$results[$rfOfferList->getASIN()] = [];
+			$rfAsin = self::getAsinFromRequest($key, $rfOfferList);
+
+			$results[$rfAsin] = [];
 
 			foreach ($rfOfferList->getOffers() as $apiOffer){
-				$results[$rfOfferList->getASIN()][] = $apiOffer;
+				$results[$rfAsin][] = $apiOffer;
 			}
 
-			if ($rfOfferList->hasMorePages() && count($results[$rfOfferList->getASIN()]) == 10){
+			if ($rfOfferList->hasMorePages() && count($results[$rfAsin]) == 10){
 				echoLine('[RainforestAmazon] Страница 2 ' . $rfOfferList->hasMorePages());
 
 				$options['page'] = $rfOfferList->getCurrentPage() + 1;
@@ -224,7 +238,7 @@ class RainforestAmazon
 
 				foreach ($apiEntitiesPage as $key => $rfOfferListPage) {
 					foreach ($rfOfferListPage->getOffers() as $apiOffer){
-						$results[$rfOfferList->getASIN()][] = $apiOffer;
+						$results[$rfAsin][] = $apiOffer;
 					}
 				}
 
@@ -236,7 +250,7 @@ class RainforestAmazon
 
 					foreach ($apiEntitiesPage as $key => $rfOfferListPage) {
 						foreach ($rfOfferListPage->getOffers() as $apiOffer){
-							$results[$rfOfferList->getASIN()][] = $apiOffer;
+							$results[$rfAsin][] = $apiOffer;
 						}
 					}
 				}	

@@ -15,7 +15,7 @@ class ControllerKPRainForest extends Controller {
 		}
 
 		if (!$this->config->get('config_rainforest_enable_api')){
-			echoLine('[parseofferscron] RNF API NOT ENABLED');
+			echoLine('[ControllerKPRainForest] RNF API NOT ENABLED');
 			return;
 		}
 	}
@@ -197,6 +197,48 @@ class ControllerKPRainForest extends Controller {
 		}
 
 		$this->rainforestAmazon->offersParser->clearProductsAmazonQueue();
+	}
+
+	public function parsenoofferscron(){
+
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$this->load->library('Timer');
+
+		if (!$this->config->get('config_rainforest_enable_pricing')){
+			echoLine('[parseofferscron] RNF AMAZON PRICING NOT ENABLED');
+			return;
+		}
+		
+		$this->rainforestAmazon->offersParser->setNoOffersLogic(true);
+
+		$products = $this->rainforestAmazon->offersParser->getProductsToGetOffers();			
+
+		$total = count($products);
+		echoLine('[parseofferscron] Всего товаров которые надо обновлять: ' . $total);
+		
+		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::offerRequestLimits);
+		echoLine('[parseofferscron] Всего ' . $total . ' товаров!');
+
+		$i=1;
+		$timer = new FPCTimer();		
+
+		for ($i = 1; $i <= $iterations; $i++){
+			$timer = new FPCTimer();
+
+			$slice = array_slice($products, (int)\hobotix\RainforestAmazon::offerRequestLimits * ($i-1), (int)\hobotix\RainforestAmazon::offerRequestLimits);
+			$results = $this->rainforestAmazon->getProductsOffersASYNC($slice);
+
+			if ($results){
+				foreach ($results as $asin => $offers){				
+					$this->rainforestAmazon->offersParser->addOffersForASIN($asin, $offers);
+					$this->rainforestAmazon->offersParser->clearProductsAmazonQueue($asin);
+				}
+
+			}
+
+			echoLine('[parseofferscron] Времени на итерацию: ' . $i . ' из ' . $iterations .': ' . $timer->getTime() . ' сек.');
+			unset($timer);
+		}
 	}
 
 	public function parseofferscron(){

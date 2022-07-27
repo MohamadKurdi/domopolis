@@ -99,6 +99,7 @@ class ModelKPProduct extends Model {
 		return $query->rows;	
 	}
 
+
 	public function reindexElastic($product_ids){
 		$this->load->library('ElasticSearch');
 		$elasticSearch = new ElasticSearch($this->registry);

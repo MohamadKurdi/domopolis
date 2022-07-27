@@ -91,7 +91,7 @@ class OffersParser
 			$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -'" . $this->config->get('config_rainforest_update_period') . "' DAY)))";
 		}
 
-		$query = $this->db->ncquery("SELECT DISTINCT(asin) " . $sql . " ORDER BY amzn_last_offers ASC LIMIT " . (int)\hobotix\RainforestAmazon::offerParserLimit);
+		$query = $this->db->ncquery("SELECT DISTINCT(asin), product_id " . $sql . " ORDER BY amzn_last_offers ASC LIMIT " . (int)\hobotix\RainforestAmazon::offerParserLimit);
 
 		foreach ($query->rows as $row){
 			if (trim($row['asin'])){
@@ -129,7 +129,7 @@ class OffersParser
 	}
 
 	public function setProductNoOffers($asin){
-		$sql = "UPDATE product SET amzn_no_offers = 1, amzn_no_offers_counter = (amzn_no_offers_counter + 1) ";
+		$sql = "UPDATE product SET amzn_no_offers = 1, amzn_offers_count  = 0, amzn_no_offers_counter = (amzn_no_offers_counter + 1) ";
 
 		if ($this->config->get('config_rainforest_nooffers_action')  && $this->config->get('config_rainforest_nooffers_quantity')){
 			$sql .= ", quantity = 0 ";
@@ -145,6 +145,13 @@ class OffersParser
 		return $this;		
 	}
 
+	public function setProductOffersCount($asin, $count){
+		$this->db->query("UPDATE product SET amzn_no_offers = 1, amzn_offers_count = '" . (int)$count . "' WHERE asin LIKE '" . $this->db->escape($asin) . "'");
+
+		return $this;
+
+	}
+
 	public function setProductOffers($asin){
 		$sql = "UPDATE product SET amzn_no_offers = 0, amzn_no_offers_counter = 0 ";
 		if ($this->config->get('config_rainforest_nooffers_action') && $this->config->get('config_rainforest_nooffers_quantity')){
@@ -158,7 +165,7 @@ class OffersParser
 		$this->PriceLogic->setProductOffers($asin);
 
 		return $this;
-	}
+	}	
 
 	public function setLastOffersDate($asin){
 		$this->db->query("UPDATE product SET amzn_last_offers = NOW() WHERE asin LIKE '" . $this->db->escape($asin) . "'");		
@@ -214,7 +221,7 @@ class OffersParser
 		if (!$rfOffers){
 			$this->setProductNoOffers($asin);
 		} else {
-			$this->setProductOffers($asin);
+			$this->setProductOffers($asin)->setProductOffersCount($asin, count($rfOffers));
 		}
 
 		foreach ($rfOffers as $key => $rfOffer){			
