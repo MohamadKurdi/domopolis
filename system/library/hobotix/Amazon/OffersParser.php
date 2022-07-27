@@ -11,10 +11,10 @@ class OffersParser
 	private $config;
 	private $log;
 
+	private $no_offers_logic = false;
+
 	public $Suppliers;
-	public $PriceLogic;
-
-
+	public $PriceLogic;	
 	
 	public function __construct($registry){
 		$this->config = $registry->get('config');
@@ -26,7 +26,12 @@ class OffersParser
 
 		require_once(dirname(__FILE__) . '/PriceLogic.php');
 		$this->PriceLogic = new PriceLogic($registry);
+	}
 
+	public function setNoOffersLogic($no_offers_logic){
+		$this->no_offers_logic = $no_offers_logic;
+
+		return $this;
 	}
 
 	public function getTotalProductsToGetOffers(){
@@ -49,12 +54,17 @@ class OffersParser
 
 
 		$sql .= " AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1))";
-		$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -'" . $this->config->get('config_rainforest_update_period') . "' DAY)))";
+
+		if ($this->no_offers_logic){
+			$sql .= " AND p.amzn_no_offers = 1";
+		} else {
+			$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -'" . $this->config->get('config_rainforest_update_period') . "' DAY)))";
+		}
 
 		$query = $this->db->ncquery("SELECT COUNT(DISTINCT(asin)) as total " . $sql . "");
 
 		return $query->row['total'];
-	}	
+	}		
 	
 	public function getProductsToGetOffers(){
 		$result = [];		
@@ -74,7 +84,12 @@ class OffersParser
 		}
 
 		$sql .= " AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1))";
-		$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -'" . $this->config->get('config_rainforest_update_period') . "' DAY)))";
+
+		if ($this->no_offers_logic){
+			$sql .= " AND p.amzn_no_offers = 1";
+		} else {
+			$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -'" . $this->config->get('config_rainforest_update_period') . "' DAY)))";
+		}
 
 		$query = $this->db->ncquery("SELECT DISTINCT(asin) " . $sql . " ORDER BY amzn_last_offers ASC LIMIT " . (int)\hobotix\RainforestAmazon::offerParserLimit);
 
@@ -85,7 +100,7 @@ class OffersParser
 		}
 
 		return $result;
-	}	
+	}		
 
 	public function getProductsAmazonQueue(){
 		$result = [];
