@@ -19,8 +19,6 @@
 			$hreflangs = $this->model_kp_urldecode->decodeURI();			
 			$this->document->setHrefLangs($hreflangs);
 
-			$this->log->debug($hreflangs);
-
 			if ($this->registry->get('perform_redirect_to_second_language')){
 				header('X-UA-REDIRECT: Slava Ukraini!');
 
