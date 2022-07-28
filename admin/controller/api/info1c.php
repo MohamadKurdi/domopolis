@@ -437,7 +437,15 @@ class ControllerApiInfo1C extends Controller {
 			}
 		}
 
+		$warehouseArray = ['quantity_stock', 'quantity_stockM', 'quantity_stockK'];
 		$this->db->query('DELETE FROM product_stock_waits WHERE 1');
+
+		$implode = [];
+		foreach ($warehouseArray as $warehouseSingle){
+			$implode[] = ' `' . $warehouseSingle . '_onway' . '` = 0';
+		}
+
+		$this->db->query('UPDATE product SET ' . implode(',' , $implode) . ' WHERE 1');
 
 		unset($stockwait);
 		foreach ($tmp_stockwaits as $product_id => $stockwait){								
@@ -449,7 +457,7 @@ class ControllerApiInfo1C extends Controller {
 
 				$this->db->query("UPDATE product_stock_waits SET `" . $warehouse . "` = '" . (int)$quantity  . "' WHERE product_id = '" . (int)$product_id . "'");		
 
-				if (in_array($warehouse, ['quantity_stock', 'quantity_stockM', 'quantity_stockK'])){
+				if (in_array($warehouse, $warehouseArray)){
 					$this->db->query("UPDATE product SET `" . $warehouse . '_onway' . "` = '" . (int)$quantity  . "' WHERE product_id = '" . (int)$product_id . "'");	
 				}				
 			}
@@ -2117,8 +2125,7 @@ class ControllerApiInfo1C extends Controller {
 		
 		public function getStocksFrom1C($update = true, $updateStockGroups = false){
 			
-			$this->getStockWaitsFrom1C();
-			
+			$this->getStockWaitsFrom1C();						
 			$this->load->model('kp/info1c');			
 			$result = $this->model_kp_info1c->getStocksFrom1C();
 			
