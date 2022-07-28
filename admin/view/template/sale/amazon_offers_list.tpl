@@ -1,4 +1,4 @@
-<?php if ($offers) { ?>
+<?php if ($offers || $bad_offers) { ?>
 	<table class="list">
 		<thead>
 			<tr>
@@ -130,7 +130,86 @@
 			</tr>
 		<?php } ?>
 
+		<?php if ($bad_offers) { ?>
+			<?php foreach ($bad_offers as $offer) { ?>
+				<td colspan="3">
+					<small style="display:inline-block; padding:3px 5px; color:#cf4a61"><i class="fa fa-exclamation-triangle"></i> bad offer</span>
+				</td>
+				<td class="left" style="color:#cf4a61">						
+					<b><?php echo $offer['seller']; ?></b>
+
+					<?php if ($offer['supplier']) { ?>
+						
+						<? if ($offer['supplier']['amzn_good']) { ?>+5
+							<small class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">повышенный рейтинг</small>
+						<?php } elseif ($offer['supplier']['amzn_bad']) { ?>
+							<small class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">пониженный рейтинг</small>
+						<?php } elseif ($offer['supplier']['amzn_coefficient']) { ?>
+							<small class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">рейтинг <?php echo $offer['supplier']['amzn_coefficient']; ?></small>
+						<?php } ?>
+
+					<?php } ?>
+
+					<?php if ($offer['link']) { ?>
+						<a href="<?php echo $offer['link']; ?>" target="_blank"><i class="fa fa-external-link-square"></i></a>
+					<?php } ?>					
+
+				</td>
+				<td class="left" style="color:#cf4a61">
+					<?php if ($offer['rating']) { ?>										
+						<?php if ($offer['rating'] > 4.5) { ?>
+							<span style="color:#4ea24e"><i class="fa fa-star"></i> <?php echo $offer['rating']; ?></span>
+						<?php } else { ?>
+							<span style="color:#cf4a61"><i class="fa fa-star"></i> <?php echo $offer['rating']; ?></span>
+						<?php } ?>		
+					<?php } ?>
+
+				</td>
+				<td style="color:#cf4a61">
+					<?php if ($offer['rating']) { ?>				
+						<?php if ($offer['reviews'] > 500) { ?>
+							<span style="color:#4ea24e"><i class="fa fa-edit"></i><?php echo $offer['reviews']; ?></span>
+						<?php } else { ?>
+							<span style="color:#cf4a61"><i class="fa fa-edit"></i><?php echo $offer['reviews']; ?></span>
+						<?php } ?>
+					<?php } ?>
+				</td>
+				<td class="left" style="white-space:nowrap;color:#cf4a61">						
+					<b><?php echo $offer['price']; ?></b>		
+				</td>
+				<td class="left" style="white-space:nowrap;color:#cf4a61">	
+
+					<?php if ($offer['delivery_fba']) { ?>
+						<i class="fa fa-amazon" style="color:#FF9900;"></i>
+					<?php } ?>
+
+					<b><?php echo $offer['delivery']; ?></b>			
+				</td>
+
+				<td class="left" style="color:#cf4a61">						
+					<small><?php echo $offer['delivery_comment']; ?></small>		
+				</td>
+
+				<td class="left" style="white-space:nowrap;color:#cf4a61">						
+					<b <?php if ($offer['is_min_price']) { ?>style="color:#4ea24e"<?php } ?>><?php echo $offer['total']; ?></b>
+				</td>
+
+				<td class="left" style="white-space:nowrap;color:#cf4a61">						
+					<b><?php echo $offer['offer_rating']; ?></b>
+				</td>
+
+				<td style="color:#cf4a61">		
+					<?php echo $offer['date_added']; ?>
+				</td>
+
+				<td style="color:#cf4a61">		
+					<a href="<?php echo $offer['link2']; ?>" target="_blank"><i class="fa fa-external-link-square"></i></a>
+				</td>
+			</tr>
+			<?php } ?>
+		<?php } ?>
+
 	</table>
 	<? } else { ?>
-	<div style="color:rgb(207, 74, 97); font-size:28px; text-align:center;"><i class="fa fa-exclamation-triangle"></i><br /> Нет офферов на Amazon</div>
+		<div style="color:rgb(207, 74, 97); font-size:28px; text-align:center;"><i class="fa fa-exclamation-triangle"></i><br /> Нет офферов на Amazon</div>
 	<?php } ?>

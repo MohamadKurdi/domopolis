@@ -19,7 +19,7 @@ class ControllerKPAmazon extends Controller {
 		$product = $this->model_catalog_product->getProduct($product_id);
 
 		if ($explicit){
-			$rfOffers = $this->rainforestAmazon->getProductOffers($product);
+			$rfOffers = $allRfOffers = $this->rainforestAmazon->getProductOffers($product);
 			$product = $this->model_catalog_product->getProduct($product_id);
 
 			if ($product['asin']){
@@ -27,13 +27,16 @@ class ControllerKPAmazon extends Controller {
 			}
 		}
 
-		$this->data['offers'] = $offers = [];
+		$this->data['offers'] 		= $offers 		= [];
+		$this->data['bad_offers'] 	= $bad_offers 	= [];
 		if ($product['asin']){		
 			$offers = $this->model_kp_product->getProductAmazonOffers($product['asin']);
 		}
 
+		$good_offers = [];
 		foreach ($offers as $offer){
-			if ($offer['conditionIsNew']){
+				$good_offers[] = $offer['offer_id'];
+
 				$this->data['offers'][] = [					
 					'seller' 				=> $offer['sellerName'],
 					'prime'	 				=> $offer['isPrime'],
@@ -53,6 +56,38 @@ class ControllerKPAmazon extends Controller {
 					'link'					=> $offer['sellerLink']?$offer['sellerLink']:$this->rainforestAmazon->createLinkToAmazonSearchPage($product['asin']),
 					'link2'					=> $this->rainforestAmazon->createLinkToAmazonSearchPage($offer['asin'])
 				];
+		}
+
+		if ($explicit){
+			foreach ($allRfOffers as $rfOffer){
+				if (!empty($rfOffer->getOriginalDataArray()['offer_id'])){
+					$offer_id = $rfOffer->getOriginalDataArray()['offer_id'];
+				} else {
+					$offer_id = md5(serialize($rfOffer->getOriginalDataArray()));
+				}
+
+				if (!in_array($offer_id, $good_offers)){
+					$this->data['bad_offers'][] = [					
+						'seller' 				=> $rfOffer->getSellerName(),
+						'prime'	 				=> $rfOffer->getIsPrime(),
+						'is_best'				=> false,
+						'offer_rating'			=> 0,
+						'supplier'				=> $this->rainforestAmazon->offersParser->Suppliers->getSupplier($rfOffer->getSellerName()),
+						'price'	 				=> $this->currency->format_with_left($rfOffer->getPriceAmount(), $rfOffer->getPriceCurrency(), 1),
+						'delivery'	 			=> $this->currency->format_with_left($rfOffer->getDeliveryAmount(), $rfOffer->getDeliveryCurrency(), 1),	
+						'total'					=> $this->currency->format_with_left($rfOffer->getPriceAmount() + $rfOffer->getDeliveryAmount(), $rfOffer->getPriceCurrency(), 1),
+						'delivery_fba' 			=> $rfOffer->getDeliveryIsFba(),
+						'delivery_comment' 		=> $rfOffer->getDeliveryComments(),
+						'is_min_price'			=> false,	
+						'is_new'				=> false,						
+						'reviews'				=> (int)$rfOffer->getSellerRatingsTotal(),
+						'rating'				=> (int)$rfOffer->getSellerRating50() / 10,
+						'positive'				=> (int)$rfOffer->getSellerPositiveRatings100(),
+						'date_added'			=> 'skipped',
+						'link'					=> $rfOffer->getSellerLink()?$rfOffer->getSellerLink():$this->rainforestAmazon->createLinkToAmazonSearchPage($product['asin']),
+						'link2'					=> $this->rainforestAmazon->createLinkToAmazonSearchPage($offer['asin'])
+					];
+				}
 			}
 		}
 

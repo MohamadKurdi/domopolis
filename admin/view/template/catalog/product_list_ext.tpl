@@ -294,17 +294,17 @@
 											<?php /* ТОЧНО НЕТ ОФФЕРОВ НА ДАННЫЙ МОМЕНТ */ ?>	
 											<?php if ($product['amzn_no_offers'] == 1 && $product['amzn_offers_count'] == 0) { ?>
 												<i class="fa fa-exclamation-triangle" style="color:#fa4934"></i>
-												<span style="color:#fa4934">Нету</span>
+												<span style="color:#fa4934">нету</span>
 											<?php } ?>
 											
 											<?php if ($product['amzn_no_offers'] == 0 && $product['amzn_offers_count'] == 0) { ?>
 												<i class="fa fa-refresh" style="color:#7f00ff"></i>
-												<span style="color:#7f00ff">Ждёт</span>
+												<span style="color:#7f00ff">ждёт</span>
 											<?php } ?>
 
 											<?php if ($product['amzn_offers_count'] == 1) { ?>
 												<i class="fa fa-exclamation-triangle" style="color:#fa4934"></i>
-												<span style="color:#fa4934">Один</span>
+												<span style="color:#fa4934">один</span>
 											<?php } ?>
 
 											<?php if ($product['amzn_offers_count']>1 && $product['amzn_offers_count'] <= 4) { ?>
@@ -317,6 +317,12 @@
 												<span style="color:#32bd38"><?php echo $product['amzn_offers_count']; ?></span>
 											<?php } ?>
 
+											<br />
+											<?php if ($product['amzn_last_offers']) { ?>
+												<i class="fa fa-check"></i> <?php echo $product['amzn_last_offers']; ?>
+											<?php } else { ?>
+												<i class="fa fa-hourglass"></i> ждёт
+											<?php } ?>
 										</td>
 
 										<?php break;

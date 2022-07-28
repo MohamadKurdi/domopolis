@@ -31,8 +31,9 @@
 
 			echo '>> Выравнивание количества офферов...' . PHP_EOL;
 			$this->db->query("UPDATE product SET product.amzn_offers_count = (SELECT COUNT(*) FROM product_amzn_offers WHERE product_amzn_offers.asin = product.asin)");
-			$this->db->query("UPDATE product SET product.amzn_no_offers = 1 WHERE amzn_offers_count = 0");
-			$this->db->query("UPDATE product SET product.amzn_no_offers = 0 WHERE amzn_offers_count > 0");
+			$this->db->query("UPDATE product SET product.amzn_no_offers = 1 WHERE amzn_offers_count = 0 AND amzn_last_offers <> '0000-00-00 00:00:00'");
+			$this->db->query("UPDATE product SET product.amzn_no_offers = 0 WHERE amzn_offers_count > 0 OR amzn_last_offers = '0000-00-00 00:00:00'");
+			//$this->db->query("DELETE FROM product_amzn_offers WHERE asin NOT IN (SELECT asin FROM product)");
 			
 			echo '>> Подсчет количества продаж за неделю...'  . PHP_EOL;
 			echo 'QUERY:' .  "UPDATE product p SET bought_for_week = (SELECT SUM(quantity) FROM order_product op WHERE op.product_id = p.product_id AND op.order_id IN (SELECT o.order_id FROM `order` o WHERE o.order_status_id > 0 AND DATE(o.date_added) >= DATE(DATE_SUB(NOW(),INTERVAL 7 DAY))))" . PHP_EOL;

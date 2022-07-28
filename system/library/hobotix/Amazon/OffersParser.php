@@ -52,11 +52,10 @@ class OffersParser
 			$sql .= "AND p.filled_from_amazon = 1";
 		}
 
-
 		$sql .= " AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1))";
 
 		if ($this->no_offers_logic){
-			$sql .= " AND p.amzn_no_offers = 1";
+			$sql .= " AND p.amzn_no_offers = 1 AND DATE(amzn_last_offers) <> DATE(NOW())";
 		} else {
 			$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -'" . $this->config->get('config_rainforest_update_period') . "' DAY)))";
 		}
@@ -86,10 +85,10 @@ class OffersParser
 		$sql .= " AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1))";
 
 		if ($this->no_offers_logic){
-			$sql .= " AND p.amzn_no_offers = 1";
+			$sql .= " AND p.amzn_no_offers = 1 AND DATE(amzn_last_offers) <> DATE(NOW())";
 		} else {
 			$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -'" . $this->config->get('config_rainforest_update_period') . "' DAY)))";
-		}
+		}			
 
 		$query = $this->db->ncquery("SELECT DISTINCT(asin), product_id " . $sql . " ORDER BY amzn_last_offers ASC LIMIT " . (int)\hobotix\RainforestAmazon::offerParserLimit);
 
@@ -206,6 +205,10 @@ class OffersParser
 				$addThisOffer = false;
 			}
 
+			if (!$rfOffer->getConditionIsNew() || !self::checkIfOfferReallyIsNew($rfOffer)){
+				$addThisOffer = false;
+			}
+
 			if ($addThisOffer){
 				$rfOffersTMP[] = $rfOffer;
 			}
@@ -245,8 +248,14 @@ class OffersParser
 				$this->db->query("UPDATE product SET amazon_lowest_price = '" . (float)$amazonLowestPrice . "' WHERE asin = '" . $this->db->escape($asin) . "'  AND is_markdown = 0");
 			}
 
-			$conditionIsNew = $rfOffer->getConditionIsNew() && self::checkIfOfferReallyIsNew($rfOffer);			
-			
+			//Мы пропускаем офферы, с не новым товаром теперь всегда
+			$conditionIsNew = true;
+
+			if (!empty($rfOffer->getOriginalDataArray()['offer_id'])){
+				$offer_id = $rfOffer->getOriginalDataArray()['offer_id'];
+			} else {
+				$offer_id = md5(serialize($rfOffer->getOriginalDataArray()));
+			}
 
 			$this->db->query("INSERT INTO product_amzn_offers SET
 				asin 							= '" . $this->db->escape($asin) . "', 			
@@ -272,6 +281,7 @@ class OffersParser
 				isBestOffer						= '" . (int)($key == $ratingKeys['maxRatingKey']) . "',
 				offerRating						= '" . (float)$ratingKeys['ratingKeys'][$key] . "',
 				isPrime							= '" . (int)$rfOffer->getIsPrime() . "',
+				offer_id 						= '" . $this->db->escape($offer_id) . "',
 				date_added						= NOW()");
 		}
 	}

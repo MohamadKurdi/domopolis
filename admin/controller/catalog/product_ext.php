@@ -535,8 +535,9 @@ class ControllerCatalogProductExt extends Controller {
             }
 
             //CountVariants
-            $columns['variants'] = $this->model_catalog_product->countVariantProducts($result['product_id']);
-            $columns['amzn_no_offers_counter'] = $result['amzn_no_offers_counter'];
+            $columns['variants']                = $this->model_catalog_product->countVariantProducts($result['product_id']);
+            $columns['amzn_no_offers_counter']  = $result['amzn_no_offers_counter'];
+            $columns['amzn_last_offers']        = ($result['amzn_last_offers'] == '0000-00-00 00:00:00')?false:date('d-m', strtotime($result['amzn_last_offers']));
 
             $this->data['products'][] = $columns;
         }
