@@ -1,4 +1,4 @@
-<?php  
+<?php
 	class ControllerCommonFooter extends Controller {
 		
 		private function replaceMetaSeo($haystack) {

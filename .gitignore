@@ -9,6 +9,7 @@
 /admin/app/
 /admin/icons/
 /admin/icon/
+/admin/pwa/*
 /admin/manifest.json
 /admin/browserconfig.xml
 /admin/favicon.ico
