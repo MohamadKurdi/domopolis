@@ -685,14 +685,16 @@
             if (isset($this->request->get['path'])) {
                 $this->path = $this->request->get['path'];		
             }                       
-            
-            if (empty($this->request->get['_route_'])) {	            
-                //    return;
+
+            if (!empty($this->request->get['_route_'])) {	            
+                $_route_ = $this->request->get['_route_'];
+            }
+
+            if (empty($_route_) && !empty($this->request->server['REQUEST_URI'])) {            
+                $_route_ = $this->request->get['REQUEST_URI'];            
             }
             
-            $_route_ = $this->request->get['_route_'];            
-            
-            if (!$_route_){
+            if (empty($_route_) || !$_route_){
                 return;
             }
             
