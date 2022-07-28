@@ -2,8 +2,8 @@
     
     class ControllerModuleOCFilter extends Controller {
         protected $registry;
-        private $_data = array();
-        private $languageFullCacheData = array();
+        private $_data = [];
+        private $languageFullCacheData = [];
         
         public function __construct($registry) {
             $this->registry = $registry;                        
@@ -24,8 +24,10 @@
             $this->load->model('tool/image');
             
             if (!($this->languageFullCacheData = $this->cache->get('seo_pro.full_language_data'))){
-				$query = $this->db->query("SELECT * FROM language");
-				
+				$this->languageFullCacheData = [];
+
+                $query = $this->db->query("SELECT * FROM language");
+
 				foreach ($query->rows as $row){
 					$this->languageFullCacheData[$row['code']] = $row;
                 }
