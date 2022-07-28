@@ -6,9 +6,9 @@
 #Админка
 /admin/config*.php
 /admin/config.parts/*
-/admin/app/
-/admin/icons/
-/admin/icon/
+/admin/app/*
+/admin/icons/*
+/admin/icon/*
 /admin/pwa/*
 /admin/manifest.json
 /admin/browserconfig.xml
