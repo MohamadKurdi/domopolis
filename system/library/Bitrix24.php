@@ -20,28 +20,31 @@
 			$this->bitrixScope 		= $this->config->get('config_bitrix_bot_scope');
 			$this->CLIENT_ID 		= $this->config->get('config_bitrix_bot_client_id');
 			$this->CLIENT_SECRET 	= $this->config->get('config_bitrix_bot_client_secret');
-			
-			$appsConfig     = array();
-			$configFileName = DIR_SYSTEM . 'config/bitrixbot' . trim(str_replace('.', '_', $this->bitrixDomain)) . '.php';
-			
+
+			$appsConfig     = [];
+
+			if ($this->bitrixDomain){
+				$configFileName = DIR_SYSTEM . 'config/bitrixbot' . trim(str_replace('.', '_', $this->bitrixDomain)) . '.php';
+				
 			//при вызове от бота
-			if (isset($this->request->request['auth'])){
-				$configFileName = DIR_SYSTEM . 'config/bitrixbot' . trim(str_replace('.', '_', $this->request->request['auth']['domain'])) . '.php';
-				if (file_exists($configFileName)) {
-					include_once $configFileName;
-				}
-				
-				$this->appsConfig = $appsConfig;
-				
+				if (isset($this->request->request['auth'])){
+					$configFileName = DIR_SYSTEM . 'config/bitrixbot' . trim(str_replace('.', '_', $this->request->request['auth']['domain'])) . '.php';
+					if (file_exists($configFileName)) {
+						include_once $configFileName;
+					}
+					
+					$this->appsConfig = $appsConfig;
+					
 			//при вызове напрямую
 				} else {
-				
-				if (file_exists($configFileName)) {
-					include_once $configFileName;
-				}
-				
-				$this->appsConfig = $appsConfig;
-			}			
+					
+					if (file_exists($configFileName)) {
+						include_once $configFileName;
+					}
+					
+					$this->appsConfig = $appsConfig;
+				}			
+			}
 		}
 		
 		public function checkAuth(){
