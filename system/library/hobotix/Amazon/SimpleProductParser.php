@@ -62,16 +62,32 @@
 				return false;
 			}
 
-			if (!empty($response['frequently_bought_together'])){
-				$response['product']['frequently_bought_together'] = $response['frequently_bought_together'];
+			if (!empty($response['view_to_purchase'])){
+				$response['product']['view_to_purchase'] = $response['view_to_purchase'];
+			}
+
+			if (!empty($response['also_viewed'])){
+				$response['product']['also_viewed'] = $response['also_viewed'];
+			}
+
+			if (!empty($response['similar_to_consider'])){
+				$response['product']['similar_to_consider'] = $response['similar_to_consider'];
 			}
 
 			if (!empty($response['compare_with_similar'])){
 				$response['product']['compare_with_similar'] = $response['compare_with_similar'];
 			}
 
+			if (!empty($response['also_bought'])){
+				$response['product']['also_bought'] = $response['also_bought'];
+			}
+
 			if (!empty($response['sponsored_products'])){
 				$response['product']['sponsored_products'] = $response['sponsored_products'];
+			}
+
+			if (!empty($response['frequently_bought_together'])){
+				$response['product']['frequently_bought_together'] = $response['frequently_bought_together'];
 			}
 			
 			return $response['product'];			

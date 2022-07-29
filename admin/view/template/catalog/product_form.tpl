@@ -1798,7 +1798,7 @@
 																		</td>
 																	</tr>
 
-																	<tr style="border-bottom: 1px dotted #000;">
+																	<tr>
 
 																		<td style="width:33%">																			
 																			<input type="text" name="category" value="" /><br /><br />
@@ -1853,25 +1853,44 @@
 
 																	
 																</tr>
+															</table>
 
+															<h2>Перелинковка товаров (+Amazon)</h2>
+
+															<table class="form">
 																<tr>
-																	<td style="width:33%">
+																	<td style="width:25%">
 																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Похожие или замена</span>
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF"><i class="fa fa-amazon"></i> compare_with_similar</span>
+
+																		<span class="help"><i class="fa fa-info-circle"></i> Массив, содержащий сведения о других товарах из раздела «Сравнить с похожими товарами» на странице товара.</span>
 																	</td>
-																	<td style="width:33%">
-																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Sponsored Products</span>
+																	<td style="width:25%">
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Sponsored Products</span>
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF"><i class="fa fa-amazon"></i> sponsored_products</span>
+
+																		<span class="help"><i class="fa fa-info-circle"></i> Массив, содержащий сведения о спонсируемых продуктах, отображаемых на текущей странице продукта.</span>
 																	</td>
-																	<td style="width:33%">
-																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Сопутствующие</span>
+																	<td style="width:25%">
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00AD07; color:#FFF">Сопутствующие</span>
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00AD07; color:#FFF"><i class="fa fa-amazon"></i> frequently_bought_together</span>
+
+																		<span class="help"><i class="fa fa-info-circle"></i> Объект, содержащий сведения о других продуктах, которые, по мнению Amazon, «часто покупаются вместе» с текущим продуктом. Штатная логика related</span>
+																	</td>
+																	<td style="width:25%">
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#5D5D5D; color:#FFF">Похожие - 2</span>
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#5D5D5D; color:#FFF"><i class="fa fa-amazon"></i> similar_to_consider</span>
+
+																		<span class="help"><i class="fa fa-info-circle"></i> Объект, содержащий сведения о разделе «похожий элемент для рассмотрения», если он показан.</span>
 																	</td>
 																</tr>
 
-																<tr style="border-bottom: 1px dotted #000;">
-																	<td style="width:33%">																			
+																<tr>
+																	<td style="width:25%">																			
 																		<input type="text" name="similar" value="" /><br /><br />
 																		<div id="product-similar" class="scrollbox" style="min-height: 200px;">
 																			<?php $class = 'odd'; ?>
-																			<?php foreach ($product_similar as $product_similar) { ?>
+																			<?php foreach ($products_similar as $product_similar) { ?>
 																				<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
 																				<div id="product-similar<?php echo $product_related['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product_similar['name']; ?><img src="view/image/delete.png" alt="" />
 																					<input type="hidden" name="product_similar[]" value="<?php echo $product_similar['product_id']; ?>" />
@@ -1880,11 +1899,11 @@
 																		</div>
 																	</td>
 
-																	<td style="width:33%">																			
+																	<td style="width:25%">																			
 																		<input type="text" name="sponsored" value="" /><br /><br />
 																		<div id="product-sponsored" class="scrollbox" style="min-height: 200px;">
 																			<?php $class = 'odd'; ?>
-																			<?php foreach ($product_sponsored as $product_sponsored) { ?>
+																			<?php foreach ($products_sponsored as $product_sponsored) { ?>
 																				<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
 																				<div id="product-sponsored<?php echo $product_sponsored['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product_sponsored['name']; ?><img src="view/image/delete.png" alt="" />
 																					<input type="hidden" name="product_sponsored[]" value="<?php echo $product_sponsored['product_id']; ?>" />
@@ -1893,11 +1912,11 @@
 																		</div>
 																	</td>
 
-																	<td style="width:33%">																			
+																	<td style="width:25%">																			
 																		<input type="text" name="related" value="" /><br /><br />
 																		<div id="product-related" class="scrollbox" style="min-height: 200px;">
 																			<?php $class = 'odd'; ?>
-																			<?php foreach ($product_related as $product_related) { ?>
+																			<?php foreach ($products_related as $product_related) { ?>
 																				<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
 																				<div id="product-related<?php echo $product_related['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product_related['name']; ?><img src="view/image/delete.png" alt="" />
 																					<input type="hidden" name="product_related[]" value="<?php echo $product_related['product_id']; ?>" />
@@ -1906,11 +1925,89 @@
 																		</div>
 																	</td>
 
-
+																	<td style="width:25%">																			
+																		<input type="text" name="similar_to_consider" value="" /><br /><br />
+																		<div id="product-similar_to_consider" class="scrollbox" style="min-height: 200px;">
+																			<?php $class = 'odd'; ?>
+																			<?php foreach ($products_similar_to_consider as $product_similar_to_consider) { ?>
+																				<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+																				<div id="product-similar_to_consider<?php echo $product_similar_to_consider['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product_similar_to_consider['name']; ?><img src="view/image/delete.png" alt="" />
+																					<input type="hidden" name="product_similar_to_consider[]" value="<?php echo $product_related['product_id']; ?>" />
+																				</div>
+																			<?php } ?>
+																		</div>
+																	</td>
 																</tr>
+
+																<tr>
+																	<td style="width:25%">
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Купили после просмотра</span>
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF"><i class="fa fa-amazon"></i> view_to_purchase</span>
+
+																		<span class="help"><i class="fa fa-info-circle"></i> Массив, содержащий информацию о других продуктах, которые клиенты Amazon купили после просмотра текущего продукта. Обычно отображается в разделе на странице продукта под заголовком «Что еще покупают покупатели после просмотра этого товара?».</span>
+																	</td>
+																	<td style="width:25%">
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00AD07; color:#FFF">Также смотрели</span>
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00AD07; color:#FFF"><i class="fa fa-amazon"></i> also_viewed</span>
+
+																		<span class="help"><i class="fa fa-info-circle"></i> Массив, содержащий информацию о других продуктах, которые клиенты Amazon просматривали вместе с текущим продуктом.</span>
+																	</td>
+																	<td style="width:25%">
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Также купили</span>
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF"><i class="fa fa-amazon"></i> also_bought</span>
+
+																		<span class="help"><i class="fa fa-info-circle"></i> Массив, содержащий информацию о других продуктах, которые также купили клиенты Amazon, купившие текущий продукт. Обычно отображается в разделе на странице продукта под заголовком «Клиенты, которые купили этот товар, также купили».</span>
+																	</td>
+																	<td style="width:25%">																		
+																	</td>
+																</tr>
+																<tr>
+																	<td style="width:25%">																			
+																		<input type="text" name="view_to_purchase" value="" /><br /><br />
+																		<div id="product-view_to_purchase" class="scrollbox" style="min-height: 200px;">
+																			<?php $class = 'odd'; ?>
+																			<?php foreach ($products_view_to_purchase as $product_view_to_purchase) { ?>
+																				<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+																				<div id="product-view_to_purchase<?php echo $product_view_to_purchase['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product_view_to_purchase['name']; ?><img src="view/image/delete.png" alt="" />
+																					<input type="hidden" name="product_view_to_purchase[]" value="<?php echo $product_related['product_id']; ?>" />
+																				</div>
+																			<?php } ?>
+																		</div>
+																	</td>
+																	<td style="width:25%">																			
+																		<input type="text" name="also_viewed" value="" /><br /><br />
+																		<div id="product-also_viewed" class="scrollbox" style="min-height: 200px;">
+																			<?php $class = 'odd'; ?>
+																			<?php foreach ($products_also_viewed as $product_also_viewed) { ?>
+																				<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+																				<div id="product-also_viewed<?php echo $product_also_viewed['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product_also_viewed['name']; ?><img src="view/image/delete.png" alt="" />
+																					<input type="hidden" name="product_also_viewed[]" value="<?php echo $product_related['product_id']; ?>" />
+																				</div>
+																			<?php } ?>
+																		</div>
+																	</td>
+																	<td style="width:25%">																			
+																		<input type="text" name="also_bought" value="" /><br /><br />
+																		<div id="product-also_bought" class="scrollbox" style="min-height: 200px;">
+																			<?php $class = 'odd'; ?>
+																			<?php foreach ($products_also_bought as $product_also_bought) { ?>
+																				<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+																				<div id="product-also_bought<?php echo $product_also_bought['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product_also_bought['name']; ?><img src="view/image/delete.png" alt="" />
+																					<input type="hidden" name="product_also_bought[]" value="<?php echo $product_related['product_id']; ?>" />
+																				</div>
+																			<?php } ?>
+																		</div>
+																	</td>
+																	<td style="width:25%">																		
+																	</td>
+																</tr>
+
+																</table>
+
+															<h2>Группировки и другая шляпа</h2>
+
+															<table class="form">
 																		<tr>
-
-
 																		<td style="width:33%">
 																			<div>
 																			<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Принадлежит к группам</span></p>
@@ -3314,6 +3411,162 @@ $('input[name=\'collection\']').autocomplete({
 		
 		$('#product-similar div:odd').attr('class', 'odd');
 		$('#product-similar div:even').attr('class', 'even');	
+	});
+
+	// similar_to_consider
+	$('input[name=\'similar_to_consider\']').autocomplete({
+		delay: 500,
+		source: function(request, response) {
+			$.ajax({
+				url: 'index.php?route=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+				dataType: 'json',
+				success: function(json) {		
+					response($.map(json, function(item) {
+						return {
+							label: item.name,
+							value: item.product_id
+						}
+					}));
+				}
+			});
+		}, 
+		select: function(event, ui) {
+			$('#product-similar_to_consider' + ui.item.value).remove();
+			
+			$('#product-similar_to_consider').append('<div id="product-similar_to_consider' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="product_similar_to_consider[]" value="' + ui.item.value + '" /></div>');
+			
+			$('#product-similar_to_consider div:odd').attr('class', 'odd');
+			$('#product-similar_to_consider div:even').attr('class', 'even');
+			
+			return false;
+		},
+		focus: function(event, ui) {
+			return false;
+		}
+	});
+	
+	$('#product-similar_to_consider div img').live('click', function() {
+		$(this).parent().remove();
+		
+		$('#product-similar_to_consider div:odd').attr('class', 'odd');
+		$('#product-similar_to_consider div:even').attr('class', 'even');	
+	});
+
+	// view_to_purchase
+	$('input[name=\'view_to_purchase\']').autocomplete({
+		delay: 500,
+		source: function(request, response) {
+			$.ajax({
+				url: 'index.php?route=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+				dataType: 'json',
+				success: function(json) {		
+					response($.map(json, function(item) {
+						return {
+							label: item.name,
+							value: item.product_id
+						}
+					}));
+				}
+			});
+		}, 
+		select: function(event, ui) {
+			$('#product-view_to_purchase' + ui.item.value).remove();
+			
+			$('#product-view_to_purchase').append('<div id="product-view_to_purchase' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="product_view_to_purchase[]" value="' + ui.item.value + '" /></div>');
+			
+			$('#product-view_to_purchase div:odd').attr('class', 'odd');
+			$('#product-view_to_purchase div:even').attr('class', 'even');
+			
+			return false;
+		},
+		focus: function(event, ui) {
+			return false;
+		}
+	});
+	
+	$('#product-view_to_purchase div img').live('click', function() {
+		$(this).parent().remove();
+		
+		$('#product-view_to_purchase div:odd').attr('class', 'odd');
+		$('#product-view_to_purchase div:even').attr('class', 'even');	
+	});
+
+	// also_viewed
+	$('input[name=\'also_viewed\']').autocomplete({
+		delay: 500,
+		source: function(request, response) {
+			$.ajax({
+				url: 'index.php?route=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+				dataType: 'json',
+				success: function(json) {		
+					response($.map(json, function(item) {
+						return {
+							label: item.name,
+							value: item.product_id
+						}
+					}));
+				}
+			});
+		}, 
+		select: function(event, ui) {
+			$('#product-also_viewed' + ui.item.value).remove();
+			
+			$('#product-also_viewed').append('<div id="product-also_viewed' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="product_also_viewed[]" value="' + ui.item.value + '" /></div>');
+			
+			$('#product-also_viewed div:odd').attr('class', 'odd');
+			$('#product-also_viewed div:even').attr('class', 'even');
+			
+			return false;
+		},
+		focus: function(event, ui) {
+			return false;
+		}
+	});
+	
+	$('#product-also_viewed div img').live('click', function() {
+		$(this).parent().remove();
+		
+		$('#product-also_viewed div:odd').attr('class', 'odd');
+		$('#product-also_viewed div:even').attr('class', 'even');	
+	});
+
+	// also_bought
+	$('input[name=\'also_bought\']').autocomplete({
+		delay: 500,
+		source: function(request, response) {
+			$.ajax({
+				url: 'index.php?route=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+				dataType: 'json',
+				success: function(json) {		
+					response($.map(json, function(item) {
+						return {
+							label: item.name,
+							value: item.product_id
+						}
+					}));
+				}
+			});
+		}, 
+		select: function(event, ui) {
+			$('#product-also_bought' + ui.item.value).remove();
+			
+			$('#product-also_bought').append('<div id="product-also_bought' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="product_also_bought[]" value="' + ui.item.value + '" /></div>');
+			
+			$('#product-also_bought div:odd').attr('class', 'odd');
+			$('#product-also_bought div:even').attr('class', 'even');
+			
+			return false;
+		},
+		focus: function(event, ui) {
+			return false;
+		}
+	});
+	
+	$('#product-also_bought div img').live('click', function() {
+		$(this).parent().remove();
+		
+		$('#product-also_bought div:odd').attr('class', 'odd');
+		$('#product-also_bought div:even').attr('class', 'even');	
 	});
 
 	// sponsored

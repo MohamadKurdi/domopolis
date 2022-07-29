@@ -267,6 +267,44 @@
 					$this->db->query("INSERT INTO product_sponsored SET product_id = '" . (int)$sponsored_id . "', sponsored_id = '" . (int)$product_id . "'");
 				}
 			}
+
+			
+			if (isset($data['product_similar_to_consider'])) {
+				foreach ($data['product_similar_to_consider'] as $similar_to_consider_id) {
+					$this->db->query("DELETE FROM product_similar_to_consider WHERE product_id = '" . (int)$product_id . "' AND similar_to_consider_id = '" . (int)$similar_to_consider_id . "'");
+					$this->db->query("INSERT INTO product_similar_to_consider SET product_id = '" . (int)$product_id . "', similar_to_consider_id = '" . (int)$similar_to_consider_id . "'");
+					$this->db->query("DELETE FROM product_similar_to_consider WHERE product_id = '" . (int)$similar_to_consider_id . "' AND similar_to_consider_id = '" . (int)$product_id . "'");
+					$this->db->query("INSERT INTO product_similar_to_consider SET product_id = '" . (int)$similar_to_consider_id . "', similar_to_consider_id = '" . (int)$product_id . "'");
+				}
+			}
+
+			
+			if (isset($data['product_view_to_purchase'])) {
+				foreach ($data['product_view_to_purchase'] as $view_to_purchase_id) {
+					$this->db->query("DELETE FROM product_view_to_purchase WHERE product_id = '" . (int)$product_id . "' AND view_to_purchase_id = '" . (int)$view_to_purchase_id . "'");
+					$this->db->query("INSERT INTO product_view_to_purchase SET product_id = '" . (int)$product_id . "', view_to_purchase_id = '" . (int)$view_to_purchase_id . "'");
+					$this->db->query("DELETE FROM product_view_to_purchase WHERE product_id = '" . (int)$view_to_purchase_id . "' AND view_to_purchase_id = '" . (int)$product_id . "'");
+					$this->db->query("INSERT INTO product_view_to_purchase SET product_id = '" . (int)$view_to_purchase_id . "', view_to_purchase_id = '" . (int)$product_id . "'");
+				}
+			}
+			
+			if (isset($data['product_also_viewed'])) {
+				foreach ($data['product_also_viewed'] as $also_viewed_id) {
+					$this->db->query("DELETE FROM product_also_viewed WHERE product_id = '" . (int)$product_id . "' AND also_viewed_id = '" . (int)$also_viewed_id . "'");
+					$this->db->query("INSERT INTO product_also_viewed SET product_id = '" . (int)$product_id . "', also_viewed_id = '" . (int)$also_viewed_id . "'");
+					$this->db->query("DELETE FROM product_also_viewed WHERE product_id = '" . (int)$also_viewed_id . "' AND also_viewed_id = '" . (int)$product_id . "'");
+					$this->db->query("INSERT INTO product_also_viewed SET product_id = '" . (int)$also_viewed_id . "', also_viewed_id = '" . (int)$product_id . "'");
+				}
+			}
+			
+			if (isset($data['product_also_bought'])) {
+				foreach ($data['product_also_bought'] as $also_bought_id) {
+					$this->db->query("DELETE FROM product_also_bought WHERE product_id = '" . (int)$product_id . "' AND also_bought_id = '" . (int)$also_bought_id . "'");
+					$this->db->query("INSERT INTO product_also_bought SET product_id = '" . (int)$product_id . "', also_bought_id = '" . (int)$also_bought_id . "'");
+					$this->db->query("DELETE FROM product_also_bought WHERE product_id = '" . (int)$also_bought_id . "' AND also_bought_id = '" . (int)$product_id . "'");
+					$this->db->query("INSERT INTO product_also_bought SET product_id = '" . (int)$also_bought_id . "', also_bought_id = '" . (int)$product_id . "'");
+				}
+			}
 			
 			$this->db->query("DELETE FROM product_child WHERE product_id = '" . (int)$product_id . "'");
 			if (isset($data['product_child'])) {									
@@ -325,7 +363,6 @@
 		}
 
 		public function editProductVariantDescriptions($products, $data){
-
 		}
 		
 		public function editProduct($product_id, $data) {
@@ -931,6 +968,55 @@
 				}
 			}
 			
+			$this->db->query("DELETE FROM product_similar_to_consider WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_similar_to_consider WHERE similar_to_consider_id = '" . (int)$product_id . "'");
+			
+			if (isset($data['product_similar_to_consider'])) {
+				foreach ($data['product_similar_to_consider'] as $similar_to_consider_id) {
+					$this->db->query("DELETE FROM product_similar_to_consider WHERE product_id = '" . (int)$product_id . "' AND similar_to_consider_id = '" . (int)$similar_to_consider_id . "'");
+					$this->db->query("INSERT INTO product_similar_to_consider SET product_id = '" . (int)$product_id . "', similar_to_consider_id = '" . (int)$similar_to_consider_id . "'");
+					$this->db->query("DELETE FROM product_similar_to_consider WHERE product_id = '" . (int)$similar_to_consider_id . "' AND similar_to_consider_id = '" . (int)$product_id . "'");
+					$this->db->query("INSERT INTO product_similar_to_consider SET product_id = '" . (int)$similar_to_consider_id . "', similar_to_consider_id = '" . (int)$product_id . "'");
+				}
+			}
+
+			$this->db->query("DELETE FROM product_view_to_purchase WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_view_to_purchase WHERE view_to_purchase_id = '" . (int)$product_id . "'");
+			
+			if (isset($data['product_view_to_purchase'])) {
+				foreach ($data['product_view_to_purchase'] as $view_to_purchase_id) {
+					$this->db->query("DELETE FROM product_view_to_purchase WHERE product_id = '" . (int)$product_id . "' AND view_to_purchase_id = '" . (int)$view_to_purchase_id . "'");
+					$this->db->query("INSERT INTO product_view_to_purchase SET product_id = '" . (int)$product_id . "', view_to_purchase_id = '" . (int)$view_to_purchase_id . "'");
+					$this->db->query("DELETE FROM product_view_to_purchase WHERE product_id = '" . (int)$view_to_purchase_id . "' AND view_to_purchase_id = '" . (int)$product_id . "'");
+					$this->db->query("INSERT INTO product_view_to_purchase SET product_id = '" . (int)$view_to_purchase_id . "', view_to_purchase_id = '" . (int)$product_id . "'");
+				}
+			}
+
+			$this->db->query("DELETE FROM product_also_viewed WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_also_viewed WHERE also_viewed_id = '" . (int)$product_id . "'");
+			
+			if (isset($data['product_also_viewed'])) {
+				foreach ($data['product_also_viewed'] as $also_viewed_id) {
+					$this->db->query("DELETE FROM product_also_viewed WHERE product_id = '" . (int)$product_id . "' AND also_viewed_id = '" . (int)$also_viewed_id . "'");
+					$this->db->query("INSERT INTO product_also_viewed SET product_id = '" . (int)$product_id . "', also_viewed_id = '" . (int)$also_viewed_id . "'");
+					$this->db->query("DELETE FROM product_also_viewed WHERE product_id = '" . (int)$also_viewed_id . "' AND also_viewed_id = '" . (int)$product_id . "'");
+					$this->db->query("INSERT INTO product_also_viewed SET product_id = '" . (int)$also_viewed_id . "', also_viewed_id = '" . (int)$product_id . "'");
+				}
+			}
+
+			$this->db->query("DELETE FROM product_also_bought WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_also_bought WHERE also_bought_id = '" . (int)$product_id . "'");
+			
+			if (isset($data['product_also_bought'])) {
+				foreach ($data['product_also_bought'] as $also_bought_id) {
+					$this->db->query("DELETE FROM product_also_bought WHERE product_id = '" . (int)$product_id . "' AND also_bought_id = '" . (int)$also_bought_id . "'");
+					$this->db->query("INSERT INTO product_also_bought SET product_id = '" . (int)$product_id . "', also_bought_id = '" . (int)$also_bought_id . "'");
+					$this->db->query("DELETE FROM product_also_bought WHERE product_id = '" . (int)$also_bought_id . "' AND also_bought_id = '" . (int)$product_id . "'");
+					$this->db->query("INSERT INTO product_also_bought SET product_id = '" . (int)$also_bought_id . "', also_bought_id = '" . (int)$product_id . "'");
+				}
+			}
+
+
 			
 			$this->db->query("DELETE FROM product_child WHERE product_id = '" . (int)$product_id . "'");
 			if (isset($data['product_child'])) {										
@@ -1038,8 +1124,7 @@
 				return $new_product_id;
 			}
 		}	
-		
-		
+				
 		public function getProductOptionPrices($product_id){
 			
 			$options = $this->db->query("SELECT DISTINCT this_is_product_id FROM product_option_value WHERE product_id = '" . (int)$product_id . "'");
@@ -1092,9 +1177,7 @@
 				);
 				} else {
 				return false;
-			}
-			
-			
+			}						
 		}
 		
 		public function copyProductNoStock($product_id) {
@@ -1135,8 +1218,7 @@
 				return $new_product_id;
 			}
 		}
-
-		
+	
 		public function deleteProduct($product_id, $recursion = true, $asin_deletion_mode = false) {
 
 
@@ -1212,8 +1294,7 @@
                     $results = $this->model_catalog_set->deleteSet($result['set_id']);
 				}
 			}
-			$this->db->query("DELETE FROM url_alias WHERE query = 'product_id=" . (int)$product_id. "'");
-			
+			$this->db->query("DELETE FROM url_alias WHERE query = 'product_id=" . (int)$product_id. "'");			
 		}
 
 		public function countVariantProducts($product_id){
@@ -1226,7 +1307,6 @@
 
 			$query = $this->db->query($sql);
 			return $query->rows;
-
 		}
 
 		public function getOtherVariantProducts($product_id){
@@ -1235,7 +1315,6 @@
 			$query = $this->db->query($sql);
 			return $query->rows;
 		}
-
 
 		public function getAllProductVariants($product_id){
 			$variants = $this->getProductVariantsIds($product_id);
@@ -1246,7 +1325,6 @@
 			return $query->rows;
 		}
 		
-
 		public function getProductVariantsIds($product_id){
 			$variants = [$product_id];
 			$main_variant_id = 0;
@@ -1302,8 +1380,7 @@
 				return false;
 			}
 		}
-		
-		
+				
 		
 		public function getProductStorePrice($product_id, $store_id) {
 			$query = $this->db->query("SELECT price FROM product_price_to_store WHERE product_id = '" . (int)$product_id . "' AND store_id = '" . (int)$store_id . "' LIMIT 1");
@@ -1492,8 +1569,6 @@
 			return $results;
 		}
 		
-		//партии
-		/*Additional offer*/
 		public function getAdditionalOfferById($ao_id, $ao_product_id) {
 			$query = $this->db->query("SELECT * FROM product_additional_offer WHERE product_additional_offer_id = '" . (int)$ao_id . "' AND ao_product_id = '" . (int)$ao_product_id . "' ORDER BY priority, price LIMIT 1");
 			
@@ -1514,8 +1589,7 @@
 			
 			return $query->rows;
 		}
-		
-		
+			
 		public function getProductAdditionalOfferGroups() {
 			$query = $this->db->query("SELECT DISTINCT ao_group FROM product_additional_offer ORDER BY priority, price");
 			
@@ -1544,8 +1618,7 @@
 			}
 			
 			return $store_data;
-		}
-		/*Additional offer*/	
+		}	
 		
 		public function getProductWaitListOrders($product_id){
 			$query = $this->db->query("SELECT order_id, quantity FROM order_product_nogood opn WHERE product_id = '" .(int)$product_id. "' AND waitlist = 1");
@@ -1709,8 +1782,7 @@
 				} else {
 				//нету записи в базе
 				return false;
-			}
-			
+			}		
 		}
 		
 		public function getProductsWaitListTotalReady() {
@@ -1726,8 +1798,6 @@
 		}
 		
 		public function getProductsWaitList($data = array()) {
-			
-			//GET stocks
 			$sql = "SELECT 			
 			p.*, 			
 			opn.*,
@@ -2139,7 +2209,6 @@
 			}
 			
 			return $product_stock_statuses;
-
 		}
 		
 		public function getProductActualCost($product_id) {
@@ -2149,8 +2218,7 @@
 				return $query->row['actual_cost'];
 				} else {
 				return false;
-			}
-			
+			}			
 		}
 		
 		public function getProductSpecialOne($product_id) {
@@ -2264,9 +2332,9 @@
 				}
 			}
 			
-			return false;
-			
+			return false;			
 		}
+
 		public function getProductRewards($product_id) {
 			$query = $this->db->query("SELECT * FROM product_reward WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -2325,6 +2393,7 @@
 			return $name;
 		}
 		
+		//Сопутствующие, стоковая логика, амазон frequently_bought_together
 		public function getProductRelated($product_id) {
 			$product_related_data = array();
 			
@@ -2337,6 +2406,7 @@
 			return $product_related_data;
 		}
 
+		//Похожие, амазон compare_with_similar
 		public function getProductSimilar($product_id) {
 			$product_similar_data = array();
 			
@@ -2349,6 +2419,7 @@
 			return $product_similar_data;
 		}
 
+		//Спонсоред, sponsored_products
 		public function getProductSponsored($product_id) {
 			$product_sponsored_data = array();
 			
@@ -2360,7 +2431,59 @@
 			
 			return $product_sponsored_data;
 		}
+
+		//Похожие, амазон similar_to_consider
+		public function getProductSimilarToConsider($product_id) {
+			$product_similar_data = array();
+			
+			$query = $this->db->query("SELECT * FROM product_similar_to_consider WHERE product_id = '" . (int)$product_id . "'");
+			
+			foreach ($query->rows as $result) {
+				$product_similar_data[] = $result['similar_to_consider_id'];
+			}
+			
+			return $product_similar_data;
+		}
+
+		//Купили после просмотра, амазон view_to_purchase
+		public function getProductViewToPurchase($product_id) {
+			$product_view_to_purchase_data = array();
+			
+			$query = $this->db->query("SELECT * FROM product_view_to_purchase WHERE product_id = '" . (int)$product_id . "'");
+			
+			foreach ($query->rows as $result) {
+				$product_view_to_purchase_data[] = $result['view_to_purchase_id'];
+			}
+			
+			return $product_view_to_purchase_data;
+		}
+
+		//Также просматривали, амазон also_viewed
+		public function getProductAlsoViewed($product_id) {
+			$product_also_viewed_data = array();
+			
+			$query = $this->db->query("SELECT * FROM product_also_viewed WHERE product_id = '" . (int)$product_id . "'");
+			
+			foreach ($query->rows as $result) {
+				$product_also_viewed_data[] = $result['also_viewed_id'];
+			}
+			
+			return $product_also_viewed_data;
+		}
 		
+		//Также купили, амазон also_bought
+		public function getProductAlsoBought($product_id) {
+			$product_also_bought_data = array();
+			
+			$query = $this->db->query("SELECT * FROM product_also_bought WHERE product_id = '" . (int)$product_id . "'");
+			
+			foreach ($query->rows as $result) {
+				$product_also_bought_data[] = $result['also_bought_id'];
+			}
+			
+			return $product_also_bought_data;
+		}
+
 		public function getProductChild($product_id) {
 			$product_child_data = array();
 			

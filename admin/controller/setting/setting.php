@@ -2715,10 +2715,16 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_rainforest_default_unknown_category_id'] = $this->config->get('config_rainforest_default_unknown_category_id');
 		}
 
-		if (isset($this->request->post['config_rainforest_enable_similar_adding'])) {
-			$this->data['config_rainforest_enable_similar_adding'] = $this->request->post['config_rainforest_enable_similar_adding']; 
+		if (isset($this->request->post['config_rainforest_enable_compare_with_similar_adding'])) {
+			$this->data['config_rainforest_enable_compare_with_similar_adding'] = $this->request->post['config_rainforest_enable_compare_with_similar_adding']; 
 		} else {
-			$this->data['config_rainforest_enable_similar_adding'] = $this->config->get('config_rainforest_enable_similar_adding');
+			$this->data['config_rainforest_enable_compare_with_similar_adding'] = $this->config->get('config_rainforest_enable_compare_with_similar_adding');
+		}
+
+		if (isset($this->request->post['config_rainforest_enable_similar_to_consider_adding'])) {
+			$this->data['config_rainforest_enable_similar_to_consider_adding'] = $this->request->post['config_rainforest_enable_similar_to_consider_adding']; 
+		} else {
+			$this->data['config_rainforest_enable_similar_to_consider_adding'] = $this->config->get('config_rainforest_enable_similar_to_consider_adding');
 		}
 
 		if (isset($this->request->post['config_rainforest_enable_related_adding'])) {

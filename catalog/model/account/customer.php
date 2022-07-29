@@ -357,6 +357,22 @@
 		}
 		
 		public function getTotalCustomersByEmail($email) {
+
+			if (!trim($email)){
+				return 0;
+			}
+
+			$query = $this->db->non_cached_query("SELECT COUNT(*) AS total FROM customer WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
+			
+			return $query->row['total'];
+		}
+
+		public function getTotalCustomersByPhone($phone) {
+
+			if (!trim($phone)){
+				return 0;
+			}
+
 			$query = $this->db->non_cached_query("SELECT COUNT(*) AS total FROM customer WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "'");
 			
 			return $query->row['total'];

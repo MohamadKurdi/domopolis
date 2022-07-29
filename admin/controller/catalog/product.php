@@ -2554,13 +2554,13 @@ class ControllerCatalogProduct extends Controller {
 			$products = array();
 		}
 
-		$this->data['product_related'] = array();
+		$this->data['products_related'] = array();
 
 		foreach ($products as $product_id) {
 			$related_info = $this->model_catalog_product->getProduct($product_id);
 
 			if ($related_info) {
-				$this->data['product_related'][] = array(
+				$this->data['products_related'][] = array(
 					'product_id' => $related_info['product_id'],
 					'name'       => $related_info['name']
 				);
@@ -2575,13 +2575,13 @@ class ControllerCatalogProduct extends Controller {
 			$products = array();
 		}
 
-		$this->data['product_similar'] = array();
+		$this->data['products_similar'] = array();
 
 		foreach ($products as $product_id) {
 			$similar_info = $this->model_catalog_product->getProduct($product_id);
 
 			if ($similar_info) {
-				$this->data['product_similar'][] = array(
+				$this->data['products_similar'][] = array(
 					'product_id' => $similar_info['product_id'],
 					'name'       => $similar_info['name']
 				);
@@ -2596,15 +2596,101 @@ class ControllerCatalogProduct extends Controller {
 			$products = array();
 		}
 
-		$this->data['product_sponsored'] = array();
+		$this->data['products_sponsored'] = array();
 
 		foreach ($products as $product_id) {
 			$sponsored_info = $this->model_catalog_product->getProduct($product_id);
 
 			if ($sponsored_info) {
-				$this->data['product_sponsored'][] = array(
+				$this->data['products_sponsored'][] = array(
 					'product_id' => $sponsored_info['product_id'],
 					'name'       => $sponsored_info['name']
+				);
+			}
+		}
+
+		if (isset($this->request->post['product_similar_to_consider'])) {
+			$products = $this->request->post['product_similar_to_consider'];
+		} elseif (isset($this->request->get['product_id'])) {		
+			$products = $this->model_catalog_product->getProductSimilarToConsider($this->request->get['product_id']);
+		} else {
+			$products = array();
+		}
+
+		$this->data['products_similar_to_consider'] = array();
+
+		foreach ($products as $product_id) {
+			$similar_to_consider_info = $this->model_catalog_product->getProduct($product_id);
+
+			if ($similar_to_consider_info) {
+				$this->data['products_similar_to_consider'][] = array(
+					'product_id' => $similar_to_consider_info['product_id'],
+					'name'       => $similar_to_consider_info['name']
+				);
+			}
+		}
+
+
+		if (isset($this->request->post['product_view_to_purchase'])) {
+			$products = $this->request->post['product_view_to_purchase'];
+		} elseif (isset($this->request->get['product_id'])) {		
+			$products = $this->model_catalog_product->getProductViewToPurchase($this->request->get['product_id']);
+		} else {
+			$products = array();
+		}
+
+		$this->data['products_view_to_purchase'] = array();
+
+		foreach ($products as $product_id) {
+			$view_to_purchase_info = $this->model_catalog_product->getProduct($product_id);
+
+			if ($view_to_purchase_info) {
+				$this->data['products_view_to_purchase'][] = array(
+					'product_id' => $view_to_purchase_info['product_id'],
+					'name'       => $view_to_purchase_info['name']
+				);
+			}
+		}
+
+		if (isset($this->request->post['product_also_viewed'])) {
+			$products = $this->request->post['product_also_viewed'];
+		} elseif (isset($this->request->get['product_id'])) {		
+			$products = $this->model_catalog_product->getProductAlsoViewed($this->request->get['product_id']);
+		} else {
+			$products = array();
+		}
+
+		$this->data['products_also_viewed'] = array();
+
+		foreach ($products as $product_id) {
+			$also_viewed_info = $this->model_catalog_product->getProduct($product_id);
+
+			if ($also_viewed_info) {
+				$this->data['products_also_viewed'][] = array(
+					'product_id' => $also_viewed_info['product_id'],
+					'name'       => $also_viewed_info['name']
+				);
+			}
+		}
+
+
+		if (isset($this->request->post['product_also_bought'])) {
+			$products = $this->request->post['product_also_bought'];
+		} elseif (isset($this->request->get['product_id'])) {		
+			$products = $this->model_catalog_product->getProductAlsoBought($this->request->get['product_id']);
+		} else {
+			$products = array();
+		}
+
+		$this->data['products_also_bought'] = array();
+
+		foreach ($products as $product_id) {
+			$also_bought_info = $this->model_catalog_product->getProduct($product_id);
+
+			if ($also_bought_info) {
+				$this->data['products_also_bought'][] = array(
+					'product_id' => $also_bought_info['product_id'],
+					'name'       => $also_bought_info['name']
 				);
 			}
 		}
