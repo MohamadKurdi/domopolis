@@ -272,3 +272,43 @@ border-radius: 2px;}
 .tooltip.bottom-left .tooltip-arrow{top:0;right:5px;margin-top:-5px;border-width:0 5px 5px;border-bottom-color:#000}
 .tooltip.bottom-right .tooltip-arrow{top:0;left:5px;margin-top:-5px;border-width:0 5px 5px;border-bottom-color:#000}
 #aqe-popup-form{display: flex;flex-direction: column;}
+@media screen and (max-width: 560px){
+	#order_filters > div {
+		width: 100% !important;
+		float: none !important;
+		margin: 0 !important
+	}
+	#order_filters .dashboard-content{
+		display: block;
+	    width: 100%;
+	    overflow-x: auto;
+	    -webkit-overflow-scrolling: touch;
+	    padding: 0;
+	    min-height: auto !important;
+	}
+	#order_filters .dashboard-content table{
+	    width: 100%;
+	    margin-bottom: 0 !important;
+	}
+	#order_filters .dashboard-content table tbody{
+		box-sizing: border-box;
+		display: table-row-group;
+	}
+	
+	#order_filters .dashboard-content table tr{
+		    display: table-row;
+	}
+	#order_filters .dashboard-content table tr td{
+		display: table-cell;
+		padding: 10px;
+		white-space: nowrap;
+	}
+	#template_bygroup > table > tbody,
+	#template_bygroup > table{
+		width: 100%;
+		display: block;
+	}
+	#template_bygroup .dashboard-content thead{
+		display: table-row-group  !important;
+	}
+}
