@@ -2697,6 +2697,24 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_rainforest_category_model'] = $this->config->get('config_rainforest_category_model');
 		}
 
+		if (isset($this->request->post['config_rainforest_enable_review_adding'])) {
+			$this->data['config_rainforest_enable_review_adding'] = $this->request->post['config_rainforest_enable_review_adding']; 
+		} else {
+			$this->data['config_rainforest_enable_review_adding'] = $this->config->get('config_rainforest_enable_review_adding');
+		}
+
+		if (isset($this->request->post['config_rainforest_max_review_per_product'])) {
+			$this->data['config_rainforest_max_review_per_product'] = $this->request->post['config_rainforest_max_review_per_product']; 
+		} else {
+			$this->data['config_rainforest_max_review_per_product'] = $this->config->get('config_rainforest_max_review_per_product');
+		}
+
+		if (isset($this->request->post['config_rainforest_min_review_rating'])) {
+			$this->data['config_rainforest_min_review_rating'] = $this->request->post['config_rainforest_min_review_rating']; 
+		} else {
+			$this->data['config_rainforest_min_review_rating'] = $this->config->get('config_rainforest_min_review_rating');
+		}
+
 		if (isset($this->request->post['config_rainforest_enable_recursive_adding'])) {
 			$this->data['config_rainforest_enable_recursive_adding'] = $this->request->post['config_rainforest_enable_recursive_adding']; 
 		} else {

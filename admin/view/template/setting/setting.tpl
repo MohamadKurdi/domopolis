@@ -3882,6 +3882,32 @@
 											</select>
 										</div>
 									</td>
+
+									<td style="width:20%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Добавлять отзывы из top_reviews</span></p>
+											<select name="config_rainforest_enable_review_adding">
+												<?php if ($config_rainforest_enable_review_adding) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Мин. рейтинг (1-5)</span></p>
+											<input type="number" name="config_rainforest_min_review_rating" value="<?php echo $config_rainforest_min_review_rating; ?>" size="50" style="width:100px;" />
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Макс на товар</span></p>
+											<input type="number" name="config_rainforest_max_review_per_product" value="<?php echo $config_rainforest_max_review_per_product; ?>" size="50" style="width:100px;" />
+										</div>
+
+									</td>
 								</tr>
 
 								<tr>

@@ -115,7 +115,7 @@ class productModelGet extends hoboModel{
 	}
 
 	public function getTotalProductsWithFullData(){
-		$sql = "SELECT COUNT(product_id) as total FROM product_amzn_data WHERE 1";
+		$sql = "SELECT COUNT(product_id) as total FROM product_amzn_data WHERE product_id IN (SELECT product_id FROM product)";
 
 		return $this->db->ncquery($sql)->row['total'];
 	}
@@ -123,7 +123,7 @@ class productModelGet extends hoboModel{
 	public function getProductsWithFullData($start){
 		$result = [];
 
-		$sql = "SELECT * FROM product_amzn_data WHERE 1 ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
+		$sql = "SELECT * FROM product_amzn_data WHERE product_id IN (SELECT product_id FROM product) ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
 
 		$query = $this->db->ncquery($sql);
 
@@ -148,7 +148,7 @@ class productModelGet extends hoboModel{
 	}
 
 	public function getTotalProductsWithFullDataInDB(){
-		$sql = "SELECT COUNT(product_id) as total FROM product_amzn_data WHERE file = '' AND NOT ISNULL(json)";
+		$sql = "SELECT COUNT(product_id) as total FROM product_amzn_data WHERE product_id IN (SELECT product_id FROM product) AND file = '' AND NOT ISNULL(json)";
 
 		return $this->db->ncquery($sql)->row['total'];
 	}
@@ -156,7 +156,7 @@ class productModelGet extends hoboModel{
 	public function getProductsWithFullDataInDB($start){
 		$result = [];
 
-		$sql = "SELECT * FROM product_amzn_data WHERE file = '' AND NOT ISNULL(json) ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;	
+		$sql = "SELECT * FROM product_amzn_data WHERE product_id IN (SELECT product_id FROM product) AND file = '' AND NOT ISNULL(json) ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;	
 
 		$query = $this->db->ncquery($sql);
 

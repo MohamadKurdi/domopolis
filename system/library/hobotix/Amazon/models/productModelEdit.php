@@ -99,7 +99,6 @@ class productModelEdit extends hoboModel{
 		$this->db->query("TRUNCATE product_variants_ids");
 	}
 
-
 	public function insertVariantToVariantsTable($product_id, $asins){		
 		$this->db->query("INSERT IGNORE INTO product_variants_ids (product_id, variant_id) SELECT '" . (int)$product_id . "', product_id FROM product WHERE asin IN ('" . implode("','", $asins) . "')");
 	}
@@ -425,7 +424,34 @@ class productModelEdit extends hoboModel{
 		$this->db->query("DELETE FROM url_alias WHERE query = 'product_id=" . (int)$product_id. "'");
 	}
 
-
+	public function addReview($data){
+		$this->db->query("INSERT INTO review SET 
+				addimage 	= '', 
+				answer 		= '', 
+				good 		= '', 
+				bads 		= '', 
+				html_status = '0', 
+				purchased 	= '1', 
+				author 		= '" . $this->db->escape($data['author']) . "', 
+				product_id 	= '" . (int)$data['product_id'] . "', 
+				text 		= '" . $this->db->escape(strip_tags($data['text'])) . "', 
+				rating 		= '" . (int)$data['rating'] . "', 
+				status 		= '1', 
+				date_added 	= '" . $this->db->escape($data['date_added']) . "'");
+			
+			$review_id = $this->db->getLastId();
+			
+			$this->db->query("DELETE FROM review_description WHERE review_id = '" . (int)$review_id . "'");
+			foreach ($data['review_description'] as $language_id => $value) {
+				$this->db->query("INSERT INTO review_description SET 
+				review_id 	= '" . (int)$review_id . "', 
+				language_id = '" . (int)$language_id . "',
+				answer 		= '',
+				good 		= '',
+				bads 		= '',
+				text 		= '" . $this->db->escape(strip_tags($value['text'])) . "'");
+			}
+	}
 
 
 

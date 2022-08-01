@@ -40,7 +40,7 @@
 			}
 			
 			if ($this->request->server['REQUEST_URI'] == '/'  || !isset($this->request->get['route']) || $this->request->get['route'] == 'common/home'){
-				$this->data['page_type'] == 'homepage';
+				$this->data['page_type'] = 'homepage';
 			}
 			
 			$this->load->model('localisation/language');

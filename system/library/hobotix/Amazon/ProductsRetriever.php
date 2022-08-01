@@ -880,9 +880,46 @@
 		}
 
 		public function parseProductTopReviews($product_id, $product){
-			if (!empty($product['top_reviews'])){
+			if ($this->config->get('config_rainforest_enable_review_adding')){
+				if (!empty($product['top_reviews'])){
+					$counter = 0;
+					foreach ($product['top_reviews'] as $review){
+						if ($review['rating'] >= (int)$this->config->get('config_rainforest_min_review_rating')){
 
+							$counter++;
 
+							if ($counter >= (int)$this->config->get('config_rainforest_max_review_per_product')){
+								break;
+							}
+
+							$review_description = [];					
+							$author = $this->db->query("SELECT firstname FROM customer WHERE firstname <> '' ORDER BY RAND() LIMIT 1")->row['firstname'];
+
+							foreach ($this->registry->get('languages') as $language_code => $language) {
+								$review['body'] = atrim($review['body']);						
+
+								$text = $this->translateWithCheck($review['body'], $language_code);
+
+								$review_description[$language['language_id']] = [
+									'text' => $text,
+								];
+							}
+
+							$review_data = [
+								'author'				=> $author,
+								'product_id'			=> $product_id,	
+								'text'					=> $review_description[$this->config->get('config_language_id')]['text'],	
+								'rating'				=> $review['rating'],
+								'date_added'			=> date('Y-m-d H:i:s', strtotime($review['date']['utc'])),
+								'review_description' 	=> $review_description
+							];
+
+							$this->model_product_edit->addReview($review_data);
+						}
+					}
+
+					die();
+				}
 			}
 		}
 

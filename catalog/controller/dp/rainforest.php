@@ -376,8 +376,7 @@ class ControllerDPRainForest extends Controller {
 				}
 			}	
 		}
-	}
-	
+	}	
 
 	/*
 	Фиксит переводы строк
@@ -588,5 +587,35 @@ class ControllerDPRainForest extends Controller {
 				}
 			}	
 		}		
+	}
+
+	/*
+	Добавляет отзывы товаров из уже заполненных и сохраненных данных
+	*/
+	public function fixreviews(){
+
+
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFullData();		
+
+		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
+		echoLine('[fixreviews] Всего товаров: ' . $total);
+		$k = 1;	
+
+		for ($i = 1; $i <= $iterations; $i++){
+			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullData(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
+			if ($products){		
+				foreach ($products as $product){
+					echoLine('[fixreviews] Товар ' . $product['product_id'] . '/' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
+
+					$this->rainforestAmazon->productsRetriever->parseProductTopReviews($product['product_id'], json_decode($product['json'], true));
+					$k++;			
+				}
+			}	
+		}		
+
+
+
+
 	}
 }
