@@ -73,6 +73,7 @@
 /system/cache
 /system/cache_mfp
 /system/config
+/system/config/*
 /system/csvprice_pro
 /system/logs
 /system/temp
