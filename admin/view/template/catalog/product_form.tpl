@@ -1958,7 +1958,11 @@
 
 																		<span class="help"><i class="fa fa-info-circle"></i> Массив, содержащий информацию о других продуктах, которые также купили клиенты Amazon, купившие текущий продукт. Обычно отображается в разделе на странице продукта под заголовком «Клиенты, которые купили этот товар, также купили».</span>
 																	</td>
-																	<td style="width:25%">																		
+																	<td style="width:25%">	
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#5D5D5D; color:#FFF">Shop By Look</span>
+																		<span class="status_color" style="display:inline-block; padding:3px 5px; background:#5D5D5D; color:#FFF"><i class="fa fa-amazon"></i> shop_by_look</span>
+
+																		<span class="help"><i class="fa fa-info-circle"></i> Объект, содержащий сведения о разделе «Поиск по внешнему виду» на странице продукта.</span>																	
 																	</td>
 																</tr>
 																<tr>
@@ -1998,7 +2002,17 @@
 																			<?php } ?>
 																		</div>
 																	</td>
-																	<td style="width:25%">																		
+																	<td style="width:25%">																			
+																		<input type="text" name="shop_by_look" value="" /><br /><br />
+																		<div id="product-shop_by_look" class="scrollbox" style="min-height: 200px;">
+																			<?php $class = 'odd'; ?>
+																			<?php foreach ($products_shop_by_look as $product_shop_by_look) { ?>
+																				<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+																				<div id="product-shop_by_look<?php echo $product_shop_by_look['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product_shop_by_look['name']; ?><img src="view/image/delete.png" alt="" />
+																					<input type="hidden" name="product_shop_by_look[]" value="<?php echo $product_related['product_id']; ?>" />
+																				</div>
+																			<?php } ?>
+																		</div>
 																	</td>
 																</tr>
 
@@ -3567,6 +3581,45 @@ $('input[name=\'collection\']').autocomplete({
 		
 		$('#product-also_bought div:odd').attr('class', 'odd');
 		$('#product-also_bought div:even').attr('class', 'even');	
+	});
+
+	// shop_by_look
+	$('input[name=\'shop_by_look\']').autocomplete({
+		delay: 500,
+		source: function(request, response) {
+			$.ajax({
+				url: 'index.php?route=catalog/product/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+				dataType: 'json',
+				success: function(json) {		
+					response($.map(json, function(item) {
+						return {
+							label: item.name,
+							value: item.product_id
+						}
+					}));
+				}
+			});
+		}, 
+		select: function(event, ui) {
+			$('#product-shop_by_look' + ui.item.value).remove();
+			
+			$('#product-shop_by_look').append('<div id="product-shop_by_look' + ui.item.value + '">' + ui.item.label + '<img src="view/image/delete.png" alt="" /><input type="hidden" name="product_shop_by_look[]" value="' + ui.item.value + '" /></div>');
+			
+			$('#product-shop_by_look div:odd').attr('class', 'odd');
+			$('#product-shop_by_look div:even').attr('class', 'even');
+			
+			return false;
+		},
+		focus: function(event, ui) {
+			return false;
+		}
+	});
+	
+	$('#product-shop_by_look div img').live('click', function() {
+		$(this).parent().remove();
+		
+		$('#product-shop_by_look div:odd').attr('class', 'odd');
+		$('#product-shop_by_look div:even').attr('class', 'even');	
 	});
 
 	// sponsored

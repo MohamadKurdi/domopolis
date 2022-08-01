@@ -305,6 +305,15 @@
 					$this->db->query("INSERT INTO product_also_bought SET product_id = '" . (int)$also_bought_id . "', also_bought_id = '" . (int)$product_id . "'");
 				}
 			}
+
+			if (isset($data['product_shop_by_look'])) {
+				foreach ($data['product_shop_by_look'] as $shop_by_look_id) {
+					$this->db->query("DELETE FROM product_shop_by_look WHERE product_id = '" . (int)$product_id . "' AND shop_by_look_id = '" . (int)$shop_by_look_id . "'");
+					$this->db->query("INSERT INTO product_shop_by_look SET product_id = '" . (int)$product_id . "', shop_by_look_id = '" . (int)$shop_by_look_id . "'");
+					$this->db->query("DELETE FROM product_shop_by_look WHERE product_id = '" . (int)$shop_by_look_id . "' AND shop_by_look_id = '" . (int)$product_id . "'");
+					$this->db->query("INSERT INTO product_shop_by_look SET product_id = '" . (int)$shop_by_look_id . "', shop_by_look_id = '" . (int)$product_id . "'");
+				}
+			}
 			
 			$this->db->query("DELETE FROM product_child WHERE product_id = '" . (int)$product_id . "'");
 			if (isset($data['product_child'])) {									
@@ -1016,6 +1025,17 @@
 				}
 			}
 
+			$this->db->query("DELETE FROM product_shop_by_look WHERE product_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_shop_by_look WHERE shop_by_look_id = '" . (int)$product_id . "'");
+			
+			if (isset($data['product_shop_by_look'])) {
+				foreach ($data['product_shop_by_look'] as $shop_by_look_id) {
+					$this->db->query("DELETE FROM product_shop_by_look WHERE product_id = '" . (int)$product_id . "' AND shop_by_look_id = '" . (int)$shop_by_look_id . "'");
+					$this->db->query("INSERT INTO product_shop_by_look SET product_id = '" . (int)$product_id . "', shop_by_look_id = '" . (int)$shop_by_look_id . "'");
+					$this->db->query("DELETE FROM product_shop_by_look WHERE product_id = '" . (int)$shop_by_look_id . "' AND shop_by_look_id = '" . (int)$product_id . "'");
+					$this->db->query("INSERT INTO product_shop_by_look SET product_id = '" . (int)$shop_by_look_id . "', shop_by_look_id = '" . (int)$product_id . "'");
+				}
+			}
 
 			
 			$this->db->query("DELETE FROM product_child WHERE product_id = '" . (int)$product_id . "'");
@@ -2482,6 +2502,19 @@
 			}
 			
 			return $product_also_bought_data;
+		}
+
+		//Купить по внешнему виду, амазон shop_by_look
+		public function getProductShopByLook($product_id) {
+			$product_shop_by_look_data = array();
+			
+			$query = $this->db->query("SELECT * FROM product_shop_by_look WHERE product_id = '" . (int)$product_id . "'");
+			
+			foreach ($query->rows as $result) {
+				$product_shop_by_look_data[] = $result['shop_by_look_id'];
+			}
+			
+			return $product_shop_by_look_data;
 		}
 
 		public function getProductChild($product_id) {

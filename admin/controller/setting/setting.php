@@ -2721,12 +2721,6 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_rainforest_enable_compare_with_similar_adding'] = $this->config->get('config_rainforest_enable_compare_with_similar_adding');
 		}
 
-		if (isset($this->request->post['config_rainforest_enable_similar_to_consider_adding'])) {
-			$this->data['config_rainforest_enable_similar_to_consider_adding'] = $this->request->post['config_rainforest_enable_similar_to_consider_adding']; 
-		} else {
-			$this->data['config_rainforest_enable_similar_to_consider_adding'] = $this->config->get('config_rainforest_enable_similar_to_consider_adding');
-		}
-
 		if (isset($this->request->post['config_rainforest_enable_related_adding'])) {
 			$this->data['config_rainforest_enable_related_adding'] = $this->request->post['config_rainforest_enable_related_adding']; 
 		} else {
@@ -2737,6 +2731,38 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_rainforest_enable_sponsored_adding'] = $this->request->post['config_rainforest_enable_sponsored_adding']; 
 		} else {
 			$this->data['config_rainforest_enable_sponsored_adding'] = $this->config->get('config_rainforest_enable_sponsored_adding');
+		}
+
+
+		if (isset($this->request->post['config_rainforest_enable_similar_to_consider_adding'])) {
+			$this->data['config_rainforest_enable_similar_to_consider_adding'] = $this->request->post['config_rainforest_enable_similar_to_consider_adding']; 
+		} else {
+			$this->data['config_rainforest_enable_similar_to_consider_adding'] = $this->config->get('config_rainforest_enable_similar_to_consider_adding');
+		}
+
+
+		if (isset($this->request->post['config_rainforest_enable_view_to_purchase_adding'])) {
+			$this->data['config_rainforest_enable_view_to_purchase_adding'] = $this->request->post['config_rainforest_enable_view_to_purchase_adding']; 
+		} else {
+			$this->data['config_rainforest_enable_view_to_purchase_adding'] = $this->config->get('config_rainforest_enable_view_to_purchase_adding');
+		}
+
+		if (isset($this->request->post['config_rainforest_enable_also_viewed_adding'])) {
+			$this->data['config_rainforest_enable_also_viewed_adding'] = $this->request->post['config_rainforest_enable_also_viewed_adding']; 
+		} else {
+			$this->data['config_rainforest_enable_also_viewed_adding'] = $this->config->get('config_rainforest_enable_also_viewed_adding');
+		}
+
+		if (isset($this->request->post['config_rainforest_enable_also_bought_adding'])) {
+			$this->data['config_rainforest_enable_also_bought_adding'] = $this->request->post['config_rainforest_enable_also_bought_adding']; 
+		} else {
+			$this->data['config_rainforest_enable_also_bought_adding'] = $this->config->get('config_rainforest_enable_also_bought_adding');
+		}
+
+		if (isset($this->request->post['config_rainforest_enable_shop_by_look_adding'])) {
+			$this->data['config_rainforest_enable_shop_by_look_adding'] = $this->request->post['config_rainforest_enable_shop_by_look_adding']; 
+		} else {
+			$this->data['config_rainforest_enable_shop_by_look_adding'] = $this->config->get('config_rainforest_enable_shop_by_look_adding');
 		}
 
 		if (isset($this->request->post['config_rainforest_enable_auto_tree'])) {
