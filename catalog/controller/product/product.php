@@ -2529,7 +2529,8 @@
 						$filenames = array(
 						'image/jpg'  => '.jpg',
 						'image/jpeg' => '.jpeg',
-						'image/png'  => '.png'
+						'image/png'  => '.png',
+						'image/webp' => '.webp'
 						);
 						
 						$upload_file_name = md5(time()) . $filenames[$imageinfo['mime']];

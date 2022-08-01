@@ -811,7 +811,7 @@
 			return true;
 		}
 
-		public function parseProductVariants($product_id, $product, $do_adding_new_variants = true){			
+		public function parseProductVariants($product_id, $product, $do_adding_new_variants = true){
 			$this->parseProductVariantDimensions($product_id, $product);		
 
 			if (!empty($product['variants']) && $do_adding_new_variants){	
@@ -876,6 +876,13 @@
 				if (!empty($product['buybox_winner']['price']) && $product['buybox_winner']['price']['currency'] == 'EUR'){					
 					$this->model_product_edit->editProductFields($product_id, [['name' => 'amazon_best_price', 'type' => 'decimal', 'value' => $product['buybox_winner']['price']['value']]]);
 				}
+			}
+		}
+
+		public function parseProductTopReviews($product_id, $product){
+			if (!empty($product['top_reviews'])){
+
+
 			}
 		}
 
