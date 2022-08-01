@@ -6,7 +6,6 @@ class ControllerApiInfo1C extends Controller {
 		$gen_key = false;			
 
 		return (sha1($array['operation_id']) == mb_strtolower(str_replace(' ', '', $array['key'])));
-
 	}
 
 	public function getSimilarProductFromMainDB($product_id){
@@ -35,7 +34,6 @@ class ControllerApiInfo1C extends Controller {
 		}
 
 		return false;
-
 	}
 
 	public function getOrderJSON($order_id = 0){
@@ -130,9 +128,6 @@ class ControllerApiInfo1C extends Controller {
 		}
 
 		$this->response->setOutput(json_encode($result));
-
-
-
 	}
 
 	public function describeProductFields(){
@@ -191,7 +186,6 @@ class ControllerApiInfo1C extends Controller {
 
 		$this->response->setOutput('SQL EXECUTED:' . $sql);
 	}
-
 
 	public function describeOrderFields(){
 
@@ -360,8 +354,6 @@ class ControllerApiInfo1C extends Controller {
 		$order_data = array_unique($order_data);
 
 		$this->response->setOutput(json_encode($order_data));
-
-
 	}
 
 	public function getOrdersInCourierService(){
@@ -391,7 +383,6 @@ class ControllerApiInfo1C extends Controller {
 		$order_data = array_unique($order_data);
 
 		$this->response->setOutput(implode(',', $order_data));
-
 	}
 
 	public function getStockWaitsFrom1C(){
@@ -499,7 +490,6 @@ class ControllerApiInfo1C extends Controller {
 
 		$this->load->model('feed/exchange1c');
 		$this->model_feed_exchange1c->makeSalesResultXML($order_id, true, false, false, $delivery_num);
-
 	}
 
 	public function updateLocalPricesXML(){
@@ -621,9 +611,6 @@ class ControllerApiInfo1C extends Controller {
 
 			}
 		}
-
-
-
 	}
 
 	public function getAllVouchersList(){
@@ -667,7 +654,6 @@ class ControllerApiInfo1C extends Controller {
 		}
 
 		$this->response->setOutput(json_encode($return));
-
 	}
 
 	public function getFullWaitlist(){
@@ -707,9 +693,7 @@ class ControllerApiInfo1C extends Controller {
 		}
 
 		$this->response->setOutput(json_encode($return));
-
 	}
-
 
 	public function getOrderTrackerXML($order_id = false){
 
@@ -808,7 +792,6 @@ class ControllerApiInfo1C extends Controller {
 
 			} 
 		}						
-
 	}
 
 	public function updateOrdersInCourierService($json_data = ''){
@@ -2357,31 +2340,31 @@ class ControllerApiInfo1C extends Controller {
 
 
 		$this->response->setOutput(json_encode($query->rows));	
-
-
-
-
 	}
 
 	public function transactionSyncSet($transactionData){	
 		$this->load->model('sale/customer');
 		$this->load->model('sale/order');
 
-			//Это редактирование транзакции (изначально добавлена с сайта, у нее есть идентификатор
-			//Мы редактируем ТОЛЬКО ГУИД
+		if (empty($transactionData['customer_transaction_id']) && empty($transactionData['guid'])){
+			die('Both customer_transaction_id and guid are empty!');
+		}
+
+		//Это редактирование транзакции (изначально добавлена с сайта, у нее есть идентификатор
+		//Мы редактируем ТОЛЬКО ГУИД
 		if (!empty($transactionData['customer_transaction_id'])){
 			$transaction = $this->model_sale_customer->getTransactionByID($transactionData['customer_transaction_id']);
 
 				//Проверка на существование
 			if (!$transaction){
-				die('transaction '. $transactionData['customer_transaction_id'] .' does not exist, check please');
+				die('Transaction '. $transactionData['customer_transaction_id'] .' does not exist, check please');
 			} else {
 					//Если ок - то присваиваем ГУИД этой транзакции
 				$this->model_sale_customer->updateTransactionGUIDByTransactionID($transactionData['customer_transaction_id'], $transactionData['guid']);
-				die('guid updated');
+				die('Transaction found, guid updated');
 			}
 
-				//Не важно, есть ли индентификатор сайта, эта транзакция либо новая (если у нее нет customer_transaction_id, либо уже существующая)
+		//Не важно, есть ли индентификатор сайта, эта транзакция либо новая (если у нее нет customer_transaction_id, либо уже существующая)
 		} elseif (!empty($transactionData['guid'])){
 			$transaction = $this->model_sale_customer->getTransactionByGUID($transactionData['guid']);
 
@@ -2399,7 +2382,7 @@ class ControllerApiInfo1C extends Controller {
 
 			foreach ($fields as $field){
 				if (!isset($transactionData[$field])){
-					die('field empty: ' . $field . '');
+					die('JSON Field empty ' . $field);
 				}
 			}
 
@@ -2443,15 +2426,12 @@ class ControllerApiInfo1C extends Controller {
 
 			}	
 		}
-
 	}
-
 
 	public function transactionSyncGet($transactionData){		
 		$this->load->model('sale/customer');
 		$this->load->model('sale/order');
 		$transactions = array();
-
 
 		if (!empty($transactionData['order_id'])){
 			$order = $this->model_sale_order->getOrder($transactionData['order_id']);
@@ -2497,24 +2477,4 @@ class ControllerApiInfo1C extends Controller {
 		}
 		$this->response->setOutput(json_encode($transactions));	
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }																																

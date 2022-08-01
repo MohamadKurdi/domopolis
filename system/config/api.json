@@ -34,7 +34,9 @@
 		"api/info1c/putOrderTrackingInfo",
 		"api/info1c/updateOrdersInCourierService",
 		"api/info1c/describeTableFields",
-		"api/info1c/editOrderFields"		
+		"api/info1c/editOrderFields",
+		"api/info1c/transactionSyncGet",
+		"api/info1c/transactionSyncSet"
 	],
 	"configs":[
 		{
@@ -70,7 +72,9 @@
 			"api/info1c/putOrderTrackingInfo":			"/admin/config.php",
 			"api/info1c/updateOrdersInCourierService":	"/admin/config.php",
 			"api/info1c/describeTableFields":			"/admin/config.php",
-			"api/info1c/editOrderFields":				"/admin/config.php"
+			"api/info1c/editOrderFields":				"/admin/config.php",
+			"api/info1c/transactionSyncGet":			"/admin/config.php",
+			"api/info1c/transactionSyncSet":			"/admin/config.php"
 		}
 	],
 	"params":[
@@ -97,7 +101,9 @@
 			"api/info1c/putOrderTrackingInfo":					["tracking_data:json"],
 			"api/info1c/updateOrdersInCourierService":			["courier_data:json"],
 			"api/info1c/editOrderFields":						["order_id:int", "fields:json"],
-			"api/info1c/describeTableFields":					["table:string"]
+			"api/info1c/describeTableFields":					["table:string"],
+			"api/info1c/transactionSyncGet":					["transaction_data:json"],
+			"api/info1c/transactionSyncSet":					["transaction_data:json"]
 		}
 	],
 	"additional":[
@@ -154,7 +160,9 @@
 			"api/info1c/putOrderTrackingInfo":				"Добавить историю к трекингу заказа для клиента и уведомления клиента (если включено)",
 			"api/info1c/updateOrdersInCourierService":		"Обновить информацию о заказах, которые находятся в службе доставки",
 			"api/info1c/describeTableFields":				"Получить описание любой таблички базы данных - названия, тип данных полей и комментарии к ним",
-			"api/info1c/editOrderFields":					"Обновить произвольное поле в табличке заказов. При обновлении выполняется контроль типов данных. Описание таблички можно получить в api/info1c/describeTableFields?table=order"
+			"api/info1c/editOrderFields":					"Обновить произвольное поле в табличке заказов. При обновлении выполняется контроль типов данных. Описание таблички можно получить в api/info1c/describeTableFields?table=order",
+			"api/info1c/transactionSyncGet":				"Синхронизация финансовых транзакций - получение данных от сайта. Либо по заказу либо по покупателю",
+			"api/info1c/transactionSyncSet":				"Синхронизация финансовых транзакций - запись данных в БД сайта, либо обновление информации о транзакции"
 
 		}
 	],

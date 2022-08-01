@@ -42,5 +42,7 @@
 	"api/info1c/putOrderTrackingInfo":					"api/info1c/putOrderTrackingInfo",
 	"api/info1c/updateOrdersInCourierService":			"api/info1c/updateOrdersInCourierService",
 	"api/info1c/describeTableFields":					"api/info1c/describeTableFields",
-	"api/info1c/editOrderFields":						"api/info1c/editOrderFields"
+	"api/info1c/editOrderFields":						"api/info1c/editOrderFields",
+	"api/info1c/transactionSyncGet":					"api/info1c/transactionSyncGet",
+	"api/info1c/transactionSyncSet":					"api/info1c/transactionSyncSet"
 }
