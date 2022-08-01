@@ -653,17 +653,14 @@
 						$this->db->query("INSERT INTO product_price_to_store SET store_id = '" . (int)$key . "', product_id = '" . (int)$product_id . "', price = '" . (float)$value['price'] . "', dot_not_overload_1c = '" . (int)$value['dot_not_overload_1c'] . "', settled_from_1c = '" . (int)$value['settled_from_1c'] . "'");
 						
 					}
-				}
-				
+				}				
 			}
 			
 			$this->db->query("DELETE FROM product_price_national_to_store WHERE product_id = '" . (int)$product_id . "'");
 			
 			if (isset($data['product_price_national_to_store'])) {
 				$this->load->model('setting/setting');
-				
-				
-				
+												
 				foreach ($data['product_price_national_to_store'] as $key => $value){
 
 					if ($value && (!empty($value['price']) || !empty($value['dot_not_overload_1c']))) {					
@@ -671,8 +668,7 @@
 						$this->db->query("INSERT INTO product_price_national_to_store SET store_id = '" . (int)$key . "', product_id = '" . (int)$product_id . "', price = '" . (float)$value['price'] . "', dot_not_overload_1c = '" . (int)$value['dot_not_overload_1c'] . "', settled_from_1c = '" . (int)$value['settled_from_1c'] . "',  currency = '" . $this->db->escape($this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', (int)$key)) . "'");
 						
 					}
-				}
-				
+				}				
 			}
 			
 			$this->db->query("DELETE FROM product_price_national_to_yam WHERE product_id = '" . (int)$product_id . "'");
@@ -680,19 +676,13 @@
 			if (isset($data['product_price_national_to_yam'])) {
 				$this->load->model('setting/setting');
 				
-				
-				
 				foreach ($data['product_price_national_to_yam'] as $key => $value){
-					
-					
-					
 					if ($value && (!empty($value['price']) || !empty($value['dot_not_overload_1c']))) {					
 						
 						$this->db->query("INSERT INTO product_price_national_to_yam SET store_id = '" . (int)$key . "', product_id = '" . (int)$product_id . "', price = '" . (float)$value['price'] . "', dot_not_overload_1c = '" . (int)$value['dot_not_overload_1c'] . "', settled_from_1c = '" . (int)$value['settled_from_1c'] . "',  currency = '" . $this->db->escape($this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', (int)$key)) . "'");
 						
 					}
-				}
-				
+				}				
 			}
 
 			$this->db->query("DELETE FROM product_stock_status WHERE product_id = '" . (int)$product_id . "'");
@@ -701,12 +691,9 @@
 				foreach ($data['product_stock_status'] as $key => $value){
 					
 					if ($value > 0) {
-						
 						$this->db->query("INSERT INTO product_stock_status SET store_id = '" . (int)$key . "', product_id = '" . (int)$product_id . "', stock_status_id = '" . (int)$value . "'");
-						
 					}
 				}
-				
 			}	
 			
 			$this->db->query("DELETE FROM product_stock_limits WHERE product_id = '" . (int)$product_id . "'");
@@ -715,9 +702,7 @@
 				foreach ($data['product_stock_limits'] as $key => $value){
 					
 					if (is_array($value)) {
-						
 						$this->db->query("INSERT INTO product_stock_limits SET store_id = '" . (int)$key . "', product_id = '" . (int)$product_id . "', min_stock = '" . (int)$value['min_stock'] . "', rec_stock = '" . (int)$value['rec_stock'] . "'");
-						
 					}
 				}
 				
@@ -728,7 +713,7 @@
 			
 			if (isset($data['product_option'])) {
 				
-				$this->addBatchOptions($data); //Q: Options Boost
+				$this->addBatchOptions($data);
 				
 				foreach ($data['product_option'] as $product_option) {
 					if ($product_option['type'] == 'select' || $product_option['type'] == 'block' || $product_option['type'] == 'radio' || $product_option['type'] == 'checkbox' || $product_option['type'] == 'image') {
@@ -740,14 +725,13 @@
 							foreach ($product_option['product_option_value'] as $product_option_value) {
 								$this->db->query("INSERT INTO product_option_value SET product_option_value_id = '" . (int)$product_option_value['product_option_value_id'] . "', product_option_id = '" . (int)$product_option_id . "', product_id = '" . (int)$product_id . "', option_id = '" . (int)$product_option['option_id'] . "', this_is_product_id = '" . (int)$product_option_value['this_is_product_id'] . "', option_value_id = '" . (int)$product_option_value['option_value_id'] . "', quantity = '" . (int)$product_option_value['quantity'] . "', subtract = '" . (int)$product_option_value['subtract'] . "', price = '" . (float)$product_option_value['price'] . "', price_prefix = '" . $this->db->escape($product_option_value['price_prefix']) . "', points = '" . (int)$product_option_value['points'] . "', points_prefix = '" . $this->db->escape($product_option_value['points_prefix']) . "', weight = '" . (float)$product_option_value['weight'] . "', weight_prefix = '" . $this->db->escape($product_option_value['weight_prefix']) . "'");
 								
-								//Q: Options Boost
+
 								$ob_pov_id = $this->db->getLastId();
 								if(isset($product_option_value['ob_sku'])) { $this->db->query("UPDATE product_option_value SET ob_sku = '" . $this->db->escape($product_option_value['ob_sku']) . "' WHERE product_option_value_id = '" . (int)$ob_pov_id . "'"); }
 								if(isset($product_option_value['ob_info'])) { $this->db->query("UPDATE product_option_value SET ob_info = '" . $this->db->escape($product_option_value['ob_info']) . "' WHERE product_option_value_id = '" . (int)$ob_pov_id . "'"); }
 								if(isset($product_option_value['ob_image'])) { $this->db->query("UPDATE product_option_value SET ob_image = '" . $this->db->escape($product_option_value['ob_image']) . "' WHERE product_option_value_id = '" . (int)$ob_pov_id . "'"); }
 								if(isset($product_option_value['ob_sku_override'])) { $this->db->query("UPDATE product_option_value SET ob_sku_override = '" . $this->db->escape($product_option_value['ob_sku_override']) . "' WHERE product_option_value_id = '" . (int)$ob_pov_id . "'"); }
 								unset($ob_pov_id);
-								//
 							}
 							}else{
 							$this->db->query("DELETE FROM product_option WHERE product_option_id = '".$product_option_id."'");
@@ -792,7 +776,6 @@
 				}
 			}
 			
-			/*Additional offer*/
 			$this->db->query("DELETE FROM product_additional_offer WHERE product_id = '" . (int)$product_id . "'");
 			
 			if (isset($data['product_additional_offer'])) {
@@ -847,9 +830,7 @@
 					}
 				}
 			}
-			/*Additional offer*/
-			
-			/* FAproduct */
+
 			if (isset($data['faproduct_facategory'])) {
 				$this->load->model('catalog/faproduct');
 				$this->model_catalog_faproduct->setFAproductCats((int)$product_id, $data['faproduct_facategory']);
@@ -863,7 +844,6 @@
 					);
 				}
 			} 
-			/* FAproduct */
 			
 			$this->db->query("DELETE FROM product_image WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -996,8 +976,6 @@
 				foreach ($data['product_view_to_purchase'] as $view_to_purchase_id) {
 					$this->db->query("DELETE FROM product_view_to_purchase WHERE product_id = '" . (int)$product_id . "' AND view_to_purchase_id = '" . (int)$view_to_purchase_id . "'");
 					$this->db->query("INSERT INTO product_view_to_purchase SET product_id = '" . (int)$product_id . "', view_to_purchase_id = '" . (int)$view_to_purchase_id . "'");
-					$this->db->query("DELETE FROM product_view_to_purchase WHERE product_id = '" . (int)$view_to_purchase_id . "' AND view_to_purchase_id = '" . (int)$product_id . "'");
-					$this->db->query("INSERT INTO product_view_to_purchase SET product_id = '" . (int)$view_to_purchase_id . "', view_to_purchase_id = '" . (int)$product_id . "'");
 				}
 			}
 

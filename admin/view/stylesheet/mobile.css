@@ -27,9 +27,6 @@
 	#content .tile .tile-body i{
 		font-size: 30px !important;
 	}
-	#content .tile .tile-footer {
-	    min-height: 36px !important;
-	}
 	#menu > div:first-of-type{
 		float: right !important;
 	}

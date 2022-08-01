@@ -3564,7 +3564,7 @@
 							<h2>Rainforest API (получение цен и прочей шляпы из Amazon)</h2>
 							<table class="form">
 								<tr>
-									<td style="width:15%">
+									<td style="width:20%">
 										<div>
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Включить rfAPI</span></p>
 										<select name="config_rainforest_enable_api">
@@ -3583,7 +3583,7 @@
 										</div>
 									</td>									
 									
-									<td style="width:15%">
+									<td style="width:20%">
 										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Домен rfAPI - 1</span></p>
 											<select name="config_rainforest_api_domain_1">
@@ -3599,7 +3599,7 @@
 										</div>
 									</td>
 									
-									<td style="width:15%">
+									<td style="width:20%">
 										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Модель работы</span></p>
 											<select name="config_rainforest_category_model">
@@ -3608,7 +3608,6 @@
 													<option value="<?php echo $rainforest_model; ?>" <?php if ($rainforest_model == $config_rainforest_category_model) { ?> selected="selected"<?php } ?>><?php echo $rainforest_model; ?></option>
 												<?php } ?>
 											</select>
-
 										</div>
 
 										<div>
@@ -3622,7 +3621,11 @@
 													<option value="0"  selected="selected">Отключить</option>
 												<? } ?>
 											</select>
-										</div>
+										</div>										
+									</td>
+
+									<td style="width:20%">
+
 										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ID технической категории</span></p>
 											<input type="number" name="config_rainforest_default_technical_category_id" value="<?php echo $config_rainforest_default_technical_category_id; ?>" size="50" style="width:90px;" />
@@ -3634,115 +3637,7 @@
 										</div>
 									</td>
 
-									<td style="width:15%">
-										<div>
-											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Добавлять compare_with_similar</span></p>
-											<select name="config_rainforest_enable_compare_with_similar_adding">
-												<?php if ($config_rainforest_enable_compare_with_similar_adding) { ?>
-													<option value="1" selected="selected">Включить</option>
-													<option value="0">Отключить</option>
-												<?php } else { ?>													
-													<option value="1">Включить</option>
-													<option value="0"  selected="selected">Отключить</option>
-												<? } ?>
-											</select>										
-										</div>
-										<div>
-											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Добавлять frequently_bought_together</span></p>
-											<select name="config_rainforest_enable_related_adding">
-												<?php if ($config_rainforest_enable_related_adding) { ?>
-													<option value="1" selected="selected">Включить</option>
-													<option value="0">Отключить</option>
-												<?php } else { ?>													
-													<option value="1">Включить</option>
-													<option value="0"  selected="selected">Отключить</option>
-												<? } ?>
-											</select>	
-										</div>
-										<div>
-											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Добавлять sponsored_products</span></p>
-											<select name="config_rainforest_enable_sponsored_adding">
-												<?php if ($config_rainforest_enable_sponsored_adding) { ?>
-													<option value="1" selected="selected">Включить</option>
-													<option value="0">Отключить</option>
-												<?php } else { ?>													
-													<option value="1">Включить</option>
-													<option value="0"  selected="selected">Отключить</option>
-												<? } ?>
-											</select>
-											<br />
-											<span class="help">рекламный блок на амазоне</span>
-										</div>
-
-										<div>
-											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Добавлять similar_to_consider</span></p>
-											<select name="config_rainforest_enable_similar_to_consider_adding">
-												<?php if ($config_rainforest_enable_similar_to_consider_adding) { ?>
-													<option value="1" selected="selected">Включить</option>
-													<option value="0">Отключить</option>
-												<?php } else { ?>													
-													<option value="1">Включить</option>
-													<option value="0"  selected="selected">Отключить</option>
-												<? } ?>
-											</select>
-										</div>
-									</td>
-
-									<td style="width:15%">
-										<div>
-											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Добавлять view_to_purchase</span></p>
-											<select name="config_rainforest_enable_view_to_purchase_adding">
-												<?php if ($config_rainforest_enable_view_to_purchase_adding) { ?>
-													<option value="1" selected="selected">Включить</option>
-													<option value="0">Отключить</option>
-												<?php } else { ?>													
-													<option value="1">Включить</option>
-													<option value="0"  selected="selected">Отключить</option>
-												<? } ?>
-											</select>
-										</div>
-
-										<div>
-											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Добавлять also_viewed</span></p>
-											<select name="config_rainforest_enable_also_viewed_adding">
-												<?php if ($config_rainforest_enable_also_viewed_adding) { ?>
-													<option value="1" selected="selected">Включить</option>
-													<option value="0">Отключить</option>
-												<?php } else { ?>													
-													<option value="1">Включить</option>
-													<option value="0"  selected="selected">Отключить</option>
-												<? } ?>
-											</select>
-										</div>
-
-										<div>
-											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Добавлять also_bought</span></p>
-											<select name="config_rainforest_enable_also_bought_adding">
-												<?php if ($config_rainforest_enable_also_bought_adding) { ?>
-													<option value="1" selected="selected">Включить</option>
-													<option value="0">Отключить</option>
-												<?php } else { ?>													
-													<option value="1">Включить</option>
-													<option value="0"  selected="selected">Отключить</option>
-												<? } ?>
-											</select>
-										</div>
-
-										<div>
-											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Добавлять shop_by_look</span></p>
-											<select name="config_rainforest_enable_shop_by_look_adding">
-												<?php if ($config_rainforest_enable_shop_by_look_adding) { ?>
-													<option value="1" selected="selected">Включить</option>
-													<option value="0">Отключить</option>
-												<?php } else { ?>													
-													<option value="1">Включить</option>
-													<option value="0"  selected="selected">Отключить</option>
-												<? } ?>
-											</select>
-										</div>
-									</td>
-
-									<td style="width:15%">
+									<td style="width:20%">
 										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Загружать макс вариантов</span></p>
 											=<input type="number" name="config_rainforest_max_variants" value="<?php echo $config_rainforest_max_variants; ?>" size="50" style="width:100px;" />
@@ -3754,7 +3649,7 @@
 									</td>
 									
 									
-									<td style="width:15%">
+									<td style="width:20%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Фильтры rfAPI - 1</span></p>
 										<div class="scrollbox" style="height:200px;">
 											<?php $class = 'odd'; ?>
@@ -3774,9 +3669,223 @@
 										<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);">Выделить всё</a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);">Снять выделение</a>
 									</td>									
 								</tr>
-								<tr>
 
-									<td style="width:15%">
+								<tr>
+									<td style="width:20%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Обрабатывать compare_with_similar</span></p>
+											<select name="config_rainforest_enable_compare_with_similar_parsing">
+												<?php if ($config_rainforest_enable_compare_with_similar_parsing) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>										
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Обрабатывать frequently_bought_together</span></p>
+											<select name="config_rainforest_enable_related_parsing">
+												<?php if ($config_rainforest_enable_related_parsing) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>	
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Обрабатывать sponsored_products</span></p>
+											<select name="config_rainforest_enable_sponsored_parsing">
+												<?php if ($config_rainforest_enable_sponsored_parsing) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Обрабатывать similar_to_consider</span></p>
+											<select name="config_rainforest_enable_similar_to_consider_parsing">
+												<?php if ($config_rainforest_enable_similar_to_consider_parsing) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+									</td>
+
+									<td style="width:20%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Обрабатывать view_to_purchase</span></p>
+											<select name="config_rainforest_enable_view_to_purchase_parsing">
+												<?php if ($config_rainforest_enable_view_to_purchase_parsing) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Обрабатывать also_viewed</span></p>
+											<select name="config_rainforest_enable_also_viewed_parsing">
+												<?php if ($config_rainforest_enable_also_viewed_parsing) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Обрабатывать also_bought</span></p>
+											<select name="config_rainforest_enable_also_bought_parsing">
+												<?php if ($config_rainforest_enable_also_bought_parsing) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Обрабатывать shop_by_look</span></p>
+											<select name="config_rainforest_enable_shop_by_look_parsing">
+												<?php if ($config_rainforest_enable_shop_by_look_parsing) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+									</td>
+
+									<td style="width:20%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Добавлять compare_with_similar</span></p>
+											<select name="config_rainforest_enable_compare_with_similar_adding">
+												<?php if ($config_rainforest_enable_compare_with_similar_adding) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>										
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Добавлять frequently_bought_together</span></p>
+											<select name="config_rainforest_enable_related_adding">
+												<?php if ($config_rainforest_enable_related_adding) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>	
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Добавлять sponsored_products</span></p>
+											<select name="config_rainforest_enable_sponsored_adding">
+												<?php if ($config_rainforest_enable_sponsored_adding) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Добавлять similar_to_consider</span></p>
+											<select name="config_rainforest_enable_similar_to_consider_adding">
+												<?php if ($config_rainforest_enable_similar_to_consider_adding) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+									</td>
+
+									<td style="width:20%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Добавлять view_to_purchase</span></p>
+											<select name="config_rainforest_enable_view_to_purchase_adding">
+												<?php if ($config_rainforest_enable_view_to_purchase_adding) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Добавлять also_viewed</span></p>
+											<select name="config_rainforest_enable_also_viewed_adding">
+												<?php if ($config_rainforest_enable_also_viewed_adding) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Добавлять also_bought</span></p>
+											<select name="config_rainforest_enable_also_bought_adding">
+												<?php if ($config_rainforest_enable_also_bought_adding) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Добавлять shop_by_look</span></p>
+											<select name="config_rainforest_enable_shop_by_look_adding">
+												<?php if ($config_rainforest_enable_shop_by_look_adding) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+									</td>
+								</tr>
+
+								<tr>
+									<td style="width:20%">
 										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Переводить</span></p>
 											<select name="config_rainforest_enable_translation">
@@ -3802,12 +3911,9 @@
 											</select>
 										</div>
 									</td>
-								
-									<td style="width:15%">
 										
-									</td>
 
-									<td style="width:15%">
+									<td style="width:20%">
 									<?php foreach ($languages as $language) { ?>
 										<?php if ($language['code'] != $config_rainforest_source_language) { ?>
 											<div>
@@ -3827,7 +3933,7 @@
 									</td>
 
 
-									<td style="width:15%">
+									<td style="width:20%">
 										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Обновлять кат. раз в Х дней</span></p>
 											<input type="number" name="config_rainforest_category_update_period" value="<?php echo $config_rainforest_category_update_period; ?>" size="50" style="width:100px;" />
@@ -3838,12 +3944,12 @@
 										</div>
 									</td>
 
-									<td style="width:15%">
+									<td style="width:20%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">TG группа уведомлений</span></p>
 										<input type="text" name="config_rainforest_tg_alert_group_id" value="<?php echo $config_rainforest_tg_alert_group_id; ?>" size="50" style="width:250px;" />
 									</td>
 
-									<td style="width:15%">
+									<td style="width:20%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Автоматическое дерево</span></p>
 										<select name="config_rainforest_enable_auto_tree">
 											<?php if ($config_rainforest_enable_auto_tree) { ?>
@@ -3856,7 +3962,7 @@
 										</select>
 									</td>
 
-									<td style="width:15%">
+									<td style="width:20%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Корневые категории Amazon</span></p>
 										<textarea name="config_rainforest_root_categories" rows="3"><?php echo $config_rainforest_root_categories; ?></textarea>
 									</td>

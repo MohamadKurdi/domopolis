@@ -25,13 +25,15 @@
 <? } ?>
 
 <a class="link_headr cache-button-warn" onclick="$('#clearCacheR').load('<? echo $clear_memcache ?>');" >
-	<i class="fa fa-eraser" aria-hidden="true"></i> БД <span id="clearCacheR"></span>
+	<i class="fa fa-eraser" aria-hidden="true"></i><span class="hidden-xs"> БД </span><span id="clearCacheR"></span>
 </a>
 
 
 <?php if ($this->user->getUserGroup() == 1) { ?>
-
+	
+	<? /*
 	<a class="link_headr <? if ($noCacheMode) { ?>link_enter cache-button-bad<? } else { ?> cache-button-good<?php } ?>" onclick="$('#noCacheR').load('<? echo $noCacheModeLink ?>');">L1 <span id='noCacheR'><? echo ($noCacheMode?'OFF':'ON'); ?> <?php if (!empty($noCacheModeDuration)) { ?><i class="fa fa-clock-o"></i> <? echo $noCacheModeDuration ?><? } ?></span></a>
+	*/ ?>
 	
 	<a class="link_headr <? if ($noPageCacheMode) { ?>link_enter cache-button-bad<? } else { ?> cache-button-good<?php } ?>" onclick="$('#noPageCacheR').load('<? echo $noPageCacheModeLink ?>');">FPC <span id='noPageCacheR'><? echo ($noPageCacheMode?'OFF':'ON'); ?> <?php if (!empty($noPageCacheModeDuration)) { ?><i class="fa fa-clock-o"></i> <? echo $noPageCacheModeDuration ?> / <? } ?> <?php echo $noPageCacheModeTTL; ?></span>
 	</a>
