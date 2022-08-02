@@ -930,11 +930,12 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$this->data['config_currency_auto'] = $this->config->get('config_currency_auto');
 		}
-			// Показывать меню слева
-		if (isset($this->request->post['show_menu_in_left'])) {
-			$this->data['show_menu_in_left'] = $this->request->post['show_menu_in_left'];
+			
+		//Добавить меню как child на homepage
+		if (isset($this->request->post['config_mmenu_on_homepage'])) {
+			$this->data['config_mmenu_on_homepage'] = $this->request->post['config_mmenu_on_homepage'];
 		} else {
-			$this->data['show_menu_in_left'] = $this->config->get('show_menu_in_left');
+			$this->data['config_mmenu_on_homepage'] = $this->config->get('config_mmenu_on_homepage');
 		}
 		
 		$this->load->model('localisation/currency');

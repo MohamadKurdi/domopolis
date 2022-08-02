@@ -129,6 +129,10 @@
 			'common/footer',
 			'common/header',
 			);
+
+			if ($this->config->get('config_mmenu_on_homepage')){
+				$this->children[] = 'module/mmenu';
+			}
 			
 			$this->response->setOutput($this->render());
 		}

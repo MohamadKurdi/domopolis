@@ -368,7 +368,7 @@
 						<table class="form">
 							<tr>											
 								<td style="width:20%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><span class="required">*</span> <?php echo $entry_title; ?></span></p>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_title; ?></span></p>
 									<textarea name="config_title" cols="40" rows="5"><?php echo $config_title; ?></textarea>
 									<?php if ($error_title) { ?>
 										<span class="error"><?php echo $error_title; ?></span>
@@ -393,34 +393,33 @@
 											</select>
 										</td>
 
-								<td style="width:20%">										
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_layout; ?></p>
-										<select name="config_layout_id">
-											<?php foreach ($layouts as $layout) { ?>
-												<?php if ($layout['layout_id'] == $config_layout_id) { ?>
-													<option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
-												<?php } else { ?>
-													<option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
-												<?php } ?>
-											<?php } ?>
-										</select>
-									</td>
-									<td style="width:20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Меню</p>
-											<? if ($show_menu_in_left) { ?>
-												<select type="select" name="show_menu_in_left">
-													<option value="1" selected='selected' >Да, показывать меню слева</option>
-													<option value="0" >Нет, показывать меню сверху</option>
+										<td style="width:20%">										
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_layout; ?></p>
+												<select name="config_layout_id">
+													<?php foreach ($layouts as $layout) { ?>
+														<?php if ($layout['layout_id'] == $config_layout_id) { ?>
+															<option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
+														<?php } else { ?>
+															<option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
+														<?php } ?>
+													<?php } ?>
 												</select>
-											<? } else { ?>
-												<select name="show_menu_in_left">
-													<option value="1" >Да, показывать меню слева</option>
-													<option value="0"  selected='selected' >Нет, показывать меню сверху</option>
-												</select>
-											<? } ?>  
-										</td>
-								</tr>
-							</table>							
+											</td>
+
+											<td style="width:20%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Добавить меню в homepage</p>
+													<select type="select" name="config_mmenu_on_homepage">
+														<? if ($config_mmenu_on_homepage) { ?>
+															<option value="1" selected='selected' >Да</option>
+															<option value="0" >Нет</option>
+														<? } else { ?>
+															<option value="1" >Да</option>
+															<option value="0"  selected='selected' >Нет</option>
+														<? } ?>       
+													</select>
+												</td>
+											</tr>
+										</table>							
 						</div>
 
 					<div id="tab-terms">
