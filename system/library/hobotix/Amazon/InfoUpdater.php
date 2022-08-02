@@ -23,7 +23,9 @@ class InfoUpdater
 
 	private $removeFromReview = [
 		'Читайте далі',
-		'Докладно'
+		'читайте далі',
+		'Докладно',
+		'Lesen Sie weiter'
 	];
 
 	public const descriptionsQueryLimit = 5000;
@@ -57,6 +59,9 @@ class InfoUpdater
 
 		//Кавычки и другие символы, одинарная кавычка только с пробелом, потому что иначе это апостроф
 		$review = str_replace(["&amp;", "' ", "( "], ['&', ' ', '('], $review);
+
+		//Упоминания Amazon
+		$review = str_ireplace(["Amazon", "amazon", "Амазон"], ['Domopolis'], $review);
 
 		//Кавычка в начале - точно не апостроф
 		$review = ltrim($review, "'");

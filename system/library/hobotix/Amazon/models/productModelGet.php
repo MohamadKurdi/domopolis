@@ -114,16 +114,30 @@ class productModelGet extends hoboModel{
 		return $result;
 	}
 
-	public function getTotalProductsWithFullData(){
-		$sql = "SELECT COUNT(product_id) as total FROM product_amzn_data WHERE product_id IN (SELECT product_id FROM product)";
+	public function getTotalProductsWithFullData($filter_data = []){
+		$sql = "SELECT COUNT(pad.product_id) as total FROM product_amzn_data pad LEFT JOIN product p ON (p.product_id = pad.product_id) WHERE pad.product_id IN (SELECT product_id FROM product)";
+
+		if (!empty($filter_data)){
+			foreach ($filter_data as $filter => $value){
+				$sql .= " AND p.`" . $this->db->escape($filter) . "` = '" . $this->db->escape($value) . "' ";
+			}
+		}
 
 		return $this->db->ncquery($sql)->row['total'];
 	}
 
-	public function getProductsWithFullData($start){
+	public function getProductsWithFullData($start, $filter_data = []){
 		$result = [];
 
-		$sql = "SELECT * FROM product_amzn_data WHERE product_id IN (SELECT product_id FROM product) ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
+		$sql = "SELECT pad.* FROM product_amzn_data pad LEFT JOIN product p ON (p.product_id = pad.product_id) WHERE pad.product_id IN (SELECT product_id FROM product) ";
+
+		if (!empty($filter_data)){
+			foreach ($filter_data as $filter => $value){
+				$sql .= " AND p.`" . $this->db->escape($filter) . "` = '" . $this->db->escape($value) . "' ";
+			}
+		}
+
+		$sql .= " ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
 
 		$query = $this->db->ncquery($sql);
 
