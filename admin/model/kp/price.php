@@ -1,8 +1,6 @@
 <?
 	class ModelKpPrice extends Model {
 
-
-
 		public function roundPrices(){
 			$affected = 0;
 			
@@ -61,25 +59,16 @@
 				return $affected;
 			}
 		}
-
-		
+	
 		public function guessPrice($price){
 			
-			return number_format($price * $this->getCoefficient($price), 2, '.', ' ');
-			
+			return number_format($price * $this->getCoefficient($price), 2, '.', ' ');			
 		}
 		
-		public function guessPriceByProductId($product_id){
-			
-			
-			
-			
-			
+		public function guessPriceByProductId($product_id){	
 		}
-		
-		
-		public function getProductResultPriceByStore($product_id, $store_id)
-        {
+			
+		public function getProductResultPriceByStore($product_id, $store_id){
 			
 			$this->load->model('setting/setting');
 			$this->load->model('localisation/currency');
@@ -262,6 +251,5 @@
 			*/
 			public function getProductPriceFromSources ($product_id) {
 				return;
-			}
-			
+			}			
 		}							

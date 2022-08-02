@@ -6,18 +6,7 @@
 		'm.market.yandex.ru',
 		'hotline.ua',
 		'rozetka.com.ua'
-		);
-		
-		private function mb_ucfirst($word)
-		{
-			return mb_strtoupper(mb_substr($word, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($word, 1, mb_strlen($word), 'UTF-8');
-		}
-		
-		private function bool_real_stripos($haystack, $needle){
-			
-			return !(stripos($haystack, $needle) === false);
-			
-		}
+		);						
 		
 		public function getCityByIpAddrAjax($ip = false){
 			if (!empty($this->request->get['ip'])){
@@ -27,12 +16,9 @@
 			$ipapi = new maciejkrol\ipapicom\ipapi ($this->config->get('config_ip_api_key'));
 			$ipResult = $ipapi->locate($ip);
 			
-			$this->response->setOutput(json_encode($ipResult));
-			
+			$this->response->setOutput(json_encode($ipResult));		
 		}
-		
-		
-		
+			
 		public function customAddressFields($data) {
 			$this->load->model('tool/simplecustom');
 			
@@ -91,9 +77,7 @@
 			}
 			
 			
-			return $_price;
-			
-			
+			return $_price;			
 		}				
 		
 		private function dateDiff($date1, $date2){
@@ -107,8 +91,7 @@
 			
 			return $d;
 		}				
-		
-		//даты заказа
+				
 		public function processTimes($order_id){
 			$this->load->model('sale/order');
 			$order = $this->model_sale_order->getOrder($order_id);
@@ -134,11 +117,9 @@
 			'date_added'    => $order['date_added'],
 			'date_accepted' => $date_accepted,
 			'date_closed'   => $date_closed
-			);
-			
+			);			
 		}		
-		
-		//Нужна ли подпись клиента в чеке
+				
 		public function customerNeedSign($delivery_code){
 			$a = array(
 			'dostavkaplus.sh1',
@@ -149,7 +130,7 @@
 			
 			);
 			
-			return (in_array($delivery_code, $a) || $this->bool_real_stripos($delivery_code, 'pickup_advanced'));
+			return (in_array($delivery_code, $a) || bool_real_stripos($delivery_code, 'pickup_advanced'));
 		}
 		
 		public function getPickupName($delivery_code){
@@ -162,8 +143,7 @@
 				return 	$delivery_names[$delivery_code];		
 				} else {
 				return false;
-			}	
-			
+			}				
 		}
 		
 		public function getPickupName2($delivery_code){
@@ -176,8 +156,7 @@
 				return 	$delivery_names[$delivery_code];		
 				} else {
 				return false;
-			}	
-			
+			}				
 		}
 		
 		public function getPickupPhone($delivery_code){
@@ -191,55 +170,8 @@
 				} else {
 				return false;
 			}	
-		}
-		
-		
-		public function getDeliveryCompany($delivery_code, $second = false){
+		}				
 			
-			if ($second) {
-				$delivery_names = array(
-				//украшка
-				'dostavkaplus.sh3' 		=> 'Новой Почтой',
-				'dostavkaplus.sh13' 	=> 'Новой Почтой',
-				'dostavkaplus.sh14' 	=> 'УкрПочтой',
-				'dostavkaplus.sh15' 	=> 'JustIn',
-				'dostavkaplus.sh4'	 	=> 'ТК ИнТайм',
-				//рашка
-				'dostavkaplus.sh5' => 'Почтой России ЕМS',
-				'dostavkaplus.sh6' => 'ТК СДЭК',
-				//Белорашка
-				'dostavkaplus.sh16' => 'БелПочтой',
-				);
-				
-				if (!empty($delivery_names[$delivery_code])){
-					return $delivery_names[$delivery_code];		
-					} else {
-					return "неизвестно";
-				}	
-			}
-			
-			$delivery_names = array(
-			//украшка
-			'dostavkaplus.sh3' => 'Новой Почтой',
-			'dostavkaplus.sh13' => 'Новой Почтой',
-			'dostavkaplus.sh14' => 'УкрПочтой',
-			'dostavkaplus.sh15' => 'JustIn',
-			'dostavkaplus.sh4' => 'ТК ИнТайм',
-			//рашка
-			'dostavkaplus.sh5' => 'Почтой России ЕМS',
-			'dostavkaplus.sh6' => 'ТК СДЭК',
-			//Белорашка
-			'dostavkaplus.sh16' => 'БелПочтой',
-			);
-			
-			if (isset($delivery_names[$delivery_code])){
-				return 	$delivery_names[$delivery_code];		
-				} else {
-				return "неизвестно";
-			}	
-		}
-		
-		
 		public function orderHasPrepay($order_id){
 			$this->load->model('sale/order');
 			$totals = $this->model_sale_order->getOrderTotals($order_id);
@@ -247,7 +179,7 @@
 			$has_prepay = false;
 			
 			foreach ($totals as $total){
-				if ($this->bool_real_stripos($total['title'], 'предоплата') || ($total['code'] == 'cod')){
+				if (bool_real_stripos($total['title'], 'предоплата') || ($total['code'] == 'cod')){
 					$has_prepay = true;
 					break;
 				}
@@ -286,8 +218,7 @@
 			
 			return false;
 		}
-		
-		
+				
 		public function index() {
 			$this->language->load('sale/order');
 			
@@ -1317,9 +1248,8 @@
 			}
 			
 			$this->data['courier_statuses'] = $this->model_sale_order->getOrderCourierAllStatuses();
-			$this->data['shipping_methods'] = $this->model_sale_order->getOrderCourierAllShippingMethods();
-			
-			$this->data['payment_methods'] = $this->model_sale_order->getOrderCourierAllPaymentMethods();
+			$this->data['shipping_methods'] = $this->model_sale_order->getOrderCourierAllShippingMethods();			
+			$this->data['payment_methods']  = $this->model_sale_order->getOrderCourierAllPaymentMethods();
 			
 			
 			$this->load->model('module/referrer');
@@ -1331,12 +1261,6 @@
 			foreach ($results as $result) {
 				$action = array();
 				
-				/*
-					$action[] = array(
-					'text' => $this->language->get('text_view'),
-					'href' => $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL')
-					);
-				*/	
 				$action[] = array(
 				'text' => '<i class="fa fa-file-excel-o"></i>',
 				'href' => $this->url->link('report/export_xls/createProductsInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, 'SSL')
@@ -1440,13 +1364,11 @@
 				}
 				
 				$_order_parties = array();
-				foreach ($_order_parties_tmp as $_partie){
-					
+				foreach ($_order_parties_tmp as $_partie){					
 					$_order_parties []= array(
 					'part_num' => $_partie,
 					'href'     => $this->url->link('sale/order', 'filter_order_id=' . $_partie . '&token=' . $this->session->data['token'], 'SSL')				
-					);
-					
+					);				
 				}
 				
 				if ($result['total_national'] > 0){
@@ -1519,7 +1441,9 @@
 						}
 						
 						$zero_product_current_total = -1 * ($zero_product_current_price['price'] * $zero_price_product_quantity);
-						$zero_product_current_total_national = $this->currency->convert($zero_product_current_total, $this->config->get('config_currency'), $result['currency_code']);
+						$zero_product_current_total_national = $zero_product_current_total; 
+						//Maybe a bug, but not sure
+						//$this->currency->convert($zero_product_current_total, $this->config->get('config_currency'), $result['currency_code']);
 						
 						$total_discount += $zero_product_current_total_national;
 						$sub_total += -1 * $zero_product_current_total_national;
@@ -4246,7 +4170,7 @@
 			$order_has_birthday_discount = false;
 			$__birthday_discount_percent = false;
 			foreach ($this->data['order_totals'] as $o_total){
-				if ($o_total['code'] == 'discount_regular' || $this->bool_real_stripos($o_total['title'], 'рождения')){
+				if ($o_total['code'] == 'discount_regular' || bool_real_stripos($o_total['title'], 'рождения')){
 					$order_has_birthday_discount = true;
 					$__birthday_discount_percent = (int)preg_replace('~[^0-9]+~','', $o_total['title']);
 					break;
@@ -4303,7 +4227,7 @@
 			
 			$order_has_cumulative_discount = false;
 			foreach ($this->data['order_totals'] as $o_total){
-				if ($o_total['code'] == 'shoputils_cumulative_discounts' || $this->bool_real_stripos($o_total['title'], 'накопительная')){
+				if ($o_total['code'] == 'shoputils_cumulative_discounts' || bool_real_stripos($o_total['title'], 'накопительная')){
 					$scd_discount = $this->load->model_total_scd_recount->getCustomerDiscount($order_info['store_id'], $order_info['customer_group_id'], $order_info['language_id'], $order_info['customer_id']);
 					
 					$_scd_discount_percent = (int)preg_replace('~[^0-9]+~','', $o_total['title']);
@@ -4910,7 +4834,7 @@
 			
 			$fixed_discounts = array();
 			foreach ($this->data['order_totals'] as &$order_total){
-				if ($this->bool_real_stripos($order_total['title'], 'скидка') && $order_total['value_national'] < 0 && !$this->bool_real_stripos($order_total['title'], '%')){												
+				if (bool_real_stripos($order_total['title'], 'скидка') && $order_total['value_national'] < 0 && !bool_real_stripos($order_total['title'], '%')){												
 					$_percent = (abs($order_total['value_national']) / $sub_total) * 100;					
 					$order_total['discount_alert'] = "<span style='color:#cf4a61'><i class='fa fa-warning'></i>&nbsp;Внимание! Это целочисленная скидка! При пересчете итогов возможна погрешность! Значение скидки в процентах: $_percent%.</span>";										
 				}		
@@ -5047,8 +4971,7 @@
 			
 			if (isset($this->request->get['order_id'])){
 				$this->response->setOutput(json_encode(['operation' => 'complete']));
-			}
-			
+			}		
 		}
 		
 		public function add_return(){
@@ -5109,7 +5032,7 @@
 						continue;
 					}
 					
-					if (($_total['value_national'] < 0) && $this->model_sale_order->bool_real_stripos($_total['title'], 'Скидка') && !$this->bool_real_stripos($_total['title'], '%')){
+					if (($_total['value_national'] < 0) && $this->model_sale_order->bool_real_stripos($_total['title'], 'Скидка') && !bool_real_stripos($_total['title'], '%')){
 						continue;
 					}
 					
@@ -5316,8 +5239,7 @@
 			$this->response->setOutput(json_encode($json));
 		}
 		
-		public function info() {
-			
+		public function info() {			
 		}
 		
 		public function divideProduct(){
@@ -5358,8 +5280,7 @@
 				$this->resaveOrder($order_product->row['order_id']);
 				
 				echo 'ok';
-			}
-			
+			}			
 		}
 		
 		public function addProduct(){
@@ -5478,8 +5399,7 @@
 			$result = $this->model_sale_order->addProduct($product, $order);
 			$this->resaveOrder($order_id);
 			
-			$this->response->setOutput(json_encode(['add' => $result]));
-			
+			$this->response->setOutput(json_encode(['add' => $result]));			
 		}
 		
 		public function createInvoiceNo() {
@@ -5674,8 +5594,7 @@
 			}
 			
 			$this->response->setOutput(json_encode($json));
-		}
-		
+		}		
 		
 		public function getDeliverySMSTextAjax(){
 			$order_id = $this->request->post['order_id'];
@@ -5683,10 +5602,7 @@
 			$ttn = $this->request->post['ttn'];
 			$shipping_code = $this->request->post['shipping_code'];
 			
-			/*		
-				echo 'Заказ # '.$order_id.' отправлен Вам '.date('d.m.Y', strtotime($date)).' '.$this->getDeliveryCompany($shipping_code).', ТТН # '.$ttn;		
-			*/
-			echo 'Заказ #'.$order_id.' отправлен Вам '.$this->getDeliveryCompany($shipping_code).', ТТН # '.$ttn;	
+			echo 'Заказ #'.$order_id.' отправлен Вам '.getDeliveryCompany($shipping_code).', ТТН # '.$ttn;	
 		}
 		
 		public function getTransactionSMSTextAjax(){
@@ -5781,9 +5697,7 @@
 				$str .= '';
 			}
 			
-			echo $str;
-			
-			
+			echo $str;		
 		}
 		
 		public function getStatusSMSTextAjax(){
@@ -5864,7 +5778,7 @@
 					$pick_url = $this->model_setting_setting->getKeySettingValue('config', 'config_url', $order['store_id']); 
 				}
 				
-				if ($this->bool_real_stripos($order['shipping_code'], 'pickup_advanced')){				
+				if (bool_real_stripos($order['shipping_code'], 'pickup_advanced')){				
 					$pick_index = (int)str_replace('pickup_advanced.point_','',$order['shipping_code']);
 					} else {
 					$pick_index = 0;
@@ -5934,8 +5848,7 @@
 			
 			$this->template = 'sale/order_reject_reason.tpl';
 			
-			$this->response->setOutput($this->render());
-			
+			$this->response->setOutput($this->render());			
 		}
 		
 		public function setOrderLockAjax(){
@@ -5948,8 +5861,7 @@
 			
 			$check = $this->db->query("SELECT closed FROM `order` WHERE order_id = '" . (int)$order_id . "'");
 			
-			echo (int)$check->row['closed'];
-			
+			echo (int)$check->row['closed'];			
 		}
 		
 		public function setOrderSalaryPaidAjax(){
@@ -5960,9 +5872,7 @@
 			}
 			
 			$check = $this->db->query("SELECT salary_paid FROM `order` WHERE order_id = '" . (int)$order_id . "'");
-			echo (int)$check->row['salary_paid'];
-			
-			
+			echo (int)$check->row['salary_paid'];	
 		}
 		
 		public function ttnhistory(){
@@ -5986,7 +5896,7 @@
 				
 				$this->data['ttns'][] = array(
 				'order_ttn_id' => $result['order_ttn_id'],
-				'delivery_company' => $this->getDeliveryCompany($result['delivery_code']),
+				'delivery_company' => getDeliveryCompany($result['delivery_code']),
 				'delivery_code' => $result['delivery_code'],
 				'delivery_code_err' => ($result['delivery_code'] != $this->data['order']['shipping_code']),
 				'date_ttn' => date('d.m.Y', strtotime($result['date_ttn'])),
@@ -6170,8 +6080,7 @@
 			$this->template = 'sale/order_courier_sale_history.tpl';
 			
 			$this->response->setOutput($this->render());		
-		}
-		
+		}		
 		
 		public function emailhistory(){
 			$this->language->load('sale/order');
@@ -6280,8 +6189,7 @@
 			
 			$this->template = 'sale/order_invoice_history.tpl';
 			
-			$this->response->setOutput($this->render());
-			
+			$this->response->setOutput($this->render());			
 		}
 		
 		public function savehistory(){
@@ -6350,8 +6258,7 @@
 			
 			$this->response->setOutput($this->render());
 		}
-		
-		
+				
 		public function emailhistory2pdf(){
 			$id = (int)$this->request->get['id'];
 			$order_id = (int)$this->request->get['order_id'];
@@ -6492,8 +6399,7 @@
 			}
 			
 			return $max;
-		}
-		
+		}		
 		
 		public function singleinvoice_log(){
 			$id = (int)$this->request->get['id'];	
@@ -6865,8 +6771,7 @@
 				echo 'ok';		
 			}
 		}
-		
-		
+				
 		public function delete_order_history() {
 			$this->language->load('sale/order');
 			$this->load->model('sale/order');
@@ -6945,8 +6850,7 @@
 			
 			$this->template = 'sale/order_history.tpl';		
 			
-			$this->response->setOutput($this->render());	
-			
+			$this->response->setOutput($this->render());				
 		}
 		
 		public function download() {
@@ -7119,10 +7023,8 @@
 			
 			$this->template = 'sale/order_return_form.tpl';
 			
-			$this->response->setOutput($this->render());
-			
-		}
-		
+			$this->response->setOutput($this->render());			
+		}		
 		
 		public function single_invoice($return = false, $data = array()){
 			$this->language->load('sale/order');
@@ -7602,7 +7504,7 @@
 						
 						//доставка, если по тарифу
 						$please_do_not_change_text = false;
-						if ((int)$total['value_national'] == 0 && $this->bool_real_stripos($total['text'], 'тариф')){
+						if ((int)$total['value_national'] == 0 && bool_real_stripos($total['text'], 'тариф')){
 							//	$total['title'] = $total['title'] .': '. $total['text'];
 							$total['title'] = 'Доставка по тарифам курьерской службы';
 							$total['text'] = '0';
@@ -7610,7 +7512,7 @@
 							$please_do_not_change_text = true;
 						}
 						
-						if ((int)$total['value_national'] == 0 && $this->bool_real_stripos($total['title'], 'Самовывоз')){						
+						if ((int)$total['value_national'] == 0 && bool_real_stripos($total['title'], 'Самовывоз')){						
 							$total['title'] = 'Самовывоз';
 							$total['text'] = '0';
 							$please_do_not_change_text = true;
@@ -7618,7 +7520,7 @@
 						
 						
 						//
-						if (((int)$total['value_national'] == 0 || $this->bool_real_stripos($total['text'], 'Бесплатно')) && !$please_do_not_change_text){
+						if (((int)$total['value_national'] == 0 || bool_real_stripos($total['text'], 'Бесплатно')) && !$please_do_not_change_text){
 							//$total['text'] = $this->currency->format(0, $order_info['currency_code'], 1);
 							$total['text'] = '0';
 						}
@@ -7632,7 +7534,7 @@
 						
 						
 						//Скидка на день рождения - самая первая
-						if (($total['value_national'] < 0) && ($this->bool_real_stripos($total['title'], 'рождения') && !$this->bool_real_stripos($total['title'], '%') || $total['code'] == 'discount_regular')){
+						if (($total['value_national'] < 0) && (bool_real_stripos($total['title'], 'рождения') && !bool_real_stripos($total['title'], '%') || $total['code'] == 'discount_regular')){
 							
 							$percent_of_discount = (int)preg_replace('~[^0-9]+~','', $total['title']);
 							
@@ -7711,7 +7613,7 @@
 						}
 						
 						//Скидка на товарный чек (выбираем, если где-то в тайтле есть '%'), и это ниразу не день рождения
-						elseif (($total['value_national'] < 0) && $this->bool_real_stripos($total['title'], 'Скидка') && $this->bool_real_stripos($total['title'], '%'))
+						elseif (($total['value_national'] < 0) && bool_real_stripos($total['title'], 'Скидка') && bool_real_stripos($total['title'], '%'))
 						{				
 							
 							$percent_of_discount = (int)preg_replace('~[^0-9]+~','', $total['title']);
@@ -7763,7 +7665,7 @@
 						
 						
 						//фиксированная скидка, не процентная
-						elseif (($total['value_national'] < 0) && $this->bool_real_stripos($total['title'], 'Скидка') && $this->bool_real_stripos($total['code'], 'custom_discount') && !$this->bool_real_stripos($total['title'], '%')){
+						elseif (($total['value_national'] < 0) && bool_real_stripos($total['title'], 'Скидка') && bool_real_stripos($total['code'], 'custom_discount') && !bool_real_stripos($total['title'], '%')){
 							
 							if ($total['for_delivery'] && ($total['for_delivery'] != $delivery_num)){
 								$add_this_to_real_total = false;
@@ -7771,7 +7673,7 @@
 							}
 						}
 						
-						elseif (($total['value_national'] < 0) && $this->bool_real_stripos($total['title'], 'Бонус') && $this->bool_real_stripos($total['code'], 'reward')){
+						elseif (($total['value_national'] < 0) && bool_real_stripos($total['title'], 'Бонус') && bool_real_stripos($total['code'], 'reward')){
 							
 							if ($total['for_delivery'] && ($total['for_delivery'] != $delivery_num)){
 								$add_this_to_real_total = false;
@@ -7780,7 +7682,7 @@
 						}
 						
 						//накопительная скидка	
-						elseif ($total['code']  ==  'shoputils_cumulative_discounts' || $this->bool_real_stripos($total['title'], 'накопительная')){
+						elseif ($total['code']  ==  'shoputils_cumulative_discounts' || bool_real_stripos($total['title'], 'накопительная')){
 							$this->load->model('total/scd_recount');	
 							$this->load->model('catalog/product');	
 							
@@ -7855,7 +7757,7 @@
 						}
 						
 						//пересчет купона, если он есть
-						elseif (($total['value_national'] <= 0) && $this->bool_real_stripos($total['title'], 'Промокод') && $total['code']  ==  'coupon'){
+						elseif (($total['value_national'] <= 0) && bool_real_stripos($total['title'], 'Промокод') && $total['code']  ==  'coupon'){
 							
 							$coupon_name = $this->model_sale_order->getCouponName($total['title']);
 							$coupon_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "coupon` WHERE code = '" . $this->db->escape($coupon_name) . "'");
@@ -7945,7 +7847,7 @@
 						}
 						
 						//У заказа была предоплата. Это текущий "+" счет заказа
-						if ($this->bool_real_stripos($total['title'], 'предоплата') || $total['code'] == 'transfer_plus_prepayment'){
+						if (bool_real_stripos($total['title'], 'предоплата') || $total['code'] == 'transfer_plus_prepayment'){
 							$total['title'] = 'Предоплата';
 							
 							//$total['text'] = $this->currency->format(-1 * $paid_on_current_moment, $order_info['currency_code'], '1');
@@ -7956,7 +7858,7 @@
 						}
 						
 						//учет доставки только на первую поставку
-						if (($this->bool_real_stripos($total['title'], 'Доставка') || $total['code'] == 'shipping') && $total['value_national'] > 0){
+						if ((bool_real_stripos($total['title'], 'Доставка') || $total['code'] == 'shipping') && $total['value_national'] > 0){
 							
 							if ($delivery_num > 1){
 								$add_this_to_real_total = false;
@@ -7968,14 +7870,14 @@
 						
 						
 						//если накопительная скидка какого-то хера равна нулю
-						if ( ($total['code']  ==  'shoputils_cumulative_discounts' || $this->bool_real_stripos($total['title'], 'накопительная')) && $total['value_national'] == 0){
+						if ( ($total['code']  ==  'shoputils_cumulative_discounts' || bool_real_stripos($total['title'], 'накопительная')) && $total['value_national'] == 0){
 							$add_this_to_real_total = false;
 							$add_this_value_to_real_total = false;
 						}
 						
 					}
 					
-					if (!($this->bool_real_stripos($total['title'], 'предоплата') || $total['code'] == 'transfer_plus_prepayment')) {
+					if (!(bool_real_stripos($total['title'], 'предоплата') || $total['code'] == 'transfer_plus_prepayment')) {
 						
 						if ($total['code'] != 'total'){
 							if ($add_this_value_to_real_total){
@@ -8047,7 +7949,7 @@
 				
 				//Метод доставки короткий
 				if (!isset($do_not_replace_shipping_method)){
-					$short_shipping_method = trim($this->mb_ucfirst(trim(str_ireplace('Доставка', '', $order_info['shipping_method']))));
+					$short_shipping_method = trim(mb_ucfirst(trim(str_ireplace('Доставка', '', $order_info['shipping_method']))));
 					} else {
 					$short_shipping_method = 'Самовывоз';
 				}
@@ -8127,8 +8029,7 @@
 				return $out;	
 				} else {
 				$this->response->setOutput($out);
-			}
-			
+			}			
 		}
 		
 		public function count_sum_cheque(){
@@ -8151,8 +8052,7 @@
 			
 			echo number_format($total, 2, ',', ' ');
 		}
-		
-		
+				
 		public function save_and_print_invoice($auto_gen = false, $data = array()){
 			
 			
@@ -8242,8 +8142,7 @@
 				echo $invoice_id;
 			}
 		}
-		
-		
+				
 		public function invoice() {
 			$this->language->load('sale/order');
 			
@@ -8462,8 +8361,7 @@
 			
 			$this->response->setOutput($this->render());
 		}
-		
-		
+				
 		public function getManagerInfoAjax(){
 			$this->load->model('sale/order');
 			
@@ -8477,8 +8375,7 @@
 				$out .= $this->currency->format($ttl['total'], $ttl['currency_code'], $ttl['currency_value']).'<br />';		
 			}
 			
-			echo $out;
-			
+			echo $out;			
 		}
 		
 		public function setNoGoodProductWaitList(){
@@ -8489,8 +8386,7 @@
 			$check_query = $this->db->query("SELECT waitlist FROM order_product_nogood WHERE `order_product_id` = '". (int)$order_product_id ."' LIMIT 1");
 			
 			echo $check_query->row['waitlist'];
-		}
-		
+		}		
 		
 		public function setProductIsAvailableOnSite(){
 			$this->load->model('user/user');
@@ -8740,9 +8636,7 @@
 				);
 				
 				echo json_encode($json);			
-			}
-			
-			
+			}			
 		}
 		
 		public function changeTotalPayAjax(){
@@ -8758,11 +8652,8 @@
 				$this->db->query("UPDATE `".DB_PREFIX."order` SET total_paid = 0, total_paid_date = '" .$this->db->escape('0000-00-00 00:00:00'). "' WHERE `order_id` = '". (int)$order_id ."'");	
 				
 				echo 'Ок, факт оплаты отменен!';	
-			}
-			
-		}
-		
-		
+			}			
+		}		
 		
 		public function changeManagerAjax(){
 			$this->load->model('user/user');
@@ -8965,8 +8856,7 @@
 			
 			$this->redirect($this->url->link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'], 'SSL'));
 		}
-		
-		
+				
 		public function showMailPreview(){
 			if(!isset($this->request->get['order_id'])){
 				$this->redirect($this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL'));
@@ -9194,8 +9084,7 @@
 			$result .= ",&nbsp;&nbsp;Астана: ".$quantites['quantity_stockM'];
 			
 			
-			echo $result;
-			
+			echo $result;			
 		}
 		
 		public function getRelatedProductsAjax(){
@@ -9496,8 +9385,7 @@
 				} else {
 				echo 'error';
 			}
-		}
-		
+		}		
 		
 		public function updateOrderProductFieldsAjax(){
 			if (!$this->user->hasPermission('modify', 'sale/order')) {
@@ -9519,8 +9407,7 @@
 				}
 				
 				echo $this->db->escape($data['value']);				
-			}
-			
+			}			
 		}
 		
 		public function updateOrderHistoryFieldsAjax(){
@@ -9543,13 +9430,10 @@
 				}
 				
 				echo $this->db->escape($data['value']);				
-			}
-			
+			}			
 		}
 		
-		public function sendNoAccessoriesToContent(){
-			
-			
+		public function sendNoAccessoriesToContent(){			
 		}
 		
 		public function updateOrderFieldsAjax(){
@@ -9611,11 +9495,9 @@
 				}
 				} else {
 				echo 'shit';
-			}
-			
+			}			
 		}
-		
-		
+				
 		public function updatePartiesFrom1CAjax($order_id = false){
 			$this->load->model('kp/info1c');	
 			$this->load->model('sale/order');
@@ -9790,9 +9672,7 @@
 				
 			}									
 			
-			$this->response->setOutput(json_encode($result));
-			
-			
+			$this->response->setOutput(json_encode($result));			
 		}
 		
 		public function getConcardisOrder(){
@@ -9850,8 +9730,7 @@
 			
 			if ($this->user->canEditCSI()){
 				$this->model_kp_work->updateFieldPlusOne('edit_csi_count');
-			}
-			
+			}		
 		}
 		
 		public function restoreOrderSave(){
