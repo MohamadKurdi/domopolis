@@ -27,7 +27,7 @@
 				$configFileName = DIR_SYSTEM . 'config/bitrixbot' . trim(str_replace('.', '_', $this->bitrixDomain)) . '.php';
 				
 			//при вызове от бота
-				if (isset($this->request->request['auth'])){
+				if (!empty($this->request->request['auth']) && !empty($this->request->request['auth']['domain'])){
 					$configFileName = DIR_SYSTEM . 'config/bitrixbot' . trim(str_replace('.', '_', $this->request->request['auth']['domain'])) . '.php';
 					if (file_exists($configFileName)) {
 						include_once $configFileName;
