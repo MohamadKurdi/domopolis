@@ -115,7 +115,10 @@ class productModelGet extends hoboModel{
 	}
 
 	public function getTotalProductsWithFullData($filter_data = []){
-		$sql = "SELECT COUNT(pad.product_id) as total FROM product_amzn_data pad LEFT JOIN product p ON (p.product_id = pad.product_id) WHERE pad.product_id IN (SELECT product_id FROM product)";
+		$sql = "SELECT COUNT(pad.product_id) as total FROM product_amzn_data pad LEFT JOIN product p ON (p.product_id = pad.product_id) WHERE pad.product_id IN (SELECT product_id FROM product) ";
+
+		$sql .= " AND p.asin <> 'INVALID' 
+		AND pad.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1 AND amazon_can_get_full = 1))";
 
 		if (!empty($filter_data)){
 			foreach ($filter_data as $filter => $value){
@@ -137,7 +140,10 @@ class productModelGet extends hoboModel{
 			}
 		}
 
-		$sql .= " ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
+		$sql .= " AND p.asin <> 'INVALID' 
+		AND pad.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1 AND amazon_can_get_full = 1))";
+
+		$sql .= " ORDER BY pad.product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
 
 		$query = $this->db->ncquery($sql);
 

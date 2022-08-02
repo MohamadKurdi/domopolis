@@ -24,8 +24,13 @@ class InfoUpdater
 	private $removeFromReview = [
 		'Читайте далі',
 		'читайте далі',
+		'Читати далі',
+		'читати далі',
 		'Докладно',
-		'Lesen Sie weiter'
+		'Lesen Sie weiter',
+		'Sie weiter',
+		'lessen Sie weiter',
+		'продовжуйте читати'
 	];
 
 	public const descriptionsQueryLimit = 5000;
