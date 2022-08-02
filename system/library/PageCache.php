@@ -167,7 +167,7 @@ class PageCache{
 
 					if (mb_strtoupper($name) == 'X-NO-FPC-TIME'){
 						$value = $value[0];
-						$body = round($value, 4);																
+						$body = round($value, 2);																
 
 						if ((float)$value > 0.2){
 							$class = 'warn';
@@ -214,7 +214,7 @@ class PageCache{
 				foreach ($httpResponse->getHeaders() as $name => $value){					
 					if (mb_strtoupper($name) == 'X-NO-FPC-TIME'){
 						$value = $value[0];
-						$body = round($value, 4);																
+						$body = round($value, 2);																
 
 						if ((float)$value > 0.2){
 							$class = 'warn';

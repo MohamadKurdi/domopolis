@@ -8,7 +8,7 @@
 <?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
 
 	<?php foreach ($admin_modes as $mode_name => $mode_config) { ?>
-	<a class="link_headr <? if (${$mode_name}) { ?>link_enter cache-button-bad<? } else { ?> cache-button-good<?php } ?>" onclick="$('#<?php echo $mode_name; ?>').load('<? echo ${'set_' . $mode_name}; ?>');" >
+	<a class="hidden-xs link_headr <? if (${$mode_name}) { ?>link_enter cache-button-bad<? } else { ?> cache-button-good<?php } ?>" onclick="$('#<?php echo $mode_name; ?>').load('<? echo ${'set_' . $mode_name}; ?>');" >
 		<i class="fa <?php echo $mode_config['icon']; ?>" aria-hidden="true"></i> <?php echo $mode_config['btn_text']; ?> <span id="<?php echo $mode_name; ?>"></span>
 	</a>
 	<?php } ?>
@@ -35,10 +35,14 @@
 	<a class="link_headr <? if ($noCacheMode) { ?>link_enter cache-button-bad<? } else { ?> cache-button-good<?php } ?>" onclick="$('#noCacheR').load('<? echo $noCacheModeLink ?>');">L1 <span id='noCacheR'><? echo ($noCacheMode?'OFF':'ON'); ?> <?php if (!empty($noCacheModeDuration)) { ?><i class="fa fa-clock-o"></i> <? echo $noCacheModeDuration ?><? } ?></span></a>
 	*/ ?>
 	
-	<a class="link_headr <? if ($noPageCacheMode) { ?>link_enter cache-button-bad<? } else { ?> cache-button-good<?php } ?>" onclick="$('#noPageCacheR').load('<? echo $noPageCacheModeLink ?>');">FPC <span id='noPageCacheR'><? echo ($noPageCacheMode?'OFF':'ON'); ?> <?php if (!empty($noPageCacheModeDuration)) { ?><i class="fa fa-clock-o"></i> <? echo $noPageCacheModeDuration ?> / <? } ?> <?php echo $noPageCacheModeTTL; ?></span>
+	<a class="link_headr <? if ($noPageCacheMode) { ?>link_enter cache-button-bad<? } else { ?> cache-button-good<?php } ?>" onclick="$('#noPageCacheR').load('<? echo $noPageCacheModeLink ?>');">FPC 
+	<span id='noPageCacheR'>
+		<? echo ($noPageCacheMode?'OFF':'ON'); ?> 
+		<?php if (!empty($noPageCacheModeDuration)) { ?><i class="fa fa-clock-o"></i> <? echo $noPageCacheModeDuration ?>/<?php echo $noPageCacheModeTTL; ?><? } ?> 		
+	</span>
 	</a>
 
-	<a class="link_headr cache-button-<?php echo $pageCacheInfo['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-server"></i> <?php echo $pageCacheInfo['used'] . ' of ' . $pageCacheInfo['total'];?></a>
+	<a class="hidden-xs link_headr cache-button-<?php echo $pageCacheInfo['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-server"></i> <?php echo $pageCacheInfo['used'] . ' of ' . $pageCacheInfo['total'];?></a>
 
 	<a class="link_headr cache-button-<?php echo $serverResponceTime['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-rocket"></i> <?php echo $serverResponceTime['body'];?></a>
 
