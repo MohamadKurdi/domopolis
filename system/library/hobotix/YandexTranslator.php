@@ -34,16 +34,9 @@ class YandexTranslator
 	}
 
 	public function translateMulti($data = []){
-
-		
-
-
-
-
-
 	}
 
-	public function translate($text, $from, $to, $returnString = false){
+	public function translate($text, $from = false, $to, $returnString = false){
 
 		$result = false;
 
@@ -79,7 +72,12 @@ class YandexTranslator
 		
 		try {
 			$translate = new \Panda\Yandex\TranslateSdk\Translate($text);
-			$translate->setSourceLang($from)->setTargetLang($to)->setFormat(\Panda\Yandex\TranslateSdk\Format::HTML);
+			
+			if ($from){
+				$translate->setSourceLang($from);
+			}
+
+			$translate->setTargetLang($to)->setFormat(\Panda\Yandex\TranslateSdk\Format::HTML);
 			$result = $this->cloud->request($translate);
 
 			$this->addStats($text);
@@ -170,15 +168,6 @@ class YandexTranslator
 	public function updateCollectionDescriptionTranslation($collection_id, $language_id, $text){										
 		$this->db->query("UPDATE collection_description SET description = '" . $this->db->escape($text) . "' WHERE collection_id = '" . (int)$collection_id . "' AND language_id = '" . (int)$language_id . "'");
 	}
-
-
-
-
-
-
-
-
-
 
 
 }

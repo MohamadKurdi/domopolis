@@ -80,7 +80,7 @@
 			return $this->model_product_get->getProductsByAsin($asin);
 		}
 		
-		public function translateWithCheck($text, $language_code){
+		public function translateWithCheck($text, $language_code, $detect = false){
 			$text = atrim($text);
 
 			$real_language_code = $language_code;
@@ -92,7 +92,7 @@
 				$text = $text;	
 			} else {
 				if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $real_language_code)){
-					$text = $this->yandexTranslator->translate($text, $this->config->get('config_rainforest_source_language'), $real_language_code, true);
+					$text = $this->yandexTranslator->translate($text, $detect?false:$this->config->get('config_rainforest_source_language'), $real_language_code, true);
 				} else {
 					$text = '';
 				}
@@ -898,7 +898,9 @@
 							foreach ($this->registry->get('languages') as $language_code => $language) {
 								$review['body'] = atrim($review['body']);						
 
-								$text = $this->translateWithCheck($review['body'], $language_code);
+								$text = $this->translateWithCheck($review['body'], $language_code, true);
+
+								$text = $this->registry->get('rainforestAmazon')->infoUpdater->normalizeProductReview($text);
 
 								$review_description[$language['language_id']] = [
 									'text' => $text,
@@ -916,9 +918,7 @@
 
 							$this->model_product_edit->addReview($review_data);
 						}
-					}
-
-					die();
+					}					
 				}
 			}
 		}
@@ -1024,6 +1024,9 @@
 
 			//Parse product buybox winner to amazon best price
 			$this->parseProductBuyBoxWinner($product_id, $product);
+
+			//Parse product top reviews
+			$this->parseProductTopReviews($product_id, $product);
 
 			//Варианты
 			$this->parseProductVariants($product_id, $product, $do_adding_new_variants);

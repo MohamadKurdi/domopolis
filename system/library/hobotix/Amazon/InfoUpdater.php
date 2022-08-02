@@ -21,6 +21,11 @@ class InfoUpdater
 		'1 шт'
 	];
 
+	private $removeFromReview = [
+		'Читайте далі',
+		'Докладно'
+	];
+
 	public const descriptionsQueryLimit = 5000;
 
 	private $rfClient;
@@ -44,6 +49,32 @@ class InfoUpdater
 		$query = $this->db->ncquery($sql);
 
 		return $query->rows;
+	}
+
+	public function normalizeProductReview($review){
+		//Убираем все кавычки, и другие непонятные спецсимволы, из-за них потом проблемы
+		$review = str_replace(['"', ',,', '?'], '', $review);
+
+		//Кавычки и другие символы, одинарная кавычка только с пробелом, потому что иначе это апостроф
+		$review = str_replace(["&amp;", "' ", "( "], ['&', ' ', '('], $review);
+
+		//Кавычка в начале - точно не апостроф
+		$review = ltrim($review, "'");
+
+		//Заданные строки
+		$review = str_ireplace($this->removeFromReview, [''], $review);
+		
+		//Убрать всё остальное кроме нужных букв, цифр и символов
+		$review = preg_replace('/[^a-zA-Z0-9а-щА-ЩЬьЮюЯяЇїІіЄєҐґ()\-,&Ø\'\.\/\* ]/mui', '', $review, -1);
+
+		//Убираем двойные пробелы
+		$review = str_replace(['  '], [' '], $review);
+		$review = trim($review);
+
+		$review = trim($review);
+
+		return $review;
+
 	}
 	
 	public function normalizeProductName($name){
