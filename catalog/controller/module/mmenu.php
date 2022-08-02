@@ -158,7 +158,7 @@ class ControllerModuleMMenu extends Controller {
 				}
 			}
 		}
-		
+
 		if ($this->config->get('config_monobrand')>0) {
 			$this->load->model('catalog/collection');
 			$collections = $this->model_catalog_collection->getCollectionsByManufacturer($this->config->get('config_monobrand'), 50);
@@ -221,5 +221,7 @@ class ControllerModuleMMenu extends Controller {
 				$this->template = 'default/template/module/mmenu.tpl';
 			}
 		}
+
+		$this->render();
 	}
 }				
