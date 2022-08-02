@@ -72,8 +72,7 @@
 			
 			$this->response->setOutput($this->render());
 		}
-		
-		
+				
 		private function renderSubcategories(){
 			
 			$this->language->load('product/category');
@@ -84,11 +83,6 @@
 			
 			$this->load->model('catalog/category');
 			$this->load->model('catalog/manufacturer');
-			
-			
-			
-			
-			
 		}
 		
 		
@@ -150,7 +144,7 @@
 			}							
 			
 			if (isset($this->request->get['limit'])) {
-				$limit = $this->request->get['limit'];
+				$limit = (int)$this->request->get['limit'];
 				} else {
 				$limit = $this->config->get('config_catalog_limit');
 			}

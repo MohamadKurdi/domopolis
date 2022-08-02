@@ -1,34 +1,36 @@
 <?php
 	class ControllerCommonHoboSeo extends Controller {		
 		private function checkBadURIParams(){
-			$new_page = false;			
-			$bad_get_params = array(
+			$new_page = '';			
+			$badGetParams = [
 			'categoryID'
-			);
+			];
 			
-			foreach ($bad_get_params as $_bad_param){
-				if (isset($this->request->get[$_bad_param])){
-					$new_page = str_replace('&amp;' . $_bad_param . '=' . $this->request->get[$_bad_param], '', $_SERVER['REQUEST_URI']);
-					$new_page = str_replace('&' . $_bad_param . '=' . $this->request->get[$_bad_param], '', $new_page);
-					$new_page = str_replace('?' . $_bad_param . '=' . $this->request->get[$_bad_param], '', $new_page);
-					$new_page = str_replace('' . $_bad_param . '=' . $this->request->get[$_bad_param], '', $new_page);
+			foreach ($badGetParams as $badGetParam){
+				if (isset($this->request->get[$badGetParam])){
+					$new_page = str_replace('&amp;' . $badGetParam . '=' . $this->request->get[$badGetParam], '', $this->request->server['REQUEST_URI']);
+					$new_page = str_replace('&' . $badGetParam . '=' . $this->request->get[$badGetParam], '', $new_page);
+					$new_page = str_replace('?' . $badGetParam . '=' . $this->request->get[$badGetParam], '', $new_page);
+					$new_page = str_replace('' . $badGetParam . '=' . $this->request->get[$badGetParam], '', $new_page);
 				}			
 			}
 			
 			
 			if (isset($this->request->get['utm_term']) && filter_var($this->request->get['utm_term'], FILTER_VALIDATE_EMAIL)){
-				$new_page = str_replace('&utm_term=' . $this->request->get['utm_term'], '', $_SERVER['REQUEST_URI']);
+				$new_page = str_replace('&utm_term=' . $this->request->get['utm_term'], '', $this->request->server['REQUEST_URI']);
 				$new_page = str_replace('?utm_term=' . $this->request->get['utm_term'], '', $new_page);
 				$new_page = str_replace('utm_term=' . $this->request->get['utm_term'], '', $new_page);
 			}
 			
-			if (isset($this->request->get['page']) && $this->request->get['page'] == '1'){
-				$new_page = str_replace('&amp;page=1', '', $_SERVER['REQUEST_URI']);
-				$new_page = str_replace('&page=1', '', $new_page);
-				$new_page = str_replace('?page=1', '', $new_page);						
+			if (isset($this->request->get['page']) && (int)$this->request->get['page'] <= 1){
+				$new_page = str_replace('&amp;page=' . (int)$this->request->get['page'], '', $this->request->server['REQUEST_URI']);
+				$new_page = str_replace('&page=' . (int)$this->request->get['page'], '', $new_page);
+				$new_page = str_replace('?page=' . (int)$this->request->get['page'], '', $new_page);						
 			}
+
+			$new_page = trim($new_page);
 			
-			if ($new_page){
+			if ($new_page && trim($new_page)){
 				header('Location: ' . str_replace('&amp;', '&', $new_page), true, 301);
 				exit();
 			}
