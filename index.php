@@ -177,12 +177,14 @@
 		
 		if ($result['front']){
 			$languages[$result['code']] = $result;
+			$languages_id_mapping[$result['language_id']] = $result;
 			$languages_id_code_mapping[$result['language_id']] = $result['code'];
 		}
 	}
 
 	//ALL LANGUAGES TO REGISTRY
 	$registry->set('languages', $languages);
+	$registry->set('languages_id_mapping', $languages_id_mapping);
 	$registry->set('languages_id_code_mapping', $languages_id_code_mapping);
 	$registry->get('config')->set('config_supported_languages', [$registry->get('config')->get('config_language'), $registry->get('config')->get('config_second_language')]);
 	$registry->get('config')->set('config_rainforest_source_language_id', $all_languages[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);	

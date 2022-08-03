@@ -123,14 +123,8 @@
 			return false;
 		}
 		
-		private function buildCacheString(){
-			
-			$request_uri_md5  	= md5($this->request->server['REQUEST_URI']);
-			$store_id    		= $this->config->get('config_store_id');
-			$language_id 		= $this->config->get('config_language_id');
-			
-			return 'hreflangs.' . $request_uri_md5 . '.' . $store_id . '.' . $language_id;
-			
+		private function buildCacheString(){						
+			return 'hreflangs.' . md5($this->request->server['REQUEST_URI']) . '.' . $this->config->get('config_store_id') . '.' . $this->config->get('config_language_id');			
 		}
 		
 		public function decodeURI(){
@@ -143,15 +137,11 @@
 				$this->load->model('localisation/language');
 				$this->load->model('setting/setting');
 				
-				$tmp_config_ssl = $this->config->get('config_ssl');
-				$current_language = $this->model_localisation_language->getLanguage($this->config->get('config_language_id'));
-				$current_urlcode = $current_language['urlcode'];
+				$tmp_config_ssl 	= $this->config->get('config_ssl');
+				$current_language 	= $this->registry->get('languages_id_mapping')[$this->config->get('config_language_id')];
+				$current_urlcode 	= $current_language['urlcode'];
 				
-				foreach ($this->model_localisation_language->getLanguages() as $language){	
-					
-					if ($language['language_id'] == 26){
-						continue;
-					}
+				foreach ($this->registry->get('languages') as $code => $language){	
 					
 					$stores = $this->getStoresByLanguageID($language['code']);
 					

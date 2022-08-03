@@ -63,7 +63,6 @@
 				$show_top_block = false;
 			}
 			
-			// Notify bar
 			$notifies = $this->config->get('notify_bar');
 			
 			if ($notifies && count($notifies) > 1) {
@@ -87,25 +86,18 @@
 				} else {
 				$this->data['notifies'] = false;
 			}
-			// Notify bar
-			
-			//	$show_top_block = false;
 			
 			$this->data['show_top_block'] = $show_top_block;
 			
 			$opt_group_array = array(8,9,10,11);
 			
-			//preauth
-			$this->load->model('account/preauth');
-			//	if (!$this->customer->isLogged()){				
+
+			$this->load->model('account/preauth');			
 			if ($email = $this->model_account_preauth->CheckPreauth()){	
 				$this->customer->login($email, '', true);					
 			}			
-			//}
-			
-			
-			
-			//Количество просмотров ПОЛНЫХ СТРАНИЦ
+
+
 			if (!isset($this->session->data['pages_viewed'])){
 				$this->session->data['pages_viewed'] = 1;	
 				} else {
@@ -385,19 +377,15 @@
 			$this->data['text_search'] = $this->language->get('text_search');
 			$this->data['text_under_search'] = $this->language->get('text_under_search');
 			$this->data['search_like'] = 'Кофеварка';
-			
-
-			// Search		
+				
 			if (isset($this->request->get['search'])) {
 				$this->data['search'] = $this->request->get['search'];
 				} else {
 				$this->data['search'] = '';
 			}
 			
-			
 			$this->data['text_special'] = $this->language->get('text_special');	
 			$this->data['special'] = $this->url->link('product/special');
-			
 			
 			$this->data['text_manufacturer'] = $this->language->get('text_manufacturer');
 			$this->data['href_manufacturer'] = $this->url->link('product/manufacturer');	
