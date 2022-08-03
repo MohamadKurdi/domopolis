@@ -386,27 +386,7 @@
 			$this->data['text_under_search'] = $this->language->get('text_under_search');
 			$this->data['search_like'] = 'Кофеварка';
 			
-			// Daniel's robot detector
-			$status = true;
-			if (isset($this->request->server['HTTP_USER_AGENT'])) {
-				$robots = explode("\n", trim($this->config->get('config_robots')));
-				foreach ($robots as $robot) {
-					if ($robot && strpos($this->request->server['HTTP_USER_AGENT'], trim($robot)) !== false) {
-						$status = false;
-						break;
-					}
-				}
-			}
-			// A dirty hack to try to set a cookie for the multi-store feature
-			$this->load->model('setting/store');
-			$this->data['stores'] = array();
-			if ($this->config->get('config_shared') && $status) {
-				$this->data['stores'][] = $server . 'catalog/view/javascript/crossdomain.php?session_id=' . $this->session->getId();
-				$stores = $this->model_setting_store->getStores();
-				foreach ($stores as $store) {
-					$this->data['stores'][] = $store['url'] . 'catalog/view/javascript/crossdomain.php?session_id=' . $this->session->getId();
-				}
-			}
+
 			// Search		
 			if (isset($this->request->get['search'])) {
 				$this->data['search'] = $this->request->get['search'];
