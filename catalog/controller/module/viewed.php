@@ -1,9 +1,6 @@
 <?php
 	class ControllerModuleViewed extends Controller {
-		
-		
-		
-		
+								
 		public function viewed(){
 			$viewed_products = array();
 			
