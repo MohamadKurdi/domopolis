@@ -83,12 +83,12 @@
 				$cache_data = $this->cache->get('seo_pro.structure.' . $language['language_id']);
 				
 				if (!$cache_data) {
-					$query = $this->db->query("SELECT DISTINCT LOWER(`keyword`) as 'keyword', `query` FROM url_alias WHERE language_id = '" . (int)$language['language_id'] . "' OR language_id = '-1'");
+					$query = $this->db->query("SELECT `keyword`, `query` FROM url_alias WHERE language_id IN (" . (int)$language['language_id'] . ", -1)");
 					
 					$cache_data = array();
 					foreach ($query->rows as $row) {
-						$cache_data['keywords'][$row['keyword']] = $row['query'];
-						$cache_data['queries'][$row['query']] = $row['keyword'];
+						$cache_data['keywords'][$row['keyword']] 	= $row['query'];
+						$cache_data['queries'][$row['query']] 		= $row['keyword'];
 					}
 					$this->cache->set('seo_pro.structure.' . $language['language_id'], $cache_data);
 				}
@@ -103,12 +103,12 @@
 			$this->cache_data = $this->cache->get('seo_pro.structure.' . $language_id);
 			
 			if (!$this->cache_data) {
-				$query = $this->db->query("SELECT DISTINCT LOWER(`keyword`) as 'keyword', `query` FROM url_alias WHERE language_id = '" . (int)$language_id . "' OR language_id = '-1'");
+				$query = $this->db->query("SELECT `keyword`, `query` FROM url_alias WHERE language_id IN (" . (int)$language_id . ", -1)");
 				
 				$this->cache_data = array();
 				foreach ($query->rows as $row) {
-					$this->cache_data['keywords'][$row['keyword']] = $row['query'];
-					$this->cache_data['queries'][$row['query']] = $row['keyword'];
+					$this->cache_data['keywords'][$row['keyword']] 	= $row['query'];
+					$this->cache_data['queries'][$row['query']] 	= $row['keyword'];
 				}
 				$this->cache->set('seo_pro.structure.' . $language_id, $this->cache_data);
 			}
@@ -837,17 +837,7 @@
 		}
 		
 		private function updateHrefLang($query, $url){
-			/*
-				$checkquery = $this->db->query("SELECT url FROM seo_hreflang WHERE language_id = '" . (int)$this->language_id . "' AND query = '" . $this->db->escape($query) . "' LIMIT 1");
-				
-				if ($checkquery->num_rows){
-				if ($checkquery->row['url'] != $query){
-				$this->db->query("UPDATE seo_hreflang SET url = '" . $this->db->escape($url) . "' WHERE language_id = '" . (int)$this->language_id . "' AND query = '" . $this->db->escape($query) . "' LIMIT 1");
-				}
-				} else {
-				$this->db->query("INSERT IGNORE INTO seo_hreflang SET language_id = '" . (int)$this->language_id . "', query = '" . $this->db->escape($query) . "', url = '" . $this->db->escape($url) . "'");
-				}
-			*/	
+			
 		}
 		
 		private function getPathByProduct($product_id) {
