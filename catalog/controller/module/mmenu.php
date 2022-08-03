@@ -159,35 +159,6 @@ class ControllerModuleMMenu extends Controller {
 			}
 		}
 
-		if ($this->config->get('config_monobrand')>0) {
-			$this->load->model('catalog/collection');
-			$collections = $this->model_catalog_collection->getCollectionsByManufacturer($this->config->get('config_monobrand'), 50);
-			$man = $this->model_catalog_manufacturer->getManufacturer($this->config->get('config_monobrand'));
-
-			$this->data['monomanufacturer'] = array(
-				'name' => 'Коллекции '.$man['name'],
-				'href' =>  $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $man['manufacturer_id'])
-			);
-
-			$this->data['collections'] = array();
-			if($collections){
-				foreach($collections as $collection){
-
-					if ($collection['image']) {
-						$img = $this->model_tool_image->resize($collection['image'],  50, 50);
-					} else {
-						$img = 'catalog/view/theme/mattimeo/image/img_not_found.png';
-					};
-
-					$this->data['collections'][] = array(
-						'name' => $collection['name'],
-						'image' => $img,
-						'href' => $this->url->link('product/collection', 'collection_id=' . $collection['collection_id'])
-					);
-				}
-			}
-		}
-
 		$this->data['text_special'] = $this->language->get('text_special');
 		$this->data['special'] = $this->url->link('product/special');
 
@@ -197,13 +168,18 @@ class ControllerModuleMMenu extends Controller {
 		$this->data['text_popular_products'] = $this->language->get('text_popular_products');
 		$this->data['href_manufacturer'] = $this->url->link('product/manufacturer');
 
-		$brands = $this->model_catalog_manufacturer->getManufacturers(array('sort' => 'm.sort_order', 'order' => 'ASC', 'limit' => 20, 'menu_brand' => 1));
-		foreach ($brands as $k => $b) {
-			$brands[$k]['thumb'] = $this->model_tool_image->resize($b['image'], 150, 100);
-			$brands[$k]['url'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $b['manufacturer_id']);
-		}
+		$this->data['brands'] = [];
 
-		$this->data['brands'] = $brands;
+		if ($this->config->get('config_brands_in_mmenu')){
+
+			$brands = $this->model_catalog_manufacturer->getManufacturers(array('sort' => 'm.sort_order', 'order' => 'ASC', 'limit' => 20, 'menu_brand' => 1));
+			foreach ($brands as $k => $b) {
+				$brands[$k]['thumb'] = $this->model_tool_image->resize($b['image'], 150, 100);
+				$brands[$k]['url'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $b['manufacturer_id']);
+			}
+
+			$this->data['brands'] = $brands;
+		}
 
 		$this->load->model('design/layout');
 		$layout_id = $this->model_design_layout->getLayout('module/mmenu');

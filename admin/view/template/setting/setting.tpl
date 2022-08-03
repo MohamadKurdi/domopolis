@@ -367,59 +367,75 @@
 
 						<table class="form">
 							<tr>											
-								<td style="width:20%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_title; ?></span></p>
+								<td style="width:15%">
+									<p>
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_title; ?></span>
+									</p>
 									<textarea name="config_title" cols="40" rows="5"><?php echo $config_title; ?></textarea>
-									<?php if ($error_title) { ?>
-										<span class="error"><?php echo $error_title; ?></span>
-									<?php } ?>
 								</td>
 
-								<td style="width:20%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_meta_description; ?></p>
-										<textarea name="config_meta_description" cols="40" rows="5"><?php echo $config_title; ?></textarea>
-									</td>
+								<td style="width:15%">
+									<p>
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_meta_description; ?>
+									</p>
+									<textarea name="config_meta_description" cols="40" rows="5"><?php echo $config_title; ?></textarea>
+								</td>
 
-									<td style="width:20%"> 
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Шаблон</p>
-											<select name="config_template">
-												<?php foreach ($templates as $template) { ?>
-													<?php if ($template == $config_template) { ?>
-														<option value="<?php echo $template; ?>" selected="selected"><?php echo $template; ?></option>
-													<?php } else { ?>
-														<option value="<?php echo $template; ?>"><?php echo $template; ?></option>
-													<?php } ?>
-												<?php } ?>
-											</select>
-										</td>
+								<td style="width:15%"> 
+									<p>
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Шаблон</span>
+									</p>
+									<select name="config_template">
+										<?php foreach ($templates as $template) { ?>
+											<?php if ($template == $config_template) { ?>
+												<option value="<?php echo $template; ?>" selected="selected"><?php echo $template; ?></option>
+											<?php } else { ?>
+												<option value="<?php echo $template; ?>"><?php echo $template; ?></option>
+											<?php } ?>
+										<?php } ?>
+									</select>
+								</td>
 
-										<td style="width:20%">										
-											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_layout; ?></p>
-												<select name="config_layout_id">
-													<?php foreach ($layouts as $layout) { ?>
-														<?php if ($layout['layout_id'] == $config_layout_id) { ?>
-															<option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
-														<?php } else { ?>
-															<option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
-														<?php } ?>
-													<?php } ?>
-												</select>
-											</td>
+								<td style="width:15%">										
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_layout; ?><</span></p>
+									<select name="config_layout_id">
+										<?php foreach ($layouts as $layout) { ?>
+											<?php if ($layout['layout_id'] == $config_layout_id) { ?>
+												<option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
+											<?php } else { ?>
+												<option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+									</select>
+								</td>
 
-											<td style="width:20%">
-												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Добавить меню в homepage</p>
-													<select type="select" name="config_mmenu_on_homepage">
-														<? if ($config_mmenu_on_homepage) { ?>
-															<option value="1" selected='selected' >Да</option>
-															<option value="0" >Нет</option>
-														<? } else { ?>
-															<option value="1" >Да</option>
-															<option value="0"  selected='selected' >Нет</option>
-														<? } ?>       
-													</select>
-												</td>
-											</tr>
-										</table>							
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Добавить меню в homepage</span></p>
+									<select type="select" name="config_mmenu_on_homepage">
+										<? if ($config_mmenu_on_homepage) { ?>
+											<option value="1" selected='selected' >Да</option>
+											<option value="0" >Нет</option>
+										<? } else { ?>
+											<option value="1" >Да</option>
+											<option value="0"  selected='selected' >Нет</option>
+										<? } ?>       
+									</select>
+								</td>							
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бренды в мегаменю</span></p>
+									<select type="select" name="config_brands_in_mmenu">
+										<? if ($config_brands_in_mmenu) { ?>
+											<option value="1" selected='selected' >Да</option>
+											<option value="0" >Нет</option>
+										<? } else { ?>
+											<option value="1" >Да</option>
+											<option value="0"  selected='selected' >Нет</option>
+										<? } ?>       
+									</select>
+								</td>
+						</tr>
+					</table>							
 						</div>
 
 					<div id="tab-terms">
