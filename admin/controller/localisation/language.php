@@ -400,6 +400,8 @@
 				'urlcode'     => $result['urlcode'],
 				'hreflang'    => $result['hreflang'],
 				'sort_order'  => $result['sort_order'],
+				'status'	  => $result['status'],
+				'front'	  	  => $result['front'],
 				'selected'    => isset($this->request->post['selected']) && in_array($result['language_id'], $this->request->post['selected']),
 				'action'      => $action	
 				);		
@@ -672,6 +674,14 @@
 				$this->data['status'] = $language_info['status'];
 				} else {
 				$this->data['status'] = 1;
+			}
+
+			if (isset($this->request->post['front'])) {
+				$this->data['front'] = $this->request->post['front'];
+				} elseif (!empty($language_info)) {
+				$this->data['front'] = $language_info['front'];
+				} else {
+				$this->data['front'] = 1;
 			}
 			
 			$this->template = 'localisation/language_form.tpl';

@@ -4,7 +4,6 @@
 		private $language_code 				= '';
 		private $language_id 				= 2;
 		private $languageSettingsCacheData 	= array();
-		private $languageFullCacheData 		= array();
 		private $mapFrom 					= array('intersection_id');
 		private $mapTo 						= array('category_id');
 		
@@ -20,8 +19,7 @@
 				
 				$this->load->model('localisation/language');
 				$language = $this->model_localisation_language->getLanguage($this->language_id);
-				$this->language_code = $language['code'];
-				
+				$this->language_code = $language['code'];				
 			}
 			
 			$this->rebuildAllCaches();
@@ -60,8 +58,8 @@
 		
 		private function getFullLanguageByCode($code){
 			
-			if (!empty($this->languageFullCacheData[$code])){
-				return $this->languageFullCacheData[$code];
+			if (!empty($this->registry->get('languages')[$code])){
+				return $this->registry->get('languages')[$code];
 			}
 			
 			$this->load->model('localisation/language');
@@ -79,20 +77,9 @@
 				}
 				
 				$this->cache->set('seo_pro.setting_language_data', $this->languageSettingsCacheData);
-			}
+			}			
 			
-			if (!($this->languageFullCacheData = $this->cache->get('seo_pro.full_language_data'))){
-				$this->languageFullCacheData = [];
-				$query = $this->db->query("SELECT * FROM language");
-				
-				foreach ($query->rows as $row){
-					$this->languageFullCacheData[$row['code']] = $row;
-				}
-				
-				$this->cache->set('seo_pro.full_language_data', $this->languageFullCacheData);
-			}
-			
-			foreach ($this->languageFullCacheData as $language){
+			foreach ($this->registry->get('languages') as $language){
 				$cache_data = $this->cache->get('seo_pro.structure.' . $language['language_id']);
 				
 				if (!$cache_data) {
@@ -136,13 +123,9 @@
 		}	
 		
 		public function index() {
-			//=========== OpenCart Shortcodes
-			
-			// Shortcodes
 			$shortcodes = new Shortcodes($this->registry);
 			$this->registry->set('shortcodes', $shortcodes);
 			
-			//=== Default shortcodes
 			$this->load->helper('shortcodes_default');
 			
 			$class         = new ShortcodesDefault($this->registry);
@@ -151,7 +134,6 @@
 				$this->shortcodes->add_shortcode($shortcode, $shortcode, $class);
 			}
 			
-			//=== Extensions shortcodes : for extensions developer
 			$files = glob(DIR_APPLICATION . '/view/shortcodes/*.php');
 			if ($files) {
 				foreach ($files as $file) {
@@ -168,7 +150,6 @@
 				}
 			}
 			
-			//=== Themes shortcodes : for theme developer
 			$file = DIR_TEMPLATE . $this->config->get('config_template') . '/shortcodes_theme.php';
 			if (file_exists($file)) {
 				require_once(VQMod::modCheck($file));
@@ -180,7 +161,6 @@
 				}
 			}
 			
-			//=== Custom shortcodes : user power!
 			$file = DIR_TEMPLATE . $this->config->get('config_template') . '/shortcodes_custom.php';
 			if (file_exists($file)) {
 				require_once(VQMod::modCheck($file));
@@ -192,16 +172,11 @@
 				}
 			}
 			
-			//=========== END :: OpenCart Shortcodes
-			
-			
-			// Add rewrite to url class
 			if ($this->config->get('config_seo_url')) {			
 				$this->url->addRewrite($this);
 				} else {
 				return;
-			}
-			
+			}			
 						
 			if (!is_null($this->registry->get('ocfilter'))) {
 				$this->url->addRewrite($this->registry->get('ocfilter'));								
@@ -212,7 +187,7 @@
 					
 					$urllanguage = explode('/', trim(utf8_strtolower($this->request->get['_route_']), '/'));
 					$this->load->model('localisation/language');
-					$languages = $this->languageFullCacheData;
+					$languages = $this->registry->get('languages');
 					
 					$lang = array();
 					foreach($languages as $language){

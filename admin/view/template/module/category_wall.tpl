@@ -44,10 +44,7 @@
                                 <tr>
                                     <td><?php echo $entry_store; ?></td>
                                     <td>
-                                        <input type="checkbox" name="category_wall_module[<?php echo $module_row; ?>][store_id][]" value="0" <?php echo isset($module['store_id']) && in_array(0, $module['store_id']) ? 'checked="checked" ' : ''; ?> />
-                                    <?php echo $default_store; ?> </label>
-                                    <?php foreach ($stores as $store) { ?>
-                                     
+                                    <?php foreach ($stores as $store) { ?>                                     
                                             <input type="checkbox" name="category_wall_module[<?php echo $module_row; ?>][store_id][]" value="<?php echo $store['store_id']; ?>" <?php echo isset($module['store_id']) && in_array($store['store_id'], $module['store_id']) ? 'checked="checked" ' : ''; ?> />
                                         <?php echo $store['name']; ?>
                                     <?php } ?></td>
