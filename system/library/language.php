@@ -1,36 +1,21 @@
 <?php
 	class Language {
-		private $default = 'english';
-		private $directory;
-		private $data = array();
-		private $path = DIR_LANGUAGE;
+		private $default 	= 'english';
+		private $directory	= 'english';
+		private $data 		= [];
+		private $path 		= DIR_LANGUAGE;
+
+		private $db			= null;
+		private $config		= null;
 		
-		public function __construct($directory, $registry = false) {
-			
+		public function __construct($directory, $registry = false) {			
 			$this->path = DIR_LANGUAGE;
 			
-			if (defined('THIS_IS_CATALOG')){
-				
-				if (SITE_NAMESPACE == 'HAUSGARTEN' && $directory == 'russian'){
-					
-					$this->directory = $directory . '_hsg';
-					
-					} else {
-					
-					$this->directory = $directory;
-					
-				}
-				
-				
-				} else {
-				$this->directory = $directory;
-			}
+			$this->directory = $directory;
 			
 			if ($registry){
-				$this->config = $registry->get('config');
-				$this->db = $registry->get('db');
-				
-				$this->registry = $registry;
+				$this->config 	= $registry->get('config');
+				$this->db 		= $registry->get('db');								
 			}
 		}
 		
@@ -50,25 +35,25 @@
 			$file = $this->path . $this->directory . '/retranslate/' . $filename . '.php';
 			
 			if (file_exists($file)) {
-				$_ = array();
-				
-				require($file);
-				
+				$_ = [];				
+				require($file);				
 				return $_;
 			}
 		}
 		
 		public function loadCatalogLanguage($language_id, $filename){
-			$query = $this->db->query("SELECT directory FROM language WHERE language_id = '" . (int)$language_id . "' LIMIT 1");
-			
-			$file = DIR_CATALOG .'language/'. $query->row['directory'] . '/' . $filename . '.php';
+			if ($this->db){
+				$query = $this->db->query("SELECT directory FROM language WHERE language_id = '" . (int)$language_id . "' LIMIT 1");
 
-			if (file_exists($file)) {
-				$_ = array();
-				
-				require($file);
-				
-				return $_;
+				if ($query->num_rows){
+					$file = DIR_CATALOG .'language/'. $query->row['directory'] . '/' . $filename . '.php';
+
+					if (file_exists($file)) {
+						$_ = [];				
+						require($file);				
+						return $_;
+					}
+				}
 			}
 		}
 		
@@ -96,20 +81,6 @@
 				return $this->data;
 			}
 			
-			/*
-				$file = $this->path . $this->directory . '/retranslate/' . $filename . '.php';
-				if (file_exists($file)) {
-				$_ = array();
-				
-				require($file);
-				
-				$this->data = array_merge($this->data, $_);
-				
-				return $this->data;
-				}
-			*/
-			
-			
 			$file = $this->path . $this->default . '/' . $filename . '.php';
 			
 			if (file_exists($file)) {
@@ -121,8 +92,7 @@
 				
 				return $this->data;
 				} else {
-				trigger_error('Error: Could not load language ' . $filename . '!');
-				//	exit();
+				trigger_error('Error: Could not load language ' . $filename . '!');				
 			}
 		}
 		

@@ -295,7 +295,7 @@
 	}
 	
 	//Язык	
-	$language = new Language($languages[$code]['directory']);
+	$language = new Language($languages[$code]['directory'], $registry);
 	$language->load($languages[$code]['filename']);	
 	$registry->set('language', $language); 
 	

@@ -1754,9 +1754,7 @@ class ControllerApiInfo1C extends Controller {
 				$this->load->model('sale/order');
 				$this->load->model('sale/customer');
 				$this->load->model('localisation/order_status');
-				$this->load->model('setting/setting');
-
-			//check order
+				$this->load->model('setting/setting');			
 				$order_info = $this->model_sale_order->getOrder($order_id);
 
 				$responce = array();
@@ -1790,7 +1788,6 @@ class ControllerApiInfo1C extends Controller {
 							$this->response->setOutput(json_encode($responce)); 
 
 						} else {
-						//fast add order history
 
 							if ($order_status_id == $this->config->get('config_complete_status_id') || $order_status_id == $this->config->get('config_cancelled_status_id')){
 								$this->db->query("UPDATE `order` SET closed = '1' WHERE order_id = '" . (int)$order_id . "'");
@@ -1805,10 +1802,7 @@ class ControllerApiInfo1C extends Controller {
 								`datetime` = NOW()
 								");
 
-
-						//Бонусы
 							if ($order_status_id == $this->config->get('config_complete_status_id')){			
-							//Считаем сумму начисляемых бонусов
 								$reward_query = $this->db->query("SELECT SUM(reward) as total FROM order_product WHERE order_id = '" . $order_id . "'");
 
 								if ($reward_query->num_rows && $reward_query->row['total']){
@@ -1818,36 +1812,24 @@ class ControllerApiInfo1C extends Controller {
 								}
 							}
 
-						//Полная отмена
 							if ($order_status_id == $this->config->get('config_cancelled_status_id')){
 
-							//Очищаем все начисления по текущему заказу
 								$this->customer->clearRewardTableByOrder($order_info['customer_id'], $order_id);
-
-							//Очищаем очередь начислений, в случае отмены после выполнения
 								$this->customer->clearRewardQueueByOrder($order_info['customer_id'], $order_id);
 
-							//Ищем списание по данному заказу и возвращаем такую же сумму на бонусный счет покупателя
 								$pointsPaidForThisOrder = $this->customer->getRewardReservedByOrder($order_info['customer_id'], $order_id);
-
-
 								if ($pointsPaidForThisOrder > 0){
 									$description = sprintf($this->language->getCatalogLanguageString($order_info['language_id'], 'total/reward', 'text_reward_return_description'), $order_id);
-
 									$this->customer->addReward($order_info['customer_id'], $description, $pointsPaidForThisOrder, $order_id, 'ORDER_RETURN');
 								}
 
 							}
 
-
-						//YANDEX MARKET
 							if ($order_info['yam'] && $order_info['yam_id']){
 								$this->load->model('api/yamarket');
 								$this->model_api_yamarket->addToQueue($order_id, $order_status_id);						
 							}
 
-
-						//customer_history
 							if ($comment && mb_strlen($comment) > 2){
 								$customer_comment_text = 'изменен статус на: <b>'.$this->model_localisation_order_status->getOrderStatusName($order_status_id).'</b> ('.$comment.')';
 							} else {
@@ -1945,536 +1927,536 @@ class ControllerApiInfo1C extends Controller {
 											'href'     		   => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL')
 										);
 									}
-							} // Products
-							
-							$template->data['vouchers'] = array();
-							if(isset($data['show_vouchers'])){
-								$vouchers = $this->model_sale_order->getOrderVouchers($order_id);			 
-								foreach ($vouchers as $voucher) {
-									$template->data['vouchers'][] = array(
-										'description' => $voucher['description'],
-										'amount'      => $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']),
-										'href'        => $this->url->link('sale/voucher/update', 'token=' . $this->session->data['token'] . '&voucher_id=' . $voucher['voucher_id'], 'SSL')
-									);
 								}
-							} // Vouchers
-							
-							$template->data['totals'] = array();
-							if(isset($data['show_totals'])){
-								$template->data['totals'] = $this->model_sale_order->getOrderTotals($order_id);
-							} // Totals	
-							
-							$template->data['downloads'] = array();
-							if(isset($data['show_downloads'])){				
-								foreach ($products as $product) {
-									$results = $this->model_sale_order->getOrderDownloads($order_id, $product['order_product_id']);	
-									foreach ($results as $result) {
-										$template->data['downloads'][] = array(
-											'name'      => $result['name'],
-											'filename'  => $result['mask'],
-											'remaining' => $result['remaining']
+
+								$template->data['vouchers'] = array();
+								if(isset($data['show_vouchers'])){
+									$vouchers = $this->model_sale_order->getOrderVouchers($order_id);			 
+									foreach ($vouchers as $voucher) {
+										$template->data['vouchers'][] = array(
+											'description' => $voucher['description'],
+											'amount'      => $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']),
+											'href'        => $this->url->link('sale/voucher/update', 'token=' . $this->session->data['token'] . '&voucher_id=' . $voucher['voucher_id'], 'SSL')
 										);
 									}
 								}
-							} // Downloads	
-							
-							$attachments = array();
-							if(isset($data['attach_invoice_pdf'])){
-								$this->load->model('module/emailtemplate/invoice');
-								$template->data['emailtemplate_invoice_pdf'] = $this->model_module_emailtemplate_invoice->getInvoice($this->request->get['order_id'], true);
-								$attachments[] = $template->data['emailtemplate_invoice_pdf'];
-							}
-							
-							$language = new Language($order_info['language_directory']);
-							$language->load($order_info['language_filename']);
-							$language->load('mail/order');
-							
-							$subject = sprintf($language->get('text_subject'), $order_info['store_name'], $order_id);
-							
-							$message  = $language->get('text_order') . ' ' . $order_id . "\n";
-							$message .= $language->get('text_date_added') . ' ' . date($language->get('date_format_short'), strtotime($order_info['date_added'])) . "\n\n";
-							
-							$data['order_status_id'] = $order_status_id;
-							$order_status_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_status WHERE order_status_id = '" . (int)$data['order_status_id'] . "' AND language_id = '" . (int)$order_info['language_id'] . "'");
-							
-							if ($order_status_query->num_rows) {
-								$message .= $language->get('text_order_status') . "\n";
-								$message .= $order_status_query->row['name'] . "\n\n";
-							}
-							
-							if ($order_info['customer_id']) {
-								$message .= $language->get('text_link') . "\n";
-								$message .= html_entity_decode($order_info['store_url'] . 'index.php?route=account/order/info&order_id=' . $order_id, ENT_QUOTES, 'UTF-8') . "\n\n";
-							}
-							
-							if ($comment) {
-								$message .= $language->get('text_comment') . "\n\n";
-								$message .= strip_tags(html_entity_decode($comment, ENT_QUOTES, 'UTF-8')) . "\n\n";
-							}
-							
-							$message .= $language->get('text_footer');
-							
-							if (!empty($template->data['products'])) {
-								$message .= "\n" . $language->get('text_products') . "\n"; 
-								foreach ($template->data['products'] as $product) {
-									$message .= $product['quantity'] . 'x ' . $product['name'] . ' (' . $product['model'] . ') ' . html_entity_decode($product['total'], ENT_NOQUOTES, 'UTF-8') . "\n";
-									foreach ($product['option'] as $option) {
-										$message .= chr(9) . '-' . $option['name'] . ' ' . (strlen($option['value']) > 20 ? substr($option['value'], 0, 20) . '..' : $option['value']) . "\n";
+
+								$template->data['totals'] = array();
+								if(isset($data['show_totals'])){
+									$template->data['totals'] = $this->model_sale_order->getOrderTotals($order_id);
+								}
+
+								$template->data['downloads'] = array();
+								if(isset($data['show_downloads'])){				
+									foreach ($products as $product) {
+										$results = $this->model_sale_order->getOrderDownloads($order_id, $product['order_product_id']);	
+										foreach ($results as $result) {
+											$template->data['downloads'][] = array(
+												'name'      => $result['name'],
+												'filename'  => $result['mask'],
+												'remaining' => $result['remaining']
+											);
+										}
 									}
 								}
-							}
-							
-							if (!empty($template->data['vouchers'])) { 
-								foreach ($template->data['vouchers'] as $voucher) {
-									$message .= '1x ' . $voucher['description'] . ' ' . $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']);
+
+								$attachments = array();
+								if(isset($data['attach_invoice_pdf'])){
+									$this->load->model('module/emailtemplate/invoice');
+									$template->data['emailtemplate_invoice_pdf'] = $this->model_module_emailtemplate_invoice->getInvoice($this->request->get['order_id'], true);
+									$attachments[] = $template->data['emailtemplate_invoice_pdf'];
 								}
-							}
-							
-							if (!empty($template->data['totals'])) {
-								$message .= "\n" . $language->get('text_total') . "\n";	
-								foreach ($template->data['totals'] as $total) {
-									$message .= $total['title'] . ': ' . html_entity_decode($total['text'], ENT_NOQUOTES, 'UTF-8') . "\n";
+
+								$language = new Language($order_info['language_directory']);
+								$language->load($order_info['language_filename']);
+								$language->load('mail/order');
+
+								$subject = sprintf($language->get('text_subject'), $order_info['store_name'], $order_id);
+
+								$message  = $language->get('text_order') . ' ' . $order_id . "\n";
+								$message .= $language->get('text_date_added') . ' ' . date($language->get('date_format_short'), strtotime($order_info['date_added'])) . "\n\n";
+
+								$data['order_status_id'] = $order_status_id;
+								$order_status_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_status WHERE order_status_id = '" . (int)$data['order_status_id'] . "' AND language_id = '" . (int)$order_info['language_id'] . "'");
+
+								if ($order_status_query->num_rows) {
+									$message .= $language->get('text_order_status') . "\n";
+									$message .= $order_status_query->row['name'] . "\n\n";
 								}
+
+								if ($order_info['customer_id']) {
+									$message .= $language->get('text_link') . "\n";
+									$message .= html_entity_decode($order_info['store_url'] . 'index.php?route=account/order/info&order_id=' . $order_id, ENT_QUOTES, 'UTF-8') . "\n\n";
+								}
+
+								if ($comment) {
+									$message .= $language->get('text_comment') . "\n\n";
+									$message .= strip_tags(html_entity_decode($comment, ENT_QUOTES, 'UTF-8')) . "\n\n";
+								}
+
+								$message .= $language->get('text_footer');
+
+								if (!empty($template->data['products'])) {
+									$message .= "\n" . $language->get('text_products') . "\n"; 
+									foreach ($template->data['products'] as $product) {
+										$message .= $product['quantity'] . 'x ' . $product['name'] . ' (' . $product['model'] . ') ' . html_entity_decode($product['total'], ENT_NOQUOTES, 'UTF-8') . "\n";
+										foreach ($product['option'] as $option) {
+											$message .= chr(9) . '-' . $option['name'] . ' ' . (strlen($option['value']) > 20 ? substr($option['value'], 0, 20) . '..' : $option['value']) . "\n";
+										}
+									}
+								}
+
+								if (!empty($template->data['vouchers'])) { 
+									foreach ($template->data['vouchers'] as $voucher) {
+										$message .= '1x ' . $voucher['description'] . ' ' . $this->currency->format($voucher['amount'], $order_info['currency_code'], $order_info['currency_value']);
+									}
+								}
+
+								if (!empty($template->data['totals'])) {
+									$message .= "\n" . $language->get('text_total') . "\n";	
+									foreach ($template->data['totals'] as $total) {
+										$message .= $total['title'] . ': ' . html_entity_decode($total['text'], ENT_NOQUOTES, 'UTF-8') . "\n";
+									}
+								}
+
+								if (!empty($template->data['downloads'])) {
+									$message .= "\n" . $language->get('text_download') . "\n";
+									$message .= $order_info['store_url'] . 'index.php?route=account/download' . "\n\n";
+								}
+
+								$template->addData($data);
+
+								$template->addData($order_info);
+
+								$template->data['new_comment'] = html_entity_decode($comment, ENT_QUOTES, 'UTF-8');
+								$template->data['invoice'] = html_entity_decode($order_info['store_url'] . 'index.php?route=account/order/info&order_id=' . $order_id, ENT_QUOTES, 'UTF-8');
+								$template->data['invoice_tracking'] = $template->getTracking($template->data['invoice']);
+
+								$template->data['date_added'] = date($language->get('date_format_short'), strtotime($order_info['date_added']));
+
+								if ($order_status_query->num_rows) {
+									$template->data['order_status'] = $order_status_query->row['name']; 
+								}
+
+								$mail = new Mail($this->registry); 
+								$mail->setTo($order_info['email']);
+
+								$mail->setFrom($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$order_info['store_id']));
+								$mail->setSender($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$order_info['store_id']));
+
+								$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
+								$mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
+								$template_data = array('key' =>'admin.order_update');
+								if(!empty($data['field_template'])){
+									$template_data['emailtemplate_id'] = $data['field_template'];
+								}
+								if(!empty($data['order_status_id'])){
+									$template_data['order_status_id'] = $data['order_status_id'];
+								}
+								if(!empty($data['customer_id'])){
+									$template_data['customer_id'] = $data['customer_id'];
+								}
+								if(isset($order_info['store_id'])){
+									$template_data['store_id'] = $order_info['store_id'];
+								}
+								if(isset($order_info['language_id'])){
+									$template_data['language_id'] = $order_info['language_id'];
+								}
+
+								$template->load($template_data);
+
+								$mail = $template->hook($mail);
+								foreach($attachments as $attachment){
+									$mail->addAttachment($attachment);
+								} 
+
+								$mail->setTo($order_info['email']);
+								$mail->send();
+
+								$template->sent();
 							}
-							
-							if (!empty($template->data['downloads'])) {
-								$message .= "\n" . $language->get('text_download') . "\n";
-								$message .= $order_info['store_url'] . 'index.php?route=account/download' . "\n\n";
-							}
-							
-							$template->addData($data);
-							
-							$template->addData($order_info);
-							
-							$template->data['new_comment'] = html_entity_decode($comment, ENT_QUOTES, 'UTF-8');
-							$template->data['invoice'] = html_entity_decode($order_info['store_url'] . 'index.php?route=account/order/info&order_id=' . $order_id, ENT_QUOTES, 'UTF-8');
-							$template->data['invoice_tracking'] = $template->getTracking($template->data['invoice']);
-							
-							$template->data['date_added'] = date($language->get('date_format_short'), strtotime($order_info['date_added']));
-							
-							if ($order_status_query->num_rows) {
-								$template->data['order_status'] = $order_status_query->row['name']; 
-							}
-							
-							$mail = new Mail($this->registry); 
-							$mail->setTo($order_info['email']);
-							
-							$mail->setFrom($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$order_info['store_id']));
-							$mail->setSender($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$order_info['store_id']));
-							
-							$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
-							$mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
-							$template_data = array('key' =>'admin.order_update');
-							if(!empty($data['field_template'])){
-								$template_data['emailtemplate_id'] = $data['field_template'];
-							}
-							if(!empty($data['order_status_id'])){
-								$template_data['order_status_id'] = $data['order_status_id'];
-							}
-							if(!empty($data['customer_id'])){
-								$template_data['customer_id'] = $data['customer_id'];
-							}
-							if(isset($order_info['store_id'])){
-								$template_data['store_id'] = $order_info['store_id'];
-							}
-							if(isset($order_info['language_id'])){
-								$template_data['language_id'] = $order_info['language_id'];
-							}
-							
-							$template->load($template_data);
-							
-							$mail = $template->hook($mail);
-							foreach($attachments as $attachment){
-								$mail->addAttachment($attachment);
-							} 
-							
-							$mail->setTo($order_info['email']);
-							$mail->send();
-							
-							$template->sent();
-						}
-						
-						$this->load->model('feed/exchange1c');
-						$this->model_feed_exchange1c->addOrderToQueue($order_id);
-						$this->model_feed_exchange1c->makeSalesResultXML($order_id);
-						
-						$responce['success'] = true;
-						$responce['new_status'] = $order_status_id;
-						$this->response->setOutput(json_encode($responce));
-					}					
-				}		
+
+							$this->load->model('feed/exchange1c');
+							$this->model_feed_exchange1c->addOrderToQueue($order_id);
+							$this->model_feed_exchange1c->makeSalesResultXML($order_id);
+
+							$responce['success'] = true;
+							$responce['new_status'] = $order_status_id;
+							$this->response->setOutput(json_encode($responce));
+						}					
+					}		
+				}
 			}
-		}
-		
-		public function getStocksFrom1C($update = true, $updateStockGroups = false){
-			
-			$this->getStockWaitsFrom1C();						
-			$this->load->model('kp/info1c');			
-			$result = $this->model_kp_info1c->getStocksFrom1C();
-			
-			$this->updateStockXML($result, $update, $updateStockGroups);											
-		}
+
+			public function getStocksFrom1C($update = true, $updateStockGroups = false){
+
+				$this->getStockWaitsFrom1C();						
+				$this->load->model('kp/info1c');			
+				$result = $this->model_kp_info1c->getStocksFrom1C();
+
+				$this->updateStockXML($result, $update, $updateStockGroups);											
+			}
 
 
-		public function getOrderCurrentStatusJSON($orders){
-			$this->load->model('sale/order');
-			
-			foreach ($orders as $order_id){
-				
-				$order_info = $this->db->query("SELECT o.order_id, os.name, os.order_status_id FROM `order` o LEFT JOIN order_status os ON (o.order_status_id = os.order_status_id AND os.language_id = 2) WHERE o.order_id = '" . (int)$order_id . "' LIMIT 1");
-				if (!$order_info->num_rows){
-					$responce[$order_id] = array(				
-						'error' => "true",
-						'error_msg' => 'Order does not exist'
-					);	
-				} else {
-					
-					foreach ($order_info->row as $key => $value){
-						$responce[$order_id][$key] = $value;						
-					}
-					
-				}
-			}
-			
-			$this->response->setOutput(json_encode($responce));
-		}
-		
-		public function getOrderCurrentStatus($orders){
-			$this->load->model('sale/order');
-			
-			$orders = explode(',', $orders);
-			
-			$responce = array();
-			
-			foreach ($orders as $order_id){
-				
-				$order_info = $this->db->query("SELECT o.order_id, os.name, os.order_status_id FROM `order` o LEFT JOIN order_status os ON (o.order_status_id = os.order_status_id AND os.language_id = 2) WHERE o.order_id = '" . (int)$order_id . "' LIMIT 1");
-				if (!$order_info->num_rows){
-					$responce[$order_id] = array(				
-						'error' => "true",
-						'error_msg' => 'Order does not exist'
-					);	
-				} else {
-					
-					foreach ($order_info->row as $key => $value){
-						$responce[$order_id][$key] = $value;						
-					}
-					
-				}
-			}
-			
-			$this->response->setOutput(json_encode($responce));
-		}
-		
-		public function exportCatalogCron(){
-			$this->load->model('feed/exchange1c');
-			
-			
-			$this->model_feed_exchange1c->exportCategoriesXML(0);			
-			$this->model_feed_exchange1c->exportManufacturersXML(0);
-			$this->model_feed_exchange1c->exportCollectionsXML(0);
-			
-		}
-		
-		public function getActualPrices(){
-			$this->load->model('kp/info1c');
-			$this->load->model('catalog/product');
-			
-			
-			
-			if ($result = $this->model_kp_info1c->getActualCostFrom1C()){
-				
-				$this->db->query("UPDATE product SET mpp_price = 0 WHERE 1");
-				
-				foreach ($result['items'] as $product){
-					
-					echo  $product['idProduct'] . ' : ' . $product['price'] . ' : ' . $product['datePrice'] . ' : ' .  $product['mpp_price'] . PHP_EOL;
-					$this->db->query("UPDATE product SET mpp_price = '" . (float)$product['mpp_price'] . "', actual_cost = '" . (float)$product['price'] . "', actual_cost_date = '" . $this->db->escape(date('Y-m-d', strtotime($product['datePrice'])))  . "' WHERE product_id = '" . (int)$product['idProduct'] . "'");
-				}				
-			}
-			
-		}
-		
-		
-		public function putOrderTrackingInfo($json_data = ''){
-			$this->load->model('sale/order');
-			$this->load->model('setting/setting');
-			
-			$return = array();
-			
-			if ($json_data['trackerType'] && $json_data['trackerType'] == 'LeaveMainWarehouse' && $json_data['NumPart']) {
-				
-				$orders = array();
-				foreach ($json_data['items'] as $item){				
-					$orders[] = $item['idOrder'];			
-				}
-				
-				array_unique($orders);
-				
+			public function getOrderCurrentStatusJSON($orders){
+				$this->load->model('sale/order');
+
 				foreach ($orders as $order_id){
-					$order_info = $this->model_sale_order->getOrder($order_id);
-					
-					if ($order_info){				
-						//check if to send
-						$check_query = $this->db->query("SELECT * FROM order_tracker_sms WHERE tracker_type = 'LeaveMainWarehouse' AND order_id = '" . (int)$order_id . "' AND partie_num = '" . $this->db->escape($json_data['NumPart']) . "'");
-						
-						if (!$check_query->num_rows){
-							
-							$message  = str_replace(
-								array(
-									'{ID}',			
-									'{FIRSTNAME}',				
-								),
-								array(
-									$order_id,
-									$order_info['firstname'],
-								),
-								$this->config->get('config_sms_tracker_leave_main_warehouse')
-							);
-							
-							$options = array(
-								'to'       => $order_info['telephone'],
-								'from'     => $this->model_setting_setting->getKeySettingValue('config', 'config_sms_sign', (int)$order_info['store_id']),				
-								'message'  => $message
-							);
-							
-							
-							
-							$sms_id = $this->smsQueue->queue($options);
-							
-							if ($sms_id){
-								$sms_status = 'В очереди';					
-							} else {
-								$sms_status = 'Неудача';
-							}
-							$sms_data = array(
-								'order_status_id' => 2,
-								'sms' => $options['message']
-							);
-							
-							
-							$this->db->query("INSERT INTO order_tracker_sms SET tracker_type = 'LeaveMainWarehouse', order_id = '" . (int)$order_id . "', partie_num = '" . $this->db->escape($json_data['NumPart']) . "', date_sent = NOW()");
-							$this->model_sale_order->addOrderSmsHistory($order_id, $sms_data, $sms_status, $sms_id, (int)$order_info['customer_id']);
-							$return[$order_id] = $options['message'];
-							
-						} else {
-							$return[$order_id] = 'already sent';
-						}
-					}
-					
-				}
-				
-				
-			} else {
-				
-				$return['error'] = 'trackerType mismatch';
-				
-			}
-			
-			$this->response->setOutput(json_encode($return));
-			
-		}
-		
-		public function trackerCron(){
-			$this->load->model('feed/exchange1c');
-			$this->load->model('sale/order');
-			$this->load->model('kp/info1c');	
-			
-			$query = $this->db->query("SELECT DISTINCT(order_id) FROM `order` WHERE order_status_id IN (2, 33, 26, 15, 14, 16, 25)");
-			
-			$i = 1;
-			foreach ($query->rows as $row){
-				$order_id = $row['order_id'];
-				
-				$order1c = $this->model_kp_info1c->getOrderTrackerXML($order_id);
-				
-				if ($order1c) {
-					echo $i . '/' . $query->num_rows . ': получили заказ ' . $order_id . PHP_EOL;
-					$this->db->query("UPDATE `order` SET tracker_xml = '" . $this->db->escape(json_encode($order1c)) . "' WHERE order_id = '" . (int)$order_id . "'");
-				} else {
-					echo $i . '/' . $query->num_rows . ': ошибка получения ' . $order_id . PHP_EOL;
-				}
-				
-				$i++;
-				
-				
-			}
-			
-		}
-		
-		
-		public function exportOrdersCron(){
-			$this->load->model('feed/exchange1c');
-			$this->load->model('sale/order');
-			
-			$query = $this->db->query("SELECT order_id FROM order_to_1c_queue ORDER BY RAND() LIMIT 20");
-			
-			
-			foreach ($query->rows as $result) {								
-				$order_id = $result['order_id'];
-				$order = $this->model_sale_order->getOrder($order_id);
-				
-			if (in_array((int)$order['order_status_id'], $this->config->get('config_odinass_order_status_id')) /* && $total_national > 0 */){
 
-				$check_date_query = $this->db->query("SELECT date_added FROM `order` WHERE `order_id` = '" . (int)$order_id . "' AND (DATE(date_added) >= '2017-01-01' OR `order_id` = 11618)");								
-
-				if (count($check_date_query->row)){									
-					$this->model_feed_exchange1c->getOrderXML($order_id);
-					$this->model_feed_exchange1c->makeSalesResultXML($order_id);
-					$this->model_feed_exchange1c->getOrderReturnsXML($order_id);
-					$this->model_feed_exchange1c->getOrderTransactionsXML($order_id);
-					$this->model_feed_exchange1c->getOrderSuppliesXML($order_id);
-
-					echo $order_id . PHP_EOL;
-				}
-			}
-
-			$this->model_feed_exchange1c->removeOrderFromQueue($order_id);
-
-		}	
-	}
-
-	public function legalpersonList(){
-
-		$query = $this->db->query("SELECT * FROM legalperson WHERE 1");
-
-
-		$this->response->setOutput(json_encode($query->rows));	
-	}
-
-	public function transactionSyncSet($transactionData){	
-		$this->load->model('sale/customer');
-		$this->load->model('sale/order');
-
-		if (empty($transactionData['customer_transaction_id']) && empty($transactionData['guid'])){
-			die('Both customer_transaction_id and guid are empty!');
-		}
-
-		//Это редактирование транзакции (изначально добавлена с сайта, у нее есть идентификатор
-		//Мы редактируем ТОЛЬКО ГУИД
-		if (!empty($transactionData['customer_transaction_id'])){
-			$transaction = $this->model_sale_customer->getTransactionByID($transactionData['customer_transaction_id']);
-
-				//Проверка на существование
-			if (!$transaction){
-				die('Transaction '. $transactionData['customer_transaction_id'] .' does not exist, check please');
-			} else {
-					//Если ок - то присваиваем ГУИД этой транзакции
-				$this->model_sale_customer->updateTransactionGUIDByTransactionID($transactionData['customer_transaction_id'], $transactionData['guid']);
-				die('Transaction found, guid updated');
-			}
-
-		//Не важно, есть ли индентификатор сайта, эта транзакция либо новая (если у нее нет customer_transaction_id, либо уже существующая)
-		} elseif (!empty($transactionData['guid'])){
-			$transaction = $this->model_sale_customer->getTransactionByGUID($transactionData['guid']);
-
-
-			$fields = array(
-				'customer_id',
-				'description',						
-				'amount_national',
-				'currency_code',
-				'order_id',
-				'date_added',
-				'legalperson_id',
-				'guid'
-			);
-
-			foreach ($fields as $field){
-				if (!isset($transactionData[$field])){
-					die('JSON Field empty ' . $field);
-				}
-			}
-
-				//Существующую транзакцию мы либо ничего не делаем, либо обновляем информацию (?)
-			if ($transaction){
-
-				$this->response->setOutput(json_encode(array('exists' => true, 'customer_transaction_id' => $transaction['customer_transaction_id'])));
-
-					//Несуществующую транзакцию мы создаем
-			} else {
-
-				$data = array(
-					'customer_id' 		=> $transactionData['customer_id'],
-					'description'		=> $transactionData['description'],					
-					'amount_national'	=> $transactionData['amount_national'],
-					'currency_code'		=> $transactionData['currency_code'],
-					'order_id'			=> $transactionData['order_id'],
-					'date_added'		=> date('Y-m-d H:i:s', strtotime($transactionData['date_added'])),
-					'added_from'		=> $transactionData['added_from']?$transactionData['added_from']:'1c_sync',
-					'legalperson_id'	=> $transactionData['legalperson_id'],
-					'guid' 				=> $transactionData['guid']
-				);
-
-				if ($transactionData['order_id']){
-					$order_info = $this->model_sale_order->getOrder($transactionData['order_id']);
-
-					if ($order_info['currency_value']){
-						$data['amount'] = $this->currency->reconvert($transactionData['amount_national'], $order_info['currency_value']);
+					$order_info = $this->db->query("SELECT o.order_id, os.name, os.order_status_id FROM `order` o LEFT JOIN order_status os ON (o.order_status_id = os.order_status_id AND os.language_id = 2) WHERE o.order_id = '" . (int)$order_id . "' LIMIT 1");
+					if (!$order_info->num_rows){
+						$responce[$order_id] = array(				
+							'error' => "true",
+							'error_msg' => 'Order does not exist'
+						);	
 					} else {
-						$data['amount'] = $this->currency->convert($transactionData['amount_national'], $transactionData['currency_code'], 'EUR');
+
+						foreach ($order_info->row as $key => $value){
+							$responce[$order_id][$key] = $value;						
+						}
+
 					}
+				}
+
+				$this->response->setOutput(json_encode($responce));
+			}
+
+			public function getOrderCurrentStatus($orders){
+				$this->load->model('sale/order');
+
+				$orders = explode(',', $orders);
+
+				$responce = array();
+
+				foreach ($orders as $order_id){
+
+					$order_info = $this->db->query("SELECT o.order_id, os.name, os.order_status_id FROM `order` o LEFT JOIN order_status os ON (o.order_status_id = os.order_status_id AND os.language_id = 2) WHERE o.order_id = '" . (int)$order_id . "' LIMIT 1");
+					if (!$order_info->num_rows){
+						$responce[$order_id] = array(				
+							'error' => "true",
+							'error_msg' => 'Order does not exist'
+						);	
+					} else {
+
+						foreach ($order_info->row as $key => $value){
+							$responce[$order_id][$key] = $value;						
+						}
+
+					}
+				}
+
+				$this->response->setOutput(json_encode($responce));
+			}
+
+			public function exportCatalogCron(){
+				$this->load->model('feed/exchange1c');
+
+
+				$this->model_feed_exchange1c->exportCategoriesXML(0);			
+				$this->model_feed_exchange1c->exportManufacturersXML(0);
+				$this->model_feed_exchange1c->exportCollectionsXML(0);
+
+			}
+
+			public function getActualPrices(){
+				$this->load->model('kp/info1c');
+				$this->load->model('catalog/product');
+
+
+
+				if ($result = $this->model_kp_info1c->getActualCostFrom1C()){
+
+					$this->db->query("UPDATE product SET mpp_price = 0 WHERE 1");
+
+					foreach ($result['items'] as $product){
+
+						echo  $product['idProduct'] . ' : ' . $product['price'] . ' : ' . $product['datePrice'] . ' : ' .  $product['mpp_price'] . PHP_EOL;
+						$this->db->query("UPDATE product SET mpp_price = '" . (float)$product['mpp_price'] . "', actual_cost = '" . (float)$product['price'] . "', actual_cost_date = '" . $this->db->escape(date('Y-m-d', strtotime($product['datePrice'])))  . "' WHERE product_id = '" . (int)$product['idProduct'] . "'");
+					}				
+				}
+
+			}
+
+
+			public function putOrderTrackingInfo($json_data = ''){
+				$this->load->model('sale/order');
+				$this->load->model('setting/setting');
+
+				$return = array();
+
+				if ($json_data['trackerType'] && $json_data['trackerType'] == 'LeaveMainWarehouse' && $json_data['NumPart']) {
+
+					$orders = array();
+					foreach ($json_data['items'] as $item){				
+						$orders[] = $item['idOrder'];			
+					}
+
+					array_unique($orders);
+
+					foreach ($orders as $order_id){
+						$order_info = $this->model_sale_order->getOrder($order_id);
+
+						if ($order_info){				
+						//check if to send
+							$check_query = $this->db->query("SELECT * FROM order_tracker_sms WHERE tracker_type = 'LeaveMainWarehouse' AND order_id = '" . (int)$order_id . "' AND partie_num = '" . $this->db->escape($json_data['NumPart']) . "'");
+
+							if (!$check_query->num_rows){
+
+								$message  = str_replace(
+									array(
+										'{ID}',			
+										'{FIRSTNAME}',				
+									),
+									array(
+										$order_id,
+										$order_info['firstname'],
+									),
+									$this->config->get('config_sms_tracker_leave_main_warehouse')
+								);
+
+								$options = array(
+									'to'       => $order_info['telephone'],
+									'from'     => $this->model_setting_setting->getKeySettingValue('config', 'config_sms_sign', (int)$order_info['store_id']),				
+									'message'  => $message
+								);
+
+
+
+								$sms_id = $this->smsQueue->queue($options);
+
+								if ($sms_id){
+									$sms_status = 'В очереди';					
+								} else {
+									$sms_status = 'Неудача';
+								}
+								$sms_data = array(
+									'order_status_id' => 2,
+									'sms' => $options['message']
+								);
+
+
+								$this->db->query("INSERT INTO order_tracker_sms SET tracker_type = 'LeaveMainWarehouse', order_id = '" . (int)$order_id . "', partie_num = '" . $this->db->escape($json_data['NumPart']) . "', date_sent = NOW()");
+								$this->model_sale_order->addOrderSmsHistory($order_id, $sms_data, $sms_status, $sms_id, (int)$order_info['customer_id']);
+								$return[$order_id] = $options['message'];
+
+							} else {
+								$return[$order_id] = 'already sent';
+							}
+						}
+
+					}
+
 
 				} else {
 
-					$data['amount'] = $this->currency->convert($transactionData['amount_national'], $transactionData['currency_code'], 'EUR');
+					$return['error'] = 'trackerType mismatch';
 
 				}
 
-				$transaction_id = $this->model_sale_customer->addTransactionFromAPI($data);
-				$this->response->setOutput(json_encode(array('exists' => false, 'customer_transaction_id' => $transaction_id)));
+				$this->response->setOutput(json_encode($return));
+
+			}
+
+			public function trackerCron(){
+				$this->load->model('feed/exchange1c');
+				$this->load->model('sale/order');
+				$this->load->model('kp/info1c');	
+
+				$query = $this->db->query("SELECT DISTINCT(order_id) FROM `order` WHERE order_status_id IN (2, 33, 26, 15, 14, 16, 25)");
+
+				$i = 1;
+				foreach ($query->rows as $row){
+					$order_id = $row['order_id'];
+
+					$order1c = $this->model_kp_info1c->getOrderTrackerXML($order_id);
+
+					if ($order1c) {
+						echo $i . '/' . $query->num_rows . ': получили заказ ' . $order_id . PHP_EOL;
+						$this->db->query("UPDATE `order` SET tracker_xml = '" . $this->db->escape(json_encode($order1c)) . "' WHERE order_id = '" . (int)$order_id . "'");
+					} else {
+						echo $i . '/' . $query->num_rows . ': ошибка получения ' . $order_id . PHP_EOL;
+					}
+
+					$i++;
+
+
+				}
+
+			}
+
+
+			public function exportOrdersCron(){
+				$this->load->model('feed/exchange1c');
+				$this->load->model('sale/order');
+
+				$query = $this->db->query("SELECT order_id FROM order_to_1c_queue ORDER BY RAND() LIMIT 20");
+
+
+				foreach ($query->rows as $result) {								
+					$order_id = $result['order_id'];
+					$order = $this->model_sale_order->getOrder($order_id);
+
+				if (in_array((int)$order['order_status_id'], $this->config->get('config_odinass_order_status_id')) /* && $total_national > 0 */){
+
+					$check_date_query = $this->db->query("SELECT date_added FROM `order` WHERE `order_id` = '" . (int)$order_id . "' AND (DATE(date_added) >= '2017-01-01' OR `order_id` = 11618)");								
+
+					if (count($check_date_query->row)){									
+						$this->model_feed_exchange1c->getOrderXML($order_id);
+						$this->model_feed_exchange1c->makeSalesResultXML($order_id);
+						$this->model_feed_exchange1c->getOrderReturnsXML($order_id);
+						$this->model_feed_exchange1c->getOrderTransactionsXML($order_id);
+						$this->model_feed_exchange1c->getOrderSuppliesXML($order_id);
+
+						echo $order_id . PHP_EOL;
+					}
+				}
+
+				$this->model_feed_exchange1c->removeOrderFromQueue($order_id);
 
 			}	
 		}
-	}
 
-	public function transactionSyncGet($transactionData){		
-		$this->load->model('sale/customer');
-		$this->load->model('sale/order');
-		$transactions = array();
+		public function legalpersonList(){
 
-		if (!empty($transactionData['order_id'])){
-			$order = $this->model_sale_order->getOrder($transactionData['order_id']);
-			if (!$order){
-				die('order does not exist, check please');
-			}
-
-			$customer_transactions = $this->model_sale_customer->getTransactions($order['customer_id'], 0, 10000, $order['order_id']);	
+			$query = $this->db->query("SELECT * FROM legalperson WHERE 1");
 
 
-		} elseif ($transactionData['customer_id']){
-			$customer = $this->model_sale_customer->getCustomer($transactionData['customer_id']);
-			if (!$customer){
-				die('customer does not exist, check please');
-			}
-
-			$customer_transactions = $this->model_sale_customer->getTransactions($customer['customer_id'], 0, 10000);	
+			$this->response->setOutput(json_encode($query->rows));	
 		}
 
+		public function transactionSyncSet($transactionData){	
+			$this->load->model('sale/customer');
+			$this->load->model('sale/order');
 
-		foreach ($customer_transactions as $customer_transaction){
-			$ct_date = date('Y-m-d', strtotime($customer_transaction['date_added']));
-			$ct_time = date('H:i:s', strtotime($customer_transaction['date_added']));
+			if (empty($transactionData['customer_transaction_id']) && empty($transactionData['guid'])){
+				die('Both customer_transaction_id and guid are empty!');
+			}
 
-			$transactions[] = array(
-				'customer_transaction_id'       => $customer_transaction['customer_transaction_id']
-				,'guid'                    		=> $customer_transaction['guid']
-				,'date'             			=> $ct_date
-				,'time'             			=> $ct_time
-				,'description'             		=> $customer_transaction['description']						
-				,'currency'               		=> $customer_transaction['currency_code']
-				,'sum'                			=> $customer_transaction['amount_national']
-				,'sumEUR' 						=> $customer_transaction['amount']
-				,'added_from'					=> $customer_transaction['added_from']
-				,'legalperson_id'				=> $customer_transaction['legalperson_id']
-				,'legalperson_name_1C'			=> $customer_transaction['legalperson_name_1C']
-				,'legalperson_name'				=> $customer_transaction['legalperson_name']
-				,'isHandMade'					=> ($customer_transaction['added_from'] == 'manual_admin')
-				,'isAutoCheck'					=> ($customer_transaction['added_from'] == 'auto_order_close')					
-			);
+		//Это редактирование транзакции (изначально добавлена с сайта, у нее есть идентификатор
+		//Мы редактируем ТОЛЬКО ГУИД
+			if (!empty($transactionData['customer_transaction_id'])){
+				$transaction = $this->model_sale_customer->getTransactionByID($transactionData['customer_transaction_id']);
+
+				//Проверка на существование
+				if (!$transaction){
+					die('Transaction '. $transactionData['customer_transaction_id'] .' does not exist, check please');
+				} else {
+					//Если ок - то присваиваем ГУИД этой транзакции
+					$this->model_sale_customer->updateTransactionGUIDByTransactionID($transactionData['customer_transaction_id'], $transactionData['guid']);
+					die('Transaction found, guid updated');
+				}
+
+		//Не важно, есть ли индентификатор сайта, эта транзакция либо новая (если у нее нет customer_transaction_id, либо уже существующая)
+			} elseif (!empty($transactionData['guid'])){
+				$transaction = $this->model_sale_customer->getTransactionByGUID($transactionData['guid']);
 
 
+				$fields = array(
+					'customer_id',
+					'description',						
+					'amount_national',
+					'currency_code',
+					'order_id',
+					'date_added',
+					'legalperson_id',
+					'guid'
+				);
+
+				foreach ($fields as $field){
+					if (!isset($transactionData[$field])){
+						die('JSON Field empty ' . $field);
+					}
+				}
+
+				//Существующую транзакцию мы либо ничего не делаем, либо обновляем информацию (?)
+				if ($transaction){
+
+					$this->response->setOutput(json_encode(array('exists' => true, 'customer_transaction_id' => $transaction['customer_transaction_id'])));
+
+					//Несуществующую транзакцию мы создаем
+				} else {
+
+					$data = array(
+						'customer_id' 		=> $transactionData['customer_id'],
+						'description'		=> $transactionData['description'],					
+						'amount_national'	=> $transactionData['amount_national'],
+						'currency_code'		=> $transactionData['currency_code'],
+						'order_id'			=> $transactionData['order_id'],
+						'date_added'		=> date('Y-m-d H:i:s', strtotime($transactionData['date_added'])),
+						'added_from'		=> $transactionData['added_from']?$transactionData['added_from']:'1c_sync',
+						'legalperson_id'	=> $transactionData['legalperson_id'],
+						'guid' 				=> $transactionData['guid']
+					);
+
+					if ($transactionData['order_id']){
+						$order_info = $this->model_sale_order->getOrder($transactionData['order_id']);
+
+						if ($order_info['currency_value']){
+							$data['amount'] = $this->currency->reconvert($transactionData['amount_national'], $order_info['currency_value']);
+						} else {
+							$data['amount'] = $this->currency->convert($transactionData['amount_national'], $transactionData['currency_code'], 'EUR');
+						}
+
+					} else {
+
+						$data['amount'] = $this->currency->convert($transactionData['amount_national'], $transactionData['currency_code'], 'EUR');
+
+					}
+
+					$transaction_id = $this->model_sale_customer->addTransactionFromAPI($data);
+					$this->response->setOutput(json_encode(array('exists' => false, 'customer_transaction_id' => $transaction_id)));
+
+				}	
+			}
 		}
-		$this->response->setOutput(json_encode($transactions));	
-	}
-}																																
+
+		public function transactionSyncGet($transactionData){		
+			$this->load->model('sale/customer');
+			$this->load->model('sale/order');
+			$transactions = array();
+
+			if (!empty($transactionData['order_id'])){
+				$order = $this->model_sale_order->getOrder($transactionData['order_id']);
+				if (!$order){
+					die('order does not exist, check please');
+				}
+
+				$customer_transactions = $this->model_sale_customer->getTransactions($order['customer_id'], 0, 10000, $order['order_id']);	
+
+
+			} elseif ($transactionData['customer_id']){
+				$customer = $this->model_sale_customer->getCustomer($transactionData['customer_id']);
+				if (!$customer){
+					die('customer does not exist, check please');
+				}
+
+				$customer_transactions = $this->model_sale_customer->getTransactions($customer['customer_id'], 0, 10000);	
+			}
+
+
+			foreach ($customer_transactions as $customer_transaction){
+				$ct_date = date('Y-m-d', strtotime($customer_transaction['date_added']));
+				$ct_time = date('H:i:s', strtotime($customer_transaction['date_added']));
+
+				$transactions[] = array(
+					'customer_transaction_id'       => $customer_transaction['customer_transaction_id']
+					,'guid'                    		=> $customer_transaction['guid']
+					,'date'             			=> $ct_date
+					,'time'             			=> $ct_time
+					,'description'             		=> $customer_transaction['description']						
+					,'currency'               		=> $customer_transaction['currency_code']
+					,'sum'                			=> $customer_transaction['amount_national']
+					,'sumEUR' 						=> $customer_transaction['amount']
+					,'added_from'					=> $customer_transaction['added_from']
+					,'legalperson_id'				=> $customer_transaction['legalperson_id']
+					,'legalperson_name_1C'			=> $customer_transaction['legalperson_name_1C']
+					,'legalperson_name'				=> $customer_transaction['legalperson_name']
+					,'isHandMade'					=> ($customer_transaction['added_from'] == 'manual_admin')
+					,'isAutoCheck'					=> ($customer_transaction['added_from'] == 'auto_order_close')					
+				);
+
+
+			}
+			$this->response->setOutput(json_encode($transactions));	
+		}
+	}																																
