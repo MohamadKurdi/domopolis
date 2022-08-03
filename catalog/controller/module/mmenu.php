@@ -41,8 +41,7 @@ class ControllerModuleMMenu extends Controller {
 		$categories = $this->model_catalog_category->getCategories(0);
 
 		foreach ($categories as $category) {
-			if ($category['top']) {
-						// Level 2
+			if ($category['top']) {						
 				$children_data = array();
 
 				$children = $this->model_catalog_category->getCategories($category['category_id']);
@@ -128,36 +127,6 @@ class ControllerModuleMMenu extends Controller {
 
 			}
 		}			
-
-		$data = array();
-		$manufacturers = $this->model_catalog_manufacturer->getManufacturers($data);
-		$this->data['manufacturers'] = array();
-		if($manufacturers){
-			foreach($manufacturers as $manufacturer){
-
-				$dimensions = array(
-					'w' => 50,
-					'h' => 50
-				);
-
-				if ($manufacturer['image']) {
-					$img = $this->model_tool_image->resize($manufacturer['image'],  $dimensions['w'], $dimensions['h']);
-				} else {
-					$img = 'catalog/view/theme/mattimeo/image/img_not_found.png';
-				};
-
-
-				if ($manufacturer['sort_order'] != -1) {
-					$this->data['manufacturers'][] = array(
-						'name' => $manufacturer['name'],
-						'image' => $img,
-						'width' => $dimensions['w'],
-						'height' => $dimensions['h'],
-						'href' => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $manufacturer['manufacturer_id'])
-					);
-				}
-			}
-		}
 
 		$this->data['text_special'] = $this->language->get('text_special');
 		$this->data['special'] = $this->url->link('product/special');
