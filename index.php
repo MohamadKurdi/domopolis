@@ -113,8 +113,13 @@
 	
 	$registry->get('config')->set('config_store_id', $store_id);	
 	$settings = $registry->get('cache')->get('settings.structure'.(int)$registry->get('config')->get('config_store_id'));
-	if (!$settings) {	
-		$query = $registry->get('db')->query("SELECT * FROM setting WHERE store_id = '0' OR store_id = '" . (int)$registry->get('config')->get('config_store_id') . "' ORDER BY store_id ASC");		
+	if (!$settings) {
+		if ($registry->get('config')->get('config_store_id') == 0){
+			$query = $registry->get('db')->query("SELECT * FROM setting WHERE store_id = '0'");
+		} else {
+			$query = $registry->get('db')->query("SELECT * FROM setting WHERE store_id IN (0, " . (int)$registry->get('config')->get('config_store_id') . ") ORDER BY store_id ASC");
+		}
+				
 		$settings = $query->rows;
 		$registry->get('cache')->set('settings.structure'.(int)$registry->get('config')->get('config_store_id'), $settings);
 	}
