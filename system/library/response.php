@@ -160,10 +160,7 @@
 		}
 
 		public function outputDebug(){
-			if (defined('DEBUGSQL') && DEBUGSQL) {
-					
-					//	opcache_reset();
-					
+			if (defined('DEBUGSQL') && DEBUGSQL) {						
 					$time = microtime();
 					$time = explode(' ', $time);
 					$time = $time[1] + $time[0];
@@ -175,15 +172,15 @@
 					$queries = $GLOBALS['sql'];
 					
 					echo '<div id="debug" style="position:relative; bottom:0; z-index:1000; width:100%;min-height:100px; padding:20px; background: darkred; "><div style="width:1000px;margin:0 auto;">';
-					echo '<div style="color:white; font-size:14px; line-height:20px">Страница сформирована за ' . $total_time. ' секунд | ';
-					echo 'Всего запросов:' . count($GLOBALS['sql']) . '</div>';
-					echo '<div style="color:white; font-size:14px; line-height:20px">Использование памяти ' . $this->size_convert(memory_get_usage(true)) . '</div>';
+					echo '<div style="color:white; font-size:14px; line-height:20px">Page gen time ' . $total_time. ' seconds | ';
+					echo 'Total sql queries:' . count($GLOBALS['sql']) . '</div>';
+					echo '<div style="color:white; font-size:14px; line-height:20px">Memory usage ' . $this->size_convert(memory_get_usage(true)) . '</div>';
 					foreach ($queries as $query) {
 						$sql = explode ('[sep]', $query);
 						
-						$querytime = round($sql[1],4);						
+						$querytime 	= round($sql[1],4);						
 						$controller = $sql[2];						
-						$iscached = $sql[3];
+						$iscached 	= $sql[3];
 						
 						if ($querytime > 0.004) {
 							echo '<div style=" width:990px; color:red; font-size:12px;background:white;margin-bottom:0px;padding:2px;"> время:' . $querytime  . ' сек. | controller: <span style="color:black;">'.$controller. '</span> кэш: <span style="color:black;">'. $iscached. '</span></div>'; 

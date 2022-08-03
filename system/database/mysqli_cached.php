@@ -1,12 +1,13 @@
 <?php
 
 	final class DBMySQLi_Cached {
-		private $link;
-		private $cache;
-		private $cachedQuery = false;
-		private $slaveDB = false;
-		private $defaultPort = 3306;
-		private $uncacheableTables = [];				
+		private $link 				= null;
+		private $cache 				= null;
+		private $cachedQuery 		= false;
+		private $slaveDB 			= false;
+		private $defaultPort 		= 3306;
+		private $uncacheableTables 	= [];
+		private $currentQueries 	= [];			
 		
 		public function __construct($hostname, $username, $password, $database) {
 			$port = $this->defaultPort;
@@ -45,16 +46,6 @@
 			$this->link->query("SET SQL_MODE = ''");
 		}
 		
-		public function loadBalanсerQuery($sql){
-			
-			if (stripos($sql, 'select ') === 0){
-				
-				
-				
-				
-			}
-		}
-		
 		private function validateIfQueryIsCacheable($sql){
 			
 			foreach ($this->uncacheableTables as $table){
@@ -71,25 +62,23 @@
 			
 			if (!$this->link->errno){
 				if (isset($query->num_rows)) {
-					$data = array();
+					$data = [];
 					
 					while ($row = $query->fetch_assoc()) {
 						$data[] = $row;
 					}
 					
-					$result = new stdClass();
-					$result->num_rows = $query->num_rows;
-					$result->row = isset($data[0]) ? $data[0] : array();
-					$result->rows = $data;
+					$result 			= new stdClass();
+					$result->num_rows 	= $query->num_rows;
+					$result->row 		= isset($data[0]) ? $data[0] : array();
+					$result->rows 		= $data;					
+					$result->sql 		= $sql;	
 					
-					$result->sql = $sql;	
-					
-					if ($cached){						
-						$md5query = md5($sql);						
-						$this->cache->set('sql.' . $md5query, $result);
+					if ($cached){											
+						$this->cache->set('sql.' . md5($sql), $result);
 						$result->fromCache = 'cacheable';
 					} else {
-						$result->fromCache = 'noncached';
+						$result->fromCache = 'non-cached';
 					}
 					
 					unset($data);
@@ -107,15 +96,25 @@
 		} 
 		
 		public function query($sql) {
-			
-			$md5query = '';
-			if (stripos($sql, 'select ') === 0){
+			if (stripos($sql, 'select ') === 0){				
 				
 				if (!$this->validateIfQueryIsCacheable($sql)){
 					return $this->non_cached_query($sql);
 				}
-				
+
 				$md5query = md5($sql);
+				if (in_array($md5query, $this->currentQueries)){
+					if ($result = $this->cache->get('sql.' . $md5query, true)){				
+						if ($result->sql == $sql) {
+							$this->cachedQuery = $result;
+							$result->fromCache = 'cached-repeat';
+							return($result);					
+						}				
+					}
+				} else {
+					$this->currentQueries[] = $md5query;
+				}				
+
 				if ($result = $this->cache->get('sql.' . $md5query)){				
 					if ($result->sql == $sql) {
 						$this->cachedQuery = $result;
@@ -124,9 +123,8 @@
 					}				
 				}
 			}
-			
-			return $this->returnQueryData($sql, true);
-			
+
+			return $this->returnQueryData($sql, true);			
 		}
 		
 		public function non_cached_query($sql) {
@@ -137,8 +135,7 @@
 			return $this->link->real_escape_string($value);
 		}
 		
-		public function countAffected() {
-			
+		public function countAffected() {			
 			if (isset($this->cachedQuery) && $this->cachedQuery) {
 				return $this->cachedQuery->num_rows;
 			}

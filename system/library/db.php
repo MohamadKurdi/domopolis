@@ -36,7 +36,7 @@
 			
 			public function __construct($driver, $hostname, $username, $password, $database) {
 				
-				$this->driver = $driver;
+				$this->driver 	= $driver;
 				$this->hostname = $hostname;
 				$this->username = $username;			
 				$this->password = $password;
@@ -64,14 +64,11 @@
 					
 					$finishtime = microtime(true) - $starttime;
 					
-					if (is_object($result)){
-						$fromCache = $result->fromCache;
-						} else {
-						$fromCache = 'nonselect';
+					if (!isset($GLOBALS['controller_name'])) { 
+						$GLOBALS['controller_name'] = '';
 					}
 					
-					if (!isset($GLOBALS['controller_name'])) $GLOBALS['controller_name'] = '';
-					$GLOBALS['sql'][] = $sql. '[sep]'. $finishtime . '[sep]'.	 ($GLOBALS['controller_name']) .'[sep]' . $fromCache;
+					$GLOBALS['sql'][] = $sql. '[sep]'. $finishtime . '[sep]'.	 ($GLOBALS['controller_name']) .'[sep]' . (is_object($result)?$result->fromCache:'non-select');
 					
 					return $result;
 					
@@ -108,18 +105,13 @@
 					$result = $this->connection->non_cached_query($sql);
 					$finishtime = microtime(true) - $starttime;
 					
-					if (is_object($result)){
-						$fromCache = $result->fromCache;
-						} else {
-						$fromCache = 'nonselect';
-					}
-					
 					if (!isset($GLOBALS['controller_name'])) $GLOBALS['controller_name'] = '';
-					$GLOBALS['sql'][] = $sql. '[sep]'. $finishtime . '[sep]'.	 ($GLOBALS['controller_name']) .'[sep]' . $fromCache;
+					$GLOBALS['sql'][] = $sql. '[sep]'. $finishtime . '[sep]'.	 ($GLOBALS['controller_name']) .'[sep]' .  (is_object($result)?$result->fromCache:'non-select');
 					
 					return $result;
 					
 					} else {
+						
 					return $this->connection->non_cached_query($sql);
 				}
 			}
