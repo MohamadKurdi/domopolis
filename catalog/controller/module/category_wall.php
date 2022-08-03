@@ -311,5 +311,7 @@ class ControllerModuleCategoryWall extends Controller {
 		} else {
 			$this->template = 'default/template/module/' . $tpl;
 		}	
+
+		$this->render();
 	}
 }
