@@ -754,7 +754,7 @@
 					$product_data['stock_dates'] = $this->parseProductStockDataOneString($product_data, true);
 
 					//Табличка с скомпилированными ценами фронта
-					$this->db->query("INSERT INTO product_front_price SET 
+				/*	$this->db->query("INSERT INTO product_front_price SET 
 						product_id 	= '" . (int)$product_data['product_id'] . "',
 						store_id 	= '" . (int)$this->config->get('config_store_id') . "',  
 						price 		= '" . (float)$product_data['price'] . "',
@@ -766,6 +766,7 @@
 						special 	= '" . (float)$product_data['special'] . "',
 						reward 		= '" . (float)$product_data['reward'] . "',
 						currency 	= '" . $this->db->escape($this->config->get('config_regional_currency')) . "'");
+				*/
 					
 					
 					} else {
