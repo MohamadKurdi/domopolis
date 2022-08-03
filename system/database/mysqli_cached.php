@@ -34,8 +34,9 @@
 			if (function_exists('loadJsonConfig')){
 				$jsonConfig = loadJsonConfig('dbcache');
 				$this->uncacheableTables = $jsonConfig['uncacheableTables'];
+				$this->explicitCacheableTables = $jsonConfig['explicitCacheableTables'];
 			}
-			
+
 			error_reporting($err_level); 
 			
 			if (mysqli_connect_error()) {
@@ -46,8 +47,7 @@
 			$this->link->query("SET SQL_MODE = ''");
 		}
 		
-		private function validateIfQueryIsCacheable($sql){
-			
+		private function validateIfQueryIsCacheable($sql){			
 			foreach ($this->uncacheableTables as $table){
 				if (strpos($sql, $table) !== false){
 					return false;
@@ -55,6 +55,16 @@
 			}
 			
 			return true;
+		}
+
+		private function validateIfQueryIsCacheableExpilcit($sql){			
+			foreach ($this->explicitCacheableTables as $table){
+				if (strpos($sql, 'FROM ' . $table) !== false){
+					return true;
+				}
+			}
+			
+			return false;
 		}
 		
 		public function returnQueryData($sql, $cached){
@@ -94,33 +104,44 @@
 				exit();
 			}	
 		} 
+
+		private function getCachedQueryAndReturn($sql, $fromCache, $explicit = false){
+
+			if ($result = $this->cache->get('sql.' . md5($sql), $explicit)){				
+				if ($result->sql == $sql) {
+					$this->cachedQuery = $result;
+					$result->fromCache = $fromCache;
+					return $result;					
+				}				
+			}
+
+			return false;
+		}
 		
 		public function query($sql) {
-			if (stripos($sql, 'select ') === 0){				
+			if (stripos($sql, 'select ') === 0){	
+				$md5query = md5($sql);			
 				
 				if (!$this->validateIfQueryIsCacheable($sql)){
 					return $this->non_cached_query($sql);
 				}
 
-				$md5query = md5($sql);
 				if (in_array($md5query, $this->currentQueries)){
-					if ($result = $this->cache->get('sql.' . $md5query, true)){				
-						if ($result->sql == $sql) {
-							$this->cachedQuery = $result;
-							$result->fromCache = 'cached-repeat';
-							return($result);					
-						}				
+					if ($result = $this->getCachedQueryAndReturn($sql, 'cached-repeat', true)){
+						return $result;
 					}
 				} else {
 					$this->currentQueries[] = $md5query;
 				}				
 
-				if ($result = $this->cache->get('sql.' . $md5query)){				
-					if ($result->sql == $sql) {
-						$this->cachedQuery = $result;
-						$result->fromCache = 'cached';
-						return($result);					
-					}				
+				if ($this->validateIfQueryIsCacheableExpilcit($sql)){
+					if ($result = $this->getCachedQueryAndReturn($sql, 'cached-explicit', true)){
+						return $result;
+					}
+				}
+
+				if ($result = $this->getCachedQueryAndReturn($sql, 'cached')){
+					return $result;
 				}
 			}
 

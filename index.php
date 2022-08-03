@@ -160,7 +160,7 @@
 
 	//Stores main language config to registry (need for ElasticSearch and some other)
 	$stores_to_main_language_mapping = [];
-	$query = $registry->get('db')->query("SELECT store_id, value FROM `setting` WHERE `key` = 'config_language'");
+	$query = $registry->get('db')->query("SELECT store_id, value FROM setting WHERE `key` = 'config_language'");
 	foreach ($query->rows as $result) {
 		$stores_to_main_language_mapping[$result['store_id']] = $result['value'];
 	}

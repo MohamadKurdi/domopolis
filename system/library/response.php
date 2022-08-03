@@ -173,7 +173,7 @@
 					
 					echo '<div id="debug" style="position:relative; bottom:0; z-index:1000; width:100%;min-height:100px; padding:20px; background: darkred; "><div style="width:1000px;margin:0 auto;">';
 					echo '<div style="color:white; font-size:14px; line-height:20px">Page gen time ' . $total_time. ' seconds | ';
-					echo 'Total sql queries:' . count($GLOBALS['sql']) . '</div>';
+					echo 'Total sql queries ' . count($GLOBALS['sql']) . '</div>';
 					echo '<div style="color:white; font-size:14px; line-height:20px">Memory usage ' . $this->size_convert(memory_get_usage(true)) . '</div>';
 					foreach ($queries as $query) {
 						$sql = explode ('[sep]', $query);
