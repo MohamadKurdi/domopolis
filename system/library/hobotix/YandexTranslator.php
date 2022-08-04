@@ -15,7 +15,7 @@ class YandexTranslator
 	private $enableCheck = false;
 
 	private $hourLimit = 10000000;
-	private $symbolLimit = 9999;
+	private $symbolLimit = 9000;
 	private $sentensesDelimiter = '.';
 
 	public function __construct($registry){
@@ -50,12 +50,11 @@ class YandexTranslator
 				echoLine('[YandexTranslator] Лимит на часовой перевод почти достигнут, надо поспать минуту!');
 				sleep(mt_rand(50,60));
 			}
-		}
+		}		
 		
 		if (mb_strlen($text, 'UTF-8') > $this->symbolLimit){
 			$translationResult = '';
-			$translateArray = $this->toBigPieces($text);
-			
+			$translateArray = $this->toBigPieces($text);			
 			
 			foreach ($translateArray as $translateItem){
 				$translationResult .= $this->translate($translateItem, $from, $to, true);
@@ -111,7 +110,6 @@ class YandexTranslator
 		$this->db->query("INSERT INTO translate_stats SET time = NOW(), amount = '" . (int)mb_strlen($text) . "'");
 	}
 
-	//Service functions
 	private function toSentenses ($text) {
 		$sentArray = explode($this->sentensesDelimiter, $text);
 		return $sentArray;
@@ -122,7 +120,7 @@ class YandexTranslator
 		$i = 0;
 		$bigPiecesArray[0] = '';
 		for ($k = 0; $k < count($sentArray); $k++) {
-			$bigPiecesArray[$i] .= $sentArray[$k].$this->sentensesDelimiter;
+			$bigPiecesArray[$i] .= ($sentArray[$k] . $this->sentensesDelimiter);
 			if (strlen($bigPiecesArray[$i]) > $this->symbolLimit){
 				$i++;
 				$bigPiecesArray[$i] = '';
@@ -133,9 +131,7 @@ class YandexTranslator
 	}
 
 	private function fromBigPieces (array $bigPiecesArray) {
-
 		ksort($bigPiecesArray);
-
 		return implode($bigPiecesArray);
 	}
 

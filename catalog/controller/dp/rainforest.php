@@ -13,7 +13,7 @@ class ControllerDPRainForest extends Controller {
 
 	
 	public function __construct($registry){
-		ini_set('memory_limit', '2G');
+		ini_set('memory_limit', '4G');
 
 		parent::__construct($registry);
 
@@ -77,6 +77,14 @@ class ControllerDPRainForest extends Controller {
 					$this->recursiveTree($childCategory['id'], $type);
 				}
 			}
+		}
+	}
+
+	public function checkasin(){
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+
+		if (!$this->rainforestAmazon->productsRetriever->getProductsByAsin('B009HQH7NG')){					
+			echoLine('[parseCategoryPage] Товар ' . $rfSimpleProduct['asin'] . ' не найден, ' . $counters);	
 		}
 	}
 
@@ -596,29 +604,23 @@ class ControllerDPRainForest extends Controller {
 
 
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
-		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFullData(['reviews_parsed' => 0, 'status' => 1, 'amzn_no_offers' => 0]);		
+		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFullData(['reviews_parsed' => 0, 'status' => 1, 'filled_from_amazon' => 1, 'amzn_no_offers' => 0]);		
 
 		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 		echoLine('[fixreviews] Всего товаров: ' . $total);
 		$k = 1;	
 
 		for ($i = 1; $i <= $iterations; $i++){
-			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullData(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit, ['reviews_parsed' => 0, 'status' => 1, 'amzn_no_offers' => 0]);
+			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullData(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit, ['reviews_parsed' => 0, 'status' => 1, 'filled_from_amazon' => 1, 'amzn_no_offers' => 0]);
 			if ($products){		
 				foreach ($products as $product){
 					echoLine('[fixreviews] Товар ' . $product['product_id'] . '/' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
 
 					$this->rainforestAmazon->productsRetriever->parseProductTopReviews($product['product_id'], json_decode($product['json'], true));
-
-					$this->rainforestAmazon->productsRetriever->model_product_edit->editProductFields($product['product_id'], [['type' => 'int','name' => 'reviews_parsed', 'value' => 1]]);
-
 					$k++;			
 				}
 			}	
 		}		
-
-
-
 
 	}
 }

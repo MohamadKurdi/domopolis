@@ -840,13 +840,16 @@
 							$this->model_product_edit->updateProductMainVariantIdByParentAsin($variant['product_id'], $variant['main_asin']);
 						}
 					} else {
+
+						if (!$this->getProductsByAsin($variant['asin'])){
+
 						//Товара не существует вообще
-						echoLine('[parseProductVariants] Новый товар-вариант:' . $variant['asin']);
+							echoLine('[parseProductVariants] Новый товар-вариант:' . $variant['asin']);
 
-						$new_product_name = $this->trimProductNameWithoutVariant($product['title'], $this->getCurrentVariantDimensions($product['variants']), $this->getVariantDimensionsByAsin($product['variants'], $variant['asin']));
-						echoLine('[editFullProduct] Новый вариант: ' . $new_product_name);	
+							$new_product_name = $this->trimProductNameWithoutVariant($product['title'], $this->getCurrentVariantDimensions($product['variants']), $this->getVariantDimensionsByAsin($product['variants'], $variant['asin']));
+							echoLine('[editFullProduct] Новый вариант: ' . $new_product_name);	
 
-						$new_product_id = $this->addSimpleProductWithOnlyAsin([
+							$new_product_id = $this->addSimpleProductWithOnlyAsin([
 								'asin' 				=> $variant['asin'], 
 								'category_id' 		=> $this->model_product_get->getCurrentProductCategory($product_id), 
 								'main_variant_id'	=> $product_id,
@@ -854,14 +857,16 @@
 								'image' 			=> $this->getImage($this->getVariantImageByAsin($product['variants'], $variant['asin'])), 
 								'added_from_amazon' => 1
 							]);
+						}	
 
 						echoLine('[parseProductVariants] Обновляем привязку родителя по асину:' . $variant['asin'] . ':' . $variant['main_asin']);
 						$this->model_product_edit->updateProductMainVariantIdByParentAsin($new_product_id, $variant['main_asin']);					
 
+
 						$new_product_data[] = [
 							'product_id' => $new_product_id,
 							'asin' => $variant['asin']
-						];
+						];						
 					}
 				}
 
@@ -893,13 +898,13 @@
 							}
 
 							$review_description = [];					
-							$author = $this->db->query("SELECT firstname FROM customer WHERE firstname <> '' ORDER BY RAND() LIMIT 1")->row['firstname'];
+							$author = $this->db->ncquery("SELECT firstname FROM customer WHERE firstname <> '' ORDER BY RAND() LIMIT 1")->row['firstname'];
+							echoLine('[parseProductTopReviews] Автор ' . $author);
 
 							foreach ($this->registry->get('languages') as $language_code => $language) {
 								$review['body'] = atrim($review['body']);						
 
 								$text = $this->translateWithCheck($review['body'], $language_code, true);
-
 								$text = $this->registry->get('rainforestAmazon')->infoUpdater->normalizeProductReview($text);
 
 								$review_description[$language['language_id']] = [
@@ -918,8 +923,10 @@
 
 							$this->model_product_edit->addReview($review_data);
 						}
-					}					
+					}										
 				}
+
+				$this->model_product_edit->setProductReviewsParsed($product_id);
 			}
 		}
 

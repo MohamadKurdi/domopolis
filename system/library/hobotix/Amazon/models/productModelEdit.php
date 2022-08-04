@@ -126,6 +126,10 @@ class productModelEdit extends hoboModel{
 		$this->db->query("UPDATE product_description SET translated = 1	WHERE product_id 	= '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
 	}
 
+	public function setProductReviewsParsed($product_id){			
+		$this->db->query("UPDATE product SET reviews_parsed = 1	WHERE product_id 	= '" . (int)$product_id . "'");
+	}
+
 	public function addProductNames($product_id, $data){			
 		foreach ($data as $language_id => $value) {
 			$this->db->query("INSERT INTO product_description SET 
@@ -399,29 +403,15 @@ class productModelEdit extends hoboModel{
 
 		$this->db->query("INSERT IGNORE INTO deleted_asins SET asin = '" . $this->db->escape($product['asin']) . "', name = '" . $this->db->escape($product['title']) . "', date_added = NOW(), user_id = '195'");
 
-		$this->db->query("DELETE FROM product WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM ocfilter_option_value_to_product WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_attribute WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_description WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_discount WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_filter WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_image WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_option WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_option_value WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_related WHERE related_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_sponsored WHERE product_id = '" . (int)$product_id . "'");
+		foreach ([
+			'product_reward','product_attribute','product_sponsored','product_to_store','product_to_category','product_also_bought','product_tmp','product_yam_recommended_prices','product_view_to_purchase','product_sticker','product_special_backup','product_costs','product_price_to_store','product_video','product_to_set','product_variants_ids','product_special','product_similar_to_consider','product_discount','product_sources','product_stock_waits','product_master','product_anyrelated','product_stock_limits','product_to_download','product_related_set','product_also_viewed','product_child','product_price_history','product_recurring','product_status','product_price_national_to_store','product_profile','product_to_tab','product_option_value','product_description','product_product_option','product_shop_by_look','product_stock_status','product_additional_offer','product_filter','product_similar','product','product_image','product_related','product_tab_content','product_to_layout','product_option','product_special_attribute','product_price_national_to_store1','product_front_price','product_video_description','product_product_option_value','product_price_national_to_yam','product_yam_data', 'review','ocfilter_option_value_to_product'	
+		] as $table){
+			$sql = "DELETE FROM `" . $table . "` WHERE product_id = '" . (int)$product_id . "'";			
+			$this->db->query($sql);
+		}
+
 		$this->db->query("DELETE FROM product_sponsored WHERE sponsored_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_similar WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("DELETE FROM product_similar WHERE similar_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_reward WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_special WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_to_category WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_to_download WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_to_layout WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_to_store WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_amzn_data WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM url_alias WHERE query = 'product_id=" . (int)$product_id. "'");
 	}
 
 	public function addReview($data){
