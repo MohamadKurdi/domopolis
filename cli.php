@@ -182,7 +182,7 @@
 	$registry->get('config')->set('config_language_hreflang', 	$languages[$registry->get('config')->get('config_language')]['hreflang']);
 
 	//RNF MAIN LANGUAGE
-	$registry->get('config')->set('config_rainforest_source_language_id', $languages[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);
+	$registry->get('config')->set('config_rainforest_source_language_id', $all_languages[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);
 
 	//Stores and languages mapping to registry
 	$stores = [0];
