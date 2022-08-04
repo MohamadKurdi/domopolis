@@ -1,5 +1,9 @@
 <?php
 	class ModelCatalogProduct extends Model {
+
+		private $product_related_tables = [
+			'product_reward','product_attribute','product_sponsored','product_to_store','product_to_category','product_also_bought','product_tmp','product_yam_recommended_prices','product_view_to_purchase','product_sticker','product_special_backup','product_costs','product_price_to_store','product_video','product_to_set','product_variants_ids','product_special','product_similar_to_consider','product_discount','product_sources','product_stock_waits','product_master','product_anyrelated','product_stock_limits','product_to_download','product_related_set','product_also_viewed','product_child','product_price_history','product_recurring','product_status','product_price_national_to_store','product_profile','product_to_tab','product_option_value','product_description','product_product_option','product_shop_by_look','product_stock_status','product_additional_offer','product_filter','product_similar','product','product_image','product_related','product_tab_content','product_to_layout','product_option','product_special_attribute','product_price_national_to_store1','product_front_price','product_video_description','product_product_option_value','product_price_national_to_yam','product_yam_data', 'review','ocfilter_option_value_to_product'	
+		];
 		
 		
 		public function addProduct($data) {
@@ -1216,6 +1220,20 @@
 				return $new_product_id;
 			}
 		}
+
+
+		public function deleteProductSimple($product_id){
+
+			foreach ($this->product_related_tables as $table){
+				$sql = "DELETE FROM `" . $table . "` WHERE product_id = '" . (int)$product_id . "'";
+			//	echoLine($sql);
+				$this->db->query($sql);
+			}
+
+			$this->db->query("DELETE FROM product_sponsored WHERE sponsored_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_similar WHERE similar_id = '" . (int)$product_id . "'");
+
+		}
 	
 		public function deleteProduct($product_id, $recursion = true, $asin_deletion_mode = false) {
 
@@ -1255,35 +1273,12 @@
 				}
 			}		
 
-			$this->db->query("DELETE FROM product WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM ocfilter_option_value_to_product WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_attribute WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_description WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_discount WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_filter WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_image WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_option WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_option_value WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_related WHERE related_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_sponsored WHERE product_id = '" . (int)$product_id . "'");
+			foreach ($this->product_related_tables as $table){
+				$this->db->query("DELETE FROM `" . $table . "` WHERE product_id = '" . (int)$product_id . "'");
+			}
+
 			$this->db->query("DELETE FROM product_sponsored WHERE sponsored_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_similar WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_similar WHERE similar_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_reward WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_special WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_to_category WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_to_download WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_to_layout WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_to_store WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_amzn_data WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_profile WHERE product_id = " . (int)$product_id);
-			$this->db->query("DELETE FROM review WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_product_option WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_product_option_value WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM product_additional_offer WHERE product_id = '" . (int)$product_id . "'");			
-			$this->db->query("DELETE FROM faproduct_to_facategory WHERE product_id = '" . (int)$product_id . "'");
-			$this->db->query("DELETE FROM facategory_to_faproduct WHERE product_id = '" . (int)$product_id . "'");
 			
 			$this->load->model('catalog/set');
 			$results = $this->model_catalog_set->getSetsByProductId($product_id);
@@ -2547,6 +2542,12 @@
 			return $query->row['total'];
 		}
 
+		public function getTotalProductsWithDoubleAsin() {
+			$query = $this->db->query("SELECT COUNT(asin) as total FROM product WHERE asin <> 'INVALID' GROUP BY asin HAVING(COUNT(`product_id`)) > 1");
+			
+			return $query->num_rows?$query->row['total']:0;
+		}
+
 		public function getTotalProductsParsed() {
 			$query = $this->db->query("SELECT COUNT(product_id) as total FROM product_amzn_data WHERE 1");
 			
@@ -2585,6 +2586,26 @@
 
 		public function getTotalProductsNeedToBeFilled() {
 			$query = $this->db->query("SELECT COUNT(DISTINCT p2c.product_id) as total FROM product_to_category p2c LEFT JOIN product p ON (p.product_id = p2c.product_id) WHERE category_id IN (SELECT category_id FROM category WHERE amazon_can_get_full = 1) AND fill_from_amazon = 1");
+			
+			return $query->row['total'];
+		}
+
+		public function getTotalProductsSimple($data = array()) {
+			$sql = "SELECT COUNT(DISTINCT p.product_id) AS total FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id)";
+			$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
+			$query = $this->db->query($sql);
+			
+			return $query->row['total'];
+		}
+
+		public function getTotalProductsSimpleNoVariants($data = array()) {
+			$sql = "SELECT COUNT(DISTINCT p.product_id) AS total FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id)";
+			$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
+			$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
+
+			$query = $this->db->query($sql);
 			
 			return $query->row['total'];
 		}

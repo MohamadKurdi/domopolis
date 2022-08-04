@@ -6,6 +6,20 @@
 			header('HTTP/1.1 200 OK');
 			$this->response->setOutput('OK');			
 		}
+
+		public function deleteduplicates(){
+		/*	$this->load->model('catalog/product');
+			$query = $this->db->query("SELECT product_id FROM product WHERE product_id NOT IN (SELECT product_id FROM tmp_product)");
+
+			$i = 1;
+			foreach ($query->rows as $row){
+				echoLine($i . '/' . $query->num_rows);
+				$i++;
+
+				$this->model_catalog_product->deleteProductSimple($row['product_id']);
+			}
+		*/
+		}
 		
 		public function smsQueue(){
 			$this->smsQueue->cron();
