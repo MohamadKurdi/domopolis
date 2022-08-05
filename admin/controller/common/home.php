@@ -82,6 +82,25 @@
 			$this->response->setOutput($this->render());		
 		}
 
+		public function getRainForestStats(){
+			$result = $this->rainforestAmazon->checkIfPossibleToMakeRequest(true);
+
+
+
+			if ($result['status'] == true){
+				$this->data['success'] 	= true;
+				$this->data['answer'] 	= $result['answer'];
+			} else {
+				$this->data['success'] 	= false;
+				$this->data['message'] 	= $result['message'];
+				$this->data['answer']  	= $result['answer'];
+			}
+
+			$this->template = 'homestats/rnf.tpl';
+			
+			$this->response->setOutput($this->render());
+		}
+
 		public function getCronStats(){
 			$cronSettings = $this->simpleProcess->getCronConfig();
 

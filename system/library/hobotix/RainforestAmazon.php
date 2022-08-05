@@ -125,7 +125,7 @@ class RainforestAmazon
 		}
 	}
 
-	public function checkIfPossibleToMakeRequest(){
+	public function checkIfPossibleToMakeRequest($return = false){
 		$queryString = http_build_query([
 			'api_key' => $this->config->get('config_rainforest_api_key')
 		]);
@@ -136,25 +136,64 @@ class RainforestAmazon
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-		$api_result = curl_exec($ch);
+		$answer 	= curl_exec($ch);
 		$httpcode 	= curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		curl_close($ch);		
+		curl_close($ch);
 
-		if ($httpcode == 200){
-			return true;
+		$error 		= false;	
+		$warning 	= false;		
+
+		//В том случае, если не 200, то всё плохо и хуево
+		if ($httpcode != 200){
+			$error = 'PAYMENT_FAIL';
 		}
 
-		if ($this->config->get('config_telegram_bot_enable_alerts')){
-			$text = '😂 <b>Хьюстон, у нас проблема!</b>' . PHP_EOL . PHP_EOL;
-			$text .= '@lexdanelia, тут это, с оплатой Rainforest что-то, мы цены не обновляем!' . PHP_EOL . PHP_EOL;
-			$text .= 'Сервер отвечает: ' . $api_result . PHP_EOL;
-			$this->sendAlertToTelegram($text);
+		if (!$error && !json_decode($answer)){
+			$error = 'JSON_DECODE';
 		}
 
-		throw new \Exception('Please update your payment details to continue using Rainforest API.');
-		die();
+		$answer = json_decode($answer, true);
+		if (!$error && empty($answer['account_info'])){
+			$error = 'NO_ACCOUNT_INFO';
+		}
 
-		return false;
+		if (!$error && $answer && !empty($answer['account_info']) && $answer['account_info']['credits_remaining'] > 0){
+			if ($answer['account_info']['credits_remaining'] <= $answer['account_info']['credits_limit']/10){
+				$warning = 'CREDITS_LESS_THEN_10_PERCENT';
+			}
+		}
+
+		if (!$error && $answer && !empty($answer['account_info']) && $answer['account_info']['credits_remaining'] == 0){
+			if ($answer['account_info']['overage_enabled'] && $answer['account_info']['overage_used'] >= $answer['account_info']['overage_limit']){
+				$error = 'ZERO_CREDITS_AND_OVERAGE_OVERLIMIT';
+			} elseif ($answer['account_info']['overage_enabled'] && $answer['account_info']['overage_used'] < $answer['account_info']['overage_limit']){								
+				$warning = 'ZERO_CREDITS_AND_OVERAGE_IS_USED_NOW';
+			} elseif (!$answer['account_info']['overage_enabled']) {
+				$error = 'ZERO_CREDITS_AND_OVERAGE_NOT_ENABLED';
+			}
+		}
+
+		if ($error){
+			if ($this->config->get('config_telegram_bot_enable_alerts')){
+				$text = '😂 <b>Хьюстон, у нас проблема!</b>' . PHP_EOL . PHP_EOL;
+				$text .= '@lexdanelia, тут это, с оплатой Rainforest что-то, мы цены не обновляем!' . PHP_EOL . PHP_EOL;
+				$text .= 'Сервер отвечает: ' . $api_result . PHP_EOL;
+				$this->sendAlertToTelegram($text);
+			}
+
+			if ($return){
+				return ['status' => false, 'message' => $error, 'answer' => $answer];
+			} else {
+				throw new \Exception($error);			
+				die($error);			
+			}
+		}
+
+		if ($warning){
+			return ['status' => false, 'message' => $warning, 'answer' => $answer];
+		}
+
+		return ['status' => true, 'message' => '', 'answer' => $answer];
 	}	
 
 	public function searchCategories($filter_name){			

@@ -790,25 +790,13 @@ public function getRainforestInfo(){
 
 	if ($this->config->get('config_rainforest_enable_api')){
 
-		$queryString = http_build_query([
-			'api_key' => $this->config->get('config_rainforest_api_key')
-		]);
+		$result = $this->rainforestAmazon->checkIfPossibleToMakeRequest(true);
 
-		$ch = curl_init(sprintf('%s?%s', 'https://api.rainforestapi.com/account', $queryString));
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-		$api_result = curl_exec($ch);
-		$httpcode 	= curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		curl_close($ch);		
-
-		if ($httpcode == 200){
+		if ($result['status'] === true){
 			$body = 'OK';
 			$class= 'good';
 		} else {
-			$body = 'FAIL: ERR';
+			$body = $result['message'];
 			$class= 'bad';
 		}
 

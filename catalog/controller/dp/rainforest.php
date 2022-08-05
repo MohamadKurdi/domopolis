@@ -29,6 +29,9 @@ class ControllerDPRainForest extends Controller {
 			die('RNF Category API Workmode not set');
 		}
 
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		$this->rainforestAmazon->checkIfPossibleToMakeRequest();
+
 		$this->fullFillExistentAsins();
 	}
 
@@ -80,9 +83,7 @@ class ControllerDPRainForest extends Controller {
 		}
 	}
 
-	public function checkasin(){
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
-
+	public function checkasin(){		
 		if (!$this->rainforestAmazon->productsRetriever->getProductsByAsin('B009HQH7NG')){					
 			echoLine('[parseCategoryPage] Товар ' . $rfSimpleProduct['asin'] . ' не найден, ' . $counters);	
 		}
@@ -140,8 +141,7 @@ class ControllerDPRainForest extends Controller {
 	}
 
 	public function addcategoriescron(){
-		$type = $this->config->get('config_rainforest_category_model');
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon'); 
+		$type = $this->config->get('config_rainforest_category_model');		
 		
 		if ($type == 'bestsellers') {
 			if (!empty($this->config->get('config_rainforest_root_categories'))){
@@ -174,8 +174,7 @@ class ControllerDPRainForest extends Controller {
 		}
 	}	
 
-	public function addnewproductscron(){
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+	public function addnewproductscron(){		
 		$this->load->library('Timer');
 		$timer = new FPCTimer();
 
@@ -251,9 +250,10 @@ class ControllerDPRainForest extends Controller {
 
 	public function editfullproductscron($parsetechcategory = false){
 
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+		
 		$this->load->library('Timer');
 		$timer = new FPCTimer();
+
 
 		if ($parsetechcategory){
 			$products = $this->rainforestAmazon->productsRetriever->getProductsFromTechCategory();
@@ -302,14 +302,14 @@ class ControllerDPRainForest extends Controller {
 		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();
 	}
 
-	public function parsetechcategory(){
+	public function parsetechcategory(){		
+
 		if ($this->config->get('config_rainforest_default_technical_category_id') && $this->config->get('config_rainforest_default_unknown_category_id')){
 			$this->editfullproductscron(true);
 		}
 	}
 
-	public function editfullproductscronl2(){
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+	public function editfullproductscronl2(){		
 		$this->load->library('Timer');
 		$timer = new FPCTimer();
 
@@ -331,8 +331,7 @@ class ControllerDPRainForest extends Controller {
 		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();
 	}
 
-	public function updateimagesfromamazon(){
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+	public function updateimagesfromamazon(){		
 		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoImages();
 
 		foreach ($products as $product_id => $amazon_product_image){
@@ -340,8 +339,7 @@ class ControllerDPRainForest extends Controller {
 		}
 	}
 
-	public function setpricesfast(){
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+	public function setpricesfast(){		
 		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFastPrice();		
 
 		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
@@ -361,9 +359,7 @@ class ControllerDPRainForest extends Controller {
 		}		
 	}
 
-	public function puttofilecache(){
-
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+	public function puttofilecache(){		
 		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFullDataInDB();		
 
 		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
@@ -389,8 +385,7 @@ class ControllerDPRainForest extends Controller {
 	/*
 	Фиксит переводы строк
 	*/
-	public function fixtranslations(){
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+	public function fixtranslations(){		
 		$this->rainforestAmazon->productsRetriever->yandexTranslator->setDebug(true);
 		$this->rainforestAmazon->productsRetriever->model_product_edit->cleanFailedTranslations();
 
@@ -486,8 +481,7 @@ class ControllerDPRainForest extends Controller {
 	/*
 	Фиксит привязки вариантов методом записи в табличку с айдишками
 	*/
-	public function fixvariantsbyids(){
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+	public function fixvariantsbyids(){		
 		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFullData();
 
 		$this->rainforestAmazon->productsRetriever->model_product_edit->clearIdsVariantsTable();
@@ -515,8 +509,7 @@ class ControllerDPRainForest extends Controller {
 	/*
 	Начальное заполнение таблички вариантов, v2 логика вариантов на асинах
 	*/
-	public function setvariants(){
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+	public function setvariants(){		
 		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFullData();		
 
 		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
@@ -540,10 +533,7 @@ class ControllerDPRainForest extends Controller {
 	/*
 	Фиксит привязки вариантов методом прохода таблички c asin
 	*/
-	public function fixvariants(){
-
-
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+	public function fixvariants(){		
 		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithVariantsSet();		
 
 		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
@@ -573,9 +563,7 @@ class ControllerDPRainForest extends Controller {
 	/*
 	Фиксит названия товаров функцией normalizeProductName из InfoUpdater
 	*/
-	public function fixnames(){
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
-
+	public function fixnames(){		
 		$total = $this->rainforestAmazon->infoUpdater->getTotalNames();
 		$iterations = ceil($total/(int)\hobotix\Amazon\InfoUpdater::descriptionsQueryLimit);
 		echoLine('[fixnames] Всего товаров: ' . $total);
@@ -600,10 +588,7 @@ class ControllerDPRainForest extends Controller {
 	/*
 	Добавляет отзывы товаров из уже заполненных и сохраненных данных
 	*/
-	public function fixreviews(){
-
-
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+	public function fixreviews(){		
 		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFullData(['reviews_parsed' => 0, 'status' => 1, 'filled_from_amazon' => 1, 'amzn_no_offers' => 0]);		
 
 		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);

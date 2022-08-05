@@ -42,8 +42,7 @@ class YandexTranslator
 
 		if (!mb_strlen($text)){
 			return '';
-		}
-
+		}		
 
 		if ($this->enableCheck){
 			if ($this->getHourlyAmount() >= ($this->hourLimit*0.95)){
@@ -60,18 +59,18 @@ class YandexTranslator
 				$translationResult .= $this->translate($translateItem, $from, $to, true);
 			}
 			
-			return json_encode(array(
-				'translations' => array(
-					'0' => array(
-						'text' => $translationResult)
-				)
-			)
-		);
+			return json_encode([
+				'translations' => [
+					'0' => [
+						'text' => $translationResult
+					]
+				]
+			]);		
 		}
-		
+
 		try {
 			$translate = new \Panda\Yandex\TranslateSdk\Translate($text);
-			
+
 			if ($from){
 				$translate->setSourceLang($from);
 			}
@@ -84,7 +83,7 @@ class YandexTranslator
 		} catch (\Panda\Yandex\TranslateSdk\Exception\ClientException $e) {
 			echoLine($e->getMessage());			
 		}
-		
+
 		if ($returnString){
 			$json = json_decode($result, true);
 			if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -97,8 +96,8 @@ class YandexTranslator
 				return $json['translations'][0]['text'];
 			}
 		}
-		
-		
+
+
 		return $result;
 	}		
 
@@ -116,14 +115,26 @@ class YandexTranslator
 	}
 
 	private function toBigPieces ($text) {
+
+		while (strpos($text, '..') !== false){
+			$text = str_replace(($this->sentensesDelimiter . $this->sentensesDelimiter), $this->sentensesDelimiter, $text);
+		}
+
 		$sentArray = $this->toSentenses($text);
 		$i = 0;
 		$bigPiecesArray[0] = '';
 		for ($k = 0; $k < count($sentArray); $k++) {
-			$bigPiecesArray[$i] .= ($sentArray[$k] . $this->sentensesDelimiter);
-			if (strlen($bigPiecesArray[$i]) > $this->symbolLimit){
+				//Если в этой итерации получается так, что 
+			if (mb_strlen($bigPiecesArray[$i] . $sentArray[$k] . $this->sentensesDelimiter) > $this->symbolLimit){
 				$i++;
-				$bigPiecesArray[$i] = '';
+				$bigPiecesArray[$i] = $sentArray[$k] . $this->sentensesDelimiter;
+			} else {
+				$bigPiecesArray[$i] .= ($sentArray[$k] . $this->sentensesDelimiter);
+
+				if (mb_strlen($bigPiecesArray[$i], 'UTF-8') > $this->symbolLimit){
+					$i++;
+					$bigPiecesArray[$i] = '';
+				}
 			}
 		}
 

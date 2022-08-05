@@ -208,6 +208,8 @@ class ControllerKPRainForest extends Controller {
 			echoLine('[parseofferscron] RNF AMAZON PRICING NOT ENABLED');
 			return;
 		}
+
+		$this->rainforestAmazon->checkIfPossibleToMakeRequest();
 		
 		$this->rainforestAmazon->offersParser->setNoOffersLogic(true);
 
@@ -250,6 +252,8 @@ class ControllerKPRainForest extends Controller {
 			echoLine('[parseofferscron] RNF AMAZON PRICING NOT ENABLED');
 			return;
 		}
+
+		$this->rainforestAmazon->checkIfPossibleToMakeRequest();
 							
 		$products = $this->rainforestAmazon->offersParser->getProductsToGetOffers();			
 

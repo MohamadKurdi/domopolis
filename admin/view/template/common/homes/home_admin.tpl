@@ -26,19 +26,19 @@
 			<div id="order_filters" <?php if ($stores_count == 1) { ?>style="width:50%; float:right;"<?php } ?> class="filters delayed-load" data-route='common/home/loadOrderStats'>
 			</div>
 
-			<?php if ($this->config->get('config_cron_stats_display_enable')) { ?>
-				<div style="clear:both; height:10px;">
-				</div>
-				<div class="latest delayed-load" data-route='common/home/getCronStats' data-reload="4000">
-				
-				</div>
+			
+			<?php if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_enable_api')) { ?>
+				<div style="clear:both; height:10px;"></div>
+				<div class="latest delayed-load" data-route='common/home/getRainForestStats' data-reload="5000"></div>
 			<?php } ?>
 
-			<div style="clear:both; height:10px;">
-			</div>
-			<div class="latest delayed-load" data-route='common/home/getLastTwentyOrders'>
-				
-			</div>
+			<?php if ($this->config->get('config_cron_stats_display_enable')) { ?>
+				<div style="clear:both; height:10px;"></div>
+				<div class="latest delayed-load" data-route='common/home/getCronStats' data-reload="4000"></div>
+			<?php } ?>
+
+			<div style="clear:both; height:10px;"></div>
+			<div class="latest delayed-load" data-route='common/home/getLastTwentyOrders'></div>
 		</td>
 	</tr>
 </table>
