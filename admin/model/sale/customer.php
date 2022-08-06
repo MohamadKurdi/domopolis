@@ -1315,9 +1315,7 @@
 				$is_error = false;
 			}
 			
-			$this->addHistory($customer_id, $comment, $order_id, $call_id, $manager_id, $need_call, $segment_id, $order_status_id, $prev_order_status_id, $is_error);
-			
-			
+			$this->addHistory($customer_id, $comment, $order_id, $call_id, $manager_id, $need_call, $segment_id, $order_status_id, $prev_order_status_id, $is_error);						
 		}
 		
 		public function addHistory($customer_id, $comment, $order_id = 0, $call_id = 0, $manager_id = 0, $need_call = false, $segment_id = 0, $order_status_id = 0, $prev_order_status_id = 0, $is_error = false) {
@@ -1365,6 +1363,24 @@
 			$query = $this->db->query("SELECT COUNT(*) AS total FROM customer_history WHERE customer_id = '" . (int)$customer_id . "'");
 			
 			return $query->row['total'];
+		}
+
+		public function updateTransactionFromAPI($customer_transaction_id, $data){
+			
+			$query = $this->db->query("UPDATE customer_transaction SET 
+			customer_id 		= '" . (int)$data['customer_id'] . "', 
+			order_id 			= '" . (int)$data['order_id'] . "', 
+			description 		= '" . $this->db->escape($data['description']) . "', 
+			amount 				= '" . (float)$data['amount'] . "', 
+			amount_national 	= '" . (float)$data['amount_national'] . "', 
+			currency_code 		= '" . $this->db->escape($data['currency_code']) . "', 
+			date_added 			= '" . $this->db->escape($data['date_added']) . "', 				
+			added_from 			= '" . $this->db->escape($data['added_from']) . "', 
+			legalperson_id 		= '" . (int)$data['legalperson_id'] . "', 
+			guid 				= '" . $this->db->escape($data['guid']) . "'
+			WHERE customer_transaction_id = '" . (int)$customer_transaction_id . "'");
+
+			return $customer_transaction_id;
 		}
 		
 		public function addTransactionFromAPI($data){

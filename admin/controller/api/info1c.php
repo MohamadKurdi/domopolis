@@ -2324,91 +2324,97 @@ class ControllerApiInfo1C extends Controller {
 			$this->response->setOutput(json_encode($query->rows));	
 		}
 
-		public function transactionSyncSet($transactionData){	
+
+		public function transactionSyncSet($transactionData){
 			$this->load->model('sale/customer');
 			$this->load->model('sale/order');
 
+			$fields = ['customer_id','description','amount_national','currency_code','order_id','legalperson_id','guid'];
+
 			if (empty($transactionData['customer_transaction_id']) && empty($transactionData['guid'])){
-				die('Both customer_transaction_id and guid are empty!');
+				$result = [
+					'status' 	=> 'error',
+					'message' 	=> 'Both customer_transaction_id and guid are empty. What the fuck?',
+					'data_sent'	=> $transactionData
+				];
+
+				$this->response->setOutput(json_encode($result));
+				return;
+			}
+			
+			foreach ($fields as $field){
+				if (!isset($transactionData[$field])){
+					$result = [
+						'status' 	=> 'error',
+						'message' 	=> 'Field ' . $field . ' is empty. Need all fields: ' . implode(',', $fields),
+						'data_sent'	=> $transactionData
+					];
+
+					$this->response->setOutput(json_encode($result));
+					return;
+				}
 			}
 
-		//Это редактирование транзакции (изначально добавлена с сайта, у нее есть идентификатор
-		//Мы редактируем ТОЛЬКО ГУИД
+			$transaction = false;
 			if (!empty($transactionData['customer_transaction_id'])){
 				$transaction = $this->model_sale_customer->getTransactionByID($transactionData['customer_transaction_id']);
-
-				//Проверка на существование
-				if (!$transaction){
-					die('Transaction '. $transactionData['customer_transaction_id'] .' does not exist, check please');
-				} else {
-					//Если ок - то присваиваем ГУИД этой транзакции
-					$this->model_sale_customer->updateTransactionGUIDByTransactionID($transactionData['customer_transaction_id'], $transactionData['guid']);
-					die('Transaction found, guid updated');
-				}
-
-		//Не важно, есть ли индентификатор сайта, эта транзакция либо новая (если у нее нет customer_transaction_id, либо уже существующая)
 			} elseif (!empty($transactionData['guid'])){
 				$transaction = $this->model_sale_customer->getTransactionByGUID($transactionData['guid']);
-
-
-				$fields = array(
-					'customer_id',
-					'description',						
-					'amount_national',
-					'currency_code',
-					'order_id',
-					'date_added',
-					'legalperson_id',
-					'guid'
-				);
-
-				foreach ($fields as $field){
-					if (!isset($transactionData[$field])){
-						die('JSON Field empty ' . $field);
-					}
-				}
-
-				//Существующую транзакцию мы либо ничего не делаем, либо обновляем информацию (?)
-				if ($transaction){
-
-					$this->response->setOutput(json_encode(array('exists' => true, 'customer_transaction_id' => $transaction['customer_transaction_id'])));
-
-					//Несуществующую транзакцию мы создаем
-				} else {
-
-					$data = array(
-						'customer_id' 		=> $transactionData['customer_id'],
-						'description'		=> $transactionData['description'],					
-						'amount_national'	=> $transactionData['amount_national'],
-						'currency_code'		=> $transactionData['currency_code'],
-						'order_id'			=> $transactionData['order_id'],
-						'date_added'		=> date('Y-m-d H:i:s', strtotime($transactionData['date_added'])),
-						'added_from'		=> $transactionData['added_from']?$transactionData['added_from']:'1c_sync',
-						'legalperson_id'	=> $transactionData['legalperson_id'],
-						'guid' 				=> $transactionData['guid']
-					);
-
-					if ($transactionData['order_id']){
-						$order_info = $this->model_sale_order->getOrder($transactionData['order_id']);
-
-						if ($order_info['currency_value']){
-							$data['amount'] = $this->currency->reconvert($transactionData['amount_national'], $order_info['currency_value']);
-						} else {
-							$data['amount'] = $this->currency->convert($transactionData['amount_national'], $transactionData['currency_code'], 'EUR');
-						}
-
-					} else {
-
-						$data['amount'] = $this->currency->convert($transactionData['amount_national'], $transactionData['currency_code'], 'EUR');
-
-					}
-
-					$transaction_id = $this->model_sale_customer->addTransactionFromAPI($data);
-					$this->response->setOutput(json_encode(array('exists' => false, 'customer_transaction_id' => $transaction_id)));
-
-				}	
 			}
+
+			if (!empty($transactionData['date_added'])){
+				$date_added = date('Y-m-d H:i:s', strtotime($transactionData['date_added']));
+			} elseif ($transaction) {
+				$date_added = $transaction['date_added'];
+			} else {
+				$date_added = date('Y-m-d H:i:s');
+			}
+
+			if (!empty($transactionData['added_from'])){
+				$added_from = $transactionData['added_from'];
+			} elseif ($transaction) {
+				$added_from = $transaction['added_from'];
+			} else {
+				$added_from = '1c_sync';
+			}
+
+			$data = array(
+				'customer_id' 		=> $transactionData['customer_id'],
+				'description'		=> $transactionData['description'],					
+				'amount_national'	=> $transactionData['amount_national'],
+				'currency_code'		=> $transactionData['currency_code'],
+				'order_id'			=> $transactionData['order_id'],
+				'date_added'		=> $date_added,
+				'added_from'		=> $added_from,
+				'legalperson_id'	=> $transactionData['legalperson_id'],
+				'guid' 				=> $transactionData['guid']
+			);
+
+			if ($transactionData['order_id']){
+				$order_info = $this->model_sale_order->getOrder($transactionData['order_id']);
+				if ($order_info['currency_value']){
+					$data['amount'] = $this->currency->reconvert((float)$transactionData['amount_national'], $order_info['currency_value']);
+				} else {
+					$data['amount'] = $this->currency->convert((float)$transactionData['amount_national'], $transactionData['currency_code'], 'EUR');
+				}
+			} else {
+				$data['amount'] = $this->currency->convert((float)$transactionData['amount_national'], $transactionData['currency_code'], 'EUR');
+			}
+			
+			if ($transaction){
+				$customer_transaction_id = $this->model_sale_customer->updateTransactionFromAPI($transaction['customer_transaction_id'], $data);
+				$result = ['status' => 'success', 'message' => 'Transaction found and edited'];
+			} else {
+				$customer_transaction_id = $this->model_sale_customer->addTransactionFromAPI($data);
+				$result = ['status' => 'success', 'message' => 'Transaction not found and added'];
+			}
+
+			$result['data_sent'] 		= $transactionData;
+			$result['transaction_data'] = $this->model_sale_customer->getTransactionByID($customer_transaction_id);
+
+			$this->response->setOutput(json_encode($result));
 		}
+		
 
 		public function transactionSyncGet($transactionData){		
 			$this->load->model('sale/customer');
