@@ -470,7 +470,7 @@
 					$("input[name=filter_price]").prop("disabled", false);
 				}
 			})
-			$('input.filter.date_available,input.filter.date_modified').datepicker({dateFormat: 'yy-mm-dd', constrainInput: false});
+			$('input.filter.date_available,input.filter.date_modified,input.filter.date_added').datepicker({dateFormat: 'yy-mm-dd', constrainInput: false});
 			
 			$(".quick_edit").editable(function(value, settings) {
 				return quick_update(this, value, settings, '<?php echo $update_url; ?>');

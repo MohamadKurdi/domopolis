@@ -338,6 +338,8 @@ class ControllerCatalogProductExt extends Controller {
             $data['filter_' . $filter] = $value;
         }
 
+
+
         $this->load->model('tool/image');
 
         if (!empty($this->session->data['aqe_list_view_image_width'])){
@@ -639,7 +641,13 @@ class ControllerCatalogProductExt extends Controller {
 
         if (in_array("category", $column_order)) {
             $this->load->model('catalog/category');
-            $this->data['categories'] = $this->model_catalog_category->getCategories(['filter_status' => 1]);
+
+            $category_filter_data = ['filter_status' => 1];
+            if (!empty($data['filter_date_added'])){
+                $category_filter_data['filter_product_date_added'] = $data['filter_date_added'];
+            }
+
+            $this->data['categories'] = $this->model_catalog_category->getCategories($category_filter_data);
         }
 
         if (in_array("download", $column_order)) {

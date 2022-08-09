@@ -55,7 +55,7 @@ class OffersParser
 		$sql .= " AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1))";
 
 		if ($this->no_offers_logic){
-			$sql .= " AND p.amzn_no_offers = 1 AND DATE(amzn_last_offers) <= '2022-26-07'";
+			$sql .= " AND p.amzn_no_offers = 1  AND DATE(amzn_last_offers) <= '2022-08-08'";
 		} else {
 			$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -'" . $this->config->get('config_rainforest_update_period') . "' DAY)))";
 		}
@@ -85,7 +85,7 @@ class OffersParser
 		$sql .= " AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1))";
 
 		if ($this->no_offers_logic){
-			$sql .= " AND p.amzn_no_offers = 1 AND DATE(amzn_last_offers) <= '2022-26-07'";
+			$sql .= " AND p.amzn_no_offers = 1 AND DATE(amzn_last_offers) <= '2022-08-08'";
 		} else {
 			$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -'" . $this->config->get('config_rainforest_update_period') . "' DAY)))";
 		}			

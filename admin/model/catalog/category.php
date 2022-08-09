@@ -531,7 +531,8 @@ class ModelCatalogCategory extends Model {
 		public function getCategories($data) {
 			$sql = "SELECT cp.category_id AS category_id, c.tnved, c.priceva_enable, c.deletenotinstock, c.intersections, c.google_category_id, cd2.menu_name, cd2.alternate_name, c.parent_id, c.sort_order,
 			(SELECT menu_icon FROM category c4 WHERE c4.category_id = cp.category_id) as menu_icon, 
-			(SELECT image FROM category c5 WHERE c5.category_id = cp.category_id) as image, GROUP_CONCAT(cd1.name ORDER BY cp.level SEPARATOR ' &gt; ') AS name 
+			(SELECT image FROM category c5 WHERE c5.category_id = cp.category_id) as image, 
+			GROUP_CONCAT(cd1.name ORDER BY cp.level SEPARATOR ' &gt; ') AS name 
 			FROM category_path cp 
 			LEFT JOIN category c ON (cp.path_id = c.category_id) 
 			LEFT JOIN category_description cd1 ON (c.category_id = cd1.category_id) 
@@ -545,6 +546,10 @@ class ModelCatalogCategory extends Model {
 
 			if (isset($data['filter_parent_id'])) {
 				$sql .= " AND c.parent_id = '" . (int)$data['filter_parent_id'] . "'";
+			}
+
+			if (isset($data['filter_product_date_added'])) {
+				$sql .= " AND cp.category_id IN (SELECT category_id FROM product_to_category WHERE product_id IN (SELECT product_id FROM product WHERE DATE(date_added) = '" . $this->db->escape($data['filter_product_date_added']) . "'))";
 			}
 
 			if (isset($data['filter_status'])) {

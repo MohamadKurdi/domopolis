@@ -20,9 +20,11 @@ class RainforestAmazon
 	private $tgAlertChatID = null;
 
 	/*
-		Лимит для парсера категорий, сколько в параллели
+		categoryParserLimit  - сколько отбирать категорий за один запуск
+		categoryRequestLimits - Лимит для парсера категорий, сколько в параллели
 	*/
-	public const categoryRequestLimits 	= 100;
+	public const categoryParserLimit 	= 100;
+	public const categoryRequestLimits 	= 20;
 	
 	/*
 		Лимит для отбора пост-обработок

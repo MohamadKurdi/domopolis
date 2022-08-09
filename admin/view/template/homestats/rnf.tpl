@@ -10,7 +10,7 @@
 		<?php if ($success) { ?>
 			<span style="color:#00ad07; font-size:18px; font-weight: 700;"><i class="fa fa-check-circle"></i> судя по ответу от Rainforest, всё работает
 				<br />
-				<small><i class="fa-info-circle"></i> скрипты крутятся, лавеха мутится</small>
+				<small><i class="fa fa-info-circle"></i> скрипты крутятся, лавеха мутится</small>
 			</span>
 		<?php } else { ?>
 
