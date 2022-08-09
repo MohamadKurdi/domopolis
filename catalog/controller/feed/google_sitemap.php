@@ -20,6 +20,7 @@ class ControllerFeedGoogleSitemap extends Controller {
 
 	public function index(){
 		$this->load->model('setting/store');
+		$this->load->model('localisation/language');
 
 		error_reporting(E_ALL);
 
