@@ -204,7 +204,7 @@
 		foreach ($query->rows as $row){
 			if ($row['value']){
 				$supported_language_codes[$store_id][] 	= $row['value'];
-				$supported_language_ids[$store_id][] 	= $languages[$row['value']]['language_id'];
+				$supported_language_ids[$store_id][] 	= $all_languages[$row['value']]['language_id'];
 			}
 
 			if ($row['key'] == 'config_second_language'){
