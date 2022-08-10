@@ -263,6 +263,7 @@
 							<tr>	
 							
 								<td style="width:18%">
+									<div>
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика цен B2B</span></p>
 									<select name="config_group_price_enable">
 										<?php if ($config_group_price_enable) { ?>
@@ -275,10 +276,9 @@
 									</select>
 									<br />
 									<span class="help">логика нагружает магазин, если реально это не используется, пусть будет отключено</span>
-								</td>
-
-								<td style="width:18%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF;">Монобрендовый магазин</span></p>
+									</div>
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF;">Монобрендовый магазин</span></p>
 									<select name="config_monobrand" style=" width:150px;">
 										<option value="0">Нет</option>
 
@@ -292,74 +292,81 @@
 									</select>	
 									<br />
 									<span class="help">настройка, позволяющая работать без списка брендов (неактуальная настройка)</span>
+									</div>
 								</td>
 
 								<td style="width:18%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">В брендах только товары</span></p>
-									<select type="select" name="config_show_goods_overload">
-										<? if ($config_show_goods_overload) { ?>
-
-											<option value="1" selected='selected' >Да</option>
-											<option value="0" >Нет</option>
-
-										<? } else { ?>
-
-											<option value="1" >Да</option>
-											<option value="0"  selected='selected' >Нет</option>
-
-										<? } ?>       
-									</select>
-									<br />
-									<span class="help">на странице брендов выводятся только товары, без списков коллекций, и.т.д.</span>	
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">В брендах только товары</span></p>
+										<select type="select" name="config_show_goods_overload">
+											<? if ($config_show_goods_overload) { ?>
+												<option value="1" selected='selected' >Да</option>
+												<option value="0" >Нет</option>
+											<? } else { ?>
+												<option value="1" >Да</option>
+												<option value="0"  selected='selected' >Нет</option>
+											<? } ?>       
+										</select>
+										<br />
+										<span class="help">на странице брендов выводятся только товары, без списков коллекций, и.т.д.</span>	
+									</div>
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Обязательная цена</span></p>
+										<select type="select" name="config_no_zeroprice">
+											<? if ($config_no_zeroprice) { ?>
+												<option value="1" selected='selected' >Да</option>
+												<option value="0" >Нет</option>
+											<? } else { ?>
+												<option value="1" >Да</option>
+												<option value="0"  selected='selected' >Нет</option>
+											<? } ?>       
+										</select>
+										<br />
+										<span class="help">Если включено, то из отборов фронта исключаются товары без заданной основной цены</span>										
+									</div>
 								</td>
 
 								<td style="width:18%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Режим конфликта</span></p>
-									<select type="select" name="config_warmode_enable">
-										<? if ($config_warmode_enable) { ?>
-
-											<option value="1" selected='selected' >Да</option>
-											<option value="0" >Нет</option>
-
-										<? } else { ?>
-
-											<option value="1" >Да</option>
-											<option value="0"  selected='selected' >Нет</option>
-
-										<? } ?>       
-									</select>
-									<br />
-									<span class="help">будет отключен переключатель стран, и некоторые другие моменты</span>	
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Режим конфликта</span></p>
+										<select type="select" name="config_warmode_enable">
+											<? if ($config_warmode_enable) { ?>
+												<option value="1" selected='selected' >Да</option>
+												<option value="0" >Нет</option>
+											<? } else { ?>
+												<option value="1" >Да</option>
+												<option value="0"  selected='selected' >Нет</option>
+											<? } ?>       
+										</select>
+										<br />
+										<span class="help">будет отключен переключатель стран, и некоторые другие моменты</span>	
+									</div>
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Режим разработки</span></p>
+										<select type="select" name="config_no_access_enable">
+											<? if ($config_no_access_enable) { ?>
+												<option value="1" selected='selected' >Да</option>
+												<option value="0" >Нет</option>
+											<? } else { ?>
+												<option value="1" >Да</option>
+												<option value="0"  selected='selected' >Нет</option>
+											<? } ?>       
+										</select>
+										<br />
+										<span class="help">Если включено, фронт будет закрыт 403 кодом в случае, если сессия админки не определена</span>	
+									</div>
 								</td>
 
 								<td style="width:18%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Режим разработки</span></p>
-									<select type="select" name="config_no_access_enable">
-										<? if ($config_no_access_enable) { ?>
-											<option value="1" selected='selected' >Да</option>
-											<option value="0" >Нет</option>
-										<? } else { ?>
-											<option value="1" >Да</option>
-											<option value="0"  selected='selected' >Нет</option>
-										<? } ?>       
-									</select>
-									<br />
-									<span class="help">Если включено, фронт будет закрыт 403 кодом в случае, если сессия админки не определена</span>	
+									
 								</td>
 
 								<td style="width:18%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Обязательная цена</span></p>
-									<select type="select" name="config_no_zeroprice">
-										<? if ($config_no_zeroprice) { ?>
-											<option value="1" selected='selected' >Да</option>
-											<option value="0" >Нет</option>
-										<? } else { ?>
-											<option value="1" >Да</option>
-											<option value="0"  selected='selected' >Нет</option>
-										<? } ?>       
-									</select>
-									<br />
-									<span class="help">Если включено, то из отборов фронта исключаются товары без заданной основной цены</span>	
+									
+								</td>
+
+								<td style="width:18%">
+									
 								</td>
 
 							</tr>
@@ -367,72 +374,80 @@
 
 						<table class="form">
 							<tr>											
-								<td style="width:15%">
+								<td style="width:18%">
 									<p>
-										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_title; ?></span>
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">META TITLE</span>
 									</p>
 									<textarea name="config_title" cols="40" rows="5"><?php echo $config_title; ?></textarea>
 								</td>
 
-								<td style="width:15%">
+								<td style="width:18%">
 									<p>
-										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_meta_description; ?>
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">META DESCRIPTION</span>
 									</p>
 									<textarea name="config_meta_description" cols="40" rows="5"><?php echo $config_title; ?></textarea>
 								</td>
 
-								<td style="width:15%"> 
-									<p>
-										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Шаблон</span>
-									</p>
-									<select name="config_template">
-										<?php foreach ($templates as $template) { ?>
-											<?php if ($template == $config_template) { ?>
-												<option value="<?php echo $template; ?>" selected="selected"><?php echo $template; ?></option>
-											<?php } else { ?>
-												<option value="<?php echo $template; ?>"><?php echo $template; ?></option>
+								<td style="width:18%"> 
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Шаблон</span></p>
+										<select name="config_template">
+											<?php foreach ($templates as $template) { ?>
+												<?php if ($template == $config_template) { ?>
+													<option value="<?php echo $template; ?>" selected="selected"><?php echo $template; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $template; ?>"><?php echo $template; ?></option>
+												<?php } ?>
 											<?php } ?>
-										<?php } ?>
-									</select>
+										</select>
+									</div>
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_layout; ?><</span></p>
+										<select name="config_layout_id">
+											<?php foreach ($layouts as $layout) { ?>
+												<?php if ($layout['layout_id'] == $config_layout_id) { ?>
+													<option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>										
+									</div>
 								</td>
 
-								<td style="width:15%">										
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_layout; ?><</span></p>
-									<select name="config_layout_id">
-										<?php foreach ($layouts as $layout) { ?>
-											<?php if ($layout['layout_id'] == $config_layout_id) { ?>
-												<option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
-											<?php } else { ?>
-												<option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
-											<?php } ?>
-										<?php } ?>
-									</select>
+								<td style="width:18%">										
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Добавить меню в homepage</span></p>
+										<select type="select" name="config_mmenu_on_homepage">
+											<? if ($config_mmenu_on_homepage) { ?>
+												<option value="1" selected='selected' >Да</option>
+												<option value="0" >Нет</option>
+											<? } else { ?>
+												<option value="1" >Да</option>
+												<option value="0"  selected='selected' >Нет</option>
+											<? } ?>       
+										</select>
+									</div>
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бренды в мегаменю</span></p>
+										<select type="select" name="config_brands_in_mmenu">
+											<? if ($config_brands_in_mmenu) { ?>
+												<option value="1" selected='selected' >Да</option>
+												<option value="0" >Нет</option>
+											<? } else { ?>
+												<option value="1" >Да</option>
+												<option value="0"  selected='selected' >Нет</option>
+											<? } ?>       
+										</select>
+									</div>
 								</td>
 
-								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Добавить меню в homepage</span></p>
-									<select type="select" name="config_mmenu_on_homepage">
-										<? if ($config_mmenu_on_homepage) { ?>
-											<option value="1" selected='selected' >Да</option>
-											<option value="0" >Нет</option>
-										<? } else { ?>
-											<option value="1" >Да</option>
-											<option value="0"  selected='selected' >Нет</option>
-										<? } ?>       
-									</select>
+								<td style="width:18%">
+									
 								</td>							
 
-								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бренды в мегаменю</span></p>
-									<select type="select" name="config_brands_in_mmenu">
-										<? if ($config_brands_in_mmenu) { ?>
-											<option value="1" selected='selected' >Да</option>
-											<option value="0" >Нет</option>
-										<? } else { ?>
-											<option value="1" >Да</option>
-											<option value="0"  selected='selected' >Нет</option>
-										<? } ?>       
-									</select>
+								<td style="width:18%">
+									
 								</td>
 						</tr>
 					</table>							
@@ -1378,7 +1393,7 @@
 										<? } ?>
 									</select>
 									<br />
-									<span class="help">Если выключено - то выводится только один уровень</span>
+									<span class="help">Если выключено - то выводится только один уровень и снижается нагрузка.</span>
 								</td>
 
 								<td style="width:15%">
@@ -1398,6 +1413,21 @@
 
 								<td style="width:15%">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Отображать только товары с полной инфой</span></p>
+									<select name="config_rainforest_show_only_filled_products_in_catalog">
+										<?php if ($config_rainforest_show_only_filled_products_in_catalog) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+									<br />
+									<span class="help">Если включены специфические режимы амазона - будут показаны только заполненные товары</span>
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Сортировка по-умолчанию</span></p>
 									<select name="config_rainforest_show_only_filled_products_in_catalog">
 										<?php if ($config_rainforest_show_only_filled_products_in_catalog) { ?>
 											<option value="1" selected="selected">Включить</option>
