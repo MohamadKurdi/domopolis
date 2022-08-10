@@ -353,6 +353,10 @@
 		unset($registry->get('request')->get['_route_']);
 	}
 
+	//Сортировки
+	$sorts = loadJsonConfig('sorts');
+	$registry->set('sorts', $sorts);
+
 	//Implementation of different redirect modes and|or modules
 	$controller->addPreAction(new Action('common/hoboseo'));
 	$controller->addPreAction(new Action('common/seo_pro'));

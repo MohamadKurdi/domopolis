@@ -375,22 +375,16 @@
 				}
 				
 				$this->data['sorts'] = array();
-				
-				$this->data['sorts'][] = array(
-				'text'  => $this->language->get('populars'),
-				'value' => 'p.viewed-DESC',
-				'href'  => $this->url->link('product/collection', 'collection_id=' . $this->request->get['collection_id'] . '&sort=p.viewed&order=DESC' . $url)
-				);
-				$this->data['sorts'][] = array(
-				'text'  => $this->language->get('price_asc'),
-				'value' => 'p.price-ASC',
-				'href'  => $this->url->link('product/collection', 'collection_id=' . $this->request->get['collection_id'] . '&sort=p.price&order=ASC' . $url)
-				);
-				$this->data['sorts'][] = array(
-				'text'  => $this->language->get('price_desc'),
-				'value' => 'p.price-DESC',
-				'href'  => $this->url->link('product/collection', 'collection_id=' . $this->request->get['collection_id'] . '&sort=p.price&order=DESC' . $url)
-				);
+
+				foreach ($this->registry->get('sorts') as $sortConfig){
+					if ($sortConfig['visible']){
+						$this->data['sorts'][] = array(
+                			'text'  => $this->language->get($sortConfig['text_variable']),
+                			'value' => ($sortConfig['field'] . '-' . $sortConfig['order']),
+                			'href'  => $this->url->link('product/collection', 'collection_id=' . $this->request->get['collection_id'] . '&sort=' . $sortConfig['field'] . '&order='. $sortConfig['order'] . $url)
+						);
+					}
+				}	
 				
 				$url = '';
 				

@@ -132,131 +132,17 @@
 			}
 			
 			$this->data['sorts'] = array();
-			
-			$this->data['sorts'][] = array(
-            'text'  => $this->language->get('text_default'),
-            'value' => 'p.sort_order-ASC',
-            'href'  => $this->url->link('product/special', '&sort=p.sort_order&order=ASC' . $url)
-			);
-			$this->data['sorts'][] = array(
-            'text'  => $this->language->get('price_asc'),
-            'value' => 'p.price-ASC',
-            'href'  => $this->url->link('product/special', '&sort=p.price&order=ASC' . $url)
-			);
-			$this->data['sorts'][] = array(
-            'text'  => $this->language->get('price_desc'),
-            'value' => 'p.price-DESC',
-            'href'  => $this->url->link('product/special', '&sort=p.price&order=DESC' . $url)
-			);
-			$this->data['sorts'][] = array(
-            'text'  => $this->language->get('populars'),
-            'value' => 'p.viewed-DESC',
-            'href'  => $this->url->link('product/special', '&sort=p.viewed&order=DESC' . $url)
-			);
-    	    /*if ($this->config->get('config_default_sp')) {
-				$this->data['sorts'][] = array(
-			    'text'  => $this->config->get('config_default_text_sp'),
-			    'value' => 'p.sort_order-ASC',
-			    'href'  => $this->url->link('product/special', 'sort=p.sort_order&order=ASC' . $url)
-				);}
-				if ($this->config->get('config_name_asc_sp')) {
-				$this->data['sorts'][] = array(
-			    'text'  => $this->config->get('config_name_asc_text_sp'),
-			    'value' => 'pd.name-ASC',
-			    'href'  => $this->url->link('product/special', 'sort=pd.name&order=ASC' . $url)
-				);}
-				if ($this->config->get('config_name_desc_sp')) {
-				$this->data['sorts'][] = array(
-			    'text'  => $this->config->get('config_name_desc_text_sp'),
-			    'value' => 'pd.name-DESC',
-			    'href'  => $this->url->link('product/special', 'sort=pd.name&order=DESC' . $url)
-				);}
-				if ($this->config->get('config_price_asc_sp')) {
-				$this->data['sorts'][] = array(
-			    'text'  => $this->config->get('config_price_asc_text_sp'),
-			    'value' => 'ps.price-ASC',
-			    'href'  => $this->url->link('product/special', 'sort=ps.price&order=ASC' . $url)
-				);}
-				if ($this->config->get('config_price_desc_sp')) {
-				$this->data['sorts'][] = array(
-			    'text'  => $this->config->get('config_price_desc_text_sp'),
-			    'value' => 'ps.price-DESC',
-			    'href'  => $this->url->link('product/special', 'sort=ps.price&order=DESC' . $url)
-				);}
-				if ($this->config->get('config_review_status')) {
-				if ($this->config->get('config_rating_desc_sp')) {
-				$this->data['sorts'][] = array(
-				'text'  => $this->config->get('config_rating_desc_text_sp'),
-				'value' => 'rating-DESC',
-				'href'  => $this->url->link('product/special', 'sort=rating&order=DESC' . $url)
-				);}
-				if ($this->config->get('config_rating_asc_sp')) {
-				$this->data['sorts'][] = array(
-				'text'  => $this->config->get('config_rating_asc_text_sp'),
-				'value' => 'rating-ASC',
-				'href'  => $this->url->link('product/special', 'sort=rating&order=ASC' . $url)
-				);}
+
+			foreach ($this->registry->get('sorts') as $sortConfig){
+				if ($sortConfig['visible']){
+					$this->data['sorts'][] = array(
+						'text'  => $this->language->get($sortConfig['text_variable']),
+						'value' => ($sortConfig['field'] . '-' . $sortConfig['order']),
+						'href'  => $this->url->link('product/special', '&sort=' . $sortConfig['field'] . '&order='. $sortConfig['order'] . $url)
+					);
 				}
-				if ($this->config->get('config_model_asc_sp')) {
-				$this->data['sorts'][] = array(
-				'text'  => $this->config->get('config_model_asc_text_sp'),
-				'value' => 'p.model-ASC',
-				'href'  => $this->url->link('product/special', 'sort=p.model&order=ASC' . $url)
-				);}
-				if ($this->config->get('config_model_desc_sp')) {
-				$this->data['sorts'][] = array(
-			    'text'  => $this->config->get('config_model_desc_text_sp'),
-			    'value' => 'p.model-DESC',
-			    'href'  => $this->url->link('product/special', 'sort=p.model&order=DESC' . $url)
-				);}
-				if ($this->config->get('config_viewed_asc_sp')) {
-				$this->data['sorts'][] = array(
-    			'text'  => $this->config->get('config_viewed_asc_text_sp'),
-				'value' => 'p.viewed-ASC',
-				'href'  => $this->url->link('product/special', 'sort=p.viewed&order=ASC' . $url)
-				);}
-				if ($this->config->get('config_viewed_desc_sp')) {
-				$this->data['sorts'][] = array(
-    			'text'  => $this->config->get('config_viewed_desc_text_sp'),
-				'value' => 'p.viewed-DESC',
-				'href'  => $this->url->link('product/special', 'sort=p.viewed&order=DESC' . $url)
-				);}
-				if ($this->config->get('config_quantity_asc_sp')) {
-				$this->data['sorts'][] = array(
-        		'text'  => $this->config->get('config_quantity_asc_text_sp'),
-				'value' => 'p.quantity-ASC',
-				'href'  => $this->url->link('product/special', 'sort=p.quantity&order=ASC' . $url)
-				);}
-				if ($this->config->get('config_quantity_desc_sp')) {
-				$this->data['sorts'][] = array(
-    			'text'  => $this->config->get('config_quantity_desc_text_sp'),
-				'value' => 'p.quantity-DESC',
-				'href'  => $this->url->link('product/special', 'sort=p.quantity&order=DESC' . $url)
-				);}
-				if ($this->config->get('config_manufacturer_asc_sp')) {
-				$this->data['sorts'][] = array(
-            	'text'  => $this->config->get('config_manufacturer_asc_text_sp'),
-				'value' => 'p.manufacturer_id-ASC',
-				'href'  => $this->url->link('product/special', 'sort=p.manufacturer_id&order=ASC' . $url)
-				);}
-				if ($this->config->get('config_manufacturer_desc_sp')) {
-				$this->data['sorts'][] = array(
-        		'text'  => $this->config->get('config_manufacturer_desc_text_sp'),
-				'value' => 'p.manufacturer_id-DESC',
-				'href'  => $this->url->link('product/special', 'sort=p.manufacturer_id&order=DESC' . $url)
-				);}
-				if ($this->config->get('config_date_added_asc_sp')) {
-				$this->data['sorts'][] = array(
-                'text'  => $this->config->get('config_date_added_asc_text_sp'),
-				'value' => 'p.date_added-ASC',
-				'href'  => $this->url->link('product/special', 'sort=p.date_added&order=ASC' . $url)
-				);}
-				if ($this->config->get('config_date_added_desc_sp')) {
-				$this->data['sorts'][] = array(
-        		'text'  => $this->config->get('config_date_added_desc_text_sp'),
-				'value' => 'p.date_added-DESC',
-				'href'  => $this->url->link('product/special', 'sort=p.date_added&order=DESC' . $url)
-			);}*/
+			}	
+		
 			
 			$url = '';
 
