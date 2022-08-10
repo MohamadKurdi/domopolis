@@ -2722,6 +2722,12 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_rainforest_min_review_rating'] = $this->config->get('config_rainforest_min_review_rating');
 		}
 
+		if (isset($this->request->post['config_rainforest_max_review_length'])) {
+			$this->data['config_rainforest_max_review_length'] = $this->request->post['config_rainforest_max_review_length']; 
+		} else {
+			$this->data['config_rainforest_max_review_length'] = $this->config->get('config_rainforest_max_review_length');
+		}
+
 		if (isset($this->request->post['config_rainforest_enable_recursive_adding'])) {
 			$this->data['config_rainforest_enable_recursive_adding'] = $this->request->post['config_rainforest_enable_recursive_adding']; 
 		} else {

@@ -3922,6 +3922,11 @@
 											<input type="number" name="config_rainforest_max_review_per_product" value="<?php echo $config_rainforest_max_review_per_product; ?>" size="50" style="width:100px;" />
 										</div>
 
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Макс символов</span></p>
+											<input type="number" name="config_rainforest_max_review_length" value="<?php echo $config_rainforest_max_review_length; ?>" size="50" style="width:100px;" />
+										</div>
+
 									</td>
 								</tr>
 
