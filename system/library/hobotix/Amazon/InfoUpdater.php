@@ -225,6 +225,9 @@ class InfoUpdater
 		$name = rtrim($name, ', ');
 		$name = rtrim($name);
 
+		$name = ltrim($name, ',. ');
+		$name = ltrim($name);
+
 		//Первая буква - большая, функция своя, в хелпере utf8
 		$name = \mb_ucfirst($name);
 
