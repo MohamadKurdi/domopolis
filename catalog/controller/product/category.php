@@ -128,8 +128,10 @@
 			if (isset($this->request->get['sort'])) {
 				$sort = $this->request->get['sort'];
 				} else {			
-				$sort = 'stock_status_id ASC, p.sort_order';
+				$sort = $this->registry->get('sort_default');
 			}
+
+			var_dump($sort);
 			
 			if (isset($this->request->get['order'])) {
 				$order = $this->request->get['order'];

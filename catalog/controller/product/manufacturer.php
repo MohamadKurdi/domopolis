@@ -311,7 +311,7 @@
 			if (isset($this->request->get['sort'])) {
 				$sort = $this->request->get['sort'];
 				} else {
-				$sort = 'stock_status_id ASC, p.sort_order';
+				$sort = $this->registry->get('sort_default');
 			}
 			
 			if (isset($this->request->get['order'])) {

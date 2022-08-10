@@ -355,7 +355,14 @@
 
 	//Сортировки
 	$sorts = loadJsonConfig('sorts');
-	$registry->set('sorts', $sorts);
+
+	if (!empty($sorts['sorts'])){
+		$registry->set('sorts', $sorts['sorts']);
+	}
+
+	if (!empty($sorts['default'])){
+		$registry->set('sort_default', $sorts['default']);
+	}
 
 	//Implementation of different redirect modes and|or modules
 	$controller->addPreAction(new Action('common/hoboseo'));
