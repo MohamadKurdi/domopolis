@@ -49,10 +49,21 @@
 			return $ch;			
 		}	
 
-		private static function reparseRnfBuggyArray($array){
+		private static function reparseRnfBuggyArray($array, $index = false){
 
-			if (!empty($array['asin'])){
-				return [$array];
+			if ($index){
+				if (!empty($array[$index])){
+
+					if (!empty($array[$index]['asin'])){
+						$array[$index] = [$array[$index]];
+						return $array;
+					}
+
+				}
+			} else {
+				if (!empty($array['asin'])){
+					return [$array];
+				}
 			}
 
 			return $array;
@@ -96,11 +107,11 @@
 			}
 
 			if (!empty($response['frequently_bought_together'])){
-				$response['product']['frequently_bought_together'] = self::reparseRnfBuggyArray($response['frequently_bought_together']);
+				$response['product']['frequently_bought_together'] = self::reparseRnfBuggyArray($response['frequently_bought_together'], 'products');
 			}
 
 			if (!empty($response['shop_by_look'])){
-				$response['product']['shop_by_look'] = self::reparseRnfBuggyArray($response['shop_by_look']);
+				$response['product']['shop_by_look'] = self::reparseRnfBuggyArray($response['shop_by_look'], 'items');
 			}
 			
 			return $response['product'];			

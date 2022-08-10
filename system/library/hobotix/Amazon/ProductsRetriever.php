@@ -901,41 +901,48 @@
 			if ($this->config->get('config_rainforest_enable_review_adding')){
 				if (!empty($product['top_reviews'])){
 					$counter = 0;
-					foreach ($product['top_reviews'] as $review){
-						if ($review['rating'] >= (int)$this->config->get('config_rainforest_min_review_rating')){
+					foreach ($product['top_reviews'] as $review){						
 
-							$counter++;
-
-							if ($counter >= (int)$this->config->get('config_rainforest_max_review_per_product')){
-								break;
-							}
-
-							$review_description = [];					
-							$author = $this->db->ncquery("SELECT firstname FROM customer WHERE firstname <> '' ORDER BY RAND() LIMIT 1")->row['firstname'];
-							echoLine('[parseProductTopReviews] Автор ' . $author);
-
-							foreach ($this->registry->get('languages') as $language_code => $language) {
-								$review['body'] = atrim($review['body']);						
-
-								$text = $this->translateWithCheck($review['body'], $language_code, true);
-								$text = $this->registry->get('rainforestAmazon')->infoUpdater->normalizeProductReview($text);
-
-								$review_description[$language['language_id']] = [
-									'text' => $text,
-								];
-							}
-
-							$review_data = [
-								'author'				=> $author,
-								'product_id'			=> $product_id,	
-								'text'					=> $review_description[$this->config->get('config_language_id')]['text'],	
-								'rating'				=> $review['rating'],
-								'date_added'			=> date('Y-m-d H:i:s', strtotime($review['date']['utc'])),
-								'review_description' 	=> $review_description
-							];
-
-							$this->model_product_edit->addReview($review_data);
+						if (mb_strlen($review['body']) > (int)$this->config->get('config_rainforest_max_review_length')){
+							echoLine('[parseProductTopReviews] длина отзыва ' . mb_strlen($review['body']) . ', пропускаем');
+							continue;
 						}
+
+						if ($review['rating'] < (int)$this->config->get('config_rainforest_min_review_rating')){
+							echoLine('[parseProductTopReviews] рейтинг отзыва ' . $review['rating'] . ', пропускаем');
+							continue;
+						}
+
+						$counter++;
+						if ($counter >= (int)$this->config->get('config_rainforest_max_review_per_product')){
+							break;
+						}
+
+						$review_description = [];					
+						$author = $this->db->ncquery("SELECT firstname FROM customer WHERE firstname <> '' ORDER BY RAND() LIMIT 1")->row['firstname'];
+						echoLine('[parseProductTopReviews] Автор ' . $author);
+
+						foreach ($this->registry->get('languages') as $language_code => $language) {
+							$review['body'] = atrim($review['body']);						
+
+							$text = $this->translateWithCheck($review['body'], $language_code, true);
+							$text = $this->registry->get('rainforestAmazon')->infoUpdater->normalizeProductReview($text);
+
+							$review_description[$language['language_id']] = [
+								'text' => $text,
+							];
+						}
+
+						$review_data = [
+							'author'				=> $author,
+							'product_id'			=> $product_id,	
+							'text'					=> $review_description[$this->config->get('config_language_id')]['text'],	
+							'rating'				=> $review['rating'],
+							'date_added'			=> date('Y-m-d H:i:s', strtotime($review['date']['utc'])),
+							'review_description' 	=> $review_description
+						];
+
+						$this->model_product_edit->addReview($review_data);
 					}										
 				}
 
