@@ -48,7 +48,7 @@ class InfoUpdater
 	}
 
 	public function getTotalNames(){
-		return $this->db->query("SELECT COUNT(*) as total FROM product_description WHERE language_id = '" . $this->config->get('config_language_id') . "' AND name <> ''")->row['total'];
+		return $this->db->query("SELECT COUNT(*) as total FROM product_description WHERE language_id = '" . $this->config->get('config_language_id') . "' AND name <> '' ")->row['total'];
 	}
 
 	public function getNames($start){
@@ -58,7 +58,7 @@ class InfoUpdater
 		return $query->rows;
 	}
 
-	public function normalizeProductReview($review){
+	public function normalizeProductReview($review){				
 		//Убираем все кавычки, и другие непонятные спецсимволы, из-за них потом проблемы
 		$review = str_replace(['"', ',,', '?'], '', $review);
 
@@ -88,12 +88,12 @@ class InfoUpdater
 	}
 	
 	public function normalizeProductName($name){
-		echoLine('[InfoUpdater] O: ' . $name);
+		echoLine('[InfoUpdater] In: ' . $name);
 		//Убираем все кавычки, и другие непонятные спецсимволы, из-за них потом проблемы
-		$name = str_replace(['"', ',,', '?'], '', $name);
+		$name = str_replace(['"', ',,', '?', '()', '( )'], '', $name);
 
 		//Кавычки и другие символы, одинарная кавычка только с пробелом, потому что иначе это апостроф
-		$name = str_replace(["&amp;", "' ", "( "], ['&', ' ', '('], $name);
+		$name = str_replace(["&amp;", "' ", "( ", " )", '(-', '-)'], ['&', ' ', '(', ' )', '(', ')'], $name);
 
 		//Кавычка в начале - точно не апостроф
 		$name = ltrim($name, "'");
@@ -118,33 +118,118 @@ class InfoUpdater
 
 		//Обрезать пробелы
 		$name = trim($name);
+		
+		//Логика штук		
+		for($i=200; $i>=1; $i--){
+			$array_from = $array_to = [];
+			$to_str = ($i . ' шт. ');
+
+			$array_from[] = $i . 'штук';
+			$array_from[] = $i . 'ШТУК';
+			$array_from[] = $i . 'Штук';
+			$array_from[] = $i . ' штук';
+			$array_from[] = $i . ' ШТУК';
+			$array_from[] = $i . ' Штук';
+
+			$array_from[] = $i . 'Шт';
+			$array_from[] = $i . 'Шт.';
+			$array_from[] = $i . ' Шт';
+			$array_from[] = $i . ' Шт.';
+
+			$array_from[] = $i . 'шт';
+			$array_from[] = $i . ' шт';
+			
+			$array_from[] = $i . ' ШТ';
+			$array_from[] = $i . ' ШТ.';
+			$array_from[] = $i . 'ШТ';
+			$array_from[] = $i . 'ШТ.';
+
+			$array_from[] = $i . 'X ';
+			$array_from[] = $i . 'x ';
+			$array_from[] = $i . 'X ';
+			$array_from[] = $i . 'x ';
+			$array_from[] = $i . 'Х ';
+			$array_from[] = $i . 'х ';		
+
+			for ($k=0; $k<count($array_from); $k++){
+				$array_to[]  = $to_str;
+			}
+
+			$name = str_ireplace($array_from, $array_to, $name);		
+		}				
+		
+		$name = trim($name);
+
+		//Переносим штуки назад, в случае если они спереди и с иксом
+		for($i=200; $i>=1; $i--){
+			foreach ([($i . ' x '), ($i . ' Х '), ($i . 'x '), ($i . 'Х ')] as $str_from){
+				$str2 = ($i . ' шт. ');
+				
+				if (mb_stripos($name, $str_from) === 0){
+					$name = str_ireplace($str_from, '', $name);
+					$name = trim($name);
+					$name = $name . ', ' . $str2;
+					break;
+				}
+			}
+		}		
+
+		//Переносим штуки назад
+		for($i=200; $i>=1; $i--){
+			$str = ($i . ' шт. ');
+				
+			if (mb_stripos($name, $str) === 0){
+				$name = mb_substr($name, mb_strlen($str) + 1);
+				$name = trim($name);
+				$name = $name . ', ' . $str;
+				break;
+			}
+		}
+
+		//Могли образоваться двойные точки и пробелы
+		$name = str_replace(['. .', '..', ' . ', ',.', '  ', ',,'], ['.', '.', '. ', ', ', ' ', ','], $name);
+		$name = rtrim($name);					
+		$name = rtrim($name, ',');					
+
+		//Находим первое вхождение кириллических символов или цифр
+		$cyrfirst = strpbrk($name, 'АаБбВвГгҐґДдЕеЄєЖжЗзИиІіЇїЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЬьЮюЯяабвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ');
+		$cyrfirstpos = strcspn($name, 'АаБбВвГгҐґДдЕеЄєЖжЗзИиІіЇїЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЬьЮюЯяабвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ');
+
+		if ($cyrfirstpos){
+			$pre = mb_substr($name, 0, $cyrfirstpos);
+			$pre = trim($pre);
+		}
+		
+		//Если есть, то обрезаем строку с начала до конца (типа убираем все символы из начала)
+		if ($cyrfirst){
+			$name = $cyrfirst;
+		}
+
+		//Если есть еще что-то впереди, то переносим его назад
+		if (!empty($pre)){
+			$name = $name . ', ' . $pre;
+		}
+
+		//Переносим штуки назад еще блядь один раз, на тот случай, если они были впереди
+		$str = ('Шт.');
+		if (mb_stripos($name, $str) === 0){
+			$name = mb_substr($name, mb_strlen($str));
+			$name = trim($name);
+			$name = $name . ' шт.';
+		}
+
+		$name = str_replace(['. .', '..', ' . ', ',.', '  ', ',,', ', .', ' .'], ['.', '.', '. ', ', ', ' ', ',', '', ''], $name);
+
+		//Обрезать пробелы
+		$name = trim($name);					
+		$name = rtrim($name, ', ');
+		$name = rtrim($name);
 
 		//Первая буква - большая, функция своя, в хелпере utf8
 		$name = \mb_ucfirst($name);
-		
-		//Логика штук
-		$array_from = [];
-		$array_to	= [];
-		for($i=100; $i>=2; $i--){
-			$array_from[] = $i . ' шт';
-			$array_from[] = $i . 'шт';
-			$array_from[] = $i . ' штук';
-			$array_from[] = $i . 'X ';
-			$array_from[] = $i . 'x ';
 
-			$array_to[]   = $i . ' ' . ' шт. ';
-			$array_to[]   = $i . ' ' . ' шт. ';
-			$array_to[]   = $i . ' ' . ' шт. ';
-			$array_to[]   = $i . ' ' . ' шт. ';
-			$array_to[]   = $i . ' ' . ' шт. ';			
-		}
-
-		$name = str_ireplace($array_from, $array_to, $name);
-		$name = str_replace(['..'], ['.'], $name);		
-		$name = str_replace(['. .'], ['.'], $name);
-		$name = str_replace(['  '], [' '], $name);
-
-		echoLine('[InfoUpdater] N: ' . $name);
+		echoLine('[InfoUpdater] Out: ' . $name);
+		echoLine('');
 
 		return $name;
 	}

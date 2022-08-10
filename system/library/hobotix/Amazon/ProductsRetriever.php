@@ -385,7 +385,7 @@
 						if ($related = $this->getProductsByAsin($bought_together['asin'])){
 
 							foreach ($related as $related_id){
-								echoLine('[parseProductRelatedProducts] Покупают вместе: ' . $related_id);
+								echoLine('[parseProductRelatedProducts] Related товар: ' . $related_id);
 
 								$product_related[] = $related_id;
 							}
@@ -394,7 +394,7 @@
 
 							if ($this->config->get('config_rainforest_enable_recursive_adding') && $this->config->get('config_rainforest_enable_related_adding')){
 
-								echoLine('[parseProductRelatedProducts] Новый покупают вместе товар: ' . $bought_together['asin'] . ' ' . $bought_together['title']);
+								echoLine('[parseProductRelatedProducts] Новый Related товар: ' . $bought_together['asin'] . ' ' . $bought_together['title']);
 
 								$new_related_id = $this->addSimpleProductWithOnlyAsin([
 									'asin' 				=> $bought_together['asin'],
@@ -436,7 +436,7 @@
 
 							if ($this->config->get('config_rainforest_enable_recursive_adding') && $this->config->get('config_rainforest_enable_sponsored_adding')){
 
-								echoLine('[parseProductSponsoredProducts] Новый sponsored товар: ' . $sponsored_product['asin'] . ' ' . $sponsored_product['title']);
+								echoLine('[parseProductSponsoredProducts] Новый Sponsored товар: ' . $sponsored_product['asin'] . ' ' . $sponsored_product['title']);
 
 								$new_sponsored_id = $this->addSimpleProductWithOnlyAsin([
 									'asin' 				=> $sponsored_product['asin'],
@@ -469,14 +469,14 @@
 						if ($similar = $this->getProductsByAsin($compare_with_similar['asin'])){
 
 							foreach ($similar as $similar_id){
-								echoLine('[parseProductSimilarProducts] Похожий товар: ' . $similar_id);
+								echoLine('[parseProductSimilarProducts] Similar товар: ' . $similar_id);
 
 								$product_similar[] = $similar_id;
 							}
 
 						} else {
 							if ($this->config->get('config_rainforest_enable_recursive_adding') && $this->config->get('config_rainforest_enable_compare_with_similar_adding')){
-								echoLine('[parseProductSimilarProducts] Новый похожий товар: ' . $compare_with_similar['asin'] . ' ' . $compare_with_similar['title']);
+								echoLine('[parseProductSimilarProducts] Новый Similar товар: ' . $compare_with_similar['asin'] . ' ' . $compare_with_similar['title']);
 
 								$new_similar_id = $this->addSimpleProductWithOnlyAsin([
 									'asin' 				=> $compare_with_similar['asin'],
@@ -508,14 +508,14 @@
 						if ($similar = $this->getProductsByAsin($similar_to_consider['asin'])){
 
 							foreach ($similar as $similar_id){
-								echoLine('[parseProductSimilarToConsiderProducts] StC товар: ' . $similar_id);
+								echoLine('[parseProductSimilarToConsiderProducts] SimilarToConsider товар: ' . $similar_id);
 
 								$product_similar[] = $similar_id;
 							}
 
 						} else {
 							if ($this->config->get('config_rainforest_enable_recursive_adding') && $this->config->get('config_rainforest_enable_similar_to_consider_adding')){
-								echoLine('[parseProductSimilarToConsiderProducts] Новый StC товар: ' . $similar_to_consider['asin'] . ' ' . $similar_to_consider['title']);
+								echoLine('[parseProductSimilarToConsiderProducts] Новый SimilarToConsider товар: ' . $similar_to_consider['asin'] . ' ' . $similar_to_consider['title']);
 
 								$new_similar_id = $this->addSimpleProductWithOnlyAsin([
 									'asin' 				=> $similar_to_consider['asin'],
@@ -547,14 +547,14 @@
 						if ($view_to_purchase = $this->getProductsByAsin($view_to_purchase_product['asin'])){
 
 							foreach ($view_to_purchase as $view_to_purchase_id){
-								echoLine('[parseProductViewToPurchaseProducts] VtP товар: ' . $view_to_purchase_id);
+								echoLine('[parseProductViewToPurchaseProducts] ViewToPurchase товар: ' . $view_to_purchase_id);
 
 								$product_view_to_purchase[] = $view_to_purchase_id;
 							}
 
 						} else {
 							if ($this->config->get('config_rainforest_enable_recursive_adding') && $this->config->get('config_rainforest_enable_view_to_purchase_adding')){
-								echoLine('[parseProductViewToPurchaseProducts] Новый VtP товар: ' . $view_to_purchase_product['asin'] . ' ' . $view_to_purchase_product['title']);
+								echoLine('[parseProductViewToPurchaseProducts] Новый ViewToPurchase товар: ' . $view_to_purchase_product['asin'] . ' ' . $view_to_purchase_product['title']);
 
 								$new_view_to_purchase_id = $this->addSimpleProductWithOnlyAsin([
 									'asin' 				=> $view_to_purchase_product['asin'],
@@ -586,14 +586,14 @@
 						if ($also_viewed = $this->getProductsByAsin($also_viewed_product['asin'])){
 
 							foreach ($also_viewed as $also_viewed_id){
-								echoLine('[parseProductAlsoViewedProducts] AV товар: ' . $also_viewed_id);
+								echoLine('[parseProductAlsoViewedProducts] AlsoViewed товар: ' . $also_viewed_id);
 
 								$product_also_viewed[] = $also_viewed_id;
 							}
 
 						} else {
 							if ($this->config->get('config_rainforest_enable_recursive_adding') && $this->config->get('config_rainforest_enable_also_viewed_adding')){
-								echoLine('[parseProductAlsoViewedProducts] Новый AV товар: ' . $also_viewed_product['asin'] . ' ' . $also_viewed_product['title']);
+								echoLine('[parseProductAlsoViewedProducts] Новый AlsoViewed товар: ' . $also_viewed_product['asin'] . ' ' . $also_viewed_product['title']);
 
 								$new_also_viewed_id = $this->addSimpleProductWithOnlyAsin([
 									'asin' 				=> $also_viewed_product['asin'],
@@ -625,14 +625,14 @@
 						if ($also_bought = $this->getProductsByAsin($also_bought_product['asin'])){
 
 							foreach ($also_bought as $also_bought_id){
-								echoLine('[parseProductAlsoBoughtProducts] AB товар: ' . $also_bought_id);
+								echoLine('[parseProductAlsoBoughtProducts] AlsoBought товар: ' . $also_bought_id);
 
 								$product_also_bought[] = $also_bought_id;
 							}
 
 						} else {
 							if ($this->config->get('config_rainforest_enable_recursive_adding') && $this->config->get('config_rainforest_enable_also_bought_adding')){
-								echoLine('[parseProductAlsoBoughtProducts] Новый AB товар: ' . $also_bought_product['asin'] . ' ' . $also_bought_product['title']);
+								echoLine('[parseProductAlsoBoughtProducts] Новый AlsoBought товар: ' . $also_bought_product['asin'] . ' ' . $also_bought_product['title']);
 
 								$new_also_bought_id = $this->addSimpleProductWithOnlyAsin([
 									'asin' 				=> $also_bought_product['asin'],
@@ -664,7 +664,7 @@
 						if ($shop_by_look = $this->getProductsByAsin($shop_by_look_product['asin'])){
 
 							foreach ($shop_by_look as $shop_by_look_id){
-								echoLine('[parseProductShopByLookProducts] SbL товар: ' . $shop_by_look_id);
+								echoLine('[parseProductShopByLookProducts] ShopByLook товар: ' . $shop_by_look_id);
 
 								$product_shop_by_look[] = $shop_by_look_id;
 							}
@@ -673,7 +673,7 @@
 
 							if ($this->config->get('config_rainforest_enable_recursive_adding') && $this->config->get('config_rainforest_enable_shop_by_look_adding')){
 
-								echoLine('[parseProductShopByLookProducts] Новый SbL товар: ' . $shop_by_look_product['asin'] . ' ' . $shop_by_look_product['title']);
+								echoLine('[parseProductShopByLookProducts] Новый ShopByLook товар: ' . $shop_by_look_product['asin'] . ' ' . $shop_by_look_product['title']);
 
 								$new_shop_by_look_id = $this->addSimpleProductWithOnlyAsin([
 									'asin' 				=> $shop_by_look_product['asin'],
@@ -884,6 +884,19 @@
 			}
 		}
 
+		public function parseProductLink($product_id, $product){
+			if (!empty($product['link'])){
+				$this->model_product_edit->editProductFields($product_id, [['name' => 'amazon_product_link', 'type' => 'varchar', 'value' => $product['link']]]);
+			}
+		}
+
+		public function parseProductRating($product_id, $product){
+			if (!empty($product['rating'])){
+				echoLine('[parseProductRating] Рейтинг ' . $product['rating']);
+				$this->model_product_edit->editProductFields($product_id, [['name' => 'amzn_rating', 'type' => 'decimal', 'value' => $product['rating']]]);
+			}
+		}
+
 		public function parseProductTopReviews($product_id, $product){
 			if ($this->config->get('config_rainforest_enable_review_adding')){
 				if (!empty($product['top_reviews'])){
@@ -952,8 +965,11 @@
 				$this->model_product_edit->setProductVariants($product);
 			}			
 
-			//Product Link
-			$this->model_product_edit->editProductFields($product_id, [['name' => 'amazon_product_link', 'type' => 'varchar', 'value' => $product['link']]]);			
+			//Ссылка
+			$this->parseProductLink($product_id, $product);
+
+			//Рейтинг
+			$this->parseProductRating($product_id, $product);			
 
 			//Бренд
 			$this->parseProductManufacturer($product_id, $product);

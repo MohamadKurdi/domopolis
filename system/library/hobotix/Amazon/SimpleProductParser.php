@@ -47,7 +47,16 @@
 			curl_setopt($ch, CURLOPT_VERBOSE, false);	
 			
 			return $ch;			
-		}		
+		}	
+
+		private static function reparseRnfBuggyArray($array){
+
+			if (!empty($array['asin'])){
+				return [$array];
+			}
+
+			return $array;
+		}	
 		
 		private function parseResponse($response){
 			$response = json_decode($response, true);	
@@ -63,35 +72,35 @@
 			}
 
 			if (!empty($response['view_to_purchase'])){
-				$response['product']['view_to_purchase'] = $response['view_to_purchase'];
+				$response['product']['view_to_purchase'] = self::reparseRnfBuggyArray($response['view_to_purchase']);
 			}
 
 			if (!empty($response['also_viewed'])){
-				$response['product']['also_viewed'] = $response['also_viewed'];
+				$response['product']['also_viewed'] = self::reparseRnfBuggyArray($response['also_viewed']);
 			}
 
 			if (!empty($response['similar_to_consider'])){
-				$response['product']['similar_to_consider'] = $response['similar_to_consider'];
+				$response['product']['similar_to_consider'] = self::reparseRnfBuggyArray($response['similar_to_consider']);
 			}
 
 			if (!empty($response['compare_with_similar'])){
-				$response['product']['compare_with_similar'] = $response['compare_with_similar'];
+				$response['product']['compare_with_similar'] = self::reparseRnfBuggyArray($response['compare_with_similar']);
 			}
 
 			if (!empty($response['also_bought'])){
-				$response['product']['also_bought'] = $response['also_bought'];
+				$response['product']['also_bought'] = self::reparseRnfBuggyArray($response['also_bought']);
 			}
 
 			if (!empty($response['sponsored_products'])){
-				$response['product']['sponsored_products'] = $response['sponsored_products'];
+				$response['product']['sponsored_products'] = self::reparseRnfBuggyArray($response['sponsored_products']);
 			}
 
 			if (!empty($response['frequently_bought_together'])){
-				$response['product']['frequently_bought_together'] = $response['frequently_bought_together'];
+				$response['product']['frequently_bought_together'] = self::reparseRnfBuggyArray($response['frequently_bought_together']);
 			}
 
 			if (!empty($response['shop_by_look'])){
-				$response['product']['shop_by_look'] = $response['shop_by_look'];
+				$response['product']['shop_by_look'] = self::reparseRnfBuggyArray($response['shop_by_look']);
 			}
 			
 			return $response['product'];			

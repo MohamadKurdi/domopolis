@@ -5,7 +5,7 @@ namespace hobotix\Amazon;
 class productModelGet extends hoboModel{
 
 	private $asinsArray = [];
-	//private $testAsin = 'B07ZGHHC7T';
+	//private $testAsin = 'B0154LPR20';
 	private $testAsin = false;
 
 	public function checkIfAsinIsDeleted($asin){

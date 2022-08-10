@@ -283,7 +283,7 @@ class ControllerDPRainForest extends Controller {
 					if ($parsetechcategory){
 						$this->rainforestAmazon->productsRetriever->editJustProductCategory($product_id, $result);					
 					} else {
-						$this->rainforestAmazon->productsRetriever->editFullProduct($product_id, $result);
+						$this->rainforestAmazon->productsRetriever->editFullProduct($product_id, $result);						
 					}
 
 				} else {
@@ -534,7 +534,7 @@ class ControllerDPRainForest extends Controller {
 	Фиксит привязки вариантов методом прохода таблички c asin
 	*/
 	public function fixvariants(){		
-		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithVariantsSet();		
+		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithVariantsSet();
 
 		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 		echoLine('[fixvariants] Всего товаров: ' . $total);
@@ -573,12 +573,14 @@ class ControllerDPRainForest extends Controller {
 			$products = $this->rainforestAmazon->infoUpdater->getNames(($i-1) * (int)\hobotix\Amazon\InfoUpdater::descriptionsQueryLimit);
 			if ($products){		
 				foreach ($products as $product){
-					echoLine('[fixnames] ' . $i . '/' . $iterations);					
+					echoLine('[fixnames] ' . $i . '/' . $iterations);	
 
+				//	$this->rainforestAmazon->infoUpdater->normalizeProductName($product['name']);				
+				
 					$this->rainforestAmazon->productsRetriever->model_product_edit->updateProductName($product['product_id'], [
 						'name' 			=>	$this->rainforestAmazon->infoUpdater->normalizeProductName($product['name']),						
 						'language_id'	=>	$product['language_id']
-					]);
+					]);				
 					
 				}
 			}	
@@ -606,6 +608,28 @@ class ControllerDPRainForest extends Controller {
 				}
 			}	
 		}		
+	}
 
+	/*
+	Добавляет рейтинг товаров из уже заполненных
+	*/
+	public function fixrating(){		
+		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFullData(['amzn_rating' => 0]);		
+
+		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
+		echoLine('[fixreviews] Всего товаров: ' . $total);
+		$k = 1;	
+
+		for ($i = 1; $i <= $iterations; $i++){
+			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullData(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit, ['amzn_rating' => 0]);
+			if ($products){		
+				foreach ($products as $product){
+					echoLine('[fixreviews] Товар ' . $product['product_id'] . '/' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
+
+					$this->rainforestAmazon->productsRetriever->parseProductRating($product['product_id'], json_decode($product['json'], true));
+					$k++;			
+				}
+			}	
+		}		
 	}
 }
