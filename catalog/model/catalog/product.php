@@ -1260,7 +1260,7 @@
 						$sql = MegaFilterCore::newInstance($this, $sql)->getSQL(__FUNCTION__);
 					}
 				}
-			}
+			}			
 			
 			$query = $this->db->query($sql);
 			

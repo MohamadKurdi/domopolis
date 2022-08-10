@@ -13,14 +13,14 @@
 			
 			if (isset($this->request->get['sort'])) {
 				$sort = $this->request->get['sort'];
-				} else {
-				$sort = $this->registry->get('sort_default');
+				} else {			
+				$sort = $this->config->get('sort_default');
 			}
 			
 			if (isset($this->request->get['order'])) {
 				$order = $this->request->get['order'];
 				} else {
-				$order = $this->registry->get('order_default');
+				$order = $this->config->get('order_default');
 			}
 			
 			if (isset($this->request->get['page'])) {

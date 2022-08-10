@@ -1319,6 +1319,12 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_sort_default'] = $this->config->get('config_sort_default');
 		}
 
+		if (isset($this->request->post['config_order_default'])) {
+			$this->data['config_order_default'] = $this->request->post['config_order_default'];
+		} else {
+			$this->data['config_order_default'] = $this->config->get('config_order_default');
+		}
+
 		if (isset($this->request->post['config_display_subcategory_in_all_categories'])) {
 			$this->data['config_display_subcategory_in_all_categories'] = $this->request->post['config_display_subcategory_in_all_categories'];
 		} else {

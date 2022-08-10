@@ -1427,18 +1427,32 @@
 								</td>
 
 								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Сортировка по-умолчанию</span></p>
-									<select name="config_rainforest_show_only_filled_products_in_catalog">
-										<?php if ($config_rainforest_show_only_filled_products_in_catalog) { ?>
-											<option value="1" selected="selected">Включить</option>
-											<option value="0">Отключить</option>
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Сортировка по-умолчанию</span></p>
+										<select name="config_sort_default">
+											<?php foreach ($this->registry->get('sorts_available') as $sort_name => $sort_sort) { ?>
+												<?php if ($config_sort_default == $sort_sort) { ?>
+													<option value="<?php echo $sort_sort; ?>" selected="selected"><?php echo $sort_name; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $sort_sort; ?>"><?php echo $sort_name; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>
+										<br />
+										<span class="help">Сортировка по-умолчанию в листингах</span>
+									</div>
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Порядок по-умолчанию</span></p>
+										<select name="config_order_default">
+										<?php if ($config_order_default == 'ASC') { ?>
+											<option value="ASC" selected="selected">ASC</option>
+											<option value="DESC">DESC</option>
 										<?php } else { ?>													
-											<option value="1">Включить</option>
-											<option value="0"  selected="selected">Отключить</option>
+											<option value="ASC">ASC</option>
+											<option value="DESC"  selected="selected">DESC</option>
 										<? } ?>
 									</select>
-									<br />
-									<span class="help">Если включены специфические режимы амазона - будут показаны только заполненные товары</span>
+									</div>									
 								</td>
 
 							</tr>						
