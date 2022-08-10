@@ -1313,10 +1313,10 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_product_count'] = $this->config->get('config_product_count');
 		}
 
-		if (isset($this->request->post['config_default_sort'])) {
-			$this->data['config_default_sort'] = $this->request->post['config_default_sort'];
+		if (isset($this->request->post['config_sort_default'])) {
+			$this->data['config_sort_default'] = $this->request->post['config_sort_default'];
 		} else {
-			$this->data['config_default_sort'] = $this->config->get('config_default_sort');
+			$this->data['config_sort_default'] = $this->config->get('config_sort_default');
 		}
 
 		if (isset($this->request->post['config_display_subcategory_in_all_categories'])) {

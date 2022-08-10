@@ -360,8 +360,18 @@
 		$registry->set('sorts', $sorts['sorts']);
 	}
 
-	if (!empty($sorts['default'])){
-		$registry->set('sort_default', $sorts['default']);
+	if ($registry->get('config')->get('config_sort_default')){
+		$registry->set('sort_default', $registry->get('config')->get('config_sort_default'));
+	} elseif (!empty($sorts['sort_default'])){
+		$registry->set('sort_default', $sorts['sort_default']);
+	}
+
+	if (!empty($sorts['order_default'])){
+		$registry->set('order_default', $sorts['order_default']);
+	}
+
+	if (!empty($sorts['sorts_available'])){
+		$registry->set('sorts_available', $sorts['sorts_available']);
 	}
 
 	//Implementation of different redirect modes and|or modules

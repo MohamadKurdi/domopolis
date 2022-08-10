@@ -130,13 +130,11 @@
 				} else {			
 				$sort = $this->registry->get('sort_default');
 			}
-
-			var_dump($sort);
 			
 			if (isset($this->request->get['order'])) {
 				$order = $this->request->get['order'];
 				} else {
-				$order = 'ASC';
+				$order = $this->registry->get('order_default');
 			}
 			
 			if (isset($this->request->get['page'])) {

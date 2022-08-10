@@ -317,7 +317,7 @@
 			if (isset($this->request->get['order'])) {
 				$order = $this->request->get['order'];
 				} else {
-				$order = 'ASC';
+				$order = $this->registry->get('order_default');
 			} 
 			
 			if (isset($this->request->get['page'])) {

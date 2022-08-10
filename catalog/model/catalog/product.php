@@ -1213,23 +1213,7 @@
 			
 			$sql .= " GROUP BY p.product_id";
 			
-			$sort_data = array(
-			'pd.name',
-			'p.model',
-			'p.quantity',
-			'p.price',
-			'rating',
-			'p.sort_order',
-			'p.date_added',
-			'p.viewed',
-			'p.quantity',
-			'p.manufacturer_id',
-			'stock_status_id ASC, p.date_added',
-			'stock_status_id ASC, p.sort_order',
-			'stock_status_id ASC, p.viewed',
-			);
-			
-			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+			if (isset($data['sort']) && in_array($data['sort'], $this->registry->get('sorts_available'))) {
 				if ($data['sort'] == 'pd.name' || $data['sort'] == 'p.model') {
 					$sql .= " ORDER BY stock_status_id ASC, LCASE(" . $data['sort'] . ")";
 					} elseif ($data['sort'] == 'p.price') {
@@ -1415,23 +1399,7 @@
 			
 			$sql .= " AND ps.customer_group_id = '" . (int)$customer_group_id . "' AND p.date_available <= '" . date(MYSQL_NOW_DATE_FORMAT) . "' AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < '" . date(MYSQL_NOW_DATE_FORMAT) . "') AND (ps.date_end = '0000-00-00' OR ps.date_end > '" . date(MYSQL_NOW_DATE_FORMAT) . "')) GROUP BY ps.product_id";
 			
-			$sort_data = array(
-			'pd.name',
-			'p.model',
-			'p.quantity',
-			'p.price',
-			'rating',
-			'p.sort_order',
-			'p.date_added',
-			'p.viewed',
-			'p.quantity',
-			'p.manufacturer_id',
-			'stock_status_id ASC, p.date_added',
-			'stock_status_id ASC, p.sort_order',
-			'stock_status_id ASC, p.viewed',
-			);
-			
-			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+			if (isset($data['sort']) && in_array($data['sort'], $this->registry->get('sorts_available'))) {
 				if ($data['sort'] == 'pd.name' || $data['sort'] == 'p.model') {
 					$sql .= " ORDER BY stock_status_id ASC, LCASE(" . $data['sort'] . ")";
 					} elseif ($data['sort'] == 'p.price') {

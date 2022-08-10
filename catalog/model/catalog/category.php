@@ -67,9 +67,7 @@
 			$query = $this->db->query($sql);
 			
 			return $query->rows;
-		}
-		
-		
+		}				
 		
 		public function getCategoryFilters($category_id) {
 			$implode = array();

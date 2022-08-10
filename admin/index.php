@@ -239,6 +239,28 @@
 	$language = new Language($languages[$config->get('config_admin_language')]['directory'], $registry);
 	$language->load($languages[$config->get('config_admin_language')]['filename']);	
 	$registry->set('language', $language);
+
+	
+	//Сортировки
+	$sorts = loadJsonConfig('sorts');
+
+	if (!empty($sorts['sorts'])){
+		$registry->set('sorts', $sorts['sorts']);
+	}
+
+	if ($registry->get('config')->get('config_sort_default')){
+		$registry->set('sort_default', $registry->get('config')->get('config_sort_default'));
+	} elseif (!empty($sorts['sort_default'])){
+		$registry->set('sort_default', $sorts['sort_default']);
+	}
+
+	if (!empty($sorts['order_default'])){
+		$registry->set('order_default', $sorts['order_default']);
+	}
+
+	if (!empty($sorts['sorts_available'])){
+		$registry->set('sorts_available', $sorts['sorts_available']);
+	}
 	
 
 	$registry->set('document', new Document()); 		
