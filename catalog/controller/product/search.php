@@ -35,9 +35,16 @@ class ControllerProductSearch extends Controller {
 				$name = $hit['highlight'][$field][0];
 			}
 
+
+
 			if ($product = $this->model_catalog_product->getProduct($hit['_source']['product_id'])){
-				$product_data[$hit['_source']['product_id']] = $product;
-				$product_data[$hit['_source']['product_id']]['name'] = $name;
+
+				if (is_array($name)){
+					$name = $product['name'];
+				}
+
+				$product_data[$hit['_source']['product_id']] 			= $product;
+				$product_data[$hit['_source']['product_id']]['name'] 	= $name;
 			}
 		}
 

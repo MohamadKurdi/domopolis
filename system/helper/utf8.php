@@ -369,6 +369,7 @@ function prepareEcommPrice($price) : float{
 }
 
 function prepareEcommString($string) : string{
+
 	if ($string){
 		$string = str_replace('&amp;', '&', $string);
 		$string = str_replace("'", "`", $string);

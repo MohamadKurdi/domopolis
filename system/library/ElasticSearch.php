@@ -675,7 +675,7 @@
 
 			$results = $this->elastic->search($params);
 			
-			$this->log->debug($results);
+		//	$this->log->debug($results);
 			
 			return $results;			
 		}
