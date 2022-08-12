@@ -12,10 +12,7 @@
 				$quote_data = array();
 				
 				$arr_lock = array();
-				$arr_unlock = array();
-				
-				
-				
+				$arr_unlock = array();												
 				
 				if (is_array($this->config->get($this->name.'_module')) and count($this->config->get($this->name.'_module')) > 0) {
 					foreach($this->config->get($this->name.'_module') as $key => $module) {
@@ -261,9 +258,17 @@
 								
 								
 								//Доставка по Минску отключается НЕ для Минска
-								if ($status == true && ($key == 7) && !empty($address['cdek_city_guid'])){
-									
+								if ($status == true && ($key == 7) && !empty($address['cdek_city_guid'])){									
 									if ($address['cdek_city_guid'] == 9220) {
+										$status == true;
+									} else {
+										$status = false;
+									}
+								}
+
+								//Доставка по Алматы отключается НЕ для Алматы
+								if ($status == true && ($key == 8) && !empty($address['cdek_city_guid'])){									
+									if ($address['cdek_city_guid'] == 4756) {
 										$status == true;
 									} else {
 										$status = false;
@@ -366,12 +371,11 @@
 											$rates = explode(',', $module['city_rate2']);
 										}
 										
-										//	print_r($rates);
 										if (count($rates) > 0) {
 											foreach ($rates as $rate) {
 												$data = trim($rate);
 												
-												if (mb_strtolower($data, 'UTF-8') == mb_strtolower(trim($address['city']), 'UTF-8')) {
+												if (mb_stripos($address['city'], $data) !== false) {
 													$arr_unlock[] = $key;
 												}
 											}
