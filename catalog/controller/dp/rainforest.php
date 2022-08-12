@@ -575,12 +575,12 @@ class ControllerDPRainForest extends Controller {
 				foreach ($products as $product){
 					echoLine('[fixnames] ' . $i . '/' . $iterations);	
 
-				//	$this->rainforestAmazon->infoUpdater->normalizeProductName($product['name']);				
+					//$this->rainforestAmazon->infoUpdater->normalizeProductName($product['name']);				
 				
-					$this->rainforestAmazon->productsRetriever->model_product_edit->updateProductName($product['product_id'], [
-						'name' 			=>	$this->rainforestAmazon->infoUpdater->normalizeProductName($product['name']),						
-						'language_id'	=>	$product['language_id']
-					]);				
+					 $this->rainforestAmazon->productsRetriever->model_product_edit->updateProductName($product['product_id'], [
+					 	'name' 			=>	$this->rainforestAmazon->infoUpdater->normalizeProductName($product['name']),						
+					 	'language_id'	=>	$product['language_id']
+					 ]);				
 					
 				}
 			}	

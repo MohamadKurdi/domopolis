@@ -179,7 +179,7 @@ class InfoUpdater
 			$str = ($i . ' шт. ');
 				
 			if (mb_stripos($name, $str) === 0){
-				$name = mb_substr($name, mb_strlen($str) + 1);
+				$name = mb_substr($name, mb_strlen($str));
 				$name = trim($name);
 				$name = $name . ', ' . $str;
 				break;
@@ -217,6 +217,29 @@ class InfoUpdater
 			$name = trim($name);
 			$name = $name . ' шт.';
 		}
+
+		$str = ('См.');
+		if (mb_stripos($name, $str) === 0){
+			$name = mb_substr($name, mb_strlen($str));
+			$name = trim($name);
+		}
+
+		$str = ('См ');
+		if (mb_stripos($name, $str) === 0){
+			$name = mb_substr($name, mb_strlen($str));
+			$name = trim($name);
+		}
+
+		//Находим первое вхождение кириллических символов или цифр
+		$cyrfirst = strpbrk($name, 'АаБбВвГгҐґДдЕеЄєЖжЗзИиІіЇїЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЬьЮюЯяабвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ');
+		
+		//Если есть, то обрезаем строку с начала до конца (типа убираем латиницу из начала)
+		if ($cyrfirst){
+			$name = $cyrfirst;
+		}
+
+		//Обрезать пробелы
+		$name = trim($name);
 
 		$name = str_replace(['. .', '..', ' . ', ',.', '  ', ',,', ', .', ' .'], ['.', '.', '. ', ', ', ' ', ',', '', ''], $name);
 
