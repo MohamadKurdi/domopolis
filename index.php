@@ -51,13 +51,23 @@
 		} else {
 		die ('ho config file assigned to host');
 	}
-	
-	//Перезагрузка конфигурационного файла для определенных AJAX контроллеров
-	//!!!ЗДЕСЬ НЕ УЧТЕНА ПРИВЯЗКА К ДОМЕНУ, это TODO
+
+	$configFilesPrefix = false;
+	if (count($configFileExploded = explode('.', $currentConfigFile)) == 3){
+		if (mb_strlen($configFileExploded[1]) == 2){
+			$configFilesPrefix = trim($configFileExploded[1]);
+		}
+	}
+
+	//Перезагрузка конфигурационного файла для определенных AJAX контроллеров	
 	if (thisIsAjax() && !empty($_GET['route'])){
 		$dbRouter = loadJsonConfig('dbrouting');
 		if (!empty($dbRouter[$_GET['route']]) && file_exists(dirname(__FILE__) . '/' . $dbRouter[$_GET['route']])){
 			$currentConfigFile = $dbRouter[$_GET['route']];
+
+			if ($configFilesPrefix && !strpos($currentConfigFile, ('.' . $configFilesPrefix . '.'))){
+				$currentConfigFile = str_replace('config.', ('config.' . $configFilesPrefix . '.'), $currentConfigFile);
+			}
 		}		
 	}
 	
@@ -144,14 +154,24 @@
 		$registry->get('config')->set('config_static_subdomain', 	HTTPS_STATIC_SUBDOMAIN);
 	}
 
-
 	if ($registry->get('config')->get('config_no_access_enable')){
 		if (!defined('ADMIN_SESSION_DETECTED') || !ADMIN_SESSION_DETECTED){
 			$ipsConfig  = loadJsonConfig('ips');
 
 			if (!in_array($_SERVER['REMOTE_ADDR'], $ipsConfig['whitelist'])){
 				header('HTTP/1.1 403 No Access Enabled');
-				die('RESOURCE IN DEVELOPMENT');
+
+				$csFile = dirname(__FILE__) . '/ep/';
+				if (!empty($configFilesPrefix)){
+					$csFile .= ($configFilesPrefix . '/');
+				}
+				$csFile .= 'coming/index.html';
+
+				if (file_exists($csFile)){
+					die(file_get_contents($csFile));
+				} else {
+					die('RESOURCE IN DEVELOPMENT');
+				}
 			}
 		}
 	}
