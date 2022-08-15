@@ -99,7 +99,7 @@
 	},
 	"api/info1c/updateLegalPersonAccountsCron": {
 		"name"		:"Выгрузка информации о юридических лицах для 1С",
-		"config"	:"config.slave.php",
+		"config"	:"config.php",
 		"group"		:"Синхронизация с 1С",
 		"main"		:false,
 		"args"		: []
