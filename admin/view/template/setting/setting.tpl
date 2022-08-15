@@ -4197,6 +4197,8 @@
 										</div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Х дней от последней закупки</span></p>
 											<input type="number" step="1" name="config_rainforest_pass_offers_for_ordered_days" value="<?php echo $config_rainforest_pass_offers_for_ordered_days; ?>" style="width:100px;" />
+											<br />
+											<span class="help"><i class="fa fa-exclamation-circle"></i> если пропускать товары, которые были закуплены, то как давно</span>
 										</div>
 									</td>
 
@@ -4225,7 +4227,9 @@
 													<option value="1">Да</option>
 													<option value="0"  selected="selected">Нет</option>
 												<? } ?>
-											</select>											
+											</select>	
+											<br />
+											<span class="help"><i class="fa fa-exclamation-circle"></i> если эта настройка выключена, также не будут изменяться статусы</span>									
 										</div>
 										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Получать офферы сразу после заказа</span></p>

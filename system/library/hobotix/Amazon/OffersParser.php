@@ -48,10 +48,20 @@ class OffersParser
 			$sql .= " AND (" . $this->PriceLogic->buildStockQueryField() . " = 0)";
 		}
 
-		$sql .= "
-		AND (NOT ISNULL(p.asin) OR p.asin <> '')
-		AND p.asin <> 'INVALID'";
+		if ($this->config->get('config_rainforest_pass_offers_for_ordered')){
+			$sql .= " AND ( actual_cost_date = '0000-00-00' ";
 
+			if ($this->config->get('config_rainforest_pass_offers_for_ordered_days')){
+				$sql .= " OR DATE_ADD(actual_cost_date, INTERVAL " . (int)$this->config->get('config_rainforest_pass_offers_for_ordered_days') . " DAY) < DATE(NOW())";
+			}
+
+			$sql .= ")";
+		}
+
+		$sql .= "
+		AND (NOT ISNULL(p.asin))
+		AND p.asin <> ''
+		AND p.asin <> 'INVALID'";
 
 		if ($this->config->get('config_rainforest_enable_offers_only_for_filled')){
 			$sql .= "AND p.filled_from_amazon = 1";
@@ -62,7 +72,7 @@ class OffersParser
 		if ($this->no_offers_logic){
 			$sql .= " AND p.amzn_no_offers = 1";
 		} else {
-			$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -'" . $this->config->get('config_rainforest_update_period') . "' DAY)))";
+			$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -" . $this->config->get('config_rainforest_update_period') . " DAY)))";
 		}
 
 		$query = $this->db->ncquery("SELECT COUNT(DISTINCT(asin)) as total " . $sql . "");
@@ -84,7 +94,19 @@ class OffersParser
 			$sql .= " AND (" . $this->PriceLogic->buildStockQueryField() . " = 0)";
 		}
 
-		$sql .= "	AND (NOT ISNULL(p.asin) OR p.asin <> '')
+		if ($this->config->get('config_rainforest_pass_offers_for_ordered')){
+			$sql .= " AND ( actual_cost_date = '0000-00-00' ";
+
+			if ($this->config->get('config_rainforest_pass_offers_for_ordered_days')){
+				$sql .= " OR DATE_ADD(actual_cost_date, INTERVAL " . (int)$this->config->get('config_rainforest_pass_offers_for_ordered_days') . " DAY) < DATE(NOW())";
+			}
+
+			$sql .= ")";
+		}
+
+		$sql .= "
+		AND (NOT ISNULL(p.asin))
+		AND p.asin <> ''
 		AND p.asin <> 'INVALID'";
 
 		if ($this->config->get('config_rainforest_enable_offers_only_for_filled')){
@@ -96,10 +118,15 @@ class OffersParser
 		if ($this->no_offers_logic){
 			$sql .= " AND p.amzn_no_offers = 1";
 		} else {
-			$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -'" . $this->config->get('config_rainforest_update_period') . "' DAY)))";
-		}			
+			$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -" . $this->config->get('config_rainforest_update_period') . " DAY)))";
+		}		
 
-		$query = $this->db->ncquery("SELECT DISTINCT(asin), product_id " . $sql . " ORDER BY amzn_last_offers ASC LIMIT " . (int)\hobotix\RainforestAmazon::offerParserLimit);
+
+		$sql = "SELECT DISTINCT(asin), product_id " . $sql . " ORDER BY amzn_last_offers ASC LIMIT " . (int)\hobotix\RainforestAmazon::offerParserLimit;
+
+		var_dump($sql);
+
+		$query = $this->db->ncquery($sql);
 
 		foreach ($query->rows as $row){
 			if (trim($row['asin'])){

@@ -187,38 +187,64 @@ class PriceLogic
 			return false;
 	}
 
-	public function checkIfWeCanUpdateProductOffers($product_id, $warehouse_identifier = 'current'){
-		$query = $this->db->ncquery("SELECT * FROM product WHERE product_id = '" . (int)$product_id . "' LIMIT 1");
-
-		if ($query->num_rows && $query->row['asin']){
-
-			//Настройка "получать офферы для товаров на складе"
-			if ($this->config->get('config_rainforest_enable_offers_for_stock')){
-				return true;
-			} else {
-
-				//Если он на складе
-				if ($warehouse_identifier != 'current'){
-
-					if (($query->row[$warehouse_identifier] + $query->row[$warehouse_identifier . '_onstock']) <= 0){
-						return false;
-					} else {
-						return true;
-					}
-
-				} else {
-
-					if (($query->row[$this->config->get('config_warehouse_identifier')] + $query->row[$this->config->get('config_warehouse_identifier') . '_onstock']) <= 0){
-						return false;
-					} else {
-						return true;
-					}
-
-				}
-			}
+	public function checkIfWeCanUpdateProductOffers($product_id, $warehouse_identifier = 'current'){		
+		if (!$this->config->get('config_rainforest_enable_pricing')){
+			return false;
 		}
 
-		return false;
+		$query = $this->db->ncquery("SELECT * FROM product WHERE product_id = '" . (int)$product_id . "' LIMIT 1");
+		
+		$proceedWithPrice = false;
+		if ($query->num_rows && $query->row['asin']){
+			$proceedWithPrice = true;
+			
+			if ($this->config->get('config_rainforest_enable_offers_for_stock')){
+			//	echoLine('[checkIfWeCanUpdateProductOffers] Включена настройка обновлять товар на складе, обновляем');
+				$proceedWithPrice = true;
+			} else {				
+				if ($warehouse_identifier == 'current'){
+					$warehouse_identifier = $this->config->get('config_warehouse_identifier');
+				}
+
+				if (($query->row[$warehouse_identifier] + $query->row[$warehouse_identifier . '_onway']) <= 0){
+			//		echoLine('[checkIfWeCanUpdateProductOffers] Товар не на складе и не едет, обновляем');
+					$proceedWithPrice = true;
+
+				} else {
+			//		echoLine('[checkIfWeCanUpdateProductOffers] Товар на складе или едет, пропускаем');						
+					$proceedWithPrice = false;
+				}
+			}
+
+			if ($proceedWithPrice && $this->config->get('config_rainforest_pass_offers_for_ordered')){
+				if ($query->row['actual_cost_date'] == '0000-00-00'){
+			//		echoLine('[checkIfWeCanUpdateProductOffers] Закупка не обновлялась никогда, обновляем');
+					$proceedWithPrice = true;
+				} else {
+
+					if ($this->config->get('config_rainforest_pass_offers_for_ordered_days')){
+						$dateWhenWeCanToUpdate = date('Y-m-d', strtotime('+' . (int)$this->config->get('config_rainforest_pass_offers_for_ordered_days') . ' days', strtotime($query->row['actual_cost_date'])));
+
+						if ($dateWhenWeCanToUpdate >= date('Y-m-d')){
+			//				echoLine('[checkIfWeCanUpdateProductOffers] Закупка ' . $dateWhenWeCanToUpdate . ', пропускаем');
+							$proceedWithPrice = false;
+						} else {
+			//				echoLine('[checkIfWeCanUpdateProductOffers] Закупка ' . $dateWhenWeCanToUpdate . ', обновляем');
+							$proceedWithPrice = true;
+						}
+
+					} else {
+			//			echoLine('[checkIfWeCanUpdateProductOffers] Нет граничного срока закупки, пропускаем');
+						$proceedWithPrice = false;
+					}
+
+					
+				}
+			}
+
+		}
+
+		return $proceedWithPrice;
 	}
 
 	public function checkIfProductIsOnWarehouse($product_id, $warehouse_identifier){
@@ -327,7 +353,6 @@ class PriceLogic
 
 
 		public function setProductNoOffers($asin){
-
 			if ($this->config->get('config_rainforest_nooffers_action') && $this->config->get('config_rainforest_nooffers_status_id')){
 
 			//Если нет офферов, и товара нет в наличии нигде, и он никуда не едет, то 
@@ -338,7 +363,6 @@ class PriceLogic
 				$this->db->query("DELETE FROM product_stock_status WHERE product_id IN (SELECT product_id FROM product WHERE asin = '" . $this->db->escape($asin) . "'  AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0))");
 				//	echoLine($asin . ', если товара нет в наличии, очищены переназначения статусов');
 				}
-
 			}
 
 			public function setProductOffers($asin){
@@ -419,10 +443,6 @@ class PriceLogic
 						$this->db->query($sql);
 
 					}				
-
-
 				}
-
-
 
 			}
