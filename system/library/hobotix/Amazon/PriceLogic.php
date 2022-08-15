@@ -187,6 +187,40 @@ class PriceLogic
 			return false;
 	}
 
+	public function checkIfWeCanUpdateProductOffers($product_id, $warehouse_identifier = 'current'){
+		$query = $this->db->ncquery("SELECT * FROM product WHERE product_id = '" . (int)$product_id . "' LIMIT 1");
+
+		if ($query->num_rows && $query->row['asin']){
+
+			//Настройка "получать офферы для товаров на складе"
+			if ($this->config->get('config_rainforest_enable_offers_for_stock')){
+				return true;
+			} else {
+
+				//Если он на складе
+				if ($warehouse_identifier != 'current'){
+
+					if (($query->row[$warehouse_identifier] + $query->row[$warehouse_identifier . '_onstock']) <= 0){
+						return false;
+					} else {
+						return true;
+					}
+
+				} else {
+
+					if (($query->row[$this->config->get('config_warehouse_identifier')] + $query->row[$this->config->get('config_warehouse_identifier') . '_onstock']) <= 0){
+						return false;
+					} else {
+						return true;
+					}
+
+				}
+			}
+		}
+
+		return false;
+	}
+
 	public function checkIfProductIsOnWarehouse($product_id, $warehouse_identifier){
 		$query = $this->db->query("SELECT * FROM product WHERE product_id = '" . $product_id . "' AND (`" . $warehouse_identifier . "` + `" . $warehouse_identifier . '_onway' . "` > 0)");
 
@@ -256,7 +290,7 @@ class PriceLogic
 							$defaultMultiplier = $this->config->get('config_rainforest_default_multiplier_' . $store_id);
 
 							if ($weightCoefficient || $defaultMultiplier){
-								if (!$this->checkIfProductIsOnWarehouse($product_id, $warehouse_identifier)){
+								if ($this->checkIfWeCanUpdateProductOffers($product_id, $warehouse_identifier)){
 
 									$newPrice = $this->mainFormula($amazonBestPrice, $productWeight, $weightCoefficient, $defaultMultiplier);
 
@@ -278,8 +312,6 @@ class PriceLogic
 			}
 		}
 	}
-
-
 
 
 	//Логика работы со статусами складов
@@ -341,8 +373,6 @@ class PriceLogic
 			//Для товаров, которых нет в наличии на определенном складе, при этом статус установлен как "есть на складе", мы должны поставить его в 
 			//1. Наличие уточняйте, если для товара нет предложений на амазон и включена настройка "менять статус"
 			//2. Есть в наличии, если для товара есть предложения на амазон, либо выключена настройка "менять статус"
-
-
 
 					foreach ($this->storesWarehouses as $store_id => $storesWarehouse) {
 						$warehouse_identifier = $storesWarehouse['config_warehouse_identifier_local'];

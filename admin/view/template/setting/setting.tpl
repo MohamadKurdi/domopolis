@@ -4085,22 +4085,22 @@
 							<table class="form">
 								<tr>
 									<td style="width:15%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Включить ценообразование A+rfAPI</span></p>
-										<select name="config_rainforest_enable_pricing">
-											<?php if ($config_rainforest_enable_pricing) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Включить ценообразование A+rfAPI</span></p>
+											<select name="config_rainforest_enable_pricing">
+												<?php if ($config_rainforest_enable_pricing) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
 												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-										<br />
-										<span class="help"><i class="fa fa-exclamation-circle"></i> в случае неоплаты - лучше отключить</span>
-									</td>
-
-									<td style="width:15%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Цена для этой страны ставится по-умолчанию</span></p>
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+											<br />
+											<span class="help"><i class="fa fa-exclamation-circle"></i> в случае неоплаты - лучше отключить</span>
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Цена для этой страны ставится по-умолчанию</span></p>
 											<select name="config_rainforest_default_store_id">
 												<option value="-1" <?php if (-1 == $config_rainforest_default_store_id) { ?>selected="selected"<? } ?>>Переназначать все страны</option>
 												<?php foreach ($stores as $store) { ?>
@@ -4109,7 +4109,9 @@
 											</select>
 										<br />
 										<span class="help"><i class="fa fa-info"></i> если задано, то цена для этого магазина будет ценой по-умолчанию</span>
+										</div>
 									</td>
+		
 
 									<td style="width:15%">
 										<div>
@@ -4163,40 +4165,81 @@
 											<br />
 											<span class="help"><i class="fa fa-exclamation-circle"></i> если включено удаление то удаляются товары у которых не было офферов Х раз</span>
 										</div>
-									
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Также изменять количество</span></p>
+											<select name="config_rainforest_nooffers_quantity">
+												<?php if ($config_rainforest_nooffers_quantity) { ?>
+													<option value="1" selected="selected">Менять количество</option>
+													<option value="0">Нихуя не делать</option>
+												<?php } else { ?>													
+													<option value="1">Менять количество</option>
+													<option value="0"  selected="selected">Нихуя не делать</option>
+												<? } ?>
+											</select>
+											<br />
+											<span class="help"><i class="fa fa-exclamation-circle"></i> количество будет изменяться 0-9999</span>
+										</div>
 									</td>
 
 									<td style="width:15%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Также изменять количество</span></p>
-										<select name="config_rainforest_nooffers_quantity">
-											<?php if ($config_rainforest_nooffers_quantity) { ?>
-												<option value="1" selected="selected">Менять количество</option>
-												<option value="0">Нихуя не делать</option>
+										<div>
+											<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Пропускать товары, которые были закуплены</span></p>
+											<select name="config_rainforest_pass_offers_for_ordered">
+												<?php if ($config_rainforest_pass_offers_for_ordered) { ?>
+													<option value="1" selected="selected">Да</option>
+													<option value="0">Нет</option>
 												<?php } else { ?>													
-												<option value="1">Менять количество</option>
-												<option value="0"  selected="selected">Нихуя не делать</option>
-											<? } ?>
-										</select>
-										<br />
-										<span class="help"><i class="fa fa-exclamation-circle"></i> количество будет изменяться 0-9999</span>
+													<option value="1">Да</option>
+													<option value="0"  selected="selected">Нет</option>
+												<? } ?>
+											</select>
+										</div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Х дней от последней закупки</span></p>
+											<input type="number" step="1" name="config_rainforest_pass_offers_for_ordered_days" value="<?php echo $config_rainforest_pass_offers_for_ordered_days; ?>" style="width:100px;" />
+										</div>
 									</td>
 
 									<td style="width:15%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Получать офферы только для полностью загруженных</span></p>
-										<select name="config_rainforest_enable_offers_only_for_filled">
-											<?php if ($config_rainforest_enable_offers_only_for_filled) { ?>
-												<option value="1" selected="selected">Да</option>
-												<option value="0">Нет, для всех</option>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Получать офферы только для полностью загруженных</span></p>
+											<select name="config_rainforest_enable_offers_only_for_filled">
+												<?php if ($config_rainforest_enable_offers_only_for_filled) { ?>
+													<option value="1" selected="selected">Да</option>
+													<option value="0">Нет, для всех</option>
 												<?php } else { ?>													
-												<option value="1">Да</option>
-												<option value="0"  selected="selected">Нет, для всех</option>
-											<? } ?>
-										</select>
-										<br />
-										<span class="help"><i class="fa fa-exclamation-circle"></i> в противном случае - для всех асинов</span>
+													<option value="1">Да</option>
+													<option value="0"  selected="selected">Нет, для всех</option>
+												<? } ?>
+											</select>
+											<br />
+											<span class="help"><i class="fa fa-exclamation-circle"></i> в противном случае - для всех асинов.</span>
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Получать офферы для товаров на складе</span></p>
+											<select name="config_rainforest_enable_offers_for_stock">
+												<?php if ($config_rainforest_enable_offers_for_stock) { ?>
+													<option value="1" selected="selected">Да</option>
+													<option value="0">Нет</option>
+												<?php } else { ?>													
+													<option value="1">Да</option>
+													<option value="0"  selected="selected">Нет</option>
+												<? } ?>
+											</select>											
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Получать офферы сразу после заказа</span></p>
+											<select name="config_rainforest_disable_offers_for_stock">
+												<?php if ($config_rainforest_disable_offers_for_stock) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
 									</td>
-
-
 								</tr>
 							</table>
 							<table class="form">

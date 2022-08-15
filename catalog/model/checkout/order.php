@@ -326,10 +326,12 @@
 			}
 
 			//Постановка в очередь для получения цен Amazon
-			$product_query = $this->db->ncquery("SELECT * FROM product WHERE product_id = '" . (int)$product['product_id'] . "' LIMIT 1");
 
-			if ($product_query->row[$this->config->get('config_warehouse_identifier')] <= 0 && $product_query->row['asin']){
-				$this->db->query("INSERT IGNORE INTO amzn_product_queue SET asin = '" . $this->db->escape($product_query->row['asin']) . "'");
+			//Настройка "получать офферы после заказа"
+			if ($this->config->get('config_rainforest_enable_offers_after_order')){
+				if ($this->registry->get('rainforestAmazon')->offersParser->checkIfWeCanUpdateProductOffers($product_id)){
+					$this->db->query("INSERT IGNORE INTO amzn_product_queue SET asin = '" . $this->db->escape($product_query->row['asin']) . "'");
+				}			
 			}
 
 			
@@ -350,9 +352,7 @@
 					
 					$this->db->query("INSERT INTO yandex_stock_queue SET yam_product_id = '" . $this->db->escape($yam_product_id) . "', stock = '" . (int)$query->row['stock'] . "' ON DUPLICATE KEY UPDATE stock = '" . (int)$query->row['stock'] . "'");
 					
-				}
-				
-				
+				}								
 			}
 			
 			foreach ($data['vouchers'] as $voucher) {

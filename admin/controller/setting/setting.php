@@ -2931,6 +2931,29 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_rainforest_enable_offers_only_for_filled'] = $this->config->get('config_rainforest_enable_offers_only_for_filled');
 		}
 
+		if (isset($this->request->post['config_rainforest_enable_offers_after_order'])) {
+			$this->data['config_rainforest_enable_offers_after_order'] = $this->request->post['config_rainforest_enable_offers_after_order']; 
+		} else {
+			$this->data['config_rainforest_enable_offers_after_order'] = $this->config->get('config_rainforest_enable_offers_after_order');
+		}
+
+		if (isset($this->request->post['config_rainforest_enable_offers_for_stock'])) {
+			$this->data['config_rainforest_enable_offers_for_stock'] = $this->request->post['config_rainforest_enable_offers_for_stock']; 
+		} else {
+			$this->data['config_rainforest_enable_offers_for_stock'] = $this->config->get('config_rainforest_enable_offers_for_stock');
+		}
+
+		if (isset($this->request->post['config_rainforest_pass_offers_for_ordered'])) {
+			$this->data['config_rainforest_pass_offers_for_ordered'] = $this->request->post['config_rainforest_pass_offers_for_ordered']; 
+		} else {
+			$this->data['config_rainforest_pass_offers_for_ordered'] = $this->config->get('config_rainforest_pass_offers_for_ordered');
+		}
+
+		if (isset($this->request->post['config_rainforest_pass_offers_for_ordered_days'])) {
+			$this->data['config_rainforest_pass_offers_for_ordered_days'] = $this->request->post['config_rainforest_pass_offers_for_ordered_days']; 
+		} else {
+			$this->data['config_rainforest_pass_offers_for_ordered_days'] = $this->config->get('config_rainforest_pass_offers_for_ordered_days');
+		}
 
 		if (isset($this->request->post['config_rainforest_main_formula'])) {
 			$this->data['config_rainforest_main_formula'] = $this->request->post['config_rainforest_main_formula']; 
