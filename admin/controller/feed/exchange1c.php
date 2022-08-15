@@ -3,11 +3,30 @@ class ControllerFeedExchange1c extends Controller {
 			
 	
 	public function index() {
-		
-		
-		
-		
 	}	
+
+
+	public function updateXMLStructures(){
+		$this->load->model('kp/info1c');
+		$this->load->model('feed/exchange1c');
+		$this->load->model('localisation/legalperson');
+
+		echoLine('[updateXMLStructures] Статусы заказов');
+		$this->model_feed_exchange1c->getOrderStatusCodes(0);
+
+		echoLine('[updateXMLStructures] Структура каталога');
+		$this->model_feed_exchange1c->exportCategoriesXML(0);			
+		$this->model_feed_exchange1c->exportManufacturersXML(0);
+		$this->model_feed_exchange1c->exportCollectionsXML(0);
+		$this->model_feed_exchange1c->getCategoriesTree(0);	
+		$this->model_feed_exchange1c->getDimensions(0);	
+
+		echoLine('[updateXMLStructures] Курсы валют');
+		$this->model_feed_exchange1c->getCurrencies(0);
+
+		echoLine('[updateXMLStructures] Доставки и оплаты');
+		$this->model_feed_exchange1c->getDeliveriesAndShippings(0);	
+	}
 	
 	//авторизация для штатной проверки	
 	public function modeCheckauth() {
@@ -56,7 +75,6 @@ class ControllerFeedExchange1c extends Controller {
 		echo "file_limit=".$limit."\n";
 	}
 	
-	
 	//Штатная обработка
 	public function modeQueryOrders() {
 		
@@ -87,13 +105,10 @@ class ControllerFeedExchange1c extends Controller {
 	public function getDeliveriesAndShippings(){		
 		
 		$this->load->model('feed/exchange1c');
-		$this->model_feed_exchange1c->getDeliveriesAndShippings(true);
-				
+		$this->model_feed_exchange1c->getDeliveriesAndShippings(true);				
 	}
 	
-	public function getOrderStatusCodes(){
-		
-		
+	public function getOrderStatusCodes(){		
 		$this->load->model('feed/exchange1c');
 		$this->model_feed_exchange1c->getOrderStatusCodes(true);
 	}
@@ -102,7 +117,6 @@ class ControllerFeedExchange1c extends Controller {
 		$this->load->model('feed/exchange1c');
 		$this->model_feed_exchange1c->getProductsLeft();
 	}
-
 	
 	public function initiateOrdersFromDateToDateXML(){
 		$this->load->model('feed/exchange1c');
@@ -156,23 +170,20 @@ class ControllerFeedExchange1c extends Controller {
 		
 		
 		$this->load->model('feed/exchange1c');
-		$this->model_feed_exchange1c->getDimensions(true);
-		
+		$this->model_feed_exchange1c->getDimensions(true);		
 	}
 	
 	public function getCurrencies(){
 		
 		$this->load->model('feed/exchange1c');
-		$this->model_feed_exchange1c->getCurrencies(true);
-		
+		$this->model_feed_exchange1c->getCurrencies(true);		
 	}
 	
 	public function getCategoriesTree(){
 		
 		
 		$this->load->model('feed/exchange1c');
-		$this->model_feed_exchange1c->getCategoriesTree(true);
-		
+		$this->model_feed_exchange1c->getCategoriesTree(true);	
 	}
 	
 	public function getOrderTransactionsXML($order_id = 0) {
@@ -186,8 +197,7 @@ class ControllerFeedExchange1c extends Controller {
 		}
 		
 		$this->load->model('feed/exchange1c');
-		$this->model_feed_exchange1c->getOrderTransactionsXML($order_id, true);
-		
+		$this->model_feed_exchange1c->getOrderTransactionsXML($order_id, true);		
 	}
 	
 	public function getOrderReturnsXML($order_id = 0) {
@@ -202,8 +212,7 @@ class ControllerFeedExchange1c extends Controller {
 		
 		
 		$this->load->model('feed/exchange1c');
-		$this->model_feed_exchange1c->getOrderReturnsXML($order_id, true);
-		
+		$this->model_feed_exchange1c->getOrderReturnsXML($order_id, true);		
 	}
 	
 	public function makeSalesResultXML($order_id = 0) {
@@ -218,8 +227,7 @@ class ControllerFeedExchange1c extends Controller {
 		
 		
 		$this->load->model('feed/exchange1c');
-		$this->model_feed_exchange1c->makeSalesResultXML($order_id, true);
-		
+		$this->model_feed_exchange1c->makeSalesResultXML($order_id, true);		
 	}
 	
 	public function getOrderXML($order_id = 0) {
@@ -234,7 +242,6 @@ class ControllerFeedExchange1c extends Controller {
 		
 		
 		$this->load->model('feed/exchange1c');
-		$this->model_feed_exchange1c->getOrderXML($order_id, true);
-		
+		$this->model_feed_exchange1c->getOrderXML($order_id, true);		
 	}
 }

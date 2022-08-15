@@ -462,11 +462,8 @@ class ControllerApiInfo1C extends Controller {
 		$legalpersons = $this->model_localisation_legalperson->getLegalPersons();
 
 		foreach ($legalpersons as $legalperson){
-
 			$info = $this->model_kp_info1c->getLegalPersonAccountFrom1C($legalperson['legalperson_id']);	
-
 			$this->db->query("UPDATE legalperson SET account_info = '" . $this->db->escape(serialize($info)) . "' WHERE legalperson_id = '" . (int)$legalperson['legalperson_id'] . "'");
-
 		}
 	}
 
@@ -794,451 +791,398 @@ class ControllerApiInfo1C extends Controller {
 		}						
 	}
 
-	public function updateOrdersInCourierService($json_data = ''){
-		$this->load->model('sale/order');
-		$this->load->model('setting/setting');
+	private function updateStockXML($xml, $update, $updateStockGroups){
+		require_once(DIR_SYSTEM . 'library/XML2Array.php');
+		$xml2array = new XML2Array();
 
+		$log_odinass = new Log('import_from_1c.txt');
+		$log_odinass->write('> Начало загрузки');
 
-		foreach ($json_data as $courier_order){
+		$xml = htmlspecialchars_decode($xml);
 
-			if (isset($courier_order['idCourier'])){
-				$order = $this->model_sale_order->getOrder($courier_order['id']);
-
-				if (!isset($courier_order['comment'])){
-					$courier_order['comment'] = '';
-				}
-
-				if ($order){
-					$this->db->query("INSERT INTO order_courier_history (order_id, courier_id, date_added, date_status, status, comment, json) 
-						VALUES ('" . (int)$order['order_id'] . "', 
-							'" . $this->db->escape($courier_order['idCourier']) . "',
-							NOW(),
-							'" . $this->db->escape($courier_order['DateStatus']) . "',
-							'" . $this->db->escape($courier_order['Status']) . "',
-							'" . $this->db->escape($courier_order['comment']) . "',
-							'" . $this->db->escape(json_encode($courier_order)) . "'
-							)
-							ON DUPLICATE KEY UPDATE date_status = '" . $this->db->escape($courier_order['DateStatus']) . "',
-							status = '" . $this->db->escape($courier_order['Status']) . "',
-							comment = '" . $this->db->escape($courier_order['comment']) . "',
-							json = '" . $this->db->escape(json_encode($courier_order)) . "'
-							");
-						
-						
-						if ($courier_order['Status'] == 'в кассе' && $order['order_status_id'] != $this->config->get('config_complete_status_id')){
-							$probably_close_reason = "В курьерской службе заказ отмечен, как выданный";
-							$this->db->query("UPDATE `order` SET probably_close = 1, probably_close_reason = '" . $this->db->escape($probably_close_reason) . "' WHERE order_id = '" . (int)$order['order_id'] . "'");								
-						}
-						
-						if ((strpos($courier_order['Status'], 'отказ') !== false) && $order['order_status_id'] != $this->config->get('config_cancelled_status_id')){
-							$probably_cancel_reason = "Курьерская служба сообщает об отказе";
-							$this->db->query("UPDATE `order` SET probably_cancel = 1, probably_cancel_reason = '" . $this->db->escape($probably_cancel_reason) . "' WHERE order_id = '" . (int)$order['order_id'] . "'");								
-						}
-						
-					}
-					
-				} else {					
-					die('No order found');					
-				}								
-			}
-			
-			echo 'parsed';
-			
+		try {
+			$input = $xml2array->createArray($xml);				
+		} catch (Exception $e){
+			die ('Ошибка разбора XML. ' . $e->getMessage());
 		}
-		
-		private function updateStockXML($xml, $update, $updateStockGroups){
-			require_once(DIR_SYSTEM . 'library/XML2Array.php');
-			$xml2array = new XML2Array();
-			
-			$log_odinass = new Log('import_from_1c.txt');
-			$log_odinass->write('> Начало загрузки');
-			
-			$xml = htmlspecialchars_decode($xml);
-			
-			try {
-				$input = $xml2array->createArray($xml);				
-			} catch (Exception $e){
-				die ('Ошибка разбора XML. ' . $e->getMessage());
-			}
 
 			//var_dump($input);
-			
-			if ($input && is_array($input) && isset($input['document']) && is_array($input['document'])){
-				$input = $input['document'];
-			} else {
-				die ('Ошибка разбора XML');
-			}
-			
-			if ($input['mode'] == 'products') {
-				if ($this->check_key($input)){
-					
-					$this->load->model('localisation/country');
-					$stocks = array();
-					
-					$countries = $this->model_localisation_country->getCountries();
-					foreach ($countries as $country){
-						if ($country['warehouse_identifier']){
-							$stocks[$country['warehouse_identifier']] = $country['name'];
-						}
+
+		if ($input && is_array($input) && isset($input['document']) && is_array($input['document'])){
+			$input = $input['document'];
+		} else {
+			die ('Ошибка разбора XML');
+		}
+
+		if ($input['mode'] == 'products') {
+			if ($this->check_key($input)){
+
+				$this->load->model('localisation/country');
+				$stocks = array();
+
+				$countries = $this->model_localisation_country->getCountries();
+				foreach ($countries as $country){
+					if ($country['warehouse_identifier']){
+						$stocks[$country['warehouse_identifier']] = $country['name'];
 					}
-					
-					
-					if (isset($input['products']['product']['product_id'])){
-						$input['products']['product'] = array($input['products']['product']);
+				}
+
+
+				if (isset($input['products']['product']['product_id'])){
+					$input['products']['product'] = array($input['products']['product']);
+				}
+
+				$log_odinass->write('>> Товары');					
+
+				$query = $this->db->query("UPDATE `" . DB_PREFIX . "product` SET 
+					`quantity_stock` 	= 0,
+					`quantity_stockK` 	= 0,
+					`quantity_stockM` 	= 0,
+					`quantity_stockMN` 	= 0,
+					`quantity_stockAS` 	= 0					
+					WHERE 1");										
+
+				$count = 0;		
+				$total_count = 0;
+				$products_in_stock = array();				
+				$products_in_stock_msk = array();
+				$products_in_stock_kyiv = array();
+				$products_in_stock_de = array();
+
+				$total_p_on_stocks = array();
+				$total_q_on_stocks = array();
+
+				foreach ($stocks as $k => $v){
+					$total_p_on_stocks[$k] = 0;
+					$total_q_on_stocks[$k] = 0;
+				}
+
+				$unique_products = array();
+				foreach ($input['products']['product'] as $value){
+
+					if (!isset($unique_products[(int)($value['product_id'])])){
+						$unique_products[(int)($value['product_id'])] = array();							
 					}
-					
-					$log_odinass->write('>> Товары');					
-					
-					$query = $this->db->query("UPDATE `" . DB_PREFIX . "product` SET 
-						`quantity_stock` 	= 0,
-						`quantity_stockK` 	= 0,
-						`quantity_stockM` 	= 0,
-						`quantity_stockMN` 	= 0,
-						`quantity_stockAS` 	= 0					
-						WHERE 1");										
-					
-					$count = 0;		
-					$total_count = 0;
-					$products_in_stock = array();				
-					$products_in_stock_msk = array();
-					$products_in_stock_kyiv = array();
-					$products_in_stock_de = array();
-					
-					$total_p_on_stocks = array();
-					$total_q_on_stocks = array();
-					
+
 					foreach ($stocks as $k => $v){
-						$total_p_on_stocks[$k] = 0;
-						$total_q_on_stocks[$k] = 0;
+						if (isset($value[$k])){																					
+							$unique_products[(int)($value['product_id'])][$k] = $value[$k];
+							$total_count += $value[$k];
+						}												
 					}
-					
-					$unique_products = array();
-					foreach ($input['products']['product'] as $value){
-						
-						if (!isset($unique_products[(int)($value['product_id'])])){
-							$unique_products[(int)($value['product_id'])] = array();							
-						}
-						
-						foreach ($stocks as $k => $v){
-							if (isset($value[$k])){																					
-								$unique_products[(int)($value['product_id'])][$k] = $value[$k];
-								$total_count += $value[$k];
-							}												
-						}
-						
-						if (isset($value['actual_cost'])){																					
-							$unique_products[($value['product_id'])]['actual_cost'] = (float)str_replace(',','.',$value['actual_cost']);
-						}
-						
-						if (isset($value['SebestoimostK'])){
-							$unique_products[($value['product_id'])]['costK'] = (float)str_replace(',','.',$value['SebestoimostK']);
-						}
-						
-						if (isset($value['SebestoimostM'])){
-							$unique_products[($value['product_id'])]['costM'] = (float)str_replace(',','.',$value['SebestoimostM']);
-						}
-						
-						if (isset($value['MVTCK'])){
-							$unique_products[($value['product_id'])]['min_sale_priceK'] = (float)str_replace(',','.',$value['MVTCK']);
-						}
-						
-						if (isset($value['MVTCM'])){
-							$unique_products[($value['product_id'])]['min_sale_priceM'] = (float)str_replace(',','.',$value['MVTCM']);
-						}
-						
-						if (isset($value['product_vendor'])){																					
-							$unique_products[($value['product_id'])]['product_vendor'] = $value['product_vendor'];
-						}
+
+					if (isset($value['actual_cost'])){																					
+						$unique_products[($value['product_id'])]['actual_cost'] = (float)str_replace(',','.',$value['actual_cost']);
 					}
-					
+
+					if (isset($value['SebestoimostK'])){
+						$unique_products[($value['product_id'])]['costK'] = (float)str_replace(',','.',$value['SebestoimostK']);
+					}
+
+					if (isset($value['SebestoimostM'])){
+						$unique_products[($value['product_id'])]['costM'] = (float)str_replace(',','.',$value['SebestoimostM']);
+					}
+
+					if (isset($value['MVTCK'])){
+						$unique_products[($value['product_id'])]['min_sale_priceK'] = (float)str_replace(',','.',$value['MVTCK']);
+					}
+
+					if (isset($value['MVTCM'])){
+						$unique_products[($value['product_id'])]['min_sale_priceM'] = (float)str_replace(',','.',$value['MVTCM']);
+					}
+
+					if (isset($value['product_vendor'])){																					
+						$unique_products[($value['product_id'])]['product_vendor'] = $value['product_vendor'];
+					}
+				}
+
 					//	echo ('Всего ' . count($unique_products) . ' товаров') . PHP_EOL;
-					$log_odinass->write('Всего ' . count($unique_products) . ' товаров');
-					
+				$log_odinass->write('Всего ' . count($unique_products) . ' товаров');
+
 					//	echo ('Всего ' . $total_count . ' единиц товаров') . PHP_EOL;
-					$log_odinass->write('Всего ' . $total_count . ' единиц товаров');
-					
-					foreach ($unique_products as $key => &$value){										
-						
-						$value['product_id'] = $key;
-						
-						$query = $this->db->query("SELECT product_id, location FROM `" . DB_PREFIX . "product` WHERE product_id = '". (int)(trim($value['product_id'])) ."' LIMIT 1");
-						$product = $query->row;												
-						
-						if (!$product){
+				$log_odinass->write('Всего ' . $total_count . ' единиц товаров');
+
+				foreach ($unique_products as $key => &$value){										
+
+					$value['product_id'] = $key;
+
+					$query = $this->db->query("SELECT product_id, location FROM `" . DB_PREFIX . "product` WHERE product_id = '". (int)(trim($value['product_id'])) ."' LIMIT 1");
+					$product = $query->row;												
+
+					if (!$product){
 							//	echo ('Товара '.(int)($value['product_id']).' не существует!') . PHP_EOL;
-							
-							
-							if (isset($value['product_vendor']) && $value['product_vendor']){
-								
-								$log_odinass->write('Товара '.(int)($value['product_id']).' не существует, попробуем найти по артикулу: ' . $value['product_vendor'] . '');
-								
-								$sku = preg_replace("([^0-9])", "", $value['product_vendor']);
-								
-								$query = $this->db->query("SELECT product_id FROM `" . DB_PREFIX . "product` WHERE ((REPLACE(REPLACE(REPLACE(REPLACE(model,' ',''), '.', ''), '/', ''), '-', '') = '" . $this->db->escape($sku) . "' OR REPLACE(REPLACE(REPLACE(REPLACE(sku,' ',''), '.', ''), '/', ''), '-', '') = '" . $this->db->escape($sku) . "') AND LENGTH(model)>1 AND stock_product_id = 0) LIMIT 1");
-								
-								$product = $query->row;
-								
-								if ($product){
-									$log_odinass->write('Нашли по артикулу: ' . $value['product_vendor'] . ', код товара: ' . $product['product_id'] . '');
-									echo 'Нашли по артикулу: ' . $value['product_vendor'] . ', код товара: ' . $product['product_id'] . '' . PHP_EOL;
-									$value['product_id'] = $product['product_id'];
-								} else {
-									$log_odinass->write('Товара '.(int)($value['product_id']).' не существует, артикула: ' . $value['product_vendor'] . ' также не существует');
-									echo 'Товара '.(int)($value['product_id']).' не существует, артикула: ' . $value['product_vendor'] . ' также не существует' . PHP_EOL;
-								}
+
+
+						if (isset($value['product_vendor']) && $value['product_vendor']){
+
+							$log_odinass->write('Товара '.(int)($value['product_id']).' не существует, попробуем найти по артикулу: ' . $value['product_vendor'] . '');
+
+							$sku = preg_replace("([^0-9])", "", $value['product_vendor']);
+
+							$query = $this->db->query("SELECT product_id FROM `" . DB_PREFIX . "product` WHERE ((REPLACE(REPLACE(REPLACE(REPLACE(model,' ',''), '.', ''), '/', ''), '-', '') = '" . $this->db->escape($sku) . "' OR REPLACE(REPLACE(REPLACE(REPLACE(sku,' ',''), '.', ''), '/', ''), '-', '') = '" . $this->db->escape($sku) . "') AND LENGTH(model)>1 AND stock_product_id = 0) LIMIT 1");
+
+							$product = $query->row;
+
+							if ($product){
+								$log_odinass->write('Нашли по артикулу: ' . $value['product_vendor'] . ', код товара: ' . $product['product_id'] . '');
+								echo 'Нашли по артикулу: ' . $value['product_vendor'] . ', код товара: ' . $product['product_id'] . '' . PHP_EOL;
+								$value['product_id'] = $product['product_id'];
+							} else {
+								$log_odinass->write('Товара '.(int)($value['product_id']).' не существует, артикула: ' . $value['product_vendor'] . ' также не существует');
+								echo 'Товара '.(int)($value['product_id']).' не существует, артикула: ' . $value['product_vendor'] . ' также не существует' . PHP_EOL;
 							}
-						}					
-						
+						}
+					}					
+
+					foreach ($stocks as $k => $v){
+						if (!isset($value[$k])){
+							$value[$k] = '0';
+						}															
+					}
+
+					if (!isset($value['actual_cost'])){																					
+						$value['actual_cost'] = 0;
+					}
+
+					if (!isset($product['location'])){	
+						$product['location'] = '';	
+					}
+
+					if ($product && (isset($product['location']) && $product['location'] != 'certificate' && $product['location'] != 'newcertificate')) {
+
 						foreach ($stocks as $k => $v){
-							if (!isset($value[$k])){
-								$value[$k] = '0';
-							}															
+							if ($value[$k] > 0) {									
+								$total_p_on_stocks[$k] += 1;
+								$total_q_on_stocks[$k] += $value[$k];
+							}									
 						}
-						
-						if (!isset($value['actual_cost'])){																					
-							$value['actual_cost'] = 0;
-						}
-						
-						if (!isset($product['location'])){	
-							$product['location'] = '';	
-						}
-						
-						if ($product && (isset($product['location']) && $product['location'] != 'certificate' && $product['location'] != 'newcertificate')) {
-							
-							foreach ($stocks as $k => $v){
-								if ($value[$k] > 0) {									
-									$total_p_on_stocks[$k] += 1;
-									$total_q_on_stocks[$k] += $value[$k];
-								}									
-							}
-							
-							reset($stocks);
-							
-							$total_in_stock = false;
-							foreach ($stocks as $k => $v){
-								if ($value[$k] > 0) {									
-									$total_in_stock = true;
-									break;
-								}									
-							}
-							
-							if ($value['quantity_stockK'] > 0) {								
-								$products_in_stock_kyiv[] = $value['product_id'];
-								$this->rainforestAmazon->offersParser->PriceLogic->setProductStockInWarehouse($value['product_id'], 'quantity_stockK');
-							}
-							
-							if ($value['quantity_stockM'] > 0){
-								$products_in_stock_msk[] = $value['product_id'];
-								$this->rainforestAmazon->offersParser->PriceLogic->setProductStockInWarehouse($value['product_id'], 'quantity_stockM');
-							} 
 
-							if ($value['quantity_stock'] > 0) {								
-								$products_in_stock_de[] = $value['product_id'];															
-							} 
+						reset($stocks);
 
-							if ($total_in_stock) {
-								$products_in_stock[] = $value['product_id'];
-							}
-							
+						$total_in_stock = false;
+						foreach ($stocks as $k => $v){
+							if ($value[$k] > 0) {									
+								$total_in_stock = true;
+								break;
+							}									
+						}
+
+						if ($value['quantity_stockK'] > 0) {								
+							$products_in_stock_kyiv[] = $value['product_id'];
+							$this->rainforestAmazon->offersParser->PriceLogic->setProductStockInWarehouse($value['product_id'], 'quantity_stockK');
+						}
+
+						if ($value['quantity_stockM'] > 0){
+							$products_in_stock_msk[] = $value['product_id'];
+							$this->rainforestAmazon->offersParser->PriceLogic->setProductStockInWarehouse($value['product_id'], 'quantity_stockM');
+						} 
+
+						if ($value['quantity_stock'] > 0) {								
+							$products_in_stock_de[] = $value['product_id'];															
+						} 
+
+						if ($total_in_stock) {
+							$products_in_stock[] = $value['product_id'];
+						}
+
 							//	echo 'Наличие Г:' .  (int)$value['quantity_stock'] . ' К:' . (int)$value['quantity_stockK'] . ' M:' . (int)$value['quantity_stockMN'] . PHP_EOL;
-							
-							$sql = ("UPDATE `" . DB_PREFIX . "product` SET 
-								`quantity_stock` 	= '" . (int)$value['quantity_stock'] . "',
-								`quantity_stockK` 	= '" . (int)$value['quantity_stockK'] . "',
-								`quantity_stockM` 	= '" . (int)$value['quantity_stockM'] . "',
-								`quantity_stockMN` 	= '" . (int)$value['quantity_stockM'] . "',
-								`quantity_stockAS` 	= '" . (int)$value['quantity_stockM'] . "',
-								`actual_cost` 	    = '" . (float)$value['actual_cost'] . "'	
-								WHERE product_id = '" . (int)$value['product_id'] . "'");														
-							
-							$ol = 'product '.$value['product_id'];
-							$ol .= ' DE: '.(int)$value['quantity_stock'];
-							$ol .= ' UA: '.(int)$value['quantity_stockK'];
-							$ol .= ' RU: '.(int)$value['quantity_stockM'];
+
+						$sql = ("UPDATE `" . DB_PREFIX . "product` SET 
+							`quantity_stock` 	= '" . (int)$value['quantity_stock'] . "',
+							`quantity_stockK` 	= '" . (int)$value['quantity_stockK'] . "',
+							`quantity_stockM` 	= '" . (int)$value['quantity_stockM'] . "',
+							`quantity_stockMN` 	= '" . (int)$value['quantity_stockM'] . "',
+							`quantity_stockAS` 	= '" . (int)$value['quantity_stockM'] . "',
+							`actual_cost` 	    = '" . (float)$value['actual_cost'] . "'	
+							WHERE product_id = '" . (int)$value['product_id'] . "'");														
+
+						$ol = 'product '.$value['product_id'];
+						$ol .= ' DE: '.(int)$value['quantity_stock'];
+						$ol .= ' UA: '.(int)$value['quantity_stockK'];
+						$ol .= ' RU: '.(int)$value['quantity_stockM'];
 							//	$ol .= ' BY: '.(int)$value['quantity_stockMN'];
 							//	$ol .= ' KZ: '.(int)$value['quantity_stockAS'];
-							$ol .= ' / COST: '.(float)$value['actual_cost'];
-							
-							
-							echo $ol . PHP_EOL;
+						$ol .= ' / COST: '.(float)$value['actual_cost'];
+
+
+						echo $ol . PHP_EOL;
+						$this->db->query($sql);
+
+
+						if (!empty($value['costM']) && !empty($value['min_sale_priceM'])){
+							$sql = "INSERT INTO product_costs SET 
+							product_id 		= '" . $value['product_id'] . "', 
+							store_id 		= 0, 
+							cost 			= '" . (float)$value['costM'] . "',
+							currency 		= 'EUR',
+							min_sale_price 	= '" . (float)$value['min_sale_priceM'] . "'
+							ON DUPLICATE KEY UPDATE
+							cost 			= '" . (float)$value['costM'] . "',
+							min_sale_price 	= '" . (float)$value['min_sale_priceM'] . "'";
+
 							$this->db->query($sql);
-							
-							
-							if (!empty($value['costM']) && !empty($value['min_sale_priceM'])){
-								$sql = "INSERT INTO product_costs SET 
-								product_id 		= '" . $value['product_id'] . "', 
-								store_id 		= 0, 
-								cost 			= '" . (float)$value['costM'] . "',
-								currency 		= 'EUR',
-								min_sale_price 	= '" . (float)$value['min_sale_priceM'] . "'
-								ON DUPLICATE KEY UPDATE
-								cost 			= '" . (float)$value['costM'] . "',
-								min_sale_price 	= '" . (float)$value['min_sale_priceM'] . "'";
-								
-								$this->db->query($sql);
-							}
-							
-							if (!empty($value['costK']) && !empty($value['min_sale_priceK'])){
-								$sql = "INSERT INTO product_costs SET 
-								product_id 		= '" . $value['product_id'] . "', 
-								store_id 		= 1, 
-								cost 			= '" . (float)$value['costK'] . "',
-								currency 		= 'EUR',
-								min_sale_price 	= '" . (float)$value['min_sale_priceK'] . "'
-								ON DUPLICATE KEY UPDATE
-								cost 			= '" . (float)$value['costK'] . "',
-								min_sale_price 	= '" . (float)$value['min_sale_priceK'] . "'";
-								
-								$this->db->query($sql);
-							}
-							
-							$count += $this->db->countAffected();
-							
-						}					
-					}
+						}
+
+						if (!empty($value['costK']) && !empty($value['min_sale_priceK'])){
+							$sql = "INSERT INTO product_costs SET 
+							product_id 		= '" . $value['product_id'] . "', 
+							store_id 		= 1, 
+							cost 			= '" . (float)$value['costK'] . "',
+							currency 		= 'EUR',
+							min_sale_price 	= '" . (float)$value['min_sale_priceK'] . "'
+							ON DUPLICATE KEY UPDATE
+							cost 			= '" . (float)$value['costK'] . "',
+							min_sale_price 	= '" . (float)$value['min_sale_priceK'] . "'";
+
+							$this->db->query($sql);
+						}
+
+						$count += $this->db->countAffected();
+
+					}					
+				}
 
 					//Обновление общего наличия
-					$this->db->query("UPDATE product SET quantity = (quantity_stock + quantity_stockK + quantity_stockM) WHERE quantity < (quantity_stock + quantity_stockK + quantity_stockM)");					
-					
+				$this->db->query("UPDATE product SET quantity = (quantity_stock + quantity_stockK + quantity_stockM) WHERE quantity < (quantity_stock + quantity_stockK + quantity_stockM)");					
+
 					//Обновление товаров в яндексе
-					$this->db->query("INSERT INTO yandex_stock_queue (yam_product_id, stock) SELECT yam_product_id, quantity_stockM FROM product WHERE (quantity_stockM > 0 OR yam_in_feed = 1) ON DUPLICATE KEY UPDATE stock = quantity_stockM");
-					
-					$products_in_stock = array_unique($products_in_stock);
-					$products_in_stock_msk = array_unique($products_in_stock_msk);
-					$products_in_stock_kyiv = array_unique($products_in_stock_kyiv);
-					$products_in_stock_de = array_unique($products_in_stock_de);
-					
+				$this->db->query("INSERT INTO yandex_stock_queue (yam_product_id, stock) SELECT yam_product_id, quantity_stockM FROM product WHERE (quantity_stockM > 0 OR yam_in_feed = 1) ON DUPLICATE KEY UPDATE stock = quantity_stockM");
+
+				$products_in_stock = array_unique($products_in_stock);
+				$products_in_stock_msk = array_unique($products_in_stock_msk);
+				$products_in_stock_kyiv = array_unique($products_in_stock_kyiv);
+				$products_in_stock_de = array_unique($products_in_stock_de);
+
 					//	echo ('Всего в Москве ' . count($products_in_stock_msk) . ' товаров') . PHP_EOL;
-					$log_odinass->write('Всего в Москве ' . count($products_in_stock_msk) . ' товаров');
-					
+				$log_odinass->write('Всего в Москве ' . count($products_in_stock_msk) . ' товаров');
+
 					//	echo ('Всего в Киеве ' . count($products_in_stock_msk) . ' товаров') . PHP_EOL;
-					$log_odinass->write('Всего в Киеве ' . count($products_in_stock_kyiv) . ' товаров');
-					
+				$log_odinass->write('Всего в Киеве ' . count($products_in_stock_kyiv) . ' товаров');
+
 					//	echo ('Всего в Германии ' . count($products_in_stock_de) . ' товаров') . PHP_EOL;
-					$log_odinass->write('Всего в Германии ' . count($products_in_stock_de) . ' товаров');
-					
-					$this->load->model('kp/product');
-					if ($updateStockGroups){
-						
+				$log_odinass->write('Всего в Германии ' . count($products_in_stock_de) . ' товаров');
+
+				$this->load->model('kp/product');
+				if ($updateStockGroups){
+
 						//очистка категорий перед выполнением
-						$this->db->query("DELETE FROM product_to_category WHERE category_id = 6475");
-						$this->db->query("DELETE FROM product_to_category WHERE category_id = 8307");
-						$this->db->query("DELETE FROM product_to_category WHERE category_id = 8308");						
-						
+					$this->db->query("DELETE FROM product_to_category WHERE category_id = 6475");
+					$this->db->query("DELETE FROM product_to_category WHERE category_id = 8307");
+					$this->db->query("DELETE FROM product_to_category WHERE category_id = 8308");						
+
 						//убираем из стока откуда-то взявшиеся там не-сток товары
-						$this->db->query("DELETE FROM product_to_category WHERE category_id = 6474 AND product_id NOT IN (SELECT product_id FROM product WHERE stock_product_id > 0)");
-						
-						foreach ($products_in_stock_msk as $product_in_present_id){
-							$this->model_kp_product->copyProductToPresent($product_in_present_id, 20, 2, true);	
+					$this->db->query("DELETE FROM product_to_category WHERE category_id = 6474 AND product_id NOT IN (SELECT product_id FROM product WHERE stock_product_id > 0)");
+
+					foreach ($products_in_stock_msk as $product_in_present_id){
+						$this->model_kp_product->copyProductToPresent($product_in_present_id, 20, 2, true);	
 							//	$this->model_kp_product->addToYobanyiChaliukActionProduct($product_in_present_id, 80);
-						}
-						
-						foreach ($products_in_stock_msk as $product_in_present_id){
+					}
+
+					foreach ($products_in_stock_msk as $product_in_present_id){
 							//$this->model_kp_product->copyProductToPresentUA($product_in_present_id, 20, 2, true);						
-						}
-						
-						foreach ($products_in_stock_kyiv as $product_in_present_id){
-							$this->model_kp_product->copyProductToPresentUA($product_in_present_id, 20, 2, true);						
-						}
-						
-						foreach ($products_in_stock_de as $product_in_de_id){
+					}
+
+					foreach ($products_in_stock_kyiv as $product_in_present_id){
+						$this->model_kp_product->copyProductToPresentUA($product_in_present_id, 20, 2, true);						
+					}
+
+					foreach ($products_in_stock_de as $product_in_de_id){
 							//	$this->model_kp_product->copyProductToStock($product_in_de_id, 15, 10000, false);
 							//	$this->model_kp_product->addToYobanyiChaliukActionProduct($product_in_de_id, 80);	
-						}
-						
-						foreach ($products_in_stock as $product_in_stock_id){
+					}
+
+					foreach ($products_in_stock as $product_in_stock_id){
 							//$this->model_kp_product->copyProductToStock($product_in_stock_id);							
-						}
 					}
-					
-					foreach ($stocks as $k => $v){
-						$this->db->query("INSERT IGNORE INTO stocks_dynamics SET date_added = DATE(NOW()), warehouse_identifier = '" . $this->db->escape($k) . "', p_count = '" . (int)$total_p_on_stocks[$k] . "', q_count = '" . (int)$total_q_on_stocks[$k] . "' ON DUPLICATE KEY UPDATE p_count = '" . (int)$total_p_on_stocks[$k] . "', q_count = '" . (int)$total_q_on_stocks[$k] . "'");
-						
-					}
-					
-					$this->db->query("UPDATE `product` SET ean = '', asin = '', isbn = ''	WHERE stock_product_id > 0");
-					$this->db->query("UPDATE order_product_nogood opn SET product_id = (SELECT p.stock_product_id FROM product p WHERE p.product_id = opn.product_id LIMIT 1) WHERE product_id IN (SELECT product_id FROM product WHERE stock_product_id > 0)");
-					$this->db->query("UPDATE `return` opn SET product_id = (SELECT p.stock_product_id FROM product p WHERE p.product_id = opn.product_id LIMIT 1) WHERE product_id IN (SELECT product_id FROM product WHERE stock_product_id > 0)");
-					$this->db->query("UPDATE `order_product` opn SET product_id = (SELECT p.stock_product_id FROM product p WHERE p.product_id = opn.product_id LIMIT 1) WHERE product_id IN (SELECT product_id FROM product WHERE stock_product_id > 0)");
+				}
+
+				foreach ($stocks as $k => $v){
+					$this->db->query("INSERT IGNORE INTO stocks_dynamics SET date_added = DATE(NOW()), warehouse_identifier = '" . $this->db->escape($k) . "', p_count = '" . (int)$total_p_on_stocks[$k] . "', q_count = '" . (int)$total_q_on_stocks[$k] . "' ON DUPLICATE KEY UPDATE p_count = '" . (int)$total_p_on_stocks[$k] . "', q_count = '" . (int)$total_q_on_stocks[$k] . "'");
+
+				}
+
+				$this->db->query("UPDATE `product` SET ean = '', asin = '', isbn = ''	WHERE stock_product_id > 0");
+				$this->db->query("UPDATE order_product_nogood opn SET product_id = (SELECT p.stock_product_id FROM product p WHERE p.product_id = opn.product_id LIMIT 1) WHERE product_id IN (SELECT product_id FROM product WHERE stock_product_id > 0)");
+				$this->db->query("UPDATE `return` opn SET product_id = (SELECT p.stock_product_id FROM product p WHERE p.product_id = opn.product_id LIMIT 1) WHERE product_id IN (SELECT product_id FROM product WHERE stock_product_id > 0)");
+				$this->db->query("UPDATE `order_product` opn SET product_id = (SELECT p.stock_product_id FROM product p WHERE p.product_id = opn.product_id LIMIT 1) WHERE product_id IN (SELECT product_id FROM product WHERE stock_product_id > 0)");
 
 					//Отключение уценки, которой нет на складах
-					$this->db->query("UPDATE `product` SET status = 0 WHERE is_markdown = 1 AND (quantity_stock + quantity_stockK + quantity_stockM) = 0");
+				$this->db->query("UPDATE `product` SET status = 0 WHERE is_markdown = 1 AND (quantity_stock + quantity_stockK + quantity_stockM) = 0");
 
-					$this->rainforestAmazon->offersParser->PriceLogic->setProductStockStatusesGlobal();
+				$this->rainforestAmazon->offersParser->PriceLogic->setProductStockStatusesGlobal();
 
-					$this->cache->flush();
-					
-					$this->model_kp_product->setLastUpdate();
-				}			
-			}
-		}
-		
-		public function updateProductField($product_id, $field, $value){
-			$this->load->model('catalog/product');
-			$result = $this->model_catalog_product->getProduct($product_id);
-			
-			if (!$result){
-				die('no product exist');
-			}
-			
-			if ($field == 'product_id'){
-				die("can't alter $field");
-			}
-			
-			$query = $this->db->query("SHOW COLUMNS FROM product LIKE '" . $this->db->escape($field) . "'");
-			if (!$query->num_rows){
-				die("no field $field exist in table");
-			}
-			
-			$this->db->query("UPDATE product SET `" . $this->db->escape($field) . "` = '" . $this->db->escape($value) . "' WHERE product_id = '" . (int)$product_id . "'");
-			$result2 = $this->model_catalog_product->getProduct($product_id);
-			
-			$array = array(
-				'previous' => $result[$field],
-				'current'  => $result2[$field]
-			);
-			
-			$this->response->setOutput(json_encode($array));
-			
-		}
-		
-		public function setProductPrices($product_id, $prices = array()){
-			$this->load->model('catalog/product');
-			$this->load->model('setting/store');
-			$this->load->model('setting/setting');
-			$this->load->model('kp/price');
-			
-			$product = $this->model_catalog_product->getProduct($product_id);
-			
-			if (!$product){
-				echo json_encode(array('error' => 'product_not_exist'));
-				die();
-			}
-			
-			//Основные цены
-			if (!isset($prices['prices'])){
-				echo json_encode(array('error' => 'no_prices_branch'));
-				die();
-			}
-			
-			if ($prices['prices']['main_price']['currency'] != $this->config->get('config_currency')){
-				$main_price = $this->currency->convert($prices['prices']['main_price']['price'], $prices['prices']['main_price']['currency'], $this->config->get('config_currency'));
-			} else {
-				$main_price = $prices['prices']['main_price']['price'];
+				$this->cache->flush();
+
+				$this->model_kp_product->setLastUpdate();
 			}			
-			
-			if ($prices['prices']['main_cost']['currency'] != $this->config->get('config_currency')){
-				$main_cost = $this->currency->convert($prices['prices']['main_cost']['price'], $prices['prices']['main_cost']['currency'], $this->config->get('config_currency'));
-			} else {
-				$main_cost = $prices['prices']['main_cost']['price'];
-			}
-			
-			if ($prices['prices']['mpp_price']['currency'] != $this->config->get('config_currency')){
-				$mpp_price = $this->currency->convert($prices['prices']['mpp_price']['price'], $prices['prices']['mpp_price']['currency'], $this->config->get('config_currency'));
-			} else {
-				$mpp_price = $prices['prices']['mpp_price']['price'];
-			}						
-			
+		}
+	}
+
+	public function updateProductField($product_id, $field, $value){
+		$this->load->model('catalog/product');
+		$result = $this->model_catalog_product->getProduct($product_id);
+
+		if (!$result){
+			die('no product exist');
+		}
+
+		if ($field == 'product_id'){
+			die("can't alter $field");
+		}
+
+		$query = $this->db->query("SHOW COLUMNS FROM product LIKE '" . $this->db->escape($field) . "'");
+		if (!$query->num_rows){
+			die("no field $field exist in table");
+		}
+
+		$this->db->query("UPDATE product SET `" . $this->db->escape($field) . "` = '" . $this->db->escape($value) . "' WHERE product_id = '" . (int)$product_id . "'");
+		$result2 = $this->model_catalog_product->getProduct($product_id);
+
+		$array = array(
+			'previous' => $result[$field],
+			'current'  => $result2[$field]
+		);
+
+		$this->response->setOutput(json_encode($array));			
+	}
+
+	public function setProductPrices($product_id, $prices = array()){
+		$this->load->model('catalog/product');
+		$this->load->model('setting/store');
+		$this->load->model('setting/setting');
+		$this->load->model('kp/price');
+
+		$product = $this->model_catalog_product->getProduct($product_id);
+
+		if (!$product){
+			echo json_encode(array('error' => 'product_not_exist'));
+			die();
+		}
+
+			//Основные цены
+		if (!isset($prices['prices'])){
+			echo json_encode(array('error' => 'no_prices_branch'));
+			die();
+		}
+
+		if ($prices['prices']['main_price']['currency'] != $this->config->get('config_currency')){
+			$main_price = $this->currency->convert($prices['prices']['main_price']['price'], $prices['prices']['main_price']['currency'], $this->config->get('config_currency'));
+		} else {
+			$main_price = $prices['prices']['main_price']['price'];
+		}			
+
+		if ($prices['prices']['main_cost']['currency'] != $this->config->get('config_currency')){
+			$main_cost = $this->currency->convert($prices['prices']['main_cost']['price'], $prices['prices']['main_cost']['currency'], $this->config->get('config_currency'));
+		} else {
+			$main_cost = $prices['prices']['main_cost']['price'];
+		}
+
+		if ($prices['prices']['mpp_price']['currency'] != $this->config->get('config_currency')){
+			$mpp_price = $this->currency->convert($prices['prices']['mpp_price']['price'], $prices['prices']['mpp_price']['currency'], $this->config->get('config_currency'));
+		} else {
+			$mpp_price = $prices['prices']['mpp_price']['price'];
+		}						
+
 			/*
 				$this->db->query("UPDATE product SET 
 				price 			= '" . (float)$main_price . "', 
@@ -2148,33 +2092,23 @@ class ControllerApiInfo1C extends Controller {
 				$this->response->setOutput(json_encode($responce));
 			}
 
-			public function exportCatalogCron(){
-				$this->load->model('feed/exchange1c');
-
-
-				$this->model_feed_exchange1c->exportCategoriesXML(0);			
-				$this->model_feed_exchange1c->exportManufacturersXML(0);
-				$this->model_feed_exchange1c->exportCollectionsXML(0);
-
-			}
-
 			public function getActualPrices(){
 				$this->load->model('kp/info1c');
 				$this->load->model('catalog/product');
 
-
-
 				if ($result = $this->model_kp_info1c->getActualCostFrom1C()){
-
 					$this->db->query("UPDATE product SET mpp_price = 0 WHERE 1");
 
 					foreach ($result['items'] as $product){
-
-						echo  $product['idProduct'] . ' : ' . $product['price'] . ' : ' . $product['datePrice'] . ' : ' .  $product['mpp_price'] . PHP_EOL;
-						$this->db->query("UPDATE product SET mpp_price = '" . (float)$product['mpp_price'] . "', actual_cost = '" . (float)$product['price'] . "', actual_cost_date = '" . $this->db->escape(date('Y-m-d', strtotime($product['datePrice'])))  . "' WHERE product_id = '" . (int)$product['idProduct'] . "'");
-					}				
+						echoLine($product['idProduct'] . ' : ' . $product['price'] . ' : ' . $product['datePrice'] . ' : ' .  $product['mpp_price']);
+						
+						$this->db->query("UPDATE product SET 	
+							mpp_price = '" . (float)$product['mpp_price'] . "', 
+							actual_cost = '" . (float)$product['price'] . "', 
+							actual_cost_date = '" . $this->db->escape(date('Y-m-d', strtotime($product['datePrice'])))  . "' 
+							WHERE product_id = '" . (int)$product['idProduct'] . "'");
+					}						
 				}
-
 			}
 
 
@@ -2314,18 +2248,25 @@ class ControllerApiInfo1C extends Controller {
 				$this->model_feed_exchange1c->removeOrderFromQueue($order_id);
 
 			}	
-		}
+	}
 
-		public function legalpersonList(){
+	public function legalpersonList(){
 
 			$query = $this->db->query("SELECT * FROM legalperson WHERE 1");
 
 
 			$this->response->setOutput(json_encode($query->rows));	
-		}
+	}
+
+	public function productPurchaseSet($purchaseData){
 
 
-		public function transactionSyncSet($transactionData){
+
+
+
+	}
+
+	public function transactionSyncSet($transactionData){
 			$this->load->model('sale/customer');
 			$this->load->model('sale/order');
 
@@ -2413,10 +2354,9 @@ class ControllerApiInfo1C extends Controller {
 			$result['transaction_data'] = $this->model_sale_customer->getTransactionByID($customer_transaction_id);
 
 			$this->response->setOutput(json_encode($result));
-		}
-		
+	}
 
-		public function transactionSyncGet($transactionData){		
+	public function transactionSyncGet($transactionData){
 			$this->load->model('sale/customer');
 			$this->load->model('sale/order');
 			$transactions = array();
@@ -2464,5 +2404,54 @@ class ControllerApiInfo1C extends Controller {
 
 			}
 			$this->response->setOutput(json_encode($transactions));	
-		}
-	}																																
+	}
+
+	public function updateOrdersInCourierService($json_data = ''){
+			$this->load->model('sale/order');
+			$this->load->model('setting/setting');
+
+			foreach ($json_data as $courier_order){
+				if (isset($courier_order['idCourier'])){
+					$order = $this->model_sale_order->getOrder($courier_order['id']);
+
+					if (!isset($courier_order['comment'])){
+						$courier_order['comment'] = '';
+					}
+
+					if ($order){
+						$this->db->query("INSERT INTO order_courier_history (order_id, courier_id, date_added, date_status, status, comment, json) 
+							VALUES ('" . (int)$order['order_id'] . "', 
+								'" . $this->db->escape($courier_order['idCourier']) . "',
+								NOW(),
+								'" . $this->db->escape($courier_order['DateStatus']) . "',
+								'" . $this->db->escape($courier_order['Status']) . "',
+								'" . $this->db->escape($courier_order['comment']) . "',
+								'" . $this->db->escape(json_encode($courier_order)) . "'
+								)
+								ON DUPLICATE KEY UPDATE date_status = '" . $this->db->escape($courier_order['DateStatus']) . "',
+								status = '" . $this->db->escape($courier_order['Status']) . "',
+								comment = '" . $this->db->escape($courier_order['comment']) . "',
+								json = '" . $this->db->escape(json_encode($courier_order)) . "'
+								");
+
+
+							if ($courier_order['Status'] == 'в кассе' && $order['order_status_id'] != $this->config->get('config_complete_status_id')){
+								$probably_close_reason = "В курьерской службе заказ отмечен, как выданный";
+								$this->db->query("UPDATE `order` SET probably_close = 1, probably_close_reason = '" . $this->db->escape($probably_close_reason) . "' WHERE order_id = '" . (int)$order['order_id'] . "'");								
+							}
+
+							if ((strpos($courier_order['Status'], 'отказ') !== false) && $order['order_status_id'] != $this->config->get('config_cancelled_status_id')){
+								$probably_cancel_reason = "Курьерская служба сообщает об отказе";
+								$this->db->query("UPDATE `order` SET probably_cancel = 1, probably_cancel_reason = '" . $this->db->escape($probably_cancel_reason) . "' WHERE order_id = '" . (int)$order['order_id'] . "'");								
+							}
+
+						}
+
+					} else {					
+						die('No order found');					
+					}								
+				}
+
+				die('parsed');			
+			}
+}																																
