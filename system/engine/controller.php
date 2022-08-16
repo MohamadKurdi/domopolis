@@ -182,27 +182,11 @@
 
 			foreach ($this->children as $child) {
 				$this->data[basename($child)] = $this->getChild($child);
-			}
-			
-			$dev = false;
-			$devIdArray = array('1218253', '1353', '1218683', '1497', '50009076');
-			$devIdArray = array();
-			
-			if (isset($_SESSION['customer_id']) && in_array($_SESSION['customer_id'], $devIdArray)) {
-				$dev = true;
-			}
-			
-			// Нужно проверить, я разработчик, или нет?
-			if ($dev) {
-				$fixedPath = str_replace(".tpl", ".dev.tpl", $this->template);
-				if (file_exists(DIR_TEMPLATE.$fixedPath)) {
-					$this->template = $fixedPath;
-				}
-			}
+			}						
 			
 			if (isset($_GET['print_file_path']) && $_GET['print_file_path'] == 'true') {
 				print DIR_TEMPLATE . $this->template;
-				print "<br>";
+				print "<br />";
 			}
 			
 			if (file_exists(DIR_TEMPLATE . $this->template)) {
