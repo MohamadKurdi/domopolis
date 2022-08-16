@@ -1426,6 +1426,25 @@
 				} else {
 				$this->data['config_secure'] = '';
 			}
+
+			$social_auth_config = [
+			'social_auth_facebook_app_id',
+			'social_auth_facebook_secret_key',
+			'social_auth_google_app_id',
+			'social_auth_google_secret_key',
+			'social_auth_insatagram_client_id',
+			'social_auth_insatagram_secret_key'
+		];
+
+		foreach ($social_auth_config as $social_auth_config_key){
+			if (isset($this->request->post[$social_auth_config_key])) {
+				$this->data[$social_auth_config_key] = $this->request->post[$social_auth_config_key];
+				} elseif (isset($store_info[$social_auth_config_key])) {
+				$this->data[$social_auth_config_key] = $store_info[$social_auth_config_key];
+				} else {
+				$this->data[$social_auth_config_key] = '';
+			} 		
+		}
 			
 			if (isset($this->request->post['config_google_analytics'])) {
 				$this->data['config_google_analytics'] = $this->request->post['config_google_analytics'];

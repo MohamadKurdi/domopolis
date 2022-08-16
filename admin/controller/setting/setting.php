@@ -3008,6 +3008,23 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$this->data['config_rainforest_delete_no_offers_counter'] = $this->config->get('config_rainforest_delete_no_offers_counter');
 		}
+
+		$social_auth_config = [
+			'social_auth_facebook_app_id',
+			'social_auth_facebook_secret_key',
+			'social_auth_google_app_id',
+			'social_auth_google_secret_key',
+			'social_auth_insatagram_client_id',
+			'social_auth_insatagram_secret_key'
+		];
+
+		foreach ($social_auth_config as $social_auth_config_key){
+			if (isset($this->request->post[$social_auth_config_key])) {
+				$this->data[$social_auth_config_key] = $this->request->post[$social_auth_config_key]; 
+			} else {
+				$this->data[$social_auth_config_key] = $this->config->get(${$social_auth_config_key});
+			}			
+		}
 		
 
 		$this->load->model('setting/store');

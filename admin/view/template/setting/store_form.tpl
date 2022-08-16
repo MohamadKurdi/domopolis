@@ -1202,6 +1202,32 @@
 								</div>
 								
 								<div id="tab-google-ya-fb-vk">
+									<h2 style="color:#57AC79">Авторизация Google + Facebook APP</h2>
+							<table class="form">
+								<tr>		
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Google APP ID</span></p>
+										<input type="text" name="social_auth_google_app_id" value="<?php echo $social_auth_google_app_id; ?>" size="30" style="width:150px;" />
+									</td>
+									
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Google Secret Key</span></p>
+										<input type="text" name="social_auth_google_secret_key" value="<?php echo $social_auth_google_secret_key; ?>" size="30" style="width:150px;" />
+									</td>	
+									
+										<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">FB APP ID</span></p>
+										<input type="text" name="social_auth_facebook_app_id" value="<?php echo $social_auth_facebook_app_id; ?>" size="30" style="width:150px;" />
+									</td>
+									
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">FB APP Secret Key</span></p>
+										<input type="text" name="social_auth_facebook_secret_key" value="<?php echo $social_auth_facebook_secret_key; ?>" size="30" style="width:150px;" />
+									</td>	
+								</tr>
+							</table>
+
+									
 							<h2 style="color:#57AC79">Google Tag Manager (GTM) + Custom JS code</h2>
 							<table class="form">
 								<tr>		
