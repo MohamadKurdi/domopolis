@@ -124,8 +124,6 @@ class OffersParser
 
 		$sql = "SELECT DISTINCT(asin), product_id " . $sql . " ORDER BY amzn_last_offers ASC LIMIT " . (int)\hobotix\RainforestAmazon::offerParserLimit;
 
-		var_dump($sql);
-
 		$query = $this->db->ncquery($sql);
 
 		foreach ($query->rows as $row){
