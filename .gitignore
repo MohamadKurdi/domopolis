@@ -57,11 +57,15 @@
 #Кэш системного пользователя
 /.cache/
 
-#Шаблоны, языки
+#Шаблоны
 /catalog/view/theme/kp/
 /catalog/view/theme/dp/
 /catalog/view/theme/ho/
-/catalog/language/
+
+#Языки
+/catalog/language/russian
+/catalog/language/ukrainian
+
 
 #Рассылки
 /send/*
