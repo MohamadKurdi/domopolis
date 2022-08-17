@@ -228,7 +228,7 @@
 
 
 <? /* NPROGRESS */ ?>
-<script src="/js/node_modules/nprogress/nprogress.js" async="async" defer></script>
+<script src="<?php echo trim($this->config->get('config_static_subdomain')); ?>/js/node_modules/nprogress/nprogress.js" async="async" defer></script>
 <script>
 	window.addEventListener('beforeunload', function(event) {
 	console.log('BeforeUnload fired');			
