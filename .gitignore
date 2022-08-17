@@ -58,7 +58,9 @@
 /.cache/
 
 #Шаблоны, языки
-/catalog/view/theme/
+/catalog/view/theme/kp/
+/catalog/view/theme/dp/
+/catalog/view/theme/ho/
 /catalog/language/
 
 #Рассылки
