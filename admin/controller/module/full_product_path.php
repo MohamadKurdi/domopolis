@@ -11,8 +11,6 @@ class ControllerModuleFullProductPath extends Controller {
 		$data['_url'] = &$this->url;
 		$data['token'] = $this->session->data['token'];
 
-		$this->document->addScript('view/full_product_path/itoggle.js');
-		$this->document->addStyle('view/full_product_path/style.css');
 
 		$this->load->language('module/full_product_path');
 		$this->document->setTitle(strip_tags($this->language->get('module_title')));
@@ -150,13 +148,6 @@ class ControllerModuleFullProductPath extends Controller {
 	public function install() {
 		$this->load->model('setting/setting');
 		$this->model_setting_setting->editSetting('full_product_path', array('full_product_path_largest' => true));
-		if(is_file(DIR_CATALOG.'../vqmod/xml/full_product_path.xml.disabled'))
-			rename(DIR_CATALOG.'../vqmod/xml/full_product_path.xml.disabled', DIR_CATALOG.'../vqmod/xml/full_product_path.xml');
-	}
-	
-	public function uninstall() {
-		if(is_file(DIR_CATALOG.'../vqmod/xml/full_product_path.xml'))
-			rename(DIR_CATALOG.'../vqmod/xml/full_product_path.xml', DIR_CATALOG.'../vqmod/xml/full_product_path.xml.disabled');
 	}
 	
 	private function validate() {
@@ -169,4 +160,3 @@ class ControllerModuleFullProductPath extends Controller {
 		return false;
 	}
 }
-?>
