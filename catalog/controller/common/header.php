@@ -244,24 +244,49 @@
 			
 			/*---------------- END STYLES -------------*/
 			//NODE JS PACKAGE JSON READER
-			$npmPackageLockFile 	= DIR_ENGINE . 'js/' . 'package-lock.json';
-			$npmScripts 			= [];
-			if (file_exists($npmPackageLockFile)){
-				if ($npmDependencies = json_decode(file_get_contents($npmPackageLockFile), true)){
-					foreach ($npmDependencies['dependencies'] as $npmDependency => $npmInfo){
 
-						$npmPackageInfoFile = DIR_ENGINE . 'js/node_modules/' . $npmDependency . '/package.json';
+			if ($this->data['npmScriptsMinified'] = $this->cache->get('npm.scripts.minified1.' . $this->config->get('config_store_id'))){
 
-						if (file_exists($npmPackageInfoFile)){
-							if ($npmPackageInfo = json_decode(file_get_contents($npmPackageInfoFile), true)){
-								if (!empty($npmPackageInfo['main'])){
-									$this->log->debug($npmPackageInfo['main']);
 
+			} else {
+
+				$npmPackageLockFile 	= DIR_ENGINE . 'js/' . 'package-lock.json';
+				$npmScripts 			= [];
+				if (file_exists($npmPackageLockFile)){
+					if ($npmDependencies = json_decode(file_get_contents($npmPackageLockFile), true)){
+						foreach ($npmDependencies['dependencies'] as $npmDependency => $npmInfo){
+
+							$npmPackageDirectory 	= DIR_ENGINE . 'js/node_modules/' . $npmDependency . '/';
+							$npmPackageRelative		= '/js/node_modules/' . $npmDependency . '/';
+							$npmPackageInfoFile 	= $npmPackageDirectory . 'package.json';
+
+							if (file_exists($npmPackageInfoFile)){
+								if ($npmPackageInfo = json_decode(file_get_contents($npmPackageInfoFile), true)){
+									if (!empty($npmPackageInfo['main'])){
+										if (file_exists($npmPackageDirectory . $npmPackageInfo['main'])){
+											$npmScripts[] = ($npmPackageRelative . $npmPackageInfo['main']);
+										}
+									}
 								}
 							}
 						}
 					}
 				}
+
+				if ($npmScripts){
+					$query = "f=" . implode(',', $npmScripts);
+					$this->data['npmScriptsMinified'] = Minify\StaticService\build_uri($static_uri, $query, 'js');
+
+					if ($this->config->get('config_static_subdomain') && $this->data['npmScriptsMinified']){
+						$this->data['npmScriptsMinified'] = ltrim($this->data['npmScriptsMinified'], '/');
+
+						if (file_exists(DIR_SITE . $this->data['npmScriptsMinified'])){
+							$this->data['npmScriptsMinified'] = trim($this->config->get('config_static_subdomain')) . $this->data['npmScriptsMinified'];
+						}
+					}
+				}
+
+				$this->cache->get('npm.scripts.minified.' . $this->config->get('config_store_id'), $this->data['npmScriptsMinified']);
 			}
 			
 			//BEGIN SCRIPTS			
