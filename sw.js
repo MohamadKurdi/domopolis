@@ -1,10 +1,8 @@
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js');
 
 const OFFLINE_HTML 	= '/offline.html';
-const FAVICON 		= '/favicon.ico';
+const PRECACHE = [{url: OFFLINE_HTML, revision: '1001'}];
 
-
-const PRECACHE = [{url: OFFLINE_HTML, revision: '1001'}, {url: FAVICON, revision: '1'}];
 workbox.precaching.precacheAndRoute(PRECACHE);
 
 
