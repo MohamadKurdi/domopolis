@@ -1,0 +1,90 @@
+/* geoip */
+.geoip-block
+{
+    margin: -20px 0 10px 0;
+    position: relative;
+}
+
+.geoip-block .content
+{
+    position: absolute;
+    right: 0;
+    z-index: 100;
+	  top: -6px;
+}
+
+.geoip-block input
+{
+    background-color: #fff;
+    border: 1px solid #ccc;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-shadow: 0 2px 0 #F0F0F0;
+    -moz-box-shadow: 0 2px 0 #F0F0F0;
+    box-shadow: 0 2px 0 #F0F0F0;
+}
+
+.geoip-block .geoip-search
+{
+    display: none;
+}
+
+.geoip-block .zone
+{
+    border-bottom: 1px dotted;
+    cursor: pointer;
+}
+
+.geoip-block .ui-autocomplete
+{
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+* html .geoip-block .ui-autocomplete
+{
+    height: 300px;
+}
+
+#geoip-confirm-region
+{
+    text-align: center;
+    margin-top: 15px;
+    font-size: 16px;
+    line-height: 20px;
+}
+
+#geoip-choose-region .column
+{
+    float: left;
+    width: 33%;
+}
+
+#geoip-choose-region .column .i
+{
+    margin-bottom: 15px;
+}
+
+#geoip-choose-region .column a
+{
+    font-weight: bold;
+    color: #38B0E3;
+}
+
+#geoip-choose-region .geoip-block
+{
+    margin: 10px 0 15px;
+}
+
+#geoip-choose-region .geoip-block input
+{
+    width: 50%;
+}
+
+#geoip-choose-region .border
+{
+    margin: 15px 0;
+    border-bottom: 1px solid #ededed;
+}

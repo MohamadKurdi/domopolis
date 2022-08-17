@@ -1,0 +1,214 @@
+.ru_list #return_block p:first-child {
+background-color:#C4E2AF;
+box-sizing:border-box;
+border:1px solid #7cc04b;
+color:#2F5F0D;
+margin:0 auto 15px -1px;
+padding:25px;
+}
+#return_block{
+	width: 100%;
+	display: block;
+}
+.ru_list {
+padding:0;
+}
+.ru_list .step {
+display:block;
+}
+.ru_list .info_item_text {
+display:block;
+float:left;
+height:140px;
+vertical-align:middle;
+border:1px solid #ccc;
+border-right:1px solid transparent;
+width:290px;
+position:relative;
+overflow:visible;
+z-index:1;
+color:#7f7f7f;
+padding:10px 40px 10px 105px;
+}
+.ru_list .info_item_text:nth-child(2) {
+background-image:url(/image/data/info-pages/first-p.png);
+background-repeat:no-repeat;
+background-position:10% 40%!important;
+}
+
+.ru_list .info_item_text:nth-child(3) {
+background-image:url(/image/data/info-pages/second-p.png);
+background-repeat:no-repeat;
+background-position:10% 40%!important;
+border-left:1px solid transparent;
+}
+
+.ru_list .info_item_text:nth-child(4) {
+background-image:url(/image/cache/data/icon/8-50x50.png);
+background-repeat:no-repeat;
+background-position:10% 45%!important;
+border-left:1px solid transparent;
+font-size:14px;
+}
+
+.ru_list .info_item_text:nth-child(4) span:not(.step) {
+font-size:12px;
+margin-top:-15px;
+display:block;
+width:100%;
+}
+
+.ru_list .info_item_text:nth-child(5) {
+background-image:url(/image/data/info-pages/fourth-p.png);
+background-repeat:no-repeat;
+background-position:10% 45%!important;
+border-left:1px solid transparent;
+}
+
+.ru_list .info_item_text:after {
+content:'';
+position:absolute;
+right:-25px;
+top:0;
+width:45px;
+height:138px;
+background-repeat:no-repeat;
+z-index:4;
+background-image:url(/image/data/info-pages/right-arrow.jpg);
+}
+
+.ru_list .info_item_text:nth-child(5) span:after {
+content:'';
+position:absolute;
+right:-25px;
+top:-2px;
+width:45px;
+height:145px;
+background-repeat:no-repeat;
+z-index:4;
+background-image:url(/image/data/info-pages/right-arrow-last.jpg);
+}
+
+.ru_list .info_item_text a {
+color:#7cc04b;
+}
+
+.ru_list li#return_block p:last-child {
+width:100%;
+float:left;
+display:block;
+}
+
+.ru_list .sub_title {
+color:#7f7f7f;
+font-size:18px;
+text-transform:uppercase;
+display: block;
+width:100%;
+}
+
+.ru_list .sub_title + ul {
+padding-left:50px;
+}
+
+.ru_list #return_block .sub_title:nth-child(8),.ru_list #information-wrapper-block li ul {
+width:100%;
+display:block;
+float:left;
+}
+
+.ru_list .sub_title + ul > li,.ru_list .sub_title + ul + p {
+color:#7f7f7f;
+padding-bottom:10px;
+}
+
+/* SMARTPHONES PORTRAIT */
+@media only screen and (min-width: 240px) {
+.ru_list #return_block .info_item_text:nth-child(5):after {display: none;}
+.ru_list #return_block .info_item_text:after {display: none;}
+.ru_list #return_block .info_item_text:before {display: none;}
+.ru_list .info_item_text:after {
+content:'';
+position:absolute;
+right:-45px;
+}
+.ru_list .info_item_text:nth-child(5) span:after {
+display: none;
+}
+.ru_list .info_item_text {
+	width:100%;
+	min-height:140px;
+	max-height:240px;
+	height:100%;
+    border-left: 1px solid #ccc!important;
+    border-right: 1px solid #ccc!important;
+    padding: 10px 10px 10px 150px;
+}
+}
+
+/* SMARTPHONES LANDSCAPE */
+@media only screen and (min-width: 480px) {
+.ru_list #return_block .info_item_text:nth-child(5):after {display: block;}
+.ru_list #return_block .info_item_text:after {display: block;}
+.ru_list #return_block .info_item_text:before {display: block;}
+.ru_list .info_item_text {width:95%;min-height:140px;max-height:240px;height:100%;}
+.ru_list .info_item_text:after {
+content:'';
+position:absolute;
+right:-45px;
+}
+.ru_list .info_item_text:nth-child(5) span:after {
+display: none;
+}
+.ru_list .info_item_text {
+    border-left: 1px solid #ccc!important;
+    border-right: 1px solid #ccc!important;
+    padding: 10px 100px 10px 150px;
+}
+
+}
+
+/* TABLETS PORTRAIT */
+@media only screen and (min-width: 768px) {
+.ru_list #return_block .info_item_text:nth-child(5):after {display: block;}
+.ru_list #return_block .info_item_text:after {display: block;}
+.ru_list #return_block .info_item_text:before {display: block;}
+.ru_list .info_item_text {width:49%;height:140px;}
+.ru_list .info_item_text:after {
+content:'';
+position:absolute;
+right:-45px;
+}
+.ru_list .info_item_text:nth-child(5) span:after {
+display: none;
+}
+.ru_list .info_item_text {
+    border-left: 1px solid transparent!important;
+    border-right: 1px solid transparent!important;
+    padding: 10px 40px 10px 150px;
+}
+.ru_list .info_item_text:nth-child(2) {
+    border-left: 1px solid #ccc;
+}
+.ru_list .info_item_text:nth-child(4) {
+    border-left: 1px solid #ccc;
+}
+/* TABLET LANDSCAPE / DESKTOP */
+@media only screen and (min-width: 1024px) {
+.ru_list .info_item_text {width:25%;max-width: 289px;height:140px;}
+.ru_list .info_item_text {
+    border-left: 1px solid transparent!important;
+    padding: 10px 10px 10px 90px;
+}
+.ru_list .info_item_text:nth-child(2) {
+    border-left: 1px solid #ccc!important;
+}
+} 
+
+/* RUSSIAN END*/
+
+/* UKRAINE BEGIN*/
+
+.ua_list #return_block p:first-child{background-color:#C4E2AF;box-sizing:border-box;border:1px solid #7cc04b;color:#2F5F0D;margin:0 auto 15px -1px;padding:25px}#return_block{width:100%;display:block}.ua_list{padding:0}.ua_list .step{display:block}.ua_list .info_item_text{display:block;float:left;height:140px;vertical-align:middle;border:1px solid #ccc;border-right:1px solid transparent;width:290px;position:relative;overflow:visible;z-index:1;color:#7f7f7f;padding:10px 40px 10px 105px}.ua_list .info_item_text:nth-child(2){background-image:url(/image/data/info-pages/first-p.png);background-repeat:no-repeat;background-position:10% 40%!important}.ua_list .info_item_text:nth-child(3){background-image:url(/image/data/info-pages/second-p.png);background-repeat:no-repeat;background-position:10% 40%!important;border-left:1px solid transparent}.ua_list .info_item_text:nth-child(4){background-image:url(/image/cache/data/icon/8-50x50.png);background-repeat:no-repeat;background-position:10% 45%!important;border-left:1px solid transparent;font-size:14px}.ua_list .info_item_text:nth-child(4) span:not(.step){font-size:12px;margin-top:-15px;display:block;width:100%}.ua_list .info_item_text:nth-child(5){background-image:url(/image/data/info-pages/fourth-p.png);background-repeat:no-repeat;background-position:10% 45%!important;border-left:1px solid transparent}.ua_list .info_item_text:after{content:'';position:absolute;right:-25px;top:0;width:45px;height:138px;background-repeat:no-repeat;z-index:4;background-image:url(/image/data/info-pages/right-arrow.jpg)}.ua_list .info_item_text:nth-child(5) span:after{content:'';position:absolute;right:-25px;top:-2px;width:45px;height:145px;background-repeat:no-repeat;z-index:4;background-image:url(/image/data/info-pages/right-arrow-last.jpg)}.ua_list .info_item_text a{color:#7cc04b}.ua_list li#return_block p:last-child{width:100%;float:left;display:block}.ua_list .sub_title{color:#7f7f7f;font-size:18px;text-transform:uppercase;display:block;width:100%}.ua_list .sub_title+ul{padding-left:50px}.ua_list #return_block .sub_title:nth-child(8),.ua_list #information-wrapper-block li ul{width:100%;display:block;float:left}.ua_list .sub_title+ul >li,.ua_list .sub_title+ul+p{color:#7f7f7f;padding-bottom:10px}@media only screen and (min-width:240px){.ua_list #return_block .info_item_text:nth-child(5):after{display:none}.ua_list #return_block .info_item_text:after{display:none}.ua_list #return_block .info_item_text:before{display:none}.ua_list .info_item_text:after{content:'';position:absolute;right:-45px}.ua_list .info_item_text:nth-child(5) span:after{display:none}.ua_list .info_item_text{width:100%;min-height:140px;max-height:240px;height:100%; border-left:1px solid #ccc!important; border-right:1px solid #ccc!important; padding:10px 10px 10px 150px}}@media only screen and (min-width:480px){.ua_list #return_block .info_item_text:nth-child(5):after{display:block}.ua_list #return_block .info_item_text:after{display:block}.ua_list #return_block .info_item_text:before{display:block}.ua_list .info_item_text{width:95%;min-height:140px;max-height:240px;height:100%}.ua_list .info_item_text:after{content:'';position:absolute;right:-45px}.ua_list .info_item_text:nth-child(5) span:after{display:none}.ua_list .info_item_text{ border-left:1px solid #ccc!important; border-right:1px solid #ccc!important; padding:10px 100px 10px 150px}}@media only screen and (min-width:768px){.ua_list #return_block .info_item_text:nth-child(5):after{display:block}.ua_list #return_block .info_item_text:after{display:block}.ua_list #return_block .info_item_text:before{display:block}.ua_list .info_item_text{width:49%;height:140px}.ua_list .info_item_text:after{content:'';position:absolute;right:-45px}.ua_list .info_item_text:nth-child(5) span:after{display:none}.ua_list .info_item_text{ border-left:1px solid transparent!important; border-right:1px solid transparent!important; padding:10px 40px 10px 150px}.ua_list .info_item_text:nth-child(2){ border-left:1px solid #ccc}.ua_list .info_item_text:nth-child(4){ border-left:1px solid #ccc}@media only screen and (min-width:1024px){.ua_list .info_item_text{width:25%;max-width:289px;height:140px}.ua_list .info_item_text{ border-left:1px solid transparent!important; padding:10px 40px 10px 105px}.ua_list .info_item_text:nth-child(2){ border-left:1px solid #ccc!important}}
+
+/* UKRAINE ENDS*/

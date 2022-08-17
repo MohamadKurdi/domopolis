@@ -1,0 +1,36 @@
+.info_list{
+	padding:0px;
+}
+p.info_title{
+	width:100%;
+	text-align: center;
+	font-size: 14pt;
+	color: #a4a4a4;
+} 
+p.second-p {
+background-color:#C4E2AF;
+box-sizing:border-box;
+border:1px solid #7cc04b;
+color:#2F5F0D;
+margin:0 auto 15px -1px;
+padding:25px;
+}
+
+p.logo-user{
+	padding-top:120px;
+    background-position: top center;
+    background-image:url(//kitchen-profi.com.ua/image/data/info-pages/user.png);
+    background-repeat:no-repeat;
+	width:100%;
+	text-align: center;
+}
+
+p.logo-user a{
+	color:#7CC04B;
+}
+p.logo-user span{
+	width:100%;
+	text-align: center;
+	display: block;
+	float: left;
+}

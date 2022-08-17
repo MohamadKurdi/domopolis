@@ -1,0 +1,44 @@
+.menu .topmenu ul li .level3 a,.menu > ul > li > div.topmenu_theme > ul > li > div.topmenu a {width: inherit !important;}
+.menu > ul > li > div.topmenu > ul + ul {margin: 0; padding-left: 0 !important;}
+.menu > ul > li > div.topmenu > ul + ul.manufacturer_list li:first-child {background-color: #EEE;border-bottom: 1px solid #fefefe;}
+.menu > ul > li > div > ul > li > a div.sub_image + span {display: inline-block;padding-bottom: 13px;padding-top: 13px;}
+.sub_image {padding-left: 10px}
+.menu #topbrand {padding: 0;}
+.menu #topbrand ul li {margin-bottom: 0;}
+@media only screen and (max-width: 990px) {
+.ma-nav-mobile-container{position:relative}
+.navbar .btn-navbar{display:block;float:left;padding:13px 0;margin:0;width:100%}
+.navbar .btn-navbar div{display:block;float:left;margin-left:40px;line-height:24px;font-family:"Open Sans",Arial,Helvetica,sans-serif;font-size:12px;text-decoration:none;text-transform:uppercase;font-weight:700}
+.navbar{position:relative}
+.navbar .btn-navbar .icon-bar{display:block;width:18px;height:2px;-webkit-border-radius:1px;-moz-border-radius:1px;border-radius:1px;-webkit-box-shadow:0 1px 0 rgba(255,255,255,0.5);-moz-box-shadow:0 1px 0 rgba(255,255,255,0.5);box-shadow:0 1px 0 rgba(255,255,255,0.5);margin-left:10px}
+.btn-navbar .icon-bar{margin-top:4px}
+#navbar-inner{min-height:50px}
+#ma-mobilemenu{display:none;height:auto}
+.nav-collapse,.nav-collapse.collapse{/* overflow-x:hidden; *//* overflow-y:hidden */}
+.menu1 .mobilemenu{list-style:none;margin:0;padding:0}
+.menu1 .mobilemenu .categ_image{display:none}
+.nav-collapse{text-align:left;clear:both}
+.menu1 .mobilemenu ul{padding:0;margin:0;display:block}
+.menu1 .mobilemenu li{cursor:pointer;list-style-type:none;padding:0;margin:0;float:left;display:block;width:100%;position:relative}
+.menu1 .mobilemenu li div{padding:0 34px 15px 15px;display:block;clear:both}
+.menu1 .mobilemenu a{text-decoration:none;line-height:34px;display:block;cursor:pointer;border-top:1px solid rgba(0,0,0,0.1)}
+.menu1 .mobilemenu > li > a{font-size:12px;padding:0 10px;font-family:"Open Sans",Arial,Helvetica,sans-serif;text-transform:uppercase;font-weight:700}
+.menu1 .mobilemenu ul a{padding-left:25px;padding-right:50px}
+.menu1 .mobilemenu ul ul a{padding-left:40px}
+.menu1 .mobilemenu ul ul ul a{padding-left:55px}
+.menu1 .mobilemenu ul ul ul ul a{padding-left:70px}
+.menu1 .mobilemenu ul ul ul ul ul a{padding-left:85px}
+.menu1 .mobilemenu span.head a{background:url(../image/icon/menu_down.png) no-repeat center right}
+.menu1 .mobilemenu li.active>span.head a{background:url(../image/icon/menu_up.png) no-repeat center right}
+.menu1 .mobilemenu li.selected span.head a{background:url(../image/icon/menu_up.png) no-repeat center right}
+.menu1 .mobilemenu span.head{position:absolute;top:0;right:0;z-index:7}
+.menu1 .mobilemenu span.head a{display:block;height:34px;padding:0;width:34px;border:0}
+.menu1 .mobilemenu .categories > span.head a,.menu1 .mobilemenu .linkinfo > span.head a{width:766px}
+.menu1 .mobilemenu li.custombox,.menu1 .mobilemenu #topmenuaccount{display:none}
+}
+@media only screen and (min-width: 480px) and (max-width: 789px) {
+.menu1 .mobilemenu .categories > span.head a,.menu1 .mobilemenu .linkinfo > span.head a{width:448px}
+}
+@media only screen and (max-width: 479px) {
+.menu1 .mobilemenu .categories > span.head a,.menu1 .mobilemenu .linkinfo > span.head a{width:280px}
+}

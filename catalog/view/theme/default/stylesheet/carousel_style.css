@@ -1,0 +1,43 @@
+.content_carou .carou .itemcolumns {min-height:415px; }
+.carou .itemcolumns {min-height:415px; }
+
+
+.list_carousel{
+	position:relative;
+	/* overflow:hidden; */
+	/* padding-top:53px; */
+
+	float: left;
+	width: 100%;
+}
+
+.list_carousel .itemcolumns{
+    height:100%;
+    float:left;
+    display: block;
+	padding-left:0px;
+	
+}
+
+.list_carousel a.prev, .list_carousel a.next{
+	display:block;
+	position:absolute;
+    width:32px; 
+	height:32px;
+	top:0px;
+	background-repeat:no-repeat;
+    cursor:pointer;
+	text-indent:-9999px;
+
+}
+.list_carousel  a.prev{background-position:0px center; right:32px;
+}
+.list_carousel  a.next{ background-position: -36px center ; right:0px;
+}
+.list_carousel.content_carou  a.prev{ right: 34px; top: -34px; height: 34px;}
+.list_carousel.content_carou  a.next{ right: 0; top: -34px; height: 34px;}
+
+
+
+
+

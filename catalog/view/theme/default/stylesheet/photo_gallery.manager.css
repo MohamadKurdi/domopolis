@@ -1,0 +1,59 @@
+.transition{
+    -webkit-transition: all 100ms ease-in-out;
+    -moz-transition: all 100ms ease-in-out;
+    -ms-transition: all 100ms ease-in-out;
+    -o-transition: all 100ms ease-in-out;
+    transition: all 100ms ease-in-out;
+}
+
+.box-gallery, .gallery{
+    text-align: center;
+}
+.gallery-product{
+    text-align: left !important;
+}
+.box-gallery .gallery_cover, .gallery .gallery_photo{
+    text-decoration: none;
+    display: inline-block;
+    border: 1px solid #ddd;
+    padding: 5px;
+    border-radius:4px;
+    margin:3px;
+}
+.box-gallery .gallery_cover:hover, .gallery .gallery_photo:hover{
+    border: 1px solid #afafaf;
+    box-shadow: 0 0 3px 0px rgba(0, 0, 0, 0.2),inset 0 1px 1px #fff;    
+}
+.box-gallery .gallery_cover img, .box-gallery .gallery_cover span{
+    display: block;
+}
+.box-gallery .gallery_cover span{
+    text-align: center;
+    padding-top:6px;
+}
+
+.gallery .gallery_photo img, .gallery .gallery_photo span{
+    display: block;
+}
+.gallery .gallery_photo span{
+    text-align: center;
+    padding-top:6px;
+}
+.gallery .album_description{
+    padding: 10px;
+    text-align: left;
+}
+
+/* Gallery page */
+.limiter{
+    display: block;
+    height: 30px;
+    position: relative;
+}
+.limiter .limit{
+    right: 10px;
+    position: absolute;
+}
+.album_link{
+    text-decoration: none;
+}

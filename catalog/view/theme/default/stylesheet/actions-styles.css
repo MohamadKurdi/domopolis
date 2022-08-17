@@ -1,0 +1,100 @@
+/* Actions List */
+#actionsList {
+	overflow: auto;
+}
+#actionsList > div {
+	margin-bottom: 15px;
+	overflow: auto;
+}
+
+#actionsList .actionsImage {
+	height: auto;
+	position: relative;
+	width: auto;
+	float: left;
+	margin-right: 10px;
+}
+#actionsList .actionsHeader h1 {
+	margin: 0px;
+	padding: 0px;
+	line-height: 14px;
+}
+#actionsList .actionsHeader h1 a {
+	font-size: 14px;
+	font-weight: bold;
+	letter-spacing: 0.5px;
+	text-decoration: none;
+	color:#516A1E;
+}
+#actionsList .actionsDate {
+	font-weight: bold;
+	display: block;
+	color: #000;
+}
+#actionsList .actionsDescription, #actionsList .actionsDate {
+	margin-top: 6px;
+}
+#actionsList .actionsReadMore {
+	text-align: right;
+}
+#actionsList .actionsReadMore a {
+	text-decoration: none;
+}
+#actionsList .actionsReadMore a:hover {
+	text-decoration: underline;
+}
+
+/* Actions Info */
+#actionsInfo {
+	margin-bottom: 0px;
+	overflow: auto;
+	vertical-align: top;
+}
+
+.actionsModule .actionsDate, #actionsInfo .actionsDate {
+	font-weight: bold;
+}
+
+#actionsInfo .actionsDescription, #actionsInfo .actionsDate {
+	margin-top: 10px;
+}
+.actionsModule {
+	padding-bottom: 10px;
+	border-bottom: 1px solid #EEEEEE;
+}
+.actionsModule + .actionsModule {
+	margin-top: 10px;
+}
+.actionsModule div + div {
+	margin-top: 6px;
+}
+.actionsReadAll {
+	margin-top: 10px;
+}
+.actionsRelHeader .left {
+	float: left;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 14px;
+	color: #333;
+}
+.actionsRelHeader .right {
+	float: right;
+}
+.actionsRelHeader {
+	border-bottom: 1px solid #DBDEE1;
+	padding-bottom: 10px;
+	overflow: auto;
+}
+
+.actionsRelProducts {
+	padding: 10px 0px;
+	margin-bottom: 20px;
+}
+.actionsRelProducts > div {
+	text-align: center;
+	background: transparent;
+	margin: 0px 15px 15px 0px;
+	padding: 0px;
+}

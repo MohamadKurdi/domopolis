@@ -1,0 +1,46 @@
+.carousel  {
+   max-width: 1080px;
+  width: 100%;
+  float: left;
+}
+.carousel-wrapper {
+   margin: 10px 30px; /* отступы для стрелок */
+   overflow: hidden; /* скрываем содержимое, выходящее за рамки основной области */
+   position:relative;
+}
+.carousel-items {
+   width: 10000px; /* устанавливаем большую ширину для набора элементов */
+   position: relative; /* позиционируем блок относительно основной области карусели */
+}
+.carousel-block {
+    float: left;
+  height: 135px;
+  overflow: hidden;
+  padding: 0px 10px 10px 0px;
+}
+.carousel-block img{
+	display:block;
+}
+
+/*********** BUTTONS ***********/
+.carousel-button-left a, .carousel-button-right a{
+   width: 25px; 
+   height: 36px; 
+   position: relative;
+   top: 63px;
+   cursor: pointer; 
+   text-decoration:none;
+}
+.carousel-button-left a{
+   float: left; 
+   background: url(../image/kitchen-carousel/carousel-left.png); 
+}
+.carousel-button-right a{
+   float: right;
+   background: url(../image/kitchen-carousel/carousel-right.png); 
+}
+
+/*********** SHADOW ***********/
+.shadow{
+	border: 1px solid #eee;
+}

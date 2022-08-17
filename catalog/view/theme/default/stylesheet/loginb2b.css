@@ -1,0 +1,283 @@
+.new_user{
+  float: left;
+    width: 48%;
+}
+
+.clear{
+  clear: both;
+}
+
+.new_user .title_div, .reg_user .title_div{
+  color: #000000;
+  font-family: PT Sans;
+  font-weight: 400;
+  font-size: 16px;
+  margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.new_user .content_div, .reg_user .content_div{
+  overflow: auto;
+  margin-bottom: 20px;
+  background-color: rgba(0,0,0,0.03);
+  border: 1px solid rgba(0,0,0,0.08);
+  padding: 20px;
+  min-height: 190px;
+  color: #2B2B2B;
+}
+
+.new_user .content_div a.button{
+    background-color: #DEDEDE;
+      color: #363636;
+      font-family: PT Sans;
+  font-size: 12px;
+  font-weight: bold;
+    display: inline-block;
+  text-decoration: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  line-height: 18px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  background-position: left center;
+  background-repeat: no-repeat;
+  transition: all .4s ease;
+  -webkit-transition: all .4s ease;
+  -moz-transition: all .4s ease;
+}
+
+.reg_user{
+  /*background-color: #FFF;*/
+  /*float: right;*/
+    /*width: 48%;*/
+}
+
+.reg_user .content_div{
+  background-color: transparent;
+}
+
+.reg_user .forgotten{
+  margin: 10px 0 0 0;
+  display: block;
+  padding: 0;
+}
+
+.forms_div{
+  background-color: #fff;
+  padding: 50px 20px 20px 40px;
+}
+
+.forgotten{
+    display: block;
+  margin: 10px 0 0px 0;
+}
+/*-----------------------------------------------------------------------------------------------------------------------------*/
+body .simplecheckout-customer-left{display: none;}
+/*body .reg_div{width: 49%; float: right;}*/
+body .simpleregister-block-content{
+  border:0; 
+  padding: 0;
+/*   margin: 0 100px;
+ -webkit-column-count: 2;
+  -moz-column-count: 2;
+  column-count: 2;*/
+  /*height: 140px;*/
+}
+body .simpleregister-block-content .simplecheckout-customer{
+  width: 100%;
+  margin: 0 ;
+}
+body .simplecheckout-customer .simplecheckout-customer-right select{
+  border: 1px solid #CCC;
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 5px;
+}
+
+body .simpleregister-button-right{
+  margin: 0 0 0 0;
+  padding: 0 0 20px 0;
+  float: left;
+}
+body .simple-content .buttons{border: 0 !important; margin: 0;}
+body .simpleregister-have-account{
+  margin: 0;
+  padding: 10px 135px 0 135px;
+  background-color: #fff;
+  text-align: right;
+}
+
+body .simpleregister-have-account a{
+  text-decoration: none;
+}
+
+body .simpleregister-have-account a:hover{
+  text-decoration: underline;
+}
+
+.star{
+  margin: 0;
+  padding: 0 0 20px 0;
+}
+
+.text_for_refistration{
+  margin: 0;
+  width: 100%;
+  padding: 20px 0 20px 0px;
+}
+
+body a.to_the_retail{
+  text-decoration: none;
+  float: right;
+  margin: 25px 0 0 0;
+  background-color: #DEDEDE;
+  padding: 8px 12px;
+  color: #363636;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 18px;
+  border-radius: 3px;
+    transition: 0.5s;
+  -webkit-transition: 0.5s;
+  -moz-transition: 0.5s;
+}
+
+body a.to_the_retail:hover{
+  background-color: #363636;
+  color:#DEDEDE;
+  text-decoration: none;
+}
+
+a.to_the_retail:hover{
+  text-decoration: underline;
+}
+.text_for_refistration span{
+  font-size: 18px;
+  font-weight: 700;
+  display: block;
+  padding: 0 0 10px 0
+}
+
+#content h1 {display: none;}
+
+/*.login_div{
+  width: 49%;
+  float: left;
+}*/
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+.info_menu_list{
+  display: none!important;
+}
+
+body #footer{
+  padding: 0 0px 20px 0px;
+}
+
+.main #content{
+  margin-bottom: 0; 
+  min-height: 0;
+}
+
+.main .content_div{
+  margin-bottom: 0;
+  background-color: #fff;
+}
+
+/*--------------------------------------------------------------------------------------------------------*/
+
+/*-------------------------------------------Footer 14.05----------------------------------------------------------*/
+
+.info_menu_block{
+  width: 100%;
+  max-width: 1170px;
+  margin: 50px auto 0; 
+  background-color: #fff;}
+.info_menu_block .info_menu_list{
+  padding: 10px 0 0 30px;
+  margin: 0;}
+
+.info_menu_list_second{
+    margin: 10px 0 10px 20px;
+      padding: 0;
+      border-left: 1px solid #DEDEDE;}
+.info_menu_list_second li{
+  margin: 5px 20px 8px 15px;
+  text-align: left;
+  display: block;
+  vertical-align: middle;
+  position: relative;
+  line-height: 10px;}
+.info_menu_list_second li a{
+ color: #7F7F7F;
+ text-decoration: none;}
+.info_menu_list_second li a:hover{color: #363636;}
+.info_menu_list li{
+  display: inline-block;
+  width: 180px;
+  margin: 0 40px 10px 0;
+  vertical-align: top;
+  text-align: center;
+  padding: 10px 0 0 0;}
+.info_menu_list li:last-child{margin: 0;}
+.info_menu_list li .info_menu{
+  padding: 50px 0 0 0;
+  font-size: 14px;
+  text-align: center;
+  text-decoration: none;
+  position: relative;
+  color: #7F7F7F;
+  display: block;}
+.info_menu_list li .info_menu:hover{color: #363636;}
+body .info_menu_list li.active .info_menu{color: #262626;}
+ .info_menu_list li .info_menu:before{
+  content: "";
+  display: block;
+  background-repeat: no-repeat;
+  background-image: url(../images/sprite_tabs.png);
+  width: 180px;
+  font-size: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 0;}
+.info_menu_list li:nth-child(1) .info_menu:before{background-position: center -35px; height: 30px; margin: 6px 0 0 0;}
+.info_menu_list li:nth-child(8) .info_menu:before{background-position: center -593px; height: 57px; margin: -12px 0 0 0;}
+.info_menu_list li:nth-child(4) .info_menu:before{background-position: center -101px; height: 34px; margin: 6px 0 0 0;}
+.info_menu_list li:nth-child(3) .info_menu:before{background-position: center -35px; height: 30px; margin: 6px 0 0 0;}
+.info_menu_list li:nth-child(6) .info_menu:before{background-position: center -268px; height: 36px; margin: 3px 0 0 0;}
+.info_menu_list li:nth-child(5) .info_menu:before{background-position: center -353px; height: 42px;}
+.info_menu_list li:nth-child(7) .info_menu:before{background-position: center -439px; height: 40px;}
+.info_menu_list li:nth-child(2) .info_menu:before{background-position: center -507px; height: 23px; margin: 10px 0 0 0;}
+/*  hover  */
+body .info_menu_list li:nth-child(1):hover .info_menu:before{background-position: center -2px;}
+body .info_menu_list li:nth-child(8):hover .info_menu:before{background-position: center -535px;}
+body .info_menu_list li:nth-child(4):hover .info_menu:before{background-position: center -66px;}
+body .info_menu_list li:nth-child(3):hover .info_menu:before{background-position: center -2px;}
+body .info_menu_list li:nth-child(6):hover .info_menu:before{background-position: center -229px;}
+body .info_menu_list li:nth-child(5):hover .info_menu:before{background-position: center -308px;}
+body .info_menu_list li:nth-child(7):hover .info_menu:before{background-position: center -397px;}
+body .info_menu_list li:nth-child(2):hover .info_menu:before{background-position: center -482px;}
+/*------------*/
+
+td.simplecheckout-customer-right input {
+    padding: 8px;
+}
+
+.custom-block-1 input[type="text"], .custom-block-1 input[type="password"],.custom-block-1  select {
+    padding: 8px;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.simplecheckout-block-content.custom-block-1 {
+    min-height: 605px;
+    padding: 20px;
+}
+.form-center .custom-block-1 {
+    padding-top: 15em;
+    padding-left: 8em;
+    padding-right: 8em;
+    background-color: #F5F5F5;
+}

@@ -1,0 +1,102 @@
+p{
+    padding:0px;
+    margin: 0px;
+}
+td p{
+    padding: 10px;
+    margin: 0px;
+}
+
+#contacts p{
+    padding:0px;
+}
+.info_list{
+    padding:0px;
+    width:100%;
+    text-align: center;
+}
+
+.info_list li table{
+    margin: 0!important;
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #DDD;
+    background-color: #fff;
+    border-color: #ddd;
+}
+
+.info_list li table tr td{
+    border-collapse: collapse;
+    border-color: #ddd;
+}
+
+.info_list li table tr td ul{
+    padding: 15px;
+}
+
+.info_list li table tr:first-child{
+    padding: 12px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #7CC04B;
+    font-weight: 400;
+    font-size: 14px;
+}
+table + p + p {
+        width:100%;
+    text-align: center;
+        color:#a5a5a5;
+        font-size: 12pt;
+        font-weight: 100!important;
+}
+
+td > ul{
+    list-style-type: none;
+} 
+
+td > ul > li{
+        list-style-type: none;
+} 
+.payment-method{ width:100%;}
+
+.payment-method li{ 
+    width:50%;
+    display: inline-block;
+    float: left;
+    position: relative;
+    padding:50px 100px;
+
+}
+.visa_pay:after{
+    content: "";
+    background-position: 0% 50%;
+    background-image:url(//kitchen-profi.com.ua/image/data/info-pages/visa-master.png);
+    background-repeat:no-repeat;
+    position: absolute;
+    left:50%;
+    margin-left: -50px;
+    top:0px;
+    width:100px;
+    height:100px;
+}
+.mastercard_pay:after{
+    content: "";
+    background-position:100% 0%;
+    background-image:url(//kitchen-profi.com.ua/image/data/info-pages/visa-master.png);
+    background-repeat:no-repeat;
+    position: absolute;
+    left:50%;
+    margin-left: -50px;
+    top:0px;
+    width:100px;
+    height:100px;
+}
+
+
+table + p{
+    display: none;
+}
+
+table + p + p {
+    color:#000;
+}

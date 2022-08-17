@@ -1,0 +1,43 @@
+.matban_box a{text-decoration:none}
+.matban_box .threeheading{font-family:Arial,Helvetica,sans-serif;font-size:15px;text-transform:uppercase;font-weight:700}
+.matban_box .stylebanner{position:relative;float:left;vertical-align:top;overflow:hidden}
+.matban_box .box_maska .stylebanner + .stylebanner{margin-left:2%}
+#column-left .matban_box .box_maska .stylebanner + .stylebanner,#column-right .matban_box .box_maska .stylebanner + .stylebanner{margin-left:0}
+.matban_box .box_maska{overflow:hidden;width:100%; margin-bottom: 20px;}
+.count-1{width:100%}
+.count-2{width:49%}
+.count-3{width:32%}
+.count-4{width:23.5%}
+.count-5{width:18.4%}
+.count-6{width:32%}
+.count-7{width:23.5%}
+.count-8{width:23.5%}
+.count-9{width:33%}
+.count-10{width:18.4%}
+#column-left .count-2,#column-left .count-3,#column-left .count-4,#column-left .count-5,#column-left .count-6,#column-left .count-7,#column-left .count-8,#column-left .count-9,#column-left .count-10,#column-right .count-2,#column-right .count-3,#column-right .count-4,#column-right .count-5,#column-right .count-6,#column-right .count-7,#column-right .count-8,#column-right .count-9,#column-right .count-10{width:100%;float:none}
+.matban_box.maska_text{text-align:left}
+.matban_box.maska_text .one > div{position:relative;overflow:hidden}
+.matban_box.maska_text .maska{background-color:#fff;filter:Alpha(Opacity=0);opacity:0;-moz-opacity:0;-khtml-opacity:0;display:block;position:absolute;transform:scale(0);-webkit-transform:scale(0);-o-transform:scale(0);-moz-transform:scale(0);-webkit-transition:all .2s ease-out;-moz-transition:all .2s ease-out;transition:all .2s ease-out}
+.matban_box.maska_text .stylebanner:hover .maska{filter:Alpha(Opacity=40);opacity:.4;-moz-opacity:.4;-khtml-opacity:.4;transform:scale(1);-webkit-transform:scale(1);-o-transform:scale(1);-moz-transform:scale(1)}
+.matban_box.maska_text .two{position:absolute;z-index:10;left:0;bottom:10%;padding:15px;-webkit-transition:all .2s ease-out;-moz-transition:all .2s ease-out;transition:all .2s ease-out;background-color:rgba(0,0,0,0.4)}
+.matban_box.maska_text .threeheading{color:#FFF}
+.matban_box.maska_text .textbanner2{font-family:Arial,Helvetica,sans-serif;font-size:16px;color:#fff}
+.full_container .matban_box.maska_text{margin:0 20px}
+.full_container .matban_box.maska_text .one img{width:100%;height:auto!important}
+.matban_box.beforetext .stylebanner{text-align:center;margin-bottom:30px}
+.matban_box.beforetext .one{margin-bottom:10px;padding-right:20px}
+.matban_box.beforetext .threeheading{text-align:center;margin-bottom:10px}
+.matban_box.beforetext .two{padding-right:20px;text-align:left}
+#column-left .matban_box.beforetext .one,#column-left .matban_box.beforetext .two,#column-right .matban_box.beforetext .one,#column-right .matban_box.beforetext .two{padding-right:0}
+.matban_box.slider_banner{text-align:center;margin-bottom:5px}
+.matban_box.slider_banner .stylebanner{margin-bottom:0;margin-right:0}
+.matban_box.slider_banner .one img{width:100%;height:auto!important;display:block}
+.matban_box.slider_banner .two{position:absolute;text-align:left;z-index:10;bottom:10%;padding:15px;background-color:rgba(0,0,0,0.4)}
+.matban_box.slider_banner .textbanner2{font-family:Arial,Helvetica,sans-serif;font-size:16px;color:#FFF}
+.matban_box.slider_banner .threeheading{color:#FFF}
+.matban_box.slider_banner .mattSlider{overflow:hidden}
+.matban_box.slider_banner.double{width:50%;height:auto!important;margin-left:50%}
+.matban_box.slider_banner.double.doubleleft{float:left;margin-left:0}
+.matban_box.slider_banner.double .two{background-color:transparent;width:90%;padding:0 5%;bottom:10%}
+.matban_box.slider_banner.double.doubleleft .two{text-align:right}
+.matban_box.slider_banner.double .threeheading{color:#FFF;font-size:40px}s

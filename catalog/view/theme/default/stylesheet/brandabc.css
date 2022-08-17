@@ -1,0 +1,11 @@
+.brand_abc .box-heading{padding-right:10px;}
+.brand_abc > div{ display:inline-block;}
+.brand_abc .box-heading span:after{ content: ":";}
+.brand_abc .box-heading{ margin-bottom:0;}
+
+#column-left .brand_abc > div, #column-right .brand_abc > div{ display:block;}
+#column-left .brand_abc .box-heading span:after,
+#column-right .brand_abc .box-heading span:after{ content: "";}
+#column-left .brand_abc .box-heading,
+#column-right .brand_abc .box-heading{ margin-bottom:20px;}
+

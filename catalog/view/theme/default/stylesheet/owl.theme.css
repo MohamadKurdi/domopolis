@@ -1,0 +1,123 @@
+.owl-theme .owl-controls{
+	text-align: center;
+}
+.product-grid .owl-theme .owl-controls,
+.product-list .owl-theme .owl-controls,
+.box-product .owl-theme .owl-buttons,
+.matban_box .owl-theme .owl-buttons{
+	text-align: center;
+	position:absolute;
+	top:45%;
+	width:100%;
+	z-index:11;
+}
+.owl-pagination{ margin-top:10px;}
+
+/* Styling Next and Prev buttons */
+
+.owl-theme .owl-controls .owl-buttons div{
+	background-image: url(../image/icon/prev_next.png);
+	position:absolute;
+	width:34px; height:34px;
+	display: block;
+	background-repeat:no-repeat;
+	zoom: 1;
+	z-index:2;
+	text-align:center;
+	filter: Alpha(Opacity=0);/*IE7 fix*/
+	opacity: 0;
+	-moz-opacity: 0;
+    -khtml-opacity: 0; 
+	transition-delay: 0;
+    transition-duration: 0.3s;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.owl-theme .owl-controls .owl-buttons div.owl-prev{ left:-10px; background-position: 1px center ;}
+.owl-theme .owl-controls .owl-buttons div.owl-next{ right:-10px; background-position: -35px center ;}
+.owl-theme:hover .owl-controls .owl-buttons div.owl-prev{ left:0px;}
+.owl-theme:hover .owl-controls .owl-buttons div.owl-next{ right:0px;}
+/* Clickable class fix problem with hover on touch devices */
+/* Use it for non-touch hover action */
+.owl-theme:hover .owl-controls.clickable .owl-buttons div{
+	filter: Alpha(Opacity=70);/*IE7 fix*/
+	opacity: 0.7;
+	-moz-opacity: 0.7;
+    -khtml-opacity: 0.7; 
+	text-decoration: none;
+}
+
+/* Styling Pagination*/
+
+.owl-theme .owl-controls .owl-page{
+	display: inline-block;
+	zoom: 1;
+	*display: inline;/*IE7 life-saver */
+}
+.owl-theme .owl-controls .owl-page span{
+	display: block;
+	width: 8px;
+	height: 8px;
+	margin: 3px;
+	filter: Alpha(Opacity=20);/*IE7 fix*/
+	opacity: 0.2;
+	-moz-opacity: 0.2;
+    -khtml-opacity: 0.2;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+	background: #8f8f8f;
+}
+
+.owl-theme .owl-controls .owl-page.active span,
+.owl-theme .owl-controls.clickable .owl-page:hover span{
+	filter: Alpha(Opacity=100);/*IE7 fix*/
+	opacity: 1;
+	-moz-opacity: 1;
+    -khtml-opacity: 1;
+}
+
+/* If PaginationNumbers is true */
+
+.owl-theme .owl-controls .owl-page span.owl-numbers{
+	height: auto;
+	width: auto;
+	color: #FFF;
+	padding: 2px 10px;
+	font-size: 12px;
+	-webkit-border-radius: 30px;
+	-moz-border-radius: 30px;
+	border-radius: 30px;
+}
+
+/* preloading images */
+.owl-item.loading{
+	min-height: 150px;
+	background: url(../image/loading.gif) no-repeat center center
+}
+/*custom box*/
+.verticaltab .owl-theme .owl-controls .owl-buttons{
+	position:absolute;
+	top:45%;
+	right:0px;
+	width:100%;
+}
+.verticaltab  .owl-theme .owl-controls .owl-buttons div{
+	background-repeat:no-repeat;
+	width:32px; 
+	height:32px;
+	filter: Alpha(Opacity=100);/*IE7 fix*/
+	opacity: 1;
+	-moz-opacity: 1;
+    -khtml-opacity: 1; 
+
+}
+.verticaltab .owl-theme .owl-controls .owl-buttons div.owl-prev,
+.verticaltab .owl-theme:hover .owl-controls .owl-buttons div.owl-prev{left:-32px; background-position: 0px center;}
+.verticaltab .owl-theme .owl-controls .owl-buttons div.owl-next,
+.verticaltab .owl-theme:hover .owl-controls .owl-buttons div.owl-next{right:-32px; background-position: -36px center ;}
+.verticaltab {
+	padding:0;
+	text-align:center;
+}
+

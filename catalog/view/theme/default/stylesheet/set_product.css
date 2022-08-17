@@ -1,0 +1,229 @@
+/* Front End Styles */
+    .in-product .item{
+        width: 100%!important
+    }
+    #list-products-in-set-product-page .set-item{
+        display: block;
+        float: left;
+        width: 100%;
+        border-top: none!important
+    }
+
+    #list-products-in-set-product-page {
+        margin-top: -20px;
+    }
+
+
+   .kitchen-review-servize .jspContainer{
+		height: 180px!important;
+    }
+
+    .kitchen-details{
+    	height: 293px;
+    }
+
+    .image-additional-bottom-soc ul li:first-child{
+		float: left;
+    }
+/*
+    #box .box-heading   {
+    width: auto;
+    clear: both;
+    text-align: center;
+    background-color: rgba(0,0,0,0.03);
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    border-left: 1px solid rgba(0,0,0,0.08);
+    border-right: 1px solid rgba(0,0,0,0.08);
+    overflow: hidden;
+    min-height: 95px;
+}*/
+
+
+@media(min-width: 960px){
+	#quick-order-block{
+		padding-right: 0px;
+	}
+}
+
+.image-additional-bottom-soc{
+	padding-bottom: 0px!important;
+}
+.block-with-btns{
+	line-height: 36px;
+	font-family: PT Sans;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.kitchen-panel-info .btn-success{
+	margin: 0px!important;
+}
+
+#quick-order-btn{
+    padding: 7px 15px;
+    margin-bottom: 10px;
+}
+
+
+.social-text-for-share{
+	font-weight: 900;
+	font-size: 14px;
+}
+#quick-order-btn{
+    padding: 7px 15px;
+}
+
+.box-content {
+    position: relative;
+    float: left;
+    width: 100%;
+    padding: 0px;
+}
+
+.set-item{
+    padding: 15px;
+}
+
+ .product-list .left-image-block > .image { 
+     text-align: center;
+     margin: auto;
+     width: 100%;
+     height: 75px!important;
+          border: none;
+ }
+.product-list .left-image-block{ 
+     text-align: center;
+     margin: auto;
+     width: 30%;
+     height: 75px!important;
+     float: left;
+     border: none;
+ }
+
+ .in-product .item{
+ 	    float: left;
+    height: auto;
+    overflow: hidden;
+    margin: 0;
+    position: relative;
+    border-bottom: 1px solid #eee;
+    border-left: 0 solid #eee;
+    border-right: 1px solid #eee;
+
+ }
+
+ .box-heading-servize{
+		    margin: 0;
+    font-size: 25px;
+    font-weight: 400;
+ }
+
+ .kitchen-panel-info .kitchen-panel{
+ 	margin-bottom: 0px;
+
+ }
+
+
+
+ .old-price{
+ 	text-decoration: line-through;
+ }
+
+ .in-product .centr {
+    margin: 10px 0 0;
+    position: relative;
+    float: left;
+    width: 60%;
+}
+
+
+.set-quantity{
+	padding: 5px 0px;
+}
+
+
+.image-additional-bottom-soc {
+    width: auto;
+    clear: both;
+    text-align: center;
+    background-color: rgba(0,0,0,0.03);
+    padding: 10px;
+    border: 1px solid rgba(0,0,0,0.08);
+    overflow: hidden;
+    min-height: auto;
+    margin-bottom: 15px;
+}
+
+.economy .value{
+/*	color:#7CC04B;*/
+}
+
+.economy, .set-total {
+/*	color:#7CC04B;*/
+text-align: center;
+}
+
+.product-info .image {
+    height: 444px!important;
+}
+span.inf-price{
+	display: inline-block;
+	width: 100%;
+	float: left;
+}
+
+
+.kitchen-panel-info .cart-block{
+	padding-bottom: 0px;
+}
+
+.image-additional-bottom-soc ul li {
+    display: inline-block;
+    padding: 0px;
+    float: right;
+}
+
+.servize-btn{
+	font-family: PT Sans;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: #fff;
+/*    border: 1px solid #7cc04b;*/
+    color: #7cc04b;
+    background-color: #FFF;
+    border-radius: 0;
+	text-align: center;
+	padding: 7px 10px;
+	line-height: 20px;
+    cursor: pointer;
+    text-decoration: none;
+    margin-right: 0;
+	box-sizing: border-box;
+    display: inline-block;
+    font-size: 18px;
+    text-decoration: underline;
+}
+
+.servize-btn:hover{
+	color:#fff;
+    background-color: #6DA942;
+}
+
+
+.servize-btn.active{
+	color:#fff;
+    background-color: #6DA942;
+}
+
+
+
+
+
+.product-list{
+	margin-bottom: 15px;
+	border: 1px solid #ddd;
+	border-top: none;
+	padding-bottom: 0px;
+}

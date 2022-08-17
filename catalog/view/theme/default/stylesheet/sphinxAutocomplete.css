@@ -1,0 +1,65 @@
+.sphinxsearch {
+	display: none;
+	position: absolute;
+	width: 295px;
+	top: 30px;
+	right: 0;
+	background: #fff;
+	line-height: 1.2;
+	z-index: 9999999;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	-o-box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	-ms-box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+#search, .searchbox {
+	overflow: visible;
+	z-index: 9999999;
+}
+
+.sphinxsearch .categories span,
+.sphinxsearch .products span {
+	text-align: center;
+	display: block;
+	padding: 10px 0;
+	background: #eee;
+}
+
+
+.sphinx-product,
+.sphinx-product-cat {
+	min-height: 40px;
+	border-bottom: 1px solid #e9e9e9;
+	color: #000;
+	display: block;
+	font-size: 11px;
+	font-weight: normal;
+	padding: 5px;
+	text-decoration: none;
+}
+
+.sphinx-product-cat {
+	line-height: 40px;
+	text-transform: uppercase;
+	text-indent: 10px;
+}
+
+.sphinx-product img,
+.sphinx-product-cat img {
+	float: left;
+	margin: 0 10px 0 0;
+}
+
+.sphinx-product strong {
+	font-size: 13px;
+	margin: 5px 5px 5px 0;
+}
+
+.sphinx-viewall {
+	font-size: 12px;
+	font-weight: bold;
+	padding: 10px;
+	text-align: center;
+}

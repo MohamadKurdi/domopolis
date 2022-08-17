@@ -1,0 +1,116 @@
+#callback {
+	background:#09f;
+    border: 1px solid #555555;
+    border-radius: 9px 9px 9px 9px;
+    box-shadow: 0 0 7px #000000;
+    cursor: pointer;
+    height: 160px;
+    margin-right: -60px;
+    margin-top: -90px;
+    position: fixed;
+    right: 0;
+    top: 50%;
+    width: 93px;
+    z-index: 100;
+}
+#callback:hover {
+	background: #0165cb;
+}
+.contact-input {
+	width: 90%;
+	height: 25px;
+	text-align:center;
+}
+.content-left-50  input, .content-left-100  input {
+	border:2px solid #d5d5d5;
+}
+.content-left-50  textarea , .content-left-100  textarea {
+	border:2px solid #d5d5d5;
+}
+.content-left-50  input:hover, .content-left-50  textarea:hover, .content-left-100  input:hover, .content-left-100  textarea:hover {
+	border:2px solid #67CA67;
+}
+.content-left-50  input:focus, .content-left-50  textarea:focus, .content-left-100  input:focus, .content-left-100  textarea:focus {
+	border:2px solid #67CA67;
+}
+.contact-textarea {
+	width: 90%;
+	height: 50px;
+	text-align:center;
+}
+.contact-data textarea{
+	resize:none;
+}
+.contact-content {
+	text-align:center;
+	overflow:auto;
+	background:#fff;
+}
+.contact-data {
+	margin-bottom:10px;
+	height:240px;
+}
+.contact-success {
+	margin-bottom:10px;
+	height:30px;
+	clear:both;
+}
+.contact-right {
+  float: right;
+  width: 50%;
+
+}
+.content-right {
+	background: none repeat scroll 0 0 #f8f8f8;
+	border: medium none #c9c9c9;
+	height: 252px;
+	margin: 35px 15px 15px;
+	text-align: left;
+	border: 2px solid #d5d5d5;
+}
+.content-right > div {
+	padding:5px 5px 5px 35px;
+}
+.content-left-50 {
+  float: left;
+  width: 50%;
+  height:345px;	
+
+}
+.content-left-100 {
+  float: left;
+ 
+  height:345px;	
+
+}
+.contact-title {
+	font-weight:bold;
+	font-size:16px;
+}
+.contact-content  button.contact-send {
+	background: #09f;
+	border-radius: 3px;
+	border:none;
+	color: #fff;
+	display: inline-block;
+	font-size: 16px;
+	height: 38px;
+	line-height: 30px;
+	margin: 0;
+	padding: 3px 5px;
+	text-align: center;
+}
+.contact-content  button.contact-send:hover {
+	background: #0165cb;
+	border:#none;
+	color: #fff;
+}
+.fa.fa-phone-square {
+vertical-align: middle;
+}
+.button-send {
+	margin-bottom:5px;
+}
+.skype img {
+  vertical-align: sub;
+}

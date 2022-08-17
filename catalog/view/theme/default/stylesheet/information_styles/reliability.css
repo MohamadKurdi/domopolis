@@ -1,0 +1,89 @@
+.info_title{
+	width:100%;
+	text-align: center;
+		color:#a5a5a5;
+	text-transform: uppercase;
+		font-size: 12pt;
+}
+
+.list-how-to-order{
+	width:100%;
+}
+
+.list-how-to-order li{
+	display: inline-block;
+	float: left;
+	width:45%;
+	margin: 0px;
+	padding:120px 10px;
+	text-align: center;
+	position: relative;
+	color:#a5a5a5;
+	text-transform: uppercase;
+	font-size: 12t;
+	text-align:center;
+}
+
+.list-how-to-order li:nth-child(2){
+    width: 7%;
+
+}
+.list-how-to-order li a{
+	color:#a5a5a5;
+	text-transform: uppercase;
+	font-size: 12pt;
+}
+.list-how-to-order li:after{
+	content:'';
+	background-image:url(//kitchen-profi.com.ua/image/data/info-pages/reliablity.png);
+	background-repeat:no-repeat;
+	width:100px;
+	height:100px;
+	position: absolute;
+	top:0px;
+	left:50%;
+	margin-left: -30px;
+}
+
+.list-how-to-order .center:after{
+	content:'';
+	background-image:url(//kitchen-profi.com.ua/image/data/info-pages/reliablity.png);
+	background-repeat:no-repeat;
+    width: 50px;
+	height:100px;
+	background-position: -100px 0px;
+}
+
+.list-how-to-order .second-item:after{
+	background-position: -150px 0px;
+}
+
+.list-how-to-order + p{
+	width:100%;
+	text-align:center;
+	color:#0c0c0c;
+}
+
+
+@media only screen and (max-width: 768px) {
+
+.list-how-to-order li{
+	display: inline-block;
+	float: left;
+	width:45%;
+	margin: 0px;
+	padding:120px 10px;
+	text-align: center;
+	position: relative;
+	color:#a5a5a5;
+	text-transform: uppercase;
+	font-size: 12t;
+	text-align:center;
+}
+
+.list-how-to-order li:nth-child(2){
+    width: 7%;
+
+}
+
+} 
