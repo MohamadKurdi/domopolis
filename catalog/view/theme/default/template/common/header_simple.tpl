@@ -1004,11 +1004,15 @@
 			</style>
 		<?php } ?>
 
-		<script src="<?php echo trim($this->config->get('config_static_subdomain')); ?>js/node_modules/jquery/dist/jquery.min.js"></script>
-		<script src="<?php echo trim($this->config->get('config_static_subdomain')); ?>js/node_modules/jquery-ui/dist/jquery-ui.min.js"></script>
 
-
-		<script src="<?php echo trim($this->config->get('config_static_subdomain')); ?>js/node_modules/select2/dist/js/select2.min.js"></script>
+		<?php if (!empty($npmScriptsMinified)) { ?>
+			<script src="<?php echo $npmScriptsMinified; ?>"></script>
+		<?php } else { ?>
+				<script src="<?php echo trim($this->config->get('config_static_subdomain')); ?>js/node_modules/jquery/dist/jquery.min.js"></script>
+				<script src="<?php echo trim($this->config->get('config_static_subdomain')); ?>js/node_modules/jquery-ui/dist/jquery-ui.min.js"></script>
+				<script src="<?php echo trim($this->config->get('config_static_subdomain')); ?>js/node_modules/select2/dist/js/select2.min.js"></script>
+		<?php } ?>
+		
 		<script src="<?php echo trim($this->config->get('config_static_subdomain')); ?>js/node_modules/select2/dist/js/i18n/ru.js"></script>
 		<script src="<?php echo trim($this->config->get('config_static_subdomain')); ?>js/node_modules/select2/dist/js/i18n/uk.js"></script>
 

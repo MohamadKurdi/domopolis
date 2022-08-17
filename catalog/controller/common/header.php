@@ -245,8 +245,8 @@
 			/*---------------- END STYLES -------------*/
 			//NODE JS PACKAGE JSON READER
 
-			if ($this->data['npmScriptsMinified'] = $this->cache->get('npm.scripts.minified1.' . $this->config->get('config_store_id'))){
-
+			if ($this->data['npmScriptsMinified'] = $this->cache->get('npm.scripts.minified.' . $this->config->get('config_store_id'))){
+				//do nothing
 
 			} else {
 

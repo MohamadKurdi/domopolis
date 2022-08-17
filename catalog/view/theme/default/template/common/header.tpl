@@ -903,9 +903,13 @@
 				}
 			</style>
 		<?php } ?>
+		
 
 		<?php if (!empty($npmScriptsMinified)) { ?>
 			<script src="<?php echo $npmScriptsMinified; ?>"></script>
+		<?php } else { ?>			
+			<script src="<?php echo trim($this->config->get('config_static_subdomain')); ?>js/node_modules/jquery/dist/jquery.min.js"></script>
+			<script src="<?php echo trim($this->config->get('config_static_subdomain')); ?>js/node_modules/jquery-ui/dist/jquery-ui.min.js"></script>
 		<?php } ?>
 		
 		<link href='https://fonts.googleapis.com/css?family=Montserrat:400,500,700&display=swap&subset=cyrillic' rel='stylesheet' type='text/css'>
