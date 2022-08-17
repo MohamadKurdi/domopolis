@@ -167,6 +167,7 @@
     }
 
 </style>
+
 <?php include(dirname(__FILE__).'/../structured/breadcrumbs.tpl'); ?>
 
 <?php include(dirname(__FILE__).'/../structured/intersections_list.tpl'); ?>
