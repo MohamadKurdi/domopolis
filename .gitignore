@@ -18,6 +18,7 @@
 #Основные конфиги
 /config*.php
 /config.parts/*
+/system/config.parts/*
 
 #Документы
 /docs/*
