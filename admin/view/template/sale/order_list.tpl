@@ -1154,25 +1154,7 @@
 	
 	.SumoSelect.sumo_filter_courier_status{width:200px!important;}
 </style>
-<script>
-	/*
-		$(document).ready(function () {
-		$('select[name=filter_order_status_id]').SumoSelect({placeholder: 'Статусы и отборы'});
-		$('select[name=filter_reject_reason_id]').SumoSelect({placeholder: 'Причины отказа'});
-		$('select[name=filter_order_store_id]').SumoSelect({placeholder: 'Магазин и страна'});
-		
-		$('select[name=filter_courier_status]').SumoSelect({placeholder: 'Статус в курьерке'});
-		$('select[name=filter_manager_id]').SumoSelect({placeholder: 'Менеджер'});
-		});
-		
-		$(document).ready(function () {
-		$('select[name=filter_order_status_id]').niceSelect();
-		$('select[name=filter_reject_reason_id]').niceSelect();
-		$('select[name=filter_order_store_id]').niceSelect();
-		$('select[name=filter_courier_status]').niceSelect();	
-		$('select[name=filter_manager_id]').niceSelect();	
-	});	*/
-</script>
+
 <script>
 	$('#only_my_orders').change(function(){
 		if ($(this).is(':checked')){

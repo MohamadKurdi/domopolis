@@ -243,7 +243,26 @@
 			}
 			
 			/*---------------- END STYLES -------------*/
-			
+			//NODE JS PACKAGE JSON READER
+			$npmPackageLockFile 	= DIR_ENGINE . 'js/' . 'package-lock.json';
+			$npmScripts 			= [];
+			if (file_exists($npmPackageLockFile)){
+				if ($npmDependencies = json_decode(file_get_contents($npmPackageLockFile), true)){
+					foreach ($npmDependencies['dependencies'] as $npmDependency => $npmInfo){
+
+						$npmPackageInfoFile = DIR_ENGINE . 'js/node_modules/' . $npmDependency . '/package.json';
+
+						if (file_exists($npmPackageInfoFile)){
+							if ($npmPackageInfo = json_decode(file_get_contents($npmPackageInfoFile), true)){
+								if (!empty($npmPackageInfo['main'])){
+									$this->log->debug($npmPackageInfo['main']);
+
+								}
+							}
+						}
+					}
+				}
+			}
 			
 			//BEGIN SCRIPTS			
 			$general_js = prepareEOLArray($this->config->get('config_header_min_scripts'));

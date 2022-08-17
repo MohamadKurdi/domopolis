@@ -478,12 +478,6 @@
 		<? } ?>
 	}
 </script>
-<script>
-	$(document).ready(function(){
-		$('#payment_address').niceSelect();
-		$('#shipping_address').niceSelect();
-	});
-</script>
 <? if ($closed) { ?>
 	<script>
 		$(document).ready(function(){
