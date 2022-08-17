@@ -7,8 +7,8 @@
 	<!--<![endif]-->
 	<head>
 		
-		<?php include(dirname(__FILE__).'/../structured/header_pwa.tpl'); ?>
-		<?php include(dirname(__FILE__).'/../structured/header_logged_datalayer.tpl'); ?>
+		<?php include($this->checkTemplate(dirname(__FILE__), '/../structured/header_pwa.tpl')); ?>
+		<?php include($this->checkTemplate(dirname(__FILE__), '/../structured/header_logged_datalayer.tpl')); ?>
 		
 		
 		<link rel="dns-prefetch" href="https://cdn.jsdelivr.net" >

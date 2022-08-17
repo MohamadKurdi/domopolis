@@ -168,13 +168,13 @@
 
 </style>
 
-<?php include(dirname(__FILE__).'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__), '/../structured/breadcrumbs.tpl')); ?>
 
-<?php include(dirname(__FILE__).'/../structured/intersections_list.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/intersections_list.tpl')); ?>
 
-<?php include(dirname(__FILE__).'/../structured/subcategory_list.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/subcategory_list.tpl')); ?>
 
-<?php include(dirname(__FILE__).'/../structured/subactions_list.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/subactions_list.tpl')); ?>
 
 <?php echo $content_top; ?><div id="mfilter-content-container">
 

@@ -180,6 +180,29 @@
 				return $this->model_tool_image->resize('no_image.jpg', $width, $height);
 			}
 		}
+
+		protected function checkTemplate($currentDir, $includeTemplate){
+			$absPath = [];
+
+			$settledPath = '/' . $this->config->get('config_template') . '/template/';
+			$defaultPath = '/' . $this->default_template . '/template/';
+
+			//is current template
+			if (stripos($currentDir, $settledPath) !== false){
+				$absPath['settled'] = $currentDir;
+				$absPath['default'] = str_replace($settledPath, $defaultPath, $currentDir);
+			} elseif (stripos($currentDir, $defaultPath) !== false){
+				$absPath['settled'] = str_replace($defaultPath, $settledPath, $currentDir);
+				$absPath['default'] = $currentDir;
+			}
+
+			if (file_exists($absPath['settled'] . $includeTemplate)){
+				return ($absPath['settled'] . $includeTemplate);
+			}
+
+			return $absPath['default'] . $includeTemplate;
+		}
+
 		
 		protected function render() {
 

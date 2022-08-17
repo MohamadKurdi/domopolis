@@ -164,6 +164,7 @@ if (!function_exists('echoLine')){
 
 function tryToGuessIfStringIsSKU($string){}
 
+
 function loadAndRenameCatalogModels($path, $className, $classNameTo){
 
 	$modelCatalogProductContents = file_get_contents(DIR_CATALOG . $path);
