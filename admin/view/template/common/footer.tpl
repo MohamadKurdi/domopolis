@@ -1,6 +1,4 @@
 </div>
-<link rel="stylesheet" href="view/javascript/jquery-nice-select-1.1.0/css/nice-select.css">
-<script type="text/javascript" src="view/javascript/jquery-nice-select-1.1.0/js/jquery.nice-select.min.js"></script>
 <div id="footer"></div>
 <div id="top">	
 <svg viewBox="0 0 32 32"  fill="none" stroke="#51a881" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
