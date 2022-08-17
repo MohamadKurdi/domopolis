@@ -781,11 +781,11 @@
                 $this->data['tab_review'] = sprintf($this->language->get('tab_review'), $product_info['reviews']);
                 $this->data['tab_related'] = $this->language->get('tab_related');
 				
-                $this->data['product_id'] = (int)$this->request->get['product_id'];
-                $this->data['manufacturer'] = trim($product_info['manufacturer']);
-                $this->data['model'] = $product_info['model'];
-                $this->data['sku'] = $product_info['sku'];
-                $this->data['points'] = $this->currency->formatBonus($product_info['reward'], true);
+                $this->data['product_id'] 	= (int)$this->request->get['product_id'];
+                $this->data['manufacturer'] = $manufacturer_info?(trim($product_info['manufacturer'])):'';
+                $this->data['model'] 		= $product_info['model'];
+                $this->data['sku'] 			= $product_info['sku'];
+                $this->data['points'] 		= $this->currency->formatBonus($product_info['reward'], true);
 				
 				$this->data['models'] = array();
 				
@@ -1047,21 +1047,21 @@
 				
 				
 				if (!$just_price){
-					$this->data['manufacturers'] = $this->url->link('product/manufacturer/info',
-					'manufacturer_id=' . $product_info['manufacturer_id']);
-					
-					$manufacturer_image = $this->model_catalog_manufacturer->getManufacturer($product_info['manufacturer_id']);
-					
+
+					if ($manufacturer_info ){
+						$this->data['manufacturers'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $product_info['manufacturer_id']);					
+
 					//overload location
-					if (isset($manufacturer_image['location']) && $manufacturer_image['location']) {
-						$this->data['location'] = (strpos($product_info['location'],
-						'certificate') === false) ? $manufacturer_image['location'] : false;
-					}
-					
-					$this->data['show_manufacturer'] = (isset($manufacturer_image['sort_order']) && $manufacturer_image['sort_order'] != '-1');
-					if ($manufacturer_image) {
+						if (isset($manufacturer_info['location']) && $manufacturer_info['location']) {
+							$this->data['location'] = (strpos($product_info['location'],
+								'certificate') === false) ? $manufacturer_info['location'] : false;
+						}
+
+						$this->data['show_manufacturer'] = ($manufacturer_info && isset($manufacturer_info['sort_order']) && $manufacturer_info['sort_order'] != '-1');					
+
 						$this->data['manufacturers_img'] = $this->model_tool_image->resize($manufacturer_image['image'],300, 100);
 						$this->data['manufacturers_img_260'] = $this->model_tool_image->resize($manufacturer_image['image'], 260, 90);
+
 					}
 					
 					if ($product_info['image']) {
@@ -2122,12 +2122,8 @@
 							}
 							
 							
-							if (!$template_overload) {
-								if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/product.tpl')) {
-									$this->template = $this->config->get('config_template') . '/template/product/product.tpl';
-									} else {
-									$this->template = 'default/template/product/product.tpl';
-								}
+							if (!$template_overload) {								
+								$this->template = 'product/product.tpl';
 							}
 							
 						}

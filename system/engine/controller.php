@@ -10,10 +10,13 @@
 		protected $data = array();
 		protected $output;
 		protected $minifier;
+
+		private $default_template = 'default';
 		
 		public function __construct($registry) {
 			$GLOBALS['controller_name'] = get_class ($this);
 			$this->registry = $registry;
+			$this->config 	= $registry->get('config');
 			
 			if( ! empty( $this->request->get['mfp'] ) ) {
 				preg_match( '/path\[([^]]*)\]/', $this->request->get['mfp'], $mf_matches );
@@ -189,6 +192,29 @@
 				print "<br />";
 			}
 			
+			if (!defined('IS_ADMIN')){
+			//Removing theme name from template name		
+				if (stripos($this->template, $this->config->get('config_template')) === 0){
+					$this->template = substr($this->template, mb_strlen($this->config->get('config_template')));
+				}
+
+			//If theme name is default
+				if (stripos($this->template, $this->default_template) === 0){
+					$this->template = substr($this->template, mb_strlen($this->default_template));
+				}
+
+				$this->template = ltrim($this->template, '/');
+				if (stripos($this->template, 'template/') === 0){
+					$this->template = substr($this->template, mb_strlen('template/'));
+				}
+
+				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/' . $this->template)){
+					$this->template = $this->config->get('config_template') . '/template/' . $this->template;
+				} else {
+					$this->template = $this->default_template . '/template/' . $this->template;
+				}
+			}								
+
 			if (file_exists(DIR_TEMPLATE . $this->template)) {
 				extract($this->data);
 				

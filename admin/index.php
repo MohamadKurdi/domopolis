@@ -4,7 +4,8 @@
 
 	define('VERSION', '1.5.6.4');
 	define('IS_HTTPS', true);
-	header('X-ENGINE-ENTRANCE: INDEX-ADMIN'); 
+	define('IS_ADMIN', true);
+	header('X-ENGINE-ENTRANCE: INDEX-ADMIN');
 
 	set_error_handler('error_handler');
 

@@ -1372,52 +1372,41 @@
 				
 				//Нужно определить текущий layout, а потом получить его шаблон!
 				//В первую очередь - если назначен лэйаут для категории
-				$this->bcache->SetFile('templ.cat.'.$category_id.'.tpl', 'templ_cat'.$this->config->get('config_store_id'));
-				if ($this->bcache->CheckFile()) {
-					$this->template = $this->bcache->ReturnFileContent();
+
+				$this->load->model('design/layout');
+				$layout_id = $this->model_catalog_category->getCategoryLayoutId($category_id);
+				if (!$layout_id){				
+					$layout_id = $this->model_design_layout->getLayout('product/category');				
+				}						
+
+				if ($template = $this->model_design_layout->getLayoutTemplateByLayoutId($layout_id)) {
+					if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/' . $template)) {
+						$this->template = $this->config->get('config_template') . '/template/' . $template;
 					} else {
-					
-					$this->load->model('design/layout');
-					$layout_id = $this->model_catalog_category->getCategoryLayoutId($category_id);
-					if (!$layout_id){				
-						$layout_id = $this->model_design_layout->getLayout('product/category');				
-					}						
-					
-					if ($template = $this->model_design_layout->getLayoutTemplateByLayoutId($layout_id)) {
-						if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/' . $template)) {
-							$this->template = $this->config->get('config_template') . '/template/' . $template;
-							} else {
-							$this->template = 'default/template/' . $template;
-						}
-						} else {
+						$this->template = 'default/template/' . $template;
+					}
+				} else {
 						//Если нет переназначения Layout, то проверяем переназначение конкретной категории
-						$template_overload = false;
-						$this->load->model('setting/setting');
-						$custom_template_module = $this->model_setting_setting->getSetting('custom_template_module', $this->config->get('config_store_id'));				
-						if(!empty($custom_template_module['custom_template_module'])){
-							foreach ($custom_template_module['custom_template_module'] as $key => $module) {
-								if (($module['type'] == 0) && !empty($module['categories'])) {
-									if (in_array($category_id, $module['categories'])) {
-										if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') .'/'. $module['template_name'])) {
-											$this->template = $this->config->get('config_template') .'/'. $module['template_name'];							
-											} else {
-											$this->template = DIR_TEMPLATE . 'default' .'/'. $module['template_name'];								
-										}
-										$template_overload = true;
+					$template_overload = false;
+					$this->load->model('setting/setting');
+					$custom_template_module = $this->model_setting_setting->getSetting('custom_template_module', $this->config->get('config_store_id'));				
+					if(!empty($custom_template_module['custom_template_module'])){
+						foreach ($custom_template_module['custom_template_module'] as $key => $module) {
+							if (($module['type'] == 0) && !empty($module['categories'])) {
+								if (in_array($category_id, $module['categories'])) {
+									if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') .'/'. $module['template_name'])) {
+										$this->template = $this->config->get('config_template') .'/'. $module['template_name'];							
+									} else {
+										$this->template = DIR_TEMPLATE . 'default' .'/'. $module['template_name'];								
 									}
+									$template_overload = true;
 								}
 							}
-						}					
-						if (!$template_overload) {
-							if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/category.tpl')) {
-								$this->template = $this->config->get('config_template') . '/template/product/category.tpl';
-								} else {
-								$this->template = 'default/template/product/category.tpl';
-							}				
 						}
+					}					
+					if (!$template_overload) {
+						$this->template = 'product/category.tpl';				
 					}
-					
-					$this->bcache->WriteFile($this->template);
 				}
 				
 				$no_shop = (isset($args['no_shop']) && $args['no_shop']);
