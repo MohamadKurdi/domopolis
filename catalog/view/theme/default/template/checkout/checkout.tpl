@@ -2,7 +2,7 @@
 
 <!--order-page-->
 <section class="order-page">
-	<?php include(dirname(__FILE__).'/../structured/breadcrumbs.tpl'); ?>
+	<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
   	<div class="wrap">
 		<div class="order-row">
 			<div id="checkout">

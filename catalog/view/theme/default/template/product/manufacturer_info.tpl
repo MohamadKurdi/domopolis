@@ -6,7 +6,7 @@
 <?php echo $header; ?>
 <link rel="stylesheet" href="catalog/view/theme/kp/css/sumoselect.css" />
 	<script src="catalog/view/theme/kp/js/sumoselect.min.js"></script> 
-<?php include(dirname(__FILE__).'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
 <?php echo $column_right; ?>
 <section id="content-manufacturer"  style="margin-top: 0;">
  <?php if (isset($category['manufacturer'][$i])) { ?>
@@ -129,7 +129,7 @@
 									<div class="swiper-wrapper">
 						            <?php foreach ($content_block['product_array'] as $product) { ?>
 						              <div class="swiper-slide">
-						                  <?php include(dirname(__FILE__).'/../structured/product_single.tpl'); ?>
+						                  <?php include($this->checkTemplate(dirname(FILE),'/../structured/product_single.tpl'); ?>
 						               
 						              </div>
 						            <?php } ?>
@@ -311,7 +311,7 @@ var swiper = new Swiper('#acontent_products_scroll_<? echo $content_block['manuf
 	          	<div class="product__grid all-colection-product" id="product__grid">
 	        		
 	            	<?php foreach ($products as $product) { ?>
-						              		<?php include(dirname(__FILE__).'/../structured/product_single.tpl'); ?>
+						              		<?php include($this->checkTemplate(dirname(FILE),'/../structured/product_single.tpl'); ?>
 						            	<?php } ?>
 	            	
 	          	</div>

@@ -1,6 +1,6 @@
 <?php echo $header; ?>
 <?php echo $column_left; ?><?php echo $column_right; ?>
-<?php include(dirname(__FILE__).'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
 <div id="content" class="order-tracker-page">
 	<div class="wrap">
 	

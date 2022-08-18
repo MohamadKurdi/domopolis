@@ -22,7 +22,7 @@
 <div class="warning"><?php echo $error_warning; ?></div>
 <?php } ?>
 <?php echo $column_right; ?>
-<?php include(dirname(__FILE__).'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
 <section id="content" class="adress-content-list account_wrap">
     
     <div class="wrap two_column"> 

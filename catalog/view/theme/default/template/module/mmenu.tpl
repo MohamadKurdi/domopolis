@@ -54,7 +54,7 @@
 									
 										<?php foreach ($category['products'] as $product):  ?>
 											
-												<?php include(dirname(__FILE__).'/../structured/product_single.tpl'); ?>
+												<?php include($this->checkTemplate(dirname(FILE),'/../structured/product_single.tpl'); ?>
 											
 
 										<?php endforeach; ?>

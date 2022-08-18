@@ -5,7 +5,7 @@
 </div>
 <?php echo $column_right; ?>
 
-<?php include(dirname(__FILE__).'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
 <section id="content">
 	<div class="wrap">
 		<?php echo $content_top; ?>

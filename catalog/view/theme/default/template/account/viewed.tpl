@@ -153,7 +153,7 @@ $button_quick = $this->language->get('entry_quickview');
 	}
 </style>
 <section class="catalog account_wrap" id="content"><?php echo $content_top; ?>
- 	<?php include(dirname(__FILE__).'/../structured/breadcrumbs.tpl'); ?>
+ 	<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
 	<div class="wrap two_column">
 		<div class="side_bar">
             <?php echo $column_left; ?>
@@ -187,7 +187,7 @@ $button_quick = $this->language->get('entry_quickview');
 						<!--/catalog__content-head-->
 			 	<div class="product-grid product__grid" id="product__grid">
 				<?php foreach ($products as $product) { ?>
-					<?php include(dirname(__FILE__).'/../structured/product_single.tpl'); ?>
+					<?php include($this->checkTemplate(dirname(FILE),'/../structured/product_single.tpl'); ?>
 				<?php } ?>
 
 			  	</div>

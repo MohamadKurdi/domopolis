@@ -1,6 +1,6 @@
 <?php echo $header; ?>
 
-<?php include(dirname(__FILE__).'/structured_manufacturer/head.tpl'); ?>
+<?php include($this->checkTemplate(dirname(FILE),'/structured_manufacturer/head.tpl'); ?>
 
 <section class="blog-page">
   <div class="wrap">

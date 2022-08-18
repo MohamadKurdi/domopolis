@@ -16,7 +16,7 @@
 	
 </style>
 <section id="content-contact">
-	<?php include(dirname(__FILE__).'/../structured/breadcrumbs.tpl'); ?>
+	<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
 	<div class="wrap">
 		<?php echo $content_top; ?>
 	

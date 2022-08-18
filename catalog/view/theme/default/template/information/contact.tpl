@@ -15,7 +15,7 @@
 <?php } ?>
 
 <section id="content-contact">
-	<?php include(dirname(__FILE__).'/../structured/breadcrumbs.tpl'); ?>
+	<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
 	<?php if ($hb_snippets_local_enable == 'y'){echo html_entity_decode($hb_snippets_local_snippet);} ?>
 	<div class="wrap">
 		<?php echo $content_top; ?>

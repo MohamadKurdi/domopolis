@@ -3,7 +3,7 @@
 <div class="warning"><?php echo $error_warning; ?></div>
 <?php } ?>
 <?php echo $column_left; ?><?php echo $column_right; ?>
-<?php include(dirname(__FILE__).'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
 <section id="content"><?php echo $content_top; ?>
 <div class="wrap">
   <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" class="simplecheckout-customer">

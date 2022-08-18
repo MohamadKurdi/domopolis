@@ -46,7 +46,7 @@
 	</style>
 	
 	<?php echo $content_top; ?>
-    <?php include(dirname(__FILE__).'/../structured/breadcrumbs.tpl'); ?>
+    <?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
     <div class="wrap">
         <div class="account_content unsubscribe_wrap">
 			

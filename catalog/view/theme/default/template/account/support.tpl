@@ -13,7 +13,7 @@
 	
 <?php } ?>
 
-<?php include(dirname(__FILE__).'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
 <style>
 	.account_content .head_wrap{
 		margin-bottom: 30px;

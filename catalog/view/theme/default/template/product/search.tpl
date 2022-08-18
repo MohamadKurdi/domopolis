@@ -11,13 +11,13 @@
 	}
 	}
 </style>
-<?php include(dirname(__FILE__).'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
 
-<?php include(dirname(__FILE__).'/../structured/search_categories_list.tpl'); ?>
+<?php include($this->checkTemplate(dirname(FILE),'/../structured/search_categories_list.tpl'); ?>
 
-<?php include(dirname(__FILE__).'/../structured/intersections_list.tpl'); ?>
+<?php include($this->checkTemplate(dirname(FILE),'/../structured/intersections_list.tpl'); ?>
 <?php $intersections = $intersections2; ?>
-<?php include(dirname(__FILE__).'/../structured/intersections_list.tpl'); ?>
+<?php include($this->checkTemplate(dirname(FILE),'/../structured/intersections_list.tpl'); ?>
 
 <?php echo $content_top; ?><div id="mfilter-content-container">
 	
@@ -36,7 +36,7 @@
 	</div>
 	<?php } ?>
 	
-	<?php include(dirname(__FILE__).'/../structured/product_list.tpl'); ?>
+	<?php include($this->checkTemplate(dirname(FILE),'/../structured/product_list.tpl'); ?>
 	<!--/catalog-->
 	
 	<script>

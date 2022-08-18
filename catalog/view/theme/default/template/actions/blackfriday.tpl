@@ -140,7 +140,7 @@
 		}
 	}	
 </style>
-<?php include(dirname(__FILE__).'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
 <section class="action-page blackfriday_wrap">
 	<div class="wrap">
 		<div class="action_two_column">

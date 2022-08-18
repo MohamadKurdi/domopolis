@@ -36,7 +36,7 @@
 				<div class="swiper-wrapper">
 					<?php foreach ($products as $product) { ?>
 						<div class="swiper-slide">
-							<?php include(dirname(__FILE__).'/../structured/product_single.tpl'); ?>
+							<?php include($this->checkTemplate(dirname(FILE),'/../structured/product_single.tpl'); ?>
 						</div>
 					<? } unset($product); ?>
 				</div>	

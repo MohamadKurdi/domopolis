@@ -63,9 +63,9 @@
 		</div>
 		<div class="delivery_mobile">
 			<?php if (file_exists(dirname(__FILE__).'/delivery/delivery_terms.'. $this->config->get('config_language') .'.tpl')) { ?>
-				<?php include(dirname(__FILE__).'/delivery/delivery_terms.'. $this->config->get('config_language') .'.tpl'); ?>			
+				<?php include($this->checkTemplate(dirname(FILE),'/delivery/delivery_terms.'. $this->config->get('config_language') .'.tpl'); ?>
 				<?php } else { ?>
-				<?php include(dirname(__FILE__).'/delivery_terms.tpl'); ?>
+				<?php include($this->checkTemplate(dirname(FILE),'/delivery_terms.tpl'); ?>
 			<?php } ?>
 		</div>
 		<?php if ($product['special']) { ?>
@@ -85,9 +85,9 @@
 	
 	<div class="product__delivery">					
 		<?php if (file_exists(dirname(__FILE__).'/delivery/delivery_terms.'. $this->config->get('config_language') .'.tpl')) { ?>
-			<?php include(dirname(__FILE__).'/delivery/delivery_terms.'. $this->config->get('config_language') .'.tpl'); ?>			
+			<?php include($this->checkTemplate(dirname(FILE),'/delivery/delivery_terms.'. $this->config->get('config_language') .'.tpl'); ?>
 			<?php } else { ?>
-			<?php include(dirname(__FILE__).'/delivery_terms.tpl'); ?>
+			<?php include($this->checkTemplate(dirname(FILE),'/delivery_terms.tpl'); ?>
 		<?php } ?>
 	</div>
 	<?php if ($product['price']) { ?>

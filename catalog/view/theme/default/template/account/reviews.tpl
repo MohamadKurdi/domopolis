@@ -1,5 +1,5 @@
 <?php echo $header; ?><?php echo $column_right; ?>
-<?php include(dirname(__FILE__).'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
 <style>
 .ajax-edit{display:none;}
 .ajax-edit textarea{width:100%;cursor:text;}

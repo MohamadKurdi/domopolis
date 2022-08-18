@@ -1,6 +1,6 @@
 <?php echo $header; ?>
 
-<?php include(dirname(__FILE__).'/structured_manufacturer/head.tpl'); ?>
+<?php include($this->checkTemplate(dirname(FILE),'/structured_manufacturer/head.tpl'); ?>
 
 <?php if ($products) { ?>
 	<section class="catalog ">
@@ -76,11 +76,11 @@
 						
 						<!--product__item-->													
 							<?php $productCounter = 1; foreach ($products as $product) { ?>
-							<?php include(dirname(__FILE__).'/../../structured/product_single.tpl'); ?>
+							<?php include($this->checkTemplate(dirname(FILE),'/../../structured/product_single.tpl'); ?>
 							<?php if (IS_MOBILE_SESSION && $productCounter == 8) { ?>
-								<?php include(dirname(__FILE__).'/../../structured/listing_pwainstall.tpl'); ?>
+								<?php include($this->checkTemplate(dirname(FILE),'/../../structured/listing_pwainstall.tpl'); ?>
 							<?php } elseif ($productCounter == 12) { ?>
-								<?php include(dirname(__FILE__).'/../../structured/listing_pwainstall.tpl'); ?>
+								<?php include($this->checkTemplate(dirname(FILE),'/../../structured/listing_pwainstall.tpl'); ?>
 							<?php } ?>
 						<?php $productCounter += 1; } ?>
 						<!--/product__item-->
@@ -90,7 +90,7 @@
 					<!--/product__grid-->
 					</section>
 					<!--pages-->
-					<?php include(dirname(__FILE__).'/../../structured/pagination.tpl'); ?>
+					<?php include($this->checkTemplate(dirname(FILE),'/../../structured/pagination.tpl'); ?>
 					<!--/pages-->
 				</div>
 				<!--/catalog__content-->
