@@ -1,6 +1,6 @@
 <?php echo $header; ?>
 
-<?php include($this->checkTemplate(dirname(FILE),'/structured_manufacturer/head.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/structured_manufacturer/head.tpl')); ?>
 
 <?php if ($products) { ?>
 	<section class="catalog ">
@@ -80,7 +80,7 @@
 							
 								<?php $this->log->debug($product); ?>
 							
-								<?php include($this->checkTemplate(dirname(FILE),'/../../structured/product_single.tpl'); ?>
+								<?php include($this->checkTemplate(dirname(__FILE__),'/../../structured/product_single.tpl')); ?>
 							<?php } ?>
 						<!--/product__item-->
 						
@@ -90,7 +90,7 @@
 					</section>
 					
 					<!--pages-->
-					<?php include($this->checkTemplate(dirname(FILE),'/../../structured/pagination.tpl'); ?>
+					<?php include($this->checkTemplate(dirname(__FILE__),'/../../structured/pagination.tpl')); ?>
 					<!--/pages-->
 				</div>
 				<!--/catalog__content-->

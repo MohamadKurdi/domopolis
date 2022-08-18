@@ -1,5 +1,5 @@
 <?php echo $header; ?><?php echo $column_right; ?>
-<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
 <style>
 .ui-dialog.ui-corner-all{
 padding: 10px 10px;

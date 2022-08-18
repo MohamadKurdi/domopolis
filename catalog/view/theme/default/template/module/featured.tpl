@@ -37,7 +37,7 @@
 						<!--/product__item-->
 						<?php foreach ($tab['products'] as $product) { ?>
 							<!--product__item-->
-							<?php include($this->checkTemplate(dirname(FILE),'/../structured/product_single.tpl'); ?>
+							<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/product_single.tpl')); ?>
 							<!--/product__item-->
 						<?php $i++; } ?>
 					</div>

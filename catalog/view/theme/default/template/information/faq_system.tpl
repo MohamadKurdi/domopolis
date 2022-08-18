@@ -19,7 +19,7 @@
 </style>
 
 <section id="content-faq">
-	<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
+	<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
 	<div class="wrap">
 	<?php echo $content_top; ?>
   <?php if ($allow_propose) { ?>

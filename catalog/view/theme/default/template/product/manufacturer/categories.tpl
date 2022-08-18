@@ -1,6 +1,6 @@
 <?php echo $header; ?>
 
-<?php include($this->checkTemplate(dirname(FILE),'/structured_manufacturer/head.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/structured_manufacturer/head.tpl')); ?>
 	<?php if ($this->config->get('config_store_id') == 2) { ?>
 
 		<div class="wrap">

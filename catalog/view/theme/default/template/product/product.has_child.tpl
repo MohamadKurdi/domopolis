@@ -5,7 +5,7 @@
 <?php endif; ?>
 
 
-<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
 
 <?php echo $column_left; ?><?php echo $column_right; ?>
 <div id="content" class="colection-content colection-child-content">
@@ -241,7 +241,7 @@
 							
 							<!--product__item-->
 							<? foreach ($child_products as $product) { ?>
-								<?php include($this->checkTemplate(dirname(FILE),'/../structured/product_single_collection_child.tpl'); ?>
+								<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/product_single_collection_child.tpl')); ?>
 							<?php } ?>
 							<!--/product__item-->
 							

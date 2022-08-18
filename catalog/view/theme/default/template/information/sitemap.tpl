@@ -53,7 +53,7 @@
       }   
   }
 </style>
-<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
 <div id="content-sitemap"><?php echo $content_top; ?>
   <div class="wrap">
   <div class="sitemap-info">

@@ -63,31 +63,31 @@
 		</div>
 		<div class="delivery_mobile">
 			<?php if (file_exists(dirname(__FILE__).'/delivery/delivery_terms.'. $this->config->get('config_language') .'.tpl')) { ?>
-				<?php include($this->checkTemplate(dirname(FILE),'/delivery/delivery_terms.'. $this->config->get('config_language') .'.tpl'); ?>
+				<?php include($this->checkTemplate(dirname(__FILE__),'/delivery/delivery_terms.'. $this->config->get('config_language') .'.tpl')); ?>
 				<?php } else { ?>
-				<?php include($this->checkTemplate(dirname(FILE),'/delivery_terms.tpl'); ?>
+				<?php include($this->checkTemplate(dirname(__FILE__),'/delivery_terms.tpl')); ?>
 			<?php } ?>
 		</div>
 		<?php if ($product['special']) { ?>
-			<div class="price__sale">-<?php echo $product['saving']; ?>%</div>			
+			<div class="price__sale">-<?php echo $product['saving']; ?>%</div>
 		<?php } ?>
 		<div class="product-info__code">
 			<span><?php echo $text_model; ?> <?php echo $product['sku']; ?></span>
 		</div>
 	</div>
 	<?php if (!empty($product['active_coupon'])) { ?>
-		<div class="product__line__promocode hidden">	
+		<div class="product__line__promocode hidden">
 			<span><?php echo $product['active_coupon']['coupon_price']; ?></span>
 			<span class="product__line__promocode__text"><?php echo $text_promocode_price;?></span>
 			<span class="product__line__promocode__code"><?php echo $product['active_coupon']['code']; ?></span>
 		</div>
 	<?php } ?>
-	
-	<div class="product__delivery">					
+
+	<div class="product__delivery">
 		<?php if (file_exists(dirname(__FILE__).'/delivery/delivery_terms.'. $this->config->get('config_language') .'.tpl')) { ?>
-			<?php include($this->checkTemplate(dirname(FILE),'/delivery/delivery_terms.'. $this->config->get('config_language') .'.tpl'); ?>
+			<?php include($this->checkTemplate(dirname(__FILE__),'/delivery/delivery_terms.'. $this->config->get('config_language') .'.tpl')); ?>
 			<?php } else { ?>
-			<?php include($this->checkTemplate(dirname(FILE),'/delivery_terms.tpl'); ?>
+			<?php include($this->checkTemplate(dirname(__FILE__),'/delivery_terms.tpl')); ?>
 		<?php } ?>
 	</div>
 	<?php if ($product['price']) { ?>

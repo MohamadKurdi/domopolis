@@ -1,7 +1,7 @@
 <?php echo $header; ?>
 
 <?php echo $column_left; ?><?php echo $column_right; ?>
-<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
 <div id="content-shop-rating">
 	<?php echo $content_top; ?>
 	<div class="wrap">
@@ -223,7 +223,7 @@
 	<div class="object">
         <div class="overlay-popup-close">X</div>
         <h3>Оставить отзыв</h3>
-        <?php include($this->checkTemplate(dirname(FILE),'/../structured/rating_form_shop.tpl'); ?>
+        <?php include($this->checkTemplate(dirname(__FILE__),'/../structured/rating_form_shop.tpl')); ?>
 	</div>
 </div>
 <!-- popup_form_revievs -->

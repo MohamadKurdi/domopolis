@@ -797,7 +797,7 @@ unset($this->session->data['gac:listfrom']); }
 		}
 	</script>
 <?php } ?>
-<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
 <!--article-->
 <section id="product-detail" class="article product-detail">
 	<div class="wrap">
@@ -1983,7 +1983,7 @@ unset($this->session->data['gac:listfrom']); }
 						<div class="catalog__content product-grid list__colection">
 							<div class="product__grid"  id="product__grid">
 								<?php foreach ($collection as $product) { ?>								
-									<?php include($this->checkTemplate(dirname(FILE),'/../structured/product_single.tpl'); ?>
+									<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/product_single.tpl')); ?>
 								<?php } ?>
 								
 							</div>				
@@ -2454,14 +2454,14 @@ unset($this->session->data['gac:listfrom']); }
 	<div class="object">
 		<div class="overlay-popup-close"><i class="fas fa-times"></i></div>
 		<h3>Оставить отзыв</h3>		
-		<?php include($this->checkTemplate(dirname(FILE),'/../structured/review_form.tpl'); ?>
+		<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/review_form.tpl')); ?>
 	</div>
 </div>
 <!-- popup_form_revievs -->
 <div id="quick_popup_container"></div>
 <!-- popup_form_revievs -->
 <div class="popup-form" id="info_popup">
-	<?php include($this->checkTemplate(dirname(FILE),'/../common/popup_info.tpl'); ?>
+	<?php include($this->checkTemplate(dirname(__FILE__),'/../common/popup_info.tpl')); ?>
 </div>
 
 <!-- popup_form_revievs -->
@@ -2487,7 +2487,7 @@ unset($this->session->data['gac:listfrom']); }
 			<div class="overlay-popup-close"><i class="fas fa-times"></i></div>
 			<h3>Причина уценки</h3>
 			<div class="info-order-container">
-				<?php include($this->checkTemplate(dirname(FILE),'/popup/markdown-reason.tpl'); ?>
+				<?php include($this->checkTemplate(dirname(__FILE__),'/popup/markdown-reason.tpl')); ?>
 			</div>
 		</div>
 	</div>

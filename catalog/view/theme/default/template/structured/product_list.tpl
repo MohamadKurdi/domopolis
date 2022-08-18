@@ -98,12 +98,12 @@
 						<?php $productPriceSum = 0; ?>						
 						<?php $productCounter = 1; ?> 
 						<?php    foreach ($products as $product) { ?>
-							<?php include($this->checkTemplate(dirname(FILE),'/product_single.tpl'); ?>
+							<?php include($this->checkTemplate(dirname(__FILE__),'/product_single.tpl')); ?>
 							<?php if (empty($this->request->get['page'])) { ?>
 								<?php if (IS_MOBILE_SESSION && $productCounter == 8) { ?>
-									<?php include($this->checkTemplate(dirname(FILE),'/listing_pwainstall.tpl'); ?>
+									<?php include($this->checkTemplate(dirname(__FILE__),'/listing_pwainstall.tpl')); ?>
 									<?php } elseif ($productCounter == 12) { ?>
-									<?php include($this->checkTemplate(dirname(FILE),'/listing_pwainstall.tpl'); ?>
+									<?php include($this->checkTemplate(dirname(__FILE__),'/listing_pwainstall.tpl')); ?>
 								<?php } ?>
 							<?php } ?>
 							<?php $productIDS[] = $product['product_id']; ?>
@@ -117,7 +117,7 @@
 					<!--/product__grid-->
 					
 					<!--pages-->
-					<?php include($this->checkTemplate(dirname(FILE),'/../structured/pagination.tpl'); ?>
+					<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/pagination.tpl')); ?>
 					<!--/pages-->
 				</div>
 				<!--/catalog__content-->

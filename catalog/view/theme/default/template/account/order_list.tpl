@@ -1,6 +1,6 @@
 <?php echo $header; ?>
 <?php echo $column_right; ?>
-<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
 <style>
 	.tracker-order-info{		
 	width:100% !important;
@@ -430,7 +430,7 @@
 				<div class="list_order accordion_list_order">
 					<?php if ($orders) { ?>
 						<?php foreach ($orders as $order) { ?>	
-							<?php include($this->checkTemplate(dirname(FILE),'/structured_order/order_single_dev.tpl'); ?>
+							<?php include($this->checkTemplate(dirname(__FILE__),'/structured_order/order_single_dev.tpl')); ?>
 						<?php } ?>
 						<div class="pagination"><?php echo $pagination; ?></div>
 						<?php } else { ?>

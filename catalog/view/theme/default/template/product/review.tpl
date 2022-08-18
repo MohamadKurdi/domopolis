@@ -21,6 +21,6 @@
 	<h4 class="title"><?php echo $text_retranslate_87; ?></h4>
 </div>
 <div id="form-review" class="<?php if ($reviews) { ?>hidden<? } ?>">
-	<?php include($this->checkTemplate(dirname(FILE),'/../structured/review_form.tpl'); ?>
+	<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/review_form.tpl')); ?>
 </div>
 <?php } ?>

@@ -1,5 +1,5 @@
 <?php echo $header; ?><?php echo $column_right; ?>
-<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
 <div id="content"  class="account_wrap"><?php echo $content_top; ?>
   <div class="wrap two_column">
     <div class="side_bar">

@@ -1,7 +1,7 @@
 <!--footer__down-->
 
 
-<?php include($this->checkTemplate(dirname(FILE),'/../structured/footer_pwainstall.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/footer_pwainstall.tpl')); ?>
 
 <div class="footer__down">
 	<?php if ($this->config->get('config_store_id') == 2) {?>

@@ -25,11 +25,11 @@
 			<a href="<? echo $product['href']; ?>" title="<? echo $product['name']; ?>"><? echo $product['name']; ?></a>
 		</div>
 		<div class="delivery_mobile">
-			<?php include($this->checkTemplate(dirname(FILE),'/delivery_terms.tpl'); ?>
+			<?php include($this->checkTemplate(dirname(__FILE__),'/delivery_terms.tpl')); ?>
 		</div>
 	</div>
 	<div class="product__delivery">
-		<?php include($this->checkTemplate(dirname(FILE),'/delivery_terms.tpl'); ?>
+		<?php include($this->checkTemplate(dirname(__FILE__),'/delivery_terms.tpl')); ?>
 	</div>
 	<?php if ($product['price']) { ?>
 		<div class="product__price">

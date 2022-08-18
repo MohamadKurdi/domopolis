@@ -163,7 +163,7 @@
     }
 </style>
 
-<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
 
 <section id="content" class="colection-content">
 	

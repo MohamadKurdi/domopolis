@@ -1,7 +1,7 @@
 <?php echo $header; ?>
 <link rel="stylesheet" href="catalog/view/theme/kp/css/sumoselect.css" />
 <script src="catalog/view/theme/kp/js/sumoselect.min.js"></script> 
-<?php include($this->checkTemplate(dirname(FILE),'/structured_manufacturer/head.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/structured_manufacturer/head.tpl')); ?>
 
 <style type="text/css">
     #content_collection .swiper-wrapper.content-collection {

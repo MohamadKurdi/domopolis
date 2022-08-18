@@ -3,7 +3,7 @@
     <div class="wrap ajax-module-reloadable" data-modpath="module/subscribe" data-reloadable-group="customer">
 	</div>  
 	
-	<?php include(dirname(__FILE__).'/../structured/footer_pwainstall.tpl'); ?>
+	<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/footer_pwainstall.tpl')); ?>
 	
     <div class="wrap">  
         <!--footer__medium-->

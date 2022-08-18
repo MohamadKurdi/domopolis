@@ -6,8 +6,8 @@
 <html dir="<?php echo $direction; ?>" lang="<?php echo $lang; ?>">
 	<!--<![endif]-->
 	<head>
-		<?php include(dirname(__FILE__).'/../structured/header_pwa.tpl'); ?>
-		<?php include(dirname(__FILE__).'/../structured/header_logged_datalayer.tpl'); ?>
+		<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/header_pwa.tpl')); ?>
+		<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/header_logged_datalayer.tpl')); ?>
 
 		<meta charset="utf-8">
 		<meta name="viewport"

@@ -40,21 +40,21 @@
 				<?php if (!empty($reparsedProducts['in_stock'])) { $products = $reparsedProducts['in_stock']; ?>
 					
 					<h4><?php echo $in_stock_text_h4; ?></h4>
-					<?php include(dirname(__FILE__).'/../structured/popupcart_simple_products.tpl'); ?>
+					<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/popupcart_simple_products.tpl')); ?>
 					
 				<? unset($product); } ?>
 				
 				<?php if (!empty($reparsedProducts['not_in_stock'])) { $products = $reparsedProducts['not_in_stock'];  ?>
 					
 					<h4><?php echo $this->language->get('text_not_stock_' . $this->config->get('config_country_id')); ?></h4>
-					<?php include(dirname(__FILE__).'/../structured/popupcart_simple_products.tpl'); ?>
+					<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/popupcart_simple_products.tpl')); ?>
 					
 				<? unset($product); } ?>
 				
 				<?php if (!empty($reparsedProducts['certificates'])) { $products = $reparsedProducts['certificates'];  ?>
 
 					<h4><?php echo $this->language->get('text_present_certificates'); ?></h4>
-					<?php include(dirname(__FILE__).'/../structured/popupcart_simple_products.tpl'); ?>
+					<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/popupcart_simple_products.tpl')); ?>
 
 				<? unset($product); } ?>
 			</div>

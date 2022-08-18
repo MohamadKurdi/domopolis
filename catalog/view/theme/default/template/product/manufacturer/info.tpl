@@ -1,7 +1,7 @@
 <?php echo $header; ?>
 <link rel="stylesheet" href="catalog/view/theme/kp/css/sumoselect.css" />
 <script src="catalog/view/theme/kp/js/sumoselect.min.js"></script> 
-<?php include($this->checkTemplate(dirname(FILE),'/structured_manufacturer/head.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/structured_manufacturer/head.tpl')); ?>
 
 <!--desc-brand-->
 <div class="desc-brand">
@@ -500,12 +500,12 @@
 									<?php $productPriceSum = 0; ?>						
 									<?php $productCounter = 1; ?> 
 									<?php    foreach ($products as $product) { ?>
-										<?php include($this->checkTemplate(dirname(FILE),'/../../structured/product_single.tpl'); ?>
+										<?php include($this->checkTemplate(dirname(__FILE__),'/../../structured/product_single.tpl')); ?>
 										<?php if (empty($this->request->get['page'])) { ?>
 											<?php if (IS_MOBILE_SESSION && $productCounter == 8) { ?>
-												<?php include($this->checkTemplate(dirname(FILE),'/../../structured/listing_pwainstall.tpl'); ?>
+												<?php include($this->checkTemplate(dirname(__FILE__),'/../../structured/listing_pwainstall.tpl')); ?>
 											<?php } elseif ($productCounter == 12) { ?>
-												<?php include($this->checkTemplate(dirname(FILE),'/../../structured/listing_pwainstall.tpl'); ?>
+												<?php include($this->checkTemplate(dirname(__FILE__),'/../../structured/listing_pwainstall.tpl')); ?>
 											<?php } ?>
 										<?php } ?>
 										<?php $productIDS[] = $product['product_id']; ?>
@@ -519,7 +519,7 @@
 								<!--/product__grid-->
 							</section>
 							<!--pages-->
-							<?php include($this->checkTemplate(dirname(FILE),'/../../structured/pagination.tpl'); ?>
+							<?php include($this->checkTemplate(dirname(__FILE__),'/../../structured/pagination.tpl')); ?>
 							<!--/pages-->
 						</div>
 						<!--/catalog__content-->

@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="catalog/view/theme/kp/css/sumoselect.css" />
 <script src="catalog/view/theme/kp/js/sumoselect.min.js"></script> 
 <?php echo $column_left; ?><?php echo $column_right; ?><?php echo $content_top; ?>
-<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
 <section id="content-news-product">
 	<div class="wrap">
 	    <h1 class="title"><?=$text_new_products ?></h1>
@@ -43,7 +43,7 @@
 	          	<div class="product__grid" id="product__grid">
 	        		<!--product__item-->
 	            	<?php foreach ($products as $product) { ?>
-	              		<?php include($this->checkTemplate(dirname(FILE),'/../structured/product_single.tpl'); ?>
+	              		<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/product_single.tpl')); ?>
 					<?php } ?>
 	            	<!--/product__item-->
 				</div>
