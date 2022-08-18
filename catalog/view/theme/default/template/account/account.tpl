@@ -8,7 +8,7 @@
 <?php echo $column_right; ?>
 <div id="content-account" class="account_wrap my_office_page">
     <?php echo $content_top; ?>
-    <?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl')); ?>
+    <?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
     <div class="wrap two_column">
         <div class="side_bar">
             <?php echo $column_left; ?>
