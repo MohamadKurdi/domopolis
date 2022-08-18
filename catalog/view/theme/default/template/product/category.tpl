@@ -196,7 +196,7 @@
 	<!--/tags-->
 
 	<!--catalog-->
-	<?php include(dirname(__FILE__).'/../structured/product_list.tpl'); ?>
+	<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/product_list.tpl')); ?>
 	<!--/catalog-->
 
 	<script>

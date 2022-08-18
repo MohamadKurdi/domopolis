@@ -377,7 +377,7 @@
 	}            
 </script>  
 
-<?php include(dirname(__FILE__).'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
 
 <div id="content" class="colection-content">
 	<?php echo $content_top; ?>
@@ -659,7 +659,7 @@
 </div>
 <?php } ?>
 	<!--catalog-->
-	<?php include(dirname(__FILE__).'/../structured/product_list.tpl'); ?>
+	<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/product_list.tpl')); ?>
 	<!--/catalog-->
 	
 

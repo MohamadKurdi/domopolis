@@ -168,7 +168,7 @@
 <?php echo $column_right; ?>
 <div id="content-compare" class="account_wrap">
     <?php echo $content_top; ?>
-    <?php include(dirname(__FILE__).'/../structured/breadcrumbs.tpl'); ?>
+    <?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
     <div class="wrap two_column">
         <div class="side_bar">
             <?php echo $column_left; ?>

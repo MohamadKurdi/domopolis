@@ -8,7 +8,7 @@
 	
 	<?php foreach ($reviews as $review) { ?>
 			
-			<?php include(dirname(__FILE__).'/../structured/review_block.tpl'); ?>
+			<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/review_block.tpl')); ?>
 		
 	<?php } ?>
 	
