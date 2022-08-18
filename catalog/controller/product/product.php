@@ -1048,7 +1048,7 @@
 				
 				if (!$just_price){
 
-					if ($manufacturer_info ){
+					if ($manufacturer_info){
 						$this->data['manufacturers'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $product_info['manufacturer_id']);					
 
 					//overload location
@@ -1059,8 +1059,8 @@
 
 						$this->data['show_manufacturer'] = ($manufacturer_info && isset($manufacturer_info['sort_order']) && $manufacturer_info['sort_order'] != '-1');					
 
-						$this->data['manufacturers_img'] = $this->model_tool_image->resize($manufacturer_image['image'],300, 100);
-						$this->data['manufacturers_img_260'] = $this->model_tool_image->resize($manufacturer_image['image'], 260, 90);
+						$this->data['manufacturers_img'] = $this->model_tool_image->resize($manufacturer_info['image'],300, 100);
+						$this->data['manufacturers_img_260'] = $this->model_tool_image->resize($manufacturer_info['image'], 260, 90);
 
 					}
 					
