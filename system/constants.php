@@ -59,7 +59,7 @@ if (isset($_SERVER['HTTP_ACCEPT']) && isset($_SERVER['HTTP_USER_AGENT'])) {
 
 //AVIF
 if (isset($_SERVER['HTTP_ACCEPT']) && isset($_SERVER['HTTP_USER_AGENT'])) {
-	if( strpos( $_SERVER['HTTP_ACCEPT'], 'image/avif' ) !== false && function_exists('imageavif1')) {	
+	if( strpos( $_SERVER['HTTP_ACCEPT'], 'image/avif' ) !== false && function_exists('imageavif1')) {
 		header('X-IMAGE-AVIF: TRUE');
 		define('AVIFACCEPTABLE', true);	
 	} else {
