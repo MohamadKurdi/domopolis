@@ -45,8 +45,10 @@
 			try {  
 				if ($mime == 'image/gif') {
 					return imagecreatefromgif($image);
-				} elseif ($mime == 'image/webp') {
+					} elseif ($mime == 'image/webp') {
 					return imagecreatefromwebp($image);
+				} elseif ($mime == 'image/avif') {
+					return imagecreatefromavif($image);
 					} elseif ($mime == 'image/png') {
 					return imagecreatefrompng($image);
 					} elseif ($mime == 'image/jpeg') {			
@@ -54,6 +56,19 @@
 				}
 				} catch (Exception $e) {
 				
+			}
+		}
+
+		public function saveavif($file, $quality = IMAGE_QUALITY) {
+			$info = pathinfo($file);
+			
+			$extension = strtolower($info['extension']);
+			$filename = $info['filename'];
+			$dirname = $info['dirname'];
+			
+			if (is_object($this->image) || is_resource($this->image)) {				
+				imageavif($this->image, $file, $quality);
+				imagedestroy($this->image);
 			}
 		}
 		
@@ -78,6 +93,8 @@
 			if (is_object($this->image) || is_resource($this->image)) {
 				if ($extension == 'jpeg' || $extension == 'jpg') {
 					imagejpeg($this->image, $file, $quality);
+					} elseif($extension == 'avif') {
+					imageavif($this->image, $file);					
 					} elseif($extension == 'webp') {
 					imagewebp($this->image, $file);
 					} elseif($extension == 'png') {
@@ -164,8 +181,7 @@
 			imagecopyresampled($this->image, $image_old, 0, 0, 0, 0,  $this->info['width'], $this->info['height'], $this->info['width'], $this->info['height']);
 			imagedestroy($image_old);
 		}
-		
-		
+				
 		public function watermark($file, $position = 'bottomright') {
 			$watermark = $this->create($file);
 			

@@ -352,7 +352,7 @@ class PageCache{
 	}
 
 	public function prepareCacheDirAndGetCachePath($check = true){		
-		$cacheRouteString = md5(json_encode($_REQUEST) . $_SERVER['HTTP_HOST'] . (int)WEBPACCEPTABLE . (int)IS_MOBILE_SESSION . (int)IS_TABLET_SESSION);
+		$cacheRouteString = md5(json_encode($_REQUEST) . $_SERVER['HTTP_HOST'] . (int)WEBPACCEPTABLE . (int)AVIFACCEPTABLE . (int)IS_MOBILE_SESSION . (int)IS_TABLET_SESSION);
 
 		$cacheDir = DIR_CACHE . PAGECACHE_DIR;
 		$cacheDir .= $cacheRouteString[0] . $cacheRouteString[1] . '/';  

@@ -46,7 +46,7 @@ if ((isset($_GET['hello']) && $_GET['hello'] == 'world')){
 
 //WEBP
 if (isset($_SERVER['HTTP_ACCEPT']) && isset($_SERVER['HTTP_USER_AGENT'])) {
-	if( strpos( $_SERVER['HTTP_ACCEPT'], 'image/webp' ) !== false ) {
+	if( strpos( $_SERVER['HTTP_ACCEPT'], 'image/webp' ) !== false && function_exists('imagewebp')) {
 		header('X-IMAGE-WEBP: TRUE');	
 		define('WEBPACCEPTABLE', true);	
 	} else {
@@ -59,7 +59,7 @@ if (isset($_SERVER['HTTP_ACCEPT']) && isset($_SERVER['HTTP_USER_AGENT'])) {
 
 //AVIF
 if (isset($_SERVER['HTTP_ACCEPT']) && isset($_SERVER['HTTP_USER_AGENT'])) {
-	if( strpos( $_SERVER['HTTP_ACCEPT'], 'image/avif' ) !== false ) {	
+	if( strpos( $_SERVER['HTTP_ACCEPT'], 'image/avif' ) !== false && function_exists('imageavif1')) {	
 		header('X-IMAGE-AVIF: TRUE');
 		define('AVIFACCEPTABLE', true);	
 	} else {

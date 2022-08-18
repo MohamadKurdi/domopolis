@@ -1,6 +1,6 @@
 <?php
 class ModelToolImage extends Model {
-	public function resize($filename, $width, $height, $type = "", $quality = IMAGE_QUALITY, $do_not_resize = false, $webp = false) {
+	public function resize($filename, $width, $height, $type = '', $quality = IMAGE_QUALITY, $do_not_resize = false, $webp = false, $avif = false) {
 
 		$uri = '';
 		if (isset($this->request->server['REQUEST_URI'])) {
@@ -8,10 +8,12 @@ class ModelToolImage extends Model {
 		}
 
 		if (stripos($uri, 'admin') === false) {
-			if (isset($this->request->server['HTTP_ACCEPT']) && isset($this->request->server['HTTP_USER_AGENT'])) {
-				if( strpos( $this->request->server['HTTP_ACCEPT'], 'image/webp' ) !== false ) {	
-					$webp = true;	
-				}
+			if (WEBPACCEPTABLE) {				
+				$webp = true;					
+			}
+
+			if (AVIFACCEPTABLE) {				
+				$avif = true;					
 			}
 		}
 
@@ -29,9 +31,13 @@ class ModelToolImage extends Model {
 			$extension = 'webp';
 		}
 
+		if ($avif) {
+			$extension = 'avif';
+		}
+
 		$old_image = $filename;
 
-		$new_image_struct = Image::cachedname($filename, $extension, array($width, $height, $quality, $do_not_resize, $webp));
+		$new_image_struct = Image::cachedname($filename, $extension, array($width, $height, $quality, $do_not_resize));
 		$new_image = $new_image_struct['full_path'];
 		$new_image_relative = $new_image_struct['relative_path'];
 
@@ -40,8 +46,11 @@ class ModelToolImage extends Model {
 
 			if (!$do_not_resize){
 				$image->resize($width, $height, $type);
-			}								
-			if ($webp){
+			}	
+
+			if ($avif){
+				$image->saveavif($new_image, $quality);	
+			} elseif ($webp){
 				$image->savewebp($new_image, $quality);	
 			} else {
 				$image->save($new_image, $quality);	
@@ -77,6 +86,8 @@ class ModelToolImage extends Model {
 			return 'image/png';
 		} elseif ($extension == 'gif') {
 			return 'image/gif';
+		} elseif ($extension == 'avif') {
+			return 'image/avif';		
 		} elseif ($extension == 'webp') {
 			return 'image/webp';
 		}
@@ -85,8 +96,12 @@ class ModelToolImage extends Model {
 
 	}
 
-	public function resize_webp($filename, $width, $height, $type = "", $quality = IMAGE_QUALITY, $do_not_resize = false){
-		return $this->resize($filename, $width, $height, $type = "", $quality, $do_not_resize, $webp = true);
+	public function resize_webp($filename, $width, $height, $type = '', $quality = IMAGE_QUALITY, $do_not_resize = false){
+		return $this->resize($filename, $width, $height, $type = '', $quality, $do_not_resize, $webp = true, $avif = false);
+	}
+
+	public function resize_avif($filename, $width, $height, $type = '', $quality = IMAGE_QUALITY, $do_not_resize = false){
+		return $this->resize($filename, $width, $height, $type = '', $quality, $do_not_resize, $webp = false, $avif = true);
 	}
 
 }			
