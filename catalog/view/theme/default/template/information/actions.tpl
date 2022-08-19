@@ -1,5 +1,5 @@
 <?php echo $header; ?><?php echo $column_left; ?><?php echo $column_right; ?>
-<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl')); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
 <style type="text/css">
 	#countdown .digit {
     background-color: #51a881;
@@ -197,7 +197,7 @@
 							<div class="product__grid" id="product__grid">
 								<!--product__item-->
 								<?php foreach ($product_related as $product) { ?>
-									<?php include($this->checkTemplate(dirname(FILE),'/../structured/product_single.tpl')); ?>
+									<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/product_single.tpl')); ?>
 								<?php } ?>
 								<!--/product__item-->
 							</div>
