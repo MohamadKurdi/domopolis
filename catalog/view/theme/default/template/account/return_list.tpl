@@ -1,5 +1,5 @@
 <?php echo $header; ?><?php echo $column_left; ?><?php echo $column_right; ?>
-<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl')); ?>
 <div id="content"><?php echo $content_top; ?>
   <div class="wrap">
     <?php if ($returns) { ?>
