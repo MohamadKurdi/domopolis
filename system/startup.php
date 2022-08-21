@@ -84,7 +84,14 @@ require_once(DIR_SYSTEM . 'library/config.php');
 require_once(DIR_SYSTEM . 'library/db.php');
 require_once(DIR_SYSTEM . 'library/document.php');
 require_once(DIR_SYSTEM . 'library/encryption.php');
-require_once(DIR_SYSTEM . 'library/image.php');
+
+//Imagick is consindered better than GD
+if (extension_loaded('imagick')){
+	require_once(DIR_SYSTEM . 'library/imageMagick.php');
+} else {
+	require_once(DIR_SYSTEM . 'library/image.php');
+}
+
 require_once(DIR_SYSTEM . 'library/video.php');
 require_once(DIR_SYSTEM . 'library/language.php');
 require_once(DIR_SYSTEM . 'library/log.php');

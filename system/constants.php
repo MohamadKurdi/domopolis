@@ -43,10 +43,12 @@ if ((isset($_GET['hello']) && $_GET['hello'] == 'world')){
 	}
 }
 
+$imageQualities = loadJsonConfig('image');
 
+//IMAGES
 //WEBP
 if (isset($_SERVER['HTTP_ACCEPT']) && isset($_SERVER['HTTP_USER_AGENT'])) {
-	if( strpos( $_SERVER['HTTP_ACCEPT'], 'image/webp' ) !== false && function_exists('imagewebp')) {
+	if( strpos( $_SERVER['HTTP_ACCEPT'], 'image/webp' ) !== false && (function_exists('imagewebp') || extension_loaded('imagick')) && (int)$imageQualities['config_image_webp_quality'] > 0) {
 		header('X-IMAGE-WEBP: TRUE');	
 		define('WEBPACCEPTABLE', true);	
 	} else {
@@ -56,10 +58,10 @@ if (isset($_SERVER['HTTP_ACCEPT']) && isset($_SERVER['HTTP_USER_AGENT'])) {
 	define('WEBPACCEPTABLE', false);
 }
 
-
+//IMAGES
 //AVIF
 if (isset($_SERVER['HTTP_ACCEPT']) && isset($_SERVER['HTTP_USER_AGENT'])) {
-	if( strpos( $_SERVER['HTTP_ACCEPT'], 'image/avif' ) !== false && function_exists('imageavif1')) {
+	if( strpos( $_SERVER['HTTP_ACCEPT'], 'image/avif' ) !== false && (extension_loaded('imagick')) && (int)$imageQualities['config_image_avif_quality'] > 0) {
 		header('X-IMAGE-AVIF: TRUE');
 		define('AVIFACCEPTABLE', true);	
 	} else {
@@ -67,6 +69,14 @@ if (isset($_SERVER['HTTP_ACCEPT']) && isset($_SERVER['HTTP_USER_AGENT'])) {
 	}
 } else {
 	define('AVIFACCEPTABLE', false);
+}
+
+if (AVIFACCEPTABLE){
+	define('IMAGE_QUALITY', $imageQualities['config_image_avif_quality']);	
+} elseif (WEBPACCEPTABLE){
+	define('IMAGE_QUALITY', $imageQualities['config_image_webp_quality']);
+} else {
+	define('IMAGE_QUALITY', $imageQualities['config_image_jpeg_quality']);
 }
 
 if (IS_DEBUG){
