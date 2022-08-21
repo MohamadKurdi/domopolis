@@ -207,11 +207,12 @@
 				$supported_language_ids[$store_id][] 	= $all_languages[$row['value']]['language_id'];
 			}
 
-			if ($row['key'] == 'config_second_language'){
-				$registry->set('excluded_language_id', $row['value']);
+			if ($row['key'] == 'config_second_language' && $row['value']){
+				$registry->set('excluded_language_id', 		$all_languages[$row['value']]['language_id']);
+				$registry->set('excluded_language_code', 	$row['value']);
 			}
 		}
-	}
+	}	
 
 	$registry->set('supported_language_codes', $supported_language_codes);
 	$registry->set('supported_language_ids', $supported_language_ids);

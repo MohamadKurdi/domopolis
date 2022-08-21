@@ -258,7 +258,7 @@ class ControllerFeedReFeedMaker extends Controller {
 		}
 
 		$language_id = $this->config->get('config_language_id');
-		$store_id = $this->config->get('config_store_id');
+		$store_id = $this->config->get('config_store_id');		
 
 			//получаем язык и валюту
 		foreach (array(0,1) as $changeID){
