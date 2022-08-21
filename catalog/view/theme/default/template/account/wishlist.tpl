@@ -1,6 +1,6 @@
 <?php echo $header; ?>
 <?php echo $column_right; ?>
-<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl'); ?>
+<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl')); ?>
 
 <style type="text/css">
     
