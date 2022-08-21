@@ -1758,9 +1758,9 @@ class ControllerSettingSetting extends Controller {
 		}
 		
 		if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo')) && is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
-			$this->data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'), 100, 100);		
+			$this->data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'), 200, 200);		
 		} else {
-			$this->data['logo'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+			$this->data['logo'] = $this->model_tool_image->resize('no_image.jpg', 200, 200);
 		}
 		
 		if (isset($this->request->post['config_icon'])) {
@@ -1770,9 +1770,9 @@ class ControllerSettingSetting extends Controller {
 		}
 		
 		if ($this->config->get('config_icon') && file_exists(DIR_IMAGE . $this->config->get('config_icon')) && is_file(DIR_IMAGE . $this->config->get('config_icon'))) {
-			$this->data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'), 100, 100);		
+			$this->data['icon'] = $this->model_tool_image->resize($this->config->get('config_icon'), 200, 200);		
 		} else {
-			$this->data['icon'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+			$this->data['icon'] = $this->model_tool_image->resize('no_image.jpg', 200, 200);
 		}
 		
 		if (isset($this->request->post['config_noimage'])) {
@@ -1780,14 +1780,32 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$this->data['config_noimage'] = $this->config->get('config_noimage');			
 		}
-		
+
 		if ($this->config->get('config_noimage') && file_exists(DIR_IMAGE . $this->config->get('config_noimage')) && is_file(DIR_IMAGE . $this->config->get('config_noimage'))) {
-			$this->data['noimage'] = $this->model_tool_image->resize($this->config->get('config_noimage'), 100, 100);		
+			$this->data['noimage'] = $this->model_tool_image->resize($this->config->get('config_noimage'), 200, 200);		
 		} else {
-			$this->data['noimage'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+			$this->data['noimage'] = $this->model_tool_image->resize('no_image.jpg', 200, 200);
+		}
+
+		if (isset($this->request->post['config_image_jpeg_quality'])) {
+			$this->data['config_image_jpeg_quality'] = $this->request->post['config_image_jpeg_quality'];
+		} else {
+			$this->data['config_image_jpeg_quality'] = $this->config->get('config_image_jpeg_quality');			
+		}
+
+		if (isset($this->request->post['config_image_webp_quality'])) {
+			$this->data['config_image_webp_quality'] = $this->request->post['config_image_webp_quality'];
+		} else {
+			$this->data['config_image_webp_quality'] = $this->config->get('config_image_webp_quality');			
+		}
+
+		if (isset($this->request->post['config_image_avif_quality'])) {
+			$this->data['config_image_avif_quality'] = $this->request->post['config_image_avif_quality'];
+		} else {
+			$this->data['config_image_avif_quality'] = $this->config->get('config_image_avif_quality');			
 		}
 		
-		$this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+		
 		
 		if (isset($this->request->post['config_image_category_width'])) {
 			$this->data['config_image_category_width'] = $this->request->post['config_image_category_width'];
