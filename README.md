@@ -12,6 +12,8 @@
 
 ✨A lot of API's integrated
 
+😍Template supports PWA, and asset caching with service worker
+
 🔥Separate API mode and CLI mode
 
 😊And many-many other changes
