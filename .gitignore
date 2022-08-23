@@ -1,0 +1,93 @@
+#Роботс
+/robots*.txt
+/README.md
+/.bash_history
+
+#Админка
+/admin/config*.php
+/admin/config.parts/*
+/admin/app/*
+/admin/icons/*
+/admin/icon/*
+/admin/pwa/*
+/admin/manifest.json
+/admin/browserconfig.xml
+/admin/favicon.ico
+/admin/offline.html
+
+#Основные конфиги
+/config*.php
+/config.parts/*
+/system/config.parts/*
+
+#Документы
+/docs/*
+
+#Страницы ошибок
+/ep/*
+
+#EXPORT: TODO, Там и статика и исполняемый код
+/export/
+
+#Фиды и сайтмапы
+/feeds/*
+/sitemaps/*
+
+#Картинки и кеш
+/image/*
+/image.*/*
+/img/*
+/img.*/*
+
+#Иконки
+/icon/*
+
+#Статичные ресурсы PWA и само PWA
+/pwa/*
+/offline.html
+/offline.*.html
+/browserconfig.xml
+/favicon.ico
+
+#Статика минификатора
+/min/
+
+#node includes
+/js/
+
+#Старая директория api
+/api/
+
+#Кэш системного пользователя
+/.cache/
+
+#Шаблоны
+/catalog/view/theme/kp/
+/catalog/view/theme/dp/
+/catalog/view/theme/ho/
+
+#Языки
+/catalog/language/russian
+/catalog/language/ukrainian
+
+
+#Рассылки
+/send/*
+
+#Composer
+/vendor/
+/composer.lock
+/composer.json
+
+#Всякая системная шляпа
+/system/cache
+/system/cache_mfp
+/system/config
+/system/config/*
+/system/csvprice_pro
+/system/logs
+/system/temp
+/system/pids
+
+#Директории IDE
+.idea
