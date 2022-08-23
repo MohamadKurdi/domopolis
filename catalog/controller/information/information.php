@@ -191,11 +191,7 @@
 					$this->document->addLink('canonical', $canonical);
 					
 					
-					$this->bcache->SetFile('template.information.'.$this->config->get('config_store_id').$information_id.'.tpl', 'templates');
-					if ($this->bcache->CheckFile()) {		
-						$this->template = $this->bcache->ReturnFileContent();
-						} else {
-						
+					
 						$this->load->model('design/layout');
 						$layout_id = $this->model_catalog_information->getInformationLayoutId($information_id);
 						if (!$layout_id){				
@@ -203,11 +199,7 @@
 						}						
 						
 						if ($template = $this->model_design_layout->getLayoutTemplateByLayoutId($layout_id)) {
-							if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/' . $template)) {
-								$this->template = $this->config->get('config_template') . '/template/' . $template;
-								} else {
-								$this->template = 'default/template/' . $template;
-							}				
+							$this->template = $template;			
 							} else {
 							//Если нет переназначения Layout, то проверяем переназначение конкретной категории
 							$template_overload = false;
@@ -217,11 +209,7 @@
 								foreach ($custom_template_module['custom_template_module'] as $key => $module) {
 									if (($module['type'] == 2) && !empty($module['informations'])) {
 										if (in_array($information_id, $module['informations'])) {
-											if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') .'/'. $module['template_name'])) {
-												$this->template = $this->config->get('config_template') .'/'. $module['template_name'];							
-												} else {
-												$this->template = DIR_TEMPLATE . 'default' .'/'. $module['template_name'];								
-											}
+											$this->template = $module['template_name'];
 											$template_overload = true;
 										}
 									}
@@ -229,17 +217,11 @@
 							}
 							
 							if (!$template_overload) {
-								if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/information/information.tpl')) {
-									$this->template = $this->config->get('config_template') . '/template/information/information.tpl';
-									} else {
-									$this->template = 'default/template/information/information.tpl';
-								}			
+								$this->template = 'information/information.tpl';			
 							}
-						}
-						
-						$this->bcache->WriteFile($this->template);
-					}
-					
+
+							
+						}																
 					
 					
 					$this->children = array(

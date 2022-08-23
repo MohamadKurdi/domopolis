@@ -1380,11 +1380,7 @@
 				}						
 
 				if ($template = $this->model_design_layout->getLayoutTemplateByLayoutId($layout_id)) {
-					if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/' . $template)) {
-						$this->template = $this->config->get('config_template') . '/template/' . $template;
-					} else {
-						$this->template = 'default/template/' . $template;
-					}
+					$this->template = $template;
 				} else {
 						//Если нет переназначения Layout, то проверяем переназначение конкретной категории
 					$template_overload = false;
@@ -1394,11 +1390,7 @@
 						foreach ($custom_template_module['custom_template_module'] as $key => $module) {
 							if (($module['type'] == 0) && !empty($module['categories'])) {
 								if (in_array($category_id, $module['categories'])) {
-									if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') .'/'. $module['template_name'])) {
-										$this->template = $this->config->get('config_template') .'/'. $module['template_name'];							
-									} else {
-										$this->template = DIR_TEMPLATE . 'default' .'/'. $module['template_name'];								
-									}
+									$this->template = $module['template_name'];
 									$template_overload = true;
 								}
 							}
