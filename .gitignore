@@ -88,4 +88,6 @@
 /system/logs
 /system/temp
 /system/pids
+
+#Директории IDE
 .idea
