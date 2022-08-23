@@ -329,6 +329,7 @@
 	$registry->set('smsQueue', 			new smsQueue($registry));	
 	$registry->set('shortAlias', 		new shortAlias($registry));	
 	$registry->set('Bitrix24', 			new Bitrix24($registry));
+	$registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
 	$registry->set('customer', 			new Customer($registry));
 	$registry->set('affiliate', 		new Affiliate($registry));
 	$registry->set('currency', 			new Currency($registry));
