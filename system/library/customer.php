@@ -671,7 +671,7 @@
 		
 		
 		//Удаляет начисление из очереди начислений, если заказ отменен до 14 дней	
-		public function clearRewardQueueByOrder($customer_id = false, $order_id){
+		public function clearRewardQueueByOrder($customer_id, $order_id){
 			if (!$customer_id){
 				$customer_id = $this->customer_id;
 			}
@@ -720,7 +720,7 @@
 		}
 		
 		//Просмотреть очередь начислений по заказу
-		public function getRewardInQueueByOrder($customer_id = false, $order_id) {
+		public function getRewardInQueueByOrder($customer_id, $order_id) {
 			if (!$customer_id){
 				$customer_id = $this->customer_id;
 			}
@@ -735,7 +735,7 @@
 		}		
 		
 		//Обновить количество баллов в очереди по заказу
-		public function updateRewardInQueueByOrder($customer_id = false, $order_id, $points) {
+		public function updateRewardInQueueByOrder($customer_id, $order_id, $points) {
 			if (!$customer_id){
 				$customer_id = $this->customer_id;
 			}
@@ -748,7 +748,7 @@
 		//---------------------------- Функции работы с ТАБЛИЧКОЙ ИЛИ СЧЕТОМ БАЛЛОВ ------------------------------------
 		
 		//Получить сумму начислений за заказ
-		public function getTotalRewardByOrder($customer_id = false, $order_id) {
+		public function getTotalRewardByOrder($customer_id, $order_id) {
 			if (!$customer_id){
 				$customer_id = $this->customer_id;
 			}
@@ -760,7 +760,7 @@
 		}
 		
 		//Проверить бонусы, начисленные за заказ
-		public function getRewardInTableByOrder($customer_id = false, $order_id) {
+		public function getRewardInTableByOrder($customer_id, $order_id) {
 			if (!$customer_id){
 				$customer_id = $this->customer_id;
 			}
@@ -775,7 +775,7 @@
 		}
 		
 		//Обновить бонусы, начисленные за заказ (при возврате, например, после 14 дней)
-		public function updateRewardInTableByOrder($customer_id = false, $order_id, $points) {
+		public function updateRewardInTableByOrder($customer_id, $order_id, $points) {
 			if (!$customer_id){
 				$customer_id = $this->customer_id;
 			}
@@ -787,7 +787,7 @@
 		}
 		
 		//Получить бонусы, зарезервированные в заказе
-		public function getRewardReservedByOrder($customer_id = false, $order_id) {
+		public function getRewardReservedByOrder($customer_id, $order_id) {
 			if (!$customer_id){
 				$customer_id = $this->customer_id;
 			}
@@ -803,7 +803,7 @@
 		
 		
 		//Удаляет начисление из начислений, если заказ отменен после 14 дней	
-		public function clearRewardTableByOrder($customer_id = false, $order_id){
+		public function clearRewardTableByOrder($customer_id, $order_id){
 			if (!$customer_id){
 				$customer_id = $this->customer_id;
 			}

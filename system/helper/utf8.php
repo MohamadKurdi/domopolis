@@ -52,6 +52,7 @@ function atrim($string){
 
 function clean_string( $string ) {
 	$string = preg_replace( "/[^a-zA-ZА-Яа-я0-9\s]/", '', $string );
+	$string = trim($string);
 
 	return $string;
 }

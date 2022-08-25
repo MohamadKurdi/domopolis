@@ -36,7 +36,7 @@ class YandexTranslator
 	public function translateMulti($data = []){
 	}
 
-	public function translate($text, $from = false, $to, $returnString = false){
+	public function translate($text, $from, $to, $returnString = false){
 
 		$result = false;
 

@@ -35,7 +35,8 @@
 			'UPC'									=> ['upc'],
 			'UWeltweite Artikelidentnummer (GTIN)'	=> ['ean'],
 			'GTIN'									=> ['ean'],
-			'EAN'									=> ['ean']
+			'EAN'									=> ['ean'],
+			'Weltweite Artikelidentnummer (GTIN)'	=> ['ean']
 		];
 
 		private $mapAmazonToStoreFieldsSpecificationsRev = [
@@ -47,7 +48,12 @@
 			'Hersteller',
 			'Im Angebot von Amazon.de seit',
 			'Marke',
+			'Brand',
 			'Amazon Bestseller-Rang',
+			'Best Sellers Rank',
+			'Date First Available',
+			'Customer Reviews',
+			'Manufacturer contact',
 			'Auslaufartikel (Produktion durch Hersteller eingestellt)',
 			'Durchschnittliche Kundenbewertung'			
 		];
@@ -335,10 +341,16 @@
 
 					if (!$mappedAttribute) {
 
+						echoLine('[parseProductAttributes] Ищем атрибут: ' . $attribute['name']);
+
 						$attribute_id = $this->model_product_cached_get->getAttribute($attribute['name']);
 
 						if (!$attribute_id){
+
+							echoLine('[parseProductAttributes] Атрибут не найден: ' . $attribute['name']);
+
 							$attribute_description = [];
+
 							foreach ($this->registry->get('languages') as $language_code => $language) {						
 								$attribute_description[$language['language_id']] = [
 									'name' => $this->translateWithCheck($attribute['name'], $language_code)
@@ -353,6 +365,7 @@
 						}
 
 						$product_attribute_description = [];
+
 						foreach ($this->registry->get('languages') as $language_code => $language) {						
 							$product_attribute_description[$language['language_id']] = [
 								'text' => $this->translateWithCheck($attribute['value'], $language_code)
@@ -367,10 +380,14 @@
 				}
 			}
 
-
 			if ($product_attribute){
 				$this->model_product_edit->editProductAttributes($product_id, $product_attribute);
-			}			
+			}
+
+
+			var_dump($product_attribute);
+			die();
+			
 
 			if ($main_variant_id && !$main_variant_id == $product_id){
 	
@@ -1021,6 +1038,7 @@
 
 			//Атрибуты, фичер баллетс и спецификации
 			$this->parseProductAttributes($product_id, $product, $main_variant?$main_variant['main_variant_id']:false);
+			die();
 			
 			//Размеры, готовая функция из InfoUpdater
 			$this->registry->get('rainforestAmazon')->infoUpdater->parseAndUpdateProductDimensions($product);

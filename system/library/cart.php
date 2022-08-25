@@ -671,7 +671,7 @@
 			return $recurring_products;
 		}
 		
-		public function add($product_id, $qty = 1, $option, $profile_id = '', $set_id = false, $ao_id = false) {
+		public function add($product_id, $qty, $option, $profile_id = '', $set_id = false, $ao_id = false) {
 			// TODO Нужно тут убрать ф-ция формирования ключа, и вызвать метод makeCartKey(...)
 			// $key = $this->makeCartKey($product_id, $option, $profile_id, $set_id, $ao_id);
 			$key = (int)$product_id . ':';

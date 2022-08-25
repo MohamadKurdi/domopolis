@@ -154,24 +154,26 @@
 	$registry->set('stores_to_main_language_mapping', $stores_to_main_language_mapping);			
 				
 	//Определение языка
-	$languages = $all_languages = [];
+	$languages = $languages_front = $languages_all = [];
 	$languages_id_code_mapping = [];
 	$query = $registry->get('db')->query("SELECT * FROM `language` WHERE status = '1'"); 
 	
 	foreach ($query->rows as $result) {
-		$all_languages[$result['code']] = $result;	
+		$languages_all[$result['code']] = $result;	
+		$languages[$result['code']] = $result;
 		
 		if ($result['front']){
-			$languages[$result['code']] = $result;
+			$languages_front[$result['code']] = $result;
 			$languages_id_code_mapping[$result['language_id']] = $result['code'];
 		}
 	}
 
 	//ALL LANGUAGES TO REGISTRY
 	$registry->set('languages', $languages);
+	$registry->set('languages_front', $languages_front);
 	$registry->set('languages_id_code_mapping', $languages_id_code_mapping);
 	$registry->get('config')->set('config_supported_languages', [$registry->get('config')->get('config_language'), $registry->get('config')->get('config_second_language')]);
-	$registry->get('config')->set('config_rainforest_source_language_id', $all_languages[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);	
+	$registry->get('config')->set('config_rainforest_source_language_id', $languages_all[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);	
 
 	if (!empty($language_code)){
 		$registry->get('config')->set('config_language', $language_code);
@@ -182,7 +184,7 @@
 	$registry->get('config')->set('config_language_hreflang', 	$languages[$registry->get('config')->get('config_language')]['hreflang']);
 
 	//RNF MAIN LANGUAGE
-	$registry->get('config')->set('config_rainforest_source_language_id', $all_languages[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);
+	$registry->get('config')->set('config_rainforest_source_language_id', $languages_all[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);
 
 	//Stores and languages mapping to registry
 	$stores = [0];
@@ -204,11 +206,11 @@
 		foreach ($query->rows as $row){
 			if ($row['value']){
 				$supported_language_codes[$store_id][] 	= $row['value'];
-				$supported_language_ids[$store_id][] 	= $all_languages[$row['value']]['language_id'];
+				$supported_language_ids[$store_id][] 	= $languages_all[$row['value']]['language_id'];
 			}
 
 			if ($row['key'] == 'config_second_language' && $row['value']){
-				$registry->set('excluded_language_id', 		$all_languages[$row['value']]['language_id']);
+				$registry->set('excluded_language_id', 		$languages_all[$row['value']]['language_id']);
 				$registry->set('excluded_language_code', 	$row['value']);
 			}
 		}

@@ -480,9 +480,17 @@
 								<li><a class="home_icon_style" href="<?php echo HTTPS_CATALOG.'reviewgen/'; ?>"><i class="fa fa-sitemap"></i><span>Генератор отзывов</span></a></li>
 							</ul>
 						</li>
+
+						<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
+						<li id="rnf">
+							<a class="top" href="<?php echo $rnf; ?>"><i class="fa fa-amazon icon_menu"></i>Rainforest</a>
+						</li>
+						<?php } ?>
+
 						<li id="system"><a class="top"><i class="fa fa-cogs icon_menu"></i><?php echo $text_system; ?></a>
 							<ul>
 								<li><a class="home_icon_style"  href="<?php echo $panel; ?>"><i class="fa fa-server"></i><span>Панель</span></a></li>
+								<li><a class="home_icon_style"  href="<?php echo $rnf; ?>"><i class="fa fa-amazon"></i><span>Настройки RNF API</span></a></li>
 								
 								<li><a class="home_icon_style"  href="<?php echo $courier_face2; ?>" target="_blank"><i class="fa fa-bus" ></i><span>Интерфейс курьера</span></a></li>
 								

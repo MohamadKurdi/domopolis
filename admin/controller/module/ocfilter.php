@@ -166,23 +166,19 @@
 			$this->response->setOutput($this->render());
 		}
 		
-		public function copyAttributesCLI(){
-		
-		
+		public function copyAttributesCLI($store_id){			
 			$this->load->model('catalog/ocfilter');				
 			
 			$data = [
-				'truncate' 	=> true,
-				'option'	=> false,
-				'filter'	=> false,
-				'attribute'	=> true,
-				'option_store' => [0,1,2,5],
-				'type'		=> 'checkbox'
+				'truncate' 		=> true,
+				'option'		=> false,
+				'filter'		=> false,
+				'attribute'		=> true,
+				'option_store' 	=> [$store_id],
+				'type'			=> 'checkbox'
 			];
 			
-			$this->model_catalog_ocfilter->copyAttributesToOCFilter($data);
-		
-		
+			$this->model_catalog_ocfilter->copyAttributesToOCFilter($data);				
 		}
 		
 		public function copyAttributes() {
