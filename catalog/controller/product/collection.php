@@ -480,9 +480,9 @@
 				
 				
 				if ($product_total){
-					$this->template = $this->config->get('config_template') . '/template/product/collection.tpl';
+					$this->template = 'product/collection.tpl';
 					} else {
-					$this->template = $this->config->get('config_template') . '/template/product/collection_parent.tpl';
+					$this->template = 'product/collection_parent.tpl';
 				}
 				
 				$this->children = array(

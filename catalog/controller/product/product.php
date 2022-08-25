@@ -16,7 +16,7 @@
 
 			$this->log->debug($this->data);
 			
-			$this->template = $this->config->get('config_template') . '/template/blocks/price.tpl';
+			$this->template = 'blocks/price.tpl';
 			$this->response->setOutput($this->render());
 		}
 		
@@ -281,7 +281,7 @@
 					$this->data['delivery_city']['id'] = $customer_city['id'];
 				}
 				
-				$this->template = $this->config->get('config_template') . '/template/blocks/delivery_info.tpl';
+				$this->template = 'blocks/delivery_info.tpl';
 				
 				$this->response->setOutput($this->render());	
 			}
@@ -2058,13 +2058,11 @@
 					
 					$this->load->model('design/layout');
 					if ($this->data['is_set']) {
-						$this->template = $this->config->get('config_template') . '/template/product/product.set_kp.tpl';
-						} else {
-						//$this->template = false;
+						$this->template = 'product/product.set_kp.tpl';
 					}
 					
 					if ($this->data['has_child']) {
-						$this->template = $this->config->get('config_template') . '/template/product/product.has_child.tpl';
+						$this->template = 'product/product.has_child.tpl';
 						} else {
 						$this->template = false;
 					}
@@ -2077,11 +2075,7 @@
 						}
 						
 						if ($template = $this->model_design_layout->getLayoutTemplateByLayoutId($layout_id)) {
-							if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/' . $template)) {
-								$this->template = $this->config->get('config_template') . '/template/' . $template;
-								} else {
-								$this->template = 'default/template/' . $template;
-							}
+							$this->template = $template;
 							
 							} else {
 							
@@ -2095,11 +2089,7 @@
 											$category_id = explode('_', $this->request->get['path']);
 											$category_id = end($category_id);
 											if (in_array($category_id, $module['product_categories'])) {
-												if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $module['template_name'])) {
-													$this->template = $this->config->get('config_template') . '/' . $module['template_name'];
-													} else {
-													$this->template = DIR_TEMPLATE . 'default' . '/' . $module['template_name'];
-												}
+												$this->template = $module['template_name'];
 												$template_overload = true;
 											}
 										}
@@ -2110,11 +2100,7 @@
 									if (($module['type'] == 1) && !empty($module['products'])) {
 										$products = explode(',', $module['products']);
 										if (in_array($product_id, $products)) {
-											if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/' . $module['template_name'])) {
-												$this->template = $this->config->get('config_template') . '/' . $module['template_name'];
-												} else {
-												$this->template = DIR_TEMPLATE . 'default' . '/' . $module['template_name'];
-											}
+											$this->template = $module['template_name'];
 											$template_overload = true;
 										}
 									}
@@ -2127,10 +2113,6 @@
 							}
 							
 						}
-					}
-					
-					if ($this->customer->isLogged() == 1512764){
-						$this->template = $this->config->get('config_template') . '/template/product/product_dev.tpl';
 					}
 					
 					//BOF Product Block Option

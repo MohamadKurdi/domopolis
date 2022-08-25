@@ -49,11 +49,7 @@
 			
 			$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
 			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/error/not_found.tpl';
-				} else {
-				$this->template = 'default/template/error/not_found.tpl';
-			}
+			$this->template = 'error/not_found.tpl';
 			
 			$this->children = array(
 			'common/column_left',
@@ -196,11 +192,7 @@
 			
 			$this->data['continue'] = $this->url->link('common/home');
 			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/manufacturer_list.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/product/manufacturer_list.tpl';
-				} else {
-				$this->template = 'default/template/product/manufacturer_list.tpl';
-			}			
+			$this->template = 'product/manufacturer_list.tpl';		
 			
 			$this->children = array(
 			'common/column_left',
@@ -503,11 +495,7 @@
 				$this->data['text_retranslate_app_block'] = sprintf($this->data['text_retranslate_app_block_reward'], $this->currency->format($this->config->get('rewardpoints_appinstall'), $this->config->get('config_currency_national'), 1));
 			}
 			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/manufacturer/sales.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/product/manufacturer/sales.tpl';
-				} else {
-				$this->template = 'default/template/product/manufacturer/sales.tpl';
-			}
+			$this->template = 'product/manufacturer/sales.tpl';
 			
 			$this->children = array(
 			'common/column_left',
@@ -724,11 +712,7 @@
 				$this->data['text_retranslate_app_block'] = sprintf($this->data['text_retranslate_app_block_reward'], $this->currency->format($this->config->get('rewardpoints_appinstall'), $this->config->get('config_currency_national'), 1));
 			}
 			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/manufacturer/newproducts.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/product/manufacturer/newproducts.tpl';
-				} else {
-				$this->template = 'default/template/product/manufacturer/newproducts.tpl';
-			}
+			$this->template = 'product/manufacturer/newproducts.tpl';
 			
 			$this->children = array(
 			'common/column_left',
@@ -901,11 +885,7 @@
 			
 			$this->data['active_button'] = 'collections';
 			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/manufacturer/collections.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/product/manufacturer/collections.tpl';
-				} else {
-				$this->template = 'default/template/product/manufacturer/collections.tpl';
-			}
+			$this->template = 'product/manufacturer/collections.tpl';
 			
 			$this->children = array(
 			'common/column_left',
@@ -1109,11 +1089,7 @@
 			
 			$this->data['active_button'] = 'categories';
 			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/manufacturer/categories.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/product/manufacturer/categories.tpl';
-				} else {
-				$this->template = 'default/template/product/manufacturer/categories.tpl';
-			}
+			$this->template = 'product/manufacturer/categories.tpl';
 			
 			$this->children = array(
 			'common/column_left',
@@ -1353,11 +1329,7 @@
 			
 			$this->data['active_button'] = 'articles';
 			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/manufacturer/articles.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/product/manufacturer/articles.tpl';
-				} else {
-				$this->template = 'default/template/product/manufacturer/articles.tpl';
-			}
+			$this->template = 'product/manufacturer/articles.tpl';
 			
 			$this->children = array(
 			'common/column_left',
@@ -1872,53 +1844,32 @@
 				require_once(DIR_SYSTEM . 'library/microdata/opengraph/manufacturer.php');
 				require_once(DIR_SYSTEM . 'library/microdata/twittercard/manufacturer.php');
 				
-				
-				$this->bcache->SetFile('templ.man.'.$manufacturer_id.'.tpl', 'templ_man'.$this->config->get('config_store_id'));
-				if ($this->bcache->CheckFile()) {		
-					$this->template = $this->bcache->ReturnFileContent();
-					} else {
-					
-					$this->load->model('design/layout');
-					$layout_id = $this->model_catalog_manufacturer->getManufacturerLayoutId($manufacturer_id);
-					if (!$layout_id){				
-						$layout_id = $this->model_design_layout->getLayout('product/manufacturer');				
-					}	
-					
-					if ($template = $this->model_design_layout->getLayoutTemplateByLayoutId($layout_id)) {
-						if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/' . $template)) {
-							$this->template = $this->config->get('config_template') . '/template/' . $template;
-							} else {
-							$this->template = 'default/template/' . $template;
-						}				
-						} else {
-						$template_overload = false;
-						$this->load->model('setting/setting');
-						$custom_template_module = $this->model_setting_setting->getSetting('custom_template_module', $this->config->get('config_store_id'));
-						if(!empty($custom_template_module['custom_template_module'])){
-							foreach ($custom_template_module['custom_template_module'] as $key => $module) {
-								if (($module['type'] == 3) && !empty($module['manufacturers'])) {
-									if (in_array($manufacturer_id, $module['manufacturers'])) {
-										if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') .'/'. $module['template_name'])) {
-											$this->template = $this->config->get('config_template') .'/'. $module['template_name'];
-											} else {
-											$this->template = DIR_TEMPLATE . 'default' .'/'. $module['template_name'];
-										}
-										$template_overload = true;
-									}
+				$this->load->model('design/layout');
+				$layout_id = $this->model_catalog_manufacturer->getManufacturerLayoutId($manufacturer_id);
+				if (!$layout_id){				
+					$layout_id = $this->model_design_layout->getLayout('product/manufacturer');				
+				}	
+
+				if ($template = $this->model_design_layout->getLayoutTemplateByLayoutId($layout_id)) {
+					$this->template = $template;				
+				} else {
+					$template_overload = false;
+					$this->load->model('setting/setting');
+					$custom_template_module = $this->model_setting_setting->getSetting('custom_template_module', $this->config->get('config_store_id'));
+					if(!empty($custom_template_module['custom_template_module'])){
+						foreach ($custom_template_module['custom_template_module'] as $key => $module) {
+							if (($module['type'] == 3) && !empty($module['manufacturers'])) {
+								if (in_array($manufacturer_id, $module['manufacturers'])) {
+									$this->template = $module['template_name'];
+									$template_overload = true;
 								}
 							}
 						}
-						
-						if (!$template_overload) {
-							if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/manufacturer/info.tpl')) {
-								$this->template = $this->config->get('config_template') . '/template/product/manufacturer/info.tpl';
-								} else {
-								$this->template = 'default/template/product/manufacturer/info.tpl';
-							}
-						}
 					}
-					
-					$this->bcache->WriteFile($this->template);
+
+					if (!$template_overload) {
+						$this->template = 'product/manufacturer/info.tpl';
+					}
 				}
 				
 				//REWARD TEXT
@@ -2032,11 +1983,7 @@
 				
 				$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
 				
-				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-					$this->template = $this->config->get('config_template') . '/template/error/not_found.tpl';
-					} else {
-					$this->template = 'default/template/error/not_found.tpl';
-				}
+				$this->template = 'error/not_found.tpl';
 				
 				$this->children = array(
 				'common/column_left',
