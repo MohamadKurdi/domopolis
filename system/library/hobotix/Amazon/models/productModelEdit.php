@@ -122,6 +122,26 @@ class productModelEdit extends hoboModel{
 		$this->db->query("UPDATE product_video_description SET title = '' WHERE title LIKE('%limit on units was exceeded%')");
 	} 
 
+	public function changeProductAttributes($attribute_id_from, $attribute_id_to) {
+		$sql = "UPDATE product_attribute SET attribute_id = '" . (int)$attribute_id_to . "' WHERE attribute_id = '" . (int)$attribute_id_from . "'";
+		echoLine($sql);
+
+		//$query = $this->db->query($sql);		
+	}
+
+	public function getAttributeDescriptions($attribute_id) {
+		$query = $this->db->query("SELECT * FROM attribute_description ad WHERE ad.attribute_id = '" . (int)$attribute_id . "'");
+
+		return $query->rows;
+	}
+
+	public function deleteAttribute($attribute_id) {
+		$this->db->query("DELETE FROM attribute WHERE attribute_id = '" . (int)$attribute_id . "'");
+		$this->db->query("DELETE FROM attribute_description WHERE attribute_id = '" . (int)$attribute_id . "'");
+		$this->db->query("DELETE FROM product_attribute WHERE attribute_id = '" . (int)$attribute_id . "'");
+        $this->db->query("DELETE FROM attribute_value_image WHERE attribute_id = '" . (int)$attribute_id . "'");
+    }
+
 	public function setProductTranslated($product_id, $language_id){			
 		$this->db->query("UPDATE product_description SET translated = 1	WHERE product_id 	= '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
 	}
@@ -368,27 +388,27 @@ class productModelEdit extends hoboModel{
 	}
 
 	public function addManufacturer($name){		
-		$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer SET name = '" . $this->db->escape($name) . "'");
+		$this->db->query("INSERT INTO manufacturer SET name = '" . $this->db->escape($name) . "'");
 		$manufacturer_id = $this->db->getLastId();
 
 		$this->db->query("DELETE FROM manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 		$this->db->query("INSERT INTO manufacturer_to_store SET manufacturer_id = '" . (int)$manufacturer_id . "', store_id = '0'");
 
-		$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+		$this->db->query("DELETE FROM manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 		foreach ($this->registry->get('languages') as $language_code => $language) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_description SET manufacturer_id = '" . (int)$manufacturer_id . "', language_id = '" . (int)$language['language_id'] . "', seo_title = '" . $this->db->escape($name) . "'");
+			$this->db->query("INSERT INTO manufacturer_description SET manufacturer_id = '" . (int)$manufacturer_id . "', language_id = '" . (int)$language['language_id'] . "', seo_title = '" . $this->db->escape($name) . "'");
 		}
 
 		return (int)$manufacturer_id;
 	}
 
 	public function addAttribute($data){
-		$this->db->query("INSERT INTO " . DB_PREFIX . "attribute SET attribute_group_id = '" . (int)$data['attribute_group_id'] . "'");
+		$this->db->query("INSERT INTO attribute SET attribute_group_id = '" . (int)$data['attribute_group_id'] . "'");
 
 		$attribute_id = $this->db->getLastId();
 
 		foreach ($data['attribute_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "attribute_description SET attribute_id = '" . (int)$attribute_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
+			$this->db->query("INSERT INTO attribute_description SET attribute_id = '" . (int)$attribute_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
 
 			if ($language_id == $this->config->get('config_rainforest_source_language_id')){
 				$name = $value['name'];

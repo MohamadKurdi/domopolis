@@ -383,12 +383,7 @@
 			if ($product_attribute){
 				$this->model_product_edit->editProductAttributes($product_id, $product_attribute);
 			}
-
-
-			var_dump($product_attribute);
-			die();
 			
-
 			if ($main_variant_id && !$main_variant_id == $product_id){
 	
 			}

@@ -380,6 +380,65 @@ class ControllerDPRainForest extends Controller {
 				}
 			}	
 		}
+	}
+
+	//Фиксит дубли атрибутов
+	public function fixattributes(){
+		$this->db->query("UPDATE attribute_description SET name = TRIM(name)");
+		$this->db->query("UPDATE attribute_description SET name = REPLACE(name, '- ', '') WHERE name LIKE ('-%')");
+
+		$query = $this->db->query("SELECT *, GROUP_CONCAT(attribute_id SEPARATOR ',') as 'other_attributes' FROM attribute_description WHERE language_id = 2 GROUP BY name HAVING(count(attribute_id)) > 1");
+
+		foreach ($query->rows as $row){
+			$current_attribute_id 		= $row['attribute_id'];
+			$current_attribute 			= $this->rainforestAmazon->productsRetriever->model_product_edit->getAttributeDescriptions($row['attribute_id']);			
+			$current_attribute_rnf_name = '';
+			$attribute_has_rnf_name_id	= false;			
+
+			foreach ($other_attributes = explode(',', $row['other_attributes']) as $other_attribute_id){
+				$other_attribute = $this->rainforestAmazon->productsRetriever->model_product_edit->getAttributeDescriptions($other_attribute_id);
+
+				unset($attribute_line);
+				foreach ($other_attribute as $attribute_line){
+					if ($attribute_line['language_id'] == $this->config->get('config_rainforest_source_language_id') && mb_strlen($attribute_line['name']) > 0){
+						$current_attribute_rnf_name 	= $attribute_line['name'];
+						$attribute_has_rnf_name_id 		= $attribute_line['attribute_id'];
+						break;
+					}
+				}
+
+				if ($current_attribute_rnf_name){
+					break;
+				}
+			}
+
+			if ($current_attribute_rnf_name){
+				echoLine('[fixattributes] Атрибут ' . $row['name'] . ', rnf name: ' . $current_attribute_rnf_name . ', main_id: ' . $attribute_has_rnf_name_id);
+
+				unset($other_attribute_id);
+				foreach ($other_attributes = explode(',', $row['other_attributes']) as $other_attribute_id){
+					if ($other_attribute_id != $attribute_has_rnf_name_id){
+						echoLine('[fixattributes] Перепривязываем атрибуты ' . $other_attribute_id . ' -> ' . $attribute_has_rnf_name_id);
+						$this->rainforestAmazon->productsRetriever->model_product_edit->changeProductAttributes($other_attribute_id, $attribute_has_rnf_name_id);
+						$this->rainforestAmazon->productsRetriever->model_product_edit->deleteAttribute($other_attribute_id);
+					}
+
+				}
+
+
+			} else {
+				echoLine('[fixattributes] Атрибут ' . $row['name'] . ', no rnf name');				
+
+				foreach ($other_attributes = explode(',', $row['other_attributes']) as $to_delete_attribute_id){
+					echoLine('[fixattributes] Атрибут ' . $to_delete_attribute_id . ', нужно удалить, но пока не удаляем');
+					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteAttribute($to_delete_attribute_id);
+				}
+			}
+
+
+
+		}
+
 	}	
 
 	/*
