@@ -49,6 +49,8 @@ final class Cache {
 		} elseif ((CACHE_DRIVER == 'redis') && $this->isredis) {				
 			return $this->redis->get($key);
 		}
+
+		return false;
 	}
 	
 	public function set($key, $value, $ttl = DB_CACHED_EXPIRE, $redis_explicit = false) {

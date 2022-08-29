@@ -1,5 +1,5 @@
 <?php
-class ModelToolImage extends Model {
+class ModelToolImage extends Model {	
 	public function resize($filename, $width, $height, $type = '', $quality = IMAGE_QUALITY, $do_not_resize = false, $webp = false, $avif = false) {
 
 		$uri = '';
@@ -7,25 +7,45 @@ class ModelToolImage extends Model {
 			$uri = $this->request->server['REQUEST_URI'];
 		}
 
-		if (stripos($uri, 'admin') === false) {
-			if (WEBPACCEPTABLE) {				
-				$webp = true;					
-			}
+		$info 		= pathinfo($filename);
+		$extension 	= $info['extension'];
+		$basename 	= $info['basename'];
+		$dirname 	= $info['dirname'];		
 
-			if (AVIFACCEPTABLE) {				
-				$avif = true;					
-			}
+		if (stripos($uri, 'admin') === false) {
+			if (!empty(IMAGE_CONVERT_FALLBACK[$extension])){
+				if (IMAGE_CONVERT_FALLBACK[$extension] == 'default'){
+					$webp = false;
+					$avif = false;
+
+					if ($quality == IMAGE_QUALITY){
+						$quality = IMAGE_JPEG_QUALITY;
+					}
+
+				} elseif (IMAGE_CONVERT_FALLBACK[$extension] == 'webp'){
+					$avif = false;	
+					if (WEBPACCEPTABLE) {				
+						$webp = true;
+
+						if ($quality == IMAGE_QUALITY){
+							$quality = IMAGE_WEBP_QUALITY;
+						}
+					}
+				}
+			} else {
+				if (WEBPACCEPTABLE) {				
+					$webp = true;					
+				}
+
+				if (AVIFACCEPTABLE) {				
+					$avif = true;					
+				}		
+			}	
 		}
 
 		if (!file_exists(DIR_IMAGE . $filename) || !is_file(DIR_IMAGE . $filename)) {
 			$filename = 'no_image.jpg';
-		} 
-
-		$info = pathinfo($filename);
-
-		$extension = $info['extension'];
-		$basename = $info['basename'];
-		$dirname = $info['dirname'];
+		} 		
 
 		if ($webp) {
 			$extension = 'webp';
@@ -37,11 +57,11 @@ class ModelToolImage extends Model {
 
 		$old_image = $filename;
 
-		$new_image_struct = Image::cachedname($filename, $extension, array($width, $height, $quality, $do_not_resize));
-		$new_image = $new_image_struct['full_path'];
+		$new_image_struct 	= Image::cachedname($filename, $extension, array($width, $height, $quality, $do_not_resize));
+		$new_image 			= $new_image_struct['full_path'];
 		$new_image_relative = $new_image_struct['relative_path'];
 
-		if (!file_exists($new_image) || (filemtime(DIR_IMAGE . $old_image) > filemtime($new_image))) {				
+		if (IS_DEBUG || (!file_exists($new_image) || (filemtime(DIR_IMAGE . $old_image) > filemtime($new_image)))) {				
 			$image = new Image(DIR_IMAGE . $old_image);
 
 			if (!$do_not_resize){

@@ -437,7 +437,7 @@
 			
 			
 			if ($manufacturer_info['image']){
-				$this->data['manufacturer_logo'] = $this->model_tool_image->resize($manufacturer_info['image'], 150, 150, '', 100);
+				$this->data['manufacturer_logo'] = $this->model_tool_image->resize($manufacturer_info['image'], 150, 150);
 				} else {
 				$this->data['manufacturer_logo'] = false;
 			}								
@@ -445,9 +445,9 @@
 			if ($manufacturer_info['banner']){
 				
 				if (!$manufacturer_info['banner_width'] || !$manufacturer_info['banner_height']){
-					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height'], '', 100, true);
+					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
 					} else {
-					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height'], '', 100);
+					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
 				}
 				} else {
 				$this->data['banner'] = false;
@@ -652,7 +652,7 @@
 			
 			
 			if ($manufacturer_info['image']){
-				$this->data['manufacturer_logo'] = $this->model_tool_image->resize($manufacturer_info['image'], 150, 150, '', 100);
+				$this->data['manufacturer_logo'] = $this->model_tool_image->resize($manufacturer_info['image'], 150, 150);
 				} else {
 				$this->data['manufacturer_logo'] = false;
 			}								
@@ -660,9 +660,9 @@
 			if ($manufacturer_info['banner']){
 				
 				if (!$manufacturer_info['banner_width'] || !$manufacturer_info['banner_height']){
-					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height'], '', 100, true);
+					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
 					} else {
-					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height'], '', 100);
+					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
 				}
 				} else {
 				$this->data['banner'] = false;
@@ -831,7 +831,7 @@
 			
 			
 			if ($manufacturer_info['image']){
-				$this->data['manufacturer_logo'] = $this->model_tool_image->resize($manufacturer_info['image'], 150, 150, '', 100);
+				$this->data['manufacturer_logo'] = $this->model_tool_image->resize($manufacturer_info['image'], 150, 150);
 				} else {
 				$this->data['manufacturer_logo'] = false;
 			}								
@@ -839,9 +839,9 @@
 			if ($manufacturer_info['banner']){
 				
 				if (!$manufacturer_info['banner_width'] || !$manufacturer_info['banner_height']){
-					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height'], '', 100, true);
+					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
 					} else {
-					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height'], '', 100);
+					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
 				}
 				} else {
 				$this->data['banner'] = false;
@@ -1036,7 +1036,7 @@
 			$this->log->debug($this->data['categories']);
 			
 			if ($manufacturer_info['image']){
-				$this->data['manufacturer_logo'] = $this->model_tool_image->resize($manufacturer_info['image'], 150, 150, '', 100);
+				$this->data['manufacturer_logo'] = $this->model_tool_image->resize($manufacturer_info['image'], 150, 150);
 				} else {
 				$this->data['manufacturer_logo'] = false;
 			}								
@@ -1044,9 +1044,9 @@
 			if ($manufacturer_info['banner']){
 				
 				if (!$manufacturer_info['banner_width'] || !$manufacturer_info['banner_height']){
-					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height'], '', 100, true);
+					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
 					} else {
-					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height'], '', 100);
+					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
 				}
 				} else {
 				$this->data['banner'] = false;
@@ -1276,7 +1276,7 @@
 			}
 			
 			if ($manufacturer_info['image']){
-				$this->data['manufacturer_logo'] = $this->model_tool_image->resize($manufacturer_info['image'], 150, 150, '', 100);
+				$this->data['manufacturer_logo'] = $this->model_tool_image->resize($manufacturer_info['image'], 150, 150);
 				} else {
 				$this->data['manufacturer_logo'] = false;
 			}								
@@ -1284,9 +1284,9 @@
 			if ($manufacturer_info['banner']){
 				
 				if (!$manufacturer_info['banner_width'] || !$manufacturer_info['banner_height']){
-					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height'], '', 100, true);
+					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
 					} else {
-					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height'], '', 100);
+					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
 				}
 				} else {
 				$this->data['banner'] = false;
@@ -1411,13 +1411,11 @@
 			);
 			
 			$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
-
-			$this->log->debug($manufacturer_info['image']);
 			
 			if ($manufacturer_info) {							
 				
 				if ($manufacturer_info['image']){
-					$this->data['manufacturer_logo'] = $this->model_tool_image->resize($manufacturer_info['image'], 150, 150, '', 100);
+					$this->data['manufacturer_logo'] = $this->model_tool_image->resize($manufacturer_info['image'], 150, 150);
 					} else {
 					$this->data['manufacturer_logo'] = false;
 				}								
@@ -1425,9 +1423,9 @@
 				if ($manufacturer_info['banner']){
 					
 					if (!$manufacturer_info['banner_width'] || !$manufacturer_info['banner_height']){
-						$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height'], '', 100, true);
+						$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
 						} else {
-						$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height'], '', 100);
+						$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
 					}
 					} else {
 					$this->data['banner'] = false;

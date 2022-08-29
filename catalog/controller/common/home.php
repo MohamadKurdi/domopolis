@@ -46,32 +46,23 @@
 				$this->data[$translationСode] = $translationText;
 			}
 			
-			$this->bcache->SetFile('home_manufacturers.'.$store_id.$language_id.md5($this->config->get('config_template')).'.tpl', 'home_manufacturers_vincook');
-			if ($this->bcache->CheckFile()) {
-				$this->data['brands'] = $this->bcache->ReturnFileContent(true);
-				} else {
-				$this->data['brands'] = array();
-				
-				$this->load->model('catalog/manufacturer');
-				$this->load->model('tool/image');
-				
-				
+
+			$this->data['brands'] = array();
+
+			$this->load->model('catalog/manufacturer');
+			$this->load->model('tool/image');
+
+
 				// Нужно получить все бренды
-				$brands = $this->model_catalog_manufacturer->getManufacturers(array('sort' => 'm.sort_order', 'order' => 'ASC', 'menu_brand' => 1, 'limit' => 100));
-				
-				foreach ($brands as $k => $b) {
-					
-					if ($this->config->get('config_template') == 'vincook') {					
-						$brands[$k]['thumb'] = $this->model_tool_image->resize($b['image'], 300, 300);					
-						} else {
-						$brands[$k]['thumb'] = $this->model_tool_image->resize($b['image'], 100, 100);	
-					}
-					$brands[$k]['url'] = $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $b['manufacturer_id']);
-				}
-				
-				$this->data['brands'] = $brands;
-				$this->bcache->WriteFile($this->data['brands'], true);
+			$brands = $this->model_catalog_manufacturer->getManufacturers(array('sort' => 'm.sort_order', 'order' => 'ASC', 'menu_brand' => 1, 'limit' => 100));
+
+			foreach ($brands as $k => $b) {				
+				$brands[$k]['thumb'] = $this->model_tool_image->resize($b['image'], 100, 100);	
+				$brands[$k]['url'] = $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $b['manufacturer_id']);
 			}
+
+			$this->data['brands'] = $brands;
+
 			
 			$this->load->model('catalog/shop_rating');
 			$this->data['shop_rating'] = $this->model_catalog_shop_rating->getStoreRatingScore();

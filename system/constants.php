@@ -43,7 +43,9 @@ if ((isset($_GET['hello']) && $_GET['hello'] == 'world')){
 	}
 }
 
-$imageQualities = loadJsonConfig('image');
+$imageConfig 	= loadJsonConfig('image');
+$imageQualities = $imageConfig['quality'];
+
 
 //IMAGES
 //WEBP
@@ -71,12 +73,23 @@ if (isset($_SERVER['HTTP_ACCEPT']) && isset($_SERVER['HTTP_USER_AGENT'])) {
 	define('AVIFACCEPTABLE', false);
 }
 
-if (AVIFACCEPTABLE){
-	define('IMAGE_QUALITY', $imageQualities['config_image_avif_quality']);	
-} elseif (WEBPACCEPTABLE){
-	define('IMAGE_QUALITY', $imageQualities['config_image_webp_quality']);
+//FALLBACK IMAGES
+if (!empty($imageConfig['fallback'])){
+	define('IMAGE_CONVERT_FALLBACK', $imageConfig['fallback']);
 } else {
-	define('IMAGE_QUALITY', $imageQualities['config_image_jpeg_quality']);
+	define('IMAGE_CONVERT_FALLBACK', []);
+}
+
+define('IMAGE_JPEG_QUALITY', $imageQualities['config_image_jpeg_quality']);
+define('IMAGE_WEBP_QUALITY', $imageQualities['config_image_webp_quality']);
+define('IMAGE_AVIF_QUALITY', $imageQualities['config_image_avif_quality']);
+
+if (AVIFACCEPTABLE){
+	define('IMAGE_QUALITY', IMAGE_AVIF_QUALITY);	
+} elseif (WEBPACCEPTABLE){
+	define('IMAGE_QUALITY', IMAGE_WEBP_QUALITY);
+} else {
+	define('IMAGE_QUALITY', IMAGE_JPEG_QUALITY);
 }
 
 if (IS_DEBUG){
