@@ -34,23 +34,6 @@ final class Cache {
 				$this->isredis = true;
 			}				
 		};
-		
-		if (!($this->ismemcache || $this->isxcache || $this->isredis))
-		{
-			$files = glob(DIR_CACHE . 'cache.*');
-			
-			if ($files) {
-				foreach ($files as $file) {
-					$time = substr(strrchr($file, '.'), 1);
-					
-					if ($time < time()) { 
-						if (file_exists($file)) { 
-							@unlink($file); 
-						} 				
-					} 			    
-				} 		    
-			} 		
-		}   	
 	} 	
 	
 	
@@ -65,19 +48,6 @@ final class Cache {
 			return unserialize(xcache_get($this->prefix . $key));			
 		} elseif ((CACHE_DRIVER == 'redis') && $this->isredis) {				
 			return $this->redis->get($key);
-		} else {
-			$files = glob(DIR_CACHE . 'cache.' . $key . '.*');
-			if ($files) {
-				foreach ($files as $file) {
-					$cache = '';
-					$handle = fopen($file, 'r');
-					if ($handle) {
-						$cache = fread($handle, filesize($file));
-						fclose($handle);
-					}
-					return unserialize($cache);
-				}
-			}
 		}
 	}
 	
@@ -92,13 +62,7 @@ final class Cache {
 			} else {
 				$this->redis->set($key, $value, Array('nx'));
 			}
-		} else { 
-			$this->delete($key);
-			$file = DIR_CACHE . 'cache.' . $key . '.' . (time() + $ttl); 
-			$handle = fopen($file, 'w');
-			fwrite($handle, serialize($value));
-			fclose($handle);
-		};
+		}
 	}
 
 	public function addtolist($list, $value, $ttl = DB_CACHED_EXPIRE ){
@@ -131,16 +95,6 @@ final class Cache {
 			xcache_unset($this->prefix . $key);
 		} elseif ((CACHE_DRIVER == 'redis') && $this->isredis) {	
 			//$this->redis->delete($key);
-		} else {
-			$files = glob(DIR_CACHE . 'cache.' . $key . '.*');
-			if ($files) {
-				foreach ($files as $file) {
-					if (file_exists($file)) {
-						@unlink($file);
-						clearstatcache();
-					}
-				}
-			}
 		}
 	}
 	
