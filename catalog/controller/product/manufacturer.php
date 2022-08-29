@@ -177,7 +177,7 @@
 					$this->data['categories'][$key]['manufacturer'][] = array(
 					'name' => $result['name'],
 					'mcategories' => $mcategories,
-					'image' => $image,
+					'image' 	  => $image,
 					'image_webp' => $image_webp,
 					'image_mime' => $image_mime,
 					'back_image' => $back_image,
@@ -1411,6 +1411,8 @@
 			);
 			
 			$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
+
+			$this->log->debug($manufacturer_info['image']);
 			
 			if ($manufacturer_info) {							
 				
