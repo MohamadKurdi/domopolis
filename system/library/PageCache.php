@@ -204,7 +204,7 @@ class PageCache{
 
 		try {
 			$httpClient 	= new GuzzleHttp\Client();
-			$httpResponse 	= $httpClient->request('GET', HTTP_CATALOG . '?hello=world');
+			$httpResponse 	= $httpClient->request('GET', HTTP_CATALOG);
 
 			if ($httpResponse->getStatusCode() != 200){
 				$body = 'FAIL: ' . $httpResponse->getStatusCode();
