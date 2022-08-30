@@ -157,29 +157,18 @@
 					$this->data['href'] = ($setting[(int)$this->config->get('config_language_id')]['href'])?$setting[(int)$this->config->get('config_language_id')]['href']:$this->url->link('common/home');
 					
 					if ($setting['image'] && mb_strlen($setting['image']) > 2){
-						$this->data['image'] = $this->model_tool_image->resize($setting['image'], $setting['big_image_width'], $setting['big_image_height'], '', 80);
-						$this->data['image_mime'] = $this->model_tool_image->getMime($setting['image']);
-						$this->data['image_webp'] = $this->model_tool_image->resize_webp($setting['image'], $setting['big_image_width'], $setting['big_image_height'], '', 80);
+						$this->data['image'] = $this->model_tool_image->resize($setting['image'], $setting['big_image_width'], $setting['big_image_height'], '', 80);						
 						
 						if ($setting['sort_order']%2 == 0){
 							$this->data['class'] = 'layout-left';				
 							} else {
 							$this->data['class'] = 'layout-right';
 						}
-						
-						if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/customproduct_with_image.tpl')) {
-							$this->template = $this->config->get('config_template') . '/template/module/customproduct_with_image.tpl';
-							} else {
-							$this->template = 'default/template/module/customproduct_with_image.tpl';
-						}
-						
-						
+
+						$this->template = 'module/customproduct_with_image.tpl';
+
 						} else {
-						if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/customproduct.tpl')) {
-							$this->template = $this->config->get('config_template') . '/template/module/customproduct.tpl';
-							} else {
-							$this->template = 'default/template/module/customproduct.tpl';
-						}
+						$this->template = 'module/customproduct.tpl';
 					}
 					
 					

@@ -74,13 +74,9 @@
 		private function prepareProduct($result){
 			
 			if ($result['image']) {
-				$image = $this->model_tool_image->resize($result['image'], 180, 180);
-				$image_mime = $this->model_tool_image->getMime($result['image']);
-				$image_webp = $this->model_tool_image->resize_webp($result['image'], 180, 180);
+				$image = $this->model_tool_image->resize($result['image'], 180, 180);				
 				} else {
 				$image = $this->model_tool_image->resize($this->config->get('config_noimage'), 180, 180);
-				$image_mime = $this->model_tool_image->getMime($this->config->get('config_noimage'));
-				$image_webp = $this->model_tool_image->resize_webp($this->config->get('config_noimage'), 180, 180);
 			}
 			
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
@@ -116,32 +112,30 @@
 			$href = $this->makeURL($this->url->link('product/product', 'product_id=' . $result['product_id']));
 			
 			return array(
-			'new'         		=> $result['new'],					
-			'show_action' 		=> $result['additional_offer_count'],
-			'product_id'  		=> $result['product_id'],
-			'stock_type'  		=> $stock_data['stock_type'],						
-			'show_delivery_terms' => $stock_data['show_delivery_terms'],
-			'thumb'       => $image,
-			'thumb_mime'  => $image_mime,
-			'thumb_webp'  => $image_webp,
-			'is_set' 	  => $result['set_id'],
-			'name'        => $result['name'],
-			'description' => $_description,
-			'price'       => $price,
-			'special'     => $special,
-			'saving'      => round((($result['price'] - $result['special'])/($result['price'] + 0.01))*100, 0),
-			'tax'         => $tax,
-			'rating'      => $result['rating'],
-			'count_reviews' => $result['reviews'],
-			'sku'      	  => $result['model']?$result['model']:$result['sku'],
-			'sort_order'  => $result['sort_order'],
-			'can_not_buy' => ($result['stock_status_id'] == $this->config->get('config_not_in_stock_status_id')),
-			'need_ask_about_stock' => ($result['stock_status_id'] == $this->config->get('config_partly_in_stock_status_id')),
-			'has_child'  => $result['has_child'],
-			'stock_status'  => $result['stock_status'],
-			'location'      => $result['location'],
-			'reviews'     => sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
-			'href'        => $href
+			'new'         			=> $result['new'],					
+			'show_action' 			=> $result['additional_offer_count'],
+			'product_id'  			=> $result['product_id'],
+			'stock_type'  			=> $stock_data['stock_type'],						
+			'show_delivery_terms' 	=> $stock_data['show_delivery_terms'],
+			'thumb'       			=> $image,
+			'is_set' 	  			=> $result['set_id'],
+			'name'        			=> $result['name'],
+			'description' 			=> $_description,
+			'price'       			=> $price,
+			'special'     			=> $special,
+			'saving'      			=> round((($result['price'] - $result['special'])/($result['price'] + 0.01))*100, 0),
+			'tax'         			=> $tax,
+			'rating'      			=> $result['rating'],
+			'count_reviews' 		=> $result['reviews'],
+			'sku'      	  			=> $result['model']?$result['model']:$result['sku'],
+			'sort_order'  			=> $result['sort_order'],
+			'can_not_buy' 			=> ($result['stock_status_id'] == $this->config->get('config_not_in_stock_status_id')),
+			'need_ask_about_stock' 	=> ($result['stock_status_id'] == $this->config->get('config_partly_in_stock_status_id')),
+			'has_child'  			=> $result['has_child'],
+			'stock_status'  		=> $result['stock_status'],
+			'location'      		=> $result['location'],
+			'reviews'     			=> sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
+			'href'        			=> $href
 			);
 			
 		}
