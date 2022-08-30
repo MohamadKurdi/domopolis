@@ -444,29 +444,13 @@
 			$this->load->model('design/layout');
 			$layout_id = $this->model_design_layout->getLayout('common/footer');				
 			if ($template_overload) {
-				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/' . $template_overload . '.tpl')) {
-					$this->template = $this->config->get('config_template') . '/template/common/' . $template_overload . '.tpl';
-					} else {
-					$this->template = 'default/template/common/' . $template_overload . '.tpl';
-				}
-				
+				$this->template = $template_overload . '.tpl';				
 				} elseif ($template = $this->model_design_layout->getLayoutTemplateByLayoutId($layout_id)) {
-				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/' . $template)) {
-					$this->template = $this->config->get('config_template') . '/template/' . $template;
-					} else {
-					$this->template = 'default/template/' . $template;
-				}				
+				$this->template = $template;			
 				} else {
-				
-				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/footer.tpl')) {
-					$this->template = $this->config->get('config_template') . '/template/common/footer.tpl';
-					} else {
-					$this->template = 'default/template/common/footer.tpl';
-				}
+				$this->template = 'common/footer.tpl';
 			}	
-			
-			
-			
+									
 			$this->response->setOutput($this->render());			
 		}
 	}							

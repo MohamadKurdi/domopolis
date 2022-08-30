@@ -47,26 +47,39 @@
 			}
 			
 
-			$this->data['brands'] = array();
+			$this->data['brands'] = $this->cache->get('manufacturers.home.' . $this->config->get('config_store_id') . '.' . $this->config->get('config_language_id'));
 
-			$this->load->model('catalog/manufacturer');
-			$this->load->model('tool/image');
+			if (!$this->data['brands']){
+				$this->load->model('catalog/manufacturer');
+				$this->load->model('tool/image');
 
+				$this->data['brands'] = $this->model_catalog_manufacturer->getManufacturers(array('sort' => 'm.sort_order', 'order' => 'ASC', 'menu_brand' => 1, 'limit' => 100));
 
-				// Нужно получить все бренды
-			$brands = $this->model_catalog_manufacturer->getManufacturers(array('sort' => 'm.sort_order', 'order' => 'ASC', 'menu_brand' => 1, 'limit' => 100));
-
-			foreach ($brands as $k => $b) {				
-				$brands[$k]['thumb'] = $this->model_tool_image->resize($b['image'], 101, 101);	
-				$brands[$k]['url'] = $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $b['manufacturer_id']);
+				foreach ($this->data['brands'] as $k => $b) {				
+					$this->data['brands'][$k]['thumb'] = $this->model_tool_image->resize($b['image'], 101, 101);	
+					$this->data['brands'][$k]['url'] = $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $b['manufacturer_id']);
+				}
+				
+				$this->cache->set('manufacturers.home.' . $this->config->get('config_store_id') . '.' . $this->config->get('config_language_id'), $this->data['brands']);
 			}
 
-			$this->data['brands'] = $brands;
-
+			$this->data['shop_rating_struct'] = $this->cache->get('shop_rating.' . $this->config->get('config_store_id') . '.' . $this->config->get('config_language_id'));
 			
-			$this->load->model('catalog/shop_rating');
-			$this->data['shop_rating'] = $this->model_catalog_shop_rating->getStoreRatingScore();
-			$this->data['shop_rating_count'] = $this->model_catalog_shop_rating->getStoreRatingsTotal();
+			if (!$this->data['shop_rating_struct']){
+
+				$this->load->model('catalog/shop_rating');
+
+				$this->data['shop_rating_struct'] = [
+					'shop_rating' 			=> $this->model_catalog_shop_rating->getStoreRatingScore(),
+					'shop_rating_count' 	=> $this->model_catalog_shop_rating->getStoreRatingsTotal()
+				];
+
+				$this->cache->set('shop_rating.' . $this->config->get('config_store_id') . '.' . $this->config->get('config_language_id'), $this->data['shop_rating_struct']);
+
+			}
+
+			$this->data['shop_rating'] 			= $this->data['shop_rating_struct']['shop_rating'];
+			$this->data['shop_rating_count'] 	= $this->data['shop_rating_struct']['shop_rating_count'];
 			
 			$this->data['name'] = $this->config->get('config_name');
 			$this->data['o_email'] = $this->config->get('config_display_email');	

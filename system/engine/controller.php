@@ -32,7 +32,7 @@
 				
 				unset( $mf_matches );
 			}
-		}
+		}		
 		
 		public function __get($key) {
 			return $this->registry->get($key);
@@ -124,6 +124,23 @@
 			);
 			
 			return preg_replace($search, $replace, $content);
+		}
+
+		public function createCacheQueryString($controller, $setting = [], $options = []){
+			$md5 = md5(serialize($setting) . serialize($options));
+
+			return  $controller . $this->config->get('config_store_id') . $this->config->get('config_language_id') . $this->registry->get('currency')->getId() . $md5;
+
+		}
+
+		protected function setCachedOutput($out){
+
+			if (IS_HTTPS){
+				$out = str_ireplace('http://', 'https://', $out);
+			}
+			
+			$this->output = $out;
+
 		}
 		
 		protected function setBlockCachedOutput($out){

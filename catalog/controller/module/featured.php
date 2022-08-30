@@ -3,16 +3,11 @@
 		protected function index($setting) {
 			$this->language->load('module/featured'); 
 			
-			$store_id = $this->config->get('config_store_id');
-			$language_id = $this->config->get('config_language_id');
-			$currency_id = $this->currency->getId();
+			$out = $this->cache->get($this->createCacheQueryString(get_class($this), $setting));
 			
-			$this->bcache->SetFile('module.'.$store_id.$language_id.$currency_id.md5(serialize($setting)).'.tpl', 'featured');
-			
-			if ($this->bcache->CheckFile()) {		
-				
-				$out = $this->bcache->ReturnFileContent();
-				$this->setBlockCachedOutput($out);
+			if ($out) {		
+
+				$this->setCachedOutput($out);
 				
 				} else {
 				
@@ -103,7 +98,7 @@
 				}
 				
 				$out = $this->render();
-				$this->bcache->WriteFile($out);
+				$this->cache->set($this->createCacheQueryString(get_class($this), $setting), $out);
 			}
 		}
 	}		
