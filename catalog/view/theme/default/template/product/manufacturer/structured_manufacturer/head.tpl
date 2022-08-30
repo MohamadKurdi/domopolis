@@ -6,7 +6,7 @@
   <div class="wrap">
     <div class="main_baner_brand" style="background-image: url('<?php echo $banner; ?>');<?php if ($banner) { ?> padding: 0 25px; <?php } else { ?> height: auto; <?php } ?>">
       <div class="logo-box">
-         <a href="<?php echo $main_link; ?>"><img src="<?php echo $manufacturer_logo; ?>" alt="<?php echo $manufacturer_name; ?>"></a>
+         <a href="<?php echo $main_link; ?>"><img src="<?php echo $manufacturer_logo; ?>" alt="<?php echo $heading_title; ?>"></a>
       </div>
     </div>
   </div>

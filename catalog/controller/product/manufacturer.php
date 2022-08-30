@@ -166,23 +166,14 @@
 					
 					$mcategories = array_slice($mcategories, 0, 5);
 					
-					$image = $this->model_tool_image->resize($result['image'], 300, 300);
-					$image_webp = $this->model_tool_image->resize_webp($result['image'], 300, 300);
-					$image_mime = $this->model_tool_image->getMime($result['image']);
-						
+					$image = $this->model_tool_image->resize($result['image'], 300, 300);						
 					$back_image = $this->model_tool_image->resize($result['back_image'], 300, 300);
-					$back_image_webp = $this->model_tool_image->resize_webp($result['back_image'], 300, 300);
-					$back_image_mime = $this->model_tool_image->getMime($result['back_image']);
 					
 					$this->data['categories'][$key]['manufacturer'][] = array(
 					'name' => $result['name'],
 					'mcategories' => $mcategories,
 					'image' 	  => $image,
-					'image_webp' => $image_webp,
-					'image_mime' => $image_mime,
 					'back_image' => $back_image,
-					'back_image_webp' => $image_webp,
-					'back_image_mime' => $image_mime,
 					'short_description' => strip_tags($description[$this->config->get('config_language_id')]['short_description']),
 					'location' => $description[$this->config->get('config_language_id')]['location'],
 					'href' => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $result['manufacturer_id'])
@@ -372,20 +363,14 @@
 				
 				
 				if ($action['image']) {
-					$image = $this->model_tool_image->resize($action['image'], 407, 491);
-					$image_mime = $this->model_tool_image->getMime($action['image']);
-					$image_webp = $this->model_tool_image->resize_webp($action['image'], 407, 491);
+					$image = $this->model_tool_image->resize($action['image'], 407, 491);					
 					} else {
 					$image = $this->model_tool_image->resize($this->config->get('config_noimage'), 407, 491);
-					$image_mime = $this->model_tool_image->getMime($this->config->get('config_noimage'));
-					$image_webp = $this->model_tool_image->resize_webp($this->config->get('config_noimage'), 407, 491);
 				}
 				
 				$this->data['actions'][] = array(
 				'is_inserted_action' => true,
 				'thumb'       => $image,
-				'thumb_mime'  => $image_mime,
-				'thumb_webp'  => $image_webp,
 				'title' => $action['title'],
 				'href' => $this->url->link('information/actions','actions_id=' . $action['actions_id'])
 				);
@@ -445,16 +430,17 @@
 			if ($manufacturer_info['banner']){
 				
 				if (!$manufacturer_info['banner_width'] || !$manufacturer_info['banner_height']){
-					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
+					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], 1520, 300);
 					} else {
 					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
 				}
+
 				} else {
 				$this->data['banner'] = false;
 			}		
 			
-			$this->data['banner_width'] = $manufacturer_info['banner_width'];
-			$this->data['banner_height'] = $manufacturer_info['banner_height'];
+			$this->data['banner_width'] 	= $manufacturer_info['banner_width'];
+			$this->data['banner_height'] 	= $manufacturer_info['banner_height'];
 			
 			$this->data['main_link'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
 			$this->data['products_link'] = $this->url->link('product/manufacturer/products', 'manufacturer_id=' . $this->request->get['manufacturer_id']);
@@ -660,7 +646,7 @@
 			if ($manufacturer_info['banner']){
 				
 				if (!$manufacturer_info['banner_width'] || !$manufacturer_info['banner_height']){
-					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
+					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], 1520, 300);
 					} else {
 					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
 				}
@@ -839,7 +825,7 @@
 			if ($manufacturer_info['banner']){
 				
 				if (!$manufacturer_info['banner_width'] || !$manufacturer_info['banner_height']){
-					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
+					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], 1520, 300);
 					} else {
 					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
 				}
@@ -1044,7 +1030,7 @@
 			if ($manufacturer_info['banner']){
 				
 				if (!$manufacturer_info['banner_width'] || !$manufacturer_info['banner_height']){
-					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
+					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], 1520, 300);
 					} else {
 					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
 				}
@@ -1184,21 +1170,14 @@
 				$custom3 = (in_array("custom3", $elements) && $result['cfield3']) ? html_entity_decode($result['cfield3'], ENT_QUOTES, 'UTF-8') : '';
 				$custom4 = (in_array("custom4", $elements) && $result['cfield4']) ? html_entity_decode($result['cfield4'], ENT_QUOTES, 'UTF-8') : '';
 				if (in_array("image", $elements) && ($result['image'] || $result['image2'])) {
-					if ($result['image2']) {
-						
+					if ($result['image2']) {					
 						$image = $this->model_tool_image->resize($result['image2'], $bbwidth, $bbheight);
-						$image_mime = $this->model_tool_image->getMime($result['image2']);
-						$image_webp = $this->model_tool_image->resize_webp($result['image2'], $bbwidth, $bbheight);
-						
 						} else {
 						$image = $this->model_tool_image->resize($result['image'], $bbwidth, $bbheight);
-						$image_mime = $this->model_tool_image->getMime($result['image']);
-						$image_webp = $this->model_tool_image->resize_webp($result['image'], $bbwidth, $bbheight);
+					
 					}
 					} else {
 					$image = false;
-					$image_mime = false;
-					$image_webp = false;
 				}
 				if (in_array("author", $elements) && $result['author']) {
 					$author = $result['author'];
@@ -1255,8 +1234,6 @@
 				'article_id'  => $result['news_id'],
 				'name'        => $name,
 				'thumb'       => $image,
-				'thumb_mime'  => $image_mime,
-				'thumb_webp'  => $image_webp,
 				'date_added'  => $da,
 				'du'          => $du,
 				'author'      => $author,
@@ -1284,7 +1261,7 @@
 			if ($manufacturer_info['banner']){
 				
 				if (!$manufacturer_info['banner_width'] || !$manufacturer_info['banner_height']){
-					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
+					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], 1520, 300);
 					} else {
 					$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
 				}
@@ -1423,7 +1400,7 @@
 				if ($manufacturer_info['banner']){
 					
 					if (!$manufacturer_info['banner_width'] || !$manufacturer_info['banner_height']){
-						$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
+						$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], 1520, 300);
 						} else {
 						$this->data['banner'] = $this->model_tool_image->resize($manufacturer_info['banner'], $manufacturer_info['banner_width'], $manufacturer_info['banner_height']);
 					}
@@ -1636,19 +1613,13 @@
 							$action = array_shift($actions);
 							if ($action['image_to_cat']) {
 								$image = $this->model_tool_image->resize($action['image_to_cat'], 407, 491);
-								$image_mime = $this->model_tool_image->getMime($action['image_to_cat']);
-								$image_webp = $this->model_tool_image->resize_webp($action['image_to_cat'], 407, 491);
 								} else {
 								$image = $this->model_tool_image->resize($this->config->get('config_noimage'), 407, 491);
-								$image_mime = $this->model_tool_image->getMime($this->config->get('config_noimage'));
-								$image_webp = $this->model_tool_image->resize_webp($this->config->get('config_noimage'), 407, 491);
 							}
 							
 							$action_data = array(
 							'is_inserted_action' => true,
 							'thumb'       => $image,
-							'thumb_mime'  => $image_mime,
-							'thumb_webp'  => $image_webp,
 							'title' => $action['title'],
 							'href' => $this->url->link('information/actions','actions_id=' . $action['actions_id'])
 							);
@@ -1675,19 +1646,13 @@
 							
 							if ($action['image_to_cat']) {
 								$image = $this->model_tool_image->resize($action['image_to_cat'], 407, 491);
-								$image_mime = $this->model_tool_image->getMime($action['image_to_cat']);
-								$image_webp = $this->model_tool_image->resize_webp($action['image_to_cat'], 407, 491);
 								} else {
 								$image = $this->model_tool_image->resize($this->config->get('config_noimage'), 407, 491);
-								$image_mime = $this->model_tool_image->getMime($this->config->get('config_noimage'));
-								$image_webp = $this->model_tool_image->resize_webp($this->config->get('config_noimage'), 407, 491);
 							}
 							
 							$action_data = array(
 							'is_inserted_action' => true,
 							'thumb'       => $image,
-							'thumb_mime'  => $image_mime,
-							'thumb_webp'  => $image_webp,
 							'title' => $action['title'],
 							'href' => $this->url->link('information/actions','actions_id=' . $action['actions_id'])
 							);
@@ -1843,6 +1808,8 @@
 				
 				require_once(DIR_SYSTEM . 'library/microdata/opengraph/manufacturer.php');
 				require_once(DIR_SYSTEM . 'library/microdata/twittercard/manufacturer.php');
+
+				$this->data['active_button'] = 'info';
 				
 				$this->load->model('design/layout');
 				$layout_id = $this->model_catalog_manufacturer->getManufacturerLayoutId($manufacturer_id);
