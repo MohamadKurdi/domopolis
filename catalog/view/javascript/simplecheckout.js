@@ -724,7 +724,7 @@
         };
         
         this.nextStep = function($target) {
-            
+            var delay = 100;
             
             $('body, html').animate({
                 scrollTop: 0
