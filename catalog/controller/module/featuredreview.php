@@ -2,7 +2,8 @@
 class ControllerModulefeaturedreview extends Controller {
 	protected function index($setting) {
 		
-		if (!empty($this->request->get['path'])){
+		$manufacturer_id = 0;
+		if (!empty($this->request->get['manufacturer_id'])){
 			$manufacturer_id = (int)$this->request->get['manufacturer_id'];
 		}
 
@@ -17,6 +18,7 @@ class ControllerModulefeaturedreview extends Controller {
 			$md5_template = md5($this->request->get['route']);
 		}
 
+		$page_type = 'general';
 		if (isset($this->request->get['route']) && $this->request->get['route'] == 'product/category' && $category_id){
 			$page_type = 'category';
 

@@ -263,7 +263,7 @@
 							if (file_exists($npmPackageInfoFile)){
 								if ($npmPackageInfo = json_decode(file_get_contents($npmPackageInfoFile), true)){
 									if (!empty($npmPackageInfo['main'])){
-										if (file_exists($npmPackageDirectory . $npmPackageInfo['main'])){
+										if (file_exists($npmPackageDirectory . $npmPackageInfo['main']) && pathinfo($npmPackageInfo['main'],  PATHINFO_EXTENSION) == 'js'){											
 											$npmScripts[] = ($npmPackageRelative . $npmPackageInfo['main']);
 										}
 									}

@@ -8,102 +8,14 @@
 	<head>
 		<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/header_pwa.tpl')); ?>
 		<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/header_logged_datalayer.tpl')); ?>
-
-		<meta charset="utf-8">
-		<meta name="viewport"
-		content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui, user-scalable=no">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title><?php echo $title; ?></title>
-		<base href="<?php echo $base; ?>" />
-		<?php if ($icon) { ?>
-			<link href="<?php echo $icon; ?>" rel="icon"/>
-		<?php } ?>
-		<?php if ($description) { ?>
-			<meta name="description" content="<?php echo $description; ?>"/>
-		<?php } ?>
-		<?php if ($keywords) { ?>
-			<meta name="keywords" content="<?php echo $keywords; ?>"/>
-		<?php } ?>
-		<?php if ($noindex) { ?>
-			<meta name="robots" content="noindex,nofolow"/>
-		<?php } ?>
-		<?php if ($robots) { ?>
-			<meta name="robots" content="<? echo $robots; ?>" />
-		<?php } ?>
-		<meta name="Copyright" content="&copy; 2010-<? echo date('Y'); ?> Kitchen-Profi" />
-
-		<meta property="og:site_name" content="<?php echo $config_title; ?>"/>
-		<meta property="og:company" content="<?php echo $config_title; ?>" />
-		<? if ($phone) { ?>
-			<meta property="og:phone_number" content="<?php echo $phone; ?>" />
-		<? } ?>
-		<? if ($phone2) { ?>
-			<meta property="og:phone_number" content="<?php echo $phone2; ?>" />
-		<? } ?>
-		<? if ($phone3) { ?>
-			<meta property="og:phone_number" content="<?php echo $phone3; ?>" />
-		<? } ?>
-		<?php foreach ($opengraphs as $opengraph) { ?>
-			<meta property="<?php echo  $opengraph['property']; ?>" content="<? echo $opengraph['content']; ?>"/>
-		<?php } ?>
-		<? if (isset($social_auth)) { ?>
-			<? echo html_entity_decode($social_auth); ?>
-		<? } ?>
-		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=KmA6bJbGzP">
-		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=KmA6bJbGzP">
-		<link rel="icon" type="image/png" sizes="194x194" href="/favicon-194x194.png?v=KmA6bJbGzP">
-		<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png?v=KmA6bJbGzP">
-		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=KmA6bJbGzP">
-		<link rel="mask-icon" href="/safari-pinned-tab.svg?v=KmA6bJbGzP" color="#55ad7a">
-		<link rel="shortcut icon" href="/favicon.ico?v=KmA6bJbGzP">
-		<meta name="apple-mobile-web-app-title" content="Kitchen Profi">
-		<meta name="application-name" content="Kitchen Profi">
-		<meta name="msapplication-TileColor" content="#2b5797">
-		<meta name="msapplication-TileImage" content="/mstile-144x144.png?v=KmA6bJbGzP">
-		<meta name="theme-color" content="#ffffff">
-		<?php foreach ($links as $link) { ?>
-			<link href="<?php echo $link['href']; ?>" rel="<?php echo $link['rel']; ?>" <? if ($link['hreflang']) { ?>hreflang="<?php echo $link['hreflang']; ?>"<? } ?> />
-		<?php } ?>
-		<?php if ($this->config->get('gen_responsive') == '1') { ?>
-			<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<?php } ?>
-
-		<link rel="dns-prefetch" href="https://cdn.jsdelivr.net" >
-		<link rel="dns-prefetch" href="https://fonts.googleapis.com" >
-		<link rel="dns-prefetch" href="https://fonts.gstatic.com" >
-		<link rel="dns-prefetch" href="https://cdn-ru.bitrix24.ru" >
-		<link rel="dns-prefetch" href="https://cdn.bitrix24.ru" >
-
-		<?php if ($preconnect_domains) { ?>
-			<? foreach ($preconnect_domains as $preconnect_domain) { ?>
-				<link rel="dns-prefetch" href="<?php echo $preconnect_domain;  ?>" >
-				<link rel="preconnect" href="<?php echo $preconnect_domain;  ?>" >
-			<? } ?>
-		<? } ?>
-
-		<script type="application/ld+json">
-			{
-				"@context": "http://schema.org",
-				"@type": "Organization",
-				"url": "<?php echo $base; ?>","logo": "<?php echo $logo; ?>","potentialAction": {
-					"@type": "SearchAction",
-					"target": "<?php echo $base; ?>search?search={search_term_string}",
-					"query-input": "required name=search_term_string"
-				},"sameAs" : ["https://www.facebook.com/KitchenProfi/","https://vk.com/kitchenprofi","https://twitter.com/KitchenProfi","https://plus.google.com/+Kitchen-profi"]}
-		</script>
-		<script>
-			var dataLayer = dataLayer || [];
-		</script>
+		<?php include($this->checkTemplate(dirname(__FILE__), '/../structured/header_head.tpl')); ?>
 		
-		<? echo $google_analytics_header; ?>
-		<? echo $config_fb_pixel_header; ?>
-		<? echo $config_gtm_header; ?>
 
 
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css" crossorigin="anonymous">
-
-		<link rel="stylesheet" href="/catalog/view/javascript/select2/dist/css/select2.min.css">
+		<link rel="stylesheet" href="/js/node_modules/pretty-checkbox/dist/pretty-checkbox.min.css" crossorigin="anonymous">
+		<link rel="stylesheet" href="/js/node_modules/select2/dist/css/select2.min.css">
 		<link rel="stylesheet" href="/catalog/view/theme/kp/css/sumoselect.css">
+
 		<style type="text/css">
 			.simple-processing-dadata-request::after {
 				content: '';
@@ -992,18 +904,6 @@
 			}
 		</style>
 
-		<?php if (!empty($points_svg)) { ?>
-			<style>
-				.order-cart__item-right .reward_wrap .text::before,
-				#ajaxtable_table tr .price-block .reward_wrap .text::before, 
-				.price__head .reward_wrap .text::before,
-				.product__grid__colection .product__item .product__middle__colection .reward_wrap .text::before, 
-				.product__info .reward_wrap .text::before{
-					background-image: url("<?php echo $points_svg;?>")!important;
-				}
-			</style>
-		<?php } ?>
-
 
 		<?php if (!empty($npmScriptsMinified)) { ?>
 			<script src="<?php echo $npmScriptsMinified; ?>"></script>
@@ -1013,44 +913,14 @@
 				<script src="<?php echo trim($this->config->get('config_static_subdomain')); ?>js/node_modules/select2/dist/js/select2.min.js"></script>
 		<?php } ?>
 		
-		<script src="<?php echo trim($this->config->get('config_static_subdomain')); ?>js/node_modules/select2/dist/js/i18n/ru.js"></script>
-		<script src="<?php echo trim($this->config->get('config_static_subdomain')); ?>js/node_modules/select2/dist/js/i18n/uk.js"></script>
-
+		<script src="/js/node_modules/select2/dist/js/i18n/ru.js"></script>
+		<script src="/js/node_modules/select2/dist/js/i18n/uk.js"></script>
 		<script src="/catalog/view/theme/kp/js/sumoselect.min.js"></script>
+
 		<link href='https://fonts.googleapis.com/css?family=Montserrat:400,500,700&display=swap&subset=cyrillic' rel='stylesheet' type='text/css'>
 	</head>
 	<body>
-		<? echo $config_gtm_body; ?>
-		<? echo $config_fb_pixel_body; ?>
-
-		<?php if ($config_vk_enable_pixel) { ?>
-			<? echo $config_vk_pixel_body; ?>
-		<?php } ?>
-
-		<?php if (!empty($general_minified_css_uri)) { ?>
-			<link href="<? echo $general_minified_css_uri; ?>" rel="stylesheet" media="screen" />
-		<?php } ?>
-
-		<?php if (!empty($added_minified_css_uri)) { ?>
-			<link href="<? echo $added_minified_css_uri; ?>" rel="stylesheet" media="screen" />
-		<?php } ?>
-
-
-		<?php if (!empty($general_minified_js_uri)) { ?>
-			<script src="<? echo $general_minified_js_uri; ?>"></script>
-		<?php } ?>
-
-		<?php if (!empty($added_minified_js_uri)) { ?>
-			<script src="<? echo $added_minified_js_uri; ?>"></script>
-		<?php } ?>
-
-		<?php  foreach ($incompatible_scripts as $incompatible_script) { ?>
-			<script src="<?php echo $incompatible_script; ?>?rnd=<?php echo mt_rand(0, 1000); ?>"></script>
-		<?php } ?>
-
-		<?php  foreach ($added_but_excluded_scripts as $added_but_excluded_script) { ?>
-      		<script src="<?php echo $added_but_excluded_script; ?>?rnd=<?php echo mt_rand(0, 1000); ?>"></script>
-		<?php } ?>
+		<?php include($this->checkTemplate(dirname(__FILE__), '/../structured/header_body_scripts.tpl')); ?>
 
 		<section class="header-order">
 			<div class="wrap">
