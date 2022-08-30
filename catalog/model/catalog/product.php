@@ -321,8 +321,8 @@
 				'price'       				=> $price,
 				'special'     				=> $special,
 				'points'	  				=> $this->currency->formatBonus($result['reward'], true),
-			//	'colors'	 				=> $this->getProductColorsByGroup($result['product_id'], $result['color_group']),
-			//	'options'	  				=> $this->getProductOptionsForCatalog($result['product_id']),	
+				'colors'	 				=> $this->getProductColorsByGroup($result['product_id'], $result['color_group']),
+				'options'	  				=> $this->getProductOptionsForCatalog($result['product_id']),	
 				'variants_count'			=> $result['variants_count'],			
 				'variants_text'				=> ($result['variants_count'])?('+ ' . $result['variants_count'] . ' ' . morphos\Russian\NounPluralization::pluralize($result['variants_count'], $this->language->get('text_variant'))):'',
 				'saving'      				=> round((($result['price'] - $result['special'])/($result['price'] + 0.01))*100, 0),
@@ -781,6 +781,10 @@
 		}
 		
 		public function getProductOptionPrices($product_id)	{
+
+			if (!$this->config->get('config_option_price_enable')){
+				return false;
+			}
 			
 			if ($this->customer->isLogged()) {
 				$customer_group_id = $this->customer->getCustomerGroupId();
@@ -790,7 +794,7 @@
 			
 			$prices_data = $this->cache->get('product.pricerange.' . (int)$product_id . '.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $customer_group_id);
 			
-			if (!$prices_data || true) {
+			if (!$prices_data) {
 				
 				$prices_data = array(
 				'price'   => false,
@@ -2973,11 +2977,14 @@
 			}
 		}
 		
-		public function getProductColorsByGroup($product_id, $color_group = '')
-		{
+		public function getProductColorsByGroup($product_id, $color_group = ''){
+
+			if (!$this->config->get('config_color_grouping_products_enable')){
+				return [];
+			}
 			
 			if (!$color_group) {
-				return array();
+				return [];
 			}
 			
 			$this->load->model('tool/image');
@@ -3009,8 +3016,11 @@
 		}
 		
 		
-		public function getProductOptionsForCatalog($product_id)
-		{
+		public function getProductOptionsForCatalog($product_id){
+
+			if (!$this->config->get('config_option_products_enable')){
+				return false;
+			}
 			
 			$all_options = $this->getProductOptions($product_id);
 			

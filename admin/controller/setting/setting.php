@@ -1188,6 +1188,24 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$this->data['config_group_price_enable'] = $this->config->get('config_group_price_enable');
 		}
+
+		if (isset($this->request->post['config_option_price_enable'])) {
+			$this->data['config_option_price_enable'] = $this->request->post['config_option_price_enable'];
+		} else {
+			$this->data['config_option_price_enable'] = $this->config->get('config_option_price_enable');
+		}
+
+		if (isset($this->request->post['config_option_products_enable'])) {
+			$this->data['config_option_products_enable'] = $this->request->post['config_option_products_enable'];
+		} else {
+			$this->data['config_option_products_enable'] = $this->config->get('config_option_products_enable');
+		}
+
+		if (isset($this->request->post['config_color_grouping_products_enable'])) {
+			$this->data['config_color_grouping_products_enable'] = $this->request->post['config_color_grouping_products_enable'];
+		} else {
+			$this->data['config_color_grouping_products_enable'] = $this->config->get('config_color_grouping_products_enable');
+		}
 		
 		if (isset($this->request->post['config_android_playstore_enable'])) {
 			$this->data['config_android_playstore_enable'] = $this->request->post['config_android_playstore_enable'];
