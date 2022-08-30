@@ -297,6 +297,53 @@
 
 								<td style="width:18%">
 									<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика товаров-опций</span></p>
+									<select name="config_option_products_enable">
+										<?php if ($config_option_products_enable) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+									<br />
+									<span class="help">логика нагружает магазин! включить только в случае если товары привязаны друг к другу как опции (не касается товаров с Amazon)</span>
+									</div>
+
+									<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика цен опций</span></p>
+									<select name="config_option_price_enable">
+										<?php if ($config_option_price_enable) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+									<br />
+									<span class="help">логика нагружает магазин! включить только в случае если товары привязаны друг к другу как опции и подсчёт цен в каталоге выполняется "от - до"</span>
+									</div>
+
+									<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика цветовых групп</span></p>
+									<select name="config_color_grouping_products_enable">
+										<?php if ($config_color_grouping_products_enable) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+									<br />
+									<span class="help">логика нагружает магазин! включить только в случае если товары привязаны друг к другу как опции и разделяются по "цветовым группам"</span>
+									</div>
+								</td>
+
+								<td style="width:18%">
+									<div>
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">В брендах только товары</span></p>
 										<select type="select" name="config_show_goods_overload">
 											<? if ($config_show_goods_overload) { ?>
