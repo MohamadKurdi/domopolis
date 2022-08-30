@@ -385,7 +385,7 @@ class ControllerDPRainForest extends Controller {
 	//Фиксит дубли атрибутов
 	public function fixattributes(){
 		$this->db->query("UPDATE attribute_description SET name = TRIM(name)");
-		$this->db->query("UPDATE attribute_description SET name = REPLACE(name, '- ', '') WHERE name LIKE ('-%')");
+		$this->db->query("UPDATE attribute_description SET name = REPLACE(name, '- ', '') WHERE name LIKE ('-%') AND language_id <> '" . (int)$this->config->get('config_rainforest_source_language_id') . "'");
 
 		$query = $this->db->query("SELECT *, GROUP_CONCAT(attribute_id SEPARATOR ',') as 'other_attributes' FROM attribute_description WHERE language_id = 2 GROUP BY name HAVING(count(attribute_id)) > 1");
 
