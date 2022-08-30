@@ -203,12 +203,13 @@ class PageCache{
 		$class  = 'good';
 
 		try {
-			$httpClient = new GuzzleHttp\Client();
-			$httpResponse = $httpClient->request('GET', HTTP_CATALOG);
+			$httpClient 	= new GuzzleHttp\Client();
+			$httpResponse 	= $httpClient->request('GET', HTTP_CATALOG . '?hello=world');
 
 			if ($httpResponse->getStatusCode() != 200){
 				$body = 'FAIL: ' . $httpResponse->getStatusCode();
 				$class = 'bad';
+
 			} else {
 
 				foreach ($httpResponse->getHeaders() as $name => $value){					
@@ -245,8 +246,13 @@ class PageCache{
 
 		} catch (GuzzleHttp\Exception\ClientException $e){
 
-			$body  = $e->getMessage();
-			$class = 'bad';
+			$body  = 	$e->getMessage();
+			$class = 	'bad';
+
+		} catch (GuzzleHttp\Exception\ServerException $e) {
+
+			$body  = 	$e->getMessage();
+			$class = 	'bad';
 
 		}
 

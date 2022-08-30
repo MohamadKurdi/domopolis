@@ -7,6 +7,10 @@ class ModelToolImage extends Model {
 			$uri = $this->request->server['REQUEST_URI'];
 		}
 
+		if (!file_exists(DIR_IMAGE . $filename) || !is_file(DIR_IMAGE . $filename)) {
+			$filename = 'no_image.jpg';
+		} 	
+
 		$info 		= pathinfo($filename);
 		$extension 	= $info['extension'];
 		$basename 	= $info['basename'];
@@ -41,11 +45,7 @@ class ModelToolImage extends Model {
 					$avif = true;					
 				}		
 			}	
-		}
-
-		if (!file_exists(DIR_IMAGE . $filename) || !is_file(DIR_IMAGE . $filename)) {
-			$filename = 'no_image.jpg';
-		} 		
+		}		
 
 		if ($webp) {
 			$extension = 'webp';
