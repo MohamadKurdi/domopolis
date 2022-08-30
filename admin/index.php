@@ -62,20 +62,9 @@
 		die('sorry');
 	}
 	
-	if ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == '1' || $_SERVER['HTTPS'])) || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && (strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https') || (!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on'))) {	
-		define('IS_HTTPS', true);			
-		} else {
-		define('IS_HTTPS', false);
-	}
-	
 	require_once(DIR_SYSTEM . '../vendor/autoload.php');
 	
-	//VirtualQMOD
-	//require_once('../vqmod/vqmod.php');
-	//VQMod::bootup();
-	require_once(DIR_SYSTEM . 'startup.php');
-	
-	// Application Classes
+	require_once(DIR_SYSTEM . 'startup.php');	
 	require_once(DIR_SYSTEM . 'library/currency.php');
 	require_once(DIR_SYSTEM . 'library/customer.php');
 	require_once(DIR_SYSTEM . 'library/user.php');
