@@ -57,7 +57,7 @@
 			$brands = $this->model_catalog_manufacturer->getManufacturers(array('sort' => 'm.sort_order', 'order' => 'ASC', 'menu_brand' => 1, 'limit' => 100));
 
 			foreach ($brands as $k => $b) {				
-				$brands[$k]['thumb'] = $this->model_tool_image->resize($b['image'], 100, 100);	
+				$brands[$k]['thumb'] = $this->model_tool_image->resize($b['image'], 101, 101);	
 				$brands[$k]['url'] = $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $b['manufacturer_id']);
 			}
 

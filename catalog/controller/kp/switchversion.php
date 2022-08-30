@@ -9,7 +9,7 @@
 		public function convert(){
 			$this->load->model('tool/image');
 
-			$image = $this->model_tool_image->resize('data/logo/brabantia-logo.png', 218, 218);
+			$image = $this->model_tool_image->resize('data/logo/brabantia-logo.png', 120, 120);
 					
 			header('Content-Type: image/webp');
 			echo file_get_contents($image);
