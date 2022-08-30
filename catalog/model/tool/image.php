@@ -61,7 +61,7 @@ class ModelToolImage extends Model {
 		$new_image 			= $new_image_struct['full_path'];
 		$new_image_relative = $new_image_struct['relative_path'];
 
-		if ((!file_exists($new_image) || (filemtime(DIR_IMAGE . $old_image) > filemtime($new_image)))) {				
+		if (IS_DEBUG || (!file_exists($new_image) || (filemtime(DIR_IMAGE . $old_image) > filemtime($new_image)))) {				
 			$image = new Image(DIR_IMAGE . $old_image);
 
 			if (!$do_not_resize){
