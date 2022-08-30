@@ -112,22 +112,14 @@
 						
 						
 						$image = $this->model_tool_image->resize($result['image'], 300, 300);
-							$image_webp = $this->model_tool_image->resize_webp($result['image'], 300, 300);
-							$image_mime = $this->model_tool_image->getMime($result['image']);
-							
-							$back_image = $this->model_tool_image->resize($result['back_image'], 300, 300);
-							$back_image_webp = $this->model_tool_image->resize_webp($result['back_image'], 300, 300);
-							$back_image_mime = $this->model_tool_image->getMime($result['back_image']);
+						$back_image = $this->model_tool_image->resize($result['back_image'], 300, 300);
+
 						
 						$this->data['categories'][$key]['manufacturer'][] = array(
 						'name' => $result['name'],
 						'mcategories' => $mcategories,
 						'image' => $image,
-						'image_webp' => $image_webp,
-						'image_mime' => $image_mime,
 						'back_image' => $back_image,
-						'back_image_webp' => $image_webp,
-						'back_image_mime' => $image_mime,
 						'short_description' => strip_tags($description[$this->config->get('config_language_id')]['short_description']),
 						'location' => $description[$this->config->get('config_language_id')]['location'],
 						'href' => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $result['manufacturer_id'])
@@ -169,43 +161,27 @@
 				$this->data['compare'] = $this->url->link('product/compare');
 				
 				if ($countrybrand_info['image']) {
-					$this->data['popup_ohuevshiy'] = $this->model_tool_image->resize($countrybrand_info['image'], 1000, 1000);	
-					$this->data['popup_ohuevshiy_webp'] = $this->model_tool_image->resize_webp($countrybrand_info['image'], 1000, 1000);	
-					$this->data['popup_ohuevshiy_mime'] =  $this->model_tool_image->getMime($countrybrand_info['image']);										
+					$this->data['popup_ohuevshiy'] = $this->model_tool_image->resize($countrybrand_info['image'], 1000, 1000);											
 					} else {
 					$this->data['popup_ohuevshiy'] = $this->model_tool_image->resize($this->config->get('config_noimage'), 1000, 1000);
-					$this->data['popup_ohuevshiy_webp'] = $this->model_tool_image->resize_webp($this->config->get('config_noimage'), 1000, 1000);	
-					$this->data['popup_ohuevshiy_mime'] =  $this->model_tool_image->getMime($this->config->get('config_noimage'));
 				}
 				
 				if ($countrybrand_info['image']) {
-					$this->data['popup'] = $this->model_tool_image->resize($countrybrand_info['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height'));	
-					$this->data['popup_webp'] = $this->model_tool_image->resize_webp($countrybrand_info['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height'));	
-					$this->data['popup_mime'] =  $this->model_tool_image->getMime($countrybrand_info['image']);										
+					$this->data['popup'] = $this->model_tool_image->resize($countrybrand_info['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height'));			
 					} else {
 					$this->data['popup'] = $this->model_tool_image->resize($this->config->get('config_noimage'), $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height'));
-					$this->data['popup_webp'] = $this->model_tool_image->resize_webp($this->config->get('config_noimage'), $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height'));	
-					$this->data['popup_mime'] =  $this->model_tool_image->getMime($this->config->get('config_noimage'));
 				}
 				
 				if ($countrybrand_info['image']) {
-					$this->data['thumb'] = $this->model_tool_image->resize($countrybrand_info['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));	
-					$this->data['thumb_webp'] = $this->model_tool_image->resize_webp($countrybrand_info['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));	
-					$this->data['thumb_mime'] =  $this->model_tool_image->getMime($countrybrand_info['image']);										
+					$this->data['thumb'] = $this->model_tool_image->resize($countrybrand_info['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));						
 					} else {
 					$this->data['thumb'] = $this->model_tool_image->resize($this->config->get('config_noimage'), $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));
-					$this->data['thumb_webp'] = $this->model_tool_image->resize_webp($this->config->get('config_noimage'), $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));	
-					$this->data['thumb_mime'] =  $this->model_tool_image->getMime($this->config->get('config_noimage'));
 				}
 				
 				if ($countrybrand_info['image']) {
-					$this->data['smallimg'] = $this->model_tool_image->resize($countrybrand_info['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));	
-					$this->data['smallimg_webp'] = $this->model_tool_image->resize_webp($countrybrand_info['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));	
-					$this->data['smallimg_mime'] =  $this->model_tool_image->getMime($countrybrand_info['image']);										
+					$this->data['smallimg'] = $this->model_tool_image->resize($countrybrand_info['image'], $this->config->get('config_image_thumb_width'), $this->config->get('config_image_thumb_height'));										
 					} else {
 					$this->data['smallimg'] = $this->model_tool_image->resize($this->config->get('config_noimage'), $this->config->get('config_image_additional_width'),	$this->config->get('config_image_additional_height'));
-					$this->data['smallimg_webp'] = $this->model_tool_image->resize_webp($this->config->get('config_noimage'), $this->config->get('config_image_additional_width'),	$this->config->get('config_image_additional_height'));	
-					$this->data['smallimg_mime'] =  $this->model_tool_image->getMime($this->config->get('config_noimage'));
 				}
 				
 				
@@ -214,23 +190,11 @@
 				$results = $this->model_catalog_countrybrand->getCountrybrandImages($this->request->get['countrybrand_id']);
 				
 				foreach ($results as $result) {
-					$this->data['images'][] = array(
-					
+					$this->data['images'][] = array(					
 					'popup_ohuevshiy'  => $this->model_tool_image->resize($result['image'],	1000, 1000),
-					'popup_ohuevshiy_webp'  => $this->model_tool_image->resize_webp($result['image'],	1000, 1000),
-					'popup_ohuevshiy_mime'  => $this->model_tool_image->getMime($result['image']),
-					
 					'popup'  => $this->model_tool_image->resize($result['image'],	$this->config->get('config_image_popup_width'),	$this->config->get('config_image_popup_height')),
-					'popup_webp'  => $this->model_tool_image->resize_webp($result['image'],	$this->config->get('config_image_popup_width'),	$this->config->get('config_image_popup_height')),
-					'popup_mime'  => $this->model_tool_image->getMime($result['image']),
-					
 					'middle' => $this->model_tool_image->resize($result['image'],  $this->config->get('config_image_thumb_width'),	$this->config->get('config_image_thumb_height')),
-					'middle_webp'  => $this->model_tool_image->resize_webp($result['image'],	$this->config->get('config_image_thumb_width'),	$this->config->get('config_image_thumb_height')),
-					'middle_mime'  => $this->model_tool_image->getMime($result['image']),
-					
 					'thumb'  => $this->model_tool_image->resize($result['image'],   $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height')),
-					'thumb_webp'  => $this->model_tool_image->resize_webp($result['image'],	$this->config->get('config_image_additional_width'),	$this->config->get('config_image_additional_height')),
-					'thumb_mime'  => $this->model_tool_image->getMime($result['image'])
 					);
 				}
 				

@@ -423,8 +423,7 @@
     											<?php foreach ($images as $image) { ?>
     												<?php if (isset($image['thumb'])) { ?>
     													<div class="swiper-slide">
-    														<img src="<?php echo $image['middle']; ?>"
-    														alt="<?php echo $heading_title; ?>">
+    														<img src="<?php echo $image['middle']; ?>" alt="<?php echo $heading_title; ?>">
     													</div>
     												<?php } ?>
     												<?php $i++;

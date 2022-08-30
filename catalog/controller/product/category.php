@@ -793,20 +793,14 @@
 							
 							$action = array_shift($actions);
 							if ($action['image_to_cat']) {
-								$image = $this->model_tool_image->resize($action['image_to_cat'], 407, 491);
-								$image_mime = $this->model_tool_image->getMime($action['image_to_cat']);
-								$image_webp = $this->model_tool_image->resize_webp($action['image_to_cat'], 407, 491);
+								$image = $this->model_tool_image->resize($action['image_to_cat'], 407, 491);								
 								} else {
 								$image = $this->model_tool_image->resize($this->config->get('config_noimage'), 407, 491);
-								$image_mime = $this->model_tool_image->getMime($this->config->get('config_noimage'));
-								$image_webp = $this->model_tool_image->resize_webp($this->config->get('config_noimage'), 407, 491);
 							}
 							
 							$action_data = array(
 							'is_inserted_action' => true,
 							'thumb'       => $image,
-							'thumb_mime'  => $image_mime,
-							'thumb_webp'  => $image_webp,
 							'title' => $action['title'],
 							'href' => $this->url->link('information/actions','actions_id=' . $action['actions_id'])
 							);
@@ -832,22 +826,16 @@
 							$action = array_shift($actions);
 							
 							if ($action['image_to_cat']) {
-								$image = $this->model_tool_image->resize($action['image_to_cat'], 407, 491);
-								$image_mime = $this->model_tool_image->getMime($action['image_to_cat']);
-								$image_webp = $this->model_tool_image->resize_webp($action['image_to_cat'], 407, 491);
+								$image = $this->model_tool_image->resize($action['image_to_cat'], 407, 491);								
 								} else {
 								$image = $this->model_tool_image->resize($this->config->get('config_noimage'), 407, 491);
-								$image_mime = $this->model_tool_image->getMime($this->config->get('config_noimage'));
-								$image_webp = $this->model_tool_image->resize_webp($this->config->get('config_noimage'), 407, 491);
 							}
 							
 							$action_data = array(
-							'is_inserted_action' => true,
-							'thumb'       => $image,
-							'thumb_mime'  => $image_mime,
-							'thumb_webp'  => $image_webp,
-							'title' => $action['title'],
-							'href' => $this->url->link('information/actions','actions_id=' . $action['actions_id'])
+							'is_inserted_action' 	=> true,
+							'thumb'       			=> $image,
+							'title' 				=> $action['title'],
+							'href' 					=> $this->url->link('information/actions','actions_id=' . $action['actions_id'])
 							);
 							
 							$counter = 1;

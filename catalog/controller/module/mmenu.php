@@ -97,20 +97,14 @@ class ControllerModuleMMenu extends Controller {
 					foreach ($results as $result) {
 						if ((!empty($result['image']))) {
 							$image = $this->model_tool_image->resize($result['image'], 300, 300);
-							$image_webp = $this->model_tool_image->resize_webp($result['image'], 300, 300);
-							$image_mime = $this->model_tool_image->getMime($result['image']);
 						} else {
-							$image = $this->model_tool_image->resize('no_image.jpg', 300, 300);
-							$image_webp = $this->model_tool_image->resize_webp('no_image.jpg', 300, 300);
-							$image_mime = $this->model_tool_image->getMime('no_image.jpg');
+							$image = $this->model_tool_image->resize($this->config->get('config_noimage'), 300, 300);
 						}
 						if ($result['sort_order'] != -1) {
 							$manufacturers_data[] = array(
 								'manufacturer_id' => $result['manufacturer_id'],
 								'name'       	  => $result['name'],
 								'image' => $image,
-								'image_webp' => $image_webp,
-								'image_mime' => $image_mime,
 								'href'            => $this->url->link('product/category', 'path=' . $category['category_id'] . '&manufacturer_id=' . $result['manufacturer_id'])
 							);
 						}
