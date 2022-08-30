@@ -33,7 +33,7 @@ final class Cache {
 				$this->redis->select(REDIS_DATABASE);
 				$this->isredis = true;
 			}				
-		};
+		}
 	} 	
 	
 	
