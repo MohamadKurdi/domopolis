@@ -3787,9 +3787,25 @@
 
 									<td style="width:12%">
 
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Парсер дерева категорий</span></p>
+										<select name="config_rainforest_enable_category_tree_parser">
+											<?php if ($config_rainforest_enable_category_tree_parser) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+										</div>
+
+									</td>
+
+									<td style="width:12%">
+
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Валидация ASIN</span></p>
-										<select name="config_rainforest_enable_asins_cron">
-											<?php if ($config_rainforest_enable_asins_cron) { ?>
+										<select name="config_rainforest_enable_asins_parser">
+											<?php if ($config_rainforest_enable_asins_parser) { ?>
 												<option value="1" selected="selected">Включить</option>
 												<option value="0">Отключить</option>
 												<?php } else { ?>													
@@ -3804,8 +3820,8 @@
 									<td style="width:12%">
 
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Валидация EAN/GTIN</span></p>
-										<select name="config_rainforest_enable_eans_cron">
-											<?php if ($config_rainforest_enable_eans_cron) { ?>
+										<select name="config_rainforest_enable_eans_parser">
+											<?php if ($config_rainforest_enable_eans_parser) { ?>
 												<option value="1" selected="selected">Включить</option>
 												<option value="0">Отключить</option>
 												<?php } else { ?>													
@@ -3820,8 +3836,8 @@
 									<td style="width:12%">
 
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Офферы заказанных товаров</span></p>
-										<select name="config_rainforest_enable_offersqueue_cron">
-											<?php if ($config_rainforest_enable_offersqueue_cron) { ?>
+										<select name="config_rainforest_enable_offersqueue_parser">
+											<?php if ($config_rainforest_enable_offersqueue_parser) { ?>
 												<option value="1" selected="selected">Включить</option>
 												<option value="0">Отключить</option>
 												<?php } else { ?>													

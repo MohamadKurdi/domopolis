@@ -39,7 +39,7 @@
 					<div style="width:99%; float:left;">
 						<table class="list">
 							<tr>
-								<td style="white-space: nowrap;">
+								<td style="white-space: nowrap;color:#7F00FF;">
 									<i class="fa fa-refresh"></i> <b>Парсер новых товаров Amazon</b>
 								</td>
 								<td style="width:40px;">
@@ -52,7 +52,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td style="white-space: nowrap;">
+								<td style="white-space: nowrap;color:#7F00FF;">
 									<i class="fa fa-refresh"></i> <b>Парсер данных о товарах Amazon</b>
 								</td>
 								<td>
@@ -65,7 +65,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td style="white-space: nowrap;">
+								<td style="white-space: nowrap;color:#7F00FF;">
 									<i class="fa fa-refresh"></i> <b>Разгребатель технической категории</b>
 								</td>
 								<td>
@@ -78,7 +78,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td style="white-space: nowrap;">
+								<td style="white-space: nowrap;color:#7F00FF;">
 									<i class="fa fa-refresh"></i> <b>Парсер данных о товарах Amazon L2</b>
 								</td>
 								<td>
@@ -91,7 +91,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td style="white-space: nowrap;">
+								<td style="white-space: nowrap;color:#7F00FF;">
 									<i class="fa fa-refresh"></i> <b>Получение офферов с Amazon</b>
 								</td>
 								<td>
@@ -100,6 +100,62 @@
 								<td>
 									<span class="help">
 										<i class="fa fa-info-circle"></i> Этот воркер получает и обновляет предложения и цены с Amazon. Также, в зависимости от настроек, он меняет статусы, и может удалять товары.
+									</span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="white-space: nowrap;color:#7F00FF;">
+									<i class="fa fa-refresh"></i> <b>Офферы для товаров в заказах</b>
+								</td>
+								<td>
+									<input id="config_rainforest_enable_offersqueue_parser" type="checkbox" class="checkbox" name="config_rainforest_enable_offersqueue_parser" <? if ($config_rainforest_enable_offersqueue_parser){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_offersqueue_parser"></label>
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Чтоб иметь актуальную цену закупки, этот воркер получает цены и наличие для только что заказанных товаров.
+									</span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="white-space: nowrap;color:#7F00FF;">
+									<i class="fa fa-refresh"></i> <b>Парсер дерева категорий Amazon</b>
+								</td>
+								<td>
+									<input id="config_rainforest_enable_category_tree_parser" type="checkbox" class="checkbox" name="config_rainforest_enable_category_tree_parser" <? if ($config_rainforest_enable_category_tree_parser){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_category_tree_parser"></label>
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Этот воркер просматривает дерево категорий Amazon в соответствии с настройками модели работы и добавляет несуществующие ранее категории. Он не редактирует привязки категорий, только добавляет их.
+									</span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="white-space: nowrap;color:#7F00FF;">
+									<i class="fa fa-refresh"></i> <b>Валидатор ASIN</b>
+								</td>
+								<td>
+									<input id="config_rainforest_enable_asins_parser" type="checkbox" class="checkbox" name="config_rainforest_enable_asins_parser" <? if ($config_rainforest_enable_asins_parser){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_asins_parser"></label>
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Иногда на Amazon удаляются некоторые товары. Для избежания участия их в получении цен этот воркер проверяет существование товаров на Amazon. В зависимости от логики, ASIN либо обнуляется либо товар отключается. Используется только в случае, если в каталоге есть товары, добавленные не через API, а вручную
+									</span>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="white-space: nowrap;color:#7F00FF;">
+									<i class="fa fa-refresh"></i> <b>Валидатор EAN/GTIN</b>
+								</td>
+								<td>
+									<input id="config_rainforest_enable_eans_parser" type="checkbox" class="checkbox" name="config_rainforest_enable_eans_parser" <? if ($config_rainforest_enable_eans_parser){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_eans_parser"></label>
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Для обновления цен с Amazon необходимо знать идентификатор ASIN. Если в каталоге существуют товары у которых задан EAN (GTIN), этот воркер пытается сопоставить EAN с ASIN и записать его в БД. Используется только в случае, если в каталоге есть товары, добавленные не через API, а вручную
 									</span>
 								</td>
 							</tr>
