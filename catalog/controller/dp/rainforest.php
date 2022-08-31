@@ -141,6 +141,12 @@ class ControllerDPRainForest extends Controller {
 	}
 
 	public function addcategoriescron(){
+
+		if (!$this->config->get('config_rainforest_enable_category_tree_parser')){
+			echoLine('[ControllerKPRainForest::addcategoriescron] CRON IS DISABLED IN ADMIN');
+			return;
+		}
+
 		$type = $this->config->get('config_rainforest_category_model');		
 		
 		if ($type == 'bestsellers') {
@@ -174,7 +180,13 @@ class ControllerDPRainForest extends Controller {
 		}
 	}	
 
-	public function addnewproductscron(){		
+	public function addnewproductscron(){	
+
+		if (!$this->config->get('config_rainforest_enable_new_parser')){
+			echoLine('[ControllerKPRainForest::addnewproductscron] CRON IS DISABLED IN ADMIN');
+			return;
+		}
+
 		$this->load->library('Timer');
 		$timer = new FPCTimer();
 
@@ -250,6 +262,11 @@ class ControllerDPRainForest extends Controller {
 
 	public function editfullproductscron($parsetechcategory = false){
 
+		if (!$this->config->get('config_rainforest_enable_data_parser')){
+			echoLine('[ControllerKPRainForest::editfullproductscron] CRON IS DISABLED IN ADMIN');
+			return;
+		}
+
 		
 		$this->load->library('Timer');
 		$timer = new FPCTimer();
@@ -304,12 +321,23 @@ class ControllerDPRainForest extends Controller {
 
 	public function parsetechcategory(){		
 
+		if (!$this->config->get('config_rainforest_enable_tech_category_parser')){
+			echoLine('[ControllerKPRainForest::parsetechcategory] CRON IS DISABLED IN ADMIN');
+			return;
+		}
+
 		if ($this->config->get('config_rainforest_default_technical_category_id') && $this->config->get('config_rainforest_default_unknown_category_id')){
 			$this->editfullproductscron(true);
 		}
 	}
 
 	public function editfullproductscronl2(){		
+
+		if (!$this->config->get('config_rainforest_enable_data_l2_parser')){
+			echoLine('[ControllerKPRainForest::editfullproductscronl2] CRON IS DISABLED IN ADMIN');
+			return;
+		}
+
 		$this->load->library('Timer');
 		$timer = new FPCTimer();
 
@@ -382,7 +410,9 @@ class ControllerDPRainForest extends Controller {
 		}
 	}
 
-	//Фиксит дубли атрибутов
+	/*
+	Фиксит дубли атрибутов
+	*/
 	public function fixattributes(){
 		$this->db->query("UPDATE attribute_description SET name = TRIM(name)");
 		$this->db->query("UPDATE attribute_description SET name = REPLACE(name, '- ', '') WHERE name LIKE ('-%') AND language_id <> '" . (int)$this->config->get('config_rainforest_source_language_id') . "'");
@@ -438,7 +468,6 @@ class ControllerDPRainForest extends Controller {
 
 
 		}
-
 	}	
 
 	/*

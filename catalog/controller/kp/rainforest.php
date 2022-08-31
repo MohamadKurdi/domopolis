@@ -46,6 +46,11 @@ class ControllerKPRainForest extends Controller {
 	}
 
 	public function parseeanscron(){
+
+		if (!$this->config->get('config_rainforest_enable_eans_parser')){
+			echoLine('[ControllerKPRainForest::parseeanscron] CRON IS DISABLED IN ADMIN');
+			return;
+		}
 		
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');
@@ -104,6 +109,12 @@ class ControllerKPRainForest extends Controller {
 	}
 	
 	public function parseasinscron(){		
+
+		if (!$this->config->get('config_rainforest_enable_asins_parser')){
+			echoLine('[ControllerKPRainForest::parseasinscron] CRON IS DISABLED IN ADMIN');
+			return;
+		}
+
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');
 		$this->load->model('catalog/product');
@@ -162,6 +173,12 @@ class ControllerKPRainForest extends Controller {
 	}
 
 	public function parseoffersqueuecron(){
+
+		if (!$this->config->get('config_rainforest_enable_offersqueue_parser')){
+			echoLine('[ControllerKPRainForest::parseoffersqueuecron] CRON IS DISABLED IN ADMIN');
+			return;
+		}
+
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');
 
@@ -200,6 +217,11 @@ class ControllerKPRainForest extends Controller {
 	}
 
 	public function parsenoofferscron(){
+
+		if (!$this->config->get('config_rainforest_enable_offers_parser')){
+			echoLine('[ControllerKPRainForest::parsenoofferscron] CRON IS DISABLED IN ADMIN');
+			return;
+		}
 
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');
@@ -244,6 +266,11 @@ class ControllerKPRainForest extends Controller {
 	}
 
 	public function parseofferscron(){
+
+		if (!$this->config->get('config_rainforest_enable_offers_parser')){
+			echoLine('[ControllerKPRainForest::parseofferscron] CRON IS DISABLED IN ADMIN');
+			return;
+		}
 
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');
