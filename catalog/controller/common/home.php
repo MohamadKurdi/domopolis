@@ -47,7 +47,7 @@
 			}
 			
 
-			$this->data['brands'] = $this->cache->get('manufacturers.home.' . $this->config->get('config_store_id') . '.' . $this->config->get('config_language_id'));
+			$this->data['brands'] = $this->cache->get($this->createCacheQueryString(get_class($this), [], ['manufacturers_home']));
 
 			if (!$this->data['brands']){
 				$this->load->model('catalog/manufacturer');
@@ -60,10 +60,10 @@
 					$this->data['brands'][$k]['url'] = $this->url->link('catalog/manufacturer/info', 'manufacturer_id=' . $b['manufacturer_id']);
 				}
 				
-				$this->cache->set('manufacturers.home.' . $this->config->get('config_store_id') . '.' . $this->config->get('config_language_id'), $this->data['brands']);
+				$this->cache->set($this->createCacheQueryString(get_class($this), [], ['manufacturers_home']), $this->data['brands']);
 			}
 
-			$this->data['shop_rating_struct'] = $this->cache->get('shop_rating.' . $this->config->get('config_store_id') . '.' . $this->config->get('config_language_id'));
+			$this->data['shop_rating_struct'] = $this->cache->get($this->createCacheQueryString(get_class($this), [], ['shop_rating_struct']));
 			
 			if (!$this->data['shop_rating_struct']){
 
@@ -74,7 +74,7 @@
 					'shop_rating_count' 	=> $this->model_catalog_shop_rating->getStoreRatingsTotal()
 				];
 
-				$this->cache->set('shop_rating.' . $this->config->get('config_store_id') . '.' . $this->config->get('config_language_id'), $this->data['shop_rating_struct']);
+				$this->cache->set($this->createCacheQueryString(get_class($this), [], ['shop_rating_struct']), $this->data['shop_rating_struct']);
 
 			}
 
