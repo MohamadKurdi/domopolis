@@ -3101,7 +3101,26 @@ class ControllerSettingSetting extends Controller {
 			}
 			
 		}
-		
+
+		$rnf_cron_settings = [
+		'config_rainforest_enable_new_parser',
+		'config_rainforest_enable_data_parser',
+		'config_rainforest_enable_tech_category_parser',
+		'config_rainforest_enable_data_l2_parser',
+		'config_rainforest_enable_offers_parser',
+		'config_rainforest_enable_asins_cron',
+		'config_rainforest_enable_eans_cron',
+		'config_rainforest_enable_offersqueue_cron'
+		];
+
+
+		foreach ($rnf_cron_settings as $rnf_cron_setting){
+			if (isset($this->request->post[$rnf_cron_setting])) {
+				$this->data[$rnf_cron_setting] = $this->request->post[$rnf_cron_setting]; 
+			} else {
+				$this->data[$rnf_cron_setting] = $this->config->get($rnf_cron_setting);
+			}	
+		}	
 		
 		$this->data['amazon_domains'] = $this->rainforestAmazon->getValidAmazonSitesArray();	
 		$this->data['amazon_filters'] = \CaponicaAmazonRainforest\Request\OfferRequest::getStaticFilterKeys();
