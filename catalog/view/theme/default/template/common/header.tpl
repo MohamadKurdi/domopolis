@@ -690,7 +690,9 @@
 	<body>
 		<?php include($this->checkTemplate(dirname(__FILE__), '/../structured/header_body_scripts.tpl')); ?>
 		
-		<link href='https://fonts.googleapis.com/css?family=Montserrat:400,500,700&display=swap&subset=cyrillic' rel='stylesheet' type='text/css'>	
+		<style>
+			@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+		</style> 	
 		
 		<!--header-->
 		<header>
