@@ -98,10 +98,10 @@ class PageCache{
 
 	private static function formatBytes($size, $precision = 2)
 	{
-    	$base = log($size, 1024);
-    	$suffixes = array('', 'K', 'M', 'G', 'T');   
+		$base = log($size, 1024);
+		$suffixes = array('', 'K', 'M', 'G', 'T');   
 
-    	return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
+		return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
 	}
 
 	public function getPageCacheInfo(){
@@ -223,7 +223,7 @@ class PageCache{
 				foreach ($httpResponse->getHeaders() as $name => $value){					
 					if (mb_strtoupper($name) == 'X-NO-FPC-TIME'){
 						$value = $value[0];
-						$body = round($value, 2);																
+						$body = round($value, 3);																
 
 						if ((float)$value > 0.2){
 							$class = 'warn';
@@ -234,7 +234,7 @@ class PageCache{
 						}
 					} elseif (mb_strtoupper($name) == 'X-FPC-TIME') {
 						$value = $value[0];
-						$body2 = round($value, 3);																
+						$body = round($value, 3);																
 
 						if ((float)$value > 0.009){
 							$class = 'warn';
