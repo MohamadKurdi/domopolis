@@ -74,14 +74,14 @@
 		console.log("[PWA] ServiceWorker is in navigator, continue");
 		if (navigator.serviceWorker.controller) {
 			console.log("[PWA] active service worker found, no need to register");
-			} else {
+		} else {
 			navigator.serviceWorker
 			.register("/sw.js?v=105", {scope: "/"})
 			.then(function (reg) {
 				console.log("[PWA] Service worker has been registered for scope: " + reg.scope);
 			});
 		}
-		}  else {
+	}  else {
 		console.log("[PWA] ServiceWorker NOT in navigator, bad luck");		
 	}
 	
@@ -111,7 +111,7 @@
 					sendInstallEvent();
 					localStorage.setItem('pwaaccepted', 'true');								
 					console.log('[PWA] KP PWA APP is installed');							
-					} else {
+				} else {
 					pushPWAEvent('beforeinstallpromptdeclined');
 					localStorage.setItem('pwadeclined', 'true');
 					console.log('[PWA] KP PWA APP is not installed');
@@ -255,8 +255,62 @@
 			localStorage.setItem('lstest', 'lstest');
 			localStorage.removeItem('lstest');
 			return true;
-			} catch(e) {
+		} catch(e) {
 			return false;
 		}
 	}
+
+	function pushImageSupportToDataLayer(format, isSupported){
+		window.dataLayer 		= window.dataLayer || [];
+
+		dataLayer.push({
+				event: 			'ImageFormatSupport',
+				eventCategory: 	'PageSpeed',
+				eventAction:    isSupported,
+				eventLabel: 	format
+			});
+	}
+
+	function checkAVIFSupport(){
+			
+		window.afivacceptable 	= false;
+
+		var avif = new Image();
+
+		avif.src =
+		"data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAAB0AAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAIAAAACAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACVtZGF0EgAKCBgANogQEAwgMg8f8D///8WfhwB8+ErK42A=";
+		avif.onload = function () {
+			console.log('AVIF is supported in browser!');
+			window.afivacceptable = true;
+			pushImageSupportToDataLayer('AVIF', 'true');
+		};
+
+		avif.onerror = function () {
+			window.afivacceptable = false;
+			pushImageSupportToDataLayer('AVIF', 'false');
+		}
+
+	}
+
+	function checkWEBPSupport(){		
+		window.webpacceptable 	= false;
+
+		var webp = new Image();
+		webp.src =
+		"data:image/webp;base64,UklGRhoAAABXRUJQVlA4TA0AAAAvAAAAEAcQERGIiP4HAA==";
+		webp.onload = function () {
+			console.log('WEBP is supported in browser!');
+			window.webpacceptable = true;
+			pushImageSupportToDataLayer('WEBP', 'true');
+		};
+
+		webp.onerror = function () {
+			window.webpacceptable = false;
+			pushImageSupportToDataLayer('WEBP', 'false');
+		}
+
+	}
+
+	checkAVIFSupport();
+	checkWEBPSupport();
 </script>

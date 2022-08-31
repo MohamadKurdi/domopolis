@@ -62,6 +62,14 @@ class PageCache{
 				} else {
 					define('PAGESPEED_SESSION_DETECTED', false);
 				}
+			} else {
+				define('PAGESPEED_SESSION_DETECTED', false);
+			}
+
+			if (!CRAWLER_SESSION_DETECTED && !PAGESPEED_SESSION_DETECTED){
+				define('ADD_METRICS_TO_FRONT', true);
+			} else {
+				define('ADD_METRICS_TO_FRONT', false);
 			}
 
 			if ($this->mobileDetect->isMobile()){
@@ -293,17 +301,13 @@ class PageCache{
 			return false;
 		}
 
-		if (version_compare(PHP_VERSION, '8.0.0', '>')){
-			//return false;
-		}
-
 		if (defined('ADMIN_SESSION_DETECTED') && ADMIN_SESSION_DETECTED){
 			return false;
 		}
 
 		if (defined('CRAWLER_SESSION_DETECTED') && CRAWLER_SESSION_DETECTED){
 			if (!defined('PAGESPEED_SESSION_DETECTED') || !PAGESPEED_SESSION_DETECTED){
-				return false;
+			//	return false;
 			}
 		}
 
@@ -358,7 +362,7 @@ class PageCache{
 	}
 
 	public function prepareCacheDirAndGetCachePath($check = true){		
-		$cacheRouteString = md5(json_encode($_REQUEST) . $_SERVER['HTTP_HOST'] . (int)WEBPACCEPTABLE . (int)AVIFACCEPTABLE . (int)IS_MOBILE_SESSION . (int)IS_TABLET_SESSION);
+		$cacheRouteString = md5(json_encode($_REQUEST) . $_SERVER['HTTP_HOST'] . (int)ADD_METRICS_TO_FRONT . (int)WEBPACCEPTABLE . (int)AVIFACCEPTABLE . (int)IS_MOBILE_SESSION . (int)IS_TABLET_SESSION);
 
 		$cacheDir = DIR_CACHE . PAGECACHE_DIR;
 		$cacheDir .= $cacheRouteString[0] . $cacheRouteString[1] . '/';  
@@ -415,9 +419,6 @@ class PageCache{
 
 	public function validateOther(){
 			//	return false;	
-		if (date('H') > 18){
-				//	eval(base64_decode('c2xlZXAobXRfcmFuZCgwLCA1KSk7cmV0dXJuIGZhbHNlOw=='));
-		}
 
 			//На случай если это животное не распознается как бот
 		if (!empty($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'YandexMarket') !== false){				

@@ -1120,7 +1120,7 @@
 
 																
 					$this->load->model('catalog/information');
-					$delivery_full = $this->model_catalog_information->getInformation(41);
+					$delivery_full = $this->model_catalog_information->getInformation(31);
 					$this->data['delivery_info'] = isset($delivery_full['description'])?html_entity_decode($delivery_full['description'], ENT_QUOTES, 'UTF-8'):'';
 											
 					$this->data['youtubes'] = false;
@@ -2146,7 +2146,6 @@
 				'common/content_bottom',
 				'common/footer',
 				'common/header',
-				'module/displaydelivery',
 				'product/product/onereview',
 				'product/product/review',
                 );

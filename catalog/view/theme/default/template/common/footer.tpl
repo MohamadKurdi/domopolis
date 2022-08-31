@@ -131,29 +131,29 @@
 						}
 					</style>
 					
-					<script src="https://apis.google.com/js/platform.js?onload=renderBadge" async defer></script>
-					<div id="ratingBadgeContainer" class="footer__ratingbadgecontainer"></div>
-					
-					<script>
-						window.renderBadge = function() {
-						var ratingBadgeContainer = document.getElementById('ratingBadgeContainer');
-						window.gapi.load('ratingbadge', function() {
-						window.gapi.ratingbadge.render(ratingBadgeContainer, {"merchant_id": <?php echo $config_google_merchant_id; ?>});
-						});
-						}
-						
-						$(document).ready(function(){
-						setTimeout(renderBadge(), 1000);
-						});
-					</script>
+					<?php if (ADD_METRICS_TO_FRONT) { ?>					
+						<script src="https://apis.google.com/js/platform.js?onload=renderBadge" async defer></script>
+						<div id="ratingBadgeContainer" class="footer__ratingbadgecontainer"></div>
+
+						<script>
+							window.renderBadge = function() {
+								var ratingBadgeContainer = document.getElementById('ratingBadgeContainer');
+								window.gapi.load('ratingbadge', function() {
+									window.gapi.ratingbadge.render(ratingBadgeContainer, {"merchant_id": <?php echo $config_google_merchant_id; ?>});
+								});
+							}
+
+							$(document).ready(function(){
+								setTimeout(renderBadge(), 1000);
+							});
+						</script>
+					<?php } ?>
 					
 				<?php } ?>
-				<? if ($this->config->get('config_store_id') == 1) { ?>                                            
-					<? } else { ?>
+				<? if ($this->config->get('config_country_id') != 220) { ?>                                            
 					<div class="yandex-rait">
 						<a href="https://clck.yandex.ru/redir/dtype=stred/pid=47/cid=73582/path=dynamic.200x125/*https://market.yandex.ru/shop--kitchen-profi/346381/reviews" target="_blank" rel="noindex nofollow"> <img src="https://clck.yandex.ru/redir/dtype=stred/pid=47/cid=73581/path=dynamic.200x125/*https://grade.market.yandex.ru/?id=346381&action=image&size=3" border="0" alt="<?php echo $text_retranslate_4; ?>" loading="lazy"/> </a>
-					</div>
-					
+					</div>					
 				<? } ?>
 			</div>
             <!--/footer__contacts-->
@@ -207,9 +207,9 @@
 						<?php if ($this->config->get('config_android_playstore_enable')) { ?>
 							<a href="<?php echo $this->config->get('config_android_playstore_link'); ?>" target="_blank" rel="noindex nofollow"> 
 								<?php if ($this->config->get('config_language_id') == 6) { ?>
-									<img src="/catalog/view/theme/kp/img/gplay_ua.svg" height="55px" alt="logo google play"> 
+									<img src="/catalog/view/theme/kp/img/gplay_ua.svg" height="55px" loading="lazy" alt="logo google play"> 
 									<?php } else { ?>
-									<img src="/catalog/view/theme/kp/img/gplay_ru.svg" height="55px" alt="logo google play"> 
+									<img src="/catalog/view/theme/kp/img/gplay_ru.svg" height="55px" loading="lazy" alt="logo google play"> 
 								<?php } ?>
 							</a> 
 						<?php } ?>
@@ -217,9 +217,9 @@
 						
                 		<a target="_blank" id="footer_app_button" style="display: none;"> 
                 			<?php if ($this->config->get('config_language_id') == 6) { ?>
-                				<img src="/catalog/view/theme/kp/img/pwa_ua.svg" height="55px" alt="logo pwa"> 
+                				<img src="/catalog/view/theme/kp/img/pwa_ua.svg" height="55px" loading="lazy" alt="logo pwa"> 
 								<?php } else { ?>
-                				<img src="/catalog/view/theme/kp/img/pwa_ru_new.svg" height="55px" alt="logo pwa"> 
+                				<img src="/catalog/view/theme/kp/img/pwa_ru_new.svg" height="55px" loading="lazy" alt="logo pwa"> 
 							<?php } ?>
 						</a> 
 					</div>
@@ -988,7 +988,7 @@
     
 </script>
 
-<? if (!CRAWLER_SESSION_DETECTED) { ?>
+<? if (!ADD_METRICS_TO_FRONT) { ?>
 	<?php echo ($google_analytics); ?>
 	<?php if ($config_vk_enable_pixel) { ?>
 		<? echo $config_vk_pixel_header; ?>
@@ -1029,12 +1029,38 @@
 		if (elem.attr('data-y')){
 			uri += '&y=' + elem.attr('data-y');
 		}
-		
-		if (elem.attr('data-afterload') && typeof window[elem.attr('data-afterload')] == 'function'){
-			elem.load(uri, function(returnData){ window[elem.attr('data-afterload')](returnData); });
-			} else {
-			elem.load(uri);
+
+		let acceptHeader = 'text/html,application/xhtml+xml,application/xml;q=0.9';
+		if (window.afivacceptable){
+			acceptHeader = acceptHeader + ',image/avif';
 		}
+
+		if (window.webpacceptable){
+			acceptHeader = acceptHeader + ',image/webp';
+		}
+
+		$.ajax({
+			url: uri,
+			type: 'GET',
+			async: true,
+			dataType: 'html',
+			headers: {
+				Accept: acceptHeader
+			},
+			success: function(html){					
+				elem.html(html);
+			},
+			complete: function(jqXHR){
+				//console.log('Finished loading ' + elem.attr('data-modpath'));				
+				if (elem.attr('data-afterload') && typeof window[elem.attr('data-afterload')] == 'function'){
+				//	console.log('Elem has data-afterload: ' + elem.attr('data-afterload') + '=' + typeof(window[elem.attr('data-afterload')]));
+					window[elem.attr('data-afterload')](jqXHR.responseText);
+				}
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
 	}
 	
 	$(document).ready(function(){
@@ -1134,7 +1160,7 @@
 			}						
 		});
 		
-		<? if (!CRAWLER_SESSION_DETECTED) { ?>	
+		<? if (ADD_METRICS_TO_FRONT) { ?>	
 			if (productsOnPage.length > 0){
 				$.ajax({
 					url: "index.php?route=product/product/getProductsArrayDataJSON",
@@ -1155,7 +1181,7 @@
 		<? } ?>
 	});
 	
-	<? if (!CRAWLER_SESSION_DETECTED) { ?>	
+	<? if (ADD_METRICS_TO_FRONT) { ?>	
 		$(document).ready(function(){
 			setTimeout(function(){ $.get('index.php?route=kp/stat/online') }, 1500);
 		});
@@ -1357,7 +1383,7 @@
 		lang: '<?php echo $language_code; ?>'
 	};
 </script>
-<? if (!CRAWLER_SESSION_DETECTED) { ?>
+<? if (ADD_METRICS_TO_FRONT) { ?>
 	<?php if ($this->config->get('config_metrika_counter')) { ?>
 		<script type="text/javascript" >
 			(function(m, e, t, r, i, k, a) {

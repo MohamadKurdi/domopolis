@@ -219,11 +219,12 @@
     
 </script>
 
-<? if (!CRAWLER_SESSION_DETECTED) { ?>
+<? if (ADD_METRICS_TO_FRONT) { ?>
 	<?php echo ($google_analytics); ?>
 	<?php if ($config_vk_enable_pixel) { ?>
 		<? echo $config_vk_pixel_header; ?>
 	<?php } ?>
+	
 <? } ?>
 
 

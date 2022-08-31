@@ -308,8 +308,7 @@ unset($this->session->data['gac:listfrom']); }
 												<?php foreach ($images as $image) { ?>
 													<?php if (isset($image['thumb'])) { ?>
 														<div class="swiper-slide 2">
-															<img src="<?php echo $image['middle']; ?>"
-															alt="<?php echo $heading_title; ?>">
+															<img src="<?php echo $image['middle']; ?>" alt="<?php echo $heading_title; ?>" loading="lazy" />
 														</div>
 													<?php } ?>
 													<?php 
@@ -607,9 +606,6 @@ unset($this->session->data['gac:listfrom']); }
 											<div class="markdown_product_blcok">
 												<span class="name"><?php echo $text_retranslate_36; ?></span>
 												<div class="markdown_product_item">
-													<!-- <div class="img-markdown_product">
-														<img src="<?php echo $markdown_product['thumb']; ?>" width="100" height="100" title="<?php echo $markdown_product['name']; ?>"/>
-													</div> -->
 													<div class="name_markdown_product">
 														<a href="<?php echo $markdown_product['href']; ?>" title="<?php echo $markdown_product['name']; ?>" ><?php echo $markdown_product['name']; ?></a>
 														<?php if (!empty($markdown_product['special'])) { ?>
@@ -644,9 +640,6 @@ unset($this->session->data['gac:listfrom']); }
 												<?php foreach ($markdowned_products as $markdown_product) { ?>
 													
 													<div class="markdown_product_item">
-														<!-- <div class="img-markdown_product">
-															<img src="<?php echo $markdown_product['thumb']; ?>" width="100" height="100" title="<?php echo $markdown_product['name']; ?>"/>
-														</div> -->
 														<div class="name_markdown_product">
 															<a href="<?php echo $markdown_product['href']; ?>" title="<?php echo $markdown_product['name']; ?>" ><?php echo $markdown_product['name']; ?></a>
 															<?php if (!empty($markdown_product['special'])) { ?>
@@ -1202,7 +1195,7 @@ unset($this->session->data['gac:listfrom']); }
 										</div>
 										<?php unset($image); foreach ($images as $image) { ?>
 											<div>
-												<img src="<?php echo $image['popup']; ?>" alt="<? echo $heading_title; ?>" class="img-responsive"  style="padding:3px; border:1px solid rgba(0,0,0,0.08); margin-top:10px;" />
+												<img src="<?php echo $image['popup']; ?>" alt="<? echo $heading_title; ?>" class="img-responsive"  style="padding:3px; border:1px solid rgba(0,0,0,0.08); margin-top:10px;" loading="lazy" />
 											</div>
 										<?php } ?>
 									</div>
@@ -1231,7 +1224,7 @@ unset($this->session->data['gac:listfrom']); }
 								
 								<div class="sticky-block__image">
 									<?php if ($thumb) { ?>
-										<img src="<?php echo $thumb; ?>" alt="<?php echo $heading_title; ?>" width="100px"/>
+										<img src="<?php echo $thumb; ?>" alt="<?php echo $heading_title; ?>" width="100px" loading="lazy"/>
 									<?php } ?>
 									<div class="sticky-block__name"><?php echo $heading_title; ?></div>
 								</div> 
@@ -1502,7 +1495,7 @@ unset($this->session->data['gac:listfrom']); }
 										<? } ?>
 										<li>
 											<a href="javascript:void(0)" onclick="do_notification_block(31,'delivery_block');return false;" data-target="info_delivery" class="do-popup-element" >
-												<img src="/catalog/view/theme/kp/img/pluses-icon-dev.svg" alt="">
+												<img src="/catalog/view/theme/kp/img/pluses-icon-dev.svg" alt="" loading="lazy">
 												<p><?php echo $text_retranslate_47; ?> <i class="fas fa-info-circle"></i></p>
 											</a>
 										</li>
@@ -1556,8 +1549,8 @@ unset($this->session->data['gac:listfrom']); }
 					<div class="info-order-container">
 						<div class="content" style="background: #fff;padding: 20px 30px 20px;">	
 							<?php if ($delivery_info) { ?>
-								<?php echo $delivery_info; ?>
-								<? echo $displaydelivery; ?>
+								<?php  echo $delivery_info; ?>
+								<?php  echo $displaydelivery; ?>
 							<?php } ?>
 						</div>	
 					</div>
@@ -1617,7 +1610,7 @@ unset($this->session->data['gac:listfrom']); }
 			<div id="tab_header" style="display: none;">
 				
 				<?php if ($thumb) { ?>
-					<img src="<?php echo $thumb; ?>" alt="<?php echo $heading_title; ?>" width="36"/>
+					<img src="<?php echo $thumb; ?>" alt="<?php echo $heading_title; ?>" width="36" loading="lazy"/>
 				<?php } ?>
 				
 				<!--tabs__nav-->
