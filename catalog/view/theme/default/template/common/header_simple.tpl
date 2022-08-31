@@ -917,10 +917,13 @@
 		<script src="/js/node_modules/select2/dist/js/i18n/uk.js"></script>
 		<script src="/catalog/view/theme/kp/js/sumoselect.min.js"></script>
 
-		<link href='https://fonts.googleapis.com/css?family=Montserrat:400,500,700&display=swap&subset=cyrillic' rel='stylesheet' type='text/css'>
 	</head>
 	<body>
 		<?php include($this->checkTemplate(dirname(__FILE__), '/../structured/header_body_scripts.tpl')); ?>
+
+		<style>
+			@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+		</style> 
 
 		<section class="header-order">
 			<div class="wrap">

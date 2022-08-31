@@ -333,8 +333,7 @@
 			$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/css/product/product.css');
 			$this->document->addScript('catalog/view/theme/' . $this->config->get('config_template') . '/js/cloud-zoom-new/cloudzoom.js');
 			$this->document->addScript('catalog/view/theme/' . $this->config->get('config_template') . '/js/liFixar/jquery.liFixar.js');
-			$this->document->addScript('catalog/view/javascript/countdown/jquery.countdown.js');
-			$this->document->addScript('catalog/view/javascript/jquery/jquery.inputmask.bundle.min.js');
+			$this->document->addScript('catalog/view/javascript/countdown/jquery.countdown.js');			
 			$this->data['page_type'] = 'product';
             $this->data['breadcrumbs'] = array();
 			
