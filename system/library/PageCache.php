@@ -194,6 +194,11 @@ class PageCache{
 			$body  = $e->getMessage();
 			$class = 'bad';
 
+		} catch (GuzzleHttp\Exception\ServerException $e) {
+
+			$body  = 	$e->getMessage();
+			$class = 	'bad';
+
 		}
 
 		$json = [
