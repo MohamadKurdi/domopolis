@@ -150,33 +150,17 @@
 					
 					if (!isset($this->data['manufacturers'][$key])) {
 						$this->data['categories'][$key]['name'] = $key;
-					}
-					
-					$description = $this->model_catalog_manufacturer->getManufacturerDescriptions($result['manufacturer_id']);
-					$result_mcategories = $this->model_catalog_manufacturer->getTreeCategoriesByManufacturer($result['manufacturer_id']);
-					
-					$mcategories = array();
-					foreach ($result_mcategories as $mcategory){
-						$mcategories[] = array(
-						'thumb' => $this->model_tool_image->resize($mcategory['image'], 40, 40),
-						'name' => $mcategory['name'].' '.$result['name'],
-						'href' => $this->url->link('product/category', 'path='.$mcategory['category_id'].'&manufacturer_id=' . $result['manufacturer_id']),
-						);
-					}
-					
-					$mcategories = array_slice($mcategories, 0, 5);
+					}													
 					
 					$image = $this->model_tool_image->resize($result['image'], 300, 300);						
 					$back_image = $this->model_tool_image->resize($result['back_image'], 300, 300);
 					
 					$this->data['categories'][$key]['manufacturer'][] = array(
-					'name' => $result['name'],
-					'mcategories' => $mcategories,
-					'image' 	  => $image,
-					'back_image' => $back_image,
-					'short_description' => strip_tags($description[$this->config->get('config_language_id')]['short_description']),
-					'location' => $description[$this->config->get('config_language_id')]['location'],
-					'href' => $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $result['manufacturer_id'])
+					'name' 					=> $result['name'],
+					'image' 	  			=> $image,
+					'back_image' 			=> $back_image,				
+					'location' 				=> $result['location'],
+					'href' 					=> $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $result['manufacturer_id'])
 					);
 				}
 			}
