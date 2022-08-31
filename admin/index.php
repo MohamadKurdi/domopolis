@@ -99,7 +99,7 @@
 	$registry->set('db', $db);
 	
 	// Settings
-	$query = $db->query("SELECT * FROM " . DB_PREFIX . "setting WHERE store_id = '0'");
+	$query = $db->query("SELECT * FROM setting WHERE store_id = '0'");
 	
 	foreach ($query->rows as $setting) {
 		if (!$setting['serialized']) {
