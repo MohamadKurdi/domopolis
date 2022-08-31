@@ -147,13 +147,15 @@ class ControllerSettingSetting extends Controller {
 		$value 		= $this->request->post['value'];
 
 		if ($key){
-			$sql = "UPDATE setting SET `value` = '" . $this->db->escape($value) . "' WHERE `store_id` = '" . (int)$store_id . "' AND `group` = 'config' AND `key` = '" . $this->db->escape($key) . "'";
-			$query = $this->db->query($sql);
+			$query = $this->db->query("SELECT * FROM setting WHERE store_id = '" . (int)$store_id . "' AND `group` = 'config' AND `key` = '" . $this->db->escape($key) . "'");
 
-			if (!$this->db->countAffected()){
+			if ($query->num_rows){
+				$sql = "UPDATE setting SET `value` = '" . $this->db->escape($value) . "' WHERE `store_id` = '" . (int)$store_id . "' AND `group` = 'config' AND `key` = '" . $this->db->escape($key) . "'";
+			} else {
 				$sql = "INSERT INTO setting SET `value` = '" . $this->db->escape($value) . "', `store_id` = '" . (int)$store_id . "', `group` = 'config', `key` = '" . $this->db->escape($key) . "', serialized = 0";
-				$query = $this->db->query($sql);
 			}
+
+			$query = $this->db->query($sql);
 		}
 
 		var_dump($sql);
@@ -3058,7 +3060,7 @@ class ControllerSettingSetting extends Controller {
 			if (isset($this->request->post[$social_auth_config_key])) {
 				$this->data[$social_auth_config_key] = $this->request->post[$social_auth_config_key]; 
 			} else {
-				$this->data[$social_auth_config_key] = $this->config->get(${$social_auth_config_key});
+				$this->data[$social_auth_config_key] = $this->config->get($social_auth_config_key);
 			}			
 		}
 		
