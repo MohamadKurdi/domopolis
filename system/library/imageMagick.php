@@ -10,21 +10,19 @@ class Image {
     private $log;
 
     public function __construct($file) {
-        if (is_file($file)) {
-            
+        require_once(DIR_SYSTEM . 'library/log.php');
+        $this->log = new Log('imagick-error.txt');
 
+        if (is_file($file)) {            
             try {  
 
                 $this->init($file);
                 
             } catch (\ImagickException $e) {
-                require_once(DIR_SYSTEM . 'library/log.php');
-                $this->log = new Log('imagick-error.txt');
                 $this->log->write(get_class($this) . ', ' .  $this->file . ': ' . $e->getMessage());
-
                 $this->log->debug($e->getMessage());
 
-               // $this->init(DIR_IMAGE . 'no_image.jpg');
+                $this->init(DIR_IMAGE . 'no_image.jpg');
             }
 
         }
@@ -98,10 +96,17 @@ class Image {
         $this->save($file, $quality = IMAGE_QUALITY);
     }
 
-    public function save($file, $quality = IMAGE_QUALITY) {                
-        $this->image->setCompressionQuality($quality);
-        $this->image->stripImage();
-        $this->image->writeImage($file);
+    public function save($file, $quality = IMAGE_QUALITY) {      
+        try { 
+
+            $this->image->setCompressionQuality($quality);
+            $this->image->stripImage();
+            $this->image->writeImage($file);
+
+        } catch (\ImagickException $e) {
+            $this->log->write(get_class($this) . ', ' .  $this->file . ': ' . $e->getMessage());
+            $this->log->debug($e->getMessage());
+        }
     }
 
     /**
