@@ -1032,8 +1032,7 @@
 			$this->parseProductVideos($product_id, $product);			
 
 			//Атрибуты, фичер баллетс и спецификации
-			$this->parseProductAttributes($product_id, $product, $main_variant?$main_variant['main_variant_id']:false);
-			die();
+			$this->parseProductAttributes($product_id, $product, $main_variant?$main_variant['main_variant_id']:false);			
 			
 			//Размеры, готовая функция из InfoUpdater
 			$this->registry->get('rainforestAmazon')->infoUpdater->parseAndUpdateProductDimensions($product);
