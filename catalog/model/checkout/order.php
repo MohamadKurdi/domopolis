@@ -31,7 +31,7 @@
 					$query = $this->db->query("SELECT * FROM novaposhta_warehouses WHERE Ref = '" . $this->db->escape($data['novaposhta_warehouse']) . "' LIMIT 1");
 					
 					if ($query->row){
-						if ($this->config->get('config_language_id') == 6){
+						if ($this->config->get('config_language_id') == $this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id']){
 							$data['shipping_address_1'] = str_replace('"', '', $query->row['Description']);
 							$data['payment_address_1'] 	= str_replace('"', '', $query->row['Description']);
 						} else {
