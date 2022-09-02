@@ -34,6 +34,10 @@
             if ($this->simplecheckout->isBlockHidden('customer')) {
                 return;
             }
+
+            foreach ($this->language->loadRetranslate('checkout/simplecheckout') as $translationСode => $translationText){
+                $this->_templateData[$translationСode] = $translationText;
+            }
             
             $this->_templateData['text_checkout_customer']       = $this->language->get('text_checkout_customer');
             $this->_templateData['text_checkout_customer_login'] = $this->language->get('text_checkout_customer_login');

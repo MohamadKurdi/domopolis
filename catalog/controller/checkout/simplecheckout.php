@@ -51,6 +51,10 @@
 			);
 			
 			$this->_templateData['action'] = 'index.php?'.$this->simplecheckout->getAdditionalParams().'route=checkout/simplecheckout&group='.$settingsGroup;
+
+			foreach ($this->language->loadRetranslate('checkout/simplecheckout') as $translationСode => $translationText){
+                $this->_templateData[$translationСode] = $translationText;
+            }
 			
 			$this->_templateData['heading_title'] = $this->language->get('heading_title');
 			$this->_templateData['mask'] = $this->config->get('config_phonemask');
