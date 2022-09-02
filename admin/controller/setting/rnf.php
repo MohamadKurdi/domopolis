@@ -24,6 +24,42 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_max_review_per_product',
 		'config_rainforest_min_review_rating',
 		'config_rainforest_max_review_length',
+
+		'config_enable_amazon_specific_modes',
+		'config_brands_in_mmenu',
+		'config_second_level_subcategory_in_categories',
+		'config_display_subcategory_in_all_categories',
+		'config_rainforest_show_only_filled_products_in_catalog',
+
+		'config_no_zeroprice',
+		'config_product_hide_sku',
+		'config_product_replace_sku_with_product_id',
+
+		'config_sort_default',
+		'config_order_default',
+
+		'config_delivery_outstock_enable',
+
+		'config_rainforest_enable_recursive_adding',
+		'config_rainforest_enable_compare_with_similar_parsing',
+		'config_rainforest_enable_related_parsing',
+		'config_rainforest_enable_sponsored_parsing',
+		'config_rainforest_enable_similar_to_consider_parsing',
+		'config_rainforest_enable_view_to_purchase_parsing',
+		'config_rainforest_enable_also_viewed_parsing',
+		'config_rainforest_enable_also_bought_parsing',
+		'config_rainforest_enable_shop_by_look_parsing',
+
+		'config_rainforest_enable_compare_with_similar_adding',
+		'config_rainforest_enable_related_adding',
+		'config_rainforest_enable_sponsored_adding',
+		'config_rainforest_enable_similar_to_consider_adding',
+		'config_rainforest_enable_view_to_purchase_adding',
+		'config_rainforest_enable_also_viewed_adding',
+		'config_rainforest_enable_also_bought_adding',
+		'config_rainforest_enable_shop_by_look_adding'
+
+
 	];
 
 

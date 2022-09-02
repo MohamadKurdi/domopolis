@@ -32,7 +32,7 @@
 
 				<a href="#tab-products"><span style="color:#00ad07;"><i class="fa fa-refresh"></i> Настройки добавления товаров</span></a>
 				<a href="#tab-pricelogic"><span style="color:#D69241;"><i class="fa fa-refresh"></i> Настройки ценообразования</span></a>
-				<a href="#tab-api"><span style="color:#cf4a61;"><i class="fa fa-cogs"></i> Режимы магазина</span></a>					
+				<a href="#tab-store-settings"><span style="color:#cf4a61;"><i class="fa fa-cogs"></i> Режимы магазина</span></a>					
 
 			<div class="clr"></div>
 			<div class="th_style"></div>			
@@ -228,11 +228,95 @@
 							</td>
 						</tr>
 
+
+
+
+
+
+
+
+
 						<tr>
 							<td colspan="3" class="left" style="color:#00ad07;">
 								<i class="fa fa-cogs"></i> <b>Блоки связей товаров</b>
 							</td>
 						</tr>
+
+						<tr>
+							<td class="right">
+								Рекурсивное добавление
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_rainforest_enable_recursive_adding" type="checkbox" class="checkbox" name="config_rainforest_enable_recursive_adding" <? if ($config_rainforest_enable_recursive_adding){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_recursive_adding"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Добавлять ли связанные товары при получении полной информации. Это общая настройка. Если она отключена, то ни один из блоков не будет обработан, но привязки в случае нахождения товара связанного в справочнике будут выполняться.
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Обработка <br /><i>"Сравните с похожими"</i>
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_rainforest_enable_compare_with_similar_parsing" type="checkbox" class="checkbox" name="config_rainforest_enable_compare_with_similar_parsing" <? if ($config_rainforest_enable_compare_with_similar_parsing){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_compare_with_similar_parsing"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Обрабатывать или нет блок "compare_with_similar", сравните с похожими с карты товара на Amazon. Если включено, то для каждого товара из этого блока производится поиск по базе магазина и в случае нахождения выполняется связывание. Если товар не найден, то добавление зависит от настройки <i>Включить добавление "Сравните с похожими"</i>
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								Добавление <br /><i>"Сравните с похожими"</i>
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_rainforest_enable_compare_with_similar_adding" type="checkbox" class="checkbox" name="config_rainforest_enable_compare_with_similar_adding" <? if ($config_rainforest_enable_compare_with_similar_adding){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_compare_with_similar_adding"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если <i>Включить обработку "Сравните с похожими"</i> включена, то эта настройка определяет, добавлять ли новый товар из этого блока в базу магазина, если его в ней нет. Если обработка блока в целом отключена, то эта настройка не имеет значения.
+								</span>
+							</td>
+						</tr>
+
+
+						<tr>
+							<td class="right">
+								Обработка <br /><i>"Сопутствующие товары"</i>
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_rainforest_enable_related_parsing" type="checkbox" class="checkbox" name="config_rainforest_enable_related_parsing" <? if ($config_rainforest_enable_related_parsing){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_related_parsing"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Обрабатывать или нет блок "related", сопутствующие, с карты товара на Amazon. Если включено, то для каждого товара из этого блока производится поиск по базе магазина и в случае нахождения выполняется связывание. Если товар не найден, то добавление зависит от настройки <i>Включить добавление "Сопутствующие товары"</i>
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								Добавление <br /><i>"Сопутствующие товары"</i>
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_rainforest_enable_related_adding" type="checkbox" class="checkbox" name="config_rainforest_enable_related_adding" <? if ($config_rainforest_enable_related_adding){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_related_adding"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если <i>Включить обработку "Сопутствующие товары"</i> включена, то эта настройка определяет, добавлять ли новый товар из этого блока в базу магазина, если его в ней нет. Если обработка блока в целом отключена, то эта настройка не имеет значения.
+								</span>
+							</td>
+						</tr>
+
+
+
+
+
+
+
 
 
 
@@ -308,7 +392,194 @@
 				<div id="tab-pricelogic">
 				</div>
 
-				<div id="tab-api">
+				<div id="tab-store-settings">
+
+					<table class="list">
+						<tr>
+							<td colspan="3" class="left" style="color:#cf4a61;">
+								<i class="fa fa-cogs"></i> <b>Общий режим</b>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Режим работы с Amazon
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_enable_amazon_specific_modes" type="checkbox" class="checkbox" name="config_enable_amazon_specific_modes" <? if ($config_enable_amazon_specific_modes){ ?> checked="checked" <? } ?> value="1" /><label for="config_enable_amazon_specific_modes"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Включает или отключает специфические настройки и логику для магазинов, у которых большая часть контента загружается с Amazon. Для магазинов, которые используют ручное наполнение - это лучше не использовать, поскольку возможны непредвиденные изменения контента в случае выполнения некорректных операций. Включение также разблокирует супер-режимы группового редактирования вариантов, и значений атрибутов. 
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td colspan="3" class="left" style="color:#cf4a61;">
+								<i class="fa fa-cogs"></i> <b>Настройки режимов работы фронта</b>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Отображать список брендов в основном меню сайта
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_brands_in_mmenu" type="checkbox" class="checkbox" name="config_brands_in_mmenu" <? if ($config_brands_in_mmenu){ ?> checked="checked" <? } ?> value="1" /><label for="config_brands_in_mmenu"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Включает или отключает подготовку списка брендов для вывода на фронте в основном меню сайта.
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Второй уровень подкатегорий в категориях
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_second_level_subcategory_in_categories" type="checkbox" class="checkbox" name="config_second_level_subcategory_in_categories" <? if ($config_second_level_subcategory_in_categories){ ?> checked="checked" <? } ?> value="1" /><label for="config_second_level_subcategory_in_categories"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> По-умолчанию на фронте в категориях выполняется отбор только одного уровня подкатегорий. Если включить, то будет отбираться также второй уровень дочерних подкатегорий по дереву от текущей.
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Отображать подкатегории во всех категориях
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_display_subcategory_in_all_categories" type="checkbox" class="checkbox" name="config_display_subcategory_in_all_categories" <? if ($config_display_subcategory_in_all_categories){ ?> checked="checked" <? } ?> value="1" /><label for="config_display_subcategory_in_all_categories"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если включить эту настройку, то подкатегории будут отображаться сверху списка товаров в всех категориях, имеющих дочерние. Иначе отображение включено только для корневых категорий (помеченных L1 в справочнике категорий).
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Отображать только товары с загруженной информацией
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_rainforest_show_only_filled_products_in_catalog" type="checkbox" class="checkbox" name="config_rainforest_show_only_filled_products_in_catalog" <? if ($config_rainforest_show_only_filled_products_in_catalog){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_show_only_filled_products_in_catalog"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Для магазинов, работающих в режиме <i>Режим работы с Amazon</i>. Если <i>Режим работы с Amazon</i> отключен, то эта настройка ни на что не влияет. Разрешает или запрещает отображение товаров, которые уже были загружены первично воркером <i>Парсер новых товаров Amazon</i>, однако еще не загружена полная информация (описания, фото, атрибуты, и прочее) одним из воркеров <i>Парсер данных о товарах Amazon</i>, <i>Парсер данных о товарах Amazon L2</i>
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Отображать только товары с основной ценой
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_no_zeroprice" type="checkbox" class="checkbox" name="config_no_zeroprice" <? if ($config_no_zeroprice){ ?> checked="checked" <? } ?> value="1" /><label for="config_no_zeroprice"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Движок имеет несколько уровней переназначения цен и ценовых политик. Включение этой настройки исключит из показа на фронте товары, которые не имеют заданной основной цены (или цены по-умолчанию, поле price в товаре). В случае работы с РРЦ эту настройку лучше отключать. Если отключено, то производится проверка наличия хотя бы одной из цен переназначений. В любом случае, товары, имеющие все цены нулевыми не будут выведены на фронте. Для магазинов, работающих в <i>Режиме работы с Amazon</i> товары без основной цены - это товары, по которым еще не производилось получение офферов воркером <i>Получение офферов с Amazon</i>
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Прятать артикул в карте товара
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_product_hide_sku" type="checkbox" class="checkbox" name="config_product_hide_sku" <? if ($config_product_hide_sku){ ?> checked="checked" <? } ?> value="1" /><label for="config_product_hide_sku"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Включает или отключает отображение артикула в карте товара на фронте, но не из микроразметки. 
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Подменять SKU/MODEL на код товара
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_product_replace_sku_with_product_id" type="checkbox" class="checkbox" name="config_product_replace_sku_with_product_id" <? if ($config_product_replace_sku_with_product_id){ ?> checked="checked" <? } ?> value="1" /><label for="config_product_replace_sku_with_product_id"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Глобально подменяет на фронте артикула на внутренний код товара (целое число). Пожалуйста, используйте с большой осторожностью. Это заменит SKU везде, и в микроразметке в том числе. При этом поиск будет работать как и в обычном режиме и выдавать результаты так же и по артикулу. Дополнительно можно задать префикс для кода товара в общих настройках.
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Логика сортировки товаров по-умолчанию
+							</td>
+							<td style="width:50px;" class="center">
+								<select name="config_sort_default" style="width:70px;">
+									<?php foreach ($this->registry->get('sorts_available') as $sort_name => $sort_sort) { ?>
+										<?php if ($config_sort_default == $sort_sort) { ?>
+											<option value="<?php echo $sort_sort; ?>" selected="selected"><?php echo $sort_name; ?></option>
+										<?php } else { ?>
+											<option value="<?php echo $sort_sort; ?>"><?php echo $sort_name; ?></option>
+										<?php } ?>
+									<?php } ?>
+								</select>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Выбор сортировки товаров по-умолчанию в категориях, брендах, поиске и прочих листингах. Все возможные сортировки описаны в файле system/config/sorts.json. Важно: это вторичная сортировка, первичной является сортировка по наличию - товары на складе в текущей стране (если их несколько), либо те, которые есть у поставщика - будут отображены в начале листинга.
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Порядок сортировки
+							</td>
+							<td style="width:50px;" class="center">
+								<select name="config_order_default">
+										<?php if ($config_order_default == 'ASC') { ?>
+											<option value="ASC" selected="selected">ASC</option>
+											<option value="DESC">DESC</option>
+										<?php } else { ?>													
+											<option value="ASC">ASC</option>
+											<option value="DESC"  selected="selected">DESC</option>
+										<? } ?>
+									</select>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> DESC - от большего к меньшему (по уменьшению), ASC - от меньшего к большему (по возрастанию)
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Включить отображение информации о сроках
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_delivery_outstock_enable" type="checkbox" class="checkbox" name="config_delivery_outstock_enable" <? if ($config_delivery_outstock_enable){ ?> checked="checked" <? } ?> value="1" /><label for="config_delivery_outstock_enable"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Включает либо отключает вывод информации о сроках доставки на карте товара и в корзине, для товаров не в наличии. Для товаров в наличии на складе в стране сроки будут отображены в любом случае.
+								</span>
+							</td>
+						</tr>
+
+
+					</table>
+
 				</div>
 			</div>			
 
