@@ -229,13 +229,6 @@
 						</tr>
 
 
-
-
-
-
-
-
-
 						<tr>
 							<td colspan="3" class="left" style="color:#00ad07;">
 								<i class="fa fa-cogs"></i> <b>Блоки связей товаров</b>
@@ -539,6 +532,46 @@
 								<i class="fa fa-cogs"></i> <b>Переводчик</b>
 							</td>
 						</tr>
+
+						<tr>
+							<td class="right">
+								Язык Amazon
+							</td>
+							<td>
+								<select name="config_rainforest_source_language">
+									<?php foreach ($languages as $language) { ?>
+										<?php if ($language['code'] == $config_rainforest_source_language) { ?>
+											<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
+										<?php } else { ?>
+											<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
+										<?php } ?>
+									<?php } ?>
+								</select>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Amazon доступен не нескольки языках. Здесь нужно указать код языка, который будет доступен как основной язык контента на Amazon. Он обязательно должен быть создан в магазине и иметь тот же код ISO2, что и в Yandex (или Google) Translator API.
+								</span>
+							</td>
+						</tr>
+
+						<?php foreach ($languages as $language) { ?>
+							<?php if ($language['code'] != $config_rainforest_source_language) { ?>
+								<tr>
+									<td class="right">
+										Включить перевод <?php echo mb_strtoupper($language['code']); ?>
+									</td>
+									<td>
+										<input id="config_rainforest_enable_language_<?php echo $language['code']; ?>" type="checkbox" class="checkbox" name="config_rainforest_enable_language_<?php echo $language['code']; ?>" <? if (${'config_rainforest_enable_language_' . $language['code']}){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_language_<?php echo $language['code']; ?>"></label>
+									</td>
+									<td>
+										<span class="help">
+											<i class="fa fa-info-circle"></i> Включить ли автоматический перевод при добавлении на этот язык. Если нет - поля в табличках описаний будут создаваться, но пустые. Перевод возможно будет сделать позже.
+										</span>
+									</td>
+								</tr>
+							<?php } ?>
+						<?php } ?>
 
 					</table>
 				</div>

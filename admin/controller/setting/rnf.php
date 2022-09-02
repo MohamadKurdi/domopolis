@@ -57,9 +57,9 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_enable_view_to_purchase_adding',
 		'config_rainforest_enable_also_viewed_adding',
 		'config_rainforest_enable_also_bought_adding',
-		'config_rainforest_enable_shop_by_look_adding'
+		'config_rainforest_enable_shop_by_look_adding',
 
-
+		'config_rainforest_source_language'
 	];
 
 
@@ -68,6 +68,10 @@ class ControllerSettingRnf extends Controller {
 
 		$this->load->model('setting/setting');
 		$this->load->model('setting/store');
+		$this->load->model('localisation/language');		
+
+
+		$this->data['languages'] = $this->model_localisation_language->getLanguages();
 		
 		$this->data['heading_title'] = 'Управление фреймворком Rainforest / Amazon';
 		$this->document->setTitle($this->data['heading_title']);
@@ -82,7 +86,11 @@ class ControllerSettingRnf extends Controller {
 			$this->data[$other_setting] = $this->config->get($other_setting);		
 		}
 
-
+		foreach ($this->data['languages'] as $rnf_language){
+			if ($rnf_language['code'] != $this->data['config_rainforest_source_language']){
+				$this->data['config_rainforest_enable_language_' . $rnf_language['code']] = $this->config->get('config_rainforest_enable_language_' . $rnf_language['code']);
+			}
+		}
 
 
 
