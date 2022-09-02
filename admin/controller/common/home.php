@@ -85,6 +85,8 @@
 		public function getRainForestStats(){
 			$result = $this->rainforestAmazon->checkIfPossibleToMakeRequest(true);
 
+
+
 			if ($result['status'] == true){
 				$this->data['success'] 	= true;
 				$this->data['answer'] 	= $result['answer'];
@@ -369,66 +371,58 @@
 			$this->load->model('catalog/category');
 			$this->load->model('setting/setting');
 
-			$format = true;
-			if (!empty($this->request->get['long']) && $this->request->get['long'] == true){
-				$format = false;
-			}
-
-			$this->data['translated_total']					= formatLongNumber($this->model_setting_setting->getTranslatedTotal(), $format);
-			$this->data['translated_total_hour']			= formatLongNumber($this->model_setting_setting->getTranslatedTotalHour(), $format);
-			$this->data['translated_total_today']			= formatLongNumber($this->model_setting_setting->getTranslatedTotalToday(), $format);
-			$this->data['translated_total_yesterday']		= formatLongNumber($this->model_setting_setting->getTranslatedTotalYesterday(), $format);
-			$this->data['translated_total_week']			= formatLongNumber($this->model_setting_setting->getTranslatedTotalWeek(), $format);
-			$this->data['translated_total_month']			= formatLongNumber($this->model_setting_setting->getTranslatedTotalMonth(), $format);
+			$this->data['translated_total']					= formatLongNumber($this->model_setting_setting->getTranslatedTotal());
+			$this->data['translated_total_hour']			= formatLongNumber($this->model_setting_setting->getTranslatedTotalHour());
+			$this->data['translated_total_today']			= formatLongNumber($this->model_setting_setting->getTranslatedTotalToday());
+			$this->data['translated_total_yesterday']		= formatLongNumber($this->model_setting_setting->getTranslatedTotalYesterday());
+			$this->data['translated_total_week']			= formatLongNumber($this->model_setting_setting->getTranslatedTotalWeek());
+			$this->data['translated_total_month']			= formatLongNumber($this->model_setting_setting->getTranslatedTotalMonth());
 
 			$this->data['total_products_double_asin']			= $this->model_catalog_product->getTotalProductsWithDoubleAsin();
 
 			$this->data['total_products_invalid_asin']			= $this->model_catalog_product->getTotalProductsWithInvalidAsin();
 			$this->data['filter_total_products_invalid_asin'] 	= $this->url->link('catalog/product_ext', 'filter_asin=INVALID&token=' . $this->session->data['token'], 'SSL');
 
-			$this->data['total_products'] 					= formatLongNumber($this->model_catalog_product->getTotalProductsSimple(), $format);
-			$this->data['total_products_no_variants']		= formatLongNumber($this->model_catalog_product->getTotalProductsSimpleNoVariants(), $format);
+			$this->data['total_products'] 					= formatLongNumber($this->model_catalog_product->getTotalProductsSimple());
+			$this->data['total_products_no_variants']		= formatLongNumber($this->model_catalog_product->getTotalProductsSimpleNoVariants());
 
 			$this->data['total_product_enabled'] 			= formatLongNumber($this->model_catalog_product->getTotalProducts(['filter_status' => 1]));
 			$this->data['filter_total_products_enabled'] 	= $this->url->link('catalog/product_ext', 'filter_status=1&token=' . $this->session->data['token'], 'SSL');
 
 
-			$this->data['total_product_parsed'] 			= formatLongNumber($this->model_catalog_product->getTotalProductsFilled(), $format);
-			$this->data['total_product_need_to_be_parsed'] 	= formatLongNumber($this->model_catalog_product->getTotalProductsNeedToBeFilled(), $format);
+			$this->data['total_product_parsed'] 			= formatLongNumber($this->model_catalog_product->getTotalProductsFilled());
+			$this->data['total_product_need_to_be_parsed'] 	= formatLongNumber($this->model_catalog_product->getTotalProductsNeedToBeFilled());
 			$this->data['filter_total_product_parsed'] 		= $this->url->link('catalog/product_ext', 'filter_filled_from_amazon=1&token=' . $this->session->data['token'], 'SSL');
 
 			$this->data['total_products_in_tech'] 			= $this->model_catalog_product->getTotalProducts(['filter_category_id' => $this->config->get('config_rainforest_default_technical_category_id')]);
 			$this->data['filter_total_products_in_tech'] 	= $this->url->link('catalog/product_ext', 'filter_category=' . $this->config->get('config_rainforest_default_technical_category_id') . '&token=' . $this->session->data['token'], 'SSL');
 
-			$this->data['total_product_got_offers']				= formatLongNumber($this->model_catalog_product->getTotalProductsGotOffers(), $format);
-			$this->data['total_product_to_get_offers']			= formatLongNumber($this->registry->get('rainforestAmazon')->offersParser->getTotalProductsToGetOffers(), $format);
-			$this->data['total_product_got_offers_today']		= formatLongNumber($this->model_catalog_product->getTotalProductsGotOffersByDate(date('Y-m-d')), $format);
-			$this->data['total_product_got_offers_yesterday']	= formatLongNumber($this->model_catalog_product->getTotalProductsGotOffersByDate(date('Y-m-d', strtotime('-1 day'))), $format);
+			$this->data['total_product_got_offers']				= formatLongNumber($this->model_catalog_product->getTotalProductsGotOffers());
+			$this->data['total_product_to_get_offers']			= formatLongNumber($this->registry->get('rainforestAmazon')->offersParser->getTotalProductsToGetOffers());
+			$this->data['total_product_got_offers_today']		= formatLongNumber($this->model_catalog_product->getTotalProductsGotOffersByDate(date('Y-m-d')));
+			$this->data['total_product_got_offers_yesterday']	= formatLongNumber($this->model_catalog_product->getTotalProductsGotOffersByDate(date('Y-m-d', strtotime('-1 day'))));
 
-			$this->data['total_product_have_offers']			= formatLongNumber($this->model_catalog_product->getTotalProductsHaveOffers(), $format);
+			$this->data['total_product_have_offers']			= formatLongNumber($this->model_catalog_product->getTotalProductsHaveOffers());
 			$this->data['filter_total_product_have_offers'] 	= $this->url->link('catalog/product_ext', 'filter_stock_status=' . $this->config->get('config_stock_status_id') . '&token=' . $this->session->data['token'], 'SSL');
-			$this->data['total_product_have_no_offers']			= formatLongNumber($this->model_catalog_product->getTotalProductsHaveNoOffers(), $format);
+			$this->data['total_product_have_no_offers']			= formatLongNumber($this->model_catalog_product->getTotalProductsHaveNoOffers());
 			$this->data['filter_total_product_have_no_offers'] 	= $this->url->link('catalog/product_ext', 'filter_stock_status=' . $this->config->get('config_rainforest_nooffers_status_id') . '&token=' . $this->session->data['token'], 'SSL');
 
-			$this->data['total_products_added_today'] 			= formatLongNumber($this->model_catalog_product->getTotalProductsAdded(date('Y-m-d')), $format);
+			$this->data['total_products_added_today'] 			= formatLongNumber($this->model_catalog_product->getTotalProductsAdded(date('Y-m-d')));
 			$this->data['filter_total_products_added_today'] 	= $this->url->link('catalog/product_ext', 'filter_date_added=' . date('Y-m-d') . '&token=' . $this->session->data['token'], 'SSL');
 
-			$this->data['total_products_added_yesterday'] 			= formatLongNumber($this->model_catalog_product->getTotalProductsAdded(date('Y-m-d', strtotime('-1 day'))), $format);
+			$this->data['total_products_added_yesterday'] 			= formatLongNumber($this->model_catalog_product->getTotalProductsAdded(date('Y-m-d', strtotime('-1 day'))));
 			$this->data['filter_total_products_added_yesterday'] 	= $this->url->link('catalog/product_ext', 'filter_date_added=' . date('Y-m-d', strtotime('-1 day')) . '&token=' . $this->session->data['token'], 'SSL');
 
-			$this->data['total_products_added_week'] 				= formatLongNumber($this->model_catalog_product->getTotalProductsAdded(['from' => date('Y-m-d', strtotime('-1 week')), 'to' => date('Y-m-d')]), $format);
-			$this->data['total_products_added_month'] 				= formatLongNumber($this->model_catalog_product->getTotalProductsAdded(['from' => date('Y-m-d', strtotime('-1 month')), 'to' => date('Y-m-d')]), $format);
+			$this->data['total_products_added_week'] 				= formatLongNumber($this->model_catalog_product->getTotalProductsAdded(['from' => date('Y-m-d', strtotime('-1 week')), 'to' => date('Y-m-d')]));
+			$this->data['total_products_added_month'] 				= formatLongNumber($this->model_catalog_product->getTotalProductsAdded(['from' => date('Y-m-d', strtotime('-1 month')), 'to' => date('Y-m-d')]));
 
 			$this->data['total_categories'] 						= $this->model_catalog_category->getTotalCategories();
 			$this->data['total_categories_final'] 					= $this->model_catalog_category->getTotalCategoriesAmazonFinal();
 			$this->data['total_categories_enable_load'] 			= $this->model_catalog_category->getTotalCategoriesEnableLoad();
 			$this->data['total_categories_enable_full_load'] 		= $this->model_catalog_category->getTotalCategoriesEnableFullLoad();
 
-			$this->template = 'homestats/productstats.tpl';
-			if (!empty($this->request->get['tpl']) && $this->request->get['tpl'] == 'rnf'){
-				$this->template = 'setting/rnfstats.tpl';				
-			}
 
+			$this->template = 'homestats/productstats.tpl';			
 			$this->response->setOutput($this->render());
 		}
 		

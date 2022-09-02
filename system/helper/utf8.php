@@ -25,11 +25,7 @@ function getAmazonDomainsList(){
 	];
 }
 
-function formatLongNumber($number, $format = true){
-
-	if (!$format){
-		return $number;
-	}
+function formatLongNumber($number){
 
 	if ($number > 1000000000000) {
 		return round($number / 1000000000000, 1) . 'T';
