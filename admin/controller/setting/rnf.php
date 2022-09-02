@@ -14,6 +14,18 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_enable_offersqueue_parser'
 	];
 
+	private $other_settings = [
+		'config_rainforest_category_update_period',
+		'config_rainforest_max_variants',
+		'config_rainforest_skip_variants',
+		'config_rainforest_update_period',
+
+		'config_rainforest_enable_review_adding',
+		'config_rainforest_max_review_per_product',
+		'config_rainforest_min_review_rating',
+		'config_rainforest_max_review_length',
+	];
+
 
 	public function index() {
 		$this->language->load('setting/setting'); 
@@ -21,7 +33,7 @@ class ControllerSettingRnf extends Controller {
 		$this->load->model('setting/setting');
 		$this->load->model('setting/store');
 		
-		$this->data['heading_title'] = 'Управление фреймворком Rainforest';
+		$this->data['heading_title'] = 'Управление фреймворком Rainforest / Amazon';
 		$this->document->setTitle($this->data['heading_title']);
 
 
@@ -30,7 +42,9 @@ class ControllerSettingRnf extends Controller {
 		}		
 
 
-
+		foreach ($this->other_settings as $other_setting){
+			$this->data[$other_setting] = $this->config->get($other_setting);		
+		}
 
 
 
@@ -46,6 +60,25 @@ class ControllerSettingRnf extends Controller {
 			'common/footer'
 		);
 		
+		$this->response->setOutput($this->render());
+
+	}
+
+	public function getRainForestStats(){
+
+		$result = $this->rainforestAmazon->checkIfPossibleToMakeRequest(true);
+
+		if ($result['status'] == true){
+			$this->data['success'] 	= true;
+			$this->data['answer'] 	= $result['answer'];
+		} else {
+			$this->data['success'] 	= false;
+			$this->data['message'] 	= $result['message'];
+			$this->data['answer']  	= $result['answer'];
+		}
+
+		$this->template = 'setting/rnfhdr.tpl';
+
 		$this->response->setOutput($this->render());
 
 	}

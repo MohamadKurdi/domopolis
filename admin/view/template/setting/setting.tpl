@@ -5082,7 +5082,7 @@
 			$('select, textarea, input[type=text], input[type=number]').bind('change', function() {
 				var key  = $(this).attr('name');
 				var elem = $(this);
-				var value = this.value;
+				var value = $(this).val();
 				var store_id = $('input[name=store_id]').val();
 
 				$.ajax({

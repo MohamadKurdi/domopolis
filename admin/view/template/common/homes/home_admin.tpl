@@ -18,7 +18,7 @@
 		<td class="table-admin" style="width:60%;">
 
 			<?php if ($this->config->get('config_amazon_product_stats_enable')) { ?>
-				<div id="amazon_stats" style="width:49%; float:left;" class="amazonstats delayed-load" data-route='common/home/loadProductStats' data-reload="4000">
+				<div id="amazon_stats" style="width:49%; float:left;" class="amazonstats delayed-load" data-route='common/home/loadProductStats' data-reload="10000">
 				</div>
 			<?php } ?>
 
@@ -29,12 +29,12 @@
 			
 			<?php if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_enable_api')) { ?>
 				<div style="clear:both; height:10px;"></div>
-				<div class="latest delayed-load" data-route='common/home/getRainForestStats' data-reload="5000"></div>
+				<div class="latest delayed-load" data-route='common/home/getRainForestStats' data-reload="15000"></div>
 			<?php } ?>
 
 			<?php if ($this->config->get('config_cron_stats_display_enable')) { ?>
 				<div style="clear:both; height:10px;"></div>
-				<div class="latest delayed-load" data-route='common/home/getCronStats' data-reload="4000"></div>
+				<div class="latest delayed-load" data-route='common/home/getCronStats' data-reload="9000"></div>
 			<?php } ?>
 
 			<div style="clear:both; height:10px;"></div>
