@@ -265,7 +265,7 @@
 								</td>
 							<td>
 								<span class="help">
-									<i class="fa fa-info-circle"></i> Обрабатывать или нет блок "compare_with_similar", сравните с похожими с карты товара на Amazon. Если включено, то для каждого товара из этого блока производится поиск по базе магазина и в случае нахождения выполняется связывание. Если товар не найден, то добавление зависит от настройки <i>Включить добавление "Сравните с похожими"</i>
+									<i class="fa fa-info-circle"></i> Обрабатывать или нет блок "compare_with_similar", сравните с похожими с карты товара на Amazon. Если включено, то для каждого товара из этого блока производится поиск по базе магазина и в случае нахождения выполняется связывание. Если товар не найден, то добавление зависит от настройки <i>Добавление "Сравните с похожими"</i>
 								</span>
 							</td>
 						</tr>
@@ -278,7 +278,7 @@
 								</td>
 							<td>
 								<span class="help">
-									<i class="fa fa-info-circle"></i> Если <i>Включить обработку "Сравните с похожими"</i> включена, то эта настройка определяет, добавлять ли новый товар из этого блока в базу магазина, если его в ней нет. Если обработка блока в целом отключена, то эта настройка не имеет значения.
+									<i class="fa fa-info-circle"></i> Если <i>Обработка "Сравните с похожими"</i> включена, то эта настройка определяет, добавлять ли новый товар из этого блока в базу магазина, если его в ней нет. Если обработка блока в целом отключена, то эта настройка не имеет значения.
 								</span>
 							</td>
 						</tr>
@@ -293,7 +293,7 @@
 								</td>
 							<td>
 								<span class="help">
-									<i class="fa fa-info-circle"></i> Обрабатывать или нет блок "related", сопутствующие, с карты товара на Amazon. Если включено, то для каждого товара из этого блока производится поиск по базе магазина и в случае нахождения выполняется связывание. Если товар не найден, то добавление зависит от настройки <i>Включить добавление "Сопутствующие товары"</i>
+									<i class="fa fa-info-circle"></i> Обрабатывать или нет блок "related", сопутствующие, с карты товара на Amazon. Если включено, то для каждого товара из этого блока производится поиск по базе магазина и в случае нахождения выполняется связывание. Если товар не найден, то добавление зависит от настройки <i>Добавление "Сопутствующие товары"</i>
 								</span>
 							</td>
 						</tr>
@@ -306,18 +306,172 @@
 								</td>
 							<td>
 								<span class="help">
-									<i class="fa fa-info-circle"></i> Если <i>Включить обработку "Сопутствующие товары"</i> включена, то эта настройка определяет, добавлять ли новый товар из этого блока в базу магазина, если его в ней нет. Если обработка блока в целом отключена, то эта настройка не имеет значения.
+									<i class="fa fa-info-circle"></i> Если <i>Обработка "Сопутствующие товары"</i> включена, то эта настройка определяет, добавлять ли новый товар из этого блока в базу магазина, если его в ней нет. Если обработка блока в целом отключена, то эта настройка не имеет значения.
 								</span>
 							</td>
 						</tr>
 
+						<tr>
+							<td class="right">
+								Обработка <br /><i>"Товары Спонсоров"</i>
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_rainforest_enable_sponsored_parsing" type="checkbox" class="checkbox" name="config_rainforest_enable_sponsored_parsing" <? if ($config_rainforest_enable_sponsored_parsing){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_sponsored_parsing"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Обрабатывать или нет блок "sponsored", товары спонсоров, с карты товара на Amazon. Если включено, то для каждого товара из этого блока производится поиск по базе магазина и в случае нахождения выполняется связывание. Если товар не найден, то добавление зависит от настройки <i>Добавление "Товары Спонсоров"</i>
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								Добавление <br /><i>"Товары Спонсоров"</i>
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_rainforest_enable_sponsored_adding" type="checkbox" class="checkbox" name="config_rainforest_enable_sponsored_adding" <? if ($config_rainforest_enable_sponsored_adding){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_sponsored_adding"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если <i>Обработка "Товары Спонсоров"</i> включена, то эта настройка определяет, добавлять ли новый товар из этого блока в базу магазина, если его в ней нет. Если обработка блока в целом отключена, то эта настройка не имеет значения.
+								</span>
+							</td>
+						</tr>
 
+						<tr>
+							<td class="right">
+								Обработка <br /><i>"Предложения похожих"</i>
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_rainforest_enable_similar_to_consider_parsing" type="checkbox" class="checkbox" name="config_rainforest_enable_similar_to_consider_parsing" <? if ($config_rainforest_enable_similar_to_consider_parsing){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_similar_to_consider_parsing"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Обрабатывать или нет блок "similar_to_consider", предложения похожих, с карты товара на Amazon. Обычно это то же самое, что и Сравните с похожими. Если включено, то для каждого товара из этого блока производится поиск по базе магазина и в случае нахождения выполняется связывание. Если товар не найден, то добавление зависит от настройки <i>Добавление "Предложения похожих"</i>
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								Добавление <br /><i>"Предложения похожих"</i>
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_rainforest_enable_similar_to_consider_adding" type="checkbox" class="checkbox" name="config_rainforest_enable_similar_to_consider_adding" <? if ($config_rainforest_enable_similar_to_consider_adding){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_similar_to_consider_adding"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если <i>Обработка "Предложения похожих"</i> включена, то эта настройка определяет, добавлять ли новый товар из этого блока в базу магазина, если его в ней нет. Если обработка блока в целом отключена, то эта настройка не имеет значения.
+								</span>
+							</td>
+						</tr>
 
+						<tr>
+							<td class="right">
+								Обработка <br /><i>"Смотрели до покупки"</i>
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_rainforest_enable_view_to_purchase_parsing" type="checkbox" class="checkbox" name="config_rainforest_enable_view_to_purchase_parsing" <? if ($config_rainforest_enable_view_to_purchase_parsing){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_view_to_purchase_parsing"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Обрабатывать или нет блок "view_to_purchase", товары, которые смотрели до того, как купить конкретный, с карты товара на Amazon.Если включено, то для каждого товара из этого блока производится поиск по базе магазина и в случае нахождения выполняется связывание. Если товар не найден, то добавление зависит от настройки <i>Добавление "Смотрели до покупки"</i>
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								Добавление <br /><i>"Смотрели до покупки"</i>
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_rainforest_enable_view_to_purchase_adding" type="checkbox" class="checkbox" name="config_rainforest_enable_view_to_purchase_adding" <? if ($config_rainforest_enable_view_to_purchase_adding){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_view_to_purchase_adding"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если <i>Обработка "Смотрели до покупки"</i> включена, то эта настройка определяет, добавлять ли новый товар из этого блока в базу магазина, если его в ней нет. Если обработка блока в целом отключена, то эта настройка не имеет значения.
+								</span>
+							</td>
+						</tr>
 
+						<tr>
+							<td class="right">
+								Обработка <br /><i>"Также смотрели"</i>
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_rainforest_enable_also_viewed_parsing" type="checkbox" class="checkbox" name="config_rainforest_enable_also_viewed_parsing" <? if ($config_rainforest_enable_also_viewed_parsing){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_also_viewed_parsing"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Обрабатывать или нет блок "also_viewed", также просмотренные товары, с карты товара на Amazon.Если включено, то для каждого товара из этого блока производится поиск по базе магазина и в случае нахождения выполняется связывание. Если товар не найден, то добавление зависит от настройки <i>Добавление "Также смотрели"</i>
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								Добавление <br /><i>"Также смотрели"</i>
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_rainforest_enable_also_viewed_adding" type="checkbox" class="checkbox" name="config_rainforest_enable_also_viewed_adding" <? if ($config_rainforest_enable_also_viewed_adding){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_also_viewed_adding"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если <i>Обработка "Также смотрели"</i> включена, то эта настройка определяет, добавлять ли новый товар из этого блока в базу магазина, если его в ней нет. Если обработка блока в целом отключена, то эта настройка не имеет значения.
+								</span>
+							</td>
+						</tr>
 
+						<tr>
+							<td class="right">
+								Обработка <br /><i>"Также купили"</i>
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_rainforest_enable_also_bought_parsing" type="checkbox" class="checkbox" name="config_rainforest_enable_also_bought_parsing" <? if ($config_rainforest_enable_also_bought_parsing){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_also_bought_parsing"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Обрабатывать или нет блок "also_bought", товары которые купили покупатели, купившие текущий товар, с карты товара на Amazon.Если включено, то для каждого товара из этого блока производится поиск по базе магазина и в случае нахождения выполняется связывание. Если товар не найден, то добавление зависит от настройки <i>Добавление "Также купили"</i>
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								Добавление <br /><i>"Также купили"</i>
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_rainforest_enable_also_bought_adding" type="checkbox" class="checkbox" name="config_rainforest_enable_also_bought_adding" <? if ($config_rainforest_enable_also_bought_adding){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_also_bought_adding"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если <i>Обработка "Также купили"</i> включена, то эта настройка определяет, добавлять ли новый товар из этого блока в базу магазина, если его в ней нет. Если обработка блока в целом отключена, то эта настройка не имеет значения.
+								</span>
+							</td>
+						</tr>
 
-
-
+						<tr>
+							<td class="right">
+								Обработка <br /><i>"Шоппинг по виду"</i>
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_rainforest_enable_shop_by_look_parsing" type="checkbox" class="checkbox" name="config_rainforest_enable_shop_by_look_parsing" <? if ($config_rainforest_enable_shop_by_look_parsing){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_shop_by_look_parsing"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Обрабатывать или нет блок "shop_by_look", блок с товарами, которые подходят по стилю или цвету, с карты товара на Amazon.Если включено, то для каждого товара из этого блока производится поиск по базе магазина и в случае нахождения выполняется связывание. Если товар не найден, то добавление зависит от настройки <i>Добавление "Шоппинг по виду"</i>
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								Добавление <br /><i>"Шоппинг по виду"</i>
+							</td>
+							<td style="width:50px;" class="center">
+									<input id="config_rainforest_enable_shop_by_look_adding" type="checkbox" class="checkbox" name="config_rainforest_enable_shop_by_look_adding" <? if ($config_rainforest_enable_shop_by_look_adding){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_shop_by_look_adding"></label>
+								</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если <i>Обработка "Шоппинг по виду"</i> включена, то эта настройка определяет, добавлять ли новый товар из этого блока в базу магазина, если его в ней нет. Если обработка блока в целом отключена, то эта настройка не имеет значения.
+								</span>
+							</td>
+						</tr>
 
 
 						<tr>
