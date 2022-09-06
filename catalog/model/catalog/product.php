@@ -928,16 +928,10 @@
 		}
 		
 		
-		public function getProductsAverageRating($data = array())
-		{
-			
-			
+		public function getProductsAverageRating($data = []){			
 		}
 		
-		public function getProductsAverageRatingCount($data = array())
-		{
-			
-			
+		public function getProductsAverageRatingCount($data = []){
 		}
 		
 		public function cleanupCategoryWithCurrentStockData($category_id){
@@ -945,7 +939,7 @@
 		}
 		
 		
-		public function getProducts($data = array()) {
+		public function getProducts($data = []) {
 			
 			if (!isset($data['no_child'])) {
 				$data['no_child'] = false;
@@ -1331,9 +1325,60 @@
 			
 			return $query->row;
 		}
+
+		public function getFeaturedReviews($data = []){
+
+			$sql = "SELECT 
+			r.product_id 
+			FROM review r 
+			JOIN product p ON r.product_id = p.product_id 	
+			LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id)
+			WHERE r.status = '1' 
+			AND p.status = '1' 
+			AND p.date_available <= NOW() 
+			AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ";
+
+			if (!empty($data['manufacturer_id'])){
+				$sql .= " AND p.manufacturer_id = '" . (int)$data['manufacturer_id'] . "'";
+			}
+
+			if ($this->config->get('config_no_zeroprice')){
+				$sql .= " AND (p.price > 0 OR p.price_national > 0)";
+			} else {
+				$sql .= " AND (";
+				$sql .= " p.price > 0 OR p.price_national > 0";
+				$sql .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+				$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+				$sql .= ")";
+			}
+
+			if (!empty($data['filter_length'])){
+				$sql .= " AND LENGTH(r.text) >= " . (int)$data['filter_length'];
+			}
+
+			if (!empty($data['category_id'])){
+				$sql .= " AND (r.product_id IN (SELECT product_id FROM product_to_category WHERE category_id = '" . (int)$data['category_id'] . "') 
+				OR r.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE parent_id = '" . (int)$data['category_id'] . "')))";
+			}
+
+			$sql .= " ORDER BY r.date_added DESC LIMIT " . (int)$data['limit'] . "";
+
+			$query = $this->db->query($sql);
+
+			$product_data = [];
+			foreach ($query->rows as $row){
+				$product_info = $this->model_catalog_product->getProduct($row['product_id']);
+
+				if ($product_info) {					
+					$product_data[$row['product_id']] = $product_info;
+				}				
+			}
+
+			return $product_data;
+
+		}
 		
-		public function getProductSpecials($data = array())
-		{
+		public function getProductSpecials($data = []){
 			
 			if (!isset($data['no_child'])) {
 				$data['no_child'] = false;
@@ -1986,7 +2031,7 @@
 		*/
 		public  function  getProductImageTitleAlt($product_id)
 		{
-			$data = array();
+			$data = [];
 			$query =$this->db->query("SELECT alt_image,title_image FROM product_description WHERE product_id = '". (int)$product_id ."'  ");
 			//return $query->rows;
 			
@@ -2312,7 +2357,7 @@
 			}
 		}
 		
-		public function getTotalProducts($data = array())
+		public function getTotalProducts($data = [])
 		{
 			
 			if (!isset($data['no_child'])) {
@@ -2713,7 +2758,7 @@
 			return $result;
 		}
 		
-		public function getAjaxcartProducts($data = array())
+		public function getAjaxcartProducts($data = [])
 		{
 			$type_pr = (int)$this->config->get('config_type_ap');
 			
@@ -2889,7 +2934,7 @@
 			}
 		}
 		
-		public function getTotalProductSpecials($data = array())
+		public function getTotalProductSpecials($data = [])
 		{
 			
 			if (!isset($data['no_child'])) {

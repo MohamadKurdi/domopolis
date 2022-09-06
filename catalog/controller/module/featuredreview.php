@@ -94,55 +94,32 @@ class ControllerModulefeaturedreview extends Controller {
 				$setting['limit'] = 5;
 			}
 
-			$products = array();
-
-			$sql = "SELECT 
-			r.product_id 
-			FROM review r 
-			JOIN product p ON r.product_id = p.product_id 	
-			LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id)
-			WHERE r.status = 1 AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ";
-
-			if ($manufacturer_id){
-				$sql .= " AND p.manufacturer_id = '" . (int)$this->request->get['manufacturer_id'] . "'";
+			if (empty($setting['length'])) {
+				$setting['length'] = 50;
 			}
 
-			if ($category_id){
-				$sql .= " AND (r.product_id IN (SELECT product_id FROM product_to_category WHERE category_id = '" . (int)$category_id . "') 
-				OR r.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE parent_id = '" . (int)$category_id . "')))";
-			}
-
-			$sql .= " ORDER BY r.date_added DESC LIMIT " . (int)$setting['limit'] . "";
-
-			$query = $this->db->query($sql);
-
-			foreach ($query->rows as $row){														
-				$products[] = $row['product_id'];
-			}
+			$filter_data = [
+				'manufacturer_id' 	=> $manufacturer_id,
+				'category_id'		=> $category_id,
+				'limit'				=> $setting['limit'],
+				'filter_length'		=> $setting['length']
+			];
 
 			if (empty($setting['limitrev'])) {
 				$setting['limitrev'] = 3;
 			}
 
-			$products = array_slice($products, 0, (int)$setting['limit']);
+			$results = $this->model_catalog_product->getFeaturedReviews($filter_data);
+			$results = array_slice($results, 0, (int)$setting['limit']);
 
 			$microdata_reviews = array();
 			$microdata_rating_score = array();
-
-			$results = array();
-			foreach ($products as $product_id) {
-				$product_info = $this->model_catalog_product->getProduct($product_id);
-
-				if ($product_info) {					
-					$results[$product_id] = $product_info;
-				}
-			}
 
 			$this->data['products'] = $this->model_catalog_product->prepareProductToArray($results);
 
 			foreach ($this->data['products'] as &$product){
 
-				$reviews = $this->model_catalog_review->getReviewsByProductId($product['product_id']);
+				$reviews = $this->model_catalog_review->getReviewsByProductId($product['product_id'], 0, $setting['limitrev'], $setting['length']);
 				$reviews = array_slice($reviews, 0, (int)$setting['limitrev']);
 
 				foreach ($reviews as &$review){

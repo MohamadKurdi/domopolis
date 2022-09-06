@@ -201,16 +201,16 @@
 		}
 		
 		
-		public function getReviewsByProductId($product_id, $start = 0, $limit = 20) {
-			if ($start < 0) {
+		public function getReviewsByProductId($product_id, $start = 0, $limit = 20, $filter_length = false) {
+			if ($start <= 0) {
 				$start = 0;
 			}
 			
 			if ($limit < 1) {
 				$limit = 20;
 			}
-			
-			$query = $this->db->query("SELECT 
+
+			$sql = "SELECT 
 			r.review_id, 
 			r.answer, 
 			r.html_status, 
@@ -233,14 +233,23 @@
 			FROM review r 
 			LEFT JOIN product p ON (r.product_id = p.product_id)
 			LEFT JOIN review_description rd ON (r.review_id = rd.review_id) 
-			LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE p.product_id = '" . (int)$product_id . "' AND p.date_available <= NOW() AND p.status = '1' AND r.status = '1' 
-			AND rd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			LEFT JOIN product_description pd ON (p.product_id = pd.product_id) 
+			WHERE p.product_id = '" . (int)$product_id . "' AND p.date_available <= NOW() 
+			AND p.status = '1' 
+			AND r.status = '1'";
+
+			if ($filter_length){
+				$sql .= " AND LENGTH(r.text) >= " . (int)$filter_length;
+			}
+
+			$sql .= " AND rd.language_id = '" . (int)$this->config->get('config_language_id') . "'
 			AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
-			ORDER BY r.date_added DESC LIMIT " . (int)$start . "," . (int)$limit);
+			ORDER BY r.date_added DESC LIMIT " . (int)$start . "," . (int)$limit;
+			
+			$query = $this->db->query($sql);
 			
 			
-			foreach ($query->rows as &$row){
-				
+			foreach ($query->rows as &$row){				
 				foreach ($this->fields as $field){
 					if (!empty(trim($row[$field . '_overload']))){
 						$row[$field] = $row[$field . '_overload'];
