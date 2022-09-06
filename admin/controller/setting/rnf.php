@@ -62,16 +62,41 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_source_language'
 	];
 
+	private $pricing_settings = [
+		'config_rainforest_nooffers_action',
+		'config_rainforest_enable_pricing',
+		'config_rainforest_enable_offers_only_for_filled',
+		'config_rainforest_enable_offers_after_order',
+
+
+		'config_rainforest_nooffers_status_id',
+		'config_rainforest_delete_no_offers',
+		'config_rainforest_delete_no_offers_counter',
+		'config_rainforest_nooffers_quantity',
+		'config_rainforest_pass_offers_for_ordered',
+		'config_rainforest_pass_offers_for_ordered_days',
+		'config_rainforest_enable_offers_for_stock',
+		'config_rainforest_supplierminrating',
+		'config_rainforest_supplierminrating_inner',
+
+		'config_rainforest_main_formula',
+		'config_rainforest_default_store_id'
+	];
 
 	public function index() {
 		$this->language->load('setting/setting'); 
 
 		$this->load->model('setting/setting');
 		$this->load->model('setting/store');
-		$this->load->model('localisation/language');		
+		$this->load->model('localisation/language');
+		$this->load->model('localisation/order_status');
+		$this->load->model('localisation/stock_status');
+		$this->load->model('setting/store');			
 
-
-		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+		$this->data['languages'] 		= $this->model_localisation_language->getLanguages();
+		$this->data['order_statuses'] 	= $this->model_localisation_order_status->getOrderStatuses();	
+		$this->data['stock_statuses'] 	= $this->model_localisation_stock_status->getStockStatuses();
+		$this->data['stores'] 			= $this->model_setting_store->getStores();
 		
 		$this->data['heading_title'] = 'Управление фреймворком Rainforest / Amazon';
 		$this->document->setTitle($this->data['heading_title']);
@@ -81,10 +106,9 @@ class ControllerSettingRnf extends Controller {
 			$this->data[$cron_setting] = $this->config->get($cron_setting);		
 		}		
 
-
 		foreach ($this->other_settings as $other_setting){
 			$this->data[$other_setting] = $this->config->get($other_setting);		
-		}
+		}		
 
 		foreach ($this->data['languages'] as $rnf_language){
 			if ($rnf_language['code'] != $this->data['config_rainforest_source_language']){
@@ -92,9 +116,25 @@ class ControllerSettingRnf extends Controller {
 			}
 		}
 
+		foreach ($this->pricing_settings as $pricing_setting){
+			$this->data[$pricing_setting] = $this->config->get($pricing_setting);		
+		}
 
+		foreach ($this->data['stores']  as $store){
+			if (isset($this->request->post['config_rainforest_kg_price_' . $store['store_id']])) {
+				$this->data['config_rainforest_kg_price_' . $store['store_id']] = $this->request->post['config_rainforest_kg_price_' . $store['store_id']]; 
+			} else {
+				$this->data['config_rainforest_kg_price_' . $store['store_id']] = $this->config->get('config_rainforest_kg_price_' . $store['store_id']);
+			}
+		}
 
-
+		foreach ($this->data['stores']  as $store){
+			if (isset($this->request->post['config_rainforest_default_multiplier_' . $store['store_id']])) {
+				$this->data['config_rainforest_default_multiplier_' . $store['store_id']] = $this->request->post['config_rainforest_default_multiplier_' . $store['store_id']]; 
+			} else {
+				$this->data['config_rainforest_default_multiplier_' . $store['store_id']] = $this->config->get('config_rainforest_default_multiplier_' . $store['store_id']);
+			}
+		}		
 
 		$this->data['token'] = $this->session->data['token'];
 
@@ -106,6 +146,59 @@ class ControllerSettingRnf extends Controller {
 		
 		$this->response->setOutput($this->render());
 
+	}
+
+	public function calculate($mainFormula = '', $weightCoefficient = 0, $defaultMultiplier = 0){
+		$this->load->model('catalog/product');		
+
+		if (empty($mainFormula)){
+			$mainFormula 		= $this->request->post['main_formula'];
+		}
+
+		if (empty($weightCoefficient)){
+			$weightCoefficient 	= $this->request->post['weight_coefficient'];
+		}
+
+		if (empty($defaultMultiplier)){
+			$defaultMultiplier	= $this->request->post['default_multiplier'];
+		}
+
+		$zones 		= [0, 20, 100, 1000, 1000000];
+		$products 	= [];
+
+		for ( $i=0; $i<=(count($zones)-1); $i++){
+
+			if (!empty($zones[$i+1])){
+
+				$sql = "SELECT DISTINCT(p.product_id), p.*, pd.name, p2c.category_id as main_category_id FROM product p
+						LEFT JOIN product_description pd ON (p.product_id = pd.product_id AND language_id = '" . (int)$this->config->get('config_language_id') . "')
+						LEFT JOIN product_to_category p2c ON (p2c.product_id = p.product_id AND main_category = 1)
+						WHERE p.amazon_best_price > '0' 
+						AND p.amazon_best_price > '" . (int)$zones[$i] . "' 
+						AND p.amazon_best_price <= '" . (int)$zones[$i+1] . "' 
+						AND p.amzn_no_offers = 0
+						AND p.asin <> ''
+						AND p.asin <> 'INVALID'
+						AND p.status = 1 						
+						ORDER BY p.amazon_best_price ASC
+						LIMIT 3";
+
+
+
+				$query = $this->db->query($sql);
+
+				$products['zone_' . $zones[$i] . '_' . $zones[$i+1]] = [];
+				foreach ($query->rows as $row){
+					$products['zone_' . $zones[$i] . '_' . $zones[$i+1]][] = $row;
+				}
+			}
+		}
+
+		foreach ($products as $zone => &$product){			
+			$product['counted_weight'] = $this->rainforestAmazon->offersParser->PriceLogic->getProductWeight($product);
+		}
+
+		$this->response->setOutput(json_encode($products));
 	}
 
 	public function getRainForestStats(){

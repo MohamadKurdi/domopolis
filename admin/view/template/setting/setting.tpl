@@ -4466,8 +4466,8 @@
 										</div>
 										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Получать офферы сразу после заказа</span></p>
-											<select name="config_rainforest_disable_offers_for_stock">
-												<?php if ($config_rainforest_disable_offers_for_stock) { ?>
+											<select name="config_rainforest_enable_offers_after_order">
+												<?php if ($config_rainforest_enable_offers_after_order) { ?>
 													<option value="1" selected="selected">Включить</option>
 													<option value="0">Отключить</option>
 												<?php } else { ?>													
@@ -4483,7 +4483,6 @@
 								<tr>									
 									<?php foreach ($stores as $store) { ?>
 										<td width="<?php echo (int)(100/count($stores))?>%">
-
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-eur"></i> Стоимость логистики 1 кг: <?php echo $store['name']; ?></span></p>
 											<input type="number" step="0.1" name="config_rainforest_kg_price_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_kg_price_' . $store['store_id']}; ?>" style="width:200px;" />
 
@@ -4498,7 +4497,6 @@
 								<tr>									
 									<?php foreach ($stores as $store) { ?>
 										<td width="<?php echo (int)(100/count($stores))?>%">
-
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-eur"></i> Умножать если нет веса: <?php echo $store['name']; ?></span></p>
 											<input type="number" step="0.1" name="config_rainforest_default_multiplier_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_default_multiplier_' . $store['store_id']}; ?>" style="width:200px;" />
 
