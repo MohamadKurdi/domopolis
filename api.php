@@ -328,23 +328,27 @@ $registry->set('response', $response);
 
 
     //Остальные библиотеки
-$registry->set('document', new Document());
-$registry->set('emailBlackList', new hobotix\EmailBlackList($registry));
-$registry->set('pricevaAdaptor', new hobotix\PricevaAdaptor($registry));
-$registry->set('elasticSearch', new ElasticSearch($registry));
-$registry->set('mAlert', new mAlert($registry));
-$registry->set('smsQueue', new smsQueue($registry));
-$registry->set('shortAlias', new shortAlias($registry));
-$registry->set('Bitrix24', new Bitrix24($registry));
-$registry->set('customer', new Customer($registry));
-$registry->set('affiliate', new Affiliate($registry));
-$registry->set('currency', new Currency($registry));
-$registry->set('tax', new Tax($registry));
-$registry->set('weight', new Weight($registry));
-$registry->set('length', new Length($registry));
-$registry->set('cart', new Cart($registry));
-$registry->set('user', new User($registry));
-$registry->set('openbay', new Openbay($registry));
+$registry->set('document',          new Document());                
+$registry->set('emailBlackList',    new hobotix\EmailBlackList($registry));
+$registry->set('elasticSearch',     new ElasticSearch($registry));      
+$registry->set('mAlert',            new mAlert($registry));
+$registry->set('smsQueue',          new smsQueue($registry));   
+$registry->set('shortAlias',        new shortAlias($registry)); 
+$registry->set('Bitrix24',          new Bitrix24($registry));
+$registry->set('customer',          new Customer($registry));
+$registry->set('affiliate',         new Affiliate($registry));
+$registry->set('currency',          new Currency($registry));
+$registry->set('tax',               new Tax($registry));
+$registry->set('weight',            new Weight($registry));
+$registry->set('length',            new Length($registry));
+$registry->set('cart',              new Cart($registry));
+$registry->set('user',              new User($registry));
+$registry->set('openbay',           new Openbay($registry));
+$registry->set('encryption',        new Encryption($registry->get('config')->get('config_encryption')));    
+$registry->set('yandexTranslator',  new hobotix\YandexTranslator($registry));
+$registry->set('rainforestAmazon',  new hobotix\RainforestAmazon($registry));
+$registry->set('pricevaAdaptor',    new hobotix\PricevaAdaptor($registry));
+$registry->set('CourierServices',   new CourierServices());
 $registry->set('encryption', new Encryption($registry->get('config')->get('config_encryption')));
 
 
