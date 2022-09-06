@@ -121,11 +121,10 @@ class ControllerModulefeaturedreview extends Controller {
 
 				$reviews = $this->model_catalog_review->getReviewsByProductId($product['product_id'], 0, $setting['limitrev'], $setting['length']);
 				$reviews = array_slice($reviews, 0, (int)$setting['limitrev']);
-
 				foreach ($reviews as &$review){
-					$review['date_added'] = date('d.m.Y', strtotime($review['date_added']));
-					$microdata_reviews[] = $review;
-					$microdata_rating_score[] = $review['rating'];
+					$review['date_added'] 		= date('d.m.Y', strtotime($review['date_added']));
+					$microdata_reviews[] 		= $review;
+					$microdata_rating_score[] 	= $review['rating'];
 				}
 
 				$product['reviews2'] = $reviews;
