@@ -254,11 +254,17 @@ class PriceLogic
 	}
 
 	//Это прямо самая важная функция)))
-	public function mainFormula($amazonBestPrice, $productWeight, $weightCoefficient, $defaultMultiplier){
+	public function mainFormula($amazonBestPrice, $productWeight, $weightCoefficient, $defaultMultiplier, $overloadMainFormula = false){
+
+		if ($overloadMainFormula){
+			$mainFormula = $overloadMainFormula;
+		} else {
+			$mainFormula = $this->config->get('config_rainforest_main_formula');
+		}
 
 		if ($productWeight){
 
-			$mainFormula = str_replace(['PRICE','WEIGHT','KG_LOGISTIC','PLUS', 'MULTIPLY', 'DIVIDE'], [$amazonBestPrice, $productWeight, $weightCoefficient, '+', '*', '/'], $this->config->get('config_rainforest_main_formula'));
+			$mainFormula = str_replace(['PRICE','WEIGHT','KG_LOGISTIC','PLUS', 'MULTIPLY', 'DIVIDE'], [$amazonBestPrice, $productWeight, $weightCoefficient, '+', '*', '/'], $mainFormula);
 			$resultPrice = eval('return ' . $mainFormula . ';');
 
 		} else {
