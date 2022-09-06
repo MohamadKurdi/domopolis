@@ -83,6 +83,9 @@
 /system/cache_mfp
 /system/config
 /system/config/*
+!/system/config/api.json
+!/system/config/routes.json
+
 /system/csvprice_pro
 /system/logs
 /system/temp

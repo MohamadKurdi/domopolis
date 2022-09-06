@@ -45,5 +45,6 @@
 	"api/info1c/editOrderFields":						"api/info1c/editOrderFields",
 	"api/info1c/transactionSyncGet":					"api/info1c/transactionSyncGet",
 	"api/info1c/transactionSyncSet":					"api/info1c/transactionSyncSet",
-	"api/info1c/productPurchaseSet":					"api/info1c/productPurchaseSet"
+	"api/info1c/productPurchaseSet":					"api/info1c/productPurchaseSet",
+	"api/rainforest/amazonPriceFormulaTest":			"setting/rnf/calculate"
 }
