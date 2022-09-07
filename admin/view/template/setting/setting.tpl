@@ -2825,8 +2825,8 @@
 										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Уведомлять клиента о смене статуса</span></p>
 
-											<select name="entry_sms_send_new_order_status">
-												<?php if ($entry_sms_send_new_order_status) { ?>
+											<select name="config_sms_send_new_order_status">
+												<?php if ($config_sms_send_new_order_status) { ?>
 													<option value="1" selected="selected">Включить</option>
 													<option value="0">Отключить</option>
 												<?php } else { ?>													
@@ -2854,8 +2854,7 @@
 											<b>{STATUS}</b> - новый статус заказа<br />
 											<b>{PHONE}</b> - телефон клиента<br />
 											<b>{FIRSTNAME}</b> - имя клиента<br />
-											<b>{LASTNAME}</b> - фамилия клиента<br />
-											<b>{PRODUCTS}</b> - список товаров
+											<b>{LASTNAME}</b> - фамилия клиента											
 										</span>
 									</td>
 								</tr>	

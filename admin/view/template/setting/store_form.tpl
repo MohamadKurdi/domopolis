@@ -13,7 +13,7 @@
 	<?php } ?>
 	<div class="box">
 		<div class="heading">
-			<h1><img src="view/image/setting.png" alt="" /> <?php echo $heading_title; ?> / <?php echo $config_name; ?></h1>
+			<h1><?php echo $heading_title; ?> / <?php echo $config_name; ?></h1>
 			<div class="buttons"><a onclick="$('#form').submit();" class="button"><?php echo $button_save; ?></a><a href="<?php echo $cancel; ?>" class="button"><?php echo $button_cancel; ?></a></div>
 		</div>
 		<div class="content">
@@ -27,7 +27,8 @@
 				<a href="#tab-app"><i class="fa fa-mobile"></i> Приложение</a>
 				<a href="#tab-local"><i class="fa fa-bars"></i> <?php echo $tab_local; ?></a>
 				<a href="#tab-option"><i class="fa fa-cogs"></i> <?php echo $tab_option; ?></a>
-				<a href="#tab-image"><i class="fa fa-cogs"></i> <?php echo $tab_image; ?></a>			
+				<a href="#tab-image"><i class="fa fa-cogs"></i> <?php echo $tab_image; ?></a>
+				<a href="#tab-sms"><i class="fa fa-mobile"></i> SMS</a>			
 				<a href="#tab-server"><i class="fa fa-cogs"></i> <?php echo $tab_server; ?></a>
 				<a href="#tab-telephony"><i class="fa fa-phone"></i> АТС</a>
 				<a href="#tab-google-ya-fb-vk"><i class="fa fa-google"></i> <span style="color:#57AC79;">Google</span>, <span style="color:red;">Ya</span>, <span style="color:#7F00FF;">FB</span>, <span style="color:#3F6AD8;">VK</span></a>
@@ -1084,7 +1085,125 @@
 												<?php } ?></td>
 										</tr>
 									</table>
-								</div>								
+								</div>		
+
+								<div id="tab-sms">
+							
+							<h2>Уведомления клиента</h2>
+							<table class="form">
+								<tr>									
+									<td style="width:33%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Уведомлять клиента о заказе</span></p>
+
+											<select name="config_sms_send_new_order">
+												<?php if ($config_sms_send_new_order) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Уведомлять клиента о смене статуса</span></p>
+
+											<select name="config_sms_send_new_order_status">
+												<?php if ($config_sms_send_new_order_status) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+									</td>
+
+
+									<td style="width:25%" class="left">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Текст SMS о новом заказе</span></p>
+										<textarea name="config_sms_new_order_message" cols="40" rows="5"><?php echo $config_sms_new_order_message; ?></textarea>
+									</td>
+
+									<td style="width:33%" class="left">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Шаблон нового</span></p>
+										<span class="help">											
+											<b>{SNAME}</b> - название магазина<br />
+											<b>{ID}</b> - номер заказа<br />
+											<b>{DATE}</b> - дата заказа<br />
+											<b>{TIME}</b> - время заказа<br />
+											<b>{SUM}</b> - сумма заказа<br />
+											<b>{STATUS}</b> - новый статус заказа<br />
+											<b>{PHONE}</b> - телефон клиента<br />
+											<b>{FIRSTNAME}</b> - имя клиента<br />
+											<b>{LASTNAME}</b> - фамилия клиента
+										</span>
+									</td>
+								</tr>	
+								</table>
+
+								<table class="list">
+									<?php foreach ($order_statuses as $order_status) { ?>
+										<?php $status_message = '';
+										if (isset($config_sms_new_order_status_message[$order_status['order_status_id']])) {
+											$status_message = $config_sms_new_order_status_message[$order_status['order_status_id']];
+										} ?>
+										<tr>
+											<td style="width:200px;">
+												<span class="status_color" style="text-align: left; background: #<?php echo !empty($order_status['status_bg_color']) ? $order_status['status_bg_color'] : ''; ?>; color: #<?php echo !empty($order_status['status_txt_color']) ? $order_status['status_txt_color'] : ''; ?>;">
+
+													<?php echo $order_status['name']; ?>
+
+												</span>
+											</td>
+											<td style="width:50px" class="center">
+												<input class="checkbox" type="checkbox" name="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]" id="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]" <?php if (isset($status_message['enabled']) && $status_message['enabled']) { echo ' checked="checked"'; }?>/>
+
+												<label for="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]"></label>
+
+											</td>
+											<td style="padding:5px;">
+												<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][message]" value="<?php echo isset($status_message['message']) ? $status_message['message'] : ""; ?>" />
+											</td>
+										</tr>										
+									<?php } ?>
+									<tr>
+										<td style="width:200px;">
+											<span class="status_color" style="text-align: left; background: #43B02A; color: #FFF; ?>;">
+
+												Трекинг отправки со склада
+
+											</span>
+										</td>
+										<td style="width:50px" class="center">
+											<input class="checkbox" type="checkbox" name="config_sms_tracker_leave_main_warehouse_enabled" id="config_sms_tracker_leave_main_warehouse_enabled"<?php if ($config_sms_tracker_leave_main_warehouse_enabled) { echo ' checked="checked"'; }?>/><label for="config_sms_tracker_leave_main_warehouse_enabled"></label>
+										</td>
+										<td style="padding:5px;">
+											<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_tracker_leave_main_warehouse" value="<?php echo $config_sms_tracker_leave_main_warehouse; ?>" />
+										</td>
+									</tr>
+
+									<tr>
+										<td style="width:200px;">
+											<span class="status_color" style="text-align: left; background: #000; color: #FFF; ?>;">
+												Успешная оплата
+											</span>
+										</td>
+										<td style="width:50px" class="center">
+											<input class="checkbox" type="checkbox" name="config_sms_payment_recieved_enabled" id="config_sms_payment_recieved_enabled"<?php if ($config_sms_payment_recieved_enabled) { echo ' checked="checked"'; }?>/><label for="config_sms_payment_recieved_enabled"></label>
+										</td>
+										<td style="padding:5px;">
+											<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_payment_recieved" value="<?php echo $config_sms_payment_recieved; ?>" />
+										</td>
+									</tr>
+
+								</table>
+						</div>
+
+
 								<div id="tab-server">
 									<table class="form">
 										<tr>
@@ -1096,31 +1215,31 @@
 										</tr>
 										<tr>
 											<td><?php echo $entry_secure; ?></td>
-											<td><?php if ($config_secure) { ?>
-												<input type="radio" name="config_secure" value="1" checked="checked" />
-												<?php echo $text_yes; ?>
-												<input type="radio" name="config_secure" value="0" />
-												<?php echo $text_no; ?>
-												<?php } else { ?>
-												<input type="radio" name="config_secure" value="1" />
-												<?php echo $text_yes; ?>
-												<input type="radio" name="config_secure" value="0" checked="checked" />
-												<?php echo $text_no; ?>
-											<?php } ?></td>
+											<td>
+												<select name="config_secure">
+													<?php if ($config_secure) { ?>
+														<option value="1" selected="selected">Включить</option>
+														<option value="0">Отключить</option>
+													<?php } else { ?>													
+														<option value="1">Включить</option>
+														<option value="0"  selected="selected">Отключить</option>
+													<? } ?>
+												</select>
+											</td>
 										</tr>
 										<tr>
 											<td>SEO URL</td>
-											<td><?php if ($config_seo_url) { ?>
-												<input type="radio" name="config_seo_url" value="1" checked="checked" />
-												<?php echo $text_yes; ?>
-												<input type="radio" name="config_seo_url" value="0" />
-												<?php echo $text_no; ?>
-												<?php } else { ?>
-												<input type="radio" name="config_seo_url" value="1" />
-												<?php echo $text_yes; ?>
-												<input type="radio" name="config_seo_url" value="0" checked="checked" />
-												<?php echo $text_no; ?>
-											<?php } ?></td>
+											<td>
+												<select name="config_seo_url">
+													<?php if ($config_seo_url) { ?>
+														<option value="1" selected="selected">Включить</option>
+														<option value="0">Отключить</option>
+													<?php } else { ?>													
+														<option value="1">Включить</option>
+														<option value="0"  selected="selected">Отключить</option>
+													<? } ?>
+												</select>
+											</td>
 										</tr>
 										<tr>
 											<td><?php echo $entry_seo_url_type; ?></td>
@@ -1136,17 +1255,17 @@
 										</tr>
 										<tr>
 											<td><?php echo $entry_seo_url_include_path; ?></td>
-											<td><?php if ($config_seo_url_include_path) { ?>
-												<input type="radio" name="config_seo_url_include_path" value="1" checked="checked" />
-												<?php echo $text_yes; ?>
-												<input type="radio" name="config_seo_url_include_path" value="0" />
-												<?php echo $text_no; ?>
-												<?php } else { ?>
-												<input type="radio" name="config_seo_url_include_path" value="1" />
-												<?php echo $text_yes; ?>
-												<input type="radio" name="config_seo_url_include_path" value="0" checked="checked" />
-												<?php echo $text_no; ?>
-											<?php } ?></td>
+											<td>
+												<select name="config_seo_url_include_path">
+													<?php if ($config_seo_url_include_path) { ?>
+														<option value="1" selected="selected">Включить</option>
+														<option value="0">Отключить</option>
+													<?php } else { ?>													
+														<option value="1">Включить</option>
+														<option value="0"  selected="selected">Отключить</option>
+													<? } ?>
+												</select>
+											</td>
 										</tr>
 										<tr>
 											<td><?php echo $entry_seo_url_postfix; ?></td>
@@ -1421,35 +1540,43 @@
 						</div>
 					</div>
 				</div>
-				<script type="text/javascript"><!--
+				<script type="text/javascript">
 
-				$('select, textarea, input[type=text], input[type=number]').bind('change', function() {
-				var key  = $(this).attr('name');
-				var elem = $(this);
-				var value = this.value;
-				var store_id = $('input[name=store_id]').val();
+					$('select, textarea, input[type=text], input[type=number], input[type=checkbox]').bind('change', function() {
+						var key  = $(this).attr('name');
+						var elem = $(this);
+						var value = this.value;
+						var store_id = $('input[name=store_id]').val();
 
-				$.ajax({
-					type: 'POST',
-					url: 'index.php?route=setting/setting/editSettingAjax&store_id=' + store_id + '&token=<?php echo $token; ?>',
-					data: {
-						key: key,
-						value: value						
-					},
-					beforeSend: function(){
-						elem.css('border-color', 'yellow');
-						elem.css('border-width', '2px');						
-					},
-					success: function(){
-						elem.css('border-color', 'green');
-						elem.css('border-width', '2px');
-					}
-				});
+						if (elem.attr('type') == 'checkbox'){
+							if (elem.attr('checked')){
+								value = 1;
+							} else {
+								value = 0;
+							}
+						}
 
-			});
+						$.ajax({
+							type: 'POST',
+							url: 'index.php?route=setting/setting/editSettingAjax&store_id=' + store_id + '&token=<?php echo $token; ?>',
+							data: {
+								key: key,
+								value: value						
+							},
+							beforeSend: function(){
+								elem.css('border-color', 'yellow');
+								elem.css('border-width', '2px');						
+							},
+							success: function(){
+								elem.css('border-color', 'green');
+								elem.css('border-width', '2px');
+							}
+						});
 
-				
-				//--></script>
+					});
+
+
+				</script>
 				<script type="text/javascript"><!--
 					$('select[name=\'config_country_id\']').bind('change', function() {
 						$.ajax({
