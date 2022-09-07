@@ -89,6 +89,10 @@
 
 		public function getImage($amazonImage, $secondAttempt = false){
 
+			if (!trim($amazonImage)){
+				return '';
+			}
+
 			$localImageName 		= md5($amazonImage) . '.' . pathinfo($amazonImage,  PATHINFO_EXTENSION);
 			$localImageDir  		= 'data/source/' . mb_substr($localImageName, 0, 3) . '/' . mb_substr($localImageName, 4, 6) . '/';
 			$localImagePath 		= DIR_IMAGE . $localImageDir;
@@ -108,6 +112,9 @@
 
 					file_put_contents($fullLocalImagePath, $httpResponse->getBody()->getContents());					
 
+				} catch (GuzzleHttp\Exception\ValueError $e){
+					echoLine('[RainforestRetriever]: Не могу получить картинку ' . $e->getMessage());
+					return '';
 				} catch (GuzzleHttp\Exception\ClientException $e){
 					echoLine('[RainforestRetriever]: Не могу получить картинку ' . $e->getMessage());
 					return '';
