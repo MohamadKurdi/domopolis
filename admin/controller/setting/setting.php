@@ -147,12 +147,62 @@ class ControllerSettingSetting extends Controller {
 		$value 		= $this->request->post['value'];
 
 		if ($key){
-			$query = $this->db->query("SELECT * FROM setting WHERE store_id = '" . (int)$store_id . "' AND `group` = 'config' AND `key` = '" . $this->db->escape($key) . "'");
 
-			if ($query->num_rows){
+			if (strpos($key, '[') !== false){
+				//this is a part of array
+				$exploded = explode('[', $key);
+				$key = $exploded[0];
+
+				$result = [];
+				if (!empty($exploded[1])){
+					$idx1 = rtrim($exploded[1], ']');
+					$result[$idx1] = $value;
+				}
+				if (!empty($exploded[2])){
+					$idx2 = rtrim($exploded[2], ']');
+					$result[$idx1] = [
+						$idx2 => $value
+					];
+				}			
+				
+				$value = $result;
+			}
+
+			$key = trim($key);			
+
+			$query = $this->db->query("SELECT * FROM setting WHERE store_id = '" . (int)$store_id . "' AND `group` = 'config' AND `key` = '" . $this->db->escape($key) . "'");			
+
+			if ($query->num_rows){				
+				if (is_array($value)){
+
+					$old_value = [];
+					if ($query->row['value']){									
+						$old_value = unserialize($query->row['value']);
+					}
+					foreach ($old_value as $old_value_key => $old_value_value){
+						if (!empty($value[$old_value_key])){
+							if (is_array($value[$old_value_key])){
+								$old_value[$old_value_key] = $value[$old_value_key] + $old_value[$old_value_key];
+							} else {
+								$old_value[$old_value_key] = $value[$old_value_key];
+							}							
+
+							unset($value[$old_value_key]);
+						}
+					}
+
+
+					$value = $value + $old_value;
+					$value = serialize($value);
+				}
+
 				$sql = "UPDATE setting SET `value` = '" . $this->db->escape($value) . "' WHERE `store_id` = '" . (int)$store_id . "' AND `group` = 'config' AND `key` = '" . $this->db->escape($key) . "'";
 			} else {
-				$sql = "INSERT INTO setting SET `value` = '" . $this->db->escape($value) . "', `store_id` = '" . (int)$store_id . "', `group` = 'config', `key` = '" . $this->db->escape($key) . "', serialized = 0";
+
+				$serialized = (int)is_array($value);
+				$value = (is_array($value))?serialize($value):$value;
+
+				$sql = "INSERT INTO setting SET `value` = '" . $this->db->escape($value) . "', `store_id` = '" . (int)$store_id . "', `group` = 'config', `key` = '" . $this->db->escape($key) . "', serialized = '" . (int)$serialized . "'";
 			}
 
 			$query = $this->db->query($sql);
@@ -2387,35 +2437,27 @@ class ControllerSettingSetting extends Controller {
 		}
 		
 		if (isset($this->request->post['config_sms_send_new_order_status'])) {
-			$this->data['config_sms_send_new_order_status']
-			= $this->request->post['config_sms_send_new_order_status'];
+			$this->data['config_sms_send_new_order_status'] = $this->request->post['config_sms_send_new_order_status'];
 		} else {
-			$this->data['config_sms_send_new_order_status']
-			= $this->config->get('config_sms_send_new_order_status');
+			$this->data['config_sms_send_new_order_status']	= $this->config->get('config_sms_send_new_order_status');
 		}
 		
 		if (isset($this->request->post['config_sms_new_order_status_message'])) {
-			$this->data['config_sms_new_order_status_message']
-			= $this->request->post['config_sms_new_order_status_message'];
+			$this->data['config_sms_new_order_status_message'] = $this->request->post['config_sms_new_order_status_message'];
 		} else {
-			$this->data['config_sms_new_order_status_message']
-			= (array)$this->config->get('config_sms_new_order_status_message');
+			$this->data['config_sms_new_order_status_message'] = (array)$this->config->get('config_sms_new_order_status_message');
 		}
 		
 		if (isset($this->request->post['config_sms_send_new_order'])) {
-			$this->data['config_sms_send_new_order']
-			= $this->request->post['config_sms_send_new_order'];
+			$this->data['config_sms_send_new_order'] = $this->request->post['config_sms_send_new_order'];
 		} else {
-			$this->data['config_sms_send_new_order']
-			= $this->config->get('config_sms_send_new_order');
+			$this->data['config_sms_send_new_order'] = $this->config->get('config_sms_send_new_order');
 		}
 		
 		if (isset($this->request->post['config_sms_new_order_message'])) {
-			$this->data['config_sms_new_order_message']
-			= $this->request->post['config_sms_new_order_message'];
+			$this->data['config_sms_new_order_message']	= $this->request->post['config_sms_new_order_message'];
 		} else {
-			$this->data['config_sms_new_order_message']
-			= $this->config->get('config_sms_new_order_message');
+			$this->data['config_sms_new_order_message'] = $this->config->get('config_sms_new_order_message');
 		}
 		
 		if (isset($this->request->post['config_sms_alert'])) {

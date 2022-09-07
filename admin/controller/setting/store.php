@@ -83,8 +83,7 @@
 		public function test(){
 			
 			$this->load->model('sale/order');
-			$this->model_sale_order->generatePaymentQR2('265695', 'liqpay');
-			
+			$this->model_sale_order->generatePaymentQR2('265695', 'liqpay');			
 		}
 		
 		protected function getList() {
@@ -558,6 +557,73 @@
 				} else {
 				$this->data['config_sms_sign'] = '';
 			}
+
+			/* SMS SETTINGS NOW CAN BE OVERLOADED */
+
+			if (isset($this->request->post['config_sms_tracker_leave_main_warehouse_enabled'])) {
+				$this->data['config_sms_tracker_leave_main_warehouse_enabled'] = $this->request->post['config_sms_tracker_leave_main_warehouse_enabled'];
+				} elseif (isset($store_info['config_sms_tracker_leave_main_warehouse_enabled'])) {
+				$this->data['config_sms_tracker_leave_main_warehouse_enabled'] = $store_info['config_sms_tracker_leave_main_warehouse_enabled'];		
+				} else {
+				$this->data['config_sms_tracker_leave_main_warehouse_enabled'] = '';
+			}
+
+			if (isset($this->request->post['config_sms_tracker_leave_main_warehouse'])) {
+				$this->data['config_sms_tracker_leave_main_warehouse'] = $this->request->post['config_sms_tracker_leave_main_warehouse'];
+				} elseif (isset($store_info['config_sms_tracker_leave_main_warehouse'])) {
+				$this->data['config_sms_tracker_leave_main_warehouse'] = $store_info['config_sms_tracker_leave_main_warehouse'];		
+				} else {
+				$this->data['config_sms_tracker_leave_main_warehouse'] = '';
+			}
+
+			if (isset($this->request->post['config_sms_payment_recieved_enabled'])) {
+				$this->data['config_sms_payment_recieved_enabled'] = $this->request->post['config_sms_payment_recieved_enabled'];
+				} elseif (isset($store_info['config_sms_payment_recieved_enabled'])) {
+				$this->data['config_sms_payment_recieved_enabled'] = $store_info['config_sms_payment_recieved_enabled'];		
+				} else {
+				$this->data['config_sms_payment_recieved_enabled'] = 0;
+			}
+
+			if (isset($this->request->post['config_sms_payment_recieved'])) {
+				$this->data['config_sms_payment_recieved'] = $this->request->post['config_sms_payment_recieved'];
+				} elseif (isset($store_info['config_sms_payment_recieved'])) {
+				$this->data['config_sms_payment_recieved'] = $store_info['config_sms_payment_recieved'];		
+				} else {
+				$this->data['config_sms_payment_recieved'] = '';
+			}
+
+			if (isset($this->request->post['config_sms_send_new_order_status'])) {
+				$this->data['config_sms_send_new_order_status'] = $this->request->post['config_sms_send_new_order_status'];
+				} elseif (isset($store_info['config_sms_send_new_order_status'])) {
+				$this->data['config_sms_send_new_order_status'] = $store_info['config_sms_send_new_order_status'];		
+				} else {
+				$this->data['config_sms_send_new_order_status'] = 0;
+			}
+
+			if (isset($this->request->post['config_sms_new_order_status_message'])) {
+				$this->data['config_sms_new_order_status_message'] = $this->request->post['config_sms_new_order_status_message'];
+				} elseif (isset($store_info['config_sms_new_order_status_message'])) {
+				$this->data['config_sms_new_order_status_message'] = (array)$store_info['config_sms_new_order_status_message'];		
+				} else {
+				$this->data['config_sms_new_order_status_message'] = [];
+			}
+
+			if (isset($this->request->post['config_sms_send_new_order'])) {
+				$this->data['config_sms_send_new_order'] = $this->request->post['config_sms_send_new_order'];
+				} elseif (isset($store_info['config_sms_send_new_order'])) {
+				$this->data['config_sms_send_new_order'] = $store_info['config_sms_send_new_order'];		
+				} else {
+				$this->data['config_sms_send_new_order'] = 0;
+			}
+
+			if (isset($this->request->post['config_sms_new_order_message'])) {
+				$this->data['config_sms_new_order_message'] = $this->request->post['config_sms_new_order_message'];
+				} elseif (isset($store_info['config_sms_new_order_message'])) {
+				$this->data['config_sms_new_order_message'] = $store_info['config_sms_new_order_message'];		
+				} else {
+				$this->data['config_sms_new_order_message'] = '';
+			}
+
 			
 			if (isset($this->request->post['config_phonemask'])) {
 				$this->data['config_phonemask'] = $this->request->post['config_phonemask'];
