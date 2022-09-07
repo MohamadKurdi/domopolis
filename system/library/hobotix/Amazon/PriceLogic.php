@@ -10,6 +10,7 @@ class PriceLogic
 	private $db;	
 	private $config;
 	private $weight;
+	private $length;
 
 	private $excluded_categories = [8307, 6475, 6474, BIRTHDAY_DISCOUNT_CATEGORY, GENERAL_DISCOUNT_CATEGORY, GENERAL_MARKDOWN_CATEGORY];
 
@@ -27,6 +28,7 @@ class PriceLogic
 		$this->config 	= $registry->get('config');
 		$this->db 		= $registry->get('db');
 		$this->weight 	= $registry->get('weight');
+		$this->length 	= $registry->get('length');
 
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/PriceUpdaterQueue.php');
 		$this->priceUpdaterQueue = new PriceUpdaterQueue($registry);
@@ -377,7 +379,7 @@ class PriceLogic
 							$warehouse_identifier = $storeWarehouses['config_warehouse_identifier_local'];
 
 							if ($this->storesVolumetricWeightSettings[$store_id]['config_rainforest_use_volumetric_weight']){
-								$productWeight = $this->getProductVolumetricWeight($product);
+								$productWeight = $this->getProductVolumetricWeight($product, $store_id);
 							} else {
 								$productWeight = $this->getProductWeight($product);
 							}
