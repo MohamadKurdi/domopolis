@@ -2133,7 +2133,7 @@ class ControllerApiInfo1C extends Controller
                                 $order_id,
                                 $order_info['firstname'],
                             ),
-                            $this->config->get('config_sms_tracker_leave_main_warehouse')
+                           $this->model_setting_setting->getKeySettingValue('config', 'config_sms_tracker_leave_main_warehouse', $order_info['store_id'])
                         );
 
                         $options = array(
