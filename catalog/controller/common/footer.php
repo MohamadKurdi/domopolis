@@ -52,10 +52,8 @@
 			return true;
 		}
 		
-		protected function simplefooter(){
-			
-			$this->index('footer_simple');
-			
+		protected function simplefooter(){			
+			$this->index('common/footer_simple');			
 		}
 		
 		
@@ -439,16 +437,16 @@
 			}
 			
 			
-			$this->template = $this->config->get('config_template') . '/template/common/footer.tpl';
+			$this->template = 'common/footer';
 			
 			$this->load->model('design/layout');
 			$layout_id = $this->model_design_layout->getLayout('common/footer');				
 			if ($template_overload) {
-				$this->template = $template_overload . '.tpl';				
+				$this->template = $template_overload;				
 				} elseif ($template = $this->model_design_layout->getLayoutTemplateByLayoutId($layout_id)) {
 				$this->template = $template;			
 				} else {
-				$this->template = 'common/footer.tpl';
+				$this->template = 'common/footer';
 			}	
 									
 			$this->response->setOutput($this->render());			

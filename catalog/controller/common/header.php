@@ -11,7 +11,7 @@
 				
 		
 		protected function simpleheader(){								
-			$this->index('header_simple');			
+			$this->index('common/header_simple');			
 		}				
 
 		private function setHrefLangsAndTryToRedirect(){
@@ -544,27 +544,14 @@
 			$this->data['logged'] = $this->customer->isLogged();
 			
 			$this->load->model('design/layout');
-			$layout_id = $this->model_design_layout->getLayout('common/header');				
+			$layout_id = $this->model_design_layout->getLayout('common/header');										
 			if ($template_overload) {
-				
-				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/' . $template_overload . '.tpl')) {
-					$this->template = $this->config->get('config_template') . '/template/common/' . $template_overload . '.tpl';
-					} else {
-					$this->template = 'default/template/common/' . $template_overload . '.tpl';
-				} 
+				$this->template = $template_overload;				
 				} elseif ($template = $this->model_design_layout->getLayoutTemplateByLayoutId($layout_id)) {
-				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/' . $template)) {
-					$this->template = $this->config->get('config_template') . '/template/' . $template;
-					} else {
-					$this->template = 'default/template/' . $template;
-				}				
+				$this->template = $template;			
 				} else {
-				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/header.tpl')) {
-					$this->template = $this->config->get('config_template') . '/template/common/header.tpl';
-					} else {
-					$this->template = 'default/template/common/header.tpl';
-				}
-			}
+				$this->template = 'common/header';
+			}	
 			
 			$this->render();
 		} 		
