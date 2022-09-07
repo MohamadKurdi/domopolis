@@ -38,34 +38,6 @@
 						
 					</div>
 					
-					
-					<!-- <ul>
-						<li>
-						<a href="<?php echo $href_ru; ?>">
-						<img src="/catalog/view/theme/kp/img/flags/ru.png" alt="Kitchen Profi Россия"
-						title="Россия">
-						</a>
-						</li>
-						<li>
-						<a href="<?php echo $href_ua; ?>">
-						<img src="/catalog/view/theme/kp/img/flags/ua.png" alt="Kitchen Profi Украина"
-						title="Украина">
-						</a>
-						</li>
-						<li>
-						<a href="<?php echo $href_by; ?>">
-						<img src="/catalog/view/theme/kp/img/flags/by.png" alt="Kitchen Profi Беларусь"
-						title="Беларусь">
-						</a>
-						</li>
-						<li>
-						<a href="<?php echo $href_kz; ?>">
-						<img src="/catalog/view/theme/kp/img/flags/kz.png" alt="Kitchen Profi Казахстан"
-						title="Казахстан">
-						</a>
-						</li>
-					</ul> -->
-					
 				</div>
 				<p>&copy;<? if ($this->config->get('config_store_id') == 0) { ?>
 					kitchen-profi.ru, 
@@ -230,19 +202,19 @@
 
 <script>
 	window.addEventListener('beforeunload', function(event) {
-	console.log('BeforeUnload fired');			
-	if (NProgress instanceof Object){				
-	NProgress.configure({ showSpinner: false });
-	NProgress.start();
-	NProgress.inc(0.1);
-	setTimeout(function () {
-	NProgress.inc(0.5);
-	}, 100);
-	setTimeout(function () {
-	NProgress.done();
-	$(".fade").removeClass("out");
-	}, 1000);			
-	}
+		console.log('BeforeUnload fired');			
+		if (NProgress instanceof Object){				
+			NProgress.configure({ showSpinner: false });
+			NProgress.start();
+			NProgress.inc(0.1);
+			setTimeout(function () {
+				NProgress.inc(0.5);
+			}, 100);
+			setTimeout(function () {
+				NProgress.done();
+				$(".fade").removeClass("out");
+			}, 1000);			
+		}
 	});
 </script>
 <script>

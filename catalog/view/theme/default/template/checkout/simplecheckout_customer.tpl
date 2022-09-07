@@ -1,7 +1,3 @@
-
-<!--tabs-->
-
-
 <div class="tabs">
 	<!--tabs__nav-->
 	<div class="tabs__nav">
@@ -22,6 +18,7 @@
 			<?php if (!$this->customer->isLogged()) { ?>	
 				<h2 class="header_btn_register"><?php echo $text_retranslate_35; ?></h2>
 				<div class="btn-group-register">
+					<?php if ($this->config->get('social_auth_google_app_id')) { ?>
 					<button type="button" onclick="social_auth.googleplus(this)" data-loading-text="Loading" class="btn btn-primary btn-google">
 						<div class="btn-img" style="padding: 0;margin-right: 13px;">
 							<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" width="46px" height="46px" viewBox="0 0 46 46" version="1.1">
@@ -59,13 +56,14 @@
 						</div>
 						<span style="color: #000000; opacity: 0.54; font-size: 14px;">Google</span>            
 					</button>
+					<?php } ?>
 					
-					
-					
+					<?php if ($this->config->get('social_auth_facebook_app_id')) { ?>
 					<button type="button" onclick="social_auth.facebook(this)" data-loading-text="Loading" class="btn btn-primary btn-facebook">
 						<div class="btn-img"><i class="fab fa-facebook-f"></i></div> 
 						<span style="color: #000000; opacity: 0.54; font-size: 14px;">Facebook</span>  
 					</button>	
+				<?php } ?>
 				</div>
 			<?php } ?>	
 			<div class="simplecheckout-block-content">
@@ -75,9 +73,8 @@
 				<?php if ($display_you_will_registered) { ?>
 					<div class="you-will-be-registered"><?php echo $text_you_will_be_registered ?></div>
 				<?php } ?>
-				<?php echo $data['firstname']; ?>
+				<?php echo !empty($data['firstname'])?$data['firstname']:''; ?>
 				<?php foreach ($rows as $row) { ?>
-
 					<?php echo $row ?>
 				<?php } ?>
 				<!--btn-group-->

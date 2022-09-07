@@ -19,8 +19,8 @@
             <div class="simple-address " style="display: flex;align-items: center;height: 60px;">
                 <div class="register_block_simpl">
                     <?php foreach ($values as $info) { ?>
-                        <input type="radio" name="<?php echo $name ?>" id="<?php echo $id ?>_<?php echo $info_id ?>_<?php echo $info['id'] ?>" value="<?php echo $info['id'] ?>" <?php echo $value == $info['id'] ? 'checked="checked"' : '' ?> <?php echo $reload ? 'data-onchange="reloadAll"' : 'data-reload-payment-form="true"'?>>
-                        <label for="<?php echo $id ?>_<?php echo $info_id ?>_<?php echo $info['id'] ?>"><?php echo $info['text'] ?></label>
+                        <input type="radio" name="<?php echo $name ?>" id="<?php echo $id ?>_<?php echo $info['id'] ?>" value="<?php echo $info['id'] ?>" <?php echo $value == $info['id'] ? 'checked="checked"' : '' ?> <?php echo $reload ? 'data-onchange="reloadAll"' : 'data-reload-payment-form="true"'?>>
+                        <label for="<?php echo $id ?>_<?php echo $info['id'] ?>"><?php echo $info['text'] ?></label>
                     <?php } ?>
                 </div>
             </div>
