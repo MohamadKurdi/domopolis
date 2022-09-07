@@ -2360,6 +2360,19 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$this->data['config_sms_tracker_leave_main_warehouse'] = $this->config->get('config_sms_tracker_leave_main_warehouse');
 		}
+
+		/*recieved*/
+		if (isset($this->request->post['config_sms_payment_recieved_enabled'])) {
+			$this->data['config_sms_payment_recieved_enabled'] = $this->request->post['config_sms_payment_recieved_enabled'];
+		} else {
+			$this->data['config_sms_payment_recieved_enabled'] = $this->config->get('config_sms_payment_recieved_enabled');
+		}
+		
+		if (isset($this->request->post['config_sms_payment_recieved'])) {
+			$this->data['config_sms_payment_recieved'] = $this->request->post['config_sms_payment_recieved'];
+		} else {
+			$this->data['config_sms_payment_recieved'] = $this->config->get('config_sms_payment_recieved');
+		}
 		
 		if (isset($this->request->post['config_sms_from'])) {
 			$this->data['config_sms_from'] = $this->request->post['config_sms_from'];

@@ -2807,101 +2807,116 @@
 							<h2>Уведомления клиента</h2>
 							<table class="form">
 								<tr>									
-									<td>
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Уведомлять клиента о заказе</span></p>
+									<td style="width:33%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Уведомлять клиента о заказе</span></p>
 
-										<select name="config_sms_send_new_order">
-											<?php if ($config_sms_send_new_order) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-											<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
+											<select name="config_sms_send_new_order">
+												<?php if ($config_sms_send_new_order) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Уведомлять клиента о смене статуса</span></p>
+
+											<select name="entry_sms_send_new_order_status">
+												<?php if ($entry_sms_send_new_order_status) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
 									</td>
-								</tr>
-								<tr>
-									<td valign="top"><?php echo $entry_sms_new_order_message; ?></td>
-									<td><textarea name="config_sms_new_order_message" cols="40" rows="5"><?php echo $config_sms_new_order_message; ?></textarea></td>
-								</tr>
-								<tr>
-									<td><?php echo $entry_sms_send_new_order_status; ?></td>
-									<td><?php if ($config_sms_send_new_order_status) { ?>
-										<input type="radio" name="config_sms_send_new_order_status" value="1" checked="checked" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_sms_send_new_order_status" value="0" />
-										<?php echo $text_no; ?>
-										<?php } else { ?>
-										<input type="radio" name="config_sms_send_new_order_status" value="1" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_sms_send_new_order_status" value="0" checked="checked" />
-										<?php echo $text_no; ?>
-									<?php } ?></td>
-								</tr>
-								<tr>
-									<td valign="top"><?php echo $entry_sms_new_order_status_message; ?></td>
-									<td>
-										
-										<table>
-											<?php foreach ($order_statuses as $order_status): ?>
-											<?php 
-												if (isset($config_sms_new_order_status_message[$order_status['order_status_id']]) === true) {
-													$status_message = $config_sms_new_order_status_message[$order_status['order_status_id']];
-													} else {
-													$status_message = '';
-												}
-											?>
-											<tr>
-												<td>
-													<input class="checkbox" type="checkbox" name="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]" id="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]"<?php if (isset($status_message['enabled']) && $status_message['enabled']) { echo ' checked="checked"'; }?>/>
-													
-													<label for="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]"><?php echo $order_status['name']; ?></label>
-													
-												</td>	
-												<td>
-													<textarea name="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][message]" cols="40" rows="5"><?php echo isset($status_message['message']) ? $status_message['message'] : ""; ?></textarea>
-												</td>
-											</tr>
-											<?php endforeach; ?>
-										</table>
-										
+
+
+									<td style="width:25%" class="left">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Текст SMS о новом заказе</span></p>
+										<textarea name="config_sms_new_order_message" cols="40" rows="5"><?php echo $config_sms_new_order_message; ?></textarea>
+									</td>
+
+									<td style="width:33%" class="left">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Шаблон нового</span></p>
+										<span class="help">											
+											<b>{SNAME}</b> - название магазина<br />
+											<b>{ID}</b> - номер заказа<br />
+											<b>{DATE}</b> - дата заказа<br />
+											<b>{TIME}</b> - время заказа<br />
+											<b>{SUM}</b> - сумма заказа<br />
+											<b>{STATUS}</b> - новый статус заказа<br />
+											<b>{PHONE}</b> - телефон клиента<br />
+											<b>{FIRSTNAME}</b> - имя клиента<br />
+											<b>{LASTNAME}</b> - фамилия клиента<br />
+											<b>{PRODUCTS}</b> - список товаров
+										</span>
+									</td>
+								</tr>	
+								</table>
+
+								<table class="list">
+									<?php foreach ($order_statuses as $order_status) { ?>
+										<?php $status_message = '';
+										if (isset($config_sms_new_order_status_message[$order_status['order_status_id']])) {
+											$status_message = $config_sms_new_order_status_message[$order_status['order_status_id']];
+										} ?>
+										<tr>
+											<td style="width:200px;">
+												<span class="status_color" style="text-align: left; background: #<?php echo !empty($order_status['status_bg_color']) ? $order_status['status_bg_color'] : ''; ?>; color: #<?php echo !empty($order_status['status_txt_color']) ? $order_status['status_txt_color'] : ''; ?>;">
+
+													<?php echo $order_status['name']; ?>
+
+												</span>
+											</td>
+											<td style="width:50px" class="center">
+												<input class="checkbox" type="checkbox" name="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]" id="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]" <?php if (isset($status_message['enabled']) && $status_message['enabled']) { echo ' checked="checked"'; }?>/>
+
+												<label for="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]"></label>
+
+											</td>
+											<td style="padding:5px;">
+												<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][message]" value="<?php echo isset($status_message['message']) ? $status_message['message'] : ""; ?>" />
+											</td>
+										</tr>										
+									<?php } ?>
+									<tr>
+										<td style="width:200px;">
+											<span class="status_color" style="text-align: left; background: #43B02A; color: #FFF; ?>;">
+
+												Трекинг отправки со склада
+
+											</span>
+										</td>
+										<td style="width:50px" class="center">
+											<input class="checkbox" type="checkbox" name="config_sms_tracker_leave_main_warehouse_enabled" id="config_sms_tracker_leave_main_warehouse_enabled"<?php if ($config_sms_tracker_leave_main_warehouse_enabled) { echo ' checked="checked"'; }?>/><label for="config_sms_tracker_leave_main_warehouse_enabled"></label>
+										</td>
+										<td style="padding:5px;">
+											<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_tracker_leave_main_warehouse" value="<?php echo $config_sms_tracker_leave_main_warehouse; ?>" />
+										</td>
 									</tr>
-								</tr>
-							</table>
-							<h2>SMS трекинга</h2>		
-							<table class="form">
-								<tr>
-									<td valign="top">
-										<span class="help">Можно использовать теги:
-											{SNAME} - название магазина<br />
-											{ID} - номер заказа<br />
-											{DATE} - дата заказа<br />
-											{TIME} - время заказа<br />
-											{SUM} - сумма заказа<br />
-											{PHONE} - телефон клиента<br />
-											{STATUS} - новый статус заказа<br />
-											{FIRSTNAME} - имя клиента<br />
-											{LASTNAME} - фамилия клиента<br />
-										{COMMENT} - комментарий к заказу</span>
-									</td>
-									<td>
-										<table>
-											<tr>
-												<td>
-													<input class="checkbox" type="checkbox" name="config_sms_tracker_leave_main_warehouse_enabled" id="config_sms_tracker_leave_main_warehouse_enabled"<?php if ($config_sms_tracker_leave_main_warehouse_enabled) { echo ' checked="checked"'; }?>/>
-													
-													<label for="config_sms_tracker_leave_main_warehouse_enabled">Товар покинул основной склад</label>
-												</td>
-												
-												<td>
-													<textarea name="config_sms_tracker_leave_main_warehouse" cols="40" rows="5"><?php echo $config_sms_tracker_leave_main_warehouse; ?></textarea>
-												</td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-							</table>
+
+									<tr>
+										<td style="width:200px;">
+											<span class="status_color" style="text-align: left; background: #000; color: #FFF; ?>;">
+												Успешная оплата
+											</span>
+										</td>
+										<td style="width:50px" class="center">
+											<input class="checkbox" type="checkbox" name="config_sms_payment_recieved_enabled" id="config_sms_payment_recieved_enabled"<?php if ($config_sms_payment_recieved_enabled) { echo ' checked="checked"'; }?>/><label for="config_sms_payment_recieved_enabled"></label>
+										</td>
+										<td style="padding:5px;">
+											<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_payment_recieved" value="<?php echo $config_sms_payment_recieved; ?>" />
+										</td>
+									</tr>
+
+								</table>
 						</div>
 						<div id="tab-server">
 
@@ -5107,11 +5122,19 @@
 		</div>
 		<script type="text/javascript"><!--
 
-			$('select, textarea, input[type=text], input[type=number]').bind('change', function() {
+			$('select, textarea, input[type=text], input[type=number], input[type=checkbox]').bind('change', function() {
 				var key  = $(this).attr('name');
 				var elem = $(this);
 				var value = $(this).val();
 				var store_id = $('input[name=store_id]').val();
+
+				if (elem.attr('type') == 'checkbox'){
+					if (elem.attr('checked')){
+						value = 1;
+					} else {
+						value = 0;
+					}
+				}
 
 				$.ajax({
 					type: 'POST',
