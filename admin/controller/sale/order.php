@@ -4210,12 +4210,12 @@
 			if ($order_has_coupon){									
 				$coupon_active_products = $this->model_sale_order->getCouponProducts($order_has_coupon, $just_product_ids, $this->request->get['order_id']);	
 				
-				$coupon_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "coupon` WHERE code = '" . $this->db->escape($order_has_coupon) . "'");
+				$coupon_query = $this->db->query("SELECT * FROM `coupon` WHERE code = '" . $this->db->escape($order_has_coupon) . "'");
 				
 				$this->data['order_has_coupon'] = $coupon_query->row;
 				
 				
-				$coupon_active_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "coupon` WHERE code = '" . $this->db->escape($order_has_coupon) . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) AND status = '1'");			
+				$coupon_active_query = $this->db->query("SELECT * FROM `coupon` WHERE code = '" . $this->db->escape($order_has_coupon) . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) AND status = '1'");			
 				$this->data['order_has_coupon_is_active'] = ($coupon_active_query->num_rows);
 				
 				} else {
@@ -4885,7 +4885,7 @@
 				} else {
 				
 				if ($this->user->isLogged() && (in_array($this->user->getUserGroup(), array(12, 27))) && $this->user->getOwnOrders()){							
-					$this->db->query("UPDATE `" . DB_PREFIX . "order` SET manager_id = '" . (int)$this->user->getId() . "' WHERE order_id = '" . (int)$order_id . "'");
+					$this->db->query("UPDATE `order` SET manager_id = '" . (int)$this->user->getId() . "' WHERE order_id = '" . (int)$order_id . "'");
 					$this->data['manager'] = array(
 					'name'     => $this->model_user_user->getUserNameById($this->user->getId()), 
 					'realname' => $this->model_user_user->getRealUserNameById($this->user->getId()), 
@@ -5000,8 +5000,8 @@
 				
 				//количество РАВНО
 				} elseif ($data['quantity'] == $data['max_quantity']) {
-				//var_dump("UPDATE `" . DB_PREFIX . "order_product` SET quantity = '0', is_returned = '1' WHERE order_product_id = '" . (int)$data['order_product_id'] . "'");
-				//$this->db->query("UPDATE `" . DB_PREFIX . "order_product` SET quantity = '0', is_returned = '1' WHERE order_product_id = '" . (int)$data['order_product_id'] . "'");
+				//var_dump("UPDATE `order_product` SET quantity = '0', is_returned = '1' WHERE order_product_id = '" . (int)$data['order_product_id'] . "'");
+				//$this->db->query("UPDATE `order_product` SET quantity = '0', is_returned = '1' WHERE order_product_id = '" . (int)$data['order_product_id'] . "'");
 				$this->db->query("DELETE FROM `order_product` WHERE order_product_id = '" . (int)$data['order_product_id'] . "'");
 			}
 			
@@ -5702,11 +5702,11 @@
 		
 		public function getStatusSMSTextAjax(){
 			$this->load->model('sale/order');
+			$this->load->model('setting/setting');
 			
-			$order_id = (int)$this->request->post['order_id'];		
-			
+			$order_id = (int)$this->request->post['order_id'];					
 			$order = $this->model_sale_order->getOrder($this->request->post['order_id']);
-			$message_settings = $this->config->get('config_sms_new_order_status_message');
+			$message_settings = $this->model_setting_setting->getKeySettingValue('config', 'config_sms_new_order_status_message', $order['store_id']);
 			
 			$data = array();
 			
@@ -5720,20 +5720,7 @@
 				return;
 			}
 			
-			if (isset($message_settings[ $this->request->post['order_status_id'] ]['enabled'])
-			&& $message_settings[ $this->request->post['order_status_id'] ]['enabled'] == 'on'){
-				
-				if (!function_exists("getproductname")) {
-					function getproductname($item) {
-						return $item['name'];
-					}
-				}
-				$products = implode(';',
-				array_map(
-				"getproductname", // without lamda function for compatibility with php < 5.3s
-				$this->model_sale_order->getOrderProducts($this->request->post['order_id'])
-				)
-				);
+			if (isset($message_settings[ $this->request->post['order_status_id'] ]['enabled']) && $message_settings[$this->request->post['order_status_id'] ]['enabled'] == 'on' || $message_settings[$this->request->post['order_status_id'] ]['enabled'] == 1){								
 				
 				$this->load->model('setting/setting');
 				$frm = $this->model_setting_setting->getKeySettingValue('config', 'config_sms_sign', $order['store_id']);
@@ -5744,7 +5731,7 @@
 				if ($this->getOrderPrepayNational($order_id) > 0){
 					$partly = ' частичную';
 					$_sumtopay = $this->currency->format($this->getOrderPrepayNational($order_id), $order['currency_code'], '1');
-					} else {
+				} else {
 					$partly = '';
 					$_sumtopay = $this->currency->format($order['total_national'], $order['currency_code'], '1');
 				}
@@ -5757,7 +5744,7 @@
 				if (count($a1) == 2){
 					if (in_array(trim($order['shipping_city']), $array_msk) || in_array(trim($order['shipping_city']), $array_ky)){
 						$message_template = $a1[0];													
-						} else {
+					} else {
 						$message_template = $a1[1];
 					}
 				}
@@ -5768,71 +5755,69 @@
 					
 					$store_name = $this->model_setting_setting->getKeySettingValue('config', 'config_name', $order['store_id']);
 					
-					} else {
+				} else {
 					$store_name = $this->model_setting_setting->getKeySettingValue('config', 'config_name', $order['store_id']);
 				}
 				
 				if ($order['store_id'] == 0){
 					$pick_url = HTTP_CATALOG;
-					} else {
+				} else {
 					$pick_url = $this->model_setting_setting->getKeySettingValue('config', 'config_url', $order['store_id']); 
 				}
 				
 				if (bool_real_stripos($order['shipping_code'], 'pickup_advanced')){				
 					$pick_index = (int)str_replace('pickup_advanced.point_','',$order['shipping_code']);
-					} else {
+				} else {
 					$pick_index = 0;
 				}
 				
 				if ($order['shipping_country_id'] == 220 && $order['card_id']){
 					$this->load->model('localisation/legalperson');
 					$_p24info = ' ' . $this->model_localisation_legalperson->getLegalPersonInfo($order['card_id']) .'. ';
-					} else {
+				} else {
 					$_p24info = ' ';
 				}		 
 				
 				$message  = str_replace(
-				array(
-				'{ID}',
-				'{DATE}',
-				'{TIME}',
-				'{SUM}',
-				'{PHONE}',
-				'{STATUS}',
-				'{FIRSTNAME}',
-				'{LASTNAME}',
-				'{COMMENT}',
-				'{PRODUCTS}',
-				'{PARTLY}',
-				'{SNAME}',
-				'{PICKUP_NAME}',
-				'{PICKUP_URL}',
-				'{P24_INFO}',
-				'{SUM_TO_PAY}'
-				),
-				array(
-				$this->request->post['order_id'],
-				date('d.m.Y'),
-				date('H:i'),
-				$this->currency->format($order['total_national'], $order['currency_code'], '1'),
-				$order['telephone'],
-				$this->model_sale_order->getStatusName($this->request->post['order_status_id']),
-				$order['firstname'],
-				$order['lastname'],
-				$this->request->post['comment'],
-				$products,
-				$partly,
-				$store_name,
-				trim(str_replace('Самовывоз, ', '', $order['shipping_method'])),
-				$pick_url . 'pick' . ($pick_index+1),
-				$_p24info,
-				' ' . $_sumtopay
-				),
-				$message_template);
+					array(
+						'{ID}',
+						'{DATE}',
+						'{TIME}',
+						'{SUM}',
+						'{PHONE}',
+						'{STATUS}',
+						'{FIRSTNAME}',
+						'{LASTNAME}',
+						'{COMMENT}',						
+						'{PARTLY}',
+						'{SNAME}',
+						'{PICKUP_NAME}',
+						'{PICKUP_URL}',
+						'{P24_INFO}',
+						'{SUM_TO_PAY}'
+					),
+					array(
+						$this->request->post['order_id'],
+						date('d.m.Y'),
+						date('H:i'),
+						$this->currency->format($order['total_national'], $order['currency_code'], '1'),
+						$order['telephone'],
+						$this->model_sale_order->getStatusName($this->request->post['order_status_id']),
+						$order['firstname'],
+						$order['lastname'],
+						$this->request->post['comment'],						
+						$partly,
+						$store_name,
+						trim(str_replace('Самовывоз, ', '', $order['shipping_method'])),
+						$pick_url . 'pick' . ($pick_index+1),
+						$_p24info,
+						' ' . $_sumtopay
+					),
+					$message_template);
 				
 				$data['message'] = $message;
 				$this->response->setOutput(json_encode($data));						
-				} else {
+			} else {
 				//$data['error'][] = 'Внимание! Отправка SMS для данного статуса не включена в настройках!';
 				$data['message'] = '';
 				$this->response->setOutput(json_encode($data));
@@ -5965,11 +5950,11 @@
 		public function addTTNAjax(){
 			$this->load->model('sale/order');
 			
-			$order_id = (int)$this->request->post['order_id'];
-			$ttn = $this->request->post['ttn'];
-			$date_sent = $this->request->post['date_sent'];
-			$send_delivery_sms = $this->request->post['send_delivery_sms'];
-			$delivery_sms_text = $this->request->post['delivery_sms_text'];
+			$order_id 			= (int)$this->request->post['order_id'];
+			$ttn 				= $this->request->post['ttn'];
+			$date_sent 			= $this->request->post['date_sent'];
+			$send_delivery_sms 	= $this->request->post['send_delivery_sms'];
+			$delivery_sms_text 	= $this->request->post['delivery_sms_text'];
 			
 			$order = $this->model_sale_order->getOrder($order_id);
 			
@@ -5980,24 +5965,24 @@
 			if (mb_strlen($ttn, 'UTF-8') > 2){				
 				if ($date_sent){
 					//date_sent = дата отправки ГРУЗА
-					$this->db->query("INSERT INTO `" . DB_PREFIX . "order_ttns` SET
+					$this->db->query("INSERT INTO `order_ttns` SET
 					order_id = '" . (int)$order_id . "',
 					ttn = '" .$this->db->escape($ttn) . "',
 					delivery_code = '" .$this->db->escape($order['shipping_code']). "',
 					date_ttn = '" .$this->db->escape($date_sent). "'
 					");	
-					$this->db->query("UPDATE `" . DB_PREFIX . "order` SET ttn = '" .$this->db->escape($ttn) . "' WHERE order_id = '" . (int)$order_id . "'");
-					$this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_sent = '" .$this->db->escape($date_sent). "' WHERE order_id = '" . (int)$order_id . "'");
+					$this->db->query("UPDATE `order` SET ttn = '" .$this->db->escape($ttn) . "' WHERE order_id = '" . (int)$order_id . "'");
+					$this->db->query("UPDATE `order` SET date_sent = '" .$this->db->escape($date_sent). "' WHERE order_id = '" . (int)$order_id . "'");
 					} else {
-					$this->db->query("INSERT INTO `" . DB_PREFIX . "order_ttns` SET
+					$this->db->query("INSERT INTO `order_ttns` SET
 					order_id = '" . (int)$order_id . "',
 					ttn = '" .$this->db->escape($ttn) . "',
 					delivery_code = '" .$this->db->escape($order['shipping_code']). "',
 					date_ttn = NOW()
 					");				
 				}
-				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET ttn = '" .$this->db->escape($ttn) . "' WHERE order_id = '" . (int)$order_id . "'");
-				$this->db->query("UPDATE `" . DB_PREFIX . "order` SET date_sent = NOW() WHERE order_id = '" . (int)$order_id . "'");
+				$this->db->query("UPDATE `order` SET ttn = '" .$this->db->escape($ttn) . "' WHERE order_id = '" . (int)$order_id . "'");
+				$this->db->query("UPDATE `order` SET date_sent = NOW() WHERE order_id = '" . (int)$order_id . "'");
 			}
 			
 			if (isset($send_delivery_sms) && $send_delivery_sms && (mb_strlen($delivery_sms_text, 'UTF-8') > 2)){
@@ -6023,7 +6008,7 @@
 				);
 				
 				
-				$this->db->query("UPDATE `" . DB_PREFIX . "order_ttns` SET sms_sent = NOW() WHERE ttn = '" . $this->db->escape($ttn) . "'");
+				$this->db->query("UPDATE `order_ttns` SET sms_sent = NOW() WHERE ttn = '" . $this->db->escape($ttn) . "'");
 				$this->model_sale_order->addOrderSmsDeliveryHistory($order_id, $sms_data, $sms_status, $sms_id);
 			}	
 		}
@@ -7760,7 +7745,7 @@
 						elseif (($total['value_national'] <= 0) && bool_real_stripos($total['title'], 'Промокод') && $total['code']  ==  'coupon'){
 							
 							$coupon_name = $this->model_sale_order->getCouponName($total['title']);
-							$coupon_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "coupon` WHERE code = '" . $this->db->escape($coupon_name) . "'");
+							$coupon_query = $this->db->query("SELECT * FROM `coupon` WHERE code = '" . $this->db->escape($coupon_name) . "'");
 							
 							if ($coupon_query->num_rows && ($coupon_query->row['type'] == "P")){
 								//needs to be recounted
@@ -8124,7 +8109,7 @@
 				$_user_id = (int)$this->user->getId();
 			}		
 			
-			$this->db->query("INSERT INTO " . DB_PREFIX . "order_invoice_history SET				
+			$this->db->query("INSERT INTO order_invoice_history SET				
 			order_id = '" . (int)$order_id . "', 
 			invoice_name = '" . $this->db->escape($invoice_name) . "',
 			html = '" . $this->db->escape($html) . "',
@@ -8442,7 +8427,7 @@
 					$order_product_query = $this->db->query("SELECT * FROM `".DB_PREFIX."order_product` WHERE `order_product_id` = '". (int)$order_product_id ."' LIMIT 1");
 					$order_product = $order_product_query->row;
 					$this->db->query("DELETE FROM `".DB_PREFIX."order_product_nogood` WHERE `order_product_id` = '". (int)$order_product_id ."'");
-					$this->db->query("INSERT INTO " . DB_PREFIX . "order_product_nogood SET
+					$this->db->query("INSERT INTO order_product_nogood SET
 					order_product_id = '" . (int)$order_product['order_product_id'] . "', 
 					order_id = '" . (int)$order_product['order_id'] . "', 
 					product_id = '" . (int)$order_product['product_id'] . "',
@@ -8465,7 +8450,7 @@
 					$r = false;
 					
 					$customer_comment_text = "Товар " . $order_product['model'] . " помечен как нет в наличии";
-					$customer_query = $this->db->query("SELECT customer_id FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int)$order_product['order_id'] . "'");
+					$customer_query = $this->db->query("SELECT customer_id FROM `order` WHERE order_id = '" . (int)$order_product['order_id'] . "'");
 					
 					$_data = array(
 					'customer_id' 		      => $customer_query->row['customer_id'], 
@@ -8487,7 +8472,7 @@
 					$order_product_query = $this->db->query("SELECT * FROM `".DB_PREFIX."order_product_nogood` WHERE `order_product_id` = '". (int)$order_product_id ."' LIMIT 1");
 					$order_product = $order_product_query->row;
 					$this->db->query("DELETE FROM `".DB_PREFIX."order_product` WHERE `order_product_id` = '". (int)$order_product_id ."'");
-					$this->db->query("INSERT INTO " . DB_PREFIX . "order_product SET
+					$this->db->query("INSERT INTO order_product SET
 					order_product_id = '" . (int)$order_product['order_product_id'] . "', 
 					order_id = '" . (int)$order_product['order_id'] . "', 
 					product_id = '" . (int)$order_product['product_id'] . "',
@@ -8509,7 +8494,7 @@
 					$r = true;	
 					
 					$customer_comment_text = "Товар " . $order_product['model'] . " помечен как есть в наличии";
-					$customer_query = $this->db->query("SELECT customer_id FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int)$order_product['order_id'] . "'");
+					$customer_query = $this->db->query("SELECT customer_id FROM `order` WHERE order_id = '" . (int)$order_product['order_id'] . "'");
 					
 					$_data = array(
 					'customer_id' 		      => $customer_query->row['customer_id'], 
@@ -8923,7 +8908,7 @@
 		}
 		
 		public function getOrderPrepayNational($order_id){
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
+			$query = $this->db->query("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
 			
 			foreach ($query->rows as $row){
 				if ($row['code'] == 'transfer_plus_prepayment'){
@@ -8934,7 +8919,7 @@
 		}
 		
 		public function getOrderPrepayNationalPercent($order_id){
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
+			$query = $this->db->query("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
 			
 			foreach ($query->rows as $row){
 				if ($row['code'] == 'transfer_plus_prepayment'){
@@ -9742,7 +9727,7 @@
 				
 				$history = $this->db->query("SELECT data, order_id, datetime FROM order_save_history WHERE order_save_id = '" . $order_save_id . "'");						
 				
-				$customer_query = $this->db->query("SELECT customer_id FROM `" . DB_PREFIX . "order` WHERE order_id = '" . (int)$order_id . "'");
+				$customer_query = $this->db->query("SELECT customer_id FROM `order` WHERE order_id = '" . (int)$order_id . "'");
 				
 				if ($history->row && isset($history->row['data']) && $order_id == $history->row['order_id'] && mb_strlen($history->row['data']) > 0 && @unserialize(base64_decode($history->row['data']))){
 					$this->load->model('sale/order');
