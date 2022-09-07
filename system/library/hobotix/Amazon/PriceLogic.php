@@ -13,12 +13,14 @@ class PriceLogic
 
 	private $excluded_categories = [8307, 6475, 6474, BIRTHDAY_DISCOUNT_CATEGORY, GENERAL_DISCOUNT_CATEGORY, GENERAL_MARKDOWN_CATEGORY];
 
-	private $defaultWeightClassID = 1;	
-	private $defaultDimensions = [];
-	private $storesWarehouses = [];
-	private $warehousesStores = [];
+	private $defaultWeightClassID 			= 1;	
+	private $defaultDimensions 				= [];
+	private $storesWarehouses 				= [];
+	private $storesVolumetricWeightSettings = [];
+	private $warehousesStores 				= [];
 
-	private $storesSettingsFields = ['config_warehouse_identifier_local', 'config_warehouse_identifier'];
+	private $storesSettingsFields 	= ['config_warehouse_identifier_local', 'config_warehouse_identifier'];
+	private $storesSettingsFields2 	= ['config_rainforest_use_volumetric_weight', 'config_rainforest_volumetric_weight_coefficient'];
 
 	public function __construct($registry){
 
@@ -45,7 +47,8 @@ class PriceLogic
 			$implode[] = "`key` = '" . $field . "'";
 		}
 
-		$query = $this->db->query("SELECT store_id, `key`, value FROM setting WHERE " . implode(' OR ', $implode) . "");
+		$sql = "SELECT store_id, `key`, value FROM setting WHERE " . implode(' OR ', $implode) . "";
+		$query = $this->db->query($sql);
 
 		foreach ($query->rows as $row){
 			$this->storesWarehouses[$row['store_id']] = [];
@@ -63,7 +66,27 @@ class PriceLogic
 					$this->storesWarehouses[$row['store_id']][$field] = $row['value'];
 				}
 			}	 
-		}	
+		}
+
+		$implode = [];
+		foreach ($this->storesSettingsFields2 as $field){
+			$implode[] = "`key` LIKE ('" . $field . "%')";
+		}
+
+		$sql = "SELECT `key`, value FROM setting WHERE " . implode(' OR ', $implode) . "";
+		$query = $this->db->query($sql);
+
+		unset($row);
+		foreach ($query->rows as $row){
+
+			foreach ($this->storesSettingsFields2 as $field){
+				if (strpos($row['key'], $field) !== false){
+					$store_id = (int)str_replace($field . '_', '', $row['key']);
+					$this->storesVolumetricWeightSettings[$store_id][$field] = $row['value'];
+				}
+			}
+
+		}
 
 		return $this;
 	}
@@ -90,7 +113,7 @@ class PriceLogic
 		return $this;
 	}
 
-	private function getProductDimensions($product){
+	public function getProductDimensions($product){
 
 		$weight = (float)$product['weight'];
 		$weight_class_id = (int)$product['weight_class_id'];
@@ -144,6 +167,42 @@ class PriceLogic
 		);
 
 		return $dimensions;
+	}
+
+	public function getProductVolumetricWeight($product, $store_id, $return_volumetric_weight = false, $volumetricWeightCoefficient = false){
+		$productDimensions = $this->getProductDimensions($product);
+
+		if (!$volumetricWeightCoefficient){
+			$volumetricWeightCoefficient = (float)$this->storesVolumetricWeightSettings[$store_id]['config_rainforest_volumetric_weight_coefficient'];
+		}
+
+		if ($productDimensions['weight_class_id'] == (int)$this->config->get('config_weight_class_id')){
+			$weight = $productDimensions['weight'];
+		} else {
+			$weight = $this->weight->convert($productDimensions['weight'], $productDimensions['weight_class_id'], $this->config->get('config_weight_class_id'));
+		}
+
+		if ($productDimensions['length_class_id'] == (int)$this->config->get('config_length_class_id')){
+			$length = $productDimensions['length'];
+			$width 	= $productDimensions['width'];
+			$height = $productDimensions['height'];
+		} else {
+			$length = $this->length->convert($productDimensions['length'], $productDimensions['length_class_id'], $this->config->get('config_length_class_id'));
+			$width 	= $this->length->convert($productDimensions['width'], $productDimensions['length_class_id'], $this->config->get('config_length_class_id'));
+			$height = $this->length->convert($productDimensions['height'], $productDimensions['length_class_id'], $this->config->get('config_length_class_id'));
+		}
+
+		$volumetricWeight = ($length * $width * $height) / $volumetricWeightCoefficient;
+
+		if ($return_volumetric_weight){
+			return $volumetricWeight;
+		}
+
+		if ($volumetricWeight > $weight){
+			return $volumetricWeight;
+		}
+		
+		return $weight;			
 	}
 
 	public function getProductWeight($product){
@@ -317,7 +376,12 @@ class PriceLogic
 						foreach ($this->storesWarehouses as $store_id => $storeWarehouses){
 							$warehouse_identifier = $storeWarehouses['config_warehouse_identifier_local'];
 
-							$productWeight = $this->getProductWeight($product);
+							if ($this->storesVolumetricWeightSettings[$store_id]['config_rainforest_use_volumetric_weight']){
+								$productWeight = $this->getProductVolumetricWeight($product);
+							} else {
+								$productWeight = $this->getProductWeight($product);
+							}
+
 							$weightCoefficient = $this->config->get('config_rainforest_kg_price_' . $store_id);
 							$defaultMultiplier = $this->config->get('config_rainforest_default_multiplier_' . $store_id);
 

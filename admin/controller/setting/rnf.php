@@ -136,6 +136,22 @@ class ControllerSettingRnf extends Controller {
 			}
 		}		
 
+		foreach ($this->data['stores']  as $store){
+			if (isset($this->request->post['config_rainforest_use_volumetric_weight_' . $store['store_id']])) {
+				$this->data['config_rainforest_use_volumetric_weight_' . $store['store_id']] = $this->request->post['config_rainforest_use_volumetric_weight_' . $store['store_id']]; 
+			} else {
+				$this->data['config_rainforest_use_volumetric_weight_' . $store['store_id']] = $this->config->get('config_rainforest_use_volumetric_weight_' . $store['store_id']);
+			}
+		}	
+
+		foreach ($this->data['stores']  as $store){
+			if (isset($this->request->post['config_rainforest_volumetric_weight_coefficient_' . $store['store_id']])) {
+				$this->data['config_rainforest_volumetric_weight_coefficient_' . $store['store_id']] = $this->request->post['config_rainforest_volumetric_weight_coefficient_' . $store['store_id']]; 
+			} else {
+				$this->data['config_rainforest_volumetric_weight_coefficient_' . $store['store_id']] = $this->config->get('config_rainforest_volumetric_weight_coefficient_' . $store['store_id']);
+			}
+		}	
+
 		$this->data['token'] = $this->session->data['token'];
 
 		$this->template = 'setting/rnf.tpl';
@@ -148,7 +164,7 @@ class ControllerSettingRnf extends Controller {
 
 	}
 
-	public function calculate($mainFormula = '', $weightCoefficient = 0, $defaultMultiplier = 0){
+	public function calculate($mainFormula = '', $weightCoefficient = 0, $defaultMultiplier = 0, $useVolumetricWeight = false, $volumetricWeightCoefficient = 0, $showRandomProducts = false, $limitProducts = 0, $zonesConfig = ''){
 		$this->load->model('catalog/product');		
 
 		if (empty($mainFormula)){
@@ -163,12 +179,38 @@ class ControllerSettingRnf extends Controller {
 			$defaultMultiplier	= $this->request->post['default_multiplier'];
 		}
 
-		$zones 		= [0, 20, 100, 1000, 1000000];
+		if (empty($useVolumetricWeight)){
+			$useVolumetricWeight	= $this->request->post['use_volumetric_weight'];
+		}
+
+		if (empty($volumetricWeightCoefficient)){
+			$volumetricWeightCoefficient = $this->request->post['volumetric_weight_coefficient'];
+		}
+
+		if (empty($showRandomProducts)){
+			$showRandomProducts = $this->request->post['show_random_products'];
+		}
+
+		if (empty($limitProducts)){
+			$limitProducts = $this->request->post['limit_products'];
+		}
+
+		if (empty($zonesConfig)){
+			$zonesConfig = $this->request->post['zones_config'];
+		}
+
+		if ($zonesConfig){
+			$zones 		= explode(' ', $zonesConfig);
+		} else {
+			$zones 		= [0, 20, 50, 100, 1000, 1000000];
+		}
+
 		$products 	= [];
 
 		for ( $i=0; $i<=(count($zones)-1); $i++){
 
 			if (!empty($zones[$i+1])){
+				$products['zone_' . $zones[$i] . '_' . $zones[$i+1]] = [];
 
 				$sql = "SELECT DISTINCT(p.product_id), p.*, pd.name, p2c.category_id as main_category_id FROM product p
 						LEFT JOIN product_description pd ON (p.product_id = pd.product_id AND language_id = '" . (int)$this->config->get('config_language_id') . "')
@@ -178,27 +220,89 @@ class ControllerSettingRnf extends Controller {
 						AND p.amazon_best_price <= '" . (int)$zones[$i+1] . "' 
 						AND p.amzn_no_offers = 0
 						AND p.asin <> ''
+						AND weight > 0
+						AND length > 0						
 						AND p.asin <> 'INVALID'
-						AND p.status = 1 						
-						ORDER BY p.amazon_best_price ASC
-						LIMIT 3";
+						AND p.status = 1";
 
+						if (!$showRandomProducts){
+							$sql .= " ORDER BY amazon_best_price ASC ";
+						} else {
+							$sql .= " ORDER BY RAND() ";
+						}
 
+						$sql .= " LIMIT " . (int)$limitProducts;
 
 				$query = $this->db->query($sql);
 
-				$products['zone_' . $zones[$i] . '_' . $zones[$i+1]] = [];
 				foreach ($query->rows as $row){
-					$products['zone_' . $zones[$i] . '_' . $zones[$i+1]][] = $row;
+					$products['zone_' . $zones[$i] . '_' . $zones[$i+1]] [] = $row;
 				}
 			}
 		}
 
-		foreach ($products as $zone => &$product){			
-			$product['counted_weight'] = $this->rainforestAmazon->offersParser->PriceLogic->getProductWeight($product);
+		$results = [];
+
+		foreach ($products as $zone => $products){
+			$results[$zone] = [];			
+			foreach ($products as $product){
+				$result = [];
+				$result['name'] = $product['name'];
+			
+				$productDimensions = $this->rainforestAmazon->offersParser->PriceLogic->getProductDimensions($product);
+				if ($productDimensions['weight_class_id'] == (int)$this->config->get('config_weight_class_id')){
+					$result['weight'] = $productDimensions['weight'];
+				} else {
+					$result['weight'] = $this->weight->convert($productDimensions['weight'], $productDimensions['weight_class_id'], $this->config->get('config_weight_class_id'));
+				}
+
+				if ($productDimensions['length_class_id'] == (int)$this->config->get('config_length_class_id')){
+					$result['length'] 	= $productDimensions['length'];
+					$result['width'] 	= $productDimensions['width'];
+					$result['height'] 	= $productDimensions['height'];
+				} else {
+					$result['length'] 	= $this->length->convert($productDimensions['length'], $productDimensions['length_class_id'], $this->config->get('config_length_class_id'));
+					$result['width'] 	= $this->length->convert($productDimensions['width'], $productDimensions['length_class_id'], $this->config->get('config_length_class_id'));
+					$result['height'] 	= $this->length->convert($productDimensions['height'], $productDimensions['length_class_id'], $this->config->get('config_length_class_id'));
+				}
+
+				$result['weight'] 	= $this->weight->format($result['weight'], $this->config->get('config_weight_class_id'));
+				$result['length'] 	= $this->length->format($result['length'], $this->config->get('config_length_class_id'));
+				$result['width'] 	= $this->length->format($result['width'], $this->config->get('config_length_class_id'));
+				$result['height'] 	= $this->length->format($result['height'], $this->config->get('config_length_class_id'));
+
+				$result['counted_volumetric_weight'] 			= $this->rainforestAmazon->offersParser->PriceLogic->getProductVolumetricWeight($product, 0, true, $volumetricWeightCoefficient);
+				$result['counted_volumetric_weight_format']   	= $this->weight->format($result['counted_volumetric_weight'], $this->config->get('config_weight_class_id'));
+
+				if ($useVolumetricWeight){
+					$product['counted_weight'] = $this->rainforestAmazon->offersParser->PriceLogic->getProductVolumetricWeight($product, 0, false, $volumetricWeightCoefficient);
+				} else {
+					$product['counted_weight'] = $this->rainforestAmazon->offersParser->PriceLogic->getProductWeight($product);
+				}
+
+				$result['counted_weight'] =  $this->weight->format($product['counted_weight'], $this->config->get('config_weight_class_id'));
+				$result['counted_price']  = $this->rainforestAmazon->offersParser->PriceLogic->mainFormula($product['amazon_best_price'], $product['counted_weight'], $weightCoefficient, $defaultMultiplier, $mainFormula);
+
+				$result['amazon_best_price'] 		= $this->currency->format($product['amazon_best_price'], 'EUR', 1);
+				$result['counted_price_eur'] 		= $this->currency->format($result['counted_price'], 'EUR', 1);
+				$result['counted_price_national'] 	= $this->currency->format($this->currency->convert($result['counted_price'], 'EUR', $this->config->get('config_regional_currency')), $this->config->get('config_regional_currency'), 1);
+
+				$results[$zone][] = $result;
+			}
 		}
 
-		$this->response->setOutput(json_encode($products));
+		$this->data['results'] = $results;
+
+		if (defined('API_SESSION')){
+
+			$this->response->setOutput(json_encode($results));
+
+		} else {
+
+			$this->template = 'setting/rnfpricetest.tpl';
+			$this->response->setOutput($this->render());
+
+		}
 	}
 
 	public function getRainForestStats(){

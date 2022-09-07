@@ -792,11 +792,10 @@
 					<div style="float:left; width:60%;">
 						<div>
 							<input type="text" name="config_rainforest_main_formula" value="<?php echo $config_rainforest_main_formula; ?>" style="width:80%; font-size:24px; padding:10px;" />						
-							<a class="button" style="padding:10px; float:right; font-size:24px;" onclick="savePriceModel();"><i class="fa fa-check"></i> Сохранить</a>
+							<button class="button" style="padding:10px; float:right; font-size:24px; margin-right:4px;" onclick="savePriceModel();"><i class="fa fa-check"></i> Сохранить</button>
 						</div>
 
-						<div id="calculator_results">
-
+						<div id="calculator_results" style="min-height:500px; margin-top:10px;">
 						</div>
 					</div>
 
@@ -831,8 +830,47 @@
 							<tr>
 								<td><b>DIVIDE</b></td><td>операция деления (знак /)</td>
 							</tr>	
-
 						</table>
+					<table class="list">
+						<tr>
+							<td colspan="2" class="left" style="color:#D69241;">
+								<i class="fa fa-calculator"></i> <b>Калькулятор</b>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Рандомные товары
+							</td>
+							<td>
+								<input id="calculator_show_random" type="checkbox" class="checkbox" name="calculator_show_random" value="1" /><label for="calculator_show_random"></label>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Лимит товаров
+							</td>
+							<td>
+								<input type="number" step="1" name="calculator_limit_products" value="3" style="width:100px;" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Диапазоны
+							</td>
+							<td>
+								<input type="text" step="1" name="calculator_zones_config" value="0 20 50 100 1000 10000" style="width:200px;" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Еще раз
+							</td>
+							<td>
+								<span class="button" style="cursor:pointer;" onclick="recalculate(); return false;"><i class="fa fa-refresh"></i> пересчитать</span>
+							</td>
+						</tr>
+					</table>
+
 					<table class="list">
 						<tr>
 							<td colspan="3" class="left" style="color:#D69241;">
@@ -868,6 +906,38 @@
 								<td>
 									<span class="help">
 										<i class="fa fa-info-circle"></i> Заданная стоимость логистики 1 кг груза в страну-назначения. В формуле - переменная <b>KG_LOGISTIC</b>
+									</span>
+								</td>
+							</tr>
+						<?php } ?>
+
+						<?php foreach ($stores as $store) { ?>
+							<tr>
+								<td class="right">
+									Использовать объемный вес, <?php echo $store['name']; ?>
+								</td>
+								<td style="width:100px;" class="center">
+									<input id="config_rainforest_use_volumetric_weight_<?php echo $store['store_id']?>" type="checkbox" class="checkbox" name="config_rainforest_use_volumetric_weight_<?php echo $store['store_id']?>" <? if (${'config_rainforest_use_volumetric_weight_' . $store['store_id']}){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_use_volumetric_weight_<?php echo $store['store_id']?>"></label>
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Переменная <b>WEIGHT</b> означает не просто вес, а объемный вес товара, в случае успешного подсчёта габаритов товара. Подробнее можно посмотреть на Википедии.
+									</span>
+								</td>
+							</tr>
+						<?php } ?>
+
+						<?php foreach ($stores as $store) { ?>
+							<tr>
+								<td class="right">
+									Коэффициент объемного веса, <?php echo $store['name']; ?>
+								</td>
+								<td style="width:100px;" class="center">
+									<input type="number" step="100" name="config_rainforest_volumetric_weight_coefficient_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_volumetric_weight_coefficient_' . $store['store_id']}; ?>" style="width:100px;" />
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Делитель для подсчёта объемного веса. Длина (см) × Ширина (см) × Высота (см) / Делитель = Объёмный вес 
 									</span>
 								</td>
 							</tr>
@@ -1082,12 +1152,91 @@
 				</div>
 			</div>			
 
+
 			<script type="text/javascript">
+	<? /*
+				function recalculate(){
+					var mainFormula 				= $('input[name=config_rainforest_main_formula]').val();
+					var weightCoefficient 			= $('input[name=config_rainforest_kg_price_0]').val();
+					var defaultMultiplier 			= $('input[name=config_rainforest_default_multiplier_0]').val();
+					var useVolumetricWeight 		= $('input[name=config_rainforest_use_volumetric_weight_0]').attr('checked')?1:0;
+					var volumetricWeightCoefficient = $('input[name=config_rainforest_volumetric_weight_coefficient_0]').val();
+					var showRandomProducts 			= $('input[name=calculator_show_random]').attr('checked')?1:0;
+					var limitProducts				=  $('input[name=calculator_limit_products]').val();
+					var zonesConfig					=  $('input[name=calculator_zones_config]').val();
+
+					$.ajax({
+						type: 'POST',
+						dataType: 'html',
+						url: 'index.php?route=setting/rnf/calculate&hello=world&token=<?php echo $token; ?>',
+						data: {
+							main_formula: 					mainFormula,
+							weight_coefficient: 			weightCoefficient,					
+							default_multiplier: 			defaultMultiplier,
+							use_volumetric_weight: 			useVolumetricWeight,
+							volumetric_weight_coefficient: 	volumetricWeightCoefficient,
+							show_random_products:  			showRandomProducts,
+							limit_products:  				limitProducts,
+							zones_config:  					zonesConfig,
+						},
+						beforeSend: function(){
+						//	$('#calculator_results').html('<i class="fa fa-calculator" style="font-size:128px"></i>');
+						},
+						success: function(html){
+						//	$('#calculator_results').html(html);
+						}
+					});					
+				}
+
+				$('#tab-priceformula select, #tab-priceformula textarea, #tab-priceformula input[type=checkbox], #tab-priceformula input[type=text], #tab-priceformula input[type=number]').bind('change', function() {
+					recalculate();
+				});
+	*/ ?>		
+
+				function saveSettingAjax(key, value, elem){
+
+					var store_id = $('input[name=store_id]').val();
+
+					$.ajax({
+						type: 'POST',
+						url: 'index.php?route=setting/setting/editSettingAjax&store_id=' + store_id + '&token=<?php echo $token; ?>',
+						data: {
+							key: key,
+							value: value						
+						},
+						beforeSend: function(){
+							if (elem){
+								elem.css('border-color', 'yellow');
+								elem.css('border-width', '2px');						
+							}
+						},
+						success: function(){
+							if (elem){
+								elem.css('border-color', 'green');
+								elem.css('border-width', '2px');
+							}
+						}
+					});
+
+				}
+
+				function savePriceModel(){
+					saveSettingAjax('config_rainforest_main_formula', $('input[name=config_rainforest_main_formula]').val(), $('input[name=config_rainforest_main_formula]'));
+					saveSettingAjax('config_rainforest_default_store_id', $('select[name=config_rainforest_default_store_id]').val(), $('select[name=config_rainforest_default_store_id]'));
+
+					<?php foreach ($stores as $store) { ?>
+						saveSettingAjax('config_rainforest_kg_price_<?php echo $store['store_id']?>', $('input[name=config_rainforest_kg_price_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_kg_price_<?php echo $store['store_id']?>]'));
+						saveSettingAjax('config_rainforest_default_multiplier_<?php echo $store['store_id']?>', $('input[name=config_rainforest_default_multiplier_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_default_multiplier_<?php echo $store['store_id']?>]'));
+						saveSettingAjax('config_rainforest_use_volumetric_weight_<?php echo $store['store_id']?>', $('input[name=config_rainforest_use_volumetric_weight_<?php echo $store['store_id']?>]').attr('checked')?1:0, $('input[name=config_rainforest_use_volumetric_weight_<?php echo $store['store_id']?>]'));
+						saveSettingAjax('config_rainforest_volumetric_weight_coefficient_<?php echo $store['store_id']?>', $('input[name=config_rainforest_volumetric_weight_coefficient_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_volumetric_weight_coefficient_<?php echo $store['store_id']?>]'));
+					<?php } ?>
+				}
+
 
 				$('select, textarea, input[type=checkbox], input[type=text], input[type=number]').bind('change', function() {
 					var key  = $(this).attr('name');
 
-					<?php foreach (['config_rainforest_main_formula', 'config_rainforest_default_store_id'] as $not_change_input) { ?>
+					<?php foreach (['config_rainforest_main_formula', 'config_rainforest_default_store_id', 'calculator_show_random', 'calculator_limit_products', 'calculator_zones_config'] as $not_change_input) { ?>
 						if (key == '<?php echo $not_change_input; ?>'){
 							console.log('Pricelogic skip autosave: ' + key);
 							return;
@@ -1106,6 +1255,16 @@
 							return;
 						}
 
+						if (key == 'config_rainforest_use_volumetric_weight_<?php echo $store['store_id']?>'){
+							console.log('Pricelogic skip autosave: ' + key);
+							return;
+						}
+
+						if (key == 'config_rainforest_volumetric_weight_coefficient_<?php echo $store['store_id']?>'){
+							console.log('Pricelogic skip autosave: ' + key);
+							return;
+						}
+
 					<?php } ?>
 
 					var elem = $(this);
@@ -1119,24 +1278,8 @@
 						}
 					}
 
-					var store_id = $('input[name=store_id]').val();
-
-					$.ajax({
-						type: 'POST',
-						url: 'index.php?route=setting/setting/editSettingAjax&store_id=' + store_id + '&token=<?php echo $token; ?>',
-						data: {
-							key: key,
-							value: value						
-						},
-						beforeSend: function(){
-							elem.css('border-color', 'yellow');
-							elem.css('border-width', '2px');						
-						},
-						success: function(){
-							elem.css('border-color', 'green');
-							elem.css('border-width', '2px');
-						}
-					});
+					saveSettingAjax(key, value, elem);
+					
 
 				});
 			</script>
