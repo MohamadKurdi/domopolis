@@ -248,6 +248,10 @@
 					$this->template = substr($this->template, mb_strlen('template/'));
 				}
 
+				if (mb_substr($this->template, -4) != '.tpl'){
+					$this->template = $this->template . '.tpl';
+				}
+
 				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/' . $this->template)){
 					$this->template = $this->config->get('config_template') . '/template/' . $this->template;
 				} else {
