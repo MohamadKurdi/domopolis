@@ -518,10 +518,7 @@
 			$this->load->model('checkout/order');
 			$this->load->model('payment/shoputils_psb');
 			$this->load->model('payment/paykeeper');
-			
-			
-			$sms_template = "Заказ # {ID}. Оплату в сумме {SUM}, получили, спасибо. Заказ выполняем";
-			
+												
 			$this->model_checkout_order->addOrderToQueue($this->order['order_id']);
 			
 			if (!isset($this->session->data['order_id'])) {
@@ -570,32 +567,35 @@
 						}
 						
 						//SMS
-						$options = array(
-						'to'       => $this->order['telephone'],						
-						'from'     => $this->config->get('config_sms_sign'),						
-						'message'  => str_replace(
-						array(	'{ID}', 												
-						'{SUM}', 
-						), 
-						array(
-						$this->order['order_id'],  
-						$this->currency->format($this->model_account_order->getOrderPrepayNational($this->order['order_id']), $this->order['currency_code'], 1),
-						), 
-						$sms_template)
-						);
-						
-						$sms_id = $this->smsQueue->queue($options);
-						
-						if ($sms_id){
-							$sms_status = 'В очереди';					
+						if ($this->config->get('config_sms_payment_recieved_enabled')){
+							$sms_template = $this->config->get('config_sms_payment_recieved');  
+							$options = array(
+								'to'       => $this->order['telephone'],						
+								'from'     => $this->config->get('config_sms_sign'),						
+								'message'  => str_replace(
+									array(	'{ID}', 												
+										'{SUM}', 
+									), 
+									array(
+										$this->order['order_id'],  
+										$this->currency->format($this->model_account_order->getOrderPrepayNational($this->order['order_id']), $this->order['currency_code'], 1),
+									), 
+									$sms_template)
+							);
+							
+							$sms_id = $this->smsQueue->queue($options);
+							
+							if ($sms_id){
+								$sms_status = 'В очереди';					
 							} else {
-							$sms_status = 'Неудача';
+								$sms_status = 'Неудача';
+							}
+							
+							$sms_data = array(
+								'order_status_id' => $this->config->get('config_prepayment_paid_order_status_id'),
+								'sms' => $options['message']
+							);
 						}
-						
-						$sms_data = array(
-						'order_status_id' => $this->config->get('config_prepayment_paid_order_status_id'),
-						'sms' => $options['message']
-						);
 						
 						//$log = new Log('order_send_sms.txt');
 						//$log->write(serialize($sms_data) . ', returning: ' . $sms_id);				

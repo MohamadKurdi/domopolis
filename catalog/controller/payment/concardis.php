@@ -89,9 +89,7 @@
 			echo '[CCRON] ---------------------- STAGE 2 ----------------------' . PHP_EOL;
 			
 			foreach ($successOrders as $order_id => $concardisInfo){
-				echo '[CCRON API] Шас мы добавим оплату заказу ' . $order_id . PHP_EOL;
-				
-				$sms_template = "Заказ #{ID}. Оплату получили, спасибо. Заказ выполняем";
+				echo '[CCRON API] Шас мы добавим оплату заказу ' . $order_id . PHP_EOL;								
 				$this->model_checkout_order->addOrderToQueue($order_id);
 				
 				//Для совместимост
@@ -134,26 +132,29 @@
 				
 					
 					//SMS
-					$options = array(
-					'to'       => $this->order['telephone'],						
-					'from'     => $this->config->get('config_sms_sign'),						
-					'message'  => str_replace('{ID}', $this->order['order_id'], $sms_template)					
-					);
-					
-					$sms_id = $this->smsQueue->queue($options);
-					
-					if ($sms_id){
-						$sms_status = 'В очереди';					
+					if ($this->config->get('config_sms_payment_recieved_enabled')){
+						$sms_template = $this->config->get('config_sms_payment_recieved');  
+						$options = array(
+							'to'       => $this->order['telephone'],						
+							'from'     => $this->config->get('config_sms_sign'),						
+							'message'  => str_replace('{ID}', $this->order['order_id'], $sms_template)					
+						);
+						
+						$sms_id = $this->smsQueue->queue($options);
+						
+						if ($sms_id){
+							$sms_status = 'В очереди';					
 						} else {
-						$sms_status = 'Неудача';
+							$sms_status = 'Неудача';
+						}
+						
+						$sms_data = array(
+							'order_status_id' => $this->config->get('concardis_order_status_id'),
+							'sms' => $options['message']
+						);
+						
+						$this->model_checkout_order->addOrderSmsHistory($this->order['order_id'], $sms_data, $sms_status, $sms_id);
 					}
-					
-					$sms_data = array(
-					'order_status_id' => $this->config->get('concardis_order_status_id'),
-					'sms' => $options['message']
-					);
-					
-					$this->model_checkout_order->addOrderSmsHistory($this->order['order_id'], $sms_data, $sms_status, $sms_id);
 					
 				}
 				

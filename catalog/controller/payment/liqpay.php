@@ -150,8 +150,6 @@
 			$this->load->model('payment/shoputils_psb');
 			$this->load->model('payment/paykeeper');
 			
-			$sms_template = "Заказ # {ID}. Оплату в сумме {SUM}, получили, спасибо. Заказ выполняем";
-			
 			$this->model_checkout_order->addOrderToQueue($this->order['order_id']);
 			
 			if (!isset($this->session->data['order_id'])) {
@@ -177,29 +175,32 @@
 			);
 			
 			//SMS
-			$options = array(
-			'to'       => $this->order['telephone'],						
-			'from'     => $this->config->get('config_sms_sign'),						
-			'message'  => str_replace(
-			array(	'{ID}', '{SUM}' ), 
-			array( $this->order['order_id'], $this->currency->format($data['amount'], $this->order['currency_code'], 1),
-			), 
-			$sms_template)
-			);
-			
-			$sms_id = $this->smsQueue->queue($options);
-			
-			if ($sms_id){
-				$sms_status = 'В очереди';					
+			if ($this->config->get('config_sms_payment_recieved_enabled')){
+				$sms_template = $this->config->get('config_sms_payment_recieved');  
+				$options = array(
+					'to'       => $this->order['telephone'],						
+					'from'     => $this->config->get('config_sms_sign'),						
+					'message'  => str_replace(
+						array(	'{ID}', '{SUM}' ), 
+						array( $this->order['order_id'], $this->currency->format($data['amount'], $this->order['currency_code'], 1),
+					), 
+						$sms_template)
+				);
+				
+				$sms_id = $this->smsQueue->queue($options);
+				
+				if ($sms_id){
+					$sms_status = 'В очереди';					
 				} else {
-				$sms_status = 'Неудача';
+					$sms_status = 'Неудача';
+				}
+				$sms_data = array(
+					'order_status_id' => $this->config->get('liqpay_order_status_id'),
+					'sms' => $options['message']
+				);
+				
+				$this->model_checkout_order->addOrderSmsHistory($this->order['order_id'], $sms_data, $sms_status, $sms_id);	
 			}
-			$sms_data = array(
-			'order_status_id' => $this->config->get('liqpay_order_status_id'),
-			'sms' => $options['message']
-			);
-			
-			$this->model_checkout_order->addOrderSmsHistory($this->order['order_id'], $sms_data, $sms_status, $sms_id);	
 			
 			if ($this->order['currency_code'] == 'UAH'){
 				$actual_amount = number_format($this->model_account_order->getOrderTotalNational($this->order['order_id']), 2, '.', '');			
