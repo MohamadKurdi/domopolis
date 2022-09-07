@@ -2804,21 +2804,22 @@
 								</tr>
 							</table>
 
-							<h2>Client notification:</h2>
+							<h2>Уведомления клиента</h2>
 							<table class="form">
-								<tr>
-									<td><?php echo $entry_sms_send_new_order; ?></td>
-									<td><?php if ($config_sms_send_new_order) { ?>
-										<input type="radio" name="config_sms_send_new_order" value="1" checked="checked" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_sms_send_new_order" value="0" />
-										<?php echo $text_no; ?>
-										<?php } else { ?>
-										<input type="radio" name="config_sms_send_new_order" value="1" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_sms_send_new_order" value="0" checked="checked" />
-										<?php echo $text_no; ?>
-									<?php } ?></td>
+								<tr>									
+									<td>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Уведомлять клиента о заказе</span></p>
+
+										<select name="config_sms_send_new_order">
+											<?php if ($config_sms_send_new_order) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</td>
 								</tr>
 								<tr>
 									<td valign="top"><?php echo $entry_sms_new_order_message; ?></td>
@@ -4497,11 +4498,40 @@
 								<tr>									
 									<?php foreach ($stores as $store) { ?>
 										<td width="<?php echo (int)(100/count($stores))?>%">
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-eur"></i> Использовать объемный вес: <?php echo $store['name']; ?></span></p>
+											<select name="config_rainforest_use_volumetric_weight_<?php echo $store['store_id']; ?>">
+												<?php if (${'config_rainforest_use_volumetric_weight_' . $store['store_id']}) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+											<br />
+											<span class="help"><i class="fa fa-eur"></i> стоимость килограмма для доставки в страну (если 0 - цена не пересчитывается)</span>
+										</td>
+									<?php } ?>
+								</tr>
+							</table>
+
+							<table class="form">
+								<tr>									
+									<?php foreach ($stores as $store) { ?>
+										<td width="<?php echo (int)(100/count($stores))?>%">
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-eur"></i> Коэффициент объемного веса <?php echo $store['name']; ?></span></p>
+											<input type="number" step="100" name="config_rainforest_volumetric_weight_coefficient_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_volumetric_weight_coefficient_' . $store['store_id']}; ?>" style="width:200px;" />									
+										</td>
+									<?php } ?>
+								</tr>
+							</table>
+
+							<table class="form">
+								<tr>									
+									<?php foreach ($stores as $store) { ?>
+										<td width="<?php echo (int)(100/count($stores))?>%">
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-eur"></i> Умножать если нет веса: <?php echo $store['name']; ?></span></p>
 											<input type="number" step="0.1" name="config_rainforest_default_multiplier_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_default_multiplier_' . $store['store_id']}; ?>" style="width:200px;" />
-
-											<br />
-											<span class="help"><i class="fa fa-eur"></i> если нету веса, просто умножать цену на число</span>
 										</td>
 									<?php } ?>
 								</tr>

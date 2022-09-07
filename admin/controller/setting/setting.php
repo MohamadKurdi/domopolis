@@ -300,15 +300,11 @@ class ControllerSettingSetting extends Controller {
 		$this->data['entry_error_filename'] = $this->language->get('entry_error_filename');
 		$this->data['entry_google_analytics'] = $this->language->get('entry_google_analytics');
 		
-		$this->data['entry_sms_send_new_order_status']
-		= $this->language->get('entry_sms_send_new_order_status');
-		$this->data['entry_sms_new_order_status_message']
-		= $this->language->get('entry_sms_new_order_status_message');
+		$this->data['entry_sms_send_new_order_status'] 	= $this->language->get('entry_sms_send_new_order_status');
+		$this->data['entry_sms_new_order_status_message'] = $this->language->get('entry_sms_new_order_status_message');
 		
-		$this->data['entry_sms_send_new_order']
-		= $this->language->get('entry_sms_send_new_order');
-		$this->data['entry_sms_new_order_message']
-		= $this->language->get('entry_sms_new_order_message');
+		$this->data['entry_sms_send_new_order'] = $this->language->get('entry_sms_send_new_order');
+		$this->data['entry_sms_new_order_message'] = $this->language->get('entry_sms_new_order_message');
 		
 		$this->load->model('localisation/order_status');
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
@@ -3084,6 +3080,21 @@ class ControllerSettingSetting extends Controller {
 			}
 		}
 
+		foreach ($stores as $store){
+			if (isset($this->request->post['config_rainforest_use_volumetric_weight_' . $store['store_id']])) {
+				$this->data['config_rainforest_use_volumetric_weight_' . $store['store_id']] = $this->request->post['config_rainforest_use_volumetric_weight_' . $store['store_id']]; 
+			} else {
+				$this->data['config_rainforest_use_volumetric_weight_' . $store['store_id']] = $this->config->get('config_rainforest_use_volumetric_weight_' . $store['store_id']);
+			}
+		}
+
+		foreach ($stores as $store){
+			if (isset($this->request->post['config_rainforest_volumetric_weight_coefficient_' . $store['store_id']])) {
+				$this->data['config_rainforest_volumetric_weight_coefficient_' . $store['store_id']] = $this->request->post['config_rainforest_volumetric_weight_coefficient_' . $store['store_id']]; 
+			} else {
+				$this->data['config_rainforest_volumetric_weight_coefficient_' . $store['store_id']] = $this->config->get('config_rainforest_volumetric_weight_coefficient_' . $store['store_id']);
+			}
+		}
 		
 		if (isset($this->request->post['config_priceva_enable_api'])) {
 			$this->data['config_priceva_enable_api'] = $this->request->post['config_priceva_enable_api']; 
