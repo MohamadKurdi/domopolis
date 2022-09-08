@@ -793,6 +793,9 @@
 						<div>
 							<input type="text" name="config_rainforest_main_formula" value="<?php echo $config_rainforest_main_formula; ?>" style="width:80%; font-size:24px; padding:10px;" />						
 							<button class="button" style="padding:10px; float:right; font-size:24px; margin-right:4px;" onclick="savePriceModel();"><i class="fa fa-check"></i> Сохранить</button>
+
+							<div class="clr"></div>
+							<span class="help"><i class="fa fa-info-circle"></i> В этом разделе изменение полей на лету отключено, чтоб изменения формулы и коэффициентов не влияли на текущую модель. Если хочешь изменить модель ценообразования после тестирования формул и (или) коэффициентов - нужно нажать кнопку сохранить и дождаться окончания процесса. После нажатия кнопки ценовая модель изменится и цены товара будут формироваться исходя из новой модели. Любое изменение поля вызывает запрос на тестовый пересчёт цен.</span>
 						</div>
 
 						<div id="calculator_results" style="min-height:500px; margin-top:10px;">
@@ -840,25 +843,37 @@
 						<tr>
 							<td>
 								Рандомные товары
+								<span class="help"><i class="fa fa-info-circle"></i> иначе от дешевых к дорогим</span>
 							</td>
 							<td>
-								<input id="calculator_show_random" type="checkbox" class="checkbox" name="calculator_show_random" value="1" /><label for="calculator_show_random"></label>
+								<input id="calculator_show_random" type="checkbox" class="checkbox" name="calculator_show_random" value="1" /><label for="calculator_show_random"></label>								
 							</td>
 						</tr>
 						<tr>
 							<td>
 								Лимит товаров
+								<span class="help"><i class="fa fa-info-circle"></i> на каждый ценовой диапазон</span>
 							</td>
 							<td>
-								<input type="number" step="1" name="calculator_limit_products" value="3" style="width:100px;" />
+								<input type="number" step="1" name="calculator_limit_products" value="3" style="width:100px;" />								
 							</td>
 						</tr>
 						<tr>
 							<td>
-								Диапазоны
+								Ценовые диапазоны
+								<span class="help"><i class="fa fa-info-circle"></i> от-до через пробел</span>
 							</td>
 							<td>
-								<input type="text" step="1" name="calculator_zones_config" value="0 20 50 100 1000 10000" style="width:200px;" />
+								<input type="text" name="calculator_zones_config" value="0 20 50 100 1000 10000" style="width:90%;" />								
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Конкретные товары
+								<span class="help"><i class="fa fa-info-circle"></i> идентификаторы через пробел</span>
+							</td>
+							<td>
+								<input type="text" name="calculator_explicit_products" value="" style="width:90%;" />								
 							</td>
 						</tr>
 						<tr>
@@ -1154,7 +1169,6 @@
 
 
 			<script type="text/javascript">
-	<? /*
 				function recalculate(){
 					var mainFormula 				= $('input[name=config_rainforest_main_formula]').val();
 					var weightCoefficient 			= $('input[name=config_rainforest_kg_price_0]').val();
@@ -1162,8 +1176,9 @@
 					var useVolumetricWeight 		= $('input[name=config_rainforest_use_volumetric_weight_0]').attr('checked')?1:0;
 					var volumetricWeightCoefficient = $('input[name=config_rainforest_volumetric_weight_coefficient_0]').val();
 					var showRandomProducts 			= $('input[name=calculator_show_random]').attr('checked')?1:0;
-					var limitProducts				=  $('input[name=calculator_limit_products]').val();
-					var zonesConfig					=  $('input[name=calculator_zones_config]').val();
+					var limitProducts				= $('input[name=calculator_limit_products]').val();
+					var zonesConfig					= $('input[name=calculator_zones_config]').val();
+					var explicitProducts			= $('input[name=calculator_explicit_products]').val();
 
 					$.ajax({
 						type: 'POST',
@@ -1178,20 +1193,20 @@
 							show_random_products:  			showRandomProducts,
 							limit_products:  				limitProducts,
 							zones_config:  					zonesConfig,
+							explicit_products: 				explicitProducts
 						},
 						beforeSend: function(){
-						//	$('#calculator_results').html('<i class="fa fa-calculator" style="font-size:128px"></i>');
+							$('#calculator_results').html('<i class="fa fa-calculator" style="font-size:128px"></i>');
 						},
 						success: function(html){
-						//	$('#calculator_results').html(html);
+							$('#calculator_results').html(html);
 						}
 					});					
 				}
 
 				$('#tab-priceformula select, #tab-priceformula textarea, #tab-priceformula input[type=checkbox], #tab-priceformula input[type=text], #tab-priceformula input[type=number]').bind('change', function() {
 					recalculate();
-				});
-	*/ ?>		
+				});		
 
 				function saveSettingAjax(key, value, elem){
 
@@ -1236,7 +1251,7 @@
 				$('select, textarea, input[type=checkbox], input[type=text], input[type=number]').bind('change', function() {
 					var key  = $(this).attr('name');
 
-					<?php foreach (['config_rainforest_main_formula', 'config_rainforest_default_store_id', 'calculator_show_random', 'calculator_limit_products', 'calculator_zones_config'] as $not_change_input) { ?>
+					<?php foreach (['config_rainforest_main_formula', 'config_rainforest_default_store_id', 'calculator_show_random', 'calculator_limit_products', 'calculator_zones_config', 'calculator_explicit_products'] as $not_change_input) { ?>
 						if (key == '<?php echo $not_change_input; ?>'){
 							console.log('Pricelogic skip autosave: ' + key);
 							return;

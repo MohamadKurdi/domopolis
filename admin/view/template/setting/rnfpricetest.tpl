@@ -38,21 +38,21 @@
 				<br />
 				<b><?php echo $product['weight']; ?>, <?php echo $product['length']; ?> * <?php echo $product['width']; ?> * <?php echo $product['height']; ?></b>
 			</td>
-			<td>
+			<td style="white-space: nowrap;">
 				<?php echo $product['amazon_best_price']; ?>
 			</td>
-			<td>
+			<td style="white-space: nowrap;">
 				<?php echo $product['counted_volumetric_weight_format']; ?>
 				<br /><small><?php echo $product['counted_volumetric_weight']; ?></small>
 			</td>
-			<td>
+			<td style="white-space: nowrap;">
 				<?php echo $product['counted_weight']; ?>				
+			</td style="white-space: nowrap;">
+			<td style="white-space: nowrap;">
+				<b><?php echo $product['counted_price_eur']; ?></b>
 			</td>
-			<td>
-				<?php echo $product['counted_price_eur']; ?>
-			</td>
-			<td>
-				<?php echo $product['counted_price_national']; ?>
+			<td style="white-space: nowrap;">
+				<b><?php echo $product['counted_price_national']; ?></b>
 			</td>
 		</tr>
 

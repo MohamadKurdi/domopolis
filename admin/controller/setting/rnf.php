@@ -164,7 +164,17 @@ class ControllerSettingRnf extends Controller {
 
 	}
 
-	public function calculate($mainFormula = '', $weightCoefficient = 0, $defaultMultiplier = 0, $useVolumetricWeight = false, $volumetricWeightCoefficient = 0, $showRandomProducts = false, $limitProducts = 0, $zonesConfig = ''){
+	public function calculate($mainFormula = '', 
+		$weightCoefficient = 0, 
+		$defaultMultiplier = 0, 
+		$useVolumetricWeight = false, 
+		$volumetricWeightCoefficient = 0, 
+		$showRandomProducts = false, 
+		$limitProducts = 0, 
+		$zonesConfig = '',
+		$explicitProducts = ''
+		){
+
 		$this->load->model('catalog/product');		
 
 		if (empty($mainFormula)){
@@ -199,13 +209,26 @@ class ControllerSettingRnf extends Controller {
 			$zonesConfig = $this->request->post['zones_config'];
 		}
 
+		if (empty($explicitProducts)){
+			$explicitProducts = $this->request->post['explicit_products'];			
+		}
+
+		if ($explicitProducts){
+			$explodedExplicitProducts = explode(' ', $explicitProducts);
+			$explicitProducts = [];
+
+			foreach ($explodedExplicitProducts as $explicitProduct){
+				$explicitProducts[] = (int)trim($explicitProduct);
+			}
+		}
+
 		if ($zonesConfig){
 			$zones 		= explode(' ', $zonesConfig);
 		} else {
 			$zones 		= [0, 20, 50, 100, 1000, 1000000];
 		}
 
-		$products 	= [];
+		$products 	= [];		
 
 		for ( $i=0; $i<=(count($zones)-1); $i++){
 
@@ -219,11 +242,14 @@ class ControllerSettingRnf extends Controller {
 						AND p.amazon_best_price > '" . (int)$zones[$i] . "' 
 						AND p.amazon_best_price <= '" . (int)$zones[$i+1] . "' 
 						AND p.amzn_no_offers = 0
-						AND p.asin <> ''
-						AND weight > 0
-						AND length > 0						
-						AND p.asin <> 'INVALID'
-						AND p.status = 1";
+						AND p.asin <> ''												
+						AND p.asin <> 'INVALID'";
+
+						if ($explicitProducts){
+							$sql .= " AND p.product_id IN (" . implode(',', $explicitProducts) . ")";
+						} else {
+							$sql .= ' AND p.status = 1 AND weight > 0 AND length > 0';
+						}
 
 						if (!$showRandomProducts){
 							$sql .= " ORDER BY amazon_best_price ASC ";
@@ -244,7 +270,9 @@ class ControllerSettingRnf extends Controller {
 		$results = [];
 
 		foreach ($products as $zone => $products){
-			$results[$zone] = [];			
+			if ($products){
+				$results[$zone] = [];			
+			}
 			foreach ($products as $product){
 				$result = [];
 				$result['name'] = $product['name'];
