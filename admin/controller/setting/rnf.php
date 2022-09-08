@@ -37,6 +37,7 @@ class ControllerSettingRnf extends Controller {
 
 		'config_sort_default',
 		'config_order_default',
+		'config_disable_filter_subcategory',
 
 		'config_delivery_outstock_enable',
 

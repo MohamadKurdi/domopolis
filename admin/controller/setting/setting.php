@@ -745,6 +745,12 @@ class ControllerSettingSetting extends Controller {
 		} else {
 			$this->data['config_monobrand'] = $this->config->get('config_monobrand');
 		}
+
+		if (isset($this->request->post['config_disable_filter_subcategory'])) {
+			$this->data['config_disable_filter_subcategory'] = $this->request->post['config_disable_filter_subcategory'];
+		} else {
+			$this->data['config_disable_filter_subcategory'] = $this->config->get('config_disable_filter_subcategory');
+		}
 		
 		if (isset($this->request->post['config_dadata'])) {
 			$this->data['config_dadata'] = $this->request->post['config_dadata'];

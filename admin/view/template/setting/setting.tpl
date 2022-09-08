@@ -419,6 +419,249 @@
 							</tr>
 						</table>
 
+						<h2><?php echo $text_product; ?></h2>
+
+						<table class="form">
+							<tr>																
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Счетчик количества</span></p>
+									<select name="config_product_count">
+										<?php if ($config_product_count) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>									
+								</td>
+								
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Разрешить отзывы</span></p>
+									<select name="config_review_status">
+										<?php if ($config_review_status) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+								</td>
+								
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Разрешить скачивание файлов</span></p>
+									<select name="config_download">
+										<?php if ($config_download) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Прятать артикул в карте</span></p>
+									<select name="config_product_hide_sku">
+										<?php if ($config_product_hide_sku) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+
+									<br />
+									<span class="help">Отключает вывод артикула в карте товара</span>
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Подменять SKU/MODEL на код товара на выводе</span></p>
+									<select name="config_product_replace_sku_with_product_id">
+										<?php if ($config_product_replace_sku_with_product_id) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+
+									<br />
+									<span class="help"><i class="fa fa-info-circle"></i> Глобальная подмена на фронте артикула на внутренний код товара (целое число). Пожалуйста, используйте с большой осторожностью. Это заменит SKU везде, и в микроразметке в том числе. Поиск затронут не будет</span>
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Добавлять префикс к коду товара/SKU при использовании подмены</span></p>
+									<input type="text" name="config_product_use_sku_prefix" value="<?php echo $config_product_use_sku_prefix; ?>" size="10" />
+
+									<br />
+									<span class="help"><i class="fa fa-info-circle"></i> Если включена предыдущая настройка, и задан этот префикс, то артикул будет равен префикса+код товара. Например, KP123646</span>
+								</td>
+
+							</tr>	
+
+							<tr>
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Группа атрибутов "особенности"</span></p>
+
+									<select name="config_special_attr_id">
+										<?php foreach ($attribute_groups as $attribute_group) { ?>
+											<?php if ($attribute_group['attribute_group_id'] == $config_special_attr_id) { ?>
+												<option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
+											<?php } else { ?>
+												<option value="<?php echo $attribute_group['attribute_group_id']; ?>"><?php echo $attribute_group['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+									</select>
+									<br />
+									<span class="help">Эти атрибуты не фильтруются, а только показываются в отдельном блоке в карте товара</span>
+								</td>
+
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Группа атрибутов "Спецификации"</span></p>
+									<select name="config_specifications_attr_id">
+										<?php foreach ($attribute_groups as $attribute_group) { ?>
+											<?php if ($attribute_group['attribute_group_id'] == $config_specifications_attr_id) { ?>
+												<option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
+											<?php } else { ?>
+												<option value="<?php echo $attribute_group['attribute_group_id']; ?>"><?php echo $attribute_group['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+									</select>
+									<br />
+									<span class="help">Эти атрибуты не фильтруются, а только показываются в отдельном блоке в карте товара</span>
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Группа атрибутов по-умолчанию</span></p>
+									<select name="config_default_attr_id">
+										<?php foreach ($attribute_groups as $attribute_group) { ?>
+											<?php if ($attribute_group['attribute_group_id'] == $config_default_attr_id) { ?>
+												<option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
+											<?php } else { ?>
+												<option value="<?php echo $attribute_group['attribute_group_id']; ?>"><?php echo $attribute_group['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+									</select>
+									<br />
+									<span class="help">В эту группу добавляются атрибуты товара с Амазона</span>
+								</td>
+
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Название атрибутов - особенностей</span></p>
+									<input type="text" name="config_special_attr_name" value="<?php echo $config_special_attr_name; ?>" size="30" />										
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Название атрибутов - cпецификаций</span></p>
+									<input type="text" name="config_specifications_attr_name" value="<?php echo $config_specifications_attr_name; ?>" size="30" />										
+								</td>
+
+								<td style="width:15%">
+																
+								</td>
+							</tr>	
+							<tr>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Второй уровень подкатегорий в категориях</span></p>
+									<select name="config_second_level_subcategory_in_categories">
+										<?php if ($config_second_level_subcategory_in_categories) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+									<br />
+									<span class="help">Если выключено - то выводится только один уровень и снижается нагрузка.</span>
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Товары только в крайних категориях</span></p>
+									<select name="config_disable_filter_subcategory">
+										<?php if ($config_disable_filter_subcategory) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+									<br />
+									<span class="help">Если включено - товары отображаются только в крайних по дереву</span>
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Отображать подкатегории во всех категориях</span></p>
+									<select name="config_display_subcategory_in_all_categories">
+										<?php if ($config_display_subcategory_in_all_categories) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+									<br />
+									<span class="help">Если выключено - то подкатегории выводятся только в корневых</span>
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Отображать только товары с полной инфой</span></p>
+									<select name="config_rainforest_show_only_filled_products_in_catalog">
+										<?php if ($config_rainforest_show_only_filled_products_in_catalog) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+									<br />
+									<span class="help">Если включены специфические режимы амазона - будут показаны только заполненные товары</span>
+								</td>
+
+								<td style="width:15%">
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Сортировка по-умолчанию</span></p>
+										<select name="config_sort_default">
+											<?php foreach ($this->registry->get('sorts_available') as $sort_name => $sort_sort) { ?>
+												<?php if ($config_sort_default == $sort_sort) { ?>
+													<option value="<?php echo $sort_sort; ?>" selected="selected"><?php echo $sort_name; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $sort_sort; ?>"><?php echo $sort_name; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>
+										<br />
+										<span class="help">Сортировка по-умолчанию в листингах</span>
+									</div>
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Порядок по-умолчанию</span></p>
+										<select name="config_order_default">
+										<?php if ($config_order_default == 'ASC') { ?>
+											<option value="ASC" selected="selected">ASC</option>
+											<option value="DESC">DESC</option>
+										<?php } else { ?>													
+											<option value="ASC">ASC</option>
+											<option value="DESC"  selected="selected">DESC</option>
+										<? } ?>
+									</select>
+									</div>									
+								</td>
+
+							</tr>						
+						</table>
+
+						<h2>Другие настройки</h2>
 						<table class="form">
 							<tr>											
 								<td style="width:18%">
@@ -1274,236 +1517,7 @@
 									<?php } ?></td>
 							</tr>
 						</table>
-						<h2><?php echo $text_product; ?></h2>
-						<table class="form">
-							
-							
-						</table>
-						
-						<table class="form">
-							<tr>																
-								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Счетчик количества</span></p>
-									<select name="config_product_count">
-										<?php if ($config_product_count) { ?>
-											<option value="1" selected="selected">Включить</option>
-											<option value="0">Отключить</option>
-										<?php } else { ?>													
-											<option value="1">Включить</option>
-											<option value="0"  selected="selected">Отключить</option>
-										<? } ?>
-									</select>									
-								</td>
-								
-								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Разрешить отзывы</span></p>
-									<select name="config_review_status">
-										<?php if ($config_review_status) { ?>
-											<option value="1" selected="selected">Включить</option>
-											<option value="0">Отключить</option>
-										<?php } else { ?>													
-											<option value="1">Включить</option>
-											<option value="0"  selected="selected">Отключить</option>
-										<? } ?>
-									</select>
-								</td>
-								
-								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Разрешить скачивание файлов</span></p>
-									<select name="config_download">
-										<?php if ($config_download) { ?>
-											<option value="1" selected="selected">Включить</option>
-											<option value="0">Отключить</option>
-										<?php } else { ?>													
-											<option value="1">Включить</option>
-											<option value="0"  selected="selected">Отключить</option>
-										<? } ?>
-									</select>
-								</td>
 
-								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Прятать артикул в карте</span></p>
-									<select name="config_product_hide_sku">
-										<?php if ($config_product_hide_sku) { ?>
-											<option value="1" selected="selected">Включить</option>
-											<option value="0">Отключить</option>
-										<?php } else { ?>													
-											<option value="1">Включить</option>
-											<option value="0"  selected="selected">Отключить</option>
-										<? } ?>
-									</select>
-
-									<br />
-									<span class="help">Отключает вывод артикула в карте товара</span>
-								</td>
-
-								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Подменять SKU/MODEL на код товара на выводе</span></p>
-									<select name="config_product_replace_sku_with_product_id">
-										<?php if ($config_product_replace_sku_with_product_id) { ?>
-											<option value="1" selected="selected">Включить</option>
-											<option value="0">Отключить</option>
-										<?php } else { ?>													
-											<option value="1">Включить</option>
-											<option value="0"  selected="selected">Отключить</option>
-										<? } ?>
-									</select>
-
-									<br />
-									<span class="help"><i class="fa fa-info-circle"></i> Глобальная подмена на фронте артикула на внутренний код товара (целое число). Пожалуйста, используйте с большой осторожностью. Это заменит SKU везде, и в микроразметке в том числе. Поиск затронут не будет</span>
-								</td>
-
-								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Добавлять префикс к коду товара/SKU при использовании подмены</span></p>
-									<input type="text" name="config_product_use_sku_prefix" value="<?php echo $config_product_use_sku_prefix; ?>" size="10" />
-
-									<br />
-									<span class="help"><i class="fa fa-info-circle"></i> Если включена предыдущая настройка, и задан этот префикс, то артикул будет равен префикса+код товара. Например, KP123646</span>
-								</td>
-
-							</tr>	
-
-							<tr>
-								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Группа атрибутов "особенности"</span></p>
-
-									<select name="config_special_attr_id">
-										<?php foreach ($attribute_groups as $attribute_group) { ?>
-											<?php if ($attribute_group['attribute_group_id'] == $config_special_attr_id) { ?>
-												<option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
-											<?php } else { ?>
-												<option value="<?php echo $attribute_group['attribute_group_id']; ?>"><?php echo $attribute_group['name']; ?></option>
-											<?php } ?>
-										<?php } ?>
-									</select>
-									<br />
-									<span class="help">Эти атрибуты не фильтруются, а только показываются в отдельном блоке в карте товара</span>
-								</td>
-
-
-								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Группа атрибутов "Спецификации"</span></p>
-									<select name="config_specifications_attr_id">
-										<?php foreach ($attribute_groups as $attribute_group) { ?>
-											<?php if ($attribute_group['attribute_group_id'] == $config_specifications_attr_id) { ?>
-												<option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
-											<?php } else { ?>
-												<option value="<?php echo $attribute_group['attribute_group_id']; ?>"><?php echo $attribute_group['name']; ?></option>
-											<?php } ?>
-										<?php } ?>
-									</select>
-									<br />
-									<span class="help">Эти атрибуты не фильтруются, а только показываются в отдельном блоке в карте товара</span>
-								</td>
-
-								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Группа атрибутов по-умолчанию</span></p>
-									<select name="config_default_attr_id">
-										<?php foreach ($attribute_groups as $attribute_group) { ?>
-											<?php if ($attribute_group['attribute_group_id'] == $config_default_attr_id) { ?>
-												<option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
-											<?php } else { ?>
-												<option value="<?php echo $attribute_group['attribute_group_id']; ?>"><?php echo $attribute_group['name']; ?></option>
-											<?php } ?>
-										<?php } ?>
-									</select>
-									<br />
-									<span class="help">В эту группу добавляются атрибуты товара с Амазона</span>
-								</td>
-
-
-								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Название атрибутов - особенностей</span></p>
-									<input type="text" name="config_special_attr_name" value="<?php echo $config_special_attr_name; ?>" size="30" />										
-								</td>
-
-								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Название атрибутов - cпецификаций</span></p>
-									<input type="text" name="config_specifications_attr_name" value="<?php echo $config_specifications_attr_name; ?>" size="30" />										
-								</td>
-
-								<td style="width:15%">
-																
-								</td>
-							</tr>	
-							<tr>
-
-								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Второй уровень подкатегорий в категориях</span></p>
-									<select name="config_second_level_subcategory_in_categories">
-										<?php if ($config_second_level_subcategory_in_categories) { ?>
-											<option value="1" selected="selected">Включить</option>
-											<option value="0">Отключить</option>
-										<?php } else { ?>													
-											<option value="1">Включить</option>
-											<option value="0"  selected="selected">Отключить</option>
-										<? } ?>
-									</select>
-									<br />
-									<span class="help">Если выключено - то выводится только один уровень и снижается нагрузка.</span>
-								</td>
-
-								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Отображать подкатегории во всех категориях</span></p>
-									<select name="config_display_subcategory_in_all_categories">
-										<?php if ($config_display_subcategory_in_all_categories) { ?>
-											<option value="1" selected="selected">Включить</option>
-											<option value="0">Отключить</option>
-										<?php } else { ?>													
-											<option value="1">Включить</option>
-											<option value="0"  selected="selected">Отключить</option>
-										<? } ?>
-									</select>
-									<br />
-									<span class="help">Если выключено - то подкатегории выводятся только в корневых</span>
-								</td>
-
-								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Отображать только товары с полной инфой</span></p>
-									<select name="config_rainforest_show_only_filled_products_in_catalog">
-										<?php if ($config_rainforest_show_only_filled_products_in_catalog) { ?>
-											<option value="1" selected="selected">Включить</option>
-											<option value="0">Отключить</option>
-										<?php } else { ?>													
-											<option value="1">Включить</option>
-											<option value="0"  selected="selected">Отключить</option>
-										<? } ?>
-									</select>
-									<br />
-									<span class="help">Если включены специфические режимы амазона - будут показаны только заполненные товары</span>
-								</td>
-
-								<td style="width:15%">
-									<div>
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Сортировка по-умолчанию</span></p>
-										<select name="config_sort_default">
-											<?php foreach ($this->registry->get('sorts_available') as $sort_name => $sort_sort) { ?>
-												<?php if ($config_sort_default == $sort_sort) { ?>
-													<option value="<?php echo $sort_sort; ?>" selected="selected"><?php echo $sort_name; ?></option>
-												<?php } else { ?>
-													<option value="<?php echo $sort_sort; ?>"><?php echo $sort_name; ?></option>
-												<?php } ?>
-											<?php } ?>
-										</select>
-										<br />
-										<span class="help">Сортировка по-умолчанию в листингах</span>
-									</div>
-									<div>
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Порядок по-умолчанию</span></p>
-										<select name="config_order_default">
-										<?php if ($config_order_default == 'ASC') { ?>
-											<option value="ASC" selected="selected">ASC</option>
-											<option value="DESC">DESC</option>
-										<?php } else { ?>													
-											<option value="ASC">ASC</option>
-											<option value="DESC"  selected="selected">DESC</option>
-										<? } ?>
-									</select>
-									</div>									
-								</td>
-
-							</tr>						
-						</table>
 							<h2><?php echo $text_voucher; ?></h2>
 							<table class="form">
 								<tr>

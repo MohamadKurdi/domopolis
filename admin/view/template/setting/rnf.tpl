@@ -1036,6 +1036,20 @@
 
 						<tr>
 							<td class="right">
+								Товары только в крайних категориях
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_disable_filter_subcategory" type="checkbox" class="checkbox" name="config_disable_filter_subcategory" <? if ($config_disable_filter_subcategory){ ?> checked="checked" <? } ?> value="1" /><label for="config_disable_filter_subcategory"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если включить эту настройку, то товары будут отображаться без учёта подкатегорий, а только по прямой привязке товара к категории. В общем случае это означает, что в категориях, имеющих дочерние - товары отображаться не будут.
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
 								Отображать подкатегории во всех категориях
 							</td>
 							<td style="width:50px;" class="center">
