@@ -586,7 +586,7 @@
 								}
 								
 								if ($this->config->get('config_product_count')){
-									$product_total = $this->model_catalog_product->getTotalProducts(['filter_category_id'  => $result['category_id'],'filter_sub_category' => true]);	
+									$product_total = $this->model_catalog_product->getTotalProducts(['filter_category_id'  => $result['category_id'],'filter_sub_category' => !$this->config->get('config_disable_filter_subcategory')]);	
 								}			
 								
 								$this->data['categories'][] = [
@@ -613,7 +613,7 @@
 								}
 								
 								if ($this->config->get('config_product_count')){
-									$product_total = $this->model_catalog_product->getTotalProducts(['filter_category_id'  => $result['category_id'],'filter_sub_category' => true]);	
+									$product_total = $this->model_catalog_product->getTotalProducts(['filter_category_id'  => $result['category_id'],'filter_sub_category' => !$this->config->get('config_disable_filter_subcategory')]);	
 								}
 
 								$children = [];
@@ -681,18 +681,18 @@
 				$this->data['products'] = array();
 				
 				$data = array(
-				'filter_category_id' 	=> $category_id,
-				'filter_sub_category' 	=> true,
-				'filter_filter'      	=> $filter,
-				'filter_ocfilter'    	=> $filter_ocfilter,
+				'filter_category_id' 			=> $category_id,
+				'filter_sub_category' 			=> !$this->config->get('config_disable_filter_subcategory'),
+				'filter_filter'      			=> $filter,
+				'filter_ocfilter'    			=> $filter_ocfilter,
 				'filter_category_id_intersect' 	=> $intersection_id,
 				'filter_sub_category_intersect' => true,
-				'filterinstock' 		=> $filterinstock,
-				'no_child'      		=> true, 
-				'sort'               	=> $sort,
-				'order'              	=> $order,
-				'start'              	=> ($page - 1) * $limit,
-				'limit'              	=> $limit
+				'filterinstock' 				=> $filterinstock,
+				'no_child'      				=> true, 
+				'sort'               			=> $sort,
+				'order'              			=> $order,
+				'start'              			=> ($page - 1) * $limit,
+				'limit'              			=> $limit
 				);
 				
 				if ($category_info['category_id'] == GENERAL_MARKDOWN_CATEGORY) {
@@ -723,8 +723,12 @@
 							$data['filter_sub_category'] = '1';
 						}
 						} else {
-						$data['filter_sub_category'] = '1';
+						$data['filter_sub_category'] = !$this->config->get('config_disable_filter_subcategory');
 					}
+				}
+
+				if ($this->config->get('config_disable_filter_subcategory')){
+					$data['filter_sub_category'] = false;
 				}
 				
 				if( ! empty( $this->request->get['manufacturer_id'] ) ) {
