@@ -9,13 +9,13 @@
 			
 			require_once(DIR_SYSTEM . 'library/urlify.php');
 			
-			$query = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "manufacturer_description'");
+			$query = $this->db->query("SHOW TABLES LIKE 'manufacturer_description'");
 			$this->manufr_desc = $query->num_rows;
 		}
 		
 		public function loadKeywords() {
 			$this->keywords = array();
-			$query = $this->db->query("SELECT `query`, LOWER(`keyword`) as 'keyword' FROM " . DB_PREFIX . "url_alias");
+			$query = $this->db->query("SELECT `query`, LOWER(`keyword`) as 'keyword' FROM url_alias");
 			foreach($query->rows as $row) {
 				$this->keywords[$row['query']] = $row['keyword'];
 			}
@@ -58,7 +58,7 @@
 		public function generateCategories($data, $language_id) {		
 			if(!empty($data['categories_template'])) {
 				if(isset($data['categories_overwrite'])) {
-					//	$this->db->query("DELETE FROM `" . DB_PREFIX . "url_alias` WHERE `query` LIKE ('category_id=%');");
+					//	$this->db->query("DELETE FROM `url_alias` WHERE `query` LIKE ('category_id=%');");
 				}
 				$this->loadKeywords();
 			}
@@ -88,11 +88,11 @@
 			if(!empty($data['products_template'])) {
 				if(isset($data['products_overwrite'])) {
 					if(isset($data['only_categories']) && count($data['only_categories'])) {
-						/*	$this->db->query("DELETE FROM `" . DB_PREFIX . "url_alias` WHERE `query` IN " .
-							"(SELECT concat('product_id=', product_id) FROM `" . DB_PREFIX . "product_to_category` WHERE category_id IN (" . implode(",", $data['only_categories']) . ") )");
+						/*	$this->db->query("DELETE FROM `url_alias` WHERE `query` IN " .
+							"(SELECT concat('product_id=', product_id) FROM `product_to_category` WHERE category_id IN (" . implode(",", $data['only_categories']) . ") )");
 						*/
 						} else {
-						$this->db->query("DELETE FROM `" . DB_PREFIX . "url_alias` WHERE `query` LIKE ('product_id=%');");
+						$this->db->query("DELETE FROM `url_alias` WHERE `query` LIKE ('product_id=%');");
 					}
 				}
 				
@@ -107,15 +107,23 @@
 				$data['language_id'] = $language_id;
 			}
 			
-			foreach($this->getProducts($data) as $product) {
+			$products = $this->getProducts($data);
+			$total 		= count($products);
+			$counter 	= 1;
+
+			foreach($products as $product) {
+
+				echoLine('[SEOGEN CLI] ' . $counter . '/' . $total .' '. $product['product_id'] . ',' . $product['name']);
+
 				$this->generateProduct($product, $data);
+				$counter++;
 			}
 		}
 		
 		public function generateManufacturers($data, $language_id) {
 			if(!empty($data['manufacturers_template'])) {
 				if(isset($data['manufacturers_overwrite'])) {
-					//	$this->db->query("DELETE FROM `" . DB_PREFIX . "url_alias` WHERE `query` LIKE ('manufacturer_id=%');");
+					//	$this->db->query("DELETE FROM `url_alias` WHERE `query` LIKE ('manufacturer_id=%');");
 				}
 				$this->loadKeywords();
 			}
@@ -142,7 +150,7 @@
 		public function generateCollections($data, $language_id) {
 			if(!empty($data['collections_template'])) {
 				if(isset($data['collections_overwrite'])) {
-					//	$this->db->query("DELETE FROM `" . DB_PREFIX . "url_alias` WHERE `query` LIKE ('collection_id=%');");
+					//	$this->db->query("DELETE FROM `url_alias` WHERE `query` LIKE ('collection_id=%');");
 				}
 				$this->loadKeywords();
 			}
@@ -169,7 +177,7 @@
 		public function generateInformations($data, $language_id) {
 			if(!empty($data['informations_template'])) {
 				if(isset($data['informations_overwrite'])) {
-					//	$this->db->query("DELETE FROM `" . DB_PREFIX . "url_alias` WHERE `query` LIKE ('information_id=%');");
+					//	$this->db->query("DELETE FROM `url_alias` WHERE `query` LIKE ('information_id=%');");
 				}
 				$this->loadKeywords();
 			}
@@ -240,7 +248,7 @@
 				}
 				
 				if(count($updates) && $data['language_id'] > 0) {
-					$this->db->query("UPDATE `" . DB_PREFIX . "category_description`" .
+					$this->db->query("UPDATE `category_description`" .
 					" SET " . implode(", ", $updates) .
 					" WHERE category_id='" . (int)$category['category_id'] . "' AND language_id='" . (int)$data['language_id'] . "'");
 				}
@@ -319,12 +327,12 @@
 			
 			if(isset($product['model']) && (isset($data['products_model_overwrite']) || (strlen(trim($product['model']))) == 0)) {
 				$products_model_template = trim(strtr($data['products_model_template'], $tags));
-				$this->db->query("UPDATE `" . DB_PREFIX . "product`" .
+				$this->db->query("UPDATE `product`" .
 				" SET `model`='" . $this->db->escape($products_model_template) . "' WHERE product_id='" . (int)$product['product_id'] . "'");
 			}
 			
 			if(count($updates)  && $data['language_id'] > 0) {
-				$this->db->query("UPDATE `" . DB_PREFIX . "product_description`" .
+				$this->db->query("UPDATE `product_description`" .
 				" SET " . implode(", ", $updates) .
 				" WHERE product_id='" . (int)$product['product_id'] . "' AND language_id='" . (int)$data['language_id'] . "'");
 			}
@@ -381,7 +389,7 @@
 				}
 				
 				if(count($updates)  && $data['language_id'] > 0) {
-					$this->db->query("UPDATE `" . DB_PREFIX . "collection_description`" .
+					$this->db->query("UPDATE `collection_description`" .
 					" SET " . implode(", ", $updates) .
 					" WHERE collection_id='" . (int)$collection['collection_id'] . "' AND language_id='" . (int)$data['language_id'] . "'");			
 				}
@@ -445,7 +453,7 @@
 				}
 
 				if(count($updates)  && $data['language_id'] > 0) {
-					$this->db->query("UPDATE `" . DB_PREFIX . "manufacturer_description`" .
+					$this->db->query("UPDATE `manufacturer_description`" .
 					" SET " . implode(", ", $updates) .
 					" WHERE manufacturer_id='" . (int)$manufacturer['manufacturer_id'] . "' AND language_id='" . (int)$data['language_id'] . "'");
 				}
@@ -475,7 +483,7 @@
 				}
 				
 				if(count($updates)  && $data['language_id'] > 0) {
-					$this->db->query("UPDATE `" . DB_PREFIX . "information_description`" .
+					$this->db->query("UPDATE `information_description`" .
 					" SET " . implode(", ", $updates) .
 					" WHERE information_id='" . (int)$information['information_id'] . "' AND language_id='" . (int)$data['language_id'] . "'");
 				}
@@ -484,8 +492,8 @@
 		
 		
 		private function getCategories($category_id = false, $language_id = 2) {
-			$query = $this->db->query("SELECT cd.*, u.keyword FROM " . DB_PREFIX . "category_description cd" .
-			" LEFT JOIN " . DB_PREFIX . "url_alias u ON (CONCAT('category_id=', cd.category_id) = u.query)" .
+			$query = $this->db->query("SELECT cd.*, u.keyword FROM category_description cd" .
+			" LEFT JOIN url_alias u ON (CONCAT('category_id=', cd.category_id) = u.query)" .
 			" WHERE cd.language_id = '" . (int)$language_id . "'" .
 			($category_id ? " AND cd.category_id='" . (int)$category_id . "'" : "") .
 			" ORDER BY cd.category_id");
@@ -506,8 +514,8 @@
 			}
 			
 			$query = $this->db->query("SELECT pd.*, m.name as manufacturer, p.model as model, p.sku, p.price, p.location, " .
-			"(SELECT cd.name FROM `" . DB_PREFIX . "category_description` cd " .
-			" LEFT JOIN `" . DB_PREFIX . "product_to_category` p2c ON (cd.category_id = p2c.category_id)".
+			"(SELECT cd.name FROM `category_description` cd " .
+			" LEFT JOIN `product_to_category` p2c ON (cd.category_id = p2c.category_id)".
 			" WHERE p2c.product_id = p.product_id".
 			" AND cd.language_id ='" . (int)$seogen['language_id'] . "'".
 			" ORDER BY cd.category_id DESC LIMIT 1) AS category," .						
@@ -517,16 +525,17 @@
 			"(SELECT text FROM product_attribute pa 
 			WHERE pa.product_id = p.product_id 
 			AND pa.language_id ='" . (int)$seogen['language_id'] . "' AND pa.attribute_id = 2) as type" .	
-			" FROM `" . DB_PREFIX . "product` p" .			
-			" INNER JOIN `" . DB_PREFIX . "product_description` pd ON ( pd.product_id = p.product_id )" .
-			" LEFT JOIN `" . DB_PREFIX . "manufacturer` m ON ( m.manufacturer_id = p.manufacturer_id )" .
-			($only_categories ? " LEFT JOIN `" . DB_PREFIX . "product_to_category` p2c ON (p2c.product_id=p.product_id)" : "") .
+			" FROM `product` p" .			
+			" INNER JOIN `product_description` pd ON ( pd.product_id = p.product_id )" .
+			" LEFT JOIN `manufacturer` m ON ( m.manufacturer_id = p.manufacturer_id )" .
+			($only_categories ? " LEFT JOIN `product_to_category` p2c ON (p2c.product_id=p.product_id)" : "") .
 			" WHERE pd.language_id ='" . (int)$seogen['language_id'] . "'" .
+			" AND ((added_from_amazon = 1 AND filled_from_amazon = 1) OR added_from_amazon = 0)" . 
 			($only_categories ? " AND p2c.category_id IN (" . $only_categories . ")" : "") .
 			($product_id ? " AND p.product_id='" . (int)$product_id . "'" : "") .
-			" ORDER BY p.product_id");
+			" ORDER BY p.product_id DESC");
 			if ($product_id) {
-				$query_keyword = $this->db->query("SELECT `keyword` FROM `" . DB_PREFIX . "url_alias` WHERE `query`='product_id=". $query->rows[0]['product_id']."' LIMIT 1");
+				$query_keyword = $this->db->query("SELECT `keyword` FROM `url_alias` WHERE `query`='product_id=". $query->rows[0]['product_id']."' LIMIT 1");
 				$query->rows[0]['keyword'] = $query_keyword->num_rows ? $query_keyword->row['keyword'] : null;
 				} else if($this->keywords !== false) {
 				foreach($query->rows as &$row) {
@@ -540,16 +549,16 @@
 		private function getManufacturers($manufacturer_id = false, $language_id = 2) {
 			if($this->manufr_desc) {
 				$query = $this->db->query("SELECT md.*, u.keyword, m.name" .
-				" FROM `" . DB_PREFIX . "manufacturer` m" .
-				" LEFT JOIN `" . DB_PREFIX . "manufacturer_description` md ON (m.manufacturer_id=md.manufacturer_id)" .
-				" LEFT JOIN " . DB_PREFIX . "url_alias u ON (CONCAT('manufacturer_id=', m.manufacturer_id) = u.query)" .
+				" FROM `manufacturer` m" .
+				" LEFT JOIN `manufacturer_description` md ON (m.manufacturer_id=md.manufacturer_id)" .
+				" LEFT JOIN url_alias u ON (CONCAT('manufacturer_id=', m.manufacturer_id) = u.query)" .
 				" WHERE md.language_id='" . (int)$language_id . "'" .
 				($manufacturer_id ? " AND m.manufacturer_id='" . (int)$manufacturer_id . "'" : "") .
 				" ORDER BY m.manufacturer_id");
 				} else {
 				$query = $this->db->query("SELECT manufacturer_id, name, u.keyword" .
-				" FROM `" . DB_PREFIX . "manufacturer` m" .
-				" LEFT JOIN " . DB_PREFIX . "url_alias u ON (CONCAT('manufacturer_id=', m.manufacturer_id) = u.query)" .
+				" FROM `manufacturer` m" .
+				" LEFT JOIN url_alias u ON (CONCAT('manufacturer_id=', m.manufacturer_id) = u.query)" .
 				($manufacturer_id ? " WHERE m.manufacturer_id='" . (int)$manufacturer_id . "'" : "") .
 				" ORDER BY m.manufacturer_id");
 			}
@@ -558,10 +567,10 @@
 		
 		private function getCollections($collection_id = false, $language_id = 2) {
 			$query = $this->db->query("SELECT cd.*, u.keyword, c.name, m.name as mname" .
-			" FROM `" . DB_PREFIX . "collection` c" .
-			" LEFT JOIN `" . DB_PREFIX . "collection_description` cd ON (c.collection_id=cd.collection_id)" .
-			" LEFT JOIN `" . DB_PREFIX . "manufacturer` m ON (c.manufacturer_id=m.manufacturer_id)" .
-			" LEFT JOIN " . DB_PREFIX . "url_alias u ON (CONCAT('collection_id=', m.manufacturer_id) = u.query)" .
+			" FROM `collection` c" .
+			" LEFT JOIN `collection_description` cd ON (c.collection_id=cd.collection_id)" .
+			" LEFT JOIN `manufacturer` m ON (c.manufacturer_id=m.manufacturer_id)" .
+			" LEFT JOIN url_alias u ON (CONCAT('collection_id=', m.manufacturer_id) = u.query)" .
 			" WHERE cd.language_id='" . (int)$language_id . "'" .
 			($collection_id ? " AND m.collection_id='" . (int)$collection_id . "'" : "") .
 			" ORDER BY c.collection_id");		
@@ -569,8 +578,8 @@
 		}
 		
 		private function getInformations($information_id = false, $language_id = 2) {
-			$query = $this->db->query("SELECT id.*, u.keyword FROM " . DB_PREFIX . "information_description id" .
-			" LEFT JOIN " . DB_PREFIX . "url_alias u ON (CONCAT('information_id=', id.information_id) = u.query)" .
+			$query = $this->db->query("SELECT id.*, u.keyword FROM information_description id" .
+			" LEFT JOIN url_alias u ON (CONCAT('information_id=', id.information_id) = u.query)" .
 			" WHERE id.language_id = '" . (int)$language_id . "'" .
 			($information_id ? " AND id.information_id='" . (int)$information_id . "'" : "") .
 			" ORDER BY id.information_id");
@@ -588,7 +597,7 @@
 				$this->keywords[] = $keyword;
 				} else {
 				do {
-					$query = $this->db->query("SELECT url_alias_id FROM " . DB_PREFIX . "url_alias WHERE keyword ='" . $this->db->escape($keyword) . "'");
+					$query = $this->db->query("SELECT url_alias_id FROM url_alias WHERE keyword ='" . $this->db->escape($keyword) . "'");
 					if($query->num_rows > 0) {
 						$keyword = $k . '-' . ++$counter;
 					}
