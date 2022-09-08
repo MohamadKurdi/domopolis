@@ -5,7 +5,7 @@
 					console.log("[PWA] active service worker found, no need to register");
 					} else {
 					navigator.serviceWorker
-					.register("/admin/sw.js", {
+					.register("/admin/sw.js?v=101", {
 						scope: "/admin/"
 					})
 					.then(function (reg) {
@@ -19,7 +19,7 @@
 			window.addEventListener('beforeinstallprompt', function(e) {			
 				e.preventDefault(); 
 				deferredPrompt = e;				
-				console.log('[PWA] KP-ADMIN beforeinstallprompt fired')				
+				console.log('[PWA] APP-ADMIN beforeinstallprompt fired')				
 			});
 			
 			window.addEventListener('appinstalled', function(e) {
@@ -33,10 +33,10 @@
 					deferredPrompt.userChoice.then(function(choiceResult){
 						
 						if (choiceResult.outcome === 'accepted') {
-							console.log('[PWA] KP-ADMIN is insalled');
+							console.log('[PWA] APP-ADMIN is installed');
 							window.dataLayer = window.dataLayer || [];							
 							} else {
-							console.log('[PWA] KP-ADMIN is not installed');
+							console.log('[PWA] APP-ADMIN is not installed');
 							window.dataLayer = window.dataLayer || [];							
 						}
 						
