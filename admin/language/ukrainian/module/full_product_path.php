@@ -1,7 +1,7 @@
 <?php
 // English   Full Product Path  		Author: Sirius Dev
 // Heading
-$_['heading_title']      = '<img src="view/full_product_path/img/icon.png" style="vertical-align:top;padding-right:4px"/> Product Path Manager';
+$_['heading_title']      = 'Product Path Manager';
 $_['module_title']		  = '<span>Product </span> Path Manager';
 
 // Text
