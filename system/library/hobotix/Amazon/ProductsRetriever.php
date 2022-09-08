@@ -974,6 +974,10 @@
 						'json' 			=> json_encode($product)
 			], false);
 		}
+
+		public function fixEmptySKU($product_id){
+			$this->db->query("UPDATE product SET sku = model WHERE sku = '' AND product_id = '" . (int)$product_id . "'");			
+		}
 		
 		public function editFullProduct($product_id, $product, $do_adding_new_variants = true){	
 			$this->yandexTranslator->setDebug(false);
@@ -1034,7 +1038,10 @@
 			$this->parseProductVideos($product_id, $product);			
 
 			//Атрибуты, фичер баллетс и спецификации
-			$this->parseProductAttributes($product_id, $product, $main_variant?$main_variant['main_variant_id']:false);			
+			$this->parseProductAttributes($product_id, $product, $main_variant?$main_variant['main_variant_id']:false);
+
+			//Fixes SKU if it's empty
+			$this->fixEmptySKU($product_id);	
 			
 			//Размеры, готовая функция из InfoUpdater
 			$this->registry->get('rainforestAmazon')->infoUpdater->parseAndUpdateProductDimensions($product);
