@@ -7,7 +7,7 @@
 			parent::__construct($registry);
 
 			try{
-				$this->geoReader = new GeoIp2\Database\Reader('/var/lib/GeoIP/GeoLite2-City.mmdb');
+				$this->geoReader = new GeoIp2\Database\Reader(GEOIP_LIB_PATH);
 			} catch (InvalidArgumentException $e){
 				$this->geoReader = false;
 			}

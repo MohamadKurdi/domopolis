@@ -9,6 +9,10 @@
 
 
 		public function resize($filename, $width, $height, $return_real_path = false) {
+
+			if (!defined('IMAGE_QUALITY')){
+				define('IMAGE_QUALITY', 80);
+			}
 			
 			$uri = '';
 			if (isset($this->request->server['REQUEST_URI'])) {
