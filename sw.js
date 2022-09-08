@@ -1,7 +1,7 @@
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js');
 
-const OFFLINE_HTML 	= '/offline.html';
-const PRECACHE = [{url: OFFLINE_HTML, revision: '1001'}];
+const OFFLINE_HTML 	= '/offline.page.html';
+const PRECACHE = [{url: OFFLINE_HTML, revision: '1003'}];
 
 workbox.precaching.precacheAndRoute(PRECACHE);
 
@@ -44,7 +44,7 @@ workbox.routing.registerRoute(
 
 
 workbox.routing.registerRoute(
-	/\.(?:png|gif|jpg|jpeg|svg|webp)$/,
+	/\.(?:png|gif|jpg|jpeg|svg|webp|avif)$/,
 	new workbox.strategies.StaleWhileRevalidate({
 		cacheName: 'images',
 		plugins: [
