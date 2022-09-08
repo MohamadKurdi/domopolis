@@ -1,11 +1,7 @@
-﻿importScripts('https://storage.googleapis.com/workbox-cdn/releases/5.1.2/workbox-sw.js');
+﻿importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js');
 
 const OFFLINE_HTML = '/admin/offline.html';
-const FA_CSS = '/admin/view/stylesheet/font-awesome-4.7.0/css/font-awesome.min.css';
-const JQUERY_UI_CSS = '/admin/view/javascript/jquery/ui/themes/redmond/jquery-ui-1.9.2.custom.min.css';
-
-
-const PRECACHE = [{url: OFFLINE_HTML, revision: '1001'}, {url: FA_CSS, revision: '331'}, {url: JQUERY_UI_CSS, revision: '331'}];
+const PRECACHE = [{url: OFFLINE_HTML, revision: '1001'}];
 
 /**
 	* Precache Manifest for resources available offline.
@@ -22,14 +18,12 @@ workbox.navigationPreload.enable();
 /**
 	* Basic caching for CSS and JS.
 */
-/*
-	workbox.routing.registerRoute(
+workbox.routing.registerRoute(
 	/\.(?:js|css)$/,
 	new workbox.strategies.StaleWhileRevalidate({
-    cacheName: 'css_js'
+		cacheName: 'css_js'
 	})
 	);
-*/
 
 /**
 	* Basic caching for fonts.
