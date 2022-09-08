@@ -17,19 +17,28 @@
 		
 			return false;
 		}
+
+		private function getParentCategoryForThis($category_id){
+			$query = $this->db->query("SELECT path_id FROM category_path WHERE category_id = '" . (int)$category_id . "' AND path_id <> 0 ORDER BY level ASC LIMIT 1");
+		
+			if ($query->num_rows){
+				return $query->row['path_id'];
+			}			
+		
+			return false;
+		}
 	
 		protected function index($setting) {
 			$this->language->load('module/category');
 			
 			$this->data['heading_title'] = $this->language->get('heading_title');
 			
+			$parts = false;
 			if (isset($this->request->get['path'])) {
 				$parts = explode('_', (string)$this->request->get['path']);
-				} else {
-				$parts = array();
 			}
 			
-			$this->data['category_id'] = (int)array_pop($parts);			
+			$this->data['category_id'] = $category_id = $parts?(int)array_pop($parts):0;			
 			
 			if (isset($this->request->get['manufacturer_id'])) {
 				$manufacturer_id = (int)$this->request->get['manufacturer_id'];
@@ -38,18 +47,15 @@
 			}
 			
 			$this->load->model('catalog/category');
-			
-			$store_id = (int)$this->config->get('config_store_id');
-			$language_id  = (int)$this->config->get('config_language_id');
-			
-			$this->bcache->SetFile('module_'.$language_id.$this->data['category_id'].$manufacturer_id.md5(serialize($setting)). '.tpl', 'categories_module'.$store_id);
-			
-			if ($this->bcache->CheckFile()) {		
-				
-				$out = $this->bcache->ReturnFileContent();
-				$this->setBlockCachedOutput($out);
-				
-				} else {
+			$options = [$manufacturer_id, $category_id];
+
+			$out = $this->cache->get($this->createCacheQueryString(get_class($this), $setting, $options));
+
+			if ($out) {		
+
+				$this->setCachedOutput($out);
+
+			} else {	
 				
 				$this->data['categories'] = array();
 				
@@ -83,43 +89,35 @@
 					
 					} else {
 					
-					$this_category = $this->model_catalog_category->getCategory($this->data['category_id']);
-					
-					$root = $this->data['category_id'];
+					$currentCategory = $this->model_catalog_category->getCategory($this->data['category_id']);
+
+					$currentRootCategory = $this->data['category_id'];
 					if ($this->getIfToShowFullMenu($this->data['category_id'])){
-						if ($root_category = $this->getRootCategoryForThis($this->data['category_id'])){
-							$root = $root_category;
+						$currentParentCategory 		= $currentCategory['parent_id'];
+						$currentZeroRootCategory 	= $this->getRootCategoryForThis($this->data['category_id']);
+
+						if ($setting['only_parent_tree'] && !empty($currentCategory['parent_id'])){
+							$currentRootCategory = $currentParentCategory;
+						} else {
+							$currentRootCategory = $currentZeroRootCategory;
 						}
 					}
 					
-					$categories = $this->model_catalog_category->getCategories($root);				
+					$categories = $this->model_catalog_category->getCategories($currentRootCategory);	
+
+					if 	(count($categories) < $setting['min_for_zero_parent'] && $currentRootCategory!=$currentZeroRootCategory && $currentZeroRootCategory){
+						$categories = $this->model_catalog_category->getCategories($currentZeroRootCategory);	
+					}
 					
 					foreach ($categories as $category) {
-						
-						$children_data = array();
-						/*	
-							if ($this_category && isset($this_category['category_id']) && (($category['category_id'] == $this_category['category_id']) || (in_array($category['category_id'], $parts)))){
-							$children = $this->model_catalog_category->getCategories($category['category_id']);
-							
-							foreach ($children as $child) {
-							
-							$children_data[] = array(
-							'category_id' => $child['category_id'],
-							'name'        => $child['name'],
-							'href'        => $this->url->link('product/category', 'path=' . $category['category_id'] . '_' . $child['category_id'])	
-							);		
-							}
-							}
-						*/
-						
-						if ($this_category && isset($this_category['category_id']) && (($category['category_id'] == $this_category['category_id']) || (in_array($category['category_id'], $parts)))){
+						if ($currentCategory && isset($currentCategory['category_id']) && (($category['category_id'] == $currentCategory['category_id']) || (in_array($category['category_id'], $parts)))){
 							$this->data['opened_category_id'] = (int)$category['category_id'];
 						}
 						
 						$children = $this->model_catalog_category->getCategories($category['category_id']);
 						
-						foreach ($children as $child) {
-							
+						$children_data = array();
+						foreach ($children as $child) {							
 							$children_data[] = array(
 							'category_id' => $child['category_id'],
 							'name'        => $child['name'],
@@ -134,18 +132,13 @@
 						'children'    => $children_data,
 						'href'        => $this->url->link('product/category', 'path=' . $category['category_id'])
 						);	
-					}
-					
+					}					
 				}
 				
-				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/category.tpl')) {
-					$this->template = $this->config->get('config_template') . '/template/module/category.tpl';
-					} else {
-					$this->template = 'default/template/module/category.tpl';
-				}
+				$this->template = 'module/category';
 				
 				$out = $this->render();
-				$this->bcache->WriteFile($out);
+				$this->cache->set($this->createCacheQueryString(get_class($this), $setting, $options), $out);
 			}
 		}
 	}	
