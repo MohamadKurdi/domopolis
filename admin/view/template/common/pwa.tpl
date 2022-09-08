@@ -1,4 +1,4 @@
-<link rel="manifest" href="<?php echo HTTPS_SERVER; ?>manifest.json?rand=<?php echo mt_rand(0,999); ?>" />
+<link rel="manifest" href="https://domopolis.com.ua/admin/pwa/mapper.manifest.json.php?rand=<?php echo mt_rand(0,999); ?>" />
 		<script>
 			if ("serviceWorker" in navigator) {
 				if (navigator.serviceWorker.controller) {
