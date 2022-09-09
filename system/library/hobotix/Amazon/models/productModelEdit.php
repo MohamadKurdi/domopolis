@@ -73,9 +73,6 @@ class productModelEdit extends hoboModel{
 		$this->db->query("UPDATE product SET main_variant_id = 	'" . (int)$main_variant_id . "'	WHERE product_id = '" . (int)$product_id . "'");
 	}
 
-	public function cleanProductVariants(){
-		$this->db->query("TRUNCATE product_variants");
-	}
 
 	public function setProductVariants($product){
 		if (!empty($product['variants'])){
@@ -96,11 +93,11 @@ class productModelEdit extends hoboModel{
 	}
 
 	public function clearAsinVariantsTable(){
-		$this->db->query("TRUNCATE product_variants");
+		$this->db->query("DELETE FROM product_variants WHERE 1");
 	}
 
 	public function clearIdsVariantsTable(){
-		$this->db->query("TRUNCATE product_variants_ids");
+		$this->db->query("DELETE FROM product_variants_ids WHERE 1");
 	}
 
 	public function insertVariantToVariantsTable($product_id, $asins){		

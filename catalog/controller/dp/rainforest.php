@@ -598,7 +598,7 @@ class ControllerDPRainForest extends Controller {
 		Перестроение вариантов
 	*/
 	public function rebuildvariants(){
-		$this->rainforestAmazon->productsRetriever->model_product_edit->cleanProductVariants();
+		$this->rainforestAmazon->productsRetriever->model_product_edit->clearAsinVariantsTable();
 
 		$this->setvariants->fixvariants();
 	}
