@@ -231,7 +231,7 @@
 <?php } ?>
 
 
-<script src="/catalog/view/theme/kp/js/jquery.ui.touch-punch.min.js"></script>
+<script src="/catalog/view/theme/default/js/jquery.ui.touch-punch.min.js"></script>
 
 <script type="text/javascript">
 if ($(window).width() >= '768'){

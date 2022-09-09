@@ -14,7 +14,7 @@
 
 		<link rel="stylesheet" href="/js/node_modules/pretty-checkbox/dist/pretty-checkbox.min.css" crossorigin="anonymous">
 		<link rel="stylesheet" href="/js/node_modules/select2/dist/css/select2.min.css">
-		<link rel="stylesheet" href="/catalog/view/theme/kp/css/sumoselect.css">
+		<link rel="stylesheet" href="/catalog/view/theme/default/css/sumoselect.css">
 
 		<style type="text/css">
 			.simple-processing-dadata-request::after {

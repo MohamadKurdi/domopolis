@@ -23,7 +23,7 @@
 			background-position: center;
 			background-size: contain;
 			background-repeat: no-repeat;
-			background-image: url(/catalog/view/theme/kp/img/load_more.svg);
+			background-image: url(/catalog/view/theme/default/img/load_more.svg);
 			}
 			.grecaptcha-badge{
 			right: -999px !important;
@@ -39,7 +39,7 @@
 			header .search-scrol--wrap .search .search__select{display: none;}
 			
 			header .search-scrol--wrap .search-scrol-btn{width: 30px;height: 30px;display: flex;align-items: center;justify-content: center;border: 2px solid #51a881;border-radius: 50px;margin-left: auto;background-color: transparent;position: relative;z-index: 1;}
-			header .search-scrol--wrap .search-scrol-btn.open{width: 30px;height: 30px;line-height: 25px;font-size: 15px;color: #2121217d;cursor: pointer;background-image: url(/catalog/view/theme/kp/img/close-modal.svg);background-size: 16px 12px;background-repeat: no-repeat;border: 1px solid #000;text-align: center;background-position: center;opacity: .5;}
+			header .search-scrol--wrap .search-scrol-btn.open{width: 30px;height: 30px;line-height: 25px;font-size: 15px;color: #2121217d;cursor: pointer;background-image: url(/catalog/view/theme/default/img/close-modal.svg);background-size: 16px 12px;background-repeat: no-repeat;border: 1px solid #000;text-align: center;background-position: center;opacity: .5;}
 			header .search-scrol--wrap .search-scrol-btn.open svg{display: none;}
 			#search_input::placeholder {color: #00000096;}
 			

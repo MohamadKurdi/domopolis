@@ -23,7 +23,7 @@
 						</div>
 						<ul>
 							<li class="href_ru">
-								<a href="<?php echo $href_ru; ?>"><img src="/catalog/view/theme/kp/img/flags/ru.png" alt="Россия"></a>
+								<a href="<?php echo $href_ru; ?>"><img src="/catalog/view/theme/default/img/flags/ru.png" alt="Россия"></a>
 							</li>
 							<li class="href_ua">
 								<a href="<?php echo $href_ua; ?>"><img src="/catalog/view/theme/kp/img/flags/ua.png" alt="Украина"></a>
