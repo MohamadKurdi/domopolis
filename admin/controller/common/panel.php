@@ -227,6 +227,8 @@ class ControllerCommonPanel extends Controller {
 				$mgClient = new \Mailgun\Mailgun($configurator, new \Mailgun\Hydrator\ArrayHydrator());
 				$result = $mgClient->domains()->index();
 
+				$this->log->debug($result);
+
 				$found = false;				
 
 				foreach ($result['items'] as $item){
