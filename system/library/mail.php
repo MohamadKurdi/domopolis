@@ -20,7 +20,7 @@ class Mail {
 	public function __construct($registry = false){
 		if ($registry){
 			$this->db 				= $registry->get('db');
-			$this->config 			= $registry->get('config');
+			$this->config 			= $registry->get('config');			
 			$this->emailBlackList 	= $registry->get('emailBlackList');
 			$this->protocol = $this->config->get('config_mail_protocol');
 			$this->setFrom($this->config->get('config_email'));
