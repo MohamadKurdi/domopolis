@@ -31,6 +31,17 @@
 	$configFiles 		= loadJsonConfig('configs');
 	$domainRedirects 	= loadJsonConfig('domainredirect');
 	
+	//Echo 
+	if (isset($storesConfig[$httpHOST]) && !is_numeric($storesConfig[$httpHOST])){
+		$content = file_get_contents(dirname(__FILE__) .'/'. trim($storesConfig[$httpHOST]));
+		if ($_SERVER['REQUEST_URI'] == '/'){			
+			header('HTTP/1.1 200 OK');
+		} else {
+			header('HTTP/1.1 410 Gone');			
+		}
+		echo $content;
+		exit();
+	}
 	
 	//Редиректы доменов, из конфига domainredirect
 	if (isset($domainRedirects[$httpHOST])){		
