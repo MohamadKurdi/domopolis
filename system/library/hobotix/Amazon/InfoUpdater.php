@@ -95,6 +95,9 @@ class InfoUpdater
 		//Кавычки и другие символы, одинарная кавычка только с пробелом, потому что иначе это апостроф
 		$name = str_replace(["&amp;", "' ", "( ", " )", '(-', '-)'], ['&', ' ', '(', ' )', '(', ')'], $name);
 
+		//Упоминания Amazon
+		$name = str_ireplace(["Amazon", "amazon", "Амазон", "амазон", "Амазонов", "амазонов", "амазоней"], ['Domopolis'], $name);
+
 		//Кавычка в начале - точно не апостроф
 		$name = ltrim($name, "'");
 
@@ -248,8 +251,8 @@ class InfoUpdater
 		$name = rtrim($name, ', ');
 		$name = rtrim($name);
 
-		$name = ltrim($name, ',. ');
-		$name = ltrim($name);
+		$name = ltrim($name, '?,. ');
+		$name = ltrim($name);		
 
 		//Первая буква - большая, функция своя, в хелпере utf8
 		$name = \mb_ucfirst($name);
