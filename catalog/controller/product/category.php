@@ -590,9 +590,9 @@
 								}			
 								
 								$this->data['categories'][] = [
-								'thumb'   	 => $image,
-								'name'  => $result['name'] . ' ' . $manufacturer['name'] . ($this->config->get('config_product_count') ? ' (' . $product_total . ')' : ''),
-								'href'  => $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url_s)
+								'thumb'   	 	=> $image,
+								'name'  		=> $result['name'] . ' ' . $manufacturer['name'] . ($this->config->get('config_product_count') ? ' (' . $product_total . ')' : ''),
+								'href'  		=> $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url_s)
 								];					
 							}
 							

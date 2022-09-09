@@ -192,7 +192,7 @@ class ControllerDPRainForest extends Controller {
 		}
 
 		$type = $this->config->get('config_rainforest_category_model');
-		$currentCategories = $this->rainforestAmazon->categoryParser->setType($type)->getCategoriesWithChildrenFromDatabase('bestsellers_3273865031', true);
+		$currentCategories = $this->rainforestAmazon->categoryParser->setType($type)->getCategoriesWithChildrenFromDatabase();
 
 		foreach ($currentCategories as $currentCategory){
 			echoLine('[fixunexistentcategoriescron] Категория ' . $currentCategory['name'] . ', ' . $currentCategory['amazon_category_id']);	
@@ -204,7 +204,6 @@ class ControllerDPRainForest extends Controller {
 			$this->rainforestAmazon->categoryParser->setType($type)->updateFinalCategories();
 			$this->rainforestAmazon->categoryParser->setType($type)->rebuildAmazonTreeToStoreTree();
 			$this->rainforestAmazon->categoryParser->setType($type)->model_catalog_category->repairCategories();
-			die();
 		}
 	}
 
