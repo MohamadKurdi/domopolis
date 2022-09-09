@@ -37,6 +37,44 @@
 			$st = str_replace('O','',$st);
 			return $st;
 		}
+
+		public function fullcron(){
+
+			if (!$this->config->get('config_enable_seogen_cron')){
+				echoLine('[ControllerApiSeogen::fullcron] CRON IS DISABLED IN ADMIN');
+				return;
+			}
+
+			$this->load->language('module/seogen');
+			$this->load->model('module/seogen');
+			$this->load->model('localisation/language');
+
+			$seogen = $this->config->get('seogen');			
+			$languages = $this->model_localisation_language->getLanguages();
+
+			foreach ($languages as $language){
+				echoLine('[SEOGEN CLI] Начинаем язык ' . $language['code']);
+				echoLine('[SEOGEN CLI], Товары');
+				$this->model_module_seogen->generateProducts($seogen, $language['language_id']);
+
+				echoLine('[SEOGEN CLI], Категории');
+				$this->model_module_seogen->generateCategories($seogen, $language['language_id']);
+
+				echoLine('[SEOGEN CLI], Бренды');
+				$this->model_module_seogen->generateManufacturers($seogen, $language['language_id']);
+
+				echoLine('[SEOGEN CLI], Коллекции');
+				$this->model_module_seogen->generateCollections($seogen, $language['language_id']);
+
+				echoLine('[SEOGEN CLI], Статьи');
+				$this->model_module_seogen->generateInformations($seogen, $language['language_id']);
+
+				
+			}
+
+			$this->cron();
+			
+		}
 		
 		public function cron(){
 			$this->load->model('localisation/language');

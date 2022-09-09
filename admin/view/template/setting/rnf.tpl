@@ -189,6 +189,20 @@
 									</span>
 								</td>
 							</tr>
+
+							<tr>
+								<td style="white-space: nowrap;color:#7F00FF;">
+									<i class="fa fa-refresh"></i> <b>Генератор SEO</b>
+								</td>
+								<td style="width:40px;" class="center">
+									<input id="config_enable_seogen_cron" type="checkbox" class="checkbox" name="config_enable_seogen_cron" <? if ($config_enable_seogen_cron){ ?> checked="checked" <? } ?> value="1" /><label for="config_enable_seogen_cron"></label>
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Невозможно генерировать данные на лету для большого количества товаров. Поэтому это вынесено в регулярные задачи. Задача запускается кажду ночь и создает данные в соответствии с настройками модуля SeoGen.
+									</span>
+								</td>
+							</tr>
 						</table>
 					</div>					
 				</div>
@@ -1079,6 +1093,20 @@
 
 						<tr>
 							<td class="right">
+								Счетчик товаров
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_product_count" type="checkbox" class="checkbox" name="config_product_count" <? if ($config_product_count){ ?> checked="checked" <? } ?> value="1" /><label for="config_product_count"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Количество товаров в категориях отображается рядом с названием категории в меню, дереве и прочих местах. Пересчет количества товаров выполняется ежедневно, но не на лету, поскольку это очень сильно нагружает БД.
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
 								Отображать только товары с основной ценой
 							</td>
 							<td style="width:50px;" class="center">
@@ -1211,10 +1239,10 @@
 							explicit_products: 				explicitProducts
 						},
 						beforeSend: function(){
-							$('#calculator_results').html('<i class="fa fa-calculator" style="font-size:128px"></i>');
+						//	$('#calculator_results').html('<i class="fa fa-calculator" style="font-size:128px"></i>');
 						},
 						success: function(html){
-							$('#calculator_results').html(html);
+						//	$('#calculator_results').html(html);
 						}
 					});					
 				}

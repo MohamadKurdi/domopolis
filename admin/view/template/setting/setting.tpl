@@ -3734,7 +3734,7 @@
 
 							<table class="form">
 								<tr>
-									<td style="width:12%">
+									<td style="width:20%">
 
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Парсер новых товаров Amazon</span></p>
 										<select name="config_rainforest_enable_new_parser">
@@ -3750,7 +3750,7 @@
 
 									</td>
 
-									<td style="width:12%">
+									<td style="width:20%">
 
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Парсер данных о товарах Amazon</span></p>
 										<select name="config_rainforest_enable_data_parser">
@@ -3766,7 +3766,7 @@
 
 									</td>
 
-									<td style="width:12%">
+									<td style="width:20%">
 
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Разгребатель технической категории</span></p>
 										<select name="config_rainforest_enable_tech_category_parser">
@@ -3782,7 +3782,7 @@
 
 									</td>
 
-									<td style="width:12%">
+									<td style="width:20%">
 
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Парсер данных о товарах Amazon L2</span></p>
 										<select name="config_rainforest_enable_data_l2_parser">
@@ -3798,7 +3798,7 @@
 
 									</td>
 
-									<td style="width:12%">
+									<td style="width:20%">
 
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Получение офферов с Amazon</span></p>
 										<select name="config_rainforest_enable_offers_parser">
@@ -3813,8 +3813,9 @@
 										</div>
 
 									</td>
-
-									<td style="width:12%">
+								</tr>
+								</tr>
+									<td style="width:20%">
 
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Парсер дерева категорий</span></p>
 										<select name="config_rainforest_enable_category_tree_parser">
@@ -3830,7 +3831,7 @@
 
 									</td>
 
-									<td style="width:12%">
+									<td style="width:20%">
 
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Валидация ASIN</span></p>
 										<select name="config_rainforest_enable_asins_parser">
@@ -3846,7 +3847,7 @@
 
 									</td>
 
-									<td style="width:12%">
+									<td style="width:20%">
 
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Валидация EAN/GTIN</span></p>
 										<select name="config_rainforest_enable_eans_parser">
@@ -3862,11 +3863,27 @@
 
 									</td>
 
-									<td style="width:12%">
+									<td style="width:20%">
 
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Офферы заказанных товаров</span></p>
 										<select name="config_rainforest_enable_offersqueue_parser">
 											<?php if ($config_rainforest_enable_offersqueue_parser) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+										</div>
+
+									</td>
+
+									<td style="width:20%">
+
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Генератор SEO-данных</span></p>
+										<select name="config_enable_seogen_cron">
+											<?php if ($config_enable_seogen_cron) { ?>
 												<option value="1" selected="selected">Включить</option>
 												<option value="0">Отключить</option>
 												<?php } else { ?>													
