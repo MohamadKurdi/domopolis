@@ -525,28 +525,35 @@ class Mail {
 	public function send_mailgun(){
 
 		$mgClient = \Mailgun\Mailgun::create($this->config->get('config_mailgun_api_private_key'), $this->config->get('config_mailgun_api_url'));
-	
-		setlocale(LC_ALL, "ru_RU.UTF-8");
 
-		$attachments = array();
-		foreach ($this->attachments as $attachment) {
-			if (file_exists($attachment)) {
-				$attachments[] = ['filePath' => trim($attachment), 'filename' => basename($attachment)];		
+		try{
+			
+			setlocale(LC_ALL, "ru_RU.UTF-8");
+
+			$attachments = array();
+			foreach ($this->attachments as $attachment) {
+				if (file_exists($attachment)) {
+					$attachments[] = ['filePath' => trim($attachment), 'filename' => basename($attachment)];		
+				}
 			}
-		}
 
-		$result = $mgClient->messages()->send($this->config->get('config_mailgun_api_transaction_domain'), array(
-			'from'    => $this->sender .'<' . $this->from . '>',			
-			'to'      => $this->to,
-			'subject' => $this->subject,
-			'text'    => $this->text,
-			'html'    => $this->html
-		), array(
-			'attachment' => $attachments
-		));
+			$result = $mgClient->messages()->send($this->config->get('config_mailgun_api_transaction_domain'), array(
+				'from'    => $this->sender .'<' . $this->from . '>',			
+				'to'      => $this->to,
+				'subject' => $this->subject,
+				'text'    => $this->text,
+				'html'    => $this->html
+			), array(
+				'attachment' => $attachments
+			));
 
-		if ($result->getMessage() == "Queued. Thank you."){		
-			return $result->getId();
+			if ($result->getMessage() == "Queued. Thank you."){		
+				return $result->getId();
+			}
+
+		} catch (\Mailgun\Exception\HttpClientException $e){
+			$this->preparemail()->send_sendmail();
+			return 0;
 		}
 
 		return 0;
