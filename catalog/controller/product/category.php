@@ -547,7 +547,8 @@
 
 				if (!$current_manufacturer && (!$category_info['parent_id'] || $this->config->get('config_display_subcategory_in_all_categories'))){
 					
-					$this->data['categories'] = $this->cache->get('subcategories.' . $current_manufacturer . $category_id . (int)$this->config->get('config_language_id') . (int)$this->currency->getId() . (int)$this->config->get('config_store_id'));			
+					$this->data['categories'] = $this->cache->get($this->createCacheQueryString(get_class($this), ['subcategories'], [$current_manufacturer, $category_id]));
+
 					if (!$this->data['categories']) {	
 						
 						$fmSettings = $this->config->get('mega_filter_settings');
@@ -586,13 +587,14 @@
 								}
 								
 								if ($this->config->get('config_product_count')){
-									$product_total = $this->model_catalog_product->getTotalProducts(['filter_category_id'  => $result['category_id'],'filter_sub_category' => !$this->config->get('config_disable_filter_subcategory')]);	
+									$product_count = $this->model_catalog_product->getTotalProducts(['filter_category_id'  => $result['category_id'], 'filter_manufacturer_id' => $this->request->get['manufacturer_id']]);	
 								}			
 								
 								$this->data['categories'][] = [
 								'thumb'   	 	=> $image,
-								'name'  		=> $result['name'] . ' ' . $manufacturer['name'] . ($this->config->get('config_product_count') ? ' (' . $product_total . ')' : ''),
-								'href'  		=> $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url_s)
+								'name'  		=> $result['name'] . ' ' . $manufacturer['name'],
+								'href'  		=> $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url_s),
+								'product_count' => $product_count
 								];					
 							}
 							
@@ -611,10 +613,6 @@
 									} else {
 									$image = $this->model_tool_image->resize('no_image.png', $this->data['dimensions']['w'], $this->data['dimensions']['h']);									
 								}
-								
-								if ($this->config->get('config_product_count')){
-									$product_total = $this->model_catalog_product->getTotalProducts(['filter_category_id'  => $result['category_id'],'filter_sub_category' => !$this->config->get('config_disable_filter_subcategory')]);	
-								}
 
 								$children = [];
 								if ($this->config->get('config_second_level_subcategory_in_categories')){
@@ -632,23 +630,25 @@
 										}
 
 										$children[] = [
-											'thumb'   	=> $child_image,
-											'name'  	=> $child_result['name'] . ($this->config->get('config_product_count') ? ' (' . $product_total . ')' : ''),
-											'href'  	=> $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . '_' . $child_result['category_id'])
+											'thumb'   		=> $child_image,
+											'name'  		=> $child_result['name'],
+											'href'  		=> $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . '_' . $child_result['category_id']),
+											'product_count'	=> $this->config->get('config_product_count')?$child_result['product_count']:false
 										];
 									}
 								}						
 								
 								$this->data['categories'][] = [
-								'thumb'   	=> $image,								
-								'children'	=> $children,
-								'name'  	=> $result['name'] . ($this->config->get('config_product_count') ? ' (' . $product_total . ')' : ''),
-								'href'  	=> $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'])
+								'thumb'   		=> $image,								
+								'children'		=> $children,
+								'name'  		=> $result['name'],
+								'href'  		=> $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id']),
+								'product_count'	=> $this->config->get('config_product_count')?$result['product_count']:false
 								];					
 							}
 							
 						}
-						$this->cache->set('subcategories.' . $current_manufacturer . $category_id . (int)$this->config->get('config_language_id') . (int)$this->currency->getId() . (int)$this->config->get('config_store_id'), $this->data['categories']);
+						$this->cache->set($this->createCacheQueryString(get_class($this), ['subcategories'], [$current_manufacturer, $category_id]), $this->data['categories']);
 					}
 				}
 				

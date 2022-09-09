@@ -1,25 +1,17 @@
 <?
 
 class ControllerModuleMMenu extends Controller {
-
-		//  menu 3rd level
+		
 	private function getChildrenData( $ctg_id, $path_prefix )
 	{
 		$children_data = array();
 		$children = $this->model_catalog_category->getCategories($ctg_id);
 
-		foreach ($children as $child) {
-			$data = array(
-				'filter_category_id'  => $child['category_id'],
-				'filter_sub_category' => true
-			);
-
-				//$product_total = $this->model_catalog_product->getTotalProducts($data);
-			$product_total = 0;
-
+		foreach ($children as $child) {			
 			$children_data[] = array(
-				'name'  => $child['name'] .($this->config->get('config_product_count') ? ' (' . $product_total . ')' : ''),
-				'href'  => $this->url->link('product/category', 'path=' . $path_prefix . '_' . $child['category_id'])
+				'name'  		=> $child['name'],
+				'href'  		=> $this->url->link('product/category', 'path=' . $path_prefix . '_' . $child['category_id']),
+				'product_count'	=> $this->config->get('config_product_count')?$child['product_count']:false
 			);
 		}
 		return $children_data;
@@ -51,21 +43,12 @@ class ControllerModuleMMenu extends Controller {
 					$children = $this->model_catalog_category->getCategories($category['category_id']);
 
 					foreach ($children as $child) {
-						$data = array(
-							'filter_category_id'  => $child['category_id'],
-							'filter_sub_category' => true
-						);
-
-					//$product_total = $this->model_catalog_product->getTotalProducts($data);
-						$product_total = 0;
-
 						$children_data[] = array(
-							'name'  => $child['name'] . ($this->config->get('config_product_count') ? ' (' . $product_total . ')' : ''),
-							'children' => $this->getChildrenData($child['category_id'], $category['category_id'] . '_' . $child['category_id']),	// menu 3rd level
-							'href'  => $this->url->link('product/category', 'path=' . $category['category_id'] . '_' . $child['category_id'])
+							'name'  		=> $child['name'],
+							'children' 		=> $this->getChildrenData($child['category_id'], $category['category_id'] . '_' . $child['category_id']),
+							'href'  		=> $this->url->link('product/category', 'path=' . $category['category_id'] . '_' . $child['category_id']),
+							'product_count'	=> $this->config->get('config_product_count')?$child['product_count']:false
 						);
-
-
 					}
 
 					$bestsellerLimit = 3;
@@ -89,8 +72,6 @@ class ControllerModuleMMenu extends Controller {
 
 					$this->load->model('module/keyworder');
 
-				//$results = $this->model_module_keyworder->getManufacturersByCategory($category['category_id']);
-
 					$results = $this->model_module_keyworder->getPopularManufacturersByCategories($category['category_id']);
 					$manufacturers_data = array();
 
@@ -102,15 +83,14 @@ class ControllerModuleMMenu extends Controller {
 						}
 						if ($result['sort_order'] != -1) {
 							$manufacturers_data[] = array(
-								'manufacturer_id' => $result['manufacturer_id'],
-								'name'       	  => $result['name'],
-								'image' => $image,
-								'href'            => $this->url->link('product/category', 'path=' . $category['category_id'] . '&manufacturer_id=' . $result['manufacturer_id'])
+								'manufacturer_id' 	=> $result['manufacturer_id'],
+								'name'       	  	=> $result['name'],
+								'image' 			=> $image,
+								'href'            	=> $this->url->link('product/category', 'path=' . $category['category_id'] . '&manufacturer_id=' . $result['manufacturer_id'])
 							);
 						}
 					}
 
-						// Level 1
 					$this->data['categories'][] = array(
 						'name'     		=> $category['name'],
 						'img'      		=> $this->model_tool_image->resize($category['image'], 100,100),
@@ -119,7 +99,8 @@ class ControllerModuleMMenu extends Controller {
 						'manufacturers' => $manufacturers_data,
 						'products' 		=> $products_data,
 						'column'   		=> $category['column'] ? $category['column'] : 1,
-						'href'     		=> $this->url->link('product/category', 'path=' . $category['category_id'])
+						'href'     		=> $this->url->link('product/category', 'path=' . $category['category_id']),
+						'product_count'	=> $this->config->get('config_product_count')?$category['product_count']:false						
 					);
 
 
@@ -138,7 +119,6 @@ class ControllerModuleMMenu extends Controller {
 			$this->data['brands'] = [];
 
 			if ($this->config->get('config_brands_in_mmenu')){
-
 				$brands = $this->model_catalog_manufacturer->getManufacturers(array('sort' => 'm.sort_order', 'order' => 'ASC', 'limit' => 20, 'menu_brand' => 1));
 				foreach ($brands as $k => $b) {
 					$brands[$k]['thumb'] = $this->model_tool_image->resize($b['image'], 150, 100);
