@@ -86,9 +86,6 @@
 			
 			
 			return $results;
-
-
-
 		}
 
 	}

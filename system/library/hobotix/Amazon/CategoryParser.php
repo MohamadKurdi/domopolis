@@ -39,35 +39,34 @@ class CategoryParser
 		}
 
 	public function doRequest($params = [], $endpoint = 'categories'){
-		
-			$data = [
+
+		$data = [
 			'api_key' 			=> $this->config->get('config_rainforest_api_key'),
 			'amazon_domain' 	=> $this->config->get('config_rainforest_api_domain_1'),
 			'customer_zipcode' 	=> $this->config->get('config_rainforest_api_zipcode_1'),
 			'type'				=> $this->type
-			];
-			
-			$data = array_merge($data, $params);
-			$queryString =  http_build_query($data);						
-			
-			$ch = curl_init('https://api.rainforestapi.com/' . $endpoint . '?' . $queryString);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); 
-			curl_setopt($ch, CURLOPT_TIMEOUT, 100);
-			curl_setopt($ch, CURLOPT_VERBOSE, false);
-			
-			$json = curl_exec($ch);		
-			curl_close($ch);
-			
-			return json_decode($json, true);
-		}
+		];
+		
+		$data = array_merge($data, $params);
+		$queryString =  http_build_query($data);						
+		
+		$ch = curl_init('https://api.rainforestapi.com/' . $endpoint . '?' . $queryString);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); 
+		curl_setopt($ch, CURLOPT_TIMEOUT, 100);
+		curl_setopt($ch, CURLOPT_VERBOSE, false);
+		
+		$json = curl_exec($ch);		
+		curl_close($ch);
+		
+		return json_decode($json, true);
+	}
 
 	private function getLanguages(){
 		$query = $this->db->query("SELECT * FROM language ORDER BY sort_order, name");
 		return $query->rows;
 	}
-
 
 	public function setType($type){
 		$this->type = $type;	
@@ -81,6 +80,59 @@ class CategoryParser
 		return $result;
 	}
 
+	public function getCategoriesWithChildrenFromDatabase($amazon_category_id = false, $rows = false){
+		$sql = "SELECT c.*, cd.name, at.full_name FROM category c 
+			LEFT JOIN category_description cd ON (c.category_id = cd.category_id)
+			LEFT JOIN `". \hobotix\RainforestAmazon::categoryModeTables[$this->config->get('config_rainforest_category_model')] ."` at ON (c.amazon_category_id  = at.category_id)
+			 WHERE amazon_final_category = 0 AND amazon_category_id <> '' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
+		if ($amazon_category_id){
+			$sql .= "  AND amazon_category_id = '" . $this->db->escape($amazon_category_id) . "'";
+		}
+
+		$query = $this->db->query($sql);
+
+		if ($amazon_category_id && !$rows){
+			return $query->row;
+		} else {
+			return $query->rows;
+		}
+	}
+
+	public function guessCategoryID($id){
+		return \hobotix\RainforestAmazon::rainforestPrefixMapping[$this->config->get('config_rainforest_category_model')] . $id;
+	}
+
+	public function validateIfGuessedCategoryExists($category_info){
+		$index = \hobotix\RainforestAmazon::categoryModeInfoIndexes[$this->config->get('config_rainforest_category_model')];
+
+		if (!empty($category_info[$index])){
+			return true;			
+		}
+
+		return false;
+	}
+
+	public function getCategoryNameFromData($category_info){
+		$index = \hobotix\RainforestAmazon::categoryModeInfoIndexes[$this->config->get('config_rainforest_category_model')];
+
+		if (!empty($category_info[$index]) && !empty($category_info[$index]['title'])){
+			return $category_info[$index]['title'];
+		}
+
+		return false;
+	}
+
+	public function getCategoryChildrenFromData($category_info){
+		$index = \hobotix\RainforestAmazon::categoryModeInfoIndexes[$this->config->get('config_rainforest_category_model')];
+
+		if (!empty($category_info[$index]) && !empty($category_info[$index]['child_categories'])){
+			return $category_info[$index]['child_categories'];
+		}
+
+		return false;
+	}
+
 
 	public function getCategoryChildren($category_id){
 		$result = $this->doRequest(['parent_id' => $category_id]);
@@ -90,13 +142,11 @@ class CategoryParser
 		}
 
 		return $result['categories'];
-
 	}
 
 	public function clearTable(){
 
 		$this->db->query("TRUNCATE " . $this->table);
-
 	}
 
 	public function updateFinalCategories(){
@@ -115,8 +165,8 @@ class CategoryParser
 
 	public function rebuildAmazonTreeToStoreTree(){
 
-		//Дерево
-		$this->db->query("UPDATE category c1 SET c1.parent_id = (SELECT category_id FROM category c2 WHERE NOT ISNULL(c2.amazon_category_id) AND c2.amazon_category_id <> '' AND c2.amazon_category_id = c1.amazon_parent_category_id) WHERE parent_id = 0");
+		//Дерево, уже не используется да и не нужно даже при первичном добавлении
+		//$this->db->query("UPDATE category c1 SET c1.parent_id = (SELECT category_id FROM category c2 WHERE NOT ISNULL(c2.amazon_category_id) AND c2.amazon_category_id <> '' AND c2.amazon_category_id = c1.amazon_parent_category_id) WHERE parent_id = 0");
 
 		//Фикс null-родителя
 		$this->db->query("UPDATE category SET parent_id = 0 WHERE ISNULL(parent_id)");
@@ -129,15 +179,16 @@ class CategoryParser
 		$this->db->query("UPDATE category SET amazon_parent_category_name = (SELECT name FROM " . $this->table . " WHERE category_id = category.amazon_parent_category_id LIMIT 1)");
 
 		//Синхронизация ссылок категорий
-		$this->db->query("UPDATE category SET amazon_category_link = (SELECT link FROM " . $this->table . " WHERE category_id = category.amazon_category_id LIMIT 1)");
-
-	
+		$this->db->query("UPDATE category SET amazon_category_link = (SELECT link FROM " . $this->table . " WHERE category_id = category.amazon_category_id LIMIT 1)");	
 	}
 
 	public function addSimpleCategory($data) {
-		$this->db->query("INSERT INTO category SET 
+		if (empty($data['parent_id'])){
+			$data['parent_id'] = 0;
+		}
 
-			parent_id 				= 0, 			
+		$this->db->query("INSERT INTO category SET 
+			parent_id 				= '" . (int)$data['parent_id'] . "', 			
 			top 					= 0, 
 			status 					= 1, 		
 			submenu_in_children 	= 1, 
@@ -165,13 +216,15 @@ class CategoryParser
 		}	
 		
 		return $category_id;
-	}
-	
-	
+	}	
 
 	public function createCategory($data){
 		if (empty($data['parent_id'])){
 			$data['parent_id'] = 0;
+		}
+
+		if (empty($data['store_parent_id'])){
+			$data['store_parent_id'] = 0;
 		}
 
 		$this->db->ncquery("INSERT IGNORE INTO " . $this->table . " SET 
@@ -201,6 +254,7 @@ class CategoryParser
 						'amazon_category_id' 		=> $this->db->escape($data['id']), 
 						'amazon_category_name' 		=> $this->db->escape($data['path']),
 						'amazon_parent_category_id' => $data['parent_id'],
+						'parent_id'					=> $data['store_parent_id'],
 						'category_store'			=> ['0']
 					];
 
@@ -219,19 +273,22 @@ class CategoryParser
 						}
 
 						$category_description[ $language['language_id'] ] = [
-							'name' => $name
+							'name' 		=> $name,
+							'menu_name' => $name
 						];
 					}
 
 					$category_data['category_description'] = $category_description;
 
-					$this->addSimpleCategory($category_data);					
+					return $this->addSimpleCategory($category_data);					
 				}
 
 			} else {
 				echoLine('[CategoryParser] Категория ' . $data['id'] . ' существует');				
 			}
 		}
+
+		return $data['id'];
 	}
 
 	public function createTopCategoryFromSettings($categories){
@@ -251,8 +308,6 @@ class CategoryParser
 				);
 			}				
 		}
-
-
 	}
 
 	public function getTopCategoriesFromDataBase(){
@@ -260,7 +315,6 @@ class CategoryParser
 		$query = $this->db->ncquery("SELECT * FROM " . $this->table . " WHERE parent_id = 0");
 
 		return $query->rows;
-
 	}
 
 }	

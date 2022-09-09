@@ -140,7 +140,79 @@ class ControllerDPRainForest extends Controller {
 		return $continue;
 	}
 
+	private function getCategoryAndCreateChildren($currentCategoryInfo, $currentCategory){
+		$type = $this->config->get('config_rainforest_category_model');
+		$currentCategoryInfoName = $this->rainforestAmazon->categoryParser->getCategoryNameFromData($currentCategoryInfo);
+		
+		if ($childData = $this->rainforestAmazon->categoryParser->getCategoryChildrenFromData($currentCategoryInfo)){
+			foreach ($childData as $childInfo){
+				$guessedID = $this->rainforestAmazon->categoryParser->guessCategoryID($childInfo['id']);
+
+				if (!$this->rainforestAmazon->categoryParser->checkIfCategoryExists($guessedID)){
+					echoLine('[fixunexistentcategoriescron] ' . $childInfo['name'] . ', ' . $guessedID . ' не существует!');
+
+					if ($currentChildCategoryInfo = $this->rainforestAmazon->categoryRetriever->getCategoryFromAmazon(['amazon_category_id' => $guessedID, 'page' => 1])->getJsonResult()){
+						if ($this->rainforestAmazon->categoryParser->validateIfGuessedCategoryExists($currentChildCategoryInfo)){
+							$currentChildCategoryInfoName = $this->rainforestAmazon->categoryParser->getCategoryNameFromData($currentChildCategoryInfo);
+
+							echoLine('[fixunexistentcategoriescron] Получили дочернюю ' . $currentCategoryInfoName . ' -> ' . $currentChildCategoryInfoName);
+
+							$data = [
+								'id'				=> $guessedID,
+								'parent_id' 		=> $currentCategory['amazon_category_id'],
+								'store_parent_id' 	=> $currentCategory['category_id'],
+								'name'				=> $currentChildCategoryInfoName,
+								'path'				=> $currentCategory['full_name'] . ' > ' . $currentChildCategoryInfoName,
+								'link'				=> $childInfo['link']
+							];
+
+							echoLine('[fixunexistentcategoriescron] Добавляем категорию: ' . $currentChildCategoryInfoName);
+							$this->rainforestAmazon->categoryParser->createCategory($data);
+							$justAddedCategoryFromDatabase = $this->rainforestAmazon->categoryParser->setType($type)->getCategoriesWithChildrenFromDatabase($guessedID);
+
+							$this->getCategoryAndCreateChildren($currentChildCategoryInfo, $justAddedCategoryFromDatabase);						
+
+						} else {
+							echoLine('[fixunexistentcategoriescron] ' . $childInfo['name'] . ', ' . $guessedID . ' не существует на Amazon, пропускаем!');							
+						}
+					}
+
+				
+				} else {
+					echoLine('[fixunexistentcategoriescron] ' . $childInfo['name'] . ', ' . $guessedID . ' существует, пропускаем!');
+				}					
+			}
+		}
+	}	
+
+	public function fixunexistentcategoriescron(){
+		if (!$this->config->get('config_rainforest_enable_category_tree_parser')){
+			echoLine('[ControllerKPRainForest::fixunexistentcategoriescron] CRON IS DISABLED IN ADMIN');
+			return;
+		}
+
+		$type = $this->config->get('config_rainforest_category_model');
+		$currentCategories = $this->rainforestAmazon->categoryParser->setType($type)->getCategoriesWithChildrenFromDatabase('bestsellers_3273865031', true);
+
+		foreach ($currentCategories as $currentCategory){
+			echoLine('[fixunexistentcategoriescron] Категория ' . $currentCategory['name'] . ', ' . $currentCategory['amazon_category_id']);	
+
+			if ($currentCategoryInfo = $this->rainforestAmazon->categoryRetriever->getCategoryFromAmazon(['amazon_category_id' => $currentCategory['amazon_category_id'], 'page' => 1])->getJsonResult()){
+				$this->getCategoryAndCreateChildren($currentCategoryInfo, $currentCategory);
+			}
+
+			$this->rainforestAmazon->categoryParser->setType($type)->updateFinalCategories();
+			$this->rainforestAmazon->categoryParser->setType($type)->rebuildAmazonTreeToStoreTree();
+			$this->rainforestAmazon->categoryParser->setType($type)->model_catalog_category->repairCategories();
+			die();
+		}
+	}
+
+	/*
+	Создает первичное дерево категорий. Дальше лучше использовать fixnewcategoriescron
+	*/
 	public function addcategoriescron(){
+		exit();
 
 		if (!$this->config->get('config_rainforest_enable_category_tree_parser')){
 			echoLine('[ControllerKPRainForest::addcategoriescron] CRON IS DISABLED IN ADMIN');
@@ -359,6 +431,9 @@ class ControllerDPRainForest extends Controller {
 		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();
 	}
 
+	/*
+	Обновляет картинки в случае если есть информация, но что-то пошло не так
+	*/
 	public function updateimagesfromamazon(){		
 		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoImages();
 
@@ -367,6 +442,9 @@ class ControllerDPRainForest extends Controller {
 		}
 	}
 
+	/*
+	Быстрая установка цен, через прайслоджик
+	*/
 	public function setpricesfast(){		
 		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFastPrice();		
 
@@ -387,6 +465,9 @@ class ControllerDPRainForest extends Controller {
 		}		
 	}
 
+	/*
+	Перекладывает информацию о товарах в файловый кэш из БД
+	*/
 	public function puttofilecache(){		
 		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFullDataInDB();		
 
@@ -600,7 +681,7 @@ class ControllerDPRainForest extends Controller {
 	public function rebuildvariants(){
 		$this->rainforestAmazon->productsRetriever->model_product_edit->clearAsinVariantsTable();
 
-		$this->setvariants->fixvariants();
+		$this->setvariants()->fixvariants();
 	}
 
 	/*
@@ -626,7 +707,7 @@ class ControllerDPRainForest extends Controller {
 		}		
 		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();	
 
-		return $this;					
+		return $this;				
 	}
 
 	/*
