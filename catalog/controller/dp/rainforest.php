@@ -595,6 +595,15 @@ class ControllerDPRainForest extends Controller {
 	}
 
 	/*
+		Перестроение вариантов
+	*/
+	public function rebuildvariants(){
+		$this->rainforestAmazon->productsRetriever->model_product_edit->cleanProductVariants();
+
+		$this->setvariants->fixvariants();
+	}
+
+	/*
 	Начальное заполнение таблички вариантов, v2 логика вариантов на асинах
 	*/
 	public function setvariants(){		
@@ -615,7 +624,9 @@ class ControllerDPRainForest extends Controller {
 				}
 			}	
 		}		
-		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();						
+		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();	
+
+		return $this;					
 	}
 
 	/*
@@ -644,7 +655,9 @@ class ControllerDPRainForest extends Controller {
 				}
 			}	
 		}		
-		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();						
+		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();		
+
+		return $this;				
 	}
 
 
