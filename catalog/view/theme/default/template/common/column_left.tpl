@@ -12,7 +12,7 @@
 	?>	
 	<? if ($show_left_column_azaza) { ?>
 	<style>
-		@media only screen and (max-width: 789px) {
+		@media only screen and (max-width:  789px) {
 			.m-menu-group.hidden-left-block:not(.active) .m-menu-group-button{
 				margin:0 0 0 476px !important;
 			}
