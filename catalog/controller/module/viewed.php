@@ -57,7 +57,7 @@ class ControllerModuleViewed extends Controller {
 
 	protected function index($setting) {
 
-		$out = false;//$this->cache->get($this->createCacheQueryString(get_class($this), $setting));
+		$out = $this->cache->get($this->createCacheQueryString(get_class($this), $setting));
 
 		if ($out) {		
 
