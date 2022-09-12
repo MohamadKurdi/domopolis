@@ -70,7 +70,31 @@
 						<? for ($i=1; $i<=5; $i++) { ?>
 							<td style="width:20%"><span style="display:inline-block;width:80px;">Линк</span> <input type="text" name="blockviewed_hrefs_<? echo $i; ?>" value="<? echo ${'blockviewed_hrefs_'.$i}; ?>" /></td>
 						<? } ?>
-					</tr>				
+					</tr>
+					<tr>  
+						<? for ($i=1; $i<=5; $i++) { ?>
+							<td style="width:20%">
+								<span style="display:inline-block;width:80px;">Авто</span>
+
+								<select name="blockviewed_empty_type_<? echo $i; ?>">
+									<?php if (${'blockviewed_empty_type_'.$i} == 'none') { ?>
+										<option value="none" selected="selected">Ничего, спрятать блок</option>
+									<?php } else { ?>
+										<option value="none">Ничего, спрятать блок</option>
+									<?php } ?>
+									<?php if (${'blockviewed_empty_type_'.$i} == 'top-viewed') { ?>
+										<option value="top-viewed" selected="selected">Топ просмотров</option>
+									<?php } else { ?>
+										<option value="top-viewed">Топ просмотров</option>
+									<?php } ?>
+									<?php if (${'blockviewed_empty_type_'.$i} == 'new') { ?>
+										<option value="new" selected="selected">Новинки</option>
+									<?php } else { ?>
+										<option value="new">Новинки</option>
+									<?php } ?>
+								</select>							 
+						<? } ?>
+					</tr>					
 					<tr> 
 						<? for ($i=1; $i<=5; $i++) { ?>
 							<td style="width:20%">
@@ -121,7 +145,8 @@
 											<?php } ?>
 										<?php } ?>
 									</select></td>
-									<td class="left"><select name="viewed_module[<?php echo $module_row; ?>][position]">
+									<td class="left">
+										<select name="viewed_module[<?php echo $module_row; ?>][position]">
 										<?php if ($module['position'] == 'content_top') { ?>
 											<option value="content_top" selected="selected"><?php echo $text_content_top; ?></option>
 											<?php } else { ?>

@@ -107,8 +107,7 @@
             'limit'               => $limit
 			);
 			
-			$product_total = $this->model_catalog_product->getTotalProducts($data);
-			
+			$product_total = $this->model_catalog_product->getTotalProducts($data);			
 			$results = $this->model_catalog_product->getProducts($data);
 			
 			$this->data['dimensions'] = array(

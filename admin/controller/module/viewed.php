@@ -162,9 +162,15 @@
 					} else {
 					$this->data['blockviewed_hrefs_' . $i] = $this->config->get('blockviewed_hrefs_' . $i);
 				}
+
+				if (isset($this->request->post['blockviewed_empty_type_' . $i])) {
+					$this->data['blockviewed_empty_type_' . $i] = $this->request->post['blockviewed_empty_type_' . $i];
+					} else {
+					$this->data['blockviewed_empty_type_' . $i] = $this->config->get('blockviewed_empty_type_' . $i);
+				}
 				
 				if (isset($this->request->post['blockviewed_images_' . $i])) {
-					$this->data['blockviewed_images_' . $i] = $this->request->post['blockviewed_hrefs_' . $i];
+					$this->data['blockviewed_images_' . $i] = $this->request->post['blockviewed_images_' . $i];
 					} else {
 					$this->data['blockviewed_images_' . $i] = $this->config->get('blockviewed_images_' . $i);
 				}
@@ -206,18 +212,7 @@
 				} elseif ($this->config->get('viewed_module')) { 
 				$this->data['modules'] = $this->config->get('viewed_module');
 			}		
-			/*	
-				if ($this->product_layout_id && count($this->data['modules']) == 0) {
-				$this->data['modules'][] = array(
-                'image_width' => 80,
-                'image_height' => 80,
-                'layout_id' => $this->product_layout_id,
-                'position' => 'content_bottom',
-                'status' => 1,
-                'sort_order' => ''   
-				);
-				}
-			*/   
+  
 			$this->data['layouts'] = $layouts;
 			
 			$this->template = 'module/viewed.tpl';
@@ -233,28 +228,7 @@
 			if (!$this->user->hasPermission('modify', 'module/viewed')) {
 				$this->error['warning'] = $this->language->get('error_permission');
 			}
-			/*	
-				if (isset($this->request->post['viewed_module'])) {
-				
-				$isset_product_layout = false;
-				$isset_other_layout = false;
-				
-				foreach ($this->request->post['viewed_module'] as $key => $value) {
-                if ($value['layout_id'] == $this->product_layout_id && $value['status'] == 1) {
-				$isset_product_layout = true;
-                } else if ($value['layout_id'] != $this->product_layout_id && $value['status'] == 1) {
-				$isset_other_layout = true;
-                }
-				if (!$value['image_width'] || !$value['image_height']) {
-				$this->error['image'][$key] = $this->language->get('error_image');
-				}
-				}
-				
-				if (!$isset_product_layout && $isset_other_layout) {
-                $this->error['layout'] = $this->language->get('error_layout');
-				}
-				}
-			*/			
+			
 			if (!$this->error) {
 				return true;
 				} else {
@@ -262,4 +236,3 @@
 			}	
 		}
 	}
-?>
