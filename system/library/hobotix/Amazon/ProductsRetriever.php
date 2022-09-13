@@ -894,6 +894,7 @@
 			if (!empty($product['buybox_winner'])){
 				if (!empty($product['buybox_winner']['price']) && $product['buybox_winner']['price']['currency'] == 'EUR'){					
 					$this->model_product_edit->editProductFields($product_id, [['name' => 'amazon_best_price', 'type' => 'decimal', 'value' => $product['buybox_winner']['price']['value']]]);
+					$this->registry->get('rainforestAmazon')->offersParser->PriceLogic->updateProductPrices($product['asin'], $product['buybox_winner']['price']['value'], true);
 				}
 			}
 		}

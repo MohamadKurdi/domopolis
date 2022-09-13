@@ -334,6 +334,7 @@ class ControllerDPRainForest extends Controller {
 			}
 		}
 
+		$this->setpricesfast();
 		$this->updateimagesfromamazon();	
 	}
 
@@ -454,6 +455,7 @@ class ControllerDPRainForest extends Controller {
 		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFastPrice();		
 
 		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
+
 		echoLine('[setpricesfast] Всего товаров: ' . $total);
 		$k = 1;		
 
