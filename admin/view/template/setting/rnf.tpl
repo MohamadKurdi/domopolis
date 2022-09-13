@@ -1239,10 +1239,10 @@
 							explicit_products: 				explicitProducts
 						},
 						beforeSend: function(){
-						//	$('#calculator_results').html('<i class="fa fa-calculator" style="font-size:128px"></i>');
+							$('#calculator_results').html('<i class="fa fa-calculator" style="font-size:128px"></i>');
 						},
 						success: function(html){
-						//	$('#calculator_results').html(html);
+							$('#calculator_results').html(html);
 						}
 					});					
 				}
