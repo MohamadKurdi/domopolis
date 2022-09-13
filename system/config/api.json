@@ -109,15 +109,16 @@
 			"api/info1c/transactionSyncGet":					["transaction_data:json"],
 			"api/info1c/transactionSyncSet":					["transaction_data:json"],
 			"api/info1c/productPurchaseSet":					["purchase_data:json"],
-			"api/rainforest/amazonPriceFormulaTest":			["main_formula:string", "weight_coefficient:float", "default_multiplier:float", "use_volumetric_weight:int", "volumetric_weight_coefficient:float", "show_random_products:int", "limit_products:int", "zones_config:string", "explicit_products:string"]
+			"api/rainforest/amazonPriceFormulaTest":			["main_formula:string", "weight_coefficient:float", "default_multiplier:float", "use_volumetric_weight:int", "volumetric_weight_coefficient:float", "show_random_products:int", "limit_products:int", "zones_config:string"]
 		}
 	],
 	"additional":[
 		{
-			"api/info1c/getProductImage":			["width", "height"],
-			"api/info1c/exportOrdersFromToXML":		["only_complete"],
-			"api/bitrixbot/sendMessageToUser":		["message_type"],
-			"api/info1c/addOrderStatusHistory":		["comment", "notify"]
+			"api/info1c/getProductImage":				["width", "height"],
+			"api/info1c/exportOrdersFromToXML":			["only_complete"],
+			"api/bitrixbot/sendMessageToUser":			["message_type"],
+			"api/info1c/addOrderStatusHistory":			["comment", "notify"],
+			"api/rainforest/amazonPriceFormulaTest":	["explicit_products"]
 		}
 	],
 	"paramvalues":[
