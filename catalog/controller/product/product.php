@@ -87,8 +87,7 @@
 			}
 			
 			if ($product_id && $product_info = $this->model_catalog_product->getProduct($product_id)){
-				
-				
+								
 				foreach ($this->language->loadRetranslate('product/product') as $translationСode => $translationText){
 					$this->data[$translationСode] = $translationText;
 				}
@@ -281,7 +280,7 @@
 					$this->data['delivery_city']['id'] = $customer_city['id'];
 				}
 				
-				$this->template = 'blocks/delivery_info.tpl';
+				$this->template = 'blocks/delivery_info';
 				
 				$this->response->setOutput($this->render());	
 			}
