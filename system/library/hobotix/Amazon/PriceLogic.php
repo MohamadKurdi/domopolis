@@ -174,7 +174,7 @@ class PriceLogic
 	public function getProductVolumetricWeight($product, $store_id, $return_volumetric_weight = false, $volumetricWeightCoefficient = false){
 		$productDimensions = $this->getProductDimensions($product);
 
-		if (!$volumetricWeightCoefficient){
+		if (!$volumetricWeightCoefficient && !empty($this->storesVolumetricWeightSettings[$store_id]) && !empty($this->storesVolumetricWeightSettings[$store_id]['config_rainforest_volumetric_weight_coefficient'])){
 			$volumetricWeightCoefficient = (float)$this->storesVolumetricWeightSettings[$store_id]['config_rainforest_volumetric_weight_coefficient'];
 		}
 
@@ -194,7 +194,11 @@ class PriceLogic
 			$height = $this->length->convert($productDimensions['height'], $productDimensions['length_class_id'], $this->config->get('config_length_class_id'));
 		}
 
-		$volumetricWeight = ($length * $width * $height) / $volumetricWeightCoefficient;
+		if ($volumetricWeightCoefficient){
+			$volumetricWeight = ($length * $width * $height) / $volumetricWeightCoefficient;
+		} else {
+			$volumetricWeight = $weight;
+		}
 
 		if ($return_volumetric_weight){
 			return $volumetricWeight;
