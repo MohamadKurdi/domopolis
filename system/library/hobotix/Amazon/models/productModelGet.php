@@ -9,7 +9,16 @@ class productModelGet extends hoboModel{
 	private $testAsin = false;
 
 	public function checkIfAsinIsDeleted($asin){
-		return $this->db->ncquery("SELECT asin FROM deleted_asins WHERE asin LIKE ('" . $this->db->escape($asin) . "')")->num_rows;
+		$query = $this->db->ncquery("SELECT da.asin, da.date_added, da.name, u.firstname, u.lastname FROM deleted_asins da LEFT JOIN user u ON (da.user_id = u.user_id) WHERE asin LIKE ('" . $this->db->escape($asin) . "')");
+
+		if ($query->num_rows){
+			echoLine('[checkIfAsinIsDeleted] '  . $asin . ': ' . $query->row['name']);
+			echoLine('[checkIfAsinIsDeleted] ' . $asin . ' удален ' . $query->row['date_added'] . ', ' . $query->row['firstname'] . ' ' . $query->row['lastname']);
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 
 	public function getProducts(){

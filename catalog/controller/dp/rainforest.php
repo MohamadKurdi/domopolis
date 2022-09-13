@@ -106,21 +106,27 @@ class ControllerDPRainForest extends Controller {
 
 				if (!$this->rainforestAmazon->productsRetriever->getProductsByAsin($rfSimpleProduct['asin'])){					
 					echoLine('[parseCategoryPage] Товар ' . $rfSimpleProduct['asin'] . ' не найден, ' . $counters);		
-				
-					$this->rainforestAmazon->productsRetriever->addSimpleProductWithOnlyAsin(
-						[
-							'asin' 					=> $rfSimpleProduct['asin'], 
-							'amazon_best_price' 	=> (!empty($rfSimpleProduct['price']))?$rfSimpleProduct['price']['value']:'0',
-							'category_id' 			=> $category_id, 
-							'name' 					=> $rfSimpleProduct['title'], 
-							'amazon_product_link' 	=> $rfSimpleProduct['link'],
-							'amazon_product_image'  => $rfSimpleProduct['image'], 
-							'image' 				=> $this->rainforestAmazon->productsRetriever->getImage($rfSimpleProduct['image']), 
-							'added_from_amazon' 	=> 1
-						]
-					);										
 
-					$this->addExistentAsin($rfSimpleProduct['asin']);
+					if ($this->rainforestAmazon->productsRetriever->model_product_get->checkIfAsinIsDeleted($rfSimpleProduct['asin'])){
+						echoLine('[parseCategoryPage] ASIN удален, пропускаем!');					
+					} else {	
+
+						$this->rainforestAmazon->productsRetriever->addSimpleProductWithOnlyAsin(
+							[
+								'asin' 					=> $rfSimpleProduct['asin'], 
+								'amazon_best_price' 	=> (!empty($rfSimpleProduct['price']))?$rfSimpleProduct['price']['value']:'0',
+								'category_id' 			=> $category_id, 
+								'name' 					=> $rfSimpleProduct['title'], 
+								'amazon_product_link' 	=> $rfSimpleProduct['link'],
+								'amazon_product_image'  => $rfSimpleProduct['image'], 
+								'image' 				=> $this->rainforestAmazon->productsRetriever->getImage($rfSimpleProduct['image']), 
+								'added_from_amazon' 	=> 1
+							]
+						);		
+
+
+						$this->addExistentAsin($rfSimpleProduct['asin']);
+					}
 
 				} else {
 					echoLine('[parseCategoryPage] Товар ' . $rfSimpleProduct['asin'] . ' найден ' . $counters);						
@@ -177,7 +183,7 @@ class ControllerDPRainForest extends Controller {
 						}
 					}
 
-				
+					
 				} else {
 					echoLine('[fixunexistentcategoriescron] ' . $childInfo['name'] . ', ' . $guessedID . ' существует, пропускаем!');
 				}					
@@ -456,7 +462,7 @@ class ControllerDPRainForest extends Controller {
 			if ($products){		
 				foreach ($products as $product){
 					echoLine('[setpricesfast] Товар ' . $product['product_id'] . ' / ' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
-						
+					
 					$this->rainforestAmazon->offersParser->PriceLogic->updateProductPrices($product['asin'], $product['amazon_best_price'], true);
 					$k++;	
 				}
@@ -677,11 +683,11 @@ class ControllerDPRainForest extends Controller {
 	/*
 		Перестроение вариантов
 	*/
-	public function rebuildvariants(){
-		$this->rainforestAmazon->productsRetriever->model_product_edit->clearAsinVariantsTable();
+		public function rebuildvariants(){
+			$this->rainforestAmazon->productsRetriever->model_product_edit->clearAsinVariantsTable();
 
-		$this->setvariants()->fixvariants();
-	}
+			$this->setvariants()->fixvariants();
+		}
 
 	/*
 	Начальное заполнение таблички вариантов, v2 логика вариантов на асинах
@@ -757,11 +763,11 @@ class ControllerDPRainForest extends Controller {
 					echoLine('[fixnames] ' . $i . '/' . $iterations);	
 
 					//$this->rainforestAmazon->infoUpdater->normalizeProductName($product['name']);				
-				
-					 $this->rainforestAmazon->productsRetriever->model_product_edit->updateProductName($product['product_id'], [
-					 	'name' 			=>	$this->rainforestAmazon->infoUpdater->normalizeProductName($product['name']),						
-					 	'language_id'	=>	$product['language_id']
-					 ]);				
+					
+					$this->rainforestAmazon->productsRetriever->model_product_edit->updateProductName($product['product_id'], [
+						'name' 			=>	$this->rainforestAmazon->infoUpdater->normalizeProductName($product['name']),						
+						'language_id'	=>	$product['language_id']
+					]);				
 					
 				}
 			}	
