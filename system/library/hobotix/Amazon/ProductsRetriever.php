@@ -1134,12 +1134,17 @@
 			main_variant_id     	= '" . (!empty($data['main_variant_id'])?(int)$data['main_variant_id']:0) . "',
 			amazon_product_link  	= '" . (!empty($data['amazon_product_link'])?$this->db->escape($data['amazon_product_link']):'') . "',
 			amazon_product_image 	= '" . (!empty($data['amazon_product_image'])?$this->db->escape($data['amazon_product_image']):'') . "',
-			stock_status_id 		= '" . $this->config->get('config_in_stock_status_id') . "',
+			stock_status_id 		= '" . (int)$this->config->get('config_stock_status_id') . "',
 			quantity 				= '9999',
 			status 					= '0',
 			date_added 				= NOW()");
 			
 			$product_id = $this->db->getLastId();
+
+			//Update BestPrice
+			if (!empty($data['amazon_best_price'])){
+				$this->registry->get('rainforestAmazon')->offersParser->PriceLogic->updateProductPrices($data['asin'], $data['amazon_best_price'], true);
+			}
 			
 			$this->db->query("DELETE FROM product_to_store WHERE product_id = '" . (int)$product_id . "'");
 			$this->db->query("INSERT INTO product_to_store SET product_id = '" . (int)$product_id . "', store_id = '0'");
