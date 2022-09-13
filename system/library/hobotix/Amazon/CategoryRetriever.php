@@ -7,12 +7,19 @@
 						
 		const CLASS_NAME = 'hobotix\\Amazon\\CategoryRetriever';
 
+		private $testCategory = false;
+
 		public function getCategories(){
 			$result = [];
 
-			$sql = "SELECT c.*, cd.name FROM category c LEFT JOIN category_description cd ON (c.category_id = cd.category_id)  WHERE cd.language_id = '" . $this->config->get('config_language_id') . "' AND c.status = 1 AND c.amazon_sync_enable = 1 AND c.amazon_final_category = 1 AND LENGTH(c.amazon_category_id) > 0 AND (c.amazon_last_sync = '0000-00-00 00:00:00' OR DATE(c.amazon_last_sync) <= DATE('" . date('Y-m-d', strtotime('-' . $this->config->get('config_rainforest_category_update_period') . ' day')) . "')) ORDER BY RAND() LIMIT " . (int)\hobotix\RainforestAmazon::categoryParserLimit;
+			$sql = "SELECT c.*, cd.name FROM category c LEFT JOIN category_description cd ON (c.category_id = cd.category_id)  WHERE cd.language_id = '" . $this->config->get('config_language_id') . "' AND c.status = 1 AND c.amazon_sync_enable = 1 AND c.amazon_final_category = 1 AND LENGTH(c.amazon_category_id) > 0 AND (c.amazon_last_sync = '0000-00-00 00:00:00' OR DATE(c.amazon_last_sync) <= DATE('" . date('Y-m-d', strtotime('-' . $this->config->get('config_rainforest_category_update_period') . ' day')) . "')) ";
 
-			//$this->log->debug($sql);
+			if ($this->testCategory){
+				$sql .= " AND c.category_id = " . (int)$this->testCategory;
+			}
+
+			$sql .= " ORDER BY RAND() LIMIT " . (int)\hobotix\RainforestAmazon::categoryParserLimit;
+			
 
 			$query = $this->db->ncquery($sql);
 
