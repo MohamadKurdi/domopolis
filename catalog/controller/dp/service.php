@@ -13,8 +13,12 @@ class ControllerDPService extends Controller {
 	}
 
 	public function index(){
+		$this->fixAmazonModes();
 		$this->countProducts();
+	}
 
+	public function fixAmazonModes(){
+		$this->db->query("UPDATE product SET fill_from_amazon = 1 WHERE filled_from_amazon = 1 AND added_from_amazon = 1");
 	}
 
 
