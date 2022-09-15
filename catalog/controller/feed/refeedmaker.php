@@ -204,13 +204,12 @@ class ControllerFeedReFeedMaker extends Controller {
 
 					file_put_contents($file, $output);
 
-					echo $this->convert(memory_get_usage(true)) . PHP_EOL;
-					echo '[*] собираем мусор, освобождаем память: ' . $this->convert(memory_get_usage(true)) . PHP_EOL;
+					echo convertSize(memory_get_usage(true)) . PHP_EOL;
+					echo '[*] собираем мусор, освобождаем память: ' . convertSize(memory_get_usage(true)) . PHP_EOL;
 					gc_collect_cycles();
 				}
 			}	
 		}
-
 	}
 
 	public function makeStockFeedsCron(){
@@ -235,7 +234,6 @@ class ControllerFeedReFeedMaker extends Controller {
 			echoLine('[CRON2] Магазин ' . $store_id . ', язык ' . $this->config->get('config_language'));
 			$this->makeFeedsCron();
 		}
-
 	}
 
 	public function makeFeedsCron($stock = false){
@@ -322,12 +320,12 @@ class ControllerFeedReFeedMaker extends Controller {
 				echo '[KK'. $store_id .'] ' . $google_base_category['name'] . PHP_EOL;
 
 				$filter = array(
-					'filter_category_id' => $google_base_category['category_id'],
-					'start'              => 0,
-					'limit'              => 100000,
-					'filter_status'      => true,
-					'filter_not_bad'     => true,
-					'filter_return_simple' => true,
+					'filter_category_id' 	=> $google_base_category['category_id'],
+					'start'              	=> 0,
+					'limit'              	=> 100000,
+					'filter_status'      	=> true,
+					'filter_not_bad'     	=> true,
+					'filter_return_simple' 	=> true,
 					'filter_exclude_certs'	=> true
 				);
 
@@ -357,20 +355,14 @@ class ControllerFeedReFeedMaker extends Controller {
 
 			file_put_contents($file, $output);
 
-			echo $this->convert(memory_get_usage(true)) . PHP_EOL;
-			echo '[*] собираем мусор, освобождаем память: ' . $this->convert(memory_get_usage(true)) . PHP_EOL;
+			echo convertSize(memory_get_usage(true)) . PHP_EOL;
+			echo '[*] собираем мусор, освобождаем память: ' . convertSize(memory_get_usage(true)) . PHP_EOL;
 			gc_collect_cycles();
 
 			if (!$stock){
 				$this->makeFeedsCron(true);
 			}
 		}
-	}
-
-	function convert($size)
-	{
-		$unit=array('b','kb','mb','gb','tb','pb');
-		return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
 	}
 
 	private function normalizeForGoogle($text){
