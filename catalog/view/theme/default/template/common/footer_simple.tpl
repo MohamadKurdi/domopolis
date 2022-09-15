@@ -14,6 +14,8 @@
 			
 			<div class="footer__copyright">
 				<div class="footer__language">
+
+				 <?php if (!$this->config->get('config_warmode_enable')) { ?> 	
 					<div class="lang-menu <? if ($this->config->get('config_store_id') == 0) { ?>selected-lang_ru<?php } elseif ($this->config->get('config_store_id') == 1) {?>selected-lang_ua<?php } elseif ($this->config->get('config_store_id') == 2) {?>selected-lang_kz<?php }elseif ($this->config->get('config_store_id') == 5) {?>selected-lang_by<?php } ?>">
 						<div class="selected-lang">
 							<span class="active-lang"></span>
@@ -34,20 +36,12 @@
 							<li class="href_kz">
 								<a href="<?php echo $href_kz; ?>"><img src="/catalog/view/theme/kp/img/flags/kz.png" alt="Казахстан"></a>
 							</li>
-						</ul>
-						
+						</ul>						
 					</div>
+				<?php } ?>	
 					
 				</div>
-				<p>&copy;<? if ($this->config->get('config_store_id') == 0) { ?>
-					kitchen-profi.ru, 
-					<?php } elseif ($this->config->get('config_store_id') == 1) {?>
-					kitchen-profi.com.ua, 
-					<?php } elseif ($this->config->get('config_store_id') == 2) {?>
-					kitchen-profi.kz, 
-					<?php }elseif ($this->config->get('config_store_id') == 5) {?>
-					kitchen-profi.by, 
-				<?php } ?>
+				<p>&copy;<?php echo $this->config->get('config_name'); ?>
 				2010 - <?php echo date('Y'); ?> </p>
 			</div>
 			<div class="footer__agreement">
