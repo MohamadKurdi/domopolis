@@ -42,7 +42,7 @@ class ControllerFeedYandexKP extends Controller {
 	private $yml = '';		
 
 	private $excluded_names = ['пепельниц', 'зажигалк'];
-	private $excluded_categories = [8307, 6475, 6474, BIRTHDAY_DISCOUNT_CATEGORY, GENERAL_DISCOUNT_CATEGORY, GENERAL_MARKDOWN_CATEGORY];
+	private $excluded_categories = [8307, 6475, 6474, 6614, BIRTHDAY_DISCOUNT_CATEGORY, GENERAL_MARKDOWN_CATEGORY];
 
 	private function setFeedType($type){
 		$this->type = $type;
@@ -148,7 +148,6 @@ class ControllerFeedYandexKP extends Controller {
 		//	var_dump($this->yandexCategoriesMapping);
 
 		return $this;
-
 	}
 
 	private function openYML(){

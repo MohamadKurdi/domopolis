@@ -852,7 +852,7 @@
 			
 			if (!isset($path[$product_id])) {
 				$query = $this->db->query("SELECT category_id FROM product_to_category WHERE product_id = '" . $product_id . "' AND category_id 
-				NOT IN (". BIRTHDAY_DISCOUNT_CATEGORY .", ". GENERAL_DISCOUNT_CATEGORY .", ". GENERAL_MARKDOWN_CATEGORY .") 
+				NOT IN (". BIRTHDAY_DISCOUNT_CATEGORY .", ". (int)$this->config->get('config_special_category_id') .", ". GENERAL_MARKDOWN_CATEGORY .") 
 				ORDER BY main_category DESC LIMIT 1");
 				
 				$path[$product_id] = $this->getPathByCategory($query->num_rows ? (int)$query->row['category_id'] : 0);
