@@ -428,9 +428,6 @@
 				$this->data['search'] = '';
 			}
 			
-			$this->data['text_special'] = $this->language->get('text_special');	
-			$this->data['special'] = $this->url->link('product/special');
-			
 			$this->data['text_manufacturer'] = $this->language->get('text_manufacturer');
 			$this->data['href_manufacturer'] = $this->url->link('product/manufacturer');	
 			$this->data['href_stock_1_tovary_s_ekspress_dostavkoj'] = $this->url->link('product/category', 'path=8307');
@@ -438,8 +435,9 @@
 			$this->data['href_stock_3_podarki'] 		= $this->url->link('product/category', 'path=8228');
 			$this->data['href_newproducts'] = $this->url->link('product/product_new');
 			
-			//$this->data['href_sale'] = $this->url->link('product/special');
-			$this->data['href_sale'] = $this->url->link('product/category', 'path=6614');
+			$this->data['text_special'] = $this->language->get('text_special');	
+			$this->data['special'] 		= $this->url->link('product/category', 'path=' . $this->config->get('config_special_category_id'));
+			$this->data['href_sale'] 	= $this->url->link('product/category', 'path=' . $this->config->get('config_special_category_id'));
 			
 			$this->data['href_newyear'] = $this->url->link('product/category', 'path=8227');
 			
