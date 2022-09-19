@@ -774,6 +774,22 @@
 				$this->data['config_dadata'] = 0;
 			}
 			
+			if (isset($this->request->post['config_special_controller_logic'])) {
+				$this->data['config_special_controller_logic'] = $this->request->post['config_special_controller_logic'];
+				} elseif (isset($store_info['config_special_controller_logic'])) {
+				$this->data['config_special_controller_logic'] = $store_info['config_special_controller_logic'];
+				} else {
+				$this->data['config_special_controller_logic'] = 'default';
+			}
+
+			if (isset($this->request->post['config_special_category_id'])) {
+				$this->data['config_special_category_id'] = $this->request->post['config_special_category_id'];
+				} elseif (isset($store_info['config_special_category_id'])) {
+				$this->data['config_special_category_id'] = $store_info['config_special_category_id'];
+				} else {
+				$this->data['config_special_category_id'] = '';
+			}
+
 			if (isset($this->request->post['config_show_goods_overload'])) {
 				$this->data['config_show_goods_overload'] = $this->request->post['config_show_goods_overload'];
 				} elseif (isset($store_info['config_show_goods_overload'])) {

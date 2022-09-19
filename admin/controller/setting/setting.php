@@ -1397,6 +1397,18 @@ class ControllerSettingSetting extends Controller {
 			$this->data['config_order_default'] = $this->config->get('config_order_default');
 		}
 
+		if (isset($this->request->post['config_special_controller_logic'])) {
+			$this->data['config_special_controller_logic'] = $this->request->post['config_special_controller_logic'];
+		} else {
+			$this->data['config_special_controller_logic'] = $this->config->get('config_special_controller_logic');
+		}
+
+		if (isset($this->request->post['config_special_category_id'])) {
+			$this->data['config_special_category_id'] = $this->request->post['config_special_category_id'];
+		} else {
+			$this->data['config_special_category_id'] = $this->config->get('config_special_category_id');
+		}
+
 		if (isset($this->request->post['config_display_subcategory_in_all_categories'])) {
 			$this->data['config_display_subcategory_in_all_categories'] = $this->request->post['config_display_subcategory_in_all_categories'];
 		} else {
