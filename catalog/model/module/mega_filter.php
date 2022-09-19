@@ -231,6 +231,30 @@ class MegaFilterCore {
 		if( ! empty( $ctrl->request->get['description'] ) ) {
 			$data['filter_description'] = $ctrl->request->get['description'];
 		}
+
+		/**
+		 * Other filters
+		 */
+		if( ! empty( $ctrl->request->get['intersection_id'] ) ) {
+			$data['filter_category_id_intersect'] = $ctrl->request->get['intersection_id'];
+			$data['filter_sub_category_intersect'] = true;
+		}
+
+		if( ! empty( $ctrl->request->get['filter_current_in_stock'] ) ) {
+			$data['filter_current_in_stock'] = $ctrl->request->get['filter_current_in_stock'];
+		}
+
+		if( ! empty( $ctrl->request->get['filterinstock'] ) ) {
+			$data['filterinstock'] = $ctrl->request->get['filterinstock'];
+		}
+
+		if( ! empty( $ctrl->request->get['filter_not_bad'] ) ) {
+			$data['filter_not_bad'] = $ctrl->request->get['filter_not_bad'];
+		}
+
+		if( ! empty( $ctrl->request->get['new'] ) ) {
+			$data['new'] = $ctrl->request->get['new'];
+		}
 		
 		/**
 		 * Tagi 
@@ -335,7 +359,7 @@ class MegaFilterCore {
 							',', '[', ']'
 						), $vv);
 					}
-					
+
 					switch( $key ) {
 						case 'search_oc' :
 						case 'search' : {
@@ -1110,12 +1134,46 @@ class MegaFilterCore {
 		}
 		
 		if( ! empty( $this->_data['filter_category_id'] ) ) {
-		//	$__current_category = $this->load->model('catalog/category');
 			$__current_category = $this->_ctrl->db->query("SELECT deletenotinstock FROM category WHERE category_id = '" . $this->_data['filter_category_id'] . "'");
 			
 			if (!empty($__current_category->row['deletenotinstock'])) {
 				array_unshift( $conditions, "`p`.`" . $this->_ctrl->config->get('config_warehouse_identifier') . "` > 0" );
 			}		
+		}
+
+		if (!empty($this->_data['filter_category_id']) && $this->_ctrl->config->get('config_special_category_id') && (int)$this->_data['filter_category_id'] == (int)$this->_ctrl->config->get('config_special_category_id')) {
+			$conditions[] = "p.product_id IN (SELECT product_id FROM product_special ps WHERE ps.price < p.price AND ps.price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (store_id = '" . (int)$this->_ctrl->config->get('config_store_id') . "' OR store_id = -1)) AND p.stock_status_id <> '" . (int)$this->_ctrl->config->get('config_not_in_stock_status_id') . "' AND p.quantity > 0";
+		}			
+
+		if (!empty($this->_data['filter_category_id_intersect'])) {				
+			if (is_array($filter_category_id_intersect = explode(':', $this->_data['filter_category_id_intersect']))){
+				$filter_category_id_intersect = array_map('intval', $filter_category_id_intersect);
+			}
+
+
+			if (!empty($filter_category_id_intersect)){
+				if (!empty($this->_data['filter_sub_category_intersect'])) {
+					$conditions[] = "p.product_id IN (SELECT product_id FROM category_path cpi LEFT JOIN product_to_category p2ci ON (cpi.category_id = p2ci.category_id) WHERE cpi.path_id IN (" . implode(',', $filter_category_id_intersect) . "))";
+				} else {
+					$conditions[] = "p.product_id IN (SELECT product_id FROM product_to_category p2ci WHERE p2ci.category_id IN (" . implode(',', $filter_category_id_intersect) . "))";
+				}
+			}
+		}
+
+		if (!empty($this->_data['filter_current_in_stock'])) {
+			$conditions[] = "p." . $this->_ctrl->config->get('config_warehouse_identifier') . " > 0";
+		}
+
+		if (!empty($this->_data['filterinstock'])) {
+			$conditions[] = "p." . $this->_ctrl->config->get('config_warehouse_identifier') . " > 0";
+		}
+
+		if (!empty($this->_data['filter_not_bad'])) {
+			$conditions[] = "p.stock_status_id NOT IN (" . $this->_ctrl->config->get('config_not_in_stock_status_id') . ',' . $this->_ctrl->config->get('config_partly_in_stock_status_id') . ")";
+		}
+
+		if (!empty($this->_data['new'])) {
+			$conditions[] = "p.new = 1 AND (DATE(p.new_date_to) > '". date('Y-m-d') . "' OR DATE(p.date_added) > '" . date('Y-m-d', strtotime('-45 day')) . "')";
 		}
 		
 		// sprawdź branżę
@@ -1176,10 +1234,6 @@ class MegaFilterCore {
 			}
 		}
 		
-		// sprawdź kategorię
-		//if( ! empty( $this->_data['filter_category_id'] ) ) {
-		//	$conditions[] = 'p2c.category_id = ' . (int) $this->_data['filter_category_id'];
-		//}
 		
 		if( false != ( $mFilterPlus = $this->mfilterPlus() ) ) {
 			$mFilterPlus->baseConditions( $conditions );
@@ -1364,7 +1418,7 @@ class MegaFilterCore {
 			$this->_createSQL( $columns, $conditionsIn, array() ), $conditions
 		);				
 
-		//$this->_ctrl->log->debug($sql);	
+	//	$this->_ctrl->log->debug($sql);	
 		
 		$query = $this->_ctrl->db->query( $sql );
 		
