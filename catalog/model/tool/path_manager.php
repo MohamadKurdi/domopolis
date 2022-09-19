@@ -44,13 +44,25 @@ class ModelToolPathManager extends Model {
 		}
 		
 		$path = array();
-		$categories = $this->db->query("SELECT c.category_id, c.parent_id 
+		$categories = $this->db->query("SELECT c.category_id, c.parent_id, p2c.main_category
 			FROM product_to_category p2c 
 			LEFT JOIN category c ON (p2c.category_id = c.category_id) 
 			LEFT JOIN category_to_store c2s ON (p2c.category_id = c2s.category_id)
 			WHERE 
-			c2s.store_id = '" . (int)$this->config->get('config_store_id') ."' 
+			c2s.store_id = '" . (int)$this->config->get('config_store_id') ."'
 			AND product_id = '" . (int)$product_id . "'")->rows;
+
+		$main_category = [];		
+		foreach($categories as $key => $category){
+			if ($category['main_category']){
+				$main_category[$key] = $category;
+				break;
+			}
+		}
+
+		if ($main_category){
+			$categories = $main_category;
+		}
 		
 		foreach($categories as $key => $category)
 		{
