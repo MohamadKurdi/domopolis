@@ -657,7 +657,27 @@
 									</select>
 									</div>									
 								</td>
+								<td style="width:15%">
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Логика раздела "все скидки"</span></p>
+										<select name="config_special_controller_logic">
+											<?php if ($config_special_controller_logic == 'default') { ?>
+												<option value="default" selected="selected">По-умолчанию</option>
+												<option value="category">Товары из категории</option>
+											<?php } else { ?>													
+												<option value="default">По-умолчанию</option>
+												<option value="category"  selected="selected">Товары из категории</option>
+											<? } ?>
+										</select>
+										<br />
+										<span class="help">В любом случае скидки - это категория. От выбора логики зависит, будет ли очищаться категория.</span>
+									</div>
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">ID категории товаров со скидками</span></p>
+										<input type="number" name="config_special_category_id" value="<?php echo $config_special_category_id; ?>" size="50" style="width:90px;" />
+									</div>
 
+								</td>
 							</tr>						
 						</table>
 

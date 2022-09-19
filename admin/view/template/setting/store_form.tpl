@@ -230,6 +230,27 @@
 											</td>
 										</tr>
 										<tr>
+											<td>Логика раздела "все скидки"</td>
+											<td>
+												<select name="config_special_controller_logic">
+														<?php if ($config_special_controller_logic == 'default') { ?>
+															<option value="default" selected="selected">По-умолчанию</option>
+															<option value="category">Товары из категории</option>
+														<?php } else { ?>													
+															<option value="default">По-умолчанию</option>
+															<option value="category"  selected="selected">Товары из категории</option>
+														<? } ?>
+													</select>
+
+											</td>												
+										</tr>
+										<tr>
+											<td>ID категории товаров со скидками</td>
+											<td>											
+												<input type="number" name="config_special_category_id" value="<?php echo $config_special_category_id; ?>" size="50" style="width:90px;" />
+											</td>												
+										</tr>
+										<tr>
 											<td><span class="required">*</span> <?php echo $entry_title; ?></td>
 											<td><input type="text" name="config_title" value="<?php echo $config_title; ?>" size="200" />
 												<?php if ($error_title) { ?>
