@@ -428,7 +428,7 @@
 			var _t = jQuery(this).addClass('init'),
 				_p = { };
 
-			<?php foreach( $this->request->get as $k => $v ) { if( is_array( $v ) || ! in_array( $k, array( 'path', 'category_id', 'manufacturer_id', 'filter', 'search', 'sub_category', 'description', 'filter_tag' ) ) ) continue; ?>
+			<?php foreach( $this->request->get as $k => $v ) { if( is_array( $v ) || ! in_array( $k, array( 'path', 'category_id', 'manufacturer_id', 'intersection_id', 'filter', 'search', 'sub_category', 'description', 'filter_tag' ) ) ) continue; ?>
 				_p['<?php echo $k; ?>'] = '<?php echo addslashes( $v ); ?>';
 			<?php } ?>
 

@@ -248,14 +248,7 @@
 			$this->data['_v'] = $this->config->get('mfilter_version') ? $this->config->get('mfilter_version') : '1';
 			
 			
-			/**
-				* Szablon 
-			*/
-			if( file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/mega_filter.tpl') ) {
-				$this->template = $this->config->get('config_template') . '/template/module/mega_filter.tpl';
-				} else {
-				$this->template = 'default/template/module/mega_filter.tpl';
-			}
+			$this->template = 'module/mega_filter';
 			
 			$this->config->set('mfp_is_activated','1');
 			
