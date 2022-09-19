@@ -96,7 +96,8 @@
 					
 					$currentCategory = $this->model_catalog_category->getCategory($this->data['category_id']);
 
-					$currentRootCategory = $this->data['category_id'];
+					$currentRootCategory 		= $this->data['category_id'];
+					$currentZeroRootCategory 	= false;
 					if ($this->getIfToShowFullMenu($this->data['category_id'])){
 						$currentParentCategory 		= $currentCategory['parent_id'];
 						$currentZeroRootCategory 	= $this->getRootCategoryForThis($this->data['category_id']);
@@ -110,7 +111,7 @@
 					
 					$categories = $this->model_catalog_category->getCategories($currentRootCategory);	
 
-					if 	(count($categories) < $setting['min_for_zero_parent'] && $currentRootCategory!=$currentZeroRootCategory && $currentZeroRootCategory){
+					if 	(count($categories) < $setting['min_for_zero_parent']  && $currentZeroRootCategory && $currentRootCategory!=$currentZeroRootCategory){
 						$categories = $this->model_catalog_category->getCategories($currentZeroRootCategory);	
 					}
 					
