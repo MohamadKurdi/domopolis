@@ -24,6 +24,13 @@
 		public function smsQueue(){
 			$this->smsQueue->cron();
 		}
+
+		public function fillSpecialCategory(){
+			if ($this->config->get('config_special_controller_logic') && $this->config->get('config_special_category_id')){
+				$this->db->query("DELETE FROM product_to_category WHERE category_id = '" . (int)$this->config->get('config_special_category_id') . "'");
+				$this->db->query("INSERT IGNORE INTO product_to_category (product_id, category_id) SELECT DISTINCT ps.product_id, '" . $this->config->get('config_special_category_id') . "' FROM product_special ps LEFT JOIN product p ON ps.product_id = p.product_id WHERE p.status = 1 AND p.quantity > 0 AND ps.price < p.price AND ps.price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW()))");
+			}
+		}
 		
 		public function optimizeProductsDB(){
 			echo 'Статистика по товарам...' . PHP_EOL;
@@ -97,24 +104,7 @@
 			$query = $this->db->non_cached_query("
 			INSERT INTO product_to_category (product_id, category_id) (
 			SELECT DISTINCT product_id, " . GENERAL_MARKDOWN_CATEGORY . "
-			FROM product WHERE is_markdown = 1)");
-			
-			echo '>> Формирование категории подарочного ассортимента...'  . PHP_EOL;
-			$this->db->non_cached_query("DELETE FROM product_to_category WHERE category_id = '" . GENERAL_DISCOUNT_CATEGORY . "'");
-			
-			
-			$query = $this->db->non_cached_query("
-			INSERT INTO product_to_category (product_id, category_id) (
-			SELECT DISTINCT ps.product_id, " . GENERAL_DISCOUNT_CATEGORY . "
-			FROM product_special ps 
-			LEFT JOIN product p ON ps.product_id = p.product_id 
-			WHERE ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) 
-			AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) 
-			AND ps.customer_group_id = '1' 
-			AND ps.price <= p.price*0.9
-			AND ps.price > 0
-			);
-			");			
+			FROM product WHERE is_markdown = 1)");					
 		}
 		
 		
