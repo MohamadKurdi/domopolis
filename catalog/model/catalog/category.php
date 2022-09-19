@@ -14,30 +14,48 @@
 				} else {
 				$customer_group_id = $this->config->get('config_customer_group_id');
 			}
-			
-			$sql = "SELECT DISTINCT cp1.category_id, c1.*, cd1.* FROM category_path cp1";
-			$sql .= " LEFT JOIN product_to_category p2c1 ON (cp1.category_id = p2c1.category_id)";
-			$sql .= " LEFT JOIN category c1 ON (c1.category_id = cp1.category_id)";
-			$sql .= " LEFT JOIN category_to_store c2s ON (cp1.category_id = c2s.category_id)";
-			$sql .= " LEFT JOIN category_description cd1 ON (cp1.category_id = cd1.category_id)";
-			
-			$sql .= " WHERE p2c1.product_id IN (SELECT DISTINCT p.product_id";
-			$sql .= " FROM category_path cp LEFT JOIN product_to_category p2c ON (cp.category_id = p2c.category_id)";
-			$sql .= " LEFT JOIN product p ON (p2c.product_id = p.product_id)";
-			$sql .= " LEFT JOIN product_description pd ON (p.product_id = pd.product_id)";
-			$sql .= " LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id)";
-			$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
-			AND p.status = '1' 
-			AND p.date_available <= NOW() 
-			AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
-			AND cp.path_id = '" . $category_id . "' GROUP BY product_id) 
-			AND c1.parent_id = '" . (int)$parent_id . "'
-			AND c1.status = 1";
-			$sql .= " AND cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' 
-			AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
-			AND cp1.category_id <> '" . $category_id . "'
-			AND c1.intersections = 0";
-					
+
+			$sql = "SELECT DISTINCT cp1.path_id, c1.*, cd1.*";
+			$sql .= " FROM  category_path cp1 ";			
+			$sql .= " LEFT JOIN category c1 ON (cp1.path_id = c1.category_id)";
+			$sql .= " LEFT JOIN category_to_store c2s ON (cp1.path_id = c2s.category_id)";
+			$sql .= " LEFT JOIN category_description cd1 ON (cp1.path_id = cd1.category_id)";
+			$sql .= " WHERE cp1.category_id IN ( ";
+			$sql .= " SELECT category_id FROM product_to_category p2c WHERE product_id IN ( ";
+			$sql .= " SELECT
+				DISTINCT p.product_id
+				FROM
+				category_path cp
+				LEFT JOIN product_to_category p2c ON (cp.category_id = p2c.category_id)
+				LEFT JOIN product p ON (p2c.product_id = p.product_id)
+				LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
+				LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id)
+				WHERE
+				pd.language_id = '2'
+				AND p.status = '1'
+				AND p.date_available <= NOW()
+				AND p2s.store_id = '0'
+				AND cp.path_id = '" . (int)$category_id . "'";
+
+			if ($this->config->get('config_special_category_id') && (int)$category_id == (int)$this->config->get('config_special_category_id')) {
+			 	$sql .= "  AND p.product_id IN ( ";
+			 	$sql .= " (SELECT product_id FROM product_special ps WHERE ps.price < p.price AND ps.price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (store_id = '" . (int)$this->config->get('config_store_id') . "' OR store_id = -1))";
+			 	$sql .= " )";	 	
+			}		
+
+			$sql .= " GROUP BY product_id	
+			) ";			
+
+			$sql .= "  ) ";
+			$sql .= "  AND cp1.path_id NOT IN (SELECT path_id FROM category_path cp3 WHERE category_id = '" . (int)$category_id . "')";
+			$sql .= "  AND c1.parent_id = '" . (int)$parent_id . "'";
+			$sql .= "  AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ";
+			$sql .= "  AND cp1.category_id <> '" . (int)$category_id . "'";
+			$sql .= "  AND c1.status = 1";
+			$sql .= "  AND c1.intersections = 0";
+			$sql .= "  AND cd1.language_id = 2";		
+
+			$this->log->debugsql($sql);		
 			
 			$query = $this->db->query($sql);
 			
