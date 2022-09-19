@@ -28,6 +28,10 @@ class smsQueue {
 		
 	}
 
+	private function deleteSMSFromQueue($queue_sms_id){
+		$this->db->query("DELETE FROM queue_sms WHERE queue_sms_id = '" . (int)$queue_sms_id . "'");
+	}
+
 	public function cron(){
 		$log = new Log('sms_epochta.txt');
 
@@ -43,12 +47,15 @@ class smsQueue {
 			$balance = (float)$result['result']['balance_currency'];
 		}
 
-		echo 'Баланс: ' . $balance . PHP_EOL;
-
+		echoLine('[smsQueue] Баланс: ' . $balance);
 		if ($balance && ($balance > 5)) {
-
 			foreach ($query->rows as $sms){
 				$body 		= json_decode(base64_decode($sms['body']), true);
+
+				if (!trim($body['message'])){
+					echoLine('[smsQueue] Пустой текст!');
+					$this->deleteSMSFromQueue($sms['queue_sms_id']);
+				}
 
 				$params = [		
 					'sender'		=> $body['from'],
@@ -71,9 +78,18 @@ class smsQueue {
 					continue;
 				}
 
+				if (!empty($result["error"])){
+					echoLine('[smsQueue] Ошибка. ' . $result["error"]);
+					echoLine('[smsQueue] ' . $response);
+					
+					if ($result["error"] == 'no_good_recipients'){
+						$this->deleteSMSFromQueue($sms['queue_sms_id']);
+					}
+				}
+
 				if (!empty($result["result"]["id"]) && $result["result"]["id"]){
-					echo 'SMS: ' . $params['phone'] . ' -> ' . $result["result"]["id"] . PHP_EOL;			
-					$this->db->query("DELETE FROM queue_sms WHERE queue_sms_id = '" . (int)$sms['queue_sms_id'] . "'");
+					echoLine('[smsQueue] ' . $params['phone'] . ' -> ' . $result["result"]["id"]);			
+					$this->deleteSMSFromQueue($sms['queue_sms_id']);
 				}
 
 
