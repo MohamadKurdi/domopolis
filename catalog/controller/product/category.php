@@ -295,8 +295,7 @@
 				}
 				} else {
 				$category_info = $this->model_catalog_category->getCategory($category_id);
-			}
-			
+			}			
 			
 			if (isset($this->request->get['manufacturer_id'])){
 				$url .= '&manufacturer_id=' . $this->request->get['manufacturer_id'];	
@@ -382,6 +381,18 @@
 			}
 			
 			if ($category_info) {
+
+				if (!empty($this->request->get['intersection_id'])){
+					$intersection_info = $this->model_catalog_category->getCategory($this->request->get['intersection_id']);
+
+					if ($intersection_info){					
+						$category_info['seo_h1'] 			= str_replace($category_info['name'], ($category_info['name'] . ' - ' . $intersection_info['name'] ), $category_info['seo_h1']);
+						$category_info['meta_description'] 	= str_replace($category_info['name'], ($category_info['name'] . ' - ' . $intersection_info['name'] ), $category_info['meta_description']);
+						$category_info['name'] 				= ($category_info['name'] . ' - ' . $intersection_info['name']);	
+					}
+				}
+			
+
 				if (isset($this->request->get['manufacturer_id'])) {	
 					$this->document->setTitle($category_info['seo_title']);
 					} else {
@@ -477,14 +488,7 @@
 				if (isset($this->request->get['limit'])) {
 					$url .= '&limit=' . $this->request->get['limit'];
 				}
-				
-				/*	
-					$this->data['breadcrumbs'][] = array(
-					'text'      => $category_info['name'],
-					'href'      => $this->url->link('product/category', 'path=' . $this->request->get['path']),
-					'separator' => $this->language->get('text_separator')
-					);
-				*/					
+								
 				
 				if ($category_info['image']) {
 					$this->data['thumb'] = $this->model_tool_image->resize($category_info['image'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
@@ -658,10 +662,8 @@
 				}
 				
 				
-				$top_actions = $this->model_catalog_category->getCategoryActions($category_id);
-				
-				$this->data['top_actions'] = array();
-				
+				$top_actions = $this->model_catalog_category->getCategoryActions($category_id);				
+				$this->data['top_actions'] = array();				
 				foreach ($top_actions as $top_action){
 					
 					if ($top_action['image']) {
@@ -676,6 +678,11 @@
 					'name'	 		=> $top_action['caption'],
 					'href' 			=> $this->url->link('information/actions','actions_id=' . $top_action['actions_id'])
 					);
+				}
+
+				
+				if ($this->config->get('config_special_category_id') && (int)$category_id == (int)$this->config->get('config_special_category_id')) {					
+					$this->model_catalog_product->fillSpecialCategory();
 				}
 				
 				$this->data['products'] = array();
@@ -766,20 +773,6 @@
 				}
 				
 				$results = $this->model_catalog_product->getProducts($data);
-				
-				if ($product_total == 0 && $category_id == GENERAL_DISCOUNT_CATEGORY){
-					$data = array(
-					'sort'  => $sort,
-					'order' => $order,
-					'start' => ($page - 1) * $limit,
-					'limit' => $limit,
-					'no_child'  => true, 
-					);
-					
-					$product_total = $this->model_catalog_product->getTotalProductSpecials($data);
-					$results = $this->model_catalog_product->getProductSpecials($data);
-				}			
-				
 				
 				$this->data['dimensions'] = array(
 				'w' => $this->config->get('config_image_product_width'),
@@ -932,8 +925,7 @@
 							
 						}
 						
-					}
-					
+					}				
 				}
 				
 				if (isset($this->request->get['manufacturer_id'])){
