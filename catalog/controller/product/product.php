@@ -2329,13 +2329,13 @@ class ControllerProductProduct extends Controller
         foreach ($results as $result) {
             if ($result['addimage'] && mb_strlen($result['addimage']) > 32) {
                 if (filter_var($result['addimage'], FILTER_VALIDATE_URL)) {
-                    $_addimage = $result['addimage'];
+                    $image = $result['addimage'];
                 } else {
                     $size = getimagesize(DIR_IMAGE . $result['addimage']);
-                    $_addimage = $this->model_tool_image->resize($result['addimage'], $size[0], $size[1]);
+                    $image = $this->model_tool_image->resize($result['addimage'], $size[0], $size[1]);
                 }
             } else {
-                $_addimage = false;
+                $image = false;
             }
             
             $this->data['reviews'][] = array(
@@ -2344,7 +2344,7 @@ class ControllerProductProduct extends Controller
                 'text'       => $result['text'],
                 'good'       => $result['good'],
                 'bads'       => $result['bads'],
-                'addimage'   => $_addimage,
+                'addimage'   => $image,
                 'purchased'  => $result['purchased'],
                 'rating'     => (int)$result['rating'],
                 'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
