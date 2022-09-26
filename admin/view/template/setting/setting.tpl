@@ -437,16 +437,7 @@
 								</td>
 								
 								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Разрешить отзывы</span></p>
-									<select name="config_review_status">
-										<?php if ($config_review_status) { ?>
-											<option value="1" selected="selected">Включить</option>
-											<option value="0">Отключить</option>
-										<?php } else { ?>													
-											<option value="1">Включить</option>
-											<option value="0"  selected="selected">Отключить</option>
-										<? } ?>
-									</select>
+									
 								</td>
 								
 								<td style="width:15%">
@@ -679,6 +670,137 @@
 
 								</td>
 							</tr>						
+						</table>
+
+						<h2>Отзывы</h2>
+
+						<table class="form">
+							<tr>
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Разрешить отзывы</span></p>
+									<select name="config_review_status">
+										<?php if ($config_review_status) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Количество "лучших отзывов" в карте товара</span></p>
+									<input type="number" name="config_onereview_amount" value="<?php echo $config_onereview_amount; ?>" size="3" />
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Без модерации</span></p>
+									<select name="config_review_statusp">
+										<?php if ($config_review_statusp) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Уведомление на мейл</span></p>
+									<select name="config_review_email">
+										<?php if ($config_review_email) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Можно ли редактировать в ЛК</span></p>
+									<select name="config_myreviews_edit">
+										<?php if ($config_myreviews_edit) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Модерация после редактирования</span></p>
+									<select name="config_myreviews_moder">
+										<?php if ($config_myreviews_moder) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+								</td>
+								
+							</tr>
+							<tr>
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Поле "недостатки"</span></p>
+									<select name="config_review_bad">
+										<?php if ($config_review_bad) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Поле "достоинства"</span></p>
+									<select name="config_review_good">
+										<?php if ($config_review_good) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Добавлять вложения</span></p>
+									<select name="config_review_addimage">
+										<?php if ($config_review_addimage) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включить капчу</span></p>
+									<select name="config_review_captcha">
+										<?php if ($config_review_captcha) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+								</td>
+							</tr>
+
 						</table>
 
 						<h2>Другие настройки</h2>
@@ -1411,115 +1533,7 @@
 								</td>
 							</tr>
 						</table>	
-						
-						
-						<h2>Отзывы</h2>
-						<table class="form">
-							<tr>
-								<td>Поле недостатков</td>
-								<td>
-									<?php if ($config_review_bad) { ?>
-										<input type="radio" name="config_review_bad" value="1" checked="checked" />Да
-										<input type="radio" name="config_review_bad" value="0" />Нет
-										<?php } else { ?>
-										<input type="radio" name="config_review_bad" value="1" />Да
-										<input type="radio" name="config_review_bad" value="0" checked="checked" />Нет
-									<?php } ?>
-								</td>
-							</tr>
-							<tr>
-								<td>Поле достоинств</td>
-								<td><?php if ($config_review_good) { ?>
-									<input type="radio" name="config_review_good" value="1" checked="checked" />Да
-									<input type="radio" name="config_review_good" value="0" />Нет
-									<?php } else { ?>
-									<input type="radio" name="config_review_good" value="1" />Да
-									<input type="radio" name="config_review_good" value="0" checked="checked" />Нет
-								<?php } ?></td>
-							</tr>
-							<tr>
-								<td>Поле фото</td>
-								<td><?php if ($config_review_addimage) { ?>
-									<input type="radio" name="config_review_addimage" value="1" checked="checked" />Да
-									<input type="radio" name="config_review_addimage" value="0" />Нет
-									<?php } else { ?>
-									<input type="radio" name="config_review_addimage" value="1" />Да
-									<input type="radio" name="config_review_addimage" value="0" checked="checked" />Нет
-								<?php } ?></td>
-							</tr>
-							<tr>
-								<td>Поле капчи</td>
-								<td><?php if ($config_review_captcha) { ?>
-									<input type="radio" name="config_review_captcha" value="1" checked="checked" />Да
-									<input type="radio" name="config_review_captcha" value="0" />Нет
-									<?php } else { ?>
-									<input type="radio" name="config_review_captcha" value="1" />Да
-									<input type="radio" name="config_review_captcha" value="0" checked="checked" />Нет
-								<?php } ?></td>
-							</tr>
-							<tr>
-								<td>Автопубликация отзывов</td>
-								<td><?php if ($config_review_statusp) { ?>
-									<input type="radio" name="config_review_statusp" value="1" checked="checked" />Да
-									<input type="radio" name="config_review_statusp" value="0" />Нет
-									<?php } else { ?>
-									<input type="radio" name="config_review_statusp" value="1" />Да
-									<input type="radio" name="config_review_statusp" value="0" checked="checked" />Нет
-								<?php } ?></td>
-							</tr>
-							<tr>
-								<td>Оповещение о новом отзыве по e-mail</td>
-								<td><?php if ($config_review_email) { ?>
-									<input type="radio" name="config_review_email" value="1" checked="checked" />Да
-									<input type="radio" name="config_review_email" value="0" />Нет
-									<?php } else { ?>
-									<input type="radio" name="config_review_email" value="1" />Да
-									<input type="radio" name="config_review_email" value="0" checked="checked" />Нет
-								<?php } ?></td>
-							</tr>
-							<tr>
-								<td>Мин длина комментария</td>
-								<td>
-									<?php if (empty($config_review_text_symbol)) { ?>
-										<input type="text" name="config_review_text_symbol" value="25" size="3" />
-										<?php } else { ?>
-										<input type="text" name="config_review_text_symbol" value="<?php echo $config_review_text_symbol; ?>" size="3" />
-									<?php } ?>
-								</td>
-							</tr>
-						</table>
-						<h2>Отзывы в Личном кабинете</h2>
-						<table class="form">
-							<tr>
-								<td>Редактирование отзывов</td>
-								<td>									
-									<select name="config_myreviews_edit">
-										<?php if ($config_myreviews_edit) { ?>
-											<option value="1" selected="selected">Включить</option>
-											<option value="0">Отключить</option>
-										<?php } else { ?>													
-											<option value="1">Включить</option>
-											<option value="0"  selected="selected">Отключить</option>
-										<? } ?>
-									</select>
-
-								</td>
-							</tr>
-							<tr>
-								<td>Модерация отредактированного отзыва ?(сразу публиковать или нет)</td>
-								<td>
-									<select name="config_myreviews_moder">
-										<?php if ($config_myreviews_moder) { ?>
-											<option value="1" selected="selected">Включить</option>
-											<option value="0">Отключить</option>
-										<?php } else { ?>													
-											<option value="1">Включить</option>
-											<option value="0"  selected="selected">Отключить</option>
-										<? } ?>
-									</select>
-								</td>
-							</tr>
-						</table>
+																		
 						<h2><?php echo $text_items; ?></h2>
 						<table class="form">
 							<tr>
