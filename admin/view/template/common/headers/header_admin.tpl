@@ -471,13 +471,13 @@
 						<li id="seo"><a class="top"><i class="fa fa-puzzle-piece icon_menu"></i>SEO</a>
 							<ul>
 								<li><a class="home_icon_style" href="<?php echo $redirect_manager; ?>"><i class="fa fa-wrench"></i><span>Управление редиректами</span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $seo_feeds; ?>"><i class="fa fa-sitemap"></i><span>Списки фидов</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $seogen; ?>"><i class="fa fa-sitemap"></i><span>Генератор SEO</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $metaseo_anypage; ?>"><i class="fa fa-sitemap"></i><span>Мета-теги</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $autolink_link; ?>"><i class="fa fa-font"></i><span>Подмена слов на ссылки</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $keyworder_link; ?>"><i class="fa fa-retweet"></i><span>Связка произв./кат.</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $microdata_link; ?>"><i class="fa fa-sitemap"></i><span>Microdata v1</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $seo_snippet_link; ?>"><i class="fa fa-sitemap"></i><span>Microdata v2</span></a></li>
-								<li><a class="home_icon_style" href="<?php echo HTTPS_CATALOG.'reviewgen/'; ?>"><i class="fa fa-sitemap"></i><span>Генератор отзывов</span></a></li>
 							</ul>
 						</li>
 
