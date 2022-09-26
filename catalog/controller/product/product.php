@@ -2363,69 +2363,65 @@ class ControllerProductProduct extends Controller
         foreach ($this->language->loadRetranslate('product/product') as $translationСode => $translationText) {
             $this->data[$translationСode] = $translationText;
         }
-            
-            
+
+
         $this->load->model('catalog/review');
         $this->load->model('tool/image');
-            
+
         $this->data['text_on'] = $this->language->get('text_on');
         $this->data['text_no_reviews'] = $this->language->get('text_no_reviews');
-            
+
         if (isset($this->request->get['page'])) {
             $page = $this->request->get['page'];
         } else {
             $page = 1;
         }
-            
-            $this->data['reviews'] = array();
-            
-            $review_total = $this->model_catalog_review->getTotalReviewsByProductId($this->request->get['product_id']);
-            $results = $this->model_catalog_review->getReviewsByProductId($this->request->get['product_id'], ($page - 1) * 5, 5);
-            
-            $this->data['product_id'] = (int)$this->request->get['product_id'];
-            
+
+        $this->data['reviews'] = array();
+
+        $review_total = $this->model_catalog_review->getTotalReviewsByProductId($this->request->get['product_id']);
+        $results = $this->model_catalog_review->getReviewsByProductId($this->request->get['product_id'], ($page - 1) * 5, 5);
+
+        $this->data['product_id'] = (int)$this->request->get['product_id'];
+
         foreach ($results as $result) {
             if ($result['addimage'] && mb_strlen($result['addimage']) > 32) {
                 if (filter_var($result['addimage'], FILTER_VALIDATE_URL)) {
-                    $_addimage = $result['addimage'];
+                    $image = $result['addimage'];
                 } else {
                     $size = getimagesize(DIR_IMAGE . $result['addimage']);
-                    $_addimage = $this->model_tool_image->resize($result['addimage'], $size[0], $size[1]);
+                    $image = $this->model_tool_image->resize($result['addimage'], $size[0], $size[1]);
                 }
             } else {
-                $_addimage = false;
+                $image = false;
             }
-                
+
             $this->data['reviews'][] = array(
-            'author'     => $result['author'],
-            'answer'     => $result['answer'],
-            'text'       => $result['text'],
-            'good'       => $result['good'],
-            'bads'       => $result['bads'],
-            'addimage'   => $_addimage,
-            'purchased'  => $result['purchased'],
-            'rating'     => (int)$result['rating'],
-            'reviews'    => sprintf($this->language->get('text_reviews'), (int)$review_total),
-            'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
+                'author'     => $result['author'],
+                'answer'     => $result['answer'],
+                'text'       => $result['text'],
+                'good'       => $result['good'],
+                'bads'       => $result['bads'],
+                'addimage'   => $image,
+                'purchased'  => $result['purchased'],
+                'rating'     => (int)$result['rating'],
+                'reviews'    => sprintf($this->language->get('text_reviews'), (int)$review_total),
+                'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
             );
         }
-            
-            $pagination = new Pagination();
-            $pagination->total = $review_total;
-            $pagination->page = $page;
-            $pagination->limit = 5;
-            $pagination->text = $this->language->get('text_pagination');
-            $pagination->url = $this->url->link('product/product/review', 'product_id=' . $this->request->get['product_id'] . '&page={page}');
-            
-            $this->data['pagination'] = $pagination->render();
-            
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/review.tpl')) {
-            $this->template = $this->config->get('config_template') . '/template/product/review.tpl';
-        } else {
-            $this->template = 'default/template/product/review.tpl';
-        }
-            
-            $this->response->setOutput($this->render());
+
+        $pagination = new Pagination();
+        $pagination->total = $review_total;
+        $pagination->page = $page;
+        $pagination->limit = 5;
+        $pagination->text = $this->language->get('text_pagination');
+        $pagination->url = $this->url->link('product/product/review', 'product_id=' . $this->request->get['product_id'] . '&page={page}');
+
+        $this->data['pagination'] = $pagination->render();
+
+        $this->template = 'product/review.tpl';
+
+        $this->response->setOutput($this->render());
     }
         
         

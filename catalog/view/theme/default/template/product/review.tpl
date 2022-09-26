@@ -6,10 +6,8 @@
 		</div>
 	</div>
 	
-	<?php foreach ($reviews as $review) { ?>
-			
-			<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/review_block.tpl')); ?>
-		
+	<?php foreach ($reviews as $review) { ?>			
+		<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/review_block.tpl')); ?>		
 	<?php } ?>
 	
 	<div class="pagination"><?php echo $pagination; ?></div>
