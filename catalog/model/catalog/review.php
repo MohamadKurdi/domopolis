@@ -120,7 +120,7 @@ class ModelCatalogReview extends Model
     public function getBestReviewsForProductID($product_id)
     {
 
-        if (!$this->config->get('config_onereview_amount')) {
+        if ($this->config->get('config_onereview_amount')) {
             $limit = (int)$this->config->get('config_onereview_amount');
         } else {
             $limit = 1;
