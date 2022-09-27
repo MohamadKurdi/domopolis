@@ -1,0 +1,54 @@
+{
+    
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/vzaichikov/barcode-validator"
+        }
+    ],
+    
+    "require": {
+        "wapmorgan/morphos": "^3.2",
+        "mobiledetect/mobiledetectlib": "^2.8",
+		"itpanda-llc/yandex-translate-sdk": "dev-master",
+		"geoip2/geoip2":"~2.0",
+		"maxmind-db/reader":"~1.0",
+		"jaybizzle/crawler-detect": "dev-master",
+		"elasticsearch/elasticsearch": "^7.0",
+        "voku/portable-utf8": "^5.4",
+        "sanmai/cdek-sdk": "^0.7.3",
+        "jackmartin/justin": "^1.5",
+        "kwn/number-to-words": "^1.13",
+        "mailgun/mailgun-php": "^3.5",
+        "phptcloud/isdayoff-sdk": "^1.0",
+        "yandex-market/yandex-market-php-partner": "^2.4",
+        "yandex-market/yandex-market-php-oauth": "^1.0",
+        "yandex-market/marketplace-php-partner": "^3.2",
+        "clegginabox/pdf-merger": "dev-master",
+        "ems-api/php-client": "^1.0",
+        "daveearley/daves-email-validation-tool": "^1.2",
+        "php-http/httplug": "^2.2",
+        "php-http/curl-client": "^2.2",
+        "sparkpost/sparkpost": "^2.3",
+        "caponica/amazon-rainforest": "dev-master",
+        "phpoffice/phpspreadsheet": "^1.23",
+        "mpdf/mpdf": "^8.0",
+        "chillerlan/php-qrcode": "dev-main",
+        "vzaichikov/barcode-validator": "dev-master",
+        "priceva/priceva-sdk-php": "^0.7.0",
+        "longman/telegram-bot": "^0.76.1",
+        "zadarma/user-api-v1": "^1.1",
+        "hflabs/dadata": "^22.3",
+        "maciejkrol/ipapicom": "^1.0",
+        "symfony/http-client": "^5.4",
+        "nyholm/psr7": "^1.5",
+        "php-http/guzzle6-adapter": "^2.0",
+        "denostr/binotel-api": "^0.1.3",
+        "phpoffice/phpexcel": "^1.8",
+        "voku/html-min": "^4.4",
+        "simplehtmldom/simplehtmldom": "dev-master",
+        "doctrine/sql-formatter": "^1.1",
+        "umpirsky/transliterator": "^0.1.0",
+        "enniel/epochta": "^0.0.1"
+    }
+}
