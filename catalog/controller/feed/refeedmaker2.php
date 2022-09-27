@@ -2,7 +2,6 @@
 class ControllerFeedReFeedMaker2 extends Controller
 {
     private $steps = array(0, 100, 500, 1000, 2000, 5000, 7000, 10000, 15000, 20000, 25000, 1000000000);
-    private $limit = 20000;
     private $exclude_language_id = null;
     private $language_id = null;
     private $languages = [];
@@ -137,6 +136,28 @@ class ControllerFeedReFeedMaker2 extends Controller
 
     }
 
+    private function openXML(){
+
+        $output = '';
+        $output  = '<?xml version="1.0" encoding="UTF-8" ?>' . PHP_EOL;
+        $output .= '<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">' . PHP_EOL;
+        $output .= '  <channel>' . PHP_EOL;
+        $output .= '  <title>' . $this->config->get('config_name') . '</title>' . PHP_EOL;
+        $output .= '  <description>' . $this->config->get('config_meta_description') . '</description>' . PHP_EOL;
+        $output .= '  <link>' . $this->config->get('config_url') . '</link>' . PHP_EOL;
+
+        return $output;
+    }
+
+    private function closeXML(){
+
+        $output = '';
+        $output .= '  </channel>' . PHP_EOL;
+        $output .= '</rss>' . PHP_EOL;
+
+        return $output;
+    }
+
     public function supplemental()
     {
         $this->load->model('catalog/product');
@@ -150,16 +171,6 @@ class ControllerFeedReFeedMaker2 extends Controller
                     //Пропускаем если язык не исключенных и нужно менять айдишку
                     if ($language_id != $this->registry->get('excluded_language_id') && $changeID) {
                         continue;
-                    }
-
-                    if ($language_id == $this->registry->get('excluded_language_id')) {
-                        if ($changeID) {
-                            $file = DIR_REFEEDS . 'supplemental_feed_' . $store_id . '_' . $language_id . '_changed_ids.xml';
-                        } else {
-                            $file = DIR_REFEEDS . 'supplemental_feed_' . $store_id . '_' . $language_id . '.xml';
-                        }
-                    } else {
-                        $file = DIR_REFEEDS . 'supplemental_feed_' . $store_id . '.xml';
                     }
 
                     $query = $this->db->non_cached_query("SELECT * FROM setting WHERE store_id = '0' OR store_id = '" . $store_id . "' ORDER BY store_id ASC");
@@ -177,42 +188,69 @@ class ControllerFeedReFeedMaker2 extends Controller
 
                     $this->setSteps();
 
-                    $output = '';
-                    $output  = '<?xml version="1.0" encoding="UTF-8" ?>';
-                    $output .= '<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">';
-                    $output .= '  <channel>';
-                    $output .= '  <title>' . $this->config->get('config_name') . '</title>';
-                    $output .= '  <description>' . $this->config->get('config_meta_description') . '</description>';
-                    $output .= '  <link>' . $this->config->get('config_url') . '</link>';
-
-                    echo '[S] Магазин ' . $store_id . PHP_EOL;
+                    echoLine('[supplemental] Магазин ' . $store_id);
+                    echoLine('[supplemental] Язык ' . $language_id);
+                    echoLine('[supplemental] changeID ' . $changeID);              
 
                     $filter = array(
-                        'start'                 => 0,
-                        'limit'                 => 1000000,
                         'filter_status'         => true,
                         'filter_not_bad'        => true,
-                        'filter_return_simple'  => true
-                    );
+                        'filter_with_variants'  => true                                            
+                    );                 
 
-                    $products = $this->model_catalog_product->getProducts($filter);
+                    $total = $this->model_catalog_product->getTotalProducts($filter);
+                    $iterations = ceil($total/$this->config->get('config_google_merchant_feed_limit'));
 
-                    foreach ($products as $_product) {
-                        $product = $this->model_catalog_product->getProduct($_product['product_id']);
-                        $output .= $this->printItemFast($product, $changeID);
-                        echo '.';
+                    echoLine('[supplemental] Всего товаров ' . $total);
+
+                    for ($i = 1; $i <= $iterations; $i++){
+                        $output = $this->openXML();
+
+                        $timer = new FPCTimer();
+
+                        if ($language_id == $this->registry->get('excluded_language_id')) {
+                            if ($changeID) {
+                                $file = DIR_REFEEDS . 'supplemental_feed_' . $store_id . '_' . $language_id . '_' . $i . '_changed_ids.xml';
+                            } else {
+                                $file = DIR_REFEEDS . 'supplemental_feed_' . $store_id . '_' . $language_id . '_' . $i . '.xml';
+                            }
+                        } else {
+                            $file = DIR_REFEEDS . 'supplemental_feed_' . $store_id . '_' . $i . '.xml';
+                        }                        
+
+                        $filter = array(
+                            'start'                 => ($i-1)*$this->config->get('config_google_merchant_feed_limit'),
+                            'limit'                 => $this->config->get('config_google_merchant_feed_limit'),
+                            'filter_status'         => true,
+                            'filter_not_bad'        => true,
+                            'filter_with_variants'  => true                                            
+                        );
+
+                        echoLine('[supplemental] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . ($filter['start']) . ' по ' . ($i*$filter['limit']));
+                        echoLine('[supplemental] Файл ' . $file);
+
+                        $products = $this->model_catalog_product->getProducts($filter);
+                        $k = 0;
+                        foreach ($products as $product) {
+                            $output .= $this->printItemFast($product, $changeID);             
+                            if ($k % 100 == 0){
+                                echo $k . '..';
+                            }
+                            $k++;
+                        }
+
+                        $output .= $this->closeXML();
+
+                        file_put_contents($file, $output);
+
+                        echoLine();
+                        echoLine('[supplemental] памяти занято ' . convertSize(memory_get_usage(true)));
+                        echoLine('[supplemental] собираем мусор, освобождаем память ' . convertSize(memory_get_usage(true)));
+                        gc_collect_cycles();
+
+                        echoLine('[supplemental] Времени на итерацию ' . $timer->getTime() . ' сек.');
+                        unset($timer);
                     }
-
-                    echo PHP_EOL;
-
-                    $output .= '  </channel>';
-                    $output .= '</rss>';
-
-                    file_put_contents($file, $output);
-
-                    echo convertSize(memory_get_usage(true)) . PHP_EOL;
-                    echo '[*] собираем мусор, освобождаем память: ' . convertSize(memory_get_usage(true)) . PHP_EOL;
-                    gc_collect_cycles();
                 }
             }
         }

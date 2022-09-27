@@ -5020,19 +5020,23 @@
 							<table class="form">
 								<tr>
 									
-									<td width="20%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Идентификатор Google Analitycs</span></p>
 										<input type="text" name="config_google_analitycs_id" value="<?php echo $config_google_analitycs_id; ?>" size="30" style="width:150px;" />
 									</td>
-									<td width="20%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Google Conversion ID</span></p>
 										<input type="text" name="config_google_conversion_id" value="<?php echo $config_google_conversion_id; ?>" size="30" style="width:150px;" />
 									</td>
-									<td width="20%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Google Merchant ID</span></p>
-										<input type="text" name="config_google_merchant_id" value="<?php echo $config_google_merchant_id; ?>" size="30" style="width:150px;" />											
+										<input type="text" name="config_google_merchant_id" value="<?php echo $config_google_merchant_id; ?>" size="30" style="width:150px;" />								
 									</td>
-									<td width="20%">
+									<td width="15%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Лимит товаров на фид</span></p>
+										<input type="number" step="1" name="config_google_merchant_feed_limit" value="<?php echo $config_google_merchant_feed_limit; ?>" size="30" style="width:150px;" />											
+									</td>
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Тип Google remarketing</span></p>
 										<select name="config_google_remarketing_type">
 											<?php if ($config_google_remarketing_type == 'ecomm') { ?>
@@ -5047,7 +5051,7 @@
 											<?php } ?>
 										</select>
 									</td>
-									<td width="20%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Передача данных Ecommerce</span></p>
 										<select name="config_google_ecommerce_enable">
 											<?php if ($config_google_ecommerce_enable) { ?>

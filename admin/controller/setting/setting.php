@@ -20,8 +20,6 @@ class ControllerSettingSetting extends Controller
     
     public function getFPCINFO()
     {
-
-
         if (!$this->user->isLogged() || !isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])) {
         } else {
             $this->load->model('setting/setting');
@@ -2662,6 +2660,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_google_merchant_id'] = $this->request->post['config_google_merchant_id'];
         } else {
             $this->data['config_google_merchant_id'] = $this->config->get('config_google_merchant_id');
+        }
+
+        if (isset($this->request->post['config_google_merchant_feed_limit'])) {
+            $this->data['config_google_merchant_feed_limit'] = $this->request->post['config_google_merchant_feed_limit'];
+        } else {
+            $this->data['config_google_merchant_feed_limit'] = $this->config->get('config_google_merchant_feed_limit');
         }
         
         if (isset($this->request->post['config_google_remarketing_type'])) {
