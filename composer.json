@@ -30,7 +30,7 @@
         "php-http/httplug": "^2.2",
         "php-http/curl-client": "^2.2",
         "sparkpost/sparkpost": "^2.3",
-        "caponica/amazon-rainforest": "dev-master",
+        "caponica/amazon-rainforest": "dev-master#0425210",
         "phpoffice/phpspreadsheet": "^1.23",
         "mpdf/mpdf": "^8.0",
         "chillerlan/php-qrcode": "dev-main",
@@ -44,11 +44,12 @@
         "nyholm/psr7": "^1.5",
         "php-http/guzzle6-adapter": "^2.0",
         "denostr/binotel-api": "^0.1.3",
-        "phpoffice/phpexcel": "^1.8",
+        "phpoffice/phpexcel": "^1.8.2",
         "voku/html-min": "^4.4",
         "simplehtmldom/simplehtmldom": "dev-master",
         "doctrine/sql-formatter": "^1.1",
         "umpirsky/transliterator": "^0.1.0",
-        "enniel/epochta": "^0.0.1"
+        "enniel/epochta": "^0.0.1",
+        "dkrnl/simplexmlreader": "^1.1"
     }
 }
