@@ -52,7 +52,7 @@ class ControllerFeedReFeedMaker2 extends Controller
     private function setSteps()
     {
         $steps = array();
-        if ($this->config->get('config_store_id') == 1) {
+        if ($this->config->get('config_store_id') == 0) {
             $steps = $this->steps;
         } else {
             foreach ($this->steps as $step) {
@@ -60,7 +60,7 @@ class ControllerFeedReFeedMaker2 extends Controller
             }
         }
 
-        if ($this->config->get('config_store_id') != 1) {
+        if ($this->config->get('config_store_id') != 0) {
             foreach ($steps as &$step) {
                 $xStep = 0;
                 for ($z = 10; $z <= 10000000000; $z*=5) {
@@ -129,12 +129,20 @@ class ControllerFeedReFeedMaker2 extends Controller
         return $output;
     }
 
+    public function reparseFeedByLimits($file){
+
+
+
+
+
+    }
+
     public function supplemental()
     {
         $this->load->model('catalog/product');
 
         $this->db->query("UPDATE " . DB_PREFIX . "product SET quantity = 0 WHERE quantity < 0 ");
-        $this->db->query("UPDATE " . DB_PREFIX . "product_option_value SET quantity = 0 WHERE quantity < 0 ");
+        $this->db->query("UPDATE " . DB_PREFIX . "product_option_value SET quantity = 0 WHERE quantity < 0 ");        
 
         foreach ($this->registry->get('supported_language_ids') as $store_id => $languages) {
             foreach ($languages as $language_id) {
@@ -197,11 +205,8 @@ class ControllerFeedReFeedMaker2 extends Controller
 
                     echo PHP_EOL;
 
-
                     $output .= '  </channel>';
                     $output .= '</rss>';
-
-
 
                     file_put_contents($file, $output);
 
