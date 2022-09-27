@@ -972,7 +972,9 @@
 				$sql .= " AND p.is_option_with_id = '0' ";
 			}
 
-			$sql .= " AND ((p.main_variant_id = '0' OR ISNULL(p.main_variant_id)) OR p.display_in_catalog = 1)";
+			if (empty($data['filter_with_variants'])){
+				$sql .= " AND ((p.main_variant_id = '0' OR ISNULL(p.main_variant_id)) OR p.display_in_catalog = 1)";
+			}
 
 			if ($this->config->get('config_no_zeroprice')){
 				$sql .= " AND (p.price > 0 OR p.price_national > 0)";
@@ -1210,7 +1212,7 @@
 				$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 			}
 			
-			$product_data = array();
+			$product_data = [];
 			
 			if (in_array(__FUNCTION__,
 			array('getProducts', 'getTotalProducts', 'getProductSpecials', 'getTotalProductSpecials'))) {
@@ -1226,16 +1228,11 @@
 			$query = $this->db->query($sql);
 			
 			foreach ($query->rows as $result) {
-				
-				if ($data['return_parent'] && $result['is_option_for_product_id'] && $product_data[$result['is_option_for_product_id']] = $this->getProduct($result['is_option_for_product_id'])) {
-					
+				if ($data['return_parent'] && $result['is_option_for_product_id'] && $product_data[$result['is_option_for_product_id']] = $this->getProduct($result['is_option_for_product_id'])) {			
 					} else {
 					$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
 				}
-				
-				
-			}
-			
+			}			
 			return $product_data;
 		}
 		
@@ -2268,7 +2265,9 @@
 				$sql .= " AND p.is_option_with_id = '0' ";
 			}
 
-			$sql .= " AND ((p.main_variant_id = '0' OR ISNULL(p.main_variant_id)) OR p.display_in_catalog = 1)";	
+			if (empty($data['filter_with_variants'])){
+				$sql .= " AND ((p.main_variant_id = '0' OR ISNULL(p.main_variant_id)) OR p.display_in_catalog = 1)";	
+			}
 
 			if ($this->config->get('config_no_zeroprice')){
 				$sql .= " AND (p.price > 0 OR p.price_national > 0)";
