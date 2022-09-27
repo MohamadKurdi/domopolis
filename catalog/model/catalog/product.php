@@ -410,7 +410,9 @@
 			if (!$product_data) {
 								
 				$sql = "SELECT DISTINCT *, 
-				pd.name AS name, 
+				pd.name AS name,
+				pd.color AS color,
+				pd.material AS material, 
 				pd.alt_image, 
 				pd.title_image, 
 				p.image, 
@@ -621,6 +623,8 @@
 					'seo_h1'                   => $query->row['seo_h1'],
 					'seo_title'                => $query->row['seo_title'],
 					'tag'                      => $query->row['tag'],
+					'color'					   => $query->row['color'],
+					'material'				   => $query->row['material'],
 					/* MARKDOWN */
 					'markdown_product_id'      => $query->row['markdown_product_id'],
 					'is_markdown'              => $query->row['is_markdown'],
