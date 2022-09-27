@@ -409,14 +409,22 @@
 			
 			if (!$product_data) {
 								
-				$sql = "SELECT DISTINCT *, pd.name AS name, pd.alt_image, pd.title_image, m.image as manufacturer_img,
-				(SELECT st.set_id FROM `set` st WHERE p.product_id = st.product_id LIMIT 1) as set_id,
-				(SELECT COUNT(*) FROM product_additional_offer pao LEFT JOIN product_additional_offer_to_store pao2s ON (pao.product_additional_offer_id = pao2s.product_additional_offer_id) WHERE  pao.product_id = p.product_id AND pao.date_end > NOW() AND (ISNULL(pao2s.store_id) OR pao2s.store_id = '" . (int)$this->config->get('config_store_id') . "')) AS additional_offer_count,";
+				$sql = "SELECT DISTINCT *, 
+				pd.name AS name, 
+				pd.alt_image, 
+				pd.title_image, 
+				p.image, 
+				p.xrating as rating,
+				p.xreviews as reviews,
+				p.sort_order,
+				m.name AS manufacturer,
+				m.image as manufacturer_img, ";
+				$sql .= " (SELECT st.set_id FROM `set` st WHERE p.product_id = st.product_id LIMIT 1) as set_id, ";
+				$sql .= " (SELECT COUNT(*) FROM product_additional_offer pao LEFT JOIN product_additional_offer_to_store pao2s ON (pao.product_additional_offer_id = pao2s.product_additional_offer_id) WHERE  pao.product_id = p.product_id AND pao.date_end > NOW() AND (ISNULL(pao2s.store_id) OR pao2s.store_id = '" . (int)$this->config->get('config_store_id') . "')) AS additional_offer_count, ";
 
 				if ($this->config->get('config_no_zeroprice')){
 					$sql .= " (SELECT COUNT(p3.product_id) FROM product p3 LEFT JOIN product_to_store p32s ON (p3.product_id = p32s.product_id) WHERE p3.main_variant_id = p.product_id  AND (p3.price > 0 OR p3.price_national > 0) AND p3.status = 1 AND p3.is_markdown = 0 AND p32s.store_id = '" . (int)$this->config->get('config_store_id') . "')";
 				} else {
-
 					$sql .= " (SELECT COUNT(p3.product_id) FROM product p3 LEFT JOIN product_to_store p32s ON (p3.product_id = p32s.product_id) WHERE p3.main_variant_id = p.product_id  AND (p3.price > 0 OR p3.price_national > 0) AND p3.status = 1 AND p3.is_markdown = 0 AND p32s.store_id = '" . (int)$this->config->get('config_store_id') . "')";
 					$sql .= " AND (";
 					$sql .= " p.price > 0 OR p.price_national > 0";
@@ -424,15 +432,12 @@
 					$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
 					$sql .= ")";
 				}
-
 				$sql .= " AS variants_count, ";
-				$sql .= " (SELECT ao_product_id FROM product_additional_offer pao LEFT JOIN product_additional_offer_to_store pao2s ON (pao.product_additional_offer_id = pao2s.product_additional_offer_id) WHERE pao.product_id = p.product_id AND pao.date_end > NOW() AND pao.percent = 100 AND (ISNULL(pao2s.store_id) OR pao2s.store_id = '" . (int)$this->config->get('config_store_id') . "')  ORDER BY priority ASC LIMIT 1) AS additional_offer_product_id,
-				(SELECT GROUP_CONCAT(category_id) FROM product_to_category WHERE product_id = p.product_id GROUP BY product_id) as categories,
-				p.image, 
-				p.xrating as rating,
-				p.xreviews as reviews,
-				m.name AS manufacturer, 
-				(SELECT price FROM product_discount pd2 WHERE pd2.product_id = p.product_id AND price > 0 AND pd2.customer_group_id = '" . (int)$customer_group_id . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, 
+				$sql .= " (SELECT c5.google_category_id FROM category c5 WHERE c5.category_id = (SELECT p2cm5.category_id FROM product_to_category p2cm5 WHERE p2cm5.product_id = p.product_id ORDER BY main_category DESC LIMIT 1)) as google_category_id, ";
+				$sql .= " (SELECT GROUP_CONCAT(category_id) FROM product_to_category WHERE product_id = p.product_id GROUP BY product_id) as categories, ";
+				$sql .= " (SELECT category_id FROM product_to_category p2cm WHERE p2cm.product_id = p.product_id ORDER BY main_category DESC LIMIT 1) as main_category_id, ";
+				$sql .= " (SELECT ao_product_id FROM product_additional_offer pao LEFT JOIN product_additional_offer_to_store pao2s ON (pao.product_additional_offer_id = pao2s.product_additional_offer_id) WHERE pao.product_id = p.product_id AND pao.date_end > NOW() AND pao.percent = 100 AND (ISNULL(pao2s.store_id) OR pao2s.store_id = '" . (int)$this->config->get('config_store_id') . "')  ORDER BY priority ASC LIMIT 1) AS additional_offer_product_id, ";
+				$sql .= " (SELECT price FROM product_discount pd2 WHERE pd2.product_id = p.product_id AND price > 0 AND pd2.customer_group_id = '" . (int)$customer_group_id . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, 
 				(SELECT price FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$customer_group_id . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special,
 				(SELECT date_end FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$customer_group_id . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special_date_end,
 				(SELECT currency_scode FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$customer_group_id . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special_currency,
@@ -441,10 +446,9 @@
 				(SELECT price FROM product_price_national_to_yam ppn2yam WHERE ppn2yam.product_id = p.product_id AND price > 0 AND ppn2yam.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as yam_overload_price_national,	
 				(SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as overload_stock_status_id,
 				(SELECT name FROM stock_status sst WHERE sst.stock_status_id = (SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) AND sst.language_id = '" . (int)$this->config->get('config_language_id') . "') as overload_stock_status,	
-				(SELECT ss.name FROM stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, 				 
-				(SELECT category_id FROM product_to_category p2cm WHERE p2cm.product_id = p.product_id ORDER BY main_category DESC LIMIT 1) as main_category_id,
-				p.sort_order 
-				FROM product p 
+				(SELECT ss.name FROM stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status ";
+
+				$sql .= "FROM product p 
 				LEFT JOIN product_description pd ON (p.product_id = pd.product_id) 
 				LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
 				LEFT JOIN manufacturer m ON (p.manufacturer_id = m.manufacturer_id)
@@ -453,7 +457,7 @@
 				AND p.status = '1' 
 				AND p.date_available <= NOW() 
 				AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
-				
+
 				if (!$cached){
 					$query = $this->db->non_cached_query($sql);
 					} else {
@@ -461,15 +465,12 @@
 				}
 				
 				if ($query->num_rows) {
-					
-					//YAM PRICE
 					$yam_price = $query->row['yam_price'];
 					
 					if ($query->row['yam_currency'] != $this->config->get('config_regional_currency')){
 						$yam_price = $this->currency->convert($yam_price, $query->row['yam_currency'], $this->config->get('config_regional_currency'));
 					}
 					
-					//YAM PRICE
 					$yam_special = $query->row['yam_special'];
 					if ($query->row['yam_currency'] != $this->config->get('config_regional_currency')){
 						$yam_special = $this->currency->convert($yam_special, $query->row['yam_currency'], $this->config->get('config_regional_currency'));
@@ -526,7 +527,6 @@
 					
 					$special = $this->model_catalog_group_price->updatePrice($product_id, $query->row['special']);
 					
-
 					if ($this->currency->percent) {
 						if ($this->currency->plus) {
 							if ($do_percent) {
@@ -543,7 +543,6 @@
 						}
 					}
 
-					//MPP PRICE CURRENCY OVERLOAD
 					$mpp_price = 0;
 					if ($this->currency->percent) {
 						if ($this->currency->plus) {
@@ -630,7 +629,8 @@
 					'markdown_pack'            => $query->row['markdown_pack'],
 					'markdown_equipment'       => $query->row['markdown_equipment'],
 					/* MARKDOWN */					
-					'variants_count'		   => $query->row['variants_count'],								
+					'variants_count'		   => $query->row['variants_count'],
+					'main_variant_id'		   => $query->row['main_variant_id'],								
 					'set_id'                   => $query->row['set_id'],
 					'model'                    => $query->row['model'],
 					'sku'                      => $query->row['sku'],
@@ -654,6 +654,7 @@
 					'image'                    => $query->row['image'],
 					'main_category_id'         => $query->row['main_category_id'],
 					'categories'			   => $query->row['categories'],
+					'google_category_id'	   => $query->row['google_category_id'],
 					'manufacturer_id'          => $query->row['manufacturer_id'],
 					'collection_id'            => $query->row['collection_id'],
 					'manufacturer'             => $query->row['manufacturer'],
@@ -694,7 +695,7 @@
 					'status'                   => $query->row['status'],
 					'date_added'               => $query->row['date_added'],
 					'date_modified'            => $query->row['date_modified'],
-					'viewed'                   => $query->row['viewed'],
+					'viewed'                   => $query->row['viewed'],					
 					'color_group'              => $query->row['color_group'],
 					'bought_for_month'         => $query->row['bought_for_month'],
 					'bought_for_week'          => $query->row['bought_for_week'],
@@ -715,6 +716,7 @@
 					'yam_in_feed'		   	   => $query->row['yam_in_feed'],
 					'yam_disable'		   	   => $query->row['yam_disable'],
 					'is_illiquid'		   	   => $query->row['is_illiquid'],
+					'region_id'				   => $this->config->get('config_googlelocal_code')
 					); 
 										
 					$product_data['reward'] = $this->cart->getCurrentProductReward($product_data);
