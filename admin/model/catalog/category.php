@@ -626,7 +626,7 @@ class ModelCatalogCategory extends Model {
 		}
 		
 		public function getGoogleCategoryByName($filter){
-			$query = $this->db->query("SELECT * FROM google_base_category WHERE LOWER(name) LIKE ('%" . $this->db->escape(mb_strtolower($filter)) . "%') ORDER BY name DESC LIMIT 30");
+			$query = $this->db->query("SELECT * FROM google_base_category WHERE google_base_category_id = '" . (int)trim($filter) . "' OR LOWER(name) LIKE ('%" . $this->db->escape(mb_strtolower($filter)) . "%') ORDER BY name DESC LIMIT 30");
 			
 			return $query->rows;			
 			
