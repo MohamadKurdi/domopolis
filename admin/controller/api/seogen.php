@@ -53,23 +53,23 @@
 			$languages = $this->model_localisation_language->getLanguages();
 
 			foreach ($languages as $language){
-				echoLine('[SEOGEN CLI] Начинаем язык ' . $language['code']);
-				echoLine('[SEOGEN CLI], Товары');
-				$this->model_module_seogen->generateProducts($seogen, $language['language_id']);
+				if ($language['front']){
+					echoLine('[SEOGEN CLI] Начинаем язык ' . $language['code']);
+					echoLine('[SEOGEN CLI], Товары');
+					$this->model_module_seogen->generateProducts($seogen, $language['language_id']);
 
-				echoLine('[SEOGEN CLI], Категории');
-				$this->model_module_seogen->generateCategories($seogen, $language['language_id']);
+					echoLine('[SEOGEN CLI], Категории');
+					$this->model_module_seogen->generateCategories($seogen, $language['language_id']);
 
-				echoLine('[SEOGEN CLI], Бренды');
-				$this->model_module_seogen->generateManufacturers($seogen, $language['language_id']);
+					echoLine('[SEOGEN CLI], Бренды');
+					$this->model_module_seogen->generateManufacturers($seogen, $language['language_id']);
 
-				echoLine('[SEOGEN CLI], Коллекции');
-				$this->model_module_seogen->generateCollections($seogen, $language['language_id']);
+					echoLine('[SEOGEN CLI], Коллекции');
+					$this->model_module_seogen->generateCollections($seogen, $language['language_id']);
 
-				echoLine('[SEOGEN CLI], Статьи');
-				$this->model_module_seogen->generateInformations($seogen, $language['language_id']);
-
-				
+					echoLine('[SEOGEN CLI], Статьи');
+					$this->model_module_seogen->generateInformations($seogen, $language['language_id']);
+				}
 			}
 
 			$this->cron();
