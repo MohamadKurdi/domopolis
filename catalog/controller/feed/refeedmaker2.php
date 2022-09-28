@@ -220,18 +220,14 @@ class ControllerFeedReFeedMaker2 extends Controller
             $output .= '    <g:custom_label_0><![CDATA[На складе]]></g:custom_label_0>'. PHP_EOL;
         }
 
-        $attributes = $this->model_catalog_product->getProductAttributes($product['product_id']);
+        $attributes = $this->model_catalog_product->getProductAttributesFlat($product['product_id']);
         if ($attributes) {
-            foreach ($attributes as $ag) {
-                if (!empty($ag['attribute'])) {
-                    foreach ($ag['attribute'] as $attribute) {
-                        $output .= '    <g:product_detail>' . PHP_EOL;
-                        $output .= '        <g:section_name><![CDATA[' . $ag['name'] . ']]></g:section_name>' . PHP_EOL;
-                        $output .= '        <g:attribute_name><![CDATA[' . $attribute['name'] . ']]></g:attribute_name>' . PHP_EOL;
-                        $output .= '        <g:attribute_value><![CDATA[' . $attribute['text'] . ']]></g:attribute_value>' . PHP_EOL;
-                        $output .= '    </g:product_detail>' . PHP_EOL;
-                    }
-                }
+            foreach ($attributes as $attribute) {
+                $output .= '    <g:product_detail>' . PHP_EOL;
+                $output .= '        <g:section_name><![CDATA[' . $attribute['group'] . ']]></g:section_name>' . PHP_EOL;
+                $output .= '        <g:attribute_name><![CDATA[' . $attribute['name'] . ']]></g:attribute_name>' . PHP_EOL;
+                $output .= '        <g:attribute_value><![CDATA[' . $attribute['value'] . ']]></g:attribute_value>' . PHP_EOL;
+                $output .= '    </g:product_detail>' . PHP_EOL;
             }
         }
 

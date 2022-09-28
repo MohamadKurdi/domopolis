@@ -1716,9 +1716,29 @@
 				return 1;
 			}
 		}
+
+		public function getProductAttributesFlat($product_id){
+
+			if (!$product_attribute_flat_data = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, [$product_id]))){
+
+				$sql = '';
+				$sql .= "SELECT ad.name as name, agd.name as group, pa.text as value ";
+				$sql .= "FROM product_attribute pa  ";
+				$sql .= "LEFT JOIN attribute a ON (a.attribute_id = pa.attribute_id)  ";
+				$sql .= "LEFT JOIN attribute_description ad ON (ad.attribute_id = a.attribute_id AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "') ";
+				$sql .= "LEFT JOIN attribute_group_description agd ON (agd.attribute_group_id = a.attribute_group_id AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "')  ";
+				$sql .= "WHERE pa.product_id = '" . (int)$product_id . "' AND pa.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
+				$this->db->query($sql);
+
+				$this->cache->set($this->registry->createCacheQueryString(__METHOD__, [$product_id]), $product_attribute_flat_data);
+			}
+			
+			return $product_attribute_flat_data;
+		}
 		
 		public function getProductAttributes($product_id){
-			if (!$attribute_data = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, [$product_id]))){
+			if (!$product_attribute_group_data = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, [$product_id]))){
 
 				$product_attribute_group_data = array();
 
