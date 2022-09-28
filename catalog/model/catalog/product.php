@@ -396,7 +396,7 @@
 			$this->load->model('catalog/group_price');
 			$this->load->model('kp/product');		
 			
-			$product_data = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, ['product_id' => $product_id]));
+			$product_data = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, [$product_id]));
 			
 			if (!$cached){
 				$product_data = false;
@@ -719,15 +719,14 @@
 					); 
 										
 					$product_data['reward'] = $this->cart->getCurrentProductReward($product_data);
-					$product_data['stock_text'] = $this->parseProductStockDataOneString($product_data);
-					
+					$product_data['stock_text'] = $this->parseProductStockDataOneString($product_data);					
 					$product_data['stock_dates'] = $this->parseProductStockDataOneString($product_data, true);					
 					
 					} else {
 					$product_data = false;
 				}
 				
-				$this->cache->set($this->registry->createCacheQueryString(__METHOD__, ['product_id' => $product_id]), $product_data);
+				$this->cache->set($this->registry->createCacheQueryString(__METHOD__, [$product_id]), $product_data);
 			}
 			
 			return $product_data;
@@ -1718,29 +1717,35 @@
 		}
 		
 		public function getProductAttributes($product_id){
-			$product_attribute_group_data = array();
-			
-			$product_attribute_group_query = $this->db->query("SELECT ag.attribute_group_id, agd.name FROM product_attribute pa LEFT JOIN attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN attribute_group ag ON (a.attribute_group_id = ag.attribute_group_id) LEFT JOIN attribute_group_description agd ON (ag.attribute_group_id = agd.attribute_group_id) WHERE pa.product_id = '" . (int)$product_id . "' AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY ag.attribute_group_id ORDER BY ag.sort_order, agd.name");
-			
-			foreach ($product_attribute_group_query->rows as $product_attribute_group) {
-				$product_attribute_data = array();
+			if (!$attribute_data = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, [$product_id]))){
+
+				$product_attribute_group_data = array();
 				
-				$product_attribute_query = $this->db->query("SELECT a.attribute_id, a.sort_order, ad.name, pa.text FROM product_attribute pa LEFT JOIN attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE pa.product_id = '" . (int)$product_id . "' AND a.attribute_group_id = '" . (int)$product_attribute_group['attribute_group_id'] . "' AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pa.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY a.sort_order, ad.name");
+				$product_attribute_group_query = $this->db->query("SELECT ag.attribute_group_id, agd.name FROM product_attribute pa LEFT JOIN attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN attribute_group ag ON (a.attribute_group_id = ag.attribute_group_id) LEFT JOIN attribute_group_description agd ON (ag.attribute_group_id = agd.attribute_group_id) WHERE pa.product_id = '" . (int)$product_id . "' AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY ag.attribute_group_id ORDER BY ag.sort_order, agd.name");
 				
-				foreach ($product_attribute_query->rows as $product_attribute) {
-					$product_attribute_data[] = array(
-					'attribute_id' => $product_attribute['attribute_id'],
-					'name'         => $product_attribute['name'],
-					'text'         => $product_attribute['text'],
-					'sort_order'   => $product_attribute['sort_order'],
+				foreach ($product_attribute_group_query->rows as $product_attribute_group) {
+					$product_attribute_data = array();
+					
+					$product_attribute_query = $this->db->query("SELECT a.attribute_id, a.sort_order, ad.name, pa.text FROM product_attribute pa LEFT JOIN attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE pa.product_id = '" . (int)$product_id . "' AND a.attribute_group_id = '" . (int)$product_attribute_group['attribute_group_id'] . "' AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pa.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY a.sort_order, ad.name");
+					
+					foreach ($product_attribute_query->rows as $product_attribute) {
+						$product_attribute_data[] = array(
+							'attribute_id' => $product_attribute['attribute_id'],
+							'name'         => $product_attribute['name'],
+							'text'         => $product_attribute['text'],
+							'sort_order'   => $product_attribute['sort_order'],
+						);
+					}
+					
+					$product_attribute_group_data[] = array(
+						'attribute_group_id' => $product_attribute_group['attribute_group_id'],
+						'name'               => $product_attribute_group['name'],
+						'attribute'          => $product_attribute_data
 					);
 				}
-				
-				$product_attribute_group_data[] = array(
-				'attribute_group_id' => $product_attribute_group['attribute_group_id'],
-				'name'               => $product_attribute_group['name'],
-				'attribute'          => $product_attribute_data
-				);
+
+				$this->cache->set($this->registry->createCacheQueryString(__METHOD__, [$product_id]), $product_attribute_group_data);
+
 			}
 			
 			return $product_attribute_group_data;
@@ -2414,7 +2419,7 @@
 		}
 		
 		public function getGoogleCategoryPath($product_id){
-			if (!$string = $this->cache->get('productfullpath.' . (int)$product_id . '.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id'))){
+			if (!$string = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, [$product_id]))){
 				
 				$category = $this->db->query("SELECT category_id FROM product_to_category WHERE product_id = '" . (int)$product_id . "' ORDER BY main_category DESC LIMIT 1")->row;
 				
@@ -2439,7 +2444,7 @@
 					}
 				}
 				
-				$this->cache->set('productfullpath.' . (int)$product_id . '.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id'), $string);
+				$this->cache->set($this->registry->createCacheQueryString(__METHOD__, [$product_id]), $string);
 			}
 			
 			return $string;
