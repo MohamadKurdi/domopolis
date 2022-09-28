@@ -54,6 +54,11 @@ final class Cache {
 	}
 	
 	public function set($key, $value, $ttl = DB_CACHED_EXPIRE, $redis_explicit = false) {
+
+		if (defined('IS_DEBUG') && IS_DEBUG){
+			return false;
+		}
+
 		if ((CACHE_DRIVER == 'memcached') && $this->ismemcache){
 			$this->memcache->set($this->prefix . $key, $value, 0, $ttl);
 		} elseif ((CACHE_DRIVER == 'xcache') && $this->isxcache) {							
