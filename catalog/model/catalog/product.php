@@ -431,7 +431,8 @@
 				}
 				$sql .= " AS variants_count, ";
 				$sql .= " (SELECT c5.google_category_id FROM category c5 WHERE c5.category_id = (SELECT p2cm5.category_id FROM product_to_category p2cm5 WHERE p2cm5.product_id = p.product_id ORDER BY main_category DESC LIMIT 1)) as google_category_id, ";
-				$sql .= " (SELECT GROUP_CONCAT(category_id) FROM product_to_category WHERE product_id = p.product_id GROUP BY product_id) as categories, ";
+				$sql .= " (SELECT GROUP_CONCAT(p2c5.category_id SEPARATOR ':') FROM product_to_category p2c5 WHERE p2c5.product_id = p.product_id GROUP BY p2c5.product_id) as categories, ";
+				$sql .= " (SELECT GROUP_CONCAT(pi5.image SEPARATOR ':') FROM product_image pi5 WHERE pi5.product_id = p.product_id GROUP BY pi5.product_id) as images, ";
 				$sql .= " (SELECT category_id FROM product_to_category p2cm WHERE p2cm.product_id = p.product_id ORDER BY main_category DESC LIMIT 1) as main_category_id, ";
 				$sql .= " (SELECT ao_product_id FROM product_additional_offer pao LEFT JOIN product_additional_offer_to_store pao2s ON (pao.product_additional_offer_id = pao2s.product_additional_offer_id) WHERE pao.product_id = p.product_id AND pao.date_end > NOW() AND pao.percent = 100 AND (ISNULL(pao2s.store_id) OR pao2s.store_id = '" . (int)$this->config->get('config_store_id') . "')  ORDER BY priority ASC LIMIT 1) AS additional_offer_product_id, ";
 				$sql .= " (SELECT price FROM product_discount pd2 WHERE pd2.product_id = p.product_id AND price > 0 AND pd2.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, 
@@ -522,8 +523,7 @@
 						}
 					}
 					
-					$special = $this->model_catalog_group_price->updatePrice($product_id, $query->row['special']);
-					
+					$special = $this->model_catalog_group_price->updatePrice($product_id, $query->row['special']);					
 					if ($this->currency->percent) {
 						if ($this->currency->plus) {
 							if ($do_percent) {
@@ -651,6 +651,7 @@
 					'stock_status'             => $query->row['stock_status'],
 					'stock_status_id'          => $query->row['stock_status_id'],
 					'image'                    => $query->row['image'],
+					'images'                   => $query->row['images'],
 					'main_category_id'         => $query->row['main_category_id'],
 					'categories'			   => $query->row['categories'],
 					'google_category_id'	   => $query->row['google_category_id'],
@@ -1720,14 +1721,14 @@
 			if (!$attribute_data = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, [$product_id]))){
 
 				$product_attribute_group_data = array();
-				
+
 				$product_attribute_group_query = $this->db->query("SELECT ag.attribute_group_id, agd.name FROM product_attribute pa LEFT JOIN attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN attribute_group ag ON (a.attribute_group_id = ag.attribute_group_id) LEFT JOIN attribute_group_description agd ON (ag.attribute_group_id = agd.attribute_group_id) WHERE pa.product_id = '" . (int)$product_id . "' AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY ag.attribute_group_id ORDER BY ag.sort_order, agd.name");
-				
+
 				foreach ($product_attribute_group_query->rows as $product_attribute_group) {
 					$product_attribute_data = array();
-					
+
 					$product_attribute_query = $this->db->query("SELECT a.attribute_id, a.sort_order, ad.name, pa.text FROM product_attribute pa LEFT JOIN attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE pa.product_id = '" . (int)$product_id . "' AND a.attribute_group_id = '" . (int)$product_attribute_group['attribute_group_id'] . "' AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pa.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY a.sort_order, ad.name");
-					
+
 					foreach ($product_attribute_query->rows as $product_attribute) {
 						$product_attribute_data[] = array(
 							'attribute_id' => $product_attribute['attribute_id'],
@@ -1736,7 +1737,7 @@
 							'sort_order'   => $product_attribute['sort_order'],
 						);
 					}
-					
+
 					$product_attribute_group_data[] = array(
 						'attribute_group_id' => $product_attribute_group['attribute_group_id'],
 						'name'               => $product_attribute_group['name'],
@@ -1754,8 +1755,6 @@
 		public function getIfOptionIsProduct($option_id, $product_option_value_id){
 			
 			$check_value_query = $this->db->query("SELECT this_is_product_id FROM product_option_value WHERE product_option_id = '" . (int)$option_id . "' AND product_option_value_id = '" . (int)$product_option_value_id . "'");
-			
-			//	var_dump($check_value_query);
 			
 			if (!$check_value_query->row || !isset($check_value_query->row['this_is_product_id'])) {
 				return false;
