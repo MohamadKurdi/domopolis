@@ -256,6 +256,8 @@
 	} elseif (!empty($sorts['order_default'])){
 		$registry->get('config')->set('order_default', $sorts['order_default']);
 	}
+
+	$registry->set('customer_group_id', $registry->get('config')->get('config_customer_group_id'));
 	
 
 	$registry->set('document', new Document()); 		

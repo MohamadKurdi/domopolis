@@ -358,6 +358,12 @@ if ($registry->get('customer')->getTracking()) {
     setcookie('tracking', $registry->get('request')->get['tracking'], time() + 3600 * 24 * 1000, '/');
 }
 
+if ($registry->get('customer')->isLogged()) {
+    $registry->set('customer_group_id', $registry->get('customer')->getCustomerGroupId());
+} else {
+    $registry->set('customer_group_id', (int)$registry->get('config')->get('config_customer_group_id'));
+}
+
 if (isset($registry->get('request')->get['coupon']) && $registry->get('request')->get['coupon']) {
     if (!isset($registry->get('session')->data['coupon'])) {
         $registry->get('session')->data['coupon'] = trim($registry->get('request')->get['coupon']);
