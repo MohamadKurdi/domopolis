@@ -995,6 +995,12 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_brands_in_mmenu'] = $this->config->get('config_brands_in_mmenu');
         }
+
+        if (isset($this->request->post['config_bestsellers_in_mmenu'])) {
+            $this->data['config_bestsellers_in_mmenu'] = $this->request->post['config_bestsellers_in_mmenu'];
+        } else {
+            $this->data['config_bestsellers_in_mmenu'] = $this->config->get('config_bestsellers_in_mmenu');
+        }
         
         $this->load->model('localisation/currency');
         

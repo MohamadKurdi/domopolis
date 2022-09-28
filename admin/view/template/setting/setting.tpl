@@ -872,6 +872,18 @@
 											<? } ?>       
 										</select>
 									</div>
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бестселлеры в мегаменю</span></p>
+										<select type="select" name="config_bestsellers_in_mmenu">
+											<? if ($config_bestsellers_in_mmenu) { ?>
+												<option value="1" selected='selected' >Да</option>
+												<option value="0" >Нет</option>
+											<? } else { ?>
+												<option value="1" >Да</option>
+												<option value="0"  selected='selected' >Нет</option>
+											<? } ?>       
+										</select>
+									</div>
 								</td>
 
 								<td style="width:18%">
