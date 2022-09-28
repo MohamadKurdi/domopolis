@@ -101,6 +101,9 @@ if (!empty($loaderConfig['libraries'])){
 	}		
 }
 
+   //Пейджкеш
+$PageCache = new PageCache();
+
 $registry = new Registry();
 $registry->set('load', 		new Loader($registry));	
 $registry->set('config', 	new Config()); $config = $registry->get('config');

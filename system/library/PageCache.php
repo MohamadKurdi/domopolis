@@ -16,7 +16,9 @@ class PageCache{
 	}
 
 	public function __construct($loadLibraries = true){
-		header('X-DEV-ENGINE: ' . PHP_VERSION);
+		if (!is_cli()){
+			header('X-DEV-ENGINE: ' . PHP_VERSION);
+		}
 
 		$this->loadSettings();
 
