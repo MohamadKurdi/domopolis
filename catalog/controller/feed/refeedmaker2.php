@@ -235,15 +235,13 @@ class ControllerFeedReFeedMaker2 extends Controller
             }
         }
 
-
         if ($product['image']) {
             $output .= '    <g:image_link>' . $this->model_tool_image->resize($product['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')) . '</g:image_link>'. PHP_EOL;
         } else {
             $output .= '    <g:image_link></g:image_link>'. PHP_EOL;
         }
-
-        $images = $this->model_catalog_product->getProductImages($product['product_id']);
-        if ($images) {
+        
+        if ($product['images'] && $images = explode(':', $product['images'])) {
             foreach ($images as $image) {
                 $output .= '    <g:additional_image_link>' . $this->model_tool_image->resize($image['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')) . '</g:additional_image_link>'. PHP_EOL;
             }
@@ -312,7 +310,7 @@ class ControllerFeedReFeedMaker2 extends Controller
 
         $output = str_replace(max($this->steps), 'MORE', $output);
 
-        if (!empty($product['categories']) && $categories = explode(',', $product['categories'])) {
+        if (!empty($product['categories']) && $categories = explode(':', $product['categories'])) {
             foreach ($categories as $category_id) {
                 $path = $this->getPath($category_id);
 
