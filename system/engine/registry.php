@@ -15,8 +15,6 @@ final class Registry {
 	}
 
 	public function createCacheQueryString($method, $setting = [], $options = []){
-		$md5 = md5(serialize($setting) . serialize($options));
-
 		return  
 			$method . 
 			$this->get('config')->get('config_store_id') . 
@@ -28,6 +26,16 @@ final class Registry {
 			(int)AVIFACCEPTABLE . 
 			(int)IS_MOBILE_SESSION . 
 			(int)IS_TABLET_SESSION . 
-			$md5;
+			md5(serialize($setting) . serialize($options));
+	}
+
+	public function createCacheQueryStringData($method, $setting = [], $options = []){
+		return  
+			$method . 
+			$this->get('config')->get('config_store_id') . 
+			$this->get('config')->get('config_language_id') . 
+			$this->get('customer_group_id') . 
+			$this->get('currency')->getId() .
+			md5(serialize($setting) . serialize($options));
 	}
 }
