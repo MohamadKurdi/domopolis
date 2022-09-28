@@ -20,7 +20,7 @@ class ControllerModuleMMenu extends Controller {
 	public function index() {
 
 
-		$out = $this->cache->get($this->createCacheQueryString(get_class($this)));
+		$out = $this->cache->get($this->registry->createCacheQueryString(__METHOD__));
 
 		if ($out) {		
 
@@ -107,14 +107,31 @@ class ControllerModuleMMenu extends Controller {
 				}
 			}			
 
-			$this->data['text_special'] = $this->language->get('text_special');
-			$this->data['special'] = $this->url->link('product/special');
+			
 
 			$this->load->language('product/manufacturer');
 			$this->data['text_manufacturers'] = $this->language->get('text_manufacturers');
 			$this->data['text_all_manufacturers'] = $this->language->get('text_all_manufacturers');
 			$this->data['text_popular_products'] = $this->language->get('text_popular_products');
 			$this->data['href_manufacturer'] = $this->url->link('product/manufacturer');
+			
+
+			$this->load->language('common/header');
+			$this->data['text_new_products'] = $this->language->get('new_products');	
+			$this->data['href_new_products'] = $this->url->link('product/product_new');	
+
+			$this->data['text_special'] = $this->language->get('text_special');
+			$this->data['href_special'] = $this->url->link('product/special');
+
+			$this->data['text_actions'] = $this->language->get('text_actions');	
+			$this->data['href_actions'] = $this->url->link('information/actions');
+
+			$this->data['special'] 		= $this->url->link('product/category', 'path=' . $this->config->get('config_special_category_id'));
+			$this->data['href_sale'] 	= $this->url->link('product/category', 'path=' . $this->config->get('config_special_category_id'));
+			
+			$this->data['href_newyear'] = $this->url->link('product/category', 'path=8227');
+			
+			
 
 			$this->data['brands'] = [];
 
@@ -137,7 +154,7 @@ class ControllerModuleMMenu extends Controller {
 			}
 
 			$out = $this->render();
-			$this->cache->set($this->createCacheQueryString(get_class($this)), $out);
+			$this->cache->set($this->registry->createCacheQueryString(__METHOD__), $out);
 
 		}
 	}

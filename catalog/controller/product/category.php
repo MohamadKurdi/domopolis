@@ -551,7 +551,7 @@
 
 				if (!$current_manufacturer && (!$category_info['parent_id'] || $this->config->get('config_display_subcategory_in_all_categories'))){
 					
-					$this->data['categories'] = $this->cache->get($this->createCacheQueryString(get_class($this), ['subcategories'], [$current_manufacturer, $category_id]));
+					$this->data['categories'] = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, ['subcategories'], [$current_manufacturer, $category_id]));
 
 					if (!$this->data['categories']) {	
 						
@@ -652,7 +652,7 @@
 							}
 							
 						}
-						$this->cache->set($this->createCacheQueryString(get_class($this), ['subcategories'], [$current_manufacturer, $category_id]), $this->data['categories']);
+						$this->cache->set($this->registry->createCacheQueryString(__METHOD__, ['subcategories'], [$current_manufacturer, $category_id]), $this->data['categories']);
 					}
 				}
 				

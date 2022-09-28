@@ -3,7 +3,7 @@
 		protected function index($setting) {
 			$this->language->load('module/featured'); 
 			
-			$out = $this->cache->get($this->createCacheQueryString(get_class($this), $setting));
+			$out = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, $setting));
 			
 			if ($out) {		
 
@@ -98,7 +98,7 @@
 				}
 				
 				$out = $this->render();
-				$this->cache->set($this->createCacheQueryString(get_class($this), $setting), $out);
+				$this->cache->set($this->registry->createCacheQueryString(__METHOD__, $setting), $out);
 			}
 		}
 	}		

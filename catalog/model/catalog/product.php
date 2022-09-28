@@ -394,15 +394,10 @@
 		public function getProduct($product_id, $cached = true)	{
 			
 			$this->load->model('catalog/group_price');
-			$this->load->model('kp/product');
+			$this->load->model('kp/product');		
 			
-			if ($this->customer->isLogged()) {
-				$customer_group_id = $this->customer->getCustomerGroupId();
-				} else {
-				$customer_group_id = $this->config->get('config_customer_group_id');
-			}
+			$product_data = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, ['product_id' => $product_id]));
 			
-			$product_data = $this->cache->get('product.' . (int)$product_id . '.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $customer_group_id);
 			if (!$cached){
 				$product_data = false;
 			}
@@ -439,10 +434,10 @@
 				$sql .= " (SELECT GROUP_CONCAT(category_id) FROM product_to_category WHERE product_id = p.product_id GROUP BY product_id) as categories, ";
 				$sql .= " (SELECT category_id FROM product_to_category p2cm WHERE p2cm.product_id = p.product_id ORDER BY main_category DESC LIMIT 1) as main_category_id, ";
 				$sql .= " (SELECT ao_product_id FROM product_additional_offer pao LEFT JOIN product_additional_offer_to_store pao2s ON (pao.product_additional_offer_id = pao2s.product_additional_offer_id) WHERE pao.product_id = p.product_id AND pao.date_end > NOW() AND pao.percent = 100 AND (ISNULL(pao2s.store_id) OR pao2s.store_id = '" . (int)$this->config->get('config_store_id') . "')  ORDER BY priority ASC LIMIT 1) AS additional_offer_product_id, ";
-				$sql .= " (SELECT price FROM product_discount pd2 WHERE pd2.product_id = p.product_id AND price > 0 AND pd2.customer_group_id = '" . (int)$customer_group_id . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, 
-				(SELECT price FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$customer_group_id . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special,
-				(SELECT date_end FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$customer_group_id . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special_date_end,
-				(SELECT currency_scode FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$customer_group_id . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special_currency,
+				$sql .= " (SELECT price FROM product_discount pd2 WHERE pd2.product_id = p.product_id AND price > 0 AND pd2.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, 
+				(SELECT price FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special,
+				(SELECT date_end FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special_date_end,
+				(SELECT currency_scode FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special_currency,
 				(SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price,
 				(SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price_national,				
 				(SELECT price FROM product_price_national_to_yam ppn2yam WHERE ppn2yam.product_id = p.product_id AND price > 0 AND ppn2yam.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as yam_overload_price_national,	
@@ -732,8 +727,7 @@
 					$product_data = false;
 				}
 				
-				$this->cache->set('product.' . (int)$product_id . '.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $customer_group_id,
-				$product_data);
+				$this->cache->set($this->registry->createCacheQueryString(__METHOD__, ['product_id' => $product_id]), $product_data);
 			}
 			
 			return $product_data;
@@ -744,14 +738,9 @@
 			if (!$this->config->get('config_option_price_enable')){
 				return false;
 			}
+		
 			
-			if ($this->customer->isLogged()) {
-				$customer_group_id = $this->customer->getCustomerGroupId();
-				} else {
-				$customer_group_id = $this->config->get('config_customer_group_id');
-			}
-			
-			$prices_data = $this->cache->get('product.pricerange.' . (int)$product_id . '.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $customer_group_id);
+			$prices_data = $this->cache->get('product.pricerange.' . (int)$product_id . '.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $this->registry->get('customer_group_id'));
 			
 			if (!$prices_data) {
 				
@@ -879,7 +868,7 @@
 					$prices_data = false;
 				}
 				
-				$this->cache->set('product.pricerange.' . (int)$product_id . '.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $customer_group_id,
+				$this->cache->set('product.pricerange.' . (int)$product_id . '.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $this->registry->get('customer_group_id'),
 				$prices_data);
 			}
 			
@@ -921,11 +910,6 @@
 				$data['return_parent'] = false;
 			}
 			
-			if ($this->customer->isLogged()) {
-				$customer_group_id = $this->customer->getCustomerGroupId();
-				} else {
-				$customer_group_id = $this->config->get('config_customer_group_id');
-			}
 
 			if ($this->config->get('config_warehouse_only')){
 				$default_stock_status = $this->config->get('config_overload_stock_status_id');
@@ -950,11 +934,11 @@
 
 			}
 			
-			$sql .= " p.xrating AS rating, (SELECT price FROM product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.quantity = '1' AND price > 0 AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) AND pd2.customer_group_id = '" . (int)$customer_group_id . "' ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, 
+			$sql .= " p.xrating AS rating, (SELECT price FROM product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.quantity = '1' AND price > 0 AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) AND pd2.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, 
 			(SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price,
 			(SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_national_overload_price,
-			(SELECT price FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ps.customer_group_id = '" . (int)$customer_group_id . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special,
-			(SELECT currency_scode FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ps.customer_group_id = '" . (int)$customer_group_id . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS currency_scode";
+			(SELECT price FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special,
+			(SELECT currency_scode FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS currency_scode";
 			
 			if (!empty($data['filter_category_id'])) {
 				if (!empty($data['filter_sub_category'])) {
@@ -1259,15 +1243,9 @@
 		}
 		
 		public function getProductAdditionalOffer($product_id){
-			if ($this->customer->isLogged()) {
-				$customer_group_id = $this->customer->getCustomerGroupId();
-				} else {
-				$customer_group_id = $this->config->get('config_customer_group_id');
-			}
-			
 			
 			$query = $this->db->query("SELECT ao.* FROM product_additional_offer ao LEFT JOIN product_additional_offer_to_store ao2s ON (ao.product_additional_offer_id = ao2s.product_additional_offer_id)
-			WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW()))
+			WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW()))
 			AND (ISNULL(ao2s.store_id) OR ao2s.store_id = '" . $this->config->get('config_store_id') . "')
 			ORDER BY priority ASC, price ASC");
 			
@@ -1275,13 +1253,8 @@
 		}
 		
 		public function getProductAdditionalOfferById($product_additional_offer_id){
-			if ($this->customer->isLogged()) {
-				$customer_group_id = $this->customer->getCustomerGroupId();
-				} else {
-				$customer_group_id = $this->config->get('config_customer_group_id');
-			}
 			
-			$query = $this->db->query("SELECT * FROM product_additional_offer WHERE product_additional_offer_id = '" . (int)$product_additional_offer_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) LIMIT 1");
+			$query = $this->db->query("SELECT * FROM product_additional_offer WHERE product_additional_offer_id = '" . (int)$product_additional_offer_id . "' AND customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) LIMIT 1");
 
 			
 			return $query->row;
@@ -1344,18 +1317,12 @@
 				$data['no_child'] = false;
 			}
 			
-			if ($this->customer->isLogged()) {
-				$customer_group_id = $this->customer->getCustomerGroupId();
-				} else {
-				$customer_group_id = $this->config->get('config_customer_group_id');
-			}
-			
 			$sql = "SELECT DISTINCT ps.product_id, p.points_only_purchase, ps.price,
 			(IF((p.quantity_stock + p.quantity_stockK + p.quantity_stockM + p.quantity_stockMN + p.quantity_stockAS) > 0, 
 			IF(p." . $this->config->get('config_warehouse_identifier') . " > 0, " . $this->config->get('config_in_stock_status_id') . ", " . $this->config->get('config_stock_status_id') . "), p.stock_status_id)
 			) as stock_status_id,
 			(SELECT AVG(rating) FROM review r1 WHERE r1.product_id = ps.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, 
-			(SELECT points_special FROM product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$customer_group_id . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < '" . date(MYSQL_NOW_DATE_FORMAT) . "') AND (ps.date_end = '0000-00-00' OR ps.date_end > '" . date(MYSQL_NOW_DATE_FORMAT) . "')) AND (store_id = '" . (int)$this->config->get('config_store_id') . "' OR store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS points_special
+			(SELECT points_special FROM product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < '" . date(MYSQL_NOW_DATE_FORMAT) . "') AND (ps.date_end = '0000-00-00' OR ps.date_end > '" . date(MYSQL_NOW_DATE_FORMAT) . "')) AND (store_id = '" . (int)$this->config->get('config_store_id') . "' OR store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS points_special
 			FROM product_special ps 
 			LEFT JOIN product p ON (ps.product_id = p.product_id) 
 			LEFT JOIN product_description pd ON (p.product_id = pd.product_id) 
@@ -1414,7 +1381,7 @@
 			
 			//	$sql .= " AND p.product_id NOT IN (SELECT DISTINCT product_id FROM product_price_national_to_store) ";
 			
-			$sql .= " AND ps.customer_group_id = '" . (int)$customer_group_id . "' AND p.date_available <= '" . date(MYSQL_NOW_DATE_FORMAT) . "' AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < '" . date(MYSQL_NOW_DATE_FORMAT) . "') AND (ps.date_end = '0000-00-00' OR ps.date_end > '" . date(MYSQL_NOW_DATE_FORMAT) . "')) GROUP BY ps.product_id";
+			$sql .= " AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND p.date_available <= '" . date(MYSQL_NOW_DATE_FORMAT) . "' AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < '" . date(MYSQL_NOW_DATE_FORMAT) . "') AND (ps.date_end = '0000-00-00' OR ps.date_end > '" . date(MYSQL_NOW_DATE_FORMAT) . "')) GROUP BY ps.product_id";
 			
 			if (isset($data['sort']) && in_array($data['sort'], $this->registry->get('sorts_available'))) {
 				if ($data['sort'] == 'pd.name' || $data['sort'] == 'p.model') {
@@ -1480,13 +1447,8 @@
 		}		
 		
 		public function getLatestProducts($limit){
-			if ($this->customer->isLogged()) {
-				$customer_group_id = $this->customer->getCustomerGroupId();
-				} else {
-				$customer_group_id = $this->config->get('config_customer_group_id');
-			}
 			
-			$product_data = $this->cache->get('product.latest.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $customer_group_id . '.' . (int)$limit);
+			$product_data = $this->cache->get('product.latest.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $this->registry->get('customer_group_id') . '.' . (int)$limit);
 			
 			if (!$product_data) {
 				$query = $this->db->query("SELECT p.product_id FROM product p LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p.date_available <= NOW() AND is_markdown = 0 AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ORDER BY p.date_added DESC LIMIT " . (int)$limit);
@@ -1495,7 +1457,7 @@
 					$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
 				}
 				
-				$this->cache->set('product.latest.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $customer_group_id . '.' . (int)$limit,
+				$this->cache->set('product.latest.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $this->registry->get('customer_group_id') . '.' . (int)$limit,
 				$product_data);
 			}
 			
@@ -1515,13 +1477,8 @@
 		}
 		
 		public function getBestSellerProducts($limit){
-			if ($this->customer->isLogged()) {
-				$customer_group_id = $this->customer->getCustomerGroupId();
-				} else {
-				$customer_group_id = $this->config->get('config_customer_group_id');
-			}
 			
-			$product_data = $this->cache->get('product.bestseller.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $customer_group_id . '.' . (int)$limit);
+			$product_data = $this->cache->get('product.bestseller.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $this->registry->get('customer_group_id') . '.' . (int)$limit);
 			
 			if (!$product_data) {
 				$product_data = array();
@@ -1532,7 +1489,7 @@
 					$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
 				}
 				
-				$this->cache->set('product.bestseller.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $customer_group_id . '.' . (int)$limit,
+				$this->cache->set('product.bestseller.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $this->registry->get('customer_group_id') . '.' . (int)$limit,
 				$product_data);
 			}
 			
@@ -1540,12 +1497,6 @@
 		}
 		
 		public function getBestSellerProductsForCollection($limit, $collection_id, $manufacturer_id = false, $return_ids = false){
-			if ($this->customer->isLogged()) {
-				$customer_group_id = $this->customer->getCustomerGroupId();
-				} else {
-				$customer_group_id = $this->config->get('config_customer_group_id');
-			}
-			
 			
 			$product_data = array();
 			
@@ -1584,12 +1535,6 @@
 		}
 		
 		public function getBestSellerProductsForCategoryByTIME($limit, $category_id, $month = 3, $manufacturer_id = false, $return_ids = false){
-			if ($this->customer->isLogged()) {
-				$customer_group_id = $this->customer->getCustomerGroupId();
-				} else {
-				$customer_group_id = $this->config->get('config_customer_group_id');
-			}
-			
 			
 			$product_data = array();
 			
@@ -1631,12 +1576,6 @@
 		}
 				
 		public function getBestSellerProductsForCategory($limit, $category_id, $manufacturer_id = false, $return_ids = false){
-			if ($this->customer->isLogged()) {
-				$customer_group_id = $this->customer->getCustomerGroupId();
-				} else {
-				$customer_group_id = $this->config->get('config_customer_group_id');
-			}
-			
 			
 			$product_data = array();
 			
@@ -1677,12 +1616,6 @@
 		}
 		
 		public function getBestSellerProductsForManufacturer($limit, $manufacturer_id){
-			if ($this->customer->isLogged()) {
-				$customer_group_id = $this->customer->getCustomerGroupId();
-				} else {
-				$customer_group_id = $this->config->get('config_customer_group_id');
-			}
-			
 			
 			$product_data = array();
 			
@@ -1939,13 +1872,8 @@
 		}
 		
 		public function getProductDiscounts($product_id){
-			if ($this->customer->isLogged()) {
-				$customer_group_id = $this->customer->getCustomerGroupId();
-				} else {
-				$customer_group_id = $this->config->get('config_customer_group_id');
-			}
 			
-			$query = $this->db->query("SELECT * FROM product_discount WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND quantity > 1 AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity ASC, priority ASC, price ASC");
+			$query = $this->db->query("SELECT * FROM product_discount WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND quantity > 1 AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity ASC, priority ASC, price ASC");
 			
 			return $query->rows;
 		}
@@ -2241,12 +2169,6 @@
 				$data['no_child'] = false;
 			}			
 			
-			if ($this->customer->isLogged()) {
-				$customer_group_id = $this->customer->getCustomerGroupId();
-				} else {
-				$customer_group_id = $this->config->get('config_customer_group_id');
-			}
-			
 			$sql = "SELECT COUNT(DISTINCT p.product_id) AS total";
 			
 			if (!empty($data['filter_category_id'])) {
@@ -2462,23 +2384,12 @@
 		}
 		
 		public function getProfiles($product_id){
-			if ($this->customer->isLogged()) {
-				$customer_group_id = $this->customer->getCustomerGroupId();
-				} else {
-				$customer_group_id = $this->config->get('config_customer_group_id');
-			}
-			
-			return $this->db->query("SELECT `pd`.* FROM `product_profile` `pp` JOIN `profile_description` `pd` ON `pd`.`language_id` = " . (int)$this->config->get('config_language_id') . " AND `pd`.`profile_id` = `pp`.`profile_id` JOIN `profile` `p` ON `p`.`profile_id` = `pd`.`profile_id` WHERE `product_id` = " . (int)$product_id . " AND `status` = 1 AND `customer_group_id` = " . (int)$customer_group_id . " ORDER BY `sort_order` ASC")->rows;		
+			return $this->db->query("SELECT `pd`.* FROM `product_profile` `pp` JOIN `profile_description` `pd` ON `pd`.`language_id` = " . (int)$this->config->get('config_language_id') . " AND `pd`.`profile_id` = `pp`.`profile_id` JOIN `profile` `p` ON `p`.`profile_id` = `pd`.`profile_id` WHERE `product_id` = " . (int)$product_id . " AND `status` = 1 AND `customer_group_id` = " . (int)$this->registry->get('customer_group_id') . " ORDER BY `sort_order` ASC")->rows;		
 		}
 		
 		public function getProfile($product_id, $profile_id){
-			if ($this->customer->isLogged()) {
-				$customer_group_id = $this->customer->getCustomerGroupId();
-				} else {
-				$customer_group_id = $this->config->get('config_customer_group_id');
-			}
 			
-			return $this->db->query("SELECT * FROM `profile` `p` JOIN `product_profile` `pp` ON `pp`.`profile_id` = `p`.`profile_id` AND `pp`.`product_id` = " . (int)$product_id . " WHERE `pp`.`profile_id` = " . (int)$profile_id . " AND `status` = 1 AND `pp`.`customer_group_id` = " . (int)$customer_group_id)->row;
+			return $this->db->query("SELECT * FROM `profile` `p` JOIN `product_profile` `pp` ON `pp`.`profile_id` = `p`.`profile_id` AND `pp`.`product_id` = " . (int)$product_id . " WHERE `pp`.`profile_id` = " . (int)$profile_id . " AND `status` = 1 AND `pp`.`customer_group_id` = " . (int)$this->registry->get('customer_group_id'))->row;
 		}
 		
 		protected function getPath($parent_id, $current_path = '') {
@@ -2642,12 +2553,6 @@
 			
 			if ($type_pr == 1) {
 				
-				if ($this->customer->isLogged()) {
-					$customer_group_id = $this->customer->getCustomerGroupId();
-					} else {
-					$customer_group_id = $this->config->get('config_customer_group_id');
-				}
-				
 				$product_data = array();
 				
 				$query = $this->db->query("SELECT * FROM product_to_category WHERE category_id = '" . (int)$this->config->get('config_parent_id') . "'");
@@ -2672,15 +2577,9 @@
 				
 				} elseif ($type_pr == 3) {
 				
-				if ($this->customer->isLogged()) {
-					$customer_group_id = $this->customer->getCustomerGroupId();
-					} else {
-					$customer_group_id = $this->config->get('config_customer_group_id');
-				}
-				
 				$sql = "SELECT DISTINCT ps.product_id,
 				(SELECT AVG(rating) FROM review r1 WHERE r1.product_id = ps.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating FROM product_special ps 
-				LEFT JOIN product p ON (ps.product_id = p.product_id) LEFT JOIN product_description pd ON (p.product_id = pd.product_id) LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND ps.customer_group_id = '" . (int)$customer_group_id . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) GROUP BY ps.product_id";
+				LEFT JOIN product p ON (ps.product_id = p.product_id) LEFT JOIN product_description pd ON (p.product_id = pd.product_id) LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) GROUP BY ps.product_id";
 				
 				$sort_data = array(
 				'pd.name',
@@ -2729,14 +2628,8 @@
 				return $product_data;
 				
 				} elseif ($type_pr == 4) {
-				
-				if ($this->customer->isLogged()) {
-					$customer_group_id = $this->customer->getCustomerGroupId();
-					} else {
-					$customer_group_id = $this->config->get('config_customer_group_id');
-				}
-				
-				$product_data = $this->cache->get('product.bestseller.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $customer_group_id . '.' . '50');
+
+				$product_data = $this->cache->get('product.bestseller.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $this->registry->get('customer_group_id') . '.' . '50');
 				
 				if (!$product_data) {
 					$product_data = array();
@@ -2747,7 +2640,7 @@
 						$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
 					}
 					
-					$this->cache->set('product.bestseller.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $customer_group_id . '.' . '50',
+					$this->cache->set('product.bestseller.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $this->registry->get('customer_group_id') . '.' . '50',
 					$product_data);
 				}
 				
@@ -2755,13 +2648,7 @@
 				
 				} elseif ($type_pr == 5) {
 				
-				if ($this->customer->isLogged()) {
-					$customer_group_id = $this->customer->getCustomerGroupId();
-					} else {
-					$customer_group_id = $this->config->get('config_customer_group_id');
-				}
-				
-				$product_data = $this->cache->get('product.latest.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $customer_group_id . '.' . '50');
+				$product_data = $this->cache->get('product.latest.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $this->registry->get('customer_group_id') . '.' . '50');
 				
 				if (!$product_data) {
 					$query = $this->db->query("SELECT p.product_id FROM product p LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ORDER BY p.date_added DESC LIMIT 50");
@@ -2770,20 +2657,14 @@
 						$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
 					}
 					
-					$this->cache->set('product.latest.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $customer_group_id . '.' . '50',
+					$this->cache->set('product.latest.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $this->registry->get('customer_group_id') . '.' . '50',
 					$product_data);
 				}
 				
 				return $product_data;
 				} elseif ($type_pr == 6) {
 				
-				if ($this->customer->isLogged()) {
-					$customer_group_id = $this->customer->getCustomerGroupId();
-					} else {
-					$customer_group_id = $this->config->get('config_customer_group_id');
-				}
-				
-				$product_data = $this->cache->get('product.lastbought.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $customer_group_id . '.' . $data['limit']);
+				$product_data = $this->cache->get('product.lastbought.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $this->registry->get('customer_group_id') . '.' . $data['limit']);
 				
 				if (!$product_data) {
 					$query = $this->db->query("SELECT DISTINCT op.product_id FROM order_product op
@@ -2800,7 +2681,7 @@
 						$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
 					}
 					
-					$this->cache->set('product.lastbought.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $customer_group_id . '.' . $data['limit'],
+					$this->cache->set('product.lastbought.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $this->registry->get('customer_group_id') . '.' . $data['limit'],
 					$product_data);
 				}
 				
@@ -2821,13 +2702,6 @@
 				$data['no_child'] = false;
 			}
 			
-			if ($this->customer->isLogged()) {
-				$customer_group_id = $this->customer->getCustomerGroupId();
-				} else {
-				$customer_group_id = $this->config->get('config_customer_group_id');
-			}
-					
-			
 			$sql = "SELECT COUNT(DISTINCT ps.product_id) AS total FROM product_special ps 
 			LEFT JOIN product p ON (ps.product_id = p.product_id) 
 			LEFT JOIN product_description pd ON (p.product_id = pd.product_id) 
@@ -2835,7 +2709,7 @@
 			WHERE p.status = '1' 
 			AND p.date_available <= NOW() 
 			AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
-			AND ps.customer_group_id = '" . (int)$customer_group_id . "' 
+			AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' 
 			AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) 
 			AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) 
 			AND (p2s.store_id = '" . (int)$this->config->get('config_store_id') . "')

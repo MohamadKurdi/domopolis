@@ -57,7 +57,7 @@ class ControllerModuleViewed extends Controller {
 
 	protected function index($setting) {
 
-		$out = $this->cache->get($this->createCacheQueryString(get_class($this), $setting));
+		$out = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, $setting));
 
 		if ($out) {		
 
@@ -192,7 +192,7 @@ class ControllerModuleViewed extends Controller {
 			}
 
 			$out = $this->render();
-			$this->cache->set($this->createCacheQueryString(get_class($this), $setting), $out);			
+			$this->cache->set($this->registry->createCacheQueryString(__METHOD__, $setting), $out);			
 		}
 	}
 }								

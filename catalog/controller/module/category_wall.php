@@ -28,7 +28,7 @@ class ControllerModuleCategoryWall extends Controller {
 	protected function index($setting) {
 		static $module = 1;
 
-		$out = $this->cache->get($this->createCacheQueryString(get_class($this), $setting));
+		$out = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, $setting));
 
 		if ($out) {		
 
@@ -305,7 +305,7 @@ class ControllerModuleCategoryWall extends Controller {
 			$this->template = 'module/' . $tpl;	
 
 			$out = $this->render();
-			$this->cache->set($this->createCacheQueryString(get_class($this), $setting), $out);
+			$this->cache->set($this->registry->createCacheQueryString(__METHOD__, $setting), $out);
 
 		}
 	}

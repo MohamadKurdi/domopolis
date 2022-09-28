@@ -49,7 +49,7 @@
 			$this->load->model('catalog/category');
 			$options = [$manufacturer_id, $category_id];
 
-			$out = $this->cache->get($this->createCacheQueryString(get_class($this), $setting, $options));
+			$out = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, $setting, $options));
 
 			if ($out) {		
 
@@ -146,7 +146,7 @@
 				$this->template = 'module/category';
 				
 				$out = $this->render();
-				$this->cache->set($this->createCacheQueryString(get_class($this), $setting, $options), $out);
+				$this->cache->set($this->registry->createCacheQueryString(__METHOD__, $setting, $options), $out);
 			}
 		}
 	}	

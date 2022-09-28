@@ -33,7 +33,7 @@ class ControllerModulefeaturedreview extends Controller {
 
 		$options = [$manufacturer_id, $category_id, $md5_template, $page_type];
 
-		$out = $this->cache->get($this->createCacheQueryString(get_class($this), $setting, $options));
+		$out = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, $setting, $options));
 
 		if ($out) {		
 
@@ -156,7 +156,7 @@ class ControllerModulefeaturedreview extends Controller {
 			$this->template = 'module/'. $template;
 
 			$out = $this->render();
-			$this->cache->set($this->createCacheQueryString(get_class($this), $setting, $options), $out);
+			$this->cache->set($this->registry->createCacheQueryString(__METHOD__, $setting, $options), $out);
 		}		
 	}
 }			
