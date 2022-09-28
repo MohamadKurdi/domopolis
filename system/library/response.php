@@ -132,12 +132,6 @@
 			}
 		}
 		
-		private function size_convert($size)
-		{
-			$unit=array('b','kb','mb','gb','tb','pb');
-			return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
-		}
-		
 		public function returnOutput(){
 			
 			return $this->output;			
@@ -172,9 +166,10 @@
 					$queries = $GLOBALS['sql'];
 					
 					echo '<div id="debug" style="position:relative; bottom:0; z-index:1000; width:100%;min-height:100px; padding:20px; background: darkred; "><div style="width:1000px;margin:0 auto;">';
-					echo '<div style="color:white; font-size:14px; line-height:20px">Page gen time ' . $total_time. ' seconds | ';
-					echo 'Total sql queries ' . count($GLOBALS['sql']) . '</div>';
-					echo '<div style="color:white; font-size:14px; line-height:20px">Memory usage ' . $this->size_convert(memory_get_usage(true)) . '</div>';
+					echo '<div style="color:white; font-size:14px; line-height:20px">Page gen time ' . $total_time. ' seconds</div>';
+					echo '<div style="color:white; font-size:14px; line-height:20px">Total SQL ' . count($GLOBALS['sql']) . '</div>';
+					echo '<div style="color:white; font-size:14px; line-height:20px">Mem PHP ' . size_convert(memory_get_usage(false)) . '</div>';
+					echo '<div style="color:white; font-size:14px; line-height:20px">Mem SYS ' . size_convert(memory_get_usage(true)) . '</div>';
 					foreach ($queries as $query) {
 						$sql = explode ('[sep]', $query);
 						

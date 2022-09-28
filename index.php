@@ -101,6 +101,8 @@
 		
 		header('X-FPC-MODE: TRUE');
 		header('X-FPC-TIME: ' . $FPCTimer->getTime());
+		header('X-FPC-PHP-MEMUSED: ' . size_convert(memory_get_usage(false)));
+		header('X-FPC-SYS-MEMUSED: ' . size_convert(memory_get_usage(true)));
 		
 		echo $output;		
 		exit();
@@ -434,6 +436,8 @@
 		
 	header('X-FPC-MODE: FALSE');
 	header('X-NO-FPC-TIME: ' . $FPCTimer->getTime());
+	header('X-FPC-PHP-MEMUSED: ' . size_convert(memory_get_usage(false)));
+	header('X-FPC-SYS-MEMUSED: ' . size_convert(memory_get_usage(true)));
 	
 	// Output
 	$response->output();

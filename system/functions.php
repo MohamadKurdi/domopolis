@@ -8,6 +8,12 @@ if (!function_exists('is_cli')){
 	}
 }
 
+function size_convert($size)
+{
+	$unit = array('b','kb','mb','gb','tb','pb');
+	return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
+}
+
 function getCliParamValue($string){
 	$exploded = explode('=', $string);
 	return $exploded[1];
