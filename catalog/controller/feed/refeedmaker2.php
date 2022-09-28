@@ -101,23 +101,30 @@ class ControllerFeedReFeedMaker2 extends Controller
 
     protected function getPath($parent_id, $current_path = '')
     {
-        $category_info = $this->model_catalog_category->getCategory($parent_id);
+        if (!$path_data = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, [$parent_id, $current_path]))){
 
-        if ($category_info) {
-            if (!$current_path) {
-                $new_path = $category_info['category_id'];
-            } else {
-                $new_path = $category_info['category_id'] . '_' . $current_path;
+            $category_info = $this->model_catalog_category->getCategory($parent_id);
+
+            if ($category_info) {
+                if (!$current_path) {
+                    $new_path = $category_info['category_id'];
+                } else {
+                    $new_path = $category_info['category_id'] . '_' . $current_path;
+                }
+
+                $path = $this->getPath($category_info['parent_id'], $new_path);
+
+                if ($path) {
+                    $path_data = $path;
+                } else {
+                    $path_data = $new_path;
+                }
             }
 
-            $path = $this->getPath($category_info['parent_id'], $new_path);
-
-            if ($path) {
-                return $path;
-            } else {
-                return $new_path;
-            }
+            $this->cache->set($this->registry->createCacheQueryString(__METHOD__, [$parent_id, $current_path]), $path_data);
         }
+
+        return $path_data;
     }
 
     protected function printItemFast($product, $changeID = true)
