@@ -4,7 +4,7 @@ class ControllerModuleMMenu extends Controller {
 		
 	private function getChildrenData( $ctg_id, $path_prefix )
 	{
-		$children_data = array();
+		$children_data = [];
 		$children = $this->model_catalog_category->getCategories($ctg_id);
 
 		foreach ($children as $child) {			
@@ -33,12 +33,12 @@ class ControllerModuleMMenu extends Controller {
 			$this->load->model('catalog/manufacturer');
 
 			$this->load->model('tool/image');
-			$this->data['categories'] = array();
+			$this->data['categories'] = [];
 			$categories = $this->model_catalog_category->getCategories(0);
 
 			foreach ($categories as $category) {
 				if ($category['top']) {						
-					$children_data = array();
+					$children_data = [];
 
 					$children = $this->model_catalog_category->getCategories($category['category_id']);
 
@@ -51,43 +51,45 @@ class ControllerModuleMMenu extends Controller {
 						);
 					}
 
-					$bestsellerLimit = 3;
-					if (count($children) > 15){
+					$products_data = [];
+					if ($this->config->get('config_bestsellers_in_mmenu')){
 						$bestsellerLimit = 3;
-					}
-
-					if (count($children) > 30){
-						$bestsellerLimit = 1;
-					}
-
-					$results = $this->model_catalog_product->getBestSellerProductsForCategoryByTIME($bestsellerLimit, $category['category_id'], 3);
-
-					$this->data['dimensions'] = array(
-						'w' => $this->config->get('config_image_product_width'),
-						'h' => $this->config->get('config_image_product_height')
-					);
-
-					$products_data = $this->model_catalog_product->prepareProductToArray($results);												
-
-
-					$this->load->model('module/keyworder');
-
-					$results = $this->model_module_keyworder->getPopularManufacturersByCategories($category['category_id']);
-					$manufacturers_data = array();
-
-					foreach ($results as $result) {
-						if ((!empty($result['image']))) {
-							$image = $this->model_tool_image->resize($result['image'], 300, 300);
-						} else {
-							$image = $this->model_tool_image->resize($this->config->get('config_noimage'), 300, 300);
+						if (count($children) > 15){
+							$bestsellerLimit = 3;
 						}
-						if ($result['sort_order'] != -1) {
-							$manufacturers_data[] = array(
-								'manufacturer_id' 	=> $result['manufacturer_id'],
-								'name'       	  	=> $result['name'],
-								'image' 			=> $image,
-								'href'            	=> $this->url->link('product/category', 'path=' . $category['category_id'] . '&manufacturer_id=' . $result['manufacturer_id'])
-							);
+
+						if (count($children) > 30){
+							$bestsellerLimit = 1;
+						}
+
+						$results = $this->model_catalog_product->getBestSellerProductsForCategoryByTIME($bestsellerLimit, $category['category_id'], 3);
+						$this->data['dimensions'] = array(
+							'w' => $this->config->get('config_image_product_width'),
+							'h' => $this->config->get('config_image_product_height')
+						);
+
+						$products_data = $this->model_catalog_product->prepareProductToArray($results);			
+					}									
+
+					$manufacturers_data = [];
+					if ($this->config->get('config_brands_in_mmenu')){
+						$this->load->model('module/keyworder');
+						$results = $this->model_module_keyworder->getPopularManufacturersByCategories($category['category_id']);						
+
+						foreach ($results as $result) {
+							if ((!empty($result['image']))) {
+								$image = $this->model_tool_image->resize($result['image'], 300, 300);
+							} else {
+								$image = $this->model_tool_image->resize($this->config->get('config_noimage'), 300, 300);
+							}
+							if ($result['sort_order'] != -1) {
+								$manufacturers_data[] = array(
+									'manufacturer_id' 	=> $result['manufacturer_id'],
+									'name'       	  	=> $result['name'],
+									'image' 			=> $image,
+									'href'            	=> $this->url->link('product/category', 'path=' . $category['category_id'] . '&manufacturer_id=' . $result['manufacturer_id'])
+								);
+							}
 						}
 					}
 
