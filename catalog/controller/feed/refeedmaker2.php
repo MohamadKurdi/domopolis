@@ -101,7 +101,7 @@ class ControllerFeedReFeedMaker2 extends Controller
 
     protected function getPath($parent_id, $current_path = '')
     {
-        if (!$path_data = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, [$parent_id, $current_path]))){
+        if (!$path_data = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$parent_id, $current_path]))){
 
             $category_info = $this->model_catalog_category->getCategory($parent_id);
 
@@ -121,7 +121,7 @@ class ControllerFeedReFeedMaker2 extends Controller
                 }
             }
 
-            $this->cache->set($this->registry->createCacheQueryString(__METHOD__, [$parent_id, $current_path]), $path_data);
+            $this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$parent_id, $current_path]), $path_data);
         }
 
         return $path_data;
@@ -224,9 +224,9 @@ class ControllerFeedReFeedMaker2 extends Controller
         if ($attributes) {
             foreach ($attributes as $attribute) {
                 $output .= '    <g:product_detail>' . PHP_EOL;
-                $output .= '        <g:section_name><![CDATA[' . $attribute['group'] . ']]></g:section_name>' . PHP_EOL;
-                $output .= '        <g:attribute_name><![CDATA[' . $attribute['name'] . ']]></g:attribute_name>' . PHP_EOL;
-                $output .= '        <g:attribute_value><![CDATA[' . $attribute['value'] . ']]></g:attribute_value>' . PHP_EOL;
+                $output .= '        <g:section_name><![CDATA[' . $attribute['attribute_group'] . ']]></g:section_name>' . PHP_EOL;
+                $output .= '        <g:attribute_name><![CDATA[' . $attribute['attribute_name'] . ']]></g:attribute_name>' . PHP_EOL;
+                $output .= '        <g:attribute_value><![CDATA[' . $attribute['attribute_value'] . ']]></g:attribute_value>' . PHP_EOL;
                 $output .= '    </g:product_detail>' . PHP_EOL;
             }
         }
@@ -239,7 +239,7 @@ class ControllerFeedReFeedMaker2 extends Controller
         
         if ($product['images'] && $images = explode(':', $product['images'])) {
             foreach ($images as $image) {
-                $output .= '    <g:additional_image_link>' . $this->model_tool_image->resize($image['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')) . '</g:additional_image_link>'. PHP_EOL;
+                $output .= '    <g:additional_image_link>' . $this->model_tool_image->resize($image, $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')) . '</g:additional_image_link>'. PHP_EOL;
             }
         }
 
@@ -325,7 +325,7 @@ class ControllerFeedReFeedMaker2 extends Controller
                         }
                     }
 
-                    $output .= '    <g:product_type><![CDATA[' . $string . ']]></g:product_type>';
+                    $output .= '    <g:product_type><![CDATA[' . $string . ']]></g:product_type>'. PHP_EOL;
                 }
             }
         }

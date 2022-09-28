@@ -396,7 +396,7 @@
 			$this->load->model('catalog/group_price');
 			$this->load->model('kp/product');		
 			
-			$product_data = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, [$product_id]));
+			$product_data = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$product_id]));
 			
 			if (!$cached){
 				$product_data = false;
@@ -727,7 +727,7 @@
 					$product_data = false;
 				}
 				
-				$this->cache->set($this->registry->createCacheQueryString(__METHOD__, [$product_id]), $product_data);
+				$this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$product_id]), $product_data);
 			}
 			
 			return $product_data;
@@ -1719,26 +1719,26 @@
 
 		public function getProductAttributesFlat($product_id){
 
-			if (!$product_attribute_flat_data = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, [$product_id]))){
+			if (!$product_attribute_flat_data = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$product_id]))){
 
 				$sql = '';
-				$sql .= "SELECT ad.name as name, agd.name as group, pa.text as value ";
+				$sql .= "SELECT ad.name as 'attribute_name', agd.name as 'attribute_group', pa.text as 'attribute_value' ";
 				$sql .= "FROM product_attribute pa  ";
 				$sql .= "LEFT JOIN attribute a ON (a.attribute_id = pa.attribute_id)  ";
 				$sql .= "LEFT JOIN attribute_description ad ON (ad.attribute_id = a.attribute_id AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "') ";
 				$sql .= "LEFT JOIN attribute_group_description agd ON (agd.attribute_group_id = a.attribute_group_id AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "')  ";
 				$sql .= "WHERE pa.product_id = '" . (int)$product_id . "' AND pa.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+			
+				$product_attribute_flat_data = $this->db->query($sql)->rows;
 
-				$this->db->query($sql);
-
-				$this->cache->set($this->registry->createCacheQueryString(__METHOD__, [$product_id]), $product_attribute_flat_data);
+				$this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$product_id]), $product_attribute_flat_data);
 			}
 			
 			return $product_attribute_flat_data;
 		}
 		
 		public function getProductAttributes($product_id){
-			if (!$product_attribute_group_data = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, [$product_id]))){
+			if (!$product_attribute_group_data = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$product_id]))){
 
 				$product_attribute_group_data = array();
 
@@ -1765,7 +1765,7 @@
 					);
 				}
 
-				$this->cache->set($this->registry->createCacheQueryString(__METHOD__, [$product_id]), $product_attribute_group_data);
+				$this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$product_id]), $product_attribute_group_data);
 
 			}
 			
@@ -2438,7 +2438,7 @@
 		}
 		
 		public function getGoogleCategoryPath($product_id){
-			if (!$string = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, [$product_id]))){
+			if (!$string = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$product_id]))){
 				
 				$category = $this->db->query("SELECT category_id FROM product_to_category WHERE product_id = '" . (int)$product_id . "' ORDER BY main_category DESC LIMIT 1")->row;
 				
@@ -2463,7 +2463,7 @@
 					}
 				}
 				
-				$this->cache->set($this->registry->createCacheQueryString(__METHOD__, [$product_id]), $string);
+				$this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$product_id]), $string);
 			}
 			
 			return $string;

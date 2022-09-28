@@ -2,13 +2,13 @@
 	class ModelCatalogCategory extends Model {
 		public function getCategory($category_id) {
 
-			if (!$category_data = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, [$category_id]))){
+			if (!$category_data = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$category_id]))){
 
 				$query = $this->db->query("SELECT DISTINCT *, IFNULL(cd.menu_name, cd.name) as name FROM category c LEFT JOIN category_description cd ON (c.category_id = cd.category_id) LEFT JOIN category_to_store c2s ON (c.category_id = c2s.category_id) WHERE c.category_id = '" . (int)$category_id . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND c.status = '1'");
 
 				$category_data = $query->row;
 
-				$this->cache->set($this->registry->createCacheQueryString(__METHOD__, [$category_id]), $category_data);
+				$this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$category_id]), $category_data);
 			}
 
 			return $category_data;
