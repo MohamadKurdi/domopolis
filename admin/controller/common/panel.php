@@ -79,17 +79,22 @@ class ControllerCommonPanel extends Controller {
 		$this->load->library('deliveryapis/Justin');
 		$Justin = new Justin($this->registry, 'UA');
 
-		if ($result = $Justin->checkStatus()){
+		if ($this->config->get('config_justin_api_key')){
+			if ($result = $Justin->checkStatus()){
 
-			$body = $result;
-			$class= 'good';
+				$body = $result;
+				$class= 'good';
 
+			} else {
+
+				$body = 'FAIL';
+				$class= 'bad';
+
+			}	
 		} else {
-
-			$body = 'FAIL';
-			$class= 'bad';
-
-		}	
+			$body = 'OFF';
+			$class= 'warn';
+		}
 
 		$json = [
 			'body'  	=> $body,
