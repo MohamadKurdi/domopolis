@@ -1,16 +1,25 @@
 <?php
 class Url {
     private $url;
-    private $ssl;
+    private $registry   = null;
+    private $config     = null;
+    private $db         = null;
+
     private $rewrite = array();
 
-    public function __construct($url, $ssl = '') {
+    public function __construct($url, $registry = false) {
+        if ($registry){
+            $this->config   = $registry->get('config');
+            $this->cache    = $registry->get('cache');
+        } else {
+            global $config;
+            $this->config = $config;
+        }
+
         if (is_bool($url)) {
-            $this->url = '';
-            $this->ssl = $url;
+            $this->url = '';          
         } else {
             $this->url = $url;
-            $this->ssl = $ssl;
         }
     }
 
@@ -18,30 +27,28 @@ class Url {
         $this->rewrite[] = $rewrite;
     }
 
-    public function link($route, $args = '', $connection = '', $language_id = false) {
-        global $config;
-        global $session;
-        
-        $get_route = isset($_GET['route']) ? $_GET['route'] : (isset($_GET['_route_']) ? $_GET['_route_'] : '');
-        $debug = isset($_GET['debug']) ? true : false;
-        $unlicensed = !empty($session->data['simple_unlicensed']);
+    public function link($route, $args = '', $connection = 'SSL', $language_id = false) {
+        return $this->linkCached($route, $args, $language_id);
+    }
 
-        if (!$debug && !$unlicensed && !empty($config) && method_exists($config, 'get') && $config->get('simple_settings')) {
-            if ($config->get('simple_replace_cart') && $route == 'checkout/cart' && $get_route != 'checkout/cart') {
-                $connection = 'SSL';
+    private function rewriteSimpleCheckout($route){
+        $get_route = isset($_GET['route']) ? $_GET['route'] : (isset($_GET['_route_']) ? $_GET['_route_'] : '');
+
+        if (!empty($this->config) && method_exists($this->config, 'get') && $this->config->get('simple_settings')) {
+            if ($this->config->get('simple_replace_cart') && $route == 'checkout/cart' && $get_route != 'checkout/cart') {                
                 $route = 'checkout/simplecheckout';
 
-                if ($config->get('simple_popup_checkout')) {
+                if ($this->config->get('simple_popup_checkout')) {
                     $args .= '&popup=1';
                 }
             }
 
-            if ($config->get('simple_replace_checkout')) {
+            if ($this->config->get('simple_replace_checkout')) {
                 foreach (array('checkout/checkout', 'checkout/unicheckout', 'checkout/uni_checkout', 'checkout/oct_fastorder', 'checkout/buy', 'revolution/revcheckout', 'checkout/pixelshopcheckout') as $page) {
                     if ($route == $page && $get_route != $page) {
                         $route = 'checkout/simplecheckout';
 
-                        if ($config->get('simple_popup_checkout')) {
+                        if ($this->config->get('simple_popup_checkout')) {
                             $args .= '&popup=1';
                         }
 
@@ -50,50 +57,45 @@ class Url {
                 }
             }
 
-            if ($config->get('simple_replace_register') && $route == 'account/register' && $get_route != 'account/register') {
+            if ($this->config->get('simple_replace_register') && $route == 'account/register' && $get_route != 'account/register') {
                 $route = 'account/simpleregister';
 
-                if ($config->get('simple_popup_register')) {
+                if ($this->config->get('simple_popup_register')) {
                     $args .= '&popup=1';
                 }
             }
 
-            if ($config->get('simple_replace_edit') && $route == 'account/edit' && $get_route != 'account/edit') {
+            if ($this->config->get('simple_replace_edit') && $route == 'account/edit' && $get_route != 'account/edit') {
                 $route = 'account/simpleedit';
             }
 
-            if ($config->get('simple_replace_address') && $route == 'account/address/update' && $get_route != 'account/address/update') {
+            if ($this->config->get('simple_replace_address') && $route == 'account/address/update' && $get_route != 'account/address/update') {
                 $route = 'account/simpleaddress/update';
             }
 
-            if ($config->get('simple_replace_address') && $route == 'account/address/insert' && $get_route != 'account/address/insert') {
+            if ($this->config->get('simple_replace_address') && $route == 'account/address/insert' && $get_route != 'account/address/insert') {
                 $route = 'account/simpleaddress/insert';
             }
 
-            if ($config->get('simple_replace_address') && $route == 'account/address/edit' && $get_route != 'account/address/edit') {
+            if ($this->config->get('simple_replace_address') && $route == 'account/address/edit' && $get_route != 'account/address/edit') {
                 $route = 'account/simpleaddress/update';
             }
 
-            if ($config->get('simple_replace_address') && $route == 'account/address/add' && $get_route != 'account/address/add') {
+            if ($this->config->get('simple_replace_address') && $route == 'account/address/add' && $get_route != 'account/address/add') {
                 $route = 'account/simpleaddress/insert';
             }
         }
-        // SIMPLE END
+
+        return $route;
+    }
+
+    private function linkCached($route, $args, $language_id = false) {                
+        $route = $this->rewriteSimpleCheckout($route);
 
         if (empty($this->url)) {
-            if ($this->ssl && $connection) {
-                $url = 'https://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/.\\') . '/index.php?route=' . $route;
-            } else {
-                $url = 'https://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/.\\') . '/index.php?route=' . $route;
-            }
+            $url = 'https://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/.\\') . '/index.php?route=' . $route;
         } else {
-            if ($this->ssl && $connection) {
-                $url = $this->ssl;
-            } else {
-                $url = $this->url;
-            }
-
-            $url .= 'index.php?route=' . $route;
+            $url = ($this->url . 'index.php?route=' . $route);
         }
 
         if ($args) {
@@ -104,13 +106,13 @@ class Url {
             }
         }
 
-        foreach ($this->rewrite as $rewrite) {	
-			if ($language_id && method_exists($rewrite, 'rewriteLanguage')){			
-				$url = $rewrite->rewriteLanguage($url, $language_id);
-			} else {
-				$url = $rewrite->rewrite($url);
-			}
-		}
+        foreach ($this->rewrite as $rewrite) {  
+            if ($language_id && method_exists($rewrite, 'rewriteLanguage')){            
+                $url = $rewrite->rewriteLanguage($url, $language_id);
+            } else {
+                $url = $rewrite->rewrite($url);
+            }
+        }
 
         return $url;
     }

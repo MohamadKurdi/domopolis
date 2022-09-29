@@ -171,7 +171,7 @@ if (!$store_id) {
     $registry->get('config')->set('config_static_subdomain', HTTPS_STATIC_SUBDOMAIN);
 }
 
-$registry->set('url', new Url($registry->get('config')->get('config_url'), $registry->get('config')->get('config_ssl')));
+$registry->set('url', new Url($registry->get('config')->get('config_ssl'), $registry));
 
     //Stores main language config to registry (need for ElasticSearch and some other)
 $stores_to_main_language_mapping = [];

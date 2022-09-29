@@ -117,11 +117,7 @@
 	}
 	$registry->get('config')->set('config_config_file_prefix', $configFilesPrefix);
 	
-	
-	// Url
-	$url = new Url(HTTP_SERVER, $config->get('config_secure') ? HTTPS_SERVER : HTTP_SERVER);	
-	$registry->set('url', $url);
-	
+
 	// Log
 	$log = new Log('php-errors-admin.log');
 	$registry->set('log', $log);
@@ -194,6 +190,8 @@
 	// Cache
 	$PageCache = new PageCache(false);
 	$registry->set('PageCache', $PageCache); 
+
+	$registry->set('url',  new Url(HTTPS_SERVER, $registry));
 	
 	// Session
 	$session = new Session();
