@@ -10,12 +10,9 @@
 		public function __construct($registry) {
 			parent::__construct($registry);			
 			$this->language_id = (int)$this->config->get('config_language_id');
-			if (!empty($this->session->data) && !empty($this->session->data['language'])){
-				
-				$this->language_code = $this->session->data['language'];
-				
-				} else {
-
+			if (!empty($this->session->data) && !empty($this->session->data['language'])){				
+				$this->language_code = $this->session->data['language'];				
+			} else {
 				if (!empty($this->registry->get('languages_id_code_mapping'))){
 					$this->language_code = $this->registry->get('languages_id_code_mapping')[$this->language_id]['code'];							
 				} else {				
@@ -23,11 +20,19 @@
 					$language = $this->model_localisation_language->getLanguage($this->language_id);
 					$this->language_code = $language['code'];
 				}
-						
 			}
 			
 			$this->rebuildAllCaches();
 		}			
+
+		private function getKeyword($query){
+			//This will be mapping to query-keyword cache, which uses a lot of memory
+
+		}
+
+		private function getQuery($keyword){
+			//This will be mapping to query-keyword cache, which uses a lot of memory
+		}
 		
 		private function checkIfUriISUnrouted($uri){
 			

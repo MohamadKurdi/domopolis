@@ -170,6 +170,8 @@
 					echo '<div style="color:white; font-size:14px; line-height:20px">Total SQL ' . count($GLOBALS['sql']) . '</div>';
 					echo '<div style="color:white; font-size:14px; line-height:20px">Mem PHP ' . size_convert(memory_get_usage(false)) . '</div>';
 					echo '<div style="color:white; font-size:14px; line-height:20px">Mem SYS ' . size_convert(memory_get_usage(true)) . '</div>';
+					echo '<div style="color:white; font-size:14px; line-height:20px">Peak Mem PHP ' . size_convert(memory_get_peak_usage(false)) . '</div>';
+					echo '<div style="color:white; font-size:14px; line-height:20px">Peak Mem SYS ' . size_convert(memory_get_peak_usage(true)) . '</div>';
 					foreach ($queries as $query) {
 						$sql = explode ('[sep]', $query);
 						
