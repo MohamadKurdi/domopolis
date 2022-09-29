@@ -9,6 +9,7 @@ class Url {
 
     public function __construct($url, $registry = false) {
         if ($registry){
+            $this->registry = $registry;
             $this->config   = $registry->get('config');
             $this->cache    = $registry->get('cache');
         } else {
@@ -92,26 +93,31 @@ class Url {
     private function linkCached($route, $args, $language_id = false) {                
         $route = $this->rewriteSimpleCheckout($route);
 
-        if (empty($this->url)) {
-            $url = 'https://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/.\\') . '/index.php?route=' . $route;
-        } else {
-            $url = ($this->url . 'index.php?route=' . $route);
-        }
+        if (!$url = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$route], [$args, $language_id]))){
 
-        if ($args) {
-            if (is_array($args)) {
-                $url .= '&amp;' . http_build_query($args);
+            if (empty($this->url)) {
+                $url = 'https://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/.\\') . '/index.php?route=' . $route;
             } else {
-                $url .= str_replace('&', '&amp;', '&' . ltrim($args, '&'));
+                $url = ($this->url . 'index.php?route=' . $route);
             }
-        }
 
-        foreach ($this->rewrite as $rewrite) {  
-            if ($language_id && method_exists($rewrite, 'rewriteLanguage')){            
-                $url = $rewrite->rewriteLanguage($url, $language_id);
-            } else {
-                $url = $rewrite->rewrite($url);
+            if ($args) {
+                if (is_array($args)) {
+                    $url .= '&amp;' . http_build_query($args);
+                } else {
+                    $url .= str_replace('&', '&amp;', '&' . ltrim($args, '&'));
+                }
             }
+
+            foreach ($this->rewrite as $rewrite) {  
+                if ($language_id && method_exists($rewrite, 'rewriteLanguage')){            
+                    $url = $rewrite->rewriteLanguage($url, $language_id);
+                } else {
+                    $url = $rewrite->rewrite($url);
+                }
+            }
+
+            $this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$route], [$args, $language_id]), $url);
         }
 
         return $url;

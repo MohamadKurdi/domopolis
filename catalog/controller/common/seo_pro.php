@@ -15,10 +15,15 @@
 				$this->language_code = $this->session->data['language'];
 				
 				} else {
-				
-				$this->load->model('localisation/language');
-				$language = $this->model_localisation_language->getLanguage($this->language_id);
-				$this->language_code = $language['code'];				
+
+				if (!empty($this->registry->get('languages_id_code_mapping'))){
+					$this->language_code = $this->registry->get('languages_id_code_mapping')[$this->language_id]['code'];							
+				} else {				
+					$this->load->model('localisation/language');
+					$language = $this->model_localisation_language->getLanguage($this->language_id);
+					$this->language_code = $language['code'];
+				}
+						
 			}
 			
 			$this->rebuildAllCaches();
@@ -86,7 +91,7 @@
 						$cache_data['queries'][$row['query']] 		= $row['keyword'];
 					}
 					$this->cache->set('seo_pro.structure.' . $language['language_id'], $cache_data);
-				}
+				}				
 				
 				if ($this->language_id == $language['language_id']){
 					$this->cache_data = $cache_data;
