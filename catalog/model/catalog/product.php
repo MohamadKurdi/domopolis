@@ -66,7 +66,7 @@
 			
 			$query = $this->db->query($sql);					
 			
-			$result = array();
+			$result = [];
 			if ($query->num_rows){
 				foreach ($query->rows as $row){
 					$result[] = (int)$row['coupon_id'];
@@ -181,7 +181,7 @@
 			
 			sort($alsoViewed);
 			
-			$groupedalsoViewed = array();
+			$groupedalsoViewed = [];
 			foreach ($alsoViewed as $k => $b) {
 				for ($i = 1; $i < count($alsoViewed); $i++) {
 					if (!empty($alsoViewed[$k + $i])) {
@@ -206,7 +206,7 @@
 		}		
 		
 		public function prepareProductToArray($results, $bestsellers = array(), $ajax = false){					
-			$array = array();
+			$array = [];
 			
 			$dimensions = array(
 			'w' => $this->config->get('config_image_product_width'),
@@ -391,66 +391,69 @@
 			return $this->getProduct($product_id, false);
 		}
 		
-		public function getProduct($product_id, $cached = true)	{
+		public function getProduct($product_id, $cached = true, $simple = false) {
 			
 			$this->load->model('catalog/group_price');
+			$this->load->model('catalog/product_status');
 			$this->load->model('kp/product');		
 			
-			$product_data = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$product_id]));
+			$product_data = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$product_id], [$simple]));
 			
 			if (!$cached){
 				$product_data = false;
 			}
 			
 			if (!$product_data) {
-								
-				$sql = "SELECT DISTINCT *, 
-				pd.name AS name,
-				pd.color AS color,
-				pd.material AS material, 
-				pd.alt_image, 
-				pd.title_image, 
-				p.image, 
-				p.xrating as rating,
-				p.xreviews as reviews,
-				p.sort_order,
-				m.name AS manufacturer,
-				m.image as manufacturer_img, ";
-				$sql .= " (SELECT st.set_id FROM `set` st WHERE p.product_id = st.product_id LIMIT 1) as set_id, ";
-				$sql .= " (SELECT COUNT(*) FROM product_additional_offer pao LEFT JOIN product_additional_offer_to_store pao2s ON (pao.product_additional_offer_id = pao2s.product_additional_offer_id) WHERE  pao.product_id = p.product_id AND pao.date_end > NOW() AND (ISNULL(pao2s.store_id) OR pao2s.store_id = '" . (int)$this->config->get('config_store_id') . "')) AS additional_offer_count, ";
+				$sql = '';		
+				$sql .= "SELECT DISTINCT *, ";				
+				if ($simple != 'simple'){
+					$sql .= " p.image, p.xrating as rating, p.xreviews as reviews, p.sort_order, ";
+					$sql .= " pd.name AS name, pd.color AS color, pd.material AS material, pd.alt_image, pd.title_image,";
+					$sql .= " m.name AS manufacturer, m.image as manufacturer_img, ";
+					$sql .= " (SELECT st.set_id FROM `set` st WHERE p.product_id = st.product_id LIMIT 1) as set_id, ";
+					$sql .= " (SELECT COUNT(*) FROM product_additional_offer pao LEFT JOIN product_additional_offer_to_store pao2s ON (pao.product_additional_offer_id = pao2s.product_additional_offer_id) WHERE  pao.product_id = p.product_id AND pao.date_end > NOW() AND (ISNULL(pao2s.store_id) OR pao2s.store_id = '" . (int)$this->config->get('config_store_id') . "')) AS additional_offer_count, ";
 
-				if ($this->config->get('config_no_zeroprice')){
-					$sql .= " (SELECT COUNT(p3.product_id) FROM product p3 LEFT JOIN product_to_store p32s ON (p3.product_id = p32s.product_id) WHERE p3.main_variant_id = p.product_id  AND (p3.price > 0 OR p3.price_national > 0) AND p3.status = 1 AND p3.is_markdown = 0 AND p32s.store_id = '" . (int)$this->config->get('config_store_id') . "')";
-				} else {
-					$sql .= " (SELECT COUNT(p3.product_id) FROM product p3 LEFT JOIN product_to_store p32s ON (p3.product_id = p32s.product_id) WHERE p3.main_variant_id = p.product_id  AND (p3.price > 0 OR p3.price_national > 0) AND p3.status = 1 AND p3.is_markdown = 0 AND p32s.store_id = '" . (int)$this->config->get('config_store_id') . "')";
-					$sql .= " AND (";
-					$sql .= " p.price > 0 OR p.price_national > 0";
-					$sql .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
-					$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
-					$sql .= ")";
+					if ($this->config->get('config_no_zeroprice')){
+						$sql .= " (SELECT COUNT(p3.product_id) FROM product p3 LEFT JOIN product_to_store p32s ON (p3.product_id = p32s.product_id) WHERE p3.main_variant_id = p.product_id  AND (p3.price > 0 OR p3.price_national > 0) AND p3.status = 1 AND p3.is_markdown = 0 AND p32s.store_id = '" . (int)$this->config->get('config_store_id') . "')";
+					} else {
+						$sql .= " (SELECT COUNT(p3.product_id) FROM product p3 LEFT JOIN product_to_store p32s ON (p3.product_id = p32s.product_id) WHERE p3.main_variant_id = p.product_id  AND (p3.price > 0 OR p3.price_national > 0) AND p3.status = 1 AND p3.is_markdown = 0 AND p32s.store_id = '" . (int)$this->config->get('config_store_id') . "')";
+						$sql .= " AND (";
+						$sql .= " p.price > 0 OR p.price_national > 0";
+						$sql .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+						$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
+						$sql .= ")";
+					}
+					$sql .= " AS variants_count, ";
+
+					$sql .= " (SELECT c5.google_category_id FROM category c5 WHERE c5.category_id = (SELECT p2cm5.category_id FROM product_to_category p2cm5 WHERE p2cm5.product_id = p.product_id ORDER BY main_category DESC LIMIT 1)) as google_category_id, ";
+					$sql .= " (SELECT GROUP_CONCAT(p2c5.category_id SEPARATOR ':') FROM product_to_category p2c5 WHERE p2c5.product_id = p.product_id GROUP BY p2c5.product_id) as categories, ";
+					$sql .= " (SELECT GROUP_CONCAT(pi5.image SEPARATOR ':') FROM product_image pi5 WHERE pi5.product_id = p.product_id GROUP BY pi5.product_id) as images, ";
+					$sql .= " (SELECT category_id FROM product_to_category p2cm WHERE p2cm.product_id = p.product_id ORDER BY main_category DESC LIMIT 1) as main_category_id, ";
+					$sql .= " (SELECT ao_product_id FROM product_additional_offer pao LEFT JOIN product_additional_offer_to_store pao2s ON (pao.product_additional_offer_id = pao2s.product_additional_offer_id) WHERE pao.product_id = p.product_id AND pao.date_end > NOW() AND pao.percent = 100 AND (ISNULL(pao2s.store_id) OR pao2s.store_id = '" . (int)$this->config->get('config_store_id') . "')  ORDER BY priority ASC LIMIT 1) AS additional_offer_product_id, ";	
 				}
-				$sql .= " AS variants_count, ";
-				$sql .= " (SELECT c5.google_category_id FROM category c5 WHERE c5.category_id = (SELECT p2cm5.category_id FROM product_to_category p2cm5 WHERE p2cm5.product_id = p.product_id ORDER BY main_category DESC LIMIT 1)) as google_category_id, ";
-				$sql .= " (SELECT GROUP_CONCAT(p2c5.category_id SEPARATOR ':') FROM product_to_category p2c5 WHERE p2c5.product_id = p.product_id GROUP BY p2c5.product_id) as categories, ";
-				$sql .= " (SELECT GROUP_CONCAT(pi5.image SEPARATOR ':') FROM product_image pi5 WHERE pi5.product_id = p.product_id GROUP BY pi5.product_id) as images, ";
-				$sql .= " (SELECT category_id FROM product_to_category p2cm WHERE p2cm.product_id = p.product_id ORDER BY main_category DESC LIMIT 1) as main_category_id, ";
-				$sql .= " (SELECT ao_product_id FROM product_additional_offer pao LEFT JOIN product_additional_offer_to_store pao2s ON (pao.product_additional_offer_id = pao2s.product_additional_offer_id) WHERE pao.product_id = p.product_id AND pao.date_end > NOW() AND pao.percent = 100 AND (ISNULL(pao2s.store_id) OR pao2s.store_id = '" . (int)$this->config->get('config_store_id') . "')  ORDER BY priority ASC LIMIT 1) AS additional_offer_product_id, ";
-				$sql .= " (SELECT price FROM product_discount pd2 WHERE pd2.product_id = p.product_id AND price > 0 AND pd2.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, 
-				(SELECT price FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special,
-				(SELECT date_end FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special_date_end,
-				(SELECT currency_scode FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special_currency,
-				(SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price,
-				(SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price_national,				
-				(SELECT price FROM product_price_national_to_yam ppn2yam WHERE ppn2yam.product_id = p.product_id AND price > 0 AND ppn2yam.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as yam_overload_price_national,	
-				(SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as overload_stock_status_id,
-				(SELECT name FROM stock_status sst WHERE sst.stock_status_id = (SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) AND sst.language_id = '" . (int)$this->config->get('config_language_id') . "') as overload_stock_status,	
-				(SELECT ss.name FROM stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status ";
 
-				$sql .= "FROM product p 
+
+				$sql .= " (SELECT price FROM product_discount pd2 WHERE pd2.product_id = p.product_id AND price > 0 AND pd2.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, ";
+				$sql .= "(SELECT price FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special, ";
+				$sql .= "(SELECT date_end FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special_date_end, ";
+				$sql .= "(SELECT currency_scode FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special_currency, ";
+				$sql .= "(SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price, ";
+				$sql .= "(SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price_national, ";			
+				$sql .= "(SELECT price FROM product_price_national_to_yam ppn2yam WHERE ppn2yam.product_id = p.product_id AND price > 0 AND ppn2yam.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as yam_overload_price_national, ";		
+				$sql .= " (SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as overload_stock_status_id, ";
+				$sql .= "(SELECT name FROM stock_status sst WHERE sst.stock_status_id = (SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) AND sst.language_id = '" . (int)$this->config->get('config_language_id') . "') as overload_stock_status,	";
+				$sql .= "(SELECT ss.name FROM stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status ";
+				
+
+				$sql .= " FROM product p 
 				LEFT JOIN product_description pd ON (p.product_id = pd.product_id) 
-				LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
-				LEFT JOIN manufacturer m ON (p.manufacturer_id = m.manufacturer_id)
-				WHERE p.product_id = '" . (int)$product_id . "' 
+				LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) ";
+
+				if ($simple != 'simple'){
+					$sql .= " LEFT JOIN manufacturer m ON (p.manufacturer_id = m.manufacturer_id) ";
+				}
+
+				$sql .= " WHERE p.product_id = '" . (int)$product_id . "' 
 				AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
 				AND p.status = '1' 
 				AND p.date_available <= NOW() 
@@ -566,9 +569,11 @@
 						}
 					}
 					
-					$additional_offer_product = false;
-					if ($query->row['additional_offer_product_id'] && $query->row['additional_offer_product_id'] != $product_id){
-						$additional_offer_product = $this->getProduct($query->row['additional_offer_product_id']);
+					if ($simple != 'simple'){
+						$additional_offer_product = false;
+						if ($query->row['additional_offer_product_id'] && $query->row['additional_offer_product_id'] != $product_id){
+							$additional_offer_product = $this->getProduct($query->row['additional_offer_product_id']);
+						}
 					}
 					
 					//Логика подмены SKU
@@ -599,135 +604,157 @@
 
 						}
 					}
-					
-					$product_data = array(
-					'statuses'                 => array(),
-					//$this->model_catalog_product_status->getHTMLProductStatuses($query->row['product_id']),
-					'product_id'               => $query->row['product_id'],
-					'new'               	   => $new,
-					'stock_product_id'         => $query->row['stock_product_id'],					
-					'name'                     => $query->row['name'],
-					'variant_name_1'        	=> $query->row['variant_name_1'],
-					'variant_name_2'        	=> $query->row['variant_name_2'],
-					'variant_value_1'        	=> $query->row['variant_value_1'],
-					'variant_value_2'        	=> $query->row['variant_value_2'],
-					'is_certificate'		   => (strpos($query->row['location'], 'certificate') !== false),
-					'description'              => $query->row['description'],
-					'meta_description'         => $query->row['meta_description'],
-					'meta_keyword'             => $query->row['meta_keyword'],
-					'seo_h1'                   => $query->row['seo_h1'],
-					'seo_title'                => $query->row['seo_title'],
-					'tag'                      => $query->row['tag'],
-					'color'					   => $query->row['color'],
-					'material'				   => $query->row['material'],
-					/* MARKDOWN */
-					'markdown_product_id'      => $query->row['markdown_product_id'],
-					'is_markdown'              => $query->row['is_markdown'],
-					'markdown_appearance'      => $query->row['markdown_appearance'],
-					'markdown_condition'       => $query->row['markdown_condition'],
-					'markdown_pack'            => $query->row['markdown_pack'],
-					'markdown_equipment'       => $query->row['markdown_equipment'],
-					/* MARKDOWN */					
-					'variants_count'		   => $query->row['variants_count'],
-					'main_variant_id'		   => $query->row['main_variant_id'],								
-					'set_id'                   => $query->row['set_id'],
-					'model'                    => $query->row['model'],
-					'sku'                      => $query->row['sku'],
-					'upc'                      => $query->row['upc'],
-					'ean'                      => $query->row['ean'],
-					'jan'                      => $query->row['jan'],
-					'isbn'                     => $query->row['isbn'],
-					'mpn'                      => $query->row['mpn'],
-					'location'                 => $query->row['location'],
-					'current_in_stock'		   => $this->config->get('config_warehouse_identifier')?($query->row[$this->config->get('config_warehouse_identifier')]>0):false,
-					'current_in_stock_q'	   => $query->row[$this->config->get('config_warehouse_identifier')],
-					'quantity'                 => $query->row['quantity'],
-					'quantity'                 => $query->row['quantity'],
-					'quantity_stock'           => $query->row['quantity_stock'],
-					'quantity_stockM'          => $query->row['quantity_stockM'],
-					'quantity_stockK'          => $query->row['quantity_stockK'],
-					'quantity_stockMN'         => $query->row['quantity_stockM'],
-					'quantity_stockAS'         => $query->row['quantity_stockM'],
-					'stock_status'             => $query->row['stock_status'],
-					'stock_status_id'          => $query->row['stock_status_id'],
-					'image'                    => $query->row['image'],
-					'images'                   => $query->row['images'],
-					'main_category_id'         => $query->row['main_category_id'],
-					'categories'			   => $query->row['categories'],
-					'google_category_id'	   => $query->row['google_category_id'],
-					'manufacturer_id'          => $query->row['manufacturer_id'],
-					'collection_id'            => $query->row['collection_id'],
-					'manufacturer'             => $query->row['manufacturer'],
-					'manufacturer_img'         => $query->row['manufacturer_img'],
-					'price'                    => $price_opt,
-					'mpp_price'                => $mpp_price,
-					'has_rrp'				   => $has_rrp,
-					'price_national'           => $price_national,
-					'display_price_national'   => $display_price_national,
-					'currency'                 => $query->row['currency'],
-					'competitors'              => $query->row['competitors'],
-					'competitors_ua'           => $query->row['competitors_ua'],
-					'price_recommend'          => $price_recommend,
-					'special'                  => $special,
-					'special_date_end'         => $query->row['special_date_end'],
-					'points'                   => $query->row['points'],
-					'tax_class_id'             => $query->row['tax_class_id'],
-					'date_available'           => $query->row['date_available'],
-					'weight'                   => $query->row['weight'],
-					/*	'weight_class'             => $query->row['weight_class'], */
-					'weight_class_id'          => $query->row['weight_class_id'],
-					'length'                   => $query->row['length'],
-					'width'                    => $query->row['width'],
-					'height'                   => $query->row['height'],
-					'length_class_id'          => $query->row['length_class_id'],
-					'pack_weight'              => $query->row['pack_weight'],
-					'pack_weight_class_id'     => $query->row['pack_weight_class_id'],
-					'pack_length'              => $query->row['pack_length'],
-					'pack_width'               => $query->row['pack_width'],
-					'pack_height'              => $query->row['pack_height'],
-					'pack_length_class_id'     => $query->row['pack_length_class_id'],
-					'subtract'                 => $query->row['subtract'],
-					'has_child'                => $query->row['has_child'],
-					'rating'                   => $query->row['rating'] ? round($query->row['rating']): 0,
-					'reviews'                  => $query->row['reviews'] ? $query->row['reviews'] : 0,
-					'minimum'                  => $query->row['minimum'] ? $query->row['minimum']: 1,
-					'sort_order'               => $query->row['sort_order'],
-					'status'                   => $query->row['status'],
-					'date_added'               => $query->row['date_added'],
-					'date_modified'            => $query->row['date_modified'],
-					'viewed'                   => $query->row['viewed'],					
-					'color_group'              => $query->row['color_group'],
-					'bought_for_month'         => $query->row['bought_for_month'],
-					'bought_for_week'          => $query->row['bought_for_week'],
-					'is_option_with_id'        => $query->row['is_option_with_id'],
-					'is_option_for_product_id' => $query->row['is_option_for_product_id'],
-					'youtube'                  => $query->row['youtube'],
-					'additional_offer_count'   => $query->row['additional_offer_count'],
-					'additional_offer_product_id'   	   => $query->row['additional_offer_product_id'],
-					'additional_offer_product' => $additional_offer_product,
-					'alt_image'                => $query->row['alt_image'],
-					'title_image'              => $query->row['title_image'],
-					'yam_price_national'	   => $yam_price,
-					'yam_special_national'	   => $yam_special,
-					'yam_currency'			   => $query->row['yam_currency'],
-					'yam_percent'			   => $query->row['yam_percent'],
-					'yam_special_percent'	   => $query->row['yam_special_percent'],
-					'yam_product_id'		   => $query->row['yam_product_id'],
-					'yam_in_feed'		   	   => $query->row['yam_in_feed'],
-					'yam_disable'		   	   => $query->row['yam_disable'],
-					'is_illiquid'		   	   => $query->row['is_illiquid'],
-					'region_id'				   => $this->config->get('config_googlelocal_code')
-					); 
-										
-					$product_data['reward'] = $this->cart->getCurrentProductReward($product_data);
-					$product_data['stock_text'] = $this->parseProductStockDataOneString($product_data);					
-					$product_data['stock_dates'] = $this->parseProductStockDataOneString($product_data, true);					
+
+					if ($simple == 'simple'){
+
+						$product_data = [
+							'product_id'               => $query->row['product_id'],
+							'price'                    => $price_opt,
+							'mpp_price'                => $mpp_price,
+							'has_rrp'				   => $has_rrp,
+							'price_national'           => $price_national,
+							'display_price_national'   => $display_price_national,
+							'price_recommend'          => $price_recommend,
+							'currency'                 => $query->row['currency'],		
+							'special'                  => $special,
+							'special_date_end'         => $query->row['special_date_end'],
+							'quantity'                 => $query->row['quantity'],							
+							'quantity_stock'           => $query->row['quantity_stock'],
+							'current_in_stock'		   => $this->config->get('config_warehouse_identifier')?($query->row[$this->config->get('config_warehouse_identifier')]>0):false,
+							'current_in_stock_q'	   => $query->row[$this->config->get('config_warehouse_identifier')]
+						];
+
+
+					} else {
+
+						$product_data = [
+							'product_id'               	=> $query->row['product_id'],
+							'new'               	   	=> $new,
+							'stock_product_id'         	=> $query->row['stock_product_id'],					
+							'name'                     	=> $query->row['name'],
+							'variant_name_1'        	=> $query->row['variant_name_1'],
+							'variant_name_2'        	=> $query->row['variant_name_2'],
+							'variant_value_1'        	=> $query->row['variant_value_1'],
+							'variant_value_2'        	=> $query->row['variant_value_2'],
+							'is_certificate'		   	=> (strpos($query->row['location'], 'certificate') !== false),
+							'description'              	=> $query->row['description'],
+							'meta_description'         	=> $query->row['meta_description'],
+							'meta_keyword'             	=> $query->row['meta_keyword'],
+							'seo_h1'                   	=> $query->row['seo_h1'],
+							'seo_title'                	=> $query->row['seo_title'],
+							'tag'                      	=> $query->row['tag'],
+							'color'					   	=> $query->row['color'],
+							'material'				   	=> $query->row['material'],
+							/* MARKDOWN */
+							'markdown_product_id'      	=> $query->row['markdown_product_id'],
+							'is_markdown'              	=> $query->row['is_markdown'],
+							'markdown_appearance'      	=> $query->row['markdown_appearance'],
+							'markdown_condition'       	=> $query->row['markdown_condition'],
+							'markdown_pack'            	=> $query->row['markdown_pack'],
+							'markdown_equipment'       	=> $query->row['markdown_equipment'],
+							/* MARKDOWN */					
+							'variants_count'		   => $query->row['variants_count'],
+							'main_variant_id'		   => $query->row['main_variant_id'],								
+							'set_id'                   => $query->row['set_id'],
+							'model'                    => $query->row['model'],
+							'sku'                      => $query->row['sku'],
+							'upc'                      => $query->row['upc'],
+							'ean'                      => $query->row['ean'],
+							'jan'                      => $query->row['jan'],
+							'isbn'                     => $query->row['isbn'],
+							'mpn'                      => $query->row['mpn'],
+							'location'                 => $query->row['location'],
+							'current_in_stock'		   => $this->config->get('config_warehouse_identifier')?($query->row[$this->config->get('config_warehouse_identifier')]>0):false,
+							'current_in_stock_q'	   => $query->row[$this->config->get('config_warehouse_identifier')],
+							'quantity'                 => $query->row['quantity'],							
+							'quantity_stock'           => $query->row['quantity_stock'],
+							'quantity_stockM'          => $query->row['quantity_stockM'],
+							'quantity_stockK'          => $query->row['quantity_stockK'],
+							'quantity_stockMN'         => $query->row['quantity_stockM'],
+							'quantity_stockAS'         => $query->row['quantity_stockM'],
+							'stock_status'             => $query->row['stock_status'],
+							'stock_status_id'          => $query->row['stock_status_id'],
+							'image'                    => $query->row['image'],
+							'images'                   => $query->row['images'],
+							'main_category_id'         => $query->row['main_category_id'],
+							'categories'			   => $query->row['categories'],
+							'google_category_id'	   => $query->row['google_category_id'],
+							'manufacturer_id'          => $query->row['manufacturer_id'],
+							'collection_id'            => $query->row['collection_id'],
+							'manufacturer'             => $query->row['manufacturer'],
+							'manufacturer_img'         => $query->row['manufacturer_img'],
+							'competitors'              => $query->row['competitors'],
+							'competitors_ua'           => $query->row['competitors_ua'],
+							'price'                    => $price_opt,
+							'mpp_price'                => $mpp_price,
+							'has_rrp'				   => $has_rrp,
+							'price_national'           => $price_national,
+							'display_price_national'   => $display_price_national,
+							'currency'                 => $query->row['currency'],
+							'price_recommend'          => $price_recommend,							
+							'special'                  => $special,
+							'special_date_end'         => $query->row['special_date_end'],
+							'points'                   => $query->row['points'],
+							'tax_class_id'             => $query->row['tax_class_id'],
+							'date_available'           => $query->row['date_available'],
+							'weight'                   => $query->row['weight'],					
+							'weight_class_id'          => $query->row['weight_class_id'],
+							'length'                   => $query->row['length'],
+							'width'                    => $query->row['width'],
+							'height'                   => $query->row['height'],
+							'length_class_id'          => $query->row['length_class_id'],
+							'pack_weight'              => $query->row['pack_weight'],
+							'pack_weight_class_id'     => $query->row['pack_weight_class_id'],
+							'pack_length'              => $query->row['pack_length'],
+							'pack_width'               => $query->row['pack_width'],
+							'pack_height'              => $query->row['pack_height'],
+							'pack_length_class_id'     => $query->row['pack_length_class_id'],
+							'subtract'                 => $query->row['subtract'],
+							'has_child'                => $query->row['has_child'],
+							'rating'                   => $query->row['rating'] ? round($query->row['rating']): 0,
+							'reviews'                  => $query->row['reviews'] ? $query->row['reviews'] : 0,
+							'minimum'                  => $query->row['minimum'] ? $query->row['minimum']: 1,
+							'sort_order'               => $query->row['sort_order'],
+							'status'                   => $query->row['status'],
+							'date_added'               => $query->row['date_added'],
+							'date_modified'            => $query->row['date_modified'],
+							'viewed'                   => $query->row['viewed'],					
+							'color_group'              => $query->row['color_group'],
+							'bought_for_month'         => $query->row['bought_for_month'],
+							'bought_for_week'          => $query->row['bought_for_week'],
+							'is_option_with_id'        => $query->row['is_option_with_id'],
+							'is_option_for_product_id' => $query->row['is_option_for_product_id'],
+							'youtube'                  => $query->row['youtube'],
+							'additional_offer_count'   => $query->row['additional_offer_count'],
+							'additional_offer_product_id' => $query->row['additional_offer_product_id'],
+							'additional_offer_product' => $additional_offer_product,
+							'alt_image'                => $query->row['alt_image'],
+							'title_image'              => $query->row['title_image'],
+							'yam_price_national'	   => $yam_price,
+							'yam_special_national'	   => $yam_special,
+							'yam_currency'			   => $query->row['yam_currency'],
+							'yam_percent'			   => $query->row['yam_percent'],
+							'yam_special_percent'	   => $query->row['yam_special_percent'],
+							'yam_product_id'		   => $query->row['yam_product_id'],
+							'yam_in_feed'		   	   => $query->row['yam_in_feed'],
+							'yam_disable'		   	   => $query->row['yam_disable'],
+							'is_illiquid'		   	   => $query->row['is_illiquid'],
+							'region_id'				   => $this->config->get('config_googlelocal_code')
+						]; 
+
+						if (!$simple || $simple != 'simple'){
+							$product_data['statuses'] 		= $this->model_catalog_product_status->getHTMLProductStatuses($product_id);
+							$product_data['reward'] 		= $this->cart->getCurrentProductReward($product_data);
+							$product_data['stock_text'] 	= $this->parseProductStockDataOneString($product_data);					
+							$product_data['stock_dates'] 	= $this->parseProductStockDataOneString($product_data, true);					
+						}
+					}
 					
 					} else {
 					$product_data = false;
 				}
 				
-				$this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$product_id]), $product_data);
+				$this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$product_id], [$simple]), $product_data);
 			}
 			
 			return $product_data;
@@ -737,8 +764,7 @@
 
 			if (!$this->config->get('config_option_price_enable')){
 				return false;
-			}
-		
+			}	
 			
 			$prices_data = $this->cache->get('product.pricerange.' . (int)$product_id . '.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $this->registry->get('customer_group_id'));
 			
@@ -755,8 +781,8 @@
 				if ($options->num_rows > 1) {
 					$we_have_discount = false;
 					
-					$prices = array();
-					$specials = array();
+					$prices = [];
+					$specials = [];
 					foreach ($options->rows as $index => $option) {
 						if ($product = $this->getProduct($option['this_is_product_id'])) {
 							$prices[$index] = (float)$product['price'];
@@ -764,7 +790,7 @@
 						}
 					}
 					
-					$tmp = array();
+					$tmp = [];
 					//минимальная и максимальная обычная цена у нас есть в любом случае
 					//это мин-макс из массива обычных цен
 					$tmp['price'] = array(
@@ -820,7 +846,7 @@
 						
 						//если такая существует - то глобальная максимальная цена - это она, если нет - это максимальная скидочная, которую мы нашли
 						unset($prices[$max_price_which_has_special_key]);
-						$max_prices = array();
+						$max_prices = [];
 						foreach ($prices as $key => $price) {
 							if ($price > $max_special) {
 								$max_prices[] = $price;
@@ -908,8 +934,7 @@
 			
 			if (!isset($data['return_parent'])) {
 				$data['return_parent'] = false;
-			}
-			
+			}		
 
 			if ($this->config->get('config_warehouse_only')){
 				$default_stock_status = $this->config->get('config_overload_stock_status_id');
@@ -919,19 +944,13 @@
 
 			$sql = "SELECT DISTINCT p.product_id, p.is_option_for_product_id, ";
 
-
 			//Логика переназначения статуса при работе только со склада
-			if ($this->config->get('config_warehouse_only')){			
-				
+			if ($this->config->get('config_warehouse_only')){							
 				$sql .= " IF(p." . $this->config->get('config_warehouse_identifier') . " > 0, " . $this->config->get('config_in_stock_status_id') . ", " . $this->config->get('config_overload_stock_status_id') . ") as stock_status_id, ";
-
 			} else {
-
-
 				$sql .= " IF( (p.quantity_stock + p.quantity_stockK + p.quantity_stockM + p.quantity_stockMN + p.quantity_stockAS) > 0, 
 				IF(p." . $this->config->get('config_warehouse_identifier') . " > 0, " . $this->config->get('config_in_stock_status_id') . ", " . $default_stock_status . "), IF ((SELECT stock_status_id FROM product_stock_status WHERE product_id = p.product_id AND store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0,  (SELECT stock_status_id FROM product_stock_status WHERE product_id = p.product_id AND store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1), p.stock_status_id)
 				) as stock_status_id, ";
-
 			}
 			
 			$sql .= " p.xrating AS rating, (SELECT price FROM product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.quantity = '1' AND price > 0 AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) AND pd2.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, 
@@ -988,7 +1007,7 @@
 				}
 				
 				if (!empty($data['filter_filter'])) {
-					$implode = array();
+					$implode = [];
 					
 					$filters = explode(',', $data['filter_filter']);
 					
@@ -1004,8 +1023,7 @@
 				if (is_array($filter_category_id_intersect = explode(':', $data['filter_category_id_intersect']))){
 					$filter_category_id_intersect = array_map('intval', $filter_category_id_intersect);
 				}
-				
-				
+								
 				if (!empty($filter_category_id_intersect)){
 					if (!empty($data['filter_sub_category_intersect'])) {
 						$sql .= " AND p.product_id IN (SELECT product_id FROM category_path cpi LEFT JOIN product_to_category p2ci ON (cpi.category_id = p2ci.category_id) WHERE cpi.path_id IN (" . implode(',', $filter_category_id_intersect) . "))";
@@ -1023,7 +1041,7 @@
 				$sql .= " AND (";
 				
 				if (!empty($data['filter_name'])) {
-					$implode = array();
+					$implode = [];
 					
 					$words = explode(' ', trim(preg_replace('/\s\s+/', ' ', $data['filter_name'])));
 					
@@ -1216,11 +1234,20 @@
 			}			
 			
 			$query = $this->db->query($sql);
+
+			if (!isset($data['filter_get_product_mode'])) {
+				$simple = false;
+			} elseif ($data['filter_get_product_mode'] == 'simple'){
+				$simple = 'simple';
+			} elseif ($data['filter_get_product_mode'] == 'feed'){
+				$simple = 'feed';
+			}
 			
 			foreach ($query->rows as $result) {
-				if ($data['return_parent'] && $result['is_option_for_product_id'] && $product_data[$result['is_option_for_product_id']] = $this->getProduct($result['is_option_for_product_id'])) {			
+				if ($data['return_parent'] && $result['is_option_for_product_id']) {	
+					$product_data[$result['is_option_for_product_id']] = $this->getProduct($result['is_option_for_product_id'], true, $simple);		
 					} else {
-					$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
+					$product_data[$result['product_id']] = $this->getProduct($result['product_id'], true, $simple);
 				}
 			}			
 			return $product_data;
@@ -1413,7 +1440,7 @@
 				$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 			}
 			
-			$product_data = array();
+			$product_data = [];
 			
 			if (in_array(__FUNCTION__,
 			array('getProducts', 'getTotalProducts', 'getProductSpecials', 'getTotalProductSpecials'))) {
@@ -1465,7 +1492,7 @@
 		}
 		
 		public function getPopularProducts($limit){
-			$product_data = array();
+			$product_data = [];
 			
 			$query = $this->db->query("SELECT p.product_id FROM product p LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p.date_available <= NOW() AND is_markdown = 0 AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ORDER BY p.viewed, p.date_added DESC LIMIT " . (int)$limit);
 			
@@ -1481,7 +1508,7 @@
 			$product_data = $this->cache->get('product.bestseller.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $this->registry->get('customer_group_id') . '.' . (int)$limit);
 			
 			if (!$product_data) {
-				$product_data = array();
+				$product_data = [];
 				
 				$query = $this->db->query("SELECT op.product_id, COUNT(*) AS total FROM order_product op LEFT JOIN `order` o ON (op.order_id = o.order_id) LEFT JOIN `product` p ON (op.product_id = p.product_id) LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) WHERE o.order_status_id > '0' AND p.status = '1' AND p.date_available <= NOW() AND is_markdown = 0 AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' GROUP BY op.product_id ORDER BY total DESC LIMIT " . (int)$limit);
 				
@@ -1498,7 +1525,7 @@
 		
 		public function getBestSellerProductsForCollection($limit, $collection_id, $manufacturer_id = false, $return_ids = false){
 			
-			$product_data = array();
+			$product_data = [];
 			
 			$sql = "SELECT op.product_id, COUNT(*) AS total
 			FROM order_product op 
@@ -1536,7 +1563,7 @@
 		
 		public function getBestSellerProductsForCategoryByTIME($limit, $category_id, $month = 3, $manufacturer_id = false, $return_ids = false){
 			
-			$product_data = array();
+			$product_data = [];
 			
 			$sql = "SELECT op.product_id, COUNT(*) AS total
 			FROM order_product op 
@@ -1577,7 +1604,7 @@
 				
 		public function getBestSellerProductsForCategory($limit, $category_id, $manufacturer_id = false, $return_ids = false){
 			
-			$product_data = array();
+			$product_data = [];
 			
 			$sql = "SELECT op.product_id, COUNT(*) AS total
 			FROM order_product op 
@@ -1617,7 +1644,7 @@
 		
 		public function getBestSellerProductsForManufacturer($limit, $manufacturer_id){
 			
-			$product_data = array();
+			$product_data = [];
 			
 			$query = $this->db->query("SELECT op.product_id, COUNT(*) AS total
 			FROM order_product op 
@@ -1663,7 +1690,7 @@
 				}
 				$query = $this->db->query($sql);
 				
-				$q = array();
+				$q = [];
 				foreach ($query->rows as $row) {
 					$q[] = $row['product_id'];
 				}
@@ -1740,12 +1767,12 @@
 		public function getProductAttributes($product_id){
 			if (!$product_attribute_group_data = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$product_id]))){
 
-				$product_attribute_group_data = array();
+				$product_attribute_group_data = [];
 
 				$product_attribute_group_query = $this->db->query("SELECT ag.attribute_group_id, agd.name FROM product_attribute pa LEFT JOIN attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN attribute_group ag ON (a.attribute_group_id = ag.attribute_group_id) LEFT JOIN attribute_group_description agd ON (ag.attribute_group_id = agd.attribute_group_id) WHERE pa.product_id = '" . (int)$product_id . "' AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY ag.attribute_group_id ORDER BY ag.sort_order, agd.name");
 
 				foreach ($product_attribute_group_query->rows as $product_attribute_group) {
-					$product_attribute_data = array();
+					$product_attribute_data = [];
 
 					$product_attribute_query = $this->db->query("SELECT a.attribute_id, a.sort_order, ad.name, pa.text FROM product_attribute pa LEFT JOIN attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE pa.product_id = '" . (int)$product_id . "' AND a.attribute_group_id = '" . (int)$product_attribute_group['attribute_group_id'] . "' AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pa.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY a.sort_order, ad.name");
 
@@ -1786,13 +1813,13 @@
 		}
 		
 		public function getProductOptions($product_id){
-			$product_option_data = array();
+			$product_option_data = [];
 			
 			$product_option_query = $this->db->query("SELECT * FROM product_option po LEFT JOIN `option` o ON (po.option_id = o.option_id) LEFT JOIN option_description od ON (o.option_id = od.option_id) WHERE po.product_id = '" . (int)$product_id . "' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.sort_order");
 			
 			foreach ($product_option_query->rows as $product_option) {
 				if ($product_option['type'] == 'select' || $product_option['type'] == 'block' || $product_option['type'] == 'radio' || $product_option['type'] == 'checkbox' || $product_option['type'] == 'image') {
-					$product_option_value_data = array();
+					$product_option_value_data = [];
 					
 					$product_option_value_query = $this->db->query("SELECT * FROM product_option_value pov LEFT JOIN option_value ov ON (pov.option_value_id = ov.option_value_id) LEFT JOIN option_value_description ovd ON (ov.option_value_id = ovd.option_value_id) WHERE pov.product_id = '" . (int)$product_id . "' AND pov.product_option_id = '" . (int)$product_option['product_option_id'] . "' AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY ov.sort_order");
 					
@@ -1840,7 +1867,7 @@
 		}
 		
 		public function getProductProductOptions($product_id){
-			$product_option_data = array();
+			$product_option_data = [];
 			
 			$product_option_query = $this->db->query("SELECT * FROM product_product_option ppo
 			LEFT JOIN category_description cd
@@ -1852,7 +1879,7 @@
 			
 			foreach ($product_option_query->rows as $product_option) {
 				
-				$product_option_value_data = array();
+				$product_option_value_data = [];
 				
 				$product_option_value_query = $this->db->query("SELECT * FROM product_product_option_value ppov
 				LEFT JOIN product p ON (ppov.product_option_id = p.product_id)
@@ -1949,7 +1976,7 @@
 		}		
 		
 		public function getProductRelated($product_id){
-			$product_data = array();
+			$product_data = [];
 			
 			$sql = "SELECT * FROM product_related pr 
 				LEFT JOIN product p ON (pr.related_id = p.product_id) 
@@ -1979,7 +2006,7 @@
 		}
 
 		public function getProductSimilar($product_id){
-			$product_data = array();
+			$product_data = [];
 			
 			$sql = "SELECT * FROM product_similar ps 
 				LEFT JOIN product p ON (ps.similar_id = p.product_id) 
@@ -2012,7 +2039,7 @@
 		}
 
 		public function getProductSponsored($product_id){
-			$product_data = array();
+			$product_data = [];
 			
 			$sql = "SELECT * FROM product_sponsored ps 
 				LEFT JOIN product p ON (ps.sponsored_id = p.product_id) 
@@ -2045,7 +2072,7 @@
 		}
 		
 		public function getSimilarProductsByName($product_name, $product_id, $limit, $in_stock = false, $recursive_results = array()){
-			$product_data = array();					
+			$product_data = [];					
 			
 			$sql = "SELECT DISTINCT pd.product_id FROM product_description pd 
 			LEFT JOIN product p ON (pd.product_id = p.product_id) 
@@ -2059,7 +2086,7 @@
 			AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
 			
 			if ($recursive_results){
-				$_pids = array();
+				$_pids = [];
 				foreach($recursive_results as $__rritem){
 					$_pids[] = (int)$__rritem['product_id'];
 				}	
@@ -2102,7 +2129,7 @@
 		public function guessSameProducts($product_name, $product_id, $limit, $in_stock = false){							
 			$exploded = explode(' ', $product_name);
 			
-			$results = array();
+			$results = [];
 			
 			//Попытка получить по четырем словам
 			if (isset($exploded[0]) && isset($exploded[1]) && isset($exploded[2]) && isset($exploded[3])){
@@ -2134,7 +2161,7 @@
 		}
 		
 		public function getProductChild($product_id){
-			$product_data = array();
+			$product_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product_child pr LEFT JOIN product p ON (pr.child_id = p.product_id) LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pr.product_id = '" . (int)$product_id . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'");
 			
@@ -2146,7 +2173,7 @@
 		}
 						
 		public function getProductColourGroupRelated($color_group, $product_id){
-			$product_data = array();
+			$product_data = [];
 			
 			$query = $this->db->query("SELECT DISTINCT p.product_id FROM product p LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) WHERE color_group = '" . $this->db->escape($color_group) . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'");
 			
@@ -2243,7 +2270,7 @@
 				}
 				
 				if (!empty($data['filter_filter'])) {
-					$implode = array();
+					$implode = [];
 					
 					$filters = explode(',', $data['filter_filter']);
 					
@@ -2263,7 +2290,7 @@
 				$sql .= " AND (";
 				
 				if (!empty($data['filter_name'])) {
-					$implode = array();
+					$implode = [];
 					
 					$words = explode(' ', trim(preg_replace('/\s\s+/', ' ', $data['filter_name'])));
 					
@@ -2470,7 +2497,7 @@
 		}
 		
 		public function getProductMarkdowns($product_id) {
-			$product_markdown_data = array();
+			$product_markdown_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product p
 			LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
@@ -2485,7 +2512,7 @@
 		}
 		
 		public function getProductCategories($product_id) {
-			$product_category_data = array();
+			$product_category_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product_to_category WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -2497,7 +2524,7 @@
 		}
 		
 		public function getProductAttributesByLanguage($product_id, $language_id) {
-			$attributes = array();
+			$attributes = [];
 			
 			$query = $this->db->query("SELECT attribute_id, text FROM product_attribute WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
 			
@@ -2509,7 +2536,7 @@
 		}
 		
 		public function getProductAttributesNamesValuesByLanguage($product_id, $language_id) {
-			$attributes = array();
+			$attributes = [];
 			
 			$query = $this->db->query("SELECT a.attribute_group_id, ad.name, pa.attribute_id, pa.text FROM product_attribute pa LEFT JOIN attribute_description ad ON (pa.attribute_id = ad.attribute_id) LEFT JOIN attribute a ON (ad.attribute_id = a.attribute_id) WHERE pa.product_id = '" . (int)$product_id . "' AND pa.language_id = '" . (int)$language_id . "' AND ad.language_id = '" . (int)$language_id . "' ORDER BY ad.name");
 			
@@ -2555,7 +2582,7 @@
 			
 			$query = $this->db->query($sql);
 			
-			$result = array();
+			$result = [];
 			foreach ($query->rows as $row){
 				$result[] = $row['product_id'];
 			}
@@ -2577,7 +2604,7 @@
 			
 			if ($type_pr == 1) {
 				
-				$product_data = array();
+				$product_data = [];
 				
 				$query = $this->db->query("SELECT * FROM product_to_category WHERE category_id = '" . (int)$this->config->get('config_parent_id') . "'");
 				
@@ -2589,7 +2616,7 @@
 				
 				} elseif ($type_pr == 2) {
 				
-				$product_data = array();
+				$product_data = [];
 				
 				$query = $this->db->query("SELECT p.product_id FROM product p LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) WHERE p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ORDER BY p.viewed, p.date_added DESC LIMIT 50");
 				
@@ -2641,7 +2668,7 @@
 					$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 				}
 				
-				$product_data = array();
+				$product_data = [];
 				
 				$query = $this->db->query($sql);
 				
@@ -2656,7 +2683,7 @@
 				$product_data = $this->cache->get('product.bestseller.' . (int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id') . '.' . $this->registry->get('customer_group_id') . '.' . '50');
 				
 				if (!$product_data) {
-					$product_data = array();
+					$product_data = [];
 					
 					$query = $this->db->query("SELECT op.product_id, COUNT(*) AS total FROM order_product op LEFT JOIN `order` o ON (op.order_id = o.order_id) LEFT JOIN `product` p ON (op.product_id = p.product_id) LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) WHERE o.order_status_id > '0' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' GROUP BY op.product_id ORDER BY total DESC LIMIT 50");
 					
@@ -2817,7 +2844,7 @@
 			
 			$this->load->model('tool/image');
 			
-			$colors = array();
+			$colors = [];
 			
 			$results = $this->getColorGroupedProducts($product_id, $color_group);
 			
@@ -2850,11 +2877,11 @@
 			
 			$all_options = $this->getProductOptions($product_id);
 			
-			$options = array();
+			$options = [];
 			
 			foreach ($all_options as $option) {
 				if ($option['type'] == 'select' || $option['type'] == 'block' || $option['type'] == 'radio' || $option['type'] == 'checkbox' || $option['type'] == 'image') {
-					$option_value_data = array();
+					$option_value_data = [];
 					
 					foreach ($option['option_value'] as $option_value) {
 						if (!$option_value['subtract'] || ($option_value['quantity'] > 0)) {
@@ -2906,12 +2933,12 @@
 		}
 	
 		public function getProductAttributesByGroupId($product_id, $a_group_id){
-			$product_attribute_group_data = array();
+			$product_attribute_group_data = [];
 			
 			$product_attribute_group_query = $this->db->query("SELECT ag.attribute_group_id, agd.name FROM product_attribute pa LEFT JOIN attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN attribute_group ag ON (a.attribute_group_id = ag.attribute_group_id) LEFT JOIN attribute_group_description agd ON (ag.attribute_group_id = agd.attribute_group_id) WHERE pa.product_id = '" . (int)$product_id . "' AND ag.attribute_group_id = '" . (int)$a_group_id . "' AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY ag.attribute_group_id ORDER BY ag.sort_order, agd.name");
 			
 			foreach ($product_attribute_group_query->rows as $product_attribute_group) {
-				$product_attribute_data = array();
+				$product_attribute_data = [];
 				
 				$product_attribute_query = $this->db->query("SELECT a.attribute_id, ad.name, pa.text FROM product_attribute pa LEFT JOIN attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE pa.product_id = '" . (int)$product_id . "' AND a.attribute_group_id = '" . (int)$product_attribute_group['attribute_group_id'] . "' AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pa.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY a.sort_order, ad.name");
 				
@@ -3078,7 +3105,7 @@
 		public function parseProductStockData($result){
 			
 			//НАЛИЧИЕ 
-			$stock_data = array();
+			$stock_data = [];
 			if ($result[$this->config->get('config_warehouse_identifier')]) {
 				
 				if (in_array($this->config->get('config_store_id'),array(0, 1))){			
