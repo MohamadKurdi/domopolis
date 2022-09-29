@@ -117,38 +117,37 @@ class ControllerModuleViewed extends Controller {
 					$productIDS = array_slice($productIDS, 0, (int)$setting['limit']);
 
 					$products = $this->model_catalog_product->getProductsByIDS($productIDS);
+				}
 
-					if ($products){
-					//nothing
-					} else {				
-						if (!empty($this->config->get('blockviewed_empty_type_' . $idx))){
-							if ($this->config->get('blockviewed_empty_type_' . $idx) == 'top-viewed'){
+				if (!$products) {				
+					if (!empty($this->config->get('blockviewed_empty_type_' . $idx))){
+						if ($this->config->get('blockviewed_empty_type_' . $idx) == 'top-viewed'){
 
-								$filter_data = [								
-									'sort'                => 'p.viewed',
-									'order'               => 'DESC',
-									'start'               => 0,
-									'limit'               => $setting['limit']
-								];
+							$filter_data = [								
+								'sort'                => 'p.viewed',
+								'order'               => 'DESC',
+								'start'               => 0,
+								'limit'               => $setting['limit']
+							];
 
-								$products = $this->model_catalog_product->getProducts($filter_data);
-								
+							$products = $this->model_catalog_product->getProducts($filter_data);
+							
 
-							} elseif($this->config->get('blockviewed_empty_type_' . $idx) == 'new') {
+						} elseif($this->config->get('blockviewed_empty_type_' . $idx) == 'new') {
 
-								$filter_data = [								
-									'sort'                => 'p.date_added',
-									'order'               => 'DESC',
-									'start'               => 0,
-									'limit'               => $setting['limit']
-								];
+							$filter_data = [								
+								'sort'                => 'p.date_added',
+								'order'               => 'DESC',
+								'start'               => 0,
+								'limit'               => $setting['limit']
+							];
 
-								$products = $this->model_catalog_product->getProducts($filter_data);
-							}
-
+							$products = $this->model_catalog_product->getProducts($filter_data);
 						}
+
 					}
 				}
+
 
 				if (!$products){
 					continue;
