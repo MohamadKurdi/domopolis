@@ -6,8 +6,8 @@ Requirements
 ------------
 
 *   PHP >= 7.4.0
-?   Ioncube Loader, if you want to use encoded modules
-?   Licenses for encoded modules, it you want to use them
+*   Ioncube Loader, if you want to use encoded modules
+*   Licenses for encoded modules, it you want to use them
 
 Composer
 ------------
