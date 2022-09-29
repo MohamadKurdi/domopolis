@@ -754,6 +754,10 @@
 					} else {
 					$data['payment_code'] = '';
 				}
+
+				$data['payment_secondary_method'] = '';
+				$data['payment_secondary_code'] = '';
+				$data['postcode'] = '';
 				
 				$data['shipping_firstname'] = '';
 				$data['shipping_lastname'] = '';
@@ -767,7 +771,7 @@
 				$data['shipping_zone_id'] = '';
 				$data['shipping_address_format'] = '';
 				$data['shipping_method'] = '';
-				$data['shipping_code'] = '';
+				$data['shipping_code'] = '';				
 				$data['comment'] = '';
 				$data['total'] = '';
 				$data['total_national'] = '';
@@ -871,6 +875,8 @@
 					'tax'               => $this->tax->getTax($product['price'], $product['tax_class_id']),
 					'reward'            => $product['reward'],
 					'ao_id'             => 0,
+					'ao_product_id'		=> 0,
+					'from_stock'		=> false,
 					'price_national'    => $price_national,
 					'total_national'    => $price_national * $product['quantity'],
 					'set'               => 0

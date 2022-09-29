@@ -7,13 +7,6 @@
 				return $double_order_id;
 			}
 			
-			if ( $_SERVER['REMOTE_ADDR'] == '185.41.249.2011'){
-				print('<pre>');
-				print_r($data);
-				print('</pre>');
-				die();
-			}
-			
 			//Перегрузка simple-полей в поля заказа
 			
 			//1. Доставка курьером по городам Киев, МСК, Минск, НурСултан
@@ -330,15 +323,10 @@
 				}
 			}
 
-			//Постановка в очередь для получения цен Amazon
-
 			//Настройка "получать офферы после заказа"
 			if ($this->config->get('config_rainforest_enable_offers_after_order')){
-				if ($this->registry->get('rainforestAmazon')->offersParser->checkIfWeCanUpdateProductOffers($product_id)){
-					$this->db->query("INSERT IGNORE INTO amzn_product_queue SET asin = '" . $this->db->escape($product_query->row['asin']) . "'");
-				}			
+				$this->db->query("INSERT IGNORE INTO amzn_product_queue SET asin = '" . $this->db->escape($product_query->row['asin']) . "'");				
 			}
-
 			
 			//Резервирование товара
 			$this->db->query("UPDATE product SET `" . $this->config->get('config_warehouse_identifier') . "` = (`" . $this->config->get('config_warehouse_identifier') . "` - ". (int)$product['quantity'] .") WHERE product_id = '" . (int)$product['product_id'] . "' AND `" . $this->config->get('config_warehouse_identifier') . "` > 0");
