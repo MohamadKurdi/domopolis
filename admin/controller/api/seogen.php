@@ -101,8 +101,6 @@
 					
 					echo 'START LANGUAGE ' . $language['code'] . ' AND SHOP '. $store_id . PHP_EOL;
 					
-					
-					//collections
 					echo '-- START BLOGS'.PHP_EOL;
 					$news_url_exists_query = $this->db->query("SELECT query, keyword FROM url_alias WHERE query LIKE 'news_id=%' AND language_id = '". $language_id ."'");
 					
@@ -124,9 +122,9 @@
 					unset($row);
 					foreach ($all_news_query->rows as $row){				
 						if (!isset($cae[$row['news_id']])){
-							//now urlify
 							$keyword = URLify::filter($this->rms($row['title']), 80, $language['code']);
-							//check for duplicate
+							
+
 							if (in_array($keyword, $cae)){						
 								$keyword = substr(md5(time()), 0, 3).'-'.(int)$row['news_id'].'-'.$keyword;
 								echo '---- NEWS '.$row['news_id'].' : '.$row['title'].' NEW KEY: ' . $keyword . PHP_EOL;
@@ -210,10 +208,13 @@
 					
 					unset($row);
 					foreach ($all_manufacturers_query->rows as $row){				
-						if (!isset($cae[$row['manufacturer_id']])){
-							//now urlify
-							$keyword = URLify::filter($this->rms($row['name']), 80, $language['code']);
-							//check for duplicate
+						if (!isset($cae[$row['manufacturer_id']])){						
+							if ($this->config->get('config_seo_url_from_id')){
+								$keyword = URLify::filter($this->rms('m' . $row['manufacturer_id']), 80, $language['code']);
+							} else {
+								$keyword = URLify::filter($this->rms($row['name']), 80, $language['code']);
+							}
+
 							if (in_array($keyword, $cae)){						
 								$keyword = substr(md5(time()), 0, 3).'-'.(int)$row['manufacturer_id'].'-'.$keyword;
 								echo '---- MAN '.$row['manufacturer_id'].' : '.$row['name'].' NEW KEY: ' . $keyword . PHP_EOL;
@@ -230,7 +231,7 @@
 						}
 					}
 					
-					
+					die();
 					
 					//informations
 					echo '-- START INFORMATIONS'.PHP_EOL;
@@ -419,7 +420,13 @@
 					foreach ($all_collection_query->rows as $row){				
 						if (!isset($cae[$row['collection_id']])){
 							//now urlify
-							$keyword = URLify::filter($this->rms($row['name']), 80, $language['code']);
+							if ($this->config->get('config_seo_url_from_id')){
+								$keyword = URLify::filter($this->rms('co' . $row['collection_id']), 80, $language['code']);
+							} else {
+								$keyword = URLify::filter($this->rms($row['name']), 80, $language['code']);
+							}
+
+
 							//check for duplicate
 							if (in_array($keyword, $cae)){						
 								$keyword = substr(md5(time()), 0, 3).'-'.(int)$row['collection_id'].'-'.$keyword;
