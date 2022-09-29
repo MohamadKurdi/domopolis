@@ -1,0 +1,77 @@
+<?php
+// Heading
+$_['heading_title']             = 'Способ оплаты';
+
+// Text
+$_['text_account']              = 'Кабинет Партнера';
+$_['text_payment']              = 'Оплата';
+$_['text_your_payment']         = 'Ваши перечисления';
+$_['text_your_password']        = 'Пароль';
+$_['text_cheque']               = 'Чек';
+$_['text_paypal']               = 'PayPal';
+$_['text_bank']                 = 'Банковский перевод';
+$_['text_success']              = 'Учетные данные Партнера успешно обновлены.';
+$_['text_bonus'] = 'Оплата бонусами';
+$_['text_qiwi']                 = 'QIWI Кошелек';
+$_['text_card']                 = 'VISA/MasterCard';
+$_['text_yandex']               = 'Яндекс.Деньги';
+$_['text_webmoney']             = 'Webmoney WMR';
+$_['text_webmoneyWMZ']             = 'Webmoney WMZ';
+$_['text_webmoneyWMU']             = 'Webmoney WMU';
+$_['text_webmoneyWME']             = 'Webmoney WME';
+$_['text_webmoneyWMY']             = 'Webmoney WMY';
+$_['text_webmoneyWMB']             = 'Webmoney WMB';
+$_['text_webmoneyWMG']             = 'Webmoney WMG';
+$_['text_AlertPay']             = 'AlertPay';
+$_['text_Moneybookers']         = 'Moneybookers';
+$_['text_LIQPAY']               = 'LIQPAY';
+$_['text_SagePay']              = 'SagePay';
+$_['text_twoCheckout']          = '2Checkout';
+$_['text_GoogleWallet']         = 'GoogleWallet';
+$_['entry_AlertPay']            = 'AlertPay:';
+$_['entry_Moneybookers']        = 'Moneybookers:';
+$_['entry_LIQPAY']              = 'Номер LIQPAY:';
+$_['entry_SagePay']             = 'SagePay:';
+$_['entry_twoCheckout']         = '2Checkout:';
+$_['entry_GoogleWallet']        = 'GoogleWallet:';
+$_['entry_qiwi']                = 'Номер QIWI Кошелека:';
+$_['entry_card']                = 'Номер карты VISA или MasterCard:';
+$_['entry_yandex']              = 'Номер кошелька Яндекс.Деньги:';
+$_['entry_webmoney']            = 'Номер кошелька WMR:';
+$_['entry_webmoneyWMZ']            = 'Номер кошелька WMZ:';
+$_['entry_webmoneyWMU']            = 'Номер кошелька WMU:';
+$_['entry_webmoneyWME']            = 'Номер кошелька WME:';
+$_['entry_webmoneyWMY']            = 'Номер кошелька WMY:';
+$_['entry_webmoneyWMB']            = 'Номер кошелька WMB:';
+$_['entry_webmoneyWMG']            = 'Номер кошелька WMG:';
+$_['title_qiwi']                = 'Например: 9179386644';
+$_['title_card']                = 'Например: <br>0000-0000-0000-0000<br>0000-0000-0000-0<br>0000-0000-0000-0000-000';
+$_['title_yandex']              = 'Например: 410011687527103';
+$_['title_webmoney']            = 'Например: R853627838893';
+$_['title_webmoneyWMZ']            = 'Например: Z853627838893';
+$_['title_webmoneyWMU']            = 'Например: U853627838893';
+$_['title_webmoneyWME']            = 'Например: E853627838893';
+$_['title_webmoneyWMY']            = 'Например: Y853627838893';
+$_['title_webmoneyWMB']            = 'Например: B853627838893';
+$_['title_webmoneyWMG']            = 'Например: G853627838893';
+$_['error_qiwi']    = 'Пожалуйста введите 10 значный номер';
+$_['error_card']    = 'Пожалуйста соблюдайте формат как показано в примере';
+$_['error_yandex']    = 'Пожалуйста введите корректные значения';
+$_['error_webmoney']    = 'Пожалуйста введите корректные значения';
+$_['error_webmoneyWMZ']    = 'Пожалуйста введите корректные значения';
+$_['error_webmoneyWMU']    = 'Пожалуйста введите корректные значения';
+$_['error_webmoneyWME']    = 'Пожалуйста введите корректные значения';
+$_['error_webmoneyWMY']    = 'Пожалуйста введите корректные значения';
+$_['error_webmoneyWMB']    = 'Пожалуйста введите корректные значения';
+$_['error_webmoneyWMG']    = 'Пожалуйста введите корректные значения';
+// Entry
+$_['entry_tax']                 = 'Налоговый код:';
+$_['entry_payment']             = 'Способ оплаты:';
+$_['entry_cheque']              = 'Чек, Имя получателя платежа:';
+$_['entry_paypal']              = 'PayPal Email аккаунт:';
+$_['entry_bank_name']           = 'Название банка:';
+$_['entry_bank_branch_number']  = 'ABA/BSB номер (номер отделения):';
+$_['entry_bank_swift_code']     = 'SWIFT код:';
+$_['entry_bank_account_name']   = 'Название счёта:';
+$_['entry_bank_account_number'] = 'Номер счёта:';
+?>

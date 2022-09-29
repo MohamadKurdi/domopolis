@@ -1,0 +1,23 @@
+<?
+$_['text_retranslate_1'] = 'Выбрать все';
+$_['text_retranslate_2'] = 'Удалить выбранное';
+$_['text_retranslate_3'] = 'Переместить в список желаний';
+$_['text_retranslate_4'] = 'Удалить без сохранения';
+$_['text_retranslate_5'] = 'Отмена';
+$_['text_retranslate_6'] = 'Изображение';
+$_['text_retranslate_7'] = 'Наименование';
+$_['text_retranslate_8'] = 'Цена';
+$_['text_retranslate_9'] = 'Количество';
+$_['text_retranslate_10'] = 'Всего';
+$_['text_retranslate_11'] = 'Подарок!';
+$_['text_retranslate_12'] = 'Спецпредложение!';
+$_['text_retranslate_13'] = 'Артикул: ';
+$_['text_retranslate_14'] = 'Есть промокод?';
+$_['text_retranslate_15'] = 'применить';
+$_['text_retranslate_16'] = 'Изменить промокод';
+$_['text_retranslate_17'] = 'Продолжить покупки';
+$_['text_retranslate_18'] = 'Быстрый заказ';
+$_['text_retranslate_19'] = 'Оформить заказ';
+$_['text_retranslate_20'] = 'Ваша корзина пуста';
+$_['text_retranslate_21'] = 'Сохранить заказ';
+$_['text_retranslate_term_5_7'] = '5-7 дней';
