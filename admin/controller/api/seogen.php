@@ -2,41 +2,7 @@
 	
 	class ControllerApiSeogen extends Controller {
 		
-		private $error = array();
-		
-		private function rms($st)
-		{
-			$st = str_replace(',','',$st);
-			$st = str_replace('’','',$st);
-			$st = str_replace(' ','-',$st);
-			$st = str_replace('"','',$st);
-			$st = str_replace(')','',$st);
-			$st = str_replace('(','',$st);
-			$st = str_replace('.','',$st);
-			$st = str_replace('+','',$st);
-			$st = str_replace('*','',$st);
-			$st = str_replace('“','',$st);
-			$st = str_replace('”','',$st);
-			$st = str_replace('&quot;','-',$st);
-			$st = str_replace('&amp;','-and-',$st);
-			$st = str_replace('&','-and-',$st);
-			$st = str_replace('«','',$st);
-			$st = str_replace('»','',$st);
-			$st = str_replace('.','',$st);
-			$st = str_replace('/','-',$st);
-			$st = str_replace('\\','-',$st);
-			$st = str_replace('%','-',$st);
-			$st = str_replace('№','-',$st);
-			$st = str_replace('#','-',$st);
-			$st = str_replace('_','-',$st);
-			$st = str_replace('–','-',$st);
-			$st = str_replace('---','-',$st);
-			$st = str_replace('--','-',$st);
-			$st = str_replace('\'','',$st);
-			$st = str_replace('!','',$st);
-			$st = str_replace('O','',$st);
-			return $st;
-		}
+		private $error = array();	
 
 		public function fullcron(){
 
@@ -122,7 +88,7 @@
 					unset($row);
 					foreach ($all_news_query->rows as $row){				
 						if (!isset($cae[$row['news_id']])){
-							$keyword = URLify::filter($this->rms($row['title']), 80, $language['code']);
+							$keyword = URLify::filter(simple_rms($row['title']), 80, $language['code']);
 							
 
 							if (in_array($keyword, $cae)){						
@@ -165,9 +131,9 @@
 						if (!isset($cae[$row['category_id']])){
 							//now urlify
 							if ($this->config->get('config_seo_url_from_id')){
-								$keyword = URLify::filter($this->rms('c' . $row['category_id']), 80, $language['code']);
+								$keyword = URLify::filter(simple_rms('c' . $row['category_id']), 80, $language['code']);
 							} else {
-								$keyword = URLify::filter($this->rms($row['name']), 80, $language['code']);
+								$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
 							}
 
 							//check for duplicate
@@ -210,9 +176,9 @@
 					foreach ($all_manufacturers_query->rows as $row){				
 						if (!isset($cae[$row['manufacturer_id']])){						
 							if ($this->config->get('config_seo_url_from_id')){
-								$keyword = URLify::filter($this->rms('m' . $row['manufacturer_id']), 80, $language['code']);
+								$keyword = URLify::filter(simple_rms('m' . $row['manufacturer_id']), 80, $language['code']);
 							} else {
-								$keyword = URLify::filter($this->rms($row['name']), 80, $language['code']);
+								$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
 							}
 
 							if (in_array($keyword, $cae)){						
@@ -230,8 +196,6 @@
 							echo '---- MAN '.$row['name'].' EXISTS!'.PHP_EOL;
 						}
 					}
-					
-					die();
 					
 					//informations
 					echo '-- START INFORMATIONS'.PHP_EOL;
@@ -257,7 +221,7 @@
 					foreach ($all_informations_query->rows as $row){				
 						if (!isset($cae[$row['information_id']])){
 							//now urlify
-							$keyword = URLify::filter($this->rms($row['name']), 80, $language['code']);
+							$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
 							//check for duplicate
 							if (in_array($keyword, $cae)){						
 								$keyword = substr(md5(time()), 0, 3).'-'.(int)$row['information_id'].'-'.$keyword;
@@ -299,7 +263,7 @@
 					foreach ($all_landingpages_query->rows as $row){				
 						if (!isset($cae[$row['landingpage_id']])){
 							//now urlify
-							$keyword = URLify::filter($this->rms($row['name']), 80, $language['code']);
+							$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
 							//check for duplicate
 							if (in_array($keyword, $cae)){						
 								$keyword = substr(md5(time()), 0, 3).'-'.(int)$row['landingpage_id'].'-'.$keyword;
@@ -341,7 +305,7 @@
 					foreach ($all_informations_query->rows as $row){				
 						if (!isset($cae[$row['information_attribute_id']])){
 							//now urlify
-							$keyword = URLify::filter($this->rms($row['name']), 80, $language['code']);
+							$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
 							//check for duplicate
 							if (in_array($keyword, $cae)){						
 								$keyword = substr(md5(time()), 0, 3).'-'.(int)$row['information_attribute_id'].'-'.$keyword;
@@ -381,7 +345,7 @@
 					foreach ($all_actions_query->rows as $row){				
 						if (!isset($cae[$row['actions_id']])){
 							//now urlify
-							$keyword = URLify::filter($row['actions_id'].'-'.$this->rms($row['caption']), 80, $language['code']);
+							$keyword = URLify::filter($row['actions_id'].'-'.simple_rms($row['caption']), 80, $language['code']);
 							//check for duplicate
 							if (in_array($keyword, $cae)){						
 								$keyword = substr(md5(time()), 0, 3).'-'.(int)$row['actions_id'].'-'.$keyword;
@@ -421,9 +385,9 @@
 						if (!isset($cae[$row['collection_id']])){
 							//now urlify
 							if ($this->config->get('config_seo_url_from_id')){
-								$keyword = URLify::filter($this->rms('co' . $row['collection_id']), 80, $language['code']);
+								$keyword = URLify::filter(simple_rms('co' . $row['collection_id']), 80, $language['code']);
 							} else {
-								$keyword = URLify::filter($this->rms($row['name']), 80, $language['code']);
+								$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
 							}
 
 
@@ -469,9 +433,9 @@
 						if (!isset($cae[$row['product_id']])){
 							//now urlify
 							if ($this->config->get('config_seo_url_from_id')){
-								$keyword = URLify::filter($this->rms('p' . $row['product_id']), 80, $language['code']);
+								$keyword = URLify::filter(simple_rms('p' . $row['product_id']), 80, $language['code']);
 							} else {
-								$keyword = URLify::filter($this->rms($row['name']), 80, $language['code']);
+								$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
 							}
 
 							//check for duplicate

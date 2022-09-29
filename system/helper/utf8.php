@@ -88,6 +88,7 @@ function simple_rm1($st){
 	return $st;	
 }	
 
+
 function simple_rms($st){
 	$st = str_replace(',','',$st);
 	$st = str_replace('’','',$st);
