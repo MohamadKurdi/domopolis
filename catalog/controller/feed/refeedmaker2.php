@@ -92,8 +92,6 @@ class ControllerFeedReFeedMaker2 extends Controller
         $text = html_entity_decode($text);
         $text = str_replace('&nbsp;', ' ', $text);
         $text = str_replace('&amp;', '&', $text);
-            //$text = str_replace(' & ', ' and ', $text);
-            //$text = str_replace('&', ' and ', $text);
         $text = preg_replace("/&#?[a-z0-9]{2,8};/i", "", $text);
 
         return $text;
@@ -417,30 +415,38 @@ class ControllerFeedReFeedMaker2 extends Controller
                             $file = DIR_REFEEDS . 'supplemental_feed_' . $store_id . '_' . $i . '.xml';
                         }
 
-                        $filter = array(
-                            'start'                 => ($i-1)*$this->config->get('config_google_merchant_feed_limit'),
-                            'limit'                 => $this->config->get('config_google_merchant_feed_limit'),
-                            'filter_status'         => true,
-                            'filter_not_bad'        => true,
-                            'filter_exclude_certs'  => true,
-                            'filter_with_variants'  => true
-                        );
+                        $totalGet = ceil($this->config->get('config_google_merchant_feed_limit')/$this->config->get('config_google_merchant_one_iteration_limit'));
+                        for ($iGet = 1; $iGet <= $totalGet; $iGet++) {
 
-                        echoLine('[supplemental] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . ($filter['start']) . ' по ' . ($i*$filter['limit']));
-                        echoLine('[supplemental] Файл ' . $file);
+                            $filter = array(
+                                'start'                     => ($i-1)*$this->config->get('config_google_merchant_feed_limit') + ($iGet-1)*$this->config->get('config_google_merchant_one_iteration_limit'),
+                                'limit'                     => $this->config->get('config_google_merchant_one_iteration_limit'),
+                                'filter_status'             => true,
+                                'filter_not_bad'            => true,
+                                'filter_exclude_certs'      => true,
+                                'filter_with_variants'      => true,
+                                'filter_get_product_mode'   => 'simple'
+                            );
 
-                        $products = $this->model_catalog_product->getProducts($filter);
-                        $k = 0;
-                        foreach ($products as $product) {
-                            $output .= $this->printItemFast($product, $changeID);
-                            if ($k % 100 == 0) {
-                                echo $k . '..';
+                            echoLine('[supplemental] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . ($filter['start']) . ' по ' . ($filter['start'] + $filter['limit']));                           
+                            $products = $this->model_catalog_product->getProducts($filter);
+                            if (!$products){
+                                break;
                             }
-                            $k++;
+
+                            $k = 0;
+                            foreach ($products as $product) {
+                                $output .= $this->printItemFast($product, $changeID);
+                                if ($k % 10 == 0) {   echo $k . '..'; }
+                                $k++;
+                            }
+
+                            echoLine('');
                         }
 
-                        $output .= $this->closeXML();
+                        echoLine('[supplemental] Файл ' . $file);
 
+                        $output .= $this->closeXML();
                         file_put_contents($file, $output);
 
                         echoLine('');
@@ -448,7 +454,7 @@ class ControllerFeedReFeedMaker2 extends Controller
                         echoLine('[supplemental] собираем мусор, освобождаем память ' . convertSize(memory_get_usage(true)));
                         gc_collect_cycles();
 
-                        echoLine('[supplemental] Времени на итерацию ' . $timer->getTime() . ' сек.');
+                        echoLine('[supplemental] времени на итерацию ' . $timer->getTime() . ' сек.');
                         unset($timer);
                     }
                 }
@@ -523,30 +529,34 @@ class ControllerFeedReFeedMaker2 extends Controller
                     $file = str_replace('remarketing_full_feed_', 'merchant_stock_feed_', $file);
                 }
 
-                $filter = array(
-                    'start'                 => ($i-1)*$this->config->get('config_google_merchant_feed_limit'),
-                    'limit'                 => $this->config->get('config_google_merchant_feed_limit'),
-                    'filter_status'         => true,
-                    'filter_not_bad'        => true,
-                    'filter_exclude_certs'  => true,
-                    'filter_with_variants'  => true
-                );
+                $totalGet = ceil($this->config->get('config_google_merchant_feed_limit')/$this->config->get('config_google_merchant_one_iteration_limit'));
+                for ($iGet = 1; $iGet <= $totalGet; $iGet++) {
 
-                echoLine('[makefeed] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . ($filter['start']) . ' по ' . ($i*$filter['limit']));
-                echoLine('[makefeed] Файл ' . $file);
+                    $filter = array(
+                        'start'                     => ($i-1)*$this->config->get('config_google_merchant_feed_limit') + ($iGet-1)*$this->config->get('config_google_merchant_one_iteration_limit'),
+                        'limit'                     => $this->config->get('config_google_merchant_one_iteration_limit'),
+                        'filter_status'             => true,
+                        'filter_not_bad'            => true,
+                        'filter_exclude_certs'      => true,
+                        'filter_with_variants'      => true,
+                        'filter_get_product_mode'   => 'feed'
+                    );
 
-                $products = $this->model_catalog_product->getProducts($filter);
-                $k = 0;
-                foreach ($products as $product) {
-                    $output .= $this->printItem($product, $changeID);
-                    if ($k % 100 == 0) {
-                        echo $k . '..';
+                    echoLine('[makefeed] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . ($filter['start']) . ' по ' . ($filter['start'] + $filter['limit']));
+                    echoLine('[makefeed] Файл ' . $file);
+
+                    $products = $this->model_catalog_product->getProducts($filter);
+                    $k = 0;
+                    foreach ($products as $product) {
+                        $output .= $this->printItem($product, $changeID);
+                        if ($k % 10 == 0) {   echo $k . '..'; }
+                        $k++;
                     }
-                    $k++;
+
+                    echoLine('');
                 }
 
                 $output .= $this->closeXML();
-
                 file_put_contents($file, $output);
 
                 echoLine('');
