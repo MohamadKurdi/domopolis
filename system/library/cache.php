@@ -35,6 +35,17 @@ final class Cache {
 			}				
 		}
 	} 	
+
+	//TODO ALL THIS WITH NOT ONLY REDIS
+	public function exists($key, $explicit = false) {
+		if (defined('IS_DEBUG') && IS_DEBUG  && !$explicit){
+			return false;
+		}
+
+		if ((CACHE_DRIVER == 'redis') && $this->isredis) {				
+			return $this->redis->exists($key);
+		}
+	}
 	
 	
 	public function get($key, $explicit = false) {

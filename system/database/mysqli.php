@@ -40,20 +40,18 @@
 			
 			if (!$this->link->errno){
 				if (isset($query->num_rows)) {
-					$data = array();			
+					$result 			= new stdClass();
+					$result->num_rows 	= $query->num_rows;
+					$result->sql 		= $sql;	
+					$result->rows 		= [];
 					
 					while ($row = $query->fetch_assoc()) {
-						$data[] = $row;
+						$result->rows[] = $row;
 					}
-					
-					$result = new stdClass();
-					$result->num_rows = $query->num_rows;
-					$result->row = isset($data[0]) ? $data[0] : array();
-					$result->rows = $data;
-					$result->fromCache = 'uncacheable driver';
-					
-					unset($data);
-					
+
+					$result->row 		= isset($result->rows[0]) ? $result->rows[0] : [];
+
+					$result->fromCache = 'uncacheable driver';					
 					$query->close();
 					
 					return $result;
