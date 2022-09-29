@@ -57,8 +57,7 @@
 			return $this->config->get('config_language');		
 		}
 		
-		private function getFullLanguageByCode($code){
-			
+		private function getFullLanguageByCode($code){			
 			if (!empty($this->registry->get('languages')[$code])){
 				return $this->registry->get('languages')[$code];
 			}
@@ -225,10 +224,7 @@
 				} else {
 				$route_ = $route = $this->request->get['_route_'];
 				unset($this->request->get['_route_']);
-				$parts = explode('/', trim(utf8_strtolower($route), '/'));
-				/*	list($last_part) = explode('.', array_pop($parts));
-					array_push($parts, $last_part);
-				*/	
+				$parts = explode('/', trim(utf8_strtolower($route), '/'));	
 				$rows = array();
 				
 				
@@ -241,8 +237,7 @@
 				if (!empty($rows[0]) && !empty($rows[0]['query']) && $rows[0]['query'] == 'module/mega_filter/ajaxinfo'){
 					$this->request->get['route'] = 'module/mega_filter/ajaxinfo';
 				}
-				
-				
+								
 				if (!empty($rows[0]) && !empty($rows[0]['query'])){
 					$url = explode('=', $rows[0]['query'], 2);
 					
@@ -406,8 +401,7 @@
 					$this->request->get['route'] = 'common/home';
 				}
 									
-				return $this->forward($this->request->get['route']);
-				
+				return $this->forward($this->request->get['route']);				
 			}
 		}
 		
@@ -738,12 +732,8 @@
 			}
 			
 			$rows = array();
-			foreach($queries as $query) {						
-				
-				//	$this->log->debug($query);
-				$query = $this->mapQuery($query);
-				
-				
+			foreach($queries as $query) {										
+				$query = $this->mapQuery($query);								
 				if(isset($this->cache_data['queries'][$query])) {				
 					$query_keyword = array('query' => $query, 'keyword' => $this->cache_data['queries'][$query]);			
 					$rows[] = $query_keyword;

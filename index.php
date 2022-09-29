@@ -415,10 +415,10 @@
 		$registry->get('config')->set('order_default', $sorts['order_default']);
 	}
 
-	//Implementation of different redirect modes and|or modules
+	//Implementation of different redirect modes and|or modules	
 	$controller->addPreAction(new Action('common/hoboseo'));
 	$controller->addPreAction(new Action('common/seo_pro'));
-	
+
 	// Router
 	if (isset($registry->get('request')->get['route'])) {
 		$action = new Action($registry->get('request')->get['route']);
@@ -428,16 +428,16 @@
 	
 	//Dispatch
 	$controller->dispatch($action, new Action('error/not_found'));
-	
+
 	if ($PageCache->validateIfToCache()){
 		$PageCache->setMinifier(new \voku\helper\HtmlMin());		
 		$PageCache->writeCache($response->returnOutput());
 	}
+
 		
 	header('X-FPC-MODE: FALSE');
 	header('X-NO-FPC-TIME: ' . $FPCTimer->getTime());
 	header('X-FPC-PHP-MEMUSED: ' . size_convert(memory_get_usage(false)));
 	header('X-FPC-SYS-MEMUSED: ' . size_convert(memory_get_usage(true)));
 	
-	// Output
 	$response->output();
