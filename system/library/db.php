@@ -50,13 +50,6 @@
 			}
 			
 			public function query($sql) {
-
-				/*
-				if ($sql == "SELECT * FROM setting WHERE store_id = '0' AND `key` = 'config_ssl' LIMIT 1"){
-					debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-				}
-				*/
-
 				if (defined('DEBUGSQL') && DEBUGSQL) {		
 					$starttime = microtime(true);
 					
