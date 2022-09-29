@@ -2,16 +2,26 @@
 
 class ModelCatalogProductStatus extends Model
 {
-    public function getProductStatuses($af77ce1260170727cc45c8abd5b365ccc)
-    {
-        $a260023c2d3cf6815a29dba36ddffafbf = "SELECT ps.product_show, ps.category_show, ps.sort_order, ps.product_id, s.* FROM product_status ps LEFT JOIN status s ON ps.status_id = s.status_id WHERE s.language_id = '" . (int)$this->config->get('config_language_id') . "' AND ps.product_id = '" . (int)$af77ce1260170727cc45c8abd5b365ccc . "' ORDER BY ps.sort_order ASC";
-        $ab84bb8e23a7c6dcf8162b05536318aab = $this->db->query($a260023c2d3cf6815a29dba36ddffafbf);
-        return $ab84bb8e23a7c6dcf8162b05536318aab->rows;
+    public function getProductStatuses($product_id)
+    {   
+
+        if (!$this->config->get('config_additional_html_status_enable')){
+            return [];
+        }     
+
+        $sql = "SELECT ps.product_show, ps.category_show, ps.sort_order, ps.product_id, s.* FROM product_status ps LEFT JOIN status s ON ps.status_id = s.status_id WHERE s.language_id = '" . (int)$this->config->get('config_language_id') . "' AND ps.product_id = '" . (int)$product_id . "' ORDER BY ps.sort_order ASC";
+        $query = $this->db->query($sql);
+        return $query->rows;
     }
 
-    public function getHTMLProductStatuses($af77ce1260170727cc45c8abd5b365ccc)
+    public function getHTMLProductStatuses($product_id)
     {
-        $a2f46db88ca4254088096fe3f37f1274b = $this->getProductStatuses($af77ce1260170727cc45c8abd5b365ccc);
+
+         if (!$this->config->get('config_additional_html_status_enable')){
+            return [];
+        } 
+        
+        $a2f46db88ca4254088096fe3f37f1274b = $this->getProductStatuses($product_id);
         $a776f5c4135b037603b74c97cdbebba18 = $this->config->get('product_status_options');
         $ac333fbb97cbe8625a23ebcde093be86e = array('product' => '', 'category' => '');
         foreach ($a2f46db88ca4254088096fe3f37f1274b as $a7af59dbff38171e395fda52dbb3028f3) {

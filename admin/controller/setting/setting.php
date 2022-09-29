@@ -1263,6 +1263,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_option_products_enable'] = $this->config->get('config_option_products_enable');
         }
 
+        if (isset($this->request->post['config_additional_html_status_enable'])) {
+            $this->data['config_additional_html_status_enable'] = $this->request->post['config_additional_html_status_enable'];
+        } else {
+            $this->data['config_additional_html_status_enable'] = $this->config->get('config_additional_html_status_enable');
+        }
+
         if (isset($this->request->post['config_color_grouping_products_enable'])) {
             $this->data['config_color_grouping_products_enable'] = $this->request->post['config_color_grouping_products_enable'];
         } else {
@@ -2672,6 +2678,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_google_merchant_feed_limit'] = $this->request->post['config_google_merchant_feed_limit'];
         } else {
             $this->data['config_google_merchant_feed_limit'] = $this->config->get('config_google_merchant_feed_limit');
+        }
+
+        if (isset($this->request->post['config_google_merchant_one_iteration_limit'])) {
+            $this->data['config_google_merchant_one_iteration_limit'] = $this->request->post['config_google_merchant_one_iteration_limit'];
+        } else {
+            $this->data['config_google_merchant_one_iteration_limit'] = $this->config->get('config_google_merchant_one_iteration_limit');
         }
         
         if (isset($this->request->post['config_google_remarketing_type'])) {

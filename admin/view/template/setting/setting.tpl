@@ -312,6 +312,21 @@
 									</div>
 
 									<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика дополнительных HTML статусов товара</span></p>
+									<select name="config_additional_html_status_enable">
+										<?php if ($config_additional_html_status_enable) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+									<br />
+									<span class="help">логика нагружает магазин! включить только в случае настроен модуль Статусы товаров и это реально используется</span>
+									</div>
+
+									<div>
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика цен опций</span></p>
 									<select name="config_option_price_enable">
 										<?php if ($config_option_price_enable) { ?>
@@ -5045,8 +5060,14 @@
 										<input type="text" name="config_google_merchant_id" value="<?php echo $config_google_merchant_id; ?>" size="30" style="width:150px;" />								
 									</td>
 									<td width="15%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Лимит товаров на фид</span></p>
-										<input type="number" step="1" name="config_google_merchant_feed_limit" value="<?php echo $config_google_merchant_feed_limit; ?>" size="30" style="width:150px;" />											
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Лимит товаров на фид</span></p>
+											<input type="number" step="1000" name="config_google_merchant_feed_limit" value="<?php echo $config_google_merchant_feed_limit; ?>" size="30" style="width:150px;" />	
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Лимит товаров на выборку</span></p>
+											<input type="number" step="100" name="config_google_merchant_one_iteration_limit" value="<?php echo $config_google_merchant_one_iteration_limit; ?>" size="30" style="width:150px;" />	
+										</div>									
 									</td>
 									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Тип Google remarketing</span></p>
