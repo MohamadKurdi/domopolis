@@ -8,8 +8,7 @@
 		private $mapTo 						= array('category_id');
 		
 		public function __construct($registry) {
-			parent::__construct($registry);
-			
+			parent::__construct($registry);			
 			$this->language_id = (int)$this->config->get('config_language_id');
 			if (!empty($this->session->data) && !empty($this->session->data['language'])){
 				
@@ -36,14 +35,12 @@
 		
 		private function mapQuery($query){
 			
-			return str_replace($this->mapFrom, $this->mapTo, $query);
-			
+			return str_replace($this->mapFrom, $this->mapTo, $query);		
 		}
 		
 		private function mapQueryRev($query){
 			
-			return str_replace($this->mapTo, $this->mapFrom, $query);
-			
+			return str_replace($this->mapTo, $this->mapFrom, $query);		
 		}
 		
 		private function getLanguageCodeForStoreID($store_id){
@@ -52,8 +49,7 @@
 				return $this->languageSettingsCacheData[$store_id];
 			}
 			
-			return $this->config->get('config_language');
-			
+			return $this->config->get('config_language');		
 		}
 		
 		private function getFullLanguageByCode($code){
@@ -63,8 +59,7 @@
 			}
 			
 			$this->load->model('localisation/language');
-			return $this->model_localisation_language->getFullLanguageByCode($code);
-			
+			return $this->model_localisation_language->getFullLanguageByCode($code);			
 		}
 		
 		private function rebuildAllCaches(){
@@ -836,8 +831,7 @@
 			return $seo_url;
 		}
 		
-		private function updateHrefLang($query, $url){
-			
+		private function updateHrefLang($query, $url){			
 		}
 		
 		private function getPathByProduct($product_id) {
@@ -893,8 +887,7 @@
 				$this->cache->set('ncats.seopath'.$this->language_id, $path, DB_CACHED_EXPIRE, true);
 			}
 			
-			return $path[$ncategory_id];
-			
+			return $path[$ncategory_id];			
 		}
 		
 		private function getManufacturerPathByCollection($collection_id){
@@ -908,15 +901,14 @@
 			}
 			
 			if (!isset($path[$collection_id])) {
-				$query = $this->db->query("SELECT manufacturer_id FROM " . DB_PREFIX . "collection WHERE collection_id = '" . $collection_id . "' LIMIT 1");
+				$query = $this->db->query("SELECT manufacturer_id FROM collection WHERE collection_id = '" . $collection_id . "' LIMIT 1");
 				
 				$path[$collection_id] = $query->num_rows ? (int)$query->row['manufacturer_id'] : false;
 				
 				$this->cache->set('collection.manufacturer.seopath', $path);
 			}
 			
-			return $path[$collection_id];
-			
+			return $path[$collection_id];			
 		}
 		
 		private function getPathByCollection($collection_id){
@@ -943,8 +935,7 @@
 		private function checkIfCategoryCanHaveIntersections($category_id){
 			$category_id = (int)$category_id;
 			if ($category_id < 1) return false;
-			
-			
+						
 			$query = $this->db->query("SELECT intersections FROM category WHERE category_id = '" . (int)$category_id . "'");
 			
 			if ($query->num_rows){
@@ -1025,23 +1016,17 @@
 			if (isset($this->request->server['HTTP_X_REQUESTED_WITH']) && strtolower($this->request->server['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
 				return;
 			}
-			
-			//check page=1 param
+						
 			if (is_array($this->request->get) && isset($this->request->get['page']) && (int)$this->request->get['page'] == 1){
 				unset($this->request->get['page']);			
 			}
 			
-			if (defined('IS_DEBUG') && IS_DEBUG){
-				//$this->log->debug($this->getQueryString(array('route')));
-				//die();
-			}
-			
 			if (IS_HTTPS) {
-				$config_ssl = substr($this->config->get('config_ssl'), 0, $this->strpos_offset('/', $this->config->get('config_ssl'), 3) + 1);																
+				$config_ssl = substr($this->config->get('config_ssl'), 0, strpos_offset('/', $this->config->get('config_ssl'), 3) + 1);																
 				$url = str_replace('&amp;', '&', $config_ssl . ltrim($this->request->server['REQUEST_URI'], '/'));
 				$seo = str_replace('&amp;', '&', $this->url->link($this->request->get['route'], $this->getQueryString(array('route')), 'SSL'));
 				} else {
-				$config_url = substr($this->config->get('config_url'), 0, $this->strpos_offset('/', $this->config->get('config_url'), 3) + 1);
+				$config_url = substr($this->config->get('config_url'), 0, strpos_offset('/', $this->config->get('config_url'), 3) + 1);
 				$url = str_replace('&amp;', '&', $config_url . ltrim($this->request->server['REQUEST_URI'], '/'));
 				$seo = str_replace('&amp;', '&', $this->url->link($this->request->get['route'], $this->getQueryString(array('route')), 'NONSSL'));
 			}
@@ -1051,21 +1036,7 @@
 				$this->response->redirect($seo, 301);
 			}
 		}
-		
-		private function strpos_offset($needle, $haystack, $occurrence) {
-			// explode the haystack
-			$arr = explode($needle, $haystack);
-			// check the needle is not out of bounds
-			switch($occurrence) {
-				case $occurrence == 0:
-				return false;
-				case $occurrence > max(array_keys($arr)):
-				return false;
-				default:
-				return strlen(implode($needle, array_slice($arr, 0, $occurrence)));
-			}
-		}
-		
+						
 		private function getQueryString($exclude = array('hello', 'discount_debug', 'mfp')) {
 			if (!is_array($exclude)) {
 				$exclude = array();
