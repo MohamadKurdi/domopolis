@@ -12,7 +12,7 @@ Requirements
 Composer
 ------------
 
-* You need to run composer install to download all libraries
+* You need to run `composer install` to download all libraries
 
 
 Information
