@@ -149,48 +149,56 @@
 				}
 				
 				echo trim($output);
-				$this->outputDebug();				
+				echo $this->outputDebug();				
 			}
 		}
 
 		public function outputDebug(){
+			$output = '';
 			if (defined('DEBUGSQL') && DEBUGSQL) {						
-					$time = microtime();
-					$time = explode(' ', $time);
-					$time = $time[1] + $time[0];
-					$finish = $time;
-					$start = explode(' ', $GLOBALS['start']);
-					$start = $start[1] + $start[0];
-					$total_time = round(($finish - $start), 4);
+					global $FPCTimer;
+
+					$totalSQLTime = 0;
+					foreach ($GLOBALS['sql-debug'] as $query) {
+						$totalSQLTime += $query['querytime'];
+					}
 					
-					$queries = $GLOBALS['sql'];
-					
-					echo '<div id="debug" style="position:relative; bottom:0; z-index:1000; width:100%;min-height:100px; padding:20px; background: darkred; "><div style="width:1000px;margin:0 auto;">';
-					echo '<div style="color:white; font-size:14px; line-height:20px">Page gen time ' . $total_time. ' seconds</div>';
-					echo '<div style="color:white; font-size:14px; line-height:20px">Total SQL ' . count($GLOBALS['sql']) . '</div>';
-					echo '<div style="color:white; font-size:14px; line-height:20px">Mem PHP ' . size_convert(memory_get_usage(false)) . '</div>';
-					echo '<div style="color:white; font-size:14px; line-height:20px">Mem SYS ' . size_convert(memory_get_usage(true)) . '</div>';
-					echo '<div style="color:white; font-size:14px; line-height:20px">Peak Mem PHP ' . size_convert(memory_get_peak_usage(false)) . '</div>';
-					echo '<div style="color:white; font-size:14px; line-height:20px">Peak Mem SYS ' . size_convert(memory_get_peak_usage(true)) . '</div>';
-					foreach ($queries as $query) {
-						$sql = explode ('[sep]', $query);
-						
-						$querytime 	= round($sql[1],4);						
-						$controller = $sql[2];						
-						$iscached 	= $sql[3];
-						
-						if ($querytime > 0.004) {
-							echo '<div style=" width:990px; color:red; font-size:12px;background:white;margin-bottom:0px;padding:2px;"> время:' . $querytime  . ' сек. | controller: <span style="color:black;">'.$controller. '</span> кэш: <span style="color:black;">'. $iscached. '</span></div>'; 
-							} else { 
-							echo '<div style=" width:990px; color:grey; font-size:12px;background:white;margin-bottom:0px;padding:2px;"> время:' . $querytime  . ' сек.  | controller:  <span style="color:black;">'.$controller. '</span> | кэш: <span style="color:black;">'. $iscached. '</span></div>'; 
+					$output .= '<div id="debug" style="position:relative; bottom:0; z-index:1000; width:100%;min-height:100px; padding:20px; background: #ff3333; ">';
+					$output .= '<div style="width:1000px;margin:0 auto;">';
+					$output .= '	<div style="color:white; font-size:14px; line-height:20px">Page gen time ' . $FPCTimer->getTime() . ' sec</div>';
+					$output .= '	<div style="color:white; font-size:14px; line-height:20px">Total SQL time ' . $totalSQLTime . ' sec</div>';
+					$output .= '	<div style="color:white; font-size:14px; line-height:20px">Total SQL queries ' . count($GLOBALS['sql-debug']) . '</div>';
+					$output .= '	<div style="color:white; font-size:14px; line-height:20px">Mem PHP ' . size_convert(memory_get_usage(false)) . '</div>';
+					$output .= '	<div style="color:white; font-size:14px; line-height:20px">Mem SYS ' . size_convert(memory_get_usage(true)) . '</div>';
+					$output .= '	<div style="color:white; font-size:14px; line-height:20px">Peak Mem PHP ' . size_convert(memory_get_peak_usage(false)) . '</div>';
+					$output .= '	<div style="color:white; font-size:14px; line-height:20px">Peak Mem SYS ' . size_convert(memory_get_peak_usage(true)) . '</div>';
+					foreach ($GLOBALS['sql-debug'] as $query) {																		
+						$output .= '	<div style=" width:990px; color:'  . ($query['bad']?'#ff3333':'#009900') . '; font-size:12px;background:white;margin-bottom:0px;padding:2px;">';
+						$output .= ' [' . (($query['bad'])?'LONG QUERY':'OK QUERY') . ']';
+						$output .= ' [' . sprintf('%.7f', $query['querytime'])  . ' sec] <span style="color:black;">[' . $query['cached'] . ']</span></div>'; 
+
+						$output .= '	<div style="width:990px;color:#666; font-size:8px;background:white;padding:5px;border-top:1px solid #ddd; font-family:Courier">';
+
+						foreach ($query['backtrace'] as $key => $backtrace){
+							$path = explode('/', $backtrace['file']);
+							$path = array_slice($path, -3, 3, true);
+
+							$output .= '<div style="line-height:10px;">';
+							$output .= $key . ': ' . $backtrace['class'] . $backtrace['type'] . $backtrace['function'] . ' called from @' . implode('/', $path) . ' at line ' . $backtrace['line'];
+							$output .= '</div>';
 						}
+
+						$output .= '	</div>';
 						
-						echo '<div style=" width:990px; color:#666; font-size:10px;background:white;margin-bottom:2px;padding:1px 2px; border-top:1px solid #ddd">' . $sql[0] . '</div>';
+						$output .= '<div style=" width:990px; color:#666; font-size:10px;background:white;margin-bottom:3px;padding:5px; border-top:1px solid #ddd;  font-family:Courier">' . $query['sql'] . '</div>';
 						
 					};
 					
-					echo '</div></div>';				
+					$output .= '</div>';
+					$output .= '</div>';				
 				}
+
+			return $output;
 		}
 		
 		

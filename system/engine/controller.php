@@ -13,8 +13,7 @@
 
 		private $default_template = 'default';
 		
-		public function __construct($registry) {
-			$GLOBALS['controller_name'] = get_class ($this);
+		public function __construct($registry) {			
 			$this->registry = $registry;
 			$this->config 	= $registry->get('config');
 			
@@ -257,8 +256,7 @@
 				
 				ob_start();
 				
-				require(DIR_TEMPLATE . $this->template);
-				
+				require(DIR_TEMPLATE . $this->template);				
 				$this->output = ob_get_contents();
 				
 				ob_end_clean();

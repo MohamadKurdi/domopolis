@@ -43,7 +43,7 @@
 				$this->database = $database;
 				
 				if (defined('DEBUGSQL') && DEBUGSQL) {			
-					$GLOBALS['sql'] = array();
+					$GLOBALS['sql-debug'] = [];
 				}
 				
 				$this->createConnection();
@@ -51,18 +51,19 @@
 			
 			public function query($sql) {
 				if (defined('DEBUGSQL') && DEBUGSQL) {		
-					$starttime = microtime(true);
+					$queryTimer = new FPCTimer();
+					$result = $this->connection->query($sql);					
 					
-					$result = $this->connection->query($sql);
+					$GLOBALS['sql-debug'][] = [
+						'sql' 			=> $sql,
+						'querytime' 	=> $queryTimer->getTime(),
+						'bad'			=> ($queryTimer->getTime() > 0.004),
+						'cached'		=> (is_object($result)?$result->fromCache:'non-select'),
+						'backtrace'		=> debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)
+					];
 					
-					$finishtime = microtime(true) - $starttime;
-					
-					if (!isset($GLOBALS['controller_name'])) { 
-						$GLOBALS['controller_name'] = '';
-					}
-					
-					$GLOBALS['sql'][] = $sql. '[sep]'. $finishtime . '[sep]'.	 ($GLOBALS['controller_name']) .'[sep]' . (is_object($result)?$result->fromCache:'non-select');
-					
+					$queryTimer = null;
+
 					return $result;
 					
 					} else {
@@ -93,13 +94,19 @@
 			
 			public function non_cached_query($sql) {
 				if (defined('DEBUGSQL') && DEBUGSQL) {		
-					$starttime = microtime(true);
+					$queryTimer = new FPCTimer();
 					
 					$result = $this->connection->non_cached_query($sql);
-					$finishtime = microtime(true) - $starttime;
-					
-					if (!isset($GLOBALS['controller_name'])) $GLOBALS['controller_name'] = '';
-					$GLOBALS['sql'][] = $sql. '[sep]'. $finishtime . '[sep]'.	 ($GLOBALS['controller_name']) .'[sep]' .  (is_object($result)?$result->fromCache:'non-select');
+
+					$GLOBALS['sql-debug'][] = [
+						'sql' 			=> $sql,
+						'querytime' 	=> $queryTimer->getTime(),
+						'bad'			=> ($queryTimer->getTime() > 0.004),
+						'cached'		=> (is_object($result)?$result->fromCache:'non-select'),
+						'backtrace'		=> debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)
+					];
+
+					$queryTimer = null;
 					
 					return $result;
 					
