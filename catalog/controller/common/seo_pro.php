@@ -14,7 +14,7 @@
 				$this->language_code = $this->session->data['language'];				
 			} else {
 				if (!empty($this->registry->get('languages_id_code_mapping'))){
-					$this->language_code = $this->registry->get('languages_id_code_mapping')[$this->language_id]['code'];							
+					$this->language_code = $this->registry->get('languages_id_code_mapping')[$this->language_id];							
 				} else {				
 					$this->load->model('localisation/language');
 					$language = $this->model_localisation_language->getLanguage($this->language_id);
