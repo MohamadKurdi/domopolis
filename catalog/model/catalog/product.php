@@ -942,22 +942,25 @@
 				$default_stock_status = $this->config->get('config_stock_status_id');
 			}
 
-			$sql = "SELECT DISTINCT p.product_id, p.is_option_for_product_id, ";
+			$sql = "SELECT DISTINCT p.product_id, p.is_option_for_product_id, p.xrating AS rating, ";
 
 			//Логика переназначения статуса при работе только со склада
 			if ($this->config->get('config_warehouse_only')){							
-				$sql .= " IF(p." . $this->config->get('config_warehouse_identifier') . " > 0, " . $this->config->get('config_in_stock_status_id') . ", " . $this->config->get('config_overload_stock_status_id') . ") as stock_status_id, ";
+				$sql .= " IF(p." . $this->config->get('config_warehouse_identifier') . " > 0, " . $this->config->get('config_in_stock_status_id') . ", " . $this->config->get('config_overload_stock_status_id') . ") as stock_status_id";
 			} else {
 				$sql .= " IF( (p.quantity_stock + p.quantity_stockK + p.quantity_stockM + p.quantity_stockMN + p.quantity_stockAS) > 0, 
 				IF(p." . $this->config->get('config_warehouse_identifier') . " > 0, " . $this->config->get('config_in_stock_status_id') . ", " . $default_stock_status . "), IF ((SELECT stock_status_id FROM product_stock_status WHERE product_id = p.product_id AND store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0,  (SELECT stock_status_id FROM product_stock_status WHERE product_id = p.product_id AND store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1), p.stock_status_id)
-				) as stock_status_id, ";
+				) as stock_status_id";
 			}
-			
-			$sql .= " p.xrating AS rating, (SELECT price FROM product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.quantity = '1' AND price > 0 AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) AND pd2.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount, 
-			(SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price,
-			(SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_national_overload_price,
-			(SELECT price FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special,
-			(SELECT currency_scode FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS currency_scode";
+
+			if (!empty($data['sort']) && $data['sort'] == 'p.price') {
+				$sql .= ", ";
+				$sql .= " (SELECT price FROM product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.quantity = '1' AND price > 0 AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) AND pd2.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1) AS discount,  ";
+				$sql .= " (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price,  ";
+				$sql .= " (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_national_overload_price,  ";
+				$sql .= " (SELECT price FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special,  ";
+				$sql .= " (SELECT currency_scode FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS currency_scode ";
+			}
 			
 			if (!empty($data['filter_category_id'])) {
 				if (!empty($data['filter_sub_category'])) {
@@ -975,7 +978,16 @@
 				$sql .= " FROM product p";
 			}
 			
-			$sql .= " LEFT JOIN product_description pd ON (p.product_id = pd.product_id) LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+			$sql .= " LEFT JOIN product_description pd ON (p.product_id = pd.product_id) ";
+			$sql .= " LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+
+			if (!empty($data['sort']) && $data['sort'] == 'p.viewed') {
+				$sql .= " AND p.viewed > 0 ";
+			}
+
+			if (!empty($data['sort']) && $data['sort'] == 'p.viewed') {
+				$sql .= " AND p.date_added >= '" . date('Y-m-d', strtotime('-1 week')) . "' ";
+			}
 			
 			if ($data['no_child']) {
 				$sql .= " AND p.is_option_with_id = '0' ";
@@ -1184,7 +1196,7 @@
 			
 			$sql .= " GROUP BY p.product_id";
 			
-			if (isset($data['sort']) && in_array($data['sort'], $this->registry->get('sorts_available'))) {
+			if (!empty($data['sort']) && in_array($data['sort'], $this->registry->get('sorts_available'))) {
 				if ($data['sort'] == 'pd.name' || $data['sort'] == 'p.model') {
 					$sql .= " ORDER BY stock_status_id ASC, LCASE(" . $data['sort'] . ")";
 					} elseif ($data['sort'] == 'p.price') {
@@ -1195,19 +1207,31 @@
 						$sql .= " ORDER BY (p.`" . $this->config->get('config_warehouse_identifier') . "` > 0) DESC, (CASE WHEN (special IS NOT NULL AND currency_scode <> '" . $this->db->escape($this->config->get('config_regional_currency')) . "') THEN special WHEN discount IS NOT NULL THEN discount ELSE p.price END)";						
 					}
 
+					} elseif ($data['sort'] == 'p.viewed' || $data['sort'] == 'p.date_added') {
+						$sql .= " ORDER BY (p.`quantity` > 0) DESC, " . $data['sort'];
 					} else {
 					$sql .= " ORDER BY (p.`" . $this->config->get('config_warehouse_identifier') . "` > 0) DESC, stock_status_id ASC, " . $data['sort'];
 				}
 				} else {
 				$sql .= " ORDER BY (p.`" . $this->config->get('config_warehouse_identifier') . "` > 0) DESC, stock_status_id ASC, p.sort_order";
 			}
-			
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
-				$sql .= " DESC, LCASE(pd.name) DESC";
+
+			if (!empty($data['sort']) && ($data['sort'] == 'p.viewed' || $data['sort'] == 'p.date_added')){
+
+				if (isset($data['order']) && ($data['order'] == 'DESC')) {
+					$sql .= " DESC";
 				} else {
-				$sql .= " ASC, LCASE(pd.name) ASC";
+					$sql .= " ASC";
+				}
+
+			} else {
+				if (isset($data['order']) && ($data['order'] == 'DESC')) {
+					$sql .= " DESC, LCASE(pd.name) DESC";
+				} else {
+					$sql .= " ASC, LCASE(pd.name) ASC";
+				}
 			}
-			
+
 			if (isset($data['start']) || isset($data['limit'])) {
 				if ($data['start'] < 0) {
 					$data['start'] = 0;
