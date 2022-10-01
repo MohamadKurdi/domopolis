@@ -125,6 +125,7 @@ class ControllerModuleViewed extends Controller {
 
 							$filter_data = [								
 								'sort'                => 'p.viewed',
+							//	'filter_with_variants'=> true,
 								'order'               => 'DESC',
 								'start'               => 0,
 								'limit'               => $setting['limit']
@@ -137,6 +138,7 @@ class ControllerModuleViewed extends Controller {
 
 							$filter_data = [								
 								'sort'                => 'p.date_added',
+							//	'filter_with_variants'=> true,
 								'order'               => 'DESC',
 								'start'               => 0,
 								'limit'               => $setting['limit']
