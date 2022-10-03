@@ -230,6 +230,12 @@
 			}
 			return $result;
 		}	
+
+		public function getRelatedCategories($category_id, $limit) {
+			$query = $this->db->query("SELECT DISTINCT(cr.related_category_id), cd.* FROM category_related cr LEFT JOIN category c ON (c.category_id = cr.related_category_id) LEFT JOIN category_to_store c2s ON (c2s.category_id = cr.related_category_id) LEFT JOIN category_description cd ON (cd.category_id = cr.related_category_id) WHERE cr.category_id = '" . (int)$category_id . "' AND cr.related_category_id <> '" . (int)$category_id . "' AND c.status = 1 AND c2s.store_id = '" . $this->config->get('config_store_id') . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' LIMIT " . $limit);
+		
+			return $query->rows;
+		}
 		
 		public function getMenuContentByCategoryId ($categoryId, $data = array()) {
 			$sql = "SELECT * FROM `category_menu_content` WHERE `category_id` = ".(int)$categoryId;

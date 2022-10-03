@@ -97,7 +97,6 @@ class ControllerModuleViewed extends Controller {
 
 			$tabs = $setting['tabs'];
 
-			//ДОПОЛНИТЕЛЬНЫЕ ТАБЫ
 			if (isset($setting['product_block'])){
 				$indexes = array_map('intval', explode(',', $setting['product_block']));
 			} else {
