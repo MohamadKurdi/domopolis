@@ -4,14 +4,12 @@
 		private $level = 0;
 		private $output;
 		private $db = false;
-		private $config = false;
-		private $bcache = false;
+		private $config = false;		
 		private $cache = false;
 		private $fastTranslate = false;
 		
 		public function __construct($registry = false) {
-			if ($registry) {
-				$this->bcache 	= $registry->get('bcache');
+			if ($registry) {				
 				$this->cache  	= $registry->get('cache');
 				$this->config 	= $registry->get('config');
 				$this->db 		= $registry->get('db');
@@ -19,8 +17,7 @@
 				
 				if (defined('THIS_IS_CATALOG') && $this->db && $this->cache && $this->config && $this->config->get('config_language_id')){
 					$this->fastTranslate = $this->prepareFastTranslateArray($registry->get('languages')[$this->config->get('config_language')]['fasttranslate']);
-				}
-				
+				}				
 			}
 		}
 		
@@ -54,8 +51,7 @@
 			);
 		}
 		
-		private function doFastTranslate(){
-			
+		private function doFastTranslate(){			
 			if ($this->fastTranslate){
 				$this->output = str_replace($this->fastTranslate['fTFrom'], $this->fastTranslate['ftTo'], $this->output);
 			}
@@ -73,8 +69,7 @@
 		}
 		
 		public function setJSON($json) {
-			$this->addHeader('Content-Type: application/json');
-		
+			$this->addHeader('Content-Type: application/json');		
 			$this->output = trim(json_encode($json));
 			
 			return $this;
@@ -85,8 +80,7 @@
 				$output = str_ireplace('http://', 'https://', $output);
 			}			
 
-			$this->output = $output;	
-								
+			$this->output = $output;								
 			$this->doFastTranslate();			
 			
 			return $this;
@@ -132,23 +126,19 @@
 			}
 		}
 		
-		public function returnOutput(){
-			
-			return $this->output;			
-			
+		public function returnOutput(){			
+			return $this->output;
 		}
 
 		public function output() {
-			if ($this->output) {
-				$output = $this->output;	
-				
+			if ($this->output) {								
 				if (!headers_sent()) {
 					foreach ($this->headers as $header) {
 						header($header, true);
 					}
 				}
 				
-				echo trim($output);
+				echo trim($this->output);
 				echo $this->outputDebug();				
 			}
 		}
