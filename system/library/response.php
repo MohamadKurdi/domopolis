@@ -174,7 +174,7 @@
 							$path = array_slice($path, -3, 3, true);
 
 							$output .= '<div style="line-height:10px;">';
-							$output .= $key . ': ' . $backtrace['class'] . $backtrace['type'] . $backtrace['function'] . ' called from @' . implode('/', $path) . ' at line ' . $backtrace['line'];
+							$output .= $key . ': ' . ((!empty($backtrace['class']))?$backtrace['class']:'UNKNOWN') . ((!empty($backtrace['type']))?$backtrace['type']:'??') . $backtrace['function'] . ' called from @' . implode('/', $path) . ' at line ' . $backtrace['line'];
 							$output .= '</div>';
 						}
 
