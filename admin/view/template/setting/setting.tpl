@@ -278,20 +278,12 @@
 									<span class="help">логика нагружает магазин, если реально это не используется, пусть будет отключено</span>
 									</div>
 									<div>
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF;">Монобрендовый магазин</span></p>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF;">Монобрендовый магазин</span></p>
 									<select name="config_monobrand" style=" width:150px;">
 										<option value="0">Нет</option>
-
-										<? foreach ($manufacturers as $manufacturer) { ?>
-											<?php if ($manufacturer['manufacturer_id'] == $config_monobrand) { ?>
-												<option value="<?php echo $manufacturer['manufacturer_id'] ?>" selected="selected"><?php echo $manufacturer['name']; ?></option>
-											<?php } else { ?>
-												<option value="<?php echo $manufacturer['manufacturer_id'] ?>"><?php echo $manufacturer['name']; ?></option>
-											<? } ?>
-										<? } ?>
 									</select>	
 									<br />
-									<span class="help">настройка, позволяющая работать без списка брендов (неактуальная настройка)</span>
+									<span class="help">настройка, позволяющая работать без списка брендов (не используется)</span>
 									</div>
 								</td>
 
@@ -3403,17 +3395,19 @@
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Исключить бренды из фида Ozon</span></p>
 										<div class="scrollbox" style="height:250px;">
 										<?php $class = 'odd'; ?>
-										<?php foreach ($manufacturers as $manufacturer) { ?>
-											<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-											<div class="<?php echo $class; ?>">
-												<?php if (in_array($manufacturer['manufacturer_id'], $config_ozon_exclude_manufacturers)) { ?>
-													<input id="config_ozon_exclude_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>" class="checkbox" type="checkbox" name="config_ozon_exclude_manufacturers[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" checked="checked" />
-													<label for="config_manager_confirmed_<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></label>
+										<?php if ($config_ozon_warehouse_0) { ?>
+											<?php foreach ($manufacturers as $manufacturer) { ?>
+												<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+												<div class="<?php echo $class; ?>">
+													<?php if (in_array($manufacturer['manufacturer_id'], $config_ozon_exclude_manufacturers)) { ?>
+														<input id="config_ozon_exclude_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>" class="checkbox" type="checkbox" name="config_ozon_exclude_manufacturers[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" checked="checked" />
+														<label for="config_manager_confirmed_<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></label>
 													<?php } else { ?>
-													<input id="config_ozon_exclude_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>" class="checkbox" type="checkbox" name="config_ozon_exclude_manufacturers[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" />
-													<label for="config_ozon_exclude_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></label>
-												<?php } ?>
-											</div>
+														<input id="config_ozon_exclude_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>" class="checkbox" type="checkbox" name="config_ozon_exclude_manufacturers[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" />
+														<label for="config_ozon_exclude_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></label>
+													<?php } ?>
+												</div>
+											<?php } ?>
 										<?php } ?>
 									</div>
 
