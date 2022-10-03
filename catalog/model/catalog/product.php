@@ -995,6 +995,10 @@
 				$sql .= " AND p.is_option_with_id = '0' ";
 			}
 
+			if (!empty($data['filter_also_bought_with'])) {
+				$sql .= " AND p.product_id IN (SELECT also_bought_id FROM product_also_bought WHERE product_id = '" . (int)$data['filter_also_bought_with'] . "') ";
+			}
+
 			if (empty($data['filter_with_variants'])){
 				$sql .= " AND ((p.main_variant_id = '0' OR ISNULL(p.main_variant_id)) OR p.display_in_catalog = 1)";
 			}
@@ -1195,11 +1199,28 @@
 				} else {
 				$sql .= " AND p.is_markdown = 0 ";
 			}
+
+
+			if (!empty($data['sort']) && $data['sort'] == 'rand'){
+				$sql .= " AND (" . mt_rand() . ")";
+			}
+
+			if (!empty($data['sort']) && $data['sort'] == 'rand-10'){
+				$sql .= " AND (" . mt_rand(0, 10) . ")";
+			}
+
+			if (!empty($data['sort']) && $data['sort'] == 'rand-100'){
+				$sql .= " AND (" . mt_rand(0, 100) . ")";
+			}
 			
 			$sql .= " GROUP BY p.product_id";
 			
 			if (!empty($data['sort']) && in_array($data['sort'], $this->registry->get('sorts_available'))) {
-				if ($data['sort'] == 'pd.name' || $data['sort'] == 'p.model') {
+				if ($data['sort'] == 'rand' || $data['sort'] == 'rand-10' || $data['sort'] == 'rand-100'){
+					$sql .= " ORDER BY stock_status_id ASC, RAND()";
+
+					$data['sort'] = null;				
+				} elseif ($data['sort'] == 'pd.name' || $data['sort'] == 'p.model') {
 					$sql .= " ORDER BY stock_status_id ASC, LCASE(" . $data['sort'] . ")";
 					} elseif ($data['sort'] == 'p.price') {
 
@@ -1258,7 +1279,7 @@
 					}
 				}
 			}			
-			
+
 			$query = $this->db->query($sql);
 
 			if (!isset($data['filter_get_product_mode'])) {
