@@ -25,18 +25,57 @@
 			$this->smsQueue->cron();
 		}
 
+
 		public function fillSpecialCategory(){
 			if ($this->config->get('config_special_controller_logic') && $this->config->get('config_special_category_id')){
 				$this->db->query("DELETE FROM product_to_category WHERE category_id = '" . (int)$this->config->get('config_special_category_id') . "'");
 				$this->db->query("INSERT IGNORE INTO product_to_category (product_id, category_id) SELECT DISTINCT ps.product_id, '" . $this->config->get('config_special_category_id') . "' FROM product_special ps LEFT JOIN product p ON ps.product_id = p.product_id WHERE p.status = 1 AND p.quantity > 0 AND ps.price < p.price AND ps.price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW()))");
 			}
+
+			return $this;
+		}
+
+		public function fillMarkDownCategory(){
+			$this->db->non_cached_query("DELETE FROM product_to_category WHERE category_id = '" . GENERAL_MARKDOWN_CATEGORY . "'");
+			$this->db->non_cached_query("DELETE FROM product_to_category WHERE product_id IN (SELECT product_id FROM product WHERE is_markdown = 1)");
+			$this->db->non_cached_query("INSERT INTO product_to_category (product_id, category_id) (SELECT DISTINCT product_id, " . GENERAL_MARKDOWN_CATEGORY . " FROM product WHERE is_markdown = 1)");
+
+			return $this;
+		}
+
+		public function fillRelatedCategories(){
+			if ($this->config->get('config_related_categories_auto_enable')){
+				$query = $this->db->query("SELECT DISTINCT(pab.product_id), GROUP_CONCAT(pab.also_bought_id SEPARATOR ',') as also_bought, p2c.category_id FROM product_also_bought pab LEFT JOIN product_to_category p2c ON (pab.product_id = p2c.product_id AND p2c.main_category = 1) WHERE NOT ISNULL(p2c.category_id) GROUP BY pab.product_id");
+
+				foreach ($query->rows as $row){
+				//	echoLine('[fillRelatedCategories] ' . $row['product_id']);
+					if ($also_bought = explode(',', $row['also_bought'])){
+						foreach ($also_bought as $also_bought_id){
+							$this->db->query("INSERT IGNORE INTO category_related (category_id, related_category_id) SELECT '" . (int)$row['category_id'] . "', category_id FROM product_to_category WHERE product_id = '" . $also_bought_id . "' ORDER BY main_category DESC LIMIT 1");	
+
+							$this->db->query("INSERT IGNORE INTO category_related (category_id, related_category_id) SELECT category_id, '" . (int)$row['category_id'] . "' FROM product_to_category WHERE product_id = '" . $also_bought_id . "' ORDER BY main_category DESC LIMIT 1");					
+						}
+					}
+				}
+			}
+
+			return $this;
 		}
 		
 		public function optimizeProductsDB(){
-			echo 'Статистика по товарам...' . PHP_EOL;
+			echo 'Регулярные задачи обслуживания товарной базы' . PHP_EOL;			
 			
 			echo '>> Очистка несуществующих записей'  . PHP_EOL;
 			$this->db->query("DELETE FROM product_description WHERE product_id NOT IN (SELECT product_id FROM product)");
+			
+			$this->db->query("DELETE FROM product_also_bought WHERE product_id NOT IN (SELECT product_id FROM product)");
+			$this->db->query("DELETE FROM product_also_bought WHERE also_bought_id NOT IN (SELECT product_id FROM product)");
+
+			$this->db->query("DELETE FROM product_also_viewed WHERE product_id NOT IN (SELECT product_id FROM product)");
+			$this->db->query("DELETE FROM product_also_viewed WHERE also_viewed_id NOT IN (SELECT product_id FROM product)");
+
+			$this->db->query("DELETE FROM category_related WHERE category_id NOT IN (SELECT category_id FROM category)");
+			$this->db->query("DELETE FROM category_related WHERE related_category_id NOT IN (SELECT category_id FROM category)");
 
 			echo '>> Удаление товаров у которых нет на амазоне офферов...' . PHP_EOL;
 			if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_delete_no_offers') && $this->config->get('config_rainforest_delete_no_offers_counter')){
@@ -57,14 +96,11 @@
 			echo '>> Выравнивание количества офферов...' . PHP_EOL;
 			$this->db->query("UPDATE product SET product.amzn_offers_count = (SELECT COUNT(*) FROM product_amzn_offers WHERE product_amzn_offers.asin = product.asin)");
 			$this->db->query("UPDATE product SET product.amzn_no_offers = 1 WHERE amzn_offers_count = 0 AND amzn_last_offers <> '0000-00-00 00:00:00'");
-			$this->db->query("UPDATE product SET product.amzn_no_offers = 0 WHERE amzn_offers_count > 0 OR amzn_last_offers = '0000-00-00 00:00:00'");
-			//$this->db->query("DELETE FROM product_amzn_offers WHERE asin NOT IN (SELECT asin FROM product)");
+			$this->db->query("UPDATE product SET product.amzn_no_offers = 0 WHERE amzn_offers_count > 0 OR amzn_last_offers = '0000-00-00 00:00:00'");			
 			
 			echo '>> Подсчет количества продаж за неделю...'  . PHP_EOL;			
 			$this->db->query("UPDATE product p SET bought_for_week = (SELECT SUM(quantity) FROM order_product op WHERE op.product_id = p.product_id AND op.order_id IN (SELECT o.order_id FROM `order` o WHERE o.order_status_id > 0 AND  DATE(o.date_added) >= DATE(DATE_SUB(NOW(),INTERVAL 7 DAY))))");
-			echo PHP_EOL;
-
-			
+			echo PHP_EOL;			
 			
 			echo '>> Подсчет количества продаж за месяц...'  . PHP_EOL;			
 			$this->db->query("UPDATE product p SET bought_for_month = (SELECT SUM(quantity) FROM order_product op WHERE op.product_id = p.product_id AND op.order_id IN (SELECT o.order_id FROM `order` o WHERE o.order_status_id > 0 AND DATE(o.date_added) >= DATE(DATE_SUB(NOW(),INTERVAL 30 DAY))))");
@@ -78,11 +114,7 @@
 			//	$this->db->query("UPDATE product_description SET description = REPLACE(description, '< / strong>', '</strong>')");
 			
 			echo '>> Очистка несуществующих категорий...'  . PHP_EOL;
-			$this->db->non_cached_query("DELETE FROM product_to_category WHERE category_id NOT IN (SELECT distinct category_id FROM category)");
-			
-			echo '>> Формирование категории уценки...'  . PHP_EOL;
-			$this->db->non_cached_query("DELETE FROM product_to_category WHERE category_id = '" . GENERAL_MARKDOWN_CATEGORY . "'");
-			$this->db->non_cached_query("DELETE FROM product_to_category WHERE product_id IN (SELECT product_id FROM product WHERE is_markdown = 1)");
+			$this->db->non_cached_query("DELETE FROM product_to_category WHERE category_id NOT IN (SELECT distinct category_id FROM category)");			
 
 			echo '>> Коррекция маркеров амазона...'  . PHP_EOL;
 			$this->db->non_cached_query("UPDATE product p SET fill_from_amazon = 1 WHERE filled_from_amazon = 1 AND (fill_from_amazon = 0 OR ISNULL(fill_from_amazon))");
@@ -99,18 +131,12 @@
 			$this->db->non_cached_query("DELETE FROM product_special WHERE price = 0");
 			$this->db->non_cached_query("DELETE FROM product_price_to_store WHERE price = 0");
 			$this->db->non_cached_query("DELETE FROM product_price_national_to_store WHERE price = 0");
-			$this->db->non_cached_query("DELETE FROM product_price_national_to_yam WHERE price = 0");
-			
-			$query = $this->db->non_cached_query("
-			INSERT INTO product_to_category (product_id, category_id) (
-			SELECT DISTINCT product_id, " . GENERAL_MARKDOWN_CATEGORY . "
-			FROM product WHERE is_markdown = 1)");					
-		}
+			$this->db->non_cached_query("DELETE FROM product_price_national_to_yam WHERE price = 0");		
+
+			$this->fillSpecialCategory()->fillMarkDownCategory()->fillRelatedCategories();	
+		}		
 		
-		
-		public function dailyWork(){
-			
-			
+		public function dailyWork(){						
 			echo 'Статистика по работе сотрудников...' . PHP_EOL;
 			
 			echo 'Инициализация записей на сегодня...' . PHP_EOL;
@@ -186,9 +212,7 @@
 			$this->db->query("UPDATE user_worktime uw SET problem_order_count = (SELECT COUNT(DISTINCT order_id) as count FROM `order` WHERE (order_status_id IN (" . implode(',', $this->config->get('config_problem_order_status_id')) . ") OR (probably_cancel=1 OR probably_close=1 OR probably_problem=1) AND order_status_id > '0') AND manager_id = uw.user_id) WHERE date = DATE(NOW())");
 			echo PHP_EOL;
 		}
-		
-		
-		
+				
 		public function optimizeCustomerDB(){
 			$this->load->model('setting/setting');
 			$this->load->model('setting/store');
