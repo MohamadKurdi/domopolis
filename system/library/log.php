@@ -1,9 +1,11 @@
 <?php
 	class Log {
 		private $filename;
+		private $firePHP = null;
 		
 		public function __construct($filename = '') {
 			$this->filename = $filename;
+			$this->firePHP = \FirePHP::init();
 		}
 		
 		public function clear() {
@@ -25,23 +27,21 @@
 			$this->debug($sql, false, true, $echo);			
 		}
 
-		public function fire($variable, $level = 'log'){
-			$fire = \FirePHP::init();
-
+		public function fire($variable, $level = 'log'){			
 			if ($level == 'log'){
-				$fire->log($variable);
+				$this->firePHP->log($variable);
 			}
-			
+
 			if ($level == 'info'){
-				$fire->info($variable);
+				$this->firePHP->info($variable);
 			}
 
 			if ($level == 'warn'){
-				$fire->warn($variable);
+				$this->firePHP->warn($variable);
 			}
 
 			if ($level == 'error'){
-				$fire->error($variable);
+				$this->firePHP->error($variable);
 			}
 
 			return;
