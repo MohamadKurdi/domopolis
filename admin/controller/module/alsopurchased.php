@@ -17,8 +17,6 @@ class ControllerModuleAlsopurchased extends Controller
             $this->model_setting_setting->editSetting( 'alsopurchased', $this->request->
                 post );
 
-            $this->cache->delete( 'product' );
-
             $this->session->data['success'] = $this->language->get( 'text_success' );
 
             $this->redirect( $this->url->link( 'extension/module', 'token=' . $this->
