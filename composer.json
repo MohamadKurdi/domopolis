@@ -49,6 +49,7 @@
         "simplehtmldom/simplehtmldom": "dev-master",
         "doctrine/sql-formatter": "^1.1",
         "umpirsky/transliterator": "^0.1.0",
-        "enniel/epochta": "^0.0.1"
+        "enniel/epochta": "^0.0.1",
+        "firephp/firephp-core": "^0.5.3"
     }
 }

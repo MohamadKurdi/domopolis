@@ -2,7 +2,7 @@
 	class Log {
 		private $filename;
 		
-		public function __construct($filename) {
+		public function __construct($filename = '') {
 			$this->filename = $filename;
 		}
 		
@@ -23,6 +23,28 @@
 		
 		public function debugsql($sql, $echo = false){
 			$this->debug($sql, false, true, $echo);			
+		}
+
+		public function fire($variable, $level = 'log'){
+			$fire = \FirePHP::init();
+
+			if ($level == 'log'){
+				$fire->log($variable);
+			}
+			
+			if ($level == 'info'){
+				$fire->info($variable);
+			}
+
+			if ($level == 'warn'){
+				$fire->warn($variable);
+			}
+
+			if ($level == 'error'){
+				$fire->error($variable);
+			}
+
+			return;
 		}
 		
 		public function debug($variable, $message = false, $sql = false, $echo = false){
