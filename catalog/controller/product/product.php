@@ -1132,9 +1132,11 @@ class ControllerProductProduct extends Controller
                         $this->data['delivery_info'] = isset($delivery_full['description'])?html_entity_decode($delivery_full['description'], ENT_QUOTES, 'UTF-8'):'';
 
                         $this->data['youtubes'] = false;
+                        $this->data['videoInt'] = 0;
 
                         if ($product_info['youtube']) {
                             $this->data['youtubes'] = explode(',', $product_info['youtube']);
+                            $this->data['videoInt'] = 1;
                         }
 
                         $this->data['bought_for_week'] = (int)(($product_info['bought_for_month'] > 0) ? ($product_info['bought_for_month'] * 3 + $product_id % 4) : false);
