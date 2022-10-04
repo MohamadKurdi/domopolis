@@ -1032,7 +1032,8 @@
 			'config_delivery_russia_term',
 			'config_delivery_ukrainian_term',
 			'config_delivery_outstock_term',
-			'config_delivery_outstock_enable'
+			'config_delivery_outstock_enable',
+			'config_delivery_display_logic'			
 			);
 			
 			foreach ($termskeys as $termkey){

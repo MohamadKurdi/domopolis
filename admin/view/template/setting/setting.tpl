@@ -907,60 +907,63 @@
 					<div id="tab-terms">
 						<h2>Сроки поставки. Задаются через дефис, цифрами, 15-30, 4-7, 1-2</h2>
 						<table class="form">
-										<tr>
-											<td>Сроки поставки если есть в наличии в текущей стране</td>
-											<td>
-												<input type="text" name="config_delivery_instock_term" value="<?php echo $config_delivery_instock_term; ?>" size="10" />
-											</td>
-											<td>
-											</td>
-										</tr>
-										
-										<tr>
-											<td>Сроки поставки если нету в наличии в текущей стране, но есть в Германии</td>
-											<td>
-												<input type="text" name="config_delivery_central_term" value="<?php echo $config_delivery_central_term; ?>" size="10" />
-											</td>
-											<td>
-											</td>
-										</tr>
-										
-										<tr>
-											<td>Сроки поставки если есть в наличии на складе РФ</td>
-											<td>
-												<input type="text" name="config_delivery_russia_term" value="<?php echo $config_delivery_russia_term; ?>" size="10" />
-											</td>
-											<td>
-											</td>
-										</tr>
-										
-										<tr>
-											<td>Сроки поставки если есть в наличии на складе Украина</td>
-											<td>
-												<input type="text" name="config_delivery_ukrainian_term" value="<?php echo $config_delivery_ukrainian_term; ?>" size="10" />
-											</td>
-											<td>
-											</td>
-										</tr>
-										
-										<tr>
-											<td>Сроки поставки если нету в наличии на своих складах</td>
-											<td>
-												<input type="text" name="config_delivery_outstock_term" value="<?php echo $config_delivery_outstock_term; ?>" size="10" />
-											</td>
-											<td>
-												<select name="config_delivery_outstock_enable">
-													<?php if ($config_delivery_outstock_enable) { ?>
-														<option value="1" selected="selected">Включить отображение информации о сроках</option>
-														<option value="0">Отключить отображение информации о сроках</option>
-														<?php } else { ?>													
-														<option value="1">Включить отображение информации о сроках</option>
-														<option value="0"  selected="selected">Отключить отображение информации о сроках</option>
-													<? } ?>
-												</select>
-											</td>
-										</tr>
-									</table>		
+							<tr>
+								<td style="width:33%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Сроки поставки если есть в наличии в текущей стране</span></p>
+									<input type="text" name="config_delivery_instock_term" value="<?php echo $config_delivery_instock_term; ?>" size="10" />
+								</td>
+	
+								<td style="width:33%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Сроки поставки если нету в наличии в текущей стране, но есть в Германии</span></p>
+									<input type="text" name="config_delivery_central_term" value="<?php echo $config_delivery_central_term; ?>" size="10" />
+								</td>
+								
+								<td style="width:33%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Сроки поставки если есть в наличии на складе РФ</span></p>
+									<input type="text" name="config_delivery_russia_term" value="<?php echo $config_delivery_russia_term; ?>" size="10" />
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width:33%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Сроки поставки если есть в наличии на складе в Украине</span></p>
+									<input type="text" name="config_delivery_ukrainian_term" value="<?php echo $config_delivery_ukrainian_term; ?>" size="10" />
+								</td>
+
+								<td style="width:33%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Сроки поставки если есть в наличии на складе в Украине</span></p>
+									<input type="text" name="config_delivery_outstock_term" value="<?php echo $config_delivery_outstock_term; ?>" size="10" />
+								</td>
+							</tr>
+
+							<tr>
+								<td style="width:33%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Отображать сроки, если нет в наличии на складе в стране</span></p>
+									<select name="config_delivery_outstock_enable">
+										<?php if ($config_delivery_outstock_enable) { ?>
+											<option value="1" selected="selected">Включить отображение информации о сроках</option>
+											<option value="0">Отключить отображение информации о сроках</option>
+										<?php } else { ?>													
+											<option value="1">Включить отображение информации о сроках</option>
+											<option value="0"  selected="selected">Отключить отображение информации о сроках</option>
+										<? } ?>
+									</select>
+								</td>
+
+								<td style="width:33%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика подсчёта сроков в карте товара</span></p>
+									<select name="config_delivery_display_logic">
+										<?php if ($config_delivery_display_logic == 'v1') { ?>
+											<option value="v1" selected="selected">Логика v1, без блоков, разделять отправку и доставку</option>
+											<option value="v2"></option>
+										<?php } else { ?>													
+											<option value="v1">Логика v1, без блоков, разделять отправку и доставку</option>
+											<option value="v2"  selected="selected">Логика v2, блоками, даты в заголовке, не разделять отправку и доставку</option>
+										<? } ?>
+									</select>
+								</td>
+							</tr>
+						</table>		
 						
 						<h2>Идентификаторы складов</h2>
 						
