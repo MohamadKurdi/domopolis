@@ -36,7 +36,7 @@ class ControllerModuleAlsoPurchased extends Controller
 					$categories = $this->model_catalog_category->getRelatedCategories($product['main_category_id'], $setting['category_limit']);
 
 					foreach ($categories as $category){
-						$products = $results = $results_full = [];
+						$results = $results_full = $results_full2 = [];
 						$filter_data = [
 							 'start' 					=> 0,
 							 'limit' 					=> $setting['limit'],	
@@ -55,7 +55,7 @@ class ControllerModuleAlsoPurchased extends Controller
 								'start' 					=> 0,
 								'limit' 					=> ($setting['limit'] - count($results)),	
 								'filter_category_id'		=> $category['category_id'],						
-								'sort'						=> 'rand',
+								'sort'						=> 'p.viewed',
 								'order'               		=> 'DESC',	
 								'filter_not_bad'			=> true,		
 								'filter_with_variants'		=> true
@@ -63,6 +63,20 @@ class ControllerModuleAlsoPurchased extends Controller
 
 							$results_full = $this->model_catalog_product->getProducts($filter_data);							
 						}
+
+						if ((count($results) + count($results_full)) < $setting['limit']){
+							$filter_data = [
+								'start' 					=> 0,
+								'limit' 					=> ($setting['limit'] - (count($results) + count($results_full))),	
+								'filter_category_id'		=> $category['category_id'],						
+								'sort'						=> 'rand-10',
+								'order'               		=> 'DESC',	
+								'filter_not_bad'			=> true,		
+								'filter_with_variants'		=> true
+							];
+
+							$results_full2 = $this->model_catalog_product->getProducts($filter_data);													
+						}									
 
 						$merged = [];
 						foreach ($results as $key => $result){
@@ -72,6 +86,10 @@ class ControllerModuleAlsoPurchased extends Controller
 						foreach ($results_full as $key => $result){
 							$merged[$key] = $result;
 						}
+
+						foreach ($results_full2 as $key => $result){
+							$merged[$key] = $result;
+						}					
 
 						$products = $this->model_catalog_product->prepareProductToArray($merged);
 
