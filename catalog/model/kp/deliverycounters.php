@@ -45,7 +45,7 @@
 			$deliveryPeriod = $novaPoshta->getDeliveryDate($novaposhta_city_guid, date('y.m.d'));
 			
 			if ($deliveryPeriod){
-				$query = $this->db->query("UPDATE  novaposhta_cities_ww  SET deliveryPeriod = '" . (int)$deliveryPeriod . "' WHERE Ref = '" . (int)$novaposhta_city_guid . "'");
+				$query = $this->db->query("UPDATE  novaposhta_cities_ww  SET deliveryPeriod = '" . (int)$deliveryPeriod . "' WHERE Ref = '" . $this->db->escape($novaposhta_city_guid) . "'");
 			}
 			
 			return $deliveryPeriod;
@@ -53,14 +53,15 @@
 		
 		//Новая Почта
 		public function getNovaPoshtaDeliveryTerms($novaposhta_city_guid){
+
 			$deliveryPeriod = false;
 			
-			$query = $this->db->query("SELECT deliveryPeriod FROM novaposhta_cities_ww WHERE Ref = '" . (int)$novaposhta_city_guid . "'");
+			$query = $this->db->query("SELECT deliveryPeriod FROM novaposhta_cities_ww WHERE Ref = '" . $this->db->escape($novaposhta_city_guid) . "'");
 			
 			if ($query->num_rows && $query->row['deliveryPeriod']){
 				$deliveryPeriod = $query->row['deliveryPeriod'];					
 			}
-			
+
 			//Если в БД нету, либо 10% вероятность, то обновляем информацию в базе
 			if (!$deliveryPeriod || mt_rand(0,10) == 5){
 				$deliveryPeriod = $this->updateNovaPoshtaDeliveryTermsInDatabase($novaposhta_city_guid);

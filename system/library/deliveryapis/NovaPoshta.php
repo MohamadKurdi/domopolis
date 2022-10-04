@@ -102,18 +102,19 @@
 			'CityRecipient' => $city
 			)
 			);
-			
-			
+						
 			$result = $this->doRequest($data);
-			
+
 			if (!empty($result['success']) && $result['success']){
 				$datetime1 = date_create(date('d.m.Y'));
 				$datetime2 = date_create($result['data'][0]['DeliveryDate']['date']);
 				
 				$interval = date_diff($datetime1, $datetime2);
-				
-				return $interval->days;
-				
+				if ($interval->days == 0){
+					return 1;
+				} else {
+					return $interval->days;				
+				}
 			}
 			
 			return false;
