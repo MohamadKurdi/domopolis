@@ -85,6 +85,7 @@ class ControllerProductProduct extends Controller
     {
         $this->load->model('catalog/product');
         $this->load->model('tool/simpleapicustom');
+        $this->load->model('kp/deliverycounters');
 
         if (isset($this->request->get['x'])) {
             $product_id = (int)$this->request->get['x'];
@@ -123,27 +124,29 @@ class ControllerProductProduct extends Controller
             $cdekDeliveryTerms = array();
 
             if (($this->data['delivery_city']['city'] != $this->language->get('default_city_' . $this->config->get('config_country_id')) || ($this->config->get('config_warehouse_identifier') != $this->config->get('config_warehouse_identifier_local'))) && $product_info['stock_dates'] && $this->model_tool_simpleapicustom->checkIfUseRUKZBYServices()) {
-                if (!empty($customer_city) && !empty($customer_city)) {
-                    $this->load->model('kp/deliverycounters');
+                if (!empty($customer_city) && !empty($customer_city['id'])) {
                     if ($cdekDeliveryTerms = $this->model_kp_deliverycounters->getCDEKDeliveryTerms($customer_city['id'])) {
                         $this->data['cdek_delivery_dates']['start'] = date('d.m', strtotime('+'. ($product_info['stock_dates']['start'] + $cdekDeliveryTerms['deliveryPeriodMin'] + 1) .' day'));
-
                         $this->data['cdek_delivery_dates']['end'] = date('d.m', strtotime('+'. ($product_info['stock_dates']['end'] + $cdekDeliveryTerms['deliveryPeriodMax'] + 1) .' day'));
                     }
                 }
             }
 
-            if ($this->data['delivery_city']['city'] != $this->language->get('default_city_' . $this->config->get('config_country_id')) && $product_info['stock_dates'] && $this->model_tool_simpleapicustom->checkIfUseUAServices()) {
-                if (!empty($customer_city) && !empty($customer_city)) {
-                    $this->load->model('kp/deliverycounters');
+            if ($product_info['stock_dates'] && $this->model_tool_simpleapicustom->checkIfUseUAServices()) {
+                if (!empty($customer_city) && !empty($customer_city['id'])) {
                     if ($npDeliveryTerms = $this->model_kp_deliverycounters->getNovaPoshtaDeliveryTerms($customer_city['id'])) {
                         $this->data['np_delivery_dates']['start'] = date('d.m', strtotime('+'. ($product_info['stock_dates']['start'] + $npDeliveryTerms) .' day'));
-
                         $this->data['np_delivery_dates']['end'] = date('d.m', strtotime('+'. ($product_info['stock_dates']['end'] + $npDeliveryTerms) .' day'));
                     }
                 }
-            }
 
+                if ($this->data['delivery_city']['city'] != $this->language->get('default_city_' . $this->config->get('config_country_id')) && $this->config->get('config_delivery_display_logic') == 'v2'){
+                    if (!empty($this->data['np_delivery_dates'])){
+                        $this->data['delivery_dates']['start']  = $this->data['np_delivery_dates']['start'];
+                        $this->data['delivery_dates']['end']    = $this->data['np_delivery_dates']['end'];
+                    }
+                }
+            }
 
             //По умолчанию "доставка по"
             $this->data['delivery_text'] = $this->data['delivery_to_city_courier'];
@@ -265,6 +268,9 @@ class ControllerProductProduct extends Controller
             }
 
             $this->template = 'blocks/delivery_info';
+            if ($this->config->get('config_delivery_display_logic') == 'v2'){
+                $this->template = 'blocks/delivery_info2';
+            }
 
             $this->response->setOutput($this->render());
         }
