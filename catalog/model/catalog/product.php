@@ -1181,6 +1181,10 @@
 			if (!empty($data['filterinstock'])) {
 				$sql .= " AND p." . $this->config->get('config_warehouse_identifier') . " > 0";
 			}
+
+			if (!empty($data['filter_quantity'])) {
+				$sql .= " AND p.quantity > 0";
+			}
 			
 			if (!empty($data['filter_not_bad'])) {
 				$sql .= " AND p.stock_status_id NOT IN (" . $this->config->get('config_not_in_stock_status_id') . ',' . $this->config->get('config_partly_in_stock_status_id') . ")";
@@ -2453,6 +2457,10 @@
 			
 			if (!empty($data['filterinstock'])) {
 				$sql .= " AND p." . $this->config->get('config_warehouse_identifier') . " > 0";
+			}
+
+			if (!empty($data['filter_quantity'])) {
+				$sql .= " AND p.quantity > 0";
 			}
 			
 			if (!empty($data['filter_enable_markdown'])) {
