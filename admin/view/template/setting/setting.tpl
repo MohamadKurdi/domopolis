@@ -4533,7 +4533,6 @@
 
 									<td style="width:15%">
 										<div>
-											<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Пропускать товары, которые были закуплены</span></p>
 											<select name="config_rainforest_pass_offers_for_ordered">
 												<?php if ($config_rainforest_pass_offers_for_ordered) { ?>
@@ -4545,10 +4544,18 @@
 												<? } ?>
 											</select>
 										</div>
+										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Х дней от последней закупки</span></p>
 											<input type="number" step="1" name="config_rainforest_pass_offers_for_ordered_days" value="<?php echo $config_rainforest_pass_offers_for_ordered_days; ?>" style="width:100px;" />
 											<br />
 											<span class="help"><i class="fa fa-exclamation-circle"></i> если пропускать товары, которые были закуплены, то как давно</span>
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Объемный вес макс Х</span></p>
+											<input type="number" step="0.1" name="config_rainforest_volumetric_max_wc_multiplier" value="<?php echo $config_rainforest_volumetric_max_wc_multiplier; ?>" style="width:100px;" />
+											<br />
+											<span class="help"><i class="fa fa-exclamation-circle"></i> не учитывать объемный вес, если он больше в Х раз</span>
 										</div>
 									</td>
 

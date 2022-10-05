@@ -84,7 +84,8 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_supplierminrating_inner',
 
 		'config_rainforest_main_formula',
-		'config_rainforest_default_store_id'
+		'config_rainforest_default_store_id',
+		'config_rainforest_volumetric_max_wc_multiplier'
 	];
 
 	public function index() {
@@ -173,6 +174,7 @@ class ControllerSettingRnf extends Controller {
 		$defaultMultiplier = 0, 
 		$useVolumetricWeight = false, 
 		$volumetricWeightCoefficient = 0, 
+		$volumetricMaxWCMultiplier = 0,
 		$showRandomProducts = false, 
 		$limitProducts = 0, 
 		$zonesConfig = '',
@@ -199,6 +201,10 @@ class ControllerSettingRnf extends Controller {
 
 		if (empty($volumetricWeightCoefficient)){
 			$volumetricWeightCoefficient = $this->request->post['volumetric_weight_coefficient'];
+		}
+
+		if (empty($volumetricMaxWCMultiplier)){
+			$volumetricMaxWCMultiplier = $this->request->post['volumetric_max_wc_multiplier'];
 		}
 
 		if (empty($showRandomProducts)){
@@ -307,7 +313,15 @@ class ControllerSettingRnf extends Controller {
 				$result['counted_volumetric_weight_format']   	= $this->weight->format($result['counted_volumetric_weight'], $this->config->get('config_weight_class_id'));
 
 				if ($useVolumetricWeight){
-					$product['counted_weight'] = $this->rainforestAmazon->offersParser->PriceLogic->getProductVolumetricWeight($product, 0, false, $volumetricWeightCoefficient);
+					$product['counted_weight'] 		= $this->rainforestAmazon->offersParser->PriceLogic->getProductVolumetricWeight($product, 0, false, $volumetricWeightCoefficient);
+					$product['counted_weight_real'] = $this->rainforestAmazon->offersParser->PriceLogic->getProductWeight($product);
+
+					if ($volumetricMaxWCMultiplier){
+						if ($product['counted_weight'] > ($product['counted_weight_real'] * (float)$this->config->get('config_rainforest_volumetric_max_wc_multiplier'))){
+							$product['counted_weight'] = $product['counted_weight_real'];
+						}
+					}
+
 				} else {
 					$product['counted_weight'] = $this->rainforestAmazon->offersParser->PriceLogic->getProductWeight($product);
 				}

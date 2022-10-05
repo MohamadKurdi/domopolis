@@ -924,6 +924,21 @@
 								</span>
 							</td>
 						</tr>
+
+						<tr>
+							<td class="right">
+								Объемный вес макс Х
+							</td>
+							<td style="width:100px;" class="center">
+								<input type="number" step="0.1" name="config_rainforest_volumetric_max_wc_multiplier" value="<?php echo $config_rainforest_volumetric_max_wc_multiplier; ?>" style="width:100px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Защита от некорректного большого объемного веса, в случае если Амазон отдает габарит товара, который фактически складывается. Если объемный вес будет больше в Х раз чем фактический, то объемный учтён не будет.
+								</span>
+							</td>
+						</tr>
+
 						<?php foreach ($stores as $store) { ?>
 							<tr>
 								<td class="right">
@@ -1218,6 +1233,7 @@
 					var defaultMultiplier 			= $('input[name=config_rainforest_default_multiplier_0]').val();
 					var useVolumetricWeight 		= $('input[name=config_rainforest_use_volumetric_weight_0]').attr('checked')?1:0;
 					var volumetricWeightCoefficient = $('input[name=config_rainforest_volumetric_weight_coefficient_0]').val();
+					var volumetricMaxWCMultiplier 	= $('input[name=config_rainforest_volumetric_max_wc_multiplier]').val();
 					var showRandomProducts 			= $('input[name=calculator_show_random]').attr('checked')?1:0;
 					var limitProducts				= $('input[name=calculator_limit_products]').val();
 					var zonesConfig					= $('input[name=calculator_zones_config]').val();
@@ -1233,6 +1249,7 @@
 							default_multiplier: 			defaultMultiplier,
 							use_volumetric_weight: 			useVolumetricWeight,
 							volumetric_weight_coefficient: 	volumetricWeightCoefficient,
+							volumetric_max_wc_multiplier:   volumetricMaxWCMultiplier,
 							show_random_products:  			showRandomProducts,
 							limit_products:  				limitProducts,
 							zones_config:  					zonesConfig,
@@ -1281,6 +1298,7 @@
 				function savePriceModel(){
 					saveSettingAjax('config_rainforest_main_formula', $('input[name=config_rainforest_main_formula]').val(), $('input[name=config_rainforest_main_formula]'));
 					saveSettingAjax('config_rainforest_default_store_id', $('select[name=config_rainforest_default_store_id]').val(), $('select[name=config_rainforest_default_store_id]'));
+					saveSettingAjax('config_rainforest_volumetric_max_wc_multiplier', $('input[name=config_rainforest_volumetric_max_wc_multiplier]').val(), $('input[name=config_rainforest_volumetric_max_wc_multiplier]'));
 
 					<?php foreach ($stores as $store) { ?>
 						saveSettingAjax('config_rainforest_kg_price_<?php echo $store['store_id']?>', $('input[name=config_rainforest_kg_price_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_kg_price_<?php echo $store['store_id']?>]'));
@@ -1294,7 +1312,7 @@
 				$('select, textarea, input[type=checkbox], input[type=text], input[type=number]').bind('change', function() {
 					var key  = $(this).attr('name');
 
-					<?php foreach (['config_rainforest_main_formula', 'config_rainforest_default_store_id', 'calculator_show_random', 'calculator_limit_products', 'calculator_zones_config', 'calculator_explicit_products'] as $not_change_input) { ?>
+					<?php foreach (['config_rainforest_main_formula', 'config_rainforest_volumetric_max_wc_multiplier', 'config_rainforest_default_store_id', 'calculator_show_random', 'calculator_limit_products', 'calculator_zones_config', 'calculator_explicit_products'] as $not_change_input) { ?>
 						if (key == '<?php echo $not_change_input; ?>'){
 							console.log('Pricelogic skip autosave: ' + key);
 							return;

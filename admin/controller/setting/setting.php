@@ -3110,6 +3110,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_rainforest_supplierminrating_inner'] = $this->config->get('config_rainforest_supplierminrating_inner');
         }
 
+        if (isset($this->request->post['config_rainforest_volumetric_max_wc_multiplier'])) {
+            $this->data['config_rainforest_volumetric_max_wc_multiplier'] = $this->request->post['config_rainforest_volumetric_max_wc_multiplier'];
+        } else {
+            $this->data['config_rainforest_volumetric_max_wc_multiplier'] = $this->config->get('config_rainforest_volumetric_max_wc_multiplier');
+        }
+
         if (isset($this->request->post['config_rainforest_default_store_id'])) {
             $this->data['config_rainforest_default_store_id'] = $this->request->post['config_rainforest_default_store_id'];
         } else {
@@ -3198,7 +3204,7 @@ class ControllerSettingSetting extends Controller
                 $this->data['config_rainforest_volumetric_weight_coefficient_' . $store['store_id']] = $this->config->get('config_rainforest_volumetric_weight_coefficient_' . $store['store_id']);
             }
         }
-        
+
         if (isset($this->request->post['config_priceva_enable_api'])) {
             $this->data['config_priceva_enable_api'] = $this->request->post['config_priceva_enable_api'];
         } else {
