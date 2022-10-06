@@ -627,11 +627,24 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_phonemask'] = $this->config->get('config_phonemask');
         }
+
+        $this->load->model('localisation/language');        
+        $this->data['languages'] = $this->model_localisation_language->getLanguages();
         
         if (isset($this->request->post['config_default_city'])) {
             $this->data['config_default_city'] = $this->request->post['config_default_city'];
         } else {
             $this->data['config_default_city'] = $this->config->get('config_default_city');
+        }
+
+        foreach ($this->data['languages'] as $city_language){
+
+            if (isset($this->request->post['config_default_city_' . $city_language['code']])) {
+                $this->data['config_default_city_' . $city_language['code']] = $this->request->post['config_default_city_' . $city_language['code']];
+            } else {
+                $this->data['config_default_city_' . $city_language['code']] = $this->config->get('config_default_city_' . $city_language['code']);
+            }
+
         }
         
         if (isset($this->request->post['config_sms_sign'])) {
@@ -917,11 +930,7 @@ class ControllerSettingSetting extends Controller
             $this->data['config_second_language'] = $this->request->post['config_second_language'];
         } else {
             $this->data['config_second_language'] = $this->config->get('config_second_language');
-        }
-        
-        $this->load->model('localisation/language');
-        
-        $this->data['languages'] = $this->model_localisation_language->getLanguages();
+        }               
         
         if (isset($this->request->post['config_admin_language'])) {
             $this->data['config_admin_language'] = $this->request->post['config_admin_language'];

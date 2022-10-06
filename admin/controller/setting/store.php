@@ -632,6 +632,9 @@
 				} else {
 				$this->data['config_phonemask'] = '';
 			}
+
+			$this->load->model('localisation/language');			
+			$this->data['languages'] = $this->model_localisation_language->getLanguages();
 			
 			if (isset($this->request->post['config_default_city'])) {
 				$this->data['config_default_city'] = $this->request->post['config_default_city'];
@@ -640,6 +643,18 @@
 				} else {
 				$this->data['config_default_city'] = '';
 			}
+
+			foreach ($this->data['languages'] as $city_language){
+
+				if (isset($this->request->post['config_default_city_' . $city_language['code']])) {
+					$this->data['config_default_city_' . $city_language['code']] = $this->request->post['config_default_city_' . $city_language['code']];
+				} elseif (isset($store_info['config_default_city' . $city_language['code']])) {
+					$this->data['config_default_city_' . $city_language['code']] = $store_info['config_default_city' . $city_language['code']];
+				} else {
+					$this->data['config_default_city_' . $city_language['code']] = '';
+				}
+
+			}	
 			
 			if (isset($this->request->post['config_email'])) {
 				$this->data['config_email'] = $this->request->post['config_email'];
@@ -947,11 +962,7 @@
 				$this->data['config_do_redirection_to_second_language'] = $store_info['config_do_redirection_to_second_language'];			
 				} else {
 				$this->data['config_do_redirection_to_second_language'] = $this->config->get('config_do_redirection_to_second_language');
-			}
-			
-			$this->load->model('localisation/language');
-			
-			$this->data['languages'] = $this->model_localisation_language->getLanguages();
+			}		
 			
 			if (isset($this->request->post['config_currency'])) {
 				$this->data['config_currency'] = $this->request->post['config_currency'];

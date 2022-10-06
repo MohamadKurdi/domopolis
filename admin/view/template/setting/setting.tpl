@@ -1215,6 +1215,7 @@
 									<?php } ?>
 								</select></td>
 							</tr>
+
 							<tr>
 								<td><?php echo $entry_zone; ?></td>
 								<td>
@@ -1244,11 +1245,21 @@
 								<td><input type="text" name="config_countryname" value="<?php echo $config_countryname; ?>" size="30" />
 								</td>
 							</tr>	
+
 							<tr>
-								<td><span class="required"></span>Дефолтный город</td>
+								<td>Дефолтный город (столица)</td>
 								<td><input type="text" name="config_default_city" value="<?php echo $config_default_city; ?>" size="20" />   </td>            
-							</tr>																
-							
+							</tr>		
+
+							<?php foreach ($languages as $language) { ?>
+								<tr>
+									<td><p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Дефолтный город (столица) <?php echo $language['code']; ?></span></p></td>
+									<td>										
+										<input type="text" name="config_default_city_<?php echo $language['code']; ?>" value="<?php echo ${'config_default_city_' . $language['code']}; ?>" size="20" />										
+									</td>
+								</tr>													
+							<?php } ?>
+
 							<tr>
 								<td><?php echo $entry_language; ?></td>
 								<td>
@@ -1262,8 +1273,7 @@
 									<?php } ?>
 								</select>
 								</td>
-							</tr>
-							
+							</tr>							
 							
 							<tr>
 								<td>Второй язык фронта</td>

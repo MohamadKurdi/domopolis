@@ -415,6 +415,11 @@
 		$registry->get('config')->set('order_default', $sorts['order_default']);
 	}
 
+	//Default city reloading
+	if ($registry->get('config')->get('config_default_city_' . $registry->get('config')->get('config_language'))){
+		$registry->get('config')->set('config_default_city', $registry->get('config')->get('config_default_city_' . $registry->get('config')->get('config_language')));
+	}
+
 	//Implementation of different redirect modes and|or modules	
 	$controller->addPreAction(new Action('common/hoboseo'));
 	$controller->addPreAction(new Action('common/seo_pro'));
