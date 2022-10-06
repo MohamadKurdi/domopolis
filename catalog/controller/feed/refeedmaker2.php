@@ -272,7 +272,7 @@ class ControllerFeedReFeedMaker2 extends Controller
 
 
         if (!trim($product['manufacturer']) || (trim($product['manufacturer']) && !$has_gtin && !$has_mpn)) {
-            $output .= '    g:identifier_exists>false</g:identifier_exists>'. PHP_EOL;
+            $output .= '    <g:identifier_exists>false</g:identifier_exists>'. PHP_EOL;
         }
 
         $output .= '    <g:price>' . $this->currency->format($product['price'], '', '', false) . ' ' .  $this->currency->getCode() . '</g:price>'. PHP_EOL;
