@@ -12,14 +12,26 @@ workbox.googleAnalytics.initialize();
 workbox.routing.registerRoute(
 	/\.(?:css)$/,
 	new workbox.strategies.StaleWhileRevalidate({
-		cacheName: 'css'
+		cacheName: 'css',
+		plugins: [
+		new workbox.expiration.ExpirationPlugin({                
+                maxEntries: 100,
+                purgeOnQuotaError: true,
+            }),
+		],
 	})
 	);
 
 workbox.routing.registerRoute(
 	/\.(?:js)$/,
 	new workbox.strategies.StaleWhileRevalidate({
-		cacheName: 'js'
+		cacheName: 'js',
+		plugins: [
+		new workbox.expiration.ExpirationPlugin({                
+                maxEntries: 100,
+                purgeOnQuotaError: true,
+            }),
+		],
 	})
 	);
 
@@ -27,6 +39,12 @@ workbox.routing.registerRoute(
 	/\.(?:woff|woff2|ttf|otf|eot)$/,
 	new workbox.strategies.StaleWhileRevalidate({
 		cacheName: 'fonts',
+		plugins: [
+		new workbox.expiration.ExpirationPlugin({                
+                maxEntries: 20,
+                purgeOnQuotaError: true,
+            }),
+		],
 	})
 	);
 
@@ -48,9 +66,8 @@ workbox.routing.registerRoute(
 	new workbox.strategies.StaleWhileRevalidate({
 		cacheName: 'images',
 		plugins: [
-		new workbox.expiration.ExpirationPlugin({
-                // Only cache 60 most recent images.
-                maxEntries: 60,
+		new workbox.expiration.ExpirationPlugin({                
+                maxEntries: 200,
                 purgeOnQuotaError: true,
             }),
 		],
