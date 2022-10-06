@@ -2,12 +2,12 @@
 
 class ControllerModuleMMenu extends Controller {
 		
-	private function getChildrenData( $ctg_id, $path_prefix )
+	private function getChildrenData( $category_id, $path_prefix )
 	{
 		$children_data = [];
-		$children = $this->model_catalog_category->getCategories($ctg_id);
+		$children = $this->model_catalog_category->getCategories($category_id);
 
-		foreach ($children as $child) {			
+		foreach ($children as $child) {	
 			$children_data[] = array(
 				'name'  		=> $child['name'],
 				'href'  		=> $this->url->link('product/category', 'path=' . $path_prefix . '_' . $child['category_id']),
@@ -22,7 +22,7 @@ class ControllerModuleMMenu extends Controller {
 
 		$out = $this->cache->get($this->registry->createCacheQueryString(__METHOD__));
 
-		if ($out) {		
+		if ($out && false) {		
 
 			$this->setCachedOutput($out);
 			
