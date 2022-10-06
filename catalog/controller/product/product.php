@@ -173,18 +173,18 @@ class ControllerProductProduct extends Controller
                             if (count($rates) > 0) {
                                 foreach ($rates as $rate) {
                                     $rate_data = explode(':', $rate);
-                                    $rate_data[0] = (int)trim($rate_data[0]);
-
-                                    if ($data[0] <= $price) {                                              
-                                        if (isset($data[1])) {
-                                            $delivery_price = (int)trim($data[1]);
+                                    $rate_data[0] = (float)trim($rate_data[0]);
+                                   
+                                    if ($rate_data[0] <= (float)$this->currency->format($price, $dostavkaplus_module['currency'], '', false)) {                                              
+                                        if (isset($rate_data[1])) {
+                                            $delivery_price = (float)trim($rate_data[1]);
                                         }                                            
                                     }
                                 }
                             }
 
-                            if ($delivery_price){
-                                $this->data['courier_delivery_price_text'] = $this->currency->format($dostavkaplus_module['price_from'], $dostavkaplus_module['currency'], 1);
+                            if ((float)$delivery_price > 0){
+                                $this->data['courier_delivery_price_text'] = $this->currency->format($delivery_price, $dostavkaplus_module['currency'], 1);
                             } else {
                                 $this->data['courier_delivery_price_text'] = $this->data['delivery_to_city_free'];
                             }
