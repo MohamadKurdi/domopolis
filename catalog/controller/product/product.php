@@ -139,6 +139,14 @@ class ControllerProductProduct extends Controller
                         $this->data['np_delivery_dates']['end'] = date('d.m', strtotime('+'. ($product_info['stock_dates']['end'] + $npDeliveryTerms) .' day'));
                     }
                 }
+                
+                foreach ($this->config->get('dostavkaplus_module') as $key => $dostavkaplus_module){
+                    //NP Config
+                    if ($key == 3){
+                        $this->data['np_delivery_price_text'] = $this->data['delivery_to_city_price_from'] . $this->currency->format($dostavkaplus_module['price_from'], $dostavkaplus_module['currency'], 1);
+                        break;
+                    }                   
+                }
 
                 if ($this->data['delivery_city']['city'] != $this->language->get('default_city_' . $this->config->get('config_country_id')) && $this->config->get('config_delivery_display_logic') == 'v2'){
                     if (!empty($this->data['np_delivery_dates'])){
@@ -147,6 +155,47 @@ class ControllerProductProduct extends Controller
                     }
                 }
             }
+
+            //Курьерская доставка по городу, отдельно
+             if ($this->data['delivery_city']['city'] == $this->language->get('default_city_' . $this->config->get('config_country_id')) && $this->config->get('config_delivery_display_logic') == 'v2'){
+                $this->data['courier_delivery_text'] = $this->data['delivery_by_courier_for_v2'];
+
+                 if ($this->model_tool_simpleapicustom->checkIfUseUAServices()) {
+                 foreach ($this->config->get('dostavkaplus_module') as $key => $dostavkaplus_module){
+                        //Kyiv courier config                   
+                        if ($key == 2){
+                            $price = $product_info['price'];
+                            if ($product_info['special']){
+                                 $price = $product_info['special'];
+                            }
+
+                            $rates = explode(',', $dostavkaplus_module['sumrate']);
+                            if (count($rates) > 0) {
+                                foreach ($rates as $rate) {
+                                    $rate_data = explode(':', $rate);
+                                    $rate_data[0] = (int)trim($rate_data[0]);
+
+                                    if ($data[0] <= $price) {                                              
+                                        if (isset($data[1])) {
+                                            $delivery_price = (int)trim($data[1]);
+                                        }                                            
+                                    }
+                                }
+                            }
+
+                            if ($delivery_price){
+                                $this->data['courier_delivery_price_text'] = $this->currency->format($dostavkaplus_module['price_from'], $dostavkaplus_module['currency'], 1);
+                            } else {
+                                $this->data['courier_delivery_price_text'] = $this->data['delivery_to_city_free'];
+                            }
+
+                            break;
+                        }                   
+                    }
+                }
+
+             }
+
 
             //По умолчанию "доставка по"
             $this->data['delivery_text'] = $this->data['delivery_to_city_courier'];
