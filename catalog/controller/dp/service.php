@@ -40,6 +40,7 @@ class ControllerDPService extends Controller {
 		);
 
 		foreach ($categories as $category_info){
+
 			$filter_data['filter_category_id'] 		= $category_info['category_id'];
 
 			if ($category_info['category_id'] == GENERAL_MARKDOWN_CATEGORY) {

@@ -22,7 +22,7 @@ class ControllerModuleMMenu extends Controller {
 
 		$out = $this->cache->get($this->registry->createCacheQueryString(__METHOD__));
 
-		if ($out && false) {		
+		if ($out) {		
 
 			$this->setCachedOutput($out);
 			
