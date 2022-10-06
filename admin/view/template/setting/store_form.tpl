@@ -637,14 +637,14 @@
 											 </td>            
 										</tr>
 										
-									<?php foreach ($languages as $language) { ?>
-								<tr>
-									<td><p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Дефолтный город (столица) <?php echo $language['code']; ?></span></p></td>
-									<td>										
-										<input type="text" name="config_default_city_<?php echo $language['code']; ?>" value="<?php echo ${'config_default_city_' . $language['code']}; ?>" size="20" />										
-									</td>
-								</tr>													
-							<?php } ?>
+										<?php foreach ($languages as $language) { ?>
+											<tr>
+												<td><p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Дефолтный город (столица) <?php echo $language['code']; ?></span></p></td>
+												<td>										
+													<input type="text" name="config_default_city_<?php echo $language['code']; ?>" value="<?php echo ${'config_default_city_' . $language['code']}; ?>" size="20" />										
+												</td>
+											</tr>													
+										<?php } ?>
 
 										<tr>
 											<td>Активные способы оплаты<br /><span class="help">выводятся в карте товара, по одному в строке</span></td>

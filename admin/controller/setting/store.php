@@ -648,8 +648,8 @@
 
 				if (isset($this->request->post['config_default_city_' . $city_language['code']])) {
 					$this->data['config_default_city_' . $city_language['code']] = $this->request->post['config_default_city_' . $city_language['code']];
-				} elseif (isset($store_info['config_default_city' . $city_language['code']])) {
-					$this->data['config_default_city_' . $city_language['code']] = $store_info['config_default_city' . $city_language['code']];
+				} elseif (isset($store_info['config_default_city_' . $city_language['code']])) {				
+					$this->data['config_default_city_' . $city_language['code']] = $store_info['config_default_city_' . $city_language['code']];
 				} else {
 					$this->data['config_default_city_' . $city_language['code']] = '';
 				}
