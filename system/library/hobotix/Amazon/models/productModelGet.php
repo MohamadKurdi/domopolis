@@ -200,13 +200,39 @@ class productModelGet extends hoboModel{
 		return $result;
 	}
 
+	public function getTotalProductsWithFastPriceFull(){
+		$result = [];
+
+		$sql = "SELECT COUNT(product_id) as total FROM product WHERE amazon_best_price > 0";		
+
+		return $this->db->ncquery($sql)->row['total'];		
+	}	
+
+	public function getProductsWithFastPriceFull($start){
+		$result = [];
+
+		$sql = "SELECT * FROM product WHERE amazon_best_price > 0 ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
+
+		$query = $this->db->ncquery($sql);
+
+		foreach ($query->rows as $row){
+			$result[] = [
+				'product_id' 			=> $row['product_id'],
+				'amazon_best_price'		=> $row['amazon_best_price'],
+				'asin' 					=> $row['asin']									
+			];
+		}
+
+		return $result;
+	}
+
 	public function getTotalProductsWithFastPrice(){
 		$result = [];
 
 		$sql = "SELECT COUNT(product_id) as total FROM product WHERE amazon_best_price > 0 AND price = 0";		
 
 		return $this->db->ncquery($sql)->row['total'];		
-	}
+	}	
 
 	public function getProductsWithFastPrice($start){
 		$result = [];
