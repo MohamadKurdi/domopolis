@@ -203,7 +203,7 @@ class productModelGet extends hoboModel{
 	public function getTotalProductsWithFastPriceFull(){
 		$result = [];
 
-		$sql = "SELECT COUNT(product_id) as total FROM product WHERE amazon_best_price > 0";		
+		$sql = "SELECT COUNT(product_id) as total FROM product WHERE amazon_best_price > 0 AND asin <> 'INVALID'";		
 
 		return $this->db->ncquery($sql)->row['total'];		
 	}	
@@ -211,7 +211,7 @@ class productModelGet extends hoboModel{
 	public function getProductsWithFastPriceFull($start){
 		$result = [];
 
-		$sql = "SELECT * FROM product WHERE amazon_best_price > 0 ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
+		$sql = "SELECT * FROM product WHERE amazon_best_price > 0 AND asin <> 'INVALID' ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
 
 		$query = $this->db->ncquery($sql);
 
@@ -229,7 +229,7 @@ class productModelGet extends hoboModel{
 	public function getTotalProductsWithFastPrice(){
 		$result = [];
 
-		$sql = "SELECT COUNT(product_id) as total FROM product WHERE amazon_best_price > 0 AND price = 0";		
+		$sql = "SELECT COUNT(product_id) as total FROM product WHERE amazon_best_price > 0 AND asin <> 'INVALID' AND price = 0";		
 
 		return $this->db->ncquery($sql)->row['total'];		
 	}	
@@ -237,7 +237,7 @@ class productModelGet extends hoboModel{
 	public function getProductsWithFastPrice($start){
 		$result = [];
 
-		$sql = "SELECT * FROM product WHERE amazon_best_price > 0 AND price = 0 ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
+		$sql = "SELECT * FROM product WHERE amazon_best_price > 0 AND price = 0 AND asin <> 'INVALID' ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
 
 		$query = $this->db->ncquery($sql);
 
