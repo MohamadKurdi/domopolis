@@ -473,6 +473,30 @@ class ControllerDPRainForest extends Controller {
 	}
 
 	/*
+	Полная переустановка цен, через прайслоджик, в случае багов в прайслоджике
+	*/
+	public function fixpricesfull(){
+		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFastPriceFull();		
+
+		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
+
+		echoLine('[fixpricesfull] Всего товаров: ' . $total);
+		$k = 1;		
+
+		for ($i = 1; $i <= $iterations; $i++){
+			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFastPriceFull(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
+			if ($products){		
+				foreach ($products as $product){
+					echoLine('[fixpricesfull] Товар ' . $product['product_id'] . ' / ' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
+					
+					$this->rainforestAmazon->offersParser->PriceLogic->updateProductPrices($product['asin'], $product['amazon_best_price'], true);
+					$k++;	
+				}
+			}	
+		}		
+	}
+
+	/*
 	Перекладывает информацию о товарах в файловый кэш из БД
 	*/
 	public function puttofilecache(){		
