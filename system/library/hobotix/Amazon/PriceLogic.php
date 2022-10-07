@@ -386,8 +386,8 @@ class PriceLogic
 								$productWeight = $this->getProductVolumetricWeight($product, $store_id);
 								$productWeightReal = $this->getProductWeight($product);
 
-								if ($volumetricMaxWCMultiplier){
-									if ($productWeight > ($productWeightReal * (float)$volumetricMaxWCMultiplier)){
+								if ($this->config->get('config_rainforest_volumetric_max_wc_multiplier')){
+									if ($productWeight > ($productWeightReal * (float)$this->config->get('config_rainforest_volumetric_max_wc_multiplier'))){
 										$productWeight = $productWeightReal;
 									}
 								}
