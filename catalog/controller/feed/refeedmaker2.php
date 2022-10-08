@@ -230,18 +230,18 @@ class ControllerFeedReFeedMaker2 extends Controller
         }
 
         if ($product['image']) {
-            $output .= '    <g:image_link>' . $this->model_tool_image->resize($product['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')) . '</g:image_link>'. PHP_EOL;
+            $output .= '    <g:image_link><![CDATA[' . $this->model_tool_image->resize($product['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')) . ']]></g:image_link>'. PHP_EOL;
         } else {
             $output .= '    <g:image_link></g:image_link>'. PHP_EOL;
         }
         
         if ($product['images'] && $images = explode(':', $product['images'])) {
             foreach ($images as $image) {
-                $output .= '    <g:additional_image_link>' . $this->model_tool_image->resize($image, $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')) . '</g:additional_image_link>'. PHP_EOL;
+                $output .= '    <g:additional_image_link><![CDATA[' . $this->model_tool_image->resize($image, $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')) . ']]></g:additional_image_link>'. PHP_EOL;
             }
         }
 
-        $output .= '    <g:model_number>' . $product['model'] . '</g:model_number>'. PHP_EOL;
+        $output .= '    <g:model_number><![CDATA[' . $product['model'] . ']]></g:model_number>'. PHP_EOL;
 
         $mpn = false;
         $has_mpn = true;
@@ -255,15 +255,15 @@ class ControllerFeedReFeedMaker2 extends Controller
 
         if ($mpn) {
             $has_mpn = true;
-            $output .= '    <g:mpn>' . $mpn . '</g:mpn>'. PHP_EOL;
+            $output .= '    <g:mpn><![CDATA[' . $mpn . ']]></g:mpn>'. PHP_EOL;
         }
 
         $has_gtin = false;
 
         if ($product['ean'] && (\BarcodeValidator::IsValidEAN13($product['ean']) || \BarcodeValidator::IsValidEAN8($product['ean']))) {
             $has_gtin = true;
-            $output .= '    <g:ean>' . $product['ean'] . '</g:ean>'. PHP_EOL;
-            $output .= '    <g:gtin>' . $product['ean'] . '</g:gtin>'. PHP_EOL;
+            $output .= '    <g:ean><![CDATA[' . $product['ean'] . ']]></g:ean>'. PHP_EOL;
+            $output .= '    <g:gtin><![CDATA[' . $product['ean'] . ']]></g:gtin>'. PHP_EOL;
         }
 
         if ($this->eanLog && $product['ean'] && !$has_gtin) {
@@ -275,11 +275,11 @@ class ControllerFeedReFeedMaker2 extends Controller
             $output .= '    <g:identifier_exists>false</g:identifier_exists>'. PHP_EOL;
         }
 
-        $output .= '    <g:price>' . $this->currency->format($product['price'], '', '', false) . ' ' .  $this->currency->getCode() . '</g:price>'. PHP_EOL;
+        $output .= '    <g:price><![CDATA[' . $this->currency->format($product['price'], '', '', false) . ' ' .  $this->currency->getCode() . ']]></g:price>'. PHP_EOL;
 
         if ((float)$product['special']) {
-            $output .= '    g:sale_price>' .  $this->currency->format($product['special'], '', '', false) . ' ' . $this->currency->getCode() . '</g:sale_price>'. PHP_EOL;
-            $output .= '    <g:offer_price>' .  $this->currency->format($product['special'], '', '', false) . ' ' . $this->currency->getCode() . '</g:offer_price>'. PHP_EOL;
+            $output .= '    <g:sale_price><![CDATA[' .  $this->currency->format($product['special'], '', '', false) . ' ' . $this->currency->getCode() . ']]></g:sale_price>'. PHP_EOL;
+            $output .= '    <g:offer_price><![CDATA[' .  $this->currency->format($product['special'], '', '', false) . ' ' . $this->currency->getCode() . ']]></g:offer_price>'. PHP_EOL;
 
             if (!empty($product['special_date_end']) && $product['special_date_end'] != '0000-00-00' && $product['special_date_end'] != '1970-01-01') {
                 if (date('Y', strtotime($product['special_date_end'])) - date('Y') > 10) {
