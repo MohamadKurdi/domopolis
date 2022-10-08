@@ -33,6 +33,7 @@
 /sitemaps/*
 
 #Картинки и кеш
+/image
 /image/*
 /image.*/*
 /img/*
