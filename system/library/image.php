@@ -24,20 +24,20 @@ class Image {
 		}
 	}
 	
-	public static function cachedname($filename, $extension, $data = array()){
-		$md5 = md5($filename . implode('.', $data));
+    public static function cachedname($filename, $extension, $data = array()){
+        $md5 = md5($filename . implode('.', $data));
 
-		$directory              = DIR_IMAGECACHE . substr($md5, 0, 3) . '/';
-		$image_name             = $md5 . 'x' . $data[0] . 'x' . $data[1] . 'x' . $data[2] .  '.' . $extension;
-		$full_image_path        = $directory . $image_name;
-		$relative_image_path    = DIR_IMAGECACHE_NAME . substr($md5, 0, 3) . '/' . $image_name;
+        $directory              = DIR_IMAGECACHE . substr($md5, 0, 3) . '/';
+        $image_name             = $md5 . 'x' . $data[0] . 'x' . $data[1] . 'x' . $data[2] .  '.' . $extension;
+        $full_image_path        = $directory . $image_name;
+        $relative_image_path    = DIR_IMAGECACHE_NAME . substr($md5, 0, 3) . '/' . $image_name;
 
-		if (!is_dir($directory)){
-			mkdir($directory, 0775, true);
-		}
+        if (!is_dir($directory)){
+            mkdir($directory, 0775, true);
+        }
 
-		return ['full_path' => $full_image_path, 'relative_path' => $relative_image_path];
-	}
+        return ['full_path' => $full_image_path, 'relative_path' => $relative_image_path];
+    }
 	
 	private function create($image) {
 		$mime = $this->info['mime'];
