@@ -69,10 +69,10 @@
 						<?php } ?>
 					</table>
 				</div>
-				<?php } else if ($countProduct >= 5) { ?>
-				<span>В корзине <?php echo $text_items; ?> товаров</span>
-				<?php } else if ($countProduct >= 3) { ?>
-				<span>В корзине <?php echo $text_items; ?> товара</span>
+				<?php } else { ?>
+
+				<span><?php echo $text_in_cart; ?> <?php echo $text_items; ?> <?php echo $products_pluralized; ?></span>
+				
 				
 			<?php } ?>
 		    <div class="mini-cart-total">

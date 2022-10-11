@@ -45,13 +45,18 @@
 				}		
 			}
 			
-			$this->data['totals'] = $total_data;
-			
-			$this->data['heading_title'] = $this->language->get('heading_title');
-			
-			$this->data['text_items'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total));
-			
+			$this->data['totals'] = $total_data;			
+			$this->data['heading_title'] = $this->language->get('heading_title');			
+			$this->data['text_items'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total));			
 			$this->data['count_items'] = $this->cart->countProducts();
+
+			$this->data['text_in_cart'] = $this->language->get('text_in_cart');
+
+			if ($this->config->get('config_language') == 'uk'){
+				$this->data['products_pluralized'] = getUkrainianPluralWord($this->cart->countProducts(), $this->language->get('text_products_pluralized'));			
+			} else {
+				$this->data['products_pluralized'] = morphos\Russian\NounPluralization::pluralize($this->cart->countProducts(), $this->language->get('text_product'));
+			}
 			
 			//$this->data['text_items'] = (int)($this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0));
 			$this->data['text_empty'] = $this->language->get('text_empty');
@@ -132,24 +137,24 @@
 				$this->data['total_quantity'] += $product['quantity'];
 				
 				$this->data['products'][] = array(
-				'key'       => $product['key'],
-				'thumb'     => $image,
-				'name'      => $product['name'],
+				'key'       				=> $product['key'],
+				'thumb'     				=> $image,
+				'name'      				=> $product['name'],
 				'is_special_offer'          => $product['is_special_offer'],
 				'is_special_offer_present'  => $product['is_special_offer_present'],
-				'model'     => $product['model'], 
-				'option'    => $option_data,
-				'quantity'  => $product['quantity'],
-				'price'     => $price,
-				'price_national'     => $price_national,				
-				'total'     => $total,
-				'saving' => $product['saving'],
-				'total_old_national'  => $total_old_national,	
-				'total_national'  => $total_national,	
-				'href'      => $this->url->link('product/product', 'product_id=' . $product['product_id']),
-				'recurring' => $product['recurring'],
-				'profile'   => $product['profile_name'],
-                'childProductArray'  => $product['childProductArray']
+				'model'     				=> $product['model'], 
+				'option'    				=> $option_data,
+				'quantity'  				=> $product['quantity'],
+				'price'     				=> $price,
+				'price_national'     		=> $price_national,				
+				'total'     				=> $total,
+				'saving' 					=> $product['saving'],
+				'total_old_national'  		=> $total_old_national,	
+				'total_national'  			=> $total_national,	
+				'href'      				=> $this->url->link('product/product', 'product_id=' . $product['product_id']),
+				'recurring' 				=> $product['recurring'],
+				'profile'   				=> $product['profile_name'],
+                'childProductArray'  		=> $product['childProductArray']
 				);
 			}
 			
@@ -179,13 +184,8 @@
 			$this->data['cart'] = $this->url->link('checkout/cart');
 			$this->data['popupcart'] = $this->url->link('common/popupcart');
 			
-			$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
-			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/cart.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/module/cart.tpl';
-				} else {
-				$this->template = 'default/template/module/cart.tpl';
-			}
+			$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');			
+			$this->template = 'module/cart.tpl';
 			
 			$this->response->setOutput($this->render());		
 		}
