@@ -88,8 +88,12 @@
 			$qrOutputInterface = new QRImageWithLogo($options, $qrCode->getMatrix());
 			
 			//header('Content-type: image/png');
-			$qrOutputInterface->dump($qr_file, DIR_CATALOG . '../icon/android-chrome-192x192.png');
-
+			if (file_exists(DIR_IMAGE . 'payment_qr_logo.png')){
+				$qrOutputInterface->dump($qr_file, DIR_IMAGE . 'payment_qr_logo.png');
+			} else {
+				$qrOutputInterface->dump($qr_file, DIR_CATALOG . '../icon/android-chrome-192x192.png');
+			}
+			
 		}
 		
 	}		
