@@ -186,7 +186,6 @@ class OffersParser
 		}
 
 		return $this;
-
 	}
 
 	public function setProductOffers($asin){
@@ -273,7 +272,6 @@ class OffersParser
 				$this->db->query("UPDATE product SET amazon_best_price = '" . (float)$amazonBestPrice . "' WHERE asin = '" . $this->db->escape($asin) . "' AND is_markdown = 0");
 
 				$this->PriceLogic->updateProductPrices($asin, $amazonBestPrice);
-
 			}
 
 			//Lowest Amazon Price
@@ -289,6 +287,12 @@ class OffersParser
 				$offer_id = $rfOffer->getOriginalDataArray()['offer_id'];
 			} else {
 				$offer_id = md5(serialize($rfOffer->getOriginalDataArray()));
+			}
+
+			//BuyBoxWinner
+			$buyBoxWinner = false;
+			if (!empty($rfOffer->getOriginalDataArray()['buybox_winner'])){
+				$buyBoxWinner = true;
 			}
 
 			$this->db->query("INSERT INTO product_amzn_offers SET
@@ -312,6 +316,7 @@ class OffersParser
 				sellerRatingsTotal 				= '" . (int)$rfOffer->getSellerRatingsTotal() . "',
 				sellerPositiveRatings100 		= '" . (int)$rfOffer->getSellerPositiveRatings100() . "',
 				is_min_price					= '" . (int)($key == $minKey) . "',
+				isBuyBoxWinner					= '" . (int)($buyBoxWinner) . "',
 				isBestOffer						= '" . (int)($key == $ratingKeys['maxRatingKey']) . "',
 				offerRating						= '" . (float)$ratingKeys['ratingKeys'][$key] . "',
 				isPrime							= '" . (int)$rfOffer->getIsPrime() . "',
