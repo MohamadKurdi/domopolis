@@ -219,6 +219,22 @@ class OffersParser
 		return true;
 	}
 
+	//Пропуск офферов Amazon, которые не являются байбокс офферами и не имеют информации о доставке
+	public static function checkIfAmazonOfferIsReallyInStock($rfOffer){
+		$amazonSupplierNames = ['Amazon Media EU S.à r.l.', 'Amazon'];
+
+		//это оффер Амазона
+		if (in_array($rfOffer->getSellerName(), $amazonSupplierNames) && $rfOffer->getDeliveryIsFba()){
+
+			//Оффер Амазона не является байбокс-виннером и у него нет информации о доставке
+			if (empty($rfOffer->getOriginalDataArray()['buybox_winner']) && !$rfOffer->getDeliveryComments()){
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	public function reparseOffersToSkip($rfOffers){
 		$rfOffersTMP = [];
 
@@ -238,7 +254,7 @@ class OffersParser
 				$addThisOffer = false;
 			}
 
-			if (!$rfOffer->getConditionIsNew() || !self::checkIfOfferReallyIsNew($rfOffer)){
+			if (!$rfOffer->getConditionIsNew() || !self::checkIfOfferReallyIsNew($rfOffer) || !self::checkIfAmazonOfferIsReallyInStock($rfOffer)){
 				$addThisOffer = false;
 			}
 
@@ -336,11 +352,11 @@ class OffersParser
 		foreach ($rfOfferList as $key => $rfOffer){
 			$rfOfferWeight = 0;
 
-			if (!$rfOffer->getConditionIsNew() || !self::checkIfOfferReallyIsNew($rfOffer)){
+			if (!$rfOffer->getConditionIsNew() || !self::checkIfOfferReallyIsNew($rfOffer) || !self::checkIfAmazonOfferIsReallyInStock($rfOffer)){
 				$rfOfferWeight -= 80;
 			}
 
-			if ($rfOffer->getSellerName() == 'Amazon'){
+			if ($rfOffer->getSellerName() == 'Amazon' && self::checkIfAmazonOfferIsReallyInStock($rfOffer)){
 				$rfOfferWeight += 30;
 			}
 
@@ -369,6 +385,10 @@ class OffersParser
 			}
 
 			if ($key == $minPriceKey){
+				$rfOfferWeight += 5;
+			}
+
+			if (!empty($rfOffer->getOriginalDataArray()['buybox_winner'])){
 				$rfOfferWeight += 5;
 			}
 

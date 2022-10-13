@@ -139,7 +139,7 @@
 
 		<?php if ($bad_offers) { ?>
 			<?php foreach ($bad_offers as $offer) { ?>
-				<td colspan="3">
+				<td colspan="4">
 					<small style="display:inline-block; padding:3px 5px; color:#cf4a61"><i class="fa fa-exclamation-triangle"></i> bad offer</span>
 				</td>
 				<td class="left" style="color:#cf4a61">						
