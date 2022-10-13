@@ -1992,7 +1992,7 @@
 			return $query->rows;
 		}
 
-		public function getProductVariants($product_id){
+		public function getProductVariants($product_id, $exclude_product_id = false){
 			$product_data = [];
 			
 			$sql = "SELECT p.product_id FROM product p 		
@@ -2019,8 +2019,13 @@
 
 			$query = $this->db->query($sql);
 
+			$product_data[$product_id] = $this->getProduct($product_id);
 			foreach ($query->rows as $result) {
-				$product_data[] = $this->getProduct($result['product_id']);
+				$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
+			}
+
+			if ($exclude_product_id && !empty($product_data[$exclude_product_id])){
+				unset($product_data[$exclude_product_id]);
 			}
 			
 			return $product_data;
@@ -3024,7 +3029,7 @@
 			$exploded = explode('-', $term);
 			
 			if (!empty($exploded[1])){
-				if ($this->config->get('config_language_id') == 6){
+				if ($this->config->get('config_language') == 'uk'){
 					$result = $exploded[0] . '-' . $exploded[1] . ' ' . getUkrainianPluralWord((int)$exploded[1], $this->language->get('text_dt_day_text'));
 					} else {
 					$result = $exploded[0] . '-' . \morphos\Russian\TimeSpeller::spellInterval(DateInterval::createFromDateString('+' . (int)$exploded[1] . ' day'));
@@ -3033,7 +3038,7 @@
 				
 				} else {
 				
-				if ($this->config->get('config_language_id') == 6){
+				if ($this->config->get('config_language') == 'uk'){
 					$result = $exploded[0] . ' ' . getUkrainianPluralWord((int)$exploded[1], $this->language->get('text_dt_day_text'));
 					} else {
 					$result = \morphos\Russian\TimeSpeller::spellInterval(DateInterval::createFromDateString('+' . (int)$exploded[0] . ' day'));
@@ -3093,7 +3098,7 @@
 			}
 			
 			//Значение по-умолчанию для статуса "есть в наличии"
-			if ($product['stock_status_id'] == $this->config->get('config_stock_status_id')){
+			if ($product['stock_status_id'] == $this->config->get('config_stock_status_id') || $product['stock_status_id'] == $this->config->get('config_in_stock_status_id')){
 				$stockText = $this->language->get('text_dt_preorder');	
 				$stockTerm = $this->config->get('config_delivery_outstock_term');
 				$stockClass = 'good';

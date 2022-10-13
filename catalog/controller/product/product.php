@@ -14,9 +14,7 @@ class ControllerProductProduct extends Controller
         }
 
         $this->data = $this->index($product_id, true);
-
-        $this->log->debug($this->data);
-
+        
         $this->template = 'blocks/price.tpl';
         $this->response->setOutput($this->render());
     }
@@ -143,7 +141,7 @@ class ControllerProductProduct extends Controller
                 foreach ($this->config->get('dostavkaplus_module') as $key => $dostavkaplus_module){
                     //NP Config
                     if ($key == 3){
-                        $this->data['np_delivery_price_text'] = $this->data['delivery_to_city_price_from'] . $this->currency->format($dostavkaplus_module['price_from'], $dostavkaplus_module['currency'], 1);
+                        $this->data['np_delivery_price_text'] = $this->data['delivery_to_city_price_from'] . $this->currency->format($dostavkaplus_module['price_from'], $dostavkaplus_module['curr'], 1);
                         break;
                     }                   
                 }
@@ -162,6 +160,7 @@ class ControllerProductProduct extends Controller
 
                  if ($this->model_tool_simpleapicustom->checkIfUseUAServices()) {
                  foreach ($this->config->get('dostavkaplus_module') as $key => $dostavkaplus_module){
+
                         //Kyiv courier config                   
                         if ($key == 2){
                             $price = $product_info['price'];
@@ -175,7 +174,7 @@ class ControllerProductProduct extends Controller
                                     $rate_data = explode(':', $rate);
                                     $rate_data[0] = (float)trim($rate_data[0]);
                                    
-                                    if ($rate_data[0] <= (float)$this->currency->format($price, $dostavkaplus_module['currency'], '', false)) {                                              
+                                    if ($rate_data[0] <= (float)$this->currency->format($price, $dostavkaplus_module['curr'], '', false)) {                                              
                                         if (isset($rate_data[1])) {
                                             $delivery_price = (float)trim($rate_data[1]);
                                         }                                            
@@ -184,7 +183,7 @@ class ControllerProductProduct extends Controller
                             }
 
                             if ((float)$delivery_price > 0){
-                                $this->data['courier_delivery_price_text'] = $this->currency->format($delivery_price, $dostavkaplus_module['currency'], 1);
+                                $this->data['courier_delivery_price_text'] = $this->currency->format($delivery_price, $dostavkaplus_module['curr'], 1);
                             } else {
                                 $this->data['courier_delivery_price_text'] = $this->data['delivery_to_city_free'];
                             }
@@ -1320,8 +1319,15 @@ class ControllerProductProduct extends Controller
                     $this->data['free_delivery'] = $free_delivery;
 
                     /* Варианты */
-                    $variants = $this->model_catalog_product->getProductVariants($this->request->get['product_id']);
-                    $this->data['variants'] = $this->model_catalog_product->prepareProductToArray($variants);
+                    $this->data['variants'] = [];
+
+                    if ($product_info['variants_count']){
+                        $variants = $this->model_catalog_product->getProductVariants($this->request->get['product_id'], $this->request->get['product_id']);
+                        $this->data['variants'] = $this->model_catalog_product->prepareProductToArray($variants);
+                    } elseif ($product_info['main_variant_id']){
+                        $variants = $this->model_catalog_product->getProductVariants($product_info['main_variant_id'], $this->request->get['product_id']);
+                        $this->data['variants'] = $this->model_catalog_product->prepareProductToArray($variants);
+                    }
 
                     /*Additional offer*/
                     $additional_offers_results = $this->model_catalog_product->getProductAdditionalOffer($this->request->get['product_id']);
