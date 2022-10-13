@@ -1289,6 +1289,7 @@ class ControllerCatalogProduct extends Controller {
 					$this->data['offers'][] = [					
 						'seller' 				=> $offer['sellerName'],
 						'prime'	 				=> $offer['isPrime'],
+						'buybox_winner'	 		=> $offer['isBuyBoxWinner'],
 						'is_best'				=> $offer['isBestOffer'],
 						'offer_rating'			=> $offer['offerRating'],
 						'supplier'				=> $this->rainforestAmazon->offersParser->Suppliers->getSupplier($offer['sellerName']),

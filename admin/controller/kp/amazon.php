@@ -36,10 +36,10 @@ class ControllerKPAmazon extends Controller {
 		$good_offers = [];
 		foreach ($offers as $offer){
 				$good_offers[] = $offer['offer_id'];
-
 				$this->data['offers'][] = [					
 					'seller' 				=> $offer['sellerName'],
 					'prime'	 				=> $offer['isPrime'],
+					'buybox_winner'	 		=> $offer['isBuyBoxWinner'],
 					'is_best'				=> $offer['isBestOffer'],
 					'offer_rating'			=> $offer['offerRating'],
 					'supplier'				=> $this->rainforestAmazon->offersParser->Suppliers->getSupplier($offer['sellerName']),
@@ -66,10 +66,17 @@ class ControllerKPAmazon extends Controller {
 					$offer_id = md5(serialize($rfOffer->getOriginalDataArray()));
 				}
 
+				//BuyBoxWinner
+				$buyBoxWinner = false;
+				if (!empty($rfOffer->getOriginalDataArray()['buybox_winner'])){
+					$buyBoxWinner = true;
+				}
+
 				if (!in_array($offer_id, $good_offers)){
 					$this->data['bad_offers'][] = [					
 						'seller' 				=> $rfOffer->getSellerName(),
 						'prime'	 				=> $rfOffer->getIsPrime(),
+						'buybox_winner'	 		=> $buyBoxWinner,
 						'is_best'				=> false,
 						'offer_rating'			=> 0,
 						'supplier'				=> $this->rainforestAmazon->offersParser->Suppliers->getSupplier($rfOffer->getSellerName()),

@@ -8,6 +8,8 @@
 				</td>
 				<td width="70px;">					
 				</td>
+				<td width="70px;">					
+				</td>
 				<td>						
 					<b>Продавец</b>
 				</td>
@@ -48,13 +50,18 @@
 					<?php } ?>
 				</td>
 				<td width="70px;">
+					<?php if ($offer['buybox_winner']) { ?>
+						<span style="color:#FF6600"><i class="fa fa-star" style="color:#FF6600"></i> BuyBox</span>
+					<?php } ?>
+				</td>
+				<td width="70px;">
 					<?php if ($offer['prime']) { ?>
-						<span style="color:#009fd5"><i class="fa fa-star" style=""></i> Prime</span>
+						<span style="color:#009fd5"><i class="fa fa-star" style="color:#009fd5"></i> Prime</span>
 					<?php } ?>
 				</td>
 				<td width="70px;">
 					<?php if ($offer['is_min_price']) { ?>
-						<span style="color:#4ea24e"><i class="fa fa-sort-amount-asc" aria-hidden="true"></i> Цена</span>
+						<span style="color:#4ea24e"><i class="fa fa-sort-amount-asc" style="color:#4ea24e" aria-hidden="true"></i> Цена</span>
 					<?php } ?>
 				</td>
 				<td class="left">						

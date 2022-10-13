@@ -931,11 +931,11 @@
 								</td>
 
 								<td style="width:33%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Сроки поставки если есть в наличии на складе в Украине</span></p>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Сроки поставки если нет в наличии в Германии</span></p>
 									<input type="text" name="config_delivery_outstock_term" value="<?php echo $config_delivery_outstock_term; ?>" size="10" />
 								</td>
 							</tr>
-
+							
 							<tr>
 								<td style="width:33%">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Отображать сроки, если нет в наличии на складе в стране</span></p>
