@@ -994,7 +994,7 @@
 			//Индексация категорий
 			$query = $this->db->query("SELECT category_id FROM category WHERE status = 1");
 			$i = 1;
-			foreach ($query->rows as $category_id){			
+			foreach ($query->rows as $category_id){							
 				$params = [];
 				$params['index'] = 'categories' . $this->config->get('config_elasticsearch_index_suffix');
 				$params['id'] = $i;$i++;				
@@ -1004,7 +1004,9 @@
 				
 				//Индексация названий
 				$namequery = $this->db->query("SELECT name as name, alternate_name as alternate_name, language_id FROM category_description WHERE category_id = '" . (int)$category_id['category_id'] . "'");						
-				$this->prepareCategoryManufacturerIndex($namequery, $category_id['category_id'], 0, 0, $params);				
+				$this->prepareCategoryManufacturerIndex($namequery, $category_id['category_id'], 0, 0, $params);		
+
+				echoLine('[elastic] Категория ' . $category_id['category_id']);
 				
 				//Привязка к магазинам
 				$storequery = $this->db->query("SELECT store_id FROM category_to_store WHERE category_id = '" . (int)$category_id['category_id'] . "'");
@@ -1019,8 +1021,7 @@
 			
 			//Индексация брендов
 			$query = $this->db->query("SELECT manufacturer_id FROM manufacturer WHERE 1");
-			foreach ($query->rows as $manufacturer_id){	
-				
+			foreach ($query->rows as $manufacturer_id){					
 				//	echoLine('Только производитель ' . $manufacturer_id['manufacturer_id']);
 				
 				$params = [];
@@ -1032,7 +1033,9 @@
 				
 				//Индексация названий
 				$namequery = $this->db->query("SELECT m.manufacturer_id, m.name as name, md.alternate_name as alternate_name, md.language_id FROM manufacturer m LEFT JOIN manufacturer_description md ON m.manufacturer_id = md.manufacturer_id WHERE m.manufacturer_id = '" . (int)$manufacturer_id['manufacturer_id'] . "'");						
-				$this->prepareCategoryManufacturerIndex($namequery, 0, $manufacturer_id['manufacturer_id'], 0, $params);				
+				$this->prepareCategoryManufacturerIndex($namequery, 0, $manufacturer_id['manufacturer_id'], 0, $params);	
+
+				echoLine('[elastic] Бренд ' . $manufacturer_id['manufacturer_id']);			
 				
 				//Привязка к магазинам
 				$storequery = $this->db->query("SELECT store_id FROM manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id['manufacturer_id'] . "'");
@@ -1187,6 +1190,7 @@
 
 			$this->makeTextNumbers($params);
 
+			echoLine('[elastic] Товар ' . $product['product_id']);
 
 				//Привязка к категориям
 			$catquery = $this->db->query("SELECT category_id FROM product_to_category WHERE product_id = '" . (int)$product['product_id'] . "'");
