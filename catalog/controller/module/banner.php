@@ -11,7 +11,6 @@ class ControllerModuleBanner extends Controller {
 		$this->data['banners'] = array();
 		
 		$results = $this->model_design_banner->getBanner($setting['banner_id']);
-
 		foreach ($results as $result) {
 			if (file_exists(DIR_IMAGE . $result['image'])) {
 				$this->data['banners'][] = array(
@@ -25,15 +24,9 @@ class ControllerModuleBanner extends Controller {
 		$this->data['module'] = $module++;
 		
 		if (count($results) == 1){
-			$template = 'banner_single.tpl';
+			$template = 'module/banner_single';
 		} else {
-			$template = 'banner.tpl';
-		}
-		
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/' . $template)) {
-			$this->template = $this->config->get('config_template') . '/template/module/' . $template;
-		} else {
-			$this->template = 'default/template/module/' . $template;
+			$template = 'module/banner';
 		}
 		
 		$this->render();

@@ -6,14 +6,6 @@ class ControllerModuleSlideshow extends Controller {
 		$this->load->model('design/banner');
 		$this->load->model('tool/image');
 		
-		$this->document->addScript('catalog/view/javascript/jquery/nivo-slider/jquery.nivo.slider.pack.js');
-		
-		if (file_exists('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/slideshow.css')) {
-			$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/slideshow.css');
-		} else {
-			$this->document->addStyle('catalog/view/theme/default/stylesheet/slideshow.css');
-		}
-		
 		$this->data['width'] = $setting['width'];
 		$this->data['height'] = $setting['height'];
 		
@@ -32,8 +24,8 @@ class ControllerModuleSlideshow extends Controller {
 						'link'  => !empty($result['link_o'])?$result['link_o']:$result['link'],
 						'block_text'  => html_entity_decode($result['block_text'], ENT_COMPAT, 'UTF-8'),
 						'button_text'  => html_entity_decode($result['button_text'], ENT_COMPAT, 'UTF-8'),
-						'image' => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height'], 100),	
-						'image_sm' => $this->model_tool_image->resize($result['image_sm'], $setting['width_sm'], $setting['height_sm'], 100),
+						'image' => $this->model_tool_image->resize($result['image'], $setting['width'], $setting['height']),	
+						'image_sm' => $this->model_tool_image->resize($result['image_sm'], $setting['width_sm'], $setting['height_sm']),
 					);
 				}
 			}
@@ -41,11 +33,7 @@ class ControllerModuleSlideshow extends Controller {
 		
 		$this->data['module'] = $module++;
 						
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/slideshow.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/module/slideshow.tpl';
-		} else {
-			$this->template = 'default/template/module/slideshow.tpl';
-		}
+		$this->template = 'module/slideshow';
 		
 		$this->render();
 	}
