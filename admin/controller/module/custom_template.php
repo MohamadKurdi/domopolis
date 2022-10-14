@@ -73,7 +73,7 @@ class ControllerModuleCustomTemplate extends Controller {
 		
 		$this->data['categories'] = $this->model_catalog_category->getCategories(0);
 		$this->data['informations'] = $this->model_catalog_information->getInformations();
-		$this->data['manufacturers'] = $this->model_catalog_manufacturer->getManufacturers();
+	//	$this->data['manufacturers'] = $this->model_catalog_manufacturer->getManufacturers();
 		
 
 		$modules = array();
