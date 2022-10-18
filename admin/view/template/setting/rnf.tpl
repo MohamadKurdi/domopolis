@@ -47,7 +47,7 @@
 								<td style="white-space: nowrap;color:#7F00FF;">
 									<i class="fa fa-refresh"></i> <b>Парсер новых товаров Amazon</b>
 								</td>
-								<td style="width:40px;" class="center">
+								<td style="width:220px;" class="center">
 									<input id="config_rainforest_enable_new_parser" type="checkbox" class="checkbox" name="config_rainforest_enable_new_parser" <? if ($config_rainforest_enable_new_parser){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_new_parser"></label>
 								</td>
 								<td>
@@ -69,6 +69,22 @@
 									</span>
 								</td>
 							</tr>
+
+							<tr>
+								<td class="right">
+									<i class="fa fa-clock-o"></i> Время работы, часы
+								</td>
+								<td>
+									<input type="time" name="config_rainforest_new_parser_time_start" value="<?php echo $config_rainforest_new_parser_time_start; ?>" size="50" style="width:70px;" /> - 
+									<input type="time" name="config_rainforest_new_parser_time_end" value="<?php echo $config_rainforest_new_parser_time_end; ?>" size="50" style="width:70px;" />
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Добавление выполняется в рабочую базу и сильно ее нагружает. Поэтому лучше ограничивать время запуска, например, ночными часами, чтоб уменьшить нагрузки. Задавать только часы, без минут.
+									</span>
+								</td>
+							</tr>
+
 							<tr>
 								<td style="white-space: nowrap;color:#7F00FF;">
 									<i class="fa fa-refresh"></i> <b>Парсер данных о товарах Amazon</b>
@@ -81,7 +97,23 @@
 										<i class="fa fa-info-circle"></i> Изначально товары загружаются с страницы категории без данных, только название картинка и цена. Этот воркер получает полные данные о товарах, включая описание, атрибуты, блоки связей товаров, добавляет варианты, и.т.д. Воркер работает только с категориями, которые включены, у которых включен маркер <i>Разрешить загрузку полной информации о товарах</i> и только с товарами, у которых включен маркер <i>Разрешить загрузку данных</i>
 									</span>
 								</td>
-							</tr>							
+							</tr>		
+							<tr>
+								<td class="right">
+									<i class="fa fa-clock-o"></i> Время работы, часы
+								</td>
+								<td>
+									<input type="time" name="config_rainforest_data_parser_time_start" value="<?php echo $config_rainforest_data_parser_time_start; ?>" size="50" style="width:70px;" /> - 
+									<input type="time" name="config_rainforest_data_parser_time_end" value="<?php echo $config_rainforest_data_parser_time_end; ?>" size="50" style="width:70px;" />
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Обработка выполняется в рабочей базе и сильно ее нагружает. Поэтому лучше ограничивать время запуска, например, ночными часами, чтоб уменьшить нагрузки. Задавать только часы, без минут.
+									</span>
+								</td>
+							</tr>
+
+
 							<tr>
 								<td style="white-space: nowrap;color:#7F00FF;">
 									<i class="fa fa-refresh"></i> <b>Разгребатель технической категории</b>
@@ -96,6 +128,22 @@
 								</td>
 							</tr>
 							<tr>
+								<td class="right">
+									<i class="fa fa-clock-o"></i> Время работы, часы
+								</td>
+								<td>
+									<input type="time" name="config_rainforest_tech_category_parser_time_start" value="<?php echo $config_rainforest_tech_category_parser_time_start; ?>" size="50" style="width:70px;" /> - 
+									<input type="time" name="config_rainforest_tech_category_parser_time_end" value="<?php echo $config_rainforest_tech_category_parser_time_end; ?>" size="50" style="width:70px;" />
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Обработка выполняется в рабочей базе и сильно ее нагружает. Поэтому лучше ограничивать время запуска, например, ночными часами, чтоб уменьшить нагрузки. Задавать только часы, без минут.
+									</span>
+								</td>
+							</tr>
+
+
+							<tr>
 								<td style="white-space: nowrap;color:#7F00FF;">
 									<i class="fa fa-refresh"></i> <b>Парсер данных о товарах Amazon L2</b>
 								</td>
@@ -108,6 +156,22 @@
 									</span>
 								</td>
 							</tr>
+							<tr>
+								<td class="right">
+									<i class="fa fa-clock-o"></i> Время работы, часы
+								</td>
+								<td>
+									<input type="time" name="config_rainforest_data_l2_parser_time_start" value="<?php echo $config_rainforest_data_l2_parser_time_start; ?>" size="50" style="width:70px;" /> - 
+									<input type="time" name="config_rainforest_data_l2_parser_time_end" value="<?php echo $config_rainforest_data_l2_parser_time_end; ?>" size="50" style="width:70px;" />
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Обработка выполняется в рабочей базе и сильно ее нагружает. Поэтому лучше ограничивать время запуска, например, ночными часами, чтоб уменьшить нагрузки. Задавать только часы, без минут.
+									</span>
+								</td>
+							</tr>
+
+
 							<tr>
 								<td style="white-space: nowrap;color:#7F00FF;">
 									<i class="fa fa-refresh"></i> <b>Получение офферов с Amazon</b>
@@ -134,6 +198,23 @@
 									</span>
 								</td>
 							</tr>
+							<tr>
+								<td class="right">
+									<i class="fa fa-clock-o"></i> Время работы, часы
+								</td>
+								<td>
+									<input type="time" name="config_rainforest_offers_parser_time_start" value="<?php echo $config_rainforest_offers_parser_time_start; ?>" size="50" style="width:70px;" /> - 
+									<input type="time" name="config_rainforest_offers_parser_time_end" value="<?php echo $config_rainforest_offers_parser_time_end; ?>" size="50" style="width:70px;" />
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Обработка выполняется в рабочей базе и сильно ее нагружает. Поэтому лучше ограничивать время запуска, например, ночными часами, чтоб уменьшить нагрузки. Задавать только часы, без минут.
+									</span>
+								</td>
+							</tr>
+
+
+
 							<tr>
 								<td style="white-space: nowrap;color:#7F00FF;">
 									<i class="fa fa-refresh"></i> <b>Офферы для товаров в заказах</b>
@@ -1309,7 +1390,7 @@
 				}
 
 
-				$('select, textarea, input[type=checkbox], input[type=text], input[type=number]').bind('change', function() {
+				$('select, textarea, input[type=checkbox], input[type=text], input[type=time], input[type=number]').bind('change', function() {
 					var key  = $(this).attr('name');
 
 					<?php foreach (['config_rainforest_main_formula', 'config_rainforest_volumetric_max_wc_multiplier', 'config_rainforest_default_store_id', 'calculator_show_random', 'calculator_limit_products', 'calculator_zones_config', 'calculator_explicit_products'] as $not_change_input) { ?>

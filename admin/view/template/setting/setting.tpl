@@ -3803,168 +3803,194 @@
 							<table class="form">
 								<tr>
 									<td style="width:20%">
-
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Парсер новых товаров Amazon</span></p>
-										<select name="config_rainforest_enable_new_parser">
-											<?php if ($config_rainforest_enable_new_parser) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Парсер новых товаров Amazon</span></p>
+											<select name="config_rainforest_enable_new_parser">
+												<?php if ($config_rainforest_enable_new_parser) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
 												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-clock-o"></i> Время работы</span></p>
+
+											<input type="time" name="config_rainforest_new_parser_time_start" value="<?php echo $config_rainforest_new_parser_time_start; ?>" size="50" style="width:70px;" /> - 
+											<input type="time" name="config_rainforest_new_parser_time_end" value="<?php echo $config_rainforest_new_parser_time_end; ?>" size="50" style="width:70px;" />
 										</div>
 
 									</td>
 
 									<td style="width:20%">
-
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Парсер данных о товарах Amazon</span></p>
-										<select name="config_rainforest_enable_data_parser">
-											<?php if ($config_rainforest_enable_data_parser) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Парсер данных о товарах Amazon</span></p>
+											<select name="config_rainforest_enable_data_parser">
+												<?php if ($config_rainforest_enable_data_parser) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
 												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
 										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-clock-o"></i> Время работы</span></p>
 
+											<input type="time" name="config_rainforest_data_parser_time_start" value="<?php echo $config_rainforest_data_parser_time_start; ?>" size="50" style="width:70px;" /> - 
+											<input type="time" name="config_rainforest_data_parser_time_end" value="<?php echo $config_rainforest_data_parser_time_end; ?>" size="50" style="width:70px;" />
+										</div>
+										
 									</td>
 
 									<td style="width:20%">
-
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Разгребатель технической категории</span></p>
-										<select name="config_rainforest_enable_tech_category_parser">
-											<?php if ($config_rainforest_enable_tech_category_parser) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Разгребатель технической категории</span></p>
+											<select name="config_rainforest_enable_tech_category_parser">
+												<?php if ($config_rainforest_enable_tech_category_parser) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
 												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
 										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-clock-o"></i> Время работы</span></p>
 
+											<input type="time" name="config_rainforest_tech_category_parser_time_start" value="<?php echo $config_rainforest_tech_category_parser_time_start; ?>" size="50" style="width:70px;" /> - 
+											<input type="time" name="config_rainforest_tech_category_parser_time_end" value="<?php echo $config_rainforest_tech_category_parser_time_end; ?>" size="50" style="width:70px;" />
+										</div>
 									</td>
 
 									<td style="width:20%">
-
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Парсер данных о товарах Amazon L2</span></p>
-										<select name="config_rainforest_enable_data_l2_parser">
-											<?php if ($config_rainforest_enable_data_l2_parser) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Парсер данных о товарах Amazon L2</span></p>
+											<select name="config_rainforest_enable_data_l2_parser">
+												<?php if ($config_rainforest_enable_data_l2_parser) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
 												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
 										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-clock-o"></i> Время работы</span></p>
 
+											<input type="time" name="config_rainforest_data_l2_parser_time_start" value="<?php echo $config_rainforest_data_l2_parser_time_start; ?>" size="50" style="width:70px;" /> - 
+											<input type="time" name="config_rainforest_data_l2_parser_time_end" value="<?php echo $config_rainforest_data_l2_parser_time_end; ?>" size="50" style="width:70px;" />
+										</div>
 									</td>
 
 									<td style="width:20%">
-
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Получение офферов с Amazon</span></p>
-										<select name="config_rainforest_enable_offers_parser">
-											<?php if ($config_rainforest_enable_offers_parser) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Получение офферов с Amazon</span></p>
+											<select name="config_rainforest_enable_offers_parser">
+												<?php if ($config_rainforest_enable_offers_parser) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
 												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
 										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-clock-o"></i> Время работы</span></p>
 
+											<input type="time" name="config_rainforest_offers_parser_time_start" value="<?php echo $config_rainforest_offers_parser_time_start; ?>" size="50" style="width:70px;" /> - 
+											<input type="time" name="config_rainforest_offers_parser_time_end" value="<?php echo $config_rainforest_offers_parser_time_end; ?>" size="50" style="width:70px;" />
+										</div>
 									</td>
 								</tr>
-								</tr>
-									<td style="width:20%">
+							</tr>
+							<td style="width:20%">
+								<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Парсер дерева категорий</span></p>
+									<select name="config_rainforest_enable_category_tree_parser">
+										<?php if ($config_rainforest_enable_category_tree_parser) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+								</div>
 
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Парсер дерева категорий</span></p>
-										<select name="config_rainforest_enable_category_tree_parser">
-											<?php if ($config_rainforest_enable_category_tree_parser) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-										</div>
+							</td>
 
-									</td>
+							<td style="width:20%">
+								<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Валидация ASIN</span></p>
+									<select name="config_rainforest_enable_asins_parser">
+										<?php if ($config_rainforest_enable_asins_parser) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+								</div>
 
-									<td style="width:20%">
+							</td>
 
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Валидация ASIN</span></p>
-										<select name="config_rainforest_enable_asins_parser">
-											<?php if ($config_rainforest_enable_asins_parser) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-										</div>
+							<td style="width:20%">
+								<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Валидация EAN/GTIN</span></p>
+									<select name="config_rainforest_enable_eans_parser">
+										<?php if ($config_rainforest_enable_eans_parser) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+								</div>
 
-									</td>
+							</td>
 
-									<td style="width:20%">
+							<td style="width:20%">
+								<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Офферы заказанных товаров</span></p>
+									<select name="config_rainforest_enable_offersqueue_parser">
+										<?php if ($config_rainforest_enable_offersqueue_parser) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+								</div>
 
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Валидация EAN/GTIN</span></p>
-										<select name="config_rainforest_enable_eans_parser">
-											<?php if ($config_rainforest_enable_eans_parser) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-										</div>
+							</td>
 
-									</td>
+							<td style="width:20%">
+								<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Генератор SEO-данных</span></p>
+									<select name="config_enable_seogen_cron">
+										<?php if ($config_enable_seogen_cron) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+								</div>
 
-									<td style="width:20%">
-
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Офферы заказанных товаров</span></p>
-										<select name="config_rainforest_enable_offersqueue_parser">
-											<?php if ($config_rainforest_enable_offersqueue_parser) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-										</div>
-
-									</td>
-
-									<td style="width:20%">
-
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Генератор SEO-данных</span></p>
-										<select name="config_enable_seogen_cron">
-											<?php if ($config_enable_seogen_cron) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-										</div>
-
-									</td>
-								</tr>
-
-							</table>
+							</td>
+						</tr>
+					</table>
 
 
 							<h2>Rainforest API (получение цен и прочей шляпы из Amazon)</h2>
@@ -5250,7 +5276,7 @@
 		</div>
 		<script type="text/javascript"><!--
 
-			$('select, textarea, input[type=text], input[type=number], input[type=checkbox]').bind('change', function() {
+			$('select, textarea, input[type=text], input[type=number], input[type=time], input[type=checkbox]').bind('change', function() {
 				var key  = $(this).attr('name');
 				var elem = $(this);
 				var value = $(this).val();
