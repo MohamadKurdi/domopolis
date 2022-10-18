@@ -272,14 +272,24 @@ class ControllerKPRainForest extends Controller {
 			return;
 		}
 
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
-		$this->load->library('Timer');
-
 		if (!$this->config->get('config_rainforest_enable_pricing')){
 			echoLine('[parseofferscron] RNF AMAZON PRICING NOT ENABLED');
 			return;
 		}
 
+		$this->load->library('Timer');
+		if ($this->config->has('config_rainforest_offers_parser_time_start') && $this->config->has('config_rainforest_offers_parser_time_end')){
+			$interval = new Interval($this->config->get('config_rainforest_offers_parser_time_start') . '-' . $this->config->get('config_rainforest_offers_parser_time_end'));
+
+			if (!$interval->isNow()){
+				echoLine('[ControllerKPRainForest::editfullproductscron] NOT ALLOWED TIME');
+				return;
+			} else {
+				echoLine('[ControllerKPRainForest::editfullproductscron] ALLOWED TIME');				
+			}
+		}
+
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->rainforestAmazon->checkIfPossibleToMakeRequest();
 							
 		$products = $this->rainforestAmazon->offersParser->getProductsToGetOffers();			

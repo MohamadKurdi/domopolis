@@ -265,6 +265,18 @@ class ControllerDPRainForest extends Controller {
 		}
 
 		$this->load->library('Timer');
+
+		if ($this->config->has('config_rainforest_new_parser_time_start') && $this->config->has('config_rainforest_new_parser_time_end')){
+			$interval = new Interval($this->config->get('config_rainforest_new_parser_time_start') . '-' . $this->config->get('config_rainforest_new_parser_time_end'));
+
+			if (!$interval->isNow()){
+				echoLine('[ControllerKPRainForest::addnewproductscron] NOT ALLOWED TIME');
+				return;
+			} else {
+				echoLine('[ControllerKPRainForest::addnewproductscron] ALLOWED TIME');				
+			}
+		}
+
 		$timer = new FPCTimer();
 
 		$this->categoriesData = $this->rainforestAmazon->categoryRetriever->getCategories();
@@ -344,11 +356,22 @@ class ControllerDPRainForest extends Controller {
 			echoLine('[ControllerKPRainForest::editfullproductscron] CRON IS DISABLED IN ADMIN');
 			return;
 		}
+				
+		if (!$parsetechcategory){
+			$this->load->library('Timer');
+			if ($this->config->has('config_rainforest_data_parser_time_start') && $this->config->has('config_rainforest_data_parser_time_end')){
+				$interval = new Interval($this->config->get('config_rainforest_data_parser_time_start') . '-' . $this->config->get('config_rainforest_data_parser_time_end'));
 
-		
-		$this->load->library('Timer');
+				if (!$interval->isNow()){
+					echoLine('[ControllerKPRainForest::editfullproductscron] NOT ALLOWED TIME');
+					return;
+				} else {
+					echoLine('[ControllerKPRainForest::editfullproductscron] ALLOWED TIME');				
+				}
+			}
+		}
+
 		$timer = new FPCTimer();
-
 
 		if ($parsetechcategory){
 			$products = $this->rainforestAmazon->productsRetriever->getProductsFromTechCategory();
@@ -404,6 +427,19 @@ class ControllerDPRainForest extends Controller {
 			return;
 		}
 
+		$this->load->library('Timer');
+
+		if ($this->config->has('config_rainforest_tech_category_parser_time_start') && $this->config->has('config_rainforest_tech_category_parser_time_end')){
+			$interval = new Interval($this->config->get('config_rainforest_tech_category_parser_time_start') . '-' . $this->config->get('config_rainforest_tech_category_parser_time_end'));
+
+			if (!$interval->isNow()){
+				echoLine('[ControllerKPRainForest::editfullproductscron] NOT ALLOWED TIME');
+				return;
+			} else {
+				echoLine('[ControllerKPRainForest::editfullproductscron] ALLOWED TIME');				
+			}
+		}
+
 		if ($this->config->get('config_rainforest_default_technical_category_id') && $this->config->get('config_rainforest_default_unknown_category_id')){
 			$this->editfullproductscron(true);
 		}
@@ -417,6 +453,18 @@ class ControllerDPRainForest extends Controller {
 		}
 
 		$this->load->library('Timer');
+
+		if ($this->config->has('config_rainforest_data_l2_parser_time_start') && $this->config->has('config_rainforest_data_l2_parser_time_end')){
+			$interval = new Interval($this->config->get('config_rainforest_data_l2_parser_time_start') . '-' . $this->config->get('config_rainforest_data_l2_parser_time_end'));
+
+			if (!$interval->isNow()){
+				echoLine('[ControllerKPRainForest::editfullproductscron] NOT ALLOWED TIME');
+				return;
+			} else {
+				echoLine('[ControllerKPRainForest::editfullproductscron] ALLOWED TIME');				
+			}
+		}
+		
 		$timer = new FPCTimer();
 
 		$products = $this->rainforestAmazon->productsRetriever->getProductsWithFullDataButNotFullfilled();
