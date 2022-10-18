@@ -3231,11 +3231,27 @@ class ControllerSettingSetting extends Controller
 
         $rnf_cron_settings = [
         'config_rainforest_enable_new_parser',
+        'config_rainforest_new_parser_time_start',
+        'config_rainforest_new_parser_time_end',
+
         'config_rainforest_enable_data_parser',
+        'config_rainforest_data_parser_time_start',
+        'config_rainforest_data_parser_time_end',
+
         'config_rainforest_enable_tech_category_parser',
+        'config_rainforest_tech_category_parser_time_start',
+        'config_rainforest_tech_category_parser_time_end',
+
         'config_rainforest_enable_category_tree_parser',
+        
         'config_rainforest_enable_data_l2_parser',
+        'config_rainforest_data_l2_parser_time_start',
+        'config_rainforest_data_l2_parser_time_end',
+
         'config_rainforest_enable_offers_parser',
+        'config_rainforest_offers_parser_time_start',
+        'config_rainforest_offers_parser_time_end',
+        
         'config_rainforest_enable_asins_parser',
         'config_rainforest_enable_eans_parser',
         'config_rainforest_enable_offersqueue_parser',
