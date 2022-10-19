@@ -10,8 +10,6 @@ class ControllerModuleCookLink extends Controller {
 		$this->posts_url = $this->config->get('config_main_wp_blog_domain') . '/wp-json/posts';
 		$this->media_url = $this->config->get('config_main_wp_blog_domain') . '/wp-json/media';
 		
-		$debug = isset($_GET['debug']);
-		
 		if (!is_dir(DIR_IMAGE . $this->image_dir)) {
 			mkdir(DIR_IMAGE . $this->image_dir, 0775);         	
 		}
@@ -24,19 +22,9 @@ class ControllerModuleCookLink extends Controller {
 		}
 		
 		$cache_block = mt_rand(0, $module['amount_caches']);		
-		$this->bcache->SetFile('module_' . $language_id . md5(serialize($module)) . '_' . $cache_block . '.tpl', 'kpcook_module' . $store_id);
-		
-		if ($this->bcache->CheckFile()) {		
-		
-			$out = $this->bcache->ReturnFileContent();
-			$this->setBlockCachedOutput($out);
-			
-		} else {
-		
 		$this->language->load('module/cooklink');
 		$this->load->model('tool/image');
 
-		
 		$this->data['heading_title'] = (isset($module['title']))?$module['title']:'';
 		
 		if (!$module['amount_single']){
@@ -75,10 +63,6 @@ class ControllerModuleCookLink extends Controller {
 		}
 		$param_string = '?type=' . $post_type . $param_string . '&filter[posts_per_page]=' . $limit;
 		
-		if ($debug) {
-			var_dump($this->posts_url . $param_string);
-		}
-		
 		$json = @file_get_contents($this->posts_url . $param_string);		
 
 		$this->data['posts'] = array();
@@ -86,9 +70,6 @@ class ControllerModuleCookLink extends Controller {
 		if (!(($posts = json_decode($json, true)) === NULL)){			
 						
 			foreach ($posts as $post){
-
-				//сохраним картинку
-				
 				if (is_array($post['featured_image']) && isset($post['featured_image']['guid']) && $post['featured_image']['guid']) {					
 					$remote_image_file = $post['featured_image']['guid'];
 					//копируем файл себе
@@ -120,25 +101,10 @@ class ControllerModuleCookLink extends Controller {
 					'excerpt' => trim($excerpt)
 				);				
 			}
-						
-			
-		}
-		
-		//var_dump($this->data['posts']);
-		
-	
-		
-	
-
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/cooklink.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/module/cooklink.tpl';
-		} else {
-			$this->template = 'default/template/module/cooklink.tpl';
 		}
 
-			$out = $this->render();
-			$this->bcache->WriteFile($out);
-		}			
+		$this->template = 'module/cooklink.tpl';
+
+		$this->render();	
 	}
 }
-?>
