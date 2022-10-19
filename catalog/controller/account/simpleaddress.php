@@ -295,13 +295,9 @@ class ControllerAccountSimpleaddress extends SimpleController {
         $this->_templateData['language_code'] = isset($this->session->data['language']) && strlen($this->session->data['language']) > 0 && strlen($this->session->data['language']) < 6 ? $this->session->data['language'] : $this->config->get('config_language'); 
         
         $childrens = array();
-        
-        $this->document->addStyle('/catalog/view/javascript/select2/dist/css/select2.min.css');
-        $this->document->addStyle('/catalog/view/theme/kp/css/sumoselect.css');
-        
-        $this->document->addScript('/catalog/view/javascript/select2/dist/js/select2.min.js');
-        $this->document->addScript('/catalog/view/javascript/select2/dist/js/i18n/ru.js');
-        $this->document->addScript('/catalog/view/javascript/select2/dist/js/i18n/ua.js');
+                    
+        $this->document->addScript('/js/node_modules/select2/dist/js/i18n/ru.js');
+        $this->document->addScript('/js/node_modules/select2/dist/js/i18n/uk.js');
         
         $this->_templateData['simple_page_type'] = 'simple_edit_address';
 
