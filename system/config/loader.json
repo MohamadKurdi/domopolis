@@ -9,8 +9,7 @@
 		"../vendor/autoload",
 		"startup"		
 	],
-	"libraries":[		
-		"bcache",
+	"libraries":[				
 		"customer",
 		"affiliate",
 		"currency",
