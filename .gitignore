@@ -55,6 +55,8 @@
 
 #node includes
 /js/
+!/js/package.json
+!/js/package-lock.json
 
 #Старая директория api
 /api/
