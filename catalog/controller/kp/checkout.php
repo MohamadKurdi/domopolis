@@ -75,10 +75,7 @@
 			}
 			
 			
-			$this->response->setOutput(json_encode($result));
-			
-			
-			
+			$this->response->setOutput(json_encode($result));									
 		}
 		
 		public function getDefaultCities($limit = 24){

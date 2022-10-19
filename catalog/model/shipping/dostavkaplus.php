@@ -151,7 +151,7 @@
 									}
 								}
 								
-								//Отключаем нахуй Укрпочту, если доступна НП
+								//Отключаем Укрпочту, если доступна НП
 								if ($status == true && $key == 14 && !empty($address['novaposhta_city_guid'])){
 									$npWCQuery = $this->db->query("SELECT WarehouseCount FROM novaposhta_cities_ww WHERE Ref = '" . $this->db->escape($address['novaposhta_city_guid']) . "' LIMIT 1");
 									
@@ -180,7 +180,7 @@
 									}
 								}
 								
-								//Отключить нахуй ЕМС по Московской области
+								//Отключить  ЕМС по Московской области
 								if ($status == true && $key == 5 && !empty($address['cdek_city_guid'])){
 									
 									$npWCQuery = $this->db->query("SELECT code FROM cdek_cities WHERE code = '" . (int)$address['cdek_city_guid'] . "' AND region_code IN (9,81) LIMIT 1");
@@ -468,15 +468,15 @@
 									) {
 										
 										$quote_data['sh'.$key] = array(
-                                        'code'            	=> $this->name.'.sh'.$key,
-                                        'title'           	=> $title,
-                                        'image'           	=> $module['image'],
-                                        'cost'            	=> $price,
-										'cost_national'   	=> $price_national,
-                                        'description'     	=> $description,
-										'additional_description'     => $additional_description,
-                                        'tax_class_id'    	=> '',
-                                        'sort_order'      	=> $module['sort_order'],
+                                        'code'            				=> $this->name.'.sh'.$key,
+                                        'title'           				=> $title,
+                                        'image'           				=> $module['image'],
+                                        'cost'            				=> $price,
+										'cost_national'   				=> $price_national,
+                                        'description'     				=> $description,
+										'additional_description'     	=> $additional_description,
+                                        'tax_class_id'    				=> '',
+                                        'sort_order'      				=> $module['sort_order'],
                                         'text'            	=> $text,
                                         'error'           	=> $error,
 										'status'          	=> true,
