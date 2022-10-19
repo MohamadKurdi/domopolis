@@ -1311,6 +1311,8 @@
 								</div>
 								
 								<div id="tab-telephony">
+
+									<h2>Очереди</h2>
 									<table class="form">
 										<tr>
 											<td>
@@ -1354,6 +1356,37 @@
 											</td>
 										</tr>
 									</table>
+
+									<h2>Binotel (телефония)</h2>
+							<table class="form">
+								<tr>
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Движок телефонии</span></p>
+										<select name="config_telephony_engine">
+											<?php if ($config_telephony_engine == 'asterisk') { ?>
+												<option value="asterisk" selected="selected">Asterisk AMI</option>
+												<option value="binotel">Binotel API</option>
+												<?php } else { ?>													
+												<option value="asterisk">Asterisk AMI</option>
+												<option value="binotel"  selected="selected">Binotel API</option>
+											<? } ?>
+										</select>										
+									</td>
+
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Binotel API KEY</span></p>
+										<input type="text" name="config_binotel_api_key" value="<?php echo $config_binotel_api_key; ?>" size="30" style="width:300px;" />										
+									</td>
+
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Binotel API SECRET</span></p>
+										<input type="text" name="config_binotel_api_secret" value="<?php echo $config_binotel_api_secret; ?>" size="30" style="width:300px;" />		
+									</td>
+
+									<td width="25%">		
+									</td>
+								</tr>
+							</table>
 								</div>
 								
 								<div id="tab-google-ya-fb-vk">

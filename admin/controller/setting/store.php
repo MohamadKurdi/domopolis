@@ -1294,6 +1294,33 @@
 				} else {
 				$this->data['config_stock_checkout'] = '';
 			}
+
+			if (isset($this->request->post['config_telephony_engine'])) {
+				$this->data['config_telephony_engine'] = $this->request->post['config_telephony_engine'];
+				} elseif (isset($store_info['config_telephony_engine'])) {
+				$this->data['config_telephony_engine'] = $store_info['config_telephony_engine'];			
+				} else {
+				$this->data['config_telephony_engine'] = '';
+			}
+
+			if (isset($this->request->post['config_binotel_api_key'])) {
+				$this->data['config_binotel_api_key'] = $this->request->post['config_binotel_api_key'];
+				} elseif (isset($store_info['config_binotel_api_key'])) {
+				$this->data['config_binotel_api_key'] = $store_info['config_binotel_api_key'];			
+				} else {
+				$this->data['config_binotel_api_key'] = '';
+			}
+
+			if (isset($this->request->post['config_binotel_api_secret'])) {
+				$this->data['config_binotel_api_secret'] = $this->request->post['config_binotel_api_secret'];
+				} elseif (isset($store_info['config_binotel_api_secret'])) {
+				$this->data['config_binotel_api_secret'] = $store_info['config_binotel_api_secret'];			
+				} else {
+				$this->data['config_binotel_api_secret'] = '';
+			}
+
+			
+
 			
 			if (isset($this->request->post['config_default_queue'])) {
 				$this->data['config_default_queue'] = $this->request->post['config_default_queue'];

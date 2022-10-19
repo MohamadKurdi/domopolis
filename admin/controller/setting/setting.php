@@ -3378,7 +3378,26 @@ class ControllerSettingSetting extends Controller
             }
         }
 
-            //ASTERISK AMI
+        //Binotel
+        if (isset($this->request->post['config_telephony_engine'])) {
+            $this->data['config_telephony_engine'] = $this->request->post['config_telephony_engine'];
+        } else {
+            $this->data['config_telephony_engine'] = $this->config->get('config_telephony_engine');
+        }
+
+        if (isset($this->request->post['config_binotel_api_key'])) {
+            $this->data['config_binotel_api_key'] = $this->request->post['config_binotel_api_key'];
+        } else {
+            $this->data['config_binotel_api_key'] = $this->config->get('config_binotel_api_key');
+        }
+
+        if (isset($this->request->post['config_binotel_api_secret'])) {
+            $this->data['config_binotel_api_secret'] = $this->request->post['config_binotel_api_secret'];
+        } else {
+            $this->data['config_binotel_api_secret'] = $this->config->get('config_binotel_api_secret');
+        }
+
+        //ASTERISK AMI
         if (isset($this->request->post['config_asterisk_ami_user'])) {
             $this->data['config_asterisk_ami_user'] = $this->request->post['config_asterisk_ami_user'];
         } else {
