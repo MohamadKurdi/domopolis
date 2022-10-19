@@ -1,8 +1,5 @@
-
 <?php   
-	class ControllerCommonHeaderSimple extends Controller {
-		private $top_block_id = 'top_covid3';
-		
+	class ControllerCommonHeaderSimple extends Controller {				
 		protected function index(){
 			$this->children = array('common/header/simple');
 			$this->template = '';

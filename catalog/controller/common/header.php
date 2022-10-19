@@ -12,7 +12,11 @@
 		
 		protected function simpleheader(){								
 			$this->index('common/header_simple');			
-		}				
+		}			
+
+		protected function landingnoshop(){								
+			$this->index('common/header_landingnoshop');			
+		}	
 
 		private function setHrefLangsAndTryToRedirect(){
 			$this->load->model('kp/urldecode');
