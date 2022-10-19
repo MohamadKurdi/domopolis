@@ -136,11 +136,12 @@ class ControllerModuleViewed extends Controller {
 						} elseif($this->config->get('blockviewed_empty_type_' . $idx) == 'new') {
 
 							$filter_data = [								
-								'sort'                => 'p.date_added',
+								'sort'                			=> 'p.date_added',
+								'filter_different_categories' 	=> true,
 							//	'filter_with_variants'=> true,
-								'order'               => 'DESC',
-								'start'               => 0,
-								'limit'               => $setting['limit']
+								'order'               			=> 'DESC',
+								'start'               			=> 0,
+								'limit'               			=> $setting['limit']
 							];
 
 							$products = $this->model_catalog_product->getProducts($filter_data);

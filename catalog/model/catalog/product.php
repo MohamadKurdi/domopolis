@@ -961,6 +961,12 @@
 				$sql .= " (SELECT price FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special,  ";
 				$sql .= " (SELECT currency_scode FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS currency_scode ";
 			}
+
+			if (!empty($data['filter_different_categories'])){
+				$sql .= ", ";
+				$sql .= "(SELECT category_id FROM product_to_category p2c2 WHERE p2c2.product_id = p.product_id ORDER BY main_category DESC LIMIT 1) as main_category_id";				
+			}
+
 			
 			if (!empty($data['filter_category_id'])) {
 				if (!empty($data['filter_sub_category'])) {
@@ -1217,7 +1223,11 @@
 				$sql .= " AND (" . mt_rand(0, 100) . ")";
 			}
 			
-			$sql .= " GROUP BY p.product_id";
+			if (!empty($data['filter_different_categories'])){
+				$sql .= " GROUP BY main_category_id";
+			} else {
+				$sql .= " GROUP BY p.product_id";
+			}
 			
 			if (!empty($data['sort']) && in_array($data['sort'], $this->registry->get('sorts_available'))) {
 				if ($data['sort'] == 'rand' || $data['sort'] == 'rand-10' || $data['sort'] == 'rand-100'){
