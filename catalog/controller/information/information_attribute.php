@@ -163,63 +163,11 @@ class ControllerInformationInformationAttribute extends Controller {
 
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/stylesheet/information_styles/' . $shortname.'.css')){
                 $this->document->addStyle('catalog/view/theme/'.$this->config->get('config_template').'/stylesheet/information_styles/' . $shortname.'.css');
-            } else {
-                //	fopen(DIR_TEMPLATE . $this->config->get('config_template') . '/stylesheet/information_styles/' . $shortname.'.css','w');
             }
 
             $this->document->addLink('canonical', $canonical);
 
-
-            $this->bcache->SetFile('template.information_attribute.'.$this->config->get('config_store_id').$information_id.'.tpl', 'templates');
-            if ($this->bcache->CheckFile()) {
-                $this->template = $this->bcache->ReturnFileContent();
-            } else {
-
-                $this->load->model('design/layout');
-                $layout_id = $this->model_catalog_information_attribute->getInformationLayoutId($information_id);
-                if (!$layout_id){
-                    // $layout_id = $this->model_catalog_information_attribute->getLayout('information/information');
-                }
-
-                if ($template = $this->model_design_layout->getLayoutTemplateByLayoutId($layout_id)) {
-                    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/' . $template)) {
-                        $this->template = $this->config->get('config_template') . '/template/' . $template;
-                    } else {
-                        $this->template = 'default/template/' . $template;
-                    }
-                } else {
-                    //Если нет переназначения Layout, то проверяем переназначение конкретной категории
-                    $template_overload = false;
-                    $this->load->model('setting/setting');
-                    $custom_template_module = $this->model_setting_setting->getSetting('custom_template_module', $this->config->get('config_store_id'));
-                    if(!empty($custom_template_module['custom_template_module'])){
-                        foreach ($custom_template_module['custom_template_module'] as $key => $module) {
-                            if (($module['type'] == 2) && !empty($module['informations'])) {
-                                if (in_array($information_id, $module['informations'])) {
-                                    if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') .'/'. $module['template_name'])) {
-                                        $this->template = $this->config->get('config_template') .'/'. $module['template_name'];
-                                    } else {
-                                        $this->template = DIR_TEMPLATE . 'default' .'/'. $module['template_name'];
-                                    }
-                                    $template_overload = true;
-                                }
-                            }
-                        }
-                    }
-
-                    if (!$template_overload) {
-                        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/information/information_attribute.tpl')) {
-                            $this->template = $this->config->get('config_template') . '/template/information/information_attribute.tpl';
-                        } else {
-                            $this->template = 'default/template/information/information.tpl';
-                        }
-                    }
-                }
-
-                $this->bcache->WriteFile($this->template);
-            }
-
-
+            $this->template = 'information/information_attribute';
 
             $this->children = array(
                 'common/column_left',
@@ -251,11 +199,7 @@ class ControllerInformationInformationAttribute extends Controller {
 
             $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
 
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-                $this->template = $this->config->get('config_template') . '/template/error/not_found.tpl';
-            } else {
-                $this->template = 'default/template/error/not_found.tpl';
-            }
+            $this->template = 'error/not_found';
 
             $this->children = array(
                 'common/column_left',
@@ -320,7 +264,7 @@ class ControllerInformationInformationAttribute extends Controller {
             $shortname = $this->db->escape(str_replace('/','',$shortname['path']));
 
             if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/stylesheet/information_styles/' . $shortname.'.css')){
-                $output =  "<style type='text/css' src='catalog/view/theme/".$this->config->get('config_template')."/stylesheet/information_styles/"				. $shortname.".css' />";
+                $output =  "<style type='text/css' src='catalog/view/theme/".$this->config->get('config_template')."/stylesheet/information_styles/" . $shortname.".css' />";
             } else {
                 $output = '';
             }
@@ -376,4 +320,3 @@ class ControllerInformationInformationAttribute extends Controller {
         }
     }
 }
-?>
