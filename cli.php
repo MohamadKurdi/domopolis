@@ -110,7 +110,6 @@ $registry = new Registry();
 $registry->set('load', 		new Loader($registry));	
 $registry->set('config', 	new Config()); $config = $registry->get('config');
 $registry->set('db', 		new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE));	
-$registry->set('bcache', 	new BCache($registry));		
 $registry->set('cache', 	new Cache());
 $registry->set('request', 	new Request());
 $registry->set('session', 	new Session($registry)); $session = $registry->get('session');
