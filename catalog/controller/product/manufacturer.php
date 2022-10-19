@@ -754,14 +754,10 @@
 			$current_lang  = (int)$this->config->get('config_language_id');
 			$current_curr  = (int)$this->currency->getId();
 			$manufacturer_id  = (int)$this->request->get['manufacturer_id'];
-			
-			$this->bcache->SetFile('collections.'.$manufacturer_id.$current_store.$current_lang.$current_curr.'.tpl', 'manufacturer');
-			if ($this->bcache->CheckFile()) {
-				
-				$this->data['collections'] = $this->bcache->ReturnFileContent(true);
-				
-				} else {		
-				
+
+			$this->data['collections'] = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, ['collections'], [$manufacturer_id]));
+
+			if (!$this->data['collections']) {		
 				$this->load->model('catalog/collection');	
 				$results = $this->model_catalog_collection->getCollectionsByManufacturerNoVirtualForShowAll($manufacturer_id, 300);
 				$this->data['collections'] = array();			
@@ -771,7 +767,7 @@
 						
 						if (is_numeric(utf8_substr($result['name'], 0, 1))) {
 							$key = '0 - 9';
-							} else {
+						} else {
 							$key = utf8_substr(utf8_strtoupper($result['name']), 0, 1);
 						}
 						
@@ -779,24 +775,24 @@
 						
 						if ($result['image']) {
 							$image = $this->model_tool_image->resize($result['image'], 500, 500);
-							} else {
+						} else {
 							$image = false;
 						}
 						
 						if (!$result['no_brand']) {
 							
 							$this->data['collections'][$key]['collection'][] = array(
-							'collection_id'     	=> $result['collection_id'],
-							'name'       	  		=> $result['name'],
-							'short_description'     => $result['short_description'],
-							'thumb'       	  		=> $image,
-							'href'            		=> $this->url->link('product/collection', 'collection_id=' . $result['collection_id'])
+								'collection_id'     	=> $result['collection_id'],
+								'name'       	  		=> $result['name'],
+								'short_description'     => $result['short_description'],
+								'thumb'       	  		=> $image,
+								'href'            		=> $this->url->link('product/collection', 'collection_id=' . $result['collection_id'])
 							);	
 							
 						}
 					}							
 				}
-				$this->bcache->WriteFile($this->data['collections'], true);
+				$this->cache->set($this->registry->createCacheQueryString(__METHOD__, ['collections'], [$manufacturer_id]), $this->data['collections']);
 			}
 			
 			
@@ -925,10 +921,9 @@
 			$current_curr  = (int)$this->currency->getId();
 			$manufacturer_id  = (int)$this->request->get['manufacturer_id'];
 			
-			$this->bcache->SetFile('categories.'.$manufacturer_id.$current_lang.$current_curr.'.tpl', 'manufacturer_categories'.$current_store);
-			if ($this->bcache->CheckFile()) {
-				$this->data['categories'] = $this->bcache->ReturnFileContent(true);
-				} else {
+			$this->data['categories'] = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, ['categories'], [$manufacturer_id]));
+
+			if (!$this->data['categories']) {		
 				$this->load->model('module/keyworder');
 				$this->data['categories'] = array();
 				$results_parent_categories = $this->model_catalog_manufacturer->getTreeCategoriesByManufacturer($manufacturer_id);								
@@ -1000,10 +995,8 @@
 					
 				}
 				
-				$this->bcache->WriteFile($this->data['categories'], true);
-			}
-			
-			$this->log->debug($this->data['categories']);
+				$this->cache->set($this->registry->createCacheQueryString(__METHOD__, ['categories'], [$manufacturer_id]), $this->data['categories']);
+			}				
 			
 			if ($manufacturer_info['image']){
 				$this->data['manufacturer_logo'] = $this->model_tool_image->resize($manufacturer_info['image'], 150, 150);
