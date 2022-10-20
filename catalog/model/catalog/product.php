@@ -987,7 +987,7 @@
 			$sql .= " LEFT JOIN product_description pd ON (p.product_id = pd.product_id) ";
 			$sql .= " LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
 
-			if (!empty($data['sort']) && $data['sort'] == 'p.viewed') {
+			if (!empty($data['sort']) && $data['sort'] == 'p.viewed' && !empty($data['filter_only_viewed'])) {
 				$sql .= " AND p.viewed > 0 ";
 			}
 

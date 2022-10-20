@@ -124,6 +124,7 @@ class ControllerModuleViewed extends Controller {
 
 							$filter_data = [								
 								'sort'                => 'p.viewed',
+								'filter_only_viewed'  => true, 
 							//	'filter_with_variants'=> true,
 								'order'               => 'DESC',
 								'start'               => 0,
