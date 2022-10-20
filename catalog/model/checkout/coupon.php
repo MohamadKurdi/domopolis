@@ -237,6 +237,7 @@
 				'type'          => $coupon_query->row['type'],
 				'discount'      => $coupon_query->row['discount'],
 				'discount_sum'  => $coupon_query->row['discount_sum'],
+				'only_in_stock' => $coupon_query->row['only_in_stock'],
 				'currency'      => $coupon_query->row['currency'],
 				'shipping'      => $coupon_query->row['shipping'],
 				'total'         => $coupon_query->row['total'],
