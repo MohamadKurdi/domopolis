@@ -1,6 +1,4 @@
 <?php
-	
-	
 	use Elasticsearch\ClientBuilder;
 	
 	class ControllerKPSearch extends Controller {
@@ -106,8 +104,7 @@
 			'id'   		=> $id,
 			'idtype'   	=> $idtype,	
 			'type' 		=> $type
-			);	
-			
+			);			
 		}
 		
 		private function prepareResults($results, $field, $exact, $query = false){
@@ -159,8 +156,7 @@
 			
 			foreach ($data as $result){
 				
-				if ($result['type'] == 'p'){
-					
+				if ($result['type'] == 'p'){					
 					$product = $this->model_catalog_product->getProduct($result['id']);
 					if ($product){
 						$parsedData['p'][$result['id']] = array(
@@ -233,13 +229,9 @@
 			foreach ($this->language->loadRetranslate('common/header') as $translationСode => $translationText){
 				$this->data[$translationСode] = $translationText;
 			}
-			
-			
-			$query = $this->request->get['query'];
-			$query = trim(mb_strtolower($query));
-			//	$this->log->debug($query);
-			if (!mb_strlen($query)){
-				//display_history or popular searches
+						
+			$query = trim(mb_strtolower($this->request->get['query']));			
+			if (!mb_strlen($query)){				
 				$this->load->model('kp/search');
 				$this->data['histories'] = array();
 				
@@ -312,10 +304,9 @@
 							$resultsP = $this->elasticSearch->sku($query);
 						}
 					}
-					
+
 					$r1 = $this->prepareResults($results, $field, $exact, $query);									
 					$r2 = $this->prepareResults($resultsP, $field, $exact);
-					
 				}
 				
 				
@@ -329,7 +320,7 @@
 				} catch ( Exception $e ) {
 				$this->log->debug($e->getMessage());
 				$this->data['results'][0] = array(				
-				'name' => 'Что-то пошло не так, сейчас разберемся ' . $e->getMessage()
+				'name' => 'Something is broken, we are fixing it just now ' . $e->getMessage()
 				);
 			}			
 			
@@ -360,25 +351,14 @@
 			$this->data['results_count'] = count($this->data['results']['s']) + count($this->data['results']['m']) + count($this->data['results']['mc']) + count($this->data['results']['p']) + count($this->data['results']['c']) + count($this->data['results']['cc']);
 			
 			$this->template = $this->config->get('config_template') . '/template/structured/kpsearch.tpl';
-			$this->response->setOutput($this->render());
-			
+			$this->response->setOutput($this->render());			
 		}
 		
-		public function fullindexer(){
-			
-			$this->elasticSearch->recreateIndices()->indexer()->productsindexer();
-			
-			
+		public function fullindexer(){	
+			$this->elasticSearch->recreateIndices()->indexer()->productsindexer();		
 		}
 
-		public function productindexer($product_id){
-			
+		public function productindexer($product_id){			
 			$this->elasticSearch->reindexproduct($product_id);
-			
-			
 		}
-		
-		
-		
-		
 	}
