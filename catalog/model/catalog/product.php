@@ -1239,9 +1239,9 @@
 					} elseif ($data['sort'] == 'p.price') {
 
 					if ($this->config->get('config_warehouse_only')){
-						$sql .= " ORDER BY (p.`" . $this->config->get('config_warehouse_identifier') . "` > 0) DESC, (CASE WHEN (special IS NOT NULL AND currency_scode <> '" . $this->db->escape($this->config->get('config_regional_currency')) . "') THEN special WHEN discount IS NOT NULL THEN discount ELSE p.price END)";
+						$sql .= " ORDER BY (p.`quantity` > 0) DESC, (p.`" . $this->config->get('config_warehouse_identifier') . "` > 0) DESC, (CASE WHEN (special IS NOT NULL AND currency_scode <> '" . $this->db->escape($this->config->get('config_regional_currency')) . "') THEN special WHEN discount IS NOT NULL THEN discount ELSE p.price END)";
 					} else {
-						$sql .= " ORDER BY (p.`" . $this->config->get('config_warehouse_identifier') . "` > 0) DESC, (CASE WHEN (special IS NOT NULL AND currency_scode <> '" . $this->db->escape($this->config->get('config_regional_currency')) . "') THEN special WHEN discount IS NOT NULL THEN discount ELSE p.price END)";						
+						$sql .= " ORDER BY (p.`quantity` > 0) DESC, (p.`" . $this->config->get('config_warehouse_identifier') . "` > 0) DESC, (CASE WHEN (special IS NOT NULL AND currency_scode <> '" . $this->db->escape($this->config->get('config_regional_currency')) . "') THEN special WHEN discount IS NOT NULL THEN discount ELSE p.price END)";						
 					}
 
 					} elseif ($data['sort'] == 'p.viewed' || $data['sort'] == 'p.date_added') {
