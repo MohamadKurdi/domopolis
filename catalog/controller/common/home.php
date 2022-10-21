@@ -141,9 +141,7 @@
 			$this->response->setOutput($this->render());
 		}
 		
-		public function homecart(){
-			
-			
+		public function homecart(){						
 			$this->language->load('common/home');
 			
 			foreach ($this->language->loadRetranslate('common/home') as $translationСode => $translationText){
@@ -158,9 +156,15 @@
 				$this->data['home_cart_total_quantity'] = 0;
 				
 				$this->data['home_cart_total'] = $this->cart->getSubTotal();
-				$this->data['home_cart_count'] = $this->cart->countProducts();
-				
-				$this->data['home_cart_line_1'] = $this->language->get('text_general_in_da_cart') . ' ' . $this->cart->countProducts() . ' ' . morphos\Russian\NounPluralization::pluralize($this->cart->countProducts(), $this->language->get('text_general_product'));
+				$this->data['home_cart_count'] = $this->cart->countProducts();								
+
+				if ($this->config->get('config_language') == 'uk'){
+					$this->data['home_cart_line_1'] = $this->language->get('text_general_in_da_cart') . ' ' . $this->cart->countProducts() . ' ' . getUkrainianPluralWord($this->cart->countProducts(), $this->language->get('text_products_pluralized'));			
+				} else {
+					$this->data['home_cart_line_1'] = $this->language->get('text_general_in_da_cart') . ' ' . $this->cart->countProducts() . ' ' . morphos\Russian\NounPluralization::pluralize($this->cart->countProducts(), $this->language->get('text_general_product'));
+				}
+
+
 				$this->data['home_cart_line_2'] = $this->language->get('text_general_for_sum') . ' <b>' . $this->currency->format($this->cart->getSubTotal()) . '</b>';
 				
 				$this->data['home_cart_text_go_to_checkout'] = $this->language->get('text_general_go_to_checkout');
