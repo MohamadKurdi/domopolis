@@ -1023,6 +1023,38 @@ class ControllerFeedYandexKP extends Controller {
 
 		}
 
+		$products = $this->db->query($sql);	
+
+		return $products;
+	}
+
+	public function makeStockFeedQueryWithManufacturerExclusion(){			
+		$sql = "SELECT DISTINCT(p.product_id) FROM product p 
+		LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
+		LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
+		WHERE 
+		p.`". $this->config->get('config_warehouse_identifier') ."` > 0 
+		AND p.status = 1 
+		AND p.quantity > 0
+		AND p.is_virtual = 0
+		AND p.is_markdown = 0
+		AND p.yam_disable = 0
+		AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+		AND p2s.store_id = '" . $this->config->get('config_store_id') . "'";
+
+		if ($this->excluded_names){
+			$sql .= " AND NOT (";
+
+			$_OR = [];
+			foreach ($this->excluded_names as $excluded_name){
+				$_OR[] = "LOWER(pd.name) LIKE '%" . $excluded_name . "%'";
+			}										
+
+			$sql .= implode(' OR ' , $_OR);					
+			$sql .= ")";
+
+		}
+
 		if ($this->excludeYandexManufacturers){
 			$sql .= " AND p.manufacturer_id NOT IN (";
 			$sql .= implode(',', $this->excludeYandexManufacturers);
@@ -1045,13 +1077,12 @@ class ControllerFeedYandexKP extends Controller {
 				$this->updateYandexMarketSetAllNotInFeed();				
 			}
 
-
 			echoLine('[YML] ' . $store_id);
 
 			$this->setProductImages()->cacheCategoryDimensions();
 			$this->loadSettings($store_id)->openYML()->addShop()->addCategories()->setFeedType('market');
 
-			$products = $this->makeStockFeedQuery();
+			$products = $this->makeStockFeedQueryWithManufacturerExclusion();
 
 			if (!$this->config->get('config_yam_enable_sync_from_1c') && $this->config->get('config_yam_enable_plus_percent') && (float)$this->config->get('config_yam_plus_percent') <> 0){
 				$this->updateYandexMarketPrices($products->rows)->flushCache();
@@ -1060,8 +1091,9 @@ class ControllerFeedYandexKP extends Controller {
 			$this->setProducts($products->rows)->addOffers();
 			$this->closeYML()->writeFeed($this->stock_path[0]);
 
-				//ADD DIRECT
+			//ADD DIRECT
 			echoLine('[DIRECT YML] ' . $store_id);
+			$products = $this->makeStockFeedQuery();
 			$this->loadSettings($store_id)->openYML()->addShop()->addCategories()->setFeedType('yandex');										
 			$this->setProducts($products->rows)->addOffers();
 			$this->closeYML()->writeFeed($this->direct_stock_path[0]);
@@ -1080,7 +1112,6 @@ class ControllerFeedYandexKP extends Controller {
 			}
 
 		}
-
 	}
 
 	public function makeFullFeed(){
@@ -1110,8 +1141,7 @@ class ControllerFeedYandexKP extends Controller {
 				$products = $this->db->query($sql);	
 				$this->setProducts($products->rows)->addOffers();
 				
-				$this->closeYML()->writeFeed($this->full_path[0]);
-				
+				$this->closeYML()->writeFeed($this->full_path[0]);				
 			}
 		}
 		
