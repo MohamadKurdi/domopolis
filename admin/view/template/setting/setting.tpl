@@ -3411,11 +3411,11 @@
 						
 
 						<div id="tab-ya-market">
-							<h2>Настройки Ozon Seller</h2>
+							<h2>Настройки Ozon Seller + исключение брендов</h2>
 
 							<table class="form">
 								<tr>		
-									<td width="30%">
+									<td width="20%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">OZON ценообразование так же как в Yandex</span></p>
 										<select name="config_ozon_enable_price_yam">
 											<?php if ($config_ozon_enable_price_yam) { ?>
@@ -3430,14 +3430,14 @@
 										<span class="help">если включено, то в Ozon пойдет та же цена, что и в Яндекс.Маркет. Иначе - цена фронта</span>
 									</td>	
 
-									<td width="30%">
+									<td width="20%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Название склада в ЛК Ozon Seller</span></p>
 										<input type="text" name="config_ozon_warehouse_0" value="<?php echo $config_ozon_warehouse_0; ?>" size="30" style="width:200px;" />
 										<br />
 										<span class="help">Обязательное требование, нужно скопировать из личного кабинета Озона</span>
 									</td>
 
-									<td width="40%">
+									<td width="30%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Исключить бренды из фида Ozon</span></p>
 										<div class="scrollbox" style="height:250px;">
 										<?php $class = 'odd'; ?>
@@ -3447,7 +3447,7 @@
 												<div class="<?php echo $class; ?>">
 													<?php if (in_array($manufacturer['manufacturer_id'], $config_ozon_exclude_manufacturers)) { ?>
 														<input id="config_ozon_exclude_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>" class="checkbox" type="checkbox" name="config_ozon_exclude_manufacturers[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" checked="checked" />
-														<label for="config_manager_confirmed_<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></label>
+														<label for="config_yandex_exclude_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></label>
 													<?php } else { ?>
 														<input id="config_ozon_exclude_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>" class="checkbox" type="checkbox" name="config_ozon_exclude_manufacturers[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" />
 														<label for="config_ozon_exclude_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></label>
@@ -3456,8 +3456,30 @@
 											<?php } ?>
 										<?php } ?>
 									</div>
+									</td>
+
+									<td width="30%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Исключить бренды из фида Yandex Market</span></p>
+										<div class="scrollbox" style="height:250px;">
+										<?php $class = 'odd'; ?>
+										<?php if ($config_yam_fbs_campaign_id) { ?>
+											<?php foreach ($manufacturers as $manufacturer) { ?>
+												<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+												<div class="<?php echo $class; ?>">
+													<?php if (in_array($manufacturer['manufacturer_id'], $config_yandex_exclude_manufacturers)) { ?>
+														<input id="config_yandex_exclude_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>" class="checkbox" type="checkbox" name="config_yandex_exclude_manufacturers[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" checked="checked" />
+														<label for="config_yandex_exclude_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></label>
+													<?php } else { ?>
+														<input id="config_yandex_exclude_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>" class="checkbox" type="checkbox" name="config_yandex_exclude_manufacturers[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" />
+														<label for="config_yandex_exclude_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></label>
+													<?php } ?>
+												</div>
+											<?php } ?>
+										<?php } ?>
+									</div>
 
 									</td>
+
 								</tr>
 							</table>
 
@@ -5317,7 +5339,7 @@
 
 				if (elem.attr('type') == 'checkbox'){
 					if (elem.attr('checked')){
-						value = 1;
+						value = elem.val();
 					} else {
 						value = 0;
 					}

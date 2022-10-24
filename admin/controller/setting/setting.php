@@ -3515,6 +3515,14 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_ozon_exclude_manufacturers'] = array();
         }
+
+        if (isset($this->request->post['config_yandex_exclude_manufacturers'])) {
+            $this->data['config_yandex_exclude_manufacturers'] = $this->request->post['config_yandex_exclude_manufacturers'];
+        } elseif ($this->config->get('config_yandex_exclude_manufacturers')) {
+            $this->data['config_yandex_exclude_manufacturers'] = $this->config->get('config_yandex_exclude_manufacturers');
+        } else {
+            $this->data['config_yandex_exclude_manufacturers'] = array();
+        }
         
         if (isset($this->request->post['config_yam_enable_category_tree'])) {
             $this->data['config_yam_enable_category_tree'] = $this->request->post['config_yam_enable_category_tree'];
