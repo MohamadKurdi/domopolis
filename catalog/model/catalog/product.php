@@ -991,7 +991,7 @@
 				$sql .= " AND p.viewed > 0 ";
 			}
 
-			if (!empty($data['sort']) && $data['sort'] == 'p.date_added') {
+			if (!empty($data['sort']) && $data['sort'] == 'p.date_added' && empty($data['new']) && empty($data['newlong'])) {
 				$sql .= " AND p.date_added >= '" . date('Y-m-d', strtotime('-1 week')) . "' ";
 				$sql .= " AND p.quantity > 0 ";
 				$sql .= " AND stock_status_id = '" . $default_stock_status . "'";
