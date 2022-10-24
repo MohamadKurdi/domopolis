@@ -24,6 +24,7 @@ class ControllerFeedYandexKP extends Controller {
 
 		//Виллерой исключить
 	private $excludeOzonManufacturers = [];
+	private $excludeYandexManufacturers = [];
 
 		//Озон = граммы, миллиметры
 	private $ozonWeightClassID = 2;
@@ -49,6 +50,7 @@ class ControllerFeedYandexKP extends Controller {
 
 		$this->currentWeightClassID = $this->yandexWeightClassID;
 		$this->currentLengthClassID = $this->yandexLengthClassID;
+		$this->excludeYandexManufacturers 	= $this->config->get('config_yandex_exclude_manufacturers');
 
 		if ($this->type == 'ozon'){
 
@@ -57,7 +59,7 @@ class ControllerFeedYandexKP extends Controller {
 			$this->currentWeightClassID = $this->ozonWeightClassID;
 			$this->currentLengthClassID = $this->ozonLengthClassID;
 
-			$this->excludeOzonManufacturers = $this->config->get('config_ozon_exclude_manufacturers');
+			$this->excludeOzonManufacturers 	= $this->config->get('config_ozon_exclude_manufacturers');
 		}
 
 		echoLine('Единица веса:' . $this->currentWeightClassID);
@@ -994,8 +996,7 @@ class ControllerFeedYandexKP extends Controller {
 	}
 
 
-	public function makeStockFeedQuery(){
-			//Товары в наличии
+	public function makeStockFeedQuery(){			
 		$sql = "SELECT DISTINCT(p.product_id) FROM product p 
 		LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
 		LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
@@ -1020,6 +1021,12 @@ class ControllerFeedYandexKP extends Controller {
 			$sql .= implode(' OR ' , $_OR);					
 			$sql .= ")";
 
+		}
+
+		if ($this->excludeYandexManufacturers){
+			$sql .= " AND p.manufacturer_id NOT IN (";
+			$sql .= implode(',', $this->excludeYandexManufacturers);
+			$sql .= ")";
 		}
 
 		$products = $this->db->query($sql);	
