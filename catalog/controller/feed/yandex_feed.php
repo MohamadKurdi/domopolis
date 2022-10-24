@@ -960,21 +960,7 @@
 			$this->offers = array();
 			$this->shop = array();
 			
-			$query = $this->db->non_cached_query("SELECT * FROM language"); 			
-			foreach ($query->rows as $result) {
-				$languages[$result['code']] = array(
-				'language_id' => $result['language_id'],
-				'name'        => $result['name'],
-				'code'        => $result['code'],
-				'locale'      => $result['locale'],
-				'directory'   => $result['directory'],
-				'filename'    => $result['filename']
-				);
-			}
-			
-			$file = DIR_REFEEDS . 'hotline_full.xml';
-			
-			$store_id = 1;			
+			$file = DIR_REFEEDS . 'hotline_full.xml';	
 			
 			$this->setCurrency($offers_currency = 'UAH', 1);
 			
@@ -989,24 +975,7 @@
 					$this->setCurrency($currency['code'], number_format($this->currency->real_convert(1, $currency['code'],  $offers_currency), 2, '.', ''));
 				}
 			}
-			
-			$this->config->set('config_url', HTTP_SERVER);
-			$this->config->set('config_ssl', HTTPS_SERVER);
-			// Settings
-			$query = $this->db->non_cached_query("SELECT * FROM setting WHERE store_id = '0' OR store_id = '" . $store_id . "' ORDER BY store_id ASC");				
-			foreach ($query->rows as $setting) {
-				if (!$setting['serialized']) {
-					$this->config->set($setting['key'], $setting['value']);
-					} else {
-					$this->config->set($setting['key'], unserialize($setting['value']));
-				}
-			}
-			
-			$this->config->set('config_store_id', $store_id);
-			$this->config->set('config_language_id', $languages[$this->config->get('config_language')]['language_id']);
-			$this->currency->set($this->config->get('config_regional_currency'));			
-			
-			
+
 			$hotline = fopen($file, 'w+');
 			fwrite($hotline, '<?xml version="1.0" encoding="UTF-8"?>' . $this->eol);
 			fwrite($hotline, '<price>' . $this->eol);
@@ -1050,6 +1019,7 @@
 				fwrite($hotline, '<name>' . $category['name'] . '</name>' . $this->eol);
 				fwrite($hotline, '</category>' . $this->eol);
 			}
+
 			
 			fwrite($hotline, '</categories>' . $this->eol);
 			fwrite($hotline, '<items>' . $this->eol);
@@ -1059,21 +1029,32 @@
 			
 			$items = array();
 			
-			$i = 1;
-			foreach ($products_1 as $product){						
+			$k = 1;
+			foreach ($products_1 as $product){										
 				$items[$product['product_id']] = $this->model_catalog_product->getProduct($product['product_id']);
+				$k++;
+
+				if ($k % 100 == 0){
+					echo $k . '...';
+				}
 			}
 			
 			echo PHP_EOL;
 			
+			$k = 1;
 			foreach ($products_2 as $product){
 				if (!isset($items[$product['product_id']])){
 					$items[$product['product_id']] = $this->model_catalog_product->getProduct($product['product_id']);
+					$k++;
+				}
+
+				if ($k % 100 == 0){
+					echo $k . '...';
 				}
 			}
 			
-			echo '[i] Получили товары, всего ' . count($products_1) .  ' по параметрам, и ' . count($products_2) . ' в наличии, уникальных ' . count($items) . PHP_EOL;
-			echo '[*] собираем мусор, освобождаем память: ' . $this->convert(memory_get_usage(true)) . PHP_EOL;
+			echoLine( '[i] Получили товары, всего ' . count($products_1) .  ' по параметрам, и ' . count($products_2) . ' в наличии, уникальных ' . count($items) );
+			echoLine( '[*] собираем мусор, освобождаем память: ' . $this->convert(memory_get_usage(true)) );
 			gc_collect_cycles();
 			
 			foreach ($items as $item){
