@@ -18,36 +18,62 @@ class ControllerApiExtCall extends Controller {
  
 				if ( ! empty( $num ) )
 				{
-						echo "Dialing $num\r\n";
- 
-						$timeout = 10;
- 
-						$socket = fsockopen($this->config->get('config_asterisk_ami_host'),"5038", $errno, $errstr, $timeout);
-						fputs($socket, "Action: Login\r\n");
-						fputs($socket, "UserName: ".$this->config->get('config_asterisk_ami_user')."\r\n");
-						fputs($socket, "Secret: ".$this->config->get('config_asterisk_ami_pass')."\r\n\r\n");
- 
-						$wrets=fgets($socket,128);
-						echo $wrets;
- 
-						fputs($socket, "Action: Originate\r\n" );
-						fputs($socket, "Channel: Local/$ext@from-internal\r\n" );
-						fputs($socket, "Exten: $num\r\n" );
-						fputs($socket, "Context: from-internal\r\n" );
-						fputs($socket, "Priority: 1\r\n" );
-						fputs($socket, "Async: yes\r\n" );
-						fputs($socket, "WaitTime: 15\r\n" );
-						fputs($socket, "Callerid: $num\r\n\r\n" );
- 
-						$wrets=fgets($socket,128);
-						echo $wrets;
-						fclose($socket);
+						if ($this->config->get('config_telephony_engine') == 'binotel'){
+							$this->originateCallAjaxBinotel($num, $ext);						
+						} else {
+							$this->originateCallAjaxAsterisk($num, $ext);						
+						}
 				}
 					else
 				{
 					echo "Unable to determine number from (" . $this->request->post['phone'] . ")\r\n";
 				}
 		}
+	}
+
+	public function originateCallAjaxAsterisk($num, $ext){
+
+		echo "Dialing $num\r\n";
+
+		$timeout = 10;
+		$socket = fsockopen($this->config->get('config_asterisk_ami_host'),"5038", $errno, $errstr, $timeout);
+		fputs($socket, "Action: Login\r\n");
+		fputs($socket, "UserName: ".$this->config->get('config_asterisk_ami_user')."\r\n");
+		fputs($socket, "Secret: ".$this->config->get('config_asterisk_ami_pass')."\r\n\r\n");
+
+		$wrets=fgets($socket,128);
+		echo $wrets;
+
+		fputs($socket, "Action: Originate\r\n" );
+		fputs($socket, "Channel: Local/$ext@from-internal\r\n" );
+		fputs($socket, "Exten: $num\r\n" );
+		fputs($socket, "Context: from-internal\r\n" );
+		fputs($socket, "Priority: 1\r\n" );
+		fputs($socket, "Async: yes\r\n" );
+		fputs($socket, "WaitTime: 15\r\n" );
+		fputs($socket, "Callerid: $num\r\n\r\n" );
+
+		$wrets = fgets($socket,128);
+		echo $wrets;
+		fclose($socket);
+
+	}
+
+	public function originateCallAjaxBinotel($num, $ext){
+
+	var_dump($num);
+
+		try {
+    		$binotelClient = new \denostr\Binotel\Client($this->config->get('config_binotel_api_key'), $this->config->get('config_binotel_api_secret'));
+
+    		$result = $binotelClient->calls->extToPhone([
+    			'ext_number' => $ext,
+    			'phone_number' => $num,
+    		]);
+
+    	} catch (\denostr\Binotel\Exception $e) {
+   		 	echo (sprintf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage()));
+		}	
 	}
 	
 	public function getAStatusAjax(){
