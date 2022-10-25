@@ -240,13 +240,14 @@
 							<li id="cronmon">
 								<a class="top" href="<?php echo $cronmon; ?>"><i class="fa fa-refresh icon_menu"></i>Cron</a>
 							</li>
-							<? if (in_array($this->user->getID(), array(2, 3))) { ?>
+							<? if ($this->user->getIsAV()) { ?>
 								<li id="worktime"><a class="top"><i class="fa fa-eye icon_menu"></i>Работа</a>
 									<ul>
-										<li id="user_worktime"><a class="home_icon_style" href="<?php echo $user_worktime; ?>"><i class="fa fa-eye"  aria-hidden="true"></i><span>Сводка работы за день</span></a></li>
-										<li id="manager_quality"><a class="home_icon_style" href="<?php echo $manager_quality; ?>"><i class="fa fa-bar-chart"  aria-hidden="true"></i><span>Сводка по менеджерам</span></a></li>
-										<li id="salary_manager"><a class="home_icon_style" href="<?php echo $salary_manager; ?>"><i class="fa fa-handshake-o"  aria-hidden="true"></i><span>Отчет по закрытым заказам - менеджера</span></a></li>
-										<li id="salary_customerservice"><a class="home_icon_style" href="<?php echo $salary_customerservice; ?>"><i class="fa fa-users"  aria-hidden="true"></i><span>Отчет по выполненной работе - клиент-сервис</span></a></li>
+										<li id="user_content"><a class="home_icon_style" href="<?php echo $user_content; ?>"><i class="fa fa-clock-o"  aria-hidden="true"></i><span>Работа контентов</span></a></li>
+										<li id="user_worktime"><a class="home_icon_style" href="<?php echo $user_worktime; ?>"><i class="fa fa-clock-o"  aria-hidden="true"></i><span>Работа менеджеров</span></a></li>
+										<li id="manager_quality"><a class="home_icon_style" href="<?php echo $manager_quality; ?>"><i class="fa fa-bar-chart"  aria-hidden="true"></i><span>KPI менеджеров</span></a></li>
+										<li id="salary_manager"><a class="home_icon_style" href="<?php echo $salary_manager; ?>"><i class="fa fa-handshake-o"  aria-hidden="true"></i><span>Отчет по закрытым заказам</span></a></li>
+										<li id="salary_customerservice"><a class="home_icon_style" href="<?php echo $salary_customerservice; ?>"><i class="fa fa-users"  aria-hidden="true"></i><span>Отчет по клиент-сервису</span></a></li>
 									</ul>
 								</li>
 							<? } ?>

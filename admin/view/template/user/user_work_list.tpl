@@ -13,7 +13,7 @@
 	</div>
 	<div class="box">
 		<div class="heading order_head">
-			<h1>Учет рабочего времени и действий</h1>				  					
+			<h1>Учет рабочего времени и действий менеджеров</h1>				  					
 		</div>
 		<div class="clear:both"></div>
 		<div class="content" style="padding:5px;">
