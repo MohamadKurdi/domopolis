@@ -126,9 +126,9 @@
 
 										<td class="right">
 											<? if ($category['status']) { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Вкл</span>
+												<i class="fa fa-check" style="color:#4ea24e"></i>
 											<? } else { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Выкл</span>
+												<i class="fa fa-times" style="color:#cf4a61"></i>
 											<? } ?>
 										</td>
 
@@ -156,31 +156,31 @@
 
 
 													<? } else { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>	
 
 												<td class="left">
 													<? if ($category['amazon_sync_enable']) { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
 												<td class="left">
 													<? if ($category['amazon_final_category']) { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>		
 
 												<td class="left">
 													<? if ($category['amazon_can_get_full']) { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>	
 											<?php } ?>
@@ -189,7 +189,7 @@
 													<? if ($category['google_category']) { ?>
 														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF; font-size:10px;"><?php echo $category['google_category']; ?></span>
 													<? } else { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>	
 
@@ -199,7 +199,7 @@
 														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF; font-size:10px;"><?php echo $category['yandex_category_name']; ?></span>
 
 													<? } else { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
 													<? } ?>	
 												</td>																						
 
@@ -233,33 +233,33 @@
 
 												<td class="left">
 													<? if ($category['deletenotinstock']) { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
 												<td class="left">
 													<? if ($category['submenu_in_children']) { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
 												<td class="left">
 													<? if ($category['intersections']) { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
 												<td class="left">
 													<? if ($category['priceva_enable']) { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
@@ -267,7 +267,7 @@
 													<? if ($category['tnved']) { ?>
 														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF"><?php echo $category['tnved']; ?></span>
 													<? } else { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>									
 
