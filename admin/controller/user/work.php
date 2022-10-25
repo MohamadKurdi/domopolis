@@ -13,13 +13,6 @@
 			$this->getList();
 		}
 		
-		private function secToHR($seconds) {
-			$hours = floor($seconds / 3600);
-			$minutes = floor(($seconds / 60) % 60);
-			$seconds = $seconds % 60;
-			return $hours > 0 ? "$hours ч., $minutes мин." : ($minutes > 0 ? "$minutes мин., $seconds сек. " : "$seconds сек.");
-		}
-		
 		private function getList(){
 			$this->document->setTitle('Результаты работы');
 			$this->data['heading_title'] = 'Результаты работы';
@@ -96,26 +89,26 @@
 				}
 												
 				$this->data['stats'][$result['group_name']][] = array(
-				'user_name' => $this->model_user_user->getRealUserNameById($result['user_id']),
-				'user_id'   => $result['user_id'],
-				'inbound_call_count' => $result['inbound_call_count'],
-				'inbound_call_duration' => $this->secToHR($result['inbound_call_duration']),
-				'outbound_call_count' => $result['outbound_call_count'],
-				'outbound_call_duration' => $this->secToHR($result['outbound_call_duration']),
-				'owned_order_count' => $result['owned_order_count'],
-				'edit_order_count' => $result['edit_order_count'],
-				'edit_csi_count' => $result['edit_csi_count'],
-				'edit_birthday_count' => $result['edit_birthday_count'],
-				'edit_customer_count' => $result['edit_customer_count'],
-				'sent_mail_count' => $result['sent_mail_count'],
-				'worktime_start' => $result['worktime_start'],
-				'worktime_finish' => $result['worktime_finish'],
-				'daily_actions' => $result['daily_actions'],
-				'problem_order_count' => $result['problem_order_count'],
-				'success_order_count' => $result['success_order_count'],
-				'cancel_order_count' => $result['cancel_order_count'],
-				'treated_order_count' => $result['treated_order_count'],
-				'confirmed_order_count' => $result['confirmed_order_count']
+				'user_name' 				=> $this->model_user_user->getRealUserNameById($result['user_id']),
+				'user_id'   				=> $result['user_id'],
+				'inbound_call_count' 		=> $result['inbound_call_count'],
+				'inbound_call_duration' 	=> secToHR($result['inbound_call_duration']),
+				'outbound_call_count' 		=> $result['outbound_call_count'],
+				'outbound_call_duration' 	=> secToHR($result['outbound_call_duration']),
+				'owned_order_count' 		=> $result['owned_order_count'],
+				'edit_order_count' 			=> $result['edit_order_count'],
+				'edit_csi_count' 			=> $result['edit_csi_count'],
+				'edit_birthday_count' 		=> $result['edit_birthday_count'],
+				'edit_customer_count' 		=> $result['edit_customer_count'],
+				'sent_mail_count' 			=> $result['sent_mail_count'],
+				'worktime_start' 			=> $result['worktime_start'],
+				'worktime_finish' 			=> $result['worktime_finish'],
+				'daily_actions' 			=> $result['daily_actions'],
+				'problem_order_count' 		=> $result['problem_order_count'],
+				'success_order_count' 		=> $result['success_order_count'],
+				'cancel_order_count' 		=> $result['cancel_order_count'],
+				'treated_order_count' 		=> $result['treated_order_count'],
+				'confirmed_order_count' 	=> $result['confirmed_order_count']
 				);
 				
 				

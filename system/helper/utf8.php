@@ -2,27 +2,15 @@
 
 function getAmazonDomainsList(){
 	return [
-		'amazon.com.br',
-		'amazon.ca',
-		'amazon.com.mx',
-		'amazon.com',
-		'amazon.cn',
-		'amazon.in',
-		'amazon.co.jp',
-		'amazon.sg',
-		'amazon.ae',
-		'amazon.sa',
-		'amazon.fr',
-		'amazon.de',
-		'amazon.it',
-		'amazon.nl',
-		'amazon.pl',
-		'amazon.es',
-		'amazon.se',
-		'amazon.com.tr',
-		'amazon.co.uk',
-		'amazon.com.au'
+		'amazon.com.br','amazon.ca','amazon.com.mx','amazon.com','amazon.cn','amazon.in','amazon.co.jp','amazon.sg','amazon.ae','amazon.sa','amazon.fr','amazon.de','amazon.it','amazon.nl','amazon.pl','amazon.es','amazon.se','amazon.com.tr','amazon.co.uk','amazon.com.au'
 	];
+}
+
+function secToHR($seconds) {
+	$hours = floor($seconds / 3600);
+	$minutes = floor(($seconds / 60) % 60);
+	$seconds = $seconds % 60;
+	return $hours > 0 ? "$hours h., $minutes m." : ($minutes > 0 ? "$minutes m., $seconds s. " : "$seconds s.");
 }
 
 function formatLongNumber($number, $format = true){
@@ -349,9 +337,9 @@ function getDeliveryCompany($delivery_code, $second = false){
 			'dostavkaplus.sh14' 	=> 'УкрПочтой',
 			'dostavkaplus.sh15' 	=> 'JustIn',
 			'dostavkaplus.sh4'	 	=> 'ТК ИнТайм',
-			'dostavkaplus.sh5' => 'Почтой России ЕМS',
-			'dostavkaplus.sh6' => 'ТК СДЭК',
-			'dostavkaplus.sh16' => 'БелПочтой',
+			'dostavkaplus.sh5' 		=> 'Почтой России ЕМS',
+			'dostavkaplus.sh6' 		=> 'ТК СДЭК',
+			'dostavkaplus.sh16' 	=> 'БелПочтой',
 		);
 
 		if (!empty($delivery_names[$delivery_code])){
@@ -367,10 +355,8 @@ function getDeliveryCompany($delivery_code, $second = false){
 		'dostavkaplus.sh14' => 'УкрПочтой',
 		'dostavkaplus.sh15' => 'JustIn',
 		'dostavkaplus.sh4' => 'ТК ИнТайм',
-			//рашка
 		'dostavkaplus.sh5' => 'Почтой России ЕМS',
 		'dostavkaplus.sh6' => 'ТК СДЭК',
-			//Белорашка
 		'dostavkaplus.sh16' => 'БелПочтой',
 	);
 
