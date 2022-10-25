@@ -30,12 +30,6 @@
 			'separator' => false
 			);
 			
-			$this->data['breadcrumbs'][] = array(
-			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('user/work', 'token=' . $this->session->data['token'], 'SSL'),
-			'separator' => ' :: '
-			);
-			
 			if (empty($this->request->get['period'])){
 				$period = date('Y-m-d');				
 				} else {
