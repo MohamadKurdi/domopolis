@@ -370,6 +370,9 @@
 					$this->db->query("INSERT INTO `product_profile` SET `product_id` = " . (int)$product_id . ", customer_group_id = " . (int)$profile['customer_group_id'] . ", `profile_id` = " . (int)$profile['profile_id']);
 				}
 			} 
+
+			$this->load->model('kp/content');
+			$this->model_kp_content->addContent(['action' => 'add', 'entity_type' => 'product', 'entity_id' => $product_id]);
 			
 			
 			return (int)$product_id;
@@ -1078,6 +1081,9 @@
 			}		
 			
 			$this->rainforestAmazon->offersParser->PriceLogic->priceUpdaterQueue->addToQueue($product_id);
+
+			$this->load->model('kp/content');
+			$this->model_kp_content->addContent(['action' => 'edit', 'entity_type' => 'product', 'entity_id' => $product_id]);
 			
 			return (int)$product_id;
 		}
@@ -1088,12 +1094,7 @@
 			if ($query->num_rows) {
 				$this->load->model('catalog/faproduct');
 				
-				$data = array();
-				
-				$data = $query->row;
-				
-				//	$data['sku'] = '';
-				//	$data['upc'] = '';
+				$data = $query->row;			
 				$data['viewed'] = '0';
 				$data['keyword'] = array();
 				$data['status'] = '0';
@@ -1122,6 +1123,9 @@
 				$new_product_id = $this->addProduct($data);
 				
 				$this->db->query("UPDATE product SET stock_product_id = '" .(int)$product_id. "' WHERE product_id = '" . (int)$new_product_id . "'");
+
+				$this->load->model('kp/content');
+				$this->model_kp_content->addContent(['action' => 'copy', 'entity_type' => 'product', 'entity_id' => $new_product_id]);
 				
 				return $new_product_id;
 			}
@@ -1188,12 +1192,7 @@
 			if ($query->num_rows) {
 				$this->load->model('catalog/faproduct');
 				
-				$data = array();
-				
-				$data = $query->row;
-				
-				//	$data['sku'] = '';
-				//	$data['upc'] = '';
+				$data = $query->row;				
 				$data['viewed'] = '0';
 				$data['keyword'] = '';
 				$data['status'] = '0';
@@ -1215,7 +1214,10 @@
 				$data = array_merge($data, array('product_store' => $this->getProductStores($product_id)));
 				$data = array_merge($data, array('product_profiles' => $this->getProfiles($product_id)));
 				
-				$new_product_id = $this->addProduct($data);						
+				$new_product_id = $this->addProduct($data);	
+
+				$this->load->model('kp/content');
+				$this->model_kp_content->addContent(['action' => 'copy', 'entity_type' => 'product', 'entity_id' => $new_product_id]);					
 				
 				return $new_product_id;
 			}
@@ -1226,13 +1228,14 @@
 
 			foreach ($this->product_related_tables as $table){
 				$sql = "DELETE FROM `" . $table . "` WHERE product_id = '" . (int)$product_id . "'";
-			//	echoLine($sql);
 				$this->db->query($sql);
 			}
 
+			$this->load->model('kp/content');
+			$this->model_kp_content->addContent(['action' => 'delete', 'entity_type' => 'product', 'entity_id' => $product_id]);
+
 			$this->db->query("DELETE FROM product_sponsored WHERE sponsored_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_similar WHERE similar_id = '" . (int)$product_id . "'");
-
 		}
 	
 		public function deleteProduct($product_id, $recursion = true, $asin_deletion_mode = false) {
@@ -1269,7 +1272,6 @@
 				if ($recursion){
 					$products_to_delete = $this->getProductVariantsIds($product_id);
 
-				//Recursive deletion for variants
 					if ($products_to_delete){
 						foreach ($products_to_delete as $product_id_to_delete){
 							if ((int)$product_id_to_delete && $product_id != $product_id_to_delete){							
@@ -1294,7 +1296,11 @@
                     $results = $this->model_catalog_set->deleteSet($result['set_id']);
 				}
 			}
+
 			$this->db->query("DELETE FROM url_alias WHERE query = 'product_id=" . (int)$product_id. "'");			
+
+			$this->load->model('kp/content');
+			$this->model_kp_content->addContent(['action' => 'delete', 'entity_type' => 'product', 'entity_id' => $product_id]);
 		}
 
 		public function countVariantProducts($product_id){
@@ -1380,8 +1386,7 @@
 				return false;
 			}
 		}
-				
-		
+						
 		public function getProductStorePrice($product_id, $store_id) {
 			$query = $this->db->query("SELECT price FROM product_price_to_store WHERE product_id = '" . (int)$product_id . "' AND store_id = '" . (int)$store_id . "' LIMIT 1");
 			
@@ -1391,8 +1396,7 @@
 				return false;
 			}
 		}
-
-		
+	
 		public function getProductStorePriceNational($product_id, $store_id) {
 			$query = $this->db->query("SELECT price FROM product_price_national_to_store WHERE product_id = '" . (int)$product_id . "' AND store_id = '" . (int)$store_id . "' LIMIT 1");
 			
@@ -1917,8 +1921,7 @@
 			
 			return $query->rows;
 		}
-		
-		
+			
 		public function getProductsByCategoryId($category_id) {
 			$query = $this->db->query("SELECT * FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id) LEFT JOIN product_to_category p2c ON (p.product_id = p2c.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p2c.category_id = '" . (int)$category_id . "' ORDER BY pd.name ASC");
 			

@@ -65,6 +65,9 @@
 			
 			$this->load->model('kp/reward');
 			$this->model_kp_reward->editReward($collection_id, 'co', $data);
+
+			$this->load->model('kp/content');
+			$this->model_kp_content->addContent(['action' => 'add', 'entity_type' => 'collection', 'entity_id' => $collection_id]);
 			
 			return (int)$collection_id;
 		}
@@ -118,6 +121,9 @@
 			$this->load->model('kp/reward');
 			$this->model_kp_reward->editReward($collection_id, 'co', $data);
 
+			$this->load->model('kp/content');
+			$this->model_kp_content->addContent(['action' => 'edit', 'entity_type' => 'collection', 'entity_id' => $collection_id]);
+
 			return (int)$collection_id;
 		}
 		
@@ -133,8 +139,9 @@
 			$this->db->query("DELETE FROM url_alias WHERE query = 'collection_id=" . (int)$collection_id . "'");
 			$this->db->query("DELETE FROM collection_description WHERE collection_id = '" . (int)$collection_id . "'");
 			$this->db->query("UPDATE product SET collection_id = 0 WHERE collection_id = '" . (int)$collection_id . "'");		
-			
-			$this->cache->delete('collection');
+
+			$this->load->model('kp/content');
+			$this->model_kp_content->addContent(['action' => 'delete', 'entity_type' => 'collection', 'entity_id' => $collection_id]);			
 		}	
 		
 		
@@ -220,8 +227,7 @@
 			
 			return $collection_description_data;
 		}
-		
-		
+				
 		public function getCollectionStores($collection_id) {
 			$collection_store_data = array();
 			
@@ -262,10 +268,4 @@
 			
 			return $query->row['total'];
 		}	
-		
-		
-		
 	}
-	
-	
-?>

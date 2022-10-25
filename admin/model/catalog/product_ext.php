@@ -310,8 +310,6 @@ class ModelCatalogProductExt extends Model {
             $sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
         }
 
-    //   $this->log->debugsql($sql);
-
         $query = $this->db->query($sql);
 
         $count = $this->db->query("SELECT FOUND_ROWS() AS count");
@@ -526,6 +524,9 @@ class ModelCatalogProductExt extends Model {
             }
             $result = 1;
         }        
+
+        $this->load->model('kp/content');
+        $this->model_kp_content->addContent(['action' => 'edit', 'entity_type' => 'product', 'entity_id' => $product_id]);
 
         return $result;
     }

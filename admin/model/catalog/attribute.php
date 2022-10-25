@@ -8,6 +8,9 @@ class ModelCatalogAttribute extends Model {
 		foreach ($data['attribute_description'] as $language_id => $value) {
 			$this->db->query("INSERT INTO attribute_description SET attribute_id = '" . (int)$attribute_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
 		}
+
+		$this->load->model('kp/content');
+		$this->model_kp_content->addContent(['action' => 'add', 'entity_type' => 'attribute', 'entity_id' => $attribute_id]);
 		
 		return $attribute_id;
 	}
@@ -20,6 +23,9 @@ class ModelCatalogAttribute extends Model {
 		foreach ($data['attribute_description'] as $language_id => $value) {
 			$this->db->query("INSERT INTO attribute_description SET attribute_id = '" . (int)$attribute_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "'");
 		}
+
+		$this->load->model('kp/content');
+		$this->model_kp_content->addContent(['action' => 'edit', 'entity_type' => 'attribute', 'entity_id' => $attribute_id]);
 	}
 
 	public function deleteAttribute($attribute_id) {
@@ -27,6 +33,9 @@ class ModelCatalogAttribute extends Model {
 		$this->db->query("DELETE FROM attribute_description WHERE attribute_id = '" . (int)$attribute_id . "'");
 		$this->db->query("DELETE FROM product_attribute WHERE attribute_id = '" . (int)$attribute_id . "'");
         $this->db->query("DELETE FROM attribute_value_image WHERE attribute_id = '" . (int)$attribute_id . "'");
+
+        $this->load->model('kp/content');
+		$this->model_kp_content->addContent(['action' => 'delete', 'entity_type' => 'attribute', 'entity_id' => $attribute_id]);
     }
 
 	public function getAttribute($attribute_id) {
@@ -47,13 +56,11 @@ class ModelCatalogAttribute extends Model {
         foreach ($images as $attributeNameValue => $image) {
             if ($image) {
                 $insertArray[$attributeNameValue]['image'] = $image;
-                // $this->db->query("INSERT INTO attribute_value_image (`attribute_id`, `attribute_value`, `image`) VALUES ('".(int)$attributeId."', '".$this->db->escape($attributeNameValue)."', '".$this->db->escape($image)."')");
             }
         }
         foreach ($informations as $attributeNameValue => $info) {
             if ($info) {
                 $insertArray[$attributeNameValue]['information_id'] = $info;
-                // $this->db->query("INSERT INTO attribute_value_image (`attribute_id`, `attribute_value`, `image`) VALUES ('".(int)$attributeId."', '".$this->db->escape($attributeNameValue)."', '".$this->db->escape($image)."')");
             }
         }
 

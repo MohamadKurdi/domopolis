@@ -114,6 +114,8 @@ class ModelCatalogCategory extends Model {
 		$this->load->model('kp/reward');
 		$this->model_kp_reward->editReward($category_id, 'c', $data);
 		
+		$this->load->model('kp/content');
+		$this->model_kp_content->addContent(['action' => 'add', 'entity_type' => 'category', 'entity_id' => $category_id]);
 		
 		
 		return $category_id;
@@ -351,7 +353,8 @@ class ModelCatalogCategory extends Model {
 		$this->load->model('kp/reward');
 		$this->model_kp_reward->editReward($category_id, 'c', $data);
 		
-		
+		$this->load->model('kp/content');
+		$this->model_kp_content->addContent(['action' => 'edit', 'entity_type' => 'category', 'entity_id' => $category_id]);
 
 		return (int)$category_id;
 	}
@@ -391,6 +394,9 @@ class ModelCatalogCategory extends Model {
 			}
 			$result = 1;
 		}
+
+		$this->load->model('kp/content');
+		$this->model_kp_content->addContent(['action' => 'edit', 'entity_type' => 'category', 'entity_id' => $category_id]);
 		
 		return $result;
 	}
@@ -426,16 +432,8 @@ class ModelCatalogCategory extends Model {
 		$this->db->query("DELETE FROM product_to_category WHERE category_id = '" . (int)$category_id . "'");
 		$this->db->query("DELETE FROM url_alias WHERE query = 'category_id=" . (int)$category_id . "'");
 		
-		
-		
-		if(!$this->config->get('sphinx_config_index_type')) {
-			return;
-		}
-		
-		$this->load->model('catalog/sphinxsearch');
-		$this->model_catalog_sphinxsearch->delete('categories', $category_id);
-		
-		
+		$this->load->model('kp/content');
+		$this->model_kp_content->addContent(['action' => 'delete', 'entity_type' => 'category', 'entity_id' => $category_id]);			
 	} 
 	
 	public function getRelatedCategories($category_id) {
@@ -568,9 +566,7 @@ class ModelCatalogCategory extends Model {
 				}	
 				
 				$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
-			}
-			
-		//	$this->log->debugsql($sql);
+			}		
 			
 			$query = $this->db->query($sql);
 			

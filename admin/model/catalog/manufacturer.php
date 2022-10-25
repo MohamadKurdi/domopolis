@@ -1,34 +1,34 @@
 <?php
 	class ModelCatalogManufacturer extends Model {
 		public function addManufacturer($data) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer SET name = '" . $this->db->escape($data['name']) . "', tip = '" . $this->db->escape($data['tip']) . "', menu_brand = '" . (int)$data['menu_brand'] . "', show_goods = '" . (int)$data['show_goods'] . "', priceva_enable = '" . (int)$data['priceva_enable'] . "', priceva_feed = '" . $this->db->escape($data['priceva_feed']) . "',  sort_order = '" . (int)$data['sort_order'] . "', banner_width = '" . (int)$data['banner_width'] . "', banner_height = '" . (int)$data['banner_height'] . "'");
+			$this->db->query("INSERT INTO manufacturer SET name = '" . $this->db->escape($data['name']) . "', tip = '" . $this->db->escape($data['tip']) . "', menu_brand = '" . (int)$data['menu_brand'] . "', show_goods = '" . (int)$data['show_goods'] . "', priceva_enable = '" . (int)$data['priceva_enable'] . "', priceva_feed = '" . $this->db->escape($data['priceva_feed']) . "',  sort_order = '" . (int)$data['sort_order'] . "', banner_width = '" . (int)$data['banner_width'] . "', banner_height = '" . (int)$data['banner_height'] . "'");
 			
 			$manufacturer_id = $this->db->getLastId();
 			
 			if (isset($data['image'])) {
-				$this->db->query("UPDATE " . DB_PREFIX . "manufacturer SET image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+				$this->db->query("UPDATE manufacturer SET image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			}
 			
 			if (isset($data['banner'])) {
-				$this->db->query("UPDATE " . DB_PREFIX . "manufacturer SET banner = '" . $this->db->escape(html_entity_decode($data['banner'], ENT_QUOTES, 'UTF-8')) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+				$this->db->query("UPDATE manufacturer SET banner = '" . $this->db->escape(html_entity_decode($data['banner'], ENT_QUOTES, 'UTF-8')) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			}
 			
 			if (isset($data['back_image'])) {
-				$this->db->query("UPDATE " . DB_PREFIX . "manufacturer SET back_image = '" . $this->db->escape(html_entity_decode($data['back_image'], ENT_QUOTES, 'UTF-8')) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+				$this->db->query("UPDATE manufacturer SET back_image = '" . $this->db->escape(html_entity_decode($data['back_image'], ENT_QUOTES, 'UTF-8')) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			}
 			
-			$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_to_layout WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$this->db->query("DELETE FROM manufacturer_to_layout WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
     		if (isset($data['manufacturer_layout'])) {
     			foreach ($data['manufacturer_layout'] as $store_id => $layout) {
     				if ($layout['layout_id']) {
-    					$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_to_layout SET manufacturer_id = '" . (int)$manufacturer_id . "', store_id = '" . (int)$store_id . "', layout_id = '" . (int)$layout['layout_id'] . "'");
+    					$this->db->query("INSERT INTO manufacturer_to_layout SET manufacturer_id = '" . (int)$manufacturer_id . "', store_id = '" . (int)$store_id . "', layout_id = '" . (int)$layout['layout_id'] . "'");
 					}
 				}
 			}
 			
-			$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$this->db->query("DELETE FROM manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			foreach ($data['manufacturer_description'] as $language_id => $value) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_description SET manufacturer_id = '" . (int)$manufacturer_id . "', language_id = '" . (int)$language_id . "', seo_title = '" . $this->db->escape($value['seo_title']) . "', seo_h1 = '" . $this->db->escape($value['seo_h1']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', description = '" . $this->db->escape($value['description']) . "', location = '" . $this->db->escape($value['location']) . "', short_description = '" . $this->db->escape($value['short_description']) . "',
+				$this->db->query("INSERT INTO manufacturer_description SET manufacturer_id = '" . (int)$manufacturer_id . "', language_id = '" . (int)$language_id . "', seo_title = '" . $this->db->escape($value['seo_title']) . "', seo_h1 = '" . $this->db->escape($value['seo_h1']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', description = '" . $this->db->escape($value['description']) . "', location = '" . $this->db->escape($value['location']) . "', short_description = '" . $this->db->escape($value['short_description']) . "',
 				alternate_name = '" . $this->db->escape($value['alternate_name']) . "',
 				products_title = '" . $this->db->escape($value['products_title']) . "',
 				products_meta_description = '" . $this->db->escape($value['products_meta_description']) . "',
@@ -46,41 +46,44 @@
 			
 			if (isset($data['manufacturer_store'])) {
 				foreach ($data['manufacturer_store'] as $store_id) {
-					$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_to_store SET manufacturer_id = '" . (int)$manufacturer_id . "', store_id = '" . (int)$store_id . "'");
+					$this->db->query("INSERT INTO manufacturer_to_store SET manufacturer_id = '" . (int)$manufacturer_id . "', store_id = '" . (int)$store_id . "'");
 				}
 			}
 			
 			if ($data['keyword']) {
 				foreach ($data['keyword'] as $language_id => $keyword) {
-					if ($keyword) {$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'manufacturer_id=" . (int)$manufacturer_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'manufacturer_id=" . (int)$manufacturer_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
 				}
 			}
 			
 			$this->load->model('kp/reward');
 			$this->model_kp_reward->editReward($manufacturer_id, 'm', $data);
+
+			$this->load->model('kp/content');
+			$this->model_kp_content->addContent(['action' => 'add', 'entity_type' => 'manufacturer', 'entity_id' => $manufacturer_id]);
 			
 			return (int)$manufacturer_id;
 		}
 		
 		public function editManufacturer($manufacturer_id, $data) {
-			$this->db->query("UPDATE " . DB_PREFIX . "manufacturer SET name = '" . $this->db->escape($data['name']) . "', tip = '" . $this->db->escape($data['tip']) . "', menu_brand = '" . (int)$data['menu_brand'] . "', show_goods = '" . (int)$data['show_goods'] . "', sort_order = '" . (int)$data['sort_order'] . "', priceva_enable = '" . (int)$data['priceva_enable'] . "', priceva_feed = '" . $this->db->escape($data['priceva_feed']) . "', banner_width = '" . (int)$data['banner_width'] . "', banner_height = '" . (int)$data['banner_height'] . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$this->db->query("UPDATE manufacturer SET name = '" . $this->db->escape($data['name']) . "', tip = '" . $this->db->escape($data['tip']) . "', menu_brand = '" . (int)$data['menu_brand'] . "', show_goods = '" . (int)$data['show_goods'] . "', sort_order = '" . (int)$data['sort_order'] . "', priceva_enable = '" . (int)$data['priceva_enable'] . "', priceva_feed = '" . $this->db->escape($data['priceva_feed']) . "', banner_width = '" . (int)$data['banner_width'] . "', banner_height = '" . (int)$data['banner_height'] . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			
 			if (isset($data['image'])) {
-				$this->db->query("UPDATE " . DB_PREFIX . "manufacturer SET image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+				$this->db->query("UPDATE manufacturer SET image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			}
 			
 			if (isset($data['banner'])) {
-				$this->db->query("UPDATE " . DB_PREFIX . "manufacturer SET banner = '" . $this->db->escape(html_entity_decode($data['banner'], ENT_QUOTES, 'UTF-8')) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+				$this->db->query("UPDATE manufacturer SET banner = '" . $this->db->escape(html_entity_decode($data['banner'], ENT_QUOTES, 'UTF-8')) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			}
 			
 			if (isset($data['back_image'])) {
-				$this->db->query("UPDATE " . DB_PREFIX . "manufacturer SET back_image = '" . $this->db->escape(html_entity_decode($data['back_image'], ENT_QUOTES, 'UTF-8')) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+				$this->db->query("UPDATE manufacturer SET back_image = '" . $this->db->escape(html_entity_decode($data['back_image'], ENT_QUOTES, 'UTF-8')) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			}
 			
-			$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$this->db->query("DELETE FROM manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			
 			foreach ($data['manufacturer_description'] as $language_id => $value) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_description SET manufacturer_id = '" . (int)$manufacturer_id . "', language_id = '" . (int)$language_id . "', seo_title = '" . $this->db->escape($value['seo_title']) . "', seo_h1 = '" . $this->db->escape($value['seo_h1']) . "',  meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', description = '" . $this->db->escape($value['description']) . "', location = '" . $this->db->escape($value['location']) . "', short_description = '" . $this->db->escape($value['short_description']) . "',
+				$this->db->query("INSERT INTO manufacturer_description SET manufacturer_id = '" . (int)$manufacturer_id . "', language_id = '" . (int)$language_id . "', seo_title = '" . $this->db->escape($value['seo_title']) . "', seo_h1 = '" . $this->db->escape($value['seo_h1']) . "',  meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', description = '" . $this->db->escape($value['description']) . "', location = '" . $this->db->escape($value['location']) . "', short_description = '" . $this->db->escape($value['short_description']) . "',
 				alternate_name = '" . $this->db->escape($value['alternate_name']) . "',
 				products_title = '" . $this->db->escape($value['products_title']) . "',
 				products_meta_description = '" . $this->db->escape($value['products_meta_description']) . "',
@@ -98,24 +101,24 @@
 			
 			
 			
-			$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_to_layout WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$this->db->query("DELETE FROM manufacturer_to_layout WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
     		if (isset($data['manufacturer_layout'])) {
     			foreach ($data['manufacturer_layout'] as $store_id => $layout) {
     				if ($layout['layout_id']) {
-    					$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_to_layout SET manufacturer_id = '" . (int)$manufacturer_id . "', store_id = '" . (int)$store_id . "', layout_id = '" . (int)$layout['layout_id'] . "'");
+    					$this->db->query("INSERT INTO manufacturer_to_layout SET manufacturer_id = '" . (int)$manufacturer_id . "', store_id = '" . (int)$store_id . "', layout_id = '" . (int)$layout['layout_id'] . "'");
 					}
 				}
 			}
 			
-			$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$this->db->query("DELETE FROM manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			if (isset($data['manufacturer_store'])) {
 				foreach ($data['manufacturer_store'] as $store_id) {
-					$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_to_store SET manufacturer_id = '" . (int)$manufacturer_id . "', store_id = '" . (int)$store_id . "'");
+					$this->db->query("INSERT INTO manufacturer_to_store SET manufacturer_id = '" . (int)$manufacturer_id . "', store_id = '" . (int)$store_id . "'");
 				}
 			}
 			
 			
-			$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_page_content WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$this->db->query("DELETE FROM manufacturer_page_content WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			
 			if (isset($data['copyrussian']) && $data['copyrussian'] == 1){
 				
@@ -143,7 +146,7 @@
 							$value['categories'] = array();
 						}
 						
-						$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_page_content SET 
+						$this->db->query("INSERT INTO manufacturer_page_content SET 
 						manufacturer_id = '" . (int)$manufacturer_id . "', 
 						language_id = '" . (int)$language_id . "', 
 						title = '" . $this->db->escape($value['title']) . "',
@@ -176,7 +179,7 @@
 							$value['categories'] = array();
 						}
 						
-						$this->db->query("INSERT INTO " . DB_PREFIX . "manufacturer_page_content SET 
+						$this->db->query("INSERT INTO manufacturer_page_content SET 
 						manufacturer_id = '" . (int)$manufacturer_id . "', 
 						language_id = '" . (int)$language_id . "', 
 						title = '" . $this->db->escape($value['title']) . "',
@@ -192,31 +195,37 @@
 				
 			}
 			
-			$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'manufacturer_id=" . (int)$manufacturer_id. "'");
+			$this->db->query("DELETE FROM url_alias WHERE query = 'manufacturer_id=" . (int)$manufacturer_id. "'");
 			
 			if ($data['keyword']) {
 				foreach ($data['keyword'] as $language_id => $keyword) {
-					if ($keyword) {$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'manufacturer_id=" . (int)$manufacturer_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'manufacturer_id=" . (int)$manufacturer_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
 				}
 			}
 			
 			$this->load->model('kp/reward');
 			$this->model_kp_reward->editReward($manufacturer_id, 'm', $data);
 
+			$this->load->model('kp/content');
+			$this->model_kp_content->addContent(['action' => 'edit', 'entity_type' => 'manufacturer', 'entity_id' => $manufacturer_id]);
+
 			return (int)$manufacturer_id;
 		}
 		
 		public function deleteManufacturer($manufacturer_id) {
-			$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
-			$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
-			$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'manufacturer_id=" . (int)$manufacturer_id . "'");
-			$this->db->query("DELETE FROM " . DB_PREFIX . "manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$this->db->query("DELETE FROM manufacturer WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$this->db->query("DELETE FROM manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$this->db->query("DELETE FROM url_alias WHERE query = 'manufacturer_id=" . (int)$manufacturer_id . "'");
+			$this->db->query("DELETE FROM manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+
+			$this->load->model('kp/content');
+			$this->model_kp_content->addContent(['action' => 'delete', 'entity_type' => 'manufacturer', 'entity_id' => $manufacturer_id]);
 			
 			$this->cache->delete('manufacturer');
 		}	
 		
 		public function getManufacturer($manufacturer_id) {
-			$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "manufacturer WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$query = $this->db->query("SELECT DISTINCT * FROM manufacturer WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			
 			return $query->row;
 		}
@@ -224,7 +233,7 @@
 		public function getKeyWords($manufacturer_id) {
 			$keywords = array();
 			
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE query = 'manufacturer_id=" . (int)$manufacturer_id . "'");
+			$query = $this->db->query("SELECT * FROM url_alias WHERE query = 'manufacturer_id=" . (int)$manufacturer_id . "'");
 			
 			foreach ($query->rows as $result) {
 				$keywords[$result['language_id']] = $result['keyword'];					
@@ -236,7 +245,7 @@
 		public function getManufacturerLayouts($manufacturer_id) {
 			$manufacturer_layout_data = array();
 			
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "manufacturer_to_layout WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$query = $this->db->query("SELECT * FROM manufacturer_to_layout WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			
 			foreach ($query->rows as $result) {
 				$manufacturer_layout_data[$result['store_id']] = $result['layout_id'];
@@ -248,7 +257,7 @@
 		public function getManufacturerDescriptions($manufacturer_id) {
 			$manufacturer_description_data = array();
 			
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$query = $this->db->query("SELECT * FROM manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			
 			foreach ($query->rows as $result) {
 				$manufacturer_description_data[$result['language_id']] = array(
@@ -289,7 +298,7 @@
 		}
 		
 		public function getManufacturers($data = array()) {
-			$sql = "SELECT * FROM " . DB_PREFIX . "manufacturer WHERE 1";
+			$sql = "SELECT * FROM manufacturer WHERE 1";
 			
 			if (!empty($data['filter_name'])) {
 				$sql .= " AND name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
@@ -340,7 +349,7 @@
 		public function getManufacturerStores($manufacturer_id) {
 			$manufacturer_store_data = array();
 			
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$query = $this->db->query("SELECT * FROM manufacturer_to_store WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			
 			foreach ($query->rows as $result) {
 				$manufacturer_store_data[] = $result['store_id'];
@@ -350,19 +359,19 @@
 		}
 		
 		public function getTotalManufacturersByImageId($image_id) {
-			$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "manufacturer WHERE image_id = '" . (int)$image_id . "'");
+			$query = $this->db->query("SELECT COUNT(*) AS total FROM manufacturer WHERE image_id = '" . (int)$image_id . "'");
 			
 			return $query->row['total'];
 		}
 		
 		public function getTotalManufacturers() {
-			$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "manufacturer");
+			$query = $this->db->query("SELECT COUNT(*) AS total FROM manufacturer");
 			
 			return $query->row['total'];
 		}	
 		
 		public function getTotalProductsByManufacturer($manufacturer_id) {
-			$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "product WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$query = $this->db->query("SELECT COUNT(*) AS total FROM product WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			
 			return $query->row['total'];
 		}
@@ -370,7 +379,7 @@
 		public function getManufacturerPageContent($manufacturer_id) {
 			$manufacturer_page_content_data = array();
 			
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "manufacturer_page_content WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$query = $this->db->query("SELECT * FROM manufacturer_page_content WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			
 			foreach ($query->rows as $result) {
 				
