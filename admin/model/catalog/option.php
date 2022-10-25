@@ -60,6 +60,7 @@ class ModelCatalogOption extends Model {
 		$this->model_kp_content->addContent(['action' => 'edit', 'entity_type' => 'option', 'entity_id' => $option_id]);
 
 		return (int)$option_id;
+		
 	}
 
 	public function deleteOption($option_id) {
