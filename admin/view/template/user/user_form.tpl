@@ -68,7 +68,7 @@
 						</td>
 					</tr>
 					<tr>
-                        <td>ФинТранзакции</td>
+                        <td>Финансовые транзакции</td>
                         <td>
                             <select name="do_transactions">
                                 <option <?php if ($do_transactions): ?>selected="selected"<?php endif?> value="1">
@@ -119,6 +119,13 @@
 						<td><select name="count_worktime">
 							<option value="0" <? if (!$count_worktime ) { ?>selected="selected"<? } ?>>Нет</option>
 							<option value="1" <? if ($count_worktime) { ?>selected="selected"<? } ?>>Да</option>
+						</select></td>           
+					</tr>
+					<tr>
+						<td>Учет работы с контентом</td>
+						<td><select name="count_content">
+							<option value="0" <? if (!$count_content ) { ?>selected="selected"<? } ?>>Нет</option>
+							<option value="1" <? if ($count_content) { ?>selected="selected"<? } ?>>Да</option>
 						</select></td>           
 					</tr>
 					<tr>

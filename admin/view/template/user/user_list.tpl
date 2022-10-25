@@ -25,8 +25,6 @@
 							<? foreach ($users as $name => $group) { ?>
 								
 								<? if ($name == 'Уволенные') { ?>
-									
-									
 									<tr>
 										<td colspan="6" class="left"><b><? echo $name; ?></b> <span onclick="$('.hidden_del').toggle()" style="cursor:pointer; border-bottom:1px dashed black">развернуть</span></td>
 									</td>
@@ -34,268 +32,285 @@
 										<tr style="display:none;" class="hidden_del">
 											<td style="text-align: center;"><?php if ($user['selected']) { ?>
 												<input type="checkbox" name="selected[]" value="<?php echo $user['user_id']; ?>" checked="checked" />
-												<?php } else { ?>
-												<input type="checkbox" name="selected[]" value="<?php echo $user['user_id']; ?>" />
-											<?php } ?></td>
-											<td class="left">
-												<?php echo $user['username']; ?>
-											</td>
-											<td class="left">
-												<?php echo $user['firstname']; ?> <?php echo $user['lastname']; ?>
-											</td>	
-											
-											<td class="left">
-												<? if ($user['status']) { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF"><?php echo $user['status']; ?></span>
-													<? } else { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $user['status']; ?></span>
-												<? } ?>
-											</td>
-											
-											<td class="left">
-												<? if ($user['is_av']) { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-													<? } else { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-												<? } ?>
-											</td>
-											
-											<td class="left">
-												<? if ($user['unlock_orders']) { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-													<? } else { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-												<? } ?>
-											</td>
-											
-											<td class="left">
-												<? if ($user['do_transactions']) { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-													<? } else { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-												<? } ?>
-											</td>
-											
-											<td class="left">
-												<? if ($user['is_mainmanager']) { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-													<? } else { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-												<? } ?>
-											</td>
-											
-											<td class="left">
-												<? if ($user['is_headsales']) { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-													<? } else { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-												<? } ?>
-											</td>
-											
-											<td class="left">
-												<? if ($user['edit_csi']) { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-													<? } else { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-												<? } ?>
-											</td>
-											
-											<td class="left">
-												<? if ($user['own_orders']) { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-													<? } else { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-												<? } ?>
-											</td>																						
-											
-											<td class="left">
-												<? if ($user['ticket']) { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-													<? } else { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-												<? } ?>
-											</td>
-											
-											<td class="left">
-												<? if ($user['count_worktime']) { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-													<? } else { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-												<? } ?>
-											</td>
-											
-											<td class="left">
-												<? if ($user['internal_pbx_num']) { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ccc;"><?php echo $user['internal_pbx_num']; ?></span>
-												<? } ?>
-											</td>
-											
-											<td class="left">
-												<? if ($user['bitrix_id']) { ?>
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ccc;"><?php echo $user['bitrix_id']; ?></span>
-												<? } ?>
-											</td>
-											
-											<td class="left"><?php echo $user['date_added']; ?></td>
-											<td class="right"><?php foreach ($user['action'] as $action) { ?>
-												<a class="button" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
-											<?php } ?></td>
-										</tr>
-									<?php } ?>
-									
-									
-									
-									
-									<? } else { ?>
-									
-									<tr>
-									<td colspan="13" class="left"><b><? echo $name; ?></b></td>
-								</td>
-								<tr>
-									<td width="1" style="text-align: center;"></td>
-									<td class="left"><?php echo $column_username; ?></td>
-									<td></td>
-									<td class="left"><?php echo $column_status; ?></td>
-									<td class="left">Супер права</td>
-									<td class="left">Разблок заказа</td>
-									<td class="left">Транзакции</td>
-									<td class="left">Главный мен.</td>
-									<td class="left">Руководитель ОП</td>
-									<td class="left">Редакт CSI</td>
-									<td class="left">Присв. заказы</td>
-									<td class="left">Постановка задач</td>
-									<td class="left">Учет времени</td>
-									<td class="left">SIP номер</td>
-									<td class="left">Bitrix24 id</td>
-									<td class="left"><?php echo $column_date_added; ?></td>
-									<td class="right"><?php echo $column_action; ?></td>
-								</tr>
-								
-								<?php foreach ($group as $user) { ?>
-									<tr>
-										<td style="text-align: center;"><?php if ($user['selected']) { ?>
-											<input type="checkbox" name="selected[]" value="<?php echo $user['user_id']; ?>" checked="checked" />
 											<?php } else { ?>
-											<input type="checkbox" name="selected[]" value="<?php echo $user['user_id']; ?>" />
-										<?php } ?></td>
-										<td class="left">
-											<?php echo $user['username']; ?>
-										</td>
-										<td class="left">
-											<?php echo $user['firstname']; ?> <?php echo $user['lastname']; ?>
-										</td>	
-										
-										<td class="left">
-											<? if ($user['status']) { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF"><?php echo $user['status']; ?></span>
-												<? } else { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $user['status']; ?></span>
-											<? } ?>
-										</td>
-										
-										<td class="left">
-											<? if ($user['is_av']) { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-												<? } else { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-											<? } ?>
-										</td>
-										
-										<td class="left">
-											<? if ($user['unlock_orders']) { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-												<? } else { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-											<? } ?>
-										</td>
-										
-										<td class="left">
-											<? if ($user['do_transactions']) { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-												<? } else { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-											<? } ?>
-										</td>
-										
-										<td class="left">
-											<? if ($user['is_mainmanager']) { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-												<? } else { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-											<? } ?>
-										</td>
-										
-										<td class="left">
-											<? if ($user['is_headsales']) { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-												<? } else { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-											<? } ?>
-										</td>
-										
-										<td class="left">
-											<? if ($user['edit_csi']) { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-												<? } else { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-											<? } ?>
-										</td>
-										
-										<td class="left">
-											<? if ($user['own_orders']) { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-												<? } else { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-											<? } ?>
-										</td>																						
-										
-										<td class="left">
-											<? if ($user['ticket']) { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-												<? } else { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-											<? } ?>
-										</td>
-										
-										<td class="left">
-											<? if ($user['count_worktime']) { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-												<? } else { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-											<? } ?>
-										</td>
-										
-										<td class="left">
-											<? if ($user['internal_pbx_num']) { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ccc;"><?php echo $user['internal_pbx_num']; ?></span>
-											<? } ?>
-										</td>
-										
-										<td class="left">
-											<? if ($user['bitrix_id']) { ?>
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ccc;"><?php echo $user['bitrix_id']; ?></span>
-											<? } ?>
-										</td>
-										
-										<td class="left"><?php echo $user['date_added']; ?></td>
-										<td class="right"><?php foreach ($user['action'] as $action) { ?>
-											<a class="button" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
-										<?php } ?></td>
-									</tr>
-								<?php } ?>
-								
-							<? } ?>
-						<?php } ?>
-						<?php } else { ?>
-						<tr>
-							<td class="center" colspan="5"><?php echo $text_no_results; ?></td>
-						</tr>
-					<?php } ?>
-				</tbody>
-			</table>
-		</form>
-		<div class="pagination"><?php echo $pagination; ?></div>
-	</div>
-</div>
-</div>
-<?php echo $footer; ?> 
+												<input type="checkbox" name="selected[]" value="<?php echo $user['user_id']; ?>" />
+												<?php } ?></td>
+												<td class="left">
+													<?php echo $user['username']; ?>
+												</td>
+												<td class="left">
+													<?php echo $user['firstname']; ?> <?php echo $user['lastname']; ?>
+												</td>	
+
+												<td class="left">
+													<? if ($user['status']) { ?>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
+													<? } else { ?>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
+													<? } ?>
+												</td>
+
+												<td class="left">
+													<? if ($user['is_av']) { ?>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
+													<? } else { ?>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
+													<? } ?>
+												</td>
+
+												<td class="left">
+													<? if ($user['unlock_orders']) { ?>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
+													<? } else { ?>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
+													<? } ?>
+												</td>
+
+												<td class="left">
+													<? if ($user['do_transactions']) { ?>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
+													<? } else { ?>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
+													<? } ?>
+												</td>
+
+												<td class="left">
+													<? if ($user['is_mainmanager']) { ?>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
+													<? } else { ?>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
+													<? } ?>
+												</td>
+
+												<td class="left">
+													<? if ($user['is_headsales']) { ?>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
+													<? } else { ?>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
+													<? } ?>
+												</td>
+
+												<td class="left">
+													<? if ($user['edit_csi']) { ?>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
+													<? } else { ?>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
+													<? } ?>
+												</td>
+
+												<td class="left">
+													<? if ($user['own_orders']) { ?>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
+													<? } else { ?>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
+													<? } ?>
+												</td>																						
+
+												<td class="left">
+													<? if ($user['ticket']) { ?>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
+													<? } else { ?>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
+													<? } ?>
+												</td>
+
+												<td class="left">
+													<? if ($user['count_worktime']) { ?>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
+													<? } else { ?>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
+													<? } ?>
+												</td>
+
+												<td class="left">
+													<? if ($user['count_content']) { ?>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
+													<? } else { ?>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
+													<? } ?>
+												</td>
+
+												<td class="left">
+													<? if ($user['internal_pbx_num']) { ?>
+														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ccc;"><?php echo $user['internal_pbx_num']; ?></span>
+													<? } ?>
+												</td>
+
+												<td class="left">
+													<? if ($user['bitrix_id']) { ?>
+														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ccc;"><?php echo $user['bitrix_id']; ?></span>
+													<? } ?>
+												</td>
+
+												<td class="left"><?php echo $user['date_added']; ?></td>
+												<td class="right"><?php foreach ($user['action'] as $action) { ?>
+													<a class="button" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
+													<?php } ?></td>
+												</tr>
+											<?php } ?>
+
+
+
+
+										<? } else { ?>
+
+											<tr>
+												<td colspan="18" class="left"><b><? echo $name; ?></b></td>
+											</td>
+											<tr>
+												<td width="1" style="text-align: center;"></td>
+												<td class="left"><?php echo $column_username; ?></td>
+												<td></td>
+												<td class="left"><?php echo $column_status; ?></td>
+												<td class="left">Супермен</td>
+												<td class="left">Разблокировка</td>
+												<td class="left">Транзакции</td>
+												<td class="left">ГМ</td>
+												<td class="left">РОП</td>
+												<td class="left">CSI</td>
+												<td class="left">Присв. заказы</td>
+												<td class="left">Задачи</td>
+												<td class="left">Время</td>
+												<td class="left">Контент</td>
+												<td class="left">SIP</td>
+												<td class="left">B24</td>
+												<td class="left"><?php echo $column_date_added; ?></td>
+												<td class="right"><?php echo $column_action; ?></td>
+											</tr>
+
+											<?php foreach ($group as $user) { ?>
+												<tr>
+													<td style="text-align: center;"><?php if ($user['selected']) { ?>
+														<input type="checkbox" name="selected[]" value="<?php echo $user['user_id']; ?>" checked="checked" />
+													<?php } else { ?>
+														<input type="checkbox" name="selected[]" value="<?php echo $user['user_id']; ?>" />
+														<?php } ?></td>
+														<td class="left">
+															<?php echo $user['username']; ?>
+														</td>
+														<td class="left">
+															<?php echo $user['firstname']; ?> <?php echo $user['lastname']; ?>
+														</td>	
+
+														<td class="left">
+															<? if ($user['status']) { ?>
+																<i class="fa fa-check" style="color:#4ea24e"></i>
+															<? } else { ?>
+																<i class="fa fa-times" style="color:#cf4a61"></i>
+															<? } ?>
+														</td>
+
+														<td class="left">
+															<? if ($user['is_av']) { ?>
+																<i class="fa fa-check" style="color:#4ea24e"></i>
+															<? } else { ?>
+																<i class="fa fa-times" style="color:#cf4a61"></i>
+															<? } ?>
+														</td>
+
+														<td class="left">
+															<? if ($user['unlock_orders']) { ?>
+																<i class="fa fa-check" style="color:#4ea24e"></i>
+															<? } else { ?>
+																<i class="fa fa-times" style="color:#cf4a61"></i>
+															<? } ?>
+														</td>
+
+														<td class="left">
+															<? if ($user['do_transactions']) { ?>
+																<i class="fa fa-check" style="color:#4ea24e"></i>
+															<? } else { ?>
+																<i class="fa fa-times" style="color:#cf4a61"></i>
+															<? } ?>
+														</td>
+
+														<td class="left">
+															<? if ($user['is_mainmanager']) { ?>
+																<i class="fa fa-check" style="color:#4ea24e"></i>
+															<? } else { ?>
+																<i class="fa fa-times" style="color:#cf4a61"></i>
+															<? } ?>
+														</td>
+
+														<td class="left">
+															<? if ($user['is_headsales']) { ?>
+																<i class="fa fa-check" style="color:#4ea24e"></i>
+															<? } else { ?>
+																<i class="fa fa-times" style="color:#cf4a61"></i>
+															<? } ?>
+														</td>
+
+														<td class="left">
+															<? if ($user['edit_csi']) { ?>
+																<i class="fa fa-check" style="color:#4ea24e"></i>
+															<? } else { ?>
+																<i class="fa fa-times" style="color:#cf4a61"></i>
+															<? } ?>
+														</td>
+
+														<td class="left">
+															<? if ($user['own_orders']) { ?>
+																<i class="fa fa-check" style="color:#4ea24e"></i>
+															<? } else { ?>
+																<i class="fa fa-times" style="color:#cf4a61"></i>
+															<? } ?>
+														</td>																						
+
+														<td class="left">
+															<? if ($user['ticket']) { ?>
+																<i class="fa fa-check" style="color:#4ea24e"></i>
+															<? } else { ?>
+																<i class="fa fa-times" style="color:#cf4a61"></i>
+															<? } ?>
+														</td>
+
+														<td class="left">
+															<? if ($user['count_worktime']) { ?>
+																<i class="fa fa-check" style="color:#4ea24e"></i>
+															<? } else { ?>
+																<i class="fa fa-times" style="color:#cf4a61"></i>
+															<? } ?>
+														</td>
+
+														<td class="left">
+															<? if ($user['count_content']) { ?>
+																<i class="fa fa-check" style="color:#4ea24e"></i>
+															<? } else { ?>
+																<i class="fa fa-times" style="color:#cf4a61"></i>
+															<? } ?>
+														</td>
+
+														<td class="left">
+															<? if ($user['internal_pbx_num']) { ?>
+																<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ccc;"><?php echo $user['internal_pbx_num']; ?></span>
+															<? } ?>
+														</td>
+
+														<td class="left">
+															<? if ($user['bitrix_id']) { ?>
+																<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ccc;"><?php echo $user['bitrix_id']; ?></span>
+															<? } ?>
+														</td>
+
+														<td class="left"><?php echo $user['date_added']; ?></td>
+														<td class="right"><?php foreach ($user['action'] as $action) { ?>
+															<a class="button" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
+															<?php } ?></td>
+														</tr>
+													<?php } ?>
+
+												<? } ?>
+											<?php } ?>
+										<?php } else { ?>
+											<tr>
+												<td class="center" colspan="5"><?php echo $text_no_results; ?></td>
+											</tr>
+										<?php } ?>
+									</tbody>
+								</table>
+							</form>
+							<div class="pagination"><?php echo $pagination; ?></div>
+						</div>
+					</div>
+				</div>
+				<?php echo $footer; ?> 
