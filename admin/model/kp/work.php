@@ -1,30 +1,24 @@
 <?
 	class ModelKpWork extends Model {
 		
-		
 		public function init(){
 			$this->db->query("INSERT IGNORE INTO user_worktime (`user_id`, `date`) VALUES ('" . (int)$this->user->getID() . "', NOW())");		
-		}
-		
+		}	
 		
 		public function updateFieldPlusOne($field){
 			if (!$field) return false;
 			
 			$this->init();
-			$this->db->query("UPDATE user_worktime SET `" . $this->db->escape($field) . "` = `" . $this->db->escape($field) . "`+1 WHERE date = DATE(NOW()) AND user_id = '" . (int)$this->user->getID() . "'");	
-			
+			$this->db->query("UPDATE user_worktime SET `" . $this->db->escape($field) . "` = `" . $this->db->escape($field) . "`+1 WHERE date = DATE(NOW()) AND user_id = '" . (int)$this->user->getID() . "'");			
 		}
 		
-		public function getAllUserStatsForDate($date = false){
-			
+		public function getAllUserStatsForDate($date = false){		
 			if (!$date){
 				$date = date('Y-m-d', strtotime("-$i day"));
 			}
 			
 			$query = $this->db->query("SELECT uw.*, u.user_id as uid, ug.name as group_name, ug.user_group_id as user_group_id FROM user_worktime uw LEFT JOIN user u ON uw.user_id = u.user_id LEFT JOIN user_group ug ON ug.user_group_id = u.user_group_id WHERE DATE(uw.date) = '" . $this->db->escape($date) . "' AND u.status = 1 AND u.count_worktime = 1");		
-			
-			return $query->rows;
-			
+			return $query->rows;		
 		}	
 		
 		
@@ -32,8 +26,7 @@
 			
 			$query = $this->db->query("SELECT COUNT(*) as total FROM user_worktime WHERE MONTH(date) = '" . (int)$month . "' AND YEAR(date) = '" . (int)$year . "' AND user_id = '" . (int)$user_id . "' AND NOT (ISNULL(worktime_start))");
 			
-			return $query->row['total'];
-			
+			return $query->row['total'];			
 		}
 		
 		public function countFieldSum($user_id, $field, $month, $year){
@@ -52,8 +45,7 @@
 				return 0;
 			}
 			
-			return $query->row['total'];
-			
+			return $query->row['total'];	
 		}
 		
 		public function countTimeDiffSum($user_id, $month, $year){
@@ -69,19 +61,16 @@
 				return 0;
 			}
 			
-			return $query->row['total'];
-			
+			return $query->row['total'];		
 		}
 		
-		public function getPromoCodes($promo_type, $manager_id){
-			
+		public function getPromoCodes($promo_type, $manager_id){			
 			$query = $this->db->query("SELECT * FROM coupon WHERE promo_type = '" . $this->db->escape($promo_type) . "' AND manager_id = '" . (int)$manager_id . "'");
 			
 			return $query->rows;
 		}
 		
-		public function getCountClosedOrdersForMonth($manager_id, $month, $year){
-			
+		public function getCountClosedOrdersForMonth($manager_id, $month, $year){		
 			if ($manager_id){
 				
 				$query = $this->db->query("SELECT COUNT(DISTINCT order_id) as total FROM `order_history` 
@@ -129,8 +118,7 @@
 		public function getCountConfirmedToProcessOrdersForMonth($manager_id, $month, $year){
 			
 			$sql = "SELECT COUNT(DISTINCT order_id) as total FROM `order` o WHERE ";
-			
-			//присвоенные менеджеру
+
 			if ($manager_id) {
 				$sql .= " o.manager_id = '" . (int)$manager_id . "'";
 				} else {
@@ -155,8 +143,7 @@
 			return $query->row['total'];
 		}
 		
-		public function getTotalManagerOrdersForMonth($manager_id, $month, $year){
-			
+		public function getTotalManagerOrdersForMonth($manager_id, $month, $year){			
 			if ($manager_id){
 				
 				$query = $this->db->query("SELECT COUNT(DISTINCT order_id) as total FROM `order` 
@@ -234,12 +221,9 @@
 				}
 			}
 			
-		//	var_dump($managers);
-			
 			return $managers;
 		}
-		
-		
+				
 		public function getAVGCSIByOrdersForMonth($manager_id, $month, $year){
 			
 			$this->load->model('kp/csi');
@@ -277,8 +261,7 @@
 				return 0;
 			}
 		}
-		
-		
+				
 		public function getCurrentCountOrderStatusForManager($manager_id, $order_status_id){
 			
 			$query = $this->db->query("SELECT COUNT(DISTINCT order_id) AS total FROM `order` WHERE manager_id = '" . (int)$manager_id . "' AND order_status_id = '" . $order_status_id . "'");			
@@ -323,35 +306,26 @@
 				return $query->row['mindate'];
 				} else {
 				return 0;
-			}
-			
+			}			
 		}
 		
-		public function addtCurrentCountOrderStatusForManagerDynamics($manager_id, $order_status_id, $count){
-			
+		public function addtCurrentCountOrderStatusForManagerDynamics($manager_id, $order_status_id, $count){			
 			$query = $this->db->query("
 			INSERT IGNORE INTO manager_order_status_dynamics
 			SET manager_id = '" . (int)$manager_id . "',
 			date = DATE(NOW()),
 			order_status_id = '" . (int)$order_status_id . "',
 			count = '" . (int)$count . "'				
-			");
-			
-			
-			
+			");	
 		}
 		
-		public function addManagerKPIHistory($manager_id, $data){
-			
+		public function addManagerKPIHistory($manager_id, $data){		
 			$query = $this->db->query("
 			INSERT INTO manager_kpi
 			(manager_id, date_added, kpi_json)
 			VALUES ('" . (int)$manager_id . "', DATE(NOW()), '" . $this->db->escape(json_encode($data)) . "')
 			ON DUPLICATE KEY UPDATE
 			kpi_json = '" . $this->db->escape(json_encode($data)) . "'");
-			
-			
-			
 		}
 		
 		public function getManagerLastKPI($manager_id){
@@ -375,16 +349,6 @@
 		}
 		
 		public function syncUserDBCron(){
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 		}
 		
 	}									

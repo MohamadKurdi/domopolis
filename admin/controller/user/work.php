@@ -14,8 +14,8 @@
 		}
 		
 		private function getList(){
-			$this->document->setTitle('Результаты работы');
-			$this->data['heading_title'] = 'Результаты работы';
+			$this->document->setTitle('Учет рабочего времени и действий менеджеров');
+			$this->data['heading_title'] = 'Учет рабочего времени и действий менеджеров';
 			$this->data['token'] = $this->session->data['token'];
 			
 			$this->load->model('user/user');
@@ -46,7 +46,7 @@
 			
 			$this->data['periods'] = array();
 			
-			for ($i = 0; $i <= 30; $i++) {
+			for ($i = 0; $i <= 10; $i++) {
 				
 				switch ($i) {
 					
