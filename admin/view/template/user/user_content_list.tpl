@@ -66,11 +66,23 @@
 									<?php echo $user['product']['delete']; ?>
 								<?php } ?>
 							</td>
-							<td class="right">
 
-								
+							<?php foreach (['category', 'manufacturer', 'collection', 'information', 'landingpage', 'attribute', 'option'] as $idx) { ?>
+							<td class="right">
+								<?php if (!empty($user[$idx]['edit'])) { ?>
+									<span class="green"><i class="fa fa-edit"></i><?php echo $user[$idx]['edit']; ?></span>&nbsp;&nbsp;
+								<?php } ?>
+
+								<?php if (!empty($user[$idx]['add'])) { ?>
+									<span class="orange"><i class="fa fa-plus"></i><?php echo $user[$idx]['add']; ?></span>&nbsp;&nbsp;
+								<?php } ?>
+
+								<?php if (!empty($user[$idx]['delete'])) { ?>
+									<span class="red"><i class="fa fa-minus"></i><?php echo $user[$idx]['delete']; ?></span>
+								<?php } ?>
 								
 							</td>
+							<? } ?>
 						</tr>
 
 					<? } ?>
