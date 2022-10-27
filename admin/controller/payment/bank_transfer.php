@@ -85,6 +85,15 @@ class ControllerPaymentBankTransfer extends Controller {
 			}
 		}
 
+		$this->load->model('setting/store');			
+		$this->data['stores'] = $this->model_setting_store->getStores();
+			
+		if (isset($this->request->post['bank_transfer_store'])) {
+			$this->data['bank_transfer_store'] = $this->request->post['bank_transfer_store'];
+		} else { 
+			$this->data['bank_transfer_store'] = $this->config->get('bank_transfer_store'); 
+		}	
+
 		$this->data['languages'] = $languages;
 
 		if (isset($this->request->post['bank_transfer_total'])) {

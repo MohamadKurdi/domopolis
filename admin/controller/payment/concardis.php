@@ -134,11 +134,20 @@ class ControllerPaymentConcardis extends Controller {
 
 		$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
+		$this->load->model('setting/store');			
+		$this->data['stores'] = $this->model_setting_store->getStores();
+			
+		if (isset($this->request->post['concardis_store'])) {
+			$this->data['concardis_store'] = $this->request->post['concardis_sort_order'];
+		} else { 
+			$this->data['concardis_store'] = $this->config->get('concardis_store'); 
+		}	
+
 		if (isset($this->request->post['concardis_geo_zone_id'])) {
 			$this->data['concardis_geo_zone_id'] = $this->request->post['concardis_geo_zone_id'];
 		} else {
 			$this->data['concardis_geo_zone_id'] = $this->config->get('concardis_geo_zone_id'); 
-		} 	
+		} 			
 
 		$this->load->model('localisation/geo_zone');
 

@@ -4,25 +4,26 @@
 		
 		public function getMethod($address, $total) {
 			$method_data = array();
-			
-			$status = false;
-			
-			if (($this->config->get('concardis_status'))){
-				$status = true;
+
+			$status = true;	
+			if (!$this->config->get('concardis_status')){
+				$status = false;
+			}
+		
+			if (!in_array($this->config->get('config_store_id'), $this->config->get('concardis_store'))){
+				$status = false;
 			}
 			
-			$this->language->load('payment/concardis');					
-					
-			$status = false;
+			$this->language->load('payment/concardis');									
 			
 			if ($status) {
 				$method_data = array(
-				'code'        => self::METHOD_CODE,
-				'status'      => $status,
-				'checkactive' => true,
-				'title'      => $this->language->get('text_title'),
-				'description' => $this->language->get('text_description'),
-				'sort_order' => $this->config->get('concardis_sort_order')
+				'code'        	=> self::METHOD_CODE,
+				'status'      	=> $status,
+				'checkactive' 	=> true,
+				'title'      	=> $this->language->get('text_title'),
+				'description' 	=> $this->language->get('text_description'),
+				'sort_order' 	=> $this->config->get('concardis_sort_order')
 				);
 			}
 			

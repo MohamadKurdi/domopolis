@@ -5,7 +5,7 @@
 			
 			$status = true;
 			
-			if ((int)$address['country_id'] == 220) {
+			if (!in_array($this->config->get('config_store_id'), $this->config->get('bank_transfer_store'))){
 				$status = false;
 			}
 			
