@@ -378,12 +378,10 @@ class ControllerProductSearch extends Controller {
 				}
 
 
-
 				$field = $this->elasticSearch->buildField('name');
 				$field2 = $this->elasticSearch->buildField('names');
 				$field3 = $this->elasticSearch->buildField('description');
 				$field4 = $this->elasticSearch->buildField('suggest');
-
 
 				$product_total = $this->elasticSearch->fuzzyP('products' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field2, $field3, ['getTotal' => true]);				
 				$resultsE = $this->elasticSearch->fuzzyP('products' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field2, $field3, ['start' => (($page - 1) * $limit), 'limit' => $limit, 'filter_manufacturer_id' => $filter_manufacturer_id, 'filter_category_id' => $filter_category_id, 'sort' => $sort, 'order' => $order]);

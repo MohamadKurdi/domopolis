@@ -687,9 +687,20 @@
 				
 				$this->data['products'] = array();
 				
+				$ifToDisplayProductsFromSubCategories = true;
+				if (!$this->config->get('config_disable_filter_subcategory')){
+					$ifToDisplayProducts = false;
+
+					if ($this->config->get('config_disable_filter_subcategory_only_for_main')){
+						if ($category_info['parent_id'] > 0){
+							$ifToDisplayProducts = true;
+						}
+					}
+				}
+
 				$data = array(
 				'filter_category_id' 			=> $category_id,
-				'filter_sub_category' 			=> !$this->config->get('config_disable_filter_subcategory'),
+				'filter_sub_category' 			=> $ifToDisplayProductsFromSubCategories,
 				'filter_filter'      			=> $filter,
 				'filter_ocfilter'    			=> $filter_ocfilter,
 				'filter_category_id_intersect' 	=> $intersection_id,
@@ -704,8 +715,7 @@
 				
 				if ($category_info['category_id'] == GENERAL_MARKDOWN_CATEGORY) {
 					$data['filter_enable_markdown'] = true;
-				}
-				
+				}				
 				
 				if (!empty($category_info['deletenotinstock'])) {
 					$data['filter_current_in_stock'] = true;
@@ -730,13 +740,11 @@
 							$data['filter_sub_category'] = '1';
 						}
 						} else {
-						$data['filter_sub_category'] = !$this->config->get('config_disable_filter_subcategory');
+						$data['filter_sub_category'] = $ifToDisplayProductsFromSubCategories;
 					}
 				}
-
-				if ($this->config->get('config_disable_filter_subcategory')){
-					$data['filter_sub_category'] = false;
-				}
+				
+				$data['filter_sub_category'] = $ifToDisplayProductsFromSubCategories;
 				
 				if( ! empty( $this->request->get['manufacturer_id'] ) ) {
 					$data['filter_manufacturer_id'] = (int) $this->request->get['manufacturer_id'];

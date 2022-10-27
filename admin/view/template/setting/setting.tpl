@@ -583,18 +583,34 @@
 								</td>
 
 								<td style="width:15%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Товары только в крайних категориях</span></p>
-									<select name="config_disable_filter_subcategory">
-										<?php if ($config_disable_filter_subcategory) { ?>
-											<option value="1" selected="selected">Включить</option>
-											<option value="0">Отключить</option>
-										<?php } else { ?>													
-											<option value="1">Включить</option>
-											<option value="0"  selected="selected">Отключить</option>
-										<? } ?>
-									</select>
-									<br />
-									<span class="help">Если включено - товары отображаются только в крайних по дереву</span>
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Товары только в крайних категориях</span></p>
+										<select name="config_disable_filter_subcategory">
+											<?php if ($config_disable_filter_subcategory) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+										<br />
+										<span class="help">Если включено - товары отображаются только в крайних по дереву</span>
+									</div>
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Убрать товары только с уровня 0</span></p>
+										<select name="config_disable_filter_subcategory_only_for_main">
+											<?php if ($config_disable_filter_subcategory_only_for_main) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+										<br />
+										<span class="help">Если включена эта настройка и предыдущая, то товары будут показываться везде, кроме корневых категорий</span>
+									</div>
 								</td>
 
 								<td style="width:15%">
