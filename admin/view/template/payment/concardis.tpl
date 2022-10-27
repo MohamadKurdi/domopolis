@@ -91,6 +91,30 @@
 							<?php } ?>
 						</select></td>
 					</tr>
+
+					<tr>
+						<td>Включить в магазинах</td>
+						<td>
+							<div class="scrollbox" style="min-height: 150px;">
+								<?php $class = 'even'; ?>
+								<?php foreach ($stores as $store) { ?>
+									<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+									<div class="<?php echo $class; ?>">
+										<?php if (in_array($store['store_id'], $concardis_store)) { ?>
+											<input id="store_<?php echo $store['store_id']; ?>" class="checkbox" type="checkbox" name="concardis_store[]" value="<?php echo $store['store_id']; ?>" checked="checked" />
+											<label for="store_<?php echo $store['store_id']; ?>"><?php echo $store['name']; ?></label>
+											<?php } else { ?>
+											<input id="store_<?php echo $store['store_id']; ?>" class="checkbox" type="checkbox" name="concardis_store[]" value="<?php echo $store['store_id']; ?>" />
+											<label for="store_<?php echo $store['store_id']; ?>"><?php echo $store['name']; ?></label>
+										<?php } ?>
+									</div>
+								<?php } ?>
+								
+							</div>
+							<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);">Выделить всё</a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);">Снять выделение</a>
+						</td>
+					</tr>
+					
 					<tr>
 						<td><?php echo $entry_geo_zone; ?></td>
 						<td><select name="concardis_geo_zone_id">
