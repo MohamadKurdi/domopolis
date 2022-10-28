@@ -570,8 +570,7 @@
 			$this->load->model('payment/shoputils_psb');
 			$this->load->model('payment/paykeeper');
 			$this->load->model('payment/pp_express');
-			$this->load->model('payment/liqpay');
-			$this->load->model('payment/adyen');
+			$this->load->model('payment/liqpay');			
 			$this->load->model('payment/concardis');
 			$this->load->model('account/transaction');
 			$this->load->model('account/order');
