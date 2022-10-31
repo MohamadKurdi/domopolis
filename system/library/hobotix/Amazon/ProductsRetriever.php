@@ -1120,9 +1120,18 @@
 		public function addSimpleProductWithOnlyAsin($data) {			
 
 			if ($this->model_product_get->checkIfAsinIsDeleted($data['asin'])){
-				echoLine('[RainforestRetriever] ASIN удален, пропускаем!');				
+				echoLine('[RainforestRetriever] ASIN deleted, skipping!');				
 				return 0;
-			}			
+			}	
+
+			if (!empty($data['amazon_best_price'])){
+				if ($this->config->get('config_rainforest_skip_low_price_products')){
+					if ((float)$data['amazon_best_price'] < (float)$this->config->get('config_rainforest_skip_low_price_products')){
+						echoLine('[RainforestRetriever] Price too low, skipping!');				
+						return 0;
+					}
+				}
+			}		
 
 			$this->db->query("INSERT INTO product SET 
 			model 					= '" . $this->db->escape($data['asin']) . "', 
