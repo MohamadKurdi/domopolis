@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Сен 29 2022 г., 10:19
+-- Время создания: Окт 31 2022 г., 12:38
 -- Версия сервера: 10.6.7-MariaDB-2ubuntu1.1-log
 -- Версия PHP: 8.1.9
 
@@ -5523,6 +5523,7 @@ CREATE TABLE `product_amzn_offers` (
   `date_added` datetime NOT NULL,
   `is_min_price` tinyint(1) NOT NULL,
   `isPrime` tinyint(1) NOT NULL,
+  `isBuyBoxWinner` tinyint(1) NOT NULL DEFAULT 0,
   `isBestOffer` tinyint(1) NOT NULL,
   `offerRating` decimal(15,2) NOT NULL,
   `offer_id` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL
@@ -7517,8 +7518,7 @@ CREATE TABLE `url_alias` (
   `url_alias_id` int(11) NOT NULL,
   `query` varchar(255) NOT NULL,
   `keyword` varchar(255) NOT NULL,
-  `language_id` int(11) NOT NULL DEFAULT -1,
-  `auto_gen` varchar(24) DEFAULT ''
+  `language_id` int(11) NOT NULL DEFAULT -1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -7561,6 +7561,7 @@ CREATE TABLE `user` (
   `outbound_pbx_num` varchar(255) NOT NULL,
   `own_orders` tinyint(1) NOT NULL DEFAULT 0,
   `count_worktime` tinyint(1) NOT NULL,
+  `count_content` tinyint(1) NOT NULL DEFAULT 0,
   `edit_csi` tinyint(1) NOT NULL,
   `ip` varchar(40) NOT NULL,
   `status` tinyint(1) NOT NULL,
@@ -7569,6 +7570,21 @@ CREATE TABLE `user` (
   `unlock_orders` tinyint(1) NOT NULL,
   `do_transactions` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `user_content`
+--
+
+CREATE TABLE `user_content` (
+  `user_id` int(11) NOT NULL,
+  `datetime` datetime NOT NULL,
+  `date` date NOT NULL,
+  `action` varchar(10) NOT NULL,
+  `entity_type` varchar(32) NOT NULL,
+  `entity_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -8371,6 +8387,7 @@ ALTER TABLE `category_psm_template`
 -- Индексы таблицы `category_related`
 --
 ALTER TABLE `category_related`
+  ADD UNIQUE KEY `category_id_2` (`category_id`,`related_category_id`),
   ADD KEY `category_id` (`category_id`);
 
 --
@@ -8904,7 +8921,8 @@ ALTER TABLE `customer_history`
 ALTER TABLE `customer_ip`
   ADD PRIMARY KEY (`customer_ip_id`),
   ADD KEY `ip` (`ip`),
-  ADD KEY `customer_id` (`customer_id`);
+  ADD KEY `customer_id` (`customer_id`),
+  ADD KEY `customer_id_customer_ip` (`customer_id`,`ip`) USING BTREE;
 
 --
 -- Индексы таблицы `customer_online`
@@ -9469,7 +9487,8 @@ ALTER TABLE `layout_route`
   ADD KEY `layout_id` (`layout_id`),
   ADD KEY `store_id` (`store_id`),
   ADD KEY `route` (`route`),
-  ADD KEY `store_id_route` (`store_id`,`route`) USING BTREE;
+  ADD KEY `store_id_route` (`store_id`,`route`) USING BTREE,
+  ADD KEY `layout_id_store_id` (`layout_id`,`store_id`) USING BTREE;
 
 --
 -- Индексы таблицы `legalperson`
@@ -10329,7 +10348,8 @@ ALTER TABLE `product`
   ADD KEY `amzn_offers_count` (`amzn_offers_count`),
   ADD KEY `amzn_rating` (`amzn_rating`),
   ADD KEY `xrating` (`xrating`),
-  ADD KEY `amazon_best_price` (`amazon_best_price`);
+  ADD KEY `amazon_best_price` (`amazon_best_price`),
+  ADD KEY `viewed` (`viewed`);
 
 --
 -- Индексы таблицы `product_additional_offer`
@@ -10381,7 +10401,8 @@ ALTER TABLE `product_amzn_offers`
   ADD KEY `date_added` (`date_added`),
   ADD KEY `is_min_price` (`is_min_price`),
   ADD KEY `isPrime` (`isPrime`),
-  ADD KEY `isBestOffer` (`isBestOffer`);
+  ADD KEY `isBestOffer` (`isBestOffer`),
+  ADD KEY `isBuyBoxWinner` (`isBuyBoxWinner`);
 
 --
 -- Индексы таблицы `product_anyrelated`
@@ -11445,6 +11466,16 @@ ALTER TABLE `user`
   ADD KEY `ip_2` (`ip`,`status`),
   ADD KEY `user_id` (`user_id`,`status`),
   ADD KEY `user_id_2` (`user_id`,`status`);
+
+--
+-- Индексы таблицы `user_content`
+--
+ALTER TABLE `user_content`
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `date` (`date`),
+  ADD KEY `entity_type` (`entity_type`),
+  ADD KEY `action` (`action`),
+  ADD KEY `user_id_2` (`user_id`,`date`,`action`);
 
 --
 -- Индексы таблицы `user_group`
