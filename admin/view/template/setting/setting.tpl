@@ -304,7 +304,7 @@
 									</div>
 
 									<div>
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика дополнительных HTML статусов товара</span></p>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика HTML статусов</span></p>
 									<select name="config_additional_html_status_enable">
 										<?php if ($config_additional_html_status_enable) { ?>
 											<option value="1" selected="selected">Включить</option>
@@ -411,12 +411,31 @@
 									</div>
 								</td>
 
-								<td style="width:18%">
-									
-								</td>
-
-								<td style="width:18%">
-									
+								<td style="width:20%">
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Отключать пустые категории</span></p>
+										<select type="select" name="config_disable_empty_categories">
+											<? if ($config_disable_empty_categories) { ?>
+												<option value="1" selected='selected' >Да</option>
+												<option value="0" >Нет</option>
+											<? } else { ?>
+												<option value="1" >Да</option>
+												<option value="0"  selected='selected' >Нет</option>
+											<? } ?>       
+										</select>										
+									</div>
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включать не-пустые категории</span></p>
+										<select type="select" name="config_enable_non_empty_categories">
+											<? if ($config_enable_non_empty_categories) { ?>
+												<option value="1" selected='selected' >Да</option>
+												<option value="0" >Нет</option>
+											<? } else { ?>
+												<option value="1" >Да</option>
+												<option value="0"  selected='selected' >Нет</option>
+											<? } ?>       
+										</select>										
+									</div>
 								</td>
 
 								<td style="width:18%">
@@ -4161,6 +4180,11 @@
 										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Пропускать товары с вариантами</span></p>
 											><input type="number" name="config_rainforest_skip_variants" value="<?php echo $config_rainforest_skip_variants; ?>" size="50" style="width:100px;" />
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Не добавлять товары с ценой меньше</span></p>
+											<input type="number" name="config_rainforest_skip_low_price_products" value="<?php echo $config_rainforest_skip_low_price_products; ?>" size="50" style="width:100px;" /> <i class="fa fa-eur"></i>
 										</div>
 									</td>
 									
