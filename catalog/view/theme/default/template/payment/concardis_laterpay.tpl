@@ -14,7 +14,7 @@
 </section>
 
 		
-<script src="https://pp.payengine.de/widgetjs/payengine.widgеt.min.js"></script>
+<script src="https://pp.payengine.de/widgetjs/payengine.widget.min.js"></script>
 <script>
 	var widgetReference;
 	
@@ -34,7 +34,6 @@
 			} else {
 			console.log(result);
 		}
-		//Handle transaction successfully created
 	}
 	
 	window.onload = function() {
