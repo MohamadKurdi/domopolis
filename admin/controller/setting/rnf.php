@@ -35,6 +35,7 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_category_update_period',
 		'config_rainforest_max_variants',
 		'config_rainforest_skip_variants',
+		'config_rainforest_skip_low_price_products',
 		'config_rainforest_update_period',
 
 		'config_rainforest_enable_review_adding',
@@ -58,6 +59,9 @@ class ControllerSettingRnf extends Controller {
 
 		'config_delivery_outstock_enable',
 		'config_product_count',
+
+		'config_disable_empty_categories',
+		'config_enable_non_empty_categories',
 
 
 		'config_rainforest_enable_recursive_adding',

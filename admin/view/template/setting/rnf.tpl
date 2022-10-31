@@ -295,7 +295,7 @@
 					<table class="list">
 						<tr>
 							<td colspan="3" class="left" style="color:#00ad07;">
-								<i class="fa fa-cogs"></i> <b>Варианты</b>
+								<i class="fa fa-cogs"></i> <b>Варианты, цена</b>
 							</td>
 						</tr>
 						<tr>
@@ -321,6 +321,20 @@
 							<td>
 								<span class="help">
 									<i class="fa fa-info-circle"></i> Во избежание загрузки товаров, у которых очень большое количество вариантов, мы изначально при загрузке пропускаем товары, у которых вариантов больше заданного числа.
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Пропускать товары с ценой меньше
+							</td>
+							<td>
+								<input type="number" name="config_rainforest_skip_low_price_products" value="<?php echo $config_rainforest_skip_low_price_products; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Товары с низкой ценой иногда бывают довольно трешовые. Если задать тут число больше нуля, то товары с ценой меньше не будут добавляться. Цена в валюте закупки (евро).
 								</span>
 							</td>
 						</tr>
