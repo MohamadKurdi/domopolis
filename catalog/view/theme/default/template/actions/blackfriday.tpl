@@ -170,6 +170,21 @@
 				<p class="text"><?php echo $text_blackfriday_text_9; ?></p>
 			</div>
 		</div>
+
+
+		<?php if ($product_groups) { ?>
+			<?php foreach ($product_groups as $product_group) { ?>
+				<div>
+					<a href="<?php echo $product_group['href']?>" title="<?php echo $product_group['href']?>"><?php echo $product_group['name']?></a>
+
+					<?php foreach ($product_group['products'] as $product) { ?>
+						<?php /* include single product template */ ?>
+					<?php } ?>
+				</div>
+			<?php } ?>
+		<?php } ?>
+
+
 		<div class="last-action-block">
 			<h2 class="title"><?=$text_blackfriday_title_list ?></h2>
 			<div  id="additionalActions" class="news-block">
