@@ -381,10 +381,8 @@
 			}
 			
 			if ($category_info) {
-
 				if (!empty($this->request->get['intersection_id'])){
 					$intersection_info = $this->model_catalog_category->getCategory($this->request->get['intersection_id']);
-
 					if ($intersection_info){					
 						$category_info['seo_h1'] 			= str_replace($category_info['name'], ($category_info['name'] . ' - ' . $intersection_info['name'] ), $category_info['seo_h1']);
 						$category_info['meta_description'] 	= str_replace($category_info['name'], ($category_info['name'] . ' - ' . $intersection_info['name'] ), $category_info['meta_description']);

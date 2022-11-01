@@ -57,7 +57,7 @@
 			$sql .= "  AND c1.intersections = 0";
 			$sql .= "  AND cd1.language_id = 2";		
 
-			$this->log->debugsql($sql);		
+		//	$this->log->debugsql($sql);		
 			
 			$query = $this->db->query($sql);
 			

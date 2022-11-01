@@ -1311,6 +1311,7 @@
 					$product_data[$result['product_id']] = $this->getProduct($result['product_id'], true, $simple);
 				}
 			}			
+			
 			return $product_data;
 		}
 		
