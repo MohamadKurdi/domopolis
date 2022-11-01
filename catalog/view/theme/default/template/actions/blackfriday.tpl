@@ -87,48 +87,48 @@
 		align-items: center;
 	}
 	#promo-code-txt-action {
-    color: #fbc17e;
-    white-space: nowrap;
-    padding: 2px 9px;
-    border: 1px dashed;
-    font-weight: 500;
-    cursor: pointer;
-    margin-left: 15px;
-}
+		color: #fbc17e;
+		white-space: nowrap;
+		padding: 2px 9px;
+		border: 1px dashed;
+		font-weight: 500;
+		cursor: pointer;
+		margin-left: 15px;
+	}
 	#promo-code-txt{
-    color: #fbc17e;
-    white-space: nowrap;
-    padding: 2px 9px;
-    border: 1px dashed;
-    font-weight: 500;
-    cursor: pointer;
+		color: #fbc17e;
+		white-space: nowrap;
+		padding: 2px 9px;
+		border: 1px dashed;
+		font-weight: 500;
+		cursor: pointer;
 	}
 	.btn-copy {
 
-    width: 22px;
-    height: 12px;
-    background-color: transparent;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-    display: inline-flex;
-    margin-left: 5px;
-    cursor: pointer;
-    position: relative;
+		width: 22px;
+		height: 12px;
+		background-color: transparent;
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
+		display: inline-flex;
+		margin-left: 5px;
+		cursor: pointer;
+		position: relative;
 	}
 	.btn-copy .tooltiptext{
-    display: none;
-    width: 116px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    padding: 9px 6px;
-    border-radius: 6px;
-    position: absolute;
-    z-index: 1;
-    font-size: 12px;
-    top: -50px;
-    left: 0;
+		display: none;
+		width: 116px;
+		background-color: black;
+		color: #fff;
+		text-align: center;
+		padding: 9px 6px;
+		border-radius: 6px;
+		position: absolute;
+		z-index: 1;
+		font-size: 12px;
+		top: -50px;
+		left: 0;
 	}
 	@media screen and (max-width: 768px) {
 		.blackfriday_wrap .last-action-block{
@@ -188,23 +188,23 @@
 				<?php } ?>
 			</div>
 		</div>
-				
+		
 	</div>
 </section>
 <script>
-					
-						
-					
-							function copytext(el) {
-								var $tmp = $("<textarea>");
-								$("body").append($tmp);
-								$tmp.val($(el).text()).select();
-								document.execCommand("copy");
-								$tmp.remove();
-								$('.btn-copy').find('.tooltiptext').show();
-								setInterval(function(){
-								$('.btn-copy').find('.tooltiptext').hide();
-								}, 1500);
-							}  
-						</script>
+	
+	
+	
+	function copytext(el) {
+		var $tmp = $("<textarea>");
+		$("body").append($tmp);
+		$tmp.val($(el).text()).select();
+		document.execCommand("copy");
+		$tmp.remove();
+		$('.btn-copy').find('.tooltiptext').show();
+		setInterval(function(){
+			$('.btn-copy').find('.tooltiptext').hide();
+		}, 1500);
+	}  
+</script>
 <?php echo $footer; ?>
