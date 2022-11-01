@@ -13,25 +13,25 @@
 			}
 			
 			$this->db->query("INSERT INTO `actions` SET 
-			`image` = '" . $this->db->escape($data['image']) . "', 
-			`image_to_cat` = '" . $this->db->escape($data['image_to_cat']) . "', 
-			`status` = '" . (int)$data['status'] . "',
-			`fancybox` = '".(int)$data['fancybox']."',
-			`date_start` = '".(int)$data['date_start']."',
-			`date_end` = '".(int)$data['date_end']."',
-			`only_in_stock` = '" . (int)$data['only_in_stock'] . "',
-			`product_related` = '" . $product_related . "',
-			`manufacturer_id` = '" . (int)$data['manufacturer_id'] . "',
-			`deletenotinstock` = '" . (int)$data['deletenotinstock'] . "',
-			`display_all_active` = '" . (int)$data['display_all_active'] . "',
-			`ao_group` = '" . $this->db->escape($data['ao_group']) . "'
-			");
-			
-			
+			`image` 			= '" . $this->db->escape($data['image']) . "', 
+			`image_to_cat` 		= '" . $this->db->escape($data['image_to_cat']) . "', 
+			`status` 			= '" . (int)$data['status'] . "',
+			`fancybox` 			= '" . (int)$data['fancybox'] . "',
+			`date_start` 		= '" . (int)$data['date_start'] . "',
+			`date_end` 			= '" . (int)$data['date_end'] . "',
+			`only_in_stock` 	= '" . (int)$data['only_in_stock'] . "',
+			`product_related` 	= '" . $product_related . "',
+			`manufacturer_id` 	= '" . (int)$data['manufacturer_id'] . "',
+			`category_related_id` 				= '" . (int)$data['category_related_id'] . "',
+			`category_related_no_intersections` = '" . (int)$data['category_related_no_intersections'] . "',
+			`category_related_limit_products` 	= '" . (int)$data['category_related_limit_products'] . "',
+			`deletenotinstock` 					= '" . (int)$data['deletenotinstock'] . "',
+			`display_all_active` 				= '" . (int)$data['display_all_active'] . "',
+			`ao_group` 							= '" . $this->db->escape($data['ao_group']) . "'
+			");			
 			
 			$actions_id = $this->db->getLastId(); 
-			$this->updateActionsDescription($actions_id, $data['actions_description']);
-			
+			$this->updateActionsDescription($actions_id, $data['actions_description']);			
 			
 			$this->db->query("DELETE FROM `actions_to_product` WHERE actions_id = '" . $actions_id . "'");
 			foreach ($data['product_related'] as $product_id) {
@@ -142,18 +142,21 @@
 			}
 			
 			$this->db->query("UPDATE `actions` SET
-			`image` = '" . $this->db->escape($data['image']) . "', 
-			`image_to_cat` = '" . $this->db->escape($data['image_to_cat']) . "', 
-			`date_start` = '" . (int)$data['date_start'] . "',
-			`date_end` = '" . (int)$data['date_end'] . "',
-			`status` = '" . (int)$data['status'] . "',
-			`fancybox` = '" . (int)$data['fancybox'] . "',
-			`manufacturer_id` = '" . (int)$data['manufacturer_id'] . "',
-			`only_in_stock` = '" . (int)$data['only_in_stock'] . "',
-			`deletenotinstock` = '" . (int)$data['deletenotinstock'] . "',
-			`product_related` = '" . $product_related . "',
-			`ao_group` = '" . $this->db->escape($data['ao_group']) . "',
-			`display_all_active` = '" . (int)$data['display_all_active'] . "'
+			`image` 				= '" . $this->db->escape($data['image']) . "', 
+			`image_to_cat` 			= '" . $this->db->escape($data['image_to_cat']) . "', 
+			`date_start` 			= '" . (int)$data['date_start'] . "',
+			`date_end` 				= '" . (int)$data['date_end'] . "',
+			`status` 				= '" . (int)$data['status'] . "',
+			`fancybox` 				= '" . (int)$data['fancybox'] . "',
+			`manufacturer_id` 		= '" . (int)$data['manufacturer_id'] . "',
+			`category_related_id` 				= '" . (int)$data['category_related_id'] . "',
+			`category_related_no_intersections` = '" . (int)$data['category_related_no_intersections'] . "',
+			`category_related_limit_products` 	= '" . (int)$data['category_related_limit_products'] . "',
+			`only_in_stock` 		= '" . (int)$data['only_in_stock'] . "',
+			`deletenotinstock` 		= '" . (int)$data['deletenotinstock'] . "',
+			`product_related` 		= '" . $product_related . "',
+			`ao_group` 				= '" . $this->db->escape($data['ao_group']) . "',
+			`display_all_active` 	= '" . (int)$data['display_all_active'] . "'
 			WHERE `actions_id` = '" . (int)$actions_id . "'");
 			
 			$this->updateActionsDescription($actions_id, $data['actions_description']);

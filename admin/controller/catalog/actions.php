@@ -385,8 +385,7 @@
 				}
 			}
 			
-			$this->load->model('catalog/product');
-			
+			$this->load->model('catalog/product');			
 			$this->data['all_ao_groups'] = $this->model_catalog_product->getProductAdditionalOfferGroups();
 			
 			if (isset($this->request->post['ao_group'])) {
@@ -429,6 +428,41 @@
 					}
 				}
 			}
+
+			$this->load->model('catalog/category');
+
+			if (isset($this->request->post['category_related_id'])) {
+				$this->data['category_related_id'] = $this->request->post['category_related_id'];
+				} elseif (!empty($actions_info)) {
+				$this->data['category_related_id'] = $actions_info['category_related_id'];
+				} else {
+				$this->data['category_related_id'] = 0;
+			}
+
+			if (isset($this->request->post['category_related_no_intersections'])) {
+				$this->data['category_related_no_intersections'] = $this->request->post['category_related_no_intersections'];
+				} elseif (!empty($actions_info)) {
+				$this->data['category_related_no_intersections'] = $actions_info['category_related_no_intersections'];
+				} else {
+				$this->data['category_related_no_intersections'] = 0;
+			}
+
+			if (isset($this->request->post['category_related_limit_products'])) {
+				$this->data['category_related_limit_products'] = $this->request->post['category_related_limit_products'];
+				} elseif (!empty($actions_info)) {
+				$this->data['category_related_limit_products'] = $actions_info['category_related_limit_products'];
+				} else {
+				$this->data['category_related_limit_products'] = 0;
+			}
+
+			$this->data['category_related'] = '';
+			if ($this->data['category_related_id']){
+				$category_info = $this->model_catalog_category->getCategory($this->data['category_related_id']);
+				
+				if ($category_info) {
+					$this->data['category_related'] = ($category_info['path'] ? $category_info['path'] . ' &gt; ' : '') . $category_info['name'];					
+				}
+			}
 			
 			$this->load->model('catalog/manufacturer');
 			
@@ -453,9 +487,7 @@
 				} else {
 				$this->data['manufacturer'] = '';
 				}
-			
-			// Categories
-			$this->load->model('catalog/category');
+					
 			
 			if (isset($this->request->post['actions_category'])) {
 				$categories = $this->request->post['actions_category'];

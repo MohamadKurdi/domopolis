@@ -300,20 +300,27 @@
 			<div id="tab-links">
 				<table class="form">
 					<tr>						
-						<td width="20%">
+						<td style="width: 15%">
 							<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Привязать спецпредложение</span>													
 						</td>
-						<td width="20%">
-							<span class="status_color" style="display:inline-block; padding:3px 5px;background:#00ad07; color:#FFF">Привязать к бренду</span>													
+						<td style="width: 15%">
+							<span class="status_color" style="display:inline-block; padding:3px 5px;background:#00ad07; color:#FFF">Привязать к бренду</span>					
 						</td>
-						<td width="60%">
-							
+						<td style="width: 25%">
+							<span class="status_color" style="display:inline-block; padding:3px 5px;background:#7F00FF; color:#FFF">Привязать к специальной категории</span>		
+						</td>
+
+						<td style="width: 15%">
+							<span class="status_color" style="display:inline-block; padding:3px 5px;background:#7F00FF; color:#FFF">Без пересечений</span>		
+						</td>
+						<td style="width: 15%">
+							<span class="status_color" style="display:inline-block; padding:3px 5px;background:#7F00FF; color:#FFF">Лимит товаров</span>		
 						</td>
 					</tr>
-					<tr style="border-bottom:1px dashed gray">						
-						<td width="20%">
+					<tr>						
+						<td>
 							<select name="ao_group">
-								<option value="">Нехуя не привязывать</option>
+								<option value="">Не привязывать</option>
 								<? foreach ($all_ao_groups as $all_ao_group) { ?>
 									<? if ($all_ao_group == $ao_group) { ?>
 										<option value="<? echo $all_ao_group; ?>" selected="selected"><? echo $all_ao_group; ?></option>
@@ -323,11 +330,44 @@
 								<? } ?>
 							</select>
 						</td>
-						<td width="20%">
+						<td>
 							<input type="text" name="manufacturer" value="<?php echo $manufacturer ?>" />
 							<input type="hidden" name="manufacturer_id" value="<?php echo $manufacturer_id; ?>" />			
 						</td>
-						<td></td>
+						<td>
+							<div>
+								<div style="float:left;width:350px;">							
+									<input type="text" name="category_related" id="category_related" value="<?php echo $category_related; ?>" style="width:90%" />							
+									<input type="hidden" name="category_related_id" id="category_related_id" value="<?php echo $category_related_id; ?>" />
+								</div>
+								<div style="float:right;width:100px;">
+									<a onclick="$('#category_related').val(''); $('#category_related_id').val('');" class="button"><span>Очистить</span></a>
+								</div>
+							</div>
+						</td>
+
+						<td>
+							<select name="category_related_no_intersections">
+								<?php if ($category_related_no_intersections) { ?>
+									<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+									<option value="0"><?php echo $text_disabled; ?></option>
+								<?php } else { ?>
+									<option value="1"><?php echo $text_enabled; ?></option>
+									<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+								<?php } ?>
+							</select>
+						</td>
+						<td>
+							<input type="number" name="category_related_limit_products" value="<?php echo $category_related_limit_products; ?>" />
+						</td>
+					</tr>
+					<tr style="border-bottom:1px dashed gray">
+						<td colspan="2"></td>
+						<td colspan="3">
+							<span class="help">
+								Либо специальная, либо обычная категория. Если настройка "Привязка без пересечений" включена, то в акции будут выведены товары привязанной категории без пересечений и разбивки по основным категориями.
+							</span>
+						</td>
 					</tr>
 				</table>
 				
@@ -495,6 +535,37 @@
 </div>
 </div>
 <script type="text/javascript" src="view/javascript/ckeditor/ckeditor.js"></script> 
+
+<script type="text/javascript"><!--
+		$('input[name=\'category_related\']').autocomplete({
+			delay: 500,
+			source: function(request, response) {		
+				$.ajax({
+					url: 'index.php?route=catalog/category/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+					dataType: 'json',
+					success: function(json) {
+						
+						response($.map(json, function(item) {
+							return {
+								label: item.name,
+								value: item.category_id
+							}
+						}));
+					}
+				});
+			},
+			select: function(event, ui) {
+				$('input[name=\'category_related\']').val(ui.item.label);
+				$('input[name=\'category_related_id\']').val(ui.item.value);
+				
+				return false;
+			},
+			focus: function(event, ui) {
+				return false;
+			}
+		});
+	//--></script> 
+
 <script type="text/javascript"><!--
 	
 	// Category
