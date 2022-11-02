@@ -90,8 +90,8 @@
 							<input type="hidden" value="<?php echo $product['quantity']; ?>" name="quainty" maxlength="4" />
 						<? } ?>
 					</div>
-					<?php if ($minimum > 1) { ?>
-						<div class="minimum"><?php echo $minimum; ?></div>
+					<?php if ($product['minimum'] > 1) { ?>
+						<div class="minimum"><?php echo $product['minimum']; ?></div>
 					<?php } ?>
 				</td>
 				<td class="total_price" style="text-align: center;">
