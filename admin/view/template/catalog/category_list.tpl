@@ -78,6 +78,7 @@
 							<td class="left" style="width:30px;">Уд. нал</td>
 							<td class="left" style="width:30px;">Меню в доч.</td>
 							<td class="left" style="width:30px;">Пересеч.</td>
+							<td class="left" style="width:30px;">Искл. из пересеч</td>
 							<td class="left" style="width:30px;">Priceva</td>
 							<td class="left" style="width:30px;">ТНВЭД</td>
 							<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
@@ -99,15 +100,11 @@
 										<input type="checkbox" name="selected[]" value="<?php echo $category['category_id']; ?>" />
 										<?php } ?></td>
 										<td class="left">
-
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:<?php if ($rollup_enabled) { ?><?php echo $levels[$category['level']]; ?><?php } else { ?>#4ea24e<?php } ?>; color:#FFF"><?php echo $category['category_id']; ?></span>									
-
 										</td>		
 										<?php if ($rollup_enabled) { ?>
 											<td class="left" style="font-size:18px;">
-
 												<b style="color:<?php echo $levels[$category['level']]; ?>">L<?php echo $category['level']; ?></b>
-
 											</td>
 										<?php } ?>
 
@@ -124,7 +121,7 @@
 											<?php } ?>
 										</td>
 
-										<td class="right">
+										<td class="center">
 											<? if ($category['status']) { ?>
 												<i class="fa fa-check" style="color:#4ea24e"></i>
 											<? } else { ?>
@@ -154,13 +151,12 @@
 													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56; color:#FFF; font-size:10px;">
 														<?php echo $category['amazon_category_id']; ?></span>
 
-
 													<? } else { ?>
 														<i class="fa fa-times" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>	
 
-												<td class="left">
+												<td class="center">
 													<? if ($category['amazon_sync_enable']) { ?>
 														<i class="fa fa-check" style="color:#4ea24e"></i>
 													<? } else { ?>
@@ -168,7 +164,7 @@
 													<? } ?>
 												</td>
 
-												<td class="left">
+												<td class="center">
 													<? if ($category['amazon_final_category']) { ?>
 														<i class="fa fa-check" style="color:#4ea24e"></i>
 													<? } else { ?>
@@ -176,7 +172,7 @@
 													<? } ?>
 												</td>		
 
-												<td class="left">
+												<td class="center">
 													<? if ($category['amazon_can_get_full']) { ?>
 														<i class="fa fa-check" style="color:#4ea24e"></i>
 													<? } else { ?>
@@ -185,7 +181,7 @@
 												</td>	
 											<?php } ?>
 
-												<td class="left">
+												<td class="center">
 													<? if ($category['google_category']) { ?>
 														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF; font-size:10px;"><?php echo $category['google_category']; ?></span>
 													<? } else { ?>
@@ -194,7 +190,7 @@
 												</td>	
 
 
-												<td class="left">
+												<td class="center">
 													<? if ($category['yandex_category_name']) { ?>
 														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF; font-size:10px;"><?php echo $category['yandex_category_name']; ?></span>
 
@@ -204,7 +200,7 @@
 												</td>																						
 
 
-												<td class="left">
+												<td class="center">
 													<img src="<?php echo $category['image']; ?>" height="50px" width="50px" />									
 												</td>			  
 												<td>
@@ -231,7 +227,7 @@
 													<? } ?>
 												</td>
 
-												<td class="left">
+												<td class="center">
 													<? if ($category['deletenotinstock']) { ?>
 														<i class="fa fa-check" style="color:#4ea24e"></i>
 													<? } else { ?>
@@ -239,7 +235,7 @@
 													<? } ?>
 												</td>
 
-												<td class="left">
+												<td class="center">
 													<? if ($category['submenu_in_children']) { ?>
 														<i class="fa fa-check" style="color:#4ea24e"></i>
 													<? } else { ?>
@@ -247,7 +243,7 @@
 													<? } ?>
 												</td>
 
-												<td class="left">
+												<td class="center">
 													<? if ($category['intersections']) { ?>
 														<i class="fa fa-check" style="color:#4ea24e"></i>
 													<? } else { ?>
@@ -255,7 +251,15 @@
 													<? } ?>
 												</td>
 
-												<td class="left">
+												<td class="center">
+													<? if ($category['exclude_from_intersections']) { ?>
+														<i class="fa fa-check" style="color:#4ea24e"></i>
+													<? } else { ?>
+														<i class="fa fa-times" style="color:#cf4a61"></i>
+													<? } ?>
+												</td>
+
+												<td class="center">
 													<? if ($category['priceva_enable']) { ?>
 														<i class="fa fa-check" style="color:#4ea24e"></i>
 													<? } else { ?>
@@ -263,7 +267,7 @@
 													<? } ?>
 												</td>
 
-												<td class="right">
+												<td class="center">
 													<? if ($category['tnved']) { ?>
 														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF"><?php echo $category['tnved']; ?></span>
 													<? } else { ?>

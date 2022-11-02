@@ -185,19 +185,22 @@
 				<div id="tab-products">
 					<table class="form">						
 						<tr>
-							<td style="width:20%">
+							<td style="width:15%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">ТНВЭД для товаров</span>
 							</td>
-							<td style="width:20%">
+							<td style="width:15%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Наценка</span>
 							</td>
-							<td style="width:20%">
+							<td style="width:15%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Отбор пересечений</span>
 							</td>
-							<td style="width:20%">
+							<td style="width:15%">
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Исключить из пересечений</span>
+							</td>
+							<td style="width:15%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Удалять товары не в наличии</span>
 							</td>
-							<td style="width:20%">
+							<td style="width:15%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Полное меню в дочерних категориях</span>
 							</td>
 						</tr>
@@ -211,6 +214,17 @@
 							<td>
 								<select name="intersections">
 									<?php if ($intersections) { ?>
+										<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+										<option value="0"><?php echo $text_disabled; ?></option>
+										<?php } else { ?>
+										<option value="1"><?php echo $text_enabled; ?></option>
+										<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+									<?php } ?>
+								</select>
+							</td>
+							<td>
+								<select name="exclude_from_intersections">
+									<?php if ($exclude_from_intersections) { ?>
 										<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
 										<option value="0"><?php echo $text_disabled; ?></option>
 										<?php } else { ?>

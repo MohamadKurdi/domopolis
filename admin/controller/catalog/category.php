@@ -278,12 +278,12 @@ class ControllerCatalogCategory extends Controller {
 					'deletenotinstock'			=> $real_category['deletenotinstock'],
 					'priceva_enable'			=> $real_category['priceva_enable'],
 					'submenu_in_children'		=> $real_category['submenu_in_children'],
-					'intersections'				=> $real_category['intersections'],
+					'intersections'								=> $real_category['intersections'],
+					'exclude_from_intersections'				=> $real_category['exclude_from_intersections'],
 					'default_length'			=> $real_category['default_length'],
 					'default_width'				=> $real_category['default_width'],
 					'default_height'			=> $real_category['default_height'],
-					'default_weight'			=> $real_category['default_weight'],
-					'intersections'				=> $real_category['intersections'],
+					'default_weight'			=> $real_category['default_weight'],					
 					'status'					=> $real_category['status'],
 					'selected'    				=> isset($this->request->post['selected']) && in_array($result['category_id'], $this->request->post['selected']),
 					'action'      				=> $action
@@ -712,6 +712,14 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['intersections'] = $category_info['intersections'];
 		} else {
 			$this->data['intersections'] = 0;
+		}
+
+		if (isset($this->request->post['exclude_from_intersections'])) {
+			$this->data['exclude_from_intersections'] = $this->request->post['exclude_from_intersections'];
+		} elseif (!empty($category_info)) {
+			$this->data['exclude_from_intersections'] = $category_info['exclude_from_intersections'];
+		} else {
+			$this->data['exclude_from_intersections'] = 0;
 		}
 
 		if (isset($this->request->post['virtual_parent_id'])) {
