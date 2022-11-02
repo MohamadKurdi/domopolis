@@ -36,7 +36,7 @@
 				pd.language_id = '2'
 				AND p.status = '1'
 				AND p.date_available <= NOW()
-				AND p2s.store_id = '0'
+				AND p2s.store_id = '0'								
 				AND cp.path_id = '" . (int)$category_id . "'";
 
 			if ($this->config->get('config_special_category_id') && (int)$category_id == (int)$this->config->get('config_special_category_id')) {
@@ -54,6 +54,7 @@
 			$sql .= "  AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ";
 			$sql .= "  AND cp1.category_id <> '" . (int)$category_id . "'";
 			$sql .= "  AND c1.status = 1";
+			$sql .= "  AND c1.exclude_from_intersections <> 1";
 			$sql .= "  AND c1.intersections = 0";
 			$sql .= "  AND cd1.language_id = 2";		
 

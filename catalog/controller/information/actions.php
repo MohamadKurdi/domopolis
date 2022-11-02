@@ -172,9 +172,9 @@ class ControllerInformationActions extends Controller {
 
 		$this->data['product_related'] = $this->model_catalog_product->prepareProductToArray($results);
 
+		$this->data['product_groups'] = [];
 		if (!empty($action_info['category_related_id']) && !$action_info['category_related_no_intersections']){
-			$this->data['product_groups'] = [];
-
+			
 			$intersections = $this->model_catalog_category->getCategoriesIntersections($action_info['category_related_id']);
 
 			foreach ($intersections as $intersection){
@@ -200,10 +200,7 @@ class ControllerInformationActions extends Controller {
 						'products' 	=> $this->model_catalog_product->prepareProductToArray($products)
 					];
 				}
-
 			}
-
-
 		}
 
 		if ($action_info['coupon']){
