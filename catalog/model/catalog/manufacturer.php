@@ -1,7 +1,12 @@
 <?php
 	class ModelCatalogManufacturer extends Model {
 		public function getManufacturer($manufacturer_id) {
-			$query = $this->db->query("SELECT * FROM manufacturer m LEFT JOIN manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id) LEFT JOIN manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id) WHERE m.manufacturer_id = '" . (int)$manufacturer_id . "' AND (md.language_id = '" . (int)$this->config->get('config_language_id') . "' OR md.language_id is null) AND m2s.store_id = '" . (int)$this->config->get('config_store_id') . "'");
+			$query = $this->db->query("SELECT * FROM manufacturer m 
+				LEFT JOIN manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id) 
+				LEFT JOIN manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id) 
+				WHERE m.manufacturer_id = '" . (int)$manufacturer_id . "' 
+				AND (md.language_id = '" . (int)$this->config->get('config_language_id') . "' OR md.language_id is null) 
+				AND m2s.store_id = '" . (int)$this->config->get('config_store_id') . "'");
 			
 			return $query->row;	
 		}
@@ -9,17 +14,22 @@
 		public function getAllCountryBrands(){
 			$query = $this->db->query("SELECT * FROM countrybrand oc
 			LEFT JOIN countrybrand_description ocd ON (oc.countrybrand_id = ocd.countrybrand_id)  
-			LEFT JOIN countrybrand_to_store oc2s ON (oc.countrybrand_id = oc2s.countrybrand_id)  
+			LEFT JOIN countrybrand_to_store oc2s ON (oc.countrybrand_id = oc2s.countrybrand_id)
+			LEFT JOIN manufacturer_description md ON (TRIM(ocd.type) = TRIM(md.location) AND md.language_id = '" . (int)$this->config->get('config_language_id') . "')
+			LEFT JOIN manufacturer_to_store m2s ON (md.manufacturer_id = m2s.manufacturer_id) 
 			WHERE ocd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND md.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND m2s.store_id = '" . (int)$this->config->get('config_store_id') . "'
 			AND oc2s.store_id = '" . (int)$this->config->get('config_store_id') . "'
+			GROUP BY oc.countrybrand_id
+			HAVING COUNT(md.manufacturer_id) > 0
 			ORDER BY name ASC");
 			
 			foreach ($query->rows as &$row){
 				if (!empty($row['name_overload'])){
 					$row['seo_title'] = str_replace($row['name'], $row['name_overload'], $row['seo_title']);
 					$row['seo_h1'] = str_replace($row['name'], $row['name_overload'], $row['seo_h1']);
-					$row['meta_description'] = str_replace($row['name'], $row['name_overload'], $row['meta_description']);
-					
+					$row['meta_description'] = str_replace($row['name'], $row['name_overload'], $row['meta_description']);					
 					$row['name'] = $row['name_overload'];
 				}
 			}
@@ -71,17 +81,6 @@
 		}
 		
 		public function getPopularManufacturersByCategories($category_id, $limit = 10){
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 		}
 		
 		public function getManufacturerDescriptions($manufacturer_id) {
@@ -121,7 +120,7 @@
 				}
 				
 				if (isset($data['filter_country'])) {
-					$sql .= " AND md.location = '" . $this->db->escape($data['filter_country']) . "'";
+					$sql .= " AND TRIM(md.location) = '" . $this->db->escape($data['filter_country']) . "'";
 				}
 				
 				
