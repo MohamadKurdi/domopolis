@@ -105,12 +105,11 @@
 									<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <input type="text" style="margin-bottom:5px;" id="countrybrand_description_<?php echo $language['language_id']; ?>_type" name="countrybrand_description[<?php echo $language['language_id']; ?>][type]" value="<?php if (isset($countrybrand_description[$language['language_id']]['type'])) { echo $countrybrand_description[$language['language_id']]['type']; } ?>" />
 									
 									<i class="fa fa-arrow-left"></i>
-
 									
 									<?php if (!empty($locations[$language['language_id']])) { ?>
-										<select class="copyselect" data-language-id="<?php echo $language['language_id']; ?>" id="locations_<?php echo $locations[$language['language_id']]; ?>">
+										<select class="copyselect" data-language-id="<?php echo $language['language_id']; ?>" id="locations_<?php echo $language['language_id']; ?>">
 											<?php foreach ($locations[$language['language_id']] as $location) { ?>
-											<option value="<?php echo $location; ?>"><?php echo $location; ?></option>											
+											<option value="<?php echo $location; ?>" <?php if ($location == $countrybrand_description[$language['language_id']]['type']) { ?>selected="selected"<? } ?>><?php echo $location; ?></option>											
 											<?php } ?>
 										</select>
 									<?php } ?><br />
