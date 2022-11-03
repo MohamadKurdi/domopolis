@@ -58,8 +58,7 @@
 					'ecomm_totalvalue' => 0
 					);
 					
-				} 
-				
+				} 				
 				
 				
 				$this->document->setKeywords($countrybrand_info['meta_keyword']);
@@ -81,6 +80,8 @@
 				);
 				
 				$results = $this->model_catalog_manufacturer->getManufacturers($filter_data);
+
+				$this->log->debug($results);
 				
 				foreach ($results as $result) {
 					if ($result['sort_order'] != -1) {
