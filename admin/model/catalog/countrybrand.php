@@ -17,19 +17,21 @@
 		
 			$descriptions = $this->getCountrybrandDescriptions($countrybrand_id);
 		
-			$query = $this->db->query("SELECT COUNT(DISTINCT manufacturer_id) as total FROM manufacturer_description WHERE LENGTH(location) > 0 AND language_id = '" . (int)$this->config->get('config_language_id') . "' AND TRIM(location) = '" . $this->db->escape(trim($descriptions[$this->config->get('config_language_id')]['type'])) . "'");
+			$query = $this->db->query("SELECT COUNT(DISTINCT manufacturer_id) as total FROM manufacturer_description WHERE LENGTH(location) > 0 
+				AND language_id = '" . (int)$this->config->get('config_language_id') . "' 
+				AND TRIM(location) = '" . $this->db->escape(trim($descriptions[$this->config->get('config_language_id')]['type'])) . "'");
 			
 			return $query->row['total'];
 		}
 		
 		public function getAllCountrybrands(){
-			$query = $this->db->query("SELECT * FROM countrybrand oc LEFT JOIN countrybrand_description ocd ON (oc.countrybrand_id = ocd.countrybrand_id)  WHERE ocd.language_id = " . (int)$this->config->get('config_language_id'));
+			$query = $this->db->query("SELECT * FROM countrybrand oc LEFT JOIN countrybrand_description ocd ON (oc.countrybrand_id = ocd.countrybrand_id) 
+				WHERE ocd.language_id = " . (int)$this->config->get('config_language_id'));
 			
 			return $query->rows;
 		}
 		
-		public function getCountrybrandById($countrybrand_id){
-			
+		public function getCountrybrandById($countrybrand_id){			
 			if ($countrybrand_id > 0){
 				
 				$query = $this->db->query("SELECT * FROM countrybrand oc LEFT JOIN countrybrand_description ocd ON (oc.countrybrand_id = ocd.countrybrand_id) WHERE ocd.language_id = " . (int)$this->config->get('config_language_id') . " AND oc.countrybrand_id = " . (int)$countrybrand_id . " LIMIT 1");

@@ -128,8 +128,7 @@
 			$this->getList();
 		}
 		
-		protected function getList() {
-			// Нужно получть список всех производителей
+		protected function getList() {			
 			$this->load->model('catalog/manufacturer');
 			$this->data['brandArray'] = $this->model_catalog_manufacturer->getManufacturers();
 			$this->data['control_brand'] = isset($_GET['manufacturer_id']) ? $_GET['manufacturer_id'] : 0; 
