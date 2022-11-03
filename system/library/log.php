@@ -49,8 +49,10 @@
 		
 		public function debug($variable, $message = false, $sql = false, $echo = false){
 			
-			if ((defined('IS_DEBUG') && IS_DEBUG) || $echo || php_sapi_name()=== 'cli') {
-				print '<pre>';									
+			if ((defined('IS_DEBUG') && IS_DEBUG) || $echo || is_cli()) {	
+
+				if (!is_cli()) { print '<pre>';	}
+
 				if ($message){
 					print_r($message);
 				}
@@ -64,7 +66,8 @@
 						var_dump($variable);
 					}
 				}
-				print '</pre>';
+
+				if (!is_cli()) { print '</pre>'; }
 			}
 			
 		}
