@@ -60,12 +60,12 @@ class ControllerDPService extends Controller {
 		
 		if ($this->config->get('config_disable_empty_categories')){
 			echoLine('[ControllerDPService::countProducts] DISABLE EMPTY CATEGORIES = YES');
-			$this->db->query("UPDATE category SET status = '0' WHERE product_count = 0");
+	//		$this->db->query("UPDATE category SET status = '0' WHERE product_count = 0");
 		}
 
 		if ($this->config->get('config_enable_non_empty_categories')){
 			echoLine('[ControllerDPService::countProducts] ENABLE NON-EMPTY CATEGORIES = YES');
-			$this->db->query("UPDATE category SET status = '1' WHERE product_count > 0");
+	//		$this->db->query("UPDATE category SET status = '1' WHERE product_count > 0");
 		}
 
 	}
