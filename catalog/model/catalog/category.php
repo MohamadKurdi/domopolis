@@ -81,7 +81,7 @@
 			return $query->rows;
 		}
 		
-		public function getCategories($parent_id = 0, $limit = false) {
+		public function getCategories($parent_id = 0, $limit = 0) {
 			
 			if ($parent_id == 0){
 				$virtual_parent_id = -3;
@@ -89,7 +89,15 @@
 				$virtual_parent_id = $parent_id;
 			}
 			
-			$sql = "SELECT *, IFNULL(cd.menu_name, cd.name) as name FROM category c LEFT JOIN category_description cd ON (c.category_id = cd.category_id) LEFT JOIN category_to_store c2s ON (c.category_id = c2s.category_id) WHERE (c.parent_id = '" . (int)$parent_id . "' OR c.virtual_parent_id = '" . (int)$virtual_parent_id . "') AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "'  AND c.status = '1' ORDER BY c.sort_order, LCASE(cd.name)";
+			$sql = "SELECT *, IFNULL(cd.menu_name, cd.name) as name 
+			FROM category c 
+			LEFT JOIN category_description cd ON (c.category_id = cd.category_id) 
+			LEFT JOIN category_to_store c2s ON (c.category_id = c2s.category_id) 
+			WHERE (c.parent_id = '" . (int)$parent_id . "' OR c.virtual_parent_id = '" . (int)$virtual_parent_id . "') 
+				AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+				AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+				AND c.status = '1' 
+				ORDER BY c.sort_order DESC, LCASE(cd.name)";
 			
 			if ((int)$limit < 0){
 				$limit = 0;
@@ -98,7 +106,7 @@
 			}
 			
 			if ($limit){
-			$sql .= " LIMIT 0, $limit";
+				$sql .= " LIMIT 0, $limit";
 			}
 			
 			$query = $this->db->query($sql);

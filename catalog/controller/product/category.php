@@ -618,7 +618,7 @@
 
 								$children = [];
 								if ($this->config->get('config_second_level_subcategory_in_categories')){
-									$child_results = $this->model_catalog_category->getCategories($result['category_id']);
+									$child_results = $this->model_catalog_category->getCategories($result['category_id'], $this->config->get('config_subcategories_limit'));
 
 									foreach ($child_results as $child_result) {								
 										if ($child_result['menu_name']){
