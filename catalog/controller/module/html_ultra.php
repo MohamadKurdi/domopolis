@@ -1,7 +1,6 @@
 <?php  
 class ControllerModuleHtmlUltra extends Controller {
 	protected function index($setting) {
-//ставим значения отображения модуля по умолчанию активным
 			$show_html_ultra = "1";
 			$show_html_ultra_t = "1";
 			
@@ -15,17 +14,11 @@ class ControllerModuleHtmlUltra extends Controller {
 				}
 			} 		
 			
-			//узнаем использовать ли php 
 			$this->data['php_on']=html_entity_decode($setting['php_status'], ENT_QUOTES, 'UTF-8');
 			
-			//Проверяем соотвтетствует ли условию вывода данный модуль
-			//щетчик наличия доп настройки
 			$count_dop_setting=0;
-			//щетчик что доп настройка равна 1
 			$count_true=0; 
 			 
-			//Период 
-			date_default_timezone_set('Europe/Moscow');
 			if (!empty($setting['datetime_from']) and !empty($setting['datetime_to'])){
 				if ((strtotime(date("d-m-Y H:i:s")) >= strtotime($setting['datetime_from'])) and (strtotime(date("d-m-Y H:i:s")) <= strtotime($setting['datetime_to']))){
 					$count_dop_setting++; 
@@ -35,7 +28,6 @@ class ControllerModuleHtmlUltra extends Controller {
 				}
 			}
 			
-			//Время 
 			if (!empty($setting['time_from']) and !empty($setting['time_to'])){
 				if ((strtotime(date("H:i:s")) >= strtotime($setting['time_from'])) and (strtotime(date("H:i:s")) <= strtotime($setting['time_to']))) {
 					$count_dop_setting++; 
@@ -44,7 +36,7 @@ class ControllerModuleHtmlUltra extends Controller {
 					$count_dop_setting++;
 				}
 			}
-			//дни недели
+
 			if (!empty($setting['time_day'])){
 				$count_dop_setting++;
 				foreach ($setting['time_day'] as $day_key => $day){
@@ -55,8 +47,6 @@ class ControllerModuleHtmlUltra extends Controller {
 				}				
 			}
 
-			 
-			//магазин
 			if((isset($setting['paragraph_status']['store']) and $setting['paragraph_status']['store'] == "0"))	{
 				if (!empty($setting['product_store'])){
 					if (!empty($setting['product_store'][$this->config->get('config_store_id')])){
@@ -76,7 +66,7 @@ class ControllerModuleHtmlUltra extends Controller {
 					}
 				}				
 			}
-			//Производитель
+
 			if (isset($this->request->get['route'])){
 				if(strpos($this->request->get['route'], "manufacturer") !== false){
 					if((isset($setting['paragraph_status']['manufacturer']) and $setting['paragraph_status']['manufacturer'] == "0"))	{
@@ -111,7 +101,6 @@ class ControllerModuleHtmlUltra extends Controller {
 				}	
 			}
 					
-			//Категории	
 			if (isset($this->request->get['route'])){
 				if(strpos($this->request->get['route'], "category") !== false){
 					if((isset($setting['paragraph_status']['category']) and $setting['paragraph_status']['category'] == "0"))	{			
@@ -149,7 +138,6 @@ class ControllerModuleHtmlUltra extends Controller {
 				}	
 			}
 		 	
-			//учитавать для товаров категории и производителей
 			if(isset($this->request->get['product_id'])){
 				if (isset($setting['produkt_consider']['category'])){
 					//включаем для товаров в категории
@@ -176,7 +164,6 @@ class ControllerModuleHtmlUltra extends Controller {
 				}
 				
 				if (isset($setting['produkt_consider']['manufacturer'])){
-					//включаем для товаров от производителя
 					if ($setting['paragraph_status']['manufacturer'] == "0"){
 						$count_dop_setting++;
 						foreach ($setting['manufacturer'] as $manufacturer_id => $manufacturer_value){
@@ -186,8 +173,7 @@ class ControllerModuleHtmlUltra extends Controller {
 									break;
 								}
 						}
-					}else {
-					//исключаем для товаров от производителя
+					} else {
 					foreach ($setting['manufacturer'] as $manufacturer_id => $manufacturer_value){
 						$produkt_manufacturer = $this->model_module_html_ultra->getProduktManufacturer($this->request->get['product_id'],$manufacturer_id);
 							if ($produkt_manufacturer){
@@ -199,8 +185,6 @@ class ControllerModuleHtmlUltra extends Controller {
 			}			
 			
 			
-				
-			//Товар	
 			if(isset($this->request->get['product_id'])){
 				if((isset($setting['paragraph_status']['product']) and $setting['paragraph_status']['product'] == "0"))	{			
 					if (!empty($setting['product'])){ 
@@ -231,7 +215,6 @@ class ControllerModuleHtmlUltra extends Controller {
 				}	
 			}		
 			
-			//Группа клиента
 				if((isset($setting['paragraph_status']['grup_сustomers']) and $setting['paragraph_status']['grup_сustomers'] == "0"))	{			
 					if (!empty($setting['grup_clients'])){
 						if (!empty($setting['grup_clients'][$this->config->get('config_customer_group_id')])){
@@ -252,7 +235,7 @@ class ControllerModuleHtmlUltra extends Controller {
 					}				
 				}				
 
-			//Клиент	
+		
 			if((isset($setting['paragraph_status']['сustomer']) and $setting['paragraph_status']['сustomer'] == "0"))	{				
 				if (!empty($setting['сustomer'])){
 					if (!empty($setting['сustomer'][$this->customer->getId()])){
@@ -272,7 +255,8 @@ class ControllerModuleHtmlUltra extends Controller {
 					}
 				}
 			}
-			//Язык	
+			
+
 			if((isset($setting['paragraph_status']['language']) and $setting['paragraph_status']['language'] == "0"))	{		
 				if (!empty($setting['language_m'])){
 					if (!empty($setting['language_m'][$this->config->get('config_language_id')])){
@@ -292,7 +276,8 @@ class ControllerModuleHtmlUltra extends Controller {
 					}				
 				}
 			}
-			//Страницы	
+			
+
 			if (isset($this->request->get['information_id'])){
 				if((isset($setting['paragraph_status']['information']) and $setting['paragraph_status']['information'] == "0"))	{			
 					if (!empty($setting['information'])){ 
@@ -323,7 +308,7 @@ class ControllerModuleHtmlUltra extends Controller {
 				}
 			}		
 			
-			//авторизация 
+		
 			if (!empty($setting['authorization'])){
 				if ($setting['authorization'] =="1"){
 					$count_dop_setting++; 
@@ -341,17 +326,13 @@ class ControllerModuleHtmlUltra extends Controller {
 				}
 			}		
 			  
-			//узнаем использовать ли оформление
+
 			$this->data['decor_status'] = $setting['decor_status'];
-			//Значение заголовка и содержимого
 			$html_ultra_title 	= html_entity_decode($setting['module_description'][$this->config->get('config_language_id')]['title'], ENT_QUOTES, 'UTF-8');
 			$html_ultra_description 	= html_entity_decode($setting['module_description'][$this->config->get('config_language_id')]['description'], ENT_QUOTES, 'UTF-8');
-			//код офрмелния
 			$html_ultra_decor 	= html_entity_decode($setting['html_ultra_decor'], ENT_QUOTES, 'UTF-8');
-			//стиль оформления 
 			$this->data['html_ultra_css'] 	= html_entity_decode($setting['html_ultra_css'], ENT_QUOTES, 'UTF-8');
 			
-			//Использование короткого кода
 			$ticket_description= array(
 					'[title]' => html_entity_decode($setting['module_description'][$this->config->get('config_language_id')]['title'], ENT_QUOTES, 'UTF-8'),
 					'[content]' => html_entity_decode($setting['module_description'][$this->config->get('config_language_id')]['description'], ENT_QUOTES, 'UTF-8'),		
@@ -372,7 +353,7 @@ class ControllerModuleHtmlUltra extends Controller {
 					'[language::id]' => $this->config->get('config_language_id'),
 					'[language::code]' => $this->config->get('config_language') 
 				); 
-			//стоит ли использовать оформелние  
+
 			if ($setting['decor_status']==1){
 				foreach ($ticket_description as $key_ticket =>$ticket_result){
 					$html_ultra_decor = str_replace($key_ticket,$ticket_result,$html_ultra_decor);
@@ -386,7 +367,6 @@ class ControllerModuleHtmlUltra extends Controller {
 				$this->data['html_ultra'] = $html_ultra_description;								
 			}  
 											
-			//вывод модуля если все условия учтены  
 			$show_html_ultra = ($count_dop_setting != $count_true)? "0" : "1";
 			$this->data['show_html_ultra_view'] = $show_html_ultra;
 			
@@ -394,16 +374,8 @@ class ControllerModuleHtmlUltra extends Controller {
 			
 			$this->data['test_setting'] = $setting;
 
-			
-			
-			
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/html_ultra.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/module/html_ultra.tpl';
-		} else {
-			$this->template = 'default/template/module/html_ultra.tpl';
-		}
+		$this->template = 'module/html_ultra';
 		
 		$this->render();
 	}
 }
-?>
