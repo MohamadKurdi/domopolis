@@ -4,8 +4,6 @@ const OFFLINE_HTML 	= '/offline.page.html';
 const PRECACHE = [{url: OFFLINE_HTML, revision: '1003'}];
 
 workbox.precaching.precacheAndRoute(PRECACHE);
-
-
 workbox.navigationPreload.enable();
 workbox.googleAnalytics.initialize();
 
@@ -15,9 +13,9 @@ workbox.routing.registerRoute(
 		cacheName: 'css',
 		plugins: [
 		new workbox.expiration.ExpirationPlugin({                
-                maxEntries: 100,
-                purgeOnQuotaError: true,
-            }),
+			maxEntries: 100,
+			purgeOnQuotaError: true,
+		}),
 		],
 	})
 	);
@@ -28,9 +26,9 @@ workbox.routing.registerRoute(
 		cacheName: 'js',
 		plugins: [
 		new workbox.expiration.ExpirationPlugin({                
-                maxEntries: 100,
-                purgeOnQuotaError: true,
-            }),
+			maxEntries: 100,
+			purgeOnQuotaError: true,
+		}),
 		],
 	})
 	);
@@ -41,9 +39,9 @@ workbox.routing.registerRoute(
 		cacheName: 'fonts',
 		plugins: [
 		new workbox.expiration.ExpirationPlugin({                
-                maxEntries: 20,
-                purgeOnQuotaError: true,
-            }),
+			maxEntries: 20,
+			purgeOnQuotaError: true,
+		}),
 		],
 	})
 	);
@@ -67,9 +65,9 @@ workbox.routing.registerRoute(
 		cacheName: 'images',
 		plugins: [
 		new workbox.expiration.ExpirationPlugin({                
-                maxEntries: 200,
-                purgeOnQuotaError: true,
-            }),
+			maxEntries: 200,
+			purgeOnQuotaError: true,
+		}),
 		],
 	})
 	);
