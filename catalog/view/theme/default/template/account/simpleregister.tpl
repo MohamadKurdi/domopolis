@@ -186,7 +186,7 @@
         <?php } ?>
     </form>
     <div class="social_register">
-        <span class="title">Войти с помощью:</span>
+        <span class="title"><?php echo $text_register_with; ?></span>
         <div class="btn-group-register">
 
             <?php if ($this->config->get('social_auth_google_app_id')) { ?>

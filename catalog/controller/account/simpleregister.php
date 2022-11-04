@@ -47,6 +47,7 @@ class ControllerAccountSimpleRegister extends SimpleController {
         $this->_templateData['text_account_already'] = sprintf($this->language->get('text_account_already'), $this->url->link('account/login', '', 'SSL'));
         $this->_templateData['login_link'] = $this->url->link('account/login', '', 'SSL');
         $this->_templateData['button_continue']      = $this->language->get('button_continue');
+        $this->_templateData['text_register_with']      = $this->language->get('text_register_with');
 
         $this->_templateData['error_warning'] = '';
         $this->_templateData['error_agreement'] = '';
