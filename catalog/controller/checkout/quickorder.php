@@ -151,7 +151,7 @@
 									$this->load->model('account/customer');
 									
 									$this->model_account_customer->addCustomer(array(
-									'firstname' => 'Клиент',
+									'firstname' => $this->language->get('text_client'),
 									'lastname' 	=> $phone,
 									'customer_group_id' => $this->config->get('config_customer_group_id'),
 									'email' 	=> $phone,
@@ -268,7 +268,7 @@
 								$data['customer_id'] = 0;
 								$data['lastname'] = '';
 								// TODO
-								$data['firstname'] = 'Клиент';
+								$data['firstname'] = $this->language->get('text_client');
 								$data['email'] = $phone;
 								$data['fax'] ='';
 								$data['customer_group_id'] = '';
@@ -617,7 +617,7 @@
 						$this->load->model('account/customer');
 						
 						$this->model_account_customer->addCustomer(array(
-						'firstname' => 'Клиент',
+						'firstname' => $this->language->get('text_client'),
 						'lastname' 	=> $phone,
 						'email' 	=> $phone,
 						'telephone' => $phone,
@@ -702,7 +702,7 @@
 					$data['customer_id'] = 0;
 					$data['lastname'] = '';
 					// TODO
-					$data['firstname'] = 'Клиент';
+					$data['firstname'] = $this->language->get('text_client');
 					$data['email'] = $phone;
 					$data['fax'] ='';
 					$data['customer_group_id'] = '';
@@ -1028,7 +1028,7 @@
 							$this->load->model('account/customer');
 							
 							$this->model_account_customer->addCustomer(array(
-							'firstname' => 'Клиент',
+							'firstname' => $this->language->get('text_client'),
 							'lastname' => 'Быстрый заказ',
 							'email' => $phone,
 							'telephone' => $phone,
@@ -1142,7 +1142,7 @@
 						$data['customer_id'] = 0;
 						$data['lastname'] = '';
 						// TODO
-						$data['firstname'] = 'Клиент';
+						$data['firstname'] = $this->language->get('text_client');
 						$data['email'] = $phone;
 						$data['fax'] ='';
 						$data['customer_group_id'] = '';
