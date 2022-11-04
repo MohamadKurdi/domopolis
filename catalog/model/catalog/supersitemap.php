@@ -8,7 +8,10 @@
 			p.date_added, 
 			p.date_modified, 
 			p.image, 
-			pd.name FROM product p 
+			pd.name,
+			(SELECT GROUP_CONCAT(pi5.image SEPARATOR ':') FROM product_image pi5 WHERE pi5.product_id = p.product_id GROUP BY pi5.product_id) as images,
+			(SELECT GROUP_CONCAT(pv5.video SEPARATOR ':') FROM product_video pv5 WHERE pv5.product_id = p.product_id GROUP BY pv5.product_id) as videos
+			FROM product p 
 			LEFT JOIN product_description pd ON ( p.product_id = pd.product_id ) 
 			JOIN product_to_store p2s ON (p.product_id = p2s.product_id)
 			WHERE 

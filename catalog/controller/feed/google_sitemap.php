@@ -93,7 +93,6 @@ class ControllerFeedGoogleSitemap extends Controller {
 				continue;
 			}
 
-
 			$this->loadSettings($store_id);			
 			echoLine('[CRON2] Магазин ' . $store_id . ', язык ' . $this->config->get('config_language'));
 			$this->makeFeedsCron();
@@ -110,6 +109,7 @@ class ControllerFeedGoogleSitemap extends Controller {
 			$this->load->model('catalog/supersitemap');	
 			$this->load->model('catalog/product');
 			$this->load->model('tool/image');
+			$this->load->model('tool/video');
 			$this->load->model('catalog/category');
 			$this->load->model('catalog/manufacturer');
 			$this->load->model('catalog/countrybrand');
@@ -165,19 +165,41 @@ class ControllerFeedGoogleSitemap extends Controller {
 
 				$output  = '<?xml version="1.0" encoding="UTF-8"?>';
 				$output .= ' <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-
-				xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' . PHP_EOL;
+				xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+				xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">' . PHP_EOL;
 
 				$products = $this->model_catalog_supersitemap->getProducts($start, $this->limit);
 
 				foreach ($products as $product) {
 					$output .= '<url>' . PHP_EOL;
 					$output .= '<loc><![CDATA[' . $this->url->link('product/product', 'product_id=' . $product['product_id']) . ']]></loc>' . PHP_EOL;
+					
 					$output .= '<image:image>' . PHP_EOL;
 					$output .= '<image:loc><![CDATA[' . $this->model_tool_image->resize($product['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')) . ']]></image:loc>' . PHP_EOL;
 					$output .= '<image:caption><![CDATA[' . $product['name'] . ']]></image:caption>' . PHP_EOL;
 					$output .= '<image:title><![CDATA[' . $product['name'] . ']]></image:title>' . PHP_EOL;
 					$output .= '</image:image>' . PHP_EOL;
+
+				/*	if ($product['images'] && $images = explode(':', $product['images'])){
+						foreach ($images as $image){
+							$output .= '<image:image>' . PHP_EOL;
+							$output .= '<image:loc><![CDATA[' . $this->model_tool_image->resize($image, $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')) . ']]></image:loc>' . PHP_EOL;
+							$output .= '<image:caption><![CDATA[' . $product['name'] . ']]></image:caption>' . PHP_EOL;
+							$output .= '<image:title><![CDATA[' . $product['name'] . ']]></image:title>' . PHP_EOL;
+							$output .= '</image:image>' . PHP_EOL;
+						}
+					}
+				*/
+
+					if ($product['videos'] && $videos = explode(':', $product['videos'])){
+						foreach ($videos as $video){
+							$output .= '<video:video>' . PHP_EOL;
+							$output .= '<video:content_loc><![CDATA[' . $this->model_tool_video->getPath($video) . ']]></video:content_loc>' . PHP_EOL;
+							$output .= '<video:title><![CDATA[' . $product['name'] . ']]></video:title>' . PHP_EOL;
+							$output .= '</video:video>' . PHP_EOL;
+						}
+					}
+
 					$output .= '<lastmod>' . substr(max($product['date_added'], $product['date_modified']), 0, 10) . '</lastmod>' . PHP_EOL;
 					$output .= '<changefreq>weekly</changefreq>' . PHP_EOL;
 					$output .= '<priority>0.9</priority>' . PHP_EOL;
