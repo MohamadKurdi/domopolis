@@ -201,8 +201,6 @@
 				}
 				
 			}
-			
-			
 		}
 		
 		public function cronAttributesUA(){
@@ -295,8 +293,7 @@
 				}
 				
 			}
-		}
-		
+		}	
 		
 		public function cronProductsUA(){
 
@@ -480,8 +477,7 @@
 				echoLine('[TR] Нет товаров для перевода:)');
 				
 			}
-		}
-		
+		}	
 		
 		public function cronCollectionsUA(){
 
@@ -568,9 +564,6 @@
 				echoLine('[TR] Нет товаров для перевода:)');
 				
 			}
-			
-			
-			
 		}
 		
 	}																								
