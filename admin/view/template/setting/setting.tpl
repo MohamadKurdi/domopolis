@@ -2391,77 +2391,87 @@
 									<td style="width:15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_image_category; ?></span></p>
 
-										<input type="text" name="config_image_category_width" value="<?php echo $config_image_category_width; ?>" size="3" />
+										<input type="number" name="config_image_category_width" value="<?php echo $config_image_category_width; ?>" size="50" style="width:100px;" />
 										x
-										<input type="text" name="config_image_category_height" value="<?php echo $config_image_category_height; ?>" size="3" />
+										<input type="number" name="config_image_category_height" value="<?php echo $config_image_category_height; ?>" size="50" style="width:100px;" />
+									</td>
+
+									<td style="width:15%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Изображения подкатегорий</span></p>
+
+										<input type="number" name="config_image_subcategory_width" value="<?php echo $config_image_subcategory_width; ?>" size="50" style="width:100px;" />
+										x
+										<input type="number" name="config_image_subcategory_height" value="<?php echo $config_image_subcategory_height; ?>" size="50" style="width:100px;" />
 									</td>
 
 									<td style="width:15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_image_thumb; ?></span></p>
 
-										<input type="text" name="config_image_thumb_width" value="<?php echo $config_image_thumb_width; ?>" size="3" />
+										<input type="number" name="config_image_thumb_width" value="<?php echo $config_image_thumb_width; ?>" size="50" style="width:100px;" />
 										x
-										<input type="text" name="config_image_thumb_height" value="<?php echo $config_image_thumb_height; ?>" size="3" />
+										<input type="number" name="config_image_thumb_height" value="<?php echo $config_image_thumb_height; ?>" size="50" style="width:100px;" />
 									</td>
 
 									<td style="width:15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_image_popup; ?></span></p>
 
-										<input type="text" name="config_image_popup_width" value="<?php echo $config_image_popup_width; ?>" size="3" />
+										<input type="number" name="config_image_popup_width" value="<?php echo $config_image_popup_width; ?>" size="50" style="width:100px;" />
 										x
-										<input type="text" name="config_image_popup_height" value="<?php echo $config_image_popup_height; ?>" size="3" />
+										<input type="number" name="config_image_popup_height" value="<?php echo $config_image_popup_height; ?>" size="50" style="width:100px;" />
 									</td>
 
 									<td style="width:15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_image_product; ?></span></p>
 
-										<input type="text" name="config_image_product_width" value="<?php echo $config_image_product_width; ?>" size="3" />
+										<input type="number" name="config_image_product_width" value="<?php echo $config_image_product_width; ?>" size="50" style="width:100px;" />
 										x
-										<input type="text" name="config_image_product_height" value="<?php echo $config_image_product_height; ?>" size="3" />
+										<input type="number" name="config_image_product_height" value="<?php echo $config_image_product_height; ?>" size="50" style="width:100px;" />
 									</td>
 
 									<td style="width:15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_image_additional; ?></span></p>
 
-										<input type="text" name="config_image_additional_width" value="<?php echo $config_image_additional_width; ?>" size="3" />
+										<input type="number" name="config_image_additional_width" value="<?php echo $config_image_additional_width; ?>" size="50" style="width:100px;" />
 										x
-										<input type="text" name="config_image_additional_height" value="<?php echo $config_image_additional_height; ?>" size="3" />
+										<input type="number" name="config_image_additional_height" value="<?php echo $config_image_additional_height; ?>" size="50" style="width:100px;" />
 									</td>
 
-									<td style="width:15%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_image_related; ?></span></p>
-
-										<input type="text" name="config_image_related_width" value="<?php echo $config_image_related_width; ?>" size="3" />
-										x
-										<input type="text" name="config_image_related_height" value="<?php echo $config_image_related_height; ?>" size="3" />
-									</td>
+								
 
 								</tr>
 								<tr>
 
 									<td style="width:15%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_image_related; ?></span></p>
+
+										<input type="number" name="config_image_related_width" value="<?php echo $config_image_related_width; ?>" size="50" style="width:100px;" />
+										x
+										<input type="number" name="config_image_related_height" value="<?php echo $config_image_related_height; ?>" size="50" style="width:100px;" />
+									</td>
+
+									<td style="width:15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_image_compare; ?></span></p>
 
-										<input type="text" name="config_image_compare_width" value="<?php echo $config_image_compare_width; ?>" size="3" />
+										<input type="number" name="config_image_compare_width" value="<?php echo $config_image_compare_width; ?>" size="50" style="width:100px;" />
 										x
-										<input type="text" name="config_image_compare_height" value="<?php echo $config_image_compare_height; ?>" size="3" />
+										<input type="number" name="config_image_compare_height" value="<?php echo $config_image_compare_height; ?>" size="50" style="width:100px;" />
 									</td>
 
 									<td style="width:15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_image_wishlist; ?></span></p>
 
-										<input type="text" name="config_image_wishlist_width" value="<?php echo $config_image_wishlist_width; ?>" size="3" />
+										<input type="number" name="config_image_wishlist_width" value="<?php echo $config_image_wishlist_width; ?>" size="50" style="width:100px;" />
 										x
-										<input type="text" name="config_image_wishlist_height" value="<?php echo $config_image_wishlist_height; ?>" size="3" />
+										<input type="number" name="config_image_wishlist_height" value="<?php echo $config_image_wishlist_height; ?>" size="50" style="width:100px;" />
 									</td>
 
 
 									<td style="width:15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><?php echo $entry_image_wishlist; ?></span></p>
 
-										<input type="text" name="config_image_cart_width" value="<?php echo $config_image_cart_width; ?>" size="3" />
+										<input type="number" name="config_image_cart_width" value="<?php echo $config_image_cart_width; ?>" size="50" style="width:100px;" />
 										x
-										<input type="text" name="config_image_cart_height" value="<?php echo $config_image_cart_height; ?>" size="3" />
+										<input type="number" name="config_image_cart_height" value="<?php echo $config_image_cart_height; ?>" size="50" style="width:100px;"  />
 									</td>
 								</tr>
 							</table>

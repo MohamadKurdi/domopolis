@@ -562,8 +562,8 @@
 						}
 						
 						$this->data['dimensions'] = array(
-						'w' => 486,
-						'h' => 300
+						'w' => $this->config->get('config_image_subcategory_width'),
+						'h' => $this->config->get('config_image_subcategory_height')
 						);
 						
 						
