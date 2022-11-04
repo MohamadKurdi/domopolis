@@ -51,7 +51,6 @@ class ControllerFeedGoogleSitemap extends Controller {
 
 			$this->response->setNonHTTPSOutput($content);
 
-
 		}
 	}
 
