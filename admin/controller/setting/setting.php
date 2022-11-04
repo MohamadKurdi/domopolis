@@ -1463,6 +1463,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_display_subcategory_in_all_categories'] = $this->config->get('config_display_subcategory_in_all_categories');
         }
 
+        if (isset($this->request->post['config_subcategories_limit'])) {
+            $this->data['config_subcategories_limit'] = $this->request->post['config_subcategories_limit'];
+        } else {
+            $this->data['config_subcategories_limit'] = $this->config->get('config_subcategories_limit');
+        }
+
         if (isset($this->request->post['config_second_level_subcategory_in_categories'])) {
             $this->data['config_second_level_subcategory_in_categories'] = $this->request->post['config_second_level_subcategory_in_categories'];
         } else {

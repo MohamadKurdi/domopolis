@@ -633,6 +633,7 @@
 								</td>
 
 								<td style="width:15%">
+									<div>
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Отображать подкатегории во всех категориях</span></p>
 									<select name="config_display_subcategory_in_all_categories">
 										<?php if ($config_display_subcategory_in_all_categories) { ?>
@@ -645,6 +646,12 @@
 									</select>
 									<br />
 									<span class="help">Если выключено - то подкатегории выводятся только в корневых</span>
+									</div>
+
+									<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Лимит подкатегорий второго уровня</span></p>
+									<input type="number" name="config_subcategories_limit" value="<?php echo $config_subcategories_limit; ?>" size="50" style="width:100px;">									
+									</div>
 								</td>
 
 								<td style="width:15%">
