@@ -1,23 +1,21 @@
 <?php
-// RU
 
-// Text
 $_['text_information']  = 'Информация';
 $_['text_service']      = 'Служба поддержки';
 $_['text_extra']        = 'Покупателю';
 $_['text_contact']      = 'Связаться с нами';
 $_['text_return']       = 'Возврат товара';
 $_['text_sitemap']      = 'Весь каталог';
-$_['text_manufacturer'] = 'Бренды'; // $_['text_manufacturer'] = 'Производители (бренды)';
+$_['text_manufacturer'] = 'Бренды';
 
 $_['text_voucher']      = 'Подарочные сертификаты';
 $_['text_affiliate']    = 'Партнёрская программа';
 $_['text_special']      = 'Акции';
-$_['text_account'] = 'Кабинет'; // $_['text_account'] = 'Личный кабинет'; // $_['text_account']      = 'Личный Кабинет';
+$_['text_account'] = 'Кабинет';
 
 
 $_['text_order']        = 'История заказов';
-$_['text_wishlist'] = 'Избранное'; // $_['text_wishlist']     = 'Закладки';
+$_['text_wishlist'] = 'Избранное';
 
 $_['text_newsletter']   = 'Рассылка';
 $_['text_powered']      = '';
@@ -44,8 +42,4 @@ $_['dialog.main.button.subscribe']='ПОДПИСАТЬСЯ';
 $_['dialog.main.button.unsubscribe']='ОТПИСАТЬСЯ';
 $_['dialog.blocked.title']='Разблокировать уведомления';
 $_['dialog.blocked.message']="Следуйте этим инструкциям, чтобы разрешить уведомления:";
-$_['welcome.title']="Kitchen Profi";
 $_['welcome.message']="Благодарим за подписку!";
-
-
-?>

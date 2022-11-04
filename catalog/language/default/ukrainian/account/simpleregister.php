@@ -21,6 +21,8 @@ $_['entry_password_confirm'] = 'Підтвердіть пароль';
 $_['entry_captcha']          = 'Необхідно пройти перевірку';
 $_['entry_customer_type']    = 'Тип покупця';
 
+$_['text_register_with']    = 'Зареєструватись за допомогою';
+
 // Error
 $_['error_exists']           = 'Даний email вже зареєстрований в системі!';
 $_['error_password']         = 'У паролі повинно бути від %d до %d символів!';
@@ -30,5 +32,3 @@ $_['error_captcha']          = 'Перевірку не пройдено!';
 
 $_['entry_email_confirm']    = 'Повторіть E-mail';
 $_['error_email_confirm']    = 'E-mail і підтвердження не співпадають!';
-
-?>

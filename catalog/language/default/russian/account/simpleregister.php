@@ -21,6 +21,8 @@ $_['entry_password_confirm'] = 'Подтвердите пароль';
 $_['entry_captcha']          = 'Введите защитный код';
 $_['entry_customer_type']    = 'Тип покупателя';
 
+$_['text_register_with']    = 'Зарегистрироваться с помощью';
+
 // Error
 $_['error_exists']           = 'Данный email уже зарегистрирован в системе!';
 $_['error_password']         = 'В пароле должно быть от %d до %d символов!';
