@@ -1195,8 +1195,8 @@ class ControllerProductProduct extends Controller
 
                         $this->data['bought_for_week'] = (int)(($product_info['bought_for_month'] > 0) ? ($product_info['bought_for_month'] * 3 + $product_id % 4) : false);
 
-                        if ($this->data['bought_for_week']) {
-                            if ($this->config->get('config_language_id') == 6) {
+                        if ($this->data['bought_for_week']) {                            
+                            if ($this->config->get('config_language') == 'uk') {
                                 if ($this->data['bought_for_week'] == 1) {
                                     $this->data['bought_for_week'] = sprintf($this->language->get('text_bought_for_week'), $this->data['bought_for_week'], $this->language->get('text_one_people'));
                                 } else {
