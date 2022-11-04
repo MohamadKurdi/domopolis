@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']       = 'Полоса уведомления для пользователей kitchen-profi';
+$_['heading_title']       = 'Полоса уведомления для пользователей';
 
 // Text
 $_['text_module']         = 'Модули';
