@@ -110,6 +110,9 @@ $_['text_present_certificates'] 		= 'Подарочные сертификаты
 $_['text_bonus'] = 'бонус';
 $_['text_bonus_pluralized'] = array('бонус', 'бонуса', 'бонусов');
 
+$_['text_product'] = 'товар';
+$_['text_products_pluralized'] = array('товар', 'товара', 'товаров');
+
 $_['text_bonus_application'] = 'Бонусы за установку приложения';
 
 $_['text_has_no_in_stock']		= 'Под заказ';
