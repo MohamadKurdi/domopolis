@@ -1116,66 +1116,23 @@
 					return $this->forward('common/login');
 				}
 			}
-		}
-			
-		
-		public function clearMemCache() {
-			if(!isset($this->session->data['token'])) $this->session->data['token'] = '';
-			
-			$this->session->data['clear_memcache'] = true;
-			
-			if ($this->cache->flush()) {
-				
-				$this->load->model('user/user');					
-				$name = $this->model_user_user->getRealUserNameById($this->user->getID());
-				
-				$data = array(
-				'type' => 'warning',
-				'text' => $name . " очистил(а) временный кэш!", 
-				'entity_type' => '', 
-				'entity_id' => 0
-				);
-				
-				$this->mAlert->insertAlertForGroup('admins', $data);
-				$this->mAlert->insertAlertForGroup('contents', $data);
-				
-				echo 'ОК';
-				} else { 
-				echo 'FUCK:(';
-			}
-		}
+		}			
 		
 		public function secureURL($getRequestVar) {
 			
 			$valid = FALSE;
-			
-			// check if the module has been enabled
 			if ( $this->config->get('secure_status') &&  $this->config->get('secure_status') == 1 ) {
-				
-				// get the secure key from the database
 				$db_skey    =  $this->config->get('secure_key');
-				
-				
-				// get the secure value from the database
 				$db_sval    =  $this->config->get('secure_value');
 				
-				// Get the session securekey
 				$session_skey = "" ; 
 				$session_sval = "" ; 
 				If( isset($this->session->data[$db_skey]) ) {
 					
 					$k = explode("_",$this->session->data[$db_skey]);
-					
-					$k[0];
-					//$session_skey = $this->session->data[$db_skey] ; 
 					$session_skey = $k[0];
-					$session_sval = $k[1];
-					
+					$session_sval = $k[1];				
 				}
-				
-				// Get the session secure value
-				
-				//If( isset($this->session->data[$db_sval]) ) { $session_sval = $this->session->data[$db_sval] ; }
 				
 				if(!empty($getRequestVar)){
 					
@@ -1184,7 +1141,6 @@
 						
 					}}
 					
-					// Get the URL params thru get request
 					$url_skey = "" ;
 					$url_sval = "" ;
 					
@@ -1196,36 +1152,20 @@
 					}
 					
 					
-					if($db_skey && $db_sval && $url_skey && $url_sval ){
-						
+					if($db_skey && $db_sval && $url_skey && $url_sval ){						
 						if ( $db_skey === $url_skey && $db_sval === $url_sval ) {
-							
-							// if everything is correct , set the session
 							$this->session->data[$db_skey] = $db_skey."_".$db_sval  ;
-							//$this->session->data[$db_sval] = $db_sval  ;
 							$valid = TRUE;	
-						}
-						
+						}						
 					}
 					
-					if ( $session_skey && $session_sval && $session_skey === $db_skey  && $session_sval === $db_sval ) {
-						
+					if ( $session_skey && $session_sval && $session_skey === $db_skey  && $session_sval === $db_sval ) {						
 						$valid = TRUE;				
 					}
 					
-					
-					
-					if (!$valid ) {
-						
-						if ($this->config->get('config_url') != "") {
-							$loc = 'Location:'.$this->config->get('config_url').'?route=error/not_found';
-							} else {
-							$loc = 'Location:../?route=error/not_found';
-						}
-						header($loc);
+					if (!$valid ) {						
+						header('Location: ' . HTTPS_CATALOG);
 						exit;
-						
-						
 					}
 					
 			}

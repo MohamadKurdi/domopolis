@@ -49,23 +49,20 @@ class ControllerSettingSetting extends Controller
             }
 
             $this->data['admin_modes'] = $this->admin_modes;
-            $this->data['clear_memcache'] = $this->url->link('common/home/clearMemCache', 'token=' . $this->session->data['token'], 'SSL');
+
             
-            $this->data['noCacheModeLink'] = $this->url->link('setting/setting/setNoCacheMode', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['noCacheMode'] = file_exists(DIR_CACHE . BCACHE_DIR . 'nocache');
-            
-            if ($this->data['noCacheMode']) {
-                $this->data['noCacheModeDuration'] = time() - filemtime(DIR_CACHE . BCACHE_DIR . 'nocache');
+            if (!$this->config->get('config_enable_highload_admin_mode') || $this->user->getUserGroup() == 1){
+                $this->data['clearMemCache'] = $this->url->link('setting/setting/clearMemCache', 'token=' . $this->session->data['token'], 'SSL');                    
+
+                $this->data['noPageCacheModeLink'] = $this->url->link('setting/setting/setNoPageCacheMode', 'token=' . $this->session->data['token'], 'SSL');
+                $this->data['noPageCacheMode'] = file_exists(DIR_CACHE . PAGECACHE_DIR . 'nopagecache');
+
+                if ($this->data['noPageCacheMode']) {
+                    $this->data['noPageCacheModeDuration'] = time() - filemtime(DIR_CACHE . PAGECACHE_DIR . 'nopagecache');
+                }
+
+                $this->data['noPageCacheModeTTL'] = $this->PageCache->getTTL();
             }
-            
-            $this->data['noPageCacheModeLink'] = $this->url->link('setting/setting/setNoPageCacheMode', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['noPageCacheMode'] = file_exists(DIR_CACHE . PAGECACHE_DIR . 'nopagecache');
-            
-            if ($this->data['noPageCacheMode']) {
-                $this->data['noPageCacheModeDuration'] = time() - filemtime(DIR_CACHE . PAGECACHE_DIR . 'nopagecache');
-            }
-            
-            $this->data['noPageCacheModeTTL'] = $this->PageCache->getTTL();
 
             $this->data['panelLink'] = $this->url->link('common/panel', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['serverResponceTime'] = $this->PageCache->getServerResponceTime();
@@ -76,6 +73,32 @@ class ControllerSettingSetting extends Controller
             $this->template = 'common/cachebuttons.tpl';
             
             $this->response->setOutput($this->render());
+        }
+    }
+
+    public function clearMemCache() {
+        if(!isset($this->session->data['token'])) $this->session->data['token'] = '';
+
+        $this->session->data['clear_memcache'] = true;
+
+        if ($this->cache->flush()) {
+
+            $this->load->model('user/user');                    
+            $name = $this->model_user_user->getRealUserNameById($this->user->getID());
+
+            $data = array(
+                'type' => 'warning',
+                'text' => $name . " очистил(а) временный кэш!", 
+                'entity_type' => '', 
+                'entity_id' => 0
+            );
+
+            $this->mAlert->insertAlertForGroup('admins', $data);
+            $this->mAlert->insertAlertForGroup('contents', $data);
+
+            echo 'ОК';
+        } else { 
+            echo 'FUCK:(';
         }
     }
 
@@ -2842,6 +2865,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_enable_amazon_specific_modes'] = $this->request->post['config_enable_amazon_specific_modes'];
         } else {
             $this->data['config_enable_amazon_specific_modes'] = $this->config->get('config_enable_amazon_specific_modes');
+        }
+
+        if (isset($this->request->post['config_enable_highload_admin_mode'])) {
+            $this->data['config_enable_highload_admin_mode'] = $this->request->post['config_enable_highload_admin_mode'];
+        } else {
+            $this->data['config_enable_highload_admin_mode'] = $this->config->get('config_enable_highload_admin_mode');
         }
 
         if (isset($this->request->post['config_enable_amazon_asin_file_cache'])) {
