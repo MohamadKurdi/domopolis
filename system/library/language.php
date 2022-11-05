@@ -102,7 +102,7 @@ class Language {
 
 		if($loadOverwrite){
 			$fileOverloadOverwrite 	= str_replace('.php', '_.php', $fileOverload);
-			$fileDefaultOverwrite 	= str_replace('.php', '_.php', $fileDefaultOverwrite);	
+			$fileDefaultOverwrite 	= str_replace('.php', '_.php', $fileDefault);	
 			return $this->mergeOrReturn($fileOverloadOverwrite, $fileDefaultOverwrite, true, 'data');
 		}
 
@@ -112,7 +112,7 @@ class Language {
 
 		if($loadOverwrite){
 			$fileOverloadOverwrite 	= str_replace('.php', '_.php', $fileOverload);
-			$fileDefaultOverwrite 	= str_replace('.php', '_.php', $fileDefaultOverwrite);
+			$fileDefaultOverwrite 	= str_replace('.php', '_.php', $fileDefault);
 			return $this->mergeOrReturn($fileOverloadOverwrite, $fileDefaultOverwrite, true, 'data');
 		}
 	} 
