@@ -168,6 +168,10 @@ class productModelEdit extends hoboModel{
 		$this->db->query("UPDATE product_description SET name = '" . $this->db->escape($data['name']) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$data['language_id'] . "'");
 	}
 
+	public function updateProductAttribute($product_id, $data){
+		$this->db->query("UPDATE product_attribute SET `text` = '" . $this->db->escape($data['text']) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$data['language_id'] . "' AND attribute_id = '" . (int)$data['attribute_id'] . "'");
+	}
+
 
 	public function editProductImages($product_id, $data){
 		$this->db->query("DELETE FROM product_image WHERE product_id = '" . (int)$product_id . "'");

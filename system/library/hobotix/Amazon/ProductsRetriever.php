@@ -261,8 +261,11 @@
 
 					$product_attribute_description = [];
 					foreach ($this->registry->get('languages') as $language_code => $language) {
+						$text = $this->translateWithCheck($feature_bullet, $language_code);
+						$text = $this->registry->get('rainforestAmazon')->infoUpdater->normalizeProductAttributeText($text);
+
 						$product_attribute_description[$language['language_id']] = [
-							'text' => $this->translateWithCheck($feature_bullet, $language_code)
+							'text' => $text
 						];
 					}
 
@@ -368,9 +371,12 @@
 
 						$product_attribute_description = [];
 
-						foreach ($this->registry->get('languages') as $language_code => $language) {						
+						foreach ($this->registry->get('languages') as $language_code => $language) {	
+							$text = $this->translateWithCheck($attribute['value'], $language_code);
+							$text = $this->registry->get('rainforestAmazon')->infoUpdater->normalizeProductAttributeText($text);
+
 							$product_attribute_description[$language['language_id']] = [
-								'text' => $this->translateWithCheck($attribute['value'], $language_code)
+								'text' => $text
 							];
 						}
 

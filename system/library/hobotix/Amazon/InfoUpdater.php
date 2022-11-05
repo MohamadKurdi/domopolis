@@ -58,6 +58,44 @@ class InfoUpdater
 		return $query->rows;
 	}
 
+	public function getTotalAttributes(){
+		return $this->db->query("SELECT COUNT(*) as total FROM product_attribute WHERE language_id = '" . $this->config->get('config_language_id') . "' AND `text` <> '' ")->row['total'];
+	}
+
+	public function getAttributes($start){
+		$sql = "SELECT product_id, attribute_id, language_id, `text` FROM product_attribute WHERE `text` <> '' AND language_id = '" . $this->config->get('config_language_id') . "' ORDER BY product_id ASC limit " . (int)$start . ", " . (int)self::descriptionsQueryLimit;		
+		$query = $this->db->ncquery($sql);
+
+		return $query->rows;
+	}
+
+	public function normalizeProductAttributeText($text){
+
+		//Убираем все кавычки, и другие непонятные спецсимволы, из-за них потом проблемы
+		$text = str_replace(['"', ',,', '?'], '', $text);
+
+		//Кавычки и другие символы, одинарная кавычка только с пробелом, потому что иначе это апостроф
+		$text = str_replace(["&amp;", "' ", "( "], ['&', ' ', '('], $text);
+
+		//Упоминания Amazon
+		$text = str_ireplace(["Amazon", "amazon", "Амазон"], ['Domopolis'], $text);
+
+		//Кавычка в начале - точно не апостроф
+		$text = ltrim($text, "'");
+
+		//Заданные строки
+		$text = str_ireplace($this->removeFromReview, [''], $text);
+		
+		//Убрать всё остальное кроме нужных букв, цифр и символов
+		$text = preg_replace('/[^a-zA-Z0-9а-щА-ЩЬьЮюЯяЇїІіЄєҐґ:()\-,&Ø\'\.\/\* ]/mui', '', $text, -1);
+
+		//Убираем двойные пробелы
+		$text = str_replace(['  '], [' '], $text);
+		$text = trim($text);
+
+		return $text;
+	}
+
 	public function normalizeProductReview($review){				
 		//Убираем все кавычки, и другие непонятные спецсимволы, из-за них потом проблемы
 		$review = str_replace(['"', ',,', '?'], '', $review);
@@ -81,10 +119,7 @@ class InfoUpdater
 		$review = str_replace(['  '], [' '], $review);
 		$review = trim($review);
 
-		$review = trim($review);
-
 		return $review;
-
 	}
 	
 	public function normalizeProductName($name){

@@ -820,6 +820,39 @@ class ControllerDPRainForest extends Controller {
 		return $this;				
 	}
 
+	/*
+	Фиксит названия товаров функцией normalizeProductName из InfoUpdater
+	*/
+	public function fixattributestexts(){		
+		$total = $this->rainforestAmazon->infoUpdater->getTotalAttributes();
+		$iterations = ceil($total/(int)\hobotix\Amazon\InfoUpdater::descriptionsQueryLimit);
+		echoLine('[fixattributestexts] Всего атрибутов: ' . $total);
+		$k = 1;			
+
+		for ($i = 1; $i <= $iterations; $i++){
+			$attributes = $this->rainforestAmazon->infoUpdater->getAttributes(($i-1) * (int)\hobotix\Amazon\InfoUpdater::descriptionsQueryLimit);
+			if ($attributes){		
+				foreach ($attributes as $attribute){
+					echoLine('[fixattributestexts] ' . $i . '/' . $iterations);	
+
+			//		echoLine ($attribute['text'] . ' -> ' .  $this->rainforestAmazon->infoUpdater->normalizeProductAttributeText($attribute['text']) );
+					
+					$this->rainforestAmazon->productsRetriever->model_product_edit->updateProductAttribute($attribute['product_id'], [
+						'text' 			=>	$this->rainforestAmazon->infoUpdater->normalizeProductAttributeText($attribute['text']),	
+						'attribute_id'	=> 	$attribute['attribute_id'],				
+						'language_id'	=>	$attribute['language_id']
+					]);				
+					
+				}
+			}	
+		}	
+
+		echoLine('[fixattributestexts] DELETING EMPTY');
+		$this->db->query("DELETE FROM product_attribute WHERE `text` = ''");	
+		echoLine('[fixattributestexts] OPTIMIZING');
+		$this->db->query("OPTIMIZE TABLE product_attribute");
+	}
+
 
 	/*
 	Фиксит названия товаров функцией normalizeProductName из InfoUpdater
