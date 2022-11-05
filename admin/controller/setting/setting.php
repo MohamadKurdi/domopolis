@@ -79,26 +79,32 @@ class ControllerSettingSetting extends Controller
     public function clearMemCache() {
         if(!isset($this->session->data['token'])) $this->session->data['token'] = '';
 
-        $this->session->data['clear_memcache'] = true;
+        if (!$this->config->get('config_enable_highload_admin_mode') || $this->user->getUserGroup() == 1){
 
-        if ($this->cache->flush()) {
+            $this->session->data['clear_memcache'] = true;
 
-            $this->load->model('user/user');                    
-            $name = $this->model_user_user->getRealUserNameById($this->user->getID());
+            if ($this->cache->flush()) {
 
-            $data = array(
-                'type' => 'warning',
-                'text' => $name . " очистил(а) временный кэш!", 
-                'entity_type' => '', 
-                'entity_id' => 0
-            );
+                $this->load->model('user/user');                    
+                $name = $this->model_user_user->getRealUserNameById($this->user->getID());
 
-            $this->mAlert->insertAlertForGroup('admins', $data);
-            $this->mAlert->insertAlertForGroup('contents', $data);
+                $data = array(
+                    'type' => 'warning',
+                    'text' => $name . " очистил(а) временный кэш!", 
+                    'entity_type' => '', 
+                    'entity_id' => 0
+                );
 
-            echo 'ОК';
-        } else { 
-            echo 'FUCK:(';
+                $this->mAlert->insertAlertForGroup('admins', $data);
+                $this->mAlert->insertAlertForGroup('contents', $data);
+
+                echo 'ОК';        
+            } else { 
+                echo 'ERR';
+            }
+
+        } else {
+            echo 'ERR';
         }
     }
 

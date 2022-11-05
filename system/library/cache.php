@@ -35,9 +35,12 @@ final class Cache {
 			}				
 		}
 	} 	
-
-	//TODO ALL THIS WITH NOT ONLY REDIS
+	
 	public function exists($key, $explicit = false) {
+		if (defined('ADMIN_SESSION_DETECTED') && ADMIN_SESSION_DETECTED  && !$explicit){			
+			return false;
+		}
+
 		if (defined('IS_DEBUG') && IS_DEBUG  && !$explicit){
 			return false;
 		}
@@ -49,6 +52,10 @@ final class Cache {
 	
 	
 	public function get($key, $explicit = false) {
+		if (defined('ADMIN_SESSION_DETECTED') && ADMIN_SESSION_DETECTED  && !$explicit){
+			return false;
+		}
+
 		if (defined('IS_DEBUG') && IS_DEBUG && !$explicit){
 			return false;
 		}
