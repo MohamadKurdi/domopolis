@@ -167,18 +167,34 @@
 								</td>
 
 								<td style="width:15%">
-								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Включить хранение данных в файлах</span></p>
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Включить хранение данных в файлах</span></p>
 										<select name="config_enable_amazon_asin_file_cache">
 											<?php if ($config_enable_amazon_asin_file_cache) { ?>
 												<option value="1" selected="selected">Включить</option>
 												<option value="0">Отключить</option>
-												<?php } else { ?>													
+											<?php } else { ?>													
 												<option value="1">Включить</option>
 												<option value="0"  selected="selected">Отключить</option>
 											<? } ?>
 										</select>
-									<br />
-									<span class="help">Большое количество данных (более 10-20к записей в базу) очень сильно тормозит БД, нужно использовать файловый кэш</span>
+										<br />
+										<span class="help">Большое количество данных (более 10-20к записей в базу) очень сильно тормозит БД, нужно использовать файловый кэш</span>
+									</div>
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Хайлоад режим</span></p>
+										<select name="config_enable_highload_admin_mode">
+											<?php if ($config_enable_highload_admin_mode) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+										<br />
+										<span class="help">Если включено, то у всех, кроме суперадминистраторов, пропадает возможность сбрасывать кэши</span>
+									</div>
 								</td>
 
 								<td style="width:20%">
