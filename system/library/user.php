@@ -291,6 +291,8 @@ class User {
 			$this->db->query("INSERT INTO adminlog SET user_id = '" . (int)$this->user_id . "', `user_name` = '" . $this->username . "', `action` = 'logout', `allowed` = '1', `url` = '".$this->db->escape($this->request->server['REQUEST_URI'])."', `ip` = '" . $this->request->server['REMOTE_ADDR'] . "', date = NOW()");
 		}
 
+		$this->db->query("UPDATE `user` SET `ip` = '' WHERE user_id = '" . (int)$this->user_id . "'");
+
 		$this->user_id = '';
 		$this->username = '';
 
