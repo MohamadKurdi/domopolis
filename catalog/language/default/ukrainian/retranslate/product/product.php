@@ -90,13 +90,23 @@ $_['text_retranslate_84'] = 'Всі відгуки';
 $_['text_retranslate_85'] = 'Додати відгук до товару'; 
 
 $_['text_retranslate_87'] = 'Відгуків поки що немає';
+$_['text_retranslate_88'] = 'Купують разом';
 
 $_['all_collection'] = 'Вся колекція';
+
+$_['delivery_to_city_v2_title'] = 'Доставка по м. ';
 
 $_['delivery_to_city_courier'] = 'Доставка по';
 $_['delivery_to_city_remote'] = 'Відправка до м.';
 $_['delivery_to_city_cs_ru'] = 'Доставка НП в';
 $_['delivery_to_city_cs_ua'] = 'Доставка НП по м.';
+
+$_['delivery_to_city_cs_ua_v2'] = 'Нова Пошта';
+
+$_['delivery_by_courier_for_v2'] = "Кур'єром по місту";
+
+$_['delivery_to_city_price_from'] = 'від ';
+$_['delivery_to_city_free'] = 'Безкоштовно';
 
 $_['delivery_to_city_temp_text'] = 'розраховуємо термін доставки';
 

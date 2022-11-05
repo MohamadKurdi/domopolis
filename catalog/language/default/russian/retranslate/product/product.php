@@ -90,11 +90,21 @@ $_['text_retranslate_84'] = 'Все отзывы';
 $_['text_retranslate_85'] = 'Добавить отзыв к товару';
 
 $_['text_retranslate_87'] = 'Отзывов пока нет';
+$_['text_retranslate_88'] = 'Покупают вместе';
 
 $_['delivery_to_city_courier'] = 'Доставка по';
 $_['delivery_to_city_remote'] = 'Отправка в';
 $_['delivery_to_city_cs_ru'] = 'Доставка СДЭК в';
 $_['delivery_to_city_cs_ua'] = 'Доставка НП в';
+
+$_['delivery_by_courier_for_v2'] = 'Курьером по городу';
+$_['delivery_to_city_cs_ua_v2'] = 'Новая Почта';
+
+$_['delivery_to_city_price_from'] = 'від ';
+$_['delivery_to_city_free'] = 'Безкоштовно';
+
+$_['delivery_to_city_price_from'] = 'от ';
+$_['delivery_to_city_free'] = 'Бесплатно';
 
 $_['delivery_to_city_temp_text'] = 'рассчитываем сроки доставки';
 
