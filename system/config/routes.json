@@ -25,6 +25,7 @@
 	"api/info1c/getProductPrices":						"api/info1c/getProductPrices",
 	"api/info1c/setProductPrices":						"api/info1c/setProductPrices",
 	"api/info1c/getProductImage":						"api/info1c/getProductImage",
+	"api/info1c/editProductFields":						"api/info1c/editProductFields",
 	"api/info1c/getFullProductsBySKU":					"api/info1c/getFullProductsBySKU",
 	"api/info1c/getManagerKPIJSON":						"kp/salary/getManagerKPIFor1C",
 	"api/info1c/getCurrenciesXML":						"feed/exchange1c/getCurrencies",
