@@ -81,9 +81,9 @@ $_['text_retranslate_49'] = 'Зв\'язок';
 
 $_['text_retranslate_99'] = 'Новий Рік';
 
-$_['logo_alt_title_176']        = 'Інтернет-магазин посуду Domopolis Росія';
-$_['logo_alt_title_220']        = 'Інтернет-магазин посуду Domopolis Україна';
-$_['logo_alt_title_109']        = 'Інтернет-магазин посуду Domopolis Беларусь';
-$_['logo_alt_title_20']         = 'Інтернет-магазин посуду Domopolis Казахстан';
+$_['logo_alt_title_176']        = 'Інтернет-магазин';
+$_['logo_alt_title_220']        = 'Інтернет-магазин';
+$_['logo_alt_title_109']        = 'Інтернет-магазин';
+$_['logo_alt_title_20']         = 'Інтернет-магазин';
 
 $_['delivery_to_city_temp_text'] = 'розраховуємо термін доставки';

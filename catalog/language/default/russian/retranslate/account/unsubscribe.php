@@ -4,7 +4,7 @@ $_['heading_title'] = 'Отписаться от рассылок';
 
 $_['text_enter_your_email'] = 'Введите Email, например myemail@gmail.com';
 
-$_['text_label_check'] = 'Я больше не хочу получать письма от Domopolis';
+$_['text_label_check'] = 'Я больше не хочу получать письма';
 
 $_['text_unsubscribe_button'] = 'Отписаться';
 

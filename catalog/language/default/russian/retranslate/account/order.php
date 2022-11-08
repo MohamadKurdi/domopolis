@@ -1,12 +1,5 @@
 <?php
-// Heading
 $_['heading_title']         = 'История заказов';
-
-
-
-
-
-// Text
 $_['text_account'] = 'Кабинет';
 
 $_['text_order']            = 'Заказ';
@@ -37,9 +30,7 @@ $_['text_error']            = 'Запрошенный заказ не найде
  $_['button_shoputils_psb_onpay']  = 'Оплатить онлайн';
 
 $_['button_invoice']       = 'Скачать инвойс';
-
-// Column
-$_['text_product_list']           = 'Товары Domopolis';
+$_['text_product_list']           = 'Товары';
 $_['text_date_from']           = 'от';
 
 $_['tab_total'] = 'Все заказы';

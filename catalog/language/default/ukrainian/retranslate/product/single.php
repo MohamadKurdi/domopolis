@@ -23,13 +23,13 @@ $_['text_retranslate_go2cat'] = 'Перейти до категорії';
 $_['text_nothing_found'] = 'На жаль, нічого не знайдено';
 $_['text_present'] = 'Подарунок';
 
-$_['text_bonus1'] = 'Бонуси нараховуються на рахунок учасника програми лояльності Domopolis:';
+$_['text_bonus1'] = 'Бонуси нараховуються на рахунок учасника програми лояльності:';
 $_['text_bonus2'] = '1) Бонуси нараховуються через 14 днів після закриття замовлення';
 $_['text_bonus3'] = '2) Баланс можна перевірити в особистому кабінеті в розділі «Мої бонуси».';
 $_['text_bonus4'] = '3) накопичення бонусів можна оплатити до 50% вартості таких покупок.';
 
-$_['text_retranslate_app_block'] = 'З додатком Domopolis швидше і дешевше';
-$_['text_retranslate_app_block_reward'] = 'Встанови додаток Domopolis та отримай <span style=" white-space: nowrap;">%s</span> на бонусний рахунок';
+$_['text_retranslate_app_block'] = 'З додатком швидше і дешевше';
+$_['text_retranslate_app_block_reward'] = 'Встанови додаток та отримай <span style=" white-space: nowrap;">%s</span> на бонусний рахунок';
 $_['text_retranslate_app_install'] = 'Встановити додаток';
 
 

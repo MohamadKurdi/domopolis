@@ -4,7 +4,7 @@ $_['heading_title'] = 'Відписатися від розсилок';
 
 $_['text_enter_your_email'] = 'Введіть електронну пошту, наприклад myemail@gmail.com';
 
-$_['text_label_check'] = 'Я більше не хочу отримувати листи від Domopolis';
+$_['text_label_check'] = 'Я більше не хочу отримувати листи';
 
 $_['text_unsubscribe_button'] = 'Відписатися';
 

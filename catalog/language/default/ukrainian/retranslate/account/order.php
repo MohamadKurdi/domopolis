@@ -1,12 +1,5 @@
 <?php
-// Heading
 $_['heading_title'] = 'Історія замовлень';
-
-
-
-
-
-// Text
 $_['text_account'] = 'Кабінет';
 
 $_['text_order'] = 'Замовлення';
@@ -34,14 +27,10 @@ $_['text_history'] = 'Історія замовлення';
 $_['text_success'] = 'Товари із замовлення #%s успішно додані до Вашого кошика!';
 $_['text_empty'] = 'Ви ще не робили покупок!';
 $_['text_error'] = 'Запитане замовлення не знайдено!';
- $_['button_shoputils_psb_onpay'] = 'Сплатити онлайн';
-
+$_['button_shoputils_psb_onpay'] = 'Сплатити онлайн';
 $_['button_invoice'] = 'Завантажити інвойс';
-
-// Column
-$_['text_product_list'] = 'Товари Domopolis';
+$_['text_product_list'] = 'Товари';
 $_['text_date_from'] = 'від';
-
 $_['tab_total'] = 'Всі замовлення';
 $_['tab_inprocess'] = 'В обробці';
 $_['tab_cancelled'] = 'Скасовані';

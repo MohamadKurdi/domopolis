@@ -33,7 +33,7 @@ $_['text_retranslate_35'] = 'Пошук';
 $_['text_retranslate_36'] = 'Найбільший магазин елітного посуду з гарантовано кращою ціною';
 
 $_['text_retranslate_app_block'] = 'З додатком швидше і дешевше';
-$_['text_retranslate_app_block_reward'] = 'Встанови додаток та отримай <span style=" white-space: nowrap;">%s</span> на бонусний рахунок';
+$_['text_retranslate_app_block_reward'] = 'Встанови додаток та отримай <span style="white-space: nowrap;">%s</span> на бонусний рахунок';
 $_['text_retranslate_app_install'] = 'Встановити додаток';
 
 

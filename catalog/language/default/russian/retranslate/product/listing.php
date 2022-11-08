@@ -25,8 +25,8 @@ $_['text_translate_2'] = 'логотипами';
 $_['text_translate_bybrand'] = 'Бренды по странам';
 $_['text_translate_3'] = 'списком';
 
-$_['text_retranslate_app_block'] = 'С приложением Domopolis быстрее и дешевле';
-$_['text_retranslate_app_block_reward'] = 'Установи приложение Domopolis и получи %s на бонусный счет';
+$_['text_retranslate_app_block'] = 'С приложением быстрее и дешевле';
+$_['text_retranslate_app_block_reward'] = 'Установи приложение и получи %s на бонусный счет';
 $_['text_retranslate_app_install'] = 'Установить приложение';
 
 $_['text_retranslate_app_header'] = 'Наши приложения';

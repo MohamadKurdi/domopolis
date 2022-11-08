@@ -1,8 +1,5 @@
 <?php
-// Heading
 $_['heading_title']      = 'Мои бонусы';
-
-// Column
 $_['column_date_added']  = 'Дата';
 $_['column_description'] = 'Описание';
 $_['column_points']      = 'Количество';
@@ -15,7 +12,6 @@ $_['column_date_inactivate']      = 'Дата сгорания';
 $_['column_date_activate']      = 'Дата активации';
 $_['column_date_activate_points']      = 'Будет начислено';
 
-// Text
 $_['text_account'] = 'Кабинет';
 
 $_['text_reward']        = 'Бонусные баллы';
@@ -26,7 +22,7 @@ $_['text_reward_description']         = 'Использование бонусо
 
 $_['text_reward_burn']         = "Истек срок действия бонусов, добавленных %s, (%s)";
 
-$_['text_birthday_add']         = "Domopolis поздравляет вас с днем рождения!";
+$_['text_birthday_add']         = "Мы поздравляем вас с днем рождения!";
 
 $_['text_all']      = 'всего на счету';
 $_['text_active']      = 'активных';
