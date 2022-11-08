@@ -1197,11 +1197,17 @@
 			}
 			
 			if (!empty($data['new'])) {
-				$sql .= " AND p.new = 1 AND (DATE(p.new_date_to) > '". date('Y-m-d') . "' OR DATE(p.date_added) > '" . date('Y-m-d', strtotime('-45 day')) . "')";
+				if (!$this->config->get('config_ignore_manual_marker_productnews')){
+					$sql .= " AND p.new = 1 ";
+				}
+				$sql .= " AND (DATE(p.new_date_to) > '". date('Y-m-d') . "' OR DATE(p.date_added) > '" . date('Y-m-d', strtotime('-' . $this->config->get('config_new_days') . ' day')) . "')";
 			}
 			
 			if (!empty($data['newlong'])) {
-				$sql .= " AND p.new = 1 AND p.date_added > '" . date('Y-m-d H:i:s', strtotime('-300 day')) . "'";
+				if (!$this->config->get('config_ignore_manual_marker_productnews')){
+					$sql .= " AND p.new = 1 ";
+				}
+				$sql .= " AND p.date_added > '" . date('Y-m-d H:i:s', strtotime('-' . $this->config->get('config_newlong_days') . ' day')) . "'";
 			}
 			
 			if (!empty($data['filter_enable_markdown'])) {
@@ -2460,11 +2466,17 @@
 			}
 			
 			if (!empty($data['new'])) {
-				$sql .= " AND p.new = 1 AND (DATE(p.new_date_to) > '". date('Y-m-d') . "' OR DATE(p.date_added) > '" . date('Y-m-d', strtotime('-45 day')) . "')";
+				if (!$this->config->get('config_ignore_manual_marker_productnews')){
+					$sql .= " AND p.new = 1 ";
+				}
+				$sql .= " AND (DATE(p.new_date_to) > '". date('Y-m-d') . "' OR DATE(p.date_added) > '" . date('Y-m-d', strtotime('-' . $this->config->get('config_new_days') . ' day')) . "')";
 			}
 			
 			if (!empty($data['newlong'])) {
-				$sql .= " AND p.new = 1 AND p.date_added > '" . date('Y-m-d H:i:s', strtotime('-300 day')) . "'";
+				if (!$this->config->get('config_ignore_manual_marker_productnews')){
+					$sql .= " AND p.new = 1 ";
+				}
+				$sql .= " AND p.date_added > '" . date('Y-m-d H:i:s', strtotime('-' . $this->config->get('config_newlong_days') . ' day')) . "'";
 			}
 			
 			if (!empty($data['filter_current_in_stock'])) {
