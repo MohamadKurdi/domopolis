@@ -671,6 +671,7 @@
 								</td>
 
 								<td style="width:15%">
+									<div>
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Отображать только товары с полной инфой</span></p>
 									<select name="config_rainforest_show_only_filled_products_in_catalog">
 										<?php if ($config_rainforest_show_only_filled_products_in_catalog) { ?>
@@ -683,6 +684,8 @@
 									</select>
 									<br />
 									<span class="help">Если включены специфические режимы амазона - будут показаны только заполненные товары</span>
+								</div>
+								
 								</td>
 
 								<td style="width:15%">
@@ -735,6 +738,41 @@
 
 								</td>
 							</tr>						
+						</table>
+
+						<h2>Новинки</h2>
+
+						<table class="form">
+							<tr>
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Новинки без new = 1</span></p>
+									<select name="config_ignore_manual_marker_productnews">
+										<?php if ($config_ignore_manual_marker_productnews) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+									<br />
+									<span class="help">Если включено, то при отборе новинок игнорируется маркер new = 1, который ставится вручную</span>
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Интервал добавления</span></p>
+									<input type="number" name="config_new_days" value="<?php echo $config_new_days; ?>" size="10" style="width:100px" />
+									<br />
+									<span class="help">Товар считается новинкой, если он добавлен Х дней от сегодня</span>
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Интервал добавления длинный</span></p>
+									<input type="number" name="config_newlong_days" value="<?php echo $config_newlong_days; ?>" size="10" style="width:100px" />
+									<br />
+									<span class="help">Товар считается новинкой, если он добавлен Х дней от сегодня. Логика длинного интервала используется в каких-то контроллерах</span>
+								</td>
+							</tr>
 						</table>
 
 						<h2>Отзывы</h2>

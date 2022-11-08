@@ -1456,6 +1456,24 @@ class ControllerSettingSetting extends Controller
             $this->data['config_product_count'] = $this->config->get('config_product_count');
         }
 
+        if (isset($this->request->post['config_ignore_manual_marker_productnews'])) {
+            $this->data['config_ignore_manual_marker_productnews'] = $this->request->post['config_ignore_manual_marker_productnews'];
+        } else {
+            $this->data['config_ignore_manual_marker_productnews'] = $this->config->get('config_ignore_manual_marker_productnews');
+        }
+
+        if (isset($this->request->post['config_new_days'])) {
+            $this->data['config_new_days'] = $this->request->post['config_new_days'];
+        } else {
+            $this->data['config_new_days'] = $this->config->get('config_new_days');
+        }
+
+        if (isset($this->request->post['config_newlong_days'])) {
+            $this->data['config_newlong_days'] = $this->request->post['config_newlong_days'];
+        } else {
+            $this->data['config_newlong_days'] = $this->config->get('config_newlong_days');
+        }
+
         if (isset($this->request->post['config_sort_default'])) {
             $this->data['config_sort_default'] = $this->request->post['config_sort_default'];
         } else {
