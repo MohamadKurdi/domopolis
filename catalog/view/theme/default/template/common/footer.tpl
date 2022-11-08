@@ -371,7 +371,7 @@
     <div class="wrap-modal">
         <div class="body">
             <button class="close_modals"></button>
-            <p>Вы должны выполнить <a href="/account/login">вход</a> или <a href="/register">создать аккаунт</a> чтобы сохранить <a href="" class="name_product"></a> в свой список закладок!</p>
+            <p><?php echo $text_retranslate_wishlist_register; ?></p>
 		</div>  
 	</div>
 </div>
