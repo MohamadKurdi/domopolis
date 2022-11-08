@@ -12,8 +12,7 @@
 			$this->load->model('catalog/set');			
 			$this->load->model('tool/image');
 			
-			
-			
+						
 			if (isset($this->request->get['sort'])) {
 				$sort = $this->request->get['sort'];
 				} else {
@@ -35,7 +34,7 @@
 			if (isset($this->request->get['limit'])) {
 				$limit = $this->request->get['limit'];
 				} else {
-				$limit = 20;
+				$limit = $this->config->get('config_catalog_limit');
 			}
 			
 			$this->document->setTitle("Новинки");
