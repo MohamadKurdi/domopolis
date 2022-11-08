@@ -36,6 +36,8 @@ $_['text_retranslate_app_block'] = 'З додатком швидше і деше
 $_['text_retranslate_app_block_reward'] = 'Встанови додаток та отримай <span style="white-space: nowrap;">%s</span> на бонусний рахунок';
 $_['text_retranslate_app_install'] = 'Встановити додаток';
 
+$_['text_retranslate_wishlist_register'] = 'Будь-ласка, авторизуйтесь чи зареєструйтесь для того, щоб користуватись списком обраних товарів';
+
 
 $_['text_retranslate_app_header'] = 'Наші додатки';
 $_['text_retranslate_app_button_line_1'] = 'Встановити';
