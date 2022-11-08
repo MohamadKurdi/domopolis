@@ -2,7 +2,7 @@
 $_['text_retranslate_1'] = 'Графік роботи call-центру';
 $_['text_retranslate_2'] = 'пн-нд, з 09:00 до 19:00';
 $_['text_retranslate_3'] = 'Замовлення на сайті - 24/7';
-$_['text_retranslate_4'] = 'Читайте відгуки покупців та оцінюйте якість магазину Domopolis на Яндекс.Маркет';
+$_['text_retranslate_4'] = 'Читайте відгуки покупців та оцінюйте якість магазину на Яндекс.Маркет';
 $_['text_retranslate_5'] = 'Для покупців';
 $_['text_retranslate_6'] = 'Як замовити';
 $_['text_retranslate_7'] = 'Доставка';
@@ -30,10 +30,10 @@ $_['text_retranslate_28'] = 'Товар доданий в кошик';
 
 $_['text_retranslate_29'] = 'Скажіть що-небудь';
 $_['text_retranslate_35'] = 'Пошук';
-$_['text_retranslate_36'] = 'Domopolis - найбільший магазин елітного посуду з гарантовано кращою ціною';
+$_['text_retranslate_36'] = 'Найбільший магазин елітного посуду з гарантовано кращою ціною';
 
-$_['text_retranslate_app_block'] = 'З додатком Domopolis швидше і дешевше';
-$_['text_retranslate_app_block_reward'] = 'Встанови додаток Domopolis та отримай <span style=" white-space: nowrap;">%s</span> на бонусний рахунок';
+$_['text_retranslate_app_block'] = 'З додатком швидше і дешевше';
+$_['text_retranslate_app_block_reward'] = 'Встанови додаток та отримай <span style=" white-space: nowrap;">%s</span> на бонусний рахунок';
 $_['text_retranslate_app_install'] = 'Встановити додаток';
 
 
