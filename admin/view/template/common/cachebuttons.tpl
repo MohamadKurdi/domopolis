@@ -41,11 +41,13 @@
 	</a>
 
 	<a class="hidden-xs link_headr cache-button-<?php echo $pageCacheInfo['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-server"></i> <?php echo $pageCacheInfo['used'] . ' of ' . $pageCacheInfo['total'];?></a>
-
+<?php /* ?>
 	<a class="link_headr cache-button-<?php echo $serverResponceTime['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-rocket"></i> <?php echo $serverResponceTime['body'];?></a>
-
+<?php */ ?>
 	<a class="hidden-xs link_headr cache-button-<?php echo $redisMem['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-cog" aria-hidden="true"></i> <?php echo $redisMem['body'];?></a>
 
+<?php /* ?>
 	<a class="hidden-xs link_headr cache-button-<?php echo $serverResponceTime['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-code" aria-hidden="true"></i> <?php echo $serverResponceTime['engine'];?></a>
+<?php */ ?>
 
 	<?php } ?>

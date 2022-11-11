@@ -65,7 +65,7 @@ class ControllerSettingSetting extends Controller
             }
 
             $this->data['panelLink'] = $this->url->link('common/panel', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['serverResponceTime'] = $this->PageCache->getServerResponceTime();
+       //     $this->data['serverResponceTime'] = $this->PageCache->getServerResponceTime();
             $this->data['redisMem']         = $this->PageCache->getRedisInfo();
             $this->data['pageCacheInfo']    = $this->PageCache->getPageCacheInfo();
 

@@ -22,7 +22,7 @@
 			foreach ($query->rows as $row){				
 				foreach ($languages as $language){					
 					echoLine('[TR] Языковая запись ' . (int)$row['rate_id']);
-					$this->db->query("INSERT IGNORE INTO " . DB_PREFIX . "shop_rating_description SET rate_id = '" . (int)$row['rate_id'] . "', language_id = '" . $language['language_id'] . "', comment = '', answer = '', good = '', bad = ''");					
+					$this->db->query("INSERT IGNORE INTO shop_rating_description SET rate_id = '" . (int)$row['rate_id'] . "', language_id = '" . $language['language_id'] . "', comment = '', answer = '', good = '', bad = ''");					
 				}				
 			}
 			
@@ -104,7 +104,7 @@
 				foreach ($languages as $language){
 					
 					echoLine('[TR] Языковая запись ' . (int)$row['review_id']);
-					$this->db->query("INSERT IGNORE INTO " . DB_PREFIX . "review_description SET review_id = '" . (int)$row['review_id'] . "', language_id = '" . $language['language_id'] . "', text = '', answer = '', good = '', bads = ''");
+					$this->db->query("INSERT IGNORE INTO review_description SET review_id = '" . (int)$row['review_id'] . "', language_id = '" . $language['language_id'] . "', text = '', answer = '', good = '', bads = ''");
 					
 				}
 				
@@ -280,7 +280,7 @@
 			$this->load->model('kp/translate');	
 			
 			$sql = "SELECT product_id FROM `product_description` WHERE product_id IN 
-			(SELECT product_id FROM product_description pd2 WHERE pd2.language_id = 5)
+			(SELECT product_id FROM product_description pd2 WHERE pd2.language_id = 2)
 			AND product_id NOT IN (SELECT product_id FROM product_description pd3 WHERE pd3.language_id = 6)
 			AND language_id = 5";
 			
@@ -288,7 +288,7 @@
 			
 			foreach ($query->rows as $row){				
 				echoLine('[TR] Языковая запись ' . (int)$row['product_id']);
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_description SET product_id = '" . (int)$row['product_id'] . "', language_id = '6', name = '', short_name_d = '', name_of_option = '', meta_keyword = '', seo_title = '', seo_h1 = '', meta_description = '', description = '', tag = '', markdown_appearance = '', markdown_condition = '', markdown_pack = '', markdown_equipment = '', translated = '0'");				
+				$this->db->query("INSERT INTO product_description SET product_id = '" . (int)$row['product_id'] . "', language_id = '6', name = '', short_name_d = '', name_of_option = '', meta_keyword = '', seo_title = '', seo_h1 = '', meta_description = '', description = '', tag = '', markdown_appearance = '', markdown_condition = '', markdown_pack = '', markdown_equipment = '', translated = '0'");				
 			}
 			
 			//Названия
