@@ -49,7 +49,7 @@
             $amount = number_format($order['total_national'], 2, '.', '');	
             
             $wayforpay_language = $this->config->get('wayforpay_language');
-            if ($this->config->get('config_language_id') == 6){
+            if ($this->config->get('config_language') == 'uk'){
                 $wayforpay_language = 'UA';
             }
             

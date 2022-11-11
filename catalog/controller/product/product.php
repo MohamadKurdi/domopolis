@@ -280,7 +280,7 @@ class ControllerProductProduct extends Controller
                                 //Проверяем, работает ли в этот день самовывоз (+$i дней от текущего)
                                 if (!empty($pickup_times[date('N', strtotime('+' . $i . ' day')) - 1]) && $pickup_times[date('N', strtotime('+' . $i . ' day')) - 1] != 'false' && !in_array(date('j', strtotime('+' . $i . ' day')), $dayoffs)) {
                                     $pickup_times_on_this_day = explode(':', $pickup_times[date('N', strtotime('+' . $i . ' day')) - 1]);
-                                    if ($this->config->get('config_language_id') == 6) {
+                                    if ($this->config->get('config_language') == 'uk') {
                                         setlocale(LC_ALL, 'uk_UA.UTF-8');
                                         $dayname = getUkrainianWeekDayDeclenced(date('N', strtotime('+' . $i . ' day')));
                                     } else {
@@ -1843,16 +1843,6 @@ class ControllerProductProduct extends Controller
                     }
                     
                     if ($product_info['description']) {
-                        /*  if ($this->config->get('config_language_id') == 6){
-
-                            $this->log->debug(tidy_repair_string($product_info['description']));
-
-                            if ($tryToRepairDescripion = tidy_repair_string($this->data['description'])){
-                            $this->data['description'] = $tryToRepairDescripion;
-                            }
-                            }
-                        */
-
                             $this->data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8') . ' ';
                         } else {
                             $this->data['description'] = false;
