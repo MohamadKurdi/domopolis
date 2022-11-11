@@ -22,7 +22,8 @@ class Mail {
 			$this->db 				= $registry->get('db');
 			$this->config 			= $registry->get('config');			
 			$this->emailBlackList 	= $registry->get('emailBlackList');
-			$this->protocol = $this->config->get('config_mail_protocol');
+			$this->protocol 		= $this->config->get('config_mail_protocol');
+			
 			$this->setFrom($this->config->get('config_email'));
 			$this->setSender($this->config->get('config_name'));
 		}

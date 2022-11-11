@@ -69,8 +69,8 @@ class ControllerApiInfo1C extends Controller
             }
         }
 
-        $this->db->query("INSERT INTO `" . DB_PREFIX . "order_ttns` SET	order_id = '" . (int)$order_id . "', ttn = '" . $this->db->escape($ttn) . "', delivery_code = '" . $this->db->escape($couriercode) . "', date_ttn = NOW(), sms_sent = NOW()");
-        $this->db->query("UPDATE `" . DB_PREFIX . "order` SET `ttn` = '" . $this->db->escape($ttn) . "' WHERE order_id = " . (int)$order_id);
+        $this->db->query("INSERT INTO `order_ttns` SET	order_id = '" . (int)$order_id . "', ttn = '" . $this->db->escape($ttn) . "', delivery_code = '" . $this->db->escape($couriercode) . "', date_ttn = NOW(), sms_sent = NOW()");
+        $this->db->query("UPDATE `order` SET `ttn` = '" . $this->db->escape($ttn) . "' WHERE order_id = " . (int)$order_id);
 
         $smsTEXT = 'Заказ #' . $order_id . ' отправлен, ТТН ' . $ttn;
 
@@ -136,9 +136,9 @@ class ControllerApiInfo1C extends Controller
         $result = array();
         foreach ($query->rows as $row) {
             $result[] = array(
-                'field' => $row['Field'],
-                'type'  => $row['Type'],
-                'comment'  => $row['Comment'],
+                'field'     => $row['Field'],
+                'type'      => $row['Type'],
+                'comment'   => $row['Comment'],
             );
         }
 
@@ -148,40 +148,10 @@ class ControllerApiInfo1C extends Controller
     public function editProductFields($product_id, $fields)
     {
 
-        $sql = "UPDATE `product` SET ";
+        $prepared   = $this->db->prepareUpdateQuery('product', $fields);
+        $result     = $this->db->doUpdateQuery('product', $product_id, 'product_id', $prepared['result']);
 
-        foreach ($fields as $field) {
-            if ($field['type'] == 'int') {
-                $implode[] = " `" . $field['name'] . "` = '" . (int)$field['value'] . "'";
-            }
-
-            if ($field['type'] == 'decimal') {
-                $implode[] = " `" . $field['name'] . "` = '" . (float)$field['value'] . "'";
-            }
-
-            if ($field['type'] == 'varchar') {
-                $implode[] = " `" . $field['name'] . "` = '" . $this->db->escape($field['value']) . "'";
-            }
-
-            if ($field['type'] == 'date') {
-                $implode[] = " `" . $field['name'] . "` = '" . date('Y-m-d', strtotime($field['value'])) . "'";
-            }
-
-            if ($field['type'] == 'datetime') {
-                $implode[] = " `" . $field['name'] . "` = '" . date('Y-m-d H:i:s', strtotime($field['value'])) . "'";
-            }
-        }
-
-        $implode[] = " `date_modified` = NOW() ";
-
-
-        $sql .= implode(',', $implode);
-
-        $sql .= " WHERE product_id = '" . (int)$product_id . "'";
-
-        $this->db->query($sql);
-
-        $this->response->setOutput('SQL EXECUTED:' . $sql);
+        $this->response->setJSON(array_merge($prepared, $result));
     }
 
     public function describeOrderFields()
@@ -192,9 +162,9 @@ class ControllerApiInfo1C extends Controller
         $result = array();
         foreach ($query->rows as $row) {
             $result[] = array(
-                'field' => $row['Field'],
-                'type'  => $row['Type'],
-                'comment'  => $row['Comment'],
+                'field'     => $row['Field'],
+                'type'      => $row['Type'],
+                'comment'   => $row['Comment'],
             );
         }
 
@@ -305,7 +275,7 @@ class ControllerApiInfo1C extends Controller
 
         $sql .= " WHERE order_id = '" . (int)$order_id . "'";
 
-        $this->db->query("INSERT INTO `" . DB_PREFIX . "order_save_history` SET 
+        $this->db->query("INSERT INTO `order_save_history` SET 
 			`order_id` = '" . (int)$order_id . "', 
 			`user_id` = '" . 54 . "',
 			`data` = '',
@@ -584,7 +554,7 @@ class ControllerApiInfo1C extends Controller
                     echo '[i] Доабвлена РРЦ ' . $price['price'] . ' ' . $price['currency'] . ', магазин ' . $store_id . PHP_EOL;
 
                     if ($price['price'] > 0) {
-                        $this->db->query("INSERT IGNORE INTO " . DB_PREFIX . "product_price_national_to_store SET store_id = '" . (int)$store_id . "', product_id = '" . (int)$product['product_id'] . "', price = '" . (float)$price['price'] . "', dot_not_overload_1c = '0', settled_from_1c = '1',  currency = '" . $this->db->escape($price['currency']) . "'");
+                        $this->db->query("INSERT IGNORE INTO product_price_national_to_store SET store_id = '" . (int)$store_id . "', product_id = '" . (int)$product['product_id'] . "', price = '" . (float)$price['price'] . "', dot_not_overload_1c = '0', settled_from_1c = '1',  currency = '" . $this->db->escape($price['currency']) . "'");
                     }
                 }
             } else {
@@ -812,7 +782,7 @@ class ControllerApiInfo1C extends Controller
 
                 $log_odinass->write('>> Товары');
 
-                $query = $this->db->query("UPDATE `" . DB_PREFIX . "product` SET 
+                $query = $this->db->query("UPDATE `product` SET 
 					`quantity_stock` 	= 0,
 					`quantity_stockK` 	= 0,
 					`quantity_stockM` 	= 0,
@@ -882,7 +852,7 @@ class ControllerApiInfo1C extends Controller
                 foreach ($unique_products as $key => &$value) {
                     $value['product_id'] = $key;
 
-                    $query = $this->db->query("SELECT product_id, location FROM `" . DB_PREFIX . "product` WHERE product_id = '". (int)(trim($value['product_id'])) ."' LIMIT 1");
+                    $query = $this->db->query("SELECT product_id, location FROM `product` WHERE product_id = '". (int)(trim($value['product_id'])) ."' LIMIT 1");
                     $product = $query->row;
 
                     if (!$product) {
@@ -894,7 +864,7 @@ class ControllerApiInfo1C extends Controller
 
                             $sku = preg_replace("([^0-9])", "", $value['product_vendor']);
 
-                            $query = $this->db->query("SELECT product_id FROM `" . DB_PREFIX . "product` WHERE ((REPLACE(REPLACE(REPLACE(REPLACE(model,' ',''), '.', ''), '/', ''), '-', '') = '" . $this->db->escape($sku) . "' OR REPLACE(REPLACE(REPLACE(REPLACE(sku,' ',''), '.', ''), '/', ''), '-', '') = '" . $this->db->escape($sku) . "') AND LENGTH(model)>1 AND stock_product_id = 0) LIMIT 1");
+                            $query = $this->db->query("SELECT product_id FROM `product` WHERE ((REPLACE(REPLACE(REPLACE(REPLACE(model,' ',''), '.', ''), '/', ''), '-', '') = '" . $this->db->escape($sku) . "' OR REPLACE(REPLACE(REPLACE(REPLACE(sku,' ',''), '.', ''), '/', ''), '-', '') = '" . $this->db->escape($sku) . "') AND LENGTH(model)>1 AND stock_product_id = 0) LIMIT 1");
 
                             $product = $query->row;
 
@@ -961,7 +931,7 @@ class ControllerApiInfo1C extends Controller
 
                             //  echo 'Наличие Г:' .  (int)$value['quantity_stock'] . ' К:' . (int)$value['quantity_stockK'] . ' M:' . (int)$value['quantity_stockMN'] . PHP_EOL;
 
-                        $sql = ("UPDATE `" . DB_PREFIX . "product` SET 
+                        $sql = ("UPDATE `product` SET 
 							`quantity_stock` 	= '" . (int)$value['quantity_stock'] . "',
 							`quantity_stockK` 	= '" . (int)$value['quantity_stockK'] . "',
 							`quantity_stockM` 	= '" . (int)$value['quantity_stockM'] . "',
@@ -1393,7 +1363,7 @@ class ControllerApiInfo1C extends Controller
                 'name' => 'Переназначение цены для Yandex Market в локальной валюте',
                 'code' => 'product_price_national_to_yam'
             );
-            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_price_national_to_yam WHERE product_id = '" . (int)$product_id . "'");
+            $query = $this->db->query("SELECT * FROM product_price_national_to_yam WHERE product_id = '" . (int)$product_id . "'");
 
             if ($query->num_rows) {
                 $product['prices']['yandex_market']['product_price_national_to_yam']['prices'] = array();
@@ -1420,7 +1390,7 @@ class ControllerApiInfo1C extends Controller
                 'name' => 'Переназначение цены для стран в основной валюте',
                 'code' => 'product_price_to_store'
             );
-            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_price_to_store WHERE product_id = '" . (int)$product_id . "'");
+            $query = $this->db->query("SELECT * FROM product_price_to_store WHERE product_id = '" . (int)$product_id . "'");
 
             if ($query->num_rows) {
                 $product['prices']['product_price_to_store']['prices'] = array();
@@ -1440,7 +1410,7 @@ class ControllerApiInfo1C extends Controller
                 'name' => 'Переназначение цены для стран в локальной валюте (РРЦ)',
                 'code' => 'product_price_national_to_store'
             );
-            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_price_national_to_store WHERE product_id = '" . (int)$product_id . "'");
+            $query = $this->db->query("SELECT * FROM product_price_national_to_store WHERE product_id = '" . (int)$product_id . "'");
 
             if ($query->num_rows) {
                 $product['prices']['product_price_national_to_store']['prices'] = array();
@@ -1455,7 +1425,7 @@ class ControllerApiInfo1C extends Controller
                 }
             }
 
-            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_special ps WHERE product_id = '" . (int)$product_id . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW()))");
+            $query = $this->db->query("SELECT * FROM product_special ps WHERE product_id = '" . (int)$product_id . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW()))");
             if ($query->num_rows) {
                 $product['prices']['product_specials'] = array(
                     'name' => 'Скидочные цены',
@@ -1734,7 +1704,7 @@ class ControllerApiInfo1C extends Controller
                     $this->db->query("UPDATE `order` SET order_status_id = '" . (int)$order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
                     $this->db->query("INSERT INTO order_history SET order_id = '" . (int)$order_id . "', order_status_id = '" . (int)$order_status_id . "', notify = '" . (int)$notify . "', user_id = 54, comment = '" . $this->db->escape($comment) . "', date_added = NOW()");
 
-                    $this->db->query("INSERT INTO `" . DB_PREFIX . "order_save_history` SET 
+                    $this->db->query("INSERT INTO `order_save_history` SET 
 								`order_id` = '" . (int)$order_id . "', 
 								`user_id` = '54',
 								`datetime` = NOW()
@@ -1912,7 +1882,7 @@ class ControllerApiInfo1C extends Controller
                         $message .= $language->get('text_date_added') . ' ' . date($language->get('date_format_short'), strtotime($order_info['date_added'])) . "\n\n";
 
                         $data['order_status_id'] = $order_status_id;
-                        $order_status_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_status WHERE order_status_id = '" . (int)$data['order_status_id'] . "' AND language_id = '" . (int)$order_info['language_id'] . "'");
+                        $order_status_query = $this->db->query("SELECT * FROM order_status WHERE order_status_id = '" . (int)$data['order_status_id'] . "' AND language_id = '" . (int)$order_info['language_id'] . "'");
 
                         if ($order_status_query->num_rows) {
                             $message .= $language->get('text_order_status') . "\n";
