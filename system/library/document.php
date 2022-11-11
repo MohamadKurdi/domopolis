@@ -15,10 +15,9 @@
 		private $hreflangs 		= [];
 		
 		
-		public function setTitle($title) {
-			
+		public function setTitle($title) {			
 			if (defined('SITE_NAMESPACE') && !defined('THIS_IS_CATALOG')){
-				$this->title =  mb_substr(SITE_NAMESPACE,0,1) . ' : ' . $title;
+				$this->title =  mb_substr(SITE_NAMESPACE, 0, 1) . ' : ' . $title;
 				} else {
 				$this->title = $title;
 			}
@@ -75,16 +74,14 @@
 		public function getRobots(){
 			return $this->robots;			
 		}
-		
-		//COMPATIBILITY
+				
 		public function addRobotsMeta( $content ) {
 			$this->setRobots($content);
 		}
 		
 		public function getRobotsMeta() {
 			return $this->robots;
-		}
-		
+		}		
 		
 		public function addMeta( $key, $val, $type = 'name' ) {
 			if( $val === '' ) return $this;
@@ -110,9 +107,9 @@
 			}
 		
 			$this->links[md5($href.$rel.$hreflang)] = array(
-			'href' => $href,
-			'rel'  => $rel,
-			'hreflang' => $hreflang
+			'href' 		=> $href,
+			'rel'  		=> $rel,
+			'hreflang' 	=> $hreflang
 			);			
 		}
 		
