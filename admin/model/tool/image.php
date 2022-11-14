@@ -51,9 +51,18 @@
 		}
 		
 		public function greyscale($filename, $width = 0, $height = 0, $resize = false) {
-			if (!file_exists(DIR_IMAGE . $filename) || !is_file(DIR_IMAGE . $filename)) {
+			if (!trim($filename)){
+				$filename = 'no_image.jpg';
+			}
+			
+			$DIR_IMAGE = DIR_IMAGE;	
+			if (file_exists(DIR_IMAGE . $filename) && is_file(DIR_IMAGE . $filename)){
+			//do nothing
+			} elseif (defined('DIR_IMAGE_MAIN') && file_exists(DIR_IMAGE_MAIN . $filename) && is_file(DIR_IMAGE_MAIN . $filename)){
+				$DIR_IMAGE = DIR_IMAGE_MAIN;		
+			} else {			
 				return;
-			} 
+			}	
 			
 			$info = pathinfo($filename);
 			
@@ -65,11 +74,11 @@
 			$new_image = $new_image_struct['full_path'];
 			$new_image_relative = $new_image_struct['relative_path'];
 			
-			if (!file_exists($new_image) || (filemtime(DIR_IMAGE . $old_image) > filemtime($new_image))) {				
+			if (!file_exists($new_image) || (filemtime($DIR_IMAGE . $old_image) > filemtime($new_image))) {				
 				
-				list($width_orig, $height_orig) = getimagesize(DIR_IMAGE . $old_image);
+				list($width_orig, $height_orig) = getimagesize($DIR_IMAGE . $old_image);
 				
-				$image = new Image(DIR_IMAGE . $old_image);
+				$image = new Image($DIR_IMAGE . $old_image);
 
 				if ($resize) {
 					$image->resize($width, $height);

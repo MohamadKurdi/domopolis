@@ -1360,11 +1360,7 @@
 				$this->data['config_logo'] = '';
 			}
 			
-			if (isset($store_info['config_logo']) && file_exists(DIR_IMAGE . $store_info['config_logo']) && is_file(DIR_IMAGE . $store_info['config_logo'])) {
-				$this->data['logo'] = $this->model_tool_image->resize($store_info['config_logo'], 100, 100);		
-				} else {
-				$this->data['logo'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
-			}
+			$this->data['logo'] = $this->model_tool_image->resize($store_info['config_logo'], 100, 100);
 			
 			if (isset($this->request->post['config_icon'])) {
 				$this->data['config_icon'] = $this->request->post['config_icon'];
