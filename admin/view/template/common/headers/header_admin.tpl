@@ -398,10 +398,6 @@
 								<li><a class="home_icon_style" href="<?php echo $payment; ?>"><i class="fa fa-credit-card"></i><span><?php echo $text_payment; ?></span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $total; ?>"><i class="fa fa-plus"></i><span><?php echo $text_total; ?></span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $feed; ?>"><i class="fa fa-line-chart"></i><span><?php echo $text_feed; ?></span></a></li>
-								<? /*
-									<li><a class="home_icon_style" href="<?php echo $rewards_gen; ?>"><i class="fa fa-exchange"></i><span>Генератор бонусных баллов</span></a></li>
-									<li><a class="home_icon_style" href="<?php echo $rewards_mod; ?>"><i class="fa fa-cog"></i><span>Настройки бонусной программы</span></a></li>
-								*/ ?>
 								
 								<li><a class="home_icon_style" href="<?php echo $invite_after_order; ?>"><i class="fa fa-bar-chart"></i><span>Отзыв после покупки</span></a></li>
 								
@@ -409,8 +405,6 @@
 								<li><a class="home_icon_style" href="<?php echo $affiliate_mod_link; ?>"><i class="fa fa-cog"></i><span>Настройки партн. программы</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $subscribe; ?>"><i class="fa fa-check-square-o"></i><span><?php echo $text_subscribe; ?></span></a></li>
 								
-								<!--li><a href="<?php echo $recurring_profile; ?>"><?php echo $text_recurring_profile; ?></a></li-->
-								<!-- PAYPAL MANAGE NAVIGATION LINK -->
 								<?php if ($pp_express_status) { ?>
 									<li><a class="parent home_icon_style" href="<?php echo $paypal_express; ?>"><i class="fa fa-cc-paypal"></i><span><?php echo $text_paypal_express; ?></span></a>
 										<ul>
@@ -418,55 +412,7 @@
 										</ul>
 									</li>
 								<?php } ?>
-								<!-- PAYPAL MANAGE NAVIGATION LINK END -->		
 								<li><a class="home_icon_style" href="<?php echo $contact; ?>"><i class="fa fa-at"></i><span><?php echo $text_contact; ?></span></a></li>
-								
-								
-								<li><a class="home_icon_style parent" href="<?php echo $vk_export; ?>"><i class="fa fa-vk"></i><span><?php echo $text_vk_export; ?></span></a>
-									<ul>
-										<li><a href="<?php echo $vk_export; ?>"><?php echo $text_vk_export; ?></a></li>
-										<li><a href="<?php echo $vk_export_albums; ?>"><?php echo $text_vk_export_albums; ?></a></li>
-										<li><a href="<?php echo $vk_export_setting; ?>"><?php echo $text_vk_export_setting; ?></a></li>
-										<li><a href="<?php echo $vk_export_report; ?>"><?php echo $text_vk_export_cron_report; ?></a></li>
-									</ul>
-								</li>
-								<?php if ($openbay_show_menu == 1) { ?>
-									<li><a class="parent home_icon_style"><i class="fa fa-folder-open-o"></i><span><?php echo $text_openbay_extension; ?></span></a>
-										<ul>
-											<li><a href="<?php echo $openbay_link_extension; ?>"><?php echo $text_openbay_dashboard; ?></a></li>
-											<li><a href="<?php echo $openbay_link_orders; ?>"><?php echo $text_openbay_orders; ?></a></li>
-											<li><a href="<?php echo $openbay_link_items; ?>"><?php echo $text_openbay_items; ?></a></li>
-											
-											<?php if($openbay_markets['ebay'] == 1){ ?>
-												<li><a class="parent" href="<?php echo $openbay_link_ebay; ?>"><?php echo $text_openbay_ebay; ?></a>
-													<ul>
-														<li><a href="<?php echo $openbay_link_ebay_settings; ?>"><?php echo $text_openbay_settings; ?></a></li>
-														<li><a href="<?php echo $openbay_link_ebay_links; ?>"><?php echo $text_openbay_links; ?></a></li>
-														<li><a href="<?php echo $openbay_link_ebay_orderimport; ?>"><?php echo $text_openbay_order_import; ?></a></li>
-													</ul>
-												</li>
-											<?php } ?>
-											
-											<?php if($openbay_markets['amazon'] == 1){ ?>
-												<li><a class="parent" href="<?php echo $openbay_link_amazon; ?>"><?php echo $text_openbay_amazon; ?></a>
-													<ul>
-														<li><a href="<?php echo $openbay_link_amazon_settings; ?>"><?php echo $text_openbay_settings; ?></a></li>
-														<li><a href="<?php echo $openbay_link_amazon_links; ?>"><?php echo $text_openbay_links; ?></a></li>
-													</ul>
-												</li>
-											<?php } ?>
-											
-											<?php if($openbay_markets['amazonus'] == 1){ ?>
-												<li><a class="parent" href="<?php echo $openbay_link_amazonus; ?>"><?php echo $text_openbay_amazonus; ?></a>
-													<ul>
-														<li><a href="<?php echo $openbay_link_amazonus_settings; ?>"><?php echo $text_openbay_settings; ?></a></li>
-														<li><a href="<?php echo $openbay_link_amazonus_links; ?>"><?php echo $text_openbay_links; ?></a></li>
-													</ul>
-												</li>
-											<?php } ?>
-										</ul>
-									</li>
-								<?php } ?>
 							</ul>
 						</li>							
 						<li id="seo"><a class="top"><i class="fa fa-puzzle-piece icon_menu"></i>SEO</a>

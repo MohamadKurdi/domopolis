@@ -93,14 +93,7 @@ class ControllerModuleKeyworder extends Controller {
 
 		foreach ($results['val'] as $result) {
 			if (isset($results['dat'][$result['keyworder_id']])) {
-				foreach ($results['dat'][$result['keyworder_id']] as $dat) {
-					
-					if ($dat['image'] && file_exists(DIR_IMAGE . $dat['image'])) {
-						$thumb = $this->model_tool_image->resize($dat['image'], 50, 50);
-					} else {
-						$thumb = $this->model_tool_image->resize('no_image.jpg', 50, 50);
-					}
-					
+				foreach ($results['dat'][$result['keyworder_id']] as $dat) {					
 					$keyworder_description[$result['keyworder_id']][$dat['language_id']] = array(
 						'seo_h1' 			=> $dat['seo_h1'],
 						'seo_title' 		=> $dat['seo_title'],
@@ -110,7 +103,7 @@ class ControllerModuleKeyworder extends Controller {
 						'category_status' 	=> $dat['category_status'],
 						'keyworder_status' 	=> $dat['keyworder_status'],
 						'image'             => $dat['image'],
-						'thumb'             => $thumb
+						'thumb'             => $this->model_tool_image->resize($dat['image'], 50, 50)
 					);
 				}
 			} else {
