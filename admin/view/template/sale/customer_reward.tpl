@@ -19,8 +19,8 @@
 			<tr>
 				<td class="left">Служебный код</td>
 				<td class="left">Заказ</td>
-				<td class="left"><?php echo $column_description; ?></td>
-				<td class="right"><?php echo $column_points; ?></td>
+				<td class="left">Описание</td>
+				<td class="right">Бонусов</td>
 				<td class="right">Дата добавления</td>
 				<td class="right">Дата начисления</td>
 			</tr>
@@ -75,12 +75,11 @@
 		<tr>
 			<td class="left">Служебный код</td>
 			<td class="left">Ответственный</td>
-			<td class="left"><?php echo $column_date_added; ?></td>
+			<td class="left">Дата добавления</td>
 			<td class="left">Заказ</td>
-			<td class="left"><?php echo $column_description; ?></td>
-			<td class="right"><?php echo $column_points; ?></td>
+			<td class="left">Описание</td>
+			<td class="right">Бонусы</td>
 			<td class="right">Потрачено</td>
-			<td class="right">Дата списания</td>
 			<td class="right">Активные</td>
 			<td class="right">Дата сгорания</td>
 		</tr>
@@ -127,12 +126,6 @@
 							<div class="reward-points red">
 								<?php echo $reward['points_paid']; ?>	
 							</div>
-						<?php } ?>
-					</td>
-					
-					<td class="right">
-						<?php if ($reward['points_paid']) { ?>
-							<i class="fa fa-calendar" aria-hidden="true"></i><?php echo $reward['date_paid']; ?>
 						<?php } ?>
 					</td>
 					

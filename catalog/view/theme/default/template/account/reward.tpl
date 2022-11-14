@@ -401,8 +401,7 @@
 							<td class="left"><?php echo $column_order_id; ?></td>
 							<td class="left"><?php echo $column_description; ?></td>
 							<td class="right"><?php echo $column_points; ?></td>
-							<td class="right"><?php echo $column_points_paid; ?></td>
-							<td class="right"><?php echo $column_date_paid; ?></td>
+							<td class="right"><?php echo $column_points_paid; ?></td>							
 							<td class="right"><?php echo $column_active_points; ?></td>
 							<td class="right"><?php echo $column_date_inactivate; ?></td>
 						</tr>
@@ -436,12 +435,6 @@
 									<td class="left" style="white-space:nowrap;">
 										<?php if ($reward['points_paid']) { ?>
 											<small><span class="text-danger"><?php echo $reward['points_paid']; ?></span></small>
-										<?php } ?>
-									</td>
-									
-									<td class="left">
-										<?php if ($reward['date_paid']) { ?>
-											<small><?php echo $reward['date_paid']; ?></small>
 										<?php } ?>
 									</td>
 									

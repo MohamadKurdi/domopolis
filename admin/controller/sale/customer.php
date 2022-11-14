@@ -3619,6 +3619,7 @@
 				'order_id' 	  	=> $result['order_id'],
 				'user_id' 	  	=> $result['user_id'],
 				'user' 	  		=> $result['user_id']?$this->model_user_user->getRealUserNameById($result['user_id']):'',
+				'burned'		=> $result['burned'],
 				'date_added'  	=> date('d.m.Y', strtotime($result['date_added'])),
 				'time_added'  	=> date('H:i:s', strtotime($result['date_added'])),
 				'points_paid' 	=> $result['points_paid']?$this->currency->formatBonus($result['points_paid']):false,
