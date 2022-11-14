@@ -484,15 +484,9 @@
 			$this->data['countrybrand_images'] = array();
 			
 			foreach ($countrybrand_images as $countrybrand_image) {
-				if ($countrybrand_image['image'] && file_exists(DIR_IMAGE . $countrybrand_image['image'])) {
-					$image = $countrybrand_image['image'];
-					} else {
-					$image = 'no_image.jpg';
-				}
-				
 				$this->data['countrybrand_images'][] = array(
-				'image'      => $image,
-				'thumb'      => $this->model_tool_image->resize($image, 100, 100),
+				'image'      => $countrybrand_image['image'],
+				'thumb'      => $this->model_tool_image->resize($countrybrand_image['image'], 100, 100),
 				'sort_order' => $countrybrand_image['sort_order']
 				);
 			}
@@ -515,17 +509,17 @@
 				$this->data['banner'] = '';
 			}					
 			
-			if (isset($this->request->post['image']) && file_exists(DIR_IMAGE . $this->request->post['image'])) {
+			if (isset($this->request->post['image'])) {
 				$this->data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
-				} elseif (!empty($countrybrand_info) && $countrybrand_info['image'] && file_exists(DIR_IMAGE . $countrybrand_info['image'])) {
+				} elseif (!empty($countrybrand_info) && $countrybrand_info['image']) {
 				$this->data['thumb'] = $this->model_tool_image->resize($countrybrand_info['image'], 100, 100);
 				} else {
 				$this->data['thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
 			}
 			
-			if (isset($this->request->post['banner']) && file_exists(DIR_IMAGE . $this->request->post['banner'])) {
+			if (isset($this->request->post['banner'])) {
 				$this->data['banner_thumb'] = $this->model_tool_image->resize($this->request->post['banner'], 100, 100);
-				} elseif (!empty($countrybrand_info) && $countrybrand_info['banner'] && file_exists(DIR_IMAGE . $countrybrand_info['banner'])) {
+				} elseif (!empty($countrybrand_info) && $countrybrand_info['banner']) {
 				$this->data['banner_thumb'] = $this->model_tool_image->resize($countrybrand_info['banner'], 100, 100);
 				} else {
 				$this->data['banner_thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);

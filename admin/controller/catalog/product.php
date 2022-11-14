@@ -637,12 +637,6 @@ class ControllerCatalogProduct extends Controller {
 				'href' => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'] . $url, 'SSL')
 			);
 
-			if ($result['image'] && file_exists(DIR_IMAGE . $result['image'])) {
-				$image = $this->model_tool_image->resize($result['image'], 40, 40);
-			} else {
-				$image = $this->model_tool_image->resize('no_image.jpg', 40, 40);
-			}
-
 			$special = false;
 
 			$product_specials = $this->model_catalog_product->getProductSpecials($result['product_id']);
@@ -661,7 +655,7 @@ class ControllerCatalogProduct extends Controller {
 				'model'      => $result['model'],
 				'price'      => $result['price'],
 				'special'    => $special,
-				'image'      => $image,
+				'image'      => $this->model_tool_image->resize($result['image'], 40, 40),
 				'quantity'   => $result['quantity'],
 				'status'     => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
 				'selected'   => isset($this->request->post['selected']) && in_array($result['product_id'], $this->request->post['selected']),
@@ -1498,9 +1492,9 @@ class ControllerCatalogProduct extends Controller {
 		}
 
 
-		if (isset($this->request->post['image']) && file_exists(DIR_IMAGE . $this->request->post['image'])) {
+		if (isset($this->request->post['image'])) {
 			$this->data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
-		} elseif (!empty($product_info) && $product_info['image'] && file_exists(DIR_IMAGE . $product_info['image'])) {
+		} elseif (!empty($product_info) && $product_info['image']) {
 			$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], 100, 100);
 		} else {
 			$this->data['thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
@@ -2374,13 +2368,6 @@ class ControllerCatalogProduct extends Controller {
 			$product_product_option_value_data = array();
 
 			foreach ($product_product_option['product_option'] as $product_option_value) {
-
-				if (isset($product_option_value['image']) && file_exists(DIR_IMAGE . $product_option_value['image'])) {
-					$thumb = $this->model_tool_image->resize($product_option_value['image'], 100, 100);
-				} else {
-					$thumb = $this->model_tool_image->resize('no_image.jpg', 100, 100);
-				}
-
 				$special = false;
 
 				$product_specials = $this->model_catalog_product->getProductSpecials($product_option_value['product_option_id']);
@@ -2397,7 +2384,7 @@ class ControllerCatalogProduct extends Controller {
 					'product_product_option_value_id' => $product_option_value['product_product_option_value_id'],
 					'product_option_id'         	  => $product_option_value['product_option_id'],
 					'name'                    		  => $product_option_value['name'],
-					'image'                   		  => $thumb,
+					'image'                   		  => $this->model_tool_image->resize($product_option_value['image'], 100, 100),
 					'price'                   		  => $product_option_value['price'],
 					'special'						  => $special,
 					'sort_order'            		  => $product_option_value['sort_order'],					
@@ -2419,11 +2406,7 @@ class ControllerCatalogProduct extends Controller {
 		foreach ($this->data['product_options'] as $k1 => $product_option) {
 			if (isset($product_option['product_option_value'])) {
 				foreach ($product_option['product_option_value'] as $k2 => $product_option_value) {
-					if (isset($product_option_value['ob_image']) && file_exists(DIR_IMAGE . $product_option_value['ob_image']) && is_file(DIR_IMAGE . $product_option_value['ob_image'])) {
-						$this->data['product_options'][$k1]['product_option_value'][$k2]['preview'] = $this->model_tool_image->resize($product_option_value['ob_image'], 38, 38);
-					} else {
-						$this->data['product_options'][$k1]['product_option_value'][$k2]['preview'] = $this->model_tool_image->resize('no_image.jpg', 38, 38);
-					}
+					$this->data['product_options'][$k1]['product_option_value'][$k2]['preview'] = $this->model_tool_image->resize($product_option_value['ob_image'], 38, 38);
 				}
 			}
 		}
@@ -2460,17 +2443,11 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['product_videos'] = array();
 
 		foreach ($product_videos as $product_video) {
-			if ($product_video['image'] && file_exists(DIR_IMAGE . $product_video['image'])) {
-				$image = $product_video['image'];
-			} else {
-				$image = 'no_image.jpg';
-			}
-
 			$this->data['product_videos'][] = array(
 				'image'      				=> $image,
 				'video'      				=> $product_video['video'],
 				'play'						=> $this->model_tool_image->video($product_video['video']),
-				'thumb'      				=> $this->model_tool_image->resize($image, 100, 100),					
+				'thumb'      				=> $this->model_tool_image->resize($product_video['image'], 100, 100),					
 				'sort_order' 				=> $product_video['sort_order'],
 				'product_video_description' => $product_video['product_video_description']
 			);
@@ -2489,15 +2466,9 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['product_images'] = array();
 
 		foreach ($product_images as $product_image) {
-			if ($product_image['image'] && file_exists(DIR_IMAGE . $product_image['image'])) {
-				$image = $product_image['image'];
-			} else {
-				$image = 'no_image.jpg';
-			}
-
 			$this->data['product_images'][] = array(
 				'image'      => $image,
-				'thumb'      => $this->model_tool_image->resize($image, 100, 100),
+				'thumb'      => $this->model_tool_image->resize($product_image['image'], 100, 100),
 				'sort_order' => $product_image['sort_order']
 			);
 		}
@@ -2968,14 +2939,7 @@ class ControllerCatalogProduct extends Controller {
 				}
 
 				$this->load->model('tool/image');
-
-				if ($result['image'] && file_exists(DIR_IMAGE . $result['image'])) {
-					$image = $result['image'];
-				} else {
-					$image = 'no_image.jpg';
-				}
-
-				$thumb = $this->model_tool_image->resize($image, 100, 100);
+				$thumb = $this->model_tool_image->resize($result['image'], 100, 100);
 
 				$json[] = array(
 					'product_id' => $result['product_id'],
@@ -2983,7 +2947,7 @@ class ControllerCatalogProduct extends Controller {
 					'image'       => $this->model_tool_image->resize($result['image'], 40, 40),
 					'model'      => $result['model'],
 					'ean'        => $result['ean'],
-					'asin'        => $result['asin'],
+					'asin'       => $result['asin'],
 					'option'     => $option_data,
 					'price'      => $result['price'],
 					'image'      => $thumb,

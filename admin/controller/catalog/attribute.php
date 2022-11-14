@@ -372,7 +372,7 @@ class ControllerCatalogAttribute extends Controller {
         foreach ($attributeValueArray as $k => $v) {
             $image = 'no_image.jpg';
             $imageData = false;
-            if (array_key_exists ($v['text'], $attributeImages) && file_exists(DIR_IMAGE.$attributeImages[$v['text']])) {
+            if (array_key_exists ($v['text'], $attributeImages)) {
                 $image = $attributeImages[$v['text']];
                 $imageData = true;
             }
@@ -394,9 +394,6 @@ class ControllerCatalogAttribute extends Controller {
 
         $this->load->model('catalog/information');
         $this->data['informations'] = $this->model_catalog_information->getInformations();
-
-
-        // $sql = "SELECT DISTINCT `text` FROM `product_attribute` WHERE `attribute_id` = 11";
 
 		$this->template = 'catalog/attribute_form.tpl';
 		$this->children = array(

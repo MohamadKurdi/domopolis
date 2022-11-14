@@ -23,12 +23,7 @@ class ControllerCatalogCollection extends Controller {
 				$query4 = $this->db->query("SELECT virtual FROM collection WHERE collection_id = '" . (int)$row['collection_id'] . "' AND virtual = 1");
 
 				if (!$query4->num_rows){
-
-					//$this->model_catalog_collection->deleteCollection($row['collection_id']);				
-					//$this->db->query("UPDATE product SET collection_id = 0 WHERE collection_id = '" . (int)$row['collection_id'] . "'");
-
 					echoLine('[i] Коллекция ' . $row['name'] . ' (' . (int)$row['collection_id'] . ') не существует! удаляем!');
-
 				} else {
 					echoLine('[i] Виртуальная Коллекция ' . $row['name'] .' (' . (int)$row['collection_id'] . ') пропускаем!');
 				}
@@ -630,15 +625,9 @@ class ControllerCatalogCollection extends Controller {
 			$this->data['collection_images'] = array();
 
 			foreach ($collection_images as $collection_image) {
-				if ($collection_image['image'] && file_exists(DIR_IMAGE . $collection_image['image'])) {
-					$image = $collection_image['image'];
-				} else {
-					$image = 'no_image.jpg';
-				}
-
 				$this->data['collection_images'][] = array(
 					'image'      => $image,
-					'thumb'      => $this->model_tool_image->resize($image, 100, 100),
+					'thumb'      => $this->model_tool_image->resize($collection_image['image'], 100, 100),
 					'sort_order' => $collection_image['sort_order']
 				);
 			}
@@ -661,17 +650,17 @@ class ControllerCatalogCollection extends Controller {
 				$this->data['banner'] = '';
 			}					
 
-			if (isset($this->request->post['image']) && file_exists(DIR_IMAGE . $this->request->post['image'])) {
+			if (isset($this->request->post['image'])) {
 				$this->data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
-			} elseif (!empty($collection_info) && $collection_info['image'] && file_exists(DIR_IMAGE . $collection_info['image'])) {
+			} elseif (!empty($collection_info) && $collection_info['image']) {
 				$this->data['thumb'] = $this->model_tool_image->resize($collection_info['image'], 100, 100);
 			} else {
 				$this->data['thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
 			}
 
-			if (isset($this->request->post['banner']) && file_exists(DIR_IMAGE . $this->request->post['banner'])) {
+			if (isset($this->request->post['banner'])) {
 				$this->data['banner_thumb'] = $this->model_tool_image->resize($this->request->post['banner'], 100, 100);
-			} elseif (!empty($collection_info) && $collection_info['banner'] && file_exists(DIR_IMAGE . $collection_info['banner'])) {
+			} elseif (!empty($collection_info) && $collection_info['banner']) {
 				$this->data['banner_thumb'] = $this->model_tool_image->resize($collection_info['banner'], 100, 100);
 			} else {
 				$this->data['banner_thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);

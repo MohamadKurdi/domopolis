@@ -367,12 +367,7 @@
 			foreach ($results as $result) {
 				$action = array();
 				
-				if ($result['image'] && file_exists(DIR_IMAGE . $result['image'])) {
-					$image = $this->model_tool_image->resize($result['image'], 40, 40);
-					} else {
-					$image = $this->model_tool_image->resize('no_image.jpg', 40, 40);
-				}
-				
+				$image = $this->model_tool_image->resize($result['image'], 40, 40);
 				$special = false;
 				
 				$product_specials = $this->model_catalog_product->getProductSpecials($result['product_id']);

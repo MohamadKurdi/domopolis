@@ -450,11 +450,7 @@
 			$this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 22, 22);
 			
 			foreach ($this->data['ocfilter_option_values'] as $key => $value) {
-				if ($value['image'] && file_exists(DIR_IMAGE . $value['image'])) {
-					$this->data['ocfilter_option_values'][$key]['thumb'] = $this->model_tool_image->resize($value['image'], 22, 22);
-					} else {
-					$this->data['ocfilter_option_values'][$key]['thumb'] = 'view/image/banner.png';
-				}
+				$this->data['ocfilter_option_values'][$key]['thumb'] = $this->model_tool_image->resize($value['image'], 22, 22);
 			}
 			
 			if (isset($this->request->post['sort_order'])) {

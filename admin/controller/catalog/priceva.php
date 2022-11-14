@@ -353,12 +353,7 @@ class ControllerCatalogPriceva extends Controller {
 		foreach ($results as $result) {
 			$action = array();
 
-			if ($result['image'] && file_exists(DIR_IMAGE . $result['image'])) {
-				$image = $this->model_tool_image->resize($result['image'], 60, 60);
-			} else {
-				$image = $this->model_tool_image->resize('no_image.jpg', 60, 60);
-			}
-
+			$image = $this->model_tool_image->resize($result['image'], 60, 60);
 			$product_info = $this->modelCatalogProduct->getUncachedProductForStore($result['product_id'], $filter_store_id);
 			$product_info_admin = $this->model_catalog_product->getProduct($result['product_id'], false);
 

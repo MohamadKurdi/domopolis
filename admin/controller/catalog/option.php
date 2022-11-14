@@ -394,17 +394,11 @@
 			$this->data['option_values'] = array();
 			
 			foreach ($option_values as $option_value) {
-				if ($option_value['image'] && file_exists(DIR_IMAGE . $option_value['image'])) {
-					$image = $option_value['image'];
-					} else {
-					$image = 'no_image.jpg';
-				}
-				
 				$this->data['option_values'][] = array(
 				'option_value_id'          => $option_value['option_value_id'],
 				'option_value_description' => $option_value['option_value_description'],
-				'image'                    => $image,
-				'thumb'                    => $this->model_tool_image->resize($image, 100, 100),
+				'image'                    => $option_value['image'],
+				'thumb'                    => $this->model_tool_image->resize($option_value['image'], 100, 100),
 				'sort_order'               => $option_value['sort_order']
 				);
 			}
@@ -501,17 +495,11 @@
 					if ($option['type'] == 'select' || $option['type'] == 'block' || $option['type'] == 'radio' || $option['type'] == 'checkbox' || $option['type'] == 'image') {
 						$option_values = $this->model_catalog_option->getOptionValues($option['option_id']);
 						
-						foreach ($option_values as $option_value) {
-							if ($option_value['image'] && file_exists(DIR_IMAGE . $option_value['image'])) {
-								$image = $this->model_tool_image->resize($option_value['image'], 50, 50);
-								} else {
-								$image = '';
-							}
-							
+						foreach ($option_values as $option_value) {							
 							$option_value_data[] = array(
 							'option_value_id' => $option_value['option_value_id'],
 							'name'            => html_entity_decode($option_value['name'], ENT_QUOTES, 'UTF-8'),
-							'image'           => $image					
+							'image'           => $this->model_tool_image->resize($option_value['image'], 50, 50)					
 							);
 						}
 						

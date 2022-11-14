@@ -577,12 +577,12 @@ class ControllerCatalogNews extends Controller {
 		
 		$this->load->model('tool/image');
 		$this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
-		if (!empty($news_info) && $news_info['image'] && file_exists(DIR_IMAGE . $news_info['image'])) {
+		if (!empty($news_info) && $news_info['image']) {
 			$this->data['thumb'] = $this->model_tool_image->resize($news_info['image'], 100, 100);
 		} else {
 			$this->data['thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
 		}
-		if (!empty($news_info) && $news_info['image2'] && file_exists(DIR_IMAGE . $news_info['image2'])) {
+		if (!empty($news_info) && $news_info['image2']) {
 			$this->data['thumb2'] = $this->model_tool_image->resize($news_info['image2'], 100, 100);
 		} else {
 			$this->data['thumb2'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
@@ -679,15 +679,9 @@ class ControllerCatalogNews extends Controller {
 		$this->data['news_gallery'] = array();
 
 		foreach ($news_gallery as $news_image) {
-			if ($news_image['image'] && file_exists(DIR_IMAGE . $news_image['image'])) {
-				$image = $news_image['image'];
-			} else {
-				$image = 'no_image.jpg';
-			}
-
 			$this->data['news_gallery'][] = array(
-				'image'      => $image,
-				'thumb'      => $this->model_tool_image->resize($image, 100, 100),
+				'image'      => $news_image['image'],
+				'thumb'      => $this->model_tool_image->resize($news_image['image'], 100, 100),
 				'text'       => $news_image['text'],
 				'sort_order' => $news_image['sort_order']
 			);

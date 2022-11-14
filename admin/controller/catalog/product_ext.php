@@ -389,11 +389,7 @@ class ControllerCatalogProductExt extends Controller {
                 }
             }
 
-            if ($result['image'] && file_exists(DIR_IMAGE . $result['image'])) {
-                $image = $this->model_tool_image->resize($result['image'], 40, 40);
-            } else {
-                $image = $this->model_tool_image->resize('no_image.jpg', 40, 40);
-            }
+            $image = $this->model_tool_image->resize($result['image'], 40, 40);
 
             $special = false;
 
@@ -427,13 +423,8 @@ class ControllerCatalogProductExt extends Controller {
                 foreach($cp_cols as $column => $attr) {
                     if ($attr['display']) {
                         if ($column == 'image') {
-                            if ($result['image'] && file_exists(DIR_IMAGE . $result['image'])) {
-                                $image = $this->model_tool_image->resize($result['image'], $this->config->get('aqe_list_view_image_width'), $this->config->get('aqe_list_view_image_height'));
-                            } else {
-                                $image = $this->model_tool_image->resize('no_image.jpg', $this->config->get('aqe_list_view_image_width'), $this->config->get('aqe_list_view_image_height'));
-                            }
                             $columns[$column] = $result['image'];
-                            $columns['thumb'] = $image;
+                            $columns['thumb'] = $this->model_tool_image->resize($result['image'], $this->config->get('aqe_list_view_image_width'), $this->config->get('aqe_list_view_image_height'));
                             $columns['name'] = $result['name'];
                         } else if ($column == 'category') {
                             $this->load->model('catalog/category');
@@ -989,15 +980,9 @@ class ControllerCatalogProductExt extends Controller {
                     $this->load->model('tool/image');
 
                     foreach ($product_images as $product_image) {
-                        if ($product_image['image'] && file_exists(DIR_IMAGE . $product_image['image'])) {
-                            $image = $product_image['image'];
-                        } else {
-                            $image = 'no_image.jpg';
-                        }
-
                         $this->data['product_images'][] = array(
                             'image'      => $image,
-                            'thumb'      => $this->model_tool_image->resize($image, 100, 100),
+                            'thumb'      => $this->model_tool_image->resize($product_image['image'], 100, 100),
                             'sort_order' => $product_image['sort_order']
                         );
                     }
@@ -1271,11 +1256,7 @@ class ControllerCatalogProductExt extends Controller {
                     }
                 } else if ($column == 'image') {
                     $this->load->model('tool/image');
-                    if ($value && file_exists(DIR_IMAGE . $value)) {
-                        $image = $this->model_tool_image->resize($value, $this->config->get('aqe_list_view_image_width'), $this->config->get('aqe_list_view_image_height'));
-                    } else {
-                        $image = $this->model_tool_image->resize('no_image.jpg', $this->config->get('aqe_list_view_image_width'), $this->config->get('aqe_list_view_image_height'));
-                    }
+                    $image = $this->model_tool_image->resize($value, $this->config->get('aqe_list_view_image_width'), $this->config->get('aqe_list_view_image_height'));
                     $json['value'] = '<img src="' . $image . '" data-id="' . $id . '" data-image="' . $value . '" alt="' . $alt . '" style="padding: 1px; border: 1px solid #DDDDDD;" />';
                 } else if ($column == 'tax_class') {
                     $this->load->model('localisation/tax_class');

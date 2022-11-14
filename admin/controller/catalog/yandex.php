@@ -19,18 +19,12 @@
 			loadAndRenameCatalogModels('model/catalog/product.php', 'ModelCatalogProduct', 'ModelCatalogProductCatalog');
 			$this->modelCatalogProduct = new ModelCatalogProductCatalog($this->registry);
 			
-			
-			
 			$this->getList();
 		}
 		
-		public function hideshow(){
-		
-			$product_id = $this->request->get['product_id'];
-		
-			$this->hideOrShowProductInMarketViaAPI($product_id);
-		
-		
+		public function hideshow(){		
+			$product_id = $this->request->get['product_id'];		
+			$this->hideOrShowProductInMarketViaAPI($product_id);				
 		}
 		
 		private function hideOrShowProductInMarketViaAPI($product_id){
@@ -340,12 +334,7 @@
 			foreach ($results as $result) {
 				$action = array();
 				
-				if ($result['image'] && file_exists(DIR_IMAGE . $result['image'])) {
-					$image = $this->model_tool_image->resize($result['image'], 60, 60);
-					} else {
-					$image = $this->model_tool_image->resize('no_image.jpg', 60, 60);
-				}
-				
+				$image = $this->model_tool_image->resize($result['image'], 60, 60);
 				$product_info = $this->modelCatalogProduct->getProduct($result['product_id'], false);
 				
 				$price = $this->currency->format_with_left($product_info['price'], $this->config->get('config_regional_currency'));

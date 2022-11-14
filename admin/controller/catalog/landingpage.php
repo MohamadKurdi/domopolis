@@ -427,9 +427,9 @@ class ControllerCatalogLandingpage extends Controller {
 		
 		$this->load->model('tool/image');
 
-		if (isset($this->request->post['image']) && file_exists(DIR_IMAGE . $this->request->post['image'])) {
+		if (isset($this->request->post['image'])) {
 			$this->data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
-		} elseif (!empty($landingpage_info) && $landingpage_info['image'] && file_exists(DIR_IMAGE . $landingpage_info['image'])) {
+		} elseif (!empty($landingpage_info) && $landingpage_info['image']) {
 			$this->data['thumb'] = $this->model_tool_image->resize($landingpage_info['image'], 100, 100);
 		} else {
 			$this->data['thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);

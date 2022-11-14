@@ -279,7 +279,7 @@ class ControllerCatalogncategory extends Controller {
 		
 		$this->load->model('tool/image');
 
-		if (!empty($ncategory_info) && $ncategory_info['image'] && file_exists(DIR_IMAGE . $ncategory_info['image'])) {
+		if (!empty($ncategory_info) && $ncategory_info['image']) {
 			$this->data['thumb'] = $this->model_tool_image->resize($ncategory_info['image'], 100, 100);
 		} else {
 			$this->data['thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);

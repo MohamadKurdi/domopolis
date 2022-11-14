@@ -215,11 +215,7 @@ class ControllerCatalogCategory extends Controller {
 				'href' => $this->url->link('catalog/category/update', 'token=' . $this->session->data['token'] . '&category_id=' . $result['category_id'] . $url, 'SSL')
 			);
 
-			if ($result['image'] && file_exists(DIR_IMAGE . $result['image'])) {
-				$image = $this->model_tool_image->resize($result['image'], $this->config->get('aqe_list_view_image_width'), $this->config->get('aqe_list_view_image_height'));
-			} else {
-				$image = $this->model_tool_image->resize('no_image.jpg', $this->config->get('aqe_list_view_image_width'), $this->config->get('aqe_list_view_image_height'));
-			}
+			$image = $this->model_tool_image->resize($result['image'], $this->config->get('aqe_list_view_image_width'), $this->config->get('aqe_list_view_image_height'));
 
 			$yandex_category_name = false;
 			if ($real_category['yandex_category_name']){
@@ -536,12 +532,7 @@ class ControllerCatalogCategory extends Controller {
 		foreach ($this->data['languages'] as $language){
 			if (isset($this->data['category_menu_content'][$language['language_id']])){
 				foreach ($this->data['category_menu_content'][$language['language_id']] as &$content){
-
-					if (isset($content['image']) && $content['image'] && file_exists(DIR_IMAGE . $content['image'])) {
-						$content['thumb'] = $this->model_tool_image->resize($content['image'], 100, 100);													
-					} else {											
-						$content['thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
-					}
+					$content['thumb'] = $this->model_tool_image->resize($content['image'], 100, 100);
 				}									
 			}
 		}
@@ -812,9 +803,9 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['image'] = '';
 		}
 
-		if (isset($this->request->post['image']) && file_exists(DIR_IMAGE . $this->request->post['image'])) {
+		if (isset($this->request->post['image'])) {
 			$this->data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
-		} elseif (!empty($category_info) && $category_info['image'] && file_exists(DIR_IMAGE . $category_info['image'])) {
+		} elseif (!empty($category_info) && $category_info['image']) {
 			$this->data['thumb'] = $this->model_tool_image->resize($category_info['image'], 100, 100);
 		} else {
 			$this->data['thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
