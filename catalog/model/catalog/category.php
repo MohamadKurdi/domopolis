@@ -97,7 +97,7 @@
 				AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
 				AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
 				AND c.status = '1' 
-				ORDER BY c.sort_order DESC, LCASE(cd.name)";
+				ORDER BY c.sort_order ASC, LCASE(cd.name)";
 			
 			if ((int)$limit < 0){
 				$limit = 0;
