@@ -77,12 +77,7 @@ class ModelToolImage extends Model {
 			}
 		}
 
-
-		//давайте получим сервер
-		//дефолтно у нас конфиг_урл - он существует в 100% случаев
 		$img_server = $this->config->get('config_ssl');	
-
-
 		if ($this->config->get('config_img_ssl')){					
 			$img_server = $this->config->get('config_img_ssl');
 		}
