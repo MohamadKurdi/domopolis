@@ -1,11 +1,4 @@
 <?php
-      //===========================================//
-     // Advanced Banners                 		  //
-    // Author: Joel Reeds                        //
-   // Company: OpenCart Addons                  //
-  // Website: http://opencartaddons.com        //
- // Contact: webmaster@opencartaddons.com     //
-//===========================================//
 class ControllerModuleOCAAB extends Controller {
 	private $extension = 'ocaab';
 	private $extensionType = 'module';
@@ -14,17 +7,17 @@ class ControllerModuleOCAAB extends Controller {
 		static $module = 0;
 		
 		if ($setting['status']) {
-		
+			
 			$status = true;
 			
 			$banner_data = array();
 			
 			$this->data['banners']		= array();
 			$this->data['extension']	= $this->extension;
-		
+			
 			$this->load->model('design/banner');			
 			$this->load->model('tool/image');
-					
+			
 			if ($this->customer->isLogged()) {
 				$customer_group_id = $this->customer->getCustomerGroupId();
 			} else {
@@ -153,7 +146,7 @@ class ControllerModuleOCAAB extends Controller {
 					'nextText'			=> !empty($setting['slideshow_nexttext']) ? $setting['slideshow_nexttext'] : 'Next',
 					'randomStart'		=> !empty($setting['slideshow_randomstart']) ? $setting['slideshow_randomstart'] : 'false'
 				);
-	
+				
 				if (!$banner_data || !$setting['cache']) {
 					$banner_data = array();
 					
@@ -167,13 +160,11 @@ class ControllerModuleOCAAB extends Controller {
 								$results = $this->model_design_banner->getBanner($banner['banner_id']);
 								
 								foreach ($results as $result) {
-									if (file_exists(DIR_IMAGE . $result['image'])) {
-										$banners[] = array(
-											'title' => $result['title'],
-											'link'  => $result['link'],
-											'image' => $this->model_tool_image->resize($result['image'], (int)$banner['image_width'], (int)$banner['image_height'], '',85)
-										);
-									}
+									$banners[] = array(
+										'title' => $result['title'],
+										'link'  => $result['link'],
+										'image' => $this->model_tool_image->resize($result['image'], (int)$banner['image_width'], (int)$banner['image_height'], '',85)
+									);
 								}
 								$banner_data[$x] = array(
 									'banners'		=> $banners,
@@ -204,7 +195,7 @@ class ControllerModuleOCAAB extends Controller {
 			$this->data['height'] 	= '100%';
 			
 			$this->document->addScript('catalog/view/javascript/jquery/nivo-slider/jquery.nivo.slider.pack.js');
-		
+			
 			if (file_exists('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/slideshow.css')) {
 				$this->document->addStyle('catalog/view/theme/' . $this->config->get('config_template') . '/stylesheet/slideshow.css');
 			} else {
@@ -218,7 +209,7 @@ class ControllerModuleOCAAB extends Controller {
 			}
 		} else {
 			$this->document->addScript('catalog/view/javascript/jquery/jquery.cycle.js');
-		
+			
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/' . $this->extensionType . '/' . $this->extension . '.tpl')) {
 				$this->template = $this->config->get('config_template') . '/template/' . $this->extensionType . '/' . $this->extension . '.tpl';
 			} else {
@@ -229,4 +220,3 @@ class ControllerModuleOCAAB extends Controller {
 		$this->render();
 	}
 }
-?>

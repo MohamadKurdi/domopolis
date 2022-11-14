@@ -89,11 +89,7 @@
 					$this->data['logo'] = '';
 				}		
 				
-				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/paykeeper.tpl')) {
-					$this->template = $this->config->get('config_template') . '/template/payment/paykeeper.tpl';
-					} else {
-					$this->template = 'default/template/payment/paykeeper.tpl';
-				}
+				$this->template = 'payment/paykeeper.tpl';
 				
 				$this->response->setOutput($this->render());
 				} else {
@@ -174,11 +170,7 @@
 					$this->data['logo'] = '';
 				}		
 				
-				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/paykeeper.tpl')) {
-					$this->template = $this->config->get('config_template') . '/template/payment/paykeeper.tpl';
-					} else {
-					$this->template = 'default/template/payment/paykeeper.tpl';
-				}
+				$this->template = 'payment/paykeeper.tpl';
 				
 				$this->response->setOutput($this->render());
 				} else {

@@ -3,8 +3,7 @@
 		const METHOD_CODE = 'paykeeper';
 		
 		
-		public function getMethod($address, $total, $explicit_show = false) {
-			
+		public function getMethod($address, $total, $explicit_show = false) {			
 			$status = false;						
 
 			if (($this->config->get('paykeeper_status'))){
@@ -17,10 +16,8 @@
 				$status = false;
 			}
 			
-			//проверить обычную логику и показать для админки
 			if ($explicit_show && $status){
 				$status = true;
-			//включить на фронте в казахстане обязательно
 			} elseif ((int)$address['country_id'] == 109 || (int)$address['country_id'] == 20) {
 				$status = false;			
 			} else {
