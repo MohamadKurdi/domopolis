@@ -353,10 +353,6 @@ class ControllerCommonHeader extends Controller
                 
             $this->data['text_nauthor'] = $this->language->get('text_nauthor');
                 
-            $this->data['vk_export'] = $this->url->link('extension/vk_export', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['vk_export_albums'] = $this->url->link('extension/vk_export/albums', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['vk_export_setting'] = $this->url->link('module/vk_export', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['vk_export_report'] = $this->url->link('extension/vk_export/report', 'token=' . $this->session->data['token'], 'SSL');
                 
             $this->data['mreport_ttnscan'] = $this->url->link('report/mreports', 'report=ttnscan&token=' . $this->session->data['token'], 'SSL');
             $this->data['mreport_needtocall'] = $this->url->link('report/mreports', 'report=needtocall&token=' . $this->session->data['token'], 'SSL');
