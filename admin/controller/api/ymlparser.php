@@ -172,29 +172,6 @@
 										
 									}								
 									
-									/*	
-										//картинки
-										$dir = mb_strtolower(preg_replace('/[^a-zA-Z0-9]/', '', $offer['vendor']));							
-										if (!is_dir(DIR_IMAGE . 'data/' . $dir ) ){
-										mkdir(DIR_IMAGE . 'data/' . $dir);
-										}
-										
-										if (!is_array($offer['picture']) && $offer['picture']){
-										$offer['picture'] = array($offer['picture']);
-										}
-										
-										$product_image = array();
-										foreach ($offer['picture'] as $pic){
-										if (!file_exists(DIR_IMAGE . 'data/' . $dir . '/' . basename($pic))){
-										echo '>>> Тырю картинку ' . basename($pic) . PHP_EOL;
-										file_put_contents(DIR_IMAGE . 'data/' . $dir . '/' . basename($pic), file_get_contents($pic));
-										}
-										
-										$product_image[] = 'data/' . $dir . '/' . basename($pic);
-										}
-										
-										fwrite($picfile, (int)$product['product_id'] . ';' . $offer['vendorCode'] . ';' . implode(',', $product_image) . PHP_EOL);
-									*/	
 									
 								}
 							}
