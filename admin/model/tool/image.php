@@ -2,28 +2,28 @@
 	class ModelToolImage extends Model {
 
 		public function video($filename){
-
 			return HTTPS_IMAGE . $filename;
-
 		}
 
 
 		public function resize($filename, $width, $height, $return_real_path = false) {
-
-			if (!defined('IMAGE_QUALITY')){
-				define('IMAGE_QUALITY', 80);
-			}
-			
 			$uri = '';
 			if (isset($this->request->server['REQUEST_URI'])) {
 				$uri = $this->request->server['REQUEST_URI'];
 			}
-			
-			$webp = false;
-			
-			if (!file_exists(DIR_IMAGE . $filename) || !is_file(DIR_IMAGE . $filename)) {
+
+			if (!trim($filename)){
 				$filename = 'no_image.jpg';
-			} 
+			}
+			
+			$DIR_IMAGE = DIR_IMAGE;	
+			if (file_exists(DIR_IMAGE . $filename) && is_file(DIR_IMAGE . $filename)){
+			//do nothing
+			} elseif (defined('DIR_IMAGE_MAIN') && file_exists(DIR_IMAGE_MAIN . $filename) && is_file(DIR_IMAGE_MAIN . $filename)){
+				$DIR_IMAGE = DIR_IMAGE_MAIN;		
+			} else {			
+				$filename = 'no_image.jpg';
+			}			
 			
 			$info = pathinfo($filename);
 			
@@ -32,12 +32,12 @@
 			$dirname = $info['dirname'];
 			
 			$old_image = $filename;
-			$new_image_struct = Image::cachedname($filename, $extension, [$width, $height, IMAGE_QUALITY, false, $webp]);
+			$new_image_struct = Image::cachedname($filename, $extension, [$width, $height, IMAGE_QUALITY, false, false]);
 			$new_image = $new_image_struct['full_path'];
 			$new_image_relative = $new_image_struct['relative_path'];
 			
-			if (!file_exists($new_image) || (filemtime(DIR_IMAGE . $old_image) > filemtime($new_image))) {								
-				$image = new Image(DIR_IMAGE . $old_image);
+			if (!file_exists($new_image) || (filemtime($DIR_IMAGE . $old_image) > filemtime($new_image))) {								
+				$image = new Image($DIR_IMAGE . $old_image);
 				$image->resize($width, $height);
 				$image->save($new_image, IMAGE_QUALITY);	
 			}
