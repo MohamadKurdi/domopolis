@@ -248,7 +248,7 @@ class ModelCatalogProductStatus extends Model
         $this->load->model('tool/image');
         $a776f5c4135b037603b74c97cdbebba18 = $this->config->get('product_status_options');
         $ac2b58574c9be213976ad15f8a14bed73 = $this->config->get('config_url') . 'image/' . $a7a33f61f16f67c1be945e4ea4b01c484;
-        if (!isset($a7a33f61f16f67c1be945e4ea4b01c484) || !$a7a33f61f16f67c1be945e4ea4b01c484 || !file_exists(DIR_IMAGE . $a7a33f61f16f67c1be945e4ea4b01c484)) {
+        if (!isset($a7a33f61f16f67c1be945e4ea4b01c484) || !$a7a33f61f16f67c1be945e4ea4b01c484) {
             $a7a33f61f16f67c1be945e4ea4b01c484 = 'no_image.jpg';
         }
         if ($a776f5c4135b037603b74c97cdbebba18[$a06dee0aab9da3a856736a38f2d30ee3f]['image_width'] || $a776f5c4135b037603b74c97cdbebba18[$a06dee0aab9da3a856736a38f2d30ee3f]['image_height']) {

@@ -551,11 +551,7 @@ class ControllerReportAdvProductPurchased extends Controller {
 		$this->load->model('tool/image');
 		
 		foreach ($results as $result) {
-			if ($result['image'] && file_exists(DIR_IMAGE . $result['image'])) {
-				$image = $this->model_tool_image->resize($result['image'], 40, 40);
-			} else {
-				$image = $this->model_tool_image->resize('no_image.jpg', 40, 40);
-			}
+			$image = $this->model_tool_image->resize($result['image'], 40, 40);
 			
 			$this->load->model('catalog/product');
 			$category = $this->model_catalog_product->getProductCategories($result['product_id']);

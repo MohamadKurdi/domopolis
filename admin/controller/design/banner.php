@@ -375,39 +375,19 @@ class ControllerDesignBanner extends Controller {
 		$this->data['banner_images'] = array();
 
 		foreach ($banner_images as $banner_image) {
-			if ($banner_image['image'] && file_exists(DIR_IMAGE . $banner_image['image'])) {
-				$image = $banner_image['image'];
-			} else {
-				$image = 'no_image.jpg';
-			}		
-			
-			if ($banner_image['image_sm'] && file_exists(DIR_IMAGE . $banner_image['image_sm'])) {
-				$image_sm = $banner_image['image_sm'];
-			} else {
-				$image_sm = 'no_image.jpg';
-			}
-		
 			foreach ($this->data['languages'] as $language){
-				if ($banner_image['banner_image_description'][$language['language_id']]['overload_image'] && file_exists(DIR_IMAGE . $banner_image['banner_image_description'][$language['language_id']]['overload_image'])){
-					$banner_image['banner_image_description'][$language['language_id']]['overload_thumb'] = $this->model_tool_image->resize($banner_image['banner_image_description'][$language['language_id']]['overload_image'], 100, 100);
-				} else {
-					$banner_image['banner_image_description'][$language['language_id']]['overload_thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
-				}
+				$banner_image['banner_image_description'][$language['language_id']]['overload_thumb'] = $this->model_tool_image->resize($banner_image['banner_image_description'][$language['language_id']]['overload_image'], 100, 100);
 				
-				if ($banner_image['banner_image_description'][$language['language_id']]['overload_image_sm'] && file_exists(DIR_IMAGE . $banner_image['banner_image_description'][$language['language_id']]['overload_image_sm'])){
-					$banner_image['banner_image_description'][$language['language_id']]['overload_thumb_sm'] = $this->model_tool_image->resize($banner_image['banner_image_description'][$language['language_id']]['overload_image_sm'], 100, 100);
-				}  else {
-					$banner_image['banner_image_description'][$language['language_id']]['overload_thumb_sm'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
-				}
+				$banner_image['banner_image_description'][$language['language_id']]['overload_thumb_sm'] = $this->model_tool_image->resize($banner_image['banner_image_description'][$language['language_id']]['overload_image_sm'], 100, 100);
 			}
 
 			$this->data['banner_images'][] = array(
 				'banner_image_description' => $banner_image['banner_image_description'],
 				'link'                     => $banner_image['link'],
-				'image'                    => $image,
-				'image_sm'                 => $image_sm,
-				'thumb'                    => $this->model_tool_image->resize($image, 100, 100),
-				'thumb_sm'                 => $this->model_tool_image->resize($image_sm, 100, 100)
+				'image'                    => $banner_image['image'],
+				'image_sm'                 => $banner_image['image_sm'],
+				'thumb'                    => $this->model_tool_image->resize($banner_image['image'], 100, 100),
+				'thumb_sm'                 => $this->model_tool_image->resize($banner_image['image_sm'], 100, 100)
 			);	
 		} 
 

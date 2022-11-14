@@ -752,7 +752,6 @@ class ControllerModuleSet extends Controller {
                 'show_in_product' => isset($product['show_in_product']) ? $product['show_in_product'] : 0,
                 'quantity'        => $product['quantity'],
                 'sort_order'      => $product['sort_order'],
-//                'count_persone'      => $product['sort_order'],
                 'error_price_in_set' => isset($product['error_price_in_set']) ? $product['error_price_in_set'] : false,
                 'error_quantity'  =>  isset($product['error_quantity']) ? $product['error_quantity'] : false
             );
@@ -767,12 +766,6 @@ class ControllerModuleSet extends Controller {
 		} else {
 			$this->data['total_set'] = '';
 		}
-
-        // 156 + 108 + 115 + 62 + 58
-
-
-
-
 
 		if (isset($this->request->post['percent'])) {
 			$this->data['percent'] = $this->request->post['percent'];
@@ -794,9 +787,9 @@ class ControllerModuleSet extends Controller {
 		}
 		$this->load->model('tool/image');
 		
-		if (isset($this->request->post['set_image']) && file_exists(DIR_IMAGE . $this->request->post['set_image'])) {
+		if (isset($this->request->post['set_image'])) {
 			$this->data['set_thumb'] = $this->model_tool_image->resize($this->request->post['set_image'], 100, 100);
-		} elseif (!empty($set_info) && $set_info['image'] && file_exists(DIR_IMAGE . $set_info['image'])) {
+		} elseif (!empty($set_info) && $set_info['image']) {
 			$this->data['set_thumb'] = $this->model_tool_image->resize($set_info['image'], 100, 100);
 		} else {
 			$this->data['set_thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
@@ -972,9 +965,9 @@ class ControllerModuleSet extends Controller {
 		
 		$this->load->model('tool/image');
 		
-		if (isset($this->request->post['image']) && file_exists(DIR_IMAGE . $this->request->post['image'])) {
+		if (isset($this->request->post['image'])) {
 			$this->data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
-		} elseif (!empty($product_info) && $product_info['image'] && file_exists(DIR_IMAGE . $product_info['image'])) {
+		} elseif (!empty($product_info) && $product_info['image']) {
 			$this->data['thumb'] = $this->model_tool_image->resize($product_info['image'], 100, 100);
 		} else {
 			$this->data['thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
@@ -1043,14 +1036,9 @@ class ControllerModuleSet extends Controller {
 		}
 		$this->data['product_images'] = array();
 		foreach ($product_images as $product_image) {
-			if ($product_image['image'] && file_exists(DIR_IMAGE . $product_image['image'])) {
-				$image = $product_image['image'];
-			} else {
-				$image = 'no_image.jpg';
-			}
 			$this->data['product_images'][] = array(
-				'image'      => $image,
-				'thumb'      => $this->model_tool_image->resize($image, 100, 100),
+				'image'      => $product_image['image'],
+				'thumb'      => $this->model_tool_image->resize($product_image['image'], 100, 100),
 				'sort_order' => $product_image['sort_order']
 			);
 		}
@@ -1064,8 +1052,7 @@ class ControllerModuleSet extends Controller {
 			$this->data['product_layout'] = array();
 		}
 		$this->load->model('design/layout');
-		$this->data['layouts'] = $this->model_design_layout->getLayouts();        
-        //end productcard
+		$this->data['layouts'] = $this->model_design_layout->getLayouts();                
 	
 		$this->template = 'module/set/form.tpl';
 		$this->children = array(
@@ -1405,9 +1392,7 @@ class ControllerModuleSet extends Controller {
 		
 		if (!$json) {
 			if (is_uploaded_file($this->request->files['file']['tmp_name']) && file_exists($this->request->files['file']['tmp_name'])) {
-				$file = basename($filename) . '.' . md5(mt_rand());
-				
-				// Hide the uploaded file name so people can not link to it directly.
+				$file = basename($filename) . '.' . md5(mt_rand());								
 				$json['file'] = $this->encryption->encrypt($file);
 				
 				move_uploaded_file($this->request->files['file']['tmp_name'], DIR_DOWNLOAD . $file);
@@ -1532,4 +1517,3 @@ class ControllerModuleSet extends Controller {
 
     }
 }
-?>

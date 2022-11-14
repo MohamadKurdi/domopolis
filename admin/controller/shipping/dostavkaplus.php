@@ -57,14 +57,7 @@ class ControllerShippingDostavkaPlus extends Controller {
         $this->load->model('tool/image');
 
         foreach ($this->data['modules'] as $key => $module) {
-            if ( isset($module['image']) and $module['image'] && file_exists(DIR_IMAGE .  $module['image'])) {
-                $thumb = $this->model_tool_image->resize($module['image'], 100, 100);
-            }
-            else {
-                $thumb = $this->model_tool_image->resize('no_image.jpg', 100, 100);
-            }
-
-            $this->data['modules'][$key]['thumb'] = $thumb;
+            $this->data['modules'][$key]['thumb'] =  $this->model_tool_image->resize($module['image'], 100, 100);
         }
 
         $this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);

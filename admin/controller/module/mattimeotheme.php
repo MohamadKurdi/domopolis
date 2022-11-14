@@ -603,16 +603,10 @@ class ControllerModuleMattimeoTheme extends Controller {
 		}
 		
 	
-		foreach ($mattimgs as $mattimg) {
-			if ($mattimg['image'] && file_exists(DIR_IMAGE . $mattimg['image'])) {
-				$image = $mattimg['image'];
-			} else {
-				$image = 'no_image.jpg';
-			}			
-			
+		foreach ($mattimgs as $mattimg) {			
 			$this->data['mattimgs'][] = array(
-				'image'                    => $image,
-				'thumb'                    => $this->model_tool_image->resize($image, 50, 50),
+				'image'                    => $mattimg['image'],
+				'thumb'                    => $this->model_tool_image->resize($mattimg['image'], 50, 50),
 				'title'                    => $mattimg['title'] ,
 			);	
 		} 
@@ -627,15 +621,9 @@ class ControllerModuleMattimeoTheme extends Controller {
 		
 	
 		foreach ($mattnetworks as $mattnetwork) {
-			if ($mattnetwork['image'] && file_exists(DIR_IMAGE . $mattnetwork['image'])) {
-				$image = $mattnetwork['image'];
-			} else {
-				$image = 'no_image.jpg';
-			}			
-			
 			$this->data['mattnetworks'][] = array(
-				'image'                    => $image,
-				'thumb'                    => $this->model_tool_image->resize($image, 50, 50),
+				'image'                    => $mattnetwork['image'],
+				'thumb'                    => $this->model_tool_image->resize($mattnetwork['image'], 50, 50),
 				'title'                    => $mattnetwork['title'] ,
 				'href'                     => $mattnetwork['href'] ,
 			);	
@@ -662,31 +650,29 @@ class ControllerModuleMattimeoTheme extends Controller {
 			'common/footer'
 		);
 		
-		 if (isset($this->data['image_bg']) && $this->data['image_bg'] != "" && file_exists(DIR_IMAGE . $this->data['image_bg'])) {
+		 if (isset($this->data['image_bg']) && $this->data['image_bg'] != "") {
             $this->data['image_preview'] = $this->model_tool_image->resize($this->data['image_bg'], 70, 70);
         } else {
             $this->data['image_preview'] = $this->model_tool_image->resize('no_image.jpg', 70, 70);
         }
 		
-		 if (isset($this->data['image_header_bg']) && $this->data['image_header_bg'] != "" && file_exists(DIR_IMAGE . $this->data['image_header_bg'])) {
+		 if (isset($this->data['image_header_bg']) && $this->data['image_header_bg'] != "") {
             $this->data['image_header_preview'] = $this->model_tool_image->resize($this->data['image_header_bg'], 70, 70);
         } else {
             $this->data['image_header_preview'] = $this->model_tool_image->resize('no_image.jpg', 70, 70);
         }
-		 if (isset($this->data['image_footer_bg']) && $this->data['image_footer_bg'] != "" && file_exists(DIR_IMAGE . $this->data['image_footer_bg'])) {
+		 if (isset($this->data['image_footer_bg']) && $this->data['image_footer_bg'] != "") {
             $this->data['image_footer_preview'] = $this->model_tool_image->resize($this->data['image_footer_bg'], 70, 70);
         } else {
             $this->data['image_footer_preview'] = $this->model_tool_image->resize('no_image.jpg', 70, 70);
         }
 		
-		 if (isset($this->data['parallax_bg']) && $this->data['parallax_bg'] != "" && file_exists(DIR_IMAGE . $this->data['parallax_bg'])) {
+		 if (isset($this->data['parallax_bg']) && $this->data['parallax_bg'] != "") {
             $this->data['parallax_preview'] = $this->model_tool_image->resize($this->data['parallax_bg'], 70, 70);
         } else {
             $this->data['parallax_preview'] = $this->model_tool_image->resize('no_image.jpg', 70, 70);
         }
-		
-		
-		// NO IMAGE
+					
 		$this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 50, 50);
 		
 			

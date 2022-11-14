@@ -18,9 +18,7 @@ class ControllerModuleProductStatus extends Controller {
 			$setting['product_status_options'] = $this->request->post['product_status_options'];
 			$this->model_setting_setting->editSetting('product_status', $setting);
 
-			$this->session->data['success'] = $this->language->get('text_success');
-
-			//$this->redirect($this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'));
+			$this->session->data['success'] = $this->language->get('text_success');			
 		}
 
 		if (isset($this->error['warning'])) {
@@ -57,8 +55,7 @@ class ControllerModuleProductStatus extends Controller {
 		} elseif ($this->config->get('product_status_options')) {
 			$this->data['options'] = $this->config->get('product_status_options');
 		}
-
-		// Statuses list
+				
 		$this->getList();
 
 		$this->template = 'module/product_status.tpl';
@@ -226,11 +223,7 @@ class ControllerModuleProductStatus extends Controller {
 		$this->load->model('tool/image');
 
 		foreach ($this->data['languages'] as $language) {
-			if (isset($this->data['status_description'][$language['language_id']]['image']) && $this->data['status_description'][$language['language_id']]['image'] && file_exists(DIR_IMAGE . $this->data['status_description'][$language['language_id']]['image'])) {
-				$this->data['thumb'][$language['language_id']] = $this->model_tool_image->resize($this->data['status_description'][$language['language_id']]['image'], 100, 100);
-			} else {
-				$this->data['thumb'][$language['language_id']] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
-			}
+			$this->data['thumb'][$language['language_id']] = $this->model_tool_image->resize($this->data['status_description'][$language['language_id']]['image'], 100, 100);
 		}
 
 		$this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
@@ -285,8 +278,7 @@ class ControllerModuleProductStatus extends Controller {
 
 	public function install() {
 		$this->load->model('setting/setting');
-		$this->load->model('catalog/product_status');
-		// create db table
+		$this->load->model('catalog/product_status');		
 		$this->model_catalog_product_status->install();
 		$this->model_setting_setting->deleteSetting('product_status');
 		$setting['product_status_options'] = $this->model_catalog_product_status->getDefaultOptions();
@@ -295,8 +287,7 @@ class ControllerModuleProductStatus extends Controller {
 
 	public function uninstall() {
 		$this->load->model('setting/setting');
-		$this->load->model('catalog/product_status');
-		// drop db table
+		$this->load->model('catalog/product_status');		
 		$this->model_catalog_product_status->uninstall();
 		$this->model_setting_setting->deleteSetting('product_status');
 	}
@@ -320,7 +311,7 @@ class ControllerModuleProductStatus extends Controller {
 				$this->error['name'][$language_id] = $this->language->get('error_name');
 			}
 
-			if (!isset($value['image']) || !$value['image'] || !file_exists(DIR_IMAGE . $value['image'])) {
+			if (!isset($value['image']) || !$value['image']) {
 				$this->error['image'][$language_id] = $this->language->get('error_image');
 			}
 		}
@@ -336,4 +327,3 @@ class ControllerModuleProductStatus extends Controller {
 		}
 	}
 }
-//author sv2109 (sv2109@gmail.com) license for 1 product copy granted for feofan (feofan.net, am@feofan.net)
