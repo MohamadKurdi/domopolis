@@ -873,12 +873,7 @@ public function confirm($order_id, $order_status_id, $comment = '', $notify = fa
 				$affiliate_info = $this->model_affiliate_affiliate->getAffiliate($order_info['affiliate_id']);
 			}
 
-			if(!isset($passArray) || empty($passArray)){ $passArray = null; }
-			$this->openbay->orderNew((int)$order_id);
-
-				//$this->cache->delete('product');
-
-				// Downloads
+			if(!isset($passArray) || empty($passArray)){ $passArray = null; }											
 			$order_download_query = $this->db->query("SELECT * FROM order_download WHERE order_id = '" . (int)$order_id . "'");
 
 				// Gift Voucher
