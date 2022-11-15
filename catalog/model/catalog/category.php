@@ -56,9 +56,8 @@
 			$sql .= "  AND c1.status = 1";
 			$sql .= "  AND c1.exclude_from_intersections <> 1";
 			$sql .= "  AND c1.intersections = 0";
-			$sql .= "  AND cd1.language_id = 2";		
-
-		//	$this->log->debugsql($sql);		
+			$sql .= "  AND cd1.language_id = 2";
+			$sql .= "  ORDER BY c1.sort_order ASC, LCASE(cd1.name) DESC";					
 			
 			$query = $this->db->query($sql);
 			
