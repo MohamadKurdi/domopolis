@@ -1118,9 +1118,8 @@
 				});
 				
 				navigator.share({
-					title: document.title,
-					text: '<?php echo $text_retranslate_36; ?>',
-					url: location.href,
+					title: document.title,					
+					url: location.href
 				});	
 			}
 			
