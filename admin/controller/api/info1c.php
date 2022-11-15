@@ -11,30 +11,6 @@ class ControllerApiInfo1C extends Controller
         return (sha1($array['operation_id']) == mb_strtolower(str_replace(' ', '', $array['key'])));
     }
 
-    public function getSimilarProductFromMainDB($product_id)
-    {
-        $dbMain = new DB('mysqli', '/var/lib/mysql/mysql.sock', 'kp_kitchenprofi', 'HWrN7mKQGh', 'kp_kitchenprofi');
-        $this->registry->set('dbMain', $dbMain);
-
-
-        $q1 = $this->dbMain->query("SELECT name FROM product_description WHERE product_id = '" . (int)$product_id . "' AND language_id = 26 LIMIT 1");
-
-        if ($q1->num_rows && $q1->row['name']) {
-            echo 'MDB: Нашли в основной базе, название товара - ' . $q1->row['name'] . PHP_EOL;
-            $q2 = $this->db->query("SELECT product_id FROM product_description WHERE TRIM(name) LIKE '" . $this->db->escape(trim($q1->row['name'])) . "' LIMIT 1");
-
-            if ($q2->num_rows && $q2->row['product_id']) {
-                echo 'MDB: Нашли товар в по названию в текущей базе: ' . $q2->row['product_id'] . PHP_EOL;
-
-                return  $q2->row['product_id'];
-            } else {
-                echo 'MDB: Не нашли товар в по названию в текущей базе' . PHP_EOL;
-            }
-        }
-
-        return false;
-    }
-
     public function getOrderJSON($order_id = 0)
     {
 
