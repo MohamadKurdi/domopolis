@@ -1474,8 +1474,6 @@
 				$sql .= " AND is_markdown = 0 ";
 			}
 			
-			//	$sql .= " AND p.product_id NOT IN (SELECT DISTINCT product_id FROM product_price_national_to_store) ";
-			
 			$sql .= " AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND p.date_available <= '" . date(MYSQL_NOW_DATE_FORMAT) . "' AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < '" . date(MYSQL_NOW_DATE_FORMAT) . "') AND (ps.date_end = '0000-00-00' OR ps.date_end > '" . date(MYSQL_NOW_DATE_FORMAT) . "')) GROUP BY ps.product_id";
 			
 			if (isset($data['sort']) && in_array($data['sort'], $this->registry->get('sorts_available'))) {
@@ -1647,12 +1645,13 @@
 			}
 			$sql .= " AND p.status = '1'
 			AND DATE(o.date_added) >= '" . date('Y-m-d', strtotime("- $month month")) . "'
-			AND p.quantity > 0 
+			AND p.quantity > 0
+			AND p." . $this->config->get('config_warehouse_identifier') . " > 0
 			AND is_markdown = 0
 			AND stock_status_id <> '" . (int)$this->config->get('config_not_in_stock_status_id') . "' 
-			AND p.date_available <= NOW() AND 
-			cp.path_id = '" . (int)$category_id . "' AND 
-			p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+			AND p.date_available <= NOW() 
+			AND cp.path_id = '" . (int)$category_id . "'
+			AND	p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
 			GROUP BY op.product_id ORDER BY total DESC LIMIT " . (int)$limit;
 			
 			$query = $this->db->query($sql);
