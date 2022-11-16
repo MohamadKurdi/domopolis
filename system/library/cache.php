@@ -37,7 +37,7 @@ final class Cache {
 	} 	
 	
 	public function exists($key, $explicit = false) {
-		if (defined('ADMIN_SESSION_DETECTED') && ADMIN_SESSION_DETECTED  && !$explicit){			
+		if (defined('ADMIN_SESSION_DETECTED') && ADMIN_SESSION_DETECTED && defined('BYPASS_CACHE_FOR_LOGGED_ADMIN_ENABLED') && BYPASS_CACHE_FOR_LOGGED_ADMIN_ENABLED && !$explicit){	
 			return false;
 		}
 
@@ -52,7 +52,7 @@ final class Cache {
 	
 	
 	public function get($key, $explicit = false) {
-		if (defined('ADMIN_SESSION_DETECTED') && ADMIN_SESSION_DETECTED  && !$explicit){
+		if (defined('ADMIN_SESSION_DETECTED') && ADMIN_SESSION_DETECTED && defined('BYPASS_CACHE_FOR_LOGGED_ADMIN_ENABLED') && BYPASS_CACHE_FOR_LOGGED_ADMIN_ENABLED && !$explicit){
 			return false;
 		}
 
@@ -72,6 +72,9 @@ final class Cache {
 	}
 	
 	public function set($key, $value, $ttl = DB_CACHED_EXPIRE, $redis_explicit = false) {
+		if (defined('ADMIN_SESSION_DETECTED') && ADMIN_SESSION_DETECTED && defined('BYPASS_CACHE_FOR_LOGGED_ADMIN_ENABLED') && BYPASS_CACHE_FOR_LOGGED_ADMIN_ENABLED && !$explicit){
+			return false;
+		}
 
 		if (defined('IS_DEBUG') && IS_DEBUG){
 			return false;

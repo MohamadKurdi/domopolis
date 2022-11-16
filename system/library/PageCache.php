@@ -113,13 +113,11 @@ class PageCache{
 
 		$body  = 'Used ' . ' ' . self::formatBytes($used_space, 0) . ' of ' . self::formatBytes($total_space, 0); 
 		$class = 'good';
-
-			//Занято больше половины
+			
 		if (($total_space*0.5 < $used_space)){
 			$class = 'warn';
 		}
 
-			//Занято больше 75%
 		if (($total_space*0.75 < $used_space)){
 			$class = 'bad';
 		}
