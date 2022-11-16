@@ -1186,6 +1186,7 @@ class ControllerSettingSetting extends Controller
             'config_delivery_ukrainian_term',
             'config_delivery_outstock_term',
             'config_delivery_outstock_enable',
+            'config_divide_cart_by_stock',
             'config_delivery_display_logic'
         );
         

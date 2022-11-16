@@ -1047,6 +1047,19 @@
 								</td>
 
 								<td style="width:33%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Разделять корзину по наличию</span></p>
+									<select name="config_divide_cart_by_stock">
+										<?php if ($config_divide_cart_by_stock) { ?>
+											<option value="1" selected="selected">Разделять</option>
+											<option value="0">Не разделять</option>
+										<?php } else { ?>													
+											<option value="1">Разделять</option>
+											<option value="0"  selected="selected">Не разделять</option>
+										<? } ?>
+									</select>
+								</td>
+
+								<td style="width:33%">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика подсчёта сроков в карте товара</span></p>
 									<select name="config_delivery_display_logic">
 										<?php if ($config_delivery_display_logic == 'v1') { ?>

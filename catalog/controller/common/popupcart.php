@@ -247,9 +247,9 @@
 				$this->data['this_is_checkout_page'] = $this->validateIfIsCheckoutPage();
 				
 				if ($this->data['this_is_checkout_page']){
-					$this->template = $this->config->get('config_template') . '/template/common/popup_cart_checkout.tpl';
+					$this->template = 'common/popup_cart_checkout.tpl';
 					} else {
-					$this->template = $this->config->get('config_template') . '/template/common/popup_cart.tpl';
+					$this->template = 'common/popup_cart.tpl';
 				}
 				$this->response->setOutput($this->render());
 			}

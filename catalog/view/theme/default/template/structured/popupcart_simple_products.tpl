@@ -29,7 +29,7 @@
 						<span style="color:red; font-weight:700;">
 							<? if ($product['is_special_offer_present']) { ?>
 								<?php echo $text_retranslate_11; ?>
-								<? } else { ?>
+							<? } else { ?>
 								<?php echo $text_retranslate_12; ?>
 							<? } ?>
 						</span><br />
@@ -39,15 +39,17 @@
 						<small><?php echo $text_retranslate_13; ?> <?php echo $product['model']; ?></small>	
 					</div> 
 					
-					<?php if ($product['is_certificate']) { ?>
-						<span class="alert alert-success alert-no-padding"><?php echo $this->language->get('text_has_in_stock'); ?></span>
+					<?php if ($this->config->get('config_divide_cart_by_stock')) { ?>	
+						<?php if ($product['is_certificate']) { ?>
+							<span class="alert alert-success alert-no-padding"><?php echo $this->language->get('text_has_in_stock'); ?></span>
 						<?php } elseif ($product['fully_in_stock']) { ?>
-						<span class="alert alert-success alert-no-padding"><?php echo $this->language->get('text_has_in_stock'); ?> <?php echo $product['amount_in_stock']; ?> шт</span>
+							<span class="alert alert-success alert-no-padding"><?php echo $this->language->get('text_has_in_stock'); ?> <?php echo $product['amount_in_stock']; ?> шт</span>
 						<?php } elseif ($product['current_in_stock']) { ?>
-						<span class="alert alert-warning alert-no-padding"><?php echo $this->language->get('text_has_in_stock'); ?> <?php echo $product['amount_in_stock']; ?> шт</span>
+							<span class="alert alert-warning alert-no-padding"><?php echo $this->language->get('text_has_in_stock'); ?> <?php echo $product['amount_in_stock']; ?> шт</span>
 						<?php } else { ?>
-						<span class="alert alert-danger alert-no-padding"><?php echo $this->language->get('text_has_no_in_stock'); ?>, <?php echo $text_not_in_stock_delivery_term; ?></span>
-					<?php } ?>	
+							<span class="alert alert-danger alert-no-padding"><?php echo $this->language->get('text_has_no_in_stock'); ?>, <?php echo $text_not_in_stock_delivery_term; ?></span>
+						<?php } ?>	
+					<?php } ?>
 				</td>
 				<td class="price-block">								
 					<? if ($product['price_old'] && $product['saving']) { ?>
@@ -56,21 +58,21 @@
 							<span class="price-saving" id="price-saving-<?=$product['key'] ?>"><?=$product['saving']; ?>%</span>
 							<div class="value " id="price-<?=$product['key'] ?>"><?php if (!$product['amount_in_stock']) { ?><?php } ?><?=$product['price']; ?></div>
 						</div>
-						<? } else { ?>
+					<? } else { ?>
 						<div class="value " id="price-<?=$product['key'] ?>"><?php if (!$product['amount_in_stock']) { ?><?php } ?><?=$product['price']; ?></div>		
 					<?php } ?>	
 					<? if ($product['points']) { ?>
-					<div class="reward_wrap">
-						<span class="text"><?php echo $product['points']; ?></span>
-						<div class="prompt">
-							<p><?php echo $text_bonus1; ?></p>
-							<ul>
-								<li><?php echo $text_bonus2; ?></li>
-								<li><?php echo $text_bonus3; ?></li>
-								<li><?php echo $text_bonus4; ?></li>
-							</ul>
+						<div class="reward_wrap">
+							<span class="text"><?php echo $product['points']; ?></span>
+							<div class="prompt">
+								<p><?php echo $text_bonus1; ?></p>
+								<ul>
+									<li><?php echo $text_bonus2; ?></li>
+									<li><?php echo $text_bonus3; ?></li>
+									<li><?php echo $text_bonus4; ?></li>
+								</ul>
+							</div>
 						</div>
-					</div>
 					<? } ?>				
 				</td>
 				<td class="quantity">
@@ -80,7 +82,7 @@
 							<a onclick="minus(this);" class="quantity-m">-</a>
 							<input value="<?php echo $product['quantity']; ?>" data-minimum="<?php echo !empty($product['minimum'])?(int)$product['minimum']:1; ?>" name="quainty" class="qt input_number" onchange="qtVal(this);" onchange="return validate(this); updateCart();" maxlength="4" onkeyup="return validate(this);" />
 							<a onclick="plus(this);"  class="quantity-p">+</a>
-							<? } else { ?>
+						<? } else { ?>
 							<span class="qt" style="font-size:14px"><?php echo $product['quantity']; ?></span>
 							<input type="hidden" value="<?php echo $product['quantity']; ?>" name="quainty" maxlength="4" />
 						<? } ?>
