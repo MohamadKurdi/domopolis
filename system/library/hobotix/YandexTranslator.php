@@ -31,6 +31,7 @@ class YandexTranslator
 
 	public function setDebug($debug){
 		$this->debug = $debug;
+		return $this;
 	}
 
 	public function translateMulti($data = []){
@@ -96,7 +97,6 @@ class YandexTranslator
 				return $json['translations'][0]['text'];
 			}
 		}
-
 
 		return $result;
 	}		
