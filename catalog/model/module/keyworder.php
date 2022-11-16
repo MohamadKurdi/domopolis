@@ -32,9 +32,10 @@
 			
 			$sql = "SELECT 
 			DISTINCT m.manufacturer_id, m.name, m.image, m.sort_order,
-			COUNT(DISTINCT order_id) as order_total
+			COUNT(DISTINCT op.order_id) as order_total
 			FROM order_product op
 			LEFT JOIN product p ON (p.product_id = op.product_id)
+			LEFT JOIN `order` o ON (op.order_id = o.order_id)
 			LEFT JOIN manufacturer m ON (p.manufacturer_id = m.manufacturer_id)
 			LEFT JOIN manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id) 
 			WHERE op.product_id IN (
@@ -42,14 +43,15 @@
 			LEFT JOIN product_to_category p2c ON (cp.category_id = p2c.category_id)
 			WHERE cp.path_id = '" . (int)$category_id . "'       
 			)
+			AND DATE(o.date_added) >= '" . date('Y-m-d', strtotime("-1 month")) . "'
 			AND p.status = 1
+			AND	o.order_status_id > '0'
+			AND p.quantity > 0
+			AND is_markdown = 0			
 			AND m2s.store_id = '" . (int)$this->config->get('config_store_id') . "'
 			GROUP BY p.manufacturer_id
 			ORDER BY order_total DESC
-			LIMIT " . (int)$limit . ""; 
-			
-			
-		//	$this->log->debugsql($sql);
+			LIMIT " . (int)$limit . ""; 								
 			
 			$query = $this->db->query($sql);
 			
