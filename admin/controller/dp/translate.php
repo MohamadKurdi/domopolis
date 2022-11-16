@@ -14,86 +14,6 @@
 
 			$this->load->model('kp/translate');	
 			
-			$query = $this->db->query("SELECT rate_id FROM shop_rating WHERE rate_id NOT IN (SELECT rate_id FROM shop_rating_description)");
-			
-			$this->load->model('localisation/language');
-			$languages = $this->model_localisation_language->getLanguages();
-			
-			foreach ($query->rows as $row){				
-				foreach ($languages as $language){					
-					echoLine('[TR] Языковая запись ' . (int)$row['rate_id']);
-					$this->db->query("INSERT IGNORE INTO shop_rating_description SET rate_id = '" . (int)$row['rate_id'] . "', language_id = '" . $language['language_id'] . "', comment = '', answer = '', good = '', bad = ''");					
-				}				
-			}
-			
-			$query = $this->db->query("SELECT rate_id, comment, good, bad FROM shop_rating WHERE rate_id IN (SELECT rate_id FROM shop_rating_description WHERE (comment = '' OR good = '' OR bad = '') AND language_id = 6)");
-			
-			if ($query->num_rows){
-				$count = count($query->rows);
-				$i = 0;
-				
-				$start_time = time();
-				$working_time = 0;
-				$sleep_counter = 1;
-				$count_symbols = 0;
-				
-				echoLine('[TR] Всего отзывов ' . $count);
-				
-				foreach ($query->rows as $row){
-					$fields = array('comment', 'good', 'bad');
-					
-					echoLine($i . '/' . $count);
-					
-					foreach ($fields as $field){
-						
-						if (!empty($row[$field])){
-							$translation = $this->model_kp_translate->translateYandex($row[$field], 'uk', 'ru');	
-							
-							$json = json_decode($translation, true);
-							if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
-								$translated = $json['translations'][0]['text'] = htmlspecialchars_decode($json['translations'][0]['text'], ENT_QUOTES);
-							}
-							
-							if ($translated){
-								echoLine('[TR UATR] ' . trim(str_replace(PHP_EOL, '', substr(strip_tags($translated), 0, 100))));	
-								$this->model_kp_translate->updateShopRatingTranslation($row['rate_id'], '6', $translated, $field);								
-								} else {
-								echoLine('[TR ERROR] Что-то пошло не так');					
-							}
-							
-							$counter++;
-							
-							$count_symbols += mb_strlen($row[$field]);
-							
-							$working_time = time() - $start_time;
-							$average_count = (int)((3600/$working_time) * $count_symbols);
-							
-							if ($average_count > 800000){
-								echoLine('[TR DYNC] Динамическая корректировка паузы, пауза: ' . $sleep_counter);
-								$sleep_counter += 1;	
-								} else {
-								if ($sleep_counter >= 1){
-									$sleep_counter -= 1;
-								}
-								echoLine('[TR DYNC] Динамическая корректировка паузы, пауза: ' . $sleep_counter);
-							}
-							
-							echoLine('[TR STAT] Время выполнения ' . $working_time . ' секунд.');
-							echoLine('[TR STAT] Среднее количество символов в час: ' . $average_count);
-							
-							sleep($sleep_counter);
-							
-							
-							echoLine('');
-						}
-						
-					}
-					
-					$i++;
-				}
-				
-			}
-			
 			$query = $this->db->query("SELECT review_id FROM review WHERE review_id NOT IN (SELECT review_id FROM review_description)");
 			
 			$this->load->model('localisation/language');
@@ -110,7 +30,7 @@
 				
 			}
 			
-			$query = $this->db->query("SELECT review_id, text, good, bads, answer FROM review WHERE review_id IN (SELECT review_id FROM review_description WHERE text = '' AND language_id = 6)");
+			$query = $this->db->query("SELECT review_id, text, good, bads, answer FROM review WHERE review_id IN (SELECT review_id FROM review_description WHERE text = '' AND language_id = 6) LIMIT 1");
 			
 			if ($query->num_rows){
 				$count = count($query->rows);
@@ -126,7 +46,7 @@
 				foreach ($query->rows as $row){
 					$fields = array('text', 'good', 'bads', 'answer');
 					
-					echoLine($i . '/' . $count);
+					echoLine($row['review_id'] . ':' . $i . '/' . $count);
 					
 					foreach ($fields as $field){
 						
@@ -152,7 +72,7 @@
 							$working_time = time() - $start_time;
 							$average_count = (int)((3600/$working_time) * $count_symbols);
 							
-							if ($average_count > 800000){
+							if ($average_count > 8000000){
 								echoLine('[TR DYNC] Динамическая корректировка паузы, пауза: ' . $sleep_counter);
 								$sleep_counter += 1;	
 								} else {
@@ -179,7 +99,7 @@
 			}
 		}
 		
-		public function cronAttributesUA(){
+		public function cronAttributesRU(){
 
 			if (!$this->config->get('config_yandex_translate_api_enable')){
 				return;
@@ -204,7 +124,7 @@
 				foreach ($query->rows as $row){
 					$translated = false;
 					
-					$ruquery = $this->db->query("SELECT text FROM product_attribute WHERE product_id = '" . $row['product_id'] . "' AND attribute_id = '" . $row['attribute_id'] . "' AND language_id = 5 AND LENGTH(text) > 0");
+					$ruquery = $this->db->query("SELECT text FROM product_attribute WHERE product_id = '" . $row['product_id'] . "' AND attribute_id = '" . $row['attribute_id'] . "' AND language_id = 2 AND LENGTH(text) > 0");
 					
 					echoLine($i . '/' . $count);
 					
@@ -240,9 +160,7 @@
 						
 						$this->model_kp_translate->updateAttributeTranslation($row['product_id'], $row['attribute_id'], '6', $translated);
 						
-						echoLine($text . ' -> ' . $translated);
-						
-						
+						echoLine($text . ' -> ' . $translated);												
 						$count_symbols += mb_strlen($text);
 						
 						$working_time = time() - $start_time;
@@ -271,7 +189,7 @@
 			}
 		}	
 		
-		public function cronProductsUA(){
+		public function cronProductsRU(){
 
 			if (!$this->config->get('config_yandex_translate_api_enable')){
 				return;
@@ -282,7 +200,7 @@
 			$sql = "SELECT product_id FROM `product_description` WHERE product_id IN 
 			(SELECT product_id FROM product_description pd2 WHERE pd2.language_id = 2)
 			AND product_id NOT IN (SELECT product_id FROM product_description pd3 WHERE pd3.language_id = 6)
-			AND language_id = 5";
+			AND language_id = 2";
 			
 			$query = $this->db->query($sql);
 			
@@ -294,9 +212,9 @@
 			//Названия
 			$sql = "SELECT product_id, 
 			name as name_ruua FROM product_description 
-			WHERE product_id IN (SELECT product_id FROM product_description pd2 WHERE pd2.language_id = 5 AND LENGTH(pd2.name) > 5 AND pd2.name REGEXP '[а-яА-Я]') 
+			WHERE product_id IN (SELECT product_id FROM product_description pd2 WHERE pd2.language_id = 2 AND LENGTH(pd2.name) > 2 AND pd2.name REGEXP '[а-яА-Я]') 
 			AND product_id IN (SELECT product_id FROM product_description pd3 WHERE pd3.language_id = 6 AND LENGTH(pd3.name) <= 5 AND translated = 0)
-			AND language_id = 5";
+			AND language_id = 2";
 			
 			$query = $this->db->query($sql);
 			
@@ -346,7 +264,7 @@
 					$working_time = time() - $start_time;
 					$average_count = (int)((3600/$working_time) * $count_symbols);
 					
-					if ($average_count > 800000){
+					if ($average_count > 8000000){
 						echoLine('[TR DYNC] Динамическая корректировка паузы, пауза: ' . $sleep_counter);
 						$sleep_counter += 1;	
 						} else {
@@ -367,16 +285,18 @@
 				}
 				
 			}
+
+			die();
 			
 			
 			//SELECTING PRODUCTS
 			$sql = "SELECT p.product_id, pd.name, pd.description as description_ruua FROM `product` p
-			LEFT JOIN product_description pd ON (pd.language_id = 5 AND pd.product_id = p.product_id)
+			LEFT JOIN product_description pd ON (pd.language_id = 2 AND pd.product_id = p.product_id)
 			LEFT JOIN product_to_store p2s ON (p2s.product_id = p.product_id)
 			WHERE p.stock_status_id NOT IN (" . $this->config->get('config_not_in_stock_status_id') . ")
-			AND p.product_id IN (SELECT product_id FROM product_description pd3 WHERE language_id = 5 AND LENGTH(pd3.description) > 100)
+			AND p.product_id IN (SELECT product_id FROM product_description pd3 WHERE language_id = 2 AND LENGTH(pd3.description) > 100)
 			AND p.product_id IN (SELECT product_id FROM product_description pd4 WHERE language_id = 6 AND LENGTH(pd4.description) < 50)
-			AND pd.language_id = 5
+			AND pd.language_id = 2
 			AND p2s.store_id = 1
 			AND p.status = 1
 			AND p.price > 0";
@@ -426,7 +346,7 @@
 					$working_time = time() - $start_time;
 					$average_count = (int)((3600/$working_time) * $count_symbols);
 					
-					if ($average_count > 800000){
+					if ($average_count > 8000000){
 						echoLine('[TR DYNC] Динамическая корректировка паузы, пауза: ' . $sleep_counter);
 						$sleep_counter += 1;	
 						} else {
@@ -439,8 +359,7 @@
 					echoLine('[TR STAT] Время выполнения ' . $working_time . ' секунд.');
 					echoLine('[TR STAT] Среднее количество символов в час: ' . $average_count);
 					
-					sleep($sleep_counter);
-					
+					sleep($sleep_counter);					
 					
 					echoLine('');
 				}
@@ -463,11 +382,11 @@
 			
 			//SELECTING COLLECTIONS
 			$query = $this->db->query("SELECT c.collection_id, c.name, cd.description as description_ruua FROM `collection` c
-			LEFT JOIN collection_description cd ON (cd.language_id = 5 AND cd.collection_id = c.collection_id)
+			LEFT JOIN collection_description cd ON (cd.language_id = 2 AND cd.collection_id = c.collection_id)
 			LEFT JOIN collection_to_store c2s ON (c2s.collection_id = c.collection_id)
-			WHERE  c.collection_id IN (SELECT collection_id FROM collection_description pd3 WHERE language_id = 5 AND LENGTH(pd3.description) > 100)
+			WHERE  c.collection_id IN (SELECT collection_id FROM collection_description pd3 WHERE language_id = 2 AND LENGTH(pd3.description) > 100)
 			AND c.collection_id IN (SELECT collection_id FROM collection_description pd4 WHERE language_id = 6 AND LENGTH(pd4.description) < 50)
-			AND cd.language_id = 5
+			AND cd.language_id = 2
 			AND c2s.store_id = 1");			
 			
 			if ($query->num_rows){
