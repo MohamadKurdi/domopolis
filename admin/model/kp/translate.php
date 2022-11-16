@@ -3,82 +3,9 @@
 	
 	class ModelKpTranslate extends Model {
 		
-		private $symbolLimit = 9999;
-		private $sentensesDelimiter = '.';
-		
-		private function toSentenses ($text) {
-			$sentArray = explode($this->sentensesDelimiter, $text);
-			return $sentArray;
-		}
-		
-		private function toBigPieces ($text) {
-			$sentArray = $this->toSentenses($text);
-			$i = 0;
-			$bigPiecesArray[0] = '';
-			for ($k = 0; $k < count($sentArray); $k++) {
-				$bigPiecesArray[$i] .= $sentArray[$k].$this->sentensesDelimiter;
-				if (strlen($bigPiecesArray[$i]) > $this->symbolLimit){
-					$i++;
-					$bigPiecesArray[$i] = '';
-				}
-			}
-			
-			return $bigPiecesArray;
-		}
-		
-		private function fromBigPieces (array $bigPiecesArray) {
-			
-			ksort($bigPiecesArray);
-			
-			return implode($bigPiecesArray);
-		}
-		
-		
+		/* NOW USING LIBRARY, LEFT JUST FOR COMPATIBILITY */
 		public function translateYandex($text, $from, $to, $returnString = false){
-			$result = false;
-			
-			if (mb_strlen($text, 'UTF-8') > $this->symbolLimit){
-				$translationResult = '';
-				$translateArray = $this->toBigPieces($text);
-				
-				
-				foreach ($translateArray as $translateItem){
-					$translationResult .= $this->translateYandex($translateItem, $from, $to, true);
-				}
-				
-				return json_encode(array(
-				'translations' => array(
-				'0' => array(
-				'text' => $translationResult)
-				)
-				)
-				);
-			}
-			
-			try {
-				$cloud = TranslateSdk\Cloud::createApi($this->config->get('config_yandex_translate_api_key'));							
-				} catch (TranslateSdk\Exception\ClientException $e) {
-				echoLine($e->getMessage());
-				die();
-			}
-			
-			try {
-				$translate = new TranslateSdk\Translate($text);
-				$translate->setSourceLang($from)->setTargetLang($to)->setFormat(TranslateSdk\Format::HTML);
-				$result = $cloud->request($translate);
-				} catch (TranslateSdk\Exception\ClientException $e) {
-				echoLine($e->getMessage());			
-			}
-			
-			if ($returnString){
-				$json = json_decode($result, true);
-				if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
-					return $json['translations'][0]['text'];
-				}
-			}
-			
-			
-			return $result;
+			return $this->yandexTranslator->setDebug(true)->translate($text, $from, $to, $returnString = false);
 		}		
 		
 		public function updateAttributeTranslation($product_id, $attribute_id, $language_id, $text){										
