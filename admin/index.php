@@ -81,7 +81,8 @@
 	require_once(DIR_SYSTEM . 'library/hobotix/EmailBlackList.php');
 	require_once(DIR_SYSTEM . 'library/hobotix/RainforestAmazon.php');
 	require_once(DIR_SYSTEM . 'library/hobotix/PricevaAdaptor.php');
-	require_once(DIR_SYSTEM . 'library/hobotix/simpleProcess.php');	
+	require_once(DIR_SYSTEM . 'library/hobotix/simpleProcess.php');
+	require_once(DIR_SYSTEM . 'library/hobotix/YandexTranslator.php');	
 	
 	// Registry
 	$registry = new Registry();
@@ -271,6 +272,9 @@
 			
 	$rainforestAmazon = new hobotix\RainforestAmazon($registry);
 	$registry->set('rainforestAmazon', $rainforestAmazon);
+
+	$yandexTranslator = new hobotix\YandexTranslator($registry);
+	$registry->set('yandexTranslator', $yandexTranslator);
 	
 	// Customer
 	$registry->set('customer', new Customer($registry));
