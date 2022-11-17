@@ -2,7 +2,13 @@
 	class ModelToolImage extends Model {
 
 		public function video($filename){
-			return HTTPS_IMAGE . $filename;
+			if (file_exists(DIR_IMAGE . $filename) && is_file(DIR_IMAGE . $filename)){
+				return HTTPS_IMAGE . $filename;
+			} elseif (defined('DIR_IMAGE_MAIN') && file_exists(DIR_IMAGE_MAIN . $filename) && is_file(DIR_IMAGE_MAIN . $filename)){
+				return HTTPS_IMAGE_MAIN . $filename;
+			} else {			
+				return '';
+			}				
 		}
 
 
