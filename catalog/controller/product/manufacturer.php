@@ -62,8 +62,7 @@
 			
 			$this->response->setOutput($this->render());
 		}
-		
-		
+				
 		public function index() {
 			$this->language->load('product/manufacturer');
 			
@@ -244,8 +243,7 @@
 			);
 			if (!$this->model_catalog_news->getNews($filter_data)){
 				$this->data['articles_link'] = false;
-			}
-			
+			}			
 		}
 		
 		public function special(){
@@ -863,8 +861,7 @@
 			);
 			
 			
-			$this->response->setOutput($this->render());	
-			
+			$this->response->setOutput($this->render());				
 		}		
 		
 		public function categories(){
@@ -1064,8 +1061,7 @@
 			);
 			
 			
-			$this->response->setOutput($this->render());	
-			
+			$this->response->setOutput($this->render());				
 		}
 		
 		public function articles(){
@@ -1756,7 +1752,11 @@
 						$this->document->setTitle(sprintf($this->language->get('text_page'), (int)$page) . $this->document->getTitle());
 						$this->document->setDescription(sprintf($this->language->get('text_page'), (int)$page) . $this->document->getDescription());
 						
-						$this->document->setRobots("noindex, follow");
+						if ($this->config->get('config_index_manufacturer_pages')){
+							$this->document->setRobots("index, follow");
+						} else {
+							$this->document->setRobots("noindex, follow");
+						}
 					}
 					if ($page < $num_pages) {
 						$this->document->addLink($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $this->request->get['manufacturer_id'] . '&page=' . ($page + 1)), 'next');
@@ -1939,7 +1939,6 @@
 				);
 				
 				$this->response->setOutput($this->render());
-			}
-			
+			}			
 		}
 	}

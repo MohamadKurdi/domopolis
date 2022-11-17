@@ -1248,8 +1248,12 @@
 					
 					$this->document->setTitle(sprintf($this->language->get('text_page'), (int)$page) . $this->document->getTitle());
 					$this->document->setDescription(sprintf($this->language->get('text_page'), (int)$page) . $this->document->getDescription());
-					
-					$this->document->setRobots("noindex, follow");
+
+					if ($this->config->get('config_index_category_pages')){
+						$this->document->setRobots("index, follow");
+					} else {
+						$this->document->setRobots("noindex, follow");
+					}
 				}										
 				
 				
