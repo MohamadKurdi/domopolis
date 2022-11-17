@@ -35,7 +35,7 @@
 			return ($quantity) ? true : false;
 		}
 		
-		public function getBestSellerProductsForCategory($product_info, $limit, $store_id, $stock_in_current = false, $exclude, $use_manufacturer = true, $only_warehouse_stock = false) {
+		public function getBestSellerProductsForCategory($product_info, $limit, $store_id, $stock_in_current, $exclude, $use_manufacturer = true, $only_warehouse_stock = false) {
 			$product_data = array();
 						
 			$this->load->model('setting/setting');
@@ -90,7 +90,7 @@
 			return $product_data;
 		}
 		
-		public function getSimilarProductsByName($product_name, $product_id, $manufacturer_id, $limit, $in_stock = true, $recursive_results = array(), $exclude = array(), $language_id, $store_id, $only_warehouse_stock = false){
+		public function getSimilarProductsByName($product_name, $product_id, $manufacturer_id, $limit, $in_stock, $recursive_results, $exclude, $language_id, $store_id, $only_warehouse_stock = false){
 			$this->load->model('setting/setting');
 			
 			$product_name = trim(trim($product_name, ',.'));
@@ -157,7 +157,7 @@
 		}
 		
 		
-		public function guessSameProducts($product_name, $product_id, $manufacturer_id, $limit, $in_stock = true, $language_id, $store_id, $exclude, $only_warehouse_stock = false){							
+		public function guessSameProducts($product_name, $product_id, $manufacturer_id, $limit, $in_stock, $language_id, $store_id, $exclude, $only_warehouse_stock = false){							
 			$exploded = explode(' ', $product_name);
 			
 			$results = array();
