@@ -190,8 +190,10 @@
 
 	if ($registry->get('config')->get('config_enable_highload_admin_mode')){
 		define('BYPASS_CACHE_FOR_LOGGED_ADMIN_ENABLED', true);
+		header('X-FPC-BYPASS-ALL: 1');
 	} else {
 		define('BYPASS_CACHE_FOR_LOGGED_ADMIN_ENABLED', false);
+		header('X-FPC-BYPASS-ALL: 0');
 	}
 			
 	$registry->set('url', new Url($registry->get('config')->get('config_ssl'), $registry));		
