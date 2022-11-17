@@ -30,7 +30,7 @@
 				
 			}
 			
-			$query = $this->db->query("SELECT review_id, text, good, bads, answer FROM review WHERE review_id IN (SELECT review_id FROM review_description WHERE text = '' AND language_id = 6) LIMIT 1");
+			$query = $this->db->query("SELECT review_id, text, good, bads, answer FROM review WHERE review_id IN (SELECT review_id FROM review_description WHERE text = '' AND language_id = 6)");
 			
 			if ($query->num_rows){
 				$count = count($query->rows);
@@ -40,6 +40,7 @@
 				$working_time = 0;
 				$sleep_counter = 1;
 				$count_symbols = 0;
+				$counter = 0;
 				
 				echoLine('[TR] Всего отзывов ' . $count);
 				
@@ -284,10 +285,7 @@
 					
 				}
 				
-			}
-
-			die();
-			
+			}			
 			
 			//SELECTING PRODUCTS
 			$sql = "SELECT p.product_id, pd.name, pd.description as description_ruua FROM `product` p
@@ -296,8 +294,7 @@
 			WHERE p.stock_status_id NOT IN (" . $this->config->get('config_not_in_stock_status_id') . ")
 			AND p.product_id IN (SELECT product_id FROM product_description pd3 WHERE language_id = 2 AND LENGTH(pd3.description) > 100)
 			AND p.product_id IN (SELECT product_id FROM product_description pd4 WHERE language_id = 6 AND LENGTH(pd4.description) < 50)
-			AND pd.language_id = 2
-			AND p2s.store_id = 1
+			AND pd.language_id = 2			
 			AND p.status = 1
 			AND p.price > 0";
 			
