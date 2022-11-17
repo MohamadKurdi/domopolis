@@ -38,7 +38,7 @@
 				<? /*	<a href="#tab-ftp" style="display:none;"><?php echo $tab_ftp; ?></a>  */ ?>
 				<? /*	<a href="#tab-fraud"><?php echo $tab_fraud; ?></a> */ ?>
 				<a href="#tab-sms"><i class="fa fa-mobile"></i> <?php echo $tab_sms; ?></a>
-				<a href="#tab-server"><i class="fa fa-cogs"></i> <?php echo $tab_server; ?></a>
+				<a href="#tab-server"><i class="fa fa-cogs"></i> Сервер, SEO</a>
 				<a href="#tab-telephony"><span style="color:#7F00FF;"><i class="fa fa-phone"></i> АТС, LDAP</span></a>
 				<a href="#tab-google-ya-fb-vk"><i class="fa fa-google"></i> <span style="color:#57AC79;">Google</span>, <span style="color:red;">Ya</span>, <span style="color:#7F00FF;">FB</span>, <span style="color:#3F6AD8;">VK</span></a>
 				<a href="#tab-ya-market"><span style="color:red;"><i class="fa fa-yahoo"></i> Yandex.Market, Ozon.Seller</span></a>
@@ -3117,7 +3117,104 @@
 								</table>
 						</div>
 						<div id="tab-server">
+							<h2>Базовые настройки SEO</h2>
 
+							<table class="form">
+							<input type="hidden" name="config_secure" value="1" />
+								<input type="hidden" name="config_shared" value="0" />
+								<input type="hidden" name="config_robots" value="" />
+								<tr>
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Использовать ЧПУ</span></p>
+										<select name="config_seo_url">
+											<?php if ($config_seo_url) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</td>
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика ЧПУ</span></p>
+										<select name="config_seo_url_type">
+											<?php foreach ($seo_types as $seo_type) { ?>
+												<?php if ($seo_type['type'] == $config_seo_url_type) { ?>
+													<option value="<?php echo $seo_type['type']; ?>" selected="selected"><?php echo $seo_type['name']; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $seo_type['type']; ?>"><?php echo $seo_type['name']; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>
+									</td>
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">ЧПУ = идентификатор</span></p>
+										<select name="config_seo_url_from_id">
+											<?php if ($config_seo_url_from_id) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+										<span class="help">Товары p12345, категории c12345</span>
+									</td>
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">ЧПУ товаров с категориями</span></p>
+										<select name="config_seo_url_include_path">
+											<?php if ($config_seo_url_include_path) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+										<span class="help">/category/subcategory/product (только для seo_pro)</span>
+									</td>
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">ЧПУ товаров с категориями</span></p>
+										<input type="text" name="config_seo_url_postfix" value="<?php echo $config_seo_url_postfix; ?>" size="10" />
+										<span class="help">Например .html, (только для seo_pro)</span>
+									</td>
+								</tr>
+
+								<tr>
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Индексировать пагинацию категорий</span></p>
+										<select name="config_index_category_pages">
+											<?php if ($config_index_category_pages) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>										
+									</td>
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Индексировать пагинацию брендов</span></p>
+										<select name="config_index_manufacturer_pages">
+											<?php if ($config_index_manufacturer_pages) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>										
+									</td>
+
+								</tr>
+							</table>
+
+							<h2>Минификатор</h2>
 							<table class="form">
 								<tr>
 									<td width="50%">
@@ -3170,102 +3267,9 @@
 								</tr>
 							</table>
 
-							<table class="form">
-								
-								<tr>
-									<td><?php echo $entry_secure; ?></td>
-									<td>
-										<select name="config_secure">
-											<?php if ($config_secure) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-											<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-									</td>
-								</tr>
-								<tr>
-									<td><?php echo $entry_shared; ?></td>
-									<td>
-										<select name="config_shared">
-											<?php if ($config_shared) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-											<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-									</td>
-								</tr>
-								<tr>
-									<td><?php echo $entry_robots; ?></td>
-									<td><textarea name="config_robots" cols="40" rows="5"><?php echo $config_robots; ?></textarea></td>
-								</tr>                    
-								<tr>
-									<td>SEO URL</td>
-									<td>
-										<select name="config_seo_url">
-											<?php if ($config_seo_url) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-											<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-									</td>
-								</tr>
-								<tr>
-									<td><?php echo $entry_seo_url_type; ?></td>
-									<td>
-										<select name="config_seo_url_type">
-											<?php foreach ($seo_types as $seo_type) { ?>
-												<?php if ($seo_type['type'] == $config_seo_url_type) { ?>
-													<option value="<?php echo $seo_type['type']; ?>" selected="selected"><?php echo $seo_type['name']; ?></option>
-												<?php } else { ?>
-													<option value="<?php echo $seo_type['type']; ?>"><?php echo $seo_type['name']; ?></option>
-												<?php } ?>
-											<?php } ?>
-										</select>
-									</td>
-								</tr>
-								<tr>
-									<td><?php echo $entry_seo_url_include_path; ?></td>
-									<td>
-										<select name="config_seo_url_include_path">
-											<?php if ($config_seo_url_include_path) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-											<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-									</td>
-								</tr>
-								<tr>
-									<td><?php echo $entry_seo_url_postfix; ?></td>
-									<td><input type="text" name="config_seo_url_postfix" value="<?php echo $config_seo_url_postfix; ?>" size="3" /></td>
-								</tr>
 
-								<tr>
-									<td>SEO-URL из id</td>
-									<td>
-										<select name="config_seo_url_from_id">
-											<?php if ($config_seo_url_from_id) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-											<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-									</td>
-								</tr>
-
+							<h2>Сервер</h2>
+							<table class="form">								
 								<tr>
 									<td><?php echo $entry_file_extension_allowed; ?></td>
 									<td><textarea name="config_file_extension_allowed" cols="40" rows="5"><?php echo $config_file_extension_allowed; ?></textarea></td>
@@ -3350,7 +3354,7 @@
 													<?php } ?></td>
 												</tr>											
 											</table>
-										</div>
+						</div>
 						
 						<div id="tab-telephony">
 
