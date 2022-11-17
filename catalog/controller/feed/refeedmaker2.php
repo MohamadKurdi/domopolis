@@ -374,7 +374,11 @@ class ControllerFeedReFeedMaker2 extends Controller
                         if (!$setting['serialized']) {
                             $this->config->set($setting['key'], $setting['value']);
                         } else {
-                            $this->config->set($setting['key'], unserialize($setting['value']));
+                            if ($setting['value']){
+                                $this->config->set($setting['key'], unserialize($setting['value']));
+                            } else {
+                                $this->config->set($setting['key'], null);
+                            }
                         }
                     }
 
