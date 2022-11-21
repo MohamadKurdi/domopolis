@@ -285,7 +285,7 @@ class ControllerCommonFooter extends Controller {
 		
 		$this->data['contact'] = $this->url->link('information/contact');
 		$this->data['faq_url'] = $this->url->link('information/faq_system');
-		$this->data['about_url'] = $this->url->link('information/information', 'information_id=4');
+		$this->data['about_url'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_about_article_id'));
 		$this->data['site_map_url'] = $this->url->link('information/sitemap');
 		
 		
@@ -305,25 +305,26 @@ class ControllerCommonFooter extends Controller {
 		$this->data['product_new'] = $this->url->link('product/product_new', '', 'SSL');
 		$this->data['shoprating'] = $this->url->link('information/shop_rating', '', 'SSL');
 		
-		$this->data['href_how_order'] = $this->url->link('information/information', 'information_id=29');
-		$this->data['href_delivery'] = $this->url->link('information/information', 'information_id=31');
-		$this->data['href_payment'] = $this->url->link('information/information', 'information_id=30');
-		$this->data['href_return'] = $this->url->link('information/information', 'information_id=33');
-		$this->data['href_vendors'] = $this->url->link('information/information', 'information_id=44');
+		$this->data['href_how_order'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_how_order_article_id'));
+			$this->data['href_delivery'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_delivery_article_id'));
+			$this->data['href_payment'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_payment_article_id'));
+			$this->data['href_return'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_return_article_id'));
+
+		$this->data['href_vendors'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_vendors_article_id'));
 		
-		$this->data['href_cashback'] = $this->url->link('information/information', 'information_id=45');
+		$this->data['href_cashback'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_reward_article_id'));
 		
-		$this->data['href_discounts'] = $this->url->link('information/information', 'information_id=32');
-		$this->data['href_present_sertificate'] = $this->url->link('information/information', 'information_id=35');
+		$this->data['href_discounts'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_discounts_article_id'));
+		$this->data['href_present_sertificate'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_present_certificates_article_id'));
 		
-		$this->data['href_about'] = $this->url->link('information/information', 'information_id=4');
+		$this->data['href_about'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_about_article_id'));
 		$this->data['href_faq'] = $this->url->link('information/faq_system');
 		$this->data['href_contact'] = $this->url->link('information/contact');
 		$this->data['href_shop_rating'] = $this->url->link('information/shop_rating');
 		$this->data['href_sitemap'] = $this->url->link('information/sitemap');
 		
-		$this->data['href_polzovatelskoe'] = $this->url->link('information/information', 'information_id=5');
-		$this->data['href_personaldata'] = $this->url->link('information/information', 'information_id=3');						
+		$this->data['href_polzovatelskoe'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_agreement_article_id'));
+		$this->data['href_personaldata'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_personaldata_article_id'));						
 		
 		$worktime =  explode(';', $this->config->get('config_worktime'));
 		if ($this->customer->isLogged() && $this->customer->isOpt()){

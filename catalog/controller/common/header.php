@@ -448,16 +448,16 @@
 			$this->data['href_actions'] = $this->url->link('information/actions');
 			$this->data['href_blog']	= $this->url->link('news/ncategory');
 			
-			$this->data['href_how_order'] = $this->url->link('information/information', 'information_id=29');
-			$this->data['href_delivery'] = $this->url->link('information/information', 'information_id=31');
-			$this->data['href_payment'] = $this->url->link('information/information', 'information_id=30');
-			$this->data['href_return'] = $this->url->link('information/information', 'information_id=33');
+			$this->data['href_how_order'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_how_order_article_id'));
+			$this->data['href_delivery'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_delivery_article_id'));
+			$this->data['href_payment'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_payment_article_id'));
+			$this->data['href_return'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_return_article_id'));
 			$this->data['href_track'] = $this->url->link('account/tracker');
 			
-			$this->data['href_discounts'] = $this->url->link('information/information', 'information_id=32');
-			$this->data['href_present_sertificate'] = $this->url->link('information/information', 'information_id=35');
+			$this->data['href_discounts'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_discounts_article_id'));
+			$this->data['href_present_sertificate'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_present_certificates_article_id'));
 			
-			$this->data['href_about'] = $this->url->link('information/information', 'information_id=4');
+			$this->data['href_about'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_about_article_id'));
 			$this->data['href_faq'] = $this->url->link('information/faq_system');
 			$this->data['href_contact'] = $this->url->link('information/contact');
 			$this->data['href_shop_rating'] = $this->url->link('information/shop_rating');
