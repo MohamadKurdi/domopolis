@@ -864,6 +864,24 @@
 						</tr>
 						<tr>
 							<td colspan="3" class="left" style="color:#D69241;">
+								<i class="fa fa-cogs"></i> <b>Исключения по срокам доставки</b>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								Максимальное количество дней
+							</td>
+							<td style="width:50px;" class="center">
+								<input type="number" name="config_rainforest_max_delivery_days_for_offer" value="<?php echo $config_rainforest_max_delivery_days_for_offer; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Обычно если сроки больше недели то товара у поставщика нет и он точно так же где-то ждёт его под заказ и не факт что он там есть. Как-то так. (с) Валера. Офферы, которые имеют срок доставки от этого количества дней - будут проигнорированы и не будут участвовать в формировании цены и наличия. <span style="color:red">логика пока в разработке</span>
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3" class="left" style="color:#D69241;">
 								<i class="fa fa-cogs"></i> <b>Исключения поставщиков</b>
 							</td>
 						</tr>
