@@ -1930,7 +1930,29 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_return_status_id'] = $this->config->get('config_return_status_id');
         }
+
+        $articlekeys = array(
+            'config_reward_article_id',
+            'config_how_order_article_id',
+            'config_delivery_article_id',
+            'config_payment_article_id',
+            'config_return_article_id',            
+            'config_discounts_article_id',
+            'config_present_certificates_article_id',
+            'config_about_article_id',
+            'config_vendors_article_id',
+            'config_agreement_article_id',
+            'config_personaldata_article_id'
+        );
         
+        foreach ($articlekeys as $articlekey) {
+            if (isset($this->request->post[$articlekey])) {
+                $this->data[$articlekey] = $this->request->post[$articlekey];
+            } else {
+                $this->data[$articlekey] = $this->config->get($articlekey);
+            }
+        }
+
         $this->load->model('localisation/return_status');
         
         $this->data['return_statuses'] = $this->model_localisation_return_status->getReturnStatuses();
@@ -3266,6 +3288,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_rainforest_delete_no_offers_counter'] = $this->request->post['config_rainforest_delete_no_offers_counter'];
         } else {
             $this->data['config_rainforest_delete_no_offers_counter'] = $this->config->get('config_rainforest_delete_no_offers_counter');
+        }
+
+        if (isset($this->request->post['config_rainforest_max_delivery_days_for_offer'])) {
+            $this->data['config_rainforest_max_delivery_days_for_offer'] = $this->request->post['config_rainforest_max_delivery_days_for_offer'];
+        } else {
+            $this->data['config_rainforest_max_delivery_days_for_offer'] = $this->config->get('config_rainforest_max_delivery_days_for_offer');
         }
 
         $social_auth_config = [

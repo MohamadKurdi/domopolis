@@ -2398,6 +2398,185 @@
 									</select></td>
 								</tr>
 							</table>
+
+							<h2>Другие привязки статей</h2>
+							<table class="form">
+								<tr>
+									<td>Информация о бонусах</td>
+									<td>
+										<select name="config_reward_article_id">
+											<option value="0"><?php echo $text_none; ?></option>
+											<?php foreach ($informations as $information) { ?>
+												<?php if ($information['information_id'] == $config_return_id) { ?>
+													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>
+									</td>
+								</tr>
+
+								<tr>
+									<td>Статья "как заказать"</td>
+									<td>
+										<select name="config_how_order_article_id">
+											<option value="0"><?php echo $text_none; ?></option>
+											<?php foreach ($informations as $information) { ?>
+												<?php if ($information['information_id'] == $config_return_id) { ?>
+													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>
+									</td>
+								</tr>
+
+								<tr>
+									<td>Информация о доставке</td>
+									<td>
+										<select name="config_delivery_article_id">
+											<option value="0"><?php echo $text_none; ?></option>
+											<?php foreach ($informations as $information) { ?>
+												<?php if ($information['information_id'] == $config_return_id) { ?>
+													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>
+									</td>
+								</tr>
+
+								<tr>
+									<td>Информация о оплате</td>
+									<td>
+										<select name="config_payment_article_id">
+											<option value="0"><?php echo $text_none; ?></option>
+											<?php foreach ($informations as $information) { ?>
+												<?php if ($information['information_id'] == $config_return_id) { ?>
+													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>
+									</td>
+								</tr>
+
+								<tr>
+									<td>Информация о возвратах</td>
+									<td>
+										<select name="config_return_article_id">
+											<option value="0"><?php echo $text_none; ?></option>
+											<?php foreach ($informations as $information) { ?>
+												<?php if ($information['information_id'] == $config_return_id) { ?>
+													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>
+									</td>
+								</tr>
+
+								<tr>
+									<td>Информация о дискаунтах/скидках</td>
+									<td>
+										<select name="config_discounts_article_id">
+											<option value="0"><?php echo $text_none; ?></option>
+											<?php foreach ($informations as $information) { ?>
+												<?php if ($information['information_id'] == $config_return_id) { ?>
+													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>
+									</td>
+								</tr>
+
+								<tr>
+									<td>Информация о подарочных сертификатах</td>
+									<td>
+										<select name="config_present_certificates_article_id">
+											<option value="0"><?php echo $text_none; ?></option>
+											<?php foreach ($informations as $information) { ?>
+												<?php if ($information['information_id'] == $config_return_id) { ?>
+													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>
+									</td>
+								</tr>
+
+								<tr>
+									<td>Информация о магазине (О нас)</td>
+									<td>
+										<select name="config_about_article_id">
+											<option value="0"><?php echo $text_none; ?></option>
+											<?php foreach ($informations as $information) { ?>
+												<?php if ($information['information_id'] == $config_return_id) { ?>
+													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>
+									</td>
+								</tr>
+
+								<tr>
+									<td>Информация поставщикам</td>
+									<td>
+										<select name="config_vendors_article_id">
+											<option value="0"><?php echo $text_none; ?></option>
+											<?php foreach ($informations as $information) { ?>
+												<?php if ($information['information_id'] == $config_return_id) { ?>
+													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>
+									</td>
+								</tr>
+
+								<tr>
+									<td>Пользовательское соглашение</td>
+									<td>
+										<select name="config_agreement_article_id">
+											<option value="0"><?php echo $text_none; ?></option>
+											<?php foreach ($informations as $information) { ?>
+												<?php if ($information['information_id'] == $config_return_id) { ?>
+													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>
+									</td>
+								</tr>
+
+								<tr>
+									<td>Персональные данные</td>
+									<td>
+										<select name="config_personaldata_article_id">
+											<option value="0"><?php echo $text_none; ?></option>
+											<?php foreach ($informations as $information) { ?>
+												<?php if ($information['information_id'] == $config_return_id) { ?>
+													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
+												<?php } else { ?>
+													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
+												<?php } ?>
+											<?php } ?>
+										</select>
+									</td>
+								</tr>
+							</table>
 						</div>
 						<div id="tab-image">
 							<table class="form">
@@ -4710,6 +4889,12 @@
 											</select>
 											<br />
 											<span class="help"><i class="fa fa-exclamation-circle"></i> установить этот статус товару, если на амазоне нет предложений</span>	
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Макс. дней доставки</span></p>
+											<input type="number" name="config_rainforest_max_delivery_days_for_offer" value="<?php echo $config_rainforest_max_delivery_days_for_offer; ?>" size="50" style="width:100px;" />
+											<br />
+											<span class="help"><i class="fa fa-exclamation-circle"></i> оффер будет проигнорирован, если доставка занимает больше дней</span>
 										</div>
 									</td>
 
