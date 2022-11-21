@@ -2,7 +2,7 @@
 	class ModelKpInfo1C extends Model {		
 		private $SoapClient;
 		
-		private function SoapConnectTo1C(){
+		private function SoapConnectTo1C($wsdl = true){
 			
 			ini_set("soap.wsdl_cache_enabled", "0" ); 
 			ini_set('default_socket_timeout', '1480');
@@ -22,9 +22,8 @@
 				$SoapURI .= '?wsdl';
 			}
 
-			$this->SoapClient = new SoapClient($SoapURI,
-			
-			array(
+			$this->SoapClient = new SoapClient($SoapURI,			
+			[
 			'login' => $this->config->get('config_odinass_soap_user'),
 			'password' => $this->config->get('config_odinass_soap_passwd'),
 			'soap_version' => SOAP_1_2,
@@ -35,8 +34,7 @@
 			'exceptions' => 1,
 			'trace' => true,	
 			'stream_context' => $context
-			)
-			);
+			]);
 			
 		}
 		
