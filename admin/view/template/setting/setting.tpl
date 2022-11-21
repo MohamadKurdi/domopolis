@@ -2407,7 +2407,7 @@
 										<select name="config_reward_article_id">
 											<option value="0"><?php echo $text_none; ?></option>
 											<?php foreach ($informations as $information) { ?>
-												<?php if ($information['information_id'] == $config_return_id) { ?>
+												<?php if ($information['information_id'] == $config_reward_article_id) { ?>
 													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
 												<?php } else { ?>
 													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
@@ -2423,7 +2423,7 @@
 										<select name="config_how_order_article_id">
 											<option value="0"><?php echo $text_none; ?></option>
 											<?php foreach ($informations as $information) { ?>
-												<?php if ($information['information_id'] == $config_return_id) { ?>
+												<?php if ($information['information_id'] == $config_how_order_article_id) { ?>
 													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
 												<?php } else { ?>
 													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
@@ -2439,7 +2439,7 @@
 										<select name="config_delivery_article_id">
 											<option value="0"><?php echo $text_none; ?></option>
 											<?php foreach ($informations as $information) { ?>
-												<?php if ($information['information_id'] == $config_return_id) { ?>
+												<?php if ($information['information_id'] == $config_delivery_article_id) { ?>
 													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
 												<?php } else { ?>
 													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
@@ -2455,7 +2455,7 @@
 										<select name="config_payment_article_id">
 											<option value="0"><?php echo $text_none; ?></option>
 											<?php foreach ($informations as $information) { ?>
-												<?php if ($information['information_id'] == $config_return_id) { ?>
+												<?php if ($information['information_id'] == $config_payment_article_id) { ?>
 													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
 												<?php } else { ?>
 													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
@@ -2471,7 +2471,7 @@
 										<select name="config_return_article_id">
 											<option value="0"><?php echo $text_none; ?></option>
 											<?php foreach ($informations as $information) { ?>
-												<?php if ($information['information_id'] == $config_return_id) { ?>
+												<?php if ($information['information_id'] == $config_return_article_id) { ?>
 													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
 												<?php } else { ?>
 													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
@@ -2487,7 +2487,7 @@
 										<select name="config_discounts_article_id">
 											<option value="0"><?php echo $text_none; ?></option>
 											<?php foreach ($informations as $information) { ?>
-												<?php if ($information['information_id'] == $config_return_id) { ?>
+												<?php if ($information['information_id'] == $config_discounts_article_id) { ?>
 													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
 												<?php } else { ?>
 													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
@@ -2503,7 +2503,7 @@
 										<select name="config_present_certificates_article_id">
 											<option value="0"><?php echo $text_none; ?></option>
 											<?php foreach ($informations as $information) { ?>
-												<?php if ($information['information_id'] == $config_return_id) { ?>
+												<?php if ($information['information_id'] == $config_present_certificates_article_id) { ?>
 													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
 												<?php } else { ?>
 													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
@@ -2519,7 +2519,7 @@
 										<select name="config_about_article_id">
 											<option value="0"><?php echo $text_none; ?></option>
 											<?php foreach ($informations as $information) { ?>
-												<?php if ($information['information_id'] == $config_return_id) { ?>
+												<?php if ($information['information_id'] == $config_about_article_id) { ?>
 													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
 												<?php } else { ?>
 													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
@@ -2535,7 +2535,7 @@
 										<select name="config_vendors_article_id">
 											<option value="0"><?php echo $text_none; ?></option>
 											<?php foreach ($informations as $information) { ?>
-												<?php if ($information['information_id'] == $config_return_id) { ?>
+												<?php if ($information['information_id'] == $config_vendors_article_id) { ?>
 													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
 												<?php } else { ?>
 													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
@@ -2551,7 +2551,7 @@
 										<select name="config_agreement_article_id">
 											<option value="0"><?php echo $text_none; ?></option>
 											<?php foreach ($informations as $information) { ?>
-												<?php if ($information['information_id'] == $config_return_id) { ?>
+												<?php if ($information['information_id'] == $config_agreement_article_id) { ?>
 													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
 												<?php } else { ?>
 													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
@@ -2567,7 +2567,7 @@
 										<select name="config_personaldata_article_id">
 											<option value="0"><?php echo $text_none; ?></option>
 											<?php foreach ($informations as $information) { ?>
-												<?php if ($information['information_id'] == $config_return_id) { ?>
+												<?php if ($information['information_id'] == $config_personaldata_article_id) { ?>
 													<option value="<?php echo $information['information_id']; ?>" selected="selected"><?php echo $information['title']; ?></option>
 												<?php } else { ?>
 													<option value="<?php echo $information['information_id']; ?>"><?php echo $information['title']; ?></option>
