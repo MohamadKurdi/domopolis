@@ -235,6 +235,11 @@ class OffersParser
 		return true;
 	}
 
+	public function parseAmazonDeliveryComment($deliveryComment){
+		$date = parseAmazonDeliveryDateToEnglish($deliveryComment);
+
+	}
+
 	public function reparseOffersToSkip($rfOffers){
 		$rfOffersTMP = [];
 

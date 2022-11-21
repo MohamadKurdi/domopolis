@@ -1,5 +1,28 @@
 <?php
 
+function parseAmazonDeliveryDateToEnglish($date){
+	$de_months 	= ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+	$de_months2 	= ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+	$en_months  	= ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+	$de_days 	= ['Montag', 'Morgen', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonnabend', 'Sonntag'];
+	$de_days2 	= ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+
+	foreach ($de_days as $de_day){
+		$date = str_ireplace(($de_day.','), '', $date);
+	}
+
+	foreach ($de_days2 as $de_day){
+		$date = str_ireplace(($de_day.'.,'), '', $date);
+	}
+
+	$date = str_ireplace($de_months, $en_months, $date);
+	$date = str_ireplace($de_months2, $en_months, $date);
+
+	return $date;
+}
+
+
 function getAmazonDomainsList(){
 	return [
 		'amazon.com.br','amazon.ca','amazon.com.mx','amazon.com','amazon.cn','amazon.in','amazon.co.jp','amazon.sg','amazon.ae','amazon.sa','amazon.fr','amazon.de','amazon.it','amazon.nl','amazon.pl','amazon.es','amazon.se','amazon.com.tr','amazon.co.uk','amazon.com.au'
