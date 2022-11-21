@@ -81,8 +81,8 @@ justify-content: space-between;
 
 .tracker-order-info ul li{
 display: inline-block;
-width: 200px;
-min-width: 150px;
+width: 150px;
+min-width: 100px;
 margin: 0;
 vertical-align: top;
 text-align: center;
@@ -150,58 +150,46 @@ min-width: 100px;
 					} elseif($full_order_info['shipping_country_id'] == 20) {
 					$ct = 'Минске';
 				}
-			?>
-			
-			<?php if (isset($success_permalink) && $success_permalink) { ?>		
-				<div class="success">
-					<i class="fas fa-check-circle"></i><?php echo $success_permalink; ?>					
-				</div>
-			<?php } ?>
+			?>		
 			
 			<? if ($general_tracker_status) { ?>
 				<div class="tracker-order-info">		
 					<ul>
 						<li class="done">
 							<i class="fa fa-map-marker" ></i>
-							<br />Заказ принят
+							<br /><?php echo $text_tracker_1; ?>
 						</li>
 						<li class="<? if (in_array('first_step', $general_tracker_status)) { ?>done<? } else { ?>undone<? } ?>">
 							<i class="fa fa-spinner" ></i>
-							<br />В обработке
+							<br /><?php echo $text_tracker_2; ?>
 						</li>
 						<li class="<? if (in_array('second_step', $general_tracker_status)) { ?>done<? } else { ?>undone<? } ?>">
 							<i class="fa fa-check" ></i>
-							<br />Подтвержден покупателем
+							<br /><?php echo $text_tracker_3; ?>
 						</li>
 						<li class="<? if (in_array('third_step', $general_tracker_status)) { ?>done<? } else { ?>undone<? } ?>">
 							<i class="fas fa-chart-pie" ></i>
-							<br />На комплектации в Германии
+							<br /><?php echo $text_tracker_4; ?>
 						</li>
 						<li class="<? if (in_array('fourth_step', $general_tracker_status)) { ?>done<? } else { ?>undone<? } ?>">
 							<i class="fa fa-truck" ></i>
-							<br />На транзите Германия - <? echo $full_order_info['shipping_country'] ?>
+							<br /><?php echo $text_tracker_5; ?> <? echo $full_order_info['shipping_country'] ?>
 						</li>
 						<li class="<? if (in_array('fifth_step', $general_tracker_status)) { ?>done<? } else { ?>undone<? } ?>">				
 							<i class="fa fa-clock" ></i>
-							<br />На складе в <? echo $ct; ?>
-							<br />Ожидает доставки
+							<br /><?php echo $text_tracker_6; ?> <? echo $ct; ?>
+							<br /><?php echo $text_tracker_7; ?>
 						</li>
 						
 						<? if ($is_on_pickpoint) { ?>	
 							<li class="<? if (in_array('sixth_step', $general_tracker_status)) { ?>done<? } else { ?>undone<? } ?>">
 								<i class="fa fa-car" ></i>
-								<br />В пункте самовывоза
-								<?php if ($shipping_method) { ?>
-									<br /><?php echo str_replace('Самовывоз, ','', $shipping_method); ?>
-								<?php } ?>
+								<br /><?php echo $text_tracker_8; ?>
 							</li>
 							<? } else { ?>
 							<li class="<? if (in_array('sixth_step', $general_tracker_status)) { ?>done<? } else { ?>undone<? } ?>">
 								<i class="fa fa-car" ></i>
-								<br />Доставляется
-								<?php if ($shipping_method) { ?>
-									<br /><?php echo $shipping_method; ?>
-								<?php } ?>
+								<br /><?php echo $text_tracker_9; ?>
 							</li>
 							
 						<? } ?>
@@ -209,18 +197,12 @@ min-width: 100px;
 						<? if (!$is_on_pickpoint) { ?>	
 							<li class="<? if (in_array('seventh_step', $general_tracker_status)) { ?>done<? } else { ?>undone<? } ?>">
 								<i class="fa fa-check-circle" ></i>
-								<br />Доставлен
-								<?php if (($full_order_info['firstname'] || $full_order_info['lastname']) && in_array('seventh_step', $general_tracker_status)) { ?>
-									<br />Получатель - <?php echo $full_order_info['firstname'] . ' ' . $full_order_info['lastname']; ?>
-								<?php } ?>
+								<br /><?php echo $text_tracker_10; ?>								
 							</li>
 							<? } else { ?>
 							<li class="<? if (in_array('seventh_step', $general_tracker_status)) { ?>done<? } else { ?>undone<? } ?>">
 								<i class="fa fa-check-circle" ></i>
-								<br />Получен
-								<?php if (($full_order_info['firstname'] || $full_order_info['lastname']) && in_array('seventh_step', $general_tracker_status)) { ?>
-									<br />Получатель - <?php echo $full_order_info['firstname'] . ' ' . $full_order_info['lastname']; ?>
-								<?php } ?>
+								<br /><?php echo $text_tracker_11; ?>	
 							</li>
 							
 						<? } ?>
@@ -235,18 +217,18 @@ min-width: 100px;
 						
 						<? if ($manager && $manager_set) { ?>
 							<li class="undone">
-								<i class="fa fa-user"></i><br />Менеджер по заказу - <?php echo $manager; ?>
+								<i class="fa fa-user"></i><br /><?php echo $text_tracker_12; ?> <?php echo $manager; ?>
 							</li>
 						<? } ?>
 						
 						
 						<? if ($full_order_info['display_date_in_account'] && ($full_order_info['date_delivery_actual'] != '0000-00-00' || $full_order_info['date_delivery_to'] != '0000-00-00')) { ?>	
 							<li class="undone">
-								<i class="fa fa-car" ></i><br /> Согласована дата доставки 
+								<i class="fa fa-car" ></i><br /> <?php echo $text_tracker_13; ?> 
 								<? if ($full_order_info['date_delivery_actual'] != '0000-00-00') { ?>
 									<? echo date('d.m.Y', strtotime($full_order_info['date_delivery_actual'])) ?>
 									<? } elseif ($full_order_info['date_delivery_to'] != '0000-00-00') { ?>
-									до <? echo date('d.m.Y', strtotime($full_order_info['date_delivery_to'])) ?>
+									- <? echo date('d.m.Y', strtotime($full_order_info['date_delivery_to'])) ?>
 								<? } ?>
 							</li>
 						<? } ?>
@@ -254,28 +236,28 @@ min-width: 100px;
 						<? if ($full_order_info['wait_full']) { ?>	
 							<li class="undone">
 								<i class="fa fa-th-list" ></i><br />
-								Вы согласовали доставку после полной комплектации заказа
+								<?php echo $text_tracker_14; ?>
 							</li>
 						<? } ?>
 						
 						<? if ($is_full_paid) { ?>	
 							<li class="done">
-								<i class="fa fa-eur" ></i><br />
-								Ваш заказ полностью оплачен
+								<i class="fa fa-check-circle" ></i><br />
+								<?php echo $text_tracker_15; ?>	
 							</li>
 						<? } ?>
 						
 						<? if ($full_order_info['urgent']) { ?>	
 							<li class="undone">
 								<i class="fa fa-space-shuttle" ></i><br />
-								Ваш заказ срочный
+								<?php echo $text_tracker_16; ?>	
 							</li>
 						<? } ?>
 						
 						<? if ($full_order_info['preorder']) { ?>	
 							<li class="undone">
 								<i class="fa fa-space-shuttle" ></i><br />
-								Заявка на уточнение цены и наличия
+								<?php echo $text_tracker_17; ?>	
 							</li>
 						<? } ?>
 					</ul>
@@ -346,13 +328,13 @@ min-width: 100px;
 										<br />
 										&nbsp;<small> - <?php echo $option['name']; ?>: <?php echo $option['value']; ?></small>
 									<?php } ?>
-									<br />Артикул <?php echo $product['model']; ?>								
+									<br /><?php echo $product['model']; ?>								
 								</td>
 								<td class="right"><?php echo $product['quantity']; ?></td>
 								
 								<td class="right">
 									<?php if ($full_order_info['preorder'] && $product['price_isnull']) { ?>
-										Уточняется
+										<?php echo $text_tracker_18; ?>	
 										<?php } else { ?>
 										<?php echo $product['price']; ?>
 									<?php } ?>
@@ -360,7 +342,7 @@ min-width: 100px;
 								
 								<td class="right" style="whitespace:nowrap;">
 									<?php if ($full_order_info['preorder'] && $product['price_isnull']) { ?>
-										Уточняется
+										<?php echo $text_tracker_18; ?>	
 										<?php } else { ?>
 										<b><?php echo $product['total']; ?></b>
 									<?php } ?>
@@ -393,51 +375,43 @@ min-width: 100px;
 										<?php if (!empty($pp_express_onpay) && $pay_equirePP) { ?>
 											<? if ($currency_code == 'RUB') { ?>
 												<a style="text-transform:none; text-align:center; float:right; margin-left:10px; max-width:200px;" onclick="location='<?php echo $pp_express_onpay; ?>'" class="button">
-													<div style="padding:4px 8px; margin-top:4px; display:inline-block;"><img src="catalog/view/image/payment/pp2_visa_mc_s.png" height="30px" title="Методы оплаты" alt="Методы оплаты"/></div><br />
-												Оплатить <?php echo $total['text']; ?> кредитной картой</a>
+													<div style="padding:4px 8px; margin-top:4px; display:inline-block;"><img src="catalog/view/image/payment/pp2_visa_mc_s.png" height="30px" title="Payment methods" alt="Payment methods"/></div><br />
+												<?php echo $text_tracker_19; ?>	<?php echo $total['text']; ?> <?php echo $text_tracker_10; ?>	</a>
 											<? } ?>
 										<? } ?>
 										
 										<?php if (!empty($liqpay_onpay) && $pay_equireLQP) { ?>
 											<? if ($currency_code == 'UAH') { ?>
 												<a style="text-transform:none; text-align:center; float:right; margin-left:10px; max-width:200px;" onclick="location='<?php echo $liqpay_onpay; ?>'" class="button">
-													<div style="padding:4px 8px; margin-top:4px; display:inline-block;"><img src="catalog/view/image/payment/liqpay_payment_s.png" title="Методы оплаты" alt="Методы оплаты" height="30px"/></div><br />
-													Оплатить <?php echo $total['text']; ?> через LiqPay
+													<div style="padding:4px 8px; margin-top:4px; display:inline-block;"><img src="catalog/view/image/payment/liqpay_payment_s.png" title="Payment methods" alt="Payment methods" height="30px"/></div><br />
+													<?php echo $text_tracker_19; ?> <?php echo $total['text']; ?> через LiqPay
 												</a>
 											<? } ?>
 										<? } ?>
 										
 										<?php if (!empty($concardis_onpay_cc_eur) && $pay_equireCP) { ?>
 											<a style="text-transform:none; text-align:center; float:right; margin-left:10px; border:1px solid #E0E0E0; border-radius:5px; background:#FFF; max-width:200px;" onclick="location='<?php echo $concardis_onpay_cc_eur; ?>'" class="button">
-												<div style="padding:4px 8px; margin-top:4px; display:inline-block;"><img src="catalog/view/image/payment/concardis-1.png" title="Методы оплаты" alt="Методы оплаты" height="30px"/></div><br />
-												Оплатить <?php echo $order_to_pay_cc_eur; ?> через Concardis Payengine
+												<div style="padding:4px 8px; margin-top:4px; display:inline-block;"><img src="catalog/view/image/payment/concardis-1.png" title="Payment methods" alt="Payment methods" height="30px"/></div><br />
+												<?php echo $text_tracker_19; ?> <?php echo $order_to_pay_cc_eur; ?> через Concardis Payengine
 											</a>
 										<? } ?>
 										
 										<?php if (!empty($concardis_onpay) && $pay_equireCP) { ?>
 											<a style="text-transform:none; text-align:center; float:right; margin-left:10px; border:1px solid #E0E0E0; border-radius:5px; background:#FFF; max-width:200px;" onclick="location='<?php echo $concardis_onpay; ?>'" class="button">
-												<div style="padding:4px 8px; margin-top:4px; display:inline-block;"><img src="catalog/view/image/payment/concardis-1.png" title="Методы оплаты" alt="Методы оплаты" height="30px"/></div><br />
-												Оплатить <?php echo $order_to_pay; ?> через Concardis Payengine
+												<div style="padding:4px 8px; margin-top:4px; display:inline-block;"><img src="catalog/view/image/payment/concardis-1.png" title="Payment methods" alt="Payment methods" height="30px"/></div><br />
+												<?php echo $text_tracker_19; ?> <?php echo $order_to_pay; ?> через Concardis Payengine
 											</a>
-										<? } ?>
-										
-										<?php if (!empty($adyen_onpay) && $pay_equirePP) { ?>
-											<? if ($currency_code == 'RUB') { ?>
-												<a style="text-transform:none; text-align:center; float:right; margin-left:10px; max-width:200px;" onclick="location='<?php echo $adyen_onpay; ?>'" class="button">
-													<div style="padding:4px 8px; margin-top:4px; display:inline-block;"><img src="catalog/view/image/payment/adyen.png" height="30px" title="Методы оплаты" alt="Методы оплаты"/></div><br />
-												Оплатить <?php echo $total['text']; ?> кредитной картой</a>
-											<? } ?>
 										<? } ?>
 										
 										<?php if (!empty($paykeeper_onpay) && $pay_equire) { ?>
 											<? if ($currency_code == 'RUB') { ?>
 												<a style="text-transform:none; text-align:center; float:right; margin-left:10px; max-width:200px;" onclick="location='<?php echo $paykeeper_onpay; ?>'" class="button">
-													<div style="padding:4px 8px; margin-top:4px; display:inline-block;"><img src="catalog/view/image/payment/PayKeeper_s.png" title="Методы оплаты" alt="Методы оплаты"/><img src="catalog/view/theme/default/image/payment/shoputils_psb/visa_PNG39.png" height="30px" title="Методы оплаты" alt="Методы оплаты"/></div><br />
-												Оплатить <?php echo $order_to_pay; ?> кредитной картой</a>
+													<div style="padding:4px 8px; margin-top:4px; display:inline-block;"><img src="catalog/view/image/payment/PayKeeper_s.png" title="Payment methods" alt="Payment methods"/><img src="catalog/view/theme/default/image/payment/shoputils_psb/visa_PNG39.png" height="30px" title="Payment methods" alt="Payment methods"/></div><br />
+												<?php echo $text_tracker_19; ?> <?php echo $order_to_pay; ?> <?php echo $text_tracker_20; ?></a>
 												<? } else { ?>
 												<a style="text-transform:none; text-align:center; max-width:200px;" onclick="location='<?php echo $paykeeper_onpay; ?>'" class="button">
-													<div style="padding:4px 8px; margin-top:4px; display:inline-block;"><img src="catalog/view/image/payment/PayKeeper_s.png" title="Методы оплаты" alt="Методы оплаты"/><img src="catalog/view/theme/default/image/payment/shoputils_psb/visa_PNG39.png" height="30px" title="Методы оплаты" alt="Методы оплаты"/></div><br />
-													Оплатить <?php echo $total['text']; ?> (<? echo $order_to_pay; ?>) кредитной картой
+													<div style="padding:4px 8px; margin-top:4px; display:inline-block;"><img src="catalog/view/image/payment/PayKeeper_s.png" title="Payment methods" alt="Payment methods"/><img src="catalog/view/theme/default/image/payment/shoputils_psb/visa_PNG39.png" height="30px" title="Payment methods" alt="Payment methods"/></div><br />
+													<?php echo $text_tracker_19; ?> <?php echo $total['text']; ?> (<? echo $order_to_pay; ?>) <?php echo $text_tracker_20; ?>	
 												</a>
 											<? } ?>
 										<? } ?>
@@ -449,21 +423,21 @@ min-width: 100px;
 								<td class="right" style="whitespace:nowrap;"><b><?php echo $total['text']; ?></b></td>
 							</tr>
 						<?php } ?>
-						<? if ($currency_code != 'RUB' && $currency_code != 'UAH') { ?>
+						<? /* if ($currency_code != 'RUB' && $currency_code != 'UAH') { ?>
 							<tr>
 								<td colspan='6' style="padding-top:5px;padding-bottom:5px;text-align:center;">
 									<? 
 										$a1 = array(
 										'BYN' => 'белорусских рублях',
-										'UAH' => 'украинских гривнах',
+										'UAH' => 'українських гривнях',
 										'KZT' => 'казахстанских тенге'
 										);
 										
 									?>
-									<span style="font-weight:700;">Оплата выполняется в <? echo $a1[$currency_code] ?> с конвертацией через российский рубль по курсу: <? echo $my_currency; ?> = <? echo $currency_cource; ?></span>
+									<span style="font-weight:700;">Оплата выполняется в <? echo $a1[$currency_code] ?> с конвертацией через рубль по курсу: <? echo $my_currency; ?> = <? echo $currency_cource; ?></span>
 								</td>
 							</tr>
-						<? } ?>
+						<? } */ ?>
 					</tfoot>
 				</table>
 			</div>
@@ -484,7 +458,7 @@ min-width: 100px;
 				</div>
 			<?php } ?>
 			<?php if ($histories) { ?>
-				<span style="font-size: 18px; margin-bottom: 15px;"><?php echo $text_history; ?></span>
+				<h2 style="margin-bottom:4px;"><?php echo $text_history; ?></h2>
 				<div class="table-adaptive">
 					<table class="list">
 						<thead>
@@ -508,7 +482,7 @@ min-width: 100px;
 			<?php } ?>
 			
 			<?php if ($transactions) { ?>
-				<h2 style="margin-bottom:4px;">Финансовые операции по заказу</h2>
+				<h2 style="margin-bottom:4px;"><?php echo $text_tracker_21; ?></h2>
 				<div class="table-adaptive">
 					<table class="list">
 						<thead>
@@ -535,15 +509,15 @@ min-width: 100px;
 				<style>
 					span.get_ttn_info {cursor:pointer; display:inline-block; border-bottom:1px dashed black;}
 				</style>
-				<h2 style="margin-bottom:4px;">Товаро-транспортные накладные</h2>
-				<span class="help" style="display:inline-block; margin-bottom:4px;">Для получения информации о статусе доставки, пожалуйста, нажмите на номер накладной и дождитесь ответа.</span>
+				<h2 style="margin-bottom:4px;"><?php echo $text_tracker_22; ?></h2>
+				<span class="help" style="display:inline-block; margin-bottom:4px;"><?php echo $text_tracker_23; ?></span>
 				<div class="table-adaptive">
 					<table class="list">
 						<thead>
 							<tr>
-								<td class="left">Дата отправки</td>
-								<td class="left">Транспортная компания</td>
-								<td class="left">Номер товарно-транспортной накладной</td>
+								<td class="left"><?php echo $text_tracker_24; ?></td>
+								<td class="left"><?php echo $text_tracker_25; ?></td>
+								<td class="left"><?php echo $text_tracker_26; ?></td>
 							</tr>
 						</thead>
 						<tbody>
@@ -580,7 +554,7 @@ min-width: 100px;
 	}, 
 	function(){
 		span.next().hide();
-		$(this).dialog({width:900, modal:true,resizable:true,position:{my: 'center', at:'center center', of: window}, closeOnEscape: true, title: 'Информация по накладной '+ttn}); 
+		$(this).dialog({width:900, modal:true,resizable:true,position:{my: 'center', at:'center center', of: window}, closeOnEscape: true, title: '<?php echo $text_tracker_27; ?> '+ttn}); 
 	});
 });</script>
 <div id="ttninfo"></div>
