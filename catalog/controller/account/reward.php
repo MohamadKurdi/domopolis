@@ -27,6 +27,10 @@
 			
 			
 			$this->load->model('account/reward');
+
+			foreach ($this->language->loadRetranslate('account/account') as $translationСode => $translationText){
+				$this->data[$translationСode] = $translationText;
+			}	
 			
 			$this->data['heading_title'] = $this->language->get('heading_title');
 			
@@ -96,6 +100,8 @@
 			
 			$this->data['total_active'] = $this->currency->formatBonus($this->data['total_active']);
 			$this->data['total_queue'] = $this->currency->formatBonus($this->data['total_queue']);
+
+			$this->data['rewards_article_href'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_reward_article_id'));
 			
 			
 			$this->data['text_all'] = $this->language->get('text_all');
@@ -143,11 +149,7 @@
 			
 			$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
 			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/reward.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/account/reward.tpl';
-				} else {
-				$this->template = 'default/template/account/reward.tpl';
-			}
+			$this->template = 'account/reward.tpl';
 			
 			$this->children = array(
 			'common/column_left',
