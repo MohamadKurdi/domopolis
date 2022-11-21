@@ -1,26 +1,8 @@
 <?php
-/***********************************************************************************************************************
-
-Version 1.5.6
-Created 23:02 15.01.2014 UTF-8
-Copyright (C) 2010 Ukrainian Localization by OpenCart Ukrainian Team (http://opencart.ua). All rights reserved.
-
-Translators:
- Eugene Kuligin (k.evgen@meta.ua)
- Roman Shtepa (xr0m3oz@gmail.com)
- and others.
-
-Responsible for Translation:
- Eugene Kuligin (admin@opencart.ua)
-
-License http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
-Ask a question http://forum.opencart.ua
-
-************************************************************************************************************************/
-
 $_['heading_title'] = 'Історія замовлень'; #46295
-$_['text_account'] = 'Обліковий запис'; #46375
-$_['text_order'] = 'Інформація про замовлення'; #46376
+$_['text_account'] = 'Кабінет'; #46375
+$_['text_order_single'] = 'Замовлення'; #46375
+$_['text_order'] = 'Замовлення'; #46376
 $_['text_order_detail'] = 'Деталі замовлення'; #46884
 $_['text_invoice_no'] = 'Рахунок №:'; #46296
 $_['text_order_id'] = 'ID замовлення:'; #52081

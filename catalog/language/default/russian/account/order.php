@@ -2,9 +2,7 @@
 // Heading
 $_['heading_title']         = 'История заказов';
 
-// Text
-$_['text_account'] = 'Кабинет'; // $_['text_account']          = 'Личный Кабинет';
-
+$_['text_account'] = 'Кабинет';
 $_['text_order']            = 'Заказ';
 $_['text_order_detail']     = 'Детали заказа';
 $_['text_invoice_no']       = '№ Счета:';

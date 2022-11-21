@@ -5,32 +5,48 @@
 		private function SoapConnectTo1C(){
 			
 			ini_set("soap.wsdl_cache_enabled", "0" ); 
+			ini_set('default_socket_timeout', '1480');
+			libxml_disable_entity_loader(false);
 			
-			$this->SoapClient = new SoapClient("https://1capi.ims-group.de/api/ws/exchange?wsdl",
+			$context = stream_context_create([
+			'ssl' => [
+			'verify_peer' => false,
+			'verify_peer_name' => false,
+			'allow_self_signed' => true
+			]
+			]);
+
+			$SoapURI = $this->config->get('config_odinass_soap_uri');
+			
+			if ($wsdl){
+				$SoapURI .= '?wsdl';
+			}
+
+			$this->SoapClient = new SoapClient($SoapURI,
+			
 			array(
-			'login' => "SOAPUSER", //логин пользователя к базе 1С
-			'password' => "ceRqcNfoZL5CC0Wa", //пароль пользователя к базе 1С
-			'soap_version' => SOAP_1_2, //версия SOAP
+			'login' => $this->config->get('config_odinass_soap_user'),
+			'password' => $this->config->get('config_odinass_soap_passwd'),
+			'soap_version' => SOAP_1_2,
+			'connection_timeout' => 1480,
+			'verifypeer' => false,
+    		'verifyhost' => false,
 			'cache_wsdl' => WSDL_CACHE_NONE,
 			'exceptions' => 1,
-			'trace' => true,			
+			'trace' => true,	
+			'stream_context' => $context
 			)
 			);
 			
 		}
 		
 		public function getOrderTrackerXML($order_id){
-			
-			
-			
 			try {
 				$this->SoapConnectTo1C();
 				
 				$result2 = $this->SoapClient->tracker(array('order_id' => $order_id)); 
 				
 				} catch (Exception $e){
-				
-				print_r($e->getMessage());
 				return false;
 			}
 			
@@ -42,8 +58,6 @@
 			
 			require_once(DIR_SYSTEM . 'library/XML2Array.php');
 			$xml2array = new XML2Array();
-			
-		//	$xml = htmlspecialchars_decode($xml);
 			
 			try {
 				$input = $xml2array->createArray($xml);				
@@ -60,12 +74,9 @@
 			
 			$this->SoapConnectTo1C();
 			
-			try {
-				
-				$result = $this->SoapClient->stock(array('organisation' => SITE_NAMESPACE)); 
-				
+			try {				
+				$result = $this->SoapClient->stock(array('organisation' => SITE_NAMESPACE)); 				
 				} catch (Exception $e){
-				print_r($e->getMessage());
 				die();
 			}
 			

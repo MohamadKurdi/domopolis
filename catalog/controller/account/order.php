@@ -3,46 +3,37 @@
 		private $error = array();
 		
 		
-		public function getDeliveryCompany($delivery_code, $second = false){
-			
+		public function getDeliveryCompany($delivery_code, $second = false){			
 			if ($second) {
 				$delivery_names = array(
-				//украшка
-				'dostavkaplus.sh3' => 'Новой Почтой',
+				'dostavkaplus.sh3' => 'Новою Поштою',
 				'dostavkaplus.sh4' => 'ТК ИнТайм',
-				//рашка
 				'dostavkaplus.sh5' => 'Почтой России ЕМS',
 				'dostavkaplus.sh6' => 'ТК ПЭК',
 				'dostavkaplus.sh7' => 'ТК СДЭК',
-				//Белорашка
 				'dostavkaplus.sh9' => 'Vozim.by',
 				);
 				
 				if (isset($delivery_names[$delivery_code])){
 					return 	$delivery_names[$delivery_code];		
 					} else {
-					return "неизвестно";
+					return "unknown";
 				}	
-				
-				
 			}
 			
 			$delivery_names = array(
-			//украшка
-			'dostavkaplus.sh3' => 'Новой Почтой',
-			'dostavkaplus.sh4' => 'ТК ИнТайм',
-			//рашка
+			'dostavkaplus.sh3' => 'Новою Поштою',
+			'dostavkaplus.sh4' => 'ТК ІнТайм',
 			'dostavkaplus.sh5' => 'Почтой России ЕМS',
 			'dostavkaplus.sh6' => 'ТК ПЭК',
 			'dostavkaplus.sh7' => 'ТК СДЭК',
-			//,tkjhfirf
 			'dostavkaplus.sh9' => 'Службой Vozim.by',
 			);
 			
 			if (isset($delivery_names[$delivery_code])){
 				return 	$delivery_names[$delivery_code];		
 				} else {
-				return "неизвестно";
+				return "unknown";
 			}	
 		}				
 		
@@ -51,14 +42,11 @@
 			$this->load->model('account/order');
 			$this->load->model('tool/user');
 			$this->load->model('kp/info1c');
-			$this->load->model('tool/image');
-			
+			$this->load->model('tool/image');			
 			
 			$orders = array();
 			
 			foreach ($results as $result) {
-			
-				$this->log->debug($result);
 			
 				$order_info = $this->model_account_order->getOrder($result['order_id']);
 				$product_total = $this->model_account_order->getTotalOrderProductsByOrderId($result['order_id']);
@@ -141,8 +129,7 @@
 			
 			return $orders;
 		}		
-		
-		
+				
 		private function prepareLinks(){					
 			$result = ['count' => [], 'links' => []];
 			
@@ -168,8 +155,7 @@
 				$result['links']['completed'] = $this->url->link('account/order/completedorderslist');			
 			} 
 			
-			return $result;
-			
+			return $result;			
 		}
 		
 		public function completedorderslist(){
@@ -238,9 +224,7 @@
 			$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
 			
 			$this->template = $this->config->get('config_template') . '/template/account/order_list.tpl';
-			
-			
-			
+									
 			$this->children = array(
 			'common/column_left',
 			'common/column_right',
@@ -481,7 +465,7 @@
 			'href'      => $this->url->link('account/account', '', 'SSL'),        	
 			'separator' => $this->language->get('text_separator')
 			);
-			
+
 			$url = '';
 			
 			if (isset($this->request->get['page'])) {
@@ -548,25 +532,12 @@
 			$this->model_module_emailtemplate_invoice->getInvoice($this->request->get['order_id'], false);
 			exit(0);
 		}
-		
-		private function track(){
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-		}
-		
+	
 		
 		public function info() { 
 			$this->language->load('account/transaction');
 			$this->language->load('account/order');
+
 			$this->load->model('payment/shoputils_psb');
 			$this->load->model('payment/paykeeper');
 			$this->load->model('payment/pp_express');
@@ -579,13 +550,15 @@
 			
 			$this->load->model('account/order');			
 			$this->load->model('kp/info1c');
-			
-			
-			
+									
 			if (isset($this->request->get['order_id'])) {
 				$order_id = $this->request->get['order_id'];
 				} else {
 				$order_id = 0;
+			}	
+
+			foreach ($this->language->loadRetranslate('account/order') as $translationСode => $translationText){
+				$this->data[$translationСode] = $translationText;
 			}	
 			
 			$this->load->model('account/preauth');
@@ -595,15 +568,14 @@
 			}						
 			
 			if (!$this->customer->isLogged()) {
-				$this->session->data['redirect'] = $this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL');
-				
+				$this->session->data['redirect'] = $this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL');				
 				$this->redirect($this->url->link('account/login', '', 'SSL'));
 			}
 			
 			$order_info = $this->model_account_order->getOrder($order_id);
 			
 			if ($order_info) {
-				$this->document->setTitle($this->language->get('text_order'));
+				$this->document->setTitle($this->language->get('text_order_single') .' '. $order_id);
 				
 				$this->data['full_order_info'] = $order_info;
 				
@@ -620,6 +592,13 @@
 				'href'      => $this->url->link('account/account', '', 'SSL'),        	
 				'separator' => $this->language->get('text_separator')
 				);
+
+				$this->data['breadcrumbs'][] = array(
+					'text'      => $this->language->get('heading_title'),
+					'href'      => $this->url->link('account/order', '', 'SSL'),        	
+					'separator' => $this->language->get('text_separator')
+				);
+			
 				
 				$url = '';
 				
@@ -628,7 +607,7 @@
 				}
 				
 				
-				$this->data['heading_title'] = '#'.$order_id;
+				$this->data['heading_title'] = $this->language->get('text_order_single') .' '. $order_id;
 				
 				$this->data['text_order_detail'] = $this->language->get('text_order_detail');
 				$this->data['text_invoice_no'] = $this->language->get('text_invoice_no');
@@ -749,8 +728,7 @@
 				$products = $this->model_account_order->getOrderProducts($this->request->get['order_id']);
 				
 				$this->load->model('kp/info1c');
-				//	$order1c = $this->model_kp_info1c->getOrderTrackerXML($this->request->get['order_id']);
-				$order1c = false;
+				$order1c = $this->model_kp_info1c->getOrderTrackerXML($this->request->get['order_id']);
 				
 				$products1c = array();
 				
@@ -788,8 +766,7 @@
 					$is_on_sixth_step = false;
 					$is_on_seventh_step = false;				
 				}
-				foreach ($products as $product) {
-					
+				foreach ($products as $product) {					
 					$tracker_status = array();					
 					
 					foreach ($products1c as $p1c){
@@ -1058,30 +1035,7 @@
 				}		
 				
 				$this->data['totals'] = $this->model_account_order->getOrderTotals($this->request->get['order_id']);
-				
-				foreach ($this->data['totals'] as $total){
-					if ($total['code'] == 'transfer_plus_prepayment'){
-						/*
-							
-							if ($order_info['currency_code'] == 'RUB') {
-							
-							$this->data['shoputils_psb_onpay_prepay'] = $this->model_payment_shoputils_psb->checkLaterpay($order_info['order_id']) ? $this->url->link('payment/shoputils_psb/laterprepay', sprintf('prepay=1&order_id=%s&order_tt=%s&order_fl=%s', $order_info['order_id'], $total['value_national'], md5($order_info['firstname'].$order_info['lastname'])), 'SSL') : '';
-							
-							$this->data['paykeeper_onpay_prepay'] = $this->model_payment_paykeeper->checkLaterpay($order_info['order_id']) ? $this->url->link('payment/paykeeper/laterprepay', sprintf('order_id=%s&order_tt=%s&order_fl=%s', $order_info['order_id'], $total['value_national'], md5($order_info['firstname'] . $order_info['lastname'])), 'SSL') : '';
-							
-							$this->data['order_to_pay_prepay'] = $this->currency->format($total['value_national'], $order_info['currency_code']);
-							//Если другая валюта		
-							} elseif ($order_info['currency_code'] != 'UAH') {
-							$this->data['shoputils_psb_onpay_prepay'] = $this->model_payment_shoputils_psb->checkLaterpay($order_info['order_id']) ? $this->url->link('payment/shoputils_psb/laterprepay', sprintf('prepay=1&order_id=%s&order_tt=%s&order_fl=%s', $order_info['order_id'], $total['value_national'], md5($order_info['firstname'].$order_info['lastname'])), 'SSL') : '';
-							
-							$this->data['paykeeper_onpay_prepay'] = $this->model_payment_paykeeper->checkLaterpay($order_info['order_id']) ? $this->url->link('payment/paykeeper/laterprepay', sprintf('order_id=%s&order_tt=%s&order_fl=%s', $order_info['order_id'], $total['value_national'], md5($order_info['firstname'] . $order_info['lastname'])), 'SSL') : '';
-							
-							$this->data['order_to_pay_prepay'] = $this->currency->format($this->currency->convert($total['value_national'], $order_info['currency_code'], 'RUB'), 'RUB', 1);				
-							}
-						*/
-					}								
-				}
-				
+									
 				if ($is_on_third_step){
 					$general_tracker_status[] = 'first_step';
 					$general_tracker_status[] = 'second_step';
@@ -1186,8 +1140,7 @@
 				$this->data['button_invoice'] = $this->language->get('button_invoice');
 				
 				$this->load->model('module/emailtemplate');
-				
-				# Extension settings - load main template
+								
 				$config = $this->model_module_emailtemplate->getConfig(array(
 				'store_id' 	  => $order_info['store_id'],
 				'language_id' => $order_info['language_id']
@@ -1197,15 +1150,12 @@
 					$this->data['download_invoice'] = $this->url->link('account/order/invoice', 'order_id='.$order_id, 'SSL');
 				}
 				
-				//payments: liqpay
 				if ($order_info['order_status_id'] == $this->config->get('config_confirmed_order_status_id')){
 					$this->data['liqpay_payment_form'] = $this->getChild('payment/liqpay');
 					} else {
 					$this->data['liqpay_payment_form'] = false;
 				}
-				//$this->data['robokassa_payment_form'] = $this->getChild('payment/robokassa');
 				
-				//ttns
 				$results = $this->model_account_order->getOrderTtnHistory($this->request->get['order_id']);
 				
 				$this->data['ttns'] = array();
@@ -1250,11 +1200,7 @@
 					);
 				}	
 				
-				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_info.tpl')) {
-					$this->template = $this->config->get('config_template') . '/template/account/order_info.tpl';
-					} else {
-					$this->template = 'default/template/account/order_info.tpl';
-				}
+				$this->template = 'account/order_info.tpl';
 				
 				$this->children = array(
 				'common/column_left',

@@ -45,9 +45,7 @@
 			}
 		}
 		
-		public function __construct($registry) {
-			// $request = new Request();
-			
+		public function __construct($registry) {			
 			$this->config 	= $registry->get('config');
 			$this->db 		= $registry->get('db');
 			$this->log 		= $registry->get('log');
@@ -103,7 +101,7 @@
 			
 		}
 		
-		public function login($email, $password, $override = false, $autologin=false) {
+		public function login($email, $password, $override = false, $autologin = false) {
 			if ($override) {
 				if (is_numeric($email)){
 					
@@ -187,8 +185,7 @@
 				$this->customer_id = $customer_query->row['customer_id'];
 				
 				
-				$this->affiliate_paid = $customer_query->row['affiliate_paid'];
-				
+				$this->affiliate_paid = $customer_query->row['affiliate_paid'];				
 				
 				$this->firstname = $customer_query->row['firstname'];
 				$this->lastname = $customer_query->row['lastname'];

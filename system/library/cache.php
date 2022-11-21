@@ -72,7 +72,7 @@ final class Cache {
 	}
 	
 	public function set($key, $value, $ttl = DB_CACHED_EXPIRE, $redis_explicit = false) {
-		if (defined('ADMIN_SESSION_DETECTED') && ADMIN_SESSION_DETECTED && defined('BYPASS_CACHE_FOR_LOGGED_ADMIN_ENABLED') && BYPASS_CACHE_FOR_LOGGED_ADMIN_ENABLED && !$explicit){
+		if (defined('ADMIN_SESSION_DETECTED') && ADMIN_SESSION_DETECTED && defined('BYPASS_CACHE_FOR_LOGGED_ADMIN_ENABLED') && BYPASS_CACHE_FOR_LOGGED_ADMIN_ENABLED && !$redis_explicit){
 			return false;
 		}
 

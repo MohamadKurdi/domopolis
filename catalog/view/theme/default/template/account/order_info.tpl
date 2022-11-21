@@ -142,7 +142,7 @@ min-width: 100px;
 			<? 
 				$ct = 'Москве';
 				if ($full_order_info['shipping_country_id'] == 220){
-					$ct = 'Киеве';
+					$ct = 'Києві';
 					} elseif($full_order_info['shipping_country_id'] == 176) {
 					$ct = 'Москве';
 					} elseif($full_order_info['shipping_country_id'] == 109) {

@@ -29,19 +29,18 @@
 		<form action="<?php echo $action; ?>" method="POST" enctype="multipart/form-data">
 			<div class="content simplecheckout-customer-right" style="font-size: 16px;    padding: 3% 0 5% 20%;">
 				
-				<b>Номер заказа</b><br />
-				<input type="text" class="login-entry-field field" name="order_id" value="<?php echo $order_id; ?>" placeholder="Номер заказа, например 112434"/>
+				<b><?php echo $text_tracker_1; ?></b><br />
+				<input type="text" class="login-entry-field field" name="order_id" value="<?php echo $order_id; ?>" placeholder="<?php echo $text_tracker_2; ?>"/>
 				<br /><br />
-				<b>Ваш e-mail, номер дисконтной карты или телефон</b><br />
-				<input type="text" class="login-entry-field field" name="auth" value="<?php echo $auth; ?>" placeholder="Ваш e-mail, номер дисконтной карты или телефон" />
+				<b><?php echo $text_tracker_3; ?></b><br />
+				<input type="text" class="login-entry-field field" name="auth" value="<?php echo $auth; ?>" placeholder="" />
 				<br />								
 				<br />
 				<?php if ($error_warning) { ?>
 					<div class="warning"><?php echo $error_warning; ?></div>
 				<?php } ?>
-				<input type="submit" value="Проверить заказ" class="button btn btn-acaunt" />
-			</div>
-			
+				<input type="submit" value="<?php echo $text_tracker_4; ?>" class="button btn btn-acaunt" />
+			</div>			
 		</form>
 		<!--/div-->
 	</div>

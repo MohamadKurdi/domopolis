@@ -30,10 +30,16 @@ if ((isset($_GET['hello']) && $_GET['hello'] == 'world')){
 		define('IS_DEBUG', true);
 		define('DEV_ENVIRONMENT', false);
 
+	} elseif ($_SERVER['REMOTE_ADDR'] == '95.67.113.2061') {
+
+		define('IS_DEBUG', true);
+		define('DEV_ENVIRONMENT', false);
+
 	} else {
 
-		define('DEV_ENVIRONMENT', false);
 		define('IS_DEBUG', false);
+		define('DEV_ENVIRONMENT', false);
+		
 	}
 
 	if (isset($_GET['hello']) && $_GET['hello'] == 'justsql'){
