@@ -7,7 +7,7 @@ class ModelToolImage extends Model {
 			$uri = $this->request->server['REQUEST_URI'];
 		}
 
-		if (!trim($filename)){
+		if (!$filename || !trim($filename)){
 			$filename = 'no_image.jpg';
 		}
 		
