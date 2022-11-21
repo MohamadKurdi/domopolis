@@ -8,7 +8,10 @@
 			return $this->yandexTranslator->setDebug(true)->translate($text, $from, $to, $returnString = false);
 		}		
 		
-		public function updateAttributeTranslation($product_id, $attribute_id, $language_id, $text){										
+		public function updateAttributeTranslation($product_id, $attribute_id, $language_id, $text){
+
+			$this->db->query("INSERT IGNORE INTO product_attribute SET text = '" . $this->db->escape($text) . "', product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', attribute_id = '" . (int)$attribute_id . "'");
+
 			$this->db->query("UPDATE product_attribute SET text = '" . $this->db->escape($text) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "' AND attribute_id = '" . (int)$attribute_id . "'");
 		}
 		

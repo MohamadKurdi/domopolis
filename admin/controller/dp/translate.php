@@ -99,6 +99,18 @@
 				
 			}
 		}
+
+		public function createempty(){
+			$query = $this->db->query("SELECT product_id, attribute_id FROM product_attribute");
+
+			$c = 1;
+			foreach ($query->rows as $row){
+				$this->db->query("INSERT IGNORE INTO product_attribute SET product_id = '" . (int)$row['product_id'] . "', language_id = '6', attribute_id = '" . (int)$row['attribute_id'] . "', text = ''");
+
+				echoLine($c . '/' . $query->num_rows .' '. $row['product_id'] . ':' . $row['attribute_id']);
+				$c++;
+			}
+		}
 		
 		public function cronAttributesRU(){
 
@@ -111,7 +123,7 @@
 			$tempTranslations = array(
 			'Стекло' => 'Скло'
 			);
-			$query = $this->db->query("SELECT product_id, attribute_id FROM product_attribute WHERE language_id = 6 AND LENGTH(text) = 0");
+			$query = $this->db->query("SELECT product_id, attribute_id FROM product_attribute WHERE language_id = 6 AND text = ''");
 			
 			if ($query->num_rows){
 				$count = count($query->rows);
