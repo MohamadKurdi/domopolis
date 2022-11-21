@@ -4,6 +4,7 @@ $_['heading_title']         = 'История заказов';
 
 $_['text_account'] = 'Кабинет';
 $_['text_order']            = 'Заказ';
+$_['text_order_single']            = 'Заказ';
 $_['text_order_detail']     = 'Детали заказа';
 $_['text_invoice_no']       = '№ Счета:';
 $_['text_order_id']         = '№ Заказа:';

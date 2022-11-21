@@ -4,8 +4,7 @@
 <div id="content" class="order-login-page">
 	<div class="wrap">
 		<?php echo $content_top; ?>
-		<div class="login-content">
-			
+		<div class="login-content">			
 			<style>
 				.content {font-size: 16px; padding: 3% 0 5% 20%!important;}
 				.content a{font-size: 16px; text-decoration: none;}
