@@ -356,7 +356,7 @@ class ControllerDPRainForest extends Controller {
 			echoLine('[ControllerKPRainForest::editfullproductscron] CRON IS DISABLED IN ADMIN');
 			return;
 		}
-				
+
 		if (!$parsetechcategory){
 			$this->load->library('Timer');
 			if ($this->config->has('config_rainforest_data_parser_time_start') && $this->config->has('config_rainforest_data_parser_time_end')){
@@ -513,19 +513,19 @@ class ControllerDPRainForest extends Controller {
 					$offer['deliveryComments'] = '21. - 22. November';
 					if ($dates = $this->rainforestAmazon->offersParser->parseAmazonDeliveryComment($offer['deliveryComments'])){
 
-					$string = '[fixoffersdates] Оффер ' . $offer['amazon_offer_id'];
-					$string .= ', ';
-					$string .= $offer['deliveryComments'];
-					$string .= ' -> ';
-					$string .= $dates['minDays'];
-					$string .= ', from '; 
-					$string .= $dates['deliveryFrom'];
-					$string .= ', to '; 
-					$string .= $dates['deliveryTo'];
-					$string .= (' (' . $i . '/' . $k . '/' . $total . ')');
+						$string = '[fixoffersdates] Оффер ' . $offer['amazon_offer_id'];
+						$string .= ', ';
+						$string .= $offer['deliveryComments'];
+						$string .= ' -> ';
+						$string .= $dates['minDays'];
+						$string .= ', from '; 
+						$string .= $dates['deliveryFrom'];
+						$string .= ', to '; 
+						$string .= $dates['deliveryTo'];
+						$string .= (' (' . $i . '/' . $k . '/' . $total . ')');
 
-					echoLine($string);								
-					$this->rainforestAmazon->offersParser->setAmazonOfferDates($offer['amazon_offer_id'], $dates);
+						echoLine($string);								
+						$this->rainforestAmazon->offersParser->setAmazonOfferDates($offer['amazon_offer_id'], $dates);
 
 					} else {
 						echoLine('[fixoffersdates] FAILED TO PARSE DATE: ' . $offer['deliveryComments']);	
@@ -797,11 +797,10 @@ class ControllerDPRainForest extends Controller {
 	/*
 		Перестроение вариантов
 	*/
-		public function rebuildvariants(){
-			$this->rainforestAmazon->productsRetriever->model_product_edit->clearAsinVariantsTable();
-
-			$this->setvariants()->fixvariants();
-		}
+	public function rebuildvariants(){
+		$this->rainforestAmazon->productsRetriever->model_product_edit->clearAsinVariantsTable();
+		$this->setvariants()->fixvariants();
+	}
 
 	/*
 	Начальное заполнение таблички вариантов, v2 логика вариантов на асинах
