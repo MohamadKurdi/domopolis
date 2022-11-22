@@ -1,12 +1,14 @@
 <?php
 
 function parseAmazonDeliveryDateToEnglish($date){
-	$de_months 	= ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+	$de_months 		= ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
 	$de_months2 	= ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
 	$en_months  	= ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 	$de_days 	= ['Montag', 'Morgen', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonnabend', 'Sonntag'];
 	$de_days2 	= ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+
+	$de_remove	= ['frühestens'];
 
 	foreach ($de_days as $de_day){
 		$date = str_ireplace(($de_day.','), '', $date);
@@ -17,11 +19,27 @@ function parseAmazonDeliveryDateToEnglish($date){
 	}
 
 	$date = str_ireplace($de_months, $en_months, $date);
-	$date = str_ireplace($de_months2, $en_months, $date);
+	$date = str_ireplace($de_remove, '', $date);
+	$date = trim($date);
 
 	return $date;
 }
 
+function guessYear($date){
+	if ($date['month'] < date('n')){
+		return date('Y') + 1;
+	} else {
+		return date('Y');
+	}
+}
+
+function reformatDate($date){
+	return date('Y-m-d', strtotime($date['year'] . '-' . $date['month'] . '-' . $date['day']));
+}
+
+function days_diff($target){	
+	return (int)date_diff(date_create(date('Y-m-d')), date_create($target))->format('%a');
+}
 
 function getAmazonDomainsList(){
 	return [
