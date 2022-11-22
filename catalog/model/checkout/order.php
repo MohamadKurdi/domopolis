@@ -325,6 +325,7 @@ class ModelCheckoutOrder extends Model {
 
 			//Настройка "получать офферы после заказа"
 		if ($this->config->get('config_rainforest_enable_offers_after_order')){
+			$product_query = $this->db->query("SELECT asin FROM product WHERE product_id = '" . (int)$product['product_id'] . "'");
 			$this->db->query("INSERT IGNORE INTO amzn_product_queue SET asin = '" . $this->db->escape($product_query->row['asin']) . "'");				
 		}
 
