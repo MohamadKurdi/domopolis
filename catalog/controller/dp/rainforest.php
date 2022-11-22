@@ -497,6 +497,46 @@ class ControllerDPRainForest extends Controller {
 	}
 
 	/*
+	Пересчитывает даты доставки или поставки офферов амазона
+	*/
+	public function fixoffersdates(){
+		$total = $this->rainforestAmazon->offersParser->getTotalAmazonOffers();		
+		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
+
+		echoLine('[fixoffersdates] Всего офферов: ' . $total);
+		$k = 1;		
+
+		for ($i = 1; $i <= $iterations; $i++){
+			$offers = $this->rainforestAmazon->offersParser->getAmazonOffers(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
+			if ($offers){		
+				foreach ($offers as $offer){
+					$offer['deliveryComments'] = '21. - 22. November';
+					if ($dates = $this->rainforestAmazon->offersParser->parseAmazonDeliveryComment($offer['deliveryComments'])){
+
+					$string = '[fixoffersdates] Оффер ' . $offer['amazon_offer_id'];
+					$string .= ', ';
+					$string .= $offer['deliveryComments'];
+					$string .= ' -> ';
+					$string .= $dates['minDays'];
+					$string .= ', from '; 
+					$string .= $dates['deliveryFrom'];
+					$string .= ', to '; 
+					$string .= $dates['deliveryTo'];
+					$string .= (' (' . $i . '/' . $k . '/' . $total . ')');
+
+					echoLine($string);								
+					$this->rainforestAmazon->offersParser->setAmazonOfferDates($offer['amazon_offer_id'], $dates);
+
+					} else {
+						echoLine('[fixoffersdates] FAILED TO PARSE DATE: ' . $offer['deliveryComments']);	
+					}
+					$k++;	
+				}
+			}	
+		}
+	}
+
+	/*
 	Быстрая установка цен, через прайслоджик
 	*/
 	public function setpricesfast(){		
