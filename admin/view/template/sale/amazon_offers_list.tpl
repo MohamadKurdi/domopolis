@@ -29,6 +29,15 @@
 					Инфо
 				</td>
 				<td>						
+					Дней			
+				</td>
+				<td>						
+					От			
+				</td>
+				<td>						
+					До			
+				</td>
+				<td>						
 					Итог			
 				</td>
 				<td>						
@@ -119,6 +128,18 @@
 					<small><?php echo $offer['delivery_comment']; ?></small>		
 				</td>
 
+				<td class="left">						
+					<small><?php echo $offer['min_days']; ?></small>		
+				</td>
+
+				<td class="left">						
+					<small><?php echo $offer['delivery_from']; ?></small>		
+				</td>
+
+				<td class="left">						
+					<small><?php echo $offer['delivery_to']; ?></small>		
+				</td>
+
 				<td class="left" style="white-space:nowrap;">						
 					<b <?php if ($offer['is_min_price']) { ?>style="color:#4ea24e"<?php } ?>><?php echo $offer['total']; ?></b>
 				</td>
@@ -195,6 +216,18 @@
 
 				<td class="left" style="color:#cf4a61">						
 					<small><?php echo $offer['delivery_comment']; ?></small>		
+				</td>
+
+				<td class="left" style="color:#cf4a61">						
+					<small><?php echo $offer['min_days']; ?></small>		
+				</td>
+
+				<td class="left" style="color:#cf4a61">						
+					<small><?php echo $offer['delivery_from']; ?></small>		
+				</td>
+
+				<td class="left" style="color:#cf4a61">						
+					<small><?php echo $offer['delivery_to']; ?></small>		
 				</td>
 
 				<td class="left" style="white-space:nowrap;color:#cf4a61">						

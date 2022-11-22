@@ -48,6 +48,9 @@ class ControllerKPAmazon extends Controller {
 					'total'					=> $this->currency->format_with_left($offer['priceAmount'] + $offer['deliveryAmount'], $offer['priceCurrency'], 1),
 					'delivery_fba' 			=> $offer['deliveryIsFba'],
 					'delivery_comment' 		=> $offer['deliveryComments'],
+					'min_days' 				=> $offer['minDays'],
+					'delivery_from' 		=> $offer['deliveryFrom'],
+					'delivery_to' 			=> $offer['deliveryTo'],
 					'is_min_price'			=> $offer['is_min_price'],							
 					'reviews'				=> (int)$offer['sellerRatingsTotal'],
 					'rating'				=> (int)$offer['sellerRating50'] / 10,
@@ -72,6 +75,11 @@ class ControllerKPAmazon extends Controller {
 					$buyBoxWinner = true;
 				}
 
+				$offerDates = false;
+				if ($rfOffer->getDeliveryComments()){
+					$offerDates = $this->rainforestAmazon->offersParser->parseAmazonDeliveryComment($rfOffer->getDeliveryComments());
+				}
+
 				if (!in_array($offer_id, $good_offers)){
 					$this->data['bad_offers'][] = [					
 						'seller' 				=> $rfOffer->getSellerName(),
@@ -85,6 +93,9 @@ class ControllerKPAmazon extends Controller {
 						'total'					=> $this->currency->format_with_left($rfOffer->getPriceAmount() + $rfOffer->getDeliveryAmount(), $rfOffer->getPriceCurrency(), 1),
 						'delivery_fba' 			=> $rfOffer->getDeliveryIsFba(),
 						'delivery_comment' 		=> $rfOffer->getDeliveryComments(),
+						'min_days' 				=> ($offerDates?(int)$offerDates['minDays']:'0'),
+						'delivery_from' 		=> ($offerDates?$this->db->escape($offerDates['deliveryFrom']):'0'),
+						'delivery_to'   		=> ($offerDates?$this->db->escape($offerDates['deliveryTo']):'0'),
 						'is_min_price'			=> false,	
 						'is_new'				=> false,						
 						'reviews'				=> (int)$rfOffer->getSellerRatingsTotal(),
