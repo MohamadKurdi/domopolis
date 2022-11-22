@@ -213,8 +213,6 @@
 								</td>
 							</tr>
 
-
-
 							<tr>
 								<td style="white-space: nowrap;color:#7F00FF;">
 									<i class="fa fa-refresh"></i> <b>Офферы для товаров в заказах</b>
@@ -225,6 +223,20 @@
 								<td>
 									<span class="help">
 										<i class="fa fa-info-circle"></i> Чтоб иметь актуальную цену закупки, этот воркер получает цены и наличие для только что заказанных товаров.
+									</span>
+								</td>
+							</tr>
+
+							<tr>
+								<td class="right">
+									<i class="fa fa-refresh"></i> Добавлять товары в очередь
+								</td>
+								<td style="width:40px;" class="center">
+									<input id="config_rainforest_enable_offers_after_order" type="checkbox" class="checkbox" name="config_rainforest_enable_offers_after_order" <? if ($config_rainforest_enable_offers_after_order){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_offers_after_order"></label>
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Чтоб иметь актуальную цену закупки, товары должны добавляться в очередь после каждого заказа.
 									</span>
 								</td>
 							</tr>
