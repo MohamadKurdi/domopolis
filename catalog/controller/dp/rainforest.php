@@ -510,7 +510,6 @@ class ControllerDPRainForest extends Controller {
 			$offers = $this->rainforestAmazon->offersParser->getAmazonOffers(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 			if ($offers){		
 				foreach ($offers as $offer){
-					$offer['deliveryComments'] = '21. - 22. November';
 					if ($dates = $this->rainforestAmazon->offersParser->parseAmazonDeliveryComment($offer['deliveryComments'])){
 
 						$string = '[fixoffersdates] Оффер ' . $offer['amazon_offer_id'];
