@@ -148,6 +148,25 @@ class OffersParser
 		return $result;
 	}
 
+	public function getTotalAmazonOffers(){
+		return $this->db->query("SELECT COUNT(*) AS total FROM product_amzn_offers")->row['total'];
+	}
+
+	public function getAmazonOffers($start){
+		$query = $this->db->query("SELECT * FROM product_amzn_offers WHERE deliveryComments <> '' LIMIT " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
+
+		return $query->rows;
+	}
+
+	public function setAmazonOfferDates($amazon_offer_id, $data){
+
+		$this->db->query("UPDATE product_amzn_offers SET 
+			minDays 		= '" . (int)$data['minDays'] . "', 
+			deliveryFrom 	= '" . $this->db->escape(date('Y-m-d', strtotime($data['deliveryFrom']))) . "', 
+			deliveryTo 		= '" . $this->db->escape(date('Y-m-d', strtotime($data['deliveryTo']))) . "'
+			WHERE amazon_offer_id = '" . (int)$amazon_offer_id . "'");
+	}
+
 	public function clearProductsAmazonQueue($asin = false){
 		if ($asin){
 			$this->db->query("DELETE FROM amzn_product_queue WHERE asin = '" . $this->db->escape($asin) . "'");
@@ -236,8 +255,90 @@ class OffersParser
 	}
 
 	public function parseAmazonDeliveryComment($deliveryComment){
-		$date = parseAmazonDeliveryDateToEnglish($deliveryComment);
+		$deliveryComment = parseAmazonDeliveryDateToEnglish($deliveryComment);
 
+		//1. October
+		if (preg_match('/^[0-9]{1,2}\. [äa-zA-Z]{2,9}$/', $deliveryComment, $matches) == 1){
+			preg_match('/[0-9]{1,2}\. [äa-zA-Z]{2,9}$/', $deliveryComment, $date);						
+			$date = (date_parse_from_format('j. F', $date[0]));
+			$date['year'] = guessYear($date);		
+
+			$dateFrom = $dateTo = $date;	
+		}
+
+		//Sa., 1. October
+		if (preg_match('/^[a-zA-Z]{2,10}\., [0-9]{1,2}\. [äa-zA-Z]{2,9}$/', $deliveryComment, $matches) == 1){
+			preg_match('/[0-9]{1,2}\. [äa-zA-Z]{2,9}$/', $deliveryComment, $date);						
+			$date = (date_parse_from_format('j. F', $date[0]));
+			$date['year'] = guessYear($date);
+
+			$dateFrom = $dateTo = $date;
+		}
+
+		//Montag, 9. Januar
+		if (preg_match('/^[a-zA-Z]{2,10}, [0-9]{1,2}\. [äa-zA-Z]{2,9}$/', $deliveryComment, $matches) == 1){
+			preg_match('/[0-9]{1,2}\. [äa-zA-Z]{2,9}$/', $deliveryComment, $date);			
+			$date = (date_parse_from_format('j. F', $date[0]));
+			$date['year'] = guessYear($date);
+
+			$dateFrom = $dateTo = $date;
+		}
+
+		//23. - 25. Januar
+		if (preg_match('/^[0-9]{1,2}\. - [0-9]{1,2}\. [äa-zA-Z]{2,9}$/', $deliveryComment, $matches) == 1){
+			preg_match_all('/[0-9]{1,2}\./', $deliveryComment, $days);	
+			preg_match_all('/[äa-zA-Z]{2,9}$/', $deliveryComment, $month);	
+
+			$dateFrom 	= (date_parse_from_format('j. F', $days[0][0] . ' ' . $month[0][0]));
+			$dateTo 	= (date_parse_from_format('j. F', $days[0][1] . ' ' . $month[0][0]));
+
+			$dateFrom['year'] 	= guessYear($dateFrom);
+			$dateTo['year'] 	= guessYear($dateTo);			
+		}
+
+		//21. - 22. Februar, 3021
+		if (preg_match('/^[0-9]{1,2}\. - [0-9]{1,2}\. [äa-zA-Z]{2,9}, [0-9]{1,4}$/', $deliveryComment, $matches) == 1){
+			preg_match_all('/[0-9]{1,2}\./', $deliveryComment, $days);	
+			preg_match_all('/[äa-zA-Z]{2,9}/', $deliveryComment, $month);	
+			
+			$dateFrom 	= (date_parse_from_format('j. F', $days[0][0] . ' ' . $month[0][0]));
+			$dateTo 	= (date_parse_from_format('j. F', $days[0][1] . ' ' . $month[0][0]));
+
+			$dateFrom['year'] 	= guessYear($dateFrom);
+			$dateTo['year'] 	= guessYear($dateTo);			
+		}
+
+
+		//2. Dezember - 4. Januar
+		if (preg_match('/^[0-9]{1,2}\. [äa-zA-Z]{2,9} - [0-9]{1,2}\. [äa-zA-Z]{2,9}$/', $deliveryComment, $matches) == 1){
+			preg_match_all('/[0-9]{1,2}\./', $deliveryComment, $days);	
+			preg_match_all('/[äa-zA-Z]{2,9}/', $deliveryComment, $months);	
+			
+			$dateFrom 	= (date_parse_from_format('j. F', $days[0][0] . ' ' . $months[0][0]));
+			$dateTo 	= (date_parse_from_format('j. F', $days[0][1] . ' ' . $months[0][1]));
+
+			$dateFrom['year'] 	= guessYear($dateFrom);
+			$dateTo['year'] 	= guessYear($dateTo);			
+		}
+
+		//frühestens Do., 22. September, 13:00 - 18:00 -> 22. September, 13:00 - 18:00
+		if (preg_match('/^^[0-9]{1,2}\. [äa-zA-Z]{2,9}, [0-9]{1,2}:[0-9]{1,2} - [0-9]{1,2}:[0-9]{1,2}$/', $deliveryComment, $matches) == 1){
+			preg_match('/[0-9]{1,2}\. [äa-zA-Z]{2,9}/', $deliveryComment, $date);			
+			$date = (date_parse_from_format('j. F', $date[0]));
+			$date['year'] = guessYear($date);
+
+			$dateFrom = $dateTo = $date;		
+		}
+
+		if (!$dateFrom || empty($dateFrom) || !$dateFrom['month'] || ($dateFrom['year'] + $dateFrom['month'] + $dateFrom['day']) <= 0){
+			return false;
+		}
+
+		return [
+			'deliveryFrom' 	=> reformatDate($dateFrom),
+			'deliveryTo' 	=> reformatDate($dateTo),
+			'minDays' 		=> days_diff(reformatDate($dateFrom)),
+		];
 	}
 
 	public function reparseOffersToSkip($rfOffers){
@@ -252,6 +353,14 @@ class OffersParser
 				//Не обрабатывать офферы от поставщиков, если ручной рейтинг ниже 500
 				if (!empty($supplier['amzn_coefficient']) && (int)$supplier['amzn_coefficient'] < $this->Suppliers->supplierMinInnerRatingForUse){
 					$addThisOffer = false;
+				}
+			}
+
+			if ($rfOffer->getDeliveryComments() && $offerDates = $this->parseAmazonDeliveryComment($rfOffer->getDeliveryComments())){
+				if ($this->config->get('config_rainforest_max_delivery_days_for_offer') > 0){
+					if (!empty($offerDates['minDays']) && (int)$offerDates['minDays'] > (int)$this->config->get('config_rainforest_max_delivery_days_for_offer')){
+						$addThisOffer = false;
+					}
 				}
 			}
 
@@ -316,6 +425,11 @@ class OffersParser
 				$buyBoxWinner = true;
 			}
 
+			$offerDates = false;
+			if ($rfOffer->getDeliveryComments()){
+				$offerDates = $this->parseAmazonDeliveryComment($rfOffer->getDeliveryComments());
+			}
+
 			$this->db->query("INSERT INTO product_amzn_offers SET
 				asin 							= '" . $this->db->escape($asin) . "', 			
 				priceCurrency 					= '" . $this->db->escape($rfOffer->getPriceCurrency()) . "',
@@ -328,6 +442,9 @@ class OffersParser
 				deliveryIsFba 					= '" . (int)$rfOffer->getDeliveryIsFba() . "',
 				deliveryIsShippedCrossBorder 	= '" . (int)$rfOffer->getDeliveryIsShippedCrossBorder() . "',
 				deliveryComments 				= '" . $this->db->escape($rfOffer->getDeliveryComments()) . "',
+				minDays 						= '" . ($offerDates?(int)$offerDates['minDays']:'0') . "',
+				deliveryFrom 					= '" . ($offerDates?$this->db->escape($offerDates['deliveryFrom']):'0') . "',
+				deliveryTo  					= '" . ($offerDates?$this->db->escape($offerDates['deliveryTo']):'0') . "',
 				conditionIsNew 					= '" . (int)$conditionIsNew . "',
 				conditionTitle 					= '" . $this->db->escape($rfOffer->getConditionTitle()) . "',
 				conditionComments 				= '" . $this->db->escape($rfOffer->getConditionComments()) . "',
