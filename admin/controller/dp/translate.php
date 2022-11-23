@@ -111,6 +111,50 @@
 				$c++;
 			}
 		}
+
+		public function createemptynames(){
+			$query = $this->db->query("SELECT attribute_id FROM attribute");
+
+			$c = 1;
+			foreach ($query->rows as $row){
+				$this->db->query("INSERT IGNORE INTO attribute_description SET language_id = '6', attribute_id = '" . (int)$row['attribute_id'] . "', name = ''");
+
+				echoLine($c . '/' . $query->num_rows . ' ' . $row['attribute_id']);
+				$c++;
+			}
+		}
+
+		public function translateAttributeNamesRu(){
+
+			if (!$this->config->get('config_yandex_translate_api_enable')){
+				return;
+			}
+			
+			$this->load->model('kp/translate');			
+			$query = $this->db->query("SELECT * FROM attribute_description WHERE language_id = 6 AND name = ''");
+
+			foreach ($query->rows as $row){
+				$ruquery = $this->db->query("SELECT name FROM attribute_description WHERE attribute_id = '" . $row['attribute_id'] . "' AND language_id = 2");
+
+				$text = $ruquery->row['name'];
+
+				$translation_ruua = $this->model_kp_translate->translateYandex($text, 'uk', 'ru');	
+
+				$json = json_decode($translation_ruua, true);
+				if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
+					$translated = $json['translations'][0]['text'] = htmlspecialchars_decode($json['translations'][0]['text'], ENT_QUOTES);
+				}
+
+				if ($translated){
+					echoLine('[TR UATR] ' . trim(str_replace(PHP_EOL, '', substr(strip_tags($translated), 0, 100))));							
+				} else {
+					echoLine('[TR ERROR] Что-то пошло не так');					
+				}
+
+				$this->model_kp_translate->updateAttributeNameTranslation($row['attribute_id'], '6', $translated);
+
+			}
+		}
 		
 		public function cronAttributesRU(){
 

@@ -9,10 +9,13 @@
 		}		
 		
 		public function updateAttributeTranslation($product_id, $attribute_id, $language_id, $text){
-
 			$this->db->query("INSERT IGNORE INTO product_attribute SET text = '" . $this->db->escape($text) . "', product_id = '" . (int)$product_id . "', language_id = '" . (int)$language_id . "', attribute_id = '" . (int)$attribute_id . "'");
 
 			$this->db->query("UPDATE product_attribute SET text = '" . $this->db->escape($text) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "' AND attribute_id = '" . (int)$attribute_id . "'");
+		}
+
+		public function updateAttributeNameTranslation($attribute_id, $language_id, $name){										
+			$this->db->query("UPDATE attribute_description SET name = '" . $this->db->escape($name) . "' WHERE attribute_id = '" . (int)$attribute_id . "' AND language_id = '" . (int)$language_id . "'");
 		}
 		
 		public function updateReviewTranslation($review_id, $language_id, $text, $field){										
