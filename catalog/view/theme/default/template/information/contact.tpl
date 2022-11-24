@@ -147,7 +147,38 @@
 					</form>
 				</div>
 			</div>
-			
+			<?php if ($this->config->get('config_store_id') == 0) {?>
+				<style>
+					.notice_wrap .text{
+						font-size: 18px;
+						display: block;
+						background: #e0665f;
+						padding: 25px;
+						color: #fff;
+						font-weight: 500;
+						text-align: center;
+						margin-bottom: 25px;
+					}
+					.notice_wrap .text a{
+						color: #fff;
+						text-decoration: underline;
+					}
+					.notice_wrap img{
+						max-width: 1000px;
+						display: block;
+						margin: auto;
+						width: 100%;
+					}
+				</style>
+				<div class="notice_wrap">
+					<div class="content">
+						<p class="text">
+							Уважаемые клиенты, обращаем Ваше внимание  - участились мошеннические действия. На некоторых сайтах указаны реквизиты похожие на реквизиты нашей компании, после получения предоплаты мошенники обрывают контакты, заказы не выполняют. Будьте бдительные и осторожны <a href="https://kitchen-profi.ru/">https://kitchen-profi.ru/</a> наш официальный сайт, за действия мошенников ответственности не несем.
+						</p>
+						<img src="/catalog/view/theme/kp/img/notification_message.jpg" alt="Уважаемые клиенты">
+					</div>
+				</div>
+			<?php } >
 			<?php echo $content_bottom; ?>
 		</div>
 	</section>
