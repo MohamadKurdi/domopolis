@@ -178,7 +178,7 @@
 						<img src="/catalog/view/theme/kp/img/notification_message.jpg" alt="Уважаемые клиенты">
 					</div>
 				</div>
-			<?php } >
+			<?php } ?>
 			<?php echo $content_bottom; ?>
 		</div>
 	</section>
