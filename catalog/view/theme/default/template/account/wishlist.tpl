@@ -180,99 +180,34 @@
         <div class="account_content">
             <?php if ($success) { ?>
               <div class="success" style="margin-bottom: 20px;color: green; font-weight: 500;"><?php echo $success; ?></div>
-            <?php } ?>
-            <?php if ($products) { ?>
+          <?php } ?>
+          <?php if ($products) { ?>
             <div class="wishlist-info">
-                <?php foreach ($products as $product) { ?>
-                <!--cart__item-->
-                <div class="cart__item" id="wishlist-row<?php echo $product['product_id']; ?>">
-                    <div class="delete">
-                        <?php if($product['is_set']){ ?>
-                            <a class="1" href="<?php echo $product['remove']; ?>"><i class="far fa-times-circle"></i></a>
-                        <?php } else { ?>
-                            <a class="12" href="<?php echo $product['remove']; ?>"><i class="far fa-times-circle"></i></a>
+                <div class="catalog__content product-grid">
+                    <div class="product-grid product__grid" id="product__grid">
+                        <?php foreach ($products as $product) { ?>
+                            <span style="display:none">
+                                <a href="<? echo $remove_href . $product['product_id']; ?>">Х</a>
+                            </span>
+
+                            <?php include($this->checkTemplate(dirname(__FILE__),'/../structured/product_single.tpl')); ?>
                         <?php } ?>
                     </div>
-                    <!--product__photo-->
-                    <div class="product__photo">
-                        <?php if ($product['thumb']) { ?>
-                        <a href="<?php echo $product['href']; ?>">
-                            <img src="<?php echo $product['thumb']; ?>" title="<?php echo $product['name']; ?>" alt="<? echo $product['name']; ?>" loading="lazy">
-                       </a>
-                        <?php } ?>
-                    </div>
-                    <!--/product__photo-->
-                    <!--product__middle-->
-                    <div class="product__middle">
-                        <div class="product__rating"><span class="rate rate-5"></span></div>
-                        <div class="product__title">
-                            <a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a>
-                        </div>
-                        <div class="product__code">Код товара: <?php echo $product['product_id']; ?></div>
-                    </div>
-                    <!--/product__middle-->
-                    <!--product__bottom-->
-                    <div class="product__bottom">
-                        
-                        <div class="product__info" style="margin-bottom: 20px;">
-                            <?php  if ($product['need_ask_about_stock']) { ?>        
-                                <!-- <div class="product__availability" style="margin-bottom: 10px;">Наличие уточняйте</div> -->
-                            <?php  } elseif ($product['can_not_buy']) { ?>
-                                <!-- <div class="product__availability" style="margin-bottom: 10px;">Нет в наличии</div> -->
-                            <?php } else { ?>  
-                                <div class="product__availability" style="margin-bottom: 10px;">В наличии</div>
-                            <?php } ?>
-                            
-                            <div class="product__price">
-                              <?php if (!$product['special']) { ?>
-                                <div class="price__new"><?php echo $product['price']; ?></div>
-                              <?php } else { ?>
-                                <div class="price__new"><?php echo $product['special']; ?></div>
-                                <div class="price__old"><?php echo $product['price']; ?></div>
-                                
-                              <?php } ?>
-                            </div>
-                            <? if ($product['points']) { ?>
-                                <div class="reward_wrap">
-                                    <span class="text"><?php echo $product['points']; ?></span>
-                                </div>
-                            <? } ?>
-                        </div>
-                        <div class="price__btn-group">
-                            <?php  if ($product['need_ask_about_stock']) { ?>        
-                                <p style="color: #ccc;font-size: 16px;font-weight: 700;">Наличие уточняйте</p>
-                                            
-                            <?php  } elseif ($product['can_not_buy']) { ?>
-                                <span style="color: #ccc;font-size: 16px;font-weight: 700;">Нет в наличии</span>
-                            <?php } else { ?>  
-                            
-                          <button class="price__btn-buy btn" onclick="addToCart('<?php echo $product['product_id']; ?>');">
-                            <svg width="26" height="25" viewBox="0 0 26 25" fill="none" xmlns="https://www.w3.org/2000/svg">
-                              <path d="M1 1.33948H5.19858L8.01163 15.6923C8.10762 16.1858 8.37051 16.6292 8.7543 16.9447C9.13809 17.2602 9.61832 17.4278 10.1109 17.4181H20.3135C20.8061 17.4278 21.2863 17.2602 21.6701 16.9447C22.0539 16.6292 22.3168 16.1858 22.4128 15.6923L24.0922 6.69903H6.24823M10.4468 22.7777C10.4468 23.3697 9.97687 23.8496 9.39716 23.8496C8.81746 23.8496 8.34752 23.3697 8.34752 22.7777C8.34752 22.1857 8.81746 21.7058 9.39716 21.7058C9.97687 21.7058 10.4468 22.1857 10.4468 22.7777ZM21.9929 22.7777C21.9929 23.3697 21.523 23.8496 20.9433 23.8496C20.3636 23.8496 19.8936 23.3697 19.8936 22.7777C19.8936 22.1857 20.3636 21.7058 20.9433 21.7058C21.523 21.7058 21.9929 22.1857 21.9929 22.7777Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            </svg>
-                            <span>В корзину</span>       
-                          </button>
-                          <?php } ?>
-                        </div>
-                    </div>
-                <!--/product__bottom-->
                 </div>
-                <!--/cart__item-->
-                <?php } ?>
             </div>
             <div class="buttons" hidden>
                 <div class="right"><a href="<?php echo $continue; ?>" class="btn btn-acaunt"><?php echo $button_continue; ?></a>
                 </div>
             </div>
-            <?php } else { ?>
+        <?php } else { ?>
             <div class="content"><?php echo $text_empty; ?></div>
             <div class="buttons" hidden>
                 <div class="right"><a href="<?php echo $continue; ?>" class="btn btn-acaunt"><?php echo $button_continue; ?></a>
                 </div>
             </div>
-            <?php } ?>
-            <?php echo $content_bottom; ?>
-        </div>
+        <?php } ?>
+        <?php echo $content_bottom; ?>
     </div>
+</div>
 </section>
 <?php echo $footer; ?>

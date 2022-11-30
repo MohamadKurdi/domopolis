@@ -21,6 +21,7 @@
 			foreach ($this->language->loadRetranslate('product/single') as $translationСode => $translationText){
 				$this->data[$translationСode] = $translationText;
 			}
+
 			
 			if (isset($this->request->get['remove'])) {
 				$key = array_search($this->request->get['remove'], $this->session->data['wishlist']);
@@ -73,82 +74,18 @@
 				$this->data['success'] = '';
 			}
 			
-			$this->data['products'] = array();
+			$results = [];
 			
-			foreach ($this->session->data['wishlist'] as $key => $product_id) {
-				$product_info = $this->model_catalog_product->getProduct($product_id);
-				
-				if ($product_info) { 
-					if ($product_info['image']) {
-						$image = $this->model_tool_image->resize($product_info['image'], $this->config->get('config_image_wishlist_width'), $this->config->get('config_image_wishlist_height'));
-						} else {
-						$image = false;
-					}
-					
-					if ($product_info['quantity'] <= 0) {
-						$stock = $product_info['stock_status'];
-						} elseif ($this->config->get('config_stock_display')) {
-						$stock = $product_info['quantity'];
-						} else {
-						$stock = $this->language->get('text_instock');
-					}
-					
-					if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-						$price = $this->currency->format($this->tax->calculate($product_info['price'], $product_info['tax_class_id'], $this->config->get('config_tax')));
-						} else {
-						$price = false;
-					}
-					
-					if ((float)$product_info['special']) {
-						$special = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')));
-						} else {
-						$special = false;
-					}
-					
-					if ($product_info['quantity'] <= 0) {
-						$availability = $product_info['stock_status'];
-						} elseif ($this->config->get('config_stock_display')) {
-						$availability = $product_info['quantity'];
-						} else {
-						$availability = $this->language->get('text_instock');
-					}				
-					
-					
-					$stock_data = $this->model_catalog_product->parseProductStockData($product_info);
-					
-					$this->data['products'][] = array(
-					'product_id' => $product_info['product_id'],
-					'thumb'      => $image,
-                    'is_set' => $this->model_catalog_set->isSetExist($product_info['product_id']),
-					'name'       => $product_info['name'],
-					'model'      => $product_info['model'],
-					'stock'      => $stock,
-					'price'      => $price,		
-					'special'    => $special,
-					'model'        => $product_info['model'],
-					'manufacturer' => $product_info['manufacturer'],
-					'availability' => $availability,
-					'rating'       => (int)$product_info['rating'],
-					'reviews'      => sprintf($this->language->get('text_reviews'), (int)$product_info['reviews']),
-					'weight'       => $this->weight->format($product_info['weight'], $product_info['weight_class_id']),
-					'length'       => $this->length->format($product_info['length'], $product_info['length_class_id']),
-					'width'        => $this->length->format($product_info['width'], $product_info['length_class_id']),
-					'height'       => $this->length->format($product_info['height'], $product_info['length_class_id']),
-					'attribute'    => $attribute_data,
-					'points'	  	=> $this->currency->formatBonus($result['reward'], true),
-					'can_not_buy' 	=> ($product_info['stock_status_id'] == $this->config->get('config_not_in_stock_status_id')),
-					'need_ask_about_stock' => ($product_info['stock_status_id'] == $this->config->get('config_partly_in_stock_status_id')),
-					'has_child'  	=> $product_info['has_child'],
-					'stock_status'  => $product_info['stock_status'],
-					'location'      => $product_info['location'],
-					'href'       => $this->url->link('product/product', 'product_id=' . $product_info['product_id']),
-					'remove'     => $this->url->link('account/wishlist', 'remove=' . $product_info['product_id'])
-					);
+			foreach ($this->session->data['wishlist'] as $key => $product_id) {								
+				if ($product_info = $this->model_catalog_product->getProduct($product_id)) { 
+					$results[] = $product_info; 			
 					} else {
 					unset($this->session->data['wishlist'][$key]);
 				}
-			}	
-			
+			}
+
+			$this->data['products'] = $this->model_catalog_product->prepareProductToArray($results);				
+			$this->data['remove_href'] = $this->url->link('account/wishlist', 'remove=');
 			$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
 			
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/wishlist.tpl')) {
@@ -205,4 +142,3 @@
 			$this->response->setOutput(json_encode($json));
 		}	
 	}
-?>
