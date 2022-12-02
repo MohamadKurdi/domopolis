@@ -179,7 +179,7 @@
 				let navNext = $(this).closest('.collection-content').find('.swiper-next-slide'); 
 
 				var swiper = new Swiper(this, {
-					loop: true,
+					loop: false,
 					slidesPerView: "auto",
 				        // slidesPerView: 3,
 				        preloadImages: false,
