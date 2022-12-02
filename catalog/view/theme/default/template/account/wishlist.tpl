@@ -3,7 +3,24 @@
 <?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl')); ?>
 
 <style type="text/css">
-    
+    .product_single_wrap{
+        position: relative;
+    }
+    .product_single_wrap .remove_btn{
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 1;
+        background: #e16a5d;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        border-radius: 100px;
+        font-size: 12px;
+    }
     @media screen and (max-width:560px){
         .wishlist-info{
             display: flex;
@@ -186,11 +203,10 @@
                 <div class="catalog__content product-grid">
                     <div class="product-grid product__grid" id="product__grid">
                         <?php foreach ($products as $product) { ?>
-                            <span style="display:none">
-                                <a href="<? echo $remove_href . $product['product_id']; ?>">Х</a>
-                            </span>
-
-                            <?php include($this->checkTemplate(dirname(__FILE__),'/../structured/product_single.tpl')); ?>
+                             <div class="product_single_wrap">
+                                <a href="<? echo $remove_href . $product['product_id']; ?>" class="remove_btn"><i class="fas fa-times"></i></a>
+                                <?php include($this->checkTemplate(dirname(__FILE__),'/../structured/product_single.tpl')); ?>
+                            </div>
                         <?php } ?>
                     </div>
                 </div>
