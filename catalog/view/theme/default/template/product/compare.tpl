@@ -213,9 +213,9 @@
                                         </div>
                                         <div class="add_cart_wrap">
                                             <?php  if ($product['need_ask_about_stock']) { ?>       
-                                                <p style="color: #e16a5d;font-size: 13px;font-weight: 500;">Наличие уточняйте</p>
+                                                <p style="color: #e16a5d;font-size: 13px;font-weight: 500;"><?php echo $product['stock_status']; ?></p>
                                             <?php  } elseif ($product['can_not_buy']) { ?>
-                                                <p style="color: #e16a5d;font-size: 13px;font-weight: 500;">Нет в наличии</p>
+                                                <p style="color: #e16a5d;font-size: 13px;font-weight: 500;"><?php echo $product['stock_status']; ?></p>
                                             <?php } else { ?>     
                                                 <?php if($product['is_set']){ ?>
                                                     <a class="button" href="<?php echo $product['href']; ?>">
