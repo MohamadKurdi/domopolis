@@ -2467,7 +2467,7 @@ class ControllerCatalogProduct extends Controller {
 
 		foreach ($product_images as $product_image) {
 			$this->data['product_images'][] = array(
-				'image'      => $image,
+				'image'      => $product_image['image'],
 				'thumb'      => $this->model_tool_image->resize($product_image['image'], 100, 100),
 				'sort_order' => $product_image['sort_order']
 			);
