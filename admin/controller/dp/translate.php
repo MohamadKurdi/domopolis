@@ -269,8 +269,8 @@
 			//Названия
 			$sql = "SELECT product_id, 
 			name as name_ruua FROM product_description 
-			WHERE product_id IN (SELECT product_id FROM product_description pd2 WHERE pd2.language_id = 2 AND LENGTH(pd2.name) > 2 AND pd2.name REGEXP '[а-яА-Я]') 
-			AND product_id IN (SELECT product_id FROM product_description pd3 WHERE pd3.language_id = 6 AND LENGTH(pd3.name) <= 5 AND translated = 0)
+			WHERE product_id IN (SELECT product_id FROM product_description pd2 WHERE pd2.language_id = 2 AND LENGTH(pd2.name) > 2) 
+			AND product_id IN (SELECT product_id FROM product_description pd3 WHERE pd3.language_id = 6 AND LENGTH(pd3.name) <= 5)
 			AND language_id = 2";
 			
 			$query = $this->db->query($sql);
@@ -350,9 +350,7 @@
 			WHERE p.stock_status_id NOT IN (" . $this->config->get('config_not_in_stock_status_id') . ")
 			AND p.product_id IN (SELECT product_id FROM product_description pd3 WHERE language_id = 2 AND LENGTH(pd3.description) > 100)
 			AND p.product_id IN (SELECT product_id FROM product_description pd4 WHERE language_id = 6 AND LENGTH(pd4.description) < 50)
-			AND pd.language_id = 2			
-			AND p.status = 1
-			AND p.price > 0";
+			AND pd.language_id = 2";
 			
 			$query = $this->db->query($sql);			
 			
