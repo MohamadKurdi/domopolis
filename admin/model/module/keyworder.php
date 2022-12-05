@@ -4,7 +4,7 @@ class ModelModuleKeyworder extends Model {
 	protected $cound_deleted = 0;
 
 	public function getKeyworder($data = array()) {
-		$sql = "SELECT k.keyworder_id, k.manufacturer_id, k.category_id FROM " . DB_PREFIX . "keyworder k LEFT JOIN " . DB_PREFIX . "manufacturer m ON (m.manufacturer_id = k.manufacturer_id) LEFT JOIN " . DB_PREFIX . "category_description cd ON (cd.category_id = k.category_id) WHERE";
+		$sql = "SELECT k.keyworder_id, k.manufacturer_id, k.category_id FROM keyworder k LEFT JOIN manufacturer m ON (m.manufacturer_id = k.manufacturer_id) LEFT JOIN category_description cd ON (cd.category_id = k.category_id) WHERE";
 
 		if (!empty($data['filter_category_id'])) {
 			$sql .= " k.category_id = '" . (int)$data['filter_category_id'] . "'";
@@ -58,13 +58,13 @@ class ModelModuleKeyworder extends Model {
 	}
 
 	public function getDescriptions($keyworder_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "keyworder_description WHERE keyworder_id = '" . (int)$keyworder_id . "'");
+		$query = $this->db->query("SELECT * FROM keyworder_description WHERE keyworder_id = '" . (int)$keyworder_id . "'");
 
 		return $query->rows;
 	}
 
 	public function getTotalKeyworder($data = array()) {
-		$sql = "SELECT COUNT(*) AS total FROM " . DB_PREFIX . "keyworder";
+		$sql = "SELECT COUNT(*) AS total FROM keyworder";
 
 		if ((!empty($data['filter_category_id'])) || (!empty($data['filter_manufacturer_id']))) {
 			$sql .= " WHERE ";
@@ -88,10 +88,10 @@ class ModelModuleKeyworder extends Model {
 	}
 
 	public function saveKeyworder($data) {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "keyworder_description WHERE keyworder_id = '" . (int)$data['keyworder_id'] . "'");
+		$this->db->query("DELETE FROM keyworder_description WHERE keyworder_id = '" . (int)$data['keyworder_id'] . "'");
 
 		foreach ($data['infos'] as $language_id => $value) {
-			$this->db->query("INSERT INTO " . DB_PREFIX . "keyworder_description SET 
+			$this->db->query("INSERT INTO keyworder_description SET 
 				keyworder_id = '" . (int)$data['keyworder_id'] . "', 
 				language_id = '" . (int)$language_id . "', 
 				seo_h1 = '" .  $this->db->escape($value['seo_h1']) . "', 
@@ -107,13 +107,13 @@ class ModelModuleKeyworder extends Model {
 	}
 
 	public function getAllKeyworders() {
-		$sql = $this->db->query("SELECT manufacturer_id, category_id FROM " . DB_PREFIX . "keyworder");
+		$sql = $this->db->query("SELECT manufacturer_id, category_id FROM keyworder");
 
 		return $sql->rows;
 	}
 	
 	public function getAllKeywordersWithKWid() {
-		$sql = $this->db->query("SELECT manufacturer_id, category_id, keyworder_id FROM " . DB_PREFIX . "keyworder WHERE 1");
+		$sql = $this->db->query("SELECT manufacturer_id, category_id, keyworder_id FROM keyworder WHERE 1");
 
 		return $sql->rows;
 	}
@@ -264,7 +264,7 @@ class ModelModuleKeyworder extends Model {
 				}
 
 //закончили обработку
-				$this->db->query("UPDATE " . DB_PREFIX . "keyworder_description SET
+				$this->db->query("UPDATE keyworder_description SET
 					seo_h1 = '" . $this->db->escape(trim($category_info['seo_h1'])) . "',
 					seo_title = '" . $this->db->escape(trim($category_info['seo_title'])) . "',
 					meta_keyword = '" . $this->db->escape(trim($category_info['meta_keyword'])) . "',
@@ -304,12 +304,12 @@ class ModelModuleKeyworder extends Model {
 				md.meta_description AS manufacturer_meta_description, 
 				m.image AS manufacturer_image, 
 				kd.keyworder_status 
-			FROM " . DB_PREFIX . "category c
-			LEFT JOIN " . DB_PREFIX . "category_description cd ON (c.category_id = cd.category_id) 
-			LEFT JOIN " . DB_PREFIX . "keyworder k ON (k.manufacturer_id = '" . (int)$manufacturer_id . "' AND k.category_id = '" . (int)$category_id . "')
-			LEFT JOIN " . DB_PREFIX . "keyworder_description kd ON (kd.keyworder_id = k.keyworder_id)
-			LEFT JOIN " . DB_PREFIX . "manufacturer m ON (m.manufacturer_id = '" . (int)$manufacturer_id . "') 
-			LEFT JOIN " . DB_PREFIX . "manufacturer_description md ON (md.manufacturer_id = m.manufacturer_id) 
+			FROM category c
+			LEFT JOIN category_description cd ON (c.category_id = cd.category_id) 
+			LEFT JOIN keyworder k ON (k.manufacturer_id = '" . (int)$manufacturer_id . "' AND k.category_id = '" . (int)$category_id . "')
+			LEFT JOIN keyworder_description kd ON (kd.keyworder_id = k.keyworder_id)
+			LEFT JOIN manufacturer m ON (m.manufacturer_id = '" . (int)$manufacturer_id . "') 
+			LEFT JOIN manufacturer_description md ON (md.manufacturer_id = m.manufacturer_id) 
 			WHERE c.category_id = '" . (int)$category_id . "' 
 			AND cd.language_id = '" . (int)$language_id . "' 
 			AND m.manufacturer_id = '" . (int)$manufacturer_id . "' 
@@ -324,16 +324,16 @@ class ModelModuleKeyworder extends Model {
 		$sql1 = "SELECT 
 			m.manufacturer_id, 
 			cp.path_id as category_id
-			FROM " . DB_PREFIX . "product p 
-			LEFT JOIN " . DB_PREFIX . "product_to_category ptc 
+			FROM product p 
+			LEFT JOIN product_to_category ptc 
 			ON (p.product_id = ptc.product_id) 
-			LEFT JOIN " . DB_PREFIX . "category_path cp 
+			LEFT JOIN category_path cp 
 			ON (ptc.category_id = cp.category_id) 
-			LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) 
+			LEFT JOIN manufacturer m ON (p.manufacturer_id = m.manufacturer_id) 
 			GROUP BY m.manufacturer_id, cp.path_id 
 			HAVING COUNT(*) >= 1 ORDER BY m.name ASC";
 			
-		$sql2 = "SELECT manufacturer_id, category_id FROM " . DB_PREFIX . "keyworder";
+		$sql2 = "SELECT manufacturer_id, category_id FROM keyworder";
 						
 		$query1 = $this->db->query($sql1);
 		
@@ -342,7 +342,7 @@ class ModelModuleKeyworder extends Model {
 		$arr1 = array();
 		foreach ($query1->rows as $rows) {					
 			
-			$sql3 = "SELECT '" . $rows['manufacturer_id'] . "', parent_id FROM " . DB_PREFIX . "category
+			$sql3 = "SELECT '" . $rows['manufacturer_id'] . "', parent_id FROM category
 				WHERE category_id = '" . $rows['category_id'] . "' LIMIT 1";
 			$query3 = $this->db->query($sql3);
 			
@@ -371,7 +371,7 @@ class ModelModuleKeyworder extends Model {
 				$result = explode('_', (string)(implode('', $arr)));
 				
 				if ((($result[0]) != 0) && (($result[1]) != 0)) {
-					$this->db->query("INSERT INTO " . DB_PREFIX . "keyworder SET 
+					$this->db->query("INSERT INTO keyworder SET 
 						manufacturer_id = '" . (int)$result[0] . "', 
 						category_id = '" . (int)$result[1] . "' 
 					");
@@ -379,7 +379,7 @@ class ModelModuleKeyworder extends Model {
 					$keyworder_id = $this->db->getLastId();
 
 					foreach ($languages as $language) {
-						$this->db->query("INSERT INTO " . DB_PREFIX . "keyworder_description SET 
+						$this->db->query("INSERT INTO keyworder_description SET 
 							keyworder_id = '" . (int)$keyworder_id . "', 
 							language_id = '" . (int)$language['language_id'] . "',							
 							category_status = '1',
@@ -412,7 +412,7 @@ class ModelModuleKeyworder extends Model {
 				// подсчитываем удаленные
 				$this_cound_deleted[] = array($delete_values[0]);
 
-				$this->db->query("DELETE k, kd FROM " . DB_PREFIX . "keyworder k LEFT JOIN " . DB_PREFIX . "keyworder_description kd ON (k.keyworder_id = kd.keyworder_id) WHERE k.manufacturer_id = '" . (int)$delete_values[0] . "' AND k.category_id = '" . (int)$delete_values[1] . "'");
+				$this->db->query("DELETE k, kd FROM keyworder k LEFT JOIN keyworder_description kd ON (k.keyworder_id = kd.keyworder_id) WHERE k.manufacturer_id = '" . (int)$delete_values[0] . "' AND k.category_id = '" . (int)$delete_values[1] . "'");
 			}
 		}
 		
@@ -437,7 +437,7 @@ class ModelModuleKeyworder extends Model {
 
 		foreach ($datas as $data) {
 			if ((($data['manufacturer_id']) != 0) && (($data['category_id']) != 0)) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "keyworder SET 
+				$this->db->query("INSERT INTO keyworder SET 
 					manufacturer_id = '" . (int)$data['manufacturer_id'] . "', 
 					category_id = '" . (int)$data['category_id'] . "' 
 				");
@@ -445,7 +445,7 @@ class ModelModuleKeyworder extends Model {
 				$keyworder_id = $this->db->getLastId();
 
 				foreach ($languages as $language) {
-					$this->db->query("INSERT INTO " . DB_PREFIX . "keyworder_description SET 
+					$this->db->query("INSERT INTO keyworder_description SET 
 						keyworder_id = '" . (int)$keyworder_id . "', 
 						language_id = '" . (int)$language['language_id'] . "',
 						category_status = '1',
@@ -460,14 +460,14 @@ class ModelModuleKeyworder extends Model {
 	
 
 	public function install() {
-		$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "keyworder (
+		$this->db->query("CREATE TABLE IF NOT EXISTS keyworder (
 			keyworder_id int(11) NOT NULL AUTO_INCREMENT, 
 			manufacturer_id int(11) NOT NULL , 
 			category_id int(11) NOT NULL , 
 			PRIMARY KEY (keyworder_id) 
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
 
-		$this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "keyworder_description (
+		$this->db->query("CREATE TABLE IF NOT EXISTS keyworder_description (
 			keyworder_id int(11) NOT NULL, 
 			language_id int(11) NOT NULL, 
 			seo_h1 varchar(255) NOT NULL , 
@@ -480,7 +480,7 @@ class ModelModuleKeyworder extends Model {
 			PRIMARY KEY (keyworder_id,language_id) 
 			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci");
 
-		$sql = "SELECT m.manufacturer_id, ptc.category_id FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_to_category ptc ON (p.product_id = ptc.product_id) LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id) GROUP BY m.manufacturer_id, ptc.category_id HAVING COUNT(*) >= 1 ORDER BY m.name ASC";
+		$sql = "SELECT m.manufacturer_id, ptc.category_id FROM product p LEFT JOIN product_to_category ptc ON (p.product_id = ptc.product_id) LEFT JOIN manufacturer m ON (p.manufacturer_id = m.manufacturer_id) GROUP BY m.manufacturer_id, ptc.category_id HAVING COUNT(*) >= 1 ORDER BY m.name ASC";
 		
 		$query = $this->db->query($sql);
 		
@@ -488,8 +488,8 @@ class ModelModuleKeyworder extends Model {
 	}
 
 	public function uninstall() {
-		$this->db->query("DROP TABLE IF EXISTS " . DB_PREFIX . "keyworder");
-		$this->db->query("DROP TABLE IF EXISTS " . DB_PREFIX . "keyworder_description");
+		$this->db->query("DROP TABLE IF EXISTS keyworder");
+		$this->db->query("DROP TABLE IF EXISTS keyworder_description");
 	}
 }
 ?>

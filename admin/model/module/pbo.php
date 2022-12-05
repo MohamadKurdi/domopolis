@@ -6,8 +6,8 @@ class ModelModulePbo extends Model
 		$query = $this->db->query("SELECT od.name "
 		. " , o.option_id "
 		. " , o.type "
-		. " FROM " . DB_PREFIX . "option_description od "
-		. " LEFT JOIN `" . DB_PREFIX . "option` o "
+		. " FROM option_description od "
+		. " LEFT JOIN `option` o "
 		. " ON o.option_id = od.option_id "
 		. " WHERE od.language_id = '" . (int)$this->config->get('config_language_id') . "'"
 		. " AND (o.type = 'radio' "
@@ -19,4 +19,3 @@ class ModelModulePbo extends Model
 		return $query->rows;
 	}
 }
-?>

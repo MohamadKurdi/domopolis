@@ -6,7 +6,7 @@ class ModelModuleAlsoviewed extends Model {
 		parent::__construct($register);
 	}
 	public function install(){
-		$query = $this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "alsoviewed`
+		$query = $this->db->query("CREATE TABLE IF NOT EXISTS `alsoviewed`
 	 (`id` INT(11) NOT NULL AUTO_INCREMENT, 
 	 `low` INT(11) NULL DEFAULT '0',
 	 `high` INT(11) NULL DEFAULT '0',
@@ -15,8 +15,7 @@ class ModelModuleAlsoviewed extends Model {
 	  PRIMARY KEY (`id`));");	
 	}
 	public function uninstall()	{
-		  $this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "alsoviewed`");
+		  $this->db->query("DROP TABLE IF EXISTS `alsoviewed`");
 	}
 
 }
-?>

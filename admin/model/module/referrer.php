@@ -44,7 +44,7 @@
             return $patterns;
 			
 			$patterns = array();
-			$query = $this->db->query("SELECT name, url_mask, url_param FROM `" . DB_PREFIX . "referrer_patterns`");
+			$query = $this->db->query("SELECT name, url_mask, url_param FROM `referrer_patterns`");
 			foreach($query->rows as $row ) {
 				array_push( $patterns, array( "name" => $row["name"], "url_mask" => $row["url_mask"], "url_param" => $row["url_param"]) );
 			}
@@ -53,7 +53,7 @@
 		}
 		
 		public function deleteRecord($pattern_id) {
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "referrer_patterns` WHERE `pattern_id` = '" . (int)$pattern_id . "'");
+			$this->db->query("DELETE FROM `referrer_patterns` WHERE `pattern_id` = '" . (int)$pattern_id . "'");
 			$this->cache->delete('referrer_patterns');
 		}
 		
@@ -61,9 +61,9 @@
 			if($data['name'] == '' or $data['url_mask'] == '' or $data['url_param'] == '')
             return false;
 			if($data['pattern_id'] != 0 ) {
-				$this->db->query("UPDATE `" . DB_PREFIX . "referrer_patterns` SET `name` = '" . $this->db->escape($data['name']) . "', `url_mask` = '" . $this->db->escape($data['url_mask']) . "', `url_param` = '" . $this->db->escape($data['url_param']) . "' WHERE `pattern_id` = '" . (int)$data['pattern_id'] . "'");
+				$this->db->query("UPDATE `referrer_patterns` SET `name` = '" . $this->db->escape($data['name']) . "', `url_mask` = '" . $this->db->escape($data['url_mask']) . "', `url_param` = '" . $this->db->escape($data['url_param']) . "' WHERE `pattern_id` = '" . (int)$data['pattern_id'] . "'");
 				} else {
-				$this->db->query("INSERT INTO `" . DB_PREFIX . "referrer_patterns` SET `name` = '" .  $this->db->escape($data['name']) . "', `url_mask` = '" . $this->db->escape($data['url_mask']) . "', `url_param` = '" . $this->db->escape($data['url_param']) . "'");
+				$this->db->query("INSERT INTO `referrer_patterns` SET `name` = '" .  $this->db->escape($data['name']) . "', `url_mask` = '" . $this->db->escape($data['url_mask']) . "', `url_param` = '" . $this->db->escape($data['url_param']) . "'");
 			}
 			$this->cache->delete('referrer_patterns');
 			return true;
@@ -72,11 +72,11 @@
 		// Get List
 		public function getRecords($data = array()) {
 			if (!$data) {
-				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "referrer_patterns` ORDER BY pattern_id");
+				$query = $this->db->query("SELECT * FROM `referrer_patterns` ORDER BY pattern_id");
 				return $query->rows;
 			}
 			
-			$sql = "SELECT * FROM `" . DB_PREFIX . "referrer_patterns` ";
+			$sql = "SELECT * FROM `referrer_patterns` ";
 			
 			$sort_data = array('name', 'pattern');
 			
@@ -110,34 +110,34 @@
 		
 		// Total Records
 		public function getRecordsCount() {
-			$query = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "referrer_patterns`;");
+			$query = $this->db->query("SELECT COUNT(*) AS total FROM `referrer_patterns`;");
 			return $query->row['total'];
 		}
 		
 		// Install/Uninstall
 		public function install() {
 			
-			$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "referrer_patterns` ( `pattern_id` int(11) NOT NULL AUTO_INCREMENT, `name` varchar(128) NOT NULL, `url_mask` varchar(256) NOT NULL, `url_param` varchar(256) NOT NULL, PRIMARY KEY (`pattern_id`) );");
+			$this->db->query("CREATE TABLE IF NOT EXISTS `referrer_patterns` ( `pattern_id` int(11) NOT NULL AUTO_INCREMENT, `name` varchar(128) NOT NULL, `url_mask` varchar(256) NOT NULL, `url_param` varchar(256) NOT NULL, PRIMARY KEY (`pattern_id`) );");
 			
-			$query = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "order` WHERE `Field` = 'first_referrer'");
+			$query = $this->db->query("SHOW COLUMNS FROM `order` WHERE `Field` = 'first_referrer'");
 			if(count($query->rows) == 0 ) {
-				$this->db->query("ALTER TABLE `" . DB_PREFIX . "order` ADD `first_referrer` text;");
+				$this->db->query("ALTER TABLE `order` ADD `first_referrer` text;");
 			}
-			$query = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "order` WHERE `Field` = 'last_referrer'");
+			$query = $this->db->query("SHOW COLUMNS FROM `order` WHERE `Field` = 'last_referrer'");
 			if(count($query->rows) == 0 ) {
-				$this->db->query("ALTER TABLE `" . DB_PREFIX . "order` ADD `last_referrer` text;");
+				$this->db->query("ALTER TABLE `order` ADD `last_referrer` text;");
 			}
 			
 			$sql = array();
 			
-			$sql[] = "INSERT INTO `" . DB_PREFIX . "referrer_patterns` (name, url_mask, url_param) VALUES ('Картинки.Mail', 'go.mail.ru', 'q');";
-			$sql[] = "INSERT INTO `" . DB_PREFIX . "referrer_patterns` (name, url_mask, url_param) VALUES ('Google', 'google.','q');";
-			$sql[] = "INSERT INTO `" . DB_PREFIX . "referrer_patterns` (name, url_mask, url_param) VALUES ('Google', 'google.','as_q');";
-			$sql[] = "INSERT INTO `" . DB_PREFIX . "referrer_patterns` (name, url_mask, url_param) VALUES ('Яндекс.Картинки', 'images.yandex.', 'text');";
-			$sql[] = "INSERT INTO `" . DB_PREFIX . "referrer_patterns` (name, url_mask, url_param) VALUES ('Яндекс.Mobile', 'm.yandex.', 'query');";
-			$sql[] = "INSERT INTO `" . DB_PREFIX . "referrer_patterns` (name, url_mask, url_param) VALUES ('Яндекс Маркет', 'market.yandex.', 'text');";
-			$sql[] = "INSERT INTO `" . DB_PREFIX . "referrer_patterns` (name, url_mask, url_param) VALUES ('Яндекс', 'hghltd.yandex.', 'text');";
-			$sql[] = "INSERT INTO `" . DB_PREFIX . "referrer_patterns` (name, url_mask, url_param) VALUES ('Яндекс', 'yandex.', 'text');";
+			$sql[] = "INSERT INTO `referrer_patterns` (name, url_mask, url_param) VALUES ('Картинки.Mail', 'go.mail.ru', 'q');";
+			$sql[] = "INSERT INTO `referrer_patterns` (name, url_mask, url_param) VALUES ('Google', 'google.','q');";
+			$sql[] = "INSERT INTO `referrer_patterns` (name, url_mask, url_param) VALUES ('Google', 'google.','as_q');";
+			$sql[] = "INSERT INTO `referrer_patterns` (name, url_mask, url_param) VALUES ('Яндекс.Картинки', 'images.yandex.', 'text');";
+			$sql[] = "INSERT INTO `referrer_patterns` (name, url_mask, url_param) VALUES ('Яндекс.Mobile', 'm.yandex.', 'query');";
+			$sql[] = "INSERT INTO `referrer_patterns` (name, url_mask, url_param) VALUES ('Яндекс Маркет', 'market.yandex.', 'text');";
+			$sql[] = "INSERT INTO `referrer_patterns` (name, url_mask, url_param) VALUES ('Яндекс', 'hghltd.yandex.', 'text');";
+			$sql[] = "INSERT INTO `referrer_patterns` (name, url_mask, url_param) VALUES ('Яндекс', 'yandex.', 'text');";
 			
 			foreach ($sql as $_sql) {
 				$this->db->query($_sql);
@@ -148,19 +148,18 @@
 		}
 		
 		public function uninstall() {
-			$query = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "order` WHERE `Field` = 'first_referrer'");
+			$query = $this->db->query("SHOW COLUMNS FROM `order` WHERE `Field` = 'first_referrer'");
 			if(count($query->rows) == 1 ) {
-				$this->db->query("ALTER TABLE `" . DB_PREFIX . "order` DROP COLUMN `first_referrer`;");
+				$this->db->query("ALTER TABLE `order` DROP COLUMN `first_referrer`;");
 			}
-			$query = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . "order` WHERE `Field` = 'last_referrer'");
+			$query = $this->db->query("SHOW COLUMNS FROM `order` WHERE `Field` = 'last_referrer'");
 			if(count($query->rows) == 1 ) {
-				$this->db->query("ALTER TABLE `" . DB_PREFIX . "order` DROP COLUMN `last_referrer`;");
+				$this->db->query("ALTER TABLE `order` DROP COLUMN `last_referrer`;");
 			}
-			$this->db->query("DROP TABLE IF EXISTS `" . DB_PREFIX . "referrer_patterns`");
+			$this->db->query("DROP TABLE IF EXISTS `referrer_patterns`");
 			
 			$this->cache->delete('referrer_patterns');
 			return TRUE;
 		}
 		
 	}
-?>

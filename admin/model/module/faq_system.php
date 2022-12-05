@@ -2,7 +2,7 @@
 	class ModelModuleFAQSystem extends Model {
 		
 		public function addCategory($data){
-			$sql = "INSERT INTO " . DB_PREFIX . "faq_category 
+			$sql = "INSERT INTO faq_category 
 			SET sort_order ='" . (int)$data['sort_order'] . "',
 			status     ='" . (int)$data['status'] . "'";
 			
@@ -11,7 +11,7 @@
 			$category_id = $this->db->getLastId();
 			
 			foreach($data['category_description'] as $key => $value){
-				$sql = "INSERT INTO " . DB_PREFIX . "faq_category_description 
+				$sql = "INSERT INTO faq_category_description 
 				SET category_id ='" . (int)$category_id . "', 
 				language_id ='" . (int)$key ."', 
 				name        ='" . $this->db->escape($value['name']) . "'";
@@ -21,23 +21,23 @@
 			
 			if ($data['keyword']) {
 				foreach ($data['keyword'] as $language_id => $keyword) {
-					if ($keyword) {$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'faq_category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'faq_category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
 				}
 			}
 		}
 		
 		public function editCategory($category_id, $data){
-			$sql = "UPDATE " . DB_PREFIX . "faq_category 
+			$sql = "UPDATE faq_category 
 			SET sort_order ='" . (int)$data['sort_order'] . "',
 			status     ='" . (int)$data['status'] . "'
 			WHERE category_id ='" . (int)$category_id . "'";
 			
 			$this->db->query($sql);
 			
-			$this->db->query("DELETE FROM " . DB_PREFIX . "faq_category_description WHERE category_id='" . (int)$category_id . "'");
+			$this->db->query("DELETE FROM faq_category_description WHERE category_id='" . (int)$category_id . "'");
 			
 			foreach($data['category_description'] as $key => $value){
-				$sql = "INSERT INTO " . DB_PREFIX . "faq_category_description 
+				$sql = "INSERT INTO faq_category_description 
 				SET category_id ='" . (int)$category_id . "', 
 				language_id ='" . (int)$key ."', 
 				name        ='" . $this->db->escape($value['name']) . "'";
@@ -45,19 +45,19 @@
 			}		
 			
 			
-			$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'faq_category_id=" . (int)$category_id. "'");
+			$this->db->query("DELETE FROM url_alias WHERE query = 'faq_category_id=" . (int)$category_id. "'");
 			
 			if ($data['keyword']) {
 				foreach ($data['keyword'] as $language_id => $keyword) {
-					if ($keyword) {$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'faq_category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'faq_category_id=" . (int)$category_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
 				}
 			}
 			
 		}
 		
 		public function getCategories(){
-			$sql = "SELECT c.*, cd.* FROM " . DB_PREFIX . "faq_category c 
-			LEFT JOIN " . DB_PREFIX . "faq_category_description cd ON (c.category_id = cd.category_id)
+			$sql = "SELECT c.*, cd.* FROM faq_category c 
+			LEFT JOIN faq_category_description cd ON (c.category_id = cd.category_id)
 			WHERE cd.language_id ='" . (int)$this->config->get('config_language_id') ."'
 			ORDER BY c.sort_order ASC";
 			
@@ -67,7 +67,7 @@
 		}
 		
 		public function getCategory($category_id){
-			$sql = "SELECT * FROM " . DB_PREFIX . "faq_category 
+			$sql = "SELECT * FROM faq_category 
 			WHERE category_id ='" . (int)$category_id . "'";
 			
 			$query = $this->db->query($sql);
@@ -78,7 +78,7 @@
 		public function getCategoryDescriptions($category_id) {
 			$category_description_data = array();
 			
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "faq_category_description WHERE category_id = '" . (int)$category_id . "'");
+			$query = $this->db->query("SELECT * FROM faq_category_description WHERE category_id = '" . (int)$category_id . "'");
 			
 			foreach ($query->rows as $result) {
 				$category_description_data[$result['language_id']] = array(
@@ -92,7 +92,7 @@
 		public function getKeyWords($category_id) {
 			$keywords = array();
 			
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE query = 'faq_category_id=" . (int)$category_id . "'");
+			$query = $this->db->query("SELECT * FROM url_alias WHERE query = 'faq_category_id=" . (int)$category_id . "'");
 			
 			foreach ($query->rows as $result) {
 				$keywords[$result['language_id']] = $result['keyword'];					
@@ -102,12 +102,12 @@
 		}
 		
 		public function deleteCategory($category_id){
-			$this->db->query("DELETE FROM " . DB_PREFIX . "faq_category WHERE category_id ='" . (int)$category_id . "'");
-			$this->db->query("DELETE FROM " . DB_PREFIX . "faq_category_description WHERE category_id ='" . (int)$category_id . "'");
+			$this->db->query("DELETE FROM faq_category WHERE category_id ='" . (int)$category_id . "'");
+			$this->db->query("DELETE FROM faq_category_description WHERE category_id ='" . (int)$category_id . "'");
 		}
 		
 		public function addQuestion($data){
-			$sql = "INSERT INTO " . DB_PREFIX . "faq_question 
+			$sql = "INSERT INTO faq_question 
 			SET category_id ='" . (int)$data['category_id'] ."',
 			status      ='" . (int)$data['status'] ."',
 			sort_order  ='" . (int)$data['sort_order'] ."'";
@@ -118,7 +118,7 @@
 			
 			if (isset($this->request->post['question_description'])){
 				foreach($this->request->post['question_description'] as $key => $value){
-					$sql = "INSERT INTO " . DB_PREFIX . "faq_question_description 
+					$sql = "INSERT INTO faq_question_description 
 					SET question_id ='" . (int)$question_id . "',
 					language_id ='" . (int)$key . "',
 					title       ='" . $this->db->escape($value['title']) . "',
@@ -130,7 +130,7 @@
 		}
 		
 		public function editQuestion($question_id, $data){
-			$sql = "UPDATE " . DB_PREFIX . "faq_question 
+			$sql = "UPDATE faq_question 
 			SET category_id ='" . (int)$data['category_id'] ."',
 			status      ='" . (int)$data['status'] ."',
 			sort_order  ='" . (int)$data['sort_order'] ."'
@@ -138,11 +138,11 @@
 			
 			$this->db->query($sql);			
 			
-			$this->db->query("DELETE FROM " . DB_PREFIX . "faq_question_description WHERE question_id='" . (int)$question_id . "'");
+			$this->db->query("DELETE FROM faq_question_description WHERE question_id='" . (int)$question_id . "'");
 			
 			if (isset($this->request->post['question_description'])){
 				foreach($this->request->post['question_description'] as $key => $value){
-					$sql = "INSERT INTO " . DB_PREFIX . "faq_question_description 
+					$sql = "INSERT INTO faq_question_description 
 					SET question_id ='" . (int)$question_id . "',
 					language_id ='" . (int)$key . "',
 					title       ='" . $this->db->escape($value['title']) . "',
@@ -155,9 +155,9 @@
 		
 		public function getQuestions($data = array()){
 			
-			$sql = "SELECT q.*, qd.*, cd.* FROM " . DB_PREFIX . "faq_question q 
-			LEFT JOIN " . DB_PREFIX . "faq_question_description qd ON (q.question_id = qd.question_id)
-			LEFT JOIN " . DB_PREFIX . "faq_category_description cd ON (q.category_id = cd.category_id)
+			$sql = "SELECT q.*, qd.*, cd.* FROM faq_question q 
+			LEFT JOIN faq_question_description qd ON (q.question_id = qd.question_id)
+			LEFT JOIN faq_category_description cd ON (q.category_id = cd.category_id)
 			WHERE cd.language_id='" . (int)$this->config->get('config_language_id') . "' AND qd.language_id='" . (int)$this->config->get('config_language_id') . "' ";
 			
 			if (isset($data['filter_status'])){
@@ -172,7 +172,7 @@
 		}
 		
 		public function getQuestion($question_id){
-			$sql = "SELECT * FROM " . DB_PREFIX . "faq_question WHERE question_id='" . (int)$question_id . "'";
+			$sql = "SELECT * FROM faq_question WHERE question_id='" . (int)$question_id . "'";
 			$query = $this->db->query($sql);
 			
 			return $query->row;
@@ -181,7 +181,7 @@
 		public function getQuestionDescriptions($question_id){
 			$question_description_data = array();
 			
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "faq_question_description WHERE question_id = '" . (int)$question_id . "'");
+			$query = $this->db->query("SELECT * FROM faq_question_description WHERE question_id = '" . (int)$question_id . "'");
 			
 			foreach ($query->rows as $result) {
 				$question_description_data[$result['language_id']] = array(
@@ -194,8 +194,8 @@
 		}
 		
 		public function deleteQuestion($question_id){
-			$this->db->query("DELETE FROM " . DB_PREFIX . "faq_question WHERE question_id='" . (int)$question_id . "'");
-			$this->db->query("DELETE FROM " . DB_PREFIX . "faq_question_description WHERE question_id='" . (int)$question_id . "'");
+			$this->db->query("DELETE FROM faq_question WHERE question_id='" . (int)$question_id . "'");
+			$this->db->query("DELETE FROM faq_question_description WHERE question_id='" . (int)$question_id . "'");
 		}
 	}
 ?>
