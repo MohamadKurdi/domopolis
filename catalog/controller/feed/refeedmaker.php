@@ -339,6 +339,11 @@ class ControllerFeedReFeedMaker extends Controller
                 $products = $this->model_catalog_product->getProducts($filter);
 
                 foreach ($products as $_product) {
+
+                    if (!isFriendlyURL($this->url->link('product/product', 'product_id=' . $_product['product_id']))){
+                        continue;
+                    }
+                    
                     $product = $this->model_catalog_product->getProduct($_product['product_id']);
 
                     if ($stock && $this->config->get('config_googlelocal_code')) {

@@ -440,7 +440,11 @@ class ControllerFeedReFeedMaker2 extends Controller
 
                             $k = 0;
                             foreach ($products as $product) {
-                                $output .= $this->printItemFast($product, $changeID);
+
+                                if (isFriendlyURL($this->url->link('product/product', 'product_id=' . $product['product_id']))){
+                                    $output .= $this->printItemFast($product, $changeID);
+                                }
+
                                 if ($k % 10 == 0) {   echo $k . '..'; }
                                 $k++;
                             }
@@ -551,8 +555,14 @@ class ControllerFeedReFeedMaker2 extends Controller
 
                     $products = $this->model_catalog_product->getProducts($filter);
                     $k = 0;
+
                     foreach ($products as $product) {
+                        if (!isFriendlyURL($this->url->link('product/product', 'product_id=' . $product['product_id']))){
+                            continue;
+                        }
+
                         $output .= $this->printItem($product, $changeID);
+
                         if ($k % 10 == 0) {   echo $k . '..'; }
                         $k++;
                     }
