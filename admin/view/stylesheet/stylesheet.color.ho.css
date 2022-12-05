@@ -1,6 +1,6 @@
-#menu{background:#1f4962;}
-#menu > ul .selected .top{background: #2a526a;}
-#menu > ul :hover a.top,#menu > ul .sfhover a.top{background: #2a526a;}
+#menu{background: #fd5f24;}
+#menu > ul .selected .top{background: #d02812;}
+#menu > ul :hover a.top,#menu > ul .sfhover a.top{background: #d02812;}
 #menu > ul .parent{background:url(../image/arrow_kp.png) 1% center no-repeat;border-radius:3px}
 #menu ul li li:hover > a{color:#1f4962;border-bottom: 1px solid #1f4962;}
 .warning{background:#cf4a61 url(../image/warning.png) 10px center no-repeat;}
