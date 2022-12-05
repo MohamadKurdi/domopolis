@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Окт 31 2022 г., 12:38
+-- Время создания: Дек 05 2022 г., 15:20
 -- Версия сервера: 10.6.7-MariaDB-2ubuntu1.1-log
 -- Версия PHP: 8.1.9
 
@@ -27,6 +27,7 @@ SET time_zone = "+00:00";
 -- Структура таблицы `actions`
 --
 
+DROP TABLE IF EXISTS `actions`;
 CREATE TABLE `actions` (
   `actions_id` int(11) NOT NULL,
   `image` varchar(255) COLLATE utf8mb3_bin DEFAULT NULL,
@@ -37,6 +38,9 @@ CREATE TABLE `actions` (
   `status` int(11) NOT NULL DEFAULT 0,
   `fancybox` int(11) NOT NULL DEFAULT 0,
   `product_related` text COLLATE utf8mb3_bin DEFAULT NULL,
+  `category_related_id` int(11) NOT NULL,
+  `category_related_no_intersections` tinyint(1) NOT NULL,
+  `category_related_limit_products` int(11) NOT NULL,
   `ao_group` varchar(100) COLLATE utf8mb3_bin NOT NULL,
   `manufacturer_id` int(11) NOT NULL,
   `deletenotinstock` tinyint(1) NOT NULL DEFAULT 0,
@@ -50,6 +54,7 @@ CREATE TABLE `actions` (
 -- Структура таблицы `actions_description`
 --
 
+DROP TABLE IF EXISTS `actions_description`;
 CREATE TABLE `actions_description` (
   `actions_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -75,6 +80,7 @@ CREATE TABLE `actions_description` (
 -- Структура таблицы `actions_to_category`
 --
 
+DROP TABLE IF EXISTS `actions_to_category`;
 CREATE TABLE `actions_to_category` (
   `actions_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
@@ -86,6 +92,7 @@ CREATE TABLE `actions_to_category` (
 -- Структура таблицы `actions_to_category_in`
 --
 
+DROP TABLE IF EXISTS `actions_to_category_in`;
 CREATE TABLE `actions_to_category_in` (
   `actions_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
@@ -97,6 +104,7 @@ CREATE TABLE `actions_to_category_in` (
 -- Структура таблицы `actions_to_layout`
 --
 
+DROP TABLE IF EXISTS `actions_to_layout`;
 CREATE TABLE `actions_to_layout` (
   `actions_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -109,6 +117,7 @@ CREATE TABLE `actions_to_layout` (
 -- Структура таблицы `actions_to_product`
 --
 
+DROP TABLE IF EXISTS `actions_to_product`;
 CREATE TABLE `actions_to_product` (
   `actions_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL
@@ -120,6 +129,7 @@ CREATE TABLE `actions_to_product` (
 -- Структура таблицы `actions_to_store`
 --
 
+DROP TABLE IF EXISTS `actions_to_store`;
 CREATE TABLE `actions_to_store` (
   `actions_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -131,6 +141,7 @@ CREATE TABLE `actions_to_store` (
 -- Структура таблицы `actiontemplate`
 --
 
+DROP TABLE IF EXISTS `actiontemplate`;
 CREATE TABLE `actiontemplate` (
   `actiontemplate_id` int(11) NOT NULL,
   `bottom` int(11) NOT NULL DEFAULT 0,
@@ -146,6 +157,7 @@ CREATE TABLE `actiontemplate` (
 -- Структура таблицы `actiontemplate_description`
 --
 
+DROP TABLE IF EXISTS `actiontemplate_description`;
 CREATE TABLE `actiontemplate_description` (
   `actiontemplate_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -163,6 +175,7 @@ CREATE TABLE `actiontemplate_description` (
 -- Структура таблицы `address`
 --
 
+DROP TABLE IF EXISTS `address`;
 CREATE TABLE `address` (
   `address_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -191,6 +204,7 @@ CREATE TABLE `address` (
 -- Структура таблицы `address_simple_fields`
 --
 
+DROP TABLE IF EXISTS `address_simple_fields`;
 CREATE TABLE `address_simple_fields` (
   `address_id` int(11) NOT NULL,
   `metadata` text DEFAULT NULL
@@ -202,6 +216,7 @@ CREATE TABLE `address_simple_fields` (
 -- Структура таблицы `adminlog`
 --
 
+DROP TABLE IF EXISTS `adminlog`;
 CREATE TABLE `adminlog` (
   `log_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -219,6 +234,7 @@ CREATE TABLE `adminlog` (
 -- Структура таблицы `advanced_coupon`
 --
 
+DROP TABLE IF EXISTS `advanced_coupon`;
 CREATE TABLE `advanced_coupon` (
   `advanced_coupon_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
@@ -236,6 +252,7 @@ CREATE TABLE `advanced_coupon` (
 -- Структура таблицы `advanced_coupon_history`
 --
 
+DROP TABLE IF EXISTS `advanced_coupon_history`;
 CREATE TABLE `advanced_coupon_history` (
   `advanced_coupon_history_id` int(11) NOT NULL,
   `advanced_coupon_id` int(11) NOT NULL,
@@ -251,6 +268,7 @@ CREATE TABLE `advanced_coupon_history` (
 -- Структура таблицы `affiliate`
 --
 
+DROP TABLE IF EXISTS `affiliate`;
 CREATE TABLE `affiliate` (
   `affiliate_id` int(11) NOT NULL,
   `firstname` varchar(32) NOT NULL,
@@ -309,6 +327,7 @@ CREATE TABLE `affiliate` (
 -- Структура таблицы `affiliate_statistics`
 --
 
+DROP TABLE IF EXISTS `affiliate_statistics`;
 CREATE TABLE `affiliate_statistics` (
   `id` int(11) NOT NULL,
   `affiliate_id` int(11) NOT NULL,
@@ -323,6 +342,7 @@ CREATE TABLE `affiliate_statistics` (
 -- Структура таблицы `affiliate_transaction`
 --
 
+DROP TABLE IF EXISTS `affiliate_transaction`;
 CREATE TABLE `affiliate_transaction` (
   `affiliate_transaction_id` int(11) NOT NULL,
   `affiliate_id` int(11) NOT NULL,
@@ -338,6 +358,7 @@ CREATE TABLE `affiliate_transaction` (
 -- Структура таблицы `albums`
 --
 
+DROP TABLE IF EXISTS `albums`;
 CREATE TABLE `albums` (
   `album_id` int(11) NOT NULL,
   `album_type` int(11) NOT NULL,
@@ -353,6 +374,7 @@ CREATE TABLE `albums` (
 -- Структура таблицы `alertlog`
 --
 
+DROP TABLE IF EXISTS `alertlog`;
 CREATE TABLE `alertlog` (
   `alertlog_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -369,6 +391,7 @@ CREATE TABLE `alertlog` (
 -- Структура таблицы `alsoviewed`
 --
 
+DROP TABLE IF EXISTS `alsoviewed`;
 CREATE TABLE `alsoviewed` (
   `id` bigint(20) NOT NULL,
   `low` int(11) DEFAULT 0,
@@ -383,6 +406,7 @@ CREATE TABLE `alsoviewed` (
 -- Структура таблицы `amazon_orders`
 --
 
+DROP TABLE IF EXISTS `amazon_orders`;
 CREATE TABLE `amazon_orders` (
   `order_id` int(11) NOT NULL,
   `amazon_id` varchar(255) NOT NULL,
@@ -399,6 +423,7 @@ CREATE TABLE `amazon_orders` (
 -- Структура таблицы `amazon_orders_blobs`
 --
 
+DROP TABLE IF EXISTS `amazon_orders_blobs`;
 CREATE TABLE `amazon_orders_blobs` (
   `amazon_id` varchar(30) NOT NULL,
   `amazon_blob` longtext NOT NULL
@@ -410,6 +435,7 @@ CREATE TABLE `amazon_orders_blobs` (
 -- Структура таблицы `amazon_orders_products`
 --
 
+DROP TABLE IF EXISTS `amazon_orders_products`;
 CREATE TABLE `amazon_orders_products` (
   `order_product_id` int(11) NOT NULL,
   `amazon_id` varchar(255) NOT NULL,
@@ -444,6 +470,7 @@ CREATE TABLE `amazon_orders_products` (
 -- Структура таблицы `amzn_product_queue`
 --
 
+DROP TABLE IF EXISTS `amzn_product_queue`;
 CREATE TABLE `amzn_product_queue` (
   `asin` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -454,6 +481,7 @@ CREATE TABLE `amzn_product_queue` (
 -- Структура таблицы `apri`
 --
 
+DROP TABLE IF EXISTS `apri`;
 CREATE TABLE `apri` (
   `order_id` int(11) NOT NULL,
   `date_added` datetime NOT NULL
@@ -465,6 +493,7 @@ CREATE TABLE `apri` (
 -- Структура таблицы `apri_unsubscribe`
 --
 
+DROP TABLE IF EXISTS `apri_unsubscribe`;
 CREATE TABLE `apri_unsubscribe` (
   `md5_email` varchar(255) NOT NULL,
   `date_added` datetime NOT NULL
@@ -476,6 +505,7 @@ CREATE TABLE `apri_unsubscribe` (
 -- Структура таблицы `attribute`
 --
 
+DROP TABLE IF EXISTS `attribute`;
 CREATE TABLE `attribute` (
   `attribute_id` int(11) NOT NULL,
   `attribute_group_id` int(11) NOT NULL,
@@ -488,6 +518,7 @@ CREATE TABLE `attribute` (
 -- Структура таблицы `attributes_category`
 --
 
+DROP TABLE IF EXISTS `attributes_category`;
 CREATE TABLE `attributes_category` (
   `attribute_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
@@ -499,6 +530,7 @@ CREATE TABLE `attributes_category` (
 -- Структура таблицы `attributes_similar_category`
 --
 
+DROP TABLE IF EXISTS `attributes_similar_category`;
 CREATE TABLE `attributes_similar_category` (
   `attribute_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
@@ -510,6 +542,7 @@ CREATE TABLE `attributes_similar_category` (
 -- Структура таблицы `attribute_description`
 --
 
+DROP TABLE IF EXISTS `attribute_description`;
 CREATE TABLE `attribute_description` (
   `attribute_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -522,6 +555,7 @@ CREATE TABLE `attribute_description` (
 -- Структура таблицы `attribute_group`
 --
 
+DROP TABLE IF EXISTS `attribute_group`;
 CREATE TABLE `attribute_group` (
   `attribute_group_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL
@@ -533,6 +567,7 @@ CREATE TABLE `attribute_group` (
 -- Структура таблицы `attribute_group_description`
 --
 
+DROP TABLE IF EXISTS `attribute_group_description`;
 CREATE TABLE `attribute_group_description` (
   `attribute_group_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -545,6 +580,7 @@ CREATE TABLE `attribute_group_description` (
 -- Структура таблицы `attribute_group_tooltip`
 --
 
+DROP TABLE IF EXISTS `attribute_group_tooltip`;
 CREATE TABLE `attribute_group_tooltip` (
   `attribute_group_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -557,6 +593,7 @@ CREATE TABLE `attribute_group_tooltip` (
 -- Структура таблицы `attribute_tooltip`
 --
 
+DROP TABLE IF EXISTS `attribute_tooltip`;
 CREATE TABLE `attribute_tooltip` (
   `attribute_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -569,6 +606,7 @@ CREATE TABLE `attribute_tooltip` (
 -- Структура таблицы `attribute_value_image`
 --
 
+DROP TABLE IF EXISTS `attribute_value_image`;
 CREATE TABLE `attribute_value_image` (
   `attribute_value_image` int(11) NOT NULL,
   `attribute_id` int(11) NOT NULL,
@@ -583,6 +621,7 @@ CREATE TABLE `attribute_value_image` (
 -- Структура таблицы `banner`
 --
 
+DROP TABLE IF EXISTS `banner`;
 CREATE TABLE `banner` (
   `banner_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
@@ -595,6 +634,7 @@ CREATE TABLE `banner` (
 -- Структура таблицы `banner_image`
 --
 
+DROP TABLE IF EXISTS `banner_image`;
 CREATE TABLE `banner_image` (
   `banner_image_id` int(11) NOT NULL,
   `banner_id` int(11) NOT NULL,
@@ -609,6 +649,7 @@ CREATE TABLE `banner_image` (
 -- Структура таблицы `banner_image_description`
 --
 
+DROP TABLE IF EXISTS `banner_image_description`;
 CREATE TABLE `banner_image_description` (
   `banner_image_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -624,262 +665,10 @@ CREATE TABLE `banner_image_description` (
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `barbara_blog_category`
---
-
-CREATE TABLE `barbara_blog_category` (
-  `category_id` int(10) UNSIGNED NOT NULL,
-  `status` varchar(11) NOT NULL DEFAULT 'publish',
-  `sort_order` int(11) NOT NULL,
-  `parent_id` int(11) NOT NULL,
-  `image` varchar(255) NOT NULL,
-  `date_added` datetime NOT NULL,
-  `date_modified` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `barbara_blog_category_description`
---
-
-CREATE TABLE `barbara_blog_category_description` (
-  `category_id` int(10) UNSIGNED NOT NULL,
-  `language_id` int(10) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `slug` varchar(255) NOT NULL,
-  `description` longtext NOT NULL,
-  `meta_description` varchar(255) NOT NULL,
-  `meta_keyword` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `barbara_blog_category_filter`
---
-
-CREATE TABLE `barbara_blog_category_filter` (
-  `category_id` int(11) NOT NULL,
-  `filter_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `barbara_blog_category_path`
---
-
-CREATE TABLE `barbara_blog_category_path` (
-  `category_id` int(11) NOT NULL,
-  `path_id` int(11) NOT NULL,
-  `level` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `barbara_blog_category_to_layout`
---
-
-CREATE TABLE `barbara_blog_category_to_layout` (
-  `category_id` int(11) NOT NULL,
-  `store_id` int(11) NOT NULL,
-  `layout_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `barbara_blog_category_to_store`
---
-
-CREATE TABLE `barbara_blog_category_to_store` (
-  `category_id` int(10) UNSIGNED NOT NULL,
-  `store_id` int(10) UNSIGNED NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `barbara_blog_post`
---
-
-CREATE TABLE `barbara_blog_post` (
-  `ID` bigint(20) UNSIGNED NOT NULL,
-  `post_author` bigint(20) UNSIGNED NOT NULL DEFAULT 0,
-  `sort_order` int(11) NOT NULL,
-  `post_status` varchar(20) NOT NULL DEFAULT 'publish',
-  `view` int(11) NOT NULL DEFAULT 0,
-  `post_thumb` varchar(255) DEFAULT NULL,
-  `date_available` date NOT NULL,
-  `date_added` datetime NOT NULL,
-  `date_modified` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `barbara_blog_postmeta`
---
-
-CREATE TABLE `barbara_blog_postmeta` (
-  `meta_id` bigint(20) UNSIGNED NOT NULL,
-  `post_id` bigint(20) UNSIGNED NOT NULL DEFAULT 0,
-  `meta_key` varchar(255) DEFAULT NULL,
-  `meta_value` longtext DEFAULT NULL,
-  `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `barbara_blog_post_description`
---
-
-CREATE TABLE `barbara_blog_post_description` (
-  `post_id` int(10) UNSIGNED NOT NULL,
-  `language_id` int(10) UNSIGNED NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `content` longtext NOT NULL,
-  `excerpt` text NOT NULL,
-  `meta_description` varchar(255) NOT NULL,
-  `meta_keyword` varchar(255) NOT NULL,
-  `tag` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `barbara_blog_post_filter`
---
-
-CREATE TABLE `barbara_blog_post_filter` (
-  `post_id` int(11) NOT NULL,
-  `filter_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `barbara_blog_post_to_category`
---
-
-CREATE TABLE `barbara_blog_post_to_category` (
-  `post_id` int(11) NOT NULL,
-  `category_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `barbara_blog_post_to_layout`
---
-
-CREATE TABLE `barbara_blog_post_to_layout` (
-  `post_id` int(11) NOT NULL,
-  `store_id` int(11) NOT NULL,
-  `layout_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `barbara_blog_post_to_store`
---
-
-CREATE TABLE `barbara_blog_post_to_store` (
-  `post_id` int(10) UNSIGNED NOT NULL,
-  `store_id` int(10) UNSIGNED NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `barbara_blog_related_product`
---
-
-CREATE TABLE `barbara_blog_related_product` (
-  `post_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `barbara_blog_setting`
---
-
-CREATE TABLE `barbara_blog_setting` (
-  `setting_id` bigint(20) UNSIGNED NOT NULL,
-  `setting_keyword` varchar(255) NOT NULL,
-  `setting_name` varchar(64) NOT NULL DEFAULT '',
-  `setting_value` longtext NOT NULL,
-  `position` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `barbara_blog_setting_general`
---
-
-CREATE TABLE `barbara_blog_setting_general` (
-  `setting_id` int(10) UNSIGNED NOT NULL,
-  `language_id` int(10) UNSIGNED NOT NULL,
-  `setting_name` varchar(255) NOT NULL,
-  `setting_value` longtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `barbara_singleclick`
---
-
-CREATE TABLE `barbara_singleclick` (
-  `id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL DEFAULT 0,
-  `product` varchar(255) NOT NULL,
-  `model` varchar(128) NOT NULL,
-  `price` varchar(255) NOT NULL,
-  `name` varchar(32) NOT NULL,
-  `phone` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `message` text NOT NULL,
-  `order_status_id` int(11) NOT NULL DEFAULT 0,
-  `date` datetime NOT NULL,
-  `date_modified` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `barbara_stickers`
---
-
-CREATE TABLE `barbara_stickers` (
-  `stickers_id` int(11) NOT NULL,
-  `langdata` text NOT NULL,
-  `image` varchar(255) NOT NULL,
-  `foncolor` varchar(255) NOT NULL DEFAULT '0',
-  `priority` int(11) NOT NULL,
-  `available` int(11) NOT NULL DEFAULT 0,
-  `type` int(11) NOT NULL,
-  `objects_type` int(11) NOT NULL,
-  `categories` text NOT NULL,
-  `products` text NOT NULL,
-  `manufacturers` text NOT NULL,
-  `enabled` int(11) NOT NULL DEFAULT 1,
-  `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
 -- Структура таблицы `callback`
 --
 
+DROP TABLE IF EXISTS `callback`;
 CREATE TABLE `callback` (
   `call_id` int(11) NOT NULL,
   `name` varchar(30) NOT NULL,
@@ -904,6 +693,7 @@ CREATE TABLE `callback` (
 -- Структура таблицы `category`
 --
 
+DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category` (
   `category_id` int(11) NOT NULL,
   `image` varchar(255) DEFAULT NULL,
@@ -928,6 +718,7 @@ CREATE TABLE `category` (
   `no_general_feed` tinyint(1) NOT NULL DEFAULT 0,
   `deletenotinstock` tinyint(1) NOT NULL DEFAULT 0,
   `intersections` tinyint(1) NOT NULL DEFAULT 0,
+  `exclude_from_intersections` tinyint(1) NOT NULL DEFAULT 0,
   `default_weight` decimal(15,4) NOT NULL,
   `default_weight_class_id` int(11) NOT NULL,
   `default_length` decimal(15,4) NOT NULL,
@@ -955,6 +746,7 @@ CREATE TABLE `category` (
 -- Структура таблицы `category_amazon_bestseller_tree`
 --
 
+DROP TABLE IF EXISTS `category_amazon_bestseller_tree`;
 CREATE TABLE `category_amazon_bestseller_tree` (
   `category_id` varchar(255) NOT NULL,
   `parent_id` varchar(255) NOT NULL,
@@ -970,6 +762,7 @@ CREATE TABLE `category_amazon_bestseller_tree` (
 -- Структура таблицы `category_amazon_tree`
 --
 
+DROP TABLE IF EXISTS `category_amazon_tree`;
 CREATE TABLE `category_amazon_tree` (
   `category_id` varchar(255) NOT NULL,
   `parent_id` varchar(255) NOT NULL,
@@ -985,6 +778,7 @@ CREATE TABLE `category_amazon_tree` (
 -- Структура таблицы `category_description`
 --
 
+DROP TABLE IF EXISTS `category_description`;
 CREATE TABLE `category_description` (
   `category_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -1009,6 +803,7 @@ CREATE TABLE `category_description` (
 -- Структура таблицы `category_filter`
 --
 
+DROP TABLE IF EXISTS `category_filter`;
 CREATE TABLE `category_filter` (
   `category_id` int(11) NOT NULL,
   `filter_id` int(11) NOT NULL
@@ -1020,6 +815,7 @@ CREATE TABLE `category_filter` (
 -- Структура таблицы `category_menu_content`
 --
 
+DROP TABLE IF EXISTS `category_menu_content`;
 CREATE TABLE `category_menu_content` (
   `category_menu_content_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
@@ -1040,6 +836,7 @@ CREATE TABLE `category_menu_content` (
 -- Структура таблицы `category_path`
 --
 
+DROP TABLE IF EXISTS `category_path`;
 CREATE TABLE `category_path` (
   `category_id` int(11) NOT NULL,
   `path_id` int(11) NOT NULL,
@@ -1052,6 +849,7 @@ CREATE TABLE `category_path` (
 -- Структура таблицы `category_product_count`
 --
 
+DROP TABLE IF EXISTS `category_product_count`;
 CREATE TABLE `category_product_count` (
   `category_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -1064,6 +862,7 @@ CREATE TABLE `category_product_count` (
 -- Структура таблицы `category_psm_template`
 --
 
+DROP TABLE IF EXISTS `category_psm_template`;
 CREATE TABLE `category_psm_template` (
   `category_psm_template_id` int(11) NOT NULL,
   `category_entity` varchar(64) DEFAULT NULL,
@@ -1078,6 +877,7 @@ CREATE TABLE `category_psm_template` (
 -- Структура таблицы `category_related`
 --
 
+DROP TABLE IF EXISTS `category_related`;
 CREATE TABLE `category_related` (
   `category_id` int(11) NOT NULL,
   `related_category_id` int(11) NOT NULL
@@ -1089,6 +889,7 @@ CREATE TABLE `category_related` (
 -- Структура таблицы `category_review`
 --
 
+DROP TABLE IF EXISTS `category_review`;
 CREATE TABLE `category_review` (
   `categoryreview_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
@@ -1107,6 +908,7 @@ CREATE TABLE `category_review` (
 -- Структура таблицы `category_to_actions`
 --
 
+DROP TABLE IF EXISTS `category_to_actions`;
 CREATE TABLE `category_to_actions` (
   `category_id` int(11) NOT NULL,
   `actions_id` int(11) NOT NULL
@@ -1118,6 +920,7 @@ CREATE TABLE `category_to_actions` (
 -- Структура таблицы `category_to_layout`
 --
 
+DROP TABLE IF EXISTS `category_to_layout`;
 CREATE TABLE `category_to_layout` (
   `category_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -1130,6 +933,7 @@ CREATE TABLE `category_to_layout` (
 -- Структура таблицы `category_to_store`
 --
 
+DROP TABLE IF EXISTS `category_to_store`;
 CREATE TABLE `category_to_store` (
   `category_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -1141,6 +945,7 @@ CREATE TABLE `category_to_store` (
 -- Структура таблицы `category_yam_tree`
 --
 
+DROP TABLE IF EXISTS `category_yam_tree`;
 CREATE TABLE `category_yam_tree` (
   `category_id` int(11) NOT NULL,
   `parent_id` int(11) NOT NULL,
@@ -1155,6 +960,7 @@ CREATE TABLE `category_yam_tree` (
 -- Структура таблицы `cdek_cities`
 --
 
+DROP TABLE IF EXISTS `cdek_cities`;
 CREATE TABLE `cdek_cities` (
   `city_id` int(11) NOT NULL,
   `city_uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -1188,6 +994,7 @@ CREATE TABLE `cdek_cities` (
 -- Структура таблицы `cdek_city`
 --
 
+DROP TABLE IF EXISTS `cdek_city`;
 CREATE TABLE `cdek_city` (
   `id` varchar(11) NOT NULL,
   `name` varchar(64) NOT NULL,
@@ -1205,6 +1012,7 @@ CREATE TABLE `cdek_city` (
 -- Структура таблицы `cdek_deliverypoints`
 --
 
+DROP TABLE IF EXISTS `cdek_deliverypoints`;
 CREATE TABLE `cdek_deliverypoints` (
   `deliverypoint_id` int(11) NOT NULL,
   `code` varchar(12) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -1249,6 +1057,7 @@ CREATE TABLE `cdek_deliverypoints` (
 -- Структура таблицы `cdek_dispatch`
 --
 
+DROP TABLE IF EXISTS `cdek_dispatch`;
 CREATE TABLE `cdek_dispatch` (
   `dispatch_id` int(11) NOT NULL,
   `dispatch_number` varchar(30) NOT NULL,
@@ -1262,6 +1071,7 @@ CREATE TABLE `cdek_dispatch` (
 -- Структура таблицы `cdek_order`
 --
 
+DROP TABLE IF EXISTS `cdek_order`;
 CREATE TABLE `cdek_order` (
   `order_id` int(11) NOT NULL,
   `dispatch_id` int(11) NOT NULL,
@@ -1306,6 +1116,7 @@ CREATE TABLE `cdek_order` (
 -- Структура таблицы `cdek_order_add_service`
 --
 
+DROP TABLE IF EXISTS `cdek_order_add_service`;
 CREATE TABLE `cdek_order_add_service` (
   `service_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -1319,6 +1130,7 @@ CREATE TABLE `cdek_order_add_service` (
 -- Структура таблицы `cdek_order_call`
 --
 
+DROP TABLE IF EXISTS `cdek_order_call`;
 CREATE TABLE `cdek_order_call` (
   `call_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -1340,6 +1152,7 @@ CREATE TABLE `cdek_order_call` (
 -- Структура таблицы `cdek_order_call_history_delay`
 --
 
+DROP TABLE IF EXISTS `cdek_order_call_history_delay`;
 CREATE TABLE `cdek_order_call_history_delay` (
   `order_id` int(11) NOT NULL,
   `date` int(11) NOT NULL,
@@ -1352,6 +1165,7 @@ CREATE TABLE `cdek_order_call_history_delay` (
 -- Структура таблицы `cdek_order_call_history_fail`
 --
 
+DROP TABLE IF EXISTS `cdek_order_call_history_fail`;
 CREATE TABLE `cdek_order_call_history_fail` (
   `order_id` int(11) NOT NULL,
   `fail_id` int(11) NOT NULL,
@@ -1365,6 +1179,7 @@ CREATE TABLE `cdek_order_call_history_fail` (
 -- Структура таблицы `cdek_order_call_history_good`
 --
 
+DROP TABLE IF EXISTS `cdek_order_call_history_good`;
 CREATE TABLE `cdek_order_call_history_good` (
   `order_id` int(11) NOT NULL,
   `date` int(11) NOT NULL,
@@ -1377,6 +1192,7 @@ CREATE TABLE `cdek_order_call_history_good` (
 -- Структура таблицы `cdek_order_courier`
 --
 
+DROP TABLE IF EXISTS `cdek_order_courier`;
 CREATE TABLE `cdek_order_courier` (
   `courier_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -1401,6 +1217,7 @@ CREATE TABLE `cdek_order_courier` (
 -- Структура таблицы `cdek_order_delay_history`
 --
 
+DROP TABLE IF EXISTS `cdek_order_delay_history`;
 CREATE TABLE `cdek_order_delay_history` (
   `order_id` int(11) NOT NULL,
   `delay_id` int(11) NOT NULL,
@@ -1414,6 +1231,7 @@ CREATE TABLE `cdek_order_delay_history` (
 -- Структура таблицы `cdek_order_package`
 --
 
+DROP TABLE IF EXISTS `cdek_order_package`;
 CREATE TABLE `cdek_order_package` (
   `package_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -1431,6 +1249,7 @@ CREATE TABLE `cdek_order_package` (
 -- Структура таблицы `cdek_order_package_item`
 --
 
+DROP TABLE IF EXISTS `cdek_order_package_item`;
 CREATE TABLE `cdek_order_package_item` (
   `package_item_id` int(11) NOT NULL,
   `package_id` int(11) NOT NULL,
@@ -1449,6 +1268,7 @@ CREATE TABLE `cdek_order_package_item` (
 -- Структура таблицы `cdek_order_reason`
 --
 
+DROP TABLE IF EXISTS `cdek_order_reason`;
 CREATE TABLE `cdek_order_reason` (
   `reason_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -1462,6 +1282,7 @@ CREATE TABLE `cdek_order_reason` (
 -- Структура таблицы `cdek_order_schedule`
 --
 
+DROP TABLE IF EXISTS `cdek_order_schedule`;
 CREATE TABLE `cdek_order_schedule` (
   `attempt_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -1483,6 +1304,7 @@ CREATE TABLE `cdek_order_schedule` (
 -- Структура таблицы `cdek_order_schedule_delay`
 --
 
+DROP TABLE IF EXISTS `cdek_order_schedule_delay`;
 CREATE TABLE `cdek_order_schedule_delay` (
   `order_id` int(11) NOT NULL,
   `attempt_id` int(11) NOT NULL,
@@ -1496,6 +1318,7 @@ CREATE TABLE `cdek_order_schedule_delay` (
 -- Структура таблицы `cdek_order_status_history`
 --
 
+DROP TABLE IF EXISTS `cdek_order_status_history`;
 CREATE TABLE `cdek_order_status_history` (
   `order_id` int(11) NOT NULL,
   `status_id` int(11) NOT NULL,
@@ -1511,6 +1334,7 @@ CREATE TABLE `cdek_order_status_history` (
 -- Структура таблицы `cdek_zones`
 --
 
+DROP TABLE IF EXISTS `cdek_zones`;
 CREATE TABLE `cdek_zones` (
   `zone_id` int(11) NOT NULL,
   `country_id` int(11) NOT NULL,
@@ -1530,6 +1354,7 @@ CREATE TABLE `cdek_zones` (
 -- Структура таблицы `collection`
 --
 
+DROP TABLE IF EXISTS `collection`;
 CREATE TABLE `collection` (
   `collection_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -1549,6 +1374,7 @@ CREATE TABLE `collection` (
 -- Структура таблицы `collection_description`
 --
 
+DROP TABLE IF EXISTS `collection_description`;
 CREATE TABLE `collection_description` (
   `collection_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -1569,6 +1395,7 @@ CREATE TABLE `collection_description` (
 -- Структура таблицы `collection_image`
 --
 
+DROP TABLE IF EXISTS `collection_image`;
 CREATE TABLE `collection_image` (
   `collection_id` int(11) NOT NULL,
   `image` varchar(500) NOT NULL,
@@ -1581,6 +1408,7 @@ CREATE TABLE `collection_image` (
 -- Структура таблицы `collection_to_store`
 --
 
+DROP TABLE IF EXISTS `collection_to_store`;
 CREATE TABLE `collection_to_store` (
   `collection_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -1592,6 +1420,7 @@ CREATE TABLE `collection_to_store` (
 -- Структура таблицы `competitors`
 --
 
+DROP TABLE IF EXISTS `competitors`;
 CREATE TABLE `competitors` (
   `competitor_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -1605,6 +1434,7 @@ CREATE TABLE `competitors` (
 -- Структура таблицы `competitor_price`
 --
 
+DROP TABLE IF EXISTS `competitor_price`;
 CREATE TABLE `competitor_price` (
   `competitor_price_id` int(11) NOT NULL,
   `competitor_id` int(11) NOT NULL,
@@ -1623,6 +1453,7 @@ CREATE TABLE `competitor_price` (
 -- Структура таблицы `competitor_urls`
 --
 
+DROP TABLE IF EXISTS `competitor_urls`;
 CREATE TABLE `competitor_urls` (
   `competitor_id` int(11) NOT NULL,
   `url` text NOT NULL,
@@ -1636,6 +1467,7 @@ CREATE TABLE `competitor_urls` (
 -- Структура таблицы `counters`
 --
 
+DROP TABLE IF EXISTS `counters`;
 CREATE TABLE `counters` (
   `counter_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -1649,6 +1481,7 @@ CREATE TABLE `counters` (
 -- Структура таблицы `country`
 --
 
+DROP TABLE IF EXISTS `country`;
 CREATE TABLE `country` (
   `country_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
@@ -1666,6 +1499,7 @@ CREATE TABLE `country` (
 -- Структура таблицы `countrybrand`
 --
 
+DROP TABLE IF EXISTS `countrybrand`;
 CREATE TABLE `countrybrand` (
   `countrybrand_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -1682,6 +1516,7 @@ CREATE TABLE `countrybrand` (
 -- Структура таблицы `countrybrand_description`
 --
 
+DROP TABLE IF EXISTS `countrybrand_description`;
 CREATE TABLE `countrybrand_description` (
   `countrybrand_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -1702,6 +1537,7 @@ CREATE TABLE `countrybrand_description` (
 -- Структура таблицы `countrybrand_to_store`
 --
 
+DROP TABLE IF EXISTS `countrybrand_to_store`;
 CREATE TABLE `countrybrand_to_store` (
   `countrybrand_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -1713,6 +1549,7 @@ CREATE TABLE `countrybrand_to_store` (
 -- Структура таблицы `country_to_fias`
 --
 
+DROP TABLE IF EXISTS `country_to_fias`;
 CREATE TABLE `country_to_fias` (
   `country_id` int(11) NOT NULL,
   `fias_id` int(11) NOT NULL
@@ -1724,6 +1561,7 @@ CREATE TABLE `country_to_fias` (
 -- Структура таблицы `coupon`
 --
 
+DROP TABLE IF EXISTS `coupon`;
 CREATE TABLE `coupon` (
   `coupon_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
@@ -1760,6 +1598,7 @@ CREATE TABLE `coupon` (
 -- Структура таблицы `coupon_category`
 --
 
+DROP TABLE IF EXISTS `coupon_category`;
 CREATE TABLE `coupon_category` (
   `coupon_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
@@ -1771,6 +1610,7 @@ CREATE TABLE `coupon_category` (
 -- Структура таблицы `coupon_collection`
 --
 
+DROP TABLE IF EXISTS `coupon_collection`;
 CREATE TABLE `coupon_collection` (
   `coupon_id` int(11) NOT NULL,
   `collection_id` int(11) NOT NULL
@@ -1782,6 +1622,7 @@ CREATE TABLE `coupon_collection` (
 -- Структура таблицы `coupon_description`
 --
 
+DROP TABLE IF EXISTS `coupon_description`;
 CREATE TABLE `coupon_description` (
   `coupon_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -1796,6 +1637,7 @@ CREATE TABLE `coupon_description` (
 -- Структура таблицы `coupon_history`
 --
 
+DROP TABLE IF EXISTS `coupon_history`;
 CREATE TABLE `coupon_history` (
   `coupon_history_id` int(11) NOT NULL,
   `coupon_id` int(11) NOT NULL,
@@ -1811,6 +1653,7 @@ CREATE TABLE `coupon_history` (
 -- Структура таблицы `coupon_manufacturer`
 --
 
+DROP TABLE IF EXISTS `coupon_manufacturer`;
 CREATE TABLE `coupon_manufacturer` (
   `coupon_id` int(11) NOT NULL,
   `manufacturer_id` int(11) NOT NULL
@@ -1822,6 +1665,7 @@ CREATE TABLE `coupon_manufacturer` (
 -- Структура таблицы `coupon_product`
 --
 
+DROP TABLE IF EXISTS `coupon_product`;
 CREATE TABLE `coupon_product` (
   `coupon_product_id` int(11) NOT NULL,
   `coupon_id` int(11) NOT NULL,
@@ -1834,6 +1678,7 @@ CREATE TABLE `coupon_product` (
 -- Структура таблицы `coupon_review`
 --
 
+DROP TABLE IF EXISTS `coupon_review`;
 CREATE TABLE `coupon_review` (
   `coupon_id` int(11) NOT NULL,
   `code` varchar(8) COLLATE utf8mb3_bin NOT NULL,
@@ -1846,6 +1691,7 @@ CREATE TABLE `coupon_review` (
 -- Структура таблицы `csvprice_pro`
 --
 
+DROP TABLE IF EXISTS `csvprice_pro`;
 CREATE TABLE `csvprice_pro` (
   `setting_id` int(11) NOT NULL,
   `key` varchar(64) NOT NULL,
@@ -1859,6 +1705,7 @@ CREATE TABLE `csvprice_pro` (
 -- Структура таблицы `csvprice_pro_crontab`
 --
 
+DROP TABLE IF EXISTS `csvprice_pro_crontab`;
 CREATE TABLE `csvprice_pro_crontab` (
   `job_id` int(11) NOT NULL,
   `profile_id` int(11) NOT NULL,
@@ -1878,6 +1725,7 @@ CREATE TABLE `csvprice_pro_crontab` (
 -- Структура таблицы `csvprice_pro_images`
 --
 
+DROP TABLE IF EXISTS `csvprice_pro_images`;
 CREATE TABLE `csvprice_pro_images` (
   `catalog_id` int(11) NOT NULL,
   `image_key` char(32) NOT NULL,
@@ -1890,6 +1738,7 @@ CREATE TABLE `csvprice_pro_images` (
 -- Структура таблицы `csvprice_pro_profiles`
 --
 
+DROP TABLE IF EXISTS `csvprice_pro_profiles`;
 CREATE TABLE `csvprice_pro_profiles` (
   `profile_id` int(11) NOT NULL,
   `key` varchar(64) NOT NULL,
@@ -1904,6 +1753,7 @@ CREATE TABLE `csvprice_pro_profiles` (
 -- Структура таблицы `currency`
 --
 
+DROP TABLE IF EXISTS `currency`;
 CREATE TABLE `currency` (
   `currency_id` int(11) NOT NULL,
   `title` varchar(32) NOT NULL,
@@ -1934,6 +1784,7 @@ CREATE TABLE `currency` (
 -- Структура таблицы `customer`
 --
 
+DROP TABLE IF EXISTS `customer`;
 CREATE TABLE `customer` (
   `customer_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL DEFAULT 0,
@@ -2021,6 +1872,7 @@ CREATE TABLE `customer` (
 -- Структура таблицы `customer_ban_ip`
 --
 
+DROP TABLE IF EXISTS `customer_ban_ip`;
 CREATE TABLE `customer_ban_ip` (
   `customer_ban_ip_id` int(11) NOT NULL,
   `ip` varchar(40) NOT NULL
@@ -2032,6 +1884,7 @@ CREATE TABLE `customer_ban_ip` (
 -- Структура таблицы `customer_calls`
 --
 
+DROP TABLE IF EXISTS `customer_calls`;
 CREATE TABLE `customer_calls` (
   `customer_call_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2053,6 +1906,7 @@ CREATE TABLE `customer_calls` (
 -- Структура таблицы `customer_emails_blacklist`
 --
 
+DROP TABLE IF EXISTS `customer_emails_blacklist`;
 CREATE TABLE `customer_emails_blacklist` (
   `email` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL
@@ -2064,6 +1918,7 @@ CREATE TABLE `customer_emails_blacklist` (
 -- Структура таблицы `customer_emails_whitelist`
 --
 
+DROP TABLE IF EXISTS `customer_emails_whitelist`;
 CREATE TABLE `customer_emails_whitelist` (
   `email` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL
@@ -2075,6 +1930,7 @@ CREATE TABLE `customer_emails_whitelist` (
 -- Структура таблицы `customer_email_campaigns`
 --
 
+DROP TABLE IF EXISTS `customer_email_campaigns`;
 CREATE TABLE `customer_email_campaigns` (
   `customer_email_campaigns_id` bigint(20) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2090,6 +1946,7 @@ CREATE TABLE `customer_email_campaigns` (
 -- Структура таблицы `customer_email_campaigns_names`
 --
 
+DROP TABLE IF EXISTS `customer_email_campaigns_names`;
 CREATE TABLE `customer_email_campaigns_names` (
   `email_campaign_mailwizz_id` varchar(100) NOT NULL,
   `email_campaign_name` varchar(255) NOT NULL
@@ -2101,6 +1958,7 @@ CREATE TABLE `customer_email_campaigns_names` (
 -- Структура таблицы `customer_field`
 --
 
+DROP TABLE IF EXISTS `customer_field`;
 CREATE TABLE `customer_field` (
   `customer_id` int(11) NOT NULL,
   `custom_field_id` int(11) NOT NULL,
@@ -2116,6 +1974,7 @@ CREATE TABLE `customer_field` (
 -- Структура таблицы `customer_group`
 --
 
+DROP TABLE IF EXISTS `customer_group`;
 CREATE TABLE `customer_group` (
   `customer_group_id` int(11) NOT NULL,
   `approval` int(11) NOT NULL,
@@ -2132,6 +1991,7 @@ CREATE TABLE `customer_group` (
 -- Структура таблицы `customer_group_description`
 --
 
+DROP TABLE IF EXISTS `customer_group_description`;
 CREATE TABLE `customer_group_description` (
   `customer_group_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2145,6 +2005,7 @@ CREATE TABLE `customer_group_description` (
 -- Структура таблицы `customer_group_price`
 --
 
+DROP TABLE IF EXISTS `customer_group_price`;
 CREATE TABLE `customer_group_price` (
   `customer_group_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
@@ -2158,6 +2019,7 @@ CREATE TABLE `customer_group_price` (
 -- Структура таблицы `customer_history`
 --
 
+DROP TABLE IF EXISTS `customer_history`;
 CREATE TABLE `customer_history` (
   `customer_history_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2181,6 +2043,7 @@ CREATE TABLE `customer_history` (
 -- Структура таблицы `customer_ip`
 --
 
+DROP TABLE IF EXISTS `customer_ip`;
 CREATE TABLE `customer_ip` (
   `customer_ip_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2194,6 +2057,7 @@ CREATE TABLE `customer_ip` (
 -- Структура таблицы `customer_online`
 --
 
+DROP TABLE IF EXISTS `customer_online`;
 CREATE TABLE `customer_online` (
   `ip` varchar(40) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2211,6 +2075,7 @@ CREATE TABLE `customer_online` (
 -- Структура таблицы `customer_online_history`
 --
 
+DROP TABLE IF EXISTS `customer_online_history`;
 CREATE TABLE `customer_online_history` (
   `customer_count` int(11) NOT NULL,
   `date_added` datetime NOT NULL
@@ -2222,6 +2087,7 @@ CREATE TABLE `customer_online_history` (
 -- Структура таблицы `customer_push_ids`
 --
 
+DROP TABLE IF EXISTS `customer_push_ids`;
 CREATE TABLE `customer_push_ids` (
   `customer_id` int(11) NOT NULL,
   `sendpulse_push_id` varchar(255) NOT NULL,
@@ -2234,6 +2100,7 @@ CREATE TABLE `customer_push_ids` (
 -- Структура таблицы `customer_reward`
 --
 
+DROP TABLE IF EXISTS `customer_reward`;
 CREATE TABLE `customer_reward` (
   `customer_reward_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL DEFAULT 0,
@@ -2254,6 +2121,7 @@ CREATE TABLE `customer_reward` (
 -- Структура таблицы `customer_reward_queue`
 --
 
+DROP TABLE IF EXISTS `customer_reward_queue`;
 CREATE TABLE `customer_reward_queue` (
   `customer_reward_queue_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2271,6 +2139,7 @@ CREATE TABLE `customer_reward_queue` (
 -- Структура таблицы `customer_search_history`
 --
 
+DROP TABLE IF EXISTS `customer_search_history`;
 CREATE TABLE `customer_search_history` (
   `customer_history_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2284,6 +2153,7 @@ CREATE TABLE `customer_search_history` (
 -- Структура таблицы `customer_segments`
 --
 
+DROP TABLE IF EXISTS `customer_segments`;
 CREATE TABLE `customer_segments` (
   `customer_id` int(11) NOT NULL,
   `segment_id` int(11) NOT NULL,
@@ -2296,6 +2166,7 @@ CREATE TABLE `customer_segments` (
 -- Структура таблицы `customer_simple_fields`
 --
 
+DROP TABLE IF EXISTS `customer_simple_fields`;
 CREATE TABLE `customer_simple_fields` (
   `customer_id` int(11) NOT NULL,
   `metadata` text DEFAULT NULL,
@@ -2310,6 +2181,7 @@ CREATE TABLE `customer_simple_fields` (
 -- Структура таблицы `customer_test`
 --
 
+DROP TABLE IF EXISTS `customer_test`;
 CREATE TABLE `customer_test` (
   `email` varchar(255) NOT NULL,
   `firstname` varchar(255) NOT NULL
@@ -2321,6 +2193,7 @@ CREATE TABLE `customer_test` (
 -- Структура таблицы `customer_transaction`
 --
 
+DROP TABLE IF EXISTS `customer_transaction`;
 CREATE TABLE `customer_transaction` (
   `customer_transaction_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2352,6 +2225,7 @@ CREATE TABLE `customer_transaction` (
 -- Структура таблицы `customer_viewed`
 --
 
+DROP TABLE IF EXISTS `customer_viewed`;
 CREATE TABLE `customer_viewed` (
   `customer_id` int(11) NOT NULL,
   `type` enum('c','m','p') NOT NULL,
@@ -2365,6 +2239,7 @@ CREATE TABLE `customer_viewed` (
 -- Структура таблицы `custom_field`
 --
 
+DROP TABLE IF EXISTS `custom_field`;
 CREATE TABLE `custom_field` (
   `custom_field_id` int(11) NOT NULL,
   `type` varchar(32) NOT NULL,
@@ -2381,6 +2256,7 @@ CREATE TABLE `custom_field` (
 -- Структура таблицы `custom_field_description`
 --
 
+DROP TABLE IF EXISTS `custom_field_description`;
 CREATE TABLE `custom_field_description` (
   `custom_field_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2393,6 +2269,7 @@ CREATE TABLE `custom_field_description` (
 -- Структура таблицы `custom_field_to_customer_group`
 --
 
+DROP TABLE IF EXISTS `custom_field_to_customer_group`;
 CREATE TABLE `custom_field_to_customer_group` (
   `custom_field_id` int(11) NOT NULL,
   `customer_group_id` int(11) NOT NULL
@@ -2404,6 +2281,7 @@ CREATE TABLE `custom_field_to_customer_group` (
 -- Структура таблицы `custom_field_value`
 --
 
+DROP TABLE IF EXISTS `custom_field_value`;
 CREATE TABLE `custom_field_value` (
   `custom_field_value_id` int(11) NOT NULL,
   `custom_field_id` int(11) NOT NULL,
@@ -2416,6 +2294,7 @@ CREATE TABLE `custom_field_value` (
 -- Структура таблицы `custom_field_value_description`
 --
 
+DROP TABLE IF EXISTS `custom_field_value_description`;
 CREATE TABLE `custom_field_value_description` (
   `custom_field_value_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2429,6 +2308,7 @@ CREATE TABLE `custom_field_value_description` (
 -- Структура таблицы `custom_url_404`
 --
 
+DROP TABLE IF EXISTS `custom_url_404`;
 CREATE TABLE `custom_url_404` (
   `custom_url_404_id` int(11) NOT NULL,
   `hit` int(11) DEFAULT NULL,
@@ -2442,6 +2322,7 @@ CREATE TABLE `custom_url_404` (
 -- Структура таблицы `deleted_asins`
 --
 
+DROP TABLE IF EXISTS `deleted_asins`;
 CREATE TABLE `deleted_asins` (
   `asin` varchar(16) NOT NULL,
   `name` varchar(1024) NOT NULL,
@@ -2455,6 +2336,7 @@ CREATE TABLE `deleted_asins` (
 -- Структура таблицы `direct_timezones`
 --
 
+DROP TABLE IF EXISTS `direct_timezones`;
 CREATE TABLE `direct_timezones` (
   `geomd5` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
   `timezone` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL
@@ -2466,6 +2348,7 @@ CREATE TABLE `direct_timezones` (
 -- Структура таблицы `download`
 --
 
+DROP TABLE IF EXISTS `download`;
 CREATE TABLE `download` (
   `download_id` int(11) NOT NULL,
   `filename` varchar(128) NOT NULL,
@@ -2480,6 +2363,7 @@ CREATE TABLE `download` (
 -- Структура таблицы `download_description`
 --
 
+DROP TABLE IF EXISTS `download_description`;
 CREATE TABLE `download_description` (
   `download_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2492,6 +2376,7 @@ CREATE TABLE `download_description` (
 -- Структура таблицы `emailmarketing_logs`
 --
 
+DROP TABLE IF EXISTS `emailmarketing_logs`;
 CREATE TABLE `emailmarketing_logs` (
   `emailmarketing_log_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -2517,6 +2402,7 @@ CREATE TABLE `emailmarketing_logs` (
 -- Структура таблицы `emailtemplate`
 --
 
+DROP TABLE IF EXISTS `emailtemplate`;
 CREATE TABLE `emailtemplate` (
   `emailtemplate_id` int(11) NOT NULL,
   `emailtemplate_key` varchar(64) NOT NULL,
@@ -2557,6 +2443,7 @@ CREATE TABLE `emailtemplate` (
 -- Структура таблицы `emailtemplate_config`
 --
 
+DROP TABLE IF EXISTS `emailtemplate_config`;
 CREATE TABLE `emailtemplate_config` (
   `emailtemplate_config_id` int(11) NOT NULL,
   `emailtemplate_config_name` varchar(64) NOT NULL,
@@ -2630,6 +2517,7 @@ CREATE TABLE `emailtemplate_config` (
 -- Структура таблицы `emailtemplate_description`
 --
 
+DROP TABLE IF EXISTS `emailtemplate_description`;
 CREATE TABLE `emailtemplate_description` (
   `emailtemplate_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2648,6 +2536,7 @@ CREATE TABLE `emailtemplate_description` (
 -- Структура таблицы `emailtemplate_logs`
 --
 
+DROP TABLE IF EXISTS `emailtemplate_logs`;
 CREATE TABLE `emailtemplate_logs` (
   `emailtemplate_log_id` bigint(20) UNSIGNED NOT NULL,
   `emailtemplate_log_sent` datetime DEFAULT NULL,
@@ -2679,6 +2568,7 @@ CREATE TABLE `emailtemplate_logs` (
 -- Структура таблицы `emailtemplate_shortcode`
 --
 
+DROP TABLE IF EXISTS `emailtemplate_shortcode`;
 CREATE TABLE `emailtemplate_shortcode` (
   `emailtemplate_shortcode_id` int(11) NOT NULL,
   `emailtemplate_shortcode_code` varchar(255) NOT NULL,
@@ -2693,6 +2583,7 @@ CREATE TABLE `emailtemplate_shortcode` (
 -- Структура таблицы `email_emailto`
 --
 
+DROP TABLE IF EXISTS `email_emailto`;
 CREATE TABLE `email_emailto` (
   `email` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -2703,6 +2594,7 @@ CREATE TABLE `email_emailto` (
 -- Структура таблицы `entity_reward`
 --
 
+DROP TABLE IF EXISTS `entity_reward`;
 CREATE TABLE `entity_reward` (
   `entity_reward_id` int(11) NOT NULL,
   `entity_id` int(11) NOT NULL,
@@ -2721,6 +2613,7 @@ CREATE TABLE `entity_reward` (
 -- Структура таблицы `extension`
 --
 
+DROP TABLE IF EXISTS `extension`;
 CREATE TABLE `extension` (
   `extension_id` int(11) NOT NULL,
   `type` varchar(32) NOT NULL,
@@ -2733,6 +2626,7 @@ CREATE TABLE `extension` (
 -- Структура таблицы `facategory`
 --
 
+DROP TABLE IF EXISTS `facategory`;
 CREATE TABLE `facategory` (
   `facategory_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL
@@ -2744,6 +2638,7 @@ CREATE TABLE `facategory` (
 -- Структура таблицы `facategory_to_faproduct`
 --
 
+DROP TABLE IF EXISTS `facategory_to_faproduct`;
 CREATE TABLE `facategory_to_faproduct` (
   `facategory_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL
@@ -2755,6 +2650,7 @@ CREATE TABLE `facategory_to_faproduct` (
 -- Структура таблицы `faproduct_to_facategory`
 --
 
+DROP TABLE IF EXISTS `faproduct_to_facategory`;
 CREATE TABLE `faproduct_to_facategory` (
   `product_id` int(11) NOT NULL,
   `facategory_id` int(11) NOT NULL
@@ -2766,6 +2662,7 @@ CREATE TABLE `faproduct_to_facategory` (
 -- Структура таблицы `faq_category`
 --
 
+DROP TABLE IF EXISTS `faq_category`;
 CREATE TABLE `faq_category` (
   `category_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0,
@@ -2778,6 +2675,7 @@ CREATE TABLE `faq_category` (
 -- Структура таблицы `faq_category_description`
 --
 
+DROP TABLE IF EXISTS `faq_category_description`;
 CREATE TABLE `faq_category_description` (
   `category_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2790,6 +2688,7 @@ CREATE TABLE `faq_category_description` (
 -- Структура таблицы `faq_question`
 --
 
+DROP TABLE IF EXISTS `faq_question`;
 CREATE TABLE `faq_question` (
   `question_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
@@ -2803,6 +2702,7 @@ CREATE TABLE `faq_question` (
 -- Структура таблицы `faq_question_description`
 --
 
+DROP TABLE IF EXISTS `faq_question_description`;
 CREATE TABLE `faq_question_description` (
   `question_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2816,6 +2716,7 @@ CREATE TABLE `faq_question_description` (
 -- Структура таблицы `feed_queue`
 --
 
+DROP TABLE IF EXISTS `feed_queue`;
 CREATE TABLE `feed_queue` (
   `category_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -2826,6 +2727,7 @@ CREATE TABLE `feed_queue` (
 -- Структура таблицы `filter`
 --
 
+DROP TABLE IF EXISTS `filter`;
 CREATE TABLE `filter` (
   `filter_id` int(11) NOT NULL,
   `filter_group_id` int(11) NOT NULL,
@@ -2838,6 +2740,7 @@ CREATE TABLE `filter` (
 -- Структура таблицы `filterpro_seo`
 --
 
+DROP TABLE IF EXISTS `filterpro_seo`;
 CREATE TABLE `filterpro_seo` (
   `url` varchar(255) NOT NULL,
   `data` text NOT NULL
@@ -2849,6 +2752,7 @@ CREATE TABLE `filterpro_seo` (
 -- Структура таблицы `filter_description`
 --
 
+DROP TABLE IF EXISTS `filter_description`;
 CREATE TABLE `filter_description` (
   `filter_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2862,6 +2766,7 @@ CREATE TABLE `filter_description` (
 -- Структура таблицы `filter_group`
 --
 
+DROP TABLE IF EXISTS `filter_group`;
 CREATE TABLE `filter_group` (
   `filter_group_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL
@@ -2873,6 +2778,7 @@ CREATE TABLE `filter_group` (
 -- Структура таблицы `filter_group_description`
 --
 
+DROP TABLE IF EXISTS `filter_group_description`;
 CREATE TABLE `filter_group_description` (
   `filter_group_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -2885,6 +2791,7 @@ CREATE TABLE `filter_group_description` (
 -- Структура таблицы `geo`
 --
 
+DROP TABLE IF EXISTS `geo`;
 CREATE TABLE `geo` (
   `id` int(11) NOT NULL,
   `zone_id` int(11) NOT NULL,
@@ -2903,6 +2810,7 @@ CREATE TABLE `geo` (
 -- Структура таблицы `geoname_alternatename`
 --
 
+DROP TABLE IF EXISTS `geoname_alternatename`;
 CREATE TABLE `geoname_alternatename` (
   `alternatenameId` int(11) NOT NULL,
   `geonameid` int(11) DEFAULT NULL,
@@ -2920,6 +2828,7 @@ CREATE TABLE `geoname_alternatename` (
 -- Структура таблицы `geoname_geoname`
 --
 
+DROP TABLE IF EXISTS `geoname_geoname`;
 CREATE TABLE `geoname_geoname` (
   `geonameid` int(11) NOT NULL,
   `name` varchar(200) DEFAULT NULL,
@@ -2948,6 +2857,7 @@ CREATE TABLE `geoname_geoname` (
 -- Структура таблицы `geo_ip`
 --
 
+DROP TABLE IF EXISTS `geo_ip`;
 CREATE TABLE `geo_ip` (
   `start` bigint(20) NOT NULL,
   `end` bigint(20) NOT NULL,
@@ -2960,6 +2870,7 @@ CREATE TABLE `geo_ip` (
 -- Структура таблицы `geo_zone`
 --
 
+DROP TABLE IF EXISTS `geo_zone`;
 CREATE TABLE `geo_zone` (
   `geo_zone_id` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
@@ -2974,6 +2885,7 @@ CREATE TABLE `geo_zone` (
 -- Структура таблицы `google_base_category`
 --
 
+DROP TABLE IF EXISTS `google_base_category`;
 CREATE TABLE `google_base_category` (
   `google_base_category_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL
@@ -2985,6 +2897,7 @@ CREATE TABLE `google_base_category` (
 -- Структура таблицы `hj_any_feed_feeds`
 --
 
+DROP TABLE IF EXISTS `hj_any_feed_feeds`;
 CREATE TABLE `hj_any_feed_feeds` (
   `id` int(11) NOT NULL,
   `name` varchar(256) DEFAULT NULL,
@@ -3000,6 +2913,7 @@ CREATE TABLE `hj_any_feed_feeds` (
 -- Структура таблицы `imagemaps`
 --
 
+DROP TABLE IF EXISTS `imagemaps`;
 CREATE TABLE `imagemaps` (
   `imagemap_id` int(11) NOT NULL,
   `module_code` varchar(64) NOT NULL,
@@ -3013,6 +2927,7 @@ CREATE TABLE `imagemaps` (
 -- Структура таблицы `information`
 --
 
+DROP TABLE IF EXISTS `information`;
 CREATE TABLE `information` (
   `information_id` int(11) NOT NULL,
   `bottom` int(11) NOT NULL DEFAULT 0,
@@ -3029,6 +2944,7 @@ CREATE TABLE `information` (
 -- Структура таблицы `information_attribute`
 --
 
+DROP TABLE IF EXISTS `information_attribute`;
 CREATE TABLE `information_attribute` (
   `information_attribute_id` int(11) NOT NULL,
   `bottom` int(11) NOT NULL DEFAULT 0,
@@ -3045,6 +2961,7 @@ CREATE TABLE `information_attribute` (
 -- Структура таблицы `information_attribute_description`
 --
 
+DROP TABLE IF EXISTS `information_attribute_description`;
 CREATE TABLE `information_attribute_description` (
   `information_attribute_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3062,6 +2979,7 @@ CREATE TABLE `information_attribute_description` (
 -- Структура таблицы `information_attribute_to_layout`
 --
 
+DROP TABLE IF EXISTS `information_attribute_to_layout`;
 CREATE TABLE `information_attribute_to_layout` (
   `information_attribute_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -3074,6 +2992,7 @@ CREATE TABLE `information_attribute_to_layout` (
 -- Структура таблицы `information_attribute_to_store`
 --
 
+DROP TABLE IF EXISTS `information_attribute_to_store`;
 CREATE TABLE `information_attribute_to_store` (
   `information_attribute_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -3085,6 +3004,7 @@ CREATE TABLE `information_attribute_to_store` (
 -- Структура таблицы `information_description`
 --
 
+DROP TABLE IF EXISTS `information_description`;
 CREATE TABLE `information_description` (
   `information_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3102,6 +3022,7 @@ CREATE TABLE `information_description` (
 -- Структура таблицы `information_to_layout`
 --
 
+DROP TABLE IF EXISTS `information_to_layout`;
 CREATE TABLE `information_to_layout` (
   `information_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -3114,6 +3035,7 @@ CREATE TABLE `information_to_layout` (
 -- Структура таблицы `information_to_store`
 --
 
+DROP TABLE IF EXISTS `information_to_store`;
 CREATE TABLE `information_to_store` (
   `information_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -3125,6 +3047,7 @@ CREATE TABLE `information_to_store` (
 -- Структура таблицы `interplusplus`
 --
 
+DROP TABLE IF EXISTS `interplusplus`;
 CREATE TABLE `interplusplus` (
   `inter_id` int(11) NOT NULL,
   `num_order` int(11) DEFAULT NULL,
@@ -3142,6 +3065,7 @@ CREATE TABLE `interplusplus` (
 -- Структура таблицы `justin_cities`
 --
 
+DROP TABLE IF EXISTS `justin_cities`;
 CREATE TABLE `justin_cities` (
   `city_id` int(11) NOT NULL,
   `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3161,6 +3085,7 @@ CREATE TABLE `justin_cities` (
 -- Структура таблицы `justin_city_regions`
 --
 
+DROP TABLE IF EXISTS `justin_city_regions`;
 CREATE TABLE `justin_city_regions` (
   `region_id` int(11) NOT NULL,
   `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3179,6 +3104,7 @@ CREATE TABLE `justin_city_regions` (
 -- Структура таблицы `justin_streets`
 --
 
+DROP TABLE IF EXISTS `justin_streets`;
 CREATE TABLE `justin_streets` (
   `street_id` int(11) NOT NULL,
   `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3196,6 +3122,7 @@ CREATE TABLE `justin_streets` (
 -- Структура таблицы `justin_warehouses`
 --
 
+DROP TABLE IF EXISTS `justin_warehouses`;
 CREATE TABLE `justin_warehouses` (
   `warehouse_id` int(11) NOT NULL,
   `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3231,6 +3158,7 @@ CREATE TABLE `justin_warehouses` (
 -- Структура таблицы `justin_zones`
 --
 
+DROP TABLE IF EXISTS `justin_zones`;
 CREATE TABLE `justin_zones` (
   `zone_id` int(11) NOT NULL,
   `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3246,6 +3174,7 @@ CREATE TABLE `justin_zones` (
 -- Структура таблицы `justin_zone_regions`
 --
 
+DROP TABLE IF EXISTS `justin_zone_regions`;
 CREATE TABLE `justin_zone_regions` (
   `region_id` int(11) NOT NULL,
   `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3264,6 +3193,7 @@ CREATE TABLE `justin_zone_regions` (
 -- Структура таблицы `keyworder`
 --
 
+DROP TABLE IF EXISTS `keyworder`;
 CREATE TABLE `keyworder` (
   `keyworder_id` int(11) NOT NULL,
   `manufacturer_id` int(11) NOT NULL,
@@ -3276,6 +3206,7 @@ CREATE TABLE `keyworder` (
 -- Структура таблицы `keyworder_description`
 --
 
+DROP TABLE IF EXISTS `keyworder_description`;
 CREATE TABLE `keyworder_description` (
   `keyworder_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3295,6 +3226,7 @@ CREATE TABLE `keyworder_description` (
 -- Структура таблицы `landingpage`
 --
 
+DROP TABLE IF EXISTS `landingpage`;
 CREATE TABLE `landingpage` (
   `landingpage_id` int(11) NOT NULL,
   `bottom` int(11) NOT NULL DEFAULT 0,
@@ -3310,6 +3242,7 @@ CREATE TABLE `landingpage` (
 -- Структура таблицы `landingpage_description`
 --
 
+DROP TABLE IF EXISTS `landingpage_description`;
 CREATE TABLE `landingpage_description` (
   `landingpage_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3327,6 +3260,7 @@ CREATE TABLE `landingpage_description` (
 -- Структура таблицы `landingpage_to_layout`
 --
 
+DROP TABLE IF EXISTS `landingpage_to_layout`;
 CREATE TABLE `landingpage_to_layout` (
   `landingpage_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -3339,6 +3273,7 @@ CREATE TABLE `landingpage_to_layout` (
 -- Структура таблицы `landingpage_to_store`
 --
 
+DROP TABLE IF EXISTS `landingpage_to_store`;
 CREATE TABLE `landingpage_to_store` (
   `landingpage_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -3350,6 +3285,7 @@ CREATE TABLE `landingpage_to_store` (
 -- Структура таблицы `language`
 --
 
+DROP TABLE IF EXISTS `language`;
 CREATE TABLE `language` (
   `language_id` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
@@ -3373,6 +3309,7 @@ CREATE TABLE `language` (
 -- Структура таблицы `layout`
 --
 
+DROP TABLE IF EXISTS `layout`;
 CREATE TABLE `layout` (
   `layout_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL
@@ -3384,6 +3321,7 @@ CREATE TABLE `layout` (
 -- Структура таблицы `layout_route`
 --
 
+DROP TABLE IF EXISTS `layout_route`;
 CREATE TABLE `layout_route` (
   `layout_route_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL,
@@ -3398,6 +3336,7 @@ CREATE TABLE `layout_route` (
 -- Структура таблицы `legalperson`
 --
 
+DROP TABLE IF EXISTS `legalperson`;
 CREATE TABLE `legalperson` (
   `legalperson_id` int(11) NOT NULL,
   `legalperson_name` varchar(255) NOT NULL,
@@ -3416,6 +3355,7 @@ CREATE TABLE `legalperson` (
 -- Структура таблицы `length_class`
 --
 
+DROP TABLE IF EXISTS `length_class`;
 CREATE TABLE `length_class` (
   `length_class_id` int(11) NOT NULL,
   `value` decimal(15,8) NOT NULL,
@@ -3429,6 +3369,7 @@ CREATE TABLE `length_class` (
 -- Структура таблицы `length_class_description`
 --
 
+DROP TABLE IF EXISTS `length_class_description`;
 CREATE TABLE `length_class_description` (
   `length_class_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3442,6 +3383,7 @@ CREATE TABLE `length_class_description` (
 -- Структура таблицы `local_supplier_products`
 --
 
+DROP TABLE IF EXISTS `local_supplier_products`;
 CREATE TABLE `local_supplier_products` (
   `supplier_id` int(11) NOT NULL,
   `supplier_product_id` int(11) NOT NULL,
@@ -3461,6 +3403,7 @@ CREATE TABLE `local_supplier_products` (
 -- Структура таблицы `mailwizz_queue`
 --
 
+DROP TABLE IF EXISTS `mailwizz_queue`;
 CREATE TABLE `mailwizz_queue` (
   `customer_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -3471,6 +3414,7 @@ CREATE TABLE `mailwizz_queue` (
 -- Структура таблицы `manager_kpi`
 --
 
+DROP TABLE IF EXISTS `manager_kpi`;
 CREATE TABLE `manager_kpi` (
   `manager_id` int(11) NOT NULL,
   `date_added` date NOT NULL,
@@ -3483,6 +3427,7 @@ CREATE TABLE `manager_kpi` (
 -- Структура таблицы `manager_order_status_dynamics`
 --
 
+DROP TABLE IF EXISTS `manager_order_status_dynamics`;
 CREATE TABLE `manager_order_status_dynamics` (
   `manager_id` int(11) NOT NULL,
   `order_status_id` int(11) NOT NULL,
@@ -3496,6 +3441,7 @@ CREATE TABLE `manager_order_status_dynamics` (
 -- Структура таблицы `manager_order_status_dynamics2`
 --
 
+DROP TABLE IF EXISTS `manager_order_status_dynamics2`;
 CREATE TABLE `manager_order_status_dynamics2` (
   `manager_id` int(11) NOT NULL,
   `order_status_id` int(11) NOT NULL,
@@ -3509,6 +3455,7 @@ CREATE TABLE `manager_order_status_dynamics2` (
 -- Структура таблицы `manufacturer`
 --
 
+DROP TABLE IF EXISTS `manufacturer`;
 CREATE TABLE `manufacturer` (
   `manufacturer_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
@@ -3532,6 +3479,7 @@ CREATE TABLE `manufacturer` (
 -- Структура таблицы `manufacturer_description`
 --
 
+DROP TABLE IF EXISTS `manufacturer_description`;
 CREATE TABLE `manufacturer_description` (
   `manufacturer_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3565,6 +3513,7 @@ CREATE TABLE `manufacturer_description` (
 -- Структура таблицы `manufacturer_page_content`
 --
 
+DROP TABLE IF EXISTS `manufacturer_page_content`;
 CREATE TABLE `manufacturer_page_content` (
   `manufacturer_page_content_id` int(11) NOT NULL,
   `manufacturer_id` int(11) NOT NULL,
@@ -3584,6 +3533,7 @@ CREATE TABLE `manufacturer_page_content` (
 -- Структура таблицы `manufacturer_to_layout`
 --
 
+DROP TABLE IF EXISTS `manufacturer_to_layout`;
 CREATE TABLE `manufacturer_to_layout` (
   `manufacturer_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -3596,6 +3546,7 @@ CREATE TABLE `manufacturer_to_layout` (
 -- Структура таблицы `manufacturer_to_store`
 --
 
+DROP TABLE IF EXISTS `manufacturer_to_store`;
 CREATE TABLE `manufacturer_to_store` (
   `manufacturer_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -3607,6 +3558,7 @@ CREATE TABLE `manufacturer_to_store` (
 -- Структура таблицы `maxmind_geo_country`
 --
 
+DROP TABLE IF EXISTS `maxmind_geo_country`;
 CREATE TABLE `maxmind_geo_country` (
   `start` bigint(20) NOT NULL,
   `end` bigint(20) NOT NULL,
@@ -3619,6 +3571,7 @@ CREATE TABLE `maxmind_geo_country` (
 -- Структура таблицы `multi_pay_payment`
 --
 
+DROP TABLE IF EXISTS `multi_pay_payment`;
 CREATE TABLE `multi_pay_payment` (
   `payment_id` int(11) NOT NULL,
   `service_cod` varchar(50) DEFAULT NULL,
@@ -3638,6 +3591,7 @@ CREATE TABLE `multi_pay_payment` (
 -- Структура таблицы `nauthor`
 --
 
+DROP TABLE IF EXISTS `nauthor`;
 CREATE TABLE `nauthor` (
   `nauthor_id` int(11) NOT NULL,
   `adminid` varchar(64) COLLATE utf8mb3_bin NOT NULL,
@@ -3651,6 +3605,7 @@ CREATE TABLE `nauthor` (
 -- Структура таблицы `nauthor_description`
 --
 
+DROP TABLE IF EXISTS `nauthor_description`;
 CREATE TABLE `nauthor_description` (
   `nauthor_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3666,6 +3621,7 @@ CREATE TABLE `nauthor_description` (
 -- Структура таблицы `ncategory`
 --
 
+DROP TABLE IF EXISTS `ncategory`;
 CREATE TABLE `ncategory` (
   `ncategory_id` int(11) NOT NULL,
   `image` varchar(255) COLLATE utf8mb3_bin DEFAULT NULL,
@@ -3684,6 +3640,7 @@ CREATE TABLE `ncategory` (
 -- Структура таблицы `ncategory_description`
 --
 
+DROP TABLE IF EXISTS `ncategory_description`;
 CREATE TABLE `ncategory_description` (
   `ncategory_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -3699,6 +3656,7 @@ CREATE TABLE `ncategory_description` (
 -- Структура таблицы `ncategory_to_layout`
 --
 
+DROP TABLE IF EXISTS `ncategory_to_layout`;
 CREATE TABLE `ncategory_to_layout` (
   `ncategory_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -3711,6 +3669,7 @@ CREATE TABLE `ncategory_to_layout` (
 -- Структура таблицы `ncategory_to_store`
 --
 
+DROP TABLE IF EXISTS `ncategory_to_store`;
 CREATE TABLE `ncategory_to_store` (
   `ncategory_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -3722,6 +3681,7 @@ CREATE TABLE `ncategory_to_store` (
 -- Структура таблицы `ncomments`
 --
 
+DROP TABLE IF EXISTS `ncomments`;
 CREATE TABLE `ncomments` (
   `ncomment_id` int(11) NOT NULL,
   `news_id` int(11) NOT NULL,
@@ -3740,6 +3700,7 @@ CREATE TABLE `ncomments` (
 -- Структура таблицы `news`
 --
 
+DROP TABLE IF EXISTS `news`;
 CREATE TABLE `news` (
   `news_id` int(11) NOT NULL,
   `nauthor_id` int(11) NOT NULL,
@@ -3767,6 +3728,7 @@ CREATE TABLE `news` (
 -- Структура таблицы `news_description`
 --
 
+DROP TABLE IF EXISTS `news_description`;
 CREATE TABLE `news_description` (
   `news_id` int(11) NOT NULL DEFAULT 0,
   `language_id` int(11) NOT NULL DEFAULT 0,
@@ -3790,6 +3752,7 @@ CREATE TABLE `news_description` (
 -- Структура таблицы `news_gallery`
 --
 
+DROP TABLE IF EXISTS `news_gallery`;
 CREATE TABLE `news_gallery` (
   `news_image_id` int(11) NOT NULL,
   `news_id` int(11) NOT NULL,
@@ -3804,6 +3767,7 @@ CREATE TABLE `news_gallery` (
 -- Структура таблицы `news_related`
 --
 
+DROP TABLE IF EXISTS `news_related`;
 CREATE TABLE `news_related` (
   `news_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL
@@ -3815,6 +3779,7 @@ CREATE TABLE `news_related` (
 -- Структура таблицы `news_to_layout`
 --
 
+DROP TABLE IF EXISTS `news_to_layout`;
 CREATE TABLE `news_to_layout` (
   `news_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -3827,6 +3792,7 @@ CREATE TABLE `news_to_layout` (
 -- Структура таблицы `news_to_ncategory`
 --
 
+DROP TABLE IF EXISTS `news_to_ncategory`;
 CREATE TABLE `news_to_ncategory` (
   `news_id` int(11) NOT NULL,
   `ncategory_id` int(11) NOT NULL
@@ -3838,6 +3804,7 @@ CREATE TABLE `news_to_ncategory` (
 -- Структура таблицы `news_to_store`
 --
 
+DROP TABLE IF EXISTS `news_to_store`;
 CREATE TABLE `news_to_store` (
   `news_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL DEFAULT 0
@@ -3849,6 +3816,7 @@ CREATE TABLE `news_to_store` (
 -- Структура таблицы `news_video`
 --
 
+DROP TABLE IF EXISTS `news_video`;
 CREATE TABLE `news_video` (
   `news_video_id` int(11) NOT NULL,
   `news_id` int(11) NOT NULL,
@@ -3865,6 +3833,7 @@ CREATE TABLE `news_video` (
 -- Структура таблицы `novaposhta_cities`
 --
 
+DROP TABLE IF EXISTS `novaposhta_cities`;
 CREATE TABLE `novaposhta_cities` (
   `CityID` int(11) NOT NULL,
   `Ref` varchar(36) NOT NULL,
@@ -3903,6 +3872,7 @@ CREATE TABLE `novaposhta_cities` (
 -- Структура таблицы `novaposhta_cities_ww`
 --
 
+DROP TABLE IF EXISTS `novaposhta_cities_ww`;
 CREATE TABLE `novaposhta_cities_ww` (
   `CityID` int(11) NOT NULL,
   `Ref` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3929,6 +3899,7 @@ CREATE TABLE `novaposhta_cities_ww` (
 -- Структура таблицы `novaposhta_streets`
 --
 
+DROP TABLE IF EXISTS `novaposhta_streets`;
 CREATE TABLE `novaposhta_streets` (
   `StreetID` int(11) NOT NULL,
   `Ref` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3945,6 +3916,7 @@ CREATE TABLE `novaposhta_streets` (
 -- Структура таблицы `novaposhta_warehouses`
 --
 
+DROP TABLE IF EXISTS `novaposhta_warehouses`;
 CREATE TABLE `novaposhta_warehouses` (
   `WarehouseID` int(11) NOT NULL,
   `SiteKey` int(11) NOT NULL,
@@ -3984,6 +3956,7 @@ CREATE TABLE `novaposhta_warehouses` (
 -- Структура таблицы `novaposhta_zones`
 --
 
+DROP TABLE IF EXISTS `novaposhta_zones`;
 CREATE TABLE `novaposhta_zones` (
   `ZoneID` int(11) NOT NULL,
   `Ref` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -3998,6 +3971,7 @@ CREATE TABLE `novaposhta_zones` (
 -- Структура таблицы `ocfilter_option`
 --
 
+DROP TABLE IF EXISTS `ocfilter_option`;
 CREATE TABLE `ocfilter_option` (
   `option_id` int(11) NOT NULL,
   `type` varchar(16) NOT NULL DEFAULT 'checkbox',
@@ -4016,6 +3990,7 @@ CREATE TABLE `ocfilter_option` (
 -- Структура таблицы `ocfilter_option_description`
 --
 
+DROP TABLE IF EXISTS `ocfilter_option_description`;
 CREATE TABLE `ocfilter_option_description` (
   `option_id` int(11) NOT NULL,
   `language_id` tinyint(4) NOT NULL,
@@ -4030,6 +4005,7 @@ CREATE TABLE `ocfilter_option_description` (
 -- Структура таблицы `ocfilter_option_to_category`
 --
 
+DROP TABLE IF EXISTS `ocfilter_option_to_category`;
 CREATE TABLE `ocfilter_option_to_category` (
   `option_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
@@ -4041,6 +4017,7 @@ CREATE TABLE `ocfilter_option_to_category` (
 -- Структура таблицы `ocfilter_option_to_store`
 --
 
+DROP TABLE IF EXISTS `ocfilter_option_to_store`;
 CREATE TABLE `ocfilter_option_to_store` (
   `option_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -4052,6 +4029,7 @@ CREATE TABLE `ocfilter_option_to_store` (
 -- Структура таблицы `ocfilter_option_value`
 --
 
+DROP TABLE IF EXISTS `ocfilter_option_value`;
 CREATE TABLE `ocfilter_option_value` (
   `value_id` bigint(20) NOT NULL,
   `option_id` int(11) NOT NULL DEFAULT 0,
@@ -4067,6 +4045,7 @@ CREATE TABLE `ocfilter_option_value` (
 -- Структура таблицы `ocfilter_option_value_description`
 --
 
+DROP TABLE IF EXISTS `ocfilter_option_value_description`;
 CREATE TABLE `ocfilter_option_value_description` (
   `value_id` bigint(20) NOT NULL,
   `option_id` int(11) NOT NULL,
@@ -4080,6 +4059,7 @@ CREATE TABLE `ocfilter_option_value_description` (
 -- Структура таблицы `ocfilter_option_value_to_product`
 --
 
+DROP TABLE IF EXISTS `ocfilter_option_value_to_product`;
 CREATE TABLE `ocfilter_option_value_to_product` (
   `ocfilter_option_value_to_product_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -4095,6 +4075,7 @@ CREATE TABLE `ocfilter_option_value_to_product` (
 -- Структура таблицы `ocfilter_option_value_to_product_description`
 --
 
+DROP TABLE IF EXISTS `ocfilter_option_value_to_product_description`;
 CREATE TABLE `ocfilter_option_value_to_product_description` (
   `product_id` int(11) NOT NULL,
   `value_id` bigint(20) NOT NULL,
@@ -4109,6 +4090,7 @@ CREATE TABLE `ocfilter_option_value_to_product_description` (
 -- Структура таблицы `ocfilter_page`
 --
 
+DROP TABLE IF EXISTS `ocfilter_page`;
 CREATE TABLE `ocfilter_page` (
   `ocfilter_page_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
@@ -4128,6 +4110,7 @@ CREATE TABLE `ocfilter_page` (
 -- Структура таблицы `oc_feedback`
 --
 
+DROP TABLE IF EXISTS `oc_feedback`;
 CREATE TABLE `oc_feedback` (
   `feedback_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0,
@@ -4142,6 +4125,7 @@ CREATE TABLE `oc_feedback` (
 -- Структура таблицы `oc_sms_log`
 --
 
+DROP TABLE IF EXISTS `oc_sms_log`;
 CREATE TABLE `oc_sms_log` (
   `id` int(11) NOT NULL,
   `phone` varchar(255) NOT NULL,
@@ -4155,6 +4139,7 @@ CREATE TABLE `oc_sms_log` (
 -- Структура таблицы `oc_yandex_category`
 --
 
+DROP TABLE IF EXISTS `oc_yandex_category`;
 CREATE TABLE `oc_yandex_category` (
   `yandex_category_id` int(11) NOT NULL,
   `level1` varchar(50) NOT NULL,
@@ -4170,6 +4155,7 @@ CREATE TABLE `oc_yandex_category` (
 -- Структура таблицы `odinass_product_queue`
 --
 
+DROP TABLE IF EXISTS `odinass_product_queue`;
 CREATE TABLE `odinass_product_queue` (
   `product_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -4180,6 +4166,7 @@ CREATE TABLE `odinass_product_queue` (
 -- Структура таблицы `option`
 --
 
+DROP TABLE IF EXISTS `option`;
 CREATE TABLE `option` (
   `option_id` int(11) NOT NULL,
   `type` varchar(32) NOT NULL,
@@ -4192,6 +4179,7 @@ CREATE TABLE `option` (
 -- Структура таблицы `option_description`
 --
 
+DROP TABLE IF EXISTS `option_description`;
 CREATE TABLE `option_description` (
   `option_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -4204,6 +4192,7 @@ CREATE TABLE `option_description` (
 -- Структура таблицы `option_tooltip`
 --
 
+DROP TABLE IF EXISTS `option_tooltip`;
 CREATE TABLE `option_tooltip` (
   `option_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -4216,6 +4205,7 @@ CREATE TABLE `option_tooltip` (
 -- Структура таблицы `option_value`
 --
 
+DROP TABLE IF EXISTS `option_value`;
 CREATE TABLE `option_value` (
   `option_value_id` int(11) NOT NULL,
   `option_id` int(11) NOT NULL,
@@ -4229,6 +4219,7 @@ CREATE TABLE `option_value` (
 -- Структура таблицы `option_value_description`
 --
 
+DROP TABLE IF EXISTS `option_value_description`;
 CREATE TABLE `option_value_description` (
   `option_value_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -4242,6 +4233,7 @@ CREATE TABLE `option_value_description` (
 -- Структура таблицы `order`
 --
 
+DROP TABLE IF EXISTS `order`;
 CREATE TABLE `order` (
   `order_id` int(11) NOT NULL COMMENT 'Номер заказа',
   `order_id2` varchar(30) NOT NULL COMMENT 'Вторичный номер заказа (не используется)',
@@ -4403,6 +4395,7 @@ CREATE TABLE `order` (
 -- Структура таблицы `order_amazon`
 --
 
+DROP TABLE IF EXISTS `order_amazon`;
 CREATE TABLE `order_amazon` (
   `order_id` int(11) NOT NULL,
   `amazon_order_id` varchar(255) NOT NULL,
@@ -4415,6 +4408,7 @@ CREATE TABLE `order_amazon` (
 -- Структура таблицы `order_amazon_product`
 --
 
+DROP TABLE IF EXISTS `order_amazon_product`;
 CREATE TABLE `order_amazon_product` (
   `order_product_id` int(11) NOT NULL,
   `amazon_order_item_code` varchar(255) NOT NULL
@@ -4426,6 +4420,7 @@ CREATE TABLE `order_amazon_product` (
 -- Структура таблицы `order_amazon_report`
 --
 
+DROP TABLE IF EXISTS `order_amazon_report`;
 CREATE TABLE `order_amazon_report` (
   `order_id` int(11) NOT NULL,
   `submission_id` varchar(255) NOT NULL,
@@ -4439,6 +4434,7 @@ CREATE TABLE `order_amazon_report` (
 -- Структура таблицы `order_courier_history`
 --
 
+DROP TABLE IF EXISTS `order_courier_history`;
 CREATE TABLE `order_courier_history` (
   `order_id` int(11) NOT NULL,
   `courier_id` varchar(100) NOT NULL,
@@ -4455,6 +4451,7 @@ CREATE TABLE `order_courier_history` (
 -- Структура таблицы `order_download`
 --
 
+DROP TABLE IF EXISTS `order_download`;
 CREATE TABLE `order_download` (
   `order_download_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4471,6 +4468,7 @@ CREATE TABLE `order_download` (
 -- Структура таблицы `order_field`
 --
 
+DROP TABLE IF EXISTS `order_field`;
 CREATE TABLE `order_field` (
   `order_id` int(11) NOT NULL,
   `custom_field_id` int(11) NOT NULL,
@@ -4486,6 +4484,7 @@ CREATE TABLE `order_field` (
 -- Структура таблицы `order_fraud`
 --
 
+DROP TABLE IF EXISTS `order_fraud`;
 CREATE TABLE `order_fraud` (
   `order_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -4548,6 +4547,7 @@ CREATE TABLE `order_fraud` (
 -- Структура таблицы `order_history`
 --
 
+DROP TABLE IF EXISTS `order_history`;
 CREATE TABLE `order_history` (
   `order_history_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4567,6 +4567,7 @@ CREATE TABLE `order_history` (
 -- Структура таблицы `order_invoice_history`
 --
 
+DROP TABLE IF EXISTS `order_invoice_history`;
 CREATE TABLE `order_invoice_history` (
   `order_invoice_id` bigint(20) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4584,6 +4585,7 @@ CREATE TABLE `order_invoice_history` (
 -- Структура таблицы `order_option`
 --
 
+DROP TABLE IF EXISTS `order_option`;
 CREATE TABLE `order_option` (
   `order_option_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4601,6 +4603,7 @@ CREATE TABLE `order_option` (
 -- Структура таблицы `order_product`
 --
 
+DROP TABLE IF EXISTS `order_product`;
 CREATE TABLE `order_product` (
   `order_product_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4642,6 +4645,7 @@ CREATE TABLE `order_product` (
 -- Структура таблицы `order_product_bought`
 --
 
+DROP TABLE IF EXISTS `order_product_bought`;
 CREATE TABLE `order_product_bought` (
   `bought_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4657,6 +4661,7 @@ CREATE TABLE `order_product_bought` (
 -- Структура таблицы `order_product_history`
 --
 
+DROP TABLE IF EXISTS `order_product_history`;
 CREATE TABLE `order_product_history` (
   `order_product_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4684,6 +4689,7 @@ CREATE TABLE `order_product_history` (
 -- Структура таблицы `order_product_nogood`
 --
 
+DROP TABLE IF EXISTS `order_product_nogood`;
 CREATE TABLE `order_product_nogood` (
   `order_product_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4721,6 +4727,7 @@ CREATE TABLE `order_product_nogood` (
 -- Структура таблицы `order_product_reserves`
 --
 
+DROP TABLE IF EXISTS `order_product_reserves`;
 CREATE TABLE `order_product_reserves` (
   `order_reserve_id` int(11) NOT NULL,
   `order_product_id` int(11) NOT NULL,
@@ -4736,6 +4743,7 @@ CREATE TABLE `order_product_reserves` (
 -- Структура таблицы `order_product_supply`
 --
 
+DROP TABLE IF EXISTS `order_product_supply`;
 CREATE TABLE `order_product_supply` (
   `order_product_supply_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4758,6 +4766,7 @@ CREATE TABLE `order_product_supply` (
 -- Структура таблицы `order_product_tracker`
 --
 
+DROP TABLE IF EXISTS `order_product_tracker`;
 CREATE TABLE `order_product_tracker` (
   `order_product_tracker_id` int(11) NOT NULL,
   `order_product` int(11) NOT NULL,
@@ -4772,6 +4781,7 @@ CREATE TABLE `order_product_tracker` (
 -- Структура таблицы `order_product_untaken`
 --
 
+DROP TABLE IF EXISTS `order_product_untaken`;
 CREATE TABLE `order_product_untaken` (
   `order_product_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4813,6 +4823,7 @@ CREATE TABLE `order_product_untaken` (
 -- Структура таблицы `order_recurring`
 --
 
+DROP TABLE IF EXISTS `order_recurring`;
 CREATE TABLE `order_recurring` (
   `order_recurring_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4842,6 +4853,7 @@ CREATE TABLE `order_recurring` (
 -- Структура таблицы `order_recurring_transaction`
 --
 
+DROP TABLE IF EXISTS `order_recurring_transaction`;
 CREATE TABLE `order_recurring_transaction` (
   `order_recurring_transaction_id` int(11) NOT NULL,
   `order_recurring_id` int(11) NOT NULL,
@@ -4856,6 +4868,7 @@ CREATE TABLE `order_recurring_transaction` (
 -- Структура таблицы `order_reject_reason`
 --
 
+DROP TABLE IF EXISTS `order_reject_reason`;
 CREATE TABLE `order_reject_reason` (
   `reject_reason_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -4868,6 +4881,7 @@ CREATE TABLE `order_reject_reason` (
 -- Структура таблицы `order_related`
 --
 
+DROP TABLE IF EXISTS `order_related`;
 CREATE TABLE `order_related` (
   `order_id` int(11) NOT NULL,
   `related_order_id` int(11) NOT NULL
@@ -4879,6 +4893,7 @@ CREATE TABLE `order_related` (
 -- Структура таблицы `order_save_history`
 --
 
+DROP TABLE IF EXISTS `order_save_history`;
 CREATE TABLE `order_save_history` (
   `order_save_id` bigint(20) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4893,6 +4908,7 @@ CREATE TABLE `order_save_history` (
 -- Структура таблицы `order_set`
 --
 
+DROP TABLE IF EXISTS `order_set`;
 CREATE TABLE `order_set` (
   `order_set_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4923,6 +4939,7 @@ CREATE TABLE `order_set` (
 -- Структура таблицы `order_simple_fields`
 --
 
+DROP TABLE IF EXISTS `order_simple_fields`;
 CREATE TABLE `order_simple_fields` (
   `order_id` int(11) NOT NULL,
   `metadata` text DEFAULT NULL,
@@ -4955,6 +4972,7 @@ CREATE TABLE `order_simple_fields` (
 -- Структура таблицы `order_sms_history`
 --
 
+DROP TABLE IF EXISTS `order_sms_history`;
 CREATE TABLE `order_sms_history` (
   `order_history_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -4973,6 +4991,7 @@ CREATE TABLE `order_sms_history` (
 -- Структура таблицы `order_status`
 --
 
+DROP TABLE IF EXISTS `order_status`;
 CREATE TABLE `order_status` (
   `order_status_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -4989,6 +5008,7 @@ CREATE TABLE `order_status` (
 -- Структура таблицы `order_status_linked`
 --
 
+DROP TABLE IF EXISTS `order_status_linked`;
 CREATE TABLE `order_status_linked` (
   `order_status_id` int(11) NOT NULL,
   `linked_order_status_id` int(11) NOT NULL
@@ -5000,6 +5020,7 @@ CREATE TABLE `order_status_linked` (
 -- Структура таблицы `order_total`
 --
 
+DROP TABLE IF EXISTS `order_total`;
 CREATE TABLE `order_total` (
   `order_total_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -5018,6 +5039,7 @@ CREATE TABLE `order_total` (
 -- Структура таблицы `order_total_tax`
 --
 
+DROP TABLE IF EXISTS `order_total_tax`;
 CREATE TABLE `order_total_tax` (
   `order_total_id` int(11) NOT NULL DEFAULT 0,
   `code` varchar(255) DEFAULT NULL,
@@ -5030,6 +5052,7 @@ CREATE TABLE `order_total_tax` (
 -- Структура таблицы `order_to_1c_queue`
 --
 
+DROP TABLE IF EXISTS `order_to_1c_queue`;
 CREATE TABLE `order_to_1c_queue` (
   `order_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -5040,6 +5063,7 @@ CREATE TABLE `order_to_1c_queue` (
 -- Структура таблицы `order_to_sdek`
 --
 
+DROP TABLE IF EXISTS `order_to_sdek`;
 CREATE TABLE `order_to_sdek` (
   `order_to_sdek_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -5053,6 +5077,7 @@ CREATE TABLE `order_to_sdek` (
 -- Структура таблицы `order_tracker`
 --
 
+DROP TABLE IF EXISTS `order_tracker`;
 CREATE TABLE `order_tracker` (
   `order_tracker_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -5066,6 +5091,7 @@ CREATE TABLE `order_tracker` (
 -- Структура таблицы `order_tracker_sms`
 --
 
+DROP TABLE IF EXISTS `order_tracker_sms`;
 CREATE TABLE `order_tracker_sms` (
   `tracker_sms_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -5080,6 +5106,7 @@ CREATE TABLE `order_tracker_sms` (
 -- Структура таблицы `order_ttns`
 --
 
+DROP TABLE IF EXISTS `order_ttns`;
 CREATE TABLE `order_ttns` (
   `order_ttn_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -5096,6 +5123,7 @@ CREATE TABLE `order_ttns` (
 -- Структура таблицы `order_voucher`
 --
 
+DROP TABLE IF EXISTS `order_voucher`;
 CREATE TABLE `order_voucher` (
   `order_voucher_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -5117,6 +5145,7 @@ CREATE TABLE `order_voucher` (
 -- Структура таблицы `parser_queue`
 --
 
+DROP TABLE IF EXISTS `parser_queue`;
 CREATE TABLE `parser_queue` (
   `parser_queue_id` int(11) NOT NULL,
   `manufacturer_id` int(11) NOT NULL,
@@ -5130,6 +5159,7 @@ CREATE TABLE `parser_queue` (
 -- Структура таблицы `pavoslidergroups`
 --
 
+DROP TABLE IF EXISTS `pavoslidergroups`;
 CREATE TABLE `pavoslidergroups` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
@@ -5142,6 +5172,7 @@ CREATE TABLE `pavoslidergroups` (
 -- Структура таблицы `pavosliderlayers`
 --
 
+DROP TABLE IF EXISTS `pavosliderlayers`;
 CREATE TABLE `pavosliderlayers` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
@@ -5160,6 +5191,7 @@ CREATE TABLE `pavosliderlayers` (
 -- Структура таблицы `paypal_iframe_order`
 --
 
+DROP TABLE IF EXISTS `paypal_iframe_order`;
 CREATE TABLE `paypal_iframe_order` (
   `paypal_iframe_order_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -5177,6 +5209,7 @@ CREATE TABLE `paypal_iframe_order` (
 -- Структура таблицы `paypal_iframe_order_transaction`
 --
 
+DROP TABLE IF EXISTS `paypal_iframe_order_transaction`;
 CREATE TABLE `paypal_iframe_order_transaction` (
   `paypal_iframe_order_transaction_id` int(11) NOT NULL,
   `paypal_iframe_order_id` int(11) NOT NULL,
@@ -5201,6 +5234,7 @@ CREATE TABLE `paypal_iframe_order_transaction` (
 -- Структура таблицы `paypal_order`
 --
 
+DROP TABLE IF EXISTS `paypal_order`;
 CREATE TABLE `paypal_order` (
   `paypal_order_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -5218,6 +5252,7 @@ CREATE TABLE `paypal_order` (
 -- Структура таблицы `paypal_order_transaction`
 --
 
+DROP TABLE IF EXISTS `paypal_order_transaction`;
 CREATE TABLE `paypal_order_transaction` (
   `paypal_order_transaction_id` int(11) NOT NULL,
   `paypal_order_id` int(11) NOT NULL,
@@ -5242,6 +5277,7 @@ CREATE TABLE `paypal_order_transaction` (
 -- Структура таблицы `priceva_data`
 --
 
+DROP TABLE IF EXISTS `priceva_data`;
 CREATE TABLE `priceva_data` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -5263,6 +5299,7 @@ CREATE TABLE `priceva_data` (
 -- Структура таблицы `priceva_sources`
 --
 
+DROP TABLE IF EXISTS `priceva_sources`;
 CREATE TABLE `priceva_sources` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -5287,6 +5324,7 @@ CREATE TABLE `priceva_sources` (
 -- Структура таблицы `product`
 --
 
+DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product` (
   `product_id` int(11) NOT NULL,
   `model` varchar(64) NOT NULL COMMENT 'Артикул или модель',
@@ -5311,6 +5349,7 @@ CREATE TABLE `product` (
   `quantity_stockK` int(11) NOT NULL DEFAULT 0,
   `quantity_stockMN` int(11) NOT NULL DEFAULT 0,
   `quantity_stockAS` int(11) NOT NULL DEFAULT 0,
+  `quantity_updateMarker` tinyint(1) NOT NULL DEFAULT 0,
   `quantity_stock_onway` int(11) NOT NULL DEFAULT 0,
   `quantity_stockK_onway` int(11) NOT NULL DEFAULT 0,
   `quantity_stockM_onway` int(11) NOT NULL DEFAULT 0,
@@ -5432,6 +5471,7 @@ CREATE TABLE `product` (
 -- Структура таблицы `product_additional_offer`
 --
 
+DROP TABLE IF EXISTS `product_additional_offer`;
 CREATE TABLE `product_additional_offer` (
   `product_additional_offer_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -5454,6 +5494,7 @@ CREATE TABLE `product_additional_offer` (
 -- Структура таблицы `product_additional_offer_to_store`
 --
 
+DROP TABLE IF EXISTS `product_additional_offer_to_store`;
 CREATE TABLE `product_additional_offer_to_store` (
   `product_additional_offer_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -5465,6 +5506,7 @@ CREATE TABLE `product_additional_offer_to_store` (
 -- Структура таблицы `product_also_bought`
 --
 
+DROP TABLE IF EXISTS `product_also_bought`;
 CREATE TABLE `product_also_bought` (
   `product_id` int(11) NOT NULL,
   `also_bought_id` int(11) NOT NULL
@@ -5476,6 +5518,7 @@ CREATE TABLE `product_also_bought` (
 -- Структура таблицы `product_also_viewed`
 --
 
+DROP TABLE IF EXISTS `product_also_viewed`;
 CREATE TABLE `product_also_viewed` (
   `product_id` int(11) NOT NULL,
   `also_viewed_id` int(11) NOT NULL
@@ -5487,6 +5530,7 @@ CREATE TABLE `product_also_viewed` (
 -- Структура таблицы `product_amzn_data`
 --
 
+DROP TABLE IF EXISTS `product_amzn_data`;
 CREATE TABLE `product_amzn_data` (
   `product_id` int(11) NOT NULL,
   `asin` varchar(255) COLLATE utf8mb3_bin NOT NULL,
@@ -5500,7 +5544,9 @@ CREATE TABLE `product_amzn_data` (
 -- Структура таблицы `product_amzn_offers`
 --
 
+DROP TABLE IF EXISTS `product_amzn_offers`;
 CREATE TABLE `product_amzn_offers` (
+  `amazon_offer_id` int(11) NOT NULL,
   `asin` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
   `priceCurrency` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
   `priceAmount` decimal(15,2) NOT NULL,
@@ -5512,6 +5558,9 @@ CREATE TABLE `product_amzn_offers` (
   `deliveryIsFba` tinyint(1) NOT NULL,
   `deliveryIsShippedCrossBorder` tinyint(1) NOT NULL,
   `deliveryComments` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `minDays` int(11) NOT NULL,
+  `deliveryFrom` date NOT NULL,
+  `deliveryTo` date NOT NULL,
   `conditionIsNew` tinyint(1) NOT NULL,
   `conditionTitle` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
   `conditionComments` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -5535,6 +5584,7 @@ CREATE TABLE `product_amzn_offers` (
 -- Структура таблицы `product_anyrelated`
 --
 
+DROP TABLE IF EXISTS `product_anyrelated`;
 CREATE TABLE `product_anyrelated` (
   `product_id` int(11) NOT NULL,
   `anyrelated_id` int(11) NOT NULL
@@ -5546,6 +5596,7 @@ CREATE TABLE `product_anyrelated` (
 -- Структура таблицы `product_attribute`
 --
 
+DROP TABLE IF EXISTS `product_attribute`;
 CREATE TABLE `product_attribute` (
   `product_id` int(11) NOT NULL,
   `attribute_id` int(11) NOT NULL,
@@ -5559,6 +5610,7 @@ CREATE TABLE `product_attribute` (
 -- Структура таблицы `product_barbara_tab`
 --
 
+DROP TABLE IF EXISTS `product_barbara_tab`;
 CREATE TABLE `product_barbara_tab` (
   `product_additional_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -5573,6 +5625,7 @@ CREATE TABLE `product_barbara_tab` (
 -- Структура таблицы `product_child`
 --
 
+DROP TABLE IF EXISTS `product_child`;
 CREATE TABLE `product_child` (
   `product_id` int(11) NOT NULL,
   `child_id` int(11) NOT NULL
@@ -5584,6 +5637,7 @@ CREATE TABLE `product_child` (
 -- Структура таблицы `product_costs`
 --
 
+DROP TABLE IF EXISTS `product_costs`;
 CREATE TABLE `product_costs` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -5598,6 +5652,7 @@ CREATE TABLE `product_costs` (
 -- Структура таблицы `product_description`
 --
 
+DROP TABLE IF EXISTS `product_description`;
 CREATE TABLE `product_description` (
   `product_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -5633,6 +5688,7 @@ CREATE TABLE `product_description` (
 -- Структура таблицы `product_discount`
 --
 
+DROP TABLE IF EXISTS `product_discount`;
 CREATE TABLE `product_discount` (
   `product_discount_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -5651,6 +5707,7 @@ CREATE TABLE `product_discount` (
 -- Структура таблицы `product_filter`
 --
 
+DROP TABLE IF EXISTS `product_filter`;
 CREATE TABLE `product_filter` (
   `product_id` int(11) NOT NULL,
   `filter_id` int(11) NOT NULL
@@ -5662,6 +5719,7 @@ CREATE TABLE `product_filter` (
 -- Структура таблицы `product_front_price`
 --
 
+DROP TABLE IF EXISTS `product_front_price`;
 CREATE TABLE `product_front_price` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -5677,6 +5735,7 @@ CREATE TABLE `product_front_price` (
 -- Структура таблицы `product_image`
 --
 
+DROP TABLE IF EXISTS `product_image`;
 CREATE TABLE `product_image` (
   `product_image_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -5690,6 +5749,7 @@ CREATE TABLE `product_image` (
 -- Структура таблицы `product_master`
 --
 
+DROP TABLE IF EXISTS `product_master`;
 CREATE TABLE `product_master` (
   `master_product_id` int(11) NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
@@ -5702,6 +5762,7 @@ CREATE TABLE `product_master` (
 -- Структура таблицы `product_option`
 --
 
+DROP TABLE IF EXISTS `product_option`;
 CREATE TABLE `product_option` (
   `product_option_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -5716,6 +5777,7 @@ CREATE TABLE `product_option` (
 -- Структура таблицы `product_option_value`
 --
 
+DROP TABLE IF EXISTS `product_option_value`;
 CREATE TABLE `product_option_value` (
   `product_option_value_id` int(11) NOT NULL,
   `product_option_id` int(11) NOT NULL,
@@ -5743,6 +5805,7 @@ CREATE TABLE `product_option_value` (
 -- Структура таблицы `product_price_history`
 --
 
+DROP TABLE IF EXISTS `product_price_history`;
 CREATE TABLE `product_price_history` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -5759,6 +5822,7 @@ CREATE TABLE `product_price_history` (
 -- Структура таблицы `product_price_national_to_store`
 --
 
+DROP TABLE IF EXISTS `product_price_national_to_store`;
 CREATE TABLE `product_price_national_to_store` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -5775,6 +5839,7 @@ CREATE TABLE `product_price_national_to_store` (
 -- Структура таблицы `product_price_national_to_store1`
 --
 
+DROP TABLE IF EXISTS `product_price_national_to_store1`;
 CREATE TABLE `product_price_national_to_store1` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -5791,6 +5856,7 @@ CREATE TABLE `product_price_national_to_store1` (
 -- Структура таблицы `product_price_national_to_yam`
 --
 
+DROP TABLE IF EXISTS `product_price_national_to_yam`;
 CREATE TABLE `product_price_national_to_yam` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -5807,6 +5873,7 @@ CREATE TABLE `product_price_national_to_yam` (
 -- Структура таблицы `product_price_to_store`
 --
 
+DROP TABLE IF EXISTS `product_price_to_store`;
 CREATE TABLE `product_price_to_store` (
   `product_id` bigint(20) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -5822,6 +5889,7 @@ CREATE TABLE `product_price_to_store` (
 -- Структура таблицы `product_product_option`
 --
 
+DROP TABLE IF EXISTS `product_product_option`;
 CREATE TABLE `product_product_option` (
   `product_product_option_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -5837,6 +5905,7 @@ CREATE TABLE `product_product_option` (
 -- Структура таблицы `product_product_option_value`
 --
 
+DROP TABLE IF EXISTS `product_product_option_value`;
 CREATE TABLE `product_product_option_value` (
   `product_product_option_value_id` int(11) NOT NULL,
   `product_product_option_id` int(11) NOT NULL,
@@ -5851,6 +5920,7 @@ CREATE TABLE `product_product_option_value` (
 -- Структура таблицы `product_profile`
 --
 
+DROP TABLE IF EXISTS `product_profile`;
 CREATE TABLE `product_profile` (
   `product_id` int(11) NOT NULL,
   `profile_id` int(11) NOT NULL,
@@ -5863,6 +5933,7 @@ CREATE TABLE `product_profile` (
 -- Структура таблицы `product_purchase`
 --
 
+DROP TABLE IF EXISTS `product_purchase`;
 CREATE TABLE `product_purchase` (
   `purchase_uuid` varchar(64) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -5879,6 +5950,7 @@ CREATE TABLE `product_purchase` (
 -- Структура таблицы `product_recurring`
 --
 
+DROP TABLE IF EXISTS `product_recurring`;
 CREATE TABLE `product_recurring` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -5890,6 +5962,7 @@ CREATE TABLE `product_recurring` (
 -- Структура таблицы `product_related`
 --
 
+DROP TABLE IF EXISTS `product_related`;
 CREATE TABLE `product_related` (
   `product_id` int(11) NOT NULL,
   `related_id` int(11) NOT NULL,
@@ -5902,6 +5975,7 @@ CREATE TABLE `product_related` (
 -- Структура таблицы `product_related_set`
 --
 
+DROP TABLE IF EXISTS `product_related_set`;
 CREATE TABLE `product_related_set` (
   `product_id` int(11) NOT NULL,
   `related_id` int(11) NOT NULL
@@ -5913,6 +5987,7 @@ CREATE TABLE `product_related_set` (
 -- Структура таблицы `product_reward`
 --
 
+DROP TABLE IF EXISTS `product_reward`;
 CREATE TABLE `product_reward` (
   `product_reward_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL DEFAULT 0,
@@ -5932,6 +6007,7 @@ CREATE TABLE `product_reward` (
 -- Структура таблицы `product_shop_by_look`
 --
 
+DROP TABLE IF EXISTS `product_shop_by_look`;
 CREATE TABLE `product_shop_by_look` (
   `product_id` int(11) NOT NULL,
   `shop_by_look_id` int(11) NOT NULL
@@ -5943,6 +6019,7 @@ CREATE TABLE `product_shop_by_look` (
 -- Структура таблицы `product_similar`
 --
 
+DROP TABLE IF EXISTS `product_similar`;
 CREATE TABLE `product_similar` (
   `product_id` int(11) NOT NULL,
   `similar_id` int(11) NOT NULL
@@ -5954,6 +6031,7 @@ CREATE TABLE `product_similar` (
 -- Структура таблицы `product_similar_to_consider`
 --
 
+DROP TABLE IF EXISTS `product_similar_to_consider`;
 CREATE TABLE `product_similar_to_consider` (
   `product_id` int(11) NOT NULL,
   `similar_to_consider_id` int(11) NOT NULL
@@ -5965,6 +6043,7 @@ CREATE TABLE `product_similar_to_consider` (
 -- Структура таблицы `product_sources`
 --
 
+DROP TABLE IF EXISTS `product_sources`;
 CREATE TABLE `product_sources` (
   `product_source_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -5978,6 +6057,7 @@ CREATE TABLE `product_sources` (
 -- Структура таблицы `product_special`
 --
 
+DROP TABLE IF EXISTS `product_special`;
 CREATE TABLE `product_special` (
   `product_special_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -6002,6 +6082,7 @@ CREATE TABLE `product_special` (
 -- Структура таблицы `product_special_attribute`
 --
 
+DROP TABLE IF EXISTS `product_special_attribute`;
 CREATE TABLE `product_special_attribute` (
   `product_special_attribute_id` int(10) UNSIGNED NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
@@ -6014,6 +6095,7 @@ CREATE TABLE `product_special_attribute` (
 -- Структура таблицы `product_special_backup`
 --
 
+DROP TABLE IF EXISTS `product_special_backup`;
 CREATE TABLE `product_special_backup` (
   `product_special_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -6035,6 +6117,7 @@ CREATE TABLE `product_special_backup` (
 -- Структура таблицы `product_sponsored`
 --
 
+DROP TABLE IF EXISTS `product_sponsored`;
 CREATE TABLE `product_sponsored` (
   `product_id` int(11) NOT NULL,
   `sponsored_id` int(11) NOT NULL
@@ -6046,6 +6129,7 @@ CREATE TABLE `product_sponsored` (
 -- Структура таблицы `product_status`
 --
 
+DROP TABLE IF EXISTS `product_status`;
 CREATE TABLE `product_status` (
   `product_id` int(11) NOT NULL,
   `status_id` int(11) NOT NULL,
@@ -6060,6 +6144,7 @@ CREATE TABLE `product_status` (
 -- Структура таблицы `product_sticker`
 --
 
+DROP TABLE IF EXISTS `product_sticker`;
 CREATE TABLE `product_sticker` (
   `product_sticker_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -6078,6 +6163,7 @@ CREATE TABLE `product_sticker` (
 -- Структура таблицы `product_stock_limits`
 --
 
+DROP TABLE IF EXISTS `product_stock_limits`;
 CREATE TABLE `product_stock_limits` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -6091,6 +6177,7 @@ CREATE TABLE `product_stock_limits` (
 -- Структура таблицы `product_stock_status`
 --
 
+DROP TABLE IF EXISTS `product_stock_status`;
 CREATE TABLE `product_stock_status` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -6103,6 +6190,7 @@ CREATE TABLE `product_stock_status` (
 -- Структура таблицы `product_stock_waits`
 --
 
+DROP TABLE IF EXISTS `product_stock_waits`;
 CREATE TABLE `product_stock_waits` (
   `product_id` int(11) NOT NULL,
   `quantity_stock` int(11) NOT NULL DEFAULT 0,
@@ -6118,6 +6206,7 @@ CREATE TABLE `product_stock_waits` (
 -- Структура таблицы `product_tab`
 --
 
+DROP TABLE IF EXISTS `product_tab`;
 CREATE TABLE `product_tab` (
   `tab_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL,
@@ -6133,6 +6222,7 @@ CREATE TABLE `product_tab` (
 -- Структура таблицы `product_tab_content`
 --
 
+DROP TABLE IF EXISTS `product_tab_content`;
 CREATE TABLE `product_tab_content` (
   `product_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -6146,6 +6236,7 @@ CREATE TABLE `product_tab_content` (
 -- Структура таблицы `product_tab_default`
 --
 
+DROP TABLE IF EXISTS `product_tab_default`;
 CREATE TABLE `product_tab_default` (
   `tab_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -6158,6 +6249,7 @@ CREATE TABLE `product_tab_default` (
 -- Структура таблицы `product_tab_name`
 --
 
+DROP TABLE IF EXISTS `product_tab_name`;
 CREATE TABLE `product_tab_name` (
   `tab_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -6170,6 +6262,7 @@ CREATE TABLE `product_tab_name` (
 -- Структура таблицы `product_tmp`
 --
 
+DROP TABLE IF EXISTS `product_tmp`;
 CREATE TABLE `product_tmp` (
   `product_id` int(11) NOT NULL,
   `model` varchar(64) NOT NULL,
@@ -6266,6 +6359,7 @@ CREATE TABLE `product_tmp` (
 -- Структура таблицы `product_to_category`
 --
 
+DROP TABLE IF EXISTS `product_to_category`;
 CREATE TABLE `product_to_category` (
   `product_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
@@ -6279,6 +6373,7 @@ CREATE TABLE `product_to_category` (
 -- Структура таблицы `product_to_download`
 --
 
+DROP TABLE IF EXISTS `product_to_download`;
 CREATE TABLE `product_to_download` (
   `product_id` int(11) NOT NULL,
   `download_id` int(11) NOT NULL
@@ -6290,6 +6385,7 @@ CREATE TABLE `product_to_download` (
 -- Структура таблицы `product_to_layout`
 --
 
+DROP TABLE IF EXISTS `product_to_layout`;
 CREATE TABLE `product_to_layout` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -6302,6 +6398,7 @@ CREATE TABLE `product_to_layout` (
 -- Структура таблицы `product_to_set`
 --
 
+DROP TABLE IF EXISTS `product_to_set`;
 CREATE TABLE `product_to_set` (
   `set_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -6320,6 +6417,7 @@ CREATE TABLE `product_to_set` (
 -- Структура таблицы `product_to_store`
 --
 
+DROP TABLE IF EXISTS `product_to_store`;
 CREATE TABLE `product_to_store` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL DEFAULT 0
@@ -6331,6 +6429,7 @@ CREATE TABLE `product_to_store` (
 -- Структура таблицы `product_to_tab`
 --
 
+DROP TABLE IF EXISTS `product_to_tab`;
 CREATE TABLE `product_to_tab` (
   `product_id` int(11) NOT NULL,
   `tab_id` int(11) NOT NULL,
@@ -6343,6 +6442,7 @@ CREATE TABLE `product_to_tab` (
 -- Структура таблицы `product_variants`
 --
 
+DROP TABLE IF EXISTS `product_variants`;
 CREATE TABLE `product_variants` (
   `main_asin` varchar(32) NOT NULL,
   `variant_asin` varchar(32) NOT NULL
@@ -6354,6 +6454,7 @@ CREATE TABLE `product_variants` (
 -- Структура таблицы `product_variants_ids`
 --
 
+DROP TABLE IF EXISTS `product_variants_ids`;
 CREATE TABLE `product_variants_ids` (
   `product_id` int(11) NOT NULL,
   `variant_id` int(11) NOT NULL
@@ -6365,6 +6466,7 @@ CREATE TABLE `product_variants_ids` (
 -- Структура таблицы `product_video`
 --
 
+DROP TABLE IF EXISTS `product_video`;
 CREATE TABLE `product_video` (
   `product_video_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -6379,6 +6481,7 @@ CREATE TABLE `product_video` (
 -- Структура таблицы `product_video_description`
 --
 
+DROP TABLE IF EXISTS `product_video_description`;
 CREATE TABLE `product_video_description` (
   `product_video_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -6392,6 +6495,7 @@ CREATE TABLE `product_video_description` (
 -- Структура таблицы `product_view_to_purchase`
 --
 
+DROP TABLE IF EXISTS `product_view_to_purchase`;
 CREATE TABLE `product_view_to_purchase` (
   `product_id` int(11) NOT NULL,
   `view_to_purchase_id` int(11) NOT NULL
@@ -6403,6 +6507,7 @@ CREATE TABLE `product_view_to_purchase` (
 -- Структура таблицы `product_yam_data`
 --
 
+DROP TABLE IF EXISTS `product_yam_data`;
 CREATE TABLE `product_yam_data` (
   `product_id` int(11) NOT NULL,
   `yam_real_price` decimal(15,2) NOT NULL,
@@ -6420,6 +6525,7 @@ CREATE TABLE `product_yam_data` (
 -- Структура таблицы `product_yam_recommended_prices`
 --
 
+DROP TABLE IF EXISTS `product_yam_recommended_prices`;
 CREATE TABLE `product_yam_recommended_prices` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -6437,6 +6543,7 @@ CREATE TABLE `product_yam_recommended_prices` (
 -- Структура таблицы `profile`
 --
 
+DROP TABLE IF EXISTS `profile`;
 CREATE TABLE `profile` (
   `profile_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL,
@@ -6458,6 +6565,7 @@ CREATE TABLE `profile` (
 -- Структура таблицы `profile_description`
 --
 
+DROP TABLE IF EXISTS `profile_description`;
 CREATE TABLE `profile_description` (
   `profile_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -6470,6 +6578,7 @@ CREATE TABLE `profile_description` (
 -- Структура таблицы `queue_mail`
 --
 
+DROP TABLE IF EXISTS `queue_mail`;
 CREATE TABLE `queue_mail` (
   `queue_mail_id` int(11) NOT NULL,
   `body` text NOT NULL
@@ -6481,6 +6590,7 @@ CREATE TABLE `queue_mail` (
 -- Структура таблицы `queue_push`
 --
 
+DROP TABLE IF EXISTS `queue_push`;
 CREATE TABLE `queue_push` (
   `queue_push_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
@@ -6493,6 +6603,7 @@ CREATE TABLE `queue_push` (
 -- Структура таблицы `queue_sms`
 --
 
+DROP TABLE IF EXISTS `queue_sms`;
 CREATE TABLE `queue_sms` (
   `queue_sms_id` int(11) NOT NULL,
   `body` text NOT NULL
@@ -6504,6 +6615,7 @@ CREATE TABLE `queue_sms` (
 -- Структура таблицы `redirect`
 --
 
+DROP TABLE IF EXISTS `redirect`;
 CREATE TABLE `redirect` (
   `redirect_id` int(11) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 0,
@@ -6521,6 +6633,7 @@ CREATE TABLE `redirect` (
 -- Структура таблицы `referrer_patterns`
 --
 
+DROP TABLE IF EXISTS `referrer_patterns`;
 CREATE TABLE `referrer_patterns` (
   `pattern_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL,
@@ -6534,6 +6647,7 @@ CREATE TABLE `referrer_patterns` (
 -- Структура таблицы `return`
 --
 
+DROP TABLE IF EXISTS `return`;
 CREATE TABLE `return` (
   `return_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -6571,6 +6685,7 @@ CREATE TABLE `return` (
 -- Структура таблицы `return_action`
 --
 
+DROP TABLE IF EXISTS `return_action`;
 CREATE TABLE `return_action` (
   `return_action_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL DEFAULT 0,
@@ -6583,6 +6698,7 @@ CREATE TABLE `return_action` (
 -- Структура таблицы `return_history`
 --
 
+DROP TABLE IF EXISTS `return_history`;
 CREATE TABLE `return_history` (
   `return_history_id` int(11) NOT NULL,
   `return_id` int(11) NOT NULL,
@@ -6598,6 +6714,7 @@ CREATE TABLE `return_history` (
 -- Структура таблицы `return_reason`
 --
 
+DROP TABLE IF EXISTS `return_reason`;
 CREATE TABLE `return_reason` (
   `return_reason_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL DEFAULT 0,
@@ -6610,6 +6727,7 @@ CREATE TABLE `return_reason` (
 -- Структура таблицы `return_status`
 --
 
+DROP TABLE IF EXISTS `return_status`;
 CREATE TABLE `return_status` (
   `return_status_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL DEFAULT 0,
@@ -6622,6 +6740,7 @@ CREATE TABLE `return_status` (
 -- Структура таблицы `review`
 --
 
+DROP TABLE IF EXISTS `review`;
 CREATE TABLE `review` (
   `review_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
@@ -6650,6 +6769,7 @@ CREATE TABLE `review` (
 -- Структура таблицы `review_description`
 --
 
+DROP TABLE IF EXISTS `review_description`;
 CREATE TABLE `review_description` (
   `review_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -6665,6 +6785,7 @@ CREATE TABLE `review_description` (
 -- Структура таблицы `review_fields`
 --
 
+DROP TABLE IF EXISTS `review_fields`;
 CREATE TABLE `review_fields` (
   `review_id` int(11) NOT NULL,
   `mark` varchar(255) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
@@ -6677,6 +6798,7 @@ CREATE TABLE `review_fields` (
 -- Структура таблицы `review_name`
 --
 
+DROP TABLE IF EXISTS `review_name`;
 CREATE TABLE `review_name` (
   `review_name_id` int(11) NOT NULL,
   `l_code` varchar(5) DEFAULT NULL,
@@ -6689,6 +6811,7 @@ CREATE TABLE `review_name` (
 -- Структура таблицы `review_template`
 --
 
+DROP TABLE IF EXISTS `review_template`;
 CREATE TABLE `review_template` (
   `review_template_id` int(11) NOT NULL,
   `l_code` varchar(5) DEFAULT NULL,
@@ -6701,6 +6824,7 @@ CREATE TABLE `review_template` (
 -- Структура таблицы `search_history`
 --
 
+DROP TABLE IF EXISTS `search_history`;
 CREATE TABLE `search_history` (
   `text` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
   `times` int(11) NOT NULL,
@@ -6713,6 +6837,7 @@ CREATE TABLE `search_history` (
 -- Структура таблицы `segments`
 --
 
+DROP TABLE IF EXISTS `segments`;
 CREATE TABLE `segments` (
   `segment_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -6740,6 +6865,7 @@ CREATE TABLE `segments` (
 -- Структура таблицы `segments_dynamics`
 --
 
+DROP TABLE IF EXISTS `segments_dynamics`;
 CREATE TABLE `segments_dynamics` (
   `segment_dynamics_id` int(11) NOT NULL,
   `segment_id` int(11) NOT NULL,
@@ -6759,6 +6885,7 @@ CREATE TABLE `segments_dynamics` (
 -- Структура таблицы `seocities`
 --
 
+DROP TABLE IF EXISTS `seocities`;
 CREATE TABLE `seocities` (
   `seocity_id` bigint(20) NOT NULL,
   `seocity_name` varchar(255) NOT NULL,
@@ -6775,6 +6902,7 @@ CREATE TABLE `seocities` (
 -- Структура таблицы `seo_hreflang`
 --
 
+DROP TABLE IF EXISTS `seo_hreflang`;
 CREATE TABLE `seo_hreflang` (
   `language_id` int(11) NOT NULL,
   `query` varchar(255) NOT NULL,
@@ -6787,6 +6915,7 @@ CREATE TABLE `seo_hreflang` (
 -- Структура таблицы `set`
 --
 
+DROP TABLE IF EXISTS `set`;
 CREATE TABLE `set` (
   `set_id` int(11) NOT NULL,
   `product_id` int(11) DEFAULT NULL,
@@ -6808,6 +6937,7 @@ CREATE TABLE `set` (
 -- Структура таблицы `setting`
 --
 
+DROP TABLE IF EXISTS `setting`;
 CREATE TABLE `setting` (
   `setting_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL DEFAULT 0,
@@ -6823,6 +6953,7 @@ CREATE TABLE `setting` (
 -- Структура таблицы `set_description`
 --
 
+DROP TABLE IF EXISTS `set_description`;
 CREATE TABLE `set_description` (
   `set_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -6836,6 +6967,7 @@ CREATE TABLE `set_description` (
 -- Структура таблицы `set_to_category`
 --
 
+DROP TABLE IF EXISTS `set_to_category`;
 CREATE TABLE `set_to_category` (
   `set_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
@@ -6847,6 +6979,7 @@ CREATE TABLE `set_to_category` (
 -- Структура таблицы `set_to_store`
 --
 
+DROP TABLE IF EXISTS `set_to_store`;
 CREATE TABLE `set_to_store` (
   `set_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -6858,6 +6991,7 @@ CREATE TABLE `set_to_store` (
 -- Структура таблицы `shoputils_citycourier_description`
 --
 
+DROP TABLE IF EXISTS `shoputils_citycourier_description`;
 CREATE TABLE `shoputils_citycourier_description` (
   `language_id` int(11) NOT NULL,
   `name` text NOT NULL,
@@ -6870,6 +7004,7 @@ CREATE TABLE `shoputils_citycourier_description` (
 -- Структура таблицы `shoputils_cumulative_discounts`
 --
 
+DROP TABLE IF EXISTS `shoputils_cumulative_discounts`;
 CREATE TABLE `shoputils_cumulative_discounts` (
   `discount_id` int(11) NOT NULL,
   `days` int(11) NOT NULL DEFAULT 0,
@@ -6886,6 +7021,7 @@ CREATE TABLE `shoputils_cumulative_discounts` (
 -- Структура таблицы `shoputils_cumulative_discounts_cmsdata`
 --
 
+DROP TABLE IF EXISTS `shoputils_cumulative_discounts_cmsdata`;
 CREATE TABLE `shoputils_cumulative_discounts_cmsdata` (
   `language_id` int(11) NOT NULL,
   `store_id` int(11) DEFAULT 0,
@@ -6899,6 +7035,7 @@ CREATE TABLE `shoputils_cumulative_discounts_cmsdata` (
 -- Структура таблицы `shoputils_cumulative_discounts_description`
 --
 
+DROP TABLE IF EXISTS `shoputils_cumulative_discounts_description`;
 CREATE TABLE `shoputils_cumulative_discounts_description` (
   `discount_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -6911,6 +7048,7 @@ CREATE TABLE `shoputils_cumulative_discounts_description` (
 -- Структура таблицы `shoputils_cumulative_discounts_to_customer_group`
 --
 
+DROP TABLE IF EXISTS `shoputils_cumulative_discounts_to_customer_group`;
 CREATE TABLE `shoputils_cumulative_discounts_to_customer_group` (
   `discount_id` int(11) NOT NULL,
   `customer_group_id` int(11) NOT NULL
@@ -6922,6 +7060,7 @@ CREATE TABLE `shoputils_cumulative_discounts_to_customer_group` (
 -- Структура таблицы `shoputils_cumulative_discounts_to_manufacturer`
 --
 
+DROP TABLE IF EXISTS `shoputils_cumulative_discounts_to_manufacturer`;
 CREATE TABLE `shoputils_cumulative_discounts_to_manufacturer` (
   `discount_id` int(11) NOT NULL,
   `manufacturer_id` int(11) NOT NULL
@@ -6933,6 +7072,7 @@ CREATE TABLE `shoputils_cumulative_discounts_to_manufacturer` (
 -- Структура таблицы `shoputils_cumulative_discounts_to_store`
 --
 
+DROP TABLE IF EXISTS `shoputils_cumulative_discounts_to_store`;
 CREATE TABLE `shoputils_cumulative_discounts_to_store` (
   `discount_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -6944,6 +7084,7 @@ CREATE TABLE `shoputils_cumulative_discounts_to_store` (
 -- Структура таблицы `shop_rating`
 --
 
+DROP TABLE IF EXISTS `shop_rating`;
 CREATE TABLE `shop_rating` (
   `rate_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
@@ -6965,6 +7106,7 @@ CREATE TABLE `shop_rating` (
 -- Структура таблицы `shop_rating_answers`
 --
 
+DROP TABLE IF EXISTS `shop_rating_answers`;
 CREATE TABLE `shop_rating_answers` (
   `id` int(11) NOT NULL,
   `rate_id` int(11) NOT NULL,
@@ -6980,6 +7122,7 @@ CREATE TABLE `shop_rating_answers` (
 -- Структура таблицы `shop_rating_custom_types`
 --
 
+DROP TABLE IF EXISTS `shop_rating_custom_types`;
 CREATE TABLE `shop_rating_custom_types` (
   `id` int(11) NOT NULL,
   `title` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
@@ -6992,6 +7135,7 @@ CREATE TABLE `shop_rating_custom_types` (
 -- Структура таблицы `shop_rating_custom_values`
 --
 
+DROP TABLE IF EXISTS `shop_rating_custom_values`;
 CREATE TABLE `shop_rating_custom_values` (
   `id` int(11) NOT NULL,
   `custom_id` int(11) NOT NULL,
@@ -7005,6 +7149,7 @@ CREATE TABLE `shop_rating_custom_values` (
 -- Структура таблицы `shop_rating_description`
 --
 
+DROP TABLE IF EXISTS `shop_rating_description`;
 CREATE TABLE `shop_rating_description` (
   `rate_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -7020,6 +7165,7 @@ CREATE TABLE `shop_rating_description` (
 -- Структура таблицы `short_url_alias`
 --
 
+DROP TABLE IF EXISTS `short_url_alias`;
 CREATE TABLE `short_url_alias` (
   `url_id` int(11) NOT NULL,
   `url` varchar(255) NOT NULL,
@@ -7034,6 +7180,7 @@ CREATE TABLE `short_url_alias` (
 -- Структура таблицы `simple_cart`
 --
 
+DROP TABLE IF EXISTS `simple_cart`;
 CREATE TABLE `simple_cart` (
   `simple_cart_id` int(11) NOT NULL,
   `store_id` int(11) DEFAULT NULL,
@@ -7052,6 +7199,7 @@ CREATE TABLE `simple_cart` (
 -- Структура таблицы `simple_custom_data`
 --
 
+DROP TABLE IF EXISTS `simple_custom_data`;
 CREATE TABLE `simple_custom_data` (
   `object_type` tinyint(4) NOT NULL,
   `object_id` int(11) NOT NULL,
@@ -7065,6 +7213,7 @@ CREATE TABLE `simple_custom_data` (
 -- Структура таблицы `sms_log`
 --
 
+DROP TABLE IF EXISTS `sms_log`;
 CREATE TABLE `sms_log` (
   `id` int(11) NOT NULL,
   `phone` varchar(255) NOT NULL,
@@ -7078,6 +7227,7 @@ CREATE TABLE `sms_log` (
 -- Структура таблицы `socnetauth2_customer2account`
 --
 
+DROP TABLE IF EXISTS `socnetauth2_customer2account`;
 CREATE TABLE `socnetauth2_customer2account` (
   `id` int(11) NOT NULL,
   `customer_id` varchar(100) NOT NULL,
@@ -7094,6 +7244,7 @@ CREATE TABLE `socnetauth2_customer2account` (
 -- Структура таблицы `socnetauth2_precode`
 --
 
+DROP TABLE IF EXISTS `socnetauth2_precode`;
 CREATE TABLE `socnetauth2_precode` (
   `id` int(11) NOT NULL,
   `identity` varchar(300) NOT NULL,
@@ -7107,6 +7258,7 @@ CREATE TABLE `socnetauth2_precode` (
 -- Структура таблицы `socnetauth2_records`
 --
 
+DROP TABLE IF EXISTS `socnetauth2_records`;
 CREATE TABLE `socnetauth2_records` (
   `id` int(11) NOT NULL,
   `state` varchar(100) NOT NULL,
@@ -7120,6 +7272,7 @@ CREATE TABLE `socnetauth2_records` (
 -- Структура таблицы `special_attribute`
 --
 
+DROP TABLE IF EXISTS `special_attribute`;
 CREATE TABLE `special_attribute` (
   `special_attribute_id` int(10) UNSIGNED NOT NULL,
   `special_attribute_group_id` int(10) UNSIGNED NOT NULL,
@@ -7133,6 +7286,7 @@ CREATE TABLE `special_attribute` (
 -- Структура таблицы `special_attribute_group`
 --
 
+DROP TABLE IF EXISTS `special_attribute_group`;
 CREATE TABLE `special_attribute_group` (
   `special_attribute_group_id` int(10) UNSIGNED NOT NULL,
   `special_attribute_group_name` varchar(100) NOT NULL DEFAULT '',
@@ -7145,6 +7299,7 @@ CREATE TABLE `special_attribute_group` (
 -- Структура таблицы `sphinx_suggestions`
 --
 
+DROP TABLE IF EXISTS `sphinx_suggestions`;
 CREATE TABLE `sphinx_suggestions` (
   `id` int(11) NOT NULL,
   `keyword` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
@@ -7158,6 +7313,7 @@ CREATE TABLE `sphinx_suggestions` (
 -- Структура таблицы `status`
 --
 
+DROP TABLE IF EXISTS `status`;
 CREATE TABLE `status` (
   `status_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -7172,6 +7328,7 @@ CREATE TABLE `status` (
 -- Структура таблицы `stocks_dynamics`
 --
 
+DROP TABLE IF EXISTS `stocks_dynamics`;
 CREATE TABLE `stocks_dynamics` (
   `stock_dynamics_id` int(11) NOT NULL,
   `date_added` date NOT NULL,
@@ -7186,6 +7343,7 @@ CREATE TABLE `stocks_dynamics` (
 -- Структура таблицы `stock_status`
 --
 
+DROP TABLE IF EXISTS `stock_status`;
 CREATE TABLE `stock_status` (
   `stock_status_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -7198,6 +7356,7 @@ CREATE TABLE `stock_status` (
 -- Структура таблицы `store`
 --
 
+DROP TABLE IF EXISTS `store`;
 CREATE TABLE `store` (
   `store_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
@@ -7211,6 +7370,7 @@ CREATE TABLE `store` (
 -- Структура таблицы `subscribe`
 --
 
+DROP TABLE IF EXISTS `subscribe`;
 CREATE TABLE `subscribe` (
   `subscribe_id` int(11) NOT NULL,
   `email` text NOT NULL,
@@ -7223,6 +7383,7 @@ CREATE TABLE `subscribe` (
 -- Структура таблицы `subscribe_auth_description`
 --
 
+DROP TABLE IF EXISTS `subscribe_auth_description`;
 CREATE TABLE `subscribe_auth_description` (
   `subscribe_auth_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -7235,6 +7396,7 @@ CREATE TABLE `subscribe_auth_description` (
 -- Структура таблицы `subscribe_email_description`
 --
 
+DROP TABLE IF EXISTS `subscribe_email_description`;
 CREATE TABLE `subscribe_email_description` (
   `subscribe_desc_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -7247,6 +7409,7 @@ CREATE TABLE `subscribe_email_description` (
 -- Структура таблицы `superstat_viewed`
 --
 
+DROP TABLE IF EXISTS `superstat_viewed`;
 CREATE TABLE `superstat_viewed` (
   `entity_type` enum('p','c','m') NOT NULL,
   `entity_id` int(11) NOT NULL,
@@ -7261,6 +7424,7 @@ CREATE TABLE `superstat_viewed` (
 -- Структура таблицы `suppliers`
 --
 
+DROP TABLE IF EXISTS `suppliers`;
 CREATE TABLE `suppliers` (
   `supplier_id` int(11) NOT NULL,
   `supplier_name` varchar(255) NOT NULL,
@@ -7289,6 +7453,7 @@ CREATE TABLE `suppliers` (
 -- Структура таблицы `tax_class`
 --
 
+DROP TABLE IF EXISTS `tax_class`;
 CREATE TABLE `tax_class` (
   `tax_class_id` int(11) NOT NULL,
   `title` varchar(32) NOT NULL,
@@ -7303,6 +7468,7 @@ CREATE TABLE `tax_class` (
 -- Структура таблицы `tax_rate`
 --
 
+DROP TABLE IF EXISTS `tax_rate`;
 CREATE TABLE `tax_rate` (
   `tax_rate_id` int(11) NOT NULL,
   `geo_zone_id` int(11) NOT NULL DEFAULT 0,
@@ -7319,6 +7485,7 @@ CREATE TABLE `tax_rate` (
 -- Структура таблицы `tax_rate_to_customer_group`
 --
 
+DROP TABLE IF EXISTS `tax_rate_to_customer_group`;
 CREATE TABLE `tax_rate_to_customer_group` (
   `tax_rate_id` int(11) NOT NULL,
   `customer_group_id` int(11) NOT NULL
@@ -7330,6 +7497,7 @@ CREATE TABLE `tax_rate_to_customer_group` (
 -- Структура таблицы `tax_rule`
 --
 
+DROP TABLE IF EXISTS `tax_rule`;
 CREATE TABLE `tax_rule` (
   `tax_rule_id` int(11) NOT NULL,
   `tax_class_id` int(11) NOT NULL,
@@ -7344,6 +7512,7 @@ CREATE TABLE `tax_rule` (
 -- Структура таблицы `telegram_chats`
 --
 
+DROP TABLE IF EXISTS `telegram_chats`;
 CREATE TABLE `telegram_chats` (
   `id` bigint(20) NOT NULL DEFAULT 0 COMMENT 'Unique user or chat identifier',
   `type` char(10) DEFAULT '' COMMENT 'chat type private groupe or channel',
@@ -7358,6 +7527,7 @@ CREATE TABLE `telegram_chats` (
 -- Структура таблицы `telegram_messages`
 --
 
+DROP TABLE IF EXISTS `telegram_messages`;
 CREATE TABLE `telegram_messages` (
   `update_id` bigint(20) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'The update''s unique identifier.',
   `message_id` bigint(20) DEFAULT NULL COMMENT 'Unique message identifier',
@@ -7391,6 +7561,7 @@ CREATE TABLE `telegram_messages` (
 -- Структура таблицы `telegram_users`
 --
 
+DROP TABLE IF EXISTS `telegram_users`;
 CREATE TABLE `telegram_users` (
   `id` bigint(20) NOT NULL DEFAULT 0 COMMENT 'Unique user identifier',
   `first_name` char(255) NOT NULL DEFAULT '' COMMENT 'User first name',
@@ -7406,6 +7577,7 @@ CREATE TABLE `telegram_users` (
 -- Структура таблицы `telegram_users_chats`
 --
 
+DROP TABLE IF EXISTS `telegram_users_chats`;
 CREATE TABLE `telegram_users_chats` (
   `user_id` bigint(20) NOT NULL DEFAULT 0 COMMENT 'Unique user identifier',
   `chat_id` bigint(20) NOT NULL DEFAULT 0 COMMENT 'Unique user or chat identifier'
@@ -7417,6 +7589,7 @@ CREATE TABLE `telegram_users_chats` (
 -- Структура таблицы `temp`
 --
 
+DROP TABLE IF EXISTS `temp`;
 CREATE TABLE `temp` (
   `key` varchar(255) NOT NULL,
   `value` longtext NOT NULL,
@@ -7429,6 +7602,7 @@ CREATE TABLE `temp` (
 -- Структура таблицы `tickets`
 --
 
+DROP TABLE IF EXISTS `tickets`;
 CREATE TABLE `tickets` (
   `ticket_id` int(11) NOT NULL,
   `user_group_id` int(11) DEFAULT NULL,
@@ -7454,6 +7628,7 @@ CREATE TABLE `tickets` (
 -- Структура таблицы `ticket_sort`
 --
 
+DROP TABLE IF EXISTS `ticket_sort`;
 CREATE TABLE `ticket_sort` (
   `ticket_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL
@@ -7465,6 +7640,7 @@ CREATE TABLE `ticket_sort` (
 -- Структура таблицы `tracker`
 --
 
+DROP TABLE IF EXISTS `tracker`;
 CREATE TABLE `tracker` (
   `id` bigint(20) NOT NULL,
   `ip` varchar(32) DEFAULT NULL,
@@ -7488,6 +7664,7 @@ CREATE TABLE `tracker` (
 -- Структура таблицы `translate_stats`
 --
 
+DROP TABLE IF EXISTS `translate_stats`;
 CREATE TABLE `translate_stats` (
   `time` datetime NOT NULL,
   `amount` int(11) NOT NULL
@@ -7499,6 +7676,7 @@ CREATE TABLE `translate_stats` (
 -- Структура таблицы `trigger_history`
 --
 
+DROP TABLE IF EXISTS `trigger_history`;
 CREATE TABLE `trigger_history` (
   `trigger_history_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -7514,6 +7692,7 @@ CREATE TABLE `trigger_history` (
 -- Структура таблицы `url_alias`
 --
 
+DROP TABLE IF EXISTS `url_alias`;
 CREATE TABLE `url_alias` (
   `url_alias_id` int(11) NOT NULL,
   `query` varchar(255) NOT NULL,
@@ -7527,6 +7706,7 @@ CREATE TABLE `url_alias` (
 -- Структура таблицы `url_alias_cached`
 --
 
+DROP TABLE IF EXISTS `url_alias_cached`;
 CREATE TABLE `url_alias_cached` (
   `store_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -7542,6 +7722,7 @@ CREATE TABLE `url_alias_cached` (
 -- Структура таблицы `user`
 --
 
+DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `user_id` int(11) NOT NULL,
   `user_group_id` int(11) NOT NULL,
@@ -7577,6 +7758,7 @@ CREATE TABLE `user` (
 -- Структура таблицы `user_content`
 --
 
+DROP TABLE IF EXISTS `user_content`;
 CREATE TABLE `user_content` (
   `user_id` int(11) NOT NULL,
   `datetime` datetime NOT NULL,
@@ -7592,6 +7774,7 @@ CREATE TABLE `user_content` (
 -- Структура таблицы `user_group`
 --
 
+DROP TABLE IF EXISTS `user_group`;
 CREATE TABLE `user_group` (
   `user_group_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
@@ -7609,6 +7792,7 @@ CREATE TABLE `user_group` (
 -- Структура таблицы `user_group_to_store`
 --
 
+DROP TABLE IF EXISTS `user_group_to_store`;
 CREATE TABLE `user_group_to_store` (
   `user_group_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
@@ -7620,6 +7804,7 @@ CREATE TABLE `user_group_to_store` (
 -- Структура таблицы `user_worktime`
 --
 
+DROP TABLE IF EXISTS `user_worktime`;
 CREATE TABLE `user_worktime` (
   `user_id` int(11) NOT NULL,
   `date` date NOT NULL,
@@ -7649,6 +7834,7 @@ CREATE TABLE `user_worktime` (
 -- Структура таблицы `vb_temp`
 --
 
+DROP TABLE IF EXISTS `vb_temp`;
 CREATE TABLE `vb_temp` (
   `href` varchar(500) NOT NULL,
   `sku` varchar(255) NOT NULL,
@@ -7662,6 +7848,7 @@ CREATE TABLE `vb_temp` (
 -- Структура таблицы `vk_export_album`
 --
 
+DROP TABLE IF EXISTS `vk_export_album`;
 CREATE TABLE `vk_export_album` (
   `category_id` int(11) NOT NULL,
   `vk_album_id` varchar(32) NOT NULL,
@@ -7674,6 +7861,7 @@ CREATE TABLE `vk_export_album` (
 -- Структура таблицы `vk_export_photo`
 --
 
+DROP TABLE IF EXISTS `vk_export_photo`;
 CREATE TABLE `vk_export_photo` (
   `product_id` int(11) NOT NULL,
   `vk_photo_id` varchar(32) NOT NULL,
@@ -7688,6 +7876,7 @@ CREATE TABLE `vk_export_photo` (
 -- Структура таблицы `voucher`
 --
 
+DROP TABLE IF EXISTS `voucher`;
 CREATE TABLE `voucher` (
   `voucher_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
@@ -7711,6 +7900,7 @@ CREATE TABLE `voucher` (
 -- Структура таблицы `voucher_history`
 --
 
+DROP TABLE IF EXISTS `voucher_history`;
 CREATE TABLE `voucher_history` (
   `voucher_history_id` int(11) NOT NULL,
   `voucher_id` int(11) NOT NULL,
@@ -7725,6 +7915,7 @@ CREATE TABLE `voucher_history` (
 -- Структура таблицы `voucher_theme`
 --
 
+DROP TABLE IF EXISTS `voucher_theme`;
 CREATE TABLE `voucher_theme` (
   `voucher_theme_id` int(11) NOT NULL,
   `image` varchar(255) NOT NULL
@@ -7736,6 +7927,7 @@ CREATE TABLE `voucher_theme` (
 -- Структура таблицы `voucher_theme_description`
 --
 
+DROP TABLE IF EXISTS `voucher_theme_description`;
 CREATE TABLE `voucher_theme_description` (
   `voucher_theme_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -7748,6 +7940,7 @@ CREATE TABLE `voucher_theme_description` (
 -- Структура таблицы `wc_continents`
 --
 
+DROP TABLE IF EXISTS `wc_continents`;
 CREATE TABLE `wc_continents` (
   `code` char(2) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -7760,6 +7953,7 @@ CREATE TABLE `wc_continents` (
 -- Структура таблицы `wc_countries`
 --
 
+DROP TABLE IF EXISTS `wc_countries`;
 CREATE TABLE `wc_countries` (
   `code` char(2) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -7774,6 +7968,7 @@ CREATE TABLE `wc_countries` (
 -- Структура таблицы `weight_class`
 --
 
+DROP TABLE IF EXISTS `weight_class`;
 CREATE TABLE `weight_class` (
   `weight_class_id` int(11) NOT NULL,
   `value` decimal(15,8) NOT NULL DEFAULT 0.00000000,
@@ -7787,6 +7982,7 @@ CREATE TABLE `weight_class` (
 -- Структура таблицы `weight_class_description`
 --
 
+DROP TABLE IF EXISTS `weight_class_description`;
 CREATE TABLE `weight_class_description` (
   `weight_class_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
@@ -7800,6 +7996,7 @@ CREATE TABLE `weight_class_description` (
 -- Структура таблицы `yandex_feeds`
 --
 
+DROP TABLE IF EXISTS `yandex_feeds`;
 CREATE TABLE `yandex_feeds` (
   `store_id` int(11) NOT NULL,
   `currency` varchar(5) NOT NULL,
@@ -7814,6 +8011,7 @@ CREATE TABLE `yandex_feeds` (
 -- Структура таблицы `yandex_queue`
 --
 
+DROP TABLE IF EXISTS `yandex_queue`;
 CREATE TABLE `yandex_queue` (
   `order_id` int(11) NOT NULL,
   `status` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -7826,6 +8024,7 @@ CREATE TABLE `yandex_queue` (
 -- Структура таблицы `yandex_stock_queue`
 --
 
+DROP TABLE IF EXISTS `yandex_stock_queue`;
 CREATE TABLE `yandex_stock_queue` (
   `yam_product_id` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
   `stock` int(11) NOT NULL,
@@ -7838,6 +8037,7 @@ CREATE TABLE `yandex_stock_queue` (
 -- Структура таблицы `zone`
 --
 
+DROP TABLE IF EXISTS `zone`;
 CREATE TABLE `zone` (
   `zone_id` int(11) NOT NULL,
   `country_id` int(11) NOT NULL,
@@ -7852,6 +8052,7 @@ CREATE TABLE `zone` (
 -- Структура таблицы `zone_to_geo_zone`
 --
 
+DROP TABLE IF EXISTS `zone_to_geo_zone`;
 CREATE TABLE `zone_to_geo_zone` (
   `zone_to_geo_zone_id` int(11) NOT NULL,
   `country_id` int(11) NOT NULL,
@@ -7867,6 +8068,7 @@ CREATE TABLE `zone_to_geo_zone` (
 -- Структура таблицы `_temp`
 --
 
+DROP TABLE IF EXISTS `_temp`;
 CREATE TABLE `_temp` (
   `value` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -7877,6 +8079,7 @@ CREATE TABLE `_temp` (
 -- Структура таблицы `_temp_discount`
 --
 
+DROP TABLE IF EXISTS `_temp_discount`;
 CREATE TABLE `_temp_discount` (
   `id` int(11) NOT NULL,
   `card_id` varchar(30) NOT NULL
@@ -8176,114 +8379,6 @@ ALTER TABLE `banner_image_description`
   ADD KEY `banner_id` (`banner_id`);
 
 --
--- Индексы таблицы `barbara_blog_category`
---
-ALTER TABLE `barbara_blog_category`
-  ADD PRIMARY KEY (`category_id`);
-
---
--- Индексы таблицы `barbara_blog_category_description`
---
-ALTER TABLE `barbara_blog_category_description`
-  ADD PRIMARY KEY (`category_id`,`language_id`);
-
---
--- Индексы таблицы `barbara_blog_category_filter`
---
-ALTER TABLE `barbara_blog_category_filter`
-  ADD PRIMARY KEY (`category_id`,`filter_id`);
-
---
--- Индексы таблицы `barbara_blog_category_path`
---
-ALTER TABLE `barbara_blog_category_path`
-  ADD PRIMARY KEY (`category_id`,`path_id`);
-
---
--- Индексы таблицы `barbara_blog_category_to_layout`
---
-ALTER TABLE `barbara_blog_category_to_layout`
-  ADD PRIMARY KEY (`category_id`,`store_id`);
-
---
--- Индексы таблицы `barbara_blog_category_to_store`
---
-ALTER TABLE `barbara_blog_category_to_store`
-  ADD PRIMARY KEY (`category_id`,`store_id`);
-
---
--- Индексы таблицы `barbara_blog_post`
---
-ALTER TABLE `barbara_blog_post`
-  ADD PRIMARY KEY (`ID`);
-
---
--- Индексы таблицы `barbara_blog_postmeta`
---
-ALTER TABLE `barbara_blog_postmeta`
-  ADD PRIMARY KEY (`meta_id`);
-
---
--- Индексы таблицы `barbara_blog_post_description`
---
-ALTER TABLE `barbara_blog_post_description`
-  ADD PRIMARY KEY (`post_id`,`language_id`);
-
---
--- Индексы таблицы `barbara_blog_post_filter`
---
-ALTER TABLE `barbara_blog_post_filter`
-  ADD PRIMARY KEY (`post_id`,`filter_id`);
-
---
--- Индексы таблицы `barbara_blog_post_to_category`
---
-ALTER TABLE `barbara_blog_post_to_category`
-  ADD PRIMARY KEY (`post_id`,`category_id`);
-
---
--- Индексы таблицы `barbara_blog_post_to_layout`
---
-ALTER TABLE `barbara_blog_post_to_layout`
-  ADD PRIMARY KEY (`post_id`,`store_id`);
-
---
--- Индексы таблицы `barbara_blog_post_to_store`
---
-ALTER TABLE `barbara_blog_post_to_store`
-  ADD PRIMARY KEY (`post_id`,`store_id`);
-
---
--- Индексы таблицы `barbara_blog_related_product`
---
-ALTER TABLE `barbara_blog_related_product`
-  ADD PRIMARY KEY (`post_id`,`product_id`);
-
---
--- Индексы таблицы `barbara_blog_setting`
---
-ALTER TABLE `barbara_blog_setting`
-  ADD PRIMARY KEY (`setting_id`);
-
---
--- Индексы таблицы `barbara_blog_setting_general`
---
-ALTER TABLE `barbara_blog_setting_general`
-  ADD PRIMARY KEY (`setting_id`);
-
---
--- Индексы таблицы `barbara_singleclick`
---
-ALTER TABLE `barbara_singleclick`
-  ADD PRIMARY KEY (`id`);
-
---
--- Индексы таблицы `barbara_stickers`
---
-ALTER TABLE `barbara_stickers`
-  ADD PRIMARY KEY (`stickers_id`);
-
---
 -- Индексы таблицы `callback`
 --
 ALTER TABLE `callback`
@@ -8316,7 +8411,8 @@ ALTER TABLE `category`
   ADD KEY `amazon_parent_category_id` (`amazon_parent_category_id`),
   ADD KEY `amazon_parent_category_name` (`amazon_parent_category_name`),
   ADD KEY `amazon_final_category` (`amazon_final_category`),
-  ADD KEY `amazon_can_get_full` (`amazon_can_get_full`);
+  ADD KEY `amazon_can_get_full` (`amazon_can_get_full`),
+  ADD KEY `exclude_from_intersections` (`exclude_from_intersections`);
 
 --
 -- Индексы таблицы `category_amazon_bestseller_tree`
@@ -10349,7 +10445,8 @@ ALTER TABLE `product`
   ADD KEY `amzn_rating` (`amzn_rating`),
   ADD KEY `xrating` (`xrating`),
   ADD KEY `amazon_best_price` (`amazon_best_price`),
-  ADD KEY `viewed` (`viewed`);
+  ADD KEY `viewed` (`viewed`),
+  ADD KEY `quantity_updateMarker` (`quantity_updateMarker`);
 
 --
 -- Индексы таблицы `product_additional_offer`
@@ -10397,12 +10494,14 @@ ALTER TABLE `product_amzn_data`
 -- Индексы таблицы `product_amzn_offers`
 --
 ALTER TABLE `product_amzn_offers`
+  ADD PRIMARY KEY (`amazon_offer_id`),
   ADD KEY `product_id` (`asin`),
   ADD KEY `date_added` (`date_added`),
   ADD KEY `is_min_price` (`is_min_price`),
   ADD KEY `isPrime` (`isPrime`),
   ADD KEY `isBestOffer` (`isBestOffer`),
-  ADD KEY `isBuyBoxWinner` (`isBuyBoxWinner`);
+  ADD KEY `isBuyBoxWinner` (`isBuyBoxWinner`),
+  ADD KEY `minDays` (`minDays`);
 
 --
 -- Индексы таблицы `product_anyrelated`
@@ -11732,48 +11831,6 @@ ALTER TABLE `banner_image`
   MODIFY `banner_image_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT для таблицы `barbara_blog_category`
---
-ALTER TABLE `barbara_blog_category`
-  MODIFY `category_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `barbara_blog_post`
---
-ALTER TABLE `barbara_blog_post`
-  MODIFY `ID` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `barbara_blog_postmeta`
---
-ALTER TABLE `barbara_blog_postmeta`
-  MODIFY `meta_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `barbara_blog_setting`
---
-ALTER TABLE `barbara_blog_setting`
-  MODIFY `setting_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `barbara_blog_setting_general`
---
-ALTER TABLE `barbara_blog_setting_general`
-  MODIFY `setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `barbara_singleclick`
---
-ALTER TABLE `barbara_singleclick`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `barbara_stickers`
---
-ALTER TABLE `barbara_stickers`
-  MODIFY `stickers_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT для таблицы `callback`
 --
 ALTER TABLE `callback`
@@ -12570,6 +12627,12 @@ ALTER TABLE `product`
 --
 ALTER TABLE `product_additional_offer`
   MODIFY `product_additional_offer_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT для таблицы `product_amzn_offers`
+--
+ALTER TABLE `product_amzn_offers`
+  MODIFY `amazon_offer_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `product_barbara_tab`
