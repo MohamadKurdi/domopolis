@@ -2,9 +2,7 @@
 
 if (!function_exists('is_cli')){
 	function is_cli(){
-
-		return (php_sapi_name() == 'cli');
-		
+		return (php_sapi_name() == 'cli');		
 	}
 }
 
@@ -66,6 +64,14 @@ function thisIsAjax($request = false){
 	return false;
 }
 
+
+function isFriendlyURL($url){
+	if (stripos($url, 'index.php?route=') !== false){
+		return false;
+	}
+
+	return true;
+}
 
 function thisIsUnroutedURI($request = false){	
 

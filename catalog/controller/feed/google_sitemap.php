@@ -171,6 +171,11 @@ class ControllerFeedGoogleSitemap extends Controller {
 				$products = $this->model_catalog_supersitemap->getProducts($start, $this->limit);
 
 				foreach ($products as $product) {
+
+					if (!isFriendlyURL($this->url->link('product/product', 'product_id=' . $product['product_id']))){
+						continue;
+					}
+
 					$output .= '<url>' . PHP_EOL;
 					$output .= '<loc><![CDATA[' . $this->url->link('product/product', 'product_id=' . $product['product_id']) . ']]></loc>' . PHP_EOL;
 					
@@ -250,6 +255,11 @@ class ControllerFeedGoogleSitemap extends Controller {
 			$manufacturers = $this->model_catalog_manufacturer->getManufacturers();
 
 			foreach ($manufacturers as $manufacturer) {
+
+				if (!isFriendlyURL($this->url->link('product/manufacturer/info', 'manufacturer_id=' . $manufacturer['manufacturer_id']))){
+					continue;
+				}
+
 				$output .= '<url>';
 				$output .= '<loc><![CDATA[' . $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $manufacturer['manufacturer_id']) . ']]></loc>';
 				$output .= '<image:image>';
@@ -277,6 +287,10 @@ class ControllerFeedGoogleSitemap extends Controller {
 			$countrybrands = $this->model_catalog_countrybrand->getCountrybrands();
 
 			foreach ($countrybrands as $countrybrand) {
+
+				if (!isFriendlyURL($this->url->link('product/countrybrand', 'countrybrand_id=' . $countrybrand['countrybrand_id']))){
+					continue;
+				}
 
 				$output .= '<url>';
 				$output .= '<loc><![CDATA[' . $this->url->link('product/countrybrand', 'countrybrand_id=' . $countrybrand['countrybrand_id']) . ']]></loc>';
@@ -307,6 +321,11 @@ class ControllerFeedGoogleSitemap extends Controller {
 			$collections = $this->model_catalog_collection->getCollections();
 
 			foreach ($collections as $collection) {
+
+				if (!isFriendlyURL($this->url->link('product/collection', 'collection_id=' . $collection['collection_id']))){
+					continue;
+				}
+
 				$output .= '<url>';
 				$output .= '<loc><![CDATA[' . $this->url->link('product/collection', 'collection_id=' . $collection['collection_id']) . ']]></loc>';
 				$output .= '<image:image>';
@@ -347,6 +366,11 @@ class ControllerFeedGoogleSitemap extends Controller {
 			$informations = $this->model_catalog_information->getInformations();
 
 			foreach ($informations as $information) {
+
+				if (!isFriendlyURL($this->url->link('information/information', 'information_id=' . $information['information_id']))){
+					continue;
+				}
+
 				$output .= '<url>';
 				$output .= '<loc><![CDATA[' . $this->url->link('information/information', 'information_id=' . $information['information_id']) . ']]></loc>';
 				$output .= '<changefreq>weekly</changefreq>';
@@ -363,6 +387,11 @@ class ControllerFeedGoogleSitemap extends Controller {
 			$output .= '</url>';
 
 			foreach ($actions as $action) {
+
+				if (!isFriendlyURL($this->url->link('information/actions', 'actions_id=' . $action['actions_id']))){
+					continue;
+				}
+				
 				$output .= '<url>';				
 				$output .= '<loc><![CDATA[' . $this->url->link('information/actions', 'actions_id=' . $action['actions_id']) . ']]></loc>';
 				$output .= '<changefreq>weekly</changefreq>';

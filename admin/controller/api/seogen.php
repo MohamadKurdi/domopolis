@@ -419,7 +419,7 @@
 						$cae[(int)$tmp] = $row['keyword'];
 					}				
 					
-					$all_informations_query = $this->db->query("SELECT p.product_id, pd.name 
+					$all_products_query = $this->db->query("SELECT p.product_id, pd.name 
 					FROM product p 
 					JOIN product_description pd ON p.product_id = pd.product_id 
 					JOIN product_to_store p2s ON p.product_id = p2s.product_id 
@@ -429,7 +429,7 @@
 					AND p.status = 1");
 					
 					unset($row);
-					foreach ($all_informations_query->rows as $row){				
+					foreach ($all_products_query->rows as $row){				
 						if (!isset($cae[$row['product_id']])){
 							//now urlify
 							if ($this->config->get('config_seo_url_from_id')){
