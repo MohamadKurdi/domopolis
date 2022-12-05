@@ -467,10 +467,4 @@ class productModelEdit extends hoboModel{
 				text 		= '" . $this->db->escape(strip_tags($value['text'])) . "'");
 			}
 	}
-
-
-
-
-
-
 }
