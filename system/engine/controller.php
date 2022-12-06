@@ -6,8 +6,8 @@
 		protected $layout;
 		protected $template;
 		protected $overrided_template;
-		protected $children = array();
-		protected $data = array();
+		protected $children = [];
+		protected $data = [];
 		protected $output;
 		protected $minifier;
 
@@ -111,9 +111,9 @@
 		protected function minify($content){
 			
 			$search = array(
-			'/\>[^\S ]+/s',  // strip whitespaces after tags, except space
-			'/[^\S ]+\</s',  // strip whitespaces before tags, except space
-			'/(\s)+/s'       // shorten multiple whitespace sequences
+			'/\>[^\S ]+/s', 
+			'/[^\S ]+\</s',
+			'/(\s)+/s'
 			);
 			
 			$replace = array(
@@ -196,7 +196,6 @@
 			$settledPath = '/' . $this->config->get('config_template') . '/template/';
 			$defaultPath = '/' . $this->default_template . '/template/';
 
-			//is current template
 			if (stripos($currentDir, $settledPath) !== false){
 				$absPath['settled'] = $currentDir;
 				$absPath['default'] = str_replace($settledPath, $defaultPath, $currentDir);

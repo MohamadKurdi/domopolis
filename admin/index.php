@@ -32,10 +32,9 @@ function echoLine($line){
 if (isset($_GET['hello']) && $_GET['hello'] == 'world'){
 	define('IS_DEBUG', true);
 } else {
-
 	$ipsConfig = loadJsonConfig('ips');
 
-	if (in_array($_SERVER['REMOTE_ADDR'], $ipsConfig['debug'])){
+	if (!empty($ipsConfig['debug']) && !empty($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], $ipsConfig['debug'])){
 		define('IS_DEBUG', true);
 	} else {
 		define('IS_DEBUG', false);
@@ -96,6 +95,14 @@ $registry->set('db', $db);
 if (defined('DB_CONTENT_SYNC') && DB_CONTENT_SYNC){
 	$dbcs = new DB(DB_CONTENT_SYNC_DRIVER, DB_CONTENT_SYNC_HOSTNAME, DB_CONTENT_SYNC_USERNAME, DB_CONTENT_SYNC_PASSWORD, DB_CONTENT_SYNC_DATABASE);
 	$registry->set('dbcs', $dbcs);
+
+	$syncConfig = loadJsonConfig('sync');
+	if (!empty($syncConfig['sync'])){
+		$registry->set('sync', $syncConfig['sync']);
+	}
+
+} else {
+	$registry->set('dbcs', false);
 }
 
 $query = $db->query("SELECT * FROM setting WHERE store_id = '0'");

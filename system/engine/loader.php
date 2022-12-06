@@ -79,7 +79,6 @@
 		}
 		
 		public function controller(string $route){
-			// Sanitize the call
 			$route = preg_replace('/[^a-zA-Z0-9_\/]/', '', $route);	
 			
 			$response = new Response($this->registry);
@@ -87,13 +86,10 @@
 			
 			$front->dispatch(new Action($route), '');
 			
-			var_dump($response->output);
-			
 			return $response->returnOutput();
 		}
 		
 		public function view(string $route, array $data = []): string {
-			// Sanitize the call
 			$route = preg_replace('/[^a-zA-Z0-9_\/]/', '', $route);			
 			$template = DIR_TEMPLATE . $route . '.twig';
 			$isTwig = true;
