@@ -29,7 +29,7 @@
 			* @return array
 		*/
 		public function getConfig($data = false, $outputFormatting = false, $keyCleanUp = false){
-			$p = DB_PREFIX;
+			$p = '';
 			$cond = array();
 			
 			if(is_array($data)){
@@ -136,7 +136,7 @@
 			* @param array - $data
 		*/
 		public function getConfigs($data = array(), $outputFormatting = false, $keyCleanUp = false){
-			$p = DB_PREFIX;
+			$p = '';
 			$cond = array();
 			
 			if (isset($data['language_id'])) {
@@ -251,7 +251,7 @@
 		public function cloneConfig($id, $data = array()){
 			$id = intval($id);
 			$inserts = array();
-			$p = DB_PREFIX;
+			$p = '';
 			$cols = EmailTemplateConfigDAO::describe("emailtemplate_config_id", "store_id", "language_id", "customer_group_id");
 			
 			if(isset($data['store_id'])){
@@ -322,7 +322,7 @@
 		public function updateConfig($id, array $data){
 			if (empty($data) && !is_numeric($id)) return false;
 			$id = intval($id);
-			$p = DB_PREFIX;
+			$p = '';
 			
 			$cols = EmailTemplateConfigDAO::describe();
 			
@@ -346,7 +346,7 @@
 		*/
 		public function deleteConfig($data){
 			$ids = array();
-			$p = DB_PREFIX;
+			$p = '';
 			if(is_array($data)){
 				foreach($data as $item){
 					$ids[] = intval($item);
@@ -383,7 +383,7 @@
 			* @return array
 		*/
 		public function getTemplate($ident, $language_id = null, $keyCleanUp = false){
-			$p = DB_PREFIX;
+			$p = '';
 			$return = array();
 			
 			if(is_numeric($ident)){
@@ -445,7 +445,7 @@
 			* @return array
 		*/
 		public function getTemplateDescription($data = array(), $limit = null){
-			$p = DB_PREFIX;
+			$p = '';
 			$cond = array();
 			$query = "SELECT * FROM {$p}emailtemplate_description";
 			
@@ -476,7 +476,7 @@
 			* @param array - $data
 		*/
 		public function getTemplates($data = array(), $keyCleanUp = false){
-			$p = DB_PREFIX;
+			$p = '';
 			$cond = array();
 			
 			if (isset($data['store_id'])) {
@@ -599,7 +599,7 @@
 			* @return array
 		*/
 		public function getTemplateLog($id, $keyCleanUp = false){
-			$p = DB_PREFIX;
+			$p = '';
 			$id = intval($id);
 			$return = array();
 			
@@ -628,7 +628,7 @@
 			* @param array - $data
 		*/
 		public function getTemplateLogs($data = array(), $outputFormatting = false, $keyCleanUp = false){
-			$p = DB_PREFIX;
+			$p = '';
 			$cond = array();
 			$query = "SELECT el.* FROM `{$p}emailtemplate_logs` el";
 			
@@ -721,7 +721,7 @@
 			* @param array - $data
 		*/
 		public function getTotalTemplateLogs($data = array()){
-			$p = DB_PREFIX;
+			$p = '';
 			$cond = array();
 			
 			if (isset($data['store_id']) && is_numeric($data['store_id'])) {
@@ -764,7 +764,7 @@
 			* @return int
 		*/
 		public function getLastTemplateLogId(){
-			$p = DB_PREFIX;
+			$p = '';
 			$query = "SELECT MAX(emailtemplate_log_id) as emailtemplate_log_id FROM `{$p}emailtemplate_logs`";
 			$result = $this->db->non_cached_query($query);
 			
@@ -777,7 +777,7 @@
 			* @return int - total rows
 		*/
 		public function getTotalTemplates($data){
-			$p = DB_PREFIX;
+			$p = '';
 			$cond = array();
 			
 			if (isset($data['store_id'])) {
@@ -881,7 +881,7 @@
 			$inserts = $this->_build_query($cols, $data);
 			if (empty($inserts)) return false;
 			
-			$p = DB_PREFIX;
+			$p = '';
 			$this->db->non_cached_query("INSERT INTO {$p}emailtemplate SET ".implode($inserts,", "));
 			
 			$new_id = $this->db->getLastId();
@@ -942,7 +942,7 @@
 		public function insertTemplateDescription(array $data){
 			if (empty($data)) return false;
 			
-			$p = DB_PREFIX;
+			$p = '';
 			$cols = EmailTemplateDescriptionDAO::describe('emailtemplate_description_id');
 			
 			$inserts = $this->_build_query($cols, $data);
@@ -964,7 +964,7 @@
 		public function insertTemplateShortCodes($id, $data){
 			$id = intval($id);
 			$cols = EmailTemplateShortCodesDAO::describe();
-			$p = DB_PREFIX;
+			$p = '';
 			$return = 0;
 			
 			$this->db->non_cached_query("DELETE FROM {$p}emailtemplate_shortcode WHERE `emailtemplate_id` = '{$id}'");
@@ -1014,7 +1014,7 @@
 		*/
 		public function updateTemplate($id, array $data){
 			$id = intval($id);
-			$p = DB_PREFIX;
+			$p = '';
 			$queries = array();
 			$affected = 0;
 			
@@ -1081,7 +1081,7 @@
 		*/
 		public function deleteTemplate($data){
 			$ids = array();
-			$p = DB_PREFIX;
+			$p = '';
 			if(is_array($data)){
 				foreach($data as $var){
 					$ids[] = intval($var);
@@ -1132,7 +1132,7 @@
 			if(empty($data)) return false;
 			
 			$ids = array();
-			$p = DB_PREFIX;
+			$p = '';
 			if(is_array($data)){
 				foreach($data as $var){
 					$ids[] = intval($var);
@@ -1160,7 +1160,7 @@
 		*/
 		public function deleteTemplateDescription($data){
 			$cond = array();
-			$p = DB_PREFIX;
+			$p = '';
 			
 			if(isset($data['language_id'])){
 				$cond[] = "`language_id` = '" . intval($data['language_id']) . "'";
@@ -1179,7 +1179,7 @@
 			* Get template enum types
 		*/
 		public function getTemplateKeys(){
-			$p = DB_PREFIX;
+			$p = '';
 			$return = array();
 			$query = "SELECT `emailtemplate_key`, count(`emailtemplate_id`) AS `total`
 			FROM `{$p}emailtemplate`
@@ -1202,7 +1202,7 @@
 			* Get template shortcodes
 		*/
 		public function getTemplateShortcodes($data, $keyCleanUp = false){
-			$p = DB_PREFIX;
+			$p = '';
 			$cond = array();
 			
 			if(is_array($data)){
@@ -1295,7 +1295,7 @@
 		public function updateTemplateShortcode($id, array $data){
 			if (empty($data) && !is_numeric($id)) return false;
 			$id = intval($id);
-			$p = DB_PREFIX;
+			$p = '';
 			
 			$cols = EmailTemplateShortCodesDAO::describe();
 			
@@ -1322,7 +1322,7 @@
 		*/
 		public function deleteTemplateShortcodes($id, $selected = array()){
 			$id = intval($id);
-			$p = DB_PREFIX;
+			$p = '';
 			
 			$cond = array();
 			$cond[] = "`emailtemplate_id` = '{$id}'";
@@ -1401,26 +1401,26 @@
 			}
 			
 			// Order Products
-			$order_product_query = $this->db->non_cached_query("SELECT op.*, p.image, p.sku, p.quantity AS stock_quantity FROM " . DB_PREFIX . "order_product op LEFT JOIN " . DB_PREFIX . "product p ON (p.product_id = op.product_id) WHERE order_id = '" . (int)$order_id . "'");
+			$order_product_query = $this->db->non_cached_query("SELECT op.*, p.image, p.sku, p.quantity AS stock_quantity FROM order_product op LEFT JOIN product p ON (p.product_id = op.product_id) WHERE order_id = '" . (int)$order_id . "'");
 			
-			$order_product_query_nogood = $this->db->non_cached_query("SELECT op.*, p.image, p.sku, p.quantity AS stock_quantity FROM " . DB_PREFIX . "order_product_nogood op LEFT JOIN " . DB_PREFIX . "product p ON (p.product_id = op.product_id) WHERE order_id = '" . (int)$order_id . "'");
+			$order_product_query_nogood = $this->db->non_cached_query("SELECT op.*, p.image, p.sku, p.quantity AS stock_quantity FROM order_product_nogood op LEFT JOIN product p ON (p.product_id = op.product_id) WHERE order_id = '" . (int)$order_id . "'");
 			
 			// Downloads
-			$order_download_query = $this->db->non_cached_query("SELECT * FROM " . DB_PREFIX . "order_download WHERE order_id = '" . (int)$order_id . "'");
+			$order_download_query = $this->db->non_cached_query("SELECT * FROM order_download WHERE order_id = '" . (int)$order_id . "'");
 			
 			// Gift Voucher
-			$chk = $this->db->non_cached_query("SHOW TABLES LIKE '" . DB_PREFIX . "order_voucher'");
+			$chk = $this->db->non_cached_query("SHOW TABLES LIKE 'order_voucher'");
 			if($chk->num_rows){
-				$order_voucher_query = $this->db->non_cached_query("SELECT * FROM " . DB_PREFIX . "order_voucher WHERE order_id = '" . (int)$order_id . "'");
+				$order_voucher_query = $this->db->non_cached_query("SELECT * FROM order_voucher WHERE order_id = '" . (int)$order_id . "'");
 				} else {
 				$order_voucher_query = false;
 			}
 			
 			// Order Totals
-			$order_total_query = $this->db->non_cached_query("SELECT * FROM `" . DB_PREFIX . "order_total` WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order ASC");
+			$order_total_query = $this->db->non_cached_query("SELECT * FROM `order_total` WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order ASC");
 			
 			// Order Status
-			$order_status_query = $this->db->non_cached_query("SELECT * FROM " . DB_PREFIX . "order_status WHERE order_status_id = '" . (int)$order_status_id . "' AND language_id = '" . (int)$order_info['language_id'] . "'");
+			$order_status_query = $this->db->non_cached_query("SELECT * FROM order_status WHERE order_status_id = '" . (int)$order_status_id . "' AND language_id = '" . (int)$order_info['language_id'] . "'");
 			if ($order_status_query->num_rows) {
 				$order_status = $order_status_query->row['name'];
 				} else {
@@ -1522,7 +1522,7 @@
 			$template->data['products'] = array();
 			foreach ($order_product_query->rows as $product) {
 				$option_data = array();
-				$order_option_query = $this->db->non_cached_query("SELECT oo.*, pov.* FROM " . DB_PREFIX . "order_option oo LEFT JOIN " . DB_PREFIX . "product_option_value pov ON (pov.product_option_value_id = oo.product_option_value_id) WHERE oo.order_id = '" . (int)$order_id . "' AND oo.order_product_id = '" . (int)$product['order_product_id'] . "'");
+				$order_option_query = $this->db->non_cached_query("SELECT oo.*, pov.* FROM order_option oo LEFT JOIN product_option_value pov ON (pov.product_option_value_id = oo.product_option_value_id) WHERE oo.order_id = '" . (int)$order_id . "' AND oo.order_product_id = '" . (int)$product['order_product_id'] . "'");
 				
 				foreach ($order_option_query->rows as $option) {
 					if ($option['type'] != 'file') {
@@ -1592,7 +1592,7 @@
 			}
 			foreach ($order_product_query_nogood->rows as $product) {
 				$option_data = array();
-				$order_option_query = $this->db->non_cached_query("SELECT oo.*, pov.* FROM " . DB_PREFIX . "order_option oo LEFT JOIN " . DB_PREFIX . "product_option_value pov ON (pov.product_option_value_id = oo.product_option_value_id) WHERE oo.order_id = '" . (int)$order_id . "' AND oo.order_product_id = '" . (int)$product['order_product_id'] . "'");
+				$order_option_query = $this->db->non_cached_query("SELECT oo.*, pov.* FROM order_option oo LEFT JOIN product_option_value pov ON (pov.product_option_value_id = oo.product_option_value_id) WHERE oo.order_id = '" . (int)$order_id . "' AND oo.order_product_id = '" . (int)$product['order_product_id'] . "'");
 				
 				foreach ($order_option_query->rows as $option) {
 					if ($option['type'] != 'file') {
@@ -1700,9 +1700,9 @@
 			$language_id = intval($language_id);
 			$store_id = intval($store_id);
 			
-			$result = $this->db->non_cached_query("SELECT * FROM `" . DB_PREFIX . "order` WHERE (`store_id` = '{$store_id}' OR `store_id` = 0) AND (`language_id` = '{$language_id}' OR `language_id` > 0) AND order_status_id > '0' ORDER BY `order_id` DESC LIMIT 1");
+			$result = $this->db->non_cached_query("SELECT * FROM `order` WHERE (`store_id` = '{$store_id}' OR `store_id` = 0) AND (`language_id` = '{$language_id}' OR `language_id` > 0) AND order_status_id > '0' ORDER BY `order_id` DESC LIMIT 1");
 			if(!$result->row){
-				$result = $this->db->non_cached_query("SELECT * FROM `" . DB_PREFIX . "order` WHERE order_status_id > '0' ORDER BY `order_id` DESC LIMIT 1");
+				$result = $this->db->non_cached_query("SELECT * FROM `order` WHERE order_status_id > '0' ORDER BY `order_id` DESC LIMIT 1");
 			}
 			
 			if($result->row){
@@ -1994,7 +1994,7 @@
 			public function install($req = array()){
 				$this->load->model('setting/setting');
 				
-				$p = DB_PREFIX;
+				$p = '';
 				$queries = array();
 				
 				// Check settings table has serialised - OC Version: < 1.5.0.5
@@ -2224,7 +2224,7 @@
 				* Apply upgrade queries
 			*/
 			public function upgrade(){
-				$p = DB_PREFIX;
+				$p = '';
 				$dir = DIR_APPLICATION.'model/module/emailtemplate/upgrade/';
 				$current_ver = $this->checkVersion();
 				
@@ -2269,7 +2269,7 @@
 				* Method handles removing table
 			*/
 			public function uninstall(){
-				$p = DB_PREFIX;
+				$p = '';
 				$queries = array();
 				$queries[] = "DROP TABLE IF EXISTS `{$p}emailtemplate`";
 				$queries[] = "DROP TABLE IF EXISTS `{$p}emailtemplate_config`";
@@ -2296,7 +2296,7 @@
 				* @return version upgrading from
 			*/
 			public function checkVersion(){
-				$p = DB_PREFIX;
+				$p = '';
 				$chk = $this->db->non_cached_query("SHOW COLUMNS FROM `{$p}emailtemplate_config` LIKE 'emailtemplate_config_version'");
 				if(!$chk->num_rows){
 					$result = $this->db->non_cached_query("ALTER TABLE `{$p}emailtemplate_config` ADD `emailtemplate_config_version` varchar(64) NOT NULL");
@@ -2316,7 +2316,7 @@
 			*/
 			public function insertLog($data){
 				$cols = EmailTemplateLogsDAO::describe();
-				$p = DB_PREFIX;
+				$p = '';
 				$logData = array();
 				
 				foreach($cols as $col => $type){
@@ -2461,7 +2461,7 @@
 				$url = "index.php?route={$route}&{$key}={$value}";
 				
 				if($this->config->get('config_seo_url')){
-					$query = $this->db->non_cached_query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` = '" . $this->db->escape($key . '=' . (int)$value) . "'");
+					$query = $this->db->non_cached_query("SELECT * FROM url_alias WHERE `query` = '" . $this->db->escape($key . '=' . (int)$value) . "'");
 					if(!empty($query->row['keyword'])){
 						$url = $query->row['keyword'];
 					}

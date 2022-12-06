@@ -82,7 +82,7 @@ class ModelKPProduct extends Model {
 
 	public function getProductAmazonFullData($asin){
 		
-		$sql = "SELECT * FROM " . DB_PREFIX . "product_amzn_data WHERE asin = '" . $this->db->escape($asin) . "' LIMIT 1";
+		$sql = "SELECT * FROM product_amzn_data WHERE asin = '" . $this->db->escape($asin) . "' LIMIT 1";
 		$query = $this->db->query($sql);
 		
 		if ($query->num_rows){						
@@ -93,7 +93,7 @@ class ModelKPProduct extends Model {
 	}
 
 	public function getProductAmazonOffers($asin){
-		$sql = "SELECT * FROM " . DB_PREFIX . "product_amzn_offers WHERE asin = '" . $this->db->escape($asin) . "'";
+		$sql = "SELECT * FROM product_amzn_offers WHERE asin = '" . $this->db->escape($asin) . "'";
 		$query = $this->db->query($sql);
 
 		return $query->rows;	
@@ -118,9 +118,9 @@ class ModelKPProduct extends Model {
 	public function getProductRelated($product_id, $limit, $store_id, $exclude) {
 		$product_related_data = array();
 
-		$sql = "SELECT * FROM " . DB_PREFIX . "product_related pr 
+		$sql = "SELECT * FROM product_related pr 
 		LEFT JOIN product p ON (p.product_id = pr.product_id)
-		LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) ";
+		LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) ";
 		$sql .= " WHERE pr.product_id = '" . (int)$product_id . "' 
 		AND p.status = '1'
 		AND p.date_available <= NOW() 
@@ -144,7 +144,7 @@ class ModelKPProduct extends Model {
 
 	public function getProductCostsForStore($product_id, $store_id) {			
 
-		$sql = "SELECT * FROM " . DB_PREFIX . "product_costs WHERE product_id = '" . (int)$product_id . "' AND store_id = '" . (int)$store_id . "' LIMIT 1";
+		$sql = "SELECT * FROM product_costs WHERE product_id = '" . (int)$product_id . "' AND store_id = '" . (int)$store_id . "' LIMIT 1";
 		$query = $this->db->query($sql);
 		
 		return $query->row;
@@ -152,7 +152,7 @@ class ModelKPProduct extends Model {
 
 	public function getProductCosts($product_id) {							
 		
-		$sql = "SELECT * FROM " . DB_PREFIX . "product_costs WHERE product_id = '" . (int)$product_id . "'";
+		$sql = "SELECT * FROM product_costs WHERE product_id = '" . (int)$product_id . "'";
 		$query = $this->db->query($sql);
 		
 		$results = [];
@@ -166,14 +166,14 @@ class ModelKPProduct extends Model {
 		return $results;
 	}
 
-	public function getSimilarProductsByName($product_name, $product_id, $manufacturer_id, $limit, $in_stock = true, $recursive_results = array(), $exclude = array(), $language_id, $store_id){
+	public function getSimilarProductsByName($product_name, $product_id, $manufacturer_id, $limit, $in_stock, $recursive_results, $exclude, $language_id, $store_id){
 		$this->load->model('setting/setting');
 
 		$product_data = array();					
 
-		$sql = "SELECT DISTINCT pd.product_id FROM " . DB_PREFIX . "product_description pd 
-		LEFT JOIN " . DB_PREFIX . "product p ON (pd.product_id = p.product_id) 
-		LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) 
+		$sql = "SELECT DISTINCT pd.product_id FROM product_description pd 
+		LEFT JOIN product p ON (pd.product_id = p.product_id) 
+		LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
 		WHERE pd.language_id = '" . $language_id . "' 
 		AND TRIM(LCASE(pd.name)) LIKE ('" . $this->db->escape(trim(mb_strtolower($product_name))) . "%')
 		AND pd.product_id <> '" . (int)$product_id . "'			
@@ -226,7 +226,7 @@ class ModelKPProduct extends Model {
 		return $product_data;
 	}
 
-	public function guessSameProducts($product_name, $product_id, $manufacturer_id, $limit, $in_stock = true, $language_id, $store_id, $exclude){							
+	public function guessSameProducts($product_name, $product_id, $manufacturer_id, $limit, $in_stock, $language_id, $store_id, $exclude){							
 		$exploded = explode(' ', $product_name);
 
 		$results = array();
@@ -383,7 +383,7 @@ class ModelKPProduct extends Model {
 		$cost = $this->model_catalog_product->getProductActualCost($product_id);
 
 		if ((int)$price > 0 && (int)$cost > 0 && ($cost + ($cost / 100 * $percent) <= $price)){
-			$this->db->query("INSERT IGNORE INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int)$product_id . "', category_id = 8308");		
+			$this->db->query("INSERT IGNORE INTO product_to_category SET product_id = '" . (int)$product_id . "', category_id = 8308");		
 			$log->write('Добавлен  '.$product_id.' в спецкупонкатегорию');
 			echo '>> Добавлен  '. $product_id . ' в спецкупонкатегорию' . PHP_EOL;
 		} else {
@@ -404,7 +404,7 @@ class ModelKPProduct extends Model {
 			AND o.order_status_id > 0
 			");
 
-		$this->db->query("INSERT IGNORE INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int)$product_id . "', category_id = 6475");				
+		$this->db->query("INSERT IGNORE INTO product_to_category SET product_id = '" . (int)$product_id . "', category_id = 6475");				
 		$log->write('Добавлен  '.$product_id.' в подарочный');
 		echo '>> Добавлен  '.$product_id.' в подарочный' . PHP_EOL;		
 	}
@@ -414,7 +414,7 @@ class ModelKPProduct extends Model {
 
 		$log = new Log('copy_to_stock.txt');
 
-		$this->db->query("INSERT IGNORE INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int)$product_id . "', category_id = 8307");				
+		$this->db->query("INSERT IGNORE INTO product_to_category SET product_id = '" . (int)$product_id . "', category_id = 8307");				
 		$log->write('Добавлен  '.$product_id.' в подарочный');
 	}
 
@@ -423,7 +423,7 @@ class ModelKPProduct extends Model {
 
 		$log = new Log('copy_to_stock.txt');
 
-		$check_in_pa_query = $this->db->query("SELECT product_id FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" . (int)$product_id . "' AND category_id = 6475");			
+		$check_in_pa_query = $this->db->query("SELECT product_id FROM product_to_category WHERE product_id = '" . (int)$product_id . "' AND category_id = 6475");			
 		$check_ord_query = $this->db->query("SELECT COUNT(*) as total FROM order_product op
 			LEFT JOIN `order` o ON (op.order_id = o.order_id) 
 			WHERE op.product_id = '" . (int)$product_id . "'
@@ -432,10 +432,10 @@ class ModelKPProduct extends Model {
 
 		if ($check_in_pa_query->num_rows == 0 && $check_ord_query->row['total'] <= $count_orders){
 
-			$check_query = $this->db->query("SELECT product_id FROM " . DB_PREFIX . "product WHERE stock_product_id = '" . (int)$product_id . "'");
+			$check_query = $this->db->query("SELECT product_id FROM product WHERE stock_product_id = '" . (int)$product_id . "'");
 			if ($check_query->num_rows){
 					//включаем товар на стоке
-				$this->db->query("UPDATE `" . DB_PREFIX . "product` SET 
+				$this->db->query("UPDATE `product` SET 
 					status = 1, 
 					stock_status_id = '" . $this->config->get('config_stock_status_id') . "', 
 					ean = '', 
@@ -450,21 +450,21 @@ class ModelKPProduct extends Model {
 
 				if ($add_to_present) {
 					echo '>> Включен  '.$product_id.' в подарочный:)' . PHP_EOL;
-					$this->db->query("INSERT IGNORE INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int)$new_product_id . "', category_id = 6475");
+					$this->db->query("INSERT IGNORE INTO product_to_category SET product_id = '" . (int)$new_product_id . "', category_id = 6475");
 				}
 
 			} else {					
 				$new_product_id = $this->model_catalog_product->copyProduct($product_id);
 
-				$this->db->query("DELETE FROM " . DB_PREFIX . "product_to_category WHERE product_id = '" .(int)$new_product_id. "'");
-				$this->db->query("INSERT IGNORE INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int)$new_product_id . "', category_id = 6474");
+				$this->db->query("DELETE FROM product_to_category WHERE product_id = '" .(int)$new_product_id. "'");
+				$this->db->query("INSERT IGNORE INTO product_to_category SET product_id = '" . (int)$new_product_id . "', category_id = 6474");
 
 				if ($add_to_present) {
 					echo '>> Включен  '.$product_id.' в подарочный:)' . PHP_EOL;
-					$this->db->query("INSERT IGNORE INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int)$new_product_id . "', category_id = 6475");		
+					$this->db->query("INSERT IGNORE INTO product_to_category SET product_id = '" . (int)$new_product_id . "', category_id = 6475");		
 				}
 
-				$this->db->query("UPDATE " . DB_PREFIX . "product SET 
+				$this->db->query("UPDATE product SET 
 					stock_product_id = '" . (int)$product_id . "',
 					stock_status_id = '" . $this->config->get('config_stock_status_id') . "', 
 					ean = '', 
@@ -484,20 +484,20 @@ class ModelKPProduct extends Model {
 			}
 
 
-			$this->db->query("DELETE FROM " . DB_PREFIX . "product_special WHERE product_id = '" .(int)$new_product_id. "'");
+			$this->db->query("DELETE FROM product_special WHERE product_id = '" .(int)$new_product_id. "'");
 
 			$special = $this->model_catalog_product->getProductSpecialOne($product_id);
 
 
 			if ($special){
 
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_special SET product_id = '" . (int)$new_product_id . "', customer_group_id = '1', priority = '1', price = '" . (float)($special * (100 - $percent) / 100) . "', date_start = '" . $this->db->escape('2005-12-12') . "', date_end = '" . $this->db->escape('2020-12-12') . "'");
+				$this->db->query("INSERT INTO product_special SET product_id = '" . (int)$new_product_id . "', customer_group_id = '1', priority = '1', price = '" . (float)($special * (100 - $percent) / 100) . "', date_start = '" . $this->db->escape('2005-12-12') . "', date_end = '" . $this->db->escape('2020-12-12') . "'");
 
 			} else {
 
 				$price = $this->model_catalog_product->getProductPrice($product_id);
 
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_special SET product_id = '" . (int)$new_product_id . "', customer_group_id = '1', priority = '1', price = '" . (float)($price * (100 - $percent) / 100) . "', date_start = '" . $this->db->escape('2005-12-12') . "', date_end = '" . $this->db->escape('2020-12-12') . "'");
+				$this->db->query("INSERT INTO product_special SET product_id = '" . (int)$new_product_id . "', customer_group_id = '1', priority = '1', price = '" . (float)($price * (100 - $percent) / 100) . "', date_start = '" . $this->db->escape('2005-12-12') . "', date_end = '" . $this->db->escape('2020-12-12') . "'");
 
 			}
 

@@ -2,11 +2,11 @@
 class ModelModuleAdminLog extends Model {
 
 	public function uninstall() {
-		$this->db->query("DROP TABLE `" . DB_PREFIX . "adminlog`");
+		$this->db->query("DROP TABLE `adminlog`");
 	}
 
 	public function install() {
-		$query = $this->db->query("CREATE TABLE `" . DB_PREFIX . "adminlog` (  `log_id` int(11) NOT NULL AUTO_INCREMENT,
+		$query = $this->db->query("CREATE TABLE `adminlog` (  `log_id` int(11) NOT NULL AUTO_INCREMENT,
 																				`user_id` int(11) NOT NULL,
 																				`user_name` varchar(20) NOT NULL,
 																				`action` varchar(50) NOT NULL,
@@ -20,7 +20,7 @@ class ModelModuleAdminLog extends Model {
 
 	public function getDataBaseLog($data = array()) {
 		if($data){
-			$sql = "SELECT * FROM " . DB_PREFIX . "adminlog WHERE action <> 'access'";
+			$sql = "SELECT * FROM adminlog WHERE action <> 'access'";
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 				$sql .= " ORDER BY " . $data['sort'];
 			} else {
@@ -51,23 +51,23 @@ class ModelModuleAdminLog extends Model {
 	}
 
 	public function getTotalDataBaseLog($data = array()) {
-		$query = $this->db->query("SELECT COUNT(log_id) AS total FROM " . DB_PREFIX . "adminlog WHERE action <> 'access'");
+		$query = $this->db->query("SELECT COUNT(log_id) AS total FROM adminlog WHERE action <> 'access'");
 		return $query->row['total'];
 	}
 
 	public function clearDataBaseLog($id, $username) {	
-		// $this->db->query("DELETE FROM " . DB_PREFIX . "adminlog");
-		$this->db->query("INSERT INTO " . DB_PREFIX . "adminlog SET user_id = '" . (int)$id . "', `user_name` = '" . $username . "', `action` = 'clear log', `allowed` = '1', `url` = '".$this->request->server['REQUEST_URI']."', `ip` = '" . $this->request->server['REMOTE_ADDR'] . "', date = NOW()");
+		// $this->db->query("DELETE FROM adminlog");
+		$this->db->query("INSERT INTO adminlog SET user_id = '" . (int)$id . "', `user_name` = '" . $username . "', `action` = 'clear log', `allowed` = '1', `url` = '".$this->request->server['REQUEST_URI']."', `ip` = '" . $this->request->server['REMOTE_ADDR'] . "', date = NOW()");
 		return true;
 	}
 
 	public function deleteEntry($id) {
-		//$this->db->query("DELETE FROM " . DB_PREFIX . "adminlog WHERE log_id = ".$id);
+		//$this->db->query("DELETE FROM adminlog WHERE log_id = ".$id);
 		return true;
 	}
 
 	public function deleteEntryLog($id, $username, $amount) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "adminlog SET user_id = '" . (int)$id . "', `user_name` = '" . $username . "', `action` = 'clear ".$amount." entries', `allowed` = '1', `url` = '".$this->request->server['REQUEST_URI']."', `ip` = '" . $this->request->server['REMOTE_ADDR'] . "', date = NOW()");
+		$this->db->query("INSERT INTO adminlog SET user_id = '" . (int)$id . "', `user_name` = '" . $username . "', `action` = 'clear ".$amount." entries', `allowed` = '1', `url` = '".$this->request->server['REQUEST_URI']."', `ip` = '" . $this->request->server['REMOTE_ADDR'] . "', date = NOW()");
 		return true;
 	}
 

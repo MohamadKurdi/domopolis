@@ -42,7 +42,7 @@ class Modelmodulesocnetauth2 extends Model
 		// ..................................................................
 	
 	
-		$sql = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "socnetauth2_records` (
+		$sql = "CREATE TABLE IF NOT EXISTS `socnetauth2_records` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
 				`state` varchar(100) NOT NULL,
 				`redirect` varchar(300) NOT NULL,
@@ -54,7 +54,7 @@ class Modelmodulesocnetauth2 extends Model
 		
 		
 		$query = $this->db->query("SELECT * FROM information_schema.COLUMNS
-								   WHERE TABLE_NAME = '" . DB_PREFIX . "customer'");
+								   WHERE TABLE_NAME = 'customer'");
 								   
 		$column_hash = array();
 		
@@ -62,49 +62,49 @@ class Modelmodulesocnetauth2 extends Model
 		/*
 		if( !isset( $column_hash['socnetauth2_facebook_id'] ) )
 		{
-			$sql = "ALTER TABLE `" . DB_PREFIX . "customer` ADD `socnetauth2_facebook_id` VARCHAR( 100 ) NOT NULL";
+			$sql = "ALTER TABLE `customer` ADD `socnetauth2_facebook_id` VARCHAR( 100 ) NOT NULL";
 			$this->db->query($sql);
 		}
 		
 		if( !isset( $column_hash['socnetauth2_facebook_profile'] ) )
 		{
-			$sql = "ALTER TABLE `" . DB_PREFIX . "customer` ADD `socnetauth2_facebook_profile` VARCHAR( 200 ) NOT NULL";
+			$sql = "ALTER TABLE `customer` ADD `socnetauth2_facebook_profile` VARCHAR( 200 ) NOT NULL";
 			$this->db->query($sql);
 		}
 		
 		if( !isset( $column_hash['socnetauth2_vkontakte_id'] ) )
 		{
-			$sql = "ALTER TABLE `" . DB_PREFIX . "customer` ADD `socnetauth2_vkontakte_id` VARCHAR( 100 ) NOT NULL";
+			$sql = "ALTER TABLE `customer` ADD `socnetauth2_vkontakte_id` VARCHAR( 100 ) NOT NULL";
 			$this->db->query($sql);
 		}
 		
 		if( !isset( $column_hash['socnetauth2_vkontakte_profile'] ) )
 		{
-			$sql = "ALTER TABLE `" . DB_PREFIX . "customer` ADD `socnetauth2_vkontakte_profile` VARCHAR( 200 ) NOT NULL";
+			$sql = "ALTER TABLE `customer` ADD `socnetauth2_vkontakte_profile` VARCHAR( 200 ) NOT NULL";
 			$this->db->query($sql);
 		}
 		
 		if( !isset( $column_hash['socnetauth2_twitter_id'] ) )
 		{
-			$sql = "ALTER TABLE `" . DB_PREFIX . "customer` ADD `socnetauth2_twitter_id` VARCHAR( 100 ) NOT NULL";
+			$sql = "ALTER TABLE `customer` ADD `socnetauth2_twitter_id` VARCHAR( 100 ) NOT NULL";
 			$this->db->query($sql);
 		}
 		
 		if( !isset( $column_hash['socnetauth2_twitter_profile'] ) )
 		{
-			$sql = "ALTER TABLE `" . DB_PREFIX . "customer` ADD `socnetauth2_twitter_profile` VARCHAR( 200 ) NOT NULL";
+			$sql = "ALTER TABLE `customer` ADD `socnetauth2_twitter_profile` VARCHAR( 200 ) NOT NULL";
 			$this->db->query($sql);
 		}
 		
 		if( !isset( $column_hash['socnetauth2_odnoklassniki_id'] ) )
 		{
-			$sql = "ALTER TABLE `" . DB_PREFIX . "customer` ADD `socnetauth2_odnoklassniki_id` VARCHAR( 100 ) NOT NULL";
+			$sql = "ALTER TABLE `customer` ADD `socnetauth2_odnoklassniki_id` VARCHAR( 100 ) NOT NULL";
 			$this->db->query($sql);
 		}
 		
 		if( !isset( $column_hash['socnetauth2_odnoklassniki_profile'] ) )
 		{
-			$sql = "ALTER TABLE `" . DB_PREFIX . "customer` ADD `socnetauth2_odnoklassniki_profile` VARCHAR( 100 ) NOT NULL";
+			$sql = "ALTER TABLE `customer` ADD `socnetauth2_odnoklassniki_profile` VARCHAR( 100 ) NOT NULL";
 			$this->db->query($sql);
 		}
 		*/
@@ -120,27 +120,27 @@ class Modelmodulesocnetauth2 extends Model
 		
 		if( !isset( $column_hash['socnetauth2_identity'] ) )
 		{
-			$sql = "ALTER TABLE `" . DB_PREFIX . "customer` ADD `socnetauth2_identity` VARCHAR( 300 ) NOT NULL";
+			$sql = "ALTER TABLE `customer` ADD `socnetauth2_identity` VARCHAR( 300 ) NOT NULL";
 			$this->db->query($sql);
 		}
 		
 		/* start metka a1 */
 		if( !isset( $column_hash['socnetauth2_link'] ) )
 		{
-			$sql = "ALTER TABLE `" . DB_PREFIX . "customer` ADD `socnetauth2_link` VARCHAR( 100 ) NOT NULL";
+			$sql = "ALTER TABLE `customer` ADD `socnetauth2_link` VARCHAR( 100 ) NOT NULL";
 			$this->db->query($sql);
 		}
 		/* end metka a1 */
 		
 		if( !isset( $column_hash['socnetauth2_provider'] ) )
 		{
-			$sql = "ALTER TABLE `" . DB_PREFIX . "customer` ADD `socnetauth2_provider` VARCHAR( 100 ) NOT NULL";
+			$sql = "ALTER TABLE `customer` ADD `socnetauth2_provider` VARCHAR( 100 ) NOT NULL";
 			$this->db->query($sql);
 		}
 		
 		if( !isset( $column_hash['socnetauth2_data'] ) )
 		{
-			$sql = "ALTER TABLE `" . DB_PREFIX . "customer` ADD `socnetauth2_data` TEXT NOT NULL";
+			$sql = "ALTER TABLE `customer` ADD `socnetauth2_data` TEXT NOT NULL";
 			$this->db->query($sql);
 		}
 	}
@@ -249,15 +249,15 @@ class Modelmodulesocnetauth2 extends Model
 		return $data;
 	}
 	
-	public function updateSetting($group='', $key, $value)
+	public function updateSetting($group, $key, $value)
 	{
-		$check = $this->db->query("SELECT * FROM ".DB_PREFIX."setting
+		$check = $this->db->query("SELECT * FROM setting
 								   WHERE
 									`group`='".$group."' AND `key`='".$key."'");
 		
 		if( empty($check->rows) )
 		{
-			$this->db->query("INSERT INTO ".DB_PREFIX."setting
+			$this->db->query("INSERT INTO setting
 								   SET 
 									value = '".$this->db->escape($value)."',
 									`group`='".$group."', 
@@ -265,7 +265,7 @@ class Modelmodulesocnetauth2 extends Model
 		}
 		else
 		{
-			$this->db->query("UPDATE ".DB_PREFIX."setting
+			$this->db->query("UPDATE setting
 								   SET 
 									value = '".$this->db->escape($value)."'
 								   WHERE
@@ -881,7 +881,7 @@ class Modelmodulesocnetauth2 extends Model
 		
 		if( $installed == 0 )
 		{
-			$sql = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "socnetauth2_customer2account` (
+			$sql = "CREATE TABLE IF NOT EXISTS `socnetauth2_customer2account` (
 				`id` int(11) NOT NULL AUTO_INCREMENT,
 				`customer_id` varchar(100) NOT NULL,
 				`identity` varchar(300) NOT NULL,
@@ -896,13 +896,13 @@ class Modelmodulesocnetauth2 extends Model
 			
 			
 			$query = $this->db->query("SELECT * 
-							   FROM `" . DB_PREFIX . "customer` 
+							   FROM `customer` 
 							   WHERE socnetauth2_identity!=''");
 			if( !empty($query->rows) )				   
 			{
 				foreach($query->rows as $customer)
 				{
-					$this->db->query("INSERT INTO `" . DB_PREFIX . "socnetauth2_customer2account`
+					$this->db->query("INSERT INTO `socnetauth2_customer2account`
 									SET 
 									`customer_id` = '".(int)$customer['customer_id']."',
 									`identity` = '".$this->escape($customer['socnetauth2_identity'])."',
@@ -916,8 +916,8 @@ class Modelmodulesocnetauth2 extends Model
 		else
 		{
 			$todel = $this->db->query("SELECT sc.id, c.customer_id 
-								  FROM `" . DB_PREFIX . "socnetauth2_customer2account` sc
-								  LEFT JOIN `" . DB_PREFIX . "customer` c
+								  FROM `socnetauth2_customer2account` sc
+								  LEFT JOIN `customer` c
 								  ON sc.customer_id=c.customer_id
 								  WHERE c.customer_id IS NULL");
 			
@@ -925,7 +925,7 @@ class Modelmodulesocnetauth2 extends Model
 			{
 				foreach($todel->rows as $item)
 				{
-					$this->db->query("DELETE FROM `" . DB_PREFIX . "socnetauth2_customer2account` 
+					$this->db->query("DELETE FROM `socnetauth2_customer2account` 
 								  WHERE id=".(int)$item['id'] );
 				}
 			}
@@ -936,7 +936,7 @@ class Modelmodulesocnetauth2 extends Model
 	public function getDataByCustomer($customer_id)
 	{
 		$query = $this->db->query("SELECT * 
-								  FROM `" . DB_PREFIX . "socnetauth2_customer2account`
+								  FROM `socnetauth2_customer2account`
 								  WHERE customer_id='".(int)$customer_id."'");
 		
 		if( !empty($query->rows) ) return $query->rows;

@@ -115,13 +115,13 @@
 
 					$this->data['processes'][] = [
 						'name' 				=> $cronParams['name'],
-						'status' 			=> $result['status'],
-						'running'			=> $result['running'],
-						'never'				=> $result['never'],
-						'finished'			=> $result['finished'],
-						'failed'			=> $result['failed'],
-						'start'				=> $result['start'],
-						'stop'				=> $result['stop']
+						'status' 			=> isset($result['status'])?$result['status']:'',
+						'running'			=> isset($result['running'])?$result['running']:'',
+						'never'				=> isset($result['never'])?$result['never']:'',
+						'finished'			=> isset($result['finished'])?$result['finished']:'',
+						'failed'			=> isset($result['failed'])?$result['failed']:'',
+						'start'				=> isset($result['start'])?$result['start']:'',
+						'stop'				=> isset($result['stop'])?$result['stop']:'',
 					];
 				}
 			}

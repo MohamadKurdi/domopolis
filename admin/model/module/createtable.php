@@ -27,10 +27,10 @@ class ModelModuleCreatetable extends Model {
 
     public function EditTableVer1() {
 		/*
-        $this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "affiliate_setting` (affiliate_id INT(11) NOT NULL AUTO_INCREMENT, order_status_id INT(11), days INT(11), total DECIMAL(15,4) NOT NULL, add_auto INT(11), qiwi INT(11), card INT(11), yandex INT(11), webmoney INT(11), cheque INT(11), paypal INT(11), bank INT(11), PRIMARY KEY (affiliate_id))");
-        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "affiliate_setting` WHERE affiliate_id = 1");
+        $this->db->query("CREATE TABLE IF NOT EXISTS `affiliate_setting` (affiliate_id INT(11) NOT NULL AUTO_INCREMENT, order_status_id INT(11), days INT(11), total DECIMAL(15,4) NOT NULL, add_auto INT(11), qiwi INT(11), card INT(11), yandex INT(11), webmoney INT(11), cheque INT(11), paypal INT(11), bank INT(11), PRIMARY KEY (affiliate_id))");
+        $query = $this->db->query("SELECT * FROM `affiliate_setting` WHERE affiliate_id = 1");
         if (!$query->num_rows) {
-            $this->db->query("INSERT INTO `" . DB_PREFIX . "affiliate_setting` SET affiliate_id= 1, order_status_id = '5', days = '7', total = '100.00',cheque = '1', paypal = '1', bank = '1'");
+            $this->db->query("INSERT INTO `affiliate_setting` SET affiliate_id= 1, order_status_id = '5', days = '7', total = '100.00',cheque = '1', paypal = '1', bank = '1'");
         }*/
         $this->ADDALTER('affiliate', 'qiwi', "VARCHAR(100) NOT NULL DEFAULT ''");
         $this->ADDALTER('affiliate', 'card', "VARCHAR(100) NOT NULL DEFAULT ''");
@@ -51,7 +51,7 @@ class ModelModuleCreatetable extends Model {
     }
 
     public function EditTableVer3() {
-        $this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "affiliate_statistics` (id INT(11) NOT NULL AUTO_INCREMENT, affiliate_id INT(11) NOT NULL, date_added DATE NOT NULL,  count_transitions INT(11) NOT NULL DEFAULT 0, PRIMARY KEY (id))");
+        $this->db->query("CREATE TABLE IF NOT EXISTS `affiliate_statistics` (id INT(11) NOT NULL AUTO_INCREMENT, affiliate_id INT(11) NOT NULL, date_added DATE NOT NULL,  count_transitions INT(11) NOT NULL DEFAULT 0, PRIMARY KEY (id))");
     }
 
     public function EditTableVer4() {
@@ -79,7 +79,7 @@ class ModelModuleCreatetable extends Model {
     }
 	public function EditTableVer7() {
 		$payment = $this->GetPayment();
-		$this->db->query("UPDATE `" . DB_PREFIX . "affiliate` SET payment = '" . $payment . "' WHERE payment = ''");
+		$this->db->query("UPDATE `affiliate` SET payment = '" . $payment . "' WHERE payment = ''");
     }
 	
 	public function GetPayment() {

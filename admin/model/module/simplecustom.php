@@ -231,7 +231,7 @@ class ModelModuleSimpleCustom extends Model {
                 }
             }
 
-            $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . $object . '_simple_fields` WHERE `'.$object.'_id` = \'' . $id . '\' LIMIT 1');
+            $query = $this->db->query('SELECT * FROM `' . $object . '_simple_fields` WHERE `'.$object.'_id` = \'' . $id . '\' LIMIT 1');
 
             foreach ($query->row as $key => $value) {
                 if (isset($result[$key])) {
@@ -296,7 +296,7 @@ class ModelModuleSimpleCustom extends Model {
 
         $text = implode(',', $text);
 
-        $this->db->query('INSERT INTO `' . DB_PREFIX . $object . '_simple_fields` SET ' . $text . ' ON DUPLICATE KEY UPDATE ' . $text);
+        $this->db->query('INSERT INTO `' . $object . '_simple_fields` SET ' . $text . ' ON DUPLICATE KEY UPDATE ' . $text);
     }
 
     public function getDataFromOldFormat($object, $id, $set) {
@@ -335,7 +335,7 @@ class ModelModuleSimpleCustom extends Model {
             $result = array();
             $fields = array();
 
-            $query = $this->db->query('SELECT * FROM `' . DB_PREFIX . $object . '_simple_fields` WHERE `'.$object.'_id` = \'' . $objectId . '\' LIMIT 1');
+            $query = $this->db->query('SELECT * FROM `' . $object . '_simple_fields` WHERE `'.$object.'_id` = \'' . $objectId . '\' LIMIT 1');
 
             if (!$query->num_rows) {
                 return array();
@@ -421,7 +421,7 @@ class ModelModuleSimpleCustom extends Model {
             $encryption = new Encryption($this->config->get('config_encryption'));
             $code = $encryption->encrypt($filename);
         } else {
-            $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "upload` WHERE filename = '" . $this->db->escape($filename) . "'");
+            $query = $this->db->query("SELECT * FROM `upload` WHERE filename = '" . $this->db->escape($filename) . "'");
 
             if ($query->num_rows) {
                 $code = $query->row['code'];

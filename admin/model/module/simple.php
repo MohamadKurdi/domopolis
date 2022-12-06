@@ -1,7 +1,7 @@
 <?php
 class ModelModuleSimple extends Model {
     public function alterTableOfSettings() {
-        $query = $this->db->query('SHOW COLUMNS FROM `' . DB_PREFIX . 'setting`');
+        $query = $this->db->query('SHOW COLUMNS FROM `setting`');
 
         $change = false;
 
@@ -12,12 +12,12 @@ class ModelModuleSimple extends Model {
         }
 
         if ($change) {
-            $this->db->query("ALTER TABLE `" . DB_PREFIX . "setting` CHANGE `value` `value` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL");
+            $this->db->query("ALTER TABLE `setting` CHANGE `value` `value` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL");
         }
     }
 
     public function createTableForCustomerFields() {
-        $this->db->query('CREATE TABLE IF NOT EXISTS `'.DB_PREFIX.'customer_simple_fields` (
+        $this->db->query('CREATE TABLE IF NOT EXISTS `customer_simple_fields` (
                           `customer_id` int(11) NOT NULL,
                           `metadata` text NULL,
                           PRIMARY KEY (`customer_id`)
@@ -25,7 +25,7 @@ class ModelModuleSimple extends Model {
     }
 
     public function createTableForAddressFields() {
-        $this->db->query('CREATE TABLE IF NOT EXISTS `'.DB_PREFIX.'address_simple_fields` (
+        $this->db->query('CREATE TABLE IF NOT EXISTS `address_simple_fields` (
                           `address_id` int(11) NOT NULL,
                           `metadata` text NULL,
                           PRIMARY KEY (`address_id`)
@@ -33,7 +33,7 @@ class ModelModuleSimple extends Model {
     }
 
     public function createTableForOrderFields() {
-        $this->db->query('CREATE TABLE IF NOT EXISTS `'.DB_PREFIX.'order_simple_fields` (
+        $this->db->query('CREATE TABLE IF NOT EXISTS `order_simple_fields` (
                           `order_id` int(11) NOT NULL,
                           `metadata` text NULL,
                           PRIMARY KEY (`order_id`)
@@ -41,10 +41,10 @@ class ModelModuleSimple extends Model {
     }
 
     public function createTableForAbandonedCarts() {
-        $query = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "simple_cart'");
+        $query = $this->db->query("SHOW TABLES LIKE 'simple_cart'");
 
         if ($query->rows) {
-            $query = $this->db->query('SHOW COLUMNS FROM ' . DB_PREFIX . 'simple_cart');
+            $query = $this->db->query('SHOW COLUMNS FROM simple_cart');
 
             $result = array();
 
@@ -53,15 +53,15 @@ class ModelModuleSimple extends Model {
             }
 
             if (!in_array('store_id', $result)) {
-                $this->db->query('ALTER TABLE `' . DB_PREFIX . 'simple_cart` ADD `store_id` int(11) NULL');
+                $this->db->query('ALTER TABLE `simple_cart` ADD `store_id` int(11) NULL');
             }
 
             if (in_array('cart', $result)) {
-                $this->db->query('ALTER TABLE `' . DB_PREFIX . 'simple_cart` DROP `cart`');
-                $this->db->query('ALTER TABLE `' . DB_PREFIX . 'simple_cart` ADD `products` text NULL');
+                $this->db->query('ALTER TABLE `simple_cart` DROP `cart`');
+                $this->db->query('ALTER TABLE `simple_cart` ADD `products` text NULL');
             }
         } else {
-            $this->db->query('CREATE TABLE IF NOT EXISTS `'.DB_PREFIX.'simple_cart` (
+            $this->db->query('CREATE TABLE IF NOT EXISTS `simple_cart` (
                           `simple_cart_id` int(11) NOT NULL AUTO_INCREMENT,
                           `store_id` int(11) NULL,
                           `customer_id` int(11) NULL,
@@ -77,13 +77,13 @@ class ModelModuleSimple extends Model {
     }
 
     public function getTotalAbandonedCarts($data = array()) {
-        $query = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "simple_cart'");
+        $query = $this->db->query("SHOW TABLES LIKE 'simple_cart'");
 
         if (!$query->rows) {
             return 0;
         }
 
-        $sql = 'SELECT COUNT(*) AS count FROM `'.DB_PREFIX.'simple_cart`';
+        $sql = 'SELECT COUNT(*) AS count FROM `simple_cart`';
 
         if (isset($data['filter_time'])) {
             $sql .= ' WHERE date_added > FROM_UNIXTIME('.(int)$data['filter_time'].')';
@@ -95,7 +95,7 @@ class ModelModuleSimple extends Model {
     }
 
     public function getAbandonedCarts($data = array()) {
-        $query = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "simple_cart'");
+        $query = $this->db->query("SHOW TABLES LIKE 'simple_cart'");
 
         if (!$query->rows) {
             return array();
@@ -106,9 +106,9 @@ class ModelModuleSimple extends Model {
                     CONCAT(sc.firstname, \' \', sc.lastname) AS name,
                     CONCAT(c.firstname, \' \', c.lastname) AS customer
                 FROM 
-                    `'.DB_PREFIX.'simple_cart` sc 
+                    `simple_cart` sc 
                 LEFT JOIN 
-                    `'.DB_PREFIX.'customer` c 
+                    `customer` c 
                 ON 
                     sc.customer_id = c.customer_id
                 ';
@@ -137,7 +137,7 @@ class ModelModuleSimple extends Model {
     }
 
     public function deleteAbandonedCarts($ids) {
-        $query = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "simple_cart'");
+        $query = $this->db->query("SHOW TABLES LIKE 'simple_cart'");
 
         if (!$query->rows) {
             return;
@@ -150,12 +150,12 @@ class ModelModuleSimple extends Model {
         }
 
         if (count($ids_cleared)) {
-            $this->db->query('DELETE FROM `'.DB_PREFIX.'simple_cart` WHERE simple_cart_id IN (' . implode(',', $ids_cleared) . ')');
+            $this->db->query('DELETE FROM `simple_cart` WHERE simple_cart_id IN (' . implode(',', $ids_cleared) . ')');
         }
     }
 
     public function clearAbandonedCarts() {
-        $this->db->query('TRUNCATE `'.DB_PREFIX.'simple_cart`');
+        $this->db->query('TRUNCATE `simple_cart`');
     }
 
     public function alterTableOfCustomer($fields) {
@@ -171,29 +171,29 @@ class ModelModuleSimple extends Model {
     }
 
     public function createUrlAliases() {
-        $query = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "url_alias'");
+        $query = $this->db->query("SHOW TABLES LIKE 'url_alias'");
 
         if ($query->rows) {
-            $checkQuery = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` = 'checkout/simplecheckout'");
+            $checkQuery = $this->db->query("SELECT * FROM url_alias WHERE `query` = 'checkout/simplecheckout'");
 
             if (!$checkQuery->num_rows) {
-                $this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET `query` = 'checkout/simplecheckout', `keyword` = 'simplecheckout'");
+                $this->db->query("INSERT INTO url_alias SET `query` = 'checkout/simplecheckout', `keyword` = 'simplecheckout'");
             }
 
-            $checkQuery = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` = 'account/simpleregister'");
+            $checkQuery = $this->db->query("SELECT * FROM url_alias WHERE `query` = 'account/simpleregister'");
 
             if (!$checkQuery->num_rows) {
-                $this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET `query` = 'account/simpleregister', `keyword` = 'simpleregister'");
+                $this->db->query("INSERT INTO url_alias SET `query` = 'account/simpleregister', `keyword` = 'simpleregister'");
             }
         }
     }
 
     public function deleteUrlAliases() {
-        $query = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "url_alias'");
+        $query = $this->db->query("SHOW TABLES LIKE 'url_alias'");
 
         if ($query->rows) {
-            $this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE `query` = 'checkout/simplecheckout' AND `keyword` = 'simplecheckout'");
-            $this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE `query` = 'account/simpleregister' AND `keyword` = 'simpleregister'");
+            $this->db->query("DELETE FROM url_alias WHERE `query` = 'checkout/simplecheckout' AND `keyword` = 'simplecheckout'");
+            $this->db->query("DELETE FROM url_alias WHERE `query` = 'account/simpleregister' AND `keyword` = 'simpleregister'");
         }
     }
 
@@ -457,7 +457,7 @@ class ModelModuleSimple extends Model {
     }
 
     public function getOrdersByCustomerId($customer_id) {
-        $query = $this->db->query("SELECT o.*, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status FROM `" . DB_PREFIX . "order` o WHERE o.customer_id = '".(int)$customer_id."' AND o.order_status_id > 0 ORDER BY o.date_added DESC");
+        $query = $this->db->query("SELECT o.*, (SELECT os.name FROM order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status FROM `order` o WHERE o.customer_id = '".(int)$customer_id."' AND o.order_status_id > 0 ORDER BY o.date_added DESC");
         
         $orders = array();
 
@@ -469,7 +469,7 @@ class ModelModuleSimple extends Model {
     }
 
     public function getOrdersByCustomerEmail($email) {
-        $query = $this->db->query("SELECT o.*, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status FROM `" . DB_PREFIX . "order` o WHERE o.email = '".$this->db->escape($email)."' AND o.order_status_id > 0 ORDER BY o.date_added DESC");
+        $query = $this->db->query("SELECT o.*, (SELECT os.name FROM order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status FROM `order` o WHERE o.email = '".$this->db->escape($email)."' AND o.order_status_id > 0 ORDER BY o.date_added DESC");
         
         $orders = array();
 
@@ -481,7 +481,7 @@ class ModelModuleSimple extends Model {
     }
 
     public function getOrdersByTelephone($telephone) {
-        $query = $this->db->query("SELECT o.*, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status FROM `" . DB_PREFIX . "order` o WHERE o.telephone = '".$this->db->escape($telephone)."' AND o.order_status_id > 0 ORDER BY o.date_added DESC");
+        $query = $this->db->query("SELECT o.*, (SELECT os.name FROM order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status FROM `order` o WHERE o.telephone = '".$this->db->escape($telephone)."' AND o.order_status_id > 0 ORDER BY o.date_added DESC");
         
         $orders = array();
 
@@ -493,12 +493,12 @@ class ModelModuleSimple extends Model {
     }
 
     public function setModuleStatusToTrue($store_id) {
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "setting WHERE `code` = 'simple' AND `store_id` = '" . (int) $store_id . "' AND `key` = 'module_simple_status'");
+        $query = $this->db->query("SELECT * FROM setting WHERE `code` = 'simple' AND `store_id` = '" . (int) $store_id . "' AND `key` = 'module_simple_status'");
 
         if ($query->num_rows) {
-            $this->db->query("UPDATE " . DB_PREFIX . "setting SET `value` = '1' WHERE `code` = 'simple' AND `store_id` = '" . (int) $store_id . "' AND `key` = 'module_simple_status'");
+            $this->db->query("UPDATE setting SET `value` = '1' WHERE `code` = 'simple' AND `store_id` = '" . (int) $store_id . "' AND `key` = 'module_simple_status'");
         } else {
-            $this->db->query("INSERT INTO " . DB_PREFIX . "setting SET `value` = '1', `code` = 'simple', `store_id` = '" . (int) $store_id . "', `key` = 'module_simple_status'");
+            $this->db->query("INSERT INTO setting SET `value` = '1', `code` = 'simple', `store_id` = '" . (int) $store_id . "', `key` = 'module_simple_status'");
         }
     }
 }

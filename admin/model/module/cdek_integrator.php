@@ -5,13 +5,13 @@ class ModelModuleCdekIntegrator extends Model {
 		
 		$sql  = "SELECT o.order_id, ";
 		$sql .= "CONCAT(o.firstname, ' ', o.lastname) AS customer, ";
-		$sql .= "(SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status, ";
+		$sql .= "(SELECT os.name FROM order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status, ";
 		$sql .= "o.total, ";
 		$sql .= "o.currency_code, ";
 		$sql .= "o.currency_value, ";
 		$sql .= "o.date_added, ";
 		$sql .= "o.date_modified ";
-		$sql .= "FROM `" . DB_PREFIX . "order` o";
+		$sql .= "FROM `order` o";
 		
 		if ($conditions = $this->getOrderConditions($data)) {
 			$sql .= " WHERE " . implode(" AND ", $conditions);
@@ -59,7 +59,7 @@ class ModelModuleCdekIntegrator extends Model {
 	public function getTotalOrders($data = array()) {
 		
 		$sql  = "SELECT COUNT(*) as total ";
-		$sql .= "FROM `" . DB_PREFIX . "order` o";
+		$sql .= "FROM `order` o";
 		
 		if ($conditions = $this->getOrderConditions($data)) {
 			$sql .= " WHERE " . implode(" AND ", $conditions);
@@ -84,7 +84,7 @@ class ModelModuleCdekIntegrator extends Model {
 		}
 		
 		if (isset($data['filter_dispatch'])) {
-			$conditions[] = "(SELECT co.order_id FROM `" . DB_PREFIX . "cdek_order` co WHERE o.order_id = co.order_id LIMIT 1) IS NULL";
+			$conditions[] = "(SELECT co.order_id FROM `cdek_order` co WHERE o.order_id = co.order_id LIMIT 1) IS NULL";
 		}
 		
 		if (isset($data['filter_dispatch_number'])) {
@@ -155,8 +155,8 @@ class ModelModuleCdekIntegrator extends Model {
 		$sql  = "SELECT op.*, ";
 		$sql .= "p.weight, ";
 		$sql .= "p.weight_class_id ";
-		$sql .= "FROM " . DB_PREFIX . "order_product op ";
-		$sql .= "LEFT JOIN " . DB_PREFIX . "product p ON (op.product_id = p.product_id) ";
+		$sql .= "FROM order_product op ";
+		$sql .= "LEFT JOIN product p ON (op.product_id = p.product_id) ";
 		$sql .= "WHERE op.order_id = '" . (int)$order_id . "'";
 		
 		return $this->db->query($sql)->rows;
@@ -167,8 +167,8 @@ class ModelModuleCdekIntegrator extends Model {
 		$sql  = "SELECT oo.*, ";
 		$sql .= "pov.weight, ";
 		$sql .= "pov.weight_prefix ";
-		$sql .= "FROM `" . DB_PREFIX . "order_option` oo ";
-		$sql .= "LEFT JOIN " . DB_PREFIX . "product_option_value pov ON (oo.product_option_value_id = pov.product_option_value_id) ";
+		$sql .= "FROM `order_option` oo ";
+		$sql .= "LEFT JOIN product_option_value pov ON (oo.product_option_value_id = pov.product_option_value_id) ";
 		//$sql .= "product_option_value pov
 		$sql .= "WHERE oo.order_product_id = '" . (int)$order_product_id . "'";
 		
@@ -179,14 +179,14 @@ class ModelModuleCdekIntegrator extends Model {
 		
 		if (!$name) return FALSE;
 		
-		return $this->db->query("SELECT * FROM `" . DB_PREFIX . "cdek_city` WHERE LCASE(name) LIKE '" . $name . "%'")->rows;
+		return $this->db->query("SELECT * FROM `cdek_city` WHERE LCASE(name) LIKE '" . $name . "%'")->rows;
 	}
 	
 	public function addDispatch($data = array()) {
 		
 		if (!$data) return FALSE;
 		
-		$this->db->query("INSERT INTO `" . DB_PREFIX . "cdek_dispatch` SET `dispatch_number` = '" . $this->db->escape($data['number']) . "', `date` = '" . $this->db->escape($data['date']) . "', `server_date` = '" . $this->db->escape(time()) . "'");
+		$this->db->query("INSERT INTO `cdek_dispatch` SET `dispatch_number` = '" . $this->db->escape($data['number']) . "', `date` = '" . $this->db->escape($data['date']) . "', `server_date` = '" . $this->db->escape(time()) . "'");
 	
 		$dispatch_id = $this->db->getLastId();
 		
@@ -196,7 +196,7 @@ class ModelModuleCdekIntegrator extends Model {
 				
 				$order_id = (int)$order_info['order_id'];
 				
-				$sql  = "INSERT INTO `" . DB_PREFIX . "cdek_order` SET ";
+				$sql  = "INSERT INTO `cdek_order` SET ";
 				$sql .= "`order_id` = " . $order_id . ", ";
 				$sql .= "`dispatch_id` = " . (int)$dispatch_id . ", ";
 				
@@ -254,7 +254,7 @@ class ModelModuleCdekIntegrator extends Model {
 				
 				foreach ($order_info['status_history'] as $status_info) {
 					
-					$sql  = "INSERT INTO `" . DB_PREFIX . "cdek_order_status_history` SET ";
+					$sql  = "INSERT INTO `cdek_order_status_history` SET ";
 					$sql .= "`order_id` = " . (int)$order_id . ", ";
 					$sql .= "`date` = '" . $this->db->escape($status_info['date']) . "', ";
 					$sql .= "`status_id` = " . (int)$status_info['status_id'] . ", ";
@@ -268,7 +268,7 @@ class ModelModuleCdekIntegrator extends Model {
 				
 				foreach ($order_info['package'] as $package_id => $package_info) {
 					
-					$sql  = "INSERT INTO `" . DB_PREFIX . "cdek_order_package` SET ";
+					$sql  = "INSERT INTO `cdek_order_package` SET ";
 					$sql .= "`order_id` = " . (int)$order_id . ", ";
 					$sql .= "`number` = " . (int)$package_id . ", ";
 					$sql .= "`brcode` = '" . ($package_info['brcode'] != '' ? $package_info['brcode'] : (int)$package_id) . "', ";
@@ -283,7 +283,7 @@ class ModelModuleCdekIntegrator extends Model {
 					
 					foreach ($package_info['item'] as $item_row => $item_info) {
 						
-						$sql  = "INSERT INTO `" . DB_PREFIX . "cdek_order_package_item` SET ";
+						$sql  = "INSERT INTO `cdek_order_package_item` SET ";
 						$sql .= "`package_id` = " . $package_id . ", ";
 						$sql .= "`order_id` = " . (int)$order_id . ", ";
 						$sql .= "`ware_key` = " . (int)$item_info['ware_key'] . ", ";
@@ -301,7 +301,7 @@ class ModelModuleCdekIntegrator extends Model {
 				
 				if ($order_info['courier']['call']) {
 					
-					$sql  = "INSERT INTO `" . DB_PREFIX . "cdek_order_courier` SET ";
+					$sql  = "INSERT INTO `cdek_order_courier` SET ";
 					$sql .= "`order_id` = " . (int)$order_id . ", ";
 					$sql .= "`date` = '" . $this->db->escape(strtotime($order_info['courier']['date'])) . "', ";
 					$sql .= "`time_beg` = '" . $order_info['courier']['time_beg'] . "', ";
@@ -325,7 +325,7 @@ class ModelModuleCdekIntegrator extends Model {
 					
 					foreach ($order_info['schedule'] as $attempt_id => $attempt_info) {
 						
-						$sql = "INSERT INTO `" . DB_PREFIX . "cdek_order_schedule` SET ";
+						$sql = "INSERT INTO `cdek_order_schedule` SET ";
 						$sql .= "`attempt_id` = " . ((int)$order_id . (int)$attempt_id) . ", ";
 						$sql .= "`order_id` = " . (int)$order_id . ", ";
 						$sql .= "`date` = '" . $this->db->escape(strtotime($attempt_info['date'])) . "', ";
@@ -349,7 +349,7 @@ class ModelModuleCdekIntegrator extends Model {
 					
 					foreach ($order_info['add_service'] as $service_id => $service_info) {
 						
-						$sql = "INSERT INTO `" . DB_PREFIX . "cdek_order_add_service` SET ";
+						$sql = "INSERT INTO `cdek_order_add_service` SET ";
 						$sql .= "`service_id` = " . $service_info['service_id'] . ", ";
 						$sql .= "`order_id` = " . (int)$order_id;
 						
@@ -381,7 +381,7 @@ class ModelModuleCdekIntegrator extends Model {
 		if ($dispatch_info = $this->getDispatchInfo($order_id)) 
 		{
 			
-			$sql  = "UPDATE `" . DB_PREFIX . "cdek_order` SET last_exchange = " . time();
+			$sql  = "UPDATE `cdek_order` SET last_exchange = " . time();
 
 			if (!empty($data['status_id'])) {
 				
@@ -436,11 +436,11 @@ class ModelModuleCdekIntegrator extends Model {
 			
 			if (!empty($data['status_history'])) {
 				
-				$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_status_history` WHERE order_id = '" . (int)$order_id . "'");
+				$this->db->query("DELETE FROM `cdek_order_status_history` WHERE order_id = '" . (int)$order_id . "'");
 				
 				foreach ($data['status_history'] as $status_info) {
 					
-					$sql  = "INSERT INTO `" . DB_PREFIX . "cdek_order_status_history` SET ";
+					$sql  = "INSERT INTO `cdek_order_status_history` SET ";
 					$sql .= "`order_id` = " . (int)$order_id . ", ";
 					$sql .= "`date` = '" . $this->db->escape($status_info['date']) . "', ";
 					$sql .= "`status_id` = " . (int)$status_info['status_id'] . ", ";
@@ -456,11 +456,11 @@ class ModelModuleCdekIntegrator extends Model {
 			
 			if (!empty($data['reason_history'])) {
 				
-				$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_reason` WHERE  order_id = '" . (int)$order_id . "'");
+				$this->db->query("DELETE FROM `cdek_order_reason` WHERE  order_id = '" . (int)$order_id . "'");
 				
 				foreach ($data['reason_history'] as $reason_info) {
 					
-					$sql  = "INSERT INTO `" . DB_PREFIX . "cdek_order_reason` SET ";
+					$sql  = "INSERT INTO `cdek_order_reason` SET ";
 					$sql .= "`reason_id` = " . (int)$reason_info['reason_id'] . ", ";
 					$sql .= "`order_id` = " . (int)$order_id . ", ";
 					$sql .= "`date` = '" . $this->db->escape($reason_info['date']) . "', ";
@@ -474,11 +474,11 @@ class ModelModuleCdekIntegrator extends Model {
 			
 			if (!empty($data['delay_history'])) {
 				
-				$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_delay_history` WHERE order_id = '" . (int)$order_id . "'");
+				$this->db->query("DELETE FROM `cdek_order_delay_history` WHERE order_id = '" . (int)$order_id . "'");
 				
 				foreach ($data['delay_history'] as $delay_info) {
 					
-					$sql  = "INSERT INTO `" . DB_PREFIX . "cdek_order_delay_history` SET ";
+					$sql  = "INSERT INTO `cdek_order_delay_history` SET ";
 					$sql .= "`order_id` = " . (int)$order_id . ", ";
 					$sql .= "`delay_id` = " . (int)$delay_info['delay_id'] . ", ";
 					$sql .= "`date` = '" . $this->db->escape($delay_info['date']) . "', ";
@@ -492,11 +492,11 @@ class ModelModuleCdekIntegrator extends Model {
 			
 			if (!empty($data['attempt'])) {
 				
-				$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_schedule_delay` WHERE order_id = '" . (int)$order_id . "'");
+				$this->db->query("DELETE FROM `cdek_order_schedule_delay` WHERE order_id = '" . (int)$order_id . "'");
 				
 				foreach ($data['attempt'] as $attempt_info) {
 					
-					$sql  = "INSERT INTO `" . DB_PREFIX . "cdek_order_schedule_delay` SET ";
+					$sql  = "INSERT INTO `cdek_order_schedule_delay` SET ";
 					$sql .= "`order_id` = " . (int)$order_id . ", ";
 					$sql .= "`attempt_id` = " . (int)$attempt_info['attempt_id'] . ", ";
 					$sql .= "`delay_id` = " . (int)$attempt_info['delay_id'] . ", ";
@@ -510,11 +510,11 @@ class ModelModuleCdekIntegrator extends Model {
 			
 			if (!empty($data['call']['good'])) {
 				
-				$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_call_history_good` WHERE order_id = '" . (int)$order_id . "'");
+				$this->db->query("DELETE FROM `cdek_order_call_history_good` WHERE order_id = '" . (int)$order_id . "'");
 				
 				foreach ($data['call']['good'] as $call_info) {
 					
-					$sql  = "INSERT INTO `" . DB_PREFIX . "cdek_order_call_history_good` SET ";
+					$sql  = "INSERT INTO `cdek_order_call_history_good` SET ";
 					$sql .= "`order_id` = " . (int)$order_id . ", ";
 					$sql .= "`date` = '" . $this->db->escape($call_info['date']) . "', ";
 					$sql .= "`date_deliv` = '" . $this->db->escape($call_info['date_deliv']) . "';";
@@ -527,11 +527,11 @@ class ModelModuleCdekIntegrator extends Model {
 			
 			if (!empty($data['call']['fail'])) {
 				
-				$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_call_history_fail` WHERE order_id = '" . (int)$order_id . "'");
+				$this->db->query("DELETE FROM `cdek_order_call_history_fail` WHERE order_id = '" . (int)$order_id . "'");
 				
 				foreach ($data['call']['fail'] as $call_info) {
 					
-					$sql  = "INSERT INTO `" . DB_PREFIX . "cdek_order_call_history_fail` SET ";
+					$sql  = "INSERT INTO `cdek_order_call_history_fail` SET ";
 					$sql .= "`order_id` = " . (int)$order_id . ", ";
 					$sql .= "`fail_id` = " . (int)$call_info['fail_id'] . ", ";
 					$sql .= "`date` = '" . $this->db->escape($call_info['date']) . "', ";
@@ -545,11 +545,11 @@ class ModelModuleCdekIntegrator extends Model {
 			
 			if (!empty($data['call']['delay'])) {
 				
-				$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_call_history_delay` WHERE order_id = '" . (int)$order_id . "'");
+				$this->db->query("DELETE FROM `cdek_order_call_history_delay` WHERE order_id = '" . (int)$order_id . "'");
 				
 				foreach ($data['call']['delay'] as $call_info) {
 					
-					$sql  = "INSERT INTO `" . DB_PREFIX . "cdek_order_call_history_delay` SET ";
+					$sql  = "INSERT INTO `cdek_order_call_history_delay` SET ";
 					$sql .= "`order_id` = " . (int)$order_id . ", ";
 					$sql .= "`date` = '" . $this->db->escape($call_info['date']) . "', ";
 					$sql .= "`date_next` = '" . $this->db->escape($call_info['date_next']) . "';";
@@ -567,7 +567,7 @@ class ModelModuleCdekIntegrator extends Model {
 	}
 	
 	public function orderExists($order_id) {
-		return $this->db->query("SELECT COUNT(*) total FROM `" . DB_PREFIX . "cdek_order` WHERE order_id = " . (int)$order_id)->row['total'];
+		return $this->db->query("SELECT COUNT(*) total FROM `cdek_order` WHERE order_id = " . (int)$order_id)->row['total'];
 	}
 	
 	public function getDispatchInfo($order_id) {
@@ -583,13 +583,13 @@ class ModelModuleCdekIntegrator extends Model {
 		$sql .= "os.description status_description, ";
 		$sql .= "os.city_id status_city_id, ";
 		$sql .= "os.city_name status_city_name, ";
-		$sql .= "(SELECT cor.description FROM `" . DB_PREFIX . "cdek_order_reason` cor WHERE cor.reason_id = o.reason_id AND cor.order_id = o.order_id) reason_status, ";
+		$sql .= "(SELECT cor.description FROM `cdek_order_reason` cor WHERE cor.reason_id = o.reason_id AND cor.order_id = o.order_id) reason_status, ";
 		$sql .= "od.date delay_date, ";
 		$sql .= "od.description delay_description ";
-		$sql .= "FROM `" . DB_PREFIX . "cdek_order` o ";
-		$sql .= "INNER JOIN `" . DB_PREFIX . "cdek_dispatch` d ON (o.dispatch_id = d.dispatch_id)";
-		$sql .= "LEFT JOIN (SELECT * FROM `" . DB_PREFIX . "cdek_order_status_history` ORDER BY date DESC LIMIT 1) os ON (o.order_id = os.order_id AND o.status_id = os.status_id) ";
-		$sql .= "LEFT JOIN (SELECT * FROM `" . DB_PREFIX . "cdek_order_delay_history` ORDER BY date DESC LIMIT 1) od ON (o.order_id = od.order_id AND o.delay_id = od.delay_id) ";
+		$sql .= "FROM `cdek_order` o ";
+		$sql .= "INNER JOIN `cdek_dispatch` d ON (o.dispatch_id = d.dispatch_id)";
+		$sql .= "LEFT JOIN (SELECT * FROM `cdek_order_status_history` ORDER BY date DESC LIMIT 1) os ON (o.order_id = os.order_id AND o.status_id = os.status_id) ";
+		$sql .= "LEFT JOIN (SELECT * FROM `cdek_order_delay_history` ORDER BY date DESC LIMIT 1) od ON (o.order_id = od.order_id AND o.delay_id = od.delay_id) ";
 		$sql .= "WHERE o.order_id = " . (int)$order_id;
 		
 		return $this->db->query($sql)->row;
@@ -601,22 +601,22 @@ class ModelModuleCdekIntegrator extends Model {
 		
 		if ($dispatch_info) {
 			
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order` WHERE order_id = '" . (int)$order_id . "'");
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_add_service` WHERE order_id = '" . (int)$order_id . "'");
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_call` WHERE order_id = '" . (int)$order_id . "'");
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_call_history_delay` WHERE order_id = '" . (int)$order_id . "'");
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_call_history_fail` WHERE order_id = '" . (int)$order_id . "'");
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_call_history_good` WHERE order_id = '" . (int)$order_id . "'");
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_courier` WHERE order_id = '" . (int)$order_id . "'");
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_delay_history` WHERE order_id = '" . (int)$order_id . "'");
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_package` WHERE order_id = '" . (int)$order_id . "'");
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_package_item` WHERE order_id = '" . (int)$order_id . "'");
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_reason` WHERE  order_id = '" . (int)$order_id . "'");
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_schedule` WHERE order_id = '" . (int)$order_id . "'");
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_schedule_delay` WHERE order_id = '" . (int)$order_id . "'");
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_order_status_history` WHERE order_id = '" . (int)$order_id . "'");
+			$this->db->query("DELETE FROM `cdek_order` WHERE order_id = '" . (int)$order_id . "'");
+			$this->db->query("DELETE FROM `cdek_order_add_service` WHERE order_id = '" . (int)$order_id . "'");
+			$this->db->query("DELETE FROM `cdek_order_call` WHERE order_id = '" . (int)$order_id . "'");
+			$this->db->query("DELETE FROM `cdek_order_call_history_delay` WHERE order_id = '" . (int)$order_id . "'");
+			$this->db->query("DELETE FROM `cdek_order_call_history_fail` WHERE order_id = '" . (int)$order_id . "'");
+			$this->db->query("DELETE FROM `cdek_order_call_history_good` WHERE order_id = '" . (int)$order_id . "'");
+			$this->db->query("DELETE FROM `cdek_order_courier` WHERE order_id = '" . (int)$order_id . "'");
+			$this->db->query("DELETE FROM `cdek_order_delay_history` WHERE order_id = '" . (int)$order_id . "'");
+			$this->db->query("DELETE FROM `cdek_order_package` WHERE order_id = '" . (int)$order_id . "'");
+			$this->db->query("DELETE FROM `cdek_order_package_item` WHERE order_id = '" . (int)$order_id . "'");
+			$this->db->query("DELETE FROM `cdek_order_reason` WHERE  order_id = '" . (int)$order_id . "'");
+			$this->db->query("DELETE FROM `cdek_order_schedule` WHERE order_id = '" . (int)$order_id . "'");
+			$this->db->query("DELETE FROM `cdek_order_schedule_delay` WHERE order_id = '" . (int)$order_id . "'");
+			$this->db->query("DELETE FROM `cdek_order_status_history` WHERE order_id = '" . (int)$order_id . "'");
 			
-			$this->db->query("DELETE FROM `" . DB_PREFIX . "cdek_dispatch` WHERE dispatch_id = '" . (int)$dispatch_info['dispatch_id'] . "' AND (SELECT COUNT(*) FROM `" . DB_PREFIX . "cdek_order` WHERE dispatch_id = '" . (int)$dispatch_info['dispatch_id'] . "') = 0");
+			$this->db->query("DELETE FROM `cdek_dispatch` WHERE dispatch_id = '" . (int)$dispatch_info['dispatch_id'] . "' AND (SELECT COUNT(*) FROM `cdek_order` WHERE dispatch_id = '" . (int)$dispatch_info['dispatch_id'] . "') = 0");
 			
 		}
 		
@@ -632,10 +632,10 @@ class ModelModuleCdekIntegrator extends Model {
 		$sql .= "os.city_id as status_city_id, ";
 		$sql .= "os.city_name as status_city_name, ";
 		$sql .= "od.description as delay_status ";
-		$sql .= "FROM `" . DB_PREFIX . "cdek_order` o ";
-		$sql .= "INNER JOIN `" . DB_PREFIX . "cdek_dispatch` d ON (o.dispatch_id = d.dispatch_id)";
-		$sql .= "LEFT JOIN (SELECT * FROM `" . DB_PREFIX . "cdek_order_status_history` ORDER BY date DESC) os ON (o.order_id = os.order_id AND o.status_id = os.status_id)";
-		$sql .= "LEFT JOIN (SELECT * FROM `" . DB_PREFIX . "cdek_order_delay_history` ORDER BY date DESC) od ON (o.order_id = od.order_id AND o.delay_id = od.delay_id) ";
+		$sql .= "FROM `cdek_order` o ";
+		$sql .= "INNER JOIN `cdek_dispatch` d ON (o.dispatch_id = d.dispatch_id)";
+		$sql .= "LEFT JOIN (SELECT * FROM `cdek_order_status_history` ORDER BY date DESC) os ON (o.order_id = os.order_id AND o.status_id = os.status_id)";
+		$sql .= "LEFT JOIN (SELECT * FROM `cdek_order_delay_history` ORDER BY date DESC) od ON (o.order_id = od.order_id AND o.delay_id = od.delay_id) ";
 		
 		$filter = array();
 		
@@ -719,8 +719,8 @@ class ModelModuleCdekIntegrator extends Model {
 	public function getDispatchTotal($data = array()) {
 		
 		$sql  = "SELECT COUNT(o.order_id) as total ";
-		$sql .= "FROM `" . DB_PREFIX . "cdek_order` o ";
-		$sql .= "INNER JOIN `" . DB_PREFIX . "cdek_dispatch` d ON (o.dispatch_id = d.dispatch_id)";
+		$sql .= "FROM `cdek_order` o ";
+		$sql .= "INNER JOIN `cdek_dispatch` d ON (o.dispatch_id = d.dispatch_id)";
 		
 		$filter = array();
 		
@@ -764,49 +764,49 @@ class ModelModuleCdekIntegrator extends Model {
 	}
 	
 	public function getStatusHistory($order_id) {
-		return $this->db->query("SELECT * FROM `" . DB_PREFIX . "cdek_order_status_history` WHERE order_id = " . (int)$order_id . " ORDER BY date DESC")->rows;
+		return $this->db->query("SELECT * FROM `cdek_order_status_history` WHERE order_id = " . (int)$order_id . " ORDER BY date DESC")->rows;
 	}
 	
 	public function getDelayHistory($order_id) {
-		return $this->db->query("SELECT * FROM `" . DB_PREFIX . "cdek_order_delay_history` WHERE order_id = " . (int)$order_id . " ORDER BY date DESC")->rows;
+		return $this->db->query("SELECT * FROM `cdek_order_delay_history` WHERE order_id = " . (int)$order_id . " ORDER BY date DESC")->rows;
 	}
 	
 	public function getCallHistoryGood($order_id) {
-		return $this->db->query("SELECT * FROM `" . DB_PREFIX . "cdek_order_call_history_good` WHERE order_id = " . (int)$order_id . " ORDER BY date DESC")->rows;
+		return $this->db->query("SELECT * FROM `cdek_order_call_history_good` WHERE order_id = " . (int)$order_id . " ORDER BY date DESC")->rows;
 	}
 	
 	public function getCallHistoryFail($order_id) {
-		return $this->db->query("SELECT * FROM `" . DB_PREFIX . "cdek_order_call_history_fail` WHERE order_id = " . (int)$order_id . " ORDER BY date DESC")->rows;
+		return $this->db->query("SELECT * FROM `cdek_order_call_history_fail` WHERE order_id = " . (int)$order_id . " ORDER BY date DESC")->rows;
 	}
 	
 	public function getCallHistoryDelay($order_id) {
-		return $this->db->query("SELECT * FROM `" . DB_PREFIX . "cdek_order_call_history_delay` WHERE order_id = " . (int)$order_id . " ORDER BY date DESC")->rows;
+		return $this->db->query("SELECT * FROM `cdek_order_call_history_delay` WHERE order_id = " . (int)$order_id . " ORDER BY date DESC")->rows;
 	}
 	
 	public function getAddService($order_id) {
-		return $this->db->query("SELECT * FROM `" . DB_PREFIX . "cdek_order_add_service` WHERE order_id = " . (int)$order_id)->rows;
+		return $this->db->query("SELECT * FROM `cdek_order_add_service` WHERE order_id = " . (int)$order_id)->rows;
 	}
 	
 	public function getCourierCall($order_id) {
-		return $this->db->query("SELECT * FROM `" . DB_PREFIX . "cdek_order_courier` WHERE order_id = " . (int)$order_id)->row;
+		return $this->db->query("SELECT * FROM `cdek_order_courier` WHERE order_id = " . (int)$order_id)->row;
 	}
 	
 	public function getChedule($order_id) {
 		
 		$sql  = "SELECT sch.*, ";
-		$sql .= "(SELECT sch_d.description FROM `" . DB_PREFIX . "cdek_order_schedule_delay` sch_d WHERE sch_d.attempt_id = sch.attempt_id AND sch_d.order_id = sch.order_id) as delay ";
-		$sql .= "FROM `" . DB_PREFIX . "cdek_order_schedule` sch ";
+		$sql .= "(SELECT sch_d.description FROM `cdek_order_schedule_delay` sch_d WHERE sch_d.attempt_id = sch.attempt_id AND sch_d.order_id = sch.order_id) as delay ";
+		$sql .= "FROM `cdek_order_schedule` sch ";
 		$sql .= "WHERE sch.order_id = " . (int)$order_id;
 		
 		return $this->db->query($sql)->rows;
 	}
 	
 	public function getPackages($order_id) {
-		return $this->db->query("SELECT * FROM `" . DB_PREFIX . "cdek_order_package` WHERE order_id = " . (int)$order_id)->rows;
+		return $this->db->query("SELECT * FROM `cdek_order_package` WHERE order_id = " . (int)$order_id)->rows;
 	}
 	
 	public function getPackageItems($package_id, $order_id) {
-		return $this->db->query("SELECT * FROM `" . DB_PREFIX . "cdek_order_package_item` WHERE package_id = " . (int)$package_id . " AND order_id = " . (int)$order_id)->rows;
+		return $this->db->query("SELECT * FROM `cdek_order_package_item` WHERE package_id = " . (int)$package_id . " AND order_id = " . (int)$order_id)->rows;
 	}
 	
 	private function changeOrderStatus($cdek_status_id, $dispatch_info) {
@@ -863,7 +863,7 @@ class ModelModuleCdekIntegrator extends Model {
 					
 					if ($order_info && $order_info['order_status_id'] != $rule['order_status_id']) {
 
-						$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int)$rule['order_status_id'] . "', date_modified = NOW() WHERE order_id = '" . (int)$dispatch_info['order_id'] . "'");
+						$this->db->query("UPDATE `order` SET order_status_id = '" . (int)$rule['order_status_id'] . "', date_modified = NOW() WHERE order_id = '" . (int)$dispatch_info['order_id'] . "'");
 						
 					}
 					
@@ -877,7 +877,7 @@ class ModelModuleCdekIntegrator extends Model {
 
 	public function getOrderToSdek($order_id)
 	{
-		$sql = "SELECT * FROM `" . DB_PREFIX . "order_to_sdek` WHERE `order_id` = '".$order_id."' LIMIT 1";
+		$sql = "SELECT * FROM `order_to_sdek` WHERE `order_id` = '".$order_id."' LIMIT 1";
 		$query = $this->db->query($sql);
 		if($query->num_rows)
 		{
@@ -890,12 +890,12 @@ class ModelModuleCdekIntegrator extends Model {
 	}
 
 	public function getCityById($id) {		
-		return $this->db->query("SELECT * FROM `" . DB_PREFIX . "cdek_city` WHERE `id` = '".$id."'")->row;
+		return $this->db->query("SELECT * FROM `cdek_city` WHERE `id` = '".$id."'")->row;
 	}
 	
 	public function install() {
 		
-		$sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "cdek_city` ( ";
+		$sql  = "CREATE TABLE IF NOT EXISTS `cdek_city` ( ";
 		$sql .= "`id` varchar(11) NOT NULL, ";
 		$sql .= "`name` varchar(64) NOT NULL, ";
 		$sql .= "`cityName` varchar(64) NOT NULL, ";
@@ -907,7 +907,7 @@ class ModelModuleCdekIntegrator extends Model {
 		
 		$this->db->query($sql);
 		
-		$sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "cdek_dispatch` ( ";
+		$sql  = "CREATE TABLE IF NOT EXISTS `cdek_dispatch` ( ";
 		$sql .= "`dispatch_id` int(11) NOT NULL AUTO_INCREMENT, ";
 		$sql .= "`dispatch_number` varchar(30) NOT NULL, ";
 		$sql .= "`date` varchar(32) NOT NULL, ";
@@ -917,7 +917,7 @@ class ModelModuleCdekIntegrator extends Model {
 		
 		$this->db->query($sql);
 		
-		$sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "cdek_order` ( ";
+		$sql  = "CREATE TABLE IF NOT EXISTS `cdek_order` ( ";
 		$sql .= "`order_id` int(11) NOT NULL, ";
 		$sql .= "`dispatch_id` int(11) NOT NULL, ";
 		$sql .= "`act_number` varchar(20) DEFAULT NULL, ";
@@ -958,7 +958,7 @@ class ModelModuleCdekIntegrator extends Model {
 		
 		$this->db->query($sql);
 		
-		$sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "cdek_order_add_service` ( ";
+		$sql  = "CREATE TABLE IF NOT EXISTS `cdek_order_add_service` ( ";
 		$sql .= "`service_id` int(4) NOT NULL, ";
 		$sql .= "`order_id` int(11) NOT NULL, ";
 		$sql .= "`description` varchar(100) DEFAULT NULL, ";
@@ -968,7 +968,7 @@ class ModelModuleCdekIntegrator extends Model {
 		
 		$this->db->query($sql);
 		
-		$sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "cdek_order_call` ( ";
+		$sql  = "CREATE TABLE IF NOT EXISTS `cdek_order_call` ( ";
 		$sql .= "`call_id` int(11) NOT NULL AUTO_INCREMENT, ";
 		$sql .= "`order_id` int(11) NOT NULL, ";
 		$sql .= "`date` int(10) NOT NULL, ";
@@ -986,7 +986,7 @@ class ModelModuleCdekIntegrator extends Model {
 		
 		$this->db->query($sql);
 		
-		$sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "cdek_order_call_history_delay` ( ";
+		$sql  = "CREATE TABLE IF NOT EXISTS `cdek_order_call_history_delay` ( ";
 		$sql .= "`order_id` int(11) NOT NULL, ";
 		$sql .= "`date` int(10) NOT NULL, ";
 		$sql .= "`date_next` int(10) NOT NULL, ";
@@ -995,7 +995,7 @@ class ModelModuleCdekIntegrator extends Model {
 		
 		$this->db->query($sql);
 		
-		$sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "cdek_order_call_history_fail` ( ";
+		$sql  = "CREATE TABLE IF NOT EXISTS `cdek_order_call_history_fail` ( ";
 		$sql .= "`order_id` int(11) NOT NULL, ";
 		$sql .= "`fail_id` int(4) NOT NULL, ";
 		$sql .= "`date` int(10) NOT NULL, ";
@@ -1005,7 +1005,7 @@ class ModelModuleCdekIntegrator extends Model {
 		
 		$this->db->query($sql);
 		
-		$sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "cdek_order_call_history_good` ( ";
+		$sql  = "CREATE TABLE IF NOT EXISTS `cdek_order_call_history_good` ( ";
 		$sql .= "`order_id` int(11) NOT NULL, ";
 		$sql .= "`date` int(10) NOT NULL, ";
 		$sql .= "`date_deliv` int(10) NOT NULL, ";
@@ -1014,7 +1014,7 @@ class ModelModuleCdekIntegrator extends Model {
 		
 		$this->db->query($sql);
 		
-		$sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "cdek_order_courier` ( ";
+		$sql  = "CREATE TABLE IF NOT EXISTS `cdek_order_courier` ( ";
 		$sql .= "`courier_id` int(11) NOT NULL AUTO_INCREMENT, ";
 		$sql .= "`order_id` int(11) NOT NULL, ";
 		$sql .= "`date` int(10) NOT NULL, ";
@@ -1035,7 +1035,7 @@ class ModelModuleCdekIntegrator extends Model {
 		
 		$this->db->query($sql);
 		
-		$sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "cdek_order_delay_history` ( ";
+		$sql  = "CREATE TABLE IF NOT EXISTS `cdek_order_delay_history` ( ";
 		$sql .= "`order_id` int(11) NOT NULL, ";
 		$sql .= "`delay_id` int(4) NOT NULL, ";
 		$sql .= "`date` int(10) NOT NULL, ";
@@ -1045,7 +1045,7 @@ class ModelModuleCdekIntegrator extends Model {
 		
 		$this->db->query($sql);
 		
-		$sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "cdek_order_package` ( ";
+		$sql  = "CREATE TABLE IF NOT EXISTS `cdek_order_package` ( ";
 		$sql .= "`package_id` int(11) NOT NULL AUTO_INCREMENT, ";
 		$sql .= "`order_id` int(11) NOT NULL, ";
 		$sql .= "`number` varchar(20) NOT NULL, ";
@@ -1059,7 +1059,7 @@ class ModelModuleCdekIntegrator extends Model {
 		
 		$this->db->query($sql);
 		
-		$sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "cdek_order_package_item` ( ";
+		$sql  = "CREATE TABLE IF NOT EXISTS `cdek_order_package_item` ( ";
 		$sql .= "`package_item_id` int(11) NOT NULL AUTO_INCREMENT, ";
 		$sql .= "`package_id` int(11) NOT NULL, ";
 		$sql .= "`order_id` int(11) NOT NULL, ";
@@ -1074,7 +1074,7 @@ class ModelModuleCdekIntegrator extends Model {
 		
 		$this->db->query($sql);
 		
-		$sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "cdek_order_reason` ( ";
+		$sql  = "CREATE TABLE IF NOT EXISTS `cdek_order_reason` ( ";
 		$sql .= "`reason_id` int(11) NOT NULL AUTO_INCREMENT, ";
 		$sql .= "`order_id` int(11) NOT NULL, ";
 		$sql .= "`date` int(10) NOT NULL, ";
@@ -1084,7 +1084,7 @@ class ModelModuleCdekIntegrator extends Model {
 		
 		$this->db->query($sql);
 		
-		$sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "cdek_order_schedule` ( ";
+		$sql  = "CREATE TABLE IF NOT EXISTS `cdek_order_schedule` ( ";
 		$sql .= "`attempt_id` int(11) NOT NULL, ";
 		$sql .= "`order_id` int(11) NOT NULL, ";
 		$sql .= "`date` int(10) NOT NULL, ";
@@ -1102,7 +1102,7 @@ class ModelModuleCdekIntegrator extends Model {
 		
 		$this->db->query($sql);
 		
-		$sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "cdek_order_schedule_delay` ( ";
+		$sql  = "CREATE TABLE IF NOT EXISTS `cdek_order_schedule_delay` ( ";
 		$sql .= "`order_id` int(11) NOT NULL, ";
 		$sql .= "`attempt_id` int(11) NOT NULL, ";
 		$sql .= "`delay_id` int(11) NOT NULL, ";
@@ -1112,7 +1112,7 @@ class ModelModuleCdekIntegrator extends Model {
 		
 		$this->db->query($sql);
 		
-		$sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "cdek_order_status_history` ( ";
+		$sql  = "CREATE TABLE IF NOT EXISTS `cdek_order_status_history` ( ";
 		$sql .= "`order_id` int(11) NOT NULL, ";
 		$sql .= "`status_id` int(8) NOT NULL, ";
 		$sql .= "`description` varchar(100) NOT NULL, ";
@@ -1124,7 +1124,7 @@ class ModelModuleCdekIntegrator extends Model {
 
 		$this->db->query($sql);
 
-		$sql  = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "order_to_sdek` ( ";
+		$sql  = "CREATE TABLE IF NOT EXISTS `order_to_sdek` ( ";
 		$sql .= "`order_to_sdek_id` int(11) NOT NULL AUTO_INCREMENT, ";
 		$sql .= "`order_id` int(11) NOT NULL, ";
 		$sql .= "`cityId` int(11) NOT NULL, ";
@@ -1138,23 +1138,23 @@ class ModelModuleCdekIntegrator extends Model {
 	
 	public function uninstall() {
 		
-		$sql  = "DROP TABLE `" . DB_PREFIX . "cdek_city`, ";
-		$sql .= "`" . DB_PREFIX . "cdek_dispatch`, ";
-		$sql .= "`" . DB_PREFIX . "cdek_order`, ";
-		$sql .= "`" . DB_PREFIX . "cdek_order_add_service`, ";
-		$sql .= "`" . DB_PREFIX . "cdek_order_call`, ";
-		$sql .= "`" . DB_PREFIX . "cdek_order_call_history_delay`, ";
-		$sql .= "`" . DB_PREFIX . "cdek_order_call_history_fail`, ";
-		$sql .= "`" . DB_PREFIX . "cdek_order_call_history_good`, ";
-		$sql .= "`" . DB_PREFIX . "cdek_order_courier`, ";
-		$sql .= "`" . DB_PREFIX . "cdek_order_delay_history`, ";
-		$sql .= "`" . DB_PREFIX . "cdek_order_package`, ";
-		$sql .= "`" . DB_PREFIX . "cdek_order_package_item`, ";
-		$sql .= "`" . DB_PREFIX . "cdek_order_reason`, ";
-		$sql .= "`" . DB_PREFIX . "cdek_order_schedule`, ";
-		$sql .= "`" . DB_PREFIX . "cdek_order_schedule_delay`, ";
-		$sql .= "`" . DB_PREFIX . "cdek_order_status_history`, ";
-		$sql .= "`" . DB_PREFIX . "order_to_sdek`;";
+		$sql  = "DROP TABLE `cdek_city`, ";
+		$sql .= "`cdek_dispatch`, ";
+		$sql .= "`cdek_order`, ";
+		$sql .= "`cdek_order_add_service`, ";
+		$sql .= "`cdek_order_call`, ";
+		$sql .= "`cdek_order_call_history_delay`, ";
+		$sql .= "`cdek_order_call_history_fail`, ";
+		$sql .= "`cdek_order_call_history_good`, ";
+		$sql .= "`cdek_order_courier`, ";
+		$sql .= "`cdek_order_delay_history`, ";
+		$sql .= "`cdek_order_package`, ";
+		$sql .= "`cdek_order_package_item`, ";
+		$sql .= "`cdek_order_reason`, ";
+		$sql .= "`cdek_order_schedule`, ";
+		$sql .= "`cdek_order_schedule_delay`, ";
+		$sql .= "`cdek_order_status_history`, ";
+		$sql .= "`order_to_sdek`;";
 		
 		$this->db->query($sql);
 	}
@@ -1171,8 +1171,8 @@ class ModelModuleCdekIntegrator extends Model {
 		);
 		
 		$sql  = "SELECT o.* ";
-		$sql .= "FROM `" . DB_PREFIX . "cdek_order` o ";
-		$sql .= "INNER JOIN `" . DB_PREFIX . "cdek_dispatch` d ON (o.dispatch_id = d.dispatch_id)";
+		$sql .= "FROM `cdek_order` o ";
+		$sql .= "INNER JOIN `cdek_dispatch` d ON (o.dispatch_id = d.dispatch_id)";
 		$sql .= "WHERE (UNIX_TIMESTAMP() - o.last_exchange) > " . $exchange_interval . " AND ";
 		$sql .= "o.status_id NOT IN (" . implode(',', $filter_statuses) . ") ";
 		$sql .= "ORDER BY o.last_exchange, d.date ";
@@ -1197,14 +1197,14 @@ class ModelModuleCdekIntegrator extends Model {
 		$filter_statuses = array();
 		
 		$sql  = "SELECT o.* ";
-		$sql .= "FROM `" . DB_PREFIX . "cdek_order` o ";
-		$sql .= "INNER JOIN `" . DB_PREFIX . "cdek_dispatch` d ON (o.dispatch_id = d.dispatch_id)";
+		$sql .= "FROM `cdek_order` o ";
+		$sql .= "INNER JOIN `cdek_dispatch` d ON (o.dispatch_id = d.dispatch_id)";
 	//	$sql .= "WHERE (UNIX_TIMESTAMP() - o.last_exchange) > " . $exchange_interval . " AND ";
 	//	$sql .= " WHERE o.status_id NOT IN (" . implode(',', $filter_statuses) . ") ";
 		$sql .= "ORDER BY o.last_exchange, d.date";
 		
 	//	$sql  = "SELECT o.* ";
-	//	$sql .= "FROM `" . DB_PREFIX . "cdek_order` o ";
+	//	$sql .= "FROM `cdek_order` o ";
 		
 		if (!$this->db->query($sql)->num_rows){
 			return false;
