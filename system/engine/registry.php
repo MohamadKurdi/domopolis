@@ -14,6 +14,23 @@ final class Registry {
 		return isset($this->data[$key]);
 	}
 
+	public function setSyncDB(){
+		if ($this->has('dbcs') && $this->get('dbcs')){
+			$this->set('dbmain', $this->get('db'));
+			$this->set('db', $this->get('dbsc'));
+		}
+
+		return $this;
+	}
+
+	public function setMainDB(){
+		if ($this->has('dmain') && $this->get('dmain')){
+			$this->set('db', $this->get('dmain'));	
+		}	
+
+		return $this;
+	}
+
 	public function createCacheQueryString($method, $setting = [], $options = []){
 		return  
 			$method . 

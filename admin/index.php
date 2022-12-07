@@ -91,6 +91,7 @@ $registry->set('config', $config);
 
 $db = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
 $registry->set('db', $db);
+$registry->set('dbmain', $db);
 
 if (defined('DB_CONTENT_SYNC') && DB_CONTENT_SYNC){
 	$dbcs = new DB(DB_CONTENT_SYNC_DRIVER, DB_CONTENT_SYNC_HOSTNAME, DB_CONTENT_SYNC_USERNAME, DB_CONTENT_SYNC_PASSWORD, DB_CONTENT_SYNC_DATABASE);
