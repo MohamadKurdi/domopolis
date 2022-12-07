@@ -89,9 +89,13 @@ $registry->set('load', $loader);
 $config = new Config();
 $registry->set('config', $config);
 
+$log = new Log('php-errors-admin.log');
+$registry->set('log', $log);
+
 $db = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
 $registry->set('db', $db);
 $registry->set('dbmain', $db);
+$registry->set('current_db', 'dbmain');
 
 if (defined('DB_CONTENT_SYNC') && DB_CONTENT_SYNC){
 	$dbcs = new DB(DB_CONTENT_SYNC_DRIVER, DB_CONTENT_SYNC_HOSTNAME, DB_CONTENT_SYNC_USERNAME, DB_CONTENT_SYNC_PASSWORD, DB_CONTENT_SYNC_DATABASE);
@@ -101,7 +105,6 @@ if (defined('DB_CONTENT_SYNC') && DB_CONTENT_SYNC){
 	if (!empty($syncConfig['sync'])){
 		$registry->set('sync', $syncConfig['sync']);
 	}
-
 } else {
 	$registry->set('dbcs', false);
 }
@@ -123,9 +126,6 @@ if (count($configFileExploded = explode('.', $configFile)) == 3){
 	}
 }
 $registry->get('config')->set('config_config_file_prefix', $configFilesPrefix);
-
-$log = new Log('php-errors-admin.log');
-$registry->set('log', $log);
 
 $smsQueue = new smsQueue($registry);
 $registry->set('smsQueue', $smsQueue);

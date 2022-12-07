@@ -1224,7 +1224,7 @@
 		}
 
 
-		public function deleteProductSimple($product_id){
+		public function deleteProductSimple($product_id, $return = false){
 
 			foreach ($this->product_related_tables as $table){
 				$sql = "DELETE FROM `" . $table . "` WHERE product_id = '" . (int)$product_id . "'";
@@ -1236,10 +1236,18 @@
 
 			$this->db->query("DELETE FROM product_sponsored WHERE sponsored_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_similar WHERE similar_id = '" . (int)$product_id . "'");
+
+			if ($return){
+				return;
+			}
+
+			$this->registry->setSyncDB();
+			$this->deleteProductSimple($product_id, true);
+			$this->registry->setMainDB();
 		}
 	
-		public function deleteProduct($product_id, $recursion = true, $asin_deletion_mode = false) {
-
+		public function deleteProduct($product_id, $recursion = true, $asin_deletion_mode = false, $return = false) {
+			
 			if (empty($this->session->data['config_rainforest_asin_deletion_mode'])){
 				$this->session->data['config_rainforest_asin_deletion_mode'] = $this->config->get('config_rainforest_asin_deletion_mode');
 			}
@@ -1295,12 +1303,20 @@
                 foreach($results as $result){
                     $results = $this->model_catalog_set->deleteSet($result['set_id']);
 				}
-			}
+			} 		
 
 			$this->db->query("DELETE FROM url_alias WHERE query = 'product_id=" . (int)$product_id. "'");			
 
 			$this->load->model('kp/content');
 			$this->model_kp_content->addContent(['action' => 'delete', 'entity_type' => 'product', 'entity_id' => $product_id]);
+
+			if ($return){
+				return;
+			}
+
+			$this->registry->setSyncDB();
+			$this->deleteProduct($product_id, $recursion, $asin_deletion_mode, true);
+			$this->registry->setMainDB();
 		}
 
 		public function countVariantProducts($product_id){

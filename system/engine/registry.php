@@ -14,10 +14,27 @@ final class Registry {
 		return isset($this->data[$key]);
 	}
 
+	public function mainDBIsUsed(){
+		if (!$this->has('current_db')){
+			return true;
+		}
+
+		if ($this->has('current_db') && $this->get('current_db') == 'dbmain'){
+			return true;
+		}
+
+		if ($this->has('current_db') && $this->get('current_db') == 'dbcs'){
+			return false;
+		}
+
+		return true;
+	}
+
 	public function setSyncDB(){
 		if ($this->has('dbcs') && $this->get('dbcs')){
 			$this->set('dbmain', $this->get('db'));
-			$this->set('db', $this->get('dbsc'));
+			$this->set('db', $this->get('dbcs'));
+			$this->set('current_db', 'dbcs');
 		}
 
 		return $this;
@@ -26,6 +43,7 @@ final class Registry {
 	public function setMainDB(){
 		if ($this->has('dmain') && $this->get('dmain')){
 			$this->set('db', $this->get('dmain'));	
+			$this->set('current_db', 'dbmain');
 		}	
 
 		return $this;
