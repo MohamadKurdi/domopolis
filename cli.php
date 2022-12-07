@@ -252,6 +252,20 @@ if ($registry->get('config')->get('config_order_default')){
 	$registry->get('config')->set('order_default', $sorts['order_default']);
 }
 
+//Вторая БД, в случае необхоидмости синхронизации некоторых действий
+if (defined('DB_CONTENT_SYNC') && DB_CONTENT_SYNC){
+	$dbcs = new DB(DB_CONTENT_SYNC_DRIVER, DB_CONTENT_SYNC_HOSTNAME, DB_CONTENT_SYNC_USERNAME, DB_CONTENT_SYNC_PASSWORD, DB_CONTENT_SYNC_DATABASE);
+	$registry->set('dbcs', $dbcs);
+
+	$syncConfig = loadJsonConfig('sync');
+	if (!empty($syncConfig['sync'])){
+		$registry->set('sync', $syncConfig['sync']);
+	}
+
+} else {
+	$registry->set('dbcs', false);
+}
+
 
 	//Библиотека респонса
 $response = new Response($registry);
