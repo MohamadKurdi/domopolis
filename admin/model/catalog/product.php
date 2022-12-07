@@ -1224,7 +1224,22 @@
 		}
 
 
-		public function deleteProductSimple($product_id, $return = false){
+		public function deleteProductSimple($product_id, $product_id_is_asin = false, $return = false){
+
+			if ($this->config->get('config_enable_amazon_specific_modes') && $product_id_is_asin){
+				$query = $this->db->query("SELECT p.product_id FROM product p WHERE p.asin = '" . $this->db->escape($product_id) . "' LIMIT 1");
+				if ($query->num_rows && !empty($query->row['product_id'])){
+					$product_id = (int)$query->row['product_id'];
+				}
+			}
+
+			if ($this->config->get('config_enable_amazon_specific_modes')){
+				$query = $this->db->query("SELECT p.asin FROM product p WHERE p.product_id = '" . (int)$product_id . "' LIMIT 1");
+
+				if ($query->num_rows && !empty($query->row['asin'])){
+					$asin = $query->row['asin'];				
+				}
+			}
 
 			foreach ($this->product_related_tables as $table){
 				$sql = "DELETE FROM `" . $table . "` WHERE product_id = '" . (int)$product_id . "'";
@@ -1241,12 +1256,23 @@
 				return;
 			}
 
-			$this->registry->setSyncDB();
-			$this->deleteProductSimple($product_id, true);
-			$this->registry->setMainDB();
+			if ($this->config->get('config_enable_amazon_specific_modes')){				
+				if (!empty($asin)){
+					$this->registry->setSyncDB();
+					$this->deleteProduct($asin, $recursion, $asin_deletion_mode, true, true);
+					$this->registry->setMainDB();
+				}
+			}
 		}
 	
-		public function deleteProduct($product_id, $recursion = true, $asin_deletion_mode = false, $return = false) {
+		public function deleteProduct($product_id, $recursion = true, $asin_deletion_mode = false, $product_id_is_asin = false, $return = false) {
+
+			if ($this->config->get('config_enable_amazon_specific_modes') && $product_id_is_asin){
+				$query = $this->db->query("SELECT p.product_id FROM product p WHERE p.asin = '" . $this->db->escape($product_id) . "' LIMIT 1");
+				if ($query->num_rows && !empty($query->row['product_id'])){
+					$product_id = (int)$query->row['product_id'];
+				}
+			}
 			
 			if (empty($this->session->data['config_rainforest_asin_deletion_mode'])){
 				$this->session->data['config_rainforest_asin_deletion_mode'] = $this->config->get('config_rainforest_asin_deletion_mode');
@@ -1260,6 +1286,7 @@
 				$query = $this->db->query("SELECT p.asin, pd.name FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id AND language_id = '26') WHERE p.product_id = '" . (int)$product_id . "' LIMIT 1");
 
 				if ($query->num_rows && !empty($query->row['asin'])){
+					$asin = $query->row['asin'];
 					$this->db->query("INSERT IGNORE INTO deleted_asins SET asin = '" . $this->db->escape($query->row['asin']) . "', name = '" . $this->db->escape($query->row['name']) . "', date_added = NOW(), user_id = '" . $this->user->getID() . "'");
 				}
 			}
@@ -1299,9 +1326,9 @@
 			
 			$this->load->model('catalog/set');
 			$results = $this->model_catalog_set->getSetsByProductId($product_id);
-            if($results){
-                foreach($results as $result){
-                    $results = $this->model_catalog_set->deleteSet($result['set_id']);
+			if($results){
+				foreach($results as $result){
+					$results = $this->model_catalog_set->deleteSet($result['set_id']);
 				}
 			} 		
 
@@ -1314,9 +1341,13 @@
 				return;
 			}
 
-			$this->registry->setSyncDB();
-			$this->deleteProduct($product_id, $recursion, $asin_deletion_mode, true);
-			$this->registry->setMainDB();
+			if ($this->config->get('config_enable_amazon_specific_modes')){
+				if (!empty($asin)){
+					$this->registry->setSyncDB();
+					$this->deleteProduct($asin, $recursion, $asin_deletion_mode, true, true);
+					$this->registry->setMainDB();
+				}
+			}
 		}
 
 		public function countVariantProducts($product_id){
