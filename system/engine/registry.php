@@ -28,6 +28,10 @@ final class Registry {
 		}
 
 		return true;
+	}	
+
+	public function hasDBCS(){
+		return ($this->has('dbcs') && $this->get('dbcs'));
 	}
 
 	public function setSyncDB(){
