@@ -1253,14 +1253,14 @@
 			$this->db->query("DELETE FROM product_similar WHERE similar_id = '" . (int)$product_id . "'");
 
 			if ($return){
+				$this->registry->setMainDB();
 				return;
 			}
 
-			if ($this->config->get('config_enable_amazon_specific_modes')){				
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->registry->hasDBCS()){				
 				if (!empty($asin)){
 					$this->registry->setSyncDB();
-					$this->deleteProduct($asin, $recursion, $asin_deletion_mode, true, true);
-					$this->registry->setMainDB();
+					$this->deleteProduct($asin, $recursion, $asin_deletion_mode, true, true);					
 				}
 			}
 		}
@@ -1338,14 +1338,14 @@
 			$this->model_kp_content->addContent(['action' => 'delete', 'entity_type' => 'product', 'entity_id' => $product_id]);
 
 			if ($return){
+				$this->registry->setMainDB();
 				return;
 			}
 
-			if ($this->config->get('config_enable_amazon_specific_modes')){
+			if ($this->config->get('config_enable_amazon_specific_modes') && $this->registry->hasDBCS()){
 				if (!empty($asin)){
 					$this->registry->setSyncDB();
-					$this->deleteProduct($asin, $recursion, $asin_deletion_mode, true, true);
-					$this->registry->setMainDB();
+					$this->deleteProduct($asin, $recursion, $asin_deletion_mode, true, true);					
 				}
 			}
 		}
