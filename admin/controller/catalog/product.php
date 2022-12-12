@@ -2444,7 +2444,7 @@ class ControllerCatalogProduct extends Controller {
 
 		foreach ($product_videos as $product_video) {
 			$this->data['product_videos'][] = array(
-				'image'      				=> $image,
+				'image'      				=> $product_video['image'],
 				'video'      				=> $product_video['video'],
 				'play'						=> $this->model_tool_image->video($product_video['video']),
 				'thumb'      				=> $this->model_tool_image->resize($product_video['image'], 100, 100),					
