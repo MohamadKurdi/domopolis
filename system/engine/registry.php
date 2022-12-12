@@ -34,6 +34,10 @@ final class Registry {
 		return ($this->has('dbcs') && $this->get('dbcs'));
 	}
 
+	public function currentDB(){
+		print_r($this->get('db')->getCurrentDatabase());
+	}
+
 	public function setSyncDB(){
 		if ($this->has('dbcs') && $this->get('dbcs')){
 			$this->set('dbmain', $this->get('db'));
@@ -44,9 +48,9 @@ final class Registry {
 		return $this;
 	}
 
-	public function setMainDB(){
-		if ($this->has('dmain') && $this->get('dmain')){
-			$this->set('db', $this->get('dmain'));	
+	public function setMainDB(){			
+		if ($this->has('dbmain') && $this->get('dbmain')){
+			$this->set('db', $this->get('dbmain'));	
 			$this->set('current_db', 'dbmain');
 		}	
 
