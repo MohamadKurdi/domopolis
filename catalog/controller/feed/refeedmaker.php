@@ -371,6 +371,8 @@ class ControllerFeedReFeedMaker extends Controller
                 $this->makeFeedsCron(true);
             }
         }
+
+        $this->cleanUp();
     }
 
     private function normalizeForGoogle($text)
