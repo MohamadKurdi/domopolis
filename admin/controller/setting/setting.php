@@ -66,8 +66,10 @@ class ControllerSettingSetting extends Controller
 
             $this->data['panelLink'] = $this->url->link('common/panel', 'token=' . $this->session->data['token'], 'SSL');
        //     $this->data['serverResponceTime'] = $this->PageCache->getServerResponceTime();
-            $this->data['redisMem']         = $this->PageCache->getRedisInfo();
-            $this->data['pageCacheInfo']    = $this->PageCache->getPageCacheInfo();
+            $this->data['redisMem']             = $this->PageCache->getRedisInfo();
+            $this->data['pageCacheInfo']        = $this->PageCache->getPageCacheInfo();
+            $this->data['refeedsCount']         = $this->PageCache->getReFeedsCount();
+            $this->data['refeedsCountLink']     = $this->url->link('setting/feeds', 'token=' . $this->session->data['token'], 'SSL');
 
             
             $this->template = 'common/cachebuttons.tpl';
