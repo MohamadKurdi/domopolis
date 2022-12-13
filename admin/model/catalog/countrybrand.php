@@ -63,7 +63,7 @@
 			
 			if (isset($data['countrybrand_image'])) {
 				foreach ($data['countrybrand_image'] as $countrybrand_image) {				
-					$this->db->query("INSERT INTO " . DB_PREFIX . "countrybrand_image SET countrybrand_id = '" . (int)$countrybrand_id . "', image = '" . $this->db->escape(html_entity_decode($countrybrand_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$countrybrand_image['sort_order'] . "'");
+					$this->db->query("INSERT INTO countrybrand_image SET countrybrand_id = '" . (int)$countrybrand_id . "', image = '" . $this->db->escape(html_entity_decode($countrybrand_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$countrybrand_image['sort_order'] . "'");
 				}
 			}
 			
@@ -77,12 +77,12 @@
 				}
 			}
 			
-			$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'countrybrand_id=" . (int)$countrybrand_id. "'");
+			$this->db->query("DELETE FROM url_alias WHERE query = 'countrybrand_id=" . (int)$countrybrand_id. "'");
 			
 			
 			if ($data['keyword']) {
 				foreach ($data['keyword'] as $language_id => $keyword) {
-					if ($keyword) {$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'countrybrand_id=" . (int)$countrybrand_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'countrybrand_id=" . (int)$countrybrand_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
 				}
 			}
 			
@@ -113,7 +113,7 @@
 			$this->db->query("DELETE FROM countrybrand_image WHERE countrybrand_id = '" . (int)$countrybrand_id . "'");
 			if (isset($data['countrybrand_image'])) {
 				foreach ($data['countrybrand_image'] as $countrybrand_image) {				
-					$this->db->query("INSERT INTO " . DB_PREFIX . "countrybrand_image SET countrybrand_id = '" . (int)$countrybrand_id . "', image = '" . $this->db->escape(html_entity_decode($countrybrand_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$countrybrand_image['sort_order'] . "'");
+					$this->db->query("INSERT INTO countrybrand_image SET countrybrand_id = '" . (int)$countrybrand_id . "', image = '" . $this->db->escape(html_entity_decode($countrybrand_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$countrybrand_image['sort_order'] . "'");
 				}
 			}
 			
@@ -129,12 +129,12 @@
 				}
 			}
 			
-			$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'countrybrand_id=" . (int)$countrybrand_id. "'");
+			$this->db->query("DELETE FROM url_alias WHERE query = 'countrybrand_id=" . (int)$countrybrand_id. "'");
 			
 			if ($data['keyword']) {
 				foreach ($data['keyword'] as $language_id => $keyword) {
 					if ($keyword) {
-						$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'countrybrand_id=" . (int)$countrybrand_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);
+						$this->db->query("INSERT INTO url_alias SET query = 'countrybrand_id=" . (int)$countrybrand_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);
 					}
 				}
 			}
@@ -145,7 +145,7 @@
 		}
 		
 		public function getCountrybrandImages($countrybrand_id) {
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "countrybrand_image WHERE countrybrand_id = '" . (int)$countrybrand_id . "'");
+			$query = $this->db->query("SELECT * FROM countrybrand_image WHERE countrybrand_id = '" . (int)$countrybrand_id . "'");
 			
 			return $query->rows;
 		}
@@ -207,7 +207,7 @@
 		public function getKeyWords($countrybrand_id) {
 			$keywords = array();
 			
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE query = 'countrybrand_id=" . (int)$countrybrand_id . "'");
+			$query = $this->db->query("SELECT * FROM url_alias WHERE query = 'countrybrand_id=" . (int)$countrybrand_id . "'");
 			
 			foreach ($query->rows as $result) {
 				$keywords[$result['language_id']] = $result['keyword'];					
