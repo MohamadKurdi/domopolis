@@ -135,7 +135,7 @@ class ControllerProductManufacturer extends Controller {
 			
 		}
 
-		$results = $this->model_catalog_manufacturer->getManufacturers(['filter_exclude_hidden' => true]);
+		$results = $this->model_catalog_manufacturer->getManufacturers(['filter_exclude_hidden' => true, 'start' => 0, 'limit' => 9999]);
 
 		foreach ($results as $result) {
 			if (is_numeric(utf8_substr($result['name'], 0, 1))) {

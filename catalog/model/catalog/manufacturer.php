@@ -128,8 +128,8 @@
 					$sql .= " AND TRIM(md.location) = '" . $this->db->escape(trim($data['filter_country'])) . "'";
 				}
 
-				if (isset($data['filter_exclude_hidden'])) {
-					$sql .= " AND sort_order <> '-1'";
+				if (!empty($data['filter_exclude_hidden'])) {
+					$sql .= " AND m.sort_order <> '-1'";
 				}
 				
 				
