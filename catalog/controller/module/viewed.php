@@ -115,7 +115,7 @@ class ControllerModuleViewed extends Controller {
 					$productIDS = explode(',', $this->config->get('blockviewed_product_' . $idx));
 					$productIDS = array_slice($productIDS, 0, (int)$setting['limit']);
 
-					$products = $this->model_catalog_product->getProductsByIDS($productIDS);
+					$products = $this->model_catalog_product->getProductsByIDS($productIDS, ['filter_quantity' => true]);
 				}
 
 				if (!$products) {				
