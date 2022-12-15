@@ -911,7 +911,7 @@
 			$this->db->query("DELETE FROM product_to_category WHERE category_id = '" . $category_id . "' AND product_id NOT IN (SELECT product_id FROM product WHERE `" . $this->config->get('config_warehouse_identifier') . "` > 0)");
 		}
 		
-		public function getProductsByIDS($productIDS){
+		public function getProductsByIDS($productIDS, $data = []){
 			$results = [];
 
 			foreach ($productIDS as $product_id) {
@@ -919,7 +919,14 @@
 				$product_info = $this->model_catalog_product->getProduct($product_id);
 
 				if ($product_info) {
-					$results[$product_id] = $product_info;
+
+					if (!empty($data['filter_quantity'])){
+						if ($product_info['quantity'] > 0){
+							$results[$product_id] = $product_info;
+						}
+					} else {
+						$results[$product_id] = $product_info;
+					}				
 				}
 			}
 
