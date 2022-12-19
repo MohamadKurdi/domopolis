@@ -37,6 +37,7 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_max_variants',
 		'config_rainforest_skip_variants',
 		'config_rainforest_skip_low_price_products',
+		'config_rainforest_drop_low_price_products',
 		'config_rainforest_update_period',
 
 		'config_rainforest_enable_review_adding',
