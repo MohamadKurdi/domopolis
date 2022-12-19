@@ -7,22 +7,6 @@
 			$this->response->setOutput('OK');			
 		}
 
-		public function deletecheap(){
-			$this->load->model('catalog/product');
-
-			if ($this->config->get('config_rainforest_skip_low_price_products') > 0){
-				$query = $this->db->query("SELECT product_id FROM product WHERE amazon_best_price > 0 AND amazon_best_price < '" . (float)$this->config->get('config_rainforest_skip_low_price_products') . "'");
-
-				$i = 1;
-				foreach ($query->rows as $row){
-					echoLine($row['product_id'] . ': ' . $i . '/' . $query->num_rows);
-					$i++;
-
-				//	$this->model_catalog_product->deleteProductSimple($row['product_id']);
-				}
-			}
-		}
-
 		public function deleteduplicates(){
 		/*	$this->load->model('catalog/product');
 			$query = $this->db->query("SELECT product_id FROM product WHERE product_id NOT IN (SELECT product_id FROM tmp_product)");
