@@ -221,7 +221,7 @@ class PriceLogic
 		}
 	}
 
-	private function getProductsByAsinExplicit($asin){
+	public function getProductsByAsinExplicit($asin){
 		$query = $this->db->query("SELECT *, (SELECT category_id FROM product_to_category p2cm WHERE p2cm.product_id = p.product_id AND category_id NOT IN (" . implode(',', $this->excluded_categories) . ") ORDER BY main_category DESC LIMIT 1) as main_category_id FROM product p WHERE asin = '" . $this->db->escape($asin) . "' AND is_markdown = 0");
 
 			$results = [];
@@ -237,7 +237,7 @@ class PriceLogic
 	}
 
 
-	private function getProductsByAsin($asin){
+	public function getProductsByAsin($asin){
 		$query = $this->db->query("SELECT *, (SELECT category_id FROM product_to_category p2cm WHERE p2cm.product_id = p.product_id AND category_id NOT IN (" . implode(',', $this->excluded_categories) . ") ORDER BY main_category DESC LIMIT 1) as main_category_id FROM product p WHERE asin = '" . $this->db->escape($asin) . "' AND is_markdown = 0 AND status = 1");
 
 			$results = [];
@@ -312,6 +312,14 @@ class PriceLogic
 		return $proceedWithPrice;
 	}
 
+	//Проверяет, есть ли товар сейчас в каком-либо заказе
+	public function checkIfProductIsInOrders($product_id){
+		$query = $this->db->query("SELECT * FROM order_product op LEFT JOIN `order` o ON o.order_id = op.order_id WHERE o.order_status_id > 0 AND op.product_id = '" . (int)$product_id . "'");
+
+		return $query->num_rows;
+	}
+
+	//Проверяет, есть ли товар сейчас на складе
 	public function checkIfProductIsOnWarehouse($product_id, $warehouse_identifier){
 		$query = $this->db->query("SELECT * FROM product WHERE product_id = '" . $product_id . "' AND (`" . $warehouse_identifier . "` + `" . $warehouse_identifier . '_onway' . "` > 0)");
 
