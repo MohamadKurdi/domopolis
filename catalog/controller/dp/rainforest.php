@@ -191,6 +191,40 @@ class ControllerDPRainForest extends Controller {
 		}
 	}	
 
+	/*
+	Если изменяется настройка или порог минимальной цены, то нужно запустить эту функцию
+	*/
+	public function deletecheapcron(){
+		$this->load->model('catalog/product');
+
+		if ($this->config->get('config_rainforest_skip_low_price_products') > 0 && $this->config->get('config_rainforest_drop_low_price_products')){
+			$query = $this->db->query("SELECT p.product_id, p.asin, pd.name FROM product p
+			 LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
+			 WHERE 
+			 pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			 AND amazon_best_price > 0 
+			 AND amazon_best_price < '" . (float)$this->config->get('config_rainforest_skip_low_price_products') . "' LIMIT 1");
+
+			$i = 1;
+			foreach ($query->rows as $row){
+				echoLine($row['product_id'] . ': ' . $i . '/' . $query->num_rows);
+
+				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
+					echoLine('[deletecheapcron] Товар ' . $row['product_id'] . ' есть в заказах, отключаем');
+					$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($row['product_id'])->addAsinToIgnored($query->row['asin'], $query->row['name']);
+				} else {
+					echoLine('[deletecheapcron] Товара ' . $row['product_id'] . ' нет в заказах, удаляем');
+					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($row['product_id'])->addAsinToIgnored($query->row['asin'], $query->row['name']);
+				}				
+
+				$i++;
+			}
+		}
+	}
+
+	/*
+	Фиксит дерево категорий
+	*/
 	public function fixunexistentcategoriescron(){
 		if (!$this->config->get('config_rainforest_enable_category_tree_parser')){
 			echoLine('[ControllerKPRainForest::fixunexistentcategoriescron] CRON IS DISABLED IN ADMIN');
