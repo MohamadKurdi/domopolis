@@ -203,7 +203,7 @@ class ControllerDPRainForest extends Controller {
 			 WHERE 
 			 pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
 			 AND amazon_best_price > 0 
-			 AND amazon_best_price < '" . (float)$this->config->get('config_rainforest_skip_low_price_products') . "' LIMIT 1");
+			 AND amazon_best_price < '" . (float)$this->config->get('config_rainforest_skip_low_price_products') . "'");
 
 			$i = 1;
 			foreach ($query->rows as $row){
