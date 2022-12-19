@@ -4453,6 +4453,19 @@
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Не добавлять товары с ценой меньше</span></p>
 											<input type="number" name="config_rainforest_skip_low_price_products" value="<?php echo $config_rainforest_skip_low_price_products; ?>" size="50" style="width:100px;" /> <i class="fa fa-eur"></i>
 										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Удалять товары с ценой меньше</span></p>
+											<select name="config_rainforest_drop_low_price_products">
+												<?php if ($config_rainforest_drop_low_price_products) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>	
+										</div>
 									</td>
 									
 									
