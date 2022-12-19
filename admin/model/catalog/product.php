@@ -1,10 +1,5 @@
 <?php
 	class ModelCatalogProduct extends Model {
-
-		private $product_related_tables = [
-			'product_reward','product_attribute','product_sponsored','product_to_store','product_to_category','product_also_bought','product_tmp','product_yam_recommended_prices','product_view_to_purchase','product_sticker','product_special_backup','product_costs','product_price_to_store','product_video','product_to_set','product_variants_ids','product_special','product_similar_to_consider','product_discount','product_sources','product_stock_waits','product_master','product_anyrelated','product_stock_limits','product_to_download','product_related_set','product_also_viewed','product_child','product_price_history','product_recurring','product_status','product_price_national_to_store','product_profile','product_to_tab','product_option_value','product_description','product_product_option','product_shop_by_look','product_stock_status','product_additional_offer','product_filter','product_similar','product','product_image','product_related','product_tab_content','product_to_layout','product_option','product_special_attribute','product_price_national_to_store1','product_front_price','product_video_description','product_product_option_value','product_price_national_to_yam','product_yam_data', 'review','ocfilter_option_value_to_product'	
-		];
-		
 		
 		public function addProduct($data) {
 			
@@ -1223,9 +1218,20 @@
 			}
 		}
 
+		public function disableProduct($product_id){
+			$this->db->query("UPDATE product SET `status` = 0 WHERE product_id = '" . (int)$product_id . "'");
+
+			return $this;
+		}
+
+		public function enableProduct($product_id){
+			$this->db->query("UPDATE product SET `status` = 1 WHERE product_id = '" . (int)$product_id . "'");
+
+			return $this;
+		}
 
 		public function deleteProductSimple($product_id){
-			foreach ($this->product_related_tables as $table){
+			foreach ((array)\hobotix\RainforestAmazon::productRelatedTables as $table){
 				$sql = "DELETE FROM `" . $table . "` WHERE product_id = '" . (int)$product_id . "'";
 				$this->db->query($sql);
 			}
@@ -1282,7 +1288,7 @@
 				}
 			}		
 
-			foreach ($this->product_related_tables as $table){
+			foreach ((array)\hobotix\RainforestAmazon::productRelatedTables as $table){
 				$this->db->query("DELETE FROM `" . $table . "` WHERE product_id = '" . (int)$product_id . "'");
 			}
 
