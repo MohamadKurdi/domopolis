@@ -5,10 +5,10 @@
 			<?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
 		<?php } ?>
 	</div>	
-	<?php if ($error_warning) { ?>
+	<?php if (!empty($error_warning)) { ?>
 		<div class="warning"><?php echo $error_warning; ?></div>
 	<?php } ?>
-	<?php if ($success) { ?>
+	<?php if (!empty($success)) { ?>
 		<div class="success"><?php echo $success; ?></div>
 	<?php } ?>
 	<div class="box">
