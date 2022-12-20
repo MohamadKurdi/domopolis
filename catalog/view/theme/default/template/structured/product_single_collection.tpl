@@ -69,7 +69,7 @@
 			<?php } ?>
 		</div>
 		<?php if ($product['special']) { ?>
-			<div class="price__sale">-<?php echo $product['saving']; ?>%</div>
+			<div class="price__sale <?php if (!empty($product['active_coupon'])) { ?>active_coupon_empty<?php } ?>">-<?php echo $product['saving']; ?>%</div>
 		<?php } ?>
 		<div class="product-info__code">
 			<span><?php echo $text_model; ?> <?php echo $product['sku']; ?></span>
