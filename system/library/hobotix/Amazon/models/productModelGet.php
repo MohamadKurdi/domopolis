@@ -474,6 +474,26 @@ class productModelGet extends hoboModel{
 		return $results;	
 	}
 
+	public function getProductName($product_id){		
+		$query = $this->db->query("SELECT name FROM product_description WHERE language_id = '" . (int)$this->config->get('config_language_id') . "' AND product_id = '" . (int)$product_id . "' LIMIT 1");
+			
+		if ($query->num_rows){
+			return $query->row['name'];
+		}
+
+		return '';
+	}	
+
+	public function getProductIdByAsin($asin){
+		$results = [];
+		$query = $this->db->ncquery("SELECT product_id FROM product WHERE asin LIKE ('" . $this->db->escape($asin) . "') LIMIT 1");
+			
+		if ($query->num_rows){
+			return $query->row['product_id'];
+		}
+
+		return false;
+	}	
 
 	public function getProductsByAsin($asin){
 		$results = [];

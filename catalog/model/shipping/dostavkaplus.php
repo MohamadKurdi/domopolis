@@ -29,15 +29,12 @@
 								
 								
 								$total = $this->cart->getSubTotal();
-								
-								//ТОТАЛ В ВАЛЮТЕ, КОТОРАЯ СТОИТ В НАСТРОЙКАХ!!!	
+																
 								if ($module['curr']){
 									$total_national = $this->currency->convert($this->cart->getSubTotal(), $this->config->get('config_currency'), $module['curr']);
 									} else {
 									$total_national = $total;								
-								}
-								
-								//$this->currency->format($this->cart->getSubTotal(), '', '', false);															
+								}																												
 								
 								$weight = $this->weight->convert($this->cart->getWeight(), $this->config->get('config_weight_class_id'), $module['weight_class_id']);
 								
@@ -58,17 +55,13 @@
 									}
 								}
 								
-								//обход страны
 								if ($module['applytoallcountries']){
 									if (!isset($address['country_id']) || !$address['country_id'] || $address['country_id'] != $this->config->get('config_country_id') || !isset($address['city']) || $address['city'] == ''){
 										$status = true;								
 										} else {
 										$status = false;
 									}							
-								}
-								
-								//$status = true;
-								
+								}								
 								
 								if (!isset($module['min_weight'])) {
 									$module['min_weight'] = 0;
@@ -144,17 +137,17 @@
 								
 								//НП Адресная
 								if ($status == true && $key == 13 && !empty($address['novaposhta_city_guid'])){
-									$npWCQuery = $this->db->query("SELECT WarehouseCount FROM novaposhta_cities_ww WHERE Ref = '" . $this->db->escape($address['novaposhta_city_guid']) . "' LIMIT 1");
+									$npWCQuery = $this->db->query("SELECT COUNT(*) as StreetCount FROM novaposhta_streets WHERE CityRef = '" . $this->db->escape($address['novaposhta_city_guid']) . "' LIMIT 1");
 									
-									if (!$npWCQuery->num_rows || ($npWCQuery->num_rows && $npWCQuery->row['WarehouseCount'] == 0)){
-										//$status = false;
+									if (!$npWCQuery->num_rows || ($npWCQuery->num_rows && $npWCQuery->row['StreetCount'] == 0)){
+										$status = false;
 									}
 								}
 								
 								//Отключаем Укрпочту, если доступна НП
 								if ($status == true && $key == 14 && !empty($address['novaposhta_city_guid'])){
 									$npWCQuery = $this->db->query("SELECT WarehouseCount FROM novaposhta_cities_ww WHERE Ref = '" . $this->db->escape($address['novaposhta_city_guid']) . "' LIMIT 1");
-									
+
 									if ($npWCQuery->num_rows && $npWCQuery->row['WarehouseCount'] > 0){
 										$status = false;
 									}

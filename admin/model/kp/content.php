@@ -3,7 +3,7 @@ class ModelKpContent extends Model {
 
 	public function addContent($data){
 
-		if ($this->user->isLogged() && $this->user->getCountContent()){
+	if ($this->user->isLogged() && $this->user->getCountContent() && $this->registry->mainDBIsUsed()){			
 
 			$this->db->query("INSERT INTO user_content SET 
 				user_id 	= '" . (int)$this->user->getID() . "',

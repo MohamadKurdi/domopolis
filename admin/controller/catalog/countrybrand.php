@@ -461,15 +461,6 @@
 				$this->data['keyword'] = array();
 			}
 			
-			if (isset($this->request->post['manufacturer'])) {
-				$this->data['manufacturer'] = $this->request->post['manufacturer'];
-				} elseif (!empty($countrybrand_info)) {
-				$this->data['manufacturer'] = $countrybrand_info['manufacturer'];
-				} else {	
-				$this->data['manufacturer'] = '';
-			}
-			
-			
 				$this->load->model('tool/image');
 			
 			// Images

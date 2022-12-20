@@ -49,6 +49,10 @@ if (!class_exists('DB')){
 			$this->createConnection();
 		}
 
+		public function getCurrentDatabase(){
+			return $this->database;			
+		}
+
 		public function query($sql) {
 			if (defined('DEBUGSQL') && DEBUGSQL) {		
 				$queryTimer = new FPCTimer();

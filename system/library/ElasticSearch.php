@@ -9,7 +9,12 @@
 		private $cache;
 		private $config;
 		private $registry;
-		private $settings = array();
+		private $settings = [];
+		private $routes = [
+			'kp/search',
+			'kp/search/test',
+			'catalog/product_ext/delete'
+		];
 		
 		const CATEGORY_PRIORITY = 20;
 		const MANUFACTURER_PRIORITY = 200;
@@ -19,23 +24,22 @@
 		const IN_STOCK_PRIORITY = 100;
 		
 		
-		public function __construct($registry, $explicit = false){		
-			$this->request 		= $registry->get('request');	
-
-			if (is_cli() || $explicit || (!empty($this->request->get['route']) && in_array($this->request->get['route'], ['kp/search', 'kp/search/test'])) || !empty($this->request->get['search'])){ 
-				$this->elastic = ClientBuilder::create()->setHosts(['http://127.0.0.1:9200'])->build();
-			} else {
-				$this->elastic = null;
-			}
-			
-			$this->settings = loadJsonConfig('search');				
+		public function __construct($registry, $explicit = false){
 			$this->registry	= $registry;
 
 			$this->db 		= $registry->get('db');
 			$this->cache 	= $registry->get('cache');
 			$this->config 	= $registry->get('config');
-			$this->log 		= $registry->get('log');
+			$this->log 		= $registry->get('log');		
+			$this->request 	= $registry->get('request');	
+
+			if (is_cli() || $explicit || (!empty($this->request->get['route']) && in_array($this->request->get['route'], $this->routes)) || !empty($this->request->get['search'])){ 
+				$this->elastic = ClientBuilder::create()->setHosts(['http://127.0.0.1:9200'])->build();
+			} else {
+				$this->elastic = null;
+			}
 			
+			$this->settings = loadJsonConfig('search');							
 		}
 		
 		
@@ -1136,11 +1140,20 @@
 
 		public function deleteproduct($product_id){
 			$params = [
-			'index' => 'product',
+			'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix'),
 			'id'    => $product_id
 			];	
 
-			$response = $this->elastic->delete($params);
+			if ($this->elastic){
+				
+				try {
+					$response = $this->elastic->delete($params);
+				} catch (\Elasticsearch\Common\Exceptions\Missing404Exception $e){
+				//	$this->log->debug($e->getMessage());
+				}
+
+			}
+
 		}
 		
 		private function indexproduct($product){

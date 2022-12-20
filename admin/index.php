@@ -32,10 +32,9 @@ function echoLine($line){
 if (isset($_GET['hello']) && $_GET['hello'] == 'world'){
 	define('IS_DEBUG', true);
 } else {
-
 	$ipsConfig = loadJsonConfig('ips');
 
-	if (in_array($_SERVER['REMOTE_ADDR'], $ipsConfig['debug'])){
+	if (!empty($ipsConfig['debug']) && !empty($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], $ipsConfig['debug'])){
 		define('IS_DEBUG', true);
 	} else {
 		define('IS_DEBUG', false);
@@ -90,12 +89,24 @@ $registry->set('load', $loader);
 $config = new Config();
 $registry->set('config', $config);
 
+$log = new Log('php-errors-admin.log');
+$registry->set('log', $log);
+
 $db = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
 $registry->set('db', $db);
+$registry->set('dbmain', $db);
+$registry->set('current_db', 'dbmain');
 
 if (defined('DB_CONTENT_SYNC') && DB_CONTENT_SYNC){
 	$dbcs = new DB(DB_CONTENT_SYNC_DRIVER, DB_CONTENT_SYNC_HOSTNAME, DB_CONTENT_SYNC_USERNAME, DB_CONTENT_SYNC_PASSWORD, DB_CONTENT_SYNC_DATABASE);
 	$registry->set('dbcs', $dbcs);
+
+	$syncConfig = loadJsonConfig('sync');
+	if (!empty($syncConfig['sync'])){
+		$registry->set('sync', $syncConfig['sync']);
+	}
+} else {
+	$registry->set('dbcs', false);
 }
 
 $query = $db->query("SELECT * FROM setting WHERE store_id = '0'");
@@ -115,9 +126,6 @@ if (count($configFileExploded = explode('.', $configFile)) == 3){
 	}
 }
 $registry->get('config')->set('config_config_file_prefix', $configFilesPrefix);
-
-$log = new Log('php-errors-admin.log');
-$registry->set('log', $log);
 
 $smsQueue = new smsQueue($registry);
 $registry->set('smsQueue', $smsQueue);

@@ -184,7 +184,7 @@ class ControllerCatalogCategory extends Controller {
 				'limit' => $this->config->get('config_admin_limit'),				
 			);
 
-			if ($this->session->data['category_hidedisabled']){
+			if (!empty($this->session->data['category_hidedisabled'])){
 				$filter['filter_status'] = 1;
 			}
 			
@@ -194,7 +194,7 @@ class ControllerCatalogCategory extends Controller {
 		$data = [];
 		foreach ($results as $result) {
 			$path = $parent_path . $result['category_id'];
-			$href = ($result['children']) ? $href_category . $path : '';			
+			$href = (!empty($result['children'])) ? $href_category . $path : '';			
 
 			if (!empty($this->session->data['category_rollup']) && $category_id == $result['category_id']) {				
 				$this->data['breadcrumbs'][] = array(
@@ -238,7 +238,7 @@ class ControllerCatalogCategory extends Controller {
 				$name = $result['name'];
 			}
 
-			if ($this->session->data['category_hidedisabled'] && !$result['status']){
+			if (!empty($this->session->data['category_hidedisabled']) && !$result['status']){
 				continue;
 			} else {
 
@@ -382,7 +382,7 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['success'] = '';
 		}
 
-		if (!$this->session->data['category_rollup']){
+		if (empty($this->session->data['category_rollup']) || !$this->session->data['category_rollup']){
 
 			$category_total = $this->model_catalog_category->getTotalCategories();
 

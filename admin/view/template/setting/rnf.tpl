@@ -5,10 +5,10 @@
 			<?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
 		<?php } ?>
 	</div>	
-	<?php if ($error_warning) { ?>
+	<?php if (!empty($error_warning)) { ?>
 		<div class="warning"><?php echo $error_warning; ?></div>
 	<?php } ?>
-	<?php if ($success) { ?>
+	<?php if (!empty($success)) { ?>
 		<div class="success"><?php echo $success; ?></div>
 	<?php } ?>
 	<div class="box">
@@ -337,6 +337,7 @@
 							</td>
 						</tr>
 
+
 						<tr>
 							<td class="right">
 								Пропускать товары с ценой меньше
@@ -351,6 +352,19 @@
 							</td>
 						</tr>
 
+						<tr>
+							<td class="right">
+								Удалять или отключать товары с ценой меньше
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_drop_low_price_products" type="checkbox" class="checkbox" name="config_rainforest_drop_low_price_products" <? if ($config_rainforest_drop_low_price_products){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_drop_low_price_products"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle" style="color:red"></i> Товары с низкой ценой иногда бывают довольно трешовые. В некоторых случаях товары не имеют изначальной цены, и цена выясняется уже в процессе получения офферов. Если эта настройка включена, то товары будут удаляться при получении офферов. Обязательно отключать для магазинов, наполняемых вручную! Если товары есть в заказах, то они не удаляются, но отключаются.
+								</span>
+							</td>
+						</tr>
 
 						<tr>
 							<td colspan="3" class="left" style="color:#00ad07;">

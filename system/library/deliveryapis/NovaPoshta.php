@@ -60,8 +60,8 @@
 			curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8', 'Content-Length: '.strlen($json)));
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 60);	
-			curl_setopt($curl, CURLOPT_TIMEOUT, 300);
+			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 100);	
+			curl_setopt($curl, CURLOPT_TIMEOUT, 500);
 			//	curl_setopt($curl, CURLOPT_VERBOSE, true);
 			
 			$result = curl_exec($curl);
@@ -75,20 +75,12 @@
 				
 				} catch (Exception $e){
 				
+				echoLine('ОШИБКА ОБРАБОТКИ');
 				echoLine($e->getMessage());
-				die();
 			}	
 		}
 		
 		public function getDeliveryPrice(){
-			
-			
-			
-			
-			
-			
-			
-			
 		}
 		
 		public function getDeliveryDate($city, $date){

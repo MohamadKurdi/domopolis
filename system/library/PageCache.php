@@ -106,6 +106,13 @@ class PageCache{
 		return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
 	}
 
+
+	public function getReFeedsCount(){
+		$feeds = glob(DIR_REFEEDS . 'remarketing_full_feed*');
+
+		return count($feeds);
+	}
+
 	public function getPageCacheInfo(){
 		$total_space = disk_total_space(DIR_CACHE);
 		$free_space  = disk_free_space(DIR_CACHE);

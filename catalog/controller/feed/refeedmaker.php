@@ -28,6 +28,17 @@ class ControllerFeedReFeedMaker extends Controller
         return $this;
     }
 
+    public function cleanUp(){
+        $feeds = glob(DIR_REFEEDS . '*');
+
+        foreach ($feeds as $feed){
+            if (is_file($feed) && (time() - filemtime($feed) > 60 * 60 * 24)){
+                echoLine($feed . ', время больше двух дней, удаляем');
+                unlink($feed);
+            }
+        }
+    }
+
     private function setLanguageID($language_id)
     {
         $this->language_id = $language_id;
@@ -371,6 +382,8 @@ class ControllerFeedReFeedMaker extends Controller
                 $this->makeFeedsCron(true);
             }
         }
+
+        $this->cleanUp();
     }
 
     private function normalizeForGoogle($text)

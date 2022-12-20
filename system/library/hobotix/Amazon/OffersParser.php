@@ -11,21 +11,31 @@ class OffersParser
 	private $config;
 	private $log;
 
+	//private $testAsin = 'B095CFY117';
+
 	private $no_offers_logic = false;
 
 	public $Suppliers;
 	public $PriceLogic;	
 	
 	public function __construct($registry){
-		$this->config = $registry->get('config');
-		$this->db = $registry->get('db');
-		$this->log = $registry->get('log');
+		$this->config 	= $registry->get('config');
+		$this->db 		= $registry->get('db');
+		$this->log 		= $registry->get('log');
 
 		require_once(dirname(__FILE__) . '/Suppliers.php');
 		$this->Suppliers = new Suppliers($registry);
 
 		require_once(dirname(__FILE__) . '/PriceLogic.php');
 		$this->PriceLogic = new PriceLogic($registry);
+
+		//models
+		require_once(dirname(__FILE__) . '/models/hoboModel.php');	
+		require_once(dirname(__FILE__) . '/models/productModelEdit.php');
+		require_once(dirname(__FILE__) . '/models/productModelGet.php');
+
+		$this->model_product_edit 		= new productModelEdit($registry);		
+		$this->model_product_get 		= new productModelGet($registry);	
 	}
 
 	public function setNoOffersLogic($no_offers_logic){
@@ -132,6 +142,10 @@ class OffersParser
 			}
 		}
 
+		if ($this->testAsin){
+			return [$this->testAsin];
+		}
+
 		return $result;
 	}		
 
@@ -226,11 +240,10 @@ class OffersParser
 		$this->db->query("UPDATE product SET amzn_last_offers = NOW() WHERE asin LIKE '" . $this->db->escape($asin) . "'");		
 
 		return $this;
-	}
+	}	
 
 	//Обработка не обязательно новых, которые рнф видит как новые
 	public static function checkIfOfferReallyIsNew($rfOffer){
-
 		if (stripos($rfOffer->getConditionTitle(), 'wie neu') !== false){
 			return false;
 		}
@@ -380,6 +393,50 @@ class OffersParser
 		return $rfOffersTMP;
 	}
 
+	public function validateProductLowPrice($asin, $amazonBestPrice){
+
+		//There's no setting for skipping products, it's a minimal price
+		if (!$this->config->get('config_rainforest_skip_low_price_products') || is_null($this->config->get('config_rainforest_skip_low_price_products')) || (int)$this->config->get('config_rainforest_skip_low_price_products') <= 0){
+			return false;
+		}
+
+		//Setting for deleting or disabling is not set or is off
+		if (!$this->config->get('config_rainforest_drop_low_price_products')){
+			return false;
+		}
+
+		if (!$amazonBestPrice){
+			return false;
+		}
+
+		if (!$asin){
+			return false;
+		}
+
+		if (!$products = $this->model_product_get->getProductsByAsin($asin)){
+			return false;
+		}
+
+		if ((int)$this->config->get('config_rainforest_skip_low_price_products') > 0){
+			if ((int)$amazonBestPrice > 0 && (int)$amazonBestPrice < (int)$this->config->get('config_rainforest_skip_low_price_products')){
+				//do the action
+
+				foreach ($products as $product_id){
+					if ($this->PriceLogic->checkIfProductIsInOrders($product_id)){
+						$this->model_product_edit->disableProduct($product_id)->addAsinToIgnored($asin, $this->model_product_get->getProductName($product_id));
+						return 'disabled';
+					} else {
+						$this->model_product_edit->deleteProductSimple($product_id)->addAsinToIgnored($asin, $this->model_product_get->getProductName($product_id));
+						return 'deleted';
+					}
+				}
+
+			}
+		}
+
+		return false;
+	}
+
 	public function addOffersForASIN($asin, $rfOffers){
 		$this->clearOffersForASIN($asin)->setLastOffersDate($asin);
 
@@ -400,6 +457,12 @@ class OffersParser
 			if ($key == $ratingKeys['maxRatingKey']){
 				$amazonBestPrice = (float)$rfOffer->getPriceAmount() + (float)$rfOffer->getDeliveryAmount();
 				$this->db->query("UPDATE product SET amazon_best_price = '" . (float)$amazonBestPrice . "' WHERE asin = '" . $this->db->escape($asin) . "' AND is_markdown = 0");
+
+				//New function, used for checking if best price is below range
+				if ($this->validateProductLowPrice($asin, $amazonBestPrice)){
+					echoLine('[OffersParser] Disabling logic worked, product is disabled or deleted');
+					break;
+				}
 
 				$this->PriceLogic->updateProductPrices($asin, $amazonBestPrice);
 			}

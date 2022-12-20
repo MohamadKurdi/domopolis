@@ -53,6 +53,40 @@ class productModelEdit extends hoboModel{
 		$this->db->query($sql);
 	}	
 
+	public function addAsinToIgnored($asin, $name = ''){
+		if (!$name){
+			$name = 'UNKNOWN_PRODUCT';
+		}
+
+		$this->db->query("INSERT IGNORE INTO deleted_asins SET asin = '" . $this->db->escape($asin) . "', name = '" . $this->db->escape($name) . "', date_added = NOW(), user_id = '195'");
+
+		return $this;
+	}
+
+	public function disableProduct($product_id){
+		$this->db->query("UPDATE product SET `status` = 0 WHERE product_id = '" . (int)$product_id . "'");
+
+		return $this;
+	}
+
+	public function enableProduct($product_id){
+		$this->db->query("UPDATE product SET `status` = 1 WHERE product_id = '" . (int)$product_id . "'");
+
+		return $this;
+	}
+
+	public function deleteProductSimple($product_id){
+		foreach ((array)\hobotix\RainforestAmazon::productRelatedTables as $table){
+			$sql = "DELETE FROM `" . $table . "` WHERE product_id = '" . (int)$product_id . "'";
+			$this->db->query($sql);
+		}
+
+		$this->db->query("DELETE FROM product_sponsored WHERE sponsored_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_similar WHERE similar_id = '" . (int)$product_id . "'");
+
+		return $this;
+	}
+
 	public function updateProductMainVariantIdByAsins($main_variant_id, $asins){
 		$this->db->query("UPDATE product SET main_variant_id = 	'" . (int)$main_variant_id . "'	WHERE asin IN ('" . implode("','", $asins) . "')");
 	}

@@ -1,72 +1,72 @@
 <?php echo $header; ?>
 <style type="text/css">
 	#content-error404{
-	background: -webkit-linear-gradient(90deg, rgb(122, 176, 76), rgb(81, 168, 129));
-	background: -moz-linear-gradient(90deg, rgb(122, 176, 76), rgb(81, 168, 129));
-	background: linear-gradient(90deg, rgb(122, 176, 76), rgb(81, 168, 129));	    
-	margin-bottom: 20px;	    
+		background: -webkit-linear-gradient(90deg, rgb(122, 176, 76), rgb(81, 168, 129));
+		background: -moz-linear-gradient(90deg, rgb(122, 176, 76), rgb(81, 168, 129));
+		background: linear-gradient(90deg, rgb(122, 176, 76), rgb(81, 168, 129));	    
+		margin-bottom: 20px;	    
 	}
 	.error_content{
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 50px 0;
-	position: relative;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 50px 0;
+		position: relative;
 	}	
 	.error_content .left-block {
-	margin-right: 30px;
-	width: 40%;
-	text-align: center;
+		margin-right: 30px;
+		width: 40%;
+		text-align: center;
 	}
 	.error_content .left-block svg{
-	width: 300px;
-	height: 300px;
-	fill: #fff;
+		width: 300px;
+		height: 300px;
+		fill: #fff;
 	}
 	.error_content .right-block{
-	width: 60%;
-	color: #fff;
-	position: relative;
+		width: 60%;
+		color: #fff;
+		position: relative;
 	}
 	.error_content .right-block h3{
-	font-size: 30px;
-	margin-bottom: 25px;
+		font-size: 30px;
+		margin-bottom: 25px;
 	}
 	.error_content .right-block p {
-	font-size: 20px !important;
-	line-height: 34px;
+		font-size: 20px !important;
+		line-height: 34px;
 	}
 	#content-error404 .error_content p .promo-error {
-	background: #ffffff;
-	color: #2e5844;
-	font-weight: 500;
-	padding: 3px 15px;
+		background: #ffffff;
+		color: #2e5844;
+		font-weight: 500;
+		padding: 3px 15px;
 	}
 	.right-block .btn-group .btn{
-	background: #ffc34f;
-	font-size: 18px;
+		background: #ffc34f;
+		font-size: 18px;
 	}
 	.right-block .btn-group .btn:hover{
-	background: #e16a5d;
+		background: #e16a5d;
 	}
 	.right-block .select-category{
-	position: relative;
-	display: inline-block;
+		position: relative;
+		display: inline-block;
 	}
 	.right-block .select-category b{
-	color: #fff !important;
+		color: #fff !important;
 	}
 	#content-error404 .right-block .select-category:after{
-	content: '';
-	background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWxuczpzdmdqcz0iaHR0cDovL3N2Z2pzLmNvbS9zdmdqcyIgdmVyc2lvbj0iMS4xIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgeD0iMCIgeT0iMCIgdmlld0JveD0iMCAwIDUxMi4wMDggNTEyLjAwOCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTEyIDUxMiIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgY2xhc3M9IiI+PGcgdHJhbnNmb3JtPSJtYXRyaXgoLTEuODM2OTcwMTk4NzIxMDI5N2UtMTYsLTEsMSwtMS44MzY5NzAxOTg3MjEwMjk3ZS0xNiwwLjAwMTAwMDQwNDM1NzkxMDE1NjIsNTEyLjAwNzk3MzY3MDk1OTYpIj48cGF0aCB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSIiIGQ9Ik01MDEuMzQyLDUzLjI1NmMtNS44OTEsMC0xMC42NjcsNC43NzYtMTAuNjY3LDEwLjY2N2MtMC4xNTMsMTM1LjQzLTEwOS45MDMsMjQ1LjE4LTI0NS4zMzMsMjQ1LjMzMyAgSDM2LjQyNGwxMDkuODAzLTEwOS43ODFjNC4wOTItNC4yMzcsMy45NzUtMTAuOTktMC4yNjItMTUuMDgzYy00LjEzNC0zLjk5Mi0xMC42ODctMy45OTItMTQuODIsMGwtMTI4LDEyOCAgYy00LjE3MSw0LjE2LTQuMTc5LDEwLjkxNC0wLjAxOSwxNS4wODVjMC4wMDYsMC4wMDYsMC4wMTMsMC4wMTMsMC4wMTksMC4wMTlsMTI4LDEyOGM0LjA5Myw0LjIzNywxMC44NDUsNC4zNTQsMTUuMDgzLDAuMjYyICBjNC4yMzctNC4wOTMsNC4zNTQtMTAuODQ1LDAuMjYyLTE1LjA4M2MtMC4wODYtMC4wODktMC4xNzMtMC4xNzYtMC4yNjItMC4yNjJMMzYuNDI0LDMzMC41ODloMjA4LjkxNyAgYzE0Ny4yMDgtMC4xNjUsMjY2LjUwMi0xMTkuNDU5LDI2Ni42NjctMjY2LjY2N0M1MTIuMDA4LDU4LjAzMiw1MDcuMjMzLDUzLjI1Niw1MDEuMzQyLDUzLjI1NnoiIGZpbGw9IiNmZmZmZmYiIGRhdGEtb3JpZ2luYWw9IiMyMTk2ZjMiIGNsYXNzPSIiLz48cGF0aCB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGQ9Ik0xMzguNjc1LDQ1OC41ODljLTIuODMxLDAuMDA1LTUuNTQ4LTEuMTE1LTcuNTUyLTMuMTE1bC0xMjgtMTI4Yy00LjE2NC00LjE2NS00LjE2NC0xMC45MTcsMC0xNS4wODNsMTI4LTEyOCAgYzQuMjM3LTQuMDkyLDEwLjk5LTMuOTc1LDE1LjA4MywwLjI2MmMzLjk5Miw0LjEzNCwzLjk5MiwxMC42ODcsMCwxNC44MkwyNS43NTgsMzE5LjkyM2wxMjAuNDQ4LDEyMC40NDggIGM0LjE3MSw0LjE2LDQuMTc5LDEwLjkxNCwwLjAxOSwxNS4wODVDMTQ0LjIyNCw0NTcuNDYxLDE0MS41MDgsNDU4LjU4OSwxMzguNjc1LDQ1OC41ODl6IiBmaWxsPSIjZmZmZmZmIiBkYXRhLW9yaWdpbmFsPSIjMDAwMDAwIiBzdHlsZT0iIiBjbGFzcz0iIi8+PHBhdGggeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBkPSJNMjQ1LjM0MiwzMzAuNTg5SDEwLjY3NWMtNS44OTEsMC0xMC42NjctNC43NzYtMTAuNjY3LTEwLjY2N2MwLTUuODkxLDQuNzc2LTEwLjY2NywxMC42NjctMTAuNjY3aDIzNC42NjcgIGMxMzUuNDMxLTAuMTUzLDI0NS4xODEtMTA5LjkwMywyNDUuMzMzLTI0NS4zMzNjMC01Ljg5MSw0Ljc3Ni0xMC42NjcsMTAuNjY3LTEwLjY2N3MxMC42NjcsNC43NzYsMTAuNjY3LDEwLjY2NyAgQzUxMS44NDQsMjExLjEzLDM5Mi41NDksMzMwLjQyNSwyNDUuMzQyLDMzMC41ODl6IiBmaWxsPSIjZmZmZmZmIiBkYXRhLW9yaWdpbmFsPSIjMDAwMDAwIiBzdHlsZT0iIiBjbGFzcz0iIi8+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PC9nPjwvc3ZnPg==);
-	background-repeat: no-repeat;
-	background-size: contain;
-	width: 130px;
-	height: 145px;
-	position: absolute;
-	/* right: 128px; */
-	left: 100%;
-	top: 17px;
+		content: '';
+		background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWxuczpzdmdqcz0iaHR0cDovL3N2Z2pzLmNvbS9zdmdqcyIgdmVyc2lvbj0iMS4xIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgeD0iMCIgeT0iMCIgdmlld0JveD0iMCAwIDUxMi4wMDggNTEyLjAwOCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTEyIDUxMiIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgY2xhc3M9IiI+PGcgdHJhbnNmb3JtPSJtYXRyaXgoLTEuODM2OTcwMTk4NzIxMDI5N2UtMTYsLTEsMSwtMS44MzY5NzAxOTg3MjEwMjk3ZS0xNiwwLjAwMTAwMDQwNDM1NzkxMDE1NjIsNTEyLjAwNzk3MzY3MDk1OTYpIj48cGF0aCB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0eWxlPSIiIGQ9Ik01MDEuMzQyLDUzLjI1NmMtNS44OTEsMC0xMC42NjcsNC43NzYtMTAuNjY3LDEwLjY2N2MtMC4xNTMsMTM1LjQzLTEwOS45MDMsMjQ1LjE4LTI0NS4zMzMsMjQ1LjMzMyAgSDM2LjQyNGwxMDkuODAzLTEwOS43ODFjNC4wOTItNC4yMzcsMy45NzUtMTAuOTktMC4yNjItMTUuMDgzYy00LjEzNC0zLjk5Mi0xMC42ODctMy45OTItMTQuODIsMGwtMTI4LDEyOCAgYy00LjE3MSw0LjE2LTQuMTc5LDEwLjkxNC0wLjAxOSwxNS4wODVjMC4wMDYsMC4wMDYsMC4wMTMsMC4wMTMsMC4wMTksMC4wMTlsMTI4LDEyOGM0LjA5Myw0LjIzNywxMC44NDUsNC4zNTQsMTUuMDgzLDAuMjYyICBjNC4yMzctNC4wOTMsNC4zNTQtMTAuODQ1LDAuMjYyLTE1LjA4M2MtMC4wODYtMC4wODktMC4xNzMtMC4xNzYtMC4yNjItMC4yNjJMMzYuNDI0LDMzMC41ODloMjA4LjkxNyAgYzE0Ny4yMDgtMC4xNjUsMjY2LjUwMi0xMTkuNDU5LDI2Ni42NjctMjY2LjY2N0M1MTIuMDA4LDU4LjAzMiw1MDcuMjMzLDUzLjI1Niw1MDEuMzQyLDUzLjI1NnoiIGZpbGw9IiNmZmZmZmYiIGRhdGEtb3JpZ2luYWw9IiMyMTk2ZjMiIGNsYXNzPSIiLz48cGF0aCB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGQ9Ik0xMzguNjc1LDQ1OC41ODljLTIuODMxLDAuMDA1LTUuNTQ4LTEuMTE1LTcuNTUyLTMuMTE1bC0xMjgtMTI4Yy00LjE2NC00LjE2NS00LjE2NC0xMC45MTcsMC0xNS4wODNsMTI4LTEyOCAgYzQuMjM3LTQuMDkyLDEwLjk5LTMuOTc1LDE1LjA4MywwLjI2MmMzLjk5Miw0LjEzNCwzLjk5MiwxMC42ODcsMCwxNC44MkwyNS43NTgsMzE5LjkyM2wxMjAuNDQ4LDEyMC40NDggIGM0LjE3MSw0LjE2LDQuMTc5LDEwLjkxNCwwLjAxOSwxNS4wODVDMTQ0LjIyNCw0NTcuNDYxLDE0MS41MDgsNDU4LjU4OSwxMzguNjc1LDQ1OC41ODl6IiBmaWxsPSIjZmZmZmZmIiBkYXRhLW9yaWdpbmFsPSIjMDAwMDAwIiBzdHlsZT0iIiBjbGFzcz0iIi8+PHBhdGggeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBkPSJNMjQ1LjM0MiwzMzAuNTg5SDEwLjY3NWMtNS44OTEsMC0xMC42NjctNC43NzYtMTAuNjY3LTEwLjY2N2MwLTUuODkxLDQuNzc2LTEwLjY2NywxMC42NjctMTAuNjY3aDIzNC42NjcgIGMxMzUuNDMxLTAuMTUzLDI0NS4xODEtMTA5LjkwMywyNDUuMzMzLTI0NS4zMzNjMC01Ljg5MSw0Ljc3Ni0xMC42NjcsMTAuNjY3LTEwLjY2N3MxMC42NjcsNC43NzYsMTAuNjY3LDEwLjY2NyAgQzUxMS44NDQsMjExLjEzLDM5Mi41NDksMzMwLjQyNSwyNDUuMzQyLDMzMC41ODl6IiBmaWxsPSIjZmZmZmZmIiBkYXRhLW9yaWdpbmFsPSIjMDAwMDAwIiBzdHlsZT0iIiBjbGFzcz0iIi8+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PGcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48L2c+PC9nPjwvc3ZnPg==);
+		background-repeat: no-repeat;
+		background-size: contain;
+		width: 130px;
+		height: 145px;
+		position: absolute;
+		/* right: 128px; */
+		left: 100%;
+		top: 17px;
 	}
 	@media screen and (max-width: 1600px) {
 		.error_content .left-block{
@@ -90,8 +90,8 @@
 			width: 70%;
 		}
 		.error_content .right-block p {
-		    font-size: 18px !important;
-		    line-height: 30px;
+			font-size: 18px !important;
+			line-height: 30px;
 		}
 		#content-error404 .right-block .select-category:after{
 			top: 13px;
@@ -106,31 +106,31 @@
 		}
 	}
 	@media screen and (max-width: 1000px) {
-	.error_content {
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	}
-	.error_content .left-block{
-	margin-right: 0;
-	margin-bottom: 20px;
-	width: 100%;
-	}
-	.error_content .right-block{
-	text-align: center;
-	
-	}
-	#content-error404 .error_content hr{
-	width: 75%;
-	margin: auto
-	}
-	#content-error404 .caption-txt{
-	width: 90%;
-	margin: auto
-	}
-	.error_content .left-block svg{
-		max-width: 300px;
-	}
+		.error_content {
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+		}
+		.error_content .left-block{
+			margin-right: 0;
+			margin-bottom: 20px;
+			width: 100%;
+		}
+		.error_content .right-block{
+			text-align: center;
+
+		}
+		#content-error404 .error_content hr{
+			width: 75%;
+			margin: auto
+		}
+		#content-error404 .caption-txt{
+			width: 90%;
+			margin: auto
+		}
+		.error_content .left-block svg{
+			max-width: 300px;
+		}
 	}
 	@media screen and (max-width: 576px) {
 		.error_content .left-block svg{
@@ -140,11 +140,11 @@
 			width: 100%;
 		}
 		.error_content .right-block h3 {
-		    font-size: 20px;
+			font-size: 20px;
 		}
 		.error_content .right-block p {
-		    font-size: 16px !important;
-		    line-height: 26px;
+			font-size: 16px !important;
+			line-height: 26px;
 		}
 	}
 </style>
@@ -163,18 +163,26 @@
 				</div>
 				<div class="right-block">
 					
-					
-					<h3>Запрашиваемая страница не существует</h3>
-					<p>Воспользуйтесь промокодом  <span class="promo-error">KP-404</span> и получите скидку на первый заказ</p>
-					<p class='select-category'>Перейдите на главную страницу или выберите подходящую <b>категорию</b></p>
-					<div class="btn-group">
-						<a class="btn btn-acaunt" href="/">На главную</a>	
-					</div>			
+					<?php if ($this->config->get('config_language') <> 'uk') { ?>
+						<h3>Запрашиваемая страница не существует</h3>
+						<p>Воспользуйтесь промокодом  <span class="promo-error">KP-404</span> и получите скидку на первый заказ</p>
+						<p class='select-category'>Перейдите на главную страницу или выберите подходящую <b>категорию</b></p>
+						<div class="btn-group">
+							<a class="btn btn-acaunt" href="/">На главную</a>	
+						</div>			
+					<?php } else { ?>
+						<h3>Сторінка, яку ви запитуєте, не існує</h3>
+						<p>Скористайтсь промокодом <span class="promo-error">KP-404</span> та отримайте знижку на перше замовлення</p>
+						<p class='select-category'>Перейдіть на головну сторінку або виберіть відповідну <b>категорію</b></p>
+						<div class="btn-group">
+							<a class="btn btn-acaunt" href="/">На головну</a>
+						</div>
+					<?php } ?>
 				</div>
 			</div>
 			
 		</div>
-	  	
+
 		
 		
 	</div>

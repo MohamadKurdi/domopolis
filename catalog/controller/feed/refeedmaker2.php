@@ -30,6 +30,17 @@ class ControllerFeedReFeedMaker2 extends Controller
         return $output;
     }
 
+    public function cleanUp(){
+        $feeds = glob(DIR_REFEEDS . '*');
+
+        foreach ($feeds as $feed){
+            if (is_file($feed) && (time() - filemtime($feed) > 60 * 60 * 24)){
+                echoLine($feed . ', время больше двух дней, удаляем');
+                unlink($feed);
+            }
+        }
+    }
+
     private function closeXML()
     {
         $output = '';
@@ -192,8 +203,12 @@ class ControllerFeedReFeedMaker2 extends Controller
         $output .= '<link>' . $this->url->link('product/product', 'product_id=' . $product['product_id'], 'SSL') . '</link>' . PHP_EOL;
         $output .= '<description><![CDATA[' . $this->normalizeForGoogle(strip_tags(html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8'))) . ']]></description>' . PHP_EOL;
 
-        
-        $output .= '<g:brand><![CDATA[' . html_entity_decode($product['manufacturer'], ENT_QUOTES, 'UTF-8') . ']]></g:brand>'. PHP_EOL;
+        if (!empty($product['manufacturer'])){        
+            $output .= '<g:brand><![CDATA[' . html_entity_decode($product['manufacturer'], ENT_QUOTES, 'UTF-8') . ']]></g:brand>'. PHP_EOL;
+        } else {
+            $output .= '<g:brand><![CDATA[NoName]]></g:brand>'. PHP_EOL;
+        }
+
         $output .= '<g:condition>new</g:condition>'. PHP_EOL;
 
         if ($this->config->get('config_language_id') == $this->registry->get('excluded_language_id') && $changeID) {
@@ -271,7 +286,7 @@ class ControllerFeedReFeedMaker2 extends Controller
         }
 
 
-        if (!trim($product['manufacturer']) || (trim($product['manufacturer']) && !$has_gtin && !$has_mpn)) {
+        if (empty($product['manufacturer']) || !trim($product['manufacturer']) || (trim($product['manufacturer']) && !$has_gtin && !$has_mpn)) {
             $output .= '    <g:identifier_exists>false</g:identifier_exists>'. PHP_EOL;
         }
 
@@ -582,5 +597,7 @@ class ControllerFeedReFeedMaker2 extends Controller
                 unset($timer);
             }
         }
+
+        $this->cleanUp();
     }
 }

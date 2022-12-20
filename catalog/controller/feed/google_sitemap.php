@@ -99,6 +99,18 @@ class ControllerFeedGoogleSitemap extends Controller {
 		}
 	}
 
+	public function cleanUp(){
+		$sitemaps = glob(DIR_SITE . DIR_SITEMAPS . '*');
+
+		foreach ($sitemaps as $sitemap){
+			if (time() - filemtime($sitemap) > 60 * 60 * 24 * 3){
+				echoLine($sitemap . ', время больше трех дней, удаляем');
+				unlink($sitemap);
+			}
+		}
+
+	}
+
 	public function makeFeedsCron() {
 
 		error_reporting(E_ALL);
@@ -487,6 +499,8 @@ class ControllerFeedGoogleSitemap extends Controller {
 
 			echo  PHP_EOL . PHP_EOL;
 		}	
+
+		$this->cleanUp();
 
 	}
 }			

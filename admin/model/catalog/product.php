@@ -1,10 +1,5 @@
 <?php
 	class ModelCatalogProduct extends Model {
-
-		private $product_related_tables = [
-			'product_reward','product_attribute','product_sponsored','product_to_store','product_to_category','product_also_bought','product_tmp','product_yam_recommended_prices','product_view_to_purchase','product_sticker','product_special_backup','product_costs','product_price_to_store','product_video','product_to_set','product_variants_ids','product_special','product_similar_to_consider','product_discount','product_sources','product_stock_waits','product_master','product_anyrelated','product_stock_limits','product_to_download','product_related_set','product_also_viewed','product_child','product_price_history','product_recurring','product_status','product_price_national_to_store','product_profile','product_to_tab','product_option_value','product_description','product_product_option','product_shop_by_look','product_stock_status','product_additional_offer','product_filter','product_similar','product','product_image','product_related','product_tab_content','product_to_layout','product_option','product_special_attribute','product_price_national_to_store1','product_front_price','product_video_description','product_product_option_value','product_price_national_to_yam','product_yam_data', 'review','ocfilter_option_value_to_product'	
-		];
-		
 		
 		public function addProduct($data) {
 			
@@ -1223,10 +1218,20 @@
 			}
 		}
 
+		public function disableProduct($product_id){
+			$this->db->query("UPDATE product SET `status` = 0 WHERE product_id = '" . (int)$product_id . "'");
+
+			return $this;
+		}
+
+		public function enableProduct($product_id){
+			$this->db->query("UPDATE product SET `status` = 1 WHERE product_id = '" . (int)$product_id . "'");
+
+			return $this;
+		}
 
 		public function deleteProductSimple($product_id){
-
-			foreach ($this->product_related_tables as $table){
+			foreach ((array)\hobotix\RainforestAmazon::productRelatedTables as $table){
 				$sql = "DELETE FROM `" . $table . "` WHERE product_id = '" . (int)$product_id . "'";
 				$this->db->query($sql);
 			}
@@ -1239,7 +1244,7 @@
 		}
 	
 		public function deleteProduct($product_id, $recursion = true, $asin_deletion_mode = false) {
-
+			
 			if (empty($this->session->data['config_rainforest_asin_deletion_mode'])){
 				$this->session->data['config_rainforest_asin_deletion_mode'] = $this->config->get('config_rainforest_asin_deletion_mode');
 			}
@@ -1252,6 +1257,7 @@
 				$query = $this->db->query("SELECT p.asin, pd.name FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id AND language_id = '26') WHERE p.product_id = '" . (int)$product_id . "' LIMIT 1");
 
 				if ($query->num_rows && !empty($query->row['asin'])){
+					$asin = $query->row['asin'];
 					$this->db->query("INSERT IGNORE INTO deleted_asins SET asin = '" . $this->db->escape($query->row['asin']) . "', name = '" . $this->db->escape($query->row['name']) . "', date_added = NOW(), user_id = '" . $this->user->getID() . "'");
 				}
 			}
@@ -1282,7 +1288,7 @@
 				}
 			}		
 
-			foreach ($this->product_related_tables as $table){
+			foreach ((array)\hobotix\RainforestAmazon::productRelatedTables as $table){
 				$this->db->query("DELETE FROM `" . $table . "` WHERE product_id = '" . (int)$product_id . "'");
 			}
 
@@ -1291,11 +1297,11 @@
 			
 			$this->load->model('catalog/set');
 			$results = $this->model_catalog_set->getSetsByProductId($product_id);
-            if($results){
-                foreach($results as $result){
-                    $results = $this->model_catalog_set->deleteSet($result['set_id']);
+			if($results){
+				foreach($results as $result){
+					$results = $this->model_catalog_set->deleteSet($result['set_id']);
 				}
-			}
+			} 		
 
 			$this->db->query("DELETE FROM url_alias WHERE query = 'product_id=" . (int)$product_id. "'");			
 
@@ -1305,6 +1311,26 @@
 
 		public function countVariantProducts($product_id){
 			return $this->db->query("SELECT COUNT(product_id) as total FROM product WHERE main_variant_id = '" . (int)$product_id . "' AND product_id <> '" . (int)$product_id . "'")->row['total'];
+		}
+
+		public function getProductIdByASIN($asin){
+			$query = $this->db->query("SELECT p.product_id FROM product p WHERE p.asin = '" . $this->db->escape($asin) . "' LIMIT 1");
+
+			if ($query->num_rows && !empty($query->row['product_id'])){
+				return $query->row['product_id'];				
+			}
+
+			return false;
+		}
+
+		public function getAsinByProductID($product_id){
+			$query = $this->db->query("SELECT p.asin FROM product p WHERE p.product_id = '" . (int)$product_id . "' LIMIT 1");
+
+			if ($query->num_rows && !empty($query->row['asin'])){
+				return $query->row['asin'];				
+			}
+
+			return false;
 		}
 
 		public function getVariantProducts($product_id, $language_id){

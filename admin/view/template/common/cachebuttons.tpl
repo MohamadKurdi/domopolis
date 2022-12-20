@@ -24,6 +24,10 @@
 
 <? } ?>
 
+<?php if ($refeedsCountLink > 1) { ?>
+<a class="hidden-xs link_headr cache-button-good" href="<?php echo $refeedsCountLink; ?>"><i class="fa fa-google"></i> <?php echo $refeedsCount;?></a>
+<?php } ?>
+
 <?php if (!empty($clearMemCache)) { ?>
 	<a class="link_headr cache-button-warn" onclick="$('#clearCacheR').load('<? echo $clearMemCache ?>');" >
 		<i class="fa fa-eraser" aria-hidden="true"></i><span class="hidden-xs"> БД </span><span id="clearCacheR"></span>
@@ -32,7 +36,7 @@
 
 
 <?php if (!empty($noPageCacheModeLink)) { ?>
-	
+
 	<a class="link_headr <? if ($noPageCacheMode) { ?>link_enter cache-button-bad<? } else { ?> cache-button-good<?php } ?>" onclick="$('#noPageCacheR').load('<? echo $noPageCacheModeLink ?>');">FPC 
 		<span id='noPageCacheR'>
 			<? echo ($noPageCacheMode?'OFF':'ON'); ?> 
@@ -41,13 +45,13 @@
 	</a>
 
 	<a class="hidden-xs link_headr cache-button-<?php echo $pageCacheInfo['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-server"></i> <?php echo $pageCacheInfo['used'] . ' of ' . $pageCacheInfo['total'];?></a>
-<?php /* ?>
+	<?php /* ?>
 	<a class="link_headr cache-button-<?php echo $serverResponceTime['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-rocket"></i> <?php echo $serverResponceTime['body'];?></a>
-<?php */ ?>
+	<?php */ ?>
 	<a class="hidden-xs link_headr cache-button-<?php echo $redisMem['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-cog" aria-hidden="true"></i> <?php echo $redisMem['body'];?></a>
 
-<?php /* ?>
+	<?php /* ?>
 	<a class="hidden-xs link_headr cache-button-<?php echo $serverResponceTime['class']?>" href="<?php echo $panelLink; ?>"><i class="fa fa-code" aria-hidden="true"></i> <?php echo $serverResponceTime['engine'];?></a>
-<?php */ ?>
+	<?php */ ?>
 
-	<?php } ?>
+<?php } ?>

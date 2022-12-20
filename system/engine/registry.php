@@ -14,6 +14,49 @@ final class Registry {
 		return isset($this->data[$key]);
 	}
 
+	public function mainDBIsUsed(){
+		if (!$this->has('current_db')){
+			return true;
+		}
+
+		if ($this->has('current_db') && $this->get('current_db') == 'dbmain'){
+			return true;
+		}
+
+		if ($this->has('current_db') && $this->get('current_db') == 'dbcs'){
+			return false;
+		}
+
+		return true;
+	}	
+
+	public function hasDBCS(){
+		return ($this->has('dbcs') && $this->get('dbcs'));
+	}
+
+	public function currentDB(){
+		print_r($this->get('db')->getCurrentDatabase());
+	}
+
+	public function setSyncDB(){
+		if ($this->has('dbcs') && $this->get('dbcs')){
+			$this->set('dbmain', $this->get('db'));
+			$this->set('db', $this->get('dbcs'));
+			$this->set('current_db', 'dbcs');
+		}
+
+		return $this;
+	}
+
+	public function setMainDB(){			
+		if ($this->has('dbmain') && $this->get('dbmain')){
+			$this->set('db', $this->get('dbmain'));	
+			$this->set('current_db', 'dbmain');
+		}	
+
+		return $this;
+	}
+
 	public function createCacheQueryString($method, $setting = [], $options = []){
 		return  
 			$method . 

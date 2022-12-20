@@ -110,6 +110,22 @@ $registry = new Registry();
 $registry->set('load', 		new Loader($registry));	
 $registry->set('config', 	new Config()); $config = $registry->get('config');
 $registry->set('db', 		new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE));	
+
+$registry->set('dbmain', $registry->get('db'));
+$registry->set('current_db', 'dbmain');
+
+if (defined('DB_CONTENT_SYNC') && DB_CONTENT_SYNC){
+	$dbcs = new DB(DB_CONTENT_SYNC_DRIVER, DB_CONTENT_SYNC_HOSTNAME, DB_CONTENT_SYNC_USERNAME, DB_CONTENT_SYNC_PASSWORD, DB_CONTENT_SYNC_DATABASE);
+	$registry->set('dbcs', $dbcs);
+
+	$syncConfig = loadJsonConfig('sync');
+	if (!empty($syncConfig['sync'])){
+		$registry->set('sync', $syncConfig['sync']);
+	}
+} else {
+	$registry->set('dbcs', false);
+}
+
 $registry->set('cache', 	new Cache());
 $registry->set('request', 	new Request());
 $registry->set('session', 	new Session($registry)); $session = $registry->get('session');
@@ -251,7 +267,6 @@ if ($registry->get('config')->get('config_order_default')){
 } elseif (!empty($sorts['order_default'])){
 	$registry->get('config')->set('order_default', $sorts['order_default']);
 }
-
 
 	//Библиотека респонса
 $response = new Response($registry);
