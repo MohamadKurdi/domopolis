@@ -129,15 +129,15 @@
 				</td>
 
 				<td class="left">						
-					<small><?php echo $offer['min_days']; ?></small>		
+					<small><?php echo !empty($offer['min_days'])?$offer['min_days']:''; ?></small>		
 				</td>
 
 				<td class="left">						
-					<small><?php echo $offer['delivery_from']; ?></small>		
+					<small><?php echo !empty($offer['delivery_from'])?$offer['min_days']:''; ?></small>		
 				</td>
 
 				<td class="left">						
-					<small><?php echo $offer['delivery_to']; ?></small>		
+					<small><?php echo !empty($offer['delivery_to'])?$offer['min_days']:''; ?></small>		
 				</td>
 
 				<td class="left" style="white-space:nowrap;">						
@@ -158,7 +158,7 @@
 			</tr>
 		<?php } ?>
 
-		<?php if ($bad_offers) { ?>
+		<?php if (!empty($bad_offers)) { ?>
 			<?php foreach ($bad_offers as $offer) { ?>
 				<td colspan="4">
 					<small style="display:inline-block; padding:3px 5px; color:#cf4a61"><i class="fa fa-exclamation-triangle"></i> bad offer</span>
