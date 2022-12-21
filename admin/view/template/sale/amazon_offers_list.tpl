@@ -133,11 +133,11 @@
 				</td>
 
 				<td class="left">						
-					<small><?php echo !empty($offer['delivery_from'])?$offer['min_days']:''; ?></small>		
+					<small><?php echo !empty($offer['delivery_from'])?$offer['delivery_from']:''; ?></small>		
 				</td>
 
 				<td class="left">						
-					<small><?php echo !empty($offer['delivery_to'])?$offer['min_days']:''; ?></small>		
+					<small><?php echo !empty($offer['delivery_to'])?$offer['delivery_to']:''; ?></small>		
 				</td>
 
 				<td class="left" style="white-space:nowrap;">						
