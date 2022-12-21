@@ -89,19 +89,6 @@ class ControllerCatalogCollection extends Controller {
 
 				}
 			}
-
-
-
-
-
-
-
-
-
-
-
-
-
 		}
 
 		public function index() {
@@ -626,7 +613,7 @@ class ControllerCatalogCollection extends Controller {
 
 			foreach ($collection_images as $collection_image) {
 				$this->data['collection_images'][] = array(
-					'image'      => $image,
+					'image'      => $collection_image['image'],
 					'thumb'      => $this->model_tool_image->resize($collection_image['image'], 100, 100),
 					'sort_order' => $collection_image['sort_order']
 				);
