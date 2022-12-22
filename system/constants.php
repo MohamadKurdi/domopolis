@@ -13,6 +13,8 @@ if (is_cli()){
 	define('CLI_MODE', false);
 }
 
+$ipsConfig = loadJsonConfig('ips');
+
 //DEBUG
 if ((isset($_GET['hello']) && $_GET['hello'] == 'world')){
 	define('IS_DEBUG', true);
@@ -30,7 +32,7 @@ if ((isset($_GET['hello']) && $_GET['hello'] == 'world')){
 		define('IS_DEBUG', true);
 		define('DEV_ENVIRONMENT', false);
 
-	} elseif ($_SERVER['REMOTE_ADDR'] == '95.67.113.2061') {
+	} elseif (!empty($ipsConfig['debug']) && !empty($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], $ipsConfig['debug'])) {
 
 		define('IS_DEBUG', true);
 		define('DEV_ENVIRONMENT', false);
