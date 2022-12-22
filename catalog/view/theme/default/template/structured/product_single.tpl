@@ -67,7 +67,7 @@
 				 <?php  if (!$product['need_ask_about_stock'] && !$product['can_not_buy']) { ?>  
 
 					<?php if ($product['special']) { ?>
-						<div class="price__sale">-<?php echo $product['saving']; ?>%</div>			
+						<div class="price__sale <?php if (empty($product['active_coupon'])) { ?>active_coupon_empty<?php } ?>">-<?php echo $product['saving']; ?>%</div>			
 					<?php } ?>
 				<?php } ?>
 			</div>
