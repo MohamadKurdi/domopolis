@@ -146,7 +146,6 @@
     @media screen and (min-width: 1280px){
         .product__item.tpl_list .product__line__promocode {
             margin-top: 25px;
-            display: none;
       }
         .product__item.tpl_list .product__info {
             position: relative;

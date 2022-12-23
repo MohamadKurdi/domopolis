@@ -120,7 +120,7 @@
 				</div>
 				
 				<?php } else { ?>
-				<span class="stock_status <?php if (!empty($do_not_show_left_aside_in_list)) { ?>stock_status_colection<?php } ?>"><? echo $product['stock_status'] ?></span>
+				<span class="stock_status"><? echo $product['stock_status'] ?></span>
 			<?php } ?>
 			
 			<?php if (empty($product['need_ask_about_stock']) && empty($product['can_not_buy'])) { ?>

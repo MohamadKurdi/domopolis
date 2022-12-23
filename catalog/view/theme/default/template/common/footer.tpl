@@ -1017,6 +1017,7 @@
 		html +=	'</div>';
 		
 		productBlock.find('.product__delivery').before(html);
+		productBlock.find('.price__sale').addClass('active_coupon_empty');
 	}
 	
 	function updateActiveActionsInBlock(productBlock, active_actions){
