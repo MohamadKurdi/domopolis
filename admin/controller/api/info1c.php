@@ -755,7 +755,7 @@ class ControllerApiInfo1C extends Controller
                 }
 
                 $log_odinass->write('>> Товары');
-                $this->db->query("UPDATE `product` SET quantity_updateMarker = 0 WHERE 1");
+                $this->db->query("UPDATE `product` SET `quantity_updateMarker` = '0' WHERE 1");
 
                 $count = 0;
                 $total_count = 0;
@@ -810,8 +810,8 @@ class ControllerApiInfo1C extends Controller
                     }
                 }
                     
-                $log_odinass->write('Всего ' . count($unique_products) . ' товаров');                    
-                $log_odinass->write('Всего ' . $total_count . ' единиц товаров');
+                $log_odinass->write('[updateStockXML] Всего ' . count($unique_products) . ' товаров');                    
+                $log_odinass->write('[updateStockXML] Всего ' . $total_count . ' единиц товаров');
 
                 foreach ($unique_products as $key => &$value) {
                     $value['product_id'] = $key;
@@ -831,11 +831,11 @@ class ControllerApiInfo1C extends Controller
 
                             if ($product) {
                                 $log_odinass->write('Нашли по артикулу: ' . $value['product_vendor'] . ', код товара: ' . $product['product_id'] . '');
-                                echo 'Нашли по артикулу: ' . $value['product_vendor'] . ', код товара: ' . $product['product_id'] . '' . PHP_EOL;
+                                echoLine('[updateStockXML] Нашли по артикулу: ' . $value['product_vendor'] . ', код товара: ' . $product['product_id']);
                                 $value['product_id'] = $product['product_id'];
                             } else {
                                 $log_odinass->write('Товара '.(int)($value['product_id']).' не существует, артикула: ' . $value['product_vendor'] . ' также не существует');
-                                echo 'Товара '.(int)($value['product_id']).' не существует, артикула: ' . $value['product_vendor'] . ' также не существует' . PHP_EOL;
+                                echoLine('[updateStockXML] Товара '.(int)($value['product_id']).' не существует, артикула: ' . $value['product_vendor'] . ' также не существует');
                             }
                         }
                     }
@@ -890,13 +890,16 @@ class ControllerApiInfo1C extends Controller
                             $products_in_stock[] = $value['product_id'];
                         }
 
+                        $log_odinass->write('Товар '.(int)($value['product_id']).', данные ' . implode(',', $value));
+                        echoLine('[updateStockXML] Товар '.(int)($value['product_id']).', данные ' . implode(',', $value));
+
                         $sql = ("UPDATE `product` SET 
 							`quantity_stock`         = '" . (int)$value['quantity_stock'] . "',
 							`quantity_stockK` 	     = '" . (int)$value['quantity_stockK'] . "',
 							`quantity_stockM` 	     = '" . (int)$value['quantity_stockM'] . "',
 							`quantity_stockMN` 	     = '" . (int)$value['quantity_stockM'] . "',
 							`quantity_stockAS` 	     = '" . (int)$value['quantity_stockM'] . "',
-							`actual_cost` 	          = '" . (float)$value['actual_cost'] . "',
+							`actual_cost` 	         = '" . (float)$value['actual_cost'] . "',
                             `quantity_updateMarker`   = 1	
 							WHERE product_id = '" . (int)$value['product_id'] . "'");
 
@@ -907,6 +910,7 @@ class ControllerApiInfo1C extends Controller
                         //  $ol .= ' BY: '.(int)$value['quantity_stockMN'];
                         //  $ol .= ' KZ: '.(int)$value['quantity_stockAS'];
                         $ol .= ' / COST: '.(float)$value['actual_cost'];
+
 
 
                         echoLine($ol);
@@ -944,15 +948,14 @@ class ControllerApiInfo1C extends Controller
                     }
                 }
 
-                $sql = ("UPDATE `product` SET 
-                            `quantity_stock`         = '0',
-                            `quantity_stockK`        = '0',
-                            `quantity_stockM`        = '0',
-                            `quantity_stockMN`       = '0',
-                            `quantity_stockAS`       = '0'                        
-                            WHERE `quantity_updateMarker` = '0'");
+                $this->db->query("UPDATE `product` SET `quantity_stock`= '0',  `quantity_stockK`= '0', `quantity_stockM`= '0', `quantity_stockMN`       = '0',`quantity_stockAS`= '0' WHERE `quantity_updateMarker` = '0'");
 
-                $this->db->query("UPDATE product SET quantity = (quantity_stock + quantity_stockK + quantity_stockM) WHERE quantity < (quantity_stock + quantity_stockK + quantity_stockM)");
+                $query = $this->db->query("SELECT product_id FROM product WHERE quantity < (quantity_stock + quantity_stockK + quantity_stockM)");
+                foreach ($query->rows as $row){
+                    echo('.');
+                    $this->db->query("UPDATE product SET quantity = (quantity_stock + quantity_stockK + quantity_stockM) WHERE product_id = '". (int)$row['product_id'] ."'");
+                }
+                echoLine('');
                     
                 $this->db->query("INSERT INTO yandex_stock_queue (yam_product_id, stock) SELECT yam_product_id, quantity_stockM FROM product WHERE (quantity_stockM > 0 OR yam_in_feed = 1) ON DUPLICATE KEY UPDATE stock = quantity_stockM");
 

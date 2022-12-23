@@ -51,18 +51,14 @@ class ModelKpInfo1C extends Model {
 			);								
 
 			$data = json_encode($data);
-
-			//	echoLine('Отправляем JSON:' . $data);
 			$result = $this->SoapClient->updateproduct(['id' => $data]); 
 			return $result;
 
 			
 		} catch (Exception $e){												
-			//	print_r($e->getMessage());
-			//	var_dump($this->SoapClient->__getLastRequest());
-			//	return ('Что-то пошло не так. ' . $e->getMessage());
+			echoLine($e->getMessage());
+			return('SOAP ERROR: ' . $e->getMessage());
 		}
-
 	}
 	
 	public function passWebServiceProxy($function, $param_name, $string_data){
@@ -74,12 +70,11 @@ class ModelKpInfo1C extends Model {
 			$data = array(
 				$param_name => (string)$string_data,				
 			);	
-			
-			
+						
 			$result = $this->SoapClient->{$function}($data); 
 			
 		} catch (Exception $e){															
-			return('Что-то пошло не так. ' . $e->getMessage());
+			return('SOAP ERROR: ' . $e->getMessage());
 		}
 		
 		return $result->return;
@@ -98,8 +93,8 @@ class ModelKpInfo1C extends Model {
 			$result = $this->SoapClient->bankbalance($data); 
 			
 		} catch (Exception $e){												
-			print_r($e->getMessage());
-			return('Что-то пошло не так. ' . $e->getMessage());
+			echoLine($e->getMessage());
+			return('SOAP ERROR: ' . $e->getMessage());
 		}
 		
 		$jsResult = $result->return;
@@ -119,26 +114,20 @@ class ModelKpInfo1C extends Model {
 			return false;
 		}
 		
-		return $json;
-		
+		return $json;		
 	}
 	
 	public function getLocalPricesXML(){
 		
 		$this->SoapConnectTo1C();
-		
-		echo 'TRYING pricelocal' . PHP_EOL;
-		try {
-			
+
+		try {	
 			$result = $this->SoapClient->pricelocal(); 
-			
 		} catch (Exception $e){												
-			print_r($e->getMessage());
-			die();
-			return('Что-то пошло не так. ' . $e->getMessage());
+			echoLine($e->getMessage());
+			return('SOAP ERROR: ' . $e->getMessage());
 		}
-		
-		
+			
 		$jsResult = $result->return;				
 		
 		$constants = get_defined_constants(true);
@@ -156,8 +145,7 @@ class ModelKpInfo1C extends Model {
 			return false;
 		}
 		
-		return $json;
-		
+		return $json;		
 	}
 	
 	public function getOrderTrackerXML($order_id){
@@ -169,8 +157,8 @@ class ModelKpInfo1C extends Model {
 			$result2 = $this->SoapClient->tracker(array('order_id' => $order_id)); 
 			
 		} catch (Exception $e){
-			print_r($e->getMessage());
-			return('Что-то пошло не так. ' . $e->getMessage());
+			echoLine($e->getMessage());
+			return('SOAP ERROR: ' . $e->getMessage());
 		}
 		
 		$xml = $result2->return;
@@ -191,21 +179,18 @@ class ModelKpInfo1C extends Model {
 			return ('Ошибка разбора XML. ' . $e->getMessage());
 		}			
 		
-		return $input;	
-		
+		return $input;			
 	}
 	
 	public function getStockWaitsFrom1C(){
 		
 		$this->SoapConnectTo1C();
 		
-		try {
-			
+		try {	
 			$result = $this->SoapClient->stockwait(); 
-			
 		} catch (Exception $e){
-			print_r($e->getMessage());
-			die();
+			echoLine($e->getMessage());
+			return('SOAP ERROR: ' . $e->getMessage());
 		}
 		
 		$jsResult = $result->return;
@@ -213,37 +198,31 @@ class ModelKpInfo1C extends Model {
 		return $jsResult;
 	}
 	
-	
 	public function getStocksFrom1C(){
 		
 		$this->SoapConnectTo1C();
 		
-		try {
-			
-			$result = $this->SoapClient->stock(array('organisation' => SITE_NAMESPACE)); 
-			
+		try {		
+			$result = $this->SoapClient->stock(array('organisation' => SITE_NAMESPACE)); 		
 		} catch (Exception $e){
-			print_r($e->getMessage());
-			die();
+			echoLine($e->getMessage());
+			return('SOAP ERROR: ' . $e->getMessage());
 		}
 		
 		$jsResult = $result->return;					
 		
-		return $jsResult;
-		
+		return $jsResult;		
 	}
 	
 	public function getActualCostFrom1C(){
 		
 		$this->SoapConnectTo1C();
 		
-		try {
-			
-			$result = $this->SoapClient->price(); 
-			
+		try {			
+			$result = $this->SoapClient->price(); 			
 		} catch (Exception $e){
-			print_r($e->getMessage());
-			die();
+			echoLine($e->getMessage());
+			return('SOAP ERROR: ' . $e->getMessage());
 		}
 		
 		$jsResult = $result->return;
@@ -263,21 +242,6 @@ class ModelKpInfo1C extends Model {
 			return false;
 		}
 		
-		return $json;
-		
+		return $json;		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }				
