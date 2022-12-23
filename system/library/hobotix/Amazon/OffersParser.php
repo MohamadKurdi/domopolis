@@ -12,6 +12,7 @@ class OffersParser
 	private $log;
 
 	//private $testAsin = 'B095CFY117';
+	private $testAsin = false;
 
 	private $no_offers_logic = false;
 
