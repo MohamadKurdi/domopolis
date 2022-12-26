@@ -36,6 +36,10 @@
 			if (isset($data['filter_name'])){
 				$sql .= " AND LOWER(name) LIKE ('%" . $this->db->escape(mb_strtolower($data['filter_name'])) . "%')";
 			}
+
+			if (isset($data['filter_problems'])){
+				$sql .= " AND (adq.category_id IN (" . (int)$this->config->get('config_rainforest_default_technical_category_id') . ", " . (int)$this->config->get('config_rainforest_default_unknown_category_id') . ")  OR ISNULL(p.date_added) OR (ISNULL(p.status) OR p.status = 0))";
+			}
 			
 			$sql .= " ORDER BY date_added DESC";
 			
@@ -57,7 +61,7 @@
 		}
 
 		public function getTotalProductsInASINQueue($data) {
-			$sql = "SELECT COUNT(*) AS total FROM amzn_add_queue adq LEFT JOIN product_description pd ON (adq.product_id = pd.product_id AND language_id = '" . $this->config->get('config_language_id') . "') WHERE 1 ";
+			$sql = "SELECT COUNT(*) AS total FROM amzn_add_queue adq LEFT JOIN product p ON (p.product_id = adq.product_id) LEFT JOIN product_description pd ON (adq.product_id = pd.product_id AND language_id = '" . $this->config->get('config_language_id') . "') WHERE 1 ";
 			
 			if (isset($data['filter_asin'])){
 				$sql .= " AND adq.asin LIKE ('%" . $this->db->escape($data['filter_asin']) . "%')";
@@ -65,6 +69,10 @@
 			
 			if (isset($data['filter_name'])){
 				$sql .= " AND LOWER(pd.name) LIKE ('%" . $this->db->escape(mb_strtolower($data['filter_name'])) . "%')";
+			}
+
+			if (isset($data['filter_problems'])){
+				$sql .= " AND (adq.category_id IN (" . (int)$this->config->get('config_rainforest_default_technical_category_id') . ", " . (int)$this->config->get('config_rainforest_default_unknown_category_id') . ")  OR ISNULL(p.date_added) OR (ISNULL(p.status) OR p.status = 0))";
 			}
 			
 			$query = $this->db->query($sql);
