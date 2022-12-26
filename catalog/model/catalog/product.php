@@ -1583,7 +1583,18 @@
 			if (!$product_data) {
 				$product_data = [];
 				
-				$query = $this->db->query("SELECT op.product_id, COUNT(*) AS total FROM order_product op LEFT JOIN `order` o ON (op.order_id = o.order_id) LEFT JOIN `product` p ON (op.product_id = p.product_id) LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) WHERE o.order_status_id > '0' AND p.status = '1' AND p.date_available <= NOW() AND is_markdown = 0 AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' GROUP BY op.product_id ORDER BY total DESC LIMIT " . (int)$limit);
+				$query = $this->db->query("SELECT op.product_id, COUNT(*) AS total FROM order_product op 
+					LEFT JOIN `order` o ON (op.order_id = o.order_id) 
+					LEFT JOIN `product` p ON (op.product_id = p.product_id) 
+					LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
+					WHERE o.order_status_id > '0' 
+					AND p.status = '1' 
+					AND p.stock_status_id <> '" . (int)$this->config->get('config_not_in_stock_status_id') . "'
+					AND p.quantity > 0 
+					AND p.is_markdown = 0 
+					AND p.date_available <= NOW() 
+					AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'
+					GROUP BY op.product_id ORDER BY total DESC LIMIT " . (int)$limit);
 				
 				foreach ($query->rows as $result) {
 					$product_data[$result['product_id']] = $this->getProduct($result['product_id']);
@@ -2598,6 +2609,16 @@
 			}
 			
 			return $product_markdown_data;
+		}
+
+		public function getProductMainCategoryId($product_id) {						
+			$query = $this->db->query("SELECT * FROM product_to_category WHERE product_id = '" . (int)$product_id . "' ORDER BY main_category DESC LIMIT 1");
+			
+			if ($query->num_rows){
+				return $query->row['category_id'];
+			}
+
+			return 0;
 		}
 		
 		public function getProductCategories($product_id) {

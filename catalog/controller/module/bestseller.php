@@ -66,7 +66,8 @@ class ControllerModuleBestSeller extends Controller {
 					'filter_category_id' 	=> $category_id,
 					'filter_manufacturer_id'=> $manufacturer_id,
 					'filter_not_bad'		=> true,		
-					'filter_with_variants'	=> true
+					'filter_with_variants'	=> true,
+					'filter_quantity'		=> true
 				);
 				$results_full = $this->model_catalog_product->getProducts($filter_data);
 			}
@@ -80,7 +81,8 @@ class ControllerModuleBestSeller extends Controller {
 					'filter_category_id'		=> $category_id,
 					'filter_manufacturer_id'	=> $manufacturer_id,						
 					'filter_not_bad'			=> true,		
-					'filter_with_variants'		=> true
+					'filter_with_variants'		=> true,
+					'filter_quantity'			=> true
 				];
 
 				$results_full2 = $this->model_catalog_product->getProducts($filter_data);							
