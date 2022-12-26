@@ -68,7 +68,7 @@ body > #container{height:auto;min-height:100%}
 .box > .heading .buttons .button{margin-left:5px}
 .box > .content h2{text-transform:uppercase;color:#222;font-size:14px;font-weight:700;padding-bottom:3px;border-bottom:1px dotted #000}
 .box > .content{min-height:600px;position:relative}
-a.button,.list a.button{font-family:Arial,Helvetica,sans-serif;text-decoration:none;padding:5px;color:#6A6A6A;border:2px solid #6A6A6A;border-radius:5px;background-color:#fff;-webkit-transition:border .25s linear,color .25s linear,background-color .25s linear;transition:border .25s linear,color .25s linear,background-color .25s linear;-webkit-font-smoothing:subpixel-antialiased;text-align:center;cursor:pointer;-webkit-user-select:none;display:inline-block}
+a.button,.list a.button{font-family:Arial,Helvetica,sans-serif;text-decoration:none;padding:7px;color:#6A6A6A;border:2px solid #6A6A6A;border-radius:5px;background-color:#fff;-webkit-transition:border .25s linear,color .25s linear,background-color .25s linear;transition:border .25s linear,color .25s linear,background-color .25s linear;-webkit-font-smoothing:subpixel-antialiased;text-align:center;cursor:pointer;-webkit-user-select:none;display:inline-block}
 a.button:hover,.list a.button :hover{color:#fff;background-color:#6A6A6A;text-decoration:none!important}
 a.button:active,.list a.button:active{color:#fff;background-color:#898989;border:2px solid #898989}
 a.redbg{background-color:#cf4a61!important;color:#FFF!important;font-weight:400;border:2px solid #cf4a61!important;}
