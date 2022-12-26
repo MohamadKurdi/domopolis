@@ -96,13 +96,16 @@
                         <tr>
                             <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
                             <td class="center" style="width:1px;"></td>
-                            <td class="center" style="width:200px;">ASIN</td>
-                            <td class="left" style="width:200px;" >Код товара</td>
+                            <td class="center" style="width:100px;">ASIN</td>
+                            <td class="left" style="width:50px;" >Картинка</td>
+                            <td class="left" style="width:70px;" >Код товара</td>
+                            <td class="left" style="width:1px;" >Статус</td>
                             <td class="left">Название</td>
                             <td class="left">Категория</td>
                             <td class="left" style="width:150px">Добавлен</td>
                             <td class="left" style="width:150px">Создан</td>       
-                            <td class="left" style="width:200px">Кем добавлен</td>                    
+                            <td class="left" style="width:100px">Кем добавлен</td>   
+                            <td class="left" style="width:100px">Действие</td>                 
                         </tr>
                     </thead>
                     <tbody>
@@ -127,6 +130,14 @@
                                     </td>
 
                                     <td class="center">
+                                       <?php if ($product['image']) { ?>
+                                            <img src="<?php echo $product['image']; ?>" />
+                                       <? } else { ?>
+                                            <span style="color:#FF9243; font-size:18px; font-weight: 700;"><i class="fa fa-refresh"></i></span>
+                                       <? } ?>
+                                    </td>
+
+                                    <td class="center">
                                        <?php if ($product['product_id']) { ?>
                                             <span style="color:#00ad07; font-weight: 700;"><? echo $product['product_id']; ?></span>
                                        <? } else { ?>
@@ -134,9 +145,17 @@
                                        <? } ?>
                                     </td>
 
-                                    <td class="center">
+                                     <td class="center">
+                                       <?php if ($product['status']) { ?>
+                                            <span style="color:#00ad07; font-size:18px; font-weight: 700;"><i class="fa fa-check-circle"></i></span>
+                                       <? } else { ?>
+                                            <span style="color:#CF4A61; font-size:18px; font-weight: 700;"><i class="fa fa-times"></i></span>
+                                       <? } ?>
+                                    </td>
+
+                                    <td class="left">
                                         <?php if ($product['product_id']) { ?>
-                                            <span style="color:#00ad07; font-weight: 700;"><a href="<? echo $product['href']; ?>" target="_blank"><? echo $product['name']; ?><i class="fa fa-external-link"></i></a></span>
+                                            <small><? echo $product['name']; ?></small>
                                        <? } else { ?>
                                             <span style="color:#FF9243; font-size:18px; font-weight: 700;"><i class="fa fa-refresh"></i></span>
                                        <? } ?>
@@ -144,7 +163,11 @@
 
                                     <td class="center">
                                         <?php if ($product['category']) { ?>
-                                            <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><? echo $product['category']['name']; ?></span>
+                                            <?php if ($product['category_id'] == $this->config->get('config_rainforest_default_technical_category_id') || $product['category_id'] == $this->config->get('config_rainforest_default_unknown_category_id')) { ?>
+                                            <span class="status_color" style="display:inline-block; padding:3px 5px; background:#CF4A61; color:#FFF"><? echo $product['category']['name']; ?></span>
+                                        <?php } else { ?>
+                                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><? echo $product['category']['name']; ?></span>
+                                        <?php } ?>
                                        <? } else { ?>
                                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9243; color:#FFF">АВТО</span>
                                        <? } ?>
@@ -164,7 +187,12 @@
 
                                     <td class="center">
                                         <small><?php echo $product['user']; ?></small>
-                                    </td>                        
+                                    </td>   
+
+                                    <td class="center">
+                                        <a class="button" href="<?php echo $product['edit']; ?>" target="_blank"><i class="fa fa-edit"></i></a>
+                                        <a class="button" href="<?php echo $product['view']; ?>"  target="_blank"><i class="fa fa-eye"></i></a>
+                                    </td>                     
                                 </tr>                                                      
                             <? } ?>                    
                         <?php } else { ?>

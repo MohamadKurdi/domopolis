@@ -121,6 +121,8 @@
 			$this->load->model('report/product');
 			$this->load->model('catalog/product');
 			$this->load->model('catalog/category');
+			$this->load->model('user/user');
+			$this->load->model('tool/image');
 			
 			$this->config->set('config_limit_admin', 100);
 			
@@ -136,7 +138,6 @@
 			$product_total = $this->model_report_product->getTotalProductsInASINQueue($filter_data);			
 			$results = $this->model_report_product->getProductsInASINQueue($filter_data);
 			
-			$this->load->model('user/user');
 			foreach ($results as $result) {	
 
 				if (!empty($filter_asin)){
@@ -153,8 +154,11 @@
 				'name'	 		=> !empty($result['name'])?$result['name']:false,
 				'date_added'	=> date('Y-m-d H:i:s', strtotime($result['date_added'])),
 				'product_id'	=> $result['product_id'],
-				'href'			=> $result['product_id']?$this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'], 'SSL'):false,
-				'date_created'	=> $result['product_id']?date('Y-m-d H:i:s', strtotime($result['date_created'])):false,		
+				'status'		=> $result['product_id']?$result['status']:false,
+				'edit'			=> $result['product_id']?$this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'], 'SSL'):false,
+				'view'			=> $result['product_id']?(HTTP_CATALOG . 'index.php?route=product/product&product_id=' . $result['product_id']):false,
+				'date_created'	=> $result['product_id']?date('Y-m-d', strtotime($result['date_created'])):false,		
+				'image'			=> $result['image']?$this->model_tool_image->resize($result['image'], 50, 50):false,
 				'category_id'	=> $result['category_id'],
 				'category'		=> $result['category_id']?$this->model_catalog_category->getCategory($result['category_id']):false,
 				'user'			=> $this->model_user_user->getRealUserNameById($result['user_id'])
