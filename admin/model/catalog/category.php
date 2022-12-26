@@ -462,12 +462,9 @@ class ModelCatalogCategory extends Model {
 	}
 	
 	public function repairAmazonTree(){
-
 		$this->db->query();
-
 	}
-	
-		// Function to repair any erroneous categories that are not in the category path table.
+		
 	public function repairCategories($parent_id = 0) {
 		$query = $this->db->query("SELECT * FROM category WHERE parent_id = '" . (int)$parent_id . "'");
 		
@@ -546,6 +543,10 @@ class ModelCatalogCategory extends Model {
 
 			if (isset($data['filter_parent_id'])) {
 				$sql .= " AND c.parent_id = '" . (int)$data['filter_parent_id'] . "'";
+			}
+
+			if (isset($data['filter_final'])) {
+				$sql .= " AND cp.category_id NOT IN (SELECT parent_id FROM category)";
 			}
 
 			if (isset($data['filter_product_date_added'])) {
