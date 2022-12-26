@@ -1,5 +1,76 @@
 <?php
 	class ModelReportProduct extends Model {
+		private $good_warehouses = array(
+				'quantity_stock' => '18',
+				'quantity_stockK' => '1',
+				'quantity_stockM' => '0',
+				);
+
+		public function deleteASINFromQueue($asin) {			
+			if (trim($asin)){
+				$this->db->query("DELETE FROM amzn_add_queue WHERE asin = '" . $this->db->escape($asin) . "'");
+			}		
+		}
+
+		public function insertAsinToQueue($data) {			
+			if (trim($data['asin'])){
+				$asins = explode(',', $data['asin']);
+
+				if (empty($data['category_id'])){
+					$data['category_id'] = 0;
+				}
+
+				foreach ($asins as $asin){
+					$this->db->query("INSERT IGNORE INTO amzn_add_queue SET asin = '" . $this->db->escape(trim($asin)) . "', category_id = '" . (int)$data['category_id'] . "', user_id = '" . (int)$this->user->getID() . "', date_added = NOW()");
+				}
+			}		
+		}
+
+		public function getProductsInASINQueue($data = array()) {
+			$sql = "SELECT adq.*, pd.name, p.date_added as date_created FROM amzn_add_queue adq LEFT JOIN product p ON (p.product_id = adq.product_id) LEFT JOIN product_description pd ON (adq.product_id = pd.product_id AND language_id = '" . $this->config->get('config_language_id') . "') WHERE 1";
+			
+			if (isset($data['filter_asin'])){
+				$sql .= " AND asin LIKE ('%" . $this->db->escape($data['filter_asin']) . "%')";
+			}
+			
+			if (isset($data['filter_name'])){
+				$sql .= " AND LOWER(name) LIKE ('%" . $this->db->escape(mb_strtolower($data['filter_name'])) . "%')";
+			}
+			
+			$sql .= " ORDER BY date_added DESC";
+			
+			if (isset($data['start']) || isset($data['limit'])) {
+				if ($data['start'] < 0) {
+					$data['start'] = 0;
+				}
+				
+				if ($data['limit'] < 1) {
+					$data['limit'] = 20;
+				}
+				
+				$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+			}
+			
+			$query = $this->db->query($sql);
+			
+			return $query->rows;
+		}
+
+		public function getTotalProductsInASINQueue($data) {
+			$sql = "SELECT COUNT(*) AS total FROM amzn_add_queue adq LEFT JOIN product_description pd ON (adq.product_id = pd.product_id AND language_id = '" . $this->config->get('config_language_id') . "') WHERE 1 ";
+			
+			if (isset($data['filter_asin'])){
+				$sql .= " AND adq.asin LIKE ('%" . $this->db->escape($data['filter_asin']) . "%')";
+			}
+			
+			if (isset($data['filter_name'])){
+				$sql .= " AND LOWER(pd.name) LIKE ('%" . $this->db->escape(mb_strtolower($data['filter_name'])) . "%')";
+			}
+			
+			$query = $this->db->query($sql);
+			
+			return $query->row['total'];
+		}
 
 
 		public function getProductsDeletedASIN($data = array()) {
@@ -13,7 +84,7 @@
 				$sql .= " AND LOWER(name) LIKE ('%" . $this->db->escape(mb_strtolower($data['filter_name'])) . "%')";
 			}
 			
-			$sql .= " ORDER BY name DESC";
+			$sql .= " ORDER BY date_added DESC";
 			
 			if (isset($data['start']) || isset($data['limit'])) {
 				if ($data['start'] < 0) {
@@ -32,20 +103,16 @@
 			return $query->rows;
 		}
 		
-		public function deleteDeletedASIN($asin) {
-			
+		public function deleteDeletedASIN($asin) {			
 			if (trim($asin)){
 				$this->db->query("DELETE FROM deleted_asins WHERE asin = '" . $this->db->escape($asin) . "'");
 			}
-			
 		}
 		
-		public function insertDeletedASIN($data) {
-			
+		public function insertDeletedASIN($data) {			
 			if (trim($data['asin'])){
 				$this->db->query("INSERT IGNORE INTO sku_deleted SET asin = '" . $this->db->escape($data['asin']) . "', `name` = '" . $this->db->escape($data['name']) . "'");
-			}
-			
+			}			
 		}
 		
 		public function getTotalProductsDeletedASIN($data) {
@@ -63,14 +130,7 @@
 			
 			return $query->row['total'];
 		}
-
-	
-		private $good_warehouses = array(
-				'quantity_stock' => '18',
-				'quantity_stockK' => '1',
-				'quantity_stockM' => '0',
-				);
-		
+				
 		public function getProductsViewed($data = array()) {
 			$sql = "SELECT sv.entity_id as product_id, pd.name, p.model, p.ean, p.price, p.actual_cost, p.actual_cost_date, p.image, m.name as manufacturer, SUM(sv.times) as viewed, ";
 			
@@ -220,8 +280,7 @@
 				return $query->row['cart'];
 				} else {
 				return 0;
-			}
-			
+			}			
 		}				
 		
 		public function getProductViewedByDays($data = array()){
@@ -238,8 +297,7 @@
 				return $query->row['viewed'];
 				} else {
 				return false;
-			}
-			
+			}			
 		}
 		
 		public function getTotalProductsViewed($data = array()) {
@@ -459,8 +517,7 @@
 			
 			$query = $this->db->query($sql);
 			
-			return $query->rows;
-			
+			return $query->rows;		
 		}
 		
 		public function getTotalBought($data = array()) {
@@ -545,8 +602,7 @@
 				return $query->row['total'];
 				} else {
 				return 0;
-			}
-			
+			}			
 		}
 		
 		public function getTotalBoughtByProductID($data = array()) {
@@ -576,11 +632,9 @@
 				return $query->row['total'];
 				} else {
 				return 0;
-			}
-			
+			}			
 		}
-		
-		
+			
 		public function getAverageBoughtByProductID($data = array()) {
 			
 			$sql = "SELECT AVG(total_by_period) as average FROM ( 
@@ -617,11 +671,9 @@
 				return (int)$query->row['average'];
 				} else {
 				return 0;
-			}
-			
+			}			
 		}
-		
-		
+				
 		public function getAverageInOrderByProductID($data = array()) {
 			
 			$sql = "SELECT AVG(op.quantity) AS average FROM `order_product` op 
@@ -650,8 +702,7 @@
 				return (int)$query->row['average'];
 				} else {
 				return 0;
-			}
-			
+			}			
 		}
 		
 		public function getLastDateOrderByProductID($data = array()) {
@@ -673,12 +724,9 @@
 				return $query->row['maxdate'];
 				} else {
 				return 'Никогда';
-			}
-			
+			}			
 		}
-		
-		
-		
+				
 		public function getProductStockWaits($product_id){
 			
 			$query = $this->db->query("SELECT * FROM product_stock_waits WHERE product_id = '" . (int)$product_id . "'");
@@ -688,20 +736,7 @@
 				return $query->row;
 			} else {
 				return false;
-			}
-			
-			
+			}			
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+	
 	}
