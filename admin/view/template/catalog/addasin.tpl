@@ -45,7 +45,13 @@
                             </div>
                         </td>
 
-                        <td style="right">
+                        <td class="right" style="width:150px;">    
+                            <div>
+                                <a href="<?php echo $filter_problems_href; ?>" class="button" style="color:#CF4A61; border-color:#CF4A61;"><i class="fa fa-exclamation-triangle"></i> Проблемные (<?php echo $filter_problems_count; ?>)</a>
+                            </div>
+                        </td>
+
+                        <td class="right" style="width:90px;">
                             <div>                                
                                 <a onclick="filter();" class="button">Фильтр</a>
                             </div>
@@ -244,7 +250,7 @@
 
 <script type="text/javascript"><!--
 function filter() {
-    url = 'index.php?route=report/product_deletedasin&token=<?php echo $token; ?>';
+    url = 'index.php?route=catalog/addasin&token=<?php echo $token; ?>';
 
     var filter_asin = $('input[name=\'filter_asin\']').attr('value');
 

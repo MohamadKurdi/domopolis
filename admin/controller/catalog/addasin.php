@@ -18,6 +18,10 @@
 			if (isset($this->request->get['filter_name'])) {
 				$url .= '&filter_name=' . $this->request->get['filter_name'];
 			}
+
+			if (isset($this->request->get['filter_problems'])) {
+				$url .= '&filter_problems=' . $this->request->get['filter_problems'];
+			}
 			
 			if (isset($this->request->get['sort'])) {
 				$url .= '&sort=' . $this->request->get['sort'];
@@ -53,6 +57,10 @@
 			if (isset($this->request->get['filter_name'])) {
 				$url .= '&filter_name=' . $this->request->get['filter_name'];
 			}
+
+			if (isset($this->request->get['filter_problems'])) {
+				$url .= '&filter_problems=' . $this->request->get['filter_problems'];
+			}
 			
 			if (isset($this->request->get['sort'])) {
 				$url .= '&sort=' . $this->request->get['sort'];
@@ -80,8 +88,9 @@
 			
 			$this->document->setTitle('Добавление товаров с Amazon');
 			
-			$filter_asin = isset($this->request->get['filter_asin']) ? $this->request->get['filter_asin'] : null;
-			$filter_name = isset($this->request->get['filter_name']) ? $this->request->get['filter_name'] : null;
+			$filter_asin 		= isset($this->request->get['filter_asin']) ? $this->request->get['filter_asin'] : null;
+			$filter_name 		= isset($this->request->get['filter_name']) ? $this->request->get['filter_name'] : null;
+			$filter_problems 	= isset($this->request->get['filter_problems']) ? $this->request->get['filter_problems'] : null;
 			
 			if (isset($this->request->get['page'])) {
 				$page = $this->request->get['page'];
@@ -99,6 +108,10 @@
 			
 			if (isset($this->request->get['filter_asin'])) {
 				$url .= '&filter_asin=' . $this->request->get['filter_asin'];
+			}
+
+			if (isset($this->request->get['filter_problems'])) {
+				$url .= '&filter_problems=' . $this->request->get['filter_problems'];
 			}
 			
 			if (isset($this->request->get['filter_name'])) {
@@ -127,16 +140,17 @@
 			$this->config->set('config_limit_admin', 100);
 			
 			$filter_data = array(
-			'filter_asin' 	=> $filter_asin,
-			'filter_name' 	=> $filter_name,
-			'start' 		=> ($page - 1) * $this->config->get('config_limit_admin'),
-			'limit' 		=> $this->config->get('config_limit_admin')
+			'filter_asin' 		=> $filter_asin,
+			'filter_name' 		=> $filter_name,
+			'filter_problems' 	=> $filter_problems,
+			'start' 			=> ($page - 1) * $this->config->get('config_limit_admin'),
+			'limit' 			=> $this->config->get('config_limit_admin')
 			);
 			
 			$this->data['products'] = array();
 					
-			$product_total = $this->model_report_product->getTotalProductsInASINQueue($filter_data);			
-			$results = $this->model_report_product->getProductsInASINQueue($filter_data);
+			$product_total 	= $this->model_report_product->getTotalProductsInASINQueue($filter_data);			
+			$results 		= $this->model_report_product->getProductsInASINQueue($filter_data);
 			
 			foreach ($results as $result) {	
 
@@ -192,6 +206,10 @@
 			if (isset($this->request->get['filter_name'])) {
 				$url .= '&filter_name=' . $this->request->get['filter_name'];
 			}
+
+			if (isset($this->request->get['filter_problems'])) {
+				$url .= '&filter_problems=' . $this->request->get['filter_problems'];
+			}
 						
 			$this->data['delete'] = $this->url->link('catalog/addasin/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 			$this->data['add'] = $this->url->link('catalog/addasin/add', 'token=' . $this->session->data['token'] . $url, 'SSL');			
@@ -223,8 +241,17 @@
 			$this->data['pagination'] = $pagination->render();
 
 
-			$this->data['filter_asin'] = $filter_asin;
-			$this->data['filter_name'] = $filter_name;			
+			$this->data['filter_asin'] 		= $filter_asin;
+			$this->data['filter_name'] 		= $filter_name;		
+
+			$filter_data = array(
+			'filter_problems' 	=> true
+			);
+
+			$this->data['filter_problems_count'] 	= $this->model_report_product->getTotalProductsInASINQueue($filter_data);
+			$this->data['filter_problems'] 			= $filter_problems;
+			$this->data['filter_problems_href'] 	= $this->url->link('catalog/addasin',  'token=' . $this->session->data['token'] . '&filter_problems=1', 'SSL');		
+
 
 			$this->template = 'catalog/addasin.tpl';
 			$this->children = array(
@@ -234,17 +261,5 @@
 			
 			$this->response->setOutput($this->render());
 		}
-
-
-
-
-
-
-
-
-
-
-
-
 
 	}
