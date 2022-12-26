@@ -62,6 +62,11 @@ class ProductsRetriever extends RainforestRetriever
 
 	
 	const CLASS_NAME = 'hobotix\\Amazon\\ProductsRetriever';
+
+		//TODO: refactor
+	public function getAsinAddQueue(){
+		return $this->model_product_get->getAsinAddQueue();
+	}	
 	
 		//TODO: refactor
 	public function getProducts(){
@@ -1164,7 +1169,7 @@ class ProductsRetriever extends RainforestRetriever
 		
 		$this->db->query("DELETE FROM product_to_store WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("INSERT INTO product_to_store SET product_id = '" . (int)$product_id . "', store_id = '0'");
-		
+				
 		$this->db->query("DELETE FROM product_to_category WHERE product_id = '" . (int)$product_id . "'");
 		$this->db->query("INSERT INTO product_to_category SET product_id = '" . (int)$product_id . "', category_id = '" . (int)$data['category_id'] . "', main_category = 1");
 		
