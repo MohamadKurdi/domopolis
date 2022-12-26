@@ -3394,6 +3394,10 @@ class ControllerSettingSetting extends Controller
         'config_rainforest_enable_offers_parser',
         'config_rainforest_offers_parser_time_start',
         'config_rainforest_offers_parser_time_end',
+
+        'config_rainforest_enable_add_queue_parser',
+        'config_rainforest_add_queue_parser_time_start',
+        'config_rainforest_add_queue_parser_time_end',
         
         'config_rainforest_enable_asins_parser',
         'config_rainforest_enable_eans_parser',
