@@ -1,7 +1,4 @@
 <?php echo $header; ?>
-<!--[if IE]>
-    <script type="text/javascript" src="view/javascript/jquery/flot2/excanvas.js"></script>
-<![endif]--> 
 <style>
     div.red{
         background-color:#ef5e67;
@@ -36,19 +33,19 @@
                     <tr class="filter f_top">
                         <td class="left">
                             <div>
-                                <p>Искать ASIN</p>
-                                <input type="text" class="text" name="filter_asin" value="<?php echo $filter_asin; ?>" style="width:90%" />
+                                <input type="text" class="text" name="filter_asin" placeholder="Искать по ASIN" value="<?php echo $filter_asin; ?>" style="width:90%" />
                             </div>
                          </td>
                          <td class="left">    
                             <div>
-                                <p>Искать название</p>
-                                <input type="text" class="text" name="filter_name" value="<?php echo $filter_name; ?>" style="width:90%" />
+                                <input type="text" class="text" name="filter_name" placeholder="Искать по названию" value="<?php echo $filter_name; ?>" style="width:90%" />
                             </div>
                         </td>
                        
                         <td style="right">
-                            <a onclick="filter();" class="button">Фильтр</a>
+                            <div>
+                                <a onclick="filter();" class="button">Фильтр</a>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
