@@ -291,6 +291,135 @@ class ControllerDPRainForest extends Controller {
 		}
 	}	
 
+	/*
+	Обработка очереди добавления ASIN
+	*/
+	public function addasinsqueuecron(){
+		if (!$this->config->get('config_rainforest_enable_add_queue_parser')){
+			echoLine('[ControllerKPRainForest::addasinsqueuecron] CRON IS DISABLED IN ADMIN');
+			return;
+		}
+
+		$this->load->library('Timer');
+
+		if ($this->config->has('config_rainforest_add_queue_parser_time_start') && $this->config->has('config_rainforest_add_queue_parser_time_end')){
+			$interval = new Interval($this->config->get('config_rainforest_add_queue_parser_time_start') . '-' . $this->config->get('config_rainforest_add_queue_parser_time_end'));
+
+			if (!$interval->isNow()){
+				echoLine('[ControllerKPRainForest::addasinsqueuecron] NOT ALLOWED TIME');
+				return;
+			} else {
+				echoLine('[ControllerKPRainForest::addasinsqueuecron] ALLOWED TIME');				
+			}
+		}
+
+		$timer = new FPCTimer();
+		$this->load->model('catalog/product');
+
+		$asins = $this->rainforestAmazon->productsRetriever->getAsinAddQueue();	
+		$asinsToCategories 	= [];
+		$asinsSlice 		= [];
+
+		if ($asins){
+			echoLine('[addasinsqueuecron] Всего ASIN для обработки: ' . count($asins));
+
+			foreach ($asins as $asin){
+				if ($this->rainforestAmazon->productsRetriever->model_product_get->checkIfAsinIsDeleted($asin['asin'])){
+					echoLine('[addasinsqueuecron] ASIN удален, убираем из очереди!');	
+					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteASINFromQueue($asin['asin']);
+					continue;
+				}
+
+				if ($product_id = $this->rainforestAmazon->productsRetriever->model_product_get->getProductIdByAsin($asin['asin'])){
+					echoLine('[addasinsqueuecron] Товар с ASIN ' . $asin['asin'] . ' уже существует');
+					$this->rainforestAmazon->productsRetriever->model_product_edit->setProductIDInQueue($asin['asin'], $product_id);
+
+					if ($category_id = $this->model_catalog_product->getProductMainCategoryId($product_id)){
+						$this->rainforestAmazon->productsRetriever->model_product_edit->setCategoryIDInQueue($asin['asin'], $category_id);
+					}
+					continue;
+				}
+
+				$asinsToCategories[$asin['asin']] = $asin['category_id'];
+				$asinsSlice[$asin['asin']] = [
+					'asin' 			=> $asin['asin'],
+					'product_id' 	=> $asin['asin']
+
+				];
+			}
+
+			$asinsToOffers = [];
+
+			if ($asinsToCategories && $asinsSlice){
+				echoLine('[addasinsqueuecron] В очереди на получение осталось: ' . count($asinsSlice));
+
+				$results = $this->rainforestAmazon->simpleProductParser->getProductByASINS($asinsSlice);
+
+				foreach ($results as $asin => $rfProduct){
+
+					if (!empty($asinsToCategories[$asin])){
+						$category_id = $asinsToCategories[$asin];
+					} else {
+						$category_id = $this->config->get('config_rainforest_default_technical_category_id');
+					}
+
+					$product_id = $this->rainforestAmazon->productsRetriever->addSimpleProductWithOnlyAsin(
+						[
+							'asin' 					=> $rfProduct['asin'], 
+							'amazon_best_price' 	=> (!empty($rfProduct['buybox_winner']))?$rfProduct['buybox_winner']['price']['value']:'0',
+							'category_id' 			=> $category_id, 
+							'name' 					=> $rfProduct['title'], 
+							'amazon_product_link' 	=> $rfProduct['link'],
+							'amazon_product_image'  => $rfProduct['main_image']['link'], 
+							'image' 				=> $this->rainforestAmazon->productsRetriever->getImage($rfProduct['main_image']['link']), 
+							'added_from_amazon' 	=> 1
+						]
+					);
+
+					if ($product_id){
+						
+						echoLine('[addasinsqueuecron] Товар добавлен: ' . $product_id);
+						$this->rainforestAmazon->productsRetriever->editFullProduct($product_id, $rfProduct);
+						$this->rainforestAmazon->productsRetriever->model_product_edit->setProductIDInQueue($asin, $product_id);
+
+						if ($category_id = $this->model_catalog_product->getProductMainCategoryId($product_id)){
+							$this->rainforestAmazon->productsRetriever->model_product_edit->setCategoryIDInQueue($asin, $category_id);
+						}
+
+						if ((!empty($rfProduct['buybox_winner']))){
+							$this->rainforestAmazon->productsRetriever->model_product_edit->enableProduct($product_id);
+						}
+
+						$asinsToOffers[] = $asin;
+
+					} else {
+						echoLine('[addasinsqueuecron] ASIN товар по какой-то причине не добавлен, удаляем из очереди!');	
+						$this->rainforestAmazon->productsRetriever->model_product_edit->deleteASINFromQueue($asin);
+						continue;
+					}					
+				}
+
+				if ($asinsToOffers){
+					$results = $this->rainforestAmazon->getProductsOffersASYNC($asinsToOffers);
+
+					if ($results){
+						foreach ($results as $asin => $offers){				
+							$this->rainforestAmazon->offersParser->addOffersForASIN($asin, $offers);					
+						}
+					}
+				}
+			}
+
+		} else {
+			echoLine('[addasinsqueuecron] Очередь пустая, либо уже всё обработано');				
+		}
+
+	}
+
+
+	/*
+	Основной крон, добавляющий товары согласно выбранной логики
+	*/
 	public function addnewproductscron(){	
 
 		if (!$this->config->get('config_rainforest_enable_new_parser')){
@@ -384,6 +513,9 @@ class ControllerDPRainForest extends Controller {
 		$this->updateimagesfromamazon();	
 	}
 
+	/*
+	Скачивает полную информацию о товаре, переводит и редактирует товар
+	*/
 	public function editfullproductscron($parsetechcategory = false){
 
 		if (!$this->config->get('config_rainforest_enable_data_parser')){
@@ -454,6 +586,9 @@ class ControllerDPRainForest extends Controller {
 		$this->rainforestAmazon->productsRetriever->model_product_edit->resetUnexsistentVariants();
 	}
 
+	/*
+	Парсер "технической категории"
+	*/
 	public function parsetechcategory(){		
 
 		if (!$this->config->get('config_rainforest_enable_tech_category_parser')){
@@ -479,6 +614,9 @@ class ControllerDPRainForest extends Controller {
 		}
 	}
 
+	/*
+	Парсер товаров уровня 2 (для тех, данные которых уже есть)
+	*/
 	public function editfullproductscronl2(){		
 
 		if (!$this->config->get('config_rainforest_enable_data_l2_parser')){

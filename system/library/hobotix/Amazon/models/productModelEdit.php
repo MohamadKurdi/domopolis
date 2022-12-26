@@ -53,6 +53,26 @@ class productModelEdit extends hoboModel{
 		$this->db->query($sql);
 	}	
 
+	public function deleteASINFromQueue($asin) {			
+		if (trim($asin)){
+			$this->db->query("DELETE FROM amzn_add_queue WHERE asin = '" . $this->db->escape($asin) . "'");
+		}
+
+		return $this;		
+	}
+
+	public function setProductIDInQueue($asin, $product_id){
+		$this->db->query("UPDATE amzn_add_queue SET product_id = '" . (int)$product_id . "' WHERE asin LIKE '" . $this->db->escape($asin) . "'");
+
+		return $this;
+	}
+
+	public function setCategoryIDInQueue($asin, $category_id){
+		$this->db->query("UPDATE amzn_add_queue SET category_id = '" . (int)$category_id . "' WHERE asin LIKE '" . $this->db->escape($asin) . "'");
+
+		return $this;
+	}
+
 	public function addAsinToIgnored($asin, $name = ''){
 		if (!$name){
 			$name = 'UNKNOWN_PRODUCT';

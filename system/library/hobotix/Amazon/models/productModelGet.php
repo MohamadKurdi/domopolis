@@ -21,6 +21,20 @@ class productModelGet extends hoboModel{
 
 	}
 
+	public function getAsinAddQueue(){
+		$result = [];
+
+		$sql = "SELECT DISTINCT asin, category_id FROM amzn_add_queue WHERE product_id = '0' ORDER BY date_added ASC LIMIT " . (int)\hobotix\RainforestAmazon::productRequestLimits;
+
+		$query = $this->db->query($sql);
+
+		if ($query->num_rows){
+			return $query->rows;
+		}
+
+		return false;
+	}
+
 	public function getProducts(){
 		$result = [];
 
