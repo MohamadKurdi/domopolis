@@ -8,8 +8,7 @@
 	
 		public function delete() {			
 			$this->load->model('report/product');
-			$url = '';
-			
+			$url = '';			
 		
 			if (isset($this->request->get['filter_asin'])) {
 				$url .= '&filter_asin=' . $this->request->get['filter_asin'];
@@ -39,7 +38,7 @@
 				$this->session->data['success'] = 'Успешно обновили список исключенных ASIN';
 			}
 			
-			$this->getList();
+			$this->response->redirect($this->url->link('report/product_deletedasin', 'token=' . $this->session->data['token'] . $url, 'SSL'));	
 		}
 		
 		public function add() {
@@ -137,7 +136,7 @@
 			
 			$this->load->model('user/user');
 			foreach ($results as $result) {	
-
+				$result['clear_asin'] = $result['asin'];
 
 				if (!empty($filter_asin)){
 					$result['asin'] = str_replace($filter_asin, '<b>' . $filter_asin . '</b>', $result['asin']);
@@ -149,6 +148,7 @@
 			
 			
 				$this->data['asins'][] = array(
+				'clear_asin'	=> $result['clear_asin'],
 				'asin'    		=> $result['asin'],
 				'name'	 		=> $result['name'],
 				'date_added'	=> date('Y-m-d H:i:s', strtotime($result['date_added'])),			

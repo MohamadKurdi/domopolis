@@ -25,7 +25,7 @@
     <div class="box">
         <div class="heading order_head">
             <h1><?php echo $heading_title; ?></h1>
-            <div class="buttons"><a onclick="$('form').submit();" class="button">Удалить выделенные</a></div>
+            <div class="buttons"><a onclick="$('#form').submit();" class="button">Удалить выделенные</a></div>
         </div>
         <div class="content">            
             <table style="width: 100%;">
@@ -51,7 +51,7 @@
                 </tbody>
             </table>
             <div class="filter_bord"></div>
-             <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
+            <form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
             <table class="list">
                 <thead>
                     <tr>
@@ -68,7 +68,7 @@
                             <tr>
 
                                  <td class="text-center">
-                                    <input type="checkbox" name="selected[]" value="<?php echo $asin['asin']; ?>" />
+                                    <input type="checkbox" name="selected[]" value="<?php echo $asin['clear_asin']; ?>" />
                                 </td>
 
                                 <td class="center">
