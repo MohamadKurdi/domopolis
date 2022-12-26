@@ -120,6 +120,10 @@ class Url {
             $this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$route], [$args, $language_id]), $url);
         }
 
+        if (defined('IS_ADMIN') && IS_ADMIN){
+            $url = str_replace('&amp;', '&', $url);
+        }
+
         return $url;
     }
 }
