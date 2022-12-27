@@ -23,10 +23,17 @@
 		</div>
 		<div class="clear:both"></div>
 		<div class="content" style="padding:5px;">
-			<div> 
+			<div>
+			<div style="float:left;"> 
 				<? foreach ($periods as $key => $period) { ?>
 					<a class="button <? if ($current_period == $key) { ?>active<? } ?>" href="<? echo $period['href']; ?>" style="margin-right:10px; margin-bottom:5px;"><? echo $period['name']; ?></a>
 				<? } ?>
+			</div>
+
+			<div style="float:right;">
+				<h1 style="margin:0px;"><?php echo $filter_data['date_from']; ?> - <?php echo $filter_data['date_to']; ?></h1>
+			</div>
+
 			</div>
 			<div style="margin-top:10px;"> 					
 				<table class="list">		

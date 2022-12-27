@@ -70,15 +70,15 @@
 			];
 
 			$this->data['periods']['week'] = [				
-				'date_from' => date('Y-m-d', strtotime('first day of this week')),
+				'date_from' => date('Y-m-d', strtotime('last Monday')),
 				'date_to' 	=> date('Y-m-d'),
 				'href' 		=> $this->url->link('user/content', 'period=week' .'&token=' . $this->session->data['token'], 'SSL'), 
 				'name' 		=> 'С начала недели' 				
 			];
 
 			$this->data['periods']['prev_week'] = [				
-				'date_from' => date('Y-m-d', strtotime('first day of previous week')),
-				'date_to' 	=> date('Y-m-d', strtotime('last day of previous week')),
+				'date_from' => date('Y-m-d', strtotime('last Monday -1 week')),
+				'date_to' 	=> date('Y-m-d', strtotime('last Sunday')),
 				'href' 		=> $this->url->link('user/content', 'period=prev_week' .'&token=' . $this->session->data['token'], 'SSL'), 
 				'name' 		=> 'За прошлую неделю' 				
 			];
@@ -101,6 +101,8 @@
 				'date_from' => $this->data['periods'][$period]['date_from'],
 				'date_to' 	=> $this->data['periods'][$period]['date_to']
 			];
+
+			$this->data['filter_data'] = $filter_data;
 
 			$users = $this->model_kp_content->getDistinctUsers($filter_data);
 			$this->data['users'] = [];
