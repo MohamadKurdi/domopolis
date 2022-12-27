@@ -154,6 +154,9 @@
             .collection-all ul.list-collection {
                 padding: 5px 0;
             }
+            .open_mob_filter{
+                display: none !important;
+            }
            
         }
         @media screen and (min-width: 768px) {
