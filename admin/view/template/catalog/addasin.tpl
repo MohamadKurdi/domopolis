@@ -138,15 +138,19 @@
                                     <td class="center">
                                        <?php if ($product['image']) { ?>
                                             <img src="<?php echo $product['image']; ?>" />
+                                       <? } elseif ($product['product_id'] == '-1') { ?>
+                                            <span style="color:#CF4A61; font-size:18px; font-weight: 700;"><i class="fa fa-times"></i></span>
                                        <? } else { ?>
                                             <span style="color:#FF9243; font-size:18px; font-weight: 700;"><i class="fa fa-refresh"></i></span>
                                        <? } ?>
                                     </td>
 
                                     <td class="center">
-                                       <?php if ($product['product_id']) { ?>
+                                       <?php if ($product['product_id'] > 0) { ?>
                                             <span style="color:#00ad07; font-weight: 700;"><? echo $product['product_id']; ?></span>
-                                       <? } else { ?>
+                                       <? } elseif ($product['product_id'] == '-1') { ?>
+                                            <span style="color:#CF4A61; font-size:18px; font-weight: 700;"><i class="fa fa-times"></i></span>
+                                       <?php } else { ?>
                                             <span style="color:#FF9243; font-size:18px; font-weight: 700;"><i class="fa fa-refresh"></i></span>
                                        <? } ?>
                                     </td>
@@ -160,9 +164,11 @@
                                     </td>
 
                                     <td class="left">
-                                        <?php if ($product['product_id']) { ?>
+                                        <?php if ($product['product_id'] > 0) { ?>
                                             <small><? echo $product['name']; ?></small>
-                                       <? } else { ?>
+                                        <? } elseif ($product['product_id'] == '-1') { ?>
+                                            <small style="color:#CF4A61;">ошибка</small>
+                                        <? } else { ?>
                                             <span style="color:#FF9243; font-size:18px; font-weight: 700;"><i class="fa fa-refresh"></i></span>
                                        <? } ?>
                                     </td> 
@@ -174,6 +180,8 @@
                                         <?php } else { ?>
                                              <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><? echo $product['category']['name']; ?></span>
                                         <?php } ?>
+                                        <? } elseif ($product['product_id'] == '-1') { ?>
+                                            <small style="color:#CF4A61;">ошибка</small>
                                        <? } else { ?>
                                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9243; color:#FFF">АВТО</span>
                                        <? } ?>
@@ -186,6 +194,8 @@
                                     <td class="center">
                                           <?php if ($product['date_created']) { ?>
                                             <small><? echo $product['date_created']; ?></small>
+                                       <? } elseif ($product['product_id'] == '-1') { ?>
+                                            <small style="color:#CF4A61;">ошибка</small>
                                        <? } else { ?>
                                             <span style="color:#FF9243; font-size:18px; font-weight: 700;"><i class="fa fa-refresh"></i></span>
                                        <? } ?>
@@ -196,8 +206,10 @@
                                     </td>   
 
                                     <td class="center">
-                                        <a class="button" href="<?php echo $product['edit']; ?>" target="_blank"><i class="fa fa-edit"></i></a>
-                                        <a class="button" href="<?php echo $product['view']; ?>"  target="_blank"><i class="fa fa-eye"></i></a>
+                                        <?php if ($product['product_id']) { ?>
+                                            <a class="button" href="<?php echo $product['edit']; ?>" target="_blank"><i class="fa fa-edit"></i></a>
+                                            <a class="button" href="<?php echo $product['view']; ?>"  target="_blank"><i class="fa fa-eye"></i></a>
+                                        <?php } ?>
                                     </td>                     
                                 </tr>                                                      
                             <? } ?>                    
