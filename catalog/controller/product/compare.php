@@ -18,7 +18,6 @@
 				$this->data[$translationСode] = $translationText;
 			}
 			
-			
 			if (isset($this->request->get['remove'])) {
 				$key = array_search($this->request->get['remove'], $this->session->data['compare']);
 				
@@ -108,7 +107,7 @@
 			
 			$tmp = array();
 			
-			foreach ($this->data['products'] as $product){
+			foreach ($this->data['products'] as &$product){
 				
 				$attribute_data = array();
 				$attribute_groups = $this->model_catalog_product->getProductAttributes($product['product_id']);
@@ -119,6 +118,8 @@
 					}
 				}
 								
+				$product['remove'] = $this->url->link('product/compare', 'remove=' . $product['product_id']);
+
 				$product['attribute'] = $attribute_data;
 				$tmp[$product['product_id']] = $product;
 			}
@@ -127,11 +128,7 @@
 			
 			$this->data['continue'] = $this->url->link('common/home');
 			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/compare.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/product/compare.tpl';
-				} else {
-				$this->template = 'default/template/product/compare.tpl';
-			}
+			$this->template = 'product/compare.tpl';
 			
 			$this->children = array(
 			'common/column_left',
