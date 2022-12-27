@@ -209,137 +209,140 @@
 			$array = [];
 			
 			$dimensions = array(
-			'w' => $this->config->get('config_image_product_width'),
-			'h' => $this->config->get('config_image_product_height')
+				'w' => $this->config->get('config_image_product_width'),
+				'h' => $this->config->get('config_image_product_height')
 			);
 			
 			foreach ($results as $result) {	
-				if ($result['image']) {
-					$image = $this->model_tool_image->resize($result['image'], $dimensions['w'], $dimensions['h']);
-					$image_mime = $this->model_tool_image->getMime($result['image']);
-					$image_webp = $this->model_tool_image->resize_webp($result['image'], $dimensions['w'], $dimensions['h']);
+				if ($result){
+
+					if ($result['image']) {
+						$image = $this->model_tool_image->resize($result['image'], $dimensions['w'], $dimensions['h']);
+						$image_mime = $this->model_tool_image->getMime($result['image']);
+						$image_webp = $this->model_tool_image->resize_webp($result['image'], $dimensions['w'], $dimensions['h']);
 					} else {
-					$image = $this->model_tool_image->resize($this->config->get('config_noimage'), $dimensions['w'], $dimensions['h']);
-					$image_mime = $this->model_tool_image->getMime($this->config->get('config_noimage'));
-					$image_webp = $this->model_tool_image->resize_webp($this->config->get('config_noimage'), $dimensions['w'], $dimensions['h']);
-				}
-				
-				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-					$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
+						$image = $this->model_tool_image->resize($this->config->get('config_noimage'), $dimensions['w'], $dimensions['h']);
+						$image_mime = $this->model_tool_image->getMime($this->config->get('config_noimage'));
+						$image_webp = $this->model_tool_image->resize_webp($this->config->get('config_noimage'), $dimensions['w'], $dimensions['h']);
+					}
+					
+					if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+						$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')));
 					} else {
-					$price = false;
-				}
-				
-				if ((float)$result['special']) {
-					$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')));
-					} else {
-					$special = false;
-				}	
-				
-				if ($this->config->get('config_tax')) {
-					$tax = $this->currency->format((float)$result['special'] ? $result['special'] : $result['price']);
-					} else {
-					$tax = false;
-				}		
-				
-				if (isset($result['display_price_national']) && $result['display_price_national'] && $result['display_price_national'] > 0 && $result['currency'] == $this->currency->getCode()){
-					$price = $this->currency->format($this->tax->calculate($result['display_price_national'], $result['tax_class_id'], $this->config->get('config_tax')), $result['currency'], 1);
-				}
-				
-				if ($option_prices = $this->getProductOptionPrices($result['product_id'])){
-					if (isset($option_prices['special']) && $option_prices['special']){
-						$special = $option_prices['special'];
+						$price = false;
+					}
+					
+					if ((float)$result['special']) {
+						$special = $this->currency->format($this->tax->calculate($result['special'], $result['tax_class_id'], $this->config->get('config_tax')));
 					} else {
 						$special = false;
-					}
-
-					if (isset($option_prices['price']) && $option_prices['price']){
-						$price = $option_prices['price'];
-					}
-
-					if ($option_prices['result']){
-						$result['price'] = $option_prices['result']['price'];
-						$result['special'] = $option_prices['result']['special'];
-					}
-				}
-				
-				if ($this->config->get('config_review_status')) {
-					$rating = (int)$result['rating'];
-					} else {
-					$rating = false;
-				}
-				
-				$is_not_certificate = (strpos($result['location'], 'certificate') === false);
-				
-				$_description = '';
-				if ($is_not_certificate){
+					}	
 					
-					if (mb_strlen($result['description']) > 10){
-						$_description = utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 128) . '..';
+					if ($this->config->get('config_tax')) {
+						$tax = $this->currency->format((float)$result['special'] ? $result['special'] : $result['price']);
+					} else {
+						$tax = false;
+					}		
+					
+					if (isset($result['display_price_national']) && $result['display_price_national'] && $result['display_price_national'] > 0 && $result['currency'] == $this->currency->getCode()){
+						$price = $this->currency->format($this->tax->calculate($result['display_price_national'], $result['tax_class_id'], $this->config->get('config_tax')), $result['currency'], 1);
 					}
 					
-					} else {
-					$_description = html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8');
-				}
-				
-				$stock_data = $this->parseProductStockData($result);
-				$ecommerceData = array(
-				'id'		=> (int)$result['product_id'],
-				'name' 		=> prepareEcommString($result['name']),
-				'gtin' 		=> prepareEcommString($result['ean']),			
-				'brand' 	=> prepareEcommString($result['manufacturer']),		
-				'price' 	=> prepareEcommString($special?$special:$price),
-				'category' 	=> prepareEcommString($this->getGoogleCategoryPath($result['product_id']))
-				);
+					if ($option_prices = $this->getProductOptionPrices($result['product_id'])){
+						if (isset($option_prices['special']) && $option_prices['special']){
+							$special = $option_prices['special'];
+						} else {
+							$special = false;
+						}
 
-				
-				$array[] = array(
-				'new'         				=> $result['new'],
-				'bestseller'  				=> $bestsellers?in_array($result['product_id'], $bestsellers):false,
-				'show_action' 				=> $result['additional_offer_count'],
-				'additional_offer_product' 	=> $result['additional_offer_product'],
-				'active_coupon'				=> $ajax?$this->recalculateCouponPrice($result, $this->getProductActiveCoupons($result['product_id'])):false,
-				'active_actions'			=> $ajax?$this->getAllProductActiveActionsForLabel($result['product_id']):false,
-				'product_id'  				=> $result['product_id'],
-				'is_certificate'			=> (strpos($result['location'], 'certificate') !== false),
-				'ecommerceData'				=> $ecommerceData,
-				'stock_type'  				=> $stock_data['stock_type'],
-				'stock_text'  				=> $result['stock_text'],						
-				'show_delivery_terms' 		=> $stock_data['show_delivery_terms'],
-				'manufacturer' 				=> $result['manufacturer'],
-				'thumb'       				=> $image,
-				'thumb_mime'  				=> $image_mime,
-				'thumb_webp'  				=> $image_webp,
-				'is_set' 	  				=> $result['set_id'],
-				'name'        				=> $result['name'],
-				'variant_name_1'        	=> $result['variant_name_1'],
-				'variant_name_2'        	=> $result['variant_name_2'],
-				'variant_value_1'        	=> $result['variant_value_1'],
-				'variant_value_2'        	=> $result['variant_value_2'],
-				'description' 				=> $_description,
-				'price'       				=> $price,
-				'special'     				=> $special,
-				'points'	  				=> $this->currency->formatBonus($result['reward'], true),
-				'colors'	 				=> $this->getProductColorsByGroup($result['product_id'], $result['color_group']),
-				'options'	  				=> $this->getProductOptionsForCatalog($result['product_id']),	
-				'variants_count'			=> $result['variants_count'],			
-				'variants_text'				=> ($result['variants_count'])?('+ ' . $result['variants_count'] . ' ' . morphos\Russian\NounPluralization::pluralize($result['variants_count'], $this->language->get('text_variant'))):'',
-				'saving'      				=> round((($result['price'] - $result['special'])/($result['price'] + 0.01))*100, 0),
-				'tax'         				=> $tax,
-				'rating'      				=> $result['rating'],
-				'count_reviews' 			=> $result['reviews'],
-				'minimum' 					=> $result['minimum'],
-				'sku'      	  				=> $result['model']?$result['model']:$result['sku'],
-				'sort_order'  				=> $result['sort_order'],
-				'can_not_buy' 				=> ($result['stock_status_id'] == $this->config->get('config_not_in_stock_status_id')),
-				'need_ask_about_stock' 		=> ($result['stock_status_id'] == $this->config->get('config_partly_in_stock_status_id')),
-				'has_child'  				=> $result['has_child'],
-				'stock_status'  			=> $result['stock_status'],
-				'location'      			=> $result['location'],
-				'reviews'     				=> sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
-				'quickview'   				=> $this->url->link('product/quickview', 'product_id=' . $result['product_id']),
-				'href'        				=> $this->url->link('product/product', 'product_id=' . $result['product_id'])
-				);
+						if (isset($option_prices['price']) && $option_prices['price']){
+							$price = $option_prices['price'];
+						}
+
+						if ($option_prices['result']){
+							$result['price'] = $option_prices['result']['price'];
+							$result['special'] = $option_prices['result']['special'];
+						}
+					}
+					
+					if ($this->config->get('config_review_status')) {
+						$rating = (int)$result['rating'];
+					} else {
+						$rating = false;
+					}
+					
+					$is_not_certificate = (strpos($result['location'], 'certificate') === false);
+					
+					$_description = '';
+					if ($is_not_certificate){
+						
+						if (mb_strlen($result['description']) > 10){
+							$_description = utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 128) . '..';
+						}
+						
+					} else {
+						$_description = html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8');
+					}
+					
+					$stock_data = $this->parseProductStockData($result);
+					$ecommerceData = array(
+						'id'		=> (int)$result['product_id'],
+						'name' 		=> prepareEcommString($result['name']),
+						'gtin' 		=> prepareEcommString($result['ean']),			
+						'brand' 	=> prepareEcommString($result['manufacturer']),		
+						'price' 	=> prepareEcommString($special?$special:$price),
+						'category' 	=> prepareEcommString($this->getGoogleCategoryPath($result['product_id']))
+					);
+
+					
+					$array[] = array(
+						'new'         				=> $result['new'],
+						'bestseller'  				=> $bestsellers?in_array($result['product_id'], $bestsellers):false,
+						'show_action' 				=> $result['additional_offer_count'],
+						'additional_offer_product' 	=> $result['additional_offer_product'],
+						'active_coupon'				=> $ajax?$this->recalculateCouponPrice($result, $this->getProductActiveCoupons($result['product_id'])):false,
+						'active_actions'			=> $ajax?$this->getAllProductActiveActionsForLabel($result['product_id']):false,
+						'product_id'  				=> $result['product_id'],
+						'is_certificate'			=> (strpos($result['location'], 'certificate') !== false),
+						'ecommerceData'				=> $ecommerceData,
+						'stock_type'  				=> $stock_data['stock_type'],
+						'stock_text'  				=> $result['stock_text'],						
+						'show_delivery_terms' 		=> $stock_data['show_delivery_terms'],
+						'manufacturer' 				=> $result['manufacturer'],
+						'thumb'       				=> $image,
+						'thumb_mime'  				=> $image_mime,
+						'thumb_webp'  				=> $image_webp,
+						'is_set' 	  				=> $result['set_id'],
+						'name'        				=> $result['name'],
+						'variant_name_1'        	=> $result['variant_name_1'],
+						'variant_name_2'        	=> $result['variant_name_2'],
+						'variant_value_1'        	=> $result['variant_value_1'],
+						'variant_value_2'        	=> $result['variant_value_2'],
+						'description' 				=> $_description,
+						'price'       				=> $price,
+						'special'     				=> $special,
+						'points'	  				=> $this->currency->formatBonus($result['reward'], true),
+						'colors'	 				=> $this->getProductColorsByGroup($result['product_id'], $result['color_group']),
+						'options'	  				=> $this->getProductOptionsForCatalog($result['product_id']),	
+						'variants_count'			=> $result['variants_count'],			
+						'variants_text'				=> ($result['variants_count'])?('+ ' . $result['variants_count'] . ' ' . morphos\Russian\NounPluralization::pluralize($result['variants_count'], $this->language->get('text_variant'))):'',
+						'saving'      				=> round((($result['price'] - $result['special'])/($result['price'] + 0.01))*100, 0),
+						'tax'         				=> $tax,
+						'rating'      				=> $result['rating'],
+						'count_reviews' 			=> $result['reviews'],
+						'minimum' 					=> $result['minimum'],
+						'sku'      	  				=> $result['model']?$result['model']:$result['sku'],
+						'sort_order'  				=> $result['sort_order'],
+						'can_not_buy' 				=> ($result['stock_status_id'] == $this->config->get('config_not_in_stock_status_id')),
+						'need_ask_about_stock' 		=> ($result['stock_status_id'] == $this->config->get('config_partly_in_stock_status_id')),
+						'has_child'  				=> $result['has_child'],
+						'stock_status'  			=> $result['stock_status'],
+						'location'      			=> $result['location'],
+						'reviews'     				=> sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
+						'quickview'   				=> $this->url->link('product/quickview', 'product_id=' . $result['product_id']),
+						'href'        				=> $this->url->link('product/product', 'product_id=' . $result['product_id'])
+					);
+				}
 			}
 			
 			return $array;
