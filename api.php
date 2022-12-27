@@ -41,8 +41,6 @@ if (!empty($apisConfig['routes'])) {
     }
 }
 
-
-    //Загрузка скриптов, в которых еще не определены константы конфига
 $loaderConfig = loadJsonConfig('loader');
 
 if (!empty($loaderConfig['preload'])) {
@@ -53,7 +51,6 @@ if (!empty($loaderConfig['preload'])) {
 
 $FPCTimer = new FPCTimer();
 
-    //find http host
 $httpHOST           = str_replace('www.', '', $_SERVER['HTTP_HOST']);
 $storesConfig       = loadJsonConfig('stores');
 $configFiles        = loadJsonConfig('configs');
@@ -79,7 +76,6 @@ if (isset($domainRedirects[$httpHOST])) {
     exit();
 }
 
-    //header('X-CONFIG-USED: ' . $currentConfigFile);
 if (defined('CONFIG_FILE') && file_exists(APPLICATION_DIRECTORY . '/' . CONFIG_FILE)) {
     $currentConfigFile = CONFIG_FILE;
 }
