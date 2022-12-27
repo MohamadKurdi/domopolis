@@ -564,8 +564,7 @@
 			
 			$this->template = 'homestats/orderstats.tpl';
 			
-			$this->response->setOutput($this->render());
-			
+			$this->response->setOutput($this->render());			
 		}
 		
 		public function index() {
@@ -691,6 +690,13 @@
 			$this->data['information_link'] = $this->url->link('catalog/information', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['lp_link'] = $this->url->link('catalog/landingpage', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['faq_url'] = $this->url->link('module/faq_system', 'token=' . $this->session->data['token'], 'SSL');
+
+			$this->data['product'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'], 'SSL');
+            if ($this->config->get('admin_quick_edit_status') && $this->config->get('aqe_catalog_products_status') && isset($this->session->data['token'])) {
+                $this->data['product'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'], 'SSL');
+            }
+			$this->data['addasin'] = $this->url->link('catalog/addasin', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['product_deletedasin'] = $this->url->link('report/product_deletedasin', 'token=' . $this->session->data['token'], 'SSL');
 			
 			// Модули товаров
 			$this->data['module_product_alsopurchased'] = $this->url->link('module/alsopurchased', 'token=' . $this->session->data['token'], 'SSL');

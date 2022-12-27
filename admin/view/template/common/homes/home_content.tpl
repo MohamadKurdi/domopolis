@@ -27,16 +27,16 @@
 	}
 	
 	.admin_button {    position: relative;width: 200px;height: 152px;margin-right:10px; margin-bottom:10px;float:left; text-align:center;text-align:center;}
-	._green{ border: 1px solid #1f4962;}
-	._orange{border: 1px solid #1f4962;}
+	._green{ border: 0px solid #1f4962;}
+	._orange{border: 0px solid #1f4962;}
 	.admin_button i{font-size:56px;opacity: 0.8;padding: 20px;}
 	.admin_button a{text-decoration:none;}
 	.home_tabs_style{height: 35px;background-color: initial;}
-	.content_opacity{background-color: #4ea24e;opacity: 0.3;width: 100%;height: 100%;}
-	.content_opacity_color{background-color: #e4c25a;opacity: 0.7;width: 100%;height: 100%;}
+	.content_opacity{background-color: #4ea24e;opacity: 1;width: 100%;height: 100%;}
+	.content_opacity_color{background-color: #e4c25a;opacity: 1;width: 100%;height: 100%;}
 	.admin_button:hover .content_opacity,.admin_button:hover .content_opacity_color, .admin_button:hover i, .admin_button:hover span{opacity: 1; color:white;}
-	._green:hover {border: 1px solid #4ea24e;}
-	._orange:hover {border: 1px solid #e4c25a;;}
+	._green:hover {border: 0px solid #4ea24e;}
+	._orange:hover {border: 0px solid #e4c25a;;}
 	.content_position{position: absolute;top: 0;left: 0;right: 0;}
 </style>
 <table class="admin_home">
@@ -62,6 +62,18 @@
 					</a>
 				</div>
 			</div>
+
+			<div class="admin_button _green">
+				<div  class="content_opacity">
+				</div>
+				<div class="content_position">
+					<a href="<?php echo $product ?>">
+						<i class="fa fa-bars"></i><br />
+						<span class="home_tabs_style">Товары</span>
+					</a>
+				</div>
+			</div>
+
 			<div class="admin_button _green">
 				<div  class="content_opacity">
 				</div>
@@ -73,16 +85,6 @@
 				</div>
 			</div>
 			
-			<div class="admin_button _green">
-				<div  class="content_opacity">
-				</div>
-				<div class="content_position">
-					<a href="<?php echo $banner_url ?>">
-						<i class="fa fa-image"></i><br />
-						<span class="home_tabs_style">Mattimeo Баннеры</span>
-					</a>
-				</div>
-			</div>
 			<div class="admin_button _green">
 				<div  class="content_opacity">
 				</div>
@@ -124,6 +126,31 @@
 					</a>       
 				</div>
 			</div>
+
+			<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
+			<div class="admin_button _green">
+				<div  class="content_opacity">
+				</div>
+				<div class="content_position">
+					<a href="<?php echo $addasin; ?>">
+						<i class="fa fa-amazon"></i><br />
+						<span class="home_tabs_style">Ручное добавление с Amazon</span>
+					</a>       
+				</div>
+			</div>
+
+			<div class="admin_button _green">
+				<div  class="content_opacity">
+				</div>
+				<div class="content_position">
+					<a href="<?php echo $product_deletedasin; ?>">
+						<i class="fa fa-amazon"></i><br />
+						<span class="home_tabs_style">Удаленные ASIN</span>
+					</a>       
+				</div>
+			</div>
+			<?php } ?>
+
 			<div class="clr"></div>
 		</td>
 	</tr>
