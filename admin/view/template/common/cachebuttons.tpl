@@ -24,7 +24,7 @@
 
 <? } ?>
 
-<?php if ($refeedsCountLink > 1) { ?>
+<?php if ($refeedsCount > 1) { ?>
 <a class="hidden-xs link_headr cache-button-good" href="<?php echo $refeedsCountLink; ?>"><i class="fa fa-google"></i> <?php echo $refeedsCount;?></a>
 <?php } ?>
 
