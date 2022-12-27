@@ -6,7 +6,6 @@ class ControllerProductProduct extends Controller
 
     public function getPriceInfo()
     {
-
         if (isset($this->request->get['x'])) {
             $product_id = (int)$this->request->get['x'];
         } else {

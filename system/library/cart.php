@@ -54,7 +54,7 @@
 						$product_additional_offer_id = (int)$product[4];
 						$product_id = (int)$product[0];
 						
-						$ao_query = $this->db->query("SELECT * FROM product_additional_offer WHERE product_additional_offer_id = '" . (int)$product_additional_offer_id . "' AND ao_product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY priority ASC, price ASC LIMIT 1");
+						$ao_query = $this->db->ncquery("SELECT * FROM product_additional_offer WHERE product_additional_offer_id = '" . (int)$product_additional_offer_id . "' AND ao_product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY priority ASC, price ASC LIMIT 1");
 						
 						//	var_dump("SELECT * FROM product_additional_offer WHERE product_additional_offer_id = '" . (int)$product_additional_offer_id . "' AND ao_product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY priority ASC, price ASC LIMIT 1");
 						
@@ -117,7 +117,7 @@
 					}
 					
 					//product stock overload id
-					$stock_tmp_query = $this->db->query("SELECT stock_product_id FROM product WHERE product_id = '" . (int)$product_id . "' LIMIT 1");
+					$stock_tmp_query = $this->db->ncquery("SELECT stock_product_id FROM product WHERE product_id = '" . (int)$product_id . "' LIMIT 1");
 					
 					$real_product_id = false;
 					if ($stock_tmp_query->num_rows){
@@ -128,7 +128,7 @@
 					}
 					
 					
-					$product_query = $this->db->query(
+					$product_query = $this->db->ncquery(
 					"SELECT *, p.image as image,				
 					(SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price,
 					(SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price_national,
@@ -169,11 +169,11 @@
 						$prod_image = $product_query->row['image'];											
 						
 						foreach ($options as $product_option_id => $option_value) {
-							$option_query = $this->db->query("SELECT po.product_option_id, po.option_id, od.name, o.type FROM product_option po LEFT JOIN `option` o ON (po.option_id = o.option_id) LEFT JOIN option_description od ON (o.option_id = od.option_id) WHERE po.product_option_id = '" . (int)$product_option_id . "' AND po.product_id = '" . (int)$product_id . "' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+							$option_query = $this->db->ncquery("SELECT po.product_option_id, po.option_id, od.name, o.type FROM product_option po LEFT JOIN `option` o ON (po.option_id = o.option_id) LEFT JOIN option_description od ON (o.option_id = od.option_id) WHERE po.product_option_id = '" . (int)$product_option_id . "' AND po.product_id = '" . (int)$product_id . "' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 							
 							if ($option_query->num_rows) {
 								if ($option_query->row['type'] == 'select' || $option_query->row['type'] == 'block' || $option_query->row['type'] == 'radio' || $option_query->row['type'] == 'image') {
-									$option_value_query = $this->db->query("SELECT *
+									$option_value_query = $this->db->ncquery("SELECT *
 									FROM product_option_value pov 
 									LEFT JOIN option_value ov ON (pov.option_value_id = ov.option_value_id) 
 									LEFT JOIN option_value_description ovd ON (ov.option_value_id = ovd.option_value_id) 
@@ -255,7 +255,7 @@
 									}
 									} elseif ($option_query->row['type'] == 'checkbox' && is_array($option_value)) {
 									foreach ($option_value as $product_option_value_id) {
-										$option_value_query = $this->db->query("SELECT * FROM product_option_value pov LEFT JOIN option_value ov ON (pov.option_value_id = ov.option_value_id) LEFT JOIN option_value_description ovd ON (ov.option_value_id = ovd.option_value_id) WHERE pov.product_option_value_id = '" . (int)$product_option_value_id . "' AND pov.product_option_id = '" . (int)$product_option_id . "' AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+										$option_value_query = $this->db->ncquery("SELECT * FROM product_option_value pov LEFT JOIN option_value ov ON (pov.option_value_id = ov.option_value_id) LEFT JOIN option_value_description ovd ON (ov.option_value_id = ovd.option_value_id) WHERE pov.product_option_value_id = '" . (int)$product_option_value_id . "' AND pov.product_option_id = '" . (int)$product_option_id . "' AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 										
 										
 										if ($option_value_query->num_rows) {
@@ -341,7 +341,7 @@
 							}
 						}
 						
-						$product_discount_query = $this->db->query("SELECT price, points FROM product_discount WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND quantity <= '" . (int)$discount_quantity . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity DESC, priority ASC, price ASC LIMIT 1");
+						$product_discount_query = $this->db->ncquery("SELECT price, points FROM product_discount WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND quantity <= '" . (int)$discount_quantity . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity DESC, priority ASC, price ASC LIMIT 1");
 						
 						if ($product_discount_query->num_rows) {
 							$price_old = $price;
@@ -349,7 +349,7 @@
 							$points = (isset($product_discount_query->row['points']) && $product_discount_query->row['points'] > 0) ? $product_discount_query->row['points'] : $points;
 						}
 						
-						$product_special_query = $this->db->query("SELECT price, points_special, currency_scode FROM product_special WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) AND (store_id = '" . (int)$this->config->get('config_store_id') . "' OR store_id = -1) ORDER BY store_id DESC, priority ASC LIMIT 1");
+						$product_special_query = $this->db->ncquery("SELECT price, points_special, currency_scode FROM product_special WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) AND (store_id = '" . (int)$this->config->get('config_store_id') . "' OR store_id = -1) ORDER BY store_id DESC, priority ASC LIMIT 1");
 						
 						if ($product_special_query->num_rows) {
 							
@@ -392,7 +392,7 @@
 						
 						// Reward Points
 						/*
-							$product_reward_query = $this->db->query("SELECT points FROM product_reward WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND store_id = '" . $this->config->get('config_store_id') . "'");
+							$product_reward_query = $this->db->ncquery("SELECT points FROM product_reward WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND store_id = '" . $this->config->get('config_store_id') . "'");
 							
 							if ($product_reward_query->num_rows) {
 							$reward = $product_reward_query->row['points'];
@@ -412,7 +412,7 @@
 							$product_additional_offer_id = (int)$product[4];
 							
 							//Код спецпредложения - 4 элемент. Понимаем, есть ли основной товар в корзине, его количество. А также запросом выясним, не истек ли срок спецпредложения, и валидна ли группа. Если все валидно - подменим цену и поставим на вывод флаг спецпредложения!
-							$ao_query = $this->db->query("SELECT * FROM product_additional_offer WHERE product_additional_offer_id = '" . (int)$product_additional_offer_id . "' AND ao_product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY priority ASC, price ASC LIMIT 1");
+							$ao_query = $this->db->ncquery("SELECT * FROM product_additional_offer WHERE product_additional_offer_id = '" . (int)$product_additional_offer_id . "' AND ao_product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY priority ASC, price ASC LIMIT 1");
 							
 							//Такой код спецпредложения есть и валиден, продолжаем...
 							if ($ao_query->row){
@@ -465,7 +465,7 @@
 						// Downloads
 						$download_data = array();
 						
-						$download_query = $this->db->query("SELECT * FROM product_to_download p2d LEFT JOIN download d ON (p2d.download_id = d.download_id) LEFT JOIN download_description dd ON (d.download_id = dd.download_id) WHERE p2d.product_id = '" . (int)$product_id . "' AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+						$download_query = $this->db->ncquery("SELECT * FROM product_to_download p2d LEFT JOIN download d ON (p2d.download_id = d.download_id) LEFT JOIN download_description dd ON (d.download_id = dd.download_id) WHERE p2d.product_id = '" . (int)$product_id . "' AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 						
 						foreach ($download_query->rows as $download) {
 							$download_data[] = array(
@@ -495,7 +495,7 @@
 						$profile_name = '';
 						
 						if ($profile_id) {
-							$profile_info = $this->db->query("SELECT * FROM `profile` `p` JOIN `product_profile` `pp` ON `pp`.`profile_id` = `p`.`profile_id` AND `pp`.`product_id` = " . (int)$product_query->row['product_id'] . " JOIN `profile_description` `pd` ON `pd`.`profile_id` = `p`.`profile_id` AND `pd`.`language_id` = " . (int)$this->config->get('config_language_id') . " WHERE `pp`.`profile_id` = " . (int)$profile_id . " AND `status` = 1 AND `pp`.`customer_group_id` = " . (int)$customer_group_id)->row;
+							$profile_info = $this->db->ncquery("SELECT * FROM `profile` `p` JOIN `product_profile` `pp` ON `pp`.`profile_id` = `p`.`profile_id` AND `pp`.`product_id` = " . (int)$product_query->row['product_id'] . " JOIN `profile_description` `pd` ON `pd`.`profile_id` = `p`.`profile_id` AND `pd`.`language_id` = " . (int)$this->config->get('config_language_id') . " WHERE `pp`.`profile_id` = " . (int)$profile_id . " AND `status` = 1 AND `pp`.`customer_group_id` = " . (int)$customer_group_id)->row;
 							
 							if ($profile_info) {
 								$profile_name = $profile_info['name'];
@@ -565,7 +565,7 @@
 						$childProductArray = array();
 						
 						if ($set_id) {
-							$tmp = $this->db->query("SELECT ps.quantity, p.short_name FROM product_to_set ps RIGHT JOIN product p ON (ps.product_id = p.product_id) WHERE ps.set_id = '" . (int)$set_id."'");
+							$tmp = $this->db->ncquery("SELECT ps.quantity, p.short_name FROM product_to_set ps RIGHT JOIN product p ON (ps.product_id = p.product_id) WHERE ps.set_id = '" . (int)$set_id."'");
 							if ($tmp->num_rows) {
 								foreach ($tmp->rows as $p) {
 									$childProductArray[] = array(
@@ -672,8 +672,12 @@
 		}
 		
 		public function add($product_id, $qty, $option, $profile_id = '', $set_id = false, $ao_id = false) {
-			// TODO Нужно тут убрать ф-ция формирования ключа, и вызвать метод makeCartKey(...)
-			// $key = $this->makeCartKey($product_id, $option, $profile_id, $set_id, $ao_id);
+			$statusQuery = $this->db->ncquery("SELECT status FROM product WHERE product_id = '" . (int)$product_id . "'");
+
+			if (!$statusQuery->num_rows || $statusQuery->row['status'] == '0'){
+				return;
+			}
+
 			$key = (int)$product_id . ':';
 			
 			if ($option) {
@@ -700,7 +704,7 @@
 				
 			}
 			
-			$minQuery = $this->db->query("SELECT minimum FROM product WHERE product_id = '" . $product_id . "'");
+			$minQuery = $this->db->ncquery("SELECT minimum FROM product WHERE product_id = '" . (int)$product_id . "'");
 			
 			if ($minQuery->num_rows && !empty($minQuery->row['minimum'])){
 				$minimum = $minQuery->row['minimum'];
@@ -755,7 +759,7 @@
 			$product = explode(':', $key);
 			$product_id = $product[0];
 			
-			$m_query = $this->db->query("SELECT minimum FROM product WHERE product_id = '" . $product_id . "'");
+			$m_query = $this->db->ncquery("SELECT minimum FROM product WHERE product_id = '" . $product_id . "'");
 			
 			$minimum = 1;
 			if ($m_query->num_rows && !empty($m_query->row['minimum'])){
@@ -785,18 +789,8 @@
 		}
 		
 		public function remove($key) {
-			if (isset($this->session->data['cart'][$key])) {
-				/*if (strpos($key, "set_") !== false) {
-					$products = $this->getProducts();
-					foreach ($products as $k => $v) {
-					if ($v['set'] == str_replace('set_', '', $key)) {
-					unset($this->session->data['cart'][$k]);
-					}
-					}
-				}*/
-				
-				unset($this->session->data['cart'][$key]);
-				
+			if (isset($this->session->data['cart'][$key])) {				
+				unset($this->session->data['cart'][$key]);				
 			}
 			
 			$this->data = array();
@@ -995,7 +989,7 @@
 				$store_id = $this->config->get('config_store_id');
 			}
 			
-			$query = $this->db->query("SELECT points, percent FROM entity_reward er WHERE 
+			$query = $this->db->ncquery("SELECT points, percent FROM entity_reward er WHERE 
 			entity_id = '" . (int)$entity_id . "'
 			AND entity_type = '" . $this->db->escape($entity_type) . "'
 			AND (er.store_id = '-1' OR er.store_id = '" . (int)$store_id . "')
@@ -1044,7 +1038,7 @@
 			$percent = 0;
 			
 			//Прямое назначение в товаре
-			$query = $this->db->query("SELECT points, percent FROM product_reward pr WHERE 
+			$query = $this->db->ncquery("SELECT points, percent FROM product_reward pr WHERE 
 			pr.product_id = '" . (int)$product['product_id'] . "' 
 			AND customer_group_id = '" . (int)$customer_group_id . "' 
 			AND ((pr.date_start = '0000-00-00' OR pr.date_start <= NOW()) AND (pr.date_end = '0000-00-00' OR pr.date_end >= NOW()))
