@@ -363,18 +363,25 @@ class ControllerDPRainForest extends Controller {
 						$category_id = $this->config->get('config_rainforest_default_technical_category_id');
 					}
 
-					$product_id = $this->rainforestAmazon->productsRetriever->addSimpleProductWithOnlyAsin(
-						[
-							'asin' 					=> $rfProduct['asin'], 
-							'amazon_best_price' 	=> (!empty($rfProduct['buybox_winner']))?$rfProduct['buybox_winner']['price']['value']:'0',
-							'category_id' 			=> $category_id, 
-							'name' 					=> $rfProduct['title'], 
-							'amazon_product_link' 	=> $rfProduct['link'],
-							'amazon_product_image'  => $rfProduct['main_image']['link'], 
-							'image' 				=> $this->rainforestAmazon->productsRetriever->getImage($rfProduct['main_image']['link']), 
-							'added_from_amazon' 	=> 1
-						]
-					);
+
+					if ($rfProduct){					
+						$product_id = $this->rainforestAmazon->productsRetriever->addSimpleProductWithOnlyAsin(
+							[
+								'asin' 					=> $rfProduct['asin'], 
+								'amazon_best_price' 	=> (!empty($rfProduct['buybox_winner']))?$rfProduct['buybox_winner']['price']['value']:'0',
+								'category_id' 			=> $category_id, 
+								'name' 					=> $rfProduct['title'], 
+								'amazon_product_link' 	=> $rfProduct['link'],
+								'amazon_product_image'  => $rfProduct['main_image']['link'], 
+								'image' 				=> $this->rainforestAmazon->productsRetriever->getImage($rfProduct['main_image']['link']), 
+								'added_from_amazon' 	=> 1
+							]
+						);
+					} else {
+						$this->rainforestAmazon->productsRetriever->model_product_edit->setProductIDInQueue($asin, -1);
+						echoLine('[addasinsqueuecron] Товар не существует: ' . $asin);
+						continue;
+					}
 
 					if ($product_id){
 						
@@ -393,8 +400,9 @@ class ControllerDPRainForest extends Controller {
 						$asinsToOffers[] = $asin;
 
 					} else {
-						echoLine('[addasinsqueuecron] ASIN товар по какой-то причине не добавлен, удаляем из очереди!');	
-						$this->rainforestAmazon->productsRetriever->model_product_edit->deleteASINFromQueue($asin);
+						echoLine('[addasinsqueuecron] ASIN товар по какой-то причине не добавлен, удаляем из очереди!');
+						$this->rainforestAmazon->productsRetriever->model_product_edit->setProductIDInQueue($asin, -1);							
+					//	$this->rainforestAmazon->productsRetriever->model_product_edit->deleteASINFromQueue($asin);
 						continue;
 					}					
 				}
