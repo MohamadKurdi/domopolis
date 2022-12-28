@@ -139,8 +139,7 @@ class ControllerCommonHeader extends Controller
             $this->data['text_length_class'] = $this->language->get('text_length_class');
             $this->data['text_vqmod_manager'] = $this->language->get('text_vqmod_manager');
             $this->data['text_zone'] = $this->language->get('text_zone');
-            
-            /* Admin Header Notices 1.0 */
+                        
             $this->data['text_new_customer'] = $this->language->get('text_new_customer');
             $this->data['text_pending_customer'] = $this->language->get('text_pending_customer');
             $this->data['text_new_order'] = $this->language->get('text_new_order');
@@ -149,21 +148,6 @@ class ControllerCommonHeader extends Controller
             $this->data['text_pending_affiliate'] = $this->language->get('text_pending_affiliate');
             $this->data['text_notification'] = $this->language->get('text_notification');
             $this->data['text_stockout'] = $this->language->get('text_stockout');
-            /* Admin Header Notices 1.0 */
-            
-            
-            
-            $this->data['text_openbay_extension'] = $this->language->get('text_openbay_extension');
-            $this->data['text_openbay_dashboard'] = $this->language->get('text_openbay_dashboard');
-            $this->data['text_openbay_orders'] = $this->language->get('text_openbay_orders');
-            $this->data['text_openbay_items'] = $this->language->get('text_openbay_items');
-            $this->data['text_openbay_ebay'] = $this->language->get('text_openbay_ebay');
-            $this->data['text_openbay_amazon'] = $this->language->get('text_openbay_amazon');
-            $this->data['text_openbay_amazonus'] = $this->language->get('text_openbay_amazonus');
-            $this->data['text_openbay_settings'] = $this->language->get('text_openbay_settings');
-            $this->data['text_openbay_links'] = $this->language->get('text_openbay_links');
-            $this->data['text_openbay_report_price'] = $this->language->get('text_openbay_report_price');
-            $this->data['text_openbay_order_import'] = $this->language->get('text_openbay_order_import');
             
             $this->data['text_paypal_express'] = $this->language->get('text_paypal_manage');
             $this->data['text_paypal_express_search'] = $this->language->get('text_paypal_search');
@@ -416,8 +400,7 @@ class ControllerCommonHeader extends Controller
             $this->data['microdata_link'] = $this->url->link('module/microdata', 'token=' . $this->session->data['token'], 'SSL');
                 
             $this->data['optprices'] = $this->url->link('module/group_price', 'token=' . $this->session->data['token'], 'SSL');
-                
-            //modules
+                            
             $this->data['mod_latest'] = $this->url->link('module/latest', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['mod_featured'] = $this->url->link('module/featured', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['mod_blokviewed'] = $this->url->link('module/viewed', 'token=' . $this->session->data['token'], 'SSL');
@@ -425,30 +408,7 @@ class ControllerCommonHeader extends Controller
             $this->data['mod_bestseller'] = $this->url->link('module/bestseller', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['mod_special'] = $this->url->link('module/special', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['mod_customproduct'] = $this->url->link('module/customproduct', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['sets_link'] = $this->url->link('module/set', 'token=' . $this->session->data['token'], 'SSL');
-                
-            $this->data['openbay_show_menu'] = $this->config->get('openbaymanager_show_menu');
-                
-            $this->data['openbay_link_extension'] = $this->url->link('extension/openbay', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['openbay_link_orders'] = $this->url->link('extension/openbay/orderList', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['openbay_link_items'] = $this->url->link('extension/openbay/itemList', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['openbay_link_ebay'] = $this->url->link('openbay/openbay', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['openbay_link_ebay_settings'] = $this->url->link('openbay/openbay/settings', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['openbay_link_ebay_links'] = $this->url->link('openbay/openbay/viewItemLinks', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['openbay_link_ebay_orderimport'] = $this->url->link('openbay/openbay/viewOrderImport', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['openbay_link_amazon'] = $this->url->link('openbay/amazon', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['openbay_link_amazon_settings'] = $this->url->link('openbay/amazon/settings', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['openbay_link_amazon_links'] = $this->url->link('openbay/amazon/itemLinks', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['openbay_link_amazonus'] = $this->url->link('openbay/amazonus', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['openbay_link_amazonus_settings'] = $this->url->link('openbay/amazonus/settings', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['openbay_link_amazonus_links'] = $this->url->link('openbay/amazonus/itemLinks', 'token=' . $this->session->data['token'], 'SSL');
-                
-            $this->data['openbay_markets'] = array(
-            'ebay' => $this->config->get('openbay_status'),
-            'amazon' => $this->config->get('amazon_status'),
-            'amazonus' => $this->config->get('amazonus_status'),
-            );
-                
+            $this->data['sets_link'] = $this->url->link('module/set', 'token=' . $this->session->data['token'], 'SSL');                                
             $this->data['token'] = $this->session->data['token'];
                 
                 
