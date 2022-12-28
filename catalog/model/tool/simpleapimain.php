@@ -316,6 +316,16 @@
 				return $this->config->get('config_customer_group_id');
 			}
 		}
+
+		public function checkPasswordForQuotes($string) {
+
+			if (stripos($string, '"') !== false || stripos($string, "'") !== false){
+				return false;
+			}
+
+			return true;
+
+		}
 		
 		public function getRandomPassword() {
 			if (!empty(self::$data['password'])) {
