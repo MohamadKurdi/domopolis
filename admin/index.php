@@ -254,7 +254,6 @@ $registry->set('weight', new Weight($registry));
 $registry->set('length', new Length($registry));
 $registry->set('user', new User($registry));
 $registry->set('cart', new Cart($registry));
-$registry->set('openbay', new Openbay($registry));
 
 $emailBlackList = new hobotix\EmailBlackList($registry);
 $registry->set('emailBlackList', $emailBlackList);
