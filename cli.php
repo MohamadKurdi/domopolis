@@ -290,7 +290,6 @@ $registry->set('weight', 			new Weight($registry));
 $registry->set('length', 			new Length($registry));
 $registry->set('cart', 				new Cart($registry));
 $registry->set('user', 				new User($registry));
-$registry->set('openbay', 			new Openbay($registry));
 $registry->set('encryption', 		new Encryption($registry->get('config')->get('config_encryption')));	
 $registry->set('yandexTranslator', 	new hobotix\YandexTranslator($registry));
 $registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));

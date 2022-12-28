@@ -367,8 +367,7 @@
 	$registry->set('tax', 				new Tax($registry));
 	$registry->set('weight', 			new Weight($registry));
 	$registry->set('length', 			new Length($registry));
-	$registry->set('cart', 				new Cart($registry));
-	$registry->set('openbay', 			new Openbay($registry));
+	$registry->set('cart', 				new Cart($registry));	
 	$registry->set('encryption', 		new Encryption($registry->get('config')->get('config_encryption')));	
 
 
