@@ -2137,21 +2137,18 @@ class ControllerApiInfo1C extends Controller
             $order_id = $result['order_id'];
             $order = $this->model_sale_order->getOrder($order_id);
 
-            if ($order && in_array((int)$order['order_status_id'], $this->config->get('config_odinass_order_status_id')) /* && $total_national > 0 */) {
-                    $check_date_query = $this->db->query("SELECT date_added FROM `order` WHERE `order_id` = '" . (int)$order_id . "' AND (DATE(date_added) >= '2017-01-01' OR `order_id` = 11618)");
+            if ($order && in_array((int)$order['order_status_id'], $this->config->get('config_odinass_order_status_id'))) {                    
 
-                if (count($check_date_query->row)) {
-                    $this->model_feed_exchange1c->getOrderXML($order_id);
-                    $this->model_feed_exchange1c->makeSalesResultXML($order_id);
-                    $this->model_feed_exchange1c->getOrderReturnsXML($order_id);
-                    $this->model_feed_exchange1c->getOrderTransactionsXML($order_id);
-                    $this->model_feed_exchange1c->getOrderSuppliesXML($order_id);
+                $this->model_feed_exchange1c->getOrderXML($order_id);
+                $this->model_feed_exchange1c->makeSalesResultXML($order_id);
+                $this->model_feed_exchange1c->getOrderReturnsXML($order_id);
+                $this->model_feed_exchange1c->getOrderTransactionsXML($order_id);
+                $this->model_feed_exchange1c->getOrderSuppliesXML($order_id);
 
-                    echo $order_id . PHP_EOL;
-                }
+                echo $order_id . PHP_EOL;                
             }
 
-                    $this->model_feed_exchange1c->removeOrderFromQueue($order_id);
+            $this->model_feed_exchange1c->removeOrderFromQueue($order_id);
         }
     }
 
