@@ -1349,38 +1349,6 @@
 		});
 	});
 //--></script>
-<script type="text/javascript"><!--
-	function orderStatusChange(){
-		var status_id = $('select[name="order_status_id"]').val();
-		
-		$('#openbayInfo').remove();
-		
-	}
-	
-	function addOrderInfo(){
-		var status_id = $('select[name="order_status_id"]').val();
-		var old_status_id = $('#old_order_status_id').val();
-		
-		$('#old_order_status_id').val(status_id);
-		
-		$.ajax({
-			url: 'index.php?route=extension/openbay/ajaxAddOrderInfo&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&status_id='+status_id+'&old_status_id='+old_status_id,
-			type: 'post',
-			dataType: 'html',
-			data: $(".openbayData").serialize(),
-			beforeSend: function(){},
-			success: function() {},
-			failure: function(){},
-			error: function(){}
-		});
-	}
-	
-	$(document).ready(function() {
-		orderStatusChange();
-	});
-	
-	$('select[name="order_status_id"]').change(function(){orderStatusChange();});
-//--></script>
 
 <script type="text/javascript" src="view/javascript/ckeditor/ckeditor.js"></script>
 <script type="text/javascript"><!--

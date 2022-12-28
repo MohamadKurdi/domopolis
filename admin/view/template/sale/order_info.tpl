@@ -977,47 +977,4 @@ $('#button-history').live('click', function() {
 <script type="text/javascript"><!--
 $('.vtabs a').tabs();
 //--></script>
-<script type="text/javascript"><!--
-    function orderStatusChange(){
-        var status_id = $('select[name="order_status_id"]').val();
-
-        $('#openbayInfo').remove();
-
-        $.ajax({
-            url: 'index.php?route=extension/openbay/ajaxOrderInfo&token=<?php echo $this->request->get['token']; ?>&order_id=<?php echo $this->request->get['order_id']; ?>&status_id='+status_id,
-            type: 'post',
-            dataType: 'html',
-            beforeSend: function(){},
-            success: function(html) {
-                $('#history').after(html);
-            },
-            failure: function(){},
-            error: function(){}
-        });
-    }
-
-    function addOrderInfo(){
-        var status_id = $('select[name="order_status_id"]').val();
-        var old_status_id = $('#old_order_status_id').val();
-
-        $('#old_order_status_id').val(status_id);
-
-        $.ajax({
-            url: 'index.php?route=extension/openbay/ajaxAddOrderInfo&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>&status_id='+status_id+'&old_status_id='+old_status_id,
-            type: 'post',
-            dataType: 'html',
-            data: $(".openbayData").serialize(),
-            beforeSend: function(){},
-            success: function() {},
-            failure: function(){},
-            error: function(){}
-        });
-    }
-
-    $(document).ready(function() {
-        orderStatusChange();
-    });
-
-    $('select[name="order_status_id"]').change(function(){orderStatusChange();});
-//--></script>
 <?php echo $footer; ?>
