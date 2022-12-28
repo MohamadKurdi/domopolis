@@ -44,8 +44,10 @@
 			'text'      => $this->language->get('text_account'),
 			'href'      => $this->url->link('account/account'),			
 			'separator' => $this->language->get('text_separator')
-			);	
-			
+			);
+
+			$this->data['logged'] = $this->customer->isLogged();
+
 			$this->data['heading_title'] = $this->language->get('heading_title');
 			
 			$this->data['text_product'] = $this->language->get('text_product');
