@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Дек 05 2022 г., 15:20
+-- Время создания: Дек 28 2022 г., 14:28
 -- Версия сервера: 10.6.7-MariaDB-2ubuntu1.1-log
 -- Версия PHP: 8.1.9
 
@@ -463,6 +463,21 @@ CREATE TABLE `amazon_orders_products` (
   `date_arriving_from` date NOT NULL,
   `date_arriving_to` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `amzn_add_queue`
+--
+
+DROP TABLE IF EXISTS `amzn_add_queue`;
+CREATE TABLE `amzn_add_queue` (
+  `asin` varchar(32) NOT NULL,
+  `date_added` datetime NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -991,24 +1006,6 @@ CREATE TABLE `cdek_cities` (
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `cdek_city`
---
-
-DROP TABLE IF EXISTS `cdek_city`;
-CREATE TABLE `cdek_city` (
-  `id` varchar(11) NOT NULL,
-  `name` varchar(64) NOT NULL,
-  `cityName` varchar(64) NOT NULL,
-  `regionName` varchar(64) NOT NULL,
-  `center` tinyint(1) NOT NULL DEFAULT 0,
-  `cache_limit` float(5,4) NOT NULL,
-  `deliveryPeriodMin` int(11) NOT NULL,
-  `deliveryPeriodMax` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
 -- Структура таблицы `cdek_deliverypoints`
 --
 
@@ -1050,283 +1047,6 @@ CREATE TABLE `cdek_deliverypoints` (
   `weight_max` decimal(14,2) NOT NULL,
   `weight_limits` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `cdek_dispatch`
---
-
-DROP TABLE IF EXISTS `cdek_dispatch`;
-CREATE TABLE `cdek_dispatch` (
-  `dispatch_id` int(11) NOT NULL,
-  `dispatch_number` varchar(30) NOT NULL,
-  `date` varchar(32) NOT NULL,
-  `server_date` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `cdek_order`
---
-
-DROP TABLE IF EXISTS `cdek_order`;
-CREATE TABLE `cdek_order` (
-  `order_id` int(11) NOT NULL,
-  `dispatch_id` int(11) NOT NULL,
-  `act_number` varchar(20) DEFAULT NULL,
-  `dispatch_number` varchar(20) NOT NULL,
-  `return_dispatch_number` varchar(20) NOT NULL,
-  `city_id` int(11) NOT NULL,
-  `city_name` varchar(128) NOT NULL,
-  `city_postcode` int(11) DEFAULT NULL,
-  `recipient_city_id` int(11) NOT NULL,
-  `recipient_city_name` varchar(128) NOT NULL,
-  `recipient_city_postcode` int(11) DEFAULT NULL,
-  `recipient_name` varchar(128) NOT NULL,
-  `recipient_email` varchar(255) DEFAULT NULL,
-  `phone` varchar(50) NOT NULL,
-  `tariff_id` int(11) NOT NULL,
-  `mode_id` int(11) NOT NULL,
-  `status_id` int(11) NOT NULL,
-  `reason_id` int(11) DEFAULT 0,
-  `delay_id` int(11) DEFAULT NULL,
-  `delivery_recipient_cost` float(15,4) DEFAULT 0.0000,
-  `cod` float(8,4) DEFAULT 0.0000,
-  `cod_fact` float(8,4) DEFAULT 0.0000,
-  `comment` varchar(255) DEFAULT NULL,
-  `seller_name` varchar(255) DEFAULT NULL,
-  `address_street` varchar(50) DEFAULT NULL,
-  `address_house` varchar(30) DEFAULT NULL,
-  `address_flat` varchar(10) DEFAULT NULL,
-  `address_pvz_code` varchar(10) DEFAULT NULL,
-  `delivery_cost` float(8,4) DEFAULT 0.0000,
-  `delivery_last_change` varchar(32) DEFAULT NULL,
-  `delivery_date` varchar(32) NOT NULL,
-  `delivery_recipient_name` varchar(50) DEFAULT NULL,
-  `currency` varchar(3) DEFAULT 'RUB',
-  `currency_cod` varchar(3) DEFAULT 'RUB',
-  `last_exchange` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `cdek_order_add_service`
---
-
-DROP TABLE IF EXISTS `cdek_order_add_service`;
-CREATE TABLE `cdek_order_add_service` (
-  `service_id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `description` varchar(100) DEFAULT NULL,
-  `price` float(8,4) NOT NULL DEFAULT 0.0000
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `cdek_order_call`
---
-
-DROP TABLE IF EXISTS `cdek_order_call`;
-CREATE TABLE `cdek_order_call` (
-  `call_id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `date` int(11) NOT NULL,
-  `time_beg` time NOT NULL,
-  `time_end` time NOT NULL,
-  `phone` varchar(50) DEFAULT NULL,
-  `recipient_name` varchar(128) DEFAULT NULL,
-  `delivery_recipient_cost` float(15,4) DEFAULT 0.0000,
-  `address_street` varchar(50) NOT NULL,
-  `address_house` varchar(30) NOT NULL,
-  `address_flat` varchar(10) NOT NULL,
-  `comment` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `cdek_order_call_history_delay`
---
-
-DROP TABLE IF EXISTS `cdek_order_call_history_delay`;
-CREATE TABLE `cdek_order_call_history_delay` (
-  `order_id` int(11) NOT NULL,
-  `date` int(11) NOT NULL,
-  `date_next` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `cdek_order_call_history_fail`
---
-
-DROP TABLE IF EXISTS `cdek_order_call_history_fail`;
-CREATE TABLE `cdek_order_call_history_fail` (
-  `order_id` int(11) NOT NULL,
-  `fail_id` int(11) NOT NULL,
-  `date` int(11) NOT NULL,
-  `description` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `cdek_order_call_history_good`
---
-
-DROP TABLE IF EXISTS `cdek_order_call_history_good`;
-CREATE TABLE `cdek_order_call_history_good` (
-  `order_id` int(11) NOT NULL,
-  `date` int(11) NOT NULL,
-  `date_deliv` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `cdek_order_courier`
---
-
-DROP TABLE IF EXISTS `cdek_order_courier`;
-CREATE TABLE `cdek_order_courier` (
-  `courier_id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `date` int(11) NOT NULL,
-  `time_beg` time NOT NULL,
-  `time_end` time NOT NULL,
-  `lunch_beg` time DEFAULT NULL,
-  `lunch_end` time DEFAULT NULL,
-  `city_id` int(11) NOT NULL,
-  `city_name` varchar(128) NOT NULL,
-  `send_phone` varchar(255) NOT NULL,
-  `sender_name` varchar(255) NOT NULL,
-  `address_street` varchar(50) NOT NULL,
-  `address_house` varchar(30) NOT NULL,
-  `address_flat` varchar(10) NOT NULL,
-  `comment` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `cdek_order_delay_history`
---
-
-DROP TABLE IF EXISTS `cdek_order_delay_history`;
-CREATE TABLE `cdek_order_delay_history` (
-  `order_id` int(11) NOT NULL,
-  `delay_id` int(11) NOT NULL,
-  `date` int(11) NOT NULL,
-  `description` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `cdek_order_package`
---
-
-DROP TABLE IF EXISTS `cdek_order_package`;
-CREATE TABLE `cdek_order_package` (
-  `package_id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `number` varchar(20) NOT NULL,
-  `brcode` varchar(20) NOT NULL,
-  `weight` int(11) NOT NULL,
-  `size_a` float(15,4) DEFAULT 0.0000,
-  `size_b` float(15,4) DEFAULT 0.0000,
-  `size_c` float(15,4) DEFAULT 0.0000
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `cdek_order_package_item`
---
-
-DROP TABLE IF EXISTS `cdek_order_package_item`;
-CREATE TABLE `cdek_order_package_item` (
-  `package_item_id` int(11) NOT NULL,
-  `package_id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `ware_key` varchar(20) NOT NULL,
-  `comment` varchar(255) NOT NULL,
-  `weight` int(11) NOT NULL DEFAULT 0,
-  `amount` int(11) NOT NULL,
-  `cost` float(15,4) NOT NULL DEFAULT 0.0000,
-  `payment` float(15,4) NOT NULL DEFAULT 0.0000
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `cdek_order_reason`
---
-
-DROP TABLE IF EXISTS `cdek_order_reason`;
-CREATE TABLE `cdek_order_reason` (
-  `reason_id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `date` int(11) NOT NULL,
-  `description` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `cdek_order_schedule`
---
-
-DROP TABLE IF EXISTS `cdek_order_schedule`;
-CREATE TABLE `cdek_order_schedule` (
-  `attempt_id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `date` int(11) NOT NULL,
-  `time_beg` time NOT NULL,
-  `time_end` time NOT NULL,
-  `phone` varchar(50) DEFAULT NULL,
-  `recipient_name` varchar(128) DEFAULT NULL,
-  `address_street` varchar(50) DEFAULT NULL,
-  `address_house` varchar(30) DEFAULT NULL,
-  `address_flat` varchar(10) DEFAULT NULL,
-  `address_pvz_code` varchar(10) DEFAULT NULL,
-  `comment` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `cdek_order_schedule_delay`
---
-
-DROP TABLE IF EXISTS `cdek_order_schedule_delay`;
-CREATE TABLE `cdek_order_schedule_delay` (
-  `order_id` int(11) NOT NULL,
-  `attempt_id` int(11) NOT NULL,
-  `delay_id` int(11) NOT NULL,
-  `description` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `cdek_order_status_history`
---
-
-DROP TABLE IF EXISTS `cdek_order_status_history`;
-CREATE TABLE `cdek_order_status_history` (
-  `order_id` int(11) NOT NULL,
-  `status_id` int(11) NOT NULL,
-  `description` varchar(100) NOT NULL,
-  `date` int(11) NOT NULL,
-  `city_id` int(11) NOT NULL,
-  `city_name` varchar(128) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
 
@@ -1529,6 +1249,19 @@ CREATE TABLE `countrybrand_description` (
   `meta_keyword` varchar(255) NOT NULL,
   `seo_title` varchar(255) NOT NULL,
   `seo_h1` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `countrybrand_image`
+--
+
+DROP TABLE IF EXISTS `countrybrand_image`;
+CREATE TABLE `countrybrand_image` (
+  `countrybrand_id` int(11) NOT NULL,
+  `image` varchar(500) NOT NULL,
+  `sort_order` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -5060,20 +4793,6 @@ CREATE TABLE `order_to_1c_queue` (
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `order_to_sdek`
---
-
-DROP TABLE IF EXISTS `order_to_sdek`;
-CREATE TABLE `order_to_sdek` (
-  `order_to_sdek_id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `cityId` int(11) NOT NULL,
-  `pvz_code` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
 -- Структура таблицы `order_tracker`
 --
 
@@ -8289,6 +8008,15 @@ ALTER TABLE `amazon_orders_products`
   ADD KEY `delivery_status_ru` (`delivery_status_ru`);
 
 --
+-- Индексы таблицы `amzn_add_queue`
+--
+ALTER TABLE `amzn_add_queue`
+  ADD UNIQUE KEY `asin` (`asin`) USING BTREE,
+  ADD KEY `product_id` (`product_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `date_added` (`date_added`);
+
+--
 -- Индексы таблицы `amzn_product_queue`
 --
 ALTER TABLE `amzn_product_queue`
@@ -8539,12 +8267,6 @@ ALTER TABLE `cdek_cities`
   ADD KEY `dadata_BELTWAY_DISTANCE` (`dadata_BELTWAY_DISTANCE`);
 
 --
--- Индексы таблицы `cdek_city`
---
-ALTER TABLE `cdek_city`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Индексы таблицы `cdek_deliverypoints`
 --
 ALTER TABLE `cdek_deliverypoints`
@@ -8557,99 +8279,6 @@ ALTER TABLE `cdek_deliverypoints`
   ADD KEY `region` (`region`),
   ADD KEY `city` (`city`),
   ADD KEY `address` (`address`);
-
---
--- Индексы таблицы `cdek_dispatch`
---
-ALTER TABLE `cdek_dispatch`
-  ADD PRIMARY KEY (`dispatch_id`);
-
---
--- Индексы таблицы `cdek_order`
---
-ALTER TABLE `cdek_order`
-  ADD PRIMARY KEY (`order_id`),
-  ADD UNIQUE KEY `dispatch_id` (`dispatch_id`),
-  ADD KEY `dispatch_number` (`dispatch_number`);
-
---
--- Индексы таблицы `cdek_order_add_service`
---
-ALTER TABLE `cdek_order_add_service`
-  ADD PRIMARY KEY (`service_id`,`order_id`);
-
---
--- Индексы таблицы `cdek_order_call`
---
-ALTER TABLE `cdek_order_call`
-  ADD PRIMARY KEY (`call_id`),
-  ADD KEY `order_id` (`order_id`);
-
---
--- Индексы таблицы `cdek_order_call_history_delay`
---
-ALTER TABLE `cdek_order_call_history_delay`
-  ADD KEY `order_id` (`order_id`);
-
---
--- Индексы таблицы `cdek_order_call_history_fail`
---
-ALTER TABLE `cdek_order_call_history_fail`
-  ADD KEY `order_id` (`order_id`);
-
---
--- Индексы таблицы `cdek_order_call_history_good`
---
-ALTER TABLE `cdek_order_call_history_good`
-  ADD KEY `order_id` (`order_id`);
-
---
--- Индексы таблицы `cdek_order_courier`
---
-ALTER TABLE `cdek_order_courier`
-  ADD PRIMARY KEY (`courier_id`);
-
---
--- Индексы таблицы `cdek_order_delay_history`
---
-ALTER TABLE `cdek_order_delay_history`
-  ADD KEY `order_id` (`order_id`,`delay_id`);
-
---
--- Индексы таблицы `cdek_order_package`
---
-ALTER TABLE `cdek_order_package`
-  ADD PRIMARY KEY (`package_id`);
-
---
--- Индексы таблицы `cdek_order_package_item`
---
-ALTER TABLE `cdek_order_package_item`
-  ADD PRIMARY KEY (`package_item_id`);
-
---
--- Индексы таблицы `cdek_order_reason`
---
-ALTER TABLE `cdek_order_reason`
-  ADD PRIMARY KEY (`reason_id`,`order_id`);
-
---
--- Индексы таблицы `cdek_order_schedule`
---
-ALTER TABLE `cdek_order_schedule`
-  ADD PRIMARY KEY (`attempt_id`);
-
---
--- Индексы таблицы `cdek_order_schedule_delay`
---
-ALTER TABLE `cdek_order_schedule_delay`
-  ADD KEY `order_id` (`order_id`,`attempt_id`);
-
---
--- Индексы таблицы `cdek_order_status_history`
---
-ALTER TABLE `cdek_order_status_history`
-  ADD KEY `order_id` (`order_id`,`status_id`);
 
 --
 -- Индексы таблицы `cdek_zones`
@@ -8744,6 +8373,12 @@ ALTER TABLE `countrybrand_description`
   ADD UNIQUE KEY `countrybrand_id_2` (`countrybrand_id`,`language_id`),
   ADD KEY `countrybrand_id` (`countrybrand_id`),
   ADD KEY `language_id` (`language_id`);
+
+--
+-- Индексы таблицы `countrybrand_image`
+--
+ALTER TABLE `countrybrand_image`
+  ADD KEY `countrybrand_id` (`countrybrand_id`);
 
 --
 -- Индексы таблицы `countrybrand_to_store`
@@ -10275,13 +9910,6 @@ ALTER TABLE `order_total_tax`
 --
 ALTER TABLE `order_to_1c_queue`
   ADD PRIMARY KEY (`order_id`);
-
---
--- Индексы таблицы `order_to_sdek`
---
-ALTER TABLE `order_to_sdek`
-  ADD PRIMARY KEY (`order_to_sdek_id`),
-  ADD UNIQUE KEY `order_id` (`order_id`);
 
 --
 -- Индексы таблицы `order_tracker`
@@ -11873,42 +11501,6 @@ ALTER TABLE `cdek_deliverypoints`
   MODIFY `deliverypoint_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT для таблицы `cdek_dispatch`
---
-ALTER TABLE `cdek_dispatch`
-  MODIFY `dispatch_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `cdek_order_call`
---
-ALTER TABLE `cdek_order_call`
-  MODIFY `call_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `cdek_order_courier`
---
-ALTER TABLE `cdek_order_courier`
-  MODIFY `courier_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `cdek_order_package`
---
-ALTER TABLE `cdek_order_package`
-  MODIFY `package_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `cdek_order_package_item`
---
-ALTER TABLE `cdek_order_package_item`
-  MODIFY `package_item_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `cdek_order_reason`
---
-ALTER TABLE `cdek_order_reason`
-  MODIFY `reason_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT для таблицы `cdek_zones`
 --
 ALTER TABLE `cdek_zones`
@@ -12543,12 +12135,6 @@ ALTER TABLE `order_status`
 --
 ALTER TABLE `order_total`
   MODIFY `order_total_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT для таблицы `order_to_sdek`
---
-ALTER TABLE `order_to_sdek`
-  MODIFY `order_to_sdek_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `order_tracker`
