@@ -712,11 +712,8 @@
 			if (isset($this->request->post['selected']) && ($this->validateDelete())) {
 				foreach ($this->request->post['selected'] as $order_id) {
 					
-					if ($this->user->getIsAV() /* || $this->user->canUnlockOrders() */){
-						
-						$this->model_sale_order->deleteOrder($order_id);
-						$this->openbay->deleteOrder($order_id);
-						
+					if ($this->user->getIsAV()){						
+						$this->model_sale_order->deleteOrder($order_id);												
 					}
 				}
 				

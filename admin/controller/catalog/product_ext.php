@@ -1312,8 +1312,7 @@ class ControllerCatalogProductExt extends Controller {
                         $json['value'] = $manufacturer['name'];
                     else
                         $json['value'] = '';
-                } else if ($column == 'quantity') {
-                    $this->openbay->putStockUpdateBulk(array($id));
+                } else if ($column == 'quantity') {                    
                     $value = (int)$value;
                     if ($value <= 0)
                         $ret = '<span style="color: #cf4a61;">' . (int)$value . '</span>';
