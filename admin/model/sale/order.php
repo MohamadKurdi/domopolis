@@ -619,9 +619,6 @@
 			$this->load->model('module/affiliate');
 			$this->model_module_affiliate->validate($order_id, $data, $commission);
 			
-			// Notify OpenBay Pro
-			//	$this->openbay->orderNew((int)$order_id);
-			
 			return (int)$order_id;
 		}
 		
@@ -2270,38 +2267,12 @@
 					$language_code = '';
 					$language_filename = '';
 					$language_directory = '';
-				}
-				
-				$amazonOrderId = '';
-				
-				if ($this->config->get('amazon_status') == 1) {
-					$amazon_query = $this->db->query("
-					SELECT `amazon_order_id`
-					FROM `amazon_order`
-					WHERE `order_id` = " . (int)$order_query->row['order_id'] . "
-					LIMIT 1")->row;
-					
-					if (isset($amazon_query['amazon_order_id']) && !empty($amazon_query['amazon_order_id'])) {
-						$amazonOrderId = $amazon_query['amazon_order_id'];
-					}
-				}
-				
-				if ($this->config->get('amazonus_status') == 1) {
-					$amazon_query = $this->db->query("
-					SELECT `amazonus_order_id`
-					FROM `amazonus_order`
-					WHERE `order_id` = " . (int)$order_query->row['order_id'] . "
-					LIMIT 1")->row;
-					
-					if (isset($amazon_query['amazonus_order_id']) && !empty($amazon_query['amazonus_order_id'])) {
-						$amazonOrderId = $amazon_query['amazonus_order_id'];
-					}
-				}
+				}				
 				
 				return array(
-				'amazon_order_id'         => $amazonOrderId,
 				'order_id'                => $order_query->row['order_id'],
 				'order_id2'               => $order_query->row['order_id2'],
+				'amazon_order_id'         => false,
 				'pwa'               	  => $order_query->row['pwa'],	
 				'yam'               	  => $order_query->row['yam'],
 				'yam_id'               	  => $order_query->row['yam_id'],
@@ -2402,8 +2373,8 @@
 				'accept_language'         => $order_query->row['accept_language'],					
 				'date_added'              => $order_query->row['date_added'],
 				'date_modified'           => $order_query->row['date_modified'],
-				'date_sent'           => $order_query->row['date_sent'],
-				'date_buy'           => $order_query->row['date_buy'],
+				'date_sent'           	  => $order_query->row['date_sent'],
+				'date_buy'           	 => $order_query->row['date_buy'],
 				'date_country'           => $order_query->row['date_country'],
 				'date_delivery'          => $order_query->row['date_delivery'],
 				'date_delivery_to'       => $order_query->row['date_delivery_to'],
@@ -2431,10 +2402,8 @@
 				'probably_close_reason'	 => $order_query->row['probably_close_reason'],
 				'probably_problem'		 => $order_query->row['probably_problem'],
 				'probably_problem_reason'=> $order_query->row['probably_problem_reason'],
-				'reject_reason_id'		 => $order_query->row['reject_reason_id'],
-				//courier
-				'courier_status'		 => $order_query->row['courier_status'],
-				//csi
+				'reject_reason_id'		 => $order_query->row['reject_reason_id'],				
+				'courier_status'		 => $order_query->row['courier_status'],				
 				'csi_reject'		 => $order_query->row['csi_reject'],
 				'csi_average'		 => $order_query->row['csi_average'],
 				'csi_mark'		 	 => $order_query->row['csi_mark'],
@@ -2447,13 +2416,10 @@
 				'manager_comment'		 => $order_query->row['manager_comment'],
 				'quality_comment'		 => $order_query->row['quality_comment'],
 				'courier_comment'		 => $order_query->row['courier_comment'],
-				'preorder'		 		=> $order_query->row['preorder'],
-				//
-				'nbt_csi'              => $order_query->row['nbt_csi'],
-				//closed
+				'preorder'		 		=> $order_query->row['preorder'],				
+				'nbt_csi'              => $order_query->row['nbt_csi'],				
 				'closed'                 => $order_query->row['closed'],
-				'salary_paid'                 => $order_query->row['salary_paid'],
-				//csi				
+				'salary_paid'                 => $order_query->row['salary_paid'],				
 				'urgent'				 => isset($order_query->row['urgent'])?$order_query->row['urgent']:0,
 				'urgent_buy'				 => isset($order_query->row['urgent_buy'])?$order_query->row['urgent_buy']:0,
 				'wait_full'				 => isset($order_query->row['wait_full'])?$order_query->row['wait_full']:0,
