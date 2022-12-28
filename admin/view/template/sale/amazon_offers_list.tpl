@@ -1,4 +1,4 @@
-<?php if ($offers || $bad_offers) { ?>
+<?php if (!empty($offers) || !empty($bad_offers)) { ?>
 	<table class="list">
 		<thead>
 			<tr>
