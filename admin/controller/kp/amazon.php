@@ -103,7 +103,7 @@ class ControllerKPAmazon extends Controller {
 						'positive'				=> (int)$rfOffer->getSellerPositiveRatings100(),
 						'date_added'			=> 'skipped',
 						'link'					=> $rfOffer->getSellerLink()?$rfOffer->getSellerLink():$this->rainforestAmazon->createLinkToAmazonSearchPage($product['asin']),
-						'link2'					=> $this->rainforestAmazon->createLinkToAmazonSearchPage($offer['asin'])
+						'link2'					=> $this->rainforestAmazon->createLinkToAmazonSearchPage($product['asin'])
 					];
 				}
 			}
