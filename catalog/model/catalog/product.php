@@ -1010,10 +1010,10 @@
 			}
 
 			if (!empty($data['sort']) && $data['sort'] == 'p.date_added' && empty($data['new']) && empty($data['newlong'])) {
-				if (!empty($data['filter_date_added_threshold'])){
-					$sql .= " AND p.date_added >= '" . date('Y-m-d', strtotime('-1 week')) . "' ";
-				} else {
+				if (!empty($data['filter_date_added_threshold'])){					
 					$sql .= " AND p.date_added >= '" . date('Y-m-d', strtotime('-'. (int)$data['filter_date_added_threshold'] .' day')) . "' ";
+				} else {
+					$sql .= " AND p.date_added >= '" . date('Y-m-d', strtotime('-1 week')) . "' ";					
 				}
 				$sql .= " AND p.quantity > 0 ";
 				$sql .= " AND stock_status_id = '" . $default_stock_status . "'";
