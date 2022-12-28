@@ -106,7 +106,7 @@ class ControllerModuleViewed extends Controller {
 
 			if (empty($setting['limit'])) {
 				$setting['limit'] = 10;
-			}	
+			}				
 
 			$this->data['tabs'] = array();
 			foreach ($indexes as $idx) {
