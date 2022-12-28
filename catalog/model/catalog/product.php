@@ -1385,7 +1385,9 @@
 			JOIN product p ON r.product_id = p.product_id 	
 			LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id)
 			WHERE r.status = '1' 
-			AND p.status = '1' 
+			AND p.status = '1'
+			AND p.is_markdown = '0' 
+			AND r.date_added >= '" . date('Y-m-d', strtotime('-1 month')) . "'
 			AND p.date_available <= NOW() 
 			AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ";
 
