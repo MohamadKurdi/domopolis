@@ -7,9 +7,9 @@
 			$this->key = hash('sha256', $key, true);
 			
 			if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
-				$this->iv = random_bytes(32); //For work on php 7.0+
+				$this->iv = random_bytes(32); 
 				} else {
-				$this->iv = mcrypt_create_iv(32, MCRYPT_RAND); //For old php versions
+				$this->iv = mcrypt_create_iv(32, MCRYPT_RAND);
 			}
 		}
 		
