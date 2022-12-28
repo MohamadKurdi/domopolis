@@ -1291,15 +1291,6 @@
 			if(typeof CKEDITOR !== "undefined")
 			CKEDITOR.instances.hcomment.updateElement();
 		*/
-		if(typeof verifyStatusChange == 'function'){
-			if(verifyStatusChange() == false){
-				return false;
-				}else{
-				addOrderInfo();
-			}
-			}else{
-			addOrderInfo();
-		}
 		
 		$.ajax({
 			url: 'index.php?route=sale/order/history&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>',

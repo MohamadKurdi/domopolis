@@ -94,7 +94,14 @@
 									<?php } ?>
 								</select>							 
 						<? } ?>
-					</tr>					
+					</tr>	
+					<tr>  
+						<? for ($i=1; $i<=5; $i++) { ?>
+							<td style="width:20%">
+								<span style="display:inline-block;width:80px;">Порог</span> <input type="number" step="1" name="blockviewed_threshold_<? echo $i; ?>" value="<? echo ${'blockviewed_threshold_'.$i}; ?>" />
+							</td>
+						<? } ?>
+					</tr>				
 					<tr> 
 						<? for ($i=1; $i<=5; $i++) { ?>
 							<td style="width:20%">
