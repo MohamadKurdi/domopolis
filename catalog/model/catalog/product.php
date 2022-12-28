@@ -1002,11 +1002,19 @@
 			$sql .= " LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
 
 			if (!empty($data['sort']) && $data['sort'] == 'p.viewed' && !empty($data['filter_only_viewed'])) {
-				$sql .= " AND p.viewed > 0 ";
+				if ((int)$data['filter_only_viewed'] > 1){
+					$sql .= " AND p.viewed > '" . (int)$data['filter_only_viewed'] . "'";
+				} else {
+					$sql .= " AND p.viewed > 0 ";
+				}
 			}
 
 			if (!empty($data['sort']) && $data['sort'] == 'p.date_added' && empty($data['new']) && empty($data['newlong'])) {
-				$sql .= " AND p.date_added >= '" . date('Y-m-d', strtotime('-1 week')) . "' ";
+				if (!empty($data['filter_date_added_threshold'])){
+					$sql .= " AND p.date_added >= '" . date('Y-m-d', strtotime('-1 week')) . "' ";
+				} else {
+					$sql .= " AND p.date_added >= '" . date('Y-m-d', strtotime('-'. (int)$data['filter_date_added_threshold'] .' day')) . "' ";
+				}
 				$sql .= " AND p.quantity > 0 ";
 				$sql .= " AND stock_status_id = '" . $default_stock_status . "'";
 			}
