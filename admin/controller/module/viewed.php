@@ -168,6 +168,12 @@
 					} else {
 					$this->data['blockviewed_empty_type_' . $i] = $this->config->get('blockviewed_empty_type_' . $i);
 				}
+
+				if (isset($this->request->post['blockviewed_threshold_' . $i])) {
+					$this->data['blockviewed_threshold_' . $i] = $this->request->post['blockviewed_threshold_' . $i];
+					} else {
+					$this->data['blockviewed_threshold_' . $i] = $this->config->get('blockviewed_threshold_' . $i);
+				}
 				
 				if (isset($this->request->post['blockviewed_images_' . $i])) {
 					$this->data['blockviewed_images_' . $i] = $this->request->post['blockviewed_images_' . $i];
