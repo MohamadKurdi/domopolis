@@ -3923,8 +3923,6 @@
 				$this->db->query("UPDATE `order` SET closed = 1 WHERE order_id = '" . (int)$order_id . "'");
 			}
 			
-			//	$this->load->model('payment/amazon_checkout');
-			//	$this->model_payment_amazon_checkout->orderStatusChange($order_id, $data);
 		}
 		
 		public function getOrderHistoriesCommentsForCourier($order_id) {
