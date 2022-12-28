@@ -4,7 +4,6 @@ if( !class_exists('Composer\\Autoload\\ClassLoader') )
     require_once(DIR_SYSTEM . '../vendor/autoload.php');
 }
 
-// Magic Quotes Fix
 if (ini_get('magic_quotes_gpc')) {
 	function clean($data) {
 		if (is_array($data)) {
@@ -28,7 +27,6 @@ if (!ini_get('date.timezone')) {
 	date_default_timezone_set('UTC');
 }
 
-// Windows IIS Compatibility  
 if (!isset($_SERVER['DOCUMENT_ROOT'])) { 
 	if (isset($_SERVER['SCRIPT_FILENAME'])) {
 		$_SERVER['DOCUMENT_ROOT'] = str_replace('\\', '/', substr($_SERVER['SCRIPT_FILENAME'], 0, 0 - strlen($_SERVER['PHP_SELF'])));
@@ -53,18 +51,9 @@ if (!isset($_SERVER['HTTP_HOST'])) {
 	$_SERVER['HTTP_HOST'] = getenv('HTTP_HOST');
 }
 
-// Helper
-
-// if (!empty($loaderConfig['helpers'])){
-// 	foreach ($loaderConfig['helpers'] as $helperFile){
-// 		require_once(DIR_SYSTEM . 'helper/' . $helperFile . '.php');
-// 	}
-// }
-
 require_once(DIR_SYSTEM . 'helper/json.php'); 
 require_once(DIR_SYSTEM . 'helper/utf8.php'); 
 
-// Engine
 require_once(DIR_SYSTEM . 'engine/action.php');
 require_once(DIR_SYSTEM . 'library/shortcodes.php');
 require_once(DIR_SYSTEM . 'engine/controller.php');
@@ -73,7 +62,6 @@ require_once(DIR_SYSTEM . 'engine/loader.php');
 require_once(DIR_SYSTEM . 'engine/model.php');
 require_once(DIR_SYSTEM . 'engine/registry.php');
 
-// Common
 require_once(DIR_SYSTEM . 'library/cache.php');
 require_once(DIR_SYSTEM . 'library/url.php');
 require_once(DIR_SYSTEM . 'library/config.php');
@@ -81,7 +69,6 @@ require_once(DIR_SYSTEM . 'library/db.php');
 require_once(DIR_SYSTEM . 'library/document.php');
 require_once(DIR_SYSTEM . 'library/encryption.php');
 
-//Imagick is consindered better than GD
 if (extension_loaded('imagick')){
 	require_once(DIR_SYSTEM . 'library/imageMagick.php');
 } else {
@@ -97,13 +84,8 @@ require_once(DIR_SYSTEM . 'library/request.php');
 require_once(DIR_SYSTEM . 'library/response.php');
 require_once(DIR_SYSTEM . 'library/session.php');
 require_once(DIR_SYSTEM . 'library/template.php');
-require_once(DIR_SYSTEM . 'library/openbay.php');
-require_once(DIR_SYSTEM . 'library/ebay.php');
-require_once(DIR_SYSTEM . 'library/amazon.php');
-require_once(DIR_SYSTEM . 'library/amazonus.php');
 require_once(DIR_SYSTEM . 'library/emailtemplate/email_template.php');
 
-// Register Globals
 if (ini_get('register_globals')) {
 	$globals = array($_REQUEST, $_SESSION, $_SERVER, $_FILES);
 
