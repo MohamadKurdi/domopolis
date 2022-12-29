@@ -2407,31 +2407,7 @@ class ControllerSettingSetting extends Controller
             $this->data['config_alert_emails'] = $this->request->post['config_alert_emails'];
         } else {
             $this->data['config_alert_emails'] = $this->config->get('config_alert_emails');
-        }
-        
-        if (isset($this->request->post['config_fraud_detection'])) {
-            $this->data['config_fraud_detection'] = $this->request->post['config_fraud_detection'];
-        } else {
-            $this->data['config_fraud_detection'] = $this->config->get('config_fraud_detection');
-        }
-        
-        if (isset($this->request->post['config_fraud_key'])) {
-            $this->data['config_fraud_key'] = $this->request->post['config_fraud_key'];
-        } else {
-            $this->data['config_fraud_key'] = $this->config->get('config_fraud_key');
-        }
-        
-        if (isset($this->request->post['config_fraud_score'])) {
-            $this->data['config_fraud_score'] = $this->request->post['config_fraud_score'];
-        } else {
-            $this->data['config_fraud_score'] = $this->config->get('config_fraud_score');
-        }
-        
-        if (isset($this->request->post['config_fraud_status_id'])) {
-            $this->data['config_fraud_status_id'] = $this->request->post['config_fraud_status_id'];
-        } else {
-            $this->data['config_fraud_status_id'] = $this->config->get('config_fraud_status_id');
-        }
+        }        
         
         if (isset($this->request->post['config_secure'])) {
             $this->data['config_secure'] = $this->request->post['config_secure'];
@@ -3676,6 +3652,9 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_yandex_exclude_manufacturers'] = array();
         }
+
+        $this->data['deprecated_yam_module'] = $this->url->link('feed/yandex_yml', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['deprecated_hotline_module'] = $this->url->link('feed/hotline_yml', 'token=' . $this->session->data['token'], 'SSL');
         
         if (isset($this->request->post['config_yam_enable_category_tree'])) {
             $this->data['config_yam_enable_category_tree'] = $this->request->post['config_yam_enable_category_tree'];
@@ -3928,24 +3907,6 @@ class ControllerSettingSetting extends Controller
         
         if (!$this->request->post['config_image_cart_width'] || !$this->request->post['config_image_cart_height']) {
             $this->error['image_cart'] = $this->language->get('error_image_cart');
-        }
-        
-        if ($this->request->post['config_ftp_status']) {
-            if (!$this->request->post['config_ftp_host']) {
-                $this->error['ftp_host'] = $this->language->get('error_ftp_host');
-            }
-            
-            if (!$this->request->post['config_ftp_port']) {
-                $this->error['ftp_port'] = $this->language->get('error_ftp_port');
-            }
-            
-            if (!$this->request->post['config_ftp_username']) {
-                $this->error['ftp_username'] = $this->language->get('error_ftp_username');
-            }
-            
-            if (!$this->request->post['config_ftp_password']) {
-                $this->error['ftp_password'] = $this->language->get('error_ftp_password');
-            }
         }
         
         if (!$this->request->post['config_error_filename']) {

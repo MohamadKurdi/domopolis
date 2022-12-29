@@ -34,14 +34,12 @@
 				<a href="#tab-local"><i class="fa fa-bars"></i> <?php echo $tab_local; ?></a>
 				<a href="#tab-option"><i class="fa fa-cogs"></i> <?php echo $tab_option; ?></a>
 				<a href="#tab-image"><i class="fa fa-cogs"></i> Картинки</a>			
-				<a href="#tab-mail"><i class="fa fa-envelope"></i> Почта</a>
-				<? /*	<a href="#tab-ftp" style="display:none;"><?php echo $tab_ftp; ?></a>  */ ?>
-				<? /*	<a href="#tab-fraud"><?php echo $tab_fraud; ?></a> */ ?>
+				<a href="#tab-mail"><i class="fa fa-envelope"></i> Почта</a>				
 				<a href="#tab-sms"><i class="fa fa-mobile"></i> <?php echo $tab_sms; ?></a>
 				<a href="#tab-server"><i class="fa fa-cogs"></i> Сервер, SEO</a>
 				<a href="#tab-telephony"><span style="color:#7F00FF;"><i class="fa fa-phone"></i> АТС, LDAP</span></a>
 				<a href="#tab-google-ya-fb-vk"><i class="fa fa-google"></i> <span style="color:#57AC79;">Google</span>, <span style="color:red;">Ya</span>, <span style="color:#7F00FF;">FB</span>, <span style="color:#3F6AD8;">VK</span></a>
-				<a href="#tab-ya-market"><span style="color:red;"><i class="fa fa-yahoo"></i> Yandex.Market, Ozon.Seller</span></a>
+				<a href="#tab-ya-market" <?php if ($this->config->get('config_country_id') != 176) { ?>style="display:none;"<? } ?>><span style="color:red;"><i class="fa fa-yahoo"></i> Yandex.Market, Ozon.Seller</span></a>
 				<a href="#tab-rainforest"><span style="color:#7F00FF;"><i class="fa fa-amazon"></i> Rainforest API</span></a>
 				<a href="#tab-apis"><span style="color:#7F00FF;"><i class="fa fa-cogs"></i> Разные API</span></a>
 				
@@ -2728,57 +2726,7 @@
 									</td>
 								</tr>
 							</table>
-						</div>
-						<div id="tab-ftp" style="display:none;">
-							<table class="form">
-								<tr>
-									<td><?php echo $entry_ftp_host; ?></td>
-									<td><input type="text" name="config_ftp_host" value="<?php echo $config_ftp_host; ?>" />
-										<?php if ($error_ftp_host) { ?>
-											<span class="error"><?php echo $error_ftp_host; ?></span>
-										<?php } ?></td>
-								</tr>
-								<tr>
-									<td><?php echo $entry_ftp_port; ?></td>
-									<td><input type="text" name="config_ftp_port" value="<?php echo $config_ftp_port; ?>" />
-										<?php if ($error_ftp_port) { ?>
-											<span class="error"><?php echo $error_ftp_port; ?></span>
-										<?php } ?></td>
-								</tr>
-								<tr>
-									<td><?php echo $entry_ftp_username; ?></td>
-									<td><input type="text" name="config_ftp_username" value="<?php echo $config_ftp_username; ?>" />
-										<?php if ($error_ftp_username) { ?>
-											<span class="error"><?php echo $error_ftp_username; ?></span>
-										<?php } ?></td>
-								</tr>
-								<tr>
-									<td><?php echo $entry_ftp_password; ?></td>
-									<td><input type="text" name="config_ftp_password" value="<?php echo $config_ftp_password; ?>" />
-										<?php if ($error_ftp_password) { ?>
-											<span class="error"><?php echo $error_ftp_password; ?></span>
-										<?php } ?></td>
-								</tr>
-								<tr>
-									<td><?php echo $entry_ftp_root; ?></td>
-									<td><input type="text" name="config_ftp_root" value="<?php echo $config_ftp_root; ?>" /></td>
-								</tr>
-								<tr>
-									<td><?php echo $entry_ftp_status; ?></td>
-									<td><?php if ($config_ftp_status) { ?>
-										<input type="radio" name="config_ftp_status" value="1" checked="checked" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_ftp_status" value="0" />
-										<?php echo $text_no; ?>
-										<?php } else { ?>
-										<input type="radio" name="config_ftp_status" value="1" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_ftp_status" value="0" checked="checked" />
-										<?php echo $text_no; ?>
-									<?php } ?></td>
-								</tr>
-							</table>
-						</div>
+						</div>						
 						<div id="tab-mail">
 							<h2>Сервисные почтовые аккаунты и домены</h2>
 
@@ -3114,44 +3062,7 @@
 								</tr>
 							</table>
 						</div>
-						<div id="tab-fraud" style="display:none;">
-							<table class="form">
-								<tr>
-									<td><?php echo $entry_fraud_detection; ?></td>
-									<td><?php if ($config_fraud_detection) { ?>
-										<input type="radio" name="config_fraud_detection" value="1" checked="checked" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_fraud_detection" value="0" />
-										<?php echo $text_no; ?>
-										<?php } else { ?>
-										<input type="radio" name="config_fraud_detection" value="1" />
-										<?php echo $text_yes; ?>
-										<input type="radio" name="config_fraud_detection" value="0" checked="checked" />
-										<?php echo $text_no; ?>
-									<?php } ?></td>
-								</tr>
-								<tr>
-									<td><?php echo $entry_fraud_key; ?></td>
-									<td><input type="text" name="config_fraud_key" value="<?php echo $config_fraud_key; ?>" /></td>
-								</tr>
-								<tr>
-									<td><?php echo $entry_fraud_score; ?></td>
-									<td><input type="text" name="config_fraud_score" value="<?php echo $config_fraud_score; ?>" /></td>
-								</tr>
-								<tr>
-									<td><?php echo $entry_fraud_status; ?></td>
-									<td><select name="config_fraud_status_id">
-										<?php foreach ($order_statuses as $order_status) { ?>
-											<?php if ($order_status['order_status_id'] == $config_fraud_status_id) { ?>
-												<option value="<?php echo $order_status['order_status_id']; ?>" selected="selected"><?php echo $order_status['name']; ?></option>
-												<?php } else { ?>
-												<option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
-											<?php } ?>
-										<?php } ?>
-									</select></td>
-								</tr>
-							</table>
-						</div>
+
 						<div id="tab-sms">
 
 							<h2><i class="fa fa-search"></i> Сервис SMSGATE (Epochta)</h2>
@@ -3815,7 +3726,12 @@
 										</select>
 										<br />
 										<span class="help">товары в фиде маркета будут подаваться с переназначенными ценами</span>
-									</td>		
+									</td>	
+
+									<td width="50%">
+										<a href="<?php echo $deprecated_yam_module; ?>">[Deprecated] Модуль Яндекс-маркета</a><br />
+										<a href="<?php echo $deprecated_hotline_module; ?>">[Deprecated] Модуль Hotline</a><br />
+									</td>	
 									
 								</tr>
 								
