@@ -56,8 +56,6 @@
 						
 						$ao_query = $this->db->ncquery("SELECT * FROM product_additional_offer WHERE product_additional_offer_id = '" . (int)$product_additional_offer_id . "' AND ao_product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY priority ASC, price ASC LIMIT 1");
 						
-						//	var_dump("SELECT * FROM product_additional_offer WHERE product_additional_offer_id = '" . (int)$product_additional_offer_id . "' AND ao_product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY priority ASC, price ASC LIMIT 1");
-						
 						if ($ao_query->row){
 							$ao_main_product_id = $ao_query->row['product_id'];
 							
@@ -390,16 +388,6 @@
 							$special = false;
 						}	
 						
-						// Reward Points
-						/*
-							$product_reward_query = $this->db->ncquery("SELECT points FROM product_reward WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND store_id = '" . $this->config->get('config_store_id') . "'");
-							
-							if ($product_reward_query->num_rows) {
-							$reward = $product_reward_query->row['points'];
-							} else {
-							$reward = 0;
-							}
-						*/
 						$this->load->model('catalog/product');				
 						$reward = $this->getCurrentProductReward($this->registry->get('model_catalog_product')->getProduct($product_id));
 						
@@ -1011,11 +999,7 @@
 		
 			if (!$store_id){
 				$store_id = $this->config->get('config_store_id');
-			}
-			
-			if ($store_id != 2){
-			//	return false;
-			}
+			}			
 			
 			if (!$currency){
 				$currency = $this->config->get('config_regional_currency');
@@ -1037,21 +1021,23 @@
 			$points = 0;
 			$percent = 0;
 			
+			if ($this->config->get('config_reward_overload_product')){
 			//Прямое назначение в товаре
-			$query = $this->db->ncquery("SELECT points, percent FROM product_reward pr WHERE 
-			pr.product_id = '" . (int)$product['product_id'] . "' 
-			AND customer_group_id = '" . (int)$customer_group_id . "' 
-			AND ((pr.date_start = '0000-00-00' OR pr.date_start <= NOW()) AND (pr.date_end = '0000-00-00' OR pr.date_end >= NOW()))
-			AND (pr.store_id = '-1' OR pr.store_id = '" . (int)$store_id . "') 
-			ORDER BY pr.store_id DESC LIMIT 1");						
-			
-			if ($query->num_rows) {				
-				$points = $query->row['points'];
-				$percent = $query->row['percent'];				
+				$query = $this->db->ncquery("SELECT points, percent FROM product_reward pr WHERE 
+					pr.product_id = '" . (int)$product['product_id'] . "' 
+					AND customer_group_id = '" . (int)$customer_group_id . "' 
+					AND ((pr.date_start = '0000-00-00' OR pr.date_start <= NOW()) AND (pr.date_end = '0000-00-00' OR pr.date_end >= NOW()))
+					AND (pr.store_id = '-1' OR pr.store_id = '" . (int)$store_id . "') 
+					ORDER BY pr.store_id DESC LIMIT 1");						
+				
+				if ($query->num_rows) {				
+					$points = $query->row['points'];
+					$percent = $query->row['percent'];				
+				}
 			}
 			
 			//Коллекция
-			if (!$points && !$percent && $product['collection_id']){
+			if ($this->config->get('config_reward_overload_collection') && !$points && !$percent && $product['collection_id']){
 				$entityReward = $this->getEntityReward('co', $product['collection_id'], $store_id);
 				
 				if ($entityReward['points'] || $entityReward['percent']) {				
@@ -1061,7 +1047,7 @@
 			}
 			
 			//Бренд
-			if (!$points && !$percent && $product['manufacturer_id']){
+			if ($this->config->get('config_reward_overload_manufacturer') && !$points && !$percent && $product['manufacturer_id']){
 				$entityReward = $this->getEntityReward('m', $product['manufacturer_id'], $store_id);
 				
 				if ($entityReward['points'] || $entityReward['percent']) {				
@@ -1072,25 +1058,27 @@
 			
 			
 			//Категория
-			if (!$points && !$percent && $product['main_category_id']){
-				$entityReward = $this->getEntityReward('c', $product['main_category_id'], $store_id);
-				
-				if ($entityReward['points'] || $entityReward['percent']) {				
-					$points = $entityReward['points'];
-					$percent = $entityReward['percent'];				
+			if ($this->config->get('config_reward_overload_category')){
+				if (!$points && !$percent && $product['main_category_id']){
+					$entityReward = $this->getEntityReward('c', $product['main_category_id'], $store_id);
+					
+					if ($entityReward['points'] || $entityReward['percent']) {				
+						$points = $entityReward['points'];
+						$percent = $entityReward['percent'];				
+					}
 				}
-			}
 
-			if (!$points && !$percent && $product['categories']){
-				$categories = array_map('trim', explode(',', $product['categories']));
+				if (!$points && !$percent && $product['categories']){
+					$categories = array_map('trim', explode(',', $product['categories']));
 
-				if ($categories){
-					foreach ($categories as $category_id){
-						$entityReward = $this->getEntityReward('c', $category_id, $store_id);
+					if ($categories){
+						foreach ($categories as $category_id){
+							$entityReward = $this->getEntityReward('c', $category_id, $store_id);
 
-						if ($entityReward['points'] || $entityReward['percent']) {				
-							$points = $entityReward['points'];
-							$percent = $entityReward['percent'];				
+							if ($entityReward['points'] || $entityReward['percent']) {				
+								$points = $entityReward['points'];
+								$percent = $entityReward['percent'];				
+							}
 						}
 					}
 				}

@@ -1628,9 +1628,71 @@
 									<input type="text" name="rewardpoints_pointspercent" value="<?php echo $rewardpoints_pointspercent; ?>" size="5" />
 									<span class="help">значение по умолчанию, которое будет назначаться товарам, если не переназначено далее, в категория, брендах и коллекциях</span>
 								</td>
+							</tr>														
+						</table>
+
+						<h2>Логика бонусов</h2>
+						<table class="form">														
+							<tr>
+								<td style="width:20%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Оверлоад товаров</span></p>
+									<select name="config_reward_overload_product">
+										<?php if ($config_reward_overload_product) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>	
+								</td>
+
+								<td style="width:20%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Оверлоад коллекций</span></p>
+									<select name="config_reward_overload_collection">
+										<?php if ($config_reward_overload_collection) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>	
+								</td>
+
+
+								<td style="width:20%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Оверлоад брендов</span></p>
+									<select name="config_reward_overload_manufacturer">
+										<?php if ($config_reward_overload_manufacturer) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>	
+								</td>
+	
+								<td style="width:20%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Оверлоад категорий</span></p>
+									<select name="config_reward_overload_category">
+										<?php if ($config_reward_overload_category) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>	
+								</td>
+
 							</tr>
-							
-							
+							<tr>
+								<td colspan="4">
+									<i class="fa fa-exclamation-circle"></i> если в магазине не планируется использовать переназначения бонусов на каком-либо из этих этапов - их нужно отключить, это значительно ускоряет магазин
+								</td>
+							</tr>
 						</table>
 						
 						<h2>Начисление бонусов</h2>

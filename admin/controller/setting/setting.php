@@ -1180,6 +1180,21 @@ class ControllerSettingSetting extends Controller
             $this->data['rewardpoints_birthday'] = $this->config->get('rewardpoints_birthday');
         }
 
+        $reward_overload_keys = array(
+            'config_reward_overload_product',
+            'config_reward_overload_collection',
+            'config_reward_overload_manufacturer',
+            'config_reward_overload_category'
+        );
+        
+        foreach ($reward_overload_keys as $reward_overload_key) {
+            if (isset($this->request->post[$reward_overload_key])) {
+                $this->data[$reward_overload_key] = $this->request->post[$reward_overload_key];
+            } else {
+                $this->data[$reward_overload_key] = $this->config->get($reward_overload_key);
+            }
+        }
+
         
         $termskeys = array(
             'config_delivery_instock_term',
