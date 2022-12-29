@@ -350,6 +350,18 @@ class ControllerProductSearch extends Controller {
 
 		$this->data['products'] = array();
 
+		$this->data['sorts'] = array();
+
+		foreach ($this->registry->get('sorts') as $sortConfig){
+			if ($sortConfig['visible']){
+				$this->data['sorts'][] = array(
+					'text'  => $this->language->get($sortConfig['text_variable']),
+					'value' => ($sortConfig['field'] . '-' . $sortConfig['order']),
+					'href'  => $this->url->link('product/search', '&sort=' . $sortConfig['field'] . '&order='. $sortConfig['order'] . $url)
+				);
+			}
+		}	
+
 		if (isset($this->request->get['search']) || isset($this->request->get['tag'])) {
 			$data = array(
 				'search'         			=> $search, 
@@ -446,19 +458,7 @@ class ControllerProductSearch extends Controller {
 
 			if (isset($this->request->get['limit'])) {
 				$url .= '&limit=' . $this->request->get['limit'];
-			}
-
-			$this->data['sorts'] = array();
-
-			foreach ($this->registry->get('sorts') as $sortConfig){
-				if ($sortConfig['visible']){
-					$this->data['sorts'][] = array(
-						'text'  => $this->language->get($sortConfig['text_variable']),
-						'value' => ($sortConfig['field'] . '-' . $sortConfig['order']),
-						'href'  => $this->url->link('product/search', '&sort=' . $sortConfig['field'] . '&order='. $sortConfig['order'] . $url)
-					);
-				}
-			}	
+			}			
 
 			$url = '';
 
