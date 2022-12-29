@@ -114,6 +114,10 @@
 				
 				$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 				$products = $this->model_checkout_order->getOrderProducts($this->session->data['order_id']);
+
+				if (!$order_info){
+					$this->redirect($this->url->link('checkout/simplecheckout'));
+				}
 				
 				if ($this->config->get('config_google_remarketing_type') == 'ecomm') {
 					
@@ -381,16 +385,15 @@
 				$is_logged = $this->config->get('success_page_is_logged');
 				
 				$replace = array(
-				'order_id'         => $order_info['order_id'],
-				'email'            => $order_info['email'],
-				'delivery_address' => $delivery_address,
-				'date_order'       => date($this->language->get('date_format_short'), strtotime($order_info['date_added'])),
-				'shipping_method'  => $order_info['shipping_method'],
-				'payment_method'  => $order_info['payment_method'],
-				'facebook'         => ($this->config->get('success_page_facebook_status')) ? '<div class="fb-like-box" data-href="http' . ((isset($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] == 'on') || ($_SERVER['HTTPS'] == '1'))) ? 's' : '') . '://www.facebook.com/' . $this->config->get('success_page_facebook_profile') . '" data-width="' . $this->config->get('success_page_facebook_width') . '" data-height="' . $this->config->get('success_page_facebook_height') . '" border-color="' . $this->config->get('success_page_facebook_border') . '" data-show-faces="true" data-stream="false" data-header="false"></div>' : '',
-				'is_logged'        => ($this->customer->isLogged() && isset($is_logged[$this->config->get('config_language_id')])) ? html_entity_decode($is_logged[$this->config->get('config_language_id')], ENT_QUOTES, 'UTF-8') : '',
-				'store_telephone'   => $this->config->get('config_telephone'),
-				'store_telephone2'   => $this->config->get('config_telephone2'),
+				'order_id'         		=> $order_info['order_id'],
+				'email'            		=> $order_info['email'],
+				'delivery_address' 		=> $delivery_address,
+				'date_order'       		=> date($this->language->get('date_format_short'), strtotime($order_info['date_added'])),
+				'shipping_method'  		=> $order_info['shipping_method'],
+				'payment_method'  		=> $order_info['payment_method'],
+				'is_logged'        		=> ($this->customer->isLogged() && isset($is_logged[$this->config->get('config_language_id')])) ? html_entity_decode($is_logged[$this->config->get('config_language_id')], ENT_QUOTES, 'UTF-8') : '',
+				'store_telephone'   	=> $this->config->get('config_telephone'),
+				'store_telephone2'   	=> $this->config->get('config_telephone2'),
 				);
 				
 				$description = $this->config->get('success_page_description');
@@ -399,11 +402,7 @@
 				$this->data['order_data'] = $replace;
 			}
 			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/common/success.tpl';
-				} else {
-				$this->template = 'default/template/common/success.tpl';
-			}
+			$this->template = 'common/success.tpl';
 			
 			$this->children = array(
 			'common/column_left',

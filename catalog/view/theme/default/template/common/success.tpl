@@ -70,7 +70,7 @@
 						<div id="actionsList">
 							<div class="news-block">
 								<?php foreach ($actions_all as $actions) { ?>
-									<div class="actionListItem news-items <?php if ($actions['archive']) { ?>news-items-archive<?php } ?>" itemscope="" itemtype="http://schema.org/Article">
+									<div class="actionListItem news-items" itemscope="" itemtype="http://schema.org/Article">
 										<?php if ($actions['thumb']) { ?>
 											<div class="actionsImage news__photo">
 												<a href="<?php echo $actions['href']; ?>">
