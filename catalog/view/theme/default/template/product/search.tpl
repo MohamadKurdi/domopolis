@@ -12,11 +12,9 @@
 	}
 </style>
 <?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
-
 <?php include($this->checkTemplate(dirname(__FILE__),'/../structured/search_categories_list.tpl')); ?>
-
 <?php include($this->checkTemplate(dirname(__FILE__),'/../structured/intersections_list.tpl')); ?>
-<?php $intersections = $intersections2; ?>
+<?php $intersections = !empty($intersections2)?$intersections2:false; ?>
 <?php include($this->checkTemplate(dirname(__FILE__),'/../structured/intersections_list.tpl')); ?>
 
 <?php echo $content_top; ?><div id="mfilter-content-container">

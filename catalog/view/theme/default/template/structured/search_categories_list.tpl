@@ -1,4 +1,4 @@
-<?php if ($top_found_cmas) { ?>
+<?php if (!empty($top_found_cmas)) { ?>
 	<div class="wrap">
 		<div class="tags">				<?php echo $text_retranslate_go2cat; ?>
 			<div class="tags__row">

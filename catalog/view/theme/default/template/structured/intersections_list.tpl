@@ -1,4 +1,4 @@
-<?php if ($intersections) { ?>
+<?php if (!empty($intersections)) { ?>
 	<div class="wrap">
 		<div class="tags">
 			<div class="tags__row">
