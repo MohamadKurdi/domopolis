@@ -233,16 +233,16 @@ class ControllerProductSearch extends Controller {
 		} 
 
 		if (isset($this->request->get['sort'])) {
-				$sort = $this->request->get['sort'];
-				} else {			
-				$sort = $this->config->get('sort_default');
-			}
-			
-			if (isset($this->request->get['order'])) {
-				$order = $this->request->get['order'];
-				} else {
-				$order = $this->config->get('order_default');
-			}
+			$sort = $this->request->get['sort'];
+		} else {			
+			$sort = $this->config->get('sort_default');
+		}
+
+		if (isset($this->request->get['order'])) {
+			$order = $this->request->get['order'];
+		} else {
+			$order = $this->config->get('order_default');
+		}
 
 		if (isset($this->request->get['page'])) {
 			$page = $this->request->get['page'];
@@ -370,7 +370,6 @@ class ControllerProductSearch extends Controller {
 				$this->filter_category_id = $filter_category_id;
 				$this->filter_manufacturer_id = $filter_manufacturer_id;
 
-					//TRY TO FIND BY SKU										
 				if (Elasticsearch::validateResult($resultSKU = $this->elasticSearch->sku($query)) == 1){				
 					if ($productFoundBySKU = $this->elasticSingleProductResult($resultSKU)){
 						$this->response->redirect($this->url->link('product/product', 'product_id=' . $productFoundBySKU['product_id'] . '&search=' .  urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'))));
@@ -391,12 +390,9 @@ class ControllerProductSearch extends Controller {
 				$this->data['intersections'] = $this->prepareManufacturers(Elasticsearch::validateAggregationResult($resultAggregations, 'manufacturers'));
 				$this->data['intersections2'] = $this->prepareCategories(Elasticsearch::validateAggregationResult($resultAggregations, 'categories'));
 
-					//Поиск категорий, брендов и связок
-					//Самый первый запрос, просто поиск по названию, надеюсь в большинстве случаев его достаточно
 				$exact = true;
 				$resultsCMA = $this->elasticSearch->fuzzy('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field4, ['limit' => 30]);	
 
-					//Запрос к альтернативному набору
 				if (!ElasticSearch::validateResult($resultsCMA)){
 					$exact = false;
 					$resultsCMA = $this->elasticSearch->fuzzy('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field2, $field4, ['limit' => 30]);
@@ -405,303 +401,284 @@ class ControllerProductSearch extends Controller {
 				$this->data['top_found_cmas'] = $this->elasticResultsCMA($resultsCMA, $field, $exact);
 
 
-					//	$this->log->debug($this->data['top_found_cmas']);
-
 			} catch ( Exception $e ) {
 				$this->data['elastic_failed_error'] = 'Наш очень умный поиск поломался! Мы уже в процессе починки';
 				$this->data['elastic_failed_error_message'] = $e->getMessage();
 			};
 
+			$this->data['dimensions'] = array(
+				'w' => $this->config->get('config_image_product_width'),
+				'h' => $this->config->get('config_image_product_height')
+			);
 
-				/*	if (count($results['product_data']) == 1 && empty($this->request->get['page'])){
-					foreach ($results as $key => $value){
-					$this->response->redirect(str_replace('&amp;', '&', $this->url->link('product/product', 'product_id=' . $value['product_id'], 'SSL')));
-					}
-					}
-				*/
+			$bestsellers = [];
 
-					$this->data['dimensions'] = array(
-						'w' => $this->config->get('config_image_product_width'),
-						'h' => $this->config->get('config_image_product_height')
-					);
+			$this->data['products'] = $this->model_catalog_product->prepareProductToArray($results['product_data'], $bestsellers);
 
-					$bestsellers = [];
-
-					$this->data['products'] = $this->model_catalog_product->prepareProductToArray($results['product_data'], $bestsellers);
-
-					if (!empty($this->data['intersections']) && !empty($this->data['intersections2']) && !empty($this->data['top_found_cmas']) && ($total_results = ($product_total + count($this->data['intersections']) + count($this->data['intersections2']) + count($this->data['top_found_cmas']))) == 0){
+			if (!empty($this->data['intersections']) && !empty($this->data['intersections2']) && !empty($this->data['top_found_cmas']) && ($total_results = ($product_total + count($this->data['intersections']) + count($this->data['intersections2']) + count($this->data['top_found_cmas']))) == 0){
 					//NOTHING FOUND
-						$this->data['nothing_found'] = true;
+				$this->data['nothing_found'] = true;
 
-					} else {
+			} else {
 					//FOUND
-						$this->load->model('kp/search');
-						$this->model_kp_search->writeSearchHistory($query, $total_results);
+				$this->load->model('kp/search');
+				$this->model_kp_search->writeSearchHistory($query, $total_results);
 
-					}
+			}
 
-					$url = '';
+			$url = '';
 
-					if( ! empty( $this->request->get['mfp'] ) ) {
-						$url .= '&mfp=' . $this->request->get['mfp'];
-					}
+			if( ! empty( $this->request->get['mfp'] ) ) {
+				$url .= '&mfp=' . $this->request->get['mfp'];
+			}
 
-					if (isset($this->request->get['search'])) {
-						$url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
-					}
+			if (isset($this->request->get['search'])) {
+				$url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
+			}
 
-					if (isset($this->request->get['filter_category_id'])) {
-						$url .= '&filter_category_id=' . $this->request->get['filter_category_id'];
-					}
+			if (isset($this->request->get['filter_category_id'])) {
+				$url .= '&filter_category_id=' . $this->request->get['filter_category_id'];
+			}
 
-					if (isset($this->request->get['filter_manufacturer_id'])) {
-						$url .= '&filter_manufacturer_id=' . $this->request->get['filter_manufacturer_id'];
-					}
+			if (isset($this->request->get['filter_manufacturer_id'])) {
+				$url .= '&filter_manufacturer_id=' . $this->request->get['filter_manufacturer_id'];
+			}
 
-					if (isset($this->request->get['limit'])) {
-						$url .= '&limit=' . $this->request->get['limit'];
-					}
+			if (isset($this->request->get['limit'])) {
+				$url .= '&limit=' . $this->request->get['limit'];
+			}
 
-					$this->data['sorts'] = array();
+			$this->data['sorts'] = array();
 
-					foreach ($this->registry->get('sorts') as $sortConfig){
-						if ($sortConfig['visible']){
-							$this->data['sorts'][] = array(
-								'text'  => $this->language->get($sortConfig['text_variable']),
-								'value' => ($sortConfig['field'] . '-' . $sortConfig['order']),
-								'href'  => $this->url->link('product/search', '&sort=' . $sortConfig['field'] . '&order='. $sortConfig['order'] . $url)
-							);
-						}
-					}	
-					
-					$url = '';
+			foreach ($this->registry->get('sorts') as $sortConfig){
+				if ($sortConfig['visible']){
+					$this->data['sorts'][] = array(
+						'text'  => $this->language->get($sortConfig['text_variable']),
+						'value' => ($sortConfig['field'] . '-' . $sortConfig['order']),
+						'href'  => $this->url->link('product/search', '&sort=' . $sortConfig['field'] . '&order='. $sortConfig['order'] . $url)
+					);
+				}
+			}	
 
-					if( ! empty( $this->request->get['mfp'] ) ) {
-						$url .= '&mfp=' . $this->request->get['mfp'];
-					}
+			$url = '';
 
-					if (isset($this->request->get['search'])) {
-						$url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
-					}
+			if( ! empty( $this->request->get['mfp'] ) ) {
+				$url .= '&mfp=' . $this->request->get['mfp'];
+			}
 
-					if (isset($this->request->get['filter_category_id'])) {
-						$url .= '&filter_category_id=' . $this->request->get['filter_category_id'];
-					}
+			if (isset($this->request->get['search'])) {
+				$url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
+			}
 
-					if (isset($this->request->get['filter_manufacturer_id'])) {
-						$url .= '&filter_manufacturer_id=' . $this->request->get['filter_manufacturer_id'];
-					}
+			if (isset($this->request->get['filter_category_id'])) {
+				$url .= '&filter_category_id=' . $this->request->get['filter_category_id'];
+			}
 
-					if (isset($this->request->get['sort'])) {
-						$url .= '&sort=' . $this->request->get['sort'];
-					}	
+			if (isset($this->request->get['filter_manufacturer_id'])) {
+				$url .= '&filter_manufacturer_id=' . $this->request->get['filter_manufacturer_id'];
+			}
 
-					if (isset($this->request->get['order'])) {
-						$url .= '&order=' . $this->request->get['order'];
-					}
+			if (isset($this->request->get['sort'])) {
+				$url .= '&sort=' . $this->request->get['sort'];
+			}	
 
-					$this->data['limits'] = array();
+			if (isset($this->request->get['order'])) {
+				$url .= '&order=' . $this->request->get['order'];
+			}
 
-					$limits = array_unique(array($this->config->get('config_catalog_limit'), $this->config->get('config_catalog_limit') * 2, $this->config->get('config_catalog_limit') * 3));
+			$this->data['limits'] = array();
 
-					sort($limits);
+			$limits = array_unique(array($this->config->get('config_catalog_limit'), $this->config->get('config_catalog_limit') * 2, $this->config->get('config_catalog_limit') * 3));
 
-					foreach($limits as $value){
-						$this->data['limits'][] = array(
-							'text'  => $value,
-							'value' => $value,
-							'href'  => $this->url->link('product/search', $url . '&limit=' . $value)
-						);
-					}
+			sort($limits);
 
-					$url = '';
+			foreach($limits as $value){
+				$this->data['limits'][] = array(
+					'text'  => $value,
+					'value' => $value,
+					'href'  => $this->url->link('product/search', $url . '&limit=' . $value)
+				);
+			}
 
-					if( ! empty( $this->request->get['mfp'] ) ) {
-						$url .= '&mfp=' . $this->request->get['mfp'];
-					}
+			$url = '';
 
-					if (isset($this->request->get['search'])) {
-						$url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
-					}
+			if( ! empty( $this->request->get['mfp'] ) ) {
+				$url .= '&mfp=' . $this->request->get['mfp'];
+			}
 
-					if (isset($this->request->get['filter_category_id'])) {
-						$url .= '&filter_category_id=' . $this->request->get['filter_category_id'];
-					}
+			if (isset($this->request->get['search'])) {
+				$url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
+			}
 
-					if (isset($this->request->get['filter_manufacturer_id'])) {
-						$url .= '&filter_manufacturer_id=' . $this->request->get['filter_manufacturer_id'];
-					}
+			if (isset($this->request->get['filter_category_id'])) {
+				$url .= '&filter_category_id=' . $this->request->get['filter_category_id'];
+			}
 
-					if (isset($this->request->get['sort'])) {
-						$url .= '&sort=' . $this->request->get['sort'];
-					}	
+			if (isset($this->request->get['filter_manufacturer_id'])) {
+				$url .= '&filter_manufacturer_id=' . $this->request->get['filter_manufacturer_id'];
+			}
 
-					if (isset($this->request->get['order'])) {
-						$url .= '&order=' . $this->request->get['order'];
-					}
+			if (isset($this->request->get['sort'])) {
+				$url .= '&sort=' . $this->request->get['sort'];
+			}	
 
-					if (isset($this->request->get['limit'])) {
-						$url .= '&limit=' . $this->request->get['limit'];
-					}
+			if (isset($this->request->get['order'])) {
+				$url .= '&order=' . $this->request->get['order'];
+			}
 
+			if (isset($this->request->get['limit'])) {
+				$url .= '&limit=' . $this->request->get['limit'];
+			}
 
-					//$this->log->debug($product_total);
+			$pagination = new Pagination();
+			$pagination->total = $product_total;
+			$pagination->page = $page;
+			$pagination->limit = $limit;
+			$pagination->text = $this->language->get('text_pagination');
+			$pagination->url = $this->url->link('product/search', $url . '&page={page}');
 
-					$pagination = new Pagination();
-					$pagination->total = $product_total;
-					$pagination->page = $page;
-					$pagination->limit = $limit;
-					$pagination->text = $this->language->get('text_pagination');
-					$pagination->url = $this->url->link('product/search', $url . '&page={page}');
+			$this->data['text_show_more'] = $this->language->get('text_show_more');
+			$this->data['pagination'] = $pagination->render();
+			$this->data['pagination_text'] = $pagination->render_text();
 
-					$this->data['text_show_more'] = $this->language->get('text_show_more');
-					$this->data['pagination'] = $pagination->render();
-					$this->data['pagination_text'] = $pagination->render_text();
+			$url = '';
 
-					$url = '';
+			if( ! empty( $this->request->get['mfp'] ) ) {
+				$url .= '&mfp=' . $this->request->get['mfp'];
+			}
 
-					if( ! empty( $this->request->get['mfp'] ) ) {
-						$url .= '&mfp=' . $this->request->get['mfp'];
-					}
+			if (isset($this->request->get['search'])) {
+				$url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
+			}
 
-					if (isset($this->request->get['search'])) {
-						$url .= '&search=' . urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'));
-					}
-
-					$this->data['clear_url'] = $this->url->link('product/search', $url);
+			$this->data['clear_url'] = $this->url->link('product/search', $url);
 
 				//GOOGLE CONVERSION CODE
-					if ($this->config->get('config_google_remarketing_type') == 'ecomm') {
+			if ($this->config->get('config_google_remarketing_type') == 'ecomm') {
 
-						$this->data['google_tag_params'] = array(
-							'ecomm_prodid' => '',				
-							'ecomm_pagetype' => 'searchresults',
-							'ecomm_totalvalue' => 0
-						);
-
-					} else {	
-
-						$this->data['google_tag_params'] = array(
-							'dynx_itemid' => '',
-							'dynx_itemid2' => '',
-							'dynx_pagetype' => 'searchresults',
-							'dynx_totalvalue' => 0
-						);		
-					}
-				//END GOOGLE CONVERSION CODE
-				}	
-
-				$this->data['search'] = $search;
-				$this->data['pagetype'] = 'view_search_results';
-				$this->data['description'] = $description;
-				$this->data['filter_category_id'] = $filter_category_id;	
-				$this->data['filter_manufacturer_id'] = $filter_manufacturer_id;	
-
-				$this->data['sort'] = $sort;
-				$this->data['order'] = $order;
-				$this->data['limit'] = $limit;
-
-				$_pre = '';
-				if ($search){
-					$_pre = '&search=' . $search;
-				}
-
-				$num_pages = ceil($product_total / $limit);
-				if ($page == 1) {
-					$this->document->addLink($this->url->link('product/search', $_pre), 'canonical');
-					$this->document->addRobotsMeta("noindex, follow");
-				} else {
-					$this->document->addLink($this->url->link('product/search', $_pre . '&page=' . $page), 'canonical');
-					$this->document->addRobotsMeta("noindex, follow");
-				}
-				if ($page < $num_pages) {
-					$this->document->addLink($this->url->link('product/search', $_pre . '&page=' . ($page + 1)), 'next');
-				}
-				if ($page > 1) {
-				// Remove page duplicate
-					if ($page == 2) {
-						$this->document->addLink($this->url->link('product/search', $_pre), 'prev');
-					} else {
-						$this->document->addLink($this->url->link('product/search', $_pre . '&page=' . ($page - 1)), 'prev');
-					}
-				}
-
-				$this->data['current_sort'] = $this->language->get('text_default');
-
-				foreach ($this->data['sorts'] as $_sort){
-					if ($this->data['sort'] . '-'. $this->data['order'] == $_sort['value']){
-						$this->data['current_sort'] = $_sort['text'];
-					}
-				}
-
-				//REWARD TEXT
-				if ($this->config->get('rewardpoints_appinstall')){
-					$this->data['text_retranslate_app_block'] = sprintf($this->data['text_retranslate_app_block_reward'], $this->currency->format($this->config->get('rewardpoints_appinstall'), $this->config->get('config_currency_national'), 1));
-				}
-
-				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/search.tpl')) {
-					$this->template = $this->config->get('config_template') . '/template/product/search.tpl';
-				} else {
-					$this->template = 'default/template/product/search.tpl';
-				}
-
-				$this->children = array(
-					'common/column_left',
-					'common/column_right',
-					'common/content_top',
-					'common/content_bottom',
-					'common/footer',
-					'common/header'
+				$this->data['google_tag_params'] = array(
+					'ecomm_prodid' => '',				
+					'ecomm_pagetype' => 'searchresults',
+					'ecomm_totalvalue' => 0
 				);
 
-				if( isset( $this->request->get['mfilterAjax'] ) ) {
-					$settings	= $this->config->get('mega_filter_settings');
-					$baseTypes	= array( 'stock_status', 'manufacturers', 'rating', 'attributes', 'price', 'options', 'filters' );
+			} else {	
 
-					if( isset( $this->request->get['mfilterBTypes'] ) ) {
-						$baseTypes = explode( ',', $this->request->get['mfilterBTypes'] );
-					}
-					
-					if( ! empty( $settings['calculate_number_of_products'] ) || in_array( 'categories:tree', $baseTypes ) ) {
-						if( empty( $settings['calculate_number_of_products'] ) ) {
-							$baseTypes = array( 'categories:tree' );
-						}
-
-						$this->load->model( 'module/mega_filter' );
-
-						$idx = 0;
-
-						if( isset( $this->request->get['mfilterIdx'] ) )
-							$idx = (int) $this->request->get['mfilterIdx'];
-						
-						$this->data['mfilter_json'] = json_encode( MegaFilterCore::newInstance( $this, NULL )->getJsonData($baseTypes, $idx) );
-					}
-
-					foreach( $this->children as $mf_child ) {
-						$mf_child = explode( '/', $mf_child );
-						$mf_child = array_pop( $mf_child );
-						$this->data[$mf_child] = '';
-					}
-
-					$this->children=array();
-					$this->data['header'] = $this->data['column_left'] = $this->data['column_right'] = $this->data['content_top'] = $this->data['content_bottom'] = $this->data['footer'] = '';
-				}
-				
-				if( ! empty( $this->data['breadcrumbs'] ) && ! empty( $this->request->get['mfp'] ) ) {
-					
-					foreach( $this->data['breadcrumbs'] as $mfK => $mfBreadcrumb ) {
-						$mfReplace = preg_replace( '/path\[[^\]]+\],?/', '', $this->request->get['mfp'] );
-						$mfFind = ( mb_strpos( $mfBreadcrumb['href'], '?mfp=', 0, 'utf-8' ) !== false ? '?mfp=' : '&mfp=' );
-						
-						$this->data['breadcrumbs'][$mfK]['href'] = str_replace(array(
-							$mfFind . $this->request->get['mfp'],
-							'&amp;mfp=' . $this->request->get['mfp'],
-							$mfFind . urlencode( $this->request->get['mfp'] ),
-							'&amp;mfp=' . urlencode( $this->request->get['mfp'] )
-						), $mfReplace ? $mfFind . $mfReplace : '', $mfBreadcrumb['href'] );
-					}
-				}
-
-				$this->response->setOutput($this->render());
+				$this->data['google_tag_params'] = array(
+					'dynx_itemid' => '',
+					'dynx_itemid2' => '',
+					'dynx_pagetype' => 'searchresults',
+					'dynx_totalvalue' => 0
+				);		
 			}
-		}												
+				//END GOOGLE CONVERSION CODE
+		}	
+
+		$this->data['search'] = $search;
+		$this->data['pagetype'] = 'view_search_results';
+		$this->data['description'] = $description;
+		$this->data['filter_category_id'] = $filter_category_id;	
+		$this->data['filter_manufacturer_id'] = $filter_manufacturer_id;	
+
+		$this->data['sort'] 	= $sort;
+		$this->data['order'] 	= $order;
+		$this->data['limit'] 	= $limit;
+
+		$_pre = '';
+		if ($search){
+			$_pre = '&search=' . $search;
+		}
+
+		$num_pages = !empty($product_total)?ceil($product_total / $limit):1;
+		if ($page == 1) {
+			$this->document->addLink($this->url->link('product/search', $_pre), 'canonical');
+			$this->document->addRobotsMeta("noindex, follow");
+		} else {
+			$this->document->addLink($this->url->link('product/search', $_pre . '&page=' . $page), 'canonical');
+			$this->document->addRobotsMeta("noindex, follow");
+		}
+		if ($page < $num_pages) {
+			$this->document->addLink($this->url->link('product/search', $_pre . '&page=' . ($page + 1)), 'next');
+		}
+		if ($page > 1) {				
+			if ($page == 2) {
+				$this->document->addLink($this->url->link('product/search', $_pre), 'prev');
+			} else {
+				$this->document->addLink($this->url->link('product/search', $_pre . '&page=' . ($page - 1)), 'prev');
+			}
+		}
+
+		$this->data['current_sort'] = $this->language->get('text_default');
+
+		foreach ($this->data['sorts'] as $_sort){
+			if ($this->data['sort'] . '-'. $this->data['order'] == $_sort['value']){
+				$this->data['current_sort'] = $_sort['text'];
+			}
+		}
+
+		if ($this->config->get('rewardpoints_appinstall')){
+			$this->data['text_retranslate_app_block'] = sprintf($this->data['text_retranslate_app_block_reward'], $this->currency->format($this->config->get('rewardpoints_appinstall'), $this->config->get('config_currency_national'), 1));
+		}
+
+		$this->template = 'product/search.tpl';
+
+		$this->children = array(
+			'common/column_left',
+			'common/column_right',
+			'common/content_top',
+			'common/content_bottom',
+			'common/footer',
+			'common/header'
+		);
+
+		if( isset( $this->request->get['mfilterAjax'] ) ) {
+			$settings	= $this->config->get('mega_filter_settings');
+			$baseTypes	= array( 'stock_status', 'manufacturers', 'rating', 'attributes', 'price', 'options', 'filters' );
+
+			if( isset( $this->request->get['mfilterBTypes'] ) ) {
+				$baseTypes = explode( ',', $this->request->get['mfilterBTypes'] );
+			}
+
+			if( ! empty( $settings['calculate_number_of_products'] ) || in_array( 'categories:tree', $baseTypes ) ) {
+				if( empty( $settings['calculate_number_of_products'] ) ) {
+					$baseTypes = array( 'categories:tree' );
+				}
+
+				$this->load->model( 'module/mega_filter' );
+
+				$idx = 0;
+
+				if( isset( $this->request->get['mfilterIdx'] ) )
+					$idx = (int) $this->request->get['mfilterIdx'];
+
+				$this->data['mfilter_json'] = json_encode( MegaFilterCore::newInstance( $this, NULL )->getJsonData($baseTypes, $idx) );
+			}
+
+			foreach( $this->children as $mf_child ) {
+				$mf_child = explode( '/', $mf_child );
+				$mf_child = array_pop( $mf_child );
+				$this->data[$mf_child] = '';
+			}
+
+			$this->children=array();
+			$this->data['header'] = $this->data['column_left'] = $this->data['column_right'] = $this->data['content_top'] = $this->data['content_bottom'] = $this->data['footer'] = '';
+		}
+
+		if( ! empty( $this->data['breadcrumbs'] ) && ! empty( $this->request->get['mfp'] ) ) {
+
+			foreach( $this->data['breadcrumbs'] as $mfK => $mfBreadcrumb ) {
+				$mfReplace = preg_replace( '/path\[[^\]]+\],?/', '', $this->request->get['mfp'] );
+				$mfFind = ( mb_strpos( $mfBreadcrumb['href'], '?mfp=', 0, 'utf-8' ) !== false ? '?mfp=' : '&mfp=' );
+
+				$this->data['breadcrumbs'][$mfK]['href'] = str_replace(array(
+					$mfFind . $this->request->get['mfp'],
+					'&amp;mfp=' . $this->request->get['mfp'],
+					$mfFind . urlencode( $this->request->get['mfp'] ),
+					'&amp;mfp=' . urlencode( $this->request->get['mfp'] )
+				), $mfReplace ? $mfFind . $mfReplace : '', $mfBreadcrumb['href'] );
+			}
+		}
+
+		$this->response->setOutput($this->render());
+	}
+}												
