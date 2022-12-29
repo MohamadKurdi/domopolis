@@ -21,30 +21,9 @@
 		private $is_opt;
 		private $affiliateNZ;
 		private $opt_group_array = array(8,9,10,11);
-		
-		
-		
 		private $affiliate_paid;
-		public function refrefh($registry) {
-			$this->affiliateNZ = $registry->get('affiliate');
-		}
 		
-		
-		private function checkIfHasBirthday($month, $day){
-			$today = date('Y-m-d');
-			
-			$dates = array();
-			for ($i=-6; $i<=3; $i++){				
-				$dates[] = date('m-d', strtotime("$i day"));
-			}			
-			
-			if (in_array($month . '-' . $day, $dates) || in_array('0' . $month . '-' . $day, $dates) || in_array($month . '-' . '0' . $day, $dates) || in_array('0' . $month . '-' . '0' . $day, $dates)){
-				return true;
-				} else {
-				return false;
-			}
-		}
-		
+				
 		public function __construct($registry) {			
 			$this->config 	= $registry->get('config');
 			$this->db 		= $registry->get('db');
@@ -54,7 +33,7 @@
 			$this->user 	= $registry->get('user');			
 			
 			if (isset($this->session->data['customer_id'])) { 
-				$customer_query = $this->db->non_cached_query("SELECT * FROM customer WHERE customer_id = '" . (int)$this->session->data['customer_id'] . "' AND status = '1' AND store_id = '" . $this->config->get('config_store_id') . "'");
+				$customer_query = $this->db->ncquery("SELECT * FROM customer WHERE customer_id = '" . (int)$this->session->data['customer_id'] . "' AND status = '1' AND store_id = '" . $this->config->get('config_store_id') . "'");
 				
 				if ($customer_query->num_rows) {
 					
@@ -64,32 +43,32 @@
 						}					
 					}
 					
-					$this->customer_id = $customer_query->row['customer_id'];			
-					$this->affiliate_paid = $customer_query->row['affiliate_paid'];			           
-					$this->firstname = $customer_query->row['firstname'];
-					$this->lastname = $customer_query->row['lastname'];
-					$this->discount_card = $customer_query->row['discount_card'];
-					$this->discount_percent = $customer_query->row['discount_percent'];
-					$this->email = $customer_query->row['email'];
-					$this->telephone = $customer_query->row['telephone'];
-					$this->birthday = $customer_query->row['birthday'];
-					$this->has_birthday = $this->checkIfHasBirthday($customer_query->row['birthday_month'], $customer_query->row['birthday_date']);
-					$this->fax = $customer_query->row['fax'];
-					$this->newsletter = $customer_query->row['newsletter'];
-					$this->newsletter_news = $customer_query->row['newsletter_news'];
-					$this->newsletter_personal = $customer_query->row['newsletter_personal'];
-					$this->customer_group_id = $customer_query->row['customer_group_id'];
-					$this->address_id = $customer_query->row['address_id'];
-					$this->sendpulse_push_id = $customer_query->row['sendpulse_push_id'];
-					$this->tracking = $customer_query->row['tracking'];
-					$this->is_opt = in_array($this->customer_group_id, $this->opt_group_array);
+					$this->customer_id 				= $customer_query->row['customer_id'];			
+					$this->affiliate_paid 			= $customer_query->row['affiliate_paid'];			           
+					$this->firstname 				= $customer_query->row['firstname'];
+					$this->lastname 				= $customer_query->row['lastname'];
+					$this->discount_card 			= $customer_query->row['discount_card'];
+					$this->discount_percent 		= $customer_query->row['discount_percent'];
+					$this->email 					= $customer_query->row['email'];
+					$this->telephone 				= $customer_query->row['telephone'];
+					$this->birthday 				= $customer_query->row['birthday'];
+					$this->has_birthday 			= $this->checkIfHasBirthday($customer_query->row['birthday_month'], $customer_query->row['birthday_date']);
+					$this->fax 						= $customer_query->row['fax'];
+					$this->newsletter 				= $customer_query->row['newsletter'];
+					$this->newsletter_news 			= $customer_query->row['newsletter_news'];
+					$this->newsletter_personal 		= $customer_query->row['newsletter_personal'];
+					$this->customer_group_id 		= $customer_query->row['customer_group_id'];
+					$this->address_id 				= $customer_query->row['address_id'];
+					$this->sendpulse_push_id 		= $customer_query->row['sendpulse_push_id'];
+					$this->tracking 				= $customer_query->row['tracking'];
+					$this->is_opt 					= in_array($this->customer_group_id, $this->opt_group_array);
 					
-					$this->db->non_cached_query("UPDATE customer SET cart = '" . $this->db->escape(isset($this->session->data['cart']) ? serialize($this->session->data['cart']) : '') . "', wishlist = '" . $this->db->escape(isset($this->session->data['wishlist']) ? serialize($this->session->data['wishlist']) : '') . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
+					$this->db->ncquery("UPDATE customer SET cart = '" . $this->db->escape(isset($this->session->data['cart']) ? serialize($this->session->data['cart']) : '') . "', wishlist = '" . $this->db->escape(isset($this->session->data['wishlist']) ? serialize($this->session->data['wishlist']) : '') . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
 					
-					$query = $this->db->non_cached_query("SELECT * FROM customer_ip WHERE customer_id = '" . (int)$this->session->data['customer_id'] . "' AND ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'");
+					$query = $this->db->ncquery("SELECT * FROM customer_ip WHERE customer_id = '" . (int)$this->session->data['customer_id'] . "' AND ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "'");
 					
 					if (!$query->num_rows) {
-						$this->db->non_cached_query("INSERT INTO customer_ip SET customer_id = '" . (int)$this->session->data['customer_id'] . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', date_added = NOW()");
+						$this->db->ncquery("INSERT INTO customer_ip SET customer_id = '" . (int)$this->session->data['customer_id'] . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', date_added = NOW()");
 					}
 					} else {
 					$this->logout();
@@ -97,38 +76,36 @@
 				
 				} elseif (!$this->isLogged() && !empty($this->request->cookie['em']) && !empty($this->request->cookie['p'])) {
 				$this->login($this->request->cookie['em'], $this->request->cookie['p']);
-			}
-			
+			}			
 		}
 		
 		public function login($email, $password, $override = false, $autologin = false) {
 			if ($override) {
-				if (is_numeric($email)){
-					
-					$customer_query = $this->db->non_cached_query("SELECT * FROM customer where 
-					customer_id = '" . (int)$email . "' AND status = '1' AND store_id = '" . $this->config->get('config_store_id') . "'");
-					
+				if (is_numeric($email)){					
+					$customer_query = $this->db->ncquery("SELECT * FROM customer where 
+					customer_id = '" . (int)$email . "' AND status = '1' AND store_id = '" . $this->config->get('config_store_id') . "'");					
 					} else {
-					$customer_query = $this->db->non_cached_query("SELECT * FROM customer where 
+					$customer_query = $this->db->ncquery("SELECT * FROM customer where 
 					(LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "') AND status = '1' AND store_id = '" . $this->config->get('config_store_id') . "'");
 				}
 				
 				} else {
+					$_IS_EMAIL = $_IS_PHONE_OR_DISCOUNT = false;
 				
-				if (strpos($email, '@')){
-					$is_email = true;
+				if (filter_var($email, FILTER_VALIDATE_EMAIL)){
+					$_IS_EMAIL = true;
 					} elseif (mb_strlen(trim(preg_replace("([^0-9])", "", $email))) > 0) {
-					$is_phone_or_discount = true;				
+					$_IS_PHONE_OR_DISCOUNT = true;				
 				}
 				
-				if ($is_email){
-					$customer_query = $this->db->non_cached_query("SELECT * FROM customer WHERE 
+				if ($_IS_EMAIL){
+					$customer_query = $this->db->ncquery("SELECT * FROM customer WHERE 
 					(LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "')  		
 					AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '". $this->db->escape($password) ."' OR password = '" . $this->db->escape(md5($password)) . "')
 					AND status = '1'
 					AND approved = '1'");
-					} elseif ($is_phone_or_discount) {
-					$customer_query = $this->db->non_cached_query("SELECT * FROM customer WHERE 
+					} elseif ($_IS_PHONE_OR_DISCOUNT) {
+					$customer_query = $this->db->ncquery("SELECT * FROM customer WHERE 
 					(REPLACE(discount_card,' ','')  LIKE '" . $this->db->escape(str_replace(' ','', $email)) . "'
 					OR (TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(telephone,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) LIKE '". $this->db->escape(trim(preg_replace("([^0-9])", "", $email))) ."' )
 					OR (TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(fax,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) LIKE '". $this->db->escape(trim(preg_replace("([^0-9])", "", $email))) ."' )	
@@ -139,7 +116,7 @@
 					AND store_id = '" . $this->config->get('config_store_id') . "'
 					");
 					} else {
-					$customer_query = $this->db->non_cached_query("SELECT * FROM customer WHERE customer_id = '-1'");				
+					$customer_query = $this->db->ncquery("SELECT * FROM customer WHERE customer_id = '-1'");				
 				}
 				
 				
@@ -182,42 +159,37 @@
 					}			
 				}
 				
-				$this->customer_id = $customer_query->row['customer_id'];
+				$this->customer_id 			= $customer_query->row['customer_id'];								
+				$this->affiliate_paid 		= $customer_query->row['affiliate_paid'];								
+				$this->firstname 			= $customer_query->row['firstname'];
+				$this->lastname 			= $customer_query->row['lastname'];
+				$this->discount_card 		= $customer_query->row['discount_card'];
+				$this->discount_percent 	= $customer_query->row['discount_percent'];
+				$this->email 				= $customer_query->row['email'];
+				$this->telephone 			= $customer_query->row['telephone'];
+				$this->birthday 			= $customer_query->row['birthday'];
+				$this->has_birthday 		= $this->checkIfHasBirthday($customer_query->row['birthday_month'], $customer_query->row['birthday_date']);
+				$this->fax 					= $customer_query->row['fax'];
+				$this->newsletter 			= $customer_query->row['newsletter'];
+				$this->newsletter_news 		= $customer_query->row['newsletter_news'];
+				$this->newsletter_personal 	= $customer_query->row['newsletter_personal'];
+				$this->customer_group_id 	= $customer_query->row['customer_group_id'];
+				$this->address_id 			= $customer_query->row['address_id'];
+				$this->sendpulse_push_id 	= $customer_query->row['sendpulse_push_id'];
+				$this->tracking 			= $customer_query->row['tracking'];
+				$this->is_opt 				= in_array($this->customer_group_id, $this->opt_group_array);
 				
-				
-				$this->affiliate_paid = $customer_query->row['affiliate_paid'];				
-				
-				$this->firstname = $customer_query->row['firstname'];
-				$this->lastname = $customer_query->row['lastname'];
-				$this->discount_card = $customer_query->row['discount_card'];
-				$this->discount_percent = $customer_query->row['discount_percent'];
-				$this->email = $customer_query->row['email'];
-				$this->telephone = $customer_query->row['telephone'];
-				$this->birthday = $customer_query->row['birthday'];
-				$this->has_birthday = $this->checkIfHasBirthday($customer_query->row['birthday_month'], $customer_query->row['birthday_date']);
-				$this->fax = $customer_query->row['fax'];
-				$this->newsletter = $customer_query->row['newsletter'];
-				$this->newsletter_news = $customer_query->row['newsletter_news'];
-				$this->newsletter_personal = $customer_query->row['newsletter_personal'];
-				$this->customer_group_id = $customer_query->row['customer_group_id'];
-				$this->address_id = $customer_query->row['address_id'];
-				$this->sendpulse_push_id = $customer_query->row['sendpulse_push_id'];
-				$this->tracking = $customer_query->row['tracking'];
-				$this->is_opt = in_array($this->customer_group_id, $this->opt_group_array);
-				
-				$this->db->non_cached_query("UPDATE customer SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
+				$this->db->ncquery("UPDATE customer SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
 				
 				if($autologin) {
-					$salt = $this->db->non_cached_query("SELECT salt FROM customer WHERE customer_id = '".$customer_query->row['customer_id']."'")->row['salt'];
+					$salt = $this->db->ncquery("SELECT salt FROM customer WHERE customer_id = '".$customer_query->row['customer_id']."'")->row['salt'];
 					$password_c = sha1($salt . sha1($salt . sha1($password)));
 					setcookie('em', $email, time()+60 * 60 * 24 * 30);
 					setcookie('p', $password_c, time()+60 * 60 * 24 * 30);
 				}
-				
-				
-				
+												
 				if(isset($this->affiliateNZ) && is_object($this->affiliateNZ) && !$this->affiliateNZ->isLogged() & $this->config->get('config_affiliate_login')) {
-					$query = $this->db->non_cached_query("SELECT * FROM `affiliate` WHERE affiliate_id = '" . (int)$this->affiliate_paid . "'");
+					$query = $this->db->ncquery("SELECT * FROM `affiliate` WHERE affiliate_id = '" . (int)$this->affiliate_paid . "'");
 					$affiliate_info = $query->row;
 					if($affiliate_info) {
 						$this->affiliateNZ->login($affiliate_info['email'], $password);
@@ -225,53 +197,67 @@
 						$this->affiliateNZ->login($email, $password);
 					}
 				}
-				
-				
+								
 				return true;
 				} else {
 				return false;
 			}
 		}
-		
-		
+					
+		public function refrefh($registry) {
+			$this->affiliateNZ = $registry->get('affiliate');
+		}
+				
+		private function checkIfHasBirthday($month, $day){
+			$today = date('Y-m-d');
+			
+			$dates = array();
+			for ($i=-6; $i<=3; $i++){				
+				$dates[] = date('m-d', strtotime("$i day"));
+			}			
+			
+			if (in_array($month . '-' . $day, $dates) || in_array('0' . $month . '-' . $day, $dates) || in_array($month . '-' . '0' . $day, $dates) || in_array('0' . $month . '-' . '0' . $day, $dates)){
+				return true;
+				} else {
+				return false;
+			}
+		}
+
 		public function setTracking($tracking) {
 			$this->tracking = $tracking;
-			$this->db->non_cached_query("UPDATE customer SET tracking = '" . $this->db->escape($tracking) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");	
+			$this->db->ncquery("UPDATE customer SET tracking = '" . $this->db->escape($tracking) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");	
 		}
 		
 		public function clear_cart(){
-			$this->db->non_cached_query("UPDATE customer SET cart = '' WHERE customer_id = '" . (int)$this->customer_id . "'");
+			$this->db->ncquery("UPDATE customer SET cart = '' WHERE customer_id = '" . (int)$this->customer_id . "'");
 			unset($this->session->data['cart']);
 		}
 		
 		public function logout() {
-			$this->db->non_cached_query("UPDATE customer SET cart = '" . $this->db->escape(isset($this->session->data['cart']) ? serialize($this->session->data['cart']) : '') . "', wishlist = '" . $this->db->escape(isset($this->session->data['wishlist']) ? serialize($this->session->data['wishlist']) : '') . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
+			$this->db->ncquery("UPDATE customer SET cart = '" . $this->db->escape(isset($this->session->data['cart']) ? serialize($this->session->data['cart']) : '') . "', wishlist = '" . $this->db->escape(isset($this->session->data['wishlist']) ? serialize($this->session->data['wishlist']) : '') . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
 			
 			unset($this->session->data['customer_id']);
 			
-			$this->customer_id = '';
-			$this->firstname = '';
-			$this->lastname = '';
-			$this->discount_card = '';
-			$this->discount_percent = '';
-			$this->email = '';
-			$this->telephone = '';
-			$this->birthday = '';
-			$this->birthday = '';
-			$this->fax = '';
-			$this->newsletter = '';
-			$this->newsletter_news = '';
-			$this->newsletter_personal = '';
-			$this->customer_group_id = '';
-			$this->address_id = '';
-			$this->sendpulse_push_id = '';
-			
-			
+			$this->customer_id 			= '';
+			$this->firstname 			= '';
+			$this->lastname 			= '';
+			$this->discount_card 		= '';
+			$this->discount_percent 	= '';
+			$this->email 				= '';
+			$this->telephone 			= '';			
+			$this->birthday 			= '';
+			$this->fax 					= '';
+			$this->newsletter 			= '';
+			$this->newsletter_news 		= '';
+			$this->newsletter_personal 	= '';
+			$this->customer_group_id 	= '';
+			$this->address_id 			= '';
+			$this->sendpulse_push_id 	= '';
+						
 			$this->affiliate_paid = '';
 			if (!empty($this->affiliateNZ) && is_object($this->affiliateNZ) && $this->affiliateNZ->isLogged()) {
 				$this->affiliateNZ->logout();
-			}
-			
+			}			
             
 			$this->tracking = '';
 			$this->is_opt = false;
@@ -285,27 +271,29 @@
 		public function validateStore($email){
 			if (is_numeric($email)){
 				
-				$store_query = $this->db->non_cached_query("SELECT store_id FROM customer where 
+				$store_query = $this->db->ncquery("SELECT store_id FROM customer where 
 				customer_id = '" . (int)$email . "' AND status = '1'");
 				
 				} else {
-				$store_query = $this->db->non_cached_query("SELECT store_id FROM customer where 
+				$store_query = $this->db->ncquery("SELECT store_id FROM customer where 
 				(LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "') AND status = '1'");
 			}
 			
-			if (strpos($email, '@')){
-				$is_email = true;
+			$_IS_EMAIL = $_IS_PHONE_OR_DISCOUNT = false;
+
+			if (filter_var($email, FILTER_VALIDATE_EMAIL)){
+				$_IS_EMAIL = true;
 				} elseif (mb_strlen(trim(preg_replace("([^0-9])", "", $email))) > 0) {
-				$is_phone_or_discount = true;				
+				$_IS_PHONE_OR_DISCOUNT = true;				
 			}
 			
-			if ($is_email){
-				$store_query = $this->db->non_cached_query("SELECT store_id FROM customer WHERE 
+			if ($_IS_EMAIL){
+				$store_query = $this->db->ncquery("SELECT store_id FROM customer WHERE 
 				(LOWER(email) = '" . $this->db->escape(utf8_strtolower($email)) . "')  							
 				AND status = '1'
 				AND approved = '1'");
-				} elseif ($is_phone_or_discount) {
-				$store_query = $this->db->non_cached_query("SELECT store_id FROM customer WHERE 
+				} elseif ($_IS_PHONE_OR_DISCOUNT) {
+				$store_query = $this->db->ncquery("SELECT store_id FROM customer WHERE 
 				(REPLACE(discount_card,' ','')  LIKE '" . $this->db->escape(str_replace(' ','', $email)) . "'
 				OR (TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(telephone,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) LIKE '". $this->db->escape(trim(preg_replace("([^0-9])", "", $email))) ."' )
 				OR (TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(fax,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) LIKE '". $this->db->escape(trim(preg_replace("([^0-9])", "", $email))) ."' )	
@@ -313,7 +301,7 @@
 				AND status = '1'
 				AND approved = '1'");
 				} else {
-				$store_query = $this->db->non_cached_query("SELECT store_id FROM customer WHERE customer_id = '-1'");				
+				$store_query = $this->db->ncquery("SELECT store_id FROM customer WHERE customer_id = '-1'");				
 			}
 			
 			if ($store_query->num_rows){
@@ -377,8 +365,7 @@
 		
 		public function getNewsletter() {
 			return $this->newsletter;	
-		}
-		
+		}		
 		
 		public function getNewsletterNews() {
 			return $this->newsletter_news;	
@@ -428,13 +415,13 @@
 		}
 		
 		public function getBalance() {
-			$query = $this->db->non_cached_query("SELECT SUM(amount) AS total FROM customer_transaction WHERE customer_id = '" . (int)$this->customer_id . "'");
+			$query = $this->db->ncquery("SELECT SUM(amount) AS total FROM customer_transaction WHERE customer_id = '" . (int)$this->customer_id . "'");
 			
 			return $query->row['total'];
 		}
 		
 		public function getBalanceNational() {
-			$query = $this->db->non_cached_query("SELECT SUM(amount_national) AS total FROM customer_transaction WHERE customer_id = '" . (int)$this->customer_id . "'");
+			$query = $this->db->ncquery("SELECT SUM(amount_national) AS total FROM customer_transaction WHERE customer_id = '" . (int)$this->customer_id . "'");
 			
 			return $query->row['total'];
 		}
@@ -446,27 +433,26 @@
 			}
 			
 			if ($reason_code == 'ORDER_COMPLETE_ADD'){
-				$check_query = $this->db->non_cached_query("DELETE FROM customer_reward_queue WHERE order_id = '" . $order_id . "' AND reason_code = 'ORDER_COMPLETE_ADD'");
+				$check_query = $this->db->ncquery("DELETE FROM customer_reward_queue WHERE order_id = '" . $order_id . "' AND reason_code = 'ORDER_COMPLETE_ADD'");
 				
 				//на случай если у покупателя УЖЕ есть такое НАЧИСЛЕНИЕ, то мы обновляем сумму в истории и делаем пересчет трат.
-				$check_history_query = $this->db->non_cached_query("SELECT * FROM customer_reward WHERE order_id = '" . $order_id . "' AND reason_code = 'ORDER_COMPLETE_ADD' LIMIT 1");
+				$check_history_query = $this->db->ncquery("SELECT * FROM customer_reward WHERE order_id = '" . $order_id . "' AND reason_code = 'ORDER_COMPLETE_ADD' LIMIT 1");
 				
 				if ($check_history_query->num_rows){
-					$this->db->non_cached_query("UPDATE customer_reward SET points = '" . (int)$points . "' WHERE customer_id = '" . (int)$customer_id . "' AND customer_reward_id = '" . $check_history_query->row['customer_reward_id'] . "'");
+					$this->db->ncquery("UPDATE customer_reward SET points = '" . (int)$points . "' WHERE customer_id = '" . (int)$customer_id . "' AND customer_reward_id = '" . $check_history_query->row['customer_reward_id'] . "'");
 					
 					$this->fixRewards($customer_id);
 				}
 			}
 			
-			$this->db->non_cached_query("INSERT INTO customer_reward_queue SET 
+			$this->db->ncquery("INSERT INTO customer_reward_queue SET 
 			customer_id 	= '" . (int)$customer_id . "', 
 			order_id 		= '" . (int)$order_id . "', 
 			points 			= '" . (int)$points . "', 
 			description 	= '" . $this->db->escape($description) . "', 
 			date_added 		= NOW(), 
 			reason_code 	= '" . $this->db->escape($reason_code) . "',
-			date_activate 	= DATE_ADD(NOW(), INTERVAL 14 DAY)");
-			
+			date_activate 	= DATE_ADD(NOW(), INTERVAL 14 DAY)");			
 		}
 		
 		public function addApplicationReward($customer_id = false, $description = '', $points = 0, $order_id = 0, $reason_code = 'APPINSTALL_POINTS_ADD'){
@@ -497,10 +483,10 @@
 				//Редактирование списания по заказу
 				if ($order_id && $reason_code == 'ORDER_PAYMENT'){
 					//удаляем уже существующий платеж по этому заказу и добавляем по-новой
-					$query = $this->db->non_cached_query("SELECT * FROM customer_reward WHERE reason_code = '" . $this->db->escape($reason_code) . "' AND customer_id = '" . (int)$customer_id . "' AND order_id = '" . (int)$order_id . "' LIMIT 1");
+					$query = $this->db->ncquery("SELECT * FROM customer_reward WHERE reason_code = '" . $this->db->escape($reason_code) . "' AND customer_id = '" . (int)$customer_id . "' AND order_id = '" . (int)$order_id . "' LIMIT 1");
 					
 					if ($query->num_rows){
-						$this->db->non_cached_query("DELETE FROM customer_reward WHERE customer_reward_id = '" . $query->row['customer_reward_id'] . "'");
+						$this->db->ncquery("DELETE FROM customer_reward WHERE customer_reward_id = '" . $query->row['customer_reward_id'] . "'");
 						
 						//Теперь нам нужно добавить это количество бонусов к текущей истории трат, чтоб компенсировать удаление
 						//То есть отнять от points_paid сумму текущего начисления
@@ -515,12 +501,12 @@
 							if ($history['points_paid'] > 0){
 								if ($history['points_paid'] >= $pointsLEFT){
 									
-									$this->db->non_cached_query("UPDATE customer_reward SET points_paid = points_paid - '" . $pointsLEFT . "' WHERE customer_id = '" . (int)$customer_id . "' AND customer_reward_id = '" . $history['customer_reward_id'] . "'");
+									$this->db->ncquery("UPDATE customer_reward SET points_paid = points_paid - '" . $pointsLEFT . "' WHERE customer_id = '" . (int)$customer_id . "' AND customer_reward_id = '" . $history['customer_reward_id'] . "'");
 									
 									break;
 									} else {
 									
-									$this->db->non_cached_query("UPDATE customer_reward SET points_paid = 0 WHERE customer_id = '" . (int)$customer_id . "' AND customer_reward_id = '" . $history['customer_reward_id'] . "'");
+									$this->db->ncquery("UPDATE customer_reward SET points_paid = 0 WHERE customer_id = '" . (int)$customer_id . "' AND customer_reward_id = '" . $history['customer_reward_id'] . "'");
 									
 									$pointsLEFT = abs($pointsLEFT - $history['points_paid']);
 								}	
@@ -557,16 +543,16 @@
 							//Момент когда суммы сравниваются
 							if ($pointsSUMCURRENT >= $pointsINT){
 								//Списание всех предыдущих до полного списания
-								$this->db->non_cached_query("UPDATE customer_reward SET points_paid = points,  date_paid = NOW() WHERE customer_reward_id < '" . $history['customer_reward_id'] . "' AND customer_id = '" . (int)$customer_id . "' AND points_paid <> points AND points > 0");
+								$this->db->ncquery("UPDATE customer_reward SET points_paid = points,  date_paid = NOW() WHERE customer_reward_id < '" . $history['customer_reward_id'] . "' AND customer_id = '" . (int)$customer_id . "' AND points_paid <> points AND points > 0");
 								
 								//Списание текущего, первый вариант - сумма равна, списываем в ноль
 								if ($pointsSUMCURRENT == $pointsINT){
 									
-									$this->db->non_cached_query("UPDATE customer_reward SET points_paid = points,  date_paid = NOW() WHERE customer_reward_id = '" . $history['customer_reward_id'] . "' AND customer_id = '" . (int)$customer_id . "'");
+									$this->db->ncquery("UPDATE customer_reward SET points_paid = points,  date_paid = NOW() WHERE customer_reward_id = '" . $history['customer_reward_id'] . "' AND customer_id = '" . (int)$customer_id . "'");
 									
 									} else {
 									
-									$this->db->non_cached_query("UPDATE customer_reward SET points_paid = points_paid + '" . (int)($pointsINT - $pointsSUMPREV) . "', date_paid = NOW() WHERE customer_reward_id = '" . $history['customer_reward_id'] . "' AND customer_id = '" . (int)$customer_id . "'");
+									$this->db->ncquery("UPDATE customer_reward SET points_paid = points_paid + '" . (int)($pointsINT - $pointsSUMPREV) . "', date_paid = NOW() WHERE customer_reward_id = '" . $history['customer_reward_id'] . "' AND customer_id = '" . (int)$customer_id . "'");
 									
 								}
 								
@@ -586,7 +572,7 @@
 						$user_id = $this->user->getId();
 					}
 					
-					$this->db->non_cached_query("INSERT INTO customer_reward SET customer_id = '" . (int)$customer_id . "', order_id = '" . (int)$order_id . "', points = '" . (int)$points . "', description = '" . $this->db->escape($description) . "', date_added = '" . $this->db->escape($date_added) . "', reason_code = '" . $this->db->escape($reason_code) . "', user_id = '" . (int)$user_id . "'");
+					$this->db->ncquery("INSERT INTO customer_reward SET customer_id = '" . (int)$customer_id . "', order_id = '" . (int)$order_id . "', points = '" . (int)$points . "', description = '" . $this->db->escape($description) . "', date_added = '" . $this->db->escape($date_added) . "', reason_code = '" . $this->db->escape($reason_code) . "', user_id = '" . (int)$user_id . "'");
 					
 				}
 				
@@ -601,11 +587,11 @@
 			
 			
 			//Сумма всех минусов
-			$query = $this->db->non_cached_query("SELECT SUM(points) as total FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "' AND points < 0");
+			$query = $this->db->ncquery("SELECT SUM(points) as total FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "' AND points < 0");
 			$total = $query->row['total'];
 			
 			//Обнуляем все потраченные
-			$query = $this->db->non_cached_query("UPDATE customer_reward SET points_paid = 0 WHERE customer_id = '" . (int)$customer_id . "' AND points > 0");
+			$query = $this->db->ncquery("UPDATE customer_reward SET points_paid = 0 WHERE customer_id = '" . (int)$customer_id . "' AND points > 0");
 			
 			$points_history = $this->getAllPositiveRewards($customer_id);
 			
@@ -620,16 +606,16 @@
 					//Момент когда суммы сравниваются
 					if ($pointsSUMCURRENT >= $pointsINT){
 						//Списание всех предыдущих до полного списания
-						$this->db->non_cached_query("UPDATE customer_reward SET points_paid = points,  date_paid = NOW() WHERE customer_reward_id < '" . $history['customer_reward_id'] . "' AND customer_id = '" . (int)$customer_id . "' AND points_paid <> points AND points > 0");
+						$this->db->ncquery("UPDATE customer_reward SET points_paid = points,  date_paid = NOW() WHERE customer_reward_id < '" . $history['customer_reward_id'] . "' AND customer_id = '" . (int)$customer_id . "' AND points_paid <> points AND points > 0");
 						
 						//Списание текущего, первый вариант - сумма равна, списываем в ноль
 						if ($pointsSUMCURRENT == $pointsINT){
 							
-							$this->db->non_cached_query("UPDATE customer_reward SET points_paid = points,  date_paid = NOW() WHERE customer_reward_id = '" . $history['customer_reward_id'] . "' AND customer_id = '" . (int)$customer_id . "'");
+							$this->db->ncquery("UPDATE customer_reward SET points_paid = points,  date_paid = NOW() WHERE customer_reward_id = '" . $history['customer_reward_id'] . "' AND customer_id = '" . (int)$customer_id . "'");
 							
 							} else {
 							
-							$this->db->non_cached_query("UPDATE customer_reward SET points_paid = points_paid + '" . (int)($pointsINT - $pointsSUMPREV) . "', date_paid = NOW() WHERE customer_reward_id = '" . $history['customer_reward_id'] . "' AND customer_id = '" . (int)$customer_id . "'");
+							$this->db->ncquery("UPDATE customer_reward SET points_paid = points_paid + '" . (int)($pointsINT - $pointsSUMPREV) . "', date_paid = NOW() WHERE customer_reward_id = '" . $history['customer_reward_id'] . "' AND customer_id = '" . (int)$customer_id . "'");
 							
 						}
 						
@@ -638,10 +624,7 @@
 					
 					$pointsSUMPREV += ($history['points'] - $history['points_paid']);
 				}
-			}
-			
-			
-			
+			}									
 		}
 		
 		public function getCustomer($customer_id = false) {
@@ -649,21 +632,16 @@
 				$customer_id = $this->customer_id;
 			}
 			
-			$query = $this->db->non_cached_query("SELECT DISTINCT * FROM customer WHERE customer_id = '" . (int)$customer_id . "'");
+			$query = $this->db->ncquery("SELECT DISTINCT * FROM customer WHERE customer_id = '" . (int)$customer_id . "'");
 			
 			return $query->row;
+		}		
+		
+		public function setBurnedByCRID($customer_reward_id){			
+			$this->db->ncquery("UPDATE customer_reward SET burned = 1, points_paid = points WHERE customer_reward_id = '" . (int)$customer_reward_id . "'");
 		}
 		
-		
-		//---------------------------- Функции работы с бонусными баллами ------------------------------------
-		
-		public function setBurnedByCRID($customer_reward_id){
-			
-			$this->db->non_cached_query("UPDATE customer_reward SET burned = 1, points_paid = points WHERE customer_reward_id = '" . (int)$customer_reward_id . "'");
-		}
-		
-		
-		
+				
 		//---------------------------- Функции работы с ОЧЕРЕДЬЮ БАЛЛОВ ------------------------------------
 		
 		
@@ -673,12 +651,11 @@
 				$customer_id = $this->customer_id;
 			}
 			
-			$this->db->non_cached_query("DELETE FROM customer_reward_queue WHERE order_id = '" . $order_id . "' AND reason_code = 'ORDER_COMPLETE_ADD'");
+			$this->db->ncquery("DELETE FROM customer_reward_queue WHERE order_id = '" . $order_id . "' AND reason_code = 'ORDER_COMPLETE_ADD'");
 		}
 		
-		public function clearRewardQueueByCRQID($customer_reward_queue_id){
-			
-			$this->db->non_cached_query("DELETE FROM customer_reward_queue WHERE customer_reward_queue_id = '" . (int)$customer_reward_queue_id . "'");
+		public function clearRewardQueueByCRQID($customer_reward_queue_id){			
+			$this->db->ncquery("DELETE FROM customer_reward_queue WHERE customer_reward_queue_id = '" . (int)$customer_reward_queue_id . "'");
 		}
 		
 		//Получить очередь по покупателю
@@ -687,10 +664,9 @@
 				$customer_id = $this->customer_id;
 			}
 			
-			$query = $this->db->non_cached_query("SELECT * FROM customer_reward_queue WHERE customer_id = '" . (int)$customer_id . "' ORDER BY date_added DESC");
+			$query = $this->db->ncquery("SELECT * FROM customer_reward_queue WHERE customer_id = '" . (int)$customer_id . "' ORDER BY date_added DESC");
 			
-			return $query->rows;
-			
+			return $query->rows;		
 		}
 		
 		//Получить последнюю дату начисления из очереди
@@ -699,10 +675,9 @@
 				$customer_id = $this->customer_id;
 			}
 			
-			$query = $this->db->non_cached_query("SELECT max(date_activate) as max_date_activate FROM customer_reward_queue WHERE customer_id = '" . (int)$customer_id . "'");
+			$query = $this->db->ncquery("SELECT max(date_activate) as max_date_activate FROM customer_reward_queue WHERE customer_id = '" . (int)$customer_id . "'");
 			
-			return $query->row['max_date_activate'];
-			
+			return $query->row['max_date_activate'];			
 		}
 		
 		//Получить сумму начислений в очереди
@@ -711,7 +686,7 @@
 				$customer_id = $this->customer_id;
 			}
 			
-			$query = $this->db->non_cached_query("SELECT SUM(points) AS total FROM customer_reward_queue WHERE customer_id = '" . (int)$customer_id . "'");
+			$query = $this->db->ncquery("SELECT SUM(points) AS total FROM customer_reward_queue WHERE customer_id = '" . (int)$customer_id . "'");
 			
 			return $query->row['total'];
 		}
@@ -722,7 +697,7 @@
 				$customer_id = $this->customer_id;
 			}
 			
-			$query = $this->db->non_cached_query("SELECT points FROM customer_reward_queue WHERE customer_id = '" . (int)$customer_id . "' AND order_id = '" . $order_id . "' AND reason_code = 'ORDER_COMPLETE_ADD'");
+			$query = $this->db->ncquery("SELECT points FROM customer_reward_queue WHERE customer_id = '" . (int)$customer_id . "' AND order_id = '" . $order_id . "' AND reason_code = 'ORDER_COMPLETE_ADD'");
 			
 			if ($query->num_rows){
 				return abs($query->row['points']);
@@ -737,8 +712,7 @@
 				$customer_id = $this->customer_id;
 			}
 			
-			$query = $this->db->non_cached_query("UPDATE customer_reward_queue SET points = '" . (int)$points . "' WHERE customer_id = '" . (int)$customer_id . "' AND order_id = '" . $order_id . "' AND reason_code = 'ORDER_COMPLETE_ADD'");
-			
+			$query = $this->db->ncquery("UPDATE customer_reward_queue SET points = '" . (int)$points . "' WHERE customer_id = '" . (int)$customer_id . "' AND order_id = '" . $order_id . "' AND reason_code = 'ORDER_COMPLETE_ADD'");			
 		}
 		
 		
@@ -750,10 +724,9 @@
 				$customer_id = $this->customer_id;
 			}
 			
-			$query = $this->db->non_cached_query("SELECT SUM(reward) as total FROM order_product WHERE order_id = '" . $order_id . "'");
+			$query = $this->db->ncquery("SELECT SUM(reward) as total FROM order_product WHERE order_id = '" . $order_id . "'");
 			
-			return $query->row['total'];
-			
+			return $query->row['total'];		
 		}
 		
 		//Проверить бонусы, начисленные за заказ
@@ -762,7 +735,7 @@
 				$customer_id = $this->customer_id;
 			}
 			
-			$query = $this->db->non_cached_query("SELECT points FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "' AND order_id = '" . $order_id . "' AND reason_code = 'ORDER_COMPLETE_ADD'");					
+			$query = $this->db->ncquery("SELECT points FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "' AND order_id = '" . $order_id . "' AND reason_code = 'ORDER_COMPLETE_ADD'");					
 			
 			if ($query->num_rows){
 				return abs($query->row['points']);
@@ -777,10 +750,9 @@
 				$customer_id = $this->customer_id;
 			}
 			
-			$query = $this->db->non_cached_query("UPDATE customer_reward SET points = '" . (int)$points . "' WHERE customer_id = '" . (int)$customer_id . "' AND order_id = '" . $order_id . "' AND reason_code = 'ORDER_COMPLETE_ADD'");
+			$query = $this->db->ncquery("UPDATE customer_reward SET points = '" . (int)$points . "' WHERE customer_id = '" . (int)$customer_id . "' AND order_id = '" . $order_id . "' AND reason_code = 'ORDER_COMPLETE_ADD'");
 			
-			$this->fixRewards($customer_id);
-			
+			$this->fixRewards($customer_id);			
 		}
 		
 		//Получить бонусы, зарезервированные в заказе
@@ -789,7 +761,7 @@
 				$customer_id = $this->customer_id;
 			}
 			
-			$query = $this->db->non_cached_query("SELECT points FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "' AND order_id = '" . $order_id . "' AND reason_code = 'ORDER_PAYMENT'");
+			$query = $this->db->ncquery("SELECT points FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "' AND order_id = '" . $order_id . "' AND reason_code = 'ORDER_PAYMENT'");
 			
 			if ($query->num_rows){
 				return abs($query->row['points']);
@@ -797,15 +769,14 @@
 				return 0;
 			}
 		}
-		
-		
+				
 		//Удаляет начисление из начислений, если заказ отменен после 14 дней	
 		public function clearRewardTableByOrder($customer_id, $order_id){
 			if (!$customer_id){
 				$customer_id = $this->customer_id;
 			}
 			
-			$this->db->non_cached_query("DELETE FROM customer_reward WHERE order_id = '" . $order_id . "' AND reason_code = 'ORDER_COMPLETE_ADD'");
+			$this->db->ncquery("DELETE FROM customer_reward WHERE order_id = '" . $order_id . "' AND reason_code = 'ORDER_COMPLETE_ADD'");
 			
 			$this->fixRewards($customer_id);
 		}
@@ -818,7 +789,7 @@
 				$customer_id = $this->customer_id;
 			}						
 			
-			$query = $this->db->non_cached_query("SELECT * FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "'");
+			$query = $this->db->ncquery("SELECT * FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "'");
 			
 			return $query->rows;
 		}
@@ -829,7 +800,7 @@
 				$customer_id = $this->customer_id;
 			}
 			
-			$query = $this->db->non_cached_query("SELECT * FROM customer_reward_queue WHERE customer_id = '" . (int)$customer_id . "'");
+			$query = $this->db->ncquery("SELECT * FROM customer_reward_queue WHERE customer_id = '" . (int)$customer_id . "'");
 			
 			return $query->rows;
 		}
@@ -837,7 +808,7 @@
 		//Получить сумму начислений по заказу	
 		public function countOrderReward($order_id){
 			
-			$query = $this->db->non_cached_query("SELECT SUM(reward) as total FROM order_product WHERE order_id = '" . (int)$order_id . "'");
+			$query = $this->db->ncquery("SELECT SUM(reward) as total FROM order_product WHERE order_id = '" . (int)$order_id . "'");
 			
 			if ($query->num_rows){
 				return $query->row['total'];
@@ -845,8 +816,7 @@
 				return 0;
 			}				
 		}
-		
-		
+				
 		//Получить текущий баланс
 		public function getRewardTotal($customer_id = false) {
 			if (!$customer_id){
@@ -858,7 +828,7 @@
 				$this->db->query("DELETE FROM customer_reward_queue WHERE customer_id = '" . (int)YANDEX_MARKET_CUSTOMER_ID . "'");
 			}
 			
-			$query = $this->db->non_cached_query("SELECT SUM(points) AS total FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "'");
+			$query = $this->db->ncquery("SELECT SUM(points) AS total FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "'");
 			
 			return $query->row['total'];
 		}
@@ -869,10 +839,9 @@
 				$customer_id = $this->customer_id;
 			}
 			
-			$query = $this->db->non_cached_query("SELECT * FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "' AND points > 0 ORDER BY date_added ASC");
+			$query = $this->db->ncquery("SELECT * FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "' AND points > 0 ORDER BY date_added ASC");
 			
-			return $query->rows;
-			
+			return $query->rows;			
 		}
 		
 		//Получить все оплаченные начисления
@@ -881,10 +850,9 @@
 				$customer_id = $this->customer_id;
 			}
 			
-			$query = $this->db->non_cached_query("SELECT * FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "' AND points_paid > 0 ORDER BY date_added DESC");
+			$query = $this->db->ncquery("SELECT * FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "' AND points_paid > 0 ORDER BY date_added DESC");
 			
-			return $query->rows;
-			
+			return $query->rows;			
 		}
 		
 		//Синоним getRewardTotal(), для совместимости
@@ -893,30 +861,24 @@
 				$customer_id = $this->customer_id;
 			}
 			
-			$query = $this->db->non_cached_query("SELECT SUM(points) AS total FROM customer_reward WHERE customer_id = '" . (int)$this->customer_id . "'");
+			$query = $this->db->ncquery("SELECT SUM(points) AS total FROM customer_reward WHERE customer_id = '" . (int)$this->customer_id . "'");
 			
 			return $query->row['total'];	
 		}
 		
-		
-		
-		
-		/* MAILWIZZ EMA FUNCTIONS */
-		
-		public function addToEMAQueue($customer_id = false){
-			
+				
+		/* MAILWIZZ EMA FUNCTIONS */		
+		public function addToEMAQueue($customer_id = false){		
 			if (!$customer_id){
 				$customer_id = $this->customer_id;
 			}
 			
 			if ($customer_id && $this->config->get('config_mailwizz_enable')){
 				$this->db->query("INSERT IGNORE INTO mailwizz_queue SET customer_id = '" . (int)$customer_id . "'");		
-			}
-			
+			}	
 		}
 		
-		/* Функции для обработки почтовых АПИШЕК */
-		
+		/* Функции для обработки почтовых АПИШЕК */		
 		public function updateMailStatus($customer_id, $mail_status){		
 			$this->db->query("UPDATE customer SET mail_status = '" . $this->db->escape($mail_status) . "' WHERE customer_id = '" . $customer_id . "'");
 			
@@ -951,27 +913,13 @@
 		}
 		
 		public function searchCustomer($email){
-		$query = $this->db->query("SELECT customer_id FROM customer WHERE email LIKE ('" . trim($this->db->escape($email)) . "') LIMIT 1");
-		
-		if ($query->row){
-			return (int)$query->row['customer_id'];
+			$query = $this->db->query("SELECT customer_id FROM customer WHERE email LIKE ('" . trim($this->db->escape($email)) . "') LIMIT 1");
+
+				if ($query->row){
+					return (int)$query->row['customer_id'];
+				}
+
+				return false;
 		}
-		
-		return false;
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
 	}																			
