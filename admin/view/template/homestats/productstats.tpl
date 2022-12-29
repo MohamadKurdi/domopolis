@@ -110,16 +110,14 @@
 							Переводчик
 						</td>
 					</tr>
-					<tr>
-						<td style="color:#66c7a3"><i class="fa fa-yahoo" aria-hidden="true"></i> Всего</td>
+					<tr>						
 						<td style="color:#66c7a3"><i class="fa fa-yahoo" aria-hidden="true"></i> Час</td>
 						<td style="color:#66c7a3"><i class="fa fa-yahoo" aria-hidden="true"></i> Сегодня</td>
 						<td style="color:#3276c2"><i class="fa fa-yahoo" aria-hidden="true"></i> Вчера</td>
 						<td style="color:#24a4c1"><i class="fa fa-yahoo" aria-hidden="true"></i> Неделя</td>
 						<td style="color:#fa4934"><i class="fa fa-yahoo" aria-hidden="true"></i> Месяц</td>
 					</tr>
-					<tr>
-						<td><?php echo $translated_total; ?></td>
+					<tr>						
 						<td><?php echo $translated_total_hour; ?></td>
 						<td><?php echo $translated_total_today; ?></td>
 						<td><?php echo $translated_total_yesterday; ?></td>

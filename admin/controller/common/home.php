@@ -374,7 +374,7 @@
 				$format = false;
 			}
 
-			$this->data['translated_total']					= formatLongNumber($this->model_setting_setting->getTranslatedTotal(), $format);
+		//	$this->data['translated_total']					= formatLongNumber($this->model_setting_setting->getTranslatedTotal(), $format);
 			$this->data['translated_total_hour']			= formatLongNumber($this->model_setting_setting->getTranslatedTotalHour(), $format);
 			$this->data['translated_total_today']			= formatLongNumber($this->model_setting_setting->getTranslatedTotalToday(), $format);
 			$this->data['translated_total_yesterday']		= formatLongNumber($this->model_setting_setting->getTranslatedTotalYesterday(), $format);
