@@ -3390,6 +3390,19 @@
 										</select>										
 									</td>
 
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Формировать сайтмапы</span></p>
+										<select name="google_sitemap_status">
+											<?php if ($google_sitemap_status) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>										
+									</td>
+
 								</tr>
 							</table>
 

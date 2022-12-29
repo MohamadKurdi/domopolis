@@ -2463,10 +2463,16 @@ class ControllerSettingSetting extends Controller
             $this->data['config_index_category_pages'] = $this->config->get('config_index_category_pages');
         }
 
-         if (isset($this->request->post['config_index_manufacturer_pages'])) {
+        if (isset($this->request->post['config_index_manufacturer_pages'])) {
             $this->data['config_index_manufacturer_pages'] = $this->request->post['config_index_manufacturer_pages'];
         } else {
             $this->data['config_index_manufacturer_pages'] = $this->config->get('config_index_manufacturer_pages');
+        }
+
+        if (isset($this->request->post['google_sitemap_status'])) {
+            $this->data['google_sitemap_status'] = $this->request->post['google_sitemap_status'];
+        } else {
+            $this->data['google_sitemap_status'] = $this->config->get('google_sitemap_status');
         }
         
         if (isset($this->request->post['config_seo_url_type'])) {
