@@ -281,7 +281,7 @@ class ModelCatalogCategory extends Model {
 
 
 		if ($data['status_tree']){
-			$this->db->query("UPDATE category SET status = '" . (int)$data['status'] . "' WHERE category_id IN (SELECT category_id FROM category_path WHERE category_id = '" . (int)$category_id . "')");
+			$this->db->query("UPDATE category SET status = '" . (int)$data['status'] . "' WHERE category_id IN (SELECT category_id FROM category_path WHERE path_id = '" . (int)$category_id . "')");
 		}
 
 		if ($data['status_children']){
