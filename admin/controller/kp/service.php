@@ -451,8 +451,10 @@
 			
 			echo '[C] Чистим записи журнала событий. 2 месяца.'  . PHP_EOL;
 			$this->db->query("DELETE FROM adminlog WHERE DATE(`date`) <= DATE_SUB(CURDATE(), INTERVAL 2 MONTH)");
-			$this->db->query("DELETE FROM `short_url_alias` WHERE DATE(date_added) <= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)");
-			
+			$this->db->query("DELETE FROM `short_url_alias` WHERE DATE(date_added) <= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)");	
+
+			echo '[C] Чистим записи журнала переводчика. 1 месяц'  . PHP_EOL;
+			$this->db->query("DELETE FROM translate_stats WHERE DATE(`time`) <= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)");		
 			
 			echo '[C] Чистим записи журнала уведомлений. 2 месяц.'  . PHP_EOL;
 			$this->db->query("DELETE FROM alertlog WHERE DATE(`datetime`) <= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)");
@@ -510,8 +512,7 @@
 			$this->db->query("DELETE FROM simple_custom_data WHERE data LIKE 'a:0:{}'");
 			$this->db->query("DELETE FROM simple_custom_data WHERE object_type = 1 AND object_id IN (SELECT DISTINCT order_id FROM `order` WHERE order_status_id IN (17, 18, 23))");
 			$this->db->query("DELETE FROM simple_custom_data WHERE object_type = 2");
-			
-			
+						
 			echo '[C] Невалидные коллбеки'  . PHP_EOL;
 			$this->db->query("DELETE FROM callback WHERE status_id = 0 AND DATE(date_added) <= DATE_SUB(CURDATE(), INTERVAL 1 WEEK)");
 			$this->db->query("DELETE FROM callback WHERE sip_queue = '' OR sip_queue = '0' AND DATE(date_added) <= DATE_SUB(CURDATE(), INTERVAL 1 WEEK)");
@@ -521,12 +522,14 @@
 			$handler = new Hobotix\SessionHandler\SessionHandler();
 			$handler->setDbDetails(DB_SESSION_HOSTNAME, DB_SESSION_USERNAME, DB_SESSION_PASSWORD, DB_SESSION_DATABASE);
 			$handler->setDbTable(DB_SESSION_TABLE);
-			$handler->gc($handler->lifeTime);
-			
+			$handler->gc($handler->lifeTime);			
 			
 			echo '[O] Оптимизация таблиц...'  . PHP_EOL;
 			echo '[OТ] Оптимизация таблицы adminlog...'  . PHP_EOL;
 			$this->db->query("OPTIMIZE table adminlog");
+
+			echo '[OТ] Оптимизация таблицы translate_stats...'  . PHP_EOL;
+			$this->db->query("OPTIMIZE table translate_stats");
 			
 			echo '[OТ] Оптимизация таблицы superstat_viewed...'  . PHP_EOL;
 			$this->db->query("OPTIMIZE table superstat_viewed");
