@@ -38,9 +38,7 @@
 			$this->_templateData['display_header'] = $this->simplecheckout->getSettingValue('displayHeader', 'comment');
 			$this->_templateData['label'] = $label;
 			$this->_templateData['placeholder'] = $placeholder;
-			$this->_templateData['comment'] = $comment;
-			
-			$this->log->debug($this->_templateData);
+			$this->_templateData['comment'] = $comment;			
 			
 			$this->setOutputContent($this->renderPage('checkout/simplecheckout_comment', $this->_templateData));
 		}

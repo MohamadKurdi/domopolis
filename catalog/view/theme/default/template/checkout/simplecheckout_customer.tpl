@@ -72,8 +72,7 @@
 				<?php } ?>
 				<?php if ($display_you_will_registered) { ?>
 					<div class="you-will-be-registered"><?php echo $text_you_will_be_registered ?></div>
-				<?php } ?>
-				<?php echo !empty($data['firstname'])?$data['firstname']:''; ?>
+				<?php } ?>				
 				<?php foreach ($rows as $row) { ?>
 					<?php echo $row ?>
 				<?php } ?>
