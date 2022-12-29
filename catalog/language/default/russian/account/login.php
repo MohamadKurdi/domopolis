@@ -27,7 +27,7 @@ $_['text_forgotten']               = 'Забыли пароль?';
 $_['text_remember_me']             = 'Запомнить меня';
 
 // Entry
-$_['entry_email']                  = 'E-mail, номер дисконтной карты или номер телефона:';
+$_['entry_email']                  = 'E-mail или номер телефона:';
 $_['entry_password']               = 'Пароль:';
 
 // Error
@@ -37,7 +37,7 @@ $_['error_approved']               = 'Вы сможете войти после 
 $_['save_me']               = 'Запомнить меня';
 
 $_['placeholder_password']               = 'Пароль';
-$_['placeholder_email']               = 'Телефон, e-mail и номер дисконтной карты';
+$_['placeholder_email']               = 'E-mail или номер телефона';
 
 $_['text_register']               = 'Если у Вас еще нет аккаунта, </span><a href="%s" style="text-decoration: underline;">зарегистрируйтесь</a>';
 

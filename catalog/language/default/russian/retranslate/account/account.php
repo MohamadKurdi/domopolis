@@ -16,5 +16,5 @@ $_['text_retranslate_rewards_line_2'] = 'Подробнее';
 
 $_['text_tracker_1'] = 'Номер заказа';
 $_['text_tracker_2'] = 'Номер заказа, например 112434';
-$_['text_tracker_3'] = 'Ваш e-mail, номер дисконтной карты или телефон';
+$_['text_tracker_3'] = 'Ваш e-mail, или телефон';
 $_['text_tracker_4'] = 'Проверить заказ';
