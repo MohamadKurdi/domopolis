@@ -750,7 +750,7 @@
 						]; 
 
 						if (!$simple || $simple != 'simple'){
-							$product_data['statuses'] 		= $this->model_catalog_product_status->getHTMLProductStatuses($product_id);
+							//$product_data['statuses'] 		= $this->model_catalog_product_status->getHTMLProductStatuses($product_id);
 							$product_data['reward'] 		= $this->cart->getCurrentProductReward($product_data);
 							$product_data['stock_text'] 	= $this->parseProductStockDataOneString($product_data);					
 							$product_data['stock_dates'] 	= $this->parseProductStockDataOneString($product_data, true);					
