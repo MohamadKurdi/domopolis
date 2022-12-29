@@ -2600,7 +2600,7 @@ class ModelModuleMegaFilter extends Model {
 				`agd`.`attribute_group_id` = `ag`.`attribute_group_id` AND `agd`.`language_id` = " . (int)$this->config->get('config_language_id') . "
 			{join}
 			WHERE
-				{conditions}
+				{conditions}				
 			GROUP BY
 				`txt`, `pa`.`attribute_id`
 			HAVING 
@@ -2624,6 +2624,10 @@ class ModelModuleMegaFilter extends Model {
 		
 		if( ! $this->stockStatusIsEnabled( $idx ) && ! empty( $core->_settings['in_stock_default_selected'] ) ) {
 			$conditions[] = sprintf( '( `p`.`quantity` > 0 OR `p`.`stock_status_id` = %s )', $core->inStockStatus() );
+		}
+
+		if ($this->config->get('config_special_attr_id')){
+			$conditions[] = "(`agd`.`attribute_group_id` <> '" . (int)$this->config->get('config_special_attr_id') . "')";
 		}
 		
 		$sql	= str_replace( array( '{conditions}', '{join}' ), array( implode( ' AND ', $conditions ), $join ), $sql );
