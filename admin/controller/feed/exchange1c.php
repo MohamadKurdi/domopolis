@@ -5,7 +5,6 @@ class ControllerFeedExchange1c extends Controller {
 	public function index() {
 	}	
 
-
 	public function updateXMLStructures(){
 		$this->load->model('kp/info1c');
 		$this->load->model('feed/exchange1c');
