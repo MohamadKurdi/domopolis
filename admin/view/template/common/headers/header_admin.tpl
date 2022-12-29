@@ -397,11 +397,8 @@
 								<li><a class="home_icon_style" href="<?php echo $etemplate; ?>"><i class="fa fa-cog"></i><span>Настройка шаблонов EMail</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $shipping; ?>"><i class="fa fa-truck"></i><span><?php echo $text_shipping; ?></span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $payment; ?>"><i class="fa fa-credit-card"></i><span><?php echo $text_payment; ?></span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $total; ?>"><i class="fa fa-plus"></i><span><?php echo $text_total; ?></span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $feed; ?>"><i class="fa fa-line-chart"></i><span><?php echo $text_feed; ?></span></a></li>
-								
-								<li><a class="home_icon_style" href="<?php echo $invite_after_order; ?>"><i class="fa fa-bar-chart"></i><span>Отзыв после покупки</span></a></li>
-								
+								<li><a class="home_icon_style" href="<?php echo $total; ?>"><i class="fa fa-plus"></i><span><?php echo $text_total; ?></span></a></li>								
+								<li><a class="home_icon_style" href="<?php echo $invite_after_order; ?>"><i class="fa fa-bar-chart"></i><span>Отзыв после покупки</span></a></li>						
 								<li><a class="home_icon_style" href="<?php echo $affiliate; ?>"><i class="fa fa-handshake-o"></i><span>Партнеры / партн. программа</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $affiliate_mod_link; ?>"><i class="fa fa-cog"></i><span>Настройки партн. программы</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $subscribe; ?>"><i class="fa fa-check-square-o"></i><span><?php echo $text_subscribe; ?></span></a></li>
