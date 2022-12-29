@@ -234,11 +234,7 @@
 				$this->data['text_retranslate_app_block'] = sprintf($this->data['text_retranslate_app_block_reward'], $this->currency->format($this->config->get('rewardpoints_appinstall'), $this->config->get('config_currency_national'), 1));
 			}
 			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/product/new_products.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/product/new_products.tpl';
-				} else {
-				$this->template = 'default/template/product/new_products.tpl';
-			}
+			$this->template = 'product/new_products.tpl';
 			
 			$this->children = array(
             'common/column_left',

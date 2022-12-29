@@ -1291,9 +1291,9 @@
 
 			} else {
 				if (isset($data['order']) && ($data['order'] == 'DESC')) {
-					$sql .= " DESC, LCASE(pd.name) DESC";
+					$sql .= " DESC";
 				} else {
-					$sql .= " ASC, LCASE(pd.name) ASC";
+					$sql .= " ASC";
 				}
 			}
 
