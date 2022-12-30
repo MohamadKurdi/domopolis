@@ -1281,7 +1281,17 @@
 	<?php if (!empty($admin_uri)) { ?>
 		<script>
 			$(document).ready(function(){
-			$('h1.title').append('<span style="padding-left:10px; color:#e16a5d;"><a href="<?php echo $admin_uri; ?>" target="_blank"><i class="fa fa-edit"></i></a></span>');		
+				var html = '';
+				html += '<div style="padding:10px 0px; margin-bottom:10px; font-size:24px; color:#e16a5d; border-bottom:1px solid grey;">';
+				html += '<a href="<?php echo $admin_uri; ?>" target="_blank"><i class="fa fa-edit"></i></a>';
+				<?php if (!empty($admin_product_info['amazon_product_link'])) { ?>
+					html += '<a style="margin-left:20px" href="<?php echo $admin_product_info['amazon_product_link']; ?>" target="_blank"><i class="fab fa-amazon"></i></a>';
+				<?php } ?>
+				<?php if (!empty($admin_product_info['asin'])) { ?>
+					html += '<span style="margin-left:20px"><?php echo $admin_product_info['asin']; ?></span>';
+				<?php } ?>
+				html += '</div>';
+				$('h1.title').before(html);		
 			});
 		</script>
 	<?php } ?>

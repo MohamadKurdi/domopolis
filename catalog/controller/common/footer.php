@@ -406,6 +406,8 @@ class ControllerCommonFooter extends Controller {
 							switch (tryToGuessPageType($this->request->get)) {
 								case 'product':
 								$this->data['admin_uri'] = HTTP_ADMIN . 'index.php?route=catalog/product/update&token='. $this->data['admin_token'] .'&product_id=' . $this->request->get['product_id'];
+								$this->load->model('catalog/product');
+								$this->data['admin_product_info'] = $this->model_catalog_product->getProduct($this->request->get['product_id']);
 								break;
 
 								case 'category':
