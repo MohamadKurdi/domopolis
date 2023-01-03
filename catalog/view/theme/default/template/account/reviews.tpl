@@ -1,5 +1,5 @@
 <?php echo $header; ?><?php echo $column_right; ?>
-<?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl')); ?>
+<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
 <style>
 .ajax-edit{display:none;}
 .ajax-edit textarea{width:100%;cursor:text;}
@@ -244,8 +244,7 @@
 					</div>
 				</div>
 			<?php } ?>
-			<div class="reviews_block">
-				<div class="reviews_title">Отзывы к товара</div>
+			<div class="reviews_block">				
 				<?php if ($reviews) { ?>
 					<div class="reviews-list_wrap">
 						<?php foreach ($reviews as $review) { ?>  

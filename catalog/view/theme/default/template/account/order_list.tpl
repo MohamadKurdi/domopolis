@@ -415,10 +415,8 @@
 				<div class="head_tab">
 					<ul>
 						<?php foreach (['total','inprocess','cancelled','completed'] as $page_identifier) { ?>
-							<?php if (!empty($pages['count'][$page_identifier])) { ?>
-								
-								<li><a href='<?php echo $pages['links'][$page_identifier]; ?>'><?php echo ${'tab_' . $page_identifier}?> (<?php echo $pages['count'][$page_identifier]; ?>)</a></li>
-									
+							<?php if (!empty($pages['count'][$page_identifier])) { ?>								
+								<li><a href='<?php echo $pages['links'][$page_identifier]; ?>'><?php echo ${'tab_' . $page_identifier}?> (<?php echo $pages['count'][$page_identifier]; ?>)</a></li>									
 								<?php } ?>
 							<? } ?>
 						<?php } ?>

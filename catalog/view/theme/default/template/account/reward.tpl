@@ -218,7 +218,7 @@
 	</style>
 	
 	    <?php echo $content_top; ?>
-    <?php include($this->checkTemplate(dirname(FILE),'/../structured/breadcrumbs.tpl')); ?>
+    <?php include($this->checkTemplate(dirname(__FILE__),'/../structured/breadcrumbs.tpl')); ?>
     <div class="wrap two_column">
         <div class="side_bar">
             <?php echo $column_left; ?>
@@ -226,9 +226,9 @@
         <div class="account_content">
         	<div class="bonus_head">
         		
-				<p class="title">Kitchen-Profi Club</p>
-				<p class="description">Накапливайте бонусы и оплачивайте ими свои покупки</p>
-				<a href="/faq/cashback">Подробнее</a>
+				<p class="title"><?php echo $text_retranslate_rewards_line_0; ?></p>
+				<p class="description"><?php echo $text_retranslate_rewards_line_1; ?></p>
+				<a href="<?php echo $rewards_article_href; ?>"><?php echo $text_retranslate_rewards_line_2; ?></a>
         	</div>
 			<div class="bonus_wrap">
 
