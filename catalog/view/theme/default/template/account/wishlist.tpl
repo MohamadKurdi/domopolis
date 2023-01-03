@@ -10,7 +10,7 @@
         position: absolute;
         right: 10px;
         top: 10px;
-        z-index: 1;
+        z-index: 100;
         background: #e16a5d;
         width: 20px;
         height: 20px;
@@ -20,6 +20,10 @@
         color: #fff;
         border-radius: 100px;
         font-size: 12px;
+    }
+    .product-grid.product__grid{
+        grid-template-columns: repeat(3,minmax(0,1fr));
+        display: grid;
     }
     @media screen and (max-width:560px){
         .wishlist-info{
