@@ -373,9 +373,9 @@ function getDeliveryCompany($delivery_code, $second = false){
 
 	if ($second) {
 		$delivery_names = array(
-			'dostavkaplus.sh3' 		=> 'Новой Почтой',
-			'dostavkaplus.sh13' 	=> 'Новой Почтой',
-			'dostavkaplus.sh14' 	=> 'УкрПочтой',
+			'dostavkaplus.sh3' 		=> 'Новою Поштою',
+			'dostavkaplus.sh13' 	=> 'Новою Поштою',
+			'dostavkaplus.sh14' 	=> 'УкрПоштою',
 			'dostavkaplus.sh15' 	=> 'JustIn',
 			'dostavkaplus.sh4'	 	=> 'ТК ИнТайм',
 			'dostavkaplus.sh5' 		=> 'Почтой России ЕМS',
@@ -391,13 +391,13 @@ function getDeliveryCompany($delivery_code, $second = false){
 	}
 
 	$delivery_names = array(			
-		'dostavkaplus.sh3' => 'Новой Почтой',
-		'dostavkaplus.sh13' => 'Новой Почтой',
-		'dostavkaplus.sh14' => 'УкрПочтой',
+		'dostavkaplus.sh3' 	=> 'Новою Поштою',
+		'dostavkaplus.sh13' => 'Новою Поштою',
+		'dostavkaplus.sh14' => 'УкрПоштою',
 		'dostavkaplus.sh15' => 'JustIn',
-		'dostavkaplus.sh4' => 'ТК ИнТайм',
-		'dostavkaplus.sh5' => 'Почтой России ЕМS',
-		'dostavkaplus.sh6' => 'ТК СДЭК',
+		'dostavkaplus.sh4' 	=> 'ТК ИнТайм',
+		'dostavkaplus.sh5' 	=> 'Почтой России ЕМS',
+		'dostavkaplus.sh6' 	=> 'ТК СДЭК',
 		'dostavkaplus.sh16' => 'БелПочтой',
 	);
 
