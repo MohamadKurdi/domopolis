@@ -22,6 +22,10 @@
 				$this->data[$translationСode] = $translationText;
 			}
 
+			foreach ($this->language->loadRetranslate('account/account') as $translationСode => $translationText){
+				$this->data[$translationСode] = $translationText;
+			}
+
 			
 			if (isset($this->request->get['remove'])) {
 				$key = array_search($this->request->get['remove'], $this->session->data['wishlist']);
@@ -88,11 +92,7 @@
 			$this->data['remove_href'] = $this->url->link('account/wishlist', 'remove=');
 			$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
 			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/wishlist.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/account/wishlist.tpl';
-				} else {
-				$this->template = 'default/template/account/wishlist.tpl';
-			}
+			$this->template = 'account/wishlist.tpl';
 			
 			$this->children = array(
 			'common/column_left',

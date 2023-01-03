@@ -2,41 +2,7 @@
 	class ControllerAccountOrder extends Controller {
 		private $error = array();
 		
-		
-		public function getDeliveryCompany($delivery_code, $second = false){			
-			if ($second) {
-				$delivery_names = array(
-				'dostavkaplus.sh3' => 'Новою Поштою',
-				'dostavkaplus.sh4' => 'ТК ИнТайм',
-				'dostavkaplus.sh5' => 'Почтой России ЕМS',
-				'dostavkaplus.sh6' => 'ТК ПЭК',
-				'dostavkaplus.sh7' => 'ТК СДЭК',
-				'dostavkaplus.sh9' => 'Vozim.by',
-				);
-				
-				if (isset($delivery_names[$delivery_code])){
-					return 	$delivery_names[$delivery_code];		
-					} else {
-					return "unknown";
-				}	
-			}
-			
-			$delivery_names = array(
-			'dostavkaplus.sh3' => 'Новою Поштою',
-			'dostavkaplus.sh4' => 'ТК ІнТайм',
-			'dostavkaplus.sh5' => 'Почтой России ЕМS',
-			'dostavkaplus.sh6' => 'ТК ПЭК',
-			'dostavkaplus.sh7' => 'ТК СДЭК',
-			'dostavkaplus.sh9' => 'Службой Vozim.by',
-			);
-			
-			if (isset($delivery_names[$delivery_code])){
-				return 	$delivery_names[$delivery_code];		
-				} else {
-				return "unknown";
-			}	
-		}				
-		
+						
 		private function prepareOrderList($results){
 			$this->language->load('account/order');
 			$this->load->model('account/order');
@@ -48,10 +14,10 @@
 			
 			foreach ($results as $result) {
 			
-				$order_info = $this->model_account_order->getOrder($result['order_id']);
-				$product_total = $this->model_account_order->getTotalOrderProductsByOrderId($result['order_id']);
-				$voucher_total = $this->model_account_order->getTotalOrderVouchersByOrderId($result['order_id']);								
-				$order_products = $this->model_account_order->getOrderProducts($result['order_id']);	
+				$order_info 		= $this->model_account_order->getOrder($result['order_id']);
+				$product_total 		= $this->model_account_order->getTotalOrderProductsByOrderId($result['order_id']);
+				$voucher_total 		= $this->model_account_order->getTotalOrderVouchersByOrderId($result['order_id']);								
+				$order_products 	= $this->model_account_order->getOrderProducts($result['order_id']);	
 				
 				if (!$order_products && $order_info['order_status_id'] == $this->config->get('config_cancelled_status_id')){
 					$order_products = $this->model_account_order->getOrderProductsListNoGood($result['order_id']);
@@ -532,7 +498,6 @@
 			$this->model_module_emailtemplate_invoice->getInvoice($this->request->get['order_id'], false);
 			exit(0);
 		}
-	
 		
 		public function info() { 
 			$this->language->load('account/transaction');
@@ -961,8 +926,7 @@
 					if ($this->request->get['pay_by'] == 'concardis'){											
 						
 						$this->children = array();
-						
-						//overloading currency_code
+
 						if (isset($this->request->get['cc_code']) && in_array($this->request->get['cc_code'], array('EUR', 'RUB', 'UAH'))){
 							$this->data['url'] = $this->url->link('payment/concardis_laterpay/laterpay', sprintf('cc_code=%s&order_id=%s&order_tt=%s&order_fl=%s', $this->request->get['cc_code'], $order_info['order_id'], $order_info['total_national'], md5($order_info['firstname'] . $order_info['lastname'])), 'SSL');
 							} else {
@@ -986,9 +950,6 @@
 						
 						echo($this->render());				
 						die();
-						/*	
-							$this->redirect($this->url->link('payment/concardis_laterpay/laterpay', sprintf('order_id=%s&order_tt=%s&order_fl=%s', $order_info['order_id'], $order_info['total_national'], md5($order_info['firstname'] . $order_info['lastname'])), 'SSL'));
-						*/
 						
 						} elseif ($this->request->get['pay_by'] == 'liqpay') {
 						
@@ -1162,11 +1123,11 @@
 				foreach ($results as $result) {
 					
 					$this->data['ttns'][] = array(
-					'order_ttn_id' => $result['order_ttn_id'],
-					'delivery_company' => $this->getDeliveryCompany($result['delivery_code']),
-					'delivery_code' => $result['delivery_code'],
-					'date_ttn' => date('d.m.Y', strtotime($result['date_ttn'])),
-					'ttn'    => $result['ttn'],				
+					'order_ttn_id' 		=> $result['order_ttn_id'],
+					'delivery_company' 	=> getDeliveryCompany($result['delivery_code']),
+					'delivery_code' 	=> $result['delivery_code'],
+					'date_ttn' 			=> date('d.m.Y', strtotime($result['date_ttn'])),
+					'ttn'    			=> $result['ttn'],				
 					);
 					
 				}
@@ -1185,18 +1146,11 @@
 				
 				$results = $this->model_account_transaction->getTransactions($data);
 				
-				foreach ($results as $result) {
-					
-					$_ofd = '';
-					if ($result['paykeeper_id'] && $result['f3_id']){
-						
-					}
-					
+				foreach ($results as $result) {					
 					$this->data['transactions'][] = array(
 					'amount'      => $this->currency->format($result['amount_national'], $this->config->get('config_regional_currency'), 1),
 					'description' => $result['description'],
-					'date_added'  => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
-					'ofd_cheque'  => $_ofd
+					'date_added'  => date($this->language->get('date_format_short'), strtotime($result['date_added'])),					
 					);
 				}	
 				
