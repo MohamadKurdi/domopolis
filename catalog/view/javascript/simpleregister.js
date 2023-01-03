@@ -15,6 +15,7 @@ function simpleregister_init() {
 
 jQuery(function() {
     simpleregister_init();
+    $('input[type=password]').after('<span class="password-toggle" onclick="passwordToggle($(this));"><i class="fas fa-eye"></i></span>');
 
     jQuery('#email_confirm').live('change',function(){
         var confirm = $(this).val().trim();
