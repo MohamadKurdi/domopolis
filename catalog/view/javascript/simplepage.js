@@ -379,6 +379,7 @@
                     }
                     self.removeOverlay();
                     self.isReloading = false;
+                    $('input[type=password]').after('<span class="password-toggle" onclick="passwordToggle($(this));"><i class="fas fa-eye"></i></span>');
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     clearTimeout(overlayTimeoutId);
