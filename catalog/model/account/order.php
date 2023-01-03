@@ -48,7 +48,6 @@
 		public function updateYamBox($yam_id, $yam_box_id) {
 		
 			$this->db->non_cached_query("UPDATE `order` SET yam_box_id = '" . (int)$yam_box_id . "' WHERE yam_id = '" . (int)$yam_id . "'");
-
 		}
 		
 		public function getOrder($order_id, $no_customer = false) {
@@ -142,10 +141,10 @@
 				'shipping_iso_code_3'     => $shipping_iso_code_3,
 				'shipping_address_format' => $order_query->row['shipping_address_format'],
 				'shipping_method'         => $order_query->row['shipping_method'],
-				'shipping_code'         => $order_query->row['shipping_code'],
+				'shipping_code'           => $order_query->row['shipping_code'],
 				'comment'                 => $order_query->row['comment'],
 				'total'                   => $order_query->row['total'],
-				'total_national'                   => $order_query->row['total_national'],
+				'total_national'          => $order_query->row['total_national'],
 				'order_status_id'         => $order_query->row['order_status_id'],
 				'language_id'             => $order_query->row['language_id'],
 				'currency_id'             => $order_query->row['currency_id'],
@@ -160,11 +159,11 @@
 				'date_country'           => $order_query->row['date_country'],
 				'date_delivery'          => $order_query->row['date_delivery'],
 				'date_delivery_to'       => $order_query->row['date_delivery_to'],
-				'date_delivery_actual'       => $order_query->row['date_delivery_actual'],
+				'date_delivery_actual'       	=> $order_query->row['date_delivery_actual'],
 				'display_date_in_account'       => $order_query->row['display_date_in_account'],
 				'wait_full'				 => isset($order_query->row['wait_full'])?$order_query->row['wait_full']:0,
 				'urgent'				 => isset($order_query->row['urgent'])?$order_query->row['urgent']:0,
-				'ip'                      => $order_query->row['ip'],
+				'ip'                     => $order_query->row['ip'],
 				'manager_id'             => $order_query->row['manager_id'],
 				'pay_equire'			 => $order_query->row['pay_equire'],
 				'pay_equire2'			 => $order_query->row['pay_equire2'],
@@ -187,8 +186,7 @@
 			return $query->rows;
 		}
 		
-		public function getFilterOrders($data = array()) {
-		
+		public function getFilterOrders($data = array()) {		
 			if ($data['start'] < 0) {
 				$data['start'] = 0;
 			}
@@ -197,7 +195,24 @@
 				$data['limit'] = 1;
 			}	
 			
-			$sql = "SELECT o.order_id, o.firstname, o.lastname, os.name as status, os.status_txt_color as status_txt_color, os.status_bg_color as status_bg_color, os.front_bg_color as front_bg_color, o.date_added, o.preorder, o.total, o.manager_id, o.total_national, o.currency_code, o.currency_value, o.payment_method, o.payment_code FROM `order` o LEFT JOIN order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0'";
+			$sql = "SELECT o.order_id, 
+				o.firstname, 
+				o.lastname, 
+				os.name as status, 
+				os.status_txt_color as status_txt_color, 
+				os.status_bg_color as status_bg_color, 
+				os.front_bg_color as front_bg_color, 
+				o.date_added, 
+				o.preorder, 
+				o.total, 
+				o.manager_id, 
+				o.total_national, 
+				o.currency_code, 
+				o.currency_value, 
+				o.payment_method, 
+				o.payment_code 
+				FROM `order` o LEFT JOIN order_status os ON (o.order_status_id = os.order_status_id) 
+				WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0'";
 			
 			if ($data['filter'] == 'cancelled'){
 				$sql .= " AND o.order_status_id = '" . $this->config->get('config_cancelled_status_id') . "'";
@@ -211,13 +226,11 @@
 				$sql .= " AND o.order_status_id NOT IN (". implode(',', [$this->config->get('config_complete_status_id'), $this->config->get('config_cancelled_status_id')]) .")";
 			}
 			
-			$sql .= "AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];		
+			$sql .= "AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];	
 		
 			$query = $this->db->non_cached_query($sql);
 		
-			return $query->rows;
-		
-		
+			return $query->rows;				
 		}
 		
 		public function getTotalFilterOrders($data = array()) {
