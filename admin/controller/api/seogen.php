@@ -38,8 +38,7 @@
 				}
 			}
 
-			$this->cron();
-			
+			$this->cron();			
 		}
 		
 		public function cron(){
@@ -83,12 +82,16 @@
 					JOIN news_to_store n2s ON n.news_id = n2s.news_id
 					WHERE nd.language_id = '". $language_id ."'
 					AND n2s.store_id = '" . $store_id . "'
-					AND LENGTH(nd.title)>0");
+					AND LENGTH(nd.title) > 0");
 					
 					unset($row);
 					foreach ($all_news_query->rows as $row){				
 						if (!isset($cae[$row['news_id']])){
-							$keyword = URLify::filter(simple_rms($row['title']), 80, $language['code']);
+							if ($this->config->get('config_seo_url_from_id')){
+								$keyword = URLify::filter(simple_rms('m' . $row['news_id']), 80, $language['code']);
+							} else {
+								$keyword = URLify::filter(simple_rms($row['title']), 80, $language['code']);
+							}
 							
 
 							if (in_array($keyword, $cae)){						
@@ -220,9 +223,14 @@
 					unset($row);
 					foreach ($all_informations_query->rows as $row){				
 						if (!isset($cae[$row['information_id']])){
-							//now urlify
-							$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
-							//check for duplicate
+							
+							if ($this->config->get('config_seo_url_from_id')){
+								$keyword = URLify::filter(simple_rms('i' . $row['information_id']), 80, $language['code']);
+							} else {
+								$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
+							}
+
+
 							if (in_array($keyword, $cae)){						
 								$keyword = substr(md5(time()), 0, 3).'-'.(int)$row['information_id'].'-'.$keyword;
 								echo '---- INFO '.$row['information_id'].' : '.$row['name'].' NEW KEY: ' . $keyword . PHP_EOL;
@@ -262,9 +270,13 @@
 					unset($row);
 					foreach ($all_landingpages_query->rows as $row){				
 						if (!isset($cae[$row['landingpage_id']])){
-							//now urlify
-							$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
-							//check for duplicate
+							
+							if ($this->config->get('config_seo_url_from_id')){
+								$keyword = URLify::filter(simple_rms('lp' . $row['landingpage_id']), 80, $language['code']);
+							} else {
+								$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
+							}
+
 							if (in_array($keyword, $cae)){						
 								$keyword = substr(md5(time()), 0, 3).'-'.(int)$row['landingpage_id'].'-'.$keyword;
 								echo '---- INFO '.$row['landingpage_id'].' : '.$row['name'].' NEW KEY: ' . $keyword . PHP_EOL;
@@ -304,9 +316,13 @@
 					unset($row);
 					foreach ($all_informations_query->rows as $row){				
 						if (!isset($cae[$row['information_attribute_id']])){
-							//now urlify
-							$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
-							//check for duplicate
+							
+							if ($this->config->get('config_seo_url_from_id')){
+								$keyword = URLify::filter(simple_rms('ia' . $row['information_attribute_id']), 80, $language['code']);
+							} else {
+								$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
+							}
+
 							if (in_array($keyword, $cae)){						
 								$keyword = substr(md5(time()), 0, 3).'-'.(int)$row['information_attribute_id'].'-'.$keyword;
 								echo '---- INFOATT '.$row['information_attribute_id'].' : '.$row['name'].' NEW KEY: ' . $keyword . PHP_EOL;
@@ -344,9 +360,13 @@
 					unset($row);
 					foreach ($all_actions_query->rows as $row){				
 						if (!isset($cae[$row['actions_id']])){
-							//now urlify
-							$keyword = URLify::filter($row['actions_id'].'-'.simple_rms($row['caption']), 80, $language['code']);
-							//check for duplicate
+							
+							if ($this->config->get('config_seo_url_from_id')){
+								$keyword = URLify::filter(simple_rms('a' . $row['actions_id']), 80, $language['code']);
+							} else {
+								$keyword = URLify::filter(simple_rms($row['caption']), 80, $language['code']);
+							}
+
 							if (in_array($keyword, $cae)){						
 								$keyword = substr(md5(time()), 0, 3).'-'.(int)$row['actions_id'].'-'.$keyword;
 								echo '---- ACTION '.$row['actions_id'].' : '.$row['caption'].' NEW KEY: ' . $keyword . PHP_EOL;
