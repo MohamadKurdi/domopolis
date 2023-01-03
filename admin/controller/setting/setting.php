@@ -913,6 +913,12 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_country_id'] = $this->config->get('config_country_id');
         }
+
+        if (isset($this->request->post['config_only_one_store_and_country'])) {
+            $this->data['config_only_one_store_and_country'] = $this->request->post['config_only_one_store_and_country'];
+        } else {
+            $this->data['config_only_one_store_and_country'] = $this->config->get('config_only_one_store_and_country');
+        }
         
         $this->load->model('localisation/country');
         $this->data['countries'] = $this->model_localisation_country->getCountries();

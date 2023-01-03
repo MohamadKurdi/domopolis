@@ -1311,123 +1311,149 @@
 					<div id="tab-local">
 						<table class="form">
 							<tr>
-								<td><?php echo $entry_country; ?></td>
-								<td><select name="config_country_id">
-									<?php foreach ($countries as $country) { ?>
-										<?php if ($country['country_id'] == $config_country_id) { ?>
-											<option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
-											<?php } else { ?>
-											<option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
-										<?php } ?>
-									<?php } ?>
-								</select></td>
-							</tr>
+								<td style="width:20%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Страна</span></p>
 
-							<tr>
-								<td><?php echo $entry_zone; ?></td>
-								<td>
-								<select name="config_zone_id">
-									<?php foreach ($zones as $zone) { ?>
-										<?php if ($zone['zone_id'] == $config_zone_id) { ?>
-											<option value="<?php echo $zone['zone_id']; ?>" selected="selected"><?php echo $zone['name']; ?></option>
+									<select name="config_country_id">
+										<?php foreach ($countries as $country) { ?>
+											<?php if ($country['country_id'] == $config_country_id) { ?>
+												<option value="<?php echo $country['country_id']; ?>" selected="selected"><?php echo $country['name']; ?></option>
 											<?php } else { ?>
-											<option value="<?php echo $zone['zone_id']; ?>"><?php echo $zone['name']; ?></option>
+												<option value="<?php echo $country['country_id']; ?>"><?php echo $country['name']; ?></option>
+											<?php } ?>
 										<?php } ?>
-									<?php } ?>
-
-								</select>
+									</select>
 								</td>
-							</tr>
-							
-							<tr>
-								<td>Идентификатор для Google Merchant Local</td>
-								<td>
+
+								<td style="width:20%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Страна текстом</span></p>
+									<input type="text" name="config_countryname" value="<?php echo $config_countryname; ?>" size="30" />
+								</td>
+
+								<td style="width:20%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Режим одной страны</span></p>
+
+									<select name="config_only_one_store_and_country">
+											<?php if ($config_only_one_store_and_country) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+								</td>
+
+								<td style="width:20%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Геозона</span></p>
+
+									<select name="config_zone_id">
+										<?php foreach ($zones as $zone) { ?>
+											<?php if ($zone['zone_id'] == $config_zone_id) { ?>
+												<option value="<?php echo $zone['zone_id']; ?>" selected="selected"><?php echo $zone['name']; ?></option>
+											<?php } else { ?>
+												<option value="<?php echo $zone['zone_id']; ?>"><?php echo $zone['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+
+									</select>
+								</td>
+
+								<td style="width:20%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Google Merchant Local</span></p>
 									<input type="text" name="config_googlelocal_code" value="<?php echo $config_googlelocal_code; ?>" size="6" />
 									<span class="help">Шесть случайных цифр. При изменении сообщить @rayua</span>
 								</td>
 							</tr>
-							
+
 							<tr>
-								<td>Название страны</td>
-								<td><input type="text" name="config_countryname" value="<?php echo $config_countryname; ?>" size="30" />
+								<td style="width:20%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Cтолица</span></p>
+									<input type="text" name="config_default_city" value="<?php echo $config_default_city; ?>" size="20" />
+									<span class="help">Шесть случайных цифр. При изменении сообщить @rayua</span>
+								</td>
+
+								<?php foreach ($languages as $language) { ?>								
+									<td style="width:20%;">	
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Столица <?php echo $language['code']; ?></span></p>
+										<input type="text" name="config_default_city_<?php echo $language['code']; ?>" value="<?php echo ${'config_default_city_' . $language['code']}; ?>" size="20" />							
+									</td>													
+							<?php } ?>
+							</tr>
+
+							<tr>
+								<td style="width:20%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Язык фронта</span></p>
+									<select name="config_language">
+										<?php foreach ($languages as $language) { ?>
+											<?php if ($language['code'] == $config_language) { ?>
+												<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
+											<?php } else { ?>
+												<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+									</select>
+								</td>
+
+								<td style="width:20%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Второй язык фронта</span></p>
+									<select name="config_second_language">
+										<option value="" <?php if ($config_second_language == '') { ?>selected="selected"<?php } ?>>Не использовать</option>
+										<?php foreach ($languages as $language) { ?>
+											<?php if ($language['code'] == $config_second_language) { ?>
+												<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
+											<?php } else { ?>
+												<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+									</select>
+								</td>
+
+								<td style="width:20%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Язык админки</span></p>
+									<select name="config_admin_language">
+										<?php foreach ($languages as $language) { ?>
+											<?php if ($language['code'] == $config_admin_language) { ?>
+												<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
+											<?php } else { ?>
+												<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+									</select>
+								</td>
+
+								<td style="width:20%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Язык поставщика</span></p>
+									<select name="config_de_language">
+										<?php foreach ($languages as $language) { ?>
+											<?php if ($language['code'] == $config_de_language) { ?>
+												<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
+											<?php } else { ?>
+												<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+									</select>
+								</td>
+
+								<td style="width:20%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Активные способы оплаты</span></p>
+									<textarea name="config_payment_list" cols="40" rows="8"><?php echo $config_payment_list; ?></textarea>
+									<br /><span class="help">выводятся в карте товара, по одному в строке</span>
 								</td>
 							</tr>	
+						</table>						
 
+						<h2>Переводить</h2>
+						<table>
 							<tr>
-								<td>Дефолтный город (столица)</td>
-								<td><input type="text" name="config_default_city" value="<?php echo $config_default_city; ?>" size="20" />   </td>            
-							</tr>		
-
-							<?php foreach ($languages as $language) { ?>
-								<tr>
-									<td><p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Дефолтный город (столица) <?php echo $language['code']; ?></span></p></td>
-									<td>										
-										<input type="text" name="config_default_city_<?php echo $language['code']; ?>" value="<?php echo ${'config_default_city_' . $language['code']}; ?>" size="20" />										
-									</td>
-								</tr>													
-							<?php } ?>
-
-							<tr>
-								<td><?php echo $entry_language; ?></td>
-								<td>
-									<select name="config_language">
-									<?php foreach ($languages as $language) { ?>
-										<?php if ($language['code'] == $config_language) { ?>
-											<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
-											<?php } else { ?>
-											<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
-										<?php } ?>
-									<?php } ?>
-								</select>
-								</td>
-							</tr>							
-							
-							<tr>
-								<td>Второй язык фронта</td>
-								<td><select name="config_second_language">
-									<option value="" <?php if ($config_second_language == '') { ?>selected="selected"<?php } ?>>Не использовать</option>
-									<?php foreach ($languages as $language) { ?>
-										<?php if ($language['code'] == $config_second_language) { ?>
-											<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
-											<?php } else { ?>
-											<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
-										<?php } ?>
-									<?php } ?>
-								</select></td>
-							</tr>
-							<tr>
-								<td><?php echo $entry_admin_language; ?></td>
-								<td><select name="config_admin_language">
-									<?php foreach ($languages as $language) { ?>
-										<?php if ($language['code'] == $config_admin_language) { ?>
-											<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
-											<?php } else { ?>
-											<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
-										<?php } ?>
-									<?php } ?>
-								</select></td>
-							</tr>
-							<tr>
-								<td>Язык поставщика</td>
-								<td><select name="config_de_language">
-									<?php foreach ($languages as $language) { ?>
-										<?php if ($language['code'] == $config_de_language) { ?>
-											<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
-											<?php } else { ?>
-											<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
-										<?php } ?>
-									<?php } ?>
-								</select></td>
-							</tr>
-							
-							<tr>
-								<td>Переводить эти языки с RU</td>
-								<td><div class="scrollbox" style="height:100px; width:100px;">
+								<td style="width:30%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Переводить эти языки с RU</span></p>
+									<div class="scrollbox" style="height:100px; width:100px;">
 									<?php $class = 'odd'; ?>
 									<?php foreach ($languages as $language) { ?>
 										<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
 										<div class="<?php echo $class; ?>">
-											<?php if (in_array($language['code'], $config_translate_from_ru)) { ?>
+											<?php if (!empty($config_translate_from_ru) && in_array($language['code'], $config_translate_from_ru)) { ?>
 												
 												<input id="config_translate_from_ru_<?php echo $language['code']; ?>" class="checkbox" type="checkbox" name="config_translate_from_ru[]" value="<?php echo $language['code']; ?>" checked="checked" />
 												<label for="config_translate_from_ru_<?php echo $language['code']; ?>"><?php echo $language['code']; ?></label>
@@ -1443,16 +1469,15 @@
 								</div>
 								<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);">Выделить всё</a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);">Снять выделение</a>
 								</td>
-							</tr>
-							
-							<tr>
-								<td>Переводить эти языки с DE</td>
-								<td><div class="scrollbox" style="height:100px; width:100px;">
+
+								<td style="width:30%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Переводить эти языки с DE</span></p>
+									<div class="scrollbox" style="height:100px; width:100px;">
 									<?php $class = 'odd'; ?>
 									<?php foreach ($languages as $language) { ?>
 										<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
 										<div class="<?php echo $class; ?>">
-											<?php if (in_array($language['code'], $config_translate_from_de)) { ?>
+											<?php if (!empty($config_translate_from_de) && in_array($language['code'], $config_translate_from_de)) { ?>
 												
 												<input id="config_translate_from_de_<?php echo $language['code']; ?>" class="checkbox" type="checkbox" name="config_translate_from_de[]" value="<?php echo $language['code']; ?>" checked="checked" />
 												<label for="config_translate_from_de_<?php echo $language['code']; ?>"><?php echo $language['code']; ?></label>
@@ -1468,16 +1493,15 @@
 								</div>
 								<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);">Выделить всё</a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);">Снять выделение</a>
 								</td>
-							</tr>
 
-							<tr>
-								<td>Переводить эти языки с UK</td>
-								<td><div class="scrollbox" style="height:100px; width:100px;">
+								<td style="width:30%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Переводить эти языки с UK</span></p>
+									<div class="scrollbox" style="height:100px; width:100px;">
 									<?php $class = 'odd'; ?>
 									<?php foreach ($languages as $language) { ?>
 										<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
 										<div class="<?php echo $class; ?>">
-											<?php if (in_array($language['code'], $config_translate_from_uk)) { ?>
+											<?php if (!empty($config_translate_from_uk) && in_array($language['code'], $config_translate_from_uk)) { ?>
 												
 												<input id="config_translate_from_uk_<?php echo $language['code']; ?>" class="checkbox" type="checkbox" name="config_translate_from_uk[]" value="<?php echo $language['code']; ?>" checked="checked" />
 												<label for="config_translate_from_uk_<?php echo $language['code']; ?>"><?php echo $language['code']; ?></label>
@@ -1495,73 +1519,82 @@
 								</td>
 							</tr>
 
+						</table>						
+
+						<h2>Валюты</h2>
+						<table>	
 							<tr>
-								<td>Активные способы оплаты<br /><span class="help">выводятся в карте товара, по одному в строке</span></td>
-								<td><textarea name="config_payment_list" cols="40" rows="8"><?php echo $config_payment_list; ?></textarea></td>
-							</tr>
-							<tr>
-								<td><?php echo $entry_currency; ?></td>
-								<td><select name="config_currency">
-									<?php foreach ($currencies as $currency) { ?>
-										<?php if ($currency['code'] == $config_currency) { ?>
-											<option value="<?php echo $currency['code']; ?>" selected="selected"><?php echo $currency['title']; ?></option>
+								<td style="width:30%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Основная валюта</span></p>
+									<select name="config_currency">
+										<?php foreach ($currencies as $currency) { ?>
+											<?php if ($currency['code'] == $config_currency) { ?>
+												<option value="<?php echo $currency['code']; ?>" selected="selected"><?php echo $currency['title']; ?></option>
 											<?php } else { ?>
-											<option value="<?php echo $currency['code']; ?>"><?php echo $currency['title']; ?></option>
+												<option value="<?php echo $currency['code']; ?>"><?php echo $currency['title']; ?></option>
+											<?php } ?>
 										<?php } ?>
-									<?php } ?>
-								</select></td>
-							</tr>							
-							<tr>
-								<td>Валюта отображения<br />
+									</select>
+								</td>
+
+								<td style="width:30%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Валюта отображения</span></p>
+									<select name="config_regional_currency">
+										<?php foreach ($currencies as $currency) { ?>
+											<?php if ($currency['code'] == $config_regional_currency) { ?>
+												<option value="<?php echo $currency['code']; ?>" selected="selected"><?php echo $currency['title']; ?></option>
+											<?php } else { ?>
+												<option value="<?php echo $currency['code']; ?>"><?php echo $currency['title']; ?></option>
+											<?php } ?>
+										<?php } ?>
+									</select>
 									<span class="help">Валюта, в которой отображаются цены в региональном магазине</span>
 								</td>
-								<td><select name="config_regional_currency">
-									<?php foreach ($currencies as $currency) { ?>
-										<?php if ($currency['code'] == $config_regional_currency) { ?>
-											<option value="<?php echo $currency['code']; ?>" selected="selected"><?php echo $currency['title']; ?></option>
-											<?php } else { ?>
-											<option value="<?php echo $currency['code']; ?>"><?php echo $currency['title']; ?></option>
-										<?php } ?>
-									<?php } ?>
-								</select></td>
+
+								<td style="width:30%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Автоматическое обновление валют</span></p>
+									<select name="config_currency_auto">
+										<?php if ($config_currency_auto) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+								</td>
+
 							</tr>
+						</table>						
+
+						<h2>Единицы измерения</h2>
+						<table>
 							<tr>
-								<td><?php echo $entry_currency_auto; ?></td>
-								<td><?php if ($config_currency_auto) { ?>
-									<input type="radio" name="config_currency_auto" value="1" checked="checked" />
-									<?php echo $text_yes; ?>
-									<input type="radio" name="config_currency_auto" value="0" />
-									<?php echo $text_no; ?>
-									<?php } else { ?>
-									<input type="radio" name="config_currency_auto" value="1" />
-									<?php echo $text_yes; ?>
-									<input type="radio" name="config_currency_auto" value="0" checked="checked" />
-									<?php echo $text_no; ?>
-								<?php } ?></td>
-							</tr>
-							<tr>
-								<td><?php echo $entry_length_class; ?></td>
-								<td><select name="config_length_class_id">
-									<?php foreach ($length_classes as $length_class) { ?>
-										<?php if ($length_class['length_class_id'] == $config_length_class_id) { ?>
-											<option value="<?php echo $length_class['length_class_id']; ?>" selected="selected"><?php echo $length_class['title']; ?></option>
+								<td>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Единица длины</span></p>
+									<select name="config_length_class_id">
+										<?php foreach ($length_classes as $length_class) { ?>
+											<?php if ($length_class['length_class_id'] == $config_length_class_id) { ?>
+												<option value="<?php echo $length_class['length_class_id']; ?>" selected="selected"><?php echo $length_class['title']; ?></option>
 											<?php } else { ?>
-											<option value="<?php echo $length_class['length_class_id']; ?>"><?php echo $length_class['title']; ?></option>
+												<option value="<?php echo $length_class['length_class_id']; ?>"><?php echo $length_class['title']; ?></option>
+											<?php } ?>
 										<?php } ?>
-									<?php } ?>
-								</select></td>
-							</tr>
-							<tr>
-								<td><?php echo $entry_weight_class; ?></td>
-								<td><select name="config_weight_class_id">
-									<?php foreach ($weight_classes as $weight_class) { ?>
-										<?php if ($weight_class['weight_class_id'] == $config_weight_class_id) { ?>
-											<option value="<?php echo $weight_class['weight_class_id']; ?>" selected="selected"><?php echo $weight_class['title']; ?></option>
+									</select>
+								</td>
+
+								<td>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Единица веса</span></p>
+									<select name="config_weight_class_id">
+										<?php foreach ($weight_classes as $weight_class) { ?>
+											<?php if ($weight_class['weight_class_id'] == $config_weight_class_id) { ?>
+												<option value="<?php echo $weight_class['weight_class_id']; ?>" selected="selected"><?php echo $weight_class['title']; ?></option>
 											<?php } else { ?>
-											<option value="<?php echo $weight_class['weight_class_id']; ?>"><?php echo $weight_class['title']; ?></option>
+												<option value="<?php echo $weight_class['weight_class_id']; ?>"><?php echo $weight_class['title']; ?></option>
+											<?php } ?>
 										<?php } ?>
-									<?php } ?>
-								</select></td>
+									</select>
+								</td>
 							</tr>
 						</table>
 					</div>
