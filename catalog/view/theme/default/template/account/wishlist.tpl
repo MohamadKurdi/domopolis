@@ -26,10 +26,17 @@
         display: grid;
     }
     @media screen and (max-width:560px){
+        .product-grid.product__grid{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
         .wishlist-info{
             display: flex;
             flex-wrap: wrap;
             margin: 0 -10px;
+            justify-content: center;
         }
         .wishlist-info,
         .product__grid{
