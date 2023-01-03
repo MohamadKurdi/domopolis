@@ -12,7 +12,7 @@ function passwordToggle(elem){
 }
 
 $(document).ready(function() {
-	$('input[type=password]').after('<span class="password-toggle" onclick="passwordToggle($(this));"><i class="fas fa-eye"></i></span>');
+	$('input[type=password]').after('<span class="password-toggle 1" onclick="passwordToggle($(this));"><i class="fas fa-eye"></i></span>');
 });
 
 
