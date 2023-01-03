@@ -292,7 +292,7 @@
 					'quote'      => $quote_data,
 					'sort_order' => $this->config->get('pickup_advanced_sort_order'),
 					'error'      => false,
-					'status'     => true //CHANGE
+					'status'     => true
 					);
 				}
 			}

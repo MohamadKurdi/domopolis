@@ -56,9 +56,9 @@
 			'country'        	=> $country,	
 			'iso_code_2'     	=> $iso_code_2,
 			'iso_code_3'     	=> $iso_code_3,
-			'do_not_check_city'     	=> true,
-			'bypass_point_status'     => true,
-			'address_format' => $address_format
+			'do_not_check_city'     => true,
+			'bypass_point_status'   => true,
+			'address_format' 		=> $address_format
 			);
 			
 			$results = $this->model_setting_extension->getExtensions('shipping');
