@@ -144,11 +144,8 @@
 							<div id="menu_top">
 								<ul class="left">
 									<li id="alertlog"><a class="top" href="<? echo $user_alerts; ?>" id="alert_history_preview_click"><span class="label label-danger" style="font-size:16px;"><i class='fa fa-bell' style="color:#FFF"></i></span></a></li>
-									<!-- Admin Panel Notication -->
 									<li id="notification" class="header-notifications delayed-load short-delayed-load" data-route='common/home/loadNotifications'>
-										
 									</li>
-									<!-- Admin Header Notices 1.0 -->
 									<li id="callbacks">
 										<a class="top" href="<? echo $callback; ?>"><span class="label label-danger" style="font-size:16px;"><i class="fa fa-phone-square" ></i> &nbsp;<?php echo $total_callbacks; ?></span></a>		
 									</li>
@@ -193,9 +190,7 @@
 						<? } ?>	
 					</div>
 					<?php if ($logged) { ?>
-						<div class="div3" id="cacheButtons" style="margin-right:100px; float:right;">
-							
-						</div>
+						<div class="div3" id="cacheButtons" style="margin-right:100px; float:right;"></div>
 						<script>
 							function loadCacheButtons(){
 								$('#cacheButtons').load('index.php?route=setting/setting/getFPCINFO&token=<?php echo $token;?>');
@@ -261,8 +256,7 @@
 								<li><a class="home_icon_style" href="<?php echo $ocfilter; ?>"><i class="fa fa-cubes"></i><span><?php echo $text_ocfilter; ?> <sup style="color:red">DEV</sup></span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $ocfilter_page; ?>"><i class="fa fa-cubes"></i><span>Посадочные страницы <sup style="color:red">DEV</sup></span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $batch_editor_link; ?>"><i class="fa fa-pencil-square-o"></i><span>Batch Editor v.023</span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $batch_editor_link2; ?>"><i class="fa fa-pencil-square-o"></i><span>Batch Editor v.047</span></a></li>
-								
+								<li><a class="home_icon_style" href="<?php echo $batch_editor_link2; ?>"><i class="fa fa-pencil-square-o"></i><span>Batch Editor v.047</span></a></li>								
 								<li><a class="home_icon_style" href="<?php echo $filter; ?>"><i class="fa fa-filter"></i><span><?php echo $text_filter; ?></span></a></li>        
 								<li><a class="home_icon_style parent"><i class="fa fa-file-text-o"></i><span><?php echo $text_attribute; ?></span></a>
 									<ul>
@@ -271,23 +265,12 @@
 									</ul>
 								</li>
 								<li><a class="home_icon_style" href="<?php echo $option; ?>"><i class="fa fa-sliders"></i><span><?php echo $text_option; ?></span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $manufacturer; ?>"><i class="fa fa-barcode"></i><span>Бренды</span></a></li>
-								
-								<li><a class="home_icon_style" href="<?php echo $countrybrands_link; ?>"><i class="fa fa-flag"></i><span>Бренды по странам</span></a></li>
-								
-								<li><a class="home_icon_style" href="<?php echo $collections_link; ?>"><i class="fa fa-linode"></i><span>Коллекции</span></a></li>
-								
-								<? /*	
-									<li><a href="<?php echo $labelmaker; ?>">Метки товаров</a></li>
-									<li><a href="<?php echo $product_statuses; ?>"><?php echo $text_product_statuses; ?></a></li>  
-								*/ ?>
+								<li><a class="home_icon_style" href="<?php echo $manufacturer; ?>"><i class="fa fa-barcode"></i><span>Бренды</span></a></li>								
+								<li><a class="home_icon_style" href="<?php echo $countrybrands_link; ?>"><i class="fa fa-flag"></i><span>Бренды по странам</span></a></li>								
+								<li><a class="home_icon_style" href="<?php echo $collections_link; ?>"><i class="fa fa-linode"></i><span>Коллекции</span></a></li>								
 								<li><a class="home_icon_style" href="<?php echo $keyworder_link; ?>"><i class="fa fa-exchange"></i><span>Связка производитель/категория</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $sets_link; ?>"><i class="fa fa-window-restore"></i><span>Комплекты товаров</span></a></li>								
-								
-								<!--<li><a href="<?php echo $download; ?>"><?php echo $text_download; ?></a></li>-->
-								<!-- FAproduct -->
-								<li><a class="home_icon_style" href="<?php echo $facategory; ?>"><i class="fa fa-diamond"></i><span><?php echo $text_facategory; ?></span></a></li>
-								<!-- FAproduct -->
+								<li><a class="home_icon_style" href="<?php echo $facategory; ?>"><i class="fa fa-diamond"></i><span><?php echo $text_facategory; ?></span></a></li>								
 							</ul>
 						</li>
 						<li id="information"><a class="top"><i class="fa fa-info icon_menu"></i>Инфо</a>
@@ -450,7 +433,7 @@
 								<li><a class="parent home_icon_style"><i class="fa fa-file-image-o"></i><span><?php echo $text_design; ?></span></a>
 									<ul>
 										<li><a href="<?php echo $layout; ?>">Схемы / макеты</a></li>
-										<li><a href="<?php echo $custom_template_link; ?>">Индивидуальное переназначение шаблонов!</a></li>
+										<li><a href="<?php echo $custom_template_link; ?>">Индивидуальное переназначение шаблонов</a></li>
 										<li><a href="<?php echo $banner; ?>"><?php echo $text_banner; ?></a></li>
 										<li><a href="<?php echo $advanced_banner_link; ?>">Умные баннера</a></li>
 									</ul>
@@ -473,7 +456,7 @@
 										<li><a href="<?php echo $return_reason; ?>"><?php echo $text_return_reason; ?></a></li>
 										
 										<li><a href="<?php echo $country; ?>"><?php echo $text_country; ?></a></li>
-										<li><a href="<?php echo $legalperson; ?>">Юрлица для выставления счетов</a></li>
+										<li><a href="<?php echo $legalperson; ?>">Кассы и счета</a></li>
 										<li><a href="<?php echo $zone; ?>"><?php echo $text_zone; ?></a></li>
 										<li><a href="<?php echo $geo_zone; ?>"><?php echo $text_geo_zone; ?></a></li>
 										<li><a class="parent"><?php echo $text_tax; ?></a>
@@ -488,22 +471,9 @@
 										<li><a href="<?php echo $order_bottom_forms; ?>">Шаблоны подтверждения</a></li>
 									</ul>
 									
-								</li>		   									
-								<li><a class="home_icon_style" href="<?php echo $vqmod_manager; ?>"><i class="fa fa-pencil-square-o"></i><span><?php echo $text_vqmod_manager; ?></span></a></li>							
-								<li><a class="home_icon_style" href="<?php echo $backup; ?>"><i class="fa fa-tasks"></i><span>Стоковый бекап</span></a></li>
+								</li>		   																														
 								<li><a class="home_icon_style" href="<?php echo $csvpricelink; ?>"><i class="fa fa-cubes"></i><span>CSV IMPORT/EXPORT</span></a></li>								
-								<li><a class="parent home_icon_style"><i class="fa fa-window-close"></i><span>Неиспользуемые функции</span></a>
-									<ul>
-										<li><a href="<?php echo $geoip_link; ?>">Настройка GeoIP</a></li>
-										<li><a href="<?php echo $profile; ?>"><?php echo $text_profile; ?></a></li>
-										<li><a class="home_icon_style parent"><i class="fa fa-spinner"></i><span>Обработки</span></a>
-											<ul>
-												<li><a href="<?php echo $masspcategupd; ?>">Категории</a></li>
-												<li><a href="<?php echo $masspdiscoupd; ?>">Скидки</a></li>
-											</ul>
-										</li>
-									</ul>
-								</li>
+
 							</ul>
 						</li>							   
 						<li id="reports"><a class="top"><i class="fa fa-area-chart icon_menu"></i><?php echo $text_reports; ?></a>
