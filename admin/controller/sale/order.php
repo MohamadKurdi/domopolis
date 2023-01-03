@@ -1334,7 +1334,7 @@
 						}
 					}
 					
-					if (mb_strlen($product['part_num']) > 1 && !in_array($product['part_num'], $_order_parties_tmp)){
+					if (!empty($product['part_num']) && mb_strlen($product['part_num']) > 1 && !in_array($product['part_num'], $_order_parties_tmp)){
 						$_order_parties_tmp[]= $product['part_num'];
 					}
 					
@@ -1346,10 +1346,10 @@
 					'order_product_id' => $product['order_product_id'],
 					'order_id'         => $result['order_id'],
 					'product_id'       => $product['product_id'],
-					'from_stock'       => $product['from_stock'],
-					'from_bd_gift'     => $product['from_bd_gift'],
+					'from_stock'       => !empty($product['from_stock'])?$product['from_stock']:false,
+					'from_bd_gift'     => !empty($product['from_bd_gift'])?$product['from_bd_gift']:false,
 					'name'    	 	   => $product['name'],
-					'part_num'		   => $product['part_num'],
+					'part_num'		   => !empty($product['part_num'])?$product['part_num']:false,
 					'lthumb'    	   => $this->model_tool_image->resize($product['image'], 150, 150),
 					'thumb'    	 	   => $this->model_tool_image->resize($product['image'], 25, 25),
 					'model'    		   => $product['model'],
