@@ -1,25 +1,7 @@
 <?php
-/***********************************************************************************************************************
 
-Version 1.5.6
-Created 23:02 15.01.2014 UTF-8
-Copyright (C) 2010 Ukrainian Localization by OpenCart Ukrainian Team (http://opencart.ua). All rights reserved.
-
-Translators:
- Eugene Kuligin (k.evgen@meta.ua)
- Larisa Bodnar (bodnar_larisa@meta.ua)
- and others.
-
-Responsible for Translation:
- Eugene Kuligin (admin@opencart.ua)
-
-License http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
-Ask a question http://forum.opencart.ua
-
-************************************************************************************************************************/
-
-$_['heading_title'] = 'Адресна книга'; #44178
-$_['text_account'] = 'Обліковий запис'; #44179
+$_['heading_title'] = 'Мої адреси'; #44178
+$_['text_account'] = 'Кабінет'; #44179
 $_['text_address_book'] = 'Записи адресної книги'; #44180
 $_['text_edit_address'] = 'Редагувати адресу'; #44181
 $_['text_insert'] = 'Вашу адресу було успішно додано'; #44182
