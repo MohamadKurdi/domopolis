@@ -62,11 +62,6 @@ class ControllerAccountForgotten extends Controller {
 			'separator' => $this->language->get('text_separator')
 		);
 
-		$this->data['breadcrumbs'][] = array(
-			'text'      => $this->language->get('text_forgotten'),
-			'href'      => $this->url->link('account/forgotten', '', 'SSL'),       	
-			'separator' => $this->language->get('text_separator')
-		);
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
 
@@ -75,9 +70,7 @@ class ControllerAccountForgotten extends Controller {
 
 		$this->data['entry_by_email'] = $this->language->get('entry_by_email');
 		$this->data['entry_by_telephone'] = $this->language->get('entry_by_telephone');
-
 		$this->data['entry_email'] = $this->language->get('entry_email');
-
 		$this->data['button_continue'] = $this->language->get('button_continue');
 		$this->data['button_back'] = $this->language->get('button_back');
 
@@ -88,14 +81,9 @@ class ControllerAccountForgotten extends Controller {
 		}
 
 		$this->data['action'] = $this->url->link('account/forgotten', '', 'SSL');
-
 		$this->data['back'] = $this->url->link('account/login', '', 'SSL');
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/forgotten.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/account/forgotten.tpl';
-		} else {
-			$this->template = 'default/template/account/forgotten.tpl';
-		}
+		$this->template = 'account/forgotten.tpl';
 
 		$this->children = array(
 			'common/column_left',
