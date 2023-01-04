@@ -188,6 +188,7 @@ class ControllerLocalisationLengthClass extends Controller {
 				'value'           => $result['value'],
 				'amazon_key'      => $result['amazon_key'],
 				'system_key'      => $result['system_key'],
+				'variants'        => $result['variants'],
 				'selected'        => isset($this->request->post['selected']) && in_array($result['length_class_id'], $this->request->post['selected']),
 				'action'          => $action
 			);
@@ -368,6 +369,14 @@ class ControllerLocalisationLengthClass extends Controller {
 			$this->data['system_key'] = $length_class_info['system_key'];
 		} else {
 			$this->data['system_key'] = '';
+		}
+
+		if (isset($this->request->post['variants'])) {
+			$this->data['variants'] = $this->request->post['variants'];
+		} elseif (!empty($weight_class_info)) {
+			$this->data['variants'] = $weight_class_info['variants'];
+		} else {
+			$this->data['variants'] = '';
 		}
 
 		$this->template = 'localisation/length_class_form.tpl';

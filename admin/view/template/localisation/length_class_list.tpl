@@ -2,14 +2,14 @@
 <div id="content">
   <div class="breadcrumb">
     <?php foreach ($breadcrumbs as $breadcrumb) { ?>
-    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+      <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
     <?php } ?>
   </div>
   <?php if ($error_warning) { ?>
-  <div class="warning"><?php echo $error_warning; ?></div>
+    <div class="warning"><?php echo $error_warning; ?></div>
   <?php } ?>
   <?php if ($success) { ?>
-  <div class="success"><?php echo $success; ?></div>
+    <div class="success"><?php echo $success; ?></div>
   <?php } ?>
   <div class="box">
     <div class="heading order_head">
@@ -24,53 +24,51 @@
               <td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
               <td class="left"><?php if ($sort == 'title') { ?>
                 <a href="<?php echo $sort_title; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_title; ?></a>
-                <?php } else { ?>
+              <?php } else { ?>
                 <a href="<?php echo $sort_title; ?>"><?php echo $column_title; ?></a>
                 <?php } ?></td>
-              <td class="left"><?php if ($sort == 'unit') { ?>
-                <a href="<?php echo $sort_unit; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_unit; ?></a>
+                <td class="left"><?php if ($sort == 'unit') { ?>
+                  <a href="<?php echo $sort_unit; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_unit; ?></a>
                 <?php } else { ?>
-                <a href="<?php echo $sort_unit; ?>"><?php echo $column_unit; ?></a>
-                <?php } ?></td>
-			  <td class="left">Код</td>
-			  <td class="left">Код Amazon</td>
-              <td class="right"><?php if ($sort == 'value') { ?>
-                <a href="<?php echo $sort_value; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_value; ?></a>
-                <?php } else { ?>
-                <a href="<?php echo $sort_value; ?>"><?php echo $column_value; ?></a>
-                <?php } ?></td>
-              <td class="right"><?php echo $column_action; ?></td>
-            </tr>
-          </thead>
-          <tbody>
-            <?php if ($length_classes) { ?>
-            <?php foreach ($length_classes as $length_class) { ?>
-            <tr>
-              <td style="text-align: center;"><?php if ($length_class['selected']) { ?>
-                <input type="checkbox" name="selected[]" value="<?php echo $length_class['length_class_id']; ?>" checked="checked" />
-                <?php } else { ?>
-                <input type="checkbox" name="selected[]" value="<?php echo $length_class['length_class_id']; ?>" />
-                <?php } ?></td>
-              <td class="left"><?php echo $length_class['title']; ?></td>
-              <td class="left"><?php echo $length_class['unit']; ?></td>
-			     <td class="left"><?php echo $length_class['system_key']; ?></td>
-			   <td class="left"><?php echo $length_class['amazon_key']; ?></td>
-              <td class="right"><?php echo $length_class['value']; ?></td>
-              <td class="right"><?php foreach ($length_class['action'] as $action) { ?>
-                <a class="button" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
-                <?php } ?></td>
-            </tr>
-            <?php } ?>
-            <?php } else { ?>
-            <tr>
-              <td class="center" colspan="5"><?php echo $text_no_results; ?></td>
-            </tr>
-            <?php } ?>
-          </tbody>
-        </table>
-      </form>
-      <div class="pagination"><?php echo $pagination; ?></div>
-    </div>
-  </div>
-</div>
-<?php echo $footer; ?>
+                  <a href="<?php echo $sort_unit; ?>"><?php echo $column_unit; ?></a>
+                  <?php } ?></td>
+                  <td class="left">Варианты</td>
+                  <td class="right"><?php if ($sort == 'value') { ?>
+                    <a href="<?php echo $sort_value; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_value; ?></a>
+                  <?php } else { ?>
+                    <a href="<?php echo $sort_value; ?>"><?php echo $column_value; ?></a>
+                    <?php } ?></td>
+                    <td class="right"><?php echo $column_action; ?></td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php if ($length_classes) { ?>
+                    <?php foreach ($length_classes as $length_class) { ?>
+                      <tr>
+                        <td style="text-align: center;"><?php if ($length_class['selected']) { ?>
+                          <input type="checkbox" name="selected[]" value="<?php echo $length_class['length_class_id']; ?>" checked="checked" />
+                        <?php } else { ?>
+                          <input type="checkbox" name="selected[]" value="<?php echo $length_class['length_class_id']; ?>" />
+                          <?php } ?></td>
+                          <td class="left"><?php echo $length_class['title']; ?></td>
+                          <td class="left"><?php echo $length_class['unit']; ?></td>
+                          <td class="left"><small><?php echo $length_class['variants']; ?></small></td>
+                          <td class="right"><?php echo $length_class['value']; ?></td>
+                          <td class="right"><?php foreach ($length_class['action'] as $action) { ?>
+                            <a class="button" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
+                            <?php } ?></td>
+                          </tr>
+                        <?php } ?>
+                      <?php } else { ?>
+                        <tr>
+                          <td class="center" colspan="5"><?php echo $text_no_results; ?></td>
+                        </tr>
+                      <?php } ?>
+                    </tbody>
+                  </table>
+                </form>
+                <div class="pagination"><?php echo $pagination; ?></div>
+              </div>
+            </div>
+          </div>
+          <?php echo $footer; ?>
