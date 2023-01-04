@@ -171,7 +171,6 @@ class ControllerCatalogAttribute extends Controller {
 		);
 
 		$attribute_total = $this->model_catalog_attribute->getTotalAttributes();
-
 		$results = $this->model_catalog_attribute->getAttributes($data);
 
 		foreach ($results as $result) {
@@ -187,6 +186,8 @@ class ControllerCatalogAttribute extends Controller {
 				'name'            			=> $result['name'],
 				'dimension_type'            => $result['dimension_type'],
 				'attribute_group' 			=> $result['attribute_group'],
+				'count'						=> $this->model_catalog_attribute->getCountAttributesValueByAttributeId($result['attribute_id']),
+				'values'					=> $this->model_catalog_attribute->getSomeAttributesValueByAttributeId($result['attribute_id']),
 				'sort_order'      			=> $result['sort_order'],
 				'selected'        			=> isset($this->request->post['selected']) && in_array($result['attribute_id'], $this->request->post['selected']),
 				'action'          			=> $action
@@ -496,4 +497,3 @@ class ControllerCatalogAttribute extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}		  
 }
-?>

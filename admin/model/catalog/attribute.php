@@ -45,8 +45,18 @@ class ModelCatalogAttribute extends Model {
 	}
 
 	public function getRandAttributesValueByAttributeId ($attribute_id) {
-        $query = $this->db->query("SELECT DISTINCT `text` FROM `product_attribute` WHERE `attribute_id` = '" . (int)$attribute_id . "' AND `text` <> '' ORDER BY RAND() LIMIT 100");
+        $query = $this->db->query("SELECT DISTINCT `text` FROM `product_attribute` WHERE `attribute_id` = '" . (int)$attribute_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "' AND `text` <> '' ORDER BY RAND() LIMIT 100");
         return $query->rows;
+    }
+
+    public function getSomeAttributesValueByAttributeId ($attribute_id) {
+        $query = $this->db->query("SELECT DISTINCT `text` FROM `product_attribute` WHERE `attribute_id` = '" . (int)$attribute_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "' AND `text` <> '' AND LENGTH(text) < 50 LIMIT 10");
+        return $query->rows;
+    }
+
+    public function getCountAttributesValueByAttributeId ($attribute_id) {
+        $query = $this->db->query("SELECT COUNT(DISTINCT `text`) as total FROM `product_attribute` WHERE `attribute_id` = '" . (int)$attribute_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "' AND `text` <> ''");
+        return $query->row['total'];
     }
 
     public function getAttributesValueByAttributeId ($attribute_id) {

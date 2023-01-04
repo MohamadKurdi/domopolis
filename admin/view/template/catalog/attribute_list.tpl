@@ -44,6 +44,9 @@
                   <a href="<?php echo $sort_dimension_type; ?>">Габариты</a>
                 <?php } ?>
               </td>
+              <td class="left">
+                Значений
+              </td>
               <td class="right">
                 <?php if ($sort == 'a.sort_order') { ?>
                   <a href="<?php echo $sort_sort_order; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_sort_order; ?></a>
@@ -70,11 +73,17 @@
                   </td>
                   <td class="left">
                     <span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF"><?php echo $attribute['name']; ?></span>
+
+                    <?php if (!empty($attribute['values'])) { ?><br />
+                      <?php foreach ($attribute['values'] as $value) { ?>
+                        <small style="margin-right:5px;"><?php echo $value['text']; ?></small>
+                      <?php } ?>
+                    <? } ?>
                   </td>
-                  <td class="center">
+                  <td class="center" style="width:100px;">
                     <span class="status_color" style="display:inline-block; padding:3px 5px; background:#32bd38; color:#FFF"><?php echo $attribute['attribute_group']; ?></span>
                   </td>
-                  <td class="center">
+                  <td class="center" style="width:100px;">
 
                     <?php if ($attribute['dimension_type'] == 'length') { ?>
                       <span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Длина</span>
@@ -93,10 +102,15 @@
                     <?php } ?>
 
                   </td>
-                  <td class="center">
+
+                  <td class="center" style="width:50px;">
+                    <span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><?php echo $attribute['count']; ?></span>
+                  </td>
+
+                  <td class="center" style="width:50px;">
                     <span class="status_color" style="display:inline-block; padding:3px 5px; background:#000; color:#FFF"><?php echo $attribute['sort_order']; ?></span>
                   </td>
-                  <td class="right">
+                  <td class="right" style="width:50px;">
                     <?php foreach ($attribute['action'] as $action) { ?>
                       <a class="button" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
                     <?php } ?>

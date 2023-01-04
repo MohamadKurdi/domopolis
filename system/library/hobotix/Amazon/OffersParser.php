@@ -599,7 +599,6 @@ class OffersParser
 
 		return ['ratingKeys' => $ratingKeys, 'maxRatingKey' => $maxRatingKey];
 	}
-
 	
 	public function getMinPriceOffer($rfOfferList, $excludeKey = -1){
 		

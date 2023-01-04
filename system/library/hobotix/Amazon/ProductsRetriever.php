@@ -36,7 +36,7 @@ class ProductsRetriever extends RainforestRetriever
 		'UWeltweite Artikelidentnummer (GTIN)'	=> ['ean'],
 		'GTIN'									=> ['ean'],
 		'EAN'									=> ['ean'],
-		'Weltweite Artikelidentnummer (GTIN)'	=> ['ean'],
+		'Weltweite Artikelidentnummer (GTIN)'	=> ['ean'],		
 		'ISBN-10'								=> ['ean'],
 		'ISBN-13'								=> ['ean']
 	];
@@ -356,7 +356,6 @@ class ProductsRetriever extends RainforestRetriever
 					$attribute_id = $this->model_product_cached_get->getAttribute($attribute['name']);
 
 					if (!$attribute_id){
-
 						echoLine('[parseProductAttributes] Атрибут не найден: ' . $attribute['name']);
 
 						$attribute_description = [];
@@ -400,6 +399,11 @@ class ProductsRetriever extends RainforestRetriever
 		if ($main_variant_id && !$main_variant_id == $product_id){
 			
 		}
+	}
+
+	public function parseDimensionAttributes($product_id, $product){
+		
+		
 	}
 
 	public function parseProductRelatedProducts($product_id, $product){

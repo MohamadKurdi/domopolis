@@ -25,6 +25,21 @@ class productModelCachedGet extends hoboModel{
 		return false;
 	}
 
+	public function getAttributeInfo($attribute_id){
+		if ($this->cache->get($this->getKey('attributes_info', $attribute_id), true)){
+			return $this->cache->get($this->getKey('attributes_info', $attribute_id), true);
+		}
+
+		$query = $this->db->ncquery("SELECT * FROM attribute WHERE attribute_id = '" . (int)$attribute_id . "' LIMIT 1");
+
+		if ($query->num_rows){
+			$this->cache->set($this->getKey('attributes_info', $attribute_id), $query->row);
+			return $query->row;
+		}
+		
+		return false;
+	}
+
 	public function getAttribute($name){
 		if ($this->cache->get($this->getKey('attributes', $name), true)){
 			return $this->cache->get($this->getKey('attributes', $name), true);

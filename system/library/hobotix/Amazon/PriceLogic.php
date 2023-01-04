@@ -115,6 +115,24 @@ class PriceLogic
 		return $this;
 	}
 
+	public function checkIfAttributeDefinesDimensions($attribute_info){
+		if (!$this->config->get('config_dimensions_attr_id')){
+			return false;
+		}
+
+		if ($attribute_info['attribute_group_id'] == $this->config->get('config_dimensions_attr_id')){
+			if ($attribute_info['dimension_type']){
+				return $attribute_info['dimension_type'];
+			}
+		}
+
+		return false;
+	}
+
+	public function getWeightFromString($string){
+		
+	}
+
 	public function getProductDimensions($product){
 
 		$weight = (float)$product['weight'];
