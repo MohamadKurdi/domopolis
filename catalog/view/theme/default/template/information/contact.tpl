@@ -11,7 +11,6 @@
 			});
 		});
 	</script>
-	
 <?php } ?>
 
 <section id="content-contact">
