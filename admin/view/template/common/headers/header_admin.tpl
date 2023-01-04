@@ -419,32 +419,6 @@
 							<ul>
 								<li><a class="home_icon_style"  href="<?php echo $panel; ?>"><i class="fa fa-server"></i><span>Панель</span></a></li>
 								<li><a class="home_icon_style"  href="<?php echo $rnf; ?>"><i class="fa fa-amazon"></i><span>Настройки RNF API</span></a></li>
-								
-								<li><a class="home_icon_style"  href="<?php echo $courier_face2; ?>" target="_blank"><i class="fa fa-bus" ></i><span>Интерфейс курьера</span></a></li>
-								
-								<li><a class="home_icon_style"  href="<?php echo $simple_module; ?>" target="_blank"><i class="fa fa-server"></i><span>Чекаут</span></a></li>
-								<li><a class="home_icon_style"  href="<?php echo $simple_module_abandoned; ?>"><i class="fa fa-server"></i><span>Брошенные корзины</span></a></li>
-								
-								<li><a class="home_icon_style"  href="<?php echo $ocfilter_module; ?>" target="_blank"><i class="fa fa-server"></i><span>Модуль фильтра</span></a></li>
-								
-								<li><a class="home_icon_style" href="<?php echo $setting; ?>"><i class="fa fa-cog"></i><span><?php echo $text_setting; ?></span></a></li>
-								<li><a class="home_icon_style" href="<? echo $adminlog_url; ?>"><i class="fa fa-user"></i><span>Журнал доступа</span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $error_log; ?>"><i class="fa fa-bars"></i><span>Журналы системы</span></a></li>
-								<li><a class="parent home_icon_style"><i class="fa fa-file-image-o"></i><span><?php echo $text_design; ?></span></a>
-									<ul>
-										<li><a href="<?php echo $layout; ?>">Схемы / макеты</a></li>
-										<li><a href="<?php echo $custom_template_link; ?>">Индивидуальное переназначение шаблонов</a></li>
-										<li><a href="<?php echo $banner; ?>"><?php echo $text_banner; ?></a></li>
-										<li><a href="<?php echo $advanced_banner_link; ?>">Умные баннера</a></li>
-									</ul>
-								</li>
-								<li><a class="parent home_icon_style"><i class="fa fa-users"></i><span><?php echo $text_users; ?></span></a>
-									<ul>
-										<li><a href="<?php echo $user; ?>"><?php echo $text_user; ?></a></li>
-										<li><a href="<?php echo $user_group; ?>"><?php echo $text_user_group; ?></a></li>
-									</ul>
-								</li>
-								<li><a class="home_icon_style" href="<?php echo $translator; ?>"><i class="fa fa-language"></i><span>Перевод языковых файлов</span></a></li>
 								<li><a class="parent home_icon_style"><i class="fa fa-globe"></i><span><?php echo $text_localisation; ?></span></a>
 									<ul>
 										<li><a href="<?php echo $language; ?>"><?php echo $text_language; ?></a></li>
@@ -454,7 +428,6 @@
 										<li><a href="<?php echo $return_status; ?>"><?php echo $text_return_status; ?></a></li>
 										<li><a href="<?php echo $return_action; ?>"><?php echo $text_return_action; ?></a></li>
 										<li><a href="<?php echo $return_reason; ?>"><?php echo $text_return_reason; ?></a></li>
-										
 										<li><a href="<?php echo $country; ?>"><?php echo $text_country; ?></a></li>
 										<li><a href="<?php echo $legalperson; ?>">Кассы и счета</a></li>
 										<li><a href="<?php echo $zone; ?>"><?php echo $text_zone; ?></a></li>
@@ -469,11 +442,31 @@
 										<li><a href="<?php echo $weight_class; ?>"><?php echo $text_weight_class; ?></a></li>
 										
 										<li><a href="<?php echo $order_bottom_forms; ?>">Шаблоны подтверждения</a></li>
+									</ul>									
+								</li>
+								<li><a class="parent home_icon_style"><i class="fa fa-file-image-o"></i><span><?php echo $text_design; ?></span></a>
+									<ul>
+										<li><a href="<?php echo $layout; ?>">Схемы / макеты</a></li>
+										<li><a href="<?php echo $custom_template_link; ?>">Индивидуальное переназначение шаблонов</a></li>
+										<li><a href="<?php echo $banner; ?>"><?php echo $text_banner; ?></a></li>
+										<li><a href="<?php echo $advanced_banner_link; ?>">Умные баннера</a></li>
 									</ul>
-									
-								</li>		   																														
+								</li>
+								<li><a class="parent home_icon_style"><i class="fa fa-users"></i><span><?php echo $text_users; ?></span></a>
+									<ul>
+										<li><a href="<?php echo $user; ?>"><?php echo $text_user; ?></a></li>
+										<li><a href="<?php echo $user_group; ?>"><?php echo $text_user_group; ?></a></li>
+									</ul>
+								</li>							
+								<li><a class="home_icon_style"  href="<?php echo $courier_face2; ?>" target="_blank"><i class="fa fa-bus" ></i><span>Интерфейс курьера</span></a></li>								
+								<li><a class="home_icon_style"  href="<?php echo $simple_module; ?>" target="_blank"><i class="fa fa-server"></i><span>Чекаут</span></a></li>
+								<li><a class="home_icon_style"  href="<?php echo $simple_module_abandoned; ?>"><i class="fa fa-server"></i><span>Брошенные корзины</span></a></li>								
+								<li><a class="home_icon_style"  href="<?php echo $ocfilter_module; ?>" target="_blank"><i class="fa fa-server"></i><span>Модуль фильтра</span></a></li>								
+								<li><a class="home_icon_style" href="<?php echo $setting; ?>"><i class="fa fa-cog"></i><span><?php echo $text_setting; ?></span></a></li>
+								<li><a class="home_icon_style" href="<? echo $adminlog_url; ?>"><i class="fa fa-user"></i><span>Журнал доступа</span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $error_log; ?>"><i class="fa fa-bars"></i><span>Журналы системы</span></a></li>								
+								<li><a class="home_icon_style" href="<?php echo $translator; ?>"><i class="fa fa-language"></i><span>Перевод языковых файлов</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $csvpricelink; ?>"><i class="fa fa-cubes"></i><span>CSV IMPORT/EXPORT</span></a></li>								
-
 							</ul>
 						</li>							   
 						<li id="reports"><a class="top"><i class="fa fa-area-chart icon_menu"></i><?php echo $text_reports; ?></a>
