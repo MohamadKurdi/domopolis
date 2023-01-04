@@ -1,7 +1,7 @@
 <?php 
 class ModelCatalogAttribute extends Model {
 	public function addAttribute($data) {
-		$this->db->query("INSERT INTO attribute SET attribute_group_id = '" . (int)$data['attribute_group_id'] . "', sort_order = '" . (int)$data['sort_order'] . "'");
+		$this->db->query("INSERT INTO attribute SET attribute_group_id = '" . (int)$data['attribute_group_id'] . "', dimension_type = '" . $this->db->escape($data['dimension_type']) . "', sort_order = '" . (int)$data['sort_order'] . "'");
 
 		$attribute_id = $this->db->getLastId();
 
@@ -16,7 +16,7 @@ class ModelCatalogAttribute extends Model {
 	}
 
 	public function editAttribute($attribute_id, $data) {
-		$this->db->query("UPDATE attribute SET attribute_group_id = '" . (int)$data['attribute_group_id'] . "', sort_order = '" . (int)$data['sort_order'] . "' WHERE attribute_id = '" . (int)$attribute_id . "'");
+		$this->db->query("UPDATE attribute SET attribute_group_id = '" . (int)$data['attribute_group_id'] . "', dimension_type = '" . $this->db->escape($data['dimension_type']) . "', sort_order = '" . (int)$data['sort_order'] . "' WHERE attribute_id = '" . (int)$attribute_id . "'");
 
 		$this->db->query("DELETE FROM attribute_description WHERE attribute_id = '" . (int)$attribute_id . "'");
 
@@ -44,13 +44,28 @@ class ModelCatalogAttribute extends Model {
 		return $query->row;
 	}
 
-    public function getAttributesValueByAttributeId ($attributeId) {
-        $query = $this->db->query("SELECT DISTINCT `text` FROM `product_attribute` WHERE `attribute_id` = '".(int)$attributeId."' AND `text` <> ''");
+	public function getRandAttributesValueByAttributeId ($attribute_id) {
+        $query = $this->db->query("SELECT DISTINCT `text` FROM `product_attribute` WHERE `attribute_id` = '" . (int)$attribute_id . "' AND `text` <> '' ORDER BY RAND() LIMIT 100");
         return $query->rows;
     }
 
-    public function updateAttributeImageValues ($attributeId, $images, $informations) {
-        $this->db->query("DELETE FROM attribute_value_image WHERE attribute_id = '" . (int)$attributeId . "'");
+    public function getAttributesValueByAttributeId ($attribute_id) {
+    	if (!$this->config->get('config_enable_attributes_values_logic')){
+    		return [];
+    	}
+
+        $query = $this->db->query("SELECT DISTINCT `text` FROM `product_attribute` WHERE `attribute_id` = '".(int)$attribute_id."' AND `text` <> ''");
+        return $query->rows;
+    }
+
+    public function updateAttributeImageValues ($attribute_id, $images, $informations) {
+
+    	if (!$this->config->get('config_enable_attributes_values_logic')){
+    		return;
+    	}
+
+
+        $this->db->query("DELETE FROM attribute_value_image WHERE attribute_id = '" . (int)$attribute_id . "'");
 
         $insertArray = array();
         foreach ($images as $attributeNameValue => $image) {
@@ -73,12 +88,17 @@ class ModelCatalogAttribute extends Model {
             }
 
 
-            $this->db->query("INSERT INTO attribute_value_image (`attribute_id`, `attribute_value`, ".implode(', ', $keys).") VALUES ('".(int)$attributeId."', '".$this->db->escape($valueName)."', ".implode(", ", $values)." )");
+            $this->db->query("INSERT INTO attribute_value_image (`attribute_id`, `attribute_value`, ".implode(', ', $keys).") VALUES ('".(int)$attribute_id."', '".$this->db->escape($valueName)."', ".implode(", ", $values)." )");
         }
     }
 
-    public function getAttributeImagesByAttributeId ($attributeId) {
-        $query = $this->db->query("SELECT * FROM attribute_value_image WHERE attribute_id = '" . (int)$attributeId . "'");
+    public function getAttributeImagesByAttributeId ($attribute_id) {
+    	if (!$this->config->get('config_enable_attributes_values_logic')){
+    		return [];
+    	}
+
+
+        $query = $this->db->query("SELECT * FROM attribute_value_image WHERE attribute_id = '" . (int)$attribute_id . "'");
         $imagesArray = array();
         foreach ($query->rows as $image) {
             if ($image['image']) {
@@ -87,22 +107,21 @@ class ModelCatalogAttribute extends Model {
         }
 
         return $imagesArray;
-
     }
 
+    public function getAttributeInformationByAttributeId ($attribute_id) {
+    	if (!$this->config->get('config_enable_attributes_values_logic')){
+    		return [];
+    	}
 
-    public function getAttributeInformationByAttributeId ($attributeId) {
-        $query = $this->db->query("SELECT * FROM attribute_value_image WHERE attribute_id = '" . (int)$attributeId . "'");
+        $query = $this->db->query("SELECT * FROM attribute_value_image WHERE attribute_id = '" . (int)$attribute_id . "'");
         $informationArray = array();
         foreach ($query->rows as $i) {
             $informationArray[$i['attribute_value']] = $i['information_id'];
         }
 
         return $informationArray;
-
     }
-
-
 
 	public function getAttributes($data = array()) {
 		$sql = "SELECT *, (SELECT agd.name FROM attribute_group_description agd WHERE agd.attribute_group_id = a.attribute_group_id AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "') AS attribute_group FROM attribute a LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE ad.language_id = '" . (int)$this->config->get('config_language_id') . "'";
@@ -118,6 +137,7 @@ class ModelCatalogAttribute extends Model {
 		$sort_data = array(
 			'ad.name',
 			'attribute_group',
+			'a.dimension_type',
 			'a.sort_order'
 		);	
 
@@ -176,6 +196,7 @@ class ModelCatalogAttribute extends Model {
 		$sort_data = array(
 			'ad.name',
 			'attribute_group',
+			'dimension_type',
 			'a.sort_order'
 		);	
 

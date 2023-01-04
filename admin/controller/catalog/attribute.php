@@ -183,12 +183,13 @@ class ControllerCatalogAttribute extends Controller {
 			);
 
 			$this->data['attributes'][] = array(
-				'attribute_id'    => $result['attribute_id'],
-				'name'            => $result['name'],
-				'attribute_group' => $result['attribute_group'],
-				'sort_order'      => $result['sort_order'],
-				'selected'        => isset($this->request->post['selected']) && in_array($result['attribute_id'], $this->request->post['selected']),
-				'action'          => $action
+				'attribute_id'    			=> $result['attribute_id'],
+				'name'            			=> $result['name'],
+				'dimension_type'            => $result['dimension_type'],
+				'attribute_group' 			=> $result['attribute_group'],
+				'sort_order'      			=> $result['sort_order'],
+				'selected'        			=> isset($this->request->post['selected']) && in_array($result['attribute_id'], $this->request->post['selected']),
+				'action'          			=> $action
 			);
 		}	
 
@@ -233,6 +234,7 @@ class ControllerCatalogAttribute extends Controller {
 		$this->data['sort_name'] = $this->url->link('catalog/attribute', 'token=' . $this->session->data['token'] . '&sort=ad.name' . $url, 'SSL');
 		$this->data['sort_attribute_group'] = $this->url->link('catalog/attribute', 'token=' . $this->session->data['token'] . '&sort=attribute_group' . $url, 'SSL');
 		$this->data['sort_sort_order'] = $this->url->link('catalog/attribute', 'token=' . $this->session->data['token'] . '&sort=a.sort_order' . $url, 'SSL');
+		$this->data['sort_dimension_type'] = $this->url->link('catalog/attribute', 'token=' . $this->session->data['token'] . '&sort=a.dimension_type' . $url, 'SSL');
 
 		$url = '';
 
@@ -351,6 +353,14 @@ class ControllerCatalogAttribute extends Controller {
 
 		$this->data['attribute_groups'] = $this->model_catalog_attribute_group->getAttributeGroups();	
 
+		if (isset($this->request->post['dimension_type'])) {
+			$this->data['dimension_type'] = $this->request->post['dimension_type'];
+		} elseif (!empty($attribute_info)) {
+			$this->data['dimension_type'] = $attribute_info['dimension_type'];
+		} else {
+			$this->data['dimension_type'] = '';
+		}
+
 		if (isset($this->request->post['sort_order'])) {
 			$this->data['sort_order'] = $this->request->post['sort_order'];
 		} elseif (!empty($attribute_info)) {
@@ -362,35 +372,41 @@ class ControllerCatalogAttribute extends Controller {
         $this->load->model('tool/image');
         $this->data['token'] = $this->session->data['token'];
         $this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+       
+        if ($this->config->get('config_enable_attributes_values_logic')){
+        	$attributeValueArray = $this->model_catalog_attribute->getAttributesValueByAttributeId($this->request->get['attribute_id']);        
+        	$attributeImages = $this->model_catalog_attribute->getAttributeImagesByAttributeId($this->request->get['attribute_id']);
+        	$attributeInformations = $this->model_catalog_attribute->getAttributeInformationByAttributeId($this->request->get['attribute_id']);
 
+        	foreach ($attributeValueArray as $k => $v) {
+        		$image = 'no_image.jpg';
+        		$imageData = false;
+        		if (array_key_exists ($v['text'], $attributeImages)) {
+        			$image = $attributeImages[$v['text']];
+        			$imageData = true;
+        		}
+        		$attributeValueArray[$k]['thumb'] = $this->model_tool_image->resize($image, 100, 100);
+        		$attributeValueArray[$k]['image'] = $imageData ? $image : '';
+        	}
 
-        // Нужно получить значение всех атрибутов
-        $attributeValueArray = $this->model_catalog_attribute->getAttributesValueByAttributeId($this->request->get['attribute_id']);
-        $attributeImages = $this->model_catalog_attribute->getAttributeImagesByAttributeId($this->request->get['attribute_id']);
-        $attributeInformations = $this->model_catalog_attribute->getAttributeInformationByAttributeId($this->request->get['attribute_id']);
+        	foreach ($attributeValueArray as $k => $v) {
+        		if (array_key_exists ($v['text'], $attributeInformations)) {
+        			$attributeValueArray[$k]['information_id'] = $attributeInformations[$v['text']];
+        		} else {
+        			$attributeValueArray[$k]['information_id'] = 0;
+        		}
+        	}
 
-        foreach ($attributeValueArray as $k => $v) {
-            $image = 'no_image.jpg';
-            $imageData = false;
-            if (array_key_exists ($v['text'], $attributeImages)) {
-                $image = $attributeImages[$v['text']];
-                $imageData = true;
-            }
-            $attributeValueArray[$k]['thumb'] = $this->model_tool_image->resize($image, 100, 100);
-            $attributeValueArray[$k]['image'] = $imageData ? $image : '';
+        	$this->data['attribute_values'] = $attributeValueArray;
+        } else {
+        	$this->data['rand_attribute_values'] = [];
+
+        	$attributeValueArray = $this->model_catalog_attribute->getRandAttributesValueByAttributeId($this->request->get['attribute_id']); 
+
+        	foreach ($attributeValueArray as $k => $v){
+        		$this->data['rand_attribute_values'][] = $v['text'];
+        	}
         }
-
-        foreach ($attributeValueArray as $k => $v) {
-            if (array_key_exists ($v['text'], $attributeInformations)) {
-                $attributeValueArray[$k]['information_id'] = $attributeInformations[$v['text']];
-            } else {
-                $attributeValueArray[$k]['information_id'] = 0;
-            }
-        }
-
-
-
-        $this->data['attribute_values'] = $attributeValueArray;
 
         $this->load->model('catalog/information');
         $this->data['informations'] = $this->model_catalog_information->getInformations();
