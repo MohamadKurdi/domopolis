@@ -278,26 +278,40 @@
 							
 								<td style="width:18%">
 									<div>
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика цен B2B</span></p>
-									<select name="config_group_price_enable">
-										<?php if ($config_group_price_enable) { ?>
-											<option value="1" selected="selected">Включить</option>
-											<option value="0">Отключить</option>
-										<?php } else { ?>													
-											<option value="1">Включить</option>
-											<option value="0"  selected="selected">Отключить</option>
-										<? } ?>
-									</select>
-									<br />
-									<span class="help">логика нагружает магазин, если реально это не используется, пусть будет отключено</span>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика цен B2B</span></p>
+										<select name="config_group_price_enable">
+											<?php if ($config_group_price_enable) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+										<br />
+										<span class="help">логика нагружает магазин, если реально это не используется, пусть будет отключено</span>
 									</div>
 									<div>
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF;">Монобрендовый магазин</span></p>
-									<select name="config_monobrand" style=" width:150px;">
-										<option value="0">Нет</option>
-									</select>	
-									<br />
-									<span class="help">настройка, позволяющая работать без списка брендов (не используется)</span>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF;">Монобрендовый магазин</span></p>
+										<select name="config_monobrand" style=" width:150px;">
+											<option value="0">Нет</option>
+										</select>	
+										<br />
+										<span class="help">настройка, позволяющая работать без списка брендов (не используется)</span>
+									</div>
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика значений атрибутов</span></p>
+										<select name="config_enable_attributes_values_logic">
+											<?php if ($config_enable_attributes_values_logic) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+										<br />
+										<span class="help">Привязка статей и картинок к изображениям атрибутов. логика нагружает админку и магазин! если реально это не используется, пусть будет отключено</span>
 									</div>
 								</td>
 
@@ -583,6 +597,21 @@
 									<span class="help">В эту группу добавляются атрибуты товара с Амазона</span>
 								</td>
 
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Группа атрибутов "Габариты"</span></p>
+									<select name="config_dimensions_attr_id">
+										<?php foreach ($attribute_groups as $attribute_group) { ?>
+											<?php if ($attribute_group['attribute_group_id'] == $config_dimensions_attr_id) { ?>
+												<option value="<?php echo $attribute_group['attribute_group_id']; ?>" selected="selected"><?php echo $attribute_group['name']; ?></option>
+											<?php } else { ?>
+												<option value="<?php echo $attribute_group['attribute_group_id']; ?>"><?php echo $attribute_group['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+									</select>
+									<br />
+									<span class="help">В эту группу добавляются атрибуты товара с Амазона</span>
+								</td>
+
 
 								<td style="width:15%">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Название атрибутов - особенностей</span></p>
@@ -592,10 +621,6 @@
 								<td style="width:15%">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Название атрибутов - cпецификаций</span></p>
 									<input type="text" name="config_specifications_attr_name" value="<?php echo $config_specifications_attr_name; ?>" size="30" />										
-								</td>
-
-								<td style="width:15%">
-																
 								</td>
 							</tr>	
 							<tr>

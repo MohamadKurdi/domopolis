@@ -1426,6 +1426,18 @@ class ControllerSettingSetting extends Controller
             $this->data['config_default_attr_id'] = $this->config->get('config_default_attr_id');
         }
 
+        if (isset($this->request->post['config_dimensions_attr_id'])) {
+            $this->data['config_dimensions_attr_id'] = $this->request->post['config_dimensions_attr_id'];
+        } else {
+            $this->data['config_dimensions_attr_id'] = $this->config->get('config_dimensions_attr_id');
+        }
+
+        if (isset($this->request->post['config_enable_attributes_values_logic'])) {
+            $this->data['config_enable_attributes_values_logic'] = $this->request->post['config_enable_attributes_values_logic'];
+        } else {
+            $this->data['config_enable_attributes_values_logic'] = $this->config->get('config_enable_attributes_values_logic');
+        }
+
         if (isset($this->request->post['config_special_attr_name'])) {
             $this->data['config_special_attr_name'] = $this->request->post['config_special_attr_name'];
         } else {
