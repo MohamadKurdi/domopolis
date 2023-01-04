@@ -36,7 +36,7 @@
             display: flex;
             flex-wrap: wrap;
             margin: 0 -10px;
-            justify-content: center;
+            justify-content: center !important;
         }
         .wishlist-info,
         .product__grid{
