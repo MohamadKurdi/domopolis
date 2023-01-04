@@ -3696,7 +3696,7 @@
 									<?php for ($i=1; $i<=$config_goip4_simnumber; $i++) { ?>
 										<td width="25%">
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">GOIP4 <?php echo $i; ?> линия</span></p>
-											<input type="text" name="config_goip4_simnumber_<?php echo $i; ?>" value="<?php echo ${'config_goip4_uri_' . $i}; ?>" size="30" style="width:300px;" />		
+											<input type="text" name="config_goip4_simnumber_<?php echo $i; ?>" value="<?php echo ${'config_goip4_simnumber_' . $i}; ?>" size="30" style="width:300px;" />		
 										</td>
 									<?php } ?>
 								</tr>
