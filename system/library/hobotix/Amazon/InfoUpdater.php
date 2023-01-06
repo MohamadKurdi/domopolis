@@ -392,7 +392,16 @@ class InfoUpdater
 			$query = $this->db->query("SELECT * FROM weight_class WHERE 1");
 
 			foreach ($query->rows as $row){
-				$this->weightCache[$row['amazon_key']] = $row;
+				if ($row['amazon_key']){
+					$this->weightCache[$row['amazon_key']] = $row;
+				}
+
+				if ($row['variants'] && is_array(explode(',', $row['variants']))){
+					foreach (explode(',', $row['variants']) as $variant){
+						$this->weightCache[$variant] = $row;
+					}
+				}
+
 			}
 		}
 
@@ -402,13 +411,23 @@ class InfoUpdater
 			$query = $this->db->query("SELECT * FROM length_class WHERE 1");
 
 			foreach ($query->rows as $row){
-				$this->lengthCache[$row['amazon_key']] = $row;
+				if ($row['amazon_key']){
+					$this->lengthCache[$row['amazon_key']] = $row;
+				}
+
+				if ($row['variants'] && is_array(explode(',', $row['variants']))){
+					foreach (explode(',', $row['variants']) as $variant){
+						$this->lengthCache[$variant] = $row;
+					}
+				}
 			}
 		}
 	}
 
+
+	//THIS WORKS ONLY FOR 10x10x10 Cm; 5 kg - this is standard Amazon dimension string
 	public function parseDimesionsString($string){
-		$string = atrim($string);
+		$string = mb_strtolower(atrim($string));
 		$exploded1 = explode(';', $string);
 
 		if (count($exploded1) != 2){
