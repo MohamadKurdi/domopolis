@@ -1265,7 +1265,7 @@ class ControllerCatalogProduct extends Controller {
 
 			$amazon_product_data = $this->model_kp_product->getProductAmazonFullData($this->data['asin']);
 			if ($this->config->get('config_enable_amazon_asin_file_cache')){	
-				if (file_exists(DIR_CACHE . $amazon_product_data['file'])){
+				if ($amazon_product_data && file_exists(DIR_CACHE . $amazon_product_data['file'])){
 					$this->data['amazon_product_json'] = HTTPS_CATALOG . 'system/' . DIR_CACHE_NAME . $amazon_product_data['file'];				
 				}
 			} else {
