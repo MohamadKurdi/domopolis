@@ -48,8 +48,8 @@
 			$this->load->model('sale/callback');
 			$this->data['total_callbacks'] = $this->model_sale_callback->getOpenedCallBacks();
 			
-			$this->data['callback'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token'], 'SSL');//!
-			$this->data['text_callback'] = $this->language->get('text_callback');//!
+			$this->data['callback'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['text_callback'] = $this->language->get('text_callback');
 			
 			$this->load->model('catalog/review');
 			$this->data['total_review_approval'] = $this->model_catalog_review->getTotalReviewsAwaitingApproval();
@@ -76,6 +76,7 @@
 			$this->data['waitlist_pre'] = $this->url->link('catalog/waitlist', 'filter_prewait=1&token=' . $this->session->data['token'], 'SSL');
 			$this->data['review'] = $this->url->link('catalog/review', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['affiliate'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'], 'SSL');	
+			$this->data['shortnames'] = $this->url->link('catalog/shortnames', 'token=' . $this->session->data['token'], 'SSL');
 			
 			$this->template = 'homestats/headernotifications.tpl';
 			
@@ -621,34 +622,8 @@
 			
 			$this->data['token'] = $this->session->data['token'];
 			
-			$this->load->model('sale/order');
-			
-			//	$this->data['total_sale'] = $this->currency->format($this->model_sale_order->getTotalSales(), $this->config->get('config_currency'));
-			//	$this->data['total_sale_year'] = $this->currency->format($this->model_sale_order->getTotalSalesByYear(date('Y')), $this->config->get('config_currency'));
-			//	$this->data['total_order'] = $this->model_sale_order->getTotalOrders();
-			
-			$this->load->model('sale/customer');
-			
-			//	$this->data['total_customer'] = $this->model_sale_customer->getTotalCustomers();
-			//	$this->data['total_customer_approval'] = $this->model_sale_customer->getTotalCustomersAwaitingApproval();
-			
-			$this->load->model('catalog/review');
-			
-			//	$this->data['total_review'] = $this->model_catalog_review->getTotalReviews();
-			//	$this->data['total_review_approval'] = $this->model_catalog_review->getTotalReviewsAwaitingApproval();
-			
-			$this->load->model('sale/affiliate');
-			
-			//	$this->data['total_affiliate'] = $this->model_sale_affiliate->getTotalAffiliates();
-			//	$this->data['total_affiliate_approval'] = $this->model_sale_affiliate->getTotalAffiliatesAwaitingApproval();
-			
-			//	$this->load->model('report/online');
-			//	$this->data['online'] = $this->model_report_online->getTotalCustomersOnlineNotBotsFast();
-			
 			$this->load->model('user/user');
 			$this->data['managers'] = $this->model_user_user->getUsersByGroups(array(12, 19), true);
-			
-			// Ссылки
 			
 			// Для _sales
 			$this->data['order_url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
@@ -690,6 +665,7 @@
 			$this->data['information_link'] = $this->url->link('catalog/information', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['lp_link'] = $this->url->link('catalog/landingpage', 'token=' . $this->session->data['token'], 'SSL');
 			$this->data['faq_url'] = $this->url->link('module/faq_system', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['shortnames'] = $this->url->link('catalog/shortnames', 'token=' . $this->session->data['token'], 'SSL');
 
 			$this->data['product'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'], 'SSL');
             if ($this->config->get('admin_quick_edit_status') && $this->config->get('aqe_catalog_products_status') && isset($this->session->data['token'])) {

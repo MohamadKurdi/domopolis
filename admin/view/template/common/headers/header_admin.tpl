@@ -23,7 +23,7 @@
 		<link type="text/css" href="view/javascript/jquery/ui/themes/redmond/jquery-ui-1.9.2.custom.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="view/stylesheet/<? echo FILE_STYLE; ?>?v=<?php echo mt_rand(0,10000); ?>" />
 		<link rel="stylesheet" type="text/css" href="view/stylesheet/<? echo FILE_STYLE2; ?>?v=<?php echo mt_rand(0,10000); ?>" />
-		<link rel="stylesheet" type="text/css" href="view/stylesheet/mobile.css?v=<?php echo rand(); ?>" />
+		<link rel="stylesheet" type="text/css" href="view/stylesheet/mobile.css?v=<?php echo mt_rand(0,10000); ?>" />
 		<link rel="stylesheet" type="text/css" href="view/stylesheet/tickets.css" />
 		<?php foreach ($styles as $style) { ?>
 			<link rel="<?php echo $style['rel']; ?>" type="text/css" href="<?php echo $style['href']; ?>" media="<?php echo $style['media']; ?>" />
@@ -146,12 +146,17 @@
 									<li id="alertlog"><a class="top" href="<? echo $user_alerts; ?>" id="alert_history_preview_click"><span class="label label-danger" style="font-size:16px;"><i class='fa fa-bell' style="color:#FFF"></i></span></a></li>
 									<li id="notification" class="header-notifications delayed-load short-delayed-load" data-route='common/home/loadNotifications'>
 									</li>
+
+									<li id="shortnames">
+										<a class="top" href="<? echo $shortnames; ?>"><span class="label label-danger" style="font-size:16px;"><i class="fa fa-eur" ></i> &nbsp;<?php echo $total_shortnames_todo; ?></span></a>		
+									</li>
+
 									<li id="callbacks">
 										<a class="top" href="<? echo $callback; ?>"><span class="label label-danger" style="font-size:16px;"><i class="fa fa-phone-square" ></i> &nbsp;<?php echo $total_callbacks; ?></span></a>		
 									</li>
 									
 									<li id="waitlists">
-										<a class="top" href="<? echo $waitlist_ready; ?>"><span class="label label-danger" style="font-size:16px;"><i class="fa fa-thumbs-up" ></i>&nbsp;<?php echo $total_waitlist_ready; ?></span></a>										
+										<a class="top" href="<? echo $waitlist_ready; ?>"><span class="label label-danger" style="font-size:16px;"><i class="fa fa-thumbs-up" ></i>&nbsp;<?php echo $total_waitlist_ready; ?></span></a>
 									</li>
 
 									<li id="waitlists-pre">
@@ -251,6 +256,7 @@
 							<ul>
 								<li><a class="home_icon_style" href="<?php echo $category; ?>"><i class="fa fa-minus"></i><span><?php echo $text_category; ?></span></a></li>								
 								<li><a class="home_icon_style" href="<?php echo $product; ?>"><i class="fa fa-cubes"></i><span><?php echo $text_product; ?></span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $shortnames; ?>"><i class="fa fa-amazon"></i><span>Экспортные названия  <sup style="color:red">(NEW)</sup></span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $addasin; ?>"><i class="fa fa-amazon"></i><span>Добавление по ASIN  <sup style="color:red">(NEW)</sup></span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $product_deletedasin; ?>"><i class="fa fa-amazon"></i><span>Исключенные ASIN</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $ocfilter; ?>"><i class="fa fa-cubes"></i><span><?php echo $text_ocfilter; ?> <sup style="color:red">DEV</sup></span></a></li>

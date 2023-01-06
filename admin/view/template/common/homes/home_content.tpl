@@ -41,17 +41,7 @@
 </style>
 <table class="admin_home">
 	<tr>
-		<td>
-			<div class="admin_button _green">
-				<div  class="content_opacity ">
-				</div>
-				<div class="content_position">
-					<a href="<?php echo $keyworder_link; ?>">
-						<i class="fa fa-keyboard-o"></i><br />
-						<span class="home_tabs_style">Связка производитель - категория (keyworder)</span>
-					</a>
-				</div>
-			</div>
+		<td>			
 			<div class="admin_button _green">
 				<div  class="content_opacity">
 				</div>
@@ -70,6 +60,17 @@
 					<a href="<?php echo $product ?>">
 						<i class="fa fa-bars"></i><br />
 						<span class="home_tabs_style">Товары</span>
+					</a>
+				</div>
+			</div>
+
+			<div class="admin_button _green">
+				<div  class="content_opacity ">
+				</div>
+				<div class="content_position">
+					<a href="<?php echo $keyworder_link; ?>">
+						<i class="fa fa-keyboard-o"></i><br />
+						<span class="home_tabs_style">Связка производитель - категория (keyworder)</span>
 					</a>
 				</div>
 			</div>
@@ -96,6 +97,7 @@
 				</div>
 			</div>
 			
+			<div class="clr"></div>
 			<div class="admin_button _green">
 				<div  class="content_opacity">
 				</div>
@@ -123,6 +125,18 @@
 					<a href="<?php echo $lp_link; ?>">
 						<i class="fa fa-info"></i><br />
 						<span class="home_tabs_style">Посадочные страницы</span>
+					</a>       
+				</div>
+			</div>
+
+			<div class="clr"></div>
+			<div class="admin_button _green">
+				<div  class="content_opacity">
+				</div>
+				<div class="content_position">
+					<a href="<?php echo $shortnames; ?>">
+						<i class="fa fa-eur"></i><br />
+						<span class="home_tabs_style">Экспортные названия</span>
 					</a>       
 				</div>
 			</div>

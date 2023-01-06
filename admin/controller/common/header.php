@@ -179,7 +179,10 @@ class ControllerCommonHeader extends Controller
 
             $this->data['masspcategupd'] = $this->url->link('tool/masspcategupd', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['masspdiscoupd'] = $this->url->link('tool/masspdiscoupd', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['shortnames'] = $this->url->link('catalog/shortnames', 'token=' . $this->session->data['token'], 'SSL');
 
+            $this->load->model('report/product');
+            $this->data['total_shortnames_todo'] = $this->model_report_product->getTotalProductsWithNoShortNames();
 
             $this->data['banner'] = $this->url->link('design/banner', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['category'] = $this->url->link('catalog/category', 'token=' . $this->session->data['token'], 'SSL');
@@ -312,27 +315,16 @@ class ControllerCommonHeader extends Controller
             $this->data['nmod'] = $this->url->link('module/news', 'token=' . $this->session->data['token'], 'SSL');
 
             $this->data['ncmod'] = $this->url->link('module/ncategory', 'token=' . $this->session->data['token'], 'SSL');
-
             $this->data['npages'] = $this->url->link('catalog/news', 'token=' . $this->session->data['token'], 'SSL');
-
             $this->data['ncategory'] = $this->url->link('catalog/ncategory', 'token=' . $this->session->data['token'], 'SSL');
-
             $this->data['tocomments'] = $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'], 'SSL');
-
             $this->data['nauthor'] = $this->url->link('catalog/nauthor', 'token=' . $this->session->data['token'], 'SSL');
-
             $this->data['text_commod'] = $this->language->get('text_commod');
-
             $this->data['entry_npages'] = $this->language->get('entry_npages');
-
             $this->data['entry_nmod'] = $this->language->get('entry_nmod');
-
             $this->data['entry_ncmod'] = $this->language->get('entry_ncmod');
-
             $this->data['entry_ncategory'] = $this->language->get('entry_ncategory');
-
             $this->data['text_nauthor'] = $this->language->get('text_nauthor');
-
 
             $this->data['mreport_ttnscan'] = $this->url->link('report/mreports', 'report=ttnscan&token=' . $this->session->data['token'], 'SSL');
             $this->data['mreport_needtocall'] = $this->url->link('report/mreports', 'report=needtocall&token=' . $this->session->data['token'], 'SSL');
@@ -344,12 +336,6 @@ class ControllerCommonHeader extends Controller
 
             $this->data['adminlog_url'] = $this->url->link('module/adminlog', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['cdek_integrator'] = $this->url->link('module/cdek_integrator', 'token=' . $this->session->data['token'], 'SSL');
-
-            $this->language->load('extension/vk_export_header');
-            $this->data['text_vk_export'] = $this->language->get('text_vk_export');
-            $this->data['text_vk_export_albums'] = $this->language->get('text_vk_export_albums');
-            $this->data['text_vk_export_setting'] = $this->language->get('text_vk_export_setting');
-            $this->data['text_vk_export_cron_report'] = $this->language->get('text_vk_export_cron_report');
 
             $this->data['collections_link'] = $this->url->link('catalog/collection', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['countrybrands_link'] = $this->url->link('catalog/countrybrand', 'token=' . $this->session->data['token'], 'SSL');
@@ -406,7 +392,6 @@ class ControllerCommonHeader extends Controller
             $this->data['sets_link'] = $this->url->link('module/set', 'token=' . $this->session->data['token'], 'SSL');                                
             $this->data['token'] = $this->session->data['token'];
 
-
             $this->data['paypal_express'] = $this->url->link('payment/pp_express', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['paypal_express_search'] = $this->url->link('payment/pp_express/search', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['recurring_profile'] = $this->url->link('sale/recurring', 'token=' . $this->session->data['token'], 'SSL');
@@ -414,17 +399,13 @@ class ControllerCommonHeader extends Controller
             $this->load->model('sale/callback');
             $this->data['total_callbacks'] = $this->model_sale_callback->getOpenedCallBacks();
 
-            $this->data['callback'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token'], 'SSL');//!
-            $this->data['text_callback'] = $this->language->get('text_callback');//!
+            $this->data['callback'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['text_callback'] = $this->language->get('text_callback');
 
-            /* Admin Header Notices 1.0 */
-
-            //waitlist ready
             $this->load->model('catalog/product');
             $this->data['total_waitlist_ready'] = $this->model_catalog_product->getTotalProductsWaitList(array('filter_supplier_has' => 1));
             $this->data['total_waitlist_prewaits'] = $this->model_catalog_product->getProductsWaitListTotalPreWaits();
 
-            //CURRENCIES
             $this->load->model('localisation/currency');
             $currencies = $this->model_localisation_currency->getCurrencies();
 
