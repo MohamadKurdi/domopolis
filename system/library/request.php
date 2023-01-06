@@ -5,10 +5,17 @@ class Request {
 	public $cookie 	= [];
 	public $files 	= [];
 	public $server 	= [];
+	public $data 	= [];
+	public $method  = 'GET';
 
 	private $numericParams = [
 		'page',
-		'limit'
+		'limit',
+		'product_id',
+		'category_id',
+		'manufacturer_id',
+		'collection_id',
+		'user_id'
 	];
 
 	public function __construct() {
@@ -19,12 +26,28 @@ class Request {
 		$_FILES 	= $this->clean($_FILES);
 		$_SERVER 	= $this->clean($_SERVER);
 
-		$this->get = $_GET;
-		$this->post = $_POST;
-		$this->request = $_REQUEST;
-		$this->cookie = $_COOKIE;
-		$this->files = $_FILES;
-		$this->server = $_SERVER;
+		$this->get 		= $_GET;
+		$this->post 	= $_POST;
+		$this->request 	= $_REQUEST;
+		$this->cookie 	= $_COOKIE;
+		$this->files 	= $_FILES;
+		$this->server 	= $_SERVER;
+		if (!empty($_SERVER['REQUEST_METHOD'])){
+			$this->method 	= $_SERVER['REQUEST_METHOD'];
+		}
+		$this->data     = array_merge($_GET, $_POST);
+	}
+
+	public function isPUT(){
+		return ($this->method == 'PUT');
+	}
+
+	public function isGET(){
+		return ($this->method == 'GET');
+	}
+
+	public function isPOST(){
+		return ($this->method == 'POST');
 	}
 
 	public function clean($data) {
