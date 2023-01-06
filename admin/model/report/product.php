@@ -6,6 +6,71 @@
 				'quantity_stockM' => '0',
 				);
 
+
+		public function getProductsWithNoShortNames($data = []){			
+			$sql = "SELECT DISTINCT op.product_id, 
+				p.asin, 
+				p.image, 
+				p.status, 
+				pd_native_language.name as native_name, 
+				pd_amazon_language.name as amazon_name,
+				pd_native_language.short_name_d as native_short_name, 
+				pd_amazon_language.short_name_d as amazon_short_name
+				FROM `order_product` op
+				LEFT JOIN product p ON (p.product_id = op.product_id)
+				LEFT JOIN `order` o ON (o.order_id = op.order_id) 
+				LEFT JOIN product_description pd_native_language ON (pd_native_language.product_id = op.product_id AND pd_native_language.language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_language')]['language_id'] . "')
+				LEFT JOIN product_description pd_amazon_language ON (pd_amazon_language.product_id = op.product_id AND pd_amazon_language.language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id'] . "')	
+				WHERE 
+				o.order_status_id > 0
+				AND p.status = 1
+				AND o.order_status_id <> '" . (int)$this->config->get('config_cancelled_status_id') . "'
+				AND (pd_native_language.short_name_d = '' OR pd_amazon_language.short_name_d = '')
+				AND (pd_native_language.name <> '' AND pd_amazon_language.name <> '')";
+
+			$sql .= " ORDER BY op.product_id DESC";
+
+			if (isset($data['start']) || isset($data['limit'])) {
+				if ($data['start'] < 0) {
+					$data['start'] = 0;
+				}
+				
+				if ($data['limit'] < 1) {
+					$data['limit'] = 20;
+				}
+				
+				$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+			}
+			
+			$query = $this->db->query($sql);
+			
+			return $query->rows;
+
+		}
+
+		public function getTotalProductsWithNoShortNames($data = []){
+			$this->load->model('localisation/language');
+
+			$sql = "SELECT COUNT(DISTINCT op.product_id) as total FROM `order_product` op 
+				LEFT JOIN `order` o ON (o.order_id = op.order_id)
+				LEFT JOIN product p ON (p.product_id = op.product_id)
+				LEFT JOIN product_description pd_native_language ON (pd_native_language.product_id = op.product_id AND pd_native_language.language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_language')]['language_id'] . "')
+				LEFT JOIN product_description pd_amazon_language ON (pd_amazon_language.product_id = op.product_id AND pd_amazon_language.language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id'] . "')
+				WHERE 
+				o.order_status_id > 0
+				AND p.status = 1
+				AND o.order_status_id <> '" . (int)$this->config->get('config_cancelled_status_id') . "'
+				AND (pd_native_language.short_name_d = '' OR pd_amazon_language.short_name_d = '')
+				AND (pd_native_language.name <> '' AND pd_amazon_language.name <> '')";
+
+			$sql .= " ORDER BY o.date_added DESC";
+			
+			$query = $this->db->query($sql);
+			
+			return $query->row['total'];
+
+		}
+
 		public function deleteASINFromQueue($asin) {			
 			if (trim($asin)){
 				$this->db->query("DELETE FROM amzn_add_queue WHERE asin = '" . $this->db->escape($asin) . "'");
@@ -26,7 +91,7 @@
 			}		
 		}
 
-		public function getProductsInASINQueue($data = array()) {
+		public function getProductsInASINQueue($data = []) {
 			$sql = "SELECT adq.*, pd.name, p.image, p.status, p.date_added as date_created FROM amzn_add_queue adq LEFT JOIN product p ON (p.product_id = adq.product_id) LEFT JOIN product_description pd ON (adq.product_id = pd.product_id AND language_id = '" . $this->config->get('config_language_id') . "') WHERE 1";
 			
 			if (isset($data['filter_asin'])){
@@ -81,7 +146,7 @@
 		}
 
 
-		public function getProductsDeletedASIN($data = array()) {
+		public function getProductsDeletedASIN($data = []) {
 			$sql = "SELECT * FROM deleted_asins WHERE 1 ";
 			
 			if (isset($data['filter_asin'])){
@@ -139,7 +204,7 @@
 			return $query->row['total'];
 		}
 				
-		public function getProductsViewed($data = array()) {
+		public function getProductsViewed($data = []) {
 			$sql = "SELECT sv.entity_id as product_id, pd.name, p.model, p.ean, p.price, p.actual_cost, p.actual_cost_date, p.image, m.name as manufacturer, SUM(sv.times) as viewed, ";
 			
 			$sql .= " (SELECT price FROM product_special ps WHERE ps.product_id = sv.entity_id 
@@ -258,7 +323,7 @@
 			return $query->rows;
 		}	
 		
-		public function getProductBoughtByDays($data = array()){
+		public function getProductBoughtByDays($data = []){
 			$sql = "SELECT SUM(op.quantity) as cart FROM `order` o
 			LEFT JOIN order_product op ON (o.order_id = op.order_id) WHERE 
 			o.order_status_id > 0 AND op.product_id > 0 AND
@@ -291,7 +356,7 @@
 			}			
 		}				
 		
-		public function getProductViewedByDays($data = array()){
+		public function getProductViewedByDays($data = []){
 			$sql = "SELECT SUM(sv.times) as viewed FROM superstat_viewed sv
 			WHERE entity_type = 'p'
 			AND entity_id = '" . $this->db->escape($data['product_id']) . "'
@@ -308,7 +373,7 @@
 			}			
 		}
 		
-		public function getTotalProductsViewed($data = array()) {
+		public function getTotalProductsViewed($data = []) {
 			$sql = "SELECT COUNT(DISTINCT entity_id) as total FROM superstat_viewed sv
 			LEFT JOIN product p ON (p.product_id = sv.entity_id) 						
 			";
@@ -350,7 +415,7 @@
 			$this->db->query("UPDATE product SET viewed = '0'");
 		}
 		
-		public function getPurchased($data = array()) {
+		public function getPurchased($data = []) {
 			$sql = "SELECT op.name, op.model, SUM(op.quantity) AS quantity, SUM(op.total + op.total * op.tax / 100) AS total FROM order_product op LEFT JOIN `order` o ON (op.order_id = o.order_id)";
 			
 			if (!empty($data['filter_order_status_id'])) {
@@ -408,7 +473,7 @@
 			return $query->row['total'];
 		}
 		
-		public function getBought($data = array()) {
+		public function getBought($data = []) {
 			$sql = "SELECT DISTINCT(op.product_id),
 			op.model,
 			op.name,
@@ -474,7 +539,7 @@
 			
 			if (!empty($data['filter_problems'])){
 				$sql .= ' AND (';
-				$tsql = array();
+				$tsql = [];
 				foreach ($this->good_warehouses as $wh => $store_id){
 					$tsql []= "((p.".$wh." <=  (SELECT min_stock FROM product_stock_limits psl WHERE min_stock > 0 AND psl.product_id = p.product_id AND store_id = '" . $store_id . "')) OR 
 						(p.".$wh." >  (SELECT min_stock + min_stock * 0.3 FROM product_stock_limits psl WHERE min_stock > 0 AND psl.product_id = p.product_id AND store_id = '" . $store_id . "')
@@ -528,7 +593,7 @@
 			return $query->rows;		
 		}
 		
-		public function getTotalBought($data = array()) {
+		public function getTotalBought($data = []) {
 			
 			$this->db->query("UPDATE order_product op SET date_added_fo = (SELECT date_added FROM `order` o WHERE o.order_id = op.order_id LIMIT 1) WHERE ISNULL(op.date_added_fo)");
 			
@@ -574,7 +639,7 @@
 			
 			if (!empty($data['filter_problems'])){
 				$sql .= ' AND (';
-				$tsql = array();
+				$tsql = [];
 				foreach ($this->good_warehouses as $wh => $store_id){
 					$tsql []= "((p.".$wh." <=  (SELECT min_stock FROM product_stock_limits psl WHERE min_stock > 0 AND psl.product_id = p.product_id AND store_id = '" . $store_id . "')) OR 
 						(p.".$wh." >  (SELECT min_stock + min_stock * 0.3 FROM product_stock_limits psl WHERE min_stock > 0 AND psl.product_id = p.product_id AND store_id = '" . $store_id . "')
@@ -613,7 +678,7 @@
 			}			
 		}
 		
-		public function getTotalBoughtByProductID($data = array()) {
+		public function getTotalBoughtByProductID($data = []) {
 			
 			$sql = "SELECT SUM(op.quantity) AS total FROM `order_product` op 
 			LEFT JOIN `order` o ON (op.order_id = o.order_id)";
@@ -643,7 +708,7 @@
 			}			
 		}
 			
-		public function getAverageBoughtByProductID($data = array()) {
+		public function getAverageBoughtByProductID($data = []) {
 			
 			$sql = "SELECT AVG(total_by_period) as average FROM ( 
 			SELECT SUM(op.quantity) AS total_by_period FROM `order_product` op 
@@ -682,7 +747,7 @@
 			}			
 		}
 				
-		public function getAverageInOrderByProductID($data = array()) {
+		public function getAverageInOrderByProductID($data = []) {
 			
 			$sql = "SELECT AVG(op.quantity) AS average FROM `order_product` op 
 			LEFT JOIN `order` o ON (op.order_id = o.order_id)";
@@ -713,7 +778,7 @@
 			}			
 		}
 		
-		public function getLastDateOrderByProductID($data = array()) {
+		public function getLastDateOrderByProductID($data = []) {
 			
 			$sql = "SELECT MAX(op.date_added_fo) as maxdate FROM `order_product` op 
 			LEFT JOIN `order` o ON (op.order_id = o.order_id)";
