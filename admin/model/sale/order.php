@@ -2851,10 +2851,7 @@
 			
 		}
 		
-		public function getOrderUntakenProducts($order_id, $with_returns = true, $order_by = 'op.delivery_num, op.name', $delivery_num = false, $no_certificate = false) {
-			$this->load->model('localisation/language');
-			$de_language_id = $this->model_localisation_language->getLanguageByCode($this->config->get('config_de_language'));
-			
+		public function getOrderUntakenProducts($order_id, $with_returns = true, $order_by = 'op.delivery_num, op.name', $delivery_num = false, $no_certificate = false) {			
 			$_sql_addon = '';
 			
 			if ($delivery_num){				
@@ -2870,8 +2867,8 @@
 			}
 			
 			$query = $this->db->query("SELECT op.*,p.image, p.short_name, p.short_name_de, p.product_id, p.manufacturer_id, 
-			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$de_language_id . "' LIMIT 1) as de_name,
-			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '6' LIMIT 1) as ua_name 
+			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id'] . "' LIMIT 1) as de_name,
+			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id'] . "' LIMIT 1) as ua_name 
 			FROM order_product_untaken op LEFT JOIN product p ON op.product_id = p.product_id WHERE order_id = '" . (int)$order_id . "' " . $_sql_addon . " ORDER BY " . $this->db->escape($order_by) . "");		
 			
 			$products = array();
@@ -2882,10 +2879,7 @@
 			return $products;
 		}
 		
-		public function getOrderProducts($order_id, $with_returns = true, $order_by = 'op.delivery_num, op.name', $delivery_num = false, $no_certificate = false) {
-			$this->load->model('localisation/language');
-			$de_language_id = $this->model_localisation_language->getLanguageByCode($this->config->get('config_de_language'));
-			
+		public function getOrderProducts($order_id, $with_returns = true, $order_by = 'op.delivery_num, op.name', $delivery_num = false, $no_certificate = false) {			
 			$_sql_addon = '';
 			
 			if ($delivery_num){				
@@ -2908,8 +2902,8 @@
 			p.manufacturer_id, 
 			p.ean, 
 			p.asin,
-			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$de_language_id . "' LIMIT 1) as de_name,
-			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '6' LIMIT 1) as ua_name 
+			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id'] . "' LIMIT 1) as de_name,
+			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id'] . "' LIMIT 1) as ua_name 
 			FROM order_product op LEFT JOIN product p ON op.product_id = p.product_id WHERE order_id = '" . (int)$order_id . "' " . $_sql_addon . " ORDER BY " . $this->db->escape($order_by) . "");		
 			
 			$products = array();
@@ -2954,33 +2948,25 @@
 			
 		}
 		
-		public function getOrderProductPartiesByID($order_product_id) {
-			
+		public function getOrderProductPartiesByID($order_product_id) {			
 			$query = $this->db->query("SELECT op.* FROM order_product op WHERE order_product_id = '" . (int)$order_product_id . "' LIMIT 1");
 			
-			return $query->row;
-			
+			return $query->row;			
 		}
 		
-		public function getOrderProductsNoGood($order_id) {
-			$this->load->model('localisation/language');
-			$de_language_id = $this->model_localisation_language->getLanguageByCode($this->config->get('config_de_language'));
-			
+		public function getOrderProductsNoGood($order_id) {			
 			$query = $this->db->query("SELECT op.*,p.image, p.short_name, p.product_id, p.stock_status_id, 
-			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$de_language_id . "' LIMIT 1) as de_name,
-			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '6' LIMIT 1) as ua_name 
+			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id'] . "' LIMIT 1) as de_name,
+			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id'] . "' LIMIT 1) as ua_name 
 			FROM order_product_nogood op LEFT JOIN product p ON op.product_id = p.product_id WHERE order_id = '" . (int)$order_id . "' ORDER BY op.name");
 			
 			return $query->rows;
 		}
 		
-		public function getOrderProductsBySet($order_id, $set_id){
-			$this->load->model('localisation/language');
-			$de_language_id = $this->model_localisation_language->getLanguageByCode($this->config->get('config_de_language'));
-			
+		public function getOrderProductsBySet($order_id, $set_id){			
 			$query = $this->db->query("SELECT op.*,p.image, p.short_name, p.product_id, 
-			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$de_language_id . "' LIMIT 1) as de_name,
-			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '6' LIMIT 1) as ua_name 
+			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id'] . "' LIMIT 1) as de_name,
+			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id'] . "' LIMIT 1) as ua_name 
 			FROM order_set op LEFT JOIN product p ON op.product_id = p.product_id WHERE order_id = '" . (int)$order_id . "' AND set_id = '" . (int)$set_id . "' ORDER BY op.name");
 			
 			return $query->rows;
@@ -3320,8 +3306,6 @@
 			if ($this->user->isLogged() && $this->user->getManagerStores()){
 				$sql .= " AND o.store_id IN (" . implode(',', $this->user->getManagerStores()) . ")";			
 			}
-			
-			//	var_dump($sql);
 			
 			$query = $this->db->query($sql);
 			
