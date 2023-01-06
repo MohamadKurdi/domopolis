@@ -353,10 +353,10 @@
 													</tr>
 													<tr>
 														<td>Экспортное название<br /><span class="help">макс. 50 символов</span></td>
-														<td><input type="text" name="short_name" value="<?php echo $short_name; ?>" style="width:300px;" size="50" /></td>
+														<td><input type="text" name="short_name" value="<?php echo $short_name; ?>" size="50" maxlength="50" /></td>
 
 														<td><img src="view/image/flags/de.png" title="de"> Экспортное название DE<br /><span class="help">макс. 50 символов</span></td>
-														<td><input type="text" name="short_name_de" value="<?php echo $short_name_de; ?>" style="width:300px;" size="50" /></td>
+														<td><input type="text" name="short_name_de" value="<?php echo $short_name_de; ?>" size="50" maxlength="50" /></td>
 													</tr>
 													<tr>
 														<td><?php echo $entry_sku; ?></td>
