@@ -87,7 +87,7 @@
 					echo '>> Удаляем товар ' . $row['product_id'] . PHP_EOL;
 					$this->model_catalog_product->deleteProduct($row['product_id'], false, true);
 				}
-			}
+			}			
 
 			echo '>> Нормализация рейтинга товаров...' . PHP_EOL;
 			$this->db->query("UPDATE product SET xrating = (SELECT AVG(rating) as xrating FROM review WHERE status = 1 AND product_id = product.product_id GROUP BY product_id)");

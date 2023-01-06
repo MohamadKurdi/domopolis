@@ -1657,12 +1657,12 @@
 					
 					$product_counter = 0;
 					foreach ($products as $product) {
-						$real_product = $this->model_catalog_product->getProduct($product['product_id']);
-						$real_product_descriptions = $this->model_catalog_product->getProductDescriptions($product['product_id']);
-						$weight_class = $this->model_localisation_weight_class->getWeightClass($real_product['weight_class_id']);
-						$weight_full_class = $this->model_localisation_weight_class->getWeightClass($real_product['pack_weight_class_id']);
-						$manufacturer = $this->model_catalog_manufacturer->getManufacturer($real_product['manufacturer_id']);						
-						$is_set = $this->model_catalog_product->getThisProductIsSet($product['product_id']);
+						$real_product 				= $this->model_catalog_product->getProduct($product['product_id']);
+						$real_product_descriptions 	= $this->model_catalog_product->getProductDescriptions($product['product_id']);
+						$weight_class 				= $this->model_localisation_weight_class->getWeightClass($real_product['weight_class_id']);
+						$weight_full_class 			= $this->model_localisation_weight_class->getWeightClass($real_product['pack_weight_class_id']);
+						$manufacturer 				= $this->model_catalog_manufacturer->getManufacturer($real_product['manufacturer_id']);						
+						$is_set 					= $this->model_catalog_product->getThisProductIsSet($product['product_id']);
 						
 						if (!$manufacturer || !isset($manufacturer['name'])){
 							$manufacturer['name'] = 'Неизвестно';
@@ -1687,10 +1687,32 @@
 							$ao_quantity = false;
 						}
 						
-						//tnved
 						if (!$real_product['tnved'] || mb_strlen($real_product['tnved']) < 2){
 							$real_product['tnved'] = $this->model_catalog_product->getProductTNVEDByCategory($product['product_id']);
-						}					
+						}
+
+						//short_name new logic, 06.01.2023
+						$short_name = $short_name_de = '';
+						if (!empty($real_product_descriptions[$this->registry->get('languages')[$this->config->get('config_language')]['language_id']])){
+							$short_name = $real_product_descriptions[$this->registry->get('languages')[$this->config->get('config_language')]['language_id']]['short_name_d'];
+						}
+
+						if (!empty($real_product_descriptions[$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id']])){
+							$short_name_de = $real_product_descriptions[$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id']]['short_name_d'];
+						}
+
+						if (!$short_name){
+							$short_name = $product['short_name'];
+						}
+
+						if (!$short_name_de){
+							$short_name_de = $product['short_name_de'];
+						}
+
+						if (!$short_name){
+							$short_name = $product['name'];
+						}
+										
 						
 						$document['Документ' . $document_counter]['Товары']['Товар' . $product_counter] = array(
 						'ИД'            						=> $product['product_id']
@@ -1709,9 +1731,9 @@
 						,'ВесТовараПолныйЕдиницаИД'   			=> $real_product['pack_weight_class_id']
 						,'ВесТовараПолныйЕдиницаНаименование'	=> isset($weight_full_class['title'])?$weight_full_class['title']:'Ложь'
 						,'ВесТовараПолныйЕдиницаОбозначение'	=> isset($weight_full_class['unit'])?$weight_full_class['unit']:'Ложь'
-						,'НаименованиеКороткое'   				=> $this->rms($product['short_name'])?$this->rms($product['short_name']):$this->rms($product['name'])	
+						,'НаименованиеКороткое'   				=> $this->rms($short_name)
 						,'НаименованиеНаЯзыкеБренда'			=> $this->rms($product['de_name'])
-						,'НаименованиеКороткоеНаЯзыкеБренда'	=> $this->rms($product['short_name_de'])
+						,'НаименованиеКороткоеНаЯзыкеБренда'	=> $this->rms($short_name_de)
 						,'МинимумКЗаказу'  						=> $real_product['minimum']
 						,'КоличествоВУпаковке'					=> $real_product['package']
 						,'БрендИД'       						=> $real_product['manufacturer_id']
@@ -2029,9 +2051,6 @@
 								,'ВесТовараПолныйЕдиницаИД'   			=> $real_set_product['pack_weight_class_id']
 								,'ВесТовараПолныйЕдиницаНаименование'	=> isset($weight_full_class['title'])?$weight_full_class['title']:'Ложь'
 								,'ВесТовараПолныйЕдиницаОбозначение'	=> isset($weight_full_class['unit'])?$weight_full_class['unit']:'Ложь'
-								,'НаименованиеКороткое'   			=> $this->rms($set_product['short_name'])?$this->rms($set_product['short_name']):$this->rms($set_product['name'])
-								,'НаименованиеНаЯзыкеБренда'		=> $this->rms($set_product['de_name'])
-								,'НаименованиеКороткоеНаЯзыкеБренда'	=> $this->rms($set_product['short_name_de'])
 								,'БрендИД'       					=> $real_set_product['manufacturer_id']
 								,'ИзображениеСсылка'				=> $this->model_tool_image->resize($real_set_product['image'], 150, 150)
 								,'БрендНаименование'        		=> $this->rms($manufacturer['name'])
@@ -2247,7 +2266,7 @@
 					
 					$product_counter = 0;
 					foreach ($products as $product) {
-						$real_product = $this->model_catalog_product->getProduct($product['product_id']);
+						$real_product = $this->model_catalog_product->getProduct($product['product_id']);						
 						$weight_class = isset($real_product['weight_class_id'])?$this->model_localisation_weight_class->getWeightClass($real_product['weight_class_id']):false;
 						$weight_full_class = isset($real_product['pack_weight_class_id'])?$this->model_localisation_weight_class->getWeightClass($real_product['pack_weight_class_id']):false;
 						$manufacturer = isset($real_product['pack_weight_class_id'])?$this->model_catalog_manufacturer->getManufacturer($real_product['manufacturer_id']):false;
@@ -2260,8 +2279,7 @@
 							$real_product['tnved'] = $this->model_catalog_product->getProductTNVEDByCategory($product['product_id']);
 						}
 						
-						if ($product['waitlist']) {
-							
+						if ($product['waitlist']) {							
 							$document['Документ' . $document_counter]['ТоварыНетУПоставщикаИВЛистеОжидания']['Товар' . $product_counter] = array(
 							'ИД'            					=> $product['product_id']
 							,'Артикул'		 					=> $product['model']
@@ -2276,9 +2294,6 @@
 							,'ВесТовараПолныйЕдиницаИД'   			=> isset($real_product['pack_weight_class_id'])?$real_product['pack_weight_class_id']:'Ложь'					
 							,'ВесТовараПолныйЕдиницаНаименование'	=> isset($weight_full_class['title'])?$weight_full_class['title']:'Ложь'
 							,'ВесТовараПолныйЕдиницаОбозначение'	=> isset($weight_full_class['unit'])?$weight_full_class['unit']:'Ложь'
-							,'НаименованиеКороткое'   			=> $this->rms($product['short_name'])?$this->rms($product['short_name']):$this->rms($product['name'])
-							,'НаименованиеНаЯзыкеБренда'		=> $this->rms($product['de_name'])
-							,'НаименованиеКороткоеНаЯзыкеБренда'	=> $this->rms(isset($product['short_name_de'])?$product['short_name_de']:'Ложь')
 							,'МинимумКЗаказу'  						=> $real_product['minimum']
 							,'КоличествоВУпаковке'					=> $real_product['package']
 							,'БрендИД'       					=> isset($real_product['manufacturer_id'])?$real_product['manufacturer_id']:'Ложь'
@@ -2390,9 +2405,6 @@
 							,'ВесТовараПолныйЕдиницаИД'   			=> isset($real_product['weight'])?$real_product['pack_weight_class_id']:'Ложь'
 							,'ВесТовараПолныйЕдиницаНаименование'	=> isset($weight_full_class['title'])?$weight_full_class['title']:'Ложь'
 							,'ВесТовараПолныйЕдиницаОбозначение'	=> isset($weight_full_class['unit'])?$weight_full_class['unit']:'Ложь'
-							,'НаименованиеКороткое'   			=> $this->rms($product['short_name'])?$this->rms($product['short_name']):$this->rms($product['name'])
-							,'НаименованиеНаЯзыкеБренда'		=> $this->rms($product['de_name'])
-							,'НаименованиеКороткоеНаЯзыкеБренда'	=> isset($product['short_name_de'])?$this->rms($product['short_name_de']):'Ложь'
 							,'МинимумКЗаказу'  						=> $real_product['minimum']
 							,'КоличествоВУпаковке'					=> $real_product['package']
 							,'БрендИД'       					=> isset($real_product['manufacturer_id'])?$real_product['manufacturer_id']:'Ложь'
