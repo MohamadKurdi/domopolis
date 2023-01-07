@@ -73,6 +73,17 @@
             </tr>
         <?php } ?>
 
+        <?php if (!empty($rand_attribute_values2)) { ?>
+           <tr>
+            <td>Примеры значений атрибута</td>
+                <td>
+                    <?php $i=0; foreach ($rand_attribute_values2 as $rand_attribute_value) { ?>
+                            <span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF; margin-left:10px; margin-bottom:5px;"><?php echo $rand_attribute_value ?></span>                         
+                    <?php } ?>
+                </td>
+            </tr>
+        <?php } ?>
+
          <?php if (!empty($attribute_values)) { ?>
            <tr>
             <td>Изображения значений атрибута</td>

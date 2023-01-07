@@ -401,11 +401,17 @@ class ControllerCatalogAttribute extends Controller {
         	$this->data['attribute_values'] = $attributeValueArray;
         } else {
         	$this->data['rand_attribute_values'] = [];
+        	$this->data['rand_attribute_values2'] = [];
 
-        	$attributeValueArray = $this->model_catalog_attribute->getRandAttributesValueByAttributeId($this->request->get['attribute_id']); 
+        	$attributeValueArray = $this->model_catalog_attribute->getRandAttributesValueByAttributeId($this->request->get['attribute_id']);
+        	$attributeValueArray2 = $this->model_catalog_attribute->getRandAOriginalttributesValueByAttributeId($this->request->get['attribute_id']); 
 
         	foreach ($attributeValueArray as $k => $v){
         		$this->data['rand_attribute_values'][] = $v['text'];
+        	}
+
+        	foreach ($attributeValueArray2 as $k => $v){
+        		$this->data['rand_attribute_values2'][] = $v['text'];
         	}
         }
 
