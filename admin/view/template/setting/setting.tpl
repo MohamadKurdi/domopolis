@@ -5786,10 +5786,22 @@
 				var store_id = $('input[name=store_id]').val();
 
 				if (elem.attr('type') == 'checkbox'){
-					if (elem.attr('checked')){
-						value = elem.val();
+					value = [];
+					if (key.indexOf('[]') > 0){
+						var allboxes = $('input[name=\''+ key +'\']');
+
+						allboxes.each(function(i){
+							if ($(this).attr('checked')){
+								value.push($(this).val());
+							}
+						});
 					} else {
-						value = 0;
+
+						if (elem.attr('checked')){
+							value = elem.val();
+						} else {
+							value = 0;
+						}
 					}
 				}
 

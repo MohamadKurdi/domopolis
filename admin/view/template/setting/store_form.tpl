@@ -1611,17 +1611,29 @@
 				</div>
 				<script type="text/javascript">
 
-					$('select, textarea, input[type=text], input[type=number], input[type=checkbox]').bind('change', function() {
+					$('select, textarea, input[type=text], input[type=number], input[type=time], input[type=checkbox]').bind('change', function() {
 						var key  = $(this).attr('name');
 						var elem = $(this);
-						var value = this.value;
+						var value = $(this).val();
 						var store_id = $('input[name=store_id]').val();
 
 						if (elem.attr('type') == 'checkbox'){
-							if (elem.attr('checked')){
-								value = 1;
+							value = [];
+							if (key.indexOf('[]') > 0){
+								var allboxes = $('input[name=\''+ key +'\']');
+
+								allboxes.each(function(i){
+									if ($(this).attr('checked')){
+										value.push($(this).val());
+									}
+								});
 							} else {
-								value = 0;
+
+								if (elem.attr('checked')){
+									value = elem.val();
+								} else {
+									value = 0;
+								}
 							}
 						}
 
