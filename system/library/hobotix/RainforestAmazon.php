@@ -75,16 +75,16 @@ class RainforestAmazon
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/OffersParser.php');
 		$this->offersParser = new Amazon\OffersParser($registry);
 
+		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/RainforestRetriever.php');
+
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/InfoUpdater.php');
-		$this->infoUpdater = new Amazon\InfoUpdater($registry, $this->rfClient);
+		$this->infoUpdater = new Amazon\InfoUpdater($registry);
 
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/ParamsTranslator.php');
 		$this->paramsTranslator = new Amazon\ParamsTranslator();
 				
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/CategoryParser.php');
 		$this->categoryParser = new Amazon\CategoryParser($registry, $this->rfClient);
-
-		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/RainforestRetriever.php');
 
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/CategoryRetriever.php');
 		$this->categoryRetriever = new Amazon\CategoryRetriever($registry);
@@ -168,8 +168,8 @@ class RainforestAmazon
 		}
 
 		if (!$error && $answer && !empty($answer['account_info']) && $answer['account_info']['credits_remaining'] > 0){
-			if ($answer['account_info']['credits_remaining'] <= $answer['account_info']['credits_limit']/10){
-				$warning = 'CREDITS_LESS_THEN_10_PERCENT';
+			if ($answer['account_info']['credits_remaining'] <= $answer['account_info']['credits_limit']/20){
+				$warning = 'CREDITS_LESS_THEN_5_PERCENT';
 			}
 		}
 
