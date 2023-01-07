@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Дек 28 2022 г., 14:28
+-- Время создания: Янв 07 2023 г., 20:40
 -- Версия сервера: 10.6.7-MariaDB-2ubuntu1.1-log
 -- Версия PHP: 8.1.9
 
@@ -524,6 +524,7 @@ DROP TABLE IF EXISTS `attribute`;
 CREATE TABLE `attribute` (
   `attribute_id` int(11) NOT NULL,
   `attribute_group_id` int(11) NOT NULL,
+  `dimension_type` enum('length','width','height','dimensions','weight','all') DEFAULT NULL,
   `sort_order` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
@@ -3093,7 +3094,8 @@ CREATE TABLE `length_class` (
   `length_class_id` int(11) NOT NULL,
   `value` decimal(15,8) NOT NULL,
   `system_key` varchar(100) NOT NULL,
-  `amazon_key` varchar(100) NOT NULL
+  `amazon_key` varchar(100) NOT NULL,
+  `variants` varchar(2048) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -7550,20 +7552,6 @@ CREATE TABLE `user_worktime` (
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `vb_temp`
---
-
-DROP TABLE IF EXISTS `vb_temp`;
-CREATE TABLE `vb_temp` (
-  `href` varchar(500) NOT NULL,
-  `sku` varchar(255) NOT NULL,
-  `price` decimal(10,4) NOT NULL,
-  `special` decimal(10,4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
 -- Структура таблицы `vk_export_album`
 --
 
@@ -7692,7 +7680,8 @@ CREATE TABLE `weight_class` (
   `weight_class_id` int(11) NOT NULL,
   `value` decimal(15,8) NOT NULL DEFAULT 0.00000000,
   `system_key` varchar(100) NOT NULL,
-  `amazon_key` varchar(100) NOT NULL
+  `amazon_key` varchar(100) NOT NULL,
+  `variants` varchar(2048) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -8032,7 +8021,9 @@ ALTER TABLE `apri`
 -- Индексы таблицы `attribute`
 --
 ALTER TABLE `attribute`
-  ADD PRIMARY KEY (`attribute_id`);
+  ADD PRIMARY KEY (`attribute_id`),
+  ADD KEY `attribute_group_id` (`attribute_group_id`),
+  ADD KEY `dimension_type` (`dimension_type`);
 
 --
 -- Индексы таблицы `attributes_category`
@@ -10034,7 +10025,6 @@ ALTER TABLE `product`
   ADD KEY `weight_class_id` (`weight_class_id`),
   ADD KEY `length_class_id` (`length_class_id`),
   ADD KEY `quantity_stock` (`quantity_stock`),
-  ADD KEY `quantity_stockM` (`quantity_stockM`),
   ADD KEY `quantity_stockK` (`quantity_stockK`),
   ADD KEY `new` (`new`),
   ADD KEY `stock_status_id` (`stock_status_id`),
@@ -10047,17 +10037,13 @@ ALTER TABLE `product`
   ADD KEY `yam_in_feed` (`yam_in_feed`),
   ADD KEY `yam_hidden` (`yam_hidden`),
   ADD KEY `is_illiquid` (`is_illiquid`),
-  ADD KEY `quantity_stockMN` (`quantity_stockMN`),
   ADD KEY `amzn_invalid_asin` (`amzn_invalid_asin`),
   ADD KEY `amzn_not_found` (`amzn_not_found`),
   ADD KEY `amzn_last_search` (`amzn_last_search`),
   ADD KEY `amzn_no_offers` (`amzn_no_offers`),
   ADD KEY `amzn_ignore` (`amzn_ignore`),
   ADD KEY `quantity_stockK_onway` (`quantity_stockK_onway`),
-  ADD KEY `quantity_stockM_onway` (`quantity_stockM_onway`),
   ADD KEY `quantity_stock_onway` (`quantity_stock_onway`),
-  ADD KEY `quantity_stockMN_onway` (`quantity_stockMN_onway`),
-  ADD KEY `quantity_stockAS_onway` (`quantity_stockAS_onway`),
   ADD KEY `date_added` (`date_added`),
   ADD KEY `new_date_to` (`new_date_to`),
   ADD KEY `added_from_amazon` (`added_from_amazon`),
@@ -10146,8 +10132,9 @@ ALTER TABLE `product_attribute`
   ADD KEY `attribute_id` (`attribute_id`),
   ADD KEY `language_id` (`language_id`),
   ADD KEY `product_id` (`product_id`),
-  ADD KEY `text` (`text`(255)),
-  ADD KEY `product_id_language_id` (`product_id`,`language_id`) USING BTREE;
+  ADD KEY `product_id_language_id` (`product_id`,`language_id`) USING BTREE,
+  ADD KEY `attribute_id_language_id` (`attribute_id`,`language_id`) USING BTREE,
+  ADD KEY `text` (`text`(1024)) USING BTREE;
 
 --
 -- Индексы таблицы `product_barbara_tab`
@@ -10186,7 +10173,8 @@ ALTER TABLE `product_description`
   ADD KEY `variant_name_1` (`variant_name_1`),
   ADD KEY `variant_name_2` (`variant_name_2`),
   ADD KEY `variant_value_1` (`variant_value_1`),
-  ADD KEY `variant_value_2` (`variant_value_2`);
+  ADD KEY `variant_value_2` (`variant_value_2`),
+  ADD KEY `short_name_d` (`short_name_d`);
 
 --
 -- Индексы таблицы `product_discount`
@@ -10402,7 +10390,9 @@ ALTER TABLE `product_special`
   ADD KEY `price` (`price`),
   ADD KEY `set_by_stock` (`set_by_stock`),
   ADD KEY `set_by_stock_illiquid` (`set_by_stock_illiquid`),
-  ADD KEY `date_settled_by_stock` (`date_settled_by_stock`);
+  ADD KEY `date_settled_by_stock` (`date_settled_by_stock`),
+  ADD KEY `date_start` (`date_start`),
+  ADD KEY `date_end` (`date_end`);
 
 --
 -- Индексы таблицы `product_special_attribute`
