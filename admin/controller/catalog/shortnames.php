@@ -136,6 +136,9 @@ class ControllerCatalogShortNames extends Controller {
 						$this->db->query("UPDATE product SET short_name_de = '" . $this->db->escape($this->request->data['text']) . "' WHERE product_id = '" . (int)$this->request->data['product_id'] . "'");
 					}			
 				}	
+
+				$this->load->model('kp/content');
+				$this->model_kp_content->addContent(['action' => 'edit', 'entity_type' => 'product', 'entity_id' => $product_id]);
 			}
 		}
 	}
