@@ -1886,23 +1886,43 @@ class ControllerProductProduct extends Controller
                             if (!empty($html_block['content'][$this->config->get('config_language_id')])) {
                                 $this->data['payment_list'] = explode(PHP_EOL, $html_block['content'][$this->config->get('config_language_id')]);
                             }
-                        }
+                        }                        
 
                         if (!empty($product_info['weight']) && !empty($product_info['weight_class_id'])){
-                            $this->data['weight'] = $this->weight->format($product_info['weight'], $product_info['weight_class_id']);
+                            if ($product_info['weight_class_id'] != $this->config->get('config_weight_class_id') && $this->config->get('config_convert_weights_class_id') && in_array($product_info['weight_class_id'], $this->config->get('config_convert_weights_class_id'))){
+                                $product_info['weight'] = $this->weight->convert($product_info['weight'], $product_info['weight_class_id'], $this->config->get('config_weight_class_id'));
+                                $this->data['weight'] = $this->weight->format($product_info['weight'], $this->config->get('config_weight_class_id'));
+                            } else {
+                                $this->data['weight'] = $this->weight->format($product_info['weight'], $product_info['weight_class_id']);
+                            }                           
                         }
 
                         $product_dimensions = [];
                         if (!empty($product_info['length']) && !empty($product_info['length_class_id'])){
-                            $this->data['length'] = $product_dimensions['length'] = $this->length->format($product_info['length'], $product_info['length_class_id']);
+                            if ($product_info['length_class_id'] != $this->config->get('config_length_class_id') && $this->config->get('config_convert_lengths_class_id') && in_array($product_info['length_class_id'], $this->config->get('config_convert_lengths_class_id'))){
+                                $product_info['length'] = $this->length->convert($product_info['length'], $product_info['length_class_id'], $this->config->get('config_length_class_id'));
+                                $this->data['length'] = $product_dimensions['length'] = $this->length->format($product_info['length'], $this->config->get('config_length_class_id'));
+                            } else {
+                                $this->data['length'] = $product_dimensions['length'] = $this->length->format($product_info['length'], $product_info['length_class_id']);
+                            }
                         }
 
                         if (!empty($product_info['width']) && !empty($product_info['length_class_id'])){
-                            $this->data['width'] = $product_dimensions['width'] = $this->length->format($product_info['width'], $product_info['length_class_id']);
+                            if ($product_info['length_class_id'] != $this->config->get('config_length_class_id') && $this->config->get('config_convert_lengths_class_id') && in_array($product_info['length_class_id'], $this->config->get('config_convert_lengths_class_id'))){
+                                $product_info['width'] = $this->length->convert($product_info['width'], $product_info['length_class_id'], $this->config->get('config_length_class_id'));
+                                $this->data['width'] = $product_dimensions['width'] = $this->length->format($product_info['width'], $this->config->get('config_length_class_id'));
+                            } else {
+                                $this->data['width'] = $product_dimensions['width'] = $this->length->format($product_info['width'], $product_info['length_class_id']);
+                            }
                         }
 
                         if (!empty($product_info['height']) && !empty($product_info['length_class_id'])){
-                            $this->data['height'] = $product_dimensions['height'] = $this->length->format($product_info['height'], $product_info['length_class_id']);
+                            if ($product_info['length_class_id'] != $this->config->get('config_length_class_id') && $this->config->get('config_convert_lengths_class_id') && in_array($product_info['length_class_id'], $this->config->get('config_convert_lengths_class_id'))){
+                                $product_info['height'] = $this->length->convert($product_info['height'], $product_info['length_class_id'], $this->config->get('config_length_class_id'));
+                                $this->data['height'] = $product_dimensions['height'] = $this->length->format($product_info['height'], $this->config->get('config_length_class_id'));
+                            } else {
+                                $this->data['height'] = $product_dimensions['height'] = $this->length->format($product_info['height'], $product_info['length_class_id']);
+                            }
                         }
 
                         if (!empty($product_dimensions)){
