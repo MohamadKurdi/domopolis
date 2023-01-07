@@ -1076,9 +1076,14 @@ class ControllerSettingSetting extends Controller
             $this->data['config_length_class_id'] = $this->config->get('config_length_class_id');
         }
         
-        $this->load->model('localisation/length_class');
-        
+        $this->load->model('localisation/length_class');        
         $this->data['length_classes'] = $this->model_localisation_length_class->getLengthClasses();
+
+        if (isset($this->request->post['config_convert_lengths_class_id'])) {
+            $this->data['config_convert_lengths_class_id'] = $this->request->post['config_convert_lengths_class_id'];
+        } else {
+            $this->data['config_convert_lengths_class_id'] = $this->config->get('config_convert_lengths_class_id');
+        }
         
         if (isset($this->request->post['config_weight_class_id'])) {
             $this->data['config_weight_class_id'] = $this->request->post['config_weight_class_id'];
@@ -1086,9 +1091,14 @@ class ControllerSettingSetting extends Controller
             $this->data['config_weight_class_id'] = $this->config->get('config_weight_class_id');
         }
         
-        $this->load->model('localisation/weight_class');
-        
+        $this->load->model('localisation/weight_class');        
         $this->data['weight_classes'] = $this->model_localisation_weight_class->getWeightClasses();
+
+        if (isset($this->request->post['config_convert_weights_class_id'])) {
+            $this->data['config_convert_weights_class_id'] = $this->request->post['config_convert_weights_class_id'];
+        } else {
+            $this->data['config_convert_weights_class_id'] = $this->config->get('config_convert_weights_class_id');
+        }
         
         if (isset($this->request->post['config_review_good'])) {
             $this->data['config_review_good'] = $this->request->post['config_review_good'];

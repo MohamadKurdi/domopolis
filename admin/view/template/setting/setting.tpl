@@ -1595,7 +1595,7 @@
 						<h2>Единицы измерения</h2>
 						<table>
 							<tr>
-								<td>
+								<td style="width:25%;">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Единица длины</span></p>
 									<select name="config_length_class_id">
 										<?php foreach ($length_classes as $length_class) { ?>
@@ -1608,7 +1608,31 @@
 									</select>
 								</td>
 
-								<td>
+								<td style="width:30%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Конвертировать эти единицы на фронте</span></p>
+									<div class="scrollbox" style="height:200px; width:200px;">
+									<?php $class = 'odd'; ?>
+									<?php foreach ($length_classes as $length_class) { ?>
+										<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+										<div class="<?php echo $class; ?>">
+											<?php if (!empty($config_convert_lengths_class_id) && in_array($length_class['length_class_id'], $config_convert_lengths_class_id)) { ?>
+												
+												<input id="config_convert_lengths_class_id_<?php echo $length_class['length_class_id']; ?>" class="checkbox" type="checkbox" name="config_convert_lengths_class_id[]" value="<?php echo $length_class['length_class_id']; ?>" checked="checked" />
+												<label for="config_convert_lengths_class_id_<?php echo $length_class['length_class_id']; ?>"><?php echo $length_class['title']; ?></label>
+												
+												<?php } else { ?>
+												
+												<input id="config_convert_lengths_class_id_<?php echo $length_class['length_class_id']; ?>" class="checkbox" type="checkbox" name="config_convert_lengths_class_id[]" value="<?php echo $length_class['length_class_id']; ?>" />
+												<label for="config_convert_lengths_class_id_<?php echo $length_class['length_class_id']; ?>"><?php echo $length_class['title']; ?></label>
+												
+											<?php } ?>
+										</div>
+									<?php } ?>
+								</div>
+								<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);">Выделить всё</a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);">Снять выделение</a>
+								</td>
+
+								<td style="width:25%;">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Единица веса</span></p>
 									<select name="config_weight_class_id">
 										<?php foreach ($weight_classes as $weight_class) { ?>
@@ -1619,6 +1643,30 @@
 											<?php } ?>
 										<?php } ?>
 									</select>
+								</td>
+
+								<td style="width:30%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Конвертировать эти единицы на фронте</span></p>
+									<div class="scrollbox" style="height:200px; width:200px;">
+									<?php $class = 'odd'; ?>
+									<?php foreach ($weight_classes as $weight_class) { ?>
+										<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+										<div class="<?php echo $class; ?>">
+											<?php if (!empty($config_convert_weights_class_id) && in_array($weight_class['weight_class_id'], $config_convert_weights_class_id)) { ?>
+												
+												<input id="config_convert_weights_class_id_<?php echo $weight_class['weight_class_id']; ?>" class="checkbox" type="checkbox" name="config_convert_weights_class_id[]" value="<?php echo $weight_class['weight_class_id']; ?>" checked="checked" />
+												<label for="config_convert_weights_class_id_<?php echo $weight_class['weight_class_id']; ?>"><?php echo $weight_class['title']; ?></label>
+												
+												<?php } else { ?>
+												
+												<input id="config_convert_weights_class_id_<?php echo $weight_class['weight_class_id']; ?>" class="checkbox" type="checkbox" name="config_convert_weights_class_id[]" value="<?php echo $weight_class['weight_class_id']; ?>" />
+												<label for="config_convert_weights_class_id_<?php echo $weight_class['weight_class_id']; ?>"><?php echo $weight_class['title']; ?></label>
+												
+											<?php } ?>
+										</div>
+									<?php } ?>
+								</div>
+								<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);">Выделить всё</a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);">Снять выделение</a>
 								</td>
 							</tr>
 						</table>
