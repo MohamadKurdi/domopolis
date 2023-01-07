@@ -344,7 +344,7 @@ class ControllerSettingRnf extends Controller {
 					$product['counted_weight_real'] = $this->rainforestAmazon->offersParser->PriceLogic->getProductWeight($product);
 
 					if ($volumetricMaxWCMultiplier){
-						if ($product['counted_weight'] > ($product['counted_weight_real'] * (float)$this->config->get('config_rainforest_volumetric_max_wc_multiplier'))){
+						if ((float)$product['counted_weight'] > ((float)$product['counted_weight_real'] * (float)$volumetricMaxWCMultiplier)){
 							$product['counted_weight'] = $product['counted_weight_real'];
 						}
 					}
