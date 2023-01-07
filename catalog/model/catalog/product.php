@@ -1847,7 +1847,6 @@
 		}
 
 		public function getProductAttributesFlat($product_id){
-
 			if (!$product_attribute_flat_data = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$product_id]))){
 
 				$sql = '';
@@ -1866,24 +1865,52 @@
 			return $product_attribute_flat_data;
 		}
 		
-		public function getProductAttributes($product_id){
-			if (!$product_attribute_group_data = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$product_id]))){
+		public function getProductAttributes($product_id, $filter_data = []){
+			if (!$product_attribute_group_data = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$product_id], $filter_data))){
 
 				$product_attribute_group_data = [];
 
-				$product_attribute_group_query = $this->db->query("SELECT ag.attribute_group_id, agd.name FROM product_attribute pa LEFT JOIN attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN attribute_group ag ON (a.attribute_group_id = ag.attribute_group_id) LEFT JOIN attribute_group_description agd ON (ag.attribute_group_id = agd.attribute_group_id) WHERE pa.product_id = '" . (int)$product_id . "' AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY ag.attribute_group_id ORDER BY ag.sort_order, agd.name");
+				$sql = "SELECT ag.attribute_group_id, agd.name FROM product_attribute pa LEFT JOIN attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN attribute_group ag ON (a.attribute_group_id = ag.attribute_group_id) LEFT JOIN attribute_group_description agd ON (ag.attribute_group_id = agd.attribute_group_id)";
+
+				$sql .= " WHERE pa.product_id = '" . (int)$product_id . "' AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
+				if (!empty($filter_data['exclude_groups'])){
+					$sql .= " AND ag.attribute_group_id NOT IN (" . implode(',', $filter_data['exclude_groups']) . ")";
+				}
+
+				$sql .= " GROUP BY ag.attribute_group_id ORDER BY ag.sort_order, agd.name";
+
+				$product_attribute_group_query = $this->db->query($sql);
 
 				foreach ($product_attribute_group_query->rows as $product_attribute_group) {
 					$product_attribute_data = [];
 
-					$product_attribute_query = $this->db->query("SELECT a.attribute_id, a.sort_order, ad.name, pa.text FROM product_attribute pa LEFT JOIN attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE pa.product_id = '" . (int)$product_id . "' AND a.attribute_group_id = '" . (int)$product_attribute_group['attribute_group_id'] . "' AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pa.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY a.sort_order, ad.name");
+					$sql = "SELECT a.attribute_id, a.attribute_group_id, a.dimension_type, a.sort_order, ad.name, pa.text FROM product_attribute pa LEFT JOIN attribute a ON (pa.attribute_id = a.attribute_id) LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id) ";
+
+					$sql .= " WHERE pa.product_id = '" . (int)$product_id . "' AND a.attribute_group_id = '" . (int)$product_attribute_group['attribute_group_id'] . "' AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pa.language_id = '" . (int)$this->config->get('config_language_id') . "' ";
+
+					if (isset($filter_data['exclude_sort_order'])){
+						$sql .= " AND a.sort_order <> '" . (int)$filter_data['exclude_sort_order'] . "'";
+					}
+
+					if (!empty($filter_data['exclude_dimension_types'])){
+						foreach ($filter_data['exclude_dimension_types'] as $exclude_dimension_type){
+							$sql .= " AND (ISNULL(a.dimension_type) OR a.dimension_type <> '" . $this->db->escape($exclude_dimension_type) . "')";
+						}						
+					}
+
+					$sql .= " ORDER BY a.sort_order, ad.name";
+
+					$product_attribute_query = $this->db->query($sql);
 
 					foreach ($product_attribute_query->rows as $product_attribute) {
 						$product_attribute_data[] = array(
-							'attribute_id' => $product_attribute['attribute_id'],
-							'name'         => $product_attribute['name'],
-							'text'         => $product_attribute['text'],
-							'sort_order'   => $product_attribute['sort_order'],
+							'attribute_id' 			=> $product_attribute['attribute_id'],
+							'attribute_group_id' 	=> $product_attribute['attribute_group_id'],
+							'dimension_type' 		=> $product_attribute['dimension_type'],
+							'name'         			=> $product_attribute['name'],
+							'text'         			=> $product_attribute['text'],
+							'sort_order'   			=> $product_attribute['sort_order']
 						);
 					}
 
@@ -1894,7 +1921,7 @@
 					);
 				}
 
-				$this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$product_id]), $product_attribute_group_data);
+				$this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$product_id], $filter_data), $product_attribute_group_data);
 
 			}
 			

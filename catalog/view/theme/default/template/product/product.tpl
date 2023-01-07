@@ -797,21 +797,35 @@ unset($this->session->data['gac:listfrom']); }
 														</h2>
 													</li>
 												<? } ?>
+
 												<?php if ($attribute_groups) { ?>
-													<?php foreach ($attribute_groups as $attribute_group) { ?>
-														<?php if ($attribute_group['attribute_group_id'] != $special_attribute_group_id) { ?>
-															<?php foreach ($attribute_group['attribute'] as $attribute) { ?>
-																<? if ($attribute['sort_order'] != '-1') { ?>
-																	<li>
-																		<h2>
-																			<span><?php echo $attribute['name']; ?></span> <span><?php echo $attribute['text']; ?></span>
-																		</h2>
-																	</li>
-																<? } ?>
-															<?php } ?>
+													<?php foreach ($attribute_groups as $attribute_group) { ?>												
+														<?php foreach ($attribute_group['attribute'] as $attribute) { ?>												
+															<li>
+																<h2>
+																	<span><?php echo $attribute['name']; ?></span> <span><?php echo $attribute['text']; ?></span>
+																</h2>
+															</li>
 														<?php } ?>
 													<?php } ?>
 												<?php } ?>
+
+												<?php if (!empty($weight)) { ?>
+													<li>
+														<h2>
+															<span><?php echo $text_weight; ?></span> <span><?php echo $weight; ?></span>
+														</h2>
+													</li>
+												<?php } ?>
+
+												<?php if (!empty($product_dimensions)) { ?>
+													<li>
+														<h2>
+															<span><?php echo $text_dimensions; ?></span> <span><?php echo $product_dimensions; ?></span>
+														</h2>
+													</li>
+												<?php } ?>
+
 												<!--Custom product information-->
 												<?php if (($this->config->get('status_product') == '1') && (isset($this->document->cusom_p)) ){ ?>
 													<li>
@@ -1128,18 +1142,27 @@ unset($this->session->data['gac:listfrom']); }
 										<span><?php echo $text_stock; ?></span> <span><?php echo $stock; ?></span>
 									</li> -->
 									<?php if ($attribute_groups) { ?>
-										<?php foreach ($attribute_groups as $attribute_group) { ?>
-											<?php if ($attribute_group['attribute_group_id'] != $special_attribute_group_id) { ?>
-												<?php foreach ($attribute_group['attribute'] as $attribute) { ?>
-													<? if ($attribute['sort_order'] != '-1') { ?>
-														<li>
-															<span><?php echo $attribute['name']; ?></span> <span><?php echo $attribute['text']; ?></span>
-														</li>
-													<? } ?>
-												<?php } ?>
+										<?php foreach ($attribute_groups as $attribute_group) { ?>												
+											<?php foreach ($attribute_group['attribute'] as $attribute) { ?>												
+												<li>
+													<span><?php echo $attribute['name']; ?></span> <span><?php echo $attribute['text']; ?></span>
+												</li>
 											<?php } ?>
 										<?php } ?>
 									<?php } ?>
+
+									<?php if (!empty($weight)) { ?>
+										<li>											
+											<span><?php echo $text_weight; ?></span> <span><?php echo $weight; ?></span>											
+										</li>
+									<?php } ?>
+
+									<?php if (!empty($product_dimensions)) { ?>
+										<li>
+											<span><?php echo $text_dimensions; ?></span> <span><?php echo $product_dimensions; ?></span>
+										</li>
+									<?php } ?>
+
 									<!--Custom product information-->
 									<?php if (($this->config->get('status_product') == '1') && (isset($this->document->cusom_p)) ){ ?>
 										<li>

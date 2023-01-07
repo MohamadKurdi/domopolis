@@ -856,8 +856,7 @@ class ControllerProductProduct extends Controller
                 
                 $this->data['has_labels'] = array();
                 
-                if (!$just_price) {
-                    /* MARKDOWN */
+                if (!$just_price) {     
                     $this->data['is_markdown'] = $product_info['is_markdown'];
                     
                     if ($product_info['is_markdown']) {
@@ -1421,7 +1420,6 @@ class ControllerProductProduct extends Controller
                             $ao_date_end = false;
                         }
 
-
                         $this->data['additional_offers'][] = array(
                             'additional_offer_id'       => $additional_offer['product_additional_offer_id'],
                             'ao_product_id'             => $additional_offer['ao_product_id'],
@@ -1448,12 +1446,10 @@ class ControllerProductProduct extends Controller
                         $this->data['has_labels']['special'] = true;
                     }
 
-                //BOF Product Series
-                    $this->load->model('catalog/product_master');
-                //get link of linked products + colors
-                    $pds_allow_buying_series = $this->getData('pds_allow_buying_series', 0);
+                $this->load->model('catalog/product_master');
+                $pds_allow_buying_series = $this->getData('pds_allow_buying_series', 0);
 
-                $results = $this->model_catalog_product_master->getLinkedProducts($this->request->get['product_id'], '2', $pds_allow_buying_series); //'2' is Image
+                $results = $this->model_catalog_product_master->getLinkedProducts($this->request->get['product_id'], '2', $pds_allow_buying_series);
                 
                 $this->data['pds'] = array();
                 
@@ -1506,14 +1502,13 @@ class ControllerProductProduct extends Controller
                     $is_master = $this->model_catalog_product_master->isMaster(
                         $this->request->get['product_id'],
                         '2'
-                    ); //2 is Image
+                    );
                     $pds_allow_buying_series = $this->getData('pds_allow_buying_series', 0);
                     $this->data['display_add_to_cart'] = !$is_master || $pds_allow_buying_series;
                     $this->data['no_add_to_cart_message'] = $this->language->get('text_select_series_item');
                 }
                 
                 $this->data['text_in_the_same_series'] = $this->language->get('text_in_the_same_series');
-                //EOF Product Series
                 
                 $this->data['product_code'] = $this->request->get['product_id'];
                 
@@ -1611,8 +1606,6 @@ class ControllerProductProduct extends Controller
                         );
                     }
                 }
-                
-                //  include(DIR_SYSTEM . '../catalog/controller/product/options_boost.inc.php');
                 
                 if (file_exists(DIR_SYSTEM . '../catalog/controller/product/options_boost.inc.php')) {
                     foreach ($_all_options as $option) {
@@ -1719,11 +1712,11 @@ class ControllerProductProduct extends Controller
                     $this->data['current_in_stock_color'] = 'good';
                 }
 
-                $this->data['stock'] = $product_info['stock_status'];
-                $this->data['stock_status_id'] = $product_info['stock_status_id'];
-                $this->data['can_not_buy'] = ($product_info['stock_status_id'] == $this->config->get('config_not_in_stock_status_id'));
+                $this->data['stock']                = $product_info['stock_status'];
+                $this->data['stock_status_id']      = $product_info['stock_status_id'];
+                $this->data['can_not_buy']          = ($product_info['stock_status_id'] == $this->config->get('config_not_in_stock_status_id'));
                 $this->data['need_ask_about_stock'] = ($product_info['stock_status_id'] == $this->config->get('config_partly_in_stock_status_id'));
-                $this->data['stock_color'] = ($product_info['stock_status_id'] == $this->config->get('config_stock_status_id')) ? '#4C6600' : '#BA0000';
+                $this->data['stock_color']          = ($product_info['stock_status_id'] == $this->config->get('config_stock_status_id')) ? '#4C6600' : '#BA0000';
                 
                 if ($this->data['can_not_buy']) {
                     $this->data['rees46_is_available'] = 0;
@@ -1847,14 +1840,9 @@ class ControllerProductProduct extends Controller
                             $this->data['description'] = false;
                         }
 
-
                         $autolinks = $this->config->get('autolinks');
 
-                        if (isset($autolinks) && (strpos(
-                            $this->data['description'],
-                            'iframe'
-                        ) == false) && (strpos($this->data['description'], 'object') == false)
-                    ) {
+                        if (!empty($autolinks) && (strpos($this->data['description'], 'iframe') == false) && (strpos($this->data['description'], 'object') == false)){
                             $xdescription = mb_convert_encoding(html_entity_decode(
                                 $this->data['description'],
                                 ENT_COMPAT,
@@ -1892,7 +1880,6 @@ class ControllerProductProduct extends Controller
                         }
 
                         $this->data['payment_list'] = explode(PHP_EOL, $this->config->get('config_payment_list'));
-
                         $html_block = $this->model_setting_setting->getKeySettingValue('html_block', 'html_block_6');
 
                         if ($html_block) {
@@ -1901,33 +1888,64 @@ class ControllerProductProduct extends Controller
                             }
                         }
 
-                        $this->data['attribute_groups'] = $this->model_catalog_product->getProductAttributes($this->request->get['product_id']);
+                        if (!empty($product_info['weight']) && !empty($product_info['weight_class_id'])){
+                            $this->data['weight'] = $this->weight->format($product_info['weight'], $product_info['weight_class_id']);
+                        }
 
-                        $this->data['special_attribute_group_id'] = $this->config->get('config_special_attr_id');
-                        $this->data['attribute_groups_special'] = $this->model_catalog_product->getProductAttributesByGroupId(
-                            $this->request->get['product_id'],
-                            $this->data['special_attribute_group_id']
-                        );
+                        $product_dimensions = [];
+                        if (!empty($product_info['length']) && !empty($product_info['length_class_id'])){
+                            $this->data['length'] = $product_dimensions['length'] = $this->length->format($product_info['length'], $product_info['length_class_id']);
+                        }
 
+                        if (!empty($product_info['width']) && !empty($product_info['length_class_id'])){
+                            $this->data['width'] = $product_dimensions['width'] = $this->length->format($product_info['width'], $product_info['length_class_id']);
+                        }
+
+                        if (!empty($product_info['height']) && !empty($product_info['length_class_id'])){
+                            $this->data['height'] = $product_dimensions['height'] = $this->length->format($product_info['height'], $product_info['length_class_id']);
+                        }
+
+                        if (!empty($product_dimensions)){
+                            $this->data['product_dimensions'] = implode(' x ', $product_dimensions);
+                        }
+
+                        $filter_data = [
+                            'exclude_groups'            => [
+                                (int)$this->config->get('config_special_attr_id')
+                            ],
+                            'exclude_sort_order'        => '-1',
+                            'exclude_dimension_types'   => []
+                        ];
+
+                        if (!empty($this->data['weight'])){
+                            $filter_data['exclude_dimension_types'][] = 'weight';
+                        }
+
+                        if (!empty($this->data['length'])){
+                            $filter_data['exclude_dimension_types'][] = 'dimensions';
+                            $filter_data['exclude_dimension_types'][] = 'length';
+                        }
+
+                        if (!empty($this->data['weight']) && !empty($this->data['length'])){
+                            $filter_data['exclude_dimension_types'][] = 'all';
+                        }
+
+
+                        $this->data['attribute_groups'] = $this->model_catalog_product->getProductAttributes($this->request->get['product_id'], $filter_data);
+                        $this->data['attribute_groups_special'] = $this->model_catalog_product->getProductAttributesByGroupId($this->request->get['product_id'], $this->config->get('config_special_attr_id'));
 
                         $this->data['color_grouped_products'] = array();
                         if ($product_info['color_group']) {
-                            $_cgrouped_products = $this->model_catalog_product->getColorGroupedProducts(
-                                $this->request->get['product_id'],
-                                $product_info['color_group']
-                            );
+                            $color_grouped_products = $this->model_catalog_product->getColorGroupedProducts($this->request->get['product_id'],$product_info['color_group']);
 
-                            if ($_cgrouped_products) {
-                                foreach ($_cgrouped_products as $_cgproduct) {
-                                    $_cgrealproduct = $this->model_catalog_product->getProduct($_cgproduct['product_id']);
+                            if ($color_grouped_products) {
+                                foreach ($color_grouped_products as $color_grouped_product) {
+                                    $color_real_product = $this->model_catalog_product->getProduct($color_grouped_product['product_id']);
 
                                     $this->data['color_grouped_products'][] = array(
-                                        'image' => $this->model_tool_image->resize($_cgrealproduct['image'], 100, 100),
-                                        'name'  => $_cgrealproduct['name'],
-                                        '_href' => $this->url->link(
-                                            'product/product',
-                                            'product_id=' . $_cgrealproduct['product_id']
-                                        )
+                                        'image' => $this->model_tool_image->resize($color_real_product['image'], 100, 100),
+                                        'name'  => $color_real_product['name'],
+                                        '_href' => $this->url->link('product/product','product_id=' . $color_real_product['product_id'])
                                     );
                                 }
                             }
@@ -1972,8 +1990,6 @@ class ControllerProductProduct extends Controller
                             }
                         }
 
-
-                    //нет в наличии в стране, подбираем что-то похожее со склада
                         $this->data['products_same_onstock'] = array();
                         if ($this->data['stock_type'] <> 'in_stock_in_country') {
                             $results = $this->model_catalog_product->guessSameProducts($product_info['name'], $product_info['product_id'], 12, true);
@@ -1986,28 +2002,19 @@ class ControllerProductProduct extends Controller
                             'h' => $this->config->get('config_image_related_height')
                         );
 
-
-
-                    //related
                         $this->data['products'] = array();
                         $results = $this->model_catalog_product->getProductRelated($this->request->get['product_id']);
                         $this->data['products'] = $this->model_catalog_product->prepareProductToArray($results);
 
-
-                    //similar
                         $this->data['products_similar'] = array();
                         $results = $this->model_catalog_product->getProductSimilar($this->request->get['product_id']);
                         $this->data['products_similar'] = $this->model_catalog_product->prepareProductToArray($results);
 
-                    //sponsored
                         $this->data['products_sponsored'] = array();
                         $results = $this->model_catalog_product->getProductSponsored($this->request->get['product_id']);
                         $this->data['products_sponsored'] = $this->model_catalog_product->prepareProductToArray($results);
 
-
-
                         $this->data['color_group_products'] = array();
-                    //try to get similar products of parent
                         $parent_product = false;
                         if (!$product_info['color_group'] && $product_info['is_option_for_product_id']) {
                             $parent_product = $this->model_catalog_product->getProduct($product_info['is_option_for_product_id']);
@@ -2097,7 +2104,6 @@ class ControllerProductProduct extends Controller
                             );
                         }
 
-                    //opengraph see also
                         $this->document->addOpenGraph('see_also', $this->data['next_product']['href']);
                         $this->document->addOpenGraph('see_also', $this->data['prev_product']['href']);
 
@@ -2114,8 +2120,6 @@ class ControllerProductProduct extends Controller
                                 );
                             }
                         }
-
-                    //GOOGLE CONVERSION CODE
 
                         if ($this->config->get('config_google_remarketing_type') == 'ecomm') {
                             $this->data['google_tag_params'] = array(
@@ -2166,8 +2170,6 @@ class ControllerProductProduct extends Controller
 
                         $this->data['google_ecommerce_info'] = array_map('prepareEcommString', $this->data['google_ecommerce_info']);
 
-                    //END GOOGLE CONVERSION CODE
-
 
                         $this->data['text_payment_profile'] = $this->language->get('text_payment_profile');
                         $this->data['profiles'] = $this->model_catalog_product->getProfiles($product_info['product_id']);
@@ -2186,7 +2188,6 @@ class ControllerProductProduct extends Controller
                         } else {
                             $this->template = false;
                         }
-
 
                         if (!$this->template) {
                             $layout_id = $this->model_catalog_product->getProductLayoutId($product_info['product_id']);
@@ -2232,7 +2233,6 @@ class ControllerProductProduct extends Controller
                             }
                         }
 
-                    //BOF Product Block Option
                         $this->setData('pbo_text_block_padding', 10);
                         $this->setData('pbo_text_block_border_width', 3);
                         $this->setData('pbo_text_block_border_radius', 0);
@@ -2249,10 +2249,9 @@ class ControllerProductProduct extends Controller
                         $this->setData('pbo_image_block_border_color', '#E7E7E7');
                         $this->setData('pbo_image_block_selected_block_border_color', '#FFA500');
 
-                        $this->setData('pbo_options', array());
-                    //EOF Product Block Option
+                        $this->setData('pbo_options', array());                    
                     }
-                //Дичайшее решение, но за минуту
+                
                     $this->data['original_data'] = $this->data;
 
                     $this->children = array(
