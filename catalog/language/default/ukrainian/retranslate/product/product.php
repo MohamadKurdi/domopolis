@@ -119,3 +119,5 @@ $_['pickup_text_tomorrow_from'] = 'Самовивіз <b>завтра</b>, з %s
 
 $_['pickup_text_dayoff_from'] = $_['pickup_text_datomorrow_from'] = 'Самовивіз у <b>%s</b>, з %s до %s годин';
 $_['text_by_complect']      = 'Купити комплект';
+$_['text_weight'] = 'Вага';
+$_['text_dimensions'] = 'Розмір';
