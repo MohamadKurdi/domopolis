@@ -177,66 +177,23 @@ class ControllerSettingSetting extends Controller
         $key        = $this->request->post['key'];
         $value      = $this->request->post['value'];
 
+        $serialized = (int)is_array($value);
+        $value = (is_array($value))?serialize($value):$value;
+        $key = trim($key, '[]');
+
         if ($key) {
-            if (strpos($key, '[') !== false) {
-                //this is a part of array
-                $exploded = explode('[', $key);
-                $key = $exploded[0];
-
-                $result = [];
-                if (!empty($exploded[1])) {
-                    $idx1 = rtrim($exploded[1], ']');
-                    $result[$idx1] = $value;
-                }
-                if (!empty($exploded[2])) {
-                    $idx2 = rtrim($exploded[2], ']');
-                    $result[$idx1] = [
-                        $idx2 => $value
-                    ];
-                }
-                
-                $value = $result;
-            }
-
-            $key = trim($key);
-
             $query = $this->db->query("SELECT * FROM setting WHERE store_id = '" . (int)$store_id . "' AND `group` = 'config' AND `key` = '" . $this->db->escape($key) . "'");
 
-            if ($query->num_rows) {
-                if (is_array($value)) {
-                    $old_value = [];
-                    if ($query->row['value']) {
-                        $old_value = unserialize($query->row['value']);
-                    }
-                    foreach ($old_value as $old_value_key => $old_value_value) {
-                        if (!empty($value[$old_value_key])) {
-                            if (is_array($value[$old_value_key])) {
-                                $old_value[$old_value_key] = $value[$old_value_key] + $old_value[$old_value_key];
-                            } else {
-                                $old_value[$old_value_key] = $value[$old_value_key];
-                            }
-
-                            unset($value[$old_value_key]);
-                        }
-                    }
-
-
-                    $value = $value + $old_value;
-                    $value = serialize($value);
-                }
-
+            if ($query->num_rows) {                
                 $sql = "UPDATE setting SET `value` = '" . $this->db->escape($value) . "' WHERE `store_id` = '" . (int)$store_id . "' AND `group` = 'config' AND `key` = '" . $this->db->escape($key) . "'";
             } else {
-                $serialized = (int)is_array($value);
-                $value = (is_array($value))?serialize($value):$value;
-
                 $sql = "INSERT INTO setting SET `value` = '" . $this->db->escape($value) . "', `store_id` = '" . (int)$store_id . "', `group` = 'config', `key` = '" . $this->db->escape($key) . "', serialized = '" . (int)$serialized . "'";
             }
 
             $query = $this->db->query($sql);
         }
 
-        var_dump($sql);
+        $this->response->setOutput($sql);
     }
     
     
