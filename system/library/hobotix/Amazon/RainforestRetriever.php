@@ -11,7 +11,6 @@
 
 		public $model_catalog_category = null;
 		public $model_catalog_product = null;
-
 		public $model_product_add = null;
 
 		public $yandexTranslator = null;

@@ -2,13 +2,11 @@
 
 namespace hobotix\Amazon;
 
-class InfoUpdater
+class InfoUpdater extends RainforestRetriever
 {
 
 	const CLASS_NAME = 'hobotix\\Amazon\\InfoUpdater';
-
-	private $db;	
-	private $config;
+	
 	private $lengthCache = false;
 	private $weightCache = false;	
 
@@ -35,14 +33,10 @@ class InfoUpdater
 
 	public const descriptionsQueryLimit = 5000;
 
-	private $rfClient;
+	
+	public function __construct($registry){
 
-	public function __construct($registry, $rfClient){
-
-		$this->config = $registry->get('config');
-		$this->db = $registry->get('db');
-		$this->log = $registry->get('log');
-		$this->rfClient = $rfClient;
+		parent::__construct($registry);
 		$this->setDimensionsCache();
 
 	}
@@ -425,7 +419,10 @@ class InfoUpdater
 	}
 
 
-	//THIS WORKS ONLY FOR 10x10x10 Cm; 5 kg - this is standard Amazon dimension string
+	/*
+	 THIS WORKS ONLY FOR 10x10x10 Cm; 5 kg - this is standard Amazon dimension string, this is old function
+	 THIS MUST be rewritten to regular expressions
+	*/
 	public function parseDimesionsString($string){
 		$string = mb_strtolower(atrim($string));
 		$exploded1 = explode(';', $string);
@@ -455,7 +452,7 @@ class InfoUpdater
 
 		$weight = (float)atrim($exploded_weight_class[0]);
 		if (!$weight_class_id){
-			echoLine('Не найдена единица измерения веса: ' . atrim($exploded_weight_class[1]));
+			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Не найдена единица измерения веса: ' . atrim($exploded_weight_class[1]));
 			$weight = 0;
 		}
 
@@ -464,11 +461,15 @@ class InfoUpdater
 		$height = (float)atrim($exploded_length[2]);
 
 		if (!$length_class_id){
-			echoLine('Не найдена единица измерения размера: ' . atrim($exploded_length_class[1]));
+			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Не найдена единица измерения размера: ' . atrim($exploded_length_class[1]));
 
 			$length = 0;
 			$width 	= 0;
 			$height = 0;
+		}
+
+		if ($length + $width + $height + $weight == 0){
+			return false;
 		}
 
 		return [
@@ -481,34 +482,239 @@ class InfoUpdater
 		];
 	}
 
-	public function parseAndUpdateProductDimensions($json){			
 
-		if (!$json || empty($json['dimensions'])){
-			return false;
+	public function tryToParseDimensionStringExtended($dimensionString, $type){
+		$dimensionString = trim($dimensionString);
+
+		//All, attribute that contains the same as in 'dimensions'
+		if ($type == 'all'){
+				//43.1 x 16.7 x 12.5 cm 480 Gramm, and also standard string, actually this is regexp implementation of parseDimesionsString 
+			if (preg_match('/^[0-9]+[.,]?[0-9]* [x] [0-9]+[.,]?[0-9]* [x] [0-9]+[.,]?[0-9]* [a-zA-Zäа-яА-Я]+[;]? [0-9]+[.,]?[0-9]* [a-zA-Zäа-яА-Я]+$/', $dimensionString, $matches) == 1){
+				preg_match_all('/[0-9]+[.,]?[0-9]*/', $dimensionString, $dimensions);
+				preg_match_all('/[a-zA-Zäа-яА-Я]+/', $dimensionString, $classes);
+
+				if (!empty($dimensions[0]) && count($dimensions[0]) == 4 && !empty($classes[0]) && count($classes[0]) == 4){
+					$length 		= str_replace(',', '.', $dimensions[0][0]);
+					$width 			= str_replace(',', '.', $dimensions[0][1]);
+					$height 		= str_replace(',', '.', $dimensions[0][2]);
+					$length_class 	= mb_strtolower($classes[0][2]);
+
+					$weight 		= str_replace(',', '.', $dimensions[0][3]);
+					$weight_class 	= mb_strtolower($classes[0][3]);
+
+					$length_class_id = 0;
+					if (!empty($this->lengthCache[atrim($length_class)])){
+						$length_class_id = $this->lengthCache[atrim($length_class)]['length_class_id'];
+					}
+
+					$weight_class_id = 0;
+					if (!empty($this->weightCache[atrim($weight_class)])){
+						$weight_class_id = $this->weightCache[atrim($weight_class)]['weight_class_id'];
+					}
+
+					if ($length && $length_class_id && $weight && $weight_class_id){
+						echoLine('[InfoUpdater::tryToParseDimensionStringExtended] Length and class found: ' . $length . ' ' . $length_class . ' -> ' . $length_class_id);
+						echoLine('[InfoUpdater::tryToParseDimensionStringExtended] Weight and class found: ' . $weight . ' ' . $weight_class . ' -> ' . $weight_class_id);
+
+						return [
+							'length' 			=> (float)$length,
+							'width' 			=> (float)$width,
+							'height' 			=> (float)$height,
+							'length_class_id' 	=> (int)$length_class_id,
+							'weight' 			=> (float)$weight,
+							'weight_class_id' 	=> (int)$weight_class_id
+						];
+					}
+				}
+			}
+		}		
+
+		//Just Weight
+		if ($type == 'weight'){
+			//6.7 Kilogramm or any other like that, float + text
+			if (preg_match('/^[0-9]+[.,]?[0-9]* [a-zA-Zäа-яА-Я]+$/', $dimensionString, $matches) == 1){
+				preg_match('/^[0-9]+[.,]?[0-9]*/', $dimensionString, $weight);
+				preg_match('/[a-zA-Zäа-яА-Я]+$/', $dimensionString, $weight_class);
+
+				$weight 		= str_replace(',', '.', $weight[0]);
+				$weight_class 	= mb_strtolower($weight_class[0]);
+
+				$weight_class_id = 0;
+				if (!empty($this->weightCache[atrim($weight_class)])){
+					$weight_class_id = $this->weightCache[atrim($weight_class)]['weight_class_id'];
+				}
+
+				if ($weight && $weight_class_id){
+					echoLine('[InfoUpdater::tryToParseDimensionStringExtended] Weight and class found: ' . $weight . ' ' . $weight_class . ' -> ' . $weight_class_id);
+
+					return [
+						'weight' 			=> (float)$weight,
+						'weight_class_id' 	=> (int)$weight_class_id
+					];
+				}
+			}
 		}
 
-		if ($data = $this->parseDimesionsString($json['dimensions'])){			
+		//Just dimensions
+		if ($type == 'dimensions'){
+			//43.1 x 16.7 x 12.5 cm 
+			if (preg_match('/^[0-9]+[.,]?[0-9]* [x] [0-9]+[.,]?[0-9]* [x] [0-9]+[.,]?[0-9]* [a-zA-Zäа-яА-Я]+$/', $dimensionString, $matches) == 1){
+				preg_match_all('/[0-9]+[.,]?[0-9]*/', $dimensionString, $dimensions);
+				preg_match_all('/[a-zA-Zäа-яА-Я]+$/', $dimensionString, $length_class);
 
-		$this->db->query("UPDATE product SET
+				if (!empty($dimensions[0]) && count($dimensions[0]) == 3 && !empty($length_class[0]) && count($length_class[0]) == 1){
+					$length 		= str_replace(',', '.', $dimensions[0][0]);
+					$width 			= str_replace(',', '.', $dimensions[0][1]);
+					$height 		= str_replace(',', '.', $dimensions[0][2]);
+					$length_class 	= mb_strtolower($length_class[0][0]);
+
+					$length_class_id = 0;
+					if (!empty($this->lengthCache[atrim($length_class)])){
+						$length_class_id = $this->lengthCache[atrim($length_class)]['length_class_id'];
+					}
+
+					if ($length && $length_class_id){
+						echoLine('[InfoUpdater::tryToParseDimensionStringExtended] Length and class found: ' . $length . ' ' . $length_class . ' -> ' . $length_class_id);
+
+						return [
+							'length' 			=> (float)$length,
+							'width' 			=> (float)$width,
+							'height' 			=> (float)$height,
+							'length_class_id' 	=> (int)$length_class_id
+						];
+
+					}
+				}
+			}
+		}
+
+
+
+		return false;
+	}
+
+
+	private function parseDimesionsAttributes($attributes){
+		$result = [];
+
+		foreach ($attributes as $attribute){
+			if ($attribute_id = $this->model_product_cached_get->getAttribute($attribute['name'])){
+				if ($attribute_info = $this->model_product_cached_get->getAttributeInfo($attribute_id)){
+					if ($attribute_info['attribute_group_id'] == $this->config->get('config_dimensions_attr_id')){
+						echoLine('[InfoUpdater::parseDimesionsAttributes] Found dimension attribute: ' . $attribute['name'] . ', value ' . $attribute['value'] . ', type ' . $attribute_info['dimension_type']);
+
+						if ($attribute_info['dimension_type']){
+							if ($parsed = $this->tryToParseDimensionStringExtended($attribute['value'], $attribute_info['dimension_type'])) {
+
+								if ($attribute_info['dimension_type'] == 'all' && !empty($parsed['weight']) && !empty($parsed['length'])){
+									$result['weight'] 			= $parsed['weight'];
+									$result['weight_class_id'] 	= $parsed['weight_class_id'];
+									$result['length'] 			= $parsed['length'];
+									$result['width'] 			= $parsed['width'];
+									$result['height'] 			= $parsed['height'];	
+									$result['length_class_id']  = $parsed['length_class_id'];
+								}
+
+								if ($attribute_info['dimension_type'] == 'weight' && !empty($parsed['weight']) && empty($result['weight'])){
+									$result['weight'] 			= $parsed['weight'];
+									$result['weight_class_id'] 	= $parsed['weight_class_id'];
+								}
+
+								if ($attribute_info['dimension_type'] == 'dimensions'  && !empty($parsed['length']) && empty($result['length'])){
+									$result['length'] 			= $parsed['length'];
+									$result['width'] 			= $parsed['width'];
+									$result['height'] 			= $parsed['height'];	
+									$result['length_class_id']  = $parsed['length_class_id'];
+								}
+
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return $result;
+	}
+
+
+	private function updateProductDimensions($product, $data){
+	//	return;
+
+		if (!empty($data['weight']) && !empty($data['weight_class_id'])){
+			echoLine('[InfoUpdater::updateProductDimensions] Weight: ' . $data['weight']);		
+			echoLine('[InfoUpdater::updateProductDimensions] Weight class: ' . $data['weight_class_id']);
+
+			$this->db->query("UPDATE product SET 
+				weight 					= '" . (float)$data['weight'] . "', 
+				weight_class_id 		= '" . (int)$data['weight_class_id'] . "',
+				pack_weight 			= '" . (float)$data['weight'] . "',
+				pack_weight_class_id 	= '" . (int)$data['weight_class_id'] . "'
+				WHERE asin = '" . $this->db->escape($product['asin']) . "'");
+		}
+
+		if (!empty($data['length']) && !empty($data['width']) && !empty($data['height']) && !empty($data['length_class_id'])){					
+			echoLine('[InfoUpdater::updateProductDimensions] Length: ' . $data['length']);		
+			echoLine('[InfoUpdater::updateProductDimensions] Length class: ' . $data['length_class_id']);
+
+			$this->db->query("UPDATE product SET
 				length 					= '" . (float)$data['length'] . "',
 				width					= '" . (float)$data['width'] . "',
-				height					= '" . (float)$data['height'] . "',
-				weight 					= '" . (float)$data['weight'] . "',
+				height					= '" . (float)$data['height'] . "',				
 				length_class_id 		= '" . (int)$data['length_class_id'] . "',
-				weight_class_id 		= '" . (int)$data['weight_class_id'] . "',
 				pack_length 			= '" . (float)$data['length'] . "',
 				pack_width				= '" . (float)$data['width'] . "',
-				pack_height				= '" . (float)$data['height'] . "',
-				pack_weight 			= '" . (float)$data['weight'] . "',
-				pack_length_class_id 	= '" . (int)$data['length_class_id'] . "',
-				pack_weight_class_id 	= '" . (int)$data['weight_class_id'] . "'
-				WHERE asin = '" . $this->db->escape($json['asin']) . "'");
+				pack_height				= '" . (float)$data['height'] . "',			
+				pack_length_class_id 	= '" . (int)$data['length_class_id'] . "'			
+				WHERE asin = '" . $this->db->escape($product['asin']) . "'");
+		}
+	}
 
+	private  static function prepareAttributesForParsing($attributes){
+		$result = [];
+
+		foreach ($attributes as $temp){
+			$temp['name'] = atrim($temp['name']);
+			$temp['value'] = atrim($temp['value']);
+
+			$result[clean_string($temp['name'])] = [
+				'name' 	=> $temp['name'],
+				'value' => $temp['value']
+			];
+		}
+
+		return $result;
+	}
+
+	public function parseAndUpdateProductDimensions($product){					
+		if (!$product || (empty($product['dimensions']) && empty($product['attributes']) && empty($product['specifications']))){
+			return false;
+		}
+		
+		if (!empty($product['dimensions']) && $data = $this->parseDimesionsString(atrim($product['dimensions']))){	
+			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Found dimensions ' . atrim($product['dimensions']));
+
+			$this->updateProductDimensions($product, $data);
+			return true;		
+		} elseif (!empty($product['dimensions']) && $data = $this->tryToParseDimensionStringExtended(atrim($product['dimensions']), 'all')){	
+			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Found dimensions ' . atrim($product['dimensions']));
+
+			$this->updateProductDimensions($product, $data);
+			return true;			
+		} elseif (!empty($product['attributes']) && $data = $this->parseDimesionsAttributes(self::prepareAttributesForParsing($product['attributes']))) {
+			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Found something from attributes');
+
+			$this->updateProductDimensions($product, $data);
+			return true;
+		} elseif (!empty($product['specifications']) && $data = $this->parseDimesionsAttributes(self::prepareAttributesForParsing($product['specifications']))){
+			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Found something from specifications');
+
+			$this->updateProductDimensions($product, $data);
 			return true;
 
 		} else {
 
-			echoLine($json['dimensions']);
+			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Could not parse dimensions for ' . $product['asin']);
 
 		}
 
@@ -517,7 +723,6 @@ class InfoUpdater
 
 		//Работа с справочником товаров
 	public function updateProductNotFoundOnAmazon($product_id){
-
 		$this->db->query("UPDATE product SET amzn_not_found = 1 WHERE product_id = '" . $product_id . "'");			
 
 		return $this;		
