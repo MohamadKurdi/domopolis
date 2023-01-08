@@ -539,6 +539,9 @@
 			
 			echo '[OТ] Оптимизация таблицы customer...'  . PHP_EOL;
 			$this->db->query("OPTIMIZE table customer");
+
+			echo '[OТ] Оптимизация таблицы customer_online...'  . PHP_EOL;
+			$this->db->query("OPTIMIZE table customer_online");
 			
 			echo '[OТ] Оптимизация таблицы address...'  . PHP_EOL;
 			$this->db->query("OPTIMIZE table address");
