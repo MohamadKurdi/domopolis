@@ -192,34 +192,112 @@ class ControllerDPRainForest extends Controller {
 	}	
 
 	/*
-	Если изменяется настройка или порог минимальной цены, то нужно запустить эту функцию
+	Функционал очистки базы товаров (запуск всех функций очистки подряд)
 	*/
-	public function deletecheapcron(){
-		$this->load->model('catalog/product');
+	public function cleardatabasecron(){
+		$this->deletenoofferscron()->deleteinvalidasinscron()->deletecheapcron();
+	}
 
-		if ($this->config->get('config_rainforest_skip_low_price_products') > 0 && $this->config->get('config_rainforest_drop_low_price_products')){
-			$query = $this->db->query("SELECT p.product_id, p.asin, pd.name FROM product p
-			 LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
-			 WHERE 
-			 pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
-			 AND amazon_best_price > 0 
-			 AND amazon_best_price < '" . (float)$this->config->get('config_rainforest_skip_low_price_products') . "'");
+	/*
+	Очистка базы от товаров отсутствующими офферами
+	*/
+	public function deletenoofferscron(){
+		if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_delete_no_offers') && $this->config->get('config_rainforest_delete_no_offers_counter')){
+
+			$query = $this->db->query("SELECT p.product_id, p.asin, p.old_asin, pd.name FROM product p
+				LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
+				WHERE 
+				pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+				AND
+				amzn_no_offers = 1 
+				AND amzn_no_offers_counter >= '" . (int)$this->config->get('config_rainforest_delete_no_offers_counter') . "' 
+				AND asin <> '' 
+				AND amzn_last_offers != '0000-00-00 00:00:00'");
 
 			$i = 1;
 			foreach ($query->rows as $row){
-				echoLine($row['product_id'] . ': ' . $i . '/' . $query->num_rows);
+				echoLine($row['product_id'] . '/' . $row['asin'] . ' ' . $i . '/' . $query->num_rows);
 
 				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
-					echoLine('[deletecheapcron] Product ' . $row['product_id'] . ' есть в заказах, отключаем');
+					echoLine('[deletenoofferscron] Product ' . $row['product_id'] . ' is in orders, disabling');
 					$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($row['product_id'])->addAsinToIgnored($query->row['asin'], $query->row['name']);
 				} else {
-					echoLine('[deletecheapcron] Товара ' . $row['product_id'] . ' нет в заказах, удаляем');
+					echoLine('[deletenoofferscron] Product ' . $row['product_id'] . ' not in orders, deleting');
 					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($row['product_id'])->addAsinToIgnored($query->row['asin'], $query->row['name']);
+				}	
+
+				$i++;
+			}
+		}		
+
+		return $this;
+	}
+
+	/*
+	Очистка базы от товаров с невалидным ASIN
+	*/
+	public function deleteinvalidasinscron(){
+		if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_delete_invalid_asins')){
+			$query = $this->db->query("SELECT p.product_id, p.asin, p.old_asin, pd.name FROM product p
+			 LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
+			 WHERE 
+			 pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			 AND p.asin = 'INVALID'");
+
+
+			$i = 1;
+			foreach ($query->rows as $row){
+				if (empty($row['old_asin'])){
+					$row['old_asin'] = 'INVALID';
+				}
+
+				echoLine($row['product_id'] . '/' . $row['old_asin'] . ' ' . $i . '/' . $query->num_rows);
+
+				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
+					echoLine('[deleteinvalidasinscron] Product ' . $row['product_id'] . ' is in orders, disabling');
+					$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($row['product_id'])->addAsinToIgnored($query->row['old_asin'], $query->row['name']);
+				} else {
+					echoLine('[deleteinvalidasinscron] Product ' . $row['product_id'] . ' not in orders, deleting');
+					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($row['product_id'])->addAsinToIgnored($query->row['old_asin'], $query->row['name']);
 				}				
 
 				$i++;
 			}
 		}
+
+		return $this;
+	}
+
+	/*
+	Если изменяется настройка или порог минимальной цены, то нужно запустить эту функцию
+	*/
+	public function deletecheapcron(){		
+		if ($this->config->get('config_rainforest_skip_low_price_products') > 0 && $this->config->get('config_rainforest_drop_low_price_products')){
+			$query = $this->db->query("SELECT p.product_id, p.asin, pd.name FROM product p
+			 LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
+			 WHERE 
+			 pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			 AND amazon_best_price > 0
+			 AND status = 1 
+			 AND amazon_best_price < '" . (float)$this->config->get('config_rainforest_skip_low_price_products') . "'");
+
+			$i = 1;
+			foreach ($query->rows as $row){
+				echoLine($row['product_id'] . '/' . $row['asin'] . ' ' . $i . '/' . $query->num_rows);
+
+				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
+					echoLine('[deletecheapcron] Product ' . $row['product_id'] . ' is in orders, disabling');
+					$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($row['product_id'])->addAsinToIgnored($query->row['asin'], $query->row['name']);
+				} else {
+					echoLine('[deletecheapcron] Product ' . $row['product_id'] . ' not in orders, deleting');
+					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($row['product_id'])->addAsinToIgnored($query->row['asin'], $query->row['name']);
+				}			
+
+				$i++;
+			}
+		}
+
+		return $this;
 	}
 
 	/*
@@ -460,7 +538,7 @@ class ControllerDPRainForest extends Controller {
 		echoLine('[AddNewProducts2] Всего ' . $total . ' категорий!');		
 
 		$otherPageRequests = [];		
-		for ($i = 1; $i <= $iterations; $i++){
+		for ($i = 1; $i <= ($iterations+1); $i++){
 			$timer = new FPCTimer();
 			$this->current_iteration = $i;
 			echoLine('[AddNewProducts2] Шаг 1 Итерация ' . $i . ' из ' . $iterations . ', категории с ' . (\hobotix\RainforestAmazon::categoryRequestLimits * ($i-1)) . ' по ' . \hobotix\RainforestAmazon::categoryRequestLimits * $i);
@@ -495,7 +573,7 @@ class ControllerDPRainForest extends Controller {
 		$total = count($otherPageRequests);
 		$this->iterations = $iterations = ceil($total/\hobotix\RainforestAmazon::categoryRequestLimits);
 		echoLine('[AddNewProducts2] Всего eще ' . $total . ' запросов!');
-		for ($i = 1; $i <= $iterations; $i++){
+		for ($i = 1; $i <= ($iterations+1); $i++){
 			$this->current_iteration = $i;
 			echoLine('[AddNewProducts2] Шаг 2 Итерация ' . $i . ' из ' . $iterations . ', категории с ' . (\hobotix\RainforestAmazon::categoryRequestLimits * ($i-1)) . ' по ' . \hobotix\RainforestAmazon::categoryRequestLimits * $i);
 			$slice = array_slice($otherPageRequests, \hobotix\RainforestAmazon::categoryRequestLimits * ($i-1), \hobotix\RainforestAmazon::categoryRequestLimits);
@@ -530,11 +608,11 @@ class ControllerDPRainForest extends Controller {
 		$this->load->library('Timer');
 
 		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::productRequestLimits);
-		echoLine('[fixweights] Total products: ' . $total);
+		echoLine('[fixlostjson] Total products: ' . $total);
 		$k = 1;	
 
 		$total_lost = 0;
-		for ($i = 1; $i <= $iterations; $i++){
+		for ($i = 1; $i <= ($iterations+1); $i++){
 			$timer = new FPCTimer();	
 
 			echoLine('[fixlostjson] Iteration ' . $i . '/' . $iterations);
@@ -610,7 +688,7 @@ class ControllerDPRainForest extends Controller {
 		$total = count($products);
 		$iterations = ceil($total/\hobotix\RainforestAmazon::productRequestLimits);
 
-		for ($i = 1; $i <= $iterations; $i++){
+		for ($i = 1; $i <= ($iterations+1); $i++){
 			$timer = new FPCTimer();
 			echoLine('[editfullproductscron] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . (\hobotix\RainforestAmazon::productRequestLimits * ($i-1)) . ' по ' . \hobotix\RainforestAmazon::productRequestLimits * $i);
 
@@ -738,7 +816,7 @@ class ControllerDPRainForest extends Controller {
 		echoLine('[fixoffersdates] Всего офферов: ' . $total);
 		$k = 1;		
 
-		for ($i = 1; $i <= $iterations; $i++){
+		for ($i = 1; $i <= ($iterations+1); $i++){
 			$offers = $this->rainforestAmazon->offersParser->getAmazonOffers(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 			if ($offers){		
 				foreach ($offers as $offer){
@@ -778,7 +856,7 @@ class ControllerDPRainForest extends Controller {
 		echoLine('[setpricesfast] Total products: ' . $total);
 		$k = 1;		
 
-		for ($i = 1; $i <= $iterations; $i++){
+		for ($i = 1; $i <= ($iterations+1); $i++){
 			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFastPrice(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 			if ($products){		
 				foreach ($products as $product){
@@ -802,7 +880,7 @@ class ControllerDPRainForest extends Controller {
 		echoLine('[fixpricesfull] Total products: ' . $total);
 		$k = 1;		
 
-		for ($i = 1; $i <= $iterations; $i++){
+		for ($i = 1; $i <= ($iterations+1); $i++){
 			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFastPriceFull(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 			if ($products){		
 				foreach ($products as $product){
@@ -825,7 +903,7 @@ class ControllerDPRainForest extends Controller {
 		echoLine('[puttofilecache] Total products: ' . $total);
 		$k = 1;		
 
-		for ($i = 1; $i <= $iterations; $i++){
+		for ($i = 1; $i <= ($iterations+1); $i++){
 			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullDataInDB(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 			if ($products){		
 				foreach ($products as $product){
@@ -842,6 +920,23 @@ class ControllerDPRainForest extends Controller {
 	}
 
 	/*
+	Проверяет асины в случае их изменения и перезаписывает из сохраненной таблички кэшированных данных
+	*/
+	public function fixasins(){
+		$this->db->query("SELECT p.product_id, p.asin as p_asin, pad.asin as pad_asin FROM `product` p LEFT JOIN product_amzn_data pad ON (p.product_id = pad.product_id) WHERE p.asin <> pad.asin");
+
+
+
+
+
+
+
+
+
+
+	}
+
+	/*
 	Переназначает вес товаров, в случае изменений в логике определения веса товаров
 	*/
 	public function fixweights(){
@@ -851,13 +946,16 @@ class ControllerDPRainForest extends Controller {
 		echoLine('[fixweights] Total products: ' . $total);
 		$k = 1;	
 
-		for ($i = 1; $i <= $iterations; $i++){
+		for ($i = 1; $i <= ($iterations+1); $i++){
 			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullData(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit, ['weight' => 0]);
 			if ($products){		
 				foreach ($products as $product){
 					echoLine('[fixweights] Product ' . $product['product_id'] . '/' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
 
-					$this->rainforestAmazon->infoUpdater->parseAndUpdateProductDimensions(json_decode($product['json'], true));
+					$json = json_decode($product['json'], true);
+					$json['product_id'] = $product['product_id'];
+
+					$this->rainforestAmazon->infoUpdater->parseAndUpdateProductDimensions($json);
 					$k++;			
 				}
 			}	
@@ -874,13 +972,16 @@ class ControllerDPRainForest extends Controller {
 		echoLine('[fixweights] Total products: ' . $total);
 		$k = 1;	
 
-		for ($i = 1; $i <= $iterations; $i++){
+		for ($i = 1; $i <= ($iterations+1); $i++){
 			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullData(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit, ['length' => 0]);
 			if ($products){		
 				foreach ($products as $product){
 					echoLine('[fixweights] Product ' . $product['product_id'] . '/' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
 
-					$this->rainforestAmazon->infoUpdater->parseAndUpdateProductDimensions(json_decode($product['json'], true));
+					$json = json_decode($product['json'], true);
+					$json['product_id'] = $product['product_id'];
+
+					$this->rainforestAmazon->infoUpdater->parseAndUpdateProductDimensions($json);
 					$k++;			
 				}
 			}	
@@ -1052,7 +1153,7 @@ class ControllerDPRainForest extends Controller {
 		echoLine('[fixvariants] Total products: ' . $total);
 		$k = 1;	
 
-		for ($i = 1; $i <= $iterations; $i++){
+		for ($i = 1; $i <= ($iterations+1); $i++){
 			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullData(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 			if ($products){		
 				foreach ($products as $product){
@@ -1086,7 +1187,7 @@ class ControllerDPRainForest extends Controller {
 		echoLine('[fixvariants] Total products: ' . $total);
 		$k = 1;	
 
-		for ($i = 1; $i <= $iterations; $i++){
+		for ($i = 1; $i <= ($iterations+1); $i++){
 			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullData(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 			if ($products){		
 				foreach ($products as $product){
@@ -1112,7 +1213,7 @@ class ControllerDPRainForest extends Controller {
 		echoLine('[fixvariants] Total products: ' . $total);
 		$k = 1;	
 
-		for ($i = 1; $i <= $iterations; $i++){
+		for ($i = 1; $i <= ($iterations+1); $i++){
 			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithVariantsSet(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 			if ($products){		
 				foreach ($products as $product){
@@ -1142,7 +1243,7 @@ class ControllerDPRainForest extends Controller {
 		echoLine('[fixattributestexts] Всего атрибутов: ' . $total);
 		$k = 1;			
 
-		for ($i = 1; $i <= $iterations; $i++){
+		for ($i = 1; $i <= ($iterations+1); $i++){
 			$attributes = $this->rainforestAmazon->infoUpdater->getAttributes(($i-1) * (int)\hobotix\Amazon\InfoUpdater::descriptionsQueryLimit);
 			if ($attributes){		
 				foreach ($attributes as $attribute){
@@ -1176,7 +1277,7 @@ class ControllerDPRainForest extends Controller {
 		echoLine('[fixnames] Total products: ' . $total);
 		$k = 1;			
 
-		for ($i = 1; $i <= $iterations; $i++){
+		for ($i = 1; $i <= ($iterations+1); $i++){
 			$products = $this->rainforestAmazon->infoUpdater->getNames(($i-1) * (int)\hobotix\Amazon\InfoUpdater::descriptionsQueryLimit);
 			if ($products){		
 				foreach ($products as $product){
@@ -1204,7 +1305,7 @@ class ControllerDPRainForest extends Controller {
 		echoLine('[fixreviews] Total products: ' . $total);
 		$k = 1;	
 
-		for ($i = 1; $i <= $iterations; $i++){
+		for ($i = 1; $i <= ($iterations+1); $i++){
 			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullData(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit, ['reviews_parsed' => 0, 'status' => 1, 'filled_from_amazon' => 1, 'amzn_no_offers' => 0]);
 			if ($products){		
 				foreach ($products as $product){
@@ -1227,7 +1328,7 @@ class ControllerDPRainForest extends Controller {
 		echoLine('[fixreviews] Total products: ' . $total);
 		$k = 1;	
 
-		for ($i = 1; $i <= $iterations; $i++){
+		for ($i = 1; $i <= ($iterations+1); $i++){
 			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullData(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit, ['amzn_rating' => 0]);
 			if ($products){		
 				foreach ($products as $product){

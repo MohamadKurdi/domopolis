@@ -373,6 +373,7 @@ class InfoUpdater extends RainforestRetriever
 		$this->db->query($sql);
 
 		if ($updateDimensions){
+			$product['json']['product_id'] = $product['product_id'];
 			$this->parseAndUpdateProductDimensions($product['json']);
 		}
 
@@ -651,6 +652,15 @@ class InfoUpdater extends RainforestRetriever
 				pack_weight 			= '" . (float)$data['weight'] . "',
 				pack_weight_class_id 	= '" . (int)$data['weight_class_id'] . "'
 				WHERE asin = '" . $this->db->escape($product['asin']) . "'");
+
+			if (!empty($product['product_id'])){
+				$this->db->query("UPDATE product SET 
+				weight 					= '" . (float)$data['weight'] . "', 
+				weight_class_id 		= '" . (int)$data['weight_class_id'] . "',
+				pack_weight 			= '" . (float)$data['weight'] . "',
+				pack_weight_class_id 	= '" . (int)$data['weight_class_id'] . "'
+				WHERE product_id = '" . (int)$product['product_id'] . "'");
+			}
 		}
 
 		if (!empty($data['length']) && !empty($data['width']) && !empty($data['height']) && !empty($data['length_class_id'])){					
@@ -667,6 +677,19 @@ class InfoUpdater extends RainforestRetriever
 				pack_height				= '" . (float)$data['height'] . "',			
 				pack_length_class_id 	= '" . (int)$data['length_class_id'] . "'			
 				WHERE asin = '" . $this->db->escape($product['asin']) . "'");
+
+			if (!empty($product['product_id'])){
+				$this->db->query("UPDATE product SET
+				length 					= '" . (float)$data['length'] . "',
+				width					= '" . (float)$data['width'] . "',
+				height					= '" . (float)$data['height'] . "',				
+				length_class_id 		= '" . (int)$data['length_class_id'] . "',
+				pack_length 			= '" . (float)$data['length'] . "',
+				pack_width				= '" . (float)$data['width'] . "',
+				pack_height				= '" . (float)$data['height'] . "',			
+				pack_length_class_id 	= '" . (int)$data['length_class_id'] . "'			
+				WHERE product_id = '" . (int)$product['product_id'] . "'");
+			}
 		}
 	}
 

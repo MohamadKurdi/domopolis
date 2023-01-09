@@ -224,6 +224,12 @@ class productModelGet extends hoboModel{
 		return $result;
 	}
 
+	public function getProductsWithInvalidASIN(){
+		$sql = "SELECT product_id FROM product WHERE asin = 'INVALID'";
+
+		return $this->db->ncquery($sql)->row['total'];
+	}
+
 	public function getTotalProductsWithFullDataInDB(){
 		$sql = "SELECT COUNT(product_id) as total FROM product_amzn_data WHERE product_id IN (SELECT product_id FROM product) AND file = '' AND NOT ISNULL(json)";
 
