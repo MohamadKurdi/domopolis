@@ -305,7 +305,7 @@ class ControllerDPRainForest extends Controller {
 	*/
 	public function fixunexistentcategoriescron(){
 		if (!$this->config->get('config_rainforest_enable_category_tree_parser')){
-			echoLine('[ControllerKPRainForest::fixunexistentcategoriescron] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerDPRainForest::fixunexistentcategoriescron] CRON IS DISABLED IN ADMIN');
 			return;
 		}
 
@@ -332,7 +332,7 @@ class ControllerDPRainForest extends Controller {
 		exit();
 
 		if (!$this->config->get('config_rainforest_enable_category_tree_parser')){
-			echoLine('[ControllerKPRainForest::addcategoriescron] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerDPRainForest::addcategoriescron] CRON IS DISABLED IN ADMIN');
 			return;
 		}
 
@@ -374,7 +374,7 @@ class ControllerDPRainForest extends Controller {
 	*/
 	public function addasinsqueuecron(){
 		if (!$this->config->get('config_rainforest_enable_add_queue_parser')){
-			echoLine('[ControllerKPRainForest::addasinsqueuecron] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerDPRainForest::addasinsqueuecron] CRON IS DISABLED IN ADMIN');
 			return;
 		}
 
@@ -384,10 +384,10 @@ class ControllerDPRainForest extends Controller {
 			$interval = new Interval($this->config->get('config_rainforest_add_queue_parser_time_start') . '-' . $this->config->get('config_rainforest_add_queue_parser_time_end'));
 
 			if (!$interval->isNow()){
-				echoLine('[ControllerKPRainForest::addasinsqueuecron] NOT ALLOWED TIME');
+				echoLine('[ControllerDPRainForest::addasinsqueuecron] NOT ALLOWED TIME');
 				return;
 			} else {
-				echoLine('[ControllerKPRainForest::addasinsqueuecron] ALLOWED TIME');				
+				echoLine('[ControllerDPRainForest::addasinsqueuecron] ALLOWED TIME');				
 			}
 		}
 
@@ -508,7 +508,7 @@ class ControllerDPRainForest extends Controller {
 	public function addnewproductscron(){	
 
 		if (!$this->config->get('config_rainforest_enable_new_parser')){
-			echoLine('[ControllerKPRainForest::addnewproductscron] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerDPRainForest::addnewproductscron] CRON IS DISABLED IN ADMIN');
 			return;
 		}
 
@@ -518,10 +518,10 @@ class ControllerDPRainForest extends Controller {
 			$interval = new Interval($this->config->get('config_rainforest_new_parser_time_start') . '-' . $this->config->get('config_rainforest_new_parser_time_end'));
 
 			if (!$interval->isNow()){
-				echoLine('[ControllerKPRainForest::addnewproductscron] NOT ALLOWED TIME');
+				echoLine('[ControllerDPRainForest::addnewproductscron] NOT ALLOWED TIME');
 				return;
 			} else {
-				echoLine('[ControllerKPRainForest::addnewproductscron] ALLOWED TIME');				
+				echoLine('[ControllerDPRainForest::addnewproductscron] ALLOWED TIME');				
 			}
 		}
 
@@ -598,6 +598,68 @@ class ControllerDPRainForest extends Controller {
 		$this->updateimagesfromamazon();	
 	}
 
+	/*
+	Проверяет асины в случае их изменения и перезаписывает из сохраненной таблички кэшированных данных, и обновляет полностью информацию о товаре
+	*/
+	public function recoverasinscron(){
+
+		if (!$this->config->get('config_rainforest_enable_recoverasins_parser')){
+			echoLine('[ControllerDPRainForest::recoverasins] CRON IS DISABLED IN ADMIN');
+			return;
+		}
+
+		if ($this->config->has('config_rainforest_recoverasins_parser_time_start') && $this->config->has('config_rainforest_recoverasins_parser_time_end')){
+			$interval = new Interval($this->config->get('config_rainforest_recoverasins_parser_time_start') . '-' . $this->config->get('config_rainforest_recoverasins_parser_time_end'));
+
+			if (!$interval->isNow()){
+				echoLine('[ControllerDPRainForest::recoverasins] NOT ALLOWED TIME');
+				return;
+			} else {
+				echoLine('[ControllerDPRainForest::recoverasins] ALLOWED TIME');				
+			}
+		}
+
+		if ($this->config->get('config_enable_amazon_specific_modes')){
+			$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithChangedAsins();
+			
+			$this->load->library('Timer');
+
+			echoLine('[recoverasins] Total products: ' . $total);
+
+			$timer = new FPCTimer();	
+
+			$slice = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithChangedAsins((int)\hobotix\RainforestAmazon::productRequestLimits);
+			echoLine('[recoverasins] Have ' . count($slice) . ' changed asins, trying to recover...');
+
+			foreach ($slice as $changed){
+				echoLine('[recoverasins] Changed ' . $changed['product_id'] . ' with asin ' . $changed['asin_in_product_table'] . ' -> ' . $changed['asin']);					
+			}	
+
+			$results = $this->rainforestAmazon->simpleProductParser->getProductByASINS($slice);
+
+			foreach ($results as $product_id => $result){
+				$this->rainforestAmazon->infoUpdater->updateProductAmazonLastSearch($product_id);
+
+				if ($result){
+					echoLine('[recoverasins] Product ' . $product_id . ' -> ' . $result['asin']);
+					echoLine('[recoverasins] Old name:' . $slice[$product_id]['name']);
+					echoLine('[recoverasins] New name:' . $result['title']);
+
+					$this->rainforestAmazon->productsRetriever->editFullProduct($product_id, $result);
+					$this->rainforestAmazon->infoUpdater->updateASINInDatabase(['product_id' => $product_id, 'asin' => $result['asin']]);
+
+				} else {
+					echoLine('[recoverasins] Could not recover ' . $product_id . ' -> ' . $result['asin']);
+					$this->rainforestAmazon->infoUpdater->updateASINInDatabase(['product_id' => $product_id, 'asin' => 'INVALID']);				
+				}
+			}				
+
+			echoLine('[fixlostjson] Iteration time: ' . $timer->getTime() . ' sec.');
+			unset($timer);	
+		}
+	}
+
+
 
 	/*
 	Проверяет существование данных в файлах и перескачивает их по мере необходимости
@@ -657,7 +719,7 @@ class ControllerDPRainForest extends Controller {
 	public function editfullproductscron($parsetechcategory = false){
 
 		if (!$this->config->get('config_rainforest_enable_data_parser')){
-			echoLine('[ControllerKPRainForest::editfullproductscron] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerDPRainForest::editfullproductscron] CRON IS DISABLED IN ADMIN');
 			return;
 		}
 
@@ -667,10 +729,10 @@ class ControllerDPRainForest extends Controller {
 				$interval = new Interval($this->config->get('config_rainforest_data_parser_time_start') . '-' . $this->config->get('config_rainforest_data_parser_time_end'));
 
 				if (!$interval->isNow()){
-					echoLine('[ControllerKPRainForest::editfullproductscron] NOT ALLOWED TIME');
+					echoLine('[ControllerDPRainForest::editfullproductscron] NOT ALLOWED TIME');
 					return;
 				} else {
-					echoLine('[ControllerKPRainForest::editfullproductscron] ALLOWED TIME');				
+					echoLine('[ControllerDPRainForest::editfullproductscron] ALLOWED TIME');				
 				}
 			}
 		}
@@ -730,7 +792,7 @@ class ControllerDPRainForest extends Controller {
 	public function parsetechcategory(){		
 
 		if (!$this->config->get('config_rainforest_enable_tech_category_parser')){
-			echoLine('[ControllerKPRainForest::parsetechcategory] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerDPRainForest::parsetechcategory] CRON IS DISABLED IN ADMIN');
 			return;
 		}
 
@@ -740,10 +802,10 @@ class ControllerDPRainForest extends Controller {
 			$interval = new Interval($this->config->get('config_rainforest_tech_category_parser_time_start') . '-' . $this->config->get('config_rainforest_tech_category_parser_time_end'));
 
 			if (!$interval->isNow()){
-				echoLine('[ControllerKPRainForest::editfullproductscron] NOT ALLOWED TIME');
+				echoLine('[ControllerDPRainForest::editfullproductscron] NOT ALLOWED TIME');
 				return;
 			} else {
-				echoLine('[ControllerKPRainForest::editfullproductscron] ALLOWED TIME');				
+				echoLine('[ControllerDPRainForest::editfullproductscron] ALLOWED TIME');				
 			}
 		}
 
@@ -758,7 +820,7 @@ class ControllerDPRainForest extends Controller {
 	public function editfullproductscronl2(){		
 
 		if (!$this->config->get('config_rainforest_enable_data_l2_parser')){
-			echoLine('[ControllerKPRainForest::editfullproductscronl2] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerDPRainForest::editfullproductscronl2] CRON IS DISABLED IN ADMIN');
 			return;
 		}
 
@@ -768,10 +830,10 @@ class ControllerDPRainForest extends Controller {
 			$interval = new Interval($this->config->get('config_rainforest_data_l2_parser_time_start') . '-' . $this->config->get('config_rainforest_data_l2_parser_time_end'));
 
 			if (!$interval->isNow()){
-				echoLine('[ControllerKPRainForest::editfullproductscron] NOT ALLOWED TIME');
+				echoLine('[ControllerDPRainForest::editfullproductscron] NOT ALLOWED TIME');
 				return;
 			} else {
-				echoLine('[ControllerKPRainForest::editfullproductscron] ALLOWED TIME');				
+				echoLine('[ControllerDPRainForest::editfullproductscron] ALLOWED TIME');				
 			}
 		}
 		
@@ -919,23 +981,7 @@ class ControllerDPRainForest extends Controller {
 		}
 	}
 
-	/*
-	Проверяет асины в случае их изменения и перезаписывает из сохраненной таблички кэшированных данных
-	*/
-	public function fixasins(){
-		$this->db->query("SELECT p.product_id, p.asin as p_asin, pad.asin as pad_asin FROM `product` p LEFT JOIN product_amzn_data pad ON (p.product_id = pad.product_id) WHERE p.asin <> pad.asin");
-
-
-
-
-
-
-
-
-
-
-	}
-
+	
 	/*
 	Переназначает вес товаров, в случае изменений в логике определения веса товаров
 	*/
