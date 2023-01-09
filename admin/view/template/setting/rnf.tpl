@@ -198,6 +198,34 @@
 								</td>
 							</tr>
 
+							<tr>
+								<td style="white-space: nowrap;color:#7F00FF;">
+									<i class="fa fa-refresh"></i> <b>Поиск и обновление потерянных ASIN</b>
+								</td>
+								<td style="width:40px;" class="center">
+									<input id="config_rainforest_enable_recoverasins_parser" type="checkbox" class="checkbox" name="config_rainforest_enable_recoverasins_parser" <? if ($config_rainforest_enable_recoverasins_parser){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_recoverasins_parser"></label>
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> В процессе жизни товара на Амазоне у него может измениться асин. Если нам удалось это заметить, то мы пытаемся обновить полную информацию о товаре
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td class="right">
+									<i class="fa fa-clock-o"></i> Время работы, часы
+								</td>
+								<td>
+									<input type="time" name="config_rainforest_recoverasins_parser_time_start" value="<?php echo $config_rainforest_recoverasins_parser_time_start; ?>" size="50" style="width:70px;" /> - 
+									<input type="time" name="config_rainforest_recoverasins_parser_time_end" value="<?php echo $config_rainforest_recoverasins_parser_time_end; ?>" size="50" style="width:70px;" />
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Обработка выполняется в рабочей базе и сильно ее нагружает. Поэтому лучше ограничивать время запуска, например, ночными часами, чтоб уменьшить нагрузки.
+									</span>
+								</td>
+							</tr>	
+
 
 							<tr>
 								<td style="white-space: nowrap;color:#7F00FF;">
@@ -266,7 +294,7 @@
 										<i class="fa fa-info-circle"></i> Чтоб иметь актуальную цену закупки, товары должны добавляться в очередь после каждого заказа.
 									</span>
 								</td>
-							</tr>
+							</tr>												
 
 							<tr>
 								<td style="white-space: nowrap;color:#7F00FF;">
