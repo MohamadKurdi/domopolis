@@ -77,17 +77,7 @@
 			$this->db->query("DELETE FROM category_related WHERE category_id NOT IN (SELECT category_id FROM category)");
 			$this->db->query("DELETE FROM category_related WHERE related_category_id NOT IN (SELECT category_id FROM category)");
 
-			echo '>> Удаление товаров у которых нет на амазоне офферов...' . PHP_EOL;
-			if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_delete_no_offers') && $this->config->get('config_rainforest_delete_no_offers_counter')){
-				$this->load->model('catalog/product');
-
-				$query = $this->db->query("SELECT product_id FROM product WHERE amzn_no_offers = 1 AND amzn_no_offers_counter >= '" . (int)$this->config->get('config_rainforest_delete_no_offers_counter') . "' AND asin <> '' AND amzn_last_offers != '0000-00-00 00:00:00'");
-
-				foreach ($query->rows as $row){
-					echo '>> Удаляем товар ' . $row['product_id'] . PHP_EOL;
-					$this->model_catalog_product->deleteProduct($row['product_id'], false, true);
-				}
-			}			
+			$this->db->query("DELETE FROM product_amzn_data WHERE product_id NOT IN (SELECT product_id FROM product)");			
 
 			echo '>> Нормализация рейтинга товаров...' . PHP_EOL;
 			$this->db->query("UPDATE product SET xrating = (SELECT AVG(rating) as xrating FROM review WHERE status = 1 AND product_id = product.product_id GROUP BY product_id)");
