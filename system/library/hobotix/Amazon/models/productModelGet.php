@@ -152,6 +152,48 @@ class productModelGet extends hoboModel{
 		return $this->db->ncquery($sql)->row['total'];
 	}
 
+	public function getProductsWithChangedAsins($start){
+		$result = [];
+
+		$sql = "SELECT p.product_id, p.asin as p_asin, pad.asin as pad_asin, pd.name FROM `product` p 
+		LEFT JOIN product_amzn_data pad ON (p.product_id = pad.product_id) 
+		LEFT JOIN product_description pd ON (p.product_id = pd.product_id AND language_id = '" . $this->config->get('config_rainforest_source_language_id') . "') 
+		WHERE 
+		p.asin <> pad.asin 
+		AND p.asin <> ''
+		AND p.asin <> 'INVALID'
+		AND NOT ISNULL(pad.asin)
+		AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1 AND amazon_can_get_full = 1)) 
+		ORDER BY p.date_added DESC
+		limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::productRequestLimits;
+
+		$query = $this->db->ncquery($sql);
+
+		foreach ($query->rows as $row){
+			$result[$row['product_id']] = [
+					'product_id' 			=> $row['product_id'],
+					'name' 					=> $row['name'], 		
+					'asin_in_product_table'	=> $row['p_asin'],
+					'asin'					=> $row['pad_asin']							
+				];
+		}
+
+		return $result;
+	}
+
+	public function getTotalProductsWithChangedAsins(){
+		$sql = "SELECT COUNT(*) as total FROM product p 
+			LEFT JOIN product_amzn_data pad ON (p.product_id = pad.product_id) 
+			WHERE 			
+			p.asin <> pad.asin 
+			AND p.asin <> '' 
+			AND p.asin <> 'INVALID'
+			AND NOT ISNULL(pad.asin)
+			AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1 AND amazon_can_get_full = 1))";
+
+		return $this->db->ncquery($sql)->row['total'];
+	}
+
 	public function getProductsWithFullDataWithLostJSON($start, $filter_data = []){
 		$result = [];
 

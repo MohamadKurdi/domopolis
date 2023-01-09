@@ -1125,7 +1125,8 @@ class ProductsRetriever extends RainforestRetriever
 						$this->editFullProduct($product_id, $result, false);
 
 					} else {
-						echoLine('[editFullProductsWNP] Товар ' . $product_id . ', не найден, ASIN ' . $result['asin']);
+
+						echoLine('[editFullProductsWNP] Товар ' . $product_id . ', не найден');
 					}
 				}
 			}
