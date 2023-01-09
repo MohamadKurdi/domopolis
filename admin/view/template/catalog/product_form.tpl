@@ -55,7 +55,7 @@
 					<a href="#tab-price" style="background-color:#00ad07; color:#FFF;">Цены</a>					
 					<a href="#tab-priceva" style="background-color:#7F00FF; color:#FFF;"><i class="fa fa-product-hunt"></i> Конкуренты</a>					
 					<a href="#tab-amazon" style="background-color:#FF9900; color:#FFF;"><i class="fa fa-amazon"></i> Amazon</a>
-					<a href="#tab-yandex-market" style="background-color:#cf4a61; color:#FFF;"><i class="fa fa-yahoo"></i> Yandex.Market</a>
+					<?php if ($this->config->get('config_country_id') == 176) { ?><a href="#tab-yandex-market" style="background-color:#cf4a61; color:#FFF;"><i class="fa fa-yahoo"></i> Yandex.Market</a><? } ?>
 					<a href="#tab-special" style="background-color:#00ad07; color:#FFF;">Скидки</a>
 					<a href="#tab-markdown" style="background-color:#00ad07; color:#FFF;">Уценка</a>
 					<a href="#tab-additional-offer" style="background-color:#00ad07; color:#FFF;">Специальные</a>
@@ -816,7 +816,7 @@
 
 															</div>
 
-															<div id="tab-yandex-market">
+															<div id="tab-yandex-market" <?php if ($this->config->get('config_country_id') != 176) { ?>style="display:none"<? } ?>>
 																<table class="form">
 																	<td width="33%" valign="top">
 
@@ -1200,7 +1200,7 @@
 																			<table class="form">
 																				<tr>
 																					<td style="width:50%">
-																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Ссылки на конкурентов - Россия</span>
+																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Ссылки на конкурентов - RU</span>
 																					</td>
 																					<td style="width:50%">
 																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Ссылки на конкурентов - Украина</span>
@@ -1210,7 +1210,7 @@
 																					<td>
 																						<textarea name="competitors" style="width:90%; height:200px;"><? echo $competitors; ?></textarea>
 																						<br />
-																						<span class="help">cсылки на страницы, где находится товар на сайтах конкурентов. по одной в строке. только Россия</span>
+																						<span class="help">cсылки на страницы, где находится товар на сайтах конкурентов. по одной в строке. только RU</span>
 																					</td>
 																					<td>
 																						<textarea name="competitors_ua" style="width:90%; height:200px;"><? echo $competitors_ua; ?></textarea>
