@@ -1,19 +1,22 @@
 function passwordToggle(elem){
-	let passwdInput = elem.prev('input');
-	let eye = elem.children('i');
-	
-	if (passwdInput.attr('type') === "password") {
-		passwdInput.attr('type', 'text');
-		eye.removeClass('fa-eye, fa-eye-slash').addClass('fa-eye-slash');
-		} else {
-		passwdInput.attr('type', 'password');
-		eye.removeClass('fa-eye, fa-eye-slash').addClass('fa-eye');
-	}
+	$('.password-toggle').each(function() {
+		let passwdInput = $(this).prev('input');
+		let eye = $(this).children('i');
+
+		if (passwdInput.attr('type') === "password") {
+			passwdInput.attr('type', 'text');
+			eye.removeClass('fa-eye, fa-eye-slash').addClass('fa-eye-slash');
+			} else {
+			passwdInput.attr('type', 'password');
+			eye.removeClass('fa-eye, fa-eye-slash').addClass('fa-eye');
+		}
+	});
 }
 
 $(document).ready(function() {
-	$('input[type=password]').after('<span class="password-toggle 1" onclick="passwordToggle($(this));"><i class="fas fa-eye"></i></span>');
+	$('input[type=password]').after('<span class="password-toggle" onclick="passwordToggle();"><i class="fas fa-eye"></i></span>');
 });
+
 
 
 
