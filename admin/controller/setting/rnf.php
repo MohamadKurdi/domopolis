@@ -55,6 +55,11 @@ class ControllerSettingRnf extends Controller {
 		'config_display_subcategory_in_all_categories',
 		'config_rainforest_show_only_filled_products_in_catalog',
 
+		'config_rainforest_delete_no_offers',
+		'config_rainforest_delete_no_offers_counter',
+		'config_rainforest_delete_invalid_asins',
+
+
 		'config_no_zeroprice',
 		'config_product_hide_sku',
 		'config_product_replace_sku_with_product_id',

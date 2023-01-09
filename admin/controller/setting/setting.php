@@ -3280,6 +3280,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_rainforest_delete_no_offers_counter'] = $this->config->get('config_rainforest_delete_no_offers_counter');
         }
 
+        if (isset($this->request->post['config_rainforest_delete_invalid_asins'])) {
+            $this->data['config_rainforest_delete_invalid_asins'] = $this->request->post['config_rainforest_delete_invalid_asins'];
+        } else {
+            $this->data['config_rainforest_delete_invalid_asins'] = $this->config->get('config_rainforest_delete_invalid_asins');
+        }
+
         if (isset($this->request->post['config_rainforest_max_delivery_days_for_offer'])) {
             $this->data['config_rainforest_max_delivery_days_for_offer'] = $this->request->post['config_rainforest_max_delivery_days_for_offer'];
         } else {

@@ -394,6 +394,48 @@
 						</tr>
 
 						<tr>
+							<td class="right">
+								Удалять или отключать невалидные ASIN
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_delete_invalid_asins" type="checkbox" class="checkbox" name="config_rainforest_delete_invalid_asins" <? if ($config_rainforest_delete_invalid_asins){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_delete_invalid_asins"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle" style="color:red"></i> Периодически товары пропадают из Amazon. В таком случае при попытке получить оффер, либо информацию о товаре его ASIN обозначается как INVALID. Если эта настройка включена, то такие товары будут периодически удаляться из базы. Обязательно отключать для магазинов, наполняемых вручную! Если товары есть в заказах, то они не удаляются, но отключаются.
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Удалять или отключать товары без офферов
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_delete_no_offers" type="checkbox" class="checkbox" name="config_rainforest_delete_no_offers" <? if ($config_rainforest_delete_no_offers){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_delete_no_offers"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle" style="color:red"></i> Периодическое удаление товаров, у которых нет офферов несколько раз подряд. Количество раз подряд, в которых у товара нет офферов (либо все офферы плохие) задано следующей настройкой.
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Порог "нету офферов"
+							</td>
+							<td>
+								<input type="number" name="config_rainforest_delete_no_offers_counter" value="<?php echo $config_rainforest_delete_no_offers_counter; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Количество отсутствий офферов подряд. Задает порог для удаления товара в случае отсутствия офферов.
+								</span>
+							</td>
+						</tr>
+
+						<tr>
 							<td colspan="3" class="left" style="color:#00ad07;">
 								<i class="fa fa-cogs"></i> <b>Блоки связей товаров</b>
 							</td>
@@ -968,16 +1010,17 @@
 					</table>
 				</div>
 
-				<div id="tab-priceformula">					
+				<div id="tab-priceformula">				
+					<div>
+						<input type="text" name="config_rainforest_main_formula" value="<?php echo $config_rainforest_main_formula; ?>" style="width:80%; font-size:16px; padding:10px;" />						
+						<button class="button" style="padding:10px; float:right; font-size:24px; margin-right:4px;" onclick="savePriceModel();"><i class="fa fa-check"></i> Сохранить</button>
+
+						<div class="clr"></div>
+						<span class="help"><i class="fa fa-info-circle"></i> В этом разделе изменение полей на лету отключено, чтоб изменения формулы и коэффициентов не влияли на текущую модель. Если хочешь изменить модель ценообразования после тестирования формул и (или) коэффициентов - нужно нажать кнопку сохранить и дождаться окончания процесса. После нажатия кнопки ценовая модель изменится и цены товара будут формироваться исходя из новой модели. Любое изменение поля вызывает запрос на тестовый пересчёт цен.</span>
+					</div>
+
+					<div class="clr"></div>
 					<div style="float:left; width:60%;">
-						<div>
-							<input type="text" name="config_rainforest_main_formula" value="<?php echo $config_rainforest_main_formula; ?>" style="width:80%; font-size:24px; padding:10px;" />						
-							<button class="button" style="padding:10px; float:right; font-size:24px; margin-right:4px;" onclick="savePriceModel();"><i class="fa fa-check"></i> Сохранить</button>
-
-							<div class="clr"></div>
-							<span class="help"><i class="fa fa-info-circle"></i> В этом разделе изменение полей на лету отключено, чтоб изменения формулы и коэффициентов не влияли на текущую модель. Если хочешь изменить модель ценообразования после тестирования формул и (или) коэффициентов - нужно нажать кнопку сохранить и дождаться окончания процесса. После нажатия кнопки ценовая модель изменится и цены товара будут формироваться исходя из новой модели. Любое изменение поля вызывает запрос на тестовый пересчёт цен.</span>
-						</div>
-
 						<div id="calculator_results" style="min-height:500px; margin-top:10px;">
 						</div>
 					</div>
