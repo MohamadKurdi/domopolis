@@ -174,23 +174,16 @@
 				$query = $this->db->query("SELECT * FROM currency WHERE code != '" . $this->db->escape($this->config->get('config_currency')) . "' AND date_modified < '" .  $this->db->escape(date('Y-m-d H:i:s', strtotime('-1 day'))) . "'");
 			}
 			
-			$current_values_query = $this->db->query("SELECT * FROM currency WHERE 1");
+			$current_values_query = $this->currency->getCurrencies();
 			$current_values = array();
 
-			foreach ($current_values_query->rows as $crypto){
-				if ($crypto['cryptopair']){
-					$json = json_decode(file_get_contents('https://api.binance.com/api/v3/avgPrice?symbol=' . $crypto['cryptopair']), true);
-
-					if (!empty($json['price']) && is_numeric($json['price'])){
-						echoLine($crypto['cryptopair'] . ': ' . $json['price']);
-						if (strpos($crypto['cryptopair'], $crypto['code']) === 0){							
-							$json['price'] = 1/$json['price'];
-						}
-
-						$this->db->query("UPDATE currency SET cryptopair_value = '" . (float)$json['price'] . "' WHERE code = '" . $this->db->escape($crypto['code']) . "'");
-					}
-				}
+			$supported_currencies = [];
+			foreach ($current_values_query->rows as $currency){
+				$supported_currencies[] = $currency['code'];
 			}
+
+			$this->currency->updatecryptopairs();
+			die();
 			
 			foreach ($current_values_query->rows as $cvq){
 				
@@ -203,26 +196,19 @@
 				}
 				
 				$current_values[$cvq['code']] = array(
-				'value' => $cvq['value'],
-				'old_value' => $cvq['old_value_real'],
-				'plus_percent' => $pp,
+				'value' 		=> $cvq['value'],
+				'old_value' 	=> $cvq['old_value_real'],
+				'plus_percent' 	=> $pp,
 				);
 			}
 			
-			//fixer.io
 			
 			if ($bot){
-				
-				if ($do_autoupdate) {
-					$message = 'Доброго утречка, господа. Давайте взглянем на курсы валют.';
-					} else {
-					$message = 'Добрый вечер, уважаемые. Перед сном проверим курсы валют.';
-				}			
-				
+				$message = 'Hello, gentleman. Lets check currency rates';
 			}
 			
 			if ($cron){ echo PHP_EOL; }			
-			if ($cron){ echo '[Курсы ЕЦБ, FIXER.IO API]'.PHP_EOL; }			
+			if ($cron){ echo '[ECB RATES, FIXER.IO API]'.PHP_EOL; }			
 			$curl = curl_init();
 			curl_setopt($curl, CURLOPT_URL, 'http://data.fixer.io/api/latest?access_key=abfbaa76c3702a5bdd9ba42765858ee3&base=EUR&symbols=USD,RUB,KZT,UAH,BYN');
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -240,7 +226,7 @@
 					
 					$attach = array(
 					array(
-					"MESSAGE" => "[B]Европейский Центральный Банк[/B]"
+					"MESSAGE" => "[B]European Central Bank[/B]"
 					)
 					);
 					
@@ -249,7 +235,7 @@
 				}
 				
 				foreach ($json_array['rates'] as $currency_code => $rate){
-					if ($cron){ echo '-> Курс ЕЦБ ' . $currency_code .' - EUR: ' . (float)$rate . PHP_EOL; }
+					if ($cron){ echo '-> ECB RATE ' . $currency_code .' - EUR: ' . (float)$rate . PHP_EOL; }
 					
 					if ($bot) {
 						$grid[] = array(
@@ -289,7 +275,7 @@
 			
 			
 			if ($cron){ echo PHP_EOL; }			
-			if ($cron){ echo '[Курс KZT - EUR, Халикбанк хуяпи]'.PHP_EOL; }				
+			if ($cron){ echo '[Курс KZT - EUR, Халикбанк]'.PHP_EOL; }				
 			$curl = curl_init();
 			curl_setopt($curl, CURLOPT_URL, 'https://back.halykbank.kz/common/currency-history');
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -579,18 +565,6 @@
 			$content = curl_exec($curl);
 			curl_close($curl);
 			
-		/*	libxml_use_internal_errors(true);
-			$f = new DOMDocument("1.0", "utf-8");
-			$f->loadHTML($content);
-			libxml_clear_errors();
-			$finder = new DomXPath($f);
-			
-			$nodes = $finder->query( '/html/body/div[3]/div/div[1]/section/div/' );
-			
-			foreach ($nodes as $textNode) {
-				echo $textNode->nodeValue;
-			}
-		*/
 			$json_array = json_decode($content, true);
 			$c = false;
 			
@@ -740,16 +714,6 @@
 			$json = curl_exec($curl);
 			curl_close($curl);
 			
-			
-			/*	
-				libxml_use_internal_errors(true);
-				$f = new DOMDocument("1.0", "utf-8");
-				$f->loadHTML($content);
-				libxml_clear_errors();
-				$finder = new DomXPath($f);
-			*/
-			
-			//	$json = file_get_contents('https://www.rsb.ru/local/ajax/getcoursemass1.php?callback=test2&date='.date('d.m.Y').'&course_type=cash&currency=eur&_=15');
 			$json = str_replace(array('test2(', ');'), '', $json);							
 			
 			$json = json_decode($json, true);
