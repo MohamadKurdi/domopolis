@@ -587,9 +587,8 @@
 			$content = curl_exec($curl);
 			curl_close($curl);
 			
-			$content = str_replace(array('test2(', ');'), '', $content);							
-			
-			$json = json_decode($json, true);
+			$content = str_replace(array('test2(', ');'), '', $content);										
+			$json = json_decode($content, true);
 			
 			if (is_array($json) && !empty($json['currentItem']['sell'])){
 				$value = str_replace(',', '.',$json['currentItem']['sell']);
