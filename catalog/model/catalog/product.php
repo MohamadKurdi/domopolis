@@ -1258,9 +1258,11 @@
 			}
 			
 			if (!empty($data['sort']) && in_array($data['sort'], $this->registry->get('sorts_available'))) {
-				if ($data['sort'] == 'rand' || $data['sort'] == 'rand-10' || $data['sort'] == 'rand-100'){
+				if ($data['sort'] == 'p.product_id'){
+					$sql .= " ORDER BY p.product_id";
+					$data['sort'] = null;					
+				} elseif ($data['sort'] == 'rand' || $data['sort'] == 'rand-10' || $data['sort'] == 'rand-100'){
 					$sql .= " ORDER BY stock_status_id ASC, RAND()";
-
 					$data['sort'] = null;				
 				} elseif ($data['sort'] == 'pd.name' || $data['sort'] == 'p.model') {
 					$sql .= " ORDER BY stock_status_id ASC, LCASE(" . $data['sort'] . ")";
@@ -1282,7 +1284,6 @@
 			}
 
 			if (!empty($data['sort']) && ($data['sort'] == 'p.viewed' || $data['sort'] == 'p.date_added')){
-
 				if (isset($data['order']) && ($data['order'] == 'DESC')) {
 					$sql .= " DESC";
 				} else {
