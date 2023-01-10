@@ -144,8 +144,8 @@ class ControllerFeedReFeedMaker extends Controller
     {
         $this->load->model('catalog/product');
 
-        $this->db->query("UPDATE " . DB_PREFIX . "product SET quantity = 0 WHERE quantity < 0 ");
-        $this->db->query("UPDATE " . DB_PREFIX . "product_option_value SET quantity = 0 WHERE quantity < 0 ");
+        $this->db->query("UPDATE product SET quantity = 0 WHERE quantity < 0 ");
+        $this->db->query("UPDATE product_option_value SET quantity = 0 WHERE quantity < 0 ");
 
         foreach ($this->registry->get('supported_language_ids') as $store_id => $languages) {
             foreach ($languages as $language_id) {
@@ -231,7 +231,7 @@ class ControllerFeedReFeedMaker extends Controller
 
     public function makeAllExceptExcludedLanguageCron()
     {
-        $query = $this->db->non_cached_query("SELECT * FROM " . DB_PREFIX . "store ORDER BY store_id ASC");
+        $query = $this->db->non_cached_query("SELECT * FROM store ORDER BY store_id ASC");
 
         $stores = [0];
         foreach ($query->rows as $row) {

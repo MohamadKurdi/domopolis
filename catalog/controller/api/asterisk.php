@@ -264,7 +264,7 @@ class ControllerAPIAsterisk extends Controller {
 				
 				if ($real_inbound_call || $from_sendmissedcall) {
 					
-					$query = $this->db->query("INSERT INTO " . DB_PREFIX . "callback SET 
+					$query = $this->db->query("INSERT INTO callback SET 
 						name = '" . $this->db->escape($name)  . "', 
 						comment_buyer = '" . $this->db->escape('Пропущенный звонок')  . "',
 						email_buyer = '" . $this->db->escape('')  . "', 

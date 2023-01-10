@@ -55,36 +55,11 @@ class ControllerFeedGoogleSitemap extends Controller {
 	}
 
 	private function loadSettings($store_id){
-
-		$query = $this->db->non_cached_query("SELECT * FROM setting WHERE store_id = '0' OR store_id = '" . $store_id . "' ORDER BY store_id ASC");				
-		foreach ($query->rows as $setting) {
-			if (!$setting['serialized']) {
-				$this->config->set($setting['key'], $setting['value']);
-			} else {
-				$this->config->set($setting['key'], unserialize($setting['value']));
-			}
-		}
-
-		$query = $this->db->non_cached_query("SELECT * FROM language"); 			
-		foreach ($query->rows as $result) {
-			$languages[$result['code']] = array(
-				'language_id' => $result['language_id'],
-				'name'        => $result['name'],
-				'code'        => $result['code'],
-				'locale'      => $result['locale'],
-				'directory'   => $result['directory'],
-				'filename'    => $result['filename']
-			);
-		}
-
-		$this->languages = $languages;
-
-		$this->config->set('config_store_id', $store_id);
-		$this->config->set('config_language_id', $languages[$this->config->get('config_language')]['language_id']);
-		$this->currency->set($this->config->get('config_regional_currency'));		
-
+		$this->load->model('setting/setting');	
+		$this->model_setting_setting->loadSettings($store_id);
+		
+		$this->languages = $this->registry->get('languages');
 		return $this;
-
 	}
 
 	public function makeAllExceptExcludedLanguageCron(){
