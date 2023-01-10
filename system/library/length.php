@@ -1,20 +1,21 @@
 <?php
 class Length {
-	private $lengths = array();
+	private $lengths = [];
 
 	public function __construct($registry) {
-		$this->db = $registry->get('db');
-		$this->config = $registry->get('config');
+		$this->db 		= $registry->get('db');
+		$this->config 	= $registry->get('config');
+		$this->cache 	= $registry->get('cache');
 
-		$length_class_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "length_class mc LEFT JOIN " . DB_PREFIX . "length_class_description mcd ON (mc.length_class_id = mcd.length_class_id) WHERE mcd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+		if (!$this->lengths = $this->cache->get('lengths')){
+			$length_class_query = $this->db->query("SELECT * FROM length_class lc LEFT JOIN length_class_description lcd ON (lc.length_class_id = lcd.length_class_id) WHERE lcd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 
-		foreach ($length_class_query->rows as $result) {
-			$this->lengths[$result['length_class_id']] = array(
-				'length_class_id' => $result['length_class_id'],
-				'title'           => $result['title'],
-				'unit'            => $result['unit'],
-				'value'           => $result['value']
-			);
+			$this->lengths = [];
+			foreach ($length_class_query->rows as $result) {
+				$this->lengths[$result['length_class_id']] = $result;
+			}
+			
+			$this->cache->set('lengths', $this->lengths);
 		}
 	}
 
