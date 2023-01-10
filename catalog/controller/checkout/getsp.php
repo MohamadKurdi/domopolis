@@ -68,11 +68,6 @@
 					$this->load->model('shipping/' . $result['code']);
 					$quote = $this->{'model_shipping_' . $result['code']}->getQuote($address_data); 
 					
-					foreach ($quote['quote'] as &$_q){
-						//	$_q['title'] .= ' (' . $_q['code'] . ')';
-					}
-					//unset($_q);
-					
 					if ($quote && $quote['quote']) {
 						$json['shipping_method'][$result['code']] = array( 
 						'title'      => $quote['title'],
@@ -116,7 +111,7 @@
 			//Перезагрузка настроек магазина
 			$settings = $this->cache->get('settings.structure'.(int)$this->config->get('config_store_id'));
 			if (!$settings) {	
-				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "setting WHERE store_id = '0' OR store_id = '" . (int)$this->config->get('config_store_id') . "' ORDER BY store_id ASC");
+				$query = $this->db->query("SELECT * FROM setting WHERE store_id = '0' OR store_id = '" . (int)$this->config->get('config_store_id') . "' ORDER BY store_id ASC");
 				
 				$settings = $query->rows;
 				$this->cache->set('settings.structure'.(int)$this->config->get('config_store_id'), $settings);

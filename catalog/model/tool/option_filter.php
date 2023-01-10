@@ -101,5 +101,3 @@ class ModelToolOptionFilter extends Model {
     }
 
 }
-
-?>

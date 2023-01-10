@@ -47,7 +47,7 @@
 		public function getCouponProducts($coupon_id) {
 			$coupon_product_data = array();
 			
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "coupon_product WHERE coupon_id = '" . (int)$coupon_id . "'");
+			$query = $this->db->query("SELECT * FROM coupon_product WHERE coupon_id = '" . (int)$coupon_id . "'");
 			
 			foreach ($query->rows as $result) {
 				$coupon_product_data[] = $result['product_id'];
@@ -59,7 +59,7 @@
 		public function getCouponCategories($coupon_id) {
 			$coupon_category_data = array();
 			
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "coupon_category WHERE coupon_id = '" . (int)$coupon_id . "'");
+			$query = $this->db->query("SELECT * FROM coupon_category WHERE coupon_id = '" . (int)$coupon_id . "'");
 			
 			foreach ($query->rows as $result) {
 				$coupon_category_data[] = $result['category_id'];
@@ -71,7 +71,7 @@
 		public function getCouponCollections($coupon_id) {
 			$coupon_collection_data = array();
 			
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "coupon_collection WHERE coupon_id = '" . (int)$coupon_id . "'");
+			$query = $this->db->query("SELECT * FROM coupon_collection WHERE coupon_id = '" . (int)$coupon_id . "'");
 			
 			foreach ($query->rows as $result) {
 				$coupon_collection_data[] = $result['collection_id'];
@@ -83,7 +83,7 @@
 		public function getCouponManufacturers($coupon_id) {
 			$coupon_manufacturer_data = array();
 			
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "coupon_manufacturer WHERE coupon_id = '" . (int)$coupon_id . "'");
+			$query = $this->db->query("SELECT * FROM coupon_manufacturer WHERE coupon_id = '" . (int)$coupon_id . "'");
 			
 			foreach ($query->rows as $result) {
 				$coupon_manufacturer_data[] = $result['manufacturer_id'];

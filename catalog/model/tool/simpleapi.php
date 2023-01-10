@@ -11,7 +11,7 @@ class ModelToolSimpleApi extends Model {
         $query = $this->db->query("SELECT
                 country_id, zone_id, city, postcode
             FROM
-                " . DB_PREFIX . "address
+                address
             WHERE
                 city LIKE '%" . $this->db->escape($term) . "%'
             OR
@@ -20,7 +20,7 @@ class ModelToolSimpleApi extends Model {
                 country_id, zone_id, city, postcode");
 
         foreach ($query->rows as $result) {
-            $country_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "country` WHERE country_id = '" . (int)$result['country_id'] . "'");
+            $country_query = $this->db->query("SELECT * FROM `country` WHERE country_id = '" . (int)$result['country_id'] . "'");
 
             if ($country_query->num_rows) {
                 $country = $country_query->row['name'];
@@ -34,7 +34,7 @@ class ModelToolSimpleApi extends Model {
                 $address_format = '';
             }
 
-            $zone_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone` WHERE zone_id = '" . (int)$result['zone_id'] . "'");
+            $zone_query = $this->db->query("SELECT * FROM `zone` WHERE zone_id = '" . (int)$result['zone_id'] . "'");
 
             if ($zone_query->num_rows) {
                 $zone = $zone_query->row['name'];
@@ -63,9 +63,9 @@ class ModelToolSimpleApi extends Model {
         $query = $this->db->query("SELECT
                 *
             FROM
-                " . DB_PREFIX . "product p
+                product p
             LEFT JOIN
-                " . DB_PREFIX . "product_description pd
+                product_description pd
             ON
                 (p.product_id = pd.product_id)
             WHERE
@@ -87,9 +87,9 @@ class ModelToolSimpleApi extends Model {
                 z.name AS zone_name,
                 c.name AS country_name
             FROM
-                " . DB_PREFIX . "zone z
+                zone z
             LEFT JOIN
-                " . DB_PREFIX . "country c
+                country c
             ON
                 z.country_id = c.country_id
             WHERE
@@ -106,9 +106,9 @@ class ModelToolSimpleApi extends Model {
                 z.name AS zone_name,
                 c.name AS country_name
             FROM
-                " . DB_PREFIX . "zone z
+                zone z
             LEFT JOIN
-                " . DB_PREFIX . "country c
+                country c
             ON
                 z.country_id = c.country_id
             WHERE
@@ -123,7 +123,7 @@ class ModelToolSimpleApi extends Model {
         $simple_cart_id = 0;
 
         if ($data['simple_cart_id']) {
-            $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "simple_cart` WHERE simple_cart_id = '" . (int)$data['simple_cart_id'] . "'");
+            $query = $this->db->query("SELECT * FROM `simple_cart` WHERE simple_cart_id = '" . (int)$data['simple_cart_id'] . "'");
         
             if (!$query->num_rows) {
                 $simple_cart_id = 0;
@@ -135,7 +135,7 @@ class ModelToolSimpleApi extends Model {
         if ($simple_cart_id) {
             $sql = "
                 UPDATE 
-                    `" . DB_PREFIX . "simple_cart` 
+                    `simple_cart` 
                 SET ";
 
             $parts = array();
@@ -176,7 +176,7 @@ class ModelToolSimpleApi extends Model {
         } else {
             $this->db->query("
                 INSERT INTO 
-                    `" . DB_PREFIX . "simple_cart` 
+                    `simple_cart` 
                 SET 
                     store_id = '" . (int)$data['store_id'] . "', 
                     customer_id = '" . (int)$data['customer_id'] . "', 
@@ -193,13 +193,13 @@ class ModelToolSimpleApi extends Model {
     }
 
     public function deleteAbandonedCart($simple_cart_id) {
-        $this->db->query("DELETE FROM `" . DB_PREFIX . "simple_cart` WHERE simple_cart_id = '" . (int)$simple_cart_id . "'");
+        $this->db->query("DELETE FROM `simple_cart` WHERE simple_cart_id = '" . (int)$simple_cart_id . "'");
     }
 
     public function getAbandonedCarts($after, $gap = 1) {
         // $gap - интервал в часах, после которого которого корзина считается брошенной
 
-        $query = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "simple_cart'");
+        $query = $this->db->query("SHOW TABLES LIKE 'simple_cart'");
 
         if (!$query->rows) {
             return array();
@@ -226,7 +226,7 @@ class ModelToolSimpleApi extends Model {
     }
 
     public function getShippedProduct() {
-        $query = $this->db->query("SELECT product_id FROM " . DB_PREFIX . "product WHERE shipping = '1' AND status = '1'");
+        $query = $this->db->query("SELECT product_id FROM product WHERE shipping = '1' AND status = '1' LIMIT 1");
 
         if ($query->num_rows) {
             return $query->row['product_id'];
@@ -237,9 +237,9 @@ class ModelToolSimpleApi extends Model {
 
     public function updateLastCronTime($old_opencart) {
         if ($old_opencart) {
-            $this->db->query("UPDATE " . DB_PREFIX . "setting SET `value` = '" . (int)time() . "', serialized = '0'  WHERE `group` = 'simple' AND `key` = 'simple_cron_time' AND store_id = '0'");
+            $this->db->query("UPDATE setting SET `value` = '" . (int)time() . "', serialized = '0'  WHERE `group` = 'simple' AND `key` = 'simple_cron_time' AND store_id = '0'");
         } else {
-            $this->db->query("UPDATE " . DB_PREFIX . "setting SET `value` = '" . (int)time() . "', serialized = '0'  WHERE `code` = 'simple' AND `key` = 'simple_cron_time' AND store_id = '0'");
+            $this->db->query("UPDATE setting SET `value` = '" . (int)time() . "', serialized = '0'  WHERE `code` = 'simple' AND `key` = 'simple_cron_time' AND store_id = '0'");
         }
     }
 }
