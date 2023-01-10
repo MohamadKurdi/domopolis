@@ -2877,6 +2877,13 @@ class ControllerSettingSetting extends Controller
             $this->data['config_bitrix_bot_client_secret'] = $this->config->get('config_bitrix_bot_client_secret');
         }
 
+        //FIXERIO
+         if (isset($this->request->post['config_fixer_io_token'])) {
+            $this->data['config_fixer_io_token'] = $this->request->post['config_fixer_io_token'];
+        } else {
+            $this->data['config_fixer_io_token'] = $this->config->get('config_fixer_io_token');
+        }
+
             //TELEGRAM
         if (isset($this->request->post['config_telegram_bot_enable_alerts'])) {
             $this->data['config_telegram_bot_enable_alerts'] = $this->request->post['config_telegram_bot_enable_alerts'];

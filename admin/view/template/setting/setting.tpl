@@ -1560,10 +1560,11 @@
 											<?php } ?>
 										<?php } ?>
 									</select>
+									<span class="help">основная валюта, в которой задаются цены</span>
 								</td>
 
 								<td style="width:30%;">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Валюта отображения</span></p>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Валюта фронта</span></p>
 									<select name="config_regional_currency">
 										<?php foreach ($currencies as $currency) { ?>
 											<?php if ($currency['code'] == $config_regional_currency) { ?>
@@ -1577,16 +1578,7 @@
 								</td>
 
 								<td style="width:30%;">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Автоматическое обновление валют</span></p>
-									<select name="config_currency_auto">
-										<?php if ($config_currency_auto) { ?>
-											<option value="1" selected="selected">Включить</option>
-											<option value="0">Отключить</option>
-										<?php } else { ?>													
-											<option value="1">Включить</option>
-											<option value="0"  selected="selected">Отключить</option>
-										<? } ?>
-									</select>
+								
 								</td>
 
 							</tr>
@@ -5324,8 +5316,30 @@
 								</tr>
 							</table>
 
-							<h2>Bitrix24 BOT API (Чудо-бот)</h2>
+							<h2>Автообновление курсов валют</h2>
+							<table class="form">
+								<tr>
+									<td style="width:20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">Fixer.io token</span></p>
+										<input type="text" name="config_fixer_io_token" value="<?php echo $config_fixer_io_token; ?>" size="50" style="width:250px;" />
+									</td>
 
+									<td style="width:20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Автоматическое обновление валют</span></p>
+										<select name="config_currency_auto">
+											<?php if ($config_currency_auto) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</td>
+								</tr>
+							</table>
+
+							<h2>Bitrix24 BOT API (Чудо-бот)</h2>
 							<table class="form">
 								<tr>
 									<td width="20%">
@@ -5473,12 +5487,10 @@
 								</tr>
 							</table>
 							
-							<h2><i class="fa fa-search"></i> ElasticSearch API (умный поиск на нашем сервере)</h2>
-							
+							<h2><i class="fa fa-search"></i> ElasticSearch API (умный поиск на нашем сервере)</h2>							
 							<table class="form">
 								<tr>
-									<td width="20%">
-									
+									<td width="20%">									
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><i class="fa fa-search"></i> FUZZY параметр для подбора товаров</span></p>
 										<input type="number" step="0.1" name="config_elasticsearch_fuzziness_product" value="<?php echo $config_elasticsearch_fuzziness_product; ?>" size="3" style="width:100px;" />
 										
@@ -5486,8 +5498,7 @@
 										<span class="help"><i class="fa fa-search"></i> чем это значение больше, тем больше будет нечетких результатов подбора, при этом поиск будет более широкий, но возможны неверные срабатывания</span>
 									</td>
 									
-									<td width="20%">
-									
+									<td width="20%">									
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><i class="fa fa-search"></i> FUZZY параметр для подбора категорий</span></p>
 										<input type="number" step="0.1" name="config_elasticsearch_fuzziness_category" value="<?php echo $config_elasticsearch_fuzziness_category; ?>" size="3" style="width:100px;" />
 										
@@ -5495,28 +5506,23 @@
 										<span class="help"><i class="fa fa-search"></i> чем это значение больше, тем больше будет нечетких результатов подбора, при этом поиск будет более широкий, но возможны неверные срабатывания</span>
 									</td>
 									
-									<td width="20%">
-									
+									<td width="20%">									
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><i class="fa fa-search"></i> FUZZY параметр для автокомплита</span></p>
 										<input type="number" step="0.1" name="config_elasticsearch_fuzziness_autcocomplete" value="<?php echo $config_elasticsearch_fuzziness_autcocomplete; ?>" size="3" style="width:100px;" />
 										
 										<br />
-										<span class="help"><i class="fa fa-search"></i> чем это значение больше, тем больше будет нечетких результатов подбора, при этом поиск будет более широкий, но возможны неверные срабатывания</span>
-										
+										<span class="help"><i class="fa fa-search"></i> чем это значение больше, тем больше будет нечетких результатов подбора, при этом поиск будет более широкий, но возможны неверные срабатывания</span>										
 									</td>
 
-									<td width="20%">
-									
+									<td width="20%">									
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><i class="fa fa-search"></i> Суффикс именования индексов</span></p>
 										<input type="text" name="config_elasticsearch_index_suffix" value="<?php echo $config_elasticsearch_index_suffix; ?>" size="20" style="width:100px;" />
 										
 										<br />
-										<span class="help"><i class="fa fa-search"></i> в случае работы нескольки магазинов на одном движке</span>
-										
+										<span class="help"><i class="fa fa-search"></i> в случае работы нескольки магазинов на одном движке</span>										
 									</td>
 
-									<td width="20%">
-									
+									<td width="20%">									
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><i class="fa fa-search"></i> Использовать свои склады</span></p>
 										<select name="config_elasticsearch_use_local_stock">
 											<?php if ($config_elasticsearch_use_local_stock) { ?>
@@ -5529,8 +5535,7 @@
 										</select>
 										
 										<br />
-										<span class="help"><i class="fa fa-search"></i> Если включено, товары, которые есть на локальном складе - всегда будут вверху любых результатов поиска. При этом товары, которых нет на складе - значительно пессимизируются в выдаче</span>
-										
+										<span class="help"><i class="fa fa-search"></i> Если включено, товары, которые есть на локальном складе - всегда будут вверху любых результатов поиска. При этом товары, которых нет на складе - значительно пессимизируются в выдаче</span>										
 									</td>>
 
 
