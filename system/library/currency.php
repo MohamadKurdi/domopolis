@@ -26,19 +26,15 @@
 				
 				$this->currencies = [];
 				foreach ($query->rows as $result) {				
-					$this->currencies[$result['code']] = [
-						'currency_id'   	=> $result['currency_id'],
-						'title'         	=> $result['title'],
-						'code'          	=> $result['code'],
-						'symbol_left'   	=> $result['symbol_left'],
-						'symbol_right'  	=> $result['symbol_right'],
-						'decimal_place' 	=> $result['decimal_place'],
-						'cryptopair' 		=> $result['cryptopair'],	
-						'value'         	=> $result['value'],
-						'value_real'    	=> $result['value_real'],
-						'value_uah_unreal' 	=> $result['value_uah_unreal'],
-						'plus_percent' 		=> $result['plus_percent'],
-					];
+					$this->currencies[$result['code']] = $result;
+
+					if ($result['plus_percent'][0] == '+' || $result['plus_percent'][0] == 'p'){
+						$result['plus_percent'] = '+' . trim($result['plus_percent'], '-+pm');
+					} elseif ($result['plus_percent'][0] == '-' || $result['plus_percent'][0] == 'm') {
+						$result['plus_percent'] = '-' . trim($result['plus_percent'], '-+pm');
+					} else {
+						$result['plus_percent'] = '+' . trim($result['plus_percent'], '-+pm');
+					}
 				}
 
 				$this->cache->set('currencies', $this->currencies);
@@ -52,6 +48,17 @@
 		*/
 		public function getCurrencies(){
 			return $this->currencies;
+		}
+
+		/*
+			This function returns currency
+		*/
+		public function getCurrency($code){
+			if (!empty($this->currencies[$code])){
+				return $this->currencies[$code];
+			}
+
+			return false;
 		}
 
 		/*
@@ -424,11 +431,17 @@
 			return $return_string;
 		}
 
+		/*
+			This function updates any field of currency
+		*/
+		public function updateCurrencyField($code, $field, $value){
+			$this->db->query("UPDATE currency SET `" . $this->db->escape($field) . "` = '" . (float)$value . "', date_modified = '" .  $this->db->escape(date('Y-m-d H:i:s')) . "' WHERE code = '" . $this->db->escape($code) . "'");
+		}
 
 		/*
 			This function updates cryptopairs rates, if they are set
 		*/
-		public function updatecryptopairs(){
+		public function updateCryptoPairs(){
 			foreach ($this->currencies as $code => $currency){
 				if ($currency['cryptopair']){
 					$json = json_decode(file_get_contents('https://api.binance.com/api/v3/avgPrice?symbol=' . $currency['cryptopair']), true);
@@ -439,25 +452,210 @@
 							$json['price'] = 1/$json['price'];
 						}
 
-						$this->db->query("UPDATE currency SET cryptopair_value = '" . (float)$json['price'] . "' WHERE code = '" . $this->db->escape($currency['code']) . "'");
+						$this->updateCurrencyField($currency['code'], 'cryptopair_value', $json['price']);						
 					}
 				}
 			}
 		}
 
-		public function recalculate($currency){
+		/*
+			This function gets Fixer.Io rates
+		*/
+		public function getFixerIoRates(){
+			echoLine('[Currency::getFixerIoRates]' . ' starting');
+
+			$curl = curl_init();
+			curl_setopt($curl, CURLOPT_URL, 'http://data.fixer.io/api/latest?access_key='. $this->config->get('config_fixer_io_token') .'&base=' . $this->config->get('config_currency') . '&symbols=' . implode(',', array_keys($this->currencies)));
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($curl, CURLOPT_HEADER, false);
+			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+			$content = curl_exec($curl);
+			curl_close($curl);
+			
+			$json = json_decode($content, true);	
+			
+			if ($json && isset($json['success']) && $json['success']) {
+				echoLine('[Currency::getFixerIoRates]' . ' got rates');
+				foreach ($json['rates'] as $code => $rate){
+					echoLine('[Currency::getFixerIoRates] Rate for ' . $this->config->get('config_currency') . '/' . $code . ' = ' . $rate);
+				}
+
+				return $json['rates'];
+			}
+
+			return false;
+		}
+
+		/*
+			This function gets KhalikBank rates
+		*/
+		public function getHalykbankRates(){
+			echoLine('[Currency::getHalykbankRates]' . ' starting');
+
+			$curl = curl_init();
+			curl_setopt($curl, CURLOPT_URL, 'https://back.halykbank.kz/common/currency-history');
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($curl, CURLOPT_HEADER, false);
+			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+			$content = curl_exec($curl);
+			curl_close($curl);
+
+			$json = json_decode($content, true);
+
+			if ($json && !empty($json['data']['currencyHistory'][0]['cards']['EUR/KZT']['sell'])) {
+				echoLine('[Currency::getHalykbankRates] Real EUR/KZT rate:' . number_format($json['data']['currencyHistory'][0]['cards']['EUR/KZT']['sell'], 2));
+				return number_format($json['data']['currencyHistory'][0]['cards']['EUR/KZT']['sell'], 2);
+			}
+
+			return false;
+		}
 
 
+		/*
+			This function gets PrivatBank rates
+		*/
+		public function getPrivatbankRates(){
+			echoLine('[Currency::getPrivatbankRates]' . ' starting');
 
+			$curl = curl_init();
+			curl_setopt($curl, CURLOPT_URL, 'https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11');
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($curl, CURLOPT_HEADER, false);
+			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+			$content = curl_exec($curl);
+			curl_close($curl);
+			
+			$json = json_decode($content, true);
+			if (is_array($json)){
+				foreach ($json as $line){
+					if ($line['base_ccy'] == 'UAH' && $line['ccy'] == 'EUR'){
+						echoLine('[Currency::getPrivatbankRates] Real EUR/UAH rate:' . number_format($line['sale'], 2));						
+						return number_format($line['sale'], 2);
+					}
+				}
+			}
 
+			return false;
+		}
 
+		/*
+			This function gets AlfaBank.by rates
+		*/
+		public function getAlfabankByRates(){
+			echoLine('[Currency::getAlfabankByRates]' . ' starting');
 
+			$curl = curl_init();
+			curl_setopt($curl, CURLOPT_URL, 'https://developerhub.alfabank.by:8273/partner/1.0.1/public/rates');
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($curl, CURLOPT_HEADER, false);
+			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($curl, CURLOPT_TIMEOUT, 30);
+			$content = curl_exec($curl);
+			curl_close($curl);
+			
+			$json = json_decode($content, true);
 
+			if (is_array($json)){
+				foreach ($json['rates'] as $line){
+					if ($json['sellIso'] == 'EUR' && $json['buyIso'] == 'BYN'){
+						echoLine('[Currency::getAlfabankByRates] Real EUR/BYN rate:' . number_format($line['buyRate'], 2));						
+						return number_format($line['buyRate'], 2);
+					}
+				}
+			}
 
+			return false;
+		}
 
+		/*
+			This function gets RSB rates
+		*/
+		public function getRsbRates(){
+			echoLine('[Currency::getRsbRates]' . ' starting');
 
+			$curl = curl_init();
+			curl_setopt($curl, CURLOPT_URL, 'https://www.rsb.ru/local/ajax/getcoursemass1.php?callback=test2&'.date('d.m.Y').'&course_type=cards&currency=eur&_=1596197030' . mt_rand(100,999));
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($curl, CURLOPT_HTTPHEADER, array('Host: www.rsb.ru', 'Referer: https://www.rsb.ru/courses/'));
+			curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+			curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:58.0) Gecko/20100101 Firefox/58.0");
+			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($curl, CURLOPT_TIMEOUT, 30);			
+			$content = curl_exec($curl);
+			curl_close($curl);
+			
+			$content = str_replace(array('test2(', ');'), '', $content);							
+			
+			$json = json_decode($json, true);
+			
+			if (is_array($json) && !empty($json['currentItem']['sell'])){
+				$value = str_replace(',', '.',$json['currentItem']['sell']);
 
+				echoLine('[Currency::getRsbRates] Real EUR/RUB rate:' . number_format($value, 2));						
+				return number_format($value, 2);
+			}
 
+			return false;
+		}
+
+		public function recalculate($code, $value_real){								
+			if ($currency = $this->getCurrency($code)){
+				$result = [
+					'diff' 		=> false,
+					'new_value' => $currency['value']
+				];
+
+				if ($diff = round(($currency['old_value_real'] - $value_real), 4) <> 0){
+					$result['diff'] = $diff;
+				}
+
+				$new_value = $value_real;
+				//If currency has auto_percent adding
+				if ($currency['auto_percent']){
+					$new_value = ($value_real + $value_real / 100 * $currency['auto_percent']);
+				}
+
+				if ($currency['value_minimal'] && $currency['value_minimal'] > 0){
+					echoLine('[Currency::recalculate] Minimal value for ' . $code . ' is set:' . $currency['value_minimal']);
+
+					if ($diff && $diff > 0 && abs($diff) > 0.1){
+					}
+
+					if (!($diff === false) && $diff < 0 && abs($diff) > 0.1){								
+						echoLine('[Currency::recalculate] Rate for ' . $code . ' is up:' . abs($diff));
+
+						if (($currency['old_value'] + abs($diff)) >$currency['value_minimal']){
+							$new_value = ($currency['old_value'] + abs($diff));
+							echoLine('[Currency::recalculate] New rate for ' . $code . ' after increasing of real rate:' . $new_value);							
+						}
+
+						if (($currency['old_value'] + abs($diff)) > $new_value){
+							$new_value = ($currency['old_value'] + abs($diff));
+							echoLine('[Currency::recalculate] Auto percent for ' . $code . ' is more, new value changed:' . $new_value);	
+						}
+
+						if ($new_value < $currency['value_minimal']){
+							$new_value = $currency['value_minimal'];
+							echoLine('[Currency::recalculate] New value less than min for ' . $code . ' overloading:' . $new_value);
+						}
+					}
+
+					if ($new_value < $currency['value_minimal']){
+						$new_value = $currency['value_minimal'];
+						echoLine('[Currency::recalculate] New value less than min for ' . $code . ' overloading:' . $new_value);
+					}
+				}
+
+				$result['new_value'] = $new_value;
+				return $result;
+
+			} else {
+				echoLine('[Currency::recalculate] Not supported currency: ' . $code);
+				return false;
+			}
 		}
 
 	}				

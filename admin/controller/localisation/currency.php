@@ -9,24 +9,14 @@
 			
 			$this->load->model('localisation/currency');
 			
-			if ($this->config->get('config_currency_auto')) {		
-				//	$this->model_localisation_currency->updateCurrencies();
-			}
-			
 			$this->getList();
 		}
 		
-		public function updateCron($force = false, $cron = false, $bot = false, $return = false, $do_autoupdate){
+		public function updaterates(){
 			$this->load->model('localisation/currency');
 			$this->load->model('kp/bitrixBot');
 			
-			if ($this->config->get('config_currency_auto')) {		
-				$this->model_localisation_currency->updateCurrencies($force, $cron, $bot, $return, $do_autoupdate);
-			}
-			
-			
-			
-			//echo 'updated'.PHP_EOL;
+			$this->model_localisation_currency->updateCurrencies();			
 		}
 		
 		public function insert() {
