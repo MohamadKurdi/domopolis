@@ -1,12 +1,12 @@
 <?php
 	class ModelKPProduct extends Model {
-		private $error = array();
+		private $error 			= [];
 
-		private $order_products = array(); // Лимит на кол. нахождений, если будет достигнуто, то товар удаляем из поиска по БД
-		private $product_limit = NULL; // Лимит на товары (максимум ищем 3)
-		private $quantity_field = NULL;
-		private $exclude = array();
-		private $order_id = 0;
+		private $order_products = [];
+		private $product_limit 	= null;
+		private $quantity_field = null;
+		private $exclude 		= [];
+		private $order_id 		= 0;
 
 		public function setOrderID($order_id = 0) {
 			$this->order_id = $order_id;
@@ -36,7 +36,7 @@
 		}
 		
 		public function getBestSellerProductsForCategory($product_info, $limit, $store_id, $stock_in_current, $exclude, $use_manufacturer = true, $only_warehouse_stock = false) {
-			$product_data = array();
+			$product_data = [];
 						
 			$this->load->model('setting/setting');
 			$category_id = $this->getProductMainCategory($product_info['product_id']);
@@ -95,11 +95,11 @@
 			
 			$product_name = trim(trim($product_name, ',.'));
 			
-			$product_data = array();					
+			$product_data = [];					
 			
-			$sql = "SELECT DISTINCT pd.product_id FROM " . DB_PREFIX . "product_description pd 
-			LEFT JOIN " . DB_PREFIX . "product p ON (pd.product_id = p.product_id) 
-			LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p.product_id = p2s.product_id) 
+			$sql = "SELECT DISTINCT pd.product_id FROM product_description pd 
+			LEFT JOIN product p ON (pd.product_id = p.product_id) 
+			LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
 			WHERE pd.language_id = '" . $language_id . "' 
 			AND TRIM(LCASE(REPLACE(pd.name, ',', ''))) LIKE ('" . $this->db->escape(trim(mb_strtolower($product_name))) . "%')
 			AND pd.product_id <> '" . (int)$product_id . "'			
@@ -160,7 +160,7 @@
 		public function guessSameProducts($product_name, $product_id, $manufacturer_id, $limit, $in_stock, $language_id, $store_id, $exclude, $only_warehouse_stock = false){							
 			$exploded = explode(' ', $product_name);
 			
-			$results = array();
+			$results = [];
 			
 			//Попытка получить по четырем словам
 			if (isset($exploded[0]) && isset($exploded[1]) && isset($exploded[2]) && isset($exploded[3])){
@@ -196,13 +196,13 @@
 		  * @param - $only_warehouse_stock = Искать только на складах, не искать у поставщика
 		  * @param - Нужно для trigger.cancelledbyterms
 		  */
-		public function getReplaceProducts($product_id, $order_id, $exclude = array(), $only_warehouse_stock = false){
+		public function getReplaceProducts($product_id, $order_id, $exclude = [], $only_warehouse_stock = false){
 			$this->load->model('catalog/product');
 			$this->load->model('catalog/category');
 			$this->load->model('account/order');
 			$this->load->model('tool/image');
 
-			$result = array();
+			$result = [];
 			
 			$order = $this->model_account_order->getOrder($order_id, true);
 			$product = $this->model_catalog_product->getProduct($product_id);
@@ -271,7 +271,7 @@
 				
 				$data['main_attributes'] = $this->model_catalog_product->getProductAttributesNamesValuesByLanguage($product_id, $language_id);
 				
-				$data['special_attributes'] = array();
+				$data['special_attributes'] = [];
 				
 				foreach ($data['main_attributes'] as $key => $value){
 					if ($value['group_id'] == $this->config->get('config_special_attr_id')){
@@ -282,7 +282,7 @@
 				
 				//got categories, getting categorie attributes
 				foreach ($categories as $category){
-					$valid_attributes = array();
+					$valid_attributes = [];
 					
 					$category_attributes = $this->model_catalog_category->getAttributesByCategory($category);
 					
@@ -302,7 +302,7 @@
 						
 						//таки есть товары
 						if ($result_product_ids){					
-							$products = array();										
+							$products = [];										
 							
 							foreach ($result_product_ids as $result_id){
 								$product = $this->model_catalog_product->getProduct($result_id);
@@ -316,7 +316,7 @@
 							$result_product_ids = $this->model_catalog_product->getSimilarProductsByAttributes($product_id, $category, $language_id, $store_id, $valid_attributes, 3 - count($result), $stock = 2);
 							
 							if ($result_product_ids){					
-								$products = array();										
+								$products = [];										
 								
 								foreach ($result_product_ids as $result_id){
 									$product = $this->model_catalog_product->getProduct($result_id);
@@ -344,7 +344,7 @@
 		public function getProductRelated($order_products, $limit, $categories, $store_id, $use_not_stock = false, $order_id = 0) {
 
 			if ($this->order_id && ($this->order_id !== $order_id)) {
-				$this->exclude = array();
+				$this->exclude = [];
 			}
 
 			if (!isset($this->product_limit)) $this->product_limit = (count($order_products) >= 6) ? 2 : 3;
@@ -358,11 +358,11 @@
 				}
 			}
 			
-			$products = array();
+			$products = [];
 
 			// Для $use_not_stock
 			if ($this->order_products) {
-				$order_products = array();
+				$order_products = [];
 
 				foreach ($this->order_products as $key => $value) {
 					if ($value) $order_products[] = $key;
@@ -407,12 +407,12 @@
 		}
 
 		public function getProductRelatedByCategory($order_products, $limit, $exclude, $store_id, $use_manufacturer = false, $use_not_stock = false) {
-			$products = array();
+			$products = [];
 		
 			// Исключаем товар у которого уже лимит исчерпан! Разделяй и властвуй! Разделяем по продуктам а не все вместе чтоб знать лимит
 			foreach ($this->order_products as $product_id => $product_limit) {
 
-				$categories = array();
+				$categories = [];
 
 				if (($product_limit) && ($product_limit <= $this->product_limit)) {
 					$categories = $this->getCategoriesByProduct($product_id);
@@ -477,7 +477,7 @@
 
 		/* Если есть коллекция и связанная категория то должно выбирать из связанной категории этой коллекции */
 		public function getProductRelatedByCollection($order_products, $limit, $exclude, $store_id, $use_category = false, $use_not_stock = false) {
-			$products = array();
+			$products = [];
 
 			foreach ($this->order_products as $product_id => $product_limit) {
 				if (($product_limit) && ($product_limit <= $this->product_limit)) {
@@ -494,7 +494,7 @@
 							$categories = $this->model_catalog_product->getProductCategories($product_id);
 						}
 
-						$related_categories = array();
+						$related_categories = [];
 
 						// Если указана главная категория
 						if ($category) {
@@ -558,7 +558,7 @@
 
 		// Производители товаров
 		public function getManufacturersByProduct($product_id = 0) {
-			$manufacturers = array();
+			$manufacturers = [];
 
 			if ($product_id) {
 				$query = $this->db->non_cached_query("SELECT DISTINCT manufacturer_id FROM product WHERE product_id = '" . (int)$product_id . "'");
@@ -572,8 +572,8 @@
 		}
 
 		// Связанные категории
-		public function getRelatedCategories($category = array()) {
-			$categories = array();
+		public function getRelatedCategories($category = []) {
+			$categories = [];
 
 			if ($category) {
 				$query = $this->db->non_cached_query("SELECT DISTINCT related_category_id FROM category_related WHERE category_id IN (" . implode(',', $category) . ")");
@@ -597,8 +597,8 @@
 
 		}
 
-		public function getCategoriesByProducts($products = array()) {
-			$categories = array();
+		public function getCategoriesByProducts($products = []) {
+			$categories = [];
 
 			if ($products) {
 				foreach ($products as $product) {
@@ -621,7 +621,7 @@
 		}
 
 		public function getCategoriesByProduct($product = false) {
-			$categories = array();
+			$categories = [];
 
 			if ($product) {
 				$cat = $this->model_catalog_product->getProductCategories($product);

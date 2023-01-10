@@ -115,4 +115,3 @@ class ModelModuleStatistics extends Model {
         return $rezult_data;
     }
 }
-?>

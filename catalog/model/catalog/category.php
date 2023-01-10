@@ -218,7 +218,7 @@
 		
 		public function getAttributesByCategory($category_id) {
 			$result = array();
-			$query = $this->db->query("SELECT attribute_id FROM " . DB_PREFIX . "attributes_category  WHERE category_id=" . $category_id);
+			$query = $this->db->query("SELECT attribute_id FROM attributes_category  WHERE category_id=" . $category_id);
 			foreach($query->rows as $row) {
 				$result[] = $row['attribute_id'];
 			}
@@ -227,7 +227,7 @@
 		
 		public function getAttributesSimilarByCategory($category_id) {
 			$result = array();
-			$query = $this->db->query("SELECT attribute_id FROM " . DB_PREFIX . "attributes_similar_category  WHERE category_id=" . $category_id);
+			$query = $this->db->query("SELECT attribute_id FROM attributes_similar_category  WHERE category_id=" . $category_id);
 			foreach($query->rows as $row) {
 				$result[] = $row['attribute_id'];
 			}
@@ -236,10 +236,10 @@
 			
 		public function getAttributesToProduct($category_ids) {
 			$result = array();
-			$query = $this->db->query("SELECT DISTINCT attribute_id FROM " . DB_PREFIX . "attributes_category  WHERE category_id IN (" . implode(", ", $category_ids) . ")");
+			$query = $this->db->query("SELECT DISTINCT attribute_id FROM attributes_category  WHERE category_id IN (" . implode(", ", $category_ids) . ")");
 			foreach ($query->rows as $row) {
 				$attr_id = $row['attribute_id'];
-				$sub_query = $this->db->query("SELECT attribute_id, name FROM " . DB_PREFIX . "attribute_description WHERE attribute_id= '" . (int)$attr_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+				$sub_query = $this->db->query("SELECT attribute_id, name FROM attribute_description WHERE attribute_id= '" . (int)$attr_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
 				foreach($sub_query->rows as $row2) {
 					$result[] = array('attribute_id' => $row2['attribute_id'], 'name' => $row2['name']);	
 				}			
