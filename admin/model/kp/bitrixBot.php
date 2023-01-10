@@ -1,13 +1,13 @@
 <?
 	class ModelKpBitrixBot extends Model {
 		
-		public function sendMessage($message = '', $attach = array(), $dialog_id = false){
+		public function sendMessage($message = '', $attach = [], $dialog_id = false){
 			
 			if (!$dialog_id){
 				$dialog_id = $this->request->request['data']['PARAMS']['DIALOG_ID'];
 				$_auth = $this->request->request["auth"];
 			} else {
-				$_auth = array();
+				$_auth = [];
 			}
 			
 			$result = $this->Bitrix24->restCommand(
@@ -26,7 +26,7 @@
 		}
 					
 
-		public function sendMessageToUser($message = '', $attach = array(), $user_id){
+		public function sendMessageToUser($message = '', $attach = [], $user_id = false){
 						
 			$result = $this->Bitrix24->restCommand(
 			'imbot.message.add', 
@@ -42,7 +42,7 @@
 			return $result;
 		}
 		
-		public function sendNotificationToUser($message = '', $attach = array() , $user_id){
+		public function sendNotificationToUser($message = '', $attach = [] , $user_id = false){
 						
 			$result = $this->Bitrix24->restCommand(
 			'im.notify.system.add', 
@@ -58,7 +58,7 @@
 		}
 		
 		
-		public function answerCommand($message = '', $attach = array(), $command_id = false, $message_id = false){
+		public function answerCommand($message = '', $attach = [], $command_id = false, $message_id = false){
 					
 			
 			$result = $this->Bitrix24->restCommand('imbot.command.answer', Array(
