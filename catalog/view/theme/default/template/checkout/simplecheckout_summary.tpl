@@ -28,8 +28,7 @@
 	
 	
 	
-	<?php if (isset($modules['reward']) && $customer_can_use_points && $points > 0) { ?>
-		<!-- я проверку пока запихнул сюда, что бы не видели пользователи -->		
+	<?php if (isset($modules['reward']) && $customer_can_use_points && $points > 0) { ?>	
 		<?php if($isLogged) { ?>
 			
 			<?php } else { ?>
@@ -46,9 +45,9 @@
 					<span class="text"><?php echo $text_retranslate_47; ?> <?php echo $total_points_customer_has; ?> <?php echo $points_pluralized; ?></span>
 				</div>
 				<div class="content">
-					<span class="inputs"><input class="form-control field" type="number" min="0" onkeyup="this.value = this.value.replace(/[^\d]/g,'');" placeholder="<?php echo $text_retranslate_46; ?>" name="reward" data-onchange="" value="<?php echo $reward; ?>" /></span>
+					<span class="inputs"><input class="form-control field" type="number" min="0" onkeydown="checkKey(event)" onkeyup="this.value = this.value.replace(/[^\d]/g,'');" placeholder="<?php echo $text_retranslate_46; ?>" name="reward" data-onchange="" value="<?php echo $reward; ?>" /></span>
 					<span class="inputs buttons">
-						<a id="simplecheckout_button_cart" data-onclick="reloadAll" class="button btn-primary button_oc btn oct-button"><span class="reward-code-txt"><?php echo $text_retranslate_17; ?></span></a>
+						<a id="simplecheckout_button_cart" data-onclick="reloadAll" class="reward_btn button btn-primary button_oc btn oct-button"><span class="reward-code-txt"><?php echo $text_retranslate_17; ?></span></a>
 					</span>
 				</div>
 			</div>
@@ -260,6 +259,12 @@
 		},100)
 		
 	});
+
+	function checkKey(e) {
+        if(e.keyCode == "13") {
+	        $('.reward_btn').trigger( "click" )
+	    }
+	}
 	
 	$("#report_bug_simple_btn").bind("click", function (e) {
 		e.preventDefault();
