@@ -1,14 +1,14 @@
 <?php
 class ControllerFeedReFeedMaker2 extends Controller
 {
-    private $steps = array(0, 100, 500, 1000, 2000, 5000, 7000, 10000, 15000, 20000, 25000, 1000000000);
-    private $stockMode = false;
+    private $steps      = [0, 100, 500, 1000, 2000, 5000, 7000, 10000, 15000, 20000, 25000, 1000000000];
+    private $stockMode  = false;
 
-    private $exclude_language_id = null;
-    private $language_id = null;
-    private $languages = [];
-    private $urlcode = '';
-    private $eanLog = false;
+    private $exclude_language_id    = null;
+    private $language_id            = null;
+    private $languages              = [];
+    private $urlcode                = '';
+    private $eanLog                 = false;
 
     private function setStockMode($stock)
     {
@@ -67,15 +67,8 @@ class ControllerFeedReFeedMaker2 extends Controller
     }
 
     private function setSteps()
-    {
-        $steps = array();
-        if ($this->config->get('config_store_id') == 0) {
-            $steps = $this->steps;
-        } else {
-            foreach ($this->steps as $step) {
-                $steps[] = $this->currency->convert($step, 'UAH', $this->currency->getCode(), true, true);
-            }
-        }
+    {        
+        $steps = $this->steps;
 
         if ($this->config->get('config_store_id') != 0) {
             foreach ($steps as &$step) {
@@ -444,7 +437,9 @@ class ControllerFeedReFeedMaker2 extends Controller
                                 'filter_not_bad'            => true,
                                 'filter_exclude_certs'      => true,
                                 'filter_with_variants'      => true,
-                                'filter_get_product_mode'   => 'simple'
+                                'filter_get_product_mode'   => 'simple',
+                                'sort'                      => 'p.product_id',
+                                'order'                     => 'ASC'
                             );
 
                             echoLine('[supplemental] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . ($filter['start']) . ' по ' . ($filter['start'] + $filter['limit']));                           
@@ -562,7 +557,9 @@ class ControllerFeedReFeedMaker2 extends Controller
                         'filter_not_bad'            => true,
                         'filter_exclude_certs'      => true,
                         'filter_with_variants'      => true,
-                        'filter_get_product_mode'   => 'feed'
+                        'filter_get_product_mode'   => 'feed',
+                        'sort'                      => 'p.product_id',
+                        'order'                     => 'ASC'
                     );
 
                     echoLine('[makefeed] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . ($filter['start']) . ' по ' . ($filter['start'] + $filter['limit']));
