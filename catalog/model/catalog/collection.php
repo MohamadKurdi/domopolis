@@ -149,7 +149,7 @@
 		}	
 		
 		public function getCollectionImages($collection_id) {
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "collection_image WHERE collection_id = '" . (int)$collection_id . "'");
+			$query = $this->db->query("SELECT * FROM collection_image WHERE collection_id = '" . (int)$collection_id . "'");
 			
 			return $query->rows;
 		}

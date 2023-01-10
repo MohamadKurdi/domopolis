@@ -70,7 +70,7 @@
 		public function getCategoryActions($category_id) {
 			$actions_category_data = array();
 			
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "actions_to_category WHERE category_id = '" . (int)$category_id . "'");
+			$query = $this->db->query("SELECT * FROM actions_to_category WHERE category_id = '" . (int)$category_id . "'");
 			
 			foreach ($query->rows as $result) {
 				if ($action = $this->getActiveAction($result['actions_id'])){				
@@ -84,7 +84,7 @@
 		public function getManufacturerActions($manufacturer_id) {
 			$actions_manufacturer_data = array();
 			
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "actions WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$query = $this->db->query("SELECT * FROM actions WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			
 			foreach ($query->rows as $result) {
 				if ($action = $this->getActiveAction($result['actions_id'])){				
@@ -202,30 +202,7 @@
 			}	
 			
 			return $query->rows;
-		}
-		
-		
-		
-		
-		
-		/*public function getActionsAnonce($actions_id, $limit = 3) {
-			$query = $this->db->query("SELECT
-			n.actions_id,
-			n.image,
-			n.date_start,
-			n.date_end,
-			nd.caption,
-			nd.description
-			FROM `actions` n 
-			LEFT JOIN `actions_description` nd ON (n.actions_id = nd.actions_id)
-			LEFT JOIN `actions_to_store` n2s ON (n.actions_id = n2s.actions_id)
-			WHERE nd.language_id = '" . (int)$this->config->get('config_language_id') . "'  
-			AND n2s.store_id = '" . (int)$this->config->get('config_store_id') . "'
-			AND n.status = '1'
-			AND n.actions_id <> '".(int)$actions_id. "'
-			ORDER BY n.date_start DESC LIMIT 0," . (int)$limit);
-			return $query->rows;
-		}*/
+		}		
 		
 		public function getActionsLayoutId($actions_id) {
 			$query = $this->db->query("SELECT * FROM actions_to_layout WHERE actions_id = '" . (int)$actions_id . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
@@ -246,8 +223,7 @@
 			return $query->row['total'];
 		}
 		
-		public function getMonthName($m) {
-			// Russian
+		public function getMonthName($m) {			
 			$month['ru'] = array('января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря');
 			$month['uk'] = array('січня', 'лютого', 'березня', 'квітня', 'травня', 'червня', 'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня');
 			

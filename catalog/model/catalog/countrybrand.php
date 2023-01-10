@@ -17,7 +17,7 @@
 		
 		
 		public function getCountrybrandImages($countrybrand_id) {
-		/*	$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "countrybrand_image WHERE countrybrand_id = '" . (int)$countrybrand_id . "'");
+		/*	$query = $this->db->query("SELECT * FROM countrybrand_image WHERE countrybrand_id = '" . (int)$countrybrand_id . "'");
 			
 			return $query->rows;
 		*/
