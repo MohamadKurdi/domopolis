@@ -1,53 +1,72 @@
 <?php
 	class Currency {
-		private $code;
-		private $currencies = array();
+		private $code 		= null;
+		private $config 	= null;
+		private $db 		= null;
+		private $language 	= null;
+		private $request 	= null;
+		private $session 	= null;
+		private $cache 		= null;
+		private $log 		= null;
+		public 	$percent 	= 0;
+		public 	$plus 		= true;
+		public 	$currencies = [];
 		
 		public function __construct($registry) {
-			$this->config = $registry->get('config');
-			$this->db     = $registry->get('db');
+			$this->config 	= $registry->get('config');
+			$this->db     	= $registry->get('db');
 			$this->language = $registry->get('language');
-			$this->request = $registry->get('request');
-			$this->session = $registry->get('session');
-			$this->cache = $registry->get('cache');
-			$this->log = $registry->get('log');
-			$this->percent = 0;
-			$this->plus    = true;
+			$this->request 	= $registry->get('request');
+			$this->session 	= $registry->get('session');
+			$this->cache 	= $registry->get('cache');
+			$this->log 		= $registry->get('log');
 			
-			if (!$data = $this->cache->get('currencies')){
-				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "currency WHERE 1");
-				$data = $query->rows;
-				$this->cache->set('currencies', $data);
-			}
-			
-			foreach ($data as $result) {
+			if (!$this->currencies = $this->cache->get('currencies')){
+				$query = $this->db->query("SELECT * FROM currency WHERE 1");
 				
-				$this->currencies[$result['code']] = array(
-				'currency_id'   => $result['currency_id'],
-				'title'         => $result['title'],
-				'code'          => $result['code'],
-				'symbol_left'   => $result['symbol_left'],
-				'symbol_right'  => $result['symbol_right'],
-				'decimal_place' => $result['decimal_place'],
-				'value'         => $result['value'],
-				'value_real'    => $result['value_real'],
-				'value_uah_unreal' => $result['value_uah_unreal'],
-				'plus_percent' => $result['plus_percent'],
-				);
-			}
-			/*
-				if (isset($this->request->get['currency']) && (array_key_exists($this->request->get['currency'], $this->currencies))) {
-				$this->set($this->request->get['currency']);
-				} elseif ((isset($this->session->data['currency'])) && (array_key_exists($this->session->data['currency'], $this->currencies))) {
-				$this->set($this->session->data['currency']);
-				} elseif ((isset($this->request->cookie['currency'])) && (array_key_exists($this->request->cookie['currency'], $this->currencies))) {
-				$this->set($this->request->cookie['currency']);		
-				} else {
-				$this->set($this->config->get('config_regional_currency'));
+				$this->currencies = [];
+				foreach ($query->rows as $result) {				
+					$this->currencies[$result['code']] = [
+						'currency_id'   	=> $result['currency_id'],
+						'title'         	=> $result['title'],
+						'code'          	=> $result['code'],
+						'symbol_left'   	=> $result['symbol_left'],
+						'symbol_right'  	=> $result['symbol_right'],
+						'decimal_place' 	=> $result['decimal_place'],
+						'cryptopair' 		=> $result['cryptopair'],	
+						'value'         	=> $result['value'],
+						'value_real'    	=> $result['value_real'],
+						'value_uah_unreal' 	=> $result['value_uah_unreal'],
+						'plus_percent' 		=> $result['plus_percent'],
+					];
 				}
-			*/
-			//жесткая привязка
+
+				$this->cache->set('currencies', $this->currencies);
+			}
+			
 			$this->set($this->config->get('config_regional_currency'));						
+		}
+
+		/*
+			This function returns all currencies
+		*/
+		public function getCurrencies(){
+			return $this->currencies;
+		}
+
+		/*
+			This function implements stock logic, where currency is detected from request
+		*/
+		public function setCurrencyFromRequest(){
+			if (isset($this->request->get['currency']) && (array_key_exists($this->request->get['currency'], $this->currencies))) {
+				$this->set($this->request->get['currency']);
+			} elseif ((isset($this->session->data['currency'])) && (array_key_exists($this->session->data['currency'], $this->currencies))) {
+				$this->set($this->session->data['currency']);
+			} elseif ((isset($this->request->cookie['currency'])) && (array_key_exists($this->request->cookie['currency'], $this->currencies))) {
+				$this->set($this->request->cookie['currency']);		
+			} else {
+				$this->set($this->config->get('config_regional_currency'));
+			}			
 		}
 		
 		public function set($currency) {
@@ -75,8 +94,7 @@
 				}
 			}
 		}				
-		
-		//Заглушка для админки, где используется меньше параметров, для форматирования как в каталоге
+				
 		public function format_with_left($number, $currency = '', $value = '') {
 			return $this->format($number, $currency, $value, $format = true, $real = false, $real_code = false, true);		
 		}
@@ -157,8 +175,7 @@
 				return $value;			
 			}
 			
-			return round($value / $cource);
-			
+			return round($value / $cource);			
 		}
 		
 		public function convert($value, $from, $to, $real = false, $round = true) {
@@ -245,14 +262,11 @@
 			}
 			/*	if ($result < ($value * ($to / $from))){ $result += 1; 	} */
 			
-			return $result;
-			
+			return $result;			
 		}
 		
-		public function makeDiscountOnNumber($value, $percent){
-			
-			return ($value - $value / 100 * $percent);
-			
+		public function makeDiscountOnNumber($value, $percent){			
+			return ($value - $value / 100 * $percent);			
 		}
 		
 		public function shit_convert_to_uah($value, $from, $to = 'UAH'){
@@ -264,8 +278,7 @@
 			
 			$result = $value * $from;			
 			
-			return $result;
-			
+			return $result;			
 		}
 		
 		public function getId($currency = '') {
@@ -354,8 +367,7 @@
 				} else {
 				
 				return false;
-			}
-			
+			}			
 		}
 		
 		public function formatBonus($points, $strong = false) {
@@ -376,8 +388,7 @@
 				} else {
 				
 				return false;
-			}
-			
+			}			
 		}
 		
 		public function formatPoints($points, $format = true) {
@@ -412,4 +423,41 @@
 			}
 			return $return_string;
 		}
+
+
+		/*
+			This function updates cryptopairs rates, if they are set
+		*/
+		public function updatecryptopairs(){
+			foreach ($this->currencies as $code => $currency){
+				if ($currency['cryptopair']){
+					$json = json_decode(file_get_contents('https://api.binance.com/api/v3/avgPrice?symbol=' . $currency['cryptopair']), true);
+
+					if (!empty($json['price']) && is_numeric($json['price'])){
+						echoLine('[Currency::updatecryptopairs] ' . $currency['cryptopair'] . ': ' . $json['price']);
+						if (strpos($currency['cryptopair'], $currency['code']) === 0){							
+							$json['price'] = 1/$json['price'];
+						}
+
+						$this->db->query("UPDATE currency SET cryptopair_value = '" . (float)$json['price'] . "' WHERE code = '" . $this->db->escape($currency['code']) . "'");
+					}
+				}
+			}
+		}
+
+		public function recalculate($currency){
+
+
+
+
+
+
+
+
+
+
+
+
+		}
+
 	}				
