@@ -86,68 +86,68 @@ class SimpleCheckout extends Simple {
             $order_pending = $this->cache->get('order_pending');
 
             if (!isset($order_pending)) {
-                $query = $this->db->query("SHOW TABLES LIKE '" . DB_PREFIX . "order_pending'");
+                $query = $this->db->query("SHOW TABLES LIKE 'order_pending'");
                 $order_pending = $query->rows ? true : false;
                 $this->cache->set('order_pending', $order_pending);
             }
 
             $this->db->query("SET SQL_BIG_SELECTS=1");
             $this->db->query("DELETE
-                                    `" . DB_PREFIX . "order`,
-                                    " . DB_PREFIX . "order_product,
-                                    " . DB_PREFIX . "order_history,
-                                    " . DB_PREFIX . "order_option,
+                                    `order`,
+                                    order_product,
+                                    order_history,
+                                    order_option,
                                     " . ($version < 300 ? (DB_PREFIX . "affiliate_transaction,") : "") . "
                                     " . ($version < 200 ? (DB_PREFIX . "order_download,") : "") . "
-                                    " . DB_PREFIX . "order_total"
-                                    . ($version >= 152 ? "," . DB_PREFIX . "order_voucher" : "") .
-                                    ($version >= 152 && $version < 203 ? "," . DB_PREFIX . "order_fraud" : "") .
+                                    order_total"
+                                    . ($version >= 152 ? ",order_voucher" : "") .
+                                    ($version >= 152 && $version < 203 ? ",order_fraud" : "") .
                             " FROM
-                                `" . DB_PREFIX . "order`
+                                `order`
                             LEFT JOIN
-                                " . DB_PREFIX . "order_product
+                                order_product
                             ON
-                                " . DB_PREFIX . "order_product.order_id = `" . DB_PREFIX . "order`.order_id
+                                order_product.order_id = `order`.order_id
                             LEFT JOIN
-                                " . DB_PREFIX . "order_history
+                                order_history
                             ON
-                                " . DB_PREFIX . "order_history.order_id = `" . DB_PREFIX . "order`.order_id"
+                                order_history.order_id = `order`.order_id"
                             . ($version < 300 ? "
                             LEFT JOIN
-                                " . DB_PREFIX . "affiliate_transaction
+                                affiliate_transaction
                             ON
-                                " . DB_PREFIX . "affiliate_transaction.order_id = `" . DB_PREFIX . "order`.order_id" : "")."
+                                affiliate_transaction.order_id = `order`.order_id" : "")."
                             LEFT JOIN
-                                " . DB_PREFIX . "order_option
+                                order_option
                             ON
-                                " . DB_PREFIX . "order_option.order_id = `" . DB_PREFIX . "order`.order_id"
+                                order_option.order_id = `order`.order_id"
                             . ($version < 200 ? "
                             LEFT JOIN
-                                " . DB_PREFIX . "order_download
+                                order_download
                             ON
-                                " . DB_PREFIX . "order_download.order_id = `" . DB_PREFIX . "order`.order_id" : "")."
+                                order_download.order_id = `order`.order_id" : "")."
                             LEFT JOIN
-                                " . DB_PREFIX . "order_total
+                                order_total
                             ON
-                                " . DB_PREFIX . "order_total.order_id = `" . DB_PREFIX . "order`.order_id "
+                                order_total.order_id = `order`.order_id "
                             . ($version >= 152 ? "
                             LEFT JOIN
-                                " . DB_PREFIX . "order_voucher
+                                order_voucher
                             ON
-                                " . DB_PREFIX . "order_voucher.order_id = `" . DB_PREFIX . "order`.order_id" : "")
+                                order_voucher.order_id = `order`.order_id" : "")
                             . ($version >= 152 && $version < 203 ? "
                             LEFT JOIN
-                                " . DB_PREFIX . "order_fraud
+                                order_fraud
                             ON
-                                " . DB_PREFIX . "order_fraud.order_id = `" . DB_PREFIX . "order`.order_id" : "")
+                                order_fraud.order_id = `order`.order_id" : "")
                             . ($order_pending ? " LEFT JOIN
-                                " . DB_PREFIX . "order_pending
+                                order_pending
                             ON
-                                " . DB_PREFIX . "order_pending.order_id = `" . DB_PREFIX . "order`.order_id" : "") .
+                                order_pending.order_id = `order`.order_id" : "") .
                             " WHERE
-                                `" . DB_PREFIX . "order`.order_id = '" . (int)$order_id . "'
+                                `order`.order_id = '" . (int)$order_id . "'
                             AND
-                                `" . DB_PREFIX . "order`.order_status_id = 0");
+                                `order`.order_status_id = 0");
 
             if ($this->db->countAffected() > 0) {
                 $this->db->query("SET insert_id = " . (int)$order_id);

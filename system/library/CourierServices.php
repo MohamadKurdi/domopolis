@@ -8,11 +8,11 @@
 		private $db;
 		
 		private $services = array(
-		'dostavkaplus.sh3' => 'NewPost',
+		'dostavkaplus.sh3' 	=> 'NewPost',
 		'dostavkaplus.sh13' => 'NewPost',
-		'dostavkaplus.sh4' => 'InTime',
-		'dostavkaplus.sh5' => 'EMSRussia',
-		'dostavkaplus.sh6' => 'TKSDEK',
+		'dostavkaplus.sh4' 	=> 'InTime',
+		'dostavkaplus.sh5' 	=> 'EMSRussia',
+		'dostavkaplus.sh6' 	=> 'TKSDEK',
 		'dostavkaplus.sh17' => 'TKSDEK',
 		);
 		
@@ -187,7 +187,7 @@
 			
 			$result = false;
 			
-			$payload =  '{"system":"Tracking","apiKey":"f0a192955bdefd1dd4c2942624d127b5","modelName":"InternetDocument","calledMethod":"getDocumentsEWMovement","language":"uk","methodProperties":{"Number":"'. $ttn .'"}}';
+			$payload =  '{"system":"Tracking","apiKey":"' . $this->config->get('config_novaposhta_api_key') . '","modelName":"InternetDocument","calledMethod":"getDocumentsEWMovement","language":"uk","methodProperties":{"Number":"'. $ttn .'"}}';
 			
 			if( $curl = curl_init() ) {
 				curl_setopt($curl, CURLOPT_URL, $url);
@@ -291,11 +291,7 @@
 			}
 			
 			$result = json_decode($result, true);
-			/*	
-				print '<pre>';
-				print_r($result);
-				print '</pre>';
-			*/	
+
 			if (!isset($result['list'][0]['trackingItem']) || !isset($result['list'][0]['trackingItem']['commonStatus'])){
 				return "Сбой разбора данных EMS";
 				} else {
@@ -459,14 +455,14 @@
 					} else {
 					$ttn_query = $this->db->query("SELECT * FROM order_ttns WHERE ttn LIKE ('" . $this->ttn . "') LIMIT 1");
 					//insert dispatch
-					$this->db->query("INSERT INTO `" . DB_PREFIX . "cdek_dispatch` SET `dispatch_number` = '" . $this->db->escape($this->ttn) . "', `date` = '" . $this->db->escape(strtotime($ttn_query->row['date_ttn'])) . "', `server_date` = '" . $this->db->escape(time()) . "'");
+					$this->db->query("INSERT INTO `cdek_dispatch` SET `dispatch_number` = '" . $this->db->escape($this->ttn) . "', `date` = '" . $this->db->escape(strtotime($ttn_query->row['date_ttn'])) . "', `server_date` = '" . $this->db->escape(time()) . "'");
 					$dispatch_id = $this->db->getLastId();
 					
 					//order_query
 					$order_query = $this->db->query("SELECT * FROM `order` WHERE order_id = '" .  $ttn_query->row['order_id'] . "' LIMIT 1");
 					$order_info = $order_query->row;
 					
-					$sql  = "INSERT INTO `" . DB_PREFIX . "cdek_order` SET ";
+					$sql  = "INSERT INTO `cdek_order` SET ";
 					$sql .= "`order_id` = " . $ttn_query->row['order_id'] . ", ";
 					$sql .= "`dispatch_id` = " . (int)$dispatch_id . ", ";
 					$sql .= "`dispatch_number` = '" . $this->ttn . "', ";
