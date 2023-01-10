@@ -24,27 +24,27 @@ if (!is_cli()){
 	die();
 }
 
-echoLine('[CLI] Йобані очі, це ж ми в CLI. Версия PHP: ' . phpversion() . ', время ' . date('Y-m-d H:i:s'));	
+echoLine('[CLI] We are in CLI mode. PHP version: ' . phpversion() . ', time ' . date('Y-m-d H:i:s'));	
 
 	//Первый параметр: admin, catalog, для выбора приложения
 if (!isset($argv[1])){
-	echoLine('[CLI] Нет первого параметра, должен быть или admin, или catalog');
+	echoLine('[CLI] No first parameter, must be admin, or catalog');
 	die();
 }
 
 if (!isset($argv[2])){
-	echoLine('[CLI] Нет второго параметра, должен быть конфигурационный файл');
+	echoLine('[CLI] No second parameter, must be config file');
 	die();
 }
 
 if (!isset($argv[3])){
-	echoLine('[CLI] Нет третьего параметра, должен быть исполняемый контроллер');
+	echoLine('[CLI] No third parameter, must be action controller');
 	die();
 }
 
 $application = trim($argv[1]);
 if (!in_array($application, ['admin', 'catalog'])){
-	echoLine('[CLI] Первый параметр должен быть или admin, или catalog');
+	echoLine('[CLI] First parameter, must be admin, or catalog');
 	die();
 }
 
@@ -57,7 +57,7 @@ if ($application == 'admin'){
 $configFile = trim($argv[2]) . '.php';	
 $existentConfigFiles = glob($applicationLocation . 'config*.php');
 if (!in_array($applicationLocation . $configFile, $existentConfigFiles)){
-	echoLine('[CLI] Доступные файлы конфигураций: ' . implode(', ', $existentConfigFiles));
+	echoLine('[CLI] Allowed config files: ' . implode(', ', $existentConfigFiles));
 	die();
 }
 
@@ -72,21 +72,20 @@ for ($i=4; $i<=20; $i++){
 		if (strpos($argv[$i], 'store_id=') !== false){
 			$store_id = getCliParamValue($argv[$i]);
 			$allArguments[] = $argv[$i];
-			echoLine('[CLI] Мы работаем в магазине: ' . $store_id);
+			echoLine('[CLI] Working in store: ' . $store_id);
 		} elseif (strpos($argv[$i], 'language_code=') !== false){
 			$language_code = getCliParamValue($argv[$i]);
 			$allArguments[] = $argv[$i];
-			echoLine('[CLI] Мы работаем с языком: ' . $language_code);
+			echoLine('[CLI] Working with language: ' . $language_code);
 		} else {
 			$functionArguments[] = trim($argv[$i]);
 			$allArguments[] = trim($argv[$i]);
 		}
 	}
 }
-
-	//Вроде всё окей
-echoLine('[CLI] Запускаем ' . $route . ' в приложении ' . $application . ' с конфигом ' . $configFile);
-echoLine('[CLI] Заданы параметры: ' . implode(', ', $functionArguments));
+	
+echoLine('[CLI] Starting ' . $route . ' in app ' . $application . ' with config ' . $configFile);
+echoLine('[CLI] Parameters: ' . implode(', ', $functionArguments));
 
 require_once($applicationLocation . $configFile);	
 
@@ -96,14 +95,12 @@ if (!empty($loaderConfig['startup'])){
 	}
 }
 
-	//Из директории library, с уже определенной константой DIR_SYSTEM
 if (!empty($loaderConfig['libraries'])){
 	foreach ($loaderConfig['libraries'] as $libraryFile){
 		require_once(DIR_SYSTEM . 'library/' . $libraryFile . '.php');
 	}		
 }
 
-   //Пейджкеш
 $PageCache = new PageCache();
 
 $registry = new Registry();
@@ -326,15 +323,15 @@ if ($functionArguments){
 
 if (isset($action)){
 	if ($action->getFile()){
-		echoLine('[CLI] Action файл найден: ' . $action->getFile());
+		echoLine('[CLI] Action file found: ' . $action->getFile());
 		$controller->dispatch($action, new Action('kp/errorreport/error'));
 	} else {
 		$registry->get('simpleProcess')->dropProcess();
-		echoLine('[CLI] Action файл не найден, це пізда');			
+		echoLine('[CLI] Action file not found');			
 	}	
 } else {
 	$registry->get('simpleProcess')->dropProcess();
-	echoLine('[CLI] Action не определена, це пізда');
+	echoLine('[CLI] Action not defined');
 }
 
 $registry->get('simpleProcess')->stopProcess();
