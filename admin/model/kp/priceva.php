@@ -120,10 +120,10 @@ class ModelKpPriceva extends Model {
 
 
 	public function getProducts($data = array()) {
-		$sql = "SELECT prd.*, p.*, pd.* FROM " . DB_PREFIX . "priceva_data prd LEFT JOIN " . DB_PREFIX . "product p ON (p.product_id = prd.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id AND language_id = '" . $this->config->get('config_language_id') . "')";
+		$sql = "SELECT prd.*, p.*, pd.* FROM priceva_data prd LEFT JOIN product p ON (p.product_id = prd.product_id) LEFT JOIN product_description pd ON (p.product_id = pd.product_id AND language_id = '" . $this->config->get('config_language_id') . "')";
 
 		if (!empty($data['filter_category_id'])) {
-			$sql .= " LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id)";			
+			$sql .= " LEFT JOIN product_to_category p2c ON (p.product_id = p2c.product_id)";			
 		}
 
 		$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'"; 
@@ -287,10 +287,10 @@ class ModelKpPriceva extends Model {
 
 	//	$this->log->debug($data);
 
-		$sql = "SELECT COUNT(DISTINCT p.product_id) AS total  FROM " . DB_PREFIX . "priceva_data prd LEFT JOIN " . DB_PREFIX . "product p ON (p.product_id = prd.product_id) LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id AND language_id = '" . $this->config->get('config_language_id') . "')";
+		$sql = "SELECT COUNT(DISTINCT p.product_id) AS total  FROM priceva_data prd LEFT JOIN product p ON (p.product_id = prd.product_id) LEFT JOIN product_description pd ON (p.product_id = pd.product_id AND language_id = '" . $this->config->get('config_language_id') . "')";
 
 		if (!empty($data['filter_category_id'])) {
-			$sql .= " LEFT JOIN " . DB_PREFIX . "product_to_category p2c ON (p.product_id = p2c.product_id)";			
+			$sql .= " LEFT JOIN product_to_category p2c ON (p.product_id = p2c.product_id)";			
 		}
 
 		$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
