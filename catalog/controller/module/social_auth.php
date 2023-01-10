@@ -6,7 +6,6 @@
 			echo 'false';
 		}
 		
-		// form for adding non-existing fields
 		public function register() {
 			$this->load->language('account/edit');
 			
@@ -18,24 +17,23 @@
 				
 				$customer = array(
 				'firstname' => $this->request->post['firstname'],
-				'lastname' => $this->request->post['lastname'],
-				'email' => $this->request->post['email'],
+				'lastname' 	=> $this->request->post['lastname'],
+				'email' 	=> $this->request->post['email'],
 				'telephone' => '',
-				'fax' => '',
-				'password' => md5(time()),
-				'company' => '',
+				'fax' 		=> '',
+				'password' 	=> md5(time()),
+				'company' 	=> '',
 				'address_1' => '',
 				'address_2' => '',
-				'city' => '',
-				'postcode' => '',
-				'country_id' => 104,
-				'zone_id' => 0,
-				'social_id' => $this->request->post['social_id'],
+				'city' 		=> '',
+				'postcode' 	=> '',
+				'country_id' 	=> $this->config->get('config_country_id'),
+				'zone_id' 		=> 0,
+				'social_id' 	=> $this->request->post['social_id'],
                 );
 				
-				$customer_id = $this->model_account_customer->addCustomer($customer);
-				
-				$this->db->query("UPDATE " . DB_PREFIX . "customer SET social_id = '" . (string)$customer['social_id'] . "' WHERE customer_id = '" . (int)$customer_id . "'");
+				$customer_id = $this->model_account_customer->addCustomer($customer);				
+				$this->db->query("UPDATE customer SET social_id = '" . (string)$customer['social_id'] . "' WHERE customer_id = '" . (int)$customer_id . "'");
 				
 				if($customer_id){
 					$customer_info = $this->model_account_customer->getCustomer($customer_id);
@@ -161,11 +159,7 @@
 			$this->data['footer'] = $this->load->controller('common/footer');
 			$this->data['header'] = $this->load->controller('common/header');
 			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/social_auth_register.tpl')) {
-				$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/module/social_auth_register.tpl', $data));
-				} else {
-				$this->response->setOutput($this->load->view('default/template/module/social_auth_register.tpl', $data));
-			}
+			$this->response->setOutput($this->load->view('module/social_auth_register', $data));
 		}
 		
 		// validate fiels register function
@@ -411,7 +405,7 @@
 			if($customer['social_id']){
                 $this->load->model('account/customer');
                 
-                $customer_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "customer WHERE social_id = '" . (string)$customer['social_id'] . "'");
+                $customer_query = $this->db->query("SELECT * FROM customer WHERE social_id = '" . (string)$customer['social_id'] . "'");
                 
                 $customer_info = $customer_query->row;
                 
@@ -449,7 +443,7 @@
                         
                         $customer_id = $this->model_account_customer->addCustomer($customer);
                         
-                        $this->db->query("UPDATE " . DB_PREFIX . "customer SET social_id = '" . (string)$customer['social_id'] . "' WHERE customer_id = '" . (int)$customer_id . "'");
+                        $this->db->query("UPDATE customer SET social_id = '" . (string)$customer['social_id'] . "' WHERE customer_id = '" . (int)$customer_id . "'");
                         
                         if($customer_id){
                             
