@@ -493,22 +493,21 @@
 		public function getHalykbankRates(){
 			echoLine('[Currency::getHalykbankRates]' . ' starting');
 
-			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_URL, 'https://back.halykbank.kz/common/currency-history');
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($curl, CURLOPT_HEADER, false);
-			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
-			curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-			$content = curl_exec($curl);
-			curl_close($curl);
+			try{
+				$httpClient = new \GuzzleHttp\Client();
+				$httpResponce = $httpClient->request('GET', "https://back.halykbank.kz/common/currency-history", ['timeout' => 30]);	
+				$json = json_decode($httpResponce->getBody(), true);
 
-			$json = json_decode($content, true);
-
-			if ($json && !empty($json['data']['currencyHistory'][0]['cards']['EUR/KZT']['sell'])) {
-				echoLine('[Currency::getHalykbankRates] Real EUR/KZT rate:' . number_format($json['data']['currencyHistory'][0]['cards']['EUR/KZT']['sell'], 2));
-				return number_format($json['data']['currencyHistory'][0]['cards']['EUR/KZT']['sell'], 2);
+				if ($json && !empty($json['data']['currencyHistory'][0]['cards']['EUR/KZT']['sell'])) {
+					echoLine('[Currency::getHalykbankRates] Real EUR/KZT rate:' . number_format($json['data']['currencyHistory'][0]['cards']['EUR/KZT']['sell'], 2));
+					return number_format($json['data']['currencyHistory'][0]['cards']['EUR/KZT']['sell'], 2);
+				}
+			} catch (\GuzzleHttp\Exception\ConnectException $e){
+				echoLine('[Currency::getHalykbankRates] Failed to get rate' . $e->getMessage());
+				return false;
 			}
 
+			echoLine('[Currency::getHalykbankRates] Failed to get rate');
 			return false;
 		}
 
@@ -519,25 +518,26 @@
 		public function getPrivatbankRates(){
 			echoLine('[Currency::getPrivatbankRates]' . ' starting');
 
-			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_URL, 'https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11');
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($curl, CURLOPT_HEADER, false);
-			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
-			curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-			$content = curl_exec($curl);
-			curl_close($curl);
-			
-			$json = json_decode($content, true);
-			if (is_array($json)){
-				foreach ($json as $line){
-					if ($line['base_ccy'] == 'UAH' && $line['ccy'] == 'EUR'){
-						echoLine('[Currency::getPrivatbankRates] Real EUR/UAH rate:' . number_format($line['sale'], 2));						
-						return number_format($line['sale'], 2);
+			try{
+				$httpClient = new \GuzzleHttp\Client();
+				$httpResponce = $httpClient->request('GET', "https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11", ['timeout' => 30]);	
+				$json = json_decode($httpResponce->getBody(), true);			
+
+				if (is_array($json)){
+					foreach ($json as $line){
+						if ($line['base_ccy'] == 'UAH' && $line['ccy'] == 'EUR'){
+							echoLine('[Currency::getPrivatbankRates] Real EUR/UAH rate:' . number_format($line['sale'], 2));						
+							return number_format($line['sale'], 2);
+						}
 					}
 				}
+
+			} catch (\GuzzleHttp\Exception\ConnectException $e){
+				echoLine('[Currency::getPrivatbankRates] Failed to get rate' . $e->getMessage());
+				return false;
 			}
 
+			echoLine('[Currency::getPrivatbankRates] Failed to get rate');
 			return false;
 		}
 
@@ -547,26 +547,26 @@
 		public function getAlfabankByRates(){
 			echoLine('[Currency::getAlfabankByRates]' . ' starting');
 
-			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_URL, 'https://developerhub.alfabank.by:8273/partner/1.0.1/public/rates');
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($curl, CURLOPT_HEADER, false);
-			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
-			curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-			$content = curl_exec($curl);
-			curl_close($curl);
-			
-			$json = json_decode($content, true);
+			try{
+				$httpClient = new \GuzzleHttp\Client();
+				$httpResponce = $httpClient->request('GET', "https://developerhub.alfabank.by:8273/partner/1.0.1/public/rates", ['timeout' => 30]);	
+				$json = json_decode($httpResponce->getBody(), true);	
 
-			if (is_array($json)){
-				foreach ($json['rates'] as $line){
-					if ($json['sellIso'] == 'EUR' && $json['buyIso'] == 'BYN'){
-						echoLine('[Currency::getAlfabankByRates] Real EUR/BYN rate:' . number_format($line['buyRate'], 2));						
-						return number_format($line['buyRate'], 2);
+				if (is_array($json)){
+					foreach ($json['rates'] as $line){
+						if ($line['sellIso'] == 'EUR' && $line['buyIso'] == 'BYN'){
+							echoLine('[Currency::getAlfabankByRates] Real EUR/BYN rate:' . number_format($line['buyRate'], 2));						
+							return number_format($line['buyRate'], 2);
+						}
 					}
 				}
+
+			} catch (\GuzzleHttp\Exception\ConnectException $e){
+				echoLine('[Currency::getAlfabankByRates] Failed to get rate' . $e->getMessage());
+				return false;
 			}
 
+			echoLine('[Currency::getAlfabankByRates] Failed to get rate');
 			return false;
 		}
 
@@ -576,27 +576,24 @@
 		public function getRsbRates(){
 			echoLine('[Currency::getRsbRates]' . ' starting');
 
-			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_URL, 'https://www.rsb.ru/local/ajax/getcoursemass1.php?callback=test2&'.date('d.m.Y').'&course_type=cards&currency=eur&_=1596197030' . mt_rand(100,999));
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($curl, CURLOPT_HTTPHEADER, array('Host: www.rsb.ru', 'Referer: https://www.rsb.ru/courses/'));
-			curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-			curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:58.0) Gecko/20100101 Firefox/58.0");
-			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 30);
-			curl_setopt($curl, CURLOPT_TIMEOUT, 30);			
-			$content = curl_exec($curl);
-			curl_close($curl);
-			
-			$content = str_replace(array('test2(', ');'), '', $content);										
-			$json = json_decode($content, true);
-			
-			if (is_array($json) && !empty($json['currentItem']['sell'])){
-				$value = str_replace(',', '.',$json['currentItem']['sell']);
+			try{
+				$httpClient = new \GuzzleHttp\Client();
+				$httpResponce = $httpClient->request('GET', 'https://www.rsb.ru/local/ajax/getcoursemass1.php?callback=test2&'.date('d.m.Y').'&course_type=cards&currency=eur&_=1596197030' . mt_rand(100,999), ['timeout' => 30, 'curl' => [CURLOPT_HTTPHEADER => ['Host: www.rsb.ru', 'Referer: https://www.rsb.ru/courses/'], CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:58.0) Gecko/20100101 Firefox/58.0']]);	
+				$json = json_decode(str_replace(array('test2(', ');'), '',$httpResponce->getBody()), true);
 
-				echoLine('[Currency::getRsbRates] Real EUR/RUB rate:' . number_format($value, 2));						
-				return number_format($value, 2);
+				if (is_array($json) && !empty($json['currentItem']['sell'])){
+					$value = str_replace(',', '.',$json['currentItem']['sell']);
+
+					echoLine('[Currency::getRsbRates] Real EUR/RUB rate:' . number_format($value, 2));						
+					return number_format($value, 2);
+				}
+
+			} catch (\GuzzleHttp\Exception\ConnectException $e){
+				echoLine('[Currency::getRsbRates] Failed to get rate' . $e->getMessage());
+				return false;
 			}
 
+			echoLine('[Currency::getRsbRates] Failed to get rate');	
 			return false;
 		}
 
