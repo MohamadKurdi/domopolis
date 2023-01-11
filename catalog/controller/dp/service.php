@@ -12,6 +12,11 @@ class ControllerDPService extends Controller {
 		}
 	}
 
+	public function test(){
+		$this->log->debug($this->url->link('product/product', 'product_id=991916'));
+		$this->log->debug($this->url->link('common/home'));
+	}
+
 	public function index(){
 		$this->fixAmazonModes();
 		$this->countProducts();
