@@ -83,7 +83,7 @@ for ($i=4; $i<=20; $i++){
 		}
 	}
 }
-	
+
 echoLine('[CLI] Starting ' . $route . ' in app ' . $application . ' with config ' . $configFile);
 echoLine('[CLI] Parameters: ' . implode(', ', $functionArguments));
 
@@ -157,6 +157,22 @@ if (!$store_id) {
 	$registry->get('config')->set('config_img_ssls', 			HTTPS_IMG_SERVERS);			
 	$registry->get('config')->set('config_img_server_count', 	HTTPS_IMG_SERVERS_COUNT);			
 	$registry->get('config')->set('config_static_subdomain', 	HTTPS_STATIC_SUBDOMAIN);
+}
+
+//Very fast seo-url logic
+if ($registry->get('config')->get('config_seo_url_from_id')){
+	$short_url_mapping = loadJsonConfig('shorturlmap');
+	$short_uri_queries = $short_uri_keywords = [];
+
+	if (is_array($short_url_mapping)){
+		foreach ($short_url_mapping as $query => $keyword){
+			$short_uri_queries[$query] = $keyword;
+			$short_uri_keywords[$keyword] = $query;
+		}
+	}
+
+	$registry->set('short_uri_queries', $short_uri_queries);
+	$registry->set('short_uri_keywords', $short_uri_keywords);
 }
 
 $registry->set('url', new Url($registry->get('config')->get('config_ssl'), $registry));

@@ -141,7 +141,7 @@ $registry->set('log', new Log('php-errors-api.log'));
 $registry->get('config')->set('config_store_id', $store_id);
 $settings = $registry->get('cache')->get('settings.structure'.(int)$registry->get('config')->get('config_store_id'));
 if (!$settings) {
-    $query = $registry->get('db')->query("SELECT * FROM " . DB_PREFIX . "setting WHERE store_id = '0' OR store_id = '" . (int)$registry->get('config')->get('config_store_id') . "' ORDER BY store_id ASC");
+    $query = $registry->get('db')->query("SELECT * FROM setting WHERE store_id = '0' OR store_id = '" . (int)$registry->get('config')->get('config_store_id') . "' ORDER BY store_id ASC");
     $settings = $query->rows;
     $registry->get('cache')->set('settings.structure'.(int)$registry->get('config')->get('config_store_id'), $settings);
 }
@@ -165,6 +165,22 @@ if (!$store_id) {
     $registry->get('config')->set('config_img_server_count', HTTPS_IMG_SERVERS_COUNT);
     $registry->get('config')->set('config_static_subdomain', HTTPS_STATIC_SUBDOMAIN);
 }
+
+//Very fast seo-url logic
+    if ($registry->get('config')->get('config_seo_url_from_id')){
+        $short_url_mapping = loadJsonConfig('shorturlmap');
+        $short_uri_queries = $short_uri_keywords = [];
+
+        if (is_array($short_url_mapping)){
+            foreach ($short_url_mapping as $query => $keyword){
+                $short_uri_queries[$query] = $keyword;
+                $short_uri_keywords[$keyword] = $query;
+            }
+        }
+
+        $registry->set('short_uri_queries', $short_uri_queries);
+        $registry->set('short_uri_keywords', $short_uri_keywords);
+    }
 
 $registry->set('url', new Url($registry->get('config')->get('config_ssl'), $registry));
 
@@ -337,13 +353,12 @@ $registry->set('tax',               new Tax($registry));
 $registry->set('weight',            new Weight($registry));
 $registry->set('length',            new Length($registry));
 $registry->set('cart',              new Cart($registry));
-$registry->set('user',              new User($registry));
-$registry->set('encryption',        new Encryption($registry->get('config')->get('config_encryption')));    
+$registry->set('user',              new User($registry)); 
 $registry->set('yandexTranslator',  new hobotix\YandexTranslator($registry));
 $registry->set('rainforestAmazon',  new hobotix\RainforestAmazon($registry));
 $registry->set('pricevaAdaptor',    new hobotix\PricevaAdaptor($registry));
 $registry->set('CourierServices',   new CourierServices());
-$registry->set('encryption', new Encryption($registry->get('config')->get('config_encryption')));
+$registry->set('encryption',        new Encryption($registry->get('config')->get('config_encryption')));
 
 
 if ($registry->get('customer')->getTracking()) {

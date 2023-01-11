@@ -187,6 +187,22 @@ $registry->set('cache', $cache);
 $PageCache = new PageCache(false);
 $registry->set('PageCache', $PageCache); 
 
+//Very fast seo-url logic
+if ($registry->get('config')->get('config_seo_url_from_id')){
+	$short_url_mapping = loadJsonConfig('shorturlmap');
+	$short_uri_queries = $short_uri_keywords = [];
+
+	if (is_array($short_url_mapping)){
+		foreach ($short_url_mapping as $query => $keyword){
+			$short_uri_queries[$query] = $keyword;
+			$short_uri_keywords[$keyword] = $query;
+		}
+	}
+
+	$registry->set('short_uri_queries', $short_uri_queries);
+	$registry->set('short_uri_keywords', $short_uri_keywords);
+}
+
 $registry->set('url',  new Url(HTTPS_SERVER, $registry));
 
 $session = new Session();
