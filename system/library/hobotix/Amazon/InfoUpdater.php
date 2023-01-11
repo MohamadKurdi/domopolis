@@ -637,11 +637,24 @@ class InfoUpdater extends RainforestRetriever
 		return $result;
 	}
 
+	private function checkWeight($data){
+		if (!empty($data['weight']) && !empty($data['weight_class_id'])){
+			//Kilogramm > 100, it's a fail
+
+			if ($data['weight_class_id'] == 1 && (float)$data['weight'] > 500){
+				echoLine('[InfoUpdater::checkWeight] BAD WEIGHT DETECTED: ' . $data['weight']);	
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 
 	private function updateProductDimensions($product, $data){
 	//	return;
 
-		if (!empty($data['weight']) && !empty($data['weight_class_id'])){
+		if (!empty($data['weight']) && !empty($data['weight_class_id']) && $this->checkWeight($data)){
 			echoLine('[InfoUpdater::updateProductDimensions] Weight: ' . $data['weight']);		
 			echoLine('[InfoUpdater::updateProductDimensions] Weight class: ' . $data['weight_class_id']);
 
