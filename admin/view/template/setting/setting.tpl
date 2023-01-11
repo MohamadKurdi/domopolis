@@ -4660,7 +4660,7 @@
 											<?php foreach ($amazon_filters as $amazon_filter) { ?>
 												<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
 												<div class="<?php echo $class; ?>">
-													<?php if (in_array($amazon_filter, $config_rainforest_amazon_filters_1)) { ?>
+													<?php if (!empty($config_rainforest_amazon_filters_1) && in_array($amazon_filter, $config_rainforest_amazon_filters_1)) { ?>
 														<input id="config_rainforest_amazon_filters_1<?php echo $amazon_filter; ?>" class="checkbox" type="checkbox" name="config_rainforest_amazon_filters_1[]" value="<?php echo $amazon_filter; ?>" checked="checked" />
 														<label for="config_rainforest_amazon_filters_1<?php echo $amazon_filter; ?>"><?php echo $amazon_filter; ?></label>
 														<?php } else { ?>
@@ -5369,6 +5369,11 @@
 												<option value="0"  selected="selected">Отключить</option>
 											<? } ?>
 										</select>
+									</td>
+
+									<td style="width:20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Порог обновления</span></p>
+										<input type="number" step="1" name="config_currency_auto_threshold" value="<?php echo $config_currency_auto_threshold; ?>" size="2" style="width:100px;" />%
 									</td>
 								</tr>
 							</table>

@@ -2896,6 +2896,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_fixer_io_token'] = $this->config->get('config_fixer_io_token');
         }
 
+         if (isset($this->request->post['config_currency_auto_threshold'])) {
+            $this->data['config_currency_auto_threshold'] = $this->request->post['config_currency_auto_threshold'];
+        } else {
+            $this->data['config_currency_auto_threshold'] = $this->config->get('config_currency_auto_threshold');
+        }
+
             //TELEGRAM
         if (isset($this->request->post['config_telegram_bot_enable_alerts'])) {
             $this->data['config_telegram_bot_enable_alerts'] = $this->request->post['config_telegram_bot_enable_alerts'];
