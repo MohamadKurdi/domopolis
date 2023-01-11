@@ -412,7 +412,7 @@ class ControllerFeedReFeedMaker2 extends Controller
 
                     echoLine('[supplemental] Всего товаров ' . $total);
 
-                    for ($i = 1; $i <= $iterations; $i++) {
+                    for ($i = 1; $i <= ($iterations+1); $i++) {
                         $output = $this->openXML();
 
                         $timer = new FPCTimer();
@@ -528,7 +528,7 @@ class ControllerFeedReFeedMaker2 extends Controller
 
             echoLine('[makefeed] Всего товаров ' . $total);
 
-            for ($i = 1; $i <= $iterations; $i++) {
+            for ($i = 1; $i <= ($iterations+1); $i++) {
                 $output = $this->openXML();
 
                 $timer = new FPCTimer();
