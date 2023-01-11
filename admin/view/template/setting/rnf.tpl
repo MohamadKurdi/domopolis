@@ -1239,6 +1239,22 @@
 								</td>
 							</tr>
 						<?php } ?>
+
+						<?php foreach ($stores as $store) { ?>
+							<tr>
+								<td class="right">
+									Максимальный множитель, <?php echo $store['name']; ?>
+								</td>
+								<td style="width:100px;" class="center">
+									<input type="number" step="0.1" name="config_rainforest_max_multiplier_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_max_multiplier_' . $store['store_id']}; ?>" style="width:100px;" />
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Максимальная наценка, раз. Для товаров у которых вес задан очень некорректно.
+									</span>
+								</td>
+							</tr>
+						<?php } ?>
 					</table>
 				</div>
 				</div>
@@ -1468,6 +1484,7 @@
 					var mainFormula 				= $('input[name=config_rainforest_main_formula]').val();
 					var weightCoefficient 			= $('input[name=config_rainforest_kg_price_0]').val();
 					var defaultMultiplier 			= $('input[name=config_rainforest_default_multiplier_0]').val();
+					var maxMultiplier 				= $('input[name=config_rainforest_max_multiplier_0]').val();
 					var useVolumetricWeight 		= $('input[name=config_rainforest_use_volumetric_weight_0]').attr('checked')?1:0;
 					var volumetricWeightCoefficient = $('input[name=config_rainforest_volumetric_weight_coefficient_0]').val();
 					var volumetricMaxWCMultiplier 	= $('input[name=config_rainforest_volumetric_max_wc_multiplier]').val();
@@ -1484,6 +1501,7 @@
 							main_formula: 					mainFormula,
 							weight_coefficient: 			weightCoefficient,					
 							default_multiplier: 			defaultMultiplier,
+							max_multiplier: 				maxMultiplier,
 							use_volumetric_weight: 			useVolumetricWeight,
 							volumetric_weight_coefficient: 	volumetricWeightCoefficient,
 							volumetric_max_wc_multiplier:   volumetricMaxWCMultiplier,
@@ -1540,6 +1558,9 @@
 					<?php foreach ($stores as $store) { ?>
 						saveSettingAjax('config_rainforest_kg_price_<?php echo $store['store_id']?>', $('input[name=config_rainforest_kg_price_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_kg_price_<?php echo $store['store_id']?>]'));
 						saveSettingAjax('config_rainforest_default_multiplier_<?php echo $store['store_id']?>', $('input[name=config_rainforest_default_multiplier_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_default_multiplier_<?php echo $store['store_id']?>]'));
+
+						saveSettingAjax('config_rainforest_max_multiplier_<?php echo $store['store_id']?>', $('input[name=config_rainforest_max_multiplier_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_max_multiplier_<?php echo $store['store_id']?>]'));
+
 						saveSettingAjax('config_rainforest_use_volumetric_weight_<?php echo $store['store_id']?>', $('input[name=config_rainforest_use_volumetric_weight_<?php echo $store['store_id']?>]').attr('checked')?1:0, $('input[name=config_rainforest_use_volumetric_weight_<?php echo $store['store_id']?>]'));
 						saveSettingAjax('config_rainforest_volumetric_weight_coefficient_<?php echo $store['store_id']?>', $('input[name=config_rainforest_volumetric_weight_coefficient_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_volumetric_weight_coefficient_<?php echo $store['store_id']?>]'));
 					<?php } ?>
@@ -1559,6 +1580,11 @@
 					<?php foreach ($stores as $store) { ?>
 
 						if (key == 'config_rainforest_default_multiplier_<?php echo $store['store_id']?>'){
+							console.log('Pricelogic skip autosave: ' + key);
+							return;
+						}
+
+						if (key == 'config_rainforest_max_multiplier_<?php echo $store['store_id']?>'){
 							console.log('Pricelogic skip autosave: ' + key);
 							return;
 						}

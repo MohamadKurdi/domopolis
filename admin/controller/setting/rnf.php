@@ -107,7 +107,6 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_enable_offers_only_for_filled',
 		'config_rainforest_enable_offers_after_order',
 
-
 		'config_rainforest_nooffers_status_id',
 		'config_rainforest_delete_no_offers',
 		'config_rainforest_delete_no_offers_counter',
@@ -178,6 +177,14 @@ class ControllerSettingRnf extends Controller {
 		}		
 
 		foreach ($this->data['stores']  as $store){
+			if (isset($this->request->post['config_rainforest_max_multiplier_' . $store['store_id']])) {
+				$this->data['config_rainforest_max_multiplier_' . $store['store_id']] = $this->request->post['config_rainforest_max_multiplier_' . $store['store_id']]; 
+			} else {
+				$this->data['config_rainforest_max_multiplier_' . $store['store_id']] = $this->config->get('config_rainforest_max_multiplier_' . $store['store_id']);
+			}
+		}	
+
+		foreach ($this->data['stores']  as $store){
 			if (isset($this->request->post['config_rainforest_use_volumetric_weight_' . $store['store_id']])) {
 				$this->data['config_rainforest_use_volumetric_weight_' . $store['store_id']] = $this->request->post['config_rainforest_use_volumetric_weight_' . $store['store_id']]; 
 			} else {
@@ -205,16 +212,18 @@ class ControllerSettingRnf extends Controller {
 
 	}
 
-	public function calculate($mainFormula = '', 
-		$weightCoefficient = 0, 
-		$defaultMultiplier = 0, 
-		$useVolumetricWeight = false, 
-		$volumetricWeightCoefficient = 0, 
-		$volumetricMaxWCMultiplier = 0,
-		$showRandomProducts = false, 
-		$limitProducts = 0, 
-		$zonesConfig = '',
-		$explicitProducts = ''
+	public function calculate(
+		$mainFormula 				= '', 
+		$weightCoefficient 			= 0, 
+		$defaultMultiplier 			= 0, 
+		$maxMultiplier 				= 0,
+		$useVolumetricWeight 		= false, 
+		$volumetricWeightCoefficient 	= 0, 
+		$volumetricMaxWCMultiplier 		= 0,
+		$showRandomProducts 			= false, 
+		$limitProducts 					= 0, 
+		$zonesConfig 					= '',
+		$explicitProducts 				= ''
 		){
 
 		$this->load->model('catalog/product');		
@@ -229,6 +238,10 @@ class ControllerSettingRnf extends Controller {
 
 		if (empty($defaultMultiplier)){
 			$defaultMultiplier	= $this->request->post['default_multiplier'];
+		}
+
+		if (empty($maxMultiplier)){
+			$maxMultiplier	= $this->request->post['max_multiplier'];
 		}
 
 		if (empty($useVolumetricWeight)){
@@ -271,7 +284,7 @@ class ControllerSettingRnf extends Controller {
 		if ($zonesConfig){
 			$zones 		= explode(' ', $zonesConfig);
 		} else {
-			$zones 		= [0, 20, 50, 100, 1000, 1000000];
+			$zones 		= [0, 20, 50, 100, 1000, 5000, 1000000];
 		}
 
 		$products 	= [];		
@@ -284,10 +297,10 @@ class ControllerSettingRnf extends Controller {
 				$sql = "SELECT DISTINCT(p.product_id), p.*, pd.name, p2c.category_id as main_category_id FROM product p
 						LEFT JOIN product_description pd ON (p.product_id = pd.product_id AND language_id = '" . (int)$this->config->get('config_language_id') . "')
 						LEFT JOIN product_to_category p2c ON (p2c.product_id = p.product_id AND main_category = 1)
-						WHERE p.amazon_best_price > '0' 
+						WHERE 
+						p.amazon_best_price > '0' 
 						AND p.amazon_best_price > '" . (int)$zones[$i] . "' 
 						AND p.amazon_best_price <= '" . (int)$zones[$i+1] . "' 
-						AND p.amzn_no_offers = 0
 						AND p.asin <> ''												
 						AND p.asin <> 'INVALID'";
 
@@ -363,7 +376,7 @@ class ControllerSettingRnf extends Controller {
 				}
 
 				$result['counted_weight'] =  $this->weight->format($product['counted_weight'], $this->config->get('config_weight_class_id'));
-				$result['counted_price']  = $this->rainforestAmazon->offersParser->PriceLogic->mainFormula($product['amazon_best_price'], $product['counted_weight'], $weightCoefficient, $defaultMultiplier, $mainFormula);
+				$result['counted_price']  = $this->rainforestAmazon->offersParser->PriceLogic->mainFormula($product['amazon_best_price'], $product['counted_weight'], $weightCoefficient, $defaultMultiplier, $maxMultiplier, $mainFormula);
 
 				$result['amazon_best_price'] 		= $this->currency->format($product['amazon_best_price'], 'EUR', 1);
 				$result['counted_price_eur'] 		= $this->currency->format($result['counted_price'], 'EUR', 1);

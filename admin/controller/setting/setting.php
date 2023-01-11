@@ -3355,6 +3355,14 @@ class ControllerSettingSetting extends Controller
         }
 
         foreach ($stores as $store) {
+            if (isset($this->request->post['config_rainforest_max_multiplier_' . $store['store_id']])) {
+                $this->data['config_rainforest_max_multiplier_' . $store['store_id']] = $this->request->post['config_rainforest_max_multiplier_' . $store['store_id']];
+            } else {
+                $this->data['config_rainforest_max_multiplier_' . $store['store_id']] = $this->config->get('config_rainforest_max_multiplier_' . $store['store_id']);
+            }
+        }
+
+        foreach ($stores as $store) {
             if (isset($this->request->post['config_rainforest_use_volumetric_weight_' . $store['store_id']])) {
                 $this->data['config_rainforest_use_volumetric_weight_' . $store['store_id']] = $this->request->post['config_rainforest_use_volumetric_weight_' . $store['store_id']];
             } else {

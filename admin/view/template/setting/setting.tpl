@@ -5261,6 +5261,17 @@
 								</tr>
 							</table>
 
+							<table class="form">
+								<tr>									
+									<?php foreach ($stores as $store) { ?>
+										<td width="<?php echo (int)(100/count($stores))?>%">
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-eur"></i> Максимально Х <?php echo $store['name']; ?></span></p>
+											<input type="number" step="0.1" name="config_rainforest_max_multiplier_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_max_multiplier_' . $store['store_id']}; ?>" style="width:200px;" />
+										</td>
+									<?php } ?>
+								</tr>
+							</table>
+
 							<table>
 								<tr>									
 										<td width="20%">
