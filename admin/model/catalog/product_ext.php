@@ -333,10 +333,20 @@ class ModelCatalogProductExt extends Model {
 
 
             if ($column == 'status'){
-                if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']){
-                    $this->db->query("UPDATE product SET status = '" . (int)$data['status'] . "' WHERE main_variant_id = '" . (int)$product_id . "'");              
-                    $this->db->query("UPDATE product SET minimum = '" . (int)$data['minimum'] . "' WHERE main_variant_id = '" . (int)$product_id . "'");
-                    $this->db->query("UPDATE product SET shipping = '" . (int)$data['shipping'] . "' WHERE main_variant_id = '" . (int)$product_id . "'");
+                if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']){                    
+                    $this->db->query("UPDATE product SET status     = '" . (int)$value . "' WHERE main_variant_id = '" . (int)$product_id . "'");                                 
+                }
+            }
+
+            if ($column == 'minimum'){
+                if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']){                    
+                    $this->db->query("UPDATE product SET minimum     = '" . (int)$value . "' WHERE main_variant_id = '" . (int)$product_id . "'");                                 
+                }
+            }
+
+            if ($column == 'shipping'){
+                if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']){                    
+                    $this->db->query("UPDATE product SET shipping     = '" . (int)$value . "' WHERE main_variant_id = '" . (int)$product_id . "'");                                 
                 }
             }
 
