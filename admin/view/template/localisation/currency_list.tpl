@@ -35,8 +35,7 @@
 							<?php } ?></td>	
 							<td>Крипто-пара</td>
 							<td></td>
-							<td class="left">Вн. курс к UAH</td>
-							<td class="left">Вн. курс к UAH продажа</td>
+							<td class="left">Вн. курс к UAH</td>							
 							<td class="right"><?php if ($sort == 'value') { ?>
 								<a href="<?php echo $sort_value; ?>" class="<?php echo strtolower($order); ?>">Внутр к €</a>
 								<?php } else { ?>
@@ -73,8 +72,7 @@
 									<td class="left"><?php echo $currency['code']; ?></td>
 									<td class="left"><?php echo $currency['cryptopair']; ?></td>
 									<td class="left"><? if (isset($currency['flag'])) { ?><img src="<? echo HTTPS_CATALOG ?>/image/flags/<?php echo $currency['flag']; ?>" /><? } ?></td>			 
-									<td class="left"><?php echo $currency['mc']; ?> = <?php echo $currency['rc']; ?></td>
-									<td class="left"><?php echo $currency['mc']; ?> = <?php echo $currency['value_uah_unreal']; ?> грн.</td>	
+									<td class="left"><?php echo $currency['mc']; ?> = <?php echo $currency['rc']; ?></td>										
 									<td class="right"><?php echo $currency['value']; ?></td>
 									<td class="center">
 										<? if ($our_is_equal) { ?>
