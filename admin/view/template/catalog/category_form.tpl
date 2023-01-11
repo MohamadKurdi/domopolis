@@ -53,7 +53,7 @@
 									<td>
 										<div class="translate_wrap">
 											<a class="btn-copy<?php echo $language['language_id']; ?> btn-copy" onclick="getCopy($(this),'input','category_description[2]');"><i class="fa fa-copy"></i> Копировать с ru</a>
-											<?php if (in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
+											<?php if ($this->config->get('config_translate_from_ru') && in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
 												<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'ru','<?php echo $language['code']; ?>','input','category_description[5]');">Перевести <img src="view/image/flags/ru.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>
 												<?php } elseif ($language['code'] == $this->config->get('config_admin_language')) { ?>
 												<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'de','<?php echo $language['code']; ?>','input','category_description[26]');">
@@ -72,7 +72,7 @@
 									<td>
 										<div class="translate_wrap">
 											<a class="btn-copy<?php echo $language['language_id']; ?> btn-copy" onclick="getCopy($(this),'textarea','category_description[2]');"><i class="fa fa-copy"></i> Копировать с ru</a>
-											<?php if (in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
+											<?php if ($this->config->get('config_translate_from_ru') && in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
 												<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'ru','<?php echo $language['code']; ?>','textarea','category_description[5]');">Перевести <img src="view/image/flags/ru.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>
 												<?php } elseif ($language['code'] == $this->config->get('config_admin_language')) { ?>
 												<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'de','<?php echo $language['code']; ?>','textarea','category_description[26]');">
@@ -91,7 +91,7 @@
 										
 										<div class="translate_wrap">
 											<a class="btn-copy<?php echo $language['language_id']; ?> btn-copy" onclick="getCopy($(this),'input','category_description[2]');"><i class="fa fa-copy"></i> Копировать с ru</a>
-											<?php if (in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
+											<?php if ($this->config->get('config_translate_from_ru') && in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
 												<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'ru','<?php echo $language['code']; ?>','input','category_description[5]');">Перевести <img src="view/image/flags/ru.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>
 												<?php } elseif ($language['code'] == $this->config->get('config_admin_language')) { ?>
 												<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'de','<?php echo $language['code']; ?>','input','category_description[26]');">
@@ -114,7 +114,7 @@
 									<td>
 										<div class="translate_wrap">
 											<a class="btn-copy<?php echo $language['language_id']; ?> btn-copy" onclick="getCopy($(this),'input','category_description[2]');"><i class="fa fa-copy"></i> Копировать с ru</a>
-											<?php if (in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
+											<?php if ($this->config->get('config_translate_from_ru') && in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
 												<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'ru','<?php echo $language['code']; ?>','input','category_description[5]');">Перевести <img src="view/image/flags/ru.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>
 												<?php } elseif ($language['code'] == $this->config->get('config_admin_language')) { ?>
 												<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'de','<?php echo $language['code']; ?>','input','category_description[26]');">
@@ -130,7 +130,7 @@
 									<td>
 										<div class="translate_wrap">
 											<a class="btn-copy<?php echo $language['language_id']; ?> btn-copy" onclick="getCopy($(this),'input','category_description[2]');"><i class="fa fa-copy"></i> Копировать с ru</a>
-											<?php if (in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
+											<?php if ($this->config->get('config_translate_from_ru') && in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
 												<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'ru','<?php echo $language['code']; ?>','input','category_description[5]');">Перевести <img src="view/image/flags/ru.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>
 												<?php } elseif ($language['code'] == $this->config->get('config_admin_language')) { ?>
 												<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'de','<?php echo $language['code']; ?>','input','category_description[26]');">
@@ -146,7 +146,7 @@
 									<td>
 										<div class="translate_wrap">
 											<a class="btn-copy<?php echo $language['language_id']; ?> btn-copy" onclick="getCopy($(this),'textarea','category_description[2]');"><i class="fa fa-copy"></i> Копировать с ru</a>
-											<?php if (in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
+											<?php if ($this->config->get('config_translate_from_ru') && in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
 												<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'ru','<?php echo $language['code']; ?>','textarea','category_description[5]');">Перевести <img src="view/image/flags/ru.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>
 												<?php } elseif ($language['code'] == $this->config->get('config_admin_language')) { ?>
 												<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'de','<?php echo $language['code']; ?>','textarea','category_description[26]');">
@@ -166,7 +166,7 @@
 									<td>
 										<div class="translate_wrap">
 											<a class="btn-copy<?php echo $language['language_id']; ?> btn-copy" onclick="getCopy($(this),'textarea','category_description[2]');"><i class="fa fa-copy"></i> Копировать с ru</a>
-											<?php if (in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
+											<?php if ($this->config->get('config_translate_from_ru') && in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
 												<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'ru','<?php echo $language['code']; ?>','textarea','category_description[5]');">Перевести <img src="view/image/flags/ru.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>
 												<?php } elseif ($language['code'] == $this->config->get('config_admin_language')) { ?>
 												<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'de','<?php echo $language['code']; ?>','textarea','category_description[26]');">
