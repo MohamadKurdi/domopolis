@@ -327,7 +327,7 @@ class PriceLogic
 	}
 
 	//Это прямо самая важная функция)))
-	public function mainFormula($amazonBestPrice, $productWeight, $weightCoefficient, $defaultMultiplier, $overloadMainFormula = false){
+	public function mainFormula($amazonBestPrice, $productWeight, $weightCoefficient, $defaultMultiplier, $maxMultiplier, $overloadMainFormula = false){
 
 		if ($overloadMainFormula){
 			$mainFormula = $overloadMainFormula;
@@ -339,6 +339,10 @@ class PriceLogic
 
 			$mainFormula = str_replace(['PRICE','WEIGHT','KG_LOGISTIC','PLUS', 'MULTIPLY', 'DIVIDE'], [$amazonBestPrice, $productWeight, $weightCoefficient, '+', '*', '/'], $mainFormula);
 			$resultPrice = eval('return ' . $mainFormula . ';');
+
+			if ($resultPrice > $amazonBestPrice * $maxMultiplier){
+				$resultPrice = $amazonBestPrice * $defaultMultiplier;
+			}
 
 		} else {
 
@@ -404,13 +408,14 @@ class PriceLogic
 								$productWeight = $this->getProductWeight($product);
 							}
 
-							$weightCoefficient = $this->config->get('config_rainforest_kg_price_' . $store_id);
-							$defaultMultiplier = $this->config->get('config_rainforest_default_multiplier_' . $store_id);
+							$weightCoefficient 	= $this->config->get('config_rainforest_kg_price_' . $store_id);
+							$defaultMultiplier 	= $this->config->get('config_rainforest_default_multiplier_' . $store_id);
+							$maxMultiplier 		= $this->config->get('config_rainforest_max_multiplier_' . $store_id);
 
 							if ($weightCoefficient || $defaultMultiplier){
 								if ($this->checkIfWeCanUpdateProductOffers($product_id, $warehouse_identifier)){
 
-									$newPrice = $this->mainFormula($amazonBestPrice, $productWeight, $weightCoefficient, $defaultMultiplier);
+									$newPrice = $this->mainFormula($amazonBestPrice, $productWeight, $weightCoefficient, $defaultMultiplier, $maxMultiplier);
 
 									$logString = 'Товар: ' . $product_id . ', ' . $asin . ', вес: ' . $productWeight . ', цена для магазина ' . $store_id . ' = ' . $newPrice . ' EUR';
 									$this->log->write($logString);
