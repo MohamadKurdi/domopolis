@@ -32,6 +32,28 @@ class Url {
         return $this->linkCached($route, $args, $language_id);
     }
 
+    public function checkIfGenerate($param){        
+        if (!$this->config->get('config_seo_url_do_generate')){
+            if ($this->registry->has('short_uri_queries') && !empty($this->registry->get('short_uri_queries')[$param])){
+                return false;
+            }
+        }
+
+        return true;        
+    }
+
+    public function linkfromid($param, $id){
+        $keywords = [];
+
+        if ($this->config->get('config_seo_url_from_id') && $this->registry->has('short_uri_queries') && !empty($this->registry->get('short_uri_queries')[$param])){
+            foreach ($this->registry->get('languages') as $language){
+                $keywords[$language['language_id']] = $this->registry->get('short_uri_queries')[$param] . $id;
+            }
+        }
+
+        return $keywords;
+    }
+
     private function rewriteSimpleCheckout($route){
         $get_route = isset($_GET['route']) ? $_GET['route'] : (isset($_GET['_route_']) ? $_GET['_route_'] : '');
 
