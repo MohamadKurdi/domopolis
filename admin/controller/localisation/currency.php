@@ -214,7 +214,6 @@
 				'flag'          		=> $result['flag'],
 				'value'         		=> number_format($result['value'],2,'.',' '),
 				'value_real'    		=> number_format($result['value_real'],2,'.',' '),
-				'value_uah_unreal'  	=> number_format($result['value_uah_unreal'],2,'.',' '),
 				'value_minimal'  		=> number_format($result['value_minimal'],2,'.',' '),
 				'value_eur_official'  	=> number_format($result['value_eur_official'],2,'.',' '),
 				'cryptopair'  			=> $result['cryptopair'],
