@@ -391,14 +391,37 @@
 					$sql .= " (SELECT COUNT(*) FROM product_additional_offer pao LEFT JOIN product_additional_offer_to_store pao2s ON (pao.product_additional_offer_id = pao2s.product_additional_offer_id) WHERE  pao.product_id = p.product_id AND pao.date_end > NOW() AND (ISNULL(pao2s.store_id) OR pao2s.store_id = '" . (int)$this->config->get('config_store_id') . "')) AS additional_offer_count, ";
 
 					if ($this->config->get('config_no_zeroprice')){
-						$sql .= " (SELECT COUNT(p3.product_id) FROM product p3 LEFT JOIN product_to_store p32s ON (p3.product_id = p32s.product_id) WHERE p3.main_variant_id = p.product_id  AND (p3.price > 0 OR p3.price_national > 0) AND p3.status = 1 AND p3.is_markdown = 0 AND p32s.store_id = '" . (int)$this->config->get('config_store_id') . "')";
+						$sql .= " (SELECT COUNT(p3.product_id) FROM product p3 ";
+
+						if (!$this->config->get('config_single_store_enable')){
+							$sql .= " LEFT JOIN product_to_store p32s ON (p3.product_id = p32s.product_id) ";
+						}						
+
+						$sql .= " WHERE p3.main_variant_id = p.product_id  AND (p3.price > 0 OR p3.price_national > 0) AND p3.status = 1 AND p3.is_markdown = 0 ";
+						
+						if (!$this->config->get('config_single_store_enable')){
+							$sql .= " AND p32s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+						}
+
+						$sql .= ")";
 					} else {
-						$sql .= " (SELECT COUNT(p3.product_id) FROM product p3 LEFT JOIN product_to_store p32s ON (p3.product_id = p32s.product_id) WHERE p3.main_variant_id = p.product_id  AND (p3.price > 0 OR p3.price_national > 0) AND p3.status = 1 AND p3.is_markdown = 0 AND p32s.store_id = '" . (int)$this->config->get('config_store_id') . "')";
+						$sql .= " (SELECT COUNT(p3.product_id) FROM product p3 ";
+						
+						if (!$this->config->get('config_single_store_enable')){
+							$sql .= " LEFT JOIN product_to_store p32s ON (p3.product_id = p32s.product_id) ";
+						}
+
+						$sql .= " WHERE p3.main_variant_id = p.product_id  AND (p3.price > 0 OR p3.price_national > 0) AND p3.status = 1 AND p3.is_markdown = 0 ";
+
+						if (!$this->config->get('config_single_store_enable')){
+							$sql .= " AND p32s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+						}
+
 						$sql .= " AND (";
 						$sql .= " p.price > 0 OR p.price_national > 0";
 						$sql .= " OR (SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
 						$sql .= " OR (SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0";
-						$sql .= ")";
+						$sql .= "))";
 					}
 					$sql .= " AS variants_count, ";
 
@@ -415,26 +438,37 @@
 				$sql .= "(SELECT date_end FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special_date_end, ";
 				$sql .= "(SELECT currency_scode FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special_currency, ";
 				$sql .= "(SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price, ";
-				$sql .= "(SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price_national, ";			
-				$sql .= "(SELECT price FROM product_price_national_to_yam ppn2yam WHERE ppn2yam.product_id = p.product_id AND price > 0 AND ppn2yam.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as yam_overload_price_national, ";		
+				$sql .= "(SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price_national, ";		
+
+				if ($this->config->get('config_yam_offer_id_price_enable')){
+					$sql .= "(SELECT price FROM product_price_national_to_yam ppn2yam WHERE ppn2yam.product_id = p.product_id AND price > 0 AND ppn2yam.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as yam_overload_price_national, ";		
+				}
+
 				$sql .= " (SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as overload_stock_status_id, ";
 				$sql .= "(SELECT name FROM stock_status sst WHERE sst.stock_status_id = (SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) AND sst.language_id = '" . (int)$this->config->get('config_language_id') . "') as overload_stock_status,	";
 				$sql .= "(SELECT ss.name FROM stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status ";
 				
 
 				$sql .= " FROM product p 
-				LEFT JOIN product_description pd ON (p.product_id = pd.product_id) 
-				LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) ";
+				LEFT JOIN product_description pd ON (p.product_id = pd.product_id) ";
+
+				if (!$this->config->get('config_single_store_enable')){
+					$sql .= " LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) ";
+				}
 
 				if ($simple != 'simple'){
 					$sql .= " LEFT JOIN manufacturer m ON (p.manufacturer_id = m.manufacturer_id) ";
 				}
 
-				$sql .= " WHERE p.product_id = '" . (int)$product_id . "' 
+				$sql .= " WHERE 
+				p.product_id = '" . (int)$product_id . "' 
 				AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
 				AND p.status = '1' 
-				AND p.date_available <= NOW() 
-				AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+				AND p.date_available <= NOW() ";
+
+				if (!$this->config->get('config_single_store_enable')){
+					$sql .= " AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+				}
 
 				if (!$cached){
 					$query = $this->db->non_cached_query($sql);
@@ -454,7 +488,7 @@
 						$yam_special = $this->currency->convert($yam_special, $query->row['yam_currency'], $this->config->get('config_regional_currency'));
 					}
 					
-					if ($query->row['yam_overload_price_national']){
+					if (!empty($query->row['yam_overload_price_national'])){
 						$yam_price = $query->row['yam_overload_price_national'];
 					}
 					
@@ -969,7 +1003,16 @@
 			}
 			
 			$sql .= " LEFT JOIN product_description pd ON (p.product_id = pd.product_id) ";
-			$sql .= " LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+
+			if (!$this->config->get('config_single_store_enable')){
+				$sql .= " LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) ";
+			}
+
+			$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() ";
+
+			if (!$this->config->get('config_single_store_enable')){
+				$sql .= " AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+			}
 
 			if (!empty($data['sort']) && $data['sort'] == 'p.viewed' && !empty($data['filter_only_viewed'])) {
 				if ((int)$data['filter_only_viewed'] > 1){
@@ -989,7 +1032,7 @@
 				$sql .= " AND stock_status_id = '" . $default_stock_status . "'";
 			}
 			
-			if ($data['no_child']) {
+			if ($this->config->get('config_option_products_enable') && $data['no_child']) {
 				$sql .= " AND p.is_option_with_id = '0' ";
 			}
 
@@ -1314,12 +1357,8 @@
 			return $product_data;
 		}
 		
-		public function getProductDeName($product_id){
-			$this->load->model('localisation/language');
-			
-			$language_id = $this->model_localisation_language->getLanguageByCode($this->config->get('config_de_language'));
-			
-			$query = $this->db->query("SELECT name FROM product_description WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "' LIMIT 1");
+		public function getProductDeName($product_id){			
+			$query = $this->db->query("SELECT name FROM product_description WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')] . "' LIMIT 1");
 			
 			if (isset($query->row['name'])){
 				$name = $query->row['name'];			
@@ -1353,14 +1392,22 @@
 			$sql = "SELECT 
 			r.product_id 
 			FROM review r 
-			JOIN product p ON r.product_id = p.product_id 	
-			LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id)
-			WHERE r.status = '1' 
+			JOIN product p ON r.product_id = p.product_id ";
+			
+			if (!$this->config->get('config_single_store_enable')){
+				$sql .= " LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) ";
+			}
+			
+
+			$sql .= " WHERE r.status = '1' 
 			AND p.status = '1'
 			AND p.is_markdown = '0' 
 			AND r.date_added >= '" . date('Y-m-d', strtotime('-1 month')) . "'
-			AND p.date_available <= NOW() 
-			AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ";
+			AND p.date_available <= NOW() ";
+
+			if (!$this->config->get('config_single_store_enable')){
+				$sql .= " AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ";
+			}
 
 			if (!empty($data['manufacturer_id'])){
 				$sql .= " AND p.manufacturer_id = '" . (int)$data['manufacturer_id'] . "'";
@@ -1450,7 +1497,7 @@
 				$sql .= " AND p.stock_status_id NOT IN (" . $this->config->get('config_not_in_stock_status_id') . ',' . $this->config->get('config_partly_in_stock_status_id') . ")";
 			}
 			
-			if ($data['no_child']) {
+			if ($this->config->get('config_option_products_enable') && $data['no_child']) {
 				$sql .= " AND p.is_option_with_id = '0' ";
 			}
 			
@@ -1640,15 +1687,21 @@
 			$sql = "SELECT op.product_id, COUNT(*) AS total
 			FROM order_product op 
 			LEFT JOIN `order` o ON (op.order_id = o.order_id) 
-			LEFT JOIN `product` p ON (op.product_id = p.product_id) 
-			LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
-			LEFT JOIN `product_to_category` p2c ON (p2c.product_id = p.product_id)
+			LEFT JOIN `product` p ON (op.product_id = p.product_id) ";
+
+			if (!$this->config->get('config_single_store_enable')){
+				$sql .= " LEFT JOIN `product_to_store` p2s ON (p.product_id = p2s.product_id) ";
+			}
+
+			$sql .= " LEFT JOIN `product_to_category` p2c ON (p2c.product_id = p.product_id)
 			LEFT JOIN `category_path` cp ON (p2c.category_id = cp.category_id)
 			WHERE 
 			o.order_status_id > '0'";
+
 			if ($manufacturer_id){
 				$sql .= " AND p.manufacturer_id = " . (int)$manufacturer_id;
 			}
+
 			$sql .= " AND p.status = '1'
 			AND DATE(o.date_added) >= '" . date('Y-m-d', strtotime("- $month month")) . "'
 			AND p.quantity > 0
@@ -1656,9 +1709,13 @@
 			AND is_markdown = 0
 			AND stock_status_id <> '" . (int)$this->config->get('config_not_in_stock_status_id') . "' 
 			AND p.date_available <= NOW() 
-			AND cp.path_id = '" . (int)$category_id . "'
-			AND	p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
-			GROUP BY op.product_id ORDER BY total DESC LIMIT " . (int)$limit;
+			AND cp.path_id = '" . (int)$category_id . "'";
+
+			if (!$this->config->get('config_single_store_enable')){
+				$sql .= " AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+			}
+
+			$sql .= " GROUP BY op.product_id ORDER BY total DESC LIMIT " . (int)$limit;
 			
 			$query = $this->db->query($sql);
 			
@@ -1682,23 +1739,34 @@
 			$sql = "SELECT op.product_id, COUNT(*) AS total
 			FROM order_product op 
 			LEFT JOIN `order` o ON (op.order_id = o.order_id) 
-			LEFT JOIN `product` p ON (op.product_id = p.product_id) 
-			LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
-			LEFT JOIN `product_to_category` p2c ON (p2c.product_id = p.product_id)
+			LEFT JOIN `product` p ON (op.product_id = p.product_id) ";
+			
+
+			if (!$this->config->get('config_single_store_enable')){
+				$sql .= " LEFT JOIN `product_to_store` p2s ON (p.product_id = p2s.product_id) ";
+			}
+
+			$sql .= " LEFT JOIN `product_to_category` p2c ON (p2c.product_id = p.product_id)
 			LEFT JOIN `category_path` cp ON (p2c.category_id = cp.category_id)
 			WHERE 
-			o.order_status_id > '0'";
+			o.order_status_id = '" . $this->config->get('config_complete_status_id') . "'";
+			
 			if ($manufacturer_id){
 				$sql .= " AND p.manufacturer_id = " . (int)$manufacturer_id;
 			}
+
 			$sql .= " AND p.status = '1'
 			AND p.quantity > 0 
-			AND is_markdown = 0
-			AND stock_status_id <> '" . (int)$this->config->get('config_not_in_stock_status_id') . "' 
-			AND p.date_available <= NOW() AND 
-			cp.path_id = '" . (int)$category_id . "' AND 
-			p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
-			GROUP BY op.product_id ORDER BY total DESC LIMIT " . (int)$limit;
+			AND p.is_markdown = 0
+			AND p.stock_status_id <> '" . (int)$this->config->get('config_not_in_stock_status_id') . "' 
+			AND p.date_available <= NOW()  
+			AND cp.path_id = '" . (int)$category_id . "'";
+
+			if (!$this->config->get('config_single_store_enable')){
+				$sql .= " AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+			}
+
+			$sql .= " GROUP BY op.product_id ORDER BY total DESC LIMIT " . (int)$limit;
 			
 			$query = $this->db->query($sql);
 			
@@ -1741,26 +1809,47 @@
 			return $product_data;
 		}		
 		
-		public function getPrevNextProduct($productid, $catId, $collectionId){
+		public function getPrevNextProduct($product_id, $category_id, $collection_id){
 			
-			$pnproduct_data = $this->cache->get('product.pn.' . $productid . '.' . $catId . '.' . $collectionId . '.' . (int)$this->config->get('config_store_id'));
+			$pnproduct_data = $this->cache->get('product.pn.' . $product_id . '.' . $category_id . '.' . $collection_id . '.' . (int)$this->config->get('config_store_id'));
 			
 			if (!$pnproduct_data) {
 				
-				if (!$collectionId) {
-					$sql = "SELECT p2c.product_id FROM category_path cp
-					LEFT JOIN product_to_category p2c ON (cp.category_id = p2c.category_id) 
-					LEFT JOIN product_to_store p2s ON (p2s.product_id = p2c.product_id)";
-					$sql .= " LEFT JOIN product p ON (p.product_id = p2c.product_id) ";
-					$sql .= " WHERE p.status = '1' AND p.date_available <= '" . date(MYSQL_NOW_DATE_FORMAT) . "' AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
-					$sql .= " AND cp.path_id = '" . (int)$catId . " '";
-					$sql .= " ORDER BY p2c.product_id ASC";
-					} else {
-					$sql = "SELECT p.product_id FROM product p LEFT JOIN product_to_store p2s ON (p2s.product_id = p.product_id)";
-					$sql .= " WHERE p.status = '1' AND p.date_available <= '" . date(MYSQL_NOW_DATE_FORMAT) . "' AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
-					$sql .= " AND collection_id = '" . (int)$collectionId . " '";
+				if ($collection_id) {
+					$sql = "SELECT p.product_id FROM product p ";
+					if (!$this->config->get('config_single_store_enable')){
+						$sql .= " LEFT JOIN product_to_store p2s ON (p2s.product_id = p.product_id)";
+					}
+
+					$sql .= " WHERE p.status = '1' AND p.date_available <= '" . date(MYSQL_NOW_DATE_FORMAT) . "'";
+
+					if (!$this->config->get('config_single_store_enable')){
+						$sql .= " AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+					}
+
+					$sql .= " AND collection_id = '" . (int)$collection_id . " '";
 					$sql .= " ORDER BY product_id ASC";
+
+					} else {
+
+					$sql = "SELECT p2c.product_id FROM category_path cp
+					LEFT JOIN product_to_category p2c ON (cp.category_id = p2c.category_id) ";
+
+					if (!$this->config->get('config_single_store_enable')){
+						$sql .= " LEFT JOIN product_to_store p2s ON (p2s.product_id = p2c.product_id)";
+					}
+
+					$sql .= " LEFT JOIN product p ON (p.product_id = p2c.product_id) ";
+					$sql .= " WHERE p.status = '1' AND p.date_available <= '" . date(MYSQL_NOW_DATE_FORMAT) . "' ";
+
+					if (!$this->config->get('config_single_store_enable')){
+						$sql .= " AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+					}
+					
+					$sql .= " AND cp.path_id = '" . (int)$category_id . " '";
+					$sql .= " ORDER BY p2c.product_id ASC";
 				}
+
 				$query = $this->db->query($sql);
 				
 				$q = [];
@@ -1772,7 +1861,7 @@
 				
 				if (count($q) > 1) {
 					$count = count($q);
-					$key = array_search($productid, $q);
+					$key = array_search($product_id, $q);
 					
 					if ($key == $count - 1) {
 						$next = $q[0];
@@ -1785,7 +1874,7 @@
 						$prev = $q[$key - 1];
 					}
 					} elseif (count($q) == 1) {
-					$key = array_search($productid, $q);
+					$key = array_search($product_id, $q);
 					$prev = $q[$key];
 					$next = $q[$key];
 				}
@@ -1795,7 +1884,7 @@
 				'prev' => $this->getProduct($prev)
 				);
 				
-				$this->cache->set('product.pn.' . $productid . '.' . $catId . '.' . $collectionId . '.' . (int)$this->config->get('config_store_id'),
+				$this->cache->set('product.pn.' . $product_id . '.' . $category_id . '.' . $collection_id . '.' . (int)$this->config->get('config_store_id'),
 				$pnproduct_data);
 				
 			}
@@ -2343,9 +2432,19 @@
 				$sql .= " FROM product p";
 			}
 			
-			$sql .= " LEFT JOIN product_description pd ON (p.product_id = pd.product_id) LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+			$sql .= " LEFT JOIN product_description pd ON (p.product_id = pd.product_id) ";
+
+			if (!$this->config->get('config_single_store_enable')){
+				$sql .= " LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) ";
+			}
 			
-			if ($data['no_child']) {
+			$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND p.status = '1' AND p.date_available <= NOW() ";
+
+			if (!$this->config->get('config_single_store_enable')){
+				$sql .= " AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+			}
+			
+			if ($this->config->get('config_option_products_enable') && $data['no_child']) {
 				$sql .= " AND p.is_option_with_id = '0' ";
 			}
 
@@ -2613,11 +2712,21 @@
 		
 		public function getProductMarkdowns($product_id) {
 			$product_markdown_data = [];
+
+			$sql = "SELECT * FROM product p ";
+
+			if (!$this->config->get('config_single_store_enable')){
+				$sql .= " LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id)";
+			}
+
+			$sql .= " WHERE p.markdown_product_id = '" . (int)$product_id . "' 
+			AND p.status = 1 ";
+
+			if (!$this->config->get('config_single_store_enable')){
+				$sql .= " AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
+			}
 			
-			$query = $this->db->query("SELECT * FROM product p
-			LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
-			WHERE p.markdown_product_id = '" . (int)$product_id . "' 
-			AND p.status = 1 AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'");
+			$query = $this->db->query($sql);
 			
 			foreach ($query->rows as $result) {
 				$product_markdown_data[$result['product_id']] = $this->getProduct($result['product_id']);
@@ -2917,7 +3026,7 @@
 				$sql .= " AND p.stock_status_id NOT IN (" . (int)$this->config->get('config_not_in_stock_status_id') . ',' . (int)$this->config->get('config_partly_in_stock_status_id') . ")";
 			}
 			
-			if ($data['no_child']) {
+			if ($this->config->get('config_option_products_enable') && $data['no_child']) {
 				$sql .= " AND p.is_option_with_id = '0' ";
 			}
 			
