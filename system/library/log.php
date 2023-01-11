@@ -67,7 +67,7 @@
 					}
 				}
 
-				if (!is_cli()) { print '</pre>'; }
+				if (!is_cli()) { print '</pre>'; } else { print PHP_EOL; }
 			}
 			
 		}
