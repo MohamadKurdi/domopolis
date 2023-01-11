@@ -2060,72 +2060,73 @@ class ControllerProductProduct extends Controller
                             $collection_id = $this->request->get['collection_id'];
                         }
 
-                        $result = $this->model_catalog_product->getPrevNextProduct($product_id, $category_id, $collection_id);
+                        
+                        // $result = $this->model_catalog_product->getPrevNextProduct($product_id, $category_id, $collection_id);
 
-                        if (isset($this->request->get['path'])) {
-                            $this->data['prev_product'] = array(
-                                'product_id' => $result['prev']['product_id'],
-                                'name'       => $result['prev']['name'],
-                                'href'       => $this->url->link(
-                                    'product/product',
-                                    'path=' . $this->request->get['path'] . '&product_id=' . $result['prev']['product_id']
-                                ),
-                                'thumb'      => $this->model_tool_image->resize($result['prev']['image'], 100, 100)
-                            );
+                        // if (isset($this->request->get['path'])) {
+                        //     $this->data['prev_product'] = array(
+                        //         'product_id' => $result['prev']['product_id'],
+                        //         'name'       => $result['prev']['name'],
+                        //         'href'       => $this->url->link(
+                        //             'product/product',
+                        //             'path=' . $this->request->get['path'] . '&product_id=' . $result['prev']['product_id']
+                        //         ),
+                        //         'thumb'      => $this->model_tool_image->resize($result['prev']['image'], 100, 100)
+                        //     );
 
-                            $this->data['next_product'] = array(
-                                'product_id' => $result['next']['product_id'],
-                                'name'       => $result['next']['name'],
-                                'href'       => $this->url->link(
-                                    'product/product',
-                                    'path=' . $this->request->get['path'] . '&product_id=' . $result['next']['product_id']
-                                ),
-                                'thumb'      => $this->model_tool_image->resize($result['next']['image'], 100, 100)
-                            );
-                        } elseif ($collection_id) {
-                            $this->data['prev_product'] = array(
-                                'product_id' => $result['prev']['product_id'],
-                                'name'       => $result['prev']['name'],
-                                'href'       => $this->url->link(
-                                    'product/product',
-                                    'collection_id=' . $collection_id . '&product_id=' . $result['prev']['product_id']
-                                ),
-                                'thumb'      => $this->model_tool_image->resize($result['prev']['image'], 100, 100)
-                            );
+                        //     $this->data['next_product'] = array(
+                        //         'product_id' => $result['next']['product_id'],
+                        //         'name'       => $result['next']['name'],
+                        //         'href'       => $this->url->link(
+                        //             'product/product',
+                        //             'path=' . $this->request->get['path'] . '&product_id=' . $result['next']['product_id']
+                        //         ),
+                        //         'thumb'      => $this->model_tool_image->resize($result['next']['image'], 100, 100)
+                        //     );
+                        // } elseif ($collection_id) {
+                        //     $this->data['prev_product'] = array(
+                        //         'product_id' => $result['prev']['product_id'],
+                        //         'name'       => $result['prev']['name'],
+                        //         'href'       => $this->url->link(
+                        //             'product/product',
+                        //             'collection_id=' . $collection_id . '&product_id=' . $result['prev']['product_id']
+                        //         ),
+                        //         'thumb'      => $this->model_tool_image->resize($result['prev']['image'], 100, 100)
+                        //     );
 
-                            $this->data['next_product'] = array(
-                                'product_id' => $result['next']['product_id'],
-                                'name'       => $result['next']['name'],
-                                'href'       => $this->url->link(
-                                    'product/product',
-                                    'collection_id=' . $this->request->get['collection_id'] . '&product_id=' . $result['next']['product_id']
-                                ),
-                                'thumb'      => $this->model_tool_image->resize($result['next']['image'], 100, 100)
-                            );
-                        } else {
-                            $this->data['prev_product'] = array(
-                                'product_id' => $result['prev']['product_id'],
-                                'name'       => $result['prev']['name'],
-                                'href'       => $this->url->link(
-                                    'product/product',
-                                    'product_id=' . $result['prev']['product_id']
-                                ),
-                                'thumb'      => $this->model_tool_image->resize($result['prev']['image'], 100, 100)
-                            );
+                        //     $this->data['next_product'] = array(
+                        //         'product_id' => $result['next']['product_id'],
+                        //         'name'       => $result['next']['name'],
+                        //         'href'       => $this->url->link(
+                        //             'product/product',
+                        //             'collection_id=' . $this->request->get['collection_id'] . '&product_id=' . $result['next']['product_id']
+                        //         ),
+                        //         'thumb'      => $this->model_tool_image->resize($result['next']['image'], 100, 100)
+                        //     );
+                        // } else {
+                        //     $this->data['prev_product'] = array(
+                        //         'product_id' => $result['prev']['product_id'],
+                        //         'name'       => $result['prev']['name'],
+                        //         'href'       => $this->url->link(
+                        //             'product/product',
+                        //             'product_id=' . $result['prev']['product_id']
+                        //         ),
+                        //         'thumb'      => $this->model_tool_image->resize($result['prev']['image'], 100, 100)
+                        //     );
 
-                            $this->data['next_product'] = array(
-                                'product_id' => $result['next']['product_id'],
-                                'name'       => $result['next']['name'],
-                                'href'       => $this->url->link(
-                                    'product/product',
-                                    'product_id=' . $result['next']['product_id']
-                                ),
-                                'thumb'      => $this->model_tool_image->resize($result['next']['image'], 100, 100)
-                            );
-                        }
+                        //     $this->data['next_product'] = array(
+                        //         'product_id' => $result['next']['product_id'],
+                        //         'name'       => $result['next']['name'],
+                        //         'href'       => $this->url->link(
+                        //             'product/product',
+                        //             'product_id=' . $result['next']['product_id']
+                        //         ),
+                        //         'thumb'      => $this->model_tool_image->resize($result['next']['image'], 100, 100)
+                        //     );
+                        // }
 
-                        $this->document->addOpenGraph('see_also', $this->data['next_product']['href']);
-                        $this->document->addOpenGraph('see_also', $this->data['prev_product']['href']);
+                        // $this->document->addOpenGraph('see_also', $this->data['next_product']['href']);
+                        // $this->document->addOpenGraph('see_also', $this->data['prev_product']['href']);
 
 
                         $this->data['tags'] = array();
