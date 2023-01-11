@@ -1358,7 +1358,7 @@
 		}
 		
 		public function getProductDeName($product_id){			
-			$query = $this->db->query("SELECT name FROM product_description WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')] . "' LIMIT 1");
+			$query = $this->db->query("SELECT name FROM product_description WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$this->registry->get('languages_all')[$this->config->get('config_de_language')] . "' LIMIT 1");
 			
 			if (isset($query->row['name'])){
 				$name = $query->row['name'];			

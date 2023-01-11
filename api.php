@@ -200,7 +200,7 @@ $query = $registry->get('db')->query("SELECT * FROM `language` WHERE status = '1
 
 foreach ($query->rows as $result) {
     $languages_all[$result['code']] = $result;  
-    $languages[$result['code']] = $result;
+    $languages[$result['code']]     = $result;
     
     if ($result['front']){
         $languages_front[$result['code']] = $result;
@@ -210,6 +210,7 @@ foreach ($query->rows as $result) {
 
     //ALL LANGUAGES TO REGISTRY
 $registry->set('languages', $languages);
+$registry->set('languages_all', $languages_all);
 $registry->set('languages_front', $languages_front);
 $registry->set('languages_id_code_mapping', $languages_id_code_mapping);
 $registry->get('config')->set('config_supported_languages', [$registry->get('config')->get('config_language'), $registry->get('config')->get('config_second_language')]);
