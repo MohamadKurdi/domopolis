@@ -25,17 +25,39 @@
 			$this->rebuildAllCaches();
 		}			
 
-		private function getKeyword($query){
-			//This will be mapping to query-keyword cache, which uses a lot of memory
+		private function getKeyword($query){			
+			$exploded_query = explode('=', $query);
+			if ($this->config->get('config_seo_url_from_id') && $this->registry->has('short_uri_queries') && count($exploded_query) == '2' && !empty($this->registry->get('short_uri_queries')[$exploded_query[0]])){
+				return $this->registry->get('short_uri_queries')[$exploded_query[0]] . (int)$exploded_query[1];				
+			}
 
+			//FALLBACK TO CACHE
+			if (isset($this->cache_data['queries'][$query])){
+				return $this->cache_data['queries'][$query];
+			}
+
+			return false;
 		}
 
 		private function getQuery($keyword){
-			//This will be mapping to query-keyword cache, which uses a lot of memory
+			if ($this->config->get('config_seo_url_from_id') && $this->registry->get('short_uri_keywords') && preg_match('/^[a-z]{1,2}[0-9]+$/', $keyword)){
+				preg_match('/^[a-z]/', $keyword, $code);
+				preg_match('/[0-9]+$/', $keyword, $identifier);
+
+				if (count($code) == 1 && count($identifier) == 1 && !empty($this->registry->get('short_uri_keywords')[$code[0]])){
+					return $this->registry->get('short_uri_keywords')[$code[0]] . '=' . $identifier[0];
+				}
+			}
+
+			//FALLBACK TO CACHE
+			if (isset($this->cache_data['keywords'][$keyword])){
+				return $this->cache_data['keywords'][$keyword];
+			}
+
+			return false;
 		}
 		
-		private function checkIfUriISUnrouted($uri){
-			
+		private function checkIfUriISUnrouted($uri){			
 			if (stripos($uri, 'index.php?route=') !== false){
 				return true;
 			}
@@ -230,13 +252,16 @@
 				$route_ = $route = $this->request->get['_route_'];
 				unset($this->request->get['_route_']);
 				$parts = explode('/', trim(utf8_strtolower($route), '/'));	
-				$rows = array();
-				
-				
+				$rows = [];
+								
 				foreach ($parts as $keyword) {
-					if (isset($this->cache_data['keywords'][$keyword])) {
-						$rows[] = array('keyword' => $keyword, 'query' => $this->cache_data['keywords'][$keyword]);
+					if (($query_result = $this->getQuery($keyword)) !== false){
+						$rows[] = ['keyword' => $keyword, 'query' => $query_result];
 					}
+
+					// if (isset($this->cache_data['keywords'][$keyword])) {
+					// 	$rows[] = array('keyword' => $keyword, 'query' => $this->cache_data['keywords'][$keyword]);
+					// }
 				}								
 				
 				if (!empty($rows[0]) && !empty($rows[0]['query']) && $rows[0]['query'] == 'module/mega_filter/ajaxinfo'){
@@ -738,11 +763,16 @@
 			
 			$rows = array();
 			foreach($queries as $query) {										
-				$query = $this->mapQuery($query);								
-				if(isset($this->cache_data['queries'][$query])) {				
-					$query_keyword = array('query' => $query, 'keyword' => $this->cache_data['queries'][$query]);			
-					$rows[] = $query_keyword;
+				$query = $this->mapQuery($query);	
+
+				if (($keyword_result = $this->getKeyword($query)) !== false){
+					$rows[] = ['query' => $query, 'keyword' => $keyword_result];
 				}
+
+				// if(isset($this->cache_data['queries'][$query])) {				
+				// 	$query_keyword = array('query' => $query, 'keyword' => $this->cache_data['queries'][$query]);			
+				// 	$rows[] = $query_keyword;
+				// }
 			}
 			
 			if(count($rows) == count($queries)) {
@@ -759,8 +789,7 @@
 			
 			$this->load->model('setting/setting');
 			$this->load->model('localisation/language');
-			$config_language = $this->getLanguageCodeForStoreID($this->config->get('config_store_id'));
-			
+			$config_language = $this->getLanguageCodeForStoreID($this->config->get('config_store_id'));			
 			
 			if ($seo_url == ''){
 				
@@ -1031,7 +1060,7 @@
 				$seo = str_replace('&amp;', '&', $this->url->link($this->request->get['route'], $this->getQueryString(array('route')), 'NONSSL'));
 			}
 			
-			if ((php_sapi_name()!=="cli") && (rawurldecode($url) != rawurldecode($seo)) && strpos($url,'mfp=')===false && (strpos($url, '/search')===false)) {	  	  										
+			if ((php_sapi_name()!=="cli") && (rawurldecode($url) != rawurldecode($seo)) && strpos($url,'mfp=')===false && (strpos($url, '/search')===false)) {	 
 				header($this->request->server['SERVER_PROTOCOL'] . ' 301 Moved Permanently');
 				$this->response->redirect($seo, 301);
 			}
