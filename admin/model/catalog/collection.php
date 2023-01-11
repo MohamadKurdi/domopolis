@@ -7,8 +7,7 @@
 			return $query->rows;
 		}
 		
-		public function getCollectionById($collection_id){
-			
+		public function getCollectionById($collection_id){			
 			if ($collection_id > 0){
 				
 				$query = $this->db->query("SELECT * FROM collection oc LEFT JOIN collection_description ocd ON (oc.collection_id = ocd.collection_id) WHERE ocd.language_id = " . (int)$this->config->get('config_language_id') . " AND oc.collection_id = " . (int)$collection_id . " LIMIT 1");
@@ -40,7 +39,7 @@
 			
 			if (isset($data['collection_image'])) {
 				foreach ($data['collection_image'] as $collection_image) {				
-					$this->db->query("INSERT INTO " . DB_PREFIX . "collection_image SET collection_id = '" . (int)$collection_id . "', image = '" . $this->db->escape(html_entity_decode($collection_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$collection_image['sort_order'] . "'");
+					$this->db->query("INSERT INTO collection_image SET collection_id = '" . (int)$collection_id . "', image = '" . $this->db->escape(html_entity_decode($collection_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$collection_image['sort_order'] . "'");
 				}
 			}
 			
@@ -54,12 +53,14 @@
 				}
 			}
 			
-			$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'collection_id=" . (int)$collection_id. "'");
-			
-			
-			if ($data['keyword']) {
-				foreach ($data['keyword'] as $language_id => $keyword) {
-					if ($keyword) {$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'collection_id=" . (int)$collection_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+			if ($this->url->checkIfGenerate('collection_id')){
+				$this->db->query("DELETE FROM url_alias WHERE query = 'collection_id=" . (int)$collection_id. "'");
+
+
+				if ($data['keyword']) {
+					foreach ($data['keyword'] as $language_id => $keyword) {
+						if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'collection_id=" . (int)$collection_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					}
 				}
 			}
 			
@@ -91,7 +92,7 @@
 			$this->db->query("DELETE FROM collection_image WHERE collection_id = '" . (int)$collection_id . "'");
 			if (isset($data['collection_image'])) {
 				foreach ($data['collection_image'] as $collection_image) {				
-					$this->db->query("INSERT INTO " . DB_PREFIX . "collection_image SET collection_id = '" . (int)$collection_id . "', image = '" . $this->db->escape(html_entity_decode($collection_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$collection_image['sort_order'] . "'");
+					$this->db->query("INSERT INTO collection_image SET collection_id = '" . (int)$collection_id . "', image = '" . $this->db->escape(html_entity_decode($collection_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$collection_image['sort_order'] . "'");
 				}
 			}
 			
@@ -107,12 +108,14 @@
 				}
 			}
 			
-			$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'collection_id=" . (int)$collection_id. "'");
-			
-			if ($data['keyword']) {
-				foreach ($data['keyword'] as $language_id => $keyword) {
-					if ($keyword) {
-						$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'collection_id=" . (int)$collection_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);
+			if ($this->url->checkIfGenerate('collection_id')){
+				$this->db->query("DELETE FROM url_alias WHERE query = 'collection_id=" . (int)$collection_id. "'");
+				
+				if ($data['keyword']) {
+					foreach ($data['keyword'] as $language_id => $keyword) {
+						if ($keyword) {
+							$this->db->query("INSERT INTO url_alias SET query = 'collection_id=" . (int)$collection_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);
+						}
 					}
 				}
 			}
@@ -128,7 +131,7 @@
 		}
 		
 		public function getCollectionImages($collection_id) {
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "collection_image WHERE collection_id = '" . (int)$collection_id . "'");
+			$query = $this->db->query("SELECT * FROM collection_image WHERE collection_id = '" . (int)$collection_id . "'");
 			
 			return $query->rows;
 		}
@@ -196,8 +199,12 @@
 		
 		public function getKeyWords($collection_id) {
 			$keywords = array();
+
+			if ($keywords = $this->url->linkfromid('collection_id', $collection_id)){
+				return $keywords;
+			}
 			
-			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE query = 'collection_id=" . (int)$collection_id . "'");
+			$query = $this->db->query("SELECT * FROM url_alias WHERE query = 'collection_id=" . (int)$collection_id . "'");
 			
 			foreach ($query->rows as $result) {
 				$keywords[$result['language_id']] = $result['keyword'];					

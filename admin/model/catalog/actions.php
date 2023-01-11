@@ -1,8 +1,7 @@
 <?php
 	class ModelCatalogActions extends Model {
 		
-		public function addActions($data) {
-			/* Format date & time */
+		public function addActions($data) {			
 			$data['date_start'] = strtotime( preg_replace('|^([0-9]{2})-([0-9]{2})-([0-9]{4})|', "\\3-\\2-\\1", $data['date_start']) . ':00' );
 			$data['date_end'] = strtotime( preg_replace('|^([0-9]{2})-([0-9]{2})-([0-9]{4})|', "\\3-\\2-\\1", $data['date_end']). ':00' );
 			
@@ -68,16 +67,16 @@
 				}		
 			}
 			
-			if ($data['keyword']) {
-				
-				$this->db->query("DELETE FROM `url_alias` WHERE `query` = 'actions_id=" . (int)$actions_id. "'");
-				
-				foreach ($data['keyword'] as $language_id => $keyword) {
-					if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'actions_id=" . (int)$actions_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+			if ($this->url->checkIfGenerate('actions_id')){
+				if ($data['keyword']) {				
+					$this->db->query("DELETE FROM `url_alias` WHERE `query` = 'actions_id=" . (int)$actions_id. "'");
+
+					foreach ($data['keyword'] as $language_id => $keyword) {
+						if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'actions_id=" . (int)$actions_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					}
 				}
 			}
-			
-			$this->cache->delete('actions_content');
+						
 		}
 		
 		public function getActionCategories($actions_id) {
@@ -130,8 +129,7 @@
 				`content` = '" . $this->db->escape($value['content']) . "'");
 			}
 		}
-		public function editActions($actions_id, $data) {
-			/* Format date & time */
+		public function editActions($actions_id, $data) {			
 			$data['date_start'] = strtotime( preg_replace('|^([0-9]{2})-([0-9]{2})-([0-9]{4})|', "\\3-\\2-\\1", $data['date_start']) . ':00' );
 			$data['date_end'] = strtotime( preg_replace('|^([0-9]{2})-([0-9]{2})-([0-9]{4})|', "\\3-\\2-\\1", $data['date_end']) . ':00' );
 			
@@ -200,20 +198,24 @@
 				}		
 			}
 			
-			if ($data['keyword']) {
-				
-				$this->db->query("DELETE FROM `url_alias` WHERE `query` = 'actions_id=" . (int)$actions_id. "'");
-				
-				foreach ($data['keyword'] as $language_id => $keyword) {
-					if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'actions_id=" . (int)$actions_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+			if ($this->url->checkIfGenerate('actions_id')){
+				if ($data['keyword']) {				
+					$this->db->query("DELETE FROM `url_alias` WHERE `query` = 'actions_id=" . (int)$actions_id. "'");
+
+					foreach ($data['keyword'] as $language_id => $keyword) {
+						if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'actions_id=" . (int)$actions_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					}
 				}
 			}
-			
-			$this->cache->delete('actions_content');
+						
 		}
 		
 		public function getKeyWords($actions_id) {
 			$keywords = array();
+
+			if ($keywords = $this->url->linkfromid('actions_id', $actions_id)){
+				return $keywords;
+			}
 			
 			$query = $this->db->query("SELECT * FROM url_alias WHERE query = 'actions_id=" . (int)$actions_id . "'");
 			

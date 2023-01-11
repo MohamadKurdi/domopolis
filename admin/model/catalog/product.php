@@ -354,9 +354,11 @@
 				}
 			}
 			
-			if ($data['keyword']) {
-				foreach ($data['keyword'] as $language_id => $keyword) {
-					if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+			if ($this->url->checkIfGenerate('product_id')){
+				if ($data['keyword']) {
+					foreach ($data['keyword'] as $language_id => $keyword) {
+						if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					}
 				}
 			}
 			
@@ -1057,12 +1059,14 @@
 					}
 				}
 			}
-			
-			$this->db->query("DELETE FROM url_alias WHERE query = 'product_id=" . (int)$product_id. "'");
-			
-			if ($data['keyword']) {
-				foreach ($data['keyword'] as $language_id => $keyword) {
-					if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+		
+			if ($this->url->checkIfGenerate('product_id')){	
+				$this->db->query("DELETE FROM url_alias WHERE query = 'product_id=" . (int)$product_id. "'");
+				
+				if ($data['keyword']) {
+					foreach ($data['keyword'] as $language_id => $keyword) {
+						if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'product_id=" . (int)$product_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					}
 				}
 			}
 			
@@ -1392,10 +1396,13 @@
 		}
 		
 		public function getKeyWords($product_id) {
-			$keywords = array();
-			
-			$query = $this->db->query("SELECT * FROM url_alias WHERE query = 'product_id=" . (int)$product_id . "'");
-			
+			$keywords = [];			
+
+			if ($keywords = $this->url->linkfromid('product_id', $product_id)){
+				return $keywords;
+			}
+
+			$query = $this->db->query("SELECT * FROM url_alias WHERE query = 'product_id=" . (int)$product_id . "'");			
 			foreach ($query->rows as $result) {
 				$keywords[$result['language_id']] = $result['keyword'];					
 			}

@@ -50,9 +50,11 @@
 				}
 			}
 			
-			if ($data['keyword']) {
-				foreach ($data['keyword'] as $language_id => $keyword) {
-					if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'manufacturer_id=" . (int)$manufacturer_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+			if ($this->url->checkIfGenerate('manufacturer_id')){
+				if ($data['keyword']) {
+					foreach ($data['keyword'] as $language_id => $keyword) {
+						if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'manufacturer_id=" . (int)$manufacturer_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					}
 				}
 			}
 			
@@ -195,11 +197,13 @@
 				
 			}
 			
-			$this->db->query("DELETE FROM url_alias WHERE query = 'manufacturer_id=" . (int)$manufacturer_id. "'");
-			
-			if ($data['keyword']) {
-				foreach ($data['keyword'] as $language_id => $keyword) {
-					if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'manufacturer_id=" . (int)$manufacturer_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+			if ($this->url->checkIfGenerate('manufacturer_id')){
+				$this->db->query("DELETE FROM url_alias WHERE query = 'manufacturer_id=" . (int)$manufacturer_id. "'");
+
+				if ($data['keyword']) {
+					foreach ($data['keyword'] as $language_id => $keyword) {
+						if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'manufacturer_id=" . (int)$manufacturer_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					}
 				}
 			}
 			
@@ -219,9 +223,7 @@
 			$this->db->query("DELETE FROM manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 
 			$this->load->model('kp/content');
-			$this->model_kp_content->addContent(['action' => 'delete', 'entity_type' => 'manufacturer', 'entity_id' => $manufacturer_id]);
-			
-			$this->cache->delete('manufacturer');
+			$this->model_kp_content->addContent(['action' => 'delete', 'entity_type' => 'manufacturer', 'entity_id' => $manufacturer_id]);					
 		}	
 		
 		public function getManufacturer($manufacturer_id) {
@@ -232,6 +234,11 @@
 		
 		public function getKeyWords($manufacturer_id) {
 			$keywords = array();
+
+			if ($keywords = $this->url->linkfromid('manufacturer_id', $manufacturer_id)){
+				return $keywords;
+			}
+
 			
 			$query = $this->db->query("SELECT * FROM url_alias WHERE query = 'manufacturer_id=" . (int)$manufacturer_id . "'");
 			
@@ -270,17 +277,17 @@
 				'seo_h1'    	 				=> $result['seo_h1'],
 				'alternate_name'    	 		=> $result['alternate_name'],
 				'products_title'    	 		=> $result['products_title'],
-				'products_meta_description'    	 	=> $result['products_meta_description'],
-				'collections_title'    	 			=> $result['collections_title'],
-				'collections_meta_description'    	 	=> $result['collections_meta_description'],
-				'categories_title'    	 			=> $result['categories_title'],
-				'categories_meta_description'    	 	=> $result['categories_meta_description'],
-				'articles_title'    	 	=> $result['articles_title'],
-				'articles_meta_description'    	 	=> $result['articles_meta_description'],
-				'newproducts_title'    	 	=> $result['newproducts_title'],
-				'newproducts_meta_description'    	 	=> $result['newproducts_meta_description'],
-				'special_title'    	 	=> $result['special_title'],
-				'special_meta_description'    	 	=> $result['special_meta_description']				
+				'products_meta_description'    	=> $result['products_meta_description'],
+				'collections_title'    	 		=> $result['collections_title'],
+				'collections_meta_description'  => $result['collections_meta_description'],
+				'categories_title'    	 		=> $result['categories_title'],
+				'categories_meta_description'   => $result['categories_meta_description'],
+				'articles_title'    	 		=> $result['articles_title'],
+				'articles_meta_description'    	=> $result['articles_meta_description'],
+				'newproducts_title'    	 		=> $result['newproducts_title'],
+				'newproducts_meta_description'  => $result['newproducts_meta_description'],
+				'special_title'    	 			=> $result['special_title'],
+				'special_meta_description'    	=> $result['special_meta_description']				
 				);
 			}
 			

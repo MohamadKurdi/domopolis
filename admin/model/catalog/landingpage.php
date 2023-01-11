@@ -23,9 +23,11 @@ class ModelCataloglandingpage extends Model {
 			}
 		}
 		
-		if ($data['keyword']) {
-			foreach ($data['keyword'] as $language_id => $keyword) {
-				if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'landingpage_id=" . (int)$landingpage_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+		if ($this->url->checkIfGenerate('landingpage_id')){
+			if ($data['keyword']) {
+				foreach ($data['keyword'] as $language_id => $keyword) {
+					if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'landingpage_id=" . (int)$landingpage_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+				}
 			}
 		}
 
@@ -62,11 +64,13 @@ class ModelCataloglandingpage extends Model {
 			}
 		}
 		
-		$this->db->query("DELETE FROM url_alias WHERE query = 'landingpage_id=" . (int)$landingpage_id. "'");
-		
-		if ($data['keyword']) {
-			foreach ($data['keyword'] as $language_id => $keyword) {
-				if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'landingpage_id=" . (int)$landingpage_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+		if ($this->url->checkIfGenerate('landingpage_id')){
+			$this->db->query("DELETE FROM url_alias WHERE query = 'landingpage_id=" . (int)$landingpage_id. "'");
+
+			if ($data['keyword']) {
+				foreach ($data['keyword'] as $language_id => $keyword) {
+					if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'landingpage_id=" . (int)$landingpage_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+				}
 			}
 		}
 		
@@ -95,6 +99,10 @@ class ModelCataloglandingpage extends Model {
 	
 	public function getKeyWords($landingpage_id) {
 		$keywords = array();
+
+		if ($keywords = $this->url->linkfromid('landingpage_id', $landingpage_id)){
+			return $keywords;
+		}
 		
 		$query = $this->db->query("SELECT * FROM url_alias WHERE query = 'landingpage_id=" . (int)$landingpage_id . "'");
 		

@@ -27,14 +27,14 @@
 				}
 			}
 			
-			
-			if ($data['keyword']) {
-				foreach ($data['keyword'] as $language_id => $keyword) {
-					if ($keyword) {$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'ncategory_id=" . (int)$ncategory_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+			if ($this->url->checkIfGenerate('ncategory_id')){
+				if ($data['keyword']) {
+					foreach ($data['keyword'] as $language_id => $keyword) {
+						if ($keyword) {$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'ncategory_id=" . (int)$ncategory_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					}
 				}
 			}
 			
-			$this->cache->delete('ncategory');
 		}
 		
 		public function editncategory($ncategory_id, $data) {
@@ -68,15 +68,15 @@
 				}
 			}
 			
-			$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'ncategory_id=" . (int)$ncategory_id. "'");
-			
-			if ($data['keyword']) {
-				foreach ($data['keyword'] as $language_id => $keyword) {
-					if ($keyword) {$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'ncategory_id=" . (int)$ncategory_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+			if ($this->url->checkIfGenerate('ncategory_id')){
+				$this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'ncategory_id=" . (int)$ncategory_id. "'");
+
+				if ($data['keyword']) {
+					foreach ($data['keyword'] as $language_id => $keyword) {
+						if ($keyword) {$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias SET query = 'ncategory_id=" . (int)$ncategory_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					}
 				}
 			}
-			
-			$this->cache->delete('ncategory');
 		}
 		
 		public function deletencategory($ncategory_id) {
@@ -103,6 +103,10 @@
 		
 		public function getKeyWords($ncategory_id) {
 			$keywords = array();
+
+			if ($keywords = $this->url->linkfromid('ncategory_id', $ncategory_id)){
+				return $keywords;
+			}
 			
 			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE query = 'ncategory_id=" . (int)$ncategory_id . "'");
 			

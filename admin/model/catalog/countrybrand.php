@@ -77,17 +77,18 @@
 				}
 			}
 			
-			$this->db->query("DELETE FROM url_alias WHERE query = 'countrybrand_id=" . (int)$countrybrand_id. "'");
-			
-			
-			if ($data['keyword']) {
-				foreach ($data['keyword'] as $language_id => $keyword) {
-					if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'countrybrand_id=" . (int)$countrybrand_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+			if ($this->url->checkIfGenerate('countrybrand_id')){
+				$this->db->query("DELETE FROM url_alias WHERE query = 'countrybrand_id=" . (int)$countrybrand_id. "'");
+
+				if ($data['keyword']) {
+					foreach ($data['keyword'] as $language_id => $keyword) {
+						if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'countrybrand_id=" . (int)$countrybrand_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
+					}
 				}
 			}
 			
 			$this->load->model('kp/reward');
-			$this->model_kp_reward->editReward($countrybrand_id, 'co', $data);
+			$this->model_kp_reward->editReward($countrybrand_id, 'cb', $data);
 			
 			return $countrybrand_id;
 		}
@@ -129,19 +130,20 @@
 				}
 			}
 			
-			$this->db->query("DELETE FROM url_alias WHERE query = 'countrybrand_id=" . (int)$countrybrand_id. "'");
-			
-			if ($data['keyword']) {
-				foreach ($data['keyword'] as $language_id => $keyword) {
-					if ($keyword) {
-						$this->db->query("INSERT INTO url_alias SET query = 'countrybrand_id=" . (int)$countrybrand_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);
+			if ($this->url->checkIfGenerate('countrybrand_id')){
+				$this->db->query("DELETE FROM url_alias WHERE query = 'countrybrand_id=" . (int)$countrybrand_id. "'");
+
+				if ($data['keyword']) {
+					foreach ($data['keyword'] as $language_id => $keyword) {
+						if ($keyword) {
+							$this->db->query("INSERT INTO url_alias SET query = 'countrybrand_id=" . (int)$countrybrand_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);
+						}
 					}
 				}
 			}
-			
-			
+						
 			$this->load->model('kp/reward');
-			$this->model_kp_reward->editReward($countrybrand_id, 'co', $data);
+			$this->model_kp_reward->editReward($countrybrand_id, 'cb', $data);
 		}
 		
 		public function getCountrybrandImages($countrybrand_id) {
@@ -154,9 +156,7 @@
 			$this->db->query("DELETE FROM countrybrand WHERE countrybrand_id = '" . (int)$countrybrand_id . "'");
 			$this->db->query("DELETE FROM countrybrand_to_store WHERE countrybrand_id = '" . (int)$countrybrand_id . "'");
 			$this->db->query("DELETE FROM url_alias WHERE query = 'countrybrand_id=" . (int)$countrybrand_id . "'");
-			$this->db->query("DELETE FROM countrybrand_description WHERE countrybrand_id = '" . (int)$countrybrand_id . "'");	
-			
-			$this->cache->delete('countrybrand');
+			$this->db->query("DELETE FROM countrybrand_description WHERE countrybrand_id = '" . (int)$countrybrand_id . "'");					
 		}	
 		
 		
@@ -206,6 +206,10 @@
 		
 		public function getKeyWords($countrybrand_id) {
 			$keywords = array();
+
+			if ($keywords = $this->url->linkfromid('countrybrand_id', $countrybrand_id)){
+				return $keywords;
+			}
 			
 			$query = $this->db->query("SELECT * FROM url_alias WHERE query = 'countrybrand_id=" . (int)$countrybrand_id . "'");
 			
