@@ -134,8 +134,7 @@ class ModelLocalisationCurrency extends Model {
 		$this->currency->updateCryptoPairs();			
 
 		$data = [];			
-		$current_currencies = $this->currency->getCurrencies();
-		$current_values = [];
+		$current_currencies = $this->currency->getCurrencies();		
 		
 		if ($fixerio = $this->currency->getFixerIoRates()) {								
 			foreach ($fixerio as $currency_code => $rate){					

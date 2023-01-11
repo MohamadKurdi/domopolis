@@ -597,8 +597,14 @@
 			return false;
 		}
 
-		public function recalculate($code, $value_real){								
+		public function recalculate($code, $value_real){			
+
 			if ($currency = $this->getCurrency($code)){
+				$currency['value'] 			= (float)$currency['value'];
+				$currency['old_value'] 		= (float)$currency['old_value'];
+				$currency['old_value_real'] = (float)$currency['old_value_real'];
+				$currency['value_minimal'] 	= (float)$currency['value_minimal'];
+
 				$result = [
 					'diff' 		=> false,
 					'new_value' => $currency['value']
@@ -643,6 +649,11 @@
 						$new_value = $currency['value_minimal'];
 						echoLine('[Currency::recalculate] New value less than min for ' . $code . ' overloading:' . $new_value);
 					}
+				}				
+
+				if ($new_value != $currency['value_minimal'] && abs($new_value - $currency['value']) < ($currency['value']/100)*(int)$this->config->get('config_currency_auto_threshold')){					
+					$new_value = $currency['value'];
+					echoLine('[Currency::recalculate] New value not in threshold ' . $this->config->get('config_currency_auto_threshold') . ' overloading:' . $currency['value']);
 				}
 
 				$result['new_value'] = $new_value;
