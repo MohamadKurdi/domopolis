@@ -38,12 +38,17 @@ class YandexTranslator
 	}
 
 	public function translate($text, $from, $to, $returnString = false){
+		$text = trim($text);
 
 		$result = false;
 
 		if (!mb_strlen($text)){
 			return '';
-		}		
+		}
+
+		if (is_numeric($text)){
+			return $text;
+		}			
 
 		if ($this->enableCheck){
 			if ($this->getHourlyAmount() >= ($this->hourLimit*0.95)){
