@@ -278,6 +278,21 @@
 							
 								<td style="width:18%">
 									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Single store mode</span></p>
+										<select name="config_single_store_enable">
+											<?php if ($config_single_store_enable) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+										<br />
+										<span class="help">отключает привязки многих сущностей к табличкам *_to_store. включать только в случае 1 база = 1 магазин</span>
+									</div>
+
+									<div>
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика цен B2B</span></p>
 										<select name="config_group_price_enable">
 											<?php if ($config_group_price_enable) { ?>
@@ -3385,6 +3400,7 @@
 												<option value="0"  selected="selected">Отключить</option>
 											<? } ?>
 										</select>
+										<span class="help">Настройка только для совместимости, никогда не отключать</span>
 									</td>
 									<td width="20%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика ЧПУ</span></p>
@@ -3397,6 +3413,7 @@
 												<?php } ?>
 											<?php } ?>
 										</select>
+										<span class="help">Настройка только для совместимости, нужно использовать seo_pro</span>
 									</td>
 
 									<td width="20%">
@@ -3428,13 +3445,27 @@
 									</td>
 
 									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">ЧПУ товаров с категориями</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Постфикс ЧПУ</span></p>
 										<input type="text" name="config_seo_url_postfix" value="<?php echo $config_seo_url_postfix; ?>" size="10" />
 										<span class="help">Например .html, (только для seo_pro)</span>
 									</td>
 								</tr>
 
 								<tr>
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Генерировать ЧПУ (Highload опция)</span></p>
+										<select name="config_seo_url_do_generate">
+											<?php if ($config_seo_url_do_generate) { ?>
+												<option value="1" selected="selected">Генерировать</option>
+												<option value="0">Не генерировать</option>
+											<?php } else { ?>													
+												<option value="1">Генерировать</option>
+												<option value="0"  selected="selected">Не генерировать</option>
+											<? } ?>
+										</select>
+										<span class="help">Только для ЧПУ = идентификатор, позволяет значительно разгрузить базу. используется конфиг shorturlmap.json</span>										
+									</td>
+
 									<td width="20%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Индексировать пагинацию категорий</span></p>
 										<select name="config_index_category_pages">
@@ -3445,7 +3476,8 @@
 												<option value="1">Включить</option>
 												<option value="0"  selected="selected">Отключить</option>
 											<? } ?>
-										</select>										
+										</select>
+										<span class="help">Если выключено, то page>1 закрыто noindex</span>										
 									</td>
 
 									<td width="20%">
@@ -3458,7 +3490,8 @@
 												<option value="1">Включить</option>
 												<option value="0"  selected="selected">Отключить</option>
 											<? } ?>
-										</select>										
+										</select>
+										<span class="help">Если выключено, то page>1 закрыто noindex</span>										
 									</td>
 
 									<td width="20%">
@@ -3471,7 +3504,8 @@
 												<option value="1">Включить</option>
 												<option value="0"  selected="selected">Отключить</option>
 											<? } ?>
-										</select>										
+										</select>
+										<span class="help">Настройка только для совместимости, либо для магазина в разработке</span>										
 									</td>
 
 								</tr>

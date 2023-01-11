@@ -574,6 +574,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_warmode_enable'] = $this->config->get('config_warmode_enable');
         }
 
+        if (isset($this->request->post['config_single_store_enable'])) {
+            $this->data['config_single_store_enable'] = $this->request->post['config_single_store_enable'];
+        } else {
+            $this->data['config_single_store_enable'] = $this->config->get('config_single_store_enable');
+        }
+
         if (isset($this->request->post['config_no_zeroprice'])) {
             $this->data['config_no_zeroprice'] = $this->request->post['config_no_zeroprice'];
         } else {
@@ -2485,6 +2491,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_seo_url_from_id'] = $this->request->post['config_seo_url_from_id'];
         } else {
             $this->data['config_seo_url_from_id'] = $this->config->get('config_seo_url_from_id');
+        }
+
+        if (isset($this->request->post['config_seo_url_do_generate'])) {
+            $this->data['config_seo_url_do_generate'] = $this->request->post['config_seo_url_do_not_generate'];
+        } else {
+            $this->data['config_seo_url_do_generate'] = $this->config->get('config_seo_url_do_generate');
         }
         
         if (isset($this->request->post['config_file_extension_allowed'])) {
