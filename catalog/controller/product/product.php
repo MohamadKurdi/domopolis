@@ -833,7 +833,7 @@ class ControllerProductProduct extends Controller
                 $this->data['tab_related'] = $this->language->get('tab_related');
                 
                 $this->data['product_id']   = (int)$this->request->get['product_id'];
-                $this->data['manufacturer'] = $manufacturer_info?(trim($product_info['manufacturer'])):'';
+                $this->data['manufacturer'] = !empty($manufacturer_info)?(trim($product_info['manufacturer'])):'';
                 $this->data['model']        = $product_info['model'];
                 $this->data['sku']          = $product_info['sku'];
                 $this->data['points']       = $this->currency->formatBonus($product_info['reward'], true);
