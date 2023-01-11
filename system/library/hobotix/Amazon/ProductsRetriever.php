@@ -1202,7 +1202,7 @@ class ProductsRetriever extends RainforestRetriever
 			$this->model_product_edit->addProductNames($product_id, $product_name_data);
 		}
 
-		if ($this->config->get('config_seo_url_from_id')){
+		if ($this->config->get('config_seo_url_from_id') && $this->registry->get('url')->checkIfGenerate('product_id')){
 			$this->db->query("DELETE FROM url_alias WHERE query = '" . $this->db->escape('product_id=' . $product_id) . "'");
 
 			foreach ($this->registry->get('languages') as $language_code => $language) {
