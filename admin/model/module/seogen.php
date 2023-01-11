@@ -112,7 +112,6 @@
 			$counter 	= 1;
 
 			foreach($products as $product) {
-
 				echoLine('[SEOGEN CLI] ' . $counter . '/' . $total .' '. $product['product_id'] . ',' . $product['name']);
 
 				$this->generateProduct($product, $data);
@@ -259,17 +258,17 @@
 		public function generateProduct($product, $data, $return = false) {
 			
 			$tags = array(
-			'[product_name]' => $product['name'],
-			'[product_id]' => $product['product_id'],
+			'[product_name]' 		=> $product['name'],
+			'[product_id]' 			=> $product['product_id'],
 			'[product_description]' => strip_tags(html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8')),
-			'[model_name]' => $product['model'],
-			'[manufacturer_name]' => $product['manufacturer']?$product['manufacturer'].'.':'',
-			'[category_name]' => $product['category'],
-			'[location]' => $product['location'],
-			'[sku]' => $product['sku'],
-			'[madeof]' => $product['madeof']?$product['madeof'].', ':'',
-			'[type]' => $product['type']?$product['type']:'',
-			'[price]' => $this->currency->format($product['price']),
+			'[model_name]' 			=> $product['model'],
+			'[manufacturer_name]' 	=> $product['manufacturer']?$product['manufacturer'].'.':'',
+			'[category_name]' 		=> $product['category'],
+			'[location]' 			=> $product['location'],
+			'[sku]' 				=> $product['sku'],
+			'[madeof]' 				=> $product['madeof']?$product['madeof'].', ':'',
+			'[type]' 				=> $product['type']?$product['type']:'',
+			'[price]' 				=> $this->currency->format($product['price']),
 			);
 			
 			if (isset($data['language_id'])){
