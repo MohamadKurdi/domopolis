@@ -396,7 +396,6 @@ class InfoUpdater extends RainforestRetriever
 						$this->weightCache[$variant] = $row;
 					}
 				}
-
 			}
 		}
 
