@@ -364,8 +364,20 @@ class OffersParser
 			$this->Suppliers->addSupplier($rfOffer->getSellerName());
 
 			if ($supplier = $this->Suppliers->getSupplier($rfOffer->getSellerName())){
-				//Не обрабатывать офферы от поставщиков, если ручной рейтинг ниже 500
 				if (!empty($supplier['amzn_coefficient']) && (int)$supplier['amzn_coefficient'] < $this->Suppliers->supplierMinInnerRatingForUse){
+					$addThisOffer = false;
+				}
+			}
+
+			if ((float)$this->config->get('config_rainforest_max_delivery_price') && (float)$rfOffer->getDeliveryAmount() > 0){
+				if ((float)$rfOffer->getDeliveryAmount() > $this->config->get('config_rainforest_max_delivery_price')){
+					$addThisOffer = false;
+				}
+			}
+
+			//Bad delivery price
+			if ((float)$this->config->get('config_rainforest_max_delivery_price_multiplier') && (float)$rfOffer->getDeliveryAmount() > 0){
+				if ((float)$rfOffer->getDeliveryAmount() > (float)$rfOffer->getPriceAmount() * (float)$this->config->get('config_rainforest_max_delivery_price_multiplier')){
 					$addThisOffer = false;
 				}
 			}
@@ -441,7 +453,7 @@ class OffersParser
 	public function addOffersForASIN($asin, $rfOffers){
 		$this->clearOffersForASIN($asin)->setLastOffersDate($asin);
 
-		$rfOffers = $this->reparseOffersToSkip($rfOffers);
+		$rfOffers 	= $this->reparseOffersToSkip($rfOffers);
 
 		$minKey  	= $this->getMinPriceOffer($rfOffers);
 		$ratingKeys = $this->calculateOffersRatings($rfOffers);

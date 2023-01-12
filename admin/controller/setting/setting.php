@@ -3317,6 +3317,18 @@ class ControllerSettingSetting extends Controller
             $this->data['config_rainforest_max_delivery_days_for_offer'] = $this->config->get('config_rainforest_max_delivery_days_for_offer');
         }
 
+         if (isset($this->request->post['config_rainforest_max_delivery_price'])) {
+            $this->data['config_rainforest_max_delivery_price'] = $this->request->post['config_rainforest_max_delivery_price'];
+        } else {
+            $this->data['config_rainforest_max_delivery_price'] = $this->config->get('config_rainforest_max_delivery_price');
+        }
+
+         if (isset($this->request->post['config_rainforest_max_delivery_price_multiplier'])) {
+            $this->data['config_rainforest_max_delivery_price_multiplier'] = $this->request->post['config_rainforest_max_delivery_price_multiplier'];
+        } else {
+            $this->data['config_rainforest_max_delivery_price_multiplier'] = $this->config->get('config_rainforest_max_delivery_price_multiplier');
+        }
+
         $social_auth_config = [
             'social_auth_facebook_app_id',
             'social_auth_facebook_secret_key',

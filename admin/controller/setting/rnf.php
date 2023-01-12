@@ -117,6 +117,8 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_supplierminrating',
 		'config_rainforest_supplierminrating_inner',
 		'config_rainforest_max_delivery_days_for_offer',
+		'config_rainforest_max_delivery_price',
+		'config_rainforest_max_delivery_price_multiplier',
 
 		'config_rainforest_main_formula',
 		'config_rainforest_default_store_id',
