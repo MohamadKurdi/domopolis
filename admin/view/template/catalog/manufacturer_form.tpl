@@ -807,7 +807,7 @@
 				bgiframe: false,
 				width: <?php echo $this->config->get('pim_width')?$this->config->get('pim_width'):800;?>,
 				height: <?php echo $this->config->get('pim_height')?$this->config->get('pim_height'):400;?>,
-				resizable: false,
+				resizable: true,
 				modal: false
 			});
 		};
