@@ -3227,6 +3227,18 @@ class ControllerSettingSetting extends Controller
             $this->data['config_rainforest_enable_offers_after_order'] = $this->config->get('config_rainforest_enable_offers_after_order');
         }
 
+        if (isset($this->request->post['config_rainforest_delay_price_setting'])) {
+            $this->data['config_rainforest_delay_price_setting'] = $this->request->post['config_rainforest_delay_price_setting'];
+        } else {
+            $this->data['config_rainforest_delay_price_setting'] = $this->config->get('config_rainforest_delay_price_setting');
+        }
+
+        if (isset($this->request->post['config_rainforest_delay_stock_setting'])) {
+            $this->data['config_rainforest_delay_stock_setting'] = $this->request->post['config_rainforest_delay_stock_setting'];
+        } else {
+            $this->data['config_rainforest_delay_stock_setting'] = $this->config->get('config_rainforest_delay_stock_setting');
+        }
+
         if (isset($this->request->post['config_rainforest_enable_offers_for_stock'])) {
             $this->data['config_rainforest_enable_offers_for_stock'] = $this->request->post['config_rainforest_enable_offers_for_stock'];
         } else {

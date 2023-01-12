@@ -31,9 +31,7 @@
 				<a href="#tab-cron-results"><span style="color:#0054b3;"><i class="fa fa-refresh"></i> Статистика работы фреймворка</span></a>
 				<a href="#tab-products"><span style="color:#00ad07;"><i class="fa fa-cogs"></i> Настройки добавления товаров</span></a>
 				<a href="#tab-pricelogic"><span style="color:#D69241;"><i class="fa fa-cogs"></i> Настройки ценообразования</span></a>
-
 				<a href="#tab-priceformula"><span style="color:#ff7815;"><i class="fa fa-calculator"></i> Ценовая модель</span></a>
-
 				<a href="#tab-store-settings"><span style="color:#cf4a61;"><i class="fa fa-cogs"></i> Режимы магазина</span></a>					
 
 				<div class="clr"></div>
@@ -242,6 +240,32 @@
 							</tr>
 							<tr>
 								<td class="right">
+									<i class="fa fa-refresh"></i> Отложенное назначение цен
+								</td>
+								<td style="width:40px;" class="center">
+									<input id="config_rainforest_delay_price_setting" type="checkbox" class="checkbox" name="config_rainforest_delay_price_setting" <? if ($config_rainforest_delay_price_setting){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_delay_price_setting"></label>
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Если включено - то цены не обновляются при получении офферов, а только при формировании фидов для мерчанта и фейсбука, для того, чтоб цены всегда совпадали и отсутствия резких скачков цен. Это не затрагивает обновление наличия.
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td class="right">
+									<i class="fa fa-refresh"></i> Отложенное изменение наличия
+								</td>
+								<td style="width:40px;" class="center">
+									<input id="config_rainforest_delay_stock_setting" type="checkbox" class="checkbox" name="config_rainforest_delay_stock_setting" <? if ($config_rainforest_delay_stock_setting){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_delay_stock_setting"></label>
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Если включено - то наличие не обновляется при получении офферов, а только при формировании фидов для мерчанта и фейсбука.
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td class="right">
 									<i class="fa fa-cogs"></i> Интервал обновления
 								</td>
 								<td>
@@ -362,7 +386,7 @@
 					<table class="list">
 						<tr>
 							<td colspan="3" class="left" style="color:#00ad07;">
-								<i class="fa fa-cogs"></i> <b>Варианты, цена</b>
+								<i class="fa fa-cogs"></i> <b>Варианты, цена, валидность товаров</b>
 							</td>
 						</tr>
 						<tr>
@@ -431,34 +455,6 @@
 							<td>
 								<span class="help">
 									<i class="fa fa-info-circle" style="color:red"></i> Периодически товары пропадают из Amazon. В таком случае при попытке получить оффер, либо информацию о товаре его ASIN обозначается как INVALID. Если эта настройка включена, то такие товары будут периодически удаляться из базы. Обязательно отключать для магазинов, наполняемых вручную! Если товары есть в заказах, то они не удаляются, но отключаются.
-								</span>
-							</td>
-						</tr>
-
-						<tr>
-							<td class="right">
-								Удалять или отключать товары без офферов
-							</td>
-							<td style="width:50px;" class="center">
-								<input id="config_rainforest_delete_no_offers" type="checkbox" class="checkbox" name="config_rainforest_delete_no_offers" <? if ($config_rainforest_delete_no_offers){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_delete_no_offers"></label>
-							</td>
-							<td>
-								<span class="help">
-									<i class="fa fa-info-circle" style="color:red"></i> Периодическое удаление товаров, у которых нет офферов несколько раз подряд. Количество раз подряд, в которых у товара нет офферов (либо все офферы плохие) задано следующей настройкой.
-								</span>
-							</td>
-						</tr>
-
-						<tr>
-							<td class="right">
-								Порог "нету офферов"
-							</td>
-							<td>
-								<input type="number" name="config_rainforest_delete_no_offers_counter" value="<?php echo $config_rainforest_delete_no_offers_counter; ?>" size="50" style="width:50px;" />
-							</td>
-							<td>
-								<span class="help">
-									<i class="fa fa-info-circle"></i> Количество отсутствий офферов подряд. Задает порог для удаления товара в случае отсутствия офферов.
 								</span>
 							</td>
 						</tr>
@@ -987,7 +983,7 @@
 						</tr>
 						<tr>
 							<td colspan="3" class="left" style="color:#D69241;">
-								<i class="fa fa-cogs"></i> <b>Исключения доставке</b>
+								<i class="fa fa-cogs"></i> <b>Исключения по доставке</b>
 							</td>
 						</tr>
 						<tr>
