@@ -987,7 +987,7 @@
 						</tr>
 						<tr>
 							<td colspan="3" class="left" style="color:#D69241;">
-								<i class="fa fa-cogs"></i> <b>Исключения по срокам доставки</b>
+								<i class="fa fa-cogs"></i> <b>Исключения доставке</b>
 							</td>
 						</tr>
 						<tr>
@@ -1003,6 +1003,35 @@
 								</span>
 							</td>
 						</tr>
+
+						<tr>
+							<td class="right">
+								Максимальная стоимость доставки, абсолютное значение
+							</td>
+							<td style="width:50px;" class="center">
+								<input type="number" name="config_rainforest_max_delivery_price" value="<?php echo $config_rainforest_max_delivery_price; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Исключать оффер, если стоимость доставки превышает это абсолютное значение
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Максимальная стоимость доставки, от цены
+							</td>
+							<td style="width:50px;" class="center">
+								<input type="number" name="config_rainforest_max_delivery_price_multiplier" value="<?php echo $config_rainforest_max_delivery_price_multiplier; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Исключать оффер, если стоимость доставки превышает цену товара в столько раз
+								</span>
+							</td>
+						</tr>
+
 						<tr>
 							<td colspan="3" class="left" style="color:#D69241;">
 								<i class="fa fa-cogs"></i> <b>Исключения поставщиков</b>

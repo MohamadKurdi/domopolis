@@ -5093,6 +5093,20 @@
 											<br />
 											<span class="help"><i class="fa fa-exclamation-circle"></i> оффер будет проигнорирован, если доставка занимает больше дней</span>
 										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Макс. цена доставки</span></p>
+											<input type="number" name="config_rainforest_max_delivery_price" value="<?php echo $config_rainforest_max_delivery_price; ?>" size="50" style="width:100px;" /> EUR
+											<br />
+											<span class="help"><i class="fa fa-exclamation-circle"></i> оффер будет проигнорирован, если доставка стоит больше</span>
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Макс. цена доставки Х</span></p>
+											<input type="number" name="config_rainforest_max_delivery_price_multiplier" value="<?php echo $config_rainforest_max_delivery_price_multiplier; ?>" size="50" style="width:100px;" />
+											<br />
+											<span class="help"><i class="fa fa-exclamation-circle"></i> оффер будет проигнорирован, если доставка больше цены в Х раз</span>
+										</div>
 									</td>
 
 									<td style="width:15%">
