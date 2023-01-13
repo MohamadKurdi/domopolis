@@ -80,12 +80,6 @@
 			$this->getList();
 		}
 		
-		public function test(){
-			
-			$this->load->model('sale/order');
-			$this->model_sale_order->generatePaymentQR2('265695', 'liqpay');			
-		}
-		
 		protected function getList() {
 			$url = '';
 			
@@ -591,6 +585,38 @@
 				} else {
 				$this->data['config_sms_payment_recieved'] = '';
 			}
+
+			if (isset($this->request->post['config_sms_ttn_sent_enabled'])) {
+                $this->data['config_sms_ttn_sent_enabled'] = $this->request->post['config_sms_ttn_sent_enabled'];
+                } elseif (isset($store_info['config_sms_ttn_sent_enabled'])) {
+                $this->data['config_sms_ttn_sent_enabled'] = $store_info['config_sms_ttn_sent_enabled'];        
+                } else {
+                $this->data['config_sms_ttn_sent_enabled'] = 0;
+            }
+
+            if (isset($this->request->post['config_sms_ttn_sent'])) {
+                $this->data['config_sms_ttn_sent'] = $this->request->post['config_sms_ttn_sent'];
+                } elseif (isset($store_info['config_sms_ttn_sent'])) {
+                $this->data['config_sms_ttn_sent'] = $store_info['config_sms_ttn_sent'];        
+                } else {
+                $this->data['config_sms_ttn_sent'] = '';
+            }
+
+            if (isset($this->request->post['config_sms_ttn_ready_enabled'])) {
+                $this->data['config_sms_ttn_ready_enabled'] = $this->request->post['config_sms_ttn_ready_enabled'];
+                } elseif (isset($store_info['config_sms_ttn_ready_enabled'])) {
+                $this->data['config_sms_ttn_ready_enabled'] = $store_info['config_sms_ttn_ready_enabled'];        
+                } else {
+                $this->data['config_sms_ttn_ready_enabled'] = 0;
+            }
+
+            if (isset($this->request->post['config_sms_ttn_ready'])) {
+                $this->data['config_sms_ttn_ready'] = $this->request->post['config_sms_ttn_ready'];
+                } elseif (isset($store_info['config_sms_ttn_ready'])) {
+                $this->data['config_sms_ttn_ready'] = $store_info['config_sms_ttn_ready'];        
+                } else {
+                $this->data['config_sms_ttn_ready'] = '';
+            }
 
 			if (isset($this->request->post['config_sms_send_new_order_status'])) {
 				$this->data['config_sms_send_new_order_status'] = $this->request->post['config_sms_send_new_order_status'];

@@ -1175,7 +1175,9 @@
 											<b>{STATUS}</b> - новый статус заказа<br />
 											<b>{PHONE}</b> - телефон клиента<br />
 											<b>{FIRSTNAME}</b> - имя клиента<br />
-											<b>{LASTNAME}</b> - фамилия клиента
+											<b>{LASTNAME}</b> - фамилия клиента<br />
+											<b>{TTN}</b> - ТТН службы доставки<br />
+											<b>{DELIVERY_SERVICE}</b> - Служба доставки
 										</span>
 									</td>
 								</tr>	
@@ -1209,9 +1211,7 @@
 									<tr>
 										<td style="width:200px;">
 											<span class="status_color" style="text-align: left; background: #43B02A; color: #FFF; ?>;">
-
 												Трекинг отправки со склада
-
 											</span>
 										</td>
 										<td style="width:50px" class="center">
@@ -1236,10 +1236,35 @@
 										</td>
 									</tr>
 
+									<tr>
+										<td style="width:200px;">
+											<span class="status_color" style="text-align: left; background: #ef5e67; color: #FFF; ?>;">
+												ТТН службы доставки: отправка
+											</span>
+										</td>
+										<td style="width:50px" class="center">
+											<input class="checkbox" type="checkbox" name="config_sms_ttn_sent_enabled" id="config_sms_ttn_sent_enabled"<?php if ($config_sms_ttn_sent_enabled) { echo ' checked="checked"'; }?>/><label for="config_sms_ttn_sent_enabled"></label>
+										</td>
+										<td style="padding:5px;">
+											<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_ttn_sent" value="<?php echo $config_sms_ttn_sent; ?>" />
+										</td>
+									</tr>
+
+									<tr>
+										<td style="width:200px;">
+											<span class="status_color" style="text-align: left; background: #43B02A; color: #FFF; ?>;">
+												ТТН службы доставки: доставлено
+											</span>
+										</td>
+										<td style="width:50px" class="center">
+											<input class="checkbox" type="checkbox" name="config_sms_ttn_ready_enabled" id="config_sms_ttn_ready_enabled"<?php if ($config_sms_ttn_ready_enabled) { echo ' checked="checked"'; }?>/><label for="config_sms_ttn_ready_enabled"></label>
+										</td>
+										<td style="padding:5px;">
+											<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_ttn_ready" value="<?php echo $config_sms_ttn_ready; ?>" />
+										</td>
+									</tr>
 								</table>
-						</div>
-
-
+							</div>
 								<div id="tab-server">
 									<table class="form">
 										<tr>

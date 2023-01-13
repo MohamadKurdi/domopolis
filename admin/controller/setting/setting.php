@@ -2558,8 +2558,7 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_sms_to'] = $this->config->get('config_sms_to');
         }
-        
-        /*tracker*/
+                
         if (isset($this->request->post['config_sms_tracker_leave_main_warehouse_enabled'])) {
             $this->data['config_sms_tracker_leave_main_warehouse_enabled'] = $this->request->post['config_sms_tracker_leave_main_warehouse_enabled'];
         } else {
@@ -2571,8 +2570,7 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_sms_tracker_leave_main_warehouse'] = $this->config->get('config_sms_tracker_leave_main_warehouse');
         }
-
-        /*recieved*/
+        
         if (isset($this->request->post['config_sms_payment_recieved_enabled'])) {
             $this->data['config_sms_payment_recieved_enabled'] = $this->request->post['config_sms_payment_recieved_enabled'];
         } else {
@@ -2583,6 +2581,30 @@ class ControllerSettingSetting extends Controller
             $this->data['config_sms_payment_recieved'] = $this->request->post['config_sms_payment_recieved'];
         } else {
             $this->data['config_sms_payment_recieved'] = $this->config->get('config_sms_payment_recieved');
+        }
+
+        if (isset($this->request->post['config_sms_ttn_sent_enabled'])) {
+            $this->data['config_sms_ttn_sent_enabled'] = $this->request->post['config_sms_ttn_sent_enabled'];
+        } else {
+            $this->data['config_sms_ttn_sent_enabled'] = $this->config->get('config_sms_ttn_sent_enabled');
+        }
+        
+        if (isset($this->request->post['config_sms_ttn_sent'])) {
+            $this->data['config_sms_ttn_sent'] = $this->request->post['config_sms_ttn_sent'];
+        } else {
+            $this->data['config_sms_ttn_sent'] = $this->config->get('config_sms_ttn_sent');
+        }
+
+        if (isset($this->request->post['config_sms_ttn_ready_enabled'])) {
+            $this->data['config_sms_ttn_ready_enabled'] = $this->request->post['config_sms_ttn_ready_enabled'];
+        } else {
+            $this->data['config_sms_ttn_ready_enabled'] = $this->config->get('config_sms_ttn_ready_enabled');
+        }
+        
+        if (isset($this->request->post['config_sms_ttn_ready'])) {
+            $this->data['config_sms_ttn_ready'] = $this->request->post['config_sms_ttn_ready'];
+        } else {
+            $this->data['config_sms_ttn_ready'] = $this->config->get('config_sms_ttn_ready');
         }
         
         if (isset($this->request->post['config_sms_from'])) {
