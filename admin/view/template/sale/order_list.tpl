@@ -75,10 +75,6 @@
 				<h1 class="ktooltip_hover" title="Дополнительные функции" style="margin-left:10px; padding:3px 8px; border-radius:5px; border:2px solid #6A6A6A;">
 				<a style="color:#6A6A6A; text-decoration:none;" onclick="$('#additional_buttons').toggle();"><i class="fa fa-bars" aria-hidden="true"></i></a></h1>
 				
-				<!--	
-					<h1 class="ktooltip_hover" title="Новый заказ / пока в разработке" style="margin-left:10px; padding:3px 8px; border-radius:5px; border:2px solid #6A6A6A;">
-					<a style="color:#6A6A6A; text-decoration:none;" href="<?php echo $insert; ?>"><i class="fa fa-plus" aria-hidden="true"></i></a></h1>	
-				-->	
 				<? if ($this->user->getIsAV() /* || $this->user->canUnlockOrders() */) { ?>	
 					<h1 class="ktooltip_hover" title="Удалить заказы" style="margin-left:10px; padding:3px 8px; border-radius:5px; border:2px solid #6A6A6A;">
 					<a onclick="$('#form').attr('action', '<?php echo $delete; ?>'); $('#form').attr('target', '_self'); $('#form').submit();" style="color:#6A6A6A; text-decoration:none;" ><i class="fa fa-window-close-o" aria-hidden="true"></i></a></h1>
@@ -93,7 +89,7 @@
 					<td width="20%" class="center" style="padding:10px 5px;">
 						<a style="border:2px solid #7F00FF; color:#7F00FF" class="button" onclick="window.open('index.php?route=report/export_xls/createOrderNowWhere&token=<? echo $token; ?>&date='+$('#order_to_deliveries_date').val());">Товары Германия</a>
 					</td>
-					<td width="20%" class="center" style="padding:10px 5px; color:#7F00FF">
+					<td width="30%" class="center" style="padding:10px 5px; color:#7F00FF">
 						<select name="filter_order_store_id_to_cheque" id="filter_order_store_id_to_cheque" style="width:250px;font-size:16px; padding:6px 10px;" >
 							<option value="*"></option>				
 							<?php foreach ($order_stores as $order_store) { ?>
@@ -105,28 +101,30 @@
 							<?php } ?>
 						</select>
 						<a style="border:2px solid #7F00FF; color:#7F00FF" onclick="$('#form').attr('action', '<?php echo $invoice; ?>'); $('#form').attr('target', '_blank'); $('#form').submit();" class="button"><?php echo $button_invoice; ?></a>
-					</td>										
-				</tr>
-				
-				<tr>
-					<td width="25%" class="center" style="padding:10px 5px;">
+					</td>	
+					<td width="60%" class="center" style="padding:10px 5px;">
 						<input type="text" style="font-size:16px; width:100px; padding:6px 10px; text-align:center;" class="date" id="order_to_deliveries_date_to_cheque" />&nbsp;
 						<a style="border:2px solid #7F00FF; color:#7F00FF" class="button" onclick="window.open('index.php?route=catalog/parties/getOnDateCheques&token=<? echo $token; ?>&date='+$('#order_to_deliveries_date_to_cheque').val()+'&store_id='+$('#filter_order_store_id_to_cheque').attr('value'))">Все чеки на доставку</a> 
-					</td>
-					<td width="25%" class="center" style="padding:10px 5px;">
-						<input type="text" style="font-size:16px; width:100px; padding:6px 10px; text-align:center;" class="date" id="order_to_deliveries_date" />&nbsp;
-						
-						<a style="border:2px solid #7F00FF; color:#7F00FF" class="button" onclick="window.open('index.php?route=report/export_xls/createOrderDeliveryMoscow&token=<? echo $token; ?>&date='+$('#order_to_deliveries_date').val());">Заявка Москва</a>
-						
-						<a style="border:2px solid #7F00FF; color:#7F00FF" class="button" onclick="window.open('index.php?route=report/export_xls/createOrderDeliveryMoscow&shipping_country_id=20&token=<? echo $token; ?>&date='+$('#order_to_deliveries_date').val());">Заявка Беларусь</a>
-						
-					</td>
-					<td width="25%" class="center" style="padding:10px 5px;">
-						
-						<a style="border:2px solid #7F00FF; color:#7F00FF" href="<?php echo HTTPS_CATALOG . 'yamarket-partner-api/acts/receptiontransferact'?>" target="_blank" class="button"><i class="fa fa-yoast"></i> Маркет АКТ Приема-передачи</a>
-						
-					</td>
+					</td>									
 				</tr>
+				
+				<?php if ($this->config->get('config_country_id') == 176) { ?>	
+					<tr>
+						<td width="25%" class="center" style="padding:10px 5px;">
+							<input type="text" style="font-size:16px; width:100px; padding:6px 10px; text-align:center;" class="date" id="order_to_deliveries_date" />&nbsp;
+
+							<a style="border:2px solid #7F00FF; color:#7F00FF" class="button" onclick="window.open('index.php?route=report/export_xls/createOrderDeliveryMoscow&token=<? echo $token; ?>&date='+$('#order_to_deliveries_date').val());">Заявка Москва</a>
+
+							<a style="border:2px solid #7F00FF; color:#7F00FF" class="button" onclick="window.open('index.php?route=report/export_xls/createOrderDeliveryMoscow&shipping_country_id=20&token=<? echo $token; ?>&date='+$('#order_to_deliveries_date').val());">Заявка Беларусь</a>
+
+						</td>
+						<td width="25%" class="center" style="padding:10px 5px;">
+
+							<a style="border:2px solid #7F00FF; color:#7F00FF" href="<?php echo HTTPS_CATALOG . 'yamarket-partner-api/acts/receptiontransferact'?>" target="_blank" class="button"><i class="fa fa-yoast"></i> Маркет АКТ Приема-передачи</a>
+
+						</td>
+					</tr>
+				<?php } ?>
 			</table>
 		</div>
 		<div style="clear:both;"></div>
@@ -466,34 +464,19 @@
 								<label for="checkbox_14" style="color:#7F00FF;"><i class="fa fa-download" style="padding: 3px 3px;background-color: #7F00FF;color: #FFF;"></i>&nbsp;PWA/APP Заказы</label>								
 							</div>
 							
-							<div style="margin-top:5px;">
-								<input id="checkbox_22" class="checkbox" type="checkbox" name="filter_yam" <? if ($filter_yam) { ?>checked="checked"<? } ?> value="1" /> 
-								<label for="checkbox_22" style="color:#cf4a61"><i class="fa fa-yoast" style="padding: 3px 3px;background-color: #cf4a61;color: #FFF;"></i>&nbsp;Я.Маркет заказы</label>								
-							</div>
-							<? /*	
+							<?php if ($this->config->get('config_country_id') == 176) { ?>
 								<div style="margin-top:5px;">
-								<span style="font-size:20px; cursor:pointer;" class="go_to_store" data-customer-id="<?php echo YANDEX_MARKET_CUSTOMER_ID; ?>" data-store-id="0">Войти как ЯМ <i class="fa fa-sign-in"></i></span>
-								
-								<script>
-								$('.go_to_store').on('click', function(){
-								var store_id = $(this).attr('data-store-id');
-								var customer_id = $(this).attr('data-customer-id');
-								
-								swal({ title: "Войти как Яндекс.Маркет?", text: "Оформить заказ от имени Яндекс", type: "warning", showCancelButton: true,  confirmButtonColor: "#F96E64",  confirmButtonText: "Да, перейти!", cancelButtonText: "Отмена",  closeOnConfirm: true }, function() {
-								window.open('index.php?route=sale/customer/login&token=<?php echo $token; ?>&customer_id='+customer_id+'&store_id=' + store_id)
-								});
-								
-								});
-								</script>
+									<input id="checkbox_22" class="checkbox" type="checkbox" name="filter_yam" <? if ($filter_yam) { ?>checked="checked"<? } ?> value="1" /> 
+									<label for="checkbox_22" style="color:#cf4a61"><i class="fa fa-yoast" style="padding: 3px 3px;background-color: #cf4a61;color: #FFF;"></i>&nbsp;Я.Маркет заказы</label>								
 								</div>
-							*/ ?>
-							
-							<div style="margin-top:5px;">
-								<a style="display:inline-block; float:left; margin-right:5px;" href="<?php echo HTTPS_CATALOG . 'yamarket-partner-api/acts/receptiontransferact'?>" target="_blank" class="button"><i class="fa fa-yoast"></i> АКТ ПП</a>
-								
-								
-								<input type="text" name="filter_yam_id" placeholder="Ya.Market ID" value="<?php echo $filter_yam_id; ?>" size="25" style="text-align: left; width:120px; display:inline-block; float:left;" />
-							</div>
+
+								<div style="margin-top:5px;">
+									<a style="display:inline-block; float:left; margin-right:5px;" href="<?php echo HTTPS_CATALOG . 'yamarket-partner-api/acts/receptiontransferact'?>" target="_blank" class="button"><i class="fa fa-yoast"></i> АКТ ПП</a>
+
+
+									<input type="text" name="filter_yam_id" placeholder="Ya.Market ID" value="<?php echo $filter_yam_id; ?>" size="25" style="text-align: left; width:120px; display:inline-block; float:left;" />
+								</div>
+							<?php } ?>
 							
 						</td>
 					</tr>
@@ -876,7 +859,7 @@
 											
 											<? if ($order['ttn']) { ?>
 												<br />
-												<span style="font-size:11px; line-height:14px;">ТТН: <span class="get_ttn_info" data-ttn="<? echo $order['ttn']; ?>" data-delivery-code="<?php echo $order['delivery_code']; ?>"><b><? echo $order['ttn']; ?></b></span>&nbsp;&nbsp;<span style="display:none;"></span>
+												<span style="font-size:11px; line-height:14px;">ТТН: <span class="get_ttn_info" data-ttn="<? echo $order['ttn']; ?>" data-delivery-code="<?php echo $order['delivery_code']; ?>" data-delivery-phone="<?php echo $order['telephone']; ?>"><b><? echo $order['ttn']; ?></b></span>&nbsp;&nbsp;<span style="display:none;"></span>
 												</span><br />
 											<? } ?>
 											
@@ -1204,15 +1187,17 @@
 	span.next().show();
 	var ttn = span.attr('data-ttn');
 	var code = span.attr('data-delivery-code');
+	var phone = span.attr('data-delivery-phone');
 	$('#ttninfo').load(
 	'index.php?route=sale/order/ttninfoajax&token=<? echo $token ?>',
 	{
 		ttn : ttn,
-		delivery_code : code
+		delivery_code : code,
+		phone: phone
 	}, 
 	function(){
 		span.next().hide();
-		$(this).dialog({width:900, modal:true,resizable:true,position:{my: 'center', at:'center center', of: window}, closeOnEscape: true, title: 'Информация по накладной '+ttn}); 
+		$(this).dialog({width:900, height:700, modal:true,resizable:true,position:{my: 'center', at:'center center', of: window}, closeOnEscape: true, title: 'Информация по накладной '+ttn}); 
 	});
 });</script>
 <script>
@@ -1325,13 +1310,15 @@
 		if (filter_ttn) {
 			url += '&filter_ttn=' + encodeURIComponent(filter_ttn);
 		}	
-		
-		var filter_yam_id = $('input[name=\'filter_yam_id\']').attr('value');
-		
-		if (filter_yam_id) {
-			url += '&filter_yam_id=' + encodeURIComponent(filter_yam_id);
-		}
-		
+
+		<?php if ($this->config->get('config_country_id') == 176) { ?>	
+			var filter_yam_id = $('input[name=\'filter_yam_id\']').attr('value');
+
+			if (filter_yam_id) {
+				url += '&filter_yam_id=' + encodeURIComponent(filter_yam_id);
+			}
+		<?php } ?>	
+
 		var filter_urgent = $('input[name=\'filter_urgent\']:checked').val();
 		
 		if (filter_urgent !== undefined) {
@@ -1368,11 +1355,13 @@
 			url += '&filter_pwa=1';
 		}
 		
-		var filter_yam = $('input[name=\'filter_yam\']:checked').val();
-		
-		if (filter_yam !== undefined) {
-			url += '&filter_yam=1';
-		}
+		<?php if ($this->config->get('config_country_id') == 176) { ?>	
+			var filter_yam = $('input[name=\'filter_yam\']:checked').val();
+
+			if (filter_yam !== undefined) {
+				url += '&filter_yam=1';
+			}
+		<?php } ?>
 		
 		var filter_total = $('input[name=\'filter_total\']').attr('value');
 		
