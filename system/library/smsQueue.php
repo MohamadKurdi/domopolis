@@ -10,8 +10,7 @@ class smsQueue {
 		$this->config 	= $registry->get('config');
 	}
 	
-	public function queue($data){			
-		//all_parameters_to_array
+	public function queue($data){					
 		$queue_array = array(		
 			'to' 	=> $data['to'],
 			'from' 	=> $data['from'],
@@ -91,8 +90,6 @@ class smsQueue {
 					echoLine('[smsQueue] ' . $params['phone'] . ' -> ' . $result["result"]["id"]);			
 					$this->deleteSMSFromQueue($sms['queue_sms_id']);
 				}
-
-
 			}
 
 		}
