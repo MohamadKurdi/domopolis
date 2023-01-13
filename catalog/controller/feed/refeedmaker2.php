@@ -10,12 +10,16 @@ class ControllerFeedReFeedMaker2 extends Controller
     private $urlcode                = '';
     private $eanLog                 = false;
 
+
+    public function __construct($registry){
+        parent::__construct($registry);            
+    }
+
     private function setStockMode($stock)
     {
         $this->stockMode = $stock;
-
         return $this;
-    }
+    }    
 
     private function openXML()
     {
@@ -364,6 +368,12 @@ class ControllerFeedReFeedMaker2 extends Controller
 
     public function supplemental()
     {
+
+        if ($this->simpleProcess->isRunning('feed/refeedmaker2/makefeed')){   
+            echoLine('[makefeed] Process feed/refeedmaker2/makefeed running we can not continue');
+            return;
+        }
+
         $this->load->model('catalog/product');
 
         $this->db->query("UPDATE product SET quantity = 0 WHERE quantity < 0 ");
@@ -371,8 +381,7 @@ class ControllerFeedReFeedMaker2 extends Controller
 
         foreach ($this->registry->get('supported_language_ids') as $store_id => $languages) {
             foreach ($languages as $language_id) {
-                foreach (array(0,1) as $changeID) {
-                    //Пропускаем если язык не исключенных и нужно менять айдишку
+                foreach (array(0,1) as $changeID) {                    
                     if ($language_id != $this->registry->get('excluded_language_id') && $changeID) {
                         continue;
                     }
@@ -487,6 +496,9 @@ class ControllerFeedReFeedMaker2 extends Controller
 
     public function makefeed()
     {
+        
+        $this->rainforestAmazon->offersParser->PriceLogic->updatePricesFromDelayed();    
+
         $this->load->model('catalog/category');
         $this->load->model('catalog/product');
         $this->load->model('localisation/currency');
@@ -595,6 +607,12 @@ class ControllerFeedReFeedMaker2 extends Controller
             }
         }
 
+        if (!$this->simpleProcess->isRunning('feed/refeedmaker2/supplemental')){   
+            echoLine('[makefeed] Process feed/refeedmaker2/supplemental is not running, starting it');
+            $this->supplemental();
+        }
+
         $this->cleanUp();
+
     }
 }

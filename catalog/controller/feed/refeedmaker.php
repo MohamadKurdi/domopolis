@@ -9,6 +9,9 @@ class ControllerFeedReFeedMaker extends Controller
     private $urlcode = '';
     private $eanLog = false;
 
+    public function __construct($registry){
+        parent::__construct($registry);
+    }
 
     private function loadSettings($store_id)
     {
