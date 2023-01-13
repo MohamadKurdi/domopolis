@@ -5,7 +5,7 @@ class ModelToolPathManager extends Model {
 		$path = [];
 
 		$category = $this->db->query("SELECT category_id, parent_id FROM category WHERE category_id = '" . $category_id. "'")->row;
-			
+		
 		while ($category['parent_id']){		
 			array_unshift($path, $category['parent_id']);
 			$category = $this->db->query("SELECT category_id, parent_id FROM category WHERE category_id = '" . $category['parent_id']. "'")->row;
@@ -21,7 +21,7 @@ class ModelToolPathManager extends Model {
 
 	}
 
- 
+	
 	public function getFullProductPath($product_id, $breadcrumbs_mode = false) {
 		$path_mode = 'full_product_path_mode';
 		if($breadcrumbs_mode) {
@@ -43,14 +43,23 @@ class ModelToolPathManager extends Model {
 			}
 		}
 		
-		$path = array();
-		$categories = $this->db->query("SELECT c.category_id, c.parent_id, p2c.main_category
-			FROM product_to_category p2c 
-			LEFT JOIN category c ON (p2c.category_id = c.category_id) 
-			LEFT JOIN category_to_store c2s ON (p2c.category_id = c2s.category_id)
-			WHERE 
-			c2s.store_id = '" . (int)$this->config->get('config_store_id') ."'
-			AND product_id = '" . (int)$product_id . "'")->rows;
+		$path = [];
+
+		$sql = "SELECT c.category_id, c.parent_id, p2c.main_category
+		FROM product_to_category p2c 
+		LEFT JOIN category c ON (p2c.category_id = c.category_id) ";
+
+		if (!$this->config->get('config_single_store_enable')){
+			$sql .= " LEFT JOIN category_to_store c2s ON (p2c.category_id = c2s.category_id) ";
+		}
+
+		$sql .= " WHERE product_id = '" . (int)$product_id . "'";
+
+		if (!$this->config->get('config_single_store_enable')){
+			$sql .= " AND c2s.store_id = '" . (int)$this->config->get('config_store_id') ."' ";		
+		}
+
+		$categories = $this->db->query($sql)->rows;
 
 		$main_category = [];		
 		foreach($categories as $key => $category){
@@ -79,8 +88,7 @@ class ModelToolPathManager extends Model {
 			$banned_cats = $this->config->get('full_product_path_categories');
 			
 			if(count($banned_cats) && (count($categories) > 1))
-			{
-				//if(preg_match('#[_=](\d+)&$#', $path[$key], $cat))
+			{				
 				if(preg_match('#[_=](\d+)$#', $path[$key], $cat))
 				{
 					if(in_array($cat[1], $banned_cats))
@@ -90,15 +98,14 @@ class ModelToolPathManager extends Model {
 		}
 		
 		if (!count($path)) return null;
-
-		// wich one is the largest ?
+		
 		$whichone = array_map('strlen', $path);
 		asort($whichone);
 		$whichone = array_keys($whichone);
 		
 		if ($this->config->get($path_mode) == '2')
 			$whichone = array_pop($whichone);
-			
+		
 		else $whichone = array_shift($whichone);
 		
 		$path = $path[$whichone];

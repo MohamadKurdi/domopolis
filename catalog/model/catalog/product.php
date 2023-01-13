@@ -19,9 +19,20 @@
 			AND birthday = 0
 			AND (DATE(date_start) <= NOW() OR DATE(date_start) = '0000-00-00')
 			AND (DATE(date_end) >= NOW() OR DATE(date_end) = '0000-00-00')
-			AND ((type = 'F' AND currency = '" . $this->db->escape($this->config->get('config_regional_currency')) . "') OR (type = 'P'))
-			AND (coupon_id IN (SELECT coupon_id FROM coupon_category WHERE category_id IN (SELECT p2c.category_id FROM product_to_category p2c LEFT JOIN category_to_store c2s ON (p2c.category_id = c2s.category_id) WHERE store_id = '" . (int)$this->config->get('config_store_id') . "' AND product_id = '" . (int)$product_id . "'))
-			OR coupon_id IN (SELECT coupon_id FROM coupon_collection WHERE collection_id IN (SELECT collection_id FROM product WHERE product_id = '" . (int)$product_id . "'))
+			AND ((type = 'F' AND currency = '" . $this->db->escape($this->config->get('config_regional_currency')) . "') OR (type = 'P')) ";
+			$sql .= " AND (coupon_id IN (SELECT coupon_id FROM coupon_category WHERE category_id IN (SELECT p2c.category_id FROM product_to_category p2c ";
+			if (!$this->config->get('config_single_store_enable')){
+				$sql .= " LEFT JOIN category_to_store c2s ON (p2c.category_id = c2s.category_id) ";
+			}
+
+			$sql .= " WHERE product_id = '" . (int)$product_id . "'";
+
+			if (!$this->config->get('config_single_store_enable')){
+				$sql .= " AND store_id = '" . (int)$this->config->get('config_store_id') . "'";
+			}
+
+			$sql .= ")) ";			
+			$sql .= " OR coupon_id IN (SELECT coupon_id FROM coupon_collection WHERE collection_id IN (SELECT collection_id FROM product WHERE product_id = '" . (int)$product_id . "'))
 			OR coupon_id IN (SELECT coupon_id FROM coupon_manufacturer WHERE manufacturer_id IN (SELECT manufacturer_id FROM product WHERE product_id = '" . (int)$product_id . "'))
 			OR coupon_id IN (SELECT coupon_id FROM coupon_product WHERE product_id = '" . (int)$product_id . "'))";
 			
@@ -273,15 +284,15 @@
 					
 					$is_not_certificate = (strpos($result['location'], 'certificate') === false);
 					
-					$_description = '';
+					$description = '';
 					if ($is_not_certificate){
 						
 						if (mb_strlen($result['description']) > 10){
-							$_description = utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 128) . '..';
+							$description = utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 128) . '..';
 						}
 						
 					} else {
-						$_description = html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8');
+						$description = html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8');
 					}
 					
 					$stock_data = $this->parseProductStockData($result);
@@ -291,7 +302,7 @@
 						'gtin' 		=> prepareEcommString($result['ean']),			
 						'brand' 	=> prepareEcommString($result['manufacturer']),		
 						'price' 	=> prepareEcommString($special?$special:$price),
-						'category' 	=> prepareEcommString($this->getGoogleCategoryPath($result['product_id']))
+						'category' 	=> prepareEcommString($this->getGoogleCategoryPathForCategory($result['main_category_id']))
 					);
 
 					
@@ -322,7 +333,7 @@
 						'length'                   	=> $this->length->format($result['length'], $result['length_class_id']),
 						'width'                    	=> $this->length->format($result['width'], $result['length_class_id']),
 						'height'                   	=> $this->length->format($result['height'], $result['length_class_id']),
-						'description' 				=> $_description,
+						'description' 				=> $description,
 						'price'       				=> $price,
 						'special'     				=> $special,
 						'points'	  				=> $this->currency->formatBonus($result['reward'], true),
@@ -437,16 +448,24 @@
 				$sql .= "(SELECT price FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special, ";
 				$sql .= "(SELECT date_end FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special_date_end, ";
 				$sql .= "(SELECT currency_scode FROM product_special ps WHERE ps.product_id = p.product_id AND price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND (ps.store_id = '" . (int)$this->config->get('config_store_id') . "' OR ps.store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS special_currency, ";
-				$sql .= "(SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price, ";
-				$sql .= "(SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price_national, ";		
+
+				if (!$this->config->get('config_single_store_enable')){
+					$sql .= "(SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND price > 0 AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price, ";
+					$sql .= "(SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND price > 0 AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price_national, ";		
+				}
 
 				if ($this->config->get('config_yam_offer_id_price_enable')){
 					$sql .= "(SELECT price FROM product_price_national_to_yam ppn2yam WHERE ppn2yam.product_id = p.product_id AND price > 0 AND ppn2yam.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as yam_overload_price_national, ";		
 				}
 
-				$sql .= " (SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as overload_stock_status_id, ";
-				$sql .= "(SELECT name FROM stock_status sst WHERE sst.stock_status_id = (SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) AND sst.language_id = '" . (int)$this->config->get('config_language_id') . "') as overload_stock_status,	";
-				$sql .= "(SELECT ss.name FROM stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status ";
+				if (!$this->config->get('config_single_store_enable')){
+					$sql .= " (SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as overload_stock_status_id, ";
+					$sql .= "(SELECT name FROM stock_status sst WHERE sst.stock_status_id = (SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) AND sst.language_id = '" . (int)$this->config->get('config_language_id') . "') as overload_stock_status,	";
+				}
+
+
+				$sql .= "(SELECT ss.name FROM stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, ";
+				$sql .= "(SELECT pdde.name FROM product_description pdde WHERE p.product_id = pdde.product_id AND pdde.language_id = '" . (int)$this->registry->get('languages_all')[$this->config->get('config_de_language')] . "') AS de_name ";
 				
 
 				$sql .= " FROM product p 
@@ -468,7 +487,7 @@
 
 				if (!$this->config->get('config_single_store_enable')){
 					$sql .= " AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'";
-				}
+				}				
 
 				if (!$cached){
 					$query = $this->db->non_cached_query($sql);
@@ -477,6 +496,10 @@
 				}
 				
 				if ($query->num_rows) {
+					if ($this->config->get('config_single_store_enable')){
+						$query->row['currency'] = $this->config->get('config_regional_currency');
+					}
+
 					$yam_price = $query->row['yam_price'];
 					
 					if ($query->row['yam_currency'] != $this->config->get('config_regional_currency')){
@@ -496,14 +519,14 @@
 						$query->row['yam_product_id'] = $this->config->get('config_yam_offer_id_prefix') . $product_id;
 					}
 					
-					if (isset($query->row['store_overload_price']) && $query->row['store_overload_price']) {
+					if (!empty($query->row['store_overload_price'])) {
 						$query->row['price'] = $query->row['store_overload_price'];
 					}
 					
 					$do_percent = true;
 					$overload_price_national = false;
 					$has_rrp = false;
-					if (isset($query->row['store_overload_price_national']) && $query->row['store_overload_price_national']) {
+					if (!empty($query->row['store_overload_price_national'])) {
 						$query->row['price'] = $this->currency->convert($query->row['store_overload_price_national'],
 						$this->config->get('config_regional_currency'), $this->config->get('config_currency'),
 						false, false);
@@ -522,8 +545,7 @@
 					
 					if ($query->row['price_national']) {
 						$display_price_national = $query->row['price_national'];
-						$price_national = $this->model_catalog_group_price->updatePrice($product_id,
-						$query->row['price_national']);
+						$price_national = $this->model_catalog_group_price->updatePrice($product_id, $query->row['price_national']);
 						} else {
 						$display_price_national = false;
 						$price_national = false;
@@ -599,7 +621,7 @@
 					}
 
 					//Логика переназначения статусов наличия
-					if ($query->row['overload_stock_status_id'] && $query->row['overload_stock_status']){
+					if (!empty($query->row['overload_stock_status_id']) && $query->row['overload_stock_status']){
 						$query->row['stock_status_id'] 	= $query->row['overload_stock_status_id'];
 						$query->row['stock_status'] 	= $query->row['overload_stock_status'];
 					}
@@ -643,6 +665,7 @@
 							'new'               	   	=> $new,
 							'stock_product_id'         	=> $query->row['stock_product_id'],					
 							'name'                     	=> $query->row['name'],
+							'de_name'                   => $query->row['de_name'],
 							'variant_name_1'        	=> $query->row['variant_name_1'],
 							'variant_name_2'        	=> $query->row['variant_name_2'],
 							'variant_value_1'        	=> $query->row['variant_value_1'],
@@ -1355,18 +1378,6 @@
 			}			
 			
 			return $product_data;
-		}
-		
-		public function getProductDeName($product_id){			
-			$query = $this->db->query("SELECT name FROM product_description WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$this->registry->get('languages_all')[$this->config->get('config_de_language')] . "' LIMIT 1");
-			
-			if (isset($query->row['name'])){
-				$name = $query->row['name'];			
-				} else {
-				$name = '';
-			}
-			
-			return $name;
 		}
 		
 		public function getProductAdditionalOffer($product_id){
@@ -2676,6 +2687,41 @@
 					return $new_path;
 				}
 			}
+		}
+
+		public function getGoogleCategoryPathForCategory($category_id){
+			if (!$string = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$category_id]))){
+
+				$query = $this->db->query("SELECT google_tree FROM category_description WHERE category_id = '" . $category_id . "' AND language_id = '" . $this->config->get('config_language_id') . "' LIMIT 1");
+				if (!$query->num_rows || empty($query->row['google_tree']) || !$string = $query->row['google_tree']){
+					
+					$path = $string = '';
+					if (!empty($category_id)){				
+						$path = $this->getPath($category_id);
+					}
+					
+					if ($path) {
+						$string = '';
+						
+						foreach (explode('_', $path) as $path_id) {
+							$category_info = $this->model_catalog_category->getCategory($path_id);
+							
+							if ($category_info) {
+								if (!$string) {
+									$string = $category_info['name'];
+								} else {
+									$string .= '/' . $category_info['name'];
+								}
+							}
+						}
+					}
+
+					$this->db->query("UPDATE category_description SET google_tree = '" . $this->db->escape($string) . "' WHERE category_id = '" . $category_id . "' AND language_id = '" . $this->config->get('config_language_id') . "'");
+				}
+				$this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$category_id]), $string);
+			}
+			
+			return $string;
 		}
 		
 		public function getGoogleCategoryPath($product_id){
