@@ -99,6 +99,16 @@ class CategoryParser
 		}
 	}
 
+	public function getAmazonCategoryInfo($category_id){
+		$query = $this->db->query("SELECT * FROM `". \hobotix\RainforestAmazon::categoryModeTables[$this->config->get('config_rainforest_category_model')] ."` WHERE category_id = '" . $this->db->escape($category_id) . "'");
+
+		if ($query->num_rows){
+			return $query->row;
+		} else {
+			return false;
+		}
+	}
+
 	public function guessCategoryID($id){
 		return \hobotix\RainforestAmazon::rainforestPrefixMapping[$this->config->get('config_rainforest_category_model')] . $id;
 	}
@@ -227,14 +237,21 @@ class CategoryParser
 			$data['store_parent_id'] = 0;
 		}
 
+		$data['name_native'] 		= $this->yandexTranslator->translate($data['name'], $this->config->get('config_rainforest_source_language'), $this->config->get('config_language'), true);
+		$data['full_name_native'] 	= $this->yandexTranslator->translate($data['path'], $this->config->get('config_rainforest_source_language'), $this->config->get('config_language'), true);
+
 		$this->db->ncquery("INSERT IGNORE INTO " . $this->table . " SET 
-			category_id 	= '" . $this->db->escape($data['id']) . "', 
-			parent_id		= '" . $this->db->escape($data['parent_id']) . "',
-			name 			= '" . $this->db->escape($data['name']) . "', 
-			full_name 		= '" . $this->db->escape($data['path']) . "',
-			link			= '" . $this->db->escape($data['link']) . "'
+			category_id 		= '" . $this->db->escape($data['id']) . "', 
+			parent_id			= '" . $this->db->escape($data['parent_id']) . "',
+			name 				= '" . $this->db->escape($data['name']) . "',
+			name_native 		= '" . $this->db->escape($data['name_native']) . "', 
+			full_name 			= '" . $this->db->escape($data['path']) . "',
+			full_name_native 	= '" . $this->db->escape($data['full_name_native']) . "',
+			link				= '" . $this->db->escape($data['link']) . "'
 			ON DUPLICATE KEY UPDATE
-			link			= '" . $this->db->escape($data['link']) . "'
+			link				= '" . $this->db->escape($data['link']) . "',
+			name_native 		= '" . $this->db->escape($data['name_native']) . "',
+			full_name_native 	= '" . $this->db->escape($data['full_name_native']) . "'
 		");
 
 		if ($this->config->get('config_rainforest_enable_auto_tree')){
@@ -260,8 +277,6 @@ class CategoryParser
 
 					$category_description = [];
 					foreach ($this->getLanguages() as $language){
-
-						//Дефолтный язык всегда в приоритете
 						if ($language['code'] == $this->config->get('config_rainforest_source_language')){
 							$name = $data['name'];
 						} else {
@@ -311,10 +326,7 @@ class CategoryParser
 	}
 
 	public function getTopCategoriesFromDataBase(){
-
 		$query = $this->db->ncquery("SELECT * FROM " . $this->table . " WHERE parent_id = 0");
-
 		return $query->rows;
 	}
-
 }	

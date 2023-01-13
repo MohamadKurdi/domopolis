@@ -207,7 +207,6 @@ class ControllerCatalogCategory extends Controller {
 			}
 
 			$real_category = $this->model_catalog_category->getCategory($result['category_id']);
-
 			$action = array();
 
 			$action[] = array(
@@ -274,8 +273,8 @@ class ControllerCatalogCategory extends Controller {
 					'deletenotinstock'			=> $real_category['deletenotinstock'],
 					'priceva_enable'			=> $real_category['priceva_enable'],
 					'submenu_in_children'		=> $real_category['submenu_in_children'],
-					'intersections'								=> $real_category['intersections'],
-					'exclude_from_intersections'				=> $real_category['exclude_from_intersections'],
+					'intersections'					=> $real_category['intersections'],
+					'exclude_from_intersections'	=> $real_category['exclude_from_intersections'],
 					'default_length'			=> $real_category['default_length'],
 					'default_width'				=> $real_category['default_width'],
 					'default_height'			=> $real_category['default_height'],
@@ -578,10 +577,13 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['amazon_can_get_full'] = false;
 		}
 
+		$this->data['amazon_category_full_information'] = false;
+
 		if (isset($this->request->post['amazon_category_id'])) {
 			$this->data['amazon_category_id'] = $this->request->post['amazon_category_id'];
 		} elseif (!empty($category_info)) {
-			$this->data['amazon_category_id'] = $category_info['amazon_category_id'];
+			$this->data['amazon_category_id'] 				= $category_info['amazon_category_id'];
+			$this->data['amazon_category_full_information'] = $this->rainforestAmazon->categoryParser->getAmazonCategoryInfo($category_info['amazon_category_id']);
 		} else {
 			$this->data['amazon_category_id'] = '';
 		}
@@ -1115,9 +1117,7 @@ class ControllerCatalogCategory extends Controller {
 		}
 		
 		foreach ($query->rows as $row){
-
-			fputcsv($file, $row);
-			
+			fputcsv($file, $row);			
 		}
 
 		fclose($file);
@@ -1125,11 +1125,9 @@ class ControllerCatalogCategory extends Controller {
 	}
 
 	public function amazon_autocomplete() {				
-
 		$json = array();
 
 		if ($this->config->get('config_rainforest_enable_api') && isset($this->request->get['filter_name']) && mb_strlen($this->request->get['filter_name']) > 3) {
-
 			$queryString = http_build_query([
 				'api_key' 		=> $this->config->get('config_rainforest_api_key'),
 				'amazon_domain' => $this->config->get('config_rainforest_api_domain_1'),
@@ -1147,7 +1145,7 @@ class ControllerCatalogCategory extends Controller {
 
 			$encoded = json_decode($json, true);
 
-			if (!empty($encoded['categories'])){
+			if (!empty($encoded['categories'])){				
 				$json = $encoded['categories'];
 			} else {
 				$json = [['path' => $encoded['request_info']['message'], 'id' => 0]];
