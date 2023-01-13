@@ -50,7 +50,7 @@ class ControllerApiInfo1C extends Controller
 
         $smsTEXT = 'SMS sending disabled';
         if ($this->model_setting_setting->getKeySettingValue('config', 'config_sms_ttn_sent_enabled', (int)$order_info['store_id'])){
-            $smsTEXT = str_replace(['{ID}, {TTN}'], [$order_info['store_id'], $ttn], $this->model_setting_setting->getKeySettingValue('config', 'config_sms_ttn_sent', (int)$order_info['store_id']));
+            $smsTEXT = str_replace(['{ID}', '{TTN}'], [$order_id, $ttn], $this->model_setting_setting->getKeySettingValue('config', 'config_sms_ttn_sent', (int)$order_info['store_id']));
 
             $options = array(
                 'to'       => $order_info['telephone'],

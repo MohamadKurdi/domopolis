@@ -5592,12 +5592,22 @@
 		}		
 		
 		public function getDeliverySMSTextAjax(){
-			$order_id = $this->request->post['order_id'];
-			$date = $this->request->post['senddate'];
-			$ttn = $this->request->post['ttn'];
-			$shipping_code = $this->request->post['shipping_code'];
-			
-			echo 'Заказ #'.$order_id.' отправлен Вам '.getDeliveryCompany($shipping_code).', ТТН # '.$ttn;	
+			$this->load->model('sale/order');
+			$this->load->model('setting/setting');
+
+			$order_id 		= $this->request->post['order_id'];
+			$date 			= $this->request->post['senddate'];
+			$ttn 			= $this->request->post['ttn'];
+			$shipping_code 	= $this->request->post['shipping_code'];
+
+			$order_info = $this->model_sale_order->getOrder($order_id);
+
+			 $smsTEXT = 'SMS sending disabled';
+			if ($this->model_setting_setting->getKeySettingValue('config', 'config_sms_ttn_sent_enabled', (int)$order_info['store_id'])){
+				$smsTEXT = str_replace(['{ID}', '{TTN}'], [$order_id, $ttn], $this->model_setting_setting->getKeySettingValue('config', 'config_sms_ttn_sent', (int)$order_info['store_id']));
+			}
+
+			$this->response->setOutput($smsTEXT);			
 		}
 		
 		public function getTransactionSMSTextAjax(){

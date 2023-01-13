@@ -466,7 +466,7 @@
 		</style>
 		<div class="main-wrap">
 			<div class="header-wrap">
-				<div><img height="40px" src="<?php echo HTTPS_SERVER; ?>icon/favicon-194x194.png" title="<?php echo $heading_title; ?>" /></div>
+				<div><img height="40px" src="view/image/<? echo FILE_LOGO; ?>" /></div>
 				<div>
 					<span><i class="fa fa-truck icon_menu"></i> <?php echo $username; ?> (<? echo SITE_NAMESPACE; ?>)</span>
 					<?php if (!$just_courier) { ?>
