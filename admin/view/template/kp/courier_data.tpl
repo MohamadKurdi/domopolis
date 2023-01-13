@@ -74,7 +74,7 @@
 	</div>	
 	
 	
-	<?php if ($order_products_untaken) { ?>
+	<?php if (!empty($order_products_untaken)) { ?>
 		
 		<table class='ptable' style='margin-top:5px; margin-bottom:10px;width:100%'>
 			<thead style='background-color:#e16a5d; color: #fff; text-align: center;'>			
@@ -105,12 +105,12 @@
 				</tr>		
 				
 				<tr>
-					<td colspan="2" style="background-color:white!important;color:grey; font-size:9px!important; <?php if ($i < count($products)) { ?>  border-bottom:0px; <?php } ?>"><i class="fa fa-info-circle"></i> клиент отказался от этого товара, чтоб вернуть обратно, нажми</td>
+					<td colspan="2" style="background-color:white!important;color:grey; font-size:9px!important; <?php if ($i < count($order_products_untaken)) { ?>  border-bottom:0px; <?php } ?>"><i class="fa fa-info-circle"></i> клиент отказался от этого товара, чтоб вернуть обратно, нажми</td>
 					<td colspan="2" class="move-to-taken" data-order-id="<?php echo $order_product['order_id']; ?>" data-order-product-id="<?php echo $order_product_untaken['order_product_id']; ?>" style="padding:10px!important;color:#FFF; background-color:#51a881;">
 						<i class="fa fa-exclamation-triangle"></i> Продажа
 					</td>
 				</tr>
-				<?php if ($i < count($products)) { ?> 
+				<?php if ($i < count($order_products_untaken)) { ?> 
 					<tr>
 						<td colspan="4" style="height:5px;background-color:white!important;"></td>
 					</tr>
@@ -160,7 +160,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td colspan="2" style="background-color:white!important;  color:grey; font-size:9px!important; <?php if ($i < count($products)) { ?>  border-bottom:0px; <?php } ?>">
+			<td colspan="2" style="background-color:white!important;  color:grey; font-size:9px!important; <?php if ($i < count($order_products)) { ?>  border-bottom:0px; <?php } ?>">
 				
 				<i class="fa fa-info-circle"></i> если клиент отказывается от товара, нажми "отказ" чтоб пересчитать сумму к оплате)
 				
@@ -179,7 +179,7 @@
 				<i class="fa fa-exclamation-triangle"></i> Отказ
 			</td>
 		</tr>
-		<?php if ($i < count($products)) { ?> 
+		<?php if ($i < count($order_products)) { ?> 
 			<tr>
 				<td colspan="4" style="height:5px;background-color:white!important; border-bottom:0px; border-top:0px;"></td>
 			</tr>
