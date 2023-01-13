@@ -297,15 +297,12 @@ class ControllerApiInfo1C extends Controller
     {
 
         $order_data = array();
-
-            //На пвз
         $query = $this->db->query("SELECT order_id FROM `order` WHERE order_status_id = 25");
 
         foreach ($query->rows as $row) {
             $order_data[] = $row['order_id'];
         }
-
-            //Доставляется по москве
+            
         $query = $this->db->query("SELECT order_id FROM `order` WHERE shipping_country_id = 176 AND 
 			(shipping_city LIKE '%Москва%'
 				OR shipping_city LIKE '%Moscow%'
@@ -327,7 +324,10 @@ class ControllerApiInfo1C extends Controller
     {
 
         $this->load->model('kp/info1c');
-        $stockwaits1c = $this->model_kp_info1c->getStockWaitsFrom1C();
+
+        if (!$stockwaits1c = $this->model_kp_info1c->getStockWaitsFrom1C()){
+            return;
+        }
 
         $stockwaits = array();
 
@@ -774,6 +774,14 @@ class ControllerApiInfo1C extends Controller
 
                 $unique_products = array();
                 foreach ($input['products']['product'] as $value) {
+
+                    foreach (['quantity_stock', 'quantity_stockK', 'quantity_stockM', 'quantity_stockMN', 'quantity_stockAS'] as $key){
+                        if (empty($value[$key])){
+                            $value[$key] = 0;
+                        }
+                    }
+
+
                     if (!isset($unique_products[(int)($value['product_id'])])) {
                         $unique_products[(int)($value['product_id'])] = array();
                     }
