@@ -84,6 +84,19 @@ for ($i=4; $i<=20; $i++){
 	}
 }
 
+$configFilesPrefix = '';
+if (count($configFileExploded = explode('.', $configFile)) >= 3){
+	if (mb_strlen($configFileExploded[1]) == 2){
+		$configFilesPrefix = trim($configFileExploded[1]);
+	}
+}
+
+if ($configFilesPrefix){
+	echoLine('[CLI] Config file prefix detected: ' . $configFilesPrefix);
+} else {
+	echoLine('[CLI] Config file prefix not detected working in single-engine mode');
+}
+
 echoLine('[CLI] Starting ' . $route . ' in app ' . $application . ' with config ' . $configFile);
 echoLine('[CLI] Parameters: ' . implode(', ', $functionArguments));
 
@@ -106,7 +119,7 @@ $PageCache = new PageCache();
 $registry = new Registry();
 $registry->set('load', 		new Loader($registry));	
 $registry->set('config', 	new Config()); $config = $registry->get('config');
-$registry->set('db', 		new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE));	
+$registry->set('db', 		new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE));
 
 $registry->set('dbmain', $registry->get('db'));
 $registry->set('current_db', 'dbmain');
@@ -158,6 +171,8 @@ if (!$store_id) {
 	$registry->get('config')->set('config_img_server_count', 	HTTPS_IMG_SERVERS_COUNT);			
 	$registry->get('config')->set('config_static_subdomain', 	HTTPS_STATIC_SUBDOMAIN);
 }
+
+$registry->get('config')->set('config_config_file_prefix', $configFilesPrefix);
 
 //Very fast seo-url logic
 if ($registry->get('config')->get('config_seo_url_from_id')){
@@ -309,7 +324,7 @@ $registry->set('yandexTranslator', 	new hobotix\YandexTranslator($registry));
 $registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
 $registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
 $registry->set('CourierServices', 	new CourierServices());
-$registry->set('simpleProcess', 	new hobotix\simpleProcess(['route' => $route, 'config' => $configFile, 'args' => $allArguments]));
+$registry->set('simpleProcess', 	new hobotix\simpleProcess(['route' => $route, 'config' => $configFile, 'args' => $allArguments], $configFilesPrefix));
 
 $registry->set('customer_group_id', (int)$registry->get('config')->get('config_customer_group_id'));
 
