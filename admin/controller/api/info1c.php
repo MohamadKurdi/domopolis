@@ -26,6 +26,7 @@ class ControllerApiInfo1C extends Controller
     public function addTTNHistory($order_id, $ttn, $couriercode)
     {
         $this->load->model('sale/order');
+        $this->load->model('setting/setting');
         $ttn = trim($ttn);
 
 
@@ -37,7 +38,6 @@ class ControllerApiInfo1C extends Controller
             die("order $order_id is closed ");
         }
 
-
         $existingTTNS = $this->model_sale_order->getOrderTtnHistory($order_id);
         foreach ($existingTTNS as $existingTTN) {
             if ($ttn == trim($existingTTN['ttn'])) {
@@ -48,29 +48,30 @@ class ControllerApiInfo1C extends Controller
         $this->db->query("INSERT INTO `order_ttns` SET	order_id = '" . (int)$order_id . "', ttn = '" . $this->db->escape($ttn) . "', delivery_code = '" . $this->db->escape($couriercode) . "', date_ttn = NOW(), sms_sent = NOW()");
         $this->db->query("UPDATE `order` SET `ttn` = '" . $this->db->escape($ttn) . "' WHERE order_id = " . (int)$order_id);
 
-        $smsTEXT = 'Заказ #' . $order_id . ' отправлен, ТТН ' . $ttn;
+        $smsTEXT = 'SMS sending disabled';
+        if ($this->model_setting_setting->getKeySettingValue('config', 'config_sms_ttn_sent_enabled', (int)$order_info['store_id'])){
+            $smsTEXT = str_replace(['{ID}, {TTN}'], [$order_info['store_id'], $ttn], $this->model_setting_setting->getKeySettingValue('config', 'config_sms_ttn_sent', (int)$order_info['store_id']));
 
-        $this->load->model('setting/setting');
+            $options = array(
+                'to'       => $order_info['telephone'],
+                'from'     => $this->model_setting_setting->getKeySettingValue('config', 'config_sms_sign', (int)$order_info['store_id']),
+                'message'  => $smsTEXT
+            );
 
-        $options = array(
-            'to'       => $order_info['telephone'],
-            'from'     => $this->model_setting_setting->getKeySettingValue('config', 'config_sms_sign', (int)$order_info['store_id']),
-            'message'  => $smsTEXT
-        );
+            $sms_id = $this->smsQueue->queue($options);
 
-        $sms_id = $this->smsQueue->queue($options);
+            if ($sms_id) {
+                $sms_status = 'В очереди';
+            } else {
+                $sms_status = 'Неудача';
+            }
+            $sms_data = array(
+                'order_status_id' => $order_info['order_status_id'],
+                'sms' => $options['message']
+            );
 
-        if ($sms_id) {
-            $sms_status = 'В очереди';
-        } else {
-            $sms_status = 'Неудача';
+            $this->model_sale_order->addOrderSmsHistory($order_id, $sms_data, $sms_status, $sms_id, (int)$order_info['customer_id']);
         }
-        $sms_data = array(
-            'order_status_id' => $order_info['order_status_id'],
-            'sms' => $options['message']
-        );
-
-        $this->model_sale_order->addOrderSmsHistory($order_id, $sms_data, $sms_status, $sms_id, (int)$order_info['customer_id']);
 
         $this->response->setOutput($smsTEXT);
     }
