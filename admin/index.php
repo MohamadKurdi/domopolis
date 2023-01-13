@@ -76,6 +76,7 @@ require_once(DIR_SYSTEM . 'library/Bitrix24.php');
 require_once(DIR_SYSTEM . 'library/shortAlias.php');
 require_once(DIR_SYSTEM . 'library/sessionDBHandler.php');
 require_once(DIR_SYSTEM . 'library/PageCache.php');
+require_once(DIR_SYSTEM . 'library/CourierServices.php');
 require_once(DIR_SYSTEM . 'library/hobotix/EmailBlackList.php');
 require_once(DIR_SYSTEM . 'library/hobotix/RainforestAmazon.php');
 require_once(DIR_SYSTEM . 'library/hobotix/PricevaAdaptor.php');
@@ -264,12 +265,13 @@ if ($registry->get('config')->get('config_order_default')){
 $registry->set('customer_group_id', $registry->get('config')->get('config_customer_group_id'));
 
 
-$registry->set('document', new Document()); 		
-$registry->set('currency', new Currency($registry));		
-$registry->set('weight', new Weight($registry));
-$registry->set('length', new Length($registry));
-$registry->set('user', new User($registry));
-$registry->set('cart', new Cart($registry));
+$registry->set('document', 			new Document()); 		
+$registry->set('currency', 			new Currency($registry));		
+$registry->set('weight', 			new Weight($registry));
+$registry->set('length', 			new Length($registry));
+$registry->set('user', 				new User($registry));
+$registry->set('cart', 				new Cart($registry));
+$registry->set('courierServices', 	new CourierServices($registry));
 
 $emailBlackList = new hobotix\EmailBlackList($registry);
 $registry->set('emailBlackList', $emailBlackList);
