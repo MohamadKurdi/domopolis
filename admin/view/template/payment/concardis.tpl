@@ -151,6 +151,19 @@
 								<option value="1"><?php echo $text_enabled; ?></option>
 								<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
 							<?php } ?>
+						</select>
+						</td>
+					</tr>
+					<tr>
+						<td>Статус админки</td>
+						<td><select name="concardis_status_fake">
+							<?php if ($concardis_status_fake) { ?>
+								<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+								<option value="0"><?php echo $text_disabled; ?></option>
+								<?php } else { ?>
+								<option value="1"><?php echo $text_enabled; ?></option>
+								<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+							<?php } ?>
 						</select></td>
 					</tr>
 					<tr>

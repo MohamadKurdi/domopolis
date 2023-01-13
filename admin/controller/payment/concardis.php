@@ -159,6 +159,12 @@ class ControllerPaymentConcardis extends Controller {
 			$this->data['concardis_status'] = $this->config->get('concardis_status');
 		}
 
+		if (isset($this->request->post['concardis_status_fake'])) {
+			$this->data['concardis_status_fake'] = $this->request->post['concardis_status_fake'];
+		} else {
+			$this->data['concardis_status_fake'] = $this->config->get('concardis_status_fake');
+		}
+
 		if (isset($this->request->post['concardis_sort_order'])) {
 			$this->data['concardis_sort_order'] = $this->request->post['concardis_sort_order'];
 		} else {
