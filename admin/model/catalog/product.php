@@ -16,7 +16,7 @@
 				$data['product_category'] = array(GENERAL_MARKDOWN_CATEGORY);	
 			}
 			
-			$this->db->query("INSERT INTO product SET model = '" . $this->db->escape($data['model']) . "', short_name = '" . $this->db->escape($data['short_name']) . "', short_name_de = '" . $this->db->escape($data['short_name_de']) . "', sku = '" . $this->db->escape($data['sku']) . "', upc = '" . $this->db->escape($data['upc']) . "', ean = '" . $this->db->escape($data['ean']) . "', jan = '" . $this->db->escape($data['jan']) . "', isbn = '" . $this->db->escape($data['isbn']) . "', mpn = '" . $this->db->escape($data['mpn']) . "', asin = '" . $this->db->escape($data['asin']) . "', location = '" . $this->db->escape($data['location']) . "', color_group = '" . $this->db->escape($data['color_group']) . "', source = '" . $this->db->escape($data['source']) . "', competitors = '" . $this->db->escape($data['competitors']) . "', competitors_ua = '" . $this->db->escape($data['competitors_ua']) . "', quantity = '" . (int)$data['quantity'] . "', minimum = '" . (int)$data['minimum'] . "', package = '" . (int)$data['package'] . "', subtract = '" . (int)$data['subtract'] . "', has_child = '" . (int)$data['has_child'] . "', stock_status_id = '" . (int)$data['stock_status_id'] . "', date_available = '" . $this->db->escape($data['date_available']) . "', manufacturer_id = '" . (int)$data['manufacturer_id'] . "', collection_id = '" . (int)$data['collection_id'] . "', shipping = '" . (int)$data['shipping'] . "', price = '" . (float)$data['price'] . "', mpp_price = '" . (float)$data['mpp_price'] . "', cost = '" . (float)$data['cost'] . "', price_national = '" . (float)$data['price_national'] . "', currency = '" . $this->db->escape($data['currency']) . "', points = '" . (int)$data['points'] . "', weight = '" . (float)$data['weight'] . "', weight_class_id = '" . (int)$data['weight_class_id'] . "', weight_amazon_key = '" . $this->db->escape($data['weight_amazon_key']) . "', length = '" . (float)$data['length'] . "', width = '" . (float)$data['width'] . "', height = '" . (float)$data['height'] . "', length_class_id = '" . (int)$data['length_class_id'] . "', length_amazon_key = '" . $this->db->escape($data['length_amazon_key']) . "', pack_weight = '" . (float)$data['pack_weight'] . "', pack_weight_class_id = '" . (int)$data['pack_weight_class_id'] . "', pack_weight_amazon_key = '" . $this->db->escape($data['pack_weight_amazon_key']) . "', pack_length = '" . (float)$data['pack_length'] . "', pack_width = '" . (float)$data['pack_width'] . "', pack_height = '" . (float)$data['pack_height'] . "', pack_length_class_id = '" . (int)$data['pack_length_class_id'] . "', pack_length_amazon_key = '" . $this->db->escape($data['pack_length_amazon_key']) . "', status = '" . (int)$data['status'] . "', tax_class_id = '" . $this->db->escape($data['tax_class_id']) . "', sort_order = '" . (int)$data['sort_order'] . "', quantity_stock = '" . (int)$data['quantity_stock'] . "', min_buy = '" . (int)$data['min_buy'] . "', max_buy = '" . (int)$data['max_buy'] . "', quantity_stockM = '" . (int)$data['quantity_stockM'] . "', quantity_stockK = '" . (int)$data['quantity_stockK'] . "', tnved = '" . $data['tnved'] . "', ignore_parse = '" . (int)$data['ignore_parse'] . "', big_business = '" . (int)$data['big_business'] . "', new = '" . (int)$data['new'] . "', ignore_parse_date_to = '" .  $this->db->escape($data['ignore_parse_date_to']) . "', new_date_to = '" .  $this->db->escape($data['new_date_to']) . "', is_markdown = '" . (int)$data['is_markdown'] . "', markdown_product_id = '" . (int)$data['markdown_product_id'] . "', main_variant_id = '" . (int)$data['main_variant_id'] . "', variant_1_is_color = '" . (int)$data['variant_1_is_color'] . "', variant_2_is_color = '" . (int)$data['variant_2_is_color'] . "', display_in_catalog = '" . (int)$data['display_in_catalog'] . "', is_option_with_id = '" . (int)$data['is_option_with_id'] . "', yam_disable = '" . (int)$data['yam_disable'] . "', is_illiquid = '" . (int)$data['is_illiquid'] . "', yam_price = '" . (float)$data['yam_price'] . "', yam_percent = '" . (float)$data['yam_percent'] . "', yam_special = '" . (float)$data['yam_special'] . "', yam_special_percent = '" . (float)$data['yam_special_percent'] . "', yam_currency = '" . $this->db->escape($data['yam_currency']) . "', yam_product_id = '" . $this->db->escape($this->config->get('config_yam_offer_id_prefix') . $product_id) . "', priceva_enable = '" . (int)$data['priceva_enable'] . "', priceva_disable = '" . (int)$data['priceva_disable'] . "', amzn_ignore = '" . (int)$data['amzn_ignore'] . "', date_added = NOW()");
+			$this->db->query("INSERT INTO product SET model = '" . $this->db->escape($data['model']) . "', short_name = '" . $this->db->escape($data['short_name']) . "', short_name_de = '" . $this->db->escape($data['short_name_de']) . "', sku = '" . $this->db->escape($data['sku']) . "', upc = '" . $this->db->escape($data['upc']) . "', ean = '" . $this->db->escape($data['ean']) . "', jan = '" . $this->db->escape($data['jan']) . "', isbn = '" . $this->db->escape($data['isbn']) . "', mpn = '" . $this->db->escape($data['mpn']) . "', asin = '" . $this->db->escape($data['asin']) . "', location = '" . $this->db->escape($data['location']) . "', color_group = '" . $this->db->escape($data['color_group']) . "', source = '" . $this->db->escape($data['source']) . "', competitors = '" . $this->db->escape($data['competitors']) . "', competitors_ua = '" . $this->db->escape($data['competitors_ua']) . "', quantity = '" . (int)$data['quantity'] . "', minimum = '" . (int)$data['minimum'] . "', package = '" . (int)$data['package'] . "', subtract = '" . (int)$data['subtract'] . "', has_child = '" . (int)$data['has_child'] . "', stock_status_id = '" . (int)$data['stock_status_id'] . "', date_available = '" . $this->db->escape($data['date_available']) . "', manufacturer_id = '" . (int)$data['manufacturer_id'] . "', collection_id = '" . (int)$data['collection_id'] . "', shipping = '" . (int)$data['shipping'] . "', price = '" . (float)$data['price'] . "', price_delayed = '" . (float)$data['price_delayed'] . "', mpp_price = '" . (float)$data['mpp_price'] . "', cost = '" . (float)$data['cost'] . "', price_national = '" . (float)$data['price_national'] . "', currency = '" . $this->db->escape($data['currency']) . "', points = '" . (int)$data['points'] . "', weight = '" . (float)$data['weight'] . "', weight_class_id = '" . (int)$data['weight_class_id'] . "', weight_amazon_key = '" . $this->db->escape($data['weight_amazon_key']) . "', length = '" . (float)$data['length'] . "', width = '" . (float)$data['width'] . "', height = '" . (float)$data['height'] . "', length_class_id = '" . (int)$data['length_class_id'] . "', length_amazon_key = '" . $this->db->escape($data['length_amazon_key']) . "', pack_weight = '" . (float)$data['pack_weight'] . "', pack_weight_class_id = '" . (int)$data['pack_weight_class_id'] . "', pack_weight_amazon_key = '" . $this->db->escape($data['pack_weight_amazon_key']) . "', pack_length = '" . (float)$data['pack_length'] . "', pack_width = '" . (float)$data['pack_width'] . "', pack_height = '" . (float)$data['pack_height'] . "', pack_length_class_id = '" . (int)$data['pack_length_class_id'] . "', pack_length_amazon_key = '" . $this->db->escape($data['pack_length_amazon_key']) . "', status = '" . (int)$data['status'] . "', tax_class_id = '" . $this->db->escape($data['tax_class_id']) . "', sort_order = '" . (int)$data['sort_order'] . "', quantity_stock = '" . (int)$data['quantity_stock'] . "', min_buy = '" . (int)$data['min_buy'] . "', max_buy = '" . (int)$data['max_buy'] . "', quantity_stockM = '" . (int)$data['quantity_stockM'] . "', quantity_stockK = '" . (int)$data['quantity_stockK'] . "', tnved = '" . $data['tnved'] . "', ignore_parse = '" . (int)$data['ignore_parse'] . "', big_business = '" . (int)$data['big_business'] . "', new = '" . (int)$data['new'] . "', ignore_parse_date_to = '" .  $this->db->escape($data['ignore_parse_date_to']) . "', new_date_to = '" .  $this->db->escape($data['new_date_to']) . "', is_markdown = '" . (int)$data['is_markdown'] . "', markdown_product_id = '" . (int)$data['markdown_product_id'] . "', main_variant_id = '" . (int)$data['main_variant_id'] . "', variant_1_is_color = '" . (int)$data['variant_1_is_color'] . "', variant_2_is_color = '" . (int)$data['variant_2_is_color'] . "', display_in_catalog = '" . (int)$data['display_in_catalog'] . "', is_option_with_id = '" . (int)$data['is_option_with_id'] . "', yam_disable = '" . (int)$data['yam_disable'] . "', is_illiquid = '" . (int)$data['is_illiquid'] . "', yam_price = '" . (float)$data['yam_price'] . "', yam_percent = '" . (float)$data['yam_percent'] . "', yam_special = '" . (float)$data['yam_special'] . "', yam_special_percent = '" . (float)$data['yam_special_percent'] . "', yam_currency = '" . $this->db->escape($data['yam_currency']) . "', yam_product_id = '" . $this->db->escape($this->config->get('config_yam_offer_id_prefix') . $product_id) . "', priceva_enable = '" . (int)$data['priceva_enable'] . "', priceva_disable = '" . (int)$data['priceva_disable'] . "', amzn_ignore = '" . (int)$data['amzn_ignore'] . "', date_added = NOW()");
 			
 			$product_id = $this->db->getLastId();
 			
@@ -161,8 +161,6 @@
 			}
 
 			if (isset($data['product_video'])) {
-
-
 				foreach ($data['product_video'] as $product_video) {									
 					$this->db->query("INSERT INTO product_video SET product_id = '" . (int)$product_id . "', video = '" . $this->db->escape(html_entity_decode($product_video['video'], ENT_QUOTES, 'UTF-8')) . "', image = '" . $this->db->escape(html_entity_decode($product_video['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$product_video['sort_order'] . "'");
 
@@ -435,6 +433,7 @@
 				collection_id 			= '" . (int)$data['collection_id'] . "', 
 				shipping 				= '" . (int)$data['shipping'] . "', 
 				price 					= '" . (float)$data['price'] . "', 
+				price_delayed 			= '" . (float)$data['price_delayed'] . "',
 				mpp_price 				= '" . (float)$data['mpp_price'] . "', 
 				cost 					= '" . (float)$data['cost'] . "', 
 				special_cost 			= '" . (float)$data['special_cost'] . "', 
@@ -648,14 +647,10 @@
 			
 			$this->db->query("DELETE FROM product_price_to_store WHERE product_id = '" . (int)$product_id . "'");
 			
-			if (isset($data['product_price_to_store'])) {
-				
-				foreach ($data['product_price_to_store'] as $key => $value){
-					
-					if ($value && (!empty($value['price'])) || !empty($value['dot_not_overload_1c'])) {
-						
-						$this->db->query("INSERT INTO product_price_to_store SET store_id = '" . (int)$key . "', product_id = '" . (int)$product_id . "', price = '" . (float)$value['price'] . "', dot_not_overload_1c = '" . (int)$value['dot_not_overload_1c'] . "', settled_from_1c = '" . (int)$value['settled_from_1c'] . "'");
-						
+			if (isset($data['product_price_to_store'])) {			
+				foreach ($data['product_price_to_store'] as $key => $value){				
+					if ($value && (!empty($value['price'])) || !empty($value['dot_not_overload_1c']) || !empty($value['price_delayed'])) {						
+						$this->db->query("INSERT INTO product_price_to_store SET store_id = '" . (int)$key . "', product_id = '" . (int)$product_id . "', price = '" . (float)$value['price'] . "', price_delayed = '" . (float)$value['price_delayed'] . "', dot_not_overload_1c = '" . (int)$value['dot_not_overload_1c'] . "', settled_from_1c = '" . (int)$value['settled_from_1c'] . "'");						
 					}
 				}				
 			}
@@ -663,14 +658,10 @@
 			$this->db->query("DELETE FROM product_price_national_to_store WHERE product_id = '" . (int)$product_id . "'");
 			
 			if (isset($data['product_price_national_to_store'])) {
-				$this->load->model('setting/setting');
-												
+				$this->load->model('setting/setting');												
 				foreach ($data['product_price_national_to_store'] as $key => $value){
-
-					if ($value && (!empty($value['price']) || !empty($value['dot_not_overload_1c']))) {					
-						
-						$this->db->query("INSERT INTO product_price_national_to_store SET store_id = '" . (int)$key . "', product_id = '" . (int)$product_id . "', price = '" . (float)$value['price'] . "', dot_not_overload_1c = '" . (int)$value['dot_not_overload_1c'] . "', settled_from_1c = '" . (int)$value['settled_from_1c'] . "',  currency = '" . $this->db->escape($this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', (int)$key)) . "'");
-						
+					if ($value && (!empty($value['price']) || !empty($value['dot_not_overload_1c']))) {										
+						$this->db->query("INSERT INTO product_price_national_to_store SET store_id = '" . (int)$key . "', product_id = '" . (int)$product_id . "', price = '" . (float)$value['price'] . "', dot_not_overload_1c = '" . (int)$value['dot_not_overload_1c'] . "', settled_from_1c = '" . (int)$value['settled_from_1c'] . "',  currency = '" . $this->db->escape($this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', (int)$key)) . "'");						
 					}
 				}				
 			}
@@ -678,13 +669,10 @@
 			$this->db->query("DELETE FROM product_price_national_to_yam WHERE product_id = '" . (int)$product_id . "'");
 			
 			if (isset($data['product_price_national_to_yam'])) {
-				$this->load->model('setting/setting');
-				
+				$this->load->model('setting/setting');				
 				foreach ($data['product_price_national_to_yam'] as $key => $value){
 					if ($value && (!empty($value['price']) || !empty($value['dot_not_overload_1c']))) {					
-						
 						$this->db->query("INSERT INTO product_price_national_to_yam SET store_id = '" . (int)$key . "', product_id = '" . (int)$product_id . "', price = '" . (float)$value['price'] . "', dot_not_overload_1c = '" . (int)$value['dot_not_overload_1c'] . "', settled_from_1c = '" . (int)$value['settled_from_1c'] . "',  currency = '" . $this->db->escape($this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', (int)$key)) . "'");
-						
 					}
 				}				
 			}
@@ -693,7 +681,6 @@
 			
 			if (isset($data['product_stock_status'])) {			
 				foreach ($data['product_stock_status'] as $key => $value){
-					
 					if ($value > 0) {
 						$this->db->query("INSERT INTO product_stock_status SET store_id = '" . (int)$key . "', product_id = '" . (int)$product_id . "', stock_status_id = '" . (int)$value . "'");
 					}
@@ -704,7 +691,6 @@
 			
 			if (isset($data['product_stock_limits'])) {			
 				foreach ($data['product_stock_limits'] as $key => $value){
-					
 					if (is_array($value)) {
 						$this->db->query("INSERT INTO product_stock_limits SET store_id = '" . (int)$key . "', product_id = '" . (int)$product_id . "', min_stock = '" . (int)$value['min_stock'] . "', rec_stock = '" . (int)$value['rec_stock'] . "'");
 					}
@@ -853,10 +839,6 @@
 			
 			if (isset($data['product_image'])) {
 				foreach ($data['product_image'] as $product_image) {
-					
-				//	if ($this->config->get('multiimageuploader_deletedef') && isset($data['def_img']) && $data['def_img'] == $product_image['image']) { continue;}
-				//	if ($this->config->get('pim_deletedef') && isset($data['def_img']) && $data['def_img'] == $product_image['image']) { continue; }
-					
 					$this->db->query("INSERT INTO product_image SET product_id = '" . (int)$product_id . "', image = '" . $this->db->escape(html_entity_decode($product_image['image'], ENT_QUOTES, 'UTF-8')) . "', sort_order = '" . (int)$product_image['sort_order'] . "'");
 				}
 			}

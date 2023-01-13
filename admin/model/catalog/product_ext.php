@@ -143,6 +143,7 @@ class ModelCatalogProductExt extends Model {
             'height'            => 'p.height',
             'weight'            => 'p.weight',
             'price'             => 'p.price',
+            'price_delayed'     => 'p.price_delayed',
             'cost'              => 'p.cost',
             'amazon_best_price' => 'p.amazon_best_price',
             'amzn_offers_count' => 'p.amzn_offers_count'
@@ -279,6 +280,7 @@ class ModelCatalogProductExt extends Model {
             'pd.name',
             'p.model',
             'p.price',
+            'p.price_delayed',
             'p.cost',
             'p.amazon_best_price',
             'p.amzn_offers_count',
@@ -327,7 +329,7 @@ class ModelCatalogProductExt extends Model {
     public function quickEditProduct($product_id, $column, $value, $lang_id=null, $data=null) {
         $this->load->model('catalog/product');
 
-        $editable = array('manufacturer', 'image', 'name', 'tag', 'model', 'sku', 'asin', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'location', 'quantity', 'price', 'cost', 'weight', 'status', 'fill_from_amazon', 'sort_order', 'tax_class', 'minimum', 'subtract', 'stock_status', 'shipping', 'date_available', 'length', 'width', 'height', 'length_class', 'weight_class', 'points');
+        $editable = array('manufacturer', 'image', 'name', 'tag', 'model', 'sku', 'asin', 'upc', 'ean', 'jan', 'mpn', 'isbn', 'location', 'quantity', 'price', 'price_delayed', 'cost', 'weight', 'status', 'fill_from_amazon', 'sort_order', 'tax_class', 'minimum', 'subtract', 'stock_status', 'shipping', 'date_available', 'length', 'width', 'height', 'length_class', 'weight_class', 'points');
         $result = false;
         if (in_array($column, $editable)) {
 
