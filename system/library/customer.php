@@ -588,13 +588,18 @@
 			
 			//Сумма всех минусов
 			$query = $this->db->ncquery("SELECT SUM(points) as total FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "' AND points < 0");
-			$total = $query->row['total'];
+
+			if ($query->num_rows){
+				$total = $query->row['total'];
+			} else {
+				$total = 0;
+			}
 			
 			//Обнуляем все потраченные
 			$query = $this->db->ncquery("UPDATE customer_reward SET points_paid = 0 WHERE customer_id = '" . (int)$customer_id . "' AND points > 0");
 			
 			$points_history = $this->getAllPositiveRewards($customer_id);
-			
+
 			$pointsINT = abs($total);
 			$pointsSUMCURRENT = 0;
 			$pointsSUMPREV = 0;
