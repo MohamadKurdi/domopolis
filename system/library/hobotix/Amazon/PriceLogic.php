@@ -353,33 +353,58 @@ class PriceLogic
 		return $resultPrice;
 	}
 
+	public function updatePricesFromDelayed(){		
+		if ($this->config->get('config_rainforest_delay_price_setting')){
+			echoLine('[PriceLogic::updatePricesFromDelayed] DELAYED PRICES IS ON!');
+
+			$this->db->query("UPDATE product SET price = price_delayed WHERE price_delayed > 0");			
+			$this->db->query("UPDATE product SET price_delayed = 0 WHERE price_delayed > 0");
+
+			$this->db->query("UPDATE product_price_to_store SET price = price_delayed WHERE price_delayed > 0");	
+			$this->db->query("UPDATE product_price_to_store SET price_delayed = 0 WHERE price_delayed > 0");		
+		} else {
+			echoLine('[PriceLogic::updatePricesFromDelayed] DELAYED PRICES IS ON!');
+		}
+	}
+
 	public function updateProductPriceInDatabase($product_id, $price){
-		$this->db->query("UPDATE product SET price = '" . (float)$price . "' WHERE product_id = '" . (int)$product_id . "' AND is_markdown = 0");
+		$field = $price;
+		if ($this->config->get('config_rainforest_delay_price_setting')){
+			$field = 'price_delayed';
+		}
+
+		$this->db->query("UPDATE product SET 
+			" . $field . " 		= '" . (float)$price . "' 
+			WHERE product_id 	= '" . (int)$product_id . "' 
+			AND is_markdown 	= 0");
 
 		$this->priceUpdaterQueue->addToQueue($product_id);
 	}
 
 	public function updateProductPriceToStoreInDatabase($product_id, $price, $store_id){
+
+		$field = $price;
+		if ($this->config->get('config_rainforest_delay_price_setting')){
+			$field = 'price_delayed';
+		}
+
 		$this->db->query("INSERT INTO product_price_to_store SET 
 			store_id 			= '" . (int)$store_id . "',
 			product_id 			= '" . (int)$product_id . "',
-			price 				= '" . (float)$price . "',
+			" . $field . " 		= '" . (float)$price . "',
 			special 			= '0',
 			settled_from_1c 	= '0',
 			dot_not_overload_1c = '0'
 			ON DUPLICATE KEY UPDATE
-			price 				= '" . (float)$price . "',
+			" . $field . " 		= '" . (float)$price . "',
 			settled_from_1c 	= '0',
 			dot_not_overload_1c = '0'");
 
 		$this->priceUpdaterQueue->addToQueue($product_id);
 	}
 
-	public function updateProductPrices($asin, $amazonBestPrice, $explicit = false){
-		//Если включена настройка "ценообразование из рейнфорест"
+	public function updateProductPrices($asin, $amazonBestPrice, $explicit = false){		
 		if ($this->config->get('config_rainforest_enable_pricing')){
-
-			//Если найдены по ASIN товары
 
 			if ($explicit){
 				$products = $this->getProductsByAsinExplicit($asin);
