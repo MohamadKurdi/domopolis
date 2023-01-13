@@ -73,9 +73,7 @@ class ControllerDPRainForest extends Controller {
 			foreach ($childCategories as $childCategory){
 
 				echoLine('[ControllerDPRainForest] Категория ' . $childCategory['path']);
-
 				$this->rainforestAmazon->categoryParser->setType($type)->createCategory($childCategory);										
-
 				if ($childCategory['has_children']){
 					$this->recursiveTree($childCategory['id'], $type);
 				}
@@ -98,8 +96,7 @@ class ControllerDPRainForest extends Controller {
 
 			$i = 1;
 			$total = count($rfCategory[$categoryResultIndex]);
-			foreach ($rfCategory[$categoryResultIndex] as $rfSimpleProduct){
-			//	echoLine('[parseCategoryPage] Product ' . $rfSimpleProduct['asin'] . ': ' . $rfSimpleProduct['title']);
+			foreach ($rfCategory[$categoryResultIndex] as $rfSimpleProduct){			
 				$counters = ($this->current_iteration . '/' . $this->iterations . ' : ');
 				$counters .= ($this->current_category . '/' . \hobotix\RainforestAmazon::categoryRequestLimits . ' : ');
 				$counters .= ($i . '/' . $total);
@@ -329,8 +326,6 @@ class ControllerDPRainForest extends Controller {
 	Создает первичное дерево категорий. Дальше лучше использовать fixnewcategoriescron
 	*/
 	public function addcategoriescron(){
-		exit();
-
 		if (!$this->config->get('config_rainforest_enable_category_tree_parser')){
 			echoLine('[ControllerDPRainForest::addcategoriescron] CRON IS DISABLED IN ADMIN');
 			return;
