@@ -1,9 +1,5 @@
 <?php
-	// Heading
 $_['heading_title']          = 'Товары';
-
-	// Text
-
 $_['text_saving'] = 'Сохраняю...';
 $_['text_loading'] = 'Загружаю ...';
 $_['text_click_edit'] = 'Нажмите, чтобы изменить...';
@@ -54,14 +50,11 @@ $_['text_percent']           = 'Процент';
 $_['entry_percent']           = 'Процент';
 $_['text_amount']            = 'Фиксированная сумма';
 
-	// Column
 $_['column_name']            = 'Название товара';
 $_['column_model']           = 'Артикул';
-$_['column_image']           = 'Изображения';
-	// Filter by category ADD
-$_['column_category']        = 'Category';
-	// End add
-$_['column_price']           = 'Цена';
+$_['column_image']           = 'Изображения';	
+$_['column_category']        = 'Категория';	
+$_['column_price']           = 'Цена<i class="fa fa-check-circle"></i>';
 $_['column_quantity']        = 'Кол.';
 $_['column_status']          = 'Статус';
 $_['column_action']          = 'Действие';
@@ -83,6 +76,7 @@ $_['column_points'] = 'Бонусы';
 $_['column_sort_order']         = 'Сортировка';
 $_['column_filled_from_amazon'] = 'Загружен<i class="fa fa-amazon"></i>';
 $_['column_amzn_no_offers'] 	= 'Нету<i class="fa fa-amazon"></i>';
+$_['column_price_delayed']		= 'Цена<i class="fa fa-clock-o"></i>';
 $_['column_amazon_best_price']	= 'Цена<i class="fa fa-amazon"></i>';
 $_['column_amzn_offers_count']	= 'Офферов<i class="fa fa-amazon"></i>';
 $_['column_fill_from_amazon'] 	= 'Загружать<i class="fa fa-amazon"></i>';
