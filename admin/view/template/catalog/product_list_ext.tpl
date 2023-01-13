@@ -246,6 +246,13 @@
 									</div>
 								</td>
 								<?php break;
+								case 'price_delayed': ?>
+								<td class="<?php echo $column_info[$col]['align']; ?>">
+									<div>
+										<input type="text" name="filter_<?php echo $col; ?>" value="<?php echo $filters[$col]; ?>" class="filter price <?php echo $col; ?>"<?php echo ($column_info[$col]['filter']['autocomplete']) ? ' placeholder="' . $text_autocomplete . '"' : ''; ?> />										
+									</div>
+								</td>
+								<?php break;
 								case 'action': ?>
 								<td width="1" class="<?php echo $column_info[$col]['align']; ?>"><a onclick="filter();" class="button"><?php echo $button_filter; ?></a></td>
 								<?php break;

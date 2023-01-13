@@ -981,6 +981,16 @@
 																							</td>									
 																						</tr>
 																						<tr>
+																							<td>
+																								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Следующая цена</span>																								
+																							</td>
+																							<td>
+																								<input type="text" name="price_delayed" value="<?php echo $price_delayed; ?>" />&nbsp;<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><? echo $this->config->get('config_currency'); ?></span>	
+
+																								<span class="help">Будет назначена при переформировании гугл-фидов</span>			
+																							</td>									
+																						</tr>
+																						<tr>
 																							<td><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Не обновлять цены</span></td>
 																							<td>
 																								<input type="checkbox" name="ignore_parse" value="1" <?php if (isset($ignore_parse) && $ignore_parse) print 'checked'; ?>/>
@@ -1027,19 +1037,16 @@
 																							<? foreach ($stores as $store) { ?>
 
 																								<tr>
-																									<td>
+																									<td style="width:150px;">
 																										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF"><? echo $store['name']; ?></span>
 																										<br /><span class="help">переназначение цены</span>
 																									</td>
 																									<td>
-																										<input style="width:200px;" type="text" name="product_price_to_store[<? echo $store['store_id']; ?>][price]" value="<?php echo isset($product_price_to_store[$store['store_id']])?$product_price_to_store[$store['store_id']]['price']:''; ?>" />
-																										&nbsp;<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF">
-																											<? echo $this->model_setting_setting->getKeySettingValue('config', 'config_currency', $store['store_id']); ?>
-																										</span>			
+																										<input style="width:200px;" type="text" name="product_price_to_store[<? echo $store['store_id']; ?>][price]" value="<?php echo isset($product_price_to_store[$store['store_id']])?$product_price_to_store[$store['store_id']]['price']:''; ?>" />			<br /><span class="help">текущая цена</span>																					
 
 																										<?php if (!empty($product_price_to_store[$store['store_id']]) && !empty($product_price_to_store[$store['store_id']]['price'])) {
 
-																											$value_in_national_currency = $this->currency->format($product_price_to_store[$store['store_id']]['price'], $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', $store['store_id'])); 																								
+																											$value_in_national_currency = $this->currency->format($product_price_to_store[$store['store_id']]['price'], $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', $store['store_id'])); 																		
 																										} ?>
 
 																										<?php if (!empty($value_in_national_currency)) { ?>
@@ -1047,6 +1054,22 @@
 																										<?php } ?>
 
 																									</td>
+
+																									<td>
+																										<input style="width:200px;" type="text" name="product_price_to_store[<? echo $store['store_id']; ?>][price_delayed]" value="<?php echo isset($product_price_to_store[$store['store_id']])?$product_price_to_store[$store['store_id']]['price_delayed']:''; ?>" /><br /><span class="help">следующая цена</span>
+
+																										<?php if (!empty($product_price_to_store[$store['store_id']]) && !empty($product_price_to_store[$store['store_id']]['price_delayed'])) {
+
+																											$value_in_national_currency = $this->currency->format($product_price_to_store[$store['store_id']]['price_delayed'], $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', $store['store_id'])); 																		
+																										} ?>
+
+																										<?php if (!empty($value_in_national_currency)) { ?>
+																											<br /><span class="help"><?php echo $value_in_national_currency; ?></span>
+																										<?php } ?>
+
+																									</td>
+
+
 																									<td>
 																										<span style="display:inline-block; padding:4px 6px; margin:3px; background:#4ea24e; color:#FFF;">
 																											<input type="checkbox" name="product_price_to_store[<? echo $store['store_id']; ?>][dot_not_overload_1c]" value="1" <?php if (isset($product_price_to_store[$store['store_id']]) && $product_price_to_store[$store['store_id']]['dot_not_overload_1c']) print 'checked'; ?>/>не переназначать из 1С
@@ -1079,7 +1102,6 @@
 																										<br /><span class="help">переназначение цены</span>
 																									</td>
 																									<td>
-
 																										<input style="width:200px;" type="text" name="product_price_national_to_store[<? echo $store['store_id']; ?>][price]" value="<?php echo isset($product_price_national_to_store[$store['store_id']])?$product_price_national_to_store[$store['store_id']]['price']:''; ?>" />&nbsp;
 																										<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><? echo $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', $store['store_id']); ?></span>
 																									</td>
