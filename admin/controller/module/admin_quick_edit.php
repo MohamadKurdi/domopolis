@@ -61,11 +61,12 @@ class ControllerModuleAdminQuickEdit extends Controller {
         'name'              => array('display' => 1, 'qe_status' => 0, 'editable' => 1, 'sortable' => 1, 'index' =>  4, 'align' =>   'left', 'qe_type' =>    'name_quick_edit', 'sort' => 'pd.name'          , 'filter' => array('show' => 1, 'type' => 0, 'autocomplete' => array('return' => array('label' =>  'name', 'value' => 'product_id')))),
         'tag'               => array('display' => 0, 'qe_status' => 0, 'editable' => 1, 'sortable' => 1, 'index' =>  5, 'align' =>   'left', 'qe_type' =>     'tag_quick_edit', 'sort' => ''                 , 'filter' => array('show' => 1, 'type' => 0, 'autocomplete' => false)),
         'model'             => array('display' => 1, 'qe_status' => 1, 'editable' => 1, 'sortable' => 1, 'index' =>  6, 'align' =>   'left', 'qe_type' =>         'quick_edit', 'sort' => 'p.model'          , 'filter' => array('show' => 1, 'type' => 0, 'autocomplete' => array('return' => array('label' => 'model', 'value' => 'product_id')))),
-        'price'             => array('display' => 1, 'qe_status' => 1, 'editable' => 1, 'sortable' => 1, 'index' =>  7, 'align' =>  'right', 'qe_type' =>   'price_quick_edit', 'sort' => 'p.price'          , 'filter' => array('show' => 1, 'type' => 0, 'autocomplete' => false)),
+
         'cost'             => array('display' => 1, 'qe_status' => 1, 'editable' => 1, 'sortable' => 1, 'index' =>  7, 'align' =>  'right', 'qe_type' =>   'price_quick_edit', 'sort' => 'p.cost'          , 'filter' => array('show' => 1, 'type' => 0, 'autocomplete' => false)),
         'amazon_best_price'             => array('display' => 1, 'qe_status' => 1, 'editable' => 1, 'sortable' => 1, 'index' =>  7, 'align' =>  'right', 'qe_type' =>   'price_quick_edit', 'sort' => 'p.amazon_best_price'       , 'filter' => array('show' => 1, 'type' => 0, 'autocomplete' => false)),
-
-         'amzn_offers_count'             => array('display' => 1, 'qe_status' => 1, 'editable' => 1, 'sortable' => 1, 'index' =>  7, 'align' =>  'right', 'qe_type' =>   'price_quick_edit', 'sort' => 'p.amzn_offers_count'       , 'filter' => array('show' => 1, 'type' => 0, 'autocomplete' => false)),
+        'price_delayed'    => array('display' => 1, 'qe_status' => 1, 'editable' => 1, 'sortable' => 1, 'index' =>  7, 'align' =>  'right', 'qe_type' =>   'price_quick_edit', 'sort' => 'p.price_delayed'          , 'filter' => array('show' => 1, 'type' => 0, 'autocomplete' => false)),
+        'price'             => array('display' => 1, 'qe_status' => 1, 'editable' => 1, 'sortable' => 1, 'index' =>  7, 'align' =>  'right', 'qe_type' =>   'price_quick_edit', 'sort' => 'p.price'          , 'filter' => array('show' => 1, 'type' => 0, 'autocomplete' => false)),
+         'amzn_offers_count'  => array('display' => 1, 'qe_status' => 1, 'editable' => 1, 'sortable' => 1, 'index' =>  7, 'align' =>  'right', 'qe_type' =>   'price_quick_edit', 'sort' => 'p.amzn_offers_count'       , 'filter' => array('show' => 1, 'type' => 0, 'autocomplete' => false)),
 
         'quantity'          => array('display' => 1, 'qe_status' => 1, 'editable' => 1, 'sortable' => 1, 'index' =>  8, 'align' =>  'right', 'qe_type' =>     'qty_quick_edit', 'sort' => 'p.quantity'       , 'filter' => array('show' => 1, 'type' => 0, 'autocomplete' => false)),
         'sku'               => array('display' => 0, 'qe_status' => 0, 'editable' => 1, 'sortable' => 1, 'index' =>  9, 'align' =>   'left', 'qe_type' =>         'quick_edit', 'sort' => 'p.sku'            , 'filter' => array('show' => 1, 'type' => 0, 'autocomplete' => array('return' => array('label' =>   'sku', 'value' => 'product_id')))),
@@ -516,6 +517,7 @@ class ControllerModuleAdminQuickEdit extends Controller {
             $page = $this->request->post['page'];
             $conf = array();
             $conf[$page] = $this->config->get($page);
+
             foreach($this->request->post['data'] as $idx => $value) {
                 list($setting, $column) = explode('-', $value);
                 if (isset($conf[$setting])) {
@@ -539,22 +541,28 @@ class ControllerModuleAdminQuickEdit extends Controller {
     }
 
     private function validateData($post) {
+
+        var_dump($post['page']);
+
         if (empty($post['page'])) {
             return false;
         } else {
             $page = $post['page'];
         }
+
         if (!array_key_exists($page, $this->column_defaults)) {
             return false;
         }
         if (empty($post['data'])) {
             return false;
         }
+
         foreach($post['data'] as $value) {
             list($setting, $column) = explode('-', $value);
             if ($setting != $page) {
                 return false;
-            }
+            }            
+
             if (!array_key_exists($column, $this->column_defaults[$page])) {
                 return false;
             }
@@ -562,4 +570,3 @@ class ControllerModuleAdminQuickEdit extends Controller {
         return true;
     }
 }
-?>

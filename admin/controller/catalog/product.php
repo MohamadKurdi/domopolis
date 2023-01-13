@@ -1585,9 +1585,6 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['product_additional_offer'] = array();
 		}
 
-		//	var_dump($this->data['product_additional_offer']);
-		/*Additional offer*/
-
 		if (isset($this->request->post['shipping'])) {
 			$this->data['shipping'] = $this->request->post['shipping'];
 		} elseif (!empty($product_info)) {
@@ -1602,6 +1599,14 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['price'] = $product_info['price'];
 		} else {
 			$this->data['price'] = '';
+		}
+
+		if (isset($this->request->post['price_delayed'])) {
+			$this->data['price_delayed'] = $this->request->post['price_delayed'];
+		} elseif (!empty($product_info)) {
+			$this->data['price_delayed'] = $product_info['price_delayed'];
+		} else {
+			$this->data['price_delayed'] = '';
 		}
 
 		if (isset($this->request->post['mpp_price'])) {
