@@ -2,8 +2,7 @@
 class ModelKpInfo1C extends Model {		
 	private $SoapClient;
 	
-	private function SoapConnectTo1C($wsdl = true){
-		
+	private function SoapConnectTo1C($wsdl = true){		
 		ini_set("soap.wsdl_cache_enabled", "0" ); 
 		ini_set('default_socket_timeout', '1480');
 		libxml_disable_entity_loader(false);
@@ -37,7 +36,6 @@ class ModelKpInfo1C extends Model {
 				'stream_context' => $context
 			)
 		);
-		
 	}
 
 	public function ping1CToUpdateProducts($product_ids){
@@ -190,7 +188,7 @@ class ModelKpInfo1C extends Model {
 			$result = $this->SoapClient->stockwait(); 
 		} catch (Exception $e){
 			echoLine($e->getMessage());
-			return('SOAP ERROR: ' . $e->getMessage());
+			return false;
 		}
 		
 		$jsResult = $result->return;
@@ -206,7 +204,7 @@ class ModelKpInfo1C extends Model {
 			$result = $this->SoapClient->stock(array('organisation' => SITE_NAMESPACE)); 		
 		} catch (Exception $e){
 			echoLine($e->getMessage());
-			return('SOAP ERROR: ' . $e->getMessage());
+			return false;
 		}
 		
 		$jsResult = $result->return;					
