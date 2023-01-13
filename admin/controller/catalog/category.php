@@ -1109,11 +1109,11 @@ class ControllerCatalogCategory extends Controller {
 		$file = fopen('php://output', 'w');
 
 		if ($this->config->get('config_rainforest_category_model') == 'standard'){
-			$query = $this->db->query("SELECT * FROM category_amazon_tree WHERE 1");
+			$query = $this->db->query("SELECT * FROM category_amazon_tree ORDER BY full_name ASC");
 		}
 
 		if ($this->config->get('config_rainforest_category_model') == 'bestsellers'){
-			$query = $this->db->query("SELECT * FROM category_amazon_bestseller_tree WHERE 1");
+			$query = $this->db->query("SELECT * FROM category_amazon_bestseller_tree ORDER BY full_name ASC");
 		}
 		
 		foreach ($query->rows as $row){
