@@ -26,9 +26,7 @@
 			
 			$this->data['button_save'] = $this->language->get('button_save');
 			
-			$this->data['custom_' . $data['set']] = $this->model_tool_simplecustom->loadData($data['type'], $data['id'], $data['set']);
-			
-			//	var_dump($this->data['custom_' . $data['set']]);
+			$this->data['custom_' . $data['set']] = $this->model_tool_simplecustom->loadData($data['type'], $data['id'], $data['set']);					
 			
 			if (!$this->data['custom_' . $data['set']] && $data['type'] == 'order' && $data['dadata_config'] == 'address'){
 				$this->model_tool_simplecustom->prepareDaDataEmptyFields($data);
@@ -5919,29 +5917,21 @@
 		}
 		
 		public function ttninfoajax(){
-			$ttn = $this->request->post['ttn'];
-			$delivery_code = $this->request->post['delivery_code'];
+			$ttn 			= $this->request->post['ttn'];
+			$delivery_code 	= $this->request->post['delivery_code'];
+			$phone 			= $this->request->post['phone'];
 			
-			require_once(DIR_SYSTEM . 'library/CourierServices.php');			
-			$courierServices = new CourierServices($this->registry);
-			
-			echo $courierServices->getInfo($ttn, $delivery_code);
-			
-			return false;
+			$this->response->setOutput($this->courierServices->getInfo($ttn, $delivery_code, $phone));					
 		}
 		
 		public function ttninfoajax2(){
-			$ttn = $this->request->post['ttn'];
+			$ttn 	= $this->request->post['ttn'];
+			$phone 	= $this->request->post['phone'];
 			
 			$dc_query = $this->db->query("SELECT delivery_code FROM order_ttns WHERE ttn = '" . $this->db->escape($ttn) ."' LIMIT 1");
 			$delivery_code = $dc_query->row['delivery_code'];
 			
-			require_once(DIR_SYSTEM . 'library/CourierServices.php');
-			$courierServices = new CourierServices($this->registry);
-			
-			echo $courierServices->getInfo($ttn, $delivery_code);
-			
-			return false;
+			$this->response->setOutput($this->courierServices->getInfo($ttn, $delivery_code, $phone));
 		}
 		
 		public function addTTNAjax(){
