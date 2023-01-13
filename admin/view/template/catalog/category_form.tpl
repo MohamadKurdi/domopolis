@@ -64,7 +64,8 @@
 										<input type="text" name="category_description[<?php echo $language['language_id']; ?>][name]" size="100" value="<?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['name'] : ''; ?>" />
 										<?php if (isset($error_name[$language['language_id']])) { ?>
 											<span class="error"><?php echo $error_name[$language['language_id']]; ?></span>
-										<?php } ?></td>
+										<?php } ?>
+									</td>
 								</tr>
 								
 								<tr>
@@ -157,6 +158,24 @@
 										<textarea name="category_description[<?php echo $language['language_id']; ?>][meta_description]" cols="40" rows="5"><?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['meta_description'] : ''; ?></textarea>
 									</td>
 								</tr>
+
+								<tr>
+									<td>Дерево Google</td>
+									<td>
+										<div class="translate_wrap">
+											<a class="btn-copy<?php echo $language['language_id']; ?> btn-copy" onclick="getCopy($(this),'input','category_description[2]');"><i class="fa fa-copy"></i> Копировать с ru</a>
+											<?php if ($this->config->get('config_translate_from_ru') && in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
+												<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'ru','<?php echo $language['code']; ?>','input','category_description[5]');">Перевести <img src="view/image/flags/ru.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>
+												<?php } elseif ($language['code'] == $this->config->get('config_admin_language')) { ?>
+												<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'de','<?php echo $language['code']; ?>','input','category_description[26]');">
+													Перевести <img src="view/image/flags/de.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+												</a>
+											<?php } ?>
+										</div>
+										<input type="text" name="category_description[<?php echo $language['language_id']; ?>][google_tree]" size="100" value="<?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['google_tree'] : ''; ?>" />										
+									</td>
+								</tr>
+
 								<tr>
 									<td><?php echo $entry_meta_keyword; ?></td>
 									<td><textarea name="category_description[<?php echo $language['language_id']; ?>][meta_keyword]" cols="40" rows="5"><?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['meta_keyword'] : ''; ?></textarea></td>

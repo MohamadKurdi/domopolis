@@ -45,7 +45,7 @@ class ModelCatalogCategory extends Model {
 		}
 		
 		foreach ($data['category_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO category_description SET category_id = '" . (int)$category_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', alternate_name = '" . $this->db->escape($value['alternate_name']) . "', menu_name = '" . $this->db->escape($value['menu_name']) . "', all_prefix = '" . $this->db->escape($value['all_prefix']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', seo_title = '" . ((isset($value['seo_title']))?($this->db->escape($value['seo_title'])):'') . "', seo_h1 = '" . ((isset($value['seo_h1']))?($this->db->escape($value['seo_h1'])):'') . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', description = '" . $this->db->escape($value['description']) . "'");
+			$this->db->query("INSERT INTO category_description SET category_id = '" . (int)$category_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', alternate_name = '" . $this->db->escape($value['alternate_name']) . "', menu_name = '" . $this->db->escape($value['menu_name']) . "', all_prefix = '" . $this->db->escape($value['all_prefix']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', seo_title = '" . ((isset($value['seo_title']))?($this->db->escape($value['seo_title'])):'') . "', seo_h1 = '" . ((isset($value['seo_h1']))?($this->db->escape($value['seo_h1'])):'') . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', description = '" . $this->db->escape($value['description']) . "', google_tree = '" . $this->db->escape($value['google_tree']) . "'");
 		}
 		
 			// MySQL Hierarchical Data Closure Table Pattern
@@ -169,7 +169,7 @@ class ModelCatalogCategory extends Model {
 		$this->db->query("DELETE FROM category_description WHERE category_id = '" . (int)$category_id . "'");
 		
 		foreach ($data['category_description'] as $language_id => $value) {
-			$this->db->query("INSERT INTO category_description SET category_id = '" . (int)$category_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', alternate_name = '" . $this->db->escape($value['alternate_name']) . "', menu_name = '" . $this->db->escape($value['menu_name']) . "', all_prefix = '" . $this->db->escape($value['all_prefix']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', seo_title = '" . ((isset($value['seo_title']))?($this->db->escape($value['seo_title'])):'') . "', seo_h1 = '" . ((isset($value['seo_h1']))?($this->db->escape($value['seo_h1'])):'') . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', description = '" . $this->db->escape($value['description']) . "'");
+			$this->db->query("INSERT INTO category_description SET category_id = '" . (int)$category_id . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($value['name']) . "', alternate_name = '" . $this->db->escape($value['alternate_name']) . "', menu_name = '" . $this->db->escape($value['menu_name']) . "', all_prefix = '" . $this->db->escape($value['all_prefix']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', seo_title = '" . ((isset($value['seo_title']))?($this->db->escape($value['seo_title'])):'') . "', seo_h1 = '" . ((isset($value['seo_h1']))?($this->db->escape($value['seo_h1'])):'') . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', description = '" . $this->db->escape($value['description']) . "', google_tree = '" . $this->db->escape($value['google_tree']) . "'");
 		}
 		
 		
@@ -185,8 +185,7 @@ class ModelCatalogCategory extends Model {
 				$lcodes[] = $lrow['language_id'];
 			} 
 			
-			foreach ($lcodes as $language_id) {
-				
+			foreach ($lcodes as $language_id) {				
 				foreach ($rucontent as $value){
 					
 					$this->db->query("INSERT INTO category_menu_content SET 
@@ -199,10 +198,8 @@ class ModelCatalogCategory extends Model {
 						width = '" . (int)$value['width'] . "', 
 						height = '" . (int)$value['height'] . "', 
 						standalone = '" . (int)$value['standalone'] . "', 
-						sort_order = '" . (int)$value['sort_order'] . "'");
-					
-				}
-				
+						sort_order = '" . (int)$value['sort_order'] . "'");					
+				}				
 			}
 			
 			
@@ -468,7 +465,7 @@ class ModelCatalogCategory extends Model {
 	public function repairAmazonTree(){
 		$this->db->query();
 	}
-		
+
 	public function repairCategories($parent_id = 0) {
 		$query = $this->db->query("SELECT * FROM category WHERE parent_id = '" . (int)$parent_id . "'");
 		
@@ -591,15 +588,16 @@ class ModelCatalogCategory extends Model {
 			
 			foreach ($query->rows as $result) {
 				$category_description_data[$result['language_id']] = array(
-					'name'             => $result['name'],
-					'alternate_name'             => $result['alternate_name'],
-					'menu_name'        => $result['menu_name'],
+					'name'             	=> $result['name'],
+					'alternate_name'    => $result['alternate_name'],
+					'menu_name'        	=> $result['menu_name'],
 					'all_prefix'        => $result['all_prefix'],
-					'meta_keyword'     => $result['meta_keyword'],
-					'seo_title'        => $result['seo_title'],
-					'seo_h1' => $result['seo_h1'],
-					'meta_description' => $result['meta_description'],
-					'description'      => $result['description']
+					'meta_keyword'     	=> $result['meta_keyword'],
+					'seo_title'        	=> $result['seo_title'],
+					'seo_h1' 			=> $result['seo_h1'],
+					'meta_description' 	=> $result['meta_description'],
+					'description'      	=> $result['description'],
+					'google_tree'      	=> $result['google_tree'],
 				);
 			}
 			
@@ -723,205 +721,205 @@ class ModelCatalogCategory extends Model {
 			Получить количество товаров в категории с прямой привязкой
 			Скорее всего функция уже нигде не используется
 		*/
-		public function getTotalProductInCategory($category_id) {
-			$sql = "SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE 1 ";
-			
-			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
-				$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
-			}
+			public function getTotalProductInCategory($category_id) {
+				$sql = "SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE 1 ";
 
-			$sql .= " AND category_id = '" .(int)$category_id. "'";
+				if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
+					$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
+				}
 
-			$query = $this->db->query($sql);
-			
-			return $query->row['total'];
-		}	
+				$sql .= " AND category_id = '" .(int)$category_id. "'";
+
+				$query = $this->db->query($sql);
+
+				return $query->row['total'];
+			}	
 
 		/*
 			Получить количество загруженных товаров в категории с прямой привязкой
 			Скорее всего функция уже нигде не используется
 		*/
-		public function getTotalFilledProductInCategory($category_id) {
-			$sql = "SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE 1 ";
-			
-			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
-				$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
-			}
+			public function getTotalFilledProductInCategory($category_id) {
+				$sql = "SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE 1 ";
 
-			$sql .= " AND p.filled_from_amazon = 1";
+				if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
+					$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
+				}
 
-			$sql .= " AND category_id = '" .(int)$category_id. "'";
+				$sql .= " AND p.filled_from_amazon = 1";
 
-			$query = $this->db->query($sql);
-			
-			return $query->row['total'];
-		}	
+				$sql .= " AND category_id = '" .(int)$category_id. "'";
+
+				$query = $this->db->query($sql);
+
+				return $query->row['total'];
+			}	
 
 
 		/*
 			Получить количество товаров в категории с всеми дочерними
 		*/
-		public function getTotalProductInCategoryWithSubcategories($category_id) {
-			$sql = "SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE 1 ";
-			
-			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
-				$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
+			public function getTotalProductInCategoryWithSubcategories($category_id) {
+				$sql = "SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE 1 ";
+
+				if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
+					$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
+				}
+
+				$sql .= " AND category_id IN (SELECT category_id FROM category_path WHERE path_id = '" . (int)$category_id . "')";			
+
+				$query = $this->db->query($sql);
+
+				return $query->row['total'];
 			}
-
-			$sql .= " AND category_id IN (SELECT category_id FROM category_path WHERE path_id = '" . (int)$category_id . "')";			
-			
-			$query = $this->db->query($sql);
-
-			return $query->row['total'];
-		}
 
 		/*
 			Получить количество товаров с ненулевой ценой в категории с всеми дочерними
 		*/
-		public function getTotalProductNoZeroPriceInCategoryWithSubcategories($category_id) {
-			$sql = "SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE 1 ";
-			
-			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
-				$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
-			}
+			public function getTotalProductNoZeroPriceInCategoryWithSubcategories($category_id) {
+				$sql = "SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE 1 ";
 
-			if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_show_only_filled_products_in_catalog')) {
-				$sql .= " AND p.filled_from_amazon = 1";
-			}
+				if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
+					$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
+				}
 
-			$sql .= " AND p.price > 0";
-			$sql .= " AND category_id IN (SELECT category_id FROM category_path WHERE path_id = '" . (int)$category_id . "')";			
-			
-			$query = $this->db->query($sql);
-			
-			return $query->row['total'];
-		}
+				if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_show_only_filled_products_in_catalog')) {
+					$sql .= " AND p.filled_from_amazon = 1";
+				}
+
+				$sql .= " AND p.price > 0";
+				$sql .= " AND category_id IN (SELECT category_id FROM category_path WHERE path_id = '" . (int)$category_id . "')";			
+
+				$query = $this->db->query($sql);
+
+				return $query->row['total'];
+			}
 
 		/*
 			Получить количество товаров с ненулевой ценой и включенных в категории с всеми дочерними
 		*/
-		public function getTotalProductNoZeroPriceAndEnabledInCategoryWithSubcategories($category_id) {
-			$sql = "SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE 1 ";
-			
-			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
-				$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
-			}
+			public function getTotalProductNoZeroPriceAndEnabledInCategoryWithSubcategories($category_id) {
+				$sql = "SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE 1 ";
 
-			if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_show_only_filled_products_in_catalog')) {
-				$sql .= " AND p.filled_from_amazon = 1";
-			}
+				if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
+					$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
+				}
 
-			$sql .= " AND p.price > 0 AND p.status = 1";
-			$sql .= " AND category_id IN (SELECT category_id FROM category_path WHERE path_id = '" . (int)$category_id . "')";			
-			
-			$query = $this->db->query($sql);
-			
-			return $query->row['total'];
-		}
+				if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_show_only_filled_products_in_catalog')) {
+					$sql .= " AND p.filled_from_amazon = 1";
+				}
 
+				$sql .= " AND p.price > 0 AND p.status = 1";
+				$sql .= " AND category_id IN (SELECT category_id FROM category_path WHERE path_id = '" . (int)$category_id . "')";			
 
-		public function getTotalFilledProductInCategoryWithSubcategories($category_id) {
-			$query = $this->db->query("SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE p.filled_from_amazon = 1 AND category_id IN (SELECT category_id FROM category_path WHERE path_id = '" . (int)$category_id . "')");
-			
-			return $query->row['total'];
-		}	
-		
-		public function getTotalCategoriesByImageId($image_id) {
-			$query = $this->db->query("SELECT COUNT(*) AS total FROM category WHERE image_id = '" . (int)$image_id . "'");
-			
-			return $query->row['total'];
-		}
-		
-		public function getTotalCategoriesByLayoutId($layout_id) {
-			$query = $this->db->query("SELECT COUNT(*) AS total FROM category_to_layout WHERE layout_id = '" . (int)$layout_id . "'");
-			
-			return $query->row['total'];
-		}	
-		
-		public function getCategoriesByParentId($parent_id = 0) {
-			$query = $this->db->query("SELECT *, 
-				(SELECT COUNT(parent_id) FROM category WHERE parent_id = c.category_id) AS children,
-				(SELECT COUNT(path_id) FROM category_path WHERE category_id = c.category_id) AS level,
-				(SELECT name FROM category_description cd3 WHERE cd3.category_id = c.parent_id AND cd3.language_id = '" . (int)$this->config->get('config_language_id') . "' LIMIT 1) as parent_name
-				FROM category c
-				LEFT JOIN category_description cd ON (c.category_id = cd.category_id) WHERE c.parent_id = '" . (int)$parent_id . "' 
-				AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY ((SELECT COUNT(parent_id) FROM category WHERE parent_id = c.category_id) > 0) DESC, cd.name ASC");
-				return $query->rows;
-			}	
-			
-			
-			public function getAttributesByCategory($category_id) {
-				$result = array();
-				$query = $this->db->query("SELECT attribute_id FROM attributes_category  WHERE category_id=" . $category_id);
-				foreach($query->rows as $row) {
-					$result[] = $row['attribute_id'];
-				}
-				return $result;
-			}		
-			
-			public function getAttributesSimilarByCategory($category_id) {
-				$result = array();
-				$query = $this->db->query("SELECT attribute_id FROM attributes_similar_category  WHERE category_id=" . $category_id);
-				foreach($query->rows as $row) {
-					$result[] = $row['attribute_id'];
-				}
-				return $result;
-			}
-			
-			
-			public function getAttributesToProduct($category_ids) {
-				$result = array();
-				$query = $this->db->query("SELECT DISTINCT attribute_id FROM attributes_category  WHERE category_id IN (" . implode(", ", $category_ids) . ")");
-				foreach ($query->rows as $row) {
-					$attr_id = $row['attribute_id'];
-					$sub_query = $this->db->query("SELECT attribute_id, name FROM attribute_description WHERE attribute_id= '" . (int)$attr_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
-					foreach($sub_query->rows as $row2) {
-						$result[] = array('attribute_id' => $row2['attribute_id'], 'name' => $row2['name']);	
-					}			
-				}
-				return $result;
-			}	
-			
-			public function getYandexCategories($name){	
-				$query = $this->db->query("SELECT * FROM category_yam_tree WHERE LOWER(name) LIKE '%" . $this->db->escape(mb_strtolower($name)) . "%' ORDER BY final_category DESC");
-				
-				return $query->rows;
-			}
-			
-			public function getCategories_MF($data) {
-				if( version_compare( VERSION, '1.5.5', '>=' ) ) {
-					$sql = "SELECT cp.category_id AS category_id, GROUP_CONCAT(cd1.name ORDER BY cp.level SEPARATOR ' &gt; ') AS name, c.parent_id, c.sort_order FROM category_path cp LEFT JOIN category c ON (cp.path_id = c.category_id) LEFT JOIN category_description cd1 ON (c.category_id = cd1.category_id) LEFT JOIN category_description cd2 ON (cp.category_id = cd2.category_id) WHERE cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'";
-					
-					if( ! empty( $data['filter_name'] ) ) {
-						$sql .= " AND cd2.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
-					} 
-					
-					$sql .= " GROUP BY cp.category_id ORDER BY name";
-				} else {
-					$sql = "SELECT * FROM category c LEFT JOIN category_description cd ON (c.category_id = cd.category_id) WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
-					
-					if( ! empty( $data['filter_name'] ) ) {
-						$sql .= " AND LOWER(cd.name) LIKE '" . $this->db->escape( function_exists( 'mb_strtolower' ) ? mb_strtolower( $data['filter_name'], 'utf-8' ) : $data['filter_name'] ) . "%'";
-					}
-					
-					$sql .= " GROUP BY c.category_id ORDER BY name";
-				}
-				
-				if (isset($data['start']) || isset($data['limit'])) {
-					if ($data['start'] < 0) {
-						$data['start'] = 0;
-					}				
-					
-					if ($data['limit'] < 1) {
-						$data['limit'] = 20;
-					}	
-					
-					$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
-				}
-				
 				$query = $this->db->query($sql);
-				
-				return $query->rows;
+
+				return $query->row['total'];
 			}
-			
-		}
+
+
+			public function getTotalFilledProductInCategoryWithSubcategories($category_id) {
+				$query = $this->db->query("SELECT COUNT(DISTINCT p2c.product_id) AS total FROM product_to_category p2c LEFT JOIN product p ON (p2c.product_id = p.product_id) WHERE p.filled_from_amazon = 1 AND category_id IN (SELECT category_id FROM category_path WHERE path_id = '" . (int)$category_id . "')");
+
+					return $query->row['total'];
+				}	
+
+				public function getTotalCategoriesByImageId($image_id) {
+					$query = $this->db->query("SELECT COUNT(*) AS total FROM category WHERE image_id = '" . (int)$image_id . "'");
+
+					return $query->row['total'];
+				}
+
+				public function getTotalCategoriesByLayoutId($layout_id) {
+					$query = $this->db->query("SELECT COUNT(*) AS total FROM category_to_layout WHERE layout_id = '" . (int)$layout_id . "'");
+
+					return $query->row['total'];
+				}	
+
+				public function getCategoriesByParentId($parent_id = 0) {
+					$query = $this->db->query("SELECT *, 
+						(SELECT COUNT(parent_id) FROM category WHERE parent_id = c.category_id) AS children,
+						(SELECT COUNT(path_id) FROM category_path WHERE category_id = c.category_id) AS level,
+						(SELECT name FROM category_description cd3 WHERE cd3.category_id = c.parent_id AND cd3.language_id = '" . (int)$this->config->get('config_language_id') . "' LIMIT 1) as parent_name
+							FROM category c
+							LEFT JOIN category_description cd ON (c.category_id = cd.category_id) WHERE c.parent_id = '" . (int)$parent_id . "' 
+							AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY ((SELECT COUNT(parent_id) FROM category WHERE parent_id = c.category_id) > 0) DESC, cd.name ASC");
+						return $query->rows;
+					}	
+
+
+					public function getAttributesByCategory($category_id) {
+						$result = array();
+						$query = $this->db->query("SELECT attribute_id FROM attributes_category  WHERE category_id=" . $category_id);
+						foreach($query->rows as $row) {
+							$result[] = $row['attribute_id'];
+						}
+						return $result;
+					}		
+
+					public function getAttributesSimilarByCategory($category_id) {
+						$result = array();
+						$query = $this->db->query("SELECT attribute_id FROM attributes_similar_category  WHERE category_id=" . $category_id);
+						foreach($query->rows as $row) {
+							$result[] = $row['attribute_id'];
+						}
+						return $result;
+					}
+
+
+					public function getAttributesToProduct($category_ids) {
+						$result = array();
+						$query = $this->db->query("SELECT DISTINCT attribute_id FROM attributes_category  WHERE category_id IN (" . implode(", ", $category_ids) . ")");
+						foreach ($query->rows as $row) {
+							$attr_id = $row['attribute_id'];
+							$sub_query = $this->db->query("SELECT attribute_id, name FROM attribute_description WHERE attribute_id= '" . (int)$attr_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+							foreach($sub_query->rows as $row2) {
+								$result[] = array('attribute_id' => $row2['attribute_id'], 'name' => $row2['name']);	
+							}			
+						}
+						return $result;
+					}	
+
+					public function getYandexCategories($name){	
+						$query = $this->db->query("SELECT * FROM category_yam_tree WHERE LOWER(name) LIKE '%" . $this->db->escape(mb_strtolower($name)) . "%' ORDER BY final_category DESC");
+
+						return $query->rows;
+					}
+
+					public function getCategories_MF($data) {
+						if( version_compare( VERSION, '1.5.5', '>=' ) ) {
+							$sql = "SELECT cp.category_id AS category_id, GROUP_CONCAT(cd1.name ORDER BY cp.level SEPARATOR ' &gt; ') AS name, c.parent_id, c.sort_order FROM category_path cp LEFT JOIN category c ON (cp.path_id = c.category_id) LEFT JOIN category_description cd1 ON (c.category_id = cd1.category_id) LEFT JOIN category_description cd2 ON (cp.category_id = cd2.category_id) WHERE cd1.language_id = '" . (int)$this->config->get('config_language_id') . "' AND cd2.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
+							if( ! empty( $data['filter_name'] ) ) {
+								$sql .= " AND cd2.name LIKE '" . $this->db->escape($data['filter_name']) . "%'";
+							} 
+
+							$sql .= " GROUP BY cp.category_id ORDER BY name";
+						} else {
+							$sql = "SELECT * FROM category c LEFT JOIN category_description cd ON (c.category_id = cd.category_id) WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+
+							if( ! empty( $data['filter_name'] ) ) {
+								$sql .= " AND LOWER(cd.name) LIKE '" . $this->db->escape( function_exists( 'mb_strtolower' ) ? mb_strtolower( $data['filter_name'], 'utf-8' ) : $data['filter_name'] ) . "%'";
+							}
+
+							$sql .= " GROUP BY c.category_id ORDER BY name";
+						}
+
+						if (isset($data['start']) || isset($data['limit'])) {
+							if ($data['start'] < 0) {
+								$data['start'] = 0;
+							}				
+
+							if ($data['limit'] < 1) {
+								$data['limit'] = 20;
+							}	
+
+							$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+						}
+
+						$query = $this->db->query($sql);
+
+						return $query->rows;
+					}
+
+				}
