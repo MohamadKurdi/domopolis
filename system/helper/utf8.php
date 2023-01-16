@@ -75,6 +75,31 @@ function formatLongNumber($number, $format = true){
 	return $number;
 }
 
+function normalizeForGoogle($text)
+{
+	$text = html_entity_decode($text);
+	$text = str_replace('&nbsp;', ' ', $text);
+	$text = str_replace('&amp;', '&', $text);
+	$text = preg_replace("/&#?[a-z0-9]{2,8};/i", "", $text);
+
+	return $text;
+}
+
+function shortentext($text, $length = 150)
+{
+	$exploded 	= explode(' ', $text);
+	$current 	= 0;
+
+	$i 		= 0;
+	while ($current < $length && isset($exploded[$i]))
+	{
+		$current += mb_strlen($exploded[$i]) + 1;
+		$i++;
+	}
+
+	return trim(implode(' ', array_slice($exploded, 0, $i - 1)), '()., ');
+}
+
 function atrim($string){	
 	$string = preg_replace('/(\x{200e}|\x{200f})/u', '', $string);
 	$string = str_replace(['"', '“', '„'], "'", $string);
