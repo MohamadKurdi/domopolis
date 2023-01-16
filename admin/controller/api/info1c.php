@@ -23,7 +23,7 @@ class ControllerApiInfo1C extends Controller
         }
     }
 
-    public function addTTNHistory($order_id, $ttn, $couriercode)
+    public function addTTNHistory($order_id, $ttn, $shipping_code = '')
     {
         $this->load->model('sale/order');
         $this->load->model('setting/setting');
@@ -38,6 +38,10 @@ class ControllerApiInfo1C extends Controller
             die("order $order_id is closed ");
         }
 
+        if (!$shipping_code) {
+            $shipping_code = $order_info['shipping_code'];
+        }
+
         $existingTTNS = $this->model_sale_order->getOrderTtnHistory($order_id);
         foreach ($existingTTNS as $existingTTN) {
             if ($ttn == trim($existingTTN['ttn'])) {
@@ -45,7 +49,7 @@ class ControllerApiInfo1C extends Controller
             }
         }
 
-        $this->db->query("INSERT INTO `order_ttns` SET	order_id = '" . (int)$order_id . "', ttn = '" . $this->db->escape($ttn) . "', delivery_code = '" . $this->db->escape($couriercode) . "', date_ttn = NOW(), sms_sent = NOW()");
+        $this->db->query("INSERT INTO `order_ttns` SET	order_id = '" . (int)$order_id . "', ttn = '" . $this->db->escape($ttn) . "', delivery_code = '" . $this->db->escape($shipping_code) . "', date_ttn = NOW(), sms_sent = NOW()");
         $this->db->query("UPDATE `order` SET `ttn` = '" . $this->db->escape($ttn) . "' WHERE order_id = " . (int)$order_id);
 
         $smsTEXT = 'SMS sending disabled';
