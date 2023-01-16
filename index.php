@@ -224,12 +224,13 @@
 	$registry->set('stores_to_main_language_mapping', $stores_to_main_language_mapping);
 				
 	//Определение языка
-	$languages = $languages_all = [];
+	$languages = $languages_all = $languages_id_mapping = $languages_id_code_mapping = $languages_all_id_code_mapping = [];
 	$languages_id_code_mapping = [];
 	$query = $registry->get('db')->query("SELECT * FROM `language` WHERE status = '1'"); 
 	
 	foreach ($query->rows as $result) {
-		$languages_all[$result['code']] = $result;	
+		$languages_all[$result['code']] = $result;
+		$languages_all_id_code_mapping[$result['language_id']] = $result['code'];	
 		
 		if ($result['front']){
 			$languages[$result['code']] = $result;
@@ -239,10 +240,11 @@
 	}
 
 	//ALL LANGUAGES TO REGISTRY
-	$registry->set('languages', $languages);
-	$registry->set('languages_all', $languages_all);
-	$registry->set('languages_id_mapping', $languages_id_mapping);
-	$registry->set('languages_id_code_mapping', $languages_id_code_mapping);
+	$registry->set('languages', 					$languages);
+	$registry->set('languages_all', 				$languages_all);
+	$registry->set('languages_id_mapping', 			$languages_id_mapping);
+	$registry->set('languages_id_code_mapping', 	$languages_id_code_mapping);
+	$registry->set('languages_all_id_code_mapping', $languages_all_id_code_mapping);
 	$registry->get('config')->set('config_supported_languages', [$registry->get('config')->get('config_language'), $registry->get('config')->get('config_second_language')]);
 	$registry->get('config')->set('config_rainforest_source_language_id', $languages_all[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);	
 

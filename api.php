@@ -194,25 +194,28 @@ foreach ($query->rows as $result) {
 $registry->set('stores_to_main_language_mapping', $stores_to_main_language_mapping);
 
  //Определение языка
-$languages = $languages_front = $languages_all = [];
+$languages = $languages_front = $languages_all = $languages_id_mapping = $languages_id_code_mapping = $languages_all_id_code_mapping = [];
 $languages_id_code_mapping = [];
 $query = $registry->get('db')->query("SELECT * FROM `language` WHERE status = '1'"); 
 
 foreach ($query->rows as $result) {
-    $languages_all[$result['code']] = $result;  
-    $languages[$result['code']]     = $result;
+    $languages[$result['code']]                             = $result;
+    $languages_all[$result['code']]                         = $result;      
+    $languages_all_id_code_mapping[$result['language_id']]  = $result['code'];
     
     if ($result['front']){
-        $languages_front[$result['code']] = $result;
-        $languages_id_code_mapping[$result['language_id']] = $result['code'];
+        $languages_front[$result['code']]                   = $result;
+        $languages_id_mapping[$result['language_id']]       = $result;
+        $languages_id_code_mapping[$result['language_id']]  = $result['code'];
     }
 }
 
     //ALL LANGUAGES TO REGISTRY
-$registry->set('languages', $languages);
-$registry->set('languages_all', $languages_all);
-$registry->set('languages_front', $languages_front);
-$registry->set('languages_id_code_mapping', $languages_id_code_mapping);
+$registry->set('languages',                     $languages);
+$registry->set('languages_all',                 $languages_all);
+$registry->set('languages_id_mapping',          $languages_id_mapping);
+$registry->set('languages_id_code_mapping',     $languages_id_code_mapping);
+$registry->set('languages_all_id_code_mapping', $languages_all_id_code_mapping);
 $registry->get('config')->set('config_supported_languages', [$registry->get('config')->get('config_language'), $registry->get('config')->get('config_second_language')]);
 $registry->get('config')->set('config_rainforest_source_language_id', $languages_all[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);   
 
