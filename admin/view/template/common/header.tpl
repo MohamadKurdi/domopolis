@@ -45,27 +45,6 @@
 			<script type="text/javascript" src="<?php echo $script; ?>"></script>
 		<?php } ?>
 		
-		<? /* if ($this->user->getId() == 2) { ?>
-			<script type="text/javascript" src="view/javascript/jssip/jssip-0.7.17.min.js"></script>
-			<script type="text/javascript" src="view/javascript/jssip/gui.js"></script>
-			<script>
-			var configuration = {
-			'ws_servers':         'ws://sip.ims-group.de:8088/ws',
-			'uri':                'sip:101@mail.ims-group.de',
-			'password':           '40c5bfd2b2320e241e1fcd518700b247'
-			};
-			
-			var coolPhone = new JsSIP.UA(configuration);
-			
-			coolPhone.on('connected', function(e){ console.log('connected'); });
-			
-			JsSIP.debug.enable('JsSIP:*');
-			
-			$(document).ready(function(){
-			coolPhone.start();
-			});
-			</script>
-		<? } */ ?>
 		<script type="text/javascript">
 			//-----------------------------------------
 			// Confirm Actions (delete, uninstall)

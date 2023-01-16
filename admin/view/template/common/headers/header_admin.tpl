@@ -478,14 +478,10 @@
 						<li id="reports"><a class="top"><i class="fa fa-area-chart icon_menu"></i><?php echo $text_reports; ?></a>
 							<ul>		
 								<li><a class="home_icon_style" href="<?php echo $report_product_viewed; ?>"><i class="fa fa-eye"></i><span>Отчет просмотров</span></a></li>
-							<? /* ?>
-									<li><a class="home_icon_style" href="<?php echo $mreport_ttnscan ?>"><i class="fa fa-area-chart"></i><span>Отчет по ТТН</span></a></li>
-									<li><a class="home_icon_style" href="<?php echo $mreport_needtocall ?>"><i class="fa fa-spinner"></i><span>Заказы в ожидании ответа</span></a></li>
-									<li><a class="home_icon_style" href="<?php echo $mreport_nopaid ?>"><i class="fa fa-spinner"></i><span>Заказы в ожидании оплаты</span></a></li>
-									<li><a class="home_icon_style" href="<?php echo $mreport_forgottencart ?>"><i class="fa fa-pencil-square-o"></i><span>Незавершенные заказы</span></a></li>
-								<?	*/ ?>
 								<li><a class="home_icon_style" href="<?php echo $mreport_minusscan ?>"><i class="fa fa-exclamation"></i><span>Проверка счетов</span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $cdek_integrator ?>"><i class="fa fa-truck"></i><span>СДЭК интеграция</span></a></li>
+								<?php if ($this->config->get('config_country_id') == 176) { ?>
+									<li><a class="home_icon_style" href="<?php echo $cdek_integrator ?>"><i class="fa fa-truck"></i><span>СДЭК интеграция</span></a></li>
+								<?php } ?>
 								<li><a class="parent home_icon_style"><i class="fa fa-database"></i><span><?php echo $text_sale; ?></span></a>
 									<ul>											
 										<li><a href="<?php echo $report_adv_sale_order ?>">Универсальный отчет</a></li>
