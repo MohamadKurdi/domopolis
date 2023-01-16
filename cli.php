@@ -327,7 +327,7 @@ $registry->set('encryption', 		new Encryption($registry->get('config')->get('con
 $registry->set('yandexTranslator', 	new hobotix\YandexTranslator($registry));
 $registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
 $registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
-$registry->set('CourierServices', 	new CourierServices());
+$registry->set('CourierServices', 	new CourierServices($registry));
 $registry->set('simpleProcess', 	new hobotix\simpleProcess(['route' => $route, 'config' => $configFile, 'args' => $allArguments], $configFilesPrefix));
 
 $registry->set('customer_group_id', (int)$registry->get('config')->get('config_customer_group_id'));
