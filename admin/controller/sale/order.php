@@ -118,56 +118,32 @@
 			);			
 		}		
 				
-		public function customerNeedSign($delivery_code){
-			$a = array(
-			'dostavkaplus.sh1',
-			'dostavkaplus.sh2',
-			'dostavkaplus.sh12',
-			//минск
-			'dostavkaplus.sh7',
-			
-			);
-			
-			return (in_array($delivery_code, $a) || bool_real_stripos($delivery_code, 'pickup_advanced'));
+		public function customerNeedSign($shipping_code){
+			return (bool_real_stripos($shipping_code, 'pickup_advanced'));
 		}
 		
-		public function getPickupName($delivery_code){
-			$delivery_names = array(
-			'pickup_advanced.point_0' => 'БЕРЕЖКОВСКОЕ ПВЗ',
-			'pickup_advanced.point_1' => 'ПВЗ Срибнокильская',
-			);
-			
-			if (isset($delivery_names[$delivery_code])){
-				return 	$delivery_names[$delivery_code];		
-				} else {
-				return false;
-			}				
+		public function getPickupName($shipping_code){
+			if (!empty($this->registry->get('shippingmethods')[$shipping_code])){
+				return $this->registry->get('shippingmethods')[$shipping_code]['name'];
+			}
+
+			return false;			
 		}
 		
-		public function getPickupName2($delivery_code){
-			$delivery_names = array(
-			'pickup_advanced.point_0' => 'г. Москва, ул. Бережковская Набережная 20, строение 40',
-			'pickup_advanced.point_1' => 'г. Киев, ул. Срибнокильськая, 2А',
-			);
-			
-			if (isset($delivery_names[$delivery_code])){
-				return 	$delivery_names[$delivery_code];		
-				} else {
-				return false;
-			}				
+		public function getPickupName2($shipping_code){
+			if (!empty($this->registry->get('shippingmethods')[$shipping_code])){
+				return $this->registry->get('shippingmethods')[$shipping_code]['address'];
+			}
+
+			return false;				
 		}
 		
-		public function getPickupPhone($delivery_code){
-			
-			$delivery_names = array(
-			'pickup_advanced.point_0' => '+8(964)517-37-05',
-			);
-			
-			if (isset($delivery_names[$delivery_code])){
-				return 	$delivery_names[$delivery_code];		
-				} else {
-				return false;
-			}	
+		public function getPickupPhone($shipping_code){
+			if (!empty($this->registry->get('shippingmethods')[$shipping_code])){
+				return $this->registry->get('shippingmethods')[$shipping_code]['phone'];
+			}
+
+			return false;	
 		}				
 			
 		public function orderHasPrepay($order_id){
