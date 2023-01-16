@@ -105,7 +105,7 @@
 			"api/info1c/getOrdersCurrentStatusJSON":			["order_ids:json"],
 			"api/info1c/exportOrdersFromToXML":					["date_from:date", "date_to:date"],
 			"api/bitrixbot/sendMessageToUser":					["user_id:string", "message:string"],
-			"api/info1c/addOrderTTNHistory":					["order_id:int", "ttn:string", "couriercode:string"],
+			"api/info1c/addOrderTTNHistory":					["order_id:int", "ttn:string"],
 			"api/info1c/addOrderStatusHistory":					["order_id:int", "order_status_id:int"],
 			"api/info1c/putOrderTrackingInfo":					["tracking_data:json"],
 			"api/info1c/updateOrdersInCourierService":			["courier_data:json"],
@@ -123,7 +123,8 @@
 			"api/info1c/exportOrdersFromToXML":			["only_complete"],
 			"api/bitrixbot/sendMessageToUser":			["message_type"],
 			"api/info1c/addOrderStatusHistory":			["comment", "notify"],
-			"api/rainforest/amazonPriceFormulaTest":	["explicit_products"]
+			"api/rainforest/amazonPriceFormulaTest":	["explicit_products"],
+			"api/info1c/addOrderTTNHistory":			["couriercode:string"]
 		}
 	],
 	"paramvalues":[
