@@ -535,26 +535,8 @@ class ControllerFeedReFeedMaker extends Controller
 
         $output = str_replace(max($this->steps), 'MORE', $output);
 
-        foreach ($categories as $category) {
-            $path = $this->getPath($category['category_id']);
-
-            if ($path) {
-                $string = '';
-
-                foreach (explode('_', $path) as $path_id) {
-                    $category_info = $this->model_catalog_category->getCategory($path_id);
-
-                    if ($category_info) {
-                        if (!$string) {
-                            $string = $category_info['name'];
-                        } else {
-                            $string .= ' &gt; ' . $category_info['name'];
-                        }
-                    }
-                }
-
-                $output .= '<g:product_type><![CDATA[' . $string . ']]></g:product_type>';
-            }
+       if (!empty($product['main_category_id'])){
+            $output .= '    <g:product_type><![CDATA[' . $this->model_catalog_product->getGoogleCategoryPathForCategory($product['main_category_id']) . ']]></g:product_type>'. PHP_EOL;
         }
 
         $output .= '  <g:quantity>' . $product['quantity'] . '</g:quantity>'. PHP_EOL;
@@ -565,24 +547,4 @@ class ControllerFeedReFeedMaker extends Controller
         return $output;
     }
 
-    protected function getPath($parent_id, $current_path = '')
-    {
-        $category_info = $this->model_catalog_category->getCategory($parent_id);
-
-        if ($category_info) {
-            if (!$current_path) {
-                $new_path = $category_info['category_id'];
-            } else {
-                $new_path = $category_info['category_id'] . '_' . $current_path;
-            }
-
-            $path = $this->getPath($category_info['parent_id'], $new_path);
-
-            if ($path) {
-                return $path;
-            } else {
-                return $new_path;
-            }
-        }
-    }
 }

@@ -1,9 +1,10 @@
 <?php
 class ControllerFeedReFeedMaker2 extends Controller
 {
-    private $steps      = [0, 100, 500, 1000, 2000, 5000, 7000, 10000, 15000, 20000, 25000, 1000000000];
-    private $stockMode  = false;
+    private $steps          = [0, 100, 500, 1000, 2000, 5000, 7000, 10000, 15000, 20000, 25000, 1000000000];    
+    private $maxNameLength  = 150;
 
+    private $stockMode              = false;
     private $exclude_language_id    = null;
     private $language_id            = null;
     private $languages              = [];
@@ -93,45 +94,7 @@ class ControllerFeedReFeedMaker2 extends Controller
         }
 
         $this->steps = $steps;
-    }
-
-    private function normalizeForGoogle($text)
-    {
-        $text = html_entity_decode($text);
-        $text = str_replace('&nbsp;', ' ', $text);
-        $text = str_replace('&amp;', '&', $text);
-        $text = preg_replace("/&#?[a-z0-9]{2,8};/i", "", $text);
-
-        return $text;
-    }
-
-    protected function getPath($parent_id, $current_path = '')
-    {
-        if (!$path_data = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$parent_id, $current_path]))){
-
-            $category_info = $this->model_catalog_category->getCategory($parent_id);
-
-            if ($category_info) {
-                if (!$current_path) {
-                    $new_path = $category_info['category_id'];
-                } else {
-                    $new_path = $category_info['category_id'] . '_' . $current_path;
-                }
-
-                $path = $this->getPath($category_info['parent_id'], $new_path);
-
-                if ($path) {
-                    $path_data = $path;
-                } else {
-                    $path_data = $new_path;
-                }
-            }
-
-            $this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$parent_id, $current_path]), $path_data);
-        }
-
-        return $path_data;
-    }
+    }    
 
     protected function printItemFast($product, $changeID = true)
     {
@@ -195,10 +158,15 @@ class ControllerFeedReFeedMaker2 extends Controller
         $output = '';
 
         $output .= '<item>' . PHP_EOL;
-        $output .= '<title><![CDATA[' . $this->normalizeForGoogle($product['manufacturer'] . ' ' . $product['name']) . ']]></title>' . PHP_EOL;
+
+        if (!empty($product['short_name'])){
+            $product['name'] = $product['short_name'];
+        }
+
+        $output .= '<title><![CDATA[' . shortentext(normalizeForGoogle($product['name']), $this->maxNameLength) . ']]></title>' . PHP_EOL;        
 
         $output .= '<link>' . $this->url->link('product/product', 'product_id=' . $product['product_id'], 'SSL') . '</link>' . PHP_EOL;
-        $output .= '<description><![CDATA[' . $this->normalizeForGoogle(strip_tags(html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8'))) . ']]></description>' . PHP_EOL;
+        $output .= '<description><![CDATA[' . normalizeForGoogle(strip_tags(html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8'))) . ']]></description>' . PHP_EOL;
 
         if (!empty($product['manufacturer'])){        
             $output .= '<g:brand><![CDATA[' . html_entity_decode($product['manufacturer'], ENT_QUOTES, 'UTF-8') . ']]></g:brand>'. PHP_EOL;
@@ -316,28 +284,8 @@ class ControllerFeedReFeedMaker2 extends Controller
 
         $output = str_replace(max($this->steps), 'MORE', $output);
 
-        if (!empty($product['categories']) && $categories = explode(':', $product['categories'])) {
-            foreach ($categories as $category_id) {
-                $path = $this->getPath($category_id);
-
-                if ($path) {
-                    $string = '';
-
-                    foreach (explode('_', $path) as $path_id) {
-                        $category_info = $this->model_catalog_category->getCategory($path_id);
-
-                        if ($category_info) {
-                            if (!$string) {
-                                $string = $category_info['name'];
-                            } else {
-                                $string .= ' &gt; ' . $category_info['name'];
-                            }
-                        }
-                    }
-
-                    $output .= '    <g:product_type><![CDATA[' . $string . ']]></g:product_type>'. PHP_EOL;
-                }
-            }
+        if (!empty($product['main_category_id'])){
+            $output .= '    <g:product_type><![CDATA[' . $this->model_catalog_product->getGoogleCategoryPathForCategory($product['main_category_id']) . ']]></g:product_type>'. PHP_EOL;
         }
 
         //VARIANTS
@@ -421,7 +369,19 @@ class ControllerFeedReFeedMaker2 extends Controller
 
                     echoLine('[supplemental] Всего товаров ' . $total);
 
-                    for ($i = 1; $i <= ($iterations+1); $i++) {
+                    if ($language_id == $this->registry->get('excluded_language_id')) {
+                        if ($changeID) {
+                            $file_full = DIR_REFEEDS . 'supplemental_feed_' . $store_id . '_' . $language_id . '_full_changed_ids.xml';
+                        } else {
+                            $file_full = DIR_REFEEDS . 'supplemental_feed_' . $store_id . '_' . $language_id . '_full.xml';
+                        }
+                    } else {
+                        $file_full = DIR_REFEEDS . 'supplemental_feed_' . $store_id . '_full.xml';
+                    }
+
+                    $output_full = $this->openXML();
+
+                    for ($i = 1; $i <= ($iterations); $i++) {
                         $output = $this->openXML();
 
                         $timer = new FPCTimer();
@@ -461,7 +421,10 @@ class ControllerFeedReFeedMaker2 extends Controller
                             foreach ($products as $product) {
 
                                 if (isFriendlyURL($this->url->link('product/product', 'product_id=' . $product['product_id']))){
-                                    $output .= $this->printItemFast($product, $changeID);
+                                    $itemPrinted = $this->printItemFast($product, $changeID);
+
+                                    $output         .= $itemPrinted;
+                                    $output_full    .= $itemPrinted;
                                 }
 
                                 if ($k % 10 == 0) {   echo $k . '..'; }
@@ -484,6 +447,10 @@ class ControllerFeedReFeedMaker2 extends Controller
                         echoLine('[supplemental] времени на итерацию ' . $timer->getTime() . ' сек.');
                         unset($timer);
                     }
+
+                    $output_full .= $this->closeXML();
+                    file_put_contents($file_full, $output_full);
+
                 }
             }
         }
@@ -540,7 +507,7 @@ class ControllerFeedReFeedMaker2 extends Controller
 
             echoLine('[makefeed] Всего товаров ' . $total);
 
-            for ($i = 1; $i <= ($iterations+1); $i++) {
+            for ($i = 1; $i <= ($iterations); $i++) {
                 $output = $this->openXML();
 
                 $timer = new FPCTimer();
@@ -607,12 +574,6 @@ class ControllerFeedReFeedMaker2 extends Controller
             }
         }
 
-        if (!$this->simpleProcess->isRunning('feed/refeedmaker2/supplemental')){   
-            echoLine('[makefeed] Process feed/refeedmaker2/supplemental is not running, starting it');
-            $this->supplemental();
-        }
-
         $this->cleanUp();
-
     }
 }
