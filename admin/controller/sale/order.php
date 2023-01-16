@@ -5859,15 +5859,19 @@
 					$this->data['sms_sent'] = false;
 				}
 				
+				$shippingMethod = '';
+				if (!empty($this->registry->get('shippingmethods')[$result['delivery_code']])){
+					$shippingMethod = $this->registry->get('shippingmethods')[$result['delivery_code']]['name'];
+				}
 				
 				$this->data['ttns'][] = array(
-				'order_ttn_id' => $result['order_ttn_id'],
-				'delivery_company' => getDeliveryCompany($result['delivery_code']),
-				'delivery_code' => $result['delivery_code'],
-				'delivery_code_err' => ($result['delivery_code'] != $this->data['order']['shipping_code']),
-				'date_ttn' => date('d.m.Y', strtotime($result['date_ttn'])),
-				'ttn'    => $result['ttn'],	
-				'sms_sent' => $sms_sent,						
+				'order_ttn_id' 			=> $result['order_ttn_id'],
+				'delivery_company' 		=> $shippingMethod,
+				'delivery_code' 		=> $result['delivery_code'],
+				'delivery_code_err' 	=> ($result['delivery_code'] != $this->data['order']['shipping_code']),
+				'date_ttn' 				=> date('d.m.Y', strtotime($result['date_ttn'])),
+				'ttn'    				=> $result['ttn'],	
+				'sms_sent' 				=> $sms_sent,						
 				);
 			}
 			
@@ -5892,10 +5896,10 @@
 			$user_name = $this->model_user_user->getRealUserNameById($this->user->getID());
 			
 			$data = array(
-			'type' => 'warning',
-			'text' => $user_name.' изменил ТТН. <br />Заказ',
-			'entity_type' => 'order', 
-			'entity_id' => $order_query->row['order_id']
+			'type' 			=> 'warning',
+			'text' 			=> $user_name.' изменил ТТН. <br />Заказ',
+			'entity_type' 	=> 'order', 
+			'entity_id' 	=> $order_query->row['order_id']
 			);
 			
 			$this->mAlert->insertAlertForGroup('sales', $data);
@@ -5937,22 +5941,23 @@
 			
 			if (mb_strlen($ttn, 'UTF-8') > 2){				
 				if ($date_sent){
-					//date_sent = дата отправки ГРУЗА
+
 					$this->db->query("INSERT INTO `order_ttns` SET
 					order_id = '" . (int)$order_id . "',
 					ttn = '" .$this->db->escape($ttn) . "',
 					delivery_code = '" .$this->db->escape($order['shipping_code']). "',
-					date_ttn = '" .$this->db->escape($date_sent). "'
-					");	
+					date_ttn = '" .$this->db->escape($date_sent). "'");	
+
 					$this->db->query("UPDATE `order` SET ttn = '" .$this->db->escape($ttn) . "' WHERE order_id = '" . (int)$order_id . "'");
 					$this->db->query("UPDATE `order` SET date_sent = '" .$this->db->escape($date_sent). "' WHERE order_id = '" . (int)$order_id . "'");
+
 					} else {
+
 					$this->db->query("INSERT INTO `order_ttns` SET
 					order_id = '" . (int)$order_id . "',
 					ttn = '" .$this->db->escape($ttn) . "',
 					delivery_code = '" .$this->db->escape($order['shipping_code']). "',
-					date_ttn = NOW()
-					");				
+					date_ttn = NOW()");				
 				}
 				$this->db->query("UPDATE `order` SET ttn = '" .$this->db->escape($ttn) . "' WHERE order_id = '" . (int)$order_id . "'");
 				$this->db->query("UPDATE `order` SET date_sent = NOW() WHERE order_id = '" . (int)$order_id . "'");
@@ -7120,7 +7125,7 @@
 					$short_shipping_method = 'Самовывоз';
 					$do_not_replace_shipping_method = true;
 				}
-				
+
 				if ($order_info['payment_address_format']) {
 					$format = $order_info['payment_address_format'];
 					} else {

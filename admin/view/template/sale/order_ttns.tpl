@@ -59,7 +59,7 @@
 			type : 'POST',
 			dataType: 'html',
 			data : {
-				ttn: $('#ttn_value_'+ttn_id).val(),
+				ttn: $('#ttn_value_'+ttn_id).val(),				
 				ttn_id: ttn_id,
 				delivery_code: $('#ttn_code_'+ttn_id).val()
 			},
@@ -77,10 +77,12 @@
 		span.next().show();
 		var ttn = span.attr('data-ttn');
 		var code = span.attr('data-delivery-code');
+		var phone = $('input[name=telephone]').val();
 		$('#ttninfo').load(
 		'index.php?route=sale/order/ttninfoajax&token=<? echo $token ?>',
 		{
 			ttn : ttn,
+			phone: phone,
 			delivery_code : code
 		}, 
 		function(){

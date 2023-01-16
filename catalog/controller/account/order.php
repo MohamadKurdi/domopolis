@@ -1121,13 +1121,18 @@
 				
 				$this->data['ttns'] = array();
 				foreach ($results as $result) {
+
+					$shippingMethod = '';
+					if (!empty($this->registry->get('shippingmethods')[$result['delivery_code']])){
+						$shippingMethod = $this->registry->get('shippingmethods')[$result['delivery_code']]['name'];
+					}
 					
 					$this->data['ttns'][] = array(
-					'order_ttn_id' 		=> $result['order_ttn_id'],
-					'delivery_company' 	=> getDeliveryCompany($result['delivery_code']),
-					'delivery_code' 	=> $result['delivery_code'],
-					'date_ttn' 			=> date('d.m.Y', strtotime($result['date_ttn'])),
-					'ttn'    			=> $result['ttn'],				
+						'order_ttn_id' 		=> $result['order_ttn_id'],
+						'delivery_company' 	=> $shippingMethod,
+						'delivery_code' 	=> $result['delivery_code'],
+						'date_ttn' 			=> date('d.m.Y', strtotime($result['date_ttn'])),
+						'ttn'    			=> $result['ttn'],				
 					);
 					
 				}
