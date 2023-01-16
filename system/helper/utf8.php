@@ -213,8 +213,7 @@ function tryToGuessPageType($request){
 		
 		if ($request['route'] == 'product/category' && !empty($request['path'])){
 			return 'category';
-		}
-		
+		}		
 	}
 
 	return false;
@@ -293,17 +292,11 @@ function reparseCartProductsByStock($products){
 
 	foreach ($products as $product){
 		if ($product['is_certificate']){
-
 			$results['certificates'][] = $product;
-
 		} elseif ($product['current_in_stock']){
-
 			$results['in_stock'][] = $product;
-
 		} else {
-
 			$results['not_in_stock'][] = $product;
-
 		}
 	}
 
@@ -359,7 +352,6 @@ function getUkrainianPluralWord($number, $titles, $show_number = false) {
 	if( is_string( $titles ) )
 		$titles = preg_split( '/, */', $titles );
 
-		// когда указано 2 элемента
 	if( empty( $titles[2] ) )
 		$titles[2] = $titles[1];
 
@@ -395,46 +387,10 @@ function prepareFuckenOpenGraph($string){
 }
 
 function getDeliveryCompany($delivery_code, $second = false){
-
-	if ($second) {
-		$delivery_names = array(
-			'dostavkaplus.sh3' 		=> 'Новою Поштою',
-			'dostavkaplus.sh13' 	=> 'Новою Поштою',
-			'dostavkaplus.sh14' 	=> 'УкрПоштою',
-			'dostavkaplus.sh15' 	=> 'JustIn',
-			'dostavkaplus.sh4'	 	=> 'ТК ИнТайм',
-			'dostavkaplus.sh5' 		=> 'Почтой России ЕМS',
-			'dostavkaplus.sh6' 		=> 'ТК СДЭК',
-			'dostavkaplus.sh16' 	=> 'БелПочтой',
-		);
-
-		if (!empty($delivery_names[$delivery_code])){
-			return $delivery_names[$delivery_code];		
-		} else {
-			return "неизвестно";
-		}	
-	}
-
-	$delivery_names = array(			
-		'dostavkaplus.sh3' 	=> 'Новою Поштою',
-		'dostavkaplus.sh13' => 'Новою Поштою',
-		'dostavkaplus.sh14' => 'УкрПоштою',
-		'dostavkaplus.sh15' => 'JustIn',
-		'dostavkaplus.sh4' 	=> 'ТК ИнТайм',
-		'dostavkaplus.sh5' 	=> 'Почтой России ЕМS',
-		'dostavkaplus.sh6' 	=> 'ТК СДЭК',
-		'dostavkaplus.sh16' => 'БелПочтой',
-	);
-
-	if (isset($delivery_names[$delivery_code])){
-		return 	$delivery_names[$delivery_code];		
-	} else {
-		return "неизвестно";
-	}	
+	return $delivery_code;
 }
 
 function prepareEcommPrice($price) : float{
-
 	$hbprice = str_replace('.','',$price);
 	$hbprice = str_replace(',','.',$hbprice);
 	$hbprice = preg_replace("/[^0-9.]/", "", $hbprice);
@@ -445,7 +401,6 @@ function prepareEcommPrice($price) : float{
 }
 
 function prepareEcommString($string) : string{
-
 	if ($string){
 		$string = str_replace('&amp;', '&', $string);
 		$string = str_replace("'", "`", $string);
