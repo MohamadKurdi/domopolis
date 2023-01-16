@@ -94,9 +94,9 @@ $log = new Log('php-errors-admin.log');
 $registry->set('log', $log);
 
 $db = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
-$registry->set('db', $db);
-$registry->set('dbmain', $db);
-$registry->set('current_db', 'dbmain');
+$registry->set('db', 			$db);
+$registry->set('dbmain', 		$db);
+$registry->set('current_db', 	'dbmain');
 
 if (defined('DB_CONTENT_SYNC') && DB_CONTENT_SYNC){
 	$dbcs = new DB(DB_CONTENT_SYNC_DRIVER, DB_CONTENT_SYNC_HOSTNAME, DB_CONTENT_SYNC_USERNAME, DB_CONTENT_SYNC_PASSWORD, DB_CONTENT_SYNC_DATABASE);
@@ -127,15 +127,6 @@ if (count($configFileExploded = explode('.', $configFile)) == 3){
 	}
 }
 $registry->get('config')->set('config_config_file_prefix', $configFilesPrefix);
-
-$smsQueue = new smsQueue($registry);
-$registry->set('smsQueue', $smsQueue);
-
-$pushQueue = new pushQueue($registry);
-$registry->set('pushQueue', $pushQueue);
-
-$pricevaAdaptor = new hobotix\PricevaAdaptor($registry);
-$registry->set('pricevaAdaptor', $pricevaAdaptor);
 
 
 if (IS_DEBUG){
@@ -188,7 +179,6 @@ $registry->set('cache', $cache);
 $PageCache = new PageCache(false);
 $registry->set('PageCache', $PageCache); 
 
-//Very fast seo-url logic
 if ($registry->get('config')->get('config_seo_url_from_id')){
 	$short_url_mapping = loadJsonConfig('shorturlmap');
 	$short_uri_queries = $short_uri_keywords = [];
@@ -204,22 +194,7 @@ if ($registry->get('config')->get('config_seo_url_from_id')){
 	$registry->set('short_uri_keywords', $short_uri_keywords);
 }
 
-$registry->set('url',  new Url(HTTPS_SERVER, $registry));
-
-$session = new Session();
-$registry->set('session', $session); 
-
-$mAlert = new mAlert($registry);
-$registry->set('mAlert', $mAlert);
-
-$shortAlias = new shortAlias($registry);
-$registry->set('shortAlias', $shortAlias);
-
-$Bitrix24 = new Bitrix24($registry);
-$registry->set('Bitrix24', $Bitrix24);
-
-$registry->set('mobileDetect', new Mobile_Detect);
-$registry->set('simpleProcess', new hobotix\simpleProcess());
+$registry->set('shippingmethods', loadJsonConfig('shippingmethods'));
 
 $languages = [];
 $languages_id_code_mapping = [];
@@ -239,9 +214,7 @@ $language = new Language($languages[$config->get('config_admin_language')]['dire
 $language->load($languages[$config->get('config_admin_language')]['filename']);	
 $registry->set('language', $language);
 
-
 $sorts = loadJsonConfig('sorts');
-
 if (!empty($sorts['sorts'])){
 	$registry->set('sorts', $sorts['sorts']);
 }
@@ -264,7 +237,13 @@ if ($registry->get('config')->get('config_order_default')){
 
 $registry->set('customer_group_id', $registry->get('config')->get('config_customer_group_id'));
 
-
+$registry->set('url',  				new Url(HTTPS_SERVER, $registry));
+$registry->set('session', 			new Session()); 
+$registry->set('mAlert', 			new mAlert($registry));
+$registry->set('shortAlias', 		new shortAlias($registry));
+$registry->set('Bitrix24', 			new Bitrix24($registry));
+$registry->set('mobileDetect', 		new Mobile_Detect);
+$registry->set('simpleProcess', 	new hobotix\simpleProcess());
 $registry->set('document', 			new Document()); 		
 $registry->set('currency', 			new Currency($registry));		
 $registry->set('weight', 			new Weight($registry));
@@ -272,17 +251,13 @@ $registry->set('length', 			new Length($registry));
 $registry->set('user', 				new User($registry));
 $registry->set('cart', 				new Cart($registry));
 $registry->set('courierServices', 	new CourierServices($registry));
-
-$emailBlackList = new hobotix\EmailBlackList($registry);
-$registry->set('emailBlackList', $emailBlackList);
-
-$rainforestAmazon = new hobotix\RainforestAmazon($registry);
-$registry->set('rainforestAmazon', $rainforestAmazon);
-
-$yandexTranslator = new hobotix\YandexTranslator($registry);
-$registry->set('yandexTranslator', $yandexTranslator);
-
-$registry->set('customer', new Customer($registry));
+$registry->set('emailBlackList', 	new hobotix\EmailBlackList($registry));
+$registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
+$registry->set('yandexTranslator', 	new hobotix\YandexTranslator($registry));
+$registry->set('customer', 			new Customer($registry));
+$registry->set('smsQueue', 			new smsQueue($registry));
+$registry->set('pushQueue', 		new pushQueue($registry));
+$registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
 
 $controller = new Front($registry);
 

@@ -248,6 +248,8 @@
 	$registry->get('config')->set('config_supported_languages', [$registry->get('config')->get('config_language'), $registry->get('config')->get('config_second_language')]);
 	$registry->get('config')->set('config_rainforest_source_language_id', $languages_all[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);	
 
+	$registry->set('shippingmethods', loadJsonConfig('shippingmethods'));
+
 	//FROM URL
 	if ($registry->get('config')->get('config_second_language')){					
 		$language_from_url = explode("/", $registry->get('request')->server['REQUEST_URI']);

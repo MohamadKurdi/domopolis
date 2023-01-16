@@ -237,6 +237,8 @@ $registry->get('config')->set('config_language_hreflang', 	$languages[$registry-
 	//RNF MAIN LANGUAGE
 $registry->get('config')->set('config_rainforest_source_language_id', $languages_all[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);
 
+$registry->set('shippingmethods', loadJsonConfig('shippingmethods'));
+
 	//Stores and languages mapping to registry
 $stores = [0];
 $query = $registry->get('db')->query("SELECT * FROM store WHERE 1");

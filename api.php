@@ -307,6 +307,8 @@ if (!($registry->get('config')->get('config_warehouse_identifier'))) {
     $registry->get('config')->set('config_warehouse_identifier', 'quantity_stock');
 }
 
+$registry->set('shippingmethods', loadJsonConfig('shippingmethods'));
+
     //Язык
 $language = new Language($languages[$code]['directory'], $registry);
 $language->load($languages[$code]['filename']);
