@@ -1,8 +1,8 @@
 <?php
 	class ModelLocalisationLanguage extends Model {
 		public function getLanguage($language_id) {
-			if (!empty($this->registry->get('languages_id_mapping')[$language_id])){
-				return $this->registry->get('languages_id_mapping')[$language_id];
+			if (!empty($this->registry->get('languages_all_id_code_mapping')[$language_id])){
+				return $this->getFullLanguageByCode($this->registry->get('languages_all_id_code_mapping')[$language_id]);
 			}
 
 			return false;
