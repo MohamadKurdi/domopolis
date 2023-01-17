@@ -1,7 +1,7 @@
 <?php
 	class Controllerproductproductnew extends Controller {
 		public function index() {
-			$this->language->load('product/category');
+			$this->language->load('product/search');
 			
 			foreach ($this->language->loadRetranslate('product/single') as $translationСode => $translationText){
 				$this->data[$translationСode] = $translationText;
