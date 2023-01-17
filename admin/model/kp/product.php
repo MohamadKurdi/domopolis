@@ -409,7 +409,7 @@ class ModelKPProduct extends Model {
 		echo '>> Добавлен  '.$product_id.' в подарочный' . PHP_EOL;		
 	}
 
-	public function copyProductToPresentUA($product_id, $percent = 20, $count_orders = 2, $add_to_present = false){
+	public function copyProductToPresentUA($product_id){
 		$this->load->model('catalog/product');
 		$log = new Log('copy_to_stock.txt');
 		$this->db->query("INSERT IGNORE INTO product_to_category SET product_id = '" . (int)$product_id . "', category_id = 8307");				

@@ -876,17 +876,17 @@ class ControllerApiInfo1C extends Controller
                             }
                         }
 
-                        if ($value['quantity_stockK'] > 0) {
+                        if (!empty($value['quantity_stockK'])) {
                             $products_in_stock_kyiv[] = $value['product_id'];
                             $this->rainforestAmazon->offersParser->PriceLogic->setProductStockInWarehouse($value['product_id'], 'quantity_stockK');
                         }
 
-                        if ($value['quantity_stockM'] > 0) {
+                        if (!empty($value['quantity_stockM'])) {
                             $products_in_stock_msk[] = $value['product_id'];
                             $this->rainforestAmazon->offersParser->PriceLogic->setProductStockInWarehouse($value['product_id'], 'quantity_stockM');
                         }
 
-                        if ($value['quantity_stock'] > 0) {
+                        if (!empty($value['quantity_stock'])) {
                             $products_in_stock_de[] = $value['product_id'];
                         }
 
@@ -898,26 +898,15 @@ class ControllerApiInfo1C extends Controller
                         echoLine('[updateStockXML] Товар '.(int)($value['product_id']).', данные ' . implode(',', $value));
 
                         $sql = ("UPDATE `product` SET 
-							`quantity_stock`         = '" . (int)$value['quantity_stock'] . "',
-							`quantity_stockK` 	     = '" . (int)$value['quantity_stockK'] . "',
-							`quantity_stockM` 	     = '" . (int)$value['quantity_stockM'] . "',
-							`quantity_stockMN` 	     = '" . (int)$value['quantity_stockM'] . "',
-							`quantity_stockAS` 	     = '" . (int)$value['quantity_stockM'] . "',
+							`quantity_stock`         = '" . (!empty($value['quantity_stock'])?(int)$value['quantity_stock']:'0') . "',
+							`quantity_stockK` 	     = '" . (!empty($value['quantity_stockK'])?(int)$value['quantity_stockK']:'0') . "',
+							`quantity_stockM` 	     = '" . (!empty($value['quantity_stockM'])?(int)$value['quantity_stockM']:'0') . "',
+							`quantity_stockMN` 	     = '" . (!empty($value['quantity_stockM'])?(int)$value['quantity_stockM']:'0') . "',
+							`quantity_stockAS` 	     = '" . (!empty($value['quantity_stockM'])?(int)$value['quantity_stockM']:'0') . "',
 							`actual_cost` 	         = '" . (float)$value['actual_cost'] . "',
                             `quantity_updateMarker`   = 1	
 							WHERE product_id = '" . (int)$value['product_id'] . "'");
 
-                        $ol = 'product '.$value['product_id'];
-                        $ol .= ' DE: '.(int)$value['quantity_stock'];
-                        $ol .= ' UA: '.(int)$value['quantity_stockK'];
-                        $ol .= ' RU: '.(int)$value['quantity_stockM'];
-                        //  $ol .= ' BY: '.(int)$value['quantity_stockMN'];
-                        //  $ol .= ' KZ: '.(int)$value['quantity_stockAS'];
-                        $ol .= ' / COST: '.(float)$value['actual_cost'];
-
-
-
-                        echoLine($ol);
                         $this->db->query($sql);
 
                         if (!empty($value['costM']) && !empty($value['min_sale_priceM'])) {
@@ -991,7 +980,7 @@ class ControllerApiInfo1C extends Controller
                     }
 
                     foreach ($products_in_stock_kyiv as $product_in_present_id) {
-                        $this->model_kp_product->copyProductToPresentUA($product_in_present_id, 20, 2, true);
+                        $this->model_kp_product->copyProductToPresentUA($product_in_present_id);
                     }
 
                     foreach ($products_in_stock_de as $product_in_de_id) {
