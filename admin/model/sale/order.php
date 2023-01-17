@@ -2433,6 +2433,23 @@
 				return false;
 			}
 		}
+
+		public function getAllTrackingStatuses(){
+			$query = $this->db->query("SELECT DISTINCT(tracking_status) FROM order_ttns WHERE 1");
+
+			$result = [];
+			foreach ($query->rows as $row){
+				$result[] = $row['tracking_status'];
+			}
+
+			return $result;
+		}
+
+		public function getTrackingCodeInfo($tracking_code){
+			$query = $this->db->query("SELECT * FROM order_ttns WHERE ttn = '" . $this->db->escape($tracking_code) . "' LIMIT 1");
+
+			return $query->row;
+		}
 		
 		public function getOrders($data = array()) {
 			$sql = "SELECT DISTINCT o.order_id, o.preorder, o.pwa, o.yam, o.yam_id, o.yam_shipment_date, o.yam_shipment_id, o.yam_box_id, o.yam_fake, o.yam_status, o.yam_substatus, o.template, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.customer_id, o.tracker_xml, o.shipping_code,
