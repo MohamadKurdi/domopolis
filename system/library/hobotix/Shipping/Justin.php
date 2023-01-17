@@ -12,21 +12,19 @@
 		private $apiLogin = null;
 		private $apiKey = null;
 		
-		private $countryMapping = array(
-		'RU' => 176,
-		'KZ' => 109,
-		'BY' => 20,
-		);
-		
 		
 		public function __construct($registry, $langCode = 'RU') {			
 			$this->registry = $registry;
-			$this->config = $this->registry->get('config');
-			$this->db = $this->registry->get('db');
+			$this->config 	= $this->registry->get('config');
+			$this->db 		= $this->registry->get('db');
 
 			$this->apiLogin = $this->config->get('config_justin_api_login');
-			$this->apiKey = $this->config->get('config_justin_api_key');
+			$this->apiKey 	= $this->config->get('config_justin_api_key');
 			
+			$this->setLangCode($langCode);
+		}
+
+		public function setLangCode($langCode){
 			$this->client = new \Justin\Justin($langCode, true);
 			$this->client->setLogin($this->apiLogin)->setPassword($this->apiKey);
 			
@@ -37,7 +35,7 @@
 			if ($langCode == 'RU'){
 				$this->descriptionField = 'DescrRu';
 			}
-		}		
+		}
 
 		public function checkStatus(){
 			$response = $this->client->listRegions()->getData();
@@ -53,6 +51,20 @@
 			return false;
 		}
 		
+		public function updateReferences(){
+
+			try {
+				$this->setLangCode('RU');
+				$this->updateZones()->updateZonesRegions()->updateCities()->updateCitiesRegions()->updateStreets()->updateWarehouses();
+				
+				$this->setLangCode('UA');
+				$this->updateZones()->updateZonesRegions()->updateCities()->updateCitiesRegions()->updateStreets()->updateWarehouses();
+				
+			} catch (\Justin\Exceptions\JustinHttpException $e){
+				echoLine('JustinHttpException:' . $e->getMessage());
+			}
+
+		}
 		
 		public function updateZones(){
 			

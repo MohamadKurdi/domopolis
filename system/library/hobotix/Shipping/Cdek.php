@@ -20,11 +20,11 @@
 		
 		public function __construct($registry) {			
 			$this->registry = $registry;
-			$this->config = $this->registry->get('config');
-			$this->db = $this->registry->get('db');
+			$this->config 	= $this->registry->get('config');
+			$this->db 		= $this->registry->get('db');
 
 			$this->apiLogin = $this->config->get('cdek_login');
-			$this->apiKey = $this->config->get('cdek_password');
+			$this->apiKey 	= $this->config->get('cdek_password');
 			
 			$this->client = new \CdekSDK\CdekClient($this->apiLogin, $this->apiKey);
 		}
@@ -180,6 +180,9 @@
 			return false;
 		}
 		
+		public function updateReferences(){
+			$this->updateZones('RU')->updateZones('KZ')->updateZones('BY')->updateCities()->updateDeliveryPoints()->updateBeltWayHits();
+		}
 		
 		public function updateZones($countryCode){
 			
