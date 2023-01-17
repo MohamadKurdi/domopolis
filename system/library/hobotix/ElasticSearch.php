@@ -276,8 +276,8 @@
 				return array($numberTransformer->toWords($number));
 			}
 			
-			$m1 = array_values(morphos\Russian\CardinalNumeralGenerator::getCases($number, $gender = morphos\Gender::MALE));
-			$m2 = array_values(morphos\Russian\CardinalNumeralGenerator::getCases($number, $gender = morphos\Gender::FEMALE));
+			$m1 = array_values(\morphos\Russian\CardinalNumeralGenerator::getCases($number, $gender = \morphos\Gender::MALE));
+			$m2 = array_values(\morphos\Russian\CardinalNumeralGenerator::getCases($number, $gender = \morphos\Gender::FEMALE));
 			$m = (array_values(array_unique(array_merge($m1, $m2))));						
 			
 			return $m;		
