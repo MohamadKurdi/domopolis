@@ -763,31 +763,19 @@ class ControllerApiInfo1C extends Controller
 
                 $count = 0;
                 $total_count = 0;
-                $products_in_stock = array();
-                $products_in_stock_msk = array();
-                $products_in_stock_kyiv = array();
-                $products_in_stock_de = array();
-
-                $total_p_on_stocks = array();
-                $total_q_on_stocks = array();
+                $products_in_stock = $products_in_stock_msk = $products_in_stock_kyiv = $products_in_stock_de = [];
+                $total_p_on_stocks = $total_q_on_stocks = [];                
 
                 foreach ($stocks as $k => $v) {
                     $total_p_on_stocks[$k] = 0;
                     $total_q_on_stocks[$k] = 0;
-                }
+                }                
 
                 $unique_products = array();
-                foreach ($input['products']['product'] as $value) {
-
-                    foreach (['quantity_stock', 'quantity_stockK', 'quantity_stockM', 'quantity_stockMN', 'quantity_stockAS'] as $key){
-                        if (empty($value[$key])){
-                            $value[$key] = 0;
-                        }
-                    }
-
+                foreach ($input['products']['product'] as $value) {    
 
                     if (!isset($unique_products[(int)($value['product_id'])])) {
-                        $unique_products[(int)($value['product_id'])] = array();
+                        $unique_products[(int)($value['product_id'])] = [];
                     }
 
                     foreach ($stocks as $k => $v) {
@@ -819,7 +807,7 @@ class ControllerApiInfo1C extends Controller
 
                     if (isset($value['product_vendor'])) {
                         $unique_products[($value['product_id'])]['product_vendor'] = $value['product_vendor'];
-                    }
+                    }                    
                 }
                     
                 $log_odinass->write('[updateStockXML] Всего ' . count($unique_products) . ' товаров');                    
@@ -866,7 +854,11 @@ class ControllerApiInfo1C extends Controller
                         $product['location'] = '';
                     }
 
-                    if ($product && (isset($product['location']) && $product['location'] != 'certificate' && $product['location'] != 'newcertificate')) {
+                    if ($product) {
+                        if ($product['location'] == 'certificate' || $product['location'] == 'newcertificate'){
+                            continue;
+                        }
+
                         foreach ($stocks as $k => $v) {
                             if ($value[$k] > 0) {
                                 $total_p_on_stocks[$k] += 1;
@@ -1964,7 +1956,6 @@ class ControllerApiInfo1C extends Controller
 
     public function getStocksFrom1C($update = true, $updateStockGroups = false)
     {
-
         $this->getStockWaitsFrom1C();
         $this->load->model('kp/info1c');
         $result = $this->model_kp_info1c->getStocksFrom1C();
