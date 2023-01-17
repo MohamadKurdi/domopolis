@@ -53,8 +53,6 @@ class ControllerModuleCustomproductgrouped extends Controller {
 				
 				if ($setting_part['image']){
 					$customproduct_block['image'] = $this->model_tool_image->resize($setting_part['image'], $setting_part['big_image_width'], $setting_part['big_image_height'], '', 80);
-					$customproduct_block['image_webp'] = $this->model_tool_image->resize($setting_part['image'], $setting_part['big_image_width'], $setting_part['big_image_height'], '', 80);
-					$customproduct_block['image_mime'] = $this->model_tool_image->getMime($setting_part['image']);
 				} else {
 					$customproduct_block['image'] = false;
 				}
@@ -62,8 +60,6 @@ class ControllerModuleCustomproductgrouped extends Controller {
 				
 				if ($setting_part['image2']){
 					$customproduct_block['image2'] = $this->model_tool_image->resize($setting_part['image2'], $setting_part['big_image2_width'], $setting_part['big_image2_height'], '', 80);
-					$customproduct_block['image2_webp'] = $this->model_tool_image->resize($setting_part['image2'], $setting_part['big_image_width'], $setting_part['big_image_height'], '', 80);
-					$customproduct_block['image2_mime'] = $this->model_tool_image->getMime($setting_part['image2']);
 				} else {
 					$customproduct_block['image2'] = false;
 				}
@@ -105,6 +101,5 @@ class ControllerModuleCustomproductgrouped extends Controller {
 		
 		$this->render();
 		
-	}							
-	
+	}								
 }

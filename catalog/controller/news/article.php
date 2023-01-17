@@ -400,7 +400,6 @@ class ControllerNewsArticle extends Controller {
 						if (in_array("image", $elements) && ($result['image'] || $result['image2'])) {
 							if ($result['image2']) {
 								$image = $this->model_tool_image->resize($result['image2'], $bbwidth, $bbheight);
-
 							} else {
 								$image = $this->model_tool_image->resize($result['image'], $bbwidth, $bbheight);						
 							}
@@ -458,9 +457,7 @@ class ControllerNewsArticle extends Controller {
 						$this->data['article'][] = array(
 							'article_id'  => $result['news_id'],
 							'name'        => $name,
-							'thumb'       => $image,
-						//	'thumb_mime'  => $image_mime,
-						//	'thumb_webp'  => $image_webp,
+							'thumb'       => $image,						
 							'date_added'  => $da,
 							'du'          => $du,
 							'author'      => $author,

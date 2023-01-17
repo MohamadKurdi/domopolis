@@ -228,13 +228,9 @@
 				if ($result){
 
 					if ($result['image']) {
-						$image = $this->model_tool_image->resize($result['image'], $dimensions['w'], $dimensions['h']);
-						$image_mime = $this->model_tool_image->getMime($result['image']);
-						$image_webp = $this->model_tool_image->resize_webp($result['image'], $dimensions['w'], $dimensions['h']);
+						$image = $this->model_tool_image->resize($result['image'], $dimensions['w'], $dimensions['h']);						
 					} else {
-						$image = $this->model_tool_image->resize($this->config->get('config_noimage'), $dimensions['w'], $dimensions['h']);
-						$image_mime = $this->model_tool_image->getMime($this->config->get('config_noimage'));
-						$image_webp = $this->model_tool_image->resize_webp($this->config->get('config_noimage'), $dimensions['w'], $dimensions['h']);
+						$image = $this->model_tool_image->resize($this->config->get('config_noimage'), $dimensions['w'], $dimensions['h']);						
 					}
 					
 					if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
@@ -320,9 +316,7 @@
 						'stock_text'  				=> $result['stock_text'],						
 						'show_delivery_terms' 		=> $stock_data['show_delivery_terms'],
 						'manufacturer' 				=> $result['manufacturer'],
-						'thumb'       				=> $image,
-						'thumb_mime'  				=> $image_mime,
-						'thumb_webp'  				=> $image_webp,
+						'thumb'       				=> $image,						
 						'is_set' 	  				=> $result['set_id'],
 						'name'        				=> $result['name'],
 						'variant_name_1'        	=> $result['variant_name_1'],
