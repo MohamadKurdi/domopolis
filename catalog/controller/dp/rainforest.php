@@ -215,7 +215,12 @@ class ControllerDPRainForest extends Controller {
 			foreach ($query->rows as $row){
 				echoLine($row['product_id'] . '/' . $row['asin'] . ' ' . $i . '/' . $query->num_rows);
 
-				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
+
+				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($row['product_id'])){
+					echoLine('[deletenoofferscron] Product ' . $row['product_id'] . ' is on stock, skipping and enabling');
+					$this->rainforestAmazon->productsRetriever->model_product_edit->enableProduct($row['product_id']);
+
+				} elseif ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
 					echoLine('[deletenoofferscron] Product ' . $row['product_id'] . ' is in orders, disabling');
 					$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($row['product_id'])->addAsinToIgnored($query->row['asin'], $query->row['name']);
 				} else {
@@ -398,9 +403,8 @@ class ControllerDPRainForest extends Controller {
 
 			foreach ($asins as $asin){
 				if ($this->rainforestAmazon->productsRetriever->model_product_get->checkIfAsinIsDeleted($asin['asin'])){
-					echoLine('[addasinsqueuecron] ASIN удален, убираем из очереди!');	
-					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteASINFromQueue($asin['asin']);
-					continue;
+					echoLine('[addasinsqueuecron] ASIN удален, убираем из списка удалённых!');	
+					$this->rainforestAmazon->productsRetriever->model_product_edit->removeAsinFromIgnored($asin['asin']);					
 				}
 
 				if ($product_id = $this->rainforestAmazon->productsRetriever->model_product_get->getProductIdByAsin($asin['asin'])){

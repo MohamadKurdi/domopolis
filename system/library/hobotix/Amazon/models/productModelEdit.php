@@ -83,6 +83,12 @@ class productModelEdit extends hoboModel{
 		return $this;
 	}
 
+	public function removeAsinFromIgnored($asin){
+		$this->db->query("DELETE FROM deleted_asins WHERE asin = '" . $this->db->escape($asin) . "'");
+
+		return $this;
+	}
+
 	public function disableProduct($product_id){
 		$this->db->query("UPDATE product SET `status` = 0 WHERE product_id = '" . (int)$product_id . "'");
 

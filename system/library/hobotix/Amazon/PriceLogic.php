@@ -320,6 +320,13 @@ class PriceLogic
 	}
 
 	//Проверяет, есть ли товар сейчас на складе
+	public function checkIfProductIsOnAnyWarehouse($product_id){
+		$query = $this->db->query("SELECT * FROM product WHERE product_id = '" . $product_id . "' AND (" . $this->buildStockQueryField() . " > 0)");
+
+		return $query->num_rows;
+	}
+
+	//Проверяет, есть ли товар сейчас на складе
 	public function checkIfProductIsOnWarehouse($product_id, $warehouse_identifier){
 		$query = $this->db->query("SELECT * FROM product WHERE product_id = '" . $product_id . "' AND (`" . $warehouse_identifier . "` + `" . $warehouse_identifier . '_onway' . "` > 0)");
 
