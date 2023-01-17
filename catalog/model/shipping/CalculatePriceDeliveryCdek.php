@@ -1,14 +1,5 @@
 <?php
-/**
- * Расчёт стоимости доставки СДЭК
- * Модуль для интернет-магазинов (ИМ)
- * 
- * @version 1.0
- * @since 21.06.2012
- * @link http://www.edostavka.ru/integrator/
- * @see 3197
- * @author Tatyana Shurmeleva
- */
+
 class CalculatePriceDeliveryCdek {
 	
 	//версия модуля
@@ -296,6 +287,9 @@ class CalculatePriceDeliveryCdek {
 		}		
 
 		$response = $this->_getRemoteData($data);
+
+		var_dump(json_encode($data));
+		var_dump($response);
 		
         if( isset($response['result']) && !empty($response['result']) ) {
             $this->result = $response;

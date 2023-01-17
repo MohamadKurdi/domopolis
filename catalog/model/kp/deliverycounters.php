@@ -77,13 +77,11 @@
 			$value = $this->length->convert($value, $length_class_id, $this->length_class_id);
 		}
 		
-		private function getResult(CalculatePriceDeliveryCdek &$calc, $total = 0) {
-			
-			$result = FALSE;						
-			
+		private function getResult(CalculatePriceDeliveryCdek &$calc, $total = 0) {			
+			$result = FALSE;									
 			if ($calc->calculate() === true) {
 				
-				$response = $calc->getResult();		
+				$response = $calc->getResult();						
 				
 				if (!$this->config->get('cdek_cache_on_delivery') || !array_key_exists('cashOnDelivery', $response['result']) || ($this->config->get('cdek_cache_on_delivery') && (float)$response['result']['cashOnDelivery'] && $total >= (float)$response['result']['cashOnDelivery'])) {
 					$result = $response['result'];
@@ -200,12 +198,10 @@
 				}
 				
 				$products = $this->cart->getProducts();
-				
-				//А тут прикольная заглушка, на случай если товаров нету)))
+								
 				if (!$products){
 					$products = json_decode($this->defaultProducts, true);
-				}
-				
+				}				
 				
 				$cdek_default_weight = $this->config->get('cdek_default_weight');
 				
@@ -256,8 +252,7 @@
 				$packing_min_weight = $this->weight->convert((float)$this->config->get('cdek_packing_min_weight'), $this->config->get('cdek_packing_weight_class_id'), $this->weight_class_id);
 				$packing_value = $this->weight->convert((float)$this->config->get('cdek_packing_value'), $this->config->get('cdek_packing_weight_class_id'), $this->weight_class_id);
 				
-				if ($packing_value) {
-					
+				if ($packing_value) {					
 					$packing_weight = 0;
 					
 					switch ($this->config->get('cdek_packing_mode')) {
@@ -353,12 +348,10 @@
 					$this->log->debug('СДЭК: объем ' . $volume);
 				}
 				
-				if (!$volume) {
-					
+				if (!$volume) {					
 					if ($this->config->get('cdek_log')) {
 						$this->log->debug('СДЭК: не удалось рассчитать объем, возможно не заданы размеры товара или не установлено значение по умолчанию в настройках модуля!');
-					}
-					
+					}					
 					$status = FALSE;
 				}
 				
@@ -523,8 +516,6 @@
 			$min_WW = PHP_INT_MAX;
 			
 			$sub_total = $this->cart->getSubTotal();
-			
-			//$this->log->debug($tariff_list);
 			
 			$returnTariffs = array();
 			

@@ -62,10 +62,7 @@
 				}
 				
 				$count++;
-			}
-			
-			
-			
+			}									
 			return $this;			
 		}
 		
