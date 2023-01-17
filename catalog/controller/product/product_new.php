@@ -114,8 +114,7 @@
 			'h' => $this->config->get('config_image_product_height')
 			);
 			
-			$this->data['products'] = $this->model_catalog_product->prepareProductToArray($results);
-			
+			$this->data['products'] = $this->model_catalog_product->prepareProductToArray($results);			
 			
 			$url = '';
 			
@@ -125,27 +124,16 @@
 			}
 			
 			$this->data['sorts'] = array();
-			
-            $this->data['sorts'][] = array(
-			'text'  => $this->language->get('text_default'),
-			'value' => 'p.sort_order-ASC',
-			'href'  => $this->url->link('product/product_new', 'sort=p.sort_order&order=ASC' . $url)
-            );
-            $this->data['sorts'][] = array(
-			'text'  => $this->language->get('price_asc'),
-			'value' => 'p.price-ASC',
-			'href'  => $this->url->link('product/product_new', 'sort=p.price&order=ASC' . $url)
-            );
-            $this->data['sorts'][] = array(
-			'text'  => $this->language->get('price_desc'),
-			'value' => 'p.price-DESC',
-			'href'  => $this->url->link('product/product_new', 'sort=p.price&order=DESC' . $url)
-            );
-            $this->data['sorts'][] = array(
-			'text'  => $this->language->get('populars'),
-			'value' => 'p.viewed-DESC',
-			'href'  => $this->url->link('product/product_new', 'sort=p.viewed&order=DESC' . $url)
-            );
+
+			foreach ($this->registry->get('sorts') as $sortConfig){
+				if ($sortConfig['visible']){
+					$this->data['sorts'][] = array(
+						'text'  => $this->language->get($sortConfig['text_variable']),
+						'value' => ($sortConfig['field'] . '-' . $sortConfig['order']),
+						'href'  => $this->url->link('product/product_new', '&sort=' . $sortConfig['field'] . '&order='. $sortConfig['order'] . $url)
+					);
+				}
+			}			
 			
 			$url = '';
 			
