@@ -155,10 +155,10 @@
 						$option_weight = 0;
 						
 						$option_data = array();
+						$prod_image = $product_query->row['image'];	
 						
 						if ($this->config->get('config_product_options_enable')){						
-							$option_price_only = false;
-							$prod_image = $product_query->row['image'];											
+							$option_price_only = false;																	
 
 							foreach ($options as $product_option_id => $option_value) {
 								$option_query = $this->db->ncquery("SELECT po.product_option_id, po.option_id, od.name, o.type FROM product_option po LEFT JOIN `option` o ON (po.option_id = o.option_id) LEFT JOIN option_description od ON (o.option_id = od.option_id) WHERE po.product_option_id = '" . (int)$product_option_id . "' AND po.product_id = '" . (int)$product_id . "' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "'");
