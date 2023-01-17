@@ -1057,7 +1057,7 @@
 			}
 
 			if (empty($data['filter_with_variants'])){
-				$sql .= " AND ((p.main_variant_id = '0' OR ISNULL(p.main_variant_id)) OR p.display_in_catalog = 1)";
+				$sql .= " AND (((p.main_variant_id = '0' OR ISNULL(p.main_variant_id)) OR p.display_in_catalog = 1) OR (p.`" . $this->config->get('config_warehouse_identifier') . "` > 0))";
 			}
 
 			if ($this->config->get('config_no_zeroprice')){
@@ -1306,7 +1306,13 @@
 					} elseif ($data['sort'] == 'p.viewed' || $data['sort'] == 'p.date_added') {
 						$sql .= " ORDER BY (p.`quantity` > 0) DESC, " . $data['sort'];
 					} else {
-					$sql .= " ORDER BY (p.`" . $this->config->get('config_warehouse_identifier') . "` > 0) DESC, stock_status_id ASC, " . $data['sort'];
+
+					if (strpos($data['sort'], 'stock_status_id ASC') === false){
+						$sql .= " ORDER BY (p.`" . $this->config->get('config_warehouse_identifier') . "` > 0) DESC, stock_status_id ASC, " . $data['sort'];
+					} else {
+						$sql .= " ORDER BY (p.`" . $this->config->get('config_warehouse_identifier') . "` > 0) DESC, " . $data['sort'];
+					}
+					
 				}
 				} else {
 				$sql .= " ORDER BY (p.`" . $this->config->get('config_warehouse_identifier') . "` > 0) DESC, stock_status_id ASC, p.sort_order";
@@ -2453,7 +2459,7 @@
 			}
 
 			if (empty($data['filter_with_variants'])){
-				$sql .= " AND ((p.main_variant_id = '0' OR ISNULL(p.main_variant_id)) OR p.display_in_catalog = 1)";	
+				$sql .= " AND (((p.main_variant_id = '0' OR ISNULL(p.main_variant_id)) OR p.display_in_catalog = 1) OR (p.`" . $this->config->get('config_warehouse_identifier') . "` > 0))";	
 			}
 
 			if ($this->config->get('config_no_zeroprice')){
