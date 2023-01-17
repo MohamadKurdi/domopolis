@@ -3,12 +3,13 @@
 	namespace hobotix\shipping;
 	
 	class NovaPoshta {
-		private $db;
-		private $config;
-		private $registry;
-		private $host = 'https://api.novaposhta.ua/v2.0/json/';
-		
-		
+		private $db			= null;
+		private $config		= null;
+		private $registry	= null;
+
+		private $host 		= 'https://api.novaposhta.ua/v2.0/json/';
+		private $trackLimit = 100;
+				
 		private $apiKey = null;
 		private $defaultCityGuid = null;
 		
@@ -24,11 +25,15 @@
 		
 		private function validateResult($result){			
 			if (!$result || mb_strlen($result) < 5 || !($json = json_decode($result, true)) || empty($json['success']) || !$json['success']){				
-				throw new Exception('Erroneous response from NovaPoshta API, possibly wrong invoice number! Or problems with the API ' . serialize($result));
+				throw new \Exception('Erroneous response from NovaPoshta API, possibly wrong invoice number! Or problems with the API ' . serialize($result));
 			}
 			
 			return $json;			
 		}		
+
+		private function checkIfTaken($code){
+			return (int)in_array($code['StatusCode'], ['9', '10', '11']);
+		}
 		
 		private function doRequest($data){			
 			$json = array(			
@@ -80,6 +85,49 @@
 
 
 		public function trackAndReturn($tracking_code, $phone = ''){
+		}		
+
+		public function trackMultiCodes($tracking_codes){
+			$result = [];
+
+			if (empty($tracking_codes)){
+				return false;
+			}
+
+			$chunks = array_chunk($tracking_codes, $this->trackLimit, true);
+
+			foreach ($chunks as $chunk){
+				$Documents = [];
+
+				foreach ($chunk as $code){
+					$Documents[] = [
+						"DocumentNumber" => $code,
+						"Phone"  		 => "" 
+					];
+				}
+
+				$data = [			
+					"language"  		=> "uk",
+					"modelName"			=> "TrackingDocument",
+					"calledMethod"  	=> "getStatusDocuments",
+					"methodProperties" 	=> [ 
+						"Documents" => $Documents
+					]
+				];
+
+				$answer = $this->doRequest($data);
+			}
+			
+			unset($code);
+			foreach ($answer['data'] as $code){
+				echoLine('[NovaPoshta::trackMultiCodes] ' . $code['Number']);
+
+				$code['taken'] 				= $this->checkIfTaken($code);
+				$code['tracking_status'] 	= $code['Status'];
+				$result[$code['Number']] 	= $code;
+			}
+
+			return $result;
 		}
 
 		public function trackAndFormat($tracking_code, $phone = ''){
