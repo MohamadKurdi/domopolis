@@ -1328,6 +1328,18 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_color_grouping_products_enable'] = $this->config->get('config_color_grouping_products_enable');
         }
+
+        if (isset($this->request->post['config_product_downloads_enable'])) {
+            $this->data['config_product_downloads_enable'] = $this->request->post['config_product_downloads_enable'];
+        } else {
+            $this->data['config_product_downloads_enable'] = $this->config->get('config_product_downloads_enable');
+        }
+
+        if (isset($this->request->post['config_product_options_enable'])) {
+            $this->data['config_product_options_enable'] = $this->request->post['config_product_options_enable'];
+        } else {
+            $this->data['config_product_options_enable'] = $this->config->get('config_product_options_enable');
+        }
         
         if (isset($this->request->post['config_android_playstore_enable'])) {
             $this->data['config_android_playstore_enable'] = $this->request->post['config_android_playstore_enable'];

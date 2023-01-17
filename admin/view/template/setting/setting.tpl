@@ -394,6 +394,39 @@
 
 								<td style="width:18%">
 									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Загрузки в товарах</span></p>
+										<select type="select" name="config_product_downloads_enable">
+											<? if ($config_product_downloads_enable) { ?>
+												<option value="1" selected='selected' >Да</option>
+												<option value="0" >Нет</option>
+											<? } else { ?>
+												<option value="1" >Да</option>
+												<option value="0"  selected='selected' >Нет</option>
+											<? } ?>       
+										</select>
+										<br />
+										<span class="help">логика загрузки цифровых товаров</span>	
+									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Опции товаров</span></p>
+										<select type="select" name="config_product_options_enable">
+											<? if ($config_product_options_enable) { ?>
+												<option value="1" selected='selected' >Да</option>
+												<option value="0" >Нет</option>
+											<? } else { ?>
+												<option value="1" >Да</option>
+												<option value="0"  selected='selected' >Нет</option>
+											<? } ?>       
+										</select>
+										<br />
+										<span class="help">штатную логика опций товаров</span>	
+									</div>
+									
+								</td>
+
+								<td style="width:18%">
+									<div>
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">В брендах только товары</span></p>
 										<select type="select" name="config_show_goods_overload">
 											<? if ($config_show_goods_overload) { ?>
@@ -407,6 +440,7 @@
 										<br />
 										<span class="help">на странице брендов выводятся только товары, без списков коллекций, и.т.д.</span>	
 									</div>
+
 									<div>
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Обязательная цена</span></p>
 										<select type="select" name="config_no_zeroprice">
@@ -421,11 +455,9 @@
 										<br />
 										<span class="help">Если включено, то из отборов фронта исключаются товары без заданной основной цены</span>										
 									</div>
-								</td>
 
-								<td style="width:18%">
 									<div>
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Режим конфликта</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Режим изоляции локалей</span></p>
 										<select type="select" name="config_warmode_enable">
 											<? if ($config_warmode_enable) { ?>
 												<option value="1" selected='selected' >Да</option>

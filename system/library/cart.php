@@ -453,16 +453,18 @@
 						// Downloads
 						$download_data = array();
 						
-						$download_query = $this->db->ncquery("SELECT * FROM product_to_download p2d LEFT JOIN download d ON (p2d.download_id = d.download_id) LEFT JOIN download_description dd ON (d.download_id = dd.download_id) WHERE p2d.product_id = '" . (int)$product_id . "' AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
-						
-						foreach ($download_query->rows as $download) {
-							$download_data[] = array(
-							'download_id' => $download['download_id'],
-							'name'        => $download['name'],
-							'filename'    => $download['filename'],
-							'mask'        => $download['mask'],
-							'remaining'   => $download['remaining']
-							);
+						if ($this->config->get('config_product_downloads_enable')){
+							$download_query = $this->db->ncquery("SELECT * FROM product_to_download p2d LEFT JOIN download d ON (p2d.download_id = d.download_id) LEFT JOIN download_description dd ON (d.download_id = dd.download_id) WHERE p2d.product_id = '" . (int)$product_id . "' AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
+							
+							foreach ($download_query->rows as $download) {
+								$download_data[] = array(
+									'download_id' => $download['download_id'],
+									'name'        => $download['name'],
+									'filename'    => $download['filename'],
+									'mask'        => $download['mask'],
+									'remaining'   => $download['remaining']
+								);
+							}
 						}
 						
 						// Stock
@@ -592,7 +594,7 @@
 						'manufacturer_id'           => $product_query->row['manufacturer_id'],
 						'manufacturer'           	=> $product_query->row['manufacturer'],
 						'shipping'                  => $product_query->row['shipping'],
-						'image'       				=> $prod_image, //Q: Options Boost - overwrite product image with option image for cart (pt3)
+						'image'       				=> $prod_image,
 						'option'                    => $option_data,
 						'download'                  => $download_data,
 						'quantity'                  => $quantity,
@@ -635,9 +637,7 @@
 							$this->data[$key]['set_name'] = '';
 						}
 						} else {
-						//                    if (strpos($product_id, 'set_') === false) {
 						$this->remove($key);
-						//              }
 					}
 				}
 			}
@@ -660,9 +660,9 @@
 		}
 		
 		public function add($product_id, $qty, $option, $profile_id = '', $set_id = false, $ao_id = false) {
-			$statusQuery = $this->db->ncquery("SELECT status FROM product WHERE product_id = '" . (int)$product_id . "'");
+			$status_query = $this->db->ncquery("SELECT status FROM product WHERE product_id = '" . (int)$product_id . "'");
 
-			if (!$statusQuery->num_rows || $statusQuery->row['status'] == '0'){
+			if (!$status_query->num_rows || $status_query->row['status'] == '0'){
 				return;
 			}
 
@@ -692,10 +692,10 @@
 				
 			}
 			
-			$minQuery = $this->db->ncquery("SELECT minimum FROM product WHERE product_id = '" . (int)$product_id . "'");
+			$minimum_query = $this->db->ncquery("SELECT minimum FROM product WHERE product_id = '" . (int)$product_id . "'");
 			
-			if ($minQuery->num_rows && !empty($minQuery->row['minimum'])){
-				$minimum = $minQuery->row['minimum'];
+			if ($minimum_query->num_rows && !empty($minimum_query->row['minimum'])){
+				$minimum = $minimum_query->row['minimum'];
 				
 				if ($qty < $minimum){					
 					$qty = $minimum;
@@ -747,11 +747,11 @@
 			$product = explode(':', $key);
 			$product_id = $product[0];
 			
-			$m_query = $this->db->ncquery("SELECT minimum FROM product WHERE product_id = '" . $product_id . "'");
+			$minimum_query = $this->db->ncquery("SELECT minimum FROM product WHERE product_id = '" . (int)$product_id . "'");
 			
 			$minimum = 1;
-			if ($m_query->num_rows && !empty($m_query->row['minimum'])){
-				$minimum = (int)$m_query->row['minimum'];
+			if ($minimum_query->num_rows && !empty($minimum_query->row['minimum'])){
+				$minimum = (int)$minimum_query->row['minimum'];
 			}
 			
 			if ($qty > 0 && $qty < $minimum){
@@ -772,8 +772,7 @@
 				} else {
 				$this->remove($key);
 				$this->data = array();
-			}
-			
+			}			
 		}
 		
 		public function remove($key) {
@@ -853,8 +852,7 @@
 		public function getSubTotalInNationalCurrencyExcludeManufacturers($exclude = array()) {
 			$total_national = 0;
 			
-			foreach ($this->getProducts() as $product) {
-				
+			foreach ($this->getProducts() as $product) {				
 				if (!in_array($product['manufacturer_id'], $exclude)) {
 					$total_national += $product['total_national'];
 				}
@@ -1116,23 +1114,10 @@
 			return $stock;
 		}
 		
+		/*
+			Function changed due to every product in this universe can bi shipped
+		*/
 		public function hasShipping() {
-			//****
-			// Изменена функция для игнорирования настройки "необходима доставка" товара
-			//****
-			/*
-				$shipping = false;
-				
-				foreach ($this->getProducts() as $product) {
-				if ($product['shipping']) {
-				$shipping = true;
-				
-				break;
-				}
-				}
-				
-				return $shipping;
-			*/
 			return true;
 		}
 		
