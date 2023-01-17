@@ -941,7 +941,7 @@ class ControllerApiInfo1C extends Controller
                     }
                 }
 
-                $this->db->query("UPDATE `product` SET `quantity_stock`= '0',  `quantity_stockK`= '0', `quantity_stockM`= '0', `quantity_stockMN`       = '0',`quantity_stockAS`= '0' WHERE `quantity_updateMarker` = '0'");
+                $this->db->query("UPDATE `product` SET `quantity_stock`= '0', `quantity_stockK`= '0', `quantity_stockM`= '0', `quantity_stockMN` = '0',`quantity_stockAS`= '0' WHERE `quantity_updateMarker` = '0'");
 
                 $query = $this->db->query("SELECT product_id FROM product WHERE quantity < (quantity_stock + quantity_stockK + quantity_stockM)");
                 foreach ($query->rows as $row){
@@ -1002,6 +1002,11 @@ class ControllerApiInfo1C extends Controller
                 $this->db->query("UPDATE `return` opn SET product_id = (SELECT p.stock_product_id FROM product p WHERE p.product_id = opn.product_id LIMIT 1) WHERE product_id IN (SELECT product_id FROM product WHERE stock_product_id > 0)");
                 $this->db->query("UPDATE `order_product` opn SET product_id = (SELECT p.stock_product_id FROM product p WHERE p.product_id = opn.product_id LIMIT 1) WHERE product_id IN (SELECT product_id FROM product WHERE stock_product_id > 0)");                    
                 $this->db->query("UPDATE `product` SET status = 0 WHERE is_markdown = 1 AND (quantity_stock + quantity_stockK + quantity_stockM) = 0");
+
+                if ($this->config->get('config_enable_amazon_specific_modes')){
+                    $this->db->query("UPDATE `product` SET display_in_catalog = 1 WHERE main_variant_id > 0 AND (quantity_stock + quantity_stockK + quantity_stockM) > 0");
+                    $this->db->query("UPDATE `product` SET display_in_catalog = 0 WHERE main_variant_id > 0 AND (quantity_stock + quantity_stockK + quantity_stockM) = 0");
+                }
 
                 $this->rainforestAmazon->offersParser->PriceLogic->setProductStockStatusesGlobal();
                 $this->model_kp_product->setLastUpdate();
