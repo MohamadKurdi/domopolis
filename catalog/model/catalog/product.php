@@ -3155,6 +3155,10 @@
 			if (!$this->config->get('config_option_products_enable')){
 				return false;
 			}
+
+			if (!$this->config->get('config_product_options_enable')){
+				return false;
+			}
 			
 			$all_options = $this->getProductOptions($product_id);
 			

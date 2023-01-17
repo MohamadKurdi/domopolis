@@ -420,7 +420,7 @@
 											<? } ?>       
 										</select>
 										<br />
-										<span class="help">штатную логика опций товаров</span>	
+										<span class="help">штатная логика опций товаров</span>	
 									</div>
 									
 								</td>
