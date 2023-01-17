@@ -101,8 +101,8 @@ class ModelKPProduct extends Model {
 
 
 	public function reindexElastic($product_ids){
-		$this->load->library('ElasticSearch');
-		$elasticSearch = new ElasticSearch($this->registry);
+		$this->load->library('hobotix/ElasticSearch');
+		$elasticSearch = new \hobotix\ElasticSearch($this->registry);
 
 		foreach ($product_ids as $product_id){
 			$elasticSearch->reindexproduct($product_id);
@@ -110,8 +110,8 @@ class ModelKPProduct extends Model {
 	}
 
 	public function deleteElastic($product_id){
-		$this->load->library('ElasticSearch');
-		$elasticSearch = new ElasticSearch($this->registry);
+		$this->load->library('hobotix/ElasticSearch');
+		$elasticSearch = new \hobotix\ElasticSearch($this->registry);
 		$elasticSearch->deleteproduct($product_id);
 	}
 

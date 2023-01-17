@@ -1,5 +1,7 @@
 <?
 	
+	namespace hobotix;
+	
 	use Elasticsearch\ClientBuilder;
 	
 	class ElasticSearch{				

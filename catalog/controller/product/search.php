@@ -117,7 +117,7 @@ class ControllerProductSearch extends Controller {
 			foreach ($manufacturers as $manufacturer_id => $manufacturer){
 				if (empty($data['m' . $manufacturer_id])){
 
-					if (ElasticSearch::validateResult($resultManufacturer = $this->elasticSearch->getManufacturer($manufacturer_id))){
+					if (\hobotix\ElasticSearch::validateResult($resultManufacturer = $this->elasticSearch->getManufacturer($manufacturer_id))){
 						$name 	= $resultManufacturer['hits']['hits'][0]['_source'][$field];
 						$href 	= $this->url->link('catalog/manufacturer', 'manufacturer_id=' . $manufacturer_id);						
 						$id 	= $manufacturer_id;
@@ -382,7 +382,7 @@ class ControllerProductSearch extends Controller {
 				$this->filter_category_id = $filter_category_id;
 				$this->filter_manufacturer_id = $filter_manufacturer_id;
 
-				if (Elasticsearch::validateResult($resultSKU = $this->elasticSearch->sku($query)) == 1){				
+				if (\hobotix\Elasticsearch::validateResult($resultSKU = $this->elasticSearch->sku($query)) == 1){				
 					if ($productFoundBySKU = $this->elasticSingleProductResult($resultSKU)){
 						$this->response->redirect($this->url->link('product/product', 'product_id=' . $productFoundBySKU['product_id'] . '&search=' .  urlencode(html_entity_decode($this->request->get['search'], ENT_QUOTES, 'UTF-8'))));
 					}
@@ -399,13 +399,13 @@ class ControllerProductSearch extends Controller {
 				$results = $this->elasticResults($resultsE, $field);
 
 				$resultAggregations = $this->elasticSearch->fuzzyP('products' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field2, $field3, ['count' => true]);
-				$this->data['intersections'] = $this->prepareManufacturers(Elasticsearch::validateAggregationResult($resultAggregations, 'manufacturers'));
-				$this->data['intersections2'] = $this->prepareCategories(Elasticsearch::validateAggregationResult($resultAggregations, 'categories'));
+				$this->data['intersections'] = $this->prepareManufacturers(\hobotix\Elasticsearch::validateAggregationResult($resultAggregations, 'manufacturers'));
+				$this->data['intersections2'] = $this->prepareCategories(\hobotix\Elasticsearch::validateAggregationResult($resultAggregations, 'categories'));
 
 				$exact = true;
 				$resultsCMA = $this->elasticSearch->fuzzy('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field4, ['limit' => 30]);	
 
-				if (!ElasticSearch::validateResult($resultsCMA)){
+				if (!\hobotix\ElasticSearch::validateResult($resultsCMA)){
 					$exact = false;
 					$resultsCMA = $this->elasticSearch->fuzzy('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field2, $field4, ['limit' => 30]);
 				}

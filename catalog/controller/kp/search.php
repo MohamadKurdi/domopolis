@@ -132,7 +132,7 @@
 			foreach ($manufacturers as $manufacturer_id => $manufacturer){
 				if (empty($data['m' . $manufacturer_id])){
 					
-					if (ElasticSearch::validateResult($resultManufacturer = $this->elasticSearch->getManufacturer($manufacturer_id))){
+					if (\hobotix\ElasticSearch::validateResult($resultManufacturer = $this->elasticSearch->getManufacturer($manufacturer_id))){
 						$name 	= $resultManufacturer['hits']['hits'][0]['_source'][$field];
 						$href 	= $this->url->link('catalog/manufacturer', 'manufacturer_id=' . $manufacturer_id);						
 						$id 	= $manufacturer_id;
@@ -289,18 +289,18 @@
 					//die();
 					
 					//Запрос к альтернативному набору
-					if (!ElasticSearch::validateResult($results, true)){
+					if (!\hobotix\ElasticSearch::validateResult($results, true)){
 						$exact = false;
 						$results = $this->elasticSearch->fuzzy('categories' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field2, $field4);
 					}		
 					
 					//TRY TO FIND BY SKU										
-					if (Elasticsearch::validateResult($resultsP = $this->elasticSearch->sku($query)) == 1){				
+					if (\hobotix\Elasticsearch::validateResult($resultsP = $this->elasticSearch->sku($query)) == 1){				
 						} else {
 						
 						$resultsP = $this->elasticSearch->fuzzyP('products' . $this->config->get('config_elasticsearch_index_suffix'), $query, $field, $field2, $field3);		
 						
-						if (!ElasticSearch::validateResult($resultsP)){
+						if (!\hobotix\ElasticSearch::validateResult($resultsP)){
 							$resultsP = $this->elasticSearch->sku($query);
 						}
 					}

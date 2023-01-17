@@ -622,10 +622,10 @@ class ControllerCommonPanel extends Controller {
 		$body = '';
 		$class= 'good';
 
-		$this->load->library('ElasticSearch');
+		$this->load->library('hobotix/ElasticSearch');
 
 		try{
-			$elasticSearch = new ElasticSearch($this->registry, true);
+			$elasticSearch = new \hobotix\ElasticSearch($this->registry, true);
 
 			if ($elasticSearch){
 				$field = $elasticSearch->buildField('name');

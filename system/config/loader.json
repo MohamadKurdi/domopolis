@@ -28,8 +28,8 @@
 		"/hobotix/PricevaAdaptor",
 		"/hobotix/YandexTranslator",
 		"/hobotix/simpleProcess",
-		"XML2Array",
-		"ElasticSearch",
+		"/hobotix/ElasticSearch",
+		"XML2Array",		
 		"CourierServices"
 	],
 	"helpers":[

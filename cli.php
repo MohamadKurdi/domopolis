@@ -310,7 +310,7 @@ $registry->set('response', $response);
 	//Остальные библиотеки	
 $registry->set('document', 			new Document()); 				
 $registry->set('emailBlackList', 	new hobotix\EmailBlackList($registry));
-$registry->set('elasticSearch', 	new ElasticSearch($registry));		
+$registry->set('elasticSearch', 	new hobotix\ElasticSearch($registry));		
 $registry->set('mAlert', 			new mAlert($registry));
 $registry->set('smsQueue', 			new smsQueue($registry));	
 $registry->set('shortAlias', 		new shortAlias($registry));	

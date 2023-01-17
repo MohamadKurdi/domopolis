@@ -6,7 +6,7 @@ class CourierServices {
 	private $config;
 	private $db;
 
-	public function __construct($registry = false) {		
+	public function __construct($registry) {		
 		$this->registry = $registry;
 		$this->config 	= $registry->get('config');
 		$this->db 		= $registry->get('db');		
