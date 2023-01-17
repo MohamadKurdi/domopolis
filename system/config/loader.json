@@ -29,8 +29,8 @@
 		"/hobotix/YandexTranslator",
 		"/hobotix/simpleProcess",
 		"/hobotix/ElasticSearch",
-		"XML2Array",		
-		"CourierServices"
+		"/hobotix/CourierServices",
+		"XML2Array"
 	],
 	"helpers":[
 		"json",

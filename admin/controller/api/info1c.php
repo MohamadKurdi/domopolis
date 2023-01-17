@@ -754,7 +754,6 @@ class ControllerApiInfo1C extends Controller
                     }
                 }
 
-
                 if (isset($input['products']['product']['product_id'])) {
                     $input['products']['product'] = array($input['products']['product']);
                 }
@@ -969,25 +968,25 @@ class ControllerApiInfo1C extends Controller
                     $this->db->query("UPDATE product SET quantity = (quantity_stock + quantity_stockK + quantity_stockM) WHERE product_id = '". (int)$row['product_id'] ."'");
                 }
                 echoLine('');
-                    
-                $this->db->query("INSERT INTO yandex_stock_queue (yam_product_id, stock) SELECT yam_product_id, quantity_stockM FROM product WHERE (quantity_stockM > 0 OR yam_in_feed = 1) ON DUPLICATE KEY UPDATE stock = quantity_stockM");
+                
+                if ($this->config->get('config_yam_fbs_campaign_id')){
+                    $this->db->query("INSERT INTO yandex_stock_queue (yam_product_id, stock) SELECT yam_product_id, quantity_stockM FROM product WHERE (quantity_stockM > 0 OR yam_in_feed = 1) ON DUPLICATE KEY UPDATE stock = quantity_stockM");
+                }
 
                 $products_in_stock = array_unique($products_in_stock);
                 $products_in_stock_msk = array_unique($products_in_stock_msk);
                 $products_in_stock_kyiv = array_unique($products_in_stock_kyiv);
                 $products_in_stock_de = array_unique($products_in_stock_de);                    
-                $log_odinass->write('Всего в Москве ' . count($products_in_stock_msk) . ' товаров');                    
-                $log_odinass->write('Всего в Киеве ' . count($products_in_stock_kyiv) . ' товаров');                    
-                $log_odinass->write('Всего в Германии ' . count($products_in_stock_de) . ' товаров');
+                $log_odinass->write('Всего в quantity_stockM ' . count($products_in_stock_msk) . ' товаров');                    
+                $log_odinass->write('Всего в quantity_stockK ' . count($products_in_stock_kyiv) . ' товаров');                    
+                $log_odinass->write('Всего в quantity_stock ' . count($products_in_stock_de) . ' товаров');
 
                 $this->load->model('kp/product');
-                if ($updateStockGroups) {
-                        //очистка категорий перед выполнением
+                if ($updateStockGroups) {                        
                     $this->db->query("DELETE FROM product_to_category WHERE category_id = 6475");
                     $this->db->query("DELETE FROM product_to_category WHERE category_id = 8307");
                     $this->db->query("DELETE FROM product_to_category WHERE category_id = 8308");
-
-                        //убираем из стока откуда-то взявшиеся там не-сток товары
+                        
                     $this->db->query("DELETE FROM product_to_category WHERE category_id = 6474 AND product_id NOT IN (SELECT product_id FROM product WHERE stock_product_id > 0)");
 
                     foreach ($products_in_stock_msk as $product_in_present_id) {

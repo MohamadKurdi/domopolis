@@ -363,7 +363,7 @@ $registry->set('user',              new User($registry));
 $registry->set('yandexTranslator',  new hobotix\YandexTranslator($registry));
 $registry->set('rainforestAmazon',  new hobotix\RainforestAmazon($registry));
 $registry->set('pricevaAdaptor',    new hobotix\PricevaAdaptor($registry));
-$registry->set('CourierServices',   new CourierServices($registry));
+$registry->set('courierServices',   new hobotix\CourierServices($registry));
 $registry->set('encryption',        new Encryption($registry->get('config')->get('config_encryption')));
 
 

@@ -39,8 +39,8 @@
 		private function updateNovaPoshtaDeliveryTermsInDatabase($novaposhta_city_guid){
 			$result = array();
 			
-			$this->load->library('deliveryapis/NovaPoshta');
-			$novaPoshta = new NovaPoshta($this->registry);
+			$this->load->library('hobotix/Shipping/NovaPoshta');
+			$novaPoshta = new \hobotix\shipping\NovaPoshta($this->registry);
 			
 			$deliveryPeriod = $novaPoshta->getDeliveryDate($novaposhta_city_guid, date('y.m.d'));
 			
@@ -173,8 +173,7 @@
 				
 				$status = true;
 				
-				require_once(DIR_APPLICATION . 'model/shipping/CalculatePriceDeliveryCdek.php');
-				
+				require_once(DIR_APPLICATION . 'model/shipping/CalculatePriceDeliveryCdek.php');			
 				$calc = new CalculatePriceDeliveryCdek();
 				
 				$calc->setSenderCityId($city_from_id);

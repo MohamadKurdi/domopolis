@@ -76,8 +76,8 @@ class ControllerCommonPanel extends Controller {
 		$body = '';
 		$class= 'good';
 
-		$this->load->library('deliveryapis/Justin');
-		$Justin = new Justin($this->registry, 'UA');
+		$this->load->library('hobotix/Shipping//Justin');
+		$Justin = new \hobotix\shipping\Justin($this->registry, 'UA');
 
 		if ($this->config->get('config_justin_api_key')){
 			if ($result = $Justin->checkStatus()){
@@ -108,8 +108,8 @@ class ControllerCommonPanel extends Controller {
 		$body = '';
 		$class= 'good';
 
-		$this->load->library('deliveryapis/Cdek');
-		$Cdek = new Cdek($this->registry);
+		$this->load->library('hobotix/Shipping/Cdek');
+		$Cdek = new \hobotix\shipping\Cdek($this->registry);
 
 		if ($result = $Cdek->checkStatus()){
 
@@ -136,8 +136,8 @@ class ControllerCommonPanel extends Controller {
 		$body = '';
 		$class= 'good';
 
-		$this->load->library('deliveryapis/NovaPoshta');
-		$novaPoshta = new NovaPoshta($this->registry);
+		$this->load->library('hobotix/Shipping/NovaPoshta');
+		$novaPoshta = new \hobotix\shipping\NovaPoshta($this->registry);	
 
 		if ($result = $novaPoshta->checkStatus()){
 

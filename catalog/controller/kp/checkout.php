@@ -8,8 +8,7 @@
 		
 		//ФУНКЦИИ СДЭК
 		
-		public function guessCDEKPriceAjax(){
-		
+		public function guessCDEKPriceAjax(){		
 			$cdek_city_code = !empty($this->request->get['cdek_city_code'])?$this->request->get['cdek_city_code']:'';
 			$type = !empty($this->request->get['type'])?$this->request->get['type']:'';
 			
@@ -69,8 +68,8 @@
 			$result = array('success' => false);
 			
 			if ($lat && $lon){
-				$this->load->library('deliveryapis/Cdek');
-				$cdekAPI = new Cdek($this->registry);
+				$this->load->library('hobotix/Shipping/Cdek');
+				$cdekAPI = new \hobotix\shipping\Cdek($this->registry);
 				$result = $cdekAPI->suggestAddressByLocation(array('lat' => $lat, 'lon' => $lon), 100, 1);
 			}
 			
@@ -404,8 +403,8 @@
 		}
 		
 		public function suggestLocation(){
-			$this->load->library('deliveryapis/Cdek');
-			$cdekAPI = new Cdek($this->registry);
+			$this->load->library('hobotix/Shipping/Cdek');
+			$cdekAPI = new \hobotix\shipping\Cdek($this->registry);
 			
 			$lat = '55.888796';
 			$lon = '37.430328';
@@ -414,8 +413,8 @@
 		}		
 		
 		public function suggestAddress(){
-			$this->load->library('deliveryapis/Cdek');
-			$cdekAPI = new Cdek($this->registry);
+			$this->load->library('hobotix/Shipping/Cdek');
+			$cdekAPI = new \hobotix\shipping\Cdek($this->registry);
 			
 			$query = !empty($this->request->get['query'])?$this->request->get['query']:'';
 			$cdek_city_code = !empty($this->request->get['cdek_city_code'])?$this->request->get['cdek_city_code']:'';

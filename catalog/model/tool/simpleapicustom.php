@@ -487,8 +487,8 @@
 			$query = $this->db->query("SELECT * FROM novaposhta_streets WHERE CityRef = '" . $this->db->escape($CityRef) . "'");
 			
 			if (!$query->num_rows){
-				require_once(DIR_SYSTEM . 'library/deliveryapis/NovaPoshta.php');	
-				$novaPoshta = new NovaPoshta($this->registry);		
+				$this->load->library('hobotix/Shipping/NovaPoshta');
+				$novaPoshta = new \hobotix\shipping\NovaPoshta($this->registry);		
 				$novaPoshta->getRealTimeStreets($CityRef);
 				
 				$query = $this->db->non_cached_query("SELECT * FROM novaposhta_streets WHERE CityRef = '" . $this->db->escape($CityRef) . "'");

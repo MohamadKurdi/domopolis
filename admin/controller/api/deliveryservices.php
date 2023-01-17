@@ -1,25 +1,13 @@
 <?
 
 class ControllerApiDeliveryServices extends Controller { 
-
-	private function removeBrackets($line){
-		if (strpos($line, '(')){
-			$exploded = explode('(', $line);
-			$line = $exploded[0];
-		}
-		$line = trim(str_replace("'", "`", $line));
-
-		return trim($line);
-	}
-
 	public function index(){
-
+		if (!is_cli()){
+			die('CLI ONLY');
+		}
 	}
 
 	public function cron(){
-		require_once(DIR_SYSTEM . 'library/deliveryapis/NovaPoshta.php');	
-
-
 		if ($this->config->get('config_justin_api_key')){
 			try {
 				require_once(DIR_SYSTEM . 'library/deliveryapis/Justin.php');	
@@ -42,13 +30,7 @@ class ControllerApiDeliveryServices extends Controller {
 		}
 
 		if ($this->config->get('config_novaposhta_api_key')){
-			$novaPoshta = new NovaPoshta($this->registry);		
-			$novaPoshta->updateStreets();							
-			//$novaPoshta->updateZones()->updateCities()->updateCitiesWW()->updateWareHouses()->updateStreets();
+			$this->courierServices->updateReferences('NovaPoshta');
 		}
-
-
 	}		
-
-
 }				

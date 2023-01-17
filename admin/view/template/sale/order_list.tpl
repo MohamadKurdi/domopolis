@@ -859,7 +859,7 @@
 											
 											<? if ($order['ttn']) { ?>
 												<br />
-												<span style="font-size:11px; line-height:14px;">ТТН: <span class="get_ttn_info" data-ttn="<? echo $order['ttn']; ?>" data-delivery-code="<?php echo $order['delivery_code']; ?>" data-delivery-phone="<?php echo $order['telephone']; ?>"><b><? echo $order['ttn']; ?></b></span>&nbsp;&nbsp;<span style="display:none;"></span>
+												<span style="font-size:11px; line-height:14px;"><span class="get_ttn_info" data-ttn="<? echo $order['ttn']; ?>" data-delivery-code="<?php echo $order['delivery_code']; ?>" data-delivery-phone="<?php echo $order['telephone']; ?>"><b><? echo $order['ttn']; ?></b></span>&nbsp;&nbsp;<span style="display:none;"></span>
 												</span><br />
 											<? } ?>
 											
