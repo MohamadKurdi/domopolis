@@ -206,6 +206,7 @@ foreach ($query->rows as $result) {
 }
 
 $registry->set('languages', $languages);
+$registry->set('languages_all', $languages);
 $registry->set('languages_id_code_mapping', $languages_id_code_mapping);
 $registry->get('config')->set('config_language_id', $languages[$config->get('config_admin_language')]['language_id']);
 $registry->get('config')->set('config_rainforest_source_language_id', $languages[$registry->get('config')->get('config_rainforest_source_language')]['language_id']);

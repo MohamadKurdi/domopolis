@@ -242,7 +242,6 @@ function tryToGuessIfStringIsSKU($string){}
 
 
 function loadAndRenameCatalogModels($path, $className, $classNameTo){
-
 	$modelCatalogProductContents = file_get_contents(DIR_CATALOG . $path);
 
 	$modelCatalogProductContents = str_replace($className, $classNameTo, $modelCatalogProductContents);
