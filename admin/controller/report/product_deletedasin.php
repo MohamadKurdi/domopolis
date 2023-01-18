@@ -66,8 +66,8 @@
 				$url .= '&page=' . $this->request->get['page'];
 			}
 			
-			if (($this->request->server['REQUEST_METHOD'] == 'POST' && isset($this->request->post['sku']))) {
-				$this->model_report_product->insertDeletedSKU($this->request->post);
+			if (($this->request->server['REQUEST_METHOD'] == 'POST' && isset($this->request->post['asin']))) {
+				$this->model_report_product->insertDeletedASIN($this->request->post);
 				$this->session->data['success'] = 'Добавили ASIN';				
 			}
 			
@@ -183,8 +183,9 @@
 				$url .= '&filter_name=' . $this->request->get['filter_name'];
 			}
 						
-			$this->data['delete'] = $this->url->link('report/product_deletedasin/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
-			$this->data['save'] = $this->url->link('report/product_deletedasin/add', 'token=' . $this->session->data['token'] . $url, 'SSL');			
+			$this->data['delete'] 		= $this->url->link('report/product_deletedasin/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['save'] 		= $this->url->link('report/product_deletedasin/add', 'token=' . $this->session->data['token'] . $url, 'SSL');			
+			$this->data['excluded_asins'] 	= $this->url->link('report/product_excludedasin', 'token=' . $this->session->data['token'] . $url, 'SSL');	
 			
 			if (isset($this->session->data['error'])) {
 				$this->data['error_warning'] = $this->session->data['error'];

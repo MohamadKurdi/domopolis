@@ -25,7 +25,7 @@
     <div class="box">
         <div class="heading order_head">
             <h1><?php echo $heading_title; ?></h1>
-            <div class="buttons"><a onclick="$('#form').submit();" class="button">Удалить выделенные</a></div>
+            <div class="buttons"><a href="<?php echo $excluded_asins; ?>" class="button">Игнорируемые слова</a><a onclick="$('#form').submit();" class="button">Удалить выделенные</a></div>
         </div>
         <div class="content">            
             <table style="width: 100%;">

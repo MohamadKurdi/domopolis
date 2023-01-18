@@ -45,7 +45,6 @@
 			$query = $this->db->query($sql);
 			
 			return $query->rows;
-
 		}
 
 		public function getTotalProductsWithNoShortNames($data = []){
@@ -68,7 +67,6 @@
 			$query = $this->db->query($sql);
 			
 			return $query->row['total'];
-
 		}
 
 		public function deleteASINFromQueue($asin) {			
@@ -145,6 +143,81 @@
 			return $query->row['total'];
 		}
 
+		public function deleteExcludedText($text) {			
+			if (trim($text)){
+				$this->db->query("DELETE FROM excluded_asins WHERE `text` = '" . $this->db->escape($text) . "'");
+			}
+		}
+
+		public function insertExcludedText($data) {			
+			if (trim($data['text'])){
+				$this->db->query("INSERT IGNORE INTO excluded_asins SET 
+				`text` 				= '" . $this->db->escape(trim($data['text'])) . "', 
+				`category_id` 		= '" . (int)$data['category_id'] . "', 
+				`times` 			= '0',
+				`date_added`		= NOW(),
+				`user_id` 			= '" . $this->user->getID() . "'");
+			}			
+		}
+
+		public function getProductsExcludedTexts($data = []) {
+			$sql = "SELECT * FROM excluded_asins WHERE 1 ";
+			
+			if (isset($data['filter_text'])){
+				$sql .= " AND LOWER(text) LIKE ('%" . $this->db->escape(mb_strtolower($data['filter_text'])) . "%')";
+			}
+
+			if (isset($data['filter_category_id'])){
+				$sql .= " AND category_id = '" . (int)$data['filter_category_id'] . "'";
+			}
+			
+			$sql .= " ORDER BY date_added DESC";
+			
+			if (isset($data['start']) || isset($data['limit'])) {
+				if ($data['start'] < 0) {
+					$data['start'] = 0;
+				}
+				
+				if ($data['limit'] < 1) {
+					$data['limit'] = 20;
+				}
+				
+				$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+			}
+			
+			$query = $this->db->query($sql);
+			
+			return $query->rows;
+		}			
+
+		public function getTotalProductsExcludedTexts($data) {
+			$sql = "SELECT COUNT(*) AS total FROM excluded_asins WHERE 1 ";		
+			
+			if (isset($data['filter_category_id'])){
+				$sql .= " AND category_id = '" . (int)$data['filter_category_id'] . "'";
+			}
+
+			if (isset($data['filter_text'])){
+				$sql .= " AND LOWER(text) LIKE ('%" . $this->db->escape(mb_strtolower($data['filter_text'])) . "%')";
+			}
+			
+			$query = $this->db->query($sql);
+			
+			return $query->row['total'];
+		}
+
+
+		public function deleteDeletedASIN($asin) {			
+			if (trim($asin)){
+				$this->db->query("DELETE FROM deleted_asins WHERE asin = '" . $this->db->escape($asin) . "'");
+			}
+		}
+		
+		public function insertDeletedASIN($data) {			
+			if (trim($data['asin'])){
+				$this->db->query("INSERT IGNORE INTO deleted_asins SET asin = '" . $this->db->escape($data['asin']) . "', `name` = '" . $this->db->escape($data['name']) . "'");
+			}			
+		}
 
 		public function getProductsDeletedASIN($data = []) {
 			$sql = "SELECT * FROM deleted_asins WHERE 1 ";
@@ -174,19 +247,7 @@
 			$query = $this->db->query($sql);
 			
 			return $query->rows;
-		}
-		
-		public function deleteDeletedASIN($asin) {			
-			if (trim($asin)){
-				$this->db->query("DELETE FROM deleted_asins WHERE asin = '" . $this->db->escape($asin) . "'");
-			}
-		}
-		
-		public function insertDeletedASIN($data) {			
-			if (trim($data['asin'])){
-				$this->db->query("INSERT IGNORE INTO sku_deleted SET asin = '" . $this->db->escape($data['asin']) . "', `name` = '" . $this->db->escape($data['name']) . "'");
-			}			
-		}
+		}			
 		
 		public function getTotalProductsDeletedASIN($data) {
 			$sql = "SELECT COUNT(*) AS total FROM deleted_asins WHERE 1 ";

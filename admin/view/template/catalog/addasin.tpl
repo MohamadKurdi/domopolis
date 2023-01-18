@@ -30,7 +30,9 @@
             <div class="clr"></div>
             <span class="help"><i class="fa fa-info-circle"></i> Для работы очереди добавления должны быть включены обслуживающие крон-задачи</span>        
         </div>
-        <div class="content">            
+        <div class="content">        
+
+        <div style="border:1px dashed grey; padding:10px; margin-bottom:10px;">    
             <table style="width: 100%;">
                 <tbody>
                     <tr class="filter f_top">
@@ -59,9 +61,9 @@
                     </tr>
                 </tbody>
             </table>
-
-            <div class="filter_bord" style="margin-bottom:15px;"></div>
-
+           </div>
+            <div class="clr"></div>
+            <div style="border:1px dashed #cf4a61; padding:10px; margin-bottom:10px;">
             <form action="<?php echo $add; ?>" method="post" enctype="multipart/form-data" id="form-add">
                 <table style="width: 100%;">
                     <tbody>
@@ -93,6 +95,7 @@
                     </tbody>    
                 </table>
             </form>
+        </div>
 
             <div class="filter_bord"></div>
 
