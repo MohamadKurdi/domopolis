@@ -8,6 +8,53 @@ class productModelGet extends hoboModel{
 	//private $testAsin = 'B07MJG8JPY';
 	private $testAsin = false;
 
+	public function getExcludedTexts($category_id){
+		$excluded_texts = [];
+		$query = $this->db->ncquery("SELECT `text`, `category_id` FROM excluded_asins WHERE category_id = '" . (int)$category_id . "'");
+
+		if ($query->num_rows){			
+			foreach($query->rows as $row){				
+				$excluded_texts[] = $row['text'];
+			}
+		}
+	
+		return $excluded_texts;
+	}
+
+	public function updateExludedTextUsage($text, $category_id = 0){
+		$this->db->ncquery("UPDATE excluded_asins SET times = times+1 WHERE `text` = '" . $this->db->escape($text) . "' AND category_id = '" . (int)$category_id . "'");
+	}
+
+	public function checkIfNameIsExcluded($name, $category_id = 0){
+		$excluded_texts = $this->getExcludedTexts(0);
+
+		if (!empty($excluded_texts)){
+			foreach ($excluded_texts as $excluded_text){
+				if (strpos($name, ' ' . $excluded_text . ' ') !== false){
+					echoLine('[checkIfNameIsExcluded] FOUND exclusion: ' . $excluded_text . ' in name ' . $name, 'w');
+					$this->updateExludedTextUsage($excluded_text, 0);
+					return true;
+				}
+			}
+		}
+
+		if ($category_id){
+			$excluded_texts = $this->getExcludedTexts($category_id);
+
+			if (!empty($excluded_texts)){
+				foreach ($excluded_texts as $excluded_text){
+					if (strpos($name, ' ' . $excluded_text . ' ') !== false){
+						echoLine('[checkIfNameIsExcluded] FOUND exclusion: ' . $excluded_text . ' in name ' . $name, 'w');
+						$this->updateExludedTextUsage($excluded_text, $category_id);
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
 	public function checkIfAsinIsDeleted($asin){
 		$query = $this->db->ncquery("SELECT da.asin, da.date_added, da.name, u.firstname, u.lastname FROM deleted_asins da LEFT JOIN user u ON (da.user_id = u.user_id) WHERE asin LIKE ('" . $this->db->escape($asin) . "')");
 
@@ -18,7 +65,6 @@ class productModelGet extends hoboModel{
 		} else {
 			return false;
 		}
-
 	}
 
 	public function getAsinAddQueue(){

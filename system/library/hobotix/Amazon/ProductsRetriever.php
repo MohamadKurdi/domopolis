@@ -1136,9 +1136,18 @@ class ProductsRetriever extends RainforestRetriever
 	public function addSimpleProductWithOnlyAsin($data) {			
 
 		if ($this->model_product_get->checkIfAsinIsDeleted($data['asin'])){
-			echoLine('[RainforestRetriever] ASIN deleted, skipping!');				
+			echoLine('[RainforestRetriever] ASIN . ' . $data['asin'] . ' . deleted, skipping!', 'e');				
 			return 0;
 		}	
+
+		if ($this->model_product_get->checkIfNameIsExcluded($data['name'], $data['category_id'])){
+			
+			$this->model_product_edit->deleteASINFromQueue($data['asin']);				
+			$this->model_product_edit->addAsinToIgnored($data['asin'], $data['name']);
+
+			echoLine('[RainforestRetriever] NAME ' . $data['name'] . ' is excluded, skipping!', 'e');
+			return 0;
+		}
 
 		if (!empty($data['amazon_best_price'])){
 			if ($this->config->get('config_rainforest_skip_low_price_products')){
@@ -1166,8 +1175,7 @@ class ProductsRetriever extends RainforestRetriever
 			date_added 				= NOW()");
 		
 		$product_id = $this->db->getLastId();
-
-			//Update BestPrice
+			
 		if (!empty($data['amazon_best_price'])){
 			$this->registry->get('rainforestAmazon')->offersParser->PriceLogic->updateProductPrices($data['asin'], $data['amazon_best_price'], true);
 		}

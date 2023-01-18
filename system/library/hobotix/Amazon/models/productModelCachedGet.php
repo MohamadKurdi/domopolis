@@ -6,8 +6,12 @@ class productModelCachedGet extends hoboModel{
 
 	private $cacheprefix = 'amazon.rainforest';
 
-	private function getKey($scope, $key){
-		return $this->cacheprefix . '.' . $scope . '.' . md5($key);
+	private function getKey($scope, $key = ''){		
+		if ($key){
+			return $this->cacheprefix . '.' . $scope . '.' . md5($key);
+		} else {
+			return $this->cacheprefix . '.' . $scope;
+		}
 	}
 
 	public function getManufacturer($name){
