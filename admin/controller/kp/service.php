@@ -22,6 +22,24 @@
 		}
 		
 		public function smsQueue(){
+
+			if (!$this->config->get('config_sms_enable_queue_worker')){
+				echoLine('[ControllerKPService::smsQueue] CRON IS DISABLED IN ADMIN', 'e');
+				return;
+			}
+
+			if ($this->config->has('config_sms_enable_queue_worker_time_start') && $this->config->has('config_sms_enable_queue_worker_time_end')){
+				$interval = new Interval($this->config->get('config_sms_enable_queue_worker_time_start') . '-' . $this->config->get('config_sms_enable_queue_worker_time_end'));
+
+				if (!$interval->isNow()){
+					echoLine('[ControllerKPService::smsQueue] NOT ALLOWED TIME', 'e');
+					return;
+				} else {
+					echoLine('[ControllerKPService::smsQueue] ALLOWED TIME', 's');				
+				}
+			}
+
+
 			$this->smsQueue->cron();
 		}
 
