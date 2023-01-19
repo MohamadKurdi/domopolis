@@ -262,7 +262,30 @@
 				$limit = 1;
 			}	
 			
-			$query = $this->db->non_cached_query("SELECT o.order_id, o.firstname, o.lastname, os.name as status, os.status_txt_color as status_txt_color, os.status_bg_color as status_bg_color, os.front_bg_color as front_bg_color, o.date_added, o.preorder, o.total, o.manager_id, o.total_national, o.currency_code, o.currency_value, o.payment_method, o.payment_code FROM `order` o LEFT JOIN order_status os ON (o.order_status_id = os.order_status_id) WHERE o.customer_id = '" . (int)$this->customer->getId() . "' AND o.order_status_id > '0' AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);							
+			$query = $this->db->non_cached_query("SELECT 
+				o.order_id, 
+				o.firstname, 
+				o.lastname, 
+				o.order_status_id, 
+				o.ttn,
+				os.name as status, 
+				os.status_txt_color as status_txt_color, 
+				os.status_bg_color as status_bg_color, 
+				os.front_bg_color as front_bg_color, 
+				o.date_added, 
+				o.preorder, 
+				o.total, 
+				o.manager_id, 
+				o.total_national, 
+				o.currency_code, 
+				o.currency_value, 
+				o.payment_method, 
+				o.payment_code FROM `order` o 
+				LEFT JOIN order_status os ON (o.order_status_id = os.order_status_id) 
+				WHERE o.customer_id = '" . (int)$this->customer->getId() . "' 
+				AND o.order_status_id > '0' 
+				AND os.language_id = '" . (int)$this->config->get('config_language_id') . "' 
+				ORDER BY o.order_id DESC LIMIT " . (int)$start . "," . (int)$limit);							
 			
 			return $query->rows;
 		}

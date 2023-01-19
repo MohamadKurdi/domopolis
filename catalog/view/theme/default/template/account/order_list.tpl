@@ -409,8 +409,7 @@
             <?php echo $column_left; ?>
 		</div>
 		
-		<div class="account_content">
-			
+		<div class="account_content">			
 			<?php if ($pages) { ?>
 				<div class="head_tab">
 					<ul>
@@ -422,13 +421,10 @@
 						<?php } ?>
 					</ul>
 				</div>
-				
-				
-				
 				<div class="list_order accordion_list_order">
 					<?php if ($orders) { ?>
 						<?php foreach ($orders as $order) { ?>	
-							<?php include($this->checkTemplate(dirname(__FILE__),'/structured_order/order_single_dev.tpl')); ?>
+							<?php include($this->checkTemplate(dirname(__FILE__),'/structured_order/order_single.tpl')); ?>
 						<?php } ?>
 						<div class="pagination"><?php echo $pagination; ?></div>
 						<?php } else { ?>
@@ -449,4 +445,27 @@
 			</div>
 		</div>
 	</section>
+
+	
+	<script>
+		$('.tracking-click').click(function(){
+			var span = $(this);
+			span.next().html('<i class="fa fa-spinner fa-spin"></i>');
+			span.next().show();
+			var tracking_code = span.attr('data-tracking-code');
+			var shipping_code = span.attr('data-shipping-code');
+			var shipping_phone = span.attr('data-shipping-phone');
+			$('#ttninfo').load(
+				'index.php?route=account/order/tracking_info',
+				{
+					tracking_code : tracking_code,
+					shipping_code : shipping_code,
+					shipping_phone: shipping_phone
+				}, 
+				function(){
+					span.next().hide();
+					$(this).dialog({width:900, height:700, modal:true,resizable:true,position:{my: 'center', at:'center center', of: window}, closeOnEscape: true, title: tracking_code}); 
+				});
+		});
+	</script>
 <?php echo $footer; ?>

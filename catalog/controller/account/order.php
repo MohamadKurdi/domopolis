@@ -2,6 +2,13 @@
 	class ControllerAccountOrder extends Controller {
 		private $error = array();
 		
+		public function tracking_info(){
+			$tracking_code = $this->request->post['tracking_code'];
+			$shipping_code = $this->request->post['shipping_code'];						
+			$shipping_phone = $this->request->post['shipping_phone'];			
+			
+			$this->response->setOutput($this->courierServices->getInfo($tracking_code, $shipping_code, $shipping_phone));						
+		}
 						
 		private function prepareOrderList($results){
 			$this->language->load('account/order');
@@ -12,8 +19,7 @@
 			
 			$orders = array();
 			
-			foreach ($results as $result) {
-			
+			foreach ($results as $result) {			
 				$order_info 		= $this->model_account_order->getOrder($result['order_id']);
 				$product_total 		= $this->model_account_order->getTotalOrderProductsByOrderId($result['order_id']);
 				$voucher_total 		= $this->model_account_order->getTotalOrderVouchersByOrderId($result['order_id']);								
@@ -72,9 +78,14 @@
 				}
 				
 				$orders[] = array(
-				'order_id'   		=> $result['order_id'],
+				'order_id'   			=> $result['order_id'],
+				'order_status_id'		=> $result['order_status_id'],
+				'order_is_delivering' 	=> ($order_info['order_status_id'] == $this->config->get('config_delivering_status_id')),
+				'tracking_code'     	=> $result['ttn'],
+				'tracking_info'    		=> $this->courierServices->getTrackingCodeInfo($result['ttn']),
 				'preorder'   		=> $result['preorder'],
 				'name'       		=> $result['firstname'] . ' ' . $result['lastname'],
+				'telephone'     	=> $order_info['telephone'],
 				'status'     		=> $result['status'],
 				'status_txt_color'  => $result['status_txt_color'],
 				'status_bg_color'   => !empty($result['front_bg_color'])?$result['front_bg_color']:$result['status_bg_color'],
@@ -87,7 +98,8 @@
 				'href'       		=> $this->url->link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'),
 				'payment_code' 		=> $order_info['payment_code'], 
 				'payment_method' 	=> $order_info['payment_method'],
-				'shipping_method' 	=> $order_info['shipping_method'],			
+				'shipping_method' 	=> $order_info['shipping_method'],	
+				'shipping_code' 	=> $order_info['shipping_code'],		
 				'total_national'	=> $total_national
 				);
 			}
@@ -1227,17 +1239,5 @@
 				
 				$this->response->setOutput($this->render());				
 			}
-		}
-		
-		public function ttninfoajax(){
-			$ttn = $this->request->post['ttn'];
-			$delivery_code = $this->request->post['delivery_code'];
-			
-			require_once(DIR_SYSTEM . 'library/CourierServices.php');
-			$courierServices = new CourierServices();
-			
-			echo $courierServices->getInfo($ttn, $delivery_code);
-			
-			return false;
-		}
+		}				
 	}							
