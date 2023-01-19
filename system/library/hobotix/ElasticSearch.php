@@ -845,7 +845,7 @@
 				'index' => 'categories' . $this->config->get('config_elasticsearch_index_suffix')
 				];
 				$response = $this->elastic->indices()->delete($deleteParams);
-			} catch (Exception $e){
+			} catch (\Exception $e){
 				echoLine($e->getMessage());
 			}
 			
@@ -897,7 +897,7 @@
 			
 			try{
 				$response =  $this->elastic->indices()->create($createParams);	
-			} catch (Exception $e){
+			} catch (\Exception $e){
 				echoLine($e->getMessage());
 			}	
 			
@@ -906,7 +906,7 @@
 					'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix')
 				];
 				//$response = $this->elastic->indices()->delete($deleteParams);
-			} catch (Exception $e){
+			} catch (\Exception $e){
 				echoLine($e->getMessage());
 			}
 			
@@ -983,7 +983,7 @@
 			
 			try {
 				$response = $this->elastic->indices()->create($createParams);		
-			} catch (Exception $e){
+			} catch (\Exception $e){
 				echoLine($e->getMessage());
 			}
 			
