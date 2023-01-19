@@ -4,8 +4,9 @@ $_['text_account'] = 'Кабінет';
 
 $_['text_order'] = 'Замовлення';
 $_['text_order_detail'] = 'Інформація про замовлення';
-$_['text_invoice_no'] = '№ Рахунки:';
+$_['text_invoice_no'] = '№ Рахунку:';
 $_['text_order_id'] = '№ Замовлення:';
+$_['text_preorder_id'] = '№ Заявки:';
 $_['text_status'] = 'Статус';
 
 $_['text_date_added'] = 'Замовлення оформлено';

@@ -6,6 +6,7 @@ $_['text_order']            = 'Заказ';
 $_['text_order_detail']     = 'Информация о заказе';
 $_['text_invoice_no']       = '№ Счета:';
 $_['text_order_id']         = '№ Заказа:';
+$_['text_preorder_id']         = '№ Заявки:';
 $_['text_status']           = 'Статус';
 
 $_['text_date_added']       = 'Заказ оформлен';
