@@ -15,6 +15,12 @@ class CourierServices {
 		$this->db 		= $registry->get('db');		
 	}
 
+	public function getTrackingCodeInfo($tracking_code){
+		$query = $this->db->query("SELECT * FROM order_ttns WHERE ttn = '" . $this->db->escape($tracking_code) . "' LIMIT 1");
+
+		return $query->row;
+	}
+
 	public function getInfo($code, $shipping_code, $phone = '') {				
 		if (!empty($this->registry->get('shippingmethods')[$shipping_code]) && !empty($this->registry->get('shippingmethods')[$shipping_code]['class'])){
 			$deliveryClass = $this->registry->get('shippingmethods')[$shipping_code]['class'];
@@ -65,6 +71,8 @@ class CourierServices {
 			if (!empty($this->registry->get('shippingmethods')[$shipping_code]) && !empty($this->registry->get('shippingmethods')[$shipping_code]['class'])){
 				$deliveryClass = $this->registry->get('shippingmethods')[$shipping_code]['class'];
 
+				echoLine('[CourierServices::trackMultiCodes] Found shipping method class:' . $deliveryClass, 's');
+
 				if (file_exists(DIR_SYSTEM . '/library/hobotix/Shipping/' . $deliveryClass . '.php')){
 					require_once (DIR_SYSTEM . '/library/hobotix/Shipping/' . $deliveryClass . '.php');
 					$deliveryClass = "hobotix" . "\\" . "shipping" . "\\" . $deliveryClass;
@@ -83,6 +91,4 @@ class CourierServices {
 
 		return $result;
 	}
-
-	
 }				

@@ -1,5 +1,28 @@
 <?php
 
+/*1	Відправник самостійно створив цю накладну, але ще не надав до відправки
+2	Видалено
+3	Номер не знайдено
+4	Відправлення у місті ХХXХ. (Статус для межобластных отправлений)
+41	Відправлення у місті ХХXХ. (Статус для услуг локал стандарт и локал экспресс - доставка в пределах города)
+5	Відправлення прямує до міста YYYY
+6	Відправлення у місті YYYY, орієнтовна доставка до ВІДДІЛЕННЯ-XXX dd-mm. Очікуйте додаткове повідомлення про прибуття
+7	Прибув на відділення
+8	Прибув на відділення (завантажено в Поштомат)
+9	Відправлення отримано
+10	Відправлення отримано %DateReceived%. Протягом доби ви одержите SMS-повідомлення про надходження грошового переказу та зможете отримати його в касі відділення «Нова пошта»
+11	Відправлення отримано %DateReceived%. Грошовий переказ видано одержувачу.
+12	Нова Пошта комплектує ваше відправлення
+101	На шляху до одержувача
+102	Відмова від отримання (Відправником створено замовлення на повернення)
+103	Відмова одержувача(отримувач відмовився від відправлення)
+104	Змінено адресу
+105	Припинено зберігання
+106	Одержано і створено ЄН зворотньої доставки
+111	Невдала спроба доставки через відсутність Одержувача на адресі або зв'язку з ним
+112	Дата доставки перенесена Одержувачем*/
+
+
 	namespace hobotix\shipping;
 	
 	class NovaPoshta {
@@ -8,7 +31,7 @@
 		private $registry	= null;
 
 		private $host 		= 'https://api.novaposhta.ua/v2.0/json/';
-		private $trackLimit = 100;
+		private $trackLimit = 50;
 				
 		private $apiKey = null;
 		private $defaultCityGuid = null;
@@ -23,16 +46,92 @@
 				$this->defaultCityGuid = $this->config->get('config_novaposhta_default_city_guid');
 		}
 		
-		private function validateResult($result){			
-			if (!$result || mb_strlen($result) < 5 || !($json = json_decode($result, true)) || empty($json['success']) || !$json['success']){				
+		private function validateResult($result){
+			if (!$result || mb_strlen($result) < 5){
+				throw new \Exception('Erroneous response from NovaPoshta API! Or problems with the API ' . serialize($result));
+			}
+
+			if (!($json = json_decode($result, true))){
+				throw new \Exception('Erroneous response from NovaPoshta API! Can not decode JSON ' . serialize($result));
+			}
+
+			if (empty($json['success']) || !$json['success']){			
 				throw new \Exception('Erroneous response from NovaPoshta API, possibly wrong invoice number! Or problems with the API ' . serialize($result));
 			}
-			
+
 			return $json;			
-		}		
+		}	
+
+		private function setInvalidDocumentNumbers($result){
+			if (!empty($result['warnings'])){
+				foreach ($result['warnings'] as $warning){			
+					if (is_string($warning) && mb_strpos($warning, 'Invalid DocumentNumber') !== false){
+						$exploded = explode(':', $warning);
+						$this->setInvalid(trim($exploded[1]));						
+					}
+				}
+			}
+
+		}	
+
+		private function setInvalid($code){
+			echoLine('[NovaPoshta::setInvalid] Setting code as invalid: ' . $code, 'e');
+			$this->db->query("UPDATE order_ttns SET tracking_status = 'INVALID CODE', rejected = 1 WHERE ttn = '" . $this->db->escape($code) . "'");
+		}
+
+		private function setNewCode($code, $code_new){
+			echoLine('[NovaPoshta::setNewCode] Replacing code: ' . $code, 'e');
+			$this->db->query("UPDATE order_ttns SET ttn = '" . $this->db->escape($code_new) . "' WHERE ttn = '" . $this->db->escape($code) . "'");
+			$this->db->query("UPDATE `order` SET ttn = '" . $this->db->escape($code_new) . "' WHERE ttn = '" . $this->db->escape($code) . "'");
+		}
 
 		private function checkIfTaken($code){
-			return (int)in_array($code['StatusCode'], ['9', '10', '11']);
+			$status = (int)in_array($code['StatusCode'], ['9', '10', '11']);
+
+			if ($status){
+				echoLine('[NovaPoshta::checkIfTaken] Parsel is taken: ' . $code['Number'], 's');
+			}
+
+			return $status;
+		}
+
+		private function checkIfRejected($code){
+			$status =  (int)in_array($code['StatusCode'], ['102', '103', '111', '105']);
+
+			if ($status){
+				echoLine('[NovaPoshta::checkIfRejected] Parsel is rejected: ' . $code['Number'], 'e');
+			}
+
+			return $status;
+		}
+
+		private function checkIfRedelivering($code){
+			$redelivery =  (int)in_array($code['StatusCode'], ['104']) || ((int)$code['Redelivery'] && $code['RedeliveryNum']);
+
+			if ($redelivery){
+				echoLine('[NovaPoshta::checkIfRedelivering] Parsel is redelivered: ' . $code['Number'] . '->' . $code['RedeliveryNum'], 'w');
+				$this->setNewCode($code['Number'], $code['RedeliveryNum']);
+			}		
+		}
+
+		private function checkIfWaiting($code){
+			$status =  (int)in_array($code['StatusCode'], ['4', '41', '5', '6', '7', '8', '112', '104']);
+
+			if ($status){
+				echoLine('[NovaPoshta::checkIfWaiting] Parsel is waiting: ' . $code['Number'], 'w');
+			}
+
+			return $status;
+		}
+
+		private function checkIfUnexistent($code){
+			$status =  (int)in_array($code['StatusCode'], ['2', '3']);
+
+			if ($status){				
+				echoLine('[NovaPoshta::checkIfWaiting] Parsel is unexistent: ' . $code['Number'], 'e');
+			}
+
+			return $status;
 		}
 		
 		private function doRequest($data){			
@@ -44,7 +143,7 @@
 				$json[$key] = $value;
 			}
 
-			echoLine('[NP] Запрос ' . $data['modelName'] . '/' . $data['calledMethod']);
+			echoLine('[NovaPoshta::doRequest] Making request to ' . $data['modelName'] . '/' . $data['calledMethod']);
 			
 			$curl = curl_init($this->host);
 			curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($json));
@@ -70,14 +169,15 @@
 			
 			$result = curl_exec($curl);			
 			curl_close($curl);
-			
+
 			try{				
 				$result = $this->validateResult($result);
+				$this->setInvalidDocumentNumbers($result);
 				return $result;
 				
-				} catch (Exception $e){
-				
-				echoLine('ОШИБКА ОБРАБОТКИ');
+				} catch (\Exception $e){
+				$this->setInvalidDocumentNumbers($result);
+				echoLine('[NovaPoshta::doRequest] ERROR', 'e');
 				echoLine($e->getMessage());
 				return false;
 			}	
@@ -88,10 +188,10 @@
 		}		
 
 		public function trackMultiCodes($tracking_codes){
-			$result = [];
+			$result = [];			
 
 			if (empty($tracking_codes)){
-				return false;
+				return $result;
 			}
 
 			$chunks = array_chunk($tracking_codes, $this->trackLimit, true);
@@ -115,17 +215,26 @@
 					]
 				];
 
-				$answer = $this->doRequest($data);
-			}
-			
-			unset($code);
-			foreach ($answer['data'] as $code){
-				echoLine('[NovaPoshta::trackMultiCodes] ' . $code['Number']);
+				$answer = $this->doRequest($data);				
 
-				$code['taken'] 				= $this->checkIfTaken($code);
-				$code['tracking_status'] 	= $code['Status'];
-				$result[$code['Number']] 	= $code;
-			}
+				unset($code);
+				foreach ($answer['data'] as $code){
+					echoLine('[NovaPoshta::trackMultiCodes] ' . $code['Number'], 'i');
+
+					$this->checkIfRedelivering($code);
+
+					$code['taken'] 				= $this->checkIfTaken($code);
+					$code['rejected'] 			= $this->checkIfRejected($code);
+					$code['waiting'] 			= $this->checkIfWaiting($code);
+
+					if ($this->checkIfUnexistent($code)){
+						$code['rejected'] = 1;
+					}
+
+					$code['tracking_status'] 	= $code['Status'];
+					$result[$code['Number']] 	= $code;
+				}
+			}						
 
 			return $result;
 		}
