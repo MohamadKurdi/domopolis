@@ -136,10 +136,10 @@ class ControllerCatalogProductExt extends Controller {
                 $url .= '&page=' . $this->request->get['page'];
             }
 
-            $this->redirect($this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+           $this->redirect($this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . $url, 'SSL'));
         }
 
-        $this->getList();
+       $this->getList();
     }
 
     public function copy() {
