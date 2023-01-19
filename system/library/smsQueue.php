@@ -23,8 +23,7 @@ class smsQueue {
 		
 		$this->db->query("INSERT INTO `queue_sms` SET `body`='". base64_encode(json_encode($queue_array)) ."'");		
 		
-		return $this->db->getLastId();	
-		
+		return $this->db->getLastId();			
 	}
 
 	private function deleteSMSFromQueue($queue_sms_id){
@@ -46,13 +45,13 @@ class smsQueue {
 			$balance = (float)$result['result']['balance_currency'];
 		}
 
-		echoLine('[smsQueue] Баланс: ' . $balance);
+		echoLine('[LibrarySmsQueue::cron] Balance is: ' . $balance, 'i');
 		if ($balance && ($balance > 5)) {
 			foreach ($query->rows as $sms){
 				$body 		= json_decode(base64_decode($sms['body']), true);
 
 				if (!trim($body['message'])){
-					echoLine('[smsQueue] Пустой текст!');
+					echoLine('[LibrarySmsQueue::cron] Empty text!', 'e');
 					$this->deleteSMSFromQueue($sms['queue_sms_id']);
 				}
 
@@ -78,8 +77,8 @@ class smsQueue {
 				}
 
 				if (!empty($result["error"])){
-					echoLine('[smsQueue] Ошибка. ' . $result["error"]);
-					echoLine('[smsQueue] ' . $response);
+					echoLine('[LibrarySmsQueue::cron] ERROR ' . $result["error"] , 'e');
+					echoLine('[LibrarySmsQueue::cron] ' . $response, 'w');
 					
 					if ($result["error"] == 'no_good_recipients'){
 						$this->deleteSMSFromQueue($sms['queue_sms_id']);
@@ -87,11 +86,10 @@ class smsQueue {
 				}
 
 				if (!empty($result["result"]["id"]) && $result["result"]["id"]){
-					echoLine('[smsQueue] ' . $params['phone'] . ' -> ' . $result["result"]["id"]);			
+					echoLine('[LibrarySmsQueue] ' . $params['phone'] . ' -> ' . $result["result"]["id"], 's');			
 					$this->deleteSMSFromQueue($sms['queue_sms_id']);
 				}
 			}
-
 		}
 	}
 }
