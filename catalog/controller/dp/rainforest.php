@@ -307,7 +307,7 @@ class ControllerDPRainForest extends Controller {
 	*/
 	public function fixunexistentcategoriescron(){
 		if (!$this->config->get('config_rainforest_enable_category_tree_parser')){
-			echoLine('[ControllerDPRainForest::fixunexistentcategoriescron] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerDPRainForest::fixunexistentcategoriescron] CRON IS DISABLED IN ADMIN', 'e');
 			return;
 		}
 
@@ -332,7 +332,7 @@ class ControllerDPRainForest extends Controller {
 	*/
 	public function addcategoriescron(){
 		if (!$this->config->get('config_rainforest_enable_category_tree_parser')){
-			echoLine('[ControllerDPRainForest::addcategoriescron] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerDPRainForest::addcategoriescron] CRON IS DISABLED IN ADMIN', 'e');
 			return;
 		}
 
@@ -374,7 +374,7 @@ class ControllerDPRainForest extends Controller {
 	*/
 	public function addasinsqueuecron(){
 		if (!$this->config->get('config_rainforest_enable_add_queue_parser')){
-			echoLine('[ControllerDPRainForest::addasinsqueuecron] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerDPRainForest::addasinsqueuecron] CRON IS DISABLED IN ADMIN', 'e');
 			return;
 		}
 
@@ -384,10 +384,10 @@ class ControllerDPRainForest extends Controller {
 			$interval = new Interval($this->config->get('config_rainforest_add_queue_parser_time_start') . '-' . $this->config->get('config_rainforest_add_queue_parser_time_end'));
 
 			if (!$interval->isNow()){
-				echoLine('[ControllerDPRainForest::addasinsqueuecron] NOT ALLOWED TIME');
+				echoLine('[ControllerDPRainForest::addasinsqueuecron] NOT ALLOWED TIME', 'e');
 				return;
 			} else {
-				echoLine('[ControllerDPRainForest::addasinsqueuecron] ALLOWED TIME');				
+				echoLine('[ControllerDPRainForest::addasinsqueuecron] ALLOWED TIME', 's');				
 			}
 		}
 
@@ -507,7 +507,7 @@ class ControllerDPRainForest extends Controller {
 	public function addnewproductscron(){	
 
 		if (!$this->config->get('config_rainforest_enable_new_parser')){
-			echoLine('[ControllerDPRainForest::addnewproductscron] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerDPRainForest::addnewproductscron] CRON IS DISABLED IN ADMIN', 'e');
 			return;
 		}
 
@@ -517,10 +517,10 @@ class ControllerDPRainForest extends Controller {
 			$interval = new Interval($this->config->get('config_rainforest_new_parser_time_start') . '-' . $this->config->get('config_rainforest_new_parser_time_end'));
 
 			if (!$interval->isNow()){
-				echoLine('[ControllerDPRainForest::addnewproductscron] NOT ALLOWED TIME');
+				echoLine('[ControllerDPRainForest::addnewproductscron] NOT ALLOWED TIME', 'e');
 				return;
 			} else {
-				echoLine('[ControllerDPRainForest::addnewproductscron] ALLOWED TIME');				
+				echoLine('[ControllerDPRainForest::addnewproductscron] ALLOWED TIME', 's');				
 			}
 		}
 
@@ -603,7 +603,7 @@ class ControllerDPRainForest extends Controller {
 	public function recoverasinscron(){
 
 		if (!$this->config->get('config_rainforest_enable_recoverasins_parser')){
-			echoLine('[ControllerDPRainForest::recoverasins] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerDPRainForest::recoverasins] CRON IS DISABLED IN ADMIN', 'e');
 			return;
 		}
 
@@ -611,10 +611,10 @@ class ControllerDPRainForest extends Controller {
 			$interval = new Interval($this->config->get('config_rainforest_recoverasins_parser_time_start') . '-' . $this->config->get('config_rainforest_recoverasins_parser_time_end'));
 
 			if (!$interval->isNow()){
-				echoLine('[ControllerDPRainForest::recoverasins] NOT ALLOWED TIME');
+				echoLine('[ControllerDPRainForest::recoverasins] NOT ALLOWED TIME', 'e');
 				return;
 			} else {
-				echoLine('[ControllerDPRainForest::recoverasins] ALLOWED TIME');				
+				echoLine('[ControllerDPRainForest::recoverasins] ALLOWED TIME', 's');				
 			}
 		}
 
@@ -718,7 +718,7 @@ class ControllerDPRainForest extends Controller {
 	public function editfullproductscron($parsetechcategory = false){
 
 		if (!$this->config->get('config_rainforest_enable_data_parser')){
-			echoLine('[ControllerDPRainForest::editfullproductscron] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerDPRainForest::editfullproductscron] CRON IS DISABLED IN ADMIN', 'e');
 			return;
 		}
 
@@ -728,10 +728,10 @@ class ControllerDPRainForest extends Controller {
 				$interval = new Interval($this->config->get('config_rainforest_data_parser_time_start') . '-' . $this->config->get('config_rainforest_data_parser_time_end'));
 
 				if (!$interval->isNow()){
-					echoLine('[ControllerDPRainForest::editfullproductscron] NOT ALLOWED TIME');
+					echoLine('[ControllerDPRainForest::editfullproductscron] NOT ALLOWED TIME', 'e');
 					return;
 				} else {
-					echoLine('[ControllerDPRainForest::editfullproductscron] ALLOWED TIME');				
+					echoLine('[ControllerDPRainForest::editfullproductscron] ALLOWED TIME', 's');				
 				}
 			}
 		}
@@ -791,7 +791,7 @@ class ControllerDPRainForest extends Controller {
 	public function parsetechcategory(){		
 
 		if (!$this->config->get('config_rainforest_enable_tech_category_parser')){
-			echoLine('[ControllerDPRainForest::parsetechcategory] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerDPRainForest::parsetechcategory] CRON IS DISABLED IN ADMIN', 'e');
 			return;
 		}
 
@@ -801,10 +801,10 @@ class ControllerDPRainForest extends Controller {
 			$interval = new Interval($this->config->get('config_rainforest_tech_category_parser_time_start') . '-' . $this->config->get('config_rainforest_tech_category_parser_time_end'));
 
 			if (!$interval->isNow()){
-				echoLine('[ControllerDPRainForest::editfullproductscron] NOT ALLOWED TIME');
+				echoLine('[ControllerDPRainForest::editfullproductscron] NOT ALLOWED TIME', 'e');
 				return;
 			} else {
-				echoLine('[ControllerDPRainForest::editfullproductscron] ALLOWED TIME');				
+				echoLine('[ControllerDPRainForest::editfullproductscron] ALLOWED TIME', 's');				
 			}
 		}
 
@@ -819,7 +819,7 @@ class ControllerDPRainForest extends Controller {
 	public function editfullproductscronl2(){		
 
 		if (!$this->config->get('config_rainforest_enable_data_l2_parser')){
-			echoLine('[ControllerDPRainForest::editfullproductscronl2] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerDPRainForest::editfullproductscronl2] CRON IS DISABLED IN ADMIN', 'e');
 			return;
 		}
 
@@ -829,10 +829,10 @@ class ControllerDPRainForest extends Controller {
 			$interval = new Interval($this->config->get('config_rainforest_data_l2_parser_time_start') . '-' . $this->config->get('config_rainforest_data_l2_parser_time_end'));
 
 			if (!$interval->isNow()){
-				echoLine('[ControllerDPRainForest::editfullproductscron] NOT ALLOWED TIME');
+				echoLine('[ControllerDPRainForest::editfullproductscron] NOT ALLOWED TIME', 'e');
 				return;
 			} else {
-				echoLine('[ControllerDPRainForest::editfullproductscron] ALLOWED TIME');				
+				echoLine('[ControllerDPRainForest::editfullproductscron] ALLOWED TIME', 's');				
 			}
 		}
 		

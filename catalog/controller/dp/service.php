@@ -26,7 +26,6 @@ class ControllerDPService extends Controller {
 		$this->db->query("UPDATE product SET fill_from_amazon = 1 WHERE filled_from_amazon = 1 AND added_from_amazon = 1");
 	}
 
-
 	public function countProducts(){
 
 		if (!$this->config->get('config_product_count')){
