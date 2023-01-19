@@ -1519,7 +1519,7 @@
 				'days_from_accept'          => $result['closed']?$this->dateDiff($times['date_accepted'], $times['date_closed']):$this->dateDiff($times['date_accepted'], date('Y-m-d H:i:s')),
 				'selected'      			=> isset($this->request->post['selected']) && in_array($result['order_id'], $this->request->post['selected']),
 				'ttn'     					=> $result['ttn'],
-				'ttn_info'     				=> $this->model_sale_order->getTrackingCodeInfo($result['ttn']),
+				'ttn_info'     				=> $this->courierServices->getTrackingCodeInfo($result['ttn']),
 				'courier_status'     		=> $result['courier_status'],
 				'courier_comment'     		=> $result['courier_comment'],
 				'courier_color'             => $courier_color,

@@ -2417,16 +2417,16 @@
 				'quality_comment'		 => $order_query->row['quality_comment'],
 				'courier_comment'		 => $order_query->row['courier_comment'],
 				'preorder'		 		=> $order_query->row['preorder'],				
-				'nbt_csi'              => $order_query->row['nbt_csi'],				
-				'closed'                 => $order_query->row['closed'],
-				'salary_paid'                 => $order_query->row['salary_paid'],				
-				'urgent'				 => isset($order_query->row['urgent'])?$order_query->row['urgent']:0,
-				'urgent_buy'				 => isset($order_query->row['urgent_buy'])?$order_query->row['urgent_buy']:0,
-				'wait_full'				 => isset($order_query->row['wait_full'])?$order_query->row['wait_full']:0,
-				'ua_logistics'				 => isset($order_query->row['ua_logistics'])?$order_query->row['ua_logistics']:0,
-				'concardis_id'				 => isset($order_query->row['concardis_id'])?$order_query->row['concardis_id']:0,
-				'tracker_xml'            => $order_query->row['tracker_xml'],
-				'template'            => $order_query->row['template'],
+				'nbt_csi'              	=> $order_query->row['nbt_csi'],				
+				'closed'                => $order_query->row['closed'],
+				'salary_paid'           => $order_query->row['salary_paid'],				
+				'urgent'				=> isset($order_query->row['urgent'])?$order_query->row['urgent']:0,
+				'urgent_buy'			=> isset($order_query->row['urgent_buy'])?$order_query->row['urgent_buy']:0,
+				'wait_full'				=> isset($order_query->row['wait_full'])?$order_query->row['wait_full']:0,
+				'ua_logistics'			=> isset($order_query->row['ua_logistics'])?$order_query->row['ua_logistics']:0,
+				'concardis_id'			=> isset($order_query->row['concardis_id'])?$order_query->row['concardis_id']:0,
+				'tracker_xml'           => $order_query->row['tracker_xml'],
+				'template'            	=> $order_query->row['template'],
 				'customer_confirm_url'   => '&order_id='.$order_query->row['order_id'].'&confirm='.md5(sin($order_query->row['order_id']+2)).'&utm_term='.$order_query->row['email'].'&utoken='.md5(md5($order_query->row['email'] . $order_query->row['email']))
 				);
 				} else {
@@ -2443,12 +2443,6 @@
 			}
 
 			return $result;
-		}
-
-		public function getTrackingCodeInfo($tracking_code){
-			$query = $this->db->query("SELECT * FROM order_ttns WHERE ttn = '" . $this->db->escape($tracking_code) . "' LIMIT 1");
-
-			return $query->row;
 		}
 		
 		public function getOrders($data = array()) {

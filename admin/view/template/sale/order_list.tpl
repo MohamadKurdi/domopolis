@@ -859,11 +859,15 @@
 											
 											<? if ($order['ttn']) { ?>
 												<br />
+												<?php if (!empty($order['ttn_info']['taken'])) { ?><i class="fa fa-check-circle" style="color:#00AD07;"></i><? } ?>
+												<?php if (!empty($order['ttn_info']['waiting'])) { ?><i class="fa fa-clock-o" style="color:#ffaa56;"></i><? } ?>	
+												<?php if (!empty($order['ttn_info']['rejected'])) { ?><i class="fa fa-times" style="color:#ff5656;"></i><? } ?>
+
 												<span style="font-size:11px; line-height:14px;"><span class="get_ttn_info" data-ttn="<? echo $order['ttn']; ?>" data-delivery-code="<?php echo $order['delivery_code']; ?>" data-delivery-phone="<?php echo $order['telephone']; ?>"><b><? echo $order['ttn']; ?></b></span>&nbsp;&nbsp;<span style="display:none;"></span>
-												</span> 
-												<?php if (!empty($order['ttn_info']['taken'])) { ?><i class="fa fa-check-circle" style="color:#00AD07;"></i><? } ?>								
+												</span> 	
+
 												<?php if (!empty($order['ttn_info']['tracking_status'])) { ?>
-													<span style="display:inline-block;padding:2px 3px; font-size:11px; margin:3px; background:grey; color:#FFF;"><?php echo $order['ttn_info']['tracking_status']; ?></span>
+													<br /><span style="display:inline-block;padding:2px 3px; font-size:10px; margin:3px; background:grey; color:#FFF;"><?php echo $order['ttn_info']['tracking_status']; ?></span>
 												<?php } ?>
 												<br />
 											<? } ?>
