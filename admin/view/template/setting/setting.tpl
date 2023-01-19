@@ -3272,8 +3272,34 @@
 
 						<div id="tab-sms">
 
-							<h2><i class="fa fa-search"></i> Сервис SMSGATE (Epochta)</h2>
+							<h2><i class="fa fa-cogs"></i> Настройки воркеров и очередей</h2>
+							<table class="form">
+								<tr>
+									<td style="width:20%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Воркер очереди SMS</span></p>
+											<select name="config_sms_enable_queue_worker">
+												<?php if ($config_sms_enable_queue_worker) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-clock-o"></i> Время работы</span></p>
 
+											<input type="time" name="config_sms_enable_queue_worker_time_start" value="<?php echo $config_sms_enable_queue_worker_time_start; ?>" size="50" style="width:70px;" /> - 
+											<input type="time" name="config_sms_enable_queue_worker_time_end" value="<?php echo $config_sms_enable_queue_worker_time_end; ?>" size="50" style="width:70px;" />
+										</div>										
+									</td>									
+								</tr>
+
+							</table>
+
+							<h2><i class="fa fa-search"></i> Сервис SMSGATE (Epochta)</h2>
 							<table class="form">
 								<tr>
 									<td width="20%">
@@ -4205,6 +4231,34 @@
 						</div>
 
 						<div id="tab-deliveryapis">
+
+							<h2>Настройки воркеров служб доставки</h2>
+							<table>
+								<tr>
+								<td style="width:20%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Трекер накладных</span></p>
+											<select name="config_shipping_enable_tracker_worker">
+												<?php if ($config_shipping_enable_tracker_worker) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-clock-o"></i> Время работы</span></p>
+
+											<input type="time" name="config_shipping_enable_tracker_worker_time_start" value="<?php echo $config_shipping_enable_tracker_worker_time_start; ?>" size="50" style="width:70px;" /> - 
+											<input type="time" name="config_shipping_enable_tracker_worker_time_end" value="<?php echo $config_shipping_enable_tracker_worker_time_end; ?>" size="50" style="width:70px;" />
+										</div>										
+									</td>
+								</tr>
+							</table>
+
+
 							<h2>Новая Почта API</h2>
 							<table class="form">
 								<tr>

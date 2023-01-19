@@ -2570,6 +2570,34 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_sms_to'] = $this->config->get('config_sms_to');
         }
+
+        $shipping_workers_settings = [            
+            'config_shipping_enable_tracker_worker',
+            'config_shipping_enable_tracker_worker_time_start',
+            'config_shipping_enable_tracker_worker_time_end'
+        ];
+
+        foreach ($shipping_workers_settings as $shipping_workers_setting) {
+            if (isset($this->request->post[$shipping_workers_setting])) {
+                $this->data[$shipping_workers_setting] = $this->request->post[$shipping_workers_setting];
+            } else {
+                $this->data[$shipping_workers_setting] = $this->config->get($shipping_workers_setting);
+            }
+        }
+
+        $sms_workers_settings = [
+            'config_sms_enable_queue_worker',
+            'config_sms_enable_queue_worker_time_start',
+            'config_sms_enable_queue_worker_time_end'
+        ];
+
+        foreach ($sms_workers_settings as $sms_workers_setting) {
+            if (isset($this->request->post[$sms_workers_setting])) {
+                $this->data[$sms_workers_settings] = $this->request->post[$sms_workers_settings];
+            } else {
+                $this->data[$sms_workers_setting] = $this->config->get($sms_workers_setting);
+            }
+        }
                 
         if (isset($this->request->post['config_sms_tracker_leave_main_warehouse_enabled'])) {
             $this->data['config_sms_tracker_leave_main_warehouse_enabled'] = $this->request->post['config_sms_tracker_leave_main_warehouse_enabled'];
