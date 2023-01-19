@@ -24,7 +24,7 @@ class Image {
 		}
 	}
 	
-    public static function cachedname($filename, $extension, $data = array()){
+    public static function cachedname($filename, $extension, $data = array()){    	
         $md5 = md5($filename . implode('.', $data));
 
         $directory              = DIR_IMAGECACHE . substr($md5, 0, 3) . '/';
