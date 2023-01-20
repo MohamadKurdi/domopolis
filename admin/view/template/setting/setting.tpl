@@ -5207,10 +5207,10 @@
 											<select name="config_rainforest_nooffers_action">
 												<?php if ($config_rainforest_nooffers_action) { ?>
 													<option value="1" selected="selected">Менять статус</option>
-													<option value="0">Нихуя не делать</option>
+													<option value="0">Ничего не делать</option>
 												<?php } else { ?>													
 													<option value="1">Менять статус</option>
-													<option value="0"  selected="selected">Нихуя не делать</option>
+													<option value="0"  selected="selected">Ничего не делать</option>
 												<? } ?>
 											</select>
 											<br />
@@ -5258,10 +5258,10 @@
 											<select name="config_rainforest_delete_no_offers">
 												<?php if ($config_rainforest_delete_no_offers) { ?>
 													<option value="1" selected="selected">Удалять</option>
-													<option value="0">Нихуя не делать</option>
+													<option value="0">Ничего не делать</option>
 												<?php } else { ?>													
 													<option value="1">Удалять</option>
-													<option value="0"  selected="selected">Нихуя не делать</option>
+													<option value="0"  selected="selected">Ничего не делать</option>
 												<? } ?>
 											</select>
 											<br />
@@ -5278,15 +5278,46 @@
 											<select name="config_rainforest_nooffers_quantity">
 												<?php if ($config_rainforest_nooffers_quantity) { ?>
 													<option value="1" selected="selected">Менять количество</option>
-													<option value="0">Нихуя не делать</option>
+													<option value="0">Ничего не делать</option>
 												<?php } else { ?>													
 													<option value="1">Менять количество</option>
-													<option value="0"  selected="selected">Нихуя не делать</option>
+													<option value="0"  selected="selected">Ничего не делать</option>
 												<? } ?>
 											</select>
 											<br />
 											<span class="help"><i class="fa fa-exclamation-circle"></i> количество будет изменяться 0-9999</span>
 										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Пропускать с скидкой</span></p>
+											<select name="config_rainforest_disable_offers_if_has_special">
+												<?php if ($config_rainforest_disable_offers_if_has_special) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Выключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Выключить</option>
+												<? } ?>
+											</select>
+											<br />
+											<span class="help"><i class="fa fa-exclamation-circle"></i> пропускать товары с актуальной скидкой</span>	
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Использовать логику парсера</span></p>
+											<select name="config_rainforest_disable_offers_use_field_ignore_parse">
+												<?php if ($config_rainforest_disable_offers_use_field_ignore_parse) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Выключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Выключить</option>
+												<? } ?>
+											</select>
+											<br />
+											<span class="help"><i class="fa fa-exclamation-circle"></i> пропускать товары с "Не обновлять цены"</span>	
+										</div>
+
 									</td>
 
 									<td style="width:15%">

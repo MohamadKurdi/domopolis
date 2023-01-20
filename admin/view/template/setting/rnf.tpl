@@ -955,6 +955,35 @@
 								</span>
 							</td>
 						</tr>
+
+						<tr>
+							<td class="right">
+								Пропускать товары с актуальной скидкой
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_disable_offers_if_has_special" type="checkbox" class="checkbox" name="config_rainforest_disable_offers_if_has_special" <? if ($config_rainforest_disable_offers_if_has_special){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_disable_offers_if_has_special"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> если у товара на момент обновления есть актуальная скидка, то его цена не будет обновляться
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Пропускать товары с признаком "Не обновлять цены"
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_disable_offers_use_field_ignore_parse" type="checkbox" class="checkbox" name="config_rainforest_disable_offers_use_field_ignore_parse" <? if ($config_rainforest_disable_offers_use_field_ignore_parse){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_disable_offers_use_field_ignore_parse"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> если у товара включен признак "не обновлять цены", используемое для 1С и парсеров, то его цены также не будут обновляться
+								</span>
+							</td>
+						</tr>
+
 						<tr>
 							<td class="right">
 								Пропускать товары, которые были закуплены

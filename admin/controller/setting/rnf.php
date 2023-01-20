@@ -65,7 +65,6 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_delete_no_offers_counter',
 		'config_rainforest_delete_invalid_asins',
 
-
 		'config_no_zeroprice',
 		'config_product_hide_sku',
 		'config_product_replace_sku_with_product_id',
@@ -108,6 +107,9 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_enable_pricing',
 		'config_rainforest_enable_offers_only_for_filled',
 		'config_rainforest_enable_offers_after_order',
+
+		'config_rainforest_disable_offers_if_has_special',
+		'config_rainforest_disable_offers_use_field_ignore_parse',
 
 		'config_rainforest_nooffers_status_id',
 		'config_rainforest_delete_no_offers',

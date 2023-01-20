@@ -3289,6 +3289,18 @@ class ControllerSettingSetting extends Controller
             $this->data['config_rainforest_enable_offers_after_order'] = $this->config->get('config_rainforest_enable_offers_after_order');
         }
 
+        if (isset($this->request->post['config_rainforest_disable_offers_if_has_special'])) {
+            $this->data['config_rainforest_disable_offers_if_has_special'] = $this->request->post['config_rainforest_disable_offers_if_has_special'];
+        } else {
+            $this->data['config_rainforest_disable_offers_if_has_special'] = $this->config->get('config_rainforest_disable_offers_if_has_special');
+        }
+
+        if (isset($this->request->post['config_rainforest_disable_offers_use_field_ignore_parse'])) {
+            $this->data['config_rainforest_disable_offers_use_field_ignore_parse'] = $this->request->post['config_rainforest_disable_offers_use_field_ignore_parse'];
+        } else {
+            $this->data['config_rainforest_disable_offers_use_field_ignore_parse'] = $this->config->get('config_rainforest_disable_offers_use_field_ignore_parse');
+        }
+
         if (isset($this->request->post['config_rainforest_delay_price_setting'])) {
             $this->data['config_rainforest_delay_price_setting'] = $this->request->post['config_rainforest_delay_price_setting'];
         } else {
