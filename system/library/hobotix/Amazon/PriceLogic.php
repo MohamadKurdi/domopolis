@@ -263,27 +263,23 @@ class PriceLogic
 		if ($query->num_rows && $query->row['asin']){
 			$proceedWithPrice = true;
 			
-			if ($this->config->get('config_rainforest_enable_offers_for_stock')){
-			//	echoLine('[checkIfWeCanUpdateProductOffers] Включена настройка обновлять товар на складе, обновляем');
+			if ($this->config->get('config_rainforest_enable_offers_for_stock')){			
 				$proceedWithPrice = true;
 			} else {				
 				if ($warehouse_identifier == 'current'){
 					$warehouse_identifier = $this->config->get('config_warehouse_identifier');
 				}
 
-				if (($query->row[$warehouse_identifier] + $query->row[$warehouse_identifier . '_onway']) <= 0){
-			//		echoLine('[checkIfWeCanUpdateProductOffers] Товар не на складе и не едет, обновляем');
+				if (($query->row[$warehouse_identifier] + $query->row[$warehouse_identifier . '_onway']) <= 0){			
 					$proceedWithPrice = true;
-
 				} else {
-			//		echoLine('[checkIfWeCanUpdateProductOffers] Товар на складе или едет, пропускаем');						
+					echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Product is in real stock, or is on way, skipping', 'e');						
 					$proceedWithPrice = false;
 				}
 			}
 
 			if ($proceedWithPrice && $this->config->get('config_rainforest_pass_offers_for_ordered')){
-				if ($query->row['actual_cost_date'] == '0000-00-00'){
-			//		echoLine('[checkIfWeCanUpdateProductOffers] Закупка не обновлялась никогда, обновляем');
+				if ($query->row['actual_cost_date'] == '0000-00-00'){			
 					$proceedWithPrice = true;
 				} else {
 
@@ -291,22 +287,51 @@ class PriceLogic
 						$dateWhenWeCanToUpdate = date('Y-m-d', strtotime('+' . (int)$this->config->get('config_rainforest_pass_offers_for_ordered_days') . ' days', strtotime($query->row['actual_cost_date'])));
 
 						if ($dateWhenWeCanToUpdate >= date('Y-m-d')){
-			//				echoLine('[checkIfWeCanUpdateProductOffers] Закупка ' . $dateWhenWeCanToUpdate . ', пропускаем');
+							echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Last buy ' . $dateWhenWeCanToUpdate . ', skipping', 'e');
 							$proceedWithPrice = false;
-						} else {
-			//				echoLine('[checkIfWeCanUpdateProductOffers] Закупка ' . $dateWhenWeCanToUpdate . ', обновляем');
+						} else {							
 							$proceedWithPrice = true;
 						}
 
 					} else {
-			//			echoLine('[checkIfWeCanUpdateProductOffers] Нет граничного срока закупки, пропускаем');
+						echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] No purchase deadline, skipping', 'e');
+						$proceedWithPrice = false;
+					}					
+				}
+			}
+			
+			if ($proceedWithPrice && $query->row['amzn_ignore']){
+				echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Product must be ignored due of amzn_ignore set, skipping', 'e');
+				$proceedWithPrice = false;
+			}
+
+			if ($proceedWithPrice && $query->row['is_markdown']){
+				echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Product is markdown, skipping', 'e');
+				$proceedWithPrice = false;
+			}
+
+			//Пропускать обновление цены, если поставлена метка ignore_parse и это включено в настройках
+			if ($proceedWithPrice && $this->config->get('config_rainforest_disable_offers_use_field_ignore_parse')){
+				if ($query->row['ignore_parse'] && $query->row['ignore_parse_date_to'] == '0000-00-00'){
+					echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Product must be ignored because of ignore_parse set, skipping', 'e');
+					$proceedWithPrice = false;
+				} elseif ($query->row['ignore_parse'] && !empty($query->row['ignore_parse_date_to'])){					
+					if (date('Y-m-d') <= $query->row['ignore_parse_date_to']){
+						echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Product must be ignored due of ignore_parse and date set, skipping', 'e');
 						$proceedWithPrice = false;
 					}
-
-					
 				}
 			}
 
+			if ($proceedWithPrice && $this->config->get('config_rainforest_disable_offers_if_has_special')){
+				$special_query = $this->db->query("SELECT * FROM product_special ps WHERE ps.product_id = '" . (int)$product_id . "' AND ps.price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW()))");
+
+				if ($special_query->num_rows){
+					echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Product has actual special, skipping', 'e');
+					$proceedWithPrice = false;
+				}
+
+			}
 		}
 
 		return $proceedWithPrice;
@@ -352,9 +377,7 @@ class PriceLogic
 			}
 
 		} else {
-
 			$resultPrice = $amazonBestPrice * $defaultMultiplier;
-
 		}		
 
 		return $resultPrice;
@@ -375,7 +398,7 @@ class PriceLogic
 	}
 
 	public function updateProductPriceInDatabase($product_id, $price){
-		$field = $price;
+		$field = 'price';
 		if ($this->config->get('config_rainforest_delay_price_setting')){
 			$field = 'price_delayed';
 		}
@@ -458,7 +481,6 @@ class PriceLogic
 									} else {
 										$this->updateProductPriceToStoreInDatabase($product_id, $newPrice, $store_id);
 									}
-
 								}
 							}
 						}

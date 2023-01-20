@@ -48,7 +48,7 @@ class ControllerKPRainForest extends Controller {
 	public function parseeanscron(){
 
 		if (!$this->config->get('config_rainforest_enable_eans_parser')){
-			echoLine('[ControllerKPRainForest::parseeanscron] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerKPRainForest::parseeanscron] CRON IS DISABLED IN ADMIN', 'e');
 			return;
 		}
 		
@@ -72,7 +72,7 @@ class ControllerKPRainForest extends Controller {
 			$timer = new FPCTimer();
 			$jsonArray = [];
 
-			echoLine('[PARSEEANSCRON] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . ((int)\hobotix\RainforestAmazon::productRequestLimits * ($i-1)) . ' по ' . (int)\hobotix\RainforestAmazon::productRequestLimits * $i);
+			echoLine('[PARSEEANSCRON] Итерация ' . $i . ' from ' . $iterations . ', товары с ' . ((int)\hobotix\RainforestAmazon::productRequestLimits * ($i-1)) . ' по ' . (int)\hobotix\RainforestAmazon::productRequestLimits * $i);
 
 			$slice = array_slice($products, (int)\hobotix\RainforestAmazon::productRequestLimits * ($i-1), (int)\hobotix\RainforestAmazon::productRequestLimits);
 
@@ -102,7 +102,7 @@ class ControllerKPRainForest extends Controller {
 				}
 			}
 
-			echoLine('[PARSEASINSCRON] Времени на итерацию: ' . $timer->getTime() . ' сек.');
+			echoLine('[PARSEASINSCRON] Time for iteration: ' . $timer->getTime() . ' s.', 'i');
 			unset($timer);
 
 		}
@@ -111,7 +111,7 @@ class ControllerKPRainForest extends Controller {
 	public function parseasinscron(){		
 
 		if (!$this->config->get('config_rainforest_enable_asins_parser')){
-			echoLine('[ControllerKPRainForest::parseasinscron] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerKPRainForest::parseasinscron] CRON IS DISABLED IN ADMIN', 'e');
 			return;
 		}
 
@@ -136,7 +136,7 @@ class ControllerKPRainForest extends Controller {
 			$timer = new FPCTimer();
 			$jsonArray = [];
 
-			echoLine('[PARSEASINSCRON] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . ((int)\hobotix\RainforestAmazon::productRequestLimits * ($i-1)) . ' по ' . (int)\hobotix\RainforestAmazon::productRequestLimits * $i);
+			echoLine('[PARSEASINSCRON] Итерация ' . $i . ' from ' . $iterations . ', товары с ' . ((int)\hobotix\RainforestAmazon::productRequestLimits * ($i-1)) . ' по ' . (int)\hobotix\RainforestAmazon::productRequestLimits * $i);
 
 			$slice = array_slice($products, (int)\hobotix\RainforestAmazon::productRequestLimits * ($i-1), (int)\hobotix\RainforestAmazon::productRequestLimits);
 
@@ -167,7 +167,7 @@ class ControllerKPRainForest extends Controller {
 				}
 			}
 
-			echoLine('[PARSEASINSCRON] Времени на итерацию: ' . $timer->getTime() . ' сек.');
+			echoLine('[PARSEASINSCRON] Time for iteration: ' . $timer->getTime() . ' s.', 'i');
 			unset($timer);
 		}
 	}
@@ -175,7 +175,7 @@ class ControllerKPRainForest extends Controller {
 	public function parseoffersqueuecron(){
 
 		if (!$this->config->get('config_rainforest_enable_offersqueue_parser')){
-			echoLine('[ControllerKPRainForest::parseoffersqueuecron] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerKPRainForest::parseoffersqueuecron] CRON IS DISABLED IN ADMIN', 'e');
 			return;
 		}
 
@@ -183,17 +183,17 @@ class ControllerKPRainForest extends Controller {
 		$this->load->library('Timer');
 
 		if (!$this->config->get('config_rainforest_enable_pricing')){
-			echoLine('[parseofferscron] RNF AMAZON PRICING NOT ENABLED');
+			echoLine('[parseofferscron] RNF AMAZON PRICING NOT ENABLED', 'e');
 			return;
 		}
 
-		echoLine('Работаем с очередью');		
+		echoLine('[parseofferscron], Working with queue');		
 		$products = $this->rainforestAmazon->offersParser->getProductsAmazonQueue();
 		$this->rainforestAmazon->offersParser->clearProductsAmazonQueue();
 
 		$total = count($products);
 		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::offerRequestLimits);
-		echoLine('[parseofferscron] Всего ' . $total . ' товаров!');
+		echoLine('[parseofferscron] Total ' . $total . ' products!', 'i');
 
 		$i=1;
 		$timer = new FPCTimer();		
@@ -209,7 +209,7 @@ class ControllerKPRainForest extends Controller {
 				}
 			}
 
-			echoLine('[parseofferscron] Времени на итерацию: ' . $i . ' из ' . $iterations .': ' . $timer->getTime() . ' сек.');
+			echoLine('[parseofferscron] Time for iteration: ' . $i . ' from ' . $iterations .': ' . $timer->getTime() . ' s.', 'i');
 			unset($timer);
 		}
 
@@ -219,7 +219,7 @@ class ControllerKPRainForest extends Controller {
 	public function parsenoofferscron(){
 
 		if (!$this->config->get('config_rainforest_enable_offers_parser')){
-			echoLine('[ControllerKPRainForest::parsenoofferscron] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerKPRainForest::parsenoofferscron] CRON IS DISABLED IN ADMIN', 'e');
 			return;
 		}
 
@@ -227,21 +227,19 @@ class ControllerKPRainForest extends Controller {
 		$this->load->library('Timer');
 
 		if (!$this->config->get('config_rainforest_enable_pricing')){
-			echoLine('[parseofferscron] RNF AMAZON PRICING NOT ENABLED');
+			echoLine('[parsenoofferscron] RNF AMAZON PRICING NOT ENABLED', 'e');
 			return;
 		}
 
-		$this->rainforestAmazon->checkIfPossibleToMakeRequest();
-		
+		$this->rainforestAmazon->checkIfPossibleToMakeRequest();		
 		$this->rainforestAmazon->offersParser->setNoOffersLogic(true);
-
 		$products = $this->rainforestAmazon->offersParser->getProductsToGetOffers();			
 
 		$total = count($products);
-		echoLine('[parseofferscron] Всего товаров которые надо обновлять: ' . $total);
+		echoLine('[parsenoofferscron] Total products to update: ' . $total);
 		
 		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::offerRequestLimits);
-		echoLine('[parseofferscron] Всего ' . $total . ' товаров!');
+		echoLine('[parsenoofferscron] Total ' . $total . ' products!', 'i');
 
 		$i=1;
 		$timer = new FPCTimer();		
@@ -260,7 +258,7 @@ class ControllerKPRainForest extends Controller {
 
 			}
 
-			echoLine('[parseofferscron] Времени на итерацию: ' . $i . ' из ' . $iterations .': ' . $timer->getTime() . ' сек.');
+			echoLine('[parsenoofferscron] Time for iteration: ' . $i . ' from ' . $iterations .': ' . $timer->getTime() . ' s.', 'i');
 			unset($timer);
 		}
 	}
@@ -268,12 +266,12 @@ class ControllerKPRainForest extends Controller {
 	public function parseofferscron(){
 
 		if (!$this->config->get('config_rainforest_enable_offers_parser')){
-			echoLine('[ControllerKPRainForest::parseofferscron] CRON IS DISABLED IN ADMIN');
+			echoLine('[ControllerKPRainForest::parseofferscron] CRON IS DISABLED IN ADMIN', 'e');
 			return;
 		}
 
 		if (!$this->config->get('config_rainforest_enable_pricing')){
-			echoLine('[parseofferscron] RNF AMAZON PRICING NOT ENABLED');
+			echoLine('[parseofferscron] RNF AMAZON PRICING NOT ENABLED', 'e');
 			return;
 		}
 
@@ -295,10 +293,10 @@ class ControllerKPRainForest extends Controller {
 		$products = $this->rainforestAmazon->offersParser->getProductsToGetOffers();			
 
 		$total = count($products);
-		echoLine('[parseofferscron] Всего товаров которые надо обновлять: ' . $total);
+		echoLine('[parseofferscron] Total products to update: ' . $total, 'i');
 		
 		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::offerRequestLimits);
-		echoLine('[parseofferscron] Всего ' . $total . ' товаров!');
+		echoLine('[parseofferscron] Total ' . $total . ' products!', 'i');
 
 		$i=1;
 		$timer = new FPCTimer();		
@@ -317,7 +315,7 @@ class ControllerKPRainForest extends Controller {
 
 			}
 
-			echoLine('[parseofferscron] Времени на итерацию: ' . $i . ' из ' . $iterations .': ' . $timer->getTime() . ' сек.');
+			echoLine('[parseofferscron] Time for iteration: ' . $i . ' from ' . $iterations .': ' . $timer->getTime() . ' s.', 'i');
 			unset($timer);
 		}
 	}

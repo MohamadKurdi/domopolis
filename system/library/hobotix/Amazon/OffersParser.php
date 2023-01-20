@@ -11,7 +11,7 @@ class OffersParser
 	private $config;
 	private $log;
 
-	//private $testAsin = 'B095CFY117';
+	//private $testAsin = 'B07V5FWPT1';
 	private $testAsin = false;
 
 	private $no_offers_logic = false;
@@ -49,24 +49,32 @@ class OffersParser
 		$result = [];
 
 		$sql = " FROM product p
-		WHERE status = 1 
-		AND amzn_ignore = 0		
-		AND is_virtual = 0
-		AND is_markdown = 0			
-		AND stock_status_id <> '" . $this->config->get('config_not_in_stock_status_id') . "'";			
+		WHERE p.status = 1 
+		AND p.amzn_ignore = 0		
+		AND p.is_virtual = 0
+		AND p.is_markdown = 0			
+		AND p.stock_status_id <> '" . $this->config->get('config_not_in_stock_status_id') . "'";			
 
 		if (!$this->config->get('config_rainforest_enable_offers_for_stock')){
 			$sql .= " AND (" . $this->PriceLogic->buildStockQueryField() . " = 0)";
 		}
 
 		if ($this->config->get('config_rainforest_pass_offers_for_ordered')){
-			$sql .= " AND ( actual_cost_date = '0000-00-00' ";
+			$sql .= " AND ( p.actual_cost_date = '0000-00-00' ";
 
 			if ($this->config->get('config_rainforest_pass_offers_for_ordered_days')){
-				$sql .= " OR DATE_ADD(actual_cost_date, INTERVAL " . (int)$this->config->get('config_rainforest_pass_offers_for_ordered_days') . " DAY) < DATE(NOW())";
+				$sql .= " OR DATE_ADD(p.actual_cost_date, INTERVAL " . (int)$this->config->get('config_rainforest_pass_offers_for_ordered_days') . " DAY) < DATE(NOW())";
 			}
 
 			$sql .= ")";
+		}
+
+		if ($this->config->get('config_rainforest_disable_offers_use_field_ignore_parse')){
+			$sql .= " AND NOT (p.ignore_parse = 1 AND (p.ignore_parse_date_to = '0000-00-00' OR DATE(p.ignore_parse_date_to) > DATE(NOW())))";
+		}
+
+		if ($this->config->get('config_rainforest_disable_offers_if_has_special')){
+			$sql .= " AND p.product_id NOT IN (SELECT product_id FROM product_special ps WHERE ps.price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())))";
 		}
 
 		$sql .= "
@@ -78,12 +86,12 @@ class OffersParser
 			$sql .= "AND p.filled_from_amazon = 1";
 		}
 
-		$sql .= " AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1))";
+		$sql .= " AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1))";
 
 		if ($this->no_offers_logic){
 			$sql .= " AND p.amzn_no_offers = 1";
 		} else {
-			$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -" . $this->config->get('config_rainforest_update_period') . " DAY)))";
+			$sql .= " AND (p.amzn_last_offers = '0000-00-00 00:00:00' OR DATE(p.amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -" . $this->config->get('config_rainforest_update_period') . " DAY)))";
 		}
 
 		$query = $this->db->ncquery("SELECT COUNT(DISTINCT(asin)) as total " . $sql . "");
@@ -95,24 +103,32 @@ class OffersParser
 		$result = [];		
 
 		$sql = " FROM product p
-		WHERE status = 1 
-		AND amzn_ignore = 0		
-		AND is_virtual = 0
-		AND is_markdown = 0		
-		AND stock_status_id <> '" . $this->config->get('config_not_in_stock_status_id') . "'";
+		WHERE p.status = 1 
+		AND p.amzn_ignore = 0		
+		AND p.is_virtual = 0
+		AND p.is_markdown = 0		
+		AND p.stock_status_id <> '" . $this->config->get('config_not_in_stock_status_id') . "'";
 
 		if (!$this->config->get('config_rainforest_enable_offers_for_stock')){
 			$sql .= " AND (" . $this->PriceLogic->buildStockQueryField() . " = 0)";
 		}
 
 		if ($this->config->get('config_rainforest_pass_offers_for_ordered')){
-			$sql .= " AND ( actual_cost_date = '0000-00-00' ";
+			$sql .= " AND ( p.actual_cost_date = '0000-00-00' ";
 
 			if ($this->config->get('config_rainforest_pass_offers_for_ordered_days')){
-				$sql .= " OR DATE_ADD(actual_cost_date, INTERVAL " . (int)$this->config->get('config_rainforest_pass_offers_for_ordered_days') . " DAY) < DATE(NOW())";
+				$sql .= " OR DATE_ADD(p.actual_cost_date, INTERVAL " . (int)$this->config->get('config_rainforest_pass_offers_for_ordered_days') . " DAY) < DATE(NOW())";
 			}
 
 			$sql .= ")";
+		}
+
+		if ($this->config->get('config_rainforest_disable_offers_use_field_ignore_parse')){
+			$sql .= " AND NOT (p.ignore_parse = 1 AND (p.ignore_parse_date_to = '0000-00-00' OR DATE(p.ignore_parse_date_to) > DATE(NOW())))";
+		}
+
+		if ($this->config->get('config_rainforest_disable_offers_if_has_special')){
+			$sql .= " AND p.product_id NOT IN (SELECT product_id FROM product_special ps WHERE ps.price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())))";
 		}
 
 		$sql .= "
@@ -124,16 +140,16 @@ class OffersParser
 			$sql .= "AND p.filled_from_amazon = 1";
 		}
 
-		$sql .= " AND product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1))";
+		$sql .= " AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1))";
 
 		if ($this->no_offers_logic){
 			$sql .= " AND p.amzn_no_offers = 1";
 		} else {
-			$sql .= " AND (amzn_last_offers = '0000-00-00 00:00:00' OR DATE(amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -" . $this->config->get('config_rainforest_update_period') . " DAY)))";
+			$sql .= " AND (p.amzn_last_offers = '0000-00-00 00:00:00' OR DATE(p.amzn_last_offers) <= DATE(DATE_ADD(NOW(), INTERVAL -" . $this->config->get('config_rainforest_update_period') . " DAY)))";
 		}		
 
 
-		$sql = "SELECT DISTINCT(asin), product_id " . $sql . " ORDER BY amzn_last_offers ASC LIMIT " . (int)\hobotix\RainforestAmazon::offerParserLimit;
+		$sql = "SELECT DISTINCT(asin), product_id " . $sql . " ORDER BY amzn_last_offers ASC LIMIT " . (int)\hobotix\RainforestAmazon::offerParserLimit;		
 
 		$query = $this->db->ncquery($sql);
 
