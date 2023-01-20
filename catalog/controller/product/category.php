@@ -1218,12 +1218,11 @@
 				$this->data['pagination'] = $pagination->render();
 				$this->data['pagination_text'] = $pagination->render_text();
 				
-				$this->data['sort'] = $sort;
+				$this->data['sort']  = $sort;
 				$this->data['order'] = $order;
 				$this->data['limit'] = $limit;
 				
-				$this->data['current_sort'] = $this->language->get('text_default');
-				
+				$this->data['current_sort'] = $this->language->get('text_default');				
 				foreach ($this->data['sorts'] as $_sort){
 					if ($this->data['sort'] . '-'. $this->data['order'] == $_sort['value']){
 						$this->data['current_sort'] = $_sort['text'];

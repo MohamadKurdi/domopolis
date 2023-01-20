@@ -19,8 +19,7 @@
 
 <?php echo $content_top; ?><div id="mfilter-content-container">
 	
-	<!--catalog-->
-	
+	<!--catalog-->	
 	<?php if (!empty($elastic_failed_error)) { ?>
 	<div class="wrap">
 		<h1 class="title"><?php echo $elastic_failed_error;?></h1>
@@ -37,15 +36,13 @@
 	<?php include($this->checkTemplate(dirname(__FILE__),'/../structured/product_list.tpl')); ?>
 	<!--/catalog-->
 	
-	<script>
-		
-		$(document).ready(function () {
-			
+	<script>		
+		$(document).ready(function () {			
 			if ((typeof fbq !== 'undefined')){
 				fbq('track', 'ViewContent', 
 				{
 					content_type: 'product_group',
-					content_ids: '<?php echo $category_id; ?>'
+					content_ids: '10'
 				});
 			}
 			
@@ -55,28 +52,12 @@
 					} else {
 					$('.mfilter-free-button').addClass('hide-btn');
 				}
-			});
-			
+			});			
 		});
 		
 	</script>
 </div>
-<!-- 	<script type="text/javascript">
-	var google_tag_params = {
-	<? foreach ($google_tag_params as $name => $value) { ?>
-		<? if ($name != 'dynx_totalvalue' && $name != 'ecomm_totalvalue') { ?>
-			<? echo $name; ?>:'<? echo $value ?>',
-			<? } else { ?>
-			<? echo $name; ?>:<? echo $value ?>,
-		<? } ?>
-	<? } ?>
-	};
-</script>  -->
-
 <?php if ($this->config->get('site_position') == '1') { ?>
 	<?php echo $content_bottom; ?>
 <?php } ?>
-
-
 <?php echo $footer; ?>			
-	
