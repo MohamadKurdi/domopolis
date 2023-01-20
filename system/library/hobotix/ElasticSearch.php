@@ -640,8 +640,7 @@
 					if ($data['order'] == 'ASC'){
 						$params['body']['sort'] = [
 						[ 'stock_status_id'.'.keyword' => 'asc' ],
-						[ $this->config->get('config_warehouse_identifier').'.keyword' => 'desc' ],				
-						[ 'stock_status_id'.'keyword' => 'asc' ],
+						[ $this->config->get('config_warehouse_identifier').'.keyword' => 'desc' ],										
 						[ 'price' => 'asc' ],
 						[ '_score' => 'desc' ],
 						];
