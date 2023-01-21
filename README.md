@@ -1,4 +1,4 @@
-# Git repository of Domopolis.com.ua project
+# Highly remastered OpenCart v1.5
 
 This engine is highly remastered OpenCart v1.5.6.4 with a lot of integrations and improvements. Runs on PHP 8.1
 
