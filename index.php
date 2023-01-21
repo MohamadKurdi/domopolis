@@ -33,13 +33,17 @@
 	
 	//Echo 
 	if (isset($storesConfig[$httpHOST]) && !is_numeric($storesConfig[$httpHOST])){
-		$content = file_get_contents(dirname(__FILE__) .'/'. trim($storesConfig[$httpHOST]));
-		if ($_SERVER['REQUEST_URI'] == '/'){			
-			header('HTTP/1.1 200 OK');
+		if (file_exists(dirname(__FILE__) .'/'. trim($storesConfig[$httpHOST]))){
+			$content = file_get_contents(dirname(__FILE__) .'/'. trim($storesConfig[$httpHOST]));
+			if ($_SERVER['REQUEST_URI'] == '/'){			
+				header('HTTP/1.1 200 OK');
+			} else {
+				header('HTTP/1.1 410 Gone');			
+			}
+			echo $content;			
 		} else {
-			header('HTTP/1.1 410 Gone');			
+			header('HTTP/1.1 410 Gone');
 		}
-		echo $content;
 		exit();
 	}
 	
@@ -53,7 +57,7 @@
 	
 	//Конфигурационный файл	основной выбор с переназначением
 	$currentConfigFile = false;
-	if (isset($configFiles[$httpHOST])){
+	if (!empty($configFiles[$httpHOST])){
 		if (file_exists($configFiles[$httpHOST])) {
 			$currentConfigFile = ($configFiles[$httpHOST]);
 			} else {
