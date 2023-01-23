@@ -39,7 +39,6 @@
 			if (!$this->config->get('config_reacher_enable')){
 				return [];
 			}
-
 			$email = trim($email);
 			
 			$ch = curl_init();
@@ -93,8 +92,7 @@
 				}
 			
 				return (bool)($validationResult['valid_format'] && $validationResult['valid_mx_records'] && $validationResult['valid_host']);
-			}
-			
+			}			
 			
 			return json_encode($json);
 		}
@@ -103,7 +101,7 @@
 			$email = trim($email);
 			
 			if ($timeout){
-				echoLine('		REACHER TIMEOUT: ' . $timeout);
+				echoLine('[REACHER] ' . $timeout, 'e');
 			}
 			
 			$exploded = explode('@', $email);
@@ -117,7 +115,7 @@
 			
 			if ($json = json_decode($json, true)){
 				if(php_sapi_name() == "cli"){
-					echoLine('	REACHER: ' . $email . ': ' . $json['is_reachable']);
+					echoLine('[REACHER] ' . $email . ': ' . $json['is_reachable'], 's');
 				}
 				
 				if ($json['is_reachable'] == 'verifier'){

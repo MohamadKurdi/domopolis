@@ -105,7 +105,6 @@ class Mail {
 		}
 
 
-
 		$transmission_id = $this->_send();
 
 		if ($double_logic){

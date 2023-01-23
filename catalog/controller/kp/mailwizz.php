@@ -19,13 +19,12 @@ class ControllerKPMailWizz extends Controller {
 
 
 	public function __construct($registry){
+		parent::__construct($registry);
 
-		if ($this->config->get('config_mailwizz_enable')){
+		if (!$this->config->get('config_mailwizz_enable')){
 			echoLine('[ControllerKPMailWizz] MailWizz is disabled!', 'i');
 			die();
 		}
-
-		parent::__construct($registry);
 
 		$this->db->query("UPDATE customer SET email = TRIM(email) WHERE 1");
 		$this->db->query("UPDATE customer SET utoken = md5(md5(concat(email,email))) WHERE 1");
