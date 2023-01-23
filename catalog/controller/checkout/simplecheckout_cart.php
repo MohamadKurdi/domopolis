@@ -103,6 +103,9 @@
             $this->data['in_stock_text_h4'] = $this->language->get('text_in_stock_' . $this->config->get('config_country_id'));
             $this->data['in_stock_text_h4']  .= ' ' . $this->model_catalog_product->parseStockTerm($this->config->get('config_delivery_instock_term'));            
             $this->data['text_not_in_stock_delivery_term'] = $this->model_catalog_product->parseStockTerm($this->config->get('config_delivery_outstock_term'));
+            $this->data['text_in_stock_delivery_term'] = $this->model_catalog_product->parseStockTerm($this->config->get('config_delivery_instock_term'));      
+            $this->data['text_line_delivery'] = $this->language->get('text_line_delivery');
+
             
             $products = $this->cart->getProducts();
             
