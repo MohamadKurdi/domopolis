@@ -109,7 +109,7 @@
 			$exploded = explode('@', $email);
 			$domain = array_pop($exploded);
 			
-			if (in_array($domain, $this->passReacherResults)){			
+			if (in_array($domain, $this->passReacherResults) || !$this->config->get('config_reacher_enable')){			
 				$json = $this->checkVerifier($email);
 				} else {
 				$json = $this->reacherVerify($email);
