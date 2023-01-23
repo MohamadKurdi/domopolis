@@ -3200,6 +3200,15 @@
 								</tr>
 
 								<tr>
+									<td>Нативный домен</td>
+									<td>
+										<input type="text" name="config_mailwizz_exclude_native" value="<?php echo $config_mailwizz_exclude_native; ?>" size="50" />
+										<br />
+										<span class="help">исключать мейлы с вхождением</span>								
+									</td>
+								</tr>
+
+								<tr>
 									<td>Количество дней</td>
 									<td>
 										<input type="number" name="config_mailwizz_noorder_days" value="<?php echo $config_mailwizz_noorder_days; ?>" step="1" />

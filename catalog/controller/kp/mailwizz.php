@@ -86,7 +86,6 @@ class ControllerKPMailWizz extends Controller {
 			$customer['firstname'] = substr($customer['email'], 0, strrpos($customer['email'], '@'));
 		}
 
-
 		$data = [
 			
 			//Базовая информация
@@ -132,8 +131,7 @@ class ControllerKPMailWizz extends Controller {
 
 	private function updateCustomerInList($customer, $field){
 		$customer_info = $this->prepareCustomerArray($customer);
-
-			//Да, так неправильно, нада вынести в инит, но так влом
+			
 		$endpoint = new EmsApi\Endpoint\ListSubscribers();	
 		if ($customer[$field . '_ema_uid']){
 
@@ -209,8 +207,13 @@ class ControllerKPMailWizz extends Controller {
 			$customerIDS[] = $row['customer_id'];
 		}						
 
-		foreach ($this->getCustomers($customerIDS) as $customer){
-				//Валидация почты вообще, если она невалидна, то пропускаем в принципе
+		foreach ($this->getCustomers($customerIDS) as $customer){	
+			if ($this->emailBlackList->native($customer['email'])){
+				echoLine('[ControllerKPMailWizz::cron] mail ' . $customer['email'] . ' native', 'w');
+				$this->db->query("DELETE FROM mailwizz_queue WHERE customer_id = '" . (int)$customer['customer_id'] . "'");
+				continue;
+			}
+
 			if ($this->emailBlackList->check($customer['email'])){
 				echoLine('[ControllerKPMailWizz::cron] mail ' . $customer['email'] . ' valid stage-1, continue', 's');
 
@@ -239,15 +242,9 @@ class ControllerKPMailWizz extends Controller {
 
 					}
 				} else {
-
 					echoLine('[ControllerKPMailWizz::cron] mail ' . $customer['email'] . ' invalid stage-2, moved to blacklist');
-
 				}
-
-
 			} else {
-
-					//Находится в блеклисте
 				if ($this->emailBlackList->blacklist_check($customer['email'])){
 					echoLine('[ControllerKPMailWizz::cron] mail ' . $customer['email'] . ' in blacklist', 'e');
 					foreach ($this->fieldsToConfigs as $field => $config){
@@ -257,7 +254,6 @@ class ControllerKPMailWizz extends Controller {
 				} else {
 					echoLine('[ControllerKPMailWizz::cron] mail ' . $customer['email'] . ' invalid, passing', 'w');
 				}
-
 			}
 
 			$this->db->query("DELETE FROM mailwizz_queue WHERE customer_id = '" . (int)$customer['customer_id'] . "'");

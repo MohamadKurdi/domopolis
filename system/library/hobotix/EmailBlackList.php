@@ -16,7 +16,8 @@
 		'ukr.net',
 		'bk.ru',
 		'list.ru',
-		'i.ua'
+		'i.ua',
+		'icloud.com'
 		];
 		
 		public function __construct($registry){
@@ -129,7 +130,7 @@
 				}
 				
 				if ($json['is_reachable'] == 'unknown'){
-					print_r($json);
+				//	print_r($json);
 					
 					if ($timeout){
 						if ($json['mx']['accepts_mail']){
@@ -187,6 +188,14 @@
 				
 			}
 			
+		}
+
+		public function native($email){
+			if ($this->config->get('config_mailwizz_exclude_native')){
+				return (strpos($email, $this->config->get('config_mailwizz_exclude_native')) !== false);
+			}	
+			
+			return false;		
 		}
 		
 		public function check($email){

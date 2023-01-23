@@ -2374,6 +2374,12 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_mailwizz_noorder_days'] = $this->config->get('config_mailwizz_noorder_days');
         }
+
+        if (isset($this->request->post['config_mailwizz_exclude_native'])) {
+            $this->data['config_mailwizz_exclude_native'] = $this->request->post['config_mailwizz_exclude_native'];
+        } else {
+            $this->data['config_mailwizz_exclude_native'] = $this->config->get('config_mailwizz_exclude_native');
+        }
         
         if (isset($this->request->post['config_smtp_host'])) {
             $this->data['config_smtp_host'] = $this->request->post['config_smtp_host'];
