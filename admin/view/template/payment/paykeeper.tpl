@@ -92,7 +92,7 @@
 							</select></td>
 						</tr>
 						<tr>
-							<td><?php echo $entry_status; ?></td>
+							<td>Статус фронта</td>
 							<td><select name="paykeeper_status">
 								<?php if ($paykeeper_status) { ?>
 									<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
@@ -103,6 +103,20 @@
 								<?php } ?>
 							</select></td>
 						</tr>
+
+						<tr>
+							<td>Статус админки</td>
+							<td><select name="paykeeper_status_fake">
+								<?php if ($paykeeper_status_fake) { ?>
+									<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+									<option value="0"><?php echo $text_disabled; ?></option>
+									<?php } else { ?>
+									<option value="1"><?php echo $text_enabled; ?></option>
+									<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+								<?php } ?>
+							</select></td>
+						</tr>
+
 						<tr>
 							<td><?php echo $entry_sort_order; ?></td>
 							<td><input type="text" name="paykeeper_sort_order" value="<?php echo $paykeeper_sort_order; ?>" size="1" /></td>
