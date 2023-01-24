@@ -2,11 +2,8 @@
 	
 	class ControllerCommonPopupCart extends Controller {
 		
-		public function coupon(){
-			
+		public function coupon(){			
 			if (isset($this->request->request['remove'])) {
-				
-				
 			}
 		}
 		
@@ -54,9 +51,7 @@
 				
 				foreach ($this->language->loadRetranslate('product/single') as $translationСode => $translationText){
 					$this->data[$translationСode] = $translationText;
-				}
-				
-				
+				}								
 				
 				// Totals
 				$this->load->model('setting/extension');
@@ -149,8 +144,7 @@
 					if ($product['price_national'] && $product['price_national'] > 0 && $product['currency'] == $this->currency->getCode()) {
 						$price = $this->currency->format($this->tax->calculate($product['price_national'], $product['tax_class_id'], $this->config->get('config_tax')), $product['currency'], 1);
 					}
-					
-					// Display prices
+										
 					if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
 						$total = $this->currency->format($this->tax->calculate($product['total'], $product['tax_class_id'], $this->config->get('config_tax')));
 						$total_national = $this->currency->format($product['total_national'], $this->config->get('config_regional_currency'), '1');
@@ -193,8 +187,10 @@
 				$this->data['text_not_in_stock_delivery_term'] = $this->model_catalog_product->parseStockTerm($this->config->get('config_delivery_outstock_term'));
 				$this->data['text_in_stock_delivery_term'] = $this->model_catalog_product->parseStockTerm($this->config->get('config_delivery_instock_term'));		
 				$this->data['text_line_delivery'] = $this->language->get('text_line_delivery');
-				
-				// Gift Voucher
+
+				$this->data['text_line_popupcart_promo_1'] = $this->language->get('text_line_popupcart_promo_1');
+				$this->data['text_line_popupcart_promo_2'] = $this->language->get('text_line_popupcart_promo_2');
+								
 				$this->data['vouchers'] = array();
 				
 				if (!empty($this->session->data['vouchers'])) {

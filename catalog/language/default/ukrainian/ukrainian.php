@@ -105,6 +105,9 @@ $_['text_products_pluralized'] = array('товар', 'товара', 'товар
 $_['text_bonus_application'] = 'Бонусы за встановлення додатку';
 $_['text_retranslate_term_5_7'] = '5-7 днів';
 
+$_['text_line_popupcart_promo_1'] = '5% знижка при оплаті онлайн';
+$_['text_line_popupcart_promo_2'] = "Безкоштовна доставка кур'єром по Києву від 5000 грн";
+
 $_['text_dt_in_stock'] = 'В наявності';
 $_['text_dt_preorder'] = 'Під замовлення';
 $_['text_dt_ask_stock'] = 'Наявність уточнюйте';
