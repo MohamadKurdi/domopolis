@@ -413,7 +413,7 @@ class PriceLogic
 
 	public function updateProductPriceToStoreInDatabase($product_id, $price, $store_id){
 
-		$field = $price;
+		$field = 'price';
 		if ($this->config->get('config_rainforest_delay_price_setting')){
 			$field = 'price_delayed';
 		}
