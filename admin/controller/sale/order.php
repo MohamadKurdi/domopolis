@@ -7119,8 +7119,8 @@
 				);
 				
 				$shipping_address = str_replace(array("\r\n", "\r", "\n"), ', ', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), ', ', trim(str_replace($find, $replace, $format))));
-				
-				if ($this->getPickupName($order_info['shipping_code'])){
+
+				if (strpos($order_info['shipping_code'], 'pickup') !== false && $this->getPickupName($order_info['shipping_code'])){
 					$order_info['shipping_address'] = 'Самовывоз';
 					$shipping_address = $this->getPickupName2($order_info['shipping_code']);														
 					$short_shipping_method = 'Самовывоз';
