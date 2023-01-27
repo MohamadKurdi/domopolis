@@ -30,6 +30,7 @@
 		"/hobotix/simpleProcess",
 		"/hobotix/ElasticSearch",
 		"/hobotix/CourierServices",
+		"/hobotix/OpenAIAdaptor",
 		"XML2Array"
 	],
 	"helpers":[

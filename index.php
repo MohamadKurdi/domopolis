@@ -383,6 +383,7 @@
 	$registry->set('emailBlackList', 	new hobotix\EmailBlackList($registry));	
 	$registry->set('elasticSearch', 	new hobotix\ElasticSearch($registry));		
 	$registry->set('courierServices', 	new hobotix\CourierServices($registry));
+	$registry->set('openaiAdaptor', 	new hobotix\OpenAIAdaptor($registry));
 	$registry->set('mAlert', 			new mAlert($registry));
 	$registry->set('smsQueue', 			new smsQueue($registry));	
 	$registry->set('shortAlias', 		new shortAlias($registry));	

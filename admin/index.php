@@ -80,6 +80,7 @@ require_once(DIR_SYSTEM . 'library/hobotix/CourierServices.php');
 require_once(DIR_SYSTEM . 'library/hobotix/EmailBlackList.php');
 require_once(DIR_SYSTEM . 'library/hobotix/RainforestAmazon.php');
 require_once(DIR_SYSTEM . 'library/hobotix/PricevaAdaptor.php');
+require_once(DIR_SYSTEM . 'library/hobotix/OpenAIAdaptor.php');
 require_once(DIR_SYSTEM . 'library/hobotix/simpleProcess.php');
 require_once(DIR_SYSTEM . 'library/hobotix/YandexTranslator.php');	
 
@@ -259,6 +260,7 @@ $registry->set('emailBlackList', 	new hobotix\EmailBlackList($registry));
 $registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
 $registry->set('yandexTranslator', 	new hobotix\YandexTranslator($registry));
 $registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
+$registry->set('openaiAdaptor', 	new hobotix\OpenAIAdaptor($registry));
 
 $controller = new Front($registry);
 
