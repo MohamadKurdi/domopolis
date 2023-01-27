@@ -2988,6 +2988,202 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_telegram_bot_name'] = $this->config->get('config_telegram_bot_name');
         }
+
+        //OpenAI
+        if (isset($this->request->post['config_openai_enable'])) {
+            $this->data['config_openai_enable'] = $this->request->post['config_openai_enable'];
+        } else {
+            $this->data['config_openai_enable'] = $this->config->get('config_openai_enable');
+        }
+
+        if (isset($this->request->post['config_openai_api_key'])) {
+            $this->data['config_openai_api_key'] = $this->request->post['config_openai_api_key'];
+        } else {
+            $this->data['config_openai_api_key'] = $this->config->get('config_openai_api_key');
+        }
+
+        if (isset($this->request->post['config_openai_default_model'])) {
+            $this->data['config_openai_default_model'] = $this->request->post['config_openai_default_model'];
+        } else {
+            $this->data['config_openai_default_model'] = $this->config->get('config_openai_default_model');
+        }
+
+        if (isset($this->request->post['config_openai_enable_category_descriptions'])) {
+            $this->data['config_openai_enable_category_descriptions'] = $this->request->post['config_openai_enable_category_descriptions'];
+        } else {
+            $this->data['config_openai_enable_category_descriptions'] = $this->config->get('config_openai_enable_category_descriptions');
+        }
+
+        if (isset($this->request->post['config_openai_category_descriptions_model'])) {
+            $this->data['config_openai_category_descriptions_model'] = $this->request->post['config_openai_category_descriptions_model'];
+        } else {
+            $this->data['config_openai_category_descriptions_model'] = $this->config->get('config_openai_category_descriptions_model');
+        }
+
+        if (isset($this->request->post['config_openai_category_descriptions_maxtokens'])) {
+            $this->data['config_openai_category_descriptions_maxtokens'] = $this->request->post['config_openai_category_descriptions_maxtokens'];
+        } else {
+            $this->data['config_openai_category_descriptions_maxtokens'] = $this->config->get('config_openai_category_descriptions_maxtokens');
+        }
+
+        if (isset($this->request->post['config_openai_category_descriptions_temperature'])) {
+            $this->data['config_openai_category_descriptions_temperature'] = $this->request->post['config_openai_category_descriptions_temperature'];
+        } else {
+            $this->data['config_openai_category_descriptions_temperature'] = $this->config->get('config_openai_category_descriptions_temperature');
+        }
+
+        if (isset($this->request->post['config_openai_category_descriptions_top_p'])) {
+            $this->data['config_openai_category_descriptions_top_p'] = $this->request->post['config_openai_category_descriptions_top_p'];
+        } else {
+            $this->data['config_openai_category_descriptions_top_p'] = $this->config->get('config_openai_category_descriptions_top_p');
+        }
+
+        if (isset($this->request->post['config_openai_category_descriptions_freq_penalty'])) {
+            $this->data['config_openai_category_descriptions_freq_penalty'] = $this->request->post['config_openai_category_descriptions_freq_penalty'];
+        } else {
+            $this->data['config_openai_category_descriptions_freq_penalty'] = $this->config->get('config_openai_category_descriptions_freq_penalty');
+        }
+
+        if (isset($this->request->post['config_openai_category_descriptions_presence_penalty'])) {
+            $this->data['config_openai_category_descriptions_presence_penalty'] = $this->request->post['config_openai_category_descriptions_presence_penalty'];
+        } else {
+            $this->data['config_openai_category_descriptions_presence_penalty'] = $this->config->get('config_openai_category_descriptions_presence_penalty');
+        }
+
+        if (isset($this->request->post['config_openai_enable_shorten_names'])) {
+            $this->data['config_openai_enable_shorten_names'] = $this->request->post['config_openai_enable_shorten_names'];
+        } else {
+            $this->data['config_openai_enable_shorten_names'] = $this->config->get('config_openai_enable_shorten_names');
+        }
+
+        if (isset($this->request->post['config_openai_shortennames_model'])) {
+            $this->data['config_openai_shortennames_model'] = $this->request->post['config_openai_shortennames_model'];
+        } else {
+            $this->data['config_openai_shortennames_model'] = $this->config->get('config_openai_shortennames_model');
+        }
+
+        if (isset($this->request->post['config_openai_shortennames_maxtokens'])) {
+            $this->data['config_openai_shortennames_maxtokens'] = $this->request->post['config_openai_shortennames_maxtokens'];
+        } else {
+            $this->data['config_openai_shortennames_maxtokens'] = $this->config->get('config_openai_shortennames_maxtokens');
+        }
+
+        if (isset($this->request->post['config_openai_shortennames_length'])) {
+            $this->data['config_openai_shortennames_length'] = $this->request->post['config_openai_shortennames_length'];
+        } else {
+            $this->data['config_openai_shortennames_length'] = $this->config->get('config_openai_shortennames_length');
+        }
+
+        if (isset($this->request->post['config_openai_shortennames_maxtokens'])) {
+            $this->data['config_openai_shortennames_maxtokens'] = $this->request->post['config_openai_shortennames_maxtokens'];
+        } else {
+            $this->data['config_openai_shortennames_maxtokens'] = $this->config->get('config_openai_shortennames_maxtokens');
+        }
+
+        if (isset($this->request->post['config_openai_shortennames_temperature'])) {
+            $this->data['config_openai_shortennames_temperature'] = $this->request->post['config_openai_shortennames_temperature'];
+        } else {
+            $this->data['config_openai_shortennames_temperature'] = $this->config->get('config_openai_shortennames_temperature');
+        }
+
+        if (isset($this->request->post['config_openai_shortennames_top_p'])) {
+            $this->data['config_openai_shortennames_top_p'] = $this->request->post['config_openai_shortennames_top_p'];
+        } else {
+            $this->data['config_openai_shortennames_top_p'] = $this->config->get('config_openai_shortennames_top_p');
+        }
+
+        if (isset($this->request->post['config_openai_shortennames_freq_penalty'])) {
+            $this->data['config_openai_shortennames_freq_penalty'] = $this->request->post['config_openai_shortennames_freq_penalty'];
+        } else {
+            $this->data['config_openai_shortennames_freq_penalty'] = $this->config->get('config_openai_shortennames_freq_penalty');
+        }
+
+        if (isset($this->request->post['config_openai_shortennames_presence_penalty'])) {
+            $this->data['config_openai_shortennames_presence_penalty'] = $this->request->post['config_openai_shortennames_presence_penalty'];
+        } else {
+            $this->data['config_openai_shortennames_presence_penalty'] = $this->config->get('config_openai_shortennames_presence_penalty');
+        }
+
+        if (isset($this->request->post['config_openai_enable_export_names'])) {
+            $this->data['config_openai_enable_export_names'] = $this->request->post['config_openai_enable_export_names'];
+        } else {
+            $this->data['config_openai_enable_export_names'] = $this->config->get('config_openai_enable_export_names');
+        }
+
+        if (isset($this->request->post['config_openai_exportnames_model'])) {
+            $this->data['config_openai_exportnames_model'] = $this->request->post['config_openai_exportnames_model'];
+        } else {
+            $this->data['config_openai_exportnames_model'] = $this->config->get('config_openai_exportnames_model');
+        }
+
+        if (isset($this->request->post['config_openai_exportnames_maxtokens'])) {
+            $this->data['config_openai_exportnames_maxtokens'] = $this->request->post['config_openai_exportnames_maxtokens'];
+        } else {
+            $this->data['config_openai_exportnames_maxtokens'] = $this->config->get('config_openai_exportnames_maxtokens');
+        }
+
+        if (isset($this->request->post['config_openai_exportnames_length'])) {
+            $this->data['config_openai_exportnames_length'] = $this->request->post['config_openai_exportnames_length'];
+        } else {
+            $this->data['config_openai_exportnames_length'] = $this->config->get('config_openai_exportnames_length');
+        }
+
+        if (isset($this->request->post['config_openai_exportnames_maxtokens'])) {
+            $this->data['config_openai_exportnames_maxtokens'] = $this->request->post['config_openai_exportnames_maxtokens'];
+        } else {
+            $this->data['config_openai_exportnames_maxtokens'] = $this->config->get('config_openai_exportnames_maxtokens');
+        }
+
+        if (isset($this->request->post['config_openai_exportnames_temperature'])) {
+            $this->data['config_openai_exportnames_temperature'] = $this->request->post['config_openai_exportnames_temperature'];
+        } else {
+            $this->data['config_openai_exportnames_temperature'] = $this->config->get('config_openai_exportnames_temperature');
+        }
+
+        if (isset($this->request->post['config_openai_exportnames_top_p'])) {
+            $this->data['config_openai_exportnames_top_p'] = $this->request->post['config_openai_exportnames_top_p'];
+        } else {
+            $this->data['config_openai_exportnames_top_p'] = $this->config->get('config_openai_exportnames_top_p');
+        }
+
+        if (isset($this->request->post['config_openai_exportnames_freq_penalty'])) {
+            $this->data['config_openai_exportnames_freq_penalty'] = $this->request->post['config_openai_exportnames_freq_penalty'];
+        } else {
+            $this->data['config_openai_exportnames_freq_penalty'] = $this->config->get('config_openai_exportnames_freq_penalty');
+        }
+
+        if (isset($this->request->post['config_openai_exportnames_presence_penalty'])) {
+            $this->data['config_openai_exportnames_presence_penalty'] = $this->request->post['config_openai_exportnames_presence_penalty'];
+        } else {
+            $this->data['config_openai_exportnames_presence_penalty'] = $this->config->get('config_openai_exportnames_presence_penalty');
+        }
+
+
+         foreach ($this->data['languages'] as $openai_language) {
+            if (isset($this->request->post['config_openai_category_descriptions_query_' . $openai_language['code']])) {
+                $this->data['config_openai_category_descriptions_query_' . $openai_language['code']] = $this->request->post['config_openai_category_descriptions_query_' . $openai_language['code']];
+            } else {
+                $this->data['config_openai_category_descriptions_query_' . $openai_language['code']] = $this->config->get('config_openai_category_descriptions_query_' . $openai_language['code']);
+            }
+
+            if (isset($this->request->post['config_openai_shortennames_query_' . $openai_language['code']])) {
+                $this->data['config_openai_shortennames_query_' . $openai_language['code']] = $this->request->post['config_openai_shortennames_query_' . $openai_language['code']];
+            } else {
+                $this->data['config_openai_shortennames_query_' . $openai_language['code']] = $this->config->get('config_openai_shortennames_query_' . $openai_language['code']);
+            }
+
+            if (isset($this->request->post['config_openai_exportnames_query_' . $openai_language['code']])) {
+                $this->data['config_openai_exportnames_query_' . $openai_language['code']] = $this->request->post['config_openai_exportnames_query_' . $openai_language['code']];
+            } else {
+                $this->data['config_openai_exportnames_query_' . $openai_language['code']] = $this->config->get('config_openai_exportnames_query_' . $openai_language['code']);
+            }
+        }
+
+
+        if ($this->openaiAdaptor->OpenAI){
+            $this->data['openai_models_list'] = json_decode($this->openaiAdaptor->OpenAI->listModels(), true);
+            $this->data['openai_models_list'] = $this->data['openai_models_list']['data'];          
+        }
         
 
             //RNF
