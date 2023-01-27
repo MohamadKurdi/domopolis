@@ -5,6 +5,28 @@ class ControllerCatalogShortNames extends Controller {
 		$this->getList();
 	}
 
+	public function shortbyai(){
+		$name 			= $this->request->post['name'];
+		$language_code 	= $this->request->post['language_code'];
+
+		if ($result = $this->openaiAdaptor->shortenName($name, $language_code)){
+			$this->response->setOutput($result);
+		} else {
+			$this->response->setOutput('');
+		}
+	}
+
+	public function exportbyai(){
+		$name 			= $this->request->post['name'];
+		$language_code 	= $this->request->post['language_code'];
+
+		if ($result = $this->openaiAdaptor->exportName($name, $language_code)){
+			$this->response->setOutput($result);
+		} else {
+			$this->response->setOutput('');
+		}
+	}
+
 	protected function getList() {
 		$this->load->language('report/product_viewed');			
 		$this->document->setTitle('Редактор экспортных наименований товаров');

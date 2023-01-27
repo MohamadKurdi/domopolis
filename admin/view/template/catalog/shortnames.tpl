@@ -1,14 +1,28 @@
 <?php echo $header; ?>
 <style>
     .red{
-        color:#ef5e67;
+        background-color:#ef5e67;
     }
     .orange{
-        color:#ff7f00;
+        background-color:#ff7f00;
     }
     .green{
+        background-color:#00ad07;
+    }    
+    .black{
+         background-color:#353740;
+    }
+
+    .text-red{
+        color:#ef5e67;
+    }
+    .text-orange{
+        color:#ff7f00;
+    }
+    .text-green{
         color:#00ad07;
     }
+
     input.process, textarea.process{
         border:2px solid #ff7f00;
         background-color: #ead985;
@@ -16,6 +30,14 @@
     input.finished, textarea.finished{
         border:2px solid #00ad07;
         background-color: #e9ece6;
+    }
+
+    span.smallbutton{
+        padding:3px 5px;
+        display:inline-block;
+        margin-right:10px;
+        color:white;
+        cursor:pointer;
     }
 </style>
 <div id="content">
@@ -62,30 +84,64 @@
                                 </td>
                                 <td class="left">
                                     <div>
-                                        <img src="view/image/flags/<?php echo $native_language['image']; ?>" title="<?php echo $native_language['name']; ?>" />
-                                        <textarea style="width:90%" rows="3" class="native_name_textarea" name="native_name_<?php echo $product['product_id']; ?>" data-product-id="<?php echo $product['product_id']; ?>" data-language-id="<?php echo $native_language['language_id']; ?>" data-name="full"><?php echo $product['native_name']; ?></textarea>
-                                      
-                                        <i class="fa fa-copy <?php if (mb_strlen($product['native_name']) <= 50) { ?>green<?php } else { ?>red<?php } ?>" onclick="copy('native', <?php echo $product['product_id']; ?>)"></i>
+                                        <div style="text-align: left; height:25px;">
+                                            <img src="view/image/flags/<?php echo $native_language['image']; ?>" title="<?php echo $native_language['name']; ?>" />                                          
+
+                                           <?php if (false && mb_strlen($product['native_name']) >= $this->config->get('config_openai_shortennames_length') && $this->config->get('config_openai_enable_shorten_names')) { ?>   
+                                               <span class="smallbutton black" onclick="shortenbyai('native', '<?php echo $native_language['code']; ?>', <?php echo $product['product_id']; ?>)">🤖 AI до <?php echo $this->config->get('config_openai_shortennames_length'); ?> символов</span>
+                                           <?php } ?>
+                                       </div>
+                                        
+                                        <textarea style="width:98%" rows="3" class="native_name_textarea" name="native_name_<?php echo $product['product_id']; ?>" data-product-id="<?php echo $product['product_id']; ?>" data-language-id="<?php echo $native_language['language_id']; ?>" data-name="full"><?php echo $product['native_name']; ?></textarea>                                        
                                     </div>
 
                                     <div>
-                                        <img src="view/image/flags/<?php echo $amazon_language['image']; ?>" title="<?php echo $amazon_language['name']; ?>" />
-                                        <textarea style="width:90%" rows="3" class="amazon_name_textarea" name="amazon_name_<?php echo $product['product_id']; ?>" data-product-id="<?php echo $product['product_id']; ?>" data-language-id="<?php echo $amazon_language['language_id']; ?>" data-name="full"><?php echo $product['amazon_name']; ?></textarea>
+                                        <div style="text-align: left;">
+                                            <img src="view/image/flags/<?php echo $amazon_language['image']; ?>" title="<?php echo $amazon_language['name']; ?>" />
 
-                                       <i class="fa fa-copy <?php if (mb_strlen($product['amazon_name']) <= 50) { ?>green<?php } else { ?>red<?php } ?>" onclick="copy('amazon', <?php echo $product['product_id']; ?>)"></i>
+                                              <?php if ( false && mb_strlen($product['amazon_name']) >= $this->config->get('config_openai_shortennames_length') && $this->config->get('config_openai_enable_shorten_names')) { ?>   
+                                               <span class="smallbutton black" onclick="shortenbyai('amazon', '<?php echo $amazon_language['code']; ?>', <?php echo $product['product_id']; ?>)">🤖 AI до <?php echo $this->config->get('config_openai_shortennames_length'); ?> символов</span>
+                                             <?php } ?>                                  
+                                            </div>
+
+                                           <textarea style="width:98%" rows="3" class="amazon_name_textarea" name="amazon_name_<?php echo $product['product_id']; ?>" data-product-id="<?php echo $product['product_id']; ?>" data-language-id="<?php echo $amazon_language['language_id']; ?>" data-name="full"><?php echo $product['amazon_name']; ?></textarea>
                                     </div>
                                 </td>
+
+
                                 <td class="left">
                                     <div style="margin-bottom:10px;">
-                                        <img src="view/image/flags/<?php echo $native_language['image']; ?>" title="<?php echo $native_language['name']; ?>" />
-                                        <input type="text" style="width:90%" maxlength="50" class="native_short_name_input" name="native_short_name_<?php echo $product['product_id']; ?>" data-product-id="<?php echo $product['product_id']; ?>" data-language-id="<?php echo $native_language['language_id']; ?>" data-name="short" value="<?php echo $product['native_short_name']; ?>" />
+                                        <div style="text-align: left; height:30px;">
+                                            <img src="view/image/flags/<?php echo $native_language['image']; ?>" title="<?php echo $native_language['name']; ?>" />
+
+                                              <span class="smallbutton <?php if (mb_strlen($product['native_name']) <= $this->config->get('config_openai_exportnames_length')) { ?>green<?php } else { ?>red<?php } ?>" onclick="copy('native', <?php echo $product['product_id']; ?>)">
+                                               <i class="fa fa-copy"></i>Копировать из полного
+                                           </span>
+
+                                           <?php if (mb_strlen($product['native_name']) >= $this->config->get('config_openai_exportnames_length') && $this->config->get('config_openai_enable_export_names')) { ?>   
+                                             <span class="smallbutton black" onclick="exportbyai($(this), 'native', '<?php echo $amazon_language['code']; ?>', <?php echo $product['product_id']; ?>)">🤖 AI до <?php echo $this->config->get('config_openai_exportnames_length'); ?> символов</span><span></span>
+                                         <?php } ?> 
+                                        </div>
+                                        
+                                        <input type="text" style="width:98%" maxlength="50" class="native_short_name_input" name="native_short_name_<?php echo $product['product_id']; ?>" data-product-id="<?php echo $product['product_id']; ?>" data-language-id="<?php echo $native_language['language_id']; ?>" data-name="short" value="<?php echo $product['native_short_name']; ?>" />
 
                                         <br /><small id="native_short_name_length_<?php echo $product['product_id']; ?>"> <?php echo mb_strlen($product['native_short_name']); ?> символов</small>
                                     </div>
 
                                     <div>
-                                        <img src="view/image/flags/<?php echo $amazon_language['image']; ?>" title="<?php echo $amazon_language['name']; ?>" />
-                                        <input type="text" style="width:90%" maxlength="50" class="amazon_short_name_input" name="amazon_short_name_<?php echo $product['product_id']; ?>" data-product-id="<?php echo $product['product_id']; ?>" data-language-id="<?php echo $amazon_language['language_id']; ?>" data-name="short" value="<?php echo $product['amazon_short_name']; ?>" />
+                                        <div style="text-align: left; height:30px;">
+                                            <img src="view/image/flags/<?php echo $amazon_language['image']; ?>" title="<?php echo $amazon_language['name']; ?>" />
+
+                                            <span class="smallbutton <?php if (mb_strlen($product['amazon_name']) <= $this->config->get('config_openai_exportnames_length')) { ?>green<?php } else { ?>red<?php } ?>" onclick="copy('amazon', <?php echo $product['product_id']; ?>)">
+                                             <i class="fa fa-copy"></i>Копировать из полного                                               
+                                         </span>
+
+                                         <?php if (mb_strlen($product['amazon_name']) >= $this->config->get('config_openai_exportnames_length') && $this->config->get('config_openai_enable_export_names')) { ?>   
+                                             <span class="smallbutton black" onclick="exportbyai($(this), 'amazon', '<?php echo $amazon_language['code']; ?>', <?php echo $product['product_id']; ?>)">🤖 AI до <?php echo $this->config->get('config_openai_exportnames_length'); ?> символов</span><span></span>
+                                         <?php } ?> 
+                                     </div>
+
+                                        <input type="text" style="width:98%" maxlength="50" class="amazon_short_name_input" name="amazon_short_name_<?php echo $product['product_id']; ?>" data-product-id="<?php echo $product['product_id']; ?>" data-language-id="<?php echo $amazon_language['language_id']; ?>" data-name="short" value="<?php echo $product['amazon_short_name']; ?>" />
 
                                         <br /><small id="amazon_short_name_length_<?php echo $product['product_id']; ?>"> <?php echo mb_strlen($product['amazon_short_name']); ?> символов</small>
                                     </div>
@@ -105,6 +161,61 @@
 </div>  
 
 <script>
+
+    function shortenbyai(elem, type, language_code, product_id){
+        let from            = $('textarea[name='+ type + '_name_' + product_id + ']');
+        let to              = $('input[name='+ type + '_short_name_' + product_id + ']');
+        let name            = from.val();
+
+        $.ajax({
+            url: 'index.php?route=catalog/shortnames/shortbyai&token=<?php echo $token; ?>',
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                name: name,
+                language_code: language_code
+            },
+            success: function(text) {
+                to.val(text);
+                recount(type, product_id);
+
+                if (text.length > 0 && text.length <= 50){
+                    save(to);
+                }
+            }
+        });
+    }
+
+    function exportbyai(elem, type, language_code, product_id){
+        let from            = $('textarea[name='+ type + '_name_' + product_id + ']');
+        let to              = $('input[name='+ type + '_short_name_' + product_id + ']');
+        let name            = from.val();
+
+        $.ajax({
+            url: 'index.php?route=catalog/shortnames/exportbyai&token=<?php echo $token; ?>',
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                name: name,
+                language_code: language_code
+            },
+            success: function(text) {
+                to.val(text);
+                recount(type, product_id);
+
+                if (text.length > 0 && text.length <= 50){
+                    save(to);
+                }
+            },
+            beforeSend: function(){
+                elem.next().html('<i class="fa fa-spinner fa-spin"></i>');
+            },
+            complete: function(){
+                elem.next().html('<i class="fa fa-check"></i>');
+            }
+        });
+    }
+
     function copy(type, product_id){
         let from    = $('textarea[name='+ type + '_name_' + product_id + ']');
         let to      = $('input[name='+ type + '_short_name_' + product_id + ']');
@@ -148,9 +259,9 @@
 
        counter_span.text(length + ' символов');
         if (length > 0 && length <= 50){
-            counter_span.removeClass('red, green').addClass('green');
+            counter_span.removeClass('text-red, text-green').addClass('text-green');
         } else {
-            counter_span.removeClass('red, green').addClass('red');
+            counter_span.removeClass('text-red, text-green').addClass('text-red');
         }
     }
 
