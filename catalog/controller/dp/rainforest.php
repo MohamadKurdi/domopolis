@@ -1312,6 +1312,18 @@ class ControllerDPRainForest extends Controller {
 		$this->db->query("OPTIMIZE TABLE product_attribute");
 	}
 
+	/*
+	Фиксит названия товаров при помощи openAI
+	*/
+	public function fixnamesai(){	
+		if (!$this->config->get('config_openai_enable_shorten_names')){
+			die('RNF API NOT ENABLED');
+		}
+
+
+		$this->openaiAdaptor->shortenName('Кімнатний фонтан з підсвічуванням Висота під камінь 17 см Дизайн Дизайн по фен-шуй Фонтан Фонтан з насосом (1 світлодіодний фонтан Design6)', 'uk');	
+	}
+
 
 	/*
 	Фиксит названия товаров функцией normalizeProductName из InfoUpdater

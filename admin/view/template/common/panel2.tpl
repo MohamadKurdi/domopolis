@@ -157,8 +157,20 @@
 				</div>
 
 				<div class="tile-block">
+					<div class="tile info-loader unknown" data-path="common/panel/getOpenAIInfo" data-update-interval="300000">
+						<div class="tile-heading">🤖 OpenAI API</div>
+						<div class="tile-body"><i class="fa fa-refresh"></i>
+							<span class="tile-result small"></span>
+						</div>
+						<div class="tile-footer">
+							Всякие умные штуки
+						</div>
+					</div>
+				</div>
+
+				<div class="tile-block">
 					<div class="tile info-loader unknown" data-path="common/panel/getYandexTranslateInfo" data-update-interval="600000">
-						<div class="tile-heading">Yandex Cloud API</div>
+						<div class="tile-heading">🤖 Yandex Cloud API</div>
 						<div class="tile-body"><i class="fa fa-refresh"></i>
 							<span class="tile-result small"></span>
 						</div>
