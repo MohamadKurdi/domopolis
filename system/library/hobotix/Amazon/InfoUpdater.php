@@ -117,7 +117,8 @@ class InfoUpdater extends RainforestRetriever
 	}
 	
 	public function normalizeProductName($name){
-		echoLine('[InfoUpdater] In: ' . $name);
+		echoLine('[InfoUpdater::normalizeProductName] New name: ' . $name, 'w');
+		
 		//Убираем все кавычки, и другие непонятные спецсимволы, из-за них потом проблемы
 		$name = str_replace(['"', ',,', '?', '()', '( )'], '', $name);
 
@@ -286,8 +287,7 @@ class InfoUpdater extends RainforestRetriever
 		//Первая буква - большая, функция своя, в хелпере utf8
 		$name = \mb_ucfirst($name);
 
-		echoLine('[InfoUpdater] Out: ' . $name);
-		echoLine('');
+		echoLine('[InfoUpdater::normalizeProductName] New name: ' . $name, 's');		
 
 		return $name;
 	}
