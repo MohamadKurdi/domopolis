@@ -203,17 +203,23 @@ class productModelEdit extends hoboModel{
 		foreach ($data as $language_id => $value) {
 			$this->db->query("INSERT INTO product_description SET 
 				name 				= '" . $this->db->escape($value['name']) . "',				
+				short_name_d		= '" . $this->db->escape($value['short_name_d']) . "',
 				translated 			= '" . (int)$value['translated'] . "',
 				product_id 			= '" . (int)$product_id . "',
 				language_id 		= '" . (int)$language_id . "'
 				ON DUPLICATE KEY UPDATE
-				name 				= '" . $this->db->escape($value['name']) . "',				
+				name 				= '" . $this->db->escape($value['name']) . "',
+				short_name_d		= '" . $this->db->escape($value['short_name_d']) . "',				
 				translated 			= '" . (int)$value['translated'] . "'");
 		}
 	}
 
 	public function updateProductName($product_id, $data){
 		$this->db->query("UPDATE product_description SET name = '" . $this->db->escape($data['name']) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$data['language_id'] . "'");
+	}
+
+	public function updateProductShortName($product_id, $data){
+		$this->db->query("UPDATE product_description SET name = '" . $this->db->escape($data['short_name_d']) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$data['language_id'] . "'");
 	}
 
 	public function updateProductAttribute($product_id, $data){

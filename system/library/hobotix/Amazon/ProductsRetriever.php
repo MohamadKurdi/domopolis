@@ -1140,8 +1140,7 @@ class ProductsRetriever extends RainforestRetriever
 			return 0;
 		}	
 
-		if ($this->model_product_get->checkIfNameIsExcluded($data['name'], $data['category_id'])){
-			
+		if ($this->model_product_get->checkIfNameIsExcluded($data['name'], $data['category_id'])){		
 			$this->model_product_edit->deleteASINFromQueue($data['asin']);				
 			$this->model_product_edit->addAsinToIgnored($data['asin'], $data['name']);
 
@@ -1181,11 +1180,9 @@ class ProductsRetriever extends RainforestRetriever
 		}
 		
 		$this->db->query("DELETE FROM product_to_store WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("INSERT INTO product_to_store SET product_id = '" . (int)$product_id . "', store_id = '0'");
-				
+		$this->db->query("INSERT INTO product_to_store SET product_id = '" . (int)$product_id . "', store_id = '0'");				
 		$this->db->query("DELETE FROM product_to_category WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("INSERT INTO product_to_category SET product_id = '" . (int)$product_id . "', category_id = '" . (int)$data['category_id'] . "', main_category = 1");
-		
+		$this->db->query("INSERT INTO product_to_category SET product_id = '" . (int)$product_id . "', category_id = '" . (int)$data['category_id'] . "', main_category = 1");		
 		$this->db->query("DELETE FROM product_description WHERE product_id = '" . (int)$product_id . "'");
 
 		$product_name_data = [];		
@@ -1200,11 +1197,20 @@ class ProductsRetriever extends RainforestRetriever
 
 			$product_name_data[$language['language_id']] = [
 				'name' 			=> $name,
+				'short_name_d'  => '',
 				'translated' 	=> $translated
 			];
 
 			if ($language['code'] != $this->config->get('config_rainforest_source_language') && $name){
 				$product_name_data[$language['language_id']]['name'] = $this->registry->get('rainforestAmazon')->infoUpdater->normalizeProductName($name);
+			}
+
+			if ($this->config->get('config_openai_enable') && $this->config->get('config_openai_enable_shorten_names') && $this->config->get('config_rainforest_short_names_with_openai')){
+				$product_name_data[$language['language_id']]['name'] = $this->registry->get('openaiAdaptor')->shortenName($product_name_data[$language['language_id']]['name'], $language['code']);
+			}
+
+			if ($this->config->get('config_openai_enable') && $this->config->get('config_openai_enable_export_names') && $this->config->get('config_rainforest_export_names_with_openai')){
+				$product_name_data[$language['language_id']]['short_name_d'] = $this->registry->get('openaiAdaptor')->exportName($product_name_data[$language['language_id']]['name'], $language['code']);
 			}
 			
 			$this->model_product_edit->addProductNames($product_id, $product_name_data);
