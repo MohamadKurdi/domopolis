@@ -165,7 +165,11 @@
 		}
 		
 		public function escape($value) {
-			return $this->link->real_escape_string($value);
+			if (!empty($value)){
+				return $this->link->real_escape_string($value);	
+			}
+			
+			return $value;
 		}
 		
 		public function countAffected() {			
