@@ -38,6 +38,59 @@ final class OpenAIAdaptor
 		return false;
 	}
 
+	private function removeListFromResponse($text){
+		$result = [];
+		$array = prepareEOLArray($text);
+
+		foreach ($array as $line){
+			$line = preg_replace('/[0-9]/', '', $line);
+			$line = trim($line, ' .;,-"\'');
+			$result[] = $line;
+		}
+
+		return implode(PHP_EOL, $result);
+	}	
+
+	public function alternateNames($request){
+		if ($this->OpenAI && $this->config->get('config_openai_enable_category_alternatenames')){
+			$response = $this->OpenAI->completion([
+				'model' 			=> $this->config->get('config_openai_category_alternatenames_model'),
+				'prompt' 			=> $request,
+				'temperature' 		=> (float)$this->config->get('config_openai_category_alternatenames_temperature'),
+				'max_tokens' 		=> (int)$this->config->get('config_openai_category_alternatenames_maxtokens'),
+				'top_p' 			=> (float)$this->config->get('config_openai_category_alternatenames_top_p'),
+				'frequency_penalty' => (float)$this->config->get('config_openai_category_alternatenames_freq_penalty'),
+				'presence_penalty' 	=> (float)$this->config->get('config_openai_category_alternatenames_presence_penalty'),
+			]);
+
+			if ($text = $this->parseCompletionResponse($response)){
+				return $this->removeListFromResponse($text);
+			}
+		}
+
+		return $name;
+	}
+
+	public function categoryDescription($request){
+		if ($this->OpenAI && $this->config->get('config_openai_enable_category_descriptions')){
+			$response = $this->OpenAI->completion([
+				'model' 			=> $this->config->get('config_openai_category_descriptions_model'),
+				'prompt' 			=> $request,
+				'temperature' 		=> (float)$this->config->get('config_openai_category_descriptions_temperature'),
+				'max_tokens' 		=> (int)$this->config->get('config_openai_category_descriptions_maxtokens'),
+				'top_p' 			=> (float)$this->config->get('config_openai_category_descriptions_top_p'),
+				'frequency_penalty' => (float)$this->config->get('config_openai_category_descriptions_freq_penalty'),
+				'presence_penalty' 	=> (float)$this->config->get('config_openai_category_descriptions_presence_penalty'),
+			]);
+
+			if ($text = $this->parseCompletionResponse($response)){
+				return $text;
+			}
+		}
+
+		return $name;
+	}
+
 	public function shortenName($name, $language_code){
 		if ($this->OpenAI && $this->config->get('config_openai_shortennames_query_' . $language_code)){
 			$response = $this->OpenAI->completion([
@@ -73,8 +126,8 @@ final class OpenAIAdaptor
 			]);
 
 			if ($text = $this->parseCompletionResponse($response)){
-				echoLine('[OpenAIAdaptor::shortenName] Old name: ' . $name, 'w');
-				echoLine('[OpenAIAdaptor::shortenName] New name: ' . $text, 's');
+				echoLine('[OpenAIAdaptor::exportName] Old name: ' . $name, 'w');
+				echoLine('[OpenAIAdaptor::exportName] New name: ' . $text, 's');
 				return $text;
 			}
 		}
