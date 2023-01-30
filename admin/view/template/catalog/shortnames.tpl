@@ -84,11 +84,11 @@
                                 </td>
                                 <td class="left">
                                     <div>
-                                        <div style="text-align: left; height:25px;">
+                                        <div style="text-align: left; height:20px; margin-bottom:5px;">
                                             <img src="view/image/flags/<?php echo $native_language['image']; ?>" title="<?php echo $native_language['name']; ?>" />                                          
 
-                                           <?php if (false && mb_strlen($product['native_name']) >= $this->config->get('config_openai_shortennames_length') && $this->config->get('config_openai_enable_shorten_names')) { ?>   
-                                               <span class="smallbutton black" onclick="shortenbyai('native', '<?php echo $native_language['code']; ?>', <?php echo $product['product_id']; ?>)">🤖 AI до <?php echo $this->config->get('config_openai_shortennames_length'); ?> символов</span>
+                                           <?php if (mb_strlen($product['native_name']) >= $this->config->get('config_openai_shortennames_length') && $this->config->get('config_openai_enable_shorten_names')) { ?>   
+                                               <span class="smallbutton black" onclick="shortenbyai($(this), 'native', '<?php echo $native_language['code']; ?>', <?php echo $product['product_id']; ?>)">🤖 AI до <?php echo $this->config->get('config_openai_shortennames_length'); ?> символов</span><span></span>
                                            <?php } ?>
                                        </div>
                                         
@@ -96,11 +96,11 @@
                                     </div>
 
                                     <div>
-                                        <div style="text-align: left;">
+                                        <div style="text-align: left; height:20px; margin-bottom:5px; margin-top:5px;">
                                             <img src="view/image/flags/<?php echo $amazon_language['image']; ?>" title="<?php echo $amazon_language['name']; ?>" />
 
-                                              <?php if ( false && mb_strlen($product['amazon_name']) >= $this->config->get('config_openai_shortennames_length') && $this->config->get('config_openai_enable_shorten_names')) { ?>   
-                                               <span class="smallbutton black" onclick="shortenbyai('amazon', '<?php echo $amazon_language['code']; ?>', <?php echo $product['product_id']; ?>)">🤖 AI до <?php echo $this->config->get('config_openai_shortennames_length'); ?> символов</span>
+                                              <?php if (mb_strlen($product['amazon_name']) >= $this->config->get('config_openai_shortennames_length') && $this->config->get('config_openai_enable_shorten_names')) { ?>   
+                                               <span class="smallbutton black" onclick="shortenbyai($(this), 'amazon', '<?php echo $amazon_language['code']; ?>', <?php echo $product['product_id']; ?>)">🤖 AI до <?php echo $this->config->get('config_openai_shortennames_length'); ?> символов</span><span></span>
                                              <?php } ?>                                  
                                             </div>
 
@@ -164,7 +164,7 @@
 
     function shortenbyai(elem, type, language_code, product_id){
         let from            = $('textarea[name='+ type + '_name_' + product_id + ']');
-        let to              = $('input[name='+ type + '_short_name_' + product_id + ']');
+        let to              = $('textarea[name='+ type + '_name_' + product_id + ']');
         let name            = from.val();
 
         $.ajax({
@@ -179,9 +179,15 @@
                 to.val(text);
                 recount(type, product_id);
 
-                if (text.length > 0 && text.length <= 50){
+                if (text.length > 0 && text.length <= <?php echo $this->config->get('config_openai_shortennames_length'); ?>){
                     save(to);
                 }
+            },
+            beforeSend: function(){
+                elem.next().html('<i class="fa fa-spinner fa-spin"></i>');
+            },
+            complete: function(){
+                elem.next().html('<i class="fa fa-check"></i>');
             }
         });
     }
@@ -201,9 +207,8 @@
             },
             success: function(text) {
                 to.val(text);
-                recount(type, product_id);
 
-                if (text.length > 0 && text.length <= 50){
+                if (text.length > 0 && text.length <= <?php echo $this->config->get('config_openai_exportnames_length'); ?>){
                     save(to);
                 }
             },
@@ -258,7 +263,7 @@
        let counter_span     = $('small#'+ type + '_short_name_length_' + product_id);
 
        counter_span.text(length + ' символов');
-        if (length > 0 && length <= 50){
+        if (length > 0 && length <= <?php echo $this->config->get('config_openai_exportnames_length'); ?>){
             counter_span.removeClass('text-red, text-green').addClass('text-green');
         } else {
             counter_span.removeClass('text-red, text-green').addClass('text-red');
