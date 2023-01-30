@@ -361,10 +361,10 @@ $registry->set('length',            new Length($registry));
 $registry->set('cart',              new Cart($registry));
 $registry->set('user',              new User($registry)); 
 $registry->set('yandexTranslator',  new hobotix\YandexTranslator($registry));
+$registry->set('openaiAdaptor',     new hobotix\OpenAIAdaptor($registry));
 $registry->set('rainforestAmazon',  new hobotix\RainforestAmazon($registry));
 $registry->set('pricevaAdaptor',    new hobotix\PricevaAdaptor($registry));
 $registry->set('courierServices',   new hobotix\CourierServices($registry));
-$registry->set('openaiAdaptor',     new hobotix\OpenAIAdaptor($registry));
 $registry->set('encryption',        new Encryption($registry->get('config')->get('config_encryption')));
 
 

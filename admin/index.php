@@ -257,10 +257,10 @@ $registry->set('pushQueue', 		new pushQueue($registry));
 $registry->set('simpleProcess', 	new hobotix\simpleProcess());
 $registry->set('courierServices', 	new hobotix\CourierServices($registry));
 $registry->set('emailBlackList', 	new hobotix\EmailBlackList($registry));
-$registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
-$registry->set('yandexTranslator', 	new hobotix\YandexTranslator($registry));
-$registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
 $registry->set('openaiAdaptor', 	new hobotix\OpenAIAdaptor($registry));
+$registry->set('yandexTranslator', 	new hobotix\YandexTranslator($registry));
+$registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
+$registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
 
 $controller = new Front($registry);
 
