@@ -17,6 +17,26 @@ class ControllerCatalogCategory extends Controller {
 		$this->getList();
 	}
 
+	public function descriptionbyai(){
+		$request = $this->request->post['request'];
+
+		if ($result = $this->openaiAdaptor->categoryDescription($request)){
+			$this->response->setOutput($result);
+		} else {
+			$this->response->setOutput('');
+		}
+	}
+
+	public function alternatenamesbyai(){
+		$request = $this->request->post['request'];
+
+		if ($result = $this->openaiAdaptor->alternateNames($request)){
+			$this->response->setOutput($result);
+		} else {
+			$this->response->setOutput('');
+		}
+	}
+
 	public function insert() {
 		$this->language->load('catalog/category');
 
@@ -536,6 +556,30 @@ class ControllerCatalogCategory extends Controller {
 			}
 		}
 
+		$this->data['openai_category_descripion_requests'] = [];
+		$this->data['openai_alternatenames_requests'] = [];
+		
+		foreach ($this->data['languages'] as $language){
+			if (isset($this->data['category_description'][$language['language_id']])){
+				if ($this->config->get('config_openai_category_descriptions_query_' . $language['code'])){
+					${'config_openai_category_descriptions_query_' . $language['code']} = prepareEOLArray($this->config->get('config_openai_category_descriptions_query_' . $language['code']));
+					$this->data['openai_category_descripion_requests'][$language['code']] = [];
+
+					foreach (${'config_openai_category_descriptions_query_' . $language['code']} as $line){
+						$this->data['openai_category_descripion_requests'][$language['code']][] = sprintf($line, $this->data['category_description'][$language['language_id']]['name'], mb_strtoupper($language['code']));
+					}					 					
+				}
+
+				if ($this->config->get('config_openai_category_alternatenames_query_' . $language['code'])){
+					${'config_openai_category_alternatenames_query_' . $language['code']} = prepareEOLArray($this->config->get('config_openai_category_alternatenames_query_' . $language['code']));
+					$this->data['openai_alternatenames_requests'][$language['code']] = [];
+
+					foreach (${'config_openai_category_alternatenames_query_' . $language['code']} as $line){
+						$this->data['openai_alternatenames_requests'][$language['code']][] = sprintf($line, $this->data['category_description'][$language['language_id']]['name'], mb_strtoupper($language['code']));
+					}					 					
+				}
+			}
+		}
 
 		if (isset($this->request->post['path'])) {
 			$this->data['path'] = $this->request->post['path'];

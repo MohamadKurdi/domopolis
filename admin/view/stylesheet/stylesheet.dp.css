@@ -239,7 +239,7 @@ border-radius: 2px;}
 .btn-copy{
     background-color: #a9a9a9;
     color: #fff;
-    padding: 2px 15px;
+    padding: 5px 15px;
     border-radius: 3px 3px 0 0;
     cursor: pointer;
 	text-decoration: none;
@@ -247,7 +247,7 @@ border-radius: 2px;}
 .btn-translate{
     background-color: #1e90ff;
     color: #fff;
-    padding: 2px 15px;
+    padding: 5px 15px;
     border-radius: 3px 3px 0 0;
     cursor: pointer;
 	text-decoration: none;
