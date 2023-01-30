@@ -803,6 +803,68 @@
 							<?php } ?>
 						<?php } ?>
 
+						<tr>
+							<td colspan="3" class="left" style="color:#00ad07;">
+								<i class="fa fa-cogs"></i> <b>🤖 Интеграция с Open AI</b>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Экспортные названия
+							</td>
+							<td class="center">
+								<input id="config_rainforest_export_names_with_openai" type="checkbox" class="checkbox" name="config_rainforest_export_names_with_openai" <? if ($config_rainforest_export_names_with_openai){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_export_names_with_openai"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если OpenAI включен, то при добавлении товара будет автоматически создаваться название товара для экспортных документов, длиной не более 50 символов. Для расширенной настройки нужно изменять значения в настройках магазина, в разделе OpenAI.
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Длина экспортного названия
+							</td>
+							<td>
+								<input type="number" name="config_openai_exportnames_length" value="<?php echo $config_openai_exportnames_length; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Длина задается в символах
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Адекватные названия
+							</td>
+							<td class="center">
+								<input id="config_rainforest_short_names_with_openai" type="checkbox" class="checkbox" name="config_rainforest_short_names_with_openai" <? if ($config_rainforest_short_names_with_openai){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_short_names_with_openai"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если OpenAI включен, то при добавлении товара его название будет сокращено до 150 символов (можно изменить в настройках) при помощи OpenAI
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Длина адекватного названия
+							</td>
+							<td>
+								<input type="number" name="config_openai_shortennames_length" value="<?php echo $config_openai_shortennames_length; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Длина задается в символах
+								</span>
+							</td>
+						</tr>
+
 					</table>
 				</div>
 

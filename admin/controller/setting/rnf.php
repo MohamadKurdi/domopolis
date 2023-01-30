@@ -99,7 +99,11 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_enable_also_bought_adding',
 		'config_rainforest_enable_shop_by_look_adding',
 
-		'config_rainforest_source_language'
+		'config_rainforest_source_language',
+		'config_rainforest_export_names_with_openai',
+		'config_rainforest_short_names_with_openai',
+		'config_openai_shortennames_length',
+		'config_openai_exportnames_length'
 	];
 
 	private $pricing_settings = [
