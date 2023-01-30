@@ -29,6 +29,43 @@ class ControllerCommonPanel extends Controller {
 		$this->response->setOutput($this->render());			
 	}
 
+	public function getOpenAIInfo(){		
+		$body = '';
+		$class= 'good';
+
+		if ($this->config->get('config_openai_enable')){
+			try{
+				
+				$result = json_decode($this->openaiAdaptor->OpenAI->listModels(), true);
+
+				if (!empty($result['data'])){
+					$body = count($result['data']) . ' models';
+					$class= 'good';
+				} else {
+					$body  = serialize($result);
+					$class = 'bad';
+
+				}
+
+			} catch (\Exception $e) {
+				$body = $e->getMessage();
+				$class = 'bad';
+			}
+		}  else {
+
+			$body = 'OFF';
+			$class= 'warn';
+
+		}
+
+		$json = [
+			'body'  	=> $body,
+			'class' 	=> $class,
+		];
+
+		$this->response->setOutput(json_encode($json));	
+	}
+
 	public function getPricevaInfo(){
 		$store_id = (int)$this->request->get['store_id'];
 		$body = '';
@@ -53,16 +90,12 @@ class ControllerCommonPanel extends Controller {
 				$body = $e->getMessage();
 				$class = 'bad';
 			}
-
-
-
 		}  else {
 
 			$body = 'OFF';
 			$class= 'warn';
 
 		}
-
 
 		$json = [
 			'body'  	=> $body,
