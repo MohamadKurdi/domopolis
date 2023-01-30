@@ -3008,6 +3008,48 @@ class ControllerSettingSetting extends Controller
             $this->data['config_openai_default_model'] = $this->config->get('config_openai_default_model');
         }
 
+        if (isset($this->request->post['config_openai_enable_category_alternatenames'])) {
+            $this->data['config_openai_enable_category_alternatenames'] = $this->request->post['config_openai_enable_category_alternatenames'];
+        } else {
+            $this->data['config_openai_enable_category_alternatenames'] = $this->config->get('config_openai_enable_category_alternatenames');
+        }
+
+        if (isset($this->request->post['config_openai_category_alternatenames_model'])) {
+            $this->data['config_openai_category_alternatenames_model'] = $this->request->post['config_openai_category_alternatenames_model'];
+        } else {
+            $this->data['config_openai_category_alternatenames_model'] = $this->config->get('config_openai_category_alternatenames_model');
+        }
+
+        if (isset($this->request->post['config_openai_category_alternatenames_maxtokens'])) {
+            $this->data['config_openai_category_alternatenames_maxtokens'] = $this->request->post['config_openai_category_alternatenames_maxtokens'];
+        } else {
+            $this->data['config_openai_category_alternatenames_maxtokens'] = $this->config->get('config_openai_category_alternatenames_maxtokens');
+        }
+
+        if (isset($this->request->post['config_openai_category_alternatenames_temperature'])) {
+            $this->data['config_openai_category_alternatenames_temperature'] = $this->request->post['config_openai_category_alternatenames_temperature'];
+        } else {
+            $this->data['config_openai_category_alternatenames_temperature'] = $this->config->get('config_openai_category_alternatenames_temperature');
+        }
+
+        if (isset($this->request->post['config_openai_category_alternatenames_top_p'])) {
+            $this->data['config_openai_category_alternatenames_top_p'] = $this->request->post['config_openai_category_alternatenames_top_p'];
+        } else {
+            $this->data['config_openai_category_alternatenames_top_p'] = $this->config->get('config_openai_category_alternatenames_top_p');
+        }
+
+        if (isset($this->request->post['config_openai_category_alternatenames_freq_penalty'])) {
+            $this->data['config_openai_category_alternatenames_freq_penalty'] = $this->request->post['config_openai_category_alternatenames_freq_penalty'];
+        } else {
+            $this->data['config_openai_category_alternatenames_freq_penalty'] = $this->config->get('config_openai_category_alternatenames_freq_penalty');
+        }
+
+        if (isset($this->request->post['config_openai_category_alternatenames_presence_penalty'])) {
+            $this->data['config_openai_category_alternatenames_presence_penalty'] = $this->request->post['config_openai_category_alternatenames_presence_penalty'];
+        } else {
+            $this->data['config_openai_category_alternatenames_presence_penalty'] = $this->config->get('config_openai_category_alternatenames_presence_penalty');
+        }
+
         if (isset($this->request->post['config_openai_enable_category_descriptions'])) {
             $this->data['config_openai_enable_category_descriptions'] = $this->request->post['config_openai_enable_category_descriptions'];
         } else {
@@ -3160,6 +3202,12 @@ class ControllerSettingSetting extends Controller
 
 
          foreach ($this->data['languages'] as $openai_language) {
+            if (isset($this->request->post['config_openai_category_alternatenames_query_' . $openai_language['code']])) {
+                $this->data['config_openai_category_alternatenames_query_' . $openai_language['code']] = $this->request->post['config_openai_category_alternatenames_query_' . $openai_language['code']];
+            } else {
+                $this->data['config_openai_category_alternatenames_query_' . $openai_language['code']] = $this->config->get('config_openai_category_alternatenames_query_' . $openai_language['code']);
+            }
+
             if (isset($this->request->post['config_openai_category_descriptions_query_' . $openai_language['code']])) {
                 $this->data['config_openai_category_descriptions_query_' . $openai_language['code']] = $this->request->post['config_openai_category_descriptions_query_' . $openai_language['code']];
             } else {
@@ -3413,6 +3461,18 @@ class ControllerSettingSetting extends Controller
             $this->data['config_rainforest_root_categories'] = $this->request->post['config_rainforest_root_categories'];
         } else {
             $this->data['config_rainforest_root_categories'] = $this->config->get('config_rainforest_root_categories');
+        }
+
+        if (isset($this->request->post['config_rainforest_export_names_with_openai'])) {
+            $this->data['config_rainforest_export_names_with_openai'] = $this->request->post['config_rainforest_export_names_with_openai'];
+        } else {
+            $this->data['config_rainforest_export_names_with_openai'] = $this->config->get('config_rainforest_export_names_with_openai');
+        }
+
+        if (isset($this->request->post['config_rainforest_short_names_with_openai'])) {
+            $this->data['config_rainforest_short_names_with_openai'] = $this->request->post['config_rainforest_short_names_with_openai'];
+        } else {
+            $this->data['config_rainforest_short_names_with_openai'] = $this->config->get('config_rainforest_short_names_with_openai');
         }
 
         if (isset($this->request->post['config_rainforest_source_language'])) {

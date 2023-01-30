@@ -5070,6 +5070,34 @@
 										</div>
 
 									</td>
+
+									<td style="width:20%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">🤖 Экспортные названия с OpenAI</span></p>
+											<select name="config_rainforest_export_names_with_openai">
+												<?php if ($config_rainforest_export_names_with_openai) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">🤖 Адекватные названия с OpenAI</span></p>
+											<select name="config_rainforest_short_names_with_openai">
+												<?php if ($config_rainforest_short_names_with_openai) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+									</td>
 								</tr>
 
 								<tr>
@@ -5582,6 +5610,74 @@
 								</tr>
 							</table>
 
+							<h2>🤖 Альтернативные названия категорий для поиска</h2>
+							<table class="form">
+								<tr>
+									<td style="width:15%">	
+										<div>
+											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Включить</span></p>
+											<select name="config_openai_enable_category_alternatenames">
+												<?php if ($config_openai_enable_category_alternatenames) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>									
+										</div>
+										<div>
+											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Модель</span></p>
+											<select name="config_openai_category_alternatenames_model">
+												<?php foreach ($openai_models_list as $openai_model) { ?>
+													<?php if ($config_openai_category_alternatenames_model == $openai_model['id']) { ?>
+														<option value="<?php echo $openai_model['id']; ?>" selected="selected"><?php echo $openai_model['id']; ?></option>												
+													<?php } else { ?>													
+														<option value="<?php echo $openai_model['id']; ?>"><?php echo $openai_model['id']; ?></option>
+													<? } ?>
+												<?php } ?>
+											</select>											
+										</div>
+									</td>
+
+									<td style="width:15%">
+										<div>
+											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Max tokens</span></p>
+											<input type="number" step="10" min="100" max="4000" name="config_openai_category_alternatenames_maxtokens" value="<?php echo $config_openai_category_alternatenames_maxtokens; ?>" size="50" style="width:60px;" />										
+										</div>
+										<div>
+											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Temperature</span></p>
+											<input type="number" step="0.1" min="0" max="1" name="config_openai_category_alternatenames_temperature" value="<?php echo $config_openai_category_alternatenames_temperature; ?>" size="50" style="width:60px;" />	
+										</div>
+									</td>
+
+									<td style="width:15%">
+										<div>
+											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Top P</span></p>
+											<input type="number" step="0.1" min="0" max="1" name="config_openai_category_alternatenames_top_p" value="<?php echo $config_openai_category_alternatenames_top_p; ?>" size="50" style="width:60px;" />
+										</div>
+										<div>
+											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Frequency penalty</span></p>
+											<input type="number" step="0.1" min="0" max="2" name="config_openai_category_alternatenames_freq_penalty" value="<?php echo $config_openai_category_alternatenames_freq_penalty; ?>" size="50" style="width:60px;" />
+										</div>
+										<div>
+											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Presence penalty</span></p>
+											<input type="number" step="0.1" min="0" max="2" name="config_openai_category_alternatenames_presence_penalty" value="<?php echo $config_openai_category_alternatenames_presence_penalty; ?>" size="50" style="width:60px;" />
+										</div>
+									</td>
+
+									<td style="width:55%">
+										<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Запрос к AI</span></p>	
+										<?php foreach ($languages as $language) { ?>											
+											<div style="margin-bottom: 10px;">											
+												<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> 
+												<textarea style="width:80%" name="config_openai_category_alternatenames_query_<?php echo $language['code']; ?>" rows="4"><?php echo ${'config_openai_category_alternatenames_query_' . $language['code']}; ?></textarea>
+											</div>
+										<?php } ?>
+									</td>						
+								</tr>
+							</table>
+
 							<h2>🤖 Описания категорий</h2>
 							<table class="form">
 								<tr>
@@ -5642,7 +5738,8 @@
 										<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Запрос к AI</span></p>	
 										<?php foreach ($languages as $language) { ?>											
 											<div style="margin-bottom: 10px;">											
-												<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <input type="text" name="config_openai_category_descriptions_query_<?php echo $language['code']; ?>" value="<?php echo ${'config_openai_category_descriptions_query_' . $language['code']}; ?>" style="width:80%" />
+												<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+												<textarea style="width:80%" name="config_openai_category_descriptions_query_<?php echo $language['code']; ?>" rows="4"><?php echo ${'config_openai_category_descriptions_query_' . $language['code']}; ?></textarea>
 											</div>
 										<?php } ?>
 									</td>						
