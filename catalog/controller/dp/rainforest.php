@@ -658,8 +658,6 @@ class ControllerDPRainForest extends Controller {
 		}
 	}
 
-
-
 	/*
 	Проверяет существование данных в файлах и перескачивает их по мере необходимости
 	*/
@@ -979,7 +977,6 @@ class ControllerDPRainForest extends Controller {
 			}	
 		}
 	}
-
 	
 	/*
 	Переназначает вес товаров, в случае изменений в логике определения веса товаров
@@ -1313,15 +1310,39 @@ class ControllerDPRainForest extends Controller {
 	}
 
 	/*
-	Фиксит названия товаров при помощи openAI
+	Фиксит экспортные названия товаров при помощи openAI
 	*/
-	public function fixnamesai(){	
-		if (!$this->config->get('config_openai_enable_shorten_names')){
-			die('RNF API NOT ENABLED');
+	public function exportnamesai(){	
+		if (!$this->config->get('config_openai_enable_shorten_names') || !$this->config->get('config_openai_enable') || !$this->config->get('config_rainforest_export_names_with_openai')){
+			die('OPENAPI NOT ENABLED');
 		}
 
+		$names = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithNoShortNames();
+		echoLine('[exportnamesai] Total products: ' . count($names), 'i');
 
-		$this->openaiAdaptor->shortenName('Кімнатний фонтан з підсвічуванням Висота під камінь 17 см Дизайн Дизайн по фен-шуй Фонтан Фонтан з насосом (1 світлодіодний фонтан Design6)', 'uk');	
+		$i = 1;
+		foreach ($names as $row){
+			echoLine('[exportnamesai] Making export name for ' . $row['product_id'] .' '. $i  .' of '. count($names), 'i');	
+
+			if ($row['name'] && !trim($row['short_name_d'])){
+				if (mb_strlen($row['name']) < $this->config->get('config_openai_exportnames_length')){
+					$export_name = $row['name'];
+				} else {
+					$export_name = $this->openaiAdaptor->exportName($row['name'], $this->registry->get('languages_all_id_code_mapping')[(int)$row['language_id']]);
+				}
+
+				if ($export_name){
+					$this->rainforestAmazon->productsRetriever->model_product_edit->updateProductShortName($row['product_id'],
+						[
+							'language_id' 	=> $row['language_id'],
+							'short_name_d' 	=> $export_name
+						]
+					);
+				}
+			}
+
+			$i++;
+		}
 	}
 
 
