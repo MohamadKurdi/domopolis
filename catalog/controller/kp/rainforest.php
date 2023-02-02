@@ -188,7 +188,8 @@ class ControllerKPRainForest extends Controller {
 		}
 
 		echoLine('[parseofferscron], Working with queue');		
-		$products = $this->rainforestAmazon->offersParser->getProductsAmazonQueue();
+		$products = $this->rainforestAmazon->offersParser->getProductsAmazonQueue();		
+
 		$this->rainforestAmazon->offersParser->clearProductsAmazonQueue();
 
 		$total = count($products);
@@ -211,6 +212,32 @@ class ControllerKPRainForest extends Controller {
 
 			echoLine('[parseofferscron] Time for iteration: ' . $i . ' from ' . $iterations .': ' . $timer->getTime() . ' s.', 'i');
 			unset($timer);
+		}
+		
+		if ($this->config->get('config_openai_enable') && $this->config->get('config_rainforest_export_names_with_openai') && $this->config->get('config_openai_enable_export_names')){
+			foreach ($products as $asin){
+				$names = $this->rainforestAmazon->productsRetriever->model_product_get->getProductShortNamesByAsin($asin);
+
+				foreach ($names as $row){
+					if ($row['name'] && !trim($row['short_name_d'])){
+
+						if (mb_strlen($row['name']) < $this->config->get('config_openai_exportnames_length')){
+							$export_name = $row['name'];
+						} else {
+							$export_name = $this->openaiAdaptor->exportName($row['name'], $this->registry->get('languages_all_id_code_mapping')[(int)$row['language_id']]);
+						}
+
+						if ($export_name){
+							$this->rainforestAmazon->productsRetriever->model_product_edit->updateProductShortName($row['product_id'],
+								[
+									'language_id' 	=> $row['language_id'],
+									'short_name_d' 	=> $export_name
+								]
+							);
+						}
+					}
+				}
+			}
 		}
 
 		$this->rainforestAmazon->offersParser->clearProductsAmazonQueue();
