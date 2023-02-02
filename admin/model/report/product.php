@@ -23,9 +23,12 @@
 				LEFT JOIN product_description pd_amazon_language ON (pd_amazon_language.product_id = op.product_id AND pd_amazon_language.language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id'] . "')	
 				WHERE 
 				o.order_status_id > 0
-				AND p.status = 1
-				AND o.order_status_id <> '" . (int)$this->config->get('config_cancelled_status_id') . "'
-				AND (pd_native_language.short_name_d = '' OR pd_amazon_language.short_name_d = '')
+				AND p.status = 1				
+				AND (pd_native_language.short_name_d = '' 
+						OR pd_amazon_language.short_name_d = '' 
+						OR CHAR_LENGTH(pd_native_language.short_name_d) > '". $this->config->get('config_openai_exportnames_length') ."'
+						OR CHAR_LENGTH(pd_amazon_language.short_name_d) > '". $this->config->get('config_openai_exportnames_length') ."'
+					)
 				AND (pd_native_language.name <> '' AND pd_amazon_language.name <> '')";
 
 			$sql .= " ORDER BY op.product_id DESC";
@@ -57,9 +60,12 @@
 				LEFT JOIN product_description pd_amazon_language ON (pd_amazon_language.product_id = op.product_id AND pd_amazon_language.language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id'] . "')
 				WHERE 
 				o.order_status_id > 0
-				AND p.status = 1
-				AND o.order_status_id <> '" . (int)$this->config->get('config_cancelled_status_id') . "'
-				AND (pd_native_language.short_name_d = '' OR pd_amazon_language.short_name_d = '')
+				AND p.status = 1				
+				AND (pd_native_language.short_name_d = '' 
+						OR pd_amazon_language.short_name_d = '' 
+						OR CHAR_LENGTH(pd_native_language.short_name_d) > '". $this->config->get('config_openai_exportnames_length') ."'
+						OR CHAR_LENGTH(pd_amazon_language.short_name_d) > '". $this->config->get('config_openai_exportnames_length') ."'
+					)
 				AND (pd_native_language.name <> '' AND pd_amazon_language.name <> '')";
 
 			$sql .= " ORDER BY o.date_added DESC";
