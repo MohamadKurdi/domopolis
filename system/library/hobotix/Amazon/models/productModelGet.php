@@ -626,6 +626,37 @@ class productModelGet extends hoboModel{
 		return '';
 	}	
 
+	public function getProductsWithNoShortNames(){			
+		$sql = "SELECT p.product_id, pd.language_id, pd.name, pd.short_name_d FROM `order_product` op
+		LEFT JOIN product p ON (p.product_id = op.product_id)
+		LEFT JOIN `order` o ON (o.order_id = op.order_id) 
+		LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
+		WHERE 
+		o.order_status_id > 0
+		AND p.status = 1
+		AND pd.name <> ''
+		AND pd.short_name_d = ''
+		AND (
+			pd.language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_language')]['language_id'] . "'
+			OR pd.language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id'] . "')
+		ORDER BY p.product_id DESC";
+
+		$query = $this->db->query($sql);
+			
+		return $query->rows;
+	}
+
+	public function getProductShortNamesByAsin($asin){
+		$results = [];
+		$query = $this->db->ncquery("SELECT p.product_id, pd.language_id, pd.name, pd.short_name_d FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE asin LIKE ('" . $this->db->escape($asin) . "')");
+			
+		if ($query->num_rows){
+			return $query->rows;
+		}
+
+		return false;
+	}	
+
 	public function getProductIdByAsin($asin){
 		$results = [];
 		$query = $this->db->ncquery("SELECT product_id FROM product WHERE asin LIKE ('" . $this->db->escape($asin) . "') LIMIT 1");

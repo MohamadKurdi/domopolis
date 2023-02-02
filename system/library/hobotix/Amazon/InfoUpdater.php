@@ -41,6 +41,22 @@ class InfoUpdater extends RainforestRetriever
 
 	}
 
+	private  static function prepareAttributesForParsing($attributes){
+		$result = [];
+
+		foreach ($attributes as $temp){
+			$temp['name'] = atrim($temp['name']);
+			$temp['value'] = atrim($temp['value']);
+
+			$result[clean_string($temp['name'])] = [
+				'name' 	=> $temp['name'],
+				'value' => $temp['value']
+			];
+		}
+
+		return $result;
+	}
+
 	public function getTotalNames(){
 		return $this->db->query("SELECT COUNT(*) as total FROM product_description WHERE language_id = '" . $this->config->get('config_language_id') . "' AND name <> '' ")->row['total'];
 	}
@@ -292,7 +308,6 @@ class InfoUpdater extends RainforestRetriever
 		return $name;
 	}
 
-
 	public function setProductIsFilledFromAmazon($product_id){
 		$this->db->query("UPDATE product SET filled_from_amazon = 1 WHERE product_id = '" . (int)$product_id . "'");
 
@@ -339,7 +354,6 @@ class InfoUpdater extends RainforestRetriever
 		file_put_contents($file['full'], $json);
 
 		return $file['path'];
-
 	}
 
 	public function updateProductAmznData($product, $updateDimensions = true){
@@ -482,7 +496,6 @@ class InfoUpdater extends RainforestRetriever
 		];
 	}
 
-
 	public function tryToParseDimensionStringExtended($dimensionString, $type){
 		$dimensionString = trim($dimensionString);
 
@@ -593,7 +606,6 @@ class InfoUpdater extends RainforestRetriever
 		return false;
 	}
 
-
 	private function parseDimesionsAttributes($attributes){
 		$result = [];
 
@@ -650,10 +662,7 @@ class InfoUpdater extends RainforestRetriever
 		return true;
 	}
 
-
-	private function updateProductDimensions($product, $data){
-	//	return;
-
+	private function updateProductDimensions($product, $data){	
 		if (!empty($data['weight']) && !empty($data['weight_class_id']) && $this->checkWeight($data)){
 			echoLine('[InfoUpdater::updateProductDimensions] Weight: ' . $data['weight']);		
 			echoLine('[InfoUpdater::updateProductDimensions] Weight class: ' . $data['weight_class_id']);
@@ -703,22 +712,6 @@ class InfoUpdater extends RainforestRetriever
 				WHERE product_id = '" . (int)$product['product_id'] . "'");
 			}
 		}
-	}
-
-	private  static function prepareAttributesForParsing($attributes){
-		$result = [];
-
-		foreach ($attributes as $temp){
-			$temp['name'] = atrim($temp['name']);
-			$temp['value'] = atrim($temp['value']);
-
-			$result[clean_string($temp['name'])] = [
-				'name' 	=> $temp['name'],
-				'value' => $temp['value']
-			];
-		}
-
-		return $result;
 	}
 
 	public function parseAndUpdateProductDimensions($product){					
@@ -786,7 +779,6 @@ class InfoUpdater extends RainforestRetriever
 
 		return $this;
 	}						
-
 
 	public function validateASINAndUpdateIfNeeded($product){
 

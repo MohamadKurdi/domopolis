@@ -65,10 +65,12 @@ final class OpenAIAdaptor
 
 			if ($text = $this->parseCompletionResponse($response)){
 				return $this->removeListFromResponse($text);
+			} else {
+				return false;
 			}
 		}
 
-		return $name;
+		return false;
 	}
 
 	public function categoryDescription($request){
@@ -85,10 +87,12 @@ final class OpenAIAdaptor
 
 			if ($text = $this->parseCompletionResponse($response)){
 				return $text;
+			} else {
+				return false;
 			}
 		}
 
-		return $name;
+		return false;
 	}
 
 	public function shortenName($name, $language_code){
@@ -107,6 +111,8 @@ final class OpenAIAdaptor
 				echoLine('[OpenAIAdaptor::shortenName] Old name: ' . $name, 'w');
 				echoLine('[OpenAIAdaptor::shortenName] New name: ' . $text, 's');
 				return $text;
+			} else {
+				return false;
 			}
 		}
 
@@ -129,6 +135,8 @@ final class OpenAIAdaptor
 				echoLine('[OpenAIAdaptor::exportName] Old name: ' . $name, 'w');
 				echoLine('[OpenAIAdaptor::exportName] New name: ' . $text, 's');
 				return $text;
+			} else {
+				return false;
 			}
 		}
 

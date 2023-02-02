@@ -219,7 +219,7 @@ class productModelEdit extends hoboModel{
 	}
 
 	public function updateProductShortName($product_id, $data){
-		$this->db->query("UPDATE product_description SET name = '" . $this->db->escape($data['short_name_d']) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$data['language_id'] . "'");
+		$this->db->query("UPDATE product_description SET short_name_d = '" . $this->db->escape($data['short_name_d']) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$data['language_id'] . "'");
 	}
 
 	public function updateProductAttribute($product_id, $data){
