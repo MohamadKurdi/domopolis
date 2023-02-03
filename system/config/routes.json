@@ -12,6 +12,7 @@
 	"api/sparkpost"	:									"kp/sparkpost/api",
 	"api/mailgun" :										"kp/mailgun/api",
 	"api/asterisk" :									"api/asterisk",
+	"api/binotel" :										"api/binotel",
 	"api/bitrixbot" :									"api/bitrixbot",
 	"api/bitrixbot/sendMessageToUser":					"api/bitrixbot/sendMessageToUser",
 	"api/describe" :									"api/describe",

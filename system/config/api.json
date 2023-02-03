@@ -47,7 +47,7 @@
 			"api/ping": 								"/admin/config.slave.php",
 			"api/asterisk":								"config.api.php",
 			"api/mailgun": 								"config.api.php",			
-			"api/binotel":								"/admin/config.php",
+			"api/binotel":								"config.api.php",
 			"api/bitrixbot":							"/admin/config.php",
 			"api/bitrixbot/sendMessageToUser":			"/admin/config.php",
 			"api/info1c/getProductPrice": 				"config.slave.php",
@@ -187,6 +187,7 @@
 		"api/ping",
 		"api/sparkpost",
 		"api/mailgun",
+		"api/binotel",
 		"api/bitrixbot",
 		"api/describe"
 	]
