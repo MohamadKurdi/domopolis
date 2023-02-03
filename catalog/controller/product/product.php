@@ -601,9 +601,7 @@ public function index($product_id = false, $just_price = false)
                         'addimage'   => $result['addimage'],
                         'rating'     => (int)$result['rating'],
                         'reviews'    => sprintf($this->language->get('text_reviews'), (int)$review_total),
-                        'date_added' => date(
-                            $this->language->get('date_format_short'),
-                            strtotime($result['date_added'])
+                        'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])
                         )
                     );
                 } else {
@@ -619,9 +617,7 @@ public function index($product_id = false, $just_price = false)
                         'addimage'   => $result['addimage'],
                         'rating'     => (int)$result['rating'],
                         'reviews'    => sprintf($this->language->get('text_reviews'), (int)$review_total),
-                        'date_added' => date(
-                            $this->language->get('date_format_short'),
-                            strtotime($result['date_added'])
+                        'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])
                         )
                     );
                 }
@@ -1145,9 +1141,10 @@ public function index($product_id = false, $just_price = false)
 
                         foreach ($results as $result) {
                             $this->data['videos'][] = array(
-                                'thumb'  => $this->model_tool_image->resize($result['image'], 700, 400),
-                                'title'  => $result['title'],
-                                'video'  => $this->model_tool_video->getPath($result['video'])
+                                'thumb'         => $this->model_tool_image->resize($result['image'], 700, 400),
+                                'title'         => $result['title'],
+                                'video'         => $this->model_tool_video->getPath($result['video']),
+                                'date_added'    => date(DATE_ISO8601, strtotime($product_info['date_added']))
                             );
                         }
 
@@ -2332,13 +2329,9 @@ public function index($product_id = false, $just_price = false)
 
                 $this->data['continue'] = $this->url->link('common/home');
 
-                $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
+                $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 410 Gone');
 
-                if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/error/not_found.tpl')) {
-                    $this->template = $this->config->get('config_template') . '/template/error/not_found.tpl';
-                } else {
-                    $this->template = 'default/template/error/not_found.tpl';
-                }
+                $this->template = 'error/not_found.tpl';
 
                 $this->children = array(
                     'common/column_left',
@@ -2395,7 +2388,6 @@ public function index($product_id = false, $just_price = false)
                     'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added']))
                 );
             }
-
 
             $this->template = 'product/onereview.tpl';
 
@@ -2468,7 +2460,6 @@ public function index($product_id = false, $just_price = false)
 
             $this->response->setOutput($this->render());
         }
-
 
         public function getRecurringDescription()
         {
@@ -2754,8 +2745,7 @@ public function index($product_id = false, $just_price = false)
             
             $this->response->setOutput(json_encode($json));
         }
-        
-        
+            
         public function productload($setId = false)
         {
 
