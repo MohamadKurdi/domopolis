@@ -3,9 +3,9 @@
 		private $cache_data 				= null;
 		private $language_code 				= '';
 		private $language_id 				= 2;
-		private $languageSettingsCacheData 	= array();
-		private $mapFrom 					= array('intersection_id');
-		private $mapTo 						= array('category_id');
+		private $languageSettingsCacheData 	= [];
+		private $mapFrom 					= ['intersection_id'];
+		private $mapTo 						= ['category_id'];
 		
 		public function __construct($registry) {
 			parent::__construct($registry);			
@@ -258,10 +258,6 @@
 					if (($query_result = $this->getQuery($keyword)) !== false){
 						$rows[] = ['keyword' => $keyword, 'query' => $query_result];
 					}
-
-					// if (isset($this->cache_data['keywords'][$keyword])) {
-					// 	$rows[] = array('keyword' => $keyword, 'query' => $this->cache_data['keywords'][$keyword]);
-					// }
 				}								
 				
 				if (!empty($rows[0]) && !empty($rows[0]['query']) && $rows[0]['query'] == 'module/mega_filter/ajaxinfo'){
@@ -493,9 +489,6 @@
 					if (isset($tmp['gclid'])) {
 						$data['gclid'] = $tmp['gclid'];
 					}
-					if (isset($tmp['zalupa'])) {
-						$data['zalupa'] = $tmp['zalupa'];
-					}	
 					if (isset($tmp['hello'])) {
 						$data['hello'] = $tmp['hello'];
 					}
@@ -768,11 +761,6 @@
 				if (($keyword_result = $this->getKeyword($query)) !== false){
 					$rows[] = ['query' => $query, 'keyword' => $keyword_result];
 				}
-
-				// if(isset($this->cache_data['queries'][$query])) {				
-				// 	$query_keyword = array('query' => $query, 'keyword' => $this->cache_data['queries'][$query]);			
-				// 	$rows[] = $query_keyword;
-				// }
 			}
 			
 			if(count($rows) == count($queries)) {
@@ -878,9 +866,14 @@
 				NOT IN (". BIRTHDAY_DISCOUNT_CATEGORY .", ". (int)$this->config->get('config_special_category_id') .", ". GENERAL_MARKDOWN_CATEGORY .") 
 				ORDER BY main_category DESC LIMIT 1");
 				
-				$path[$product_id] = $this->getPathByCategory($query->num_rows ? (int)$query->row['category_id'] : 0);
-				
-				$this->cache->set('product.seopath'.$this->language_id, $path, DB_CACHED_EXPIRE, true);				
+				if ($query->num_rows){
+					$path[$product_id] = $this->getPathByCategory((int)$query->row['category_id']);
+					$this->cache->set('product.seopath'.$this->language_id, $path, DB_CACHED_EXPIRE, true);			
+				} elseif (!empty($this->request->get['path'])) {
+					$path[$product_id] = $this->request->get['path'];
+				} else {
+					$path[$product_id] = 0;
+				}									
 			}
 			
 			return $path[$product_id];
@@ -1019,8 +1012,6 @@
 			'payment/',
 			'kp/errorreport',
 			'yamarket/api',
-			'kp/sparkpost',
-			'kp/mailgun',
 			'api/'
 			);
 			
