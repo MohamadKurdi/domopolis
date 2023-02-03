@@ -1386,7 +1386,8 @@
 			});
 		}); // doc.ready
 	})(jQuery);
-	
+
+<?php if  ($this->config->get('config_order_bottom_text_enable')) { ?>	
 	if(typeof CKEDITOR !== "undefined"){
 		CKEDITOR.replace('bottom_text', {
 			height:450,
@@ -1441,6 +1442,8 @@
 				}
 			});
 		});
-	} // CKEDITOR
+	}
+
+	<?php } ?>
 //--></script>
 <script type="text/javascript" src="view/javascript/order_page.js"></script>

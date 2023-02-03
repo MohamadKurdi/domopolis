@@ -3704,8 +3704,7 @@
 			$array_msk = array('Москва','г.Москва','г Москва','город Москва','Moscow','москва');
 			$array_ky = array('Киев', 'г. Киев', 'г.Киев', 'Kyiv', 'Kiev', 'kyiv', 'kiev', 'киев', 'київ', 'Київ', 'м.Київ', 'м. Київ', 'Києв', 'м. Києв', 'г. Київ');
 			
-			$this->data['is_bad_good_try'] = false;
-			
+			$this->data['is_bad_good_try'] = false;			
 			if ($this->data['shipping_country_id'] == 176){
 				if (in_array($this->data['shipping_city'], $array_msk)){
 					if ($this->data['shipping_code'] == 'dostavkaplus.sh12') {
@@ -3768,17 +3767,9 @@
 					}	
 				}	
 				
-				} elseif ($this->data['shipping_country_id'] == 20) {
-				
-				
-				} elseif ($this->data['shipping_country_id'] == 109) {
-				
-				
+				} elseif ($this->data['shipping_country_id'] == 20) {				
+				} elseif ($this->data['shipping_country_id'] == 109) {				
 				} elseif ($this->data['shipping_country_id'] == 81) {
-				
-				
-				
-				
 			}
 			
 			$this->data['bottom_text_template_try'] = $bottom_text_template_try;

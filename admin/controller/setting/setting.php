@@ -1159,12 +1159,12 @@ class ControllerSettingSetting extends Controller
             $this->data['rewardpoints_birthday'] = $this->config->get('rewardpoints_birthday');
         }
 
-        $reward_overload_keys = array(
+        $reward_overload_keys = [
             'config_reward_overload_product',
             'config_reward_overload_collection',
             'config_reward_overload_manufacturer',
             'config_reward_overload_category'
-        );
+        ];
         
         foreach ($reward_overload_keys as $reward_overload_key) {
             if (isset($this->request->post[$reward_overload_key])) {
@@ -1175,16 +1175,17 @@ class ControllerSettingSetting extends Controller
         }
 
         
-        $termskeys = array(
+        $termskeys = [
             'config_delivery_instock_term',
             'config_delivery_central_term',
             'config_delivery_russia_term',
             'config_delivery_ukrainian_term',
             'config_delivery_outstock_term',
             'config_delivery_outstock_enable',
+            'config_order_bottom_text_enable',
             'config_divide_cart_by_stock',
             'config_delivery_display_logic'
-        );
+        ];
         
         foreach ($termskeys as $termkey) {
             if (isset($this->request->post[$termkey])) {

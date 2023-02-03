@@ -58,14 +58,10 @@ table.orderadress > tbody > tr > th,
 table.list > thead > tr > th,
 table.history > tbody > tr > th,
 table.form > tbody > tr > th {
-    background: #e3e3e2;
+    background: #b9b9b7;
 }
 .tile .tile-body i {
     font-size: 40px;
 }
 .tile-body{padding: 10px;line-height: 35px;}
 .blue_heading{background: #e3e3e2;}
-
-/*#tab_orders_switch, #tab_waitlist_switch, #tab_calls_switch, #tab_customer_v_history_switch {
-    border-bottom: 2px solid #e3e3e2;
-}*/

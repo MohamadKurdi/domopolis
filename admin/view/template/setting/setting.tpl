@@ -1084,11 +1084,12 @@
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Сроки поставки если нету в наличии в текущей стране, но есть в Германии</span></p>
 									<input type="text" name="config_delivery_central_term" value="<?php echo $config_delivery_central_term; ?>" size="10" />
 								</td>
-								
+							<?php if ($this->config->get('config_country_id') == 176) { ?>		
 								<td style="width:33%">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Сроки поставки если есть в наличии на складе РФ</span></p>
 									<input type="text" name="config_delivery_russia_term" value="<?php echo $config_delivery_russia_term; ?>" size="10" />
 								</td>
+							<?php } ?>
 							</tr>
 
 							<tr>
@@ -1105,16 +1106,31 @@
 							
 							<tr>
 								<td style="width:33%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Отображать сроки, если нет в наличии на складе в стране</span></p>
-									<select name="config_delivery_outstock_enable">
-										<?php if ($config_delivery_outstock_enable) { ?>
-											<option value="1" selected="selected">Включить отображение информации о сроках</option>
-											<option value="0">Отключить отображение информации о сроках</option>
-										<?php } else { ?>													
-											<option value="1">Включить отображение информации о сроках</option>
-											<option value="0"  selected="selected">Отключить отображение информации о сроках</option>
-										<? } ?>
-									</select>
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Отображать сроки, если нет в наличии на складе в стране</span></p>
+										<select name="config_delivery_outstock_enable">
+											<?php if ($config_delivery_outstock_enable) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включить в заказах текст с информацией о доставке</span></p>
+										<select name="config_order_bottom_text_enable">
+											<?php if ($config_order_bottom_text_enable) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</div>
 								</td>
 
 								<td style="width:33%">
@@ -1153,7 +1169,7 @@
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Идентификатор склада</span></p>
 									<input type="text" name="config_warehouse_identifier" value="<?php echo $config_warehouse_identifier; ?>" size="30" />
 									<br />
-									<span class="help">идентификатор склада, с которого выполняется отправка в эту страну (например, для КЗ и Белки - это РФ), это обычная логика обработки наличия</span>
+									<span class="help">идентификатор склада, с которого выполняется отправка в эту страну, это обычная логика обработки наличия</span>
 								</td>
 
 								<td width="25%">
@@ -1443,7 +1459,6 @@
 								<td style="width:20%;">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Cтолица</span></p>
 									<input type="text" name="config_default_city" value="<?php echo $config_default_city; ?>" size="20" />
-									<span class="help">Шесть случайных цифр. При изменении сообщить @rayua</span>
 								</td>
 
 								<?php foreach ($languages as $language) { ?>								

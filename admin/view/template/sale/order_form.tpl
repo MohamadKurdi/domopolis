@@ -70,7 +70,7 @@
 			
 			<div style="float:right; text-align:right;">
 				<input type="text" id="go_to_order" name="go_to_order" maxlength="6" style="line-height:40px; font-size:20px; width:100px; padding:0; text-align:center; float:left;">
-				<h1 class="ktooltip_hover" title="Перейти к заказу" style="margin-left:10px; padding:3px 5px; font-size:32px; border-radius:5px; border:2px solid #6A6A6A;">
+				<h1 class="ktooltip_hover" title="Перейти к заказу" style="margin-left:10px; padding:3px 5px; font-size:20px; border-radius:5px; border:2px solid #6A6A6A;">
 					<a style="color:#6A6A6A; text-decoration:none;" onclick="go_to_order()"><i class="fa fa-external-link-square" aria-hidden="true"></i></a>
 				</h1>
 				
@@ -88,6 +88,10 @@
 				
 				<h1 class="ktooltip_hover" title="Спецификация" style="margin-left:10px; font-size:20px; padding:3px 5px; border-radius:5px; border:2px solid #6A6A6A;">
 					<a href="<?php echo $xls2_download; ?>" style="color:#6A6A6A; text-decoration:none;"><i class="fa fa-file-excel-o"></i> СП</a>
+				</h1>
+
+				<h1 class="ktooltip_hover" title="Предпросмотр письма" style="margin-left:10px; font-size:20px; padding:3px 5px; border-radius:5px; border:2px solid #6A6A6A;">
+					<a onclick="$('#mailpreview').load('<? echo $url_mailpreview; ?>').dialog({width:800, modal:true,resizable:true,position:{my: 'center', at:'center top', of: window}, closeOnEscape: true});" style="color:#6A6A6A; text-decoration:none;"><i class="fa fa-eye"></i> К</a>
 				</h1>
 				
 				<h1 class="ktooltip_hover" title="Письмо клиенту" style="margin-left:10px; font-size:20px; padding:3px 5px; border-radius:5px; border:2px solid #6A6A6A;">
@@ -3618,8 +3622,8 @@
 																				</td>
 																			</table>
 																		</div>
-																		
-																		<div class="clr"></div>
+																	<?php if  ($this->config->get('config_order_bottom_text_enable')) { ?>	
+																		<div class="clr"></div>																		
 																		<div id="tab-bottom-text">
 																			<table class="list">
 																				<thead>
@@ -3766,14 +3770,16 @@
 																				</tr>
 																				<tr>
 																					<td style="padding:5px 0px;">
-																						<a onclick="$('#mailpreview').load('<? echo $url_mailpreview; ?>').dialog({width:800, modal:true,resizable:true,position:{my: 'center', at:'center top', of: window}, closeOnEscape: true});" class="button" style="float:left;">Предпросмотр</a>
-																						
+																						<a onclick="$('#mailpreview').load('<? echo $url_mailpreview; ?>').dialog({width:800, modal:true,resizable:true,position:{my: 'center', at:'center top', of: window}, closeOnEscape: true});" class="button" style="float:left;">Предпросмотр</a>																						
 																						<a onclick="var value = $('#part_num_real').val(); $('input#part_num').val(value); $('#form').submit();" class="button save_button" style="float:right;">Сохранить</a>
 																						<div class="clr"></div>
 																					</td>
 																				</tr>
 																			</table>
 																		</div>
+																	<?php } else { ?>
+																		<input id="bottom_text" name="bottom_text" value="" />
+																	<?php } ?>
 																		
 																		<div id="mailpreview" style="display:none;"></div>
 																		
