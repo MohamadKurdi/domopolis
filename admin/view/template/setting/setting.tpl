@@ -3756,20 +3756,42 @@
 								<tr>
 									<td width="33%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Обслуживающая очередь</span></p>
-										<input type="text" name="config_default_queue" value="<?php echo $config_default_queue; ?>" size="30" style="width:150px;" />										
-										<br /><span class="help">Сейчас у нас есть следующие очереди: 901 - Русскоязычная, 501 - Украиноязычная</span>
+										<select name="config_default_queue">
+											<option value="">Не назначать</option>											
+											<? foreach ($user_groups as $user_group) { ?>
+												<?php if ($user_group['sip_queue']) { ?>	
+													<?php if ($user_group['sip_queue'] == $config_default_queue) { ?>
+														<option value="<?php echo $user_group['sip_queue'] ?>" selected="selected"><?php echo $user_group['sip_queue']; ?> (<?php echo $user_group['name']; ?>)</option>
+													<?php } else { ?>
+														<option value="<?php echo $user_group['sip_queue'] ?>"><?php echo $user_group['sip_queue']; ?> (<?php echo $user_group['name']; ?>)</option>
+													<? } ?>
+												<? } ?>
+											<? } ?>
+										</select>
+
 									</td>
 
 									<td width="33%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Очередь уведомлений менеджеров</span></p>
-										<input type="text" name="config_default_alert_queue" value="<?php echo $config_default_alert_queue; ?>" size="30" style="width:150px;" />										
-										<br /><span class="help">Сейчас у нас есть следующие очереди: sales - Русскоязычная, sales_ua - Украиноязычная</span>
+										<select name="config_default_alert_queue">
+											<option value="">Не назначать</option>											
+											<? foreach ($user_groups as $user_group) { ?>
+												<?php if ($user_group['alert_namespace']) { ?>	
+													<?php if ($user_group['alert_namespace'] == $config_default_alert_queue) { ?>
+														<option value="<?php echo $user_group['alert_namespace'] ?>" selected="selected"><?php echo $user_group['alert_namespace']; ?> (<?php echo $user_group['name']; ?>)</option>
+													<?php } else { ?>
+														<option value="<?php echo $user_group['alert_namespace'] ?>"><?php echo $user_group['alert_namespace']; ?> (<?php echo $user_group['name']; ?>)</option>
+													<? } ?>
+												<? } ?>
+											<? } ?>
+										</select>
+
 									</td>
 
 									<td width="33%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Назначенная группа менеджеров</span></p>
 										<select name="config_default_manager_group">
-											<option value="0">Похуй на заказы, не назначаем</option>											
+											<option value="0">Не назначать</option>											
 											<? foreach ($user_groups as $user_group) { ?>
 												<?php if ($user_group['user_group_id'] == $config_default_manager_group) { ?>
 													<option value="<?php echo $user_group['user_group_id'] ?>" selected="selected"><?php echo $user_group['name']; ?></option>
