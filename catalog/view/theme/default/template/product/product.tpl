@@ -1203,6 +1203,22 @@ unset($this->session->data['gac:listfrom']); }
 								<?php if ($videos) { ?>
 									<div id="video"  style="background-color: #f9f9f9; text-align:center;">
 										<?php foreach ($videos as $video){ ?>
+											<script type="application/ld+json">
+												{
+													"@context": 	"https://schema.org/",
+													"@type": 		"VideoObject",
+													"name": 		"<?php echo $video['title']; ?>",
+												<?php if ($desc) { ?>
+													"description": "<?php echo $desc; ?>",
+												<?php } else { ?>	
+													"description": 	"<?php echo $video['title']; ?>",
+												<?php } ?>
+													"thumbnailUrl": "<?php echo $video['thumb'] ?>",
+													"contentUrl": "<?php echo $video['video'] ?>",
+													"uploadDate":	"<?php echo $video['date_added'] ?>"
+												}
+											</script>
+											
 											<div>
 												<video controlsList="nodownload" width="700" height="400" title="<?php echo $video['title']; ?>" poster="<?php echo $video['thumb'] ?>" controls>
 												    <source src="<?php echo  $video['video']; ?>" type="video/mp4">>
