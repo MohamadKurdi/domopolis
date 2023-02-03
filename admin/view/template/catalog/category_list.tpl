@@ -70,7 +70,9 @@
 								<td class="left" style="width:30px;">Amzn Allow Full</td>
 							<?php } ?>
 							<td class="left" style="width:100px;">Google</td>
-							<td class="left" style="width:100px;">Yandex</td>
+							<?php if ($this->config->get('config_country_id') == 176) { ?>	
+								<td class="left" style="width:100px;">Yandex</td>
+							<?php } ?>
 							<td class="left" style="width:60px;">Картинка</td>
 							<td class="left" style="width:50px;">Иконка</td>
 							<td class="left" style="width:100px;">Elastic</td>
@@ -189,15 +191,15 @@
 													<? } ?>
 												</td>	
 
-
+											<?php if ($this->config->get('config_country_id') == 176) { ?>	
 												<td class="center">
 													<? if ($category['yandex_category_name']) { ?>
 														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF; font-size:10px;"><?php echo $category['yandex_category_name']; ?></span>
-
 													<? } else { ?>
 														<i class="fa fa-times" style="color:#cf4a61"></i>
 													<? } ?>	
-												</td>																						
+												</td>		
+											<?php } ?>																				
 
 
 												<td class="center">

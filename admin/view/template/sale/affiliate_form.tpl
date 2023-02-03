@@ -181,95 +181,16 @@
                                     <br><br>
 								<?php } ?>
 								
-								<?php if ($qiwi_visible) { ?>
-                                    <input type="radio" name="payment" value="qiwi" id="qiwi" <?php if ($payment == 'qiwi') { ?> checked="checked" <?php } ?>/>
-                                    <label for="qiwi"><?php echo $text_qiwi; ?></label>
-                                    <br><br>
-								<?php } ?>
-								
 								<?php if ($card_visible) { ?>
                                     <input type="radio" name="payment" value="card" id="card" <?php if ($payment == 'card') { ?> checked="checked" <?php } ?>/>
                                     <label for="card"><?php echo $text_card; ?></label>
                                     <br><br>
-								<?php } ?>
-								
-								<?php if ($yandex_visible) { ?>
-                                    <input type="radio" name="payment" value="yandex" id="yandex" <?php if ($payment == 'yandex') { ?> checked="checked" <?php } ?>/>
-                                    <label for="yandex"><?php echo $text_yandex; ?></label>
-                                    <br><br>
-								<?php } ?>
-								
-								<?php if ($webmoney_visible) { ?>
-                                    <input type="radio" name="payment" value="webmoney" id="webmoney" <?php if ($payment == 'webmoney') { ?> checked="checked" <?php } ?>/>
-                                    <label for="webmoney"><?php echo $text_webmoney; ?></label>
-									<br><br>
-								<?php } ?>
-								
-								<?php if ($webmoney_visibleWMZ) { ?>
-                                    <input type="radio" name="payment" value="webmoneyWMZ" id="webmoneyWMZ" <?php if ($payment == 'webmoneyWMZ') { ?> checked="checked" <?php } ?>/>
-                                    <label for="webmoneyWMZ"><?php echo $text_webmoneyWMZ; ?></label>
-									<br><br>
-								<?php } ?>
-								
-								<?php if ($webmoney_visibleWMU) { ?>
-                                    <input type="radio" name="payment" value="webmoneyWMU" id="webmoneyWMU" <?php if ($payment == 'webmoneyWMU') { ?> checked="checked" <?php } ?>/>
-                                    <label for="webmoneyWMU"><?php echo $text_webmoneyWMU; ?></label>
-									<br><br>
-								<?php } ?>
-								
-								<?php if ($webmoney_visibleWME) { ?>
-                                    <input type="radio" name="payment" value="webmoneyWME" id="webmoneyWME" <?php if ($payment == 'webmoneyWME') { ?> checked="checked" <?php } ?>/>
-                                    <label for="webmoneyWME"><?php echo $text_webmoneyWME; ?></label>
-									<br><br>
-								<?php } ?>
-								
-								<?php if ($webmoney_visibleWMY) { ?>
-                                    <input type="radio" name="payment" value="webmoneyWMY" id="webmoneyWMY" <?php if ($payment == 'webmoneyWMY') { ?> checked="checked" <?php } ?>/>
-                                    <label for="webmoneyWMY"><?php echo $text_webmoneyWMY; ?></label>
-									<br><br>
-								<?php } ?>
-								
-								<?php if ($webmoney_visibleWMB) { ?>
-                                    <input type="radio" name="payment" value="webmoneyWMB" id="webmoneyWMB" <?php if ($payment == 'webmoneyWMB') { ?> checked="checked" <?php } ?>/>
-                                    <label for="webmoneyWMB"><?php echo $text_webmoneyWMB; ?></label>
-									<br><br>
-								<?php } ?>
-								
-								<?php if ($webmoney_visibleWMG) { ?>
-                                    <input type="radio" name="payment" value="webmoneyWMG" id="webmoneyWMG" <?php if ($payment == 'webmoneyWMG') { ?> checked="checked" <?php } ?>/>
-                                    <label for="webmoneyWMG"><?php echo $text_webmoneyWMG; ?></label>
-									<br><br>
-								<?php } ?>
-								
-								<?php if ($AlertPay_visible) { ?>
-                                    <input type="radio" name="payment" value="AlertPay" id="AlertPay" <?php if ($payment == 'AlertPay') { ?> checked="checked" <?php } ?>/>
-                                    <label for="AlertPay"><?php echo $text_AlertPay; ?></label><br><br>
-								<?php } ?>
-								
-								<?php if ($Moneybookers_visible) { ?>
-                                    <input type="radio" name="payment" value="Moneybookers" id="Moneybookers" <?php if ($payment == 'Moneybookers') { ?> checked="checked" <?php } ?>/>
-                                    <label for="Moneybookers"><?php echo $text_Moneybookers; ?></label><br><br>
-								<?php } ?>
+								<?php } ?>								
 								
 								<?php if ($LIQPAY_visible) { ?>
                                     <input type="radio" name="payment" value="LIQPAY" id="LIQPAY" <?php if ($payment == 'LIQPAY') { ?> checked="checked" <?php } ?>/>
                                     <label for="LIQPAY"><?php echo $text_LIQPAY; ?></label><br><br>
 								<?php } ?>
-								
-								<?php if ($SagePay_visible) { ?>
-                                    <input type="radio" name="payment" value="SagePay" id="SagePay" <?php if ($payment == 'SagePay') { ?> checked <?php } ?>/>
-                                    <label for="SagePay"><?php echo $text_SagePay; ?></label><br><br>
-								<?php } ?>
-								
-								<?php if ($twoCheckout_visible) { ?>
-                                    <input type="radio" name="payment" value="twoCheckout" id="twoCheckout" <?php if ($payment == 'twoCheckout') { ?> checked="checked" <?php } ?>/>
-                                    <label for="twoCheckout"><?php echo $text_twoCheckout; ?></label><br><br>
-								<?php } ?>
-								
-								<?php if ($GoogleWallet_visible) { ?>
-                                    <input type="radio" name="payment" value="GoogleWallet" id="GoogleWallet" <?php if ($payment == 'GoogleWallet') { ?> checked="checked" <?php } ?>/>
-                                    <label for="GoogleWallet"><?php echo $text_GoogleWallet; ?></label>
-								<?php } ?></td>
 															
 								<?php if ($payment == 'paypal') { ?>
 									<label for="paypal"><?php echo $text_paypal; ?></label>
@@ -323,109 +244,17 @@
                                 <td><?php echo $entry_bank_account_number; ?></td>
                                 <td><input type="text" name="bank_account_number" value="<?php echo $bank_account_number; ?>" /></td>
 							</tr>
-						</tbody>
-                        <tbody id="payment-qiwi" class="payment">
-                            <tr>
-                                <td><?php echo $entry_qiwi; ?></td>
-                                <td><span class="required">*</span><input type="text" name="qiwi" value="<?php echo $qiwi; ?>" /></td>
-							</tr>
-						</tbody>
-						
+						</tbody>						
                         <tbody class="payment" id="payment-card">
                             <tr>
                                 <td><?php echo $entry_card; ?></td>
                                 <td><span class="required">*</span><input type="text" name="card" value="<?php echo $card; ?>" /></td>
 							</tr>
 						</tbody>
-						
-                        <tbody class="payment" id="payment-yandex">
-                            <tr>
-                                <td><?php echo $entry_yandex; ?></td>
-                                <td><span class="required">*</span><input type="text" name="yandex" value="<?php echo $yandex; ?>" /></td>
-							</tr>
-						</tbody>
-						
-                        <tbody class="payment" id="payment-webmoney">
-                            <tr>
-                                <td><?php echo $entry_webmoney; ?></td>
-                                <td><span class="required">*</span><input type="text" name="webmoney" value="<?php echo $webmoney; ?>" /></td>
-							</tr>
-						</tbody>
-						<tbody class="payment" id="payment-webmoneyWMZ">
-                            <tr>
-                                <td><?php echo $entry_webmoneyWMZ; ?></td>
-                                <td><span class="required">*</span><input type="text" name="webmoneyWMZ" value="<?php echo $webmoneyWMZ; ?>" /></td>
-							</tr>
-						</tbody>
-						<tbody class="payment" id="payment-webmoneyWMU">
-                            <tr>
-                                <td><?php echo $entry_webmoneyWMU; ?></td>
-                                <td><span class="required">*</span><input type="text" name="webmoneyWMU" value="<?php echo $webmoneyWMU; ?>" /></td>
-							</tr>
-						</tbody>
-						<tbody class="payment" id="payment-webmoneyWME">
-                            <tr>
-                                <td><?php echo $entry_webmoneyWME; ?></td>
-                                <td><span class="required">*</span><input type="text" name="webmoneyWME" value="<?php echo $webmoneyWME; ?>" /></td>
-							</tr>
-						</tbody>
-						<tbody class="payment" id="payment-webmoneyWMY">
-                            <tr>
-                                <td><?php echo $entry_webmoneyWMY; ?></td>
-                                <td><span class="required">*</span><input type="text" name="webmoneyWMY" value="<?php echo $webmoneyWMY; ?>" /></td>
-							</tr>
-						</tbody>
-						<tbody class="payment" id="payment-webmoneyWMB">
-                            <tr>
-                                <td><?php echo $entry_webmoneyWMB; ?></td>
-                                <td><span class="required">*</span><input type="text" name="webmoneyWMB" value="<?php echo $webmoneyWMB; ?>" /></td>
-							</tr>
-						</tbody>
-						<tbody class="payment" id="payment-webmoneyWMG">
-                            <tr>
-                                <td><?php echo $entry_webmoneyWMG; ?></td>
-                                <td><span class="required">*</span><input type="text" name="webmoneyWMG" value="<?php echo $webmoneyWMG; ?>" /></td>
-							</tr>
-						</tbody>
-						<tbody class="payment" id="payment-AlertPay">
-                            <tr>
-                                <td><?php echo $entry_AlertPay; ?></td>
-                                <td><span class="required">*</span><input type="text" name="AlertPay" value="<?php echo $AlertPay; ?>" /></td>
-							</tr>
-						</tbody>
-						
-						<tbody class="payment" id="payment-Moneybookers">
-                            <tr>
-                                <td><?php echo $entry_Moneybookers; ?></td>
-                                <td><span class="required">*</span><input type="text" name="Moneybookers" value="<?php echo $Moneybookers; ?>" /></td>
-							</tr>
-						</tbody>
-						
 						<tbody class="payment" id="payment-LIQPAY">
                             <tr>
                                 <td><?php echo $entry_LIQPAY; ?></td>
                                 <td><span class="required">*</span><input type="text" name="LIQPAY" value="<?php echo $LIQPAY; ?>" /></td>
-							</tr>
-						</tbody>
-						
-						<tbody class="payment" id="payment-SagePay">
-                            <tr>
-                                <td><?php echo $entry_SagePay; ?></td>
-                                <td><span class="required">*</span><input type="text" name="SagePay" value="<?php echo $SagePay; ?>" /></td>
-							</tr>
-						</tbody>
-						
-						<tbody class="payment" id="payment-twoCheckout">
-                            <tr>
-                                <td><?php echo $entry_twoCheckout; ?></td>
-                                <td><span class="required">*</span><input type="text" name="twoCheckout" value="<?php echo $twoCheckout; ?>" /></td>
-							</tr>
-						</tbody>
-						
-						<tbody class="payment" id="payment-GoogleWallet">
-                            <tr>
-                                <td><?php echo $entry_GoogleWallet; ?></td>
-                                <td><span class="required">*</span><input type="text" name="GoogleWallet" value="<?php echo $GoogleWallet; ?>" /></td>
 							</tr>
 						</tbody>
 						<tbody id="payment-bank" class="payment">
@@ -469,53 +298,11 @@
                             <?php if ($payment == 'bank') { ?>
                             <td><input type="text" name="description" value="<?php echo $entry_payment_comment.$text_bank; ?>" /></td>
                             <?php } ?>
-                            <?php if ($payment == 'qiwi') { ?>
-                            <td><input type="text" name="description" value="<?php echo $entry_payment_comment.$text_qiwi; ?>" /></td>
-                            <?php } ?>
                             <?php if ($payment == 'card') { ?>
                             <td><input type="text" name="description" value="<?php echo $entry_payment_comment.$text_card; ?>" /></td>
                             <?php } ?>
-                            <?php if ($payment == 'yandex') { ?>
-                            <td><input type="text" name="description" value="<?php echo $entry_payment_comment.$text_yandex; ?>" /></td>
-                            <?php } ?>
-                            <?php if ($payment == 'webmoney') { ?>
-                            <td><input type="text" name="description" value="<?php echo $entry_payment_comment.$text_webmoney; ?>" /></td>
-							<?php } ?>
-                            <?php if ($payment == 'webmoneyWMZ') { ?>
-                            <td><input type="text" name="description" value="<?php echo $entry_payment_comment.$text_webmoneyWMZ; ?>" /></td>
-							<?php } ?>
-                            <?php if ($payment == 'webmoneyWMU') { ?>
-                            <td><input type="text" name="description" value="<?php echo $entry_payment_comment.$text_webmoneyWMU; ?>" /></td>
-							<?php } ?>
-                            <?php if ($payment == 'webmoneyWME') { ?>
-                            <td><input type="text" name="description" value="<?php echo $entry_payment_comment.$text_webmoneyWME; ?>" /></td>
-							<?php } ?>
-                            <?php if ($payment == 'webmoneyWMY') { ?>
-                            <td><input type="text" name="description" value="<?php echo $entry_payment_comment.$text_webmoneyWMY; ?>" /></td>
-							<?php } ?>
-                            <?php if ($payment == 'webmoneyWMB') { ?>
-                            <td><input type="text" name="description" value="<?php echo $entry_payment_comment.$text_webmoneyWMB; ?>" /></td>
-							<?php } ?>
-                            <?php if ($payment == 'webmoneyWMG') { ?>
-                            <td><input type="text" name="description" value="<?php echo $entry_payment_comment.$text_webmoneyWMG; ?>" /></td>
-                            <?php } ?>
-                            <?php if ($payment == 'AlertPay') { ?>
-                            <td><input type="text" name="description" value="<?php echo $entry_payment_comment.$text_AlertPay; ?>" /></td>
-                            <?php } ?>
-                            <?php if ($payment == 'Moneybookers') { ?>
-                            <td><input type="text" name="description" value="<?php echo $entry_payment_comment.$text_Moneybookers; ?>" /></td>
-                            <?php } ?>
                             <?php if ($payment == 'LIQPAY') { ?>
                             <td><input type="text" name="description" value="<?php echo $entry_payment_comment.$text_LIQPAY; ?>" /></td>
-                            <?php } ?>
-                            <?php if ($payment == 'SagePay') { ?>
-                            <td><input type="text" name="description" value="<?php echo $entry_payment_comment.$text_SagePay; ?>" /></td>
-                            <?php } ?>
-                            <?php if ($payment == 'twoCheckout') { ?>
-                            <td><input type="text" name="description" value="<?php echo $entry_payment_comment.$text_twoCheckout; ?>" /></td>
-                            <?php } ?>
-                            <?php if ($payment == 'GoogleWallet') { ?>
-                            <td><input type="text" name="description" value="<?php echo $entry_payment_comment.$text_GoogleWallet; ?>" /></td>
                             <?php } ?>
                         </tr>
                         <tr>

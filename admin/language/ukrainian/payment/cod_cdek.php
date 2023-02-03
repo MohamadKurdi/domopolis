@@ -1,16 +1,16 @@
 <?php
 // Heading
-$_['heading_title']			= 'Наложенный платеж';
+$_['heading_title']			= 'Наложенный платеж (deprecated)';
 
 // Text
 $_['text_payment']			= 'Оплата';
 $_['text_success']			= 'Настройки модуля обновлены!';
 $_['text_all']				= 'Всегда';
-$_['text_cdek']				= 'Только для доставки ТК СДЭК';
+$_['text_cdek']				= 'Только для доставки';
 $_['text_all_tariff']		= 'Для всех тарифов';
 $_['text_tariff_courier']	= 'Для тарифов курьером';
 $_['text_tariff_pvz']		= 'Для тарифов до ПВЗ';
-$_['text_cod_cdek']			= '<img src="view/image/payment/cod_cdek.png" alt="CDEK logo" title="CDEK" />';
+$_['text_cod_cdek']			= '';
 $_['text_fixed']			= 'фиксированное значение';
 $_['text_percent_product']	= '% от стоимости товаров';
 $_['text_percent_total']	= '% от общей стоимости';
@@ -39,4 +39,3 @@ $_['tab_additional']		= 'Дополнительно';
 $_['error_permission']		= 'У Вас нет прав для управления этим модулем!';
 $_['error_warning']			= 'Внимательно проверьте форму на ошибки!';
 $_['error_numeric']			= 'Значение должно быть числом!';
-?>

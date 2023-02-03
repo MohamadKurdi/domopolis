@@ -168,7 +168,6 @@
 			
 			$this->load->model('setting/store');
 			$this->data['stores'] = $this->model_setting_store->getStores();
-			array_unshift($this->data['stores'], array('store_id' => 0, 'name' => $this->config->get('config_name')));
 			
 			foreach ($this->data['stores'] as $idx => $store){
 				if (in_array($store['store_id'], array(17, 16))){

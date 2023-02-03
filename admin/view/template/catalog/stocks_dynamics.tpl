@@ -22,7 +22,7 @@
 						<img src="view/image/flags/de.png" title="ru">&nbsp;Центральный склад за неделю
 					</td>
 					<td style="font-size:18px; padding:4px 5px; background-color:#faf9f1;">
-						<img src="view/image/flags/ru.png" title="ru">&nbsp;Склад Москва за неделю
+						<i class="fa fa-cubes"></i>&nbsp;Региональный склад за неделю
 					</td>
 				</tr>
 				<tr>
@@ -30,7 +30,7 @@
 						<div id="quantity_stock_p_total_week" style="width:100%; height:350px;"></div>
 					</td>
 					<td style="width:50%; padding:10px;">
-						<div id="quantity_stockM_p_total_week" style="width:100%; height:350px;"></div>
+						<div id="<?php echo $this->config->get('config_warehouse_identifier_local'); ?>_p_total_week" style="width:100%; height:350px;"></div>
 					</td>
 				</tr>
 				<tr>
@@ -38,7 +38,7 @@
 						<img src="view/image/flags/de.png" title="ru">&nbsp;Центральный склад за месяц
 					</td>
 					<td style="font-size:18px; padding:4px 5px; background-color:#faf9f1;">
-						<img src="view/image/flags/ru.png" title="ru">&nbsp;Склад Москва за месяц
+						<i class="fa fa-cubes"></i>&nbsp;Региональный склад за месяц
 					</td>
 				</tr>
 				<tr>
@@ -46,7 +46,7 @@
 						<div id="quantity_stock_p_total_month" style="width:100%; height:350px;"></div>
 					</td>
 					<td style="width:50%; padding:10px;">
-						<div id="quantity_stockM_p_total_month" style="width:100%; height:350px;"></div>
+						<div id="<?php echo $this->config->get('config_warehouse_identifier_local'); ?>_p_total_month" style="width:100%; height:350px;"></div>
 					</td>
 				</tr>			
 			</table>
@@ -56,7 +56,7 @@
 
 <script type="text/javascript" src="view/javascript/jquery/flot2/jquery.flot.js"></script> 
 <script type="text/javascript" src="view/javascript/jquery/flot2/jquery.flot.resize.min.js"></script>
-<script type="text/javascript"><!--
+<script type="text/javascript">
 	function getStocksChart(warehouse, range) {
 		$.ajax({
 			type: 'get',
@@ -121,9 +121,9 @@
 	
 	$(document).ready(function(){
 		getStocksChart('quantity_stock', 'week');
-		getStocksChart('quantity_stockM', 'week');		
+		getStocksChart('<?php echo $this->config->get('config_warehouse_identifier_local'); ?>', 'week');		
 		getStocksChart('quantity_stock', 'month');
-		getStocksChart('quantity_stockM', 'month');
+		getStocksChart('<?php echo $this->config->get('config_warehouse_identifier_local'); ?>', 'month');
 	})
-//--></script>
+</script>
 <?php echo $footer; ?> 										
