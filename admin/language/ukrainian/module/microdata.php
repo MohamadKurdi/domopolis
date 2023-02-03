@@ -21,8 +21,8 @@ $_['text_island_1']       = 'Тип 1';
 $_['text_island_2']       = 'Тип 2';
 $_['text_island_3']       = 'Тип 3';
 $_['text_price']          = 'Формат валюты:';
-$_['text_price_1']        = '999.99 | 1,999 | 1,999.99 + руб | р';
-$_['text_price_2']        = '999 | 1,999 + руб | руб. | р | р.';
+$_['text_price_1']        = '999.99 | 1,999 | 1,999.99 + USD | usd';
+$_['text_price_2']        = '999 | 1,999 + USD | USD. | usd | usd.';
 $_['text_twitter_site']   = 'Сайт:';
 $_['text_twitter_creator']= 'Автор:';
 $_['text_twitter_place']  = '@ник в twitter';
@@ -39,4 +39,3 @@ $_['text_dariygray']      = 'DariyGRAY';
 
 //                        == Error
 $_['error_permission']    = 'Внимание! На управление модулем &laquo;MICRODATA&raquo; у вас недостаточно прав.';
-?>

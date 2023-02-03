@@ -237,17 +237,21 @@ border-radius: 2px;}
 #tab-payment-data table,#tab-shipping-ttn table{float:none;width:100%}
 }
 .btn-copy{
-    background-color: #a9a9a9;
+    background-color: rgb(255, 120, 21);
     color: #fff;
-    padding: 2px 15px;
+    padding: 5px 15px;
     border-radius: 3px 3px 0 0;
     cursor: pointer;
+    display:inline-block;
+    height:20px;
 	text-decoration: none;
 }
 .btn-translate{
-    background-color: #1e90ff;
+    background-color: rgb(127, 0, 255);
     color: #fff;
-    padding: 2px 15px;
+    padding: 5px 15px;
+    display:inline-block;
+    height:20px;
     border-radius: 3px 3px 0 0;
     cursor: pointer;
 	text-decoration: none;

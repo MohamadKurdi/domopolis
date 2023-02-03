@@ -24,17 +24,13 @@
                 <a onclick='$("#form").submit();' class='btn btn-success'>
                     <?php echo $button_save; ?>
                 </a>
-                <a onclick='location = "<?php
-		echo $cancel;
-		?>";' class='btn btn-danger'>
+                <a onclick='location = "<?php echo $cancel;	?>";' class='btn btn-danger'>
                     <?php echo $button_cancel; ?>
                 </a>
             </div>
         </div>
         <div class='content'>
-            <form action='<?php
-		echo $action;
-		?>' method='post' enctype='multipart/form-data' id='form'>
+            <form action='<?php	echo $action;?>' method='post' enctype='multipart/form-data' id='form'>
                 <div id='tab-microdata' class='htabs'>
                     <a href='#tab-schemaorg'>
                         <?php echo $tab_schemaorg; ?>
@@ -100,22 +96,6 @@
                                 </select>
                             </td>
                         </tr>
-                        <tr>
-                            <td colspan='4' style='text-align:center; width:auto'><img src='view/image/microdata/rdf.jpg' alt=''>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan='2' style='text-align:center; width:auto'><img src='view/image/microdata/island-type-1.jpg' alt=''>
-                            </td>
-                            <td colspan='2' style='text-align:center'><img src='view/image/microdata/island-type-2.jpg' alt=''>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan='2' style='text-align:center; width:auto'><img src='view/image/microdata/island-type-3.jpg' alt=''>
-                            </td>
-                            <td colspan='2' style='text-align:center'><img src='view/image/microdata/island-type-4.jpg' alt=''>
-                            </td>
-                        </tr>
                     </table>
                 </div>
                 <div id='tab-opengraph' class='htabs-content'>
@@ -137,12 +117,6 @@
                             </td>
                             <td></td>
                             <td></td>
-                        </tr>
-                        <tr>
-                            <td colspan='2' style='text-align:center; width:auto'><img src='view/image/microdata/fbog-1.jpg' alt=''>
-                            </td>
-                            <td colspan='2' style='text-align:center'><img src='view/image/microdata/fbog-2.jpg' alt=''>
-                            </td>
                         </tr>
                     </table>
                 </div>
@@ -185,12 +159,6 @@
 									?>' value='<?php
 									echo $twitter_creator;
 									?>' /> </td>
-                        </tr>
-                        <tr>
-                            <td colspan='2' style='text-align:center; width:auto'><img src='view/image/microdata/twittercard-1.jpg' alt=''>
-                            </td>
-                            <td colspan='2' style='text-align:center'><img src='view/image/microdata/twittercard-2.jpg' alt=''>
-                            </td>
                         </tr>
                     </table>
                 </div>             

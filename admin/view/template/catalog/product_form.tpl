@@ -1130,6 +1130,7 @@
 
 																		<div id="tab-parsing">
 
+																		<div <?php if ($this->config->get('config_country_id') != 176) { ?> style="display:none"<?php } ?>>
 																			<h2>
 																				SKU <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><?php echo $sku; ?></span> 
 																				MODEL <span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><?php echo $model; ?></span>
@@ -1138,10 +1139,7 @@
 
 
 																			<table class="form">
-																				<tr>
-																					<td>
-																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF0000; color:#FFF">Неликвидный товар</span>
-																					</td>
+																				<tr>																					
 																					<td>
 																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF0000; color:#FFF">Исключить из YAM</span>
 																					</td>
@@ -1153,27 +1151,10 @@
 																					</td>
 																					<td>
 																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF0000; color:#FFF">Исключить из Priceva</span>
-																					</td>
-																					<td>
-																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7f00; color:#FFF">Мин цена Priceva</span>
-																					</td>
-
+																					</td>																					
 																				</tr>
 
 																				<tr style="border-bottom:1px dashed gray">
-																					<td style="width:16.6%">
-																						<select name="is_illiquid">
-																							<?php if ($is_illiquid) { ?>
-																								<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-																								<option value="0"><?php echo $text_disabled; ?></option>
-																							<?php } else { ?>
-																								<option value="1"><?php echo $text_enabled; ?></option>
-																								<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-																							<?php } ?>
-																						</select>
-																					</td>
-
-
 																					<td style="width:16.6%">
 																						<select name="yam_disable">
 																							<?php if ($yam_disable) { ?>
@@ -1211,18 +1192,15 @@
 																								<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
 																							<?php } ?>
 																						</select>
-																					</td>
-
-																					<td style="width:16.6%">
-																						<input type="text" name="mpp_price" value="<?php echo $mpp_price; ?>" />&nbsp;<? echo $this->config->get('config_currency'); ?>
-																					</td>
+																					</td>																				
 																				</tr>
 																			</table>	
+																		</div>
 
 																			<table class="form">
 																				<tr>
 																					<td style="width:50%">
-																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Ссылки на конкурентов - RU</span>
+																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Ссылки на конкурентов</span>
 																					</td>
 																					<td style="width:50%">
 																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Ссылки на конкурентов - Украина</span>
@@ -1232,7 +1210,7 @@
 																					<td>
 																						<textarea name="competitors" style="width:90%; height:200px;"><? echo $competitors; ?></textarea>
 																						<br />
-																						<span class="help">cсылки на страницы, где находится товар на сайтах конкурентов. по одной в строке. только RU</span>
+																						<span class="help">cсылки на страницы, где находится товар на сайтах конкурентов. по одной в строке</span>
 																					</td>
 																					<td>
 																						<textarea name="competitors_ua" style="width:90%; height:200px;"><? echo $competitors_ua; ?></textarea>
@@ -1247,26 +1225,53 @@
 
 																			<table class="form">
 																				<tr>
-																					<td style="width:25%">
+																					<td style="width:15%">
+																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF0000; color:#FFF">Неликвидный товар</span>
+																					</td>
+																					<td style="width:15%">
 																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Закупочная цена</span>
 																					</td>
-																					<td style="width:25%">
+																					<td style="width:15%">
 																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Закупочная акционная цена</span>
 																					</td>
-																					<td style="width:25%">
+																					<td>
+																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7f00; color:#FFF">Мин цена</span>
+																					</td>
+																					<td style="width:15%">
 																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7f00; color:#FFF">Цена из парсера</span>
 																					</td>
-																					<td style="width:25%">
+																					<td style="width:15%">
 																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7f00; color:#FFF">Акционная цена из парсера</span>
 																					</td>
-
 																				</tr>
 
 																				<tr style="border-bottom:1px dashed gray">
-																					<td><input type="text" name="cost" value="<?php echo $cost; ?>" /></td>
-																					<td><input type="text" name="special_cost" value="<?php echo $special_cost; ?>" /></td>
-																					<td><?php echo $parser_price; ?></td>
-																					<td><?php echo $parser_special_price; ?></td>
+																					<td>
+																						<select name="is_illiquid">
+																							<?php if ($is_illiquid) { ?>
+																								<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+																								<option value="0"><?php echo $text_disabled; ?></option>
+																							<?php } else { ?>
+																								<option value="1"><?php echo $text_enabled; ?></option>
+																								<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+																							<?php } ?>
+																						</select>																					
+																					</td>	
+																					<td>
+																						<input type="text" name="cost" value="<?php echo $cost; ?>" />
+																					</td>
+																					<td>
+																						<input type="text" name="special_cost" value="<?php echo $special_cost; ?>" />
+																					</td>
+																					<td>																						
+																						<input type="text" name="mpp_price" value="<?php echo $mpp_price; ?>" />&nbsp;<? echo $this->config->get('config_currency'); ?>
+																					</td>
+																					<td>
+																						<?php echo $parser_price; ?>
+																					</td>
+																					<td>
+																						<?php echo $parser_special_price; ?>																							
+																					</td>
 																				</tr>
 																			</table>
 
