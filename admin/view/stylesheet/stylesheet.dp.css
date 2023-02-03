@@ -161,7 +161,7 @@ select{padding:5px 5px;line-height:28px;background:#fff;border:1px solid #dbdbdb
 .status_color_a:visited{color:#1e1e1e}
 .status_color{display:block;border-radius:2px;padding:10px 0 10px 5px}
 .status_color_padding > span{color:#FFF;cursor:pointer;font-size:18px}
-.status_color_padding{display:block;border-radius:2px;padding:10px 5px;text-align:center}
+.status_color_padding{display:block;border-radius:2px;padding:5px 5px;text-align:center}
 .filter p{margin:0;color:#999}
 .bordSTYLE{font-size:14px!important;border:none!important;border-bottom-right-radius:21px;border-bottom-left-radius:20px;color:#fff!important;text-align:center!important;padding:2px 5px!important}
 .checkbox{vertical-align:top;margin:0 3px 0 0;width:17px;height:17px}
