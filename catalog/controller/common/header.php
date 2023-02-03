@@ -400,26 +400,26 @@
 			$this->data['home'] = $this->url->link('common/home');
 			
 			$this->data['logged'] = $this->customer->isLogged();
-			$this->data['account'] = $this->url->link('account/account', '', 'SSL');
+			$this->data['account'] = $this->url->link('account/account');
 			$this->data['shopping_cart'] = $this->url->link('checkout/cart');
-			$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
-			$this->data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
+			$this->data['checkout'] = $this->url->link('checkout/checkout');
+			$this->data['wishlist'] = $this->url->link('account/wishlist');
 			
-			$this->data['all_actions'] = $this->url->link('information/actions', '', 'SSL');
-			$this->data['product_new'] = $this->url->link('product/product_new', '', 'SSL');
-			$this->data['contacts'] = $this->url->link('information/contact', '', 'SSL');
-			$this->data['feedback'] = $this->url->link('information/feedback', '', 'SSL');
+			$this->data['all_actions'] = $this->url->link('information/actions');
+			$this->data['product_new'] = $this->url->link('product/product_new');
+			$this->data['contacts'] = $this->url->link('information/contact');
+			$this->data['feedback'] = $this->url->link('information/feedback');
 			
-			$this->data['text_welcome'] = sprintf($this->language->get('text_welcome'), $this->url->link('account/login', '', 'SSL'), $this->url->link('account/register', '', 'SSL'));
+			$this->data['text_welcome'] = sprintf($this->language->get('text_welcome'), $this->url->link('account/login'), $this->url->link('account/register'));
 			$this->data['text_logged'] = '';
 			
-			$this->data['loginb2b'] = $this->url->link('account/simpleregisterb2b', '', 'SSL');
+			$this->data['loginb2b'] = $this->url->link('account/simpleregisterb2b');
 			
-			$this->data['compare'] = $this->url->link('product/compare', '', 'SSL');
+			$this->data['compare'] = $this->url->link('product/compare');
 			$this->data['text_compare'] = sprintf($this->language->get('text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
 			$this->data['text_count_compare'] = $this->language->get('text_count_compare');
 			
-			$this->data['link_logout'] = $this->url->link('account/logout', '', 'SSL');
+			$this->data['link_logout'] = $this->url->link('account/logout');
 			$this->data['text_logout'] = $this->language->get('text_logout');
 			
 			$this->data['text_search'] = $this->language->get('text_search');
@@ -575,7 +575,7 @@
 		}
 		
 		public function wishlistblock(){
-			$this->data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
+			$this->data['wishlist'] = $this->url->link('account/wishlist');
 			$this->data['count'] = (isset($this->session->data['wishlist']) ? count($this->session->data['wishlist']) : 0);
 			$this->data['text_wishlist'] = $this->language->get('text_wishlist');
 			
@@ -593,9 +593,9 @@
 			$this->language->load('common/header');
 			
 			$this->data['logged'] = $this->customer->isLogged();
-			$this->data['account'] = $this->url->link('account/account', '', 'SSL');
+			$this->data['account'] = $this->url->link('account/account');
 			$this->data['shopping_cart'] = $this->url->link('checkout/cart');
-			$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
+			$this->data['checkout'] = $this->url->link('checkout/checkout');
 			
 			$this->language->load('account/login');
 			$this->data['text_forgotten'] = $this->language->get('text_forgotten');
@@ -606,9 +606,9 @@
 			$this->data['button_login'] = $this->language->get('button_login');
 			
 			$this->load->model('account/customer');
-			$this->data['action'] = $this->url->link('account/login', '', 'SSL');
-			$this->data['register'] = $this->url->link('account/register', '', 'SSL');
-			$this->data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
+			$this->data['action'] = $this->url->link('account/login');
+			$this->data['register'] = $this->url->link('account/register');
+			$this->data['forgotten'] = $this->url->link('account/forgotten');
 			
 			//МЕНЮ Аккаунта
 			if ($this->customer->isLogged()){
@@ -624,26 +624,26 @@
 				
 				// Мой кабинет
 				$this->data['text_account'] = $this->language->get('text_account');
-				$this->data['account'] = $this->url->link('account/account', '', 'SSL');
+				$this->data['account'] = $this->url->link('account/account');
 				
 				// Мои заказы
 				$this->data['text_address'] = $this->language->get('text_address');
-				$this->data['address'] = $this->url->link('account/address', '', 'SSL');
+				$this->data['address'] = $this->url->link('account/address');
 				
 				// Мои заказы
 				$this->data['text_order'] = $this->language->get('text_order');
-				$this->data['order'] = $this->url->link('account/order', '', 'SSL');
+				$this->data['order'] = $this->url->link('account/order');
 				
 				// Мои бонусы
 				$this->data['text_reward'] = $this->language->get('text_reward');
-				$this->data['reward'] = $this->url->link('account/reward', '', 'SSL');
+				$this->data['reward'] = $this->url->link('account/reward');
 				
 				$this->data['text_transaction'] = $this->language->get('text_transaction');			
-				$this->data['transaction'] = $this->url->link('account/transaction', '', 'SSL');
+				$this->data['transaction'] = $this->url->link('account/transaction');
 				
 				// Мои промокоды
 				$this->data['text_coupons'] = $this->language->get('text_coupons');
-				$this->data['coupons'] = $this->url->link('account/promocodes', '', 'SSL');
+				$this->data['coupons'] = $this->url->link('account/promocodes');
 				
 				// Просмотренные
 				$this->data['text_viewed'] = $this->language->get('text_viewed');
@@ -669,14 +669,14 @@
 				$this->data['text_edit'] = $this->language->get('text_edit');
 				$this->data['text_address'] = $this->language->get('text_address');
 				
-				$this->data['edit'] = $this->url->link('account/edit', '', 'SSL');
-				$this->data['password'] = $this->url->link('account/password', '', 'SSL');
-				$this->data['address'] = $this->url->link('account/address', '', 'SSL');
+				$this->data['edit'] = $this->url->link('account/edit');
+				$this->data['password'] = $this->url->link('account/password');
+				$this->data['address'] = $this->url->link('account/address');
 				
 				
 				//Выход
 				$this->data['text_logout'] = $this->language->get('text_logout');
-				$this->data['logout'] = $this->url->link('account/logout', '', 'SSL');
+				$this->data['logout'] = $this->url->link('account/logout');
 				
 				$this->data['points_active'] = $this->customer->getRewardPoints();
 				$this->data['points_active_formatted'] = $this->currency->formatBonus($this->data['points_active']);
