@@ -5,7 +5,6 @@
 			<?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
 		<?php } ?>
 	</div>
-	<div class="warning"><h2>Сохранение полей работает на лету, не нажимайте кнопку сохранить при возможности</h2></div>
 	<?php if ($error_warning) { ?>
 		<div class="warning"><?php echo $error_warning; ?></div>
 	<?php } ?>
@@ -16,10 +15,12 @@
 		<div class="heading order_head">
 			<h1><img src="view/image/setting.png" alt="" /> <?php echo $heading_title; ?> / <?php echo $config_name; ?></h1>			
 				<div class="buttons">
+				<?php /* ?>	
 					<a onclick="$('#save_button').toggle()" class="button">Показать кнопку сохранения</a>
 					<a onclick="$('#form').submit();" class="button" id="save_button" style="display:none; border-color:red;color:white;background-color: red">СОХРАНИТЬ [ НЕ НАЖИМАТЬ НА ХУЕВОМ ИНТЕРНЕТЕ ]</a>
+				<?php */ ?>	
 					<a href="<?php echo $cancel; ?>" class="button"><?php echo $button_cancel; ?></a>
-			</div>
+				</div>
 		</div>
 		<div class="content">
 			<style>
@@ -49,105 +50,124 @@
 			<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
 				<input type="hidden" name="store_id" value="0"/>
 				<div id="tab-general">
+
+					<h2>Основное</h2>
 					<table class="form">
 						<tr>
-							<td><span class="required">*</span> <?php echo $entry_name; ?></td>
-							<td><input type="text" name="config_name" value="<?php echo $config_name; ?>" size="40" />
-								<?php if ($error_name) { ?>
-									<span class="error"><?php echo $error_name; ?></span>
-								<?php } ?></td>
-						</tr>
+							<td style="width:25%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Название</span></p>
+								<input type="text" name="config_name" value="<?php echo $config_name; ?>" size="40" />							
+							</td>
 						
-						<tr>
-							<td>HTTPS (для соместимости с хрефланг)</td>
-							<td><input type="text" name="config_ssl" value="<?php echo $config_ssl; ?>" size="40" /></td>
-						</tr>
-						
-						<tr>
-							<td><span class="required">*</span> <?php echo $entry_owner; ?></td>
-							<td><input type="text" name="config_owner" value="<?php echo $config_owner; ?>" size="40" />
-								<?php if ($error_owner) { ?>
-									<span class="error"><?php echo $error_owner; ?></span>
-								<?php } ?></td>
-						</tr>
-						<tr>
-							<td><span class="required">*</span> <?php echo $entry_address; ?></td>
-							<td><textarea name="config_address" cols="40" rows="5"><?php echo $config_address; ?></textarea>
-								<?php if ($error_address) { ?>
-									<span class="error"><?php echo $error_address; ?></span>
-								<?php } ?></td>
-						</tr>
-						<tr>
-							<td><span class="required">*</span> <?php echo $entry_email; ?></td>
-							<td><input type="text" name="config_email" value="<?php echo $config_email; ?>" size="40" />
-								<?php if ($error_email) { ?>
-									<span class="error"><?php echo $error_email; ?></span>
-								<?php } ?></td>
-						</tr>
-						<tr>
-							<td><span class="required"></span>E-mail для отображения в контактах</td>
-							<td><input type="text" name="config_display_email" value="<?php echo $config_display_email; ?>" size="40" /> </td>             
-						</tr>
-						<tr>
-							<td><span class="required"></span>E-mail оптовый</td>
-							<td><input type="text" name="config_opt_email" value="<?php echo $config_opt_email; ?>" size="40" />   </td>            
-						</tr>
-						<tr>
-							<td><span class="required"></span>Подпись для смсок (макс. 11 симв.)</td>
-							<td><input type="text" name="config_sms_sign" value="<?php echo $config_sms_sign; ?>" size="11" />   </td>            
-						</tr>
-						<tr>
-							<td><span class="required"></span>Маска ввода телефонного номера</td>
-							<td><input type="text" name="config_phonemask" value="<?php echo $config_phonemask; ?>" size="20" />   </td>            
-						</tr>
-						<tr>
-							<td><span class="required">*</span> <?php echo $entry_telephone; ?></td>
-							<td>
-								++Текст над:<input type="text" name="config_t_tt" value="<?php echo $config_t_tt; ?>" size="40" /><br /><br />
-								Сам телефон:<input type="text" name="config_telephone" value="<?php echo $config_telephone; ?>" size="40" /><br /><br />			 
-								++Текст под:<input type="text" name="config_t_bt" value="<?php echo $config_t_bt; ?>" size="40" /> 
-								<?php if ($error_telephone) { ?>
-									<span class="error"><?php echo $error_telephone; ?></span>
-								<?php } ?></td>
-						</tr>
-						<tr>
-							<td><span class="required"></span>Второй телефон</td>
-							<td>
-								++Текст над:<input type="text" name="config_t2_tt" value="<?php echo $config_t2_tt; ?>"  size="40"/><br /><br />
-								Сам телефон:<input type="text" name="config_telephone2" value="<?php echo $config_telephone2; ?>" size="40" /><br /><br />				
-								++Текст под:<input type="text" name="config_t2_bt" value="<?php echo $config_t2_bt; ?>" size="40" /> 
+							<td style="width:25%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">HTTPS (для соместимости с хрефланг)</span></p>
+								<input type="text" name="config_ssl" value="<?php echo $config_ssl; ?>" size="40" />
+							</td>
+
+							<td style="width:25%">
+								<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><?php echo $entry_owner; ?></span></p>
+									<input type="text" name="config_owner" value="<?php echo $config_owner; ?>" size="40" />
+								</div>
+
+								<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Время работы</span></p>
+									<input type="text" name="config_worktime" value="<?php echo $config_worktime; ?>" size="60" />
+								</div>
+							</td>
+
+							<td style="width:25%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><?php echo $entry_address; ?></span></p>
+								<textarea name="config_address" cols="40" rows="5"><?php echo $config_address; ?></textarea>
 							</td>
 						</tr>
+					</table>
+
+					<h2>Мейлы</h2>
+					<table class="form">
 						<tr>
-							<td><span class="required"></span>Третий телефон</td>
-							<td>	
-								Сам телефон:<input type="text" name="config_telephone3" value="<?php echo $config_telephone3; ?>" size="40" /><br /><br />				
+							<td style="width:25%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF"><?php echo $entry_email; ?></span></p>
+								<input type="text" name="config_email" value="<?php echo $config_email; ?>" size="40" />							
 							</td>
-						</tr> 
-						<tr>
-							<td><span class="required"></span>Время работы</td>
-							<td><input type="text" name="config_worktime" value="<?php echo $config_worktime; ?>"  style="width:400px;" />
+
+							<td style="width:25%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">E-mail для отображения в контактах</span></p>
+								<input type="text" name="config_display_email" value="<?php echo $config_display_email; ?>" size="40" />							
 							</td>
+
+							<td style="width:25%">
+								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">E-mail оптовый</span></p>
+								<input type="text" name="config_opt_email" value="<?php echo $config_opt_email; ?>" size="40" /> 							
+							</td>
+		
 						</tr>
-						<tr>
-							<td>Оптовый телефон 1</td>
-							<td>			
-								<input type="text" name="config_opt_telephone" value="<?php echo $config_opt_telephone; ?>" size="40" />
-							</td>
-						</tr>
-						<tr>
-							<td>Оптовый телефон 2</td>
-							<td>			
-								<input type="text" name="config_opt_telephone2" value="<?php echo $config_opt_telephone2; ?>" size="40" />
-							</td>
-							<tr>
-								<td><?php echo $entry_fax; ?></td>
-								<td><input type="text" name="config_fax" value="<?php echo $config_fax; ?>" /></td>
-							</tr>			
+					</table>
+
+					<h2>Телефоны</h2>
+					<table class="form">
+						<tr>							
+								<td style="width:33%">
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Текст над</span></p>
+										<input type="text" name="config_t_tt" value="<?php echo $config_t_tt; ?>" size="40" />
+									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Телефон - 1</span></p>
+										<input type="text" name="config_telephone" value="<?php echo $config_telephone; ?>" size="40" />
+									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Текст под</span></p>
+										<input type="text" name="config_t_bt" value="<?php echo $config_t_bt; ?>" size="40" />
+									</div>
+								</td>
+
+								<td style="width:33%">
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Текст над</span></p>
+										<input type="text" name="config_t2_tt" value="<?php echo $config_t2_tt; ?>" size="40" />
+									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Телефон - 2</span></p>
+										<input type="text" name="config_telephone2" value="<?php echo $config_telephone2; ?>" size="40" />
+									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Текст под</span></p>
+										<input type="text" name="config_t2_bt" value="<?php echo $config_t2_bt; ?>" size="40" />
+									</div>
+								</td>
+
+								<td style="width:33%">
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Телефон - 3</span></p>
+										<input type="text" name="config_telephone3" value="<?php echo $config_telephone3; ?>" size="40" />
+									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Оптовый телефон - 1</span></p>
+										<input type="text" name="config_opt_telephone" value="<?php echo $config_opt_telephone; ?>" size="40" />
+									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Оптовый телефон - 2</span></p>
+										<input type="text" name="config_opt_telephone2" value="<?php echo $config_opt_telephone2; ?>" size="40" />
+									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Факс</span></p>
+										<input type="text" name="config_fax" value="<?php echo $config_fax; ?>" />
+									</div>
+								</td>
+							</tr>		
 						</table>
 					</div>
+
 					<div id="tab-store">	
-						<h2>Настройки режимов работы админки. </h2>
+						<h2>Настройки режимов работы админки</h2>
 						<table class="form">
 							<tr>
 								<td style="width:15%">
@@ -3354,7 +3374,7 @@
 							<h2>Уведомления клиента</h2>
 							<table class="form">
 								<tr>									
-									<td style="width:33%">
+									<td style="width:15%">
 										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Уведомлять клиента о заказе</span></p>
 
@@ -3386,11 +3406,13 @@
 
 
 									<td style="width:25%" class="left">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Текст SMS о новом заказе</span></p>
-										<textarea name="config_sms_new_order_message" cols="40" rows="5"><?php echo $config_sms_new_order_message; ?></textarea>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Текст SMS о новом заказе</span></p>
+											<textarea name="config_sms_new_order_message" cols="40" rows="5"><?php echo $config_sms_new_order_message; ?></textarea>
+										</div>
 									</td>
 
-									<td style="width:33%" class="left">
+									<td style="width:25%" class="left">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Шаблон нового</span></p>
 										<span class="help">											
 											<b>{SNAME}</b> - название магазина<br />
@@ -3405,6 +3427,18 @@
 											<b>{TTN}</b> - ТТН службы доставки<br />
 											<b>{DELIVERY_SERVICE}</b> - Служба доставки
 										</span>
+									</td>
+
+									<td style="width:25%" class="left">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Альфа по-умолчанию</span></p>
+											<input type="text" name="config_sms_sign" value="<?php echo $config_sms_sign; ?>" size="11" />
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Маска телефона</span></p>
+											<input type="text" name="config_phonemask" value="<?php echo $config_phonemask; ?>" size="20" />
+										</div>
 									</td>
 								</tr>	
 								</table>
