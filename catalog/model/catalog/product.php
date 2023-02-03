@@ -293,7 +293,7 @@
 					
 					$stock_data = $this->parseProductStockData($result);
 					$ecommerceData = array(
-						'id'		=> (int)$result['product_id'],
+						'id'		=> ((int)$result['product_id']) . GOOGLE_ID_ENDFIX,
 						'name' 		=> prepareEcommString($result['name']),
 						'gtin' 		=> prepareEcommString($result['ean']),			
 						'brand' 	=> prepareEcommString($result['manufacturer']),		

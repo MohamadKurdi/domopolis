@@ -210,9 +210,9 @@
 
 	<?php } ?>
 	
+	
 	<?php if ($products) { ?>	
-		$(document).ready(function(){
-			
+		$(document).ready(function(){			
 			<?php $this->load->model('catalog/product'); ?>
 			
 			<?php $chunkedProducts = array_chunk($products, 5); ?>
@@ -225,15 +225,25 @@
 					'ecommerce': {
 						'currencyCode': '<?php echo $this->config->get('config_regional_currency'); ?>',  
 						'impressions':[
-						<?php $i = 0; foreach ($products as $product) { ?>					
-							{
-								'name': '<?php echo prepareEcommString($product['name']); ?>', 
-								'id': '<?php echo prepareEcommString($product['product_id'] . GOOGLE_ID_ENDFIX); ?>',
-								'price': '<?php echo ($product['special'])?prepareEcommPrice($product['special']):prepareEcommPrice($product['price']); ?>',
-								'brand': '<?php echo prepareEcommString($product['manufacturer']); ?>',
-								'category': '<?php echo prepareEcommString($this->model_catalog_product->getGoogleCategoryPath($product['product_id'])); ?>',
-								'list': '<?php echo prepareEcommString($heading_title); ?>',
+						<?php $i = 0; foreach ($products as $product) { ?>
+							{	
+							<?php if (!empty($product['ecommerceData'])) { ?>
+								'name': 	'<?php echo $product['ecommerceData']['name']; ?>',
+								'id': 		'<?php echo $product['ecommerceData']['id']; ?>',
+								'price': 	'<?php echo $product['ecommerceData']['price']; ?>',
+								'brand': 	'<?php echo $product['ecommerceData']['brand']; ?>',
+								'category': '<?php echo $product['ecommerceData']['category']; ?>',
+								'list': 	'<?php echo prepareEcommString($heading_title); ?>',
 								'position': <?php echo $k; ?>
+							<?php } else { ?>
+								'name': 	'<?php echo prepareEcommString($product['name']); ?>', 
+								'id': 		'<?php echo prepareEcommString($product['product_id'] . GOOGLE_ID_ENDFIX); ?>',
+								'price': 	'<?php echo ($product['special'])?prepareEcommPrice($product['special']):prepareEcommPrice($product['price']); ?>',
+								'brand': 	'<?php echo prepareEcommString($product['manufacturer']); ?>',
+								'category': '<?php echo prepareEcommString($this->model_catalog_product->getGoogleCategoryPathForCategory($product['main_category_id'])); ?>',
+								'list': 	'<?php echo prepareEcommString($heading_title); ?>',
+								'position': <?php echo $k; ?>
+							<?php } ?>
 							}<?php if ($i < (count($products) - 1)) {?>,<?php } ?>
 							<?php $i++; ?>
 							<?php $k++; ?>
