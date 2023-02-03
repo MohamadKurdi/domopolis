@@ -23,12 +23,14 @@ class InfoUpdater extends RainforestRetriever
 		'Читайте далі',
 		'читайте далі',
 		'Читати далі',
-		'читати далі',
+		'читати далі',		
 		'Докладно',
 		'Lesen Sie weiter',
 		'Sie weiter',
 		'lessen Sie weiter',
-		'продовжуйте читати'
+		'продовжуйте читати',
+		'Продовжити читання',
+		'Продовжуйте читати'
 	];
 
 	public const descriptionsQueryLimit = 5000;
