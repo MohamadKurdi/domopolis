@@ -358,6 +358,23 @@
 		public function getTelephone() {
 			return $this->telephone;
 		}
+
+		public function getCustomerByTelephone($phone){
+			$phone = trim(preg_replace("([^0-9])", "", $phone));
+
+			$sql = "SELECT customer_id, firstname, lastname FROM customer WHERE ";		
+			$sql .= "(TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(telephone,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) LIKE '%" . $this->db->escape($phone) . "' )";
+			$sql .= "OR (TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(fax,' ',''), '+', ''), '-', ''), '(', ''), ')', '')) LIKE '%" . $this->db->escape($phone) . "')";
+			$sql .= " LIMIT 1";
+
+			$query = $this->db->query($sql);
+
+			if ($query->num_rows){
+				return $query->row;
+			}
+
+			return false;
+		}
 		
 		public function getFax() {
 			return $this->fax;

@@ -86,8 +86,7 @@ class ControllerAPIAsterisk extends Controller {
 			$sql = "SELECT user_id FROM user WHERE internal_pbx_num = '" . $this->db->escape($dest) . "'";
 			$query = $this->db->query($sql);
 			
-			if ($query->row) {
-				
+			if ($query->row) {				
 				$data = array(
 					'type' => 'success',
 					'text' => "Входящий звонок: <br /><br /><span style='font-size:16px;'>".$customer_name.'</span>', 
@@ -194,10 +193,8 @@ class ControllerAPIAsterisk extends Controller {
 					}
 				}
 				
-				if ($query->row && $query->row['customer_id']) {
-					
-					if ($real_inbound_call || $from_sendmissedcall) {
-						
+				if ($query->row && $query->row['customer_id']) {					
+					if ($real_inbound_call || $from_sendmissedcall) {						
 						$data = array(
 							'type' => 'warning',
 							'text' => "Пропущенный звонок: <br /><br /><span style='font-size:16px;'>".$query->row['firstname'] . ' ' . $query->row['lastname'].'</span>', 
@@ -205,26 +202,25 @@ class ControllerAPIAsterisk extends Controller {
 							'entity_id' => $query->row['customer_id']
 						);
 						
-						$this->mAlert->insertAlertForGroup($alert_namespace, $data);							
-						
+						$this->mAlert->insertAlertForGroup($alert_namespace, $data);													
 					}
 					
 					$customer_id = (int)$query->row['customer_id'];
 					$name = $query->row['firstname'].' '.$query->row['lastname'];
 					
 					$sql = ("INSERT IGNORE INTO `customer_calls` SET 
-						customer_id = '" .(int)$customer_id. "', 
-						inbound = '" .(int)$inbound. "',
-						customer_phone = '" . $this->db->escape($phone). "',
-						length = 0,					
-						date_end = NOW(), 
-						comment = '',
-						sip_queue = '" . $this->db->escape($queue_id) . "',
-						internal_pbx_num = '" . $this->db->escape($internal) . "',
-						manager_id = '" . (int)$manager_id . "',
-						filelink = '',
-						order_id = 0
-						");
+						customer_id 		= '" .(int)$customer_id. "', 
+						inbound 			= '" .(int)$inbound. "',
+						customer_phone 		= '" . $this->db->escape($phone). "',
+						length 				= 0,					
+						date_end 			= NOW(), 
+						comment 			= '',
+						sip_queue 			= '" . $this->db->escape($queue_id) . "',
+						internal_pbx_num 	= '" . $this->db->escape($internal) . "',
+						manager_id 			= '" . (int)$manager_id . "',
+						filelink 			= '',
+						order_id 			= 0
+					");
 					
 					$this->db->query($sql);
 					$n = $this->db->getLastId();
@@ -262,20 +258,19 @@ class ControllerAPIAsterisk extends Controller {
 					}
 				}		
 				
-				if ($real_inbound_call || $from_sendmissedcall) {
-					
+				if ($real_inbound_call || $from_sendmissedcall) {					
 					$query = $this->db->query("INSERT INTO callback SET 
-						name = '" . $this->db->escape($name)  . "', 
-						comment_buyer = '" . $this->db->escape('Пропущенный звонок')  . "',
-						email_buyer = '" . $this->db->escape('')  . "', 
-						telephone = '" . $this->db->escape($phone) . "',
-						customer_id = '". (int)$customer_id ."',
-						sip_queue = '" . $this->db->escape($queue_id) . "',
-						date_added = NOW(), 
-						date_modified = NOW(), 
-						status_id = '0',
-						is_missed = '1',
-						comment = ''"
+						name 				= '" . $this->db->escape($name)  . "', 
+						comment_buyer 		= '" . $this->db->escape('Пропущенный звонок')  . "',
+						email_buyer 		= '" . $this->db->escape('')  . "', 
+						telephone 			= '" . $this->db->escape($phone) . "',
+						customer_id 		= '". (int)$customer_id ."',
+						sip_queue 			= '" . $this->db->escape($queue_id) . "',
+						date_added 			= NOW(), 
+						date_modified 		= NOW(), 
+						status_id 			= '0',
+						is_missed 			= '1',
+						comment 			= ''"
 					);
 					
 				}
