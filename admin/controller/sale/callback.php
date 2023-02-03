@@ -19,13 +19,8 @@
 			
 			$this->load->model('sale/callback');
 			
-			if ($this->request->server['REQUEST_METHOD'] == 'POST')  { 
-				
-				
+			if ($this->request->server['REQUEST_METHOD'] == 'POST')  { 								
 				$this->model_sale_callback->editCallback($this->request->get['callback_id'], $this->request->post);
-				
-				
-				
 				$this->session->data['success'] = $this->language->get('text_success');
 				
 				$url = '';
@@ -48,9 +43,6 @@
 			$this->getForm();
 		}   
 		
-		
-		
-		
 		public function update_batch() {
 			$this->load->language('sale/callback');
 			
@@ -65,8 +57,7 @@
 						$this->model_sale_callback->editCallbacks($callback_id);
 					}
 				}
-				
-				
+								
 				$this->session->data['success'] = $this->language->get('text_success');
 				
 				$url = '';
@@ -88,9 +79,6 @@
 			
 			$this->getList();
 		}  
-		
-		
-		
 		
 		public function delete() {
 			$this->load->language('sale/callback');
@@ -189,12 +177,10 @@
 			'limit' => $this->config->get('config_admin_limit')
 			);
 			
-			$callbacks_total = $this->model_sale_callback->getTotalCallbacks();
-			
+			$callbacks_total = $this->model_sale_callback->getTotalCallbacks();			
 			$results = $this->model_sale_callback->getCallbacks($data);
 			
-			foreach ($results as $result) {
-				
+			foreach ($results as $result) {				
 				$action = $this->url->link('sale/callback/update', 'token=' . $this->session->data['token'] . '&callback_id=' . $result['call_id'] . $url, 'SSL');
 				
 				if ($result['status_id'] == '0'){
@@ -233,6 +219,10 @@
 				$real_customer = false;
 				if (!$result['name'] && $result['customer_id']){
 					$real_customer = $this->model_sale_customer->getCustomer($result['customer_id']);
+				}
+
+				if (empty($real_customer['firstname'])){
+					$real_customer['firstname'] = $result['telephone'];
 				}
 				
 				$this->data['callbacks'][] = array(
@@ -282,9 +272,6 @@
 			
 			$this->data['button_insert'] = $this->language->get('button_insert');
 			$this->data['button_delete'] = $this->language->get('button_delete');
-			
-			
-			
     		$this->data['status_wait'] = $this->language->get('status_wait');
     		$this->data['status_done'] = $this->language->get('status_done');
 			

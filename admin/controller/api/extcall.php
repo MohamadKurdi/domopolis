@@ -6,28 +6,28 @@ class ControllerApiExtCall extends Controller {
 		if (!empty( $this->request->post['phone']) )
 		{
 			
-				if ($this->user->getIPBX()){
-					$ext = $this->user->getIPBX();
+			if ($this->user->getIPBX()){
+				$ext = $this->user->getIPBX();
+			} else {
+				die ('no extension set to user!');
+			}
+
+			$num = $this->request->post['phone'];
+			$num = preg_replace( "/\D/", "", $num );
+			$ext = preg_replace( "/\D/", "", $ext );
+
+			if ( ! empty( $num ) )
+			{
+				if ($this->config->get('config_telephony_engine') == 'binotel'){
+					$this->originateCallAjaxBinotel($num, $ext);						
 				} else {
-					die ('no extension set to user!');
+					$this->originateCallAjaxAsterisk($num, $ext);						
 				}
-				
-				$num = $this->request->post['phone'];
-				$num = preg_replace( "/\D/", "", $num );
-				$ext = preg_replace( "/\D/", "", $ext );
- 
-				if ( ! empty( $num ) )
-				{
-						if ($this->config->get('config_telephony_engine') == 'binotel'){
-							$this->originateCallAjaxBinotel($num, $ext);						
-						} else {
-							$this->originateCallAjaxAsterisk($num, $ext);						
-						}
-				}
-					else
-				{
-					echo "Unable to determine number from (" . $this->request->post['phone'] . ")\r\n";
-				}
+			}
+			else
+			{
+				echo "Unable to determine number from (" . $this->request->post['phone'] . ")\r\n";
+			}
 		}
 	}
 
@@ -59,20 +59,18 @@ class ControllerApiExtCall extends Controller {
 
 	}
 
-	public function originateCallAjaxBinotel($num, $ext){
-
-	var_dump($num);
+	public function originateCallAjaxBinotel($num, $ext){	
 
 		try {
-    		$binotelClient = new \denostr\Binotel\Client($this->config->get('config_binotel_api_key'), $this->config->get('config_binotel_api_secret'));
+			$binotelClient = new \denostr\Binotel\Client($this->config->get('config_binotel_api_key'), $this->config->get('config_binotel_api_secret'));
 
-    		$result = $binotelClient->calls->extToPhone([
-    			'ext_number' => $ext,
-    			'phone_number' => $num,
-    		]);
+			$result = $binotelClient->calls->extToPhone([
+				'ext_number' => $ext,
+				'phone_number' => $num,
+			]);
 
-    	} catch (\denostr\Binotel\Exception $e) {
-   		 	echo (sprintf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage()));
+		} catch (\denostr\Binotel\Exception $e) {
+			echo (sprintf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage()));
 		}	
 	}
 	
