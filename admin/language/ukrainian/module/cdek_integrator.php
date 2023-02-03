@@ -1,8 +1,8 @@
 <?php
 // Heading
-$_['heading_title']						= '<span style="color: #ffcc2b;">С</span>ДЭК<span class="help">Интеграция обмена</span>';
-$_['heading_title_main']				= 'СДЭК: Интеграция обмена';
-$_['heading_title_bk_main']				= 'СДЭК интегратор';
+$_['heading_title']						= 'Интеграция обмена службы доставки';
+$_['heading_title_main']				= 'Интеграция обмена службы доставки';
+$_['heading_title_bk_main']				= 'Интегратор';
 $_['heading_title_option']				= 'Настройки';
 $_['heading_title_order']				= 'Заказы на отгрузку';
 $_['heading_title_dispatch']			= 'Отгрузки';
@@ -187,4 +187,3 @@ $_['error_invalid_address_delivery']	= 'Неверный адрес достав
 $_['error_invalid_size']				= 'Невалидное значение габаритов!';
 $_['error_pvz_weigt_limit']				= 'Ограничение по весу в выбранном ПВЗ!';
 $_['error_currency_cod']				= 'Валюта наложенного платежа должна совпадать с валютой договора!';
-?>

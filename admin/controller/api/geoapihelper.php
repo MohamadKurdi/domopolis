@@ -6,8 +6,7 @@
 		
 		public function index() {}
 		
-		public function findCityID($city = 'Москва'){
-			
+		public function findCityID($city = ''){			
 			$data['filter[name]'] = trim($city);
 		
 			$this->makeRequest('cities', $data);
@@ -45,8 +44,6 @@
 			
 			$result = curl_exec($ch);
 			
-			print_r($result);
-			
-			
+			print_r($result);						
 		}
 	}

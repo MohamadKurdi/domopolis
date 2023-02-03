@@ -22,7 +22,6 @@
 		}
 		
 		public function smsQueue(){
-
 			if (!$this->config->get('config_sms_enable_queue_worker')){
 				echoLine('[ControllerKPService::smsQueue] CRON IS DISABLED IN ADMIN', 'e');
 				return;
@@ -38,8 +37,6 @@
 					echoLine('[ControllerKPService::smsQueue] ALLOWED TIME', 's');				
 				}
 			}
-
-
 			$this->smsQueue->cron();
 		}
 
@@ -400,16 +397,6 @@
 			echo '>> Копирование города...' . PHP_EOL;
 			echo 'QUERY:' . "UPDATE customer c SET city = (SELECT city FROM `address` a WHERE a.address_id = c.address_id LIMIT 1)" . PHP_EOL;
 			$this->db->query("UPDATE customer c SET city = (SELECT city FROM `address` a WHERE a.address_id = c.address_id LIMIT 1)");
-			echo PHP_EOL;
-			
-			echo '>> Подбор геозон...' . PHP_EOL;
-			echo '>>> Москва' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE address SET zone_id = 39 WHERE city LIKE 'Москва'" . PHP_EOL;
-			$this->db->query("UPDATE address SET zone_id = 39 WHERE city LIKE 'Москва'");
-			
-			echo '>>> Петербург' . PHP_EOL;
-			echo 'QUERY:' . "UPDATE address SET zone_id = 80 WHERE city LIKE 'Санкт-Петербург'" . PHP_EOL;
-			$this->db->query("UPDATE address SET zone_id = 80 WHERE city LIKE 'Санкт-Петербург'");
 			echo PHP_EOL;
 			
 			echo '>> Обновление CSI клиентов...' . PHP_EOL;
