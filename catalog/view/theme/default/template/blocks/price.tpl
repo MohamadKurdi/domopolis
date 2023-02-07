@@ -202,6 +202,15 @@
 						</button>
 					<?php } ?>
 				</div>
+
+				<? if ($customer_telephone) { ?>
+					<script type="text/javascript">
+						setTimeout(function(){
+							$('#waitlist-phone').val('<? echo $customer_telephone; ?>');
+						}, 1000)
+					</script>
+				<? } ?>
+
 				<script type="text/javascript">
 					function checkButtonTrigger(){
 						<? if (mb_strlen($mask, 'UTF-8') > 1) { ?>
