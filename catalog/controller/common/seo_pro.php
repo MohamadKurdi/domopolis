@@ -827,7 +827,7 @@
 			
 			$seo_url = $this->config->get('config_ssl') . $seo_url;
 			
-			if (isset($postfix)) {
+			if (isset($postfix) && $this->config->get('config_seo_url_postfix')) {
 				$seo_url .= trim($this->config->get('config_seo_url_postfix'));
 				} else {
 				//$seo_url .= '/';
