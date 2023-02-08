@@ -84,9 +84,7 @@
 					}
 					
 					
-					foreach ($modules as $module) {
-						
-						
+					foreach ($modules as $module) {												
 						if( ! isset( $module['layout_id'] ) )
 						$module['layout_id'] = 0;
 						
@@ -132,8 +130,7 @@
 				}
 			}
 			
-			if (count($customproduct_grouped)){
-			
+			if (count($customproduct_grouped)){			
 				$cg_sort_order = array(); 
 				foreach ($customproduct_grouped as $key => $value) {
 					$cg_sort_order[$key] = $value['sort_order'];							
@@ -145,8 +142,7 @@
 				'code'       => 'customproduct_grouped',
 				'setting'    => $customproduct_grouped,
 				'sort_order' => $customproduct_grouped_sort_order
-				);
-				
+				);				
 			}								
 			
 			$sort_order = array(); 
@@ -166,11 +162,7 @@
 				}
 			}
 			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/content_top.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/common/content_top.tpl';
-				} else {
-				$this->template = 'default/template/common/content_top.tpl';
-			}
+			$this->template = 'common/content_top.tpl';
 			
 			$this->render();
 		}
