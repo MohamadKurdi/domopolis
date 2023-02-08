@@ -140,17 +140,9 @@
 			$this->data['styles'] = $this->document->getStyles();
 			$this->data['lang'] = $this->config->get('config_language_hreflang')?$this->config->get('config_language_hreflang'):$this->language->get('code');
 			
-			$this->data['preload_links'] = array();
-			$preload_links = explode(PHP_EOL, $this->config->get('config_preload_links'));
-			
-			foreach ($preload_links as $__link){
-				
-				
-				$__link = trim(str_replace(PHP_EOL, '', $__link));
-				if (mb_strlen($__link) > 10){
-					$this->data['preload_links'][] = $__link;
-				}
-				
+			$this->data['preload_links'] = [];
+			if ($this->config->get('config_preload_links')){
+				$this->data['preload_links'] = prepareEOLArray($this->config->get('config_preload_links'));
 			}
 			
 			if ($this->data['lang'] == 'ru-KZ'){
@@ -466,17 +458,36 @@
 			$this->data['href_wmf']	= $this->url->link('product/manufacturer/info', 'manufacturer_id=202');
 			$this->data['href_vb']	= $this->url->link('product/manufacturer/info', 'manufacturer_id=201');
 			
-			$this->data['google_analytics_header'] = html_entity_decode($this->config->get('config_google_analytics_header'), ENT_QUOTES, 'UTF-8');
-			$this->data['config_gtm_header'] = html_entity_decode($this->config->get('config_gtm_header'), ENT_QUOTES, 'UTF-8');
-			$this->data['config_gtm_body'] = html_entity_decode($this->config->get('config_gtm_body'), ENT_QUOTES, 'UTF-8');
+			$this->data['google_analytics_header'] = '';
+			if ($this->config->get('config_google_analytics_header')){
+				$this->data['google_analytics_header'] = html_entity_decode($this->config->get('config_google_analytics_header'), ENT_QUOTES, 'UTF-8');
+			}
+
+			$this->data['config_gtm_header'] = '';
+			if ($this->config->get('config_gtm_header')){
+				$this->data['config_gtm_header'] = html_entity_decode($this->config->get('config_gtm_header'), ENT_QUOTES, 'UTF-8');
+			}
+
+			$this->data['config_gtm_body'] = '';
+			if ($this->config->get('config_gtm_body')){
+				$this->data['config_gtm_body'] = html_entity_decode($this->config->get('config_gtm_body'), ENT_QUOTES, 'UTF-8');
+			}			
 
 			$this->data['config_fb_pixel_header'] = html_entity_decode($this->config->get('config_fb_pixel_header'), ENT_QUOTES, 'UTF-8');
 			$this->data['config_fb_pixel_body'] = html_entity_decode($this->config->get('config_fb_pixel_body'), ENT_QUOTES, 'UTF-8');
 
-			$this->data['config_vk_pixel_header'] = html_entity_decode($this->config->get('config_vk_pixel_header'), ENT_QUOTES, 'UTF-8');
-			$this->data['config_vk_pixel_body'] = html_entity_decode($this->config->get('config_vk_pixel_body'), ENT_QUOTES, 'UTF-8');
-			$this->data['config_vk_pixel_id'] = $this->config->get('config_vk_pixel_id');
-			$this->data['config_vk_enable_pixel'] = $this->config->get('config_vk_enable_pixel');
+			$this->data['config_vk_pixel_header'] = '';
+			if ($this->config->get('config_vk_pixel_header')){
+				$this->data['config_vk_pixel_header'] = html_entity_decode($this->config->get('config_vk_pixel_header'), ENT_QUOTES, 'UTF-8');
+			}	
+
+			$this->data['config_vk_pixel_body'] = '';
+			if ($this->config->get('config_vk_pixel_body')){
+				$this->data['config_vk_pixel_body'] = html_entity_decode($this->config->get('config_vk_pixel_body'), ENT_QUOTES, 'UTF-8');
+			}
+
+			$this->data['config_vk_pixel_id'] 		= $this->config->get('config_vk_pixel_id');
+			$this->data['config_vk_enable_pixel'] 	= $this->config->get('config_vk_enable_pixel');
 
 			
 			$this->data['google_ecommerce_enable'] = (int)$this->config->get('config_google_ecommerce_enable');

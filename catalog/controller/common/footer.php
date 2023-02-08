@@ -147,14 +147,20 @@ class ControllerCommonFooter extends Controller {
 		
 		$footerBottomScripts = array();
 		$this->data['footerBottomScripts'] = $footerBottomScripts;
-		
-			//GOOGLE CONVERSION		
+					
 		$this->data['google_conversion_id'] 		= $this->config->get('config_google_conversion_id');
-		$this->data['config_google_merchant_id'] 	= $this->config->get('config_google_merchant_id');
-			//END GOOGLE CONVERSION						
+		$this->data['config_google_merchant_id'] 	= $this->config->get('config_google_merchant_id');				
 
-		$this->data['config_vk_pixel_header'] 	= html_entity_decode($this->config->get('config_vk_pixel_header'), ENT_QUOTES, 'UTF-8');
-		$this->data['config_vk_pixel_body'] 	= html_entity_decode($this->config->get('config_vk_pixel_body'), ENT_QUOTES, 'UTF-8');
+		$this->data['config_vk_pixel_header'] = '';
+		if ($this->config->get('config_vk_pixel_header')){
+			$this->data['config_vk_pixel_header'] = html_entity_decode($this->config->get('config_vk_pixel_header'), ENT_QUOTES, 'UTF-8');
+		}	
+
+		$this->data['config_vk_pixel_body'] = '';
+		if ($this->config->get('config_vk_pixel_body')){
+			$this->data['config_vk_pixel_body'] = html_entity_decode($this->config->get('config_vk_pixel_body'), ENT_QUOTES, 'UTF-8');
+		}
+		
 		$this->data['config_vk_pixel_id'] 		= $this->config->get('config_vk_pixel_id');
 		$this->data['config_vk_enable_pixel'] 	= $this->config->get('config_vk_enable_pixel');
 		
