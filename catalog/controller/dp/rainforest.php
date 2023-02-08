@@ -289,17 +289,17 @@ class ControllerDPRainForest extends Controller {
 
 				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
 					echoLine('[deletecheapcron] Product ' . $row['product_id'] . ' is in orders, disabling');
-					$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($row['product_id'])->addAsinToIgnored($query->row['asin'], $query->row['name']);
+					$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($row['product_id']); //->addAsinToIgnored($query->row['asin'], $query->row['name']);
 				} else {
 					echoLine('[deletecheapcron] Product ' . $row['product_id'] . ' not in orders, deleting');
-					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($row['product_id'])->addAsinToIgnored($query->row['asin'], $query->row['name']);
+					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($row['product_id']); //->addAsinToIgnored($query->row['asin'], $query->row['name']);
 				}			
 
 				$i++;
 			}
 		}
 
-		return $this;
+	//	return $this;
 	}
 
 	/*
