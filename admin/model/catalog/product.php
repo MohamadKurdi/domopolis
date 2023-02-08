@@ -1230,41 +1230,48 @@
 		}
 
 		public function deleteImageCache($image){
-			unlink(DIR_IMAGE . $image);
+			$level = error_reporting();
+			error_reporting(0);			
+
+			if (file_exists(DIR_IMAGE . $image) && is_file(DIR_IMAGE . $image)){
+				@unlink(DIR_IMAGE . $image);
+			}
 
 			foreach (['config_image_category_', 'config_image_thumb_', 'config_image_popup_', 'config_image_product_', 'config_image_additional_', 'config_image_related_', 'config_image_compare_', 'config_image_cart_'] as $size){
 				$cachedName = Image::cachedname($image, 'jpg', [$this->config->get($size . 'width'), $this->config->get($size . 'height'), $this->config->get('config_image_jpeg_quality'), false]);
-				if (file_exists($cachedName['full_path'])){
-					unlink($cachedName['full_path']);
+				if (file_exists($cachedName['full_path']) && is_file($cachedName['full_path'])){
+					@unlink($cachedName['full_path']);
 				}
 
 				$cachedName = Image::cachedname($image, 'webp', [$this->config->get($size . 'width'), $this->config->get($size . 'height'), $this->config->get('config_image_webp_quality'), false]);
-				if (file_exists($cachedName['full_path'])){
-					unlink($cachedName['full_path']);
+				if (file_exists($cachedName['full_path']) && is_file($cachedName['full_path'])){
+					@unlink($cachedName['full_path']);
 				}
 
 				$cachedName = Image::cachedname($image, 'avif', [$this->config->get($size . 'width'), $this->config->get($size . 'height'), $this->config->get('config_image_avif_quality'), false]);
-				if (file_exists($cachedName['full_path'])){
-					unlink($cachedName['full_path']);
+				if (file_exists($cachedName['full_path']) && is_file($cachedName['full_path'])){
+					@unlink($cachedName['full_path']);
 				}
 			}
 
 			foreach ([[1000, 1000], [600, 600], [300, 300]] as $size){
 				$cachedName = Image::cachedname($image, 'jpg', [$size[0], $size[1], $this->config->get('config_image_jpeg_quality'), false]);
-				if (file_exists($cachedName['full_path'])){
-					unlink($cachedName['full_path']);
+				if (file_exists($cachedName['full_path']) && is_file($cachedName['full_path'])){
+					@unlink($cachedName['full_path']);
 				}
 
 				$cachedName = Image::cachedname($image, 'webp', [$size[0], $size[1], $this->config->get('config_image_webp_quality'), false]);
-				if (file_exists($cachedName['full_path'])){
-					unlink($cachedName['full_path']);
+				if (file_exists($cachedName['full_path']) && is_file($cachedName['full_path'])){
+					@unlink($cachedName['full_path']);
 				}
 
 				$cachedName = Image::cachedname($image, 'avif', [$size[0], $size[1], $this->config->get('config_image_avif_quality'), false]);
-				if (file_exists($cachedName['full_path'])){
-					unlink($cachedName['full_path']);
+				if (file_exists($cachedName['full_path']) && is_file($cachedName['full_path'])){
+					@unlink($cachedName['full_path']);
 				}
 			}
+
+			error_reporting($level);
 		}
 	
 		public function deleteProduct($product_id, $recursion = true, $asin_deletion_mode = false) {				
@@ -1300,7 +1307,9 @@
 			//IMAGES CLEANUP
 			if ($this->config->get('config_enable_amazon_specific_modes')){
 				$query = $this->db->query("SELECT image FROM product WHERE product_id = '" . (int)$product_id . "'");
-				$this->deleteImageCache($query->row['image']);
+				if ($query->num_rows){
+					$this->deleteImageCache($query->row['image']);
+				}
 
 
 				$query = $this->db->query("SELECT image FROM product_image WHERE product_id = '" . (int)$product_id . "'");
