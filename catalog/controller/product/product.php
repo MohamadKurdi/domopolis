@@ -191,9 +191,7 @@ class ControllerProductProduct extends Controller
                 }                   
             }
         }
-
     }
-
 
             //По умолчанию "доставка по"
     $this->data['delivery_text'] = $this->data['delivery_to_city_courier'];
