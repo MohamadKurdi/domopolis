@@ -24,7 +24,7 @@
 			$this->document->setHrefLangs($hreflangs);
 
 			if ($this->registry->get('perform_redirect_to_second_language')){
-				header('X-UA-REDIRECT: Slava Ukraini!');
+				header('X-UA-REDIRECT: Glory to Ukraine!');
 
 				foreach ($hreflangs as $hreflang){
 					if ($hreflang['code'] == $this->config->get('config_second_language')){
@@ -47,9 +47,7 @@
 				$this->data['page_type'] = 'homepage';
 			}
 			
-			$this->load->model('localisation/language');
-			
-			//top block logic
+			$this->load->model('localisation/language');						
 			$this->data['top_block_id'] = $this->top_block_id;
 			
 			$show_top_block = true;							
@@ -57,13 +55,7 @@
 				$show_top_block = true;
 			}
 			
-			$show_top_block = ($this->config->get('config_regional_currency') == 'RUB');
-			
 			if (isset($this->session->data[$this->top_block_id])){
-				$show_top_block = false;
-			}
-			
-			if (isset($_SERVER['GEOIP_COUNTRY_CODE']) && $_SERVER['GEOIP_COUNTRY_CODE'] == 'DE'){
 				$show_top_block = false;
 			}
 			
@@ -73,8 +65,7 @@
 				usort($notifies, function($a,$b){return $a['sort_order'] <=> $b['sort_order'];});
 				
 				$this->data['notifies'] = [];
-				foreach ($notifies as $notify){
-					
+				foreach ($notifies as $notify){					
 					if (!empty($notify['status']) && $notify['status'] == 'on' && !empty($notify['notify_bar_description'][$this->config->get('config_language_id')]['main_text'])){
 						
 						$this->data['notifies'][] = array(
@@ -92,10 +83,7 @@
 			}
 			
 			$this->data['show_top_block'] = $show_top_block;
-			
-			$opt_group_array = array(8,9,10,11);
-			
-
+							
 			$this->load->model('account/preauth');			
 			if ($email = $this->model_account_preauth->CheckPreauth()){	
 				$this->customer->login($email, '', true);					
@@ -133,12 +121,12 @@
 				$this->data['error'] = '';
 			}
 						
-			$this->data['base'] = $server;
-			$this->data['description'] = $this->document->getDescription();
-			$this->data['keywords'] = $this->document->getKeywords();
-			$this->data['opengraphs'] = $this->document->getOpenGraphs();		
-			$this->data['styles'] = $this->document->getStyles();
-			$this->data['lang'] = $this->config->get('config_language_hreflang')?$this->config->get('config_language_hreflang'):$this->language->get('code');
+			$this->data['base'] 		= $server;
+			$this->data['description'] 	= $this->document->getDescription();
+			$this->data['keywords'] 	= $this->document->getKeywords();
+			$this->data['opengraphs'] 	= $this->document->getOpenGraphs();		
+			$this->data['styles'] 		= $this->document->getStyles();
+			$this->data['lang'] 		= $this->config->get('config_language_hreflang')?$this->config->get('config_language_hreflang'):$this->language->get('code');
 			
 			$this->data['preload_links'] = [];
 			if ($this->config->get('config_preload_links')){
@@ -150,34 +138,30 @@
 			}
 			
 			$this->data['pwaInstallKey'] = $this->session->data['pwaInstallKey'] = md5('pwainstall' . $this->request->server['REMOTE_ADDR'] . date('d') . $this->config->get('config_encryption'));
-			$this->data['pwaSessionKey'] = $this->session->data['pwaSessionKey'] = md5('pwasession' . $this->request->server['REMOTE_ADDR'] . date('d') . $this->config->get('config_encryption'));
-			
+			$this->data['pwaSessionKey'] = $this->session->data['pwaSessionKey'] = md5('pwasession' . $this->request->server['REMOTE_ADDR'] . date('d') . $this->config->get('config_encryption'));			
 			$this->data['spsroute'] = $this->url->link('kp/pwa/sps', 'pwaSessionKey=' . $this->data['pwaSessionKey']);
 			$this->data['spiroute'] = $this->url->link('kp/pwa/spi', 'pwaInstallKey=' . $this->data['pwaInstallKey']);
 			
 			$this->data['pwasession'] = $this->customer->getPWASession();			
 			
-			$this->data['direction'] = $this->language->get('direction');
-			$this->data['name'] = $this->config->get('config_name');
-			$this->data['o_email'] = $this->config->get('config_display_email');			
-			$worktime =  explode(';', $this->config->get('config_worktime'));
-			
+			$this->data['direction'] 	= $this->language->get('direction');
+			$this->data['name'] 		= $this->config->get('config_name');
+			$this->data['o_email'] 		= $this->config->get('config_display_email');			
+
+			$worktime =  explode(';', $this->config->get('config_worktime'));			
 			if ($this->customer->isLogged() && $this->customer->isOpt()){
-				$this->data['worktime'] = isset($worktime[1])?$worktime[1]:$worktime[0];
-				
-				//первый телефон
-				$this->data['phone'] = $this->config->get('config_opt_telephone');
-				$this->data['phone2'] = $this->config->get('config_opt_telephone2');
-				
+				$this->data['worktime'] = isset($worktime[1])?$worktime[1]:$worktime[0];								
+				$this->data['phone'] 	= $this->config->get('config_opt_telephone');
+				$this->data['phone2'] 	= $this->config->get('config_opt_telephone2');				
 				} else {
 				$this->data['worktime'] = $worktime[0];
-				$this->data['phone'] = $this->config->get('config_telephone');
-				$this->data['phone2'] = $this->config->get('config_telephone2');
-				$this->data['phone3'] = $this->config->get('config_telephone3');
+				$this->data['phone'] 	= $this->config->get('config_telephone');
+				$this->data['phone2'] 	= $this->config->get('config_telephone2');
+				$this->data['phone3'] 	= $this->config->get('config_telephone3');
 			}
 			
-			$this->data['t_bt'] = $this->config->get('config_t_bt');
-			$this->data['t2_bt'] = $this->config->get('config_t2_bt');
+			$this->data['t_bt'] 	= $this->config->get('config_t_bt');
+			$this->data['t2_bt'] 	= $this->config->get('config_t2_bt');
 			
 			$this->data['social_auth'] = $this->config->get('config_social_auth');
 			
@@ -201,145 +185,58 @@
 			$this->load->model('tool/simpleapicustom');
 			$this->data['customer_city'] = $this->model_tool_simpleapicustom->getAndCheckCurrentCity();
 			
-			//MINIFICATION ENGINE W/STATIC
-			require_once DIR_SYSTEM . '../min/static/lib.php';
-			$static_uri = "/min/static";
 			
 			/*---------------- STYLES -------------*/			
-			$general_css = prepareEOLArray($this->config->get('config_header_min_styles'));
-			
-			$query = "f=" . implode(',', $general_css);
-			$this->data['general_minified_css_uri'] = Minify\StaticService\build_uri($static_uri, $query, 'css');
-			
-			if ($this->config->get('config_static_subdomain') && $this->data['general_minified_css_uri']){
-				$this->data['general_minified_css_uri'] = ltrim($this->data['general_minified_css_uri'], '/');
-				
-				if (file_exists(DIR_SITE . $this->data['general_minified_css_uri'])){
-					$this->data['general_minified_css_uri'] = trim($this->config->get('config_static_subdomain')) . $this->data['general_minified_css_uri'];
-				}
+			if ($generalCSS = prepareEOLArray($this->config->get('config_header_min_styles'))){
+				$this->data['general_minified_css_uri'] = trim($this->config->get('config_static_subdomain')) . \hobotix\MinifyAdaptor::createFile($generalCSS, 'css');
 			}
-			
-			$t = array();
-			if ($this->data['styles']){							
-				
-				foreach ($this->data['styles'] as $style) { $t[] = $style['href']; }				
-				$query = "f=" . implode(',', $t);
-				
-				$this->data['added_minified_css_uri'] = Minify\StaticService\build_uri($static_uri, $query, 'css');
-				} else {
-				$this->data['added_minified_css_uri'] = false;
-			}
-			
-			if ($this->config->get('config_static_subdomain') && $this->data['added_minified_css_uri']){
-				$this->data['added_minified_css_uri'] = ltrim($this->data['added_minified_css_uri'], '/');
-				
-				if (file_exists(DIR_SITE . $this->data['added_minified_css_uri'])){
-					$this->data['added_minified_css_uri'] = trim($this->config->get('config_static_subdomain')) . $this->data['added_minified_css_uri'];
+
+			if (!empty($this->data['styles'])){	
+				$engineCSS = [];
+				foreach ($this->data['styles'] as $style){ 
+					$engineCSS[] = $style['href']; 
 				}
+
+				$this->data['added_minified_css_uri'] = trim($this->config->get('config_static_subdomain')) . \hobotix\MinifyAdaptor::createFile($engineCSS, 'css');
 			}
 			
 			/*---------------- END STYLES -------------*/
+
+
 			//NODE JS PACKAGE JSON READER
-
 			if ($this->data['npmScriptsMinified'] = $this->cache->get('npm.scripts.minified.' . $this->config->get('config_store_id'))){
-				//do nothing
-
-			} else {
-
-				$npmPackageLockFile 	= DIR_ENGINE . 'js/' . 'package-lock.json';
-				$npmScripts 			= [];
-				if (file_exists($npmPackageLockFile)){
-					if ($npmDependencies = json_decode(file_get_contents($npmPackageLockFile), true)){
-						foreach ($npmDependencies['dependencies'] as $npmDependency => $npmInfo){
-
-							$npmPackageDirectory 	= DIR_ENGINE . 'js/node_modules/' . $npmDependency . '/';
-							$npmPackageRelative		= '/js/node_modules/' . $npmDependency . '/';
-							$npmPackageInfoFile 	= $npmPackageDirectory . 'package.json';
-
-							if (file_exists($npmPackageInfoFile)){
-								if ($npmPackageInfo = json_decode(file_get_contents($npmPackageInfoFile), true)){
-									if (!empty($npmPackageInfo['main'])){
-										if (file_exists($npmPackageDirectory . $npmPackageInfo['main']) && pathinfo($npmPackageInfo['main'],  PATHINFO_EXTENSION) == 'js'){											
-											$npmScripts[] = ($npmPackageRelative . $npmPackageInfo['main']);
-										}
-									}
-								}
-							}
-						}
-					}
+			} else {			
+				if ($npmScripts = \hobotix\MinifyAdaptor::parseNPM()){
+					$this->data['npmScriptsMinified'] = \hobotix\MinifyAdaptor::createFile($npmScripts, 'js');
+					$this->data['npmScriptsMinified'] = trim($this->config->get('config_static_subdomain')) . $this->data['npmScriptsMinified'];
 				}
-
-				if ($npmScripts){
-					$query = "f=" . implode(',', $npmScripts);
-					$this->data['npmScriptsMinified'] = Minify\StaticService\build_uri($static_uri, $query, 'js');
-
-					if ($this->config->get('config_static_subdomain') && $this->data['npmScriptsMinified']){
-						$this->data['npmScriptsMinified'] = ltrim($this->data['npmScriptsMinified'], '/');
-
-						if (file_exists(DIR_SITE . $this->data['npmScriptsMinified'])){
-							$this->data['npmScriptsMinified'] = trim($this->config->get('config_static_subdomain')) . $this->data['npmScriptsMinified'];
-						}
-					}
-				}
-
 				$this->cache->get('npm.scripts.minified.' . $this->config->get('config_store_id'), $this->data['npmScriptsMinified']);
 			}
 			
-			//BEGIN SCRIPTS			
-			$general_js = prepareEOLArray($this->config->get('config_header_min_scripts'));
-			
-			if ($general_js) {
-				$query = "f=" . implode(',', $general_js);
-				$this->data['general_minified_js_uri'] = Minify\StaticService\build_uri($static_uri, $query, 'js');
+			if ($generalJS = prepareEOLArray($this->config->get('config_header_min_scripts'))){
+				$this->data['general_minified_js_uri'] = trim($this->config->get('config_static_subdomain')) . \hobotix\MinifyAdaptor::createFile($generalJS, 'js');				
 			}
 			
-			if ($this->config->get('config_static_subdomain') && $this->data['general_minified_js_uri']){
-				$this->data['general_minified_js_uri'] = ltrim($this->data['general_minified_js_uri'], '/');
-				
-				if (file_exists(DIR_SITE . $this->data['general_minified_js_uri'])){
-					$this->data['general_minified_js_uri'] = trim($this->config->get('config_static_subdomain')) . $this->data['general_minified_js_uri'];
-				}
-			}
-			
-			$this->data['excluded_scripts'] = prepareEOLArray($this->config->get('config_header_excluded_scripts'));
-			
-			/* !!!!!!!!!! */
-			$this->data['incompatible_scripts'] = array(				
-			);
-			
-			$t = array();
+			$addedJS = [];
 			$this->data['added_but_excluded_scripts'] = array();
 			foreach (array_unique($this->document->getScripts()) as $script) {
-				if (!in_array($script, $this->data['incompatible_scripts']) && !in_array($script, $this->data['excluded_scripts'])) {
-					$t[] = $script;			
-				}
-				
-				if (in_array($script, $this->data['excluded_scripts'])){
+				if (!in_array($script, prepareEOLArray($this->config->get('config_header_excluded_scripts')))) {
+					$addedJS[] = $script;			
+				} else {
 					$this->data['added_but_excluded_scripts'][] = $script;
 				}
 			}
-			if ($t){
-				$query = "f=" . implode(',', $t);
-				$this->data['added_minified_js_uri'] = Minify\StaticService\build_uri($static_uri, $query, 'js');
-				} else {
-				$this->data['added_minified_js_uri'] = false;
-			}
-			
-			if ($this->config->get('config_static_subdomain') && $this->data['added_minified_js_uri']){
-				$this->data['added_minified_js_uri'] = ltrim($this->data['added_minified_js_uri'], '/');
-				
-				if (file_exists(DIR_SITE . $this->data['added_minified_js_uri'])){
-					$this->data['added_minified_js_uri'] = trim($this->config->get('config_static_subdomain')) . $this->data['added_minified_js_uri'];
-				}
+
+			if ($addedJS){
+				$this->data['added_minified_js_uri'] = trim($this->config->get('config_static_subdomain')) . \hobotix\MinifyAdaptor::createFile($addedJS, 'js');	
 			}
 			
 			/*---------------- END SCRIPTS -------------*/
 			//MINIFICATION ENGINE W/STATIC END
 			
-			//Заглушка для..
+			$this->data['incompatible_scripts'] = [];
 			$this->data['scripts'] = $this->document->getScripts();
-			
-			//END SCRIPTS		
+							
 			$this->data['noindex'] = $this->document->isNoindex();
 			if ($this->config->get('config_icon') && file_exists(DIR_IMAGE . $this->config->get('config_icon'))) {
 				$this->data['icon'] = $server . DIR_IMAGE_NAME . $this->config->get('config_icon');
@@ -358,8 +255,7 @@
 			}		
 			
 			$this->data['logo_alt_title'] = $this->data['logo_alt_title_' . $this->config->get('config_country_id')];
-			
-			//SVG бонусов
+						
 			if ($this->config->get('config_reward_logosvg')){
 				$this->data['points_svg'] = trim($this->config->get('config_static_subdomain')) . 'catalog/view/theme/' . $this->config->get('config_template') . '/img/' . $this->config->get('config_reward_logosvg');
 			}
@@ -368,55 +264,53 @@
 			$this->language->load('common/header');
 			$this->data['store_url'] = HTTPS_SERVER;
 			
-			$this->data['text_home'] = $this->language->get('text_home');
-			$this->data['text_shopping_cart'] = $this->language->get('text_shopping_cart');				
-			$this->data['text_account'] = $this->language->get('text_account');
-			$this->data['text_checkout'] = $this->language->get('text_checkout');
-			$this->data['text_search_placeholder'] = $this->language->get('text_search_placeholder');
-			$this->data['text_catalog'] = $this->language->get('catalog');
-			$this->data['text_show_count_empty'] = $this->language->get('show_count_empty');
-			$this->data['text_all_show_history'] = $this->language->get('all_show_history');
-			$this->data['text_show_history'] = $this->language->get('show_history');
-			$this->data['text_product'] = $this->language->get('product');
-			$this->data['text_brand'] = $this->language->get('brand');
-			$this->data['text_collections'] = $this->language->get('collections');
-			$this->data['text_material'] = $this->language->get('material');
-			$this->data['text_vendor_code'] = $this->language->get('vendor_code');
-			$this->data['text_information'] = $this->language->get('information');
-			$this->data['text_actions'] = $this->language->get('actions');
-			$this->data['text_new_products'] = $this->language->get('new_products');
-			$this->data['text_my_card'] = $this->language->get('my_card');
-			$this->data['text_no_discount_card'] = $this->language->get('no_discount_card');
-			$this->data['text_how_get'] = $this->language->get('how_get');
-			$this->data['text_login_b2b'] = $this->language->get('login_b2b');
-			$this->data['home'] = $this->url->link('common/home');
-			
-			$this->data['logged'] = $this->customer->isLogged();
-			$this->data['account'] = $this->url->link('account/account');
-			$this->data['shopping_cart'] = $this->url->link('checkout/cart');
-			$this->data['checkout'] = $this->url->link('checkout/checkout');
-			$this->data['wishlist'] = $this->url->link('account/wishlist');
-			
-			$this->data['all_actions'] = $this->url->link('information/actions');
-			$this->data['product_new'] = $this->url->link('product/product_new');
-			$this->data['contacts'] = $this->url->link('information/contact');
-			$this->data['feedback'] = $this->url->link('information/feedback');
+			$this->data['text_home'] 				= $this->language->get('text_home');
+			$this->data['text_shopping_cart'] 		= $this->language->get('text_shopping_cart');				
+			$this->data['text_account'] 			= $this->language->get('text_account');
+			$this->data['text_checkout'] 			= $this->language->get('text_checkout');
+			$this->data['text_search_placeholder'] 	= $this->language->get('text_search_placeholder');
+			$this->data['text_catalog'] 			= $this->language->get('catalog');
+			$this->data['text_show_count_empty'] 	= $this->language->get('show_count_empty');
+			$this->data['text_all_show_history'] 	= $this->language->get('all_show_history');
+			$this->data['text_show_history'] 		= $this->language->get('show_history');
+			$this->data['text_product'] 			= $this->language->get('product');
+			$this->data['text_brand'] 				= $this->language->get('brand');
+			$this->data['text_collections'] 		= $this->language->get('collections');
+			$this->data['text_material'] 			= $this->language->get('material');
+			$this->data['text_vendor_code'] 		= $this->language->get('vendor_code');
+			$this->data['text_information'] 		= $this->language->get('information');
+			$this->data['text_actions'] 			= $this->language->get('actions');
+			$this->data['text_new_products'] 		= $this->language->get('new_products');
+			$this->data['text_my_card'] 			= $this->language->get('my_card');
+			$this->data['text_no_discount_card'] 	= $this->language->get('no_discount_card');
+			$this->data['text_how_get']				= $this->language->get('how_get');
+			$this->data['text_login_b2b'] 			= $this->language->get('login_b2b');
+			$this->data['text_special'] 			= $this->language->get('text_special');	
+
+			$this->data['home'] 					= $this->url->link('common/home');			
+			$this->data['logged'] 					= $this->customer->isLogged();
+			$this->data['account'] 					= $this->url->link('account/account');
+			$this->data['shopping_cart'] 			= $this->url->link('checkout/cart');
+			$this->data['checkout'] 				= $this->url->link('checkout/checkout');
+			$this->data['wishlist'] 				= $this->url->link('account/wishlist');			
+			$this->data['all_actions'] 				= $this->url->link('information/actions');
+			$this->data['product_new'] 				= $this->url->link('product/product_new');
+			$this->data['contacts'] 				= $this->url->link('information/contact');
+			$this->data['feedback'] 				= $this->url->link('information/feedback');
+			$this->data['loginb2b'] 				= $this->url->link('account/simpleregisterb2b');
 			
 			$this->data['text_welcome'] = sprintf($this->language->get('text_welcome'), $this->url->link('account/login'), $this->url->link('account/register'));
 			$this->data['text_logged'] = '';
+		
 			
-			$this->data['loginb2b'] = $this->url->link('account/simpleregisterb2b');
+			$this->data['compare']			 	= $this->url->link('product/compare');
+			$this->data['text_compare'] 		= sprintf($this->language->get('text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
+			$this->data['text_count_compare'] 	= $this->language->get('text_count_compare');
 			
-			$this->data['compare'] = $this->url->link('product/compare');
-			$this->data['text_compare'] = sprintf($this->language->get('text_compare'), (isset($this->session->data['compare']) ? count($this->session->data['compare']) : 0));
-			$this->data['text_count_compare'] = $this->language->get('text_count_compare');
-			
-			$this->data['link_logout'] = $this->url->link('account/logout');
-			$this->data['text_logout'] = $this->language->get('text_logout');
-			
-			$this->data['text_search'] = $this->language->get('text_search');
-			$this->data['text_under_search'] = $this->language->get('text_under_search');
-			$this->data['search_like'] = 'Кофеварка';
+			$this->data['link_logout'] 			= $this->url->link('account/logout');
+			$this->data['text_logout'] 			= $this->language->get('text_logout');			
+			$this->data['text_search'] 			= $this->language->get('text_search');
+			$this->data['text_under_search'] 	= $this->language->get('text_under_search');			
 				
 			if (isset($this->request->get['search'])) {
 				$this->data['search'] = $this->request->get['search'];
@@ -424,36 +318,30 @@
 				$this->data['search'] = '';
 			}
 			
-			$this->data['text_manufacturer'] = $this->language->get('text_manufacturer');
-			$this->data['href_manufacturer'] = $this->url->link('product/manufacturer');	
+			$this->data['text_manufacturer'] 						= $this->language->get('text_manufacturer');
+			$this->data['href_manufacturer'] 						= $this->url->link('product/manufacturer');	
 			$this->data['href_stock_1_tovary_s_ekspress_dostavkoj'] = $this->url->link('product/category', 'path=8307');
-			$this->data['href_stock_2_ekspress_podarki']= $this->url->link('product/category', 'path=6475');
-			$this->data['href_stock_3_podarki'] 		= $this->url->link('product/category', 'path=8228');
-			$this->data['href_newproducts'] = $this->url->link('product/product_new');
+			$this->data['href_stock_2_ekspress_podarki']			= $this->url->link('product/category', 'path=6475');
+			$this->data['href_stock_3_podarki'] 					= $this->url->link('product/category', 'path=8228');
+			$this->data['href_newproducts'] 						= $this->url->link('product/product_new');
 			
-			$this->data['text_special'] = $this->language->get('text_special');	
-			$this->data['special'] 		= $this->url->link('product/category', 'path=' . $this->config->get('config_special_category_id'));
-			$this->data['href_sale'] 	= $this->url->link('product/category', 'path=' . $this->config->get('config_special_category_id'));
-			
-			$this->data['href_newyear'] = $this->url->link('product/category', 'path=8227');
-			
-			$this->data['href_actions'] = $this->url->link('information/actions');
-			$this->data['href_blog']	= $this->url->link('news/ncategory');
-			
-			$this->data['href_how_order'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_how_order_article_id'));
-			$this->data['href_delivery'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_delivery_article_id'));
-			$this->data['href_payment'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_payment_article_id'));
-			$this->data['href_return'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_return_article_id'));
-			$this->data['href_track'] = $this->url->link('account/tracker');
-			
-			$this->data['href_discounts'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_discounts_article_id'));
-			$this->data['href_present_sertificate'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_present_certificates_article_id'));
-			
-			$this->data['href_about'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_about_article_id'));
-			$this->data['href_faq'] = $this->url->link('information/faq_system');
-			$this->data['href_contact'] = $this->url->link('information/contact');
-			$this->data['href_shop_rating'] = $this->url->link('information/shop_rating');
-			$this->data['href_sitemap'] = $this->url->link('information/sitemap');
+			$this->data['special'] 					= $this->url->link('product/category', 'path=' . $this->config->get('config_special_category_id'));
+			$this->data['href_sale'] 				= $this->url->link('product/category', 'path=' . $this->config->get('config_special_category_id'));			
+			$this->data['href_newyear'] 			= $this->url->link('product/category', 'path=8227');			
+			$this->data['href_actions'] 			= $this->url->link('information/actions');
+			$this->data['href_blog']				= $this->url->link('news/ncategory');			
+			$this->data['href_how_order'] 			= $this->url->link('information/information', 'information_id=' . $this->config->get('config_how_order_article_id'));
+			$this->data['href_delivery'] 			= $this->url->link('information/information', 'information_id=' . $this->config->get('config_delivery_article_id'));
+			$this->data['href_payment'] 			= $this->url->link('information/information', 'information_id=' . $this->config->get('config_payment_article_id'));
+			$this->data['href_return'] 				= $this->url->link('information/information', 'information_id=' . $this->config->get('config_return_article_id'));
+			$this->data['href_track'] 				= $this->url->link('account/tracker');			
+			$this->data['href_discounts'] 			= $this->url->link('information/information', 'information_id=' . $this->config->get('config_discounts_article_id'));
+			$this->data['href_present_sertificate'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_present_certificates_article_id'));			
+			$this->data['href_about'] 				= $this->url->link('information/information', 'information_id=' . $this->config->get('config_about_article_id'));
+			$this->data['href_faq'] 				= $this->url->link('information/faq_system');
+			$this->data['href_contact'] 			= $this->url->link('information/contact');
+			$this->data['href_shop_rating'] 		= $this->url->link('information/shop_rating');
+			$this->data['href_sitemap'] 			= $this->url->link('information/sitemap');
 			
 			$this->data['href_wmf']	= $this->url->link('product/manufacturer/info', 'manufacturer_id=202');
 			$this->data['href_vb']	= $this->url->link('product/manufacturer/info', 'manufacturer_id=201');
@@ -573,8 +461,7 @@
 			foreach ($this->language->loadRetranslate('common/header') as $translationСode => $translationText){
 				$this->data[$translationСode] = $translationText;
 			}
-			
-			//GEOLOCATION
+						
 			$this->data['customer_city'] = false;
 			$this->load->model('tool/simpleapicustom');
 			$this->data['customer_city'] = $this->model_tool_simpleapicustom->getAndCheckCurrentCity();
@@ -590,7 +477,7 @@
 			$this->data['count'] = (isset($this->session->data['wishlist']) ? count($this->session->data['wishlist']) : 0);
 			$this->data['text_wishlist'] = $this->language->get('text_wishlist');
 			
-			$this->template = $this->config->get('config_template') . '/template/blocks/wishlist.tpl';
+			$this->template = 'blocks/wishlist.tpl';
 			
 			
 			$this->response->setOutput($this->render());
@@ -603,27 +490,26 @@
 			
 			$this->language->load('common/header');
 			
-			$this->data['logged'] = $this->customer->isLogged();
-			$this->data['account'] = $this->url->link('account/account');
-			$this->data['shopping_cart'] = $this->url->link('checkout/cart');
-			$this->data['checkout'] = $this->url->link('checkout/checkout');
+			$this->data['logged'] 			= $this->customer->isLogged();
+			$this->data['account'] 			= $this->url->link('account/account');
+			$this->data['shopping_cart'] 	= $this->url->link('checkout/cart');
+			$this->data['checkout'] 		= $this->url->link('checkout/checkout');
 			
 			$this->language->load('account/login');
-			$this->data['text_forgotten'] = $this->language->get('text_forgotten');
-			$this->data['text_register'] = $this->language->get('text_register');
-			$this->data['entry_email'] = $this->language->get('entry_email');
-			$this->data['entry_password'] = $this->language->get('entry_password');
-			$this->data['button_continue'] = $this->language->get('button_continue');
-			$this->data['button_login'] = $this->language->get('button_login');
+			$this->data['text_forgotten'] 	= $this->language->get('text_forgotten');
+			$this->data['text_register'] 	= $this->language->get('text_register');
+			$this->data['entry_email'] 		= $this->language->get('entry_email');
+			$this->data['entry_password'] 	= $this->language->get('entry_password');
+			$this->data['button_continue'] 	= $this->language->get('button_continue');
+			$this->data['button_login'] 	= $this->language->get('button_login');
 			
 			$this->load->model('account/customer');
-			$this->data['action'] = $this->url->link('account/login');
-			$this->data['register'] = $this->url->link('account/register');
-			$this->data['forgotten'] = $this->url->link('account/forgotten');
+			$this->data['action'] 		= $this->url->link('account/login');
+			$this->data['register'] 	= $this->url->link('account/register');
+			$this->data['forgotten'] 	= $this->url->link('account/forgotten');
 			
 			//МЕНЮ Аккаунта
-			if ($this->customer->isLogged()){
-				
+			if ($this->customer->isLogged()){				
 				$this->data['user_name_short'] = explode(' ', trim($this->customer->getFirstName()))[0];
 				$this->data['user_name'] = $this->customer->getFirstName().' '.$this->customer->getLastName();
 				
@@ -631,7 +517,7 @@
 				$this->language->load('module/account');
 				$this->data['heading_title'] = $this->language->get('heading_title');
 				$this->data['logged'] = $this->customer->isLogged();
-			
+
 				
 				// Мой кабинет
 				$this->data['text_account'] = $this->language->get('text_account');
@@ -696,17 +582,11 @@
 			
 			if (!empty($this->request->get['x']) && $this->request->get['x'] == 'm'){
 				$this->template = $this->config->get('config_template') . '/template/blocks/customermenumobile.tpl';
-				} else {
+			} else {
 				$this->template = $this->config->get('config_template') . '/template/blocks/customermenu.tpl';
 			}
 			
 			
-			$this->response->setOutput($this->render());
-			
-			
-			
-			
-			}
-			
-			
-		}
+			$this->response->setOutput($this->render());												
+		}						
+	}

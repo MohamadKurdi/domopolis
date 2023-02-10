@@ -57,64 +57,22 @@ class ControllerCommonFooter extends Controller {
 	
 	
 	protected function index($template_overload = false) {		
-		if (IS_HTTPS) {
-			$this->data['static_domain_url'] = $this->config->get('config_img_ssl');
-		} else {
-			$this->data['static_domain_url'] = $this->config->get('config_img_url');
-		}
-		
+		$this->data['static_domain_url'] = $this->config->get('config_img_ssl');
+
+		$this->data['footerBottomScripts'] = [];		
 		$this->data['popupcart'] = $this->url->link('common/popupcart');
-		
-		
-		/*---------------- STYLES -------------*/		
-		
-			//MINIFICATION ENGINE W/STATIC
-		require_once DIR_SYSTEM . '../min/static/lib.php';
-		$static_uri = "/min/static";
-		
-		$general_css = prepareEOLArray($this->config->get('config_footer_min_styles'));
-		$query = "f=" . implode(',', $general_css);
-		$this->data['general_minified_css_uri'] = Minify\StaticService\build_uri($static_uri, $query, 'css');
-		
-		if ($this->config->get('config_static_subdomain') && $this->data['general_minified_css_uri']){
-			$this->data['general_minified_css_uri'] = ltrim($this->data['general_minified_css_uri'], '/');
-			
-			if (file_exists(DIR_SITE . $this->data['general_minified_css_uri'])){
-				$this->data['general_minified_css_uri'] = trim($this->config->get('config_static_subdomain')) . $this->data['general_minified_css_uri'];
-			}
+					
+		if ($generalCSS = prepareEOLArray($this->config->get('config_footer_min_styles'))){
+			$this->data['general_minified_css_uri'] = trim($this->config->get('config_static_subdomain')) . \hobotix\MinifyAdaptor::createFile($generalCSS, 'css');
 		}
-		
-		/*---------------- END STYLES -------------*/
-		
-		/*---------------- SCRIPTS -------------*/
-		$general_js = prepareEOLArray($this->config->get('config_footer_min_scripts'));
+
+		if ($generalJS = prepareEOLArray($this->config->get('config_footer_min_scripts'))){
+			$this->data['general_minified_js_uri'] = trim($this->config->get('config_static_subdomain')) . \hobotix\MinifyAdaptor::createFile($generalJS, 'js');				
+		}			
 		
 		$this->data['mask'] = $this->config->get('config_phonemask');
-		
-		if ($general_js){
-			$query = "f=" . implode(',', $general_js);
-			$this->data['general_minified_js_uri'] = Minify\StaticService\build_uri($static_uri, $query, 'js');
-		}
-		
-		if ($this->config->get('config_static_subdomain') && $this->data['general_minified_js_uri']){
-			$this->data['general_minified_js_uri'] = ltrim($this->data['general_minified_js_uri'], '/');
-			
-			if (file_exists(DIR_SITE . $this->data['general_minified_js_uri'])){
-				$this->data['general_minified_js_uri'] = trim($this->config->get('config_static_subdomain')) . $this->data['general_minified_js_uri'];
-			}
-		}
-		
-		/* !!!!!!!!!! */
-		$this->data['incompatible_scripts'] = array(	
-			
-		);			
-		
-		/*---------------- END SCRIPTS -------------*/
-			//MINIFICATION ENGINE W/STATIC END
-		
 		$this->data['google_analytics'] = html_entity_decode($this->config->get('config_google_analytics'), ENT_QUOTES, 'UTF-8');
 		
-			//customer info for push
 		if ($this->customer->isLogged()){
 			$this->load->model('account/address');
 			
@@ -144,10 +102,7 @@ class ControllerCommonFooter extends Controller {
 		}
 					
 		$this->data['is_pc'] = (!IS_MOBILE_SESSION && !IS_TABLET_SESSION);
-		
-		$footerBottomScripts = array();
-		$this->data['footerBottomScripts'] = $footerBottomScripts;
-					
+							
 		$this->data['google_conversion_id'] 		= $this->config->get('config_google_conversion_id');
 		$this->data['config_google_merchant_id'] 	= $this->config->get('config_google_merchant_id');				
 
