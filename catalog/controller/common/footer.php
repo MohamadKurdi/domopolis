@@ -59,7 +59,8 @@ class ControllerCommonFooter extends Controller {
 	protected function index($template_overload = false) {		
 		$this->data['static_domain_url'] = $this->config->get('config_img_ssl');
 
-		$this->data['footerBottomScripts'] = [];		
+		$this->data['footerBottomScripts'] = [];
+		$this->data['incompatible_scripts'] = [];		
 		$this->data['popupcart'] = $this->url->link('common/popupcart');
 					
 		if ($generalCSS = prepareEOLArray($this->config->get('config_footer_min_styles'))){
