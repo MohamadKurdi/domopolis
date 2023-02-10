@@ -30,6 +30,7 @@ class PageCache{
 			require_once(DIR_SITE . 'vendor/jaybizzle/crawler-detect/src/Fixtures/Exclusions.php');
 
 			require_once(DIR_SITE . 'vendor/mobiledetect/mobiledetectlib/Mobile_Detect.php');
+			require_once(DIR_SYSTEM . 'library/hobotix/MinifyAdaptor.php');
 
 			if (!empty($_SERVER['REMOTE_ADDR'])){
 				require_once(DIR_SYSTEM . 'library/db.php');
@@ -49,8 +50,8 @@ class PageCache{
 				define('ADMIN_SESSION_DETECTED', false);
 			}
 
-			$this->crawlerDetect = new Jaybizzle\CrawlerDetect\CrawlerDetect; 	
-			$this->mobileDetect = new Mobile_Detect;
+			$this->crawlerDetect 	= new Jaybizzle\CrawlerDetect\CrawlerDetect; 	
+			$this->mobileDetect 	= new Mobile_Detect;
 
 			if ($this->crawlerDetect->isCrawler()){
 				define('CRAWLER_SESSION_DETECTED', true);
@@ -98,14 +99,157 @@ class PageCache{
 		}
 	}
 
-	private static function formatBytes($size, $precision = 2)
-	{
+	private static function formatBytes($size, $precision = 2){
 		$base = log($size, 1024);
 		$suffixes = array('', 'K', 'M', 'G', 'T');   
 
 		return round(pow(1024, $base - floor($base)), $precision) . $suffixes[floor($base)];
 	}
 
+	private function validateTTLFile(){
+
+		if (file_exists(DIR_CACHE . PAGECACHE_DIR . 'nopagecache')){
+			$time = time() - filemtime(DIR_CACHE . PAGECACHE_DIR . 'nopagecache');
+
+			if ($time > ($this->getTTL() * 2)){
+				@unlink(DIR_CACHE . PAGECACHE_DIR . 'nopagecache');
+				return true;
+			}
+
+			return false;
+		}
+
+		return true;
+	}
+
+	public function validateIfToCache(){		
+
+		if (!$this->validateTTLFile()){
+			return false;
+		}
+
+		if (defined('IS_DEBUG') && IS_DEBUG){
+			return false;
+		}
+
+		if (defined('ADMIN_SESSION_DETECTED') && ADMIN_SESSION_DETECTED){
+			return false;
+		}
+
+		if (defined('CRAWLER_SESSION_DETECTED') && CRAWLER_SESSION_DETECTED){
+			if (!defined('PAGESPEED_SESSION_DETECTED') || !PAGESPEED_SESSION_DETECTED){
+			//	return false;
+			}
+		}
+
+		if (defined('DEBUGSQL') && DEBUGSQL){
+			return false;
+		}
+
+		if (thisIsAjax()){
+			return false;
+		}
+
+		if (thisIsUnroutedURI()){
+			return false;
+		}
+
+		if (is_cli()){
+			return false;
+		}
+
+		if ($_SERVER['REQUEST_METHOD'] != 'GET'){
+			return false;
+		}
+
+		if ($_SERVER['REQUEST_METHOD'] == 'GET'){
+			if (count($_REQUEST) == 0){
+				return true;
+			}
+
+			if (isset($_REQUEST['_route_'])){
+
+				foreach ($this->excludeRoutes as $excludeRoute){
+					if (strpos($_REQUEST['_route_'], $excludeRoute) !== false){
+						return false;
+					}
+				}
+
+				foreach ($this->cacheableRoutes as $cacheableRoute){
+					if (strpos($_REQUEST['_route_'], $cacheableRoute) !== false){
+						return true;
+					}
+				}
+
+				if ($_REQUEST['_route_'] == ''){					
+					return true;
+				}
+			}		
+		}
+
+		return false;
+	}
+
+	public function prepareCacheDirAndGetCachePath($check = true){		
+		$cacheRouteString = md5(json_encode($_REQUEST) . $_SERVER['HTTP_HOST'] . (int)ADD_METRICS_TO_FRONT . (int)WEBPACCEPTABLE . (int)AVIFACCEPTABLE . (int)IS_MOBILE_SESSION . (int)IS_TABLET_SESSION);
+
+		$cacheDir = DIR_CACHE . PAGECACHE_DIR;
+		$cacheDir .= $cacheRouteString[0] . $cacheRouteString[1] . '/';  
+		$cacheDir .= $cacheRouteString[2] . $cacheRouteString[3] . '/';
+		$cacheDir .= $cacheRouteString[4] . $cacheRouteString[5] . '/';
+
+		if ($check && !is_dir($cacheDir)){
+			mkdir($cacheDir, 0775, true);
+		}
+
+		return $cacheDir . $cacheRouteString . '.cache';
+	}
+
+	private static function checkMinifierDir($cache){
+		$cacheDir = \hobotix\MinifyAdaptor::getCacheTime();
+		
+		return preg_replace('/(' . str_replace('/', '\/', DIR_MINIFIED_NAME) . ')[0-9]+(\/)/', DIR_MINIFIED_NAME . $cacheDir . '/', $cache);
+	}
+
+	public function setMinifier($htmlMinifier){
+		$this->htmlMinifier = $htmlMinifier; 
+	}
+
+	public function minifyCache($cache){
+		$cache = $this->htmlMinifier->minify($cache);
+		return $cache;
+	}
+
+	public function writeCache($cache){		
+		if ($this->validateIfToCache()){
+			$cache = gzencode($this->minifyCache($cache), $this->gzLevel);
+			file_put_contents($this->prepareCacheDirAndGetCachePath(), $cache);			
+		}				
+	}
+
+	public function getCache(){		
+		if ($this->validateIfToCache()){
+			if (file_exists($path = $this->prepareCacheDirAndGetCachePath(false))){
+				if (filemtime($path) < (time() - $this->lifetime)){
+					@unlink($path);
+					return false;
+				}
+				$cache = gzdecode(file_get_contents($path));
+
+				return self::checkMinifierDir($cache); 
+			}
+			return false;
+		}
+		return false;
+	}
+
+	public function validateOther(){
+		if (!empty($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'YandexMarket') !== false){				
+			return false;						
+		}	
+
+		return true;
+	}		
 
 	public function getReFeedsCount(){
 		$feeds = glob(DIR_REFEEDS . 'remarketing_full_feed*');
@@ -284,161 +428,5 @@ class PageCache{
 
 		return $json;
 	}
-
-	private function validateTTLFile(){
-
-		if (file_exists(DIR_CACHE . PAGECACHE_DIR . 'nopagecache')){
-			$time = time() - filemtime(DIR_CACHE . PAGECACHE_DIR . 'nopagecache');
-
-			if ($time > ($this->getTTL() * 2)){
-				@unlink(DIR_CACHE . PAGECACHE_DIR . 'nopagecache');
-				return true;
-			}
-
-			return false;
-		}
-
-		return true;
-
-	}
-
-
-	public function validateIfToCache(){		
-
-		if (!$this->validateTTLFile()){
-			return false;
-		}
-
-		if (defined('IS_DEBUG') && IS_DEBUG){
-			return false;
-		}
-
-		if (defined('ADMIN_SESSION_DETECTED') && ADMIN_SESSION_DETECTED){
-			return false;
-		}
-
-		if (defined('CRAWLER_SESSION_DETECTED') && CRAWLER_SESSION_DETECTED){
-			if (!defined('PAGESPEED_SESSION_DETECTED') || !PAGESPEED_SESSION_DETECTED){
-			//	return false;
-			}
-		}
-
-		if (defined('DEBUGSQL') && DEBUGSQL){
-			return false;
-		}
-
-		if (thisIsAjax()){
-			return false;
-		}
-
-		if (thisIsUnroutedURI()){
-			return false;
-		}
-
-		if (is_cli()){
-			return false;
-		}
-
-		if ($_SERVER['REQUEST_METHOD'] != 'GET'){
-			return false;
-		}
-
-		if ($_SERVER['REQUEST_METHOD'] == 'GET'){
-
-				//Главная страница
-			if (count($_REQUEST) == 0){
-				return true;
-			}
-
-			if (isset($_REQUEST['_route_'])){
-
-				foreach ($this->excludeRoutes as $excludeRoute){
-					if (strpos($_REQUEST['_route_'], $excludeRoute) !== false){
-						return false;
-					}
-				}
-
-				foreach ($this->cacheableRoutes as $cacheableRoute){
-					if (strpos($_REQUEST['_route_'], $cacheableRoute) !== false){
-						return true;
-					}
-				}
-
-				if ($_REQUEST['_route_'] == ''){					
-					return true;
-				}
-			}		
-		}
-
-		return false;
-	}
-
-	public function prepareCacheDirAndGetCachePath($check = true){		
-		$cacheRouteString = md5(json_encode($_REQUEST) . $_SERVER['HTTP_HOST'] . (int)ADD_METRICS_TO_FRONT . (int)WEBPACCEPTABLE . (int)AVIFACCEPTABLE . (int)IS_MOBILE_SESSION . (int)IS_TABLET_SESSION);
-
-		$cacheDir = DIR_CACHE . PAGECACHE_DIR;
-		$cacheDir .= $cacheRouteString[0] . $cacheRouteString[1] . '/';  
-		$cacheDir .= $cacheRouteString[2] . $cacheRouteString[3] . '/';
-		$cacheDir .= $cacheRouteString[4] . $cacheRouteString[5] . '/';
-
-		if ($check && !is_dir($cacheDir)){
-			mkdir($cacheDir, 0775, true);
-		}
-
-		return $cacheDir . $cacheRouteString . '.cache';
-	}
-
-	public function setMinifier($htmlMinifier){
-		$this->htmlMinifier = $htmlMinifier;
-		//$this->htmlMinifier->doOptimizeViaHtmlDomParser(true); 
-	}
-
-	public function minifyCache($cache){
-		$cache = $this->htmlMinifier->minify($cache);
-
-		return $cache;
-	}
-
-	public function writeCache($cache){		
-		if ($this->validateIfToCache()){
-			$cache = gzencode($this->minifyCache($cache), $this->gzLevel);
-			file_put_contents($this->prepareCacheDirAndGetCachePath(), $cache);			
-		}				
-	}
-
-	public function getCache(){		
-		if ($this->validateIfToCache()){
-
-			if (file_exists($path = $this->prepareCacheDirAndGetCachePath(false))){
-
-				if (filemtime($path) < (time() - $this->lifetime)){
-					@unlink($path);
-					return false;
-				}
-
-				$cache = gzdecode(file_get_contents($path));
-
-				return $cache; 
-			}
-
-			return false;
-
-		}
-
-		return false;
-	}
-
-
-	public function validateOther(){
-			//	return false;	
-
-			//На случай если это животное не распознается как бот
-		if (!empty($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'YandexMarket') !== false){				
-			return false;						
-		}	
-
-		return true;
-
-	}		
 
 }														
