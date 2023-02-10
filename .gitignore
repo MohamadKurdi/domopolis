@@ -53,6 +53,7 @@
 
 #Статика минификатора
 /min/
+/min.*/
 
 #node includes
 /js/
