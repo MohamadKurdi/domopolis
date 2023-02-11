@@ -1063,16 +1063,9 @@ var ckeditor_config_basic = {
  	height: 100
 };
 CKEDITOR.replace('emailtemplate_config_head_text', ckeditor_config_basic);
-
 CKEDITOR.replace('emailtemplate_config_view_browser_text', ckeditor_config_basic);
-
 CKEDITOR.replace('emailtemplate_config_page_footer_text', ckeditor_config);
-
 CKEDITOR.replace('emailtemplate_config_footer_text', ckeditor_config);
-
-CKEDITOR.replace('emailtemplate_config_invoice_header', ckeditor_config);
-
-CKEDITOR.replace('emailtemplate_config_invoice_footer', ckeditor_config);
 
 CKEDITOR.on('instanceReady', function (ev) {
 	ev.editor.dataProcessor.htmlFilter.addRules({
