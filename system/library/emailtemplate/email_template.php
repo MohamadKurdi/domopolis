@@ -691,21 +691,7 @@
 			if($this->data['emailtemplate']['mail_attachment']){
 				$dir = substr(DIR_SYSTEM, 0, -7); // remove '/system'
 				$mail->addAttachment($dir.$this->data['emailtemplate']['mail_attachment']);
-			}
-			
-			// Check enabled, has order_id and not already set invoice.
-			if($this->data['emailtemplate']['attach_invoice'] && !empty($this->data['order_id']) && !isset($this->data['emailtemplate_invoice_pdf'])){
-				$this->load->model('module/emailtemplate/invoice');
-				
-				$model_invoice = new ModelModuleEmailTemplateInvoice($this->registry);
-				
-				$invoice = $model_invoice->getInvoice($this->data['order_id'], true);
-				
-				if($invoice && file_exists($invoice)){
-					$this->data['emailtemplate_invoice_pdf'] = $invoice;
-					$mail->addAttachment($invoice);
-				}
-			}
+			}						
 			
 			return $mail;
 		}

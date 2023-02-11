@@ -1756,7 +1756,7 @@
 			if(!empty($config['language_id'])){
 				$language_id = $config['language_id'];
 				} else {
-				$language = $this->model_localisation_language->getLanguageByCode($config['config_language']);
+				$language = $this->model_localisation_language->getLanguageByCode2($config['config_language']);
 				$language_id = $config['config_language'];
 			}
 			
@@ -2438,15 +2438,15 @@
 					foreach ($stores as $result) {
 						$storeId = $result['store_id'];
 						$result = array_merge($result, $this->model_setting_setting->getSetting("config", $storeId));
-						$language = $this->model_localisation_language->getLanguageByCode($result['config_language']);
+						$language = $this->model_localisation_language->getLanguageByCode2($result['config_language']);
 						$this->stores[$storeId] = $result;
-						$this->stores[$storeId]['store_title'] = $this->_stripHtml($result['config_title']);
-						$this->stores[$storeId]['store_url'] = (isset($result['config_url'])) ? $result['config_url'] : (defined('HTTP_CATALOG') ? HTTP_CATALOG : HTTP_SERVER);
-						$this->stores[$storeId]['store_ssl'] = (isset($result['config_ssl'])) ? $result['config_ssl'] : (defined('HTTPS_CATALOG') ? HTTPS_CATALOG : (defined('HTTPS_SERVER') ? HTTPS_SERVER : HTTP_SERVER));
-						$this->stores[$storeId]['store_name'] = $this->_stripHtml($result['name']);
+						$this->stores[$storeId]['store_title'] 		= $this->_stripHtml($result['config_title']);
+						$this->stores[$storeId]['store_url'] 		= (isset($result['config_url'])) ? $result['config_url'] : (defined('HTTP_CATALOG') ? HTTP_CATALOG : HTTP_SERVER);
+						$this->stores[$storeId]['store_ssl'] 		= (isset($result['config_ssl'])) ? $result['config_ssl'] : (defined('HTTPS_CATALOG') ? HTTPS_CATALOG : (defined('HTTPS_SERVER') ? HTTPS_SERVER : HTTP_SERVER));
+						$this->stores[$storeId]['store_name'] 		= $this->_stripHtml($result['name']);
 						$this->stores[$storeId]['store_name_short'] = $this->_truncate($result['name']);
-						$this->stores[$storeId]['language_id'] = $language['language_id'];
-						$this->stores[$storeId]['language_name'] = $language['name'];
+						$this->stores[$storeId]['language_id'] 		= $language['language_id'];
+						$this->stores[$storeId]['language_name'] 	= $language['name'];
 					}
 				}
 				

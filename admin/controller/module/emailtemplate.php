@@ -749,12 +749,6 @@ class ControllerModuleEmailtemplate extends Controller {
 	 * Download preview of invoice
 	 */
 	public function preview_invoice(){
-		if(!isset($this->request->get['order_id'])) return false;
-
-		$this->load->model('module/emailtemplate/invoice');
-
-		$this->model_module_emailtemplate_invoice->getInvoice($this->request->get['order_id'], false);
-
 		exit;
 	}
 

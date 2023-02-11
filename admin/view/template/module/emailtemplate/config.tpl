@@ -170,7 +170,6 @@
 	    				<a href="#editor-shadow"><?php echo $heading_shadow; ?></a>
 	    				<a href="#editor-showcase"><?php echo $heading_showcase; ?></a>
 	    				<a href="#editor-tracking"><?php echo $heading_tracking; ?></a>
-	    				<a href="#editor-invoice"><?php echo $heading_invoice; ?></a>
 	    			</div>
 
 	    			<div id="editor-settings" class="vtabs-content tab-content-editor">
@@ -937,67 +936,6 @@
 								</td>
 								<td>
 									<input class="large" type="text" name="emailtemplate_config_tracking_campaign_term" value="<?php echo $emailtemplate_config['tracking_campaign_term']; ?>" id="emailtemplate_config_tracking_campaign_term" />
-								</td>
-							</tr>
-						</table>
-					</div>
-
-	    			<div id="editor-invoice" class="vtabs-content tab-content-editor">
-	    				<table class="form">
-							<tr>
-								<td>
-									<label><?php echo $entry_invoice_header; ?></label>
-								</td>
-								<td>
-									<p><?php echo $entry_invoice_html; ?></p>
-									<textarea class="large" name="emailtemplate_config_invoice_header" id="emailtemplate_config_invoice_header"><?php echo $emailtemplate_config['invoice_header']; ?></textarea>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<label><?php echo $entry_invoice_footer; ?></label>
-								</td>
-								<td>
-									<textarea class="large" name="emailtemplate_config_invoice_footer" id="emailtemplate_config_invoice_footer"><?php echo $emailtemplate_config['invoice_footer']; ?></textarea>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<label><?php echo $entry_color; ?></label>
-								</td>
-								<td>
-									<input type="text" class="fieldColorPicker" name="emailtemplate_config_invoice_color" value="<?php echo $emailtemplate_config['invoice_color']; ?>" id="emailtemplate_config_invoice_color" />
-									<span style="background-color:<?php echo $emailtemplate_config['invoice_color']; ?>;" class="colorPickerPreview">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<label><?php echo $entry_invoice_download; ?></label>
-								</td>
-								<td>
-									<input type="radio" name="emailtemplate_config_invoice_download" value="1" id="emailtemplate_config_invoice_download" <?php echo ($emailtemplate_config['invoice_download'] == 1) ? ' checked="checked"' : ''; ?>/><?php echo $text_yes; ?>
-									<input type="radio" name="emailtemplate_config_invoice_download" value="0" id="emailtemplate_config_invoice_download" <?php echo ($emailtemplate_config['invoice_download'] == 0) ? ' checked="checked"' : ''; ?>/><?php echo $text_no; ?>
-									<?php if(isset($error_emailtemplate_config_invoice_download)) { ?><span class="error"><?php echo $error_emailtemplate_config_invoice_download; ?></span><?php } ?>
-								</td>
-							</tr>
-							<?php if(isset($invoice_preview)){ ?>
-							<tr>
-								<td>
-									<label><?php echo $text_preview_invoice; ?></label>
-								</td>
-								<td>
-									<a href="<?php echo $invoice_preview; ?>" target="_blank" style="text-decoration:none"><img src="view/image/download.png" alt="" width="16" height="16" style="vertical-align: top;" /> <b><?php echo $text_download; ?></b></a>
-								</td>
-							</tr>
-							<?php } ?>
-						</table>
-
-						<table class="form">
-	    					<tr>
-								<td>&nbsp;</td>
-								<td>
-									<p>To generate the PDF we used TCPDF library by Nicola Asuni - Tecnick.com <a href="http://www.tcpdf.org" target="_blank">www.tcpdf.org</a></p>
-				    				<p>If you like it please feel free to <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=paypal%40tecnick%2ecom&lc=US&no_note=0&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHostedGuest" target="_blank"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" alt="PayPal - The safer, easier way to pay online!" style="vertical-align: middle;" /></a> a small amount of money to secure the future of this free library.</p>
 								</td>
 							</tr>
 						</table>
