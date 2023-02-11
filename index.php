@@ -449,9 +449,7 @@
 	}
 
 	//Default city reloading
-	if ($registry->get('config')->get('config_default_city_' . $registry->get('config')->get('config_language'))){
-		$registry->get('log')->fire($registry->get('config')->get('config_default_city_' . $registry->get('config')->get('config_language')));
-
+	if ($registry->get('config')->get('config_default_city_' . $registry->get('config')->get('config_language'))){		
 		$registry->get('config')->set('config_default_city', $registry->get('config')->get('config_default_city_' . $registry->get('config')->get('config_language')));
 	}
 

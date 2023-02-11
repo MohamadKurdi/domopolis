@@ -27,7 +27,11 @@
 			$this->debug($sql, false, true, $echo);			
 		}
 
-		public function fire($variable, $level = 'log'){			
+		public function fire($variable, $level = 'log'){	
+			if (!$this->firePHP){
+				return;
+			}
+
 			if ($level == 'log'){
 				$this->firePHP->log($variable);
 			}
