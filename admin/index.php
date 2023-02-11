@@ -74,7 +74,7 @@ require_once(DIR_SYSTEM . 'library/mAlert.php');
 require_once(DIR_SYSTEM . 'library/pushQueue.php');
 require_once(DIR_SYSTEM . 'library/Bitrix24.php');
 require_once(DIR_SYSTEM . 'library/shortAlias.php');
-require_once(DIR_SYSTEM . 'library/sessionDBHandler.php');
+require_once(DIR_SYSTEM . 'library/hobotix/SessionDBHandler.php');
 require_once(DIR_SYSTEM . 'library/hobotix/PageCache.php');
 require_once(DIR_SYSTEM . 'library/hobotix/CourierServices.php');
 require_once(DIR_SYSTEM . 'library/hobotix/EmailBlackList.php');
