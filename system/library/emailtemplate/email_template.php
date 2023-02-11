@@ -1164,11 +1164,8 @@
 			
 			$this->fetchCss();
 			if($this->css && $html){
-				require_once DIR_SYSTEM . 'library/shared/CssToInlineStyles/CssToInlineStyles.php';
-				$cssToInlineStyles = new CssToInlineStyles();
-				$cssToInlineStyles->setCSS($this->css);
-				$cssToInlineStyles->setHTML($html);
-				$html = $cssToInlineStyles->convert();
+				$cssToInlineStyles = new \TijsVerkoyen\CssToInlineStyles\CssToInlineStyles();
+				$html = $cssToInlineStyles->convert($html, $this->css);
 				//$html = str_ireplace('{CSS}', $this->css, $html);
 			}
 			
