@@ -1,37 +1,27 @@
 <?php
 	class Pagination {
-		public $total = 0;
-		public $page = 1;
-		public $limit = 20;
-		public $num_links = 5;
-		public $url = '';
-		public $text = 'Showing {start} to {end} of {total} ({pages} Pages)';
-		public $text_first = '|&lt;';
-		public $text_last = '&gt;|';
-		public $text_next = '&gt;';
-		public $text_prev = '&lt;';
-		public $style_links = 'links';
-		public $style_prev = 'prev';
-		public $style_next = 'next';
-		public $id_next = 'pagination-next';
-		public $style_results = 'results';
-		public $paging_style = '';
-		private $language = false;
+		public $total 			= 0;
+		public $page 			= 1;
+		public $limit 			= 20;
+		public $num_links 		= 5;
+		public $url 			= '';
+		public $text 			= 'Showing {start} to {end} of {total} ({pages} Pages)';
+		public $text_first 		= '|&lt;';
+		public $text_last 		= '&gt;|';
+		public $text_next 		= '&gt;';
+		public $text_prev 		= '&lt;';
+		public $style_links 	= 'links';
+		public $style_prev 		= 'prev';
+		public $style_next 		= 'next';
+		public $id_next 		= 'pagination-next';
+		public $style_results 	= 'results';
+		public $paging_style 	= '';
+		private $language 		= null;
 		
 		
-		public function __construct($registry = false){	
+		public function __construct($registry = null){	
 			if ($registry){				
-				$this->language = $this->language = $registry->get('language');
-				
-				if (SITE_NAMESPACE == 'HAUSGARTEN'){
-					
-					$this->text_first = '|&lt;';
-					$this->text_last = '&gt;|';
-					$this->text_next = $this->language->get('text_next');
-					$this->text_prev = $this->language->get('text_prev');
-					$this->style_links = 'links';
-					$this->style_results = 'results';		
-				}								
+				$this->language = $registry->get('language');							
 			}
 		}
 		
@@ -46,7 +36,7 @@
 			}
 			
 			if (!(int)$this->limit) {
-				$limit = 10;
+				$limit = 20;
 				} else {
 				$limit = $this->limit;
 			}
@@ -64,13 +54,13 @@
 			'{products}'
 			);
 			
-			$replace = array(
+			$replace = [
 				($total) ? (($page - 1) * $limit) + 1 : 0,	
 				((($page - 1) * $limit) > ($total - $limit)) ? $total : ((($page - 1) * $limit) + $limit),	
 				$total, 
 				$num_pages,
 				morphos\Russian\NounPluralization::pluralize($total, 'товар')
-				);
+			];
 			
 			
 			
@@ -181,9 +171,7 @@
 
 			
 			$replace = array(($total) ? (($page - 1) * $limit) + 1 : 0,	((($page - 1) * $limit) > ($total - $limit)) ? $total : ((($page - 1) * $limit) + $limit),	$total, $num_pages, ($total) ? morphos\Russian\NounPluralization::pluralize((int)$total, 'товар'):'');
-			
-			
-			//	return ($output ? '<div class="' . $this->style_links . '">' . $output . '</div>' : '') . '<div class="' . $this->style_results . '">' . str_replace($find, $replace, $this->text) . '</div>';
+									
 			if (defined('THIS_IS_CATALOG') && THIS_IS_CATALOG) {
 				return ($output ? '<div class="' . $this->style_links . '">' . $output . '</div>' : '');				
 				} else {
