@@ -31,8 +31,7 @@
 		"/hobotix/ElasticSearch",
 		"/hobotix/CourierServices",
 		"/hobotix/OpenAIAdaptor",
-		"/hobotix/MinifyAdaptor",
-		"XML2Array"
+		"/hobotix/MinifyAdaptor"		
 	],
 	"helpers":[
 		"json",
