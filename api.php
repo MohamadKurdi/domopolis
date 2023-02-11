@@ -108,10 +108,8 @@ if (isset($storesConfig[$httpHOST])) {
     die('we do not serve this shit');
 }
 
-    //Пейджкеш
-$PageCache = new PageCache();
+$PageCache = new \hobotix\PageCache();
 
-    //Загрузка
 if (!empty($loaderConfig['startup'])) {
     foreach ($loaderConfig['startup'] as $startupFile) {
         require_once(DIR_SYSTEM . $startupFile . '.php');

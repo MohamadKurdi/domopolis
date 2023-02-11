@@ -114,7 +114,7 @@ if (!empty($loaderConfig['libraries'])){
 	}		
 }
 
-$PageCache = new PageCache();
+$PageCache = new \hobotix\PageCache();
 
 $registry = new Registry();
 $registry->set('load', 		new Loader($registry));	
