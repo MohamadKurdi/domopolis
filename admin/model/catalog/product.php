@@ -2781,7 +2781,7 @@
 				$sql .= " AND p.quantity_stockM > 0";
 			}
 
-			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
+			if ($this->config->get('config_enable_amazon_specific_modes') && !empty($this->session->data['config_rainforest_variant_edition_mode'])) {
             	$sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
         	}
 			
