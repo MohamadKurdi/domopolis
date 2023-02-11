@@ -54,14 +54,12 @@
 				return false;
 			}
 			
-			require_once(DIR_SYSTEM . 'library/XML2Array.php');
-			$xml2array = new XML2Array();
-			
 			try {
-				$input = $xml2array->createArray($xml);				
-				} catch (Exception $e){												
-				return ('Ошибка разбора XML. ' . $e->getMessage());
-			}			
+				$xtoa  = new \AlexTartan\Array2Xml\XmlToArray(['version'=>'1.0','encoding'=>'UTF-8','attributesKey' => '@attributes','cdataKey'=>'@cdata','valueKey'=>'@value','formatOutput'  => false]);
+				$input = $xtoa->buildArrayFromString($xml);
+			} catch (\AlexTartan\Array2Xml\Exception\ConversionException $e) {
+				die('Ошибка разбора XML. ' . $e->getMessage());
+			}    		
 			
 			return $input;	
 			
@@ -80,22 +78,6 @@
 			
 			$jsResult = $result->return;
 			
-			return $jsResult;
-			
+			return $jsResult;			
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	}	

@@ -164,16 +164,13 @@ class ModelKpInfo1C extends Model {
 		if ($xml == 'NonOrder'){
 			return false;
 		}
-		
-		
-		require_once(DIR_SYSTEM . 'library/XML2Array.php');
-		$xml2array = new XML2Array();
-		
-			//	$xml = htmlspecialchars_decode($xml);
+					
+		$xml = htmlspecialchars_decode($xml);
 		
 		try {
-			$input = $xml2array->createArray($xml);				
-		} catch (Exception $e){												
+			$xtoa  = new \AlexTartan\Array2Xml\XmlToArray(['version'=>'1.0','encoding'=>'UTF-8','attributesKey' => '@attributes','cdataKey'=>'@cdata','valueKey'=>'@value','formatOutput'  => false]);
+            $input = $xtoa->buildArrayFromString($xml);			
+		} catch (\AlexTartan\Array2Xml\Exception\ConversionException $e){												
 			return ('Ошибка разбора XML. ' . $e->getMessage());
 		}			
 		

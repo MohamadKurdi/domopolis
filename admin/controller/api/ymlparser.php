@@ -73,9 +73,6 @@
 			$this->load->model('catalog/product');
 			$this->load->model('catalog/manufacturer');
 			
-			require_once(DIR_SYSTEM . 'library/XML2Array.php');
-			$xml2array = new XML2Array();
-			
 			$log_yml = new Log('supplier_'. $supplier_code .'.txt');			
 			$log_yml->write('> Начало загрузки');
 			echo '> Начало загрузки' . PHP_EOL;
@@ -84,17 +81,15 @@
 			$log_yml->write('> Получили файл');
 			echo '> Получили файл' . PHP_EOL;
 			
-			//	$yml = mb_convert_encoding($yml, "utf-8", "windows-1251");
-			//	$yml = htmlspecialchars_decode($yml);
-			
 			try {
-				$yml = $xml2array->createArray($yml);				
-				} catch (Exception $e){
+				$xtoa  = new \AlexTartan\Array2Xml\XmlToArray(['version'=>'1.0','encoding'=>'UTF-8','attributesKey' => '@attributes','cdataKey'=>'@cdata','valueKey'=>'@value','formatOutput'  => false]);
+            	$yml = $xtoa->buildArrayFromString($yml);					
+				} catch (\AlexTartan\Array2Xml\Exception\ConversionException $e){
 				die ('Ошибка разбора XML. ' . $e->getMessage());
 			}
 			
-			$log_yml->write('> Разобрали XML2Array');
-			echo '> Разобрали XML2Array' . PHP_EOL;
+			$log_yml->write('> Разобрали YML');
+			echo '> Разобрали YML' . PHP_EOL;
 			
 			echo 'Поставщик: ' . $yml['yml_catalog']['shop']['name'] . PHP_EOL;
 			if ($params['action'] == 'update') {
