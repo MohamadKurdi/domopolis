@@ -16,16 +16,13 @@ class ControllerModuleAlsoPurchased extends Controller
 		$out = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, $setting, [$product_id]));
 
 		if ($out) {		
-
 			$this->setCachedOutput($out);
-
 		} else {	
 
 			$this->load->model('module/alsopurchased');			
 			$this->load->model('catalog/category');	
 			$this->load->model('catalog/product');
 			$this->load->model('tool/image');
-
 
 			if ($setting['categories']){
 				$this->data['categories'] 	= [];	

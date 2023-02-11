@@ -625,7 +625,10 @@ public function index($product_id = false, $just_price = false)
             $pagination->url = $this->url->link('product/product/review','product_id=' . $this->request->get['product_id'] . '&page={page}');
 
             $this->data['pagination'] = $pagination->render();
-            $this->model_catalog_product->catchAlsoViewed($this->request->get['product_id']);
+
+            if ($this->config->get('config_product_alsoviewed_enable')){
+                $this->model_catalog_product->catchAlsoViewed($this->request->get['product_id']);
+            }
 
             $this->load->model('catalog/superstat');
             $this->model_catalog_superstat->addToSuperStat('p', $this->request->get['product_id']);

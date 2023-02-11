@@ -418,11 +418,11 @@
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Загрузки в товарах</span></p>
 										<select type="select" name="config_product_downloads_enable">
 											<? if ($config_product_downloads_enable) { ?>
-												<option value="1" selected='selected' >Да</option>
-												<option value="0" >Нет</option>
+												<option value="1" selected='selected' >Включить</option>
+												<option value="0" >Отключить</option>
 											<? } else { ?>
-												<option value="1" >Да</option>
-												<option value="0"  selected='selected' >Нет</option>
+												<option value="1" >Включить</option>
+												<option value="0"  selected='selected' >Отключить</option>
 											<? } ?>       
 										</select>
 										<br />
@@ -433,15 +433,30 @@
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Опции товаров</span></p>
 										<select type="select" name="config_product_options_enable">
 											<? if ($config_product_options_enable) { ?>
-												<option value="1" selected='selected' >Да</option>
-												<option value="0" >Нет</option>
+												<option value="1" selected='selected' >Включить</option>
+												<option value="0" >Отключить</option>
 											<? } else { ?>
-												<option value="1" >Да</option>
-												<option value="0"  selected='selected' >Нет</option>
+												<option value="1" >Включить</option>
+												<option value="0"  selected='selected' >Отключить</option>
 											<? } ?>       
 										</select>
 										<br />
 										<span class="help">штатная логика опций товаров</span>	
+									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Смотрели вместе</span></p>
+										<select type="select" name="config_product_alsoviewed_enable">
+											<? if ($config_product_alsoviewed_enable) { ?>
+												<option value="1" selected='selected' >Включить</option>
+												<option value="0" >Отключить</option>
+											<? } else { ?>
+												<option value="1" >Включить</option>
+												<option value="0"  selected='selected' >Отключить</option>
+											<? } ?>       
+										</select>
+										<br />
+										<span class="help">логика нагружает магазин! если не используется - отключить!</span>	
 									</div>
 									
 								</td>

@@ -179,6 +179,13 @@
 		}
 		
         public function catchAlsoViewed($product_id){
+
+        	if (!$this->config->get('config_product_alsoviewed_enable')){
+        		if (!empty($this->session->data['alsoViewed'])) {
+        			unset($this->session->data['alsoViewed']);
+        		}
+        		return;
+        	}
 			
             if (empty($this->session->data['alsoViewed'])) {
 				$this->session->data['alsoViewed'] = $product_id;
