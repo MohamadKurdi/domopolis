@@ -1,7 +1,7 @@
 {  
 	"preload":[
 		"/system/library/Timer",
-		"/system/library/PageCache",	
+		"/system/library/hobotix/PageCache",	
 		"/system/functions",
 		"/system/constants"
 	],

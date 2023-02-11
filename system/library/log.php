@@ -4,8 +4,11 @@
 		private $firePHP = null;
 		
 		public function __construct($filename = '') {
-			$this->filename = $filename;
-			$this->firePHP = \FirePHP::init();
+			$this->filename = $filename;			
+
+			if ((defined('ADMIN_SESSION_DETECTED') && ADMIN_SESSION_DETECTED) || (defined('IS_DEBUG') && IS_DEBUG)){
+				$this->firePHP = \FirePHP::init();
+			}
 		}
 		
 		public function clear() {

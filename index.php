@@ -97,7 +97,7 @@
 	}
 	
 	//Пейджкеш		
-	$PageCache = new PageCache();	
+	$PageCache = new \hobotix\PageCache();	
 	if ($PageCache->validateOther() && $PageCache->validateIfToCache() && $output = $PageCache->getCache()){
 		if (!headers_sent()) {
 			header('Content-Type: text/html; charset=utf-8');
@@ -194,10 +194,10 @@
 
 	if ($registry->get('config')->get('config_enable_highload_admin_mode')){
 		define('BYPASS_CACHE_FOR_LOGGED_ADMIN_ENABLED', true);
-		header('X-FPC-BYPASS-ALL: 1');
+		header('X-FPC-BYPASS-ALL-ENABLED: 1');
 	} else {
 		define('BYPASS_CACHE_FOR_LOGGED_ADMIN_ENABLED', false);
-		header('X-FPC-BYPASS-ALL: 0');
+		header('X-FPC-BYPASS-ALL-ENABLED: 0');
 	}
 
 	//Very fast seo-url logic

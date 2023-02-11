@@ -75,7 +75,7 @@ require_once(DIR_SYSTEM . 'library/pushQueue.php');
 require_once(DIR_SYSTEM . 'library/Bitrix24.php');
 require_once(DIR_SYSTEM . 'library/shortAlias.php');
 require_once(DIR_SYSTEM . 'library/sessionDBHandler.php');
-require_once(DIR_SYSTEM . 'library/PageCache.php');
+require_once(DIR_SYSTEM . 'library/hobotix/PageCache.php');
 require_once(DIR_SYSTEM . 'library/hobotix/CourierServices.php');
 require_once(DIR_SYSTEM . 'library/hobotix/EmailBlackList.php');
 require_once(DIR_SYSTEM . 'library/hobotix/RainforestAmazon.php');
@@ -177,8 +177,7 @@ $registry->set('response', $response);
 $cache = new Cache();
 $registry->set('cache', $cache); 
 
-$PageCache = new PageCache(false);
-$registry->set('PageCache', $PageCache); 
+$registry->set('PageCache', new \hobotix\PageCache(false)); 
 
 if ($registry->get('config')->get('config_seo_url_from_id')){
 	$short_url_mapping = loadJsonConfig('shorturlmap');

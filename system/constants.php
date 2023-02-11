@@ -17,6 +17,7 @@ $ipsConfig = loadJsonConfig('ips');
 
 //DEBUG
 if ((isset($_GET['hello']) && $_GET['hello'] == 'world')){
+	header('X-DEBUG-REASON: hello=world');
 	define('IS_DEBUG', true);
 	define('DEV_ENVIRONMENT', true);
 	define('DEBUGSQL', true);
@@ -33,7 +34,7 @@ if ((isset($_GET['hello']) && $_GET['hello'] == 'world')){
 		define('DEV_ENVIRONMENT', false);
 
 	} elseif (!empty($ipsConfig['debug']) && !empty($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], $ipsConfig['debug'])) {
-
+		header('X-DEBUG-REASON: ipsConfig');
 		define('IS_DEBUG', true);
 		define('DEV_ENVIRONMENT', false);
 
