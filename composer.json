@@ -53,6 +53,7 @@
         "firephp/firephp-core": "^0.5.3",
         "orhanerday/open-ai": "^3.4",
         "matthiasmullie/minify": "^1.3",
-        "alextartan/xml2array": "^2.0"
+        "alextartan/xml2array": "^2.0",
+        "tijsverkoyen/css-to-inline-styles": "^2.2"
     }
 }
