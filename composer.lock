@@ -4,8 +4,67 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f4b588f4bff32ed2cbf23ebcb61dc85d",
+    "content-hash": "eb8ce0c1e323d2eb2ac9df11f0fa504d",
     "packages": [
+        {
+            "name": "alextartan/xml2array",
+            "version": "2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alextartan/xml2array.git",
+                "reference": "65a76307ef1fb67d9090b16b9a9d11d969ba01dd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alextartan/xml2array/zipball/65a76307ef1fb67d9090b16b9a9d11d969ba01dd",
+                "reference": "65a76307ef1fb67d9090b16b9a9d11d969ba01dd",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-libxml": "*",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "infection/infection": "^0.13.0 || ^0.15.0 || ^0.16.0 || ^0.20.0",
+                "php-coveralls/php-coveralls": "^2.1",
+                "phpstan/phpstan": "0.11.20",
+                "phpstan/phpstan-phpunit": "^0.11",
+                "phpstan/phpstan-strict-rules": "^0.11",
+                "phpunit/phpunit": "^8.2.0 || ^9.0.0",
+                "squizlabs/php_codesniffer": "^3.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AlexTartan\\Array2Xml\\": "src/ArrayToXml"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Alex Tartan",
+                    "email": "alex.tartan@gmail.com",
+                    "homepage": "http://web-factory.co",
+                    "role": "Lead"
+                }
+            ],
+            "description": "Lightweight xml<->array conversion.",
+            "homepage": "https://github.com/alextartan/xml2array",
+            "keywords": [
+                "array",
+                "conversion",
+                "xml"
+            ],
+            "support": {
+                "issues": "https://github.com/alextartan/xml2array/issues",
+                "source": "https://github.com/alextartan/xml2array/tree/2.0.2"
+            },
+            "time": "2020-11-09T09:38:11+00:00"
+        },
         {
             "name": "caponica/amazon-rainforest",
             "version": "dev-master",
