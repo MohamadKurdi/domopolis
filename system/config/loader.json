@@ -22,7 +22,7 @@
 		"mAlert",
 		"shortAlias",
 		"user",
-		"sessionDBHandler",
+		"/hobotix/SessionDBHandler",
 		"/hobotix/EmailBlackList",
 		"/hobotix/RainforestAmazon",
 		"/hobotix/PricevaAdaptor",
