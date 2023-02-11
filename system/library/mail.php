@@ -10,12 +10,12 @@ class Mail {
 	protected $emailtemplate;
 	protected $text;
 	protected $html;
-	protected $attachments = array();	
+	protected $attachments = [];	
 
-	public $protocol = 'mail';
-	public $newline = "\n";
-	public $crlf = "\r\n";
-	public $verp = false;
+	public $protocol 	= 'mail';
+	public $newline 	= "\n";
+	public $crlf 		= "\r\n";
+	public $verp 		= false;
 
 	public function __construct($registry = false){
 		if ($registry){
@@ -67,6 +67,7 @@ class Mail {
 	public function setReplyTo($address, $name = ''){
 		$this->replyTo = $address;
 		$this->replyToName = ($name != '') ? $name : $address;
+		return $this;
 	}	
 
 	public function setCc($address) {
@@ -84,7 +85,6 @@ class Mail {
 		return $this;
 	}
 
-
 	public function getHtml() {
 		return $this->html;
 	}
@@ -93,10 +93,9 @@ class Mail {
 		return $this->subject;		
 	}
 
-	public function send($double_logic = false, $data = array(), $marketing = false){
-
+	public function send($myLogLogic = false, $data = [], $marketing = false){
 		if 	(!$this->emailBlackList->check($this->to)){
-			echoLine('EmailBlacklist not checked');
+			echoLine('[Mail] Mail can not be checked by emailBlackList', 'e');
 			return 0;
 		}
 
@@ -104,19 +103,16 @@ class Mail {
 			$this->protocol = 'mail';
 		}
 
+		$transmission_id = $this->selectEngineAndSend();
 
-		$transmission_id = $this->_send();
-
-		if ($double_logic){
+		if ($myLogLogic){
 			$data['transmission_id'] = $transmission_id;			
 			if($this->emailtemplate){					
 				$this->emailtemplate->myLog($data, $marketing);
 			}
 		} else {
-
 			if($this->emailtemplate){
 				$logData = get_object_vars($this);
-
 				$logData['transmission_id'] = $transmission_id;		
 				unset($logData['emailtemplate']);
 				$this->emailtemplate->log($logData);
@@ -126,7 +122,7 @@ class Mail {
 		return $transmission_id;			
 	}
 
-	private function _send() {
+	private function selectEngineAndSend() {
 		if ($this->protocol == 'sparkpost'){
 			return $this->send_sparkpost();
 		}
@@ -146,7 +142,7 @@ class Mail {
 		return 0;
 	}
 
-	public function preparemail(){
+	private function preparemail(){
 		if (!$this->to) {
 			trigger_error('Error: E-Mail to required!');
 			exit();			
@@ -258,7 +254,7 @@ class Mail {
 		return $this;
 	}
 	
-	public function send_sendmail(){
+	private function send_sendmail(){
 		ini_set('sendmail_from', $this->from);
 
 		if ($this->parameter) {
@@ -268,8 +264,7 @@ class Mail {
 		}
 	}
 
-	public function send_smtp(){
-
+	private function send_smtp(){
 		$handle = fsockopen($this->config->name('config_smtp_host'), $this->config->get('config_smtp_port'), $errno, $errstr, $this->config->get('config_smtp_timeout'));
 
 		if (!$handle) {
@@ -519,18 +514,15 @@ class Mail {
 
 			fclose($handle);
 		}
-
 	}
 
-	public function send_mailgun(){
-
+	private function send_mailgun(){
 		$mgClient = \Mailgun\Mailgun::create($this->config->get('config_mailgun_api_private_key'), $this->config->get('config_mailgun_api_url'));
 
-		try{
-			
+		try{	
 			setlocale(LC_ALL, "ru_RU.UTF-8");
 
-			$attachments = array();
+			$attachments = [];
 			foreach ($this->attachments as $attachment) {
 				if (file_exists($attachment)) {
 					$attachments[] = ['filePath' => trim($attachment), 'filename' => basename($attachment)];		
@@ -559,11 +551,10 @@ class Mail {
 		return 0;
 	}
 
-	public function send_sparkpost(){		
-
+	private function send_sparkpost(){		
 		setlocale(LC_ALL, "ru_RU.UTF-8");
 
-		$attachments = array();
+		$attachments = [];
 		foreach ($this->attachments as $attachment) {
 			if (file_exists($attachment)) {
 				$handle = fopen($attachment, 'r');				
@@ -588,7 +579,7 @@ class Mail {
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 
-		$headers = array();
+		$headers = [];
 		$headers[] = 'Accept:application/json';
 		$headers[] = 'Accept-Encoding: gzip, deflate';
 		$headers[] = 'Accept-Language: en-US,en;q=0.5';
@@ -596,8 +587,6 @@ class Mail {
 		$headers[] = 'Content-Type: application/json; charset=utf-8';
 
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-
 
 		$json = json_encode([
 			'metadata'=>[
