@@ -5683,7 +5683,7 @@
 			
 			$data = array();
 			
-			if (($this->request->post['order_status_id'] == $this->config->get('config_confirmed_nopaid_order_status_id'))&& $order['shipping_country_id'] == 220 && $order['pay_type'] == 'Банковской картой' && !$order['card_id']){
+			if (($this->request->post['order_status_id'] == $this->config->get('config_confirmed_nopaid_order_status_id')) && $order['shipping_country_id'] == 220 && $order['pay_type'] == 'Банковской картой' && !$order['card_id']){
 				$data['error'][] = 'Выбрана оплата банковской картой, однако не выбрана карта для оплаты';
 			}
 			

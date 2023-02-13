@@ -172,14 +172,20 @@ class ControllerSettingSetting extends Controller
     
     public function editSettingAjax()
     {
-
         $store_id   = $this->request->get['store_id'];
         $key        = $this->request->post['key'];
         $value      = $this->request->post['value'];
 
+        if (!empty($this->request->post['js_serialized'])){
+            parse_str(html_entity_decode($value), $result);
+            if (is_array($result) && !empty($result[$key])){
+                $value = $result[$key];
+            }
+        }
+
         $serialized = (int)is_array($value);
-        $value = (is_array($value))?serialize($value):$value;
-        $key = trim($key, '[]');
+        $value      = (is_array($value))?serialize($value):$value;        
+        $key        = trim($key, '[]');       
 
         if ($key) {
             $query = $this->db->query("SELECT * FROM setting WHERE store_id = '" . (int)$store_id . "' AND `group` = 'config' AND `key` = '" . $this->db->escape($key) . "'");

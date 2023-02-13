@@ -1192,19 +1192,17 @@
 										<tr>
 											<td style="width:200px;">
 												<span class="status_color" style="text-align: left; background: #<?php echo !empty($order_status['status_bg_color']) ? $order_status['status_bg_color'] : ''; ?>; color: #<?php echo !empty($order_status['status_txt_color']) ? $order_status['status_txt_color'] : ''; ?>;">
-
 													<?php echo $order_status['name']; ?>
-
 												</span>
 											</td>
 											<td style="width:50px" class="center">
-												<input class="checkbox" type="checkbox" name="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]" id="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]" <?php if (isset($status_message['enabled']) && $status_message['enabled']) { echo ' checked="checked"'; }?>/>
+												<input data-key="config_sms_new_order_status_message" data-id="<?php echo $order_status['order_status_id']; ?>" data-name="enabled" class="checkbox" type="checkbox" name="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]" id="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]" <?php if (isset($status_message['enabled']) && $status_message['enabled']) { echo ' checked="checked"'; }?>/>
 
 												<label for="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]"></label>
 
 											</td>
 											<td style="padding:5px;">
-												<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][message]" value="<?php echo isset($status_message['message']) ? $status_message['message'] : ""; ?>" />
+												<input data-key="config_sms_new_order_status_message" data-id="<?php echo $order_status['order_status_id']; ?>" data-name="message" type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][message]" value="<?php echo isset($status_message['message']) ? $status_message['message'] : ""; ?>" />
 											</td>
 										</tr>										
 									<?php } ?>
@@ -1641,23 +1639,31 @@
 						var elem = $(this);
 						var value = $(this).val();
 						var store_id = $('input[name=store_id]').val();
+						var js_serialized 	= false;
 
-						if (elem.attr('type') == 'checkbox'){
-							value = [];
-							if (key.indexOf('[]') > 0){
-								var allboxes = $('input[name=\''+ key +'\']');
+						if (elem.attr('data-key') != null){
+							console.log('multi setting, get all keys for ' + elem.attr('data-key'));
 
-								allboxes.each(function(i){
-									if ($(this).attr('checked')){
-										value.push($(this).val());
-									}
-								});
-							} else {
+							key   			= elem.attr('data-key');					
+							value 			= $('input[data-key=\'' + elem.attr('data-key') + '\']').serialize();
+							js_serialized 	= true;		
+						} else {
+							if (elem.attr('type') == 'checkbox'){
+								value = [];
+								if (key.indexOf('[]') > 0){
+									var allboxes = $('input[name=\''+ key +'\']');
 
-								if (elem.attr('checked')){
-									value = elem.val();
+									allboxes.each(function(i){
+										if ($(this).attr('checked')){
+											value.push($(this).val());
+										}
+									});
 								} else {
-									value = 0;
+									if (elem.attr('checked')){
+										value = elem.val();
+									} else {
+										value = 0;
+									}
 								}
 							}
 						}
@@ -1667,7 +1673,8 @@
 							url: 'index.php?route=setting/setting/editSettingAjax&store_id=' + store_id + '&token=<?php echo $token; ?>',
 							data: {
 								key: key,
-								value: value						
+								value: value,
+								js_serialized: js_serialized					
 							},
 							beforeSend: function(){
 								elem.css('border-color', 'yellow');
