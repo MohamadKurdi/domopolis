@@ -17331,8 +17331,9 @@ a.mfilter-button-more {
     
 }
 .account_wrap .two_column .side_bar li a{
-    font-size: 15px;
+/*    font-size: 15px;*/
     font-weight: 500;
+    font-size: 16px;
     display: block;
     transition: .15s ease-in-out;
     margin-bottom: 10px;
