@@ -288,8 +288,8 @@ class CalculatePriceDeliveryCdek {
 
 		$response = $this->_getRemoteData($data);
 
-		var_dump(json_encode($data));
-		var_dump($response);
+	//	var_dump(json_encode($data));
+	//	var_dump($response);
 		
         if( isset($response['result']) && !empty($response['result']) ) {
             $this->result = $response;
