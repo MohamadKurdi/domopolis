@@ -4,8 +4,12 @@
 			$this->language->load('payment/bank_transfer');
 			
 			$status = true;
-			
-			if (!in_array($this->config->get('config_store_id'), $this->config->get('bank_transfer_store'))){
+
+			if (!$this->config->get('bank_transfer_store')){
+				$status = false;
+			}
+		
+			if ($this->config->get('bank_transfer_store') && !in_array($this->config->get('config_store_id'), $this->config->get('bank_transfer_store'))){
 				$status = false;
 			}
 			

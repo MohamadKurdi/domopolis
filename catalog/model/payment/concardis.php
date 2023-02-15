@@ -9,8 +9,12 @@
 			if (!$this->config->get('concardis_status')){
 				$status = false;
 			}
+
+			if (!$this->config->get('concardis_store')){
+				$status = false;
+			}
 		
-			if (!in_array($this->config->get('config_store_id'), $this->config->get('concardis_store'))){
+			if ($this->config->get('concardis_store') && !in_array($this->config->get('config_store_id'), $this->config->get('concardis_store'))){
 				$status = false;
 			}
 			
