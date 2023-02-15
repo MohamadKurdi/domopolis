@@ -37,9 +37,12 @@
 		public function setTranslationMarker($product_id, $language_id, $marker = 1){										
 			$this->db->query("UPDATE product_description SET translated = '" . (int)$marker . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
 		}
-		
-		
+				
 		public function updateCollectionDescriptionTranslation($collection_id, $language_id, $text){										
 			$this->db->query("UPDATE collection_description SET description = '" . $this->db->escape($text) . "' WHERE collection_id = '" . (int)$collection_id . "' AND language_id = '" . (int)$language_id . "'");
+		}
+
+		public function updateCategoryNameTranslation($category_id, $language_id, $text){								
+			$this->db->query("UPDATE category_description SET name = '" . $this->db->escape($text) . "' WHERE category_id = '" . (int)$category_id . "' AND language_id = '" . (int)$language_id . "'");
 		}
 	}					

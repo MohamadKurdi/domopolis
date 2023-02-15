@@ -1,32 +1,43 @@
 <?
 	
-	class ControllerKPTranslateDERU extends Controller {
-		protected $error = array();
-		
-		public function ajax() {
+	/*
+		26 -> 6
+	*/
+	
+	class ControllerDPTranslateDERU extends Controller {
+		protected $error = array();		
 
+		public function cronCategories(){
 			if (!$this->config->get('config_yandex_translate_api_enable')){
 				return;
 			}
 
-			$q 	= $this->request->post['q'];
-			$source 	= $this->request->post['source'];
-			$target 	= $this->request->post['target'];
+			$this->load->model('kp/translate');	
+
+			$sql = "SELECT category_id, name FROM category_description cd1 WHERE name = (SELECT cd2.name FROM category_description cd2 WHERE language_id = 26 AND cd1.category_id = cd2.category_id) AND language_id = 6";
 			
-			$this->load->model('kp/translate');
-			
-			$translated = $this->model_kp_translate->translateYandex($q, $source, $target);
-			
-			$json = json_decode($translated, true);
-			if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
-				$json['translations'][0]['text'] = htmlspecialchars_decode($json['translations'][0]['text'], ENT_QUOTES);
+			$query = $this->db->query($sql);
+
+			foreach ($query->rows as $row){
+				$translation = $this->model_kp_translate->translateYandex($row['name'], 'de', 'ru');	
+
+				$json = json_decode($translation, true);
+				if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
+					$translated = $json['translations'][0]['text'] = htmlspecialchars_decode($json['translations'][0]['text'], ENT_QUOTES);
+				}
+
+				if ($translated){
+					echoLine('[TR DETR] ' . trim(str_replace(PHP_EOL, '', substr(strip_tags($translated), 0, 100))));	
+					$this->model_kp_translate->updateCategoryNameTranslation($row['category_id'], '6', $translated);								
+				} else {
+					echoLine('[TR ERROR] Что-то пошло не так');					
+				}
 			}
-			$translated = json_encode($json);
-			
-			$this->response->setOutput($translated);
+
+
 		}
 		
-		public function cronReviewsUA(){
+		public function cronReviews(){
 
 			if (!$this->config->get('config_yandex_translate_api_enable')){
 				return;
@@ -44,7 +55,7 @@
 				foreach ($languages as $language){
 					
 					echoLine('[TR] Языковая запись ' . (int)$row['rate_id']);
-					$this->db->query("INSERT IGNORE INTO " . DB_PREFIX . "shop_rating_description SET rate_id = '" . (int)$row['rate_id'] . "', language_id = '" . $language['language_id'] . "', comment = '', answer = '', good = '', bad = ''");
+					$this->db->query("INSERT IGNORE INTO shop_rating_description SET rate_id = '" . (int)$row['rate_id'] . "', language_id = '" . $language['language_id'] . "', comment = '', answer = '', good = '', bad = ''");
 					
 				}
 				
@@ -128,7 +139,7 @@
 				foreach ($languages as $language){
 					
 					echoLine('[TR] Языковая запись ' . (int)$row['review_id']);
-					$this->db->query("INSERT IGNORE INTO " . DB_PREFIX . "review_description SET review_id = '" . (int)$row['review_id'] . "', language_id = '" . $language['language_id'] . "', text = '', answer = '', good = '', bads = ''");
+					$this->db->query("INSERT IGNORE INTO review_description SET review_id = '" . (int)$row['review_id'] . "', language_id = '" . $language['language_id'] . "', text = '', answer = '', good = '', bads = ''");
 					
 				}
 				
@@ -203,7 +214,7 @@
 			}
 		}
 		
-		public function cronAttributesUA(){
+		public function cronAttributes(){
 
 			if (!$this->config->get('config_yandex_translate_api_enable')){
 				return;
@@ -295,7 +306,7 @@
 			}
 		}	
 		
-		public function cronProductsUA(){
+		public function cronProducts(){
 
 			if (!$this->config->get('config_yandex_translate_api_enable')){
 				return;
@@ -304,25 +315,25 @@
 			$this->load->model('kp/translate');	
 			
 			$sql = "SELECT product_id FROM `product_description` WHERE product_id IN 
-			(SELECT product_id FROM product_description pd2 WHERE pd2.language_id = 5)
+			(SELECT product_id FROM product_description pd2 WHERE pd2.language_id = 26)
 			AND product_id NOT IN (SELECT product_id FROM product_description pd3 WHERE pd3.language_id = 6)
-			AND language_id = 5";
+			AND language_id = 26";
 			
 			$query = $this->db->query($sql);
 			
 			foreach ($query->rows as $row){
 				
 				echoLine('[TR] Языковая запись ' . (int)$row['product_id']);
-				$this->db->query("INSERT INTO " . DB_PREFIX . "product_description SET product_id = '" . (int)$row['product_id'] . "', language_id = '6', name = '', short_name_d = '', name_of_option = '', meta_keyword = '', seo_title = '', seo_h1 = '', meta_description = '', description = '', tag = '', markdown_appearance = '', markdown_condition = '', markdown_pack = '', markdown_equipment = '', translated = '0'");
+				$this->db->query("INSERT INTO product_description SET product_id = '" . (int)$row['product_id'] . "', language_id = '6', name = '', short_name_d = '', name_of_option = '', meta_keyword = '', seo_title = '', seo_h1 = '', meta_description = '', description = '', tag = '', markdown_appearance = '', markdown_condition = '', markdown_pack = '', markdown_equipment = '', translated = '0'");
 				
 			}
 			
 			//Названия
 			$sql = "SELECT product_id, 
-			name as name_ruua FROM product_description 
-			WHERE product_id IN (SELECT product_id FROM product_description pd2 WHERE pd2.language_id = 5 AND LENGTH(pd2.name) > 5 AND pd2.name REGEXP '[а-яА-Я]') 
+			name as name_deru FROM product_description 
+			WHERE product_id IN (SELECT product_id FROM product_description pd2 WHERE pd2.language_id = 26 AND LENGTH(pd2.name) > 5) 
 			AND product_id IN (SELECT product_id FROM product_description pd3 WHERE pd3.language_id = 6 AND LENGTH(pd3.name) <= 5 AND translated = 0)
-			AND language_id = 5";
+			AND language_id = 26";
 			
 			$query = $this->db->query($sql);
 			
@@ -331,7 +342,7 @@
 				
 				$total_symbols = 0;
 				foreach ($query->rows as $row){
-					$total_symbols += mb_strlen($row['name_ruua']);
+					$total_symbols += mb_strlen($row['name_deru']);
 				}
 				unset($row);
 				
@@ -343,14 +354,14 @@
 				$working_time = 0;
 				$sleep_counter = 1;
 				foreach ($query->rows as $row){
-					$count_symbols += mb_strlen($row['name_ruua']);
+					$count_symbols += mb_strlen($row['name_deru']);
 					
 					echoLine('[TR PROD] Товар ' . $counter . ' из ' . count($query->rows));
 					echoLine('[TR STAT] Символы ' . $count_symbols . ' из ' . $total_symbols);
-					echoLine('[TR PROD] Переводим товар ' . $row['name_ruua'] . ', ' . $row['product_id']);
+					echoLine('[TR PROD] Переводим товар ' . $row['name_deru'] . ', ' . $row['product_id']);
 					
 					$translation_ruua = false;
-					$translated = $this->model_kp_translate->translateYandex($row['name_ruua'], 'ru', 'uk');	
+					$translated = $this->model_kp_translate->translateYandex($row['name_deru'], 'de', 'ru');	
 					
 					$json = json_decode($translated, true);
 					if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -479,7 +490,7 @@
 			}
 		}	
 		
-		public function cronCollectionsUA(){
+		public function cronCollections(){
 
 			if (!$this->config->get('config_yandex_translate_api_enable')){
 				return;
