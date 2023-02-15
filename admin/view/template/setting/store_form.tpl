@@ -1635,18 +1635,18 @@
 				<script type="text/javascript">
 
 					$('select, textarea, input[type=text], input[type=number], input[type=time], input[type=checkbox]').bind('change', function() {
-						var key  = $(this).attr('name');
-						var elem = $(this);
-						var value = $(this).val();
-						var store_id = $('input[name=store_id]').val();
-						var js_serialized 	= false;
+						var key  			= $(this).attr('name');
+						var elem 			= $(this);
+						var value 			= $(this).val();
+						var store_id 		= $('input[name=store_id]').val();
+						var js_serialized 	= 0;
 
 						if (elem.attr('data-key') != null){
 							console.log('multi setting, get all keys for ' + elem.attr('data-key'));
 
 							key   			= elem.attr('data-key');					
 							value 			= $('input[data-key=\'' + elem.attr('data-key') + '\']').serialize();
-							js_serialized 	= true;		
+							js_serialized 	= 1;		
 						} else {
 							if (elem.attr('type') == 'checkbox'){
 								value = [];
