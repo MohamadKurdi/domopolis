@@ -45,6 +45,7 @@
 	"configs":[
 		{
 			"api/ping": 								"/admin/config.slave.php",
+			"api/describe": 							"config.api.php",
 			"api/asterisk":								"config.api.php",
 			"api/mailgun": 								"config.api.php",			
 			"api/binotel":								"config.api.php",
