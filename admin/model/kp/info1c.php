@@ -165,8 +165,6 @@ class ModelKpInfo1C extends Model {
 			return false;
 		}
 					
-		$xml = htmlspecialchars_decode($xml);
-		
 		try {
 			$xtoa  = new \AlexTartan\Array2Xml\XmlToArray(['version'=>'1.0','encoding'=>'UTF-8','attributesKey' => '@attributes','cdataKey'=>'@cdata','valueKey'=>'@value','formatOutput'  => false]);
             $input = $xtoa->buildArrayFromString($xml);			
