@@ -1245,6 +1245,13 @@ class ControllerSettingSetting extends Controller
             $this->data['config_cdek_api_tariffs'] = $this->config->get('config_cdek_api_tariffs');
         }
 
+         if (isset($this->request->post['config_cdek_api_city_sender_id'])) {
+            $this->data['config_cdek_api_city_sender_id'] = $this->request->post['config_cdek_api_city_sender_id'];
+        } else {
+            $this->data['config_cdek_api_city_sender_id'] = $this->config->get('config_cdek_api_city_sender_id');
+        }
+
+
         if (isset($this->request->post['config_novaposhta_api_key'])) {
             $this->data['config_novaposhta_api_key'] = $this->request->post['config_novaposhta_api_key'];
         } else {

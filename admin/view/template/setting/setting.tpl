@@ -4498,7 +4498,9 @@
 										<input type="text" name="config_cdek_api_tariffs" value="<?php echo $config_cdek_api_tariffs; ?>" size="50" style="width:300px;" />
 									</td>
 
-									<td width="25%">										
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ID города-отправителя</span></p>
+										<input type="text" name="config_cdek_api_city_sender_id" value="<?php echo $config_cdek_api_city_sender_id; ?>" size="50" style="width:300px;" />										
 									</td>
 								</tr>
 							</table>
