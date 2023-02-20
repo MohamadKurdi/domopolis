@@ -15,10 +15,8 @@
 		"maxmind-db/reader":"~1.0",
 		"jaybizzle/crawler-detect": "dev-master",
 		"elasticsearch/elasticsearch": "^7.0",
-        "voku/portable-utf8": "^5.4",
         "sanmai/cdek-sdk": "^0.7.3",
         "jackmartin/justin": "^1.5",
-        "kwn/number-to-words": "^1.13",
         "mailgun/mailgun-php": "^3.5",
         "phptcloud/isdayoff-sdk": "^1.0",
         "yandex-market/yandex-market-php-partner": "^2.4",
@@ -36,7 +34,6 @@
         "chillerlan/php-qrcode": "dev-main",
         "vzaichikov/barcode-validator": "dev-master",
         "priceva/priceva-sdk-php": "^0.7.0",
-        "longman/telegram-bot": "^0.76.1",
         "zadarma/user-api-v1": "^1.1",
         "hflabs/dadata": "^22.3",
         "maciejkrol/ipapicom": "^1.0",
@@ -54,6 +51,9 @@
         "orhanerday/open-ai": "^3.4",
         "matthiasmullie/minify": "^1.3",
         "alextartan/xml2array": "^2.0",
-        "tijsverkoyen/css-to-inline-styles": "^2.2"
+        "tijsverkoyen/css-to-inline-styles": "^2.2",
+        "voku/portable-utf8": "^6.0",
+        "longman/telegram-bot": "^0.80.0",
+        "kwn/number-to-words": "^2.6"
     }
 }
