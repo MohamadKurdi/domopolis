@@ -55,5 +55,10 @@
         "longman/telegram-bot": "^0.80.0",
         "kwn/number-to-words": "^2.6",
         "phpoffice/phpspreadsheet": "^1.27"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     }
 }
