@@ -29,7 +29,6 @@
         "php-http/curl-client": "^2.2",
         "sparkpost/sparkpost": "^2.3",
         "caponica/amazon-rainforest": "dev-master",
-        "phpoffice/phpspreadsheet": "^1.23",
         "mpdf/mpdf": "^8.0",
         "chillerlan/php-qrcode": "dev-main",
         "vzaichikov/barcode-validator": "dev-master",
@@ -54,6 +53,7 @@
         "tijsverkoyen/css-to-inline-styles": "^2.2",
         "voku/portable-utf8": "^6.0",
         "longman/telegram-bot": "^0.80.0",
-        "kwn/number-to-words": "^2.6"
+        "kwn/number-to-words": "^2.6",
+        "phpoffice/phpspreadsheet": "^1.27"
     }
 }
