@@ -30,7 +30,7 @@ final class PageCache{
 			require_once(DIR_SITE . 'vendor/jaybizzle/crawler-detect/src/Fixtures/Crawlers.php');
 			require_once(DIR_SITE . 'vendor/jaybizzle/crawler-detect/src/Fixtures/Headers.php');
 			require_once(DIR_SITE . 'vendor/jaybizzle/crawler-detect/src/Fixtures/Exclusions.php');
-			require_once(DIR_SITE . 'vendor/mobiledetect/mobiledetectlib/Mobile_Detect.php');
+			require_once(DIR_SITE . 'vendor/mobiledetect/mobiledetectlib/src/MobileDetect.php');
 
 			require_once(DIR_SYSTEM . 'library/hobotix/MinifyAdaptor.php');
 
@@ -53,7 +53,7 @@ final class PageCache{
 			}
 
 			$this->crawlerDetect 	= new \Jaybizzle\CrawlerDetect\CrawlerDetect; 	
-			$this->mobileDetect 	= new \Mobile_Detect;
+			$this->mobileDetect 	= new \Detection\MobileDetect;
 
 			if ($this->crawlerDetect->isCrawler()){
 				define('CRAWLER_SESSION_DETECTED', true);

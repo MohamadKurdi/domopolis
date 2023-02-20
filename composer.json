@@ -9,7 +9,6 @@
     
     "require": {
         "wapmorgan/morphos": "^3.2",
-        "mobiledetect/mobiledetectlib": "^2.8",
 		"itpanda-llc/yandex-translate-sdk": "dev-master",
 		"geoip2/geoip2":"~2.0",
 		"maxmind-db/reader":"~1.0",
@@ -54,7 +53,8 @@
         "voku/portable-utf8": "^6.0",
         "longman/telegram-bot": "^0.80.0",
         "kwn/number-to-words": "^2.6",
-        "phpoffice/phpspreadsheet": "^1.27"
+        "phpoffice/phpspreadsheet": "^1.27",
+        "mobiledetect/mobiledetectlib": "^3.74"
     },
     "config": {
         "allow-plugins": {

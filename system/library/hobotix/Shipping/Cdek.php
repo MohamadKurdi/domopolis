@@ -232,8 +232,7 @@
 			
 			return $this;
 		}
-		
-		
+				
 		public function updateCities(){
 			
 			$request = new \CdekSDK\Requests\CitiesRequest();

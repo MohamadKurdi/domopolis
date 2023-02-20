@@ -243,7 +243,7 @@ $registry->set('session', 			new Session());
 $registry->set('mAlert', 			new mAlert($registry));
 $registry->set('shortAlias', 		new shortAlias($registry));
 $registry->set('Bitrix24', 			new Bitrix24($registry));
-$registry->set('mobileDetect', 		new Mobile_Detect);
+$registry->set('mobileDetect', 		new \Detection\MobileDetect);
 $registry->set('document', 			new Document()); 		
 $registry->set('currency', 			new Currency($registry));		
 $registry->set('weight', 			new Weight($registry));
