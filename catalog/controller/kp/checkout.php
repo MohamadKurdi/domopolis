@@ -115,8 +115,7 @@
 			
 			return $results;	
 		}
-		
-		
+				
 		public function guessCitiesIDWhenNOTSET(){
 			
 			$query = !empty($this->request->get['query'])?$this->request->get['query']:'';
@@ -283,8 +282,7 @@
 				}
 				
 				$this->response->setOutput(json_encode($results));
-			}
-			
+			}			
 		}
 		
 		public function suggestFiasGuid(){
@@ -452,12 +450,5 @@
 			
 			$this->response->setOutput(json_encode($results));
 		}
-		
-		
-		
-		
-		
-		
-		
-		
+
 	}																																																	

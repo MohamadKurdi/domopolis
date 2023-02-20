@@ -311,17 +311,13 @@
 				}	
 			}	
 			
-			return $this;
-			
+			return $this;			
 		}			
-		
-		
-		
+						
 		public function updateDeliveryPoints(){
 			
-			$request = new \CdekSDK\Requests\PvzListRequest();
-			
-			$query = $this->db->query("SELECT * FROM cdek_cities WHERE 1");
+			$request 	= new \CdekSDK\Requests\PvzListRequest();			
+			$query 		= $this->db->query("SELECT * FROM cdek_cities WHERE 1");
 			
 			foreach ($query->rows as $row){
 				
