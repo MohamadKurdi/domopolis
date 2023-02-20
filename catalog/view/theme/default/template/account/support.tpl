@@ -228,31 +228,39 @@
 						<div style="display:inline-block;background-color: #57ac79;color: #fff;text-align: center;height: 40px;border-radius: 100px; width:120px; line-height: 40px;font-weight: 700;"><?php echo $support_account_text_10;?></div>
 					</button>
 				</div> -->
-				<div class="<?php if ($this->config->get('config_regional_currency') != 'UAH') { ?><?php } else { ?><? } ?>" style="text-align:center;">
-					<a href="https://m.me/104116757981722" style="text-decoration:none;" class="facebook" rel="noindex nofollow" >
-						<i class="fab fa-facebook-messenger" style=" background-image: linear-gradient(to bottom, #00c6ff, #00b5ff, #00a3ff, #008fff, #0078ff);color: #fff;width: 70px;height: 70px;font-size: 41px;border-radius: 100px;text-align: center;line-height: 70px;margin-bottom: 5px;"></i>
-						<br />
-						<div style="display:inline-block;background-color: #0078ff3b;color: #0078ff;text-align: center;height: 40px;border-radius: 100px; width:120px; line-height: 40px;font-weight: 700;">messenger</div>
-					</a>
-				</div>
-				<div class="<?php if ($this->config->get('config_regional_currency') != 'UAH') { ?><?php } else { ?><? } ?>" style="text-align:center;">
-					<a href="viber://pa?chatURI=kitchen-profi" style="text-decoration:none;" rel="nofollow">
-						<div style="display:inline-block; background-color: #995aca; border-radius:50%; background-position: center;background-size: 100% auto;background-repeat: no-repeat;  background-image: url('https://imsgroup.bitrix24.ru/bitrix/js/ui/icons/service/images/ui-service-viber.svg'); width:70px; height:70px;"></div><br />
-						<div style="display:inline-block;background-color:#f9f0ff;color:#8861b2;text-align: center;height: 40px;border-radius: 100px; width:120px; line-height: 40px;font-weight: 700;">VIBER</div>
-					</a>
-				</div>
-				<div class="<?php if ($this->config->get('config_regional_currency') != 'UAH') { ?><?php } else { ?><? } ?>" style="text-align:center;">
-					<a href="https://teleg.one/kitchenprofi_bot" style="text-decoration:none;" rel="nofollow">
-						<div style="display:inline-block; background-color: #2fc6f6; border-radius:50%; background-position: center;background-size: 100% auto;background-repeat: no-repeat;  background-image: url('https://imsgroup.bitrix24.ru/bitrix/js/ui/icons/service/images/ui-service-telegram.svg'); width:70px; height:70px;"></div><br />
-						<div style="display:inline-block;background-color:#e7f7ff;color:#4ba4e8;text-align: center;height: 40px;border-radius: 100px; width:120px; line-height: 40px;font-weight: 700;">TELEGRAM</div>
-					</a>
-				</div>
+				<?php if ($this->config->get('social_link_messenger_bot')) { ?>
+					<div class="<?php if ($this->config->get('config_regional_currency') != 'UAH') { ?><?php } else { ?><? } ?>" style="text-align:center;">
+						<a href="<?php echo $this->config->get('social_link_messenger_bot'); ?>" style="text-decoration:none;" class="facebook" rel="noindex nofollow" >
+							<i class="fab fa-facebook-messenger" style=" background-image: linear-gradient(to bottom, #00c6ff, #00b5ff, #00a3ff, #008fff, #0078ff);color: #fff;width: 70px;height: 70px;font-size: 41px;border-radius: 100px;text-align: center;line-height: 70px;margin-bottom: 5px;"></i>
+							<br />
+							<div style="display:inline-block;background-color: #0078ff3b;color: #0078ff;text-align: center;height: 40px;border-radius: 100px; width:120px; line-height: 40px;font-weight: 700;">messenger</div>
+						</a>
+					</div>
+				<? } ?>
+				<?php if ($this->config->get('social_link_viber_bot')) { ?>
+					<div class="<?php if ($this->config->get('config_regional_currency') != 'UAH') { ?><?php } else { ?><? } ?>" style="text-align:center;">
+						<a href="<?php echo $this->config->get('social_link_viber_bot'); ?>" style="text-decoration:none;" rel="nofollow">
+							<div style="display:inline-block; background-color: #995aca; border-radius:50%; background-position: center;background-size: 100% auto;background-repeat: no-repeat;  background-image: url('https://imsgroup.bitrix24.ru/bitrix/js/ui/icons/service/images/ui-service-viber.svg'); width:70px; height:70px;"></div><br />
+							<div style="display:inline-block;background-color:#f9f0ff;color:#8861b2;text-align: center;height: 40px;border-radius: 100px; width:120px; line-height: 40px;font-weight: 700;">VIBER</div>
+						</a>
+					</div>
+				<? } ?>
+				<?php if ($this->config->get('social_link_telegram_bot')) { ?>
+					<div class="<?php if ($this->config->get('config_regional_currency') != 'UAH') { ?><?php } else { ?><? } ?>" style="text-align:center;">
+						<a href="<?php echo $this->config->get('social_link_telegram_bot'); ?>" style="text-decoration:none;" rel="nofollow">
+							<div style="display:inline-block; background-color: #2fc6f6; border-radius:50%; background-position: center;background-size: 100% auto;background-repeat: no-repeat;  background-image: url('https://imsgroup.bitrix24.ru/bitrix/js/ui/icons/service/images/ui-service-telegram.svg'); width:70px; height:70px;"></div><br />
+							<div style="display:inline-block;background-color:#e7f7ff;color:#4ba4e8;text-align: center;height: 40px;border-radius: 100px; width:120px; line-height: 40px;font-weight: 700;">TELEGRAM</div>
+						</a>
+					</div>
+				<?php } ?>
+				<?php if ($this->config->get('social_link_vkontakte_bot')) { ?>
 				<div class="<?php if ($this->config->get('config_regional_currency') != 'UAH') { ?><?php } else { ?>hidden<? } ?>" style="text-align:center;">
-					<a href="http://vk.me/club88315749" style="text-decoration:none;" rel="nofollow">
+					<a href="<?php echo $this->config->get('social_link_vkontakte_bot'); ?>" style="text-decoration:none;" rel="nofollow">
 						<div style="display:inline-block; background-color: #3871ba; border-radius:50%; background-position: center;background-size: 100% auto;background-repeat: no-repeat;  background-image: url('https://imsgroup.bitrix24.ru/bitrix/js/ui/icons/service/images/ui-service-vk.svg'); width:70px; height:70px;"></div><br />
 						<div style="display:inline-block;background-color:#e7f7ff;color:#8861b2;text-align: center;height: 40px;border-radius: 100px; width:120px; line-height: 40px;font-weight: 700;">VKONTAKTE</div>
 					</a>
 				</div>
+				<?php } ?>
 			</div>
 		</div>
 		
