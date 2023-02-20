@@ -1413,221 +1413,273 @@
 								</div>
 								
 								<div id="tab-google-ya-fb-vk">
+									<h2 style="color:#57AC79">Соцсети и мессенджеры</h2>
+									<table class="form">
+										<tr>		
+											<td width="20%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ссылка на Facebook</span></p>
+												<input type="text" name="social_link_facebook" value="<?php echo $social_link_facebook; ?>" size="30" style="width:150px;" />
+											</td>
+											
+											<td width="20%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ссылка на VK</span></p>
+												<input type="text" name="social_link_vkontakte" value="<?php echo $social_link_vkontakte; ?>" size="30" style="width:150px;" />
+											</td>	
+
+											<td width="20%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ссылка на Instagram</span></p>
+												<input type="text" name="social_link_instagram" value="<?php echo $social_link_instagram; ?>" size="30" style="width:150px;" />
+											</td>
+
+											<td width="20%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ссылка на Youtube</span></p>
+												<input type="text" name="social_link_youtube" value="<?php echo $social_link_youtube; ?>" size="30" style="width:150px;" />
+											</td>
+										</tr>
+
+										<tr>		
+											<td width="20%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Messenger BOT</span></p>
+												<input type="text" name="social_link_messenger_bot" value="<?php echo $social_link_messenger_bot; ?>" size="30" style="width:150px;" />
+											</td>
+											
+											<td width="20%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Viber BOT</span></p>
+												<input type="text" name="social_link_viber_bot" value="<?php echo $social_link_viber_bot; ?>" size="30" style="width:150px;" />
+											</td>	
+
+											<td width="20%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Telegram BOT</span></p>
+												<input type="text" name="social_link_telegram_bot" value="<?php echo $social_link_telegram_bot; ?>" size="30" style="width:150px;" />
+											</td>
+
+											<td width="20%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Vkontakte BOT</span></p>
+												<input type="text" name="social_link_vkontakte_bot" value="<?php echo $social_link_vkontakte_bot; ?>" size="30" style="width:150px;" />
+											</td>
+
+											<td width="20%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Whatsapp BOT</span></p>
+												<input type="text" name="social_link_whatsapp_bot" value="<?php echo $social_link_whatsapp_bot; ?>" size="30" style="width:150px;" />
+											</td>
+										</tr>
+									</table>
+									
 									<h2 style="color:#57AC79">Авторизация Google + Facebook APP</h2>
-							<table class="form">
-								<tr>		
-									<td width="25%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Google APP ID</span></p>
-										<input type="text" name="social_auth_google_app_id" value="<?php echo $social_auth_google_app_id; ?>" size="30" style="width:150px;" />
-									</td>
-									
-									<td width="25%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Google Secret Key</span></p>
-										<input type="text" name="social_auth_google_secret_key" value="<?php echo $social_auth_google_secret_key; ?>" size="30" style="width:150px;" />
-									</td>	
-									
-										<td width="25%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">FB APP ID</span></p>
-										<input type="text" name="social_auth_facebook_app_id" value="<?php echo $social_auth_facebook_app_id; ?>" size="30" style="width:150px;" />
-									</td>
-									
-									<td width="25%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">FB APP Secret Key</span></p>
-										<input type="text" name="social_auth_facebook_secret_key" value="<?php echo $social_auth_facebook_secret_key; ?>" size="30" style="width:150px;" />
-									</td>	
-								</tr>
-							</table>
+									<table class="form">
+										<tr>		
+											<td width="25%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Google APP ID</span></p>
+												<input type="text" name="social_auth_google_app_id" value="<?php echo $social_auth_google_app_id; ?>" size="30" style="width:150px;" />
+											</td>
+
+											<td width="25%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Google Secret Key</span></p>
+												<input type="text" name="social_auth_google_secret_key" value="<?php echo $social_auth_google_secret_key; ?>" size="30" style="width:150px;" />
+											</td>	
+
+											<td width="25%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">FB APP ID</span></p>
+												<input type="text" name="social_auth_facebook_app_id" value="<?php echo $social_auth_facebook_app_id; ?>" size="30" style="width:150px;" />
+											</td>
+
+											<td width="25%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">FB APP Secret Key</span></p>
+												<input type="text" name="social_auth_facebook_secret_key" value="<?php echo $social_auth_facebook_secret_key; ?>" size="30" style="width:150px;" />
+											</td>	
+										</tr>
+									</table>
 
 									
-							<h2 style="color:#57AC79">Google Tag Manager (GTM) + Custom JS code</h2>
-							<table class="form">
-								<tr>		
-									<td width="25%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">GTM Javascript (header)</span></p>
-										<textarea name="config_gtm_header" cols="40" rows="10"><?php echo $config_gtm_header; ?></textarea>
-									</td>
-									
-									<td width="25%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">GTM NoScript (body)</span></p>
-										<textarea name="config_gtm_body" cols="40" rows="10"><?php echo $config_gtm_body; ?></textarea>
-									</td>	
+									<h2 style="color:#57AC79">Google Tag Manager (GTM) + Custom JS code</h2>
+									<table class="form">
+										<tr>		
+											<td width="25%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">GTM Javascript (header)</span></p>
+												<textarea name="config_gtm_header" cols="40" rows="10"><?php echo $config_gtm_header; ?></textarea>
+											</td>
 
-									<td width="25%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Custom JS-код в футер</span></p>
-										<textarea name="config_google_analytics" cols="40" rows="10"><?php echo $config_google_analytics; ?></textarea>
-									</td>
-									
-									<td width="25%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Custom JS-код в хедер</span></p>
-										<textarea name="config_google_analytics_header" cols="40" rows="10"><?php echo $config_google_analytics_header; ?></textarea>
-									</td>
-								</tr>
-							</table>
+											<td width="25%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">GTM NoScript (body)</span></p>
+												<textarea name="config_gtm_body" cols="40" rows="10"><?php echo $config_gtm_body; ?></textarea>
+											</td>	
 
-							<h2 style="color:#57AC79">Google Analitycs, Merchant</h2>	
-							<table class="form">
-								<tr>
-									
-									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Идентификатор Google Analitycs</span></p>
-										<input type="text" name="config_google_analitycs_id" value="<?php echo $config_google_analitycs_id; ?>" size="30" style="width:150px;" />
-									</td>
-									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Google Conversion ID</span></p>
-										<input type="text" name="config_google_conversion_id" value="<?php echo $config_google_conversion_id; ?>" size="30" style="width:150px;" />
-									</td>
-									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Google Merchant ID</span></p>
-										<input type="text" name="config_google_merchant_id" value="<?php echo $config_google_merchant_id; ?>" size="30" style="width:150px;" />											
-									</td>
-									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Тип Google remarketing</span></p>
-										<select name="config_google_remarketing_type">
-											<?php if ($config_google_remarketing_type == 'ecomm') { ?>
-												<option value="ecomm" selected="selected">E-commerce ecomm_</option>
-											<?php } else { ?>
-												<option value="ecomm">E-commerce ecomm_</option>
-											<?php } ?>
-											<?php if ($config_google_remarketing_type == 'dynx') { ?>
-												<option value="dynx" selected="selected">Универсальный dynx_</option>
-											<?php } else { ?>
-												<option value="dynx">Универсальный dynx_</option>
-											<?php } ?>
-										</select>
-									</td>
-									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Передача данных Ecommerce</span></p>
-										<select name="config_google_ecommerce_enable">
-											<?php if ($config_google_ecommerce_enable) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-											<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-									</td>
-								</tr>
-							</table>
+											<td width="25%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Custom JS-код в футер</span></p>
+												<textarea name="config_google_analytics" cols="40" rows="10"><?php echo $config_google_analytics; ?></textarea>
+											</td>
 
-							
-							<h2 style="color:#57AC79">Google ReCaptcha</h2>	
-							<table class="form">
-								<tr>		
-									<td style="width:33%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Включить ReCaptcha</span></p>
-										<select name="config_google_recaptcha_contact_enable">
-											<?php if ($config_google_recaptcha_contact_enable) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>									
-									</td>		
-									<td style="width:33%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">ReCaptcha key</span></p>
-										<input type="text" name="config_google_recaptcha_contact_key" value="<?php echo $config_google_recaptcha_contact_key; ?>" size="40" style="width:300px;" />
-									</td>		
-									<td style="width:33%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">ReCaptcha Secret</span></p>
-										<input type="text" name="config_google_recaptcha_contact_secret" value="<?php echo $config_google_recaptcha_contact_secret; ?>" size="40" style="width:300px;" />
-										
-									</td>
-								</tr>
-							</table>
+											<td width="25%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Custom JS-код в хедер</span></p>
+												<textarea name="config_google_analytics_header" cols="40" rows="10"><?php echo $config_google_analytics_header; ?></textarea>
+											</td>
+										</tr>
+									</table>
 
-							<h2 style="color:#7F00FF">Facebook пиксель</h2>
-							<table class="form">
-								<tr>		
-									<td width="25%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">FB пиксель (header)</span></p>
-										<textarea name="config_fb_pixel_header" cols="40" rows="10"><?php echo $config_fb_pixel_header; ?></textarea>
-									</td>
-									
-									<td width="25%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">FB пиксель (body)</span></p>
-										<textarea name="config_fb_pixel_body" cols="40" rows="10"><?php echo $config_fb_pixel_body; ?></textarea>
-									</td>	
-									<td width="25%"></td>
-									<td width="25%"></td>
-								</tr>
-							</table>
+									<h2 style="color:#57AC79">Google Analitycs, Merchant</h2>	
+									<table class="form">
+										<tr>
 
-							<h2 style="color:#3F6AD8">VK пиксель / ремаркетинг / ретаргетинг</h2>
-							<table class="form">
-								<tr>		
-									<td width="25%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">VK пиксель (header)</span></p>
-										<textarea name="config_vk_pixel_header" cols="40" rows="10"><?php echo $config_vk_pixel_header; ?></textarea>
-									</td>
-									
-									<td width="25%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">VK пиксель (body)</span></p>
-										<textarea name="config_vk_pixel_body" cols="40" rows="10"><?php echo $config_vk_pixel_body; ?></textarea>
-									</td>	
-									<td width="50%">
-
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">Включить пиксель</span></p>
-										<select name="config_vk_enable_pixel">
-											<?php if ($config_vk_enable_pixel) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-
-										<br />
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">VK пиксель ID</span></p>
-										<input type="text" name="config_vk_pixel_id" value="<?php echo $config_vk_pixel_id; ?>" size="40" />
-
-										<br />
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">VK прайслист ID</span></p>
-										<input type="text" name="config_vk_pricelist_id" value="<?php echo $config_vk_pricelist_id; ?>" size="40" />
-
-									</td>
-								</tr>
-							</table>
+											<td width="20%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Идентификатор Google Analitycs</span></p>
+												<input type="text" name="config_google_analitycs_id" value="<?php echo $config_google_analitycs_id; ?>" size="30" style="width:150px;" />
+											</td>
+											<td width="20%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Google Conversion ID</span></p>
+												<input type="text" name="config_google_conversion_id" value="<?php echo $config_google_conversion_id; ?>" size="30" style="width:150px;" />
+											</td>
+											<td width="20%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Google Merchant ID</span></p>
+												<input type="text" name="config_google_merchant_id" value="<?php echo $config_google_merchant_id; ?>" size="30" style="width:150px;" />											
+											</td>
+											<td width="20%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Тип Google remarketing</span></p>
+												<select name="config_google_remarketing_type">
+													<?php if ($config_google_remarketing_type == 'ecomm') { ?>
+														<option value="ecomm" selected="selected">E-commerce ecomm_</option>
+													<?php } else { ?>
+														<option value="ecomm">E-commerce ecomm_</option>
+													<?php } ?>
+													<?php if ($config_google_remarketing_type == 'dynx') { ?>
+														<option value="dynx" selected="selected">Универсальный dynx_</option>
+													<?php } else { ?>
+														<option value="dynx">Универсальный dynx_</option>
+													<?php } ?>
+												</select>
+											</td>
+											<td width="20%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Передача данных Ecommerce</span></p>
+												<select name="config_google_ecommerce_enable">
+													<?php if ($config_google_ecommerce_enable) { ?>
+														<option value="1" selected="selected">Включить</option>
+														<option value="0">Отключить</option>
+													<?php } else { ?>													
+														<option value="1">Включить</option>
+														<option value="0"  selected="selected">Отключить</option>
+													<? } ?>
+												</select>
+											</td>
+										</tr>
+									</table>
 
 
-							
-							<h2 style="color:#cf4a61">Yandex Metrika</h2>
-							<table class="form">
-								<tr>		
-									<td style="width:33%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Yandex Metrika идентификатор</span></p>
-										<input type="text" name="config_metrika_counter" value="<?php echo $config_metrika_counter; ?>" size="30" style="width:150px;" />
-									</td>
-									<td>
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Yandex WebVisor</span></p>
-										<select name="config_webvisor_enable">
-											<?php if ($config_webvisor_enable) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-											<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-									</td>
-									<td style="width:33%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включить accurateTrackBounce, trackLinks, clickmap</span></p>
-										<select name="config_clickmap_enable">
-											<?php if ($config_clickmap_enable) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
-											<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
-									</td>
-								</tr>	
-							</table>
-						</div>
+									<h2 style="color:#57AC79">Google ReCaptcha</h2>	
+									<table class="form">
+										<tr>		
+											<td style="width:33%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Включить ReCaptcha</span></p>
+												<select name="config_google_recaptcha_contact_enable">
+													<?php if ($config_google_recaptcha_contact_enable) { ?>
+														<option value="1" selected="selected">Включить</option>
+														<option value="0">Отключить</option>
+													<?php } else { ?>													
+														<option value="1">Включить</option>
+														<option value="0"  selected="selected">Отключить</option>
+													<? } ?>
+												</select>									
+											</td>		
+											<td style="width:33%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">ReCaptcha key</span></p>
+												<input type="text" name="config_google_recaptcha_contact_key" value="<?php echo $config_google_recaptcha_contact_key; ?>" size="40" style="width:300px;" />
+											</td>		
+											<td style="width:33%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">ReCaptcha Secret</span></p>
+												<input type="text" name="config_google_recaptcha_contact_secret" value="<?php echo $config_google_recaptcha_contact_secret; ?>" size="40" style="width:300px;" />
+
+											</td>
+										</tr>
+									</table>
+
+									<h2 style="color:#7F00FF">Facebook пиксель</h2>
+									<table class="form">
+										<tr>		
+											<td width="25%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">FB пиксель (header)</span></p>
+												<textarea name="config_fb_pixel_header" cols="40" rows="10"><?php echo $config_fb_pixel_header; ?></textarea>
+											</td>
+
+											<td width="25%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">FB пиксель (body)</span></p>
+												<textarea name="config_fb_pixel_body" cols="40" rows="10"><?php echo $config_fb_pixel_body; ?></textarea>
+											</td>	
+											<td width="25%"></td>
+											<td width="25%"></td>
+										</tr>
+									</table>
+
+									<h2 style="color:#3F6AD8">VK пиксель / ремаркетинг / ретаргетинг</h2>
+									<table class="form">
+										<tr>		
+											<td width="25%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">VK пиксель (header)</span></p>
+												<textarea name="config_vk_pixel_header" cols="40" rows="10"><?php echo $config_vk_pixel_header; ?></textarea>
+											</td>
+
+											<td width="25%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">VK пиксель (body)</span></p>
+												<textarea name="config_vk_pixel_body" cols="40" rows="10"><?php echo $config_vk_pixel_body; ?></textarea>
+											</td>	
+											<td width="50%">
+
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">Включить пиксель</span></p>
+												<select name="config_vk_enable_pixel">
+													<?php if ($config_vk_enable_pixel) { ?>
+														<option value="1" selected="selected">Включить</option>
+														<option value="0">Отключить</option>
+													<?php } else { ?>													
+														<option value="1">Включить</option>
+														<option value="0"  selected="selected">Отключить</option>
+													<? } ?>
+												</select>
+
+												<br />
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">VK пиксель ID</span></p>
+												<input type="text" name="config_vk_pixel_id" value="<?php echo $config_vk_pixel_id; ?>" size="40" />
+
+												<br />
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">VK прайслист ID</span></p>
+												<input type="text" name="config_vk_pricelist_id" value="<?php echo $config_vk_pricelist_id; ?>" size="40" />
+
+											</td>
+										</tr>
+									</table>
+
+
+
+									<h2 style="color:#cf4a61">Yandex Metrika</h2>
+									<table class="form">
+										<tr>		
+											<td style="width:33%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Yandex Metrika идентификатор</span></p>
+												<input type="text" name="config_metrika_counter" value="<?php echo $config_metrika_counter; ?>" size="30" style="width:150px;" />
+											</td>
+											<td>
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Yandex WebVisor</span></p>
+												<select name="config_webvisor_enable">
+													<?php if ($config_webvisor_enable) { ?>
+														<option value="1" selected="selected">Включить</option>
+														<option value="0">Отключить</option>
+													<?php } else { ?>													
+														<option value="1">Включить</option>
+														<option value="0"  selected="selected">Отключить</option>
+													<? } ?>
+												</select>
+											</td>
+											<td style="width:33%">
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включить accurateTrackBounce, trackLinks, clickmap</span></p>
+												<select name="config_clickmap_enable">
+													<?php if ($config_clickmap_enable) { ?>
+														<option value="1" selected="selected">Включить</option>
+														<option value="0">Отключить</option>
+													<?php } else { ?>													
+														<option value="1">Включить</option>
+														<option value="0"  selected="selected">Отключить</option>
+													<? } ?>
+												</select>
+											</td>
+										</tr>	
+									</table>
+								</div>
 							</form>
 						</div>
 					</div>

@@ -6318,6 +6318,59 @@
 						</div>
 						
 						<div id="tab-google-ya-fb-vk">
+							<h2 style="color:#57AC79">Соцсети и мессенджеры</h2>
+							<table class="form">
+								<tr>		
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ссылка на Facebook</span></p>
+										<input type="text" name="social_link_facebook" value="<?php echo $social_link_facebook; ?>" size="30" style="width:150px;" />
+									</td>
+									
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ссылка на VK</span></p>
+										<input type="text" name="social_link_vkontakte" value="<?php echo $social_link_vkontakte; ?>" size="30" style="width:150px;" />
+									</td>	
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ссылка на Instagram</span></p>
+										<input type="text" name="social_link_instagram" value="<?php echo $social_link_instagram; ?>" size="30" style="width:150px;" />
+									</td>
+
+									<td width="20%">
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ссылка на Youtube</span></p>
+											<input type="text" name="social_link_youtube" value="<?php echo $social_link_youtube; ?>" size="30" style="width:150px;" />
+									</td>
+								</tr>
+
+								<tr>		
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Messenger BOT</span></p>
+										<input type="text" name="social_link_messenger_bot" value="<?php echo $social_link_messenger_bot; ?>" size="30" style="width:150px;" />
+									</td>
+									
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Viber BOT</span></p>
+										<input type="text" name="social_link_viber_bot" value="<?php echo $social_link_viber_bot; ?>" size="30" style="width:150px;" />
+									</td>	
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Telegram BOT</span></p>
+										<input type="text" name="social_link_telegram_bot" value="<?php echo $social_link_telegram_bot; ?>" size="30" style="width:150px;" />
+									</td>
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Vkontakte BOT</span></p>
+										<input type="text" name="social_link_vkontakte_bot" value="<?php echo $social_link_vkontakte_bot; ?>" size="30" style="width:150px;" />
+									</td>
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Whatsapp BOT</span></p>
+										<input type="text" name="social_link_whatsapp_bot" value="<?php echo $social_link_whatsapp_bot; ?>" size="30" style="width:150px;" />
+									</td>
+								</tr>
+							</table>
+
+
 							<h2 style="color:#57AC79">Авторизация Google + Facebook APP</h2>
 							<table class="form">
 								<tr>		

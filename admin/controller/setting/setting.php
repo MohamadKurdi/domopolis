@@ -3248,7 +3248,10 @@ class ControllerSettingSetting extends Controller
 
         if ($this->openaiAdaptor->OpenAI){
             $this->data['openai_models_list'] = json_decode($this->openaiAdaptor->OpenAI->listModels(), true);
-            $this->data['openai_models_list'] = $this->data['openai_models_list']['data'];          
+
+            if (!empty($this->data['openai_models_list']['data'])){
+                $this->data['openai_models_list'] = $this->data['openai_models_list']['data'];          
+            }
         }
         
 
@@ -3709,6 +3712,26 @@ class ControllerSettingSetting extends Controller
                 $this->data[$social_auth_config_key] = $this->request->post[$social_auth_config_key];
             } else {
                 $this->data[$social_auth_config_key] = $this->config->get($social_auth_config_key);
+            }
+        }
+
+         $social_links_config = [
+            'social_link_facebook',
+            'social_link_vkontakte',
+            'social_link_instagram',
+            'social_link_youtube',
+            'social_link_viber_bot',
+            'social_link_telegram_bot',
+            'social_link_messenger_bot',
+            'social_link_vkontakte_bot',
+            'social_link_whatsapp_bot',
+        ];
+
+        foreach ($social_links_config as $social_links_config_key) {
+            if (isset($this->request->post[$social_links_config_key])) {
+                $this->data[$social_links_config_key] = $this->request->post[$social_links_config_key];
+            } else {
+                $this->data[$social_links_config_key] = $this->config->get($social_links_config_key);
             }
         }
         
