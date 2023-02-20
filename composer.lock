@@ -378,16 +378,16 @@
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.3.3",
+            "version": "1.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "30897edbfb15e784fe55587b4f73ceefd3c4d98c"
+                "reference": "74780ccf8c19d6acb8d65c5f39cd72110e132bbd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/30897edbfb15e784fe55587b4f73ceefd3c4d98c",
-                "reference": "30897edbfb15e784fe55587b4f73ceefd3c4d98c",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/74780ccf8c19d6acb8d65c5f39cd72110e132bbd",
+                "reference": "74780ccf8c19d6acb8d65c5f39cd72110e132bbd",
                 "shasum": ""
             },
             "require": {
@@ -434,7 +434,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/ca-bundle/issues",
-                "source": "https://github.com/composer/ca-bundle/tree/1.3.3"
+                "source": "https://github.com/composer/ca-bundle/tree/1.3.5"
             },
             "funding": [
                 {
@@ -450,7 +450,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-07-20T07:14:26+00:00"
+            "time": "2023-01-11T08:27:00+00:00"
         },
         {
             "name": "daveearley/daves-email-validation-tool",
@@ -822,16 +822,16 @@
         },
         {
             "name": "elasticsearch/elasticsearch",
-            "version": "v7.17.0",
+            "version": "v7.17.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/elastic/elasticsearch-php.git",
-                "reference": "1890f9d7fde076b5a3ddcf579a802af05b2e781b"
+                "url": "git@github.com:elastic/elasticsearch-php.git",
+                "reference": "f1b8918f411b837ce5f6325e829a73518fd50367"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elastic/elasticsearch-php/zipball/1890f9d7fde076b5a3ddcf579a802af05b2e781b",
-                "reference": "1890f9d7fde076b5a3ddcf579a802af05b2e781b",
+                "url": "https://api.github.com/repos/elastic/elasticsearch-php/zipball/f1b8918f411b837ce5f6325e829a73518fd50367",
+                "reference": "f1b8918f411b837ce5f6325e829a73518fd50367",
                 "shasum": ""
             },
             "require": {
@@ -881,11 +881,7 @@
                 "elasticsearch",
                 "search"
             ],
-            "support": {
-                "issues": "https://github.com/elastic/elasticsearch-php/issues",
-                "source": "https://github.com/elastic/elasticsearch-php/tree/v7.17.0"
-            },
-            "time": "2022-02-03T13:40:04+00:00"
+            "time": "2022-09-30T12:28:55+00:00"
         },
         {
             "name": "ems-api/php-client",
@@ -1252,16 +1248,16 @@
         },
         {
             "name": "geoip2/geoip2",
-            "version": "v2.12.2",
+            "version": "v2.13.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/maxmind/GeoIP2-php.git",
-                "reference": "83adb44ac4b9553d36b579a14673ed124583082f"
+                "url": "git@github.com:maxmind/GeoIP2-php.git",
+                "reference": "6a41d8fbd6b90052bc34dff3b4252d0f88067b23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/GeoIP2-php/zipball/83adb44ac4b9553d36b579a14673ed124583082f",
-                "reference": "83adb44ac4b9553d36b579a14673ed124583082f",
+                "url": "https://api.github.com/repos/maxmind/GeoIP2-php/zipball/6a41d8fbd6b90052bc34dff3b4252d0f88067b23",
+                "reference": "6a41d8fbd6b90052bc34dff3b4252d0f88067b23",
                 "shasum": ""
             },
             "require": {
@@ -1302,11 +1298,7 @@
                 "geolocation",
                 "maxmind"
             ],
-            "support": {
-                "issues": "https://github.com/maxmind/GeoIP2-php/issues",
-                "source": "https://github.com/maxmind/GeoIP2-php/tree/v2.12.2"
-            },
-            "time": "2021-11-30T18:15:25+00:00"
+            "time": "2022-08-05T20:32:58+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1786,12 +1778,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JayBizzle/Crawler-Detect.git",
-                "reference": "fbc6677b2fe9c9371c08a81244583f0aed3d96e5"
+                "reference": "6710b75871da2b718550c2bc33388315a3b20151"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/fbc6677b2fe9c9371c08a81244583f0aed3d96e5",
-                "reference": "fbc6677b2fe9c9371c08a81244583f0aed3d96e5",
+                "url": "https://api.github.com/repos/JayBizzle/Crawler-Detect/zipball/6710b75871da2b718550c2bc33388315a3b20151",
+                "reference": "6710b75871da2b718550c2bc33388315a3b20151",
                 "shasum": ""
             },
             "require": {
@@ -1829,9 +1821,9 @@
             ],
             "support": {
                 "issues": "https://github.com/JayBizzle/Crawler-Detect/issues",
-                "source": "https://github.com/JayBizzle/Crawler-Detect/tree/master"
+                "source": "https://github.com/JayBizzle/Crawler-Detect/tree/v1.2.113"
             },
-            "time": "2022-08-05T08:37:02+00:00"
+            "time": "2023-02-02T21:01:40+00:00"
         },
         {
             "name": "jms/metadata",
@@ -2260,16 +2252,16 @@
         },
         {
             "name": "mailgun/mailgun-php",
-            "version": "v3.5.2",
+            "version": "v3.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mailgun/mailgun-php.git",
-                "reference": "3ae29639d42d4996deb1996f3871dc1442d018d4"
+                "reference": "8c3840a1eb3e39329a17048994bfefefe8a57054"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mailgun/mailgun-php/zipball/3ae29639d42d4996deb1996f3871dc1442d018d4",
-                "reference": "3ae29639d42d4996deb1996f3871dc1442d018d4",
+                "url": "https://api.github.com/repos/mailgun/mailgun-php/zipball/8c3840a1eb3e39329a17048994bfefefe8a57054",
+                "reference": "8c3840a1eb3e39329a17048994bfefefe8a57054",
                 "shasum": ""
             },
             "require": {
@@ -2314,9 +2306,9 @@
             "description": "The Mailgun SDK provides methods for all API functions.",
             "support": {
                 "issues": "https://github.com/mailgun/mailgun-php/issues",
-                "source": "https://github.com/mailgun/mailgun-php/tree/v3.5.2"
+                "source": "https://github.com/mailgun/mailgun-php/tree/v3.5.5"
             },
-            "time": "2022-07-23T15:20:43+00:00"
+            "time": "2022-09-19T20:04:54+00:00"
         },
         {
             "name": "markbaker/complex",
@@ -2667,16 +2659,16 @@
         },
         {
             "name": "mobiledetect/mobiledetectlib",
-            "version": "2.8.39",
+            "version": "2.8.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/serbanghita/Mobile-Detect.git",
-                "reference": "0fd6753003fc870f6e229bae869cc1337c99bc45"
+                "reference": "fc9cccd4d3706d5a7537b562b59cc18f9e4c0cb1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/0fd6753003fc870f6e229bae869cc1337c99bc45",
-                "reference": "0fd6753003fc870f6e229bae869cc1337c99bc45",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/fc9cccd4d3706d5a7537b562b59cc18f9e4c0cb1",
+                "reference": "fc9cccd4d3706d5a7537b562b59cc18f9e4c0cb1",
                 "shasum": ""
             },
             "require": {
@@ -2717,22 +2709,22 @@
             ],
             "support": {
                 "issues": "https://github.com/serbanghita/Mobile-Detect/issues",
-                "source": "https://github.com/serbanghita/Mobile-Detect/tree/2.8.39"
+                "source": "https://github.com/serbanghita/Mobile-Detect/tree/2.8.41"
             },
-            "time": "2022-02-17T19:24:25+00:00"
+            "time": "2022-11-08T18:31:26+00:00"
         },
         {
             "name": "mpdf/mpdf",
-            "version": "v8.1.1",
+            "version": "v8.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mpdf/mpdf.git",
-                "reference": "e511e89a66bdb066e3fbf352f00f4734d5064cbf"
+                "reference": "add590e93b7502efafd9839a68cff99f3497b318"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/e511e89a66bdb066e3fbf352f00f4734d5064cbf",
-                "reference": "e511e89a66bdb066e3fbf352f00f4734d5064cbf",
+                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/add590e93b7502efafd9839a68cff99f3497b318",
+                "reference": "add590e93b7502efafd9839a68cff99f3497b318",
                 "shasum": ""
             },
             "require": {
@@ -2740,7 +2732,7 @@
                 "ext-mbstring": "*",
                 "myclabs/deep-copy": "^1.7",
                 "paragonie/random_compat": "^1.4|^2.0|^9.99.99",
-                "php": "^5.6 || ^7.0 || ~8.0.0 || ~8.1.0",
+                "php": "^5.6 || ^7.0 || ~8.0.0 || ~8.1.0 || ~8.2.0",
                 "php-http/message-factory": "^1.0",
                 "psr/http-message": "^1.0",
                 "psr/log": "^1.0 || ^2.0",
@@ -2750,7 +2742,7 @@
                 "mockery/mockery": "^1.3.0",
                 "mpdf/qrcode": "^1.1.0",
                 "squizlabs/php_codesniffer": "^3.5.0",
-                "tracy/tracy": "^2.4",
+                "tracy/tracy": "~2.5",
                 "yoast/phpunit-polyfills": "^1.0"
             },
             "suggest": {
@@ -2796,7 +2788,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2022-04-18T11:50:28+00:00"
+            "time": "2022-12-15T11:24:39+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2999,16 +2991,16 @@
         },
         {
             "name": "orhanerday/open-ai",
-            "version": "3.4",
+            "version": "3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/orhanerday/open-ai.git",
-                "reference": "cd4a45d3b6a729c108690d908c45ad1edac55651"
+                "reference": "04abf7a4b651556a6af900475de7bfeab75ec1d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/orhanerday/open-ai/zipball/cd4a45d3b6a729c108690d908c45ad1edac55651",
-                "reference": "cd4a45d3b6a729c108690d908c45ad1edac55651",
+                "url": "https://api.github.com/repos/orhanerday/open-ai/zipball/04abf7a4b651556a6af900475de7bfeab75ec1d5",
+                "reference": "04abf7a4b651556a6af900475de7bfeab75ec1d5",
                 "shasum": ""
             },
             "require": {
@@ -3046,7 +3038,7 @@
             ],
             "support": {
                 "issues": "https://github.com/orhanerday/open-ai/issues",
-                "source": "https://github.com/orhanerday/open-ai/tree/3.4"
+                "source": "https://github.com/orhanerday/open-ai/tree/3.5"
             },
             "funding": [
                 {
@@ -3054,7 +3046,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-01-03T07:45:17+00:00"
+            "time": "2023-02-10T09:15:29+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -3911,16 +3903,16 @@
         },
         {
             "name": "phptcloud/isdayoff-sdk",
-            "version": "v1.0.1",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPTCloud/IsDayOff.git",
-                "reference": "266a484089618bbbcfffb379b07c5c929e187f26"
+                "reference": "e93f3d85fe57087b60d9bf26f4160404d3e2d8eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPTCloud/IsDayOff/zipball/266a484089618bbbcfffb379b07c5c929e187f26",
-                "reference": "266a484089618bbbcfffb379b07c5c929e187f26",
+                "url": "https://api.github.com/repos/PHPTCloud/IsDayOff/zipball/e93f3d85fe57087b60d9bf26f4160404d3e2d8eb",
+                "reference": "e93f3d85fe57087b60d9bf26f4160404d3e2d8eb",
                 "shasum": ""
             },
             "require": {
@@ -3951,9 +3943,15 @@
             ],
             "support": {
                 "issues": "https://github.com/PHPTCloud/IsDayOff/issues",
-                "source": "https://github.com/PHPTCloud/IsDayOff/tree/v1.0.1"
+                "source": "https://github.com/PHPTCloud/IsDayOff/tree/v1.1.0"
             },
-            "time": "2022-03-21T03:26:43+00:00"
+            "funding": [
+                {
+                    "url": "https://www.patreon.com/tcloud",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2022-09-04T12:22:55+00:00"
         },
         {
             "name": "priceva/priceva-sdk-php",
@@ -4723,16 +4721,16 @@
         },
         {
             "name": "setasign/fpdf",
-            "version": "1.8.4",
+            "version": "1.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Setasign/FPDF.git",
-                "reference": "b0ddd9c5b98ced8230ef38534f6f3c17308a7974"
+                "reference": "f4104a04c9a3f95c4c26a0a0531abebcc980987a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Setasign/FPDF/zipball/b0ddd9c5b98ced8230ef38534f6f3c17308a7974",
-                "reference": "b0ddd9c5b98ced8230ef38534f6f3c17308a7974",
+                "url": "https://api.github.com/repos/Setasign/FPDF/zipball/f4104a04c9a3f95c4c26a0a0531abebcc980987a",
+                "reference": "f4104a04c9a3f95c4c26a0a0531abebcc980987a",
                 "shasum": ""
             },
             "require": {
@@ -4763,22 +4761,22 @@
                 "pdf"
             ],
             "support": {
-                "source": "https://github.com/Setasign/FPDF/tree/1.8.4"
+                "source": "https://github.com/Setasign/FPDF/tree/1.8.5"
             },
-            "time": "2021-08-30T07:50:06+00:00"
+            "time": "2022-11-18T07:02:00+00:00"
         },
         {
             "name": "setasign/fpdi",
-            "version": "v2.3.6",
+            "version": "v2.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Setasign/FPDI.git",
-                "reference": "6231e315f73e4f62d72b73f3d6d78ff0eed93c31"
+                "reference": "bccc892d5fa1f48c43f8ba7db5ed4ba6f30c8c05"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Setasign/FPDI/zipball/6231e315f73e4f62d72b73f3d6d78ff0eed93c31",
-                "reference": "6231e315f73e4f62d72b73f3d6d78ff0eed93c31",
+                "url": "https://api.github.com/repos/Setasign/FPDI/zipball/bccc892d5fa1f48c43f8ba7db5ed4ba6f30c8c05",
+                "reference": "bccc892d5fa1f48c43f8ba7db5ed4ba6f30c8c05",
                 "shasum": ""
             },
             "require": {
@@ -4829,7 +4827,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Setasign/FPDI/issues",
-                "source": "https://github.com/Setasign/FPDI/tree/v2.3.6"
+                "source": "https://github.com/Setasign/FPDI/tree/v2.3.7"
             },
             "funding": [
                 {
@@ -4837,7 +4835,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-02-11T11:37:01+00:00"
+            "time": "2023-02-09T10:38:43+00:00"
         },
         {
             "name": "simplehtmldom/simplehtmldom",
@@ -6409,16 +6407,16 @@
         },
         {
             "name": "voku/simple_html_dom",
-            "version": "4.8.6",
+            "version": "4.8.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/voku/simple_html_dom.git",
-                "reference": "1df7e9844eddbe190450c87f281e87bbd8d7f645"
+                "reference": "9ef90f0280fe16054c117e04ea86617ce0fcdd35"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/voku/simple_html_dom/zipball/1df7e9844eddbe190450c87f281e87bbd8d7f645",
-                "reference": "1df7e9844eddbe190450c87f281e87bbd8d7f645",
+                "url": "https://api.github.com/repos/voku/simple_html_dom/zipball/9ef90f0280fe16054c117e04ea86617ce0fcdd35",
+                "reference": "9ef90f0280fe16054c117e04ea86617ce0fcdd35",
                 "shasum": ""
             },
             "require": {
@@ -6448,17 +6446,17 @@
                 {
                     "name": "dimabdc",
                     "email": "support@titor.ru",
-                    "homepage": "http://github.com/dimabdc",
+                    "homepage": "https://github.com/dimabdc",
                     "role": "Developer"
                 },
                 {
                     "name": "Lars Moelleken",
-                    "homepage": "http://www.moelleken.org/",
-                    "role": "Developer"
+                    "homepage": "https://www.moelleken.org/",
+                    "role": "Fork-Maintainer"
                 }
             ],
             "description": "Simple HTML DOM package.",
-            "homepage": "http://simplehtmldom.sourceforge.net/",
+            "homepage": "https://github.com/voku/simple_html_dom",
             "keywords": [
                 "HTML Parser",
                 "dom",
@@ -6466,7 +6464,7 @@
             ],
             "support": {
                 "issues": "https://github.com/voku/simple_html_dom/issues",
-                "source": "https://github.com/voku/simple_html_dom/tree/4.8.6"
+                "source": "https://github.com/voku/simple_html_dom/tree/4.8.8"
             },
             "funding": [
                 {
@@ -6486,7 +6484,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-06-09T05:48:45+00:00"
+            "time": "2023-02-12T16:15:15+00:00"
         },
         {
             "name": "vzaichikov/barcode-validator",
@@ -6552,16 +6550,16 @@
         },
         {
             "name": "wapmorgan/morphos",
-            "version": "3.2.26",
+            "version": "3.2.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wapmorgan/Morphos.git",
-                "reference": "5550474d1cc6c8936bca66e86fee43f19c73a41a"
+                "reference": "e3564fd2186936b5d9cd2c0c72b96aecee5caf41"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wapmorgan/Morphos/zipball/5550474d1cc6c8936bca66e86fee43f19c73a41a",
-                "reference": "5550474d1cc6c8936bca66e86fee43f19c73a41a",
+                "url": "https://api.github.com/repos/wapmorgan/Morphos/zipball/e3564fd2186936b5d9cd2c0c72b96aecee5caf41",
+                "reference": "e3564fd2186936b5d9cd2c0c72b96aecee5caf41",
                 "shasum": ""
             },
             "require": {
@@ -6620,9 +6618,9 @@
             ],
             "support": {
                 "issues": "https://github.com/wapmorgan/Morphos/issues",
-                "source": "https://github.com/wapmorgan/Morphos/tree/3.2.26"
+                "source": "https://github.com/wapmorgan/Morphos/tree/3.2.28"
             },
-            "time": "2022-07-10T00:41:40+00:00"
+            "time": "2023-02-05T08:11:37+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -6894,16 +6892,16 @@
         },
         {
             "name": "zadarma/user-api-v1",
-            "version": "v1.1.7",
+            "version": "v1.1.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zadarma/user-api-v1.git",
-                "reference": "23badf5232bfc0a7707fd9fa9857d805e8b8e2d1"
+                "reference": "bfdb7550b8f17e49b2928a84bfa0ec8587838806"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zadarma/user-api-v1/zipball/23badf5232bfc0a7707fd9fa9857d805e8b8e2d1",
-                "reference": "23badf5232bfc0a7707fd9fa9857d805e8b8e2d1",
+                "url": "https://api.github.com/repos/zadarma/user-api-v1/zipball/bfdb7550b8f17e49b2928a84bfa0ec8587838806",
+                "reference": "bfdb7550b8f17e49b2928a84bfa0ec8587838806",
                 "shasum": ""
             },
             "require": {
@@ -6937,9 +6935,9 @@
             ],
             "support": {
                 "issues": "https://github.com/zadarma/user-api-v1/issues",
-                "source": "https://github.com/zadarma/user-api-v1/tree/v1.1.7"
+                "source": "https://github.com/zadarma/user-api-v1/tree/v1.1.9"
             },
-            "time": "2021-05-31T13:19:30+00:00"
+            "time": "2023-01-17T09:52:53+00:00"
         }
     ],
     "packages-dev": [],
@@ -6958,5 +6956,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.0.0"
 }
