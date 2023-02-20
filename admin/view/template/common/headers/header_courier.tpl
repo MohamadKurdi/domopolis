@@ -203,13 +203,8 @@
 						<? } ?>
 						
 						<ul class="right">	
-							<? /*
-								<li id="courier"><a class="top" href="<?php echo $courier_face; ?>"><i class="fa fa-user-o icon_menu"></i>Интерфейс курьера</a></li>
-							*/ ?>
 							<li id="courier2"><a class="top" href="<?php echo $courier_face2; ?>"><i class="fa fa-truck icon_menu"></i>Курьер [NEW]</a></li>
-							<li id="mreport_ttnscan"><a class="top" href="<?php echo $mreport_ttnscan ?>"><i class="fa fa-area-chart icon_menu"></i> Отчет ТТН</a></li>
-							<li id="cdek_integrator"><a class="top" href="<?php echo $cdek_integrator ?>"><i class="fa fa-truck icon_menu"></i> СДЭК API</a></li>
-							
+							<li id="mreport_ttnscan"><a class="top" href="<?php echo $mreport_ttnscan ?>"><i class="fa fa-area-chart icon_menu"></i> Отчет ТТН</a></li>														
 							<li id="dashboard"><a href="<?php echo $home; ?>&no_redirect=1" class="top"><i class="fa fa-home icon_menu"></i><?php echo $text_dashboard; ?></a></li>     						
 							
 							<li id="orders"><a class="top" href="<?php echo $order; ?>"><i class="fa fa-check-square-o icon_menu"></i><?php echo $text_order; ?></a>							

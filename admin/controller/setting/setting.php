@@ -1226,7 +1226,25 @@ class ControllerSettingSetting extends Controller
             }
         }
 
-            //Службы доставки
+         
+        if (isset($this->request->post['config_cdek_api_login'])) {
+            $this->data['config_cdek_api_login'] = $this->request->post['config_cdek_api_login'];
+        } else {
+            $this->data['config_cdek_api_login'] = $this->config->get('config_cdek_api_login');
+        }
+
+        if (isset($this->request->post['config_cdek_api_key'])) {
+            $this->data['config_cdek_api_key'] = $this->request->post['config_cdek_api_key'];
+        } else {
+            $this->data['config_cdek_api_key'] = $this->config->get('config_cdek_api_key');
+        }
+
+        if (isset($this->request->post['config_cdek_api_tariffs'])) {
+            $this->data['config_cdek_api_tariffs'] = $this->request->post['config_cdek_api_tariffs'];
+        } else {
+            $this->data['config_cdek_api_tariffs'] = $this->config->get('config_cdek_api_tariffs');
+        }
+
         if (isset($this->request->post['config_novaposhta_api_key'])) {
             $this->data['config_novaposhta_api_key'] = $this->request->post['config_novaposhta_api_key'];
         } else {

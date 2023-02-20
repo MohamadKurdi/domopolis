@@ -4481,7 +4481,27 @@
 
 
 							<h2>СДЭК API</h2>
-							<span class="help">Настройки изменяются в Модулях доставки -> СДЭК. Причина в том, что СДЭК интегрирован фреймворком</span>
+							<table class="form">
+								<tr>
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">API LOGIN</span></p>
+										<input type="text" name="config_cdek_api_login" value="<?php echo $config_cdek_api_login; ?>" size="50" style="width:300px;" />
+									</td>
+									
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">API KEY</span></p>
+										<input type="text" name="config_cdek_api_key" value="<?php echo $config_cdek_api_key; ?>" size="50" style="width:300px;" />
+									</td>
+
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Тарифы, через запятую</span></p>
+										<input type="text" name="config_cdek_api_tariffs" value="<?php echo $config_cdek_api_tariffs; ?>" size="50" style="width:300px;" />
+									</td>
+
+									<td width="25%">										
+									</td>
+								</tr>
+							</table>
 
 						</div>
 

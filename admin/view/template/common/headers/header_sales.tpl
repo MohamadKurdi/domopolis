@@ -336,8 +336,7 @@
 									<li><a class="home_icon_style" href="<?php echo $mreport_nopaid ?>"><i class="fa fa-spinner"></i><span>Заказы в ожидании оплаты</span></a></li>
 									<li><a class="home_icon_style" href="<?php echo $mreport_forgottencart ?>"><i class="fa fa-pencil-square-o"></i><span>Незавершенные заказы</span></a></li>
 								<?	*/ ?>
-									<li><a class="home_icon_style" href="<?php echo $mreport_minusscan ?>"><i class="fa fa-exclamation"></i><span>Проверка счетов</span></a></li>									
-									<li><a class="home_icon_style" href="<?php echo $cdek_integrator ?>"><i class="fa fa-truck"></i><span>СДЭК интеграция</span></a></li>
+									<li><a class="home_icon_style" href="<?php echo $mreport_minusscan ?>"><i class="fa fa-exclamation"></i><span>Проверка счетов</span></a></li>																		
 									<li><a class="home_icon_style parent"><i class="fa fa-database"></i><span><?php echo $text_sale; ?></span></a>
 										<ul>											
 											<li><a href="<?php echo $report_adv_sale_order ?>">Универсальные отчеты</a></li>

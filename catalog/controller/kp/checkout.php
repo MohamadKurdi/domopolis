@@ -1,12 +1,8 @@
 <?php
 	
 	class ControllerKPCheckout extends Controller {				
-		public function index(){
-			
+		public function index(){			
 		}
-		
-		
-		//ФУНКЦИИ СДЭК
 		
 		public function guessCDEKPriceAjax(){		
 			$cdek_city_code = !empty($this->request->get['cdek_city_code'])?$this->request->get['cdek_city_code']:'';
@@ -14,11 +10,9 @@
 			
 			$this->load->model('kp/deliverycounters');
 			$json = $this->model_kp_deliverycounters->guessCDEKPriceAjax($cdek_city_code, $type);
-			
-			
+						
 			$this->response->setOutput($json);
-		}
-		
+		}		
 		
 		public function getCitiesListAjax(){
 			foreach ($this->language->loadRetranslate('common/header') as $translationСode => $translationText){
@@ -128,8 +122,7 @@
 			$query = !empty($this->request->get['query'])?$this->request->get['query']:'';
 			$query = trim(mb_strtolower($query));
 			$result = array('city' => '');
-			
-			//Украина - справочник городов Новой Почты
+						
 			if ($this->config->get('config_country_id') == 220){
 				
 				$query = $this->db->query("SELECT nc.* FROM novaposhta_cities_ww nc WHERE LOWER(nc.Description) LIKE '" . $this->db->escape($query) . "' OR LOWER(nc.DescriptionRu) LIKE '" . $this->db->escape($query) . "' LIMIT 1");
@@ -205,8 +198,6 @@
 				$this->response->setOutput(json_encode($results, true));
 				} else {
 				
-				
-				//Украина - справочник городов Новой Почты
 				if ($this->config->get('config_country_id') == 220){
 					
 					$dbQuery = $this->db->query("SELECT nc.Ref, nc.DescriptionRu, nc.Description FROM novaposhta_cities_ww nc WHERE LOWER(nc.Description) LIKE '" . $this->db->escape($query) . "%' OR LOWER(nc.DescriptionRu) LIKE '" . $this->db->escape($query) . "%' ORDER BY WarehouseCount DESC LIMIT $limit");
@@ -228,8 +219,7 @@
 							);						
 						}
 						
-						} else {
-						//Фоллбек на полную базу городов, отправка УкрПочтой
+						} else {						
 						
 						$dbQuery = $this->db->query("SELECT nc.Ref, nc.DescriptionRu, nc.AreaDescriptionRu, nc.Description, nc.AreaDescription FROM novaposhta_cities nc WHERE LOWER(nc.Description) LIKE '" . $this->db->escape($query) . "%' OR LOWER(nc.DescriptionRu) LIKE '" . $this->db->escape($query) . "%' LIMIT $limit");
 						
@@ -283,8 +273,8 @@
 				if (!$results['results']){
 					$results['results'][] = array(                   
 					'id'                 => false,
-					'text' 				 => 'Ничего не найдено',
-					'text_short'         => 'Ничего не найдено',
+					'text' 				 => 'Nothing found',
+					'text_short'         => 'Nothing found',
 					);
 				}
 				

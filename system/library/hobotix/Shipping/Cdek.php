@@ -23,14 +23,13 @@
 			$this->config 	= $this->registry->get('config');
 			$this->db 		= $this->registry->get('db');
 
-			$this->apiLogin = $this->config->get('cdek_login');
-			$this->apiKey 	= $this->config->get('cdek_password');
+			$this->apiLogin = $this->config->get('config_cdek_api_login');
+			$this->apiKey 	= $this->config->get('config_cdek_api_key');
 			
 			$this->client = new \CdekSDK\CdekClient($this->apiLogin, $this->apiKey);
 		}
 		
-		public function updateBeltWayHits(){
-			
+		public function updateBeltWayHits(){			
 			$query = $this->db->query("SELECT * FROM cdek_cities WHERE country_id = '176' AND region_code IN (9,81) AND (ISNULL(dadata_BELTWAY_HIT) OR dadata_BELTWAY_HIT = '') AND dadata_BELTWAY_DISTANCE = 0 AND LENGTH(latitude) > 0 AND LENGTH(longitude) > 0");
 			
 			$total = $query->num_rows;

@@ -12,7 +12,7 @@ class ControllerApiDeliveryServices extends Controller {
 			$this->courierServices->updateReferences('Justin');					
 		}
 
-		if ($this->config->get('cdek_login')){
+		if ($this->config->get('config_cdek_api_login')){
 			$this->courierServices->updateReferences('Cdek');
 		}
 
