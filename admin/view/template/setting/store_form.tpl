@@ -1435,6 +1435,11 @@
 												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ссылка на Youtube</span></p>
 												<input type="text" name="social_link_youtube" value="<?php echo $social_link_youtube; ?>" size="30" style="width:150px;" />
 											</td>
+
+											<td width="20%">
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ссылка на Twitter</span></p>
+											<input type="text" name="social_link_twitter" value="<?php echo $social_link_twitter; ?>" size="30" style="width:150px;" />
+									</td>
 										</tr>
 
 										<tr>		
