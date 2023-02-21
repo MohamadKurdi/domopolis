@@ -8,10 +8,6 @@ class ControllerApiDeliveryServices extends Controller {
 	}
 
 	public function references(){
-		if ($this->config->get('config_justin_api_key')){
-			$this->courierServices->updateReferences('Justin');					
-		}
-
 		if ($this->config->get('config_cdek_api_login')){
 			$this->courierServices->updateReferences('Cdek');
 		}
