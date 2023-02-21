@@ -1,4 +1,8 @@
-{   
+{
+    "name": "hobotix/ecommerceengine",
+    "description": "Ecommerce Engine is based on OpenCart 1.5.6.4",
+    "license": "proprietary",
+
     "minimum-stability": "dev",
     "prefer-stable": true,
     
