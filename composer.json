@@ -1,9 +1,19 @@
-{
+{   
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     
     "repositories": [
         {
             "type": "vcs",
             "url": "https://github.com/vzaichikov/barcode-validator"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/vzaichikov/epochta"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/vzaichikov/amazonrainforest"
         }
     ],
     
@@ -14,10 +24,7 @@
 		"maxmind-db/reader":"~1.0",
 		"jaybizzle/crawler-detect": "dev-master",
 		"elasticsearch/elasticsearch": "^7.0",
-        "sanmai/cdek-sdk": "^0.7.3",
-        "jackmartin/justin": "^1.5",
         "mailgun/mailgun-php": "^3.5",
-        "phptcloud/isdayoff-sdk": "^1.0",
         "yandex-market/yandex-market-php-partner": "^2.4",
         "yandex-market/yandex-market-php-oauth": "^1.0",
         "yandex-market/marketplace-php-partner": "^3.2",
@@ -27,7 +34,6 @@
         "php-http/httplug": "^2.2",
         "php-http/curl-client": "^2.2",
         "sparkpost/sparkpost": "^2.3",
-        "caponica/amazon-rainforest": "dev-master",
         "mpdf/mpdf": "^8.0",
         "chillerlan/php-qrcode": "dev-main",
         "vzaichikov/barcode-validator": "dev-master",
@@ -37,14 +43,12 @@
         "maciejkrol/ipapicom": "^1.0",
         "symfony/http-client": "^5.4",
         "nyholm/psr7": "^1.5",
-        "php-http/guzzle6-adapter": "^2.0",
         "denostr/binotel-api": "^0.1.3",
         "phpoffice/phpexcel": "^1.8",
         "voku/html-min": "^4.4",
         "simplehtmldom/simplehtmldom": "dev-master",
         "doctrine/sql-formatter": "^1.1",
         "umpirsky/transliterator": "^0.1.0",
-        "enniel/epochta": "^0.0.1",
         "firephp/firephp-core": "^0.5.3",
         "orhanerday/open-ai": "^3.4",
         "matthiasmullie/minify": "^1.3",
@@ -54,7 +58,12 @@
         "longman/telegram-bot": "^0.80.0",
         "kwn/number-to-words": "^2.6",
         "phpoffice/phpspreadsheet": "^1.27",
-        "mobiledetect/mobiledetectlib": "^3.74"
+        "mobiledetect/mobiledetectlib": "^3.74",
+        "vzaichikov/epochta": "dev-master",
+        "vzaichikov/amazonrainforest": "dev-main",
+        "php-http/guzzle7-adapter": "^1.0",
+        "antistress-store/cdek-sdk-v2": "^1.1",
+        "guzzlehttp/uri-template": "^1.0"
     },
     "config": {
         "allow-plugins": {
