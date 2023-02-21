@@ -102,7 +102,7 @@ class ControllerSaleCourier2 extends Controller {
 			$result = json_decode($response, true);
 
 			if (!empty($result["result"]["id"]) && $result["result"]["id"]){
-				$this->response->setOutput($campaign_id); 
+				$this->response->setOutput($result["result"]["id"]); 
 			} else {
 				$this->response->setOutput('FAIL');
 			}								
