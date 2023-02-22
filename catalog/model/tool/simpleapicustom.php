@@ -46,8 +46,7 @@
         public function getDefaultCityGuid($cityName){
             $cityName = trim($cityName);
 			
-			if (!$this->customer->isLogged() && !empty($this->session->data['customer_location_city']) && !empty($this->session->data['customer_location_city']['id'])){
-				
+			if (!$this->customer->isLogged() && !empty($this->session->data['customer_location_city']) && !empty($this->session->data['customer_location_city']['id'])){				
 				if ($city = $this->model_tool_simpleapicustom->getCityNameByID($this->session->data['customer_location_city']['id'])){
 					return $this->session->data['customer_location_city']['id'];
 				}
@@ -74,8 +73,7 @@
 				
 				if ($cityID = $this->getCityIdByName($cityName)){
 					return $cityID;
-				}
-                
+				}              
 			}
             
             return '';
