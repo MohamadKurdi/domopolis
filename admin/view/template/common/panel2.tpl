@@ -228,19 +228,7 @@
 							сервис доставки
 						</div>
 					</div>
-				</div>
-
-				<div class="tile-block">
-					<div class="tile info-loader unknown" data-path="common/panel/getJustinInfo" data-update-interval="300000">
-						<div class="tile-heading">Justin</div>
-						<div class="tile-body"><i class="fa fa-truck"></i>
-							<span class="tile-result small"></span>
-						</div>
-						<div class="tile-footer">
-							сервис доставки
-						</div>
-					</div>
-				</div>
+				</div>			
 			
 				<h2>Наши сервисы</h2>
 

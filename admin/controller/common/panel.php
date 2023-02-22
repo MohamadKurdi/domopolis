@@ -213,7 +213,7 @@ class ControllerCommonPanel extends Controller {
 		if ($this->config->get('config_sparkpost_api_key')){
 			
 			try{
-				$httpClient = new \Http\Adapter\Guzzle6\Client(new \GuzzleHttp\Client());
+				$httpClient = new \Http\Adapter\Guzzle7\Client(new \GuzzleHttp\Client());
 				$sparkPost = new \SparkPost\SparkPost($httpClient, ['key' => $this->config->get('config_sparkpost_api_key'), 'host' => $this->config->get('config_sparkpost_api_url'), 'async' => false]);
 				$result = $sparkPost->request('GET', 'account')->getBody();
 				$result = $result['results'];	
@@ -415,7 +415,7 @@ class ControllerCommonPanel extends Controller {
 
 				//getCurrentUserPassword
 				$password = base64_decode($this->request->cookie[AUTH_PASSWD_COOKIE]);
-				$password = str_replace(AUTH_PASSWDSALT_COOKIE, '', $this->data['password']);
+				$password = str_replace(AUTH_PASSWDSALT_COOKIE, '', $password);
 
 				if($bind = @ldap_bind($ldap, $this->user->getUserName() . '@' . $this->config->get('config_ldap_domain'), $password)){
 					$body = 'AUTH OK';
