@@ -84,7 +84,7 @@
 		}
 
 		public function getRainForestStats(){
-			$result = $this->rainforestAmazon->checkIfPossibleToMakeRequest(true);
+			$result = $this->rainforestAmazon->checkIfPossibleToMakeRequest(true, true);
 
 			if ($result['status'] == true){
 				$this->data['success'] 	= true;
@@ -93,10 +93,10 @@
 				$this->data['success'] 	= false;
 				$this->data['message'] 	= $result['message'];
 				$this->data['answer']  	= $result['answer'];
+				$this->data['debug'] 	= $result['debug'];
 			}
 
-			$this->template = 'homestats/rnf.tpl';
-			
+			$this->template = 'homestats/rnf.tpl';			
 			$this->response->setOutput($this->render());
 		}
 

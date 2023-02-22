@@ -34,8 +34,10 @@
 			<?php } else { ?>
 				<span style="color:#cf4a61; font-size:18px; font-weight: 700;"><i class="fa fa-exclamation-triangle"></i> есть сложности:
 
-					<?php if ($message == 'PAYMENT_FAIL') { ?>
-						нет оплаты по тарифному плану, либо сломалось API (PAYMENT_FAIL)
+					<?php if ($message == 'CODE_NOT_200_MAYBE_PAYMENT_FAIL') { ?>
+						нет оплаты по тарифному плану, либо сломалось API (CODE_NOT_200_MAYBE_PAYMENT_FAIL)
+						<br />
+						<small><i class="fa fa-info-circle"></i> <?php echo $answer; ?></small>
 					<?php } ?>
 
 					<?php if ($message == 'JSON_DECODE') { ?>
@@ -54,16 +56,22 @@
 						превышен лимит запросов в тарифе, и превышен overage (ZERO_CREDITS_AND_OVERAGE_OVERLIMIT)
 					<?php } ?>
 
-
 					<br />
 					<small><i class="fa fa-info-circle"></i> система не работает. скрипты не крутятся, лавеха не мутится</small>
+
+					<br />
+					<small><i class="fa fa-info-circle"></i> узнать статус api можно тут: <a href="https://rainforestapi.statuspage.io/" target="_blank">https://rainforestapi.statuspage.io/</a></small>
+
+					<?php if (!empty($debug)) { ?>
+						<pre><?php echo $debug; ?></pre>
+					<?php } ?>
 
 				</span>
 			<? } ?>
 		<?php } ?>
 	</div>
 
-	<?php if (!empty($answer)) { ?>
+	<?php if (!empty($answer) && is_array($answer)) { ?>
 		<div style="width:49%; float:left;">
 			<table class="list big1">
 				<tr>

@@ -135,7 +135,7 @@ class RainforestAmazon
 		}
 	}
 
-	public function checkIfPossibleToMakeRequest($return = false){
+	public function checkIfPossibleToMakeRequest($return = false, $debug = false){
 		$queryString = http_build_query([
 			'api_key' => $this->config->get('config_rainforest_api_key')
 		]);
@@ -146,23 +146,43 @@ class RainforestAmazon
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
+		if ($debug){
+			$tmpfile = tmpfile();
+			curl_setopt($ch, CURLOPT_VERBOSE, true);
+			curl_setopt($ch, CURLOPT_STDERR, $tmpfile);
+		}
+
 		$answer 	= curl_exec($ch);
 		$httpcode 	= curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		curl_close($ch);
+
+		if ($debug){
+			rewind($tmpfile);
+			$debug_info = stream_get_contents($tmpfile);
+			fclose($tmpfile);
+		} else {
+			$debug_info = '';
+		}
 
 		$error 		= false;	
 		$warning 	= false;		
 
 		//В том случае, если не 200, то всё плохо и хуево
 		if ($httpcode != 200){
-			$error = 'PAYMENT_FAIL';
+			$error = 'CODE_NOT_200_MAYBE_PAYMENT_FAIL';
+			$answer .= ' HTTPCODE: ' . $httpcode;
+			$answer = trim($answer);
 		}
 
 		if (!$error && !json_decode($answer)){
 			$error = 'JSON_DECODE';
+			$answer .= '<br />HTTPCODE: ' . $httpcode;
 		}
 
-		$answer = json_decode($answer, true);
+		if ($answer_decoded = json_decode($answer, true)){
+			$answer = $answer_decoded;
+		}
+
 		if (!$error && empty($answer['account_info'])){
 			$error = 'NO_ACCOUNT_INFO';
 		}
@@ -192,7 +212,7 @@ class RainforestAmazon
 			}
 
 			if ($return){
-				return ['status' => false, 'message' => $error, 'answer' => $answer];
+				return ['status' => false, 'message' => $error, 'answer' => $answer, 'debug' => $debug_info];
 			} else {
 				throw new \Exception($error);			
 				die($error);			
@@ -200,10 +220,10 @@ class RainforestAmazon
 		}
 
 		if ($warning){
-			return ['status' => false, 'message' => $warning, 'answer' => $answer];
+			return ['status' => false, 'message' => $warning, 'answer' => $answer, 'debug' => $debug_info];
 		}
 
-		return ['status' => true, 'message' => '', 'answer' => $answer];
+		return ['status' => true, 'message' => '', 'answer' => $answer, 'debug' => $debug_info];
 	}	
 
 	public function searchCategories($filter_name){			
