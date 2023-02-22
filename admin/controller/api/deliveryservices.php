@@ -40,11 +40,11 @@ class ControllerApiDeliveryServices extends Controller {
 			}
 		}
 
-
 		$codes = [];
 
-		$query = $this->db->query("SELECT ot.* FROM order_ttns ot LEFT JOIN `order` o ON (o.order_id = ot.order_id) WHERE 
+		$query = $this->db->query("SELECT ot.*, o.telephone FROM order_ttns ot LEFT JOIN `order` o ON (o.order_id = ot.order_id) WHERE 
 			ot.ttn <> ''
+			AND DATE(ot.date_ttn) >= '" . date('Y-m-d', strtotime("-3 month")) . "'
 			AND ((o.order_status_id = '" . $this->config->get('config_delivering_status_id') . "' AND ot.rejected = 0 AND ot.taken = 0)  OR ot.tracking_status = '' OR ot.waiting = 1)");
 
 		foreach ($query->rows as $row){			
