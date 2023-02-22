@@ -63,6 +63,38 @@ class CourierServices {
 		}					
 	}
 
+	public function updateReferencesOneTime($deliveryClass){
+		if (file_exists(DIR_SYSTEM . '/library/hobotix/Shipping/' . $deliveryClass . '.php')){
+			require_once (DIR_SYSTEM . '/library/hobotix/Shipping/' . $deliveryClass . '.php');
+			$deliveryClass = "hobotix" . "\\" . "shipping" . "\\" . $deliveryClass;
+			$deliveryObject = new $deliveryClass($this->registry);
+
+			if (method_exists($deliveryObject, 'updateReferencesOneTime')){
+				try {
+					$deliveryObject->updateReferencesOneTime();
+				} catch (\Exception $e){
+					echoLine ($e->getMessage());
+				}
+			}
+		}					
+	}
+
+	public function getDeliveryTerms($deliveryClass, $city_id){
+		if (file_exists(DIR_SYSTEM . '/library/hobotix/Shipping/' . $deliveryClass . '.php')){
+			require_once (DIR_SYSTEM . '/library/hobotix/Shipping/' . $deliveryClass . '.php');
+			$deliveryClass = "hobotix" . "\\" . "shipping" . "\\" . $deliveryClass;
+			$deliveryObject = new $deliveryClass($this->registry);
+
+			if (method_exists($deliveryObject, 'getDeliveryTerms')){
+				try {
+					return $deliveryObject->getDeliveryTerms($city_id);
+				} catch (\Exception $e){
+					echoLine ($e->getMessage());
+				}
+			}
+		}					
+	}
+
 
 	public function trackMultiCodes($data){
 		$result = [];

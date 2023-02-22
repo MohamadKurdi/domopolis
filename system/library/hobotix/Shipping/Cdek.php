@@ -1,12 +1,19 @@
 <?php
 	
 	namespace hobotix\shipping;
+
+	use AntistressStore\CdekSDK2;
+	use AntistressStore\CdekSDK2\Entity\Requests\Check;
+	use AntistressStore\CdekSDK2\Entity\Requests\{Agreement, Barcode, DeliveryPoints, Intakes, Invoice, Location, Order, Tariff, Webhooks};
+	use AntistressStore\CdekSDK2\Entity\Responses\{AgreementResponse, CitiesResponse, DeliveryPointsResponse, EntityResponse, IntakesResponse, OrderResponse, PrintResponse, RegionsResponse, TariffListResponse, TariffResponse};
+	use AntistressStore\CdekSDK2\Entity\Responses\{CheckResponse, PaymentResponse};
+	use AntistressStore\CdekSDK2\Exceptions\{CdekV2AuthException, CdekV2RequestException};
 	
 	class Cdek {
 		private $db;
 		private $config;
 		private $registry;
-		private $client;
+		private $CdekClient;
 		
 		private $apiLogin = null;
 		private $apiKey = null;
@@ -26,7 +33,55 @@
 			$this->apiLogin = $this->config->get('config_cdek_api_login');
 			$this->apiKey 	= $this->config->get('config_cdek_api_key');
 			
-			$this->client = new \CdekSDK\CdekClient($this->apiLogin, $this->apiKey);
+			$this->CdekClient = new \AntistressStore\CdekSDK2\CdekClientV2($this->apiLogin, $this->apiKey);
+		}
+
+		public function getDeliveryTerms($city_code){
+			$result = [];
+
+			try{
+				$query = $this->db->query("SELECT deliveryPeriodMin, deliveryPeriodMax, min_WW, min_WD FROM cdek_cities WHERE code = '" . (int)$city_code . "'");
+
+				if ($query->num_rows && $query->row['deliveryPeriodMin'] && $query->row['deliveryPeriodMax'] && $query->row['min_WW'] && $query->row['min_WD']){
+					$result = [
+						'success' 			=> true,
+						'min_WD'  			=> $query->row['min_WD'],
+						'min_WW'  			=> $query->row['min_WW'],
+						'deliveryPeriodMin' => $query->row['deliveryPeriodMin'],
+						'deliveryPeriodMax' => $query->row['deliveryPeriodMax'],
+					];				
+				}
+
+				if (!$result || mt_rand(0,10) == 5){
+					$tariff_WW = (new Tariff())->setTariffCode($this->config->get('config_cdek_api_default_tariff_warehouse'))->setCityCodes($this->config->get('config_cdek_api_city_sender_id'), (int)$city_code)->setPackageWeight(500); 
+					$tariff_WD = (new Tariff())->setTariffCode($this->config->get('config_cdek_api_default_tariff_doors'))->setCityCodes($this->config->get('config_cdek_api_city_sender_id'), (int)$city_code)->setPackageWeight(500);
+
+					$tariff_WW_info = $this->CdekClient->calculateTariff($tariff_WW);
+					$tariff_WD_info = $this->CdekClient->calculateTariff($tariff_WD);
+
+					if ($tariff_WW_info && $tariff_WD_info){
+						$result = [
+							'success' 			=> true,
+							'min_WD'  			=> $tariff_WD_info->getDeliverySum(),
+							'min_WW'  			=> $tariff_WW_info->getDeliverySum(),
+							'deliveryPeriodMin' => $tariff_WW_info->getPeriodMin(),
+							'deliveryPeriodMax' => $tariff_WW_info->getPeriodMax(),
+						];
+
+						$this->db->query("UPDATE cdek_cities SET 
+							min_WD 				= '" . (float)$tariff_WD_info->getDeliverySum() . "', 
+							min_WW 				= '" . (float)$tariff_WW_info->getDeliverySum() . "',
+							deliveryPeriodMin 	= '" . (int)$tariff_WW_info->getPeriodMin() . "', 
+							deliveryPeriodMax 	= '" . (int)$tariff_WW_info->getPeriodMax() . "'
+							WHERE code = '" . (int)$city_code . "'");
+					}
+				}
+
+			} catch (\CdekV2RequestException  $e){						
+					return ['success' => false];
+			}
+
+			return $result;
 		}
 		
 		public function updateBeltWayHits(){			
@@ -157,16 +212,13 @@
 		}
 
 		public function checkStatus(){
-			$request = new \CdekSDK\Requests\RegionsRequest();
-			$request->setSize(5);
-			$request->setPage(0);
-			$request->setCountryCode('RU');
-			$response = $this->client->sendRegionsRequest($request);
+			$request = (new Location())->setCountryCodes('RU')->setSize(5);
+			$response = $this->CdekClient->getRegions($request);
 
 			if (!empty($response)){
 				foreach ($response as $region){
-					if ($region->getUuid() && $region->getCountryName()){
-						return mb_strtolower($region->getCountryName());
+					if ($region->getRegionCode() && $region->getCountry()){
+						return mb_strtolower($region->getCountry());
 					} else {
 						return false;
 					}
@@ -176,88 +228,66 @@
 			return false;
 		}
 		
-		public function updateReferences(){
+		public function updateReferences(){					
 			$this->updateZones('RU')->updateZones('KZ')->updateZones('BY')->updateCities()->updateDeliveryPoints()->updateBeltWayHits();
 		}
+
+		public function updateReferencesOneTime(){					
+			$this->updateBeltWayHits();
+		}
 		
-		public function updateZones($countryCode){
+		public function updateZones($countryCode){						
+			echoLine('[CD] Страница 0');		
+			$request = (new Location());
+			$request->setSize(1000);				
+			$request->setCountryCodes($countryCode);
+			$response = $this->CdekClient->getRegions($request);		
 			
-			$request = new \CdekSDK\Requests\RegionsRequest();
-			
-			$page = 0;
-			$emptyResponse = false;
-			while (!$emptyResponse){
-				
-				echoLine('[CD] Страница ' . $page);
-				
-				$request->setSize(1000);
-				$request->setPage($page);
-				$request->setCountryCode($countryCode);
-				$response = $this->client->sendRegionsRequest($request);
-				
-				$emptyResponse = true;
-				foreach ($response as $region){
-					if ($region->getUuid()){
-						$emptyResponse = false;
-					}
-					
-					if ($region->getUuid()){			
-						echoLine('[CD] Регион ' . $region->getName());
-						
-						$this->db->query("INSERT INTO cdek_zones SET 
-						region_uuid = '" . $this->db->escape($region->getUuid()) . "',
-						country_id = '" . $this->db->escape($this->countryMapping[$countryCode]) . "',
-						country_code = '" . $this->db->escape($region->getCountryCodeISO()) . "',
-						country = '" . $this->db->escape($region->getCountryName()) . "',
-						region = '" . $this->db->escape($region->getName()) . "',
-						prefix = '" . $this->db->escape($region->getPrefix()) . "',
-						region_code = '" . $this->db->escape($region->getCode()) . "',
-						fias_region_guid = '" . $this->db->escape($region->getFiasGuid()) . "'
+			foreach ($response as $region){
+				if ($region->getRegionCode()){			
+					echoLine('[CD] Регион ' . $region->getRegion());
+
+					$this->db->query("INSERT INTO cdek_zones SET 						
+						country_id 				= '" . $this->db->escape($this->countryMapping[$countryCode]) . "',
+						country_code 			= '" . $this->db->escape($region->getCountryCode()) . "',
+						country 				= '" . $this->db->escape($region->getCountry()) . "',
+						region 					= '" . $this->db->escape($region->getRegion()) . "',						
+						region_code 			= '" . $this->db->escape($region->getRegionCode()) . "'					
 						ON DUPLICATE KEY UPDATE
-						country_id = '" . $this->db->escape($this->countryMapping[$countryCode]) . "',
-						country_code = '" . $this->db->escape($region->getCountryCodeISO()) . "',
-						country = '" . $this->db->escape($region->getCountryName()) . "',
-						region = '" . $this->db->escape($region->getName()) . "',
-						prefix = '" . $this->db->escape($region->getPrefix()) . "',
-						region_code = '" . $this->db->escape($region->getCode()) . "',
-						fias_region_guid = '" . $this->db->escape($region->getFiasGuid()) . "'");
-					}
+						country_id 				= '" . $this->db->escape($this->countryMapping[$countryCode]) . "',
+						country_code 			= '" . $this->db->escape($region->getCountryCode()) . "',
+						country 				= '" . $this->db->escape($region->getCountry()) . "',
+						region 					= '" . $this->db->escape($region->getRegion()) . "',						
+						region_code 			= '" . $this->db->escape($region->getRegionCode()) . "'");				
 				}
-				
-				$page++;
 			}
-			
-			
-			
+
 			
 			return $this;
 		}
 				
-		public function updateCities(){
-			
-			$request = new \CdekSDK\Requests\CitiesRequest();
-			
+		public function updateCities(){			
+			$request = (new Location());			
 			$query = $this->db->query("SELECT * FROM cdek_zones WHERE 1");
 			
-			foreach ($query->rows as $row){
-				
-				echoLine('[CD] Страна ' . $row['country'] . ', регион ' . $row['region']);
+			foreach ($query->rows as $row){				
+				echoLine('[CD] Страна ' . $row['country'] . ', регион ' . $row['region'], 'i');
 				
 				$page = 0;
 				$emptyResponse = false;
-				while (!$emptyResponse){
-					$request->setCountryCode($row['country_code']);
+				try {
+					$request->setCountryCodes($row['country_code']);
 					$request->setRegionCode($row['region_code']);
-					
+
 					echoLine('[CD] Страница ' . $page);
 					$request->setSize(1000);
 					$request->setPage($page);
-					
-					$response = $this->client->sendCitiesRequest($request);
-					
+
+					$response = $this->CdekClient->getCities($request);
+
 					$emptyResponse = true;
 					foreach ($response as $city){
-						if ($city->getCityUuid()){
+						if ($city->getCode()){
 							$emptyResponse = false;
 						}
 
@@ -267,47 +297,45 @@
 							echoLine($e->getMessage());
 							$region = $row['region'];
 						}
-						
-						echoLine('[CD]	 Город ' . $city->getCityName());
-						
-						$this->db->query("INSERT INTO cdek_cities SET 
-						city_uuid = '" . $this->db->escape($city->getCityUuid()) . "',
-						code = '" . $this->db->escape($city->getCityCode()) . "',
-						city = '" . $this->db->escape($city->getCityName()) . "',
-						fias_guid = '" . $this->db->escape($city->getFiasGuid()) . "',
-						kladr_code = '" . $this->db->escape($city->getKladr()) . "',
-						country_code = '" . $this->db->escape($city->getCountryCodeISO()) . "',
-						country = '" . $this->db->escape($city->getCountry()) . "',
-						country_id = '" . $this->db->escape($this->countryMapping[$row['country_code']]) . "',
-						region = '" . $this->db->escape($region) . "',
-						region_code = '" . $this->db->escape($row['region_code']) . "',												
-						sub_region = '" . $this->db->escape($city->getSubRegion()) . "',
-						postal_codes = '" . $this->db->escape($city->getFiasGuid()) . "',
-						longitude = '" . $this->db->escape($city->getLongitude()) . "',
-						latitude = '" . $this->db->escape($city->getLatitude()) . "',
-						time_zone = '" . $this->db->escape($city->getTimeZone()) . "',
-						payment_limit = '" . $this->db->escape($city->getPaymentLimit()) . "'
-						ON DUPLICATE KEY UPDATE
-						city = '" . $this->db->escape($city->getCityName()) . "',
-						fias_guid = '" . $this->db->escape($city->getFiasGuid()) . "',
-						kladr_code = '" . $this->db->escape($city->getKladr()) . "',
-						country_code = '" . $this->db->escape($city->getCountryCodeISO()) . "',
-						country = '" . $this->db->escape($city->getCountry()) . "',
-						country_id = '" . $this->db->escape($this->countryMapping[$row['country_code']]) . "',
-						region = '" . $this->db->escape($region) . "',
-						region_code = '" . $this->db->escape($row['region_code']) . "',												
-						sub_region = '" . $this->db->escape($city->getSubRegion()) . "',
-						postal_codes = '" . $this->db->escape($city->getFiasGuid()) . "',
-						longitude = '" . $this->db->escape($city->getLongitude()) . "',
-						latitude = '" . $this->db->escape($city->getLatitude()) . "',
-						time_zone = '" . $this->db->escape($city->getTimeZone()) . "',
-						payment_limit = '" . $this->db->escape($city->getPaymentLimit()) . "'");
-						
-						
+
+						echoLine('[CD]	 Город ' . $city->getCity());
+
+						$this->db->query("INSERT INTO cdek_cities SET 						
+							code 				= '" . $this->db->escape($city->getCode()) . "',
+							city 				= '" . $this->db->escape($city->getCity()) . "',
+							fias_guid 			= '" . $this->db->escape($city->getFiasGuid()) . "',
+							kladr_code 			= '" . $this->db->escape($city->getKladrCode()) . "',
+							country_code 		= '" . $this->db->escape($city->getCountryCode()) . "',
+							country 			= '" . $this->db->escape($row['country']) . "',
+							country_id 			= '" . $this->db->escape($this->countryMapping[$row['country_code']]) . "',
+							region 				= '" . $this->db->escape($region) . "',
+							region_code 		= '" . $this->db->escape($row['region_code']) . "',												
+							sub_region 			= '" . $this->db->escape($city->getSubRegion()) . "',
+							postal_codes 		= '" . $this->db->escape($city->getPostalCode()) . "',
+							longitude 			= '" . $this->db->escape($city->getLongitude()) . "',
+							latitude 			= '" . $this->db->escape($city->getLatitude()) . "',
+							time_zone 			= '" . $this->db->escape($city->getTimeZone()) . "'						
+							ON DUPLICATE KEY UPDATE
+							city 				= '" . $this->db->escape($city->getCity()) . "',
+							fias_guid 			= '" . $this->db->escape($city->getFiasGuid()) . "',
+							kladr_code 			= '" . $this->db->escape($city->getKladrCode()) . "',
+							country_code 		= '" . $this->db->escape($city->getCountryCode()) . "',
+							country 			= '" . $this->db->escape($row['country']) . "',
+							country_id 			= '" . $this->db->escape($this->countryMapping[$row['country_code']]) . "',
+							region 				= '" . $this->db->escape($region) . "',
+							region_code 		= '" . $this->db->escape($row['region_code']) . "',												
+							sub_region 			= '" . $this->db->escape($city->getSubRegion()) . "',
+							postal_codes 		= '" . $this->db->escape($city->getPostalCode()) . "',
+							longitude 			= '" . $this->db->escape($city->getLongitude()) . "',
+							latitude 			= '" . $this->db->escape($city->getLatitude()) . "',
+							time_zone 			= '" . $this->db->escape($city->getTimeZone()) . "'");												
 					}
-					
+
 					$page++;
-				}	
+				} catch (\CdekV2RequestException  $e){
+					echoLine('Страница ' . $page . ' '. $e->getMessage(), 'e');						
+					continue;
+				}
 			}	
 			
 			return $this;			
@@ -315,111 +343,118 @@
 						
 		public function updateDeliveryPoints(){
 			
-			$request 	= new \CdekSDK\Requests\PvzListRequest();			
-			$query 		= $this->db->query("SELECT * FROM cdek_cities WHERE 1");
+			$request 	= (new DeliveryPoints());			
+			$query 		= $this->db->query("SELECT * FROM cdek_cities WHERE parsed = 0 ORDER BY city_id ASC");
 			
 			foreach ($query->rows as $row){
 				
-				echoLine('[CD] Страна ' . $row['country'] . ', регион ' . $row['region'] . ', город ' . $row['city']);
-				
-				$request->setCityID($row['code']);
-				$request->setType(\CdekSDK\Requests\PvzListRequest::TYPE_ALL);
-				
-				$response = $this->client->sendPvzListRequest($request);
-				foreach ($response as $pvz){
-					echoLine('[CD]	 ПВЗ ' . $pvz->Name);
-					
-					$OfficeImages = array();
-					if (!is_null($pvz->OfficeImages)){
-						foreach ($pvz->OfficeImages as $image) {
-							$OfficeImages[] = $image->getUrl();
+				try{
+					echoLine('[CD] Страна ' . $row['country'] . ', регион ' . $row['region'] . ', город ' . $row['city']);
+
+					$request->setCityCode($row['code']);			
+					$response = $this->CdekClient->getDeliveryPoints($request);
+
+					foreach ($response as $pvz){
+						echoLine('[CD]	 ПВЗ ' . $pvz->getName());
+
+						$OfficeImages = array();
+						if (!is_null($pvz->getOfficeImageList())){
+							foreach ($pvz->getOfficeImageList() as $image) {
+								$OfficeImages[] = $image->getUrl();
+							}
 						}
-					}
-					
-					$WorkTimes = array();
-					if (!is_null($pvz->workTimes)){
-						foreach ($pvz->workTimes as $worktime) {
-							$WorkTimes[$worktime->getDay()] = $worktime->getPeriods();
+
+						$WorkTimes = array();
+						if (!is_null($pvz->getWorkTimeList())){
+							foreach ($pvz->getWorkTimeList() as $worktime) {
+								$WorkTimes[$worktime->getDay()] = $worktime->getTime();
+							}
 						}
+
+
+						$sql = "INSERT INTO cdek_deliverypoints SET 
+						code 					= '" . $this->db->escape($pvz->getCode()) . "',
+						name 					= '" . $this->db->escape($pvz->getName()) . "',
+						country_code 			= '" . $this->db->escape($row['country_code']) . "',
+						region_code 			= '" . $this->db->escape($pvz->getLocation()->getRegionCode()) . "',
+						region 					= '" . $this->db->escape($pvz->getLocation()->getRegion()) . "',
+						city_code 				= '" . $this->db->escape($pvz->getLocation()->getCityCode()) . "',
+						city 					= '" . $this->db->escape($pvz->getLocation()->getCity()) . "',
+						postal_сode 			= '" . $this->db->escape($pvz->getLocation()->getPostalCode()) . "',
+						longitude 				= '" . $this->db->escape($pvz->getLocation()->getLongitude()) . "',
+						latitude 				= '" . $this->db->escape($pvz->getLocation()->getLatitude()) . "',												
+						address 				= '" . $this->db->escape($pvz->getLocation()->getAddress()) . "',
+						address_full 			= '" . $this->db->escape($pvz->getLocation()->getAddressFull()) . "',
+						address_comment 		= '" . $this->db->escape($pvz->getAddressComment()) . "',
+						nearest_station 		= '" . $this->db->escape($pvz->getNearestStation()) . "',
+						nearest_metro_station 	= '" . $this->db->escape($pvz->getNearestMetroStation()) . "',
+						work_time 				= '" . $this->db->escape(json_encode($WorkTimes)) . "',
+						phones 					= '" . $this->db->escape(json_encode($pvz->getPhones())) . "',
+						email 					= '" . $this->db->escape($pvz->getEmail()) . "',
+						note 					= '" . $this->db->escape($pvz->getNote()) . "',
+						type 					= '" . $this->db->escape($pvz->getType()) . "',
+						owner_сode 				= '" . (int)($pvz->getOwnerCode()) . "',
+						take_only 				= '" . (int)($pvz->getTakeOnly()) . "',
+						is_handout 				= '" . (int)($pvz->getIsHandout()) . "',
+						is_reception 			= '" . (int)($pvz->getIsReception()) . "',
+						is_dressing_room 		= '" . (int)($pvz->getIsDressingRoom()) . "',
+						have_cashless 			= '" . (int)($pvz->getHaveCashless()) . "',
+						have_cash 				= '" . (int)($pvz->getHaveCash()) . "',
+						allowed_cod 			= '" . (int)($pvz->getAllowedCod()) . "',
+						site 					= '" . $this->db->escape($pvz->getSite()) . "',
+						office_image_list 		= '" . $this->db->escape(json_encode($OfficeImages)) . "',					
+						work_time_list 			= '" . $this->db->escape(json_encode($WorkTimes)) . "',									
+						weight_min  			= '" . $pvz->getWeightMin() . "',
+						weight_max 				= '" . $pvz->getWeightMax() . "'
+						ON DUPLICATE KEY UPDATE
+						name 					= '" . $this->db->escape($pvz->getName()) . "',
+						country_code 			= '" . $this->db->escape($row['country_code']) . "',
+						region_code 			= '" . $this->db->escape($pvz->getLocation()->getRegionCode()) . "',
+						region 					= '" . $this->db->escape($pvz->getLocation()->getRegion()) . "',
+						city_code 				= '" . $this->db->escape($pvz->getLocation()->getCityCode()) . "',
+						city 					= '" . $this->db->escape($pvz->getLocation()->getCity()) . "',
+						postal_сode 			= '" . $this->db->escape($pvz->getLocation()->getPostalCode()) . "',
+						longitude 				= '" . $this->db->escape($pvz->getLocation()->getLongitude()) . "',
+						latitude 				= '" . $this->db->escape($pvz->getLocation()->getLatitude()) . "',												
+						address 				= '" . $this->db->escape($pvz->getLocation()->getAddress()) . "',
+						address_full 			= '" . $this->db->escape($pvz->getLocation()->getAddressFull()) . "',
+						address_comment 		= '" . $this->db->escape($pvz->getAddressComment()) . "',
+						nearest_station 		= '" . $this->db->escape($pvz->getNearestStation()) . "',
+						nearest_metro_station 	= '" . $this->db->escape($pvz->getNearestMetroStation()) . "',
+						work_time 				= '" . $this->db->escape(json_encode($WorkTimes)) . "',
+						phones 					= '" . $this->db->escape(json_encode($pvz->getPhones())) . "',
+						email 					= '" . $this->db->escape($pvz->getEmail()) . "',
+						note 					= '" . $this->db->escape($pvz->getNote()) . "',
+						type 					= '" . $this->db->escape($pvz->getType()) . "',
+						owner_сode 				= '" . (int)($pvz->getOwnerCode()) . "',
+						take_only 				= '" . (int)($pvz->getTakeOnly()) . "',
+						is_handout 				= '" . (int)($pvz->getIsHandout()) . "',
+						is_reception 			= '" . (int)($pvz->getIsReception()) . "',
+						is_dressing_room 		= '" . (int)($pvz->getIsDressingRoom()) . "',
+						have_cashless 			= '" . (int)($pvz->getHaveCashless()) . "',
+						have_cash 				= '" . (int)($pvz->getHaveCash()) . "',
+						allowed_cod 			= '" . (int)($pvz->getAllowedCod()) . "',
+						site 					= '" . $this->db->escape($pvz->getSite()) . "',
+						office_image_list 		= '" . $this->db->escape(json_encode($OfficeImages)) . "',					
+						work_time_list 			= '" . $this->db->escape(json_encode($WorkTimes)) . "',									
+						weight_min  			= '" . $pvz->getWeightMin() . "',
+						weight_max 				= '" . $pvz->getWeightMax() . "'";
+
+						$this->db->query($sql);	
 					}
-					
-					$weightMin = (!is_null($pvz->WeightLimit) && is_object($pvz->WeightLimit))?(int)$pvz->WeightLimit->getWeightMin():'0';
-					$weightMax = (!is_null($pvz->WeightLimit) && is_object($pvz->WeightLimit))?(int)$pvz->WeightLimit->getWeightMax():'0';
-					
-					$sql = "INSERT INTO cdek_deliverypoints SET 
-					code = '" . $this->db->escape($pvz->Code) . "',
-					name = '" . $this->db->escape($pvz->Name) . "',
-					country_code = '" . $this->db->escape($pvz->CountryCodeISO) . "',
-					region_code = '" . $this->db->escape($pvz->RegionCode) . "',
-					region = '" . $this->db->escape($pvz->RegionName) . "',
-					city_code = '" . $this->db->escape($row['code']) . "',
-					city = '" . $this->db->escape($pvz->City) . "',
-					postal_сode = '" . $this->db->escape($pvz->PostalCode) . "',
-					longitude = '" . $this->db->escape($pvz->coordX) . "',
-					latitude = '" . $this->db->escape($pvz->coordY) . "',												
-					address = '" . $this->db->escape($pvz->Address) . "',
-					address_full = '" . $this->db->escape($pvz->FullAddress) . "',
-					address_comment = '" . $this->db->escape($pvz->AddressComment) . "',
-					nearest_station = '" . $this->db->escape($pvz->NearestStation) . "',
-					nearest_metro_station = '" . $this->db->escape($pvz->MetroStation) . "',
-					work_time = '" . $this->db->escape($pvz->WorkTime) . "',
-					phones = '" . $this->db->escape(json_encode($pvz->phoneDetails)) . "',
-					email = '" . $this->db->escape($pvz->Email) . "',
-					note = '" . $this->db->escape($pvz->Note) . "',
-					type = '" . $this->db->escape($pvz->Type) . "',
-					owner_сode = '" . (int)($pvz->ownerCode) . "',
-					take_only = '" . (int)($pvz->TakeOnly) . "',
-					is_handout = '" . (int)($pvz->IsHandout) . "',
-					is_reception = '" . (int)($pvz->IsReception) . "',
-					is_dressing_room = '" . (int)($pvz->IsDressingRoom) . "',
-					have_cashless = '" . (int)($pvz->HaveCashless) . "',
-					have_cash = '" . (int)($pvz->HaveCash) . "',
-					allowed_cod = '" . (int)($pvz->AllowedCod) . "',
-					site = '" . $this->db->escape($pvz->Site) . "',
-					office_image_list = '" . $this->db->escape(json_encode($OfficeImages)) . "',					
-					work_time_list = '" . $this->db->escape(json_encode($WorkTimes)) . "',									
-					weight_min  = '" . $weightMin . "',
-					weight_max  = '" . $weightMax . "'
-					ON DUPLICATE KEY UPDATE
-					name = '" . $this->db->escape($pvz->Name) . "',
-					country_code = '" . $this->db->escape($pvz->CountryCodeISO) . "',
-					region_code = '" . $this->db->escape($pvz->RegionCode) . "',
-					region = '" . $this->db->escape($pvz->RegionName) . "',
-					city_code = '" . $this->db->escape($row['code']) . "',
-					city = '" . $this->db->escape($pvz->City) . "',
-					postal_сode = '" . $this->db->escape($pvz->PostalCode) . "',
-					longitude = '" . $this->db->escape($pvz->coordX) . "',
-					latitude = '" . $this->db->escape($pvz->coordY) . "',												
-					address = '" . $this->db->escape($pvz->Address) . "',
-					address_full = '" . $this->db->escape($pvz->FullAddress) . "',
-					address_comment = '" . $this->db->escape($pvz->AddressComment) . "',
-					nearest_station = '" . $this->db->escape($pvz->NearestStation) . "',
-					nearest_metro_station = '" . $this->db->escape($pvz->MetroStation) . "',
-					work_time = '" . $this->db->escape($pvz->WorkTime) . "',
-					phones = '" . $this->db->escape(json_encode($pvz->phoneDetails)) . "',
-					email = '" . $this->db->escape($pvz->Email) . "',
-					note = '" . $this->db->escape($pvz->Note) . "',
-					type = '" . $this->db->escape($pvz->Type) . "',
-					owner_сode = '" . (int)($pvz->ownerCode) . "',
-					take_only = '" . (int)($pvz->TakeOnly) . "',
-					is_handout = '" . (int)($pvz->IsHandout) . "',
-					is_reception = '" . (int)($pvz->IsReception) . "',
-					is_dressing_room = '" . (int)($pvz->IsDressingRoom) . "',
-					have_cashless = '" . (int)($pvz->HaveCashless) . "',
-					have_cash = '" . (int)($pvz->HaveCash) . "',
-					allowed_cod = '" . (int)($pvz->AllowedCod) . "',
-					site = '" . $this->db->escape($pvz->Site) . "',
-					office_image_list = '" . $this->db->escape(json_encode($OfficeImages)) . "',					
-					work_time_list = '" . $this->db->escape(json_encode($WorkTimes)) . "',								
-					weight_min  = '" . $weightMin . "',
-					weight_max  = '" . $weightMax . "'";
-					
-					$this->db->query($sql);	
-				}
+
+				}  catch (CdekV2RequestException  $e){
+					echoLine($e->getMessage(), 'e');
+					$this->db->query("UPDATE cdek_cities SET parsed = 1 WHERE city_id = '" . (int)$row['city_id'] . "'");
+					continue;
+				} 
+
+				$this->db->query("UPDATE cdek_cities SET parsed = 1 WHERE city_id = '" . (int)$row['city_id'] . "'");
 				
 			}
 			
 			$this->db->query("UPDATE cdek_cities SET WarehouseCount = (SELECT COUNT(cdek_deliverypoints.deliverypoint_id) FROM cdek_deliverypoints WHERE cdek_deliverypoints.city_code = cdek_cities.code) ");
+			$this->db->query("UPDATE cdek_cities SET parsed = 0");
 			
 			return $this;
 		}			
