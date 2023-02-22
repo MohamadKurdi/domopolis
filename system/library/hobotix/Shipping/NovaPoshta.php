@@ -183,7 +183,6 @@
 			}	
 		}
 
-
 		public function trackAndReturn($tracking_code, $phone = ''){
 		}		
 
@@ -364,6 +363,38 @@
 
 			return $status;	
 		}
+
+		public function getDeliveryTerms($city){
+			$result = [];
+
+			try{
+				$query = $this->db->query("SELECT deliveryPeriod FROM novaposhta_cities_ww WHERE Ref = '" . $this->db->escape($city) . "'");
+
+				if ($query->num_rows && $query->row['deliveryPeriod']){
+					$result = [
+						'success' 			=> true,
+						'deliveryPeriod' 	=> $query->row['deliveryPeriod']
+					];						
+				}
+
+				if (!$result || mt_rand(0, 10) == 5){
+					if ($deliveryPeriod = $this->getDeliveryDate($city, date('y.m.d'))){
+						$result = [
+							'success' 			=> true,
+							'deliveryPeriod' 	=> $deliveryPeriod
+						];
+
+						$this->db->query("UPDATE  novaposhta_cities_ww  SET deliveryPeriod = '" . (int)$deliveryPeriod . "' WHERE Ref = '" . $this->db->escape($city) . "'");
+					}
+				}
+
+
+			} catch (\Exception  $e){						
+				return ['success' => false];
+			}
+
+			return $result;
+		}
 		
 		public function getDeliveryPrice(){
 		}
@@ -373,10 +404,10 @@
 			'modelName' 		=> 'InternetDocument',
 			'calledMethod' 		=> 'getDocumentDeliveryDate',	
 			'methodProperties'  => array(
-			'DateTime' 		=> date('d.m.Y', strtotime($date)),
-			'ServiceType'	=> 'WarehouseWarehouse',
-			'CitySender' 	=> $this->defaultCityGuid,
-			'CityRecipient' => $city
+			'DateTime' 			=> date('d.m.Y', strtotime($date)),
+			'ServiceType'		=> 'WarehouseWarehouse',
+			'CitySender' 		=> $this->defaultCityGuid,
+			'CityRecipient' 	=> $city
 			)
 			);
 						
@@ -404,7 +435,6 @@
 			);
 						
 			$result = $this->doRequest($data);
-
 
 			if (!empty($result['data'])){
 				foreach ($result['data'] as $line){					
