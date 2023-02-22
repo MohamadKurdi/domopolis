@@ -81,8 +81,7 @@ class ControllerProductProduct extends Controller
     public function getDeliveryInfo()
     {
         $this->load->model('catalog/product');
-        $this->load->model('tool/simpleapicustom');
-        $this->load->model('kp/deliverycounters');
+        $this->load->model('tool/simpleapicustom');        
 
         if (isset($this->request->get['x'])) {
             $product_id = (int)$this->request->get['x'];
@@ -122,7 +121,7 @@ class ControllerProductProduct extends Controller
 
             if (($this->data['delivery_city']['city'] != $this->language->get('default_city_' . $this->config->get('config_country_id')) || ($this->config->get('config_warehouse_identifier') != $this->config->get('config_warehouse_identifier_local'))) && $product_info['stock_dates'] && $this->model_tool_simpleapicustom->checkIfUseRUKZBYServices()) {
                 if (!empty($customer_city) && !empty($customer_city['id'])) {
-                    if ($cdekDeliveryTerms = $this->model_kp_deliverycounters->getCDEKDeliveryTerms($customer_city['id'])) {
+                    if ($cdekDeliveryTerms = $this->courierServices->getDeliveryTerms('Cdek', $customer_city['id'])) {
                         $this->data['cdek_delivery_dates']['start'] = date('d.m', strtotime('+'. ($product_info['stock_dates']['start'] + $cdekDeliveryTerms['deliveryPeriodMin'] + 1) .' day'));
                         $this->data['cdek_delivery_dates']['end'] = date('d.m', strtotime('+'. ($product_info['stock_dates']['end'] + $cdekDeliveryTerms['deliveryPeriodMax'] + 1) .' day'));
                     }
@@ -131,9 +130,9 @@ class ControllerProductProduct extends Controller
 
             if ($product_info['stock_dates'] && $this->model_tool_simpleapicustom->checkIfUseUAServices()) {
                 if (!empty($customer_city) && !empty($customer_city['id'])) {
-                    if ($npDeliveryTerms = $this->model_kp_deliverycounters->getNovaPoshtaDeliveryTerms($customer_city['id'])) {
-                        $this->data['np_delivery_dates']['start'] = date('d.m', strtotime('+'. ($product_info['stock_dates']['start'] + $npDeliveryTerms) .' day'));
-                        $this->data['np_delivery_dates']['end'] = date('d.m', strtotime('+'. ($product_info['stock_dates']['end'] + $npDeliveryTerms) .' day'));
+                    if ($npDeliveryTerms = $this->courierServices->getDeliveryTerms('NovaPoshta', $customer_city['id']) && !empty($npDeliveryTerms['deliveryPeriod'])) {
+                        $this->data['np_delivery_dates']['start'] = date('d.m', strtotime('+'. ($product_info['stock_dates']['start'] + $npDeliveryTerms['deliveryPeriod']) .' day'));
+                        $this->data['np_delivery_dates']['end'] = date('d.m', strtotime('+'. ($product_info['stock_dates']['end'] + $npDeliveryTerms['deliveryPeriod']) .' day'));
                     }
                 }
                 

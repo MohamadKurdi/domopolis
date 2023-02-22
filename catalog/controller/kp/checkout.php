@@ -5,13 +5,18 @@
 		}
 		
 		public function guessCDEKPriceAjax(){		
-			$cdek_city_code = !empty($this->request->get['cdek_city_code'])?$this->request->get['cdek_city_code']:'';
-			$type = !empty($this->request->get['type'])?$this->request->get['type']:'';
-			
-			$this->load->model('kp/deliverycounters');
-			$json = $this->model_kp_deliverycounters->guessCDEKPriceAjax($cdek_city_code, $type);
-						
-			$this->response->setOutput($json);
+			$city_code = !empty($this->request->get['cdek_city_code'])?$this->request->get['cdek_city_code']:'';			
+			$output = $this->courierServices->getDeliveryTerms('Cdek', $city_code);
+
+			if (!empty($output['min_WD'])){
+				$output['min_WD'] = $this->currency->format($output['min_WD'], $this->config->get('config_regional_currency'), 1);
+			}
+
+			if (!empty($output['min_WW'])){
+				$output['min_WW'] = $this->currency->format($output['min_WW'], $this->config->get('config_regional_currency'), 1);
+			}
+
+			$this->response->setOutput(json_encode($output));
 		}		
 		
 		public function getCitiesListAjax(){

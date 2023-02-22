@@ -13,8 +13,14 @@ class ControllerApiDeliveryServices extends Controller {
 		}
 
 		if ($this->config->get('config_novaposhta_api_key')){
-			$this->courierServices->updateReferences('NovaPoshta');
+		//	$this->courierServices->updateReferences('NovaPoshta');
 		}
+	}
+
+	public function onetime(){
+		if ($this->config->get('config_cdek_api_login')){
+			$this->courierServices->updateReferencesOneTime('Cdek');
+		}	
 	}
 
 	public function track(){
