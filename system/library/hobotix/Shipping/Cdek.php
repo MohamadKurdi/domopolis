@@ -36,6 +36,212 @@
 			$this->CdekClient = new \AntistressStore\CdekSDK2\CdekClientV2($this->apiLogin, $this->apiKey);
 		}
 
+		private function getTrackingStatus($info){
+			$status = 'NOT_SET';
+
+			if (!empty($info->getStatuses()[0]) && ($info->getStatuses()[0])->getName()){
+				$status = ($info->getStatuses()[0])->getName();
+			}
+
+			if ($status){
+				echoLine('[Cdek::getTrackingStatus] Parsel status: ' . $status, 'i');
+			}
+
+			return $status;
+		}
+
+		private function prepareTrackingStatuses($info){
+			$result = [];
+
+			foreach ($info->getStatuses() as $cdekStatus){
+				$result[] = [
+					'code' => $cdekStatus->getCode(),
+					'name' => $cdekStatus->getName(),
+					'code' => $cdekStatus->getCity(),
+					'time' => date('d.m.Y H:i', strtotime($cdekStatus->getDateTime())),
+
+
+				];
+			}
+
+			return $result;
+		}
+
+		private function checkIfTaken($info){
+			$status = false;
+
+			if (!empty($info->getStatuses()[0]) && in_array(($info->getStatuses()[0])->getCode(), [
+				'POSTOMAT_RECEIVED',
+				'DELIVERED'				
+			])){
+				$status = true;
+			}
+
+			if ($status){
+				echoLine('[Cdek::checkIfTaken] Parsel is taken: ' . $info->getCdekNumber(), 's');
+			}
+
+			return $status;
+		}
+
+		private function checkIfWaiting($info){
+			$status = false;
+
+			if (!empty($info->getStatuses()[0]) && in_array(($info->getStatuses()[0])->getCode(), [
+				'ACCEPTED_AT_PICK_UP_POINT',
+				'SENT_TO_RECIPIENT_CITY',
+				'ACCEPTED_IN_TRANSIT_CITY',
+				'TAKEN_BY_TRANSPORTER_FROM_TRANSIT_CITY',
+				'READY_FOR_SHIPMENT_IN_TRANSIT_CITY',
+				'RECEIVED_AT_SENDER_WAREHOUSE',
+				'ACCEPTED_AT_TRANSIT_WAREHOUSE',
+				'POSTOMAT_POSTED',
+				'POSTOMAT_SEIZED',
+				'TAKEN_BY_COURIER'				
+			])){
+				$status = true;
+			}
+
+			if ($status){
+				echoLine('[Cdek::checkIfWaiting] Parsel is waiting: ' . $info->getCdekNumber(), 'w');
+			}
+
+			return $status;
+		}
+
+		private function checkIfRejected($info){
+			$status = false;
+
+			if ($info->getIsReturn()){
+				$status = true;
+			}
+
+			if ($info->getIsReverse()){
+				$status = true;
+			}
+
+			if (!empty($info->getStatuses()[0]) && in_array(($info->getStatuses()[0])->getCode(), [
+				'NOT_DELIVERED',
+				'RETURNED_TO_RECIPIENT_CITY_WAREHOUSE',
+				'INVALID'				
+			])){
+				$status = true;
+			}
+
+			if ($status){
+				echoLine('[Cdek::checkIfWaiting] Parsel is rejected: ' . $info->getCdekNumber(), 'e');
+			}
+
+			return $status;
+		}
+
+		private function checkIfUnexistent($message){
+			$status =  strpos($message, 'Order not found by cdek_number') !== false;
+
+			if ($status){				
+				echoLine('[Cdek::checkIfWaiting] Parsel is unexistent!', 'e');
+			}
+
+			return $status;
+		}
+
+		public function trackMultiCodes($tracking_codes){
+			$result = [];			
+
+			if (empty($tracking_codes)){
+				return $result;
+			}
+
+			foreach ($tracking_codes as $tracking_code){
+				$code = [];
+
+				echoLine('[Cdek::checkIfWaiting] Starting parcel: ' . $tracking_code);
+
+				try{					
+					if ($info = $this->CdekClient->getOrderInfoByCdekNumber($tracking_code)){
+							$code['taken'] 				= $this->checkIfTaken($info);
+							$code['waiting'] 			= $this->checkIfWaiting($info);
+							$code['rejected'] 			= $this->checkIfRejected($info);
+							$code['tracking_status'] 	= $this->getTrackingStatus($info);
+							$code['tracking_data'] 		= $this->prepareTrackingStatuses($info);
+
+							$result[$tracking_code] = $code;
+					}
+				}  catch (CdekV2RequestException  $e){
+					echoLine('[Cdek::trackMultiCodes] ' . $tracking_code . ' ' .  $e->getMessage(), 'e');					
+					
+					if ($this->checkIfUnexistent($e->getMessage())){								
+						$code['taken'] 				= false;
+						$code['waiting'] 			= false;
+						$code['rejected'] 			= true;
+						$code['tracking_status']	= 'UNEXSISTENT';
+						$code['tracking_data']		= ['error' => $e->getMessage()];
+
+						$result[$tracking_code] = $code;
+					}
+				} 
+			}
+
+			return $result;
+		}
+
+		public function trackAndFormat($tracking_code, $unused = ''){
+			try{
+
+				if ($info = $this->CdekClient->getOrderInfoByCdekNumber($tracking_code)){
+					return $this->prettyFormatTrackingInfo($info);
+				}
+
+			}  catch (CdekV2RequestException  $e){
+				echo $e->getMessage();					
+				return false;
+			} 
+
+			return false;
+		}
+
+		public function prettyFormatTrackingInfo($info){
+			$status = '';
+
+			foreach ($info->getStatuses() as $cdekStatus){
+				$status .= '<b>' . $cdekStatus->getName() . '</b>';
+				break;
+			}
+
+			if (!$info->getDeliveryProblem()){
+				$status .= '&nbsp;&nbsp;&nbsp;&nbsp;<b style="color:green"><i class="fa fa-check"></i> проблем с доставкой нет</b>';
+			}
+
+			$status .= '<br />';
+			$status .= '<br />';
+			$status .= "<table class='list'>";
+
+			foreach ($info->getStatuses() as $cdekStatus){
+				$status .= '<tr>';
+				$status .= '<td class="left">';
+				$status .= '<i class="fa fa-check"></i>';
+				$status .= '</td>';
+				$status .= '<td class="left">';
+				$status .= $cdekStatus->getCode();
+				$status .= '</td>';
+				$status .= '<td class="left">';
+				$status .= $cdekStatus->getName();
+				$status .= '</td>';
+				$status .= '<td class="left">';
+				$status .= $cdekStatus->getCity();
+				$status .= '</td>';
+				$status .= '<td class="left">';
+				$status .= date('d.m.Y H:i', strtotime($cdekStatus->getDateTime()));
+				$status .= '</td>';
+				$status .= '</tr>';
+			}
+
+			$status .= '</table>';
+
+
+			return $status;	
+		}
+
 		public function getDeliveryTerms($city_code){
 			$result = [];
 
