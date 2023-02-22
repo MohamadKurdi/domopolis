@@ -71,7 +71,6 @@
 					}
 				}
 			}
-
 		}	
 
 		private function setInvalid($code){
@@ -106,7 +105,7 @@
 		}
 
 		private function checkIfRedelivering($code){
-			$redelivery =  (int)in_array($code['StatusCode'], ['104']) || ((int)$code['Redelivery'] && $code['RedeliveryNum']);
+			$redelivery =  (int)in_array($code['StatusCode'], ['104']) || (!empty($code['Redelivery']) && (int)$code['Redelivery'] && $code['RedeliveryNum']);
 
 			if ($redelivery){
 				echoLine('[NovaPoshta::checkIfRedelivering] Parsel is redelivered: ' . $code['Number'] . '->' . $code['RedeliveryNum'], 'w');
@@ -214,7 +213,7 @@
 					]
 				];
 
-				$answer = $this->doRequest($data);				
+				$answer = $this->doRequest($data);			
 
 				unset($code);
 				foreach ($answer['data'] as $code){
