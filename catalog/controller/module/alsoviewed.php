@@ -7,8 +7,7 @@ class ControllerModuleAlsoviewed extends Controller {
 		
 		$ajaxrequest = true;
 		
-		$this->data['data']['AlsoViewedConfig'] = $this->config->get('alsoviewed_module');
-		
+		$this->data['data']['AlsoViewedConfig'] = $this->config->get('alsoviewed_module');		
 		$this->data['position'] = $this->data['data']['AlsoViewedConfig'][0]['position'];
 		
 		if ($ajaxrequest == false) {
@@ -22,7 +21,11 @@ class ControllerModuleAlsoviewed extends Controller {
 		}
 		
 		if (isset($this->request->get['product_id'])) {
-			$alsoViewedProducts = $this->listAlsoViewedById((int)$this->request->get['product_id'],(int)$this->data['data']['AlsoViewed']['NumberOfProducts']);
+			if (empty($this->data['data']['AlsoViewed'])){
+				$this->data['data']['AlsoViewed'] = ['NumberOfProducts' => 0];
+			}
+
+			$alsoViewedProducts = $this->listAlsoViewedById((int)$this->request->get['product_id'], (int)$this->data['data']['AlsoViewed']['NumberOfProducts']);
 		} else {
 			$alsoViewedProducts = array();
 		}
@@ -42,7 +45,7 @@ class ControllerModuleAlsoviewed extends Controller {
 	private function listAlsoViewedById($product_id, $limit = 5) {
 		$this->load->model('catalog/product');
 		
-		$product_alsoviewed_data = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, $setting, [$product_id, $limit]));
+		$product_alsoviewed_data = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, [$product_id, $limit]));
 		
 		if (!$product_alsoviewed_data) {				
 			$sql = "SELECT * FROM `alsoviewed` a LEFT JOIN product p ON p.product_id = a.high WHERE a.`low` = '" . (int)$product_id . "' AND p.stock_status_id <> '" . (int)$this->config->get('config_not_in_stock_status_id') ."' ORDER BY `number` DESC LIMIT " . (int)$limit . "";
@@ -97,7 +100,7 @@ class ControllerModuleAlsoviewed extends Controller {
 			
 			$product_alsoviewed_data = $products;
 			
-			$this->cache->set($this->registry->createCacheQueryString(__METHOD__, $setting, [$product_id, $limit]), $products);
+			$this->cache->set($this->registry->createCacheQueryString(__METHOD__, [$product_id, $limit]), $products);
 			
 		}
 		
