@@ -46,12 +46,24 @@
 						<div class="social_page_link">
 							<p class="title"><?php echo $text_retranslate_13; ?></p>
 							<ul class="footer__social">
-								<li><a href="https://twitter.com/KitchenProfi" target="_blank" class="twitter" rel="noindex nofollow"></a></li>
-								<li><a href="https://www.facebook.com/Kitchen-Profi-104116757981722" target="_blank" class="facebook" rel="noindex nofollow"></a></li>
-								<li><a href="https://www.instagram.com/kitchenprofi.de/" target="_blank" class="instagram" rel="noindex nofollow"></a></li>
+								<?php if ($this->config->get('social_link_twitter')) { ?>
+								<li><a href="<?php echo $this->config->get('social_link_twitter'); ?>" target="_blank" class="twitter" rel="noindex nofollow"></a></li>
+								<?php } ?>
+								<?php if ($this->config->get('social_link_facebook')) { ?>
+									<li>
+										<a href="<?php echo $this->config->get('social_link_facebook'); ?>" target="_blank" class="facebook" rel="noindex nofollow"></a>
+									</li>
+								<?php } ?>
+								<?php if ($this->config->get('social_link_instagram')) { ?>
+									<li>
+										<a href="<?php echo $this->config->get('social_link_instagram'); ?>" target="_blank" class="instagram" rel="noindex nofollow"></a>
+									</li>
+								<?php } ?>
 								<? if ($this->config->get('config_store_id') == 1) { ?>                        
 								<? } else { ?>
-									<li><a href="https://vk.me/club88315749" target="_blank" class="vk" rel="noindex nofollow"></a></li>
+									<?php if ($this->config->get('social_link_vkontakte')) { ?>
+										<li><a href="<?php echo $this->config->get('social_link_vkontakte'); ?>" target="_blank" class="vk" rel="noindex nofollow"></a></li>
+									<?php } ?>
 								<? } ?>
 							</ul>
 						</div>
