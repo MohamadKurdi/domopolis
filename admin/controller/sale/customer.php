@@ -17,10 +17,8 @@
 			}
 		}
 		
-		private function removeNewLines($s){
-			
-			$s = str_replace(PHP_EOL, ' ', $s);
-			
+		private function removeNewLines($s){			
+			$s = str_replace(PHP_EOL, ' ', $s);			
 			$s = trim(preg_replace('/\s+/', ' ', $s));
 			
 			return $s;
@@ -3180,6 +3178,12 @@
 					$sms = $this->model_sale_sms->getSMSByID($result['sms_id'], $this->request->get['customer_id'], $result['order_id']);
 					} else {
 					$sms = false;
+				}
+
+				if (!empty($result['email'])){
+					$email = $result['email'];
+					} else {
+					$email = false;
 				}
 				
 				
