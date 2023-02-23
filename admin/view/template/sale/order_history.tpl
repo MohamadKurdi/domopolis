@@ -30,19 +30,19 @@
 					<td class="left" style="width:auto; white-space:nowrap;">
 						
 						<span class="status_color" style="font-size:14px; display:block; padding:5px 4px; background: #<?php echo $history['status_bg_color']; ?>; color:#<?php echo $history['status_txt_color']; ?>">
-							<? if ($history['status_fa_icon']) { ?>
+							<? if (!empty($history['status_fa_icon'])) { ?>
 								<i class="fa <? echo $history['status_fa_icon']; ?>" aria-hidden="true"></i>
 							<? } ?>
 							<?php echo $history['status']; ?>
 						</span>	
 						
-						<?php if ($history['yam_status']) { ?>
+						<?php if (!empty($history['yam_status'])) { ?>
 							<span class="status_color" style="font-size:14px; margin-top:5px; display:block; padding:5px 4px; background: #FF0000; color:#FFFFFF">
 								<i class="fa fa-yoast" aria-hidden="true"></i> <?php echo $history['yam_status']; ?>
 							</span>
 						<?php } ?>
 						
-						<?php if ($history['yam_substatus']) { ?>
+						<?php if (!empty($history['yam_substatus'])) { ?>
 							<span class="status_color" style="font-size:14px;  margin-top:5px; display:block; padding:5px 4px; background: #ff7815; color:#FFFFFF">
 								<i class="fa fa-yoast" aria-hidden="true"></i> <?php echo $history['yam_substatus']; ?>
 							</span>
