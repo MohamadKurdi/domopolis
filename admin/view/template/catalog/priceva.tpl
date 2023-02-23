@@ -197,17 +197,17 @@
 
 								<td class="left">
 									РРЦ цена<br />
-									KitchenProfi, <b><?php echo $defaultCurrency; ?></b>
+									Магазин, <b><?php echo $defaultCurrency; ?></b>
 								</td>
 
 								<td class="left">
 									РРЦ цена<br />
-									KitchenProfi, <b><?php echo $catalogCurrency; ?></b>						
+									Магазин, <b><?php echo $catalogCurrency; ?></b>						
 								</td>
 
 								<td class="left">
 									Фронт цена<br />
-									KitchenProfi, <b><?php echo $catalogCurrency; ?></b>						
+									Магазин, <b><?php echo $catalogCurrency; ?></b>						
 								</td>
 
 								<td class="left">

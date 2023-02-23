@@ -98,7 +98,7 @@
 						
 						
 						<td class="left">
-							Цена KitchenProfi						
+							Цена магазина						
 						</td>
 						
 						<td class="left">
