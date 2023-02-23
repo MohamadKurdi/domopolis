@@ -1239,7 +1239,9 @@ class ControllerSettingSetting extends Controller
         }
 
         $this->data['cdek_tariffs'] = [];
-        if ($this->config->get('config_country_id') == 176 && $this->data['config_cdek_api_key'] && $this->config->get('config_cdek_api_city_sender_id')){            
+        if ($this->config->get('config_country_id') == 176 && $this->data['config_cdek_api_key'] && $this->config->get('config_cdek_api_city_sender_id')){
+            try{
+
             $CdekClient = new \AntistressStore\CdekSDK2\CdekClientV2($this->data['config_cdek_api_login'], $this->data['config_cdek_api_key']);
             $tariff     = (new \AntistressStore\CdekSDK2\Entity\Requests\Tariff())->setCityCodes($this->config->get('config_cdek_api_city_sender_id'), 137)->setPackageWeight(500);
             $tariffList = $CdekClient->calculateTariffList($tariff);
@@ -1249,6 +1251,9 @@ class ControllerSettingSetting extends Controller
                     'code' => $result->getTariffCode(),
                     'name' => $result->getTariffName(),
                 ];
+            }
+            } catch (\GuzzleHttp\Exception\ConnectException $e){
+                
             }
         }
 

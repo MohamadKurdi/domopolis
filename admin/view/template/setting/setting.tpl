@@ -6259,7 +6259,7 @@
 								</tr>
 							</table>
 							
-							<h2><i class="fa fa-search"></i> ElasticSearch API (умный поиск на нашем сервере)</h2>							
+							<h2><i class="fa fa-search"></i> ElasticSearch API (умный поиск на нашем сервере)</h2>
 							<table class="form">
 								<tr>
 									<td width="20%">									
