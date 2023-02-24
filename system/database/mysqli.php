@@ -24,8 +24,7 @@
 			
 			$err_level = error_reporting(0);
 			$this->link = new mysqli($hostname, $username, $password, $database, $port, $socket);
-
-			error_reporting($err_level); 
+			error_reporting($err_level);
 			
 			if (mysqli_connect_error()) {
 				throw new ErrorException('Error: Could not make a database link (' . mysqli_connect_errno() . ') ' . mysqli_connect_error());

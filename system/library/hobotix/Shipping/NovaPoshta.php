@@ -79,9 +79,14 @@
 		}
 
 		private function setNewCode($code, $code_new){
-			echoLine('[NovaPoshta::setNewCode] Replacing code: ' . $code, 'e');
-			$this->db->query("UPDATE order_ttns SET ttn = '" . $this->db->escape($code_new) . "' WHERE ttn = '" . $this->db->escape($code) . "'");
+			echoLine('[NovaPoshta::setNewCode] Replacing code: ' . $code . ' to ' . $code_new, 'e');
+			$this->db->query("UPDATE `order_ttns` SET ttn = '" . $this->db->escape($code_new) . "' WHERE ttn = '" . $this->db->escape($code) . "'");
 			$this->db->query("UPDATE `order` SET ttn = '" . $this->db->escape($code_new) . "' WHERE ttn = '" . $this->db->escape($code) . "'");
+		}
+
+		private function setCodeStatus($code){
+			echoLine('[NovaPoshta::setCodeStatus] Setting code status: ' . $code['Number'] . ' -> ' . $code['Status'], 'i');
+			$this->db->query("UPDATE order_ttns SET tracking_status = '" . $this->db->escape($code['Status']) . "' WHERE ttn = '" . $this->db->escape($code['Number']) . "'");
 		}
 
 		private function checkIfTaken($code){
@@ -89,6 +94,7 @@
 
 			if ($status){
 				echoLine('[NovaPoshta::checkIfTaken] Parsel is taken: ' . $code['Number'], 's');
+				$this->db->query("UPDATE order_ttns SET taken = 1 WHERE ttn = '" . $this->db->escape($code['Number']) . "'");
 			}
 
 			return $status;
@@ -99,6 +105,7 @@
 
 			if ($status){
 				echoLine('[NovaPoshta::checkIfRejected] Parsel is rejected: ' . $code['Number'], 'e');
+				$this->db->query("UPDATE order_ttns SET rejected = 1 WHERE ttn = '" . $this->db->escape($code['Number']) . "'");
 			}
 
 			return $status;
@@ -110,7 +117,7 @@
 			if ($redelivery){
 				echoLine('[NovaPoshta::checkIfRedelivering] Parsel is redelivered: ' . $code['Number'] . '->' . $code['RedeliveryNum'], 'w');
 				$this->setNewCode($code['Number'], $code['RedeliveryNum']);
-			}		
+			}	
 		}
 
 		private function checkIfWaiting($code){
@@ -118,6 +125,7 @@
 
 			if ($status){
 				echoLine('[NovaPoshta::checkIfWaiting] Parsel is waiting: ' . $code['Number'], 'w');
+				$this->db->query("UPDATE order_ttns SET waiting = 1 WHERE ttn = '" . $this->db->escape($code['Number']) . "'");
 			}
 
 			return $status;
@@ -218,18 +226,22 @@
 				unset($code);
 				foreach ($answer['data'] as $code){
 					echoLine('[NovaPoshta::trackMultiCodes] ' . $code['Number'], 'i');
-
-					$this->checkIfRedelivering($code);
-
+					
+					$this->setCodeStatus($code);
+					
 					$code['taken'] 				= $this->checkIfTaken($code);
 					$code['rejected'] 			= $this->checkIfRejected($code);
 					$code['waiting'] 			= $this->checkIfWaiting($code);
+
+					$this->checkIfRedelivering($code);
 
 					if ($this->checkIfUnexistent($code)){
 						$code['rejected'] = 1;
 					}
 
 					$code['tracking_status'] 	= $code['Status'];
+					
+
 					$result[$code['Number']] 	= $code;
 				}
 			}						
