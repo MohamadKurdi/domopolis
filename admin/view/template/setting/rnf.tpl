@@ -1154,22 +1154,65 @@
 					</table>
 				</div>
 
-				<div id="tab-priceformula">				
-					<div>
-						<input type="text" name="config_rainforest_main_formula" value="<?php echo $config_rainforest_main_formula; ?>" style="width:80%; font-size:16px; padding:10px;" />						
-						<button class="button" style="padding:10px; float:right; font-size:24px; margin-right:4px;" onclick="savePriceModel();"><i class="fa fa-check"></i> Сохранить</button>
+				<div id="tab-priceformula">									
+					<div style="float:left; width:59%;">
+						<div>
+							<input type="text" name="config_rainforest_main_formula" value="<?php echo $config_rainforest_main_formula; ?>" style="width:70%; font-size:14px; padding:6px; float:left;" />
+							<span style="float:right; width:10%; font-size:32px; margin-left:20px; cursor:pointer;" onclick="$('#formulas_overload').toggle();">ЕЩЕ <i class="fa fa-caret-down"></i></span>
+							<input type="number" step="1" name="config_rainforest_main_formula_count" value="<?php echo $config_rainforest_main_formula_count; ?>" size="50" style="float:right; width:10%;font-size:14px; padding:6px;" />						
+						</div>
 
 						<div class="clr"></div>
-						<span class="help"><i class="fa fa-info-circle"></i> В этом разделе изменение полей на лету отключено, чтоб изменения формулы и коэффициентов не влияли на текущую модель. Если хочешь изменить модель ценообразования после тестирования формул и (или) коэффициентов - нужно нажать кнопку сохранить и дождаться окончания процесса. После нажатия кнопки ценовая модель изменится и цены товара будут формироваться исходя из новой модели. Любое изменение поля вызывает запрос на тестовый пересчёт цен.</span>
-					</div>
+						<div id="formulas_overload" style="display:none;">
+							<table class="form">
+								<tr>
+									<td width="1%">										
+									</td>
+									<td width="10%">
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Цена закупки от, <?php echo $config_currency; ?></span>
+									</td>
+									<td width="10%">
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Цена закупки до, <?php echo $config_currency; ?></span>
+									</td>
+									<td width="10%">
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Умножать, если нет веса</span>
+									</td>
+									<td width="69%">
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Переназначение основной формулы</span>
+									</td>
+								</tr>
+								<?php for ($crmfc = 1; $crmfc <= $config_rainforest_main_formula_count; $crmfc++){ ?>
+									<tr>
+										<td width="10%">
+											<b><?php echo $crmfc; ?></b>
+										</td>
+										<td width="10%">
+											<input type="number" step="1" name="config_rainforest_main_formula_min_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_min_' . $crmfc}; ?>" size="50" style="width:100px; border-color:#00ad07;" />
+										</td>
+										<td width="10%">
+											<input type="number" step="1" name="config_rainforest_main_formula_max_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_max_' . $crmfc}; ?>" size="50" style="width:100px; border-color:#cf4a61;" />
+										</td>
+										<td width="10%">
+											<input type="number" step=".1" name="config_rainforest_main_formula_default_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_default_' . $crmfc}; ?>" size="50" style="width:100px; border-color:#D69241;" />
+										</td>
+										<td width="79%">
+											<input type="text" name="config_rainforest_main_formula_overload_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_overload_' . $crmfc}; ?>" style="width:90%; font-size:12px;  border-color:#7F00FF;" />
+										</td>
+									</tr>
+								<?php } ?>
+							</table>
+						</div>
 
-					<div class="clr"></div>
-					<div style="float:left; width:60%;">
+						<div class="clr"></div>
 						<div id="calculator_results" style="min-height:500px; margin-top:10px;">
 						</div>
 					</div>
 
-					<div style="float:right; width:40%;">
+					<div style="float:right; width:39%;">
+						<div>
+							<button class="button" style="padding:10px; width:100%; font-size:20px; margin-right:4px;" onclick="savePriceModel();"><i class="fa fa-check"></i> Сохранить</button>
+							<span class="help"><i class="fa fa-info-circle"></i> В этом разделе изменение полей на лету отключено, чтоб изменения формулы и коэффициентов не влияли на текущую модель. Если хочешь изменить модель ценообразования после тестирования формул и (или) коэффициентов - нужно нажать кнопку сохранить и дождаться окончания процесса. После нажатия кнопки ценовая модель изменится и цены товара будут формироваться исходя из новой модели. Любое изменение поля вызывает запрос на тестовый пересчёт цен.</span>
+						</div>
 						<table class="list">
 							<tr>
 								<td colspan="2" class="left" style="color:#D69241;">
@@ -1608,6 +1651,12 @@
 					var limitProducts				= $('input[name=calculator_limit_products]').val();
 					var zonesConfig					= $('input[name=calculator_zones_config]').val();
 					var explicitProducts			= $('input[name=calculator_explicit_products]').val();
+					<?php for ($crmfc = 1; $crmfc <= $this->data['config_rainforest_main_formula_count']; $crmfc++){ ?>	
+						var mainFormula_min_<?php echo $crmfc; ?> = $('input[name=config_rainforest_main_formula_min_<?php echo $crmfc; ?>]').val();
+						var mainFormula_max_<?php echo $crmfc; ?> = $('input[name=config_rainforest_main_formula_max_<?php echo $crmfc; ?>]').val();
+						var mainFormula_default_<?php echo $crmfc; ?> = $('input[name=config_rainforest_main_formula_default_<?php echo $crmfc; ?>]').val();
+						var mainFormula_overload_<?php echo $crmfc; ?> = $('input[name=config_rainforest_main_formula_overload_<?php echo $crmfc; ?>]').val();						
+					<?php } ?>
 
 					$.ajax({
 						type: 'POST',
@@ -1615,6 +1664,12 @@
 						url: 'index.php?route=setting/rnf/calculate&hello=world&token=<?php echo $token; ?>',
 						data: {
 							main_formula: 					mainFormula,
+							<?php for ($crmfc = 1; $crmfc <= $this->data['config_rainforest_main_formula_count']; $crmfc++){ ?>	
+								main_formula_min_<?php echo $crmfc; ?>: mainFormula_min_<?php echo $crmfc; ?>,
+								main_formula_max_<?php echo $crmfc; ?>: mainFormula_max_<?php echo $crmfc; ?>,
+								main_formula_default_<?php echo $crmfc; ?>: mainFormula_default_<?php echo $crmfc; ?>,
+								main_formula_overload_<?php echo $crmfc; ?>: mainFormula_overload_<?php echo $crmfc; ?>,
+							<?php } ?>
 							weight_coefficient: 			weightCoefficient,					
 							default_multiplier: 			defaultMultiplier,
 							max_multiplier: 				maxMultiplier,
@@ -1671,6 +1726,13 @@
 					saveSettingAjax('config_rainforest_default_store_id', $('select[name=config_rainforest_default_store_id]').val(), $('select[name=config_rainforest_default_store_id]'));
 					saveSettingAjax('config_rainforest_volumetric_max_wc_multiplier', $('input[name=config_rainforest_volumetric_max_wc_multiplier]').val(), $('input[name=config_rainforest_volumetric_max_wc_multiplier]'));
 
+					<?php for ($crmfc = 1; $crmfc <= $this->data['config_rainforest_main_formula_count']; $crmfc++){ ?>
+						saveSettingAjax('config_rainforest_main_formula_min_<?php echo $crmfc; ?>', $('input[name=config_rainforest_main_formula_min_<?php echo $crmfc; ?>]').val(), $('input[name=config_rainforest_main_formula_min_<?php echo $crmfc; ?>]'));
+						saveSettingAjax('config_rainforest_main_formula_max_<?php echo $crmfc; ?>', $('input[name=config_rainforest_main_formula_max_<?php echo $crmfc; ?>]').val(), $('input[name=config_rainforest_main_formula_max_<?php echo $crmfc; ?>]'));
+						saveSettingAjax('config_rainforest_main_formula_default_<?php echo $crmfc; ?>', $('input[name=config_rainforest_main_formula_default_<?php echo $crmfc; ?>]').val(), $('input[name=config_rainforest_main_formula_default_<?php echo $crmfc; ?>]'));
+						saveSettingAjax('config_rainforest_main_formula_overload_<?php echo $crmfc; ?>', $('input[name=config_rainforest_main_formula_overload_<?php echo $crmfc; ?>]').val(), $('input[name=config_rainforest_main_formula_overload_<?php echo $crmfc; ?>]'));
+					<?php } ?>
+
 					<?php foreach ($stores as $store) { ?>
 						saveSettingAjax('config_rainforest_kg_price_<?php echo $store['store_id']?>', $('input[name=config_rainforest_kg_price_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_kg_price_<?php echo $store['store_id']?>]'));
 						saveSettingAjax('config_rainforest_default_multiplier_<?php echo $store['store_id']?>', $('input[name=config_rainforest_default_multiplier_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_default_multiplier_<?php echo $store['store_id']?>]'));
@@ -1693,8 +1755,29 @@
 						}
 					<?php } ?>
 
-					<?php foreach ($stores as $store) { ?>
+					<?php for ($crmfc = 1; $crmfc <= $this->data['config_rainforest_main_formula_count']; $crmfc++){ ?>					
+						if (key == 'config_rainforest_main_formula_min_<?php echo $crmfc; ?>'){
+							console.log('Pricelogic skip autosave: ' + key);
+							return;
+						}
 
+						if (key == 'config_rainforest_main_formula_max_<?php echo $crmfc; ?>'){
+							console.log('Pricelogic skip autosave: ' + key);
+							return;
+						}
+
+						if (key == 'config_rainforest_main_formula_default_<?php echo $crmfc; ?>'){
+							console.log('Pricelogic skip autosave: ' + key);
+							return;
+						}
+
+						if (key == 'config_rainforest_main_formula_overload_<?php echo $crmfc; ?>'){
+							console.log('Pricelogic skip autosave: ' + key);
+							return;
+						}
+					<?php } ?>
+
+					<?php foreach ($stores as $store) { ?>
 						if (key == 'config_rainforest_default_multiplier_<?php echo $store['store_id']?>'){
 							console.log('Pricelogic skip autosave: ' + key);
 							return;
@@ -1719,7 +1802,6 @@
 							console.log('Pricelogic skip autosave: ' + key);
 							return;
 						}
-
 					<?php } ?>
 
 					var elem = $(this);

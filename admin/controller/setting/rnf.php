@@ -166,6 +166,40 @@ class ControllerSettingRnf extends Controller {
 			}
 		}
 
+		$this->data['config_currency'] = $this->config->get('config_currency');
+
+		if (isset($this->request->post['config_rainforest_main_formula_count'])) {
+            $this->data['config_rainforest_main_formula_count'] = $this->request->post['config_rainforest_main_formula_count'];
+        } else {
+            $this->data['config_rainforest_main_formula_count'] = $this->config->get('config_rainforest_main_formula_count');
+        }
+
+        for ($crmfc = 1; $crmfc <= $this->data['config_rainforest_main_formula_count']; $crmfc++){
+            if (isset($this->request->post['config_rainforest_main_formula_overload_' . $crmfc])) {
+                $this->data['config_rainforest_main_formula_overload_' . $crmfc] = $this->request->post['config_rainforest_main_formula_overload_' . $crmfc];
+            } else {
+                $this->data['config_rainforest_main_formula_overload_' . $crmfc] = $this->config->get('config_rainforest_main_formula_overload_' . $crmfc);
+            }
+
+            if (isset($this->request->post['config_rainforest_main_formula_min_' . $crmfc])) {
+                $this->data['config_rainforest_main_formula_min_' . $crmfc] = $this->request->post['config_rainforest_main_formula_min_' . $crmfc];
+            } else {
+                $this->data['config_rainforest_main_formula_min_' . $crmfc] = $this->config->get('config_rainforest_main_formula_min_' . $crmfc);
+            }
+
+            if (isset($this->request->post['config_rainforest_main_formula_default_' . $crmfc])) {
+                $this->data['config_rainforest_main_formula_default_' . $crmfc] = $this->request->post['config_rainforest_main_formula_default_' . $crmfc];
+            } else {
+                $this->data['config_rainforest_main_formula_default_' . $crmfc] = $this->config->get('config_rainforest_main_formula_default_' . $crmfc);
+            }
+
+            if (isset($this->request->post['config_rainforest_main_formula_max_' . $crmfc])) {
+                $this->data['config_rainforest_main_formula_max_' . $crmfc] = $this->request->post['config_rainforest_main_formula_max_' . $crmfc];
+            } else {
+                $this->data['config_rainforest_main_formula_max_' . $crmfc] = $this->config->get('config_rainforest_main_formula_max_' . $crmfc);
+            }
+        }
+
 		foreach ($this->pricing_settings as $pricing_setting){
 			$this->data[$pricing_setting] = $this->config->get($pricing_setting);		
 		}
@@ -222,65 +256,21 @@ class ControllerSettingRnf extends Controller {
 
 	}
 
-	public function calculate(
-		$mainFormula 				= '', 
-		$weightCoefficient 			= 0, 
-		$defaultMultiplier 			= 0, 
-		$maxMultiplier 				= 0,
-		$useVolumetricWeight 		= false, 
-		$volumetricWeightCoefficient 	= 0, 
-		$volumetricMaxWCMultiplier 		= 0,
-		$showRandomProducts 			= false, 
-		$limitProducts 					= 0, 
-		$zonesConfig 					= '',
-		$explicitProducts 				= ''
-		){
-
+	public function calculate(){
 		$this->load->model('catalog/product');		
+		$mainFormula 					= $this->request->post['main_formula'];
+		$weightCoefficient 				= $this->request->post['weight_coefficient'];
+		$defaultMultiplier				= $this->request->post['default_multiplier'];
+		$maxMultiplier					= $this->request->post['max_multiplier'];
+		$useVolumetricWeight			= $this->request->post['use_volumetric_weight'];
+		$volumetricWeightCoefficient 	= $this->request->post['volumetric_weight_coefficient'];
+		$volumetricMaxWCMultiplier 		= $this->request->post['volumetric_max_wc_multiplier'];
+		$showRandomProducts 			= $this->request->post['show_random_products'];
+		$limitProducts 					= $this->request->post['limit_products'];
+		$zonesConfig 					= $this->request->post['zones_config'];
+		$explicitProducts 				= $this->request->post['explicit_products'];
 
-		if (empty($mainFormula)){
-			$mainFormula 		= $this->request->post['main_formula'];
-		}
-
-		if (empty($weightCoefficient)){
-			$weightCoefficient 	= $this->request->post['weight_coefficient'];
-		}
-
-		if (empty($defaultMultiplier)){
-			$defaultMultiplier	= $this->request->post['default_multiplier'];
-		}
-
-		if (empty($maxMultiplier)){
-			$maxMultiplier	= $this->request->post['max_multiplier'];
-		}
-
-		if (empty($useVolumetricWeight)){
-			$useVolumetricWeight	= $this->request->post['use_volumetric_weight'];
-		}
-
-		if (empty($volumetricWeightCoefficient)){
-			$volumetricWeightCoefficient = $this->request->post['volumetric_weight_coefficient'];
-		}
-
-		if (empty($volumetricMaxWCMultiplier)){
-			$volumetricMaxWCMultiplier = $this->request->post['volumetric_max_wc_multiplier'];
-		}
-
-		if (empty($showRandomProducts)){
-			$showRandomProducts = $this->request->post['show_random_products'];
-		}
-
-		if (empty($limitProducts)){
-			$limitProducts = $this->request->post['limit_products'];
-		}
-
-		if (empty($zonesConfig)){
-			$zonesConfig = $this->request->post['zones_config'];
-		}
-
-		if (empty($explicitProducts)){
-			$explicitProducts = $this->request->post['explicit_products'];			
-		}
+		$formulaOverloadData			= []; 	
 
 		if ($explicitProducts){
 			$explodedExplicitProducts = explode(' ', $explicitProducts);
@@ -288,6 +278,21 @@ class ControllerSettingRnf extends Controller {
 
 			foreach ($explodedExplicitProducts as $explicitProduct){
 				$explicitProducts[] = (int)trim($explicitProduct);
+			}
+		}
+
+		for ($crmfc = 1; $crmfc <= $this->config->get('config_rainforest_main_formula_count'); $crmfc++){			
+			if (!empty($this->request->post['main_formula_min_' . $crmfc])
+				&& !empty($this->request->post['main_formula_max_' . $crmfc])
+				&& !empty($this->request->post['main_formula_default_' . $crmfc])
+				&& !empty($this->request->post['main_formula_overload_' . $crmfc])
+			){
+				$formulaOverloadData[$crmfc] = [
+					'min' 		=> (float)$this->request->post['main_formula_min_' . $crmfc],
+					'max' 		=> (float)$this->request->post['main_formula_max_' . $crmfc],
+					'default' 	=> (float)$this->request->post['main_formula_default_' . $crmfc],
+					'formula' 	=> trim($this->request->post['main_formula_overload_' . $crmfc])
+				];
 			}
 		}
 
@@ -386,6 +391,21 @@ class ControllerSettingRnf extends Controller {
 				}
 
 				$result['counted_weight'] =  $this->weight->format($product['counted_weight'], $this->config->get('config_weight_class_id'));
+
+				$result['used_default_multiplier'] 	= $defaultMultiplier;
+				$result['used_formula'] 			= $mainFormula;
+
+				if ($formulaOverloadData && $overloadFormula = $this->rainforestAmazon->offersParser->PriceLogic->checkOverloadFormula($product['amazon_best_price'], $formulaOverloadData)){
+					$defaultMultiplier 		= $overloadFormula['default'];
+					$mainFormula 			= $overloadFormula['formula'];
+
+					$result['formula_overloaded'] 		= true;
+					$result['used_min'] 				= $this->currency->format($overloadFormula['min'], 'EUR', 1);
+					$result['used_max'] 				= $this->currency->format($overloadFormula['max'], 'EUR', 1);
+					$result['used_default_multiplier'] 	= $overloadFormula['default'];
+					$result['used_formula'] 			= $overloadFormula['formula'];
+				}
+
 				$result['counted_price']  = $this->rainforestAmazon->offersParser->PriceLogic->mainFormula($product['amazon_best_price'], $product['counted_weight'], $weightCoefficient, $defaultMultiplier, $maxMultiplier, $mainFormula);
 
 				$result['amazon_best_price'] 		= $this->currency->format($product['amazon_best_price'], 'EUR', 1);

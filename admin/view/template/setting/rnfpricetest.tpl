@@ -35,11 +35,21 @@
 			<td>
 				<small><?php echo $product['name']; ?></small>
 
+				<?php if ($product['formula_overloaded']) { ?>
+					<br />
+					<small style="color:#cf4a61"><?php echo $product['used_formula']; ?></small>
+				<?php } ?>
+
 				<br />
-				<b><?php echo $product['weight']; ?>, <?php echo $product['length']; ?> * <?php echo $product['width']; ?> * <?php echo $product['height']; ?></b>
+				<small><b><?php echo $product['weight']; ?>, <?php echo $product['length']; ?> * <?php echo $product['width']; ?> * <?php echo $product['height']; ?></b></small>
 			</td>
 			<td style="white-space: nowrap;">
 				<?php echo $product['amazon_best_price']; ?>
+
+				<?php if ($product['formula_overloaded']) { ?>
+					<br />
+					<small style="color:#cf4a61"><?php echo $product['used_min']; ?> - <?php echo $product['used_max']; ?></small>
+				<?php } ?>
 			</td>
 			<td style="white-space: nowrap;">
 				<?php echo $product['counted_volumetric_weight_format']; ?>
