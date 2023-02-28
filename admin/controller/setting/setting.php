@@ -206,8 +206,7 @@ class ControllerSettingSetting extends Controller
 
         $this->response->setOutput($sql);
     }
-    
-    
+        
     public function index()
     {
         $this->language->load('setting/setting');
@@ -3667,6 +3666,40 @@ class ControllerSettingSetting extends Controller
             $this->data['config_rainforest_main_formula'] = $this->request->post['config_rainforest_main_formula'];
         } else {
             $this->data['config_rainforest_main_formula'] = $this->config->get('config_rainforest_main_formula');
+        }
+
+        if (isset($this->request->post['config_rainforest_main_formula_count'])) {
+            $this->data['config_rainforest_main_formula_count'] = $this->request->post['config_rainforest_main_formula_count'];
+        } else {
+            $this->data['config_rainforest_main_formula_count'] = $this->config->get('config_rainforest_main_formula_count');
+        }
+
+        for ($crmfc = 1; $crmfc <= $this->data['config_rainforest_main_formula_count']; $crmfc++){
+
+            if (isset($this->request->post['config_rainforest_main_formula_overload_' . $crmfc])) {
+                $this->data['config_rainforest_main_formula_overload_' . $crmfc] = $this->request->post['config_rainforest_main_formula_overload_' . $crmfc];
+            } else {
+                $this->data['config_rainforest_main_formula_overload_' . $crmfc] = $this->config->get('config_rainforest_main_formula_overload_' . $crmfc);
+            }
+
+            if (isset($this->request->post['config_rainforest_main_formula_min_' . $crmfc])) {
+                $this->data['config_rainforest_main_formula_min_' . $crmfc] = $this->request->post['config_rainforest_main_formula_min_' . $crmfc];
+            } else {
+                $this->data['config_rainforest_main_formula_min_' . $crmfc] = $this->config->get('config_rainforest_main_formula_min_' . $crmfc);
+            }
+
+            if (isset($this->request->post['config_rainforest_main_formula_default_' . $crmfc])) {
+                $this->data['config_rainforest_main_formula_default_' . $crmfc] = $this->request->post['config_rainforest_main_formula_default_' . $crmfc];
+            } else {
+                $this->data['config_rainforest_main_formula_default_' . $crmfc] = $this->config->get('config_rainforest_main_formula_default_' . $crmfc);
+            }
+
+            if (isset($this->request->post['config_rainforest_main_formula_max_' . $crmfc])) {
+                $this->data['config_rainforest_main_formula_max_' . $crmfc] = $this->request->post['config_rainforest_main_formula_max_' . $crmfc];
+            } else {
+                $this->data['config_rainforest_main_formula_max_' . $crmfc] = $this->config->get('config_rainforest_main_formula_max_' . $crmfc);
+            }
+
         }
 
         if (isset($this->request->post['config_rainforest_supplierminrating'])) {

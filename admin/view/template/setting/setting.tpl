@@ -5313,16 +5313,21 @@
 								</tr>
 							</table>
 
-							<h2><i class="fa fa-search"></i> Ценообразование Amazon + RainForest API</h2>
+							<h2><i class="fa fa-search"></i> Ценообразование Amazon + RainForest API Основная формула ЦО</h2>
 
 							<table class="form">
 								<tr>
-									<td width="50%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Формула подсчета цены</span></p>
-										<input type="text" name="config_rainforest_main_formula" value="<?php echo $config_rainforest_main_formula; ?>" style="width:500px;" />
+									<td width="60%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Формула подсчета цены по умолчанию</span></p>
+										<input type="text" name="config_rainforest_main_formula" value="<?php echo $config_rainforest_main_formula; ?>" style="width:90%;" />
 									</td>
 
-									<td width="50%">
+									<td width="10%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Шагов</span></p>
+										<input type="number" step="1" name="config_rainforest_main_formula_count" value="<?php echo $config_rainforest_main_formula_count; ?>" size="50" style="width:100px;" />
+									</td>
+
+									<td width="30%">
 										<span class="help">
 											<i class="fa fa-info"></i> <b>PRICE</b>  = цена товара у поставщика<br />
 											<i class="fa fa-info"></i> <b>WEIGHT</b> = подсчитанный вес товара<br />
@@ -5332,8 +5337,49 @@
 											<i class="fa fa-info"></i> <b>DIVIDE</b> = знак / нужно заменять на слово, в силу технических ограничений<br />
 										</span>
 									</td>
-								</tr>
+								</tr>								
 							</table>
+
+							<table class="form">
+								<tr>
+									<td width="1%">										
+									</td>
+									<td width="10%">
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Цена закупки от, <?php echo $config_currency; ?></span>
+									</td>
+									<td width="10%">
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Цена закупки до, <?php echo $config_currency; ?></span>
+									</td>
+									<td width="10%">
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Если нет веса</span>
+									</td>
+									<td width="69%">
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Формула</span>
+									</td>
+								</tr>
+								<?php for ($crmfc = 1; $crmfc <= $config_rainforest_main_formula_count; $crmfc++){ ?>
+									<tr>
+										<td width="10%">
+											<b><?php echo $crmfc; ?></b>
+										</td>
+										<td width="10%">
+											<input type="number" step="1" name="config_rainforest_main_formula_min_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_min_' . $crmfc}; ?>" size="50" style="width:100px; border-color:#00ad07;" />
+										</td>
+										<td width="10%">
+											<input type="number" step="1" name="config_rainforest_main_formula_max_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_max_' . $crmfc}; ?>" size="50" style="width:100px; border-color:#cf4a61;" />
+										</td>
+										<td width="10%">
+											<input type="number" step=".1" name="config_rainforest_main_formula_default_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_default_' . $crmfc}; ?>" size="50" style="width:100px; border-color:#D69241;" />
+										</td>
+										<td width="79%">
+											<input type="text" name="config_rainforest_main_formula_overload_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_overload_' . $crmfc}; ?>" style="width:90%;  border-color:#7F00FF;" />
+										</td>
+									</tr>
+								<?php } ?>
+							</table>
+
+
+							<h2><i class="fa fa-search"></i> Ценообразование Amazon + RainForest API</h2>
 
 							<table class="form">
 								<tr>
