@@ -358,6 +358,17 @@ class PriceLogic
 		return $query->num_rows;
 	}
 
+	//Проверяет вхождение товара в ценовые диапазоны перезагружающих основную формул
+	public function checkOverloadFormula($amazonBestPrice, $formulaOverloadData = []){
+		foreach ($formulaOverloadData as $key => $formula){
+			if ($amazonBestPrice >= $formula['min'] && $amazonBestPrice < $formula['max']){
+				return $formula;
+			}
+		}
+
+		return false;
+	}
+
 	//Это прямо самая важная функция)))
 	public function mainFormula($amazonBestPrice, $productWeight, $weightCoefficient, $defaultMultiplier, $maxMultiplier, $overloadMainFormula = false){
 
