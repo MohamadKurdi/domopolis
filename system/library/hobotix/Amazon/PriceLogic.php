@@ -358,7 +358,7 @@ class PriceLogic
 		return $query->num_rows;
 	}
 
-	//Проверяет вхождение товара в ценовые диапазоны перезагружающих основную формул
+	//Проверяет вхождение товара в ценовые диапазоны перезагружающих основную формулу
 	public function checkOverloadFormula($amazonBestPrice, $formulaOverloadData = []){
 		foreach ($formulaOverloadData as $key => $formula){
 			if ($amazonBestPrice >= $formula['min'] && $amazonBestPrice < $formula['max']){
@@ -376,11 +376,30 @@ class PriceLogic
 			$mainFormula = $overloadMainFormula;
 		} else {
 			$mainFormula = $this->config->get('config_rainforest_main_formula');
-		}
+		}		
 
 		if ($productWeight){
+			$from = [
+				'PRICE',
+				'WEIGHT',
+				'KG_LOGISTIC',
+				'PLUS', 
+				'MINUS',
+				'MULTIPLY', 
+				'DIVIDE'
+			];
 
-			$mainFormula = str_replace(['PRICE','WEIGHT','KG_LOGISTIC','PLUS', 'MULTIPLY', 'DIVIDE'], [$amazonBestPrice, $productWeight, $weightCoefficient, '+', '*', '/'], $mainFormula);
+			$to = [
+				$amazonBestPrice, 
+				$productWeight, 
+				$weightCoefficient, 
+				'+', 
+				'-',
+				'*', 
+				'/'
+			];
+
+			$mainFormula = str_replace($from, $to, $mainFormula);
 			$resultPrice = eval('return ' . $mainFormula . ';');
 
 			if ($resultPrice > $amazonBestPrice * $maxMultiplier){
@@ -478,8 +497,26 @@ class PriceLogic
 							$defaultMultiplier 	= $this->config->get('config_rainforest_default_multiplier_' . $store_id);
 							$maxMultiplier 		= $this->config->get('config_rainforest_max_multiplier_' . $store_id);
 
+							$paramVATSRC 		= $this->config->get('config_rainforest_formula_vat_src_' . $store_id);
+							$paramVATDST 		= $this->config->get('config_rainforest_formula_vat_dst_' . $store_id);
+							$paramTAX 			= $this->config->get('config_rainforest_formula_tax_' . $store_id);
+							$paramSUPLLIER 		= $this->config->get('config_rainforest_formula_supplier_' . $store_id);
+							$paramINVOICE 		= $this->config->get('config_rainforest_formula_invoice_' . $store_id);
+
 							if ($weightCoefficient || $defaultMultiplier){
 								if ($this->checkIfWeCanUpdateProductOffers($product_id, $warehouse_identifier)){
+
+									$params = [
+										'productWeight' 	=> $productWeight,
+										'weightCoefficient' => $weightCoefficient,
+										'defaultMultiplier' => $defaultMultiplier,
+										'maxMultiplier' 	=> $maxMultiplier,
+										'paramVATSRC' 		=> $paramVATSRC,
+										'paramVATDST' 		=> $paramVATDST,
+										'paramTAX' 			=> $paramTAX,
+										'paramSUPLLIER' 	=> $paramSUPLLIER,
+										'paramINVOICE' 		=> $paramINVOICE										
+									];
 
 									$newPrice = $this->mainFormula($amazonBestPrice, $productWeight, $weightCoefficient, $defaultMultiplier, $maxMultiplier);
 
