@@ -5332,6 +5332,12 @@
 											<i class="fa fa-info"></i> <b>PRICE</b>  = цена товара у поставщика<br />
 											<i class="fa fa-info"></i> <b>WEIGHT</b> = подсчитанный вес товара<br />
 											<i class="fa fa-info"></i> <b>KG_LOGISTIC</b> = стоимость логистики одного килограмма<br />
+											<i class="fa fa-info"></i> <b>VAT_SRC</b> = VAT/НДС страны - поставщика<br />
+											<i class="fa fa-info"></i> <b>VAT_DST</b> = VAT/НДС страны - получателя<br />
+											<i class="fa fa-info"></i> <b>TAX</b> = дополнительный налог<br />
+											<i class="fa fa-info"></i> <b>SUPPLIER</b> = процент поставщика<br />
+											<i class="fa fa-info"></i> <b>INVOICE</b> = коэффициент инвойса<br />
+											
 											<i class="fa fa-info"></i> <b>PLUS</b> = знак + нужно заменять на слово, в силу технических ограничений<br />
 											<i class="fa fa-info"></i> <b>MULTIPLY</b> = знак * нужно заменять на слово, в силу технических ограничений<br />
 											<i class="fa fa-info"></i> <b>DIVIDE</b> = знак / нужно заменять на слово, в силу технических ограничений<br />

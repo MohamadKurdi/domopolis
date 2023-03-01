@@ -213,6 +213,46 @@ class ControllerSettingRnf extends Controller {
 		}
 
 		foreach ($this->data['stores']  as $store){
+			if (isset($this->request->post['config_rainforest_formula_vat_src_' . $store['store_id']])) {
+				$this->data['config_rainforest_formula_vat_src_' . $store['store_id']] = $this->request->post['config_rainforest_formula_vat_src_' . $store['store_id']]; 
+			} else {
+				$this->data['config_rainforest_formula_vat_src_' . $store['store_id']] = $this->config->get('config_rainforest_formula_vat_src_' . $store['store_id']);
+			}
+		}
+
+		foreach ($this->data['stores']  as $store){
+			if (isset($this->request->post['config_rainforest_formula_vat_dst_' . $store['store_id']])) {
+				$this->data['config_rainforest_formula_vat_dst_' . $store['store_id']] = $this->request->post['config_rainforest_formula_vat_dst_' . $store['store_id']]; 
+			} else {
+				$this->data['config_rainforest_formula_vat_dst_' . $store['store_id']] = $this->config->get('config_rainforest_formula_vat_dst_' . $store['store_id']);
+			}
+		}
+
+		foreach ($this->data['stores']  as $store){
+			if (isset($this->request->post['config_rainforest_formula_tax_' . $store['store_id']])) {
+				$this->data['config_rainforest_formula_tax_' . $store['store_id']] = $this->request->post['config_rainforest_formula_tax_' . $store['store_id']]; 
+			} else {
+				$this->data['config_rainforest_formula_tax_' . $store['store_id']] = $this->config->get('config_rainforest_formula_tax_' . $store['store_id']);
+			}
+		}
+
+		foreach ($this->data['stores']  as $store){
+			if (isset($this->request->post['config_rainforest_formula_supplier_' . $store['store_id']])) {
+				$this->data['config_rainforest_formula_supplier_' . $store['store_id']] = $this->request->post['config_rainforest_formula_supplier_' . $store['store_id']]; 
+			} else {
+				$this->data['config_rainforest_formula_supplier_' . $store['store_id']] = $this->config->get('config_rainforest_formula_supplier_' . $store['store_id']);
+			}
+		}
+
+		foreach ($this->data['stores']  as $store){
+			if (isset($this->request->post['config_rainforest_formula_invoice_' . $store['store_id']])) {
+				$this->data['config_rainforest_formula_invoice_' . $store['store_id']] = $this->request->post['config_rainforest_formula_invoice_' . $store['store_id']]; 
+			} else {
+				$this->data['config_rainforest_formula_invoice_' . $store['store_id']] = $this->config->get('config_rainforest_formula_invoice_' . $store['store_id']);
+			}
+		}
+
+		foreach ($this->data['stores']  as $store){
 			if (isset($this->request->post['config_rainforest_default_multiplier_' . $store['store_id']])) {
 				$this->data['config_rainforest_default_multiplier_' . $store['store_id']] = $this->request->post['config_rainforest_default_multiplier_' . $store['store_id']]; 
 			} else {
@@ -253,7 +293,6 @@ class ControllerSettingRnf extends Controller {
 		);
 		
 		$this->response->setOutput($this->render());
-
 	}
 
 	public function calculate(){
@@ -405,6 +444,13 @@ class ControllerSettingRnf extends Controller {
 					$result['used_default_multiplier'] 	= $overloadFormula['default'];
 					$result['used_formula'] 			= $overloadFormula['formula'];
 				}
+
+				$mainFormulaParams = [
+					'productWeight' 	=> $product['counted_weight'],
+					'weightCoefficient' => $weightCoefficient,
+					'defaultMultiplier' => $defaultMultiplier,
+					'maxMultiplier' 	=> $maxMultiplier					
+				];
 
 				$result['counted_price']  = $this->rainforestAmazon->offersParser->PriceLogic->mainFormula($product['amazon_best_price'], $product['counted_weight'], $weightCoefficient, $defaultMultiplier, $maxMultiplier, $mainFormula);
 

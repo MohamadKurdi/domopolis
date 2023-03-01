@@ -1232,8 +1232,98 @@
 								<td><b>KG_LOGISTIC</b></td><td>стоимость логистики одного килограмма</td>
 							</tr>
 
+							<?php foreach ($stores as $store) { ?>
+								<tr>
+									<td class="right">
+										<?php echo $store['name']; ?>
+									</td>
+									<td class="center">
+										<input type="number" step="0.1" name="config_rainforest_kg_price_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_kg_price_' . $store['store_id']}; ?>" style="width:100px;" />
+									</td>
+								</tr>
+							<?php } ?>
+
+							<tr>
+								<td><b>VAT_SRC</b></td><td>VAT/НДС страны - поставщика</td>
+							</tr>
+
+							<?php foreach ($stores as $store) { ?>
+								<tr>
+									<td class="right">
+										<?php echo $store['name']; ?>
+									</td>
+									<td class="center">
+										<input type="number" step="0.1" name="config_rainforest_formula_vat_src_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_formula_vat_src_' . $store['store_id']}; ?>" style="width:100px;" />
+									</td>
+								</tr>
+							<?php } ?>
+
+							<tr>
+								<td><b>VAT_DST</b></td><td>VAT/НДС страны - получателя</td>
+							</tr>
+
+							<?php foreach ($stores as $store) { ?>
+								<tr>
+									<td class="right">
+										<?php echo $store['name']; ?>
+									</td>
+									<td class="center">
+										<input type="number" step="0.1" name="config_rainforest_formula_vat_dst_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_formula_vat_dst_' . $store['store_id']}; ?>" style="width:100px;" />
+									</td>
+								</tr>
+							<?php } ?>
+
+							<tr>
+								<td><b>TAX</b></td><td>дополнительный налог</td>
+							</tr>
+
+							<?php foreach ($stores as $store) { ?>
+								<tr>
+									<td class="right">
+										<?php echo $store['name']; ?>
+									</td>
+									<td class="center">
+										<input type="number" step="0.1" name="config_rainforest_formula_tax_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_formula_tax_' . $store['store_id']}; ?>" style="width:100px;" />
+									</td>
+								</tr>
+							<?php } ?>
+
+							<tr>
+								<td><b>SUPPLIER</b></td><td>процент поставщика</td>
+							</tr>
+
+							<?php foreach ($stores as $store) { ?>
+								<tr>
+									<td class="right">
+										<?php echo $store['name']; ?>
+									</td>
+									<td class="center">
+										<input type="number" step="0.1" name="config_rainforest_formula_supplier_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_formula_supplier_' . $store['store_id']}; ?>" style="width:100px;" />
+									</td>
+								</tr>
+							<?php } ?>
+
+							<tr>
+								<td><b>INVOICE</b></td><td>коэффициент инвойса</td>
+							</tr>
+
+							<?php foreach ($stores as $store) { ?>
+								<tr>
+									<td class="right">
+										<?php echo $store['name']; ?>
+									</td>
+									<td class="center">
+										<input type="number" step="0.1" name="config_rainforest_formula_invoice_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_formula_invoice_' . $store['store_id']}; ?>" style="width:100px;" />
+									</td>
+								</tr>
+							<?php } ?>
+
 							<tr>
 								<td><b>PLUS</b></td><td>операция добавления (знак +)</td>
+							</tr>
+
+							<tr>
+								<td><b>MINUS</b></td><td>операция отрицания (знак -)</td>
 							</tr>
 
 							<tr>
@@ -1299,7 +1389,7 @@
 					<table class="list">
 						<tr>
 							<td colspan="3" class="left" style="color:#D69241;">
-								<i class="fa fa-calculator"></i> <b>Коэффициенты</b>
+								<i class="fa fa-calculator"></i> <b>Другие параметры</b>
 							</td>
 						</tr>
 						<tr>
@@ -1333,23 +1423,7 @@
 									<i class="fa fa-info-circle"></i> Защита от некорректного большого объемного веса, в случае если Амазон отдает габарит товара, который фактически складывается. Если объемный вес будет больше в Х раз чем фактический, то объемный учтён не будет.
 								</span>
 							</td>
-						</tr>
-
-						<?php foreach ($stores as $store) { ?>
-							<tr>
-								<td class="right">
-									Стоимость логистики 1 кг в Евро, <?php echo $store['name']; ?>
-								</td>
-								<td style="width:100px;" class="center">
-									<input type="number" step="0.1" name="config_rainforest_kg_price_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_kg_price_' . $store['store_id']}; ?>" style="width:100px;" />
-								</td>
-								<td>
-									<span class="help">
-										<i class="fa fa-info-circle"></i> Заданная стоимость логистики 1 кг груза в страну-назначения. В формуле - переменная <b>KG_LOGISTIC</b>
-									</span>
-								</td>
-							</tr>
-						<?php } ?>
+						</tr>						
 
 						<?php foreach ($stores as $store) { ?>
 							<tr>
