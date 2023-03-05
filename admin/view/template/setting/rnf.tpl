@@ -1770,11 +1770,11 @@
 				});		
 
 				function saveSettingAjax(key, value, elem){
-
 					var store_id = $('input[name=store_id]').val();
 
 					$.ajax({
 						type: 'POST',
+						async: false,
 						url: 'index.php?route=setting/setting/editSettingAjax&store_id=' + store_id + '&token=<?php echo $token; ?>',
 						data: {
 							key: key,

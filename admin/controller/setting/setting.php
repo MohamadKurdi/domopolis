@@ -175,7 +175,7 @@ class ControllerSettingSetting extends Controller
         $store_id   = $this->request->get['store_id'];
         $key        = $this->request->post['key'];
 
-        if (!empty($this->request->post['value'])){
+        if (isset($this->request->post['value'])){
             $value      = $this->request->post['value'];
         } else {
             $value      = '';
