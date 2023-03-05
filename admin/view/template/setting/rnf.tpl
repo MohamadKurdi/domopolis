@@ -1157,7 +1157,7 @@
 				<div id="tab-priceformula">									
 					<div style="float:left; width:59%;">
 						<div>							
-							<textarea name="config_rainforest_main_formula" rows="3" style="width:70%; font-size:12px; padding:6px; float:left; border-color:#7F00FF;" ><?php echo $config_rainforest_main_formula; ?></textarea>
+							<textarea name="config_rainforest_main_formula" rows="5" style="width:70%; font-size:11px; padding:6px; float:left; border-color:#7F00FF;" ><?php echo $config_rainforest_main_formula; ?></textarea>
 
 							<span style="float:right; width:10%; font-size:32px; margin-left:20px; cursor:pointer;" onclick="$('#formulas_overload').toggle();">ЕЩЕ <i class="fa fa-caret-down"></i></span>
 							<input type="number" step="1" name="config_rainforest_main_formula_count" value="<?php echo $config_rainforest_main_formula_count; ?>" size="50" style="float:right; width:10%;font-size:14px; padding:6px;" />						
@@ -1197,7 +1197,7 @@
 											<input type="number" step=".1" name="config_rainforest_main_formula_default_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_default_' . $crmfc}; ?>" size="50" style="width:100px; border-color:#D69241;" />
 										</td>
 										<td width="84%">
-											<textarea name="config_rainforest_main_formula_overload_<?php echo $crmfc; ?>" rows="3" style="width:95%; font-size:12px; border-color:#7F00FF;" ><?php echo ${'config_rainforest_main_formula_overload_' . $crmfc}; ?></textarea>
+											<textarea name="config_rainforest_main_formula_overload_<?php echo $crmfc; ?>" rows="5" style="width:95%; font-size:11px; border-color:#7F00FF;" ><?php echo ${'config_rainforest_main_formula_overload_' . $crmfc}; ?></textarea>
 										</td>
 									</tr>
 								<?php } ?>

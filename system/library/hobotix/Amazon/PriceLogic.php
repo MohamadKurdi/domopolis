@@ -25,7 +25,6 @@ class PriceLogic
 	private $storesSettingsFields2 	= ['config_rainforest_use_volumetric_weight', 'config_rainforest_volumetric_weight_coefficient'];
 
 	public function __construct($registry){
-
 		$this->config 	= $registry->get('config');
 		$this->db 		= $registry->get('db');
 		$this->weight 	= $registry->get('weight');
@@ -37,23 +36,23 @@ class PriceLogic
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/PriceHistory.php');
 		$this->priceHistory = new PriceHistory($registry);
 
-		$this->cacheFormulaOverloadData()->cacheCategoryDimensions()->setStoreSettings();
+		$this->cacheCategoryDimensions()->setStoreSettings()->cacheFormulaOverloadData();
 
 		$this->log = new \Log('amazon_offers_priceupdate.txt');
 
 	}
 
 	private function cacheFormulaOverloadData(){
-		for ($crmfc = 1; $crmfc <= $this->config->get('config_rainforest_main_formula_count'); $crmfc++){
+		for ($crmfc = 1; $crmfc <= (int)$this->config->get('config_rainforest_main_formula_count'); $crmfc++){
 			if (!empty($this->config->get('config_rainforest_main_formula_min_' . $crmfc))
 				&& !empty($this->config->get('config_rainforest_main_formula_max_' . $crmfc))
-				&& !empty($this->config->get('config_rainforest_main_formula_default' . $crmfc))
+				&& !empty($this->config->get('config_rainforest_main_formula_default_' . $crmfc))
 				&& !empty($this->config->get('config_rainforest_main_formula_overload_' . $crmfc))
 			){
 				$this->formulaOverloadData[$crmfc] = [					
 					'min' 		=> (float)$this->config->get('config_rainforest_main_formula_min_' . $crmfc),
 					'max' 		=> (float)$this->config->get('config_rainforest_main_formula_max_' . $crmfc),
-					'default' 	=> (float)$this->config->get('config_rainforest_main_formula_default' . $crmfc),
+					'default' 	=> (float)$this->config->get('config_rainforest_main_formula_default_' . $crmfc),
 					'formula' 	=> trim($this->config->get('config_rainforest_main_formula_overload_' . $crmfc))
 				];
 			}
@@ -256,7 +255,6 @@ class PriceLogic
 			return false;
 	}
 
-
 	public function getProductsByAsin($asin){
 		$query = $this->db->query("SELECT *, (SELECT category_id FROM product_to_category p2cm WHERE p2cm.product_id = p.product_id AND category_id NOT IN (" . implode(',', $this->excluded_categories) . ") ORDER BY main_category DESC LIMIT 1) as main_category_id FROM product p WHERE asin = '" . $this->db->escape($asin) . "' AND is_markdown = 0 AND status = 1");
 
@@ -437,6 +435,7 @@ class PriceLogic
 
 		foreach ($formulaOverloadData as $key => $formula){
 			if ($amazonBestPrice >= $formula['min'] && $amazonBestPrice < $formula['max']){
+				echoLine('[PriceLogic] Price ' . $amazonBestPrice . ' in range ' . $formula['min'] . '-' . $formula['max'] . ', overloaded formula:' . $formula['formula'], 'w');
 				return $formula;
 			}
 		}
@@ -485,6 +484,8 @@ class PriceLogic
 			];
 
 			$mainFormula = str_replace($from, $to, $mainFormula);
+		//	echoLine('Compiled formula:' . $mainFormula, 'i');
+
 			$resultPrice = eval('return ' . $mainFormula . ';');
 
 			if ($resultPrice > $amazonBestPrice * $data['MAX_MULTIPLIER']){
@@ -541,19 +542,18 @@ class PriceLogic
 										'VAT_SRC' 				=> (float)$this->config->get('config_rainforest_formula_vat_src_' . $store_id),
 										'VAT_DST' 				=> (float)$this->config->get('config_rainforest_formula_vat_dst_' . $store_id),
 										'TAX' 					=> (float)$this->config->get('config_rainforest_formula_tax_' . $store_id),
-										'SUPLLIER' 				=> (float)$this->config->get('config_rainforest_formula_supplier_' . $store_id),
+										'SUPPLIER' 				=> (float)$this->config->get('config_rainforest_formula_supplier_' . $store_id),
 										'INVOICE' 				=> (float)$this->config->get('config_rainforest_formula_invoice_' . $store_id)										
 									];
 
 									if ($overloadMainFormula = $this->checkOverloadFormula($amazonBestPrice)){
 										$params['DEFAULT_MULTIPLIER'] = $overloadMainFormula['default'];
 										$newPrice = $this->mainFormula($amazonBestPrice, $params, $overloadMainFormula['formula']);
-										echoLine('[PriceLogic] Formula overloaded, price in range ' . $overloadMainFormula['min'] . ' - ' . $overloadMainFormula['max'], 'w');
 									} else {
 										$newPrice = $this->mainFormula($amazonBestPrice, $params);
 									}									
 
-									$logString = 'Product ' . $product_id . ', ' . $asin . ', wght: ' . $productWeight . ', price for store ' . $store_id . ' is ' . $newPrice . ' EUR';
+									$logString = ' Product ' . $product_id . ', ' . $asin . ', price ' . $amazonBestPrice . ', wght: ' . $productWeight . ', price for store ' . $store_id . ' is ' . $newPrice . ' EUR';
 									$this->log->write($logString);
 									echoLine('[PriceLogic]' . $logString, 'i');
 
