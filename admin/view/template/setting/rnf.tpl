@@ -1156,8 +1156,9 @@
 
 				<div id="tab-priceformula">									
 					<div style="float:left; width:59%;">
-						<div>
-							<input type="text" name="config_rainforest_main_formula" value="<?php echo $config_rainforest_main_formula; ?>" style="width:70%; font-size:14px; padding:6px; float:left;" />
+						<div>							
+							<textarea name="config_rainforest_main_formula" rows="3" style="width:70%; font-size:12px; padding:6px; float:left; border-color:#7F00FF;" ><?php echo $config_rainforest_main_formula; ?></textarea>
+
 							<span style="float:right; width:10%; font-size:32px; margin-left:20px; cursor:pointer;" onclick="$('#formulas_overload').toggle();">ЕЩЕ <i class="fa fa-caret-down"></i></span>
 							<input type="number" step="1" name="config_rainforest_main_formula_count" value="<?php echo $config_rainforest_main_formula_count; ?>" size="50" style="float:right; width:10%;font-size:14px; padding:6px;" />						
 						</div>
@@ -1168,35 +1169,35 @@
 								<tr>
 									<td width="1%">										
 									</td>
-									<td width="10%">
+									<td width="5%">
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Цена закупки от, <?php echo $config_currency; ?></span>
 									</td>
-									<td width="10%">
+									<td width="5%">
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Цена закупки до, <?php echo $config_currency; ?></span>
 									</td>
-									<td width="10%">
+									<td width="5%">
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Умножать, если нет веса</span>
 									</td>
-									<td width="69%">
+									<td width="84%">
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Переназначение основной формулы</span>
 									</td>
 								</tr>
 								<?php for ($crmfc = 1; $crmfc <= $config_rainforest_main_formula_count; $crmfc++){ ?>
 									<tr>
-										<td width="10%">
+										<td width="1%">
 											<b><?php echo $crmfc; ?></b>
 										</td>
-										<td width="10%">
+										<td width="5%">
 											<input type="number" step="1" name="config_rainforest_main_formula_min_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_min_' . $crmfc}; ?>" size="50" style="width:100px; border-color:#00ad07;" />
 										</td>
-										<td width="10%">
+										<td width="5%">
 											<input type="number" step="1" name="config_rainforest_main_formula_max_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_max_' . $crmfc}; ?>" size="50" style="width:100px; border-color:#cf4a61;" />
 										</td>
-										<td width="10%">
+										<td width="5%">
 											<input type="number" step=".1" name="config_rainforest_main_formula_default_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_default_' . $crmfc}; ?>" size="50" style="width:100px; border-color:#D69241;" />
 										</td>
-										<td width="79%">
-											<input type="text" name="config_rainforest_main_formula_overload_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_overload_' . $crmfc}; ?>" style="width:90%; font-size:12px;  border-color:#7F00FF;" />
+										<td width="84%">
+											<textarea name="config_rainforest_main_formula_overload_<?php echo $crmfc; ?>" rows="3" style="width:95%; font-size:12px; border-color:#7F00FF;" ><?php echo ${'config_rainforest_main_formula_overload_' . $crmfc}; ?></textarea>
 										</td>
 									</tr>
 								<?php } ?>
@@ -1221,30 +1222,15 @@
 							</tr>
 
 							<tr>
-								<td><b>PRICE</b></td><td>цена товара у поставщика</td>
+								<td><b>PRICE</b></td><td><i class="fa fa-info-circle"></i> цена товара у поставщика</td>
 							</tr>
 
 							<tr>
-								<td><b>WEIGHT</b></td><td>подсчитанный вес товара</td>
+								<td><b>WEIGHT</b></td><td> <i class="fa fa-info-circle"></i> подсчитанный вес товара</td>
 							</tr>
 
 							<tr>
-								<td><b>KG_LOGISTIC</b></td><td>стоимость логистики одного килограмма</td>
-							</tr>
-
-							<?php foreach ($stores as $store) { ?>
-								<tr>
-									<td class="right">
-										<?php echo $store['name']; ?>
-									</td>
-									<td class="center">
-										<input type="number" step="0.1" name="config_rainforest_kg_price_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_kg_price_' . $store['store_id']}; ?>" style="width:100px;" />
-									</td>
-								</tr>
-							<?php } ?>
-
-							<tr>
-								<td><b>VAT_SRC</b></td><td>VAT/НДС страны - поставщика</td>
+								<td><b>KG_LOGISTIC</b></td><td><i class="fa fa-info-circle"></i> стоимость логистики одного килограмма</td>
 							</tr>
 
 							<?php foreach ($stores as $store) { ?>
@@ -1253,13 +1239,13 @@
 										<?php echo $store['name']; ?>
 									</td>
 									<td class="center">
-										<input type="number" step="0.1" name="config_rainforest_formula_vat_src_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_formula_vat_src_' . $store['store_id']}; ?>" style="width:100px;" />
+										<input type="number" step="0.01" name="config_rainforest_kg_price_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_kg_price_' . $store['store_id']}; ?>" style="width:100px;" />
 									</td>
 								</tr>
 							<?php } ?>
 
 							<tr>
-								<td><b>VAT_DST</b></td><td>VAT/НДС страны - получателя</td>
+								<td><b>VAT_SRC</b></td><td><i class="fa fa-info-circle"></i> VAT/НДС страны - поставщика</td>
 							</tr>
 
 							<?php foreach ($stores as $store) { ?>
@@ -1268,13 +1254,13 @@
 										<?php echo $store['name']; ?>
 									</td>
 									<td class="center">
-										<input type="number" step="0.1" name="config_rainforest_formula_vat_dst_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_formula_vat_dst_' . $store['store_id']}; ?>" style="width:100px;" />
+										<input type="number" step="0.01" name="config_rainforest_formula_vat_src_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_formula_vat_src_' . $store['store_id']}; ?>" style="width:100px;" />
 									</td>
 								</tr>
 							<?php } ?>
 
 							<tr>
-								<td><b>TAX</b></td><td>дополнительный налог</td>
+								<td><b>VAT_DST</b></td><td><i class="fa fa-info-circle"></i> VAT/НДС страны - получателя</td>
 							</tr>
 
 							<?php foreach ($stores as $store) { ?>
@@ -1283,13 +1269,13 @@
 										<?php echo $store['name']; ?>
 									</td>
 									<td class="center">
-										<input type="number" step="0.1" name="config_rainforest_formula_tax_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_formula_tax_' . $store['store_id']}; ?>" style="width:100px;" />
+										<input type="number" step="0.01" name="config_rainforest_formula_vat_dst_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_formula_vat_dst_' . $store['store_id']}; ?>" style="width:100px;" />
 									</td>
 								</tr>
 							<?php } ?>
 
 							<tr>
-								<td><b>SUPPLIER</b></td><td>процент поставщика</td>
+								<td><b>TAX</b></td><td><i class="fa fa-info-circle"></i> дополнительный налог</td>
 							</tr>
 
 							<?php foreach ($stores as $store) { ?>
@@ -1298,13 +1284,13 @@
 										<?php echo $store['name']; ?>
 									</td>
 									<td class="center">
-										<input type="number" step="0.1" name="config_rainforest_formula_supplier_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_formula_supplier_' . $store['store_id']}; ?>" style="width:100px;" />
+										<input type="number" step="0.01" name="config_rainforest_formula_tax_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_formula_tax_' . $store['store_id']}; ?>" style="width:100px;" />
 									</td>
 								</tr>
 							<?php } ?>
 
 							<tr>
-								<td><b>INVOICE</b></td><td>коэффициент инвойса</td>
+								<td><b>SUPPLIER</b></td><td><i class="fa fa-info-circle"></i> процент поставщика</td>
 							</tr>
 
 							<?php foreach ($stores as $store) { ?>
@@ -1313,25 +1299,40 @@
 										<?php echo $store['name']; ?>
 									</td>
 									<td class="center">
-										<input type="number" step="0.1" name="config_rainforest_formula_invoice_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_formula_invoice_' . $store['store_id']}; ?>" style="width:100px;" />
+										<input type="number" step="0.01" name="config_rainforest_formula_supplier_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_formula_supplier_' . $store['store_id']}; ?>" style="width:100px;" />
 									</td>
 								</tr>
 							<?php } ?>
 
 							<tr>
-								<td><b>PLUS</b></td><td>операция добавления (знак +)</td>
+								<td><b>INVOICE</b></td><td><i class="fa fa-info-circle"></i> коэффициент инвойса</td>
+							</tr>
+
+							<?php foreach ($stores as $store) { ?>
+								<tr>
+									<td class="right">
+										<?php echo $store['name']; ?>
+									</td>
+									<td class="center">
+										<input type="number" step="0.01" name="config_rainforest_formula_invoice_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_formula_invoice_' . $store['store_id']}; ?>" style="width:100px;" />
+									</td>
+								</tr>
+							<?php } ?>
+
+							<tr>
+								<td><b>PLUS</b></td><td><i class="fa fa-info-circle"></i> операция добавления (знак +)</td>
 							</tr>
 
 							<tr>
-								<td><b>MINUS</b></td><td>операция отрицания (знак -)</td>
+								<td><b>MINUS</b></td><td><i class="fa fa-info-circle"></i> операция отрицания (знак -)</td>
 							</tr>
 
 							<tr>
-								<td><b>MULTIPLY</b></td><td>операция умножения (знак *)</td>
+								<td><b>MULTIPLY</b></td><td><i class="fa fa-info-circle"></i> операция умножения (знак *)</td>
 							</tr>
 
 							<tr>
-								<td><b>DIVIDE</b></td><td>операция деления (знак /)</td>
+								<td><b>DIVIDE</b></td><td><i class="fa fa-info-circle"></i> операция деления (знак /)</td>
 							</tr>	
 						</table>
 					<table class="list">
@@ -1714,7 +1715,7 @@
 
 			<script type="text/javascript">
 				function recalculate(){
-					var mainFormula 				= $('input[name=config_rainforest_main_formula]').val();
+					var mainFormula 				= $('textarea[name=config_rainforest_main_formula]').val();
 					var weightCoefficient 			= $('input[name=config_rainforest_kg_price_0]').val();
 					var defaultMultiplier 			= $('input[name=config_rainforest_default_multiplier_0]').val();
 					var maxMultiplier 				= $('input[name=config_rainforest_max_multiplier_0]').val();
@@ -1729,7 +1730,7 @@
 						var mainFormula_min_<?php echo $crmfc; ?> = $('input[name=config_rainforest_main_formula_min_<?php echo $crmfc; ?>]').val();
 						var mainFormula_max_<?php echo $crmfc; ?> = $('input[name=config_rainforest_main_formula_max_<?php echo $crmfc; ?>]').val();
 						var mainFormula_default_<?php echo $crmfc; ?> = $('input[name=config_rainforest_main_formula_default_<?php echo $crmfc; ?>]').val();
-						var mainFormula_overload_<?php echo $crmfc; ?> = $('input[name=config_rainforest_main_formula_overload_<?php echo $crmfc; ?>]').val();						
+						var mainFormula_overload_<?php echo $crmfc; ?> = $('textarea[name=config_rainforest_main_formula_overload_<?php echo $crmfc; ?>]').val();						
 					<?php } ?>
 
 					$.ajax({
@@ -1796,7 +1797,7 @@
 				}
 
 				function savePriceModel(){
-					saveSettingAjax('config_rainforest_main_formula', $('input[name=config_rainforest_main_formula]').val(), $('input[name=config_rainforest_main_formula]'));
+					saveSettingAjax('config_rainforest_main_formula', $('textarea[name=config_rainforest_main_formula]').val(), $('textarea[name=config_rainforest_main_formula]'));
 					saveSettingAjax('config_rainforest_default_store_id', $('select[name=config_rainforest_default_store_id]').val(), $('select[name=config_rainforest_default_store_id]'));
 					saveSettingAjax('config_rainforest_volumetric_max_wc_multiplier', $('input[name=config_rainforest_volumetric_max_wc_multiplier]').val(), $('input[name=config_rainforest_volumetric_max_wc_multiplier]'));
 
@@ -1804,7 +1805,7 @@
 						saveSettingAjax('config_rainforest_main_formula_min_<?php echo $crmfc; ?>', $('input[name=config_rainforest_main_formula_min_<?php echo $crmfc; ?>]').val(), $('input[name=config_rainforest_main_formula_min_<?php echo $crmfc; ?>]'));
 						saveSettingAjax('config_rainforest_main_formula_max_<?php echo $crmfc; ?>', $('input[name=config_rainforest_main_formula_max_<?php echo $crmfc; ?>]').val(), $('input[name=config_rainforest_main_formula_max_<?php echo $crmfc; ?>]'));
 						saveSettingAjax('config_rainforest_main_formula_default_<?php echo $crmfc; ?>', $('input[name=config_rainforest_main_formula_default_<?php echo $crmfc; ?>]').val(), $('input[name=config_rainforest_main_formula_default_<?php echo $crmfc; ?>]'));
-						saveSettingAjax('config_rainforest_main_formula_overload_<?php echo $crmfc; ?>', $('input[name=config_rainforest_main_formula_overload_<?php echo $crmfc; ?>]').val(), $('input[name=config_rainforest_main_formula_overload_<?php echo $crmfc; ?>]'));
+						saveSettingAjax('config_rainforest_main_formula_overload_<?php echo $crmfc; ?>', $('textarea[name=config_rainforest_main_formula_overload_<?php echo $crmfc; ?>]').val(), $('textarea[name=config_rainforest_main_formula_overload_<?php echo $crmfc; ?>]'));
 					<?php } ?>
 
 					<?php foreach ($stores as $store) { ?>

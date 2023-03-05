@@ -445,14 +445,19 @@ class ControllerSettingRnf extends Controller {
 					$result['used_formula'] 			= $overloadFormula['formula'];
 				}
 
-				$mainFormulaParams = [
-					'productWeight' 	=> $product['counted_weight'],
-					'weightCoefficient' => $weightCoefficient,
-					'defaultMultiplier' => $defaultMultiplier,
-					'maxMultiplier' 	=> $maxMultiplier					
+				$params = [
+					'WEIGHT' 				=> (float)$product['counted_weight'],
+					'KG_LOGISTIC' 			=> (float)$weightCoefficient,
+					'DEFAULT_MULTIPLIER' 	=> (float)$defaultMultiplier,
+					'MAX_MULTIPLIER' 		=> (float)$maxMultiplier,
+					'VAT_SRC' 			=> (float)$this->config->get('config_rainforest_formula_vat_src_0'),
+					'VAT_DST' 			=> (float)$this->config->get('config_rainforest_formula_vat_dst_0'),
+					'TAX' 				=> (float)$this->config->get('config_rainforest_formula_tax_0'),
+					'SUPPLIER' 			=> (float)$this->config->get('config_rainforest_formula_supplier_0'),
+					'INVOICE' 			=> (float)$this->config->get('config_rainforest_formula_invoice_0')										
 				];
 
-				$result['counted_price']  = $this->rainforestAmazon->offersParser->PriceLogic->mainFormula($product['amazon_best_price'], $product['counted_weight'], $weightCoefficient, $defaultMultiplier, $maxMultiplier, $mainFormula);
+				$result['counted_price']  = $this->rainforestAmazon->offersParser->PriceLogic->mainFormula($product['amazon_best_price'], $params, $mainFormula);
 
 				$result['amazon_best_price'] 		= $this->currency->format($product['amazon_best_price'], 'EUR', 1);
 				$result['counted_price_eur'] 		= $this->currency->format($result['counted_price'], 'EUR', 1);
