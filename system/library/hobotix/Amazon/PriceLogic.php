@@ -19,6 +19,7 @@ class PriceLogic
 	private $storesWarehouses 				= [];
 	private $storesVolumetricWeightSettings = [];
 	private $warehousesStores 				= [];
+	private $formulaOverloadData 			= [];
 
 	private $storesSettingsFields 	= ['config_warehouse_identifier_local', 'config_warehouse_identifier'];
 	private $storesSettingsFields2 	= ['config_rainforest_use_volumetric_weight', 'config_rainforest_volumetric_weight_coefficient'];
@@ -36,10 +37,29 @@ class PriceLogic
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/PriceHistory.php');
 		$this->priceHistory = new PriceHistory($registry);
 
-		$this->cacheCategoryDimensions()->setStoreSettings();
+		$this->cacheFormulaOverloadData()->cacheCategoryDimensions()->setStoreSettings();
 
 		$this->log = new \Log('amazon_offers_priceupdate.txt');
 
+	}
+
+	private function cacheFormulaOverloadData(){
+		for ($crmfc = 1; $crmfc <= $this->config->get('config_rainforest_main_formula_count'); $crmfc++){
+			if (!empty($this->config->get('config_rainforest_main_formula_min_' . $crmfc))
+				&& !empty($this->config->get('config_rainforest_main_formula_max_' . $crmfc))
+				&& !empty($this->config->get('config_rainforest_main_formula_default' . $crmfc))
+				&& !empty($this->config->get('config_rainforest_main_formula_overload_' . $crmfc))
+			){
+				$this->formulaOverloadData[$crmfc] = [					
+					'min' 		=> (float)$this->config->get('config_rainforest_main_formula_min_' . $crmfc),
+					'max' 		=> (float)$this->config->get('config_rainforest_main_formula_max_' . $crmfc),
+					'default' 	=> (float)$this->config->get('config_rainforest_main_formula_default' . $crmfc),
+					'formula' 	=> trim($this->config->get('config_rainforest_main_formula_overload_' . $crmfc))
+				];
+			}
+		}
+
+		return $this;
 	}
 
 	private function setStoreSettings(){		
@@ -357,62 +377,7 @@ class PriceLogic
 
 		return $query->num_rows;
 	}
-
-	//Проверяет вхождение товара в ценовые диапазоны перезагружающих основную формулу
-	public function checkOverloadFormula($amazonBestPrice, $formulaOverloadData = []){
-		foreach ($formulaOverloadData as $key => $formula){
-			if ($amazonBestPrice >= $formula['min'] && $amazonBestPrice < $formula['max']){
-				return $formula;
-			}
-		}
-
-		return false;
-	}
-
-	//Это прямо самая важная функция)))
-	public function mainFormula($amazonBestPrice, $productWeight, $weightCoefficient, $defaultMultiplier, $maxMultiplier, $overloadMainFormula = false){
-
-		if ($overloadMainFormula){
-			$mainFormula = $overloadMainFormula;
-		} else {
-			$mainFormula = $this->config->get('config_rainforest_main_formula');
-		}		
-
-		if ($productWeight){
-			$from = [
-				'PRICE',
-				'WEIGHT',
-				'KG_LOGISTIC',
-				'PLUS', 
-				'MINUS',
-				'MULTIPLY', 
-				'DIVIDE'
-			];
-
-			$to = [
-				$amazonBestPrice, 
-				$productWeight, 
-				$weightCoefficient, 
-				'+', 
-				'-',
-				'*', 
-				'/'
-			];
-
-			$mainFormula = str_replace($from, $to, $mainFormula);
-			$resultPrice = eval('return ' . $mainFormula . ';');
-
-			if ($resultPrice > $amazonBestPrice * $maxMultiplier){
-				$resultPrice = $amazonBestPrice * $defaultMultiplier;
-			}
-
-		} else {
-			$resultPrice = $amazonBestPrice * $defaultMultiplier;
-		}		
-
-		return $resultPrice;
-	}
-
+	
 	public function updatePricesFromDelayed(){		
 		if ($this->config->get('config_rainforest_delay_price_setting')){
 			echoLine('[PriceLogic::updatePricesFromDelayed] DELAYED PRICES IS ON!');
@@ -463,6 +428,77 @@ class PriceLogic
 		$this->priceUpdaterQueue->addToQueue($product_id);
 	}
 
+
+	//Проверяет вхождение товара в ценовые диапазоны перезагружающих основную формулу
+	public function checkOverloadFormula($amazonBestPrice, $formulaOverloadData = []){
+		if (!$formulaOverloadData){
+			$formulaOverloadData = $this->formulaOverloadData;
+		}
+
+		foreach ($formulaOverloadData as $key => $formula){
+			if ($amazonBestPrice >= $formula['min'] && $amazonBestPrice < $formula['max']){
+				return $formula;
+			}
+		}
+
+		return false;
+	}
+
+	//Это прямо самая важная функция)))
+	public function mainFormula($amazonBestPrice, $data, $overloadMainFormula = false){
+
+		if ($overloadMainFormula){
+			$mainFormula = $overloadMainFormula;
+		} else {
+			$mainFormula = $this->config->get('config_rainforest_main_formula');
+		}		
+
+		if ($data['WEIGHT']){
+			$from = [
+				'PRICE',
+				'WEIGHT',
+				'KG_LOGISTIC',
+				'VAT_SRC',
+				'VAT_DST',
+				'TAX',
+				'SUPPLIER',
+				'INVOICE',
+				'PLUS', 
+				'MINUS',
+				'MULTIPLY', 
+				'DIVIDE'
+			];
+
+			$to = [
+				$amazonBestPrice, 
+				$data['WEIGHT'], 
+				$data['KG_LOGISTIC'],
+				$data['VAT_SRC'],
+				$data['VAT_DST'],
+				$data['TAX'],
+				$data['SUPPLIER'],
+				$data['INVOICE'],
+				'+', 
+				'-',
+				'*', 
+				'/'
+			];
+
+			$mainFormula = str_replace($from, $to, $mainFormula);
+			$resultPrice = eval('return ' . $mainFormula . ';');
+
+			if ($resultPrice > $amazonBestPrice * $data['MAX_MULTIPLIER']){
+				$resultPrice = $amazonBestPrice * $data['DEFAULT_MULTIPLIER'];
+			}
+
+		} else {
+			$resultPrice = $amazonBestPrice * $data['DEFAULT_MULTIPLIER'];
+		}		
+
+		return $resultPrice;
+	}
+
+
 	public function updateProductPrices($asin, $amazonBestPrice, $explicit = false){		
 		if ($this->config->get('config_rainforest_enable_pricing')){
 
@@ -493,36 +529,33 @@ class PriceLogic
 								$productWeight = $this->getProductWeight($product);
 							}
 
-							$weightCoefficient 	= $this->config->get('config_rainforest_kg_price_' . $store_id);
-							$defaultMultiplier 	= $this->config->get('config_rainforest_default_multiplier_' . $store_id);
-							$maxMultiplier 		= $this->config->get('config_rainforest_max_multiplier_' . $store_id);
 
-							$paramVATSRC 		= $this->config->get('config_rainforest_formula_vat_src_' . $store_id);
-							$paramVATDST 		= $this->config->get('config_rainforest_formula_vat_dst_' . $store_id);
-							$paramTAX 			= $this->config->get('config_rainforest_formula_tax_' . $store_id);
-							$paramSUPLLIER 		= $this->config->get('config_rainforest_formula_supplier_' . $store_id);
-							$paramINVOICE 		= $this->config->get('config_rainforest_formula_invoice_' . $store_id);
-
-							if ($weightCoefficient || $defaultMultiplier){
+							if ($this->config->get('config_rainforest_kg_price_' . $store_id) || $this->config->get('config_rainforest_default_multiplier_' . $store_id)){
 								if ($this->checkIfWeCanUpdateProductOffers($product_id, $warehouse_identifier)){
 
 									$params = [
-										'productWeight' 	=> $productWeight,
-										'weightCoefficient' => $weightCoefficient,
-										'defaultMultiplier' => $defaultMultiplier,
-										'maxMultiplier' 	=> $maxMultiplier,
-										'paramVATSRC' 		=> $paramVATSRC,
-										'paramVATDST' 		=> $paramVATDST,
-										'paramTAX' 			=> $paramTAX,
-										'paramSUPLLIER' 	=> $paramSUPLLIER,
-										'paramINVOICE' 		=> $paramINVOICE										
+										'WEIGHT' 				=> (float)$productWeight,
+										'KG_LOGISTIC' 			=> (float)$this->config->get('config_rainforest_kg_price_' . $store_id),
+										'DEFAULT_MULTIPLIER' 	=> (float)$this->config->get('config_rainforest_default_multiplier_' . $store_id),
+										'MAX_MULTIPLIER' 		=> (float)$this->config->get('config_rainforest_max_multiplier_' . $store_id),
+										'VAT_SRC' 				=> (float)$this->config->get('config_rainforest_formula_vat_src_' . $store_id),
+										'VAT_DST' 				=> (float)$this->config->get('config_rainforest_formula_vat_dst_' . $store_id),
+										'TAX' 					=> (float)$this->config->get('config_rainforest_formula_tax_' . $store_id),
+										'SUPLLIER' 				=> (float)$this->config->get('config_rainforest_formula_supplier_' . $store_id),
+										'INVOICE' 				=> (float)$this->config->get('config_rainforest_formula_invoice_' . $store_id)										
 									];
 
-									$newPrice = $this->mainFormula($amazonBestPrice, $productWeight, $weightCoefficient, $defaultMultiplier, $maxMultiplier);
+									if ($overloadMainFormula = $this->checkOverloadFormula($amazonBestPrice)){
+										$params['DEFAULT_MULTIPLIER'] = $overloadMainFormula['default'];
+										$newPrice = $this->mainFormula($amazonBestPrice, $params, $overloadMainFormula['formula']);
+										echoLine('[PriceLogic] Formula overloaded, price in range ' . $overloadMainFormula['min'] . ' - ' . $overloadMainFormula['max'], 'w');
+									} else {
+										$newPrice = $this->mainFormula($amazonBestPrice, $params);
+									}									
 
-									$logString = 'Товар: ' . $product_id . ', ' . $asin . ', вес: ' . $productWeight . ', цена для магазина ' . $store_id . ' = ' . $newPrice . ' EUR';
+									$logString = 'Product ' . $product_id . ', ' . $asin . ', wght: ' . $productWeight . ', price for store ' . $store_id . ' is ' . $newPrice . ' EUR';
 									$this->log->write($logString);
-									echoLine('[PriceLogic]' . $logString);
+									echoLine('[PriceLogic]' . $logString, 'i');
 
 									if ($this->config->get('config_rainforest_default_store_id') != -1 && $store_id == $this->config->get('config_rainforest_default_store_id')){
 										$this->updateProductPriceInDatabase($product_id, $newPrice);
