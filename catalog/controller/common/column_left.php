@@ -134,13 +134,9 @@
 			$this->data['modules'] = array();
 			
 			
-			foreach ($module_data as $module) {
-				
-				$module = $this->getChild('module/' . $module['code'], $module['setting']);
-				
-				
-				
-				if ($module) {
+			foreach ($module_data as $module) {				
+				$module = $this->getChild('module/' . $module['code'], $module['setting']);										
+				if ($module && trim($module)) {
 					$this->data['modules'][] = $module;
 				}
 			}
