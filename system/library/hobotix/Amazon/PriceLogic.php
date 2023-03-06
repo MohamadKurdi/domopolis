@@ -435,7 +435,7 @@ class PriceLogic
 
 		foreach ($formulaOverloadData as $key => $formula){
 			if ($amazonBestPrice >= $formula['min'] && $amazonBestPrice < $formula['max']){
-				echoLine('[PriceLogic] Price ' . $amazonBestPrice . ' in range ' . $formula['min'] . '-' . $formula['max'] . ', overloaded formula:' . $formula['formula'], 'w');
+			//	echoLine('[PriceLogic] Price ' . $amazonBestPrice . ' in range ' . $formula['min'] . '-' . $formula['max'] . ', overloaded formula:' . $formula['formula'], 'w');
 				return $formula;
 			}
 		}
