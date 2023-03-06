@@ -536,7 +536,7 @@ class ControllerFeedReFeedMaker extends Controller
         $output = str_replace(max($this->steps), 'MORE', $output);
 
        if (!empty($product['main_category_id'])){
-            $output .= '    <g:product_type><![CDATA[' . $this->model_catalog_product->getGoogleCategoryPathForCategory($product['main_category_id']) . ']]></g:product_type>'. PHP_EOL;
+            $output .= '    <g:product_type><![CDATA[' . str_replace('/', ' > ', $this->model_catalog_product->getGoogleCategoryPathForCategory($product['main_category_id'])) . ']]></g:product_type>'. PHP_EOL;
         }
 
         $output .= '  <g:quantity>' . $product['quantity'] . '</g:quantity>'. PHP_EOL;
