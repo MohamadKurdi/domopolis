@@ -49,11 +49,11 @@ class ControllerApiInfo1C extends Controller
             }
         }
 
-        $this->db->query("INSERT INTO `order_ttns` SET	order_id = '" . (int)$order_id . "', ttn = '" . $this->db->escape($ttn) . "', delivery_code = '" . $this->db->escape($shipping_code) . "', date_ttn = NOW(), sms_sent = NOW()");
         $this->db->query("UPDATE `order` SET `ttn` = '" . $this->db->escape($ttn) . "' WHERE order_id = " . (int)$order_id);
+        $adding_query = $this->db->query("INSERT IGNORE INTO `order_ttns` SET	order_id = '" . (int)$order_id . "', ttn = '" . $this->db->escape($ttn) . "', delivery_code = '" . $this->db->escape($shipping_code) . "', date_ttn = NOW(), sms_sent = NOW()");
 
         $smsTEXT = 'SMS sending disabled';
-        if ($this->model_setting_setting->getKeySettingValue('config', 'config_sms_ttn_sent_enabled', (int)$order_info['store_id'])){
+        if ($adding_query->num_rows && $this->model_setting_setting->getKeySettingValue('config', 'config_sms_ttn_sent_enabled', (int)$order_info['store_id'])){
             $smsTEXT = str_replace(['{ID}', '{TTN}'], [$order_id, $ttn], $this->model_setting_setting->getKeySettingValue('config', 'config_sms_ttn_sent', (int)$order_info['store_id']));
 
             $options = array(

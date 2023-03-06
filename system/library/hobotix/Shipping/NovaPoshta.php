@@ -79,9 +79,23 @@
 		}
 
 		private function setNewCode($code, $code_new){
-			echoLine('[NovaPoshta::setNewCode] Replacing code: ' . $code . ' to ' . $code_new, 'e');
-			$this->db->query("UPDATE `order_ttns` SET ttn = '" . $this->db->escape($code_new) . "' WHERE ttn = '" . $this->db->escape($code) . "'");
-			$this->db->query("UPDATE `order` SET ttn = '" . $this->db->escape($code_new) . "' WHERE ttn = '" . $this->db->escape($code) . "'");
+			if ($code_new){
+				echoLine('[NovaPoshta::setNewCode] Adding new code: ' . $code . ' to ' . $code_new, 'e');
+				$order_query = $this->db->query("SELECT * FROM order_ttns WHERE ttn = '" . $this->db->escape($code) . "' ORDER BY date_ttn DESC LIMIT 1");
+
+				if ($order_query->row){
+					echoLine('[NovaPoshta::setNewCode] Order found: ' . $order_query->row['order_id'] . ' by ' . $order_query->row['delivery_code'], 's');
+
+					$this->db->query("INSERT IGNORE INTO `order_ttns` SET 
+						order_id = '" . (int)$order_query->row['order_id'] . "', 
+						ttn = '" . $this->db->escape($code_new) . "', 
+						delivery_code = '" . $this->db->escape($order_query->row['delivery_code']) . "', 
+						date_ttn = NOW(), 
+						sms_sent = NOW()");
+
+					$this->db->query("UPDATE `order` SET ttn = '" . $this->db->escape($code_new) . "' WHERE ttn = '" . $this->db->escape($order_query->row['order_id']) . "'");
+				}
+			}			
 		}
 
 		private function setCodeStatus($code){
@@ -112,7 +126,7 @@
 		}
 
 		private function checkIfRedelivering($code){
-			$redelivery =  (int)in_array($code['StatusCode'], ['104']) || (!empty($code['Redelivery']) && (int)$code['Redelivery'] && $code['RedeliveryNum']);
+			$redelivery =  ((int)in_array($code['StatusCode'], ['104']) && !empty($code['RedeliveryNum'])) || (!empty($code['Redelivery']) && (int)$code['Redelivery'] && !empty($code['RedeliveryNum']));
 
 			if ($redelivery){
 				echoLine('[NovaPoshta::checkIfRedelivering] Parsel is redelivered: ' . $code['Number'] . '->' . $code['RedeliveryNum'], 'w');
