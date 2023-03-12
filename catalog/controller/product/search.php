@@ -373,6 +373,8 @@ class ControllerProductSearch extends Controller {
 				'limit'               => $limit
 			);
 
+			$product_total = 0;
+
 			try {
 
 				$query = $this->request->get['search'];
