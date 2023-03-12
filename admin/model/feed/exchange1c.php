@@ -337,7 +337,7 @@
 				
 				$shippings[] = array(
 				'code' =>  'dostavkaplus.sh'.$i,	
-				'title' =>  $mdd['title'][2]	
+				'title' =>  $mdd['title'][$this->config->get('config_language_id')]	
 				);
 				$i++;
 			}
@@ -348,7 +348,7 @@
 			foreach ($pa as $mdp){
 				$shippings[] = array(				
 				'code' =>  'pickup_advanced.point_'.$i,	
-				'title' =>  $mdp[2]['description']
+				'title' =>  $mdp[$this->config->get('config_language_id')]['description']
 				);
 				$i++;
 			}
@@ -379,7 +379,7 @@
 				
 				$payments[] = array(
 				'code' =>  'transfer_plus.'.$i,	
-				'title' =>  $oppm['title'][2] . $_ptxt,
+				'title' =>  $oppm['title'][$this->config->get('config_language_id')] . $_ptxt,
 				'currency' => $oppm['curr'],
 				'isprepay' => (isset($oppm['isprepay']) && $oppm['isprepay'])
 				);
