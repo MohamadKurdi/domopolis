@@ -374,6 +374,7 @@ class ControllerProductSearch extends Controller {
 			);
 
 			$product_total = 0;
+			$total_results = 0;
 
 			try {
 
