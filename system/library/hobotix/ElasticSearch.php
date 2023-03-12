@@ -35,7 +35,7 @@
 			$this->log 		= $registry->get('log');		
 			$this->request 	= $registry->get('request');	
 
-			if (is_cli() || $explicit || (!empty($this->request->get['route']) && in_array($this->request->get['route'], $this->routes)) || !empty($this->request->get['search'])){ 
+			if (is_cli() || $explicit || (!empty($this->request->get['route']) && in_array($this->request->get['route'], $this->routes)) || isset($this->request->get['search'])){ 
 				$this->elastic = ClientBuilder::create()->setHosts(['http://127.0.0.1:9200'])->build();
 			} else {
 				$this->elastic = null;
