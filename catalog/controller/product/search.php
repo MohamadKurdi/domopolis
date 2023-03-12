@@ -417,7 +417,7 @@ class ControllerProductSearch extends Controller {
 
 
 			} catch ( Exception $e ) {
-				$this->data['elastic_failed_error'] = 'Наш очень умный поиск поломался! Мы уже в процессе починки';
+				$this->data['elastic_failed_error'] = 'Our smart search is temproraly broken! We are working on it';
 				$this->data['elastic_failed_error_message'] = $e->getMessage();
 			};
 
