@@ -402,6 +402,7 @@
 							<td>
 								<input type="text" name="google_category" value="<?php echo $google_category; ?>" style="width:90%" />
 								<input type="hidden" name="google_category_id" value="<?php echo $google_category_id; ?>" />
+								<span class="help">Только если магазин использует логику с присвоениями refeedmaker v1</span>
 							</td>
 							<td>
 								<select name="separate_feeds">
@@ -424,6 +425,7 @@
 										<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
 									<?php } ?>
 								</select>
+								<span class="help">Безусловно исключает категорию и все ее дочерние из фидов (для обеих версий refeedmaker)</span>
 							</td>
 							
 							<td>
