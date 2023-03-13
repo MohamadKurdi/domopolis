@@ -119,7 +119,7 @@
                                            </span>
 
                                            <?php if (mb_strlen($product['native_name']) >= $this->config->get('config_openai_exportnames_length') && $this->config->get('config_openai_enable_export_names')) { ?>   
-                                             <span class="smallbutton black" onclick="exportbyai($(this), 'native', '<?php echo $amazon_language['code']; ?>', <?php echo $product['product_id']; ?>)">🤖 AI до <?php echo $this->config->get('config_openai_exportnames_length'); ?> символов</span><span></span>
+                                             <span class="smallbutton black" onclick="exportbyai($(this), 'native', '<?php echo $native_language['code']; ?>', <?php echo $product['product_id']; ?>)">🤖 AI до <?php echo $this->config->get('config_openai_exportnames_length'); ?> символов</span><span></span>
                                          <?php } ?> 
                                         </div>
                                         
