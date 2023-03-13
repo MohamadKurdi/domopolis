@@ -289,6 +289,7 @@ class ControllerCatalogCategory extends Controller {
 					'amazon_category_link'  	=> $real_category['amazon_category_link'],
 					'yandex_category_name'  	=> $yandex_category_name,
 					'google_category' 			=> $this->model_catalog_category->getGoogleCategoryByID($real_category['google_category_id']),
+					'no_general_feed'			=> $real_category['no_general_feed'],
 					'tnved'						=> $real_category['tnved'],
 					'deletenotinstock'			=> $real_category['deletenotinstock'],
 					'priceva_enable'			=> $real_category['priceva_enable'],
