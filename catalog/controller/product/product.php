@@ -694,9 +694,14 @@ public function index($product_id = false, $just_price = false)
             if ($this->config->get('hb_snippets_og_enable') == '1') {
                 $hb_snippets_ogp = $this->config->get('hb_snippets_ogp');
                 if (strlen($hb_snippets_ogp) > 4) {
-                    $ogp_name = $product_info['name'];
-                    $ogp_brand = $product_info['manufacturer'];
-                    $ogp_model = $product_info['model'];
+                    $ogp_name   = $product_info['name'];
+                    if ($product_info['manufacturer']){
+                        $ogp_brand  = $product_info['manufacturer'];
+                     } else {
+                        $ogp_brand  = $this->config->get('config_owner');
+                     }
+                   
+                    $ogp_model  = $product_info['model'];
                     if ((float)$product_info['special']) {
                         $ogp_price = $this->currency->format($this->tax->calculate($product_info['special'], $product_info['tax_class_id'], $this->config->get('config_tax')));
                     } else {
@@ -1037,7 +1042,7 @@ public function index($product_id = false, $just_price = false)
                     }
 
                     if (!$just_price) {
-                        if ($manufacturer_info) {
+                        if (!empty($manufacturer_info)) {
                             $this->data['manufacturers'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $product_info['manufacturer_id']);
                     
                             if (isset($manufacturer_info['location']) && $manufacturer_info['location']) {
