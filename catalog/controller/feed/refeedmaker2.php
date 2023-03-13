@@ -492,10 +492,11 @@ class ControllerFeedReFeedMaker2 extends Controller
             echoLine('[makefeed] changeID ' . $changeID);
 
             $filter = array(
-                'filter_status'         => true,
-                'filter_not_bad'        => true,
-                'filter_with_variants'  => true,
-                'filter_exclude_certs'  => true
+                'filter_status'                     => true,
+                'filter_not_bad'                    => true,
+                'filter_with_variants'              => true,
+                'filter_exclude_certs'              => true,
+                'filter_exclude_google_categories'  => true
             );
 
             if ($this->stockMode) {
