@@ -125,69 +125,71 @@
 
 										<td class="center">
 											<? if ($category['status']) { ?>
-												<i class="fa fa-check" style="color:#4ea24e"></i>
+												<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 											<? } else { ?>
-												<i class="fa fa-times" style="color:#cf4a61"></i>
+												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 											<? } ?>
 										</td>
 
-									<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>	
-
-										<td class="left">
-											<? if ($category['amazon_category_name']) { ?>
-
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56; color:#FFF; font-size:10px;">
-													<?php if ($category['amazon_category_link']) { ?>
-														<a href="<?php echo $category['amazon_category_link']; ?>" target="_blank" style="color:white;text-decoration:none;">
-														<?php } ?>
-
-														<?php echo $category['amazon_category_name']; ?>
-
-														<?php if ($category['amazon_category_link']) { ?>
-															<i class="fa fa-external-link"></i></a>
-														<?php } ?>
-													</span>
-
-													<br />
-
+										<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>	
+											<td class="left">
+												<? if ($category['amazon_category_name']) { ?>
 													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56; color:#FFF; font-size:10px;">
-														<?php echo $category['amazon_category_id']; ?></span>
+														<?php if ($category['amazon_category_link']) { ?>
+															<a href="<?php echo $category['amazon_category_link']; ?>" target="_blank" style="color:white;text-decoration:none;">
+															<?php } ?>
 
-													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
-													<? } ?>
-												</td>	
+															<?php echo $category['amazon_category_name']; ?>
 
-												<td class="center">
-													<? if ($category['amazon_sync_enable']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
-													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
-													<? } ?>
-												</td>
+															<?php if ($category['amazon_category_link']) { ?>
+																<i class="fa fa-external-link"></i></a>
+															<?php } ?>
+														</span>
 
-												<td class="center">
-													<? if ($category['amazon_final_category']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
-													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
-													<? } ?>
-												</td>		
+														<br />
 
-												<td class="center">
-													<? if ($category['amazon_can_get_full']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
-													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
-													<? } ?>
-												</td>	
-											<?php } ?>
+														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56; color:#FFF; font-size:10px;">
+															<?php echo $category['amazon_category_id']; ?></span>
+
+														<? } else { ?>
+															<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+														<? } ?>
+													</td>	
+
+													<td class="center">
+														<? if ($category['amazon_sync_enable']) { ?>
+															<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+														<? } else { ?>
+															<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+														<? } ?>
+													</td>
+
+													<td class="center">
+														<? if ($category['amazon_final_category']) { ?>
+															<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+														<? } else { ?>
+															<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+														<? } ?>
+													</td>		
+
+													<td class="center">
+														<? if ($category['amazon_can_get_full']) { ?>
+															<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+														<? } else { ?>
+															<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+														<? } ?>
+													</td>	
+												<?php } ?>
 
 												<td class="center">
 													<? if ($category['google_category']) { ?>
 														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF; font-size:10px;"><?php echo $category['google_category']; ?></span>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<?php if ($category['no_general_feed']) { ?>
+															<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+														<?php } else { ?>
+															<i class="fa fa-question-circle" style="color:#7F00FF"></i>
+														<?php } ?>
 													<? } ?>
 												</td>	
 
@@ -196,7 +198,7 @@
 													<? if ($category['yandex_category_name']) { ?>
 														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF; font-size:10px;"><?php echo $category['yandex_category_name']; ?></span>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 													<? } ?>	
 												</td>		
 											<?php } ?>																				
@@ -231,41 +233,41 @@
 
 												<td class="center">
 													<? if ($category['deletenotinstock']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
+														<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
 												<td class="center">
 													<? if ($category['submenu_in_children']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
+														<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
 												<td class="center">
 													<? if ($category['intersections']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
+														<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
 												<td class="center">
 													<? if ($category['exclude_from_intersections']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
+														<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
 												<td class="center">
 													<? if ($category['priceva_enable']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
+														<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
@@ -273,7 +275,7 @@
 													<? if ($category['tnved']) { ?>
 														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF"><?php echo $category['tnved']; ?></span>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>									
 
