@@ -1,7 +1,6 @@
 <?php
 class ModelCatalogCategory extends Model {
 	public function getCategory($category_id) {
-
 		if (!$category_data = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$category_id]))){
 
 			$sql = "SELECT DISTINCT *, IFNULL(cd.menu_name, cd.name) as name FROM category c LEFT JOIN category_description cd ON (c.category_id = cd.category_id) ";

@@ -1006,8 +1006,7 @@
 			if (!empty($data['filter_different_categories'])){
 				$sql .= ", ";
 				$sql .= "(SELECT category_id FROM product_to_category p2c2 WHERE p2c2.product_id = p.product_id ORDER BY main_category DESC LIMIT 1) as main_category_id";				
-			}
-
+			}			
 			
 			if (!empty($data['filter_category_id'])) {
 				if (!empty($data['filter_sub_category'])) {
@@ -1079,6 +1078,10 @@
 
 			if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_show_only_filled_products_in_catalog')){
 				$sql .= " AND ((p.added_from_amazon = 0) OR (p.added_from_amazon = 1 AND p.filled_from_amazon = 1))";	
+			}
+
+			if (!empty($data['filter_exclude_google_categories'])){
+				$sql .= " AND p.product_id NOT IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category_path WHERE path_id IN (SELECT category_id FROM category WHERE no_general_feed = 1)))";
 			}
 			
 			if (!empty($data['filter_category_id'])) {
@@ -1229,7 +1232,7 @@
 				$category_id = (int)array_pop($parts);
 				$category_info = $this->model_catalog_category->getCategory($category_id);
 				
-				if ($category_info['deletenotinstock']){
+				if (!empty($category_info) && $category_info['deletenotinstock']){
 					$data['filter_current_in_stock'] = 1;
 				}
 			}
@@ -2481,6 +2484,10 @@
 
 			if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_show_only_filled_products_in_catalog')){
 				$sql .= " AND ((p.added_from_amazon = 0) OR (p.added_from_amazon = 1 AND p.filled_from_amazon = 1))";	
+			}
+
+			if (!empty($data['filter_exclude_google_categories'])){
+				$sql .= " AND p.product_id NOT IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category_path WHERE path_id IN (SELECT category_id FROM category WHERE no_general_feed = 1)))";
 			}
 			
 			if (!empty($data['filter_category_id'])) {
