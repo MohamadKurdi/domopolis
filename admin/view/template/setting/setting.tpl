@@ -5805,6 +5805,20 @@
 												<? } ?>
 											</select>									
 										</div>
+
+										<div>
+											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Точка входа</span></p>
+											<select name="config_openai_category_alternatenames_endpoint">
+												<?php foreach ($openai_endpoints as $openai_endpoint) { ?>
+													<?php if ($config_openai_category_alternatenames_endpoint == $openai_endpoint) { ?>
+														<option value="<?php echo $openai_endpoint; ?>" selected="selected"><?php echo $openai_endpoint; ?></option>												
+													<?php } else { ?>													
+														<option value="<?php echo $openai_endpoint; ?>"><?php echo $openai_endpoint; ?></option>
+													<? } ?>
+												<?php } ?>
+											</select>											
+										</div>
+
 										<div>
 											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Модель</span></p>
 											<select name="config_openai_category_alternatenames_model">
@@ -5874,6 +5888,18 @@
 											</select>									
 										</div>
 										<div>
+											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Точка входа</span></p>
+											<select name="config_openai_category_descriptions_endpoint">
+												<?php foreach ($openai_endpoints as $openai_endpoint) { ?>
+													<?php if ($config_openai_category_descriptions_endpoint == $openai_endpoint) { ?>
+														<option value="<?php echo $openai_endpoint; ?>" selected="selected"><?php echo $openai_endpoint; ?></option>												
+													<?php } else { ?>													
+														<option value="<?php echo $openai_endpoint; ?>"><?php echo $openai_endpoint; ?></option>
+													<? } ?>
+												<?php } ?>
+											</select>											
+										</div>
+										<div>
 											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Модель</span></p>
 											<select name="config_openai_category_descriptions_model">
 												<?php foreach ($openai_models_list as $openai_model) { ?>
@@ -5940,6 +5966,18 @@
 													<option value="0"  selected="selected">Отключить</option>
 												<? } ?>
 											</select>									
+										</div>
+										<div>
+											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Точка входа</span></p>
+											<select name="config_openai_shortennames_endpoint">
+												<?php foreach ($openai_endpoints as $openai_endpoint) { ?>
+													<?php if ($config_openai_shortennames_endpoint == $openai_endpoint) { ?>
+														<option value="<?php echo $openai_endpoint; ?>" selected="selected"><?php echo $openai_endpoint; ?></option>												
+													<?php } else { ?>													
+														<option value="<?php echo $openai_endpoint; ?>"><?php echo $openai_endpoint; ?></option>
+													<? } ?>
+												<?php } ?>
+											</select>											
 										</div>
 										<div>	
 											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Модель</span></p>
@@ -6012,6 +6050,18 @@
 													<option value="0"  selected="selected">Отключить</option>
 												<? } ?>
 											</select>									
+										</div>
+										<div>
+											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Точка входа</span></p>
+											<select name="config_openai_exportnames_endpoint">
+												<?php foreach ($openai_endpoints as $openai_endpoint) { ?>
+													<?php if ($config_openai_exportnames_endpoint == $openai_endpoint) { ?>
+														<option value="<?php echo $openai_endpoint; ?>" selected="selected"><?php echo $openai_endpoint; ?></option>												
+													<?php } else { ?>													
+														<option value="<?php echo $openai_endpoint; ?>"><?php echo $openai_endpoint; ?></option>
+													<? } ?>
+												<?php } ?>
+											</select>											
 										</div>
 										<div>	
 											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Модель</span></p>
