@@ -76,10 +76,22 @@
 					}
 				}
 			}
+
+			if ($this->config->get('config_use_separate_table_for_features') && isset($data['product_feature'])) {
+				foreach ($data['product_feature'] as $product_feature) {
+					if ($product_feature['feature_id']) {
+						$this->db->query("DELETE FROM product_feature WHERE product_id = '" . (int)$product_id . "' AND feature_id = '" . (int)$product_feature['feature_id'] . "'");
+						
+						foreach ($product_feature['product_feature_description'] as $language_id => $product_feature_description) {				
+							$this->db->query("INSERT INTO product_feature SET product_id = '" . (int)$product_id . "', feature_id = '" . (int)$product_feature['feature_id'] . "', language_id = '" . (int)$language_id . "', text = '" .  $this->db->escape($product_feature_description['text']) . "'");
+						}
+					}
+				}
+			}
 			
 			if (isset($data['product_option'])) {
 				
-				$this->addBatchOptions($data); //Q: Options Boost
+				$this->addBatchOptions($data);
 				
 				foreach ($data['product_option'] as $product_option) {
 					if ($product_option['type'] == 'select' || $product_option['type'] == 'block' || $product_option['type'] == 'radio' || $product_option['type'] == 'checkbox' || $product_option['type'] == 'image') {
@@ -112,15 +124,11 @@
 			$this->db->query("DELETE FROM product_stock_status WHERE product_id = '" . (int)$product_id . "'");
 			
 			if (isset($data['product_stock_status'])) {			
-				foreach ($data['product_stock_status'] as $key => $value){
-					
-					if ($value > 0) {
-						
-						$this->db->query("INSERT INTO product_stock_status SET store_id = '" . (int)$key . "', product_id = '" . (int)$product_id . "', stock_status_id = '" . (int)$value . "'");
-						
+				foreach ($data['product_stock_status'] as $key => $value){					
+					if ($value > 0) {						
+						$this->db->query("INSERT INTO product_stock_status SET store_id = '" . (int)$key . "', product_id = '" . (int)$product_id . "', stock_status_id = '" . (int)$value . "'");						
 					}
-				}
-				
+				}				
 			}
 			
 			if (!empty($data['product_product_option'])) {
@@ -207,7 +215,6 @@
 				}
 			}
 			
-			/* FAproduct */
 			if (isset($data['faproduct_facategory']) && $data['faproduct_facategory'] && count($data['faproduct_facategory']) > 0) {				
 				foreach ($data['faproduct_facategory'] as $category_id) {
 					$this->db->query("INSERT INTO faproduct_to_facategory SET 
@@ -222,7 +229,6 @@
 				facategory_id = '" . (int)$data['facategory_show'] . "'"
 				);
 			}
-			/* FAproduct */
 			
 			if (isset($data['product_filter'])) {
 				foreach ($data['product_filter'] as $filter_id) {
@@ -643,6 +649,44 @@
 
 					}				
 				}			
+			}
+
+			if ($this->config->get('config_use_separate_table_for_features')){
+				$this->db->query("DELETE FROM product_feature WHERE product_id = '" . (int)$product_id . "'");
+
+				if (!empty($data['product_feature'])) {
+					foreach ($data['product_feature'] as $product_feature) {
+						if ($product_feature['feature_id']) {
+							$this->db->query("DELETE FROM product_feature WHERE product_id = '" . (int)$product_id . "' AND feature_id = '" . (int)$product_feature['feature_id'] . "'");
+
+							$copy_product_feature_description = [];
+							foreach ($product_feature['product_feature_description'] as $language_id => $product_feature_description) {				
+								$this->db->query("INSERT INTO product_feature SET product_id = '" . (int)$product_id . "', feature_id = '" . (int)$product_feature['feature_id'] . "', language_id = '" . (int)$language_id . "', text = '" .  $this->db->escape($product_feature_description['text']) . "'");
+
+								if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_translate_edition_mode']){
+									if ($language_id == $this->config->get('config_rainforest_source_language_id')){
+										$rainforest_source_text = $product_feature_description['text'];
+									} else {
+										$copy_product_feature_description[$language_id] = [
+											'text' => $product_feature_description['text']
+										];
+									}
+								}
+							}
+
+							if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_translate_edition_mode'] && !empty($rainforest_source_text)){
+								foreach ($copy_product_feature_description as $language_id => $copy_feature_description) {	
+									$sql = "UPDATE product_feature SET text = '" . $this->db->escape($copy_feature_description['text']) . "' 
+									WHERE product_id IN 
+									(SELECT p2.product_id FROM product_feature p2 WHERE p2.feature_id = '" . (int)$product_feature['feature_id'] . "' AND p2.language_id = '" . $this->config->get('config_rainforest_source_language_id') . "' AND p2.text LIKE ('" . $this->db->escape($rainforest_source_text) . "')) 
+									AND feature_id = '" . (int)(int)$product_feature['feature_id'] . "' AND language_id = '" . (int)$language_id . "'";
+
+									$this->db->query($sql);
+								}
+							}
+						}				
+					}			
+				}
 			}
 			
 			$this->db->query("DELETE FROM product_price_to_store WHERE product_id = '" . (int)$product_id . "'");
@@ -1178,22 +1222,22 @@
 				$data['keyword'] = '';
 				$data['status'] = '0';
 				
-				$data = array_merge($data, array('product_attribute' => $this->getProductAttributes($product_id)));
-				$data = array_merge($data, array('product_description' => $this->getProductDescriptions($product_id)));			
-				$data = array_merge($data, array('product_discount' => $this->getProductDiscounts($product_id)));
-				$data = array_merge($data, array('product_filter' => $this->getProductFilters($product_id)));
-				$data = array_merge($data, array('product_image' => $this->getProductImages($product_id)));		
-				$data = array_merge($data, array('product_option' => $this->getProductOptions($product_id)));
-				$data = array_merge($data, array('product_related' => $this->getProductRelated($product_id)));
-				$data = array_merge($data, array('product_reward' => $this->getProductRewards($product_id)));
+				$data = array_merge($data, array('product_attribute' 	=> $this->getProductAttributes($product_id)));
+				$data = array_merge($data, array('product_description' 	=> $this->getProductDescriptions($product_id)));			
+				$data = array_merge($data, array('product_discount' 	=> $this->getProductDiscounts($product_id)));
+				$data = array_merge($data, array('product_filter' 		=> $this->getProductFilters($product_id)));
+				$data = array_merge($data, array('product_image' 		=> $this->getProductImages($product_id)));		
+				$data = array_merge($data, array('product_option' 		=> $this->getProductOptions($product_id)));
+				$data = array_merge($data, array('product_related' 		=> $this->getProductRelated($product_id)));
+				$data = array_merge($data, array('product_reward' 		=> $this->getProductRewards($product_id)));
 				$data = array_merge($data, array('faproduct_facategory' => $this->model_catalog_faproduct ->getFAProductCategories($product_id)));
                 $data = array_merge($data, array('faproduct_facategory' => $this->model_catalog_faproduct ->getFAcategoryShow($product_id)));
-				$data = array_merge($data, array('product_special' => $this->getProductSpecials($product_id)));
-				$data = array_merge($data, array('product_category' => $this->getProductCategories($product_id)));
-				$data = array_merge($data, array('product_download' => $this->getProductDownloads($product_id)));
-				$data = array_merge($data, array('product_layout' => $this->getProductLayouts($product_id)));
-				$data = array_merge($data, array('product_store' => $this->getProductStores($product_id)));
-				$data = array_merge($data, array('product_profiles' => $this->getProfiles($product_id)));
+				$data = array_merge($data, array('product_special' 		=> $this->getProductSpecials($product_id)));
+				$data = array_merge($data, array('product_category' 	=> $this->getProductCategories($product_id)));
+				$data = array_merge($data, array('product_download' 	=> $this->getProductDownloads($product_id)));
+				$data = array_merge($data, array('product_layout' 		=> $this->getProductLayouts($product_id)));
+				$data = array_merge($data, array('product_store' 		=> $this->getProductStores($product_id)));
+				$data = array_merge($data, array('product_profiles' 	=> $this->getProfiles($product_id)));
 				
 				$new_product_id = $this->addProduct($data);	
 
@@ -2091,6 +2135,29 @@
 			}
 			
 			return $product_attribute_data;
+		}
+
+		public function getProductFeatures($product_id) {			
+			$product_feature_data = array();
+			
+			$product_feature_query = $this->db->query("SELECT feature_id FROM product_feature WHERE product_id = '" . (int)$product_id . "' GROUP BY feature_id");
+			
+			foreach ($product_feature_query->rows as $product_feature) {
+				$product_feature_description_data = array();
+				
+				$product_feature_description_query = $this->db->query("SELECT * FROM product_feature WHERE product_id = '" . (int)$product_id . "' AND feature_id = '" . (int)$product_feature['feature_id'] . "'");
+				
+				foreach ($product_feature_description_query->rows as $product_feature_description) {
+					$product_feature_description_data[$product_feature_description['language_id']] = array('text' => $product_feature_description['text']);
+				}
+				
+				$product_feature_data[] = array(
+				'feature_id'                  	=> $product_feature['feature_id'],
+				'product_attribute_description' => $product_feature_description_data
+				);
+			}
+			
+			return $product_feature_data;
 		}
 		
 		public function getProductAttributesByLanguage($product_id, $language_id) {
