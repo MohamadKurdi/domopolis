@@ -16,6 +16,8 @@ class productModelEdit extends hoboModel{
 		'material'
 	];
 
+	private $featureAttributes = [];
+
 
 	public function editProductFields($product_id, $fields){
 		$sql = "UPDATE `product` SET ";
@@ -121,7 +123,6 @@ class productModelEdit extends hoboModel{
 		$this->db->query("UPDATE product SET main_variant_id = 	'" . (int)$main_variant_id . "'	WHERE product_id = '" . (int)$product_id . "'");
 	}
 
-
 	public function setProductVariants($product){
 		if (!empty($product['variants'])){
 
@@ -168,6 +169,7 @@ class productModelEdit extends hoboModel{
 		}
 
 		$this->db->query("UPDATE product_attribute SET text = '' WHERE text LIKE('%limit on units was exceeded%')");
+		$this->db->query("UPDATE product_feature SET text = '' WHERE text LIKE('%limit on units was exceeded%')");
 		$this->db->query("UPDATE product_video_description SET title = '' WHERE title LIKE('%limit on units was exceeded%')");
 	} 
 
@@ -188,6 +190,7 @@ class productModelEdit extends hoboModel{
 		$this->db->query("DELETE FROM attribute WHERE attribute_id = '" . (int)$attribute_id . "'");
 		$this->db->query("DELETE FROM attribute_description WHERE attribute_id = '" . (int)$attribute_id . "'");
 		$this->db->query("DELETE FROM product_attribute WHERE attribute_id = '" . (int)$attribute_id . "'");
+		$this->db->query("DELETE FROM product_feature WHERE feature_id = '" . (int)$attribute_id . "'");
         $this->db->query("DELETE FROM attribute_value_image WHERE attribute_id = '" . (int)$attribute_id . "'");
     }
 
@@ -223,9 +226,12 @@ class productModelEdit extends hoboModel{
 	}
 
 	public function updateProductAttribute($product_id, $data){
-		$this->db->query("UPDATE product_attribute SET `text` = '" . $this->db->escape($data['text']) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$data['language_id'] . "' AND attribute_id = '" . (int)$data['attribute_id'] . "'");
+		if ($this->checkIfAttributeIsAFeature($data['attribute_id'])){
+			$this->db->query("UPDATE product_feature SET `text` = '" . $this->db->escape($data['text']) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$data['language_id'] . "' AND feature_id = '" . (int)$data['attribute_id'] . "'");
+		} else {
+			$this->db->query("UPDATE product_attribute SET `text` = '" . $this->db->escape($data['text']) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$data['language_id'] . "' AND attribute_id = '" . (int)$data['attribute_id'] . "'");
+		}
 	}
-
 
 	public function editProductImages($product_id, $data){
 		$this->db->query("DELETE FROM product_image WHERE product_id = '" . (int)$product_id . "'");
@@ -318,16 +324,50 @@ class productModelEdit extends hoboModel{
 		}			
 	}
 
+	private function checkIfAttributeIsAFeature($attribute_id){
+		if (!$this->config->get('config_use_separate_table_for_features')){
+			return false;
+		}
+
+		if (!$this->config->get('config_special_attr_id')){
+			return false;
+		}
+
+		if (!$this->featureAttributes){
+			$query = $this->db->query("SELECT DISTINCT attribute_id FROM attribute WHERE attribute_group_id = '" . (int)$this->config->get('config_special_attr_id') . "'");
+
+			foreach ($query->rows as $row){
+				$this->featureAttributes[] = $row['attribute_id'];
+			}
+		}
+
+		if (in_array($attribute_id, $this->featureAttributes)){
+			echoLine('[productModelEdit::checkIfAttributeIsAFeature] Attribute ' . $attribute_id . ' is a feature!', 'i');
+			return true;
+		}
+
+		return false;
+	}
+
 	public function editProductAttributes($product_id, $data){
 		$this->db->query("DELETE FROM product_attribute WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_feature WHERE product_id = '" . (int)$product_id . "'");
 
 		foreach ($data as $product_attribute) {
 			if ($product_attribute['attribute_id']) {
-				$this->db->query("DELETE FROM product_attribute WHERE product_id = '" . (int)$product_id . "' AND attribute_id = '" . (int)$product_attribute['attribute_id'] . "'");
+				if ($this->checkIfAttributeIsAFeature($product_attribute['attribute_id'])){
+					$this->db->query("DELETE FROM product_feature WHERE product_id = '" . (int)$product_id . "' AND feature_id = '" . (int)$product_attribute['attribute_id'] . "'");
 
-				foreach ($product_attribute['product_attribute_description'] as $language_id => $product_attribute_description) {				
-					$this->db->query("INSERT INTO product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$product_attribute['attribute_id'] . "', language_id = '" . (int)$language_id . "', text = '" .  $this->db->escape($product_attribute_description['text']) . "'");
-				}
+					foreach ($product_attribute['product_attribute_description'] as $language_id => $product_attribute_description) {				
+						$this->db->query("INSERT INTO product_feature SET product_id = '" . (int)$product_id . "', feature_id = '" . (int)$product_attribute['attribute_id'] . "', language_id = '" . (int)$language_id . "', text = '" .  $this->db->escape($product_attribute_description['text']) . "'");
+					}
+				} else {
+					$this->db->query("DELETE FROM product_attribute WHERE product_id = '" . (int)$product_id . "' AND attribute_id = '" . (int)$product_attribute['attribute_id'] . "'");
+
+					foreach ($product_attribute['product_attribute_description'] as $language_id => $product_attribute_description) {				
+						$this->db->query("INSERT INTO product_attribute SET product_id = '" . (int)$product_id . "', attribute_id = '" . (int)$product_attribute['attribute_id'] . "', language_id = '" . (int)$language_id . "', text = '" .  $this->db->escape($product_attribute_description['text']) . "'");
+					}
+				}			
 			}
 		}			
 	}
@@ -338,10 +378,10 @@ class productModelEdit extends hoboModel{
 		$this->db->query("DELETE FROM product_related WHERE related_id = '" . (int)$product_id . "'");
 
 		foreach ($data as $related_id) {
-			$this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$product_id . "' AND related_id = '" . (int)$related_id . "'");
-			$this->db->query("INSERT IGNORE INTO product_related SET product_id = '" . (int)$product_id . "', related_id = '" . (int)$related_id . "'");
-			$this->db->query("DELETE FROM product_related WHERE product_id = '" . (int)$related_id . "' AND related_id = '" . (int)$product_id . "'");
-			$this->db->query("INSERT IGNORE INTO product_related SET product_id = '" . (int)$related_id . "', related_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_related WHERE product_id 		= '" . (int)$product_id . "' AND related_id = '" . (int)$related_id . "'");
+			$this->db->query("INSERT IGNORE INTO product_related SET product_id = '" . (int)$product_id . "', related_id 	= '" . (int)$related_id . "'");
+			$this->db->query("DELETE FROM product_related WHERE product_id 		= '" . (int)$related_id . "' AND related_id = '" . (int)$product_id . "'");
+			$this->db->query("INSERT IGNORE INTO product_related SET product_id = '" . (int)$related_id . "', related_id 	= '" . (int)$product_id . "'");
 		}
 	}
 
@@ -359,9 +399,9 @@ class productModelEdit extends hoboModel{
 		$this->db->query("DELETE FROM product_similar WHERE product_id = '" . (int)$product_id . "'");			
 
 		foreach ($data as $similar_id) {			
-			$this->db->query("INSERT IGNORE INTO product_similar SET product_id = '" . (int)$product_id . "', similar_id = '" . (int)$similar_id . "'");
-			$this->db->query("DELETE FROM product_similar WHERE product_id = '" . (int)$similar_id . "' AND similar_id = '" . (int)$product_id . "'");
-			$this->db->query("INSERT IGNORE INTO product_similar SET product_id = '" . (int)$similar_id . "', similar_id = '" . (int)$product_id . "'");
+			$this->db->query("INSERT IGNORE INTO product_similar SET product_id = '" . (int)$product_id . "', similar_id 	= '" . (int)$similar_id . "'");
+			$this->db->query("DELETE FROM product_similar WHERE product_id 		= '" . (int)$similar_id . "' AND similar_id 		= '" . (int)$product_id . "'");
+			$this->db->query("INSERT IGNORE INTO product_similar SET product_id = '" . (int)$similar_id . "', similar_id 	= '" . (int)$product_id . "'");
 		}
 	}
 
@@ -370,10 +410,10 @@ class productModelEdit extends hoboModel{
 		$this->db->query("DELETE FROM product_similar_to_consider WHERE similar_to_consider_id = '" . (int)$product_id . "'");
 
 		foreach ($data as $similar_to_consider_id) {
-			$this->db->query("DELETE FROM product_similar_to_consider WHERE product_id = '" . (int)$product_id . "' AND similar_to_consider_id = '" . (int)$similar_to_consider_id . "'");
-			$this->db->query("INSERT IGNORE INTO product_similar_to_consider SET product_id = '" . (int)$product_id . "', similar_to_consider_id = '" . (int)$similar_to_consider_id . "'");
-			$this->db->query("DELETE FROM product_similar_to_consider WHERE product_id = '" . (int)$similar_to_consider_id . "' AND similar_to_consider_id = '" . (int)$product_id . "'");
-			$this->db->query("INSERT IGNORE INTO product_similar_to_consider SET product_id = '" . (int)$similar_to_consider_id . "', similar_to_consider_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_similar_to_consider WHERE product_id = '" . (int)$product_id . "' AND similar_to_consider_id 					= '" . (int)$similar_to_consider_id . "'");
+			$this->db->query("INSERT IGNORE INTO product_similar_to_consider SET product_id = '" . (int)$product_id . "', similar_to_consider_id 				= '" . (int)$similar_to_consider_id . "'");
+			$this->db->query("DELETE FROM product_similar_to_consider WHERE product_id = '" . (int)$similar_to_consider_id . "' AND similar_to_consider_id 		= '" . (int)$product_id . "'");
+			$this->db->query("INSERT IGNORE INTO product_similar_to_consider SET product_id = '" . (int)$similar_to_consider_id . "', similar_to_consider_id 	= '" . (int)$product_id . "'");
 		}
 	}
 
@@ -381,44 +421,44 @@ class productModelEdit extends hoboModel{
 		$this->db->query("DELETE FROM product_view_to_purchase WHERE product_id = '" . (int)$product_id . "'");		
 
 		foreach ($data as $view_to_purchase_id) {
-			$this->db->query("DELETE FROM product_view_to_purchase WHERE product_id = '" . (int)$product_id . "' AND view_to_purchase_id = '" . (int)$view_to_purchase_id . "'");
-			$this->db->query("INSERT IGNORE INTO product_view_to_purchase SET product_id = '" . (int)$product_id . "', view_to_purchase_id = '" . (int)$view_to_purchase_id . "'");			
+			$this->db->query("DELETE FROM product_view_to_purchase WHERE product_id 		= '" . (int)$product_id . "' AND view_to_purchase_id 	= '" . (int)$view_to_purchase_id . "'");
+			$this->db->query("INSERT IGNORE INTO product_view_to_purchase SET product_id 	= '" . (int)$product_id . "', view_to_purchase_id 		= '" . (int)$view_to_purchase_id . "'");			
 		}
 	}
 
 	public function editProductAlsoViewed($product_id, $data){
-		$this->db->query("DELETE FROM product_also_viewed WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_also_viewed WHERE also_viewed_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_also_viewed WHERE product_id 		= '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_also_viewed WHERE also_viewed_id 	= '" . (int)$product_id . "'");
 		
 		foreach ($data as $also_viewed_id) {
-			$this->db->query("DELETE FROM product_also_viewed WHERE product_id = '" . (int)$product_id . "' AND also_viewed_id = '" . (int)$also_viewed_id . "'");
-			$this->db->query("INSERT IGNORE INTO product_also_viewed SET product_id = '" . (int)$product_id . "', also_viewed_id = '" . (int)$also_viewed_id . "'");
-			$this->db->query("DELETE FROM product_also_viewed WHERE product_id = '" . (int)$also_viewed_id . "' AND also_viewed_id = '" . (int)$product_id . "'");
-			$this->db->query("INSERT IGNORE INTO product_also_viewed SET product_id = '" . (int)$also_viewed_id . "', also_viewed_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_also_viewed WHERE product_id 		= '" . (int)$product_id . "' AND also_viewed_id 	= '" . (int)$also_viewed_id . "'");
+			$this->db->query("INSERT IGNORE INTO product_also_viewed SET product_id = '" . (int)$product_id . "', also_viewed_id 		= '" . (int)$also_viewed_id . "'");
+			$this->db->query("DELETE FROM product_also_viewed WHERE product_id 		= '" . (int)$also_viewed_id . "' AND also_viewed_id = '" . (int)$product_id . "'");
+			$this->db->query("INSERT IGNORE INTO product_also_viewed SET product_id = '" . (int)$also_viewed_id . "', also_viewed_id 	= '" . (int)$product_id . "'");
 		}		
 	}
 
 	public function editProductAlsoBought($product_id, $data){
-		$this->db->query("DELETE FROM product_also_bought WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_also_bought WHERE also_bought_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_also_bought WHERE product_id 		= '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_also_bought WHERE also_bought_id 	= '" . (int)$product_id . "'");
 
 		foreach ($data as $also_bought_id) {
-			$this->db->query("DELETE FROM product_also_bought WHERE product_id = '" . (int)$product_id . "' AND also_bought_id = '" . (int)$also_bought_id . "'");
-			$this->db->query("INSERT IGNORE INTO product_also_bought SET product_id = '" . (int)$product_id . "', also_bought_id = '" . (int)$also_bought_id . "'");
-			$this->db->query("DELETE FROM product_also_bought WHERE product_id = '" . (int)$also_bought_id . "' AND also_bought_id = '" . (int)$product_id . "'");
-			$this->db->query("INSERT IGNORE INTO product_also_bought SET product_id = '" . (int)$also_bought_id . "', also_bought_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_also_bought WHERE product_id 		= '" . (int)$product_id . "' AND also_bought_id 	= '" . (int)$also_bought_id . "'");
+			$this->db->query("INSERT IGNORE INTO product_also_bought SET product_id = '" . (int)$product_id . "', also_bought_id 		= '" . (int)$also_bought_id . "'");
+			$this->db->query("DELETE FROM product_also_bought WHERE product_id 		= '" . (int)$also_bought_id . "' AND also_bought_id = '" . (int)$product_id . "'");
+			$this->db->query("INSERT IGNORE INTO product_also_bought SET product_id = '" . (int)$also_bought_id . "', also_bought_id 	= '" . (int)$product_id . "'");
 		}
 	}
 
 	public function editProductShopByLook($product_id, $data){
-		$this->db->query("DELETE FROM product_shop_by_look WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_shop_by_look WHERE shop_by_look_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_shop_by_look WHERE product_id 		= '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_shop_by_look WHERE shop_by_look_id 	= '" . (int)$product_id . "'");
 
 		foreach ($data as $shop_by_look_id) {
-			$this->db->query("DELETE FROM product_shop_by_look WHERE product_id = '" . (int)$product_id . "' AND shop_by_look_id = '" . (int)$shop_by_look_id . "'");
-			$this->db->query("INSERT INTO product_shop_by_look SET product_id = '" . (int)$product_id . "', shop_by_look_id = '" . (int)$shop_by_look_id . "'");
-			$this->db->query("DELETE FROM product_shop_by_look WHERE product_id = '" . (int)$shop_by_look_id . "' AND shop_by_look_id = '" . (int)$product_id . "'");
-			$this->db->query("INSERT INTO product_shop_by_look SET product_id = '" . (int)$shop_by_look_id . "', shop_by_look_id = '" . (int)$product_id . "'");
+			$this->db->query("DELETE FROM product_shop_by_look WHERE product_id = '" . (int)$product_id . "' AND shop_by_look_id 		= '" . (int)$shop_by_look_id . "'");
+			$this->db->query("INSERT INTO product_shop_by_look SET product_id 	= '" . (int)$product_id . "', shop_by_look_id 			= '" . (int)$shop_by_look_id . "'");
+			$this->db->query("DELETE FROM product_shop_by_look WHERE product_id = '" . (int)$shop_by_look_id . "' AND shop_by_look_id 	= '" . (int)$product_id . "'");
+			$this->db->query("INSERT INTO product_shop_by_look SET product_id 	= '" . (int)$shop_by_look_id . "', shop_by_look_id 		= '" . (int)$product_id . "'");
 		}
 	}
 
@@ -431,10 +471,18 @@ class productModelEdit extends hoboModel{
 	}
 
 	public function editProductAttributeText($product_id, $attribute_id, $data){
-		foreach ($data as $language_id => $value) {
-			$this->db->query("UPDATE product_attribute SET 
-				text 				= '" . $this->db->escape($value['text']) . "'								
-				WHERE product_id 	= '" . (int)$product_id . "' AND attribute_id = '" . (int)$attribute_id . "' AND language_id = '" . (int)$language_id . "'");
+		if ($this->checkIfAttributeIsAFeature($attribute_id)){
+			foreach ($data as $language_id => $value) {						
+				$this->db->query("UPDATE product_feature SET 
+					`text` 				= '" . $this->db->escape($value['text']) . "'								
+					WHERE product_id 	= '" . (int)$product_id . "' AND feature_id = '" . (int)$attribute_id . "' AND language_id = '" . (int)$language_id . "'");			
+			}
+		} else {
+			foreach ($data as $language_id => $value) {						
+				$this->db->query("UPDATE product_attribute SET 
+					`text` 				= '" . $this->db->escape($value['text']) . "'								
+					WHERE product_id 	= '" . (int)$product_id . "' AND attribute_id = '" . (int)$attribute_id . "' AND language_id = '" . (int)$language_id . "'");			
+			}
 		}
 	}
 

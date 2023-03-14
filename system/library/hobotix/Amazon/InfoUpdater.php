@@ -82,7 +82,6 @@ class InfoUpdater extends RainforestRetriever
 	}
 
 	public function normalizeProductAttributeText($text){
-
 		//Убираем все кавычки, и другие непонятные спецсимволы, из-за них потом проблемы
 		$text = str_replace(['"', ',,', '?'], '', $text);
 
@@ -351,15 +350,13 @@ class InfoUpdater extends RainforestRetriever
 	}
 
 	public function putAsinDataToFileCache($asin, $json){
-
 		$file = $this->createAsinCacheFileName($asin);
 		file_put_contents($file['full'], $json);
 
 		return $file['path'];
 	}
 
-	public function updateProductAmznData($product, $updateDimensions = true){
-		
+	public function updateProductAmznData($product, $updateDimensions = true){		
 		if ($this->config->get('config_enable_amazon_asin_file_cache')){
 
 			$file = $this->putAsinDataToFileCache($product['asin'], $product['json']);
@@ -433,7 +430,6 @@ class InfoUpdater extends RainforestRetriever
 			}
 		}
 	}
-
 
 	/*
 	 THIS WORKS ONLY FOR 10x10x10 Cm; 5 kg - this is standard Amazon dimension string, this is old function
@@ -772,7 +768,6 @@ class InfoUpdater extends RainforestRetriever
 	}
 
 	public function updateASINInDatabase($product){
-
 		if ($product['asin'] == 'INVALID'){
 			$this->db->query("UPDATE product SET old_asin = asin WHERE product_id = '" . $product['product_id'] . "'");
 		}
@@ -808,7 +803,6 @@ class InfoUpdater extends RainforestRetriever
 			}
 
 		}
-
 
 		return $product;
 	}

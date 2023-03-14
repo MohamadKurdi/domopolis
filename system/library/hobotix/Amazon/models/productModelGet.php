@@ -540,12 +540,18 @@ class productModelGet extends hoboModel{
 	public function getProductFeatureBullets($product_id) {
 		$product_attribute_data = array();
 
-		$product_attribute_query = $this->db->ncquery("SELECT attribute_id FROM product_attribute WHERE product_id = '" . (int)$product_id . "'  AND attribute_id IN (SELECT attribute_id FROM attribute WHERE attribute_group_id = '" . $this->config->get('config_special_attr_id') . "') GROUP BY attribute_id");
+		if ($this->config->get('config_use_separate_table_for_features')){
+			$product_attribute_query = $this->db->ncquery("SELECT feature_id AS 'attribute_id' FROM product_feature WHERE product_id = '" . (int)$product_id . "'  AND feature_id IN (SELECT attribute_id FROM attribute WHERE attribute_group_id = '" . $this->config->get('config_special_attr_id') . "') GROUP BY attribute_id");
+		} else {
+			$product_attribute_query = $this->db->ncquery("SELECT attribute_id FROM product_attribute WHERE product_id = '" . (int)$product_id . "'  AND attribute_id IN (SELECT attribute_id FROM attribute WHERE attribute_group_id = '" . $this->config->get('config_special_attr_id') . "') GROUP BY attribute_id");
+		}
 
 		foreach ($product_attribute_query->rows as $product_attribute) {
 			$product_attribute_description_data = array();
-
-			$product_attribute_description_query = $this->db->ncquery("SELECT * FROM product_attribute WHERE product_id = '" . (int)$product_id . "' AND attribute_id = '" . (int)$product_attribute['attribute_id'] . "'");
+			
+			if ($this->config->get('config_use_separate_table_for_features')){
+				$product_attribute_description_query = $this->db->ncquery("SELECT * FROM product_feature WHERE product_id = '" . (int)$product_id . "' AND feature_id = '" . (int)$product_attribute['attribute_id'] . "'");
+			}
 
 			foreach ($product_attribute_description_query->rows as $product_attribute_description) {
 				$product_attribute_description_data[$product_attribute_description['language_id']] = array('text' => $product_attribute_description['text']);

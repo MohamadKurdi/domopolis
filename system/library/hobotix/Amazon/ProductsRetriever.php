@@ -247,7 +247,7 @@ class ProductsRetriever extends RainforestRetriever
 		if (!empty($product['feature_bullets']) && ($main_variant_id === false || $main_variant_id == $product_id)){				
 			$feature_bullets_counter = 1;
 			foreach ($product['feature_bullets'] as $feature_bullet){
-				echoLine('[editFullProduct] Особенности: ' . $feature_bullets_counter);
+				echoLine('[editFullProduct] Features: ' . $feature_bullets_counter);
 
 				$attribute_id = $this->model_product_cached_get->getAttribute($this->config->get('config_special_attr_name') . ' ' . $feature_bullets_counter);
 				if (!$attribute_id){
@@ -283,7 +283,7 @@ class ProductsRetriever extends RainforestRetriever
 			}
 			
 		} elseif ($main_variant_id && $main_variant_id != $product_id){
-			echoLine('[editFullProduct] Копируем feature_bullets с основного товара: ' . $main_variant_id);
+			echoLine('[editFullProduct] Copying feature_bullets from main product: ' . $main_variant_id);
 			$product_attribute = $this->model_product_get->getProductFeatureBullets($main_variant_id);
 		}
 
