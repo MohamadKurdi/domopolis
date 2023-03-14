@@ -74,11 +74,9 @@ class ModelCatalogAttribute extends Model {
     }
 
     public function updateAttributeImageValues ($attribute_id, $images, $informations) {
-
     	if (!$this->config->get('config_enable_attributes_values_logic')){
     		return;
     	}
-
 
         $this->db->query("DELETE FROM attribute_value_image WHERE attribute_id = '" . (int)$attribute_id . "'");
 
