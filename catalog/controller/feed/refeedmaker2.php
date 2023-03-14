@@ -209,6 +209,19 @@ class ControllerFeedReFeedMaker2 extends Controller
             }
         }
 
+        if ($this->config->get('config_use_separate_table_for_features')){
+            $features = $this->model_catalog_product->getProductFeaturesFlat($product['product_id']);
+            if ($features) {
+                foreach ($features as $feature) {
+                    $output .= '    <g:product_detail>' . PHP_EOL;
+                    $output .= '        <g:section_name><![CDATA[' . $feature['attribute_group'] . ']]></g:section_name>' . PHP_EOL;
+                    $output .= '        <g:attribute_name><![CDATA[' . $feature['attribute_name'] . ']]></g:attribute_name>' . PHP_EOL;
+                    $output .= '        <g:attribute_value><![CDATA[' . $feature['attribute_value'] . ']]></g:attribute_value>' . PHP_EOL;
+                    $output .= '    </g:product_detail>' . PHP_EOL;
+                }
+            }
+        }
+
         if ($product['image']) {
             $output .= '    <g:image_link><![CDATA[' . $this->model_tool_image->resize($product['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')) . ']]></g:image_link>'. PHP_EOL;
         } else {

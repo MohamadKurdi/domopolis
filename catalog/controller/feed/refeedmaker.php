@@ -437,22 +437,29 @@ class ControllerFeedReFeedMaker extends Controller
             $output .= '<g:custom_label_0><![CDATA[На складе]]></g:custom_label_0>'. PHP_EOL;
         }
 
-        $attributes = $this->model_catalog_product->getProductAttributes($product['product_id']);
-
+        $attributes = $this->model_catalog_product->getProductAttributesFlat($product['product_id']);
         if ($attributes) {
-            foreach ($attributes as $ag) {
-                if (!empty($ag['attribute'])) {
-                    foreach ($ag['attribute'] as $attribute) {
-                        $output .= '<g:product_detail>' . PHP_EOL;
-                        $output .= '<g:section_name><![CDATA[' . $ag['name'] . ']]></g:section_name>' . PHP_EOL;
-                        $output .= '<g:attribute_name><![CDATA[' . $attribute['name'] . ']]></g:attribute_name>' . PHP_EOL;
-                        $output .= '<g:attribute_value><![CDATA[' . $attribute['text'] . ']]></g:attribute_value>' . PHP_EOL;
-                        $output .= '</g:product_detail>' . PHP_EOL;
-                    }
-                }
+            foreach ($attributes as $attribute) {
+                $output .= '    <g:product_detail>' . PHP_EOL;
+                $output .= '        <g:section_name><![CDATA[' . $attribute['attribute_group'] . ']]></g:section_name>' . PHP_EOL;
+                $output .= '        <g:attribute_name><![CDATA[' . $attribute['attribute_name'] . ']]></g:attribute_name>' . PHP_EOL;
+                $output .= '        <g:attribute_value><![CDATA[' . $attribute['attribute_value'] . ']]></g:attribute_value>' . PHP_EOL;
+                $output .= '    </g:product_detail>' . PHP_EOL;
             }
         }
 
+        if ($this->config->get('config_use_separate_table_for_features')){
+            $features = $this->model_catalog_product->getProductFeaturesFlat($product['product_id']);
+            if ($features) {
+                foreach ($features as $feature) {
+                    $output .= '    <g:product_detail>' . PHP_EOL;
+                    $output .= '        <g:section_name><![CDATA[' . $feature['attribute_group'] . ']]></g:section_name>' . PHP_EOL;
+                    $output .= '        <g:attribute_name><![CDATA[' . $feature['attribute_name'] . ']]></g:attribute_name>' . PHP_EOL;
+                    $output .= '        <g:attribute_value><![CDATA[' . $feature['attribute_value'] . ']]></g:attribute_value>' . PHP_EOL;
+                    $output .= '    </g:product_detail>' . PHP_EOL;
+                }
+            }
+        }
 
         if ($product['image']) {
             $output .= '  <g:image_link>' . $this->model_tool_image->resize($product['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')) . '</g:image_link>'. PHP_EOL;
