@@ -574,7 +574,19 @@
 								</td>
 								
 								<td style="width:15%">
-									
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Отдельная табличка нефильтруемых атрибутов</span></p>
+									<select name="config_use_separate_table_for_features">
+										<?php if ($config_use_separate_table_for_features) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+
+									<br />
+									<span class="help"><i class="fa fa-info-circle"></i> Если включено, то значения нефильтруемых атрибутов (особенности) записываются и считываются из отдельной таблички</span>
 								</td>
 								
 								<td style="width:15%">

@@ -1465,6 +1465,12 @@ class ControllerSettingSetting extends Controller
         $this->load->model('catalog/attribute_group');
         $this->data['attribute_groups'] = $this->model_catalog_attribute_group->getAttributeGroups(['limit' => 100]);
         
+        if (isset($this->request->post['config_use_separate_table_for_features'])) {
+            $this->data['config_use_separate_table_for_features'] = $this->request->post['config_use_separate_table_for_features'];
+        } else {
+            $this->data['config_use_separate_table_for_features'] = $this->config->get('config_use_separate_table_for_features');
+        }
+
         if (isset($this->request->post['config_special_attr_id'])) {
             $this->data['config_special_attr_id'] = $this->request->post['config_special_attr_id'];
         } else {
