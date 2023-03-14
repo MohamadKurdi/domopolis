@@ -1859,9 +1859,13 @@ public function index($product_id = false, $just_price = false)
                         $filter_data['exclude_dimension_types'][] = 'all';
                     }
 
+                    $this->data['attribute_groups']         = $this->model_catalog_product->getProductAttributes($this->request->get['product_id'], $filter_data);
 
-                    $this->data['attribute_groups'] = $this->model_catalog_product->getProductAttributes($this->request->get['product_id'], $filter_data);
-                    $this->data['attribute_groups_special'] = $this->model_catalog_product->getProductAttributesByGroupId($this->request->get['product_id'], $this->config->get('config_special_attr_id'));
+                    if ($this->config->get('config_use_separate_table_for_features')){
+                        $this->data['attribute_groups_special'] = $this->model_catalog_product->getProductFeatures($this->request->get['product_id']);
+                    } else {
+                        $this->data['attribute_groups_special'] = $this->model_catalog_product->getProductAttributesByGroupId($this->request->get['product_id'], $this->config->get('config_special_attr_id'));
+                    }                   
 
                     $this->data['color_grouped_products'] = [];
                     if ($product_info['color_group']) {
