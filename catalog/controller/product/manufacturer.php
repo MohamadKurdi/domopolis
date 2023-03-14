@@ -109,9 +109,7 @@ class ControllerProductManufacturer extends Controller {
 			'text'      => $this->language->get('text_brand'),
 			'href'      => $this->url->link('product/manufacturer'),
 			'separator' => $this->language->get('text_separator')
-		);
-
-		$this->log->debug($this->language->get('text_brand'));
+		);		
 
 		$this->data['this_link'] = $this->url->link('product/manufacturer');
 		$this->data['categories'] = array();
@@ -120,19 +118,16 @@ class ControllerProductManufacturer extends Controller {
 		$current_lang  = (int)$this->config->get('config_language_id');
 		$current_curr  = (int)$this->currency->getId();
 
-
 			//Страницы стран
 		$this->data['countrybrands'] = [];			
 		$results = $this->model_catalog_manufacturer->getAllCountryBrands();
 
 		foreach ($results as $result){
-
 			$this->data['countrybrands'][] = [
 				'name'		=> $result['name'],
 				'flag'		=> $result['flag'],
 				'href'		=> $this->url->link('product/countrybrand', 'countrybrand_id=' . $result['countrybrand_id']),
-			];
-			
+			];		
 		}
 
 		$results = $this->model_catalog_manufacturer->getManufacturers(['filter_exclude_hidden' => true, 'start' => 0, 'limit' => 9999]);
