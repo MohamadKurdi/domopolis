@@ -192,8 +192,7 @@
 				$category_id = (int)array_pop($parts);
 			}
 			
-			$this->load->model('catalog/superstat');	
-			
+			$this->load->model('catalog/superstat');				
 			if (!empty($this->request->get['manufacturer_id'])){
 				$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($this->request->get['manufacturer_id']);
 				
