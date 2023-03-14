@@ -319,6 +319,7 @@
 						'product_id'  				=> $result['product_id'],
 						'is_certificate'			=> (strpos($result['location'], 'certificate') !== false),
 						'ecommerceData'				=> $ecommerceData,
+						'current_in_stock' 			=> $result['current_in_stock'],
 						'stock_type'  				=> $stock_data['stock_type'],
 						'stock_text'  				=> $result['stock_text'],						
 						'show_delivery_terms' 		=> $stock_data['show_delivery_terms'],
@@ -352,6 +353,7 @@
 						'can_not_buy' 				=> ($result['stock_status_id'] == $this->config->get('config_not_in_stock_status_id')),
 						'need_ask_about_stock' 		=> ($result['stock_status_id'] == $this->config->get('config_partly_in_stock_status_id')),
 						'has_child'  				=> $result['has_child'],
+						'has_video'  				=> $result['has_video'],
 						'stock_status'  			=> $result['stock_status'],
 						'location'      			=> $result['location'],
 						'reviews'     				=> sprintf($this->language->get('text_reviews'), (int)$result['reviews']),
@@ -396,7 +398,7 @@
 				$sql = '';		
 				$sql .= "SELECT DISTINCT *, ";				
 				if ($simple != 'simple'){
-					$sql .= " p.image, p.xrating as rating, p.xreviews as reviews, p.sort_order, ";
+					$sql .= " p.image, p.xhasvideo as has_video, p.xrating as rating, p.xreviews as reviews, p.sort_order, ";
 					$sql .= " pd.name AS name, pd.color AS color, pd.material AS material, pd.alt_image, pd.title_image,";
 					$sql .= " m.name AS manufacturer, m.image as manufacturer_img, ";
 					$sql .= " (SELECT st.set_id FROM `set` st WHERE p.product_id = st.product_id LIMIT 1) as set_id, ";
@@ -745,6 +747,7 @@
 							'pack_length_class_id'     => $query->row['pack_length_class_id'],
 							'subtract'                 => $query->row['subtract'],
 							'has_child'                => $query->row['has_child'],
+							'has_video' 			   => $query->row['has_video'],	
 							'rating'                   => $query->row['rating'] ? round($query->row['rating']): 0,
 							'reviews'                  => $query->row['reviews'] ? $query->row['reviews'] : 0,
 							'minimum'                  => $query->row['minimum'] ? $query->row['minimum']: 1,
