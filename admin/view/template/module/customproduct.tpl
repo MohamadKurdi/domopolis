@@ -253,8 +253,7 @@
 			</form>
 		</div>
 		<div id='module_copyright'>
-			<div style="text-align: center;"><?php echo $text_copyright; ?></div>
-			<?php echo $module_copyright; ?>
+			<div style="text-align: center;"><?php echo $text_copyright; ?></div>			
 		</div>
 	</div>
 	<script type="text/javascript"><!--
