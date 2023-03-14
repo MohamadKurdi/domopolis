@@ -150,8 +150,7 @@ class ModelKPProduct extends Model {
 		return $query->row;
 	}
 
-	public function getProductCosts($product_id) {							
-		
+	public function getProductCosts($product_id) {									
 		$sql = "SELECT * FROM product_costs WHERE product_id = '" . (int)$product_id . "'";
 		$query = $this->db->query($sql);
 		

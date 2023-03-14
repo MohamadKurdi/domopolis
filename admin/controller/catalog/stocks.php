@@ -172,8 +172,6 @@ class ControllerCatalogStocks extends Controller {
 		);
 
 		$this->response->setOutput($this->render());
-
-
 	}
 
 	public function getStockDynamicsAjax(){
@@ -245,7 +243,7 @@ class ControllerCatalogStocks extends Controller {
 		$this->data['stores'] = [];
 
 		foreach ($stores as $store){
-			if ($this->model_setting_setting->getKeySettingValue('config', 'config_warehouse_identifier_local', $store['store_id']) == $this->model_setting_setting->getKeySettingValue('config', 'config_warehouse_identifier', $store['store_id'])){			
+			if ($this->model_setting_setting->getKeySettingValue('config', 'config_warehouse_identifier_local', $store['store_id']) == $this->model_setting_setting->getKeySettingValue('config', 'config_warehouse_identifier', $store['store_id'])){		
 				$store['href'] = $this->url->link('catalog/stocks', 'store_id=' . $store['store_id'] . '&token=' . $this->session->data['token'], 'SSL');
 				$this->data['stores'][] = $store;
 			}			

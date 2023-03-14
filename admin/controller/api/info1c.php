@@ -908,23 +908,31 @@ class ControllerApiInfo1C extends Controller
                         $this->db->query($sql);
 
                         if (!empty($value['costM']) && !empty($value['min_sale_priceM'])) {
-                            $sql = "INSERT INTO product_costs SET 
-							product_id 		= '" . $value['product_id'] . "', 
-							store_id 		= 0, 
-							cost 			= '" . (float)$value['costM'] . "',
-							currency 		= 'EUR',
-							min_sale_price 	= '" . (float)$value['min_sale_priceM'] . "'
-							ON DUPLICATE KEY UPDATE
-							cost 			= '" . (float)$value['costM'] . "',
-							min_sale_price 	= '" . (float)$value['min_sale_priceM'] . "'";
+                            if ($this->config->get('config_warehouse_identifier') == 'quantity_stockM'){
+                                $sql = "INSERT INTO product_costs SET 
+                                product_id      = '" . (int)$value['product_id'] . "', 
+                                store_id        = 0, 
+                                cost            = '" . (float)$value['costM'] . "',
+                                currency        = 'EUR',
+                                min_sale_price  = '" . (float)$value['min_sale_priceM'] . "'
+                                ON DUPLICATE KEY UPDATE
+                                cost            = '" . (float)$value['costM'] . "',
+                                min_sale_price  = '" . (float)$value['min_sale_priceM'] . "'";
 
-                            $this->db->query($sql);
+                                $this->db->query($sql);
+                            }
                         }
 
                         if (!empty($value['costK']) && !empty($value['min_sale_priceK'])) {
+                            $value_store_id = 1;
+
+                            if ($this->config->get('config_warehouse_identifier') == 'quantity_stockK'){
+                                 $value_store_id = 0;
+                            }
+
                             $sql = "INSERT INTO product_costs SET 
-							product_id 		= '" . $value['product_id'] . "', 
-							store_id 		= 1, 
+							product_id 		= '" . (int)$value['product_id'] . "', 
+							store_id 		= '" . (int)$value_store_id . "', 
 							cost 			= '" . (float)$value['costK'] . "',
 							currency 		= 'EUR',
 							min_sale_price 	= '" . (float)$value['min_sale_priceK'] . "'
