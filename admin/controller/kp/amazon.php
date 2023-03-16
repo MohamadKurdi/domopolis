@@ -11,6 +11,8 @@ class ControllerKPAmazon extends Controller {
 
 		if (!empty($this->request->get['explicit'])){	
 			$explicit = (int)$this->request->get['explicit'];		
+		} else {
+			$explicit = false;
 		}
 
 		$this->load->model('catalog/product');
