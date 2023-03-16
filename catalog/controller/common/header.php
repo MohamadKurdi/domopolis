@@ -135,14 +135,7 @@
 			
 			if ($this->data['lang'] == 'ru-KZ'){
 				$this->data['lang'] = 'ru';
-			}
-			
-			$this->data['pwaInstallKey'] = $this->session->data['pwaInstallKey'] = md5('pwainstall' . $this->request->server['REMOTE_ADDR'] . date('d') . $this->config->get('config_encryption'));
-			$this->data['pwaSessionKey'] = $this->session->data['pwaSessionKey'] = md5('pwasession' . $this->request->server['REMOTE_ADDR'] . date('d') . $this->config->get('config_encryption'));			
-			$this->data['spsroute'] = $this->url->link('kp/pwa/sps', 'pwaSessionKey=' . $this->data['pwaSessionKey']);
-			$this->data['spiroute'] = $this->url->link('kp/pwa/spi', 'pwaInstallKey=' . $this->data['pwaInstallKey']);
-			
-			$this->data['pwasession'] = $this->customer->getPWASession();			
+			}								
 			
 			$this->data['direction'] 	= $this->language->get('direction');
 			$this->data['name'] 		= $this->config->get('config_name');
@@ -507,6 +500,8 @@
 			$this->data['action'] 		= $this->url->link('account/login');
 			$this->data['register'] 	= $this->url->link('account/register');
 			$this->data['forgotten'] 	= $this->url->link('account/forgotten');
+
+			$this->data['google_auth_nonce'] 	= md5($this->session->getID() . 'google_auth_nonce' . $this->config->get('config_encryption'));
 			
 			//МЕНЮ Аккаунта
 			if ($this->customer->isLogged()){				
