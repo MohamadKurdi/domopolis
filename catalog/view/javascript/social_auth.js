@@ -17,11 +17,6 @@ $(document).ready(function() {
 	$('input[type=password]').after('<span class="password-toggle" onclick="passwordToggle();"><i class="fas fa-eye"></i></span>');
 });
 
-
-
-
-//  social_auth
-
 var social_auth = {
 	
     'googleplus': function(th) {
