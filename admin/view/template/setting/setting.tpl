@@ -4495,17 +4495,30 @@
 							<h2>СДЭК API</h2>
 							<table class="form">
 								<tr>
-									<td width="20%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">API LOGIN</span></p>
-										<input type="text" name="config_cdek_api_login" value="<?php echo $config_cdek_api_login; ?>" size="50" style="width:300px;" />
+										<input type="text" name="config_cdek_api_login" value="<?php echo $config_cdek_api_login; ?>" size="50" style="width:90%;" />
 									</td>
 									
-									<td width="20%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">API KEY</span></p>
-										<input type="text" name="config_cdek_api_key" value="<?php echo $config_cdek_api_key; ?>" size="50" style="width:300px;" />
+										<input type="text" name="config_cdek_api_key" value="<?php echo $config_cdek_api_key; ?>" size="50" style="width:90%;" />
 									</td>
 
-									<td width="25%">
+									<td width="15%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Стоимость на чекауте</span></p>
+										<select name="config_cdek_calculate_on_checkout">
+												<?php if ($config_cdek_calculate_on_checkout) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>										
+									</td>
+
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Тариф по-умолчанию склад-склад</span></p>
 										<select name="config_cdek_api_default_tariff_warehouse">
 										<?php foreach ($cdek_tariffs as $cdek_tariff) { ?>
@@ -4518,7 +4531,7 @@
 										</select>
 									</td>
 
-									<td width="25%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Тариф по-умолчанию склад-двери</span></p>
 										<select name="config_cdek_api_default_tariff_doors">
 										<?php foreach ($cdek_tariffs as $cdek_tariff) { ?>
@@ -4531,10 +4544,12 @@
 										</select>
 									</td>
 
-									<td width="10%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ID города-отправителя</span></p>
 										<input type="text" name="config_cdek_api_city_sender_id" value="<?php echo $config_cdek_api_city_sender_id; ?>" size="50" style="width:300px;" />										
 									</td>
+
+
 								</tr>							
 							</table>
 

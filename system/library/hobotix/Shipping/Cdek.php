@@ -246,7 +246,7 @@
 			$result = [];
 
 			try{
-				$query = $this->db->query("SELECT deliveryPeriodMin, deliveryPeriodMax, min_WW, min_WD FROM cdek_cities WHERE code = '" . (int)$city_code . "'");
+				$query = $this->db->query("SELECT deliveryPeriodMin, deliveryPeriodMax, min_WW, min_WD FROM cdek_cities WHERE min_WD = '" . (int)$city_code . "'");
 
 				if ($query->num_rows && $query->row['deliveryPeriodMin'] && $query->row['deliveryPeriodMax'] && $query->row['min_WW'] && $query->row['min_WD']){
 					$result = [
@@ -259,8 +259,8 @@
 				}
 
 				if (!$result || mt_rand(0,10) == 5){
-					$tariff_WW = (new Tariff())->setTariffCode($this->config->get('config_cdek_api_default_tariff_warehouse'))->setCityCodes($this->config->get('config_cdek_api_city_sender_id'), (int)$city_code)->setPackageWeight(500); 
-					$tariff_WD = (new Tariff())->setTariffCode($this->config->get('config_cdek_api_default_tariff_doors'))->setCityCodes($this->config->get('config_cdek_api_city_sender_id'), (int)$city_code)->setPackageWeight(500);
+					$tariff_WW = (new Tariff())->setTariffCode($this->config->get('config_cdek_api_default_tariff_warehouse'))->setCityCodes($this->config->get('config_cdek_api_city_sender_id'), (int)$city_code)->setPackageWeight(1000); 
+					$tariff_WD = (new Tariff())->setTariffCode($this->config->get('config_cdek_api_default_tariff_doors'))->setCityCodes($this->config->get('config_cdek_api_city_sender_id'), (int)$city_code)->setPackageWeight(1000);
 
 					$tariff_WW_info = $this->CdekClient->calculateTariff($tariff_WW);
 					$tariff_WD_info = $this->CdekClient->calculateTariff($tariff_WD);

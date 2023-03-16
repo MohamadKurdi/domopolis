@@ -381,7 +381,7 @@
 	</script>
 <?php } ?> 
 
-<?php if ($this->config->get('config_country_id') != 220) { ?>
+<?php if ($this->config->get('config_cdek_calculate_on_checkout') && $this->config->get('config_country_id') != 220) { ?>
 	<script>
 		
 		function initCDEKCounters(){		

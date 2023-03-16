@@ -1237,6 +1237,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_cdek_api_key'] = $this->config->get('config_cdek_api_key');
         }
 
+        if (isset($this->request->post['config_cdek_calculate_on_checkout'])) {
+            $this->data['config_cdek_calculate_on_checkout'] = $this->request->post['config_cdek_calculate_on_checkout'];
+        } else {
+            $this->data['config_cdek_calculate_on_checkout'] = $this->config->get('config_cdek_calculate_on_checkout');
+        }
+
         $this->data['cdek_tariffs'] = [];
         if ($this->config->get('config_country_id') == 176 && $this->data['config_cdek_api_key'] && $this->config->get('config_cdek_api_city_sender_id')){
             try{
