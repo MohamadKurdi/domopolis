@@ -216,25 +216,27 @@
 			}
 			return true;
 		}
-		
-		
-		protected function index() {
 
-			$this->data['button_confirm'] = $this->language->get('button_confirm');
-			
-			$this->data['continue'] = $this->url->link('checkout/success');
-			
-			$this->load->model('checkout/order');
-			
+		public function confirm(){
+			$this->load->model('checkout/order');			
+			$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);	
+
+			if ($order_info){
+				$this->model_checkout_order->confirm($this->session->data['order_id'], $this->config->get('paykeeper_order_fail_status_id'), 'PayKeeper payment process started');			
+			}		
+		}
+
+		public function pay(){
+			$this->load->model('checkout/order');			
 			$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);					
 			
 			$request_data = array();    
-			$request_data['clientid'] = $order_info['customer_id'];
-			$request_data['orderid'] = $order_info['order_id'];
-			$request_data['sum'] = $order_info['total'];
-			$request_data['userip'] = $order_info['ip'];
-			$request_data['phone'] = $order_info['telephone'];
-			$request_data['client_email'] = $order_info['email'];
+			$request_data['clientid'] 	= $order_info['customer_id'];
+			$request_data['orderid'] 	= $order_info['order_id'];
+			$request_data['sum'] 		= $order_info['total_national'];
+			$request_data['userip'] 	= $order_info['ip'];
+			$request_data['phone'] 			= $order_info['telephone'];
+			$request_data['client_email'] 	= $order_info['email'];
 			
 			$options = array (
 			'http' => array (
@@ -246,13 +248,25 @@
 			$context = stream_context_create($options);
 			
 			$this->data['paykeeper_form'] = file_get_contents($this->config->get('paykeeper_server_url'), false, $context);
+
+			$this->template = 'payment/paykeeper.tpl';		
+
+			$this->response->setOutput($this->render());	
+		}
 		
+		
+		protected function index() {
+			$this->data['button_confirm'] = $this->language->get('button_confirm');
+			$this->data['continue'] = $this->url->link('payment/paykeeper/pay');
+
+			$this->load->model('checkout/order');			
+			$order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);								
 			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/paykeeper_order.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/payment/paykeeper_order.tpl';
-				} else {
-				$this->template = 'default/template/payment/paykeeper_order.tpl';
-			}	
+			if ($this->config->get('paykeeper_pay_on_checkout')) {
+				$this->template = 'payment/paykeeper_laterpay.tpl';
+			} else {
+				$this->template = 'payment/paykeeper_order.tpl';
+			}
 			
 			$this->render();
 		}
@@ -337,10 +351,8 @@
 			
 			
 			echo "OK ".md5($pkid.$secret_key);
-			return true;
-			
-		}
-		
+			return true;			
+		}		
 		
 		public function callback_original() {
 			$secret_key = $this->config->get('paykeeper_secret_key');
@@ -430,7 +442,6 @@
 			$this->logWrite('OK: ' . http_build_query($this->request->post, '', ','), self::$LOG_SHORT);
 		}
 		
-		//type = 'admin' - mail send to admin; type = 'customer' - mail send to customer
 		protected function sendMail($subject, $content, $order_status_id, $type = 'admin', $log_result = '') {
 			$this->load->model('payment/shoputils_psb');
 			
@@ -715,4 +726,3 @@
 		}
 		
 	}
-?>

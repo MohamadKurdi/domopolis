@@ -3,29 +3,20 @@
 		const METHOD_CODE = 'paykeeper';
 		
 		
-		public function getMethod($address, $total, $explicit_show = false) {			
+		public function getMethod($address, $total, $explicit_show = false) {
+			$this->language->load('payment/paykeeper');			
+			
 			$status = false;						
-
 			if (($this->config->get('paykeeper_status'))){
 				$status = true;
 			}
-			
-			$this->language->load('payment/paykeeper');
-			
+									
 			if ((int)$address['country_id'] == 220 || (int)$address['country_id'] == 81) {
 				$status = false;
 			}
 			
-			if ($explicit_show && $status){
-				$status = true;
-			} elseif ((int)$address['country_id'] == 109 || (int)$address['country_id'] == 20) {
+			if ((int)$address['country_id'] == 109 || (int)$address['country_id'] == 20) {
 				$status = false;			
-			} else {
-				$status = false;		
-			}
-
-			if ((int)$address['country_id'] == 176 && $this->config->get('paykeeper_status')){
-				$status = false;
 			}
 			
 			$method_data = array();
@@ -35,9 +26,9 @@
 				'code'        => self::METHOD_CODE,
 				'status'      => $status,
 				'checkactive' => true,
-				'title'      => $this->language->get('text_title'),
-				'description' => $this->language->get('text_description'),
-				'sort_order' => $this->config->get('paykeeper_sort_order')
+				'title'      	=> $this->language->get('text_title'),
+				'description' 	=> $this->language->get('text_description'),
+				'sort_order' 	=> $this->config->get('paykeeper_sort_order')
 				);
 			}
 			

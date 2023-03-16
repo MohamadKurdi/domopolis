@@ -105,6 +105,19 @@
 						</tr>
 
 						<tr>
+							<td>Оплата на чекауте</td>
+							<td><select name="paykeeper_pay_on_checkout">
+								<?php if ($paykeeper_pay_on_checkout) { ?>
+									<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+									<option value="0"><?php echo $text_disabled; ?></option>
+									<?php } else { ?>
+									<option value="1"><?php echo $text_enabled; ?></option>
+									<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+								<?php } ?>
+							</select></td>
+						</tr>
+
+						<tr>
 							<td>Статус админки</td>
 							<td><select name="paykeeper_status_fake">
 								<?php if ($paykeeper_status_fake) { ?>

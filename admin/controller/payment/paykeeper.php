@@ -119,6 +119,12 @@ class ControllerPaymentPayKeeper extends Controller {
 			$this->data['paykeeper_status'] = $this->config->get('paykeeper_status');
 		}
 
+		if (isset($this->request->post['paykeeper_pay_on_checkout'])) {
+			$this->data['paykeeper_pay_on_checkout'] = $this->request->post['paykeeper_pay_on_checkout'];
+		} else {
+			$this->data['paykeeper_pay_on_checkout'] = $this->config->get('paykeeper_pay_on_checkout');
+		}
+
 		if (isset($this->request->post['paykeeper_status_fake'])) {
 			$this->data['paykeeper_status_fake'] = $this->request->post['paykeeper_status_fake'];
 		} else {
