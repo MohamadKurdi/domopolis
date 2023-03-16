@@ -205,7 +205,7 @@
 				'code' => $code,
 				'client_id' => $google_app_id,
 				'client_secret' => $google_secret_key,
-				'redirect_uri' => $redirect_href, //это на случай если на сайте, к которому обращаемся проверяется была ли нажата кнопка submit, а не была ли оправлена форма
+				'redirect_uri' => $redirect_href,
 				'grant_type' => 'authorization_code',
                 ));
 				// get token
@@ -218,20 +218,20 @@
 				if(isset($result->id)){
 					
 					$customer = array(
-                    'firstname' => @$result->given_name,
-                    'lastname' => @$result->family_name,
-                    'email' => @$result->email,
-                    'telephone' => '',
-                    'fax' => '',
-                    'password' => md5(time()),
-                    'company' => '',
-                    'address_1' => '',
-                    'address_2' => '',
-                    'city' => '',
-                    'postcode' => '',
-                    'country_id' => $this->config->get('config_country_id'),
-                    'zone_id' => 0,
-                    'social_id' => $result->id,
+                    'firstname' 	=> @$result->given_name,
+                    'lastname' 		=> @$result->family_name,
+                    'email' 		=> @$result->email,
+                    'telephone' 	=> '',
+                    'fax' 			=> '',
+                    'password' 		=> md5(time()),
+                    'company' 		=> '',
+                    'address_1' 	=> '',
+                    'address_2' 	=> '',
+                    'city' 			=> '',
+                    'postcode' 		=> '',
+                    'country_id' 	=> $this->config->get('config_country_id'),
+                    'zone_id' 		=> 0,
+                    'social_id' 	=> $result->id,
 					);
 					
 					$return_data = $this->toLoginRegister($customer);
@@ -397,16 +397,14 @@
 				} else {
 				$redirect_after = $this->url->link('account/account', '', 'SSL');
 			}
-			
-			
+						
 			$redirect_after_register = $this->url->link('account/simpleedit', '', 'SSL');
 			//$redirect_after_register = $this->url->link('module/social_auth/register', '', 'SSL');
 			
 			if($customer['social_id']){
                 $this->load->model('account/customer');
                 
-                $customer_query = $this->db->query("SELECT * FROM customer WHERE social_id = '" . (string)$customer['social_id'] . "'");
-                
+                $customer_query = $this->db->query("SELECT * FROM customer WHERE social_id = '" . (string)$this->db->escape($customer['social_id']) . "'");                
                 $customer_info = $customer_query->row;
                 
                 if ($customer_info) {
@@ -431,22 +429,17 @@
                     } else {
                     // add customer
                     
-                    if($customer['email']){
-                        
-                        if ($this->customer->login($customer['email'], "", true)) {
-                            
-                            $this->login($customer);
-                            
-                            return ['status' => true, 'text' => 'login','redirect' => $redirect_after];
-                            
+                    if($customer['email']){                        
+                        if ($this->customer->login($customer['email'], "", true)) {                            
+                            $this->login($customer);                            
+                            return ['status' => true, 'text' => 'login','redirect' => $redirect_after];                            
 						}
                         
                         $customer_id = $this->model_account_customer->addCustomer($customer);
                         
-                        $this->db->query("UPDATE customer SET social_id = '" . (string)$customer['social_id'] . "' WHERE customer_id = '" . (int)$customer_id . "'");
+                        $this->db->query("UPDATE customer SET social_id = '" . (string)$this->db->escape($customer['social_id']) . "' WHERE customer_id = '" . (int)$customer_id . "'");
                         
-                        if($customer_id){
-                            
+                        if($customer_id){                            
                             $customer_info = $this->model_account_customer->getCustomer($customer_id);
                             
                             if ($this->customer->login($customer_info['email'], "", true)) {
@@ -467,8 +460,6 @@
                         $this->session->data['social_auth'] = $customer;
                         
                         return ['status' => true, 'text' => 'login','redirect' => $redirect_after_register];
-                        
-                        // not email
 					}
 				}
 			}
@@ -482,16 +473,13 @@
 			
 			// login OK
 			unset($this->session->data['guest']);
-			
-			// Default Shipping Address
 			$this->load->model('account/address');
 			if ($this->config->get('config_tax_customer') == 'payment') {
 				$this->session->data['payment_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
 			}
 			if ($this->config->get('config_tax_customer') == 'shipping') {
 				$this->session->data['shipping_address'] = $this->model_account_address->getAddress($this->customer->getAddressId());
-			}
-			// Add to activity log	
+			}			
 		}
 		
 		
@@ -503,9 +491,9 @@
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/x-www-form-urlencoded',
 			));
-			curl_setopt($ch, CURLOPT_POST, 1); //передача данных методом POST
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //теперь curl вернет нам ответ, а не выведет
-			curl_setopt($ch, CURLOPT_POSTFIELDS, //тут переменные которые будут переданы методом POST
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS,
             http_build_query($data)
 			);
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 40);
@@ -534,6 +522,5 @@
 			$data = json_decode($data);
 			
 			return $data;
-		}
-		
+		}		
 	}
