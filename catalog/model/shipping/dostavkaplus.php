@@ -395,7 +395,7 @@
 									}
 									
 									$additional_description = '';
-									if ($price_changed_distance){
+									if ($price_changed_distance && !empty($address['custom_beltway_distance'])){
 										$additional_description .= '<b><i class="fas fa-info-circle"></i> расстояние от МКАД до указанного адреса составляет ' . (int)$address['custom_beltway_distance'] . ' км.</b>';
 									}
 									
