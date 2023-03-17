@@ -33,15 +33,18 @@
 
 		<tr>
 			<td>
-				<small><?php echo $product['name']; ?></small>
+				<span style="font-size:11px;"><?php echo $product['name']; ?></span>
+				<br />
+				<span style="font-size:10px; display:inline-block; float:left; padding:3px; color:#FFF; background-color:#FF9900;"><?php echo $product['asin']; ?></span>		
+				<span style="font-size:10px; display:inline-block; float:left; padding:3px; color:#FFF; background-color:#4ea24e;"><?php echo $product['product_id']; ?></span>
 
-				<?php if (!empty($product['formula_overloaded'])) { ?>
+
+				<?php /* if (!empty($product['formula_overloaded'])) { ?>
 					<br />
 					<small style="color:#cf4a61"><?php echo $product['used_formula']; ?></small>
-				<?php } ?>
+				<?php } */ ?>
 
-				<br />
-				<small><b><?php echo $product['weight']; ?>, <?php echo $product['length']; ?> * <?php echo $product['width']; ?> * <?php echo $product['height']; ?></b></small>
+				<span style="font-size:10px; display:inline-block; float:left; padding:3px; color:#FFF; background-color:#7F00FF;"><?php echo $product['weight']; ?>, <?php echo $product['length']; ?> * <?php echo $product['width']; ?> * <?php echo $product['height']; ?></span>
 			</td>
 			<td style="white-space: nowrap;">
 				<?php echo $product['amazon_best_price']; ?>

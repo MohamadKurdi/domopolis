@@ -388,7 +388,9 @@ class ControllerSettingRnf extends Controller {
 			}
 			foreach ($products as $product){
 				$result = [];
-				$result['name'] = $product['name'];
+				$result['name'] 		= $product['name'];
+				$result['product_id'] 	= $product['product_id'];
+				$result['asin'] 		= $product['asin'];
 			
 				$productDimensions = $this->rainforestAmazon->offersParser->PriceLogic->getProductDimensions($product);
 				if ($productDimensions['weight_class_id'] == (int)$this->config->get('config_weight_class_id')){
