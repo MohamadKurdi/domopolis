@@ -193,8 +193,7 @@
 			$link = 'https://accounts.google.com/o/oauth2/v2/auth?scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&access_type=offline&include_granted_scopes=true&state=state_parameter_passthrough_value&' .
             'redirect_uri=' . urlencode($redirect_href) . '&response_type=code&client_id=' . $google_app_id . '';
 			
-			if (!isset($this->request->get['code'])) {
-				// not find code
+			if (!isset($this->request->get['code'])) {				
 				$this->response->redirect($link);
 				
 				} else {
@@ -202,11 +201,11 @@
 				$code = $this->request->get['code'];
 				
 				$data = $this->getTokenWithCurl('https://accounts.google.com/o/oauth2/token',array(
-				'code' => $code,
-				'client_id' => $google_app_id,
+				'code' 			=> $code,
+				'client_id' 	=> $google_app_id,
 				'client_secret' => $google_secret_key,
-				'redirect_uri' => $redirect_href,
-				'grant_type' => 'authorization_code',
+				'redirect_uri' 	=> $redirect_href,
+				'grant_type' 	=> 'authorization_code',
                 ));
 				// get token
 				$token = $data->access_token;
@@ -236,19 +235,18 @@
 					
 					$return_data = $this->toLoginRegister($customer);
 					
-					if($return_data['status']){
-						
+					if($return_data['status']){						
 						$this->response->setOutput('<script>
                         window.opener.document.location = "'. $return_data['redirect'] . '";
                         window.close();
-                        </script>');
-						
+                        </script>');						
 						} else {
 						echo $return_data['text']; exit;
 					}
 					
 					} else {
-					echo 'not find user'; exit;
+					echo 'not find user';
+					$this->response->redirect($this->url->link('account/account'));
 				}
 			}
 		}
