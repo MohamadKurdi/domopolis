@@ -2735,7 +2735,7 @@
 		}
 
 		public function getTotalProductsNeedToBeFilled() {
-			$query = $this->db->query("SELECT COUNT(DISTINCT p2c.product_id) as total FROM product_to_category p2c LEFT JOIN product p ON (p.product_id = p2c.product_id) WHERE category_id IN (SELECT category_id FROM category WHERE amazon_can_get_full = 1) AND fill_from_amazon = 1");
+			$query = $this->db->query("SELECT COUNT(DISTINCT p2c.product_id) as total FROM product_to_category p2c LEFT JOIN product p ON (p.product_id = p2c.product_id) WHERE category_id IN (SELECT category_id FROM category WHERE amazon_can_get_full = 1) AND fill_from_amazon = 1 AND filled_from_amazon = 0");
 			
 			return $query->row['total'];
 		}
