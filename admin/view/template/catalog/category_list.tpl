@@ -66,8 +66,9 @@
 							<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
 								<td class="left" style="width:200px;">Amzn Link</td>
 								<td class="left" style="width:30px;">Amzn Sync</td>
+								<td class="left" style="width:30px;">Amzn Synced</td>
 								<td class="left" style="width:30px;">Amzn Final</td>
-								<td class="left" style="width:30px;">Amzn Allow Full</td>
+								<td class="left" style="width:30px;">Amzn Allow Full</td>								
 							<?php } ?>
 							<td class="left" style="width:100px;">Google</td>
 							<?php if ($this->config->get('config_country_id') == 176) { ?>	
@@ -165,6 +166,18 @@
 													</td>
 
 													<td class="center">
+														<? if ($category['amazon_sync_enable']) { ?>
+															<? if ($category['amazon_synced']) { ?>
+																<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+															<? } else { ?>
+																<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+															<? } ?>
+														<? } else { ?>
+															<i class="fa fa-question-circle" style="color:#7F00FF"></i>
+														<? } ?>
+													</td>
+
+													<td class="center">
 														<? if ($category['amazon_final_category']) { ?>
 															<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 														<? } else { ?>
@@ -178,7 +191,7 @@
 														<? } else { ?>
 															<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 														<? } ?>
-													</td>	
+													</td>													
 												<?php } ?>
 
 												<td class="center">

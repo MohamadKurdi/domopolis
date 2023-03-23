@@ -284,6 +284,8 @@ class ControllerCatalogCategory extends Controller {
 					'amazon_category_name'  	=> $real_category['amazon_category_id']?$real_category['amazon_category_name']:false,
 					'amazon_category_id'  		=> $real_category['amazon_category_id'],
 					'amazon_sync_enable'  		=> $real_category['amazon_sync_enable'],
+					'amazon_last_sync'  		=> $real_category['amazon_last_sync'],
+					'amazon_synced'  			=> $real_category['amazon_synced'],
 					'amazon_final_category'  	=> $real_category['amazon_final_category'],
 					'amazon_can_get_full'  		=> $real_category['amazon_can_get_full'],
 					'amazon_category_link'  	=> $real_category['amazon_category_link'],
@@ -675,6 +677,14 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['amazon_last_sync'] = $category_info['amazon_last_sync'];
 		} else {
 			$this->data['amazon_last_sync'] = '0000-00-00';
+		}
+
+		if (isset($this->request->post['amazon_synced'])) {
+			$this->data['amazon_synced'] = $this->request->post['amazon_synced'];
+		} elseif (!empty($category_info)) {
+			$this->data['amazon_synced'] = $category_info['amazon_synced'];
+		} else {
+			$this->data['amazon_synced'] = '0';
 		}
 
 		if (isset($this->request->post['amazon_overprice_rules'])) {

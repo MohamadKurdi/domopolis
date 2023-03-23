@@ -791,6 +791,9 @@
 							<td style="width:25%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Дата последней синхронизации</span>
 							</td>
+							<td style="width:15%">
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Синхронизировано</span>
+							</td>
 							<td style="width:75%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Правила наценки</span>
 							</td>							
@@ -799,7 +802,18 @@
 							<td style="width:25%">
 								<input type="text" name="amazon_last_sync" value="<?php echo $amazon_last_sync; ?>" style="width:150px;"  />
 							</td>
-							
+							<td style="width:15%">
+								<select name="amzn_synced">
+									<?php if ($amzn_synced) { ?>
+										<option value="1" selected="selected">Да</option>
+										<option value="0">Нет</option>
+										<?php } else { ?>
+										<option value="1">Да</option>
+										<option value="0" selected="selected">Нет</option>
+									<?php } ?>
+								</select>
+								<br /><span class="help">Синхронизирована категория или нет в рамках текущей итерации обновления</span>
+							</td>
 							<td style="width:75%">
 								<input type="text" name="amazon_overprice_rules" value="<?php echo $amazon_overprice_rules; ?>" style="width:90%;"  />
 								<br />
