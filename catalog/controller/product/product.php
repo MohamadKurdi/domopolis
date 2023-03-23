@@ -130,11 +130,12 @@ class ControllerProductProduct extends Controller
 
             if ($product_info['stock_dates'] && $this->model_tool_simpleapicustom->checkIfUseUAServices()) {
                 if (!empty($customer_city) && !empty($customer_city['id'])) {
-                    if ($npDeliveryTerms = $this->courierServices->getDeliveryTerms('NovaPoshta', $customer_city['id']) && !empty($npDeliveryTerms['deliveryPeriod'])) {
+                    $npDeliveryTerms = $this->courierServices->getDeliveryTerms('NovaPoshta', $customer_city['id']);
+                    if ($npDeliveryTerms && !empty($npDeliveryTerms['deliveryPeriod'])) {
                         $this->data['np_delivery_dates']['start'] = date('d.m', strtotime('+'. ($product_info['stock_dates']['start'] + $npDeliveryTerms['deliveryPeriod']) .' day'));
                         $this->data['np_delivery_dates']['end'] = date('d.m', strtotime('+'. ($product_info['stock_dates']['end'] + $npDeliveryTerms['deliveryPeriod']) .' day'));
-                    }
-                }
+                    }                  
+                }                
                 
                 foreach ($this->config->get('dostavkaplus_module') as $key => $dostavkaplus_module){
                     //NP Config
@@ -202,7 +203,7 @@ class ControllerProductProduct extends Controller
         if ($this->data['delivery_city']['city'] != $this->language->get('default_city_' . $this->config->get('config_country_id'))) {
             $this->data['delivery_text'] = $this->data['delivery_to_city_remote'];
         } else {
-            $this->data['delivery_city']['city'] = morphos\Russian\GeographicalNamesInflection::getCase($this->data['delivery_city']['city'], 'дательный');
+            $this->data['delivery_city']['city'] = $this->data['delivery_city']['city'];//morphos\Russian\GeographicalNamesInflection::getCase($this->data['delivery_city']['city'], 'дательный');
         }
     }
 
