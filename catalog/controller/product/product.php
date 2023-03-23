@@ -121,10 +121,18 @@ class ControllerProductProduct extends Controller
 
             if (($this->data['delivery_city']['city'] != $this->language->get('default_city_' . $this->config->get('config_country_id')) || ($this->config->get('config_warehouse_identifier') != $this->config->get('config_warehouse_identifier_local'))) && $product_info['stock_dates'] && $this->model_tool_simpleapicustom->checkIfUseRUKZBYServices()) {
                 if (!empty($customer_city) && !empty($customer_city['id'])) {
-                    if ($cdekDeliveryTerms = $this->courierServices->getDeliveryTerms('Cdek', $customer_city['id'])) {
+                    $cdekDeliveryTerms = $this->courierServices->getDeliveryTerms('Cdek', $customer_city['id']);
+
+                    if ($cdekDeliveryTerms) {
                         $this->data['cdek_delivery_dates']['start'] = date('d.m', strtotime('+'. ($product_info['stock_dates']['start'] + $cdekDeliveryTerms['deliveryPeriodMin'] + 1) .' day'));
                         $this->data['cdek_delivery_dates']['end'] = date('d.m', strtotime('+'. ($product_info['stock_dates']['end'] + $cdekDeliveryTerms['deliveryPeriodMax'] + 1) .' day'));
+                        $this->data['cdek_price_text'] = $this->data['delivery_to_city_price_from'] . $this->currency->format($cdekDeliveryTerms['min_WW'], $this->config->get('config_regional_currency'), 1);
                     }
+                }                
+
+                if (!empty($this->data['cdek_delivery_dates'])){
+                    $this->data['delivery_dates']['start']  = $this->data['cdek_delivery_dates']['start'];
+                    $this->data['delivery_dates']['end']    = $this->data['cdek_delivery_dates']['end'];
                 }
             }
 
@@ -153,50 +161,82 @@ class ControllerProductProduct extends Controller
                 }
             }
 
-            //Курьерская доставка по городу, отдельно
             if ($this->data['delivery_city']['city'] == $this->language->get('default_city_' . $this->config->get('config_country_id')) && $this->config->get('config_delivery_display_logic') == 'v2'){
                 $this->data['courier_delivery_text'] = $this->data['delivery_by_courier_for_v2'];
 
-                if ($this->model_tool_simpleapicustom->checkIfUseUAServices()) {
-                   foreach ($this->config->get('dostavkaplus_module') as $key => $dostavkaplus_module){
+                if ($this->model_tool_simpleapicustom->checkIfUseRUKZBYServices()) {
+                    foreach ($this->config->get('dostavkaplus_module') as $key => $dostavkaplus_module){
+                        if ($key == 1 && $this->config->get('config_country_id') == 176){
+                            $delivery_price = $dostavkaplus_module['price'];
 
-                        //Kyiv courier config                   
-                    if ($key == 2){
-                        $price = $product_info['price'];
-                        if ($product_info['special']){
-                           $price = $product_info['special'];
-                       }
-
-                       $rates = explode(',', $dostavkaplus_module['sumrate']);
-                       if (count($rates) > 0) {
-                        foreach ($rates as $rate) {
-                            $rate_data = explode(':', $rate);
-                            $rate_data[0] = (float)trim($rate_data[0]);
-
-                            if ($rate_data[0] <= (float)$this->currency->format($price, $dostavkaplus_module['curr'], '', false)) {                                              
-                                if (isset($rate_data[1])) {
-                                    $delivery_price = (float)trim($rate_data[1]);
-                                }                                            
+                            $price = $product_info['price'];
+                            if ($product_info['special']){
+                                $price = $product_info['special'];
                             }
-                        }
-                    }
 
-                    if ((float)$delivery_price > 0){
-                        $this->data['courier_delivery_price_text'] = $this->currency->format($delivery_price, $dostavkaplus_module['curr'], 1);
-                    } else {
-                        $this->data['courier_delivery_price_text'] = $this->data['delivery_to_city_free'];
-                    }
+                            $rates = explode(',', $dostavkaplus_module['sumrate']);
+                            if (count($rates) > 0) {
+                                foreach ($rates as $rate) {
+                                    $rate_data = explode(':', $rate);
+                                    $rate_data[0] = (float)trim($rate_data[0]);
 
-                    break;
-                }                   
-            }
+                                    if ($rate_data[0] <= (float)$this->currency->format($price, $dostavkaplus_module['curr'], '', false)) {                                              
+                                        if (isset($rate_data[1])) {
+                                            $delivery_price = (float)trim($rate_data[1]);
+                                        }                                            
+                                    }
+                                }
+                            }
+
+                            if ((float)$delivery_price > 0){
+                                $this->data['courier_delivery_price_text'] = $this->currency->format($delivery_price, $dostavkaplus_module['curr'], 1);
+                            } else {
+                                $this->data['courier_delivery_price_text'] = $this->data['delivery_to_city_free'];
+                            }
+
+                            break;
+                        }                   
+                    }
+                }
+
+                if ($this->model_tool_simpleapicustom->checkIfUseUAServices()) {
+                    foreach ($this->config->get('dostavkaplus_module') as $key => $dostavkaplus_module){
+                        if ($key == 2){
+                             $delivery_price = $dostavkaplus_module['price'];
+                            
+                            $price = $product_info['price'];
+                            if ($product_info['special']){
+                                $price = $product_info['special'];
+                            }
+
+                            $rates = explode(',', $dostavkaplus_module['sumrate']);
+                            if (count($rates) > 0) {
+                                foreach ($rates as $rate) {
+                                    $rate_data = explode(':', $rate);
+                                    $rate_data[0] = (float)trim($rate_data[0]);
+
+                                    if ($rate_data[0] <= (float)$this->currency->format($price, $dostavkaplus_module['curr'], '', false)) {                                              
+                                        if (isset($rate_data[1])) {
+                                            $delivery_price = (float)trim($rate_data[1]);
+                                        }                                            
+                                    }
+                                }
+                            }
+
+                            if ((float)$delivery_price > 0){
+                                $this->data['courier_delivery_price_text'] = $this->currency->format($delivery_price, $dostavkaplus_module['curr'], 1);
+                            } else {
+                                $this->data['courier_delivery_price_text'] = $this->data['delivery_to_city_free'];
+                            }
+
+                            break;
+                        }                   
+                    }
+                }
         }
-    }
-
-            //По умолчанию "доставка по"
+            
     $this->data['delivery_text'] = $this->data['delivery_to_city_courier'];
-    if ($this->config->get('config_warehouse_identifier') != $this->config->get('config_warehouse_identifier_local')) {
-                //Если склады отличаются, то тоже доставка курьерской службой
+    if ($this->config->get('config_warehouse_identifier') != $this->config->get('config_warehouse_identifier_local')) {                
         $this->data['delivery_text'] = $this->data['delivery_to_city_remote'];
     } else {
                 //Если склад в стране есть, но доставка в другой город
