@@ -290,22 +290,6 @@
 
 	<tr>
 		<td class="right">
-			Переведено за всё время
-		</td>
-		<td class="center">
-			<b><?php echo $translated_total; ?></b>
-		</td>
-		<td style="width:20px" class="center">			
-		</td>
-		<td>
-			<span class="help">
-				<i class="fa fa-info-circle"></i> Количество символов, переданных в переводчик за всё время работы фреймворка
-			</span>
-		</td>		
-	</tr>
-
-	<tr>
-		<td class="right">
 			Переведено за час
 		</td>
 		<td class="center">
