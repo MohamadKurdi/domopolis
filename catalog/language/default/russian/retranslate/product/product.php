@@ -95,7 +95,10 @@ $_['text_retranslate_88'] = 'Покупают вместе';
 $_['delivery_to_city_courier'] = 'Доставка по';
 $_['delivery_to_city_remote'] = 'Отправка в';
 $_['delivery_to_city_cs_ru'] = 'Доставка СДЭК в';
+$_['delivery_to_city_cs_ru_v2'] = 'Доставка СДЭК';
 $_['delivery_to_city_cs_ua'] = 'Доставка НП в';
+
+$_['delivery_to_city_v2_title'] = 'Доставка в г. ';
 
 $_['delivery_by_courier_for_v2'] = 'Курьером по городу';
 $_['delivery_to_city_cs_ua_v2'] = 'Новая Почта';
