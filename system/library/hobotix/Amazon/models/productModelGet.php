@@ -106,7 +106,7 @@ class productModelGet extends hoboModel{
 			$sql .= " AND p.asin = '" . $this->testAsin . "'";
 		}
 
-		$sql .= " ORDER BY RAND() LIMIT " . (int)\hobotix\RainforestAmazon::fullProductParserLimit;
+		$sql .= " ORDER BY p.date_added DESC LIMIT " . (int)\hobotix\RainforestAmazon::fullProductParserLimit;
 		$query = $this->db->ncquery($sql);
 
 		foreach ($query->rows as $row){
@@ -129,7 +129,7 @@ class productModelGet extends hoboModel{
 		AND p.added_from_amazon = 1 
 		AND p.asin <> 'INVALID'	
 		AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id = '" . (int)$this->config->get('config_rainforest_default_technical_category_id') . "')
-		ORDER BY RAND() LIMIT " . (int)\hobotix\RainforestAmazon::fullProductParserLimit;
+		ORDER BY p.date_added DESC LIMIT " . (int)\hobotix\RainforestAmazon::fullProductParserLimit;
 
 		$query = $this->db->ncquery($sql);
 
@@ -159,7 +159,7 @@ class productModelGet extends hoboModel{
 		AND (NOT ISNULL(p.asin) OR p.asin <> '')
 		AND p.asin <> 'INVALID' 
 		AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1 AND amazon_can_get_full = 1))
-		ORDER BY RAND() LIMIT " . (int)\hobotix\RainforestAmazon::fullProductParserLimit;
+		ORDER BY p.date_added DESC LIMIT " . (int)\hobotix\RainforestAmazon::fullProductParserLimit;
 
 		$query = $this->db->ncquery($sql);
 
