@@ -95,13 +95,60 @@
 					</thead>
 					<tbody>
 						<?php if ($categories) { ?>
-							<?php foreach ($categories as $category) { ?>
+							<?php $header_shown = false; foreach ($categories as $category) { ?>
+
+								<?php if ($category['mark'] && !$header_shown) { $header_shown = true; ?>
+									<style>
+										tr.thead > td{font-size:11px!important;}
+									</style>
+									<tr class="thead">
+										<td width="1" style="text-align: center;">											
+										</td>
+										<td class="left" style="width:70px;">ID</td>
+										<?php if ($rollup_enabled) { ?>
+											<td width="1" style="text-align: center;">L</td>	
+										<?php } ?>
+										<td class="left" >Название</td>
+										<td class="left" style="width:30px;">Статус</td>
+										<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
+											<td class="left" style="width:200px;">Amzn Link</td>
+											<td class="left" style="width:30px;">Amzn Sync</td>
+											<td class="left" style="width:30px;">Amzn Synced</td>
+											<td class="left" style="width:30px;">Amzn Final</td>
+											<td class="left" style="width:30px;">Amzn Allow Full</td>								
+										<?php } ?>
+										<td class="left" style="width:100px;">Google</td>
+										<?php if ($this->config->get('config_country_id') == 176) { ?>	
+											<td class="left" style="width:100px;">Yandex</td>
+										<?php } ?>
+										<td class="left" style="width:60px;">Картинка</td>
+										<td class="left" style="width:50px;">Иконка</td>
+										<td class="left" style="width:100px;">Elastic</td>
+										<td class="left" style="width:100px;">Габариты</td>
+										<td class="left" style="width:30px;">Уд. нал</td>
+										<td class="left" style="width:30px;">Меню в доч.</td>
+										<td class="left" style="width:30px;">Пересеч.</td>
+										<td class="left" style="width:30px;">Искл. из пересеч</td>
+										<td class="left" style="width:30px;">Priceva</td>
+										<td class="left" style="width:30px;">ТНВЭД</td>
+										<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
+											<td class="right" style="width:100px;">Товары -></td>	
+											<td class="right" style="width:100px;">Загружено -></td>
+											<td class="right" style="width:100px;">Есть цена</td>
+										<?php } ?>
+										<td class="right" style="width:30px;">Сортировка</td>
+										<td class="right" style="width:50px;"></td>
+									</tr>
+								<?php } ?>
+
 								<tr>
-									<td style="text-align: center;"><?php if ($category['selected']) { ?>
-										<input type="checkbox" name="selected[]" value="<?php echo $category['category_id']; ?>" checked="checked" />
-									<?php } else { ?>
-										<input type="checkbox" name="selected[]" value="<?php echo $category['category_id']; ?>" />
-										<?php } ?></td>
+									<td style="text-align: center;">
+											<?php if ($category['selected']) { ?>
+												<input type="checkbox" name="selected[]" value="<?php echo $category['category_id']; ?>" checked="checked" />
+											<?php } else { ?>
+												<input type="checkbox" name="selected[]" value="<?php echo $category['category_id']; ?>" />
+											<?php } ?>
+									</td>
 										<td class="left">
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:<?php if ($rollup_enabled) { ?><?php echo $levels[$category['level']]; ?><?php } else { ?>#4ea24e<?php } ?>; color:#FFF"><?php echo $category['category_id']; ?></span>									
 										</td>		
