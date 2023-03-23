@@ -72,18 +72,12 @@ class ControllerDPRainForest extends Controller {
 		if ($childCategories) {
 			foreach ($childCategories as $childCategory){
 
-				echoLine('[ControllerDPRainForest] Категория ' . $childCategory['path']);
+				echoLine('[recursiveTree] Category ' . $childCategory['path'], 'i');
 				$this->rainforestAmazon->categoryParser->setType($type)->createCategory($childCategory);										
 				if ($childCategory['has_children']){
 					$this->recursiveTree($childCategory['id'], $type);
 				}
 			}
-		}
-	}
-
-	public function checkasin(){		
-		if (!$this->rainforestAmazon->productsRetriever->getProductsByAsin('B009HQH7NG')){					
-			echoLine('[parseCategoryPage] Product ' . $rfSimpleProduct['asin'] . ' не найден, ' . $counters);	
 		}
 	}
 
@@ -102,10 +96,10 @@ class ControllerDPRainForest extends Controller {
 				$counters .= ($i . '/' . $total);
 
 				if (!$this->rainforestAmazon->productsRetriever->getProductsByAsin($rfSimpleProduct['asin'])){					
-					echoLine('[parseCategoryPage] Product ' . $rfSimpleProduct['asin'] . ' не найден, ' . $counters);		
+					echoLine('[parseCategoryPage] Product ' . $rfSimpleProduct['asin'] . ' not found, ' . $counters, 'i');		
 
 					if ($this->rainforestAmazon->productsRetriever->model_product_get->checkIfAsinIsDeleted($rfSimpleProduct['asin'])){
-						echoLine('[parseCategoryPage] ASIN удален, пропускаем!');					
+						echoLine('[parseCategoryPage] ASIN deleted, skipping!', 'w');					
 					} else {	
 
 						$this->rainforestAmazon->productsRetriever->addSimpleProductWithOnlyAsin(
@@ -126,11 +120,11 @@ class ControllerDPRainForest extends Controller {
 					}
 
 				} else {
-					echoLine('[parseCategoryPage] Product ' . $rfSimpleProduct['asin'] . ' найден ' . $counters);						
+					echoLine('[parseCategoryPage] Product ' . $rfSimpleProduct['asin'] . ' found ' . $counters, 'i');						
 
 					//Логика работы с найденными товарами - только в случае стандартной модели, если первый Product найден - то останавливаем работу
 					if ($this->config->get('config_rainforest_category_model') == 'standard' && $this->categoriesData[$category_id]['amazon_fulfilled']){
-						echoLine('[parseCategoryPage] Product ' . $rfSimpleProduct['asin'] . ' найден, останавливаем парсинг категории');
+						echoLine('[parseCategoryPage] Product ' . $rfSimpleProduct['asin'] . ' found, stopped page parsing', 's');
 						return false;						
 						break;
 					}
@@ -526,6 +520,7 @@ class ControllerDPRainForest extends Controller {
 
 		$timer = new FPCTimer();
 
+		$this->rainforestAmazon->categoryRetriever->checkSynced();
 		$this->categoriesData = $this->rainforestAmazon->categoryRetriever->getCategories();
 
 		foreach ($this->categoriesData as $category_id => $category){
@@ -534,13 +529,13 @@ class ControllerDPRainForest extends Controller {
 
 		$total = count($this->categoriesData);		
 		$this->iterations = $iterations = ceil($total/\hobotix\RainforestAmazon::categoryRequestLimits);
-		echoLine('[AddNewProducts2] Всего ' . $total . ' категорий!');		
+		echoLine('[addnewproductscron] Всего ' . $total . ' категорий!');		
 
 		$otherPageRequests = [];		
 		for ($i = 1; $i <= ($iterations+1); $i++){
 			$timer = new FPCTimer();
 			$this->current_iteration = $i;
-			echoLine('[AddNewProducts2] Шаг 1 Итерация ' . $i . ' из ' . $iterations . ', категории с ' . (\hobotix\RainforestAmazon::categoryRequestLimits * ($i-1)) . ' по ' . \hobotix\RainforestAmazon::categoryRequestLimits * $i);
+			echoLine('[addnewproductscron] Шаг 1 Итерация ' . $i . ' из ' . $iterations . ', категории с ' . (\hobotix\RainforestAmazon::categoryRequestLimits * ($i-1)) . ' по ' . \hobotix\RainforestAmazon::categoryRequestLimits * $i);
 			
 			$slice = array_slice($this->categoriesData, \hobotix\RainforestAmazon::categoryRequestLimits * ($i-1), \hobotix\RainforestAmazon::categoryRequestLimits);
 			$rfCategoryJSONS = $this->rainforestAmazon->categoryRetriever->getCategoriesFromAmazonAsync($slice);
@@ -555,8 +550,8 @@ class ControllerDPRainForest extends Controller {
 					$this->rainforestAmazon->categoryRetriever->setJsonResult($rfCategoryJSON);
 
 					if (!$this->rainforestAmazon->categoryRetriever->getNextPage()){
-						echoLine('[AddNewProducts2] Категория ' . $this->categoriesData[$category_id]['name'] . ' всё, ставим маркер завершения');
-						$this->rainforestAmazon->categoryRetriever->setLastCategoryUpdateDate($category_id);
+						echoLine('[addnewproductscron] Category ' . $this->categoriesData[$category_id]['name'] . ' complete, setting finish marker');
+						$this->rainforestAmazon->categoryRetriever->setLastCategoryUpdateDate($category_id)->setCategorySynced($category_id);
 					} 
 
 					for ($z = 2; $z <= $this->rainforestAmazon->categoryRetriever->getTotalPages(); $z++){
@@ -571,10 +566,10 @@ class ControllerDPRainForest extends Controller {
 
 		$total = count($otherPageRequests);
 		$this->iterations = $iterations = ceil($total/\hobotix\RainforestAmazon::categoryRequestLimits);
-		echoLine('[AddNewProducts2] Всего eще ' . $total . ' запросов!');
+		echoLine('[addnewproductscron] Всего eще ' . $total . ' запросов!');
 		for ($i = 1; $i <= ($iterations+1); $i++){
 			$this->current_iteration = $i;
-			echoLine('[AddNewProducts2] Шаг 2 Итерация ' . $i . ' из ' . $iterations . ', категории с ' . (\hobotix\RainforestAmazon::categoryRequestLimits * ($i-1)) . ' по ' . \hobotix\RainforestAmazon::categoryRequestLimits * $i);
+			echoLine('[addnewproductscron] Шаг 2 Итерация ' . $i . ' из ' . $iterations . ', категории с ' . (\hobotix\RainforestAmazon::categoryRequestLimits * ($i-1)) . ' по ' . \hobotix\RainforestAmazon::categoryRequestLimits * $i);
 			$slice = array_slice($otherPageRequests, \hobotix\RainforestAmazon::categoryRequestLimits * ($i-1), \hobotix\RainforestAmazon::categoryRequestLimits);
 
 			$rfCategoryJSONS = $this->rainforestAmazon->categoryRetriever->getCategoriesFromAmazonAsync($slice);
@@ -587,8 +582,8 @@ class ControllerDPRainForest extends Controller {
 				$this->rainforestAmazon->categoryRetriever->setJsonResult($rfCategoryJSON);
 
 				if (!$this->rainforestAmazon->categoryRetriever->getNextPage()){
-					echoLine('[AddNewProducts2] Категория ' . $this->categoriesData[$category_id]['name'] . ' всё, ставим маркер завершения');
-					$this->rainforestAmazon->categoryRetriever->setLastCategoryUpdateDate($category_id);
+					echoLine('[addnewproductscron] Category ' . $this->categoriesData[$category_id]['name'] . ' complete, setting finish marker');
+					$this->rainforestAmazon->categoryRetriever->setLastCategoryUpdateDate($category_id)->setCategorySynced($category_id);
 				}
 			}
 		}
