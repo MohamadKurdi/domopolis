@@ -94,6 +94,27 @@
 								<tr>
 									<td style="width:50%">
 										<div class="translate_wrap">
+											<span class="status_color" style="display:inline-block; padding:5px 15px; background:#00ad07; color:#FFF">Тэглайн</span>
+
+											<a class="btn-copy<?php echo $language['language_id']; ?> btn-copy" onclick="getCopy($(this),'textarea','category_description[2]');"><i class="fa fa-copy"></i> Копировать с ru</a>
+											<?php if ($this->config->get('config_translate_from_ru') && in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
+												<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'ru','<?php echo $language['code']; ?>','textarea','category_description[5]');">Перевести <img src="view/image/flags/ru.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>
+												<?php } elseif ($language['code'] == $this->config->get('config_admin_language')) { ?>
+												<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'de','<?php echo $language['code']; ?>','textarea','category_description[26]');">
+													Перевести <img src="view/image/flags/de.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+												</a>
+											<?php } ?>
+										</div>
+										<textarea name="category_description[<?php echo $language['language_id']; ?>][tagline]" style="width:90%" rows="3"><?php echo isset($category_description[$language['language_id']]) ? $category_description[$language['language_id']]['tagline'] : ''; ?></textarea>
+									</td>
+									<td style="width:50%">
+									</td>
+								</tr>
+
+
+								<tr>
+									<td style="width:50%">
+										<div class="translate_wrap">
 											<span class="status_color" style="display:inline-block; padding:5px 15px; background:#00ad07; color:#FFF">SEO: H1 Tag</span>
 
 											<a class="btn-copy<?php echo $language['language_id']; ?> btn-copy" onclick="getCopy($(this),'input','category_description[2]');"><i class="fa fa-copy"></i> Копировать с ru</a>
