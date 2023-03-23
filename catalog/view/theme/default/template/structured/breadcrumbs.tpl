@@ -60,6 +60,11 @@
 				<h1 class="title"><?php echo $heading_title; ?></h1>
 			<?php } ?>
 		<?php } ?>
+
+		<?php if (!empty($tagline)) { ?>
+			<h4 class="tagline"><?php echo $tagline; ?></h4>
+		<?php } ?>
+		
 		
 	</div>
 </section>
