@@ -36,7 +36,7 @@ class ProductsRetriever extends RainforestRetriever
 		'UWeltweite Artikelidentnummer (GTIN)'	=> ['ean'],
 		'GTIN'									=> ['ean'],
 		'EAN'									=> ['ean'],
-		'Weltweite Artikelidentnummer (GTIN)'	=> ['ean'],		
+		'Weltweite Artikelidentnummer (GTIN)'	=> ['ean'],				
 		'ISBN-10'								=> ['ean'],
 		'ISBN-13'								=> ['ean']
 	];
