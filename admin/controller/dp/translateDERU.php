@@ -57,8 +57,7 @@
 					echoLine('[TR] Языковая запись ' . (int)$row['rate_id']);
 					$this->db->query("INSERT IGNORE INTO shop_rating_description SET rate_id = '" . (int)$row['rate_id'] . "', language_id = '" . $language['language_id'] . "', comment = '', answer = '', good = '', bad = ''");
 					
-				}
-				
+				}				
 			}
 			
 			$query = $this->db->query("SELECT rate_id, comment, good, bad FROM shop_rating WHERE rate_id IN (SELECT rate_id FROM shop_rating_description WHERE (comment = '' OR good = '' OR bad = '') AND language_id = 6)");
@@ -82,7 +81,7 @@
 					foreach ($fields as $field){
 						
 						if (!empty($row[$field])){
-							$translation = $this->model_kp_translate->translateYandex($row[$field], 'ru', 'uk');	
+							$translation = $this->model_kp_translate->translateYandex($row[$field], 'de', 'ru');	
 							
 							$json = json_decode($translation, true);
 							if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -90,7 +89,7 @@
 							}
 							
 							if ($translated){
-								echoLine('[TR UATR] ' . trim(str_replace(PHP_EOL, '', substr(strip_tags($translated), 0, 100))));	
+								echoLine('[TR RUTR] ' . trim(str_replace(PHP_EOL, '', substr(strip_tags($translated), 0, 100))));	
 								$this->model_kp_translate->updateShopRatingTranslation($row['rate_id'], '6', $translated, $field);								
 								} else {
 								echoLine('[TR ERROR] Что-то пошло не так');					
@@ -125,8 +124,7 @@
 					}
 					
 					$i++;
-				}
-				
+				}				
 			}
 			
 			$query = $this->db->query("SELECT review_id FROM review WHERE review_id NOT IN (SELECT review_id FROM review_description)");
@@ -134,15 +132,11 @@
 			$this->load->model('localisation/language');
 			$languages = $this->model_localisation_language->getLanguages();
 			
-			foreach ($query->rows as $row){
-				
-				foreach ($languages as $language){
-					
+			foreach ($query->rows as $row){				
+				foreach ($languages as $language){					
 					echoLine('[TR] Языковая запись ' . (int)$row['review_id']);
-					$this->db->query("INSERT IGNORE INTO review_description SET review_id = '" . (int)$row['review_id'] . "', language_id = '" . $language['language_id'] . "', text = '', answer = '', good = '', bads = ''");
-					
-				}
-				
+					$this->db->query("INSERT IGNORE INTO review_description SET review_id = '" . (int)$row['review_id'] . "', language_id = '" . $language['language_id'] . "', text = '', answer = '', good = '', bads = ''");					
+				}				
 			}
 			
 			$query = $this->db->query("SELECT review_id, text, good, bads, answer FROM review WHERE review_id IN (SELECT review_id FROM review_description WHERE text = '' AND language_id = 6)");
@@ -163,10 +157,11 @@
 					
 					echoLine($i . '/' . $count);
 					
-					foreach ($fields as $field){
-						
+					foreach ($fields as $field){						
 						if (!empty($row[$field])){
-							$translation = $this->model_kp_translate->translateYandex($row[$field], 'ru', 'uk');	
+							echoLine($row[$field], 'i');
+
+							$translation = $this->model_kp_translate->translateYandex($row[$field], 'de', 'ru');	
 							
 							$json = json_decode($translation, true);
 							if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -174,7 +169,7 @@
 							}
 							
 							if ($translated){
-								echoLine('[TR UATR] ' . trim(str_replace(PHP_EOL, '', substr(strip_tags($translated), 0, 100))));	
+								echoLine('[TR RUTR] ' . trim($translated), 'w');	
 								$this->model_kp_translate->updateReviewTranslation($row['review_id'], '6', $translated, $field);								
 								} else {
 								echoLine('[TR ERROR] Что-то пошло не так');					
@@ -187,7 +182,7 @@
 							$working_time = time() - $start_time;
 							$average_count = (int)((3600/$working_time) * $count_symbols);
 							
-							if ($average_count > 800000){
+							if ($average_count > 8000000){
 								echoLine('[TR DYNC] Динамическая корректировка паузы, пауза: ' . $sleep_counter);
 								$sleep_counter += 1;	
 								} else {
@@ -265,7 +260,7 @@
 							}
 							
 							if ($translated){
-								echoLine('[TR UATR] ' . trim(str_replace(PHP_EOL, '', substr(strip_tags($translated), 0, 100))));	
+								echoLine('[TR RUTR] ' . trim(str_replace(PHP_EOL, '', substr(strip_tags($translated), 0, 100))));	
 								$tempTranslations[$text] = $translated;								
 								} else {
 								echoLine('[TR ERROR] Что-то пошло не так');					
@@ -369,7 +364,7 @@
 					}
 					
 					if ($translation_ruua){
-						echoLine('[TR UATR] ' . trim(str_replace(PHP_EOL, '', substr(strip_tags($translation_ruua), 0, 100))));					
+						echoLine('[TR RUTR] ' . trim(str_replace(PHP_EOL, '', substr(strip_tags($translation_ruua), 0, 100))));					
 						
 						$this->model_kp_translate->updateNameTranslation($row['product_id'], '6', $translation_ruua);
 						$this->model_kp_translate->setTranslationMarker($row['product_id'], '6', true);
@@ -452,7 +447,7 @@
 					}
 					
 					if ($translation_ruua){
-						echoLine('[TR UATR] ' . trim(str_replace(PHP_EOL, '', substr(strip_tags($translation_ruua), 0, 100))));					
+						echoLine('[TR RUTR] ' . trim(str_replace(PHP_EOL, '', substr(strip_tags($translation_ruua), 0, 100))));					
 						$this->model_kp_translate->updateDescriptionTranslation($row['product_id'], '6', $translation_ruua);
 						} else {
 						echoLine('[TR ERROR] Что-то пошло не так');					
@@ -539,7 +534,7 @@
 					}
 					
 					if ($translation_ruua){
-						echoLine('[TR UATR] ' . trim(str_replace(PHP_EOL, '', substr(strip_tags($translation_ruua), 0, 100))));					
+						echoLine('[TR RUTR] ' . trim(str_replace(PHP_EOL, '', substr(strip_tags($translation_ruua), 0, 100))));					
 						$this->model_kp_translate->updateCollectionDescriptionTranslation($row['collection_id'], '6', $translation_ruua);
 						} else {
 						echoLine('[TR ERROR] Что-то пошло не так');					
