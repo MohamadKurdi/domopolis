@@ -452,13 +452,13 @@ class ControllerCatalogAttribute extends Controller {
 
 		$this->load->model('catalog/product');
 
-		foreach ($this->request->post['selected'] as $attribute_id) {
-			$product_total = $this->model_catalog_product->getTotalProductsByAttributeId($attribute_id);
+		// foreach ($this->request->post['selected'] as $attribute_id) {
+		// 	$product_total = $this->model_catalog_product->getTotalProductsByAttributeId($attribute_id);
 
-			if ($product_total) {
-				$this->error['warning'] = sprintf($this->language->get('error_product'), $product_total);
-			}
-		}
+		// 	if ($product_total) {
+		// 		$this->error['warning'] = sprintf($this->language->get('error_product'), $product_total);
+		// 	}
+		// }
 
 		if (!$this->error) { 
 			return true;
