@@ -39,12 +39,12 @@ class simpleProcess
          
          if ($process = $this->getProcess($params)){
             if (!empty($process['running'])){
-               echoLine('[simpleProcess] Process already running, stop');
+               echoLine('[simpleProcess] Process already running, stop', 'e');
                foreach ($process as $key => $info){
                   if (is_array($info)){
-                      echoLine('[simpleProcess] Process ' . $key . ' = ' . implode(',', $info));
+                      echoLine('[simpleProcess] Process ' . $key . ' = ' . implode(',', $info), 'i');
                   } else {
-                     echoLine('[simpleProcess] Process ' . $key . ' = ' . $info);
+                     echoLine('[simpleProcess] Process ' . $key . ' = ' . $info, 'i');
                   }
                }
                die();
@@ -52,11 +52,11 @@ class simpleProcess
          }
 
          if ($this->prefix){
-              echoLine('[simpleProcess] Config file is using prefixes ' . $this->prefix);
+              echoLine('[simpleProcess] Config file is using prefixes ' . $this->prefix, 'i');
          }
 
-         echoLine('[simpleProcess] Process started with pid: ' . $this->pid);
-         echoLine('[simpleProcess] Process started with pidfile: ' . $this->file);
+         echoLine('[simpleProcess] Process started with pid: ' . $this->pid, 's');
+         echoLine('[simpleProcess] Process started with pidfile: ' . $this->file, 's');
       }
    }
 
