@@ -89,7 +89,7 @@ class InfoUpdater extends RainforestRetriever
 		$text = str_replace(["&amp;", "' ", "( "], ['&', ' ', '('], $text);
 
 		//Упоминания Amazon
-		$text = str_ireplace(["Amazon", "amazon", "Амазон"], ['Domopolis'], $text);
+		$text = str_ireplace(["Amazon", "amazon", "Амазон"], [$this->config->get('config_owner')], $text);
 
 		//Кавычка в начале - точно не апостроф
 		$text = ltrim($text, "'");
@@ -115,7 +115,7 @@ class InfoUpdater extends RainforestRetriever
 		$review = str_replace(["&amp;", "' ", "( "], ['&', ' ', '('], $review);
 
 		//Упоминания Amazon
-		$review = str_ireplace(["Amazon", "amazon", "Амазон"], ['Domopolis'], $review);
+		$review = str_ireplace(["Amazon", "amazon", "Амазон"], [$this->config->get('config_owner')], $review);
 
 		//Кавычка в начале - точно не апостроф
 		$review = ltrim($review, "'");
@@ -143,7 +143,7 @@ class InfoUpdater extends RainforestRetriever
 		$name = str_replace(["&amp;", "' ", "( ", " )", '(-', '-)'], ['&', ' ', '(', ' )', '(', ')'], $name);
 
 		//Упоминания Amazon
-		$name = str_ireplace(["Amazon", "amazon", "Амазон", "амазон", "Амазонов", "амазонов", "амазоней"], ['Domopolis'], $name);
+		$name = str_ireplace(["Amazon", "amazon", "Амазон", "амазон", "Амазонов", "амазонов", "амазоней"], [$this->config->get('config_owner')], $name);
 
 		//Кавычка в начале - точно не апостроф
 		$name = ltrim($name, "'");
@@ -464,7 +464,7 @@ class InfoUpdater extends RainforestRetriever
 
 		$weight = (float)atrim($exploded_weight_class[0]);
 		if (!$weight_class_id){
-			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Не найдена единица измерения веса: ' . atrim($exploded_weight_class[1]));
+			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Did not found weight class: ' . atrim($exploded_weight_class[1]), 'e');
 			$weight = 0;
 		}
 
@@ -473,7 +473,7 @@ class InfoUpdater extends RainforestRetriever
 		$height = (float)atrim($exploded_length[2]);
 
 		if (!$length_class_id){
-			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Не найдена единица измерения размера: ' . atrim($exploded_length_class[1]));
+			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Did not found length class: ' . atrim($exploded_length_class[1]), 'e');
 
 			$length = 0;
 			$width 	= 0;
@@ -524,8 +524,8 @@ class InfoUpdater extends RainforestRetriever
 					}
 
 					if ($length && $length_class_id && $weight && $weight_class_id){
-						echoLine('[InfoUpdater::tryToParseDimensionStringExtended] Length and class found: ' . $length . ' ' . $length_class . ' -> ' . $length_class_id);
-						echoLine('[InfoUpdater::tryToParseDimensionStringExtended] Weight and class found: ' . $weight . ' ' . $weight_class . ' -> ' . $weight_class_id);
+						echoLine('[InfoUpdater::tryToParseDimensionStringExtended] Length and class found: ' . $length . ' ' . $length_class . ' -> ' . $length_class_id, 's');
+						echoLine('[InfoUpdater::tryToParseDimensionStringExtended] Weight and class found: ' . $weight . ' ' . $weight_class . ' -> ' . $weight_class_id, 's');
 
 						return [
 							'length' 			=> (float)$length,
@@ -556,7 +556,7 @@ class InfoUpdater extends RainforestRetriever
 				}
 
 				if ($weight && $weight_class_id){
-					echoLine('[InfoUpdater::tryToParseDimensionStringExtended] Weight and class found: ' . $weight . ' ' . $weight_class . ' -> ' . $weight_class_id);
+					echoLine('[InfoUpdater::tryToParseDimensionStringExtended] Weight and class found: ' . $weight . ' ' . $weight_class . ' -> ' . $weight_class_id, 's');
 
 					return [
 						'weight' 			=> (float)$weight,
@@ -585,7 +585,7 @@ class InfoUpdater extends RainforestRetriever
 					}
 
 					if ($length && $length_class_id){
-						echoLine('[InfoUpdater::tryToParseDimensionStringExtended] Length and class found: ' . $length . ' ' . $length_class . ' -> ' . $length_class_id);
+						echoLine('[InfoUpdater::tryToParseDimensionStringExtended] Length and class found: ' . $length . ' ' . $length_class . ' -> ' . $length_class_id, 's');
 
 						return [
 							'length' 			=> (float)$length,
@@ -611,7 +611,7 @@ class InfoUpdater extends RainforestRetriever
 			if ($attribute_id = $this->model_product_cached_get->getAttribute($attribute['name'])){
 				if ($attribute_info = $this->model_product_cached_get->getAttributeInfo($attribute_id)){
 					if ($attribute_info['attribute_group_id'] == $this->config->get('config_dimensions_attr_id')){
-						echoLine('[InfoUpdater::parseDimesionsAttributes] Found dimension attribute: ' . $attribute['name'] . ', value ' . $attribute['value'] . ', type ' . $attribute_info['dimension_type']);
+						echoLine('[InfoUpdater::parseDimesionsAttributes] Found dimension attribute: ' . $attribute['name'] . ', value ' . $attribute['value'] . ', type ' . $attribute_info['dimension_type'], 's');
 
 						if ($attribute_info['dimension_type']){
 							if ($parsed = $this->tryToParseDimensionStringExtended($attribute['value'], $attribute_info['dimension_type'])) {
@@ -652,7 +652,7 @@ class InfoUpdater extends RainforestRetriever
 			//Kilogramm > 100, it's a fail
 
 			if ($data['weight_class_id'] == 1 && (float)$data['weight'] > 500){
-				echoLine('[InfoUpdater::checkWeight] BAD WEIGHT DETECTED: ' . $data['weight']);	
+				echoLine('[InfoUpdater::checkWeight] BAD WEIGHT DETECTED: ' . $data['weight'], 'w');	
 				return false;
 			}
 		}
@@ -662,15 +662,15 @@ class InfoUpdater extends RainforestRetriever
 
 	private function updateProductDimensions($product, $data){	
 		if (!empty($data['weight']) && !empty($data['weight_class_id']) && $this->checkWeight($data)){
-			echoLine('[InfoUpdater::updateProductDimensions] Weight: ' . $data['weight']);		
-			echoLine('[InfoUpdater::updateProductDimensions] Weight class: ' . $data['weight_class_id']);
+			echoLine('[InfoUpdater::updateProductDimensions] Weight: ' . $data['weight'], 'i');		
+			echoLine('[InfoUpdater::updateProductDimensions] Weight class: ' . $data['weight_class_id'], 'i');
 
 			$this->db->query("UPDATE product SET 
 				weight 					= '" . (float)$data['weight'] . "', 
 				weight_class_id 		= '" . (int)$data['weight_class_id'] . "',
 				pack_weight 			= '" . (float)$data['weight'] . "',
 				pack_weight_class_id 	= '" . (int)$data['weight_class_id'] . "'
-				WHERE asin = '" . $this->db->escape($product['asin']) . "'");
+				WHERE asin 				= '" . $this->db->escape($product['asin']) . "'");
 
 			if (!empty($product['product_id'])){
 				$this->db->query("UPDATE product SET 
@@ -678,13 +678,13 @@ class InfoUpdater extends RainforestRetriever
 				weight_class_id 		= '" . (int)$data['weight_class_id'] . "',
 				pack_weight 			= '" . (float)$data['weight'] . "',
 				pack_weight_class_id 	= '" . (int)$data['weight_class_id'] . "'
-				WHERE product_id = '" . (int)$product['product_id'] . "'");
+				WHERE product_id 		= '" . (int)$product['product_id'] . "'");
 			}
 		}
 
 		if (!empty($data['length']) && !empty($data['width']) && !empty($data['height']) && !empty($data['length_class_id'])){					
-			echoLine('[InfoUpdater::updateProductDimensions] Length: ' . $data['length']);		
-			echoLine('[InfoUpdater::updateProductDimensions] Length class: ' . $data['length_class_id']);
+			echoLine('[InfoUpdater::updateProductDimensions] Length: ' . $data['length'], 'i');		
+			echoLine('[InfoUpdater::updateProductDimensions] Length class: ' . $data['length_class_id'], 'i');
 
 			$this->db->query("UPDATE product SET
 				length 					= '" . (float)$data['length'] . "',
@@ -695,7 +695,7 @@ class InfoUpdater extends RainforestRetriever
 				pack_width				= '" . (float)$data['width'] . "',
 				pack_height				= '" . (float)$data['height'] . "',			
 				pack_length_class_id 	= '" . (int)$data['length_class_id'] . "'			
-				WHERE asin = '" . $this->db->escape($product['asin']) . "'");
+				WHERE asin 				= '" . $this->db->escape($product['asin']) . "'");
 
 			if (!empty($product['product_id'])){
 				$this->db->query("UPDATE product SET
@@ -707,7 +707,7 @@ class InfoUpdater extends RainforestRetriever
 				pack_width				= '" . (float)$data['width'] . "',
 				pack_height				= '" . (float)$data['height'] . "',			
 				pack_length_class_id 	= '" . (int)$data['length_class_id'] . "'			
-				WHERE product_id = '" . (int)$product['product_id'] . "'");
+				WHERE product_id 		= '" . (int)$product['product_id'] . "'");
 			}
 		}
 	}
@@ -718,29 +718,29 @@ class InfoUpdater extends RainforestRetriever
 		}
 		
 		if (!empty($product['dimensions']) && $data = $this->parseDimesionsString(atrim($product['dimensions']))){	
-			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Found dimensions ' . atrim($product['dimensions']));
+			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Found dimensions ' . atrim($product['dimensions']), 's');
 
 			$this->updateProductDimensions($product, $data);
 			return true;		
 		} elseif (!empty($product['dimensions']) && $data = $this->tryToParseDimensionStringExtended(atrim($product['dimensions']), 'all')){	
-			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Found dimensions ' . atrim($product['dimensions']));
+			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Found dimensions ' . atrim($product['dimensions']), 's');
 
 			$this->updateProductDimensions($product, $data);
 			return true;			
 		} elseif (!empty($product['attributes']) && $data = $this->parseDimesionsAttributes(self::prepareAttributesForParsing($product['attributes']))) {
-			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Found something from attributes');
+			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Found something from attributes', 's');
 
 			$this->updateProductDimensions($product, $data);
 			return true;
 		} elseif (!empty($product['specifications']) && $data = $this->parseDimesionsAttributes(self::prepareAttributesForParsing($product['specifications']))){
-			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Found something from specifications');
+			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Found something from specifications', 's');
 
 			$this->updateProductDimensions($product, $data);
 			return true;
 
 		} else {
 
-			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Could not parse dimensions for ' . $product['asin']);
+			echoLine('[InfoUpdater::parseAndUpdateProductDimensions] Could not parse dimensions for ' . $product['asin'], 'e');
 
 		}
 
