@@ -186,7 +186,58 @@ class ControllerDPRainForest extends Controller {
 	Функционал очистки базы товаров (запуск всех функций очистки подряд)
 	*/
 	public function cleardatabasecron(){
-		$this->deletenoofferscron()->deleteinvalidasinscron()->deletecheapcron();
+		$this->deletenoofferscron()->deleteinvalidasinscron()->deletecheapcron()->deleteduplicatescron();
+	}
+
+	/*
+	Очистка базы от дублей товаров с разными кодами, но одинаковыми асинами (хз откуда они могут появляться, но факт что появляются)
+	*/
+	public function deleteduplicatescron(){
+		if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_delete_no_offers') && $this->config->get('config_rainforest_delete_no_offers_counter')){
+			$query = $this->db->query("SELECT asin, COUNT(product_id) as total, GROUP_CONCAT(product_id SEPARATOR ',') as 'products' FROM product WHERE asin <> 'INVALID' GROUP BY asin HAVING(COUNT(`product_id`)) > 1");
+
+			foreach ($query->rows as $row){
+				echoLine('[ControllerDPRainForest::deletedoublescron] Found duplicate : ' . $row['asin'] . ', ' . $row['total'] . ' products', 'e');
+				$products = explode(',', $row['products']);
+
+				$delete_products = [];
+				$enable_products = [];
+				$disable_products = [];
+
+				foreach ($products as $product_id){
+					if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($product_id)){
+						echoLine('[ControllerDPRainForest::deletedoublescron] Product ' . $product_id . ' is on stock, skipping and enabling', 'i');
+						$this->rainforestAmazon->productsRetriever->model_product_edit->enableProduct($product_id);
+					} elseif ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($product_id)){						
+						$disable_products[] = $product_id;						
+					} else {						
+						$delete_products[] = $product_id;			
+					}
+				}
+
+				if (count($products) == count($disable_products)){
+					array_shift($disable_products);
+				}
+
+				echoLine('[ControllerDPRainForest::deletedoublescron] To disable: ' . count($disable_products) . ' left!', 'i');
+				foreach ($disable_products as $product_id){
+					echoLine('[ControllerDPRainForest::deletedoublescron] Product ' . $product_id . ' is in orders, disabling', 'i');
+					$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($product_id);
+				}
+
+				if (count($products) == count($delete_products)){
+					array_shift($delete_products);
+				}
+
+				echoLine('[ControllerDPRainForest::deletedoublescron] To delete: ' . count($delete_products) . ' left!', 'i');
+				foreach ($delete_products as $product_id){
+					echoLine('[ControllerDPRainForest::deletedoublescron] Product ' . $product_id . ' not in orders, deleting', 'w');
+					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($product_id);
+				}
+			}
+		}		
+
+	//	return $this;
 	}
 
 	/*
@@ -209,16 +260,15 @@ class ControllerDPRainForest extends Controller {
 			foreach ($query->rows as $row){
 				echoLine($row['product_id'] . '/' . $row['asin'] . ' ' . $i . '/' . $query->num_rows);
 
-
 				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($row['product_id'])){
-					echoLine('[deletenoofferscron] Product ' . $row['product_id'] . ' is on stock, skipping and enabling');
+					echoLine('[ControllerDPRainForest::deletenoofferscron] Product ' . $row['product_id'] . ' is on stock, skipping and enabling', 'i');
 					$this->rainforestAmazon->productsRetriever->model_product_edit->enableProduct($row['product_id']);
 
 				} elseif ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
-					echoLine('[deletenoofferscron] Product ' . $row['product_id'] . ' is in orders, disabling');
+					echoLine('[ControllerDPRainForest::deletenoofferscron] Product ' . $row['product_id'] . ' is in orders, disabling', 'i');
 					$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($row['product_id'])->addAsinToIgnored($query->row['asin'], $query->row['name']);
 				} else {
-					echoLine('[deletenoofferscron] Product ' . $row['product_id'] . ' not in orders, deleting');
+					echoLine('[ControllerDPRainForest::deletenoofferscron] Product ' . $row['product_id'] . ' not in orders, deleting', 'e');
 					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($row['product_id'])->addAsinToIgnored($query->row['asin'], $query->row['name']);
 				}	
 
@@ -249,11 +299,14 @@ class ControllerDPRainForest extends Controller {
 
 				echoLine($row['product_id'] . '/' . $row['old_asin'] . ' ' . $i . '/' . $query->num_rows);
 
-				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
-					echoLine('[deleteinvalidasinscron] Product ' . $row['product_id'] . ' is in orders, disabling');
+				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($row['product_id'])){
+					echoLine('[ControllerDPRainForest::deleteinvalidasinscron] Product ' . $row['product_id'] . ' is on stock, skipping and enabling', 'i');
+					$this->rainforestAmazon->productsRetriever->model_product_edit->enableProduct($product_id);
+				} elseif ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
+					echoLine('[ControllerDPRainForest::deleteinvalidasinscron] Product ' . $row['product_id'] . ' is in orders, disabling', 'i');
 					$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($row['product_id'])->addAsinToIgnored($query->row['old_asin'], $query->row['name']);
 				} else {
-					echoLine('[deleteinvalidasinscron] Product ' . $row['product_id'] . ' not in orders, deleting');
+					echoLine('[ControllerDPRainForest::deleteinvalidasinscron] Product ' . $row['product_id'] . ' not in orders, deleting', 'e');
 					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($row['product_id'])->addAsinToIgnored($query->row['old_asin'], $query->row['name']);
 				}				
 
@@ -281,11 +334,14 @@ class ControllerDPRainForest extends Controller {
 			foreach ($query->rows as $row){
 				echoLine($row['product_id'] . '/' . $row['asin'] . ' ' . $i . '/' . $query->num_rows);
 
-				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
-					echoLine('[deletecheapcron] Product ' . $row['product_id'] . ' is in orders, disabling');
+				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($row['product_id'])){
+					echoLine('[ControllerDPRainForest::deletecheapcron] Product ' . $row['product_id'] . ' is on stock, skipping and enabling', 'i');
+					$this->rainforestAmazon->productsRetriever->model_product_edit->enableProduct($product_id);
+				} elseif ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
+					echoLine('[ControllerDPRainForest::deletecheapcron] Product ' . $row['product_id'] . ' is in orders, disabling', 'i');
 					$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($row['product_id']); //->addAsinToIgnored($query->row['asin'], $query->row['name']);
 				} else {
-					echoLine('[deletecheapcron] Product ' . $row['product_id'] . ' not in orders, deleting');
+					echoLine('[ControllerDPRainForest::deletecheapcron] Product ' . $row['product_id'] . ' not in orders, deleting', 'e');
 					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($row['product_id']); //->addAsinToIgnored($query->row['asin'], $query->row['name']);
 				}			
 
@@ -293,7 +349,7 @@ class ControllerDPRainForest extends Controller {
 			}
 		}
 
-	//	return $this;
+		return $this;
 	}
 
 	/*
