@@ -194,7 +194,7 @@ class ControllerDPRainForest extends Controller {
 	*/
 	public function deleteduplicatescron(){
 		if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_delete_no_offers') && $this->config->get('config_rainforest_delete_no_offers_counter')){
-			$query = $this->db->query("SELECT asin, COUNT(product_id) as total, GROUP_CONCAT(product_id SEPARATOR ',') as 'products' FROM product WHERE asin <> 'INVALID' GROUP BY asin HAVING(COUNT(`product_id`)) > 1");
+			$query = $this->db->query("SELECT asin, COUNT(product_id) as total, GROUP_CONCAT(product_id SEPARATOR ',') as 'products' FROM product WHERE asin <> 'INVALID' AND asin <> '' GROUP BY asin HAVING(COUNT(`product_id`)) > 1");
 
 			foreach ($query->rows as $row){
 				echoLine('[ControllerDPRainForest::deletedoublescron] Found duplicate : ' . $row['asin'] . ', ' . $row['total'] . ' products', 'e');
