@@ -1140,6 +1140,11 @@ class ProductsRetriever extends RainforestRetriever
 			return 0;
 		}	
 
+		if ($this->getProductsByAsin($data['asin'])){
+			echoLine('[RainforestRetriever] ASIN ' . $data['asin'] . ' exists, skipping!', 'w');
+			return 0;
+		}
+
 		if ($this->model_product_get->checkIfNameIsExcluded($data['name'], $data['category_id'])){		
 			$this->model_product_edit->deleteASINFromQueue($data['asin']);				
 			$this->model_product_edit->addAsinToIgnored($data['asin'], $data['name']);

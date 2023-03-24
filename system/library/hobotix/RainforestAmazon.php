@@ -242,9 +242,9 @@ class RainforestAmazon
 
 
 		if (!$apiEntities){									
-			echoLine('[RNF API] ASIN не найден ' . $row['asin']);			
+			echoLine('[RainforestAmazon::getProductByASIN] ASIN not found ' . $row['asin'], 'e');			
 		} else {
-			echoLine('[RNF API] ASIN найден ' . $row['asin']);
+			echoLine('[RainforestAmazon::getProductByASIN] ASIN found ' . $row['asin'], 'i');
 		}
 
 		return $apiEntities;			
@@ -280,12 +280,12 @@ class RainforestAmazon
 
 			if ($rfOfferList->getOfferCount()){
 				$this->offersParser->setLastOffersDate($rfAsin)->setProductOffers($rfAsin);
-				echoLine('[RainforestAmazon] ' . $rfAsin . ': ' . $rfOfferList->getOfferCount() . ' предложений');					
+				echoLine('[RainforestAmazon::getProductsOffersASYNC] ' . $rfAsin . ': ' . $rfOfferList->getOfferCount() . ' offers', 's');					
 			}
 		}
 
 		foreach (array_diff($products, $retrievedProducts) as $notRetrievedASIN){
-			echoLine('[RainforestAmazon] Не получили предложения по ' . $notRetrievedASIN);				
+			echoLine('[RainforestAmazon::getProductsOffersASYNC] No offers for ' . $notRetrievedASIN);				
 			$this->offersParser->setLastOffersDate($notRetrievedASIN)->setProductNoOffers($notRetrievedASIN);
 		}
 
@@ -299,7 +299,7 @@ class RainforestAmazon
 			}
 
 			if ($rfOfferList->hasMorePages() && count($results[$rfAsin]) == 10){
-				echoLine('[RainforestAmazon] Страница 2 ' . $rfOfferList->hasMorePages());
+				echoLine('[RainforestAmazon::getProductsOffersASYNC] Page 2 ' . $rfOfferList->hasMorePages());
 
 				$options['page'] = $rfOfferList->getCurrentPage() + 1;
 				$rfRequests = [new \CaponicaAmazonRainforest\Request\OfferRequest($this->config->get('config_rainforest_api_domain_1'), $asin, $options)];

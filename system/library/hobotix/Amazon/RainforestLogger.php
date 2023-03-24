@@ -26,14 +26,14 @@ class RainforestLogger extends AbstractLogger
     public function log($level, $message, array $context = array())
     {
     	if ($level == \Psr\Log\LogLevel::ERROR){
-        	echoLine('[RainforestLogger] ' . $message);
+        	echoLine('[RainforestLogger] Error: ' . $message, 'e');
 
         	if (strpos($message, 'Could not extract OfferResponse data from response') !== false && strpos($message, 'Rainforest response appears incomplete. It is missing field request_metadata') !== false){
         		//try to get asin from message
         		preg_match('/(?<=~)([\s\S]+?)(?=~)/u', $message, $asin);
 
         		if (!empty($asin[0])){
-        			echoLine('[RainforestLogger] Мы не смогли получить ничего по ASIN ' . $asin[0] . ', скорее всего он некорректный, ставим на него маркер INVALID');
+        			echoLine('[RainforestLogger] We could not get info about ASIN: ' . $asin[0] . ', we suppose it is incorrect, changing it to INVALID', 'w');
 
         			$this->registry->get('rainforestAmazon')->offersParser->setProductNoOffers(trim($asin[0]));
         			$this->registry->get('rainforestAmazon')->infoUpdater->setInvalidASIN(trim($asin[0]));
