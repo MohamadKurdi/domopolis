@@ -20,31 +20,31 @@ if (!empty($loaderConfig['preload'])){
 }
 
 if (!is_cli()){
-	echoLine('THIS IS CLI ONLY POINT');
+	echoLine('[CLI] CAN NOT RUN, THIS IS CLI ONLY POINT', 'e');
 	die();
 }
 
-echoLine('[CLI] We are in CLI mode. PHP version: ' . phpversion() . ', time ' . date('Y-m-d H:i:s'));	
+echoLine('[CLI] We are in CLI mode. PHP version: ' . phpversion() . ', time ' . date('Y-m-d H:i:s'), 's');	
 
 	//Первый параметр: admin, catalog, для выбора приложения
 if (!isset($argv[1])){
-	echoLine('[CLI] No first parameter, must be admin, or catalog');
+	echoLine('[CLI] No first parameter, must be admin, or catalog', 'e');
 	die();
 }
 
 if (!isset($argv[2])){
-	echoLine('[CLI] No second parameter, must be config file');
+	echoLine('[CLI] No second parameter, must be config file', 'e');
 	die();
 }
 
 if (!isset($argv[3])){
-	echoLine('[CLI] No third parameter, must be action controller');
+	echoLine('[CLI] No third parameter, must be action controller', 'e');
 	die();
 }
 
 $application = trim($argv[1]);
 if (!in_array($application, ['admin', 'catalog'])){
-	echoLine('[CLI] First parameter, must be admin, or catalog');
+	echoLine('[CLI] First parameter, must be admin, or catalog', 'e');
 	die();
 }
 
@@ -57,7 +57,7 @@ if ($application == 'admin'){
 $configFile = trim($argv[2]) . '.php';	
 $existentConfigFiles = glob($applicationLocation . 'config*.php');
 if (!in_array($applicationLocation . $configFile, $existentConfigFiles)){
-	echoLine('[CLI] Allowed config files: ' . implode(', ', $existentConfigFiles));
+	echoLine('[CLI] Allowed config files: ' . implode(', ', $existentConfigFiles), 'e');
 	die();
 }
 
@@ -72,11 +72,11 @@ for ($i=4; $i<=20; $i++){
 		if (strpos($argv[$i], 'store_id=') !== false){
 			$store_id = getCliParamValue($argv[$i]);
 			$allArguments[] = $argv[$i];
-			echoLine('[CLI] Working in store: ' . $store_id);
+			echoLine('[CLI] Working in store: ' . $store_id, 'i');
 		} elseif (strpos($argv[$i], 'language_code=') !== false){
 			$language_code = getCliParamValue($argv[$i]);
 			$allArguments[] = $argv[$i];
-			echoLine('[CLI] Working with language: ' . $language_code);
+			echoLine('[CLI] Working with language: ' . $language_code, 'i');
 		} else {
 			$functionArguments[] = trim($argv[$i]);
 			$allArguments[] = trim($argv[$i]);
@@ -92,13 +92,13 @@ if (count($configFileExploded = explode('.', $configFile)) >= 3){
 }
 
 if ($configFilesPrefix){
-	echoLine('[CLI] Config file prefix detected: ' . $configFilesPrefix);
+	echoLine('[CLI] Config file prefix detected: ' . $configFilesPrefix, 'i');
 } else {
-	echoLine('[CLI] Config file prefix not detected working in single-engine mode');
+	echoLine('[CLI] Config file prefix not detected working in single-engine mode', 'i');
 }
 
-echoLine('[CLI] Starting ' . $route . ' in app ' . $application . ' with config ' . $configFile);
-echoLine('[CLI] Parameters: ' . implode(', ', $functionArguments));
+echoLine('[CLI] Starting ' . $route . ' in app ' . $application . ' with config ' . $configFile, 's');
+echoLine('[CLI] Parameters: ' . implode(', ', $functionArguments), 'i');
 
 require_once($applicationLocation . $configFile);	
 
@@ -360,15 +360,15 @@ if ($functionArguments){
 
 if (isset($action)){
 	if ($action->getFile()){
-		echoLine('[CLI] Action file found: ' . $action->getFile());
+		echoLine('[CLI] Action file found: ' . $action->getFile(), 's');
 		$controller->dispatch($action, new Action('kp/errorreport/error'));
 	} else {
 		$registry->get('simpleProcess')->dropProcess();
-		echoLine('[CLI] Action file not found');			
+		echoLine('[CLI] Action file not found', 'e');			
 	}	
 } else {
 	$registry->get('simpleProcess')->dropProcess();
-	echoLine('[CLI] Action not defined');
+	echoLine('[CLI] Action not defined', 'e');
 }
 
 $registry->get('simpleProcess')->stopProcess();
