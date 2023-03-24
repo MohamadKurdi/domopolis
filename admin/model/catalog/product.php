@@ -2695,7 +2695,7 @@
 		public function getTotalProductsWithDoubleAsin() {
 			$query = $this->db->query("SELECT COUNT(asin) as total FROM product WHERE asin <> 'INVALID' GROUP BY asin HAVING(COUNT(`product_id`)) > 1");
 			
-			return $query->num_rows?$query->row['total']:0;
+			return $query->num_rows?$query->num_rows:0;
 		}
 
 		public function getTotalProductsParsed() {
