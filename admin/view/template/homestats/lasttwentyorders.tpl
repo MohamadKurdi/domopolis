@@ -8,6 +8,13 @@
 						<td  class="right" style="text-align: left;"><?php echo $order['order_id']; ?></td>
 						<td  class="left" style="text-align: left;">
 							<img src="view/image/flags/<? echo mb_strtolower($order['flag']) ?>.png" title="<? echo $order['flag']; ?>" />  <b><?php echo $order['customer']; ?></b>
+
+							<div style="clear:both;"></div>
+							<span style="font-size:10px; line-height:13px; <?php if ($order['email_bad']) { ?>color:#ff5656<?php } else { ?>color:#02760e<? } ?>">
+											<? echo $order['email']; ?>
+											<?php if ($order['email_bad']) { ?><i class="fa fa-exclamation-triangle" style="color:#ff5656"></i><?php } ?>
+											<?php if (!$order['email_bad']) { ?><i class="fa fa-check-circle" style="color:#02760e"></i><?php } ?>
+										</span>
 							
 							<? if ($order['pwa']) { ?>	
 								<div style="clear:both;"></div>

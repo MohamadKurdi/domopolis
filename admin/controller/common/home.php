@@ -232,6 +232,8 @@
 				$this->data['orders'][] = array(
 				'order_id'   		=> $result['order_id'],
 				'customer'   		=> $result['customer'],
+				'email'      		=> $result['email'],
+				'email_bad'			=> !$this->emailBlackList->check($result['email']),
 				'status'     		=> $result['status'],
 				'pwa'     			=> $result['pwa'],
 				'preorder'     		=> $result['preorder'],
@@ -402,8 +404,12 @@
 			$this->data['filter_total_products_in_tech'] 	= $this->url->link('catalog/product_ext', 'filter_category=' . $this->config->get('config_rainforest_default_technical_category_id') . '&token=' . $this->session->data['token'], 'SSL');
 
 			$this->data['total_product_got_offers']				= formatLongNumber($this->model_catalog_product->getTotalProductsGotOffers(), $format);
-			$this->data['total_product_to_get_offers']			= formatLongNumber($this->registry->get('rainforestAmazon')->offersParser->getTotalProductsToGetOffers(), $format);
-			$this->data['total_product_got_offers_today']		= formatLongNumber($this->model_catalog_product->getTotalProductsGotOffersByDate(date('Y-m-d')), $format);
+			
+			//$this->data['total_product_to_get_offers']			= formatLongNumber($this->registry->get('rainforestAmazon')->offersParser->getTotalProductsToGetOffers(), $format);
+			//$this->data['total_product_got_offers_today']		= formatLongNumber($this->model_catalog_product->getTotalProductsGotOffersByDate(date('Y-m-d')), $format);
+			$this->data['total_product_to_get_offers']			= $this->registry->get('rainforestAmazon')->offersParser->getTotalProductsToGetOffers();
+			$this->data['total_product_got_offers_today']		= $this->model_catalog_product->getTotalProductsGotOffersByDate(date('Y-m-d'));
+
 			$this->data['total_product_got_offers_yesterday']	= formatLongNumber($this->model_catalog_product->getTotalProductsGotOffersByDate(date('Y-m-d', strtotime('-1 day'))), $format);
 
 			$this->data['total_product_have_offers']			= formatLongNumber($this->model_catalog_product->getTotalProductsHaveOffers(), $format);
