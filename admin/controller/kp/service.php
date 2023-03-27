@@ -114,6 +114,10 @@
 
 			echoLine('[optimizeProductsDB] Подсчёт продаж по категориям', 'i');	
 			$this->db->query("UPDATE category SET bought_for_month = (SELECT SUM(quantity) FROM order_product op WHERE op.product_id IN (SELECT product_id FROM product_to_category WHERE category_id = category.category_id) AND op.order_id IN (SELECT o.order_id FROM `order` o WHERE o.order_status_id > 0 AND DATE(o.date_added) >= DATE(DATE_SUB(NOW(),INTERVAL 30 DAY))))");
+
+			echoLine('[optimizeProductsDB] Финальные категории', 'i');	
+			$this->db->query("UPDATE category SET final = 0 WHERE 1");
+			$this->db->query("UPDATE category SET final = 1 WHERE category_id NOT IN (SELECT parent_id FROM category)");
 			
 			echoLine('[optimizeProductsDB] Обнуление количества товаров со статусом нет в наличии', 'i');
 			$this->db->query("UPDATE product p SET quantity = 0, quantity_stock = 0, quantity_stockK = 0, quantity_stockM = 0, quantity_stockMN = 0, quantity_stockAS = 0, quantity_stock_onway = 0, quantity_stockK_onway = 0, quantity_stockM_onway = 0 WHERE stock_status_id IN (10,9)");
