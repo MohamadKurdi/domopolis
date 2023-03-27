@@ -878,6 +878,22 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['top'] = 0;
 		}
 
+		if (isset($this->request->post['homepage'])) {
+			$this->data['homepage'] = $this->request->post['homepage'];
+		} elseif (!empty($category_info)) {
+			$this->data['homepage'] = $category_info['homepage'];
+		} else {
+			$this->data['homepage'] = 0;
+		}
+
+		if (isset($this->request->post['popular'])) {
+			$this->data['popular'] = $this->request->post['popular'];
+		} elseif (!empty($category_info)) {
+			$this->data['popular'] = $category_info['popular'];
+		} else {
+			$this->data['popular'] = 0;
+		}
+
 		if (isset($this->request->post['column'])) {
 			$this->data['column'] = $this->request->post['column'];
 		} elseif (!empty($category_info)) {

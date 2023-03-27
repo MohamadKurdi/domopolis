@@ -1020,6 +1020,41 @@
 								<label for="checkbox_25"></label>
 							<?php } ?></td>
 						</tr>
+
+						<tr>
+							<td>Домашняя страница</td>
+							<td>
+								<select name="homepage">
+									<?php if ($homepage) { ?>
+										<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+										<option value="0"><?php echo $text_disabled; ?></option>
+									<?php } else { ?>
+										<option value="1"><?php echo $text_enabled; ?></option>
+										<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+									<?php } ?>
+								</select>
+
+								<br/><span class="help">В модуле "популярные категории" выводятся самые просматриваемые категории, но можно добавить любую категорию вручную</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td>Домашняя страница</td>
+							<td>
+								<select name="popular">
+									<?php if ($popular) { ?>
+										<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+										<option value="0"><?php echo $text_disabled; ?></option>
+									<?php } else { ?>
+										<option value="1"><?php echo $text_enabled; ?></option>
+										<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+									<?php } ?>
+								</select>
+
+								<br/><span class="help">Популярная категория (для использования этого где-то)</span>
+							</td>
+						</tr>
+
 						<tr>
 							<td><?php echo $entry_column; ?></td>
 							<td><input type="text" name="column" value="<?php echo $column; ?>" size="1" /></td>
