@@ -31,6 +31,7 @@ class ControllerModuleSelectedCategory extends Controller {
 					'sort'                => 'p.viewed',
 					'filter_only_viewed'  => (int)$setting['product_threshold'], 
 					'filter_category_id'  => $category['category_id'],
+					'filter_sub_category' => true,
 					'order'               => 'DESC',
 					'start'               => 0,
 					'limit'               => $setting['product_amount']
