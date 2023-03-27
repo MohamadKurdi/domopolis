@@ -2,9 +2,6 @@
 	
     class ModelCatalogProduct extends Model
     {
-        public function updateViewed($product_id){
-            $this->db->non_cached_query("UPDATE product SET viewed = (viewed + 1) WHERE product_id = '" . (int)$product_id . "'");
-		}
 		
 		public function getProductActiveCoupons($product_id){
 			
@@ -176,52 +173,7 @@
 			$query = $this->db->query($sql);
 			
 			return $query->rows;
-		}
-		
-        public function catchAlsoViewed($product_id){
-
-        	if (!$this->config->get('config_product_alsoviewed_enable')){
-        		if (!empty($this->session->data['alsoViewed'])) {
-        			unset($this->session->data['alsoViewed']);
-        		}
-        		return;
-        	}
-			
-            if (empty($this->session->data['alsoViewed'])) {
-				$this->session->data['alsoViewed'] = $product_id;
-				} else {
-				if (strstr($this->session->data['alsoViewed'], $product_id) == false) {
-					$this->session->data['alsoViewed'] .= ',' . $product_id;
-				}
-			}
-			
-			$alsoViewed = explode(',', $this->session->data['alsoViewed']);
-			
-			sort($alsoViewed);
-			
-			$groupedalsoViewed = [];
-			foreach ($alsoViewed as $k => $b) {
-				for ($i = 1; $i < count($alsoViewed); $i++) {
-					if (!empty($alsoViewed[$k + $i])) {
-						$groupedalsoViewed[] = array('low' => $b, 'high' => $alsoViewed[$k + $i]);
-					}
-				}
-			}
-			
-			if (empty($this->session->data['alsoViewed'])) {
-				$this->session->data['alsoViewed'] = $product_id;
-			}
-			
-			$alsoViewed = explode(',', $this->session->data['alsoViewed']);
-			
-			$groupedalsoViewed = array_slice($groupedalsoViewed, -3);
-			
-			foreach ($groupedalsoViewed as $p) {
-				if (mt_rand(0, 1) == 1) {
-					$this->db->non_cached_query("INSERT INTO `alsoviewed` (low, high, number, date_added) VALUES ('" . (int)$p['low'] . "', '" . (int)$p['high'] . "', '1', NOW()) ON DUPLICATE KEY UPDATE number = number+1");
-				}
-			}
-		}		
+		}		   
 		
 		public function prepareProductToArray($results, $bestsellers = array(), $ajax = false){					
 			$array = [];
