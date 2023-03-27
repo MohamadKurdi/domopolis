@@ -25,6 +25,42 @@ class ModelCatalogCategory extends Model {
 		return $category_data;
 	}
 
+	public function getMostViewedCategories($limit){
+		if ((int)$limit < 0){
+			$limit = 0;
+		} else {
+			$limit = (int)$limit;
+		}
+
+		$sql = "SELECT *, IFNULL(cd.menu_name, cd.name) as name 
+		FROM category c 
+		LEFT JOIN category_description cd ON (c.category_id = cd.category_id) ";
+
+		if (!$this->config->get('config_single_store_enable')){
+			$sql .= " LEFT JOIN category_to_store c2s ON (c.category_id = c2s.category_id) ";
+		}
+
+		$sql .= " WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "' ";
+
+		if (!$this->config->get('config_single_store_enable')){
+			$sql .= " 	AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ";
+		}
+
+		$sql .= " AND c.status = '1' ";
+		$sql .= " AND ((c.viewed > 0 AND c.final = 1) OR c.homepage = 1)";		
+		if (defined('PRESENT_UA')){
+			$sql .= " AND c.category_id <> " . PRESENT_UA;
+		}		
+		$sql .= " ORDER BY (c.homepage = 1) DESC, c.viewed DESC";
+		
+		if ($limit){
+			$sql .= " LIMIT 0, $limit";
+		}
+
+		$query = $this->db->query($sql);
+		
+		return $query->rows;
+	}
 
 	public function getCategoriesIntersections($category_id, $parent_id = 0){				
 
