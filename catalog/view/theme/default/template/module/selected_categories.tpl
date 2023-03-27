@@ -4,7 +4,11 @@
 			<? $i=0; foreach ($categories as $category) { ?>
 				<div class="section_slider">
 					<div class="head_slider">
-						<span class="title"><a href="<? echo $category['href']; ?>" title="<? echo $category['name']; ?>"><? echo $category['name']; ?></span>
+						<span class="title">
+							<a href="<? echo $category['href']; ?>" title="<? echo $category['name']; ?>"><? echo $category['name']; ?></a>
+
+							<a href="<? echo $category['href']; ?>" title="<? echo $category['name']; ?>"><span style="font-size:12px; color:#E25C1D"><?php echo $text_view_all; ?> <i class="fas fa-arrow-circle-right"></i></span></a>
+						</span>
 							<div class="nav-group">
 								<!-- arrows -->
 								<div class="swiper-prev-slide">

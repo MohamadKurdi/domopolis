@@ -11,6 +11,7 @@ class ControllerModuleSelectedCategory extends Controller {
 		} else {
 
 			$this->language->load('module/category');
+			$this->data['text_view_all'] = $this->language->get('text_view_all');
 
 			foreach ($this->language->loadRetranslate('product/single') as $translationСode => $translationText){
 				$this->data[$translationСode] = $translationText;
@@ -38,7 +39,6 @@ class ControllerModuleSelectedCategory extends Controller {
 				];
 
 				$products = $this->model_catalog_product->getProducts($filter_data);
-
 
 				$this->data['categories'][] = [
 					'href' 		=> $this->url->link('product/category', 'path=' . $category['category_id']),
