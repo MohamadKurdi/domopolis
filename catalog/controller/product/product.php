@@ -1658,8 +1658,6 @@ public function index($product_id = false, $just_price = false)
                     
                     $this->data['product_product_options'] = [];
 
-                    $this->log->debug($product_product_options);
-
                     foreach ($product_product_options as $product_product_option) {
                         $product_product_option_value_data = [];                        
                         foreach ($product_product_option['product_option'] as $product_option_value) {
