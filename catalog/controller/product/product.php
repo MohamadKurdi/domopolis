@@ -1653,55 +1653,36 @@ public function index($product_id = false, $just_price = false)
                     $this->data['rees46_is_available'] = $product_info['quantity'];
                 }
                 
-                if (!$just_price) {
-                    $product_product_options = [];
-                    
+                if (!$just_price) {                    
                     $product_product_options = $this->model_catalog_product->getProductProductOptions($this->request->get['product_id']);
                     
                     $this->data['product_product_options'] = [];
-                    
+
+                    $this->log->debug($product_product_options);
+
                     foreach ($product_product_options as $product_product_option) {
-                        $product_product_option_value_data = [];
-                        
+                        $product_product_option_value_data = [];                        
                         foreach ($product_product_option['product_option'] as $product_option_value) {
                             $special = false;
                             $product_option_info = $this->model_catalog_product->getProduct($product_option_value['product_option_id']);
                             
-                            if ($product_option_info['current_in_stock']  && !empty($product_option_value['stock_status_id']) && $product_option_value['stock_status_id'] != $this->config->get('config_not_in_stock_status_id')) {
+                            if (!empty($product_option_info) && $product_option_info['current_in_stock']  && !empty($product_option_value['stock_status_id']) && $product_option_value['stock_status_id'] != $this->config->get('config_not_in_stock_status_id')) {
                                 if (isset($product_option_value['image']) && file_exists(DIR_IMAGE . $product_option_value['image'])) {
                                     $thumb = $this->model_tool_image->resize($product_option_value['image'], 280, 320);
-                                    $popup = $this->model_tool_image->resize(
-                                        $product_option_value['image'],
-                                        $this->config->get('config_image_popup_width'),
-                                        $this->config->get('config_image_popup_height')
-                                    );
+                                    $popup = $this->model_tool_image->resize($product_option_value['image'],$this->config->get('config_image_popup_width'),$this->config->get('config_image_popup_height'));
                                 } else {
                                     $thumb = $this->model_tool_image->resize($this->config->get('config_noimage'), 280, 320);
-                                    $popup = $this->model_tool_image->resize(
-                                        $this->config->get('config_noimage'),
-                                        $this->config->get('config_image_popup_width'),
-                                        $this->config->get('config_image_popup_height')
-                                    );
-                                }
-                                
-                                
+                                    $popup = $this->model_tool_image->resize($this->config->get('config_noimage'), $this->config->get('config_image_popup_width'),$this->config->get('config_image_popup_height'));
+                                }                                                                
                                 
                                 if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-                                    $price = $this->currency->format($this->tax->calculate(
-                                        $product_option_info['price'],
-                                        $product_info['tax_class_id'],
-                                        $this->config->get('config_tax')
-                                    ));
+                                    $price = $this->currency->format($this->tax->calculate($product_option_info['price'],$product_info['tax_class_id'],$this->config->get('config_tax')));
                                 } else {
                                     $price = false;
                                 }
                                 
                                 if ((float)$product_option_info['special']) {
-                                    $special = $this->currency->format($this->tax->calculate(
-                                        $product_option_info['special'],
-                                        $product_info['tax_class_id'],
-                                        $this->config->get('config_tax')
-                                    ));
+                                    $special = $this->currency->format($this->tax->calculate($product_option_info['special'],$product_info['tax_class_id'],$this->config->get('config_tax')));
                                 } else {
                                     $special = false;
                                 }
@@ -1713,11 +1694,7 @@ public function index($product_id = false, $just_price = false)
                                     'popup'             => $popup,
                                     'price'             => $price,
                                     'special'           => $special,
-                                    'href'              => $this->url->link(
-                                        'product/product',
-                                        'product_id=' . $product_option_value['product_option_id']
-                                    ),
-
+                                    'href'              => $this->url->link('product/product','product_id=' . $product_option_value['product_option_id']),
                                 );
                             }
                         }
