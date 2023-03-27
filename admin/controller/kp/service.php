@@ -74,7 +74,7 @@
 				}
 			}
 
-			return $this;
+			//return $this;
 		}
 		
 		public function optimizeProductsDB(){
@@ -111,6 +111,9 @@
 			
 			echoLine('[optimizeProductsDB] Подсчет количества продаж за месяц', 'i');			
 			$this->db->query("UPDATE product p SET bought_for_month = (SELECT SUM(quantity) FROM order_product op WHERE op.product_id = p.product_id AND op.order_id IN (SELECT o.order_id FROM `order` o WHERE o.order_status_id > 0 AND DATE(o.date_added) >= DATE(DATE_SUB(NOW(),INTERVAL 30 DAY))))");
+
+			echoLine('[optimizeProductsDB] Подсчёт продаж по категориям', 'i');	
+			$this->db->query("UPDATE category SET bought_for_month = (SELECT SUM(quantity) FROM order_product op WHERE op.product_id IN (SELECT product_id FROM product_to_category WHERE category_id = category.category_id) AND op.order_id IN (SELECT o.order_id FROM `order` o WHERE o.order_status_id > 0 AND DATE(o.date_added) >= DATE(DATE_SUB(NOW(),INTERVAL 30 DAY))))");
 			
 			echoLine('[optimizeProductsDB] Обнуление количества товаров со статусом нет в наличии', 'i');
 			$this->db->query("UPDATE product p SET quantity = 0, quantity_stock = 0, quantity_stockK = 0, quantity_stockM = 0, quantity_stockMN = 0, quantity_stockAS = 0, quantity_stock_onway = 0, quantity_stockK_onway = 0, quantity_stockM_onway = 0 WHERE stock_status_id IN (10,9)");
@@ -440,8 +443,7 @@
 			$this->db->query("UPDATE segments s SET order_good_to_bad = (order_bad_count/order_good_count)*100");
 			echo PHP_EOL;			
 		}
-		
-		
+				
 		public function optimizeDB(){
 			
 			echo '[C] Чистим записи журнала событий. 2 месяца.'  . PHP_EOL;
