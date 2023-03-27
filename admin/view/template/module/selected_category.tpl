@@ -25,6 +25,7 @@
               <td class="left"><?php echo $entry_status; ?></td>
               <td class="right">Категорий</td>
               <td class="right">Товаров</td>
+              <td class="right">Product Threshold</td>
               <td class="right"><?php echo $entry_sort_order; ?></td>
               <td></td>
             </tr>
@@ -74,10 +75,11 @@
                   <?php } ?>
                 </select></td>
 
-                <td class="right"><input type="number" step="1" name="selected_category_module[<?php echo $module_row; ?>][category_amount]" value="<?php echo $module['category_amount']; ?>" size="3" /></td>
-                <td class="right"><input type="number" step="1" name="selected_category_module[<?php echo $module_row; ?>][product_amount]" value="<?php echo $module['product_amount']; ?>" size="3" /></td>
+                <td class="right"><input type="number" step="1" name="selected_category_module[<?php echo $module_row; ?>][category_amount]" value="<?php echo $module['category_amount']; ?>" size="10" /></td>
+                <td class="right"><input type="number" step="1" name="selected_category_module[<?php echo $module_row; ?>][product_amount]" value="<?php echo $module['product_amount']; ?>" size="10" /></td>
+                <td class="right"><input type="number" step="1" name="selected_category_module[<?php echo $module_row; ?>][product_threshold]" value="<?php echo $module['product_threshold']; ?>" size="10" /></td>
                 
-                <td class="right"><input type="number" step="1" name="selected_category_module[<?php echo $module_row; ?>][sort_order]" value="<?php echo $module['sort_order']; ?>" size="3" /></td>
+                <td class="right"><input type="number" step="1" name="selected_category_module[<?php echo $module_row; ?>][sort_order]" value="<?php echo $module['sort_order']; ?>" size="10" /></td>
 
 
                 <td class="left"><a onclick="$('#module-row<?php echo $module_row; ?>').remove();" class="button"><?php echo $button_remove; ?></a></td>
@@ -117,9 +119,10 @@ function addModule() {
  html += '      <option value="1" selected="selected"><?php echo $text_enabled; ?></option>';
  html += '      <option value="0"><?php echo $text_disabled; ?></option>';
  html += '    </select></td>';
- html += '    <td class="right"><input type="number" step="1" name="selected_category_module[' + module_row + '][category_amount]" value="" size="3" /></td>';
- html += '    <td class="right"><input type="number" step="1" name="selected_category_module[' + module_row + '][product_amount]" value="" size="3" /></td>';
- html += '    <td class="right"><input type="number" step="1" name="selected_category_module[' + module_row + '][sort_order]" value="" size="3" /></td>';
+ html += '    <td class="right"><input type="number" step="1" name="selected_category_module[' + module_row + '][category_amount]" value="" size="10" /></td>';
+ html += '    <td class="right"><input type="number" step="1" name="selected_category_module[' + module_row + '][product_amount]" value="" size="10" /></td>';
+ html += '    <td class="right"><input type="number" step="1" name="selected_category_module[' + module_row + '][product_threshold]" value="" size="10" /></td>';
+ html += '    <td class="right"><input type="number" step="1" name="selected_category_module[' + module_row + '][sort_order]" value="" size="10" /></td>';
  html += '    <td class="left"><a onclick="$(\'#module-row' + module_row + '\').remove();" class="button"><?php echo $button_remove; ?></a></td>';
  html += '  </tr>';
  html += '</tbody>';
