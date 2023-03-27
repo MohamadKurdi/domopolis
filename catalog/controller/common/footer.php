@@ -249,7 +249,7 @@ class ControllerCommonFooter extends Controller {
 		}
 
 		if (!empty($this->request->get['manufacturer_id'])){		
-            $stat_string .= '_m:' . $this->request->get('manufacturer_id');
+            $stat_string .= '_m:' . $this->request->get['manufacturer_id'];
 		}
 
 		if (!empty($this->request->get['product_id'])){		
