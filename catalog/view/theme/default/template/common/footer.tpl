@@ -1108,9 +1108,9 @@
 		<? } ?>
 	});
 	
-	<? if (ADD_METRICS_TO_FRONT) { ?>	
+	<? if (!CRAWLER_SESSION_DETECTED) { ?>	
 		$(document).ready(function(){
-			setTimeout(function(){ $.get('index.php?route=kp/stat/online') }, 1500);
+			setTimeout(function(){ $.get('<?php echo $stat_uri; ?>') }, 1500);
 		});
 	<? } ?>
 </script>

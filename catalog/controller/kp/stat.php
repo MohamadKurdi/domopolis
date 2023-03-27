@@ -3,6 +3,44 @@
 	class ControllerKPStat extends Controller {
 		public function online(){
 			$json = array();
+			
+			$this->load->model('catalog/viewed');		    
+                
+			if (!empty($this->request->get['stat'])){
+				$stats = explode('_', (string)$this->request->get['stat']);
+				foreach ($stats as $stat){
+					$stat = explode(':', $stat);
+
+					if (!empty($stat[0]) && !empty($stat[1])){
+						if ($stat[0] == 'c'){
+							$this->model_catalog_viewed->addToCustomerViewed('c', (int)$stat[1]);
+							$this->model_catalog_viewed->updateCategoryViewed((int)$stat[1]);
+
+							$json[] = ['c' => (int)$stat[1]];
+						}
+
+						if ($stat[0] == 'p'){
+							$this->model_catalog_viewed->addToCustomerViewed('p', (int)$stat[1]);
+
+							$this->model_catalog_viewed->addToViewed((int)$stat[1]);  
+							$this->model_catalog_viewed->updateProductViewed((int)$stat[1]);          				
+
+							if ($this->config->get('config_product_alsoviewed_enable')){
+								$this->model_catalog_viewed->catchAlsoViewed((int)$stat[1]);
+							}     
+
+							$json[] = ['p' => (int)$stat[1]];       						
+						}
+
+						if ($stat[0] == 'm'){
+							$this->model_catalog_viewed->addToCustomerViewed('m', (int)$stat[1]);
+
+							$json[] = ['m' => (int)$stat[1]];
+						}
+					}
+				}            	
+			}
+
 			if ($this->config->get('config_customer_online')) {
 				$this->load->model('tool/online');
 				

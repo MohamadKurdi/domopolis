@@ -238,8 +238,29 @@ class ControllerCommonFooter extends Controller {
 
 
 		$this->data['ajax'] 		= $this->url->link('kp/module');
-		$this->data['ajax_product'] = $this->url->link('product/product/getProductsArrayDataJSON');
-		$this->data['ajax_online']	= $this->url->link('kp/stat/online');
+		$this->data['ajax_product'] = $this->url->link('product/product/getProductsArrayDataJSON');		
+
+		$stat_string = '';
+		if (!empty($this->request->get['path'])){
+			$parts = explode('_', (string)$this->request->get['path']);
+            $category_id = (int)array_pop($parts);
+
+            $stat_string .= 'c:' . $category_id;
+		}
+
+		if (!empty($this->request->get['manufacturer_id'])){		
+            $stat_string .= '_m:' . $this->request->get('manufacturer_id');
+		}
+
+		if (!empty($this->request->get['product_id'])){		
+            $stat_string .= '_p:' . $this->request->get['product_id'];
+		}		
+
+		if (!empty($stat_string)){
+			$this->data['stat_uri']	= $this->url->link('kp/stat/online', 'stat=' . $stat_string);
+		} else {
+			$this->data['stat_uri']	= $this->url->link('kp/stat/online');
+		}
 		
 		$this->data['contact'] 			= $this->url->link('information/contact');
 		$this->data['faq_url'] 			= $this->url->link('information/faq_system');
