@@ -591,12 +591,6 @@ public function index($product_id = false, $just_price = false)
         }
 
         if (!$just_price) {
-            if ($product_info['stock_status_id'] != $this->config->get('config_not_in_stock_status_id')) {
-                $this->load->model('catalog/viewed');
-                $this->model_catalog_viewed->addToViewed($product_id);
-            }
-
-            $this->model_catalog_product->updateViewed($this->request->get['product_id']);
             $this->load->model('catalog/review');
 
             $this->data['text_on'] = $this->language->get('text_on');
@@ -665,19 +659,6 @@ public function index($product_id = false, $just_price = false)
             $pagination->url = $this->url->link('product/product/review','product_id=' . $this->request->get['product_id'] . '&page={page}');
 
             $this->data['pagination'] = $pagination->render();
-
-            if ($this->config->get('config_product_alsoviewed_enable')){
-                $this->model_catalog_product->catchAlsoViewed($this->request->get['product_id']);
-            }
-
-            $this->load->model('catalog/superstat');
-            $this->model_catalog_superstat->addToSuperStat('p', $this->request->get['product_id']);
-
-            if ($product_info['manufacturer_id'] > 0) {
-                $this->model_catalog_superstat->addToSuperStat('m', $product_info['manufacturer_id']);
-            }
-
-
             $url = '';
 
             if (isset($this->request->get['path'])) {

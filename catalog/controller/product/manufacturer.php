@@ -1456,12 +1456,7 @@ class ControllerProductManufacturer extends Controller {
 
 					$this->data['compare'] = $this->url->link('product/compare');
 
-					$this->load->model('catalog/superstat');		
-					$this->model_catalog_superstat->addToSuperStat('m', $manufacturer_id);			
-
-
 					$this->data['products'] = array();
-
 					$data = array(
 						'filter_manufacturer_id' => $manufacturer_id, 
 						'sort'                   => $sort,

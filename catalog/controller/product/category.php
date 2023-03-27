@@ -191,8 +191,7 @@
 				
 				$category_id = (int)array_pop($parts);
 			}
-			
-			$this->load->model('catalog/superstat');				
+						
 			if (!empty($this->request->get['manufacturer_id'])){
 				$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($this->request->get['manufacturer_id']);
 				
@@ -206,8 +205,6 @@
 				$this->load->model('module/keyworder');
 				
 				$new_result = $this->model_module_keyworder->getCategory($category_id,  $this->request->get['manufacturer_id']);
-				
-				$this->model_catalog_superstat->addToSuperStat('m', $this->request->get['manufacturer_id']);	
 				
 				$category_info = $new_result['data'];	
 				
@@ -406,9 +403,7 @@
 					'ecomm_totalvalue' => 0
 					);
 					
-				}
-				
-				$this->model_catalog_superstat->addToSuperStat('c', $category_id);							
+				}				
 				
 				$this->document->setDescription($category_info['meta_description']);
 				$this->document->setKeywords($category_info['meta_keyword']);
