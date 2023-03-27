@@ -7,7 +7,7 @@
 						<span class="title">
 							<a href="<? echo $category['href']; ?>" title="<? echo $category['name']; ?>"><? echo $category['name']; ?></a>
 
-							<a href="<? echo $category['href']; ?>" title="<? echo $category['name']; ?>"><span style="font-size:12px; color:#E25C1D"><?php echo $text_view_all; ?> <i class="fas fa-arrow-circle-right"></i></span></a>
+							<a href="<? echo $category['href']; ?>" title="<? echo $category['name']; ?>"><span><?php echo $text_view_all; ?> <i class="fas fa-arrow-circle-right"></i></span></a>
 						</span>
 							<div class="nav-group">
 								<!-- arrows -->
