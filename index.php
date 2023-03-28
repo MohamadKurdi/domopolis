@@ -453,6 +453,32 @@
 		$registry->get('config')->set('config_default_city', $registry->get('config')->get('config_default_city_' . $registry->get('config')->get('config_language')));
 	}
 
+	//dev template reloading if user is logged to admin
+	if (ADMIN_SESSION_DETECTED){
+			if (!empty($registry->get('request')->cookie[ini_get('session.name') . 'A'])){
+				if (defined('DB_SESSION_HOSTNAME') && class_exists('Hobotix\SessionHandler\SessionHandler')){
+					$handler = new \Hobotix\SessionHandler\SessionHandler();
+					$handler->setDbDetails(DB_SESSION_HOSTNAME, DB_SESSION_USERNAME, DB_SESSION_PASSWORD, DB_SESSION_DATABASE);
+					$handler->setDbTable(DB_SESSION_TABLE);
+
+					if ($adminSessionData = $handler->read($registry->get('request')->cookie[ini_get('session.name') . 'A'])){
+						$adminSessionData = \Hobotix\SessionHandler\SessionHandler::unserialize($adminSessionData);
+
+						if ($adminSessionData && !empty($adminSessionData['user_id'])){							
+							$user_query = $registry->get('db')->non_cached_query("SELECT status, username, dev_template FROM user WHERE user_id = '" . (int)$adminSessionData['user_id'] . "'");
+							header('X-USING-DEV-TEMPLATE: TRUE');
+							header('X-FRONTEND-DEV: ' . $user_query->row['username']);
+
+							if (is_dir(DIR_TEMPLATE . $registry->get('config')->get('config_template') . '_dev/')){
+								$registry->get('config')->set('config_template', $registry->get('config')->get('config_template') . '_dev');
+							}
+						}
+					}
+				}
+			}
+		}
+
+
 	//Implementation of different redirect modes and|or modules	
 	$controller->addPreAction(new Action('common/hoboseo'));
 	$controller->addPreAction(new Action('common/seo_pro'));
