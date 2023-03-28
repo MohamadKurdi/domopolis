@@ -70,6 +70,9 @@
 /catalog/view/theme/kp/
 /catalog/view/theme/dp/
 /catalog/view/theme/ho/
+/catalog/view/theme/kp_dev/
+/catalog/view/theme/dp_dev/
+/catalog/view/theme/ho_dev/
 
 #Языки
 /catalog/language/russian
