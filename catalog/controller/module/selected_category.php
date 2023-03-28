@@ -24,7 +24,12 @@ class ControllerModuleSelectedCategory extends Controller {
 
 			$this->data['categories'] = array();
 
-			$categories = $this->model_catalog_category->getMostViewedCategories($setting['category_amount']);
+			if ($setting['type'] == 'viewed'){
+				$categories = $this->model_catalog_category->getMostViewedCategories($setting['category_amount']);
+			} elseif ($setting['type'] == 'bought'){
+				$categories = $this->model_catalog_category->getMostBoughtCategories($setting['category_amount']);
+			}
+			
 
 			foreach ($categories as $category){
 

@@ -23,6 +23,7 @@
               <td class="left"><?php echo $entry_layout; ?></td>
               <td class="left"><?php echo $entry_position; ?></td>
               <td class="left"><?php echo $entry_status; ?></td>
+              <td class="right">Отбор</td>
               <td class="right">Категорий</td>
               <td class="right">Товаров</td>
               <td class="right">Product Threshold</td>
@@ -43,7 +44,8 @@
                     <?php } ?>
                   <?php } ?>
                 </select></td>
-                <td class="left"><select name="selected_category_module[<?php echo $module_row; ?>][position]">
+                <td class="left">
+                  <select name="selected_category_module[<?php echo $module_row; ?>][position]">
                   <?php if ($module['position'] == 'content_top') { ?>
                     <option value="content_top" selected="selected"><?php echo $text_content_top; ?></option>
                   <?php } else { ?>
@@ -64,8 +66,10 @@
                   <?php } else { ?>
                     <option value="column_right"><?php echo $text_column_right; ?></option>
                   <?php } ?>
-                </select></td>
-                <td class="left"><select name="selected_category_module[<?php echo $module_row; ?>][status]">
+                </select>
+              </td>
+                <td class="left">
+                  <select name="selected_category_module[<?php echo $module_row; ?>][status]">
                   <?php if ($module['status']) { ?>
                     <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
                     <option value="0"><?php echo $text_disabled; ?></option>
@@ -73,7 +77,20 @@
                     <option value="1"><?php echo $text_enabled; ?></option>
                     <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
                   <?php } ?>
-                </select></td>
+                </select>
+              </td>
+
+              <td class="left">
+                  <select name="selected_category_module[<?php echo $module_row; ?>][type]">
+                  <?php if ($module['type'] == 'viewed') { ?>
+                    <option value="viewed" selected="selected">Просмотры</option>
+                    <option value="bought">Покупки</option>
+                  <?php } else { ?>
+                    <option value="viewed">Просмотры</option>
+                    <option value="bought" selected="selected">Покупки</option>
+                  <?php } ?>
+                </select>
+              </td>
 
                 <td class="right"><input type="number" step="1" name="selected_category_module[<?php echo $module_row; ?>][category_amount]" value="<?php echo $module['category_amount']; ?>" size="10" /></td>
                 <td class="right"><input type="number" step="1" name="selected_category_module[<?php echo $module_row; ?>][product_amount]" value="<?php echo $module['product_amount']; ?>" size="10" /></td>
@@ -118,6 +135,10 @@ function addModule() {
  html += '    <td class="left"><select name="selected_category_module[' + module_row + '][status]">';
  html += '      <option value="1" selected="selected"><?php echo $text_enabled; ?></option>';
  html += '      <option value="0"><?php echo $text_disabled; ?></option>';
+ html += '    </select></td>';
+  html += '    <td class="left"><select name="selected_category_module[' + module_row + '][type]">';
+ html += '      <option value="viewed" selected="selected">Просмотры</option>';
+ html += '      <option value="bought">Покупки</option>';
  html += '    </select></td>';
  html += '    <td class="right"><input type="number" step="1" name="selected_category_module[' + module_row + '][category_amount]" value="" size="10" /></td>';
  html += '    <td class="right"><input type="number" step="1" name="selected_category_module[' + module_row + '][product_amount]" value="" size="10" /></td>';
