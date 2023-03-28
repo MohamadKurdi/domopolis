@@ -27,6 +27,7 @@ class InfoUpdater extends RainforestRetriever
 		'Докладно',
 		'Lesen Sie weiter',
 		'Sie weiter',
+		'Лізі Вейтер',
 		'lessen Sie weiter',
 		'продовжуйте читати',
 		'Продовжити читання',
