@@ -55,6 +55,19 @@
 						</td>
 					</tr>
 					<tr>
+                        <td>Фронт-девелопер</td>
+                        <td>
+                            <select name="dev_template">
+                                <option <?php if ($dev_template): ?>selected="selected"<?php endif?> value="1">
+                                    Да
+								</option>
+                                <option <?php if (!$dev_template): ?>selected="selected"<?php endif?> value="0">
+                                    Нет
+								</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
                         <td>Разблокировка заказов</td>
                         <td>
                             <select name="unlock_orders">

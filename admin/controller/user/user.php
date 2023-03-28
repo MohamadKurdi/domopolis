@@ -194,6 +194,7 @@ class ControllerUserUser extends Controller {
 				'is_headsales'      => $result['is_headsales'],
 				'unlock_orders'     => $result['unlock_orders'],
 				'do_transactions'   => $result['do_transactions'],
+				'dev_template'   	=> $result['dev_template'],
 				'own_orders' 		=> $result['own_orders'],
 				'count_worktime' 	=> $result['count_worktime'],
 				'count_content' 	=> $result['count_content'],
@@ -549,6 +550,14 @@ class ControllerUserUser extends Controller {
 			$this->data['ticket'] = $user_info['ticket'];
 		} else {
 			$this->data['ticket'] = 0;
+		}
+
+		if (isset($this->request->post['dev_template'])) {
+			$this->data['dev_template'] = $this->request->post['dev_template'];
+		} elseif (!empty($user_info)) {
+			$this->data['dev_template'] = $user_info['dev_template'];
+		} else {
+			$this->data['dev_template'] = 0;
 		}
 		
 		$this->load->model('user/user_group');

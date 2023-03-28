@@ -20,10 +20,8 @@
 			<form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
 				<table class="list">
 					<tbody>
-						<?php if ($users) { ?>
-							
-							<? foreach ($users as $name => $group) { ?>
-								
+						<?php if ($users) { ?>							
+							<? foreach ($users as $name => $group) { ?>								
 								<? if ($name == 'Уволенные') { ?>
 									<tr>
 										<td colspan="6" class="left"><b><? echo $name; ?></b> <span onclick="$('.hidden_del').toggle()" style="cursor:pointer; border-bottom:1px dashed black">развернуть</span></td>
@@ -44,89 +42,89 @@
 
 												<td class="left">
 													<? if ($user['status']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
+														<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
 												<td class="left">
 													<? if ($user['is_av']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
+														<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
 												<td class="left">
 													<? if ($user['unlock_orders']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
+														<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
 												<td class="left">
 													<? if ($user['do_transactions']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
+														<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
 												<td class="left">
 													<? if ($user['is_mainmanager']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
+														<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
 												<td class="left">
 													<? if ($user['is_headsales']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
+														<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
 												<td class="left">
 													<? if ($user['edit_csi']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
+														<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
 												<td class="left">
 													<? if ($user['own_orders']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
+														<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>																						
 
 												<td class="left">
 													<? if ($user['ticket']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
+														<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
 												<td class="left">
 													<? if ($user['count_worktime']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
+														<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
 												<td class="left">
 													<? if ($user['count_content']) { ?>
-														<i class="fa fa-check" style="color:#4ea24e"></i>
+														<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 													<? } else { ?>
-														<i class="fa fa-times" style="color:#cf4a61"></i>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 													<? } ?>
 												</td>
 
@@ -155,26 +153,27 @@
 										<? } else { ?>
 
 											<tr>
-												<td colspan="18" class="left"><b><? echo $name; ?></b></td>
+												<td colspan="19" class="left"><b><? echo $name; ?></b></td>
 											</td>
 											<tr>
 												<td width="1" style="text-align: center;"></td>
 												<td class="left"><?php echo $column_username; ?></td>
 												<td></td>
-												<td class="left"><?php echo $column_status; ?></td>
-												<td class="left">Супермен</td>
-												<td class="left">Разблокировка</td>
-												<td class="left">Транзакции</td>
-												<td class="left">ГМ</td>
-												<td class="left">РОП</td>
-												<td class="left">CSI</td>
-												<td class="left">Присв. заказы</td>
-												<td class="left">Задачи</td>
-												<td class="left">Время</td>
-												<td class="left">Контент</td>
-												<td class="left">SIP</td>
-												<td class="left">B24</td>
-												<td class="left"><?php echo $column_date_added; ?></td>
+												<td class="center"><?php echo $column_status; ?></td>
+												<td class="center">Супермен</td>
+												<td class="center">Фронт-дев</td>
+												<td class="center">Разблокировка</td>
+												<td class="center">Транзакции</td>
+												<td class="center">ГМ</td>
+												<td class="center">РОП</td>
+												<td class="center">CSI</td>
+												<td class="center">Присв. заказы</td>
+												<td class="center">Задачи</td>
+												<td class="center">Время</td>
+												<td class="center">Контент</td>
+												<td class="center">SIP</td>
+												<td class="center">B24</td>
+												<td class="center"><?php echo $column_date_added; ?></td>
 												<td class="right"><?php echo $column_action; ?></td>
 											</tr>
 
@@ -192,107 +191,115 @@
 															<?php echo $user['firstname']; ?> <?php echo $user['lastname']; ?>
 														</td>	
 
-														<td class="left">
+														<td class="center">
 															<? if ($user['status']) { ?>
-																<i class="fa fa-check" style="color:#4ea24e"></i>
+																<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 															<? } else { ?>
-																<i class="fa fa-times" style="color:#cf4a61"></i>
+																<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 															<? } ?>
 														</td>
 
-														<td class="left">
+														<td class="center">
 															<? if ($user['is_av']) { ?>
-																<i class="fa fa-check" style="color:#4ea24e"></i>
+																<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 															<? } else { ?>
-																<i class="fa fa-times" style="color:#cf4a61"></i>
+																<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 															<? } ?>
 														</td>
 
-														<td class="left">
+														<td class="center">
+															<? if ($user['dev_template']) { ?>
+																<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+															<? } else { ?>
+																<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+															<? } ?>
+														</td>
+
+														<td class="center">
 															<? if ($user['unlock_orders']) { ?>
-																<i class="fa fa-check" style="color:#4ea24e"></i>
+																<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 															<? } else { ?>
-																<i class="fa fa-times" style="color:#cf4a61"></i>
+																<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 															<? } ?>
 														</td>
 
-														<td class="left">
+														<td class="center">
 															<? if ($user['do_transactions']) { ?>
-																<i class="fa fa-check" style="color:#4ea24e"></i>
+																<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 															<? } else { ?>
-																<i class="fa fa-times" style="color:#cf4a61"></i>
+																<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 															<? } ?>
 														</td>
 
-														<td class="left">
+														<td class="center">
 															<? if ($user['is_mainmanager']) { ?>
-																<i class="fa fa-check" style="color:#4ea24e"></i>
+																<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 															<? } else { ?>
-																<i class="fa fa-times" style="color:#cf4a61"></i>
+																<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 															<? } ?>
 														</td>
 
-														<td class="left">
+														<td class="center">
 															<? if ($user['is_headsales']) { ?>
-																<i class="fa fa-check" style="color:#4ea24e"></i>
+																<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 															<? } else { ?>
-																<i class="fa fa-times" style="color:#cf4a61"></i>
+																<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 															<? } ?>
 														</td>
 
-														<td class="left">
+														<td class="center">
 															<? if ($user['edit_csi']) { ?>
-																<i class="fa fa-check" style="color:#4ea24e"></i>
+																<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 															<? } else { ?>
-																<i class="fa fa-times" style="color:#cf4a61"></i>
+																<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 															<? } ?>
 														</td>
 
-														<td class="left">
+														<td class="center">
 															<? if ($user['own_orders']) { ?>
-																<i class="fa fa-check" style="color:#4ea24e"></i>
+																<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 															<? } else { ?>
-																<i class="fa fa-times" style="color:#cf4a61"></i>
+																<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 															<? } ?>
 														</td>																						
 
-														<td class="left">
+														<td class="center">
 															<? if ($user['ticket']) { ?>
-																<i class="fa fa-check" style="color:#4ea24e"></i>
+																<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 															<? } else { ?>
-																<i class="fa fa-times" style="color:#cf4a61"></i>
+																<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 															<? } ?>
 														</td>
 
-														<td class="left">
+														<td class="center">
 															<? if ($user['count_worktime']) { ?>
-																<i class="fa fa-check" style="color:#4ea24e"></i>
+																<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 															<? } else { ?>
-																<i class="fa fa-times" style="color:#cf4a61"></i>
+																<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 															<? } ?>
 														</td>
 
 														<td class="left">
 															<? if ($user['count_content']) { ?>
-																<i class="fa fa-check" style="color:#4ea24e"></i>
+																<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 															<? } else { ?>
-																<i class="fa fa-times" style="color:#cf4a61"></i>
+																<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 															<? } ?>
 														</td>
 
-														<td class="left">
+														<td class="center">
 															<? if ($user['internal_pbx_num']) { ?>
 																<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ccc;"><?php echo $user['internal_pbx_num']; ?></span>
 															<? } ?>
 														</td>
 
-														<td class="left">
+														<td class="center">
 															<? if ($user['bitrix_id']) { ?>
 																<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ccc;"><?php echo $user['bitrix_id']; ?></span>
 															<? } ?>
 														</td>
 
-														<td class="left"><?php echo $user['date_added']; ?></td>
+														<td class="center"><?php echo $user['date_added']; ?></td>
 														<td class="right"><?php foreach ($user['action'] as $action) { ?>
 															<a class="button" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
 															<?php } ?></td>
