@@ -531,6 +531,16 @@ class ModelCatalogCategory extends Model {
 			
 		return $query->row;
 	} 
+
+	public function getCategoryIdByAmazonCategoryId($amazon_category_id) {
+		$query = $this->db->query("SELECT category_id FROM category WHERE amazon_category_id = '" . $this->db->escape($amazon_category_id) . "' LIMIT 1");				
+		
+		if ($query->num_rows){
+			return $query->row['category_id'];
+		} else {
+			return false;
+		}
+	} 
 		
 	public function getKeyWords($category_id) {
 		$keywords = array();
@@ -566,6 +576,10 @@ class ModelCatalogCategory extends Model {
 
 		if (isset($data['filter_parent_id'])) {
 			$sql .= " AND c.parent_id = '" . (int)$data['filter_parent_id'] . "'";
+		}
+
+		if (isset($data['filter_category_id'])) {
+			$sql .= " AND cp.category_id = '" . (int)$data['filter_category_id'] . "'";
 		}
 
 		if (isset($data['filter_final'])) {

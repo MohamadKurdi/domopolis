@@ -1116,12 +1116,38 @@ class ControllerCatalogCategory extends Controller {
 		}
 	}
 
+
+	public function getAmazonCategoriesCSV(){
+		
+		header( 'Content-Type: text/csv charset=utf-8' );
+		header("Content-Disposition: attachment; filename=amazon_categories_". date('Y_m_d') .".csv");
+		header("Pragma: no-cache");
+		header("Expires: 0");
+
+		$file = fopen('php://output', 'w');
+
+		if ($this->config->get('config_rainforest_category_model') == 'standard'){
+			$query = $this->db->query("SELECT * FROM category_amazon_tree ORDER BY full_name ASC");
+		}
+
+		if ($this->config->get('config_rainforest_category_model') == 'bestsellers'){
+			$query = $this->db->query("SELECT * FROM category_amazon_bestseller_tree ORDER BY full_name ASC");
+		}
+		
+		foreach ($query->rows as $row){
+			fputcsv($file, $row);			
+		}
+
+		fclose($file);
+		
+	}
+
 	public function google_autocomplete() {
 		$json = array();
 
 		if (isset($this->request->get['filter_name']) && mb_strlen($this->request->get['filter_name']) > 2) {
 			$this->load->model('catalog/category');
-			$results = $this->model_catalog_category->getGoogleCategoryByName($this->request->get['filter_name']);
+			$results = $this->model_catalog_category->getGoogleCategoryByName(trim($this->request->get['filter_name']));
 
 			foreach ($results as $result) {
 				$json[] = array(
@@ -1141,6 +1167,47 @@ class ControllerCatalogCategory extends Controller {
 
 		$this->response->setOutput(json_encode($json));
 	}		
+
+	public function amazon_info() {	
+		$this->load->model('catalog/category');
+
+		$json = array();
+
+		$result = $this->model_catalog_category->getCategory($this->request->get['category_id']);
+
+		if (!empty($result['amazon_category_id'])){
+			$json = ['amazon_category_id' => $result['amazon_category_id']];
+		}
+		
+		$this->response->setOutput(json_encode($json));
+	}			
+
+	public function amazon_info_by_amazon_id() {	
+		$this->load->model('catalog/category');
+
+		$json = array();
+
+		$category_id = $this->model_catalog_category->getCategoryIdByAmazonCategoryId($this->request->get['amazon_category_id']);
+
+		if ($category_id){
+			$data = array(
+				'filter_category_id' 	=> $category_id,
+				'start'       			=> 0,
+				'limit'       			=> 1
+			);
+
+			$results = $this->model_catalog_category->getCategories($data);
+
+			if (!empty($results[0])){
+				$json = [
+					'category_id' 	=> $results[0]['category_id'], 
+					'name' 			=> strip_tags(html_entity_decode($results[0]['name'], ENT_QUOTES, 'UTF-8'))
+				];
+			}
+		}
+		
+		$this->response->setOutput(json_encode($json));
+	}	
 
 	public function yandex_autocomplete() {	
 		$this->load->model('catalog/category');
@@ -1170,40 +1237,22 @@ class ControllerCatalogCategory extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}				
 
-	public function getAmazonCategoriesCSV(){
-		
-		header( 'Content-Type: text/csv charset=utf-8' );
-		header("Content-Disposition: attachment; filename=amazon_categories_". date('Y_m_d') .".csv");
-		header("Pragma: no-cache");
-		header("Expires: 0");
-
-		$file = fopen('php://output', 'w');
-
-		if ($this->config->get('config_rainforest_category_model') == 'standard'){
-			$query = $this->db->query("SELECT * FROM category_amazon_tree ORDER BY full_name ASC");
-		}
-
-		if ($this->config->get('config_rainforest_category_model') == 'bestsellers'){
-			$query = $this->db->query("SELECT * FROM category_amazon_bestseller_tree ORDER BY full_name ASC");
-		}
-		
-		foreach ($query->rows as $row){
-			fputcsv($file, $row);			
-		}
-
-		fclose($file);
-		
-	}
-
 	public function amazon_autocomplete() {				
 		$json = array();
 
 		if ($this->config->get('config_rainforest_enable_api') && isset($this->request->get['filter_name']) && mb_strlen($this->request->get['filter_name']) > 3) {
+
+			if (!empty($this->request->get['type'])){
+				$type = $this->request->get['type'];
+			} else {
+				$type = $this->config->get('config_rainforest_category_model');
+			}
+
 			$queryString = http_build_query([
 				'api_key' 		=> $this->config->get('config_rainforest_api_key'),
 				'amazon_domain' => $this->config->get('config_rainforest_api_domain_1'),
 				'search_term'	=> $this->request->get['filter_name'],
-				'type'			=> $this->config->get('config_rainforest_category_model')
+				'type'			=> $type
 			]);
 
 			$ch = curl_init('https://api.rainforestapi.com/categories?' . $queryString);
@@ -1235,10 +1284,10 @@ class ControllerCatalogCategory extends Controller {
 			$this->load->model('catalog/category');
 
 			$data = array(
-				'filter_name' => $this->request->get['filter_name'],
-				'filter_final' => true,
-				'start'       => 0,
-				'limit'       => 20
+				'filter_name' 	=> trim($this->request->get['filter_name']),
+				'filter_final' 	=> true,
+				'start'       	=> 0,
+				'limit'       	=> 20
 			);
 
 			$results = $this->model_catalog_category->getCategories($data);
@@ -1269,7 +1318,7 @@ class ControllerCatalogCategory extends Controller {
 			$this->load->model('catalog/category');
 
 			$data = array(
-				'filter_name' => $this->request->get['filter_name'],
+				'filter_name' => trim($this->request->get['filter_name']),
 				'start'       => 0,
 				'limit'       => 20
 			);
