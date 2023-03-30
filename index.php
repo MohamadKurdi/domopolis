@@ -466,11 +466,14 @@
 
 						if ($adminSessionData && !empty($adminSessionData['user_id'])){							
 							$user_query = $registry->get('db')->non_cached_query("SELECT status, username, dev_template FROM user WHERE user_id = '" . (int)$adminSessionData['user_id'] . "'");
-							header('X-USING-DEV-TEMPLATE: TRUE');
-							header('X-FRONTEND-DEV: ' . $user_query->row['username']);
 
-							if (is_dir(DIR_TEMPLATE . $registry->get('config')->get('config_template') . '_dev/')){
-								$registry->get('config')->set('config_template', $registry->get('config')->get('config_template') . '_dev');
+							if ((int)$user_query->row['dev_template'] == 1){
+								header('X-USING-DEV-TEMPLATE: TRUE');
+								header('X-FRONTEND-DEV: ' . $user_query->row['username']);
+
+								if (is_dir(DIR_TEMPLATE . $registry->get('config')->get('config_template') . '_dev/')){
+									$registry->get('config')->set('config_template', $registry->get('config')->get('config_template') . '_dev');
+								}
 							}
 						}
 					}
