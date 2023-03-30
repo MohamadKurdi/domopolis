@@ -2,6 +2,138 @@
 class ControllerKPAmazon extends Controller {
 
 
+	public function add(){
+		$this->load->model('report/product');
+
+		$asin 			= trim($this->request->post['asin']);
+		$category_id 	= (int)($this->request->post['category_id']);
+
+		if ($asin){
+			$this->model_report_product->insertAsinToQueue(['asin' => $asin, 'category_id' => $category_id]);	
+
+			$this->load->model('kp/content');
+			$this->model_kp_content->addContent(['action' => 'add', 'entity_type' => 'product', 'entity_id' => 0]);		
+		}
+
+		$this->response->setOutput(json_encode(['result' => 'success']));
+	}
+
+	public function ignore(){
+		$this->load->model('report/product');
+
+		$asin 			= trim($this->request->post['asin']);
+		$category_id 	= (int)($this->request->post['category_id']);
+
+		if ($asin){
+			$this->db->query("INSERT IGNORE INTO deleted_asins SET asin = '" . $this->db->escape($asin) . "', name = 'FROM_AMAZON_LOOKUP', date_added = NOW(), user_id = '" . $this->user->getID() . "'");	
+
+			$this->load->model('kp/content');
+			$this->model_kp_content->addContent(['action' => 'delete', 'entity_type' => 'product', 'entity_id' => 0]);		
+		}
+
+		$this->response->setOutput(json_encode(['result' => 'success']));
+	}
+
+	public function getRainforestPage(){
+		$url 			= trim($this->request->post['url']);
+		$category 		= trim($this->request->post['category']);
+		$page 			= (int)($this->request->post['page']);
+		$sort 			= trim($this->request->post['sort']);
+		$search_term 	= trim($this->request->post['search_term']);
+		$type 			= trim($this->request->post['type']);
+
+		$compile 		= !empty($this->request->post['compile'])?1:0;
+
+		if ($type == 'standard'){
+			$type = 'category';
+		}
+
+		if (!empty($search_term)){
+			$options = [
+				'type' 			=> $type, 		
+				'search_term' 	=> $search_term,
+				'page' 			=> $page,
+				'sort' 			=> $sort
+			];
+
+			if ($sort != 'amazon'){
+				$options['sort'] = $sort;
+			}
+
+		} elseif (!empty($url)){
+			$options = [
+				'type' 			=> $type, 		
+				'url' 			=> str_replace('&amp;', '&', $url),
+			];
+		} else {
+			$options = [
+				'type' 			=> $type, 		
+				'category_id' 	=> $category,
+				'page' 			=> $page,
+			];
+
+			if ($sort != 'amazon'){
+				$options['sort'] = $sort;
+			}
+		}
+
+		$curl = $this->rainforestAmazon->categoryRetriever->createRequest($options);
+		$result = curl_exec($curl);
+		$result = $this->rainforestAmazon->categoryRetriever->parseResponse($result);
+		
+		$products = [];
+
+		if ($type == 'category'){
+			$products = $result['category_results'];
+		} elseif ($type == 'bestsellers'){
+			$products = $result['bestsellers'];
+		} elseif ($type == 'deals'){
+			$products = $result['deals'];
+		} elseif ($type == 'search'){
+			$products = $result['search_results'];
+		}
+
+		$this->data['products'] = [];
+		$this->data['existent_products'] = [];
+		$this->data['cheap_products'] = [];
+		$this->data['deleted_products'] = [];
+		$this->data['in_queue_products'] = [];
+
+		foreach ($products as $product){
+			if ($this->rainforestAmazon->productsRetriever->model_product_get->checkIfAsinIsDeleted($product['asin'])){
+				$this->data['deleted_products'][] = $product;
+				continue;
+			}
+
+			if ($this->rainforestAmazon->productsRetriever->model_product_get->getIfAsinIsInQueue($product['asin'])){
+				$this->data['in_queue_products'][] = $product;
+				continue;
+			}
+
+			if (!empty($product['price']) && !empty($product['price']['value'])){
+				if ($this->config->get('config_rainforest_skip_low_price_products')){
+					if ((float)$product['price']['value'] < (float)$this->config->get('config_rainforest_skip_low_price_products')){
+						$this->data['cheap_products'][] = $product;
+						continue;
+					}
+				}
+			}	
+
+			if ($this->rainforestAmazon->productsRetriever->getProductsByAsin($product['asin'])){
+				$this->data['existent_products'][] = $product;
+				continue;
+			}
+
+			$this->data['products'][] = $product;
+		}
+
+		$this->template = 'kp/amazon_category_results.tpl';
+
+		$this->response->setOutput($this->render());
+	}
+
+
+
 	public function getProductOffers(){
 		$product_id = (int)$this->request->get['product_id'];
 
@@ -117,24 +249,6 @@ class ControllerKPAmazon extends Controller {
 		$this->template = 'sale/amazon_offers_list.tpl';
 
 		$this->response->setOutput($this->render());
-
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }		
