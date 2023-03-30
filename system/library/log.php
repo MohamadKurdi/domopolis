@@ -25,6 +25,10 @@
 			}
 			fclose($handle); 
 		}
+
+		public function sql($sql, $echo = false){
+			$this->debug($sql, false, true, $echo);			
+		}
 		
 		public function debugsql($sql, $echo = false){
 			$this->debug($sql, false, true, $echo);			

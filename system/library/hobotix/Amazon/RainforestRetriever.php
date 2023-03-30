@@ -188,9 +188,18 @@
 			];
 			
 			$data = array_merge($data, $params);
+
+			if (!empty($data['url'])){
+				unset($data['amazon_domain']);
+				unset($data['customer_zipcode']);
+			}
+
+			if (!empty($data['type']) && $data['type'] == 'deals'){
+				unset($data['customer_zipcode']);
+			}
+
 			$queryString =  http_build_query($data);
-			
-			
+						
 			$ch = curl_init('https://api.rainforestapi.com/request?' . $queryString);
 			
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

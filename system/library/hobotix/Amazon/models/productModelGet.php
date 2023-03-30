@@ -67,6 +67,18 @@ class productModelGet extends hoboModel{
 		}
 	}
 
+	public function getIfAsinIsInQueue($asin){
+		$sql = "SELECT asin FROM amzn_add_queue WHERE asin = '" . $this->db->escape($asin) . "'";
+
+		$query = $this->db->query($sql);
+
+		if ($query->num_rows){
+			return $query->rows;
+		}
+
+		return false;
+	}
+
 	public function getAsinAddQueue(){
 		$result = [];
 

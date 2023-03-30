@@ -61,7 +61,6 @@
 			return $this;
 		}
 
-
 		public function getCategoryFromAmazon($params = []){
 			$this->checkIfPossibleToMakeRequest();
 
