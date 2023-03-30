@@ -25,7 +25,9 @@
     <div class="box">
         <div class="heading order_head">
             <h1><?php echo $heading_title; ?></h1>
-            <div id="rnf-status" style="float: left; line-height: 26px; padding-top: 5px; margin-left:20px;" class="delayed-load short-delayed-load" data-route='setting/rnf/getRainForestStats' data-reload="5000"></div>      
+            <div id="rnf-status" style="float: left; line-height: 26px; padding-top: 5px; margin-left:20px;" class="delayed-load short-delayed-load" data-route='setting/rnf/getRainForestStats' data-reload="5000"></div>   
+
+            <div class="buttons"><a href="<?php echo $amazon; ?>" class="button"><i class="fa fa-amazon"></i> Смотреть на Amazon <sup style="color:#CF4A61">beta</sup></a></div>   
 
             <div class="clr"></div>
             <span class="help"><i class="fa fa-info-circle"></i> Для работы очереди добавления должны быть включены обслуживающие крон-задачи</span>        

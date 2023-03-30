@@ -5,6 +5,42 @@
 			$this->getList();
 		}
 
+		public function amazon(){
+			$this->load->language('report/product_viewed');
+
+			$this->document->setTitle('Добавление товаров с Amazon');
+			$this->data['heading_title'] = 'Просмотр Amazon';
+
+			$this->data['token'] = $this->session->data['token'];
+
+			$this->data['queue'] 	= $this->url->link('catalog/addasin',  'token=' . $this->session->data['token'], 'SSL');
+
+			if (isset($this->session->data['error'])) {
+				$this->data['error_warning'] = $this->session->data['error'];				
+				unset($this->session->data['error']);
+				} elseif (isset($this->error['warning'])) {
+				$this->data['error_warning'] = $this->error['warning'];
+				} else {
+				$this->data['error_warning'] = '';
+			}
+			
+			if (isset($this->session->data['success'])) {
+				$this->data['success'] = $this->session->data['success'];
+				
+				unset($this->session->data['success']);
+				} else {
+				$this->data['success'] = '';
+			}
+
+			$this->template = 'catalog/addasinamazon.tpl';
+			$this->children = array(
+				'common/header',
+				'common/footer'
+			);
+			
+			$this->response->setOutput($this->render());
+		}
+
 
 		public function delete() {			
 			$this->load->model('report/product');
@@ -87,6 +123,7 @@
 			$this->load->language('report/product_viewed');
 			
 			$this->document->setTitle('Добавление товаров с Amazon');
+			$this->data['heading_title'] = 'Добавление товаров с Amazon';
 			
 			$filter_asin 		= isset($this->request->get['filter_asin']) ? $this->request->get['filter_asin'] : null;
 			$filter_name 		= isset($this->request->get['filter_name']) ? $this->request->get['filter_name'] : null;
@@ -177,9 +214,7 @@
 				'category'		=> $result['category_id']?$this->model_catalog_category->getCategory($result['category_id']):false,
 				'user'			=> $this->model_user_user->getRealUserNameById($result['user_id'])
 				);
-			}
-			
-			$this->data['heading_title'] = 'Добавление товаров с Amazon';
+			}			
 			
 			$this->data['text_list'] = $this->language->get('text_list');
 			$this->data['text_no_results'] = $this->language->get('text_no_results');
@@ -250,7 +285,9 @@
 
 			$this->data['filter_problems_count'] 	= $this->model_report_product->getTotalProductsInASINQueue($filter_data);
 			$this->data['filter_problems'] 			= $filter_problems;
-			$this->data['filter_problems_href'] 	= $this->url->link('catalog/addasin',  'token=' . $this->session->data['token'] . '&filter_problems=1', 'SSL');		
+			$this->data['filter_problems_href'] 	= $this->url->link('catalog/addasin',  'token=' . $this->session->data['token'] . '&filter_problems=1', 'SSL');	
+
+			$this->data['amazon'] 	= $this->url->link('catalog/addasin/amazon',  'token=' . $this->session->data['token'], 'SSL');			
 
 
 			$this->template = 'catalog/addasin.tpl';
