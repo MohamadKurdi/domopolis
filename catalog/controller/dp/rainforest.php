@@ -1396,7 +1396,6 @@ class ControllerDPRainForest extends Controller {
 		}
 	}
 
-
 	/*
 	Фиксит названия товаров функцией normalizeProductName из InfoUpdater
 	*/
