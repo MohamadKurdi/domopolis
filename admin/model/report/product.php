@@ -95,11 +95,26 @@
 			}		
 		}
 
+		public function getUsersFromAsinQueue(){
+			$query = $this->db->query("SELECT DISTINCT user_id FROM amzn_add_queue WHERE 1");
+
+			$users = [];
+			foreach ($query->rows as $row){
+				$users[] = $row['user_id'];
+			}
+
+			return $users;
+		}
+
 		public function getProductsInASINQueue($data = []) {
 			$sql = "SELECT adq.*, pd.name, p.image, p.status, p.date_added as date_created FROM amzn_add_queue adq LEFT JOIN product p ON (p.product_id = adq.product_id) LEFT JOIN product_description pd ON (adq.product_id = pd.product_id AND language_id = '" . $this->config->get('config_language_id') . "') WHERE 1";
 			
 			if (isset($data['filter_asin'])){
 				$sql .= " AND asin LIKE ('%" . $this->db->escape($data['filter_asin']) . "%')";
+			}
+
+			if (isset($data['filter_user_id'])){
+				$sql .= " AND user_id = '". (int)$data['filter_user_id'] ."'";
 			}
 			
 			if (isset($data['filter_name'])){
@@ -138,6 +153,10 @@
 			
 			if (isset($data['filter_name'])){
 				$sql .= " AND LOWER(pd.name) LIKE ('%" . $this->db->escape(mb_strtolower($data['filter_name'])) . "%')";
+			}
+
+			if (isset($data['filter_user_id'])){
+				$sql .= " AND user_id = '". (int)$data['filter_user_id'] ."'";
 			}
 
 			if (isset($data['filter_problems'])){

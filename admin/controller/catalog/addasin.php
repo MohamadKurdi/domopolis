@@ -58,6 +58,10 @@
 			if (isset($this->request->get['filter_problems'])) {
 				$url .= '&filter_problems=' . $this->request->get['filter_problems'];
 			}
+
+			if (isset($this->request->get['filter_user_id'])) {
+				$url .= '&filter_user_id=' . $this->request->get['filter_user_id'];
+			}
 			
 			if (isset($this->request->get['sort'])) {
 				$url .= '&sort=' . $this->request->get['sort'];
@@ -94,6 +98,10 @@
 				$url .= '&filter_name=' . $this->request->get['filter_name'];
 			}
 
+			if (isset($this->request->get['filter_user_id'])) {
+				$url .= '&filter_user_id=' . $this->request->get['filter_user_id'];
+			}
+
 			if (isset($this->request->get['filter_problems'])) {
 				$url .= '&filter_problems=' . $this->request->get['filter_problems'];
 			}
@@ -128,6 +136,7 @@
 			$filter_asin 		= isset($this->request->get['filter_asin']) ? $this->request->get['filter_asin'] : null;
 			$filter_name 		= isset($this->request->get['filter_name']) ? $this->request->get['filter_name'] : null;
 			$filter_problems 	= isset($this->request->get['filter_problems']) ? $this->request->get['filter_problems'] : null;
+			$filter_user_id 	= isset($this->request->get['filter_user_id']) ? $this->request->get['filter_user_id'] : null;
 			
 			if (isset($this->request->get['page'])) {
 				$page = $this->request->get['page'];
@@ -149,6 +158,10 @@
 
 			if (isset($this->request->get['filter_problems'])) {
 				$url .= '&filter_problems=' . $this->request->get['filter_problems'];
+			}
+
+			if (isset($this->request->get['filter_user_id'])) {
+				$url .= '&filter_user_id=' . $this->request->get['filter_user_id'];
 			}
 			
 			if (isset($this->request->get['filter_name'])) {
@@ -174,14 +187,13 @@
 			$this->load->model('user/user');
 			$this->load->model('tool/image');
 			
-			$this->config->set('config_limit_admin', 100);
-			
 			$filter_data = array(
 			'filter_asin' 		=> $filter_asin,
 			'filter_name' 		=> $filter_name,
 			'filter_problems' 	=> $filter_problems,
-			'start' 			=> ($page - 1) * $this->config->get('config_limit_admin'),
-			'limit' 			=> $this->config->get('config_limit_admin')
+			'filter_user_id' 	=> $filter_user_id,
+			'start' 			=> ($page - 1) * 100,
+			'limit' 			=> 100
 			);
 			
 			$this->data['products'] = array();
@@ -203,7 +215,8 @@
 				$this->data['products'][] = array(
 				'asin'    		=> $result['asin'],
 				'name'	 		=> !empty($result['name'])?$result['name']:false,
-				'date_added'	=> date('Y-m-d H:i:s', strtotime($result['date_added'])),
+				'date_added'	=> date('Y-m-d', strtotime($result['date_added'])),
+				'time_added'	=> date('H:i:s', strtotime($result['date_added'])),
 				'product_id'	=> $result['product_id'],
 				'status'		=> ($result['product_id'] > 0)?$result['status']:false,
 				'edit'			=> ($result['product_id'] > 0)?$this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'], 'SSL'):false,
@@ -214,7 +227,20 @@
 				'category'		=> $result['category_id']?$this->model_catalog_category->getCategory($result['category_id']):false,
 				'user'			=> $this->model_user_user->getRealUserNameById($result['user_id'])
 				);
-			}			
+			}
+
+			$this->data['native_language'] = $this->registry->get('languages')[$this->config->get('config_language')];
+			$this->data['amazon_language'] = $this->registry->get('languages')[$this->config->get('config_de_language')];		
+
+			$this->data['users'] = [];
+			$users = $this->model_report_product->getUsersFromAsinQueue();
+
+			foreach ($users as $user_id){
+				$this->data['users'][] = [
+					'user' 		=> $this->model_user_user->getRealUserNameById($user_id),
+					'user_id' 	=> $user_id
+				];
+			}
 			
 			$this->data['text_list'] = $this->language->get('text_list');
 			$this->data['text_no_results'] = $this->language->get('text_no_results');
@@ -245,6 +271,10 @@
 			if (isset($this->request->get['filter_problems'])) {
 				$url .= '&filter_problems=' . $this->request->get['filter_problems'];
 			}
+
+			if (isset($this->request->get['filter_user_id'])) {
+				$url .= '&filter_user_id=' . $this->request->get['filter_user_id'];
+			}
 						
 			$this->data['delete'] = $this->url->link('catalog/addasin/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 			$this->data['add'] = $this->url->link('catalog/addasin/add', 'token=' . $this->session->data['token'] . $url, 'SSL');			
@@ -265,19 +295,37 @@
 				} else {
 				$this->data['success'] = '';
 			}
-			
-			$pagination = new Pagination();
-			$pagination->total = $product_total;
-			$pagination->page = $page;
-			$pagination->limit = $this->config->get('config_admin_limit');
-			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('catalog/addasin',  'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
-			
-			$this->data['pagination'] = $pagination->render();
 
+			$url = '';
+			
+			if (isset($this->request->get['filter_asin'])) {
+				$url .= '&filter_asin=' . $this->request->get['filter_asin'];
+			}
+			
+			if (isset($this->request->get['filter_name'])) {
+				$url .= '&filter_name=' . $this->request->get['filter_name'];
+			}
+
+			if (isset($this->request->get['filter_problems'])) {
+				$url .= '&filter_problems=' . $this->request->get['filter_problems'];
+			}
+
+			if (isset($this->request->get['filter_user_id'])) {
+				$url .= '&filter_user_id=' . $this->request->get['filter_user_id'];
+			}
+			
+			$pagination 		= new Pagination();			
+			$this->data['pagination'] = $pagination->render([
+				'total' 	=> 	$product_total,
+				'page' 		=>	$page,
+				'limit'		=> 	100,
+				'text' 		=>	$this->language->get('text_pagination'),
+				'url'		=> 	$this->url->link('catalog/addasin',  'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'),
+			]);
 
 			$this->data['filter_asin'] 		= $filter_asin;
 			$this->data['filter_name'] 		= $filter_name;		
+			$this->data['filter_user_id'] 	= $filter_user_id;	
 
 			$filter_data = array(
 			'filter_problems' 	=> true
@@ -285,7 +333,14 @@
 
 			$this->data['filter_problems_count'] 	= $this->model_report_product->getTotalProductsInASINQueue($filter_data);
 			$this->data['filter_problems'] 			= $filter_problems;
-			$this->data['filter_problems_href'] 	= $this->url->link('catalog/addasin',  'token=' . $this->session->data['token'] . '&filter_problems=1', 'SSL');	
+
+			$url = '';
+
+			if (isset($this->request->get['filter_user_id'])) {
+				$url .= '&filter_user_id=' . $this->request->get['filter_user_id'];
+			}
+
+			$this->data['filter_problems_href'] 	= $this->url->link('catalog/addasin',  'token=' . $this->session->data['token'] . $url . '&filter_problems=1', 'SSL');	
 
 			$this->data['amazon'] 	= $this->url->link('catalog/addasin/amazon',  'token=' . $this->session->data['token'], 'SSL');			
 
