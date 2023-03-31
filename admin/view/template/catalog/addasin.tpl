@@ -9,8 +9,34 @@
     div.green{
         background-color:#00ad07;
     }
-    div.black{
+    .black{
         background-color:#2e3438;
+    }
+     .text-red{
+        color:#ef5e67;
+    }
+    .text-orange{
+        color:#ff7f00;
+    }
+    .text-green{
+        color:#00ad07;
+    }
+
+    input.process, textarea.process{
+        border:2px solid #ff7f00;
+        background-color: #ead985;
+    }
+    input.finished, textarea.finished{
+        border:2px solid #00ad07;
+        background-color: #e9ece6;
+    }
+
+    span.smallbutton{
+        padding:3px 5px;
+        display:inline-block;
+        margin-right:10px;
+        color:white;
+        cursor:pointer;
     }
 </style>
 <div id="content">
@@ -49,6 +75,17 @@
                             </div>
                         </td>
 
+                        <td class="left" style="width:200px;">    
+                            <div>
+                                <select name="filter_user_id">
+                                    <option value="*">Пользователь</option>
+                                    <? foreach ($users as $user) { ?>
+                                        <option value="<?php echo $user['user_id']; ?>" <?php if ($user['user_id'] == $filter_user_id) { ?>selected="selected"<? } ?>><?php echo $user['user']; ?></option>
+                                    <? } ?>   
+                                </select>
+                            </div>
+                        </td>
+
                         <td class="right" style="width:150px;">    
                             <div>
                                 <a href="<?php echo $filter_problems_href; ?>" class="button" style="color:#CF4A61; border-color:#CF4A61;"><i class="fa fa-exclamation-triangle"></i> Проблемные (<?php echo $filter_problems_count; ?>)</a>
@@ -64,6 +101,7 @@
                 </tbody>
             </table>
            </div>
+
             <div class="clr"></div>
             <div style="border:1px dashed #cf4a61; padding:10px; margin-bottom:10px;">
             <form action="<?php echo $add; ?>" method="post" enctype="multipart/form-data" id="form-add">
@@ -112,9 +150,9 @@
                             <td class="left" style="width:70px;" >Код товара</td>
                             <td class="left" style="width:1px;" >Статус</td>
                             <td class="left">Название</td>
-                            <td class="left">Категория</td>
-                            <td class="left" style="width:150px">Добавлен</td>
-                            <td class="left" style="width:150px">Создан</td>       
+                            <td class="left" style="width:200px">Категория</td>
+                            <td class="left" style="width:100px">Добавлен</td>
+                            <td class="left" style="width:100px">Создан</td>       
                             <td class="left" style="width:100px">Кем добавлен</td>   
                             <td class="left" style="width:100px">Действие</td>                 
                         </tr>
@@ -170,7 +208,15 @@
 
                                     <td class="left">
                                         <?php if ($product['product_id'] > 0) { ?>
-                                            <small><? echo $product['name']; ?></small>
+
+                                            <?php if (mb_strlen($product['name']) >= $this->config->get('config_openai_shortennames_length') && $this->config->get('config_openai_enable_shorten_names')) { ?> 
+                                            <div style="text-align: left; height:20px; margin-bottom:5px;">                                                                                     
+                                                 <span class="smallbutton black" onclick="shortenbyai($(this), 'native', '<?php echo $native_language['code']; ?>', <?php echo $product['product_id']; ?>)">🤖 AI до <?php echo $this->config->get('config_openai_shortennames_length'); ?> символов</span><span></span>                                            
+                                            </div>
+                                          <?php } ?>
+
+                                            <textarea style="width:98%" rows="2" class="native_name_textarea" name="native_name_<?php echo $product['product_id']; ?>" data-product-id="<?php echo $product['product_id']; ?>" data-language-id="<?php echo $native_language['language_id']; ?>" data-name="full"><?php echo $product['name']; ?></textarea> 
+
                                         <? } elseif ($product['product_id'] == '-1') { ?>
                                             <small style="color:#CF4A61;">ошибка</small>
                                         <? } else { ?>
@@ -193,7 +239,8 @@
                                     </td> 
 
                                     <td class="center">
-                                        <small><?php echo $product['date_added']; ?></small>
+                                        <small><?php echo $product['date_added']; ?></small><br />
+                                        <small><?php echo $product['time_added']; ?></small>
                                     </td>  
 
                                     <td class="center">
@@ -231,7 +278,64 @@
     </div>
 </div>  
 
-<script type="text/javascript"><!--
+<script type="text/javascript">
+    function shortenbyai(elem, type, language_code, product_id){
+        let from            = $('textarea[name='+ type + '_name_' + product_id + ']');
+        let to              = $('textarea[name='+ type + '_name_' + product_id + ']');
+        let name            = from.val();
+
+        $.ajax({
+            url: 'index.php?route=catalog/shortnames/shortbyai&token=<?php echo $token; ?>',
+            type: 'POST',
+            dataType: 'text',
+            data: {
+                name: name,
+                language_code: language_code
+            },
+            success: function(text) {
+                to.val(text);                
+                if (text.length > 0 && text.length <= <?php echo $this->config->get('config_openai_shortennames_length'); ?>){
+                    save(to);
+                }
+            },
+            beforeSend: function(){
+                elem.next().html('<i class="fa fa-spinner fa-spin"></i>');
+            },
+            complete: function(){
+                elem.next().html('<i class="fa fa-check"></i>');
+            }
+        });
+    }
+
+    $('.native_name_textarea').on('change', function(){
+        save($(this));
+    });
+
+    function save(elem){
+        let product_id  = elem.attr('data-product-id');
+        let language_id = elem.attr('data-language-id');
+        let name        = elem.attr('data-name');
+
+        $.ajax({
+            url : 'index.php?route=catalog/shortnames/write&token=<?php echo $token; ?>',
+            data: {
+                product_id:     product_id,
+                language_id:    language_id,
+                name:           name,
+                text:           elem.val()
+            },
+            type: 'POST',
+            beforeSend: function(){
+                elem.removeClass('process, finished').addClass('finished');
+            },
+            success: function(){
+                elem.removeClass('process, finished').addClass('finished');
+            }
+        });
+    }
+</script>
+
+<script type="text/javascript">
         $('input[name=\'category\']').autocomplete({
             delay: 500,
             source: function(request, response) {       
@@ -263,9 +367,9 @@
                 return false;
             }
         });
-    //--></script> 
+</script> 
 
-<script type="text/javascript"><!--
+<script type="text/javascript">
 function filter() {
     url = 'index.php?route=catalog/addasin&token=<?php echo $token; ?>';
 
@@ -280,6 +384,12 @@ function filter() {
     if (filter_name) {
         url += '&filter_name=' + encodeURIComponent(filter_name);
     }
+
+    var filter_user_id = $('select[name=\'filter_user_id\']').children("option:selected").val();
+        
+        if (filter_user_id != '*') {
+            url += '&filter_user_id=' + encodeURIComponent(filter_user_id);
+        }
 
     location = url;
 }

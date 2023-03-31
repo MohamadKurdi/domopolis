@@ -255,7 +255,6 @@
                 elem.removeClass('process, finished').addClass('finished');
             }
         });
-
     }
 
     function recount(type, product_id){

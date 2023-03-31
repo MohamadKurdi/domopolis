@@ -240,6 +240,57 @@
         $('input[name=category_id]').val('0');
     }
 
+    function iS(){
+        const funnyPhrases = [
+          "Изучаю язык воронов..",
+          "Пытаюсь выучить азбуку Морзе в обратном порядке..",
+          "Собираю мозаику из печенья фортуны..",
+          "Ищу иголку в стоге сена (и не думайте, что это легко)..",
+          "Тестирую гравитационные законы на своем коте..",
+          "Охота за бабочками... с сеткой из спагетти..",
+          "Строю замок из карт..",
+          "Ищу сокровища на дне своего кофейного кубка..",
+          "Пишу стихи о котах на языке эльфов..",
+          "Рисую портрет своего компьютера..",
+          "Перебираю книги в поисках самой длинной фразы..",
+          "Учусь играть на битбоксе..",
+          "Пытаюсь прыгнуть через собственный хвост..",
+          "Катаю резинового утенка по офисному столу..",
+          "Ищу алфавит в облаках..",
+          "Разговариваю с домашними растениями..",
+          "Пытаюсь заменить все слова в предложении на синонимы..",
+          "Играю в «Крестики-нолики» с самим собой..",
+          "Читаю книгу задом наперед..",
+          "Тренируюсь в медитации на звук печатной машинки..",
+          "Рисую смайлики на кусочках льда..",
+          "Пытаюсь узнать, какие звуки издают листья..",
+          "Изучаю произношение самых длинных слов в мире..",
+          "Рисую красивые картинки на песке в песочнице..",
+          "Слушаю музыку и пытаюсь петь под нее на языке, которого не существует..",
+          "Заполняю лабиринт на обратной стороне книги..",
+          "Ищу секреты жизни в прозрачных кристаллах льда..",
+          "Пытаюсь запомнить все цвета радуги в обратном порядке..",
+          "Отсчитываю все свои родственные связи до пятого колена..",
+          "Решаю головоломки на одной ноге..",
+          'Подготавливаю слона к пешему переходу через Альпы..',
+          'Общаюсь с ChatGPT..',
+          'Знакомлюсь с Памелой Андерсон..'
+          ];
+
+        $('#text-counter').append(funnyPhrases[Math.floor(Math.random()*funnyPhrases.length)] + '<br/>');
+    }
+
+    function iM() {
+        window.msc += 1;
+        seconds = Math.floor(window.msc / 100);
+        milliseconds = window.msc % 100;
+        $('#milliseconds-counter').html('<i class="fa fa-clock-o"></i> ' + seconds + ':<small>' + milliseconds + '</small>');
+    }
+
+    function page(i){
+        $('input[name=page]').val(i).trigger('change');
+    }
+
     function reload(){
         var type            = $('select[name=type]').val();
         var url             = $('input[name=url]').val();
@@ -247,6 +298,16 @@
         var search_term     = $('input[name=search_term]').val();
         var page            = $('input[name=page]').val();
         var sort            = $('select[name=sort]').val();
+
+        var counterhtml = '<div style="text-align:center; padding-top:20px; color:#00ad07">';
+        counterhtml += '<i class="fa fa-spinner fa-spin" style="font-size:128px"></i>';
+        counterhtml += '<br /><br />';
+        counterhtml += '<span id="milliseconds-counter" style="font-size:24px;"></span>';
+        counterhtml += '<br /><br />';
+        counterhtml += '<span id="text-counter" style="font-size:14px;"></span>';
+        counterhtml += '<br /><br />';
+        counterhtml += 'Загрузка занимает некоторое время (до 20 секунд), ждите и улыбайтесь';
+        counterhtml +='</div>';
 
         if (url || category || search_term){
             $.ajax({
@@ -262,10 +323,16 @@
                     sort:       sort,
                 },
                 beforeSend: function(){
-                    $('#result').html('<div style="text-align:center; padding-top:20px; color:#00ad07"><i class="fa fa-spinner fa-spin" style="font-size:128px"></i><br /><br /> Загрузка занимает некоторое время, ждите и улыбайтесь</div>');
+                    $('#result').html(counterhtml);
+
+                    window.msc = 0;
+                    window.intrvl = setInterval(iM, 10);
+                    window.intrvl2 = setInterval(iS, 2000);
                 },
                 success: function(html){
                     $('#result').html(html);
+                    clearInterval(window.intrvl);
+                    clearInterval(window.intrvl2);
                 }
             });      
         }           

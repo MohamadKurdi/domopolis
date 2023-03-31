@@ -7,7 +7,7 @@
 		justify-content: space-around;
 		align-content: stretch;
 		align-items: flex-start;		
-		gap: 10px 10px; /* row-gap column gap */
+		gap: 10px 10px;
 	}
 
 	.products-container-product{
@@ -20,7 +20,7 @@
 		background-color:#D9D9D9!important;
 	}
 
-	.products-container-product-image, .products-container-product-name, .products-container-product-asin, .products-container-product-price, .products-container-product-rating, .products-container-product-delivery{
+	.products-container-product-image, .products-container-product-name, .products-container-product-asin, .products-container-product-price, .products-container-product-rating, .products-container-product-delivery, .products-container-buttons{
 		margin-bottom:10px;
 	}
 
@@ -83,14 +83,32 @@
 		color:#fff;
 		border-radius:5px;
 	}
+
+	.products-container-pagination{
+		text-align:center;
+		margin-bottom:10px;		
+	}
+
+	.products-container-pagination .pagination{
+		width:auto;
+	}
+
+	.products-container-buttons .buttons{
+		margin-bottom:10px;		
+		margin-top:10px;
+		text-align:center;
+	}
 </style>
 
 <?php if (!empty($products)) { ?>
+	<div class="products-container-pagination">
+		<div class="pagination"><?php echo $pagination; ?></div>
+	</div>
 	<div class="products-container">
 		<?php foreach ($products as $product) { ?>
 			<div class="products-container-product"  id="<?php echo $product['asin']; ?>-wrap">
 				<div class="products-container-product-image">
-					<img src="<?php echo $product['image']?>" height="200px" loading="lazy" />
+					<img src="<?php echo $product['image']?>" height="200px" style="max-width: 200px;" loading="lazy" />
 				</div>				
 				<div class="products-container-product-name">
 					<a href="<?php echo $product['link']; ?>" target="_blank">
@@ -126,7 +144,6 @@
 				<?php } ?>
 
 				<div class="products-container-product-add-ignore-wrap">
-
 					<div id="<?php echo $product['asin']; ?>-add-status" class="products-container-product-add" style="" onclick="add('<?php echo $product['asin']; ?>');">
 						<i class="fa fa-plus"></i> Добавить
 					</div>
@@ -134,11 +151,20 @@
 					<div id="<?php echo $product['asin']; ?>-ignore-status" class="products-container-product-ignore" style="" onclick="ignore('<?php echo $product['asin']; ?>');">
 						<i class="fa fa-times"></i>
 					</div>
-
 				</div>
-
 			</div>
 		<?php } ?>
+	</div>
+	<div class="products-container-pagination">
+		<div class="pagination"><?php echo $pagination; ?></div>
+	</div>
+	<div class="products-container-buttons">
+
+		<div class="buttons">
+            <a class="button" onclick="add_all();"><i class="fa fa-plus"></i> Добавить все</a>                
+            <a class="button" onclick="reload();"><i class="fa fa-refresh"></i> Обновить</a>
+        </div> 
+
 	</div>
 <?php } else { ?>
 	<div class="warning" style="font-size:36px;">
@@ -146,74 +172,29 @@
 	</div>
 <?php } ?>
 
-<?php if (!empty($in_queue_products)) { ?>
-	<div style="border:1px dashed #cf4a61; padding:10px; margin-bottom:10px; width:49%; float:left;">	
-		<h3>Пропущенные товары в очереди: <?php echo count($in_queue_products); ?></h3>
-		<table class="list">
-			<?php foreach ($in_queue_products as $product) { ?>
-				<tr>
-					<td class="left">
-						<b><?php echo $product['asin']; ?></b>
-					</td>
-					<td class="left">
-						<?php echo $product['title']; ?>				
-					</td>
-				</tr>
-			<?php } ?>
-		</table>
-	</div>
-<?php } ?>
 
-<?php if (!empty($deleted_products)) { ?>
-	<div style="border:1px dashed #cf4a61; padding:10px; margin-bottom:10px; width:49%; float:left;">	
-		<h3>Исключенные вручную товары: <?php echo count($deleted_products); ?></h3>
-		<table class="list">
-			<?php foreach ($deleted_products as $product) { ?>
-				<tr>
-					<td class="left">
-						<b><?php echo $product['asin']; ?></b>
-					</td>
-					<td class="left">
-						<?php echo $product['title']; ?>				
-					</td>
-				</tr>
-			<?php } ?>
-		</table>
-	</div>
-<?php } ?>
+<div style="border:1px dashed #cf4a61; padding:10px; margin-bottom:10px; text-align:center">
+	<?php if (!empty($total_results)) { ?>
+		<h3 style="color:#00AD07"><i class="fa fa-info-circle"></i> Всего страниц: <?php echo $num_pages; ?></h3>
+		<h3 style="color:#00AD07"><i class="fa fa-info-circle"></i> Текущая страница: <?php echo $current_page; ?></h3>
+		<h3 style="color:#00AD07"><i class="fa fa-info-circle"></i> Всего товаров на странице: <?php echo count($products); ?></h3>
+		<h3 style="color:#00AD07"><i class="fa fa-info-circle"></i> Всего товаров в категории: <?php echo $total_results; ?></h3>
+		<br />
+	<?php } ?>
 
-<?php if (!empty($cheap_products)) { ?>
-	<div style="border:1px dashed #cf4a61; padding:10px; margin-bottom:10px; width:49%; float:left;">	
-		<h3>Исключенные дешевые товары: <?php echo count($cheap_products); ?></h3>
-		<table class="list">
-			<?php foreach ($cheap_products as $product) { ?>
-				<tr>
-					<td class="left">
-						<b><?php echo $product['asin']; ?></b>
-					</td>
-					<td class="left">
-						<?php echo $product['title']; ?>				
-					</td>
-				</tr>
-			<?php } ?>
-		</table>
-	</div>
-<?php } ?>
+	<?php if (!empty($in_queue_products)) { ?>	
+		<h3 style="color:#cf4a61"><i class="fa fa-times-circle"></i> Пропущенные товары в очереди: <?php echo count($in_queue_products); ?></h3>
+	<?php } ?>
 
-<?php if (!empty($existent_products)) { ?>
-	<div style="border:1px dashed #cf4a61; padding:10px; margin-bottom:10px; width:49%; float:left;">	
-		<h3>Уже существующие товары: <?php echo count($existent_products); ?></h3>
-		<table class="list">
-			<?php foreach ($existent_products as $product) { ?>
-				<tr>
-					<td class="left">
-						<b><?php echo $product['asin']; ?></b>
-					</td>
-					<td class="left">
-						<?php echo $product['title']; ?>				
-					</td>
-				</tr>
-			<?php } ?>
-		</table>
-	</div>
-<?php } ?>
+	<?php if (!empty($deleted_products)) { ?>
+		<h3 style="color:#cf4a61"><i class="fa fa-times-circle"></i> Исключенные вручную товары: <?php echo count($deleted_products); ?></h3>
+	<?php } ?>
+
+	<?php if (!empty($cheap_products)) { ?>
+		<h3 style="color:#cf4a61"><i class="fa fa-times-circle"></i> Исключенные дешевые товары: <?php echo count($cheap_products); ?></h3>
+	<?php } ?>
+
+	<?php if (!empty($existent_products)) { ?>
+		<h3 style="color:#cf4a61"><i class="fa fa-thumbs-up"></i> Уже существующие товары: <?php echo count($existent_products); ?></h3>
+	<?php } ?>
+</div>
