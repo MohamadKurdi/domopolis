@@ -15,9 +15,9 @@ a.active_new {background: #e3e3e2;}
 .bordSTYLE{background: #e3e3e2!important;}
 .fixed_save a{background-color: #e3e3e2;border: 2px solid #e3e3e2;}
 .fixed_save a:hover{background-color: #5d5d5d;border: 2px solid #5d5d5d;}
-.pagination .links a {border: 1px solid #e3e3e2;color: #e3e3e2;}
-.pagination .links b {border: 1px solid #e3e3e2;background-color: #e3e3e2;}
-.pagination .links {color: #e3e3e2;}
+.pagination .links a {border: 1px solid #6f7373;color: #6f7373;}
+.pagination .links b {border: 1px solid #6f7373;background-color: #6f7373;}
+.pagination .links {color: #6f7373;}
 .boarder_style{height:0px;border-top:2px solid #e3e3e2;}
 .select_all{background-color: #ef5e67;border: 1px solid #ef5e67;}
 .select_all:hover{ border: 1px solid #fa6d76;background: #fa6d76;}

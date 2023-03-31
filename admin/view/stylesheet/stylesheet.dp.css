@@ -87,8 +87,8 @@ a.redbg:hover{opacity:1;background:#7a7878;border:2px solid #7a7878!important;}
 .list tr.filter td{padding:5px;border:1px solid #eee;color:#999}
 .pagination{border-top:1px solid #DDD;display:inline-block;width:100%;padding-top:6px}
 .pagination .links{float:left;padding-top:6px;color:#746270}
-.pagination .links a{padding:4px 10px;font-size:14px;text-decoration:none;background:#FFF}
-.pagination .links b{padding:4px 10px;font-size:14px;font-weight:400;text-decoration:none;color:#fff}
+.pagination .links a{padding:4px 10px;font-size:18px;text-decoration:none;background:#FFF}
+.pagination .links b{padding:4px 10px;font-size:18px;font-weight:400;text-decoration:none;color:#fff}
 .pagination .results{float:right;padding-top:6px;font-size:12px}
 table.form{width:100%;border-collapse:collapse;margin-bottom:20px}
 table.form > tbody > tr > td:first-child{width:200px}
