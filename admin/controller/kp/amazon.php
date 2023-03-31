@@ -64,6 +64,7 @@ class ControllerKPAmazon extends Controller {
 			$options = [
 				'type' 			=> $type, 		
 				'url' 			=> str_replace('&amp;', '&', $url),
+				'page' 			=> $page,
 			];
 		} else {
 			$options = [
@@ -93,7 +94,7 @@ class ControllerKPAmazon extends Controller {
 			$products = $result['search_results'];
 		}
 
-		$this->data['products'] = [];
+		$this->data['products'] = [];		
 		$this->data['existent_products'] = [];
 		$this->data['cheap_products'] = [];
 		$this->data['deleted_products'] = [];
@@ -125,6 +126,24 @@ class ControllerKPAmazon extends Controller {
 			}
 
 			$this->data['products'][] = $product;
+		}
+		
+		$this->data['pagination'] = '';
+		if (!empty($result['pagination'])){
+
+			if (!empty($result['pagination']['total_results'])){
+				$this->data['total_results'] = $result['pagination']['total_results'];
+			}
+
+			$this->data['num_pages'] 	= $result['pagination']['total_pages'];
+			$this->data['current_page'] = $result['pagination']['current_page'];
+
+			$pagination 				= new Pagination();
+			$this->data['pagination'] 	= $pagination->render_simple([
+				'num_pages' 	=> 	$result['pagination']['total_pages'],
+				'page' 			=>	$result['pagination']['current_page'],
+				'num_links' 	=>  10 							
+			]);
 		}
 
 		$this->template = 'kp/amazon_category_results.tpl';
