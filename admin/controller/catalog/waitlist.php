@@ -144,8 +144,7 @@
 				echo '0';
 			}
 			
-			exit();
-			
+			exit();			
 		}
 		
 		public function setSupplierHasAjax(){
@@ -191,12 +190,9 @@
 				echo '0';
 			}
 			
-			exit();
-			
+			exit();		
 		}
-		
-		
-		
+					
 		protected function getList() {
 			
 			$this->data['heading_title'] = 'Лист ожидания'; 
