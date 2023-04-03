@@ -122,7 +122,7 @@
 			}
 
 			if (isset($data['filter_problems'])){
-				$sql .= " AND (adq.category_id IN (" . (int)$this->config->get('config_rainforest_default_technical_category_id') . ", " . (int)$this->config->get('config_rainforest_default_unknown_category_id') . ")  OR ISNULL(p.date_added) OR (ISNULL(p.status) OR p.status = 0))";
+				$sql .= " AND (adq.category_id IN (" . (int)$this->config->get('config_rainforest_default_technical_category_id') . ", " . (int)$this->config->get('config_rainforest_default_unknown_category_id') . ") OR p.product_id = '-1' OR p.status = 0)";
 			}
 			
 			$sql .= " ORDER BY date_added DESC";
@@ -144,6 +144,18 @@
 			return $query->rows;
 		}
 
+		public function getCountWaitingInASINQueue() {
+			$query = $this->db->query("SELECT COUNT(asin) as total FROM amzn_add_queue WHERE product_id <= 0");
+
+			return $query->row['total'];
+		}
+
+		public function getCountAddedTodayInASINQueue() {
+			$query = $this->db->query("SELECT COUNT(adq.asin) as total FROM amzn_add_queue adq LEFT JOIN product p ON adq.product_id = p.product_id WHERE adq.product_id > 0 AND DATE(p.date_added) = DATE(NOW())");
+
+			return $query->row['total'];
+		}
+
 		public function getTotalProductsInASINQueue($data) {
 			$sql = "SELECT COUNT(*) AS total FROM amzn_add_queue adq LEFT JOIN product p ON (p.product_id = adq.product_id) LEFT JOIN product_description pd ON (adq.product_id = pd.product_id AND language_id = '" . $this->config->get('config_language_id') . "') WHERE 1 ";
 			
@@ -160,7 +172,7 @@
 			}
 
 			if (isset($data['filter_problems'])){
-				$sql .= " AND (adq.category_id IN (" . (int)$this->config->get('config_rainforest_default_technical_category_id') . ", " . (int)$this->config->get('config_rainforest_default_unknown_category_id') . ")  OR ISNULL(p.date_added) OR (ISNULL(p.status) OR p.status = 0))";
+				$sql .= " AND (adq.category_id IN (" . (int)$this->config->get('config_rainforest_default_technical_category_id') . ", " . (int)$this->config->get('config_rainforest_default_unknown_category_id') . ") OR p.product_id = '-1' OR p.status = 0)";
 			}
 			
 			$query = $this->db->query($sql);

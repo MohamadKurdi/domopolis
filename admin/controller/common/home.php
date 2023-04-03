@@ -369,6 +369,7 @@
 
 		public function loadProductStats(){
 			$this->load->model('catalog/product');
+			$this->load->model('report/product');
 			$this->load->model('catalog/category');
 			$this->load->model('setting/setting');
 
@@ -402,6 +403,10 @@
 
 			$this->data['total_products_in_tech'] 			= $this->model_catalog_product->getTotalProducts(['filter_category_id' => $this->config->get('config_rainforest_default_technical_category_id')]);
 			$this->data['filter_total_products_in_tech'] 	= $this->url->link('catalog/product_ext', 'filter_category=' . $this->config->get('config_rainforest_default_technical_category_id') . '&token=' . $this->session->data['token'], 'SSL');
+
+			$this->data['total_product_in_queue']				= $this->model_report_product->getCountWaitingInASINQueue();
+			$this->data['total_products_in_queue_today']		= $this->model_report_product->getCountAddedTodayInASINQueue();
+			$this->data['filter_product_in_queue']				= $this->url->link('catalog/addasin', 'token=' . $this->session->data['token'], 'SSL');
 
 			$this->data['total_product_got_offers']				= formatLongNumber($this->model_catalog_product->getTotalProductsGotOffers(), $format);
 			
