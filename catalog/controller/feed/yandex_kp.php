@@ -1092,7 +1092,12 @@ class ControllerFeedYandexKP extends Controller {
 	public function makeFullFeed(){
 		ini_set('memory_limit', '2G');
 
-		$stores = [0,1,2,5];
+		if ($this->config->get('config_single_store_enable')){
+			$stores = [0];
+		} else {
+			$stores = [0,1,2,5];
+		}
+		
 
 		foreach ($stores as $store_id){
 			echoLine('[YML] ' . $store_id);
