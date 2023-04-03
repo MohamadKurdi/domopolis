@@ -291,6 +291,28 @@
         $('input[name=page]').val(i).trigger('change');
     }
 
+    function setAllDisabled(){
+        $('select[name=type]').prop('disabled', true);
+        $('input[name=url]').prop('disabled', true);
+        $('input[name=category]').prop('disabled', true);
+        $('input[name=search_term]').prop('disabled', true);
+        $('input[name=page]').prop('disabled', true);
+        $('select[name=sort]').prop('disabled', true);
+        $('input[name=category_amazon]').prop('disabled', true);
+        $('input[name=category_shop]').prop('disabled', true);
+    }
+
+    function setAllEnabled(){
+        $('select[name=type]').prop('disabled', false);
+        $('input[name=url]').prop('disabled', false);
+        $('input[name=category]').prop('disabled', false);
+        $('input[name=search_term]').prop('disabled', false);
+        $('input[name=page]').prop('disabled', false);
+        $('select[name=sort]').prop('disabled', false);
+        $('input[name=category_amazon]').prop('disabled', false);
+        $('input[name=category_shop]').prop('disabled', false);
+    }
+
     function reload(){
         var type            = $('select[name=type]').val();
         var url             = $('input[name=url]').val();
@@ -303,6 +325,8 @@
         counterhtml += '<i class="fa fa-spinner fa-spin" style="font-size:128px"></i>';
         counterhtml += '<br /><br />';
         counterhtml += '<span id="milliseconds-counter" style="font-size:24px;"></span>';
+        counterhtml += '<br /><br />';        
+        counterhtml += '<span style="color:#cf4a61"><i class="fa fa-lock"></i> Все поля ввода заблокированы на время запроса</span>';
         counterhtml += '<br /><br />';
         counterhtml += '<span id="text-counter" style="font-size:14px;"></span>';
         counterhtml += '<br /><br />';
@@ -325,12 +349,17 @@
                 beforeSend: function(){
                     $('#result').html(counterhtml);
 
+                    setAllDisabled();
+
                     window.msc = 0;
                     window.intrvl = setInterval(iM, 10);
                     window.intrvl2 = setInterval(iS, 2000);
                 },
-                success: function(html){
+                success: function(html){                                        
                     $('#result').html(html);
+
+                    setAllEnabled();
+
                     clearInterval(window.intrvl);
                     clearInterval(window.intrvl2);
                 }
