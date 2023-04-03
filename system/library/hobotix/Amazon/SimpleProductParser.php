@@ -50,7 +50,6 @@
 		}	
 
 		private static function reparseRnfBuggyArray($array, $index = false){
-
 			if ($index){
 				if (!empty($array[$index])){
 
@@ -74,11 +73,13 @@
 			
 			if (!isset($response['request_info']['success'])){
 				var_dump($response);
-				die('[RNF API] Не получается распарсить ответ, останавливаем работу!');
+				echoLine('[SimpleProductParser::parseResponse] Could not parse response, no success marker in it!', 'e');
+				die();
 				
 			}
 			
 			if ($response['request_info']['success'] == false){
+				echoLine('[SimpleProductParser::parseResponse] Success marker is false in response, returning false!', 'e');
 				return false;
 			}
 
@@ -176,16 +177,4 @@
 			
 			return $results;		
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	}				
