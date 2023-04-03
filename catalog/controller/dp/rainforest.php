@@ -449,16 +449,16 @@ class ControllerDPRainForest extends Controller {
 		$asinsSlice 		= [];
 
 		if ($asins){
-			echoLine('[addasinsqueuecron] Всего ASIN для обработки: ' . count($asins));
+			echoLine('[ControllerDPRainForest::addasinsqueuecron] Total ASINs in queue: ' . count($asins));
 
 			foreach ($asins as $asin){
 				if ($this->rainforestAmazon->productsRetriever->model_product_get->checkIfAsinIsDeleted($asin['asin'])){
-					echoLine('[addasinsqueuecron] ASIN удален, убираем из списка удалённых!');	
+					echoLine('[ControllerDPRainForest::addasinsqueuecron] ASIN deleted, removing from deleted list!', 'i');	
 					$this->rainforestAmazon->productsRetriever->model_product_edit->removeAsinFromIgnored($asin['asin']);					
 				}
 
 				if ($product_id = $this->rainforestAmazon->productsRetriever->model_product_get->getProductIdByAsin($asin['asin'])){
-					echoLine('[addasinsqueuecron] Product с ASIN ' . $asin['asin'] . ' уже существует');
+					echoLine('[ControllerDPRainForest::addasinsqueuecron] Product with ASIN ' . $asin['asin'] . ' already exists', 'i');
 					$this->rainforestAmazon->productsRetriever->model_product_edit->setProductIDInQueue($asin['asin'], $product_id);
 
 					if ($category_id = $this->model_catalog_product->getProductMainCategoryId($product_id)){
@@ -471,14 +471,13 @@ class ControllerDPRainForest extends Controller {
 				$asinsSlice[$asin['asin']] = [
 					'asin' 			=> $asin['asin'],
 					'product_id' 	=> $asin['asin']
-
 				];
 			}
 
 			$asinsToOffers = [];
 
 			if ($asinsToCategories && $asinsSlice){
-				echoLine('[addasinsqueuecron] В очереди на получение осталось: ' . count($asinsSlice));
+				echoLine('[ControllerDPRainForest::addasinsqueuecron] Products left: ' . count($asinsSlice), 'i');
 
 				$results = $this->rainforestAmazon->simpleProductParser->getProductByASINS($asinsSlice);
 
@@ -506,13 +505,12 @@ class ControllerDPRainForest extends Controller {
 						);
 					} else {
 						$this->rainforestAmazon->productsRetriever->model_product_edit->setProductIDInQueue($asin, -1);
-						echoLine('[addasinsqueuecron] Product не существует: ' . $asin);
+						echoLine('[addasinsqueuecron] Product does not exist!: ' . $asin, 'e');
 						continue;
 					}
 
-					if ($product_id){
-						
-						echoLine('[addasinsqueuecron] Product добавлен: ' . $product_id);
+					if ($product_id){						
+						echoLine('[addasinsqueuecron] Product added: ' . $product_id, 's');
 						$this->rainforestAmazon->productsRetriever->editFullProduct($product_id, $rfProduct);
 						$this->rainforestAmazon->productsRetriever->model_product_edit->setProductIDInQueue($asin, $product_id);
 
@@ -527,7 +525,7 @@ class ControllerDPRainForest extends Controller {
 						$asinsToOffers[] = $asin;
 
 					} else {
-						echoLine('[addasinsqueuecron] ASIN Product по какой-то причине не добавлен, удаляем из очереди!');
+						echoLine('[addasinsqueuecron] ASIN Product can not be added, some error happened!', 'e');
 						$this->rainforestAmazon->productsRetriever->model_product_edit->setProductIDInQueue($asin, -1);							
 					//	$this->rainforestAmazon->productsRetriever->model_product_edit->deleteASINFromQueue($asin);
 						continue;
@@ -546,7 +544,7 @@ class ControllerDPRainForest extends Controller {
 			}
 
 		} else {
-			echoLine('[addasinsqueuecron] Очередь пустая, либо уже всё обработано');				
+			echoLine('[addasinsqueuecron] Queue is empty, or all is parsed', 's');				
 		}
 	}
 
