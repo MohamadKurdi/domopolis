@@ -41,13 +41,22 @@ if (isset($_GET['hello']) && $_GET['hello'] == 'world'){
 	}
 }
 
-$httpHost 		= str_replace('www.', '', $_SERVER['HTTP_HOST']);
-$configFiles 	= loadJsonConfig('configs');	
+$httpHOST 		= str_replace('www.', '', $_SERVER['HTTP_HOST']);
+$configFiles 	= loadJsonConfig('configs');
+$domainRedirects 	= loadJsonConfig('domainredirect');
 
-if (isset($configFiles[$httpHost])){		
-	if (file_exists($configFiles[$httpHost])) {
-		$configFile = $configFiles[$httpHost];
-		require_once($configFiles[$httpHost]);
+//Редиректы доменов, из конфига domainredirect
+	if (isset($domainRedirects[$httpHOST])){		
+		$newLocation = 'https://' . $domainRedirects[$httpHOST] . $_SERVER['REQUEST_URI'];
+		header("HTTP/1.1 301 Moved Permanently"); 
+		header("Location: " . $newLocation); 
+		exit(); 
+	}
+
+if (isset($configFiles[$httpHOST])){		
+	if (file_exists($configFiles[$httpHOST])) {
+		$configFile = $configFiles[$httpHOST];
+		require_once($configFiles[$httpHOST]);
 	} else {
 		die ('no config file!');
 	}
@@ -56,7 +65,7 @@ if (isset($configFiles[$httpHost])){
 	die ('ho config file assigned to host');
 }	
 
-if ($httpHost != parse_url(HTTPS_CATALOG, PHP_URL_HOST)){
+if ($httpHOST != parse_url(HTTPS_CATALOG, PHP_URL_HOST)){
 	die('sorry');
 }
 
