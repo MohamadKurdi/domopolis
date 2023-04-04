@@ -57,21 +57,24 @@ class ControllerDPService extends Controller {
 
 			$product_count = $this->model_catalog_product->getTotalProducts($filter_data);
 
-			echoLine('[countProducts] Категория ' . $category_info['name'] . ', товаров: ' . $product_count);
+			if ($product_count == 0){
+				echoLine('[ControllerDPService::countProducts] Category ' . $category_info['name'] . ', has products: ' . $product_count, 'w');
+			} else {
+				echoLine('[ControllerDPService::countProducts] Category ' . $category_info['name'] . ', has products: ' . $product_count, 's');
+			}
+			
 			$this->db->query("UPDATE category SET product_count = '" . (int)$product_count . "' WHERE category_id = '" . (int)$category_info['category_id'] . "'");
 		}
 
 		
 		if ($this->config->get('config_disable_empty_categories')){
-			echoLine('[ControllerDPService::countProducts] DISABLE EMPTY CATEGORIES = YES');
+			echoLine('[ControllerDPService::countProducts] DISABLE EMPTY CATEGORIES = YES', 'i');
 			$this->db->query("UPDATE category SET status = '0' WHERE product_count = 0");
 		}
 
 		if ($this->config->get('config_enable_non_empty_categories')){
-			echoLine('[ControllerDPService::countProducts] ENABLE NON-EMPTY CATEGORIES = YES');
+			echoLine('[ControllerDPService::countProducts] ENABLE NON-EMPTY CATEGORIES = YES', 'i');
 			$this->db->query("UPDATE category SET status = '1' WHERE product_count > 0");
 		}
-
 	}
-
 }
