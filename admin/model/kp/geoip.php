@@ -30,15 +30,27 @@
 			try{
 				$record = $this->geoReader->city($ip);	
 				
+				if ($record){
+
+					$city = false;
+					if (!empty($record->city->names)){
+						if (!empty($record->city->names['ru'])){
+							$city = $record->city->names['ru'];
+						} elseif (!empty($record->city->names['en'])){
+							$city = $record->city->names['en'];
+						}
+					}
+
+					$data = [
+						'country_code' 		=> $record->country->isoCode,
+						'country_name' 		=> !empty($record->country->names['ru'])?$record->country->names['ru']:$record->country->names['en'],
+						'continent_code' 	=> $record->continent->name,
+						'city' 				=> $city,
+					];
+				}
+
 				
-				$data = array(
-				'country_code' 		=> $record->country->isoCode,
-				'country_name' 		=> $record->country->names['ru'],
-				'continent_code' 	=> $record->continent->name,
-				'city' 				=> $record->city->names['ru'],
-				);
-				
-				} catch (Exception $e) {	
+			} catch (Exception $e) {	
 				$data = false;
 			}
 			
