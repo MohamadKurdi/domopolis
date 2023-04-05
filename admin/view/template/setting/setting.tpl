@@ -3584,7 +3584,7 @@
 							<h2>Базовые настройки SEO</h2>
 
 							<table class="form">
-							<input type="hidden" name="config_secure" value="1" />
+								<input type="hidden" name="config_secure" value="1" />
 								<input type="hidden" name="config_shared" value="0" />
 								<input type="hidden" name="config_robots" value="" />
 								<tr>
@@ -3710,55 +3710,122 @@
 								</tr>
 							</table>
 
-							<h2>Минификатор</h2>
+							<h2>Минификатор - продакшн</h2>
 							<table class="form">
 								<tr>
 									<td width="50%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Preload Links (от статик-субдомена)</span></p>
-										<textarea name="config_preload_links" cols="100" rows="10"><?php echo $config_preload_links; ?></textarea>
+										<textarea name="config_preload_links" cols="100" rows="5"><?php echo $config_preload_links; ?></textarea>
 									</td>
 									<td width="50%">
 									</td>
 								</tr>
 								<tr>
 									<td width="50%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Header SCRIPTS for Minifier</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Список скриптов в хедер</span></p>
 										<textarea name="config_header_min_scripts" cols="100" rows="5"><?php echo $config_header_min_scripts; ?></textarea>
+										<span class="help">будут использоваться на всех страницах</span>
 									</td>
 									<td width="50%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Header EXCLUDED SCRIPTS for Minifier</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Исключить скрипты из хедера</span></p>
 										<textarea name="config_header_excluded_scripts" cols="100" rows="5"><?php echo $config_header_excluded_scripts; ?></textarea>
-									</td>
-									
+										<span class="help">в случае если они добавлены фреймворком, $document->addScript();</span>
+									</td>									
 								</tr>
 								<tr>
 									<td width="50%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Header STYLES for Minifier</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Список стилей в хедер</span></p>
 										<textarea name="config_header_min_styles" cols="100" rows="5"><?php echo $config_header_min_styles; ?></textarea>
+										<span class="help">будут использоваться на всех страницах</span>
 									</td>
 									<td width="50%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Header EXCLUDED STYLES for Minifier</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Исключить стили из хедера</span></p>
 										<textarea name="config_header_excluded_styles" cols="100" rows="5"><?php echo $config_header_excluded_styles; ?></textarea>
+										<span class="help">в случае если они добавлены фреймворком, $document->addStyle();</span>
 									</td>
 								</tr>
 								<tr>
 									<td width="50%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Footer SCRIPTS for Minifier</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Список скриптов в футер</span></p>
 										<textarea name="config_footer_min_scripts" cols="100" rows="5"><?php echo $config_footer_min_scripts; ?></textarea>
+										<span class="help">будут использоваться на всех страницах</span>
 									</td>
 									<td width="50%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Footer EXCLUDED SCRIPTS for Minifier</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Исключить скрипты из футера</span></p>
 										<textarea name="config_footer_excluded_scripts" cols="100" rows="5"><?php echo $config_footer_excluded_scripts; ?></textarea>
+										<span class="help">в случае если они добавлены фреймворком, $document->addScript();</span>
 									</td>
 								</tr>
 								<tr>
 									<td width="50%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Footer STYLES for Minifier</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Список стилей в футер</span></p>
 										<textarea name="config_footer_min_styles" cols="100" rows="5"><?php echo $config_footer_min_styles; ?></textarea>
+										<span class="help">будут использоваться на всех страницах</span>
 									</td>
 									<td width="50%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Footer EXCLUDED STYLES for Minifier</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Исключить стили из футера</span></p>
 										<textarea name="config_footer_excluded_styles" cols="100" rows="5"><?php echo $config_footer_excluded_styles; ?></textarea>
+										<span class="help">в случае если они добавлены фреймворком, $document->addStyle();</span>
+									</td>
+								</tr>
+							</table>
+
+							<h2 style="color:#FF7815">Минификатор - режим разработки</h2>
+							<table class="form">
+								<tr>
+									<td width="50%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Preload Links (от статик-субдомена)</span></p>
+										<textarea name="config_preload_links_dev" cols="100" rows="5"><?php echo $config_preload_links_dev; ?></textarea>
+									</td>
+									<td width="50%">
+									</td>
+								</tr>
+								<tr>
+									<td width="50%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Список скриптов в хедер</span></p>
+										<textarea name="config_header_min_scripts_dev" cols="100" rows="5"><?php echo $config_header_min_scripts_dev; ?></textarea>
+										<span class="help">будут использоваться на всех страницах</span>
+									</td>
+									<td width="50%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Исключить скрипты из хедера</span></p>
+										<textarea name="config_header_excluded_scripts_dev" cols="100" rows="5"><?php echo $config_header_excluded_scripts_dev; ?></textarea>
+										<span class="help">в случае если они добавлены фреймворком, $document->addScript();</span>
+									</td>									
+								</tr>
+								<tr>
+									<td width="50%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Список стилей в хедер</span></p>
+										<textarea name="config_header_min_styles_dev" cols="100" rows="5"><?php echo $config_header_min_styles_dev; ?></textarea>
+										<span class="help">будут использоваться на всех страницах</span>
+									</td>
+									<td width="50%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Исключить стили из хедера</span></p>
+										<textarea name="config_header_excluded_styles_dev" cols="100" rows="5"><?php echo $config_header_excluded_styles_dev; ?></textarea>
+										<span class="help">в случае если они добавлены фреймворком, $document->addStyle();</span>
+									</td>
+								</tr>
+								<tr>
+									<td width="50%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Список скриптов в футер</span></p>
+										<textarea name="config_footer_min_scripts_dev" cols="100" rows="5"><?php echo $config_footer_min_scripts_dev; ?></textarea>
+										<span class="help">будут использоваться на всех страницах</span>
+									</td>
+									<td width="50%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Исключить скрипты из футера</span></p>
+										<textarea name="config_footer_excluded_scripts_dev" cols="100" rows="5"><?php echo $config_footer_excluded_scripts_dev; ?></textarea>
+										<span class="help">в случае если они добавлены фреймворком, $document->addScript();</span>
+									</td>
+								</tr>
+								<tr>
+									<td width="50%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Список стилей в футер</span></p>
+										<textarea name="config_footer_min_styles_dev" cols="100" rows="5"><?php echo $config_footer_min_styles_dev; ?></textarea>
+										<span class="help">будут использоваться на всех страницах</span>
+									</td>
+									<td width="50%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Исключить стили из футера</span></p>
+										<textarea name="config_footer_excluded_styles_dev" cols="100" rows="5"><?php echo $config_footer_excluded_styles_dev; ?></textarea>
+										<span class="help">в случае если они добавлены фреймворком, $document->addStyle();</span>
 									</td>
 								</tr>
 							</table>

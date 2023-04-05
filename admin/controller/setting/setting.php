@@ -2863,61 +2863,49 @@ class ControllerSettingSetting extends Controller
             $this->data['config_preload_links'] = $this->config->get('config_preload_links');
         }
 
-        if (isset($this->request->post['config_header_min_scripts'])) {
-            $this->data['config_header_min_scripts'] = $this->request->post['config_header_min_scripts'];
-        } else {
-            $this->data['config_header_min_scripts'] = $this->config->get('config_header_min_scripts');
-        }
+        $assets_config = [
+            'config_header_min_scripts',
+            'config_header_excluded_scripts',
+            'config_header_min_styles',
+            'config_header_excluded_styles',
+            'config_footer_min_scripts',
+            'config_footer_min_styles',
+            'config_footer_excluded_scripts',
+            'config_footer_excluded_styles'
+        ];
 
+        foreach ($assets_config as $assets_config_key) {
+            if (isset($this->request->post[$assets_config_key])) {
+                $this->data[$assets_config_key] = $this->request->post[$assets_config_key];
+            } else {
+                $this->data[$assets_config_key] = $this->config->get($assets_config_key);
+            }
+        }        
 
-        if (isset($this->request->post['config_header_excluded_scripts'])) {
-            $this->data['config_header_excluded_scripts'] = $this->request->post['config_header_excluded_scripts'];
-        } else {
-            $this->data['config_header_excluded_scripts'] = $this->config->get('config_header_excluded_scripts');
-        }
+        $assets_config_dev = [
+            'config_header_min_scripts_dev',
+            'config_header_excluded_scripts_dev',
+            'config_header_min_styles_dev',
+            'config_header_excluded_styles_dev',
+            'config_footer_min_scripts_dev',
+            'config_footer_min_styles_dev',
+            'config_footer_excluded_scripts_dev',
+            'config_footer_excluded_styles_dev'
+        ];
 
-        if (isset($this->request->post['config_header_min_styles'])) {
-            $this->data['config_header_min_styles'] = $this->request->post['config_header_min_styles'];
-        } else {
-            $this->data['config_header_min_styles'] = $this->config->get('config_header_min_styles');
-        }
-
-        if (isset($this->request->post['config_header_excluded_styles'])) {
-            $this->data['config_header_excluded_styles'] = $this->request->post['config_header_excluded_styles'];
-        } else {
-            $this->data['config_header_excluded_styles'] = $this->config->get('config_header_excluded_styles');
-        }
-
-        if (isset($this->request->post['config_footer_min_scripts'])) {
-            $this->data['config_footer_min_scripts'] = $this->request->post['config_footer_min_scripts'];
-        } else {
-            $this->data['config_footer_min_scripts'] = $this->config->get('config_footer_min_scripts');
-        }
-        
-        if (isset($this->request->post['config_footer_min_styles'])) {
-            $this->data['config_footer_min_styles'] = $this->request->post['config_footer_min_styles'];
-        } else {
-            $this->data['config_footer_min_styles'] = $this->config->get('config_footer_min_styles');
-        }
-
-        if (isset($this->request->post['config_footer_excluded_scripts'])) {
-            $this->data['config_footer_excluded_scripts'] = $this->request->post['config_footer_excluded_scripts'];
-        } else {
-            $this->data['config_footer_excluded_scripts'] = $this->config->get('config_footer_excluded_scripts');
-        }
-        
-        if (isset($this->request->post['config_footer_excluded_styles'])) {
-            $this->data['config_footer_excluded_styles'] = $this->request->post['config_footer_excluded_styles'];
-        } else {
-            $this->data['config_footer_excluded_styles'] = $this->config->get('config_footer_excluded_styles');
-        }
+        foreach ($assets_config_dev as $assets_config_key_dev) {
+            if (isset($this->request->post[$assets_config_key_dev])) {
+                $this->data[$assets_config_key_dev] = $this->request->post[$assets_config_key_dev];
+            } else {
+                $this->data[$assets_config_key_dev] = $this->config->get($assets_config_key_dev);
+            }
+        }        
         
         if (isset($this->request->post['config_sendpulse_script'])) {
             $this->data['config_sendpulse_script'] = $this->request->post['config_sendpulse_script'];
         } else {
             $this->data['config_sendpulse_script'] = $this->config->get('config_sendpulse_script');
-        }
-        
+        }        
         
         if (isset($this->request->post['config_sendpulse_id'])) {
             $this->data['config_sendpulse_id'] = $this->request->post['config_sendpulse_id'];
