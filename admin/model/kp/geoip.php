@@ -7,7 +7,11 @@
 			parent::__construct($registry);
 
 			try{
-				$this->geoReader = new GeoIp2\Database\Reader(GEOIP_LIB_PATH);
+				if (defined('GEOIP_LIB_PATH')){
+					$this->geoReader = new GeoIp2\Database\Reader(GEOIP_LIB_PATH);
+				} else {
+					$this->geoReader = false;
+				}				
 			} catch (InvalidArgumentException $e){
 				$this->geoReader = false;
 			}
