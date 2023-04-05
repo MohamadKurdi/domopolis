@@ -274,7 +274,9 @@
 												</td>	
 
 												<td class="left">
-													<small><?php echo $category['alternate_name']; ?></small>
+													<div style="max-height: 100px; overflow-y: scroll; font-size: 8px;">
+													<?php echo $category['alternate_name']; ?>
+													</div>
 												</td>
 
 												<td class="left" style="white-space:nowrap">
