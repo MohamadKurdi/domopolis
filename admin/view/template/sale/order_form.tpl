@@ -930,10 +930,12 @@
 																	<input id="wait_full_checkbox" class="checkbox onchangeedit_direct" type="checkbox" name="wait_full" value="1" <? if ($wait_full) { ?>checked="checked"<? } ?> />&nbsp;
 																	<label for="wait_full_checkbox"><span style="color:#85B200; font-weight:700;"><i class="fa fa-th-list" aria-hidden="true"></i>&nbsp;&nbsp;Клиент ждет полную комплектацию</span></label>								
 																</div>
+																<?php if ($this->config->get('config_special_logistics_enable')) { ?>
 																<div style="margin-top:7px;">
 																	<input id="ua_logistics_checkbox" class="checkbox onchangeedit_direct" type="checkbox" name="ua_logistics" value="1" <? if ($ua_logistics) { ?>checked="checked"<? } ?> />&nbsp;
-																	<label for="ua_logistics_checkbox"><span style="color:#005BBB; font-weight:700;"><i class="fa fa-bus" aria-hidden="true"></i>&nbsp;<img src="<?php echo DIR_FLAGS_NAME; ?>ua.png" />&nbsp;&nbsp;Логистика через Украину</span></label>								
+																	<label for="ua_logistics_checkbox"><span style="color:#005BBB; font-weight:700;"><i class="fa fa-bus" aria-hidden="true"></i>&nbsp;Специальная логистика</span></label>	
 																</div>	
+																<?php } ?>
 															</td>										
 															<td>
 																<div>

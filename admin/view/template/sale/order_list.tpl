@@ -455,8 +455,7 @@
 							<?php if ($this->config->get('config_special_logistics_enable')) { ?>
 							<div style="margin-top:8px;">
 								<input id="checkbox_12" class="checkbox" type="checkbox" name="filter_ua_logistics" <? if ($filter_ua_logistics) { ?>checked="checked"<? } ?> value="1" /> 
-								<label for="checkbox_12" style="color:#005BBB;"><i class="fa fa-bus" style="padding: 3px 5px;background-color: #005BBB;color: #FFF;"></i>&nbsp;
-								<i class="fa fa-bus" style="padding: 3px 3px;background-color: orange;color: #FFF;"></i>&nbsp;Специальная логистика</label>
+								<label for="checkbox_12" style="color:#005BBB;"><i class="fa fa-bus" style="padding: 3px 5px;background-color: #005BBB;color: #FFF;"></i>&nbsp;Специальная логистика</label>
 							</div>
 							<?php } ?>
 						</td>
@@ -705,7 +704,9 @@
 												<div style="font-size:12px; line-height:14px;">
 													<span> 
 														<?php if ($order['shipping_country_info']) { ?>
-															<img src="<?php echo DIR_FLAGS_NAME; ?><? echo mb_strtolower($order['shipping_country_info']['iso_code_2']) ?>.png" title="<? echo mb_strtolower($order['shipping_country_info']['iso_code_2']) ?>" /> 
+															<?php if ($this->config->get('config_admin_flags_enable')) { ?>
+																<img src="<?php echo DIR_FLAGS_NAME; ?><? echo mb_strtolower($order['shipping_country_info']['iso_code_2']) ?>.png" title="<? echo mb_strtolower($order['shipping_country_info']['iso_code_2']) ?>" /> 
+															<?php } ?>
 															<? } elseif ($order['shipping_country']) { ?>
 															<?php echo $order['shipping_country']; ?>, 
 														<? } ?>  
@@ -992,7 +993,7 @@
 											
 											<? if ($order['wait_full']) { ?><span class="ktooltip_hover" title="Клиент ждет полную комплектацию заказа" style="display:inline-block; font-size:10px; margin-top: 2px;padding: 3px 5px;background-color: #85B200;color: #FFF;border: 1px solid #85B200;border-radius: 2px;"><i class="fa fa-th-list" aria-hidden="true"></i></span><? } ?>
 											
-											<? if ($order['ua_logistics']) { ?><span class="ktooltip_hover" title="Этот заказ нужно отправить через Украину" style="display:inline-block; font-size:10px; margin-top: 2px;padding: 3px 5px;background-color: #005BBB;color: #FFF;border: 1px solid #005BBB;border-radius: 2px;"><i class="fa fa-bus" aria-hidden="true"></i>&nbsp;<img src="<?php echo DIR_FLAGS_NAME; ?>ua.png" /></span><? } ?>
+											<? if ($order['ua_logistics']) { ?><span class="ktooltip_hover" title="Специальная логистика" style="display:inline-block; font-size:10px; margin-top: 2px;padding: 3px 5px;background-color: #005BBB;color: #FFF;border: 1px solid #005BBB;border-radius: 2px;"><i class="fa fa-bus" aria-hidden="true"></i></span><? } ?>
 											
 											<? if ($order['urgent']) { ?><span  class="ktooltip_hover" title="Этот заказ со срочной доставкой" style="display:inline-block; margin-top: 2px; font-size:10px; padding:3px; background-color:red; color:#FFF; border:1px solid red; border-radius: 2px;"><i class="fa fa-space-shuttle" aria-hidden="true"></i></span><? } ?>
 											
