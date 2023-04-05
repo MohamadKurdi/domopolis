@@ -357,35 +357,35 @@
 						<?php foreach($languages as $language) { ?>
 						<input type="text" name="filterpro_seo[<?php echo $seo_filter_row; ?>][lang][<?php echo $language['language_id']; ?>][h1]"
 							   value="<?php echo $seo_filter['lang'][$language['language_id']]['h1']; ?>"/>
-						<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>
+						<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>
 						<?php } ?>
 					</td>
 					<td class="left">
 						<?php foreach($languages as $language) { ?>
 						<input type="text" name="filterpro_seo[<?php echo $seo_filter_row; ?>][lang][<?php echo $language['language_id']; ?>][title]"
 							   value="<?php echo $seo_filter['lang'][$language['language_id']]['title']; ?>"/>
-						<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>
+						<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>
 						<?php } ?>
 					</td>
 					<td class="left">
 						<?php foreach($languages as $language) { ?>
 						<input type="text" name="filterpro_seo[<?php echo $seo_filter_row; ?>][lang][<?php echo $language['language_id']; ?>][meta_description]"
 							   value="<?php echo $seo_filter['lang'][$language['language_id']]['meta_description']; ?>"/>
-						<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>
+						<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>
 						<?php } ?>
 					</td>
 					<td class="left">
 						<?php foreach($languages as $language) { ?>
 						<input type="text" name="filterpro_seo[<?php echo $seo_filter_row; ?>][lang][<?php echo $language['language_id']; ?>][meta_keywords]"
 							   value="<?php echo $seo_filter['lang'][$language['language_id']]['meta_keywords']; ?>"/>
-						<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>
+						<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>
 						<?php } ?>
 					</td>
 					<td class="left">
 						<?php foreach($languages as $language) { ?>
 						<textarea class="seo-description" rows="10" cols="10" name="filterpro_seo[<?php echo $seo_filter_row; ?>][lang][<?php echo $language['language_id']; ?>][description]"
 								  value=""><?php echo $seo_filter['lang'][$language['language_id']]['description']; ?></textarea>
-						<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>
+						<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>
 						<?php } ?>
 					</td>
 					<td class="right"><a onclick="$('#seo_filter-row<?php echo $seo_filter_row; ?>').remove();" class="button"><span><?php echo $button_remove; ?></span></a></td>
@@ -722,31 +722,31 @@ function addseo_filter() {
 	html += '    <td class="left">';
 <?php foreach($languages as $language) { ?>
 	html +=         '<input type="text" name="filterpro_seo[' + seo_filter_row + '][lang][<?php echo $language['language_id']; ?>][h1]" value="" />';
-	html +=         '<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>';
+	html +=         '<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>';
 <?php } ?>
 	html +=     '</td>';
 	html += '    <td class="left">';
 <?php foreach($languages as $language) { ?>
 	html +=         '<input type="text" name="filterpro_seo[' + seo_filter_row + '][lang][<?php echo $language['language_id']; ?>][title]" value="" />';
-	html +=         '<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>';
+	html +=         '<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>';
 <?php } ?>
 	html +=     '</td>';
 	html += '    <td class="left">';
 <?php foreach($languages as $language) { ?>
 	html +=         '<input type="text" name="filterpro_seo[' + seo_filter_row + '][lang][<?php echo $language['language_id']; ?>][meta_description]" value="" />';
-	html +=         '<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>';
+	html +=         '<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>';
 <?php } ?>
 	html +=     '</td>';
 	html += '    <td class="left">';
 <?php foreach($languages as $language) { ?>
 	html +=         '<input type="text" name="filterpro_seo[' + seo_filter_row + '][lang][<?php echo $language['language_id']; ?>][meta_keywords]" value="" />';
-	html +=         '<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>';
+	html +=         '<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>';
 <?php } ?>
 	html +=     '</td>';
 	html += '    <td class="left">';
 <?php foreach($languages as $language) { ?>
 	html +=         '<textarea  class="seo-description" rows="10" cols="10" name="filterpro_seo[' + seo_filter_row + '][lang][<?php echo $language['language_id']; ?>][description]" value="" ></textarea>';
-	html +=         '<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>';
+	html +=         '<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br/>';
 <?php } ?>
 	html +=     '</td>';
 	html += '    <td class="right"><a onclick="$(\'#seo_filter-row' + seo_filter_row + '\').remove();" class="button"><?php echo $button_remove; ?></a></td>';

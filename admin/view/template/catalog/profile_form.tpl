@@ -21,7 +21,7 @@
                   <td>
                       <?php foreach ($languages as $language): ?>
                         <input name="profile_description[<?php echo $language['language_id']; ?>][name]" value="<?php echo isset($profile_description[$language['language_id']]) ? $profile_description[$language['language_id']]['name'] : ''; ?>" />
-                        <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+                        <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
                         <?php if (isset($error_name[$language['language_id']])): ?>
                             <span class="error"><?php echo $error_name[$language['language_id']]; ?></span><br />
                         <?php endif; ?>

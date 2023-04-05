@@ -13,7 +13,7 @@
   <td>
    <?php foreach ($languages as $language) { ?>
    <input name="ocfilter[<?php echo $option_id; ?>][values][<?php echo $value['value_id']; ?>][description][<?php echo $language['language_id']; ?>][description]" value="" size="30" type="text">
-   <img src="view/image/flags/<?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>">
+   <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>">
    <?php } ?>
   </td>
  </tr>
@@ -25,7 +25,7 @@
 <input name="ocfilter[<?php echo $option_id; ?>][values][0][selected]" value="1" type="hidden">
 <?php foreach ($languages as $language) { ?>
 <textarea name="ocfilter[<?php echo $option_id; ?>][values][0][description][<?php echo $language['language_id']; ?>][description]" rows="2" cols="40"></textarea>
-<img src="view/image/flags/<?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>">
+<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>">
 <?php } ?>
 <?php } ?>
 <?php if ($type == 'slide' || $type == 'slide_dual') { ?>
@@ -40,7 +40,7 @@
   <td>
    <?php foreach ($languages as $language) { ?>
    <input name="ocfilter[<?php echo $option_id; ?>][values][0][description][<?php echo $language['language_id']; ?>][description]" value="" size="30" type="text">
-   <img src="view/image/flags/<?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>">
+   <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>">
    <?php } ?>
   </td>
  </tr>

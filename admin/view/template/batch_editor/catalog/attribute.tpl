@@ -64,7 +64,7 @@
       <?php } ?>
       <a class="value" data-language_id="<?php echo $language['language_id']; ?>"><img src="view/batch_editor/image/upload.png" alt="" title="" /></a>&nbsp;
       <input name="attribute[<?php echo $attribute_row; ?>][attribute_description][<?php echo $language['language_id']; ?>][text]" value="<?php echo $value; ?>" />
-      <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+      <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
       &nbsp;&nbsp;&nbsp;
       <?php } ?>
      </td>
@@ -190,7 +190,7 @@ if (typeof addAttribute != 'function') {
 		<?php foreach ($languages as $language) { ?>
 		html += '   <a class="value" data-language_id="<?php echo $language["language_id"]; ?>"><img src="view/batch_editor/image/upload.png" alt="" title="" /></a>&nbsp;';
 		html += '   <input name="attribute[' + attribute_row[product_id] + '][attribute_description][<?php echo $language["language_id"]; ?>][text]" /> ';
-		html += '   <img src="view/image/flags/<?php echo $language["image"]; ?>" title="<?php echo $language["name"]; ?>" /> &nbsp;&nbsp;&nbsp;';
+		html += '   <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language["image"]; ?>" title="<?php echo $language["name"]; ?>" /> &nbsp;&nbsp;&nbsp;';
 		<?php } ?>
 		html += '  </td>';
 		html += ' </tr>';

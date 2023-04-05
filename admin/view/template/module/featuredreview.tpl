@@ -21,7 +21,7 @@
             <td>
              <?php foreach ($languages as $language) { ?>
                <input type="text" name="popular_customtitle<?php echo $language['language_id']; ?>" id="popular_customtitle<?php echo $language['language_id']; ?>" size="30" value="<?php echo ${'popular_customtitle' . $language['language_id']}; ?>" />
-               <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="vertical-align: top;" /><br /><br />
+               <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="vertical-align: top;" /><br /><br />
              <?php } ?>  
            </td>
          </tr>

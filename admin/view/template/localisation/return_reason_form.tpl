@@ -20,7 +20,7 @@
             <td><span class="required">*</span> <?php echo $entry_name; ?></td>
             <td><?php foreach ($languages as $language) { ?>
               <input type="text" name="return_reason[<?php echo $language['language_id']; ?>][name]" value="<?php echo isset($return_reason[$language['language_id']]) ? $return_reason[$language['language_id']]['name'] : ''; ?>" />
-              <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+              <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
               <?php if (isset($error_name[$language['language_id']])) { ?>
               <span class="error"><?php echo $error_name[$language['language_id']]; ?></span><br />
               <?php } ?>

@@ -92,7 +92,7 @@
 										<div style="font-size:12px; line-height:14px;">
 											<span> 
 												<?php if ($order['shipping_country_info']) { ?>
-													<img src="view/image/flags/<? echo mb_strtolower($order['shipping_country_info']['iso_code_2']) ?>.png" title="<? echo mb_strtolower($order['shipping_country_info']['iso_code_2']) ?>" /> 
+													<img src="<?php echo DIR_FLAGS_NAME; ?><? echo mb_strtolower($order['shipping_country_info']['iso_code_2']) ?>.png" title="<? echo mb_strtolower($order['shipping_country_info']['iso_code_2']) ?>" /> 
 													<? } elseif ($order['shipping_country']) { ?>
 													<?php echo $order['shipping_country']; ?>, 
 												<? } ?>  
@@ -219,7 +219,7 @@
 									
 									<? if ($order['wait_full']) { ?><span class="ktooltip_hover" title="Клиент ждет полную комплектацию заказа" style="display:inline-block; margin-top: 2px;padding: 3px 5px;background-color: #85B200;color: #FFF;border: 1px solid #85B200;font-size: 14px;border-radius: 2px;"><i class="fa fa-th-list" aria-hidden="true"></i></span><? } ?>
 									
-									<? if ($order['ua_logistics']) { ?><span class="ktooltip_hover" title="Этот заказ нужно отправить через Украину" style="display:inline-block; margin-top: 2px;padding: 3px 5px;background-color: #005BBB;color: #FFF;border: 1px solid #005BBB;font-size: 14px;border-radius: 2px;"><i class="fa fa-bus" aria-hidden="true"></i>&nbsp;<img src="view/image/flags/ua.png" /></span><? } ?>
+									<? if ($order['ua_logistics']) { ?><span class="ktooltip_hover" title="Этот заказ нужно отправить через Украину" style="display:inline-block; margin-top: 2px;padding: 3px 5px;background-color: #005BBB;color: #FFF;border: 1px solid #005BBB;font-size: 14px;border-radius: 2px;"><i class="fa fa-bus" aria-hidden="true"></i>&nbsp;<img src="<?php echo DIR_FLAGS_NAME; ?>ua.png" /></span><? } ?>
 									
 									<? if ($order['urgent']) { ?><span  class="ktooltip_hover" title="Этот заказ со срочной доставкой" style="display:inline-block; margin-top: 2px; padding:3px; background-color:red; color:#FFF; border:1px solid red; font-size:14px;border-radius: 2px;"><i class="fa fa-space-shuttle" aria-hidden="true"></i></span><? } ?>
 									

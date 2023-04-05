@@ -187,7 +187,7 @@
          <?php } else { ?>
          <input name="table[<?php echo $field; ?>][text][<?php echo $code; ?>]" type="text" value="" />
          <?php } ?>
-         <img src="view/image/flags/<?php echo $language['image']; ?>" />
+         <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" />
          &nbsp;&nbsp;
          <?php } ?>
          <?php } else { ?>
@@ -319,7 +319,7 @@
          <?php $value = $array['text'][$field][$code]; ?>
          <?php } ?>
          <input type="text" name="filter[<?php echo $table; ?>][text][<?php echo $field; ?>][<?php echo $code; ?>]" value="<?php echo $value; ?>" />
-         <img src="view/image/flags/<?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>" />
+         <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>" />
          <?php } ?></td>
        </tr>
       </tbody>
@@ -357,7 +357,7 @@
          <?php $value = $multilanguage['field'][$code][$variable]; ?>
          <?php } ?>
          <input type="text" name="multilanguage[field][<?php echo $code; ?>][<?php echo $variable; ?>]" value="<?php echo $value; ?>" />
-         <img src="view/image/flags/<?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>" />
+         <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>" />
          <?php } ?></td>
        </tr>
       </tbody>
@@ -799,7 +799,7 @@ function getFilterFieldText(this_) {
 	if (field) {
 		<?php foreach ($languages as $code => $language) { ?>
 		html += '<input type="text" name="filter[' + table + '][text][' + field + '][<?php echo $code; ?>]" />&nbsp;';
-		html += '<img src="view/image/flags/<?php echo $language["image"]; ?>" alt="<?php echo $language["name"]; ?>" title="<?php echo $language["name"]; ?>" />&nbsp;';
+		html += '<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language["image"]; ?>" alt="<?php echo $language["name"]; ?>" title="<?php echo $language["name"]; ?>" />&nbsp;';
 		<?php } ?>
 	}
 	
@@ -825,7 +825,7 @@ function addMultilanguage() {
 	html += '  <td class="left">';
 	<?php foreach ($languages as $code => $language) { ?>
 	html += '   <input type="text" name="multilanguage[field][<?php echo $code; ?>][' + value + ']" value="" />&nbsp;';
-	html += '   <img src="view/image/flags/<?php echo $language["image"]; ?>" alt="<?php echo $language["name"]; ?>" title="<?php echo $language["name"]; ?>" />&nbsp;';
+	html += '   <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language["image"]; ?>" alt="<?php echo $language["name"]; ?>" title="<?php echo $language["name"]; ?>" />&nbsp;';
 	<?php } ?>
 	html += '  </td>';
 	html += ' </tr>';

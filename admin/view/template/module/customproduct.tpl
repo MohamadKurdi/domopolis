@@ -41,19 +41,19 @@
 							<tr style="border-bottom:2px solid blue;">
 								<td class="left">
 									<?php foreach ($languages as $language) { ?>
-										<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+										<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 										<input type="text" name="customproduct_module[<?php echo $module_row; ?>][<?php echo $language['language_id']; ?>][name]" value="<?php echo $module[$language['language_id']]['name']; ?>" style='width: 130px;' /><br>
 									<?php } ?>
 								</td>
 								<td class="left">
 									<?php foreach ($languages as $language) { ?>
-										<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+										<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 										<textarea name="customproduct_module[<?php echo $module_row; ?>][<?php echo $language['language_id']; ?>][description]" style='width: 150px; height:30px;'><?php echo isset($module[$language['language_id']]['description'])?trim($module[$language['language_id']]['description']):''; ?></textarea><br />
 									<?php } ?>
 								</td>
 								<td class="left">
 									<?php foreach ($languages as $language) { ?>
-										<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+										<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 										<textarea name="customproduct_module[<?php echo $module_row; ?>][<?php echo $language['language_id']; ?>][href]" style='width: 150px; height:30px;'><?php echo isset($module[$language['language_id']]['href'])?trim($module[$language['language_id']]['href']):''; ?></textarea><br />
 									<?php } ?>
 								</td>
@@ -291,7 +291,7 @@
 			html += '  <tr>';
 			html += '    <td class="left">';
 			<?php foreach ($languages as $language) { ?>
-				html += '      <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />';
+				html += '      <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />';
 				html += '      <input type="text" name="customproduct_module[' + module_row + '][<?php echo $language['language_id']; ?>][name]" value="" size="15" style="width: 141px;" /><br>';
 			<?php } ?>
 			html += '    </td>';

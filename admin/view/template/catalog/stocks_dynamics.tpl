@@ -19,7 +19,7 @@
 			<table class="list">
 				<tr>
 					<td style="font-size:18px; padding:4px 5px; background-color:#faf9f1;">
-						<img src="view/image/flags/de.png" title="ru">&nbsp;Центральный склад за неделю
+						<img src="<?php echo DIR_FLAGS_NAME; ?>de.png" title="ru">&nbsp;Центральный склад за неделю
 					</td>
 					<td style="font-size:18px; padding:4px 5px; background-color:#faf9f1;">
 						<i class="fa fa-cubes"></i>&nbsp;Региональный склад за неделю
@@ -35,7 +35,7 @@
 				</tr>
 				<tr>
 					<td style="font-size:18px; padding:4px 5px; background-color:#faf9f1;">
-						<img src="view/image/flags/de.png" title="ru">&nbsp;Центральный склад за месяц
+						<img src="<?php echo DIR_FLAGS_NAME; ?>de.png" title="ru">&nbsp;Центральный склад за месяц
 					</td>
 					<td style="font-size:18px; padding:4px 5px; background-color:#faf9f1;">
 						<i class="fa fa-cubes"></i>&nbsp;Региональный склад за месяц

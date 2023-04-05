@@ -276,7 +276,7 @@ var MFP = {
 						
 						$ul.append(jQuery('<li' + ( k ? '' : ' class="active"' ) + '>')
 							.append(jQuery('<a data-toggle="tab" href="#tab-language-' + self._row + '-' + self._langs[i].language_id + '">')
-								.append(jQuery('<img src="view/image/flags/' + self._langs[i].image + '" title="' + self._langs[i].name + '">'))
+								.append(jQuery('<img src="<?php echo DIR_FLAGS_NAME; ?>' + self._langs[i].image + '" title="' + self._langs[i].name + '">'))
 								.append( ' ' + self._langs[i].name )
 							)
 						);
@@ -758,7 +758,7 @@ var MFP = {
 								if( j )
 									$div.append('<div style="height:3px"></div>');
 							
-								$div.append('<img src="view/image/flags/' + self._langs[i].image + '"> ')
+								$div.append('<img src="<?php echo DIR_FLAGS_NAME; ?>' + self._langs[i].image + '"> ')
 									.append(self.createField( 'text', null, typeof names != 'undefined' && typeof names[self._langs[i].language_id] != 'undefined' ? names[self._langs[i].language_id] : '', {
 											'name'	: name + '[levels][' + lIdx + '][' + self._langs[i].language_id + ']'
 										})
@@ -898,7 +898,7 @@ var MFP = {
 											'class'	: 'form-control',
 											'style'	: 'width:300px; margin: ' + ( j ? '2' : '0' ) + 'px 3px 0 0;',
 											'placeholder' : '<?php echo $text_categories; ?>'
-										})).append(' <img src="view/image/flags/' + self._langs[i].image + '">').append('<br>');
+										})).append(' <img src="<?php echo DIR_FLAGS_NAME; ?>' + self._langs[i].image + '">').append('<br>');
 										
 										j++;
 									}

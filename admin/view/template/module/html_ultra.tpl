@@ -159,7 +159,7 @@
 										<ul id="languages" class="nav nav-tabs">
 										<?php $language_i=0; ?>
 											<?php foreach ($languages as $language) { ?>
-											<li <?php echo ($language_i == 0)? 'class="active"':'';?>><a data-toggle="tab"  href="#language<?php echo $language['language_id']."_".$module_id; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a></li>
+											<li <?php echo ($language_i == 0)? 'class="active"':'';?>><a data-toggle="tab"  href="#language<?php echo $language['language_id']."_".$module_id; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a></li>
 											<?php $language_i++; ?>
 											<?php } ?>
 										</ul>
@@ -704,7 +704,7 @@ function addNewModule() {
 			html += '<ul id="languages" class="nav nav-tabs">'; 
 				<?php $language_i=0; ?>
 				<?php foreach ($languages as $language) { ?>
-					html += '<li <?php echo ($language_i == 0)? 'class="active"':'';?>><a data-toggle="tab"  href="#language<?php echo $language['language_id']."_";?>'+ new_modul_id +'"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a></li>';
+					html += '<li <?php echo ($language_i == 0)? 'class="active"':'';?>><a data-toggle="tab"  href="#language<?php echo $language['language_id']."_";?>'+ new_modul_id +'"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a></li>';
 				<?php $language_i++; ?>
 				<?php } ?>
 			html += '</ul>';		

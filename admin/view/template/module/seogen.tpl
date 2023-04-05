@@ -78,9 +78,9 @@
 				</table>
 				<div id="tabs_languages" class="htabs">		
 					<?php foreach ($languages as $language) { ?>
-						<a href="#tab-lang<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $language['name']; ?></a>		
+						<a href="#tab-lang<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $language['name']; ?></a>		
 					<? } ?>
-					<a href="#tab-onlyurls"><?php foreach ($languages as $language) { ?><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<? } ?>Только SEO_URL!</a>
+					<a href="#tab-onlyurls"><?php foreach ($languages as $language) { ?><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<? } ?>Только SEO_URL!</a>
 					<div class="clr"></div>
 				</div>
 				<div class="th_style"></div>
@@ -187,14 +187,14 @@
 					<div id="tab-lang<?php echo $language['language_id']; ?>">
 						
 						<div id="tabs<?php echo $language['language_id']; ?>" class="htabs">
-							<a href="#tab-categories<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $tab_categories; ?></a>
-							<a href="#tab-products<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $tab_products; ?></a>
-							<a href="#tab-manufacturers<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $tab_manufacturers; ?></a>
+							<a href="#tab-categories<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $tab_categories; ?></a>
+							<a href="#tab-products<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $tab_products; ?></a>
+							<a href="#tab-manufacturers<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $tab_manufacturers; ?></a>
 							
-							<a href="#tab-manufacturers-tags<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;Бренды спец-тэги</a>
+							<a href="#tab-manufacturers-tags<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;Бренды спец-тэги</a>
 							
-							<a href="#tab-collections<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;Коллекции</a>
-							<a href="#tab-news<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $tab_news; ?></a>
+							<a href="#tab-collections<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;Коллекции</a>
+							<a href="#tab-news<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $tab_news; ?></a>
 						</div>
 						<div id="tab-categories<?php echo $language['language_id']; ?>">
 							<table class="seogen-table" width="100%">
@@ -277,7 +277,7 @@
 									</tr>
 									
 									<tr>
-										<td colspan="3"><a onclick="generate('categories', <?php echo $language['language_id']; ?>);" class="button"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $text_generate; ?>&nbsp;<?php echo $tab_categories; ?></a></td>
+										<td colspan="3"><a onclick="generate('categories', <?php echo $language['language_id']; ?>);" class="button"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $text_generate; ?>&nbsp;<?php echo $tab_categories; ?></a></td>
 									</tr>
 								</tbody>
 							</table>
@@ -412,7 +412,7 @@
 										<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);"><?php echo $text_select_all; ?></a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);"><?php echo $text_unselect_all; ?></a></td>
 									</tr>
 									<tr>
-										<td colspan="3"><a onclick="generate('products', <?php echo $language['language_id']; ?>);" class="button"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $text_generate; ?>&nbsp;<?php echo $tab_products; ?></a></td>
+										<td colspan="3"><a onclick="generate('products', <?php echo $language['language_id']; ?>);" class="button"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $text_generate; ?>&nbsp;<?php echo $tab_products; ?></a></td>
 									</tr>
 								</tbody>
 							</table>
@@ -608,7 +608,7 @@
 									<?php } ?>
 									
 									<tr>
-										<td colspan="3"><a onclick="generate('manufacturers-tags', <?php echo $language['language_id']; ?>);" class="button"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">Генерировать спец-тэги</a></td>
+										<td colspan="3"><a onclick="generate('manufacturers-tags', <?php echo $language['language_id']; ?>);" class="button"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">Генерировать спец-тэги</a></td>
 									</tr>
 								</tbody>
 							</table>
@@ -695,7 +695,7 @@
 									</tr>
 									
 									<tr>
-										<td colspan="3"><a onclick="generate('manufacturers', <?php echo $language['language_id']; ?>);" class="button"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $text_generate; ?>&nbsp;<?php echo $tab_manufacturers; ?></a></td>
+										<td colspan="3"><a onclick="generate('manufacturers', <?php echo $language['language_id']; ?>);" class="button"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $text_generate; ?>&nbsp;<?php echo $tab_manufacturers; ?></a></td>
 									</tr>
 								</tbody>
 							</table>
@@ -781,7 +781,7 @@
 								</tr>
 								
 								<tr>
-									<td colspan="3"><a onclick="generate('collections', <?php echo $language['language_id']; ?>);" class="button"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $text_generate; ?>&nbsp;<?php echo $tab_collections; ?></a></td>
+									<td colspan="3"><a onclick="generate('collections', <?php echo $language['language_id']; ?>);" class="button"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $text_generate; ?>&nbsp;<?php echo $tab_collections; ?></a></td>
 								</tr>
 							</tbody>
 						</table>
@@ -847,7 +847,7 @@
 									</tr>
 								<?php } ?>
 								<tr>
-									<td colspan="3"><a onclick="generate('informations', <?php echo $language['language_id']; ?>);" class="button"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $text_generate; ?>&nbsp;<?php echo $tab_news; ?></a></td>
+									<td colspan="3"><a onclick="generate('informations', <?php echo $language['language_id']; ?>);" class="button"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>">&nbsp;<?php echo $text_generate; ?>&nbsp;<?php echo $tab_news; ?></a></td>
 								</tr>
 							</tbody>
 						</table>

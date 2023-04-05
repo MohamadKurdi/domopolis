@@ -29,7 +29,7 @@
               <td><?php echo $entry_name; ?></td>
               <td>
                 <?php foreach ($languages as $language) { ?>
-                <input type="text" name="ocfilter_option_description[<?php echo $language['language_id']; ?>][name]" value="<?php echo (isset($name[$language['language_id']]) ? $name[$language['language_id']]['name'] : ''); ?>" size="50" />&nbsp;<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+                <input type="text" name="ocfilter_option_description[<?php echo $language['language_id']; ?>][name]" value="<?php echo (isset($name[$language['language_id']]) ? $name[$language['language_id']]['name'] : ''); ?>" size="50" />&nbsp;<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
                 <?php } ?>
               </td>
             </tr>
@@ -93,7 +93,7 @@
               <td><?php echo $entry_postfix; ?></td>
               <td>
                 <?php foreach ($languages as $language) { ?>
-                <input type="text" name="ocfilter_option_description[<?php echo $language['language_id']; ?>][postfix]" value="<?php echo (isset($name[$language['language_id']]) ? $name[$language['language_id']]['postfix'] : ''); ?>" size="10" />&nbsp;<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+                <input type="text" name="ocfilter_option_description[<?php echo $language['language_id']; ?>][postfix]" value="<?php echo (isset($name[$language['language_id']]) ? $name[$language['language_id']]['postfix'] : ''); ?>" size="10" />&nbsp;<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
                 <?php } ?>
               </td>
             </tr>
@@ -101,7 +101,7 @@
               <td><?php echo $entry_description; ?></td>
               <td>
                 <?php foreach ($languages as $language) { ?>
-                <textarea name="ocfilter_option_description[<?php echo $language['language_id']; ?>][description]" rows="3" cols="50" style="resize: none;"><?php echo (isset($name[$language['language_id']]) ? $name[$language['language_id']]['description'] : ''); ?></textarea>&nbsp;<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+                <textarea name="ocfilter_option_description[<?php echo $language['language_id']; ?>][description]" rows="3" cols="50" style="resize: none;"><?php echo (isset($name[$language['language_id']]) ? $name[$language['language_id']]['description'] : ''); ?></textarea>&nbsp;<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
                 <?php } ?>
               </td>
             </tr>
@@ -148,7 +148,7 @@
                 <input type="hidden" name="ocfilter_option_value[update][<?php echo $value['value_id']; ?>][color]" value="<?php echo $value['color']; ?>" />
               	<input type="hidden" name="ocfilter_option_value[update][<?php echo $value['value_id']; ?>][sort_order]" value="<?php echo $value['sort_order']; ?>" />
                 <?php foreach ($languages as $language) { ?>
-                <label><input type="text" class="value-name" name="ocfilter_option_value[update][<?php echo $value['value_id']; ?>][language][<?php echo $language['language_id']; ?>][name]" value="<?php echo (isset($value['language'][$language['language_id']]) ? $value['language'][$language['language_id']]['name'] : ''); ?>" />&nbsp;<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></label>
+                <label><input type="text" class="value-name" name="ocfilter_option_value[update][<?php echo $value['value_id']; ?>][language][<?php echo $language['language_id']; ?>][name]" value="<?php echo (isset($value['language'][$language['language_id']]) ? $value['language'][$language['language_id']]['name'] : ''); ?>" />&nbsp;<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></label>
                 <?php } ?>
               </div>
 							<a href="#" class="color-handler<?php echo ($color ? ' visible' : ''); ?>" title="<?php echo $text_select_color; ?>"<?php echo ($value['color'] ? ' style="background: #' . $value['color'] . ';"' : ''); ?>></a>

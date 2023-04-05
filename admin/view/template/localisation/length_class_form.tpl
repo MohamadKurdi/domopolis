@@ -20,7 +20,7 @@
             <td><span class="required">*</span> <?php echo $entry_title; ?></td>
             <td><?php foreach ($languages as $language) { ?>
               <input type="text" name="length_class_description[<?php echo $language['language_id']; ?>][title]" value="<?php echo isset($length_class_description[$language['language_id']]) ? $length_class_description[$language['language_id']]['title'] : ''; ?>" />
-              <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+              <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
               <?php if (isset($error_title[$language['language_id']])) { ?>
                 <span class="error"><?php echo $error_title[$language['language_id']]; ?></span><br />
               <?php } ?>
@@ -30,7 +30,7 @@
               <td><span class="required">*</span> <?php echo $entry_unit; ?></td>
               <td><?php foreach ($languages as $language) { ?>
                 <input type="text" name="length_class_description[<?php echo $language['language_id']; ?>][unit]" value="<?php echo isset($length_class_description[$language['language_id']]) ? $length_class_description[$language['language_id']]['unit'] : ''; ?>" />
-                <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+                <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
                 <?php if (isset($error_unit[$language['language_id']])) { ?>
                   <span class="error"><?php echo $error_unit[$language['language_id']]; ?></span><br />
                 <?php } ?>

@@ -37,7 +37,7 @@
 					<div id="tab-general">
 						<div id="languages" class="htabs">
 							<?php foreach ($languages as $language) { ?>
-								<a href="#language<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
+								<a href="#language<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
 							<?php } ?>
 						</div>
 						<?php foreach ($languages as $language) { ?>
@@ -50,18 +50,18 @@
 											<div class="translate_wrap">
 												<a class="btn-copy<?php echo $language['language_id']; ?> btn-copy" onclick="getCopy($(this),'input','news_description[2]');"><i class="fa fa-copy"></i> Копировать с ru</a>
 												<?php if (in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
-													<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'ru','<?php echo $language['code']; ?>','input','news_description[2]');">Перевести <img src="view/image/flags/ru.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>
+													<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'ru','<?php echo $language['code']; ?>','input','news_description[2]');">Перевести <img src="<?php echo DIR_FLAGS_NAME; ?>ru.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>
 													<?php } elseif ($language['code'] == $this->config->get('config_admin_language')) { ?>
 													<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'de','<?php echo $language['code']; ?>','input','news_description[26]');">
-														Перевести <img src="view/image/flags/de.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+														Перевести <img src="<?php echo DIR_FLAGS_NAME; ?>de.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 													</a>&nbsp;
 													
 													<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'en','<?php echo $language['code']; ?>','input','news_description[26]');">
-														Перевести <img src="view/image/flags/gb.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+														Перевести <img src="<?php echo DIR_FLAGS_NAME; ?>gb.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 													</a>&nbsp;
 													
 													<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'fr','<?php echo $language['code']; ?>','input','news_description[26]');">
-														Перевести <img src="view/image/flags/fr.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+														Перевести <img src="<?php echo DIR_FLAGS_NAME; ?>fr.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 													</a>
 												<?php } ?>
 											</div>
@@ -81,10 +81,10 @@
 											<div class="translate_wrap">
 												<a class="btn-copy<?php echo $language['language_id']; ?> btn-copy" onclick="getCopy($(this),'textarea','news_description[2]');"><i class="fa fa-copy"></i> Копировать с ru</a>
 												<?php if (in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
-													<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'ru','<?php echo $language['code']; ?>','textarea','news_description[5]');">Перевести <img src="view/image/flags/ru.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>
+													<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'ru','<?php echo $language['code']; ?>','textarea','news_description[5]');">Перевести <img src="<?php echo DIR_FLAGS_NAME; ?>ru.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>
 													<?php } elseif ($language['code'] == $this->config->get('config_admin_language')) { ?>
 													<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'de','<?php echo $language['code']; ?>','textarea','news_description[26]');">
-														Перевести <img src="view/image/flags/de.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+														Перевести <img src="<?php echo DIR_FLAGS_NAME; ?>de.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 													</a>
 												<?php } ?>
 											</div>
@@ -106,10 +106,10 @@
 												<div class="translate_wrap">
 													<a class="btn-copy<?php echo $language['language_id']; ?> btn-copy" onclick="getCopy($(this),'textarea','news_description[2]');"><i class="fa fa-copy"></i> Копировать с ru</a>
 													<?php if (in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
-														<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'ru','<?php echo $language['code']; ?>','textarea','news_description[5]');">Перевести <img src="view/image/flags/ru.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>
+														<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'ru','<?php echo $language['code']; ?>','textarea','news_description[5]');">Перевести <img src="<?php echo DIR_FLAGS_NAME; ?>ru.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>
 														<?php } elseif ($language['code'] == $this->config->get('config_admin_language')) { ?>
 														<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'de','<?php echo $language['code']; ?>','textarea','news_description[26]');">
-															Перевести <img src="view/image/flags/de.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+															Перевести <img src="<?php echo DIR_FLAGS_NAME; ?>de.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 														</a>
 													<?php } ?>
 												</div>
@@ -160,13 +160,13 @@
 								<td class="left"><?php echo $entry_keyword; ?></td>
 								<td><?php foreach ($languages as $language) { ?>
 									<input type="text" name="keyword[<?php echo $language['language_id']; ?>]" value="<?php  if (isset($keyword[$language['language_id']])) { echo $keyword[$language['language_id']]; } ?>" />
-									<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
+									<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
 								<?php } ?></td>
 							</tr>
 						</table>
 						<div id="languagesseo" class="htabs">
 							<?php foreach ($languages as $language) { ?>
-								<a href="#languageseo<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
+								<a href="#languageseo<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
 							<?php } ?>
 						</div>
 						<?php foreach ($languages as $language) { ?>
@@ -219,7 +219,7 @@
 						</table>
 						<div id="languagesc" class="htabs">
 							<?php foreach ($languages as $language) { ?>
-								<a href="#languagesc<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
+								<a href="#languagesc<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
 							<?php } ?>
 						</div>
 						<?php foreach ($languages as $language) { ?>
@@ -252,7 +252,7 @@
 					<div id="tab-recipe">
 						<div id="languarecipe" class="htabs">
 							<?php foreach ($languages as $language) { ?>
-								<a href="#languarecipe<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
+								<a href="#languarecipe<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
 							<?php } ?>
 						</div>
 						<?php foreach ($languages as $language) { ?>

@@ -16,7 +16,7 @@
    <td>
     <?php foreach ($languages as $language) { ?>
     <input name="product[name][<?php echo $language['language_id']; ?>]" type="text" value="" />
-    <img src="view/image/flags/<?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>" />&nbsp;&nbsp;
+    <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>" />&nbsp;&nbsp;
     <?php } ?>
    </td>
   </tr>

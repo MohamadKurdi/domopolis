@@ -7,7 +7,10 @@
 					<tr>
 						<td  class="right" style="text-align: left;"><?php echo $order['order_id']; ?></td>
 						<td  class="left" style="text-align: left;">
-							<img src="view/image/flags/<? echo mb_strtolower($order['flag']) ?>.png" title="<? echo $order['flag']; ?>" />  <b><?php echo $order['customer']; ?></b>
+						<?php if ($this->config->get('config_admin_flags_enable')) { ?>
+							<img src="<?php echo DIR_FLAGS_NAME; ?><? echo mb_strtolower($order['flag']) ?>.png" title="<? echo $order['flag']; ?>" /> 
+						<?php } ?>
+						<b><?php echo $order['customer']; ?></b>
 
 							<div style="clear:both;"></div>
 							<span style="font-size:10px; line-height:13px; <?php if ($order['email_bad']) { ?>color:#ff5656<?php } else { ?>color:#02760e<? } ?>">

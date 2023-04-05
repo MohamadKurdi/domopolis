@@ -108,7 +108,7 @@
 					<td class="left" colspan="2" style="background: #92BDCA;"><b><?php echo $keyword['category_name']; ?></b> <input type="hidden" name="category_id" value="<?php echo $keyword['category_id']; ?>" /></td>
 					<td class="left">
 						<?php foreach ($languages as $language) { ?>
-						  <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+						  <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 						  <select name="infos[<?php echo $language['language_id']; ?>][category_status]">
 							<?php if ($keyword['keyworder_description'][$language['language_id']]['category_status'] == 1) { ?>
 							<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
@@ -122,7 +122,7 @@
 					</td>
 					<td class="left">
 						<?php foreach ($languages as $language) { ?>
-						  <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+						  <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 						  <select name="infos[<?php echo $language['language_id']; ?>][keyworder_status]">
 							<?php if ($keyword['keyworder_description'][$language['language_id']]['keyworder_status'] == 1) { ?>
 							<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
@@ -148,37 +148,37 @@
 				<tr>
 					<td class="left">
 						<?php foreach ($languages as $language) { ?>
-							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> : <? echo $language['code']; ?><br />
+							<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> : <? echo $language['code']; ?><br />
 							<input type="text" name="infos[<?php echo $language['language_id']; ?>][seo_h1]" value="<?php echo isset($keyword['keyworder_description'][$language['language_id']]) ? $keyword['keyworder_description'][$language['language_id']]['seo_h1'] : ''; ?>" /></br></br>
 						<?php } ?>
 					</td>
 					<td class="left">
 						<?php foreach ($languages as $language) { ?>
-							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> : <? echo $language['code']; ?><br />
+							<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> : <? echo $language['code']; ?><br />
 							<input type="text" name="infos[<?php echo $language['language_id']; ?>][seo_title]" value="<?php echo isset($keyword['keyworder_description'][$language['language_id']]) ? $keyword['keyworder_description'][$language['language_id']]['seo_title'] : ''; ?>" /></br></br>
 						<?php } ?>
 					</td>
 					<td class="left">
 						<?php foreach ($languages as $language) { ?>
-							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> : <? echo $language['code']; ?><br />
+							<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> : <? echo $language['code']; ?><br />
 							<input type="text" name="infos[<?php echo $language['language_id']; ?>][meta_keyword]" value="<?php echo isset($keyword['keyworder_description'][$language['language_id']]) ? $keyword['keyworder_description'][$language['language_id']]['meta_keyword'] : ''; ?>" /></br></br>
 						<?php } ?>
 					</td>
 					<td class="left">
 						<?php foreach ($languages as $language) { ?>
-							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> : <? echo $language['code']; ?><br />
+							<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> : <? echo $language['code']; ?><br />
 							<textarea name="infos[<?php echo $language['language_id']; ?>][meta_description]" cols="40" rows="2"><?php echo isset($keyword['keyworder_description'][$language['language_id']]) ? $keyword['keyworder_description'][$language['language_id']]['meta_description'] : ''; ?></textarea></br></br>
 						<?php } ?>
 					</td>
 					<td class="left">
 						<?php foreach ($languages as $language) { ?>
-							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> : <? echo $language['code']; ?><br />
+							<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> : <? echo $language['code']; ?><br />
 							<textarea name="infos[<?php echo $language['language_id']; ?>][description]" cols="40" rows="2"><?php echo isset($keyword['keyworder_description'][$language['language_id']]) ? $keyword['keyworder_description'][$language['language_id']]['description'] : ''; ?></textarea></br></br>
 						<?php } ?>
 					</td>
 					<td class="left">
 						<?php foreach ($languages as $language) { ?>
-							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> : <? echo $language['code']; ?>
+							<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> : <? echo $language['code']; ?>
 							<img src="<?php echo $keyword['keyworder_description'][$language['language_id']]['thumb']; ?>" alt="" id="<?php echo $keyword['keyworder_id']; ?>_infos_<?php echo $language['language_id']; ?>_thumb" /><br />
 
 							<input type="hidden" id="<?php echo $keyword['keyworder_id']; ?>_infos_<?php echo $language['language_id']; ?>_image" name="infos[<?php echo $language['language_id']; ?>][image]" value="<?php echo isset($keyword['keyworder_description'][$language['language_id']]) ? $keyword['keyworder_description'][$language['language_id']]['image'] : ''; ?>" />

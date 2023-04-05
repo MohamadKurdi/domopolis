@@ -599,7 +599,7 @@
 				<div id="language-body" class="htabs" style="width:100%;">
 					<?php foreach ($languages as $language) { ?>
 						<a href="#tab-language-<?php echo $language['language_id']; ?>" style="width:auto;max-width:130px;">
-							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+							<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 							<?php echo $language['name']; ?>
 							<?php if($language['default'] == 1){ echo ' - ' . $text_default; } ?>
 						</a>

@@ -225,7 +225,7 @@
                                    name="shoputils_psb_langdata[<?php echo $language['language_id']; ?>][title]"
                                    value="<?php echo !empty($shoputils_psb_langdata[$language['language_id']]['title'])
                                                ? $shoputils_psb_langdata[$language['language_id']]['title'] : $title_default[0]; ?>"/>
-                            &nbsp;<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br />
+                            &nbsp;<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br />
                           <?php } ?>
                         </td>
                     </tr>
@@ -239,7 +239,7 @@
                                    name="shoputils_psb_langdata[<?php echo $language['language_id']; ?>][instruction]"
                                    ><?php echo !empty($shoputils_psb_langdata[$language['language_id']]['instruction'])
                                                ? $shoputils_psb_langdata[$language['language_id']]['instruction'] : ''; ?></textarea>
-                            &nbsp;<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br />
+                            &nbsp;<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br />
                           <?php } ?>
                         </td>
                     </tr>
@@ -284,7 +284,7 @@
                                    name="shoputils_psb_langdata[<?php echo $language['language_id']; ?>][mail_customer_success_subject]"
                                    value="<?php echo !empty($shoputils_psb_langdata[$language['language_id']]['mail_customer_success_subject'])
                                                ? $shoputils_psb_langdata[$language['language_id']]['mail_customer_success_subject'] : $sample_mail_customer_success_subject; ?>"/>
-                            &nbsp;<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br />
+                            &nbsp;<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br />
                           <?php } ?>
                             <?php if ($error_mail_customer_success_subject) { ?>
                             <span class="error"><?php echo $error_mail_customer_success_subject; ?></span>
@@ -299,7 +299,7 @@
                         </td>
                         <td>
                           <?php foreach ($oc_languages as $language) { ?>
-                            <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br />
+                            <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br />
                             <textarea cols="80" rows="10" id="mail-customer-success-content<?php echo $language['language_id']; ?>"
                                    name="shoputils_psb_langdata[<?php echo $language['language_id']; ?>][mail_customer_success_content]"
                                    ><?php echo !empty($shoputils_psb_langdata[$language['language_id']]['mail_customer_success_content'])
@@ -347,7 +347,7 @@
                                    name="shoputils_psb_langdata[<?php echo $language['language_id']; ?>][mail_customer_fail_subject]"
                                    value="<?php echo !empty($shoputils_psb_langdata[$language['language_id']]['mail_customer_fail_subject'])
                                                ? $shoputils_psb_langdata[$language['language_id']]['mail_customer_fail_subject'] : $sample_mail_customer_fail_subject; ?>"/>
-                            &nbsp;<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br />
+                            &nbsp;<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br />
                           <?php } ?>
                             <?php if ($error_mail_customer_fail_subject) { ?>
                             <span class="error"><?php echo $error_mail_customer_fail_subject; ?></span>
@@ -362,7 +362,7 @@
                         </td>
                         <td>
                           <?php foreach ($oc_languages as $language) { ?>
-                            <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br />
+                            <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"/><br />
                             <textarea cols="80" rows="10" id="mail-customer-fail-content<?php echo $language['language_id']; ?>"
                                    name="shoputils_psb_langdata[<?php echo $language['language_id']; ?>][mail_customer_fail_content]"
                                    ><?php echo !empty($shoputils_psb_langdata[$language['language_id']]['mail_customer_fail_content'])

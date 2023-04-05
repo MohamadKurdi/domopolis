@@ -231,7 +231,7 @@
                 </td>
                 <td class="left" rowspan="3">
                     <?php foreach ($languages as $language) { ?>
-                    <img src="view/image/flags/<?php echo $language['image'] ?>"
+                    <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image'] ?>"
                          title="<?php echo $language['name'] ?>"/>&nbsp;<span class="bold"><?php echo $language['name'] ?>: </span><br/>
                     <textarea type="text" cols="38" rows="2"
                               name="discounts[<?php echo $discount_row; ?>][descriptions][<?php echo $language['language_id'] ?>]"><?php echo $discount_descriptions[$language['language_id']]?></textarea>
@@ -351,7 +351,7 @@ function addDiscount() {
     html += '</td>';
     html += '<td class="left" rowspan="2">';
     <?php foreach ($languages as $language) { ?>
-    html += '<img src="view/image/flags/<?php echo $language['image'] ?>" title="<?php echo $language['name'] ?>" />&nbsp;<span class="bold"><?php echo $language['name'] ?>: </span><br/>';
+    html += '<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image'] ?>" title="<?php echo $language['name'] ?>" />&nbsp;<span class="bold"><?php echo $language['name'] ?>: </span><br/>';
     html += '<textarea type="text" cols="38" rows="4" name="discounts[' + discount_row + '][descriptions][<?php echo $language['language_id'] ?>]" ><?php echo $entry_discount_description_default?></textarea>';
     <?php } ?>
     html += '</td>';

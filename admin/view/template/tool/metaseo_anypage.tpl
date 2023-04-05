@@ -49,7 +49,7 @@
 									<td class="center">
 										
 										<?php foreach ($languages as $language) { ?>
-											<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+											<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 											<input type="text" name="metaseo_anypage_routes[<?php echo $page_row; ?>][title][<?php echo $language['language_id']; ?>]" value="<?php echo isset($metaseo_anypage['title'][$language['language_id']])?$metaseo_anypage['title'][$language['language_id']]:''; ?>" ><br />	
 										<?php } ?>
 										
@@ -58,7 +58,7 @@
 									<td class="center">
 										
 										<?php foreach ($languages as $language) { ?>
-											<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+											<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 											<input type="text" name="metaseo_anypage_routes[<?php echo $page_row; ?>][meta_description][<?php echo $language['language_id']; ?>]" value="<?php echo isset($metaseo_anypage['meta_description'][$language['language_id']])?	$metaseo_anypage['meta_description'][$language['language_id']]:''; ?>" ><br />
 										<?php } ?>
 										
@@ -96,7 +96,7 @@
 		html  += '<td class="left"><input type="text" class="form-control" name="metaseo_anypage_routes[' + page_row + '][route]" value="" /></td>';
 		html  += '<td class="left">';
 		<?php foreach ($languages as $language) { ?>
-			html  += '	<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />';
+			html  += '	<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />';
 			html  += '	<input type="text" name="metaseo_anypage_routes[' + page_row + '][title][<?php echo $language['language_id']; ?>]" value="" ><br />';
 		<?php } ?>		
 		html  += '</td>';
@@ -104,7 +104,7 @@
 		html  += '<td class="left">';
 		
 		<?php foreach ($languages as $language) { ?>
-			html  += '	<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />';
+			html  += '	<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />';
 			html  += '	<input type="text" name="metaseo_anypage_routes[' + page_row + '][meta_description][<?php echo $language['language_id']; ?>]" value="" ><br />';
 		<?php } ?>
 		

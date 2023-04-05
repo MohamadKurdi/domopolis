@@ -29,7 +29,7 @@
           	<?php foreach ($languages as $language) { ?>
           	<div id="language<?php echo $language['language_id']; ?>"> 
 	            <tr>
-	              <td><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <span class="required">*</span> <?php echo $entry_name; ?></td>
+	              <td><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <span class="required">*</span> <?php echo $entry_name; ?></td>
 	              <td><input type="text" name="advanced_coupon[<?php echo $language['language_id']; ?>][name]" value="<?php if(isset($advanced_coupon[$language['language_id']])) { if($advanced_coupon[$language['language_id']]['name'] != '') { echo $advanced_coupon[$language['language_id']]['name'];  } } else { echo ''; } ?>" size="50"/>
 	                <?php if (isset($error_name[$language['language_id']])) { ?>
 	                  	<span class="error"><?php echo $error_name[$language['language_id']]; ?></span>
@@ -333,7 +333,7 @@
             <?php foreach ($languages as $language) { ?>
           		<div id="language<?php echo $language['language_id']; ?>"> 
             		<tr>
-            			<td><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $entry_rules_message; ?></td>
+            			<td><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $entry_rules_message; ?></td>
             			<td><textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][discount_rules_message]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['discount_rules_message']; } else { echo ''; } ?></textarea></td>            			
             		</tr>
             	</div>
@@ -585,7 +585,7 @@
        <div id="tab-errors">        
 	   	<div id="languages" class="htabs">
 	    	<?php foreach ($languages as $language) { ?>
-	        	<a href="#language<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
+	        	<a href="#language<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
 	        <?php } ?>
 	   	</div>
         <?php foreach ($languages as $language) { ?>
@@ -593,67 +593,67 @@
           		<table class="form">      	
 	      			<!-- <tr>
 	      			 <td><span class="required">*</span> <?php echo $entry_error_blank; ?></td>
-	      			 <td><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_blank]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_blank']; } else { echo ''; } ?></textarea></td>
+	      			 <td><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_blank]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_blank']; } else { echo ''; } ?></textarea></td>
 	      			</tr>
 	      			
 	      			<tr>
 	      			 <td><span class="required">*</span> <?php echo $entry_error_not_found; ?></td>
-	      			 <td><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_not_found]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_not_found']; } else { echo ''; } ?></textarea></td>
+	      			 <td><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_not_found]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_not_found']; } else { echo ''; } ?></textarea></td>
 	      			</tr>
 	      			-->
 	      			<tr>
 	      			 <td><span class="required">*</span> <?php echo $entry_error_total_quantity_range; ?></td>
-	      			 <td><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_total_quantity_range]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_total_quantity_range']; } else { echo ''; } ?></textarea></td>
+	      			 <td><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_total_quantity_range]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_total_quantity_range']; } else { echo ''; } ?></textarea></td>
 	      			</tr>
 	      		
 	      			<tr>
 	      			 <td><span class="required">*</span> <?php echo $entry_error_total_quantity; ?></td>
-	      			 <td><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_total_quantity]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_total_quantity']; } else { echo ''; } ?></textarea></td>
+	      			 <td><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_total_quantity]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_total_quantity']; } else { echo ''; } ?></textarea></td>
 	      			</tr>
 	      			
 	      			<tr>
 	      			 <td><span class="required">*</span> <?php echo $entry_error_total_amount_range; ?></td>
-	      			 <td><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_total_amount_range]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_total_amount_range']; } else { echo ''; } ?></textarea></td>
+	      			 <td><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_total_amount_range]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_total_amount_range']; } else { echo ''; } ?></textarea></td>
 	      			</tr>
 	      			
 	      			<tr> 
 	      			 <td><span class="required">*</span> <?php echo $entry_error_total_amount; ?></td>
-	      			 <td><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_total_amount]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_total_amount']; } else { echo ''; } ?></textarea></td>
+	      			 <td><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_total_amount]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_total_amount']; } else { echo ''; } ?></textarea></td>
 	      			</tr>
 	      		
 	      			<tr>
 	      			 <td><span class="required">*</span> <?php echo $entry_error_login; ?></td>
-	      			 <td><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_login]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_login']; } else { echo ''; } ?></textarea></td>
+	      			 <td><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_login]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_login']; } else { echo ''; } ?></textarea></td>
 	      			</tr>
 	      			
 	      			<tr> 
 	      			 <td><span class="required">*</span> <?php echo $entry_error_other_coupon; ?></td>
-	      			 <td><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_other_coupon]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_other_coupon']; } else { echo ''; } ?></textarea></td>
+	      			 <td><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_other_coupon]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_other_coupon']; } else { echo ''; } ?></textarea></td>
 	      			</tr>
 	      			
 	      			<tr>
 	      			 <td><span class="required">*</span> <?php echo $entry_error_special_product; ?></td>
-	      			 <td><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_special_product]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_special_product']; } else { echo ''; } ?></textarea></td>
+	      			 <td><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_special_product]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_special_product']; } else { echo ''; } ?></textarea></td>
 	      			</tr>
 	      			
 	      			<tr>
 	      			 <td><span class="required">*</span> <?php echo $entry_error_discount_product; ?></td>
-	      			 <td><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_discount_product]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_discount_product']; } else { echo ''; } ?></textarea></td>
+	      			 <td><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_discount_product]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_discount_product']; } else { echo ''; } ?></textarea></td>
 	      			</tr>
 	      			
 	      			<tr>
 	      			 <td><span class="required">*</span> <?php echo $entry_error_total_uses_sale; ?></td>
-	      			 <td><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_total_usage_sale]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_total_usage_sale']; } else { echo ''; } ?></textarea></td>
+	      			 <td><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_total_usage_sale]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_total_usage_sale']; } else { echo ''; } ?></textarea></td>
 	      			</tr>
 	      			
 	      			<tr>
 	      			 <td><span class="required">*</span> <?php echo $entry_error_total_uses_customer; ?></td>
-	      			 <td><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_total_usage_customer]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_total_usage_customer']; } else { echo ''; } ?></textarea></td>
+	      			 <td><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_total_usage_customer]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_total_usage_customer']; } else { echo ''; } ?></textarea></td>
 	      			</tr>
 	      		
 	      			<tr>
 	      			 <td><span class="required">*</span> <?php echo $entry_error_set_disable; ?></td>
-	      			 <td><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_status_disable]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_status_disable']; } else { echo ''; } ?></textarea></td>         			 
+	      			 <td><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea name="advanced_coupon[<?php echo $language['language_id']; ?>][error_status_disable]"><?php if(isset($advanced_coupon[$language['language_id']])) { echo $advanced_coupon[$language['language_id']]['error_status_disable']; } else { echo ''; } ?></textarea></td>         			 
 	      			</tr>
 	      		          			 	
 				</table>

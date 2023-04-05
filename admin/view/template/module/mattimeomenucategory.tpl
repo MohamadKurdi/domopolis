@@ -207,7 +207,7 @@
 				  <textarea  name="mattimeomenucategory_tab[<?php echo $tab_row; ?>][title][<?php echo $language['language_id']; ?>]" class="longfield" ><?php echo isset($tab['title'][$language['language_id']]) ? $tab['title'][$language['language_id']] : ''; ?></textarea>
                   
                   
-				  <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" ><br>
+				  <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" ><br>
 				<?php } ?></td>
               <td><a onclick="$('#tab-row<?php echo $tab_row; ?>').remove();" class="btn btn-danger">&times;</a></td>
             </tr>
@@ -278,7 +278,7 @@
 	  html += '<td>';
 	  <?php foreach ($languages as $language) { ?>
 		html += '<textarea name="mattimeomenucategory_tab[' + tab_row + '][title][<?php echo $language['language_id']; ?>]" class="longfield"></textarea>';
-		html += '<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"><br>';
+		html += '<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>"><br>';
 	  <?php } ?>
 	  html += '</td>';
 		

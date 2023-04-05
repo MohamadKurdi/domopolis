@@ -20,7 +20,7 @@
 				<div id="tab-general">
 					<div id="languages" class="htabs">
 						<?php foreach ($languages as $language) { ?>
-							<a href="#language<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
+							<a href="#language<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
 						<?php } ?>
 					</div>
 					<?php foreach ($languages as $language) { ?>
@@ -93,7 +93,7 @@
 							<td><?php echo $entry_keyword; ?></td>
 							<td><?php foreach ($languages as $language) { ?>
 								<input type="text" name="keyword[<?php echo $language['language_id']; ?>]" value="<?php if (isset($keyword[$language['language_id']])) { echo $keyword[$language['language_id']]; } ?>" />
-								<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
+								<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
 							<?php } ?></td>
 						</tr>
 						<tr>

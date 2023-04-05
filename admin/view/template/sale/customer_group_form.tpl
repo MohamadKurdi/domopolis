@@ -20,7 +20,7 @@
             <td><span class="required">*</span> <?php echo $entry_name; ?></td>
             <td><?php foreach ($languages as $language) { ?>
               <input type="text" name="customer_group_description[<?php echo $language['language_id']; ?>][name]" value="<?php echo isset($customer_group_description[$language['language_id']]) ? $customer_group_description[$language['language_id']]['name'] : ''; ?>" />
-              <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+              <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
               <?php if (isset($error_name[$language['language_id']])) { ?>
               <span class="error"><?php echo $error_name[$language['language_id']]; ?></span><br />
               <?php } ?>
@@ -30,7 +30,7 @@
           <tr>
             <td><?php echo $entry_description; ?></td>
             <td><textarea name="customer_group_description[<?php echo $language['language_id']; ?>][description]" cols="40" rows="5"><?php echo isset($customer_group_description[$language['language_id']]) ? $customer_group_description[$language['language_id']]['description'] : ''; ?></textarea>
-              <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" align="top" /></td>
+              <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" align="top" /></td>
           </tr>
           <?php } ?>
           <tr>

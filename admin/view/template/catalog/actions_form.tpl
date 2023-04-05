@@ -28,7 +28,7 @@
 				<div id="tab-general">
 					<div id="languages" class="htabs">
 						<?php foreach ($languages as $language) { ?>
-							<a href="#language<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
+							<a href="#language<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
 						<?php } ?>
 						<div class="clr"></div>
 					</div>
@@ -209,7 +209,7 @@
 								<br />
 								<?php foreach ($languages as $language) { ?>
 									<div class="image">
-										<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+										<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
 										
 										<img src="<? echo isset($actions_description[$language['language_id']]) ? $actions_description[$language['language_id']]['thumb_overload'] : '' ?>" alt="" id="thumb_overload<?php echo $language['language_id']; ?>" onclick="image_upload('image_overload<?php echo $language['language_id']; ?>', 'thumb_overload<?php echo $language['language_id']; ?>');" /><br />
 										
@@ -236,7 +236,7 @@
 								<br />
 								<?php foreach ($languages as $language) { ?>
 									<div class="image">
-										<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+										<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
 										
 										<img src="<? echo isset($actions_description[$language['language_id']]) ? $actions_description[$language['language_id']]['thumb_to_cat_overload'] : '' ?>" alt="" id="thumb_to_cat_overload<?php echo $language['language_id']; ?>" onclick="image_upload('image_to_cat_overload<?php echo $language['language_id']; ?>', 'thumb_to_cat_overload<?php echo $language['language_id']; ?>');" /><br />
 										
@@ -257,7 +257,7 @@
 				<div id="tab-seo">
 					<div id="languages-seo" class="htabs">
 						<?php foreach ($languages as $language) { ?>
-							<a href="#language-seo<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
+							<a href="#language-seo<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
 						<?php } ?>
 					</div>
 					<?php foreach ($languages as $language) { ?>
@@ -289,7 +289,7 @@
 							<td>	
 								<?php foreach ($languages as $language) { ?>
 									<input type="text" name="keyword[<?php echo $language['language_id']; ?>]" value="<?php  if (isset($keyword[$language['language_id']])) { echo $keyword[$language['language_id']]; } ?>" size="100" />
-									<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
+									<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
 								<?php } ?>
 							</td>
 						</tr>

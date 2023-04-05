@@ -178,7 +178,7 @@
                     
                   <?php foreach ($languages as $language) { ?>
                     <div id="tab_general_min_order_text_<?php echo $language['language_id']; ?>">
-                      <label for="general_min_order_text_<?php echo $language['language_id']; ?>" title="<?php echo $language['name']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></label>
+                      <label for="general_min_order_text_<?php echo $language['language_id']; ?>" title="<?php echo $language['name']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></label>
                       <input type="text" name="quickcheckout[general][min_order][text][<?php echo $language['language_id']; ?>]" id="general_min_order_text_<?php echo $language['language_id']; ?>" value="<?php echo isset($quickcheckout['general']['min_order']['text'][$language['language_id']]) ? $quickcheckout['general']['min_order']['text'][$language['language_id']] : $language_min_order_text; ?>" >
                     </div>
                     <?php } ?>
@@ -194,7 +194,7 @@
                     
                   <?php foreach ($languages as $language) { ?>
                     <div id="tab_general_min_quantity_text_<?php echo $language['language_id']; ?>">
-                      <label for="general_min_quantity_text_<?php echo $language['language_id']; ?>" title="<?php echo $language['name']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></label>
+                      <label for="general_min_quantity_text_<?php echo $language['language_id']; ?>" title="<?php echo $language['name']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></label>
                       <input type="text" name="quickcheckout[general][min_quantity][text][<?php echo $language['language_id']; ?>]" id="general_min_quantity_text_<?php echo $language['language_id']; ?>" value="<?php echo isset($quickcheckout['general']['min_quantity']['text'][$language['language_id']]) ? $quickcheckout['general']['min_quantity']['text'][$language['language_id']] : $language_min_quantity_text; ?>" >
                     </div>
                     <?php } ?>

@@ -74,7 +74,7 @@
                             <tr>
                                 <td><span class="required">*</span> <?php echo $entry_title; ?></td>
                                 <td><input size="100" type="text" name="<?php echo $name; ?>_module[<?php echo $module_row; ?>][title][<?php echo $language['language_id']; ?>]" value="<?php echo isset($module['title'][$language['language_id']]) ? $module['title'][$language['language_id']] : ''; ?>" />
-                                    <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="vertical-align: top;" /><br/>
+                                    <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="vertical-align: top;" /><br/>
                                     <?php if (isset($error_title[$module_row][$language['language_id']])) { ?>
                                         <span class="error"><?php echo $error_title[$module_row][$language['language_id']]; ?></span>
                                     <?php } ?>
@@ -84,14 +84,14 @@
                             <tr>
                                 <td><?php echo $entry_info; ?></td>
                                 <td><textarea id="<?php echo $name; ?>_module_<?php echo $module_row; ?>_info_<?php echo $language['language_id']; ?>" name="<?php echo $name; ?>_module[<?php echo $module_row; ?>][info][<?php echo $language['language_id']; ?>]" cols="80" rows="7"><?php echo isset($module['info'][$language['language_id']]) ? $module['info'][$language['language_id']] : ''; ?></textarea>
-                                    <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="vertical-align: top;" />
+                                    <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="vertical-align: top;" />
                                 </td>
                             </tr>
 
                             <tr>
                                 <td>Текст, который будет, если нет цены:<br /><span class="help">К примеру, "Согласно тарифу"</span></td>
                                 <td><input size="100" type="text" name="<?php echo $name; ?>_module[<?php echo $module_row; ?>][txtprice][<?php echo $language['language_id']; ?>]" value="<?php echo isset($module['txtprice'][$language['language_id']]) ? $module['txtprice'][$language['language_id']] : ''; ?>" />
-                                    <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="vertical-align: top;" />
+                                    <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="vertical-align: top;" />
                                 </td>
                             </tr>                           
                         <?php } ?>
@@ -324,12 +324,12 @@
         html += '<?php foreach ($languages as $language) { if ($language["status"] == 1) { ?>';
         html += '   <tr>';
         html += '       <td><span class="required">*</span> <?php echo $entry_title; ?></td>';
-        html += '       <td><input size="100" type="text" name="<?php echo $name; ?>_module[' + module_row + '][title][<?php echo $language['language_id']; ?>]" value="" /><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="vertical-align: top;" /></td>';
+        html += '       <td><input size="100" type="text" name="<?php echo $name; ?>_module[' + module_row + '][title][<?php echo $language['language_id']; ?>]" value="" /><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="vertical-align: top;" /></td>';
         html += '   </tr>';
         html += '   <tr>';
         html += '       <td><?php echo $entry_info; ?></td>';
         html += '       <td><textarea id="<?php echo $name; ?>_module_' + module_row + '_info_<?php echo $language['language_id']; ?>" name="<?php echo $name; ?>_module[' + module_row + '][info][<?php echo $language['language_id']; ?>]" cols="80" rows="7"></textarea>';
-        html += '           <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="vertical-align: top;" />';
+        html += '           <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="vertical-align: top;" />';
         html += '       </td>';
         html += '   </tr>';
         html += '<?php } } ?>';

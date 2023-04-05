@@ -26,7 +26,7 @@
 	  <div id="tab-module">
         <div id="language" class="htabs" style="height:30px; border-bottom:2px solid #1f4962; padding-left:40px;">
           <?php foreach ($languages as $language) { ?>
-            <a onclick='txhDoubleTabs();return false;' href="#tab-language-<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
+            <a onclick='txhDoubleTabs();return false;' href="#tab-language-<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
           <?php } ?>
         </div>
         <?php foreach ($languages as $language) { ?>

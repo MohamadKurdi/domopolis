@@ -46,7 +46,7 @@
       <?php } else { ?>
       <input name="seo_generator[language_id][]" type="radio" value="<?php echo $language['language_id']; ?>" />
       <?php } ?>
-      <img src="view/image/flags/<?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>" />
+      <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>" />
      </label><br />
      <?php } ?>
     </td>

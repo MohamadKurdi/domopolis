@@ -123,7 +123,7 @@
                                 <td><?php foreach ($languages as $language) { ?>
                                     <p>
                                         <input type="text" name="category_wall_module[<?php echo $module_row; ?>][menu_title][<?php echo $language['language_id']; ?>]" value="<?php echo isset($module['menu_title'][$language['language_id']]) ? $module['menu_title'][$language['language_id']] : ''; ?>" class="span3" />
-                                        <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin: 0 7px 0 -26px; vertical-align: middle;" /><span class="custom-checkbox">
+                                        <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin: 0 7px 0 -26px; vertical-align: middle;" /><span class="custom-checkbox">
                                             <input type="checkbox" id="checkboxTitleStatus-<?php echo $module_row; ?>-<?php echo $language['language_id']; ?>" name="category_wall_module[<?php echo $module_row; ?>][title_status][<?php echo $language['language_id']; ?>]" value="1" <?php echo (isset($module['title_status'][$language['language_id']]) ? 'checked="checked" ' : ''); ?> />
                                             <label for="checkboxTitleStatus-<?php echo $module_row; ?>-<?php echo $language['language_id']; ?>"></label>
                                         </span></p>
@@ -208,11 +208,11 @@
                                                         <tr>
                                                             <td class="left"><?php foreach ($languages as $language) { ?>
                                                                 <input type="text" name="category_wall_module[<?php echo $module_row; ?>][custom_item][<?php echo $custom_item_row; ?>][item_title][<?php echo $language['language_id']; ?>]" value="<?php echo isset($custom_item['item_title'][$language['language_id']]) ? $custom_item['item_title'][$language['language_id']] : ''; ?>" style="margin-bottom: 3px;" class="span2" />
-                                                                <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+                                                                <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
                                                             <?php } ?></td>
                                                             <td class="left"><?php foreach ($languages as $language) { ?>
                                                                 <input type="text" name="category_wall_module[<?php echo $module_row; ?>][custom_item][<?php echo $custom_item_row; ?>][href][<?php echo $language['language_id']; ?>]" value="<?php echo isset($custom_item['href'][$language['language_id']]) ? $custom_item['href'][$language['language_id']] : ''; ?>" style="margin-bottom: 3px;" class="span2" />
-                                                                <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+                                                                <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
                                                             <?php } ?></td>
                                                             <td class="left"><div class="image"><img src="<?php echo !empty($custom_item['image']) ? $this->model_tool_image->resize($custom_item['image'], 100, 100) : $no_image; ?>" alt="" id="thumb-<?php echo $module_row; ?>-<?php echo $custom_item_row; ?>" />
                                                                 <input type="hidden" name="category_wall_module[<?php echo $module_row; ?>][custom_item][<?php echo $custom_item_row; ?>][image]" value="<?php echo $custom_item['image']; ?>" id="image-<?php echo $module_row; ?>-<?php echo $custom_item_row; ?>" />
@@ -467,7 +467,7 @@
         html += '        <td><?php echo $entry_title; ?></td>';
         html += '        <td>';
         <?php foreach ($languages as $language) { ?>
-            html += '          <p><input type="text" name="category_wall_module[' + module_row + '][menu_title][<?php echo $language['language_id']; ?>]" value="" class="span3" /> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin: 0 7px 0 -26px; vertical-align: middle;" /><span class="custom-checkbox"><input type="checkbox" id="checkboxTitleStatus-' + module_row + '-<?php echo $language['language_id']; ?>" name="category_wall_module[' + module_row + '][title_status][<?php echo $language['language_id']; ?>]" value="1" checked="checked" />';
+            html += '          <p><input type="text" name="category_wall_module[' + module_row + '][menu_title][<?php echo $language['language_id']; ?>]" value="" class="span3" /> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin: 0 7px 0 -26px; vertical-align: middle;" /><span class="custom-checkbox"><input type="checkbox" id="checkboxTitleStatus-' + module_row + '-<?php echo $language['language_id']; ?>" name="category_wall_module[' + module_row + '][title_status][<?php echo $language['language_id']; ?>]" value="1" checked="checked" />';
             html += '          <label for="checkboxTitleStatus-' + module_row + '-<?php echo $language['language_id']; ?>"></label></span></p>';
         <?php } ?>
         html += '        </td>';
@@ -641,12 +641,12 @@
         html += '  <tr>';
         html += '    <td class="left">';
         <?php foreach ($languages as $language) { ?>
-            html += '      <input type="text" name="category_wall_module[' + module_row + '][custom_item][' + custom_item_row + '][item_title][<?php echo $language['language_id']; ?>]" value="" style="margin-bottom: 3px;" class="span2" /> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';
+            html += '      <input type="text" name="category_wall_module[' + module_row + '][custom_item][' + custom_item_row + '][item_title][<?php echo $language['language_id']; ?>]" value="" style="margin-bottom: 3px;" class="span2" /> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';
         <?php } ?>
         html += '    </td>';
         html += '    <td class="left">';
         <?php foreach ($languages as $language) { ?>
-            html += '      <input type="text" name="category_wall_module[' + module_row + '][custom_item][' + custom_item_row + '][href][<?php echo $language['language_id']; ?>]" value="" style="margin-bottom: 3px;" class="span2" /> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';
+            html += '      <input type="text" name="category_wall_module[' + module_row + '][custom_item][' + custom_item_row + '][href][<?php echo $language['language_id']; ?>]" value="" style="margin-bottom: 3px;" class="span2" /> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';
         <?php } ?>
         html += '    </td>';
         html += '    <td class="left"><div class="image"><img src="<?php echo $no_image; ?>" alt="" id="thumb-' + module_row + '-' + custom_item_row + '" /><input type="hidden" name="category_wall_module[' + module_row + '][custom_item][' + custom_item_row + '][image]" value="" id="image-' + module_row + '-' + custom_item_row + '" /><br /><a onclick="image_upload(\'image-' + module_row + '-' + custom_item_row + '\', \'thumb-' + module_row + '-' + custom_item_row + '\');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$(\'#thumb-' + module_row + '-' + custom_item_row + '\').attr(\'src\', \'<?php echo $no_image; ?>\'); $(\'#image-' + module_row + '-' + custom_item_row + '\').attr(\'value\', \'\');"><?php echo $text_clear; ?></a></div></td>';

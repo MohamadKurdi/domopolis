@@ -50,28 +50,28 @@
 								</td>
 								<td class="left">
 									<?php foreach ($languages as $language) { ?>
-										<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+										<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 										<input type="text" name="notify_bar[<?php echo $notify_bar_row; ?>][notify_bar_description][<?php echo $language['language_id']; ?>][text_near_svg]" value="<?php echo isset($notify_bar['notify_bar_description'][$language['language_id']]) ? $notify_bar['notify_bar_description'][$language['language_id']]['text_near_svg'] : ''; ?>" />
 										<br />
 									<?php } ?>									
 								</td>
 								<td class="left">
 									<?php foreach ($languages as $language) { ?>
-										<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+										<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 										<input type="text" name="notify_bar[<?php echo $notify_bar_row; ?>][notify_bar_description][<?php echo $language['language_id']; ?>][main_text]" value="<?php echo isset($notify_bar['notify_bar_description'][$language['language_id']]) ? $notify_bar['notify_bar_description'][$language['language_id']]['main_text'] : ''; ?>" />
 										<br />
 									<?php } ?>	
 								</td>
 								<td class="left">
 										<?php foreach ($languages as $language) { ?>
-										<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+										<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 										<input type="text" name="notify_bar[<?php echo $notify_bar_row; ?>][notify_bar_description][<?php echo $language['language_id']; ?>][link]" value="<?php echo isset($notify_bar['notify_bar_description'][$language['language_id']]) ? $notify_bar['notify_bar_description'][$language['language_id']]['link'] : ''; ?>" />
 										<br />
 									<?php } ?>	
 								</td>
 								<td class="left">
 										<?php foreach ($languages as $language) { ?>
-										<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+										<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 										<input type="text" name="notify_bar[<?php echo $notify_bar_row; ?>][notify_bar_description][<?php echo $language['language_id']; ?>][link_text]" value="<?php echo isset($notify_bar['notify_bar_description'][$language['language_id']]) ? $notify_bar['notify_bar_description'][$language['language_id']]['link_text'] : ''; ?>" />
 										<br />
 									<?php } ?>	
@@ -116,25 +116,25 @@
 		
 		html += '    <td class="left">';
 		<?php foreach ($languages as $language) { ?>
-			html += '<input type="text" name="notify_bar[' + notify_bar_row + '][notify_bar_description][<?php echo $language['language_id']; ?>][text_near_svg]" value="" /> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';
+			html += '<input type="text" name="notify_bar[' + notify_bar_row + '][notify_bar_description][<?php echo $language['language_id']; ?>][text_near_svg]" value="" /> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';
 		<?php } ?>
 		html += '</td>';
 		
 		html += '    <td class="left">';
 		<?php foreach ($languages as $language) { ?>
-			html += '<input type="text" name="notify_bar[' + notify_bar_row + '][notify_bar_description][<?php echo $language['language_id']; ?>][main_text]" value="" /> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';
+			html += '<input type="text" name="notify_bar[' + notify_bar_row + '][notify_bar_description][<?php echo $language['language_id']; ?>][main_text]" value="" /> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';
 		<?php } ?>
 		html += '</td>';
 		
 		html += '    <td class="left">';
 		<?php foreach ($languages as $language) { ?>
-			html += '<input type="text" name="notify_bar[' + notify_bar_row + '][notify_bar_description][<?php echo $language['language_id']; ?>][link]" value="" /> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';
+			html += '<input type="text" name="notify_bar[' + notify_bar_row + '][notify_bar_description][<?php echo $language['language_id']; ?>][link]" value="" /> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';
 		<?php } ?>
 		html += '</td>';
 		
 		html += '    <td class="left">';
 		<?php foreach ($languages as $language) { ?>
-			html += '<input type="text" name="notify_bar[' + notify_bar_row + '][notify_bar_description][<?php echo $language['language_id']; ?>][link_text]" value="" /> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';
+			html += '<input type="text" name="notify_bar[' + notify_bar_row + '][notify_bar_description][<?php echo $language['language_id']; ?>][link_text]" value="" /> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';
 		<?php } ?>
 		html += '</td>';
 		

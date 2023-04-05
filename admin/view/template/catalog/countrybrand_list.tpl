@@ -81,7 +81,7 @@
 									<td class="left">
 										<?php foreach ($languages as $language) { ?>
 											<div>
-												<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> 
+												<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> 
 												<?php if (empty($countrybrand['descriptions'][$language['language_id']]) || empty($countrybrand['descriptions'][$language['language_id']]['name_overload'])) {  ?>
 													<i class="fa fa-exclamation-triangle" style="color:#cf4a61"></i>не задано
 													<?php } else {?><small><?php echo $countrybrand['descriptions'][$language['language_id']]['name_overload']; ?></small>
@@ -98,7 +98,7 @@
 										
 										<?php foreach ($languages as $language) { ?>
 											<div>
-												<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> 
+												<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> 
 												<?php if (empty($countrybrand['descriptions'][$language['language_id']]) || empty($countrybrand['descriptions'][$language['language_id']]['type'])) {  ?>
 													<i class="fa fa-exclamation-triangle" style="color:#cf4a61"></i>не задано
 													<?php } else {?>																																

@@ -42,7 +42,7 @@
 							<tr>
 								<td class="left">
 								<? if ($customer['ip_geoip_full_info']['country_code'] && file_exists(DIR_APPLICATION . '/view/image/flags/' . mb_strtolower($customer['ip_geoip_full_info']['country_code']) . '.png')) { ?>
-									<img src="view/image/flags/<? echo mb_strtolower($customer['ip_geoip_full_info']['country_code']); ?>.png" title="<? echo mb_strtolower($customer['ip_geoip_full_info']['country_code']) ?>" />
+									<img src="<?php echo DIR_FLAGS_NAME; ?><? echo mb_strtolower($customer['ip_geoip_full_info']['country_code']); ?>.png" title="<? echo mb_strtolower($customer['ip_geoip_full_info']['country_code']) ?>" />
 								<? } ?> &nbsp;
 								<a href="http://whatismyipaddress.com/ip/<?php echo $customer['ip']; ?>" target="_blank"><?php echo $customer['ip']; ?></a></td>
 								<td class="left"><div><?php if ($customer['is_bot']) { ?>

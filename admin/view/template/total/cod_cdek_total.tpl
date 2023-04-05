@@ -21,7 +21,7 @@
 						<td>
 							<?php foreach ($languages as $language) { ?>
 							<input type="text" name="cod_cdek_total_title[<?php echo $language['language_id']; ?>]" value="<?php echo isset($cod_cdek_total_title[$language['language_id']]) ? $cod_cdek_total_title[$language['language_id']] : ''; ?>" />
-							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+							<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
 							<?php } ?>
 						</td>
 					</tr>

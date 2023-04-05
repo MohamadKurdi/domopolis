@@ -385,7 +385,7 @@
 														<? foreach ($forwarded_ip as $fip) { if (trim($fip['ip'])) { ?>
 															<div>
 																<? if ($fip['ip_geoip_full_info']['country_code'] && file_exists(DIR_APPLICATION . '/view/image/flags/' . mb_strtolower($fip['ip_geoip_full_info']['country_code']) . '.png')) { ?>
-																	<img src="view/image/flags/<? echo mb_strtolower($fip['ip_geoip_full_info']['country_code']); ?>.png" title="<? echo mb_strtolower($fip['ip_geoip_full_info']['country_code']) ?>" />
+																	<img src="<?php echo DIR_FLAGS_NAME; ?><? echo mb_strtolower($fip['ip_geoip_full_info']['country_code']); ?>.png" title="<? echo mb_strtolower($fip['ip_geoip_full_info']['country_code']) ?>" />
 																<? } ?> &nbsp;<?php echo $fip['ip']; ?>
 																
 																<div style="font-size:12px;">
@@ -932,7 +932,7 @@
 																</div>
 																<div style="margin-top:7px;">
 																	<input id="ua_logistics_checkbox" class="checkbox onchangeedit_direct" type="checkbox" name="ua_logistics" value="1" <? if ($ua_logistics) { ?>checked="checked"<? } ?> />&nbsp;
-																	<label for="ua_logistics_checkbox"><span style="color:#005BBB; font-weight:700;"><i class="fa fa-bus" aria-hidden="true"></i>&nbsp;<img src="view/image/flags/ua.png" />&nbsp;&nbsp;Логистика через Украину</span></label>								
+																	<label for="ua_logistics_checkbox"><span style="color:#005BBB; font-weight:700;"><i class="fa fa-bus" aria-hidden="true"></i>&nbsp;<img src="<?php echo DIR_FLAGS_NAME; ?>ua.png" />&nbsp;&nbsp;Логистика через Украину</span></label>								
 																</div>	
 															</td>										
 															<td>
@@ -1610,7 +1610,7 @@
 																			
 																			<div>
 																				<input type="hidden" id="reserve_<? echo mb_strtolower($country['iso_code_2']) ?>_<? echo $order_product['order_product_id'] ?>_quantity" name="reserve_<? echo mb_strtolower($country['iso_code_2']) ?>_<? echo $order_product['order_product_id'] ?>_quantity" value="<? echo min($order_product[$country['warehouse_identifier']], $order_product['quantity']); ?>" />
-																				<img src="view/image/flags/<? echo mb_strtolower($country['iso_code_2']) ?>.png" title="<? echo mb_strtolower($country['iso_code_2']) ?>" /> 
+																				<img src="<?php echo DIR_FLAGS_NAME; ?><? echo mb_strtolower($country['iso_code_2']) ?>.png" title="<? echo mb_strtolower($country['iso_code_2']) ?>" /> 
 																				
 																				<? if ($order_product[$country['warehouse_identifier']] >= $order_product['quantity']) { ?>					
 																					<span style="font-size:11px; display:inline-block; padding:2px 3px; background-color:#4ea24e; color:#FFF;"><? echo $order_product[$country['warehouse_identifier']]; ?> / <? echo $order_product[$country['warehouse_identifier'] . '_onway']; ?></span>
@@ -1647,7 +1647,7 @@
 																				<? if ($country['iso_code_2'] != 'DE' && $country['country_id'] != $shipping_country_id) { ?>
 																					
 																					<div class='hidden_reserved' style="display:none;">																		
-																						<img src="view/image/flags/<? echo mb_strtolower($country['iso_code_2']) ?>.png" title="<? echo mb_strtolower($country['iso_code_2']) ?>" /> 
+																						<img src="<?php echo DIR_FLAGS_NAME; ?><? echo mb_strtolower($country['iso_code_2']) ?>.png" title="<? echo mb_strtolower($country['iso_code_2']) ?>" /> 
 																						
 																						<? if ($order_product[$country['warehouse_identifier']] >= $order_product['quantity']) { ?>																		
 																							<span style="font-size:10px; display:inline-block; padding:2px 3px; background-color:#4ea24e; color:#FFF;"><? echo $order_product[$country['warehouse_identifier']]; ?> / <? echo $order_product[$country['warehouse_identifier'] . '_onway']; ?></span>
@@ -3001,7 +3001,7 @@
 																		</select><span></span>
 																		<?php if (!$payment_country_id && $ip_geoip_full_info['country_name']) { ?>
 																			<div style="font-size:12px;"><i class="fa fa-globe" aria-hidden="true"></i> Предположительно, страна <? if ($ip_geoip_full_info['country_code'] && file_exists(DIR_APPLICATION . '/view/image/flags/' . mb_strtolower($ip_geoip_full_info['country_code']) . '.png')) { ?>
-																				<img src="view/image/flags/<? echo mb_strtolower($ip_geoip_full_info['country_code']); ?>.png" title="<? echo mb_strtolower($ip_geoip_full_info['country_code']) ?>" />
+																				<img src="<?php echo DIR_FLAGS_NAME; ?><? echo mb_strtolower($ip_geoip_full_info['country_code']); ?>.png" title="<? echo mb_strtolower($ip_geoip_full_info['country_code']) ?>" />
 																			<? } ?>&nbsp;<?php echo $ip_geoip_full_info['country_name']; ?>
 																		</div>
 																	<?php } ?>
@@ -3575,7 +3575,7 @@
 																			</select><span></span>
 																			<?php if (!$payment_country_id && $ip_geoip_full_info['country_name']) { ?>
 																				<div style="font-size:12px;"><i class="fa fa-globe" aria-hidden="true"></i> Предположительно, страна <? if ($ip_geoip_full_info['country_code'] && file_exists(DIR_APPLICATION . '/view/image/flags/' . mb_strtolower($ip_geoip_full_info['country_code']) . '.png')) { ?>
-																					<img src="view/image/flags/<? echo mb_strtolower($ip_geoip_full_info['country_code']); ?>.png" title="<? echo mb_strtolower($ip_geoip_full_info['country_code']) ?>" />
+																					<img src="<?php echo DIR_FLAGS_NAME; ?><? echo mb_strtolower($ip_geoip_full_info['country_code']); ?>.png" title="<? echo mb_strtolower($ip_geoip_full_info['country_code']) ?>" />
 																				<? } ?>&nbsp;<?php echo $ip_geoip_full_info['country_name']; ?>
 																			</div>
 																		<?php } ?>

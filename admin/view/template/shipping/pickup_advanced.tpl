@@ -60,21 +60,21 @@
 									</td>
 									<td style="width: 185px;">
 										<?php foreach ($languages as $language) { ?>
-											<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin-bottom: -1px;" /><br />
+											<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin-bottom: -1px;" /><br />
 											<textarea name="pickup_advanced_module[<?php echo $module_row; ?>][<?php echo $language['language_id']; ?>][description]"><?php echo isset($module[$language['language_id']]) ? $module[$language['language_id']]['description'] : ''; ?></textarea>                        
 											<br />
 										<?php } ?>
 									</td>
 									<td style="width: 185px;">
 										<?php foreach ($languages as $language) { ?>
-											<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin-bottom: -1px;" /><br />
+											<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin-bottom: -1px;" /><br />
 											<textarea name="pickup_advanced_module[<?php echo $module_row; ?>][<?php echo $language['language_id']; ?>][tip]"><?php echo isset($module[$language['language_id']]['tip']) ? $module[$language['language_id']]['tip'] : ''; ?></textarea>                        
 											<br />
 										<?php } ?>
 									</td>
 									<td style="width: 185px;">
 										<?php foreach ($languages as $language) { ?>
-											<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin-bottom: -1px;" />
+											<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin-bottom: -1px;" />
 											<br />
 											<input type="text" name="pickup_advanced_module[<?php echo $module_row; ?>][<?php echo $language['language_id']; ?>][remove_title]" value="<?php echo isset($module[$language['language_id']]['remove_title']) ? $module[$language['language_id']]['remove_title'] : ''; ?>" style="margin-bottom: 3px;" size="19" />
 											
@@ -82,7 +82,7 @@
 									</td>
 									<td style="width: 185px;">
 										<?php foreach ($languages as $language) { ?>
-											<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin-bottom: -1px;" />
+											<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin-bottom: -1px;" />
 											<br />
 											<textarea name="pickup_advanced_module[<?php echo $module_row; ?>][<?php echo $language['language_id']; ?>][link]"><?php echo isset($module[$language['language_id']]) ? $module[$language['language_id']]['link'] : ''; ?></textarea>
 											
@@ -91,7 +91,7 @@
 									<td style="width: 165px;">
 										
 										<?php foreach ($languages as $language) { ?>
-											<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin-bottom: -1px;" />
+											<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin-bottom: -1px;" />
 											<br />
 											<textarea name="pickup_advanced_module[<?php echo $module_row; ?>][<?php echo $language['language_id']; ?>][link_text]"><?php echo isset($module[$language['language_id']]) ? $module[$language['language_id']]['link_text'] : ''; ?></textarea>				  				                    
 											
@@ -210,7 +210,7 @@
 							<td>
 								<?php foreach ($languages as $language) { ?>
 									<input type="text" name="pickup_advanced_settings[<?php echo $language['language_id']; ?>][title]" value="<?php echo isset($pickup_advanced_settings[$language['language_id']]) ? $pickup_advanced_settings[$language['language_id']]['title'] : ''; ?>" style="margin-bottom: 3px;" />
-									<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin-bottom: -1px;" />
+									<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin-bottom: -1px;" />
 									<br />
 								<?php } ?>
 							</td>
@@ -220,7 +220,7 @@
 							<td>
 								<?php foreach ($languages as $language) { ?>
 									<input type="text" name="pickup_advanced_settings[<?php echo $language['language_id']; ?>][null_cost]" value="<?php echo isset($pickup_advanced_settings[$language['language_id']]) ? $pickup_advanced_settings[$language['language_id']]['null_cost'] : ''; ?>" style="margin-bottom: 3px;" />
-									<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin-bottom: -1px;" />
+									<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin-bottom: -1px;" />
 									<br />
 								<?php } ?>
 							</td>
@@ -308,7 +308,7 @@
 			var language_image = "<?php echo $language['image']; ?>";
 			var language_name  = "<?php echo $language['name']; ?>";
 			html += '      <input type="text" name="pickup_advanced_module[' + module_row + '][' + language_id + '][description]" value="" style="margin-bottom: 3px;" size="19" />';
-			html += '      <img src="view/image/flags/' + language_image + '" title="' + language_name + '" style="margin-bottom: -1px;" />';
+			html += '      <img src="<?php echo DIR_FLAGS_NAME; ?>' + language_image + '" title="' + language_name + '" style="margin-bottom: -1px;" />';
 			html += '      <br />';
 		<?php } ?>
 		html += '    </td>';
@@ -318,7 +318,7 @@
 			var language_image = "<?php echo $language['image']; ?>";
 			var language_name  = "<?php echo $language['name']; ?>";
 			html += '      <input type="text" name="pickup_advanced_module[' + module_row + '][' + language_id + '][link]" value="" style="margin-bottom: 3px;" size="19" />';
-			html += '      <img src="view/image/flags/' + language_image + '" title="' + language_name + '" style="margin-bottom: -1px;" />';
+			html += '      <img src="<?php echo DIR_FLAGS_NAME; ?>' + language_image + '" title="' + language_name + '" style="margin-bottom: -1px;" />';
 			html += '      <br />';
 		<?php } ?>
 		html += '    </td>';
@@ -328,7 +328,7 @@
 			var language_image = "<?php echo $language['image']; ?>";
 			var language_name  = "<?php echo $language['name']; ?>";
 			html += '      <input type="text" name="pickup_advanced_module[' + module_row + '][' + language_id + '][link_text]" value="" style="margin-bottom: 3px;" size="16" />';
-			html += '      <img src="view/image/flags/' + language_image + '" title="' + language_name + '" style="margin-bottom: -1px;" />';
+			html += '      <img src="<?php echo DIR_FLAGS_NAME; ?>' + language_image + '" title="' + language_name + '" style="margin-bottom: -1px;" />';
 			html += '      <br />';
 		<?php } ?>
 		html += '    </td>';

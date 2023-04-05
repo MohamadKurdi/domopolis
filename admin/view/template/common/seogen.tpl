@@ -23,7 +23,7 @@
 			<tbody style="border: 1px solid #003A88;">
 			<?php foreach ($languages as $language) { ?>
 				<tr>
-					<td style="width: 100px;"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_title; ?></td>
+					<td style="width: 100px;"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_title; ?></td>
 					<td style="padding: 1px 10px 1px 10px;">
 						<input style="width: 85%; float: left;" type="text" id="category<?php echo $language['language_id']; ?>" name="categories" value="">
 					</td>
@@ -34,7 +34,7 @@
 			<?php } ?>
 			<?php foreach ($languages as $language) { ?>
 				<tr>
-					<td style="width: 100px;"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_h1; ?></td>
+					<td style="width: 100px;"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_h1; ?></td>
 					<td style="padding: 1px 10px 1px 10px;">
 						<input style="width: 85%; float: left;" type="text" id="categoryh1<?php echo $language['language_id']; ?>" name="categoriesh1" value="">
 					</td>
@@ -45,7 +45,7 @@
 			<?php } ?>
 			<?php foreach ($languages as $language) { ?>
 				<tr>
-					<td style="width: 100px;"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_meta_kw; ?></td>
+					<td style="width: 100px;"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_meta_kw; ?></td>
 					<td style="padding: 1px 10px 1px 10px;">
 						<input style="width: 85%; float: left;" type="text" id="categorykey<?php echo $language['language_id']; ?>" name="categorieskey" value="">
 					</td>
@@ -56,7 +56,7 @@
 			<?php } ?>
 			<?php foreach ($languages as $language) { ?>
 				<tr>
-					<td style="width: 100px;"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_meta_desc; ?></td>
+					<td style="width: 100px;"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_meta_desc; ?></td>
 					<td style="padding: 1px 10px 1px 10px;">
 						<input style="width: 85%; float: left;" type="text" id="categorydesc<?php echo $language['language_id']; ?>" name="categoriesdesc" value="">
 					</td>
@@ -89,7 +89,7 @@
 			<tbody style="border: 1px solid #003A88;">
 			<?php foreach ($languages as $language) { ?>
 				<tr>
-					<td style="width: 100px;"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_title; ?></td>
+					<td style="width: 100px;"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_title; ?></td>
 					<td style="padding: 1px 10px 1px 10px;">
 						<input style="width: 85%; float: left;" type="text" id="product<?php echo $language['language_id']; ?>" name="product" value="">
 					</td>
@@ -100,7 +100,7 @@
 			<?php } ?>
 			<?php foreach ($languages as $language) { ?>
 				<tr>
-					<td style="width: 100px;"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_h1; ?></td>
+					<td style="width: 100px;"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_h1; ?></td>
 					<td style="padding: 1px 10px 1px 10px;">
 						<input style="width: 85%; float: left;" type="text" id="producth1<?php echo $language['language_id']; ?>" name="producth1" value="">
 					</td>
@@ -111,7 +111,7 @@
 			<?php } ?>
 			<?php foreach ($languages as $language) { ?>
 				<tr>
-					<td style="width: 100px;"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_meta_kw; ?></td>
+					<td style="width: 100px;"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_meta_kw; ?></td>
 					<td style="padding: 1px 10px 1px 10px;">
 						<input style="width: 85%; float: left;" type="text" id="productkey<?php echo $language['language_id']; ?>" name="productkey" value="">
 					</td>
@@ -122,7 +122,7 @@
 			<?php } ?>
 			<?php foreach ($languages as $language) { ?>
 				<tr>
-					<td style="width: 100px;"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_meta_desc; ?></td>
+					<td style="width: 100px;"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_meta_desc; ?></td>
 					<td style="padding: 1px 10px 1px 10px;">
 						<input style="width: 85%; float: left;" type="text" id="productdesc<?php echo $language['language_id']; ?>" name="productdesc" value="">
 					</td>
@@ -154,7 +154,7 @@
 			<tbody style="border: 1px solid #003A88;">
 				<?php foreach ($languages as $language) { ?>
 				<tr>
-					<td style="width: 100px;"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_title; ?></td>
+					<td style="width: 100px;"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_title; ?></td>
 					<td style="padding: 1px 10px 1px 10px;">
 						<input style="width: 85%; float: left;" type="text" id="manuf<?php echo $language['language_id']; ?>" name="manuf" value="">
 					</td>
@@ -165,7 +165,7 @@
 			<?php } ?>
 			<?php foreach ($languages as $language) { ?>
 				<tr>
-					<td style="width: 100px;"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_h1; ?></td>
+					<td style="width: 100px;"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_h1; ?></td>
 					<td style="padding: 1px 10px 1px 10px;">
 						<input style="width: 85%; float: left;" type="text" id="manufh1<?php echo $language['language_id']; ?>" name="manufh1" value="">
 					</td>
@@ -176,7 +176,7 @@
 			<?php } ?>
 			<?php foreach ($languages as $language) { ?>
 				<tr>
-					<td style="width: 100px;"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_meta_kw; ?></td>
+					<td style="width: 100px;"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_meta_kw; ?></td>
 					<td style="padding: 1px 10px 1px 10px;">
 						<input style="width: 85%; float: left;" type="text" id="manufkey<?php echo $language['language_id']; ?>" name="manufkey" value="">
 					</td>
@@ -187,7 +187,7 @@
 			<?php } ?>
 			<?php foreach ($languages as $language) { ?>
 				<tr>
-					<td style="width: 100px;"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_meta_desc; ?></td>
+					<td style="width: 100px;"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_meta_desc; ?></td>
 					<td style="padding: 1px 10px 1px 10px;">
 						<input style="width: 85%; float: left;" type="text" id="manufdesc<?php echo $language['language_id']; ?>" name="manufdesc" value="">
 					</td>
@@ -219,7 +219,7 @@
 			<tbody style="border: 1px solid #003A88;">
 				<?php foreach ($languages as $language) { ?>
 				<tr>
-					<td style="width: 100px;"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_title; ?></td>
+					<td style="width: 100px;"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_title; ?></td>
 					<td style="padding: 1px 10px 1px 10px;">
 						<input style="width: 85%; float: left;" type="text" id="info<?php echo $language['language_id']; ?>" name="info" value="">
 					</td>
@@ -230,7 +230,7 @@
 			<?php } ?>
 			<?php foreach ($languages as $language) { ?>
 				<tr>
-					<td style="width: 100px;"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_h1; ?></td>
+					<td style="width: 100px;"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_h1; ?></td>
 					<td style="padding: 1px 10px 1px 10px;">
 						<input style="width: 85%; float: left;" type="text" id="infoh1<?php echo $language['language_id']; ?>" name="infoh1" value="">
 					</td>
@@ -241,7 +241,7 @@
 			<?php } ?>
 			<?php foreach ($languages as $language) { ?>
 				<tr>
-					<td style="width: 100px;"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_meta_kw; ?></td>
+					<td style="width: 100px;"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_meta_kw; ?></td>
 					<td style="padding: 1px 10px 1px 10px;">
 						<input style="width: 85%; float: left;" type="text" id="infokey<?php echo $language['language_id']; ?>" name="infokey" value="">
 					</td>
@@ -252,7 +252,7 @@
 			<?php } ?>
 			<?php foreach ($languages as $language) { ?>
 				<tr>
-					<td style="width: 100px;"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_meta_desc; ?></td>
+					<td style="width: 100px;"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="float: left;" />&nbsp;&nbsp;&nbsp;<?php echo $text_meta_desc; ?></td>
 					<td style="padding: 1px 10px 1px 10px;">
 						<input style="width: 85%; float: left;" type="text" id="infodesc<?php echo $language['language_id']; ?>" name="infodesc" value="">
 					</td>

@@ -43,7 +43,7 @@
 							<td style="width:20%">Заголовок<br />
 							
 							<?php foreach ($languages as $language) { ?>
-							<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+							<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 							
 							<input type="text" name="blockviewed_titles_<? echo $i; ?>_<?php echo $language['language_id']; ?>" value="<? echo ${'blockviewed_titles_'.$i.'_'.$language['language_id']}; ?>" />
 							<br />

@@ -186,7 +186,7 @@
 			  <td style="vertical-align: top;">
 			    <div id="tabs" class="htabs" style="max-width:700px;height:80px;">
                 <?php foreach ($languages as $language) { ?>
-                  <a href="#cus_tab-language-<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
+                  <a href="#cus_tab-language-<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
                 <?php } ?>
                 </div>
 				<div class="clear"></div>

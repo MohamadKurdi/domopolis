@@ -216,7 +216,7 @@
 	<br />
     <ul class="nav nav-tabs popup_tabs">
 		<?php $i=0; foreach ($languages as $language) { ?>
-			<li <?php if ($i==0) echo 'class="active"'; ?>><a href="#tab-<?php echo $popup['id']; ?>-<?php echo $language['language_id']; ?>" data-toggle="tab"><img src="view/image/flags/<?php echo $language['image']; ?>"/> <?php echo $language['name']; ?></a></li>
+			<li <?php if ($i==0) echo 'class="active"'; ?>><a href="#tab-<?php echo $popup['id']; ?>-<?php echo $language['language_id']; ?>" data-toggle="tab"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>"/> <?php echo $language['name']; ?></a></li>
 		<?php $i++; }?>
 	</ul>
      <div class="tab-content">

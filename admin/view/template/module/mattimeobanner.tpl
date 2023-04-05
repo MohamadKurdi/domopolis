@@ -180,14 +180,14 @@
            </td>
            <td>
    				<?php foreach ($languages as $language) { ?>
-                   <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" >
+                   <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" >
    				  <input type="text"  name="mattimeobanner_module[<?php echo $module_row; ?>][tabs][<?php echo $tab_row; ?>][headingtext][<?php echo $language['language_id']; ?>]" value="<?php echo isset($tab['headingtext'][$language['language_id']]) ? $tab['headingtext'][$language['language_id']] : ''; ?>" class="input-medium" >
    				  <br>
    				<?php } ?>
 				</td>
 			  <td>
    				<?php foreach ($languages as $language) { ?>
-                   <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" >
+                   <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" >
    				  <textarea  name="mattimeobanner_module[<?php echo $module_row; ?>][tabs][<?php echo $tab_row; ?>][title][<?php echo $language['language_id']; ?>]" class="longfield"><?php echo isset($tab['title'][$language['language_id']]) ? $tab['title'][$language['language_id']] : ''; ?></textarea>
    				  <br>
    				<?php } ?>

@@ -77,7 +77,7 @@ tbody tr.hover td {
        <?php } else { ?>
        <input name="batch_editor_setting[fields][<?php echo $field['name']; ?>][alias][<?php echo $language['language_id']; ?>]" type="text" value="" />
        <?php } ?>
-       <img src="view/image/flags/<?php echo $language['image']; ?>" />&nbsp;&nbsp;
+       <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" />&nbsp;&nbsp;
        <?php } ?>
        <?php } ?>
       </td>

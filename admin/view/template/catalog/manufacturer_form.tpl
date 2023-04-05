@@ -118,10 +118,10 @@
 								<br />
 								<?php if ($priceva_feed) { ?>
 									<div>
-										<img src="view/image/flags/ru.png" title="ru"> <?php echo HTTPS_CATALOG; ?>feeds/priceva/priceva_<?php echo $priceva_feed; ?>_0.xml
+										<img src="<?php echo DIR_FLAGS_NAME; ?>ru.png" title="ru"> <?php echo HTTPS_CATALOG; ?>feeds/priceva/priceva_<?php echo $priceva_feed; ?>_0.xml
 									</div>
 									<div>
-										<img src="view/image/flags/ua.png" title="ua"> <?php echo HTTPS_CATALOG; ?>feeds/priceva/priceva_<?php echo $priceva_feed; ?>_1.xml
+										<img src="<?php echo DIR_FLAGS_NAME; ?>ua.png" title="ua"> <?php echo HTTPS_CATALOG; ?>feeds/priceva/priceva_<?php echo $priceva_feed; ?>_1.xml
 									</div>
 								<?php } ?>
 							</td>
@@ -156,7 +156,7 @@
 							<td><?php echo $entry_keyword; ?></td>
 							<td><?php foreach ($languages as $language) { ?>
 								<input type="text" name="keyword[<?php echo $language['language_id']; ?>]" value="<?php if (isset($keyword[$language['language_id']])) { echo $keyword[$language['language_id']]; } ?>" />
-								<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
+								<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br>
 							<?php } ?></td>
 						</tr>
 						<tr>
@@ -306,7 +306,7 @@
 					
 					<div id="languages" class="htabs">
 						<?php foreach ($languages as $language) { ?>
-							<a href="#language<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
+							<a href="#language<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
 						<?php } ?>
 					</div>
 					<?php foreach ($languages as $language) { ?>
@@ -353,7 +353,7 @@
 					
 					<div id="languages-tags" class="htabs">
 						<?php foreach ($languages as $language) { ?>
-							<a href="#language-tag<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
+							<a href="#language-tag<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
 						<?php } ?>
 					</div>
 					<?php foreach ($languages as $language) { ?>
@@ -465,7 +465,7 @@
 				<div id="tab-pagecontent">
 					<div id="languages2" class="htabs">
 						<?php foreach ($languages as $language) { ?>
-							<a href="#language2<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br /><?php echo $language['name']; ?></a>
+							<a href="#language2<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br /><?php echo $language['name']; ?></a>
 						<?php } ?>
 						<span style="vertical-align: -15px;"><input class="checkbox" type="checkbox" name="copyrussian" value="1" id="copyrussian" />
 						<label for="copyrussian">Копировать ru на все.</label></span>

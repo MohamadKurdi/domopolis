@@ -85,7 +85,7 @@
                                 <td class="left">
                                     <div>
                                         <div style="text-align: left; height:20px; margin-bottom:5px;">
-                                            <img src="view/image/flags/<?php echo $native_language['image']; ?>" title="<?php echo $native_language['name']; ?>" />                                          
+                                            <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $native_language['image']; ?>" title="<?php echo $native_language['name']; ?>" />                                          
 
                                            <?php if (mb_strlen($product['native_name']) >= $this->config->get('config_openai_shortennames_length') && $this->config->get('config_openai_enable_shorten_names')) { ?>   
                                                <span class="smallbutton black" onclick="shortenbyai($(this), 'native', '<?php echo $native_language['code']; ?>', <?php echo $product['product_id']; ?>)">🤖 AI до <?php echo $this->config->get('config_openai_shortennames_length'); ?> символов</span><span></span>
@@ -97,7 +97,7 @@
 
                                     <div>
                                         <div style="text-align: left; height:20px; margin-bottom:5px; margin-top:5px;">
-                                            <img src="view/image/flags/<?php echo $amazon_language['image']; ?>" title="<?php echo $amazon_language['name']; ?>" />
+                                            <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $amazon_language['image']; ?>" title="<?php echo $amazon_language['name']; ?>" />
 
                                               <?php if (mb_strlen($product['amazon_name']) >= $this->config->get('config_openai_shortennames_length') && $this->config->get('config_openai_enable_shorten_names')) { ?>   
                                                <span class="smallbutton black" onclick="shortenbyai($(this), 'amazon', '<?php echo $amazon_language['code']; ?>', <?php echo $product['product_id']; ?>)">🤖 AI до <?php echo $this->config->get('config_openai_shortennames_length'); ?> символов</span><span></span>
@@ -112,7 +112,7 @@
                                 <td class="left">
                                     <div style="margin-bottom:10px;">
                                         <div style="text-align: left; height:30px;">
-                                            <img src="view/image/flags/<?php echo $native_language['image']; ?>" title="<?php echo $native_language['name']; ?>" />
+                                            <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $native_language['image']; ?>" title="<?php echo $native_language['name']; ?>" />
 
                                               <span class="smallbutton <?php if (mb_strlen($product['native_name']) <= $this->config->get('config_openai_exportnames_length')) { ?>green<?php } else { ?>red<?php } ?>" onclick="copy('native', <?php echo $product['product_id']; ?>)">
                                                <i class="fa fa-copy"></i>Копировать из полного
@@ -130,7 +130,7 @@
 
                                     <div>
                                         <div style="text-align: left; height:30px;">
-                                            <img src="view/image/flags/<?php echo $amazon_language['image']; ?>" title="<?php echo $amazon_language['name']; ?>" />
+                                            <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $amazon_language['image']; ?>" title="<?php echo $amazon_language['name']; ?>" />
 
                                             <span class="smallbutton <?php if (mb_strlen($product['amazon_name']) <= $this->config->get('config_openai_exportnames_length')) { ?>green<?php } else { ?>red<?php } ?>" onclick="copy('amazon', <?php echo $product['product_id']; ?>)">
                                              <i class="fa fa-copy"></i>Копировать из полного                                               

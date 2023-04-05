@@ -10,7 +10,11 @@
 <?php foreach ($order_filters as $order_filter) { ?>
 	<div style="width:<?php if ($stores_count == 1) { ?>100%<?php } else { ?>48%<?php } ?>; float:left; margin-bottom:15px; margin-left:5px;">
 		<div class="dashboard-heading">
-			<img src="view/image/flags/<? echo mb_strtolower($order_filter['language']) ?>.png" /> <?php echo $order_filter['name']; ?> <a href="<?php echo $order_filter['filter_href']; ?>" style="float:right; margin-right:10px;">посмотреть все</a>
+			<?php if ($this->config->get('config_admin_flags_enable')) { ?>
+				<img src="<?php echo DIR_FLAGS_NAME; ?><? echo mb_strtolower($order_filter['language']) ?>.png" />
+			<?php } ?>
+			 <?php echo $order_filter['name']; ?>
+			<a href="<?php echo $order_filter['filter_href']; ?>" style="float:right; margin-right:10px;">посмотреть все</a>
 		</div>
 		<div class="dashboard-content" style="min-height:91px;">
 			<table class="list big">

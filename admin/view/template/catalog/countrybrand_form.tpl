@@ -102,7 +102,7 @@
 							
 							<td>	
 								<?php foreach ($languages as $language) { ?>
-									<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <input type="text" style="margin-bottom:5px;" id="countrybrand_description_<?php echo $language['language_id']; ?>_type" name="countrybrand_description[<?php echo $language['language_id']; ?>][type]" value="<?php if (isset($countrybrand_description[$language['language_id']]['type'])) { echo $countrybrand_description[$language['language_id']]['type']; } ?>" />
+									<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <input type="text" style="margin-bottom:5px;" id="countrybrand_description_<?php echo $language['language_id']; ?>_type" name="countrybrand_description[<?php echo $language['language_id']; ?>][type]" value="<?php if (isset($countrybrand_description[$language['language_id']]['type'])) { echo $countrybrand_description[$language['language_id']]['type']; } ?>" />
 									
 									<i class="fa fa-arrow-left"></i>
 									
@@ -129,7 +129,7 @@
 							<td>	
 								<?php foreach ($languages as $language) { ?>
 									<input type="text" style="margin-bottom:5px;" name="keyword[<?php echo $language['language_id']; ?>]" value="<?php if (isset($keyword[$language['language_id']])) { echo $keyword[$language['language_id']]; } ?>" />
-									<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+									<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
 								<?php } ?>
 							</td>
 							
@@ -170,7 +170,7 @@
 					
 					<div id="languages" class="htabs">
 						<?php foreach ($languages as $language) { ?>
-							<a href="#language<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
+							<a href="#language<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
 						<?php } ?>
 					</div>
 					<?php foreach ($languages as $language) { ?>
@@ -178,45 +178,45 @@
 							<table class="form">
 								<tr>
 									<td>
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> Название</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> Название</span></p>
 										<input type="text" name="countrybrand_description[<?php echo $language['language_id']; ?>][name_overload]" size="255" value="<?php echo isset($countrybrand_description[$language['language_id']]) ? $countrybrand_description[$language['language_id']]['name_overload'] : ''; ?>" />
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> Альтернативные названия, для умного поиска (каждое с новой строки)</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> Альтернативные названия, для умного поиска (каждое с новой строки)</span></p>
 										<textarea name="countrybrand_description[<?php echo $language['language_id']; ?>][alternate_name]" cols="100" rows="20"><?php echo isset($countrybrand_description[$language['language_id']]) ? $countrybrand_description[$language['language_id']]['alternate_name'] : ''; ?></textarea>
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> Мета тайтл:</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> Мета тайтл:</span></p>
 										<input type="text" name="countrybrand_description[<?php echo $language['language_id']; ?>][seo_title]" size="100" value="<?php echo isset($countrybrand_description[$language['language_id']]) ? $countrybrand_description[$language['language_id']]['seo_title'] : ''; ?>" />
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> Мета H1:</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> Мета H1:</span></p>
 									<input type="text" name="countrybrand_description[<?php echo $language['language_id']; ?>][seo_h1]" size="100" value="<?php echo isset($countrybrand_description[$language['language_id']]) ? $countrybrand_description[$language['language_id']]['seo_h1'] : ''; ?>" /></td>
 								</tr>
 								<tr>
 									<td>
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> Мета Description:</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> Мета Description:</span></p>
 									<textarea name="countrybrand_description[<?php echo $language['language_id']; ?>][meta_description]" cols="40" rows="5"><?php echo isset($countrybrand_description[$language['language_id']]) ? $countrybrand_description[$language['language_id']]['meta_description'] : ''; ?></textarea></td>
 								</tr>
 								<tr>
 									<td>
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> Мета Keywords:</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> Мета Keywords:</span></p>
 									<textarea name="countrybrand_description[<?php echo $language['language_id']; ?>][meta_keyword]" cols="40" rows="5"><?php echo isset($countrybrand_description[$language['language_id']]) ? $countrybrand_description[$language['language_id']]['meta_keyword'] : ''; ?></textarea></td>
 								</tr>
 								<tr>
 									<td>
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> Короткое описание:</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> Короткое описание:</span></p>
 									<textarea rows='10' cols='100' name="countrybrand_description[<?php echo $language['language_id']; ?>][short_description]" id="short_description<?php echo $language['language_id']; ?>"><?php echo isset($countrybrand_description[$language['language_id']]) ? $countrybrand_description[$language['language_id']]['short_description'] : ''; ?></textarea></td>
 								</tr>
 								<tr>
 									<td>
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> Описание:</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> Описание:</span></p>
 									<textarea name="countrybrand_description[<?php echo $language['language_id']; ?>][description]" id="description<?php echo $language['language_id']; ?>"><?php echo isset($countrybrand_description[$language['language_id']]) ? $countrybrand_description[$language['language_id']]['description'] : ''; ?></textarea></td>
 								</tr>
 							</table>

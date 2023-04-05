@@ -41,7 +41,7 @@
      <td class="left">
       <?php foreach ($languages as $language) { ?>
       <input name="product_attributes[<?php echo $attribute_row; ?>][product_attribute_description][<?php echo $language['language_id']; ?>][text]" value="<?php echo isset($attribute['product_attribute_description'][$language['language_id']]) ? $attribute['product_attribute_description'][$language['language_id']]['text'] : ''; ?>" />
-      <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+      <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
       &nbsp;&nbsp;&nbsp;
       <?php } ?>
      </td>

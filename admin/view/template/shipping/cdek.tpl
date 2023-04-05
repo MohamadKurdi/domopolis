@@ -40,7 +40,7 @@
 								<td>
 									<?php foreach ($languages as $language) { ?>
 									<input type="text" name="cdek_title[<?php echo $language['language_id']; ?>]" value="<?php echo isset($cdek_title[$language['language_id']]) ? $cdek_title[$language['language_id']] : ''; ?>" />
-									<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+									<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
 									<?php } ?>
 								</td>
 							</tr>
@@ -395,7 +395,7 @@
 									<?php foreach ($languages as $language) { ?>
 										<nobr>
 											<input type="text" name="cdek_custmer_tariff_list[<?php echo $tariff_row; ?>][title][<?php echo $language['language_id']; ?>]" value="<?php echo (isset($tariff_info['title'][$language['language_id']]) && is_array($tariff_info['title'])) ? $tariff_info['title'][$language['language_id']] : (($language['language_id'] == 1 && is_scalar($tariff_info['title'])) ? $tariff_info['title'] : ''); ?>" />
-											<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+											<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 										</nobr><br />
 									<?php } ?>
 								</td>
@@ -725,7 +725,7 @@
 													<td>
 														<?php foreach ($languages as $language) { ?>
 														<input type="text" name="cdek_empty[title][<?php echo $language['language_id']; ?>]" value="<?php echo isset($cdek_empty['title'][$language['language_id']]) ? $cdek_empty['title'][$language['language_id']] : ''; ?>" />
-														<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+														<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
 														<?php } ?>
 													</td>
 												</tr>
@@ -826,7 +826,7 @@ $('.cdek-tariff').live('change', function(event){
 	html += '		<td class="left">';
 	<?php foreach ($languages as $language) { ?>
 	html += '			<nobr><input type="text" name="cdek_custmer_tariff_list[' + tariff_row + '][title][<?php echo $language['language_id']; ?>]" value="'+tariff_name+'" />';
-	html += '			<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></nobr><br />';
+	html += '			<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></nobr><br />';
 	<?php } ?>
 	html += '		</td>';
 	html += '		<td class="left">';

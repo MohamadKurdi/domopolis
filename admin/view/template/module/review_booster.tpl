@@ -355,7 +355,7 @@
 		  </table>
 		  <div id="language-<?php echo $store['store_id']; ?>" class="htabs" style="position: relative;">
             <?php foreach ($languages as $language) { ?>
-            <a href="#tab-language-<?php echo $store['store_id']; ?>-<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
+            <a href="#tab-language-<?php echo $store['store_id']; ?>-<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
             <?php } ?>
 		  </div><a id="shortcode"><img src="view/image/log.png" alt="Shortcode" title="Shortcode" /></a> <a onClick="loadTemplate(this, '<?php echo $store['store_id']; ?>');"><img src="view/image/layout.png" alt="Load default template" title="Load default template" /></a>
           <?php foreach ($languages as $language) { ?>

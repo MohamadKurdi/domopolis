@@ -86,7 +86,7 @@
 										<?php if ($manufacturer['total_products']) { ?>
 											<?php foreach ($languages as $language) { ?>
 												<div>
-													<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> 
+													<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> 
 													<?php if (empty($manufacturer['descriptions'][$language['language_id']]) || empty($manufacturer['descriptions'][$language['language_id']]['location'])) {  ?>
 														<i class="fa fa-exclamation-triangle" style="color:#cf4a61"></i>не задано
 														<?php } else {?>																																
@@ -103,7 +103,7 @@
 										<?php if ($manufacturer['total_products']) { ?>
 											<?php foreach ($languages as $language) { ?>
 												<div>
-													<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> 
+													<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> 
 													<?php if (empty($manufacturer['seo_urls'][$language['language_id']])) {  ?>
 														<i class="fa fa-exclamation-triangle" style="color:#cf4a61"></i>не задано
 														<?php } else {?>																																
@@ -121,7 +121,7 @@
 										<?php if ($manufacturer['total_products']) { ?>
 											<?php foreach ($languages as $language) { ?>
 												<div>
-													<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> 
+													<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> 
 													<?php if (empty($manufacturer['descriptions'][$language['language_id']]) || empty($manufacturer['descriptions'][$language['language_id']]['alternate_name'])) {  ?>
 														<i class="fa fa-exclamation-triangle" style="color:#cf4a61"></i>не задано
 														<?php } else {?>																																

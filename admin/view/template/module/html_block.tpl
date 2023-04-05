@@ -205,7 +205,7 @@
 							</div>
 							<div id="language-<?php echo $content_row; ?>" class="htabs">
 								<?php foreach ($languages as $language) { ?>
-								<a href="#tab-language-<?php echo $content_row; ?>-<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
+								<a href="#tab-language-<?php echo $content_row; ?>-<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
 								<?php } ?>
 							<div class="clr"></div>
 							</div>
@@ -693,7 +693,7 @@ function addBlock() {
 	html += '		</div>';
 	html += '		<div id="language-' + content_row + '" class="htabs">';
 	<?php foreach ($languages as $language) { ?>
-	html += '			<a href="#tab-language-'+ content_row + '-<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>';
+	html += '			<a href="#tab-language-'+ content_row + '-<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>';
 	<?php } ?>
 	html += '		</div>';
 	<?php foreach ($languages as $language) { ?>

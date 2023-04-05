@@ -42,7 +42,7 @@
                 <input type="checkbox" name="selected[]" value="<?php echo $legalperson['legalperson_id']; ?>" />
                 <?php } ?></td>
               <td class="left"><?php echo $legalperson['legalperson_id']; ?></td>
-              <td class="left"><img src="view/image/flags/<? echo mb_strtolower($legalperson['legalperson_country_iso']) ?>.png" title="<? echo mb_strtolower($legalperson['legalperson_country_iso']) ?>" /> </td>
+              <td class="left"><img src="<?php echo DIR_FLAGS_NAME; ?><? echo mb_strtolower($legalperson['legalperson_country_iso']) ?>.png" title="<? echo mb_strtolower($legalperson['legalperson_country_iso']) ?>" /> </td>
               <td class="right"><?php echo $legalperson['legalperson_name']; ?></td>
 			  <td class="right"><?php echo $legalperson['legalperson_name_1C']; ?></td>
 			  <td class="right" style="font-size:10px;"><?php echo $legalperson['legalperson_desc']; ?></td>

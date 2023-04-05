@@ -541,7 +541,7 @@
 			html += '<td class="left">';
 			<?php foreach ($languages as $language) { ?>
 				html += '<input name="product_attributes[' + attribute_row + '][product_attribute_description][<?php echo $language["language_id"]; ?>][text]" /> ';
-				html += '<img src="view/image/flags/<?php echo $language["image"]; ?>" title="<?php echo $language["name"]; ?>" />';
+				html += '<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language["image"]; ?>" title="<?php echo $language["name"]; ?>" />';
 				html += ' &nbsp;&nbsp;&nbsp; ';
 			<?php } ?>
 			html += '</td>';

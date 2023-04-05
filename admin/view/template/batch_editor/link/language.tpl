@@ -14,7 +14,7 @@
  <div id="languages-<?php echo $link; ?><?php echo $product_id; ?>" class="htabs">
   <?php foreach ($languages as $language) { ?>
   <a href="#language-<?php echo $link; ?><?php echo $product_id; ?><?php echo $language['language_id']; ?>">
-   <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" alt="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?>
+   <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" alt="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?>
   </a>
   <?php } ?>
  </div>

@@ -30,7 +30,7 @@
                     
                     <div id="languages" class="htabs">
                         <?php foreach ($languages as $language) { ?>
-                            <a href="#language<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
+                            <a href="#language<?php echo $language['language_id']; ?>"><img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
                         <?php } ?>
                     </div>
                     <div class="clr"></div>

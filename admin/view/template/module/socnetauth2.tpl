@@ -407,7 +407,7 @@
 			
 			<?php foreach ($languages as $language) { ?>
 			<p>
-			<input type="text" name="socnetauth2_label[<?php echo $language['language_id']; ?>]" value="<?php if( !empty($socnetauth2_label[ $language['language_id'] ]) ) echo $socnetauth2_label[ $language['language_id'] ]; ?>" style="width: 300px;">&nbsp;<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" align="top" />
+			<input type="text" name="socnetauth2_label[<?php echo $language['language_id']; ?>]" value="<?php if( !empty($socnetauth2_label[ $language['language_id'] ]) ) echo $socnetauth2_label[ $language['language_id'] ]; ?>" style="width: 300px;">&nbsp;<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" align="top" />
 			</p>
 			<?php } ?>
 			
@@ -1070,7 +1070,7 @@
 		<td>
 	  		<?php foreach ($languages as $language) { ?>
 			<p>
-			<input type="text" name="socnetauth2_widget_name[<?php echo $language['language_id']; ?>]" value="<?php if( !empty($socnetauth2_widget_name[ $language['language_id'] ]) ) echo $socnetauth2_widget_name[ $language['language_id'] ]; ?>" style="width: 300px;">&nbsp;<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" align="top" />
+			<input type="text" name="socnetauth2_widget_name[<?php echo $language['language_id']; ?>]" value="<?php if( !empty($socnetauth2_widget_name[ $language['language_id'] ]) ) echo $socnetauth2_widget_name[ $language['language_id'] ]; ?>" style="width: 300px;">&nbsp;<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" align="top" />
 			</p>
 			<?php } ?>
 		</td>
@@ -1248,7 +1248,7 @@
 		<td>
 	  		<?php foreach ($languages as $language) { ?>
 			<p>
-			<input type="text" name="socnetauth2_popup_name[<?php echo $language['language_id']; ?>]" value="<?php if( !empty($socnetauth2_popup_name[ $language['language_id'] ]) ) echo $socnetauth2_popup_name[ $language['language_id'] ]; ?>" style="width: 300px;">&nbsp;<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" align="top" />
+			<input type="text" name="socnetauth2_popup_name[<?php echo $language['language_id']; ?>]" value="<?php if( !empty($socnetauth2_popup_name[ $language['language_id'] ]) ) echo $socnetauth2_popup_name[ $language['language_id'] ]; ?>" style="width: 300px;">&nbsp;<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" align="top" />
 			</p>
 			<?php } ?>
 		</td>

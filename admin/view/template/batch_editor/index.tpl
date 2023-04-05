@@ -163,7 +163,7 @@ var current_product_id = 'filter';
          <?php } else { ?>
          <label><input type="radio" name="filter_language_id" value="<?php echo $language['language_id']; ?>" /></label>
          <?php } ?>
-         <img src="view/image/flags/<?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>" />
+         <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>" />
          <?php } ?>
         </form>
        </td>

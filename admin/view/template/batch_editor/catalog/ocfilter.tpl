@@ -60,7 +60,7 @@ function ocFilterCheck(this_) {
         <?php $input_value = $data['product'][$option_id][$value_id][$language['language_id']]; ?>
         <?php } ?>
         <input name="ocfilter[<?php echo $option_id; ?>][values][<?php echo $value_id; ?>][description][<?php echo $language['language_id']; ?>][description]" value="<?php echo $input_value; ?>" size="30" type="text">
-        <img src="view/image/flags/<?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>">
+        <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>">
         <?php } ?>
        </td>
       </tr>
@@ -75,7 +75,7 @@ function ocFilterCheck(this_) {
      <?php $input_value = $data['product'][$option_id][0][$language['language_id']]; ?>
      <?php } ?>
      <textarea name="ocfilter[<?php echo $option_id; ?>][values][0][description][<?php echo $language['language_id']; ?>][description]" rows="2" cols="40"><?php echo $input_value; ?></textarea>
-     <img src="view/image/flags/<?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>">
+     <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>">
      <?php } ?>
      <?php } ?>
      <?php if ($value['type'] == 'slide' || $value['type'] == 'slide_dual') { ?>
@@ -102,7 +102,7 @@ function ocFilterCheck(this_) {
         <?php $input_value = $data['product'][$option_id][0][$language['language_id']]; ?>
         <?php } ?>
         <input name="ocfilter[<?php echo $option_id; ?>][values][0][description][<?php echo $language['language_id']; ?>][description]" value="<?php echo $input_value; ?>" size="30" type="text">
-        <img src="view/image/flags/<?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>">
+        <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" alt="<?php echo $language['name']; ?>" title="<?php echo $language['name']; ?>">
         <?php } ?>
        </td>
       </tr>

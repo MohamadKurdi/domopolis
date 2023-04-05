@@ -6,7 +6,7 @@
     <td class="left">
      <?php foreach ($languages as $code => $language) { ?>
      <input name="link[description][<?php echo $code; ?>]" type="text" value="" />
-     <img src="view/image/flags/<?php echo $language['image']; ?>" />&nbsp;&nbsp;
+     <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" />&nbsp;&nbsp;
      <?php } ?>
     </td>
    </tr>

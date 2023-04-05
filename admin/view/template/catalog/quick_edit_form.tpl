@@ -40,7 +40,7 @@ switch($parameter) {
             <?php foreach ($languages as $language) { ?>
             <span>
               <input type="text" name="filter[<?php echo $filter_row; ?>][filter_description][<?php echo $language['language_id']; ?>][name]" value="<?php echo isset($filter['filter_description'][$language['language_id']]) ? $filter['filter_description'][$language['language_id']]['name'] : ''; ?>" />
-              <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+              <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
               <?php if (isset($error_filter[$filter_row][$language['language_id']])) { ?>
               <span class="error"><?php echo $error_filter[$filter_row][$language['language_id']]; ?></span>
               <?php } ?>
@@ -67,7 +67,7 @@ function addFilter() {
   html += '  <tr>';
   html += '    <td class="left"><input type="hidden" name="filter[' + filter_row + '][filter_id]" value="" />';
   <?php foreach ($languages as $language) { ?>
-  html += '    <input type="text" name="filter[' + filter_row + '][filter_description][<?php echo $language['language_id']; ?>][name]" value="" /> <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';
+  html += '    <input type="text" name="filter[' + filter_row + '][filter_description][<?php echo $language['language_id']; ?>][name]" value="" /> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';
   <?php } ?>
   html += '    </td>';
   html += '    <td class="right"><input type="text" name="filter[' + filter_row + '][sort_order]" value="" size="1" /></td>';
