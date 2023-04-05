@@ -8,6 +8,7 @@
 /admin/icons/*
 /admin/icons/*
 /admin/view/image/flags/*
+/admin/view/image/flags.*/*
 /admin/icon/*
 /admin/pwa/*
 /admin/manifest.json
