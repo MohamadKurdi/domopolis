@@ -314,6 +314,21 @@
 									</div>
 
 									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><img src="<?php echo DIR_FLAGS_NAME; ?>de.png" title="de" />Flags in admin</span></p>
+										<select name="config_admin_flags_enable">
+											<?php if ($config_admin_flags_enable) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+										<br />
+										<span class="help">отображать или нет флаги в админке</span>
+									</div>
+
+									<div>
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика цен B2B</span></p>
 										<select name="config_group_price_enable">
 											<?php if ($config_group_price_enable) { ?>
@@ -506,6 +521,20 @@
 										<br />
 										<span class="help">будет отключен переключатель стран, и некоторые другие моменты</span>	
 									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Специальный фильтр логистики</span></p>
+										<select type="select" name="config_special_logistics_enable">
+											<? if ($config_special_logistics_enable) { ?>
+												<option value="1" selected='selected' >Да</option>
+												<option value="0" >Нет</option>
+											<? } else { ?>
+												<option value="1" >Да</option>
+												<option value="0"  selected='selected' >Нет</option>
+											<? } ?>       
+										</select>
+									</div>
+
 									<div>
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Режим разработки</span></p>
 										<select type="select" name="config_no_access_enable">
@@ -5890,7 +5919,7 @@
 										<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Запрос к AI</span></p>	
 										<?php foreach ($languages as $language) { ?>											
 											<div style="margin-bottom: 10px;">											
-												<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> 
+												<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> 
 												<textarea style="width:80%" name="config_openai_category_alternatenames_query_<?php echo $language['code']; ?>" rows="4"><?php echo ${'config_openai_category_alternatenames_query_' . $language['code']}; ?></textarea>
 											</div>
 										<?php } ?>
@@ -5970,7 +5999,7 @@
 										<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Запрос к AI</span></p>	
 										<?php foreach ($languages as $language) { ?>											
 											<div style="margin-bottom: 10px;">											
-												<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+												<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
 												<textarea style="width:80%" name="config_openai_category_descriptions_query_<?php echo $language['code']; ?>" rows="4"><?php echo ${'config_openai_category_descriptions_query_' . $language['code']}; ?></textarea>
 											</div>
 										<?php } ?>
@@ -6055,7 +6084,7 @@
 										<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Запрос к AI</span></p>	
 										<?php foreach ($languages as $language) { ?>											
 											<div style="margin-bottom: 10px;">											
-												<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <input type="text" name="config_openai_shortennames_query_<?php echo $language['code']; ?>" value="<?php echo ${'config_openai_shortennames_query_' . $language['code']}; ?>" style="width:80%" />
+												<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <input type="text" name="config_openai_shortennames_query_<?php echo $language['code']; ?>" value="<?php echo ${'config_openai_shortennames_query_' . $language['code']}; ?>" style="width:80%" />
 											</div>
 										<?php } ?>
 									</td>
@@ -6138,7 +6167,7 @@
 										<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Запрос к AI</span></p>	
 										<?php foreach ($languages as $language) { ?>											
 											<div style="margin-bottom: 10px;">											
-												<img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <input type="text" name="config_openai_exportnames_query_<?php echo $language['code']; ?>" value="<?php echo ${'config_openai_exportnames_query_' . $language['code']}; ?>" style="width:80%" />
+												<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <input type="text" name="config_openai_exportnames_query_<?php echo $language['code']; ?>" value="<?php echo ${'config_openai_exportnames_query_' . $language['code']}; ?>" style="width:80%" />
 											</div>
 										<?php } ?>
 									</td>

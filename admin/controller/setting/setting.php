@@ -590,6 +590,18 @@ class ControllerSettingSetting extends Controller
             $this->data['config_single_store_enable'] = $this->config->get('config_single_store_enable');
         }
 
+        if (isset($this->request->post['config_admin_flags_enable'])) {
+            $this->data['config_admin_flags_enable'] = $this->request->post['config_admin_flags_enable'];
+        } else {
+            $this->data['config_admin_flags_enable'] = $this->config->get('config_admin_flags_enable');
+        }
+
+         if (isset($this->request->post['config_special_logistics_enable'])) {
+            $this->data['config_special_logistics_enable'] = $this->request->post['config_special_logistics_enable'];
+        } else {
+            $this->data['config_special_logistics_enable'] = $this->config->get('config_special_logistics_enable');
+        }
+
         if (isset($this->request->post['config_no_zeroprice'])) {
             $this->data['config_no_zeroprice'] = $this->request->post['config_no_zeroprice'];
         } else {
