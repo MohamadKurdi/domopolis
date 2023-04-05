@@ -474,6 +474,23 @@
 								if (is_dir(DIR_TEMPLATE . $registry->get('config')->get('config_template') . '_dev/')){
 									$registry->get('config')->set('config_template', $registry->get('config')->get('config_template') . '_dev');
 								}
+
+								$assets_configs = [
+									'config_header_min_scripts',
+            						'config_header_excluded_scripts',
+            						'config_header_min_styles',
+            						'config_header_excluded_styles',
+            						'config_footer_min_scripts',
+            						'config_footer_min_styles',
+            						'config_footer_excluded_scripts',
+            						'config_footer_excluded_styles'
+								];
+
+								foreach ($assets_configs as $asset_config){
+									if ($registry->get('config')->has($asset_config . '_dev')){
+										$registry->get('config')->set($asset_config, $registry->get('config')->get($asset_config . '_dev'));
+									}
+								}
 							}
 						}
 					}
