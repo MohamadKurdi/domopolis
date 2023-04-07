@@ -165,7 +165,7 @@ class RainforestAmazon
 		}
 
 		$error 		= false;	
-		$warning 	= false;		
+		$warning 	= false;	
 
 		//В том случае, если не 200, то всё плохо и хуево
 		if ($httpcode != 200){
@@ -201,6 +201,10 @@ class RainforestAmazon
 			} elseif (!$answer['account_info']['overage_enabled']) {
 				$error = 'ZERO_CREDITS_AND_OVERAGE_NOT_ENABLED';
 			}
+		}
+
+		if (strpos($debug_info, 'SSL certificate verify result: unable to get local issuer certificate')){
+			$debug_info = 'SSL certificate verify result: unable to get local issuer certificate!';
 		}
 
 		if ($error){

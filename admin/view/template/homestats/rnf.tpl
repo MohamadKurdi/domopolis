@@ -23,10 +23,10 @@
 				<small><i class="fa fa-info-circle"></i> система пока работает, но каждые 1000 запросов стоят 1$</small>
 				</span>
 			
-			<?php } elseif ($message == 'CREDITS_LESS_THEN_10_PERCENT') { ?>
+			<?php } elseif ($message == 'CREDITS_LESS_THEN_5_PERCENT') { ?>
 
 				<span style="color:#FF9243; font-size:18px; font-weight: 700;"><i class="fa fa-exclamation-triangle"></i> есть ньюансы:
-				осталось менее 10% от лимита запросов (CREDITS_LESS_THEN_10_PERCENT)
+				осталось менее 5% от лимита запросов (CREDITS_LESS_THEN_5_PERCENT)
 				<br />
 				<small><i class="fa fa-info-circle"></i> система пока работает, но скоро закончится лимит запросов</small>
 				</span>
