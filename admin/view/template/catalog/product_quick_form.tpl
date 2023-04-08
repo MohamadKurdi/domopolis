@@ -10,28 +10,28 @@
 <?php
 switch($parameter) {
   case "category": ?>
-    <select name="p_c" multiple="multiple" size="10" style="width:100%;min-width:300px;">
+    <select name="p_c" multiple="multiple" size="10" style="width:100%;min-width:300px;height: 500px;">
     <?php foreach ($categories as $category) { ?>
     <option value="<?php echo $category['category_id']; ?>"<?php echo (in_array($category['category_id'], $product_category)) ? ' selected="selected"': ''; ?>><?php echo $category['name']; ?></option>
     <?php } ?>
     </select>
     <?php break;
   case "store": ?>
-    <select name="p_s" multiple="multiple" size="10" style="width:100%;min-width:300px;">
+    <select name="p_s" multiple="multiple" size="10" style="width:100%;min-width:300px;height: 500px;">
     <?php foreach ($stores as $store) { ?>
     <option value="<?php echo $store['store_id']; ?>"<?php echo (in_array($store['store_id'], $product_store)) ? ' selected="selected"': ''; ?>><?php echo $store['name']; ?></option>
     <?php } ?>
     </select>
     <?php break;
   case "filter": ?>
-    <select name="p_f" multiple="multiple" size="10" style="width:100%;min-width:300px;">
+    <select name="p_f" multiple="multiple" size="10" style="width:100%;min-width:300px;height: 500px;">
     <?php foreach ($filters as $filter) { ?>
     <option value="<?php echo $filter['filter_id']; ?>"<?php echo (in_array($filter['filter_id'], $product_filter)) ? ' selected="selected"': ''; ?>><?php echo strip_tags(html_entity_decode($filter['group'] . ' &gt; ' . $filter['name'], ENT_QUOTES, 'UTF-8')); ?></option>
     <?php } ?>
     </select>
     <?php break;
   case "download": ?>
-    <select name="p_d" multiple="multiple" size="10" style="width:100%;min-width:300px;">
+    <select name="p_d" multiple="multiple" size="10" style="width:100%;min-width:300px;height: 500px;">
     <?php foreach ($downloads as $download) { ?>
     <option value="<?php echo $download['download_id']; ?>"<?php echo (in_array($download['download_id'], $product_download)) ? ' selected="selected"': ''; ?>><?php echo $download['name']; ?></option>
     <?php } ?>
