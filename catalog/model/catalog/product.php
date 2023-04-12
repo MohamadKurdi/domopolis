@@ -443,9 +443,9 @@
 				}				
 
 				if (!$cached){
-					$query = $this->db->non_cached_query($sql);
+					$query = $this->db->ncquery($sql);
 					} else {
-					$query = $this->db->query($sql);
+					$query = $this->db->ncquery($sql);
 				}
 				
 				if ($query->num_rows) {
@@ -548,7 +548,7 @@
 					}
 					
 					if ($query->row['stock_product_id']) {
-						$main_stock_query = $this->db->query("SELECT quantity_stock, `" . $this->config->get('config_warehouse_identifier') . "` FROM product WHERE product_id = '" . (int)$query->row['stock_product_id'] . "'");
+						$main_stock_query = $this->db->ncquery("SELECT quantity_stock, `" . $this->config->get('config_warehouse_identifier') . "` FROM product WHERE product_id = '" . (int)$query->row['stock_product_id'] . "'");
 						if ($main_stock_query->num_rows && isset($main_stock_query->row['quantity_stock']) && isset($main_stock_query->row[$this->config->get('config_warehouse_identifier')])) {
 							$query->row['quantity_stock'] = $main_stock_query->row['quantity_stock'];
 							$query->row[$this->config->get('config_warehouse_identifier')] = $main_stock_query->row[$this->config->get('config_warehouse_identifier')];
@@ -585,7 +585,7 @@
 							$query->row['quantity_stock'] 			= 0;
 							$query->row['quantity'] 				= 0;
 							$query->row['stock_status_id']			= $this->config->get('config_overload_stock_status_id');
-							$overload_stock_status_query 			= $this->db->query("SELECT name FROM stock_status WHERE stock_status_id = '" . (int)$this->config->get('config_overload_stock_status_id') . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "' LIMIT 1");
+							$overload_stock_status_query 			= $this->db->ncquery("SELECT name FROM stock_status WHERE stock_status_id = '" . (int)$this->config->get('config_overload_stock_status_id') . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "' LIMIT 1");
 							$query->row['stock_status']				= $overload_stock_status_query->row['name'];
 
 						}
@@ -1891,7 +1891,7 @@
 				$sql .= "LEFT JOIN attribute_group_description agd ON (agd.attribute_group_id = a.attribute_group_id AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "')  ";
 				$sql .= "WHERE pa.product_id = '" . (int)$product_id . "' AND pa.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 			
-				$product_attribute_flat_data = $this->db->query($sql)->rows;
+				$product_attribute_flat_data = $this->db->ncquery($sql)->rows;
 
 				$this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$product_id]), $product_attribute_flat_data);
 			}
@@ -1909,7 +1909,7 @@
 				$sql .= "LEFT JOIN attribute_group_description agd ON (agd.attribute_group_id = a.attribute_group_id AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "')  ";
 				$sql .= "WHERE pa.product_id = '" . (int)$product_id . "' AND pa.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 			
-				$product_features_flat_data = $this->db->query($sql)->rows;
+				$product_features_flat_data = $this->db->ncquery($sql)->rows;
 
 				$this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$product_id]), $product_features_flat_data);
 			}
@@ -1932,7 +1932,7 @@
 
 				$sql .= " GROUP BY ag.attribute_group_id ORDER BY ag.sort_order, agd.name";
 
-				$product_attribute_group_query = $this->db->query($sql);
+				$product_attribute_group_query = $this->db->ncquery($sql);
 
 				foreach ($product_attribute_group_query->rows as $product_attribute_group) {
 					$product_attribute_data = [];
@@ -1953,7 +1953,7 @@
 
 					$sql .= " ORDER BY a.sort_order, ad.name";
 
-					$product_attribute_query = $this->db->query($sql);
+					$product_attribute_query = $this->db->ncquery($sql);
 
 					foreach ($product_attribute_query->rows as $product_attribute) {
 						$product_attribute_data[] = array(
@@ -1984,12 +1984,12 @@
 			if (!$product_attribute_group_data = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$product_id]))){
 				$product_attribute_group_data = [];
 
-				$product_attribute_group_query = $this->db->query("SELECT ag.attribute_group_id, agd.name FROM product_feature pa LEFT JOIN attribute a ON (pa.feature_id = a.attribute_id) LEFT JOIN attribute_group ag ON (a.attribute_group_id = ag.attribute_group_id) LEFT JOIN attribute_group_description agd ON (ag.attribute_group_id = agd.attribute_group_id) WHERE pa.product_id = '" . (int)$product_id . "' AND ag.attribute_group_id = '" . (int)$this->config->get('config_special_attr_id') . "' AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY ag.attribute_group_id ORDER BY ag.sort_order, agd.name");
+				$product_attribute_group_query = $this->db->ncquery("SELECT ag.attribute_group_id, agd.name FROM product_feature pa LEFT JOIN attribute a ON (pa.feature_id = a.attribute_id) LEFT JOIN attribute_group ag ON (a.attribute_group_id = ag.attribute_group_id) LEFT JOIN attribute_group_description agd ON (ag.attribute_group_id = agd.attribute_group_id) WHERE pa.product_id = '" . (int)$product_id . "' AND ag.attribute_group_id = '" . (int)$this->config->get('config_special_attr_id') . "' AND agd.language_id = '" . (int)$this->config->get('config_language_id') . "' GROUP BY ag.attribute_group_id ORDER BY ag.sort_order, agd.name");
 
 				foreach ($product_attribute_group_query->rows as $product_attribute_group) {
 					$product_attribute_data = [];
 
-					$product_attribute_query = $this->db->query("SELECT a.attribute_id, ad.name, pa.text FROM product_feature pa LEFT JOIN attribute a ON (pa.feature_id = a.attribute_id) LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE pa.product_id = '" . (int)$product_id . "' AND a.attribute_group_id = '" . (int)$product_attribute_group['attribute_group_id'] . "' AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pa.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY a.sort_order, ad.name");
+					$product_attribute_query = $this->db->ncquery("SELECT a.attribute_id, ad.name, pa.text FROM product_feature pa LEFT JOIN attribute a ON (pa.feature_id = a.attribute_id) LEFT JOIN attribute_description ad ON (a.attribute_id = ad.attribute_id) WHERE pa.product_id = '" . (int)$product_id . "' AND a.attribute_group_id = '" . (int)$product_attribute_group['attribute_group_id'] . "' AND ad.language_id = '" . (int)$this->config->get('config_language_id') . "' AND pa.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY a.sort_order, ad.name");
 
 					foreach ($product_attribute_query->rows as $product_attribute) {
 						$product_attribute_data[] = array(
