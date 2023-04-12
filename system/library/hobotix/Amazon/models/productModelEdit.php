@@ -108,11 +108,19 @@ class productModelEdit extends hoboModel{
 	}
 
 	public function updateProductMainVariantIdByParentAsin($product_id, $asin){		
-		$this->db->query("UPDATE product p SET main_variant_id = (SELECT product_id FROM product p2 WHERE p2.asin = '" . $this->db->escape($asin) . "' LIMIT 1) WHERE product_id = '" . (int)$product_id . "'");
+		$query = $this->db->query("SELECT product_id FROM product p2 WHERE p2.asin = '" . $this->db->escape($asin) . "' LIMIT 1");
+
+		if ($query->num_rows && !empty($query->row['product_id'])){
+			$this->db->query("UPDATE product p SET main_variant_id = '" . (int)$query->row['product_id'] . "' WHERE product_id = '" . (int)$product_id . "'");
+		}		
 	}
 
-	public function updateProductMainVariantIdByParentAsinByAsin($product_asin, $main_variant_asin){		
-		$this->db->query("UPDATE product p SET main_variant_id = (SELECT product_id FROM product p2 WHERE p2.asin = '" . $this->db->escape($main_variant_asin) . "' LIMIT 1) WHERE asin LIKE '" . $this->db->escape($product_asin) . "'");
+	public function updateProductMainVariantIdByParentAsinByAsin($product_asin, $main_variant_asin){	
+		$query = $this->db->query("SELECT product_id FROM product p2 WHERE p2.asin = '" . $this->db->escape($main_variant_asin) . "' LIMIT 1");
+
+		if ($query->num_rows && !empty($query->row['product_id'])){
+			$this->db->query("UPDATE product p SET main_variant_id = '" . (int)$query->row['product_id'] . "' WHERE asin LIKE '" . $this->db->escape($product_asin) . "'");
+		}		
 	}
 
 	public function updateProductMainVariantIdByAsin($asin, $main_variant_id){

@@ -130,10 +130,10 @@ class ProductsRetriever extends RainforestRetriever
 		if (!empty($product['brand'])){
 			$product['brand'] = atrim($product['brand']);
 
-			echoLine('[editFullProduct] Бренд: ' . $product['brand']);
+			echoLine('[editFullProduct] Brand: ' . $product['brand'], 'i');
 			$manufacturer_id = $this->model_product_cached_get->getManufacturer($product['brand']);			
 			if (!$manufacturer_id){
-				echoLine('[editFullProduct] Бренд не существует, добавляем:' . $product['brand']);
+				echoLine('[editFullProduct] Brand does not exist, adding it: ' . $product['brand'], 'w');
 				$manufacturer_id = $this->model_product_edit->addManufacturer($product['brand']);
 			}
 			$this->model_product_edit->editProductFields($product_id, [['name' => 'manufacturer_id', 'type' => 'int', 'value' => $manufacturer_id]]);
@@ -247,7 +247,7 @@ class ProductsRetriever extends RainforestRetriever
 		if (!empty($product['feature_bullets']) && ($main_variant_id === false || $main_variant_id == $product_id)){				
 			$feature_bullets_counter = 1;
 			foreach ($product['feature_bullets'] as $feature_bullet){
-				echoLine('[editFullProduct] Features: ' . $feature_bullets_counter);
+				echoLine('[ProductsRetriever::parseProductAttributes] Features: ' . $feature_bullets_counter, 'i');
 
 				$attribute_id = $this->model_product_cached_get->getAttribute($this->config->get('config_special_attr_name') . ' ' . $feature_bullets_counter);
 				if (!$attribute_id){
@@ -283,7 +283,7 @@ class ProductsRetriever extends RainforestRetriever
 			}
 			
 		} elseif ($main_variant_id && $main_variant_id != $product_id){
-			echoLine('[editFullProduct] Copying feature_bullets from main product: ' . $main_variant_id);
+			echoLine('[ProductsRetriever::parseProductAttributes] Copying feature_bullets from main product: ' . $main_variant_id, 'i');
 			$product_attribute = $this->model_product_get->getProductFeatureBullets($main_variant_id);
 		}
 
@@ -326,7 +326,7 @@ class ProductsRetriever extends RainforestRetriever
 			}
 
 			foreach ($mergedProductAttributes as $attribute){
-				echoLine('[editFullProduct] Атрибуты: ' . $attribute['name']);
+				echoLine('[ProductsRetriever::parseProductAttributes] Attributes: ' . $attribute['name'], 'i');
 				$attribute['name'] = atrim($attribute['name']);
 				$attribute['value'] = atrim($attribute['value']);	
 
@@ -335,7 +335,7 @@ class ProductsRetriever extends RainforestRetriever
 					$mappedAttribute = true;
 
 					foreach ($this->mapAmazonToStoreFieldsSpecifications[clean_string($attribute['name'])] as $fieldToChange){
-						echoLine('[editFullProduct] Атрибут ' . $attribute['name'] . ' -> ' . $fieldToChange);
+						echoLine('[ProductsRetriever::parseProductAttributes] Attribute ' . $attribute['name'] . ' -> ' . $fieldToChange, 'w');
 						$this->model_product_edit->editProductFields($product_id, [['name' => $fieldToChange, 'type' => 'varchar', 'value' => $attribute['value']]]);
 					}
 				} 
@@ -344,19 +344,18 @@ class ProductsRetriever extends RainforestRetriever
 					$mappedAttribute = true;
 
 					foreach ($this->mapAmazonToStoreFieldsSpecificationsRev[clean_string($attribute['name'])] as $fieldToChange){
-						echoLine('[editFullProduct] Атрибут ' . $attribute['name'] . ' -> ' . $fieldToChange);
+						echoLine('[ProductsRetriever::parseProductAttributes] Attribute ' . $attribute['name'] . ' -> ' . $fieldToChange, 'w');
 						$this->model_product_edit->editProductFields($product_id, [['name' => $fieldToChange, 'type' => 'varchar', 'value' => strrev($attribute['value'])]]);
 					}
 				} 
 
 				if (!$mappedAttribute) {
-
-					echoLine('[parseProductAttributes] Ищем атрибут: ' . $attribute['name']);
+					echoLine('[ProductsRetriever::parseProductAttributes] Search for attribute: ' . $attribute['name'], 'i');
 
 					$attribute_id = $this->model_product_cached_get->getAttribute($attribute['name']);
 
 					if (!$attribute_id){
-						echoLine('[parseProductAttributes] Атрибут не найден: ' . $attribute['name']);
+						echoLine('[ProductsRetriever::parseProductAttributes] Attribute not found: ' . $attribute['name'], 'e');
 
 						$attribute_description = [];
 
@@ -401,9 +400,7 @@ class ProductsRetriever extends RainforestRetriever
 		}
 	}
 
-	public function parseDimensionAttributes($product_id, $product){
-		
-		
+	public function parseDimensionAttributes($product_id, $product){		
 	}
 
 	public function parseProductRelatedProducts($product_id, $product){
@@ -414,7 +411,7 @@ class ProductsRetriever extends RainforestRetriever
 					if ($related = $this->getProductsByAsin($bought_together['asin'])){
 
 						foreach ($related as $related_id){
-							echoLine('[parseProductRelatedProducts] Related товар: ' . $related_id);
+							echoLine('[ProductsRetriever::parseProductRelatedProducts] Related product: ' . $related_id, 'i');
 
 							$product_related[] = $related_id;
 						}
@@ -423,7 +420,7 @@ class ProductsRetriever extends RainforestRetriever
 
 						if ($this->config->get('config_rainforest_enable_recursive_adding') && $this->config->get('config_rainforest_enable_related_adding')){
 
-							echoLine('[parseProductRelatedProducts] Новый Related товар: ' . $bought_together['asin'] . ' ' . $bought_together['title']);
+							echoLine('[ProductsRetriever::parseProductRelatedProducts] New Related product: ' . $bought_together['asin'] . ' ' . $bought_together['title'], 's');
 
 							$new_related_id = $this->addSimpleProductWithOnlyAsin([
 								'asin' 				=> $bought_together['asin'],
@@ -733,11 +730,11 @@ class ProductsRetriever extends RainforestRetriever
 				$name = $product['categories'][count($product['categories']) - 1]['name'];
 
 				if ($category_id = $this->model_product_cached_get->getCategory(atrim($name))){
-					echoLine('[editFullProduct] Нашли категорию: ' . $name . ': ' . $category_id);
+					echoLine('[ProductsRetriever::parseProductCategories] Found category: ' . $name . ': ' . $category_id, 's');
 					$this->model_product_edit->editProductCategory($product_id, [$category_id]);
 				} else {
 
-					echoLine('[editFullProduct] Не нашли категорию: ' . $name . ', уходит в неизвестную');
+					echoLine('[ProductsRetriever::parseProductCategories] Could not found category: ' . $name . ', setting as unknown', 'e');
 					$this->model_product_edit->editProductCategory($product_id, [$this->config->get('config_rainforest_default_unknown_category_id')]);
 
 				}
@@ -855,17 +852,17 @@ class ProductsRetriever extends RainforestRetriever
 						//Товар существует и уже полностью обновлен, записан, и ваще у него всё хорошо
 					if ($variant['filled_from_amazon']){
 							//Просто обновляем привязку родителя по асину
-						echoLine('[parseProductVariants] Обновляем привязку родителя по асину:' . $variant['asin'] . ':' . $variant['main_asin']);
+						echoLine('[ProductsRetriever::parseProductVariants] Updating parent by asin:' . $variant['asin'] . ':' . $variant['main_asin'], 'i');
 						$this->model_product_edit->updateProductMainVariantIdByParentAsin($variant['product_id'], $variant['main_asin']);
 					} else {
 							//Отправляем товар на полную загрузку
-						echoLine('[parseProductVariants] Заполняем товар-вариант:' . $variant['asin']);
+						echoLine('[ProductsRetriever::parseProductVariants] Filling variant product:' . $variant['asin'], 'i');
 						$new_product_data[] = [
 							'product_id' => $variant['product_id'],
 							'asin'		 => $variant['asin']
 						];
 
-						echoLine('[parseProductVariants] Обновляем привязку родителя по асину:' . $variant['asin'] . ':' . $variant['main_asin']);
+						echoLine('[ProductsRetriever::parseProductVariants] Updating parent by asin:' . $variant['asin'] . ':' . $variant['main_asin'], 'i');
 						$this->model_product_edit->updateProductMainVariantIdByParentAsin($variant['product_id'], $variant['main_asin']);
 					}
 				} else {
@@ -873,10 +870,10 @@ class ProductsRetriever extends RainforestRetriever
 					if (!$this->getProductsByAsin($variant['asin'])){
 
 						//Товара не существует вообще
-						echoLine('[parseProductVariants] Новый товар-вариант:' . $variant['asin']);
+						echoLine('[ProductsRetriever::parseProductVariants] New variant:' . $variant['asin'], 'w');
 
 						$new_product_name = $this->trimProductNameWithoutVariant($product['title'], $this->getCurrentVariantDimensions($product['variants']), $this->getVariantDimensionsByAsin($product['variants'], $variant['asin']));
-						echoLine('[editFullProduct] Новый вариант: ' . $new_product_name);	
+						echoLine('[ProductsRetriever::parseProductVariants] New variant name: ' . $new_product_name, 'i');	
 
 						$new_product_id = $this->addSimpleProductWithOnlyAsin([
 							'asin' 				=> $variant['asin'], 
@@ -888,7 +885,7 @@ class ProductsRetriever extends RainforestRetriever
 						]);
 					}	
 
-					echoLine('[parseProductVariants] Обновляем привязку родителя по асину:' . $variant['asin'] . ':' . $variant['main_asin']);
+					echoLine('[ProductsRetriever::parseProductVariants] Updating parent by asin: ' . $variant['asin'] . ':' . $variant['main_asin'], 'i');
 					$this->model_product_edit->updateProductMainVariantIdByParentAsin($new_product_id, $variant['main_asin']);					
 
 
@@ -934,12 +931,12 @@ class ProductsRetriever extends RainforestRetriever
 				foreach ($product['top_reviews'] as $review){						
 
 					if (mb_strlen($review['body']) > (int)$this->config->get('config_rainforest_max_review_length')){
-						echoLine('[parseProductTopReviews] длина отзыва ' . mb_strlen($review['body']) . ', пропускаем');
+						echoLine('[ProductsRetriever::parseProductTopReviews] length exceeded ' . mb_strlen($review['body']) . ', skip', 'e');
 						continue;
 					}
 
 					if ($review['rating'] < (int)$this->config->get('config_rainforest_min_review_rating')){
-						echoLine('[parseProductTopReviews] рейтинг отзыва ' . $review['rating'] . ', пропускаем');
+						echoLine('[ProductsRetriever::parseProductTopReviews] rating exceeded ' . $review['rating'] . ', skip', 'e');
 						continue;
 					}
 
@@ -950,7 +947,7 @@ class ProductsRetriever extends RainforestRetriever
 
 					$review_description = [];					
 					$author = $this->db->ncquery("SELECT firstname FROM customer WHERE firstname <> '' ORDER BY RAND() LIMIT 1")->row['firstname'];
-					echoLine('[parseProductTopReviews] Автор ' . $author);
+					echoLine('[ProductsRetriever::parseProductTopReviews] Author: ' . $author, 'i');
 
 					foreach ($this->registry->get('languages') as $language_code => $language) {
 						$review['body'] = atrim($review['body']);						
@@ -999,7 +996,7 @@ class ProductsRetriever extends RainforestRetriever
 		$this->yandexTranslator->setDebug(false);
 
 		if (!$this->checkProductsVariants($product_id, $product)){
-			echoLine('[editFullProduct] У товара ' . count($product['variants']) . ' вариантов, удаляем');
+			echoLine('[editFullProduct] Product has ' . count($product['variants']) . ' variants, skipping and deleting product!');
 			$this->model_product_edit->deleteProduct($product_id, $product);
 			return;
 		} else {
@@ -1022,22 +1019,19 @@ class ProductsRetriever extends RainforestRetriever
 		$main_variant = $this->model_product_get->checkIfProductIsVariantWithFilledParent($product['asin']);					
 
 		if ($main_variant){
-
 			if ($main_variant['main_variant_id'] && $main_variant['main_variant_id'] != $product_id){
-				echoLine('[parseProductVariants] Обновляем привязку родителя по product_id:' . $product_id . ':' . $main_variant['main_variant_id']);
+				echoLine('[parseProductVariants] Updating parent by asin:' . $product_id . ':' . $main_variant['main_variant_id'], 'i');
 				$this->model_product_edit->updateProductMainVariantId($product_id, $main_variant['main_variant_id']);
 
 				if ($main_variant['description_filled_from_amazon']){
-					echoLine('[editFullProduct] Копируем описание с основного товара: ' . $main_variant['main_variant_id']);
+					echoLine('[editFullProduct] Copy description from main: ' . $main_variant['main_variant_id'], 'i');
 					$this->model_product_edit->editProductDescriptions($product_id, $this->model_product_get->getProductDescriptions($main_variant['main_variant_id']));
 					$this->registry->get('rainforestAmazon')->infoUpdater->setDescriptionIsFilledFromAmazon($product_id);
 				}
-			}
-
-			
+			}			
 		} else {
 			$this->parseProductDescriptions($product_id, $product);
-			echoLine('[editFullProduct] Ставим маркер получения описаний: ' . $product_id);
+			echoLine('[editFullProduct] Setting description marker: ' . $product_id, 's');
 			$this->registry->get('rainforestAmazon')->infoUpdater->setDescriptionIsFilledFromAmazon($product_id);
 		}
 
@@ -1120,13 +1114,13 @@ class ProductsRetriever extends RainforestRetriever
 					$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmazonLastSearch($product_id);
 
 					if ($result){
-						echoLine('[editFullProductsWNP] Товар ' . $product_id . ', найден, ASIN ' . $result['asin']);				
+						echoLine('[ProductsRetriever::editFullProductsWNP] Product ' . $product_id . ', found, ASIN ' . $result['asin'], 's');				
 
 						$this->editFullProduct($product_id, $result, false);
 
 					} else {
 
-						echoLine('[editFullProductsWNP] Товар ' . $product_id . ', не найден');
+						echoLine('[ProductsRetriever::editFullProductsWNP] Product ' . $product_id . ', not found', 'e');
 					}
 				}
 			}

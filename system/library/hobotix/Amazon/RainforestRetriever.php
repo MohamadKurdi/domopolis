@@ -112,15 +112,15 @@
 					file_put_contents($fullLocalImagePath, $httpResponse->getBody()->getContents());					
 
 				} catch (GuzzleHttp\Exception\ValueError $e){
-					echoLine('[RainforestRetriever]: Не могу получить картинку ' . $e->getMessage());
+					echoLine('[RainforestRetriever::getImage]: Could not get picture: ' . $e->getMessage(), 'e');
 					return '';
 				} catch (GuzzleHttp\Exception\ClientException $e){
-					echoLine('[RainforestRetriever]: Не могу получить картинку ' . $e->getMessage());
+					echoLine('[RainforestRetriever::getImage]: Could not get picture: ' . $e->getMessage(), 'e');
 					return '';
 				} catch (\Exception $re){
 
 					if (!$secondAttempt){
-						echoLine('[RainforestRetriever]: Не могу получить картинку, скорее всего таймаут ' . $re->getMessage());
+						echoLine('[RainforestRetriever::getImage]: Could not get picture, maybe timeout ' . $re->getMessage(), 'e');
 						sleep(mt_rand(3, 5));
 						$this->getImage($amazonImage, true);
 
@@ -130,7 +130,7 @@
 				}
 			}
 
-			echoLine('[RainforestRetriever] Картинки: ' . $amazonImage . ' -> ' . $localImageName);
+			echoLine('[RainforestRetriever::getImage] Picture: ' . $amazonImage . ' -> ' . $localImageName, 's');
 
 			return $localImageDir . $localImageName;
 		}	
@@ -140,7 +140,8 @@
 			
 			if (!isset($response['request_info']['success'])){
 				throw new \Exception($response);
-				die('Что-то пошло не так!');				
+				echoLine('[RainforestRetriever::parseResponse] Something bad happened, stopping!', 'e');
+				die();				
 			}
 			
 			if ($response['request_info']['success'] == false){
