@@ -86,7 +86,9 @@ class OffersParser
 			$sql .= "AND p.filled_from_amazon = 1";
 		}
 
-		$sql .= " AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1))";
+		$sql .= " AND (p.asin NOT IN (SELECT asin FROM amzn_product_queue)) ";
+
+		$sql .= " AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1)) ";
 
 		if ($this->no_offers_logic){
 			$sql .= " AND p.amzn_no_offers = 1";
@@ -140,6 +142,8 @@ class OffersParser
 			$sql .= "AND p.filled_from_amazon = 1";
 		}
 
+		$sql .= " AND (p.asin NOT IN (SELECT asin FROM amzn_product_queue)) ";
+
 		$sql .= " AND p.product_id IN (SELECT product_id FROM product_to_category WHERE category_id IN (SELECT category_id FROM category WHERE status = 1))";
 
 		if ($this->no_offers_logic){
@@ -166,7 +170,30 @@ class OffersParser
 		return $result;
 	}		
 
-	public function getProductsAmazonQueue(){
+	public function addAsinToProductsAmazonOffersQueue($asin){
+		if ($asin){
+			$this->db->query("INSERT IGNORE INTO amzn_product_queue SET asin = '" . $this->db->escape($asin) . "', date_added = NOW()");	
+		}	
+	}
+
+	public function getProductsAmazonOffersQueue(){
+		$result = [];
+		$query = $this->db->ncquery("SELECT DISTINCT(asin) FROM amzn_product_queue ORDER BY date_added ASC LIMIT " . (int)\hobotix\RainforestAmazon::offerRequestLimits . "");
+
+		foreach ($query->rows as $row){
+			if (trim($row['asin'])){
+				$result[] = $row['asin'];
+			}
+		}
+
+		return $result;
+	}
+
+	public function clearProductsAmazonQueueStep(){
+		$this->db->query("DELETE FROM amzn_product_queue ORDER BY date_added ASC LIMIT " . (int)\hobotix\RainforestAmazon::offerRequestLimits . "");
+	}
+
+	public function getAllProductsAmazonOffersQueue(){
 		$result = [];
 		$query = $this->db->ncquery("SELECT DISTINCT(asin) FROM amzn_product_queue");
 
@@ -177,6 +204,18 @@ class OffersParser
 		}
 
 		return $result;
+	}
+
+	public function getTotalProductsAmazonOffersInQueue(){
+		return $this->db->query("SELECT COUNT(*) AS total FROM amzn_product_queue")->row['total'];
+	}
+
+	public function clearProductsAmazonQueue($asin = false){
+		if ($asin){
+			$this->db->query("DELETE FROM amzn_product_queue WHERE asin = '" . $this->db->escape($asin) . "'");
+		} else {
+			$this->db->ncquery("TRUNCATE amzn_product_queue");		
+		}
 	}
 
 	public function getTotalAmazonOffers(){
@@ -196,14 +235,6 @@ class OffersParser
 			deliveryFrom 	= '" . $this->db->escape(date('Y-m-d', strtotime($data['deliveryFrom']))) . "', 
 			deliveryTo 		= '" . $this->db->escape(date('Y-m-d', strtotime($data['deliveryTo']))) . "'
 			WHERE amazon_offer_id = '" . (int)$amazon_offer_id . "'");
-	}
-
-	public function clearProductsAmazonQueue($asin = false){
-		if ($asin){
-			$this->db->query("DELETE FROM amzn_product_queue WHERE asin = '" . $this->db->escape($asin) . "'");
-		} else {
-			$this->db->ncquery("TRUNCATE amzn_product_queue");		
-		}
 	}
 
 	public function clearOffersForASIN($asin){
