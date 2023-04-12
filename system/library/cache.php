@@ -1,6 +1,6 @@
 <?php
 final class Cache { 	
-	private $expire 		= 7200;
+	private $expire 		= 3600;
 	private $memcache 		= null;
 	private $redis 			= null;		
 	private $ismemcache 	= false;
