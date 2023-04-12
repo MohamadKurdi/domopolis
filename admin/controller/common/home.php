@@ -411,8 +411,10 @@
 			$this->data['total_product_got_offers']				= formatLongNumber($this->model_catalog_product->getTotalProductsGotOffers(), $format);
 			
 			//$this->data['total_product_to_get_offers']			= formatLongNumber($this->registry->get('rainforestAmazon')->offersParser->getTotalProductsToGetOffers(), $format);
-			//$this->data['total_product_got_offers_today']		= formatLongNumber($this->model_catalog_product->getTotalProductsGotOffersByDate(date('Y-m-d')), $format);
+			//$this->data['total_product_got_offers_today']		= formatLongNumber($this->model_catalog_product->getTotalProductsGotOffersByDate(date('Y-m-d')), $format);					
 			$this->data['total_product_to_get_offers']			= $this->registry->get('rainforestAmazon')->offersParser->getTotalProductsToGetOffers();
+			$this->data['total_product_to_get_offers_in_queue']	= $this->registry->get('rainforestAmazon')->offersParser->getTotalProductsAmazonOffersInQueue();
+
 			$this->data['total_product_got_offers_today']		= $this->model_catalog_product->getTotalProductsGotOffersByDate(date('Y-m-d'));
 
 			$this->data['total_product_got_offers_yesterday']	= formatLongNumber($this->model_catalog_product->getTotalProductsGotOffersByDate(date('Y-m-d', strtotime('-1 day'))), $format);

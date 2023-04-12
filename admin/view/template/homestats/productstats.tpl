@@ -61,13 +61,14 @@
 			<table class="list big small-bottom-margin">
 				<thead>
 					<tr>
-						<td colspan="6" class="left">
+						<td colspan="7" class="left">
 							Офферы
 						</td>
 					</tr>					
 				</thead>
 				<tr class="small">
 					<td style="color:#3276c2"><i class="fa fa-hourglass" aria-hidden="true"></i> Ждет</td>
+					<td style="color:#9832FF"><i class="fa fa-refresh" aria-hidden="true"></i> Que</td>
 					<td style="color:#24a4c1">Σ Всего</td>
 					<td style="color:#3276c2"><i class="fa fa-refresh" aria-hidden="true"></i> Сегодня</td>
 					<td style="color:#3276c2"><i class="fa fa-refresh" aria-hidden="true"></i> Вчера</td>
@@ -76,6 +77,7 @@
 				</tr>
 				<tr class="small">
 					<td><?php echo $total_product_to_get_offers; ?></td>
+					<td><?php echo $total_product_to_get_offers_in_queue; ?></td>
 					<td><?php echo $total_product_got_offers; ?></td>
 					<td><?php echo $total_product_got_offers_today; ?></td>
 					<td><?php echo $total_product_got_offers_yesterday; ?></td>
