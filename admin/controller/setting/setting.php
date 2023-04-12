@@ -3945,6 +3945,7 @@ class ControllerSettingSetting extends Controller
         'config_rainforest_add_queue_parser_time_start',
         'config_rainforest_add_queue_parser_time_end',
         'config_rainforest_delay_queue_offers',
+        'config_rainforest_delay_queue_variants',
 
         'config_rainforest_enable_recoverasins_parser',
         'config_rainforest_recoverasins_parser_time_start',

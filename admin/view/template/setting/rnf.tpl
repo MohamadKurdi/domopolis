@@ -147,7 +147,21 @@
 								</td>
 								<td>
 									<span class="help">
-										<i class="fa fa-info-circle"></i> Чтоб ускорить обновление товаров, мы используем очередь обновления цен для товаров в заказах.
+										<i class="fa fa-info-circle"></i> Чтоб ускорить добавление товаров, мы используем очередь обновления цен для товаров в заказах.
+									</span>
+								</td>
+							</tr>
+
+							<tr>
+								<td class="right">
+									<i class="fa fa-refresh"></i> Откладывать получение вариантов
+								</td>
+								<td style="width:40px;" class="center">
+									<input id="config_rainforest_delay_queue_variants" type="checkbox" class="checkbox" name="config_rainforest_delay_queue_variants" <? if ($config_rainforest_delay_queue_variants){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_delay_queue_variants"></label>
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Чтоб ускорить добавление товаров, мы откладываем добавление вариантов
 									</span>
 								</td>
 							</tr>
