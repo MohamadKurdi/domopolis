@@ -420,7 +420,16 @@ class ControllerDPRainForest extends Controller {
 	}	
 
 	/*
-	Обработка очереди добавления ASIN
+	Обработка очереди добавления ASIN - получение офферов для товаров в очереди вне очереди:)
+	*/
+	public function addoffersasinsqueuecron(){
+
+
+
+	}
+
+	/*
+	Обработка очереди добавления ASIN - добавление и обработка данных
 	*/
 	public function addasinsqueuecron(){
 		if (!$this->config->get('config_rainforest_enable_add_queue_parser')){
@@ -510,7 +519,7 @@ class ControllerDPRainForest extends Controller {
 					}
 
 					if ($product_id){						
-						echoLine('[addasinsqueuecron] Product added: ' . $product_id, 's');
+						echoLine('[ControllerDPRainForest::addasinsqueuecron] Product added: ' . $product_id, 's');
 						$this->rainforestAmazon->productsRetriever->editFullProduct($product_id, $rfProduct);
 						$this->rainforestAmazon->productsRetriever->model_product_edit->setProductIDInQueue($asin, $product_id);
 
@@ -525,7 +534,7 @@ class ControllerDPRainForest extends Controller {
 						$asinsToOffers[] = $asin;
 
 					} else {
-						echoLine('[addasinsqueuecron] ASIN Product can not be added, some error happened!', 'e');
+						echoLine('[ControllerDPRainForest::addasinsqueuecron] ASIN Product can not be added, some error happened!', 'e');
 						$this->rainforestAmazon->productsRetriever->model_product_edit->setProductIDInQueue($asin, -1);							
 					//	$this->rainforestAmazon->productsRetriever->model_product_edit->deleteASINFromQueue($asin);
 						continue;
@@ -533,11 +542,18 @@ class ControllerDPRainForest extends Controller {
 				}
 
 				if ($asinsToOffers){
-					$results = $this->rainforestAmazon->getProductsOffersASYNC($asinsToOffers);
+					if ($this->config->get('config_rainforest_delay_queue_offers')){
+						foreach($asinsToOffers as $asin){
+							$this->rainforestAmazon->offersParser->addAsinToProductsAmazonOffersQueue($asin);
+						}
+					} else {
 
-					if ($results){
-						foreach ($results as $asin => $offers){				
-							$this->rainforestAmazon->offersParser->addOffersForASIN($asin, $offers);					
+						$results = $this->rainforestAmazon->getProductsOffersASYNC($asinsToOffers);
+
+						if ($results){
+							foreach ($results as $asin => $offers){				
+								$this->rainforestAmazon->offersParser->addOffersForASIN($asin, $offers);					
+							}
 						}
 					}
 				}

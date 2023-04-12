@@ -172,25 +172,125 @@ class ControllerKPRainForest extends Controller {
 		}
 	}
 
+	/*
+		Parses queue by parts, more convenient when queue is large
+	*/
 	public function parseoffersqueuecron(){
-
 		if (!$this->config->get('config_rainforest_enable_offersqueue_parser')){
 			echoLine('[ControllerKPRainForest::parseoffersqueuecron] CRON IS DISABLED IN ADMIN', 'e');
 			return;
 		}
 
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->load->library('Timer');
+
+		if ($this->config->has('config_rainforest_offersqueue_parser_time_start') && $this->config->has('config_rainforest_offersqueue_parser_time_end')){
+			$interval = new Interval($this->config->get('config_rainforest_offersqueue_parser_time_start') . '-' . $this->config->get('config_rainforest_offersqueue_parser_time_end'));
+
+			if (!$interval->isNow()){
+				echoLine('[ControllerDPRainForest::parseoffersqueuecron] NOT ALLOWED TIME', 'e');
+				return;
+			} else {
+				echoLine('[ControllerDPRainForest::parseoffersqueuecron] ALLOWED TIME', 's');				
+			}
+		}
+
 
 		if (!$this->config->get('config_rainforest_enable_pricing')){
 			echoLine('[parseofferscron] RNF AMAZON PRICING NOT ENABLED', 'e');
 			return;
 		}
 
-		echoLine('[parseofferscron], Working with queue');		
-		$products = $this->rainforestAmazon->offersParser->getProductsAmazonQueue();		
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 
+		echoLine('[ControllerDPRainForest::parseofferscron], Working with queue', 'i');
+
+		$total = $this->rainforestAmazon->offersParser->getTotalProductsAmazonOffersInQueue();
+		echoLine('[ControllerDPRainForest::parseofferscron], Total in queue: ' . $total, 'i');
+
+		if ($total > 0){
+			$timer = new FPCTimer();
+
+			$products = $this->rainforestAmazon->offersParser->getProductsAmazonOffersQueue();
+
+			if ($products){
+				$results = $this->rainforestAmazon->getProductsOffersASYNC($products);
+
+				if ($results){
+					foreach ($results as $asin => $offers){				
+						$this->rainforestAmazon->offersParser->addOffersForASIN($asin, $offers);					
+					}
+				}
+
+				$results = $this->rainforestAmazon->offersParser->clearProductsAmazonQueueStep();
+			}
+
+			echoLine('[parseofferscron] Time for iteration: ' . $timer->getTime() . ' s.', 'i');
+			unset($timer);
+
+			if ($this->config->get('config_openai_enable') && $this->config->get('config_rainforest_export_names_with_openai') && $this->config->get('config_openai_enable_export_names')){
+				foreach ($products as $asin){
+					$names = $this->rainforestAmazon->productsRetriever->model_product_get->getProductShortNamesByAsin($asin);
+
+					foreach ($names as $row){
+						if ($row['name'] && !trim($row['short_name_d'])){
+
+							if (mb_strlen($row['name']) < $this->config->get('config_openai_exportnames_length')){
+								$export_name = $row['name'];
+							} else {
+								$export_name = $this->openaiAdaptor->exportName($row['name'], $this->registry->get('languages_all_id_code_mapping')[(int)$row['language_id']]);
+							}
+
+							if ($export_name){
+								$this->rainforestAmazon->productsRetriever->model_product_edit->updateProductShortName($row['product_id'],
+									[
+										'language_id' 	=> $row['language_id'],
+										'short_name_d' 	=> $export_name
+									]
+								);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+	/*
+		Parses the whole queue by pieces
+	*/
+	public function parseoffersqueuecron_full(){
+		if (!$this->config->get('config_rainforest_enable_offersqueue_parser')){
+			echoLine('[ControllerKPRainForest::parseoffersqueuecron] CRON IS DISABLED IN ADMIN', 'e');
+			return;
+		}
+
+		$this->load->library('Timer');
+
+		if ($this->config->has('config_rainforest_offersqueue_parser_time_start') && $this->config->has('config_rainforest_offersqueue_parser_time_end')){
+			$interval = new Interval($this->config->get('config_rainforest_offersqueue_parser_time_start') . '-' . $this->config->get('config_rainforest_offersqueue_parser_time_end'));
+
+			if (!$interval->isNow()){
+				echoLine('[ControllerDPRainForest::parseoffersqueuecron] NOT ALLOWED TIME', 'e');
+				return;
+			} else {
+				echoLine('[ControllerDPRainForest::parseoffersqueuecron] ALLOWED TIME', 's');				
+			}
+		}
+
+
+		if (!$this->config->get('config_rainforest_enable_pricing')){
+			echoLine('[parseofferscron] RNF AMAZON PRICING NOT ENABLED', 'e');
+			return;
+		}
+
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
+
+		echoLine('[ControllerDPRainForest::parseofferscron], Working with queue', 'i');		
+		$products = $this->rainforestAmazon->offersParser->getAllProductsAmazonOffersQueue();		
 		$this->rainforestAmazon->offersParser->clearProductsAmazonQueue();
+
+		echoLine('[ControllerDPRainForest::parseofferscron], Total products in queue: ' . count($products), 'i');
 
 		$total = count($products);
 		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::offerRequestLimits);
@@ -238,9 +338,7 @@ class ControllerKPRainForest extends Controller {
 					}
 				}
 			}
-		}
-
-		$this->rainforestAmazon->offersParser->clearProductsAmazonQueue();
+		}		
 	}
 
 	public function parsenoofferscron(){
@@ -307,10 +405,10 @@ class ControllerKPRainForest extends Controller {
 			$interval = new Interval($this->config->get('config_rainforest_offers_parser_time_start') . '-' . $this->config->get('config_rainforest_offers_parser_time_end'));
 
 			if (!$interval->isNow()){
-				echoLine('[ControllerKPRainForest::editfullproductscron] NOT ALLOWED TIME');
+				echoLine('[ControllerKPRainForest::parseofferscron] NOT ALLOWED TIME');
 				return;
 			} else {
-				echoLine('[ControllerKPRainForest::editfullproductscron] ALLOWED TIME');				
+				echoLine('[ControllerKPRainForest::parseofferscron] ALLOWED TIME');				
 			}
 		}
 
