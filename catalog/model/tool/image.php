@@ -21,7 +21,7 @@ class ModelToolImage extends Model {
 		}
 
 		$info 		= pathinfo($filename);
-		$extension 	= $info['extension'];
+		$extension 	= !empty($info['extension'])?$info['extension']:'jpg';
 		$basename 	= $info['basename'];
 		$dirname 	= $info['dirname'];		
 
