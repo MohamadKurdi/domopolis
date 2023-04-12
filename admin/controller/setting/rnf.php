@@ -28,14 +28,18 @@ class ControllerSettingRnf extends Controller {
         'config_rainforest_enable_add_queue_parser',
         'config_rainforest_add_queue_parser_time_start',
         'config_rainforest_add_queue_parser_time_end',
+        'config_rainforest_delay_queue_offers',
 
         'config_rainforest_enable_recoverasins_parser',
         'config_rainforest_recoverasins_parser_time_start',
         'config_rainforest_recoverasins_parser_time_end',
+
+        'config_rainforest_enable_offersqueue_parser',
+        'config_rainforest_offersqueue_parser_time_start',
+        'config_rainforest_offersqueue_parser_time_end',
         
         'config_rainforest_enable_asins_parser',
-        'config_rainforest_enable_eans_parser',
-        'config_rainforest_enable_offersqueue_parser',
+        'config_rainforest_enable_eans_parser',        
         'config_rainforest_enable_offers_after_order',
         'config_enable_seogen_cron'
 	];

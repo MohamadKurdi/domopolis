@@ -123,7 +123,7 @@
 										<i class="fa fa-info-circle"></i> Воркер, обслуживающий очередь ручного добавления ASIN. Логика работает паралельно с автоматическим добавлением. Также для корректной работы очереди должен быть включен воркер <i>Разгребатель технической категории</i> и <i>Парсер данных о товарах Amazon L2</i>
 									</span>
 								</td>
-							</tr>		
+							</tr>									
 							<tr>
 								<td class="right">
 									<i class="fa fa-clock-o"></i> Время работы, часы
@@ -138,6 +138,20 @@
 									</span>
 								</td>
 							</tr>
+							<tr>
+								<td class="right">
+									<i class="fa fa-refresh"></i> Откладывать получение офферов
+								</td>
+								<td style="width:40px;" class="center">
+									<input id="config_rainforest_delay_queue_offers" type="checkbox" class="checkbox" name="config_rainforest_delay_queue_offers" <? if ($config_rainforest_delay_queue_offers){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_delay_queue_offers"></label>
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Чтоб ускорить обновление товаров, мы используем очередь обновления цен для товаров в заказах.
+									</span>
+								</td>
+							</tr>
+
 
 							<tr>
 								<td style="white-space: nowrap;color:#7F00FF;">
@@ -294,21 +308,35 @@
 
 							<tr>
 								<td style="white-space: nowrap;color:#7F00FF;">
-									<i class="fa fa-refresh"></i> <b>Офферы для товаров в заказах</b>
+									<i class="fa fa-refresh"></i> <b>Дополнительная очередь офферов</b>
 								</td>
 								<td style="width:40px;" class="center">
 									<input id="config_rainforest_enable_offersqueue_parser" type="checkbox" class="checkbox" name="config_rainforest_enable_offersqueue_parser" <? if ($config_rainforest_enable_offersqueue_parser){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_offersqueue_parser"></label>
 								</td>
 								<td>
 									<span class="help">
-										<i class="fa fa-info-circle"></i> Чтоб иметь актуальную цену закупки, этот воркер получает цены и наличие для только что заказанных товаров.
+										<i class="fa fa-info-circle"></i> Паралельная очередь офферов. Товары в заказах, новые добавленные товары из очереди ручного добавления.
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td class="right">
+									<i class="fa fa-clock-o"></i> Время работы, часы
+								</td>
+								<td>
+									<input type="time" name="config_rainforest_offersqueue_parser_time_start" value="<?php echo $config_rainforest_offersqueue_parser_time_start; ?>" size="50" style="width:70px;" /> - 
+									<input type="time" name="config_rainforest_offersqueue_parser_time_end" value="<?php echo $config_rainforest_offersqueue_parser_time_end; ?>" size="50" style="width:70px;" />
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Обработка выполняется в рабочей базе и сильно ее нагружает. Поэтому лучше ограничивать время запуска, например, ночными часами, чтоб уменьшить нагрузки.
 									</span>
 								</td>
 							</tr>
 
 							<tr>
 								<td class="right">
-									<i class="fa fa-refresh"></i> Добавлять товары в очередь
+									<i class="fa fa-refresh"></i> Добавлять товары из заказов в очередь
 								</td>
 								<td style="width:40px;" class="center">
 									<input id="config_rainforest_enable_offers_after_order" type="checkbox" class="checkbox" name="config_rainforest_enable_offers_after_order" <? if ($config_rainforest_enable_offers_after_order){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_offers_after_order"></label>
