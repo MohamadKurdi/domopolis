@@ -4838,6 +4838,22 @@
 
 								</td>
 
+								<td style="width:20%">
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Отложить офферы для очереди</span></p>
+										<select name="config_rainforest_delay_queue_offers">
+											<?php if ($config_rainforest_delay_queue_offers) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</div>
+
+								</td>
+
 
 							</tr>
 
@@ -4891,7 +4907,7 @@
 
 							<td style="width:20%">
 								<div>
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Офферы заказанных товаров</span></p>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Паралельная очередь офферов</span></p>
 									<select name="config_rainforest_enable_offersqueue_parser">
 										<?php if ($config_rainforest_enable_offersqueue_parser) { ?>
 											<option value="1" selected="selected">Включить</option>
@@ -4901,6 +4917,13 @@
 											<option value="0"  selected="selected">Отключить</option>
 										<? } ?>
 									</select>
+								</div>
+
+								<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-clock-o"></i> Время работы</span></p>
+
+									<input type="time" name="config_rainforest_offersqueue_parser_time_start" value="<?php echo $config_rainforest_offersqueue_parser_time_start; ?>" size="50" style="width:70px;" /> - 
+									<input type="time" name="config_rainforest_offersqueue_parser_time_end" value="<?php echo $config_rainforest_offersqueue_parser_time_end; ?>" size="50" style="width:70px;" />
 								</div>
 
 							</td>
