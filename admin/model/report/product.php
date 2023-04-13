@@ -145,7 +145,13 @@
 		}
 
 		public function getCountWaitingInASINQueue() {
-			$query = $this->db->query("SELECT COUNT(asin) as total FROM amzn_add_queue WHERE product_id <= 0");
+			$query = $this->db->query("SELECT COUNT(asin) as total FROM amzn_add_queue WHERE product_id = 0");
+
+			return $query->row['total'];
+		}
+
+		public function getCountWaitingInVariantsQueue() {
+			$query = $this->db->query("SELECT COUNT(asin) as total FROM amzn_add_variants_queue WHERE 1");
 
 			return $query->row['total'];
 		}
