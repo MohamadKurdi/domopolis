@@ -55,6 +55,9 @@ class productModelEdit extends hoboModel{
 		$this->db->query($sql);
 	}	
 
+	/*
+		ASIN queue Functions
+	*/
 	public function deleteASINFromQueue($asin) {			
 		if (trim($asin)){
 			$this->db->query("DELETE FROM amzn_add_queue WHERE asin = '" . $this->db->escape($asin) . "'");
@@ -75,6 +78,24 @@ class productModelEdit extends hoboModel{
 		return $this;
 	}
 
+	/*
+		Variants queue Functions
+	*/
+	public function addProductToAmazonOffersQueue($product_id, $asin){
+		if ($product_id && $asin){
+			$this->db->query("INSERT IGNORE INTO amzn_add_variants_queue SET product_id = '" . (int)$product_id . "', asin = '" . $this->db->escape($asin) . "', date_added = NOW()");	
+		}	
+
+		return $this;
+	}
+
+	public function deleteFromVariantsAddQueue($asin){
+		$this->db->query("DELETE FROM amzn_add_variants_queue WHERE asin = '" . $this->db->escape($asin) . "'");	
+	}
+
+	/*
+		ASIN Ignore Functions
+	*/
 	public function addAsinToIgnored($asin, $name = ''){
 		if (!$name){
 			$name = 'UNKNOWN_PRODUCT';
@@ -133,16 +154,14 @@ class productModelEdit extends hoboModel{
 
 	public function setProductVariants($product){
 		if (!empty($product['variants'])){
-
 			//Проверяем, возможно этот товар уже добавлен как вариант, в таком случае мы его пропускаем
 			$query = $this->db->ncquery("SELECT main_asin FROM product_variants WHERE variant_asin = '" . $this->db->escape($product['asin']) . "'");
 			
 			if ($query->num_rows){
-				echoLine('[updateProductVariants] ' . $product['asin'] . ' уже вариант у ' . $query->row['main_asin']);
+				echoLine('[setProductVariants] ' . $product['asin'] . ' is already variant of ' . $query->row['main_asin'], 'i');
 			} else {
-
-			$this->db->query("INSERT IGNORE INTO product_variants SET main_asin = '" . $this->db->escape($product['asin']) . "', variant_asin = '" . $this->db->escape($product['asin']) . "'");
-			foreach ($product['variants'] as $variant){										
+				$this->db->query("INSERT IGNORE INTO product_variants SET main_asin = '" . $this->db->escape($product['asin']) . "', variant_asin = '" . $this->db->escape($product['asin']) . "'");
+				foreach ($product['variants'] as $variant){										
 					$this->db->query("INSERT IGNORE INTO product_variants SET main_asin = '" . $this->db->escape($product['asin']) . "', variant_asin = '" . $this->db->escape($variant['asin']) . "'");
 				}
 			}

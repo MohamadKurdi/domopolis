@@ -70,7 +70,7 @@ class productModelGet extends hoboModel{
 	public function getIfAsinIsInQueue($asin){
 		$sql = "SELECT asin FROM amzn_add_queue WHERE asin = '" . $this->db->escape($asin) . "'";
 
-		$query = $this->db->query($sql);
+		$query = $this->db->ncquery($sql);
 
 		if ($query->num_rows){
 			return $query->rows;
@@ -84,10 +84,39 @@ class productModelGet extends hoboModel{
 
 		$sql = "SELECT DISTINCT asin, category_id FROM amzn_add_queue WHERE product_id = '0' ORDER BY date_added ASC LIMIT " . (int)\hobotix\RainforestAmazon::productRequestLimits;
 
-		$query = $this->db->query($sql);
+		$query = $this->db->ncquery($sql);
 
 		if ($query->num_rows){
 			return $query->rows;
+		}
+
+		return false;
+	}
+
+	public function getVariantsAddQueue(){
+		$result = [];
+
+		$sql = "SELECT advq.*, pad.json, pad.file FROM amzn_add_variants_queue advq LEFT JOIN product_amzn_data pad ON (advq.asin = pad.asin) ORDER BY advq.date_added ASC LIMIT " . (int)\hobotix\RainforestAmazon::variantQueueLimit;
+
+		$query = $this->db->ncquery($sql);
+
+		if ($query->num_rows){
+			foreach ($query->rows as $row){
+
+				if ($this->config->get('config_enable_amazon_asin_file_cache')){
+					if (!empty($row['file']) && file_exists(DIR_CACHE . $row['file'])){
+						$row['json'] = file_get_contents(DIR_CACHE . $row['file']);
+					}
+				}
+
+				$result[]= [
+					'product_id' 			=> $row['product_id'],
+					'asin' 					=> $row['asin'],
+					'json' 					=> $row['json'] 	
+				];
+			}
+
+			return $result;
 		}
 
 		return false;
@@ -592,7 +621,6 @@ class productModelGet extends hoboModel{
 			
 		return $product_description_data;
 	}
-
 
 	public function checkIfProductIsVariantWithFilledParent($asin){
 		$query = $this->db->ncquery("SELECT p.product_id, p.asin, p.description_filled_from_amazon FROM product p WHERE p.asin = (SELECT main_asin FROM product_variants WHERE main_asin <> '" . $this->db->escape($asin) . "' AND variant_asin = '" . $this->db->escape($asin) . "' LIMIT 1)");	

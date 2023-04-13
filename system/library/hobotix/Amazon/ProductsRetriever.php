@@ -837,67 +837,76 @@ class ProductsRetriever extends RainforestRetriever
 		return true;
 	}
 
-	public function parseProductVariants($product_id, $product, $do_adding_new_variants = true){
-		$this->parseProductVariantDimensions($product_id, $product);		
+	public function parseProductVariants($product_id, $product, $do_adding_new_variants = true, $this_is_queue = false){
+		$this->parseProductVariantDimensions($product_id, $product);
 
-		if (!empty($product['variants']) && $do_adding_new_variants){	
+		if ($this->config->get('config_rainforest_delay_queue_variants') && !$this_is_queue){
+			if (!empty($product['variants']) && $do_adding_new_variants){
+				$this->model_product_edit->addProductToAmazonOffersQueue($product_id, $product['asin']);
+				echoLine('[ProductsRetriever::parseProductVariants] Skipped adding variants, added to variants queue!', 's');
+			}
+		} else {			
+			if (!empty($product['variants']) && $do_adding_new_variants){	
+				echoLine('[ProductsRetriever::parseProductVariants] Now parsing variants!', 's');
+
 				//У нас 2 варианта, либо текущий товар - основной, либо текущий - не основной
 				//В любом случае в табличке вариантов уже есть записи, они добавлены либо из текущего товара, либо из не_текущего, в любом случае мы отбираем все варианты
 				//И да, список всегда будет одинаковый, потому что записан, сука
-			$variants = $this->model_product_get->getOtherProductVariantsByAsin($product['asin']);				
-			$new_product_data = [];
-			foreach ($variants as $variant){
+				$variants = $this->model_product_get->getOtherProductVariantsByAsin($product['asin']);				
+				$new_product_data = [];
+				foreach ($variants as $variant){
 					//Товар уже существует
-				if ($variant['product_id']){
+					if ($variant['product_id']){
 						//Товар существует и уже полностью обновлен, записан, и ваще у него всё хорошо
-					if ($variant['filled_from_amazon']){
+						if ($variant['filled_from_amazon']){
 							//Просто обновляем привязку родителя по асину
-						echoLine('[ProductsRetriever::parseProductVariants] Updating parent by asin:' . $variant['asin'] . ':' . $variant['main_asin'], 'i');
-						$this->model_product_edit->updateProductMainVariantIdByParentAsin($variant['product_id'], $variant['main_asin']);
-					} else {
+							echoLine('[ProductsRetriever::parseProductVariants] Updating parent by asin:' . $variant['asin'] . ':' . $variant['main_asin'], 'i');
+							$this->model_product_edit->updateProductMainVariantIdByParentAsin($variant['product_id'], $variant['main_asin']);
+						} else {
 							//Отправляем товар на полную загрузку
-						echoLine('[ProductsRetriever::parseProductVariants] Filling variant product:' . $variant['asin'], 'i');
-						$new_product_data[] = [
-							'product_id' => $variant['product_id'],
-							'asin'		 => $variant['asin']
-						];
+							echoLine('[ProductsRetriever::parseProductVariants] Filling variant product:' . $variant['asin'], 'i');
+							$new_product_data[] = [
+								'product_id' => $variant['product_id'],
+								'asin'		 => $variant['asin']
+							];
 
-						echoLine('[ProductsRetriever::parseProductVariants] Updating parent by asin:' . $variant['asin'] . ':' . $variant['main_asin'], 'i');
-						$this->model_product_edit->updateProductMainVariantIdByParentAsin($variant['product_id'], $variant['main_asin']);
-					}
-				} else {
+							echoLine('[ProductsRetriever::parseProductVariants] Updating parent by asin:' . $variant['asin'] . ':' . $variant['main_asin'], 'i');
+							$this->model_product_edit->updateProductMainVariantIdByParentAsin($variant['product_id'], $variant['main_asin']);
+						}
+					} else {
 
-					if (!$this->getProductsByAsin($variant['asin'])){
+						if (!$this->getProductsByAsin($variant['asin'])){
 
 						//Товара не существует вообще
-						echoLine('[ProductsRetriever::parseProductVariants] New variant:' . $variant['asin'], 'w');
+							echoLine('[ProductsRetriever::parseProductVariants] New variant:' . $variant['asin'], 'w');
 
-						$new_product_name = $this->trimProductNameWithoutVariant($product['title'], $this->getCurrentVariantDimensions($product['variants']), $this->getVariantDimensionsByAsin($product['variants'], $variant['asin']));
-						echoLine('[ProductsRetriever::parseProductVariants] New variant name: ' . $new_product_name, 'i');	
+							$new_product_name = $this->trimProductNameWithoutVariant($product['title'], $this->getCurrentVariantDimensions($product['variants']), $this->getVariantDimensionsByAsin($product['variants'], $variant['asin']));
+							echoLine('[ProductsRetriever::parseProductVariants] New variant name: ' . $new_product_name, 'i');	
 
-						$new_product_id = $this->addSimpleProductWithOnlyAsin([
-							'asin' 				=> $variant['asin'], 
-							'category_id' 		=> $this->model_product_get->getCurrentProductCategory($product_id), 
-							'main_variant_id'	=> $product_id,
-							'name' 				=> $new_product_name,
-							'image' 			=> $this->getImage($this->getVariantImageByAsin($product['variants'], $variant['asin'])), 
-							'added_from_amazon' => 1
-						]);
-					}	
+							$new_product_id = $this->addSimpleProductWithOnlyAsin([
+								'asin' 				=> $variant['asin'], 
+								'category_id' 		=> $this->model_product_get->getCurrentProductCategory($product_id), 
+								'main_variant_id'	=> $product_id,
+								'name' 				=> $new_product_name,
+								'image' 			=> $this->getImage($this->getVariantImageByAsin($product['variants'], $variant['asin'])), 
+								'added_from_amazon' => 1
+							]);
+						}	
 
-					echoLine('[ProductsRetriever::parseProductVariants] Updating parent by asin: ' . $variant['asin'] . ':' . $variant['main_asin'], 'i');
-					$this->model_product_edit->updateProductMainVariantIdByParentAsin($new_product_id, $variant['main_asin']);					
+						echoLine('[ProductsRetriever::parseProductVariants] Updating parent by asin: ' . $variant['asin'] . ':' . $variant['main_asin'], 'i');
+						$this->model_product_edit->updateProductMainVariantIdByParentAsin($new_product_id, $variant['main_asin']);					
 
 
-					$new_product_data[] = [
-						'product_id' => $new_product_id,
-						'asin' => $variant['asin']
-					];						
+						$new_product_data[] = [
+							'product_id' => $new_product_id,
+							'asin' => $variant['asin']
+						];						
+					}
 				}
-			}
 
-			if ($new_product_data){
-				$this->editFullProductsAsyncWithNoVariantParser($new_product_data);
+				if ($new_product_data){
+					$this->editFullProductsAsyncWithNoVariantParser($new_product_data);
+				}
 			}
 		}
 	}
@@ -991,6 +1000,10 @@ class ProductsRetriever extends RainforestRetriever
 	public function fixEmptySKU($product_id){
 		$this->db->query("UPDATE product SET sku = model WHERE sku = '' AND product_id = '" . (int)$product_id . "'");			
 	}
+
+	public function editFullProductVariants($product_id, $product){
+		$this->parseProductVariants($product_id, $product, true, true);
+	}
 	
 	public function editFullProduct($product_id, $product, $do_adding_new_variants = true){	
 		$this->yandexTranslator->setDebug(false);
@@ -1017,7 +1030,6 @@ class ProductsRetriever extends RainforestRetriever
 			//Рефактор логики 02.07.2022, теперь мы всегда смотрим на заполненную табличку асинов
 			//UPD! Это делается только в том случае, если основной товар уже заполнен! Мы можем по какой-то причине начать с товара - варианта
 		$main_variant = $this->model_product_get->checkIfProductIsVariantWithFilledParent($product['asin']);					
-
 		if ($main_variant){
 			if ($main_variant['main_variant_id'] && $main_variant['main_variant_id'] != $product_id){
 				echoLine('[parseProductVariants] Updating parent by asin:' . $product_id . ':' . $main_variant['main_variant_id'], 'i');
@@ -1089,8 +1101,8 @@ class ProductsRetriever extends RainforestRetriever
 			//Parse product top reviews
 		$this->parseProductTopReviews($product_id, $product);
 
-			//Варианты
-		$this->parseProductVariants($product_id, $product, $do_adding_new_variants);
+			//Варианты		
+		$this->parseProductVariants($product_id, $product, $do_adding_new_variants);				
 
 		$this->registry->get('rainforestAmazon')->infoUpdater->updateProductAmazonLastSearch($product_id);
 		$this->registry->get('rainforestAmazon')->infoUpdater->setProductIsFilledFromAmazon($product_id)->enableProduct($product_id);
