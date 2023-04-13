@@ -186,7 +186,17 @@ class ControllerDPRainForest extends Controller {
 	Функционал очистки базы товаров (запуск всех функций очистки подряд)
 	*/
 	public function cleardatabasecron(){
-		$this->deletenoofferscron()->deleteinvalidasinscron()->deletecheapcron()->deleteduplicatescron();
+		$this->deletenoofferscron()->deleteinvalidasinscron()->deletecheapcron()->deleteduplicatescron()->deletebadfromqueuecron();
+	}
+
+	/*
+	Функционал очистки очереди 
+	*/
+	public function deletebadfromqueuecron(){
+		if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_enable_add_queue_parser')){
+			echoLine('[ControllerDPRainForest::deletenoofferscron] Cleaning bad queue products!', 'w');
+			$this->db->query("DELETE FROM amzn_add_queue WHERE product_id = '-1'");
+		}
 	}
 
 	/*
@@ -237,7 +247,7 @@ class ControllerDPRainForest extends Controller {
 			}
 		}		
 
-	//	return $this;
+		return $this;
 	}
 
 	/*
@@ -301,7 +311,7 @@ class ControllerDPRainForest extends Controller {
 
 				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($row['product_id'])){
 					echoLine('[ControllerDPRainForest::deleteinvalidasinscron] Product ' . $row['product_id'] . ' is on stock, skipping and enabling', 'i');
-					$this->rainforestAmazon->productsRetriever->model_product_edit->enableProduct($product_id);
+					$this->rainforestAmazon->productsRetriever->model_product_edit->enableProduct($row['product_id']);
 				} elseif ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
 					echoLine('[ControllerDPRainForest::deleteinvalidasinscron] Product ' . $row['product_id'] . ' is in orders, disabling', 'i');
 					$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($row['product_id'])->addAsinToIgnored($query->row['old_asin'], $query->row['name']);
@@ -336,7 +346,7 @@ class ControllerDPRainForest extends Controller {
 
 				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($row['product_id'])){
 					echoLine('[ControllerDPRainForest::deletecheapcron] Product ' . $row['product_id'] . ' is on stock, skipping and enabling', 'i');
-					$this->rainforestAmazon->productsRetriever->model_product_edit->enableProduct($product_id);
+					$this->rainforestAmazon->productsRetriever->model_product_edit->enableProduct($row['product_id']);
 				} elseif ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
 					echoLine('[ControllerDPRainForest::deletecheapcron] Product ' . $row['product_id'] . ' is in orders, disabling', 'i');
 					$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($row['product_id']); //->addAsinToIgnored($query->row['asin'], $query->row['name']);
@@ -420,12 +430,72 @@ class ControllerDPRainForest extends Controller {
 	}	
 
 	/*
-	Обработка очереди добавления ASIN - получение офферов для товаров в очереди вне очереди:)
+	Обработка очереди вариантов (если отложена)
 	*/
-	public function addoffersasinsqueuecron(){
+	public function addvariantsqueuecron(){
+		if (!$this->config->get('config_rainforest_enable_add_variants_queue_parser')){
+			echoLine('[ControllerDPRainForest::addvariantsqueuecron] CRON IS DISABLED IN ADMIN', 'e');
+			return;
+		}
 
+		$this->load->library('Timer');
 
+		if ($this->config->has('config_rainforest_add_variants_queue_parser_time_start') && $this->config->has('config_rainforest_add_variants_queue_parser_time_end')){
+			$interval = new Interval($this->config->get('config_rainforest_add_variants_queue_parser_time_start') . '-' . $this->config->get('config_rainforest_add_variants_queue_parser_time_end'));
 
+			if (!$interval->isNow()){
+				echoLine('[ControllerDPRainForest::addvariantsqueuecron] NOT ALLOWED TIME', 'e');
+				return;
+			} else {
+				echoLine('[ControllerDPRainForest::addvariantsqueuecron] ALLOWED TIME', 's');				
+			}
+		}
+
+		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getVariantsAddQueue();
+
+		if ($products){
+			foreach ($products as $product){
+				echoLine('[ControllerDPRainForest::addvariantsqueuecron] Starting with product ' . $product['product_id'] . ', ' . $product['asin'], 'i');					
+				$this->rainforestAmazon->productsRetriever->model_product_edit->deleteFromVariantsAddQueue($product['asin']);
+
+				if ($product['json'] && json_decode($product['json'])){
+					echoLine('[ControllerDPRainForest::addvariantsqueuecron] JSON with information found for ' . $product['asin'], 's');
+					$json = json_decode($product['json'], true);	
+				} else {
+					echoLine('[ControllerDPRainForest::addvariantsqueuecron] JSON with information not found for ' . $product['asin'] . ', trying to recover', 'e');
+
+					$results = $this->rainforestAmazon->simpleProductParser->getProductByASINS([[
+						'product_id' 	=> $product['product_id'], 
+						'asin' 			=> $product['asin']
+					]]
+				);
+
+					foreach ($results as $product_id => $result){					
+						if ($result && !empty($result['asin'])){
+							echoLine('[ControllerDPRainForest::fixlostjson] Recovered ' . $product_id . ' -> ' . $result['asin'], 's');
+
+							$this->rainforestAmazon->infoUpdater->updateProductAmazonLastSearch($product_id);
+							$this->rainforestAmazon->infoUpdater->updateProductAmznData([
+								'product_id' 	=> $product_id, 
+								'asin' 			=> $result['asin'], 
+								'json' 			=> json_encode($result)
+							], false);
+
+							$json = $result;
+						} else {
+							echoLine('[ControllerDPRainForest::fixlostjson] Could not recover ' . $product_id . ' -> ' . $result['asin'], 'e');						
+						}
+					}
+				}
+
+				if (!empty($json)){
+					echoLine('[ControllerDPRainForest::addvariantsqueuecron] Finally got JSON passing to parse ' . $product['asin'], 's');
+					$this->rainforestAmazon->productsRetriever->editFullProductVariants($product['product_id'], $json);
+				}
+			}
+		} else {
+			echoLine('[ControllerDPRainForest::addvariantsqueuecron] Variant queue is empty', 'i');				
+		}
 	}
 
 	/*
@@ -744,7 +814,7 @@ class ControllerDPRainForest extends Controller {
 			$slice = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFullDataWithLostJSON(($i-1) * (int)\hobotix\RainforestAmazon::productRequestLimits);
 			if ($slice){
 				$total_lost += count($slice);						
-				echoLine('[fixlostjson] Have ' . count($slice) . ' lost json files, recovering...');
+				echoLine('[fixlostjson] Have ' . count($slice) . ' lost json files, recovering', 'w');
 
 				foreach ($slice as $lost){
 					echoLine('[fixlostjson] Lost ' . $lost['product_id'] . ' with asin ' . $lost['asin']);					
@@ -754,7 +824,7 @@ class ControllerDPRainForest extends Controller {
 
 				foreach ($results as $product_id => $result){					
 					if ($result && !empty($result['asin'])){
-						echoLine('[fixlostjson] Recovered ' . $product_id . ' -> ' . $result['asin']);
+						echoLine('[fixlostjson] Recovered ' . $product_id . ' -> ' . $result['asin'], 's');
 
 						$this->rainforestAmazon->infoUpdater->updateProductAmazonLastSearch($product_id);
 						$this->rainforestAmazon->infoUpdater->updateProductAmznData([
@@ -763,7 +833,7 @@ class ControllerDPRainForest extends Controller {
 						'json' 			=> json_encode($result)
 						], false);
 					} else {
-						echoLine('[fixlostjson] Could not recover ' . $product_id . ' -> ' . $result['asin']);						
+						echoLine('[fixlostjson] Could not recover ' . $product_id . ' -> ' . $result['asin'], 'e');						
 					}
 				}				
 			}
