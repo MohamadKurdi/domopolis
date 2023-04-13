@@ -14,19 +14,20 @@
 			<table class="list big small-bottom-margin">
 				<thead>
 					<tr>
-						<td colspan="7" class="left">
+						<td colspan="8" class="left">
 							Товары
 						</td>
 					</tr>					
 				</thead>
 				<tr class="small">
-					<td style="color:#66c7a3"><i class="fa fa-plus" aria-hidden="true"></i> <a style="color:#66c7a3" href="<?php echo $filter_total_products_added_today; ?>">Сег<i class="fa fa-filter"></i></a></td>
-					<td style="color:#3276c2"><i class="fa fa-plus" aria-hidden="true"></i> <a style="color:#3276c2" href="<?php echo $filter_total_products_added_yesterday; ?>">Вч <i class="fa fa-filter"></i></a></td>
-					<td style="color:#24a4c1"><i class="fa fa-plus" aria-hidden="true"></i> Нед</td>		
-					<td style="color:#24a4c1"><i class="fa fa-plus" aria-hidden="true"></i> Мес</td>
-					<td style="color:#9832FF"><a style="color:#9832FF" href="<?php echo $filter_product_in_queue; ?>"><i class="fa fa-refresh" aria-hidden="true"></i> Que</a></td>
-					<td style="color:#9832FF"><i class="fa fa-plus" aria-hidden="true"></i> Que</a></td>
-					<td style="color:#fa4934"><a style="color:#fa4934" href="<?php echo $filter_total_products_invalid_asin; ?>">Плохие <i class="fa fa-filter"></i></a></td>								
+					<td style="color:#66c7a3"><i class="fa fa-plus" aria-hidden="true"></i> <a style="color:#66c7a3" href="<?php echo $filter_total_products_added_today; ?>">Td<i class="fa fa-filter"></i></a></td>
+					<td style="color:#3276c2"><i class="fa fa-plus" aria-hidden="true"></i> <a style="color:#3276c2" href="<?php echo $filter_total_products_added_yesterday; ?>">Ys <i class="fa fa-filter"></i></a></td>
+					<td style="color:#24a4c1"><i class="fa fa-plus" aria-hidden="true"></i> Wk</td>		
+					<td style="color:#24a4c1"><i class="fa fa-plus" aria-hidden="true"></i> Mn</td>
+					<td style="color:#9832FF"><a style="color:#9832FF" href="<?php echo $filter_product_in_queue; ?>"><i class="fa fa-refresh" aria-hidden="true"></i> AQue</a></td>
+					<td style="color:#9832FF"><i class="fa fa-refresh" aria-hidden="true"></i> VQue</a></td>
+					<td style="color:#9832FF"><i class="fa fa-plus" aria-hidden="true"></i> AQue</a></td>
+					<td style="color:#fa4934"><a style="color:#fa4934" href="<?php echo $filter_total_products_invalid_asin; ?>">Bad <i class="fa fa-filter"></i></a></td>								
 				</tr>
 				<tr class="small">
 					<td><?php echo $total_products_added_today; ?></td>
@@ -34,18 +35,20 @@
 					<td><?php echo $total_products_added_week; ?></td>
 					<td><?php echo $total_products_added_month; ?></td>
 					<td><?php echo $total_product_in_queue; ?></td>
+					<td><?php echo $total_product_in_variants_queue; ?></td>
 					<td><?php echo $total_products_in_queue_today; ?></td>
 					<td style="color:#fa4934"><?php echo $total_products_invalid_asin; ?></td>					
 				</tr>
-
+			</table>
+			<table class="list big small-bottom-margin">
 				<tr class="small">
-						<td style="color:#66c7a3">Всего</td>
-						<td style="color:#66c7a3">Свернуто</td>
-						<td style="color:#fa4934"><a style="color:#fa4934" href="<?php echo $filter_total_products_enabled; ?>">Вкл<i class="fa fa-filter"></i></a></td>
-						<td style="color:#3276c2"><a style="color:#3276c2" href="<?php echo $filter_total_products_in_tech; ?>">В тех.<i class="fa fa-filter"></i></a></td>
-						<td style="color:#24a4c1"><a style="color:#24a4c1" href="<?php echo $filter_total_product_parsed; ?>">Загружено <i class="fa fa-filter"></i></a></td>
-						<td style="color:#24a4c1">Загружать</td>
-						<td style="color:#fa4934">Дубли</td>						
+						<td style="color:#66c7a3">Total</td>
+						<td style="color:#66c7a3">Variants</td>
+						<td style="color:#fa4934"><a style="color:#fa4934" href="<?php echo $filter_total_products_enabled; ?>">Enabled<i class="fa fa-filter"></i></a></td>
+						<td style="color:#3276c2"><a style="color:#3276c2" href="<?php echo $filter_total_products_in_tech; ?>">Tech<i class="fa fa-filter"></i></a></td>
+						<td style="color:#24a4c1"><a style="color:#24a4c1" href="<?php echo $filter_total_product_parsed; ?>">Ready <i class="fa fa-filter"></i></a></td>
+						<td style="color:#24a4c1">To load</td>
+						<td style="color:#fa4934">Doubles</td>						
 					</tr>
 				<tr class="small">
 					<td><?php echo $total_products; ?></td>
@@ -68,7 +71,7 @@
 				</thead>
 				<tr class="small">
 					<td style="color:#3276c2"><i class="fa fa-hourglass" aria-hidden="true"></i> Ждет</td>
-					<td style="color:#9832FF"><i class="fa fa-refresh" aria-hidden="true"></i> Que</td>
+					<td style="color:#9832FF"><i class="fa fa-refresh" aria-hidden="true"></i> OQue</td>
 					<td style="color:#24a4c1">Σ Всего</td>
 					<td style="color:#3276c2"><i class="fa fa-refresh" aria-hidden="true"></i> Сегодня</td>
 					<td style="color:#3276c2"><i class="fa fa-refresh" aria-hidden="true"></i> Вчера</td>
