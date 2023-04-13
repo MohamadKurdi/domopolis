@@ -4810,6 +4810,27 @@
 								</td>
 
 								<td style="width:20%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Очередь добавления вариантов</span></p>
+											<select name="config_rainforest_enable_add_variants_queue_parser">
+												<?php if ($config_rainforest_enable_add_variants_queue_parser) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-clock-o"></i> Время работы</span></p>
+
+											<input type="time" name="config_rainforest_add_variants_queue_parser_time_start" value="<?php echo $config_rainforest_add_variants_queue_parser_time_start; ?>" size="50" style="width:70px;" /> - 
+											<input type="time" name="config_rainforest_add_variants_queue_parser_time_end" value="<?php echo $config_rainforest_add_variants_queue_parser_time_end; ?>" size="50" style="width:70px;" />
+										</div>
+								</td>
+
+								<td style="width:20%">
 									<div>
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Отложить изменение цен</span></p>
 										<select name="config_rainforest_delay_price_setting">
