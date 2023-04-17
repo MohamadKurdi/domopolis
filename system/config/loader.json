@@ -31,7 +31,8 @@
 		"/hobotix/ElasticSearch",
 		"/hobotix/CourierServices",
 		"/hobotix/OpenAIAdaptor",
-		"/hobotix/MinifyAdaptor"		
+		"/hobotix/MinifyAdaptor",
+		"/hobotix/PhoneValidator"		
 	],
 	"helpers":[
 		"json",
