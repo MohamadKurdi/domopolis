@@ -169,7 +169,7 @@
 </table>
 
 <?php if ($this->config->get('config_amazon_product_stats_enable')) { ?>
-				<div id="amazon_stats" style="width:29%; float:right;" class="amazonstats delayed-load" data-route='common/home/loadProductStats' data-reload="10000">
+				<div id="amazon_stats" style="width:29%; float:right;" class="amazonstats delayed-load" data-route='common/home/loadProductStats' data-reload="50000">
 				</div>
 			<?php } ?>
 <div class="clr"></div>
