@@ -251,7 +251,10 @@ class ControllerCommonHeader extends Controller
             $this->data['competitors'] = $this->url->link('sale/competitors', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['order_status'] = $this->url->link('localisation/order_status', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['payment'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+            
             $this->data['addasin'] = $this->url->link('catalog/addasin', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['total_product_in_asin_queue'] = $this->model_report_product->getCountWaitingInASINQueue();
+
             $this->data['product'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'], 'SSL');
             if ($this->config->get('admin_quick_edit_status') && $this->config->get('aqe_catalog_products_status') && isset($this->session->data['token'])) {
                 $this->data['product'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'], 'SSL');

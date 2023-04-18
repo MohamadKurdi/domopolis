@@ -1,5 +1,5 @@
 <style>
-	.admin_home{width:100%;}
+	.admin_home{width:70%; float:left;}
 	.admin_home tr td{text-align:center;width: 20%;}
 	.admin_home tr td a{color:#3a4247;}
 	.link-list {
@@ -164,11 +164,15 @@
 				</div>
 			</div>
 			<?php } ?>
-
-			<div class="clr"></div>
 		</td>
 	</tr>
 </table>
+
+<?php if ($this->config->get('config_amazon_product_stats_enable')) { ?>
+				<div id="amazon_stats" style="width:29%; float:right;" class="amazonstats delayed-load" data-route='common/home/loadProductStats' data-reload="10000">
+				</div>
+			<?php } ?>
+<div class="clr"></div>
 <table>
 	<tr>
 		<td>
