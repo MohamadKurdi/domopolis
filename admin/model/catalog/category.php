@@ -509,13 +509,44 @@ class ModelCatalogCategory extends Model {
 	}
 	
 	public function getCategoriesTree() {
-		$query = $this->db->query("SELECT cd.name, c.category_id, c.parent_id FROM category c LEFT JOIN category_description cd ON (c.category_id = cd.category_id) LEFT JOIN category_to_store c2s ON (c.category_id = c2s.category_id) WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "'  AND c.status = '1' AND c.sort_order <> '-1'");
+		$sql = "SELECT cd.name, c.category_id, c.parent_id FROM category c 
+			LEFT JOIN category_description cd ON (c.category_id = cd.category_id) ";
+
+		if (!$this->config->get('config_single_store_enable')){	
+			$sql .= " LEFT JOIN category_to_store c2s ON (c.category_id = c2s.category_id) ";
+		}
+
+		$sql .= " WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "' ";
+
+		if (!$this->config->get('config_single_store_enable')){	
+			$sql .= " AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ";
+		}
+
+		$sql .= "AND c.status = '1' 
+			AND c.sort_order <> '-1'";
+
+		$query = $this->db->query($sql);
 		
 		return $query->rows;
 	}
 	
 	public function getAllCategories() {
-		$query = $this->db->query("SELECT * FROM category c LEFT JOIN category_description cd ON (c.category_id = cd.category_id) LEFT JOIN category_to_store c2s ON (c.category_id = c2s.category_id) WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "' AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "'  ORDER BY c.parent_id, c.sort_order, cd.name");
+		$sql = "SELECT cd.name, c.category_id, c.parent_id FROM category c 
+			LEFT JOIN category_description cd ON (c.category_id = cd.category_id) ";
+
+		if (!$this->config->get('config_single_store_enable')){	
+			$sql .= " LEFT JOIN category_to_store c2s ON (c.category_id = c2s.category_id) ";
+		}
+
+		$sql .= " WHERE cd.language_id = '" . (int)$this->config->get('config_language_id') . "' ";
+
+		if (!$this->config->get('config_single_store_enable')){	
+			$sql .= " AND c2s.store_id = '" . (int)$this->config->get('config_store_id') . "' ";
+		}
+
+		$sql .= " ORDER BY c.parent_id, c.sort_order, cd.name";
+
+		$query = $this->db->query($sql);
 		
 		$category_data = array();
 		foreach ($query->rows as $row) {
