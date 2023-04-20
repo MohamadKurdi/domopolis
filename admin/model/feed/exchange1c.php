@@ -211,7 +211,7 @@
 			$content = $xml->asXML();
 			
 			if ($do_echo) {
-				header("Content-Type: text/xml");
+//				header("Content-Type: text/xml");
 				print_r($content);
 			}
 			
