@@ -6,9 +6,7 @@
 	
 	class ModelToolSimpleApiMain extends Model {
 		static $data = array();
-		
-		
-		
+						
 		public function getCustomerGroups($filter = '') {
 			$values = array();
 			
@@ -147,8 +145,7 @@
 			
 			return $values;
 		}
-		
-		
+				
 		public function getCities($zoneId) {
 			$values = array(
             array(
@@ -234,6 +231,10 @@
 			'text' => $this->language->get('text_no')
             )
 			);
+		}
+
+		public function validatePhone($phone_number){			
+			return $this->registry->get('phoneValidator')->validate($phone_number);
 		}
 		
 		public function checkTelephoneForUniqueness($telephone, $register) {
@@ -324,7 +325,6 @@
 			}
 
 			return true;
-
 		}
 		
 		public function getRandomPassword() {
@@ -461,13 +461,11 @@
 			return '';
 		}
 		
-		public function getCitiesForCountry(){
-			
+		public function getCitiesForCountry(){			
 		}
 		
 		// example of code for getting a mask of field
-		public function getTelephoneMask($country_id) {
-			
+		public function getTelephoneMask($country_id) {			
 			return $this->config->get('config_phonemask');
 			
 			switch ($country_id) {

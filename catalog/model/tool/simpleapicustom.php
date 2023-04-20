@@ -15,22 +15,20 @@
             
             return $values;
 		}
-		
-		public function checkIfUseUAServices(){
-			
-			return ($this->config->get('config_country_id') == 220);
-			
+
+		public function validatePhone($phone_number){			
+			return $this->registry->get('phoneValidator')->validate($phone_number);
 		}
 		
-		public function checkIfUseRUKZBYServices(){
-			
-			return ($this->config->get('config_country_id') != 220);
-			
+		public function checkIfUseUAServices(){			
+			return ($this->config->get('config_country_id') == 220);			
 		}
 		
-		
-		public function getCustomerAddressGeneralField(){		
+		public function checkIfUseRUKZBYServices(){			
+			return ($this->config->get('config_country_id') != 220);			
+		}
 			
+		public function getCustomerAddressGeneralField(){				
 			if ($customer_id = $this->customer->isLogged()){
 				$query = $this->db->query("SELECT address_1 FROM address WHERE LENGTH(address_1) > 1 AND customer_id = '" . (int)$customer_id . "' LIMIT 1");
 				
@@ -39,8 +37,7 @@
 				}
 			}
 			
-			return '';
-			
+			return '';			
 		}
         
         public function getDefaultCityGuid($cityName){
@@ -136,8 +133,7 @@
 				}
 			}
             
-            return false;
-            
+            return false;            
 		}
 		
 		public function setCustomerCityWithNoIDToSession($city){
@@ -150,10 +146,8 @@
 				return true;
 			}
             
-            return false;
-            
-		}
-		
+            return false;            
+		}		
 		
 		public function getDefaultCustomerCityStructForDeliveryGuessing(){
 			
@@ -164,8 +158,7 @@
 			'id' 	=> $city['id'],
 			);
 		}
-		
-        
+		        
         public function getAndCheckCurrentCity(){
             $customer_city = false;
             
@@ -229,12 +222,10 @@
 				}
 			}
             
-            return $customer_city;
-            
+            return $customer_city;            
 		}
 		
-		public function getJustCityIdByName($cityName){  
-			
+		public function getJustCityIdByName($cityName){  			
             $cityName = trim($cityName);
             $cityName = mb_strtolower($cityName);
 			
@@ -257,8 +248,7 @@
 			
 			$city = $this->getCityIdByName($cityName);
 			
-			return $city['id'];
-			
+			return $city['id'];		
 		}
 		
 		public function getCityIdByName($cityName){  
@@ -310,8 +300,7 @@
 				}
 			}
 			
-			return array('city' => $cityName, 'id' => false);
-			
+			return array('city' => $cityName, 'id' => false);		
 		}
 		
 		public function getCityNameByID($cityID){
