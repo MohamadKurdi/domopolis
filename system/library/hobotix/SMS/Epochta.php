@@ -15,6 +15,13 @@ class Epochta {
 	}
 
 	public function check($answer){
+		$answer = json_decode($answer, true);
+
+		if (!$answer){
+			echoLine('[Epochta::check] Error decoding JSON!', 'e');
+			return false;
+		}
+
 		if (!empty($answer['error'])){
 			echoLine('[Epochta::check] Error! ' . $answer['error'], 'e');
 			return false;
@@ -26,9 +33,9 @@ class Epochta {
 
 	public function getBalance(){
 		$balance = $this->ePochta->getUserBalance()->getBody()->getContents();	    
-		$balance = json_decode($balance, true);
-
+	
 		if ($this->check($balance)){
+			$balance = json_decode($balance, true);
 			return (float)$balance['result']['balance_currency'];
 		}
 
@@ -44,9 +51,10 @@ class Epochta {
 			'type' 			=> '2',
 			'datetime' 		=> '',
 			'sms_lifetime'  => '0',
-		])->getBody()->getContents();
+		])->getBody()->getContents();		
 
 		if ($this->check($answer)){
+			$answer = json_decode($answer, true);
 			return (float)$answer['result']['id'];
 		}
 

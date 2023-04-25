@@ -33,7 +33,7 @@ class smsQueue {
 	}
 
 	public function cron(){	
-		$query = $this->db->non_cached_query("SELECT * FROM queue_sms ORDER BY RAND() LIMIT 7");
+		$query = $this->db->non_cached_query("SELECT DISTINCT queue_sms_id, body FROM queue_sms ORDER BY queue_sms_id DESC LIMIT 7");
 		$balance = $this->registry->get('smsAdaptor')->getBalance();
 	
 		if ($balance){
