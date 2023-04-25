@@ -18,6 +18,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/vzaichikov/amazonrainforest"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/vzaichikov/bsg-php"
         }
     ],
     
@@ -71,7 +75,8 @@
         "symfony/options-resolver": "^5.0",
         "orhanerday/open-ai": "^4.7",
         "google/apiclient": "^2.13",
-        "google/auth": "^1.25"            
+        "google/auth": "^1.25",
+        "vzaichikov/bsg-php": "dev-master"            
     },
     "config": {
         "platform-check": false,
