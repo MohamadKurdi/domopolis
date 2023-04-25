@@ -37,6 +37,7 @@
 					echoLine('[ControllerKPService::smsQueue] ALLOWED TIME', 's');				
 				}
 			}
+			
 			$this->smsQueue->cron();
 		}
 
