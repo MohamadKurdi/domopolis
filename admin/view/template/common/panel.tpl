@@ -40,7 +40,7 @@
 										<td colspan="2" align="left" style="padding:5px;"><span style="padding:4px 7px; background-color:#aece4e; color:white">Связь, телефония</span></td>
 									</tr>
 									<tr>
-										<td style="width:250px;"><b>Epochta SMS (смски)</b></td>
+										<td style="width:250px;"><b>SMS-шлюз (смски)</b></td>
 										<td style="padding-top:10px; padding-bottom:10px;"><span id="epochtabalance"><i class="fa fa-spinner fa-spin"></i> загружается баланс...</span></td>
 									</tr>
 									<tr>

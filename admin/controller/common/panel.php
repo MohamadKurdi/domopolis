@@ -901,29 +901,25 @@ public function getZadarmaBalance(){
 
 
 
-public function getEpochtaBalance(){
+public function getSMSBalance(){
+	$balance = $this->smsAdaptor->getBalance();	    
+	if ($balance){
 
-	$ePochta = new \Enniel\Epochta\SMS(['public_key' => $this->config->get('config_smsgate_secret_key'), 'private_key' => $this->config->get('config_smsgate_api_key')]);
-
-	$result = $ePochta->getUserBalance()->getBody()->getContents();	    
-	$result = json_decode($result, true);
-	if ($result){
-
-		$body = (int)$result['result']['balance_currency'] . ' ' . $result['result']['currency'];
+		$body = (float)$balance;
 		$class= 'good';
 
-		if ((float)$result['result']['balance_currency'] < 300){
+		if ((float)$balance < 300){
 			$class = 'warn';
 		}
 
-		if ((float)$result['result']['balance_currency'] < 100){
+		if ((float)$balance < 100){
 			$class = 'bad';
 		}
 
 	} else {
 
-		$body = 'FAIL: ERR';
-		$class='bad';
+		$body 	= 'FAIL: ERR';
+		$class 	='bad';
 
 	}
 

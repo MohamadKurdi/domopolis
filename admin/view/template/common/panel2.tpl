@@ -52,13 +52,13 @@
 				</div>
 
 				<div class="tile-block">
-					<div class="tile info-loader unknown" data-path="common/panel/getEpochtaBalance">
-						<div class="tile-heading">Баланс EPOCHTA</div>
+					<div class="tile info-loader unknown" data-path="common/panel/getSMSBalance">
+						<div class="tile-heading">Баланс SMS-шлюза</div>
 						<div class="tile-body"><i class="fa fa-envelope"></i>
 							<span class="tile-result"></span>
 						</div>
 						<div class="tile-footer">
-							смс-шлюз
+							смс-шлюз <?php echo $this->config->get('config_smsgate_library');?>
 						</div>
 					</div>
 				</div>
