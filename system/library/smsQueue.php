@@ -2,10 +2,12 @@
 
 class smsQueue {
 	
-	private $db = null;
-	private $config = null;
+	private $db 		= null;
+	private $config 	= null;
+	private $SmsAdaptor = null;
 	
 	public function __construct($registry) {
+		$this->registry = $registry;
 		$this->db 		= $registry->get('db');
 		$this->config 	= $registry->get('config');
 	}
@@ -30,66 +32,44 @@ class smsQueue {
 		$this->db->query("DELETE FROM queue_sms WHERE queue_sms_id = '" . (int)$queue_sms_id . "'");
 	}
 
-	public function cron(){
-		$log = new Log('sms_epochta.txt');
-
+	public function cron(){	
 		$query = $this->db->non_cached_query("SELECT * FROM queue_sms ORDER BY RAND() LIMIT 7");
+		$balance = $this->registry->get('smsAdaptor')->getBalance();
+	
+		if ($balance){
+			echoLine('[LibrarySmsQueue::cron] Got balance: ' . $balance, 'i');
+		}		
+		
+		if ((int)$balance > 5){
+			echoLine('[LibrarySmsQueue::cron] Balance is: ' . $balance, 's');
 
-		$ePochta = new \Enniel\Epochta\SMS(['public_key' => $this->config->get('config_smsgate_secret_key'), 'private_key' => $this->config->get('config_smsgate_api_key')]);
-
-		$result = $ePochta->getUserBalance()->getBody()->getContents();	    
-		$result = json_decode($result, true);
-
-		$balance = 0;
-		if (!empty($result['result']['balance_currency'])){
-			$balance = (float)$result['result']['balance_currency'];
-		}
-
-		echoLine('[LibrarySmsQueue::cron] Balance is: ' . $balance, 'i');
-		if ($balance && ($balance > 5)) {
-			foreach ($query->rows as $sms){
-				$body 		= json_decode(base64_decode($sms['body']), true);
+			foreach ($query->rows as $row){
+				$body 		= json_decode(base64_decode($row['body']), true);
 
 				if (!trim($body['message'])){
 					echoLine('[LibrarySmsQueue::cron] Empty text!', 'e');
-					$this->deleteSMSFromQueue($sms['queue_sms_id']);
+					$this->deleteSMSFromQueue($row['queue_sms_id']);
 				}
 
-				$params = [		
-					'sender'		=> $body['from'],
-					'text'			=> $body['message'],
-					'phone'			=> preparePhone($body['to']),
-					'type' 			=> '2',
-					'datetime' 		=> '',
-					'sms_lifetime'  => '0',
+				$sms = [		
+					'to' 		=>	$body['to'],
+					'message' 	=> 	$body['message']
 				];
 
-				$log->write(json_encode($params));
+				$id = $this->registry->get('smsAdaptor')->sendSMS($sms);
 
-				$response = $ePochta->sendSMS($params)->getBody()->getContents();	
-				$result = json_decode($response, true);
-
-				$log->write(json_encode($result));
-
-				$success = false;
-				if (isset($result["error"]) && $result["error"] == 'not_enough_money'){
-					continue;
+				if ($id){
+					echoLine('[LibrarySmsQueue::cron] Success send to ' . $body['to'], ', returned id ' . $id, 's');
+				} else {
+					echoLine('[LibrarySmsQueue::cron] Fail send to ' . $body['to'], 'e');
 				}
 
-				if (!empty($result["error"])){
-					echoLine('[LibrarySmsQueue::cron] ERROR ' . $result["error"] , 'e');
-					echoLine('[LibrarySmsQueue::cron] ' . $response, 'w');
-					
-					if ($result["error"] == 'no_good_recipients'){
-						$this->deleteSMSFromQueue($sms['queue_sms_id']);
-					}
-				}
-
-				if (!empty($result["result"]["id"]) && $result["result"]["id"]){
-					echoLine('[LibrarySmsQueue] ' . $params['phone'] . ' -> ' . $result["result"]["id"], 's');			
-					$this->deleteSMSFromQueue($sms['queue_sms_id']);
-				}
+				$this->deleteSMSFromQueue($row['queue_sms_id']);
 			}
+
+
+		} else {
+			echoLine('[LibrarySmsQueue::cron] Quitting, balance is: ' . $balance, 'e');
 		}
 	}
 }
