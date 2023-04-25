@@ -377,14 +377,8 @@
 	$response->setCompression($registry->get('config')->get('config_compression'));
 	$registry->set('response', $response); 
 	
-
 	//Остальные библиотеки	
 	$registry->set('document', 			new Document()); 				
-	$registry->set('emailBlackList', 	new hobotix\EmailBlackList($registry));	
-	$registry->set('elasticSearch', 	new hobotix\ElasticSearch($registry));		
-	$registry->set('courierServices', 	new hobotix\CourierServices($registry));
-	$registry->set('openaiAdaptor', 	new hobotix\OpenAIAdaptor($registry));
-	$registry->set('phoneValidator', 	new hobotix\phoneValidator($registry));
 	$registry->set('mAlert', 			new mAlert($registry));
 	$registry->set('smsQueue', 			new smsQueue($registry));	
 	$registry->set('shortAlias', 		new shortAlias($registry));	
@@ -397,7 +391,12 @@
 	$registry->set('length', 			new Length($registry));
 	$registry->set('cart', 				new Cart($registry));	
 	$registry->set('encryption', 		new Encryption($registry->get('config')->get('config_encryption')));	
-
+	$registry->set('emailBlackList', 	new hobotix\EmailBlackList($registry));	
+	$registry->set('elasticSearch', 	new hobotix\ElasticSearch($registry));		
+	$registry->set('courierServices', 	new hobotix\CourierServices($registry));
+	$registry->set('openaiAdaptor', 	new hobotix\OpenAIAdaptor($registry));
+	$registry->set('phoneValidator', 	new hobotix\phoneValidator($registry));
+	$registry->set('smsAdaptor', 		new hobotix\SmsAdaptor($registry));
 
 	if ($registry->get('customer')->getTracking()) {
 		setcookie('tracking', $registry->get('customer')->getTracking(), time() + 3600 * 24 * 1000, '/');
