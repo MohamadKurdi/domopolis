@@ -3395,6 +3395,16 @@
 											<input type="time" name="config_sms_enable_queue_worker_time_start" value="<?php echo $config_sms_enable_queue_worker_time_start; ?>" size="50" style="width:70px;" /> - 
 											<input type="time" name="config_sms_enable_queue_worker_time_end" value="<?php echo $config_sms_enable_queue_worker_time_end; ?>" size="50" style="width:70px;" />
 										</div>										
+									</td>	
+
+									<td style="width:20%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Библиотека SMS</span></p>
+											<select name="config_smsgate_library">
+												<option value="BSGWorld" <?php if ($config_smsgate_library == 'BSGWorld') { ?>selected="selected"<? } ?>>BSG.World</option>
+												<option value="Epochta" <?php if ($config_smsgate_library == 'Epochta') { ?>selected="selected"<? } ?>>Epochta</option>				
+											</select>
+										</div>									
 									</td>									
 								</tr>
 

@@ -833,6 +833,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_zadarma_secret_key'] = $this->config->get('config_zadarma_secret_key');
         }
 
+        if (isset($this->request->post['config_smsgate_library'])) {
+            $this->data['config_smsgate_library'] = $this->request->post['config_smsgate_library'];
+        } else {
+            $this->data['config_smsgate_library'] = $this->config->get('config_smsgate_library');
+        }
+
         if (isset($this->request->post['config_smsgate_api_key'])) {
             $this->data['config_smsgate_api_key'] = $this->request->post['config_smsgate_api_key'];
         } else {
