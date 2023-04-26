@@ -1408,7 +1408,7 @@
 								<td>
 									<input type="text" name="config_android_playstore_code" value="<?php echo $config_android_playstore_code; ?>" size="20" />
 									<br />
-									<span class="help">ua.com.kitchenprofi.twa</span>
+									<span class="help">ua.com.mywonderapp.twa</span>
 								</td>
 							</tr>
 							
@@ -1417,7 +1417,7 @@
 								<td>
 									<input type="text" name="config_android_playstore_link" value="<?php echo $config_android_playstore_link; ?>" size="50" />
 									<br />
-									<span class="help">https://play.google.com/store/apps/details?id=ua.com.kitchenprofi.twa</span>
+									<span class="help">https://play.google.com/store/apps/details?id=ua.com.mywonderapp.twa</span>
 								</td>
 							</tr>
 
@@ -1426,7 +1426,7 @@
 								<td>
 									<input type="text" name="config_android_application_link" value="<?php echo $config_android_application_link; ?>" size="50" />
 									<br />
-									<span class="help"><?php echo HTTPS_CATALOG; ?>admin/app/admin.application.ru.twa.apk</span>
+									<span class="help"><?php echo HTTPS_CATALOG; ?>admin/app/admin.application.twa.apk</span>
 								</td>
 							</tr>
 							
