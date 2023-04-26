@@ -191,6 +191,13 @@
 			console.log('[PWA] display-mode is standalone: android-app/TWA');
 			return true;
 		}
+
+		<?php if ($this->config->get('config_android_playstore_code')) { ?>
+		if (window.navigator.userAgent.indexOf(<?php echo $this->config->get('config_android_playstore_code'); ?>) !== -1) {
+			console.log('[PWA] display-mode is standalone: android-app/TWA');
+			return true;
+		}
+		<?php } ?>
 		
 		return false;
 		
