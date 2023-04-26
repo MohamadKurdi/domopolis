@@ -103,8 +103,7 @@
 				$product_id = $this->request->post['product_id'];
 				} else {
 				$product_id = 0;
-			}
-			
+			}			
 			
 			if (isset($this->request->post['set_id'])) {
 				$set_id = (int)$this->request->post['set_id'];
