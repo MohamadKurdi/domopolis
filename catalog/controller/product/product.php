@@ -593,14 +593,14 @@ public function index($product_id = false, $just_price = false)
         if (!$just_price) {
             $this->load->model('catalog/review');
 
-            $this->data['text_on'] = $this->language->get('text_on');
-            $this->data['text_no_reviews'] = $this->language->get('text_no_reviews');
-            $this->data['entry_good'] = $this->language->get('entry_good');
-            $this->data['entry_bads'] = $this->language->get('entry_bads');
-            $this->data['text_bads'] = $this->language->get('text_bads');
-            $this->data['text_good'] = $this->language->get('text_good');
-            $this->data['text_answer'] = $this->language->get('text_answer');
-            $this->data['text_comment'] = $this->language->get('text_comment');
+            $this->data['text_on']          = $this->language->get('text_on');
+            $this->data['text_no_reviews']  = $this->language->get('text_no_reviews');
+            $this->data['entry_good']       = $this->language->get('entry_good');
+            $this->data['entry_bads']       = $this->language->get('entry_bads');
+            $this->data['text_bads']        = $this->language->get('text_bads');
+            $this->data['text_good']        = $this->language->get('text_good');
+            $this->data['text_answer']      = $this->language->get('text_answer');
+            $this->data['text_comment']     = $this->language->get('text_comment');
 
             if (isset($this->request->get['page'])) {
                 $page = $this->request->get['page'];
@@ -609,9 +609,10 @@ public function index($product_id = false, $just_price = false)
             }
 
             $this->data['reviews_array'] = [];
-
-            $review_total = $this->model_catalog_review->getTotalReviewsByProductId($this->request->get['product_id']);
-            $this->data['review_total'] = $review_total;
+         
+            $this->data['review_total']     = $product_info['reviews'];
+            $this->data['count_reviews']    = $product_info['reviews'];
+            $this->data['rating']           = $product_info['rating'];
 
             $results = $this->model_catalog_review->getReviewsByProductId($this->request->get['product_id'],($page - 1) * 5, 50);
 
@@ -839,10 +840,7 @@ public function index($product_id = false, $just_price = false)
                     $this->data['models'][] = trim($product_info['ean']);
                 }
                 
-                $this->data['ean'] = $product_info['ean'];
-                
-                $this->data['enable_found_cheaper'] = $product_info['has_rrp'] && ($product_info['manufacturer_id'] == 201);
-                
+                $this->data['ean'] = $product_info['ean'];                                                
                 $this->data['has_labels'] = [];
                 
                 if (!$just_price) {     
@@ -1055,7 +1053,7 @@ public function index($product_id = false, $just_price = false)
                     $this->data['stock']            = $product_info['stock_status'];
                     $this->data['stock_status_id']  = $product_info['stock_status_id'];
                     $this->data['can_not_buy']      = ($product_info['stock_status_id'] == $this->config->get('config_not_in_stock_status_id'));
-                    $this->data['stock_color']      = ($product_info['stock_status_id'] == $this->config->get('config_stock_status_id')) ? '#4C6600' : '#BA0000';
+                    $this->data['stock_color']      = ($product_info['stock_status_id'] == $this->config->get('config_stock_status_id')) ? '#4C6600' : '#BA0000';                    
 
                     if ($this->data['can_not_buy']) {
                         $this->data['rees46_is_available'] = 0;
@@ -1068,10 +1066,7 @@ public function index($product_id = false, $just_price = false)
                             $this->data['manufacturers'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $product_info['manufacturer_id']);
                     
                             if (isset($manufacturer_info['location']) && $manufacturer_info['location']) {
-                                $this->data['location'] = (strpos(
-                                    $product_info['location'],
-                                    'certificate'
-                                ) === false) ? $manufacturer_info['location'] : false;
+                                $this->data['location'] = (strpos($product_info['location'], 'certificate') === false) ? $manufacturer_info['location'] : false;
                             }
 
                             $this->data['show_manufacturer'] = ($manufacturer_info && isset($manufacturer_info['sort_order']) && $manufacturer_info['sort_order'] != '-1');
@@ -1645,7 +1640,10 @@ public function index($product_id = false, $just_price = false)
                 $this->data['stock_status_id']      = $product_info['stock_status_id'];
                 $this->data['can_not_buy']          = ($product_info['stock_status_id'] == $this->config->get('config_not_in_stock_status_id'));
                 $this->data['need_ask_about_stock'] = ($product_info['stock_status_id'] == $this->config->get('config_partly_in_stock_status_id'));
-                $this->data['stock_color']          = ($product_info['stock_status_id'] == $this->config->get('config_stock_status_id')) ? '#4C6600' : '#BA0000';
+                $this->data['stock_color']          = ($product_info['stock_status_id'] == $this->config->get('config_stock_status_id')) ? '#4C6600' : '#BA0000';  
+
+                $this->data['has_video']            = $product_info['has_video'];
+                $this->data['new']                  = $product_info['new'];
                 
                 if ($this->data['can_not_buy']) {
                     $this->data['rees46_is_available'] = 0;
