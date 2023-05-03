@@ -1025,12 +1025,18 @@
 							<td>Домашняя страница</td>
 							<td>
 								<select name="homepage">
-									<?php if ($homepage) { ?>
-										<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-										<option value="0"><?php echo $text_disabled; ?></option>
-									<?php } else { ?>
-										<option value="1"><?php echo $text_enabled; ?></option>
-										<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+									<?php if ($homepage == 1) { ?>
+										<option value="1" selected="selected">Принудительно включить</option>
+										<option value="0">Автоматически</option>
+										<option value="-1">Исключить</option>
+									<?php } elseif ($homepage == 0) { ?>
+										<option value="1">Принудительно включить</option>
+										<option value="0" selected="selected">Автоматически</option>
+										<option value="-1">Исключить</option>
+									<?php } elseif ($homepage == -1) { ?>
+										 <option value="1">Принудительно включить</option>
+										<option value="0" >Автоматически</option>
+										<option value="-1" selected="selected">Исключить</option>
 									<?php } ?>
 								</select>
 
