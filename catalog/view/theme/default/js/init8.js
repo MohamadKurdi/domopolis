@@ -653,7 +653,6 @@ setTimeout(function() {
         $(".mob-menu__btn").removeClass("open");
         mobile_menu.removeClass("open");
     });
-    $(".phone").mask("+0(000)000-00-00");
 
     $(window).resize(function () {
         FixedHeader();

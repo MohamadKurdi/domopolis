@@ -78,10 +78,14 @@
 	}
 	.account_content .content_wrap .phone{
 	display: flex;
-	align-items: center;
-	font-size: 30px;
+	align-items: flex-start;
 	letter-spacing: -1px;
-	line-height: 30px;
+	flex-direction: column;
+	gap: 15px;
+	}
+	.account_content .content_wrap .phone a{
+		font-size: 20px;
+		line-height: 24px;
 	}
 	.account_content .social_wrap{
 	gap: 20px;
