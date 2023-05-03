@@ -629,7 +629,7 @@ public function index($product_id = false, $just_price = false)
                         'purchased'  => $result['purchased'],
                         'addimage'   => $result['addimage'],
                         'rating'     => (int)$result['rating'],
-                        'reviews'    => sprintf($this->language->get('text_reviews'), (int)$review_total),
+                        'reviews'    => sprintf($this->language->get('text_reviews'), (int)$this->data['review_total']),
                         'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])
                     )
                     );
@@ -645,19 +645,19 @@ public function index($product_id = false, $just_price = false)
                         'purchased'  => $result['purchased'],
                         'addimage'   => $result['addimage'],
                         'rating'     => (int)$result['rating'],
-                        'reviews'    => sprintf($this->language->get('text_reviews'), (int)$review_total),
+                        'reviews'    => sprintf($this->language->get('text_reviews'), (int)$this->data['review_total']),
                         'date_added' => date($this->language->get('date_format_short'), strtotime($result['date_added'])
                     )
                     );
                 }
             }
 
-            $pagination = new Pagination();
-            $pagination->total = $review_total;
-            $pagination->page = $page;
-            $pagination->limit = 50;
-            $pagination->text = $this->language->get('text_pagination');
-            $pagination->url = $this->url->link('product/product/review','product_id=' . $this->request->get['product_id'] . '&page={page}');
+            $pagination         = new Pagination();
+            $pagination->total  = $this->data['review_total'];
+            $pagination->page   = $page;
+            $pagination->limit  = 50;
+            $pagination->text   = $this->language->get('text_pagination');
+            $pagination->url    = $this->url->link('product/product/review','product_id=' . $this->request->get['product_id'] . '&page={page}');
 
             $this->data['pagination'] = $pagination->render();
             $url = '';
