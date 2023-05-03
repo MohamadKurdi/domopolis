@@ -10,14 +10,14 @@
 <?php
 switch($parameter) {
   case "store": ?>
-    <select name="i_s" multiple="multiple" size="10" style="width:100%;min-width:300px;">
+    <select name="i_s" multiple="multiple" size="10" style="width:100%;min-width:300px;height: 500px;">
     <?php foreach ($stores as $store) { ?>
     <option value="<?php echo $store['store_id']; ?>"<?php echo (in_array($store['store_id'], $item_store)) ? ' selected="selected"': ''; ?>><?php echo $store['name']; ?></option>
     <?php } ?>
     </select>
     <?php break;
   case "filter": ?>
-    <select name="i_f" multiple="multiple" size="10" style="width:100%;min-width:300px;">
+    <select name="i_f" multiple="multiple" size="10" style="width:100%;min-width:300px;height: 500px;">
     <?php foreach ($filters as $filter) { ?>
     <option value="<?php echo $filter['filter_id']; ?>"<?php echo (in_array($filter['filter_id'], $item_filter)) ? ' selected="selected"': ''; ?>><?php echo strip_tags(html_entity_decode($filter['group'] . ' &gt; ' . $filter['name'], ENT_QUOTES, 'UTF-8')); ?></option>
     <?php } ?>
