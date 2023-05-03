@@ -531,8 +531,7 @@
 				}
 			}
             
-            $this->_templateData['summary_payment_address'] = trim(str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format)))));
-            
+            $this->_templateData['summary_payment_address'] = trim(str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format)))));            
             $this->_templateData['summary_shipping_address'] = '';
             
             if ($this->simplecheckout->hasShipping()) {
