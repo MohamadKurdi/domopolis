@@ -2008,12 +2008,8 @@ unset($this->session->data['gac:listfrom']); }
 			<script type="text/javascript">
 				
 				
-				$(document).ready(function() {	
-					
-					
-					$('#review').on('DOMSubtreeModified', function(){
-						
-						
+				$(document).ready(function() {											
+					$('#review').on('DOMSubtreeModified', function(){												
 						$('#review .pagination a').on('click', function(e) {
 							e.preventDefault();
 							
@@ -2038,6 +2034,7 @@ unset($this->session->data['gac:listfrom']); }
 					
 					var note = $('#note');
 					
+					<?php if (!empty($active_coupon)) { ?>
 					ts = "<?php echo $active_coupon['date_end']; ?>";
 					ts = new Date(ts);
 					$('#coupon__datend').countdown({
@@ -2055,6 +2052,7 @@ unset($this->session->data['gac:listfrom']); }
 							note.html(message);
 						}
 					});
+				<?php } ?>
 					
 					
 					
