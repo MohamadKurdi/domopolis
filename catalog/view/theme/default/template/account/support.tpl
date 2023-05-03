@@ -199,19 +199,15 @@
 					<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 122.88 107.22"><defs><style>.cls-1322{fill:#f0bd5c;}.cls-2144114{fill:#58a577;}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><path class="cls-1322" d="M81.64,54.65l-.53,1.64-.08.14-.07.09a7.07,7.07,0,0,1-2,.23,12.81,12.81,0,0,0,.61-5.63h0a1.55,1.55,0,0,1,.61-1.35,6.75,6.75,0,0,0,2.38-3.39l.33-2.61a4.22,4.22,0,0,0-.19-1.05.76.76,0,0,0-.11-.29h-.26a1.54,1.54,0,0,1-1.44-1.52c0-4.92-.47-8-1.37-10.13-1.52-2.57-3.87-3.87-6.67-5.27-.49-.21-1-.44-1.5-.7-9.13,9.54-16.69-2.73-27.52,15.75h-.37c-.14.32-.29.64-.43,1l-.08.16a1.53,1.53,0,0,1-2.09.56q-.36-.21-.42-.18c-.06,0-.13.16-.22.37A5,5,0,0,0,39.89,44c-.11,2.16.59,5,2,6.37a1.45,1.45,0,0,1,.47,1.06c.16,6.6,3.09,9.12,6.65,12.19l1.5,1.3c3.57,3.18,7.34,4.82,11,4.82S68.7,68.2,72,65h4.49l-.81.77-1.48,1.4c-4,3.81-8.26,5.65-12.64,5.65s-8.92-1.91-13.07-5.6l-1.46-1.28c-3.51-3-6.49-5.59-7.42-11.21l-4.82.39a3.58,3.58,0,0,1-4.05-2.93L28.89,37.41a3.55,3.55,0,0,1,3.16-3.9h.05l1.57-.13a2,2,0,0,1-.16-.65c-.94-15.35,5.68-25,14.63-29.63A29.8,29.8,0,0,1,77.25,4.6c8.18,5.27,13.52,14.91,11.12,28.32a1.72,1.72,0,0,1-.18.54l2.39.27A3.82,3.82,0,0,1,94,37.91S94,38,94,38L92.12,52.06a3.91,3.91,0,0,1-4.39,3.29h0a26.49,26.49,0,0,1-1,3.13,7,7,0,0,1-1.5,2.33c-2,2.06-8.46,2.06-10.75,2.06h-6a7,7,0,0,1-5.25,2c-3.32,0-6-1.76-6-3.93s2.68-3.93,6-3.93a7.05,7.05,0,0,1,5.06,2h6.15c1.8,0,7.14,0,8.06-.93a3,3,0,0,0,.64-1L83.82,55l-2.18-.25Z"/><path class="cls-2144114" d="M44.78,72.82,54,97l4.64-13.19-2.27-2.48c-1.71-2.5-1.12-5.33,2-5.84a23.11,23.11,0,0,1,3.43-.07,18.29,18.29,0,0,1,3.77.15c2.94.64,3.25,3.49,1.78,5.76l-2.23,2.48L69.75,97l8.35-24.2c6,5.42,27.21,6.51,33.84,10.2,9.18,5.14,8.93,15,10.94,24.2H0C2,98.11,1.79,88.08,10.94,83,19.09,78.47,38.11,78.82,44.78,72.82Z"/></g></g></svg>
 					<span class="title"><?php echo $support_account_text_6;?></span>
 					<p><?php echo $support_account_text_7;?></p>
-				</div>
-				
-				
-				<?php if ($telephone) { ?>
-					<div class="phone">
-						<?php if (!empty($telephone)) { ?>
-							<a href="tel:<?php echo $telephone; ?>"><?php echo $telephone; ?></a>
-						<?php } ?>
-						<?php if (!empty($telephone2)) { ?>
-							<a href="tel:<?php echo $telephone2; ?>"><?php echo $telephone2; ?></a>
-						<?php } ?>
-					</div>	
-				<?php } ?>
+				</div>								
+				<div class="phone">
+					<?php if (!empty($telephone)) { ?>
+						<a href="tel:<?php echo $telephone; ?>"><?php echo $telephone; ?></a>
+					<?php } ?>
+					<?php if (!empty($telephone2)) { ?>
+						<a href="tel:<?php echo $telephone2; ?>"><?php echo $telephone2; ?></a>
+					<?php } ?>
+				</div>	
 			</div>
 			<div class="content_wrap">
 				<div class="text">
@@ -221,13 +217,6 @@
 				</div>
 			</div>
 			<div class="social_wrap">
-				<!-- <div style="text-align:center;">
-					<button style="background: transparent;padding: 0;" class="do-popup-element" data-target="write_us_modal">
-						<i class="fa fa-comments" aria-hidden="true" style=" background-color: #57ac79;color: #fff;width: 70px;height: 70px;font-size: 41px;border-radius: 100px;text-align: center;line-height: 70px;margin-bottom: 5px;"></i>
-						<br />
-						<div style="display:inline-block;background-color: #57ac79;color: #fff;text-align: center;height: 40px;border-radius: 100px; width:120px; line-height: 40px;font-weight: 700;"><?php echo $support_account_text_10;?></div>
-					</button>
-				</div> -->
 				<?php if ($this->config->get('social_link_messenger_bot')) { ?>
 					<div class="<?php if ($this->config->get('config_regional_currency') != 'UAH') { ?><?php } else { ?><? } ?>" style="text-align:center;">
 						<a href="<?php echo $this->config->get('social_link_messenger_bot'); ?>" style="text-decoration:none;" class="facebook" rel="noindex nofollow" >
@@ -252,14 +241,6 @@
 							<div style="display:inline-block;background-color:#e7f7ff;color:#4ba4e8;text-align: center;height: 40px;border-radius: 100px; width:120px; line-height: 40px;font-weight: 700;">TELEGRAM</div>
 						</a>
 					</div>
-				<?php } ?>
-				<?php if ($this->config->get('social_link_vkontakte_bot')) { ?>
-				<div class="<?php if ($this->config->get('config_regional_currency') != 'UAH') { ?><?php } else { ?>hidden<? } ?>" style="text-align:center;">
-					<a href="<?php echo $this->config->get('social_link_vkontakte_bot'); ?>" style="text-decoration:none;" rel="nofollow">
-						<div style="display:inline-block; background-color: #3871ba; border-radius:50%; background-position: center;background-size: 100% auto;background-repeat: no-repeat;  background-image: url('https://imsgroup.bitrix24.ru/bitrix/js/ui/icons/service/images/ui-service-vk.svg'); width:70px; height:70px;"></div><br />
-						<div style="display:inline-block;background-color:#e7f7ff;color:#8861b2;text-align: center;height: 40px;border-radius: 100px; width:120px; line-height: 40px;font-weight: 700;">VKONTAKTE</div>
-					</a>
-				</div>
 				<?php } ?>
 			</div>
 		</div>
