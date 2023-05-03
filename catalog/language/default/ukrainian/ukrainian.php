@@ -81,7 +81,7 @@ $_['default_city_109'] 		= 'Нур-Султан (Астана)';
 $_['default_city_20'] 		= 'Мінськ';
 
 $_['text_has_in_stock'] = 'На складі в Києві';
-$_['text_has_no_in_stock'] = 'На складі в Польщі';
+$_['text_has_no_in_stock'] = 'На складі в Німеччині';
 $_['text_line_delivery'] = 'доставка';
 $_['text_information_crumbs'] = 'Інформація';
 $_['text_variant']      = 'варіант';
