@@ -259,6 +259,7 @@ $(document).ready(function () {
     function activeTab(){
         $("ul.tabs__caption").on("click", "li:not(.active)", function () {
             $(this).addClass("active").siblings().removeClass("active").closest(".tabs").find("div.tabs__content").removeClass("active").eq($(this).index()).addClass("active");
+            sliderTab();
         });
     }
     activeTab();
@@ -330,7 +331,7 @@ function sliderTab(){
             },
             on: {
                 init() {
-                    setTimeout(updateFraction, 0, this);
+                    setTimeout(updateFraction, 1000, this);
                 },
                 slideChange() {
                     updateFraction(this);
@@ -392,7 +393,7 @@ function sliderTab(){
             },
             on: {
                 init() {
-                    setTimeout(updateFraction, 0, this);
+                    setTimeout(updateFraction, 1000, this);
                 },
                 slideChange() {
                     updateFraction(this);
@@ -653,6 +654,7 @@ setTimeout(function() {
         $(".mob-menu__btn").removeClass("open");
         mobile_menu.removeClass("open");
     });
+
 
     $(window).resize(function () {
         FixedHeader();
