@@ -1,56 +1,108 @@
 <?php
 class ModelDesignBanner extends Model {
 	public function addBanner($data) {
-		$this->db->query("INSERT INTO " . DB_PREFIX . "banner SET name = '" . $this->db->escape($data['name']) . "', status = '" . (int)$data['status'] . "'");
+		$this->db->query("INSERT INTO banner SET name = '" . $this->db->escape($data['name']) . "', status = '" . (int)$data['status'] . "'");
 
 		$banner_id = $this->db->getLastId();
 
 		if (isset($data['banner_image'])) {
 			foreach ($data['banner_image'] as $banner_image) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "banner_image SET banner_id = '" . (int)$banner_id . "', link = '" .  $this->db->escape($banner_image['link']) . "', image = '" .  $this->db->escape($banner_image['image']) . "', image_sm = '" .  $this->db->escape($banner_image['image_sm']) . "'");
+
+				$banner_image['width'] 		= 0;
+				$banner_image['height'] 	= 0;
+				$banner_image['width_sm'] 	= 0;
+				$banner_image['height_sm'] 	= 0;
+				$banner_image['class'] 		= '';
+				$banner_image['class_sm'] 	= '';
+				$banner_image['block'] 		= '';
+				$banner_image['block_sm'] 	= '';
+
+				$this->db->query("INSERT INTO banner_image SET 
+					banner_id 	= '" . (int)$banner_id . "', 
+					link 		= '" .  $this->db->escape($banner_image['link']) . "', 
+					image 		= '" .  $this->db->escape($banner_image['image']) . "', 
+					image_sm 	= '" .  $this->db->escape($banner_image['image_sm']) . "',
+					width 		= '" . (int)$banner_image['width'] . "',
+					height 		= '" . (int)$banner_image['height'] . "',
+					width_sm 	= '" . (int)$banner_image['width_sm'] . "',
+					height_sm 	= '" . (int)$banner_image['height_sm'] . "',
+					class 		= '" . $this->db->escape($banner_image['class'])  . "',
+					class_sm 	= '" . $this->db->escape($banner_image['class_sm'])  . "',
+					block 		= '" . (int)$banner_image['block'] . "',
+					block_sm 		= '" . (int)$banner_image['block_sm'] . "'
+					");
 
 				$banner_image_id = $this->db->getLastId();
 
 				foreach ($banner_image['banner_image_description'] as $language_id => $banner_image_description) {				
-					$this->db->query("INSERT INTO " . DB_PREFIX . "banner_image_description SET banner_image_id = '" . (int)$banner_image_id . "', language_id = '" . (int)$language_id . "', banner_id = '" . (int)$banner_id . "', title = '" .  $this->db->escape($banner_image_description['title']) . "', link = '" .  $this->db->escape($banner_image_description['link']) . "', block_text = '" .  $this->db->escape($banner_image_description['block_text']) . "', button_text = '" .  $this->db->escape($banner_image_description['button_text']) . "', overload_image = '" .  $this->db->escape($banner_image_description['overload_image']) . "', overload_image_sm = '" .  $this->db->escape($banner_image_description['overload_image_sm']) . "'");
+					$this->db->query("INSERT INTO banner_image_description SET 
+						banner_image_id 	= '" . (int)$banner_image_id . "', 
+						language_id 		= '" . (int)$language_id . "', 
+						banner_id 			= '" . (int)$banner_id . "', 
+						title 				= '" .  $this->db->escape($banner_image_description['title']) . "', 
+						link 				= '" .  $this->db->escape($banner_image_description['link']) . "'");
 				}
 			}
-		}		
+		}	
+
+		return $banner_id;	
 	}
 
 	public function editBanner($banner_id, $data) {
-		$this->db->query("UPDATE " . DB_PREFIX . "banner SET name = '" . $this->db->escape($data['name']) . "', status = '" . (int)$data['status'] . "' WHERE banner_id = '" . (int)$banner_id . "'");
+		$this->db->query("UPDATE banner SET name = '" . $this->db->escape($data['name']) . "', status = '" . (int)$data['status'] . "' WHERE banner_id = '" . (int)$banner_id . "'");
 
-		$this->db->query("DELETE FROM " . DB_PREFIX . "banner_image WHERE banner_id = '" . (int)$banner_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "banner_image_description WHERE banner_id = '" . (int)$banner_id . "'");
+		$this->db->query("DELETE FROM banner_image WHERE banner_id = '" . (int)$banner_id . "'");
+		$this->db->query("DELETE FROM banner_image_description WHERE banner_id = '" . (int)$banner_id . "'");
 
 		if (isset($data['banner_image'])) {
 			foreach ($data['banner_image'] as $banner_image) {
-				$this->db->query("INSERT INTO " . DB_PREFIX . "banner_image SET banner_id = '" . (int)$banner_id . "', link = '" .  $this->db->escape($banner_image['link']) . "', image = '" .  $this->db->escape($banner_image['image']) . "', image_sm = '" .  $this->db->escape($banner_image['image_sm']) . "'");
+				$this->db->query("INSERT INTO banner_image SET 
+					banner_id 	= '" . (int)$banner_id . "', 
+					link 		= '" .  $this->db->escape($banner_image['link']) . "', 
+					image 		= '" .  $this->db->escape($banner_image['image']) . "', 
+					image_sm 	= '" .  $this->db->escape($banner_image['image_sm']) . "',
+					width 		= '" . (int)$banner_image['width'] . "',
+					height 		= '" . (int)$banner_image['height'] . "',
+					width_sm 	= '" . (int)$banner_image['width_sm'] . "',
+					height_sm 	= '" . (int)$banner_image['height_sm'] . "',
+					class 		= '" . $this->db->escape($banner_image['class'])  . "',
+					class_sm 	= '" . $this->db->escape($banner_image['class_sm'])  . "',
+					block 		= '" . (int)$banner_image['block'] . "',
+					block_sm 		= '" . (int)$banner_image['block_sm'] . "'
+					");
 
 				$banner_image_id = $this->db->getLastId();
 
 				foreach ($banner_image['banner_image_description'] as $language_id => $banner_image_description) {				
-					$this->db->query("INSERT INTO " . DB_PREFIX . "banner_image_description SET banner_image_id = '" . (int)$banner_image_id . "', language_id = '" . (int)$language_id . "', banner_id = '" . (int)$banner_id . "', title = '" .  $this->db->escape($banner_image_description['title']) . "', link = '" .  $this->db->escape($banner_image_description['link']) . "', block_text = '" .  $this->db->escape($banner_image_description['block_text']) . "', button_text = '" .  $this->db->escape($banner_image_description['button_text']) . "', overload_image = '" .  $this->db->escape($banner_image_description['overload_image']) . "', overload_image_sm = '" .  $this->db->escape($banner_image_description['overload_image_sm']) . "'");
+					$this->db->query("INSERT INTO banner_image_description SET 
+						banner_image_id 	= '" . (int)$banner_image_id . "', 
+						language_id 		= '" . (int)$language_id . "', 
+						banner_id 			= '" . (int)$banner_id . "', 
+						title 				= '" .  $this->db->escape($banner_image_description['title']) . "', 
+						link 				= '" .  $this->db->escape($banner_image_description['link']) . "', 
+						block_text 			= '', 
+						button_text 		= '', 
+						overload_image 		= '" .  $this->db->escape($banner_image_description['overload_image']) . "', 
+						overload_image_sm 	= '" .  $this->db->escape($banner_image_description['overload_image_sm']) . "'");
 				}
 			}
 		}			
 	}
 
 	public function deleteBanner($banner_id) {
-		$this->db->query("DELETE FROM " . DB_PREFIX . "banner WHERE banner_id = '" . (int)$banner_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "banner_image WHERE banner_id = '" . (int)$banner_id . "'");
-		$this->db->query("DELETE FROM " . DB_PREFIX . "banner_image_description WHERE banner_id = '" . (int)$banner_id . "'");
+		$this->db->query("DELETE FROM banner WHERE banner_id = '" . (int)$banner_id . "'");
+		$this->db->query("DELETE FROM banner_image WHERE banner_id = '" . (int)$banner_id . "'");
+		$this->db->query("DELETE FROM banner_image_description WHERE banner_id = '" . (int)$banner_id . "'");
 	}
 
 	public function getBanner($banner_id) {
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "banner WHERE banner_id = '" . (int)$banner_id . "'");
+		$query = $this->db->query("SELECT DISTINCT * FROM banner WHERE banner_id = '" . (int)$banner_id . "'");
 
 		return $query->row;
 	}
 
 	public function getBanners($data = array()) {
-		$sql = "SELECT * FROM " . DB_PREFIX . "banner";
+		$sql = "SELECT * FROM banner";
 
 		$sort_data = array(
 			'name',
@@ -89,12 +141,12 @@ class ModelDesignBanner extends Model {
 	public function getBannerImages($banner_id) {
 		$banner_image_data = array();
 
-		$banner_image_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "banner_image WHERE banner_id = '" . (int)$banner_id . "'");
+		$banner_image_query = $this->db->query("SELECT * FROM banner_image WHERE banner_id = '" . (int)$banner_id . "'");
 
 		foreach ($banner_image_query->rows as $banner_image) {
 			$banner_image_description_data = array();
 
-			$banner_image_description_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "banner_image_description WHERE banner_image_id = '" . (int)$banner_image['banner_image_id'] . "' AND banner_id = '" . (int)$banner_id . "'");
+			$banner_image_description_query = $this->db->query("SELECT * FROM banner_image_description WHERE banner_image_id = '" . (int)$banner_image['banner_image_id'] . "' AND banner_id = '" . (int)$banner_id . "'");
 
 			foreach ($banner_image_description_query->rows as $banner_image_description) {			
 				$banner_image_description_data[$banner_image_description['language_id']] = array(
@@ -111,7 +163,15 @@ class ModelDesignBanner extends Model {
 				'banner_image_description' => $banner_image_description_data,
 				'link'                     => $banner_image['link'],
 				'image'                    => $banner_image['image'],
-				'image_sm'                 => $banner_image['image_sm']
+				'image_sm'                 => $banner_image['image_sm'],
+				'width' 					=> $banner_image['width'],
+				'height' 					=> $banner_image['height'],
+				'width_sm' 					=> $banner_image['width_sm'],
+				'height_sm' 				=> $banner_image['height_sm'],
+				'class' 					=> $banner_image['class'],
+				'class_sm' 					=> $banner_image['class_sm'],
+				'block' 					=> $banner_image['block'],
+				'block_sm' 					=> $banner_image['block_sm'],
 			);
 		}
 
@@ -119,7 +179,7 @@ class ModelDesignBanner extends Model {
 	}
 
 	public function getTotalBanners() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "banner");
+		$query = $this->db->query("SELECT COUNT(*) AS total FROM banner");
 
 		return $query->row['total'];
 	}	

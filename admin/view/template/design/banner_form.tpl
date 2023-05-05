@@ -36,15 +36,16 @@
 						</select></td>
 					</tr>
 				</table>
+				<style>
+					#images > thead > tr > th{background: #FF7815;}
+				</style>
 				<table id="images" class="list">
 					<thead>
 						<tr>
 							<th class="left">Тайтл блока</th>
-							<th class="left">Текст в блоке</th>
-							<th class="left">Текст кнопки</th>
 							<th class="left">Ссылки</th>
-							<th class="left">Йа картинко ПК</th>
-							<th class="left">Йа картинко МОБ</th>
+							<th class="left">Изображение для больших разрешений</th>
+							<th class="left">Изображение для маленьких разрешений</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -61,66 +62,134 @@
 										<?php } ?>
 									<?php } ?>
 								</td>
-								<td class="left"><?php foreach ($languages as $language) { ?>
-									<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea rows="3" name="banner_image[<?php echo $image_row; ?>][banner_image_description][<?php echo $language['language_id']; ?>][block_text]" ><?php echo isset($banner_image['banner_image_description'][$language['language_id']]) ? $banner_image['banner_image_description'][$language['language_id']]['block_text'] : ''; ?></textarea>
-									<br /><br />
-								<?php } ?>
-								</td>
-								<td class="left">
-									<?php foreach ($languages as $language) { ?>
-									<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <textarea rows="3" name="banner_image[<?php echo $image_row; ?>][banner_image_description][<?php echo $language['language_id']; ?>][button_text]" ><?php echo isset($banner_image['banner_image_description'][$language['language_id']]) ? $banner_image['banner_image_description'][$language['language_id']]['button_text'] : ''; ?></textarea>
-									<br /><br />
-								<?php } ?>
-								</td>
 								<td class="left">
 									<input type="text" name="banner_image[<?php echo $image_row; ?>][link]" value="<?php echo $banner_image['link']; ?>" /><br /><br />
 									<?php foreach ($languages as $language) { ?>
 										<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <input type="text" name="banner_image[<?php echo $image_row; ?>][banner_image_description][<?php echo $language['language_id']; ?>][link]" value="<?php echo isset($banner_image['banner_image_description'][$language['language_id']]) ? $banner_image['banner_image_description'][$language['language_id']]['link'] : ''; ?>" />
 										<br /><br />									
-									<?php } ?>
-									
+									<?php } ?>									
 								</td>
 								<td class="left">
-									<div class="image"><img src="<?php echo $banner_image['thumb']; ?>" alt="" id="thumb<?php echo $image_row; ?>" />
-									<input type="hidden" name="banner_image[<?php echo $image_row; ?>][image]" value="<?php echo $banner_image['image']; ?>" id="image<?php echo $image_row; ?>"  />
-									<br />
-									<a onclick="image_upload('image<?php echo $image_row; ?>', 'thumb<?php echo $image_row; ?>');">Открыть</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb<?php echo $image_row; ?>').attr('src', '<?php echo $no_image; ?>'); $('#image<?php echo $image_row; ?>').attr('value', '');">Удалить</a></div><br />
-									
-									<?php foreach ($languages as $language) { ?>
-										<div class="image">
-										<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
-										
-										<img src="<?php echo isset($banner_image['banner_image_description'][$language['language_id']]) ? $banner_image['banner_image_description'][$language['language_id']]['overload_thumb'] : ''; ?>" alt="" id="thumb<?php echo $language['language_id']; ?><?php echo $image_row; ?>" />
-										
-										<input type="hidden" name="banner_image[<?php echo $image_row; ?>][banner_image_description][<?php echo $language['language_id']; ?>][overload_image]" value="<?php echo isset($banner_image['banner_image_description'][$language['language_id']]) ? $banner_image['banner_image_description'][$language['language_id']]['overload_image'] : ''; ?>" id="image<?php echo $language['language_id']; ?><?php echo $image_row; ?>"  />
-										<br />
-										<a onclick="image_upload('image<?php echo $language['language_id']; ?><?php echo $image_row; ?>', 'thumb<?php echo $language['language_id']; ?><?php echo $image_row; ?>');">Открыть</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb<?php echo $language['language_id']; ?><?php echo $image_row; ?>').attr('src', '<?php echo $no_image; ?>'); $('#image<?php echo $language['language_id']; ?><?php echo $image_row; ?>').attr('value', '');">Удалить</a>
-										
+									<div style="margin-bottom:10px;">
+										<div class="image" style="float:left;">
+											<img src="<?php echo $banner_image['thumb']; ?>" alt="" id="thumb<?php echo $image_row; ?>" />
+											<input type="hidden" name="banner_image[<?php echo $image_row; ?>][image]" value="<?php echo $banner_image['image']; ?>" id="image<?php echo $image_row; ?>"  />
+											<br />
+											<a onclick="image_upload('image<?php echo $image_row; ?>', 'thumb<?php echo $image_row; ?>');">Open</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb<?php echo $image_row; ?>').attr('src', '<?php echo $no_image; ?>'); $('#image<?php echo $image_row; ?>').attr('value', '');">Del</a>
 										</div>
-									<?php } ?>
+
+										<div style="float:right">
+											<table class="form">
+												<tr>
+													<td style="width:60px;">
+														Width
+													</td>
+													<td>
+														<input type="number" step="1" style="width:90px;" name="banner_image[<?php echo $image_row; ?>][width]" value="<?php echo $banner_image['width']; ?>" />											
+													</td>
+													<td style="width:60px;">
+														Height
+													</td>
+													<td>
+														<input type="number" step="1" style="width:90px;" name="banner_image[<?php echo $image_row; ?>][height]" value="<?php echo $banner_image['height']; ?>" />
+													</td>
+												</tr>
+												<tr>
+													<td style="width:60px;">
+														Class
+													</td>
+													<td>
+														<input type="text" style="width:90px;" name="banner_image[<?php echo $image_row; ?>][class]" value="<?php echo $banner_image['class']; ?>" />
+													</td>
+													<td style="width:60px;">
+														Block ID
+													</td>
+													<td>
+														<input type="number" step="1" style="width:90px;" name="banner_image[<?php echo $image_row; ?>][block]" value="<?php echo $banner_image['block']; ?>" />
+													</td>
+												</tr>
+											</table>
+		
+										</div>
+										<div class="clr"></div>
+									</div>
+									
+									<div style="">
+										<?php foreach ($languages as $language) { ?>
+											<div class="image">
+												<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+												<br />
+
+												<img src="<?php echo isset($banner_image['banner_image_description'][$language['language_id']]) ? $banner_image['banner_image_description'][$language['language_id']]['overload_thumb'] : ''; ?>" alt="" id="thumb<?php echo $language['language_id']; ?><?php echo $image_row; ?>" />
+
+												<input type="hidden" name="banner_image[<?php echo $image_row; ?>][banner_image_description][<?php echo $language['language_id']; ?>][overload_image]" value="<?php echo isset($banner_image['banner_image_description'][$language['language_id']]) ? $banner_image['banner_image_description'][$language['language_id']]['overload_image'] : ''; ?>" id="image<?php echo $language['language_id']; ?><?php echo $image_row; ?>"  />
+												<br />
+												<a onclick="image_upload('image<?php echo $language['language_id']; ?><?php echo $image_row; ?>', 'thumb<?php echo $language['language_id']; ?><?php echo $image_row; ?>');">Open</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb<?php echo $language['language_id']; ?><?php echo $image_row; ?>').attr('src', '<?php echo $no_image; ?>'); $('#image<?php echo $language['language_id']; ?><?php echo $image_row; ?>').attr('value', '');">Del</a>
+											</div>
+										<?php } ?>
+									</div>
 								</td>
 								
 								<td class="left">
-									<div class="image">
-										<img src="<?php echo $banner_image['thumb_sm']; ?>" alt="" id="thumb_sm<?php echo $image_row; ?>" />
-										<input type="hidden" name="banner_image[<?php echo $image_row; ?>][image_sm]" value="<?php echo $banner_image['image_sm']; ?>" id="image_sm<?php echo $image_row; ?>"  />
-									<br />
-									
-									<a onclick="image_upload('image_sm<?php echo $image_row; ?>', 'thumb_sm<?php echo $image_row; ?>');">Открыть</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb_sm<?php echo $image_row; ?>').attr('src', '<?php echo $no_image; ?>'); $('#image_sm<?php echo $image_row; ?>').attr('value', '');">Удалить</a>
-									</div><br />
-									
-									<?php foreach ($languages as $language) { ?>
-										<div class="image">
-										<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
-										
-										<img src="<?php echo isset($banner_image['banner_image_description'][$language['language_id']]) ? $banner_image['banner_image_description'][$language['language_id']]['overload_thumb_sm'] : ''; ?>" alt="" id="thumb_sm<?php echo $language['language_id']; ?><?php echo $image_row; ?>" />
-										
-										<input type="hidden" name="banner_image[<?php echo $image_row; ?>][banner_image_description][<?php echo $language['language_id']; ?>][overload_image_sm]" value="<?php echo isset($banner_image['banner_image_description'][$language['language_id']]) ? $banner_image['banner_image_description'][$language['language_id']]['overload_image_sm'] : ''; ?>" id="image_sm<?php echo $language['language_id']; ?><?php echo $image_row; ?>"  />
-										<br />
-										<a onclick="image_upload('image_sm<?php echo $language['language_id']; ?><?php echo $image_row; ?>', 'thumb_sm<?php echo $language['language_id']; ?><?php echo $image_row; ?>');">Открыть</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb_sm<?php echo $language['language_id']; ?><?php echo $image_row; ?>').attr('src', '<?php echo $no_image; ?>'); $('#image_sm<?php echo $language['language_id']; ?><?php echo $image_row; ?>').attr('value', '');">Удалить</a>
-										
+									<div style="margin-bottom:10px;">	
+										<div class="image" style="float:left;">
+											<img src="<?php echo $banner_image['thumb_sm']; ?>" alt="" id="thumb_sm<?php echo $image_row; ?>" />
+											<input type="hidden" name="banner_image[<?php echo $image_row; ?>][image_sm]" value="<?php echo $banner_image['image_sm']; ?>" id="image_sm<?php echo $image_row; ?>"  />
+											<br />
+
+											<a onclick="image_upload('image_sm<?php echo $image_row; ?>', 'thumb_sm<?php echo $image_row; ?>');">Open</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb_sm<?php echo $image_row; ?>').attr('src', '<?php echo $no_image; ?>'); $('#image_sm<?php echo $image_row; ?>').attr('value', '');">Del</a>
 										</div>
-									<?php } ?>									
+
+										<div style="float:right">
+											<table class="form">
+												<tr>
+													<td style="width:60px;">
+														Width
+													</td>
+													<td>
+														<input type="number" step="1" style="width:90px;" name="banner_image[<?php echo $image_row; ?>][width_sm]" value="<?php echo $banner_image['width_sm']; ?>" />											
+													</td>
+													<td style="width:60px;">
+														Height
+													</td>
+													<td>
+														<input type="number" step="1" style="width:90px;" name="banner_image[<?php echo $image_row; ?>][height_sm]" value="<?php echo $banner_image['height_sm']; ?>" />
+													</td>
+												</tr>
+												<tr>
+													<td style="width:60px;">
+														Class
+													</td>
+													<td>
+														<input type="text" style="width:90px;" name="banner_image[<?php echo $image_row; ?>][class_sm]" value="<?php echo $banner_image['class_sm']; ?>" />
+													</td>
+													<td style="width:60px;">
+														Block ID
+													</td>
+													<td>
+														<input type="number" step="1" style="width:90px;" name="banner_image[<?php echo $image_row; ?>][block_sm]" value="<?php echo $banner_image['block_sm']; ?>" />
+													</td>
+												</tr>
+											</table>
+		
+										</div>
+										<div class="clr"></div>
+									</div>
+
+
+									<div style="">	
+										<?php foreach ($languages as $language) { ?>
+											<div class="image">
+												<img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />
+
+												<img src="<?php echo isset($banner_image['banner_image_description'][$language['language_id']]) ? $banner_image['banner_image_description'][$language['language_id']]['overload_thumb_sm'] : ''; ?>" alt="" id="thumb_sm<?php echo $language['language_id']; ?><?php echo $image_row; ?>" />
+
+												<input type="hidden" name="banner_image[<?php echo $image_row; ?>][banner_image_description][<?php echo $language['language_id']; ?>][overload_image_sm]" value="<?php echo isset($banner_image['banner_image_description'][$language['language_id']]) ? $banner_image['banner_image_description'][$language['language_id']]['overload_image_sm'] : ''; ?>" id="image_sm<?php echo $language['language_id']; ?><?php echo $image_row; ?>"  />
+												<br />
+												<a onclick="image_upload('image_sm<?php echo $language['language_id']; ?><?php echo $image_row; ?>', 'thumb_sm<?php echo $language['language_id']; ?><?php echo $image_row; ?>');">Open</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb_sm<?php echo $language['language_id']; ?><?php echo $image_row; ?>').attr('src', '<?php echo $no_image; ?>'); $('#image_sm<?php echo $language['language_id']; ?><?php echo $image_row; ?>').attr('value', '');">Del</a>										
+											</div>
+										<?php } ?>	
+									</div>								
 								</td>
 								
 								<td class="right"><a onclick="$('#image-row<?php echo $image_row; ?>').remove();" class="button"><?php echo $button_remove; ?></a></td>
@@ -147,12 +216,26 @@
 		html += '<tr>';
 		html += '<td class="left">';
 		<?php foreach ($languages as $language) { ?>
-			html += '<input type="text" name="banner_image[' + image_row + '][banner_image_description][<?php echo $language['language_id']; ?>][title]" value="" /> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';
+			html += '<input type="text" name="banner_image[' + image_row + '][banner_image_description][<?php echo $language['language_id']; ?>][title]" value="" /> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br /><br />';
 		<?php } ?>
 		html += '</td>';	
-		html += '<td class="left"><input type="text" name="banner_image[' + image_row + '][link]" value="" /><br />';
+		html += '<td class="left"><input type="text" name="banner_image[' + image_row + '][link]" value="" /><br /><br />';
 		<?php foreach ($languages as $language) { ?>
-			html += '<input type="text" name="banner_image[' + image_row + '][banner_image_description][<?php echo $language['language_id']; ?>][link]" value="" /> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br />';
+			html += '<input type="text" name="banner_image[' + image_row + '][banner_image_description][<?php echo $language['language_id']; ?>][link]" value="" /> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /><br /><br />';
+		<?php } ?>
+
+		html += '<input type="hidden" name="banner_image[' + image_row + '][width]" value="0" />';
+		html += '<input type="hidden" name="banner_image[' + image_row + '][width_sm]" value="0" />';
+		html += '<input type="hidden" name="banner_image[' + image_row + '][height]" value="0" />';
+		html += '<input type="hidden" name="banner_image[' + image_row + '][height_sm]" value="0" />';
+		html += '<input type="hidden" name="banner_image[' + image_row + '][class]" value="" />';
+		html += '<input type="hidden" name="banner_image[' + image_row + '][class_sm]" value="" />';
+		html += '<input type="hidden" name="banner_image[' + image_row + '][block]" value="0" />';
+		html += '<input type="hidden" name="banner_image[' + image_row + '][block_sm]" value="0" />';
+
+		<?php foreach ($languages as $language) { ?>
+			html += '<input type="hidden" name="banner_image[' + image_row + '][banner_image_description][<?php echo $language['language_id']; ?>][overload_image]" value="" />';
+			html += '<input type="hidden" name="banner_image[' + image_row + '][banner_image_description][<?php echo $language['language_id']; ?>][overload_image_sm]" value="" />';
 		<?php } ?>
 		
 		html +='</td>';	

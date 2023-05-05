@@ -20,7 +20,7 @@ class ControllerDesignBanner extends Controller {
 		$this->load->model('design/banner');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-			$this->model_design_banner->addBanner($this->request->post);
+			$banner_id = $this->model_design_banner->addBanner($this->request->post);
 
 			$this->session->data['success'] = $this->language->get('text_success');
 
@@ -38,7 +38,9 @@ class ControllerDesignBanner extends Controller {
 				$url .= '&page=' . $this->request->get['page'];
 			}
 
-			$this->redirect($this->url->link('design/banner', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+			$url .= '&banner_id=' . $banner_id;
+
+			$this->redirect($this->url->link('design/banner/update', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
 
 		$this->getForm();
@@ -70,7 +72,9 @@ class ControllerDesignBanner extends Controller {
 				$url .= '&page=' . $this->request->get['page'];
 			}
 
-			$this->redirect($this->url->link('design/banner', 'token=' . $this->session->data['token'] . $url, 'SSL'));
+			$url .= '&banner_id=' . $this->request->get['banner_id'];
+
+			$this->redirect($this->url->link('design/banner/update', 'token=' . $this->session->data['token'] . $url, 'SSL'));
 		}
 
 		$this->getForm();
@@ -376,18 +380,25 @@ class ControllerDesignBanner extends Controller {
 
 		foreach ($banner_images as $banner_image) {
 			foreach ($this->data['languages'] as $language){
-				$banner_image['banner_image_description'][$language['language_id']]['overload_thumb'] = $this->model_tool_image->resize($banner_image['banner_image_description'][$language['language_id']]['overload_image'], 100, 100);
-				
+				$banner_image['banner_image_description'][$language['language_id']]['overload_thumb'] = $this->model_tool_image->resize($banner_image['banner_image_description'][$language['language_id']]['overload_image'], 100, 100);				
 				$banner_image['banner_image_description'][$language['language_id']]['overload_thumb_sm'] = $this->model_tool_image->resize($banner_image['banner_image_description'][$language['language_id']]['overload_image_sm'], 100, 100);
-			}
+			}			
 
 			$this->data['banner_images'][] = array(
-				'banner_image_description' => $banner_image['banner_image_description'],
-				'link'                     => $banner_image['link'],
-				'image'                    => $banner_image['image'],
-				'image_sm'                 => $banner_image['image_sm'],
-				'thumb'                    => $this->model_tool_image->resize($banner_image['image'], 100, 100),
-				'thumb_sm'                 => $this->model_tool_image->resize($banner_image['image_sm'], 100, 100)
+				'banner_image_description' 	=> $banner_image['banner_image_description'],
+				'link'                     	=> $banner_image['link'],
+				'image'                    	=> $banner_image['image'],
+				'image_sm'                 	=> $banner_image['image_sm'],
+				'width' 					=> $banner_image['width'],
+				'height' 					=> $banner_image['height'],
+				'width_sm' 					=> $banner_image['width_sm'],
+				'height_sm' 				=> $banner_image['height_sm'],
+				'class' 					=> $banner_image['class'],
+				'class_sm' 					=> $banner_image['class_sm'],
+				'block' 					=> $banner_image['block'],
+				'block_sm' 					=> $banner_image['block_sm'],
+				'thumb'                    	=> $this->model_tool_image->resize($banner_image['image'], 100, 100),
+				'thumb_sm'                 	=> $this->model_tool_image->resize($banner_image['image_sm'], 100, 100)
 			);	
 		} 
 
