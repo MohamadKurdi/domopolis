@@ -1,31 +1,40 @@
-<style type="text/css">
-<?php foreach ($banners as $banner) { ?>
-	.banner_<?php echo md5($banner['image']); ?>{background-image: url("<?php echo $banner["image"] ?>") !important;}
-	@media screen and (max-width: 560px) {
-		.banner_<?php echo md5($banner['image']); ?>{background-image: url("<?php echo $banner["image_sm"] ?>") !important;}
-	}
-<?php } ?>
-</style>
+
 <div class="wrap slider-top-wrap">
 	<div id="slideshow<?php echo $module; ?>" class="swiper-container main-slider">
 		<div class="swiper-wrapper">
-			<?php foreach ($blocks as $block) { ?>												
-				<div class="this-is-wrapper-for-blocks-for-large-screens-this-div-is-a-slide">
-					<?php foreach ($block as $banner) { ?>
-						<div id="" class="one-image-class <?php echo $banner['class']; ?>" style="width:<?php echo $banner['width']; ?>px; height:<?php echo $banner['height']; ?>px">
-							<img src="<?php echo $banner['image']; ?>">							
-						</div>
-					<?php } ?>
-				</div>
-			<?php } ?>
+			<?php foreach ($slides as $slide) { ?>												
+				<div class="this-is-slide-wrap-for-big-screens <?php echo $slide['class']; ?>">
+					
+					<?php foreach ($slide['images'] as $image) { ?>
+						<div class="one-image-wrap <?php echo $image['class']; ?>" style="width:<?php echo $image['width']; ?>;height:<?php echo $image['height']; ?>;">
+							<?php if ($image['link']) { ?>
+								<a href="<?php echo $image['link']; ?>" title="<?php echo $image['title']; ?>">
+							<?php } ?>
 
-			<?php foreach ($blocks_sm as $block_sm) { ?>												
-				<div class="this-is-wrapper-for-blocks-for-sm-screens-this-div-is-a-slide">
-					<?php foreach ($block_sm as $banner) { ?>
-						<div id="" class="one-image-class <?php echo $banner['class_sm']; ?>" style="width:<?php echo $banner['width_sm']; ?>px; height:<?php echo $banner['height_sm']; ?>px">
-							<img src="<?php echo $banner['image_sm']; ?>" />							
+							<img alt="<?php echo $image['title']; ?>" src="<?php echo $image['image']; ?>" width="<?php echo $image['width']; ?>" height="<?php echo $image['height']; ?>" />
+
+							<?php if ($image['link']) { ?>								
+								</a>
+							<?php } ?>
 						</div>
-					<?php } ?>
+					<? } ?>
+
+				</div>
+
+				<div class="this-is-slide-wrap-for-small-screens <?php echo $slide['class_sm']; ?>">
+					<?php foreach ($slide['images'] as $image) { ?>
+					<div class="one-image-wrap <?php echo $image['class_sm']; ?>" style="width:<?php echo $image['width_sm']; ?>;height:<?php echo $image['height_sm']; ?>;">
+							<?php if ($image['link']) { ?>
+								<a href="<?php echo $image['link']; ?>" title="<?php echo $image['title']; ?>">
+							<?php } ?>
+
+							<img alt="<?php echo $image['title']; ?>" src="<?php echo $image['image_sm']; ?>" width="<?php echo $image['width_sm']; ?>" height="<?php echo $image['height_sm']; ?>" />
+
+							<?php if ($image['link']) { ?>								
+								</a>
+							<?php } ?>
+						</div>
+					<? } ?>
 				</div>
 			<?php } ?>
 		</div>
