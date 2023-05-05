@@ -71,7 +71,6 @@ class ControllerModuleBanner extends Controller {
 		);
 
 		$this->data['action'] = $this->url->link('module/banner', 'token=' . $this->session->data['token'], 'SSL');
-
 		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
 
 		$this->data['modules'] = array();

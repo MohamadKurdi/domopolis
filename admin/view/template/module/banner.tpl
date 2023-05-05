@@ -32,15 +32,23 @@
           <?php foreach ($modules as $module) { ?>
             <tbody id="module-row<?php echo $module_row; ?>">
               <tr>
-                <td class="left"><select name="banner_module[<?php echo $module_row; ?>][banner_id]">
-                  <?php foreach ($banners as $banner) { ?>
-                    <?php if ($banner['banner_id'] == $module['banner_id']) { ?>
-                      <option value="<?php echo $banner['banner_id']; ?>" selected="selected"><?php echo $banner['name']; ?></option>
-                    <?php } else { ?>
-                      <option value="<?php echo $banner['banner_id']; ?>"><?php echo $banner['name']; ?></option>
-                    <?php } ?>
-                  <?php } ?>
-                </select></td>
+                <td class="left">
+                  <div class="scrollbox" style="width:350px; height:200px;">
+                    <?php $class = 'even'; ?>                     
+                    <?php foreach ($banners as $banner) { ?>
+                      <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                      <div class="<?php echo $class; ?>">
+                        <?php if (in_array($banner['banner_id'], $module['banner_id'])) { ?>
+                          <input id="banner_module_<?php echo $module_row; ?>_<?php echo $banner['banner_id']; ?>" class="checkbox" type="checkbox" name="banner_module[<?php echo $module_row; ?>][banner_id][]" value="<?php echo $banner['banner_id']; ?>" checked="checked" />
+                          <label for="banner_module_<?php echo $module_row; ?>_<?php echo $banner['banner_id']; ?>"><?php echo $banner['name']; ?></label>
+                        <?php } else { ?>
+                         <input id="banner_module_<?php echo $module_row; ?>_<?php echo $banner['banner_id']; ?>" class="checkbox" type="checkbox" name="banner_module[<?php echo $module_row; ?>][banner_id][]" value="<?php echo $banner['banner_id']; ?>"  />
+                         <label for="banner_module_<?php echo $module_row; ?>_<?php echo $banner['banner_id']; ?>"><?php echo $banner['name']; ?></label>
+                       <?php } ?>
+                     </div>
+                   <?php } ?>
+                 </div>
+              </td>
                 <td class="left">
                   <input type="number" step="1" name="banner_module[<?php echo $module_row; ?>][width]" value="<?php echo $module['width']; ?>" size="3" style="width:90px;" />
                   <input type="number" step="1" name="banner_module[<?php echo $module_row; ?>][height]" value="<?php echo $module['height']; ?>" size="3" style="width:90px;" />
@@ -117,11 +125,19 @@ var module_row = <?php echo $module_row; ?>;
 function addModule() {	
  html  = '<tbody id="module-row' + module_row + '">';
  html += '  <tr>';
- html += '    <td class="left"><select name="banner_module[' + module_row + '][banner_id]">';
+ html += '    <td class="left">';
+ html += '<div class="scrollbox" style="width:350px; height:200px;">';
+ <?php $class = 'even'; ?>                     
  <?php foreach ($banners as $banner) { ?>
-   html += '      <option value="<?php echo $banner['banner_id']; ?>"><?php echo addslashes($banner['name']); ?></option>';
- <?php } ?>
- html += '    </select></td>';
+  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+  html += '<div class="<?php echo $class; ?>">';
+  html += '                        <input id="banner_module_<?php echo $module_row; ?>_<?php echo $banner['banner_id']; ?>" class="checkbox" type="checkbox" name="banner_module[<?php echo $module_row; ?>][banner_id][]" value="<?php echo $banner['banner_id']; ?>"  />';
+  html += '                       <label for="banner_module_<?php echo $module_row; ?>_<?php echo $banner['banner_id']; ?>"><?php echo $banner['name']; ?></label>';
+  html += '                    </div>';
+<?php } ?>
+html += '                </div>';
+
+html += '</td>';
  html += '    <td class="left"><input type="number" step="1" name="banner_module[' + module_row + '][width]" value="" size="3" style="width:90px;" /> <input type="number" step="1" name="banner_module[' + module_row + '][height]" value="" size="3" style="width:90px;" /></td>'; 
   html += '    <td class="left"><input type="number" step="1" name="banner_module[' + module_row + '][width_sm]" value="" size="3" style="width:90px;" /> <input type="number" step="1" name="banner_module[' + module_row + '][height_sm]" value="" size="3" style="width:90px;" /></td>';
  html += '    <td class="left"><select name="banner_module[' + module_row + '][layout_id]">';
