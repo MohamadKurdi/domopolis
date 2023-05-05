@@ -25,4 +25,34 @@ class ModelDesignBanner extends Model {
 		
 		return $query->rows;
 	}
+
+	public function getBannersInfo($banner_ids) {
+		$banner_ids = array_map('intval', $banner_ids);
+
+		if ($banner_ids){
+			$sql = "SELECT * FROM banner WHERE banner_id IN (" . implode(',', $banner_ids) . ") AND status = 1 ORDER BY sort_order DESC";
+			$query = $this->db->query($sql);
+			return $query->rows;
+		}
+
+		return [];
+	}
+
+	public function getBanners($banner_ids) {
+		$data = [];
+
+		$banners = $this->getBannersInfo($banner_ids);
+
+		foreach ($banners as $banner){
+
+			$data[$banner['banner_id']]= [
+				'banner_id' => $banner['banner_id'],
+				'class'  	=> $banner['class'],
+				'class_sm'  => $banner['class_sm'],
+				'images' 	=> $this->getBanner($banner['banner_id']),
+			];
+		}
+
+		return $data;
+	}
 }
