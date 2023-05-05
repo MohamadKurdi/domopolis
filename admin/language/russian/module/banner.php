@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']       = 'Баннер';
+$_['heading_title']       = 'Конструктор Баннеров';
 
 // Text
 $_['text_module']         = 'Модули';
@@ -21,4 +21,3 @@ $_['entry_sort_order']    = 'Порядок сортировки:';
 // Error
 $_['error_permission']    = 'У Вас нет прав для изменения модуля баннера!';
 $_['error_dimension']     = 'Введите размеры баннера!';
-?>
