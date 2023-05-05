@@ -256,6 +256,14 @@
 									</ul>
 								</li>
 
+								<li id="design"><a class="top"><i class="fa fa-file-image-o icon_menu"></i>Баннера</a>
+									<ul>
+										<li><a class="home_icon_style" href="<?php echo $banner; ?>">Баннера и слайды</a></li>					
+										<li><a class="home_icon_style" href="<?php echo $banner_module; ?>">Конструктор баннеров (модуль)</a></li>					
+										<li><a class="home_icon_style" href="<?php echo $slideshow_module; ?>">Простое слайдшоу (модуль)</a></li>
+									</ul>
+								</li>
+
 
 								<li id="extension"><a class="top"><i class="fa fa-clone icon_menu"></i>Расширения</a>
 									<ul>

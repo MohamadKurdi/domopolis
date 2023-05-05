@@ -456,8 +456,9 @@
 									<ul>
 										<li><a href="<?php echo $layout; ?>">Схемы / макеты</a></li>
 										<li><a href="<?php echo $custom_template_link; ?>">Индивидуальное переназначение шаблонов</a></li>
-										<li><a href="<?php echo $banner; ?>"><?php echo $text_banner; ?></a></li>
-										<li><a href="<?php echo $advanced_banner_link; ?>">Умные баннера</a></li>
+										<li><a href="<?php echo $banner; ?>">Баннера и слайды</a></li>					
+										<li><a href="<?php echo $banner_module; ?>">Конструктор баннеров (модуль)</a></li>					
+										<li><a href="<?php echo $slideshow_module; ?>">Простое слайдшоу (модуль)</a></li>
 									</ul>
 								</li>
 								<li><a class="parent home_icon_style"><i class="fa fa-users"></i><span><?php echo $text_users; ?></span></a>

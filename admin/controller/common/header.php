@@ -185,6 +185,10 @@ class ControllerCommonHeader extends Controller
             $this->data['total_shortnames_todo'] = $this->model_report_product->getTotalProductsWithNoShortNames();
 
             $this->data['banner'] = $this->url->link('design/banner', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['banner_module'] = $this->url->link('module/banner', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['slideshow_module'] = $this->url->link('module/slideshow', 'token=' . $this->session->data['token'], 'SSL');
+
+
             $this->data['category'] = $this->url->link('catalog/category', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['facategory'] = $this->url->link('catalog/facategory', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['country'] = $this->url->link('localisation/country', 'token=' . $this->session->data['token'], 'SSL');
