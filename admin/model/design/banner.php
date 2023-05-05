@@ -1,7 +1,12 @@
 <?php
 class ModelDesignBanner extends Model {
 	public function addBanner($data) {
-		$this->db->query("INSERT INTO banner SET name = '" . $this->db->escape($data['name']) . "', status = '" . (int)$data['status'] . "'");
+		$this->db->query("INSERT INTO banner SET 
+			name 		= '" . $this->db->escape($data['name']) . "', 
+			status 		= '" . (int)$data['status'] . "',
+			sort_order 	= '" . (int)$data['sort_order'] . "',
+			class  		= '" . $this->db->escape($data['class']) . "',
+			class_sm  	= '" . $this->db->escape($data['class_sm']) . "'");
 
 		$banner_id = $this->db->getLastId();
 
@@ -49,7 +54,12 @@ class ModelDesignBanner extends Model {
 	}
 
 	public function editBanner($banner_id, $data) {
-		$this->db->query("UPDATE banner SET name = '" . $this->db->escape($data['name']) . "', status = '" . (int)$data['status'] . "' WHERE banner_id = '" . (int)$banner_id . "'");
+		$this->db->query("UPDATE banner SET name = '" . $this->db->escape($data['name']) . "', 
+			status = '" . (int)$data['status'] . "', 
+			sort_order 	= '" . (int)$data['sort_order'] . "',
+			class  		= '" . $this->db->escape($data['class']) . "',
+			class_sm  	= '" . $this->db->escape($data['class_sm']) . "' 
+			WHERE banner_id = '" . (int)$banner_id . "'");
 
 		$this->db->query("DELETE FROM banner_image WHERE banner_id = '" . (int)$banner_id . "'");
 		$this->db->query("DELETE FROM banner_image_description WHERE banner_id = '" . (int)$banner_id . "'");

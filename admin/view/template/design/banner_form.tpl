@@ -18,10 +18,12 @@
 				<table class="form">
 					<tr>
 						<td><span class="required">*</span> <?php echo $entry_name; ?></td>
-						<td><input type="text" name="name" value="<?php echo $name; ?>" size="100" />
+						<td>
+							<input type="text" name="name" value="<?php echo $name; ?>" size="100" />
 							<?php if ($error_name) { ?>
 								<span class="error"><?php echo $error_name; ?></span>
-							<?php } ?></td>
+							<?php } ?>
+						</td>
 					</tr>
 					<tr>
 						<td><?php echo $entry_status; ?></td>
@@ -29,16 +31,61 @@
 							<?php if ($status) { ?>
 								<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
 								<option value="0"><?php echo $text_disabled; ?></option>
-								<?php } else { ?>
+							<?php } else { ?>
 								<option value="1"><?php echo $text_enabled; ?></option>
 								<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
 							<?php } ?>
-						</select></td>
+						</select>
+					</td>
+					<tr>
+						<td>Сортировка</td>
+						<td>
+							<input type="number" step="1" style="width:90px;" name="sort_order" value="<?php echo $sort_order; ?>" size="100" />
+							<i class="fa fa-info-circle"></i> используется для конструктора слайдов в модуле "Конструктор Баннеров" в случае если 1 баннер = 1 слайд
+						</td>
 					</tr>
+					<style>
+						.class-selector, .class-sm-selector{border:2px solid #D9D9D9;}
+						.class-active{border:2px solid #51A62D;}
+						#images > thead > tr > th{background: #FF7815;}
+					</style>
+					<tr>
+						<td>Схема для больших разрешений</td>
+						<td>		
+							<input type="hidden" name="class" value="<?php echo $class; ?>" />					
+							<?php foreach ($banner_layouts as $layout) { ?>
+								<img src="<?php echo $layout['image']; ?>" data-layout="<?php echo $layout['layout']; ?>" height="50px;" class="class-selector <?php if ($class == $layout['layout']) { ?>class-active<? } ?>" />
+							<?php } ?>
+						</td>
+					</tr>
+					<tr>
+						<td>Схема для небольших разрешений</td>
+						<td>		
+							<input type="hidden" name="class_sm" value="<?php echo $class_sm; ?>" />					
+							<?php foreach ($banner_layouts as $layout) { ?>
+								<img src="<?php echo $layout['image']; ?>" data-layout="<?php echo $layout['layout']; ?>" height="50px;" class="class-sm-selector <?php if ($class_sm == $layout['layout']) { ?>class-active<? } ?>" />
+							<?php } ?>
+						</td>
+					</tr>
+					<script>
+						$('.class-selector').click(
+							function(){
+								$('.class-selector').removeClass('class-active');
+								$(this).addClass('class-active');
+								$('input[name=class]').val($(this).attr('data-layout'));
+							}
+						);
+
+						$('.class-sm-selector').click(
+							function(){
+								$('.class-sm-selector').removeClass('class-active');
+								$(this).addClass('class-active');
+								$('input[name=class_sm]').val($(this).attr('data-layout'));
+							}
+						);
+
+					</script>
 				</table>
-				<style>
-					#images > thead > tr > th{background: #FF7815;}
-				</style>
 				<table id="images" class="list">
 					<thead>
 						<tr>
@@ -102,7 +149,7 @@
 														<input type="text" style="width:90px;" name="banner_image[<?php echo $image_row; ?>][class]" value="<?php echo $banner_image['class']; ?>" />
 													</td>
 													<td style="width:60px;">
-														Block ID
+														Slide ID
 													</td>
 													<td>
 														<input type="number" step="1" style="width:90px;" name="banner_image[<?php echo $image_row; ?>][block]" value="<?php echo $banner_image['block']; ?>" />
@@ -164,7 +211,7 @@
 														<input type="text" style="width:90px;" name="banner_image[<?php echo $image_row; ?>][class_sm]" value="<?php echo $banner_image['class_sm']; ?>" />
 													</td>
 													<td style="width:60px;">
-														Block ID
+														Slide ID
 													</td>
 													<td>
 														<input type="number" step="1" style="width:90px;" name="banner_image[<?php echo $image_row; ?>][block_sm]" value="<?php echo $banner_image['block_sm']; ?>" />

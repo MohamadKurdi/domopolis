@@ -186,11 +186,14 @@ class ControllerDesignBanner extends Controller {
 			);
 
 			$this->data['banners'][] = array(
-				'banner_id' => $result['banner_id'],
-				'name'      => $result['name'],	
-				'status'    => ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),				
-				'selected'  => isset($this->request->post['selected']) && in_array($result['banner_id'], $this->request->post['selected']),				
-				'action'    => $action
+				'banner_id' 	=> $result['banner_id'],
+				'name'      	=> $result['name'],	
+				'sort_order'	=> $result['sort_order'],	
+				'class'			=> $result['class'],
+				'class_sm'		=> $result['class_sm'],
+				'status'    	=> ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),				
+				'selected'  	=> isset($this->request->post['selected']) && in_array($result['banner_id'], $this->request->post['selected']),				
+				'action'    	=> $action
 			);
 		}
 
@@ -362,6 +365,40 @@ class ControllerDesignBanner extends Controller {
 			$this->data['status'] = true;
 		}
 
+		if (isset($this->request->post['class'])) {
+			$this->data['class'] = $this->request->post['class'];
+		} elseif (!empty($banner_info)) {
+			$this->data['class'] = $banner_info['class'];
+		} else {
+			$this->data['class'] = '';
+		}
+
+		if (isset($this->request->post['class_sm'])) {
+			$this->data['class_sm'] = $this->request->post['class_sm'];
+		} elseif (!empty($banner_info)) {
+			$this->data['class_sm'] = $banner_info['class_sm'];
+		} else {
+			$this->data['class_sm'] = '';
+		}
+
+		if (isset($this->request->post['sort_order'])) {
+			$this->data['sort_order'] = $this->request->post['sort_order'];
+		} elseif (!empty($banner_info)) {
+			$this->data['sort_order'] = $banner_info['sort_order'];
+		} else {
+			$this->data['sort_order'] = '0';
+		}
+
+		$this->data['banner_layouts'] = [];
+		$banner_layouts = glob(DIR_APPLICATION . 'view/images/banner_layouts/*.jpg');
+
+		foreach ($banner_layouts as $banner_layout){
+			$this->data['banner_layouts'][] = [
+				'image'  => 'view/images/banner_layouts/' . pathinfo($banner_layout, PATHINFO_BASENAME),
+				'layout' => pathinfo($banner_layout, PATHINFO_FILENAME)
+			];
+		}
+	
 		$this->load->model('localisation/language');
 
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
