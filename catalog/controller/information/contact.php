@@ -148,7 +148,12 @@
 			
 			$this->data['action'] = $this->url->link('information/contact');
 			$this->data['store'] = $this->config->get('config_name');
-			$this->data['address'] = nl2br($this->config->get('config_address'));
+
+			if (!empty($this->config->get('config_address'))){
+				$this->data['address'] = nl2br($this->config->get('config_address'));
+			} else {
+				$this->data['address'] = '';
+			}
 			$this->data['telephone'] = $this->config->get('config_telephone');
 			$this->data['telephone2'] = $this->config->get('config_telephone2');
 			$this->data['telephone3'] = $this->config->get('config_telephone3');
