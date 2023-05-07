@@ -394,6 +394,20 @@
 					</div>
 				<?php } ?>
 			</div>
+
+
+	<?php if ($this->config->get('config_country_id') == 176) { ?>
+		<?php if ($this->user->getUserGroup() == 27) { ?>
+			<div style="margin-top:20px; margin-bottom:20px; background-color:red; color:white; text-align:center; font-size:32px;">
+				Українські замовлення не обробляються у цьому магазині з 14:00 07.05.2023!<br />
+				З усіх організаційних питань звертатися до Валерія Глазиріна<br />
+				Останнє замовлення, оформлене у цій адмінці: 315925<br />
+				<small>Нова адмінка Кітчен-Профі Україна: <a style="color:white;" href="https://kitchen-profi.com.ua/admin/?xkey=754">https://kitchen-profi.com.ua/admin/?xkey=754</a></small><br />
+				Слава Україні!
+			</div>
+		<?php } ?>
+	<?php } ?>
+
 			<div id="alert_history_preview"></div>
 			<script>
 				$('a#alert_history_preview_click').click(function(){
