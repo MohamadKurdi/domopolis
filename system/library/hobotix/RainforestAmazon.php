@@ -48,7 +48,7 @@ class RainforestAmazon
 	/*
 		Лимит для отбора из очереди обработки вариантов
 	*/
-	public const variantQueueLimit 		= 10;
+	public const variantQueueLimit 		= 30;
 
 	public const categoryModeTables 		= ['standard' => 'category_amazon_tree', 	'bestsellers' => 'category_amazon_bestseller_tree'];
 	public const categoryModeResultIndexes 	= ['standard' => 'category_results', 		'bestsellers' => 'bestsellers'];
