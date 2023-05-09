@@ -2715,7 +2715,15 @@
 				} else {
 				$this->data['pay_equireWPP'] = false;
 			}
-			
+
+			if (isset($this->request->post['pay_equireMono'])) {
+				$this->data['pay_equireMono'] = $this->request->post['pay_equireMono'];
+				} elseif (!empty($order_info)) {
+				$this->data['pay_equireMono'] = $order_info['pay_equireMono'];
+				} else {
+				$this->data['pay_equireMono'] = false;
+			}
+						
 			if (isset($this->request->post['pay_equireCP'])) {
 				$this->data['pay_equireCP'] = $this->request->post['pay_equireCP'];
 				} elseif (!empty($order_info)) {

@@ -1315,6 +1315,17 @@
 				$(this).removeClass('eq_disabled');
 			}
 		});
+
+		$('#pay_equireMono_img').click(function(){
+			if ($('input#pay_equireMono').val()=='1'){
+				$('input#pay_equireMono').val('0').change();
+				$(this).removeClass('eq_disabled');
+				$(this).addClass('eq_disabled');
+				} else if ($('input#pay_equireMono').val()=='0'){
+				$('input#pay_equireMono').val('1').change();
+				$(this).removeClass('eq_disabled');
+			}
+		});
 		
 		$('#pay_equireCP_img').click(function(){
 			if ($('input#pay_equireCP').val()=='1'){

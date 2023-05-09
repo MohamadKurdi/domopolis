@@ -21,9 +21,7 @@
 				$order_info['email'] = $customer_info['email'];
 			}
 			
-			if (true) {
-				
-				
+			if (true) {								
 				$codeContents = rtrim($order_info['store_url'], '/') . '/index.php?route=account/order/info&order_id=' . $order_id;
 				$codeContents .= '&utm_term=' . $order_info['email'] . '&customer_id=' . $order_info['customer_id'] . '&utoken=' . md5(md5($order_info['customer_id'] . $order_info['customer_id']));
 				$codeContents .= '&do_payment=explicit&pay_by=' . $qr_payment_code;
@@ -727,6 +725,13 @@
 				} else {
 				$data['pay_equireWPP'] = 0;
 			}
+
+			if (isset($data['pay_equireMono']) && $data['pay_equireMono']=='1'){
+				$data['pay_equireMono'] = 1;
+				} else {
+				$data['pay_equireMono'] = 0;
+			}
+			
 			
 			if (isset($data['pay_equireCP']) && $data['pay_equireCP']=='1'){
 				$data['pay_equireCP'] = 1;
@@ -734,7 +739,7 @@
 				$data['pay_equireCP'] = 0;
 			}
 			
-			if ($data['pay_equire'] || $data['pay_equire2'] || $data['pay_equirePP'] || $data['pay_equireLQP'] || $data['pay_equireWPP'] || $data['pay_equireCP']){
+			if ($data['pay_equire'] || $data['pay_equire2'] || $data['pay_equirePP'] || $data['pay_equireLQP'] || $data['pay_equireWPP'] || $data['pay_equireMono'] || $data['pay_equireCP']){
 				$data['pay_type'] = 'Банковской картой';
 			}
 			
@@ -825,82 +830,83 @@
 			}
 			
 			$this->db->query("UPDATE `order` SET 		
-			order_id2 = '" . $this->db->escape($data['order_id2']) . "',
-			firstname = '" . $this->db->escape($this->mb_ucfirst($data['firstname'])) . "', 
-			lastname = '" . $this->db->escape($this->mb_ucfirst($data['lastname'])) . "', 
-			email = '" . $this->db->escape(trim($data['email'])) . "', 
-			telephone = '" . $this->db->escape($data['telephone']) . "',				
-			fax = '" . $this->db->escape($data['fax']) . "', 
-			faxname = '" . $this->db->escape($data['faxname']) . "', 
-			customer_id = '" . (int)$data['customer_id'] . "',
-			customer_group_id = '" . (int)$data['customer_group_id'] . "',
-			payment_firstname = '" . $this->db->escape($this->mb_ucfirst($data['payment_firstname'])) . "', 
-			payment_lastname = '" . $this->db->escape($this->mb_ucfirst($data['payment_lastname'])) . "', 
-			payment_company = '" . $this->db->escape($data['payment_company']) . "', 
-			payment_company_id = '" . $this->db->escape($data['payment_company_id']) . "', 
-			payment_tax_id = '" . $this->db->escape($data['payment_tax_id']) . "', 
-			payment_address_1 = '" . $this->db->escape($data['payment_address_1']) . "', 
-			payment_address_2 = '" . $this->db->escape($data['payment_address_2']) . "', 
-			payment_city = '" . $this->db->escape($data['payment_city']) . "', 
-			payment_postcode = '" . $this->db->escape($data['payment_postcode']) . "', 
-			payment_country = '" . $this->db->escape($payment_country) . "', 
-			payment_country_id = '" . (int)$data['payment_country_id'] . "', 
-			payment_zone = '" . $this->db->escape($payment_zone) . "', 
-			payment_zone_id = '" . (int)$data['payment_zone_id'] . "', 
-			payment_address_format = '" . $this->db->escape($payment_address_format) . "',
-			payment_method = '" . $this->db->escape($data['payment_method']) . "', 
-			payment_code = '" . $this->db->escape($data['payment_code']) . "', 
-			payment_secondary_method = '" . $this->db->escape($data['payment_secondary_method']) . "', 
-			payment_secondary_code = '" . $this->db->escape($data['payment_secondary_code']) . "',
-			shipping_firstname = '" . $this->db->escape($this->mb_ucfirst($data['shipping_firstname'])) . "', 
-			shipping_lastname = '" . $this->db->escape($this->mb_ucfirst($data['shipping_lastname'])) . "', 
-			shipping_passport_serie  =  '" . $this->db->escape($data['shipping_passport_serie']) . "',
-			shipping_passport_given   =  '" . $this->db->escape($data['shipping_passport_given']) . "',		
-			shipping_company = '" . $this->db->escape($data['shipping_company']) . "', 
-			shipping_address_1 = '" . $this->db->escape($data['shipping_address_1']) . "', 
-			shipping_address_2 = '" . $this->db->escape($data['shipping_address_2']) . "',
-			shipping_city = '" . $this->db->escape($data['shipping_city']) . "', 
-			shipping_postcode = '" . $this->db->escape($data['shipping_postcode']) . "', 
-			shipping_country = '" . $this->db->escape($shipping_country) . "',
-			shipping_country_id = '" . (int)$data['shipping_country_id'] . "', 
-			legalperson_id = '" . (int)$data['legalperson_id'] . "',
-			card_id = '" . (int)$data['card_id'] . "', 
-			shipping_zone = '" . $this->db->escape($shipping_zone) . "',
-			shipping_zone_id = '" . (int)$data['shipping_zone_id'] . "', 
+			order_id2 				= '" . $this->db->escape($data['order_id2']) . "',
+			firstname 				= '" . $this->db->escape($this->mb_ucfirst($data['firstname'])) . "', 
+			lastname 				= '" . $this->db->escape($this->mb_ucfirst($data['lastname'])) . "', 
+			email 					= '" . $this->db->escape(trim($data['email'])) . "', 
+			telephone 				= '" . $this->db->escape($data['telephone']) . "',				
+			fax 					= '" . $this->db->escape($data['fax']) . "', 
+			faxname 				= '" . $this->db->escape($data['faxname']) . "', 
+			customer_id 			= '" . (int)$data['customer_id'] . "',
+			customer_group_id 		= '" . (int)$data['customer_group_id'] . "',
+			payment_firstname 		= '" . $this->db->escape($this->mb_ucfirst($data['payment_firstname'])) . "', 
+			payment_lastname 		= '" . $this->db->escape($this->mb_ucfirst($data['payment_lastname'])) . "', 
+			payment_company 		= '" . $this->db->escape($data['payment_company']) . "', 
+			payment_company_id 		= '" . $this->db->escape($data['payment_company_id']) . "', 
+			payment_tax_id 			= '" . $this->db->escape($data['payment_tax_id']) . "', 
+			payment_address_1 		= '" . $this->db->escape($data['payment_address_1']) . "', 
+			payment_address_2 		= '" . $this->db->escape($data['payment_address_2']) . "', 
+			payment_city 			= '" . $this->db->escape($data['payment_city']) . "', 
+			payment_postcode 		= '" . $this->db->escape($data['payment_postcode']) . "', 
+			payment_country 		= '" . $this->db->escape($payment_country) . "', 
+			payment_country_id 		= '" . (int)$data['payment_country_id'] . "', 
+			payment_zone 			= '" . $this->db->escape($payment_zone) . "', 
+			payment_zone_id 		= '" . (int)$data['payment_zone_id'] . "', 
+			payment_address_format 	= '" . $this->db->escape($payment_address_format) . "',
+			payment_method 			= '" . $this->db->escape($data['payment_method']) . "', 
+			payment_code 			= '" . $this->db->escape($data['payment_code']) . "', 
+			payment_secondary_method 	= '" . $this->db->escape($data['payment_secondary_method']) . "', 
+			payment_secondary_code 		= '" . $this->db->escape($data['payment_secondary_code']) . "',
+			shipping_firstname 		= '" . $this->db->escape($this->mb_ucfirst($data['shipping_firstname'])) . "', 
+			shipping_lastname 		= '" . $this->db->escape($this->mb_ucfirst($data['shipping_lastname'])) . "', 
+			shipping_passport_serie  	=  '" . $this->db->escape($data['shipping_passport_serie']) . "',
+			shipping_passport_given   	=  '" . $this->db->escape($data['shipping_passport_given']) . "',		
+			shipping_company 			= '" . $this->db->escape($data['shipping_company']) . "', 
+			shipping_address_1 		= '" . $this->db->escape($data['shipping_address_1']) . "', 
+			shipping_address_2 		= '" . $this->db->escape($data['shipping_address_2']) . "',
+			shipping_city 			= '" . $this->db->escape($data['shipping_city']) . "', 
+			shipping_postcode 		= '" . $this->db->escape($data['shipping_postcode']) . "', 
+			shipping_country 		= '" . $this->db->escape($shipping_country) . "',
+			shipping_country_id 	= '" . (int)$data['shipping_country_id'] . "', 
+			legalperson_id 			= '" . (int)$data['legalperson_id'] . "',
+			card_id 				= '" . (int)$data['card_id'] . "', 
+			shipping_zone 			= '" . $this->db->escape($shipping_zone) . "',
+			shipping_zone_id 		= '" . (int)$data['shipping_zone_id'] . "', 
 			shipping_address_format = '" . $this->db->escape($shipping_address_format) . "', 
-			shipping_method = '" . $this->db->escape($data['shipping_method']) . "', 
-			shipping_code = '" . $this->db->escape($data['shipping_code']) . "', 
-			comment = '" . $this->db->escape($data['comment']) . "', 
-			order_status_id = '" . (int)$data['order_status_id'] . "', 
-			affiliate_id  = '" . (int)$data['affiliate_id'] . "', 
-			date_modified = NOW(), 
-			date_buy =  '" . $this->db->escape($data['date_buy']) . "',
-			date_country =  '" . $this->db->escape($data['date_country']) . "',
-			date_delivery =  '" . $this->db->escape($data['date_delivery']) . "',
-			date_delivery_to =  '" . $this->db->escape($data['date_delivery_to']) . "',
-			date_delivery_actual =  '" . $this->db->escape($data['date_delivery_actual']) . "',
+			shipping_method 		= '" . $this->db->escape($data['shipping_method']) . "', 
+			shipping_code 			= '" . $this->db->escape($data['shipping_code']) . "', 
+			comment 				= '" . $this->db->escape($data['comment']) . "', 
+			order_status_id 		= '" . (int)$data['order_status_id'] . "', 
+			affiliate_id  			= '" . (int)$data['affiliate_id'] . "', 
+			date_modified 			= NOW(), 
+			date_buy 				=  '" . $this->db->escape($data['date_buy']) . "',
+			date_country 			=  '" . $this->db->escape($data['date_country']) . "',
+			date_delivery 			=  '" . $this->db->escape($data['date_delivery']) . "',
+			date_delivery_to 		=  '" . $this->db->escape($data['date_delivery_to']) . "',
+			date_delivery_actual 	=  '" . $this->db->escape($data['date_delivery_actual']) . "',
 			display_date_in_account =  '" . (int)$data['display_date_in_account'] . "',
-			date_maxpay =  '" . $this->db->escape($data['date_maxpay']) . "',
-			date_sent =  '" . $this->db->escape($data['date_sent']) . "', 			
-			part_num = '" . $this->db->escape(trim($data['part_num'])) . "', 
-			ttn = '" . $this->db->escape($data['ttn']) . "',
-			bottom_text = '" . $this->db->escape($data['bottom_text']) . "',
-			pay_equire = '" . (int)$data['pay_equire'] . "',
-			pay_equire2 = '" . (int)$data['pay_equire2'] . "',
-			pay_equirePP = '" . (int)$data['pay_equirePP'] . "',
-			pay_equireLQP = '" . (int)$data['pay_equireLQP'] . "',
-			pay_equireWPP = '" . (int)$data['pay_equireWPP'] . "',
-			pay_equireCP = '" . (int)$data['pay_equireCP'] . "',
-			pay_type = '" . $this->db->escape($data['pay_type']) . "',
-			bill_file = '" . $this->db->escape($bill_file) . "',
-			bill_file2 = '" . $this->db->escape($bill_file2) . "',
-			urgent   = '" . (int)$data['urgent'] . "',
-			preorder   = '" . (int)$data['preorder'] . "',
-			urgent_buy   = '" . (int)$data['urgent_buy'] . "',
-			wait_full   = '" . (int)$data['wait_full'] . "',
-			ua_logistics   = '" . (int)$data['ua_logistics'] . "',
-			concardis_id   = '" . $this->db->escape($data['concardis_id']) . "'
-			WHERE order_id = '" . (int)$order_id . "'");
+			date_maxpay 			=  '" . $this->db->escape($data['date_maxpay']) . "',
+			date_sent 				=  '" . $this->db->escape($data['date_sent']) . "', 			
+			part_num 				= '" . $this->db->escape(trim($data['part_num'])) . "', 
+			ttn 					= '" . $this->db->escape($data['ttn']) . "',
+			bottom_text 			= '" . $this->db->escape($data['bottom_text']) . "',
+			pay_equire 				= '" . (int)$data['pay_equire'] . "',
+			pay_equire2 			= '" . (int)$data['pay_equire2'] . "',
+			pay_equirePP 			= '" . (int)$data['pay_equirePP'] . "',
+			pay_equireLQP 			= '" . (int)$data['pay_equireLQP'] . "',
+			pay_equireWPP 			= '" . (int)$data['pay_equireWPP'] . "',
+			pay_equireMono 			= '" . (int)$data['pay_equireMono'] . "',
+			pay_equireCP 			= '" . (int)$data['pay_equireCP'] . "',
+			pay_type 				= '" . $this->db->escape($data['pay_type']) . "',
+			bill_file 				= '" . $this->db->escape($bill_file) . "',
+			bill_file2 				= '" . $this->db->escape($bill_file2) . "',
+			urgent   				= '" . (int)$data['urgent'] . "',
+			preorder   				= '" . (int)$data['preorder'] . "',
+			urgent_buy   			= '" . (int)$data['urgent_buy'] . "',
+			wait_full   			= '" . (int)$data['wait_full'] . "',
+			ua_logistics   			= '" . (int)$data['ua_logistics'] . "',
+			concardis_id   			= '" . $this->db->escape($data['concardis_id']) . "'
+			WHERE order_id 			= '" . (int)$order_id . "'");
 			
 			if (isset($data['customer_is_mudak']) && $data['customer_is_mudak']=='1' && $data['customer_id']){
 				$mudak_group_id = $this->config->get('config_bad_customer_group_id');
@@ -2379,7 +2385,7 @@
 				'date_delivery'          => $order_query->row['date_delivery'],
 				'date_delivery_to'       => $order_query->row['date_delivery_to'],
 				'date_delivery_actual'       => $order_query->row['date_delivery_actual'],
-				'display_date_in_account'       => $order_query->row['display_date_in_account'],
+				'display_date_in_account'    => $order_query->row['display_date_in_account'],
 				'date_maxpay'            => $order_query->row['date_maxpay'],
 				'manager_id'             => $order_query->row['manager_id'],
 				'courier_id'             => $order_query->row['courier_id'],
@@ -2392,6 +2398,7 @@
 				'pay_equirePP'			 => $order_query->row['pay_equirePP'],
 				'pay_equireLQP'			 => $order_query->row['pay_equireLQP'],
 				'pay_equireWPP'			 => $order_query->row['pay_equireWPP'],
+				'pay_equireMono'		 => $order_query->row['pay_equireMono'],
 				'pay_equireCP'			 => $order_query->row['pay_equireCP'],
 				'pay_type'			     => $order_query->row['pay_type'],
 				'bill_file'				 => $order_query->row['bill_file'],

@@ -3136,6 +3136,18 @@
 																							<a style="font-size:12px" href="<? echo $this->model_sale_order->generatePaymentQR($order_id, 'wayforpay', true); ?>" ><? echo $this->model_sale_order->generatePaymentQR($order_id, 'wayforpay', true); ?></a>
 																						</td>
 																					<?php } ?>
+
+																					<?php if ($this->config->get('mono_status_fake')) { ?>
+																						<td style="padding-right:10px; text-align:center;">
+																							<img id="pay_equireMono_img" src="<? echo HTTPS_CATALOG; ?>catalog/view/image/payment/monobank.png" style="cursor:pointer" width="182px"  <? if (!$pay_equireWPP) { ?>class="eq_disabled"<? } ?> />
+																							<input type="hidden" class="onchangeedit_direct" id="pay_equireMono" name="pay_equireMono" value="<? if ($pay_equireMono) { ?>1<? } else { ?>0<? } ?>"  />		
+																							<div style="background-color:#4ea24e; padding:5px; text-align:center; color:#FFF">UAH</div>
+																							<br />
+																							<img src="<? echo $this->model_sale_order->generatePaymentQR($order_id, 'mono'); ?>" />
+																							<br />
+																							<a style="font-size:12px" href="<? echo $this->model_sale_order->generatePaymentQR($order_id, 'mono', true); ?>" ><? echo $this->model_sale_order->generatePaymentQR($order_id, 'mono', true); ?></a>
+																						</td>
+																					<?php } ?>
 																					
 																				<?php } ?>
 
