@@ -282,8 +282,7 @@
             $this->load->model('account/transaction');
             $this->load->model('account/order');
             $this->load->model('checkout/order');
-            $this->load->model('payment/shoputils_psb');
-            $this->load->model('payment/paykeeper');                        
+            $this->load->model('payment/shoputils_psb');                            
                         
             $this->model_checkout_order->addOrderToQueue($this->order['order_id']);
             
@@ -292,8 +291,7 @@
             }
             
             $this->model_checkout_order->update($this->order['order_id'], $this->config->get('wayforpay_order_status_id'), 'Оплата через WayForPay', true);
-            
-            //добавляем транзакцию полной оплаты								  
+								  
             $this->model_account_transaction->addTransaction(
             'WayForPay: Оплата по заказу # '.$this->order['order_id'], 
             $this->model_account_order->getOrderTotal($this->order['order_id']),

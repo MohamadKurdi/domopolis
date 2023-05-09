@@ -933,12 +933,9 @@
 				}							
 				
 				//переход на платеж по QR
-				if (isset($this->request->get['do_payment']) && $this->request->get['do_payment'] == 'explicit' && isset($this->request->get['pay_by'])){
-					
-					if ($this->request->get['pay_by'] == 'concardis'){											
-						
+				if (isset($this->request->get['do_payment']) && $this->request->get['do_payment'] == 'explicit' && isset($this->request->get['pay_by'])){					
+					if ($this->request->get['pay_by'] == 'concardis'){																	
 						$this->children = array();
-
 						if (isset($this->request->get['cc_code']) && in_array($this->request->get['cc_code'], array('EUR', 'RUB', 'UAH'))){
 							$this->data['url'] = $this->url->link('payment/concardis_laterpay/laterpay', sprintf('cc_code=%s&order_id=%s&order_tt=%s&order_fl=%s', $this->request->get['cc_code'], $order_info['order_id'], $order_info['total_national'], md5($order_info['firstname'] . $order_info['lastname'])), 'SSL');
 							} else {
@@ -970,7 +967,10 @@
 						} elseif ($this->request->get['pay_by'] == 'wayforpay') {
 						
 						$this->redirect($this->url->link('payment/wayforpay_laterpay/laterpay', sprintf('order_id=%s&order_tt=%s&order_fl=%s', $order_info['order_id'], $order_info['total_national'], md5($order_info['firstname'] . $order_info['lastname'])), 'SSL'));
+						} elseif ($this->request->get['pay_by'] == 'mono') {
 						
+						$this->redirect($this->url->link('payment/mono/laterpay', sprintf('order_id=%s&order_tt=%s&order_fl=%s', $order_info['order_id'], $order_info['total_national'], md5($order_info['firstname'] . $order_info['lastname'])), 'SSL'));
+
 						} elseif ($this->request->get['pay_by'] == 'pp_express'){					
 						
 						$this->redirect($this->url->link('payment/pp_express_laterpay/checkout', sprintf('order_id=%s&order_tt=%s&order_fl=%s', $order_info['order_id'], $order_info['total_national'], md5($order_info['firstname'] . $order_info['lastname'])), 'SSL'));

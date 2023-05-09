@@ -164,7 +164,7 @@
 				if ($coupon_product_data || $coupon_category_data || $coupon_manufacturer_data || $coupon_collection_data) {
 					foreach ($this->cart->getProducts() as $product) {
 						
-						if ($coupon_query->row['current_in_stock']){
+						if ($coupon_query->row['only_in_stock']){
 							if (!$product['current_in_stock']){
 								continue;
 							}
