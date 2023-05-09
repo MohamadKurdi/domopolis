@@ -45,6 +45,8 @@ class ControllerPaymentMono extends Controller
 
         $formInputs = [
             "mono_status",
+            "mono_status_fake",
+            'mono_ismethod',
             "mono_merchant",
             'mono_geo_zone_id',
             "mono_sort_order",

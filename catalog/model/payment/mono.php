@@ -6,9 +6,9 @@ class ModelPaymentMono extends Model
 
     public function getMethod($address, $total)
     {
-        $this->load->language('payment/mono');
+        $this->language->load('payment/mono');
 
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('mono_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+        $query = $this->db->ncquery("SELECT * FROM zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('mono_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 
         if ($this->session->data['currency'] != self::CURRENCY_CODE[0] && $this->session->data['currency'] != self::CURRENCY_CODE[1] && $this->session->data['currency'] != self::CURRENCY_CODE[2]) {
             $status = false;
@@ -24,36 +24,40 @@ class ModelPaymentMono extends Model
 
         if ($status) {
             $method_data = [
-                'code' => 'mono',
-                'terms' => '',
-                'title' => $this->language->get('text_title').'<img src="/image/footer_monopay_light_bg.svg"  style="width: 75px;margin-left: 25px;display: inline-block;vertical-align: bottom;"/>',
-                'sort_order' => $this->config->get('mono_sort_order')
+                'code'          => 'mono',
+                'terms'         => '',
+                'description'   => $this->language->get('text_mono_description'),
+                'title'         => $this->language->get('text_title'),
+                'sort_order'    => $this->config->get('mono_sort_order')
             ];
         }
         return $method_data;
     }
+
     public function addOrder($args)
     {
-        $query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "mono_orders` WHERE OrderId = '" . (int)$args['order_id'] . "'");
+        $query = $this->db->ncquery("SELECT * FROM `mono_orders` WHERE OrderId = '" . (int)$args['order_id'] . "'");
 
         if($query->num_rows) {
-            $this->db->query("UPDATE `" . DB_PREFIX . "mono_orders` SET SecretKey = '" . $this->db->escape($args['randKey']) . "', InvoiceId = '" . $this->db->escape($args['InvoiceId']) . "' WHERE OrderId = '" . (int)$args['order_id'] . "'");
+            $this->db->ncquery("UPDATE `mono_orders` SET SecretKey = '" . $this->db->escape($args['randKey']) . "', InvoiceId = '" . $this->db->escape($args['InvoiceId']) . "' WHERE OrderId = '" . (int)$args['order_id'] . "'");
         } else {
-            $this->db->query("INSERT INTO `" . DB_PREFIX . "mono_orders` (InvoiceId, OrderId, SecretKey) VALUES('".$args['InvoiceId']."',".$args['order_id'].",'".$args['randKey']."')");
+            $this->db->ncquery("INSERT INTO `mono_orders` (InvoiceId, OrderId, SecretKey) VALUES('".$args['InvoiceId']."',".$args['order_id'].",'".$args['randKey']."')");
         }
     }
 
     public function getInvoiceId($OrderId)
     {
-        $q = $this->db->query("SELECT * FROM `" . DB_PREFIX . "mono_orders` WHERE OrderId = '". (int)$OrderId . "'");
+        $q = $this->db->ncquery("SELECT * FROM `mono_orders` WHERE OrderId = '". (int)$OrderId . "'");
 
         return $q->num_rows ? $q->row : false;
     }
+
     public function getOrderInfo($InvoiceId){
-        $q = $this->db->query("SELECT * FROM `" . DB_PREFIX . "mono_orders` WHERE InvoiceId = '". $this->db->escape($InvoiceId) . "'");
+        $q = $this->db->ncquery("SELECT * FROM `mono_orders` WHERE InvoiceId = '". $this->db->escape($InvoiceId) . "'");
 
         return $q->num_rows ? $q->row : false;
     }
+
     public function getCheckoutUrl($requestData)
     {
         $request = $this->sendToAPI($requestData);
@@ -61,26 +65,75 @@ class ModelPaymentMono extends Model
     }
 
     public function getImageUrl($product_id){
-        $q = $this->db->query("SELECT * FROM `" . DB_PREFIX . "product` WHERE product_id = ". (int)$product_id . "");
+        $q = $this->db->ncquery("SELECT * FROM `product` WHERE product_id = ". (int)$product_id . "");
 
         return $q->num_rows ? $q->row : false;
     }
+
     public function getEncodedProducts($order_id){
-        $orderProducts = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
+        $orderProducts = $this->db->ncquery("SELECT op.*, p.image FROM order_product op LEFT JOIN product p ON (op.product_id = p.product_id) WHERE order_id = '" . (int)$order_id . "'");
 
         $this->load->model('checkout/order');
+        $this->load->model('tool/image');
         $orderInfo = $this->model_checkout_order->getOrder($order_id);
 
         foreach ($orderProducts->rows as $orderProduct){
             $products[] = [
-                'name' => $orderProduct['name'],
-                'sum' => $this->currency->format($orderProduct['price'], $orderInfo['currency_code'], $orderInfo['currency_value'], false) * 100,
-                'qty' => (int)$orderProduct['quantity'],
-                'icon' => HTTPS_SERVER . "/image/" . $this->getImageUrl($orderProduct['product_id'])['image']
+                'name'  => $orderProduct['name'],
+                'code'  => $orderProduct['model'],
+                'sum'   => number_format($orderProduct['price_national'], 2, '.', '') * 100,
+                'qty'   => (int)$orderProduct['quantity'],
+                'icon'  => $this->model_tool_image->resize($orderProduct['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'))
             ];
         }
+
+        $orderTotals = $this->db->ncquery("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "'");
+        foreach ($orderTotals->rows as $orderTotal){
+            if ($orderTotal['code'] == 'coupon' && (float)$orderTotal['value_national'] < 0){
+                $products[] = [
+                    'name'  => $orderTotal['title'],
+                    'code'  => $orderTotal['code'],
+                    'sum'   => number_format($orderTotal['value_national'], 2, '.', '') * 100,
+                    'qty'   => 1,
+                    'icon'  => HTTPS_SERVER . 'catalog/view/image/monodiscount.jpg'
+                ];
+            }
+
+            if ($orderTotal['code'] == 'paymentmethoddiscounts' && (float)$orderTotal['value_national'] < 0){
+                $products[] = [
+                    'name'  => $orderTotal['title'],
+                    'code'  => $orderTotal['code'],
+                    'sum'   => number_format($orderTotal['value_national'], 2, '.', '') * 100,
+                    'qty'   => 1,
+                    'icon'  => HTTPS_SERVER . 'catalog/view/image/monodiscount.jpg'
+                ];
+            }
+
+            if ($orderTotal['code'] == 'shipping' && (float)$orderTotal['value_national'] > 0){
+                $products[] = [
+                    'name'  => $orderTotal['title'],
+                    'code'  => $orderTotal['code'],
+                    'sum'   => number_format($orderTotal['value_national'], 2, '.', '') * 100,
+                    'qty'   => 1,
+                    'icon'  => HTTPS_SERVER . 'catalog/view/image/monoshipping.jpg'
+                ];
+            }
+
+
+            if ($orderTotal['code'] == 'reward' && (float)$orderTotal['value_national'] < 0){
+                $products[] = [
+                    'name'  => $orderTotal['title'],
+                    'code'  => $orderTotal['code'],
+                    'sum'   => number_format($orderTotal['value_national'], 2, '.', '') * 100,
+                    'qty'   => 1,
+                    'icon'  => HTTPS_SERVER . 'catalog/view/image/monodiscount.jpg'
+                ];
+            }
+        }
+
         return $products;
     }
+
     public function sendToAPI($requestData)
     {
         $basketOrder =$this->getEncodedProducts($requestData['order_id']);
@@ -133,6 +186,9 @@ class ModelPaymentMono extends Model
         ];
     }
 
+        $monolog = new Log('monopay.txt');
+        $monolog->write('[ModelPaymentMono::sendToAPI] Creating invoice: ' . json_encode($data));
+
         $curl = curl_init();
         curl_setopt_array($curl, array(
         CURLOPT_URL => 'https://api.monobank.ua/api/merchant/invoice/create',
@@ -160,7 +216,7 @@ class ModelPaymentMono extends Model
         $response = json_decode($response, true);
 
         if(empty($response['invoiceId'])) {
-            throw new \Exception('Invalid response');
+            throw new \Exception('Invalid response: ' . json_encode($response));
         }
 
         $requestData['InvoiceId'] = $response['invoiceId'];
@@ -169,5 +225,3 @@ class ModelPaymentMono extends Model
         return $response;
     }
 }
-
-?>
