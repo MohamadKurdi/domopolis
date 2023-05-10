@@ -195,16 +195,23 @@ function bool_real_stripos($haystack, $needle){
 	return !(stripos($haystack, $needle) === false);			
 }
 
-function tryToGuessPageType($request){
-	
-	if (!empty($request['route'])){
-		
+function tryToGuessPageType($request){	
+	if (!isset($request['route']) || $request['route'] == 'common/home'){
+		return 'home';
+	}
+
+
+	if (!empty($request['route'])){		
 		if ($request['route'] == 'product/product' && !empty($request['product_id'])){
 			return 'product';
 		}
 
 		if ($request['route'] == 'product/manufacturer' && !empty($request['manufacturer_id'])){
 			return 'manufacturer';
+		}
+
+		if ($request['route'] == 'information/information' && !empty($request['information_id'])){
+			return 'information';
 		}
 
 		if ($request['route'] == 'product/collection' && !empty($request['collection_id'])){

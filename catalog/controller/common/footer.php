@@ -349,13 +349,11 @@ class ControllerCommonFooter extends Controller {
 				}
 			}
 		}
-		
-			//REWARD TEXT
+
 		if ($this->config->get('rewardpoints_appinstall')){
 			$this->data['text_retranslate_app_block'] = sprintf($this->data['text_retranslate_app_block_reward'], $this->currency->format($this->config->get('rewardpoints_appinstall'), $this->config->get('config_currency_national'), 1));
 		}
 		
-			//TRY TO FOUND ADMIN SESSION
 		if (ADMIN_SESSION_DETECTED){
 			if (!empty($this->request->cookie[ini_get('session.name') . 'A'])){
 				if (defined('DB_SESSION_HOSTNAME') && class_exists('Hobotix\SessionHandler\SessionHandler')){
@@ -379,6 +377,10 @@ class ControllerCommonFooter extends Controller {
 								$this->data['admin_uri'] = HTTP_ADMIN . 'index.php?route=catalog/product/update&token='. $this->data['admin_token'] .'&product_id=' . $this->request->get['product_id'];
 								$this->load->model('catalog/product');
 								$this->data['admin_product_info'] = $this->model_catalog_product->getProduct($this->request->get['product_id']);
+								break;
+
+								case 'information':
+								$this->data['admin_uri'] = HTTP_ADMIN . 'index.php?route=catalog/information/update&token='. $this->data['admin_token'] .'&information_id=' . $this->request->get['information_id'];
 								break;
 
 								case 'category':

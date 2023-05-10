@@ -43,7 +43,7 @@
 				$this->data['static_domain_url'] = $this->config->get('config_img_url');
 			}
 			
-			if ($this->request->server['REQUEST_URI'] == '/'  || !isset($this->request->get['route']) || $this->request->get['route'] == 'common/home'){
+			if ($this->request->server['REQUEST_URI'] == '/'  || tryToGuessPageType($this->request->get) == 'home'){
 				$this->data['page_type'] = 'homepage';
 			}
 			
@@ -425,7 +425,38 @@
 					}
 				}
 			}
+
+			$this->data['body_class'] = 'main-body';
 			
+			switch (tryToGuessPageType($this->request->get)) {
+				case 'home':
+				$this->data['body_class'] = 'home';
+				break;
+
+				case 'product':
+				$this->data['body_class'] = 'product-' . $this->request->get['product_id'];
+				break;				
+
+				case 'information':
+				$this->data['body_class'] = 'information-' . $this->request->get['information_id'];			
+				break;
+
+				case 'category':
+				$parts = explode('_', (string)$this->request->get['path']);
+				$this->data['body_class'] = 'category-' . (int)array_pop($parts);						
+				break;
+
+				case 'manufacturer':	
+				$this->data['body_class'] = 'manufacturer-' . $this->request->get['manufacturer_id'];												
+				break;
+
+				case 'collection':		
+				$this->data['body_class'] = 'collection-' . $this->request->get['collection_id'];											
+				break;
+
+				default:
+				break;
+			}
 						
 			$this->children = array(
 				'module/language',
