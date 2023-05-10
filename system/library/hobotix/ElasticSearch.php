@@ -561,7 +561,6 @@
 		}		
 		
 		
-		//ФУНКЦИИ ПОИСКА
 		public function fuzzyP($index, $query, $field1, $field2, $field3, $data = array()){
 
 			$store_id = $this->config->get('config_store_id');
@@ -667,7 +666,7 @@
 			
 			if (!empty($data['count'])){
 				$params['body']['aggs'] = [
-				'manufacturers' => [ 'terms' => [ 'field' => 'manufacturer_id' ]],
+				'manufacturers' => [ 'terms' => [ 'field' => 'manufacturer_id.keyword' ]],
 				'categories' 	=> [ 'terms' => [ 'field' => 'categories' ]]
 				];
 				$params['body']['from'] = 0;
@@ -745,15 +744,6 @@
 			if (!empty($data['fuzziness'])){
 				$fuzziness = (int)$data['fuzziness'];
 			}
-			
-			/*	$words = $this->prepareWords($query);
-				
-				foreach ($words as $word){
-				$must[] = array(
-				'match' => [ $field => [ 'query' => $word, 'fuzziness' => $fuzziness, 'prefix_length' => 2, 'operator' => 'AND' ] ]
-				);							
-				}		
-			*/
 			
 			$limit = 10;
 			if (!empty($data['limit'])){
@@ -904,7 +894,7 @@
 				$deleteParams = [
 					'index' => 'products' . $this->config->get('config_elasticsearch_index_suffix')
 				];
-				//$response = $this->elastic->indices()->delete($deleteParams);
+			//	$response = $this->elastic->indices()->delete($deleteParams);
 			} catch (\Exception $e){
 				echoLine($e->getMessage());
 			}
@@ -935,13 +925,13 @@
 			'identifier' 	=> [ 'char_filter' => [ 'html_strip' ], 'tokenizer' => 'standard', 'filter' => ['lowercase']]
 			] ] ],
 			'mappings' 	=> [ 'properties' => [
-			'category_id' 		=> [ 'type' => 'integer', 'index' => 'true' ],
-			'manufacturer_id' 	=> [ 'type' => 'integer', 'index' => 'true' ],
-			'product_id' 		=> [ 'type' => 'integer', 'index' => 'true' ],
-			'collection_id' 	=> [ 'type' => 'integer', 'index' => 'true' ],
-			'priority'			=> [ 'type' => 'integer', 'index' => 'true' ],
-			'sort_order'		=> [ 'type' => 'integer', 'index' => 'true' ],
-			'viewed'			=> [ 'type' => 'integer', 'index' => 'true' ],
+			'category_id' 		=> [ 'type' => 'integer', 'index' => 'true', 'fielddata' => 'true' ],
+			'manufacturer_id' 	=> [ 'type' => 'integer', 'index' => 'true', 'fielddata' => 'true' ],
+			'product_id' 		=> [ 'type' => 'integer', 'index' => 'true', 'fielddata' => 'true' ],
+			'collection_id' 	=> [ 'type' => 'integer', 'index' => 'true', 'fielddata' => 'true' ],
+			'priority'			=> [ 'type' => 'integer', 'index' => 'true', 'fielddata' => 'true' ],
+			'sort_order'		=> [ 'type' => 'integer', 'index' => 'true', 'fielddata' => 'true' ],
+			'viewed'			=> [ 'type' => 'integer', 'index' => 'true', 'fielddata' => 'true' ],
 			'price'				=> [ 'type' => 'float', 'index' => 'true' ],
 			'bought_for_week'	=> [ 'type' => 'integer', 'index' => 'true' ],
 			'bought_for_month'	=> [ 'type' => 'integer', 'index' => 'true' ],
@@ -995,8 +985,6 @@
 				die('cli only');	
 			}						
 			
-			
-			//Индексация категорий
 			$query = $this->db->query("SELECT category_id FROM category WHERE status = 1");
 			$i = 1;
 			foreach ($query->rows as $category_id){							
