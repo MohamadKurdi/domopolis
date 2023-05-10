@@ -231,7 +231,7 @@ class ControllerPaymentMono extends Controller
                 case 'processing':
                     if($order['order_status_id'] != $this->config->get('mono_order_process_status_id')) {
                         if (!$order['order_status_id']){
-                          //  $this->model_checkout_order->confirm($OrderInfo['OrderId'], $this->config->get('config_order_status_id'), $this->language->get('text_status_processing'), $notify = true);
+                            $this->model_checkout_order->confirm($OrderInfo['OrderId'], $this->config->get('config_order_status_id'), $this->language->get('text_status_started'), $notify = true);
                         }
 
                         $this->model_checkout_order->update($OrderInfo['OrderId'], $this->config->get('mono_order_process_status_id'), $this->language->get('text_status_processing'));
