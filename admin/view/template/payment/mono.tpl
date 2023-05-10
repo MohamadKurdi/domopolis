@@ -85,9 +85,9 @@
                     <?php echo $entry_order_process_status ;?>                                
                 </td>
                 <td>
-                    <select name="mono_order_cancelled_status_id" id="input-order-status" class="mono-select">
+                    <select name="mono_order_process_status_id" id="input-order-status" class="mono-select">
                         <?php foreach($order_statuses as $order_status) { ?>
-                            <option class="mono-option"  value="<?php echo $order_status['order_status_id'] ;?>" <?php echo $order_status['order_status_id'] == $mono_order_cancelled_status_id ? 'selected' : '' ;?>><?php echo $order_status['name'] ;?></option>
+                            <option class="mono-option"  value="<?php echo $order_status['order_status_id'] ;?>" <?php echo $order_status['order_status_id'] == $mono_order_process_status_id ? 'selected' : '' ;?>><?php echo $order_status['name'] ;?></option>
                         <?php } ?>
                     </select>
                 </td>
