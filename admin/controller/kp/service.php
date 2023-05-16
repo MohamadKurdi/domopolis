@@ -483,6 +483,9 @@
 			$this->db->query("DELETE FROM customer_history WHERE DATE(date_added) <= DATE_SUB(CURDATE(), INTERVAL 2 MONTH)");
 			$this->db->query("DELETE FROM customer_history WHERE segment_id > 0");
 			$this->db->query("DELETE FROM superstat_viewed WHERE DATE(date) <= DATE_SUB(CURDATE(), INTERVAL 2 MONTH)");
+
+			echo '[C] Уменьшаем объем таблички заказов'  . PHP_EOL;
+			$this->db->query("UPDATE `order` SET bottom_text = '', user_agent = '', shipping_address_struct = '', payment_address_struct = '' WHERE DATE(date_added) <= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)");			
 			
 			echo '[C] Чистим записи чеков. 3 месяцев.'  . PHP_EOL;
 			$this->db->query("DELETE FROM order_invoice_history WHERE DATE(datetime) <= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)");
@@ -493,7 +496,7 @@
 			$this->db->query("DELETE FROM order_save_history WHERE DATE(datetime) <= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) AND order_id NOT IN (SELECT DISTINCT order_id FROM `order` WHERE order_status_id IN (17, 18, 23))");
 			
 			echo '[C] Динамика сегментов. Год'  . PHP_EOL;
-			$this->db->query("DELETE FROM segments_dynamics WHERE DATE(date_added) <= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)");
+			$this->db->query("DELETE FROM segments_dynamics WHERE DATE(date_added) <= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)");
 			
 			echo '[C] Незавершенные заказы. 3 месяца'  . PHP_EOL;
 			$this->db->query("DELETE FROM `order` WHERE order_status_id = 0 AND DATE(date_added) <= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)");
