@@ -74,6 +74,13 @@
 			
 			return $this;
 		}
+
+		public function setXML($xml) {
+			$this->addHeader('Content-Type: text/xml');		
+			$this->output = trim($xml);
+			
+			return $this;
+		}
 		
 		public function setOutput($output) {
 			if (IS_HTTPS && defined('THIS_IS_CATALOG')){
