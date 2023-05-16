@@ -2612,6 +2612,12 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_seo_url_do_generate'] = $this->config->get('config_seo_url_do_generate');
         }
+
+        if (isset($this->request->post['config_seo_url_do_redirect_to_new'])) {
+            $this->data['config_seo_url_do_redirect_to_new'] = $this->request->post['config_seo_url_do_redirect_to_new'];
+        } else {
+            $this->data['config_seo_url_do_redirect_to_new'] = $this->config->get('config_seo_url_do_redirect_to_new');
+        }
         
         if (isset($this->request->post['config_file_extension_allowed'])) {
             $this->data['config_file_extension_allowed'] = $this->request->post['config_file_extension_allowed'];

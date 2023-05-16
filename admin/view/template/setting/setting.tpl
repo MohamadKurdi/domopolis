@@ -3676,6 +3676,20 @@
 									</td>
 
 									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">301 Редирект ЧПУ</span></p>
+										<select name="config_seo_url_do_redirect_to_new">
+											<?php if ($config_seo_url_do_redirect_to_new) { ?>
+												<option value="1" selected="selected">Переадресация</option>
+												<option value="0">Нет переадресации</option>
+											<?php } else { ?>													
+												<option value="1">Переадресация</option>
+												<option value="0"  selected="selected">Нет переадресации</option>
+											<? } ?>
+										</select>
+										<span class="help">Делать редирект при переходе на новую логику. Нужна табличка url_alias_old</span>										
+									</td>
+
+									<td width="20%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Индексировать пагинацию категорий</span></p>
 										<select name="config_index_category_pages">
 											<?php if ($config_index_category_pages) { ?>
