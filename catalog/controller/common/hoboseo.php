@@ -31,6 +31,7 @@
 			$new_page = trim($new_page);
 			
 			if ($new_page && trim($new_page)){
+				header('X-REDIRECT: checkBadURIParams');
 				header('Location: ' . str_replace('&amp;', '&', $new_page), true, 301);
 				exit();
 			}
@@ -60,9 +61,81 @@
 			}
 			
 			if (mb_strlen($request_query) > 3){								
-				if ($alias = $this->shortAlias->getURL($request_query, true)) {																		
+				if ($alias = $this->shortAlias->getURL($request_query, true)) {		
+					header('X-REDIRECT: shortAliasImplementation');																
 					header('Location: ' . str_replace('&amp;', '&', $alias), true, 301);
 					exit();
+				}
+			}
+
+			return $this;
+		}
+
+		private function setHrefLangsAndTryToRedirect(){
+			$this->load->model('kp/urldecode');
+			$hreflangs = $this->model_kp_urldecode->decodeURI();			
+			$this->document->setHrefLangs($hreflangs);
+
+			if ($this->registry->get('perform_redirect_to_second_language')){
+				header('X-REDIRECT: setHrefLangsAndTryToRedirect');
+
+				foreach ($hreflangs as $hreflang){
+					if ($hreflang['code'] == $this->config->get('config_second_language')){
+						header('Location: ' . str_replace('&amp;', '&', $hreflang['link']), true, 301);
+					}
+				}
+			}
+
+			return $this;
+		}
+
+		private function longToShortUrlAliasImplementation(){
+			if (thisIsAjax()){
+				return $this;
+			}
+
+			if (thisIsUnroutedURI()){
+				return $this;
+			}
+
+			if ($this->config->get('config_seo_url_from_id') && $this->config->get('config_seo_url_do_redirect_to_new')){
+				if ($this->registry->get('short_uri_queries')){		
+					$exploded = explode('/', rtrim($this->request->server['REQUEST_URI'], '/'));	
+					$keywords = [];
+					foreach ($exploded as $part){
+						if (!empty($part)){
+							$keywords[] = $part;
+						}
+					}
+
+					$url = '';
+					$url_parts = [];
+
+					foreach ($keywords as $keyword){
+						$old_alias_query = $this->db->ncquery("SELECT * FROM url_alias_old WHERE keyword LIKE '" . $this->db->escape($keyword) . "'");
+						if ($old_alias_query->num_rows){
+							if (!empty($old_alias_query->row['query'])){
+								$exploded = explode('=', $old_alias_query->row['query']);
+
+								if (count($exploded) == 2){
+									if (!empty($this->registry->get('short_uri_queries')[$exploded[0]])){
+										$url_parts[] = $this->registry->get('short_uri_queries')[$exploded[0]] . (int)$exploded[1];								
+									}
+								}
+							}
+						}
+					}
+
+					if (!empty($url_parts)){
+						$url = '/';
+						$url .= implode('/', $url_parts);
+					}
+
+					if ($url){
+						header('X-REDIRECT: longToShortUrlAliasImplementation');
+						header('Location: ' . $url, true, 301);						
+						exit();
+					}
 				}
 			}
 
@@ -125,6 +198,8 @@
 						} else {
 						$to = '/' . $to_url;							
 					}
+
+					header('X-REDIRECT: redirectManagerImplementation');
 					header('Location: ' . str_replace('&amp;', '&', $to), true, $search_query->row['response_code']);
 					exit();
 				}						
@@ -141,6 +216,16 @@
 				$registry->get('session')->data['language'] = $language;
 				setcookie('language', $language, time() + 60 * 60 * 24 * 30, '/', $registry->get('request')->server['HTTP_HOST']);
 			}
+		}
+
+		public function preSeoPro(){
+			$this->checkBadURIParams()->shortAliasImplementation()->redirectManagerImplementation();
+			return false;
+		}
+
+		public function postSeoPro(){
+			$this->longToShortUrlAliasImplementation()->setHrefLangsAndTryToRedirect();
+			return false;
 		}
 
 		public function index(){			
