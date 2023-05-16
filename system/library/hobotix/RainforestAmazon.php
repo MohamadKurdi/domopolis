@@ -74,7 +74,12 @@ class RainforestAmazon
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/RainforestLogger.php');
 		$rainforestLogger = new Amazon\RainforestLogger($registry);
 
-		$this->rfClient = new \CaponicaAmazonRainforest\Client\RainforestClient(['api_key' => trim($this->config->get('config_rainforest_api_key'))], $rainforestLogger);
+		if ($this->config->get('config_rainforest_enable_api')){
+			$this->rfClient = new \CaponicaAmazonRainforest\Client\RainforestClient(['api_key' => trim($this->config->get('config_rainforest_api_key'))], $rainforestLogger);
+		} else {
+			$this->rfClient = null;
+		}
+		
 
 		//Loading Classes
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/OffersParser.php');

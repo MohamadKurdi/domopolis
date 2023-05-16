@@ -3979,7 +3979,12 @@ class ControllerSettingSetting extends Controller
             }
         }
         
-        $this->data['amazon_domains'] = $this->rainforestAmazon->getValidAmazonSitesArray();
+        if ($this->config->get('config_rainforest_enable_api')){
+            $this->data['amazon_domains'] = $this->rainforestAmazon->getValidAmazonSitesArray();
+        } else {
+            $this->data['amazon_domains'] = [];           
+        }
+
         $this->data['amazon_filters'] = \CaponicaAmazonRainforest\Request\OfferRequest::getStaticFilterKeys();
         
         if (isset($this->request->post['config_rainforest_amazon_filters_1'])) {
