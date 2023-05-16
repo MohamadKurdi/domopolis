@@ -500,7 +500,7 @@
 
 
 	//Implementation of different redirect modes and|or modules	
-	$controller->addPreAction(new Action('common/hoboseo'));
+	$controller->addPreAction(new Action('common/hoboseo/preSeoPro'));
 	$controller->addPreAction(new Action('common/seo_pro'));
 
 	// Router
