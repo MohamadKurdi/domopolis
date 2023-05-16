@@ -16,27 +16,11 @@
 
 		protected function landingnoshop(){								
 			$this->index('common/header_landingnoshop');			
-		}	
-
-		private function setHrefLangsAndTryToRedirect(){
-			$this->load->model('kp/urldecode');
-			$hreflangs = $this->model_kp_urldecode->decodeURI();			
-			$this->document->setHrefLangs($hreflangs);
-
-			if ($this->registry->get('perform_redirect_to_second_language')){
-				header('X-UA-REDIRECT: Glory to Ukraine!');
-
-				foreach ($hreflangs as $hreflang){
-					if ($hreflang['code'] == $this->config->get('config_second_language')){
-						header('Location: ' . str_replace('&amp;', '&', $hreflang['link']), true, 301);
-					}
-				}
-			}
-		}
+		}			
 		
 		protected function index($template_overload = false) {
-			$this->setHrefLangsAndTryToRedirect();
-					
+			$this->load->controller('common/hoboseo/postSeoPro');
+
 			if (IS_HTTPS) {
 				$this->data['static_domain_url'] = $this->config->get('config_img_ssl');
 				} else {
