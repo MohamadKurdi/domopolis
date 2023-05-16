@@ -2883,11 +2883,17 @@
 			if ($no_certificate) {
 				$_sql_addon .= " AND (op.product_id NOT IN (SELECT product_id FROM product WHERE model LIKE ('%certificate%')))";				
 			}
+
+			$sql = "SELECT op.*,p.image, p.short_name, p.short_name_de, p.product_id, p.manufacturer_id, 
+			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id'] . "' LIMIT 1) as de_name ";
 			
-			$query = $this->db->query("SELECT op.*,p.image, p.short_name, p.short_name_de, p.product_id, p.manufacturer_id, 
-			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id'] . "' LIMIT 1) as de_name,
-			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id'] . "' LIMIT 1) as ua_name 
-			FROM order_product_untaken op LEFT JOIN product p ON op.product_id = p.product_id WHERE order_id = '" . (int)$order_id . "' " . $_sql_addon . " ORDER BY " . $this->db->escape($order_by) . "");		
+			if (!empty($this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')])){
+				$sql .= ", (SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id'] . "' LIMIT 1) as ua_name "; 
+			}					
+
+			$sql .= " FROM order_product_untaken op LEFT JOIN product p ON op.product_id = p.product_id WHERE order_id = '" . (int)$order_id . "' " . $_sql_addon . " ORDER BY " . $this->db->escape($order_by);
+			
+			$query = $this->db->query($sql);		
 			
 			$products = array();
 			foreach ($query->rows as $row){
@@ -2911,8 +2917,8 @@
 			if ($no_certificate) {
 				$_sql_addon .= " AND (op.product_id NOT IN (SELECT product_id FROM product WHERE model LIKE ('%certificate%')))";				
 			}
-			
-			$query = $this->db->query("SELECT op.*, 
+
+			$sql = "SELECT op.*, 
 			p.image, 
 			p.short_name, 
 			p.short_name_de, 
@@ -2920,9 +2926,15 @@
 			p.manufacturer_id, 
 			p.ean, 
 			p.asin,
-			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id'] . "' LIMIT 1) as de_name,
-			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id'] . "' LIMIT 1) as ua_name 
-			FROM order_product op LEFT JOIN product p ON op.product_id = p.product_id WHERE order_id = '" . (int)$order_id . "' " . $_sql_addon . " ORDER BY " . $this->db->escape($order_by) . "");		
+			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id'] . "' LIMIT 1) as de_name";
+
+			if (!empty($this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')])){
+				$sql .=	" , (SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id'] . "' LIMIT 1) as ua_name ";
+			}
+
+			$sql .= " FROM order_product op LEFT JOIN product p ON op.product_id = p.product_id WHERE order_id = '" . (int)$order_id . "' " . $_sql_addon . " ORDER BY " . $this->db->escape($order_by);	
+		
+			$query = $this->db->query($sql);
 			
 			$products = array();
 			foreach ($query->rows as $row){
@@ -2973,10 +2985,17 @@
 		}
 		
 		public function getOrderProductsNoGood($order_id) {			
-			$query = $this->db->query("SELECT op.*,p.image, p.short_name, p.product_id, p.stock_status_id, 
-			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id'] . "' LIMIT 1) as de_name,
-			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id'] . "' LIMIT 1) as ua_name 
-			FROM order_product_nogood op LEFT JOIN product p ON op.product_id = p.product_id WHERE order_id = '" . (int)$order_id . "' ORDER BY op.name");
+			$sql = "SELECT op.*,p.image, p.short_name, p.product_id, p.stock_status_id, 
+			(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id'] . "' LIMIT 1) as de_name ";
+
+			if (!empty($this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')])){
+				$sql .= " ,(SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id'] . "' LIMIT 1) as ua_name ";	
+			}			
+
+			$sql .= " FROM order_product_nogood op LEFT JOIN product p ON op.product_id = p.product_id WHERE order_id = '" . (int)$order_id . "' ORDER BY op.name";
+
+
+			$query = $this->db->query($sql);
 			
 			return $query->rows;
 		}

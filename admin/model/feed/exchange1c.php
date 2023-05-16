@@ -976,7 +976,7 @@
 						,'Артикул'		 						=> $product['model']
 						,'АртикулНормализованный'				=> $this->normalizeSKU($product['model'])
 						,'Наименование'   						=> $this->rms($product['name'])	
-						,'НаименованиеУКР'   					=> $this->rms($product['ua_name'])
+						,'НаименованиеУКР'   					=> !empty($product['ua_name'])?$this->rms($product['ua_name']):''
 						,'ЦенаЗаЕдиницу'  						=> $product['price_national']
 						,'ЦенаЗаЕдиницуВОсновнойВалюте'  		=> $product['price']						
 						,'ЦенаЗаЕдиницуВОсновнойВалюте'  		=> $product['price']
@@ -1653,7 +1653,7 @@
 					);		
 					
 					// Товары
-					$products = $this->model_sale_order->getOrderProducts($orders_data['order_id'], true, 'op.price_national ASC');				
+					$products = $this->model_sale_order->getOrderProducts($orders_data['order_id'], true, 'op.price_national ASC');		
 					
 					$product_counter = 0;
 					foreach ($products as $product) {
@@ -1720,7 +1720,7 @@
 						,'Артикул'		 						=> $product['model']
 						,'АртикулНормализованный'				=> $this->normalizeSKU($product['model'])
 						,'Наименование'   						=> $this->rms($product['name'])	
-						,'НаименованиеУКР'   					=> $this->rms($product['ua_name'])	
+						,'НаименованиеУКР'   					=> !empty($product['ua_name'])?$this->rms($product['ua_name']):''
 						,'ВесТовара'							=> $real_product['weight']
 						,'ВесТовараВКилограммах'				=> $this->weight->convert($real_product['weight'], $real_product['weight_class_id'], 1)
 						,'ВесТовараЕдиницаИД'   				=> $real_product['weight_class_id']
@@ -2285,7 +2285,7 @@
 							,'Артикул'		 					=> $product['model']
 							,'АртикулНормализованный'			=> $this->normalizeSKU($product['model'])
 							,'Наименование'   					=> $this->rms($product['name'])
-							,'НаименованиеУКР'   				=> $this->rms($product['ua_name'])
+							,'НаименованиеУКР'   				=> !empty($product['ua_name'])?$this->rms($product['ua_name']):''
 							,'ВесТовара'						=> isset($real_product['weight'])?$real_product['weight']:'Ложь'
 							,'ВесТовараЕдиницаИД'   			=> isset($real_product['weight_class_id'])?$real_product['weight_class_id']:'Ложь'
 							,'ВесТовараЕдиницаНаименование'		=> isset($weight_class['title'])?$weight_class['title']:'Ложь'
@@ -2393,7 +2393,7 @@
 							,'Артикул'		 					=> $product['model']
 							,'АртикулНормализованный'			=> $this->normalizeSKU($product['model'])
 							,'Наименование'   					=> $this->rms($product['name'])
-							,'НаименованиеУКР'   				=> $this->rms($product['ua_name'])
+							,'НаименованиеУКР'   				=> !empty($product['ua_name'])?$this->rms($product['ua_name']):''
 							,'ASIN'   							=> isset($real_product['asin'])?$real_product['asin']:'Ложь'
 							,'EAN'   							=> isset($real_product['ean'])?$real_product['ean']:'Ложь'
 							,'ТНВЭД'   							=> isset($real_product['tnved'])?$real_product['tnved']:'Ложь'
@@ -2516,15 +2516,13 @@
 			
 			$content = $xml->asXML();
 			
-			if ($do_echo) {
-				header("Content-Type: text/xml");
-				
+			if ($do_echo) {				
 				if ($do_iconv){
 					ini_set('mbstring.substitute_character', "none"); 
 					$content = mb_convert_encoding($content, 'CP1251', 'UTF-8'); 
 				} 
 				
-				print_r($content);				
+				$this->response->setXML($content);				
 			}
 			
 			if (!$dir) {
