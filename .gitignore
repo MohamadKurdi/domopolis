@@ -38,6 +38,8 @@
 /image
 /image/*
 /image.*/*
+/image.old
+/image.old/*
 /img/*
 /img.*
 /img.*/*
