@@ -1001,6 +1001,34 @@ class ControllerDPRainForest extends Controller {
 	}
 
 	/*
+	Обновляет картинки в случае если есть информация, но что-то пошло не так
+	*/
+	public function fixproductimages(){		
+		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWhichWeteAddedFrom('2023-05-12');
+
+		echoLine('[fixproductimages] Total products get: ' . count($products), 'i');
+
+		foreach ($products as $product){
+			echoLine('[fixproductimages] Fixing product images for product ' . $product['asin'], 'i');
+			$this->rainforestAmazon->productsRetriever->parseProductImages($product['product_id'], json_decode($product['json'], true));
+		}
+	}
+
+	/*
+	Обновляет видео товаров в случае если есть информация, но что-то пошло не так
+	*/
+	public function fixproductvideos(){		
+		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWhichWeteAddedFrom('2023-05-12');
+
+		echoLine('[fixproductimages] Total products get: ' . count($products), 'i');
+
+		foreach ($products as $product){
+			echoLine('[fixproductimages] Fixing product videos for product ' . $product['asin'], 'i');
+			$this->rainforestAmazon->productsRetriever->parseProductVideos($product['product_id'], json_decode($product['json'], true));
+		}
+	}
+
+	/*
 	Пересчитывает даты доставки или поставки офферов амазона
 	*/
 	public function fixoffersdates(){
