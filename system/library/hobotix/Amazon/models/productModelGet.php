@@ -485,6 +485,34 @@ class productModelGet extends hoboModel{
 		return $result;
 	}
 
+	public function getProductsWhichWeteAddedFrom($date_added){
+		$result = [];		
+		$sql = "SELECT pad.* FROM product_amzn_data pad LEFT JOIN product p ON (p.product_id = pad.product_id) WHERE pad.product_id IN (SELECT product_id FROM product) ";
+
+		$sql .= " AND p.date_added > '" . date('Y-m-d', strtotime($date_added)) . "'";	
+		$sql .= " ORDER BY pad.product_id ASC";	
+
+		$query = $this->db->ncquery($sql);
+
+		foreach ($query->rows as $row){
+			if ($this->config->get('config_enable_amazon_asin_file_cache')){
+				if (!empty($row['file']) && file_exists(DIR_CACHE . $row['file'])){
+					$row['json'] = file_get_contents(DIR_CACHE . $row['file']);
+				}
+			}
+
+			if ($row['json']){
+				$result[] = [
+					'product_id' 			=> $row['product_id'],
+					'asin' 					=> $row['asin'],
+					'json'					=> $row['json']							
+				];
+			}
+		}
+
+		return $result;
+	}
+
 	public function getProductsWithNoFieldTranslation($field){
 		$result = [];
 
