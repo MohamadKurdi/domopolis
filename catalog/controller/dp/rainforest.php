@@ -1008,8 +1008,10 @@ class ControllerDPRainForest extends Controller {
 
 		echoLine('[fixproductimages] Total products get: ' . count($products), 'i');
 
-		foreach ($products as $product){
-			echoLine('[fixproductimages] Fixing product images for product ' . $product['asin'], 'i');
+		$i = 1;
+		$c = count($products);
+		foreach ($products as $product){			
+			echoLine('[fixproductimages] Fixing product images for product ' . $product['asin'] . ', ' . $i . ' of ' . $c, 'i');
 			$this->rainforestAmazon->productsRetriever->parseProductImages($product['product_id'], json_decode($product['json'], true));
 		}
 	}
@@ -1022,8 +1024,10 @@ class ControllerDPRainForest extends Controller {
 
 		echoLine('[fixproductimages] Total products get: ' . count($products), 'i');
 
+		$i = 1;
+		$c = count($products);
 		foreach ($products as $product){
-			echoLine('[fixproductimages] Fixing product videos for product ' . $product['asin'], 'i');
+			echoLine('[fixproductimages] Fixing product videos for product ' . $product['asin'] . ', ' . $i . ' of ' . $c, 'i');
 			$this->rainforestAmazon->productsRetriever->parseProductVideos($product['product_id'], json_decode($product['json'], true));
 		}
 	}
