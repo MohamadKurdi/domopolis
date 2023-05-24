@@ -109,7 +109,6 @@ $_['txt_return_status']                             = 'Return Status';
 $_['txt_seo']                                       = 'SEO Keyword';
 $_['txt_shipping']                                  = 'Free Shipping';
 $_['txt_sku']                                       = 'SKU';
-$_['txt_asin']                                       = 'ASIN';
 $_['txt_sort_order']                                = 'Sort Order';
 $_['txt_status']                                    = 'Status';
 $_['txt_stock_status']                              = 'Out Of Stock Status';
@@ -217,3 +216,4 @@ $_['error_vqmod']                                   = 'vQmod does not seem to be
 $_['error_unsaved_settings']                        = 'There are unsaved settings! Please save the settings.';
 $_['error_image']                                   = 'Image width &amp; height dimensions required!';
 $_['error_image_size']                              = 'Image width &amp; height must be positive integers greater than 0!';
+?>
