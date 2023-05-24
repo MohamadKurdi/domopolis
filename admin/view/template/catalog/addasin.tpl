@@ -258,7 +258,7 @@
                                     </td>   
 
                                     <td class="center">
-                                        <?php if ($product['product_id']) { ?>
+                                        <?php if ($product['product_id'] != '-1') { ?>
                                             <a class="button" href="<?php echo $product['edit']; ?>" target="_blank"><i class="fa fa-edit"></i></a>
                                             <a class="button" href="<?php echo $product['view']; ?>"  target="_blank"><i class="fa fa-eye"></i></a>
                                         <?php } ?>
