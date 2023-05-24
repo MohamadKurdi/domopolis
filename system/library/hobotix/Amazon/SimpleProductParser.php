@@ -78,8 +78,10 @@
 				
 			}
 			
-			if ($response['request_info']['success'] == false){
+			if ($response['request_info']['success'] == false){				
 				echoLine('[SimpleProductParser::parseResponse] Success marker is false in response, returning false!', 'e');
+				echoLine('[SimpleProductParser::parseResponse] Success marker is false in response, message is:' . $response['request_info']['message'], 'e');
+
 				return false;
 			}
 
