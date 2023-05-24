@@ -503,7 +503,7 @@
 
 						<tr>
 							<td class="right">
-								Удалять или отключать товары с ценой меньше
+								<i class="fa fa-amazon"></i> Удалять или отключать товары с ценой меньше для автоматически добавленных товаров
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_drop_low_price_products" type="checkbox" class="checkbox" name="config_rainforest_drop_low_price_products" <? if ($config_rainforest_drop_low_price_products){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_drop_low_price_products"></label>
@@ -514,13 +514,41 @@
 								</span>
 							</td>
 						</tr>
+						<tr>
+							<td class="right">
+								<i class="fa fa-hand-peace-o"></i> Удалять или отключать товары с ценой меньше для товаров добавленных вручную
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_drop_low_price_products_for_manual" type="checkbox" class="checkbox" name="config_rainforest_drop_low_price_products_for_manual" <? if ($config_rainforest_drop_low_price_products_for_manual){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_drop_low_price_products_for_manual"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle" style="color:red"></i> Товары с низкой ценой иногда бывают довольно трешовые. В некоторых случаях товары не имеют изначальной цены, и цена выясняется уже в процессе получения офферов. Если эта настройка включена, то товары будут удаляться при получении офферов. Обязательно отключать для магазинов, наполняемых вручную! Если товары есть в заказах, то они не удаляются, но отключаются.
+								</span>
+							</td>
+						</tr>
 
 						<tr>
 							<td class="right">
-								Удалять или отключать невалидные ASIN
+								<i class="fa fa-amazon"></i> Удалять или отключать невалидные ASIN для автоматически добавленых товаров
+								<span class="help"></span>
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_delete_invalid_asins" type="checkbox" class="checkbox" name="config_rainforest_delete_invalid_asins" <? if ($config_rainforest_delete_invalid_asins){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_delete_invalid_asins"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle" style="color:red"></i> Периодически товары пропадают из Amazon. В таком случае при попытке получить оффер, либо информацию о товаре его ASIN обозначается как INVALID. Если эта настройка включена, то такие товары будут периодически удаляться из базы. Обязательно отключать для магазинов, наполняемых вручную! Если товары есть в заказах, то они не удаляются, но отключаются.
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								<i class="fa fa-hand-peace-o"></i> Удалять или отключать невалидные ASIN для товаров добавленных вручную
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_delete_invalid_asins_for_manual" type="checkbox" class="checkbox" name="config_rainforest_delete_invalid_asins_for_manual" <? if ($config_rainforest_delete_invalid_asins_for_manual){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_delete_invalid_asins_for_manual"></label>
 							</td>
 							<td>
 								<span class="help">
@@ -986,15 +1014,98 @@
 						</tr>
 
 
-
 						<tr>
 							<td colspan="3" class="left" style="color:#D69241;">
-								<i class="fa fa-cogs"></i> <b>Изменение статуса и наличия</b>
+								<i class="fa fa-cogs"></i> <b>Изменение статуса и наличия для вручную добавленных товаров</b>
+								<span class="help">товары с маркером 'added_from_amazon' = 0</span>
 							</td>
 						</tr>
 						<tr>
 							<td class="right">
-								Изменять статус наличия
+								<i class="fa fa-hand-peace-o"></i> Изменять статус наличия для вручную добавленных товаров
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_nooffers_action_for_manual" type="checkbox" class="checkbox" name="config_rainforest_nooffers_action_for_manual" <? if ($config_rainforest_nooffers_action_for_manual){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_nooffers_action_for_manual"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Изменять ли статус товара в зависимости от того, есть у него офферы на Amazon или нет. Это изменяет статусы по складам, проверяя также наличие на конкретном складе, а не общий статус.
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								<i class="fa fa-hand-peace-o"></i> Изменять количество для вручную добавленных товаров
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_nooffers_quantity_for_manual" type="checkbox" class="checkbox" name="config_rainforest_nooffers_quantity_for_manual" <? if ($config_rainforest_nooffers_quantity_for_manual){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_nooffers_quantity_for_manual"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если включена предыдущая настройка <i>Изменять статус наличия</i>, и включена эта настройка, то помимо изменения статуса будет также изменяться количество товара по схеме есть в наличии = 9999, нет в наличии = 0.
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								<i class="fa fa-fa-hand-peace-o"></i> Статус, если нет офферов для вручную добавленных товаров
+							</td>
+							<td style="width:100px;" class="center">
+								<select name="config_rainforest_nooffers_status_id_for_manual" style="width:90px;">
+									<?php foreach ($stock_statuses as $stock_status) { ?>
+										<?php if ($stock_status['stock_status_id'] == $config_rainforest_nooffers_status_id_for_manual) { ?>
+											<option value="<?php echo $stock_status['stock_status_id']; ?>" selected="selected"><?php echo $stock_status['name']; ?></option>
+										<?php } else { ?>
+											<option value="<?php echo $stock_status['stock_status_id']; ?>"><?php echo $stock_status['name']; ?></option>
+										<?php } ?>
+									<?php } ?>
+								</select>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если включена предыдущая настройка <i>Изменять статус наличия</i>, то при отсутствии офферов на Amazon, товары на складах, где товара нет в наличии - будут иметь этот статус. Если настройка <i>Изменять статус наличия</i> отключена, то статус изменен не будет.
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								<i class="fa fa-hand-peace-o"></i> Удалять, если нет офферов для вручную добавленных товаров
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_delete_no_offers_for_manual" type="checkbox" class="checkbox" name="config_rainforest_delete_no_offers_for_manual" <? if ($config_rainforest_delete_no_offers_for_manual){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_delete_no_offers_for_manual"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если товара нет на Amazon несколько итераций проверок подряд, то он будет удалён и добавлен в игнорируемые, в случае включения <i class="fa fa-amazon"></i>ASIN по умолчанию. Количество итераций задается следующей настройкой
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								<i class="fa fa-hand-peace-o"></i> Количество итераций для удаления для вручную добавленных товаров
+							</td>
+							<td style="width:50px;" class="center">
+								<input type="number" name="config_rainforest_delete_no_offers_counter_for_manual" value="<?php echo $config_rainforest_delete_no_offers_counter_for_manual; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если включена предыдущая настройка <i>Удалять, если нет офферов</i>, то в случае когда товара нет в наличии на Amazon это количество раз - он будет удален.
+								</span>
+							</td>
+						</tr>
+
+
+
+
+						<tr>
+							<td colspan="3" class="left" style="color:#D69241;">
+								<i class="fa fa-cogs"></i> <b>Изменение статуса и наличия для автоматически добавленных товаров</b>
+								<span class="help">товары с маркером 'added_from_amazon' = 1</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="right">
+								<i class="fa fa-amazon"></i> Изменять статус наличия для автоматически добавленных товаров
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_nooffers_action" type="checkbox" class="checkbox" name="config_rainforest_nooffers_action" <? if ($config_rainforest_nooffers_action){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_nooffers_action"></label>
@@ -1007,7 +1118,7 @@
 						</tr>
 						<tr>
 							<td class="right">
-								Изменять количество
+								<i class="fa fa-amazon"></i> Изменять количество для автоматически добавленных товаров
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_nooffers_quantity" type="checkbox" class="checkbox" name="config_rainforest_nooffers_quantity" <? if ($config_rainforest_nooffers_quantity){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_nooffers_quantity"></label>
@@ -1020,7 +1131,7 @@
 						</tr>
 						<tr>
 							<td class="right">
-								Статус, если нет офферов
+								<i class="fa fa-amazon"></i> Статус, если нет офферов для автоматически добавленных товаров
 							</td>
 							<td style="width:100px;" class="center">
 								<select name="config_rainforest_nooffers_status_id" style="width:90px;">
@@ -1042,7 +1153,7 @@
 
 						<tr>
 							<td class="right">
-								Удалять, если нет офферов
+								<i class="fa fa-amazon"></i> Удалять, если нет офферов для автоматически добавленных товаров
 							</td>
 							<td style="width:50px;" class="center">
 								<input id="config_rainforest_delete_no_offers" type="checkbox" class="checkbox" name="config_rainforest_delete_no_offers" <? if ($config_rainforest_delete_no_offers){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_delete_no_offers"></label>
@@ -1056,7 +1167,7 @@
 
 						<tr>
 							<td class="right">
-								Количество итераций для удаления
+								<i class="fa fa-amazon"></i> Количество итераций для удаления для автоматически добавленных товаров
 							</td>
 							<td style="width:50px;" class="center">
 								<input type="number" name="config_rainforest_delete_no_offers_counter" value="<?php echo $config_rainforest_delete_no_offers_counter; ?>" size="50" style="width:50px;" />

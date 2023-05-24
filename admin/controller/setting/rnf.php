@@ -55,6 +55,7 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_skip_variants',
 		'config_rainforest_skip_low_price_products',
 		'config_rainforest_drop_low_price_products',
+		'config_rainforest_drop_low_price_products_for_manual',
 		'config_rainforest_update_period',
 		'config_rainforest_delay_price_setting',
 		'config_rainforest_delay_stock_setting',
@@ -68,11 +69,7 @@ class ControllerSettingRnf extends Controller {
 		'config_brands_in_mmenu',
 		'config_second_level_subcategory_in_categories',
 		'config_display_subcategory_in_all_categories',
-		'config_rainforest_show_only_filled_products_in_catalog',
-
-		'config_rainforest_delete_no_offers',
-		'config_rainforest_delete_no_offers_counter',
-		'config_rainforest_delete_invalid_asins',
+		'config_rainforest_show_only_filled_products_in_catalog',		
 
 		'config_no_zeroprice',
 		'config_product_hide_sku',
@@ -87,7 +84,6 @@ class ControllerSettingRnf extends Controller {
 
 		'config_disable_empty_categories',
 		'config_enable_non_empty_categories',
-
 
 		'config_rainforest_enable_recursive_adding',
 		'config_rainforest_enable_compare_with_similar_parsing',
@@ -127,6 +123,15 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_nooffers_status_id',
 		'config_rainforest_delete_no_offers',
 		'config_rainforest_delete_no_offers_counter',
+		'config_rainforest_delete_invalid_asins',
+
+		'config_rainforest_nooffers_action_for_manual',
+		'config_rainforest_nooffers_quantity_for_manual',
+		'config_rainforest_delete_no_offers_for_manual',
+		'config_rainforest_delete_no_offers_counter_for_manual',
+		'config_rainforest_delete_invalid_asins_for_manual',
+		'config_rainforest_nooffers_status_id_for_manual',
+
 		'config_rainforest_nooffers_quantity',
 		'config_rainforest_pass_offers_for_ordered',
 		'config_rainforest_pass_offers_for_ordered_days',
