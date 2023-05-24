@@ -186,7 +186,45 @@ class ControllerDPRainForest extends Controller {
 	Функционал очистки базы товаров (запуск всех функций очистки подряд)
 	*/
 	public function cleardatabasecron(){
-		$this->deletenoofferscron()->deleteinvalidasinscron()->deletecheapcron()->deleteduplicatescron()->deletebadfromqueuecron();
+		if (!$this->config->get('config_enable_amazon_specific_modes')){
+			echoLine('[ControllerDPRainForest::cleardatabasecron] Setting config_enable_amazon_specific_modes is set to off, skipping!');
+			return false;
+		}
+
+		if ($this->config->get('config_rainforest_delete_no_offers') && $this->config->get('config_rainforest_delete_no_offers_counter')){
+			echoLine('[ControllerDPRainForest::cleardatabasecron] Starting deletenoofferscron(1)!', 's');
+			$this->deletenoofferscron(1);
+		}
+		if ($this->config->get('config_rainforest_delete_no_offers_manual') && $this->config->get('config_rainforest_delete_no_offers_counter_manual')){
+			echoLine('[ControllerDPRainForest::cleardatabasecron] Starting deletenoofferscron(0)!', 's');
+			$this->deletenoofferscron(0);
+		}		
+
+
+		if ($this->config->get('config_rainforest_delete_invalid_asins')){
+			echoLine('[ControllerDPRainForest::cleardatabasecron] Starting deleteinvalidasinscron(1)!', 's');
+			$this->deleteinvalidasinscron(1);
+		}
+		if ($this->config->get('config_rainforest_delete_invalid_asins_for_manual')){
+			echoLine('[ControllerDPRainForest::cleardatabasecron] Starting deleteinvalidasinscron(0)!', 's');
+			$this->deleteinvalidasinscron(0);
+		}
+
+
+		if ($this->config->get('config_rainforest_skip_low_price_products') > 0 && $this->config->get('config_rainforest_drop_low_price_products')){
+			echoLine('[ControllerDPRainForest::cleardatabasecron] Starting deletecheapcron(1)!', 's');
+			$this->deletecheapcron(1);
+		}
+		if ($this->config->get('config_rainforest_skip_low_price_products') > 0 && $this->config->get('config_rainforest_drop_low_price_products_for_manual')){
+			echoLine('[ControllerDPRainForest::cleardatabasecron] Starting deletecheapcron(0)!', 's');
+			$this->deletecheapcron(0);
+		}
+
+		echoLine('[ControllerDPRainForest::cleardatabasecron] Starting deleteduplicatescron(0)!', 's');
+		$this->deleteduplicatescron();
+
+		echoLine('[ControllerDPRainForest::cleardatabasecron] Starting deletebadfromqueuecron(0)!', 's');
+		$this->deletebadfromqueuecron();	
 	}
 
 	/*
@@ -203,152 +241,209 @@ class ControllerDPRainForest extends Controller {
 	Очистка базы от дублей товаров с разными кодами, но одинаковыми асинами (хз откуда они могут появляться, но факт что появляются)
 	*/
 	public function deleteduplicatescron(){
-		if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_delete_no_offers') && $this->config->get('config_rainforest_delete_no_offers_counter')){
-			$query = $this->db->query("SELECT asin, COUNT(product_id) as total, GROUP_CONCAT(product_id SEPARATOR ',') as 'products' FROM product WHERE asin <> 'INVALID' AND asin <> '' GROUP BY asin HAVING(COUNT(`product_id`)) > 1");
+		if (!$this->config->get('config_enable_amazon_specific_modes')){
+			echoLine('[ControllerDPRainForest::deleteduplicatescron] Setting config_enable_amazon_specific_modes is set to off, skipping!');
+			return false;
+		}
 
-			foreach ($query->rows as $row){
-				echoLine('[ControllerDPRainForest::deletedoublescron] Found duplicate : ' . $row['asin'] . ', ' . $row['total'] . ' products', 'e');
-				$products = explode(',', $row['products']);
+		$query = $this->db->query("SELECT asin, COUNT(product_id) as total, GROUP_CONCAT(product_id SEPARATOR ',') as 'products' FROM product WHERE added_from_amazon = 1 AND asin <> 'INVALID' AND asin <> '' GROUP BY asin HAVING(COUNT(`product_id`)) > 1");
 
-				$delete_products = [];
-				$enable_products = [];
-				$disable_products = [];
+		foreach ($query->rows as $row){
+			echoLine('[ControllerDPRainForest::deletedoublescron] Found duplicate : ' . $row['asin'] . ', ' . $row['total'] . ' products', 'e');
+			$products = explode(',', $row['products']);
 
-				foreach ($products as $product_id){
-					if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($product_id)){
-						echoLine('[ControllerDPRainForest::deletedoublescron] Product ' . $product_id . ' is on stock, skipping and enabling', 'i');
-						$this->rainforestAmazon->productsRetriever->model_product_edit->enableProduct($product_id);
-					} elseif ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($product_id)){						
-						$disable_products[] = $product_id;						
-					} else {						
-						$delete_products[] = $product_id;			
-					}
-				}
+			$delete_products = [];
+			$enable_products = [];
+			$disable_products = [];
 
-				if (count($products) == count($disable_products)){
-					array_shift($disable_products);
-				}
-
-				echoLine('[ControllerDPRainForest::deletedoublescron] To disable: ' . count($disable_products) . ' left!', 'i');
-				foreach ($disable_products as $product_id){
-					echoLine('[ControllerDPRainForest::deletedoublescron] Product ' . $product_id . ' is in orders, disabling', 'i');
-					$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($product_id);
-				}
-
-				if (count($products) == count($delete_products)){
-					array_shift($delete_products);
-				}
-
-				echoLine('[ControllerDPRainForest::deletedoublescron] To delete: ' . count($delete_products) . ' left!', 'i');
-				foreach ($delete_products as $product_id){
-					echoLine('[ControllerDPRainForest::deletedoublescron] Product ' . $product_id . ' not in orders, deleting', 'w');
-					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($product_id);
+			foreach ($products as $product_id){
+				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($product_id)){
+					echoLine('[ControllerDPRainForest::deletedoublescron] Product ' . $product_id . ' is on stock, skipping and enabling', 'i');
+					$this->rainforestAmazon->productsRetriever->model_product_edit->enableProduct($product_id);
+				} elseif ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($product_id)){						
+					$disable_products[] = $product_id;						
+				} else {						
+					$delete_products[] = $product_id;			
 				}
 			}
-		}		
 
-		return $this;
+			if (count($products) == count($disable_products)){
+				array_shift($disable_products);
+			}
+
+			echoLine('[ControllerDPRainForest::deletedoublescron] To disable: ' . count($disable_products) . ' left!', 'i');
+			foreach ($disable_products as $product_id){
+				echoLine('[ControllerDPRainForest::deletedoublescron] Product ' . $product_id . ' is in orders, disabling', 'i');
+				$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($product_id);
+			}
+
+			if (count($products) == count($delete_products)){
+				array_shift($delete_products);
+			}
+
+			echoLine('[ControllerDPRainForest::deletedoublescron] To delete: ' . count($delete_products) . ' left!', 'i');
+			foreach ($delete_products as $product_id){
+				echoLine('[ControllerDPRainForest::deletedoublescron] Product ' . $product_id . ' not in orders, deleting', 'w');
+				$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($product_id);
+			}
+		}
 	}
 
 	/*
 	Очистка базы от товаров отсутствующими офферами
 	*/
-	public function deletenoofferscron(){
-		if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_delete_no_offers') && $this->config->get('config_rainforest_delete_no_offers_counter')){
+	public function deletenoofferscron($added_from_amazon = 1){
+		echoLine('[ControllerDPRainForest::deletenoofferscron] Working in scope added_from_amazon = ' . (int)$added_from_amazon, 'e');
 
-			$query = $this->db->query("SELECT p.product_id, p.asin, p.old_asin, pd.name FROM product p
-				LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
-				WHERE 
-				pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
-				AND
-				amzn_no_offers = 1 
-				AND amzn_no_offers_counter >= '" . (int)$this->config->get('config_rainforest_delete_no_offers_counter') . "' 
-				AND asin <> '' 
-				AND amzn_last_offers != '0000-00-00 00:00:00'");
+		if (!$this->config->get('config_enable_amazon_specific_modes')){
+			echoLine('[ControllerDPRainForest::deletenoofferscron] Setting config_enable_amazon_specific_modes is set to off, skipping!');
+			return false;
+		}
 
-			$i = 1;
-			foreach ($query->rows as $row){
-				echoLine($row['product_id'] . '/' . $row['asin'] . ' ' . $i . '/' . $query->num_rows);
-
-				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($row['product_id'])){
-					echoLine('[ControllerDPRainForest::deletenoofferscron] Product ' . $row['product_id'] . ' is on stock, skipping and enabling', 'i');
-					$this->rainforestAmazon->productsRetriever->model_product_edit->enableProduct($row['product_id']);
-
-				} elseif ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
-					echoLine('[ControllerDPRainForest::deletenoofferscron] Product ' . $row['product_id'] . ' is in orders, disabling', 'i');
-					$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($row['product_id'])->addAsinToIgnored($query->row['asin'], $query->row['name']);
-				} else {
-					echoLine('[ControllerDPRainForest::deletenoofferscron] Product ' . $row['product_id'] . ' not in orders, deleting', 'e');
-					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($row['product_id'])->addAsinToIgnored($query->row['asin'], $query->row['name']);
-				}	
-
-				$i++;
+		if ($added_from_amazon) {
+			if (!$this->config->get('config_rainforest_delete_no_offers') || !$this->config->get('config_rainforest_delete_no_offers_counter')) {
+				echoLine('[ControllerDPRainForest::deletenoofferscron] Setting for added_from_amazon = 1 is set to off, skipping');
+				return false;
 			}
-		}		
+		}
 
-		return $this;
+		if (!$added_from_amazon) {
+			if (!$this->config->get('config_rainforest_delete_no_offers_manual') || !$this->config->get('config_rainforest_delete_no_offers_counter_manual')) {
+				echoLine('[ControllerDPRainForest::deletenoofferscron] Setting for added_from_amazon = 0 is set to off, skipping');
+				return false;
+			}
+		}
+		
+		$query = $this->db->query("SELECT p.product_id, p.asin, p.old_asin, pd.name FROM product p
+			LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
+			WHERE 
+			pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND
+			amzn_no_offers = 1 
+			AND amzn_no_offers_counter >= '" . (int)$this->config->get('config_rainforest_delete_no_offers_counter') . "' 
+			AND asin <> ''
+			AND added_from_amazon = '" . (int)$added_from_amazon . "'
+			AND amzn_last_offers != '0000-00-00 00:00:00'");
+
+		$i = 1;
+		foreach ($query->rows as $row){
+			echoLine($row['product_id'] . '/' . $row['asin'] . ' ' . $i . '/' . $query->num_rows);
+
+			if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($row['product_id'])){
+				echoLine('[ControllerDPRainForest::deletenoofferscron] Product ' . $row['product_id'] . ' is on stock, skipping and enabling', 'i');
+				$this->rainforestAmazon->productsRetriever->model_product_edit->enableProduct($row['product_id']);
+
+			} elseif ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
+				echoLine('[ControllerDPRainForest::deletenoofferscron] Product ' . $row['product_id'] . ' is in orders, disabling', 'i');
+				$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($row['product_id'])->addAsinToIgnored($query->row['asin'], $query->row['name']);
+			} else {
+				echoLine('[ControllerDPRainForest::deletenoofferscron] Product ' . $row['product_id'] . ' not in orders, deleting', 'e');
+				$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($row['product_id'])->addAsinToIgnored($query->row['asin'], $query->row['name']);
+			}	
+
+			$i++;
+		}				
 	}
 
 	/*
 	Очистка базы от товаров с невалидным ASIN
 	*/
-	public function deleteinvalidasinscron(){
-		if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_delete_invalid_asins')){
-			$query = $this->db->query("SELECT p.product_id, p.asin, p.old_asin, pd.name FROM product p
-			 LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
-			 WHERE 
-			 pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
-			 AND p.asin = 'INVALID'");
+	public function deleteinvalidasinscron($added_from_amazon = 1){
+		echoLine('[ControllerDPRainForest::deletenoofferscron] Working in scope added_from_amazon = ' . (int)$added_from_amazon, 'e');
 
+		if (!$this->config->get('config_enable_amazon_specific_modes')){
+			echoLine('[ControllerDPRainForest::deleteinvalidasinscron] Setting config_enable_amazon_specific_modes is set to off, skipping!');
+			return false;
+		}
 
-			$i = 1;
-			foreach ($query->rows as $row){
-				if (empty($row['old_asin'])){
-					$row['old_asin'] = 'INVALID';
-				}
-
-				echoLine($row['product_id'] . '/' . $row['old_asin'] . ' ' . $i . '/' . $query->num_rows);
-
-				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($row['product_id'])){
-					echoLine('[ControllerDPRainForest::deleteinvalidasinscron] Product ' . $row['product_id'] . ' is on stock, skipping and enabling', 'i');
-					$this->rainforestAmazon->productsRetriever->model_product_edit->enableProduct($row['product_id']);
-				} elseif ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
-					echoLine('[ControllerDPRainForest::deleteinvalidasinscron] Product ' . $row['product_id'] . ' is in orders, disabling', 'i');
-					$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($row['product_id'])->addAsinToIgnored($query->row['old_asin'], $query->row['name']);
-				} else {
-					echoLine('[ControllerDPRainForest::deleteinvalidasinscron] Product ' . $row['product_id'] . ' not in orders, deleting', 'e');
-					$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($row['product_id'])->addAsinToIgnored($query->row['old_asin'], $query->row['name']);
-				}				
-
-				$i++;
+		if ($added_from_amazon) {
+			if (!$this->config->get('config_rainforest_delete_invalid_asins')) {
+				echoLine('[ControllerDPRainForest::deleteinvalidasinscron] Setting for added_from_amazon = 1 is set to off, skipping');
+				return false;
 			}
 		}
 
-		return $this;
+		if (!$added_from_amazon) {
+			if (!$this->config->get('config_rainforest_delete_invalid_asins_for_manual')) {
+				echoLine('[ControllerDPRainForest::deleteinvalidasinscron] Setting for added_from_amazon = 0 is set to off, skipping');
+				return false;
+			}
+		}
+
+		$query = $this->db->query("SELECT p.product_id, p.asin, p.old_asin, pd.name FROM product p
+			LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
+			WHERE 
+			pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND added_from_amazon = '" . (int)$added_from_amazon . "'
+			AND p.asin = 'INVALID'");
+
+
+		$i = 1;
+		foreach ($query->rows as $row){
+			if (empty($row['old_asin'])){
+				$row['old_asin'] = 'INVALID';
+			}
+
+			echoLine($row['product_id'] . '/' . $row['old_asin'] . ' ' . $i . '/' . $query->num_rows);
+
+			if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($row['product_id'])){
+				echoLine('[ControllerDPRainForest::deleteinvalidasinscron] Product ' . $row['product_id'] . ' is on stock, skipping and enabling', 'i');
+				$this->rainforestAmazon->productsRetriever->model_product_edit->enableProduct($row['product_id']);
+			} elseif ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
+				echoLine('[ControllerDPRainForest::deleteinvalidasinscron] Product ' . $row['product_id'] . ' is in orders, disabling', 'i');
+				$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($row['product_id'])->addAsinToIgnored($query->row['old_asin'], $query->row['name']);
+			} else {
+				echoLine('[ControllerDPRainForest::deleteinvalidasinscron] Product ' . $row['product_id'] . ' not in orders, deleting', 'e');
+				$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($row['product_id'])->addAsinToIgnored($query->row['old_asin'], $query->row['name']);
+			}				
+
+			$i++;
+		}
 	}
 
 	/*
 	Если изменяется настройка или порог минимальной цены, то нужно запустить эту функцию
 	*/
-	public function deletecheapcron(){		
-		if ($this->config->get('config_rainforest_skip_low_price_products') > 0 && $this->config->get('config_rainforest_drop_low_price_products')){
-			$query = $this->db->query("SELECT p.product_id, p.asin, pd.name FROM product p
-			 LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
-			 WHERE 
-			 pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
-			 AND amazon_best_price > 0
-			 AND status = 1 
-			 AND amazon_best_price < '" . (float)$this->config->get('config_rainforest_skip_low_price_products') . "'");
+	public function deletecheapcron($added_from_amazon = 1){		
+		echoLine('[ControllerDPRainForest::deletecheapcron] Working in scope added_from_amazon = ' . (int)$added_from_amazon, 'e');
 
-			$i = 1;
-			foreach ($query->rows as $row){
-				echoLine($row['product_id'] . '/' . $row['asin'] . ' ' . $i . '/' . $query->num_rows);
+		if (!$this->config->get('config_enable_amazon_specific_modes')){
+			echoLine('[ControllerDPRainForest::deletecheapcron] Setting config_enable_amazon_specific_modes is set to off, skipping!');
+			return false;
+		}
 
-				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($row['product_id'])){
-					echoLine('[ControllerDPRainForest::deletecheapcron] Product ' . $row['product_id'] . ' is on stock, skipping and enabling', 'i');
-					$this->rainforestAmazon->productsRetriever->model_product_edit->enableProduct($row['product_id']);
-				} elseif ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
-					echoLine('[ControllerDPRainForest::deletecheapcron] Product ' . $row['product_id'] . ' is in orders, disabling', 'i');
+		if ($added_from_amazon) {
+			if ($this->config->get('config_rainforest_skip_low_price_products') <= 0 || !$this->config->get('config_rainforest_drop_low_price_products')) {
+				echoLine('[ControllerDPRainForest::deletecheapcron] Setting for added_from_amazon = 1 is set to off, skipping');
+				return false;
+			}
+		}
+
+		if (!$added_from_amazon) {
+			if ($this->config->get('config_rainforest_skip_low_price_products') <= 0 || !$this->config->get('config_rainforest_drop_low_price_products_for_manual')) {
+				echoLine('[ControllerDPRainForest::deletecheapcron] Setting for added_from_amazon = 0 is set to off, skipping');
+				return false;
+			}
+		}
+
+		$query = $this->db->query("SELECT p.product_id, p.asin, pd.name FROM product p
+			LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
+			WHERE 
+			pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND amazon_best_price > 0
+			AND status = 1 
+			AND added_from_amazon = '" . (int)$added_from_amazon . "'
+			AND amazon_best_price < '" . (float)$this->config->get('config_rainforest_skip_low_price_products') . "'");
+
+		$i = 1;
+		foreach ($query->rows as $row){
+			echoLine($row['product_id'] . '/' . $row['asin'] . ' ' . $i . '/' . $query->num_rows);
+
+			if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($row['product_id'])){
+				echoLine('[ControllerDPRainForest::deletecheapcron] Product ' . $row['product_id'] . ' is on stock, skipping and enabling', 'i');
+				$this->rainforestAmazon->productsRetriever->model_product_edit->enableProduct($row['product_id']);
+			} elseif ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($row['product_id'])){
+				echoLine('[ControllerDPRainForest::deletecheapcron] Product ' . $row['product_id'] . ' is in orders, disabling', 'i');
 					$this->rainforestAmazon->productsRetriever->model_product_edit->disableProduct($row['product_id']); //->addAsinToIgnored($query->row['asin'], $query->row['name']);
 				} else {
 					echoLine('[ControllerDPRainForest::deletecheapcron] Product ' . $row['product_id'] . ' not in orders, deleting', 'e');
@@ -358,9 +453,6 @@ class ControllerDPRainForest extends Controller {
 				$i++;
 			}
 		}
-
-		return $this;
-	}
 
 	/*
 	Фиксит дерево категорий
