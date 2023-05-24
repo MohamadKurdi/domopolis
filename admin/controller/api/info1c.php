@@ -1020,6 +1020,10 @@ class ControllerApiInfo1C extends Controller
         }
     }
 
+    public function clisetProductStockStatusesGlobal(){
+        $this->rainforestAmazon->offersParser->PriceLogic->setProductStockStatusesGlobal();
+    }
+
     public function updateProductField($product_id, $field, $value)
     {
         $this->load->model('catalog/product');
