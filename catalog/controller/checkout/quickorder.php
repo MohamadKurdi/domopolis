@@ -651,8 +651,7 @@ class ControllerCheckoutQuickorder extends Controller {
 				$payment_address = '';
 			} else {
 				$data['customer_id'] = 0;
-				$data['lastname'] = '';
-					// TODO
+				$data['lastname'] = '';					
 				$data['firstname'] = $this->language->get('text_client');
 				$data['email'] = $phone;
 				$data['fax'] ='';
