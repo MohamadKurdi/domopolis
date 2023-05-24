@@ -229,7 +229,6 @@ class OffersParser
 	}
 
 	public function setAmazonOfferDates($amazon_offer_id, $data){
-
 		$this->db->query("UPDATE product_amzn_offers SET 
 			minDays 		= '" . (int)$data['minDays'] . "', 
 			deliveryFrom 	= '" . $this->db->escape(date('Y-m-d', strtotime($data['deliveryFrom']))) . "', 
@@ -243,21 +242,43 @@ class OffersParser
 	}
 
 	public function setProductNoOffers($asin){
-		$sql = "UPDATE product SET amzn_no_offers = 1, amzn_offers_count  = 0, amzn_no_offers_counter = (amzn_no_offers_counter + 1) ";
+		$sql = "UPDATE product SET amzn_no_offers = 1, amzn_offers_count  = 0, amzn_no_offers_counter = (amzn_no_offers_counter + 1) WHERE asin LIKE '" . $this->db->escape($asin) . "'";
+		$this->db->query($sql);
 
-		if ($this->config->get('config_rainforest_nooffers_action')  && $this->config->get('config_rainforest_nooffers_quantity')){
-			$sql .= ", quantity = 0 ";
+		if ($this->config->get('config_rainforest_nooffers_action') && $this->config->get('config_rainforest_nooffers_quantity')){
+			$sql = "UPDATE product SET quantity = 0 WHERE asin LIKE '" . $this->db->escape($asin) . "' AND added_from_amazon = 1";
+			$this->db->query($sql);
 		}
 
-		$sql .= " WHERE asin LIKE '" . $this->db->escape($asin) . "'";
-
-		$this->db->query($sql);
+		if ($this->config->get('config_rainforest_nooffers_action_for_manual') && $this->config->get('config_rainforest_nooffers_quantity_for_manual')){
+			$sql = "UPDATE product SET quantity = 0 WHERE asin LIKE '" . $this->db->escape($asin) . "' AND added_from_amazon = 0";
+			$this->db->query($sql);
+		}		
 
 		$this->clearOffersForASIN($asin);
 		$this->PriceLogic->setProductNoOffers($asin);
 
 		return $this;		
 	}
+
+	public function setProductOffers($asin){
+		$sql = "UPDATE product SET amzn_no_offers = '0', amzn_no_offers_counter = '0' WHERE asin LIKE '" . $this->db->escape($asin) . "'";
+		$this->db->query($sql);
+		
+		if ($this->config->get('config_rainforest_nooffers_action') && $this->config->get('config_rainforest_nooffers_quantity')){
+			$sql = "UPDATE product SET quantity = 9999 WHERE asin LIKE '" . $this->db->escape($asin) . "' AND added_from_amazon = 1";
+			$this->db->query($sql);
+		}
+
+		if ($this->config->get('config_rainforest_nooffers_action_for_manual') && $this->config->get('config_rainforest_nooffers_quantity_for_manual')){
+			$sql = "UPDATE product SET quantity = 9999 WHERE asin LIKE '" . $this->db->escape($asin) . "' AND added_from_amazon = 0";
+			$this->db->query($sql);
+		}			
+
+		$this->PriceLogic->setProductOffers($asin);
+
+		return $this;
+	}	
 
 	public function setProductOffersCount($asin, $count){
 		if ($count == 0){		
@@ -268,21 +289,6 @@ class OffersParser
 
 		return $this;
 	}
-
-	public function setProductOffers($asin){
-		$sql = "UPDATE product SET amzn_no_offers = '0', amzn_no_offers_counter = '0' ";
-		if ($this->config->get('config_rainforest_nooffers_action') && $this->config->get('config_rainforest_nooffers_quantity')){
-			$sql .= ", quantity = 9999 ";
-		}
-
-		$sql .= " WHERE asin LIKE '" . $this->db->escape($asin) . "'";	
-
-		$this->db->query($sql);
-
-		$this->PriceLogic->setProductOffers($asin);
-
-		return $this;
-	}	
 
 	public function setLastOffersDate($asin){
 		$this->db->query("UPDATE product SET amzn_last_offers = NOW() WHERE asin LIKE '" . $this->db->escape($asin) . "'");		
