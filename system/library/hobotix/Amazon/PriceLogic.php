@@ -39,7 +39,6 @@ class PriceLogic
 		$this->cacheCategoryDimensions()->setStoreSettings()->cacheFormulaOverloadData();
 
 		$this->log = new \Log('amazon_offers_priceupdate.txt');
-
 	}
 
 	private function cacheFormulaOverloadData(){
@@ -401,6 +400,12 @@ class PriceLogic
 			WHERE product_id 	= '" . (int)$product_id . "' 
 			AND is_markdown 	= 0");
 
+		$this->db->query("UPDATE product SET 
+			price 				= '" . (float)$price . "' 
+			WHERE product_id 	= '" . (int)$product_id . "' 
+			AND price = 0
+			AND is_markdown 	= 0");
+
 		$this->priceUpdaterQueue->addToQueue($product_id);
 	}
 
@@ -571,110 +576,184 @@ class PriceLogic
 		}
 	}
 
-
-	//Логика работы со статусами складов
-		public function buildStockQueryField(){
-			$implode = [];
-			foreach ($this->storesWarehouses as $store_id => $storesWarehouse){
-				$implode[] = $storesWarehouse['config_warehouse_identifier'];
-				$implode[] = $storesWarehouse['config_warehouse_identifier'] . '_onway';
-			}
-
-			return implode(' + ', $implode);
+	/*
+	Логика работы со статусами складов
+	*/
+	public function buildStockQueryField(){
+		$implode = [];
+		foreach ($this->storesWarehouses as $store_id => $storesWarehouse){
+			$implode[] = $storesWarehouse['config_warehouse_identifier'];
+			$implode[] = $storesWarehouse['config_warehouse_identifier'] . '_onway';
 		}
 
+		return implode(' + ', $implode);
+	}
 
-		public function setProductNoOffers($asin){
-			if ($this->config->get('config_rainforest_nooffers_action') && $this->config->get('config_rainforest_nooffers_status_id')){
+	/*
+		Логика обработки товара, которого нет в наличии на Amazon с учётом его наличия на локальных складах
+	*/
+	public function setProductNoOffers($asin){
+		if ($this->config->get('config_rainforest_nooffers_action') && $this->config->get('config_rainforest_nooffers_status_id')){
 
-			//Если нет офферов, и товара нет в наличии нигде, и он никуда не едет, то 
-				$this->db->query("UPDATE product SET stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id') . "' WHERE asin = '" . $this->db->escape($asin) . "'  AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0)");
-				//	echoLine($asin . ', если товара нет в наличии, установлен статус уточняйте');
+			echoLine('[PriceLogic::setProductNoOffers]' . $asin  . ', товара нет в наличии, установлен статус уточняйте');
+			$sql = "UPDATE product SET stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id') . "' ";
+			$sql ." WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 1 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0)";
+			$this->db->query($sql);						
 
-			//И очистим статусы для этих товаров
-				$this->db->query("DELETE FROM product_stock_status WHERE product_id IN (SELECT product_id FROM product WHERE asin = '" . $this->db->escape($asin) . "'  AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0))");
-				//	echoLine($asin . ', если товара нет в наличии, очищены переназначения статусов');
-				}
+			echoLine('[PriceLogic::setProductNoOffers]' . $asin  . ', товара нет в наличии, очищены переназначения статусов');
+			$sql = "DELETE FROM product_stock_status ";
+			$sql .= " WHERE product_id IN ";
+			$sql .= " (SELECT product_id FROM product WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 1 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0))";
+			$this->db->query($sql);			
+		}
+
+		if ($this->config->get('config_rainforest_nooffers_action_for_manual') && $this->config->get('config_rainforest_nooffers_status_id_for_manual')){
+
+			echoLine('[PriceLogic::setProductNoOffers]' . $asin  . ', товара нет в наличии, установлен статус уточняйте');
+			$sql = "UPDATE product SET stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id_for_manual') . "' ";
+			$sql ." WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 0 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0)";
+			$this->db->query($sql);						
+
+			echoLine('[PriceLogic::setProductNoOffers]' . $asin  . ', товара нет в наличии, очищены переназначения статусов');
+			$sql = "DELETE FROM product_stock_status ";
+			$sql .= " WHERE product_id IN ";
+			$sql .= " (SELECT product_id FROM product WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 0 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0))";
+			$this->db->query($sql);			
+		}
+	}
+
+	/*
+		Логика обработки товара, который есть в наличии на Amazon с учётом его наличия на локальных складах
+	*/
+	public function setProductOffers($asin){
+
+		if ($this->config->get('config_rainforest_nooffers_action') && $this->config->get('config_rainforest_nooffers_status_id')){
+			echoLine('[PriceLogic::setProductOffers]' . $asin . ', если статус был переназначен, то мы его возвращаем на в наличии');
+			$sql = "UPDATE product SET stock_status_id = '" . (int)$this->config->get('config_stock_status_id') . "' ";
+			$sql .= " WHERE asin = '" . $this->db->escape($asin) . "'  AND added_from_amazon = 1 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 ";
+			$sql .= " AND (stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id') . "' OR stock_status_id = '" . (int)$this->config->get('config_not_in_stock_status_id') ."')";
+
+			$this->db->query($sql);
+
+			echoLine('[PriceLogic::setProductOffers]' . $asin . ', очистили табличку переназначеных статусов, если они были заданы как уточняйте или нету');
+			$sql = "DELETE FROM product_stock_status ";
+			$sql .= " WHERE product_id IN ";
+			$sql .= " (SELECT product_id FROM product WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 1  AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 ";
+			$sql .= "AND (stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id') . "' OR stock_status_id = '" . (int)$this->config->get('config_not_in_stock_status_id') ."'))";
+			$this->db->query($sql);
+		}
+
+		if ($this->config->get('config_rainforest_nooffers_action_for_manual') && $this->config->get('config_rainforest_nooffers_status_id_for_manual')){
+			echoLine('[PriceLogic::setProductOffers]' . $asin . ', если статус был переназначен, то мы его возвращаем на в наличии');
+			$sql = "UPDATE product SET stock_status_id = '" . (int)$this->config->get('config_stock_status_id') . "' ";
+			$sql .= " WHERE asin = '" . $this->db->escape($asin) . "'  AND added_from_amazon = 1 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 ";
+			$sql .= " AND (stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id') . "' OR stock_status_id = '" . (int)$this->config->get('config_not_in_stock_status_id') ."')";
+
+			$this->db->query($sql);
+
+			echoLine('[PriceLogic::setProductOffers]' . $asin . ', очистили табличку переназначеных статусов, если они были заданы как уточняйте или нету');
+			$sql = "DELETE FROM product_stock_status ";
+			$sql .= " WHERE product_id IN ";
+			$sql .= " (SELECT product_id FROM product WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 1  AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 ";
+			$sql .= "AND (stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id') . "' OR stock_status_id = '" . (int)$this->config->get('config_not_in_stock_status_id') ."'))";
+			$this->db->query($sql);
+		}
+
+	}
+
+
+	/*
+		Принудительно ставим статус "есть в наличии на складе для той страны, в которой он есть"
+	*/
+	public function setProductStockInWarehouse($product_id, $warehouse_identifier){			
+		if (isset($this->warehousesStores[$warehouse_identifier])){
+
+			echoLine('[PriceLogic::setProductStockInWarehouse] Установлен статус в наличии на складе для товара ' . $product_id . ' и страны ' . $this->warehousesStores[$warehouse_identifier]);
+
+			$sql = "INSERT INTO product_stock_status SET ";
+			$sql .= " store_id = '" . (int)$this->warehousesStores[$warehouse_identifier] . "', ";
+			$sql .= " product_id = '" . (int)$product_id . "', ";
+			$sql .= " stock_status_id = '" . $this->config->get('config_in_stock_status_id') . "' ";
+			$sql .= " ON DUPLICATE KEY UPDATE stock_status_id = '" . $this->config->get('config_in_stock_status_id') . "'";
+			$this->db->query($sql);						
+		}
+	}
+
+	private function stockStatusQuery($data){
+		$sql = "INSERT INTO product_stock_status(product_id, store_id, stock_status_id) 
+				SELECT product_id, '" . (int)$data['store_id'] . "', '" . (int)$data['stock_status_id'] . "' FROM product 
+				WHERE `" . $data['warehouse_identifier'] . "` = 0
+				AND status = 1 
+				AND amzn_ignore = 0 
+				AND is_virtual = 0 
+				AND asin <> '' 
+				AND amzn_no_offers = " . (int)$data['amzn_no_offers'] . "
+				AND added_from_amazon = " . (int)$data['added_from_amazon'] . "
+				AND product_id IN 
+				(SELECT product_id FROM product_stock_status pss2 WHERE store_id = '" . (int)$data['store_id'] . "' 
+				AND stock_status_id = '" . $this->config->get('config_in_stock_status_id') . "')
+				ON DUPLICATE KEY UPDATE stock_status_id = '" . (int)$data['stock_status_id'] . "'";
+		
+		$this->db->query($sql);
+	}
+
+	/*
+		Для товаров, которых нет в наличии на определенном складе, при этом статус установлен как "есть на складе", мы должны поставить его в 
+		1. Наличие уточняйте, если для товара нет предложений на амазон и включена настройка "менять статус"
+		2. Есть в наличии, если для товара есть предложения на амазон, либо выключена настройка "менять статус"
+	*/
+
+	public function setProductStockStatusesGlobal(){	
+
+		foreach ($this->storesWarehouses as $store_id => $storesWarehouse) {
+			$warehouse_identifier = $storesWarehouse['config_warehouse_identifier_local'];
+
+			echoLine('[PriceLogic::setProductStockStatusesGlobal] Working with warehouse ' . $warehouse_identifier);
+
+			#Глобальное обновление где больше нуля
+			echoLine('[PriceLogic::setProductStockStatusesGlobal] Установка "в наличии" товарам, которые есть на amazon: ' . $this->config->get('config_stock_status_id'), 's');
+			$this->db->query("UPDATE product SET stock_status_id = '" . $this->config->get('config_stock_status_id') . "' WHERE status = 1 AND (added_from_amazon = 1 AND amzn_no_offers = 0)");
+
+			echoLine('[PriceLogic::setProductStockStatusesGlobal] Установка "в наличии" товарам, которые есть на складах: ' . $this->config->get('config_stock_status_id'), 's');
+			$this->db->query("UPDATE product SET stock_status_id = '" . $this->config->get('config_stock_status_id') . "' WHERE status = 1 AND (" . $this->buildStockQueryField() . " > 0)");			
+
+
+			$data = [
+					'store_id' 				=> $store_id,
+					'warehouse_identifier' 	=> $warehouse_identifier,
+					'added_from_amazon' 	=> 1,
+					'amzn_no_offers' 		=> 1					
+			];
+			if ($this->config->get('config_rainforest_nooffers_action') && $this->config->get('config_rainforest_nooffers_status_id')){ 
+				echoLine('[PriceLogic::setProductStockStatusesGlobal] config_rainforest_nooffers_action = 1, no_offers = 1, status: ' . $this->config->get('config_rainforest_nooffers_status_id'));
+
+				$data['stock_status_id'] = $this->config->get('config_rainforest_nooffers_status_id');
+				$this->stockStatusQuery($data);
+			} else {
+				echoLine('[PriceLogic::setProductStockStatusesGlobal] config_rainforest_nooffers_action = 0, no_offers = 1, status: ' . $this->config->get('config_rainforest_nooffers_status_id'));
+
+				$data['stock_status_id'] = $this->config->get('config_stock_status_id');
+				$this->stockStatusQuery($data);
 			}
 
-			public function setProductOffers($asin){
 
-				if ($this->config->get('config_rainforest_nooffers_action') && $this->config->get('config_rainforest_nooffers_status_id')){
+			$data = [
+					'store_id' 				=> $store_id,
+					'warehouse_identifier' 	=> $warehouse_identifier,
+					'added_from_amazon' 	=> 0,
+					'amzn_no_offers' 		=> 1					
+			];
+			if ($this->config->get('config_rainforest_nooffers_action_for_manual') && $this->config->get('config_rainforest_nooffers_status_id_for_manual')){ 
+				echoLine('[PriceLogic::setProductStockStatusesGlobal] config_rainforest_nooffers_action_for_manual = 0, no_offers = 1, status: ' . $this->config->get('config_rainforest_nooffers_status_id_for_manual'));
 
-				//Мы убираем "наличие уточняйте, если оно стоит"
-					$this->db->query("UPDATE product SET stock_status_id = '" . (int)$this->config->get('config_stock_status_id') . "' WHERE asin = '" . $this->db->escape($asin) . "'  AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id') . "' OR stock_status_id = '" . (int)$this->config->get('config_not_in_stock_status_id') ."')");
-				//	echoLine($asin . ', если статус был переназначен, то мы его возвращаем на в наличии');
+				$data['stock_status_id'] = $this->config->get('config_rainforest_nooffers_status_id_for_manual');
+				$this->stockStatusQuery($data);
+			} else {
+				echoLine('[PriceLogic::setProductStockStatusesGlobal] config_rainforest_nooffers_action_for_manual = 0, no_offers = 1, status: ' . $this->config->get('config_rainforest_nooffers_status_id_for_manual'));
 
-				//И очищаем табличку переназначенных статусов, в случае если там стоит статус "уточняйте" или "нет в наличии"
-					$this->db->query("DELETE FROM product_stock_status WHERE product_id IN (SELECT product_id FROM product WHERE asin = '" . $this->db->escape($asin) . "'  AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id') . "' OR stock_status_id = '" . (int)$this->config->get('config_not_in_stock_status_id') ."'))");
-				//		echoLine($asin . ', очистили табличку переназначеных статусов, если они были заданы как уточняйте или нету');
-					}
-
-				}
-
-
-				public function setProductStockInWarehouse($product_id, $warehouse_identifier){
-			//принудительно ставим статус "есть в наличии на складе для той страны, в которой он есть"
-
-					if (isset($this->warehousesStores[$warehouse_identifier])){
-						$this->db->query("INSERT INTO product_stock_status SET store_id = '" . (int)$this->warehousesStores[$warehouse_identifier] . "', product_id = '" . (int)$product_id . "', stock_status_id = '" . $this->config->get('config_in_stock_status_id') . "' ON DUPLICATE KEY UPDATE stock_status_id = '" . $this->config->get('config_in_stock_status_id') . "'");
-
-			//			echoLine('Установлен статус в наличии на складе для товара ' . $product_id . ' и страны ' . $this->warehousesStores[$warehouse_identifier]);
-					}
-				}
-
-
-
-				public function setProductStockStatusesGlobal(){
-			//Для товаров, которых нет в наличии на определенном складе, при этом статус установлен как "есть на складе", мы должны поставить его в 
-			//1. Наличие уточняйте, если для товара нет предложений на амазон и включена настройка "менять статус"
-			//2. Есть в наличии, если для товара есть предложения на амазон, либо выключена настройка "менять статус"
-
-					foreach ($this->storesWarehouses as $store_id => $storesWarehouse) {
-						$warehouse_identifier = $storesWarehouse['config_warehouse_identifier_local'];
-
-						if ($this->config->get('config_rainforest_nooffers_action') && $this->config->get('config_rainforest_nooffers_status_id')){ 
-					//Статус для товара которого нет в наличии в стране и нет на амазоне
-							$new_order_status_id_not_in_amazon = $this->config->get('config_rainforest_nooffers_status_id');
-					//Статус для товара которого нет в наличии в стране и есть на амазоне
-							$new_order_status_id_in_amazon = $this->config->get('config_stock_status_id');
-						} else {
-							$new_order_status_id_not_in_amazon = $this->config->get('config_stock_status_id');
-							$new_order_status_id_in_amazon = $this->config->get('config_stock_status_id');
-						}
-
-				//Глобальное обновление где больше нуля
-						$this->db->query("UPDATE product SET stock_status_id = '" . $this->config->get('config_stock_status_id') . "' WHERE (" . $this->buildStockQueryField() . " > 0) AND status = 1");
-
-				//Товара нет в наличии в стране, при этом и нет на амазоне
-						$sql = "INSERT INTO product_stock_status(product_id, store_id, stock_status_id) 
-						SELECT product_id, '" . (int)$store_id . "', '" . (int)$new_order_status_id_not_in_amazon . "' FROM product 
-						WHERE `" . $warehouse_identifier . "` = 0
-						AND status = 1 
-						AND amzn_ignore = 0 
-						AND is_virtual = 0 
-						AND asin <> '' 
-						AND amzn_no_offers = 1 
-						AND product_id IN (SELECT product_id FROM product_stock_status pss2 WHERE store_id = '" . (int)$store_id . "' AND stock_status_id = '" . $this->config->get('config_in_stock_status_id') . "')
-						ON DUPLICATE KEY UPDATE stock_status_id = '" . (int)$new_order_status_id_not_in_amazon . "'";
-
-						$this->db->query($sql);
-
-				//Товара нет в наличии в стране, при этом он есть на амазоне
-						$sql = "INSERT INTO product_stock_status(product_id, store_id, stock_status_id) 
-						SELECT product_id, '" . (int)$store_id . "', '" . (int)$new_order_status_id_in_amazon . "' FROM product 
-						WHERE `" . $warehouse_identifier . "` = 0
-						AND status = 1 
-						AND amzn_ignore = 0 
-						AND is_virtual = 0 
-						AND asin <> '' 
-						AND amzn_no_offers = 0 
-						AND product_id IN (SELECT product_id FROM product_stock_status pss2 WHERE store_id = '" . (int)$store_id . "' AND stock_status_id = '" . $this->config->get('config_in_stock_status_id') . "')
-						ON DUPLICATE KEY UPDATE stock_status_id = '" . (int)$new_order_status_id_in_amazon . "'";
-
-						$this->db->query($sql);
-
-					}				
-				}
-
+				$data['stock_status_id'] = $this->config->get('config_stock_status_id');
+				$this->stockStatusQuery($data);
 			}
+		}
+	}
+}
