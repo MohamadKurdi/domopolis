@@ -597,8 +597,8 @@ class PriceLogic
 
 			echoLine('[PriceLogic::setProductNoOffers]' . $asin  . ', товара нет в наличии, установлен статус уточняйте');
 			$sql = "UPDATE product SET stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id') . "' ";
-			$sql ." WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 1 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0)";
-			$this->db->query($sql);						
+			$sql .= " WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 1 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0)";
+			$this->db->query($sql);		
 
 			echoLine('[PriceLogic::setProductNoOffers]' . $asin  . ', товара нет в наличии, очищены переназначения статусов');
 			$sql = "DELETE FROM product_stock_status ";
@@ -611,7 +611,7 @@ class PriceLogic
 
 			echoLine('[PriceLogic::setProductNoOffers]' . $asin  . ', товара нет в наличии, установлен статус уточняйте');
 			$sql = "UPDATE product SET stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id_for_manual') . "' ";
-			$sql ." WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 0 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0)";
+			$sql .= " WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 0 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0)";
 			$this->db->query($sql);						
 
 			echoLine('[PriceLogic::setProductNoOffers]' . $asin  . ', товара нет в наличии, очищены переназначения статусов');
@@ -704,6 +704,7 @@ class PriceLogic
 	*/
 
 	public function setProductStockStatusesGlobal(){	
+		return false;
 
 		foreach ($this->storesWarehouses as $store_id => $storesWarehouse) {
 			$warehouse_identifier = $storesWarehouse['config_warehouse_identifier_local'];
