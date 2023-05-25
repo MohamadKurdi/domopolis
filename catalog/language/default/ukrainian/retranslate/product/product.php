@@ -34,7 +34,7 @@ $_['text_retranslate_30'] = 'Ваш номер телефону:';
 $_['text_retranslate_31'] = 'Оформити попереднє замовлення';
 $_['text_retranslate_32'] = 'Повідомити про надходження';
 $_['text_retranslate_33'] = 'Купити';
-$_['text_retranslate_34'] = 'Швидке замовлення';
+$_['text_retranslate_34'] = 'Придбати зараз';
 $_['text_retranslate_35'] = 'У порівняння';
 $_['text_retranslate_36'] = 'Такий же товар без уцінки';
 $_['text_retranslate_37'] = 'Такий же товар з уцінкою';
@@ -91,6 +91,10 @@ $_['text_retranslate_85'] = 'Додати відгук до товару';
 
 $_['text_retranslate_87'] = 'Відгуків поки що немає';
 $_['text_retranslate_88'] = 'Купують разом';
+
+$_['text_retranslate_89'] = 'Варіант';
+$_['text_retranslate_90'] = 'Кількість';
+
 
 $_['all_collection'] = 'Вся колекція';
 
