@@ -121,10 +121,31 @@
 			$this->db->query("UPDATE category SET final = 1 WHERE category_id NOT IN (SELECT parent_id FROM category)");
 			
 			echoLine('[optimizeProductsDB] Обнуление количества товаров со статусом нет в наличии', 'i');
-			$this->db->query("UPDATE product p SET quantity = 0, quantity_stock = 0, quantity_stockK = 0, quantity_stockM = 0, quantity_stockMN = 0, quantity_stockAS = 0, quantity_stock_onway = 0, quantity_stockK_onway = 0, quantity_stockM_onway = 0 WHERE stock_status_id IN (10,9)");
+		//	$this->db->query("UPDATE product p SET quantity = 0, quantity_stock = 0, quantity_stockK = 0, quantity_stockM = 0, quantity_stockMN = 0, quantity_stockAS = 0, quantity_stock_onway = 0, quantity_stockK_onway = 0, quantity_stockM_onway = 0 WHERE stock_status_id IN (10,9)");
+
+			echoLine('[optimizeProductsDB] Выравнивание количества со складами', 'i');
+			$query = $this->db->query("SELECT product_id FROM product WHERE quantity < (quantity_stock + quantity_stockK + quantity_stockM)");
+			foreach ($query->rows as $row){
+				echo('.');
+				$this->db->query("UPDATE product SET quantity = (quantity_stock + quantity_stockK + quantity_stockM) WHERE product_id = '". (int)$row['product_id'] ."'");
+			}
+			echoLine('');
+
+			echoLine('[optimizeProductsDB] Нормализация markdown', 'i');
+			$this->db->query("UPDATE `product` SET ean = '', asin = '', isbn = ''	WHERE stock_product_id > 0");
+            $this->db->query("UPDATE `order_product_nogood` opn SET product_id = (SELECT p.stock_product_id FROM product p WHERE p.product_id = opn.product_id LIMIT 1) WHERE product_id IN (SELECT product_id FROM product WHERE stock_product_id > 0)");
+            $this->db->query("UPDATE `return` opn SET product_id = (SELECT p.stock_product_id FROM product p WHERE p.product_id = opn.product_id LIMIT 1) WHERE product_id IN (SELECT product_id FROM product WHERE stock_product_id > 0)");
+            $this->db->query("UPDATE `order_product` opn SET product_id = (SELECT p.stock_product_id FROM product p WHERE p.product_id = opn.product_id LIMIT 1) WHERE product_id IN (SELECT product_id FROM product WHERE stock_product_id > 0)");
+            $this->db->query("UPDATE `product` SET status = 0 WHERE is_markdown = 1 AND (quantity_stock + quantity_stockK + quantity_stockM) = 0");
+
+            if ($this->config->get('config_enable_amazon_specific_modes')){
+            	$this->db->query("UPDATE `product` SET display_in_catalog = 1 WHERE main_variant_id > 0 AND (quantity_stock + quantity_stockK + quantity_stockM) > 0");
+            	$this->db->query("UPDATE `product` SET display_in_catalog = 0 WHERE main_variant_id > 0 AND (quantity_stock + quantity_stockK + quantity_stockM) = 0");
+            }
+
 			
 			echoLine('[optimizeProductsDB] Исправление багов в описаниях', 'i');
-			$this->db->query("UPDATE product_description SET description = REPLACE(description, '< /', '</');");			
+			//$this->db->query("UPDATE product_description SET description = REPLACE(description, '< /', '</');");			
 			
 			echoLine('[optimizeProductsDB] Очистка несуществующих категорий', 'i');
 			$this->db->non_cached_query("DELETE FROM product_to_category WHERE category_id NOT IN (SELECT distinct category_id FROM category)");			
