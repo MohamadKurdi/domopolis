@@ -1014,7 +1014,7 @@ class ControllerApiInfo1C extends Controller
                     $this->db->query("UPDATE `product` SET display_in_catalog = 0 WHERE main_variant_id > 0 AND (quantity_stock + quantity_stockK + quantity_stockM) = 0");
                 }
 
-                $this->rainforestAmazon->offersParser->PriceLogic->setProductStockStatusesGlobal();
+            //    $this->rainforestAmazon->offersParser->PriceLogic->setProductStockStatusesGlobal();
                 $this->model_kp_product->setLastUpdate();
             }
         }
@@ -1582,8 +1582,6 @@ class ControllerApiInfo1C extends Controller
 
         $this->response->setOutput(json_encode($json));
     }
-
-
 
     public function getFullProductsBySKU($sku_list = array())
     {

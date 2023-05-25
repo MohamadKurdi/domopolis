@@ -730,7 +730,7 @@ class PriceLogic
 				$data['stock_status_id'] = $this->config->get('config_rainforest_nooffers_status_id');
 				$this->stockStatusQuery($data);
 			} else {
-				echoLine('[PriceLogic::setProductStockStatusesGlobal] config_rainforest_nooffers_action = 0, no_offers = 1, status: ' . $this->config->get('config_rainforest_nooffers_status_id'));
+				echoLine('[PriceLogic::setProductStockStatusesGlobal] config_rainforest_nooffers_action = 0, no_offers = 1, status: ' . $this->config->get('config_stock_status_id'));
 
 				$data['stock_status_id'] = $this->config->get('config_stock_status_id');
 				$this->stockStatusQuery($data);
@@ -744,12 +744,12 @@ class PriceLogic
 					'amzn_no_offers' 		=> 1					
 			];
 			if ($this->config->get('config_rainforest_nooffers_action_for_manual') && $this->config->get('config_rainforest_nooffers_status_id_for_manual')){ 
-				echoLine('[PriceLogic::setProductStockStatusesGlobal] config_rainforest_nooffers_action_for_manual = 0, no_offers = 1, status: ' . $this->config->get('config_rainforest_nooffers_status_id_for_manual'));
+				echoLine('[PriceLogic::setProductStockStatusesGlobal] config_rainforest_nooffers_action_for_manual = 1, no_offers = 1, status: ' . $this->config->get('config_rainforest_nooffers_status_id_for_manual'));
 
 				$data['stock_status_id'] = $this->config->get('config_rainforest_nooffers_status_id_for_manual');
 				$this->stockStatusQuery($data);
 			} else {
-				echoLine('[PriceLogic::setProductStockStatusesGlobal] config_rainforest_nooffers_action_for_manual = 0, no_offers = 1, status: ' . $this->config->get('config_rainforest_nooffers_status_id_for_manual'));
+				echoLine('[PriceLogic::setProductStockStatusesGlobal] config_rainforest_nooffers_action_for_manual = 0, no_offers = 1, status: ' . $this->config->get('config_stock_status_id'));
 
 				$data['stock_status_id'] = $this->config->get('config_stock_status_id');
 				$this->stockStatusQuery($data);
