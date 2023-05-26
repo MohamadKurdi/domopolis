@@ -800,10 +800,14 @@ class ProductsRetriever extends RainforestRetriever
 		if (!empty($variants)){
 			foreach ($variants as $variant){
 				if ($variant['asin'] == $asin){
-					return $variant['main_image'];
+					if (!empty($variant['main_image'])){
+						return $variant['main_image'];
+					}					
 				}
 			}
 		}
+
+		return false;
 	}
 
 	public function trimProductNameWithoutVariant($name, $main_variant_dimensions, $current_variant_dimensions){
