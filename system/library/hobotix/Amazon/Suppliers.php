@@ -25,21 +25,32 @@ class Suppliers
 		$this->supplierMinRatingForUse 		= $this->config->get('config_rainforest_supplierminrating') * 10;
 		$this->supplierMinInnerRatingForUse = $this->config->get('config_rainforest_supplierminrating_inner');
 
+		/* Cache
 		$query = $this->db->ncquery("SELECT supplier_name, supplier_id, amzn_good, amzn_bad, amzn_coefficient FROM suppliers WHERE supplier_type LIKE '" . $this->db->escape($this->code) . "'");
 		foreach ($query->rows as $row){
 			$this->supplierData[trim($row['supplier_name'])] = $row;
 		}
+		*/
 
 	}
 
 
+	/*
+		Just for backward compatibility
+	*/
 	public function checkIfSupplierExists($name){
+		return $this->checkIfSupplierExistsInCache($name);
+	}
+
+	public function checkIfSupplierExistsInCache($name){
 		return !empty($this->supplierData[trim($name)]);
 	}
 
 	public function getSupplier($name){
 		if ($this->checkIfSupplierExists($name)){
 			return $this->supplierData[trim($name)];
+		} else {
+			return $this->getSupplierFromDataBase($name);
 		}
 
 		return false;
@@ -71,7 +82,7 @@ class Suppliers
 				supplier_code 		= '" . $this->db->escape('AMZN') . "',
 				supplier_type 		= '" . $this->db->escape($this->code) . "', 			
 				supplier_country 	= '" . $this->db->escape($this->country) . "', 
-				supplier_comment 	= '" . $this->db->escape('Автосоздание из RNF API') . "', 
+				supplier_comment 	= '" . $this->db->escape('Auto API') . "', 
 				supplier_m_coef 	= '0',
 				supplier_l_coef 	= '0', 
 				supplier_n_coef 	= '0',
