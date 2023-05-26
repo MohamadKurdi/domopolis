@@ -68,8 +68,6 @@ class ControllerCatalogProductExt extends Controller {
         }
 
         $this->redirect($this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . $url, 'SSL'));
-
-
     }
 
     public function delete() {
@@ -410,7 +408,6 @@ class ControllerCatalogProductExt extends Controller {
             $special = false;
 
             $product_specials = $this->model_catalog_product->getProductSpecials($result['product_id']);
-
             foreach ($product_specials  as $product_special) {
                 if (($product_special['date_start'] == '0000-00-00' || $product_special['date_start'] < date('Y-m-d')) && ($product_special['date_end'] == '0000-00-00' || $product_special['date_end'] > date('Y-m-d'))) {
                     $special = round($product_special['price'], 2);
@@ -521,7 +518,6 @@ class ControllerCatalogProductExt extends Controller {
                             $columns[$column] = $action;
                         } else if ($column == 'view_in_store') {
                             $product_stores = $this->model_catalog_product->getProductStores($result['product_id']);
-
                             $columns[$column] = array();
 
                             foreach ($product_stores as $store) {
