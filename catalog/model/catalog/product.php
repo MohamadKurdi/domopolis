@@ -232,7 +232,7 @@
 					}
 					
 					if ($this->config->get('config_review_status')) {
-						$rating = (int)$result['rating'];
+						$rating = round($result['rating']);
 					} else {
 						$rating = false;
 					}

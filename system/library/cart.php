@@ -581,6 +581,8 @@
 						'ao_id'						=> ($this_is_special_offer)?$product_additional_offer_id:0,
 						'ao_product_id'				=> ($this_is_special_offer)?$ao_main_product_id:0,
 						'name'                      => $product_query->row['name'],
+						'rating'                   	=> round($product_query->row['xrating']),
+						'reviews'                   => (int)$product_query->row['xreviews'],
 						'model'                     => $product_query->row['model'],
 						'manufacturer_id'           => $product_query->row['manufacturer_id'],
 						'manufacturer'           	=> $product_query->row['manufacturer'],

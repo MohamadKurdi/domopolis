@@ -171,6 +171,8 @@
 					'current_in_stock'		    => $product['current_in_stock'],
 					'fully_in_stock'			=> $product['fully_in_stock'],
 					'amount_in_stock'			=> $product['amount_in_stock'],
+					'rating'      				=> $product['rating'],
+					'count_reviews'      		=> $product['reviews'],
 					'price_old' 				=> $price_old,
 					'saving' 					=> $product['saving'],
 					'price' 					=> $price,
