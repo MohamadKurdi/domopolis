@@ -96,12 +96,21 @@ class productModelGet extends hoboModel{
 	public function getVariantsAddQueue(){
 		$result = [];
 
-		$sql = "SELECT advq.*, pad.json, pad.file FROM amzn_add_variants_queue advq LEFT JOIN product_amzn_data pad ON (advq.asin = pad.asin) ORDER BY advq.date_added ASC LIMIT " . (int)\hobotix\RainforestAmazon::variantQueueLimit;
+		$sql = "SELECT advq.* FROM amzn_add_variants_queue advq ORDER BY advq.date_added ASC LIMIT " . (int)\hobotix\RainforestAmazon::variantQueueLimit;
 
 		$query = $this->db->ncquery($sql);
 
 		if ($query->num_rows){
 			foreach ($query->rows as $row){
+				$data_query = $this->db->ncquery("SELECT pad.json, pad.file FROM product_amzn_data pad WHERE asin = '" . $row['asin'] . "' LIMIT 1");
+
+				if ($data_query->num_rows){
+					$row['file'] = $data_query->row['file'];
+					$row['json'] = $data_query->row['json'];
+				} else {
+					$row['file'] = null;
+					$row['json'] = null;
+				}
 
 				if ($this->config->get('config_enable_amazon_asin_file_cache')){
 					if (!empty($row['file']) && file_exists(DIR_CACHE . $row['file'])){
