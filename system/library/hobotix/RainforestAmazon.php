@@ -35,15 +35,15 @@ class RainforestAmazon
 		offerParserLimit = Сколько отбирать товаров для получения офферов за один запуск
 		offerRequestLimits = Сколько запросов в параллели
 	*/
-	public const offerParserLimit 		= 3000;
-	public const offerRequestLimits 	= 30;
+	public const offerParserLimit 		= 2000;
+	public const offerRequestLimits 	= 20;
 
 	/*
 		fullProductParserLimit = Сколько отбирать товаров для получения полной информации за один запуск
 		productRequestLimits   = Сколько запросов в параллели
 	*/
-	public const fullProductParserLimit = 300;
-	public const productRequestLimits 	= 30;
+	public const fullProductParserLimit = 200;
+	public const productRequestLimits 	= 20;
 
 	/*
 		Лимит для отбора из очереди обработки вариантов

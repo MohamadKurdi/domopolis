@@ -86,27 +86,27 @@
 			}
 
 			if (!empty($response['view_to_purchase'])){
-				$response['product']['view_to_purchase'] = self::reparseRnfBuggyArray($response['view_to_purchase']);
+				$response['product']['view_to_purchase'] 		= self::reparseRnfBuggyArray($response['view_to_purchase']);
 			}
 
 			if (!empty($response['also_viewed'])){
-				$response['product']['also_viewed'] = self::reparseRnfBuggyArray($response['also_viewed']);
+				$response['product']['also_viewed'] 			= self::reparseRnfBuggyArray($response['also_viewed']);
 			}
 
 			if (!empty($response['similar_to_consider'])){
-				$response['product']['similar_to_consider'] = self::reparseRnfBuggyArray($response['similar_to_consider']);
+				$response['product']['similar_to_consider'] 	= self::reparseRnfBuggyArray($response['similar_to_consider']);
 			}
 
 			if (!empty($response['compare_with_similar'])){
-				$response['product']['compare_with_similar'] = self::reparseRnfBuggyArray($response['compare_with_similar']);
+				$response['product']['compare_with_similar'] 	= self::reparseRnfBuggyArray($response['compare_with_similar']);
 			}
 
 			if (!empty($response['also_bought'])){
-				$response['product']['also_bought'] = self::reparseRnfBuggyArray($response['also_bought']);
+				$response['product']['also_bought'] 			= self::reparseRnfBuggyArray($response['also_bought']);
 			}
 
 			if (!empty($response['sponsored_products'])){
-				$response['product']['sponsored_products'] = self::reparseRnfBuggyArray($response['sponsored_products']);
+				$response['product']['sponsored_products'] 		= self::reparseRnfBuggyArray($response['sponsored_products']);
 			}
 
 			if (!empty($response['frequently_bought_together'])){
@@ -114,7 +114,7 @@
 			}
 
 			if (!empty($response['shop_by_look'])){
-				$response['product']['shop_by_look'] = self::reparseRnfBuggyArray($response['shop_by_look'], 'items');
+				$response['product']['shop_by_look'] 			= self::reparseRnfBuggyArray($response['shop_by_look'], 'items');
 			}
 			
 			return $response['product'];			
