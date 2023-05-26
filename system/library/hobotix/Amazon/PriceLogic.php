@@ -703,9 +703,7 @@ class PriceLogic
 		2. Есть в наличии, если для товара есть предложения на амазон, либо выключена настройка "менять статус"
 	*/
 
-	public function setProductStockStatusesGlobal(){	
-		return false;
-
+	public function setProductStockStatusesGlobal(){			
 		foreach ($this->storesWarehouses as $store_id => $storesWarehouse) {
 			$warehouse_identifier = $storesWarehouse['config_warehouse_identifier_local'];
 
@@ -713,10 +711,10 @@ class PriceLogic
 
 			#Глобальное обновление где больше нуля
 			echoLine('[PriceLogic::setProductStockStatusesGlobal] Установка "в наличии" товарам, которые есть на amazon: ' . $this->config->get('config_stock_status_id'), 's');
-			$this->db->query("UPDATE product SET stock_status_id = '" . $this->config->get('config_stock_status_id') . "' WHERE status = 1 AND (added_from_amazon = 1 AND amzn_no_offers = 0)");
+			$this->db->query("UPDATE product SET stock_status_id = '" . $this->config->get('config_stock_status_id') . "' WHERE status = 1 AND stock_status_id <> '" . $this->config->get('config_stock_status_id') . "' AND (added_from_amazon = 1 AND amzn_no_offers = 0)");
 
 			echoLine('[PriceLogic::setProductStockStatusesGlobal] Установка "в наличии" товарам, которые есть на складах: ' . $this->config->get('config_stock_status_id'), 's');
-			$this->db->query("UPDATE product SET stock_status_id = '" . $this->config->get('config_stock_status_id') . "' WHERE status = 1 AND (" . $this->buildStockQueryField() . " > 0)");			
+			$this->db->query("UPDATE product SET stock_status_id = '" . $this->config->get('config_stock_status_id') . "' WHERE status = 1 AND stock_status_id <> '" . $this->config->get('config_stock_status_id') . "' AND (" . $this->buildStockQueryField() . " > 0)");			
 
 
 			$data = [
