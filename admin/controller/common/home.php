@@ -96,6 +96,11 @@
 				$this->data['debug'] 	= $result['debug'];
 			}
 
+			$result = $this->rainforestAmazon->checkZipCodes();
+
+			$this->data['zipcodes'] = $result;
+			$this->data['active_zipcodes'] = $this->rainforestAmazon->zipCodes;
+
 			$this->template = 'homestats/rnf.tpl';			
 			$this->response->setOutput($this->render());
 		}

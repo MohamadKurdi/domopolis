@@ -256,8 +256,8 @@
 							<ul>
 								<li><a class="home_icon_style" href="<?php echo $category; ?>"><i class="fa fa-minus"></i><span><?php echo $text_category; ?></span></a></li>								
 								<li><a class="home_icon_style" href="<?php echo $product; ?>"><i class="fa fa-cubes"></i><span><?php echo $text_product; ?></span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $shortnames; ?>"><i class="fa fa-amazon"></i><span>Экспортные названия  <sup style="color:red">(NEW)</sup></span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $addasin; ?>"><i class="fa fa-amazon"></i><span>Добавление по ASIN  <sup style="color:red">(NEW)</sup></span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $shortnames; ?>"><i class="fa fa-amazon"></i><span>Экспортные названия</span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $addasin; ?>"><i class="fa fa-amazon"></i><span>Добавление по ASIN</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $product_deletedasin; ?>"><i class="fa fa-amazon"></i><span>Исключенные ASIN</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $ocfilter; ?>"><i class="fa fa-cubes"></i><span><?php echo $text_ocfilter; ?> <sup style="color:red">DEV</sup></span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $ocfilter_page; ?>"><i class="fa fa-cubes"></i><span>Посадочные страницы <sup style="color:red">DEV</sup></span></a></li>
@@ -331,12 +331,25 @@
 								<li><a class="home_icon_style" href="<?php echo $coupon; ?>"><i class="fa fa-barcode"></i><span>Промокоды</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $addspecials; ?>"><i class="fa fa-clone"></i><span>Спецпредложения</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $actions; ?>"><i class="fa fa-percent"></i><span>Акционные предложения</span></a></li>
-								<li><a class="home_icon_style parent"><i class="fa fa-cc"></i><span><?php echo $text_voucher; ?></span></a>
+								<li>
+									<a class="home_icon_style parent"><i class="fa fa-cc"></i><span><?php echo $text_voucher; ?></span></a>
 									<ul>
 										<li><a href="<?php echo $voucher; ?>"><?php echo $text_voucher; ?></a></li>
 										<li><a href="<?php echo $voucher_theme; ?>"><?php echo $text_voucher_theme; ?></a></li>
 									</ul>
-								</li>									
+								</li>		
+
+								<?php if ($this->config->get('config_country_id') == 220) { ?>
+<li>
+									<a class="home_icon_style parent"><i class="fa fa-check"></i><span>CheckBOX ПРРО</span> <sup style="color:red">DEV</sup></a>
+									<ul>
+										<li><a href="<?php echo $sale_checkbox; ?>"><i class="fa fa-check"></i> Sale</a></li>
+										<li><a href="<?php echo $module_checkbox; ?>"><i class="fa fa-check"></i> Module</a></li>
+										<li><a href="<?php echo $log_checkbox; ?>"><i class="fa fa-check"></i> Log</a></li>
+									</ul>
+								</li>	
+
+								<?php } ?>							
 								
 							</ul>
 						</li>
