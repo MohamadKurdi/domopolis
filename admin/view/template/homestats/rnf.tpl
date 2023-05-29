@@ -5,7 +5,7 @@
 </style>
 
 <div class="dashboard-heading"><i class="fa fa-amazon"></i> Rainforest API</div>
-<div class="dashboard-content">
+<div class="dashboard-content" style="min-height: 360px;">
 	<div style="margin-bottom: 10px;">
 		<?php if ($success) { ?>
 			<span style="color:#00ad07; font-size:18px; font-weight: 700;"><i class="fa fa-check-circle"></i> судя по ответу от Rainforest, всё работает
@@ -72,7 +72,7 @@
 	</div>
 
 	<?php if (!empty($answer) && is_array($answer)) { ?>
-		<div style="width:49%; float:left;">
+		<div style="width:30%; float:left;  margin-right:5px;">
 			<table class="list big1">
 				<tr>
 					<td style="color:#66c7a3">
@@ -119,7 +119,11 @@
 						Overage разрешен
 					</td>
 					<td>
-						<?php echo $answer['account_info']['overage_allowed']?'Да':'Нет'; ?>
+						<?php if ($answer['account_info']['overage_allowed']) { ?>
+							<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+						<?php } else { ?>
+							<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+						<? } ?>
 					</td>
 				</tr>
 				<tr>
@@ -127,7 +131,11 @@
 						Overage включён
 					</td>
 					<td>
-						<?php echo $answer['account_info']['overage_enabled']?'Да':'Нет'; ?>
+						<?php if ($answer['account_info']['overage_enabled']) { ?>
+							<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+						<?php } else { ?>
+							<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+						<? } ?>
 					</td>
 				</tr>
 				<tr>
@@ -149,12 +157,12 @@
 			</table>
 		</div>
 
-		<div style="width:49%; float:right;">
+		<div style="width:30%; float:right;">
 			<table class="list small">
 				<thead>
 					<tr>
 						<td>
-							<b>Rainfores API</b>
+							<b>API Endpoint</b>
 						</td>
 						<td>
 							<b>Статус</b>
@@ -170,6 +178,52 @@
 							<?php echo $rnf_system['status']; ?>
 						</td>
 					</tr>
+				<?php } ?>
+			</table>
+		</div>
+
+
+		<div style="width:30%; float:right; margin-right:5px;">
+			<table class="list big1">
+				<thead>
+					<tr>
+						<td class="center">
+							<b>Domain</b>
+						</td>
+						<td class="center">
+							<b>ZipCode</b>
+						</td>
+						<td class="center">
+							<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+						</td>
+						<td class="center">
+							<b>Status</b>
+						</td>
+					</tr>
+				</thead>
+				<?php foreach ($zipcodes['zipcodes'] as $domain => $list) { ?>
+					<? if ($list) { ?>	
+						<? foreach ($list as $zipcode) { ?>				
+							<tr>
+								<td class="center">
+									<?php echo $domain; ?>
+								</td>
+								<td class="center">
+									<?php echo $zipcode['zipcode']; ?>
+								</td>
+								<td class="center">
+									<?php if (in_array($zipcode['zipcode'], $active_zipcodes)) { ?>
+										<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+									<?php } else { ?>
+										<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+									<? } ?>
+								</td>
+								<td class="center" style="color: <?php if ($zipcode['status'] == 'available') { ?>#00AD07<? } else { ?>#CF4A61<?php } ?>">
+									<?php echo $zipcode['status']; ?>
+								</td>
+							</tr>
+						<?php } ?>
+					<?php } ?>
 				<?php } ?>
 			</table>
 		</div>
