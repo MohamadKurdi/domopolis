@@ -1,15 +1,13 @@
 <?php
 class ModelSaleReceipt extends Model {
-
-
 	public function deleteReceipt($order_id) {
-		$this->db->query("DELETE FROM `" . DB_PREFIX . "order_receipt` WHERE order_id = '" . (int)$order_id . "'");
+		$this->db->query("DELETE FROM `order_receipt` WHERE order_id = '" . (int)$order_id . "'");
 	}
 
 	public function getOrders($data = array()) {
-		$sql = "SELECT o.order_id, o.email, o.telephone, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.order_status_id, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS order_status, o.shipping_code, o.shipping_method, o.payment_method, o.payment_code, o.total, o.currency_code, o.currency_value, o.date_added, o.date_modified, orec.receipt_id, orec.serial, orec.fiscal_code, orec.is_created_offline, orec.is_sent_dps, orec.sent_dps_at, orec.fiscal_date  FROM `" . DB_PREFIX . "order` o";
+		$sql = "SELECT o.order_id, o.email, o.telephone, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.order_status_id, (SELECT os.name FROM order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS order_status, o.shipping_code, o.shipping_method, o.payment_method, o.payment_code, o.total, o.total_national, o.currency_code, o.currency_value, o.date_added, o.date_modified, orec.receipt_id, orec.serial, orec.fiscal_code, orec.is_created_offline, orec.is_sent_dps, orec.sent_dps_at, orec.fiscal_date  FROM `order` o";
 		
-		$sql .= " LEFT JOIN " . DB_PREFIX . "order_receipt orec ON (o.order_id = orec.order_id)  ";
+		$sql .= " LEFT JOIN order_receipt orec ON (o.order_id = orec.order_id)  ";
 		
 
 		if (isset($data['filter_order_status'])) {
@@ -114,12 +112,11 @@ class ModelSaleReceipt extends Model {
 
 		return $order_data;
 	}
-	
-	
+		
 	public function getTotalOrders($data = array()) {
-		$sql = "SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "order` o";
+		$sql = "SELECT COUNT(*) AS total FROM `order` o";
 
-		$sql .= " LEFT JOIN " . DB_PREFIX . "order_receipt orec ON (o.order_id = orec.order_id)  ";
+		$sql .= " LEFT JOIN order_receipt orec ON (o.order_id = orec.order_id)  ";
 		
 		
 		if (isset($data['filter_order_status'])) {
@@ -185,17 +182,16 @@ class ModelSaleReceipt extends Model {
 
 		return $query->row['total'];
 	}
-
 	
 	public function getOrderProducts($order_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
+		$query = $this->db->query("SELECT * FROM order_product WHERE order_id = '" . (int)$order_id . "'");
 		
 		$products = $query->rows;
 		//receipt_config_language
 		if($this->config->get('receipt_config_language')){
 			$receipt_config_language_id = 0;		
 			// Language		
-			$query_language = $this->db->query("SELECT * FROM `" . DB_PREFIX . "language` WHERE code = '" . $this->db->escape($this->config->get('receipt_config_language')) . "'");		
+			$query_language = $this->db->query("SELECT * FROM `language` WHERE code = '" . $this->db->escape($this->config->get('receipt_config_language')) . "'");		
 			if ($query_language->num_rows) {
 				$receipt_config_language_id = $query_language->row['language_id'];
 			} 
@@ -208,28 +204,28 @@ class ModelSaleReceipt extends Model {
 	}
 	
 	public function getOrderTotals($order_id) {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
+		$query = $this->db->query("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
 
 		return $query->rows;
 	}
 	
 	public function getOrderReceipts() {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_receipt WHERE 1 ORDER BY order_receipt_id DESC LIMIT 0,5");
+		$query = $this->db->query("SELECT * FROM order_receipt WHERE 1 ORDER BY order_receipt_id DESC LIMIT 0,5");
 		#de($query->rows);
 		return $query->rows;
 	}
 
 	public function getShifts() {
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "shift WHERE z_report_id !='' ORDER BY id DESC LIMIT 0,5");
+		$query = $this->db->query("SELECT * FROM shift WHERE z_report_id !='' ORDER BY id DESC LIMIT 0,5");
 		#de($query->rows);
 		return $query->rows;
 	}
 	
 	public function getOrder($order_id) {
-		$order_query = $this->db->query("SELECT *, (SELECT CONCAT(c.firstname, ' ', c.lastname) FROM " . DB_PREFIX . "customer c WHERE c.customer_id = o.customer_id) AS customer, (SELECT os.name FROM " . DB_PREFIX . "order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS order_status FROM `" . DB_PREFIX . "order` o WHERE o.order_id = '" . (int)$order_id . "'");
+		$order_query = $this->db->query("SELECT *, (SELECT CONCAT(c.firstname, ' ', c.lastname) FROM customer c WHERE c.customer_id = o.customer_id) AS customer, (SELECT os.name FROM order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS order_status FROM `order` o WHERE o.order_id = '" . (int)$order_id . "'");
 
 		if ($order_query->num_rows) {
-			$country_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "country` WHERE country_id = '" . (int)$order_query->row['payment_country_id'] . "'");
+			$country_query = $this->db->query("SELECT * FROM `country` WHERE country_id = '" . (int)$order_query->row['payment_country_id'] . "'");
 
 			if ($country_query->num_rows) {
 				$payment_iso_code_2 = $country_query->row['iso_code_2'];
@@ -239,7 +235,7 @@ class ModelSaleReceipt extends Model {
 				$payment_iso_code_3 = '';
 			}
 
-			$zone_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone` WHERE zone_id = '" . (int)$order_query->row['payment_zone_id'] . "'");
+			$zone_query = $this->db->query("SELECT * FROM `zone` WHERE zone_id = '" . (int)$order_query->row['payment_zone_id'] . "'");
 
 			if ($zone_query->num_rows) {
 				$payment_zone_code = $zone_query->row['code'];
@@ -247,7 +243,7 @@ class ModelSaleReceipt extends Model {
 				$payment_zone_code = '';
 			}
 
-			$country_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "country` WHERE country_id = '" . (int)$order_query->row['shipping_country_id'] . "'");
+			$country_query = $this->db->query("SELECT * FROM `country` WHERE country_id = '" . (int)$order_query->row['shipping_country_id'] . "'");
 
 			if ($country_query->num_rows) {
 				$shipping_iso_code_2 = $country_query->row['iso_code_2'];
@@ -257,7 +253,7 @@ class ModelSaleReceipt extends Model {
 				$shipping_iso_code_3 = '';
 			}
 
-			$zone_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "zone` WHERE zone_id = '" . (int)$order_query->row['shipping_zone_id'] . "'");
+			$zone_query = $this->db->query("SELECT * FROM `zone` WHERE zone_id = '" . (int)$order_query->row['shipping_zone_id'] . "'");
 
 			if ($zone_query->num_rows) {
 				$shipping_zone_code = $zone_query->row['code'];
@@ -267,7 +263,7 @@ class ModelSaleReceipt extends Model {
 
 			$reward = 0;
 
-			$order_product_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_product WHERE order_id = '" . (int)$order_id . "'");
+			$order_product_query = $this->db->query("SELECT * FROM order_product WHERE order_id = '" . (int)$order_id . "'");
 
 			foreach ($order_product_query->rows as $product) {
 				$reward += $product['reward'];
@@ -366,9 +362,9 @@ class ModelSaleReceipt extends Model {
 				'accept_language'         => $order_query->row['accept_language'],
 				'date_added'              => $order_query->row['date_added'],
 				'date_modified'           => $order_query->row['date_modified'],
-				'payment_info'           => isset($order_query->row['payment_info']) ? $order_query->row['payment_info'] : '',
-				'products'           	  => $this->getOrderProducts($order_query->row['order_id']),
-				'totals'           	  => $this->getOrderTotals($order_query->row['order_id']),
+				'payment_info'           	=> isset($order_query->row['payment_info']) ? $order_query->row['payment_info'] : '',
+				'products'           	  	=> $this->getOrderProducts($order_query->row['order_id']),
+				'totals'           	  		=> $this->getOrderTotals($order_query->row['order_id']),
 			);
 			
 		} else {
@@ -377,7 +373,7 @@ class ModelSaleReceipt extends Model {
 	}
 	
 	public function getProductNameByLanguageId($product_id,$language_id, $order_product__name) {
-		$query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$language_id . "'");
+		$query = $this->db->query("SELECT DISTINCT * FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE p.product_id = '" . (int)$product_id . "' AND pd.language_id = '" . (int)$language_id . "'");
 		if(isset($query->row['name'])){
 			return $query->row['name'];
 		}
@@ -385,7 +381,8 @@ class ModelSaleReceipt extends Model {
 	}
 	
 	
-	public function changeOneSettingKey($key){ }
+	public function changeOneSettingKey($key){ 
+	}
 
     public function getAllSystemPayments(){
         $payment_extensions = array();
@@ -442,7 +439,6 @@ class ModelSaleReceipt extends Model {
         return $shipping_extensions;
     }
 
-
     public function getAllSystemTotals(){
     	$total_extensions = array();
         $no_discount = array('sub_total','tax','total');
@@ -476,10 +472,5 @@ class ModelSaleReceipt extends Model {
         }
 
         return $total_extensions;
-
     }
-
-
-    
-
 }

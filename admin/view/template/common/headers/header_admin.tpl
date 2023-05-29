@@ -337,19 +337,7 @@
 										<li><a href="<?php echo $voucher; ?>"><?php echo $text_voucher; ?></a></li>
 										<li><a href="<?php echo $voucher_theme; ?>"><?php echo $text_voucher_theme; ?></a></li>
 									</ul>
-								</li>		
-
-								<?php if ($this->config->get('config_country_id') == 220) { ?>
-<li>
-									<a class="home_icon_style parent"><i class="fa fa-check"></i><span>CheckBOX ПРРО</span> <sup style="color:red">DEV</sup></a>
-									<ul>
-										<li><a href="<?php echo $sale_checkbox; ?>"><i class="fa fa-check"></i> Sale</a></li>
-										<li><a href="<?php echo $module_checkbox; ?>"><i class="fa fa-check"></i> Module</a></li>
-										<li><a href="<?php echo $log_checkbox; ?>"><i class="fa fa-check"></i> Log</a></li>
-									</ul>
-								</li>	
-
-								<?php } ?>							
+								</li>							
 								
 							</ul>
 						</li>
@@ -401,6 +389,18 @@
 								<li><a class="home_icon_style" href="<?php echo $etemplate; ?>"><i class="fa fa-cog"></i><span>Настройка шаблонов EMail</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $shipping; ?>"><i class="fa fa-truck"></i><span><?php echo $text_shipping; ?></span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $payment; ?>"><i class="fa fa-credit-card"></i><span><?php echo $text_payment; ?></span></a></li>
+
+								<?php if ($this->config->get('config_country_id') == 220) { ?>
+								<li>
+									<a class="home_icon_style parent"><i class="fa fa-check"></i><span>CheckBOX ПРРО</span></a>
+									<ul>
+										<li><a href="<?php echo $sale_checkbox; ?>"><i class="fa fa-check"></i> Sale</a></li>
+										<li><a href="<?php echo $module_checkbox; ?>"><i class="fa fa-check"></i> Module</a></li>
+										<li><a href="<?php echo $log_checkbox; ?>"><i class="fa fa-check"></i> Log</a></li>
+									</ul>
+								</li>	
+								<?php } ?>		
+
 								<li><a class="home_icon_style" href="<?php echo $total; ?>"><i class="fa fa-plus"></i><span><?php echo $text_total; ?></span></a></li>								
 								<li><a class="home_icon_style" href="<?php echo $invite_after_order; ?>"><i class="fa fa-bar-chart"></i><span>Отзыв после покупки</span></a></li>						
 								<li><a class="home_icon_style" href="<?php echo $affiliate; ?>"><i class="fa fa-handshake-o"></i><span>Партнеры / партн. программа</span></a></li>

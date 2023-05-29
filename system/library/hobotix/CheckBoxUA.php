@@ -32,7 +32,6 @@ class CheckBoxUA {
     public $method = "POST"; // Метод запиту дефолтний
     private $error = array(); // Помилки при запитах
 
-    
 
     public function __construct($registry) {
         $this->cache = $registry->get('cache');
@@ -316,9 +315,9 @@ class CheckBoxUA {
      public function checkReceipt($data=array()){
 
         $request_body = array(      
-            'goods' => $this->getProductsForReceipt($data),
-            'delivery' => $this->getDeliveryEmail($data),          
-            'payments' => $this->getPayments($data),
+            'goods'     => $this->getProductsForReceipt($data),
+            'delivery'  => $this->getDeliveryEmail($data),          
+            'payments'  => $this->getPayments($data),
             'discounts' => $this->getDiscounts($data) ,              
         );
         if($this->config->get('receipt_footer_text')){
@@ -493,10 +492,10 @@ class CheckBoxUA {
         foreach ($data['products'] as $product) {           
             $products[] = array(
                 'good' => array(
-                    'code'=> $product['product_id'],
-                    'name'=> html_entity_decode($product['name'], ENT_QUOTES, 'UTF-8'),
-                    'tax'=> $this->getTax(),
-                    'price'=> $this->convert2intX100($product['price'],$data),
+                    'code'  => $product['product_id'],
+                    'name'  => html_entity_decode($product['name'], ENT_QUOTES, 'UTF-8'),
+                    'tax'   => $this->getTax(),
+                    'price' => $this->convert2intX100($product['price_national'], $data),
 
                 ),
                 'quantity'=> ($product['quantity'] * 1000),
@@ -509,10 +508,10 @@ class CheckBoxUA {
             $name = $this->config->get('receipt_text_for_extrapayment') ? $this->config->get('receipt_text_for_extrapayment') : 'Організація перевезень';
                 $products[] = array(
                     'good' => array(
-                        'code'=> 'addition',
-                        'name'=> $name,
-                        'tax'=> $this->getTax(),
-                        'price'=> $this->convert2intX100($extra_product_sum_array['extra_sum'],$data),
+                        'code'  => 'addition',
+                        'name'  => $name,
+                        'tax'   => $this->getTax(),
+                        'price' => $this->convert2intX100($extra_product_sum_array['extra_sum'],$data),
 
                     ),
                     'quantity'=> (1 * 1000),
@@ -547,14 +546,14 @@ class CheckBoxUA {
         $product_sum = 0;
         
         foreach ($data['products'] as $product) {
-            $product_sum += $product['total'];
+            $product_sum += $product['total_national'];
         } 
 
         foreach ($data['totals'] as $total) {
 
             $codes_for_discounts = $this->config->get('receipt_codes_for_discounts');
             if($codes_for_discounts && in_array($total['code'], $codes_for_discounts)  ){
-                $product_sum += $total['value'];
+                $product_sum += $total['value_national'];
             }
 
            
@@ -650,20 +649,16 @@ class CheckBoxUA {
         $discount_item = array();
 
         $discount_sum = 0;
-        foreach ($data['totals'] as $total) {
-
-           # $codes_for_discounts = array('coupon','coupon_nazar','voucher');
+        foreach ($data['totals'] as $total) {           
             $codes_for_discounts = $this->config->get('receipt_codes_for_discounts');
             if($codes_for_discounts && in_array($total['code'], $codes_for_discounts)){
-                $discount_sum += $total['value']*(-1);
-            }
-
-           
+                $discount_sum += $total['value_national']*(-1);
+            }         
         } 
 
-        $discount_sum = $this->convert2intX100($discount_sum,$data);      
+        $discount_sum = $this->convert2intX100($discount_sum, $data);      
 
-        $discount_item['value'] = ($discount_sum * 100);
+        $discount_item['value'] = $discount_sum;
         $discount_item['type'] = 'DISCOUNT';
         $discount_item['mode'] = 'VALUE';
         $discount_item['name'] = 'Знижка '; 
@@ -702,7 +697,7 @@ class CheckBoxUA {
     }
 
     private function checkIfOrederReceiptAlreadyExit($data=array()){
-        $sql = " SELECT * FROM ".DB_PREFIX."order_receipt WHERE order_id = ".(int)$data['order_id'] ;
+        $sql = " SELECT * FROM order_receipt WHERE order_id = ".(int)$data['order_id'] ;
         $query =$this->db->query( $sql );       
         if($query->num_rows){
             $this->error['message'] = "Для замовлення <b>".$data['order_id']."</b> вже створено чек. Код чеку: ".$query->row['fiscal_code'];
@@ -715,7 +710,7 @@ class CheckBoxUA {
         $data['order_id'] = isset($data['order_id']) ? $data['order_id'] : 0;
         $data['type'] = isset($data['type']) ? $data['type'] : '';
 
-        $sql = "INSERT INTO " . DB_PREFIX . "order_receipt SET         
+        $sql = "INSERT INTO order_receipt SET         
             order_id = '".(int)$data['order_id']. "', 
             receipt_id = '".(string)$request['id']. "',  
             serial = '".(int)$request['serial']. "',  
@@ -735,7 +730,7 @@ class CheckBoxUA {
     private function updateReceiptsRequest($request,$receipt_id){
 
 
-        $sql = "UPDATE " . DB_PREFIX . "order_receipt SET  
+        $sql = "UPDATE order_receipt SET  
             serial = '".(int)$request['serial']. "',  
             status = '".(string)$request['status']. "',  
             fiscal_code = '".(string)$request['fiscal_code']. "',  
@@ -755,7 +750,7 @@ class CheckBoxUA {
         $request['status'] = isset($request['status']) ? $request['status'] : 'error';
         $request['z_report']['id'] = isset($request['z_report']['id']) ? $request['z_report']['id'] : '';
 
-        $sql = "INSERT INTO " . DB_PREFIX . "shift SET     
+        $sql = "INSERT INTO shift SET     
             shift_id = '".$this->db->escape($request['id']). "',  
             serial = '".(int)$request['serial']. "',  
             status = '".$this->db->escape($request['status']). "',  
@@ -856,29 +851,32 @@ class CheckBoxUA {
         => 29015
 	*/	
 	
-	private function convert2intX100($number=0,$data=array()){
+	private function convert2intX100($number=0,    $data=[]){
         if($number){		
 			if($this->config->get('receipt_price_format')){
-				$number = $this->currency->format($number, $data['currency_code'], $data['currency_value'],false);
+				$number = $this->currency->format($number, $data['currency_code'], $data['currency_value'], false);
 			}				   
-            $number = (int) round(($number*100), 0);
+
+            $number = (int)round(($number*100), 0);
         }
         return $number;
     }
 }
+
+
 if(!function_exists("de")){
-function de($var,$exit=false) {
-    $my_print = '<div style="font-family: cursive;font-size: 14;border: 2px solid green;display: inline-block;white-space: pre;margin: 10px;">';
-    $my_print .= '<div style="border: 2px solid blue;">';
-    $my_print .= 'type - <b>'. gettype($var).'</b>';
-    $my_print .= '<hr>count element - <b>'. count($var).'</b>';
+    function de($var,$exit=false) {
+        $my_print = '<div style="font-family: cursive;font-size: 14;border: 2px solid green;display: inline-block;white-space: pre;margin: 10px;">';
+        $my_print .= '<div style="border: 2px solid blue;">';
+        $my_print .= 'type - <b>'. gettype($var).'</b>';
+        $my_print .= '<hr>count element - <b>'. count($var).'</b>';
     //$my_print .= '<hr>var_dump - <b>'. var_dump($var).'</b>';
-    $my_print .= '</div>';
-    @header('Content-Type: text/html; charset=utf-8');
-    $my_print .= print_r($var, true);
-    $my_print .= '</div>';
-    echo $my_print;
-    if($exit) exit();
+        $my_print .= '</div>';
+        @header('Content-Type: text/html; charset=utf-8');
+        $my_print .= print_r($var, true);
+        $my_print .= '</div>';
+        echo $my_print;
+        if($exit) exit();
     //return $my_print;
     }
 }

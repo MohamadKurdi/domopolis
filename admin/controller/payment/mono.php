@@ -56,6 +56,11 @@ class ControllerPaymentMono extends Controller
             "mono_destination",
             "mono_redirect_url",
             "mono_hold_mode",
+
+            "mono_checkbox_enable",
+            "mono_checkbox_kassir_login",
+            "mono_checkbox_kassir_password",
+            "mono_checkbox_licence_key"
         ];
 
         foreach ($formInputs as $formInput) {

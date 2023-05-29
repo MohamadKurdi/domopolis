@@ -93,17 +93,64 @@
                 </td>
             </tr>
 
+
             <tr>
-                <td><?php echo $entry_status; ?></td>
                 <td>
-                    <select name="mono_status" class="form-control">
-                       <?php if ( $mono_status == 1 ) { ?>
-                        <option class="mono-option" value="1"  selected="selected" ><?php echo $text_enabled; ?></option>
-                        <option class="mono-option" value="0"><?php echo $text_disabled; ?></option>
-                    <?php } else { ?>
-                        <option class="mono-option" value="1"><?php echo $text_enabled; ?></option>
-                        <option class="mono-option" value="0"  selected="selected"><?php echo $text_disabled; ?></option>
+                    Чекбокс ПРРО включить                              
+                </td>
+                <td>
+                    <select name="mono_checkbox_enable" class="form-control">
+                       <?php if ( $mono_checkbox_enable == 1 ) { ?>
+                            <option class="mono-option" value="1"  selected="selected" ><?php echo $text_enabled; ?></option>
+                            <option class="mono-option" value="0"><?php echo $text_disabled; ?></option>
+                        <?php } else { ?>
+                            <option class="mono-option" value="1"><?php echo $text_enabled; ?></option>
+                            <option class="mono-option" value="0"  selected="selected"><?php echo $text_disabled; ?></option>
                     <?php } ?>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Чекбокс ПРРО логин кассира
+                </td>
+                <td>
+                   <input style="margin-bottom:0%;" type="text" name="mono_checkbox_kassir_login" value="<?php echo $mono_checkbox_kassir_login ;?>" id="input-mono_checkbox_kassir_login" class="mono-select" />
+               </td>
+           </tr>
+
+           <tr>
+                <td>
+                    Чекбокс ПРРО пароль кассира
+                </td>
+                <td>
+                   <input style="margin-bottom:0%;" type="text" name="mono_checkbox_kassir_password" value="<?php echo $mono_checkbox_kassir_password ;?>" id="input-mono_checkbox_kassir_password" class="mono-select" />
+               </td>
+           </tr>
+
+           tr>
+                <td>
+                    Чекбокс ПРРО лицензионный ключ кассы
+                </td>
+                <td>
+                   <input style="margin-bottom:0%;" type="text" name="mono_checkbox_licence_key" value="<?php echo $mono_checkbox_licence_key ;?>" id="input-mono_checkbox_licence_key" class="mono-select" />
+               </td>
+           </tr>
+
+        <tr>
+            <td>
+                <?php echo $entry_status; ?>                
+            </td>
+            <td>
+                <select name="mono_status" class="form-control">
+                 <?php if ( $mono_status == 1 ) { ?>
+                    <option class="mono-option" value="1"  selected="selected" ><?php echo $text_enabled; ?></option>
+                    <option class="mono-option" value="0"><?php echo $text_disabled; ?></option>
+                <?php } else { ?>
+                    <option class="mono-option" value="1"><?php echo $text_enabled; ?></option>
+                    <option class="mono-option" value="0"  selected="selected"><?php echo $text_disabled; ?></option>
+                <?php } ?>
                 </select>
             </td>
         </tr>
@@ -111,8 +158,8 @@
         <tr>
             <td>Вторичный метод</td>
             <td>
-             <select name="mono_ismethod" class="form-control">
-                 <?php if ( $mono_ismethod == 1 ) { ?>
+               <select name="mono_ismethod" class="form-control">
+                   <?php if ( $mono_ismethod == 1 ) { ?>
                     <option class="mono-option" value="1"  selected="selected" ><?php echo $text_enabled; ?></option>
                     <option class="mono-option" value="0"><?php echo $text_disabled; ?></option>
                 <?php } else { ?>
@@ -125,10 +172,10 @@
 
     <tr>
         <td>
-           <?php echo $entry_hold ;?>                                 
-       </td>
-       <td>
-           <select name="mono_hold_mode" id="input-hold" class="mono-select">
+         <?php echo $entry_hold ;?>                                 
+     </td>
+     <td>
+         <select name="mono_hold_mode" id="input-hold" class="mono-select">
             <?php if ($mono_hold_mode == 1) { ?>
                 <option class="mono-option" value="1" selected="selected"><?php echo $text_enabled ;?></option>
                 <option class="mono-option" value="0"><?php echo $text_disabled ;?></option>
@@ -143,15 +190,15 @@
 <tr>
     <td>Статус админки</td>
     <td>
-       <select name="mono_status_fake" class="form-control">
-         <?php if ( $mono_status_fake == 1 ) { ?>
-            <option value="1"  selected="selected" ><?php echo $text_enabled; ?></option>
-            <option value="0"><?php echo $text_disabled; ?></option>
-        <?php } else {?>
-            <option value="1"><?php echo $text_enabled; ?></option>
-            <option value="0"  selected="selected"><?php echo $text_disabled; ?></option>
-        <?php }?>
-    </select>
+     <select name="mono_status_fake" class="form-control">
+       <?php if ( $mono_status_fake == 1 ) { ?>
+        <option value="1"  selected="selected" ><?php echo $text_enabled; ?></option>
+        <option value="0"><?php echo $text_disabled; ?></option>
+    <?php } else {?>
+        <option value="1"><?php echo $text_enabled; ?></option>
+        <option value="0"  selected="selected"><?php echo $text_disabled; ?></option>
+    <?php }?>
+</select>
 </td>
 </tr>
 

@@ -202,35 +202,36 @@ class ControllerSaleReceipt extends Controller {
 		$data['receipts'] = array();
 
 		$filter_data = array(
-			'filter_fiscal_code'        => $filter_fiscal_code,
-			'filter_order_id'         => $filter_order_id,
-			'filter_customer'         => $filter_customer,
-			'filter_has_receipt'          => $filter_has_receipt,
-			'filter_date_added'       => $filter_date_added,
-			'filter_order_status'  => $filter_order_status,
-			'filter_order_payment_code'  => $filter_order_payment_code,
-			'sort'                    => $sort,
-			'order'                   => $order,
-			'start'                   => ($page - 1) * $receipt_limit,
-			'limit'                   => $receipt_limit
+			'filter_fiscal_code'        	=> $filter_fiscal_code,
+			'filter_order_id'         		=> $filter_order_id,
+			'filter_customer'         		=> $filter_customer,
+			'filter_has_receipt'          	=> $filter_has_receipt,
+			'filter_date_added'       		=> $filter_date_added,
+			'filter_order_status'  			=> $filter_order_status,
+			'filter_order_payment_code'  	=> $filter_order_payment_code,
+			'sort'                    		=> $sort,
+			'order'                   		=> $order,
+			'start'                   		=> ($page - 1) * $receipt_limit,
+			'limit'                   		=> $receipt_limit
 		);
 
 		
 
-		$receipt_total = $this->model_sale_receipt->getTotalOrders($filter_data);
-		$results = $this->model_sale_receipt->getOrders($filter_data);
+		$receipt_total 	= $this->model_sale_receipt->getTotalOrders($filter_data);
+		$results 		= $this->model_sale_receipt->getOrders($filter_data);
 
 		foreach ($results as $result) {
 
 			$data['receipts'][] = array( 
-				'order_id'      => $result['order_id'],
-				'order_info_link'      => $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, true),
+				'order_id'      		=> $result['order_id'],
+				'order_info_link'      	=> $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, true),
 				
-				'fiscal_code'      => $result['fiscal_code'],
-				'shipping_method'      => $result['shipping_method'],
-				'payment_method'      => $result['payment_method'],
-				'receipt_id'      => $result['receipt_id'],  
-				'preview_data'      => (!$result['receipt_id']) ? $this->getPreviewData($result['order_id']) : array(),
+				'fiscal_code'      		=> $result['fiscal_code'],
+				'shipping_method'      	=> $result['shipping_method'],
+				'payment_method'      	=> $result['payment_method'],
+				'payment_code'      	=> $result['payment_code'],
+				'receipt_id'      		=> $result['receipt_id'],  
+				'preview_data'      	=> (!$result['receipt_id']) ? $this->getPreviewData($result['order_id']) : array(),
 
 				'update_link'      	=> $this->url->link('sale/receipt/updateReceiptInfo', 'token=' . $this->session->data['token'] . '&receipt_id=' . $result['receipt_id'] . $url, true),
 				'html_link'      	=> $this->checkbox_api->getReceiptLink($result['receipt_id'],'html'),
@@ -239,16 +240,16 @@ class ControllerSaleReceipt extends Controller {
 				'png_link'      	=> $this->checkbox_api->getReceiptLink($result['receipt_id'],'png'),
 				'qrcode_link'      	=> $this->checkbox_api->getReceiptLink($result['receipt_id'],'qrcode'),
 
-				'is_sent_dps'      	=> $result['is_sent_dps'], 
-				'sent_dps_at'      	=> $result['sent_dps_at'], 
-				'is_created_offline' => $result['is_created_offline'] ? $this->language->get('text_receipt_is_offline') : $this->language->get('text_receipt_is_online') ,
+				'is_sent_dps'      		=> $result['is_sent_dps'], 
+				'sent_dps_at'      		=> $result['sent_dps_at'], 
+				'is_created_offline' 	=> $result['is_created_offline'] ? $this->language->get('text_receipt_is_offline') : $this->language->get('text_receipt_is_online') ,
 
 				'fiscal_date'      	=> $this->checkbox_api->parse_date($result['fiscal_date']), 
 				'customer'      	=> $result['customer'], 
 				'email'      		=> $result['email'], 
 				'telephone'      		=> $result['telephone'], 
 				'order_status'        	=> $result['order_status'],
-				'total'        			=> $this->beautiful_price($result['total']),
+				'total'        			=> $this->beautiful_price($result['total_national']) . ' ' . $result['currency_code'],
 				'date_added'    		=> date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 				'date_modified' 		=> date($this->language->get('date_format_short'), strtotime($result['date_modified'])),
 				'edit'          		=> $this->url->link('sale/receipt/edit', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, true),
@@ -262,20 +263,19 @@ class ControllerSaleReceipt extends Controller {
 		$receipts_history = $this->model_sale_receipt->getOrderReceipts();
 		foreach ($receipts_history as $item) {
 			$data['receipts_history'][] = array(
-				'type' => $item['type'],
-				'receipt_id' => $item['receipt_id'],
-				'fiscal_date' => $this->checkbox_api->parse_date($item['fiscal_date']),
-				'html_link'      => $this->checkbox_api->getReceiptLink($item['receipt_id'],'html'),
-				'pdf_link'      => $this->checkbox_api->getReceiptLink($item['receipt_id'],'pdf'),
-				'text_link'      => $this->checkbox_api->getReceiptLink($item['receipt_id'],'text'),
-				'qrcode_link'      => $this->checkbox_api->getReceiptLink($item['receipt_id'],'qrcode'),
+				'type' 				=> $item['type'],
+				'receipt_id' 		=> $item['receipt_id'],
+				'fiscal_date' 		=> $this->checkbox_api->parse_date($item['fiscal_date']),
+				'html_link'      	=> $this->checkbox_api->getReceiptLink($item['receipt_id'],'html'),
+				'pdf_link'      	=> $this->checkbox_api->getReceiptLink($item['receipt_id'],'pdf'),
+				'text_link'      	=> $this->checkbox_api->getReceiptLink($item['receipt_id'],'text'),
+				'qrcode_link'      	=> $this->checkbox_api->getReceiptLink($item['receipt_id'],'qrcode'),
 			); 
 		}
 
 		$data['shifts_history'] = array();
 		$shifts_history = $this->model_sale_receipt->getShifts();
 		foreach ($shifts_history as $item) {	
-
 			$data['shifts_history'][] = array(
 				'serial' => $item['serial'],
 				'z_report_id' => $item['z_report_id'], 
@@ -284,9 +284,7 @@ class ControllerSaleReceipt extends Controller {
 		}
 
 		$this->load->model('localisation/order_status');
-		$data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
-		 
-		
+		$data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();		 		
  
 		$data['heading_title'] = $this->language->get('heading_title');
 
@@ -432,15 +430,15 @@ class ControllerSaleReceipt extends Controller {
 		$data['pagination'] = $pagination->render();
 
 
-		$data['filter_fiscal_code'] = $filter_fiscal_code;
-		$data['filter_order_id'] = $filter_order_id;
-		$data['filter_customer'] = $filter_customer;
-		$data['filter_order_status'] = $filter_order_status;
+		$data['filter_fiscal_code'] 	= $filter_fiscal_code;
+		$data['filter_order_id'] 		= $filter_order_id;
+		$data['filter_customer'] 		= $filter_customer;
+		$data['filter_order_status'] 	= $filter_order_status;
 		$data['filter_order_payment_code'] = $filter_order_payment_code;
-		$data['filter_has_receipt'] = $filter_has_receipt;
-		$data['filter_date_added'] = $filter_date_added;
-		$data['sort'] = $sort;
-		$data['order'] = $order;
+		$data['filter_has_receipt'] 	= $filter_has_receipt;
+		$data['filter_date_added'] 		= $filter_date_added;
+		$data['sort'] 					= $sort;
+		$data['order'] 					= $order;
 
 		###
 		$data['current_shifts'] = $this->cache->get('current_shift');
@@ -527,7 +525,7 @@ class ControllerSaleReceipt extends Controller {
 		$order_info = $this->model_sale_receipt->getOrder($order_id);
 		if(!$order_info){ return false;}
 		
-		$receipt_data = $this->checkbox_api->checkReceipt($order_info);
+		$receipt_data = $this->checkbox_api->checkReceipt($order_info);		
 
 		if($receipt_data['goods']){
 			foreach ($receipt_data['goods'] as $item) {
@@ -550,8 +548,8 @@ class ControllerSaleReceipt extends Controller {
 		$data['discount_value'] = 0;
 		if($receipt_data['discounts']){
 			foreach ($receipt_data['discounts'] as $item) {
-				$data['discount_name'] = $item['name'];
-				$data['discount_value'] =$this->beautiful_price ( ($item['value']/100)*(-1) );
+				$data['discount_name'] 	= $item['name'];
+				$data['discount_value'] = $this->beautiful_price ( ($item['value']/100)*(-1) );
 			}			
 		}
 
@@ -1066,9 +1064,5 @@ class ControllerSaleReceipt extends Controller {
             	$this->createCron($order_ids);
             }
         }
-    }
-    public function test() {
-    	echo "<PRE>";
-    	print_r($this->checkbox_api->getTax());
     }
 }
