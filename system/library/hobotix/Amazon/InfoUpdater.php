@@ -786,7 +786,12 @@ class InfoUpdater extends RainforestRetriever
 
 		if (empty($product['asin'])){
 			
-			$rfRequests = [new \CaponicaAmazonRainforest\Request\ProductRequest($this->config->get('config_rainforest_api_domain_1'), null, ['customer_zipcode' => $this->config->get('config_rainforest_api_zipcode_1'), 'gtin' => $product['ean']])];
+			$rfRequests = [new \CaponicaAmazonRainforest\Request\ProductRequest(
+				$this->config->get('config_rainforest_api_domain_1'), 
+				null, [
+					'customer_zipcode' => $this->registry->get('rainforestAmazon')->getRandomZipCode(), 
+					'gtin' => $product['ean']])
+			];
 			$apiEntities = $this->rfClient->retrieveProducts($rfRequests);	
 
 			if (!$apiEntities){

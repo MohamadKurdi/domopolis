@@ -43,7 +43,7 @@ class CategoryParser
 		$data = [
 			'api_key' 			=> $this->config->get('config_rainforest_api_key'),
 			'amazon_domain' 	=> $this->config->get('config_rainforest_api_domain_1'),
-			'customer_zipcode' 	=> $this->config->get('config_rainforest_api_zipcode_1'),
+			'customer_zipcode' 	=> $this->registry->get('rainforestAmazon')->getRandomZipCode(),
 			'type'				=> $this->type
 		];
 		

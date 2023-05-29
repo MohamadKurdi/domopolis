@@ -11,14 +11,16 @@
 		
 		private $db;	
 		private $config;
+		private $registry;
 		
 		private $rfClient;
 		
 		public function __construct($registry, $rfClient){
 			
-			$this->config = $registry->get('config');
-			$this->db = $registry->get('db');
-			$this->log = $registry->get('log');
+			$this->registry = $registry;
+			$this->config 	= $registry->get('config');			
+			$this->db 		= $registry->get('db');
+			$this->log 		= $registry->get('log');
 			$this->rfClient = $rfClient;
 			
 		}
@@ -30,7 +32,7 @@
 			$data = [
 			'api_key' 			=> $this->config->get('config_rainforest_api_key'),
 			'amazon_domain' 	=> $this->config->get('config_rainforest_api_domain_1'),
-			'customer_zipcode' 	=> $this->config->get('config_rainforest_api_zipcode_1'),
+			'customer_zipcode' 	=> $this->registry->get('rainforestAmazon')->getRandomZipCode(),
 			'type' 				=> 'product',
 			];
 			

@@ -10,6 +10,8 @@ class RainforestAmazon
 	private $config;		
 	private $rfRequests = [];
 
+	public $zipCodes = [];
+
 	private $rfClient;	
 	public $offersParser;
 	public $infoUpdater;
@@ -78,8 +80,13 @@ class RainforestAmazon
 			$this->rfClient = new \CaponicaAmazonRainforest\Client\RainforestClient(['api_key' => trim($this->config->get('config_rainforest_api_key'))], $rainforestLogger);
 		} else {
 			$this->rfClient = null;
+		}		
+
+		for ($i = 1; $i <= 5; $i++){
+			if ($this->config->get('config_rainforest_api_zipcode_' . $i)){
+				$this->zipCodes[] = $this->config->get('config_rainforest_api_zipcode_' . $i);
+			}
 		}
-		
 
 		//Loading Classes
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/OffersParser.php');
@@ -126,6 +133,13 @@ class RainforestAmazon
 		return $asin;
 	}
 
+	public function getRandomZipCode(){
+		$zipCode = $this->zipCodes[array_rand($this->zipCodes)];
+		echoLine('[RainforestAmazon] Using zipCode: ' . $zipCode, 'i');
+
+		return $zipCode;
+	}
+
 	public function createLinkToAmazonSearchPage($asin){			
 		return 'https://' . $this->config->get('config_rainforest_api_domain_1') . '/s?k=' . $asin;						
 	}
@@ -143,6 +157,34 @@ class RainforestAmazon
 		} catch (\Longman\TelegramBot\Exception\TelegramException $e) {
 			echoLine($e->getMessage());
 		}
+	}
+
+	public function checkZipCodes(){
+		$queryString = http_build_query([
+			'api_key' => $this->config->get('config_rainforest_api_key'),
+			'domain'  => $this->config->get('config_rainforest_api_domain_1')
+		]);
+
+		$ch = curl_init(sprintf('%s?%s', 'https://api.rainforestapi.com/zipcodes', $queryString));
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+		$answer 	= curl_exec($ch);
+		$httpcode 	= curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
+
+		if (!$error && !json_decode($answer)){
+			$error = 'JSON_DECODE';
+			$answer .= '<br />HTTPCODE: ' . $httpcode;
+		}
+
+		if ($answer_decoded = json_decode($answer, true)){
+			$answer = $answer_decoded;
+		}
+
+		return $answer;
 	}
 
 	public function checkIfPossibleToMakeRequest($return = false, $debug = false){
@@ -250,7 +292,7 @@ class RainforestAmazon
 		$rfRequests = [];
 
 		foreach ($asins as $asin){
-			$rfRequests[] = new \CaponicaAmazonRainforest\Request\ProductRequest($this->config->get('config_rainforest_api_domain_1'), $asin, ['customer_zipcode' => $this->config->get('config_rainforest_api_zipcode_1')]);
+			$rfRequests[] = new \CaponicaAmazonRainforest\Request\ProductRequest($this->config->get('config_rainforest_api_domain_1'), $asin, ['customer_zipcode' => $this->getRandomZipCode()]);
 		}
 		$apiEntities = $this->rfClient->retrieveProducts($rfRequests);
 
@@ -270,7 +312,7 @@ class RainforestAmazon
 
 		$rfRequests = [];
 
-		$options = ['customer_zipcode' => $this->config->get('config_rainforest_api_zipcode_1')];
+		$options = ['customer_zipcode' => $this->getRandomZipCode()];
 
 		if ($this->config->get('config_rainforest_amazon_filters_1')){
 			foreach ($this->config->get('config_rainforest_amazon_filters_1') as $amazon_filter_1){		
@@ -355,7 +397,7 @@ class RainforestAmazon
 
 		if (!empty($product['asin'])){
 
-			$options = ['customer_zipcode' => $this->config->get('config_rainforest_api_zipcode_1')];
+			$options = ['customer_zipcode' => $this->getRandomZipCode()];
 
 			if ($this->config->get('config_rainforest_amazon_filters_1')){
 				foreach ($this->config->get('config_rainforest_amazon_filters_1') as $amazon_filter_1){		
