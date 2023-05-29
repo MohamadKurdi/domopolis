@@ -4005,6 +4005,30 @@ class ControllerSettingSetting extends Controller
             $this->data['config_rainforest_api_zipcode_1'] = $this->config->get('config_rainforest_api_zipcode_1');
         }
 
+        if (isset($this->request->post['config_rainforest_api_zipcode_2'])) {
+            $this->data['config_rainforest_api_zipcode_2'] = $this->request->post['config_rainforest_api_zipcode_2'];
+        } else {
+            $this->data['config_rainforest_api_zipcode_2'] = $this->config->get('config_rainforest_api_zipcode_2');
+        }
+
+        if (isset($this->request->post['config_rainforest_api_zipcode_3'])) {
+            $this->data['config_rainforest_api_zipcode_3'] = $this->request->post['config_rainforest_api_zipcode_3'];
+        } else {
+            $this->data['config_rainforest_api_zipcode_3'] = $this->config->get('config_rainforest_api_zipcode_3');
+        }
+
+        if (isset($this->request->post['config_rainforest_api_zipcode_4'])) {
+            $this->data['config_rainforest_api_zipcode_4'] = $this->request->post['config_rainforest_api_zipcode_4'];
+        } else {
+            $this->data['config_rainforest_api_zipcode_4'] = $this->config->get('config_rainforest_api_zipcode_4');
+        }
+
+        if (isset($this->request->post['config_rainforest_api_zipcode_5'])) {
+            $this->data['config_rainforest_api_zipcode_5'] = $this->request->post['config_rainforest_api_zipcode_5'];
+        } else {
+            $this->data['config_rainforest_api_zipcode_5'] = $this->config->get('config_rainforest_api_zipcode_5');
+        }
+
             //Yandex Translate
         if (isset($this->request->post['config_yandex_translate_api_enable'])) {
             $this->data['config_yandex_translate_api_enable'] = $this->request->post['config_yandex_translate_api_enable'];

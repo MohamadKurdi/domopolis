@@ -5025,9 +5025,6 @@
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Ключ rfAPI</span></p>
 											<input type="text" name="config_rainforest_api_key" value="<?php echo $config_rainforest_api_key; ?>" size="50" style="width:100px;" />
 										</div>
-									</td>									
-									
-									<td style="width:20%">
 										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Домен rfAPI - 1</span></p>
 											<select name="config_rainforest_api_domain_1">
@@ -5037,9 +5034,32 @@
 												<?php } ?>
 											</select>
 										</div>
+									</td>									
+									
+									<td style="width:20%">				
 										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ZipCode rfAPI - 1</span></p>
 											<input type="text" name="config_rainforest_api_zipcode_1" value="<?php echo $config_rainforest_api_zipcode_1; ?>" size="50" style="width:100px;" />
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ZipCode rfAPI - 2</span></p>
+											<input type="text" name="config_rainforest_api_zipcode_2" value="<?php echo $config_rainforest_api_zipcode_2; ?>" size="50" style="width:100px;" />
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ZipCode rfAPI - 3</span></p>
+											<input type="text" name="config_rainforest_api_zipcode_3" value="<?php echo $config_rainforest_api_zipcode_3; ?>" size="50" style="width:100px;" />
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ZipCode rfAPI - 4</span></p>
+											<input type="text" name="config_rainforest_api_zipcode_4" value="<?php echo $config_rainforest_api_zipcode_4; ?>" size="50" style="width:100px;" />
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">ZipCode rfAPI - 5</span></p>
+											<input type="text" name="config_rainforest_api_zipcode_5" value="<?php echo $config_rainforest_api_zipcode_5; ?>" size="50" style="width:100px;" />
 										</div>
 									</td>
 									
