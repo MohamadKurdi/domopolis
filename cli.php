@@ -330,6 +330,7 @@ $registry->set('yandexTranslator', 	new hobotix\YandexTranslator($registry));
 $registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
 $registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
 $registry->set('courierServices', 	new hobotix\CourierServices($registry));
+$registry->set('checkBoxUA', 		new hobotix\CheckBoxUA($registry));
 $registry->set('simpleProcess', 	new hobotix\simpleProcess(['route' => $route, 'config' => $configFile, 'args' => $allArguments], $configFilesPrefix));
 
 $registry->set('customer_group_id', (int)$registry->get('config')->get('config_customer_group_id'));
