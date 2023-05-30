@@ -475,8 +475,7 @@ class ControllerFeedReFeedMaker2 extends Controller
     }
 
     public function makefeed()
-    {
-        
+    {        
         $this->rainforestAmazon->offersParser->PriceLogic->updatePricesFromDelayed();    
 
         $this->load->model('catalog/category');

@@ -1086,8 +1086,7 @@ public function index($product_id = false, $just_price = false)
                         if ($product_info['image']) {
                             $this->data['second_popup'] = $this->model_tool_image->resize($product_info['image'], 300, 300);
                         } else {
-                            $this->data['second_popup'] = $this->model_tool_image->resize(
-                                $this->config->get('config_noimage'),300,300);
+                            $this->data['second_popup'] = $this->model_tool_image->resize($this->config->get('config_noimage'),300,300);
                         }
 
                         if ($product_info['image']) {
