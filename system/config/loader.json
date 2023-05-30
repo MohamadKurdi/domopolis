@@ -33,7 +33,8 @@
 		"/hobotix/CourierServices",
 		"/hobotix/OpenAIAdaptor",
 		"/hobotix/MinifyAdaptor",
-		"/hobotix/PhoneValidator"		
+		"/hobotix/PhoneValidator",		
+		"/hobotix/CheckBoxUA"
 	],
 	"helpers":[
 		"json",
