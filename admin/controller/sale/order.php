@@ -349,15 +349,10 @@
 					//	$this->model_sale_order->separateOrder((int)$this->request->get['order_id'], $this->request->post);
 				}
 				
-				//if ((int)$this->request->get['order_id'] == 29709){	var_dump($this->request->post); die();		}
-				
 				if ($this->model_sale_order->getIfOrderClosed((int)$this->request->get['order_id'])){
 					$this->session->data['error_error'] = 'Заказ закрыт, редактирование невозможно!';
 					} else {				
 					$this->model_sale_order->editOrder((int)$this->request->get['order_id'], $this->request->post);	
-					
-					
-					
 					
 					//считаем количество поставок, на которые разделен заказ
 					$_count_deliveries = 1;
@@ -1220,8 +1215,7 @@
 			
 			$this->data['courier_statuses'] = $this->model_sale_order->getOrderCourierAllStatuses();
 			$this->data['shipping_methods'] = $this->model_sale_order->getOrderCourierAllShippingMethods();			
-			$this->data['payment_methods']  = $this->model_sale_order->getOrderCourierAllPaymentMethods();
-			
+			$this->data['payment_methods']  = $this->model_sale_order->getOrderCourierAllPaymentMethods();			
 			
 			$this->load->model('module/referrer');
 			
@@ -1481,6 +1475,7 @@
 				'current_time'     			=> isset($cities[$_rsct])?$cities[$_rsct]:false,
 				'can_call_now'    			=> isset($cities[$_rsct])?$this->model_kp_geoip->canCallNow($cities[$_rsct]):false,
 				'payment_method'     		=> $result['payment_method'],
+				'payment_code'     			=> $result['payment_code'],
 				'payment_secondary_method'  => $result['payment_secondary_method'],
 				'shipping_method'    		=> $result['shipping_method'],
 				'products'           		=> $order_products,
@@ -1535,6 +1530,18 @@
 				'probably_close_reason'	 	=> $result['probably_close_reason'],
 				'probably_problem'		 	=> $result['probably_problem'],
 				'probably_problem_reason'	=> $result['probably_problem_reason'],
+				'needs_checkboxua'			=> $result['needs_checkboxua'],
+				'paid_by'					=> $result['paid_by'],
+				'fiscal_code'      			=> $result['fiscal_code'],
+				'receipt_id'      			=> $result['receipt_id'], 
+				'is_sent_dps'      			=> $result['is_sent_dps'], 
+				'sent_dps_at'      			=> date('d.m.Y', strtotime($result['sent_dps_at'])), 
+				'html_link'      			=> $this->checkBoxUA->getReceiptLink($result['receipt_id'],'html'),
+				'pdf_link'      			=> $this->checkBoxUA->getReceiptLink($result['receipt_id'],'pdf'),
+				'text_link'      			=> $this->checkBoxUA->getReceiptLink($result['receipt_id'],'text'),
+				'png_link'      			=> $this->checkBoxUA->getReceiptLink($result['receipt_id'],'png'),
+				'qrcode_link'      			=> $this->checkBoxUA->getReceiptLink($result['receipt_id'],'qrcode'),
+
 				'newversion'				=> ($result['template'] == 'kp'),
 				'reward'     				=> $this->currency->formatBonus($result['reward'], true),
 				'reward_used'   			=> $result['reward_used']?$this->currency->formatNegativeBonus($result['reward_used'], true):false,
@@ -2683,6 +2690,47 @@
 					$this->data['CHECK_CONCARDIS_STATUS_STAGE_1'] = true;
 				}
 			}
+
+
+			if (isset($this->request->post['needs_checkboxua'])) {
+				$this->data['needs_checkboxua'] = $this->request->post['needs_checkboxua'];
+				} elseif (!empty($order_info)) {
+				$this->data['needs_checkboxua'] = $order_info['needs_checkboxua'];
+				} else {
+				$this->data['needs_checkboxua'] = false;
+			}
+
+			if (!empty($order_info)) {
+				$this->data['paid_by'] = $order_info['paid_by'];				
+			}
+
+			$this->load->model('sale/receipt');
+
+
+
+			$this->data['receipts'] = array();
+			$receipts = $this->model_sale_receipt->getOrders(['filter_order_id' => $this->request->get['order_id']]);
+			
+			$this->data['create_receipt_checkbox'] = $this->url->link('sale/receipt/createOne', 'order_id=' . $this->request->get['order_id'] . '&token=' . $this->session->data['token']);
+
+			if ($receipts){
+				foreach($receipts as $receipt){
+					if ($receipt['receipt_id']){						
+						$this->data['receipts'][] = [
+							'fiscal_code'      			=> $receipt['fiscal_code'],
+							'receipt_id'      			=> $receipt['receipt_id'], 
+							'is_sent_dps'      			=> $receipt['is_sent_dps'], 
+							'sent_dps_at'      			=> date('d.m.Y', strtotime($receipt['sent_dps_at'])), 
+							'html_link'      			=> $this->checkBoxUA->getReceiptLink($receipt['receipt_id'],'html'),
+							'pdf_link'      			=> $this->checkBoxUA->getReceiptLink($receipt['receipt_id'],'pdf'),
+							'text_link'      			=> $this->checkBoxUA->getReceiptLink($receipt['receipt_id'],'text'),
+							'png_link'      			=> $this->checkBoxUA->getReceiptLink($receipt['receipt_id'],'png'),
+							'qrcode_link'      			=> $this->checkBoxUA->getReceiptLink($receipt['receipt_id'],'qrcode'),
+						];
+					}
+				}
+			}
+
 			
 			if (isset($this->request->post['pay_equire2'])) {
 				$this->data['pay_equire2'] = $this->request->post['pay_equire2'];
@@ -5170,10 +5218,7 @@
 			}
 		}
 		
-		protected function validateDelete() {
-			
-			
-			
+		protected function validateDelete() {				
 			if (!$this->user->hasPermission('modify', 'sale/order') || !$this->user->canUnlockOrders()) {
 				$this->error['warning'] = 'У вас нет прав для удаления заказов!';
 			}
@@ -6714,9 +6759,7 @@
 			$this->config->get('config_language_id'))));
 		}
 		
-		public function delete_order_transaction(){
-			
-			
+		public function delete_order_transaction(){					
 			$this->data['error'] = false;
 			
 			$this->load->model('sale/order');
@@ -8016,12 +8059,8 @@
 			echo number_format($total, 2, ',', ' ');
 		}
 				
-		public function save_and_print_invoice($auto_gen = false, $data = array()){
-			
-			
+		public function save_and_print_invoice($auto_gen = false, $data = array()){						
 			if ($auto_gen) {
-				
-				//подготовка данных под генерацию
 				if ($data['delivery_num'] == 1){
 					$_cheque_num = $data['cheque_num'];
 					} else {
@@ -8496,8 +8535,7 @@
 			}
 		}
 		
-		public function setTakenProduct(){
-			
+		public function setTakenProduct(){			
 			if (in_array($this->user->getUserGroup(), array(1, 15, 12, 19, 27, 13, 23)) or $this->user->getIsAV()) {
 				$order_product_id = $this->request->get['order_product_id'];
 				$this->db->query("UPDATE `".DB_PREFIX."order_product` SET `taken` = NOT(`taken`) WHERE `order_product_id` = '". (int)$order_product_id ."'");	

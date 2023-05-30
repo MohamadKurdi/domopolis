@@ -779,14 +779,46 @@
 											
 											<br/>
 											<?php if ($order['payment_method']) { ?>
-												<span style="font-size:11px; line-height:14px;"><?php echo $order['payment_method']; ?></span></br>
+												<span style="font-size:11px; line-height:14px;"><?php echo $order['payment_method']; ?></span> 
+												<span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:black;"><?php echo $order['payment_code']; ?></span>
+
+												<?php if ($order['paid_by']) { ?>
+													<span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:black;"><i class="fa fa-check"></i> <?php echo $order['paid_by']; ?></span>
+												<?php } ?>
+
+												<?php if ($order['needs_checkboxua']) { ?>
+													<?php if ($order['receipt_id']) { ?>
+														<span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:green;"><i class="fa fa-check"></i> ДФС <?php echo $order['fiscal_code']; ?></span>	
+													<?php } else { ?>
+														<span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:red;"><i class="fa fa-refresh"></i> ДФС</span>
+													<?php } ?>	
+
+													<?php if ($order['is_sent_dps']) { ?>
+														<span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:green;"><i class="fa fa-check"></i> <?php $order['sent_dps_at']; ?></span>	
+													<?php } ?>												
+												<? } ?>
+											</br>
+											<?php } ?>		
+											<?php if ($order['receipt_id']) { ?>
+												<span style="font-size:11px; line-height:14px; display:inline-block;">Фискальный чек:</span>
+
+												<a target="_blank" href="<?php echo $order['html_link']; ?>"><span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">HTML</span></a>
+         										<a target="_blank" href="<?php echo $order['pdf_link']; ?>"><span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">PDF</span></a>
+         										<a target="_blank" href="<?php echo $order['text_link']; ?>"><span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">TXT</span></a>
+         										<a target="_blank" href="<?php echo $order['qrcode_link']; ?>"><span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">QR</span></a>
+
+         										<br>
 											<?php } ?>
+
+
 											<?php if ($order['payment_secondary_method']) { ?>
 												<span style="font-size:11px; line-height:14px;"><?php echo $order['payment_secondary_method']; ?></span></br>
 											<?php } ?>
+
 											<?php if ($order['pay_type']) { ?>
 												<span style="font-size:11px; line-height:14px;"><?php echo $order['pay_type']; ?></span></br>
 											<?php } ?>
+
 											<?php if ($order['shipping_method']) { ?>
 												<span style="font-size:11px; line-height:14px;"><?php echo $order['shipping_method']; ?></span>
 											<?php } ?>

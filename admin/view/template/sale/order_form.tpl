@@ -3047,7 +3047,8 @@
 																	<? } ?>
 																	<tr>
 																		<td class="left"><b>Вторичный способ оплаты</b></td>
-																		<td class="left"><select name="payment_secondary">
+																		<td class="left">
+																		<select name="payment_secondary">
 																			<option value=""><?php echo $text_select; ?></option>
 																			<?php if ($payment_secondary_code) { ?>
 																				<option value="<?php echo $payment_secondary_code; ?>" selected="selected"><?php echo $payment_secondary_method; ?></option>
@@ -3068,6 +3069,69 @@
 																		<td style="background-color:#7F00FF; padding:5px; color:#fff;">Внимание! Картами "МИР" нельзя оплачивать платежи на Concardis. Это ограничение самой платежной системы МИР. Только для таких случаев можно включать PayKeeper.</td>
 																	</tr>
 																<? } ?>
+
+																<tr>
+																	<td class="left"><b>Фактически оплачен</b></td>
+																	<td class="left">
+																		<?php if ($paid_by) { ?>
+																			<span style="font-size:14px; line-height:16px; display:inline-block; padding:3px 5px; color:#FFF; background-color:black;">
+																						<i class="fa fa-check"></i> <?php echo $paid_by; ?>
+																			</span>		
+																		<?php } ?>
+																	</td>
+																</tr>
+
+																<? if (in_array($currency_code, array('UAH')) && $this->config->get('receipt_login')) { ?>
+																	<tr>
+																		<td class="left">
+																			<b>Фискализация</b><br />
+																			Checkbox.ua API
+																		</td>
+																		<td class="left">
+																				<input id="needs_checkboxua" class="checkbox onchangeedit_direct" type="checkbox" name="needs_checkboxua" value="1" <?php if ($needs_checkboxua) { ?>checked="checked"<?php } ?>>
+																				<label for="needs_checkboxua"><span style="color:#cf4a61; font-weight:700;"><i class="fa fa-checkbox" aria-hidden="true"></i> требуется</span></label>
+																			<br />
+																			<span class="help" style="color:#cf4a61;"><i class="fa fa-exclamation-triangle"></i> Устанавливается автоматически в случае оплаты эквайрингом! Здесь отображено исключительно для администратора! Руками, пожалуйста, не трогать:)</span>
+
+																			<?php if ($receipts) { ?>
+																				<?php foreach ($receipts as $receipt) { ?>
+																					<span style="font-size:10px; line-height:12px; display:inline-block; padding:3px; color:#FFF; background-color:green;">
+																						<i class="fa fa-check"></i> Checkbox <?php echo $receipt['fiscal_code']; ?>
+																					</span>		
+																					<?php if ($receipt['is_sent_dps']) { ?>
+																						<span style="font-size:10px; line-height:12px; display:inline-block; padding:3px; color:#FFF; background-color:green;"><i class="fa fa-check"></i> ДФС <?php echo $receipt['fiscal_code']; ?></span>	
+																						<span style="font-size:10px; line-height:12px; display:inline-block; padding:3px; color:#FFF; background-color:green;"><i class="fa fa-check"></i> <?php echo $receipt['sent_dps_at']; ?></span>	
+																					<?php } ?>	
+
+
+																					<?php if ($receipt['receipt_id']) { ?>											
+																							<a target="_blank" href="<?php echo $receipt['html_link']; ?>"><span style="font-size:10px; line-height:12px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">HTML</span></a>
+         																					<a target="_blank" href="<?php echo $receipt['pdf_link']; ?>"><span style="font-size:10px; line-height:12px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">PDF</span></a>
+         																					<a target="_blank" href="<?php echo $receipt['text_link']; ?>"><span style="font-size:10px; line-height:12px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">TXT</span></a>
+         																					<a target="_blank" href="<?php echo $receipt['qrcode_link']; ?>"><span style="font-size:10px; line-height:12px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">QR</span></a>
+																					<?php } ?>
+																				<? } ?>
+																			<?php } else { ?>
+																				<span style="font-size:10px; line-height:12px; display:inline-block; padding:3px; color:#FFF; background-color:red;"><i class="fa fa-refresh"></i> Пока нет фискальных чеков</span>																				
+																				<?php if ($this->user->getIsAV()) { ?>
+																					<span onclick="do_checkbox_receipt();" style="cursor:pointer; font-size:10px; line-height:12px; display:inline-block; padding:3px; color:#FFF; background-color:grey;">Сформировать фискальный чек. Только для администратора</span><br />
+
+																					<script>
+																						function do_checkbox_receipt(){
+																							swal({title: "Создать фискальный чек?", text: "Информация о продаже будет передана в ДФС. Формировать только если понимаешь что делаешь!", type: "warning", showCancelButton: true,  confirmButtonColor: "#F96E64",  confirmButtonText: "Создать", cancelButtonText: "Отмена",  closeOnConfirm: true}, 
+																							 	function() { $('#receipt-checkbox-result').load('<?php echo $create_receipt_checkbox; ?>');} );
+																						}
+																					</script>
+
+																					<span id="receipt-checkbox-result"></span>
+																				<?php } ?>
+																			<?php } ?>
+																		</td>
+																	</tr>
+																<?php } else { ?>
+																	<input type="hidden" name="needs_checkboxua" value="0" />
+																<? } ?>
+
 																
 																<tr>
 																	<td><b>Эквайринг</b></td>

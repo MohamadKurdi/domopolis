@@ -631,8 +631,6 @@
 			
 		}
 		
-		
-		
 		public function editOrder($order_id, $data, $do_not_check_closed = false) {
 			$this->load->model('localisation/country');
 			$this->load->model('localisation/zone');
@@ -905,6 +903,7 @@
 			urgent_buy   			= '" . (int)$data['urgent_buy'] . "',
 			wait_full   			= '" . (int)$data['wait_full'] . "',
 			ua_logistics   			= '" . (int)$data['ua_logistics'] . "',
+			needs_checkboxua   		= '" . (int)$data['needs_checkboxua'] . "',
 			concardis_id   			= '" . $this->db->escape($data['concardis_id']) . "'
 			WHERE order_id 			= '" . (int)$order_id . "'");
 			
@@ -2087,8 +2086,7 @@
 						$this->model_feed_exchange1c->getOrderSuppliesXML($order_id);
 					*/
 				}
-			}
-			
+			}			
 		}
 		
 		
@@ -2427,6 +2425,8 @@
 				'nbt_csi'              	=> $order_query->row['nbt_csi'],				
 				'closed'                => $order_query->row['closed'],
 				'salary_paid'           => $order_query->row['salary_paid'],				
+				'needs_checkboxua'      => $order_query->row['needs_checkboxua'],				
+				'paid_by'      			=> $order_query->row['paid_by'],
 				'urgent'				=> isset($order_query->row['urgent'])?$order_query->row['urgent']:0,
 				'urgent_buy'			=> isset($order_query->row['urgent_buy'])?$order_query->row['urgent_buy']:0,
 				'wait_full'				=> isset($order_query->row['wait_full'])?$order_query->row['wait_full']:0,
@@ -2453,7 +2453,7 @@
 		}
 		
 		public function getOrders($data = array()) {
-			$sql = "SELECT DISTINCT o.order_id, o.preorder, o.pwa, o.yam, o.yam_id, o.yam_shipment_date, o.yam_shipment_id, o.yam_box_id, o.yam_fake, o.yam_status, o.yam_substatus, o.template, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.customer_id, o.tracker_xml, o.shipping_code,
+			$sql = "SELECT DISTINCT o.order_id, o.preorder, o.pwa, o.yam, o.yam_id, o.yam_shipment_date, o.yam_shipment_id, o.yam_box_id, o.yam_fake, o.yam_status, o.yam_substatus, o.template, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.customer_id, o.tracker_xml, o.shipping_code, o.needs_checkboxua, o.paid_by,
 			(SELECT SUM(reward) FROM order_product WHERE order_id = o.order_id) as reward,
 			(SELECT value_national FROM order_total WHERE order_id = o.order_id AND code = 'reward' LIMIT 1) as reward_used,
 			(SELECT os.name FROM order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status, 
@@ -2462,8 +2462,10 @@
 			(SELECT nbt_csi FROM customer c WHERE c.customer_id = o.customer_id) as nbt_csi, 
 			(SELECT os.status_bg_color FROM order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status_bg_color, 
 			(SELECT os.status_txt_color FROM order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status_txt_color, 
-			(SELECT os.status_fa_icon FROM order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status_fa_icon, o.currency_code, o.currency_value, o.date_added, o.date_modified, o.store_id, o.affiliate_id, o.telephone, o.fax, o.faxname, o.shipping_country, o.shipping_zone, o.shipping_address_1, o.payment_address_1, o.shipping_address_struct, o.shipping_city, o.email, o.comment, o.payment_postcode, o.payment_method, o.payment_secondary_method, o.shipping_method, o.total, o.total_national, o.order_status_id, o.currency_code, o.currency_value, o.date_added, o.date_modified, o.courier_id, o.manager_id, o.store_url, o.part_num, o.pay_type, o.ttn, o.reject_reason_id, o.from_waitlist, o.urgent, o.urgent_buy, o.wait_full, o.first_referrer, o.last_referrer, o.ua_logistics, o.date_delivery_actual, o.shipping_country_id, o.probably_cancel, o.probably_cancel_reason,o.probably_close,o.probably_close_reason,o.csi_average,o.csi_reject,o.probably_problem,o.probably_problem_reason, (SELECT delivery_code FROM order_ttns WHERE order_id = o.order_id AND ttn LIKE (o.ttn) LIMIT 1) as delivery_code, changed, o.closed, o.salary_paid FROM `order` o";
+			(SELECT os.status_fa_icon FROM order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status_fa_icon, o.currency_code, o.currency_value, o.date_added, o.date_modified, o.store_id, o.affiliate_id, o.telephone, o.fax, o.faxname, o.shipping_country, o.shipping_zone, o.shipping_address_1, o.payment_address_1, o.shipping_address_struct, o.shipping_city, o.email, o.comment, o.payment_postcode, o.payment_method, o.payment_code, o.payment_secondary_method, o.shipping_method, o.total, o.total_national, o.order_status_id, o.currency_code, o.currency_value, o.date_added, o.date_modified, o.courier_id, o.manager_id, o.store_url, o.part_num, o.pay_type, o.ttn, o.reject_reason_id, o.from_waitlist, o.urgent, o.urgent_buy, o.wait_full, o.first_referrer, o.last_referrer, o.ua_logistics, o.date_delivery_actual, o.shipping_country_id, o.probably_cancel, o.probably_cancel_reason,o.probably_close,o.probably_close_reason,o.csi_average,o.csi_reject,o.probably_problem,o.probably_problem_reason, (SELECT delivery_code FROM order_ttns WHERE order_id = o.order_id AND ttn LIKE (o.ttn) LIMIT 1) as delivery_code, changed, o.closed, o.salary_paid, orec.receipt_id, orec.serial, orec.fiscal_code, orec.is_created_offline, orec.is_sent_dps, orec.sent_dps_at, orec.fiscal_date FROM `order` o";
 			
+			$sql .= " LEFT JOIN order_receipt orec ON (o.order_id = orec.order_id)  ";
+
 			if (!empty($data['filter_order_id']) || !empty($data['filter_product_id'])) {
 				if (!is_numeric($data['filter_order_id']) || !empty($data['filter_product_id'])){				
 					$sql .= " LEFT JOIN order_product op ON op.order_id = o.order_id";
@@ -2966,8 +2968,7 @@
 			
 			$query = $this->db->query("SELECT op.* FROM order_product op WHERE order_product_id = '" . (int)$order_product_id . "' LIMIT 1");
 			
-			return $query->row;
-			
+			return $query->row;		
 		}
 		
 		public function getOrderProductUntakenByID($order_product_id) {
@@ -4112,7 +4113,7 @@
 		}
 		
 		public function getOrderCourierAllPaymentMethods(){
-			$query = $this->db->query("SELECT DISTINCT(payment_code), payment_method FROM `order` WHERE LENGTH(payment_code)>3 AND LENGTH(payment_method)>3 AND DATE(date_added) >= DATE_SUB(NOW(), INTERVAL 3 MONTH) AND order_status_id > 0 GROUP BY payment_code");
+			$query = $this->db->query("SELECT DISTINCT(payment_code), payment_method FROM `order` WHERE LENGTH(payment_code)>2 AND LENGTH(payment_method)>2 AND DATE(date_added) >= DATE_SUB(NOW(), INTERVAL 3 MONTH) AND order_status_id > 0 GROUP BY payment_code");
 			
 			$data = array();
 			foreach ($query->rows as $row){
