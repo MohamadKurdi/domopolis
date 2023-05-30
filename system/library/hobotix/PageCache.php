@@ -191,6 +191,17 @@ final class PageCache{
 					}
 				}
 
+				$shortUrlMapConfig = loadJsonConfig('shorturlmap');
+				if ($shortUrlMapConfig){
+					foreach ($shortUrlMapConfig as $key => $code){
+						$matches = [];
+						preg_match('/^[' . $code . '][0-9]+\//', $_REQUEST['_route_'], $matches);				
+						if (count($matches) == 1){
+							return true;
+						}
+					}
+				}
+
 				if ($_REQUEST['_route_'] == ''){					
 					return true;
 				}
