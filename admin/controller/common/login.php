@@ -24,13 +24,14 @@
 			$this->data['isMobile'] = $this->mobileDetect->isMobile();
 			$this->data['isAndroid'] = $this->mobileDetect->isAndroid();
 			
-			
-			$connection = @fsockopen($this->config->get('config_ldap_host'), 3268, $error, $error_msg, 3);
-			
-			if (!is_resource($connection)){
-				$this->data['connection_error_message'] = $error_msg;
-			} else {
-				fclose($connection);
+			if ($this->config->get('config_ldap_auth_enable')){							
+				$connection = @fsockopen($this->config->get('config_ldap_host'), 3268, $error, $error_msg, 3);
+
+				if (!is_resource($connection)){
+					$this->data['connection_error_message'] = $error_msg;
+				} else {
+					fclose($connection);
+				}
 			}
 			
 			$this->data['heading_title'] = $this->language->get('heading_title');

@@ -33,7 +33,6 @@ class User {
 
 	public function __construct($registry) {
 		$this->db 		= $registry->get('db');
-		$this->log 		= new Log('ldap_authorizations.txt');
 		$this->request 	= $registry->get('request');
 		$this->session 	= $registry->get('session');
 		$this->config 	= $registry->get('config');
@@ -42,6 +41,7 @@ class User {
 		$this->ldap_host 	= $this->config->get('config_ldap_host');
 		$this->ldap_domain 	= $this->config->get('config_ldap_domain');
 		$this->ldap_group 	= $this->config->get('config_ldap_group');
+		$this->log 		= new Log('ldap_authorizations.txt');
 
 
 		if (isset($this->session->data['user_id'])) {
