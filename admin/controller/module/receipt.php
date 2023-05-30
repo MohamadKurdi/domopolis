@@ -94,15 +94,15 @@ class ControllerModuleReceipt extends Controller {
         ];
 
         #integration_link = 
-        $data['integration_link'] = 'https://nazarkachurak.com/checkbox-integration?utm_from='.HTTP_CATALOG;
-		$data['video_link'] = 'https://nazarkachurak.com/checkbox-opencart-manual/?utm_from='.HTTP_CATALOG;
-        $data['token'] = $this->session->data['token'];
+        $data['integration_link'] 	= '';
+		$data['video_link'] 		= '';
+        $data['token'] 				= $this->session->data['token'];
         
 		
 		$this->load->model('sale/receipt');
-       	$data['total_extensions'] = $this->model_sale_receipt->getAllSystemTotals(); 
-		$data['all_payments'] = $this->model_sale_receipt->getAllSystemPayments();
-		$data['all_shippings'] = $this->model_sale_receipt->getAllSystemShippings();
+       	$data['total_extensions'] 	= $this->model_sale_receipt->getAllSystemTotals(); 
+		$data['all_payments'] 		= $this->model_sale_receipt->getAllSystemPayments();
+		$data['all_shippings'] 		= $this->model_sale_receipt->getAllSystemShippings();
 
 
         foreach($data_fields as $field){
@@ -143,8 +143,8 @@ class ControllerModuleReceipt extends Controller {
 
 	private function addDataTable() {
         
-		$this->db->query("DROP TABLE IF EXISTS " . DB_PREFIX . "order_receipt");        
-        $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "order_receipt (
+		$this->db->query("DROP TABLE IF EXISTS order_receipt");        
+        $this->db->query("CREATE TABLE IF NOT EXISTS order_receipt (
 				  `order_receipt_id` int(11) NOT NULL AUTO_INCREMENT,
 				  `order_id` int(11) NOT NULL,
 				  `receipt_id` varchar(60) NOT NULL,
@@ -158,10 +158,10 @@ class ControllerModuleReceipt extends Controller {
 				  `all_json_data` mediumtext NOT NULL,
 				  `type` varchar(64) NOT NULL,
 				  PRIMARY KEY (`order_receipt_id`)
-				) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 
-        $this->db->query("DROP TABLE IF EXISTS " . DB_PREFIX . "shift");
-        $this->db->query("CREATE TABLE IF NOT EXISTS " . DB_PREFIX . "shift (
+        $this->db->query("DROP TABLE IF EXISTS shift");
+        $this->db->query("CREATE TABLE IF NOT EXISTS shift (
 				    `id` int(11) NOT NULL AUTO_INCREMENT,
 					  `shift_id` varchar(64) NOT NULL,
 					  `serial` int(11) NOT NULL,
@@ -169,7 +169,7 @@ class ControllerModuleReceipt extends Controller {
 					  `z_report_id` varchar(64) NOT NULL,
 					  `all_json_data` mediumtext NOT NULL,
 				  PRIMARY KEY (`id`)
-				) ENGINE=MyISAM DEFAULT CHARSET=utf8; ");
+				) ENGINE=InnoDB DEFAULT CHARSET=utf8; ");
 
 	  	$this->load->model('user/user_group');
 

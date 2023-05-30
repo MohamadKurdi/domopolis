@@ -75,12 +75,11 @@
                      <tbody>
                         <?php foreach($receipts_history as $history){?>
                            <tr>
-                              <td><?php echo $history['type']; ?> 
-                           </td>
+                              <td><?php echo $history['type']; ?></td>
                            <td><?php echo $history['fiscal_date']; ?>
                         </td>
                         <td>  
-                           <a target="_blank" href="<?php echo $history['html_link']; ?>" class="btn btn-default button3 mini show-receipt">-== HTML==></a>
+                           <a target="_blank" href="<?php echo $history['html_link']; ?>" class="btn btn-default button3 mini show-receipt"> -== HTML==></a>
                            <a target="_blank" href="<?php echo $history['text_link']; ?>" class="btn btn-default button3 mini show-receipt"> -== Text==></a><br>
                         </td>
                      </tr>

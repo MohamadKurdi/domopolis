@@ -3,7 +3,7 @@ class ControllerSaleReceipt extends Controller {
 	private $error = array();
 	private $checkbox_api;
 	private $setting;
-	private $limit = 15;
+	private $limit = 1;
 
 	public function __construct($registry){
 		ini_set('display_errors', 1);
@@ -73,7 +73,7 @@ class ControllerSaleReceipt extends Controller {
         $json = array();
         if(isset($this->request->get['receipt_id'])){
             $receipt_id = $this->request->get['receipt_id'];
-            $json = $this->checkbox_api->getReceipt($receipt_id);
+            $json = $this->checkBoxUA->getReceipt($receipt_id);
         }
 
         $this->response->addHeader('Content-Type: application/json');
@@ -234,19 +234,19 @@ class ControllerSaleReceipt extends Controller {
 				'preview_data'      	=> (!$result['receipt_id']) ? $this->getPreviewData($result['order_id']) : array(),
 
 				'update_link'      	=> $this->url->link('sale/receipt/updateReceiptInfo', 'token=' . $this->session->data['token'] . '&receipt_id=' . $result['receipt_id'] . $url, true),
-				'html_link'      	=> $this->checkbox_api->getReceiptLink($result['receipt_id'],'html'),
-				'pdf_link'      	=> $this->checkbox_api->getReceiptLink($result['receipt_id'],'pdf'),
-				'text_link'      	=> $this->checkbox_api->getReceiptLink($result['receipt_id'],'text'),
-				'png_link'      	=> $this->checkbox_api->getReceiptLink($result['receipt_id'],'png'),
-				'qrcode_link'      	=> $this->checkbox_api->getReceiptLink($result['receipt_id'],'qrcode'),
+				'html_link'      	=> $this->checkBoxUA->getReceiptLink($result['receipt_id'],'html'),
+				'pdf_link'      	=> $this->checkBoxUA->getReceiptLink($result['receipt_id'],'pdf'),
+				'text_link'      	=> $this->checkBoxUA->getReceiptLink($result['receipt_id'],'text'),
+				'png_link'      	=> $this->checkBoxUA->getReceiptLink($result['receipt_id'],'png'),
+				'qrcode_link'      	=> $this->checkBoxUA->getReceiptLink($result['receipt_id'],'qrcode'),
 
 				'is_sent_dps'      		=> $result['is_sent_dps'], 
 				'sent_dps_at'      		=> $result['sent_dps_at'], 
 				'is_created_offline' 	=> $result['is_created_offline'] ? $this->language->get('text_receipt_is_offline') : $this->language->get('text_receipt_is_online') ,
 
-				'fiscal_date'      	=> $this->checkbox_api->parse_date($result['fiscal_date']), 
-				'customer'      	=> $result['customer'], 
-				'email'      		=> $result['email'], 
+				'fiscal_date'      		=> $this->checkBoxUA->parse_date($result['fiscal_date']), 
+				'customer'      		=> $result['customer'], 
+				'email'      			=> $result['email'], 
 				'telephone'      		=> $result['telephone'], 
 				'order_status'        	=> $result['order_status'],
 				'total'        			=> $this->beautiful_price($result['total_national']) . ' ' . $result['currency_code'],
@@ -255,7 +255,6 @@ class ControllerSaleReceipt extends Controller {
 				'edit'          		=> $this->url->link('sale/receipt/edit', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, true),
 				'create'          		=> $this->url->link('sale/receipt/createOne', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, true),
 				'preview'          		=> $this->url->link('sale/receipt/preview', 'token=' . $this->session->data['token'] . '&order_id=' . $result['order_id'] . $url, true),
-
             );
 		}
 
@@ -265,11 +264,11 @@ class ControllerSaleReceipt extends Controller {
 			$data['receipts_history'][] = array(
 				'type' 				=> $item['type'],
 				'receipt_id' 		=> $item['receipt_id'],
-				'fiscal_date' 		=> $this->checkbox_api->parse_date($item['fiscal_date']),
-				'html_link'      	=> $this->checkbox_api->getReceiptLink($item['receipt_id'],'html'),
-				'pdf_link'      	=> $this->checkbox_api->getReceiptLink($item['receipt_id'],'pdf'),
-				'text_link'      	=> $this->checkbox_api->getReceiptLink($item['receipt_id'],'text'),
-				'qrcode_link'      	=> $this->checkbox_api->getReceiptLink($item['receipt_id'],'qrcode'),
+				'fiscal_date' 		=> $this->checkBoxUA->parse_date($item['fiscal_date']),
+				'html_link'      	=> $this->checkBoxUA->getReceiptLink($item['receipt_id'],'html'),
+				'pdf_link'      	=> $this->checkBoxUA->getReceiptLink($item['receipt_id'],'pdf'),
+				'text_link'      	=> $this->checkBoxUA->getReceiptLink($item['receipt_id'],'text'),
+				'qrcode_link'      	=> $this->checkBoxUA->getReceiptLink($item['receipt_id'],'qrcode'),
 			); 
 		}
 
@@ -277,9 +276,9 @@ class ControllerSaleReceipt extends Controller {
 		$shifts_history = $this->model_sale_receipt->getShifts();
 		foreach ($shifts_history as $item) {	
 			$data['shifts_history'][] = array(
-				'serial' => $item['serial'],
-				'z_report_id' => $item['z_report_id'], 
-				'text_link'      => $this->checkbox_api->getReport($item['z_report_id']), 
+				'serial' 			=> $item['serial'],
+				'z_report_id' 		=> $item['z_report_id'], 
+				'text_link'      	=> $this->checkBoxUA->getReport($item['z_report_id']), 
 			); 
 		}
 
@@ -430,15 +429,15 @@ class ControllerSaleReceipt extends Controller {
 		$data['pagination'] = $pagination->render();
 
 
-		$data['filter_fiscal_code'] 	= $filter_fiscal_code;
-		$data['filter_order_id'] 		= $filter_order_id;
-		$data['filter_customer'] 		= $filter_customer;
-		$data['filter_order_status'] 	= $filter_order_status;
-		$data['filter_order_payment_code'] = $filter_order_payment_code;
-		$data['filter_has_receipt'] 	= $filter_has_receipt;
-		$data['filter_date_added'] 		= $filter_date_added;
-		$data['sort'] 					= $sort;
-		$data['order'] 					= $order;
+		$data['filter_fiscal_code'] 		= $filter_fiscal_code;
+		$data['filter_order_id'] 			= $filter_order_id;
+		$data['filter_customer'] 			= $filter_customer;
+		$data['filter_order_status'] 		= $filter_order_status;
+		$data['filter_order_payment_code'] 	= $filter_order_payment_code;
+		$data['filter_has_receipt'] 		= $filter_has_receipt;
+		$data['filter_date_added'] 			= $filter_date_added;
+		$data['sort'] 						= $sort;
+		$data['order'] 						= $order;
 
 		###
 		$data['current_shifts'] = $this->cache->get('current_shift');
@@ -525,14 +524,14 @@ class ControllerSaleReceipt extends Controller {
 		$order_info = $this->model_sale_receipt->getOrder($order_id);
 		if(!$order_info){ return false;}
 		
-		$receipt_data = $this->checkbox_api->checkReceipt($order_info);		
+		$receipt_data = $this->checkBoxUA->checkReceipt($order_info);		
 
 		if($receipt_data['goods']){
 			foreach ($receipt_data['goods'] as $item) {
 				$symbol_text = '';
 				if(isset($item['good']['tax']) && $item['good']['tax'] ){					
 					foreach ($item['good']['tax'] as $code) {
-						$symbol_text .= $this->checkbox_api->getTaxSymbolByCode($code);
+						$symbol_text .= $this->checkBoxUA->getTaxSymbolByCode($code);
 					} 					
 				}
 				$data['products'][] = array(
@@ -576,8 +575,8 @@ class ControllerSaleReceipt extends Controller {
 			$data['footer'] = $receipt_data['footer'];			
 		}
 
-		if( $this->checkbox_api->getTax() ){
-			$data['taxes'] = $this->checkbox_api->getTax();
+		if( $this->checkBoxUA->getTax() ){
+			$data['taxes'] = $this->checkBoxUA->getTax();
 		}
 
 		return $data;
@@ -641,23 +640,15 @@ class ControllerSaleReceipt extends Controller {
 		return !$this->error;
 	}
 
-	public function changeOneSettingKey() {
-		de($this->request->get);
-
-		echo "\r\n Hello NAzar";
-	 }
+	public function changeOneSettingKey() {		
+	}
 
 
 	private function init() {
-		$this->setting = $this->getSetting();
-		
-		$this->load->library('hobotix/CheckBoxUA');
-
-		$this->checkbox_api = new hobotix\CheckBoxUA($this->registry);
+		$this->setting = $this->getSetting();		
 		if (!empty($this->setting['login']) && !empty($this->setting['password'])) {		 		
-			$this->checkbox_api->setAuth($this->setting['login'], $this->setting['password'], $this->setting['x_license_key'], $this->setting['receipt_is_dev_mode']);
-		}		 
-		
+			$this->checkBoxUA->setAuth($this->setting['login'], $this->setting['password'], $this->setting['x_license_key'], $this->setting['receipt_is_dev_mode']);
+		}		 		
 	}
 
 	private function getSetting() {
@@ -668,8 +659,6 @@ class ControllerSaleReceipt extends Controller {
 		return $receipt_setting;
 	}
 
-
-
 	public function createOne(){
         $json = array();
 		if(isset($this->request->get['order_id'])){
@@ -677,13 +666,16 @@ class ControllerSaleReceipt extends Controller {
 
             $order_info = $this->model_sale_receipt->getOrder($order_id);
             if($order_info){
-                $json = $this->checkbox_api->receiptsSell($order_info);
+                $json = $this->checkBoxUA->receiptsSell($order_info);
             }
-
 		}
 
-		$this->response->addHeader('Content-Type: application/json');
-		$this->response->setOutput(json_encode($json));
+		if (!empty($json['success'])){
+			$this->response->setOutput(json_encode($json['success']));
+		} else {			
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput(json_encode($json));
+		}
 	}
 
 	public function createSelected($other_orders=array() ){
@@ -702,7 +694,7 @@ class ControllerSaleReceipt extends Controller {
             foreach ($orders as $order_id) {
                 $order_info = $this->model_sale_receipt->getOrder($order_id);
                 if($order_info){
-                    $receipt_data[$order_id] = $this->checkbox_api->receiptsSell($order_info);
+                    $receipt_data[$order_id] = $this->checkBoxUA->receiptsSell($order_info);
                 }
             }
 		}
@@ -752,37 +744,6 @@ class ControllerSaleReceipt extends Controller {
             $this->getList();
 	}
 
-	public function createCron($other_orders=array() ){
-	    $receipt_data = array();
-		$orders = array();
-
-		if($other_orders){
-            $orders = $other_orders;
-        }
-
-		if($orders){
-            foreach ($orders as $order_id) {
-                $order_info = $this->model_sale_receipt->getOrder($order_id);
-                if($order_info){
-                    $receipt_data[$order_id] = $this->checkbox_api->receiptsSell($order_info);
-                }
-            }
-		}
-		print_r($receipt_data);
-        # print message
-        $message = '';
-        foreach ($receipt_data as $order_id=>$receipt){
-
-            if(isset($receipt['error']['message'])){
-                $message .= "\r\n<BR>".$receipt['error']['message'];
-            }
-            if(isset($receipt['success'])){
-                $message .= "\r\n<BR> <b>NEW</b> ".$receipt['success'];
-            }
-
-        }
-        echo  $message;
-	}
 
     /*
      * Зміни (shift)
@@ -791,7 +752,7 @@ class ControllerSaleReceipt extends Controller {
     public function shiftOpen(){
         $this->init();
         $json = array();
-        $json = $this->checkbox_api->createShifts();
+        $json = $this->checkBoxUA->createShifts();
  
         $output = '';
         if(isset($json['id']) ){
@@ -821,7 +782,7 @@ class ControllerSaleReceipt extends Controller {
         $this->init();
         $json = array();
 
-        $json = $this->checkbox_api->closeShifts();
+        $json = $this->checkBoxUA->closeShifts();
 
         if(isset($json['id']) ){
 
@@ -832,7 +793,7 @@ class ControllerSaleReceipt extends Controller {
 		            </div>
 		          </div>';
 			if(isset($json['z_report']['id']) && $json['z_report']['id']){
-				$output .= '<script> modal_z_report("'.$this->checkbox_api->getReport($json['z_report']['id']).'"); </script>';
+				$output .= '<script> modal_z_report("'.$this->checkBoxUA->getReport($json['z_report']['id']).'"); </script>';
 			}
 
         }elseif(isset($json['message'])){
@@ -855,7 +816,7 @@ class ControllerSaleReceipt extends Controller {
 		$current_shifts = $this->cache->get('current_shift');
 		  
 		if(!$current_shifts){
-			$current_shifts = $this->checkbox_api->getShifts();
+			$current_shifts = $this->checkBoxUA->getShifts();
 		}
 		if(isset($current_shifts['error'])){
 
@@ -878,19 +839,19 @@ class ControllerSaleReceipt extends Controller {
 
 		}elseif($current_shifts){
 
-				$organization_title = $this->checkbox_api->getCurrentOrganization(); 
-				$json['opened_at'] = $this->checkbox_api->parse_date($current_shifts['opened_at'],'H:i');
-				$json['updated_at'] = !empty($current_shifts['balance']['updated_at']) ? $this->checkbox_api->parse_date($current_shifts['balance']['updated_at'],'Y-m-d H:i'): '';
+				$organization_title = $this->checkBoxUA->getCurrentOrganization(); 
+				$json['opened_at'] = $this->checkBoxUA->parse_date($current_shifts['opened_at'],'H:i');
+				$json['updated_at'] = !empty($current_shifts['balance']['updated_at']) ? $this->checkBoxUA->parse_date($current_shifts['balance']['updated_at'],'Y-m-d H:i'): '';
 				$json['id'] = $current_shifts['id'];
 				$json['status'] = $current_shifts['status'];
 				$json['balance'] = $current_shifts['balance'];
-				$json['balance']['updated_at'] = !empty($current_shifts['balance']['updated_at']) ? $this->checkbox_api->parse_date($current_shifts['balance']['updated_at']): ''; 
+				$json['balance']['updated_at'] = !empty($current_shifts['balance']['updated_at']) ? $this->checkBoxUA->parse_date($current_shifts['balance']['updated_at']): ''; 
 		 
 				$json['cash_register'] = $current_shifts['cash_register'];
-				$json['cash_register']['created_at'] = $this->checkbox_api->parse_date($current_shifts['cash_register']['created_at']);
-				$json['cash_register']['updated_at'] = $this->checkbox_api->parse_date($current_shifts['cash_register']['updated_at']);
+				$json['cash_register']['created_at'] = $this->checkBoxUA->parse_date($current_shifts['cash_register']['created_at']);
+				$json['cash_register']['updated_at'] = $this->checkBoxUA->parse_date($current_shifts['cash_register']['updated_at']);
 
-				$datetime_opened_at = new DateTime($this->checkbox_api->parse_date($current_shifts['opened_at'],'Y-m-d H:i'));
+				$datetime_opened_at = new DateTime($this->checkBoxUA->parse_date($current_shifts['opened_at'],'Y-m-d H:i'));
 				$datetimeObj1 = new DateTime(date("Y-m-d H:i"));
 				$datetimeObj2 = new DateTime( date("Y-m-d 23:59:59"));
 
@@ -990,7 +951,7 @@ class ControllerSaleReceipt extends Controller {
 		);
  	
  		if($service_data['service_value']>0){
- 			$json = $this->checkbox_api->receiptsService($service_data);
+ 			$json = $this->checkBoxUA->receiptsService($service_data);
 			$this->shiftUpdate();
  		}else{
  			$json['error']['message'] = 'Введіть сумму';
@@ -999,68 +960,115 @@ class ControllerSaleReceipt extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}
 
-    
-    public function cron() {
-        #1. Чи є замовлення
-        if(!$this->config->get('receipt_order_status_id')){
-            exit('no variable '.$this->config->get('receipt_order_status_id'));
+
+
+	public function createCron($other_orders=array() ){
+	    $receipt_data = array();
+		$orders = array();
+
+		if($other_orders){
+            $orders = $other_orders;
         }
-		# de($this->config->get('receipt_cron_order_payment_code'));
-		#receipt_cron_order_payment_code
+
+		if($orders){
+            foreach ($orders as $order_id) {
+                $order_info = $this->model_sale_receipt->getOrder($order_id);
+                if($order_info){
+                    $receipt_data[$order_id] = $this->checkBoxUA->receiptsSell($order_info);
+                }
+            }
+		}
+		        
+        $message = '';
+        foreach ($receipt_data as $order_id => $receipt){
+            if(isset($receipt['error']['message'])){
+                $message .= $receipt['error']['message'];
+            }
+
+            if(isset($receipt['success'])){
+                $message .= $receipt['success'];
+            }
+        }
+        
+        echoLine($message, 'i');
+	}
+    
+    public function cron() {    	
+    	$processingReceipts = $this->model_sale_receipt->getProcessingReceipts();
+
+    	if ($processingReceipts){
+    		echoLine('[ControllerSaleReceipt::cron] Have processing receipts, ' . count($processingReceipts), 'i');
+
+    		foreach($processingReceipts as $processingReceiptID){
+    			$this->checkBoxUA->getReceipt($processingReceiptID);
+    		}
+    	}
+
+
+        //DO NOTHING IN BETWEEN 23:00 AND 01:00
+        if (!is_cli()){
+        	echoLine('[ControllerSaleReceipt::cron] ONLY CLI MODE', 'e');
+			exit();
+        }
+
+        $this->load->library('Timer');
+
+        $interval = new Interval('23:00' . '-' . '01:00');
+        if ($interval->isNow()){
+        	echoLine('[ControllerSaleReceipt::cron] NOT ALLOWED TIME ' . date('H:i'), 'e');
+        	return;
+        } else {
+        	echoLine('[ControllerSaleReceipt::cron] ALLOWED TIME ' . date('H:i'), 's');				
+        }
 
         $filter_data = array(
-            'filter_order_status'        => $this->config->get('receipt_order_status_id'),
-			'filter_order_payment_code'        => $this->config->get('receipt_cron_order_payment_code'),
-            'filter_has_receipt'         => 0,
-            'filter_date_modified_2day'       => date('Y-m-d'),
-            'start'                   => 0,
-            'limit'                   => $this->limit
+        //  'filter_order_status'        		=> $this->config->get('receipt_order_status_id'),
+		//	'filter_order_payment_code'        	=> $this->config->get('receipt_cron_order_payment_code'),
+        	'filter_needs_checkboxua'			=> 1,
+            'filter_has_receipt'         		=> 0,
+            'filter_date_modified_2day'       	=> date('Y-m-d'),
+            'start'                   			=> 0,
+            'limit'                   			=> $this->limit
         );
-        #de($filter_data);
-        $receipt_total = $this->model_sale_receipt->getTotalOrders($filter_data);
-        $results = $this->model_sale_receipt->getOrders($filter_data);
 
-         #de($receipt_total );
-         #de($results,1);
+        $receipt_total 	= $this->model_sale_receipt->getTotalOrders($filter_data);
+        $results 		= $this->model_sale_receipt->getOrders($filter_data);
+
+        echoLine('[ControllerSaleReceipt::cron] Selected ' . $receipt_total . ' orders', 'i');
 
         if($results){
             $this->init();
-		   #2. Чи відкрита зміна
             $current_shifts = $this->cache->get('current_shift');
 
             if(!$current_shifts){
-                $current_shifts = $this->checkbox_api->getShifts();
+                $current_shifts = $this->checkBoxUA->getShifts();
             } 
 
-            // Перевіряємо, чи відкрита зміна
-            if((isset($current_shifts['error']) || !isset($current_shifts['id'])) ){ 
-            	
+            if((isset($current_shifts['error']) || !isset($current_shifts['id'])) ){             	
             	if($this->config->get('receipt_cron_auto_shifts_open') && date('H') <= $this->config->get('receipt_cron_auto_shifts_open_hour')){
-            		$this->checkbox_api->nLog('🤖CRON:➡️ Процес авто відркиття зміни');  #2.1. Відкрити зміну 
-            		#de('#2.1. Відкрити зміну',1);               
-                	$new_shift = $this->checkbox_api->createShifts();
+            		echoLine('[ControllerSaleReceipt::cron] Started auto shift opening process', 'i');
+            		               
+                	$new_shift = $this->checkBoxUA->createShifts();
                 	sleep(2);
                 	if(isset($new_shift['id']) ){
-	                	$this->checkbox_api->nLog('🤖CRON:✅ Зміну відкрито');#2.2. Зміну відкрито                    
-	                    $current_shifts = $this->checkbox_api->getShifts();
+	                	echoLine('[ControllerSaleReceipt::cron] Shift is opened with ID: ' . $new_shift['id'], 's');                   
+	                    $current_shifts = $this->checkBoxUA->getShifts();
 	                    sleep(1);
 	                }
 
-            	}else{ 
-            		// Зміна НЕ відкрита і в налаштуваннях заблоковане відкриття
-            		$this->checkbox_api->nLog('🤖CRON:❌ Зміна не відкрита і в налаштуваннях заблоковане відкриття');
+            	} else { 
+            		echoLine('[ControllerSaleReceipt::cron] Shift does not open! Exiting due to error!', 'e');    
             		return; 
 				}    	       
             }
 			
-			# ПІдготовка ід замовлень
             $order_ids = array();
             foreach ($results as $order){
                 $order_ids[] = $order['order_id'];
             }
+
             if($order_ids){
-            	$this->checkbox_api->nLog('🤖CRON:➡ Створю чеки для замовлень:'.json_encode($order_ids));
-            	#3. Створити чеки
+            	echoLine('[ControllerSaleReceipt::cron] Creating receipts for orders: ' . implode(',', $order_ids));            
             	$this->createCron($order_ids);
             }
         }

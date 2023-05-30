@@ -30,7 +30,7 @@ class CheckBoxUA {
     protected $is_dev_mode;
 
     public $method = "POST"; // Метод запиту дефолтний
-    private $error = array(); // Помилки при запитах
+    private $error = []; // Помилки при запитах
 
 
     public function __construct($registry) {
@@ -127,7 +127,6 @@ class CheckBoxUA {
     /*
      * Зміни Shifts
      */
-
     public function createShifts(){
         $url = $this->base_url .'shifts';
         $this->method = "POST";
@@ -147,7 +146,7 @@ class CheckBoxUA {
 		if(!$this->x_license_key){
 			return array();
 		}
-        $return_data = array();
+        $return_data = [];
         $url = $this->base_url .'shifts';
         $request_body['meta'] = array(      
             'statuses' => 'OPENED'            
@@ -168,15 +167,12 @@ class CheckBoxUA {
         }
 
          return $return_data;
-
-         
-
     }
 
     public function closeShifts(){ 
         $this->cache->set('current_shift', '');
         $this->cache->delete('current_shift');
-        $return_data = array();       
+        $return_data = [];       
         $url = $this->base_url .'shifts/close';
  
         $request = $this->getCurl($url);  
@@ -184,8 +180,6 @@ class CheckBoxUA {
 
         return $request;
     }
-
-
 
     public function getReport($report_id){
         $url = $this->base_url .'reports/'.$report_id.'/text';
@@ -197,16 +191,16 @@ class CheckBoxUA {
     ### RECEIPT
     ###
     public function receiptsSell($data=array()){
-        $return_data = $this->error = array();
+        $return_data = $this->error = [];
         $this->checkIfOrederReceiptAlreadyExit($data);
          
         $url = $this->base_url .'receipts/sell';
       
         $request_body = array(      
-            'goods' => $this->getProductsForReceipt($data),
-            'delivery' => $this->getDeliveryEmail($data),
-            'payments' => $this->getPayments($data),
-            'discounts' => $this->getDiscounts($data),           
+            'goods'         => $this->getProductsForReceipt($data),
+            'delivery'      => $this->getDeliveryEmail($data),
+            'payments'      => $this->getPayments($data),
+            'discounts'     => $this->getDiscounts($data),           
         );
 
         if($this->config->get('receipt_footer_text')){
@@ -219,34 +213,53 @@ class CheckBoxUA {
             sleep(1); // після створення запиту на чек - чекаємо 1 сек
 
             if(isset($request['message']) ){
-				$this->nLog('⬅️ Відповідь на створення чеку: '.json_encode($request)); 
+				$this->nLog('[CheckBoxUA::receiptsSell] Answer for request: '.json_encode($request)); 
+                echoLine('[CheckBoxUA::receiptsSell] Answer for request: '.json_encode($request));
+
                 $return_data['error']['message'] = $request['message'];
-            }else{
-                $this->saveReceiptsRequest($request,$data);
-				$this->nLog('✅ Запит на створення чеку з товарами: '.json_encode($request_body)); 
-                $return_data['success'] = "Фіскальний чек <b>".$request['fiscal_code']."</b> Успішно створено"; 
-                $return_data['success'] .= 'Переглянути чек: <a target="_blank" href="'.$this->getReceiptLink($request['id'],'text').'">-== Text==- </a> ';
-                $this->getReceipt($request['id']); // Додаткова перевірка статусу чека
+            } else {
+                $this->saveReceiptsRequest($request, $data);
+
+				$this->nLog('[CheckBoxUA::receiptsSell] Request for creating cheques: '.json_encode($request_body));    
+
+                if (is_cli()){
+                    $return_data['success'] = '[CheckBoxUA::receiptsSell] Cheque created successfully: ' . $request['fiscal_code'];
+                } else {
+                    $return_data['success']  = ' Фіскальний чек ' . $request['fiscal_code'] . ' Успішно створено'; 
+                    $return_data['success'] .= ' Переглянути чек: <a target="_blank" href="'.$this->getReceiptLink($request['id'], 'text') . '"> -== Text ==- </a> ';
+                }
+               
+
+                $this->getReceipt($request['id']);
             }
-        }else {
+        } else {
             $return_data['error'] = $this->error;
         }
+
         $this->cache->set('current_shift','');
         $this->cache->delete('current_shift');
         return $return_data;
     }
 
-    public function getReceipt($receipt_id){
-        #de($receipt_id,1);
-        $return_data = array();
-        $url = $this->base_url .'receipts/'.$receipt_id .'';
+    public function getReceipt($receipt_id){        
+        $return_data = [];
+        $url = $this->base_url . 'receipts/' . $receipt_id . '';
         $this->method = "GET";
         $request = $this->getCurl($url);
-        if(isset($request['status'] ) && $request['status'] == 'DONE'){
-            $this->updateReceiptsRequest($request,$receipt_id);
-            return array ('success'=> 'Дані про чек '.$receipt_id .' оновлено');
+
+        echoLine('[CheckBoxUA::getReceipt] Started getting ' . $receipt_id . ' from CheckBox', 'i');
+
+        if(isset($request['status']) && $request['status'] == 'DONE'){
+            $this->updateReceiptsRequest($request, $receipt_id);
+            echoLine('[CheckBoxUA::getReceipt] Data about receipt is updated!', 's');
+            echoLine('[CheckBoxUA::getReceipt] is_sent_dps = ' . (int)$request['is_sent_dps'], 'i');
+
+            return array ('success'=> 'Data updated ' . $receipt_id);
         }
+
 		if(isset($request['message']) ){
+             echoLine('[CheckBoxUA::getReceipt] Data about receipt is not updated! ' . $message, 'e');
+
             $this->nLog('⬅️ Відповідь на getReceipt: '.json_encode($request));
             return array ('error'=> array('message'=>$request['message'])  );
         } 
@@ -276,7 +289,7 @@ class CheckBoxUA {
     }
 
     public function receiptsService($data=array()){
-        $return_data = array();
+        $return_data = [];
         $url = $this->base_url .'receipts/service';
 
         $service_operation = isset($data['service_operation']) ? (string)$data['service_operation']: '';
@@ -312,7 +325,7 @@ class CheckBoxUA {
     }
 
 
-     public function checkReceipt($data=array()){
+    public function checkReceipt($data=array()){
 
         $request_body = array(      
             'goods'     => $this->getProductsForReceipt($data),
@@ -320,9 +333,11 @@ class CheckBoxUA {
             'payments'  => $this->getPayments($data),
             'discounts' => $this->getDiscounts($data) ,              
         );
+
         if($this->config->get('receipt_footer_text')){
             $request_body['footer'] = $this->config->get('receipt_footer_text');
         }
+
         return $request_body;
     }
 
@@ -364,7 +379,7 @@ class CheckBoxUA {
         $checkbox_taxes = $this->cache->get('checkbox_taxes'); 
         
         if(!$checkbox_taxes){
-            $taxes = array();
+            $taxes = [];
             $url = $this->base_url .'tax';   
             $this->method = "GET";
             $request = $this->getCurl($url);
@@ -406,7 +421,7 @@ class CheckBoxUA {
     }
 
     public function getLiqpayInfo($data,$payment_type=''){
-        $return_data = array();
+        $return_data = [];
         /*
             ### card_mask ###    
                 sender_card_type => visa
@@ -479,6 +494,18 @@ class CheckBoxUA {
     ### HELPER
     ###
 
+    public function setOrderNeedCheckbox($order_id){
+        $this->db->ncquery("UPDATE `order` SET needs_checkboxua = '1' WHERE order_id = '" . (int)$order_id . "'");
+    }
+
+    public function setOrderNotNeedCheckbox($order_id){
+        $this->db->ncquery("UPDATE `order` SET needs_checkboxua = '0' WHERE order_id = '" . (int)$order_id . "'");
+    }
+
+    public function setOrderPaidBy($order_id, $paid_by){
+        $this->db->ncquery("UPDATE `order` SET paid_by = $this->db->escape($paid_by) WHERE order_id = '" . (int)$order_id . "'");
+    }
+
     private function getProductsForReceipt($data=array()){
         if(!isset($data['products'])){
             $this->error['message'] = "Не можу отримати товари";
@@ -487,7 +514,7 @@ class CheckBoxUA {
         # якщо є декілька тоталів, які необхідно сумувати           
         $extra_product_sum_array = $this->getExtraProductSum($data);
 
-        $products = array();
+        $products = [];
         
         foreach ($data['products'] as $product) {           
             $products[] = array(
@@ -522,7 +549,7 @@ class CheckBoxUA {
     }
 
     private function getDeliveryEmail($data=array()){
-        $delivery = array(); 
+        $delivery = []; 
 
         if(isset($data['email']) && $data['email'] && $this->config->get('receipt_is_customer_send_email')){
             $delivery['email'] = $data['email'];
@@ -539,8 +566,8 @@ class CheckBoxUA {
 
     private function getPayments($data=array()){
         
-        $payments = array();
-        $payment_item = array();
+        $payments = [];
+        $payment_item = [];
 
         #1 перевірка, чи сума товарів = сумі замовленню
         $product_sum = 0;
@@ -643,10 +670,10 @@ class CheckBoxUA {
         return $payments;
     }
 
-     private function getDiscounts($data=array()){
+    private function getDiscounts($data=array()){
        
-        $discounts = array();
-        $discount_item = array();
+        $discounts = [];
+        $discount_item = [];
 
         $discount_sum = 0;
         foreach ($data['totals'] as $total) {           
@@ -692,17 +719,15 @@ class CheckBoxUA {
         if($extra_sum && $extra_total){
                 return array('extra_sum'=>$extra_sum, 'extra_total'=>$extra_total, 'quantity'=>$quantity );
         }
-        return array(); 
-        
+        return array();        
     }
 
     private function checkIfOrederReceiptAlreadyExit($data=array()){
         $sql = " SELECT * FROM order_receipt WHERE order_id = ".(int)$data['order_id'] ;
-        $query =$this->db->query( $sql );       
+        $query =$this->db->ncquery( $sql );       
         if($query->num_rows){
             $this->error['message'] = "Для замовлення <b>".$data['order_id']."</b> вже створено чек. Код чеку: ".$query->row['fiscal_code'];
         }
- 
     }
 
     private function saveReceiptsRequest($request,$data){
@@ -711,36 +736,32 @@ class CheckBoxUA {
         $data['type'] = isset($data['type']) ? $data['type'] : '';
 
         $sql = "INSERT INTO order_receipt SET         
-            order_id = '".(int)$data['order_id']. "', 
-            receipt_id = '".(string)$request['id']. "',  
-            serial = '".(int)$request['serial']. "',  
-            status = '".(string)$request['status']. "',  
-            fiscal_code = '".(string)$request['fiscal_code']. "',  
-            fiscal_date = '".(string)$request['fiscal_date']. "',  
-            is_created_offline = '".(int)$request['is_created_offline']. "',  
-            is_sent_dps = '".(int)$request['is_sent_dps']. "',  
-            sent_dps_at = '".(int)$request['sent_dps_at']. "',  
-            type = '".(string)$request['type']. "',  
-            all_json_data = '".$this->db->escape(json_encode($request)). "'  ";
-        $this->db->query( $sql ); 
+            order_id            = '".(int)$data['order_id']. "', 
+            receipt_id          = '".(string)$request['id']. "',  
+            serial              = '".(int)$request['serial']. "',  
+            status              = '".(string)$request['status']. "',  
+            fiscal_code         = '".(string)$request['fiscal_code']. "',  
+            fiscal_date         = '".(string)$request['fiscal_date']. "',  
+            is_created_offline  = '".(int)$request['is_created_offline']. "',  
+            is_sent_dps         = '".(int)$request['is_sent_dps']. "',  
+            sent_dps_at         = '".(int)$request['sent_dps_at']. "',  
+            type                = '".(string)$request['type']. "',  
+            all_json_data       = '".$this->db->escape(json_encode($request)). "'  ";
+        $this->db->ncquery( $sql ); 
     }
 
-
-
     private function updateReceiptsRequest($request,$receipt_id){
-
-
         $sql = "UPDATE order_receipt SET  
-            serial = '".(int)$request['serial']. "',  
-            status = '".(string)$request['status']. "',  
-            fiscal_code = '".(string)$request['fiscal_code']. "',  
-            fiscal_date = '".(string)$request['fiscal_date']. "',  
-            is_created_offline = '".(int)$request['is_created_offline']. "',  
-            is_sent_dps = '".(int)$request['is_sent_dps']. "',  
-            sent_dps_at = '".(int)$request['sent_dps_at']. "',               
-            all_json_data = '".$this->db->escape(json_encode($request)). "' 
-             WHERE receipt_id = '".$receipt_id."' ";
-        $this->db->query( $sql );
+            serial                  = '".(int)$request['serial']. "',  
+            status                  = '".(string)$request['status']. "',  
+            fiscal_code             = '".(string)$request['fiscal_code']. "',  
+            fiscal_date             = '".(string)$request['fiscal_date']. "',  
+            is_created_offline      = '".(int)$request['is_created_offline']. "',  
+            is_sent_dps             = '".(int)$request['is_sent_dps']. "',  
+            sent_dps_at             = '".(int)$request['sent_dps_at']. "',               
+            all_json_data           = '".$this->db->escape(json_encode($request)). "' 
+            WHERE receipt_id       = '".$receipt_id."' ";
+        $this->db->ncquery( $sql );
     }
 
     private function saveShiftRequest($request){
@@ -756,7 +777,7 @@ class CheckBoxUA {
             status = '".$this->db->escape($request['status']). "',  
             z_report_id = '".$this->db->escape($request['z_report']['id']). "',
             all_json_data = '".$this->db->escape(json_encode($request)). "'  ";
-        $this->db->query( $sql ); 
+        $this->db->ncquery( $sql ); 
     }
 
     private function get_request_headers(){
@@ -782,7 +803,7 @@ class CheckBoxUA {
     }
 
     ###
-    private function getCurl($url, $request_body = array()){   
+    private function getCurl($url, $request_body = []){   
 
         // Це потрібно для формування запитів типу  get і параметри передаємо до url запиту
         if(isset($request_body['meta']) && http_build_query($request_body['meta'])){
@@ -810,8 +831,7 @@ class CheckBoxUA {
         return $this->readResult($res,$url, $request_body,$curl_getinfo); 
     }
 
-
-    private function readResult($res, $url, $request_body = array(), $curl_getinfo=array()){
+    private function readResult($res, $url, $request_body = [], $curl_getinfo = []){
         if (!$res) {
             return false;
         } 
@@ -830,9 +850,13 @@ class CheckBoxUA {
         return json_decode( $res,1);
     }
 
-    public function nLog($message="Empty message"){
-        $log = fopen(DIR_LOGS . 'checkbox.log', 'a');
-        fwrite($log, date('Y-m-d G:i:s') . " [".$_SERVER['REMOTE_ADDR']."] : ");
+    public function nLog($message = "Empty message"){
+        $log = fopen(DIR_LOGS . 'checkbox.log', 'a+');
+
+        if (!empty($_SERVER['REMOTE_ADDR'])){
+            fwrite($log, date('Y-m-d G:i:s') . " [".$_SERVER['REMOTE_ADDR']."] : ");
+        }    
+
         fwrite($log, print_r($message, true) ."\n");
         fclose($log); 
     }
@@ -851,14 +875,14 @@ class CheckBoxUA {
         => 29015
 	*/	
 	
-	private function convert2intX100($number=0,    $data=[]){
+    private function convert2intX100($number=0, $data=[]){
         if($number){		
-			if($this->config->get('receipt_price_format')){
-				$number = $this->currency->format($number, $data['currency_code'], $data['currency_value'], false);
-			}				   
-
+            if($this->config->get('receipt_price_format')){
+                $number = $this->currency->format($number, $data['currency_code'], $data['currency_value'], false);
+            }				   
             $number = (int)round(($number*100), 0);
         }
+        
         return $number;
     }
 }

@@ -29,6 +29,10 @@ class ModelSaleReceipt extends Model {
 		if (!empty($data['filter_order_id'])) {
 			$sql .= " AND o.order_id = '" . (int)$data['filter_order_id'] . "'";
 		}
+
+		if (!empty($data['filter_needs_checkboxua'])) {
+			$sql .= " AND o.needs_checkboxua = '" . (int)$data['filter_needs_checkboxua'] . "'";
+		}
 		
 		if (!empty($data['filter_fiscal_code'])) {
 			$sql .= " AND orec.fiscal_code = '" . $this->db->escape($data['filter_fiscal_code']) . "'";
@@ -48,13 +52,12 @@ class ModelSaleReceipt extends Model {
 		if (!empty($data['filter_date_modified_2day'])) {
             $sql .= " AND (
                 DATE(o.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified_2day']) . "') OR
-                DATE(o.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified_2day']) . "') -INTERVAL 1 DAY 
+                DATE(o.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified_2day']) . "') - INTERVAL 1 DAY 
                 ) ";
         }
 
         if (isset($data['filter_has_receipt'])) {
-            if($data['filter_has_receipt']){
-                // замовлення з чеками
+            if($data['filter_has_receipt']){                
                 $sql .= " AND orec.order_id > 0 "  ;
             }else{
                 $sql .= " AND orec.order_id IS NULL "  ;
@@ -99,15 +102,13 @@ class ModelSaleReceipt extends Model {
 
 			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 		}
-		#de($sql);
+
 		$query = $this->db->query($sql);
 		$order_data = array();
 		foreach($query->rows as $order){
 			$order_data[$order['order_id'] ] = $order;
-			$order_data[$order['order_id'] ]['products'] = $this->getOrderProducts($order['order_id']);
-			$order_data[$order['order_id'] ]['totals'] = $this->getOrderTotals($order['order_id']);
-			 
-			#getOrderProducts
+			$order_data[$order['order_id'] ]['products'] 	= $this->getOrderProducts($order['order_id']);
+			$order_data[$order['order_id'] ]['totals'] 		= $this->getOrderTotals($order['order_id']);			 			
 		}
 
 		return $order_data;
@@ -143,6 +144,9 @@ class ModelSaleReceipt extends Model {
 			$sql .= " AND orec.fiscal_code = '" . $this->db->escape($data['filter_fiscal_code']) . "'";
 		}
 
+		if (!empty($data['filter_needs_checkboxua'])) {
+			$sql .= " AND o.needs_checkboxua = '" . (int)$data['filter_needs_checkboxua'] . "'";
+		}
 
 		if (!empty($data['filter_customer'])) {
 			$sql .= " AND CONCAT(o.firstname, ' ', o.lastname) LIKE '%" . $this->db->escape($data['filter_customer']) . "%'";
@@ -159,18 +163,16 @@ class ModelSaleReceipt extends Model {
 		if (!empty($data['filter_date_modified_2day'])) {
             $sql .= " AND (
                 DATE(o.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified_2day']) . "') OR
-                DATE(o.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified_2day']) . "') -INTERVAL 1 DAY 
+                DATE(o.date_modified) = DATE('" . $this->db->escape($data['filter_date_modified_2day']) . "') - INTERVAL 1 DAY 
                 ) ";
         }
         
 		if (isset($data['filter_has_receipt'])) {
-            if($data['filter_has_receipt']){
-                // замовлення з чеками
+            if($data['filter_has_receipt']){                
                 $sql .= " AND orec.order_id > 0 "  ;
             }else{
                 $sql .= " AND orec.order_id IS NULL "  ;
             }
-
         }
 
 		//20.03.21
@@ -210,9 +212,19 @@ class ModelSaleReceipt extends Model {
 	}
 	
 	public function getOrderReceipts() {
-		$query = $this->db->query("SELECT * FROM order_receipt WHERE 1 ORDER BY order_receipt_id DESC LIMIT 0,5");
-		#de($query->rows);
+		$query = $this->db->query("SELECT * FROM order_receipt WHERE 1 ORDER BY order_receipt_id DESC LIMIT 0,5");		
 		return $query->rows;
+	}
+
+	public function getProcessingReceipts() {
+		$results = [];
+		$query = $this->db->query("SELECT * FROM order_receipt WHERE fiscal_code NOT LIKE ('TEST-%') AND (fiscal_code = '' OR ISNULL(fiscal_code) OR is_sent_dps = 0)");		
+		
+		foreach ($query->rows as $row){
+			$results[] = $row['receipt_id'];
+		}
+
+		return $results;
 	}
 
 	public function getShifts() {
