@@ -12,8 +12,7 @@ class ModelToolImage extends Model {
 		}
 		
 		$DIR_IMAGE = DIR_IMAGE;	
-		if (file_exists(DIR_IMAGE . $filename) && is_file(DIR_IMAGE . $filename)){
-			//do nothing
+		if (file_exists(DIR_IMAGE . $filename) && is_file(DIR_IMAGE . $filename)){			
 		} elseif (defined('DIR_IMAGE_MAIN') && file_exists(DIR_IMAGE_MAIN . $filename) && is_file(DIR_IMAGE_MAIN . $filename)){
 			$DIR_IMAGE = DIR_IMAGE_MAIN;		
 		} else {			

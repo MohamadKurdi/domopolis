@@ -940,6 +940,10 @@
 
 			$sql = "SELECT DISTINCT p.product_id, p.is_option_for_product_id, p.xrating AS rating, ";
 
+			if (!empty($data['filter_get_product_mode']) && $data['filter_get_product_mode'] == 'preresize'){
+				$sql .= ' p.image, ';
+			}
+
 			//Логика переназначения статуса при работе только со склада
 			if ($this->config->get('config_warehouse_only')){							
 				$sql .= " IF(p." . $this->config->get('config_warehouse_identifier') . " > 0, " . $this->config->get('config_in_stock_status_id') . ", " . $this->config->get('config_overload_stock_status_id') . ") as stock_status_id";
@@ -1332,6 +1336,18 @@
 			} elseif ($data['filter_get_product_mode'] == 'feed'){
 				$simple = 'feed';
 			}
+
+			if (!empty($data['filter_get_product_mode']) && $data['filter_get_product_mode'] == 'preresize'){
+				foreach ($query->rows as $result) {
+					$product_data[$result['product_id']] = [
+						'product_id' 	=> $result['product_id'],
+						'image' 		=> $result['image'],
+						'images' 		=> $this->getProductImages($result['product_id'])
+					];
+				}
+
+				return $product_data;
+			}
 			
 			foreach ($query->rows as $result) {
 				if ($data['return_parent'] && $result['is_option_for_product_id']) {	
@@ -1343,6 +1359,7 @@
 			
 			return $product_data;
 		}
+
 		
 		public function getProductAdditionalOffer($product_id){
 			

@@ -17,6 +17,72 @@ class ControllerDPService extends Controller {
 		$this->log->debug($this->url->link('common/home'));
 	}
 
+
+	private function do_resize($image, $w, $h){
+		$new_image = $this->model_tool_image->resize_avif($image, $w, $h);
+        echoLine('[preresize] ' . $image . ' -> ' . $new_image . ' ('. $w . '*' . $h . ')', 's');
+	}
+
+	public function preresize(){
+		$this->load->model('catalog/product');
+		$this->load->model('tool/image');
+
+		$filter = array(
+                'filter_status'                     => true,
+                'filter_not_bad'                    => true
+            );
+		$total = $this->model_catalog_product->getTotalProducts($filter);
+        $iterations = ceil($total/$this->config->get('config_google_merchant_feed_limit'));
+
+        echoLine('[preresize] Всего товаров ' . $total);
+
+         for ($i = 1; $i <= ($iterations); $i++) {
+                $timer = new FPCTimer();
+                $totalGet = ceil($this->config->get('config_google_merchant_feed_limit')/$this->config->get('config_google_merchant_one_iteration_limit'));
+                for ($iGet = 1; $iGet <= $totalGet; $iGet++) {
+
+                    $filter = array(
+                        'start'                     => ($i-1)*$this->config->get('config_google_merchant_feed_limit') + ($iGet-1)*$this->config->get('config_google_merchant_one_iteration_limit'),
+                        'limit'                     => $this->config->get('config_google_merchant_one_iteration_limit'),
+                        'filter_status'             => true,
+                        'filter_not_bad'            => true,
+                        'filter_get_product_mode'   => 'preresize',                    
+                        'sort'                      => 'p.product_id',                        
+                        'order'                     => 'DESC'
+                    );
+
+                    echoLine('[preresize] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . ($filter['start']) . ' по ' . ($filter['start'] + $filter['limit']));
+                    $products = $this->model_catalog_product->getProducts($filter);
+                    $k = 0;
+
+                    foreach ($products as $product) {
+                      	//main
+                      	$this->do_resize($product['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+                      	$this->do_resize($product['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height'));
+                      	$this->do_resize($product['image'], 1000, 1000);
+
+                      	if (!empty($product['images'])){
+                      		foreach ($product['images'] as $image){
+                      			$this->do_resize($image['image'], $this->config->get('config_image_product_width'), $this->config->get('config_image_product_height'));
+                      			$this->do_resize($image['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height'));
+                      			$this->do_resize($image['image'], 1000, 1000);
+                      		}
+                      	}
+                    }
+
+                    echoLine('');
+                }
+
+                echoLine('');
+                echoLine('[preresize] памяти занято ' . convertSize(memory_get_usage(true)));
+                echoLine('[preresize] собираем мусор, освобождаем память ' . convertSize(memory_get_usage(true)));
+                gc_collect_cycles();
+
+                echoLine('[preresize] Времени на итерацию ' . $timer->getTime() . ' сек.');
+                unset($timer);
+            }
+	}
+
 	public function index(){
 		$this->fixAmazonModes();
 		$this->countProducts();
