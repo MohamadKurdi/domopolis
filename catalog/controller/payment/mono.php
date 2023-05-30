@@ -141,6 +141,14 @@ class ControllerPaymentMono extends Controller
                     case 'success':{
                         if($order['order_status_id'] != $this->config->get('mono_order_success_status_id')) {
                             $this->model_checkout_order->confirm($orderID, $this->config->get('mono_order_success_status_id'), $this->language->get('text_status_success'), $notify = true);
+
+                            if ($this->config->get('mono_checkbox_enable')){
+                                $this->load->library('hobotix/CheckBoxUA');
+                                $checkBoxAPI = new hobotix\CheckBoxUA($this->registry);
+                                $checkBoxAPI->setOrderNeedCheckbox($orderID);
+                                $checkBoxAPI->setOrderPaidBy($orderID, 'mono');
+                            }
+
                             $this->response->redirect($this->url->link('checkout/success', '', true));
                             break;
                         }
@@ -225,6 +233,14 @@ class ControllerPaymentMono extends Controller
                         }
 
                         $this->model_checkout_order->update($OrderInfo['OrderId'], $this->config->get('mono_order_success_status_id'), $this->language->get('text_status_success'), $notify = true);
+
+                        if ($this->config->get('mono_checkbox_enable')){
+                            $this->load->library('hobotix/CheckBoxUA');
+                            $checkBoxAPI = new hobotix\CheckBoxUA($this->registry);
+                            $checkBoxAPI->setOrderNeedCheckbox($OrderInfo['OrderId']);
+                            $checkBoxAPI->setOrderPaidBy($OrderInfo['OrderId'], 'mono');
+                        }
+                        
                         $this->success($OrderInfo['OrderId']);
                     }
                     break;
