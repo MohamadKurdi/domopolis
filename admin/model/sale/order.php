@@ -60,8 +60,7 @@
 			
 			return $qr_link;
 		}
-		
-		
+			
 		public function generatePaymentQR($order_id, $qr_payment_code = 'concardis', $return_link = false, $currency = false){
 			$this->load->model('sale/customer');
 			

@@ -994,17 +994,6 @@ class ControllerSaleReceipt extends Controller {
 	}
     
     public function cron() {    	
-    	$processingReceipts = $this->model_sale_receipt->getProcessingReceipts();
-
-    	if ($processingReceipts){
-    		echoLine('[ControllerSaleReceipt::cron] Have processing receipts, ' . count($processingReceipts), 'i');
-
-    		foreach($processingReceipts as $processingReceiptID){
-    			$this->checkBoxUA->getReceipt($processingReceiptID);
-    		}
-    	}
-
-
         //DO NOTHING IN BETWEEN 23:00 AND 01:00
         if (!is_cli()){
         	echoLine('[ControllerSaleReceipt::cron] ONLY CLI MODE', 'e');
@@ -1038,11 +1027,8 @@ class ControllerSaleReceipt extends Controller {
 
         if($results){
             $this->init();
-            $current_shifts = $this->cache->get('current_shift');
-
-            if(!$current_shifts){
-                $current_shifts = $this->checkBoxUA->getShifts();
-            } 
+           //$current_shifts = $this->cache->get('current_shift');
+            $current_shifts = $this->checkBoxUA->getShifts();
 
             if((isset($current_shifts['error']) || !isset($current_shifts['id'])) ){             	
             	if($this->config->get('receipt_cron_auto_shifts_open') && date('H') <= $this->config->get('receipt_cron_auto_shifts_open_hour')){
@@ -1050,17 +1036,19 @@ class ControllerSaleReceipt extends Controller {
             		               
                 	$new_shift = $this->checkBoxUA->createShifts();
                 	sleep(2);
-                	if(isset($new_shift['id']) ){
+                	if(isset($new_shift['id'])){
 	                	echoLine('[ControllerSaleReceipt::cron] Shift is opened with ID: ' . $new_shift['id'], 's');                   
 	                    $current_shifts = $this->checkBoxUA->getShifts();
 	                    sleep(1);
 	                }
 
             	} else { 
-            		echoLine('[ControllerSaleReceipt::cron] Shift does not open! Exiting due to error!', 'e');    
+            		echoLine('[ControllerSaleReceipt::cron] Shift does not open! Exiting due to error!', 'i'); 
             		return; 
 				}    	       
             }
+
+            echoLine('[ControllerSaleReceipt::cron] Working in shift ' . $current_shifts['id'], 'e');     
 			
             $order_ids = array();
             foreach ($results as $order){
@@ -1072,5 +1060,14 @@ class ControllerSaleReceipt extends Controller {
             	$this->createCron($order_ids);
             }
         }
+
+        $processingReceipts = $this->model_sale_receipt->getProcessingReceipts();
+    	if ($processingReceipts){
+    		echoLine('[ControllerSaleReceipt::cron] Have processing receipts, ' . count($processingReceipts), 'i');
+
+    		foreach($processingReceipts as $processingReceiptID){
+    			$this->checkBoxUA->getReceipt($processingReceiptID);
+    		}
+    	}
     }
 }

@@ -17,20 +17,21 @@ namespace hobotix;
 */
 
 class CheckBoxUA {
-    protected $base_url = 'https://api.checkbox.in.ua/api/v1/'; // Базовий URL API
+    protected $base_url         = 'https://api.checkbox.in.ua/api/v1/';
+    protected $x_client_name    = 'Hobotix OC 1.5';
+
     protected $login;
     protected $password;
-    protected $access_token; // Токен
-    protected $x_license_key = ''; // ключ ліцензії конкретного пРРО
-    protected $x_client_name = 'Hobotix OC 1.5';
+    protected $access_token;
+    protected $x_license_key = '';
     protected $date;
     protected $timeout = 25;
     protected $original_product_sum = 0;
-    protected $taxes; // Токен
+    protected $taxes;
     protected $is_dev_mode;
 
-    public $method = "POST"; // Метод запиту дефолтний
-    private $error = []; // Помилки при запитах
+    public $method = "POST";
+    private $error = [];    
 
 
     public function __construct($registry) {
@@ -38,7 +39,6 @@ class CheckBoxUA {
         $this->config = $registry->get('config');
         $this->db = $registry->get('db');
         $this->currency = $registry->get('currency');
-
     }
 
     /**
@@ -49,9 +49,9 @@ class CheckBoxUA {
      */
 
     public function setAuth($login, $password, $x_license_key, $receipt_is_dev_mode=0){
-        $this->login = $login;
-        $this->password = $password; 
-        $this->x_license_key = $x_license_key; 
+        $this->login            = $login;
+        $this->password         = $password; 
+        $this->x_license_key    = $x_license_key; 
 
         if($receipt_is_dev_mode){
             $this->base_url = 'https://dev-api.checkbox.in.ua/api/v1/';
@@ -69,17 +69,16 @@ class CheckBoxUA {
 			$this->is_dev_mode = true;
         }
 
-        $url = $this->base_url .'cashier/signin';
-        $request_body_data =  array('login'=> $login,'password'=> $password);
-        $request = $this->getCurl($url, $request_body_data);		        
+        $url                = $this->base_url . 'cashier/signin';
+        $request_body_data  = array('login'=> $login, 'password'=> $password);
+        $request            = $this->getCurl($url, $request_body_data);		        
 		
 		if(isset($request['access_token'])){
 			$this->access_token = $request['access_token'];
 			
 			$organization_title = $this->getCurrentOrganization(); 
 			$message = "Доступи коректні!<br>" . '<span style="font-size: 14px;color: #000;">Організація:<b> '.$organization_title.' </b></span>';
-			 
-			 
+			 			 
 			return array('success'=>$message); 
 		}
 
@@ -95,16 +94,13 @@ class CheckBoxUA {
     Вхід користувача (касира) за допомогою логіна та паролю
     */
 
-    public function signin(){
-
-        // Зберігаю в кеш, бо в режимі CLI для крон задач - не можу прочитати сесію і куки
+    public function signin(){        
         $access_token = $this->cache->get('access_token');
-        #$access_token = isset($this->request->cookie['access_token'])? $this->request->cookie['access_token'] : '';
 
         if(!$access_token){
-            $url = $this->base_url .'cashier/signin'; 
-            $request_body_data =  array('login'=> $this->login,'password'=> $this->password);
-            $request = $this->getCurl($url, $request_body_data);
+            $url = $this->base_url . 'cashier/signin'; 
+            $request_body_data  =  array('login'=> $this->login, 'password'=> $this->password);
+            $request            = $this->getCurl($url, $request_body_data);
 
             if(isset($request['access_token'])){
                 $access_token = $request['access_token'];
@@ -114,7 +110,6 @@ class CheckBoxUA {
         }
 
         $this->access_token = $access_token; 
-
     }
 
 
@@ -132,20 +127,20 @@ class CheckBoxUA {
         $this->method = "POST";
         $request = $this->getCurl($url);
         
-        // зберігаю результат запиту на відкртиття зміни
-        $this->saveShiftRequest($request);
-        #de($request);
+        $this->saveShiftRequest($request);        
         if(isset($request['id'])){
             $this->cache->set('current_shift', $request);
         }
         return $request;
     }
 
-    public function getShifts(){
-		# if not auth
+    public function getShifts(){		
 		if(!$this->x_license_key){
 			return array();
 		}
+
+        echoLine('[CheckBoxUA::getShifts] Trying to get opened shifts...', 'i');
+
         $return_data = [];
         $url = $this->base_url .'shifts';
         $request_body['meta'] = array(      
@@ -153,18 +148,19 @@ class CheckBoxUA {
         );
         if(!$this->error){
             $this->method = "GET";
-            $request = $this->getCurl($url, $request_body);
-            #de($request);
-            if(isset($request['results'][0]['id'])){
+            $request = $this->getCurl($url, $request_body); 
+
+            if(isset($request['results'][0]['id'])){                
                 $this->cache->set('current_shift', $request['results'][0]);
                 return $request['results'][0];
-            }else{
+            } else {
                 $return_data['error'] = "Немає відкритих змін";
                 return $return_data;
-            }            
-        }else {
+            }    
+
+        } else {
             $return_data['error'] = $this->error;
-        }
+        }        
 
          return $return_data;
     }
@@ -173,7 +169,7 @@ class CheckBoxUA {
         $this->cache->set('current_shift', '');
         $this->cache->delete('current_shift');
         $return_data = [];       
-        $url = $this->base_url .'shifts/close';
+        $url = $this->base_url . 'shifts/close';
  
         $request = $this->getCurl($url);  
         $this->saveShiftRequest($request);
@@ -194,7 +190,7 @@ class CheckBoxUA {
         $return_data = $this->error = [];
         $this->checkIfOrederReceiptAlreadyExit($data);
          
-        $url = $this->base_url .'receipts/sell';
+        $url = $this->base_url . 'receipts/sell';
       
         $request_body = array(      
             'goods'         => $this->getProductsForReceipt($data),
@@ -323,7 +319,6 @@ class CheckBoxUA {
 
          return $return_data;
     }
-
 
     public function checkReceipt($data=array()){
 
@@ -503,7 +498,7 @@ class CheckBoxUA {
     }
 
     public function setOrderPaidBy($order_id, $paid_by){
-        $this->db->ncquery("UPDATE `order` SET paid_by = $this->db->escape($paid_by) WHERE order_id = '" . (int)$order_id . "'");
+        $this->db->ncquery("UPDATE `order` SET paid_by = '" . $this->db->escape($paid_by) . "' WHERE order_id = '" . (int)$order_id . "'");
     }
 
     private function getProductsForReceipt($data=array()){
@@ -548,7 +543,7 @@ class CheckBoxUA {
         return $products;
     }
 
-    private function getDeliveryEmail($data=array()){
+    private function getDeliveryEmail($data = array()){
         $delivery = []; 
 
         if(isset($data['email']) && $data['email'] && $this->config->get('receipt_is_customer_send_email')){
@@ -795,6 +790,7 @@ class CheckBoxUA {
             if($this->x_license_key){
                 $request_headers[] = "X-License-Key: {$this->x_license_key}";
             }
+
             if($this->x_client_name){
                 $request_headers[] = "X-Client-Name: {$this->x_client_name}";
             }
@@ -805,30 +801,37 @@ class CheckBoxUA {
     ###
     private function getCurl($url, $request_body = []){   
 
-        // Це потрібно для формування запитів типу  get і параметри передаємо до url запиту
         if(isset($request_body['meta']) && http_build_query($request_body['meta'])){
             $url = $url . '?' .http_build_query($request_body['meta']);
             unset($request_body['meta']);
         }
+
         $this->nLog('Робимо запит ['.$this->method.'] url:'.$url);
+        echoLine('[CheckBoxUA::getCurl] Running ' . $this->method . ' on ' . $url);      
 
         $c = curl_init($url);
-        curl_setopt($c, CURLOPT_CUSTOMREQUEST, $this->method);
-        curl_setopt($c, CURLOPT_HTTPHEADER, $this->get_request_headers());
+        curl_setopt($c, CURLOPT_CUSTOMREQUEST,  $this->method);
+        curl_setopt($c, CURLOPT_HTTPHEADER,     $this->get_request_headers());
+        
         if ($request_body) {         
+            echoLine('[CheckBoxUA::getCurl] Set data for request: ' . json_encode($request_body), 'i');
             curl_setopt($c, CURLOPT_POSTFIELDS, json_encode($request_body));
         }
+
         if (strstr($url, 'https://')) {
             curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
         }
 
         curl_setopt($c, CURLOPT_RETURNTRANSFER, true); 
         curl_setopt($c, CURLOPT_CONNECTTIMEOUT, $this->timeout);
-        curl_setopt($c, CURLOPT_TIMEOUT, $this->timeout); //timeout in seconds
+        curl_setopt($c, CURLOPT_TIMEOUT, $this->timeout);
         $res = curl_exec($c);
         $curl_getinfo = curl_getinfo($c);
         curl_close($c);  
-        return $this->readResult($res,$url, $request_body,$curl_getinfo); 
+
+    //    echoLine('[CheckBoxUA::getCurl] Got answer: ' . $res, 'i');
+
+        return $this->readResult($res,  $url, $request_body,  $curl_getinfo); 
     }
 
     private function readResult($res, $url, $request_body = [], $curl_getinfo = []){
