@@ -389,16 +389,35 @@
                   </div>
                   <div class="tab-pane" id="tab-cron">
                      <fieldset>
-					 <div class="form-group">
-						<label class="col-sm-3 control-label" for="input-language" >⚠️<div style="color: #fff;background: red;font-size: 16px;    display: inline-block;    padding: 5px;">Важливо!!!</div>
-						</label>
-						<div class="col-sm-9">
-							<span style="font-size: 15px;">
-							З досвіду бачу, що існує велика ймовірність виникнення помилок, через різні дооопрацювання магазинів.<br> 
-							Тому РЕКОМЕНДУЮ перші +- 100 чеків пробивати в ручному режимі,<br> звіряючи всі дані, що є в чеку (Знижки, Надбавки, Тип оплати: Готівка чи Картка)</span>
-							
-						</div>
-					</div>
+
+                      <div class="form-group">
+                           <label class="col-sm-3 control-label" for="input-language">Відправляти в ТГ стату за день
+                           </label>
+                           <div class="col-sm-9">
+                              <select name="receipt_tg_send_alerts" id="input-receipt_tg_send_alerts" class="form-control">                  
+                                 <?php if ($receipt_tg_send_alerts) { ?>
+                                    <option value="1" selected="selected">Так</option>
+                                    <option value="0">Ні</option>
+                                 <?php } else { ?>
+                                    <option value="1">Так</option>
+                                    <option value="0" selected="selected">Ні</option>
+                                 <?php } ?> 
+                              </select>
+                           </div>
+                        </div>
+
+                         <div class="form-group">
+                        <label class="col-sm-2 control-label">Токен бота</label>
+                        <div class="col-sm-10">
+                           <input type="text" name="receipt_tg_bot_token" value="<?php echo $receipt_tg_bot_token; ?>" class="form-control"/>
+                        </div>
+                     </div>
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label">Айді групи</label>
+                        <div class="col-sm-10">
+                           <input type="text" name="receipt_tg_bot_group_id" value="<?php echo $receipt_tg_bot_group_id; ?>" class="form-control"/>
+                        </div>
+                     </div>
 					
                         <div class="form-group">
                            <label class="col-sm-3 control-label" for="input-language">Статус замовлення, при якому автоматично буде створюватись чек

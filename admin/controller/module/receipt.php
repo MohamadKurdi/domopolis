@@ -91,6 +91,10 @@ class ControllerModuleReceipt extends Controller {
             'receipt_cron_auto_shifts_open_hour',
             'receipt_limit',
 
+            'receipt_tg_send_alerts',
+            'receipt_tg_bot_token',
+            'receipt_tg_bot_group_id'
+
         ];
 
         #integration_link = 

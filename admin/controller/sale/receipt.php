@@ -3,7 +3,7 @@ class ControllerSaleReceipt extends Controller {
 	private $error = array();
 	private $checkbox_api;
 	private $setting;
-	private $limit = 1;
+	private $limit = 5;
 
 	public function __construct($registry){
 		ini_set('display_errors', 1);
@@ -1026,8 +1026,7 @@ class ControllerSaleReceipt extends Controller {
         echoLine('[ControllerSaleReceipt::cron] Selected ' . $receipt_total . ' orders', 'i');
 
         if($results){
-            $this->init();
-           //$current_shifts = $this->cache->get('current_shift');
+            $this->init();           
             $current_shifts = $this->checkBoxUA->getShifts();
 
             if((isset($current_shifts['error']) || !isset($current_shifts['id'])) ){             	
@@ -1066,8 +1065,40 @@ class ControllerSaleReceipt extends Controller {
     		echoLine('[ControllerSaleReceipt::cron] Have processing receipts, ' . count($processingReceipts), 'i');
 
     		foreach($processingReceipts as $processingReceiptID){
-    			$this->checkBoxUA->getReceipt($processingReceiptID);
+    			$this->checkBoxUA->getReceipt($processingReceiptID);    			
     		}
+    	}
+
+    	$receipt_total 	= $this->model_sale_receipt->getTotalOrders($filter_data);
+    	$results 		= $this->model_sale_receipt->getOrders($filter_data);
+
+    	if ($receipt_total > 0){
+    		if ($this->config->get('receipt_tg_send_alerts')){
+    			$telegramBot = new \Longman\TelegramBot\Telegram($this->config->get('receipt_tg_bot_token'), 'BotName');
+
+    			$message = '⚠️ CheckBox ПРРО' . PHP_EOL . PHP_EOL;
+    			$message .= '⚠️ Наразі маємо <b>' . $receipt_total . '</b> нефіскалізованих на даний момент замовлень!' . PHP_EOL . PHP_EOL;
+
+    			foreach ($results as $order){
+                	$message .= '💀 Замовлення ' . $order['order_id'] . ', на суму ' . $order['total_national']  . PHP_EOL;
+            	}
+
+            	$message .= PHP_EOL;
+    			$message .= 'ℹ️ Якщо це повідомлення буде повторено декілька разів - це є проблемою, оскільки щось пішло не так з передачею даних до ДФС';
+
+    			try {
+    				$result = \Longman\TelegramBot\Request::sendMessage([
+    					'chat_id' 		=> $this->config->get('receipt_tg_bot_group_id'),
+    					'text'    		=> $message,
+    					'parse_mode' 	=> 'HTML',
+    				]);
+
+    			} catch (\Longman\TelegramBot\Exception\TelegramException $e) {
+    				echoLine($e->getMessage(), 'e');
+    			}
+    		} else {
+    			echoLine('[ControllerSaleReceipt::cron] Some more orders left!', 'e');
+    		}			
     	}
     }
 }
