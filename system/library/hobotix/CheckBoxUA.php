@@ -247,8 +247,9 @@ class CheckBoxUA {
 
         if(isset($request['status']) && $request['status'] == 'DONE'){
             $this->updateReceiptsRequest($request, $receipt_id);
+
             echoLine('[CheckBoxUA::getReceipt] Data about receipt is updated!', 's');
-            echoLine('[CheckBoxUA::getReceipt] is_sent_dps = ' . (int)$request['is_sent_dps'], 'i');
+            echoLine('[CheckBoxUA::getReceipt] fiscal_code = ' . $request['fiscal_code'], 'i');
 
             return array ('success'=> 'Data updated ' . $receipt_id);
         }
@@ -572,13 +573,12 @@ class CheckBoxUA {
         } 
 
         foreach ($data['totals'] as $total) {
-
             $codes_for_discounts = $this->config->get('receipt_codes_for_discounts');
-            if($codes_for_discounts && in_array($total['code'], $codes_for_discounts)  ){
+            if ($codes_for_discounts && in_array($total['code'], $codes_for_discounts)  ){
                 $product_sum += $total['value_national'];
-            }
-
-           
+            } elseif ((float)$total['value_national'] < 0) {
+                $product_sum += $total['value_national'];
+            }              
         }
         
         $extra_product_sum_array = $this->getExtraProductSum($data);
@@ -620,7 +620,7 @@ class CheckBoxUA {
                 }
             }
             
-        }elseif($this->config->get('receipt_cash_payment_condition') && $this->config->get('receipt_cash_payment_condition') == 'OR'){
+        } elseif ($this->config->get('receipt_cash_payment_condition') && $this->config->get('receipt_cash_payment_condition') == 'OR'){
             
             if($this->config->get('receipt_cash_payments') && in_array($data['payment_code'], $this->config->get('receipt_cash_payments')) ) {
                  $payment_item['type'] = 'CASH';
@@ -671,23 +671,27 @@ class CheckBoxUA {
         $discount_item = [];
 
         $discount_sum = 0;
+        $codes_for_discounts = $this->config->get('receipt_codes_for_discounts');
+
         foreach ($data['totals'] as $total) {           
-            $codes_for_discounts = $this->config->get('receipt_codes_for_discounts');
-            if($codes_for_discounts && in_array($total['code'], $codes_for_discounts)){
+            if ($codes_for_discounts && in_array($total['code'], $codes_for_discounts)) {
                 $discount_sum += $total['value_national']*(-1);
-            }         
+            } elseif ((float)$total['value_national'] < 0) {
+                $discount_sum += $total['value_national']*(-1);
+            }       
         } 
 
         $discount_sum = $this->convert2intX100($discount_sum, $data);      
 
         $discount_item['value'] = $discount_sum;
-        $discount_item['type'] = 'DISCOUNT';
-        $discount_item['mode'] = 'VALUE';
-        $discount_item['name'] = 'Знижка '; 
+        $discount_item['type']  = 'DISCOUNT';
+        $discount_item['mode']  = 'VALUE';
+        $discount_item['name']  = 'Знижка '; 
 
         if($discount_sum){
            $discounts[] = $discount_item;
         }        
+
         return $discounts;
     }
     
@@ -731,30 +735,39 @@ class CheckBoxUA {
         $data['type'] = isset($data['type']) ? $data['type'] : '';
 
         $sql = "INSERT INTO order_receipt SET         
-            order_id            = '".(int)$data['order_id']. "', 
-            receipt_id          = '".(string)$request['id']. "',  
-            serial              = '".(int)$request['serial']. "',  
-            status              = '".(string)$request['status']. "',  
-            fiscal_code         = '".(string)$request['fiscal_code']. "',  
-            fiscal_date         = '".(string)$request['fiscal_date']. "',  
-            is_created_offline  = '".(int)$request['is_created_offline']. "',  
-            is_sent_dps         = '".(int)$request['is_sent_dps']. "',  
-            sent_dps_at         = '".(int)$request['sent_dps_at']. "',  
-            type                = '".(string)$request['type']. "',  
-            all_json_data       = '".$this->db->escape(json_encode($request)). "'  ";
+            order_id            = '" . (int)$data['order_id'] . "', 
+            receipt_id          = '" . $this->db->escape($request['id']) . "',  
+            serial              = '" . (int)$request['serial'] . "',  
+            status              = '" . $this->db->escape($request['status']) . "',  
+            fiscal_code         = '" . $this->db->escape($request['fiscal_code']) . "',  
+            fiscal_date         = '" . $this->db->escape($request['fiscal_date']) . "',  
+            is_created_offline  = '" . (int)$request['is_created_offline'] . "',  
+            is_sent_dps         = '" . (int)$request['is_sent_dps'] . "',  
+            sent_dps_at         = '" . $this->db->escape($request['sent_dps_at']) . "',  
+            type                = '" . $this->db->escape($request['type']) . "',  
+            all_json_data       = '" . $this->db->escape(json_encode($request)) . "'";
         $this->db->ncquery( $sql ); 
     }
 
     private function updateReceiptsRequest($request,$receipt_id){
+        if (!empty($request['fiscal_code'])){
+            $request['is_sent_dps'] = true;
+        }
+
+        if (!empty($request['fiscal_date'])){
+            $request['sent_dps_at'] = $request['fiscal_date'];
+        }
+
+
         $sql = "UPDATE order_receipt SET  
-            serial                  = '".(int)$request['serial']. "',  
-            status                  = '".(string)$request['status']. "',  
-            fiscal_code             = '".(string)$request['fiscal_code']. "',  
-            fiscal_date             = '".(string)$request['fiscal_date']. "',  
-            is_created_offline      = '".(int)$request['is_created_offline']. "',  
-            is_sent_dps             = '".(int)$request['is_sent_dps']. "',  
-            sent_dps_at             = '".(int)$request['sent_dps_at']. "',               
-            all_json_data           = '".$this->db->escape(json_encode($request)). "' 
+            serial                  = '" . (int)$request['serial'] . "',  
+            status                  = '" . $this->db->escape($request['status']) . "',  
+            fiscal_code             = '" . $this->db->escape($request['fiscal_code']) . "',  
+            fiscal_date             = '" . $this->db->escape($request['fiscal_date']) . "',  
+            is_created_offline      = '" . (int)$request['is_created_offline'] . "',  
+            is_sent_dps             = '" . (int)$request['is_sent_dps'] . "',  
+            sent_dps_at             = '" . $this->db->escape($request['sent_dps_at']) . "',               
+            all_json_data           = '" . $this->db->escape(json_encode($request)) . "' 
             WHERE receipt_id       = '".$receipt_id."' ";
         $this->db->ncquery( $sql );
     }
@@ -767,11 +780,11 @@ class CheckBoxUA {
         $request['z_report']['id'] = isset($request['z_report']['id']) ? $request['z_report']['id'] : '';
 
         $sql = "INSERT INTO shift SET     
-            shift_id = '".$this->db->escape($request['id']). "',  
-            serial = '".(int)$request['serial']. "',  
-            status = '".$this->db->escape($request['status']). "',  
-            z_report_id = '".$this->db->escape($request['z_report']['id']). "',
-            all_json_data = '".$this->db->escape(json_encode($request)). "'  ";
+            shift_id        = '" . $this->db->escape($request['id']) . "',  
+            serial          = '" . (int)$request['serial'] . "',  
+            status          = '" . $this->db->escape($request['status']) . "',  
+            z_report_id     = '" . $this->db->escape($request['z_report']['id']) . "',
+            all_json_data   = '" . $this->db->escape(json_encode($request)) . "'";
         $this->db->ncquery( $sql ); 
     }
 

@@ -89,6 +89,17 @@ class ModelPaymentMono extends Model
 
         $orderTotals = $this->db->ncquery("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "'");
         foreach ($orderTotals->rows as $orderTotal){
+
+            if ($orderTotal['code'] == 'shipping' && (float)$orderTotal['value_national'] > 0){
+                $products[] = [
+                    'name'  => $orderTotal['title'],
+                    'code'  => $orderTotal['code'],
+                    'sum'   => number_format($orderTotal['value_national'], 2, '.', '') * 100,
+                    'qty'   => 1,
+                    'icon'  => HTTPS_SERVER . 'catalog/view/image/monoshipping.jpg'
+                ];
+            }
+
             if ($orderTotal['code'] == 'coupon' && (float)$orderTotal['value_national'] < 0){
                 $products[] = [
                     'name'  => $orderTotal['title'],
@@ -109,18 +120,28 @@ class ModelPaymentMono extends Model
                 ];
             }
 
-            if ($orderTotal['code'] == 'shipping' && (float)$orderTotal['value_national'] > 0){
+            if ($orderTotal['code'] == 'reward' && (float)$orderTotal['value_national'] < 0){
                 $products[] = [
                     'name'  => $orderTotal['title'],
                     'code'  => $orderTotal['code'],
                     'sum'   => number_format($orderTotal['value_national'], 2, '.', '') * 100,
                     'qty'   => 1,
-                    'icon'  => HTTPS_SERVER . 'catalog/view/image/monoshipping.jpg'
+                    'icon'  => HTTPS_SERVER . 'catalog/view/image/monodiscount.jpg'
                 ];
             }
 
 
-            if ($orderTotal['code'] == 'reward' && (float)$orderTotal['value_national'] < 0){
+            if ($orderTotal['code'] == 'voucher' && (float)$orderTotal['value_national'] < 0){
+                $products[] = [
+                    'name'  => $orderTotal['title'],
+                    'code'  => $orderTotal['code'],
+                    'sum'   => number_format($orderTotal['value_national'], 2, '.', '') * 100,
+                    'qty'   => 1,
+                    'icon'  => HTTPS_SERVER . 'catalog/view/image/monodiscount.jpg'
+                ];
+            }
+
+            if ((float)$orderTotal['value_national'] < 0 && !in_array($orderTotal['code'], ['coupon', 'paymentmethoddiscounts', 'reward', 'voucher'])){
                 $products[] = [
                     'name'  => $orderTotal['title'],
                     'code'  => $orderTotal['code'],
