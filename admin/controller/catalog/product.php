@@ -1502,7 +1502,6 @@ class ControllerCatalogProduct extends Controller {
 
 		/*Additional offer*/
 		$this->data['product_additional_offer'] = [];
-
 		if (isset($this->request->post['product_additional_offer'])) {
 			$product_additional_offer = $this->request->post['product_additional_offer'];
 			foreach($product_additional_offer as $key=>$product_ao) {
@@ -1573,9 +1572,6 @@ class ControllerCatalogProduct extends Controller {
 
 				$img_ao = $product_ao['image'] ? $product_ao['image'] : 'no_image.jpg';
 				$this->data['product_additional_offer'][$key]['thumb'] = $this->model_tool_image->resize($img_ao, 100, 100);
-
-
-
 
 				$this->data['product_additional_offer'][$key]['description'] = $product_ao['description'];
 

@@ -2663,7 +2663,7 @@
 																							</table>
 																						</div>
 																						<div id="tab-markdown">
-																							<table id="additional-offer" class="form">
+																							<table id="table-markdown" class="form">
 																								<tr>						
 																									<td>Уцененный товар</td>
 																									<td><select name="is_markdown">
@@ -2751,10 +2751,11 @@
 																							</thead>
 																							<?php $additional_offer_row = 0; ?>
 																							<?php foreach ($product_additional_offer as $product_ao) { ?>
-																								<input type="hidden" name="product_additional_offer[<?php echo $additional_offer_row; ?>][product_additional_offer_id]" value="<?php echo $product_ao['product_additional_offer_id']; ?>" />
 																								<tbody id="additional-offer-row<?php echo $additional_offer_row; ?>">
 																									<tr>
-																										<td class="left"><select name="product_additional_offer[<?php echo $additional_offer_row; ?>][customer_group_id]" style="width:150px;">
+																										<td class="left">
+																											<input type="hidden" name="product_additional_offer[<?php echo $additional_offer_row; ?>][product_additional_offer_id]" value="<?php echo $product_ao['product_additional_offer_id']; ?>" />
+																											<select name="product_additional_offer[<?php echo $additional_offer_row; ?>][customer_group_id]" style="width:150px;">
 																											<?php foreach ($customer_groups as $customer_group) { ?>
 																												<?php if ($customer_group['customer_group_id'] == $product_ao['customer_group_id']) { ?>
 																													<option value="<?php echo $customer_group['customer_group_id']; ?>" selected="selected"><?php echo $customer_group['name']; ?></option>
@@ -2816,7 +2817,8 @@
 
 																											<td class="left">
 
-																												<? /*		<a onclick="$('#additional-offer-row<?php echo $additional_offer_row; ?>').remove();" class="button"><?php echo $button_remove; ?></a> */ ?></td>
+																												<a onclick="$('#additional-offer-row<?php echo $additional_offer_row; ?>').remove();" class="button"><?php echo $button_remove; ?></a>
+																											</td>
 																											</tr>
 
 																											<tr style="display:none;">
