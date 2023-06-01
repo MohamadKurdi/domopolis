@@ -145,7 +145,6 @@ class RainforestAmazon
 	}
 
 	public function sendAlertToTelegram($message){
-
 		try {
 			$result = \Longman\TelegramBot\Request::sendMessage([
 				'chat_id' => $this->tgAlertChatID,
@@ -155,7 +154,7 @@ class RainforestAmazon
 
 			var_dump($result);
 		} catch (\Longman\TelegramBot\Exception\TelegramException $e) {
-			echoLine($e->getMessage());
+			echoLine($e->getMessage(), 'e');
 		}
 	}
 
