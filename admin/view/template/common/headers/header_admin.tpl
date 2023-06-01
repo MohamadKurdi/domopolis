@@ -390,7 +390,7 @@
 								<li><a class="home_icon_style" href="<?php echo $shipping; ?>"><i class="fa fa-truck"></i><span><?php echo $text_shipping; ?></span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $payment; ?>"><i class="fa fa-credit-card"></i><span><?php echo $text_payment; ?></span></a></li>
 
-								<?php if ($this->config->get('config_country_id') == 220) { ?>
+								<?php if ($this->config->get('config_country_id') == 220 && !defined('RESTRICTED_FUNCTIONS')) { ?>
 								<li>
 									<a class="home_icon_style parent"><i class="fa fa-check"></i><span>CheckBOX ПРРО</span></a>
 									<ul>
