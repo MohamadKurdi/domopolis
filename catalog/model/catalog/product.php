@@ -413,8 +413,10 @@
 					$sql .= "(SELECT price FROM product_price_national_to_yam ppn2yam WHERE ppn2yam.product_id = p.product_id AND price > 0 AND ppn2yam.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as yam_overload_price_national, ";		
 				}
 
-				$sql .= " (SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as overload_stock_status_id, ";
-				$sql .= "(SELECT name FROM stock_status sst WHERE sst.stock_status_id = (SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) AND sst.language_id = '" . (int)$this->config->get('config_language_id') . "') as overload_stock_status,	";
+				if (!$this->config->get('config_single_store_enable')){
+					$sql .= " (SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as overload_stock_status_id, ";
+					$sql .= "(SELECT name FROM stock_status sst WHERE sst.stock_status_id = (SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) AND sst.language_id = '" . (int)$this->config->get('config_language_id') . "') as overload_stock_status,	";
+				}
 
 
 				$sql .= "(SELECT ss.name FROM stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, ";
@@ -574,7 +576,7 @@
 					}
 
 					//Логика переназначения статусов наличия
-					if (!empty($query->row['overload_stock_status_id']) && $query->row['overload_stock_status']){
+					if (!empty($query->row['overload_stock_status_id']) && !empty($query->row['overload_stock_status'])){
 						$query->row['stock_status_id'] 	= $query->row['overload_stock_status_id'];
 						$query->row['stock_status'] 	= $query->row['overload_stock_status'];
 					}
@@ -948,9 +950,16 @@
 			if ($this->config->get('config_warehouse_only')){							
 				$sql .= " IF(p." . $this->config->get('config_warehouse_identifier') . " > 0, " . $this->config->get('config_in_stock_status_id') . ", " . $this->config->get('config_overload_stock_status_id') . ") as stock_status_id";
 			} else {
-				$sql .= " IF( (p.quantity_stock + p.quantity_stockK + p.quantity_stockM + p.quantity_stockMN + p.quantity_stockAS) > 0, 
-				IF(p." . $this->config->get('config_warehouse_identifier') . " > 0, " . $this->config->get('config_in_stock_status_id') . ", " . $default_stock_status . "), IF ((SELECT stock_status_id FROM product_stock_status WHERE product_id = p.product_id AND store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0,  (SELECT stock_status_id FROM product_stock_status WHERE product_id = p.product_id AND store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1), p.stock_status_id)
-				) as stock_status_id";
+				if (!$this->config->get('config_single_store_enable')){
+					$sql .= " IF( (p.quantity_stock + p.quantity_stockK + p.quantity_stockM + p.quantity_stockMN + p.quantity_stockAS) > 0, 
+					IF(p." . $this->config->get('config_warehouse_identifier') . " > 0, " . $this->config->get('config_in_stock_status_id') . ", " . $default_stock_status . "), IF ((SELECT stock_status_id FROM product_stock_status WHERE product_id = p.product_id AND store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) > 0,  (SELECT stock_status_id FROM product_stock_status WHERE product_id = p.product_id AND store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1), p.stock_status_id)
+					) as stock_status_id";
+				} else {
+					$sql .= " IF( 
+					(p.quantity_stock + p.quantity_stockK + p.quantity_stockM + p.quantity_stockMN + p.quantity_stockAS) > 0, 
+					IF(p." . $this->config->get('config_warehouse_identifier') . " > 0, " . $this->config->get('config_in_stock_status_id') . ", " . $default_stock_status . "), p.stock_status_id
+					) as stock_status_id";
+				}
 			}
 
 			if (!empty($data['sort']) && $data['sort'] == 'p.price') {
