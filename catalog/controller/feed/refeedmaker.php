@@ -215,8 +215,6 @@ class ControllerFeedReFeedMaker extends Controller
                     $output .= '  </channel>';
                     $output .= '</rss>';
 
-
-
                     file_put_contents($file, $output);
 
                     echo convertSize(memory_get_usage(true)) . PHP_EOL;
