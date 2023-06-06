@@ -558,7 +558,7 @@ class ControllerCheckoutQuickorder extends Controller {
 		$this->language->load('checkout/checkout');
 
 		$json = array();
-		if (isset($this->request->post['quickfastorder-phone']) && mb_strlen($this->request->post['quickfastorder-phone'],'UTF-8')>=7 && $this->validatePhone($this->request->post['quickfastorder-phone'])) {
+		if (isset($this->request->post['quickfastorder-phone']) && mb_strlen($this->request->post['quickfastorder-phone'],'UTF-8')>=7 && $this->registry->get('phoneValidator')->validate($this->request->post['quickfastorder-phone'])) {
 			$phone = $this->request->post['quickfastorder-phone'];
 		} else {
 			$json['error']['phone'] = sprintf($this->language->get('error_required'), 'Телефон');
@@ -915,7 +915,7 @@ class ControllerCheckoutQuickorder extends Controller {
 			$this->load->model('checkout/order');
 
 			$json['order_id'] = $this->model_checkout_order->addOrder($data);
-			$this->model_checkout_order->confirm($json['order_id'], $this->config->get('config_order_status_id'), 'Этот заказ оформлен, как быстрый!', true);
+			$this->model_checkout_order->confirm($json['order_id'], $this->config->get('config_order_status_id'), $this->language->get('text_fastorder'), true);
 
 			$this->session->data['order_id'] = $json['order_id'];
 
@@ -930,25 +930,9 @@ class ControllerCheckoutQuickorder extends Controller {
 		}			
 	}
 
-	public function test(){
-		$json = array();
-		$this->language->load('checkout/cart');
-		$this->language->load('checkout/checkout');
-
-	//	var_dump($this->request->post['quickorder-dialog-phone']);
-
-		if (!empty($this->request->post['quickorder-dialog-phone']) && $this->phoneValidator->validate($this->request->post['quickorder-dialog-phone'])) {
-			$json['phone'] = $this->phoneValidator->format($this->request->post['quickorder-dialog-phone']);
-		} else {
-			$json['error']['phone'] = $this->language->get('error_telephone');
-		}
-
-		$this->response->setOutput(json_encode($json));		
-	}
-
 	public function createorder() {
 		$json = array();
-		$this->language->load('checkout/cart');
+		$this->language->load('checkout/cart');		
 		$this->language->load('checkout/checkout');
 
 		$this->load->model('catalog/product');
@@ -1339,7 +1323,7 @@ class ControllerCheckoutQuickorder extends Controller {
 				$this->load->model('localisation/country');
 
 				$json['order_id'] = $this->model_checkout_order->addOrder($data);
-				$this->model_checkout_order->confirm($json['order_id'], $this->config->get('config_order_status_id'), 'Этот заказ оформлен, как быстрый!', true);
+				$this->model_checkout_order->confirm($json['order_id'], $this->config->get('config_order_status_id'), $this->language->get('text_fastorder'), true);
 
 				$this->session->data['order_id'] = $json['order_id'];
 
@@ -1445,7 +1429,6 @@ class ControllerCheckoutQuickorder extends Controller {
 		$this->response->setOutput(json_encode($json));		
 	}
 
-
 	private function validatePreOrderRequest(){
 		$this->language->load('module/callback');
 		
@@ -1472,12 +1455,5 @@ class ControllerCheckoutQuickorder extends Controller {
 		} else {
 			return false;
 		}
-	}
-	
-	private function validatePhone($phone){			
-		$phone = trim($phone);
-		$phone = str_replace(array('+', '-', '(', ')', ' '), '', $phone);
-		
-		return preg_match("/^\d+$/", $phone);
-	}		
+	}	
 }																		
