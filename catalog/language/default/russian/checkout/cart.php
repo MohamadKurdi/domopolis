@@ -72,3 +72,4 @@ $_['text_trial']             = '%s каждые %s %s для %s платежей
 $_['text_recurring']         = '%s каждые %s %s';
 $_['text_length']            = ' для %s платежей';
 $_['text_client'] = 'Клиент';
+$_['text_fastorder'] = 'Этот заказ оформлен как быстрый';
