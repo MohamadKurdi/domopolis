@@ -418,14 +418,12 @@ class OffersParser
 
 			if ($supplier = $this->Suppliers->getSupplier($rfOffer->getSellerName())){
 				if (!empty($supplier['amzn_coefficient']) && (int)$supplier['amzn_coefficient'] < $this->Suppliers->supplierMinInnerRatingForUse){
-					echo('amzn_coefficient');
 					$addThisOffer = false;
 				}
 			}
 
 			if ((float)$this->config->get('config_rainforest_max_delivery_price') && (float)$rfOffer->getDeliveryAmount() > 0){
 				if ((float)$rfOffer->getDeliveryAmount() > $this->config->get('config_rainforest_max_delivery_price')){
-					echo('config_rainforest_max_delivery_price');
 					$addThisOffer = false;
 				}
 			}
@@ -433,7 +431,6 @@ class OffersParser
 			//Bad delivery price
 			if ((float)$this->config->get('config_rainforest_max_delivery_price_multiplier') && (float)$rfOffer->getDeliveryAmount() > 0){
 				if ((float)$rfOffer->getDeliveryAmount() > (float)$rfOffer->getPriceAmount() * (float)$this->config->get('config_rainforest_max_delivery_price_multiplier')){
-					echo('config_rainforest_max_delivery_price_multiplier');
 					$addThisOffer = false;
 				}
 			}
@@ -441,14 +438,12 @@ class OffersParser
 			if ($rfOffer->getDeliveryComments() && $offerDates = $this->parseAmazonDeliveryComment($rfOffer->getDeliveryComments())){
 				if ($this->config->get('config_rainforest_max_delivery_days_for_offer') > 0){
 					if (!empty($offerDates['minDays']) && (int)$offerDates['minDays'] > (int)$this->config->get('config_rainforest_max_delivery_days_for_offer')){
-						echo('config_rainforest_max_delivery_days_for_offer');
 						$addThisOffer = false;
 					}
 				}
 			}
 
 			if ($rfOffer->getSellerRating50()>0 && $rfOffer->getSellerRating50() < $this->Suppliers->supplierMinRatingForUse){
-				echo('supplierMinRatingForUse');
 				$addThisOffer = false;
 			}
 
