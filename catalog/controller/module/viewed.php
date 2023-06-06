@@ -126,6 +126,7 @@ class ControllerModuleViewed extends Controller {
 								'sort'                => 'p.viewed',
 								'filter_only_viewed'  => (int)$this->config->get('blockviewed_threshold_' . $idx), 
 							//	'filter_with_variants'=> true,
+								'filter_not_bad' 	  => true,
 								'order'               => 'DESC',
 								'start'               => 0,
 								'limit'               => $setting['limit']
@@ -140,6 +141,7 @@ class ControllerModuleViewed extends Controller {
 								'sort'                			=> 'p.date_added',
 								'filter_different_categories' 	=> true,
 								'filter_date_added_threshold' 	=> (int)$this->config->get('blockviewed_threshold_' . $idx), 
+								'filter_not_bad' 	  			=> true,
 							//	'filter_with_variants'=> true,
 								'order'               			=> 'DESC',
 								'start'               			=> 0,
