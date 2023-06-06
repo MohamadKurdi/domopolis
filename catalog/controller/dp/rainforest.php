@@ -32,7 +32,7 @@ class ControllerDPRainForest extends Controller {
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 		$this->rainforestAmazon->checkIfPossibleToMakeRequest();
 
-		$this->fullFillExistentAsins();
+	//	$this->fullFillExistentAsins();
 	}
 
 	/*
@@ -63,7 +63,9 @@ class ControllerDPRainForest extends Controller {
 	}
 
 	private function asinExists($asin){
-		return in_array($asin, $this->existentAsins);
+		$query = $this->db->ncquery("SELECT product_id FROM product WHERE asin = '" . $this->db->escape($asin) . "'");
+
+		return $query->num_rows;
 	}
 
 	private function recursiveTree($category_id, $type){
@@ -115,8 +117,6 @@ class ControllerDPRainForest extends Controller {
 							]
 						);		
 
-
-						$this->addExistentAsin($rfSimpleProduct['asin']);
 					}
 
 				} else {
@@ -193,11 +193,11 @@ class ControllerDPRainForest extends Controller {
 
 		if ($this->config->get('config_rainforest_delete_no_offers') && $this->config->get('config_rainforest_delete_no_offers_counter')){
 			echoLine('[ControllerDPRainForest::cleardatabasecron] Starting deletenoofferscron(1)!', 's');
-			$this->deletenoofferscron(1);
+		//	$this->deletenoofferscron(1);
 		}
 		if ($this->config->get('config_rainforest_delete_no_offers_manual') && $this->config->get('config_rainforest_delete_no_offers_counter_manual')){
 			echoLine('[ControllerDPRainForest::cleardatabasecron] Starting deletenoofferscron(0)!', 's');
-			$this->deletenoofferscron(0);
+		//	$this->deletenoofferscron(0);
 		}		
 
 

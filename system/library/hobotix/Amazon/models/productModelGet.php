@@ -751,6 +751,12 @@ class productModelGet extends hoboModel{
 		return false;
 	}	
 
+	public function checkIfProductWasAddedFromAmazon($product_id){
+		$query = $this->db->ncquery("SELECT added_from_amazon FROM product WHERE product_id = '" . (int)$product_id . "' LIMIT 1");
+
+		return $query->row['added_from_amazon'];
+	}
+
 	public function getProductsByAsin($asin){
 		$results = [];
 		$query = $this->db->ncquery("SELECT product_id FROM product WHERE asin LIKE ('" . $this->db->escape($asin) . "')");
