@@ -76,6 +76,9 @@
 /catalog/view/theme/kp_dev/
 /catalog/view/theme/dp_dev/
 /catalog/view/theme/ho_dev/
+/catalog/view/theme/kp_old/
+/catalog/view/theme/dp_old/
+/catalog/view/theme/ho_old/
 
 #Языки
 /catalog/language/russian
