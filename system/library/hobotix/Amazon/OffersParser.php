@@ -397,7 +397,7 @@ class OffersParser
 			$dateFrom = $dateTo = $date;		
 		}
 
-		if (!$dateFrom || empty($dateFrom) || !$dateFrom['month'] || ($dateFrom['year'] + $dateFrom['month'] + $dateFrom['day']) <= 0){
+		if (empty($dateFrom) || !$dateFrom || !$dateFrom['month'] || ($dateFrom['year'] + $dateFrom['month'] + $dateFrom['day']) <= 0){
 			return false;
 		}
 
