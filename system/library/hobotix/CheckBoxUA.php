@@ -547,16 +547,17 @@ class CheckBoxUA {
     private function getDeliveryEmail($data = array()){
         $delivery = []; 
 
-        if(isset($data['email']) && $data['email'] && $this->config->get('receipt_is_customer_send_email')){
+        if(isset($data['email']) && $data['email'] && $this->config->get('receipt_is_customer_send_email') && filter_var($data['email'], FILTER_VALIDATE_EMAIL)){
             $delivery['email'] = $data['email'];
             return $delivery;
         } 
 
-        # тут можливо повертати емейл адміністратора магазину 
+        
         if($this->config->get('config_email')){
             $delivery['email'] = $this->config->get('config_email');
             return $delivery;
         }
+        
         return array();        
     }
 
