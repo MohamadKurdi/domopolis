@@ -111,7 +111,7 @@ class ControllerKPMailWizz extends Controller {
 			'CSI_AVERAGE' 				=> $customer['csi_average'],
 			
 			//Дата последнего захода
-			'LAST_SITE_ACTION' 			=> (date('Y-m-d', strtotime($customer['last_date']))),
+			'LAST_SITE_ACTION' 			=> !empty($customer['last_date'])?(date('Y-m-d', strtotime($customer['last_date']))):'',
 			
 			//Бонусов на счету
 			'TOTAL_REWARD' 				=> (int)($customer['total_reward']),
