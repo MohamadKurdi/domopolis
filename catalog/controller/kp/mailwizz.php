@@ -14,7 +14,7 @@ class ControllerKPMailWizz extends Controller {
 		'newsletter_personal' 	=> 'config_mailwizz_mapping_newsletter_personal'
 	];
 
-	private $limit = 500;
+	private $limit = 1000;
 	private $countries = [];				
 
 
