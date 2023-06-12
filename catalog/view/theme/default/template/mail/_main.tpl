@@ -288,9 +288,6 @@
 																<a rel="nofollow" href="https://www.facebook.com/pages/Kitchen-Profi/356117477907433" target="_blank" class=""><img src="https://kitchen-profi.de/image/social/Facebook-color.png" height="48px" width="48px" /></a>
 																</td>
 																<td style="text-align:center; padding-top:5px;" align="center">
-																<a rel="nofollow" href="http://vk.com/kitchenprofi" target="_blank" class=""><img src="https://kitchen-profi.de/image/social/vk.png" height="48px" width="48px" /></a>
-																</td>
-																<td style="text-align:center; padding-top:5px;" align="center">
 																<a rel="nofollow" href="https://twitter.com/KitchenProfi" target="_blank" class=""><img src="https://kitchen-profi.de/image/social/Twitter-color.png" height="48px" /></a>
 																</td>
 																<td style="text-align:center; padding-top:5px;" align="center">
