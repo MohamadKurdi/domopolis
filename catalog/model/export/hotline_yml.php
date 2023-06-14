@@ -11,8 +11,7 @@
 			return $query->rows;
 		}
 		
-		public function getProductsForPriceva() {
-			
+		public function getProductsForPriceva() {			
 			$query = $this->db->non_cached_query("SELECT DISTINCT p.product_id FROM product p 
 			LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id)
 			LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
@@ -24,10 +23,7 @@
 			AND LENGTH(TRIM(competitors)) > 0
 			ORDER BY p.product_id");
 			
-			return $query->rows;
-			
-			
-			
+			return $query->rows;							
 		}
 		
 		public function getProductsForHotline() {
@@ -39,12 +35,12 @@
 			AND p.date_available <= NOW()
 			AND p.price > 0
 			AND p.status = '1'
-			AND p.product_id IN (SELECT DISTINCT product_id FROM order_product WHERE order_id IN (SELECT order_id FROM `order` WHERE order_status_id = 17 AND DATE(date_added) >= DATE_ADD(CURDATE(), INTERVAL - 4 MONTH)))
+			AND p.product_id IN (SELECT DISTINCT product_id FROM order_product WHERE order_id IN (SELECT order_id FROM `order` WHERE order_status_id = 17 AND DATE(date_added) >= DATE_ADD(CURDATE(), INTERVAL - 2 MONTH)))
 			ORDER BY p.product_id");
 			
 			return $query->rows;
 		}
-		
+
 		public function getProductsForHotlineCategoryInStock($category_id) {
 			$query = $this->db->non_cached_query("SELECT DISTINCT p.product_id FROM product p 
 			JOIN product_to_category AS p2c ON (p.product_id = p2c.product_id)
@@ -56,6 +52,21 @@
 			AND p.price > 0
 			AND p.status = '1'
 			AND p2c.category_id = '" . (int)$category_id . "'");
+			
+			return $query->rows;
+		}
+		
+		public function getProductsForHotlineInStock() {
+			$query = $this->db->non_cached_query("SELECT DISTINCT p.product_id FROM product p 
+			JOIN product_to_category AS p2c ON (p.product_id = p2c.product_id)
+			LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id)
+			LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
+			WHERE p2s.store_id = '" . (int)$this->config->get('config_store_id') . "'
+			AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND p.date_available <= NOW()
+			AND p.price > 0
+			AND p.status = '1'
+			AND p.`" . $this->config->get('config_warehouse_identifier') . "` > 0");
 			
 			return $query->rows;
 		}
