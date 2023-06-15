@@ -607,4 +607,76 @@ class productModelEdit extends hoboModel{
 				text 		= '" . $this->db->escape(strip_tags($value['text'])) . "'");
 			}
 	}
+
+	public function addCategoryToTechSimple($data){
+		$this->db->query("INSERT INTO category SET 
+			parent_id 				= '" . (int)$this->config->get('config_rainforest_default_technical_category_id') . "', 
+			virtual_parent_id 		= '0', 
+			`top` 					= '0', 
+			`column` 				= '0', 
+			sort_order 				= '-200', 
+			status 					= '0', 
+			tnved 					= '', 
+			menu_icon 				= '', 
+			overprice 				= '', 
+			google_category_id 		= '0', 
+			separate_feeds 			= '0', 
+			no_general_feed 		= '0', 
+			deletenotinstock 		= '0', 
+			intersections 				= '0', 
+			exclude_from_intersections 	= '0', 
+			default_weight 			= '0', 
+			default_weight_class_id = '0', 
+			default_length 			= '0', 
+			default_width 			= '0', 
+			default_height 			= '0', 
+			default_length_class_id = '0', 
+			priceva_enable 			= '0', 
+			submenu_in_children 	= '0', 
+			amazon_sync_enable 		= '0', 
+			amazon_last_sync 		= '', 
+			amazon_synced 			= '0', 
+			amazon_category_id 		= '', 
+			amazon_category_name 	= '', 
+			amazon_parent_category_id 		= '', 
+			amazon_parent_category_name 	= '',
+			amazon_final_category 			= '',
+			amazon_can_get_full 			= '',
+			yandex_category_name 	= '',
+			amazon_overprice_rules 	= '', 
+			date_modified 			= NOW(), 
+			date_added 				= NOW()");
+		
+		$category_id = $this->db->getLastId();
+
+		foreach ($data['category_description'] as $language_id => $value) {
+			$this->db->query("INSERT INTO category_description SET 
+				category_id 	= '" . (int)$category_id . "', 
+				language_id 	= '" . (int)$language_id . "', 
+				name 			= '" . $this->db->escape($value['name']) . "', 
+				tagline 		= '', 
+				alternate_name 	= '', 
+				menu_name 		= '', 
+				all_prefix 		= '', 
+				meta_keyword 	= '', 
+				seo_title 		= '', 
+				seo_h1 			= '', 
+				meta_description 	= '', 
+				description 		= '', 
+				google_tree 		= ''");
+		}
+
+		$level = 0;		
+		$query = $this->db->query("SELECT * FROM `category_path` WHERE category_id = '" . (int)$this->config->get('config_rainforest_default_technical_category_id') . "' ORDER BY `level` ASC");
+		
+		foreach ($query->rows as $result) {
+			$this->db->query("INSERT INTO `category_path` SET `category_id` = '" . (int)$category_id . "', `path_id` = '" . (int)$result['path_id'] . "', `level` = '" . (int)$level . "'");
+			
+			$level++;
+		}
+		
+		$this->db->query("INSERT INTO `category_path` SET `category_id` = '" . (int)$category_id . "', `path_id` = '" . (int)$category_id . "', `level` = '" . (int)$level . "'");
+
+		return $category_id;
+	}
 }
