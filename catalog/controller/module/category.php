@@ -76,7 +76,9 @@
 
 						if ($this->config->get('config_product_count')){
 							$product_count = $this->model_catalog_product->getTotalProducts(['filter_category_id'  => $result['category_id'], 'filter_manufacturer_id' => $this->request->get['manufacturer_id']]);	
-						}	
+						} else {
+							$product_count = null;
+						}
 						
 						if (isset($this->request->get['path'])){
 							$_href = $this->url->link('product/category', 'path=' . $this->request->get['path'] . '_' . $result['category_id'] . $url_s);
