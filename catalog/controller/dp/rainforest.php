@@ -639,6 +639,7 @@ class ControllerDPRainForest extends Controller {
 				}
 
 				$asinsToCategories[$asin['asin']] = $asin['category_id'];
+				$asinsToBrandLogic[$asin['asin']] = $asin['brand_logic'];
 				$asinsSlice[$asin['asin']] = [
 					'asin' 			=> $asin['asin'],
 					'product_id' 	=> $asin['asin']
@@ -658,6 +659,10 @@ class ControllerDPRainForest extends Controller {
 						$category_id = $asinsToCategories[$asin];
 					} else {
 						$category_id = $this->config->get('config_rainforest_default_technical_category_id');
+					}
+
+					if (!empty($asinsToBrandLogic[$asin])){
+						$rfProduct['brand_logic'] = true;
 					}
 
 
@@ -680,7 +685,7 @@ class ControllerDPRainForest extends Controller {
 						continue;
 					}
 
-					if ($product_id){						
+					if ($product_id){											
 						echoLine('[ControllerDPRainForest::addasinsqueuecron] Product added: ' . $product_id, 's');
 						$this->rainforestAmazon->productsRetriever->editFullProduct($product_id, $rfProduct);
 						$this->rainforestAmazon->productsRetriever->model_product_edit->setProductIDInQueue($asin, $product_id);
