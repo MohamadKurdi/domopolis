@@ -730,13 +730,42 @@ class ProductsRetriever extends RainforestRetriever
 				$name = $product['categories'][count($product['categories']) - 1]['name'];
 
 				if ($category_id = $this->model_product_cached_get->getCategory(atrim($name))){
+
 					echoLine('[ProductsRetriever::parseProductCategories] Found category: ' . $name . ': ' . $category_id, 's');
 					$this->model_product_edit->editProductCategory($product_id, [$category_id]);
+
 				} else {
 
-					echoLine('[ProductsRetriever::parseProductCategories] Could not found category: ' . $name . ', setting as unknown', 'e');
-					$this->model_product_edit->editProductCategory($product_id, [$this->config->get('config_rainforest_default_unknown_category_id')]);
+					if (!empty($product['brand']) && !empty($product['brand_logic'])){
+						$temprorary_category = $product['brand'] . ' TEMPRORARY';
 
+						echoLine('[ProductsRetriever::parseProductCategories] Brand Logic is ON: ' . $temprorary_category, 'i');
+
+
+						if ($category_id = $this->model_product_cached_get->getCategory(atrim($temprorary_category))){						
+							echoLine('[ProductsRetriever::parseProductCategories] Found BL category: ' . $temprorary_category . ': ' . $category_id, 's');							
+							$this->model_product_edit->editProductCategory($product_id, [$category_id]);
+						} else {
+							echoLine('[ProductsRetriever::parseProductCategories] Not Found BL category: ' . $temprorary_category, 'e');
+
+							$category_data = [
+								'category_description' => []
+							];
+
+							foreach ($this->registry->get('languages') as $language){
+								$category_data['category_description'][$language['language_id']]['name'] = $temprorary_category;
+							}	
+
+							$category_id = $this->model_product_edit->addCategoryToTechSimple($category_data);
+
+							echoLine('[ProductsRetriever::parseProductCategories] Created BL category: ' . $temprorary_category . ': ' . $category_id, 'i');
+							$this->model_product_edit->editProductCategory($product_id, [$category_id]);
+
+						}					
+					} else {
+						echoLine('[ProductsRetriever::parseProductCategories] Could not found category: ' . $name . ', setting as unknown', 'e');
+						$this->model_product_edit->editProductCategory($product_id, [$this->config->get('config_rainforest_default_unknown_category_id')]);
+					}
 				}
 			}
 		}
