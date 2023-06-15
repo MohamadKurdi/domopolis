@@ -89,8 +89,17 @@
 					$data['category_id'] = 0;
 				}
 
+				if (empty($data['brand_logic'])){
+					$data['brand_logic'] = 0;
+				}
+
 				foreach ($asins as $asin){
-					$this->db->query("INSERT IGNORE INTO amzn_add_queue SET asin = '" . $this->db->escape(trim($asin)) . "', category_id = '" . (int)$data['category_id'] . "', user_id = '" . (int)$this->user->getID() . "', date_added = NOW()");
+					$this->db->query("INSERT IGNORE INTO amzn_add_queue SET 
+						asin = '" . $this->db->escape(trim($asin)) . "', 
+						category_id = '" . (int)$data['category_id'] . "',
+						brand_logic = '" . (int)$data['brand_logic'] . "', 
+						user_id = '" . (int)$this->user->getID() . "', 
+						date_added = NOW()");
 				}
 			}		
 		}

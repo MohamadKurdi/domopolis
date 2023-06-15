@@ -7,9 +7,10 @@ class ControllerKPAmazon extends Controller {
 
 		$asin 			= trim($this->request->post['asin']);
 		$category_id 	= (int)($this->request->post['category_id']);
+		$brand_logic	= (int)($this->request->post['brand_logic']);
 
 		if ($asin){
-			$this->model_report_product->insertAsinToQueue(['asin' => $asin, 'category_id' => $category_id]);	
+			$this->model_report_product->insertAsinToQueue(['asin' => $asin, 'category_id' => $category_id, 'brand_logic' => $brand_logic]);	
 
 			$this->load->model('kp/content');
 			$this->model_kp_content->addContent(['action' => 'add', 'entity_type' => 'product', 'entity_id' => 0]);		
@@ -92,6 +93,12 @@ class ControllerKPAmazon extends Controller {
 			$products = $result['deals'];
 		} elseif ($type == 'search'){
 			$products = $result['search_results'];
+		} elseif ($type == 'store'){
+			$products = $result['store_results'];
+		} elseif ($type == 'store'){
+			$products = $result['store_results'];
+		} elseif ($type == 'seller_products'){
+			$products = $result['seller_products'];
 		}
 
 		$this->data['products'] = [];		
@@ -150,8 +157,6 @@ class ControllerKPAmazon extends Controller {
 
 		$this->response->setOutput($this->render());
 	}
-
-
 
 	public function getProductOffers(){
 		$product_id = (int)$this->request->get['product_id'];

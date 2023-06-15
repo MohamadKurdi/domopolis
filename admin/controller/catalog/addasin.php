@@ -41,7 +41,6 @@
 			$this->response->setOutput($this->render());
 		}
 
-
 		public function delete() {			
 			$this->load->model('report/product');
 			$url = '';
@@ -125,7 +124,6 @@
 			
 			$this->response->redirect($this->url->link('catalog/addasin', 'token=' . $this->session->data['token'] . $url, 'SSL'));			
 		}
-
 
 		protected function getList() {
 			$this->load->language('report/product_viewed');
@@ -218,6 +216,7 @@
 				'date_added'	=> date('Y-m-d', strtotime($result['date_added'])),
 				'time_added'	=> date('H:i:s', strtotime($result['date_added'])),
 				'product_id'	=> $result['product_id'],
+				'brand_logic'	=> $result['brand_logic'],
 				'status'		=> ($result['product_id'] > 0)?$result['status']:false,
 				'edit'			=> ($result['product_id'] > 0)?$this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'], 'SSL'):false,
 				'view'			=> ($result['product_id'] > 0)?(HTTP_CATALOG . 'index.php?route=product/product&product_id=' . $result['product_id']):false,
