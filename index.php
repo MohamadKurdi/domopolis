@@ -379,9 +379,6 @@
 	
 	//Остальные библиотеки	
 	$registry->set('document', 			new Document()); 				
-	$registry->set('mAlert', 			new mAlert($registry));
-	$registry->set('smsQueue', 			new smsQueue($registry));	
-	$registry->set('shortAlias', 		new shortAlias($registry));	
 	$registry->set('Bitrix24', 			new Bitrix24($registry));
 	$registry->set('customer', 			new Customer($registry));
 	$registry->set('affiliate', 		new Affiliate($registry));
@@ -390,7 +387,10 @@
 	$registry->set('weight', 			new Weight($registry));
 	$registry->set('length', 			new Length($registry));
 	$registry->set('cart', 				new Cart($registry));	
-	$registry->set('encryption', 		new Encryption($registry->get('config')->get('config_encryption')));	
+	$registry->set('encryption', 		new Encryption($registry->get('config')->get('config_encryption')));
+	$registry->set('smsQueue', 			new hobotix\SmsQueue($registry));	
+	$registry->set('mAlert', 			new hobotix\mAlert($registry));	
+	$registry->set('shortAlias', 		new hobotix\shortAlias($registry));
 	$registry->set('emailBlackList', 	new hobotix\EmailBlackList($registry));	
 	$registry->set('elasticSearch', 	new hobotix\ElasticSearch($registry));		
 	$registry->set('courierServices', 	new hobotix\CourierServices($registry));

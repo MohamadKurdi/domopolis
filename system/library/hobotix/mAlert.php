@@ -1,4 +1,7 @@
 <?php
+
+namespace hobotix;
+
 class mAlert {
 	private $prefix;
 	private $queue;
@@ -22,14 +25,13 @@ class mAlert {
 				$this->queue[$row['alert_namespace']] = explode(':', $row['user_list']);
 			}
 			
-			$query = $this->db->query("SELECT GROUP_CONCAT(u.user_id SEPARATOR ':') as user_list FROM user u WHERE u.status=1 GROUP BY u.status");
+			$query = $this->db->query("SELECT GROUP_CONCAT(u.user_id SEPARATOR ':') as user_list FROM user u WHERE u.status = '1' GROUP BY u.status");
 			$this->queue['everyone'] = $query->row['user_list'];		
 						
 			$this->cache->set($this->prefix . '_queue', $this->queue);			
 		}
 	}
-	
-	
+		
 	public function insertAlertForGroup($for_who, $data = array()){
 		if (isset($this->queue[$for_who])){
 		

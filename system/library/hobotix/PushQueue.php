@@ -1,5 +1,7 @@
 <?
 
+namespace hobotix;
+
 class pushQueue {
 	
 	private $db;
@@ -9,7 +11,6 @@ class pushQueue {
 	}
 	
 	public function queue($data){			
-		//all_parameters_to_array
 		$queue_array = array(		
 			'customer_id' 	=> $data['customer_id'],
 			'body' 			=> $data['body'],
@@ -22,7 +23,4 @@ class pushQueue {
 		return $this->db->getLastId();	
 		
 	}
-
-	
 }
-?>

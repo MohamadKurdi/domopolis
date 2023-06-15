@@ -1,4 +1,6 @@
 <?
+
+	namespace hobotix;
 	
 	class shortAlias {
 		
@@ -8,21 +10,7 @@
 		
 		public function __construct($registry) {
 			$this->db = $registry->get('db');
-			$this->cache = $registry->get('cache');
-			
-		/*	$this->cache_data = $this->cache->get('short_alias.structure');
-			if (!$this->cache_data){
-				$non_cached_query = $this->db->non_cached_query("SELECT DISTINCT LOWER(`url`) as 'url', `alias` FROM short_url_alias WHERE 1");
-				$this->cache_data = array();
-				
-				foreach ($non_cached_query->rows as $row) {
-					$this->cache_data['url'][$row['url']] = $row['alias'];
-					$this->cache_data['alias'][$row['alias']] = $row['url'];
-				}
-				$this->cache->set('short_alias.structure', $this->cache_data);
-			}
-		*/
-			
+			$this->cache = $registry->get('cache');			
 		}
 		
 		private function parse_url_if_valid($url)
@@ -135,7 +123,5 @@
 			
 			return $alias;
 			
-		}
-		
-		
+		}				
 	}		
