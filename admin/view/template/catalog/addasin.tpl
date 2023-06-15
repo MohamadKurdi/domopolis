@@ -151,6 +151,7 @@
                             <td class="left" style="width:1px;" >Статус</td>
                             <td class="left">Название</td>
                             <td class="left" style="width:200px">Категория</td>
+                            <td class="left" style="width:50px">BL</td>
                             <td class="left" style="width:100px">Добавлен</td>
                             <td class="left" style="width:100px">Создан</td>       
                             <td class="left" style="width:100px">Кем добавлен</td>   
@@ -237,6 +238,14 @@
                                             <span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9243; color:#FFF">АВТО</span>
                                        <? } ?>
                                     </td> 
+
+                                    <td class="center">
+                                        <?php if ($product['brand_logic']) { ?>
+                                            <i class="fa fa-check-circle" style="color:#4ea24e"></i>
+                                        <?php } else { ?>
+                                            <i class="fa fa-times-circle" style="color:#cf4a61"></i>
+                                        <?php } ?>
+                                    </td>
 
                                     <td class="center">
                                         <small><?php echo $product['date_added']; ?></small><br />

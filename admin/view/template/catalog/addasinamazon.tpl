@@ -47,6 +47,8 @@
                                 <select name="type">
                                     <option value="standard" selected="selected">Обычная категория</option>
                                     <option value="bestsellers">Bestseller категория</option>
+                                    <option value="store">Brand Store</option>
+                                    <option value="seller_products">Seller Products</option>
                                     <option value="deals">Deals категория</option>
                                     <option value="search">Поиск по всему Amazon</option>
                                 </select>
@@ -110,13 +112,25 @@
                         </div>
                     </td>
 
-                    <td class="left" style="width:50%">
+                    <td class="left" style="width:40%">
                         <div>
                             <p class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56; color:#FFF;"><i class="fa fa-bars"></i> Заполнить и привязать к категории магазина</p><br />
                             <input type="text" name="category_shop" style="width:90%" placeholder="Начни заполнять, чтоб выбрать категорию" />                           
                             <span class="help">будет добавлен в эту категорию, если не задать, будет попытка автоматического определения, выбираются только конечные категории</span>
                         </div>
                     </td>
+
+                    <td class="left" style="width:10%">
+                        <div>
+                            <p class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56; color:#FFF;"><i class="fa fa-refresh"></i> Бренды</p><br />
+                            <select style="width:100px;" name="brand_logic">
+                                <option value="0">Нет</option>
+                                <option value="1">Да</option>
+                            </select>
+                            <span class="help">раскладывать по брендам</span>
+                        </div>
+                    </td>
+
                     <td class="left" style="width:10%">
                         <div>
                             <p class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56; color:#FFF;"><i class="fa fa-bars"></i> ID магазина</p><br />
@@ -129,9 +143,7 @@
         </div>            
 
         <div id="result">
-            <div style="font-size:18px; padding:50px; line-height:24px;">
-                <span style="color:#cf4a61"><i class="fa fa-exclamation-circle"></i> Это бета-версия, не полностью отлаженная, поэтому пожалуйста, будь внимательнее</span><br /><br />
-
+            <div style="font-size:18px; padding:50px; line-height:24px;">               
                 <i class="fa fa-info-circle"></i> Можно подбирать категории в обе стороны, если существуют привязки. 
                 <ul>
                     <li>
@@ -166,6 +178,7 @@
 
     function add(asin){
         var category_id = $('input[name=category_id]').val();
+        var brand_logic = $('select[name=brand_logic]').children("option:selected").val();
 
         if (asin){
             $.ajax({
@@ -174,7 +187,8 @@
                 url: 'index.php?route=kp/amazon/add&hello=world&token=<?php echo $token; ?>',
                 data: {
                     asin:   asin,
-                    category_id: category_id
+                    category_id: category_id,
+                    brand_logic: brand_logic
                 },
                 beforeSend: function(){
                     $('#' + asin + '-add-status').html('<i class="fa fa-spinner fa-spin"></i> Добавляю');
@@ -238,6 +252,7 @@
         $('input[name=search_term]').val('');
         $('input[name=category_shop]').val('');
         $('input[name=category_id]').val('0');
+        $('select[name=brand_logic]').val('0');
     }
 
     function iS(){
@@ -300,6 +315,7 @@
         $('select[name=sort]').prop('disabled', true);
         $('input[name=category_amazon]').prop('disabled', true);
         $('input[name=category_shop]').prop('disabled', true);
+        $('select[name=brand_logic]').prop('disabled', true);
     }
 
     function setAllEnabled(){
@@ -311,15 +327,17 @@
         $('select[name=sort]').prop('disabled', false);
         $('input[name=category_amazon]').prop('disabled', false);
         $('input[name=category_shop]').prop('disabled', false);
+        $('select[name=brand_logic]').prop('disabled', false);
     }
 
     function reload(){
-        var type            = $('select[name=type]').val();
+        var type            = $('select[name=type]').children("option:selected").val();
         var url             = $('input[name=url]').val();
         var category        = $('input[name=category]').val();
         var search_term     = $('input[name=search_term]').val();
         var page            = $('input[name=page]').val();
         var sort            = $('select[name=sort]').val();
+        var brand_logic     = $('select[name=brand_logic]').children("option:selected").val();
 
         var counterhtml = '<div style="text-align:center; padding-top:20px; color:#00ad07">';
         counterhtml += '<i class="fa fa-spinner fa-spin" style="font-size:128px"></i>';
@@ -341,7 +359,8 @@
                 data: {
                     type:       type,
                     url:        url,
-                    category:   category,
+                    category:      category,
+                    brand_logic:   brand_logic,
                     search_term: search_term,
                     page:       page,
                     sort:       sort,

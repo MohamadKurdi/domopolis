@@ -72,6 +72,7 @@
 		text-align:center;
 		color:#fff;
 		border-radius:5px;
+		cursor:pointer;
 	}
 
 	.products-container-product-ignore{
@@ -82,6 +83,7 @@
 		text-align:center;
 		color:#fff;
 		border-radius:5px;
+		cursor:pointer;
 	}
 
 	.products-container-pagination{
