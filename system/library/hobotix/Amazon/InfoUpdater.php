@@ -31,7 +31,8 @@ class InfoUpdater extends RainforestRetriever
 		'lessen Sie weiter',
 		'продовжуйте читати',
 		'Продовжити читання',
-		'Продовжуйте читати'
+		'Продовжуйте читати',
+		'Лиза Вайтер'
 	];
 
 	public const descriptionsQueryLimit = 5000;
