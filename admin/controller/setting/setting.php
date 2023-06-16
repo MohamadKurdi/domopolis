@@ -1615,6 +1615,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_related_categories_auto_enable'] = $this->config->get('config_related_categories_auto_enable');
         }
 
+        if (isset($this->request->post['config_also_bought_auto_enable'])) {
+            $this->data['config_also_bought_auto_enable'] = $this->request->post['config_also_bought_auto_enable'];
+        } else {
+            $this->data['config_also_bought_auto_enable'] = $this->config->get('config_also_bought_auto_enable');
+        }
+
         if (isset($this->request->post['config_special_category_id'])) {
             $this->data['config_special_category_id'] = $this->request->post['config_special_category_id'];
         } else {

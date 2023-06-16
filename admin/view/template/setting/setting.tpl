@@ -5114,6 +5114,19 @@
 										</div>
 
 										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Наполнять AlsoBought товары</span></p>
+											<select name="config_also_bought_auto_enable">
+												<?php if ($config_also_bought_auto_enable) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
+
+										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Наполнять Related категории</span></p>
 											<select name="config_related_categories_auto_enable">
 												<?php if ($config_related_categories_auto_enable) { ?>
