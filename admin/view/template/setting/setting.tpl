@@ -1607,12 +1607,12 @@
 							</tr>	
 						</table>						
 
-						<h2>Переводить</h2>
+						<h2>Переводить или копировать</h2>
 						<table>
 							<tr>
-								<td style="width:30%;">
+								<td style="width:20%;">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Переводить эти языки с RU</span></p>
-									<div class="scrollbox" style="height:100px; width:100px;">
+									<div class="scrollbox" style="height:100px; width:200px;">
 									<?php $class = 'odd'; ?>
 									<?php foreach ($languages as $language) { ?>
 										<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
@@ -1634,9 +1634,9 @@
 								<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);">Выделить всё</a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);">Снять выделение</a>
 								</td>
 
-								<td style="width:30%;">
+								<td style="width:20%;">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Переводить эти языки с DE</span></p>
-									<div class="scrollbox" style="height:100px; width:100px;">
+									<div class="scrollbox" style="height:100px; width:200px;">
 									<?php $class = 'odd'; ?>
 									<?php foreach ($languages as $language) { ?>
 										<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
@@ -1658,9 +1658,9 @@
 								<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);">Выделить всё</a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);">Снять выделение</a>
 								</td>
 
-								<td style="width:30%;">
+								<td style="width:20%;">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Переводить эти языки с UK</span></p>
-									<div class="scrollbox" style="height:100px; width:100px;">
+									<div class="scrollbox" style="height:100px; width:200px;">
 									<?php $class = 'odd'; ?>
 									<?php foreach ($languages as $language) { ?>
 										<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
@@ -1674,6 +1674,30 @@
 												
 												<input id="config_translate_from_uk_<?php echo $language['code']; ?>" class="checkbox" type="checkbox" name="config_translate_from_uk[]" value="<?php echo $language['code']; ?>" />
 												<label for="config_translate_from_uk_<?php echo $language['code']; ?>"><?php echo $language['code']; ?></label>
+												
+											<?php } ?>
+										</div>
+									<?php } ?>
+								</div>
+								<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);">Выделить всё</a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);">Снять выделение</a>
+								</td>
+
+								<td style="width:20%;">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Изменять все эти языки вместе</span></p>
+									<div class="scrollbox" style="height:100px; width:200px;">
+									<?php $class = 'odd'; ?>
+									<?php foreach ($languages as $language) { ?>
+										<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+										<div class="<?php echo $class; ?>">
+											<?php if (!empty($config_edit_simultaneously) && in_array($language['code'], $config_edit_simultaneously)) { ?>
+												
+												<input id="config_edit_simultaneously_<?php echo $language['code']; ?>" class="checkbox" type="checkbox" name="config_edit_simultaneously[]" value="<?php echo $language['code']; ?>" checked="checked" />
+												<label for="config_edit_simultaneously_<?php echo $language['code']; ?>"><?php echo $language['code']; ?></label>
+												
+												<?php } else { ?>
+												
+												<input id="config_edit_simultaneously_<?php echo $language['code']; ?>" class="checkbox" type="checkbox" name="config_edit_simultaneously[]" value="<?php echo $language['code']; ?>" />
+												<label for="config_edit_simultaneously_<?php echo $language['code']; ?>"><?php echo $language['code']; ?></label>
 												
 											<?php } ?>
 										</div>

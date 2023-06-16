@@ -1008,6 +1008,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_translate_from_uk'] = $this->config->get('config_translate_from_uk');
         }
 
+        if (isset($this->request->post['config_edit_simultaneously'])) {
+            $this->data['config_edit_simultaneously'] = $this->request->post['config_edit_simultaneously'];
+        } else {
+            $this->data['config_edit_simultaneously'] = $this->config->get('config_edit_simultaneously');
+        }
+
         if (isset($this->request->post['config_enable_overprice'])) {
             $this->data['config_enable_overprice'] = $this->request->post['config_enable_overprice'];
         } else {
