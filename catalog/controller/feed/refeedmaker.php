@@ -486,7 +486,11 @@ class ControllerFeedReFeedMaker extends Controller
 
         if ($mpn) {
             $has_mpn = true;
-            $output .= '  <g:mpn>' . $mpn . '</g:mpn>'. PHP_EOL;
+            if (defined('RESTRICTED_FUNCTIONS')){
+                $output .= '  <g:mpn>' . $mpn . '</g:mpn>'. PHP_EOL;
+            } else {
+                $output .= '  <g:mpn><![CDATA[' . $mpn . ']]></g:mpn>'. PHP_EOL;
+            }            
         }
 
 
@@ -494,8 +498,8 @@ class ControllerFeedReFeedMaker extends Controller
 
         if ($product['ean'] && (\BarcodeValidator::IsValidEAN13($product['ean']) || \BarcodeValidator::IsValidEAN8($product['ean']))) {
             $has_gtin = true;
-            $output .= '  <g:ean>' . $product['ean'] . '</g:ean>'. PHP_EOL;
-            $output .= '  <g:gtin>' . $product['ean'] . '</g:gtin>'. PHP_EOL;
+            $output .= '  <g:ean><![CDATA[' . $product['ean'] . ']]></g:ean>'. PHP_EOL;
+            $output .= '  <g:gtin><![CDATA[' . $product['ean'] . ']]></g:gtin>'. PHP_EOL;
         }
 
         if ($this->eanLog && $product['ean'] && !$has_gtin) {
