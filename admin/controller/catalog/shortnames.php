@@ -141,14 +141,39 @@ class ControllerCatalogShortNames extends Controller {
 		if ($this->user->hasPermission('modify', 'catalog/product')) {
 			if ($this->request->method == 'POST'){
 
+				$languages_to_edit_simultanelously = [];
+				foreach ($this->config->get('config_edit_simultaneously') as $language_code){
+					$languages_to_edit_simultanelously[] = $this->registry->get('languages')[$language_code]['language_id'];
+				}
+
 				if ($this->request->data['name'] == 'full'){
 
 					$this->db->query("UPDATE product_description SET name = '" . $this->db->escape($this->request->data['text']) . "' WHERE product_id = '" . (int)$this->request->data['product_id'] . "' AND language_id = '" . (int)$this->request->data['language_id'] . "'");
+
+					if ($this->config->get('config_edit_simultaneously')){						
+						if (in_array($this->request->data['language_id'], $languages_to_edit_simultanelously)){
+							foreach ($languages_to_edit_simultanelously as $language_id){
+								if ($this->request->data['language_id'] != $language_id){
+									$this->db->query("UPDATE product_description SET name = '" . $this->db->escape($this->request->data['text']) . "' WHERE product_id = '" . (int)$this->request->data['product_id'] . "' AND language_id = '" . (int)$language_id . "'");
+								}
+							}
+						}						
+					}
 
 
 				} elseif ($this->request->data['name'] == 'short') {
 
 					$this->db->query("UPDATE product_description SET short_name_d = '" . $this->db->escape($this->request->data['text']) . "' WHERE product_id = '" . (int)$this->request->data['product_id'] . "' AND language_id = '" . (int)$this->request->data['language_id'] . "'");
+
+					if ($this->config->get('config_edit_simultaneously')){						
+						if (in_array($this->request->data['language_id'], $languages_to_edit_simultanelously)){
+							foreach ($languages_to_edit_simultanelously as $language_id){
+								if ($this->request->data['language_id'] != $language_id){
+									$this->db->query("UPDATE product_description SET short_name_d = '" . $this->db->escape($this->request->data['text']) . "' WHERE product_id = '" . (int)$this->request->data['product_id'] . "' AND language_id = '" . (int)$language_id . "'");
+								}
+							}
+						}						
+					}
 
 					if ($this->request->data['language_id'] == $this->registry->get('languages')[$this->config->get('config_language')]['language_id']){
 						$this->db->query("UPDATE product SET short_name = '" . $this->db->escape($this->request->data['text']) . "' WHERE product_id = '" . (int)$this->request->data['product_id'] . "'");
@@ -160,7 +185,7 @@ class ControllerCatalogShortNames extends Controller {
 				}	
 
 				$this->load->model('kp/content');
-				$this->model_kp_content->addContent(['action' => 'edit', 'entity_type' => 'product', 'entity_id' => $product_id]);
+				$this->model_kp_content->addContent(['action' => 'edit', 'entity_type' => 'product', 'entity_id' => $this->request->data['product_id']]);
 			}
 		}
 	}
