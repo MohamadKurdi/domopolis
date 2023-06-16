@@ -1071,8 +1071,14 @@ public function index($product_id = false, $just_price = false)
 
                             $this->data['show_manufacturer'] = ($manufacturer_info && isset($manufacturer_info['sort_order']) && $manufacturer_info['sort_order'] != '-1');
 
-                            $this->data['manufacturers_img'] = $this->model_tool_image->resize($manufacturer_info['image'], 300, 100);
-                            $this->data['manufacturers_img_260'] = $this->model_tool_image->resize($manufacturer_info['image'], 260, 90);
+                            if (!empty($manufacturer_info['image']) && !is_null($manufacturer_info['image'])){
+                                $this->data['manufacturers_img']        = $this->model_tool_image->resize($manufacturer_info['image'], 300, 100);
+                                $this->data['manufacturers_img_260']    = $this->model_tool_image->resize($manufacturer_info['image'], 260, 90);
+                            } else {
+                                $this->data['manufacturers_img']        = false;
+                                $this->data['manufacturers_img_260']    = false;
+                            }
+                            
                         }
 
                         if ($product_info['image']) {
