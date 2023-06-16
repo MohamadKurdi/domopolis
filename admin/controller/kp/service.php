@@ -59,27 +59,53 @@
 			return $this;
 		}
 
-		public function fillRelatedCategories(){
-			if ($this->config->get('config_related_categories_auto_enable')){
-				$query = $this->db->query("SELECT DISTINCT(pab.product_id), GROUP_CONCAT(pab.also_bought_id SEPARATOR ',') as also_bought, p2c.category_id FROM product_also_bought pab LEFT JOIN product_to_category p2c ON (pab.product_id = p2c.product_id AND p2c.main_category = 1) WHERE NOT ISNULL(p2c.category_id) GROUP BY pab.product_id");
+		public function fillAlsoBoughtProducts(){
+			if ($this->config->get('config_also_bought_auto_enable')){
+				echoLine('[Starting fillAlsoBoughtProducts] config_also_bought_auto_enable = ON', 's');
+
+				$query = $this->db->query("SELECT GROUP_CONCAT(product_id SEPARATOR ',') as also_bought FROM order_product WHERE product_id IN (SELECT product_id FROM product) GROUP BY order_id HAVING COUNT(product_id) > 1");
 
 				foreach ($query->rows as $row){
-				//	echoLine('[fillRelatedCategories] ' . $row['product_id']);
 					if ($also_bought = explode(',', $row['also_bought'])){
-						foreach ($also_bought as $also_bought_id){
-							$this->db->query("INSERT IGNORE INTO category_related (category_id, related_category_id) SELECT '" . (int)$row['category_id'] . "', category_id FROM product_to_category WHERE product_id = '" . $also_bought_id . "' ORDER BY main_category DESC LIMIT 1");	
-
-							$this->db->query("INSERT IGNORE INTO category_related (category_id, related_category_id) SELECT category_id, '" . (int)$row['category_id'] . "' FROM product_to_category WHERE product_id = '" . $also_bought_id . "' ORDER BY main_category DESC LIMIT 1");					
+						$tmp = $also_bought;
+						foreach ($also_bought as $product_id){
+							foreach ($tmp as $also_bought_id){
+								if ($product_id != $also_bought_id){
+									$this->db->query("INSERT IGNORE INTO product_also_bought (product_id, also_bought_id) VALUES ('" . $product_id . "', '" . $also_bought_id . "')");
+								}								
+							}
 						}
 					}
 				}
+			} else {
+				echoLine('[Starting fillAlsoBoughtProducts] config_also_bought_auto_enable = OFF', 'e');
+			}
+
+			return $this;
+		}
+
+		public function fillRelatedCategories(){
+			if ($this->config->get('config_related_categories_auto_enable')){
+				echoLine('[Starting fillRelatedCategories] config_related_categories_auto_enable = ON', 's');
+
+				$query = $this->db->query("SELECT DISTINCT(pab.product_id), GROUP_CONCAT(pab.also_bought_id SEPARATOR ',') as also_bought, p2c.category_id FROM product_also_bought pab LEFT JOIN product_to_category p2c ON (pab.product_id = p2c.product_id AND p2c.main_category = 1) WHERE NOT ISNULL(p2c.category_id) GROUP BY pab.product_id");
+
+				foreach ($query->rows as $row){
+					if ($also_bought = explode(',', $row['also_bought'])){
+						foreach ($also_bought as $also_bought_id){
+							$this->db->query("INSERT IGNORE INTO category_related (category_id, related_category_id) SELECT '" . (int)$row['category_id'] . "', category_id FROM product_to_category WHERE product_id = '" . $also_bought_id . "' ORDER BY main_category DESC LIMIT 1");					
+						}
+					}
+				}
+			}  else {
+				echoLine('[Starting fillAlsoBoughtProducts] config_related_categories_auto_enable = OFF', 'e');
 			}
 
 			//return $this;
 		}
 		
 		public function optimizeProductsDB(){
-			echoLine ('[optimizeProductsDB] Регулярные задачи обслуживания товарной базы', 'i');			
+			echoLine ('[optimizeProductsDB] Регулярные задачи обслуживания товарной базы', 'i');				
 			
 			echoLine('[optimizeProductsDB] Очистка несуществующих записей', 'i');
 			$this->db->query("DELETE FROM product_description WHERE product_id NOT IN (SELECT product_id FROM product)");
@@ -167,7 +193,7 @@
 			$this->db->non_cached_query("DELETE FROM product_price_national_to_store WHERE price = 0");
 			$this->db->non_cached_query("DELETE FROM product_price_national_to_yam WHERE price = 0");		
 
-			$this->fillSpecialCategory()->fillMarkDownCategory()->fillRelatedCategories();	
+			$this->fillSpecialCategory()->fillMarkDownCategory()->fillAlsoBoughtProducts()->fillRelatedCategories();	
 		}		
 		
 		public function dailyWork(){						
