@@ -20,20 +20,28 @@ class ControllerProductProduct extends Controller
 
     public function getProductsArrayDataJSON()
     {
+        $json           = [];
+        $product_ids    = [];
+
         $this->load->model('catalog/product');
         $this->load->model('tool/image');
 
-        $json = [];
-
-        if (isset($this->request->post['x'])) {
-            $tmp = $this->request->post['x'];
+        if (isset($this->request->data['x'])) {
+            $tmp = $this->request->data['x'];
         }
 
-        foreach ($tmp as $id) {
-            if ((int)$id) {
-                $product_ids[] = (int)$id;
+        if (is_array($tmp)){
+            foreach ($tmp as $id) {
+                if ((int)$id) {
+                    $product_ids[] = (int)$id;
+                }
+            }
+        } elseif (is_numeric($tmp)){
+            if ((int)$tmp) {
+                $product_ids[] = (int)$tmp;
             }
         }
+
 
         $results = [];
         foreach ($product_ids as $product_id) {

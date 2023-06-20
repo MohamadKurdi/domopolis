@@ -141,7 +141,7 @@
 		}
 		
 		public function getAllProductActiveActionsForLabel($product_id){
-			
+
 			$activeCoupons = $this->getAllProductActiveCoupons($product_id);
 			
 			$sql = "SELECT a.actions_id, ad.label, ad.label_background, ad.label_color, ad.label_text FROM actions a
