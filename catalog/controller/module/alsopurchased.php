@@ -13,7 +13,7 @@ class ControllerModuleAlsoPurchased extends Controller
 		$this->data['heading_title'] = $this->language->get('heading_title');
 		$product_id = (isset($this->request->get['product_id'])) ? $this->request->get['product_id'] : 0;
 
-		$out = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, $setting, [$product_id]));
+		$out = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, $setting, [$product_id]));		
 
 		if ($out) {		
 			$this->setCachedOutput($out);
