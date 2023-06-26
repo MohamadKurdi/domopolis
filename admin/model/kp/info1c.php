@@ -39,19 +39,20 @@ class ModelKpInfo1C extends Model {
 	}
 
 	public function ping1CToUpdateProducts($product_ids){
-
 		$this->SoapConnectTo1C();
 
 		try {
 			
-			$data = array(
-				'products'         => $product_ids				
-			);								
+			$data = [
+				'id' => [
+					'products'         => $product_ids,			
+				],
+				'organisation' => SITE_NAMESPACE
+			];								
 
 			$data = json_encode($data);
-			$result = $this->SoapClient->updateproduct(['id' => $data]); 
+			$result = $this->SoapClient->updateproduct($data); 
 			return $result;
-
 			
 		} catch (Exception $e){												
 			echoLine($e->getMessage());
@@ -59,15 +60,14 @@ class ModelKpInfo1C extends Model {
 		}
 	}
 	
-	public function passWebServiceProxy($function, $param_name, $string_data){
-		
+	public function passWebServiceProxy($function, $param_name, $string_data){		
 		$this->SoapConnectTo1C();
 		
 		try {
 			
-			$data = array(
+			$data = [
 				$param_name => (string)$string_data,				
-			);	
+			];	
 						
 			$result = $this->SoapClient->{$function}($data); 
 			
@@ -78,15 +78,15 @@ class ModelKpInfo1C extends Model {
 		return $result->return;
 	}
 	
-	public function getLegalPersonAccountFrom1C($legalperson_id){
-		
+	public function getLegalPersonAccountFrom1C($legalperson_id){		
 		$this->SoapConnectTo1C();
 		
 		try {
 			
-			$data = array(
-				'id'         => $legalperson_id,				
-			);								
+			$data = [
+				'id'         => $legalperson_id,	
+				'organisation' => SITE_NAMESPACE			
+			];								
 			
 			$result = $this->SoapClient->bankbalance($data); 
 			
@@ -115,14 +115,17 @@ class ModelKpInfo1C extends Model {
 		return $json;		
 	}
 	
-	public function getLocalPricesXML(){
-		
+	public function getLocalPricesXML(){		
 		$this->SoapConnectTo1C();
 
 		try {	
-			$result = $this->SoapClient->pricelocal(); 
+			$data = [
+				'organisation' => SITE_NAMESPACE
+			];
+
+			$result = $this->SoapClient->pricelocal($data); 
 		} catch (Exception $e){												
-			echoLine($e->getMessage());
+			echoLine($e->getMessage(), 'e');
 			return('SOAP ERROR: ' . $e->getMessage());
 		}
 			
@@ -146,13 +149,17 @@ class ModelKpInfo1C extends Model {
 		return $json;		
 	}
 	
-	public function getOrderTrackerXML($order_id){
-		
+	public function getOrderTrackerXML($order_id){	
 		$this->SoapConnectTo1C();
 		
 		try {
+
+			$data = [
+				'organisation' 	=> SITE_NAMESPACE,
+				'order_id' 		=> $order_id
+			];
 			
-			$result2 = $this->SoapClient->tracker(array('order_id' => $order_id)); 
+			$result2 = $this->SoapClient->tracker($data); 
 			
 		} catch (Exception $e){
 			echoLine($e->getMessage());
@@ -175,14 +182,17 @@ class ModelKpInfo1C extends Model {
 		return $input;			
 	}
 	
-	public function getStockWaitsFrom1C(){
-		
+	public function getStockWaitsFrom1C(){		
 		$this->SoapConnectTo1C();
 		
 		try {	
-			$result = $this->SoapClient->stockwait(); 
+			$data = [
+				'organisation' => SITE_NAMESPACE
+			];
+
+			$result = $this->SoapClient->stockwait($data); 
 		} catch (Exception $e){
-			echoLine($e->getMessage());
+			echoLine($e->getMessage(), 'e');
 			return false;
 		}
 		
@@ -191,12 +201,16 @@ class ModelKpInfo1C extends Model {
 		return $jsResult;
 	}
 	
-	public function getStocksFrom1C(){
-		
+	public function getStocksFrom1C(){		
 		$this->SoapConnectTo1C();
 		
 		try {		
-			$result = $this->SoapClient->stock(array('organisation' => SITE_NAMESPACE)); 		
+
+			$data = [
+				'organisation' => SITE_NAMESPACE
+			];
+
+			$result = $this->SoapClient->stock($data); 		
 		} catch (Exception $e){
 			echoLine($e->getMessage());
 			return false;
@@ -207,14 +221,17 @@ class ModelKpInfo1C extends Model {
 		return $jsResult;		
 	}
 	
-	public function getActualCostFrom1C(){
-		
+	public function getActualCostFrom1C(){		
 		$this->SoapConnectTo1C();
 		
 		try {			
-			$result = $this->SoapClient->price(); 			
+			$data = [
+				'organisation' => SITE_NAMESPACE
+			];
+
+			$result = $this->SoapClient->price($data); 			
 		} catch (Exception $e){
-			echoLine($e->getMessage());
+			echoLine($e->getMessage(), 'e');
 			return('SOAP ERROR: ' . $e->getMessage());
 		}
 		
