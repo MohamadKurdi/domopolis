@@ -175,6 +175,12 @@
 				from_url LIKE ('/" . $this->db->escape($request_query) ."/'))
 				AND (active = 1)"
 				);	
+
+				if ($search_query->num_rows) {
+					if (trim($search_query->row['from_url']) == trim($search_query->row['to_url'])){
+						$this->db->query("DELETE FROM `redirect` WHERE redirect_id = " . (int)$search_query->row['redirect_id']);
+					}					
+				}
 				
 				if ($search_query->num_rows) {																		
 					$this->db->query("UPDATE `redirect` SET times_used = times_used+1 WHERE redirect_id = " . (int)$search_query->row['redirect_id']);
