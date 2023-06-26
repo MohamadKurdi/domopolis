@@ -203,14 +203,17 @@ class ModelKpInfo1C extends Model {
 	
 	public function getStocksFrom1C(){		
 		$this->SoapConnectTo1C();
+
+		echoLine('Calling getStocksFrom1C, soap function stock', 'i');
 		
 		try {		
-
 			$data = [
 				'organisation' => SITE_NAMESPACE
 			];
 
-			$result = $this->SoapClient->stock($data); 		
+			echoLine('Passing data as array: ' . json_encode($data), 'i');
+
+			$result = $this->SoapClient->stock($data); 			
 		} catch (Exception $e){
 			echoLine($e->getMessage());
 			return false;
