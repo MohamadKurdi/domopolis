@@ -20,7 +20,7 @@
 				<span style="color:#FF9243; font-size:18px; font-weight: 700;"><i class="fa fa-exclamation-triangle"></i> есть ньюансы:
 				превышен лимит запросов в тарифе, и мы используем overage (ZERO_CREDITS_AND_OVERAGE_IS_USED_NOW)
 				<br />
-				<small><i class="fa fa-info-circle"></i> система пока работает, но каждые 1000 запросов стоят 1$</small>
+				<small><i class="fa fa-info-circle"></i> система пока работает, но каждые 10000 запросов стоят 8.5$</small>
 				</span>
 			
 			<?php } elseif ($message == 'CREDITS_LESS_THEN_5_PERCENT') { ?>
