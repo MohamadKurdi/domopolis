@@ -164,6 +164,9 @@ class RainforestAmazon
 			'domain'  => $this->config->get('config_rainforest_api_domain_1')
 		]);
 
+		$error 		= false;	
+		$warning 	= false;
+
 		$ch = curl_init(sprintf('%s?%s', 'https://api.rainforestapi.com/zipcodes', $queryString));
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -173,6 +176,13 @@ class RainforestAmazon
 		$answer 	= curl_exec($ch);
 		$httpcode 	= curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		curl_close($ch);
+
+		//В том случае, если не 200, то всё плохо и хуево
+		if ($httpcode != 200){
+			$error = 'CODE_NOT_200_MAYBE_PAYMENT_FAIL';
+			$answer .= ' HTTPCODE: ' . $httpcode;
+			$answer = trim($answer);
+		}
 
 		if (!$error && !json_decode($answer)){
 			$error = 'JSON_DECODE';
