@@ -707,7 +707,6 @@ class ControllerFeedYandexKP extends Controller {
 		return $this;
 	}
 
-
 	private function getProductAttributes($product_id) {
 
 		$query = $this->db->query("SELECT pa.attribute_id, pa.text, ad.name
@@ -1044,7 +1043,7 @@ class ControllerFeedYandexKP extends Controller {
 
 	public function makeStockFeed(){
 		ini_set('memory_limit', '2G');
-		$stores = [0];
+		$stores = [0,2];
 
 		foreach ($stores as $store_id){
 
@@ -1075,15 +1074,19 @@ class ControllerFeedYandexKP extends Controller {
 
 
 			if ($store_id == 0){
-				$baseClient = new \Yandex\Market\Partner\Clients\BaseClient($this->config->get('config_yam_yandexOauthID'), $this->config->get('config_yam_yandexAccessToken'));
-				$campaignID = $baseClient->getCampaigns(['page' => 0])->getCampaigns()->current()->getId();			
+				try {
+					$baseClient = new \Yandex\Market\Partner\Clients\BaseClient($this->config->get('config_yam_yandexOauthID'), $this->config->get('config_yam_yandexAccessToken'));
+					$campaignID = $baseClient->getCampaigns(['page' => 0])->getCampaigns()->current()->getId();			
 
-				$assortmentClient = new \Yandex\Market\Partner\Clients\AssortmentClient($this->config->get('config_yam_yandexOauthID'), $this->config->get('config_yam_yandexAccessToken'));
-				$feedID = $assortmentClient->getFeeds($campaignID)->current()->getId();
+					$assortmentClient = new \Yandex\Market\Partner\Clients\AssortmentClient($this->config->get('config_yam_yandexOauthID'), $this->config->get('config_yam_yandexAccessToken'));
+					$feedID = $assortmentClient->getFeeds($campaignID)->current()->getId();
 
-				echoLine('[YML] Обновление фида ' . $feedID . ' в ' . $campaignID);
+					echoLine('[YML] Обновление фида ' . $feedID . ' в ' . $campaignID, 'i');
 
-				$assortmentClient->refreshFeed($campaignID, $feedID);
+					$assortmentClient->refreshFeed($campaignID, $feedID);
+				} catch (\Yandex\Market\Partner\Exception\PartnerRequestException $e){
+					echoLine('[YML] YAM API ERROR: ' . $e->getMessage(), 'e');
+				}
 			}
 
 		}
@@ -1095,10 +1098,9 @@ class ControllerFeedYandexKP extends Controller {
 		if ($this->config->get('config_single_store_enable')){
 			$stores = [0];
 		} else {
-			$stores = [0,1,2,5];
+			$stores = [0,2];
 		}
 		
-
 		foreach ($stores as $store_id){
 			echoLine('[YML] ' . $store_id);
 
