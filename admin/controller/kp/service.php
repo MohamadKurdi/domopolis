@@ -155,7 +155,6 @@
 				echo('.');
 				$this->db->query("UPDATE product SET quantity = (quantity_stock + quantity_stockK + quantity_stockM) WHERE product_id = '". (int)$row['product_id'] ."'");
 			}
-			echoLine('');
 
 			echoLine('[optimizeProductsDB] Нормализация markdown', 'i');
 			$this->db->query("UPDATE `product` SET ean = '', asin = '', isbn = ''	WHERE stock_product_id > 0");
@@ -168,6 +167,9 @@
             	$this->db->query("UPDATE `product` SET display_in_catalog = 1 WHERE main_variant_id > 0 AND (quantity_stock + quantity_stockK + quantity_stockM) > 0");
             	$this->db->query("UPDATE `product` SET display_in_catalog = 0 WHERE main_variant_id > 0 AND (quantity_stock + quantity_stockK + quantity_stockM) = 0");
             }
+
+            echoLine('[optimizeProductsDB] Нормализация manufacturer_name to product_description', 'i');
+            $this->db->query("UPDATE product_description pd LEFT JOIN product p0 ON pd.product_id = p0.product_id SET pd.manufacturer_name =( SELECT m.name FROM manufacturer m LEFT JOIN product p1 ON p1.manufacturer_id = m.manufacturer_id WHERE p1.product_id = pd.product_id ) WHERE ( NOT ISNULL(p0.manufacturer_id) AND p0.manufacturer_id <> '0' )");
 
 			
 			echoLine('[optimizeProductsDB] Исправление багов в описаниях', 'i');
