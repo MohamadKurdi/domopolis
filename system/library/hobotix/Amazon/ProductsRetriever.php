@@ -130,12 +130,21 @@ class ProductsRetriever extends RainforestRetriever
 		if (!empty($product['brand'])){
 			$product['brand'] = atrim($product['brand']);
 
-			echoLine('[editFullProduct] Brand: ' . $product['brand'], 'i');
+			echoLine('[editFullProduct] Brand: ' . $product['brand'], 'i');			
+
 			$manufacturer_id = $this->model_product_cached_get->getManufacturer($product['brand']);			
 			if (!$manufacturer_id){
-				echoLine('[editFullProduct] Brand does not exist, adding it: ' . $product['brand'], 'w');
-				$manufacturer_id = $this->model_product_edit->addManufacturer($product['brand']);
+
+				if ($this->config->get('config_rainforest_auto_create_manufacturers')){
+					echoLine('[editFullProduct] Setting config_rainforest_auto_create_manufacturers = ON, creating brand: ' . $product['brand'], 'w');					
+					$manufacturer_id = $this->model_product_edit->addManufacturer($product['brand']);					
+				} else {
+					echoLine('[editFullProduct] Setting config_rainforest_auto_create_manufacturers = OFF, editing just description', 'w');					
+					$manufacturer_id = 0;
+				}
 			}
+
+			$this->model_product_edit->editProductDescriptionFieldExplicit($product_id, 'manufacturer_name', $product['brand']);
 			$this->model_product_edit->editProductFields($product_id, [['name' => 'manufacturer_id', 'type' => 'int', 'value' => $manufacturer_id]]);
 		}				
 	}

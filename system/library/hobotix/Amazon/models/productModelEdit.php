@@ -493,8 +493,17 @@ class productModelEdit extends hoboModel{
 		foreach ($data as $language_id => $value) {
 			$this->db->query("UPDATE product_description SET 
 				`" . $field . "` 				= '" . $this->db->escape($value[$field]) . "'								
-				WHERE product_id 	= '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
+				WHERE 
+				product_id 	= '" . (int)$product_id . "' 
+				AND language_id = '" . (int)$language_id . "'");
 		}
+	}
+
+	public function editProductDescriptionFieldExplicit($product_id, $field, $value){			
+			$this->db->query("UPDATE product_description SET 
+				`" . $field . "` 				= '" . $this->db->escape($value) . "'								
+				WHERE 
+				product_id 	= '" . (int)$product_id . "'");		
 	}
 
 	public function editProductAttributeText($product_id, $attribute_id, $data){
