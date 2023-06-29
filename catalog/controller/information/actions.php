@@ -91,7 +91,6 @@ class ControllerInformationActions extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
-
 	public function getAction($actions_id) {
 
 		foreach ($this->language->loadRetranslate('product/single') as $translationСode => $translationText){
@@ -142,7 +141,7 @@ class ControllerInformationActions extends Controller {
 		if ($action_info['ao_group']){
 			$products = $this->model_catalog_actions->getProductIdsByAdditionalOfferGroup($action_info['ao_group']);
 		} elseif (!empty($action_info['product_related'])) {
-			$products = explode(',', $actions['product_related']);
+			$products = explode(',', $action_info['product_related']);
 		} elseif (!empty($action_info['category_related_id'])) {
 			//TODO - just list of products by category, like in category listing
 			if ($action_info['category_related_no_intersections']){
@@ -170,7 +169,7 @@ class ControllerInformationActions extends Controller {
 			}			
 		}
 
-		$this->data['product_related'] = $this->model_catalog_product->prepareProductToArray($results);
+		$this->data['product_related'] = $this->model_catalog_product->prepareProductToArray($results);		
 
 		$this->data['product_groups'] = [];
 		if (!empty($action_info['category_related_id']) && !$action_info['category_related_no_intersections']){
