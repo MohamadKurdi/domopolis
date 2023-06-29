@@ -327,8 +327,12 @@ class ControllerApiInfo1C extends Controller
 
     public function getStockWaitsFrom1C()
     {
-
         $this->load->model('kp/info1c');
+
+        if (!$this->config->get('config_odinass_update_stockwaits')){
+            echoLine('[info1c::getStockWaitsFrom1C] config_odinass_update_stockwaits is disabled!', 'e');
+            return;
+        }
 
         if (!$stockwaits1c = $this->model_kp_info1c->getStockWaitsFrom1C()){
             return;
@@ -1940,8 +1944,9 @@ class ControllerApiInfo1C extends Controller
 
     public function getStocksFrom1C($update = true, $updateStockGroups = false)
     {
-        $this->getStockWaitsFrom1C();
         $this->load->model('kp/info1c');
+
+        $this->getStockWaitsFrom1C();
         $result = $this->model_kp_info1c->getStocksFrom1C();
 
         $this->updateStockXML($result, $update, $updateStockGroups);

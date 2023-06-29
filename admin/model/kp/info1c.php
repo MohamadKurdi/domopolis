@@ -15,24 +15,25 @@ class ModelKpInfo1C extends Model {
 			]
 		]);
 
-		$SoapURI = $this->config->get('config_odinass_soap_uri');
+		$SoapURI = trim($this->config->get('config_odinass_soap_uri'));
 		
 		if ($wsdl){
 			$SoapURI .= '?wsdl';
 		}
 
-		$this->SoapClient = new SoapClient($SoapURI,
-			
+		echoLine('[ModelKpInfo1C::SoapConnectTo1C] Creating SoapClient with remote URI: ' . $SoapURI, 's');
+
+		$this->SoapClient = new SoapClient($SoapURI,			
 			array(
-				'login' => $this->config->get('config_odinass_soap_user'),
-				'password' => $this->config->get('config_odinass_soap_passwd'),
-				'soap_version' => SOAP_1_2,
-				'connection_timeout' => 1480,
-				'verifypeer' => false,
-				'verifyhost' => false,
-				'cache_wsdl' => WSDL_CACHE_NONE,
-				'exceptions' => 1,
-				'trace' => true,	
+				'login' 				=> $this->config->get('config_odinass_soap_user'),
+				'password' 				=> $this->config->get('config_odinass_soap_passwd'),
+				'soap_version' 			=> SOAP_1_2,
+				'connection_timeout' 	=> 1480,
+				'verifypeer' 	=> false,
+				'verifyhost' 	=> false,
+				'cache_wsdl' 	=> WSDL_CACHE_NONE,
+				'exceptions' 	=> true,
+				'trace' 		=> true,	
 				'stream_context' => $context
 			)
 		);
@@ -182,8 +183,10 @@ class ModelKpInfo1C extends Model {
 		return $input;			
 	}
 	
-	public function getStockWaitsFrom1C(){		
+	public function getStockWaitsFrom1C(){				
 		$this->SoapConnectTo1C();
+
+		echoLine('Calling getStockWaitsFrom1C, soap function stockwait', 'i');
 		
 		try {	
 			$data = [
@@ -191,7 +194,13 @@ class ModelKpInfo1C extends Model {
 			];
 
 			$result = $this->SoapClient->stockwait($data); 
+		} catch (SoapFault $e){
+			echoLine($e->getMessage(), 'e');
+			return false;
 		} catch (Exception $e){
+			echoLine($e->getMessage(), 'e');
+			return false;
+		} catch (Throwable $e){
 			echoLine($e->getMessage(), 'e');
 			return false;
 		}
