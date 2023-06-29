@@ -56,6 +56,7 @@
 					markdown_condition = '" . $this->db->escape($value['markdown_condition']) . "', 
 					markdown_pack = '" . $this->db->escape($value['markdown_pack']) . "', 
 					markdown_equipment = '" . $this->db->escape($value['markdown_equipment']) . "', 
+					manufacturer_name = '" . $this->db->escape($value['manufacturer_name']) . "',
 					translated = '" . (int)$value['translated'] . "'");
 			}
 			
@@ -563,6 +564,7 @@
 					markdown_condition = '" . $this->db->escape($value['markdown_condition']) . "', 
 					markdown_pack = '" . $this->db->escape($value['markdown_pack']) . "', 
 					markdown_equipment = '" . $this->db->escape($value['markdown_equipment']) . "', 
+					manufacturer_name = '" . $this->db->escape($value['manufacturer_name']) . "',
 					translated = '" . (int)$value['translated'] . "'");
 
 				if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']){
@@ -1274,6 +1276,10 @@
 		}
 
 		public function deleteImageCache($image){
+			if (!$this->config->get('config_delete_products_images_enable')){
+				return;
+			}
+
 			$level = error_reporting();
 			error_reporting(0);			
 
