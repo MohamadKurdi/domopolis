@@ -278,6 +278,7 @@
 									<br />
 									<span class="help">показать на главной странице в админке счетчики категорий, товаров и процесса обработки данных, загруженных из amazon</span>
 									</div>
+									<div>
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Монитор cron на главной</span></p>
 									<select name="config_cron_stats_display_enable">
 										<?php if ($config_cron_stats_display_enable) { ?>
@@ -290,6 +291,21 @@
 									</select>
 									<br />
 									<span class="help">показать на главной странице в админке монитор регулярных задач</span>
+									</div>
+									<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Удалять картинки</span></p>
+									<select name="config_delete_products_images_enable">
+										<?php if ($config_delete_products_images_enable) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+									<br />
+									<span class="help">удалять ли файлы картинок при удалении товаров</span>
+									</div>
 								</td>
 							</tr>
 						</table>
@@ -6416,25 +6432,38 @@
 							<table class="form">
 								<tr>
 									
-									<td width="25%">
+									<td width="40%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">SOAP URI</span></p>
 										<input type="text" name="config_odinass_soap_uri" value="<?php echo $config_odinass_soap_uri; ?>" size="50" style="width:250px;" />
 									</td>
 									
-									<td width="25%">
+									<td width="20%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">SOAP USER</span></p>
 										<input type="text" name="config_odinass_soap_user" value="<?php echo $config_odinass_soap_user; ?>" size="50" style="width:250px;" />
 									</td>
 
-									<td width="25%">
+									<td width="20%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">SOAP PASSWD</span></p>
 										<input type="text" name="config_odinass_soap_passwd" value="<?php echo $config_odinass_soap_passwd; ?>" size="50" style="width:250px;" />
 									</td>
 
-									<td width="25%">
+									<td width="10%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">Загружать РРЦ</span></p>
 										<select name="config_odinass_update_local_prices">
 											<?php if ($config_odinass_update_local_prices) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</td>
+
+									<td width="10%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">Остатки в пути</span></p>
+										<select name="config_odinass_update_stockwaits">
+											<?php if ($config_odinass_update_stockwaits) { ?>
 												<option value="1" selected="selected">Включить</option>
 												<option value="0">Отключить</option>
 												<?php } else { ?>													

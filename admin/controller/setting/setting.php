@@ -1383,6 +1383,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_amazon_product_stats_enable'] = $this->config->get('config_amazon_product_stats_enable');
         }
 
+        if (isset($this->request->post['config_delete_products_images_enable'])) {
+            $this->data['config_delete_products_images_enable'] = $this->request->post['config_delete_products_images_enable'];
+        } else {
+            $this->data['config_delete_products_images_enable'] = $this->config->get('config_delete_products_images_enable');
+        }
+
         if (isset($this->request->post['config_cron_stats_display_enable'])) {
             $this->data['config_cron_stats_display_enable'] = $this->request->post['config_cron_stats_display_enable'];
         } else {
@@ -3026,6 +3032,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_odinass_update_local_prices'] = $this->request->post['config_odinass_update_local_prices'];
         } else {
             $this->data['config_odinass_update_local_prices'] = $this->config->get('config_odinass_update_local_prices');
+        }
+
+        if (isset($this->request->post['config_odinass_update_stockwaits'])) {
+            $this->data['config_odinass_update_stockwaits'] = $this->request->post['config_odinass_update_stockwaits'];
+        } else {
+            $this->data['config_odinass_update_stockwaits'] = $this->config->get('config_odinass_update_stockwaits');
         }
 
             //Bitrix24 Bot
