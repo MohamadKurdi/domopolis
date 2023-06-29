@@ -5138,7 +5138,20 @@
 													<option value="0"  selected="selected">Отключить</option>
 												<? } ?>
 											</select>
-										</div>										
+										</div>	
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Автоматически создавать бренды</span></p>
+											<select name="config_rainforest_auto_create_manufacturers">
+												<?php if ($config_rainforest_auto_create_manufacturers) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>									
 									</td>
 
 									<td style="width:20%">
