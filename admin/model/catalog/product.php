@@ -31,8 +31,22 @@
 					$this->db->query("UPDATE product SET image = '" . $this->db->escape($data['def_img']) . "' WHERE product_id = '" . (int)$product_id . "'");  
 				}
 			}
+
+			$manufacturer_name_overloaded = false;
+			if (!empty($data['manufacturer_id'])){
+				$query = $this->db->query("SELECT name FROM manufacturer WHERE manufacturer_id = '" . (int)$data['manufacturer_id'] . "'");
+
+				if ($query->num_rows && !empty($query->row['name'])){
+					$manufacturer_name_overloaded = $query->row['name'];
+				}
+			}
 			
 			foreach ($data['product_description'] as $language_id => $value) {
+
+				if ($manufacturer_name_overloaded){
+					$value['manufacturer_name'] = $manufacturer_name_overloaded;
+				}
+
 				$this->db->query("INSERT INTO product_description SET 
 					product_id = '" . (int)$product_id . "', 
 					language_id = '" . (int)$language_id . "', 
@@ -534,46 +548,62 @@
 					'variant_name_1',
 					'variant_name_2',
 					'variant_value_1',
-					'variant_value_2'
+					'variant_value_2',
+					'manufacturer_name'
 				];			
 
 			$copy_product_description 	= [];
 			$rainforest_source_text		= [];
-			foreach ($data['product_description'] as $language_id => $value) {					
+
+			$manufacturer_name_overloaded = false;
+			if (!empty($data['manufacturer_id'])){
+				$query = $this->db->query("SELECT name FROM manufacturer WHERE manufacturer_id = '" . (int)$data['manufacturer_id'] . "'");
+
+				if ($query->num_rows && !empty($query->row['name'])){
+					$manufacturer_name_overloaded = $query->row['name'];
+				}
+			}
+
+			foreach ($data['product_description'] as $language_id => $value) {	
+
+				if ($manufacturer_name_overloaded){
+					$value['manufacturer_name'] = $manufacturer_name_overloaded;
+				}				
 
 				$this->db->query("INSERT INTO product_description SET 
-					product_id = '" . (int)$product_id . "', 
-					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($value['name']) . "', 
-					short_name_d = '" . $this->db->escape($value['short_name_d']) . "', 
-					name_of_option = '" . $this->db->escape($value['name_of_option']) . "', 
-					meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', 
-					seo_title = '" . ((isset($value['seo_title']))?($this->db->escape($value['seo_title'])):'') . "', 
-					seo_h1 = '" . ((isset($value['seo_h1']))?($this->db->escape($value['seo_h1'])):'') . "', 
-					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-					description = '" . $this->db->escape($value['description']) . "', 
-					tag = '" . $this->db->escape($value['tag']) . "', 
-					color = '" . $this->db->escape($value['color']) . "', 
-					material = '" . $this->db->escape($value['material']) . "', 
-					variant_name = '" . $this->db->escape($value['variant_name']) . "', 
-					variant_name_1  = '" . $this->db->escape($value['variant_name_1']) . "', 
-					variant_name_2 = '" . $this->db->escape($value['variant_name_2']) . "',
-					variant_value_1  = '" . $this->db->escape($value['variant_value_1']) . "', 
-					variant_value_2 = '" . $this->db->escape($value['variant_value_2']) . "',
+					product_id 			= '" . (int)$product_id . "', 
+					language_id 		= '" . (int)$language_id . "', 
+					name 				= '" . $this->db->escape($value['name']) . "', 
+					short_name_d 		= '" . $this->db->escape($value['short_name_d']) . "', 
+					name_of_option 		= '" . $this->db->escape($value['name_of_option']) . "', 
+					meta_keyword 		= '" . $this->db->escape($value['meta_keyword']) . "', 
+					seo_title 			= '" . ((isset($value['seo_title']))?($this->db->escape($value['seo_title'])):'') . "', 
+					seo_h1 				= '" . ((isset($value['seo_h1']))?($this->db->escape($value['seo_h1'])):'') . "', 
+					meta_description 	= '" . $this->db->escape($value['meta_description']) . "', 
+					description 		= '" . $this->db->escape($value['description']) . "', 
+					tag 				= '" . $this->db->escape($value['tag']) . "', 
+					color 				= '" . $this->db->escape($value['color']) . "', 
+					material 			= '" . $this->db->escape($value['material']) . "', 
+					variant_name 		= '" . $this->db->escape($value['variant_name']) . "', 
+					variant_name_1  	= '" . $this->db->escape($value['variant_name_1']) . "', 
+					variant_name_2 		= '" . $this->db->escape($value['variant_name_2']) . "',
+					variant_value_1  	= '" . $this->db->escape($value['variant_value_1']) . "', 
+					variant_value_2 	= '" . $this->db->escape($value['variant_value_2']) . "',
 					markdown_appearance = '" . $this->db->escape($value['markdown_appearance']) . "', 
-					markdown_condition = '" . $this->db->escape($value['markdown_condition']) . "', 
-					markdown_pack = '" . $this->db->escape($value['markdown_pack']) . "', 
-					markdown_equipment = '" . $this->db->escape($value['markdown_equipment']) . "', 
-					manufacturer_name = '" . $this->db->escape($value['manufacturer_name']) . "',
-					translated = '" . (int)$value['translated'] . "'");
+					markdown_condition 	= '" . $this->db->escape($value['markdown_condition']) . "', 
+					markdown_pack 		= '" . $this->db->escape($value['markdown_pack']) . "', 
+					markdown_equipment 	= '" . $this->db->escape($value['markdown_equipment']) . "', 
+					manufacturer_name 	= '" . $this->db->escape($value['manufacturer_name']) . "',
+					translated 			= '" . (int)$value['translated'] . "'");
 
 				if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']){
 					$variants = $this->getProductVariantsIds($product_id);
 					if ($variants){
 					$this->db->query("UPDATE product_description SET
-						description = '" . $this->db->escape($value['description']) . "',						
-						variant_name_1  = '" . $this->db->escape($value['variant_name_1']) . "',
-						variant_name_2 = '" . $this->db->escape($value['variant_name_2']) . "'
+						description 		= '" . $this->db->escape($value['description']) . "',						
+						variant_name_1  	= '" . $this->db->escape($value['variant_name_1']) . "',
+						variant_name_2 		= '" . $this->db->escape($value['variant_name_2']) . "',
+						manufacturer_name 	= '" . $this->db->escape($value['manufacturer_name']) . "'
 						WHERE product_id IN (" . implode(',', $variants) . ") AND language_id = '" . (int)$language_id . "'");
 					}
 				}
@@ -2090,6 +2120,7 @@
 				'markdown_condition' 	=> $result['markdown_condition'],
 				'markdown_pack'			=> $result['markdown_pack'],
 				'markdown_equipment'	=> $result['markdown_equipment'],				
+				'manufacturer_name'		=> $result['manufacturer_name']
 				);
 			}
 			

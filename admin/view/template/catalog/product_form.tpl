@@ -182,11 +182,16 @@
 										<tr>
 											<td>Имя опции</td>
 											<td><input type="text" name="product_description[<?php echo $language['language_id']; ?>][name_of_option]" size="100" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['name_of_option'] : ''; ?>" />
-												<br /><span class="help">Этот товар является виртуальной опцией какого-либо другого товара с названием, указанного в вкладке "Данные" в поле "Код Группы" с названием опции &uarr;</span>
-												<?php if (isset($error_name[$language['language_id']])) { ?>
-													<span class="error"><?php echo $error_name[$language['language_id']]; ?></span>
-													<?php } ?></td>
-												</tr>
+												<br /><span class="help">Этот товар является виртуальной опцией какого-либо другого товара с названием, указанного в вкладке "Данные" в поле "Код Группы" с названием опции &uarr;</span>					
+											</td>
+										</tr>
+
+										<tr>
+											<td>Название производителя</td>
+											<td><input type="text" name="product_description[<?php echo $language['language_id']; ?>][manufacturer_name]" size="100" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['manufacturer_name'] : ''; ?>" />
+												<br /><span class="help">если производитель создан и товар привязан к нему, то это поле будет перезаписано</span>					
+											</td>
+										</tr>
 
 												<tr>
 													<td><?php echo $entry_seo_title; ?> <br /><span id='title_lngth'></span> смв.</td>
