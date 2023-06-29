@@ -351,7 +351,7 @@
 				$sql .= "SELECT DISTINCT *, ";				
 				if ($simple != 'simple'){
 					$sql .= " p.image, p.xhasvideo as has_video, p.xrating as rating, p.xreviews as reviews, p.sort_order, ";
-					$sql .= " pd.name AS name, pd.color AS color, pd.material AS material, pd.alt_image, pd.title_image,";
+					$sql .= " pd.name AS name, pd.color AS color, pd.material AS material, pd.alt_image, pd.title_image, pd.manufacturer_name, ";
 					$sql .= " m.name AS manufacturer, m.image as manufacturer_img, ";
 					$sql .= " (SELECT st.set_id FROM `set` st WHERE p.product_id = st.product_id LIMIT 1) as set_id, ";
 					$sql .= " (SELECT COUNT(*) FROM product_additional_offer pao LEFT JOIN product_additional_offer_to_store pao2s ON (pao.product_additional_offer_id = pao2s.product_additional_offer_id) WHERE  pao.product_id = p.product_id AND pao.date_end > NOW() AND (ISNULL(pao2s.store_id) OR pao2s.store_id = '" . (int)$this->config->get('config_store_id') . "')) AS additional_offer_count, ";
@@ -453,6 +453,11 @@
 				if ($query->num_rows) {
 					if ($this->config->get('config_single_store_enable')){
 						$query->row['currency'] = $this->config->get('config_regional_currency');
+					}
+
+					//overloading manufacturer
+					if (empty($query->row['manufacturer']) || empty($query->row['manufacturer_id'])){
+						$query->row['manufacturer'] = $query->row['manufacturer_name'];
 					}
 
 					$yam_price = $query->row['yam_price'];
@@ -668,9 +673,9 @@
 							'images'                   => $query->row['images'],
 							'main_category_id'         => $query->row['main_category_id'],
 							'categories'			   => $query->row['categories'],
-							'google_category_id'	   => $query->row['google_category_id'],
-							'manufacturer_id'          => $query->row['manufacturer_id'],
+							'google_category_id'	   => $query->row['google_category_id'],							
 							'collection_id'            => $query->row['collection_id'],
+							'manufacturer_id'          => $query->row['manufacturer_id'],
 							'manufacturer'             => $query->row['manufacturer'],
 							'manufacturer_img'         => $query->row['manufacturer_img'],
 							'competitors'              => $query->row['competitors'],

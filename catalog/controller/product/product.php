@@ -829,7 +829,7 @@ public function index($product_id = false, $just_price = false)
                 $this->data['tab_related']          = $this->language->get('tab_related');
                 
                 $this->data['product_id']   = (int)$this->request->get['product_id'];
-                $this->data['manufacturer'] = !empty($manufacturer_info)?(trim($product_info['manufacturer'])):'';
+                $this->data['manufacturer'] = $product_info['manufacturer'];
                 $this->data['model']        = $product_info['model'];
                 $this->data['sku']          = $product_info['sku'];
                 $this->data['points']       = $this->currency->formatBonus($product_info['reward'], true);
@@ -1070,6 +1070,7 @@ public function index($product_id = false, $just_price = false)
                     }
 
                     if (!$just_price) {
+                        $this->data['manufacturers'] = false;
                         if (!empty($manufacturer_info)) {
                             $this->data['manufacturers'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $product_info['manufacturer_id']);
                     
