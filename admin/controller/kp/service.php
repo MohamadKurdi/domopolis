@@ -144,7 +144,7 @@
 
 			echoLine('[optimizeProductsDB] Финальные категории', 'i');	
 			$this->db->query("UPDATE category SET final = 0 WHERE 1");
-			$this->db->query("UPDATE category SET final = 1 WHERE category_id NOT IN (SELECT parent_id FROM category)");
+			$this->db->query("UPDATE category SET final = 1 WHERE category_id NOT IN ( SELECT parent_id FROM ( SELECT parent_id FROM category ) AS subquery )");
 			
 			echoLine('[optimizeProductsDB] Обнуление количества товаров со статусом нет в наличии', 'i');
 		//	$this->db->query("UPDATE product p SET quantity = 0, quantity_stock = 0, quantity_stockK = 0, quantity_stockM = 0, quantity_stockMN = 0, quantity_stockAS = 0, quantity_stock_onway = 0, quantity_stockK_onway = 0, quantity_stockM_onway = 0 WHERE stock_status_id IN (10,9)");
