@@ -47,7 +47,7 @@ class ModelCatalogCategory extends Model {
 		}
 
 		$sql .= " AND c.status = '1' ";
-		$sql .= " AND c.homepage <> '-1' ";
+		$sql .= " AND c.homepage <> '-1' AND c.special <> 1 ";
 		$sql .= " AND ((c.bought_for_month > 0 AND c.final = 1) OR c.homepage = 1)";		
 		if (defined('PRESENT_UA')){
 			$sql .= " AND c.category_id <> " . PRESENT_UA;
@@ -85,7 +85,7 @@ class ModelCatalogCategory extends Model {
 		}
 
 		$sql .= " AND c.status = '1' ";
-		$sql .= " AND c.homepage <> '-1' ";
+		$sql .= " AND c.homepage <> '-1' AND c.special <> 1  ";
 		$sql .= " AND ((c.viewed > 0 AND c.final = 1) OR c.homepage = 1)";		
 		if (defined('PRESENT_UA')){
 			$sql .= " AND c.category_id <> " . PRESENT_UA;
