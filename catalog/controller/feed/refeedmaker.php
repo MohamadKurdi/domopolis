@@ -124,7 +124,7 @@ class ControllerFeedReFeedMaker extends Controller
                 $output .= '  <g:sale_price_effective_date>' . date('c', strtotime('-1 day')) .'/'. date('c', strtotime($product['special_date_end'])) . '</g:sale_price_effective_date>'. PHP_EOL;
                 $output .= '  <g:offer_price_effective_date>' . date('c', strtotime('-1 day')) .'/'. date('c', strtotime($product['special_date_end'])) . '</g:offer_price_effective_date>'. PHP_EOL;
             }
-        }
+        }        
 
         $steps = $this->steps;
         for ($i = 0; $i<=(count($steps)-2); $i++) {
@@ -135,6 +135,12 @@ class ControllerFeedReFeedMaker extends Controller
         }
 
         $output = str_replace(max($this->steps), 'MORE', $output);
+
+
+        if ((float)$product['special']) {
+             $output .= '  <g:custom_label_2><![CDATA[HAS_DISCOUNT]]></g:custom_label_2>' . PHP_EOL;
+        }
+
 
         $output .= '  <g:availability><![CDATA[' . ($product['quantity'] ? 'in stock' : 'out of stock') . ']]></g:availability>'. PHP_EOL;
         $output .= '</item>'. PHP_EOL;
@@ -543,6 +549,10 @@ class ControllerFeedReFeedMaker extends Controller
         }
 
         $output = str_replace(max($this->steps), 'MORE', $output);
+
+        if ((float)$product['special']) {
+             $output .= '  <g:custom_label_2><![CDATA[HAS_DISCOUNT]]></g:custom_label_2>' . PHP_EOL;
+        }
 
        if (!empty($product['main_category_id'])){
             $output .= '    <g:product_type><![CDATA[' . str_replace('/', ' > ', $this->model_catalog_product->getGoogleCategoryPathForCategory($product['main_category_id'])) . ']]></g:product_type>'. PHP_EOL;

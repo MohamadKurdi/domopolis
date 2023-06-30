@@ -139,6 +139,10 @@ class ControllerFeedReFeedMaker2 extends Controller
             }
         }
 
+        if ((float)$product['special']) {
+             $output .= '  <g:custom_label_2><![CDATA[HAS_DISCOUNT]]></g:custom_label_2>' . PHP_EOL;
+        }
+
         $output = str_replace(max($this->steps), 'MORE', $output);
 
         $output .= '  <g:availability><![CDATA[' . ($product['quantity'] ? 'in stock' : 'out of stock') . ']]></g:availability>'. PHP_EOL;
@@ -296,6 +300,10 @@ class ControllerFeedReFeedMaker2 extends Controller
         }
 
         $output = str_replace(max($this->steps), 'MORE', $output);
+
+        if ((float)$product['special']) {
+             $output .= '  <g:custom_label_2><![CDATA[HAS_DISCOUNT]]></g:custom_label_2>' . PHP_EOL;
+        }
 
         if (!empty($product['main_category_id'])){
             $output .= '    <g:product_type><![CDATA[' . str_replace('/', ' > ', $this->model_catalog_product->getGoogleCategoryPathForCategory($product['main_category_id'])) . ']]></g:product_type>'. PHP_EOL;
