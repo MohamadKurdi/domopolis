@@ -57,7 +57,9 @@
 							<td width="1" style="text-align: center;">
 								<input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" />
 							</td>
-							<td class="left" style="width:70px;">ID</td>
+							<td class="left" style="width:70px;">
+								ID
+							</td>
 							<?php if ($rollup_enabled) { ?>
 								<td width="1" style="text-align: center;">L</td>	
 							<?php } ?>
@@ -169,6 +171,21 @@
 											<?php if ($category['menu_name']) { ?>
 												<br /><small class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF"><?php echo $category['menu_name']; ?></small>
 											<?php } ?>
+
+											<br />
+											<?php if ($category['homepage'] == 1) { ?>
+												<small class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF"><i class="fa fa-home" aria-hidden="true"></i> Вкл</small>
+											<?php }  ?>
+											<?php if ($category['homepage'] == -1) { ?>
+												<small class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><i class="fa fa-home" aria-hidden="true"></i> Искл</small>
+											<?php }  ?>
+											<?php if ($category['homepage'] == 0) { ?>
+												<small class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56; color:#FFF"><i class="fa fa-home" aria-hidden="true"></i> Авто</small>
+											<?php }  ?>
+
+											<?php if ($category['special'] == 1) { ?>
+												<small class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><i class="fa fa-cog" aria-hidden="true"></i> Спец</small>
+											<?php }  ?>
 										</td>
 
 										<td class="center">

@@ -303,6 +303,9 @@ class ControllerCatalogCategory extends Controller {
 					'default_height'			=> $real_category['default_height'],
 					'default_weight'			=> $real_category['default_weight'],					
 					'status'					=> $real_category['status'],
+					'homepage'					=> $real_category['homepage'],
+					'special'					=> $real_category['special'],
+					'popular'					=> $real_category['popular'],
 					'selected'    				=> isset($this->request->post['selected']) && in_array($result['category_id'], $this->request->post['selected']),
 					'action'      				=> $action
 				);
@@ -884,6 +887,14 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['homepage'] = $category_info['homepage'];
 		} else {
 			$this->data['homepage'] = 0;
+		}
+
+		if (isset($this->request->post['special'])) {
+			$this->data['special'] = $this->request->post['special'];
+		} elseif (!empty($category_info)) {
+			$this->data['special'] = $category_info['special'];
+		} else {
+			$this->data['special'] = 0;
 		}
 
 		if (isset($this->request->post['popular'])) {

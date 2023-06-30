@@ -1045,6 +1045,23 @@
 						</tr>
 
 						<tr>
+							<td>Специальная категория</td>
+							<td>
+								<select name="special">
+									<?php if ($special == 1) { ?>
+										<option value="1" selected="selected">Это специальная категория</option>
+										<option value="0">Это обычная категория</option>
+									<?php } elseif ($special == 0) { ?>
+										<option value="1">Это специальная категория</option>
+										<option value="0" selected="selected">Это обычная категория</option>										
+									<?php } ?>
+								</select>
+
+								<br/><span class="help">Специальная категория - исключена из выборок популярных и самых покупаемых в некоторых местах</span>
+							</td>
+						</tr>
+
+						<tr>
 							<td>Популярная категория</td>
 							<td>
 								<select name="popular">
