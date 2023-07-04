@@ -4411,6 +4411,12 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_yam_excludewords'] = $this->config->get('config_yam_excludewords');
         }
+
+        if (isset($this->request->post['config_yam_default_category_id'])) {
+            $this->data['config_yam_default_category_id'] = $this->request->post['config_yam_default_category_id'];
+        } else {
+            $this->data['config_yam_default_category_id'] = $this->config->get('config_yam_default_category_id');
+        }
         
         if (isset($this->request->post['config_yam_yaMarketToken'])) {
             $this->data['config_yam_yaMarketToken'] = $this->request->post['config_yam_yaMarketToken'];

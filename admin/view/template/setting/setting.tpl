@@ -4498,6 +4498,11 @@
 										<textarea cols="20" rows="5" name="config_yam_excludewords"><?php echo $config_yam_excludewords; ?></textarea>
 										<br />
 										<span class="help">каждое с новой строки, например, "пепельниц зажигалк" для исключения товаров связанных с курением</span>
+
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Дефолтная категория Yandex</span></p>
+										<input type="text" name="config_yam_default_category_id" value="<?php echo $config_yam_default_category_id; ?>" size="30" style="width:250px;" />
+										<br />
+										<span class="help">в случае если не получилось никак определить</span>
 									</td>
 								</tr>
 								

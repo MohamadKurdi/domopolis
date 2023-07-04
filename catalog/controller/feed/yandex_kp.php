@@ -13,33 +13,28 @@ class ControllerFeedYandexKP extends Controller {
 	private $supported_currencies 	= array('RUR', 'RUB', 'USD', /* 'BYN', 'KZT', */ 'EUR', 'UAH');	
 	private $local_deliveries_cost 	= ['0' => 400, '1' => 80, '2' => false, '5' => false];
 	private $pickup_available 		= ['0', '1'];
-
-	private $oldLogicCompetitorFieldMapping = [];
-
-		//Хуяндекс = килограммы, сантиметры
+		
 	private $yandexWeightClassID = 1;
 	private $yandexLengthClassID = 1;
-
-		//Виллерой исключить
-	private $excludeOzonManufacturers = [];
-	private $excludeYandexManufacturers = [];	
-
-		//Озон = граммы, миллиметры
 	private $ozonWeightClassID = 2;
 	private $ozonLengthClassID = 2;
+		
+	private $excludeOzonManufacturers 	= [];
+	private $excludeYandexManufacturers = [];	
 
-	private $defaultYandexCategory = 3017;
+	private $defaultYandexCategory 	= null;
+	private $currentWeightClassID 	= 1;
+	private $currentLengthClassID 	= 1;
 
-	private $currentWeightClassID = 1;
-	private $currentLengthClassID = 1;
 	private $type = 'yandex';
 
-	private $products = [];
-	private $images = [];
-	private $attributes = [];
-	private $defaultDimensions = [];
-	private $yandexCategories = [];
-	private $yandexCategoriesMapping = [];
+	private $products 					= [];
+	private $images 					= [];
+	private $attributes 				= [];
+	private $defaultDimensions 			= [];
+	private $yandexCategories 			= [];
+	private $yandexCategoriesMapping 	= [];
+	private $oldLogicCompetitorFieldMapping = [];
 	private $yml = '';		
 
 	private $excluded_names = ['пепельниц', 'зажигалк'];
@@ -101,6 +96,10 @@ class ControllerFeedYandexKP extends Controller {
 
 		if ($this->config->get('config_yam_excludewords')){
 			$this->excluded_names = explode(PHP_EOL, $this->config->get('config_yam_excludewords'));
+		}
+
+		if ($this->config->get('config_yam_default_category_id')){
+			$this->defaultYandexCategory = $this->config->get('config_yam_default_category_id');
 		}
 
 		if (!is_null($this->pricevaAdaptor)){
@@ -249,7 +248,7 @@ class ControllerFeedYandexKP extends Controller {
 		$query = $this->db->query("SELECT category_id FROM product_to_category WHERE product_id = '" . (int)$product_id . "' AND category_id NOT IN (" . implode(',', $this->excluded_categories) . ") ORDER BY main_category DESC LIMIT 1");
 
 		if (!$query->num_rows){
-			return 0;
+			return $this->defaultYandexCategory;
 		}
 
 		return $query->row['category_id'];
