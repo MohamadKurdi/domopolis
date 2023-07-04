@@ -13,7 +13,7 @@ class ControllerApiDeliveryServices extends Controller {
 		}
 
 		if ($this->config->get('config_novaposhta_api_key')){
-		//	$this->courierServices->updateReferences('NovaPoshta');
+			$this->courierServices->updateReferences('NovaPoshta');
 		}
 	}
 

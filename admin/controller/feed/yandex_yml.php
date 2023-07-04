@@ -453,4 +453,3 @@ class ControllerFeedYandexYml extends Controller {
 		}
 	}
 }
-?>

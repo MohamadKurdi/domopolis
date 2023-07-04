@@ -1,7 +1,5 @@
 <?php
 
-
-
 class ControllerFeedYandexKP extends Controller {
 
 	private $full_path 	= ['yandex_fast_full_feed_{store_id}.xml'];
@@ -24,11 +22,13 @@ class ControllerFeedYandexKP extends Controller {
 
 		//Виллерой исключить
 	private $excludeOzonManufacturers = [];
-	private $excludeYandexManufacturers = [];
+	private $excludeYandexManufacturers = [];	
 
 		//Озон = граммы, миллиметры
 	private $ozonWeightClassID = 2;
 	private $ozonLengthClassID = 2;
+
+	private $defaultYandexCategory = 3017;
 
 	private $currentWeightClassID = 1;
 	private $currentLengthClassID = 1;
@@ -112,8 +112,6 @@ class ControllerFeedYandexKP extends Controller {
 
 		$query = $this->db->query("SELECT * FROM category_yam_tree WHERE 1");
 		foreach ($query->rows as $row){
-
-
 			$this->yandexCategories[$row['full_name']] = ($max_category_id + $row['category_id']);
 		}
 
@@ -199,7 +197,6 @@ class ControllerFeedYandexKP extends Controller {
 		echoLine('[YML] Добавили категории');
 
 		return $this;
-
 	}
 
 	private function addCategories(){				
@@ -238,7 +235,6 @@ class ControllerFeedYandexKP extends Controller {
 		echoLine('[YML] Добавили категории');
 
 		return $this;
-
 	}
 
 	private function format($price){
@@ -250,7 +246,6 @@ class ControllerFeedYandexKP extends Controller {
 	}
 
 	private function getCategory($product_id){
-
 		$query = $this->db->query("SELECT category_id FROM product_to_category WHERE product_id = '" . (int)$product_id . "' AND category_id NOT IN (" . implode(',', $this->excluded_categories) . ") ORDER BY main_category DESC LIMIT 1");
 
 		if (!$query->num_rows){
@@ -340,8 +335,6 @@ class ControllerFeedYandexKP extends Controller {
 		);
 
 		return $dimensions;
-
-
 	}
 
 	private function addOffersOzonTruncated(){
@@ -398,7 +391,6 @@ class ControllerFeedYandexKP extends Controller {
 
 		return $this;
 	}
-
 
 	private function addOffers(){
 
@@ -609,7 +601,6 @@ class ControllerFeedYandexKP extends Controller {
 		echoLine('[YML] Добавили товары');
 
 		return $this;
-
 	}
 
 	private function writeFeed($path){
@@ -645,6 +636,8 @@ class ControllerFeedYandexKP extends Controller {
 
 		echoLine('[YML] Всего ' . $total);
 
+		$invalidCategories = [];
+
 		foreach ($products as $product){										
 			$counter++;
 			if ($counter % 100 == 0){
@@ -667,7 +660,6 @@ class ControllerFeedYandexKP extends Controller {
 				$this->products[$product_id]['available']	= ($this->products[$product_id]['quantity'] > 0)?'true':'false';
 			}
 
-
 			$this->products[$product_id]['attributes'] 	= $this->getProductAttributes($product['product_id']);
 
 			if (in_array($this->products[$product_id]['main_category_id'], $this->excluded_categories)){
@@ -676,16 +668,21 @@ class ControllerFeedYandexKP extends Controller {
 
 			if ($this->config->get('config_yam_enable_category_tree')){
 				if (!empty($this->yandexCategoriesMapping[$this->products[$product_id]['main_category_id']])){
-
 					$this->products[$product_id]['main_category_id'] = $this->yandexCategoriesMapping[$this->products[$product_id]['main_category_id']];
-
+				} else {					
+					echoLine('[YML] No yandex category mapping: ' . $this->products[$product_id]['main_category_id'], 'e');
+					$invalidCategories[$this->products[$product_id]['main_category_id']] = $this->products[$product_id]['main_category_id'];
 				}
 			}				
+
+			//Fallback
+			if (empty($this->products[$product_id]['main_category_id']) || $this->products[$product_id]['main_category_id'] == '0'){
+				$this->products[$product_id]['main_category_id'] = $this->defaultYandexCategory;
+			}
 
 			if (!empty($this->oldLogicCompetitorFieldMapping[$this->config->get('config_store_id')])){
 				$this->products[$product_id]['competitors'] = $this->products[$product_id][$this->oldLogicCompetitorFieldMapping[$this->config->get('config_store_id')]];
 			}
-
 
 			$this->products[$product_id]['dimensions'] 	= $this->getProductDimensions($this->products[$product_id]);
 			$this->products[$product_id]['pickup']		= (in_array($this->config->get('config_store_id'), $this->pickup_available));				
@@ -700,6 +697,8 @@ class ControllerFeedYandexKP extends Controller {
 				$this->products[$product_id]['resized_images'][] = $this->model_tool_image->resize($image, 700, 700);
 			}
 		}
+
+		echoLine('[YML] INVALID CATEGORIES WITHOUT MAPPING: ' . implode(',' , $invalidCategories), 'e');
 
 		echoLine('');
 		echoLine('[YML] Получили товары');
@@ -736,7 +735,6 @@ class ControllerFeedYandexKP extends Controller {
 
 		return $this;
 	}
-
 
 	public function makePricevaFeeds(){
 
@@ -844,7 +842,6 @@ class ControllerFeedYandexKP extends Controller {
 
 			
 		}
-
 	}
 
 	public function flushCache(){			
@@ -874,7 +871,6 @@ class ControllerFeedYandexKP extends Controller {
 		$this->db->query("UPDATE product SET yam_in_feed = '1' WHERE product_id = '" . (int)$product_id . "'");
 	}
 
-
 	public function updateYandexMarketPriceNational($product_id, $price, $special){
 
 		$this->db->query("UPDATE product SET  
@@ -902,7 +898,6 @@ class ControllerFeedYandexKP extends Controller {
 	public function recalculatePrice($price, $percent){
 
 		return round(($price + (($price/100) * $percent)));
-
 	}
 
 	public function updateYandexMarketPrices($products){
@@ -968,7 +963,6 @@ class ControllerFeedYandexKP extends Controller {
 
 		return $this;
 	}
-
 
 	public function makeStockFeedQuery(){			
 		$sql = "SELECT DISTINCT(p.product_id) FROM product p 
@@ -1039,7 +1033,6 @@ class ControllerFeedYandexKP extends Controller {
 
 		return $products;
 	}
-
 
 	public function makeStockFeed(){
 		ini_set('memory_limit', '2G');
@@ -1125,8 +1118,5 @@ class ControllerFeedYandexKP extends Controller {
 				
 				$this->closeYML()->writeFeed($this->full_path[0]);				
 			}
-		}
-		
-		
-		
+		}		
 	}																																														
