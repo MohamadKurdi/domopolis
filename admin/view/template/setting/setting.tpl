@@ -107,7 +107,7 @@
 					<h2>Телефоны</h2>
 					<table class="form">
 						<tr>							
-								<td style="width:33%">
+								<td style="width:25%">
 									<div>
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Текст над</span></p>
 										<input type="text" name="config_t_tt" value="<?php echo $config_t_tt; ?>" size="40" />
@@ -124,7 +124,7 @@
 									</div>
 								</td>
 
-								<td style="width:33%">
+								<td style="width:25%">
 									<div>
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Текст над</span></p>
 										<input type="text" name="config_t2_tt" value="<?php echo $config_t2_tt; ?>" size="40" />
@@ -141,11 +141,19 @@
 									</div>
 								</td>
 
-								<td style="width:33%">
+								<td style="width:25%">
 									<div>
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Телефон - 3</span></p>
 										<input type="text" name="config_telephone3" value="<?php echo $config_telephone3; ?>" size="40" />
 									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Телефон - 4</span></p>
+										<input type="text" name="config_telephone4" value="<?php echo $config_telephone4; ?>" size="40" />
+									</div>
+								</td>
+
+								<td style="width:25%">									
 
 									<div>
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Оптовый телефон - 1</span></p>
@@ -159,7 +167,7 @@
 
 									<div>
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Факс</span></p>
-										<input type="text" name="config_fax" value="<?php echo $config_fax; ?>" />
+										<input type="text" name="config_fax" value="<?php echo $config_fax; ?>" size="40" />
 									</div>
 								</td>
 							</tr>		

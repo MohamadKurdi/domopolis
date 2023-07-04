@@ -703,7 +703,7 @@ class ControllerSettingSetting extends Controller
             $this->data['config_telephone'] = $this->request->post['config_telephone'];
         } else {
             $this->data['config_telephone'] = $this->config->get('config_telephone');
-        }
+        }        
         
         if (isset($this->request->post['config_telephone2'])) {
             $this->data['config_telephone2'] = $this->request->post['config_telephone2'];
@@ -716,8 +716,13 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_telephone3'] = $this->config->get('config_telephone3');
         }
-        
-        
+
+        if (isset($this->request->post['config_telephone4'])) {
+            $this->data['config_telephone4'] = $this->request->post['config_telephone4'];
+        } else {
+            $this->data['config_telephone4'] = $this->config->get('config_telephone4');
+        }
+                
         if (isset($this->request->post['config_opt_telephone'])) {
             $this->data['config_opt_telephone'] = $this->request->post['config_opt_telephone'];
         } else {

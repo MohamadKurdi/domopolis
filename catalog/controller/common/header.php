@@ -135,6 +135,7 @@
 				$this->data['phone'] 	= $this->config->get('config_telephone');
 				$this->data['phone2'] 	= $this->config->get('config_telephone2');
 				$this->data['phone3'] 	= $this->config->get('config_telephone3');
+				$this->data['phone4'] 	= $this->config->get('config_telephone4');
 			}
 			
 			$this->data['t_bt'] 	= $this->config->get('config_t_bt');
