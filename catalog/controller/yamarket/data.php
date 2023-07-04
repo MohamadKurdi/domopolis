@@ -94,10 +94,10 @@
 		
 		public function parsecategoriescron(){
 			
-			echoLine('[YAMCATEGORY] загружаем файлик.');
+			echoLine('[YAMCATEGORY] загружаем файлик', 's');
 			
-			//	$file = file_get_contents($this->fileRemote);
-			//	file_put_contents($this->fileLocal, $file);
+			$file = file_get_contents($this->fileRemote);
+			file_put_contents($this->fileLocal, $file);
 			
 			$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($this->fileLocal);
 			$reader->setReadDataOnly(true);
