@@ -2,7 +2,7 @@
 class ControllerModuleSelectedCategory extends Controller {
 	protected function index($setting) {
 
-		$out = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, $setting));
+	//	$out = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, $setting));
 
 		if ($out) {		
 
@@ -22,14 +22,13 @@ class ControllerModuleSelectedCategory extends Controller {
 			$this->load->model('catalog/category');
 			$this->load->model('catalog/product');
 
-			$this->data['categories'] = array();
+			$this->data['categories'] = array();			
 
 			if ($setting['type'] == 'viewed'){
 				$categories = $this->model_catalog_category->getMostViewedCategories($setting['category_amount']);
 			} elseif ($setting['type'] == 'bought'){
 				$categories = $this->model_catalog_category->getMostBoughtCategories($setting['category_amount']);
-			}
-			
+			}				
 
 			foreach ($categories as $category){
 
