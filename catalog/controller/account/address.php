@@ -142,14 +142,13 @@
 			);
 			
 			
-			$this->data['heading_title'] = $this->language->get('heading_title');
-			
-			$this->data['text_address_book'] = $this->language->get('text_address_book');
-			
-			$this->data['button_new_address'] = $this->language->get('button_new_address');
-			$this->data['button_edit'] = $this->language->get('button_edit');
-			$this->data['button_delete'] = $this->language->get('button_delete');
-			$this->data['button_back'] = $this->language->get('button_back');
+			$this->data['heading_title'] 		= $this->language->get('heading_title');			
+			$this->data['text_address_book'] 	= $this->language->get('text_address_book');
+			$this->data['text_default'] 		= $this->language->get('text_default');			
+			$this->data['button_new_address'] 	= $this->language->get('button_new_address');
+			$this->data['button_edit'] 			= $this->language->get('button_edit');
+			$this->data['button_delete'] 		= $this->language->get('button_delete');
+			$this->data['button_back'] 			= $this->language->get('button_back');
 			
 			if (isset($this->error['warning'])) {
 				$this->data['error_warning'] = $this->error['warning'];
@@ -158,8 +157,7 @@
 			}
 			
 			if (isset($this->session->data['success'])) {
-				$this->data['success'] = $this->session->data['success'];
-				
+				$this->data['success'] = $this->session->data['success'];				
 				unset($this->session->data['success']);
 				} else {
 				$this->data['success'] = '';
@@ -169,12 +167,11 @@
 			
 			$results = $this->model_account_address->getAddresses();
 			
-			foreach ($results as $result) {
-				
-				
+			foreach ($results as $result) {								
 				$this->data['addresses'][] = array(
 				'address_id' => $result['address_id'],
 				'city'		 => $result['city'],
+				'default'	 => $result['default'],
 				'address'    => $result['address_1'],
 				'update'     => $this->url->link('account/address/update', 'address_id=' . $result['address_id'], 'SSL'),
 				'delete'     => $this->url->link('account/address/delete', 'address_id=' . $result['address_id'], 'SSL')
