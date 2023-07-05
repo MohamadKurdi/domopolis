@@ -81,23 +81,30 @@ class ControllerCatalogProductExt extends Controller {
 
         if (isset($this->request->post['selected']) && $this->validateDelete()) {
             $asins = [];
+                
+                foreach ($this->request->post['selected'] as $product_id) {
+                    if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($product_id)){
+                        continue;
+                    } else {
+                     if ($asin = $this->model_catalog_product->getAsinByProductID($product_id)){
+                        $asins[] = $asin;
+                     }
 
-            foreach ($this->request->post['selected'] as $product_id) {
-
-                if ($asin = $this->model_catalog_product->getAsinByProductID($product_id)){
-                    $asins[] = $asin;
+                    $this->model_catalog_product->deleteProduct($product_id);
+                    $this->model_kp_product->deleteElastic($product_id);                     
                 }
-
-                $this->model_catalog_product->deleteProduct($product_id);
-                $this->model_kp_product->deleteElastic($product_id);   
-            }
+            }                       
 
             if ($this->config->get('config_enable_amazon_specific_modes') && $this->registry->hasDBCS()){
                 $this->registry->setSyncDB();
 
                 foreach ($asins as $asin) {
                     if ($product_id = $this->model_catalog_product->getProductIdByASIN($asin)){
-                        $this->model_catalog_product->deleteProduct($product_id);
+                        if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($product_id)){
+                            continue;
+                        } else {
+                            $this->model_catalog_product->deleteProduct($product_id);
+                        }                       
                     }
                 }
 

@@ -252,8 +252,13 @@ class ControllerCatalogProduct extends Controller {
 
 		if (isset($this->request->post['selected']) && $this->validateDelete()) {
 			foreach ($this->request->post['selected'] as $product_id) {
-				$this->model_catalog_product->deleteProduct($product_id);
-				$this->model_kp_product->deleteElastic($product_id);					
+				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($product_id)){
+					continue;
+					echo 'P CND'; die();
+				} else {
+					$this->model_catalog_product->deleteProduct($product_id);
+					$this->model_kp_product->deleteElastic($product_id);					
+				}
 			}
 
 			$this->session->data['success'] = $this->language->get('text_success');
