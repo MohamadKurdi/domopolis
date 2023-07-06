@@ -8,8 +8,9 @@ class RainforestAmazon
 
 	private $db;	
 	private $config;		
+	private $log;
+	
 	private $rfRequests = [];
-
 	public $zipCodes = [];
 
 	private $rfClient;	
