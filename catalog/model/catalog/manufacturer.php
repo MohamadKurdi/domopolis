@@ -114,14 +114,16 @@
 		}		
 		
 		
-		public function getManufacturers($data = array()) {
+		public function getManufacturers($data = []) {
 			if ($data) {
-				$sql = "SELECT * FROM manufacturer m LEFT JOIN manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id)
+				$sql = "SELECT * FROM manufacturer m 
+				LEFT JOIN manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id)
 				LEFT JOIN manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id) 
 				WHERE m2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND md.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 				
 				if (isset($data['menu_brand'])) {
-					$sql .= " AND menu_brand = '" .(int)$data['menu_brand']. "'";
+					$sql .= " AND menu_brand = '" . (int)$data['menu_brand'] . "'";
+					$sql .= " AND image <> ''";
 				}
 				
 				if (isset($data['filter_country'])) {
@@ -131,22 +133,21 @@
 				if (!empty($data['filter_exclude_hidden'])) {
 					$sql .= " AND m.sort_order <> '-1'";
 				}
-				
-				
+
 				$sort_data = array(
-				'name',
-				'm.sort_order'
+					'name',
+					'm.sort_order'
 				);	
 				
 				if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 					$sql .= " ORDER BY " . $data['sort'];	
-					} else {
+				} else {
 					$sql .= " ORDER BY name";	
 				}
 				
 				if (isset($data['order']) && ($data['order'] == 'DESC')) {
 					$sql .= " DESC";
-					} else {
+				} else {
 					$sql .= " ASC";
 				}
 				
@@ -169,23 +170,25 @@
 					
 					$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 				}
+
+				$this->log->debug($sql);
 				
 				$query = $this->db->query($sql);
 				
 				return $query->rows;
-				} else {
-				$manufacturer_data = $this->cache->get('manufacturer.' . (int)$this->config->get('config_store_id'));
+			} else {				
+				$manufacturer_data = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, [], ['manufacturers_list']));
 				
 				if (!$manufacturer_data) {
 					$sql = "SELECT * FROM manufacturer m LEFT JOIN manufacturer_to_store m2s ON (m.manufacturer_id = m2s.manufacturer_id)
 					LEFT JOIN manufacturer_description md ON (m.manufacturer_id = md.manufacturer_id) 
 					WHERE m2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND md.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY name";
-						
+
 					$query = $this->db->query($sql);
 
 					$manufacturer_data = $query->rows;
 					
-					$this->cache->set('manufacturer.' . (int)$this->config->get('config_store_id'), $manufacturer_data);
+					$this->cache->set($this->registry->createCacheQueryString(__METHOD__, [], ['manufacturers_list']), $manufacturer_data);
 				}
 				
 				return $manufacturer_data;
