@@ -44,8 +44,7 @@
 			
 			foreach ($this->language->loadRetranslate('common/home') as $translationСode => $translationText){
 				$this->data[$translationСode] = $translationText;
-			}
-			
+			}			
 
 			$this->data['brands'] = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, [], ['manufacturers_home']));
 
@@ -53,7 +52,7 @@
 				$this->load->model('catalog/manufacturer');
 				$this->load->model('tool/image');
 
-				$this->data['brands'] = $this->model_catalog_manufacturer->getManufacturers(array('sort' => 'm.sort_order', 'order' => 'ASC', 'menu_brand' => 1, 'limit' => 100));
+				$this->data['brands'] = $this->model_catalog_manufacturer->getManufacturers(['sort' => 'm.sort_order', 'order' => 'ASC', 'menu_brand' => 1, 'limit' => 30]);
 
 				foreach ($this->data['brands'] as $k => $b) {				
 					$this->data['brands'][$k]['thumb'] = $this->model_tool_image->resize($b['image'], 101, 101);	

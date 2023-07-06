@@ -205,6 +205,7 @@ class ControllerCatalogManufacturer extends Controller {
 				'total_products'  => $this->model_catalog_manufacturer->getTotalProductsByManufacturer($result['manufacturer_id']),
 				'name'            => $result['name'],
 				'image'			  => $image,
+				'menu_brand'      => $result['menu_brand'],
 				'sort_order'      => $result['sort_order'],
 				'selected'        => isset($this->request->post['selected']) && in_array($result['manufacturer_id'], $this->request->post['selected']),
 				'action'          => $action
@@ -465,8 +466,7 @@ class ControllerCatalogManufacturer extends Controller {
 					
 				}									
 			}
-		}
-		
+		}		
 		
 		if (isset($this->request->post['tip'])) {
 			$this->data['tip'] = $this->request->post['tip'];
@@ -483,8 +483,7 @@ class ControllerCatalogManufacturer extends Controller {
 		} else {
 			$this->data['menu_brand'] = 0;
 		}
-		
-		
+				
 		if (isset($this->request->post['show_goods'])) {
 			$this->data['show_goods'] = $this->request->post['show_goods'];
 		} elseif (!empty($manufacturer_info)) {
