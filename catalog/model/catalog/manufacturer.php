@@ -171,7 +171,7 @@
 					$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
 				}
 
-				$this->log->debug($sql);
+				//$this->log->debug($sql);
 				
 				$query = $this->db->query($sql);
 				
