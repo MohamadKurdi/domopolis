@@ -1,27 +1,29 @@
 <?php
 	class Customer {
-		private $customer_id;
-		private $store_id;
-		private $firstname;
-		private $lastname;
-		private $discount_card;
-		private $discount_percent;
-		private $birthday;
-		private $has_birthday;
-		private $email;
-		private $telephone;
-		private $fax;
-		private $newsletter;
-		private $newsletter_news;
-		private $newsletter_personal;
-		private $customer_group_id;
-		private $address_id;
-		private $sendpulse_push_id;
-		private $tracking;
-		private $is_opt;
-		private $affiliateNZ;
-		private $opt_group_array = array(8,9,10,11);
-		private $affiliate_paid;
+		private $customer_id 	= null;
+		private $store_id 		= null;
+		private $firstname 		= null;
+		private $lastname 		= null;
+		private $discount_card 	= null;
+		private $discount_percent 	= null;
+		private $birthday 			= null;
+		private $has_birthday 		= null;
+		private $email 				= null;
+		private $telephone 			= null;
+		private $city 				= null;
+		private $address 			= null;
+		private $fax 				= null;
+		private $newsletter 		= null;
+		private $newsletter_news 	= null;
+		private $newsletter_personal	= null;
+		private $customer_group_id 		= null;
+		private $address_id 		= null;
+		private $sendpulse_push_id 	= null;
+		private $tracking 			= null;
+		private $is_opt 			= null;
+		private $affiliateNZ 		= null;
+		private $opt_group_array 	= [8,9,10,11];
+		private $affiliate_paid 	= null;
 		
 				
 		public function __construct($registry) {			
@@ -41,6 +43,15 @@
 						if (isset($this->request->cookie['tracking'])){
 							$this->setTracking($this->request->cookie['tracking']);
 						}					
+					}
+
+					if ($customer_query->row['address_id']){
+						$address_query = $this->db->query("SELECT * FROM address WHERE address_id = '" . (int)$customer_query->row['address_id'] . "' LIMIT 1");
+
+						if ($address_query->num_rows){
+							$this->city 	= $address_query->row['city'];
+							$this->address 	= $address_query->row['address_1'];
+						}
 					}
 					
 					$this->customer_id 				= $customer_query->row['customer_id'];			
@@ -117,9 +128,7 @@
 					");
 					} else {
 					$customer_query = $this->db->ncquery("SELECT * FROM customer WHERE customer_id = '-1'");				
-				}
-				
-				
+				}								
 			}
 			
 			if ($customer_query->num_rows) {
@@ -141,8 +150,7 @@
 								$this->session->data['cart'][$key] += $value;
 							}
 						}			
-					}
-					
+					}					
 				}
 				
 				if ($customer_query->row['wishlist'] && is_string($customer_query->row['wishlist'])) {
@@ -157,6 +165,15 @@
 							$this->session->data['wishlist'][] = $product_id;
 						}
 					}			
+				}
+
+				if ($customer_query->row['address_id']){
+					$address_query = $this->db->query("SELECT * FROM address WHERE address_id = '" . (int)$customer_query->row['address_id'] . "' LIMIT 1");
+
+					if ($address_query->num_rows){
+						$this->city 	= $address_query->row['city'];
+						$this->address 	= $address_query->row['address_1'];
+					}
 				}
 				
 				$this->customer_id 			= $customer_query->row['customer_id'];								
@@ -188,7 +205,7 @@
 					setcookie('p', $password_c, time()+60 * 60 * 24 * 30);
 				}
 												
-				if(isset($this->affiliateNZ) && is_object($this->affiliateNZ) && !$this->affiliateNZ->isLogged() & $this->config->get('config_affiliate_login')) {
+				if($this->config->get('config_affiliate_login') && isset($this->affiliateNZ) && is_object($this->affiliateNZ) && !$this->affiliateNZ->isLogged()) {
 					$query = $this->db->ncquery("SELECT * FROM `affiliate` WHERE affiliate_id = '" . (int)$this->affiliate_paid . "'");
 					$affiliate_info = $query->row;
 					if($affiliate_info) {
@@ -379,6 +396,14 @@
 		public function getFax() {
 			return $this->fax;
 		}
+
+		public function getCity() {
+			return $this->city;
+		}
+
+		public function getAddress() {
+			return $this->address;
+		}
 		
 		public function getNewsletter() {
 			return $this->newsletter;	
@@ -430,17 +455,27 @@
 			
 			return false;
 		}
+
+		public function getTotalOrders($customer_id = false) {
+			if (!$customer_id){
+				$customer_id = $this->customer_id;
+			}
+
+			$query = $this->db->ncquery("SELECT COUNT(order_id) AS total FROM `order` WHERE customer_id = '" . (int)$this->customer_id . "' AND order_status_id > 0");
+			
+			return (int)$query->row['total'];
+		}
 		
 		public function getBalance() {
 			$query = $this->db->ncquery("SELECT SUM(amount) AS total FROM customer_transaction WHERE customer_id = '" . (int)$this->customer_id . "'");
 			
-			return $query->row['total'];
+			return (float)$query->row['total'];
 		}
 		
 		public function getBalanceNational() {
 			$query = $this->db->ncquery("SELECT SUM(amount_national) AS total FROM customer_transaction WHERE customer_id = '" . (int)$this->customer_id . "'");
 			
-			return $query->row['total'];
+			return (float)$query->row['total'];
 		}
 		
 		public function addRewardToQueue($customer_id = false, $description = '', $points = 0, $order_id = 0, $reason_code = 'UNKNOWN') {
