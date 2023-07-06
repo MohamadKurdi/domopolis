@@ -2,7 +2,7 @@
 class ControllerModuleSelectedCategory extends Controller {
 	protected function index($setting) {
 
-	//	$out = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, $setting));
+		$out = $this->cache->get($this->registry->createCacheQueryString(__METHOD__, $setting));
 
 		if ($out) {		
 
