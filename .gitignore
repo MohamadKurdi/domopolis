@@ -73,6 +73,10 @@
 /catalog/view/theme/kp/
 /catalog/view/theme/dp/
 /catalog/view/theme/ho/
+/catalog/view/theme/dev/
+/catalog/view/theme/old/
+/catalog/view/theme/_dev/
+/catalog/view/theme/_old/
 /catalog/view/theme/kp_dev/
 /catalog/view/theme/dp_dev/
 /catalog/view/theme/ho_dev/
