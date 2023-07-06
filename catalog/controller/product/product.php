@@ -2028,12 +2028,7 @@ public function index($product_id = false, $just_price = false)
                     }
 
                     $this->data['google_ecommerce_info'] = array(
-                        'price'      => ($product_info['special']) ? $this->currency->format(
-                            $product_info['special'],
-                            '',
-                            '',
-                            false
-                        ) : $this->currency->format($product_info['price'], '', '', false),
+                        'price'      => ($product_info['special']) ? $this->currency->format($product_info['special'], '','',false) : $this->currency->format($product_info['price'], '', '', false),
                         'brand'      => $this->data['manufacturer'],
                         'name'       => $this->data['heading_title'],
                         'category'   => implode('/', $this->data['categories']),

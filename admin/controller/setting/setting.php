@@ -4064,6 +4064,30 @@ class ControllerSettingSetting extends Controller
             $this->data['config_rainforest_api_zipcode_5'] = $this->config->get('config_rainforest_api_zipcode_5');
         }
 
+        if (isset($this->request->post['config_helpcrunch_enable'])) {
+            $this->data['config_helpcrunch_enable'] = $this->request->post['config_helpcrunch_enable'];
+        } else {
+            $this->data['config_helpcrunch_enable'] = $this->config->get('config_helpcrunch_enable');
+        }
+
+        if (isset($this->request->post['config_helpcrunch_app_id'])) {
+            $this->data['config_helpcrunch_app_id'] = $this->request->post['config_helpcrunch_app_id'];
+        } else {
+            $this->data['config_helpcrunch_app_id'] = $this->config->get('config_helpcrunch_app_id');
+        }
+
+        if (isset($this->request->post['config_helpcrunch_app_organisation'])) {
+            $this->data['config_helpcrunch_app_organisation'] = $this->request->post['config_helpcrunch_app_organisation'];
+        } else {
+            $this->data['config_helpcrunch_app_organisation'] = $this->config->get('config_helpcrunch_app_organisation');
+        }
+
+        if (isset($this->request->post['config_helpcrunch_send_auth_data'])) {
+            $this->data['config_helpcrunch_send_auth_data'] = $this->request->post['config_helpcrunch_send_auth_data'];
+        } else {
+            $this->data['config_helpcrunch_send_auth_data'] = $this->config->get('config_helpcrunch_send_auth_data');
+        }
+
             //Yandex Translate
         if (isset($this->request->post['config_yandex_translate_api_enable'])) {
             $this->data['config_yandex_translate_api_enable'] = $this->request->post['config_yandex_translate_api_enable'];

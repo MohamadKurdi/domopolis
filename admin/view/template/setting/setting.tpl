@@ -43,8 +43,7 @@
 				<a href="#tab-ya-market" <?php if ($this->config->get('config_country_id') != 176) { ?>style="display:none;"<? } ?>><span style="color:red;"><i class="fa fa-yahoo"></i> Yandex.Market, Ozon.Seller</span></a>
 				<a href="#tab-rainforest"><span style="color:#7F00FF;"><i class="fa fa-amazon"></i> Rainforest API</span></a>
 				<a href="#tab-openai">🤖 <span style="color:#51A62D;">OpenAI</span></a>
-				<a href="#tab-apis"><span style="color:#7F00FF;"><i class="fa fa-cogs"></i> Разные API</span></a>
-				
+				<a href="#tab-apis"><span style="color:#7F00FF;"><i class="fa fa-cogs"></i> Разные API</span></a>				
 			<div class="clr"></div></div>
 			<div class="th_style"></div>
 			<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
@@ -6423,6 +6422,47 @@
 						</div>
 						
 						<div id="tab-apis">
+							<h2>HelpCrunch чат</h2>
+							<table class="form">
+								<tr>
+									<td width="25%">	
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Включить HelpCrunch</span></p>
+										<select name="config_helpcrunch_enable">
+											<?php if ($config_helpcrunch_enable) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>									
+									</td>
+									
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">APP ID</span></p>
+										<input type="text" name="config_helpcrunch_app_id" value="<?php echo $config_helpcrunch_app_id; ?>" size="50" style="width:300px;" />
+									</td>
+									
+									<td width="25%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">API organisation</span></p>
+										<input type="text" name="config_helpcrunch_app_organisation" value="<?php echo $config_helpcrunch_app_organisation; ?>" size="50" style="width:200px;" />
+									</td>
+
+									<td width="25%">	
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Передавать пользователя</span></p>
+										<select name="config_helpcrunch_send_auth_data">
+											<?php if ($config_helpcrunch_send_auth_data) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>									
+									</td>
+									
+								</tr>
+							</table>
 
 							<h2>Yandex Translate (Cloud) API</h2>
 							<table class="form">
