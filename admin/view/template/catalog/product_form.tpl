@@ -3777,6 +3777,7 @@ $('input[name=\'collection\']').autocomplete({
 	});
 	//--></script> 
 
+<?php if ($this->config->get('config_use_separate_table_for_features')) { ?>
 	<script type="text/javascript"><!--
 	var feature_row = <?php echo $feature_row; ?>;
 	
@@ -3834,7 +3835,7 @@ $('input[name=\'collection\']').autocomplete({
 		featureautocomplete(index);
 	});
 	//--></script> 
-
+<?php } ?>
 
 	<script type="text/javascript"><!--
 	var attribute_row = <?php echo $attribute_row; ?>;
