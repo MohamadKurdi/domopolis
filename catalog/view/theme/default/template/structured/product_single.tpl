@@ -14,33 +14,27 @@
 			<a href="<? echo $product['href']; ?>" title="<?php echo strip_tags($product['name']); ?>">
 				<img loading="lazy" width="265" height="265" src="<?php echo $product['thumb']; ?>" title="<?php echo strip_tags($product['name']); ?>" alt="<?php echo strip_tags($product['name']); ?>">
 			</a>
-			<div class="product__label">
-			
-			<? /*	
+			<div class="product__label">				
 				<?php if ($product['active_actions']) { ?>
 					<?php foreach ($product['active_actions'] as $active_action) { ?>
 						<?php if ($active_action['label']) { ?>
 							<div class="product__label-hit" style="background-color:#<?php echo $active_action['label_background']; ?>; color:<?php echo $active_action['label_color']; ?>" <?php if ($active_action['label_text']) { ?>data-tooltip="<?php echo $active_action['label_text']; ?>"<? } ?>><?php echo $active_action['label']; ?>
-							</div>
-						<?php } ?>
-					<?php } ?>					
-				<?php } ?>
-			*/ ?>
-				
-				<?php if ($product['bestseller']) { ?>
-					<div class="product__label-hit"><?php echo $label_sales_hit; ?></div>
-				<? } ?>
-				<?php if ($product['new']) { ?>
-					<div class="product__label-new"><?php echo $label_sales_new; ?></div>
-				<? } ?>
-				<? /* if ($product['special']) { ?>
-					<div class="product__label-stock">Акция</div>
-					<? } ?>
-					
-					<?  ?>
-					<div class="product__label-best-price">Лучшая цена</div>
-				<? */ ?>
-			</div>
+						</div>
+					<?php } ?>
+				<?php } ?>					
+			<?php } ?>
+			
+			<?php if ($product['bestseller']) { ?>
+				<div class="product__label-hit"><?php echo $label_sales_hit; ?></div>
+			<? } ?>
+			<?php if ($product['new']) { ?>
+				<div class="product__label-new"><?php echo $label_sales_new; ?></div>
+			<? } ?>
+			<? /* if ($product['special']) { ?>
+				<div class="product__label-stock">Акция</div>					
+				<div class="product__label-best-price">Лучшая цена</div>
+			<? }  */ ?>
+		</div>
 			<?php if (!empty($product['additional_offer_product'])) { ?>
 				<div class="product__additional_offer">
 					<span class="label">+ <?php echo $text_present; ?></span>

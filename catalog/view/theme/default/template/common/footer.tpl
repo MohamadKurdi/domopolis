@@ -1039,18 +1039,20 @@
 	function updateActiveActionsInBlock(productBlock, active_actions){
 		let html = '';
 		active_actions.forEach(async function(active_action){
+			if (active_action.label_text){	
 			html += '<div class="product__label-hit" style="color:#'+active_action.label_color+'; --tooltip-color:#' + active_action.label_background + '; background-color:#' + active_action.label_background + '; --tooltip-color-txt:#' + active_action.label_color + '"'; 
 			if (active_action.label_text){
 				html += 'data-tooltip="' + active_action.label_text + '"';
 			}
 			html += '>';
 			html += active_action.label;
-			html += '</div>';			
+			html += '</div>';
+			}			
 		});
-		if( $(html).length == 0) {
-			productBlock.find('.product__label').prepend(html);
-		} 
 		
+		if( html) {
+			productBlock.find('.product__label').prepend(html);
+		} 		
 	}
 	
 	function updatePriceInBlock(productBlock, price){
