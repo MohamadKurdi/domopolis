@@ -2336,7 +2336,7 @@
 							
 							$attribute_counter = 1;
 							foreach ($attributes as $attribute){
-								$document['Документ' . $document_counter]['Товары']['Товар' . $product_counter]['Характеристики']['Характеристика' . $attribute_counter] = array(
+								$document['Документ' . $document_counter]['ТоварыНетУПоставщикаИВЛистеОжидания']['Товар' . $product_counter]['Характеристики']['Характеристика' . $attribute_counter] = array(
 								'ХарактеристикаНаименование' =>  $this->rms($attribute['name']),
 								'ХарактеристикаЗначение'     =>	 $this->rms($attribute['text'])
 								);
@@ -2347,7 +2347,7 @@
 							$document['Документ' . $document_counter]['ТоварыНетУПоставщикаИВЛистеОжидания']['Товар' . $product_counter]['ШтрихКоды'] = array(
 							'ASIN'   								=> $real_product['asin']							
 							,'ТНВЭД'   								=> $real_product['tnved']
-							,'EAN13'									=> $real_product['ean']
+							,'EAN13'								=> $real_product['ean']
 							);		
 							
 							//EAN 13
@@ -2447,7 +2447,7 @@
 							
 							$attribute_counter = 1;
 							foreach ($attributes as $attribute){
-								$document['Документ' . $document_counter]['Товары']['Товар' . $product_counter]['Характеристики']['Характеристика' . $attribute_counter] = array(
+								$document['Документ' . $document_counter]['ТоварыНетУПоставщикаИНеВЛистеОжидания']['Товар' . $product_counter]['Характеристики']['Характеристика' . $attribute_counter] = array(
 								'ХарактеристикаНаименование' =>  $this->rms($attribute['name']),
 								'ХарактеристикаЗначение'     =>	 $this->rms($attribute['text'])
 								);
