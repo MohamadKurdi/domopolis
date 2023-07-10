@@ -117,12 +117,11 @@
 								<input type="text" name="priceva_feed" value="<?php echo $priceva_feed; ?>" size="30" />
 								<br />
 								<?php if ($priceva_feed) { ?>
-									<div>
-										<img src="<?php echo DIR_FLAGS_NAME; ?>ru.png" title="ru"> <?php echo HTTPS_CATALOG; ?>feeds/<?php echo $this->config->get('config_priceva_directory_name'); ?>/<?php echo $this->config->get('config_priceva_directory_name'); ?>_<?php echo $priceva_feed; ?>_0.xml
-									</div>
-									<div>
-										<img src="<?php echo DIR_FLAGS_NAME; ?>ua.png" title="ua"> <?php echo HTTPS_CATALOG; ?>feeds/<?php echo $this->config->get('config_priceva_directory_name'); ?>/<?php echo $this->config->get('config_priceva_directory_name'); ?>_<?php echo $priceva_feed; ?>_1.xml
-									</div>
+									<?php if ($this->config->get('config_single_store_enable')) { ?>
+										<div>
+											<?php echo HTTPS_CATALOG; ?>feeds/<?php echo $this->config->get('config_priceva_directory_name'); ?>/<?php echo $this->config->get('config_priceva_directory_name'); ?>_<?php echo $priceva_feed; ?>_0.xml
+										</div>
+									<?php } ?>
 								<?php } ?>
 							</td>
 							
