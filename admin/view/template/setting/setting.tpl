@@ -6639,12 +6639,12 @@
 							</table>
 							
 							
-							<h2><i class="fa fa-search"></i> Priceva API (подбор и мониторинг цен конкурентов)</h2>
+							<h2><i class="fa fa-search"></i> Priceva / PriceControl API (подбор и мониторинг цен конкурентов)</h2>
 							
 							<table class="form">
 								<tr>
 									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3f6ad8; color:#FFF">Включить Priceva API</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3f6ad8; color:#FFF">Включить Priceva</span></p>
 										<select name="config_priceva_enable_api">
 											<?php if ($config_priceva_enable_api) { ?>
 												<option value="1" selected="selected">Включить</option>
@@ -6654,6 +6654,29 @@
 												<option value="0"  selected="selected">Отключить</option>
 											<? } ?>
 										</select>
+									</td>
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3f6ad8; color:#FFF">Включить PriceControl</span></p>
+										<select name="config_pricecontrol_enable_api">
+											<?php if ($config_pricecontrol_enable_api) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</td>
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Директория с фидами</span></p>
+										<input type="text" name="config_priceva_directory_name" value="<?php echo $config_priceva_directory_name; ?>" size="40" style="width:300px;" />	
+									</td>
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Поле с ссылками конкурентов</span></p>
+										<input type="text" name="config_priceva_competitor_field_mapping" value="<?php echo $config_priceva_competitor_field_mapping; ?>" size="40" style="width:300px;" />	
 									</td>
 								</tr>
 							

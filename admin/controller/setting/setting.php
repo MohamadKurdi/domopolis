@@ -3956,6 +3956,23 @@ class ControllerSettingSetting extends Controller
             $this->data['config_priceva_enable_api'] = $this->config->get('config_priceva_enable_api');
         }
 
+        if (isset($this->request->post['config_pricecontrol_enable_api'])) {
+            $this->data['config_pricecontrol_enable_api'] = $this->request->post['config_pricecontrol_enable_api'];
+        } else {
+            $this->data['config_pricecontrol_enable_api'] = $this->config->get('config_pricecontrol_enable_api');
+        }
+
+        if (isset($this->request->post['config_priceva_directory_name'])) {
+            $this->data['config_priceva_directory_name'] = $this->request->post['config_priceva_directory_name'];
+        } else {
+            $this->data['config_priceva_directory_name'] = $this->config->get('config_priceva_directory_name');
+        }
+
+        if (isset($this->request->post['config_priceva_competitor_field_mapping'])) {
+            $this->data['config_priceva_competitor_field_mapping'] = $this->request->post['config_priceva_competitor_field_mapping'];
+        } else {
+            $this->data['config_priceva_competitor_field_mapping'] = $this->config->get('config_priceva_competitor_field_mapping');
+        }
         
         foreach ($stores as $store) {
             if (isset($this->request->post['config_priceva_api_key_' . $store['store_id']])) {

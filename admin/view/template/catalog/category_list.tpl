@@ -84,7 +84,7 @@
 							<td class="left" style="width:30px;">Меню в доч.</td>
 							<td class="left" style="width:30px;">Пересеч.</td>
 							<td class="left" style="width:30px;">Искл. из пересеч</td>
-							<td class="left" style="width:30px;">Priceva</td>
+							<td class="left" style="width:30px;">Priceva/PriceControl</td>
 							<td class="left" style="width:30px;">ТНВЭД</td>
 							<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
 								<td class="right" style="width:100px;">Товары -></td>	

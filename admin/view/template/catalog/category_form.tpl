@@ -416,7 +416,7 @@
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Исключить из общего фида</span>
 							</td>
 							<td style="width:20%">
-								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Мониторинг цен Priceva</span>
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Мониторинг цен Priceva/PriceContol</span>
 							</td>
 						</tr>
 						<tr style="border-bottom:1px dashed gray">

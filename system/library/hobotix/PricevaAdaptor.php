@@ -27,6 +27,11 @@ final class PricevaAdaptor
 		$this->config = $registry->get('config');
 		$this->db = $registry->get('db');
 
+		if ($this->config->get('config_priceva_competitor_field_mapping')){
+			echoLine('[PricevaAdaptor] Using field ' . $this->config->get('config_priceva_competitor_field_mapping') . ' for competitors urls', 'i');
+
+			 $this->oldLogicCompetitorFieldMapping[0] = trim($this->config->get('config_priceva_competitor_field_mapping'));
+		}
 	}
 
 	public function getPricevaRelevance(){
@@ -41,7 +46,6 @@ final class PricevaAdaptor
 		$this->db->query("DELETE FROM priceva_data WHERE store_id = '" . (int)$store_id . "'");
 		$this->db->query("DELETE FROM priceva_sources WHERE store_id = '" . (int)$store_id . "'");
 	}
-
 
 	public function getPricevaData($store_id, $product_id){
 		$query = $this->db->query("SELECT * FROM priceva_sources WHERE store_id = '" . (int)$store_id . "' AND product_id = '" . (int)$product_id . "' AND active = 1");

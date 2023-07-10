@@ -8,7 +8,7 @@ class ControllerFeedYandexKP extends Controller {
 
 	private $ozon_full_path 		= ['ozon_feed_full_{store_id}.xml'];
 	private $ozon_path 				= ['ozon_feed_{store_id}.xml'];
-	private $priceva_path 			= ['priceva/priceva_{brand}_{store_id}.xml'];		
+	private $priceva_path 			= ['{dir}/{dir}_{brand}_{store_id}.xml'];		
 
 	private $supported_currencies 	= array('RUR', 'RUB', 'USD', /* 'BYN', 'KZT', */ 'EUR', 'UAH');	
 	private $local_deliveries_cost 	= ['0' => 400, '1' => 80, '2' => false, '5' => false];
@@ -570,7 +570,7 @@ class ControllerFeedYandexKP extends Controller {
 
 			foreach ($competitorUrls as $competitorUrl){
 				if (trim($competitorUrl)){
-					$this->yml .= '<competitorUrl><![CDATA[' . $competitorUrl . ']]></competitorUrl>' . PHP_EOL;	
+					$this->yml .= '<competitorUrl><![CDATA[' . atrim($competitorUrl) . ']]></competitorUrl>' . PHP_EOL;	
 				}
 			}	
 
@@ -603,7 +603,6 @@ class ControllerFeedYandexKP extends Controller {
 	}
 
 	private function writeFeed($path){
-
 		$path = str_replace('{store_id}', $this->config->get('config_store_id'), $path);
 
 		if ($this->type == 'market' && $this->config->get('config_yam_offer_id_prefix_enable') && $this->config->get('config_yam_offer_id_prefix')){
@@ -614,6 +613,11 @@ class ControllerFeedYandexKP extends Controller {
 		}
 
 		$path = DIR_REFEEDS . $path;
+		$dir = dirname($path);
+
+		if (!is_dir($dir)) {
+			mkdir($dir, 0755, true);
+		}
 
 		$file = fopen($path, 'w+');
 		fwrite($file, $this->yml);
@@ -668,7 +672,8 @@ class ControllerFeedYandexKP extends Controller {
 			if ($this->config->get('config_yam_enable_category_tree')){
 				if (!empty($this->yandexCategoriesMapping[$this->products[$product_id]['main_category_id']])){
 					$this->products[$product_id]['main_category_id'] = $this->yandexCategoriesMapping[$this->products[$product_id]['main_category_id']];
-				} else {					
+				} else {	
+					echoLine('');				
 					echoLine('[YML] No yandex category mapping: ' . $this->products[$product_id]['main_category_id'], 'e');
 					$invalidCategories[$this->products[$product_id]['main_category_id']] = $this->products[$product_id]['main_category_id'];
 				}
@@ -737,12 +742,10 @@ class ControllerFeedYandexKP extends Controller {
 
 	public function makePricevaFeeds(){
 
-		if ($this->config->get('config_priceva_enable_api')){
+		if ($this->config->get('config_priceva_enable_api') || $this->config->get('config_pricecontrol_enable_api')){
 
 			ini_set('memory_limit', '2G');
-
-			$stores = [0,1];
-
+			$stores = [0];
 			$this->setProductImages();
 
 			$feedsQuery = $this->db->query("SELECT manufacturer_id, priceva_feed FROM manufacturer WHERE priceva_enable = 1 AND TRIM(priceva_feed) <> ''");
@@ -756,13 +759,11 @@ class ControllerFeedYandexKP extends Controller {
 				}
 			}
 
-
 			foreach ($feedsArray as $pricevaFeed => $pricevaManufacturers){	
 
 				foreach ($stores as $store_id){
 					echoLine('[PRICEVA] ' . implode(',', $pricevaManufacturers) . ' ' .  $store_id);
 					$this->loadSettings($store_id)->openYML()->addShop()->addCategories()->setFeedType('priceva');
-
 
 					$sql = "SELECT DISTINCT(p.product_id) FROM product p 
 					LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
@@ -774,17 +775,14 @@ class ControllerFeedYandexKP extends Controller {
 					AND p.priceva_disable <> 1
 					AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
 					AND p2s.store_id = '" . $this->config->get('config_store_id') . "'";
-
 					$sql .= " AND p.manufacturer_id IN (". implode(',', $pricevaManufacturers) .")";
 					$sql .= " AND (p.product_id IN (SELECT product_id FROM category_path cp LEFT JOIN product_to_category p2c ON (cp.category_id = p2c.category_id) WHERE cp.path_id IN (SELECT category_id FROM category WHERE priceva_enable = 1)) OR p.priceva_enable = 1)";
 
 					$products = $this->db->query($sql);	
 
 					$this->setProducts($products->rows)->addPricevaOffers();
-					$this->closeYML()->writeFeed(str_replace('{brand}',$pricevaFeed ,$this->priceva_path[0]));
+					$this->closeYML()->writeFeed(str_replace(['{brand}', '{dir}'], [$pricevaFeed, $this->config->get('config_priceva_directory_name')], $this->priceva_path[0]));
 				}
-
-
 			}
 		}
 	}

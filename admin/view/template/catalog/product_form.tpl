@@ -52,8 +52,10 @@
 				<div id="tabs" class="htabs">
 					<a href="#tab-general" style="background-color:#ff7815; color:#FFF;">Текст</a>
 					<a href="#tab-data" style="background-color:#ff7815; color:#FFF;">Товар</a>
-					<a href="#tab-price" style="background-color:#00ad07; color:#FFF;">Цены</a>					
-					<a href="#tab-priceva" style="background-color:#7F00FF; color:#FFF;"><i class="fa fa-product-hunt"></i> Конкуренты</a>					
+					<a href="#tab-price" style="background-color:#00ad07; color:#FFF;">Цены</a>		
+					<?php if ($this->config->get('config_priceva_enable_api')) { ?>			
+						<a href="#tab-priceva" style="background-color:#7F00FF; color:#FFF;"><i class="fa fa-product-hunt"></i> Priceva</a>					
+					<?php } ?>
 					<a href="#tab-amazon" style="background-color:#FF9900; color:#FFF;"><i class="fa fa-amazon"></i> Amazon</a>
 					<?php if ($this->config->get('config_country_id') == 176) { ?><a href="#tab-yandex-market" style="background-color:#cf4a61; color:#FFF;"><i class="fa fa-yahoo"></i> Yandex.Market</a><? } ?>
 					<a href="#tab-special" style="background-color:#00ad07; color:#FFF;">Скидки</a>
@@ -581,12 +583,11 @@
 
 														</table>
 												</div>
-
+													<?php if ($this->config->get('config_priceva_enable_api')) { ?>		
 														<div id="tab-priceva">
 															<?php if ($priceva) { ?>			
 																<?php foreach ($priceva as $store_name => $priceva_data) { ?>
 																	<h2 style="color:#7F00FF"><i class="fa fa-product-hunt"></i> Данные о конкурентах с ценами <?php echo $store_name; ?> (Priceva API)</h2>
-
 																	<table class="list">
 																		<thead>
 																			<tr>
@@ -631,7 +632,6 @@
 																					<td class="left" style="white-space: nowrap;">
 																						<span style="display:inline-block; padding:3px; color:#FFF; background-color:grey;"><?php echo $priceva_line['relevance_status']; ?></i>
 																						</td>
-
 																					</tr>
 																				<?php } ?>
 																			</tbody>
@@ -639,6 +639,7 @@
 																	<?php } ?>
 																<?php } ?>
 															</div>
+														<?php } ?>
 
 															<div id="tab-amazon" <?php if (!$this->config->get('config_rainforest_enable_api')) { ?>style="display: none;"<?php } ?>>
 																<table class="form">
@@ -1155,10 +1156,10 @@
 																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF0000; color:#FFF">Код товара YAM</span>
 																					</td>
 																					<td>
-																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Включить Priceva</span>
+																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Включить Priceva/PriceControl</span>
 																					</td>
 																					<td>
-																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF0000; color:#FFF">Исключить из Priceva</span>
+																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF0000; color:#FFF">Исключить из Priceva/PriceControl</span>
 																					</td>																					
 																				</tr>
 

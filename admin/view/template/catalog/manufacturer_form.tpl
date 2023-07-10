@@ -94,10 +94,10 @@
 						
 						<tr>
 							<td style="width:40%">
-								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Мониторинг цен Priceva</span>
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Мониторинг цен Priceva/PriceControl</span>
 							</td>
 							<td style="width:60%">
-								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Название файла с фидом Priceva</span>
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Название файла с фидом Priceva/PriceControl</span>
 							</td>							
 						</tr>
 						
@@ -118,10 +118,10 @@
 								<br />
 								<?php if ($priceva_feed) { ?>
 									<div>
-										<img src="<?php echo DIR_FLAGS_NAME; ?>ru.png" title="ru"> <?php echo HTTPS_CATALOG; ?>feeds/priceva/priceva_<?php echo $priceva_feed; ?>_0.xml
+										<img src="<?php echo DIR_FLAGS_NAME; ?>ru.png" title="ru"> <?php echo HTTPS_CATALOG; ?>feeds/<?php echo $this->config->get('config_priceva_directory_name'); ?>/<?php echo $this->config->get('config_priceva_directory_name'); ?>_<?php echo $priceva_feed; ?>_0.xml
 									</div>
 									<div>
-										<img src="<?php echo DIR_FLAGS_NAME; ?>ua.png" title="ua"> <?php echo HTTPS_CATALOG; ?>feeds/priceva/priceva_<?php echo $priceva_feed; ?>_1.xml
+										<img src="<?php echo DIR_FLAGS_NAME; ?>ua.png" title="ua"> <?php echo HTTPS_CATALOG; ?>feeds/<?php echo $this->config->get('config_priceva_directory_name'); ?>/<?php echo $this->config->get('config_priceva_directory_name'); ?>_<?php echo $priceva_feed; ?>_1.xml
 									</div>
 								<?php } ?>
 							</td>
