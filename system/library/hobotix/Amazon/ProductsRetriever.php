@@ -126,11 +126,24 @@ class ProductsRetriever extends RainforestRetriever
 		}
 	}
 
+	public function checkProductManufacturerForExclusion($product_id, $product){
+		if (!empty($product['brand'])){
+			$product['brand'] = atrim($product['brand']);
+			echoLine('[checkProductManufacturerForExclusion] Checking brand for exclusions: ' . $product['brand'], 'i');		
+
+			if ($this->model_product_get->checkIfManufacturerIsExcluded($product['brand'], 0)){
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public function parseProductManufacturer($product_id, $product){
 		if (!empty($product['brand'])){
 			$product['brand'] = atrim($product['brand']);
 
-			echoLine('[editFullProduct] Brand: ' . $product['brand'], 'i');			
+			echoLine('[parseProductManufacturer] Brand: ' . $product['brand'], 'i');			
 
 			$manufacturer_id = $this->model_product_cached_get->getManufacturer($product['brand']);			
 			if (!$manufacturer_id){
@@ -1050,8 +1063,15 @@ class ProductsRetriever extends RainforestRetriever
 	public function editFullProduct($product_id, $product, $do_adding_new_variants = true){	
 		$this->yandexTranslator->setDebug(false);
 
+		if ($this->checkProductManufacturerForExclusion($product_id, $product)){
+			echoLine('[editFullProduct] Manufacturer is excluded, deleting product!', 'e');
+			$this->model_product_edit->deleteASINFromQueue($product['asin']);	
+			$this->model_product_edit->deleteProduct($product_id, $product);
+		}
+
 		if (!$this->checkProductsVariants($product_id, $product)){
-			echoLine('[editFullProduct] Product has ' . count($product['variants']) . ' variants, skipping and deleting product!');
+			echoLine('[editFullProduct] Product has ' . count($product['variants']) . ' variants, skipping and deleting product!', 'e');
+			$this->model_product_edit->deleteASINFromQueue($product['asin']);	
 			$this->model_product_edit->deleteProduct($product_id, $product);
 			return;
 		} else {

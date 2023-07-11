@@ -25,6 +25,19 @@ class productModelGet extends hoboModel{
 		$this->db->ncquery("UPDATE excluded_asins SET times = times+1 WHERE `text` = '" . $this->db->escape($text) . "' AND category_id = '" . (int)$category_id . "'");
 	}
 
+	public function checkIfManufacturerIsExcluded($name, $category_id = 0){
+		$query = $this->db->ncquery("SELECT `text`, `category_id` FROM excluded_asins WHERE LOWER(text) = '" . $this->db->escape(mb_strtolower($name)) . "' AND category_id = '" . (int)$category_id . "'");	
+
+		if ($query->num_rows){
+			echoLine('[checkIfManufacturerIsExcluded] FOUND exclusion: ' . $name . ' in list!', 'w');
+			$this->updateExludedTextUsage($name, 0);
+
+			return true;
+		}
+
+		return false;
+	}
+
 	public function checkIfNameIsExcluded($name, $category_id = 0){
 		$excluded_texts = $this->getExcludedTexts(0);
 
