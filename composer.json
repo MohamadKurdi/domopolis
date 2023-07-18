@@ -76,7 +76,8 @@
         "orhanerday/open-ai": "^4.7",
         "google/apiclient": "^2.13",
         "google/auth": "^1.25",
-        "vzaichikov/bsg-php": "dev-master"            
+        "vzaichikov/bsg-php": "dev-master",
+        "smsclub/sms-sender": "dev-main"            
     },
     "config": {
         "platform-check": false,
