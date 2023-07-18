@@ -1854,65 +1854,94 @@
 						
 						<table class="form">								
 							<tr>
-								<td>Время жизни бонусов, дней</td>
-								<td>
+								<td style="width:25%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Время жизни бонусов, дней</span></p>
 									<input type="text" name="config_reward_lifetime" value="<?php echo $config_reward_lifetime; ?>" size="5" /> дней
 								</td>
-							</tr>
-							
-							<tr>
-								<td>Максимальный процент</td>
-								<td>
-									<input type="text" name="config_reward_maxsalepercent" value="<?php echo $config_reward_maxsalepercent; ?>" size="5" />%
+
+								<td style="width:25%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Максимальный процент</span></p>
+									<input type="number" step="1" name="config_reward_maxsalepercent" value="<?php echo $config_reward_maxsalepercent; ?>" size="5" />%
 									<span class="help">такое количество процентов от суммы заказа можно оплатить бонусами</span>
 								</td>
-							</tr>
-							
-							<tr>
-								<td>Форматировать как валюту</td>
-								<td>
-									<?php if ($rewardpoints_currency_mode) { ?>
-										<input type="radio" name="rewardpoints_currency_mode" value="1" checked="checked" />Да
-										<input type="radio" name="rewardpoints_currency_mode" value="0" />Нет
-										<?php } else { ?>
-										<input type="radio" name="rewardpoints_currency_mode" value="1" />Да
-										<input type="radio" name="rewardpoints_currency_mode" value="0" checked="checked" />Нет
-									<?php } ?>
+
+								<td style="width:25%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Форматировать как валюту</span></p>
+									<select name="rewardpoints_currency_mode">
+										<?php if ($rewardpoints_currency_mode) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>	
 									<span class="help">Да: 12 354.56 бонусов, Нет: 12454 бонуса</span>
 								</td>
-							</tr>
-							
-							<tr>
-								<td>SVG иконки бонусов</td>
-								<td>
+
+								<td style="width:25%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">SVG иконки бонусов</span></p>
 									<input type="text" name="config_reward_logosvg" value="<?php echo $config_reward_logosvg; ?>" size="30" />
 									<span class="help">/catalog/view/theme/kp/img/money.svg</span>
 								</td>
 							</tr>
-							
-							<tr>
-								<td>Префикс бонусов</td>
-								<td>
+
+							<tr>								
+								<td style="width:25%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Префикс бонусов</span></p>
 									<input type="text" name="rewardpoints_currency_prefix" value="<?php echo $rewardpoints_currency_prefix; ?>" size="5" />
 									<span class="help">$ 100500</span>
 								</td>
-							</tr>
-							
-							<tr>
-								<td>Суффикс бонусов</td>
-								<td>
+
+								<td style="width:25%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Суффикс бонусов</span></p>
 									<input type="text" name="rewardpoints_currency_suffix" value="<?php echo $rewardpoints_currency_suffix; ?>" size="5" />
 									<span class="help">100500 $</span>
 								</td>
-							</tr>
-							
-							<tr>
-								<td><b>Процент начисления бонусов</b></td>
-								<td>
-									<input type="text" name="rewardpoints_pointspercent" value="<?php echo $rewardpoints_pointspercent; ?>" size="5" />
+								
+								<td style="width:25%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><b>Процент начисления бонусов</b></span></p>
+									<input type="number" step=".1" name="rewardpoints_pointspercent" value="<?php echo $rewardpoints_pointspercent; ?>" size="5" />
 									<span class="help">значение по умолчанию, которое будет назначаться товарам, если не переназначено далее, в категория, брендах и коллекциях</span>
 								</td>
 							</tr>														
+						</table>
+
+						<h2>Уведомление о сгорании</h2>
+
+						<table class="form">
+							<tr>
+								<td style="width:200px;">
+									<span class="status_color" style="text-align: left; background: #ef5e67; color: #FFF; ?>;">
+										Уведомление о сгорании бонусов
+									</span>
+								</td>
+								<td style="width:50px" class="center">
+									<input class="checkbox" type="checkbox" name="rewardpoints_reminder_enable" id="rewardpoints_reminder_enable"<?php if ($rewardpoints_reminder_enable) { echo ' checked="checked"'; }?>/><label for="rewardpoints_reminder_enable"></label>
+								</td>
+								<td style="padding:5px;">
+									<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="rewardpoints_reminder_sms_text" value="<?php echo $rewardpoints_reminder_sms_text; ?>" />
+									<span class="help"><b>{FIRSTNAME}, {POINTS_AMOUNT}, {POINTS_DAYS_LEFT}</b></span>
+								</td>
+							</tr>
+						</table>
+						<table class="form">
+							<tr>
+								<td style="width:33%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Отправлять за Х дней до сгорания</span></p>
+									<input type="number" step="1" name="rewardpoints_reminder_days_left" value="<?php echo $rewardpoints_reminder_days_left; ?>" size="20" />
+								</td>
+
+								<td style="width:33%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Мин. сумма бонусов на счету</span></p>
+									<input type="number" step="1" name="rewardpoints_reminder_min_amount" value="<?php echo $rewardpoints_reminder_min_amount; ?>" size="20" />
+								</td>
+
+								<td style="width:33%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Неиспользование бонусов Х дней</span></p>
+									<input type="number" step="1" name="rewardpoints_reminder_days_noactive" value="<?php echo $rewardpoints_reminder_days_noactive; ?>" size="20" />
+								</td>
+							</tr>
 						</table>
 
 						<h2>Логика бонусов</h2>
@@ -3448,16 +3477,36 @@
 										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Библиотека SMS</span></p>
 											<select name="config_smsgate_library">
-												<option value="BSGWorld" <?php if ($config_smsgate_library == 'BSGWorld') { ?>selected="selected"<? } ?>>BSG.World</option>
-												<option value="Epochta" <?php if ($config_smsgate_library == 'Epochta') { ?>selected="selected"<? } ?>>Epochta</option>				
+												<?php foreach ($smsgates as $smsgate) { ?>
+													<?php if ($smsgate == $config_smsgate_library) { ?>
+														<option value="<?php echo $smsgate; ?>" selected="selected"><?php echo $smsgate; ?></option>
+													<?php } else { ?>
+														<option value="<?php echo $smsgate; ?>"><?php echo $smsgate; ?></option>
+													<?php } ?>
+												<?php } ?>				
 											</select>
 										</div>									
-									</td>									
+									</td>	
+
+									<td style="width:20%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Библиотека поддерживает Viber</span></p>
+											<select name="config_smsgate_library_enable_viber">
+												<?php if ($config_smsgate_library_enable_viber) { ?>
+													<option value="1" selected="selected">Да</option>
+													<option value="0">Нет</option>
+												<?php } else { ?>													
+													<option value="1">Да</option>
+													<option value="0"  selected="selected">Нет</option>
+												<? } ?>
+											</select>
+										</div>	
+									</td>							
 								</tr>
 
 							</table>
 
-							<h2><i class="fa fa-search"></i> Сервис SMSGATE (Epochta)</h2>
+							<h2><i class="fa fa-search"></i> Аккаунт сервиса отправки SMS</h2>
 							<table class="form">
 								<tr>
 									<td width="20%">
@@ -3538,7 +3587,9 @@
 											<b>{FIRSTNAME}</b> - имя клиента<br />
 											<b>{LASTNAME}</b> - фамилия клиента<br />
 											<b>{TTN}</b> - ТТН службы доставки<br />
-											<b>{DELIVERY_SERVICE}</b> - Служба доставки
+											<b>{DELIVERY_SERVICE}</b> - служба доставки<br />
+											<b>{POINTS_AMOUNT}</b> - количество бонусов на счету<br />
+											<b>{POINTS_DAYS_LEFT}</b> - осталось дней до сгорания бонусов
 										</span>
 									</td>
 
@@ -3632,6 +3683,21 @@
 										</td>
 										<td style="padding:5px;">
 											<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_ttn_ready" value="<?php echo $config_sms_ttn_ready; ?>" />
+										</td>
+									</tr>
+
+									<tr>
+
+										<td style="width:200px;">
+											<span class="status_color" style="text-align: left; background: #ef5e67; color: #FFF; ?>;">
+												Уведомление о сгорании бонусов
+											</span>
+										</td>
+										<td style="width:50px" class="center">
+											<input class="checkbox" type="checkbox" name="rewardpoints_reminder_enable" id="rewardpoints_reminder_enable"<?php if ($rewardpoints_reminder_enable) { echo ' checked="checked"'; }?>/><label for="rewardpoints_reminder_enable"></label>
+										</td>
+										<td style="padding:5px;">
+											<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="rewardpoints_reminder_sms_text" value="<?php echo $rewardpoints_reminder_sms_text; ?>" />
 										</td>
 									</tr>
 

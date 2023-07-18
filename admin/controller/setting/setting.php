@@ -838,10 +838,23 @@ class ControllerSettingSetting extends Controller
             $this->data['config_zadarma_secret_key'] = $this->config->get('config_zadarma_secret_key');
         }
 
+        $this->data['smsgates'] = [];
+
+        $smsgates = glob(DIR_SYSTEM . '/library/hobotix/SMS/*');        
+        foreach ($smsgates as $smsgate) {
+            $this->data['smsgates'][] = pathinfo($smsgate,  PATHINFO_FILENAME);
+        }
+
         if (isset($this->request->post['config_smsgate_library'])) {
             $this->data['config_smsgate_library'] = $this->request->post['config_smsgate_library'];
         } else {
             $this->data['config_smsgate_library'] = $this->config->get('config_smsgate_library');
+        }        
+
+        if (isset($this->request->post['config_smsgate_library_enable_viber'])) {
+            $this->data['config_smsgate_library_enable_viber'] = $this->request->post['config_smsgate_library_enable_viber'];
+        } else {
+            $this->data['config_smsgate_library_enable_viber'] = $this->config->get('config_smsgate_library_enable_viber');
         }
 
         if (isset($this->request->post['config_smsgate_api_key'])) {
@@ -898,8 +911,7 @@ class ControllerSettingSetting extends Controller
         
         $this->data['templates'] = array();
         
-        $directories = glob(DIR_CATALOG . 'view/theme/*', GLOB_ONLYDIR);
-        
+        $directories = glob(DIR_CATALOG . 'view/theme/*', GLOB_ONLYDIR);        
         foreach ($directories as $directory) {
             $this->data['templates'][] = basename($directory);
         }
@@ -1196,6 +1208,36 @@ class ControllerSettingSetting extends Controller
             $this->data['rewardpoints_birthday'] = $this->request->post['rewardpoints_birthday'];
         } else {
             $this->data['rewardpoints_birthday'] = $this->config->get('rewardpoints_birthday');
+        }
+
+        if (isset($this->request->post['rewardpoints_reminder_enable'])) {
+            $this->data['rewardpoints_reminder_enable'] = $this->request->post['rewardpoints_reminder_enable'];
+        } else {
+            $this->data['rewardpoints_reminder_enable'] = $this->config->get('rewardpoints_reminder_enable');
+        }
+
+        if (isset($this->request->post['rewardpoints_reminder_days_left'])) {
+            $this->data['rewardpoints_reminder_days_left'] = $this->request->post['rewardpoints_reminder_days_left'];
+        } else {
+            $this->data['rewardpoints_reminder_days_left'] = $this->config->get('rewardpoints_reminder_days_left');
+        }
+
+        if (isset($this->request->post['rewardpoints_reminder_min_amount'])) {
+            $this->data['rewardpoints_reminder_min_amount'] = $this->request->post['rewardpoints_reminder_min_amount'];
+        } else {
+            $this->data['rewardpoints_reminder_min_amount'] = $this->config->get('rewardpoints_reminder_min_amount');
+        }
+
+        if (isset($this->request->post['rewardpoints_reminder_days_noactive'])) {
+            $this->data['rewardpoints_reminder_days_noactive'] = $this->request->post['rewardpoints_reminder_days_noactive'];
+        } else {
+            $this->data['rewardpoints_reminder_days_noactive'] = $this->config->get('rewardpoints_reminder_days_noactive');
+        }
+
+        if (isset($this->request->post['rewardpoints_reminder_sms_text'])) {
+            $this->data['rewardpoints_reminder_sms_text'] = $this->request->post['rewardpoints_reminder_sms_text'];
+        } else {
+            $this->data['rewardpoints_reminder_sms_text'] = $this->config->get('rewardpoints_reminder_sms_text');
         }
 
         $reward_overload_keys = [

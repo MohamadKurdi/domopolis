@@ -15,6 +15,7 @@
 /admin/browserconfig.xml
 /admin/favicon.ico
 /admin/offline.html
+/admin/view/template/sale/bottom_texts/*
 
 #Основные конфиги
 /config*.php
