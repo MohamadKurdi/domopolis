@@ -34,6 +34,21 @@ class smsQueue {
 		$this->db->query("DELETE FROM queue_sms WHERE queue_sms_id = '" . (int)$queue_sms_id . "'");
 	}
 
+	public function test(){
+		$balance = $this->registry->get('smsAdaptor')->getBalance();
+
+		if ($balance){
+			echoLine('[LibrarySmsQueue::test] Got balance: ' . $balance, 'i');
+		}	
+
+		$sms = [		
+			'to' 		=>	'+380632708881',
+			'message' 	=> 	'TEST - SMSCLUB - 2'
+		];
+
+		$this->registry->get('smsAdaptor')->sendSMS($sms);			
+	}
+
 	public function cron(){	
 		$query = $this->db->non_cached_query("SELECT DISTINCT queue_sms_id, body FROM queue_sms ORDER BY queue_sms_id DESC LIMIT 7");
 		$balance = $this->registry->get('smsAdaptor')->getBalance();

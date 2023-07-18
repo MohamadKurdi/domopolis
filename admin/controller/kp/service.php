@@ -20,6 +20,10 @@
 			}
 		*/
 		}
+
+		public function smsQueueTest(){
+			$this->smsQueue->test();			
+		}
 		
 		public function smsQueue(){
 			if (!$this->config->get('config_sms_enable_queue_worker')){

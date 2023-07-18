@@ -902,9 +902,9 @@ public function getZadarmaBalance(){
 
 
 public function getSMSBalance(){
-	$balance = $this->smsAdaptor->getBalance();	    
-	if ($balance){
+	$balance = $this->smsAdaptor->getBalance();	   
 
+	if ($balance){
 		$body = (float)$balance;
 		$class= 'good';
 
