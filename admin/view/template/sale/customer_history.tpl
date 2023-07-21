@@ -62,7 +62,16 @@
 						<span style="font-style:;">
 							<b><?php echo  $history['email']['emailtemplate_log_to']; ?></b>: <?php echo $history['email']['emailtemplate_log_subject']; ?></span>	
 						<? } elseif ($history['sms_id']) { ?>
-						<span style="font-style:;"><?php echo $history['sms']['comment']; ?></span>		
+						<?php if (!empty($history['sms']['comment'])) { ?>	
+							<span style="font-style:;">
+								<?php echo $history['sms']['comment']; ?>								
+							</span>	
+						<?php } else { ?>
+							<span style="font-style:;">
+								<?php echo $history['comment']; ?>								
+							</span>	
+						<?php } ?>
+	
 						<? } elseif ($history['segment_id']) { ?>
 						<span style="font-style:;">	
 							<? $segment = $history['segment']; if ($segment['bg_color']) { ?>

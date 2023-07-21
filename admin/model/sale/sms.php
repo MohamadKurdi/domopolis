@@ -2,10 +2,8 @@
 	
 	class ModelSaleSMS extends Model {
 		
-		public function logSms($phone, $text){
-			
-			$this->db->query("INSERT INTO oc_sms_log SET phone='" . $this->db->escape($phone) . "', text='" . $this->db->escape($text) . "', date_send = NOW()");
-			
+		public function logSms($phone, $text){			
+			$this->db->query("INSERT INTO oc_sms_log SET phone='" . $this->db->escape($phone) . "', text='" . $this->db->escape($text) . "', date_send = NOW()");			
 		}
 		
 		public function getLog(){
@@ -30,12 +28,4 @@
 
 			return $query->row;	
 		}
-		
-		
-		
-		
-		
-		
-		
-		
 	}	

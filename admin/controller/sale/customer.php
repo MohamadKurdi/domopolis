@@ -3177,15 +3177,14 @@
 				if ($result['sms_id']){
 					$sms = $this->model_sale_sms->getSMSByID($result['sms_id'], $this->request->get['customer_id'], $result['order_id']);
 					} else {
-					$sms = false;
+					$sms = ['comment' => $comment];
 				}
 
 				if (!empty($result['email'])){
 					$email = $result['email'];
 					} else {
 					$email = false;
-				}
-				
+				}				
 				
 				$this->data['histories'][] = array(				
 				'comment'     			=> $result['comment'],

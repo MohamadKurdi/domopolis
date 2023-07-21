@@ -3,40 +3,53 @@
 	class ControllerKPReward extends Controller {
 		protected $error = array();
 
-		public function smscron(){
+		public function reminder(){
 			if (!$this->config->get('rewardpoints_reminder_enable')){
 				echoLine('[ControllerKPReward::smscron] SMS Reminder is disabled in cron', 'e');
 				exit;
 			}
 
 
-			$sql = "SELECT SUM(points) AS total, c.customer_id, c.firstname, c.telephone FROM customer_reward cr LEFT JOIN customer c ON (cr.customer_id = c.customer_id) "; 
-			$sql .= " WHERE ";	
+			$sql = "SELECT DISTINCT(c.customer_id), c.firstname, c.telephone, ";
+			$sql .= " (SELECT SUM(points) as total FROM customer_reward crt WHERE customer_id = c.customer_id) AS total, ";
+			$sql .= " (SELECT " . (int)$this->config->get('config_reward_lifetime') . " - DATEDIFF(NOW(), MAX(date_added)) as days_left FROM customer_reward crdl WHERE points > 0  AND customer_id = c.customer_id) AS days_left ";
+			$sql .= " FROM customer_reward cr LEFT JOIN customer c ON (cr.customer_id = c.customer_id) "; 
+			$sql .= " WHERE ";				
+			$sql .= " customer_reward_id IN ";
+			$sql .= " (SELECT customer_reward_id FROM customer_reward WHERE points > 0 AND DATE(date_added) = DATE(DATE_SUB(NOW(), INTERVAL " . (int)$this->config->get('rewardpoints_reminder_days_noactive') . " DAY))) ";
+		//	$sql .= " AND customer_reward_id NOT IN ";
+		//	$sql .= " (SELECT customer_reward_id FROM customer_reward WHERE DATE(date_added) > DATE(DATE_SUB(NOW(), INTERVAL " . (int)$this->config->get('rewardpoints_reminder_days_noactive') . " DAY)) AND reason_code = 'ORDER_PAYMENT') ";				
+			$sql .= " AND (SELECT SUM(points) AS total FROM customer_reward crt WHERE customer_id = c.customer_id) >= " . (int)$this->config->get('rewardpoints_reminder_min_amount') . "";		
 
-			//Minimum total amount of points
-			$sql .= " SUM(points) > '" . $this->config->get('rewardpoints_reminder_min_amount') . "' ";
+			$query = $this->db->query($sql);
+			
+			if ($query->num_rows){
+				echoLine('[ControllerKPReward::smscron] Have total ' . $query->num_rows . ' customers', 'i');
 
-			//Last points usage is older than (points>0, points_paid is less than points+)
-			$sql .= " AND customer_reward_id IN ";
-			$sql .= " (SELECT customer_reward_id FROM customer_reward WHERE points > 0 AND points_paid < points AND (date_paid = '0000-00-00' OR date_paid <= DATE_SUB(NOW() - INTERVAL " . (int)$this->config->get('rewardpoints_reminder_days_noactive') . " DAY))) ";
+				foreach ($query->rows as $row){
+					$message = str_replace(['{FIRSTNAME}', '{POINTS_AMOUNT}', '{POINTS_DAYS_LEFT}'], [$row['firstname'], $row['total'], $row['days_left']], $this->config->get('rewardpoints_reminder_sms_text'));
+					echoLine('[ControllerKPReward::smscron] ' . $message . ' to ' . $row['customer_id'] . '/' . $row['telephone'], 's');
 
+					$options = [
+						'to'       => $row['telephone'],
+						'from'     => $this->config->get('config_sms_sign'),
+						'message'  => $message
+					];
 
-			$sql .= " GROUP BY customer_id";
-				
+					$sms_id = $this->smsQueue->queue($options);
 
+					$this->db->query("INSERT INTO `customer_history` SET
+							customer_id = '" . (int)$row['customer_id'] . "',
+							order_id = '0', 
+							comment = '" . $this->db->escape($message) . "',
+							sms_id = '" . $this->db->escape($sms_id) . "',
+							date_added = NOW()"
+					);
+				}
 
-
-
-
-
-
-
-
-
-
-
-
-
+			} else {
+				echoLine('[ControllerKPReward::smscron] Have no customers', 'e');
+			}		
 
 		}
 		
@@ -79,8 +92,7 @@
 						//Это типа нештатная какая-то ситуация, несколько начислений, такого быть не должно
 						//Разве что заказ несколько раз отменен а потом выполнен, в таком случае редактируем запись
 						
-						echoLine('Обновляем баллы покупателю ' . $row['customer_id'] . ' за заказ ' . $row['order_id']);
-						
+						echoLine('Обновляем баллы покупателю ' . $row['customer_id'] . ' за заказ ' . $row['order_id']);						
 						$log->write('Обновляем баллы покупателю ' . $row['customer_id'] . ' за заказ ' . $row['order_id']);
 						
 						
@@ -93,10 +105,8 @@
 						$this->customer->addReward($row['customer_id'], $row['description'], $row['points'], $row['order_id'], $row['reason_code']);
 						
 					}
-					
-					
-					$this->customer->clearRewardQueueByCRQID($row['customer_reward_queue_id']);
-					
+										
+					$this->customer->clearRewardQueueByCRQID($row['customer_reward_queue_id']);					
 				}
 			}
 			
