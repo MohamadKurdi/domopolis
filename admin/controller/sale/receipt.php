@@ -652,9 +652,9 @@ class ControllerSaleReceipt extends Controller {
 	}
 
 	private function getSetting() {
-		$receipt_setting['login'] = $this->config->get('receipt_login');
-		$receipt_setting['password'] = $this->config->get('receipt_password');
-		$receipt_setting['x_license_key'] = $this->config->get('receipt_x_license_key');
+		$receipt_setting['login'] 				= $this->config->get('receipt_login');
+		$receipt_setting['password'] 			= $this->config->get('receipt_password');
+		$receipt_setting['x_license_key'] 		= $this->config->get('receipt_x_license_key');
 		$receipt_setting['receipt_is_dev_mode'] = $this->config->get('receipt_is_dev_mode');
 		return $receipt_setting;
 	}
@@ -997,6 +997,11 @@ class ControllerSaleReceipt extends Controller {
         //DO NOTHING IN BETWEEN 23:00 AND 01:00
         if (!is_cli()){
         	echoLine('[ControllerSaleReceipt::cron] ONLY CLI MODE', 'e');
+			exit();
+        }
+
+        if (!$this->config->get('receipt_login')){
+        	echoLine('[ControllerSaleReceipt::cron] CheckBox DISABLED', 'e');
 			exit();
         }
 
