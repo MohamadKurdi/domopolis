@@ -1,2201 +1,3011 @@
-/*! iScroll v5.1.2 ~ (c) 2008-2014 Matteo Spinelli ~ http://cubiq.org/license */
-(function (window, document, Math) {
-var rAF = window.requestAnimationFrame	||
-	window.webkitRequestAnimationFrame	||
-	window.mozRequestAnimationFrame		||
-	window.oRequestAnimationFrame		||
-	window.msRequestAnimationFrame		||
-	function (callback) { window.setTimeout(callback, 1000 / 60); };
-
-var utils = (function () {
-	var me = {};
-
-	var _elementStyle = document.createElement('div').style;
-	var _vendor = (function () {
-		var vendors = ['t', 'webkitT', 'MozT', 'msT', 'OT'],
-			transform,
-			i = 0,
-			l = vendors.length;
-
-		for ( ; i < l; i++ ) {
-			transform = vendors[i] + 'ransform';
-			if ( transform in _elementStyle ) return vendors[i].substr(0, vendors[i].length-1);
-		}
-
-		return false;
-	})();
-
-	function _prefixStyle (style) {
-		if ( _vendor === false ) return false;
-		if ( _vendor === '' ) return style;
-		return _vendor + style.charAt(0).toUpperCase() + style.substr(1);
-	}
-
-	me.getTime = Date.now || function getTime () { return new Date().getTime(); };
-
-	me.extend = function (target, obj) {
-		for ( var i in obj ) {
-			target[i] = obj[i];
-		}
-	};
-
-	me.addEvent = function (el, type, fn, capture) {
-		if( el.addEventListener ) {
-			el.addEventListener(type, fn, !!capture);
-		} else {
-			el.attachEvent('on'+type, fn, !!capture);
-		}
-	};
-
-	me.removeEvent = function (el, type, fn, capture) {
-		if( el.removeEventListener ) {
-			el.removeEventListener(type, fn, !!capture);
-		} else {
-			el.detachEvent('on'+type, fn, !!capture);
-		}
-	};
-
-	me.prefixPointerEvent = function (pointerEvent) {
-		return window.MSPointerEvent ? 
-			'MSPointer' + pointerEvent.charAt(9).toUpperCase() + pointerEvent.substr(10):
-			pointerEvent;
-	};
-
-	me.momentum = function (current, start, time, lowerMargin, wrapperSize, deceleration) {
-		var distance = current - start,
-			speed = Math.abs(distance) / time,
-			destination,
-			duration;
-
-		deceleration = deceleration === undefined ? 0.0006 : deceleration;
-
-		destination = current + ( speed * speed ) / ( 2 * deceleration ) * ( distance < 0 ? -1 : 1 );
-		duration = speed / deceleration;
-
-		if ( destination < lowerMargin ) {
-			destination = wrapperSize ? lowerMargin - ( wrapperSize / 2.5 * ( speed / 8 ) ) : lowerMargin;
-			distance = Math.abs(destination - current);
-			duration = distance / speed;
-		} else if ( destination > 0 ) {
-			destination = wrapperSize ? wrapperSize / 2.5 * ( speed / 8 ) : 0;
-			distance = Math.abs(current) + destination;
-			duration = distance / speed;
-		}
-
-		return {
-			destination: Math.round(destination),
-			duration: duration
-		};
-	};
-
-	var _transform = _prefixStyle('transform');
-
-	me.extend(me, {
-		hasTransform: _transform !== false,
-		hasPerspective: _prefixStyle('perspective') in _elementStyle,
-		hasTouch: 'ontouchstart' in window,
-		hasPointer: window.PointerEvent || window.MSPointerEvent, // IE10 is prefixed
-		hasTransition: _prefixStyle('transition') in _elementStyle
-	});
-
-	// This should find all Android browsers lower than build 535.19 (both stock browser and webview)
-	me.isBadAndroid = /Android /.test(window.navigator.appVersion) && !(/Chrome\/\d/.test(window.navigator.appVersion));
-
-	me.extend(me.style = {}, {
-		transform: _transform,
-		transitionTimingFunction: _prefixStyle('transitionTimingFunction'),
-		transitionDuration: _prefixStyle('transitionDuration'),
-		transitionDelay: _prefixStyle('transitionDelay'),
-		transformOrigin: _prefixStyle('transformOrigin')
-	});
-
-	me.hasClass = function (e, c) {
-		var re = new RegExp("(^|\\s)" + c + "(\\s|$)");
-		return re.test(e.className);
-	};
-
-	me.addClass = function (e, c) {
-		if ( me.hasClass(e, c) ) {
-			return;
-		}
-
-		var newclass = e.className.split(' ');
-		newclass.push(c);
-		e.className = newclass.join(' ');
-	};
-
-	me.removeClass = function (e, c) {
-		if ( !me.hasClass(e, c) ) {
-			return;
-		}
-
-		var re = new RegExp("(^|\\s)" + c + "(\\s|$)", 'g');
-		e.className = e.className.replace(re, ' ');
-	};
-
-	me.offset = function (el) {
-		var left = -el.offsetLeft,
-			top = -el.offsetTop;
-
-		// jshint -W084
-		while (el = el.offsetParent) {
-			left -= el.offsetLeft;
-			top -= el.offsetTop;
-		}
-		// jshint +W084
-
-		return {
-			left: left,
-			top: top
-		};
-	};
-
-	me.preventDefaultException = function (el, exceptions) {
-		for ( var i in exceptions ) {
-			if ( exceptions[i].test(el[i]) ) {
-				return true;
-			}
-		}
-
-		return false;
-	};
-
-	me.extend(me.eventType = {}, {
-		touchstart: 1,
-		touchmove: 1,
-		touchend: 1,
-
-		mousedown: 2,
-		mousemove: 2,
-		mouseup: 2,
-
-		pointerdown: 3,
-		pointermove: 3,
-		pointerup: 3,
-
-		MSPointerDown: 3,
-		MSPointerMove: 3,
-		MSPointerUp: 3
-	});
-
-	me.extend(me.ease = {}, {
-		quadratic: {
-			style: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-			fn: function (k) {
-				return k * ( 2 - k );
-			}
-		},
-		circular: {
-			style: 'cubic-bezier(0.1, 0.57, 0.1, 1)',	// Not properly "circular" but this looks better, it should be (0.075, 0.82, 0.165, 1)
-			fn: function (k) {
-				return Math.sqrt( 1 - ( --k * k ) );
-			}
-		},
-		back: {
-			style: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-			fn: function (k) {
-				var b = 4;
-				return ( k = k - 1 ) * k * ( ( b + 1 ) * k + b ) + 1;
-			}
-		},
-		bounce: {
-			style: '',
-			fn: function (k) {
-				if ( ( k /= 1 ) < ( 1 / 2.75 ) ) {
-					return 7.5625 * k * k;
-				} else if ( k < ( 2 / 2.75 ) ) {
-					return 7.5625 * ( k -= ( 1.5 / 2.75 ) ) * k + 0.75;
-				} else if ( k < ( 2.5 / 2.75 ) ) {
-					return 7.5625 * ( k -= ( 2.25 / 2.75 ) ) * k + 0.9375;
-				} else {
-					return 7.5625 * ( k -= ( 2.625 / 2.75 ) ) * k + 0.984375;
-				}
-			}
-		},
-		elastic: {
-			style: '',
-			fn: function (k) {
-				var f = 0.22,
-					e = 0.4;
-
-				if ( k === 0 ) { return 0; }
-				if ( k == 1 ) { return 1; }
-
-				return ( e * Math.pow( 2, - 10 * k ) * Math.sin( ( k - f / 4 ) * ( 2 * Math.PI ) / f ) + 1 );
-			}
-		}
-	});
-
-	me.tap = function (e, eventName) {
-		var ev = document.createEvent('Event');
-		ev.initEvent(eventName, true, true);
-		ev.pageX = e.pageX;
-		ev.pageY = e.pageY;
-		e.target.dispatchEvent(ev);
-	};
-
-	me.click = function (e) {
-		var target = e.target,
-			ev;
-
-		if ( !(/(SELECT|INPUT|TEXTAREA)/i).test(target.tagName) ) {
-			ev = document.createEvent('MouseEvents');
-			ev.initMouseEvent('click', true, true, e.view, 1,
-				target.screenX, target.screenY, target.clientX, target.clientY,
-				e.ctrlKey, e.altKey, e.shiftKey, e.metaKey,
-				0, null);
-
-			ev._constructed = true;
-			target.dispatchEvent(ev);
-		}
-	};
-
-	return me;
-})();
-
-function IScroll (el, options) {
-	this.wrapper = typeof el == 'string' ? document.querySelector(el) : el;
-	this.scroller = this.wrapper.children[0];
-	this.scrollerStyle = this.scroller.style;		// cache style for better performance
-
-	this.options = {
-
-		resizeScrollbars: true,
-
-		mouseWheelSpeed: 20,
-
-		snapThreshold: 0.334,
-
-// INSERT POINT: OPTIONS 
-
-		startX: 0,
-		startY: 0,
-		scrollY: true,
-		directionLockThreshold: 5,
-		momentum: true,
-
-		bounce: true,
-		bounceTime: 600,
-		bounceEasing: '',
-
-		preventDefault: true,
-		preventDefaultException: { tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ },
-
-		HWCompositing: true,
-		useTransition: true,
-		useTransform: true
-	};
-
-	for ( var i in options ) {
-		this.options[i] = options[i];
-	}
-
-	// Normalize options
-	this.translateZ = this.options.HWCompositing && utils.hasPerspective ? ' translateZ(0)' : '';
-
-	this.options.useTransition = utils.hasTransition && this.options.useTransition;
-	this.options.useTransform = utils.hasTransform && this.options.useTransform;
-
-	this.options.eventPassthrough = this.options.eventPassthrough === true ? 'vertical' : this.options.eventPassthrough;
-	this.options.preventDefault = !this.options.eventPassthrough && this.options.preventDefault;
-
-	// If you want eventPassthrough I have to lock one of the axes
-	this.options.scrollY = this.options.eventPassthrough == 'vertical' ? false : this.options.scrollY;
-	this.options.scrollX = this.options.eventPassthrough == 'horizontal' ? false : this.options.scrollX;
-
-	// With eventPassthrough we also need lockDirection mechanism
-	this.options.freeScroll = this.options.freeScroll && !this.options.eventPassthrough;
-	this.options.directionLockThreshold = this.options.eventPassthrough ? 0 : this.options.directionLockThreshold;
-
-	this.options.bounceEasing = typeof this.options.bounceEasing == 'string' ? utils.ease[this.options.bounceEasing] || utils.ease.circular : this.options.bounceEasing;
-
-	this.options.resizePolling = this.options.resizePolling === undefined ? 60 : this.options.resizePolling;
-
-	if ( this.options.tap === true ) {
-		this.options.tap = 'tap';
-	}
-
-	if ( this.options.shrinkScrollbars == 'scale' ) {
-		this.options.useTransition = false;
-	}
-
-	this.options.invertWheelDirection = this.options.invertWheelDirection ? -1 : 1;
-
-// INSERT POINT: NORMALIZATION
-
-	// Some defaults	
-	this.x = 0;
-	this.y = 0;
-	this.directionX = 0;
-	this.directionY = 0;
-	this._events = {};
-
-// INSERT POINT: DEFAULTS
-
-	this._init();
-	this.refresh();
-
-	this.scrollTo(this.options.startX, this.options.startY);
-	this.enable();
-}
-
-IScroll.prototype = {
-	version: '5.1.2',
-
-	_init: function () {
-		this._initEvents();
-
-		if ( this.options.scrollbars || this.options.indicators ) {
-			this._initIndicators();
-		}
-
-		if ( this.options.mouseWheel ) {
-			this._initWheel();
-		}
-
-		if ( this.options.snap ) {
-			this._initSnap();
-		}
-
-		if ( this.options.keyBindings ) {
-			this._initKeys();
-		}
-
-// INSERT POINT: _init
-
-	},
-
-	destroy: function () {
-		this._initEvents(true);
-
-		this._execEvent('destroy');
-	},
-
-	_transitionEnd: function (e) {
-		if ( e.target != this.scroller || !this.isInTransition ) {
-			return;
-		}
-
-		this._transitionTime();
-		if ( !this.resetPosition(this.options.bounceTime) ) {
-			this.isInTransition = false;
-			this._execEvent('scrollEnd', e);
-		}
-	},
-
-	_start: function (e) {
-		// React to left mouse button only
-		if ( utils.eventType[e.type] != 1 ) {
-			if ( e.button !== 0 ) {
-				return;
-			}
-		}
-
-		if ( !this.enabled || (this.initiated && utils.eventType[e.type] !== this.initiated) ) {
-			return;
-		}
-
-		if ( this.options.preventDefault && !utils.isBadAndroid && !utils.preventDefaultException(e.target, this.options.preventDefaultException) ) {
-		//	e.preventDefault();
-		}
-		
-		e.stopPropagation();
-		
-		var point = e.touches ? e.touches[0] : e,
-			pos;
-
-		this.initiated	= utils.eventType[e.type];
-		this.moved		= false;
-		this.distX		= 0;
-		this.distY		= 0;
-		this.directionX = 0;
-		this.directionY = 0;
-		this.directionLocked = 0;
-
-		this._transitionTime();
-
-		this.startTime = utils.getTime();
-
-		if ( this.options.useTransition && this.isInTransition ) {
-			this.isInTransition = false;
-			pos = this.getComputedPosition();
-			this._translate(Math.round(pos.x), Math.round(pos.y));
-			this._execEvent('scrollEnd', e);
-		} else if ( !this.options.useTransition && this.isAnimating ) {
-			this.isAnimating = false;
-			this._execEvent('scrollEnd', e);
-		}
-
-		this.startX    = this.x;
-		this.startY    = this.y;
-		this.absStartX = this.x;
-		this.absStartY = this.y;
-		this.pointX    = point.pageX;
-		this.pointY    = point.pageY;
-
-		this._execEvent('beforeScrollStart');
-	},
-
-	_move: function (e) {
-		if ( !this.enabled || utils.eventType[e.type] !== this.initiated ) {
-			return;
-		}
-
-		if ( this.options.preventDefault ) {	// increases performance on Android? TODO: check!
-			e.preventDefault();
-		}
-
-		var point		= e.touches ? e.touches[0] : e,
-			deltaX		= point.pageX - this.pointX,
-			deltaY		= point.pageY - this.pointY,
-			timestamp	= utils.getTime(),
-			newX, newY,
-			absDistX, absDistY;
-
-		this.pointX		= point.pageX;
-		this.pointY		= point.pageY;
-
-		this.distX		+= deltaX;
-		this.distY		+= deltaY;
-		absDistX		= Math.abs(this.distX);
-		absDistY		= Math.abs(this.distY);
-
-		// We need to move at least 10 pixels for the scrolling to initiate
-		if ( timestamp - this.endTime > 300 && (absDistX < 10 && absDistY < 10) ) {
-			return;
-		}
-
-		// If you are scrolling in one direction lock the other
-		if ( !this.directionLocked && !this.options.freeScroll ) {
-			if ( absDistX > absDistY + this.options.directionLockThreshold ) {
-				this.directionLocked = 'h';		// lock horizontally
-			} else if ( absDistY >= absDistX + this.options.directionLockThreshold ) {
-				this.directionLocked = 'v';		// lock vertically
-			} else {
-				this.directionLocked = 'n';		// no lock
-			}
-		}
-
-		if ( this.directionLocked == 'h' ) {
-			if ( this.options.eventPassthrough == 'vertical' ) {
-				e.preventDefault();
-			} else if ( this.options.eventPassthrough == 'horizontal' ) {
-				this.initiated = false;
-				return;
-			}
-
-			deltaY = 0;
-		} else if ( this.directionLocked == 'v' ) {
-			if ( this.options.eventPassthrough == 'horizontal' ) {
-				e.preventDefault();
-			} else if ( this.options.eventPassthrough == 'vertical' ) {
-				this.initiated = false;
-				return;
-			}
-
-			deltaX = 0;
-		}
-
-		deltaX = this.hasHorizontalScroll ? deltaX : 0;
-		deltaY = this.hasVerticalScroll ? deltaY : 0;
-
-		newX = this.x + deltaX;
-		newY = this.y + deltaY;
-
-		// Slow down if outside of the boundaries
-		if ( newX > 0 || newX < this.maxScrollX ) {
-			newX = this.options.bounce ? this.x + deltaX / 3 : newX > 0 ? 0 : this.maxScrollX;
-		}
-		if ( newY > 0 || newY < this.maxScrollY ) {
-			newY = this.options.bounce ? this.y + deltaY / 3 : newY > 0 ? 0 : this.maxScrollY;
-		}
-
-		this.directionX = deltaX > 0 ? -1 : deltaX < 0 ? 1 : 0;
-		this.directionY = deltaY > 0 ? -1 : deltaY < 0 ? 1 : 0;
-
-		if ( !this.moved ) {
-			this._execEvent('scrollStart');
-		}
-		
-		if( newX != this.x || newY != this.y ) {
-			this._execEvent('moveStart', e);
-		} else {
-			this._execEvent('moveStop', e);
-		}
-
-		this.moved = true;
-
-		this._translate(newX, newY);
-
-/* REPLACE START: _move */
-
-		if ( timestamp - this.startTime > 300 ) {
-			this.startTime = timestamp;
-			this.startX = this.x;
-			this.startY = this.y;
-		}
-
-/* REPLACE END: _move */
-
-	},
-
-	_end: function (e) {
-		if ( !this.enabled || utils.eventType[e.type] !== this.initiated ) {
-			return;
-		}
-
-		if ( this.options.preventDefault && !utils.preventDefaultException(e.target, this.options.preventDefaultException) ) {
-		//	e.preventDefault();
-		}
-
-		var point = e.changedTouches ? e.changedTouches[0] : e,
-			momentumX,
-			momentumY,
-			duration = utils.getTime() - this.startTime,
-			newX = Math.round(this.x),
-			newY = Math.round(this.y),
-			distanceX = Math.abs(newX - this.startX),
-			distanceY = Math.abs(newY - this.startY),
-			time = 0,
-			easing = '';
-
-		this.isInTransition = 0;
-		this.initiated = 0;
-		this.endTime = utils.getTime();
-
-		// reset if we are outside of the boundaries
-		if ( this.resetPosition(this.options.bounceTime) ) {
-			return;
-		}
-
-		this.scrollTo(newX, newY);	// ensures that the last position is rounded
-
-		// we scrolled less than 10 pixels
-		if ( !this.moved ) {
-			if ( this.options.tap ) {
-				utils.tap(e, this.options.tap);
-			}
-
-			if ( this.options.click ) {
-				utils.click(e);
-			}
-
-			this._execEvent('scrollCancel');
-			return;
-		}
-
-		if ( this._events.flick && duration < 200 && distanceX < 100 && distanceY < 100 ) {
-			this._execEvent('flick');
-			return;
-		}
-
-		// start momentum animation if needed
-		if ( this.options.momentum && duration < 300 ) {
-			momentumX = this.hasHorizontalScroll ? utils.momentum(this.x, this.startX, duration, this.maxScrollX, this.options.bounce ? this.wrapperWidth : 0, this.options.deceleration) : { destination: newX, duration: 0 };
-			momentumY = this.hasVerticalScroll ? utils.momentum(this.y, this.startY, duration, this.maxScrollY, this.options.bounce ? this.wrapperHeight : 0, this.options.deceleration) : { destination: newY, duration: 0 };
-			newX = momentumX.destination;
-			newY = momentumY.destination;
-			time = Math.max(momentumX.duration, momentumY.duration);
-			this.isInTransition = 1;
-		}
-
-
-		if ( this.options.snap ) {
-			var snap = this._nearestSnap(newX, newY);
-			this.currentPage = snap;
-			time = this.options.snapSpeed || Math.max(
-					Math.max(
-						Math.min(Math.abs(newX - snap.x), 1000),
-						Math.min(Math.abs(newY - snap.y), 1000)
-					), 300);
-			newX = snap.x;
-			newY = snap.y;
-
-			this.directionX = 0;
-			this.directionY = 0;
-			easing = this.options.bounceEasing;
-		}
-
-// INSERT POINT: _end
-
-		if ( newX != this.x || newY != this.y ) {
-			// change easing function when scroller goes out of the boundaries
-			if ( newX > 0 || newX < this.maxScrollX || newY > 0 || newY < this.maxScrollY ) {
-				easing = utils.ease.quadratic;
-			}
-
-			this.scrollTo(newX, newY, time, easing);
-			return;
-		}
-
-		this._execEvent('scrollEnd',e);
-	},
-
-	_resize: function () {
-		var that = this;
-
-		clearTimeout(this.resizeTimeout);
-
-		this.resizeTimeout = setTimeout(function () {
-			that.refresh();
-		}, this.options.resizePolling);
-	},
-
-	resetPosition: function (time) {
-		var x = this.x,
-			y = this.y;
-
-		time = time || 0;
-
-		if ( !this.hasHorizontalScroll || this.x > 0 ) {
-			x = 0;
-		} else if ( this.x < this.maxScrollX ) {
-			x = this.maxScrollX;
-		}
-
-		if ( !this.hasVerticalScroll || this.y > 0 ) {
-			y = 0;
-		} else if ( this.y < this.maxScrollY ) {
-			y = this.maxScrollY;
-		}
-
-		if ( x == this.x && y == this.y ) {
-			return false;
-		}
-
-		this.scrollTo(x, y, time, this.options.bounceEasing);
-
-		return true;
-	},
-
-	disable: function () {
-		this.enabled = false;
-	},
-
-	enable: function () {
-		this.enabled = true;
-	},
-
-	refresh: function () {
-		var rf = this.wrapper.offsetHeight;		// Force reflow
-
-		this.wrapperWidth	= this.wrapper.clientWidth;
-		this.wrapperHeight	= this.wrapper.clientHeight;
-
-/* REPLACE START: refresh */
-
-		this.scrollerWidth	= this.scroller.offsetWidth;
-		this.scrollerHeight	= this.scroller.offsetHeight;
-
-		this.maxScrollX		= this.wrapperWidth - this.scrollerWidth;
-		this.maxScrollY		= this.wrapperHeight - this.scrollerHeight;
-
-/* REPLACE END: refresh */
-
-		this.hasHorizontalScroll	= this.options.scrollX && this.maxScrollX < 0;
-		this.hasVerticalScroll		= this.options.scrollY && this.maxScrollY < 0;
-
-		if ( !this.hasHorizontalScroll ) {
-			this.maxScrollX = 0;
-			this.scrollerWidth = this.wrapperWidth;
-		}
-
-		if ( !this.hasVerticalScroll ) {
-			this.maxScrollY = 0;
-			this.scrollerHeight = this.wrapperHeight;
-		}
-
-		this.endTime = 0;
-		this.directionX = 0;
-		this.directionY = 0;
-
-		this.wrapperOffset = utils.offset(this.wrapper);
-
-		this._execEvent('refresh');
-
-		this.resetPosition();
-
-// INSERT POINT: _refresh
-
-	},
-
-	on: function (type, fn) {
-		if ( !this._events[type] ) {
-			this._events[type] = [];
-		}
-
-		this._events[type].push(fn);
-	},
-
-	off: function (type, fn) {
-		if ( !this._events[type] ) {
-			return;
-		}
-
-		var index = this._events[type].indexOf(fn);
-
-		if ( index > -1 ) {
-			this._events[type].splice(index, 1);
-		}
-	},
-
-	_execEvent: function (type) {
-		if ( !this._events[type] ) {
-			return;
-		}
-
-		var i = 0,
-			l = this._events[type].length;
-
-		if ( !l ) {
-			return;
-		}
-
-		for ( ; i < l; i++ ) {
-			this._events[type][i].apply(this, [].slice.call(arguments, 1));
-		}
-	},
-
-	scrollBy: function (x, y, time, easing) {
-		x = this.x + x;
-		y = this.y + y;
-		time = time || 0;
-
-		this.scrollTo(x, y, time, easing);
-	},
-
-	scrollTo: function (x, y, time, easing) {
-		easing = easing || utils.ease.circular;
-
-		this.isInTransition = this.options.useTransition && time > 0;
-
-		if ( !time || (this.options.useTransition && easing.style) ) {
-			this._transitionTimingFunction(easing.style);
-			this._transitionTime(time);
-			this._translate(x, y);
-		} else {
-			this._animate(x, y, time, easing.fn);
-		}
-	},
-
-	scrollToElement: function (el, time, offsetX, offsetY, easing) {
-		el = el.nodeType ? el : this.scroller.querySelector(el);
-
-		if ( !el ) {
-			return;
-		}
-
-		var pos = utils.offset(el);
-
-		pos.left -= this.wrapperOffset.left;
-		pos.top  -= this.wrapperOffset.top;
-
-		// if offsetX/Y are true we center the element to the screen
-		if ( offsetX === true ) {
-			offsetX = Math.round(el.offsetWidth / 2 - this.wrapper.offsetWidth / 2);
-		}
-		if ( offsetY === true ) {
-			offsetY = Math.round(el.offsetHeight / 2 - this.wrapper.offsetHeight / 2);
-		}
-
-		pos.left -= offsetX || 0;
-		pos.top  -= offsetY || 0;
-
-		pos.left = pos.left > 0 ? 0 : pos.left < this.maxScrollX ? this.maxScrollX : pos.left;
-		pos.top  = pos.top  > 0 ? 0 : pos.top  < this.maxScrollY ? this.maxScrollY : pos.top;
-
-		time = time === undefined || time === null || time === 'auto' ? Math.max(Math.abs(this.x-pos.left), Math.abs(this.y-pos.top)) : time;
-
-		this.scrollTo(pos.left, pos.top, time, easing);
-	},
-
-	_transitionTime: function (time) {
-		time = time || 0;
-
-		this.scrollerStyle[utils.style.transitionDuration] = time + 'ms';
-
-		if ( !time && utils.isBadAndroid ) {
-			this.scrollerStyle[utils.style.transitionDuration] = '0.001s';
-		}
-
-
-		if ( this.indicators ) {
-			for ( var i = this.indicators.length; i--; ) {
-				this.indicators[i].transitionTime(time);
-			}
-		}
-
-
-// INSERT POINT: _transitionTime
-
-	},
-
-	_transitionTimingFunction: function (easing) {
-		this.scrollerStyle[utils.style.transitionTimingFunction] = easing;
-
-
-		if ( this.indicators ) {
-			for ( var i = this.indicators.length; i--; ) {
-				this.indicators[i].transitionTimingFunction(easing);
-			}
-		}
-
-
-// INSERT POINT: _transitionTimingFunction
-
-	},
-
-	_translate: function (x, y) {
-		if ( this.options.useTransform ) {
-
-/* REPLACE START: _translate */
-
-			this.scrollerStyle[utils.style.transform] = 'translate(' + x + 'px,' + y + 'px)' + this.translateZ;
-
-/* REPLACE END: _translate */
-
-		} else {
-			x = Math.round(x);
-			y = Math.round(y);
-			this.scrollerStyle.left = x + 'px';
-			this.scrollerStyle.top = y + 'px';
-		}
-
-		this.x = x;
-		this.y = y;
-
-
-	if ( this.indicators ) {
-		for ( var i = this.indicators.length; i--; ) {
-			this.indicators[i].updatePosition();
-		}
-	}
-
-
-// INSERT POINT: _translate
-
-	},
-
-	_initEvents: function (remove) {
-		var eventType = remove ? utils.removeEvent : utils.addEvent,
-			target = this.options.bindToWrapper ? this.wrapper : window;
-
-		eventType(window, 'orientationchange', this);
-		eventType(window, 'resize', this);
-
-		if ( this.options.click ) {
-			eventType(this.wrapper, 'click', this, true);
-		}
-
-		if ( !this.options.disableMouse ) {
-			eventType(this.wrapper, 'mousedown', this);
-			eventType(target, 'mousemove', this);
-			eventType(target, 'mousecancel', this);
-			eventType(target, 'mouseup', this);
-		}
-
-		if ( utils.hasPointer && !this.options.disablePointer ) {
-			eventType(this.wrapper, utils.prefixPointerEvent('pointerdown'), this);
-			eventType(target, utils.prefixPointerEvent('pointermove'), this);
-			eventType(target, utils.prefixPointerEvent('pointercancel'), this);
-			eventType(target, utils.prefixPointerEvent('pointerup'), this);
-		}
-
-		if ( utils.hasTouch && !this.options.disableTouch ) {
-			eventType(this.wrapper, 'touchstart', this);
-			eventType(target, 'touchmove', this);
-			eventType(target, 'touchcancel', this);
-			eventType(target, 'touchend', this);
-		}
-
-		eventType(this.scroller, 'transitionend', this);
-		eventType(this.scroller, 'webkitTransitionEnd', this);
-		eventType(this.scroller, 'oTransitionEnd', this);
-		eventType(this.scroller, 'MSTransitionEnd', this);
-	},
-
-	getComputedPosition: function () {
-		var matrix = window.getComputedStyle(this.scroller, null),
-			x, y;
-
-		if ( this.options.useTransform ) {
-			matrix = matrix[utils.style.transform].split(')')[0].split(', ');
-			x = +(matrix[12] || matrix[4]);
-			y = +(matrix[13] || matrix[5]);
-		} else {
-			x = +matrix.left.replace(/[^-\d.]/g, '');
-			y = +matrix.top.replace(/[^-\d.]/g, '');
-		}
-
-		return { x: x, y: y };
-	},
-
-	_initIndicators: function () {
-		var interactive = this.options.interactiveScrollbars,
-			customStyle = typeof this.options.scrollbars != 'string',
-			indicators = [],
-			indicator;
-
-		var that = this;
-
-		this.indicators = [];
-
-		if ( this.options.scrollbars ) {
-			// Vertical scrollbar
-			if ( this.options.scrollY ) {
-				indicator = {
-					el: createDefaultScrollbar('v', interactive, this.options.scrollbars),
-					interactive: interactive,
-					defaultScrollbars: true,
-					customStyle: customStyle,
-					resize: this.options.resizeScrollbars,
-					shrink: this.options.shrinkScrollbars,
-					fade: this.options.fadeScrollbars,
-					listenX: false
-				};
-
-				this.wrapper.appendChild(indicator.el);
-				indicators.push(indicator);
-			}
-
-			// Horizontal scrollbar
-			if ( this.options.scrollX ) {
-				indicator = {
-					el: createDefaultScrollbar('h', interactive, this.options.scrollbars),
-					interactive: interactive,
-					defaultScrollbars: true,
-					customStyle: customStyle,
-					resize: this.options.resizeScrollbars,
-					shrink: this.options.shrinkScrollbars,
-					fade: this.options.fadeScrollbars,
-					listenY: false
-				};
-
-				this.wrapper.appendChild(indicator.el);
-				indicators.push(indicator);
-			}
-		}
-
-		if ( this.options.indicators ) {
-			// TODO: check concat compatibility
-			indicators = indicators.concat(this.options.indicators);
-		}
-
-		for ( var i = indicators.length; i--; ) {
-			this.indicators.push( new Indicator(this, indicators[i]) );
-		}
-
-		// TODO: check if we can use array.map (wide compatibility and performance issues)
-		function _indicatorsMap (fn) {
-			for ( var i = that.indicators.length; i--; ) {
-				fn.call(that.indicators[i]);
-			}
-		}
-
-		if ( this.options.fadeScrollbars ) {
-			this.on('scrollEnd', function () {
-				_indicatorsMap(function () {
-					this.fade();
-				});
-			});
-
-			this.on('scrollCancel', function () {
-				_indicatorsMap(function () {
-					this.fade();
-				});
-			});
-
-			this.on('scrollStart', function () {
-				_indicatorsMap(function () {
-					this.fade(1);
-				});
-			});
-
-			this.on('beforeScrollStart', function () {
-				_indicatorsMap(function () {
-					this.fade(1, true);
-				});
-			});
-		}
-
-
-		this.on('refresh', function () {
-			_indicatorsMap(function () {
-				this.refresh();
-			});
-		});
-
-		this.on('destroy', function () {
-			_indicatorsMap(function () {
-				this.destroy();
-			});
-
-			delete this.indicators;
-		});
-	},
-
-	_initWheel: function () {
-		utils.addEvent(this.wrapper, 'wheel', this);
-		utils.addEvent(this.wrapper, 'mousewheel', this);
-		utils.addEvent(this.wrapper, 'DOMMouseScroll', this);
-
-		this.on('destroy', function () {
-			utils.removeEvent(this.wrapper, 'wheel', this);
-			utils.removeEvent(this.wrapper, 'mousewheel', this);
-			utils.removeEvent(this.wrapper, 'DOMMouseScroll', this);
-		});
-	},
-
-	_wheel: function (e) {
-		if ( !this.enabled ) {
-			return;
-		}
-
-		e.preventDefault();
-		//e.stopPropagation();
-
-		var wheelDeltaX, wheelDeltaY,
-			newX, newY,
-			that = this;
-
-		if ( this.wheelTimeout === undefined ) {
-			that._execEvent('scrollStart');
-		}
-
-		// Execute the scrollEnd event after 400ms the wheel stopped scrolling
-		clearTimeout(this.wheelTimeout);
-		this.wheelTimeout = setTimeout(function () {
-			that._execEvent('scrollEnd',e);
-			that.wheelTimeout = undefined;
-		}, 400);
-
-		if ( 'deltaX' in e ) {
-			wheelDeltaX = - ( e.deltaX ? ( e.deltaX > 0 ? 20 : -20 ) : 0 ) / 120 * this.options.mouseWheelSpeed;
-			wheelDeltaY = - ( e.deltaY ? ( e.deltaY > 0 ? 20 : -20 ) : 0 ) / 120 * this.options.mouseWheelSpeed;
-		} else if ( 'wheelDeltaX' in e ) {
-			wheelDeltaX = ( e.wheelDeltaX ? ( e.wheelDeltaX > 0 ? 20 : -20 ) : 0 ) / 120 * this.options.mouseWheelSpeed;
-			wheelDeltaY = ( e.wheelDeltaY ? ( e.wheelDeltaY > 0 ? 20 : -20 ) : 0 ) / 120 * this.options.mouseWheelSpeed;
-		} else if ( 'wheelDelta' in e ) {
-			wheelDeltaX = wheelDeltaY = e.wheelDelta / 120 * this.options.mouseWheelSpeed;
-		} else if ( 'detail' in e ) {
-			wheelDeltaX = wheelDeltaY = -e.detail / 3 * this.options.mouseWheelSpeed;
-		} else {
-			return;
-		}
-
-		wheelDeltaX *= this.options.invertWheelDirection;
-		wheelDeltaY *= this.options.invertWheelDirection;
-
-		if ( !this.hasVerticalScroll ) {
-			wheelDeltaX = wheelDeltaY;
-			wheelDeltaY = 0;
-		}
-
-		if ( this.options.snap ) {
-			newX = this.currentPage.pageX;
-			newY = this.currentPage.pageY;
-
-			if ( wheelDeltaX > 0 ) {
-				newX--;
-			} else if ( wheelDeltaX < 0 ) {
-				newX++;
-			}
-
-			if ( wheelDeltaY > 0 ) {
-				newY--;
-			} else if ( wheelDeltaY < 0 ) {
-				newY++;
-			}
-
-			this.goToPage(newX, newY);
-
-			return;
-		}
-
-		newX = this.x + Math.round(this.hasHorizontalScroll ? wheelDeltaX : 0);
-		newY = this.y + Math.round(this.hasVerticalScroll ? wheelDeltaY : 0);
-
-		if ( newX > 0 ) {
-			newX = 0;
-		} else if ( newX < this.maxScrollX ) {
-			newX = this.maxScrollX;
-		}
-
-		if ( newY > 0 ) {
-			newY = 0;
-		} else if ( newY < this.maxScrollY ) {
-			newY = this.maxScrollY;
-		}
-		
-		if( newX != this.x || newY != this.y ) {
-			e.stopPropagation();
-		}
-
-		this.scrollTo(newX, newY, 0);
-
-// INSERT POINT: _wheel
-	},
-
-	_initSnap: function () {
-		this.currentPage = {};
-
-		if ( typeof this.options.snap == 'string' ) {
-			this.options.snap = this.scroller.querySelectorAll(this.options.snap);
-		}
-
-		this.on('refresh', function () {
-			var i = 0, l,
-				m = 0, n,
-				cx, cy,
-				x = 0, y,
-				stepX = this.options.snapStepX || this.wrapperWidth,
-				stepY = this.options.snapStepY || this.wrapperHeight,
-				el;
-
-			this.pages = [];
-
-			if ( !this.wrapperWidth || !this.wrapperHeight || !this.scrollerWidth || !this.scrollerHeight ) {
-				return;
-			}
-
-			if ( this.options.snap === true ) {
-				cx = Math.round( stepX / 2 );
-				cy = Math.round( stepY / 2 );
-
-				while ( x > -this.scrollerWidth ) {
-					this.pages[i] = [];
-					l = 0;
-					y = 0;
-
-					while ( y > -this.scrollerHeight ) {
-						this.pages[i][l] = {
-							x: Math.max(x, this.maxScrollX),
-							y: Math.max(y, this.maxScrollY),
-							width: stepX,
-							height: stepY,
-							cx: x - cx,
-							cy: y - cy
-						};
-
-						y -= stepY;
-						l++;
-					}
-
-					x -= stepX;
-					i++;
-				}
-			} else {
-				el = this.options.snap;
-				l = el.length;
-				n = -1;
-
-				for ( ; i < l; i++ ) {
-					if ( i === 0 || el[i].offsetLeft <= el[i-1].offsetLeft ) {
-						m = 0;
-						n++;
-					}
-
-					if ( !this.pages[m] ) {
-						this.pages[m] = [];
-					}
-
-					x = Math.max(-el[i].offsetLeft, this.maxScrollX);
-					y = Math.max(-el[i].offsetTop, this.maxScrollY);
-					cx = x - Math.round(el[i].offsetWidth / 2);
-					cy = y - Math.round(el[i].offsetHeight / 2);
-
-					this.pages[m][n] = {
-						x: x,
-						y: y,
-						width: el[i].offsetWidth,
-						height: el[i].offsetHeight,
-						cx: cx,
-						cy: cy
-					};
-
-					if ( x > this.maxScrollX ) {
-						m++;
-					}
-				}
-			}
-
-			this.goToPage(this.currentPage.pageX || 0, this.currentPage.pageY || 0, 0);
-
-			// Update snap threshold if needed
-			if ( this.options.snapThreshold % 1 === 0 ) {
-				this.snapThresholdX = this.options.snapThreshold;
-				this.snapThresholdY = this.options.snapThreshold;
-			} else {
-				this.snapThresholdX = Math.round(this.pages[this.currentPage.pageX][this.currentPage.pageY].width * this.options.snapThreshold);
-				this.snapThresholdY = Math.round(this.pages[this.currentPage.pageX][this.currentPage.pageY].height * this.options.snapThreshold);
-			}
-		});
-
-		this.on('flick', function () {
-			var time = this.options.snapSpeed || Math.max(
-					Math.max(
-						Math.min(Math.abs(this.x - this.startX), 1000),
-						Math.min(Math.abs(this.y - this.startY), 1000)
-					), 300);
-
-			this.goToPage(
-				this.currentPage.pageX + this.directionX,
-				this.currentPage.pageY + this.directionY,
-				time
-			);
-		});
-	},
-
-	_nearestSnap: function (x, y) {
-		if ( !this.pages.length ) {
-			return { x: 0, y: 0, pageX: 0, pageY: 0 };
-		}
-
-		var i = 0,
-			l = this.pages.length,
-			m = 0;
-
-		// Check if we exceeded the snap threshold
-		if ( Math.abs(x - this.absStartX) < this.snapThresholdX &&
-			Math.abs(y - this.absStartY) < this.snapThresholdY ) {
-			return this.currentPage;
-		}
-
-		if ( x > 0 ) {
-			x = 0;
-		} else if ( x < this.maxScrollX ) {
-			x = this.maxScrollX;
-		}
-
-		if ( y > 0 ) {
-			y = 0;
-		} else if ( y < this.maxScrollY ) {
-			y = this.maxScrollY;
-		}
-
-		for ( ; i < l; i++ ) {
-			if ( x >= this.pages[i][0].cx ) {
-				x = this.pages[i][0].x;
-				break;
-			}
-		}
-
-		l = this.pages[i].length;
-
-		for ( ; m < l; m++ ) {
-			if ( y >= this.pages[0][m].cy ) {
-				y = this.pages[0][m].y;
-				break;
-			}
-		}
-
-		if ( i == this.currentPage.pageX ) {
-			i += this.directionX;
-
-			if ( i < 0 ) {
-				i = 0;
-			} else if ( i >= this.pages.length ) {
-				i = this.pages.length - 1;
-			}
-
-			x = this.pages[i][0].x;
-		}
-
-		if ( m == this.currentPage.pageY ) {
-			m += this.directionY;
-
-			if ( m < 0 ) {
-				m = 0;
-			} else if ( m >= this.pages[0].length ) {
-				m = this.pages[0].length - 1;
-			}
-
-			y = this.pages[0][m].y;
-		}
-
-		return {
-			x: x,
-			y: y,
-			pageX: i,
-			pageY: m
-		};
-	},
-
-	goToPage: function (x, y, time, easing) {
-		easing = easing || this.options.bounceEasing;
-
-		if ( x >= this.pages.length ) {
-			x = this.pages.length - 1;
-		} else if ( x < 0 ) {
-			x = 0;
-		}
-
-		if ( y >= this.pages[x].length ) {
-			y = this.pages[x].length - 1;
-		} else if ( y < 0 ) {
-			y = 0;
-		}
-
-		var posX = this.pages[x][y].x,
-			posY = this.pages[x][y].y;
-
-		time = time === undefined ? this.options.snapSpeed || Math.max(
-			Math.max(
-				Math.min(Math.abs(posX - this.x), 1000),
-				Math.min(Math.abs(posY - this.y), 1000)
-			), 300) : time;
-
-		this.currentPage = {
-			x: posX,
-			y: posY,
-			pageX: x,
-			pageY: y
-		};
-
-		this.scrollTo(posX, posY, time, easing);
-	},
-
-	next: function (time, easing) {
-		var x = this.currentPage.pageX,
-			y = this.currentPage.pageY;
-
-		x++;
-
-		if ( x >= this.pages.length && this.hasVerticalScroll ) {
-			x = 0;
-			y++;
-		}
-
-		this.goToPage(x, y, time, easing);
-	},
-
-	prev: function (time, easing) {
-		var x = this.currentPage.pageX,
-			y = this.currentPage.pageY;
-
-		x--;
-
-		if ( x < 0 && this.hasVerticalScroll ) {
-			x = 0;
-			y--;
-		}
-
-		this.goToPage(x, y, time, easing);
-	},
-
-	_initKeys: function (e) {
-		// default key bindings
-		var keys = {
-			pageUp: 33,
-			pageDown: 34,
-			end: 35,
-			home: 36,
-			left: 37,
-			up: 38,
-			right: 39,
-			down: 40
-		};
-		var i;
-
-		// if you give me characters I give you keycode
-		if ( typeof this.options.keyBindings == 'object' ) {
-			for ( i in this.options.keyBindings ) {
-				if ( typeof this.options.keyBindings[i] == 'string' ) {
-					this.options.keyBindings[i] = this.options.keyBindings[i].toUpperCase().charCodeAt(0);
-				}
-			}
-		} else {
-			this.options.keyBindings = {};
-		}
-
-		for ( i in keys ) {
-			this.options.keyBindings[i] = this.options.keyBindings[i] || keys[i];
-		}
-
-		utils.addEvent(window, 'keydown', this);
-
-		this.on('destroy', function () {
-			utils.removeEvent(window, 'keydown', this);
-		});
-	},
-
-	_key: function (e) {
-		if ( !this.enabled ) {
-			return;
-		}
-
-		var snap = this.options.snap,	// we are using this alot, better to cache it
-			newX = snap ? this.currentPage.pageX : this.x,
-			newY = snap ? this.currentPage.pageY : this.y,
-			now = utils.getTime(),
-			prevTime = this.keyTime || 0,
-			acceleration = 0.250,
-			pos;
-
-		if ( this.options.useTransition && this.isInTransition ) {
-			pos = this.getComputedPosition();
-
-			this._translate(Math.round(pos.x), Math.round(pos.y));
-			this.isInTransition = false;
-		}
-
-		this.keyAcceleration = now - prevTime < 200 ? Math.min(this.keyAcceleration + acceleration, 50) : 0;
-
-		switch ( e.keyCode ) {
-			case this.options.keyBindings.pageUp:
-				if ( this.hasHorizontalScroll && !this.hasVerticalScroll ) {
-					newX += snap ? 1 : this.wrapperWidth;
-				} else {
-					newY += snap ? 1 : this.wrapperHeight;
-				}
-				break;
-			case this.options.keyBindings.pageDown:
-				if ( this.hasHorizontalScroll && !this.hasVerticalScroll ) {
-					newX -= snap ? 1 : this.wrapperWidth;
-				} else {
-					newY -= snap ? 1 : this.wrapperHeight;
-				}
-				break;
-			case this.options.keyBindings.end:
-				newX = snap ? this.pages.length-1 : this.maxScrollX;
-				newY = snap ? this.pages[0].length-1 : this.maxScrollY;
-				break;
-			case this.options.keyBindings.home:
-				newX = 0;
-				newY = 0;
-				break;
-			case this.options.keyBindings.left:
-				newX += snap ? -1 : 5 + this.keyAcceleration>>0;
-				break;
-			case this.options.keyBindings.up:
-				newY += snap ? 1 : 5 + this.keyAcceleration>>0;
-				break;
-			case this.options.keyBindings.right:
-				newX -= snap ? -1 : 5 + this.keyAcceleration>>0;
-				break;
-			case this.options.keyBindings.down:
-				newY -= snap ? 1 : 5 + this.keyAcceleration>>0;
-				break;
-			default:
-				return;
-		}
-
-		if ( snap ) {
-			this.goToPage(newX, newY);
-			return;
-		}
-
-		if ( newX > 0 ) {
-			newX = 0;
-			this.keyAcceleration = 0;
-		} else if ( newX < this.maxScrollX ) {
-			newX = this.maxScrollX;
-			this.keyAcceleration = 0;
-		}
-
-		if ( newY > 0 ) {
-			newY = 0;
-			this.keyAcceleration = 0;
-		} else if ( newY < this.maxScrollY ) {
-			newY = this.maxScrollY;
-			this.keyAcceleration = 0;
-		}
-
-		this.scrollTo(newX, newY, 0);
-
-		this.keyTime = now;
-	},
-
-	_animate: function (destX, destY, duration, easingFn) {
-		var that = this,
-			startX = this.x,
-			startY = this.y,
-			startTime = utils.getTime(),
-			destTime = startTime + duration;
-
-		function step () {
-			var now = utils.getTime(),
-				newX, newY,
-				easing;
-
-			if ( now >= destTime ) {
-				that.isAnimating = false;
-				that._translate(destX, destY);
-
-				if ( !that.resetPosition(that.options.bounceTime) ) {
-					that._execEvent('scrollEnd', null);
-				}
-
-				return;
-			}
-
-			now = ( now - startTime ) / duration;
-			easing = easingFn(now);
-			newX = ( destX - startX ) * easing + startX;
-			newY = ( destY - startY ) * easing + startY;
-			that._translate(newX, newY);
-
-			if ( that.isAnimating ) {
-				rAF(step);
-			}
-		}
-
-		this.isAnimating = true;
-		step();
-	},
-	__resized: false,
-	handleEvent: function (e) {
-		if( typeof e.type == 'undefined' ) return;
-		
-		switch ( e.type ) {
-			case 'touchstart':
-			case 'pointerdown':
-			case 'MSPointerDown':
-			case 'mousedown':
-				this._start(e);
-				
-				if( ! this.__resized ) {
-					this._resize();
-					this.__resized = true;
-				}
-				break;
-			case 'touchmove':
-			case 'pointermove':
-			case 'MSPointerMove':
-			case 'mousemove':
-				this._move(e);
-				break;
-			case 'touchend':
-			case 'pointerup':
-			case 'MSPointerUp':
-			case 'mouseup':
-			case 'touchcancel':
-			case 'pointercancel':
-			case 'MSPointerCancel':
-			case 'mousecancel':
-				this._end(e);
-				break;
-			case 'orientationchange':
-			case 'resize':
-				this._resize();
-				break;
-			case 'transitionend':
-			case 'webkitTransitionEnd':
-			case 'oTransitionEnd':
-			case 'MSTransitionEnd':
-				this._transitionEnd(e);
-				break;
-			case 'wheel':
-			case 'DOMMouseScroll':
-			case 'mousewheel':
-				this._wheel(e);
-				
-				if( ! this.__resized ) {
-					this._resize();
-					this.__resized = true;
-				}
-				break;
-			case 'keydown':
-				this._key(e);
-				break;
-			case 'click':
-				if ( !e._constructed ) {
-					e.preventDefault();
-					e.stopPropagation();
-				}
-				break;
-		}
-	}
-};
-function createDefaultScrollbar (direction, interactive, type) {
-	var scrollbar = document.createElement('div'),
-		indicator = document.createElement('div');
-
-	if ( type === true ) {
-		scrollbar.style.cssText = 'position:absolute;z-index:9999';
-		indicator.style.cssText = '-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;position:absolute;background:rgba(0,0,0,0.5);border-radius:3px';
-	}
-
-	indicator.className = 'iScrollIndicator';
-
-	if ( direction == 'h' ) {
-		if ( type === true ) {
-			scrollbar.style.cssText += ';height:7px;left:2px;right:2px;bottom:0';
-			indicator.style.height = '100%';
-		}
-		scrollbar.className = 'iScrollHorizontalScrollbar';
-	} else {
-		if ( type === true ) {
-			scrollbar.style.cssText += ';width:6px;bottom:2px;top:2px;right:1px';
-			scrollbar.style.marginLeft = '1px';
-			indicator.style.width = '100%';
-		}
-		scrollbar.className = 'iScrollVerticalScrollbar';
-	}
-
-	scrollbar.style.cssText += ';overflow:hidden';
-
-	if ( !interactive ) {
-		scrollbar.style.pointerEvents = 'none';
-	}
-
-	scrollbar.appendChild(indicator);
-
-	return scrollbar;
-}
-
-function Indicator (scroller, options) {
-	this.wrapper = typeof options.el == 'string' ? document.querySelector(options.el) : options.el;
-	this.wrapperStyle = this.wrapper.style;
-	this.indicator = this.wrapper.children[0];
-	this.indicatorStyle = this.indicator.style;
-	this.scroller = scroller;
-
-	this.options = {
-		listenX: true,
-		listenY: true,
-		interactive: false,
-		resize: true,
-		defaultScrollbars: false,
-		shrink: false,
-		fade: false,
-		speedRatioX: 0,
-		speedRatioY: 0
-	};
-
-	for ( var i in options ) {
-		this.options[i] = options[i];
-	}
-
-	this.sizeRatioX = 1;
-	this.sizeRatioY = 1;
-	this.maxPosX = 0;
-	this.maxPosY = 0;
-
-	if ( this.options.interactive ) {
-		if ( !this.options.disableTouch ) {
-			utils.addEvent(this.indicator, 'touchstart', this);
-			utils.addEvent(window, 'touchend', this);
-		}
-		if ( !this.options.disablePointer ) {
-			utils.addEvent(this.indicator, utils.prefixPointerEvent('pointerdown'), this);
-			utils.addEvent(window, utils.prefixPointerEvent('pointerup'), this);
-		}
-		if ( !this.options.disableMouse ) {
-			utils.addEvent(this.indicator, 'mousedown', this);
-			utils.addEvent(window, 'mouseup', this);
-		}
-	}
-
-	if ( this.options.fade ) {
-		this.wrapperStyle[utils.style.transform] = this.scroller.translateZ;
-		this.wrapperStyle[utils.style.transitionDuration] = utils.isBadAndroid ? '0.001s' : '0ms';
-		this.wrapperStyle.opacity = '0';
-	}
-}
-
-Indicator.prototype = {
-	handleEvent: function (e) {
-		switch ( e.type ) {
-			case 'touchstart':
-			case 'pointerdown':
-			case 'MSPointerDown':
-			case 'mousedown':
-				this._start(e);
-				break;
-			case 'touchmove':
-			case 'pointermove':
-			case 'MSPointerMove':
-			case 'mousemove':
-				this._move(e);
-				break;
-			case 'touchend':
-			case 'pointerup':
-			case 'MSPointerUp':
-			case 'mouseup':
-			case 'touchcancel':
-			case 'pointercancel':
-			case 'MSPointerCancel':
-			case 'mousecancel':
-				this._end(e);
-				break;
-		}
-	},
-
-	destroy: function () {
-		if ( this.options.interactive ) {
-			utils.removeEvent(this.indicator, 'touchstart', this);
-			utils.removeEvent(this.indicator, utils.prefixPointerEvent('pointerdown'), this);
-			utils.removeEvent(this.indicator, 'mousedown', this);
-
-			utils.removeEvent(window, 'touchmove', this);
-			utils.removeEvent(window, utils.prefixPointerEvent('pointermove'), this);
-			utils.removeEvent(window, 'mousemove', this);
-
-			utils.removeEvent(window, 'touchend', this);
-			utils.removeEvent(window, utils.prefixPointerEvent('pointerup'), this);
-			utils.removeEvent(window, 'mouseup', this);
-		}
-
-		if ( this.options.defaultScrollbars ) {
-			this.wrapper.parentNode.removeChild(this.wrapper);
-		}
-	},
-
-	_start: function (e) {
-		var point = e.touches ? e.touches[0] : e;
-
-		e.preventDefault();
-		e.stopPropagation();
-
-		this.transitionTime();
-
-		this.initiated = true;
-		this.moved = false;
-		this.lastPointX	= point.pageX;
-		this.lastPointY	= point.pageY;
-
-		this.startTime	= utils.getTime();
-
-		if ( !this.options.disableTouch ) {
-			utils.addEvent(window, 'touchmove', this);
-		}
-		if ( !this.options.disablePointer ) {
-			utils.addEvent(window, utils.prefixPointerEvent('pointermove'), this);
-		}
-		if ( !this.options.disableMouse ) {
-			utils.addEvent(window, 'mousemove', this);
-		}
-
-		this.scroller._execEvent('beforeScrollStart');
-	},
-
-	_move: function (e) {
-		var point = e.touches ? e.touches[0] : e,
-			deltaX, deltaY,
-			newX, newY,
-			timestamp = utils.getTime();
-
-		if ( !this.moved ) {
-			this.scroller._execEvent('scrollStart');
-		}
-
-		this.moved = true;
-
-		deltaX = point.pageX - this.lastPointX;
-		this.lastPointX = point.pageX;
-
-		deltaY = point.pageY - this.lastPointY;
-		this.lastPointY = point.pageY;
-
-		newX = this.x + deltaX;
-		newY = this.y + deltaY;
-
-		this._pos(newX, newY);
-
-// INSERT POINT: indicator._move
-
-		e.preventDefault();
-		e.stopPropagation();
-	},
-
-	_end: function (e) {
-		if ( !this.initiated ) {
-			return;
-		}
-
-		this.initiated = false;
-
-		e.preventDefault();
-		e.stopPropagation();
-
-		utils.removeEvent(window, 'touchmove', this);
-		utils.removeEvent(window, utils.prefixPointerEvent('pointermove'), this);
-		utils.removeEvent(window, 'mousemove', this);
-
-		if ( this.scroller.options.snap ) {
-			var snap = this.scroller._nearestSnap(this.scroller.x, this.scroller.y);
-
-			var time = this.options.snapSpeed || Math.max(
-					Math.max(
-						Math.min(Math.abs(this.scroller.x - snap.x), 1000),
-						Math.min(Math.abs(this.scroller.y - snap.y), 1000)
-					), 300);
-
-			if ( this.scroller.x != snap.x || this.scroller.y != snap.y ) {
-				this.scroller.directionX = 0;
-				this.scroller.directionY = 0;
-				this.scroller.currentPage = snap;
-				this.scroller.scrollTo(snap.x, snap.y, time, this.scroller.options.bounceEasing);
-			}
-		}
-
-		if ( this.moved ) {
-			this.scroller._execEvent('scrollEnd',e);
-		}
-	},
-
-	transitionTime: function (time) {
-		time = time || 0;
-		this.indicatorStyle[utils.style.transitionDuration] = time + 'ms';
-
-		if ( !time && utils.isBadAndroid ) {
-			this.indicatorStyle[utils.style.transitionDuration] = '0.001s';
-		}
-	},
-
-	transitionTimingFunction: function (easing) {
-		this.indicatorStyle[utils.style.transitionTimingFunction] = easing;
-	},
-
-	refresh: function () {
-		this.transitionTime();
-
-		if ( this.options.listenX && !this.options.listenY ) {
-			this.indicatorStyle.display = this.scroller.hasHorizontalScroll ? 'block' : 'none';
-		} else if ( this.options.listenY && !this.options.listenX ) {
-			this.indicatorStyle.display = this.scroller.hasVerticalScroll ? 'block' : 'none';
-		} else {
-			this.indicatorStyle.display = this.scroller.hasHorizontalScroll || this.scroller.hasVerticalScroll ? 'block' : 'none';
-		}
-
-		if ( this.scroller.hasHorizontalScroll && this.scroller.hasVerticalScroll ) {
-			utils.addClass(this.wrapper, 'iScrollBothScrollbars');
-			utils.removeClass(this.wrapper, 'iScrollLoneScrollbar');
-
-			if ( this.options.defaultScrollbars && this.options.customStyle ) {
-				if ( this.options.listenX ) {
-					this.wrapper.style.right = '8px';
-				} else {
-					this.wrapper.style.bottom = '8px';
-				}
-			}
-		} else {
-			utils.removeClass(this.wrapper, 'iScrollBothScrollbars');
-			utils.addClass(this.wrapper, 'iScrollLoneScrollbar');
-
-			if ( this.options.defaultScrollbars && this.options.customStyle ) {
-				if ( this.options.listenX ) {
-					this.wrapper.style.right = '2px';
-				} else {
-					this.wrapper.style.bottom = '2px';
-				}
-			}
-		}
-
-		var r = this.wrapper.offsetHeight;	// force refresh
-
-		if ( this.options.listenX ) {
-			this.wrapperWidth = this.wrapper.clientWidth;
-			if ( this.options.resize ) {
-				this.indicatorWidth = Math.max(Math.round(this.wrapperWidth * this.wrapperWidth / (this.scroller.scrollerWidth || this.wrapperWidth || 1)), 8);
-				this.indicatorStyle.width = this.indicatorWidth + 'px';
-			} else {
-				this.indicatorWidth = this.indicator.clientWidth;
-			}
-
-			this.maxPosX = this.wrapperWidth - this.indicatorWidth;
-
-			if ( this.options.shrink == 'clip' ) {
-				this.minBoundaryX = -this.indicatorWidth + 8;
-				this.maxBoundaryX = this.wrapperWidth - 8;
-			} else {
-				this.minBoundaryX = 0;
-				this.maxBoundaryX = this.maxPosX;
-			}
-
-			this.sizeRatioX = this.options.speedRatioX || (this.scroller.maxScrollX && (this.maxPosX / this.scroller.maxScrollX));	
-		}
-
-		if ( this.options.listenY ) {
-			this.wrapperHeight = this.wrapper.clientHeight;
-			if ( this.options.resize ) {
-				this.indicatorHeight = Math.max(Math.round(this.wrapperHeight * this.wrapperHeight / (this.scroller.scrollerHeight || this.wrapperHeight || 1)), 8);
-				this.indicatorStyle.height = this.indicatorHeight + 'px';
-			} else {
-				this.indicatorHeight = this.indicator.clientHeight;
-			}
-
-			this.maxPosY = this.wrapperHeight - this.indicatorHeight;
-
-			if ( this.options.shrink == 'clip' ) {
-				this.minBoundaryY = -this.indicatorHeight + 8;
-				this.maxBoundaryY = this.wrapperHeight - 8;
-			} else {
-				this.minBoundaryY = 0;
-				this.maxBoundaryY = this.maxPosY;
-			}
-
-			this.maxPosY = this.wrapperHeight - this.indicatorHeight;
-			this.sizeRatioY = this.options.speedRatioY || (this.scroller.maxScrollY && (this.maxPosY / this.scroller.maxScrollY));
-		}
-
-		this.updatePosition();
-	},
-
-	updatePosition: function () {
-		var x = this.options.listenX && Math.round(this.sizeRatioX * this.scroller.x) || 0,
-			y = this.options.listenY && Math.round(this.sizeRatioY * this.scroller.y) || 0;
-
-		if ( !this.options.ignoreBoundaries ) {
-			if ( x < this.minBoundaryX ) {
-				if ( this.options.shrink == 'scale' ) {
-					this.width = Math.max(this.indicatorWidth + x, 8);
-					this.indicatorStyle.width = this.width + 'px';
-				}
-				x = this.minBoundaryX;
-			} else if ( x > this.maxBoundaryX ) {
-				if ( this.options.shrink == 'scale' ) {
-					this.width = Math.max(this.indicatorWidth - (x - this.maxPosX), 8);
-					this.indicatorStyle.width = this.width + 'px';
-					x = this.maxPosX + this.indicatorWidth - this.width;
-				} else {
-					x = this.maxBoundaryX;
-				}
-			} else if ( this.options.shrink == 'scale' && this.width != this.indicatorWidth ) {
-				this.width = this.indicatorWidth;
-				this.indicatorStyle.width = this.width + 'px';
-			}
-
-			if ( y < this.minBoundaryY ) {
-				if ( this.options.shrink == 'scale' ) {
-					this.height = Math.max(this.indicatorHeight + y * 3, 8);
-					this.indicatorStyle.height = this.height + 'px';
-				}
-				y = this.minBoundaryY;
-			} else if ( y > this.maxBoundaryY ) {
-				if ( this.options.shrink == 'scale' ) {
-					this.height = Math.max(this.indicatorHeight - (y - this.maxPosY) * 3, 8);
-					this.indicatorStyle.height = this.height + 'px';
-					y = this.maxPosY + this.indicatorHeight - this.height;
-				} else {
-					y = this.maxBoundaryY;
-				}
-			} else if ( this.options.shrink == 'scale' && this.height != this.indicatorHeight ) {
-				this.height = this.indicatorHeight;
-				this.indicatorStyle.height = this.height + 'px';
-			}
-		}
-
-		this.x = x;
-		this.y = y;
-
-		if ( this.scroller.options.useTransform ) {
-			this.indicatorStyle[utils.style.transform] = 'translate(' + x + 'px,' + y + 'px)' + this.scroller.translateZ;
-		} else {
-			this.indicatorStyle.left = x + 'px';
-			this.indicatorStyle.top = y + 'px';
-		}
-	},
-
-	_pos: function (x, y) {
-		if ( x < 0 ) {
-			x = 0;
-		} else if ( x > this.maxPosX ) {
-			x = this.maxPosX;
-		}
-
-		if ( y < 0 ) {
-			y = 0;
-		} else if ( y > this.maxPosY ) {
-			y = this.maxPosY;
-		}
-
-		x = this.options.listenX ? Math.round(x / this.sizeRatioX) : this.scroller.x;
-		y = this.options.listenY ? Math.round(y / this.sizeRatioY) : this.scroller.y;
-
-		this.scroller.scrollTo(x, y);
-	},
-
-	fade: function (val, hold) {
-		if ( hold && !this.visible ) {
-			return;
-		}
-
-		clearTimeout(this.fadeTimeout);
-		this.fadeTimeout = null;
-
-		var time = val ? 250 : 500,
-			delay = val ? 0 : 300;
-
-		val = val ? '1' : '0';
-
-		this.wrapperStyle[utils.style.transitionDuration] = time + 'ms';
-
-		this.fadeTimeout = setTimeout((function (val) {
-			this.wrapperStyle.opacity = val;
-			this.visible = +val;
-		}).bind(this, val), delay);
-	}
-};
-
-IScroll.utils = utils;
-
-if ( typeof module != 'undefined' && module.exports ) {
-	module.exports = IScroll;
-} else {
-	window.IScroll = IScroll;
-}
-
-})(window, document, Math);
-
-////////////////////////////////////////////////////////////////////////////////
-
-/*
- * jQuery.liveFilter
- *
- * Copyright (c) 2009 Mike Merritt
- *
- * Forked by Lim Chee Aun (cheeaun.com)
- * 
- */ 
-(function($){
-	$.fn.liveFilter = function(inputEl, filterEl, options){
-		var defaults = {
-			filterChildSelector: null,
-			filter: function(el, val){
-				return $(el).text().toUpperCase().indexOf(val.toUpperCase()) >= 0;
-			},
-			before: function(){},
-			after: function(){}
-		};
-		var options = $.extend(defaults, options);
-		var self = $(this);
-
-		var filter = options.filter;
-		$(inputEl).keyup(function(){
-			var el = self.find(filterEl);
-			if (options.filterChildSelector) el = el.find(options.filterChildSelector);
-			
-			var val = $(this).val();
-			var contains = el.filter(function(){
-				return filter(this, val);
-			});
-			
-			var containsNot = el.not(contains);
-			if (options.filterChildSelector){
-				contains = contains.parents(filterEl);
-				//containsNot = containsNot.parents(filterEl).hide();
-				containersNot = containsNot.parents(filterEl).addClass('mfilter-hide-by-live-filter');
-			}
-
-			options.before.call(this, contains, containsNot);
-
-			contains.removeClass('mfilter-hide-by-live-filter');
-			containsNot.addClass('mfilter-hide-by-live-filter');
-
-			//contains.show();
-			//containsNot.hide();
-
-			if (val === '') {
-				contains.removeClass('mfilter-hide-by-live-filter');
-				containsNot.removeClass('mfilter-hide-by-live-filter');
-				//contains.show();
-				//containsNot.show();
-			}
-
-			options.after.call(this, contains, containsNot);
-		});
-	};
-})(jQuery);
-
-////////////////////////////////////////////////////////////////////////////////
-
-/*! Copyright 2012, Ben Lin (http://dreamerslab.com/)
- * Licensed under the MIT License (LICENSE.txt).
- *
- * Version: 1.0.16
- *
- * Requires: jQuery >= 1.2.3
+/**
+ * Mega Filter
  */
-( function ( $ ){
-  $.fn.addBack = $.fn.addBack || $.fn.andSelf;
 
-  $.fn.extend({
-
-    actual : function ( method, options ){
-      // check if the jQuery method exist
-      if( !this[ method ]){
-        throw '$.actual => The jQuery method "' + method + '" you called does not exist';
-      }
-
-      var defaults = {
-        absolute      : false,
-        clone         : false,
-        includeMargin : false
-      };
-
-      var configs = $.extend( defaults, options );
-
-      var $target = this.eq( 0 );
-      var fix, restore;
-
-      if( configs.clone === true ){
-        fix = function (){
-          var style = 'position: absolute !important; top: -1000 !important; ';
-
-          // this is useful with css3pie
-          $target = $target.
-            clone().
-            attr( 'style', style ).
-            appendTo( 'body' );
-        };
-
-        restore = function (){
-          // remove DOM element after getting the width
-          $target.remove();
-        };
-      }else{
-        var tmp   = [];
-        var style = '';
-        var $hidden;
-
-        fix = function (){
-          // get all hidden parents
-          $hidden = $target.parents().addBack().filter( ':hidden' );
-          style   += 'visibility: hidden !important; display: block !important; ';
-
-          if( configs.absolute === true ) style += 'position: absolute !important; ';
-
-          // save the origin style props
-          // set the hidden el css to be got the actual value later
-          $hidden.each( function (){
-            // Save original style. If no style was set, attr() returns undefined
-            var $this     = $( this );
-            var thisStyle = $this.attr( 'style' );
-
-            tmp.push( thisStyle );
-            // Retain as much of the original style as possible, if there is one
-            $this.attr( 'style', thisStyle ? thisStyle + ';' + style : style );
-          });
-        };
-
-        restore = function (){
-          // restore origin style values
-          $hidden.each( function ( i ){
-            var $this = $( this );
-            var _tmp  = tmp[ i ];
-
-            if( _tmp === undefined ){
-              $this.removeAttr( 'style' );
-            }else{
-              $this.attr( 'style', _tmp );
+if (typeof Array.prototype.indexOf == "undefined") {
+    Array.prototype.indexOf = function (obj, start) {
+        for (var i = start || 0, j = this.length; i < j; i++) {
+            if (this[i] === obj) {
+                return i;
             }
-          });
+        }
+
+        return -1;
+    };
+}
+
+var MegaFilterINSTANCES = typeof MegaFilterINSTANCES == "undefined" ? [] : MegaFilterINSTANCES;
+
+var MegaFilter = function () {};
+
+MegaFilter.prototype = {
+    /**
+     * Kontener filtrów
+     */
+    _box: null,
+
+    /**
+     * Opcje
+     */
+    _options: null,
+
+    /**
+     * @var int
+     */
+    _timeoutAjax: null,
+
+    _timeoutSearchFiled: null,
+
+    /**
+     * @var string
+     */
+    _url: null,
+
+    /**
+     * Separator URL
+     *
+     * @var string
+     */
+    _urlSep: null,
+
+    /**
+     * Lista parametrów
+     *
+     * @var object
+     */
+    _params: null,
+
+    /**
+     * Lista scrolls
+     *
+     * @var array
+     */
+    _scrolls: null,
+
+    /**
+     * Lista guzików
+     *
+     * @var array
+     */
+    _buttonsMore: null,
+
+    _liveFilters: null,
+
+    /**
+     * Kontener główny
+     *
+     * @var jQuery
+     */
+    _jqContent: null,
+
+    /**
+     * Loader over results
+     *
+     * @var jQuery
+     */
+    _jqLoader: null,
+
+    /**
+     * Loader over filter
+     *
+     * @var jQuery
+     */
+    _jqLoaderFilter: null,
+
+    /**
+     * Slidery
+     *
+     * @type array
+     */
+    _sliders: null,
+
+    /**
+     * ID kontenera głównego
+     *
+     * @var string
+     */
+    _contentId: "#content",
+
+    /**
+     * Trwa oczekiwanie na odpowiedź serwera
+     *
+     * @var bool
+     */
+    _busy: false,
+
+    /**
+     * W trakcie ładowania danych z serwra wprowadzono zmiany
+     *
+     * @var bool
+     */
+    _waitingChanges: false,
+
+    /**
+     * Ostania odpowiedź serwera
+     *
+     * @var string
+     */
+    _lastResponse: "",
+
+    _refreshPrice: function () {},
+
+    _inUrl: null,
+
+    _isInit: false,
+
+    _cache: null,
+
+    _relativeScroll: null,
+
+    _selectOptions: null,
+
+    _lastUrl: null,
+
+    _urlToFilters: null,
+
+    _instanceIdx: 0,
+
+    _inlineHorizontalUpdate: null,
+
+    _lastEvent: null,
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Inicjuj klasę
+     */
+    init: function (box, options) {
+        var self = this,
+            i;
+
+        if (options.contentSelector) self._contentId = options.contentSelector;
+
+        self._jqContent = jQuery(self._contentId);
+
+        if (!self._jqContent.length) {
+            self._contentId = "#maincontent";
+
+            self._jqContent = jQuery(self._contentId);
+        }
+
+        self._scrolls = [];
+        self._buttonsMore = [];
+        self._liveFilters = [];
+        self._sliders = [];
+        self._inlineHorizontalUpdate = [];
+        self._box = box;
+        self._options = options;
+        self._selectOptions = {};
+        self._cache = {
+            lastResponse: {},
+            mainContent: {},
         };
-      }
 
-      fix();
-      // get the actual value with user specific methed
-      // it can be 'width', 'height', 'outerWidth', 'innerWidth'... etc
-      // configs.includeMargin only works for 'outerWidth' and 'outerHeight'
-      var actual = /(outer)/.test( method ) ?
-        $target[ method ]( configs.includeMargin ) :
-        $target[ method ]();
+        self.initResponsive();
 
-      restore();
-      // IMPORTANT, this plugin only return the value of the first element
-      return actual;
+        if (self._options.manualInit && !self._isInit) {
+            var items = self._box.find("> .mfilter-content").find("> ul,> div").hide(),
+                $init = jQuery('<a href="#" style="padding: 10px; text-align: center; display: block;">' + self._options.text.init_filter + "</a>").appendTo(self._box.find("> .mfilter-content"));
+
+            $init.click(function () {
+                $init.text(self._options.text.initializing);
+
+                setTimeout(function () {
+                    items.show();
+                    self.boot();
+                    $init.remove();
+                }, 100);
+
+                return false;
+            });
+        } else {
+            self.boot();
+        }
+
+        self._instanceIdx = MegaFilterINSTANCES.length;
+
+        return self;
+    },
+
+    boot: function () {
+        var self = this;
+
+        self.initUrls();
+
+        for (i in self._options.params) {
+            if (typeof self._options.params[i] == "function") continue;
+
+            if (typeof self._params[i] == "undefined") {
+                self._params[i] = self._options.params[i];
+            }
+        }
+
+        self.initSliders();
+
+        //var t = this.microtime(true);
+        for (i in self) {
+            if (i.indexOf("_init") === 0) {
+                self[i]();
+            }
+        }
+        //alert(this.microtime(true)-t);
+        self._isInit = true;
+    },
+
+    microtime: function (get_as_float) {
+        var now = new Date().getTime() / 1000;
+        var s = parseInt(now, 10);
+
+        return get_as_float ? now : Math.round((now - s) * 1000) / 1000 + " " + s;
+    },
+
+    keys: function (obj, skeys) {
+        var keys = [];
+
+        for (var i = 0; i < skeys.length; i++) {
+            if (typeof obj[skeys[i]] != "undefined") {
+                keys.push(skeys[i]);
+            }
+        }
+
+        return keys;
+    },
+
+    find: function (val, obj) {
+        for (var i in obj) {
+            if (obj[i] == val) {
+                return i;
+            }
+        }
+
+        return -1;
+    },
+
+    base64_decode: function (data) {
+        var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+        var o1,
+            o2,
+            o3,
+            h1,
+            h2,
+            h3,
+            h4,
+            bits,
+            i = 0,
+            ac = 0,
+            dec = "",
+            tmp_arr = [];
+
+        if (!data) {
+            return data;
+        }
+
+        data += "";
+
+        do {
+            // unpack four hexets into three octets using index points in b64
+            h1 = b64.indexOf(data.charAt(i++));
+            h2 = b64.indexOf(data.charAt(i++));
+            h3 = b64.indexOf(data.charAt(i++));
+            h4 = b64.indexOf(data.charAt(i++));
+
+            bits = (h1 << 18) | (h2 << 12) | (h3 << 6) | h4;
+
+            o1 = (bits >> 16) & 0xff;
+            o2 = (bits >> 8) & 0xff;
+            o3 = bits & 0xff;
+
+            if (h3 == 64) {
+                tmp_arr[ac++] = String.fromCharCode(o1);
+            } else if (h4 == 64) {
+                tmp_arr[ac++] = String.fromCharCode(o1, o2);
+            } else {
+                tmp_arr[ac++] = String.fromCharCode(o1, o2, o3);
+            }
+        } while (i < data.length);
+
+        dec = tmp_arr.join("");
+
+        return dec.replace(/\0+$/, "");
+    },
+
+    /**
+     * Inicjuj slidery
+     *
+     * @return void
+     */
+    initSliders: function () {
+        var self = this,
+            _init = false;
+
+        function d(txt) {
+            var $i = jQuery("<div>").html(txt),
+                txt2 = $i.text();
+            $i.remove();
+            return txt2;
+        }
+
+        self._box.find("li.mfilter-filter-item.mfilter-slider").each(function (i) {
+            var _this = jQuery(this).attr("data-slider-id", i),
+                seo_name = _this.attr("data-seo-name"),
+                sdata = jQuery.parseJSON(self.base64_decode(_this.find(".mfilter-slider-data").html())),
+                data = sdata.options,
+                $min = _this.find(".mfilter-opts-slider-min"),
+                $max = _this.find(".mfilter-opts-slider-max"),
+                $slider = _this.find(".mfilter-slider-slider"),
+                _vals_ = null,
+                update = false,
+                keys,
+                values,
+                map;
+
+            function init(data) {
+                keys = self.keys(data, sdata.keys);
+
+                if (_init) {
+                    if (!keys.length) {
+                        $slider.slider();
+                        $slider.slider("disable");
+                        return;
+                    } else {
+                        $slider.slider();
+                        $slider.slider("enable");
+                    }
+                }
+
+                if (keys.length == 1) {
+                    data["copy"] = data[keys[0]];
+                    keys.push("copy");
+                }
+
+                var filters = update ? self.filters() : self.urlToFilters();
+
+                values =
+                    typeof filters[seo_name] != "undefined"
+                        ? (function () {
+                              var d = [];
+
+                              for (var i = 0; i < filters[seo_name].length; i++) {
+                                  d[i] = self.decode(decodeURIComponent(filters[seo_name][i]));
+                              }
+
+                              return d;
+                          })()
+                        : [data[keys[0]].key, data[keys[keys.length - 1]].key];
+                map = (function () {
+                    var m = [keys.indexOf(values[0]), keys.indexOf(values[values.length - 1])];
+
+                    if (m[0] != -1 && m[1] != -1) {
+                        return typeof filters[seo_name] == "undefined" ? [0, keys.length - 1] : m;
+                    }
+
+                    for (var i in data) {
+                        if (m[0] == -1) {
+                            if (values[0] == d(data[i].value)) {
+                                m[0] = self.find(i, keys);
+                                break;
+                            }
+                        }
+                    }
+
+                    for (var i in data) {
+                        if (m[1] == -1) {
+                            if (values[values.length - 1] == d(data[i].value)) {
+                                m[1] = typeof data["copy"] == "undefined" ? self.find(i, keys) : m[0];
+                                break;
+                            }
+                        }
+                    }
+
+                    if (m[0] == -1) {
+                        m[0] = 0;
+                    }
+
+                    if (m[1] == -1) {
+                        m[1] = m[0]; //keys.length-1;
+                    }
+
+                    return m;
+                })();
+
+                $min.attr("data-key", map[0]).attr("data-min", 0).val(d(data[keys[map[0]]].name));
+                $max.attr("data-key", map[1])
+                    .attr("data-max", keys.length - 1)
+                    .val(d(data[keys[map[1]]].name));
+
+                $slider.slider({
+                    range: true,
+                    min: 0,
+                    max: keys.length - 1,
+                    values: map,
+                    slide: function (e, ui) {
+                        $min.attr("data-key", ui.values[0]).val(d(data[keys[ui.values[0]]].name));
+                        $max.attr("data-key", ui.values[1]).val(d(data[keys[ui.values[1]]].name));
+                    },
+                    stop: function (e, ui) {
+                        update = true;
+
+                        _vals_ = null;
+
+                        if (self._options["refreshResults"] != "using_button") {
+                            self.runAjax();
+                        }
+                    },
+                });
+
+                if (_init) {
+                    $slider.slider("value", $slider.slider("value"));
+                }
+
+                _init = true;
+            }
+
+            init(data);
+
+            var s_idx = self._sliders.length;
+
+            self._sliders.push({
+                data: data,
+                init: function (data, update) {
+                    init(data, update);
+                },
+                resetValues: function () {
+                    data = self._sliders[s_idx].data;
+                    keys = self.keys(data, sdata.keys);
+
+                    $min.attr("data-key", 0).attr("data-min", 0).val(d(data[keys[map[0]]].name));
+                    $max.attr("data-key", keys.length - 1)
+                        .attr("data-max", keys.length - 1)
+                        .val(d(data[keys[map[1]]].name));
+
+                    $slider.slider("option", "min", parseInt($min.attr("data-min")));
+                    $slider.slider("option", "max", parseInt($max.attr("data-max")));
+                    $slider.slider("option", "values", [$min.attr("data-min"), $max.attr("data-max")]);
+                    $slider.slider("value", $slider.slider("value"));
+
+                    _vals_ = null;
+
+                    update = true;
+                },
+                setValues: function () {
+                    var vals = $slider.slider("values");
+
+                    $min.attr("data-key", vals[0]).val(d(data[keys[vals[0]]].name));
+                    $max.attr("data-key", vals[1]).val(d(data[keys[vals[1]]].name));
+                },
+                getValues: function () {
+                    if (_vals_) {
+                        return _vals_;
+                    }
+
+                    if (
+                        $min.attr("data-key") == $min.attr("data-min") &&
+                        $max.attr("data-key") == $max.attr("data-max") &&
+                        self.keys(data, sdata.keys).length == self.keys(self._sliders[s_idx].data, sdata.keys).length
+                    ) {
+                        return [];
+                    }
+
+                    _vals_ = [];
+
+                    var min = parseInt($min.attr("data-key")),
+                        max = parseInt($max.attr("data-key")),
+                        vals = [];
+
+                    for (var i = min; i <= max; i++) {
+                        var key = keys[i];
+
+                        if (!key) continue;
+
+                        if (typeof data[key] == "undefined") {
+                            key = keys[0];
+                        }
+
+                        vals.push(encodeURIComponent(self.encode(d(data[key].value))));
+                    }
+
+                    _vals_ = vals;
+
+                    return vals;
+                },
+            });
+        });
+    },
+
+    isModern: function () {
+        if (this._options.displayOptionsAs != "modern_horizontal") {
+            return false;
+        }
+
+        if (!self._box.hasClass("mfilter-content_top")) {
+            return false;
+        }
+
+        return true;
+    },
+
+    initResponsive: function () {
+        var self = this,
+            column = null,
+            moved = false,
+            hidden = true;
+
+        if (self._box.hasClass("mfilter-hide-container")) {
+            column = self._box.parent();
+            self._box.removeClass("mfilter-content_top mfilter-modern-horizontal mfilter-hide");
+        } else if (self._box.hasClass("mfilter-column_left")) {
+            column = jQuery("#column-left");
+        } else if (self._box.hasClass("mfilter-column_right")) {
+            column = jQuery("#column-right");
+        } else {
+            return;
+        }
+
+        var id = "mfilter-free-container-" + jQuery('[id^="mfilter-free-container"]').length,
+            cnt = jQuery('<div class="mfilter-free-container">').prependTo(jQuery("body")),
+            btn = jQuery('<div class="mfilter-free-button">')
+                .appendTo(cnt)
+                .click(function () {
+                    if (hidden) {
+                        cnt.animate(
+                            {
+                                marginLeft: 0,
+                            },
+                            500,
+                            function () {
+                                self._relativeScroll.refresh();
+                            }
+                        );
+                        $("body").css("overflow", "hidden");
+                        $(this).addClass("open");
+                    } else {
+                        cnt.animate(
+                            {
+                                marginLeft: -cnt.outerWidth(true),
+                            },
+                            500
+                        );
+                        $("body").css("overflow", "initial");
+                        $(this).removeClass("open");
+                    }
+
+                    hidden = !hidden;
+                }),
+            cnt2 = jQuery("<div>").css("overflow", "hidden").attr("id", id).appendTo(cnt),
+            cnt3 = jQuery("<div>").appendTo(cnt2),
+            src = jQuery('<span class="mfilter-before-box">');
+
+        self._relativeScroll = new IScroll("#" + id, {
+            bounce: false,
+            scrollbars: true,
+            mouseWheel: true,
+            interactiveScrollbars: true,
+            mouseWheelSpeed: 120,
+        });
+
+        self._box.before(src);
+
+        if (!column.length) column = self._box.parent();
+
+        function isVisible() {
+            var visible = column.is(":visible"),
+                height = jQuery(window).height() - 50;
+
+            if (visible && moved) {
+                cnt.hide();
+
+                src.after(self._box);
+
+                if (self.isModern()) {
+                    self._box.addClass("mfilter-modern-horizontal");
+                }
+
+                if (!hidden) btn.trigger("click");
+
+                moved = false;
+            } else if (!visible && !moved) {
+                cnt.show();
+
+                cnt3.append(self._box.removeClass("mfilter-modern-horizontal"));
+
+                moved = true;
+            }
+
+            if (moved) {
+                cnt2.css("max-height", height + "px");
+                self._relativeScroll.refresh();
+            }
+        }
+
+        jQuery(window).resize(function () {
+            isVisible();
+        });
+
+        isVisible();
+    },
+
+    initUrls: function (url) {
+        var self = this;
+
+        if (typeof url == "undefined") {
+            url = document.location.href.split("#")[0];
+        }
+
+        self._urlSep = self._parseSep(url).urlSep;
+        self._url = self._parseSep(url).url;
+        self._params = self._parseUrl(url);
+        self._inUrl = self._parseUrl(url);
+    },
+
+    _initMfImage: function () {
+        var self = this;
+
+        self._box.find(".mfilter-image input").change(function () {
+            var s = jQuery(this).is(":checked");
+
+            jQuery(this).parent()[s ? "addClass" : "removeClass"]("mfilter-image-checked");
+        });
+
+        self._box.find(".mfilter-image input:checked").parent().addClass("mfilter-image-checked");
+    },
+
+    __initTreeCategoryEvents: function () {
+        var self = this,
+            $path = self._box.find('input[name="path"]');
+
+        self._box.find("li.mfilter-filter-item.mfilter-tree.mfilter-categories:not(.mfilter-hide)")[self._box.find(".mfilter-category-tree > ul > li").length ? "show" : "hide"]();
+
+        self._box.find(".mfilter-category-tree").each(function () {
+            var _this = jQuery(this),
+                ul = _this.find("> ul"),
+                top_url = ul.attr("data-top-url"),
+                top_path = ul.attr("data-top-path").split("_");
+
+            _this
+                .find(".mfilter-to-parent a")
+                .unbind("click")
+                .bind("click", function () {
+                    var parts = $path.val().split("_");
+
+                    parts.pop();
+
+                    if (top_url != "" && parts.length <= top_path.length) {
+                        window.location.href = self.createUrl(top_url);
+                    } else {
+                        $path.val(parts.join("_"));
+
+                        self.runAjax();
+                    }
+
+                    return false;
+                });
+
+            _this.find("a[data-parent-id]").click(function () {
+                if (self._busy) return false;
+
+                var id = jQuery(this).attr("data-id"),
+                    path = $path.val();
+
+                if (path != "") {
+                    path += "_";
+                }
+
+                path += id;
+
+                $path.val(path);
+
+                self.runAjax();
+
+                return false;
+            });
+        });
+    },
+
+    _initTreeCategory: function (force) {
+        var self = this,
+            $path = self._box.find('input[name="path"]');
+
+        if (self._isInit && force !== true) {
+            self.__initTreeCategoryEvents();
+
+            return;
+        }
+
+        if (!$path.val()) {
+            $path.val(typeof self._options.params.path == "undefined" ? "" : self._options.params.path);
+        }
+
+        self._box.find(".mfilter-category-tree").each(function () {
+            if ($path.val().indexOf("_") > -1 || ($path.val() && !self._options.params.path)) {
+                jQuery(this)
+                    .find("ul")
+                    .prepend(jQuery('<li class="mfilter-to-parent">').append(jQuery("<a>").text(self._options.text.go_to_top)));
+            }
+        });
+
+        self.__initTreeCategoryEvents();
+    },
+
+    _initBox: function () {
+        var self = this;
+
+        if (self._isInit) return;
+
+        if (this._options.displayOptionsAs == "modern_horizontal") return;
+
+        if (self._box.hasClass("mfilter-content_top")) {
+            self._box.find(".mfilter-content > ul > li").each(function (i) {
+                if (i && i % 4 == 0) {
+                    jQuery(this).before('<li style="clear:both; display:block;"></li>');
+                }
+            });
+        }
+    },
+
+    _initSearchFiled: function () {
+        var self = this,
+            searchField = self._box.find('input[id="mfilter-opts-search"]'),
+            searchButton = self._box.find('[id="mfilter-opts-search_button"]');
+
+        if (!searchField.length) return;
+
+        var refreshDelay = parseInt(
+                searchField
+                    .unbind("keyup keydown click")
+                    .attr("data-refresh-delay")
+                    .toString()
+                    .replace(/[^0-9]+/, "")
+            ),
+            lastValue = searchField.val();
+
+        function clearInt() {
+            if (self._timeoutSearchFiled) clearTimeout(self._timeoutSearchFiled);
+
+            self._timeoutSearchFiled = null;
+        }
+
+        if (refreshDelay != "-1") {
+            searchField.bind("keyup", function (e) {
+                if (jQuery(this).val() == lastValue) return;
+
+                if (!refreshDelay) {
+                    self.ajax();
+                } else if (e.keyCode != 13) {
+                    clearInt();
+
+                    self._timeoutSearchFiled = setTimeout(function () {
+                        self.ajax();
+
+                        self._timeoutSearchFiled = null;
+                    }, refreshDelay);
+                }
+
+                lastValue = searchField.val();
+            });
+        }
+
+        searchField
+            .bind("keydown", function (e) {
+                if (e.keyCode == 13) {
+                    clearInt();
+
+                    self.ajax();
+
+                    return false;
+                }
+            })
+            .bind("keyup.mf_shv", function () {
+                jQuery(this)[jQuery(this).val() ? "addClass" : "removeClass"]("mfilter-search-has-value");
+            })
+            .trigger("keyup.mf_shv");
+
+        searchButton.bind("click", function () {
+            clearInt();
+
+            self.ajax();
+
+            return false;
+        });
+    },
+
+    encode: function (string) {
+        string = string.replace(/,/g, "LA==");
+        string = string.replace(/\[/g, "Ww==");
+        string = string.replace(/\]/g, "XQ==");
+
+        return string;
+    },
+
+    decode: function (string) {
+        string = string.replace(/LA==/g, ",");
+        string = string.replace(/Ww==/g, "[");
+        string = string.replace(/XQ==/g, "]");
+
+        return string;
+    },
+
+    _parseSep: function (url) {
+        var self = this,
+            urlSep = null;
+
+        if (typeof url == "undefined") url = self._url;
+
+        if (!self._options.smp.isInstalled || self._options.smp.disableConvertUrls) {
+            url = self.parse_url(url);
+            url = url.scheme + "://" + url.host + (url.port ? ":" + url.port : "") + url.path;
+            url = url.split("&")[0];
+        } else {
+            url = url.indexOf("?") > -1 ? url.split("?")[0] : url.split(";")[0];
+        }
+
+        urlSep = {
+            f: "?",
+            n: "&",
+        };
+
+        return {
+            url: url,
+            urlSep: urlSep,
+        };
+    },
+
+    /**
+     * Inicjuj kontener
+     */
+    _initContent: function () {
+        var self = this;
+
+        self._jqContent.css("position", "relative");
+    },
+
+    /**
+     * @return {scheme: 'http', host: 'hostname', user: 'username', pass: 'password', path: '/path', query: 'arg=value', fragment: 'anchor'}
+     */
+    parse_url: function (str, component) {
+        var query,
+            key = ["source", "scheme", "authority", "userInfo", "user", "pass", "host", "port", "relative", "path", "directory", "file", "query", "fragment"],
+            ini = (this.php_js && this.php_js.ini) || {},
+            mode = (ini["phpjs.parse_url.mode"] && ini["phpjs.parse_url.mode"].local_value) || "php",
+            parser = {
+                php: /^(?:([^:\/?#]+):)?(?:\/\/()(?:(?:()(?:([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?))?()(?:(()(?:(?:[^?#\/]*\/)*)()(?:[^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,
+                strict: /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,
+                loose: /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/\/?)?((?:(([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/, // Added one optional slash to post-scheme to catch file:/// (should restrict this)
+            };
+
+        var m = parser[mode].exec(str),
+            uri = {},
+            i = 14;
+        while (i--) {
+            if (m[i]) {
+                uri[key[i]] = m[i];
+            }
+        }
+
+        if (component) {
+            return uri[component.replace("PHP_URL_", "").toLowerCase()];
+        }
+        if (mode !== "php") {
+            var name = (ini["phpjs.parse_url.queryKey"] && ini["phpjs.parse_url.queryKey"].local_value) || "queryKey";
+            parser = /(?:^|&)([^&=]*)=?([^&]*)/g;
+            uri[name] = {};
+            query = uri[key[12]] || "";
+            query.replace(parser, function ($0, $1, $2) {
+                if ($1) {
+                    uri[name][$1] = $2;
+                }
+            });
+        }
+        delete uri.source;
+        return uri;
+    },
+
+    baseTypes: function () {
+        var self = this,
+            types = [];
+
+        function find(self) {
+            self._box.find("[data-base-type]").each(function () {
+                var baseType = jQuery(this).attr("data-base-type"),
+                    type = jQuery(this).attr("data-type");
+
+                if (baseType == "categories") {
+                    baseType += ":" + type;
+                }
+
+                if (types.indexOf(baseType) > -1) return;
+
+                types.push(baseType);
+            });
+        }
+
+        find(self);
+
+        for (var i = 0; i < MegaFilterINSTANCES.length; i++) {
+            if (i == self._instanceIdx) continue;
+
+            find(MegaFilterINSTANCES[i]);
+        }
+
+        return types;
+    },
+
+    _ajaxUrl: function (url) {
+        return url;
+
+        var parts = url.split("/");
+
+        for (i = 0; i < parts.length; i++) {
+            if (/page-[0-9]+/.test(parts[i])) {
+                console.log(parts[i]);
+                delete parts[i];
+            }
+        }
+
+        url = parts.join("/");
+
+        if (!this._options.mijoshop) return url;
+
+        return url + (url.indexOf("?") > -1 ? "&" : "?") + "option=com_mijoshop&format=raw";
+    },
+
+    /**
+     * Inicjuj informacje o ilości
+     */
+    _initCountInfo: function () {
+        var self = this;
+
+        if (!self._options.calculateNumberOfProducts || self._isInit) return;
+
+        jQuery.ajax({
+            url: self._ajaxUrl(self.createUrl(self._options.ajaxInfoUrl, jQuery.extend({}, self._params), true)),
+            type: "GET",
+            data: {
+                mfilterIdx: self._options.idx,
+                mfilterRoute: self._options.route,
+                mfilterBTypes: self.baseTypes().join(","),
+            },
+            success: function (response) {
+                self._parseInfo(response);
+
+                self._cache.mainContent[document.location] = {
+                    html: self._jqContent.html(),
+                    json: response,
+                };
+            },
+            error: function () {},
+        });
+
+        self._parseInfo('{"stock_status":[],"manufacturers":[],"rating":[],"attributes":[],"options":[],"filters":[]}', true);
+    },
+
+    _parseInfo: function (data, first) {
+        var self = this,
+            filters = self.filters(),
+            json = jQuery.parseJSON(data);
+
+        for (var i in json) {
+            switch (i) {
+                case "categories:tree": {
+                    self._box.find(".mfilter-category-tree > ul > li").remove();
+
+                    for (var j = 0; j < json[i].length; j++) {
+                        if (self._options.hideInactiveValues && json[i][j].cnt == "0") continue;
+
+                        self._box.find(".mfilter-category-tree > ul").append(
+                            jQuery('<li class="mfilter-tb-as-tr">')
+                                .append(jQuery('<div class="mfilter-tb-as-td">').append(jQuery("<a>").attr("data-id", json[i][j].id).attr("data-parent-id", json[i][j].pid).html(json[i][j].name)))
+                                .append('<div class="mfilter-tb-as-td mfilter-col-count"><span class="mfilter-counter">' + json[i][j].cnt + "</span></div>")
+                        );
+                    }
+
+                    self._initTreeCategory(true);
+
+                    break;
+                }
+                case "price": {
+                    var priceRange = self.getPriceRange();
+
+                    if (priceRange.min == self._options.priceMin && priceRange.max == self._options.priceMax) {
+                        self._box.find('[id="mfilter-opts-price-min"]').val(json[i].min);
+                        self._box.find('[id="mfilter-opts-price-max"]').val(json[i].max);
+                    }
+
+                    self._options.priceMin = json[i].min;
+                    self._options.priceMax = json[i].max;
+
+                    self._refreshPrice();
+
+                    break;
+                }
+                case "rating":
+                case "attributes":
+                case "filters":
+                case "options":
+                case "manufacturers":
+                case "stock_status": {
+                    self._box.find(".mfilter-filter-item.mfilter-" + i).each(function () {
+                        var $item = jQuery(this),
+                            seo = $item.attr("data-seo-name"),
+                            id = $item.attr("data-id"),
+                            $items = $item.find(".mfilter-options .mfilter-option"),
+                            hidden = 0;
+
+                        $items.each(function () {
+                            var $self = jQuery(this),
+                                $input = $self.find("input[type=checkbox],input[type=radio],select"),
+                                val = $input.val(),
+                                $counter = jQuery(this).find(".mfilter-counter"),
+                                text = "",
+                                cnt = json[i];
+
+                            if (id && typeof cnt[id] != "undefined") {
+                                cnt = cnt[id];
+                            }
+
+                            if ($self.hasClass("mfilter-select")) {
+                                var $options = $input.find("option"),
+                                    hOptions = 0,
+                                    val = $input.val(),
+                                    idx = $input.prop("selectedIndex");
+
+                                if (typeof self._selectOptions[seo] == "undefined") {
+                                    self._selectOptions[seo] = [];
+
+                                    $options.each(function () {
+                                        self._selectOptions[seo].push({
+                                            name: jQuery(this).attr("data-name"),
+                                            id: jQuery(this).attr("id"),
+                                            value: jQuery(this).attr("value"),
+                                            text: jQuery(this).html(),
+                                        });
+                                    });
+                                }
+
+                                $options.remove();
+
+                                (function () {
+                                    function add($option) {
+                                        $input.append($option);
+
+                                        if (val == $option.val()) {
+                                            idx = $input.find("option").length - 1;
+                                        }
+                                    }
+
+                                    for (var i = 0; i < self._selectOptions[seo].length; i++) {
+                                        var $option = jQuery("<option>").attr("value", self._selectOptions[seo][i].value);
+
+                                        if (self._selectOptions[seo][i].name) {
+                                            $option.attr("data-name", self._selectOptions[seo][i].name);
+                                        }
+
+                                        if (self._selectOptions[seo][i].id) {
+                                            $option.attr("id", self._selectOptions[seo][i].id);
+                                        }
+
+                                        if (self._selectOptions[seo][i].id) {
+                                            var idd = self._selectOptions[seo][i].id.split("-").pop();
+
+                                            if (first || typeof cnt[idd] != "undefined") {
+                                                $option.html((!first && self._options.showNumberOfProducts ? "(" + cnt[idd] + ") " : "") + self._selectOptions[seo][i].name);
+
+                                                add($option);
+                                            } else {
+                                                $option.attr("disabled", true).html((self._options.showNumberOfProducts ? "(0)" : "") + self._selectOptions[seo][i].name);
+
+                                                if (!self._options.hideInactiveValues) {
+                                                    add($option);
+                                                }
+
+                                                hOptions++;
+                                            }
+                                        } else {
+                                            $option.html(self._selectOptions[seo][i].text);
+                                            add($option);
+                                        }
+                                    }
+                                })();
+
+                                if (idx >= 0) {
+                                    $input.prop("selectedIndex", idx);
+                                }
+
+                                if (hOptions == self._selectOptions[seo].length) {
+                                    hidden++;
+                                }
+                            } else if ($self.hasClass("mfilter-slider")) {
+                                //if( self._options.hideInactiveValues ) {
+                                self._box.find('[data-id="' + id + '"][data-slider-id]').each(function () {
+                                    var slider_id = jQuery(this).attr("data-slider-id"),
+                                        data = {};
+
+                                    for (var i in self._sliders[slider_id].data) {
+                                        if (typeof cnt != "undefined" && typeof cnt[i] != "undefined" && parseInt(cnt[i]) > 0) {
+                                            data[i] = self._sliders[slider_id].data[i];
+                                        }
+                                    }
+
+                                    self._sliders[slider_id].init(data, true);
+                                });
+                                //}
+                            } else {
+                                var idd = $input.attr("id").split("-").pop();
+
+                                if (typeof filters[seo] != "undefined") {
+                                    if (filters[seo].indexOf(encodeURIComponent(self.encode(val))) > -1) {
+                                        $counter.addClass("mfilter-close");
+                                    } else {
+                                        if (!$item.hasClass("mfilter-radio") && !$item.hasClass("mfilter-image_list_radio") /*&& base_type != 'option'*/) text += "+";
+
+                                        $counter.removeClass("mfilter-close");
+                                    }
+                                } else {
+                                    $counter.removeClass("mfilter-close");
+                                }
+
+                                $self.removeClass("mfilter-first-child mfilter-last-child mfilter-disabled mfilter-hide mfilter-visible");
+                                $self.parent().removeClass("mfilter-hide");
+
+                                if (typeof cnt[idd] != "undefined" && parseInt(cnt[idd]) > 0) {
+                                    text += cnt[idd];
+
+                                    $self.addClass("mfilter-visible");
+                                    $input.attr("disabled", false);
+                                } else {
+                                    text = "0";
+                                    hidden++;
+
+                                    $self.addClass("mfilter-disabled");
+                                    $input.attr("disabled", true);
+
+                                    if (first !== true && self._options.hideInactiveValues) {
+                                        $self.addClass("mfilter-hide");
+
+                                        if (self._box.hasClass("mfilter-content_top")) {
+                                            $self.parent().addClass("mfilter-hide");
+                                        }
+                                    }
+                                }
+
+                                $counter.text(text);
+                            }
+                        });
+
+                        if (first !== true && self._options.hideInactiveValues) {
+                            $item[hidden == $items.length ? "addClass" : "removeClass"]("mfilter-hide");
+                            $item.find(".mfilter-option").not(".mfilter-hide,.mfilter-hide-by-live-filter").first().addClass("mfilter-first-child");
+                            $item.find(".mfilter-option").not(".mfilter-hide,.mfilter-hide-by-live-filter").last().addClass("mfilter-last-child");
+                        }
+                    });
+
+                    break;
+                }
+            }
+        }
+
+        if (first !== true && (self._options.hideInactiveValues || self._box.find('[data-display-live-filter!="0"]').length)) {
+            for (var s = 0; s < self._scrolls.length; s++) {
+                self._scrolls[s].refresh();
+            }
+
+            for (var b = 0; b < self._buttonsMore.length; b++) {
+                self._buttonsMore[b].refresh();
+            }
+
+            for (var f = 0; f < self._liveFilters.length; f++) {
+                self._liveFilters[f].refresh();
+            }
+
+            if (self._relativeScroll != null) {
+                self._relativeScroll.refresh();
+            }
+        }
+
+        self._updateInlineHorizontal();
+    },
+
+    _initAlwaysSearch: function () {
+        var self = this;
+
+        function search() {
+            self._jqContent.find("[name^=filter_],[name=search],[name=category_id],[name=sub_category],[name=description]").each(function () {
+                var name = jQuery(this).attr("name"),
+                    value = jQuery(this).val(),
+                    type = jQuery(this).attr("type");
+
+                if (["checkbox", "radio"].indexOf(type) > -1 && !jQuery(this).is(":checked")) value = "";
+
+                if (name) {
+                    self._inUrl[name] = value;
+                    self._params[name] = value;
+                }
+            });
+
+            self.reload();
+            //self.ajax();
+        }
+
+        jQuery("#button-search")
+            .unbind("click")
+            .click(function (e) {
+                e.preventDefault();
+
+                search();
+            });
+
+        self._jqContent
+            .find("input[name=filter_name],input[name=search]")
+            .unbind("keydown")
+            .unbind("keyup")
+            .bind("keydown", function (e) {
+                if (e.keyCode == 13) {
+                    e.preventDefault();
+
+                    search();
+                }
+            });
+    },
+
+    __initLoader: function () {
+        this._jqLoader = jQuery('<span style="cursor: wait; z-index: 100; margin: 0; padding: 0; position: absolute; text-align: center; background-color: rgba(255,255,255,0.7);"></span>')
+            .prependTo(this._jqContent)
+            .html('<img src="catalog/view/theme/default/stylesheet/mf/images/ajax-loader.gif" alt="" />')
+            .hide();
+    },
+
+    __initLoaderFilter: function () {
+        this._jqLoaderFilter = jQuery('<span style="cursor: wait; z-index: 10000; margin: 0; padding: 0; position: absolute; background-color: rgba(255,255,255,0.7);"></span>')
+            .prependTo(this._box)
+            .hide();
+    },
+
+    /**
+     * Inicjuj wyświetlanie listy
+     */
+    _initDisplayItems: function () {
+        var self = this,
+            params = self.urlToFilters();
+
+        self._box.find(".mfilter-filter-item").each(function (i) {
+            var _level0 = jQuery(this),
+                type = _level0.attr("data-type"),
+                seo_name = _level0.attr("data-seo-name"),
+                displayLiveFilter = parseInt(_level0.attr("data-display-live-filter")),
+                displayListOfItems = _level0.attr("data-display-list-of-items");
+
+            if (!displayListOfItems) {
+                displayListOfItems = self._options.displayListOfItems.type;
+            }
+
+            if (type == "price" || type == "rating") return;
+
+            var wrapper = _level0.find(".mfilter-content-wrapper"),
+                content = _level0.find("> .mfilter-content-opts"),
+                heading = _level0.find("> .mfilter-heading"),
+                idx = null;
+
+            if (!self._box.hasClass("mfilter-content_top") && heading.hasClass("mfilter-collapsed")) {
+                if (typeof params[seo_name] == "undefined") {
+                    content.show();
+                }
+            }
+
+            if (displayListOfItems == "scroll") {
+                if (wrapper.actual("outerHeight", { includeMargin: true }) > self._options.displayListOfItems.maxHeight) {
+                    if (jQuery.browser && jQuery.browser.msie && jQuery.browser.version < 9) {
+                        wrapper.css({
+                            "max-height": self._options.displayListOfItems.maxHeight + "px",
+                            "overflow-y": "scroll",
+                        });
+                    } else {
+                        wrapper
+                            .attr("id", "mfilter-content-opts-" + i)
+                            .addClass("mfilter-iscroll")
+                            .css("max-height", self._options.displayListOfItems.maxHeight + "px");
+
+                        (function () {
+                            var iscroll = new IScroll("#mfilter-content-opts-" + i, {
+                                    bounce: false,
+                                    scrollbars: true,
+                                    mouseWheel: true,
+                                    interactiveScrollbars: true,
+                                    mouseWheelSpeed: 120,
+                                }),
+                                start = false;
+
+                            iscroll.on("moveStart", function (e) {
+                                if (!start) return;
+
+                                self._relativeScroll._end(e);
+
+                                start = false;
+                            });
+
+                            iscroll.on("moveStop", function (e) {
+                                if (start) return;
+
+                                self._relativeScroll._start(e);
+
+                                start = true;
+                            });
+
+                            iscroll.on("scrollEnd", function (e) {
+                                if (e == null) return;
+
+                                self._relativeScroll._end(e);
+
+                                start = false;
+                            });
+
+                            idx = self._scrolls.length;
+
+                            self._scrolls.push({
+                                refresh: function () {
+                                    iscroll.refresh();
+                                },
+                            });
+
+                            _level0.attr("data-scroll-idx", idx);
+                        })();
+                    }
+                }
+            } else if (displayListOfItems == "button_more" && !self._box.hasClass("mfilter-content_top") && type != "image") {
+                self._buttonsMore.push(
+                    (function (_level0) {
+                        function init(first) {
+                            var lessHeight = 0,
+                                moreHeight = 0,
+                                show = false,
+                                count = 0,
+                                idx = 0;
+
+                            _level0.find(".mfilter-option").each(function (i) {
+                                var _this = jQuery(this);
+
+                                if (_this.hasClass("mfilter-hide") || _this.hasClass("mfilter-hide-by-live-filter")) return;
+
+                                var h = _this.actual("outerHeight", { includeMargin: true });
+
+                                moreHeight += h;
+
+                                if (idx >= self._options.displayListOfItems.limit_of_items) {
+                                    lessHeight += h;
+                                    count++;
+                                }
+
+                                idx++;
+                            });
+
+                            lessHeight = moreHeight - lessHeight;
+
+                            if (count) {
+                                wrapper.css("overflow", "hidden").css("height", lessHeight + "px");
+
+                                function sh(show, force) {
+                                    if (force) {
+                                        wrapper.height(moreHeight);
+                                    } else {
+                                        wrapper.animate(
+                                            {
+                                                height: !show ? moreHeight : lessHeight,
+                                            },
+                                            500,
+                                            function () {
+                                                if (self._relativeScroll != null) self._relativeScroll.refresh();
+                                            }
+                                        );
+                                    }
+
+                                    _level0.find("a.mfilter-button-more").text(show ? self._options.displayListOfItems.textMore.replace("%s", count) : self._options.displayListOfItems.textLess);
+                                }
+
+                                _level0.find(".mfilter-content-opts").append(
+                                    jQuery("<div>")
+                                        .addClass("mfilter-button-more")
+                                        .append(
+                                            jQuery("<a>")
+                                                .attr("href", "#")
+                                                .addClass("mfilter-button-more")
+                                                .text(self._options.displayListOfItems.textMore.replace("%s", count))
+                                                .bind("click", function () {
+                                                    sh(show);
+
+                                                    show = !show;
+
+                                                    wrapper[show ? "addClass" : "removeClass"]("mfilter-slide-down");
+
+                                                    return false;
+                                                })
+                                        )
+                                );
+
+                                if (wrapper.hasClass("mfilter-slide-down")) {
+                                    sh(false, true);
+                                    show = true;
+                                }
+                            }
+                        }
+
+                        init(true);
+
+                        idx = self._buttonsMore.length;
+
+                        return {
+                            refresh: function () {
+                                _level0.find(".mfilter-content-wrapper").removeAttr("style");
+                                _level0.find(".mfilter-button-more").remove();
+
+                                init();
+                            },
+                        };
+                    })(_level0)
+                );
+            }
+
+            (function () {
+                if (self._box.hasClass("mfilter-content_top") && self._options.displayOptionsAs != "modern_horizontal") {
+                    return;
+                }
+
+                if (displayLiveFilter < 1 || content.find(".mfilter-option").length < displayLiveFilter) {
+                    displayLiveFilter = 0;
+
+                    return;
+                }
+
+                content.prepend(jQuery('<div class="mfilter-live-filter">').append(jQuery('<input type="text" id="mfilter-live-filter-input-' + i + '" />')));
+                wrapper.find("> .mfilter-options > div").attr("id", "mfilter-live-filter-list-" + i);
+
+                jQuery("#mfilter-live-filter-list-" + i).liveFilter("#mfilter-live-filter-input-" + i, ".mfilter-visible,.mfilter-should-visible,.mfilter-disabled,.mfilter-option", {
+                    filterChildSelector: "label",
+                    after: function (contains, containsNot) {
+                        var list = jQuery("#mfilter-live-filter-list-" + i);
+
+                        contains.removeClass("mfilter-should-visible").addClass("mfilter-visible");
+                        containsNot.removeClass("mfilter-visible").addClass("mfilter-should-visible");
+
+                        list.find("> .mfilter-option").removeClass("mfilter-first-child mfilter-last-child");
+
+                        list.find("> .mfilter-option:not(.mfilter-hide):not(.mfilter-hide-by-live-filter):first").addClass("mfilter-first-child");
+                        list.find("> .mfilter-option:not(.mfilter-hide):not(.mfilter-hide-by-live-filter):last").addClass("mfilter-last-child");
+
+                        if (idx !== null) {
+                            if (displayListOfItems == "scroll") {
+                                self._scrolls[idx].refresh();
+                            } else if (displayListOfItems == "button_more") {
+                                self._buttonsMore[idx].refresh();
+                            }
+                        }
+
+                        if (self._relativeScroll != null) {
+                            self._relativeScroll.refresh();
+                        }
+                    },
+                });
+
+                _level0.addClass("mfilter-live-filter-init");
+
+                self._liveFilters.push({
+                    refresh: function () {
+                        var show = content.find(".mfilter-option:not(.mfilter-hide)").length <= displayLiveFilter;
+
+                        content.find(".mfilter-live-filter")[show ? "hide" : "show"]();
+
+                        if (!show) {
+                            _level0.addClass("mfilter-live-filter-enabled");
+                        } else {
+                            _level0.removeClass("mfilter-live-filter-enabled");
+                        }
+                    },
+                    check: function () {
+                        jQuery("#mfilter-live-filter-input-" + i).trigger("keyup");
+                    },
+                });
+
+                self._liveFilters[self._liveFilters.length - 1].refresh();
+            })();
+
+            if (!self._box.hasClass("mfilter-content_top") && heading.hasClass("mfilter-collapsed")) {
+                if (typeof params[seo_name] == "undefined") {
+                    content.hide();
+                }
+            }
+        });
+    },
+
+    /**
+     * Inicjuj nagłówki
+     */
+    _initHeading: function () {
+        var self = this;
+
+        if (self._box.hasClass("mfilter-content_top")) return;
+
+        self._box.find(".mfilter-heading").click(function () {
+            var _this = jQuery(this),
+                opts = _this.parent().find("> .mfilter-content-opts");
+
+            if (_this.hasClass("mfilter-collapsed")) {
+                opts.slideDown("normal", function () {
+                    if (self._relativeScroll != null) {
+                        self._relativeScroll.refresh();
+                    }
+
+                    if (_this.parent().attr("data-scroll-idx")) {
+                        self._scrolls[_this.parent().attr("data-scroll-idx")].refresh();
+                    }
+                });
+                _this.removeClass("mfilter-collapsed");
+            } else {
+                opts.slideUp("normal", function () {
+                    if (self._relativeScroll != null) {
+                        self._relativeScroll.refresh();
+                    }
+                });
+                _this.addClass("mfilter-collapsed");
+            }
+        });
+    },
+
+    _updateInlineHorizontal: function () {
+        for (var i = 0; i < this._inlineHorizontalUpdate.length; i++) {
+            this._inlineHorizontalUpdate[i]();
+        }
+    },
+
+    _initModernHorizontal: function () {
+        var self = this;
+
+        if (this._options.displayOptionsAs != "modern_horizontal") {
+            return;
+        }
+
+        if (!self._box.hasClass("mfilter-content_top") || self._box.hasClass("mfilter-modern-horizontal")) {
+            return;
+        }
+
+        self._box.addClass("mfilter-modern-horizontal").removeClass("mfilter-hide");
+
+        self._box.find(".mfilter-content > ul").append('<li class="mfilter-clearfix">');
+
+        self._box.find(".mfilter-heading").click(function () {
+            var opened = jQuery(this).attr("data-opened") == "1" ? true : false,
+                $content = jQuery(this).next();
+
+            jQuery(this).width(jQuery(this).width());
+
+            self._box.find(".mfilter-heading[data-opened=1]").next().addClass("mfilter-hide-by-modern");
+            self._box.find(".mfilter-heading[data-opened=1]").attr("data-opened", "0").removeClass("mfilter-opened");
+
+            $content.find(".mfilter-content-wrapper").css("min-width", jQuery(this).width());
+
+            if (opened) {
+                $content.hide();
+            } else {
+                $content.show();
+            }
+
+            jQuery(this)
+                .attr("data-opened", opened ? "0" : "1")
+                [opened ? "removeClass" : "addClass"]("mfilter-opened");
+            self._box.find(".mfilter-heading[data-opened=0]").removeAttr("style").next().removeAttr("style");
+        });
+
+        if (self._box.find(".mfilter-content > ul > li:not(.mfilter-clearfix)").length > 4) {
+            function modernPlus() {
+                self._box.addClass("mfilter-modern-closed");
+
+                self._box.find(".mfilter-content > ul > li:eq(3)").after(
+                    jQuery('<li class="mfilter-modern-plus"><span></span></li>').click(function () {
+                        jQuery(this).remove();
+                        self._box.removeClass("mfilter-modern-closed");
+
+                        self._box.find(".mfilter-content > ul > li:not(.mfilter-clearfix)").removeClass("mfilter-hide-by-modern");
+
+                        self._box.find(".mfilter-content > ul > li:last").before(
+                            jQuery('<li class="mfilter-modern-minus"><span></span></li>').click(function () {
+                                jQuery(this).remove();
+                                modernPlus();
+
+                                return false;
+                            })
+                        );
+
+                        return false;
+                    })
+                );
+
+                self._box.find(".mfilter-content > ul > li:not(.mfilter-clearfix)").each(function (i) {
+                    if (i > 4) {
+                        jQuery(this).addClass("mfilter-hide-by-modern");
+                    }
+                });
+            }
+
+            modernPlus();
+        }
+    },
+
+    _initInlineHorizontal: function () {
+        var self = this;
+
+        if (!self._box.hasClass("mfilter-content_top")) {
+            return;
+        }
+
+        self._box.find('li[data-display-options-as="inline_horizontal"][data-type="checkbox"],li[data-display-options-as="inline_horizontal"][data-type="radio"]').each(function () {
+            var $container = jQuery(this).addClass("mfilter-inline-horizontal").find(".mfilter-opts-container"),
+                $wrapper = $container.find("> .mfilter-content-wrapper"),
+                $options = $wrapper.find("> .mfilter-options"),
+                $optionsCnt = $options.find("> .mfilter-options-container"),
+                $tb = $optionsCnt.find("> .mfilter-tb"),
+                left = 0;
+
+            function width() {
+                var w = 0,
+                    b = false;
+
+                left = 0;
+
+                $tb.find("> .mfilter-tb").each(function () {
+                    var ww = jQuery(this).outerWidth(true);
+
+                    if (self._lastEvent) {
+                        var $el = jQuery(this).find('[id="' + self._lastEvent + '"]');
+
+                        if ($el.length) {
+                            b = true;
+                        } else if (!b) {
+                            left += ww;
+                        }
+                    }
+
+                    w += ww;
+                });
+
+                return w;
+            }
+
+            self._inlineHorizontalUpdate[self._inlineHorizontalUpdate.length] = function () {
+                $optionsCnt.removeAttr("style");
+                $tb.removeAttr("style").css("margin-left", $tb.attr("data-mgr") + "px");
+
+                o1 = w1;
+                o2 = w2;
+
+                w1 = $optionsCnt.width();
+                w2 = width();
+
+                $optionsCnt.css("width", w1);
+                $tb.css("width", w2 + fix);
+
+                if (w2 > w1) {
+                    $right.addClass("mf-active");
+
+                    if (x >= w2 - w1 && $left.hasClass("mf-active")) {
+                        t = 0;
+                        $right.trigger("click");
+                    } else if (self._lastEvent) {
+                        var $el = $tb.find('[id="' + self._lastEvent + '"]');
+
+                        if ($el.length) {
+                            var w = $el.parent().parent().parent().outerWidth(true);
+
+                            if (x > left) {
+                                t = 0;
+                                x = left - w + w1;
+                                $left.trigger("click");
+                            } else if (x + w1 < left + w) {
+                                t = 0;
+                                x = x + w * 2 - w1;
+                                $right.trigger("click");
+                            }
+                        }
+                    }
+                } else {
+                    t = x = 0;
+                    $left.addClass("mf-active").trigger("click");
+                    $right.removeClass("mf-active");
+                }
+
+                /*if( ! $right.hasClass('mf-active') ) {
+					if( w2 > w1 ) {
+						//t=0;
+						$right.addClass('mf-active');//.trigger('click');
+					} else {
+						t=x=0;
+						$left.addClass('mf-active').trigger('click');
+						//$right.removeClass('mf-active');
+					}
+				} else {
+					if( w2 <= w1 ) {
+						$right.removeClass('mf-active');
+					}
+				}*/
+            };
+
+            var $left = jQuery('<a href="#"></a>'),
+                $right = jQuery('<a href="#"></a>');
+
+            $wrapper.prepend(jQuery('<div class="mfilter-scroll-left"></div>').append($left));
+            $wrapper.append(jQuery('<div class="mfilter-scroll-right"></div>').append($right));
+
+            var w1 = $optionsCnt.width(),
+                w2 = width(),
+                o1 = -1,
+                o2 = -1,
+                x = 0,
+                fix = 50,
+                t = "normal";
+
+            if (w2 > w1) {
+                $right.addClass("mf-active");
+            }
+
+            $optionsCnt.css("width", w1);
+            $tb.css("width", w2 + fix).attr("data-mgr", "0");
+
+            $left.click(function () {
+                var $self = jQuery(this);
+
+                if (!$self.hasClass("mf-active")) return false;
+
+                x -= w1;
+
+                if (x <= 0) {
+                    x = 0;
+                    $self.removeClass("mf-active");
+                }
+
+                $tb.attr("data-mgr", -x).stop().animate(
+                    {
+                        marginLeft: -x,
+                    },
+                    t
+                );
+
+                t = "normal";
+
+                $right.addClass("mf-active");
+
+                return false;
+            });
+            $right.click(function () {
+                var $self = jQuery(this);
+
+                if (!$self.hasClass("mf-active")) return false;
+
+                x += w1;
+
+                if (x >= w2 - w1) {
+                    x = w2 - w1;
+                    $self.removeClass("mf-active");
+                }
+
+                $tb.attr("data-mgr", -x).stop().animate(
+                    {
+                        marginLeft: -x,
+                    },
+                    t
+                );
+
+                t = "normal";
+
+                $left.addClass("mf-active");
+
+                return false;
+            });
+        });
+    },
+
+    _initCategoryRelated: function () {
+        var self = this;
+
+        self._box.find(".mfilter-filter-item.mfilter-related").each(function () {
+            var $li = jQuery(this),
+                seoName = $li.attr("data-seo-name"),
+                autoLevels = $li.attr("data-auto-levels"),
+                fields = $li.find('select[data-type="category-related"]');
+
+            fields.each(function (i) {
+                if (!autoLevels && i == fields.length - 1) {
+                    jQuery(this).change(function () {
+                        if (self._options["refreshResults"] != "using_button") {
+                            self.runAjax();
+                        }
+                    });
+                } else {
+                    function eChange($self, id) {
+                        var $this = $self.parent().attr("data-id", id),
+                            labels = $this.parent().attr("data-labels").split("#|#");
+
+                        $self.change(function () {
+                            var cat_id = $self.val();
+
+                            $next = $this.next().find("select");
+                            $parent = $next.parent();
+                            label = typeof labels[id + 1] == "undefined" ? $parent.attr("data-next-label") : labels[id + 1];
+
+                            if (cat_id) {
+                                $next.html('<option value="">' + self._options.text.loading + "</option>");
+                                $next.prop("selectedIndex", 0);
+
+                                jQuery.post(self._ajaxUrl(self._options.ajaxCategoryUrl), { cat_id: cat_id }, function (response) {
+                                    var data = jQuery.parseJSON(response);
+
+                                    if (data.length && autoLevels) {
+                                        var $li = jQuery("<li>");
+
+                                        $this.after($li);
+                                        $next = jQuery("<select>").appendTo($li);
+
+                                        if (!label) label = MegaFilterLang.text_select;
+
+                                        eChange($next, id + 1);
+                                    }
+
+                                    $next.html('<option value="">' + label + "</option>");
+                                    $next.prop("selectedIndex", 0);
+
+                                    for (var i = 0; i < data.length; i++) {
+                                        $next.append('<option value="' + data[i].id + '">' + data[i].name + "</option>");
+                                    }
+
+                                    if (autoLevels) {
+                                        if (!data.length) {
+                                            if (self._options["refreshResults"] != "using_button") {
+                                                self.runAjax();
+                                            }
+                                        }
+                                    } else if (!data.length) {
+                                        if (self._options["refreshResults"] != "using_button") {
+                                            self.runAjax();
+                                        }
+                                    }
+                                });
+                            }
+
+                            var $p = $parent;
+
+                            while ($p.length) {
+                                if (autoLevels) {
+                                    var $t = $p;
+                                    $p = $p.next();
+                                    $t.remove();
+                                } else {
+                                    $p.find("select").prop("selectedIndex", 0).find('option[value!=""]').remove();
+                                    $p = $p.next();
+                                }
+                            }
+
+                            if (!cat_id) {
+                                var beforeVal = self.urlToFilters()[seoName],
+                                    afterVal = self.filters()[seoName];
+
+                                if (typeof beforeVal == "undefined") beforeVal = [-1];
+
+                                if (typeof afterVal == "undefined") afterVal = [-1];
+
+                                if (beforeVal.toString() != afterVal.toString()) self.runAjax();
+                            }
+                        });
+                    }
+
+                    eChange(jQuery(this), i);
+                }
+            });
+        });
+    },
+
+    /**
+     * Inicjuj zdarzenia
+     */
+    _initEvents: function () {
+        var self = this;
+
+        function val($input) {
+            var val = $input.val(),
+                parent = $input.parent().parent();
+
+            if ($input.attr("type") == "checkbox" || $input.attr("type") == "radio") {
+                val = $input.is(":checked");
+
+                if (!self._options.calculateNumberOfProducts) {
+                    if (self._isInit && $input.attr("type") == "radio") {
+                        parent.parent().find(".mfilter-counter").removeClass("mfilter-close");
+                    }
+
+                    parent.find(".mfilter-counter")[val ? "addClass" : "removeClass"]("mfilter-close");
+                }
+
+                if ($input.attr("type") == "radio") {
+                    parent.parent().parent().parent().parent().parent().parent().find(".mfilter-input-active").removeClass("mfilter-input-active");
+                }
+            }
+
+            parent[val ? "addClass" : "removeClass"]("mfilter-input-active");
+        }
+
+        self._box.find('input[type=checkbox],input[type=radio],select:not([data-type="category-related"])').change(function () {
+            self._lastEvent = jQuery(this).attr("id");
+
+            if (self._options["refreshResults"] != "using_button") {
+                self.runAjax();
+            }
+
+            val(jQuery(this));
+        });
+
+        self._box.find(".mfilter-options .mfilter-option").each(function () {
+            var input = jQuery(this).find("input[type=checkbox],input[type=radio]");
+
+            if (!input.length) return;
+
+            jQuery(this)
+                .find(".mfilter-counter")
+                .bind("click", function () {
+                    if (!jQuery(this).hasClass("mfilter-close")) return;
+
+                    input.prop("checked", false).trigger("change");
+                    //jQuery(this).removeClass('mfilter-close');
+                });
+
+            if (input.is(":checked")) {
+                val(input);
+            }
+        });
+
+        self._box.find(".mfilter-button a").bind("click", function () {
+            self._lastEvent = null;
+
+            if (jQuery(this).hasClass("mfilter-button-reset")) {
+                self.resetFilters();
+            }
+
+            self.ajax();
+
+            return false;
+        });
+    },
+
+    /**
+     * Uruchom ładowanie
+     */
+    runAjax: function () {
+        var self = this;
+
+        switch (self._options["refreshResults"]) {
+            case "using_button":
+            case "immediately": {
+                self.ajax();
+
+                break;
+            }
+            case "with_delay": {
+                if (self._timeoutAjax) clearTimeout(self._timeoutAjax);
+
+                self._timeoutAjax = setTimeout(function () {
+                    self.ajax();
+
+                    self._timeoutAjax = null;
+                }, self._options["refreshDelay"]);
+
+                break;
+            }
+        }
+    },
+
+    /**
+     * Pobierz aktualny zakres cen
+     */
+    getPriceRange: function () {
+        var self = this,
+            minInput = self._box.find('[id="mfilter-opts-price-min"]'),
+            maxInput = self._box.find('[id="mfilter-opts-price-max"]'),
+            min = minInput.val(),
+            max = maxInput.val();
+
+        if (!/^[0-9]+$/.test(min) || min < self._options.priceMin) min = self._options.priceMin;
+
+        if (!/^[0-9]+$/.test(max) || max > self._options.priceMax) max = self._options.priceMax;
+
+        return {
+            min: parseInt(min),
+            max: parseInt(max),
+        };
+    },
+
+    /**
+     * Inicjuj przedział cenowy
+     */
+    _initPrice: function () {
+        var self = this,
+            priceRange = self.getPriceRange(),
+            filters = self.urlToFilters(),
+            minInput = self._box
+                .find('[id="mfilter-opts-price-min"]')
+                .unbind("change")
+                .bind("change", function () {
+                    changePrice();
+                })
+                .val(filters.price ? filters.price[0] : priceRange.min),
+            maxInput = self._box
+                .find('[id="mfilter-opts-price-max"]')
+                .unbind("change")
+                .bind("change", function () {
+                    changePrice();
+                })
+                .val(filters.price ? filters.price[1] : priceRange.max),
+            slider = self._box.find('[id="mfilter-price-slider"]');
+
+        self._refreshPrice = function (minMax) {
+            var priceRange = self.getPriceRange();
+
+            if (priceRange.min < self._options.priceMin) {
+                priceRange.min = self._options.priceMin;
+            }
+
+            if (priceRange.max > self._options.priceMax) {
+                priceRange.max = self._options.priceMax;
+            }
+
+            if (priceRange.min > priceRange.max) {
+                priceRange.min = priceRange.max;
+            }
+
+            if (priceRange.min.toString() != minInput.val()) {
+                minInput.val(priceRange.min);
+            }
+
+            if (priceRange.max.toString() != maxInput.val()) {
+                maxInput.val(priceRange.max);
+            }
+
+            slider.slider("option", "values", [priceRange.min, priceRange.max]);
+
+            if (minMax !== false) {
+                slider.slider("option", "min", self._options.priceMin);
+                slider.slider("option", "max", self._options.priceMax);
+                slider.slider("value", slider.slider("value"));
+            }
+        };
+
+        function changePrice() {
+            self._refreshPrice(false);
+
+            if (self._options["refreshResults"] != "using_button") {
+                self.runAjax();
+            }
+        }
+
+        slider.slider({
+            range: true,
+            min: self._options.priceMin,
+            max: self._options.priceMax,
+            values: [priceRange.min, priceRange.max],
+            slide: function (e, ui) {
+                minInput.val(ui.values[0]);
+                maxInput.val(ui.values[1]);
+            },
+            stop: function (e, ui) {
+                if (self._options["refreshResults"] != "using_button") {
+                    self.runAjax();
+                }
+            },
+        });
+    },
+
+    _initWindowOnPopState: function () {
+        var self = this;
+
+        if (self._isInit) return;
+
+        function update() {
+            self.eachInstances(function (self) {
+                self._urlToFilters = null;
+                self.initUrls();
+                self.setFiltersByUrl();
+            });
+        }
+
+        window.onpopstate = function (e) {
+            if (e.state) {
+                update();
+
+                self._render(e.state.html, e.state.json, true);
+            } else if (typeof self._cache.mainContent[document.location] != "undefined") {
+                update();
+
+                self._render(self._cache.mainContent[document.location].html, self._cache.mainContent[document.location].json, true);
+            }
+        };
+    },
+
+    setFiltersByUrl: function (params) {
+        var self = this;
+
+        if (typeof params == "undefined") {
+            params = self.urlToFilters();
+        }
+
+        self.resetFilters();
+
+        self._box.find("li[data-type]").each(function () {
+            var _this = jQuery(this),
+                type = _this.attr("data-type"),
+                seoName = _this.attr("data-seo-name"),
+                value = params[seoName];
+
+            if (typeof value == "undefined") return;
+
+            switch (type) {
+                case "rating":
+                case "stock_status":
+                case "manufacturers":
+                case "image":
+                case "radio":
+                case "image_list_radio":
+                case "image_list_checkbox":
+                case "checkbox": {
+                    for (var i in value) {
+                        if (typeof value[i] == "function") continue;
+
+                        var $p1 = _this
+                            .find('input[value="' + self.decode(decodeURIComponent(value[i])) + '"]')
+                            .prop("checked", true)
+                            .parent();
+
+                        $p1.parent().addClass("mfilter-input-active").find(".mfilter-counter").addClass("mfilter-close");
+
+                        if ($p1.hasClass("mfilter-image")) {
+                            $p1.addClass("mfilter-image-checked");
+                        }
+                    }
+
+                    break;
+                }
+                case "select": {
+                    _this.find('select option[value="' + self.decode(decodeURIComponent(value[0])) + '"]').attr("selected", true);
+
+                    break;
+                }
+                case "price": {
+                    _this.find('input[id="mfilter-opts-price-min"]').val(value[0]);
+                    _this.find('input[id="mfilter-opts-price-max"]').val(value[1]);
+                    _this.find('[id="mfilter-price-slider"]').each(function () {
+                        jQuery(this).slider("option", "min", value[0]);
+                        jQuery(this).slider("option", "max", value[1]);
+                        jQuery(this).slider("option", "values", [value[0], value[1]]);
+                        jQuery(this).slider("value", jQuery(this).slider("value"));
+                    });
+
+                    break;
+                }
+                case "search": {
+                    _this.find("input").val(self.decode(decodeURIComponent(value[0])));
+
+                    break;
+                }
+            }
+        });
+
+        for (var i = 0; i < self._sliders.length; i++) {
+            self._sliders[i].setValues();
+        }
+    },
+
+    /**
+     * Pokaż loader
+     */
+    _showLoader: function () {
+        var self = this;
+
+        if (self._jqLoader == null && self._options.showLoaderOverResults) {
+            self.__initLoader();
+        }
+
+        if (self._jqLoaderFilter == null && self._options.showLoaderOverFilter) {
+            self.__initLoaderFilter();
+        }
+
+        if (self._options.showLoaderOverResults) {
+            (function () {
+                var w = self._jqContent.outerWidth(true),
+                    h = self._jqContent.outerHeight(true),
+                    j = self._jqContent.find(".product-list"),
+                    k = j.length ? j : self._jqContent.find(".product-grid"),
+                    l = k.length ? k : self._jqContent,
+                    t = k.length ? k.offset().top - 150 : l.offset().top;
+
+                self._jqLoader
+                    .css("width", w + "px")
+                    .css("height", h + "px")
+                    .fadeTo("normal", 1)
+                    .find("img")
+                    .css("margin-top", t + "px");
+            })();
+        }
+
+        if (self._options.showLoaderOverFilter) {
+            (function () {
+                var w = self._box.outerWidth(true),
+                    h = self._box.outerHeight(true);
+
+                self._jqLoaderFilter
+                    .css("width", w + "px")
+                    .css("height", h + "px")
+                    .fadeTo("normal", 1);
+            })();
+        }
+
+        if (self._options.autoScroll) {
+            jQuery("html,body")
+                .stop()
+                .animate(
+                    {
+                        scrollTop: self._jqContent.offset().top + self._options.addPixelsFromTop,
+                    },
+                    "low",
+                    function () {
+                        self._busy = false;
+                        self.render();
+                    }
+                );
+        } else {
+            self._busy = false;
+            self.render();
+        }
+    },
+
+    /**
+     * Ukryj loader
+     */
+    _hideLoader: function () {
+        var self = this;
+
+        if (self._jqLoader !== null) {
+            self._jqLoader.remove();
+            self._jqLoader = null;
+        }
+
+        if (self._jqLoaderFilter !== null) {
+            self._jqLoaderFilter.remove();
+            self._jqLoaderFilter = null;
+        }
+    },
+
+    /**
+     * Pokaż wczytane dane
+     */
+    render: function (history) {
+        var self = this;
+
+        if (self._lastResponse === "" || self._busy) {
+            return;
+        }
+
+        self._hideLoader();
+
+        // usuń wszystkie linki do skryptów JS
+        self._lastResponse = self._lastResponse.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+
+        var tmp = jQuery("<tmp>").html(self._lastResponse),
+            content = tmp.find(self._contentId), // znajdź treść główną
+            json = tmp.find("#mfilter-json"); // informacje JSON zawierające dane o ilości produktów wg kategorii
+
+        if (!content.length && self._contentId != "#content") {
+            content = tmp.find("#content");
+        }
+
+        if (content.length) {
+            var styles = self._jqContent.html().match(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi);
+
+            if (styles != null && styles.length) {
+                for (var i = 0; i < styles.length; i++) {
+                    jQuery("head:first").append(styles[i]);
+                }
+            }
+
+            self._render(content.html(), json && json.length ? self.base64_decode(json.html()) : null, history);
+
+            self._lastResponse = "";
+        } else {
+            self.reload();
+        }
+    },
+
+    _render: function (html, json, history) {
+        var self = this;
+
+        if (history !== true) {
+            self._lastUrl = self.createUrl();
+            self._urlToFilters = null;
+
+            try {
+                window.history.pushState(
+                    {
+                        html: html,
+                        json: json,
+                    },
+                    "",
+                    self._lastUrl
+                );
+            } catch (e) {}
+        }
+
+        if (json) {
+            self.eachInstances(function (self) {
+                self._parseInfo(json);
+            });
+        }
+
+        self.beforeRender(self._lastResponse, html, json);
+
+        self._jqContent.html(html);
+
+        /*if( self._box.hasClass( 'mfilter-content_top' ) ) {
+			self._jqContent.prepend( self._box.removeClass('init') );
+			self.init( self._box, self._options );
+		}*/
+
+        if (typeof jQuery.totalStorage == "function" && jQuery.totalStorage("display")) {
+            display_MFP(jQuery.totalStorage("display"));
+        } else if (typeof jQuery.cookie == "function" && jQuery.cookie("display")) {
+            display_MFP(jQuery.cookie("display"));
+        } else {
+            display_MFP("list");
+        }
+
+        for (var i in self) {
+            if (i.indexOf("_initAlways") === 0 && typeof self[i] == "function") {
+                self[i]();
+            }
+        }
+
+        for (var f = 0; f < self._liveFilters.length; f++) {
+            self._liveFilters[f].check();
+        }
+
+        // Support for Product Quantity Extension (15186)
+        if (typeof pq_initExt == "function") {
+            pq_initExt();
+        }
+
+        self.afterRender(self._lastResponse, html, json);
+    },
+
+    beforeRequest: function () {},
+
+    beforeRender: function () {},
+
+    afterRender: function () {},
+
+    eachInstances: function (fn, skipCurrent) {
+        for (var i = 0; i < MegaFilterINSTANCES.length; i++) {
+            if (skipCurrent === true && i == this._instanceIdx) continue;
+
+            fn(MegaFilterINSTANCES[i]);
+        }
+    },
+
+    /**
+     * Załaduj dane
+     */
+    ajax: function () {
+        var self = this;
+
+        if (self._busy) {
+            self._waitingChanges = true;
+
+            return;
+        }
+
+        var url =
+                [self._options.routeProduct, self._options.routeHome, self._options.routeInformation].indexOf(self._options.route) > -1
+                    ? self.createUrl(self._options.ajaxResultsUrl)
+                    : self.createUrl(),
+            cname = url + self._options.idx;
+
+        if ([self._options.routeProduct, self._options.routeHome, self._options.routeInformation].indexOf(self._options.route) > -1) {
+            window.location.href = url;
+            return;
+        }
+
+        self.eachInstances(function (self) {
+            self._busy = true;
+            self._lastResponse = "";
+        });
+
+        self._showLoader();
+
+        if (typeof self._params["page"] != "undefined") {
+            delete self._params["page"];
+        }
+
+        (function () {
+            var filters = self.filters();
+
+            self.eachInstances(function (self) {
+                self.setFiltersByUrl(filters);
+            }, true);
+        })();
+
+        if (typeof self._cache.lastResponse[cname] != "undefined") {
+            self.eachInstances(function (self2) {
+                self2._lastResponse = self._cache.lastResponse[cname];
+            });
+
+            setTimeout(function () {
+                self.eachInstances(function (self) {
+                    self._busy = false;
+                });
+
+                self.render();
+            }, 100);
+
+            return;
+        }
+
+        self.beforeRequest();
+
+        jQuery.ajax({
+            type: "GET",
+            url: self._ajaxUrl(url),
+            timeout: 60 * 1000,
+            cache: false,
+            data: {
+                mfilterAjax: "1",
+                mfilterIdx: self._options.idx,
+                mfilterBTypes: self.baseTypes().join(","),
+                mfilterPath: self._options.params.path,
+            },
+            success: function (response) {
+                self.eachInstances(function (self) {
+                    self._busy = false;
+                });
+
+                if (response) {
+                    self.eachInstances(function (self) {
+                        self._lastResponse = response;
+                        self._cache.lastResponse[cname] = response;
+                    });
+
+                    self.render();
+
+                    if (self._waitingChanges) {
+                        self._waitingChanges = false;
+                        self.ajax();
+                    }
+                } else {
+                    self.reload();
+                }
+            },
+            error: function () {
+                self.reload();
+            },
+        });
+    },
+
+    /**
+     * Utwórz pełny adres URL
+     */
+    createUrl: function (url, attribs, force) {
+        var self = this,
+            params = self.paramsToUrl(url, attribs),
+            filters = self.filtersToUrl(),
+            urlSep = self._urlSep;
+
+        if (typeof url == "undefined") {
+            url = self._url;
+        } else {
+            urlSep = self._parseSep(url.split("#")[0]).urlSep;
+            url = self._parseSep(url.split("#")[0]).url;
+        }
+
+        if (params || filters) {
+            url += urlSep.f;
+
+            if (params) {
+                url += params;
+            }
+
+            if (filters) {
+                if (params) {
+                    url += urlSep.n;
+                }
+
+                url += "mfp" + (urlSep.n == "&" ? "=" : urlSep.n) + filters;
+            } else if (force) {
+                var mfp = self.filtersToUrl(self.urlToFilters());
+
+                if (mfp) {
+                    url += urlSep.n;
+                    url += "mfp" + (urlSep.n == "&" ? "=" : urlSep.n) + mfp;
+                }
+            }
+        }
+
+        return url;
+    },
+
+    /**
+     * Sprawdź poprawność wpisanego zakresu cen
+     *
+     * @return bool
+     */
+    _validPrice: function (min, max) {
+        var self = this;
+
+        min = parseInt(min);
+        max = parseInt(max);
+
+        if (min < self._options.priceMin) return false;
+
+        if (max > self._options.priceMax) return false;
+
+        if (min > max) return false;
+
+        if (min == max && min == self._options.priceMin && max == self._options.priceMax) return false;
+
+        return true;
+    },
+
+    /**
+     * Przekształć parametry z adresu URL na obiekt
+     *
+     * @return object
+     */
+    urlToFilters: function () {
+        if (this._urlToFilters !== null) {
+            return this._urlToFilters;
+        }
+
+        var self = this;
+
+        self._urlToFilters = {};
+
+        if (!self._params.mfp) return self._urlToFilters;
+
+        self._params.mfp = decodeURIComponent(self._params.mfp);
+
+        var matches = self._params.mfp.match(/[a-z0-9\-_]+\[[^\]]+\]/g);
+
+        if (!matches) return self._urlToFilters;
+
+        for (var i = 0; i < matches.length; i++) {
+            var key = matches[i].match(/([a-z0-9\-_]+)\[[^\]]+\]/)[1],
+                val = matches[i].match(/[a-z0-9\-_]+\[([^\]]+)\]/)[1].split(",");
+
+            switch (key) {
+                case "price": {
+                    if (typeof val[0] != "undefined" && val[1] != "undefined") {
+                        if (self._validPrice(val[0], val[1])) self._urlToFilters[key] = val;
+                    }
+
+                    break;
+                }
+                default: {
+                    self._urlToFilters[key] = val;
+                }
+            }
+        }
+
+        return self._urlToFilters;
+    },
+
+    resetFilters: function () {
+        var self = this;
+
+        self._box.find("li[data-type]").each(function () {
+            var _this = jQuery(this),
+                type = _this.attr("data-type"),
+                baseType = _this.attr("data-base-type"),
+                defaultVal = null;
+
+            _this.find(".mfilter-input-active").removeClass("mfilter-input-active");
+
+            if (baseType == "stock_status" && self._options.inStockDefaultSelected) {
+                defaultVal = self._options.inStockStatus;
+            }
+
+            switch (type) {
+                case "image": {
+                    _this.find("input[type=checkbox]:checked,input[type=radio]:checked").prop("checked", false).parent().removeClass("mfilter-image-checked");
+
+                    break;
+                }
+                case "tree": {
+                    _this.find("input[name=path]").val(typeof self._options.params.path == "undefined" ? "" : self._options.params.path);
+
+                    break;
+                }
+                case "rating":
+                case "stock_status":
+                case "manufacturers":
+                case "checkbox":
+                case "image_list_checkbox":
+                case "image_list_radio":
+                case "radio": {
+                    _this.find("input[type=checkbox]:checked,input[type=radio]:checked").prop("checked", false);
+                    _this.find(".mfilter-counter").removeClass("mfilter-close");
+
+                    if (defaultVal !== null) {
+                        _this
+                            .find('input[value="' + defaultVal + '"]')
+                            .prop("checked", true)
+                            .parent()
+                            .parent()
+                            .find(".mfilter-counter")
+                            .addClass("mfilter-close");
+                    }
+
+                    break;
+                }
+                case "search_oc":
+                case "search": {
+                    _this.find('input[id="mfilter-opts-search"]').val("");
+
+                    break;
+                }
+                case "slider": {
+                    break;
+                }
+                case "price": {
+                    _this.find('input[id="mfilter-opts-price-min"]').val(self._options.priceMin);
+                    _this.find('input[id="mfilter-opts-price-max"]').val(self._options.priceMax);
+                    _this.find('[id="mfilter-price-slider"]').each(function () {
+                        jQuery(this).slider("option", "min", self._options.priceMin);
+                        jQuery(this).slider("option", "max", self._options.priceMax);
+                        jQuery(this).slider("option", "values", [self._options.priceMin, self._options.priceMax]);
+                        jQuery(this).slider("value", jQuery(this).slider("value"));
+                    });
+
+                    break;
+                }
+                case "related":
+                case "select": {
+                    _this.find("select option").removeAttr("selected");
+
+                    if (defaultVal !== null) {
+                        _this.find("select option").each(function (i) {
+                            if (jQuery(this).val() == defaultVal) {
+                                jQuery(this).attr("selected", true);
+                                _this.find("select").prop("selectedIndex", i);
+
+                                return false;
+                            }
+                        });
+                    } else {
+                        _this.find("select option:first").attr("selected", true);
+                        _this.find("select").prop("selectedIndex", 0);
+                    }
+
+                    if (type == "related") {
+                        _this.find("select").each(function (i) {
+                            if (i) {
+                                if (_this.attr("data-auto-levels")) {
+                                    jQuery(this).parent().remove();
+                                } else {
+                                    jQuery(this).find('option[value!=""]').remove();
+                                }
+                            }
+                        });
+                    }
+
+                    break;
+                }
+            }
+        });
+
+        for (var i = 0; i < self._sliders.length; i++) {
+            self._sliders[i].resetValues();
+        }
+    },
+
+    /**
+     * Pobierz aktualne wartości filtrów
+     *
+     * @return object
+     */
+    filters: function () {
+        var self = this,
+            params = {},
+            stockStatusExist = self._box.find('li[data-base-type="stock_status"]').length ? true : false;
+
+        self._box.find("li[data-type]").each(function () {
+            var _this = jQuery(this),
+                type = _this.attr("data-type"),
+                seoName = _this.attr("data-seo-name");
+
+            switch (type) {
+                case "rating":
+                case "stock_status":
+                case "manufacturers":
+                case "image_list_checkbox":
+                case "image":
+                case "checkbox": {
+                    _this.find("input[type=checkbox]:checked").each(function () {
+                        if (typeof params[seoName] == "undefined") params[seoName] = [];
+
+                        params[seoName].push(encodeURIComponent(self.encode(jQuery(this).val())));
+                    });
+
+                    break;
+                }
+                case "image_list_radio":
+                case "radio": {
+                    _this.find("input[type=radio]:checked").each(function () {
+                        params[seoName] = [encodeURIComponent(self.encode(jQuery(this).val()))];
+                    });
+
+                    break;
+                }
+                case "slider": {
+                    var slider_id = _this.attr("data-slider-id"),
+                        slider_vals = self._sliders[slider_id].getValues();
+
+                    if (slider_vals.length) {
+                        params[seoName] = slider_vals;
+                    }
+
+                    break;
+                }
+                case "price": {
+                    var priceRange = self.getPriceRange();
+
+                    if (priceRange.min != self._options.priceMin || priceRange.max != self._options.priceMax) {
+                        if (self._validPrice(priceRange.min, priceRange.max)) params[seoName] = [priceRange.min, priceRange.max];
+                    }
+
+                    break;
+                }
+                case "search_oc":
+                case "search": {
+                    _this.find('input[id="mfilter-opts-search"]').each(function () {
+                        if (jQuery(this).val() !== "") {
+                            params[seoName] = [encodeURIComponent(self.encode(jQuery(this).val()))];
+                        }
+                    });
+
+                    break;
+                }
+                case "select": {
+                    _this.find("select").each(function () {
+                        if (jQuery(this).val()) params[seoName] = [encodeURIComponent(self.encode(jQuery(this).val()))];
+                    });
+
+                    break;
+                }
+                case "related": {
+                    //if( _this.find('select:last').val() ) {
+                    _this.find("select").each(function () {
+                        var val = jQuery(this).val();
+
+                        if (val) {
+                            if (typeof params[seoName] == "undefined") params[seoName] = [];
+
+                            params[seoName].push(val);
+                        }
+                    });
+                    //}
+                }
+                case "tree": {
+                    _this.find("input").each(function () {
+                        var val = jQuery(this).val();
+
+                        if (val && val != self._options.params.path) {
+                            params["path"] = [val];
+                        }
+                    });
+
+                    break;
+                }
+            }
+        });
+
+        // sprawdź czy domyślnie powinna być zaznaczona opcja "in stock"
+        if (self._options.inStockDefaultSelected && typeof params["stock_status"] == "undefined") {
+            params["stock_status"] = stockStatusExist ? [] : [self._options.inStockStatus];
+        }
+
+        return params;
+    },
+
+    /**
+     * Utwórz URL na podstawie parametrów
+     */
+    filtersToUrl: function (params) {
+        var self = this,
+            url = "";
+
+        if (typeof params == "undefined") {
+            params = self.filters();
+        }
+
+        for (var i in params) {
+            url += url ? "," : "";
+            url += "" + i + "[" + params[i].join(",") + "]";
+        }
+
+        return url;
+    },
+
+    /**
+     * Przekształć parametry na adres URL
+     *
+     * @return string
+     */
+    paramsToUrl: function (url, attribs) {
+        var self = this,
+            str = "",
+            params = typeof url == "undefined" ? self._params : self._parseUrl(url, attribs),
+            urlSep = typeof url == "undefined" ? self._urlSep : self._parseSep(url).urlSep;
+
+        for (var i in params) {
+            if (["mfilter-ajax", "mfp", "page"].indexOf(i) > -1) continue;
+            if (typeof url == "undefined" && typeof self._inUrl[i] == "undefined") continue;
+
+            str += str ? urlSep.n : "";
+            str += i + (urlSep.n == "&" ? "=" : urlSep.n) + params[i];
+        }
+
+        return str;
+    },
+
+    /**
+     * @param url string
+     * @param attribs object
+     * @return object
+     */
+    _parseUrl: function (url, attribs) {
+        if (typeof attribs != "object")
+            attribs = {
+                "mfilter-ajax": "1",
+            };
+
+        if (typeof url == "undefined") return attribs;
+
+        var self = this,
+            params,
+            i,
+            name,
+            value,
+            param;
+
+        url = url.split("#")[0];
+
+        if (url.indexOf("?") > -1 || url.indexOf("&") > -1) {
+            params = typeof self.parse_url(url).query != "undefined" ? self.parse_url(url).query.split("&") : url.split("&"); //( url.indexOf( '?' ) > -1 ? url.split('?')[1] : url ).split('&');
+
+            for (i = 0; i < params.length; i++) {
+                if (params[i].indexOf("=") < 0) continue;
+
+                param = params[i].split("=");
+                name = param[0];
+                value = param[1];
+
+                if (!name) continue;
+
+                attribs[name] = value;
+            }
+        } else {
+            params = url.split(";");
+            name = null;
+
+            for (i = 1; i < params.length; i++) {
+                if (name === null) name = params[i];
+                else {
+                    attribs[name] = params[i];
+                    name = null;
+                }
+            }
+        }
+
+        return attribs;
+    },
+
+    /**
+     * Przeładuj stronę
+     */
+    reload: function () {
+        var self = this;
+
+        window.location.href = self.createUrl();
+    },
+};
+var MegaFilterLang = {};
+
+function display_MFP(view) {
+    if (typeof display == "function") {
+        display("grid");
+        return;
     }
-  });
-})( jQuery );
+
+    function save(v) {
+        if (typeof jQuery.totalStorage == "function") {
+            jQuery.totalStorage("display", v);
+        } else if (typeof jQuery.cookie == "function") {
+            jQuery.cookie("display", v);
+        }
+    }
+
+    if (view == "list") {
+        jQuery(".product-grid").attr("class", "product-list");
+
+        jQuery(".product-list > div").each(function (index, element) {
+            html = '<div class="right">';
+            html += '  <div class="cart">' + jQuery(element).find(".cart").html() + "</div>";
+            html += '  <div class="wishlist">' + jQuery(element).find(".wishlist").html() + "</div>";
+            html += '  <div class="compare">' + jQuery(element).find(".compare").html() + "</div>";
+            html += "</div>";
+
+            html += '<div class="left">';
+
+            var image = jQuery(element).find(".image").html();
+
+            if (image != null) {
+                html += '<div class="image">' + image + "</div>";
+            }
+
+            var price = jQuery(element).find(".price").html();
+
+            if (price != null) {
+                html += '<div class="price">' + price + "</div>";
+            }
+
+            html += '  <div class="name">' + jQuery(element).find(".name").html() + "</div>";
+            html += '  <div class="description">' + jQuery(element).find(".description").html() + "</div>";
+
+            var rating = jQuery(element).find(".rating").html();
+
+            if (rating != null) {
+                html += '<div class="rating">' + rating + "</div>";
+            }
+
+            html += "</div>";
+
+            jQuery(element).html(html);
+        });
+
+        jQuery(".display").html("<b>" + MegaFilterLang.text_display + "</b> " + MegaFilterLang.text_list + " <b>/</b> <a onclick=\"display_MFP('grid');\">" + MegaFilterLang.text_grid + "</a>");
+
+        save("list");
+    } else {
+        jQuery(".product-list").attr("class", "product-grid");
+
+        jQuery(".product-grid > div").each(function (index, element) {
+            html = "";
+
+            var image = jQuery(element).find(".image").html();
+
+            if (image != null) {
+                html += '<div class="image">' + image + "</div>";
+            }
+
+            html += '<div class="name">' + jQuery(element).find(".name").html() + "</div>";
+            html += '<div class="description">' + jQuery(element).find(".description").html() + "</div>";
+
+            var price = jQuery(element).find(".price").html();
+
+            if (price != null) {
+                html += '<div class="price">' + price + "</div>";
+            }
+
+            var rating = jQuery(element).find(".rating").html();
+
+            if (rating != null) {
+                html += '<div class="rating">' + rating + "</div>";
+            }
+
+            html += '<div class="cart">' + jQuery(element).find(".cart").html() + "</div>";
+            html += '<div class="wishlist">' + jQuery(element).find(".wishlist").html() + "</div>";
+            html += '<div class="compare">' + jQuery(element).find(".compare").html() + "</div>";
+
+            jQuery(element).html(html);
+        });
+
+        jQuery(".display").html("<b>" + MegaFilterLang.text_display + "</b> <a onclick=\"display_MFP('list');\">" + MegaFilterLang.text_list + "</a> <b>/</b> " + MegaFilterLang.text_grid);
+
+        save("grid");
+    }
+}
