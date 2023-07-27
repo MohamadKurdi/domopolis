@@ -1709,19 +1709,19 @@ MegaFilter.prototype = {
                 }
 
                 /*if( ! $right.hasClass('mf-active') ) {
-                    if( w2 > w1 ) {
-                        //t=0;
-                        $right.addClass('mf-active');//.trigger('click');
-                    } else {
-                        t=x=0;
-                        $left.addClass('mf-active').trigger('click');
-                        //$right.removeClass('mf-active');
-                    }
-                } else {
-                    if( w2 <= w1 ) {
-                        $right.removeClass('mf-active');
-                    }
-                }*/
+					if( w2 > w1 ) {
+						//t=0;
+						$right.addClass('mf-active');//.trigger('click');
+					} else {
+						t=x=0;
+						$left.addClass('mf-active').trigger('click');
+						//$right.removeClass('mf-active');
+					}
+				} else {
+					if( w2 <= w1 ) {
+						$right.removeClass('mf-active');
+					}
+				}*/
             };
 
             var $left = jQuery('<a href="#"></a>'),
@@ -2344,9 +2344,9 @@ MegaFilter.prototype = {
         self._jqContent.html(html);
 
         /*if( self._box.hasClass( 'mfilter-content_top' ) ) {
-            self._jqContent.prepend( self._box.removeClass('init') );
-            self.init( self._box, self._options );
-        }*/
+			self._jqContent.prepend( self._box.removeClass('init') );
+			self.init( self._box, self._options );
+		}*/
 
         if (typeof jQuery.totalStorage == "function" && jQuery.totalStorage("display")) {
             display_MFP(jQuery.totalStorage("display"));
