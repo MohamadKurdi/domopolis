@@ -359,11 +359,7 @@ class ControllerCommonPanel extends Controller {
 		if ($this->config->get('config_yandex_translate_api_enable')){
 
 			try {
-				$cloud = Panda\Yandex\TranslateSdk\Cloud::createApi($this->config->get('config_yandex_translate_api_key'));	
-
-				$translate = new Panda\Yandex\TranslateSdk\Translate('привет');
-				$translate->setSourceLang('ru')->setTargetLang('uk')->setFormat(Panda\Yandex\TranslateSdk\Format::PLAIN_TEXT);
-				$result = $cloud->request($translate);
+				$result = $this->yandexTranslator->translate('привет', 'ru', 'uk');				
 
 				$json = json_decode($result, true);
 				if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -378,8 +374,8 @@ class ControllerCommonPanel extends Controller {
 				}
 
 			} catch (Panda\Yandex\TranslateSdk\Exception\ClientException $e) {
-				$body = $e->getMessage();
-				$class = 'bad';
+				$body 	= $e->getMessage();
+				$class 	= 'bad';
 			}
 
 		} else {

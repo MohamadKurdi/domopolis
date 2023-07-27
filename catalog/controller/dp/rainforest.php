@@ -546,6 +546,8 @@ class ControllerDPRainForest extends Controller {
 		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getVariantsAddQueue();
 
 		if ($products){
+			$this->yandexTranslator->checkIfItIsPossibleToMakeRequest();
+
 			foreach ($products as $product){
 				echoLine('[ControllerDPRainForest::addvariantsqueuecron] Starting with product ' . $product['product_id'] . ', ' . $product['asin'], 'i');					
 				$this->rainforestAmazon->productsRetriever->model_product_edit->deleteFromVariantsAddQueue($product['asin']);
@@ -620,6 +622,8 @@ class ControllerDPRainForest extends Controller {
 		$asinsSlice 		= [];
 
 		if ($asins){
+			$this->yandexTranslator->checkIfItIsPossibleToMakeRequest();
+
 			echoLine('[ControllerDPRainForest::addasinsqueuecron] Total ASINs in queue: ' . count($asins));
 
 			foreach ($asins as $asin){
@@ -663,14 +667,13 @@ class ControllerDPRainForest extends Controller {
 
 					if (!empty($asinsToBrandLogic[$asin])){
 						$rfProduct['brand_logic'] = true;
-					}
-
+					}					
 
 					if ($rfProduct){					
 						$product_id = $this->rainforestAmazon->productsRetriever->addSimpleProductWithOnlyAsin(
 							[
 								'asin' 					=> $rfProduct['asin'], 
-								'amazon_best_price' 	=> (!empty($rfProduct['buybox_winner']))?$rfProduct['buybox_winner']['price']['value']:'0',
+								'amazon_best_price' 	=> (!empty($rfProduct['buybox_winner']) && !empty($rfProduct['buybox_winner']['price']) && !empty($rfProduct['buybox_winner']['price']['value']))?$rfProduct['buybox_winner']['price']['value']:'0',
 								'category_id' 			=> $category_id, 
 								'name' 					=> $rfProduct['title'], 
 								'amazon_product_link' 	=> $rfProduct['link'],
@@ -770,6 +773,8 @@ class ControllerDPRainForest extends Controller {
 
 		$otherPageRequests = [];		
 		for ($i = 1; $i <= ($iterations+1); $i++){
+			$this->yandexTranslator->checkIfItIsPossibleToMakeRequest();
+			
 			$timer = new FPCTimer();
 			$this->current_iteration = $i;
 			echoLine('[addnewproductscron] Шаг 1 Итерация ' . $i . ' из ' . $iterations . ', категории с ' . (\hobotix\RainforestAmazon::categoryRequestLimits * ($i-1)) . ' по ' . \hobotix\RainforestAmazon::categoryRequestLimits * $i);

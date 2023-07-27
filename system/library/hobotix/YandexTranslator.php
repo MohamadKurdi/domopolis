@@ -34,6 +34,27 @@ class YandexTranslator
 		return $this;
 	}
 
+	public function checkIfItIsPossibleToMakeRequest(){
+		try {
+			$this->translate('hello', 'en', 'ru');
+		} catch (\Panda\Yandex\TranslateSdk\Exception\ClientException $e) {
+			echoLine('[ControllerDPRainForest::addasinsqueuecron] Translator fail, stopping' , 'e');
+			die();
+		}		
+	}
+
+	public function resultIsBad($result){		
+		$json = json_decode($result, true);
+
+		if (!empty($json['code']) && $json['code'] == 7){
+			if (!empty($json['message'])){
+				return $json['message'];
+			}
+		}
+
+		return false;
+	}
+
 	public function translateMulti($data = []){
 	}
 
@@ -87,11 +108,18 @@ class YandexTranslator
 			$this->addStats($text);
 
 		} catch (\Panda\Yandex\TranslateSdk\Exception\ClientException $e) {
-			echoLine($e->getMessage());			
+			echoLine($e->getMessage(), 'e');
+			die();		
+		}
+
+		if ($this->resultIsBad($result)){
+			echoLine('[YandexTranslator] YandexTranslator Fail: ' . $this->resultIsBad($result), 'e');
+			throw new \Panda\Yandex\TranslateSdk\Exception\ClientException('YT Fail! ' . $this->resultIsBad($result));			
 		}
 
 		if ($returnString){
 			$json = json_decode($result, true);
+
 			if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
 
 				if ($this->debug){
