@@ -1464,7 +1464,7 @@
 			(IF((p.quantity_stock + p.quantity_stockK + p.quantity_stockM + p.quantity_stockMN + p.quantity_stockAS) > 0, 
 			IF(p." . $this->config->get('config_warehouse_identifier') . " > 0, " . $this->config->get('config_in_stock_status_id') . ", " . $this->config->get('config_stock_status_id') . "), p.stock_status_id)
 			) as stock_status_id,
-			(SELECT AVG(rating) FROM review r1 WHERE r1.product_id = ps.product_id AND r1.status = '1' GROUP BY r1.product_id) AS rating, 
+			p.xrating AS rating, 
 			(SELECT points_special FROM product_special ps WHERE ps.product_id = p.product_id AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < '" . date(MYSQL_NOW_DATE_FORMAT) . "') AND (ps.date_end = '0000-00-00' OR ps.date_end > '" . date(MYSQL_NOW_DATE_FORMAT) . "')) AND (store_id = '" . (int)$this->config->get('config_store_id') . "' OR store_id = -1) ORDER BY ps.store_id DESC, ps.priority ASC LIMIT 1) AS points_special
 			FROM product_special ps 
 			LEFT JOIN product p ON (ps.product_id = p.product_id) 
@@ -1513,8 +1513,7 @@
 			
 			if (!empty($data['filter_exclude_certs'])) {
 				$sql .= " AND p.location <> 'certificate'";
-			}
-			
+			}			
 			
 			if (!empty($data['filter_enable_markdown'])) {
 				$sql .= " AND is_markdown = 1 ";
@@ -1522,17 +1521,39 @@
 				$sql .= " AND is_markdown = 0 ";
 			}
 			
-			$sql .= " AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' AND p.date_available <= '" . date(MYSQL_NOW_DATE_FORMAT) . "' AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' AND ((ps.date_start = '0000-00-00' OR ps.date_start < '" . date(MYSQL_NOW_DATE_FORMAT) . "') AND (ps.date_end = '0000-00-00' OR ps.date_end > '" . date(MYSQL_NOW_DATE_FORMAT) . "')) GROUP BY ps.product_id";
+			$sql .= " AND ps.customer_group_id = '" . (int)$this->registry->get('customer_group_id') . "' 
+					AND p.date_available <= '" . date(MYSQL_NOW_DATE_FORMAT) . "' 
+					AND p2s.store_id = '" . (int)$this->config->get('config_store_id') . "' 
+					AND ((ps.date_start = '0000-00-00' OR ps.date_start < '" . date(MYSQL_NOW_DATE_FORMAT) . "') 
+					AND (ps.date_end = '0000-00-00' OR ps.date_end > '" . date(MYSQL_NOW_DATE_FORMAT) . "')) ";
+
+
+			if (!empty($data['sort']) && $data['sort'] == 'rand'){
+				$sql .= " AND (" . mt_rand() . ")";
+			}
+
+			if (!empty($data['sort']) && $data['sort'] == 'rand-10'){
+				$sql .= " AND (" . mt_rand(0, 10) . ")";
+			}
+
+			if (!empty($data['sort']) && $data['sort'] == 'rand-100'){
+				$sql .= " AND (" . mt_rand(0, 100) . ")";
+			}
+
+			$sql .= " GROUP BY ps.product_id";
 			
-			if (isset($data['sort']) && in_array($data['sort'], $this->registry->get('sorts_available'))) {
-				if ($data['sort'] == 'pd.name' || $data['sort'] == 'p.model') {
+			if (isset($data['sort']) && in_array($data['sort'], $this->registry->get('sorts_available'))) {								
+				if ($data['sort'] == 'rand' || $data['sort'] == 'rand-10' || $data['sort'] == 'rand-100'){
+					$sql .= " ORDER BY stock_status_id ASC, RAND()";
+					$data['sort'] = null;	
+				} elseif ($data['sort'] == 'pd.name' || $data['sort'] == 'p.model') {
 					$sql .= " ORDER BY stock_status_id ASC, LCASE(" . $data['sort'] . ")";
-					} elseif ($data['sort'] == 'p.price') {
+				} elseif ($data['sort'] == 'p.price') {
 					$sql .= " ORDER BY (p.quantity > 0) DESC, ps.price ";
-					} else {
-					$sql .= " ORDER BY stock_status_id ASC, " . $data['sort'];
-				}
 				} else {
+					$sql .= " ORDER BY stock_status_id ASC, " . $data['sort'];
+				}			
+			} else {
 				$sql .= " ORDER BY stock_status_id ASC, p.sort_order";
 			}
 			
@@ -1566,22 +1587,17 @@
 					}
 				}
 			}
-			
-			
+						
 			$query = $this->db->query($sql);
 			
-			if (empty($data['return_just_ids'])) {
-				
+			if (empty($data['return_just_ids'])) {				
 				foreach ($query->rows as $result) {								
 					$product_data[$result['product_id']] = $this->getProduct($result['product_id']);				
-				}
-				
-				} else {
-				
+				}				
+			} else {				
 				foreach ($query->rows as $result) {
 					$product_data[] = $result['product_id'];
-				}
-				
+				}				
 			}
 			
 			return $product_data;
