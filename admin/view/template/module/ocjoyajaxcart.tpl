@@ -17,124 +17,87 @@
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
         <div class="vtabs">
           <a href="#ocjoyajaxcart-settingmain"><?php echo $text_main_tab_setting; ?></a>
-          <a href="#ocjoyajaxcart-licence"><?php echo $text_licence; ?></a>
         </div>
         <div id="ocjoyajaxcart-settingmain" class="vtabs-content">
           <table class="form">
+            <?php foreach ($languages as $language) { ?>
+              <tr>
+                <td>Заголовок блока с доп. товарами</td>
+                <td>
+                  <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" style="margin: 0 7px 0 -26px; vertical-align: middle;" /><input type="text" name="config_popupcartblocktitle_<?php echo $language['language_id']; ?>" value="<?php echo ${'config_popupcartblocktitle_' . $language['language_id']}; ?>" size="100" />
+                </td>
+              </tr>
+            <?php } ?>
+
             <tr>
-              <td><?php echo $entry_heading_forproducts; ?></td>
-              <td><input type="text" name="config_textforproducts" value="<?php echo $config_textforproducts; ?>" size="100" /></td>
-            </tr>
-            <tr>
-              <td><?php echo $text_ocjoyajaxcart_countname; ?></td>
-              <td><input type="text" name="config_ocjoyajaxcart_countname" value="<?php echo $config_ocjoyajaxcart_countname; ?>" size="50" /></td>
-            </tr>
-            <tr>
-              <td><?php echo $text_ocjoyajaxcart_countdesc; ?></td>
-              <td><input type="text" name="config_ocjoyajaxcart_countdesc" value="<?php echo $config_ocjoyajaxcart_countdesc; ?>" size="50" /></td>
-            </tr>
-            <tr>
-              <td><?php echo $text_ocjoyajaxcart_showsku; ?></td>
-              <td>
-                  <select name="config_ocjoyajaxcart_showsku">
-                      <?php if ($config_ocjoyajaxcart_showsku == "1") { ?>
-                      <option value="1" selected="selected"><?php echo $text_ocjoyajaxcart_yes; ?></option>
-                      <option value="2" ><?php echo $text_ocjoyajaxcart_no; ?></option>
-                      <option value=""  ><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
-                      <?php } elseif ($config_ocjoyajaxcart_showsku == "2") { ?>
-                      <option value="1" ><?php echo $text_ocjoyajaxcart_yes; ?></option>
-                      <option value="2" selected="selected"><?php echo $text_ocjoyajaxcart_no; ?></option>
-                      <option value=""  ><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
-                      <?php } else { ?>
-                      <option value="1" ><?php echo $text_ocjoyajaxcart_yes; ?></option>
-                      <option value="2" ><?php echo $text_ocjoyajaxcart_no; ?></option>
-                      <option value=""  selected="selected"><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
-                      <?php } ?>
-                  </select>
-              </td>
-            </tr>
-            <tr>
-              <td><?php echo $text_ocjoyajaxcart_showmodel; ?></td>
-              <td>
-                  <select name="config_ocjoyajaxcart_showmodel">
-                      <?php if ($config_ocjoyajaxcart_showmodel == "1") { ?>
-                      <option value="1" selected="selected"><?php echo $text_ocjoyajaxcart_yes; ?></option>
-                      <option value="2" ><?php echo $text_ocjoyajaxcart_no; ?></option>
-                      <option value=""  ><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
-                      <?php } elseif ($config_ocjoyajaxcart_showmodel == "2") { ?>
-                      <option value="1" ><?php echo $text_ocjoyajaxcart_yes; ?></option>
-                      <option value="2" selected="selected"><?php echo $text_ocjoyajaxcart_no; ?></option>
-                      <option value=""  ><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
-                      <?php } else { ?>
-                      <option value="1" ><?php echo $text_ocjoyajaxcart_yes; ?></option>
-                      <option value="2" ><?php echo $text_ocjoyajaxcart_no; ?></option>
-                      <option value=""  selected="selected"><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
-                      <?php } ?>
-                  </select>
-              </td>
-            </tr>
+                <td>Лимит товаров</td>
+                <td>
+                 <input type="number" step="1" name="config_cart_products_limit" value="<?php echo $config_cart_products_limit; ?>" size="50" />
+                </td>
+              </tr>
+
             <tr>
               <td><?php echo $entry_type_productsincart; ?></td>
               <td>
-                  <select name="config_type_ap" id="type_ap_change">
-                      <?php if ($config_type_ap == "1") { ?>
-                      <option value="1" selected="selected"><?php echo $text_ocjoyajaxcart_bycategory; ?></option>
-                      <option value="2" ><?php echo $text_ocjoyajaxcart_viewed; ?></option>
-                      <option value="3" ><?php echo $text_ocjoyajaxcart_special; ?></option>
-                      <option value="4" ><?php echo $text_ocjoyajaxcart_bestsellers; ?></option>
-                      <option value="5" ><?php echo $text_ocjoyajaxcart_latest; ?></option>
-					  <option value="6" >Последние заказанные</option>
-                      <option value=""  ><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
-                      <?php } elseif ($config_type_ap == "2") { ?>
-                      <option value="1" ><?php echo $text_ocjoyajaxcart_bycategory; ?></option>
-                      <option value="2" selected="selected"><?php echo $text_ocjoyajaxcart_viewed; ?></option>
-                      <option value="3" ><?php echo $text_ocjoyajaxcart_special; ?></option>
-                      <option value="4" ><?php echo $text_ocjoyajaxcart_bestsellers; ?></option>
-                      <option value="5" ><?php echo $text_ocjoyajaxcart_latest; ?></option>
-					  <option value="6" >Последние заказанные</option>
-                      <option value=""  ><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
-                       <?php } elseif ($config_type_ap == "3") { ?>
-                      <option value="1" ><?php echo $text_ocjoyajaxcart_bycategory; ?></option>
-                      <option value="2" ><?php echo $text_ocjoyajaxcart_viewed; ?></option>
-                      <option value="3" selected="selected"><?php echo $text_ocjoyajaxcart_special; ?></option>
-                      <option value="4" ><?php echo $text_ocjoyajaxcart_bestsellers; ?></option>
-                      <option value="5" ><?php echo $text_ocjoyajaxcart_latest; ?></option>
-					  <option value="6" >Последние заказанные</option>
-                      <option value=""  ><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
-                       <?php } elseif ($config_type_ap == "4") { ?>
-                      <option value="1" ><?php echo $text_ocjoyajaxcart_bycategory; ?></option>
-                      <option value="2" ><?php echo $text_ocjoyajaxcart_viewed; ?></option>
-                      <option value="3" ><?php echo $text_ocjoyajaxcart_special; ?></option>
-                      <option value="4" selected="selected"><?php echo $text_ocjoyajaxcart_bestsellers; ?></option>
-                      <option value="5" ><?php echo $text_ocjoyajaxcart_latest; ?></option>
-					  <option value="6" >Последние заказанные</option>
-                      <option value=""  ><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
-                       <?php } elseif ($config_type_ap == "5") { ?>
-                      <option value="1" ><?php echo $text_ocjoyajaxcart_bycategory; ?></option>
-                      <option value="2" ><?php echo $text_ocjoyajaxcart_viewed; ?></option>
-                      <option value="3" ><?php echo $text_ocjoyajaxcart_special; ?></option>
-                      <option value="4" ><?php echo $text_ocjoyajaxcart_bestsellers; ?></option>
-                      <option value="5" selected="selected"><?php echo $text_ocjoyajaxcart_latest; ?></option>
-					  <option value="6" >Последние заказанные</option>
-                      <option value=""  ><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
-					  <?php } elseif ($config_type_ap == "6") { ?>
-                      <option value="1" ><?php echo $text_ocjoyajaxcart_bycategory; ?></option>
-                      <option value="2" ><?php echo $text_ocjoyajaxcart_viewed; ?></option>
-                      <option value="3" ><?php echo $text_ocjoyajaxcart_special; ?></option>
-                      <option value="4" ><?php echo $text_ocjoyajaxcart_bestsellers; ?></option>
-                      <option value="5"><?php echo $text_ocjoyajaxcart_latest; ?></option>
-					  <option value="6" selected="selected">Последние заказанные</option>
-                      <option value=""  ><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
-                      <?php } else { ?>
-                      <option value="1" ><?php echo $text_ocjoyajaxcart_bycategory; ?></option>
-                      <option value="2" ><?php echo $text_ocjoyajaxcart_viewed; ?></option>
-                      <option value="3" ><?php echo $text_ocjoyajaxcart_special; ?></option>
-                      <option value="4" ><?php echo $text_ocjoyajaxcart_bestsellers; ?></option>
-                      <option value="5" ><?php echo $text_ocjoyajaxcart_latest; ?></option>
-					  <option value="6" >Последние заказанные</option>
-                      <option value=""  selected="selected"><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
-                      <?php } ?>
-                  </select>
+                <select name="config_type_ap" id="type_ap_change">
+                  <?php if ($config_type_ap == "1") { ?>
+                    <option value="1" selected="selected"><?php echo $text_ocjoyajaxcart_bycategory; ?></option>
+                    <option value="2" ><?php echo $text_ocjoyajaxcart_viewed; ?></option>
+                    <option value="3" ><?php echo $text_ocjoyajaxcart_special; ?></option>
+                    <option value="4" ><?php echo $text_ocjoyajaxcart_bestsellers; ?></option>
+                    <option value="5" ><?php echo $text_ocjoyajaxcart_latest; ?></option>
+                    <option value="6" >Последние заказанные</option>
+                    <option value=""  ><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
+                  <?php } elseif ($config_type_ap == "2") { ?>
+                    <option value="1" ><?php echo $text_ocjoyajaxcart_bycategory; ?></option>
+                    <option value="2" selected="selected"><?php echo $text_ocjoyajaxcart_viewed; ?></option>
+                    <option value="3" ><?php echo $text_ocjoyajaxcart_special; ?></option>
+                    <option value="4" ><?php echo $text_ocjoyajaxcart_bestsellers; ?></option>
+                    <option value="5" ><?php echo $text_ocjoyajaxcart_latest; ?></option>
+                    <option value="6" >Последние заказанные</option>
+                    <option value=""  ><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
+                  <?php } elseif ($config_type_ap == "3") { ?>
+                    <option value="1" ><?php echo $text_ocjoyajaxcart_bycategory; ?></option>
+                    <option value="2" ><?php echo $text_ocjoyajaxcart_viewed; ?></option>
+                    <option value="3" selected="selected"><?php echo $text_ocjoyajaxcart_special; ?></option>
+                    <option value="4" ><?php echo $text_ocjoyajaxcart_bestsellers; ?></option>
+                    <option value="5" ><?php echo $text_ocjoyajaxcart_latest; ?></option>
+                    <option value="6" >Последние заказанные</option>
+                    <option value=""  ><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
+                  <?php } elseif ($config_type_ap == "4") { ?>
+                    <option value="1" ><?php echo $text_ocjoyajaxcart_bycategory; ?></option>
+                    <option value="2" ><?php echo $text_ocjoyajaxcart_viewed; ?></option>
+                    <option value="3" ><?php echo $text_ocjoyajaxcart_special; ?></option>
+                    <option value="4" selected="selected"><?php echo $text_ocjoyajaxcart_bestsellers; ?></option>
+                    <option value="5" ><?php echo $text_ocjoyajaxcart_latest; ?></option>
+                    <option value="6" >Последние заказанные</option>
+                    <option value=""  ><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
+                  <?php } elseif ($config_type_ap == "5") { ?>
+                    <option value="1" ><?php echo $text_ocjoyajaxcart_bycategory; ?></option>
+                    <option value="2" ><?php echo $text_ocjoyajaxcart_viewed; ?></option>
+                    <option value="3" ><?php echo $text_ocjoyajaxcart_special; ?></option>
+                    <option value="4" ><?php echo $text_ocjoyajaxcart_bestsellers; ?></option>
+                    <option value="5" selected="selected"><?php echo $text_ocjoyajaxcart_latest; ?></option>
+                    <option value="6" >Последние заказанные</option>
+                    <option value=""  ><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
+                  <?php } elseif ($config_type_ap == "6") { ?>
+                    <option value="1" ><?php echo $text_ocjoyajaxcart_bycategory; ?></option>
+                    <option value="2" ><?php echo $text_ocjoyajaxcart_viewed; ?></option>
+                    <option value="3" ><?php echo $text_ocjoyajaxcart_special; ?></option>
+                    <option value="4" ><?php echo $text_ocjoyajaxcart_bestsellers; ?></option>
+                    <option value="5"><?php echo $text_ocjoyajaxcart_latest; ?></option>
+                    <option value="6" selected="selected">Последние заказанные</option>
+                    <option value=""  ><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
+                  <?php } else { ?>
+                    <option value="1" ><?php echo $text_ocjoyajaxcart_bycategory; ?></option>
+                    <option value="2" ><?php echo $text_ocjoyajaxcart_viewed; ?></option>
+                    <option value="3" ><?php echo $text_ocjoyajaxcart_special; ?></option>
+                    <option value="4" ><?php echo $text_ocjoyajaxcart_bestsellers; ?></option>
+                    <option value="5" ><?php echo $text_ocjoyajaxcart_latest; ?></option>
+                    <option value="6" >Последние заказанные</option>
+                    <option value=""  selected="selected"><?php echo $text_ocjoyajaxcart_makeachoice; ?></option>
+                  <?php } ?>
+                </select>
               </td>
             </tr>
             
@@ -169,28 +132,12 @@
             </script>
           </table>
       </div>
-        <div id="ocjoyajaxcart-licence" class="vtabs-content" style="min-height:400px;">
-          <table class="form">
-            <tr>
-              <td><?php echo $text_youruidcode; ?></td>
-              <td><input value="<?php echo base64_encode(DIR_SYSTEM.':'.$_SERVER['SERVER_NAME']); ?>" type="text" size="100"  readonly /></td>
-            </tr>
-            <tr>
-              <td><?php echo $text_activationcode; ?></td>
-              <td><input value="<?php echo $config_ukey_sc; ?>" type="text" name="config_ukey_sc" size="100" /></td>
-            </tr>
-          </table>
-        </div>
       </form>
     </div>
-    <div id="ocjoy-copyright"><?php echo $text_copyright; ?></div>
   </div>
 </div>
 
 <script type="text/javascript"><!--
 $('.vtabs a').tabs();
 //--></script>
-<style type="text/css">
-#ocjoy-copyright {padding:15px 15px;border:1px solid #ccc;margin-top:15px;box-shadow:0 0px 5px rgba(0,0,0,0.1);}
-</style>
 <?php echo $footer; ?>
