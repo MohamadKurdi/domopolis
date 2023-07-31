@@ -1,4 +1,4 @@
-<div class="sticky-block base-padding">
+<div class="sticky-block base-padding 12">
 	<div class="sticky-block__product">
 		
 		<div class="sticky-block__image">
