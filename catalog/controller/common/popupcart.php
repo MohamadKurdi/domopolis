@@ -27,23 +27,22 @@
 				unset($this->session->data['vouchers'][$this->request->request['remove']]);
 			}
 
-			if (isset($this->request->request['update'])) {
-				
-				if ($this->request->request['update'] == 'explicit'){
-									
+			if (isset($this->request->request['update'])) {				
+				if ($this->request->request['update'] == 'explicit'){									
 					if (is_array($this->request->request['explicit'])){
 						foreach ($this->request->request['explicit'] as $update_line){
 							$exploded = explode('_qt_', $update_line);
 							
 							$this->cart->update($exploded[0], $exploded[1]);	
 						}
-					}	
-							
+					}								
 				} else {
-					$this->cart->update($this->request->request['update'], $this->request->request['qty']);				
+						$this->cart->update($this->request->request['update'], $this->request->request['qty']);				
 				}
+
 				$this->response->setOutput('update ' . $this->request->request['update'] . ':' . $this->request->request['qty'] . ' success');
-				} else {
+			
+			} else {
 				
 				foreach ($this->language->loadRetranslate('common/popupcart') as $translationСode => $translationText){
 					$this->data[$translationСode] = $translationText;
@@ -52,15 +51,13 @@
 				foreach ($this->language->loadRetranslate('product/single') as $translationСode => $translationText){
 					$this->data[$translationСode] = $translationText;
 				}								
-				
-				// Totals
+								
 				$this->load->model('setting/extension');
 				
 				$total_data = array();
 				$total = 0;
 				$taxes = $this->cart->getTaxes();
 				
-				// Display prices
 				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
 					$sort_order = array();
 					
@@ -92,10 +89,10 @@
 				
 				$this->data['heading_title'] = $this->language->get('heading_title');
 				
-				$this->data['text_items'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total));
-				$this->data['text_empty'] = $this->language->get('text_empty');
-				$this->data['text_cart'] = $this->language->get('text_cart');
-				$this->data['text_checkout'] = $this->language->get('text_checkout');
+				$this->data['text_items'] 		= sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total));
+				$this->data['text_empty'] 		= $this->language->get('text_empty');
+				$this->data['text_cart'] 		= $this->language->get('text_cart');
+				$this->data['text_checkout'] 	= $this->language->get('text_checkout');
 				
 				$this->data['config_ocjoyajaxcart_countname'] = $this->config->get('config_ocjoyajaxcart_countname');
 				$this->data['config_ocjoyajaxcart_countdesc'] = $this->config->get('config_ocjoyajaxcart_countdesc');
@@ -128,7 +125,6 @@
 						$option_data[] = array('name' => $option['name'], 'value' => (utf8_strlen($value) > 20 ? utf8_substr($value, 0, 20) . '..' : $value), 'type' => $option['type']);
 					}
 					
-					// Display prices
 					if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
 						$price = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')));
 						} else {
@@ -154,7 +150,7 @@
 						$total_national = false;
 					}
 					
-					$this->data['products'][] = array(
+					$this->data['products'][] = [
 					'product_id' 				=> $product['product_id'],
 					'is_certificate' 			=> $product['is_certificate'],
 					'key' 						=> $product['key'],
@@ -180,18 +176,18 @@
 					'total_national' 			=> $total_national,
 					'href' 						=> $this->url->link('product/product', 'product_id=' . $product['product_id']),
 					'childProductArray' 		=> $product['childProductArray']
-					);
+					];
 				}
 				
 				$this->load->model('catalog/product');
-				$this->data['in_stock_text_h4'] = $this->language->get('text_in_stock_' . $this->config->get('config_country_id'));
-				$this->data['in_stock_text_h4']  .= ' ' . $this->model_catalog_product->parseStockTerm($this->config->get('config_delivery_instock_term'));				
-				$this->data['text_not_in_stock_delivery_term'] = $this->model_catalog_product->parseStockTerm($this->config->get('config_delivery_outstock_term'));
-				$this->data['text_in_stock_delivery_term'] = $this->model_catalog_product->parseStockTerm($this->config->get('config_delivery_instock_term'));		
-				$this->data['text_line_delivery'] = $this->language->get('text_line_delivery');
+				$this->data['in_stock_text_h4'] 		= $this->language->get('text_in_stock_' . $this->config->get('config_country_id'));
+				$this->data['in_stock_text_h4']  		.= ' ' . $this->model_catalog_product->parseStockTerm($this->config->get('config_delivery_instock_term'));				
+				$this->data['text_not_in_stock_delivery_term'] 	= $this->model_catalog_product->parseStockTerm($this->config->get('config_delivery_outstock_term'));
+				$this->data['text_in_stock_delivery_term'] 		= $this->model_catalog_product->parseStockTerm($this->config->get('config_delivery_instock_term'));		
+				$this->data['text_line_delivery'] 				= $this->language->get('text_line_delivery');
 
-				$this->data['text_line_popupcart_promo_1'] = $this->language->get('text_line_popupcart_promo_1');
-				$this->data['text_line_popupcart_promo_2'] = $this->language->get('text_line_popupcart_promo_2');
+				$this->data['text_line_popupcart_promo_1'] 		= $this->language->get('text_line_popupcart_promo_1');
+				$this->data['text_line_popupcart_promo_2'] 		= $this->language->get('text_line_popupcart_promo_2');
 								
 				$this->data['vouchers'] = array();
 				
@@ -208,39 +204,51 @@
 				
 				$this->data['mask'] = $this->config->get('config_phonemask');
 				$this->data['country'] = $this->config->get('config_countryname');
+
 				if ($this->customer->isLogged()) {      
-					$this->data['email'] = $this->customer->getEmail();
-					$this->data['telephone'] = $this->customer->getTelephone();
+					$this->data['email'] 		= $this->customer->getEmail();
+					$this->data['telephone'] 	= $this->customer->getTelephone();
 					} else {      
-					$this->data['email'] = '';
-					$this->data['telephone'] = '';
+					$this->data['email'] 		= '';
+					$this->data['telephone'] 	= '';
 				}
 				
 				$this->data['cart'] = $this->url->link('checkout/cart');
 				
 				$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
+
+				$this->data['ajaxcartproducts'] = [];
+				$this->data['config_popupcartblocktitle'] = $this->config->get('config_popupcartblocktitle_' . $this->config->get('config_language_id'));
+													
+				if ($this->config->get('config_type_ap') == 3){
+					$this->load->model('catalog/product');
+					
+					$data = [
+						'sort'  					=> 'rand-10',
+						'order' 					=> 'ASC',
+						'filter_current_in_stock' 	=> true,
+						'filter_not_bad' 			=> true,
+						'start' 					=> 0,
+						'limit' 					=> $this->config->get('config_cart_products_limit'),			
+					];
+
+					$this->data['ajaxcartproducts'] = $this->model_catalog_product->prepareProductToArray($this->model_catalog_product->getProductSpecials($data));
+				}
 				
-				$this->load->model('catalog/product');
-				$this->data['ajaxcartproducts'] = array();
-				
-				$data = array('sort' => 'p.date_added', 'order' => 'DESC', 'start' => 0);
-				
-				$this->data['button_cart'] = $this->language->get('button_cart');
-				$this->data['button_wishlist'] = $this->language->get('button_wishlist');
-				$this->data['button_compare'] = $this->language->get('button_compare');
-				
-				$this->data['text_ajaxcart_head'] = $this->language->get('text_ajaxcart_head');
-				$this->data['text_ajaxcart_empty'] = $this->language->get('text_ajaxcart_empty');
-				$this->data['text_ajaxcart_continue'] = $this->language->get('text_ajaxcart_continue');
-				$this->data['text_gotoorder'] = $this->language->get('text_gotoorder');
-				$this->data['text_gotoshipping'] = $this->language->get('text_gotoshipping');
-				
-				$this->data['column_image'] = $this->language->get('column_image');
-				$this->data['column_name'] = $this->language->get('column_name');
-				$this->data['column_delete'] = $this->language->get('column_delete');
-				$this->data['column_quantity'] = $this->language->get('column_quantity');
-				$this->data['column_price'] = $this->language->get('column_price');
-				$this->data['column_subtotal'] = $this->language->get('column_subtotal');
+				$this->data['button_cart'] 		= $this->language->get('button_cart');
+				$this->data['button_wishlist'] 	= $this->language->get('button_wishlist');
+				$this->data['button_compare'] 	= $this->language->get('button_compare');				
+				$this->data['text_ajaxcart_head'] 		= $this->language->get('text_ajaxcart_head');
+				$this->data['text_ajaxcart_empty'] 		= $this->language->get('text_ajaxcart_empty');
+				$this->data['text_ajaxcart_continue'] 	= $this->language->get('text_ajaxcart_continue');
+				$this->data['text_gotoorder'] 			= $this->language->get('text_gotoorder');
+				$this->data['text_gotoshipping'] 		= $this->language->get('text_gotoshipping');				
+				$this->data['column_image'] 			= $this->language->get('column_image');
+				$this->data['column_name'] 				= $this->language->get('column_name');
+				$this->data['column_delete'] 			= $this->language->get('column_delete');
+				$this->data['column_quantity'] 			= $this->language->get('column_quantity');
+				$this->data['column_price'] 			= $this->language->get('column_price');
+				$this->data['column_subtotal'] 			= $this->language->get('column_subtotal');
 				
 				
 				$this->data['this_is_checkout_page'] = $this->validateIfIsCheckoutPage();
