@@ -11,8 +11,7 @@ class SMSClub {
 		$this->config 	= $registry->get('config');
 		$this->db 		= $registry->get('db');
 
-	//	$this->smsClub = new \SmsSender\SmsSender($this->config->get('config_smsgate_api_key'));
-		$this->smsClub = new \SmsSender\SmsSender('R00ZxLaDM6mEIlw');
+		$this->smsClub = new \SmsSender\SmsSender($this->config->get('config_smsgate_api_key'));	
 	}
 
 	public function check($answer){
@@ -49,6 +48,21 @@ class SMSClub {
 		}
 
 		return false;
+	}
+
+
+	public function sendViber($viber){
+		echoLine('[SMSClub::sendViber] Sending Viber to number ' . preparePhone($viber['to']), 'i');
+
+
+
+
+
+
+
+
+
+
 	}
 
 

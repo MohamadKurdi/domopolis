@@ -16,9 +16,9 @@ class smsQueue {
 	
 	public function queue($data){					
 		$queue_array = array(		
-			'to' 	=> $data['to'],
-			'from' 	=> $data['from'],
-			'message' => $data['message']
+			'to' 		=> $data['to'],
+			'from' 		=> $data['from'],
+			'message' 	=> $data['message']
 		);
 		
 		if (mb_strlen($data['message']) > 210){
@@ -42,7 +42,7 @@ class smsQueue {
 		}	
 
 		$sms = [		
-			'to' 		=>	'+380632708881',
+			'to' 		=>	'',
 			'message' 	=> 	'TEST - SMSCLUB - 2'
 		];
 

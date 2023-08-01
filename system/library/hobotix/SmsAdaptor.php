@@ -63,4 +63,25 @@ class SmsAdaptor {
 		return $result;
 	}
 
+
+	public function sendViber($viber){
+		if ($this->config->get('config_smsgate_library_enable_viber') && method_exists($this->smsObject, 'sendViber')){
+			try {
+				$result = $this->smsObject->sendViber($viber);
+			} catch (\Exception $e){
+				$result = $e->getMessage();
+				return false;
+			}
+		}
+
+		if (empty($result)){
+			echoLine('[SmsAdaptor::getBalance] Could not send SMS!', 'e');
+			return false;
+		}			
+
+		echoLine('[SmsAdaptor::getBalance] Sent SMS, got ID: ' . $result, 's');
+
+		return $result;
+	}
+
 }
