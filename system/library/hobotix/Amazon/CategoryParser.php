@@ -15,7 +15,7 @@ class CategoryParser
 
 	public $model_catalog_category 		= null;
 	public $model_localisation_language = null;
-	public $yandexTranslator			= null;
+	public $translateAdaptor			= null;
 
 	const CLASS_NAME = 'hobotix\\Amazon\\CategoryParser';
 
@@ -31,11 +31,9 @@ class CategoryParser
 			$this->model_catalog_category = new \ModelAdminCatalogCategory($this->registry);
 
 			if ($this->config->get('config_rainforest_enable_translation')){
-				require_once(DIR_SYSTEM . 'library/hobotix/YandexTranslator.php');
-				$this->yandexTranslator = new \hobotix\YandexTranslator($this->registry);
-			}
-
-			
+				require_once(DIR_SYSTEM . 'library/hobotix/TranslateAdaptor.php');
+				$this->translateAdaptor = new \hobotix\TranslateAdaptor($this->registry);
+			}			
 		}
 
 	public function doRequest($params = [], $endpoint = 'categories'){
@@ -237,8 +235,8 @@ class CategoryParser
 			$data['store_parent_id'] = 0;
 		}
 
-		$data['name_native'] 		= $this->yandexTranslator->translate($data['name'], $this->config->get('config_rainforest_source_language'), $this->config->get('config_language'), true);
-		$data['full_name_native'] 	= $this->yandexTranslator->translate($data['path'], $this->config->get('config_rainforest_source_language'), $this->config->get('config_language'), true);
+		$data['name_native'] 		= $this->translateAdaptor->translate($data['name'], $this->config->get('config_rainforest_source_language'), $this->config->get('config_language'), true);
+		$data['full_name_native'] 	= $this->translateAdaptor->translate($data['path'], $this->config->get('config_rainforest_source_language'), $this->config->get('config_language'), true);
 
 		$this->db->ncquery("INSERT IGNORE INTO " . $this->table . " SET 
 			category_id 		= '" . $this->db->escape($data['id']) . "', 
@@ -281,7 +279,7 @@ class CategoryParser
 							$name = $data['name'];
 						} else {
 							if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $language['code'])){
-								$name = $this->yandexTranslator->translate($data['name'], $this->config->get('config_rainforest_source_language'), $language['code'], true);								
+								$name = $this->translateAdaptor->translate($data['name'], $this->config->get('config_rainforest_source_language'), $language['code'], true);								
 							} else {
 								$name = $data['name'];
 							}

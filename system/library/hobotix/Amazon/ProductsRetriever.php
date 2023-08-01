@@ -105,7 +105,7 @@ class ProductsRetriever extends RainforestRetriever
 			$text = $text;	
 		} else {
 			if ($this->config->get('config_rainforest_enable_translation') && $this->config->get('config_rainforest_enable_language_' . $real_language_code)){
-				$text = $this->yandexTranslator->translate($text, $detect?false:$this->config->get('config_rainforest_source_language'), $real_language_code, true);
+				$text = $this->translateAdaptor->translate($text, $detect?false:$this->config->get('config_rainforest_source_language'), $real_language_code, true);
 			} else {
 				$text = '';
 			}
@@ -1061,7 +1061,7 @@ class ProductsRetriever extends RainforestRetriever
 	}
 	
 	public function editFullProduct($product_id, $product, $do_adding_new_variants = true){	
-		$this->yandexTranslator->setDebug(false);
+		$this->translateAdaptor->setDebug(false);
 
 		if ($this->checkProductManufacturerForExclusion($product_id, $product)){
 			echoLine('[editFullProduct] Manufacturer is excluded, deleting product!', 'e');

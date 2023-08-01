@@ -13,7 +13,7 @@
 		public $model_catalog_product = null;
 		public $model_product_add = null;
 
-		public $yandexTranslator = null;
+		public $translateAdaptor = null;
 		
 		public $jsonResult = null;
 
@@ -25,7 +25,7 @@
 			$this->log 				= $registry->get('log');	
 
 			if ($this->config->get('config_rainforest_enable_translation')){
-				$this->yandexTranslator = $registry->get('yandexTranslator');
+				$this->translateAdaptor = $registry->get('translateAdaptor');
 			}	
 
 			//models
