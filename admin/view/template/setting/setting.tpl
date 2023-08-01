@@ -36,11 +36,16 @@
 				<a href="#tab-option"><i class="fa fa-cogs"></i> <?php echo $tab_option; ?></a>
 				<a href="#tab-image"><i class="fa fa-cogs"></i> Картинки</a>			
 				<a href="#tab-mail"><i class="fa fa-envelope"></i> Почта</a>				
-				<a href="#tab-sms"><i class="fa fa-mobile"></i> <?php echo $tab_sms; ?></a>
+				<a href="#tab-sms"><i class="fa fa-mobile"></i> SMS</a>
+				<?php if ($config_smsgate_library_enable_viber) { ?>
+					<a href="#tab-viber" ><i class="fa fa-mobile"></i> Viber</a>
+				<?php } ?>
 				<a href="#tab-server"><i class="fa fa-cogs"></i> Сервер, SEO</a>
 				<a href="#tab-telephony"><span style="color:#7F00FF;"><i class="fa fa-phone"></i> АТС, LDAP</span></a>
 				<a href="#tab-google-ya-fb-vk"><i class="fa fa-google"></i> <span style="color:#57AC79;">Google</span>, <span style="color:red;">Ya</span>, <span style="color:#7F00FF;">FB</span>, <span style="color:#3F6AD8;">VK</span></a>
-				<a href="#tab-ya-market" <?php if ($this->config->get('config_country_id') != 176) { ?>style="display:none;"<? } ?>><span style="color:red;"><i class="fa fa-yahoo"></i> Yandex.Market, Ozon.Seller</span></a>
+				<?php if ($config_country_id == 176) { ?>
+					<a href="#tab-ya-market"><span style="color:red;"><i class="fa fa-yahoo"></i> Yandex.Market, Ozon.Seller</span></a>
+				<? } ?>
 				<a href="#tab-rainforest"><span style="color:#7F00FF;"><i class="fa fa-amazon"></i> Rainforest API</span></a>
 				<a href="#tab-openai">🤖 <span style="color:#51A62D;">OpenAI</span></a>
 				<a href="#tab-apis"><span style="color:#7F00FF;"><i class="fa fa-cogs"></i> Разные API</span></a>				
@@ -1183,7 +1188,7 @@
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Сроки поставки если нету в наличии в текущей стране, но есть в Германии</span></p>
 									<input type="text" name="config_delivery_central_term" value="<?php echo $config_delivery_central_term; ?>" size="10" />
 								</td>
-							<?php if ($this->config->get('config_country_id') == 176) { ?>		
+							<?php if ($config_country_id == 176) { ?>		
 								<td style="width:33%">
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Сроки поставки если есть в наличии на складе РФ</span></p>
 									<input type="text" name="config_delivery_russia_term" value="<?php echo $config_delivery_russia_term; ?>" size="10" />
@@ -3447,8 +3452,64 @@
 							</table>
 						</div>
 
-						<div id="tab-sms">
+						<div id="tab-viber" <?php if (!$config_smsgate_library_enable_viber) { ?>style="display:none;"<?php } ?>>
+							<table class="list">
+								<tr>
+									<td style="width:200px;">
+										<span class="status_color" style="text-align: left; background: #43B02A; color:#fff">
+											Уведомление о новом заказе
+										</span>
+									</td>
+									<td style="width:50px" class="center">
+										<input class="checkbox" type="checkbox" name="config_viber_send_new_order" id="config_viber_send_new_order" <?php if ($config_viber_send_new_order) { echo ' checked="checked"'; }?> />
+										<label for="config_viber_send_new_order"></label>
+									</td>
+									<td style="width:300px;">
+										<p>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+												Текст
+											</span>
+										</p>
 
+										<textarea name="config_viber_new_order_message" cols="50" rows="7"><?php echo $config_viber_new_order_message; ?></textarea>
+									</td>
+									<td style="width:250px;">
+										<p>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+												Картинка
+											</span>
+										</p>
+
+										<div class="image">
+											<img src="<?php echo $viber_new_order_image; ?>" alt="" id="thumb-viber_new_order_image" />
+											<input type="text" style="font-size:10px; width:200px;" class="image-ajax" name="config_viber_new_order_image" value="<?php echo $config_viber_new_order_image; ?>" id="viber_new_order_image" />
+											<br />
+											<a onclick="image_upload('viber_new_order_image', 'thumb-viber_new_order_image');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb-viber_new_order_image').attr('src', '<?php echo $no_image; ?>'); $('#viber_new_order_image').attr('value', ''); $('#viber_new_order_image').trigger('change');"><?php echo $text_clear; ?></a>
+										</div>
+									</td>
+									<td style="width:200px;">
+										<p>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+												Текст кнопки
+											</span>
+										</p>
+
+										<textarea name="config_viber_new_order_button_text" cols="50" rows="7"><?php echo $config_viber_new_order_button_text; ?></textarea>
+									</td>
+									<td style="width:200px;">
+										<p>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+												URL кнопки
+											</span>
+										</p>
+
+										<textarea name="config_viber_new_order_button_url" cols="50" rows="7"><?php echo $config_viber_new_order_button_url; ?></textarea>
+									</td>
+								</tr>
+							</table>
+						</div>
+
+						<div id="tab-sms">
 							<h2><i class="fa fa-cogs"></i> Настройки воркеров и очередей</h2>
 							<table class="form">
 								<tr>
@@ -3538,20 +3599,6 @@
 								<tr>									
 									<td style="width:15%">
 										<div>
-											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Уведомлять клиента о заказе</span></p>
-
-											<select name="config_sms_send_new_order">
-												<?php if ($config_sms_send_new_order) { ?>
-													<option value="1" selected="selected">Включить</option>
-													<option value="0">Отключить</option>
-												<?php } else { ?>													
-													<option value="1">Включить</option>
-													<option value="0"  selected="selected">Отключить</option>
-												<? } ?>
-											</select>
-										</div>
-
-										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Уведомлять клиента о смене статуса</span></p>
 
 											<select name="config_sms_send_new_order_status">
@@ -3566,16 +3613,8 @@
 										</div>
 									</td>
 
-
 									<td style="width:25%" class="left">
-										<div>
-											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Текст SMS о новом заказе</span></p>
-											<textarea name="config_sms_new_order_message" cols="40" rows="5"><?php echo $config_sms_new_order_message; ?></textarea>
-										</div>
-									</td>
-
-									<td style="width:25%" class="left">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Шаблон нового</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Шаблонизация</span></p>
 										<span class="help">											
 											<b>{SNAME}</b> - название магазина<br />
 											<b>{ID}</b> - номер заказа<br />
@@ -3606,102 +3645,117 @@
 									</td>
 								</tr>	
 								</table>
-
-								<table class="list">
-									<?php foreach ($order_statuses as $order_status) { ?>
-										<?php $status_message = '';
-										if (isset($config_sms_new_order_status_message[$order_status['order_status_id']])) {
-											$status_message = $config_sms_new_order_status_message[$order_status['order_status_id']];
-										} ?>
+								
+									<table class="list">
 										<tr>
 											<td style="width:200px;">
-												<span class="status_color" style="text-align: left; background: #<?php echo !empty($order_status['status_bg_color']) ? $order_status['status_bg_color'] : ''; ?>; color: #<?php echo !empty($order_status['status_txt_color']) ? $order_status['status_txt_color'] : ''; ?>;">
-													<?php echo $order_status['name']; ?>
+												<span class="status_color" style="text-align: left; background: #43B02A; color:#fff">
+													Уведомление о новом заказе
 												</span>
 											</td>
 											<td style="width:50px" class="center">
-												<input data-key="config_sms_new_order_status_message" data-id="<?php echo $order_status['order_status_id']; ?>" data-name="enabled" class="checkbox" type="checkbox" name="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]" id="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]" <?php if (isset($status_message['enabled']) && $status_message['enabled']) { echo ' checked="checked"'; }?>/>
-
-												<label for="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]"></label>
+												<input class="checkbox" type="checkbox" name="config_sms_send_new_order" id="config_sms_send_new_order" <?php if ($config_sms_send_new_order) { echo ' checked="checked"'; }?> />
+												<label for="config_sms_send_new_order"></label>
 
 											</td>
 											<td style="padding:5px;">
-												<input data-key="config_sms_new_order_status_message" data-id="<?php echo $order_status['order_status_id']; ?>" data-name="message" type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][message]" value="<?php echo isset($status_message['message']) ? $status_message['message'] : ""; ?>" />
+												<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_new_order_message" value="<?php echo $config_sms_new_order_message; ?>" />
 											</td>
-										</tr>										
-									<?php } ?>
-									<tr>
-										<td style="width:200px;">
-											<span class="status_color" style="text-align: left; background: #43B02A; color: #FFF; ?>;">
-												Трекинг отправки со склада
-											</span>
-										</td>
-										<td style="width:50px" class="center">
-											<input class="checkbox" type="checkbox" name="config_sms_tracker_leave_main_warehouse_enabled" id="config_sms_tracker_leave_main_warehouse_enabled"<?php if ($config_sms_tracker_leave_main_warehouse_enabled) { echo ' checked="checked"'; }?>/><label for="config_sms_tracker_leave_main_warehouse_enabled"></label>
-										</td>
-										<td style="padding:5px;">
-											<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_tracker_leave_main_warehouse" value="<?php echo $config_sms_tracker_leave_main_warehouse; ?>" />
-										</td>
-									</tr>
+										</tr>
 
-									<tr>
-										<td style="width:200px;">
-											<span class="status_color" style="text-align: left; background: #000; color: #FFF; ?>;">
-												Успешная оплата
-											</span>
-										</td>
-										<td style="width:50px" class="center">
-											<input class="checkbox" type="checkbox" name="config_sms_payment_recieved_enabled" id="config_sms_payment_recieved_enabled"<?php if ($config_sms_payment_recieved_enabled) { echo ' checked="checked"'; }?>/><label for="config_sms_payment_recieved_enabled"></label>
-										</td>
-										<td style="padding:5px;">
-											<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_payment_recieved" value="<?php echo $config_sms_payment_recieved; ?>" />
-										</td>
-									</tr>
+										<?php foreach ($order_statuses as $order_status) { ?>
+											<?php $status_message = '';
+											if (isset($config_sms_new_order_status_message[$order_status['order_status_id']])) {
+												$status_message = $config_sms_new_order_status_message[$order_status['order_status_id']];
+											} ?>
+											<tr>
+												<td style="width:200px;">
+													<span class="status_color" style="text-align: left; background: #<?php echo !empty($order_status['status_bg_color']) ? $order_status['status_bg_color'] : ''; ?>; color: #<?php echo !empty($order_status['status_txt_color']) ? $order_status['status_txt_color'] : ''; ?>;">
+														<?php echo $order_status['name']; ?>
+													</span>
+												</td>
+												<td style="width:50px" class="center">
+													<input data-key="config_sms_new_order_status_message" data-id="<?php echo $order_status['order_status_id']; ?>" data-name="enabled" class="checkbox" type="checkbox" name="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]" id="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]" <?php if (isset($status_message['enabled']) && $status_message['enabled']) { echo ' checked="checked"'; }?>/>
 
-									<tr>
-										<td style="width:200px;">
-											<span class="status_color" style="text-align: left; background: #ef5e67; color: #FFF; ?>;">
-												ТТН службы доставки: отправка
-											</span>
-										</td>
-										<td style="width:50px" class="center">
-											<input class="checkbox" type="checkbox" name="config_sms_ttn_sent_enabled" id="config_sms_ttn_sent_enabled"<?php if ($config_sms_ttn_sent_enabled) { echo ' checked="checked"'; }?>/><label for="config_sms_ttn_sent_enabled"></label>
-										</td>
-										<td style="padding:5px;">
-											<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_ttn_sent" value="<?php echo $config_sms_ttn_sent; ?>" />
-										</td>
-									</tr>
+													<label for="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][enabled]"></label>
 
-									<tr>
-										<td style="width:200px;">
-											<span class="status_color" style="text-align: left; background: #43B02A; color: #FFF; ?>;">
-												ТТН службы доставки: доставлено
-											</span>
-										</td>
-										<td style="width:50px" class="center">
-											<input class="checkbox" type="checkbox" name="config_sms_ttn_ready_enabled" id="config_sms_ttn_ready_enabled"<?php if ($config_sms_ttn_ready_enabled) { echo ' checked="checked"'; }?>/><label for="config_sms_ttn_ready_enabled"></label>
-										</td>
-										<td style="padding:5px;">
-											<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_ttn_ready" value="<?php echo $config_sms_ttn_ready; ?>" />
-										</td>
-									</tr>
+												</td>
+												<td style="padding:5px;">
+													<input data-key="config_sms_new_order_status_message" data-id="<?php echo $order_status['order_status_id']; ?>" data-name="message" type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_new_order_status_message[<?php echo $order_status['order_status_id']; ?>][message]" value="<?php echo isset($status_message['message']) ? $status_message['message'] : ""; ?>" />
+												</td>
+											</tr>										
+										<?php } ?>
+										<tr>
+											<td style="width:200px;">
+												<span class="status_color" style="text-align: left; background: #43B02A; color: #FFF; ?>;">
+													Трекинг отправки со склада
+												</span>
+											</td>
+											<td style="width:50px" class="center">
+												<input class="checkbox" type="checkbox" name="config_sms_tracker_leave_main_warehouse_enabled" id="config_sms_tracker_leave_main_warehouse_enabled"<?php if ($config_sms_tracker_leave_main_warehouse_enabled) { echo ' checked="checked"'; }?>/><label for="config_sms_tracker_leave_main_warehouse_enabled"></label>
+											</td>
+											<td style="padding:5px;">
+												<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_tracker_leave_main_warehouse" value="<?php echo $config_sms_tracker_leave_main_warehouse; ?>" />
+											</td>
+										</tr>
 
-									<tr>
+										<tr>
+											<td style="width:200px;">
+												<span class="status_color" style="text-align: left; background: #000; color: #FFF; ?>;">
+													Успешная оплата
+												</span>
+											</td>
+											<td style="width:50px" class="center">
+												<input class="checkbox" type="checkbox" name="config_sms_payment_recieved_enabled" id="config_sms_payment_recieved_enabled"<?php if ($config_sms_payment_recieved_enabled) { echo ' checked="checked"'; }?>/><label for="config_sms_payment_recieved_enabled"></label>
+											</td>
+											<td style="padding:5px;">
+												<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_payment_recieved" value="<?php echo $config_sms_payment_recieved; ?>" />
+											</td>
+										</tr>
 
-										<td style="width:200px;">
-											<span class="status_color" style="text-align: left; background: #ef5e67; color: #FFF; ?>;">
-												Уведомление о сгорании бонусов
-											</span>
-										</td>
-										<td style="width:50px" class="center">
-											<input class="checkbox" type="checkbox" name="rewardpoints_reminder_enable" id="rewardpoints_reminder_enable"<?php if ($rewardpoints_reminder_enable) { echo ' checked="checked"'; }?>/><label for="rewardpoints_reminder_enable"></label>
-										</td>
-										<td style="padding:5px;">
-											<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="rewardpoints_reminder_sms_text" value="<?php echo $rewardpoints_reminder_sms_text; ?>" />
-										</td>
-									</tr>
+										<tr>
+											<td style="width:200px;">
+												<span class="status_color" style="text-align: left; background: #ef5e67; color: #FFF; ?>;">
+													ТТН службы доставки: отправка
+												</span>
+											</td>
+											<td style="width:50px" class="center">
+												<input class="checkbox" type="checkbox" name="config_sms_ttn_sent_enabled" id="config_sms_ttn_sent_enabled"<?php if ($config_sms_ttn_sent_enabled) { echo ' checked="checked"'; }?>/><label for="config_sms_ttn_sent_enabled"></label>
+											</td>
+											<td style="padding:5px;">
+												<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_ttn_sent" value="<?php echo $config_sms_ttn_sent; ?>" />
+											</td>
+										</tr>
 
-								</table>
+										<tr>
+											<td style="width:200px;">
+												<span class="status_color" style="text-align: left; background: #43B02A; color: #FFF; ?>;">
+													ТТН службы доставки: доставлено
+												</span>
+											</td>
+											<td style="width:50px" class="center">
+												<input class="checkbox" type="checkbox" name="config_sms_ttn_ready_enabled" id="config_sms_ttn_ready_enabled"<?php if ($config_sms_ttn_ready_enabled) { echo ' checked="checked"'; }?>/><label for="config_sms_ttn_ready_enabled"></label>
+											</td>
+											<td style="padding:5px;">
+												<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_ttn_ready" value="<?php echo $config_sms_ttn_ready; ?>" />
+											</td>
+										</tr>
+
+										<tr>
+
+											<td style="width:200px;">
+												<span class="status_color" style="text-align: left; background: #ef5e67; color: #FFF; ?>;">
+													Уведомление о сгорании бонусов
+												</span>
+											</td>
+											<td style="width:50px" class="center">
+												<input class="checkbox" type="checkbox" name="rewardpoints_reminder_enable" id="rewardpoints_reminder_enable"<?php if ($rewardpoints_reminder_enable) { echo ' checked="checked"'; }?>/><label for="rewardpoints_reminder_enable"></label>
+											</td>
+											<td style="padding:5px;">
+												<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="rewardpoints_reminder_sms_text" value="<?php echo $rewardpoints_reminder_sms_text; ?>" />
+											</td>
+										</tr>
+									</table>
 						</div>
 						<div id="tab-server">
 							<h2>Базовые настройки SEO</h2>
@@ -4255,7 +4309,7 @@
 						
 						
 
-						<div id="tab-ya-market">
+						<div id="tab-ya-market" <?php if ($config_country_id != 176) { ?>style="display: none;"<?php } ?>>
 							<h2>Настройки Ozon Seller + исключение брендов</h2>
 
 							<table class="form">
@@ -7253,7 +7307,9 @@
 		</div>
 		<script type="text/javascript"><!--
 
-			$('select, textarea, input[type=text], input[type=number], input[type=time], input[type=checkbox]').bind('change', function() {
+			$('select, textarea, input[type=text], input[type=number], input[type=time], input[type=checkbox], input[type=hidden]').bind('change', function() {
+				console.log('Change triggered on ' + $(this).attr('name'));
+
 				var key  			= $(this).attr('name');
 				var elem 			= $(this);
 				var value 			= $(this).val();
@@ -7365,19 +7421,23 @@
 								dataType: 'text',
 								success: function(data) {
 									$('#' + thumb).replaceWith('<img src="' + data + '" alt="" id="' + thumb + '" />');
+									$('#' + field).trigger('change');
 								}
 							});
 						}
 					},	
 					bgiframe: false,
-					width: <?php echo $this->config->get('pim_width')?$this->config->get('pim_width'):800;?>,
-					height: <?php echo $this->config->get('pim_height')?$this->config->get('pim_height'):400;?>,
-					resizable: false,
+					width: 1000,
+					height: 800,
+					resizable: true,
 					modal: false
 				});
 			};
 		//--></script> 
-		<script type="text/javascript"><!--
+		<script type="text/javascript">
 			$('#tabs a').tabs();
-		//--></script> 
+		</script> 
+		<script type="text/javascript">
+			$('#vstabs a').tabs();
+		</script> 
 	<?php echo $footer; ?>																																																																											

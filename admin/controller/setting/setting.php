@@ -2145,6 +2145,8 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_logo'] = $this->config->get('config_logo');
         }
+
+        $this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 200, 200);
         
         if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo')) && is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
             $this->data['logo'] = $this->model_tool_image->resize($this->config->get('config_logo'), 200, 200);
@@ -2843,7 +2845,48 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_sms_new_order_status_message'] = (array)$this->config->get('config_sms_new_order_status_message');
         }
+
+
+        //VIBER SETTINGS
+        if (isset($this->request->post['config_viber_send_new_order'])) {
+            $this->data['config_viber_send_new_order'] = $this->request->post['config_viber_send_new_order'];
+        } else {
+            $this->data['config_viber_send_new_order'] = $this->config->get('config_viber_send_new_order');
+        }
         
+        if (isset($this->request->post['config_viber_new_order_message'])) {
+            $this->data['config_viber_new_order_message'] = $this->request->post['config_viber_new_order_message'];
+        } else {
+            $this->data['config_viber_new_order_message'] = $this->config->get('config_viber_new_order_message');
+        }
+        
+        if (isset($this->request->post['config_viber_new_order_image'])) {
+            $this->data['config_viber_new_order_image'] = $this->request->post['config_viber_new_order_image'];
+        } else {
+            $this->data['config_viber_new_order_image'] = $this->config->get('config_viber_new_order_image');
+        }
+
+        if ($this->config->get('config_viber_new_order_image') && file_exists(DIR_IMAGE . $this->config->get('config_viber_new_order_image')) && is_file(DIR_IMAGE . $this->config->get('config_viber_new_order_image'))) {
+            $this->data['viber_new_order_image'] = $this->model_tool_image->resize($this->config->get('config_viber_new_order_image'), 200, 200);
+        } else {
+            $this->data['viber_new_order_image'] = $this->model_tool_image->resize('no_image.jpg', 200, 200);
+        }
+
+        if (isset($this->request->post['config_viber_new_order_button_text'])) {
+            $this->data['config_viber_new_order_button_text'] = $this->request->post['config_viber_new_order_button_text'];
+        } else {
+            $this->data['config_viber_new_order_button_text'] = $this->config->get('config_viber_new_order_button_text');
+        }
+
+        if (isset($this->request->post['config_viber_new_order_button_url'])) {
+            $this->data['config_viber_new_order_button_url'] = $this->request->post['config_viber_new_order_button_url'];
+        } else {
+            $this->data['config_viber_new_order_button_url'] = $this->config->get('config_viber_new_order_button_url');
+        }
+
+
+
+
         if (isset($this->request->post['config_sms_send_new_order'])) {
             $this->data['config_sms_send_new_order'] = $this->request->post['config_sms_send_new_order'];
         } else {

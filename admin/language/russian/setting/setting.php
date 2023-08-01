@@ -14,8 +14,8 @@
 	$_['text_affiliate']             = 'Партнеры';
 	$_['text_return']                = 'Возвраты';
 	$_['text_image_manager']         = 'Управление изображениями';
-	$_['text_browse']                = 'Просмотр файлов';
-	$_['text_clear']                 = 'Очистить изображение';
+	$_['text_browse']                = 'Просмотр';
+	$_['text_clear']                 = 'Очистить';
 	$_['text_shipping']              = 'Адрес доставки';
 	$_['text_payment']               = 'Платёжный адрес';
 	$_['text_mail']                  = 'Mail';
