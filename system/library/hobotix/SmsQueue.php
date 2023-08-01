@@ -14,18 +14,12 @@ class smsQueue {
 		$this->config 	= $registry->get('config');
 	}
 	
-	public function queue($data){					
-		$queue_array = array(		
-			'to' 		=> $data['to'],
-			'from' 		=> $data['from'],
-			'message' 	=> $data['message']
-		);
-		
+	public function queue($data){							
 		if (mb_strlen($data['message']) > 210){
 			return false;
 		}
 		
-		$this->db->query("INSERT INTO `queue_sms` SET `body`='". base64_encode(json_encode($queue_array)) ."'");		
+		$this->db->query("INSERT INTO `queue_sms` SET `body`='". base64_encode(json_encode($data)) ."'");		
 		
 		return $this->db->getLastId();			
 	}
@@ -68,12 +62,11 @@ class smsQueue {
 					$this->deleteSMSFromQueue($row['queue_sms_id']);
 				}
 
-				$sms = [		
-					'to' 		=>	$body['to'],
-					'message' 	=> 	$body['message']
-				];
-
-				$id = $this->registry->get('smsAdaptor')->sendSMS($sms);
+				if ($this->config->get('config_smsgate_library_enable_viber') && !empty($body['viber'])){
+					$id = $this->registry->get('smsAdaptor')->sendViber($body);
+				} else {
+					$id = $this->registry->get('smsAdaptor')->sendSMS($body);
+				}	
 
 				if ($id){
 					echoLine('[LibrarySmsQueue::cron] Success send to ' . $body['to'], ', returned id ' . $id, 's');
