@@ -6530,6 +6530,62 @@
 								</tr>
 							</table>
 
+							<h2> Translate API</h2>
+							<table class="form">
+								<tr>
+									<td width="33%">	
+										<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Библиотека Translate</span></p>
+											<select name="config_translation_library">
+												<?php foreach ($translategates as $translategate) { ?>
+													<?php if ($translategate == $config_translation_library) { ?>
+														<option value="<?php echo $translategate; ?>" selected="selected"><?php echo $translategate; ?></option>
+													<?php } else { ?>
+														<option value="<?php echo $translategate; ?>"><?php echo $translategate; ?></option>
+													<?php } ?>
+												<?php } ?>				
+											</select>
+										</div>
+									</td>	
+
+									<td width="33%">	
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Включить Translate API</span></p>
+										<select name="config_translate_api_enable">
+											<?php if ($config_translate_api_enable) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>									
+									</td>							
+								</tr>
+							</table>
+
+							<h2> Microsoft Azure Cloud API</h2>
+							<table class="form">
+								<tr>
+									<td width="33%">	
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Включить Microsoft Azure Cloud API</span></p>
+										<select name="config_azure_translate_api_enable">
+											<?php if ($config_azure_translate_api_enable) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>									
+									</td>
+									
+									<td width="33%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">API KEY</span></p>
+										<input type="text" name="config_azure_translate_api_key" value="<?php echo $config_azure_translate_api_key; ?>" size="50" style="width:250px;" />
+									</td>									
+								</tr>
+							</table>
+
 							<h2>Yandex Translate (Cloud) API</h2>
 							<table class="form">
 								<tr>

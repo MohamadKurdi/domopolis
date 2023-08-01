@@ -4147,7 +4147,26 @@ class ControllerSettingSetting extends Controller
             $this->data['config_helpcrunch_send_auth_data'] = $this->config->get('config_helpcrunch_send_auth_data');
         }
 
-            //Yandex Translate
+        $this->data['translategates'] = [];
+
+        $translategates = glob(DIR_SYSTEM . '/library/hobotix/Translate/*');        
+        foreach ($translategates as $translategate) {
+            $this->data['translategates'][] = pathinfo($translategate,  PATHINFO_FILENAME);
+        }
+
+        if (isset($this->request->post['config_translate_api_enable'])) {
+            $this->data['config_translate_api_enable'] = $this->request->post['config_translate_api_enable'];
+        } else {
+            $this->data['config_translate_api_enable'] = $this->config->get('config_translate_api_enable');
+        }       
+
+        if (isset($this->request->post['config_translation_library'])) {
+            $this->data['config_translation_library'] = $this->request->post['config_translation_library'];
+        } else {
+            $this->data['config_translation_library'] = $this->config->get('config_translation_library');
+        }  
+
+        //Yandex Translate
         if (isset($this->request->post['config_yandex_translate_api_enable'])) {
             $this->data['config_yandex_translate_api_enable'] = $this->request->post['config_yandex_translate_api_enable'];
         } else {
@@ -4166,6 +4185,18 @@ class ControllerSettingSetting extends Controller
             $this->data['config_yandex_translate_api_id'] = $this->config->get('config_yandex_translate_api_id');
         }
 
+        //MS Translate
+        if (isset($this->request->post['config_azure_translate_api_enable'])) {
+            $this->data['config_azure_translate_api_enable'] = $this->request->post['config_azure_translate_api_enable'];
+        } else {
+            $this->data['config_azure_translate_api_enable'] = $this->config->get('config_azure_translate_api_enable');
+        }
+
+         if (isset($this->request->post['config_azure_translate_api_key'])) {
+            $this->data['config_azure_translate_api_key'] = $this->request->post['config_azure_translate_api_key'];
+        } else {
+            $this->data['config_azure_translate_api_key'] = $this->config->get('config_azure_translate_api_key');
+        }
 
             //LDAP AUTH
         if (isset($this->request->post['config_ldap_auth_enable'])) {
