@@ -364,7 +364,7 @@ $registry->set('smsAdaptor',        new hobotix\SmsAdaptor($registry));
 $registry->set('emailBlackList',    new hobotix\EmailBlackList($registry));
 $registry->set('elasticSearch',     new hobotix\ElasticSearch($registry));
 $registry->set('openaiAdaptor',     new hobotix\OpenAIAdaptor($registry));
-$registry->set('yandexTranslator',  new hobotix\YandexTranslator($registry));
+$registry->set('translateAdaptor',  new hobotix\TranslateAdaptor($registry));
 $registry->set('rainforestAmazon',  new hobotix\RainforestAmazon($registry));
 $registry->set('pricevaAdaptor',    new hobotix\PricevaAdaptor($registry));
 $registry->set('courierServices',   new hobotix\CourierServices($registry));

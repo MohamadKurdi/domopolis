@@ -92,7 +92,7 @@ require_once(DIR_SYSTEM . 'library/hobotix/RainforestAmazon.php');
 require_once(DIR_SYSTEM . 'library/hobotix/PricevaAdaptor.php');
 require_once(DIR_SYSTEM . 'library/hobotix/OpenAIAdaptor.php');
 require_once(DIR_SYSTEM . 'library/hobotix/SimpleProcess.php');
-require_once(DIR_SYSTEM . 'library/hobotix/YandexTranslator.php');
+require_once(DIR_SYSTEM . 'library/hobotix/TranslateAdaptor.php');
 require_once(DIR_SYSTEM . 'library/hobotix/CheckBoxUA.php');		
 
 $registry = new Registry();
@@ -269,7 +269,7 @@ $registry->set('smsAdaptor', 		new hobotix\SmsAdaptor($registry));
 $registry->set('courierServices', 	new hobotix\CourierServices($registry));
 $registry->set('emailBlackList', 	new hobotix\EmailBlackList($registry));
 $registry->set('openaiAdaptor', 	new hobotix\OpenAIAdaptor($registry));
-$registry->set('yandexTranslator', 	new hobotix\YandexTranslator($registry));
+$registry->set('translateAdaptor', 	new hobotix\TranslateAdaptor($registry));
 $registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
 $registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
 $registry->set('checkBoxUA', 		new hobotix\CheckBoxUA($registry));

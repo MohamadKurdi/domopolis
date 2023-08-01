@@ -27,7 +27,7 @@
 		"/hobotix/EmailBlackList",
 		"/hobotix/RainforestAmazon",
 		"/hobotix/PricevaAdaptor",
-		"/hobotix/YandexTranslator",
+		"/hobotix/TranslateAdaptor",
 		"/hobotix/SimpleProcess",
 		"/hobotix/ElasticSearch",
 		"/hobotix/CourierServices",
