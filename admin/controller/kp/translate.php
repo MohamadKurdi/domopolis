@@ -4,8 +4,7 @@
 		protected $error = array();
 		
 		public function ajax() {
-
-			if (!$this->config->get('config_yandex_translate_api_enable')){
+			if (!$this->config->get('config_translate_api_enable')){
 				return;
 			}
 
@@ -15,7 +14,7 @@
 			
 			$this->load->model('kp/translate');
 			
-			$translated = $this->model_kp_translate->translateYandex($q, $source, $target);
+			$translated = $this->model_kp_translate->translate($q, $source, $target);
 			
 			$json = json_decode($translated, true);
 			if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){

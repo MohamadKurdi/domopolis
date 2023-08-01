@@ -8,7 +8,7 @@
 		
 		public function translateReviewsRU(){
 
-			if (!$this->config->get('config_yandex_translate_api_enable')){
+			if (!$this->config->get('config_translate_api_enable')){
 				return;
 			}
 
@@ -52,7 +52,7 @@
 					foreach ($fields as $field){
 						
 						if (!empty($row[$field])){
-							$translation = $this->model_kp_translate->translateYandex($row[$field], 'uk', 'ru');	
+							$translation = $this->model_kp_translate->translate($row[$field], 'uk', 'ru');	
 							
 							$json = json_decode($translation, true);
 							if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -126,7 +126,7 @@
 
 		public function translateAttributeNamesRu(){
 
-			if (!$this->config->get('config_yandex_translate_api_enable')){
+			if (!$this->config->get('config_translate_api_enable')){
 				return;
 			}
 			
@@ -138,7 +138,7 @@
 
 				$text = $ruquery->row['name'];
 
-				$translation_ruua = $this->model_kp_translate->translateYandex($text, 'uk', 'ru');	
+				$translation_ruua = $this->model_kp_translate->translate($text, 'uk', 'ru');	
 
 				$json = json_decode($translation_ruua, true);
 				if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -158,7 +158,7 @@
 		
 		public function cronAttributesRU(){
 
-			if (!$this->config->get('config_yandex_translate_api_enable')){
+			if (!$this->config->get('config_translate_api_enable')){
 				return;
 			}
 			
@@ -199,7 +199,7 @@
 						
 						if (!$translated){
 							
-							$translation_ruua = $this->model_kp_translate->translateYandex($text, 'uk', 'ru');	
+							$translation_ruua = $this->model_kp_translate->translate($text, 'uk', 'ru');	
 							
 							$json = json_decode($translation_ruua, true);
 							if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -248,7 +248,7 @@
 		
 		public function cronProductsRU(){
 
-			if (!$this->config->get('config_yandex_translate_api_enable')){
+			if (!$this->config->get('config_translate_api_enable')){
 				return;
 			}
 
@@ -299,7 +299,7 @@
 					echoLine('[TR PROD] Переводим товар ' . $row['name_ruua'] . ', ' . $row['product_id']);
 					
 					$translation_ruua = false;
-					$translated = $this->model_kp_translate->translateYandex($row['name_ruua'], 'uk', 'ru');	
+					$translated = $this->model_kp_translate->translate($row['name_ruua'], 'uk', 'ru');	
 					
 					$json = json_decode($translated, true);
 					if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -378,7 +378,7 @@
 					echoLine('[TR PROD] Переводим товар ' . $row['name'] . ', ' . $row['product_id']);
 					
 					$translation_ruua = false;
-					$translated = $this->model_kp_translate->translateYandex($row['description_ruua'], 'uk', 'ru');	
+					$translated = $this->model_kp_translate->translate($row['description_ruua'], 'uk', 'ru');	
 					
 					$json = json_decode($translated, true);
 					if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -425,7 +425,7 @@
 		
 		public function cronCollectionsUA(){
 
-			if (!$this->config->get('config_yandex_translate_api_enable')){
+			if (!$this->config->get('config_translate_api_enable')){
 				return;
 			}
 			
@@ -464,7 +464,7 @@
 					echoLine('[TR COLL] Переводим коллекцию ' . $row['name'] . ', ' . $row['collection_id']);
 					
 					$translation_ruua = false;
-					$translated = $this->model_kp_translate->translateYandex($row['description_ruua'], 'uk', 'ru');	
+					$translated = $this->model_kp_translate->translate($row['description_ruua'], 'uk', 'ru');	
 					
 					$json = json_decode($translated, true);
 					if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){

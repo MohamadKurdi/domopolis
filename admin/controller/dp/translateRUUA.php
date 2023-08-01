@@ -9,7 +9,7 @@
 		
 		public function ajax() {
 
-			if (!$this->config->get('config_yandex_translate_api_enable')){
+			if (!$this->config->get('config_translate_api_enable')){
 				return;
 			}
 
@@ -19,7 +19,7 @@
 			
 			$this->load->model('kp/translate');
 			
-			$translated = $this->model_kp_translate->translateYandex($q, $source, $target);
+			$translated = $this->model_kp_translate->translate($q, $source, $target);
 			
 			$json = json_decode($translated, true);
 			if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -32,7 +32,7 @@
 		
 		public function cronReviewsUA(){
 
-			if (!$this->config->get('config_yandex_translate_api_enable')){
+			if (!$this->config->get('config_translate_api_enable')){
 				return;
 			}
 
@@ -75,7 +75,7 @@
 					foreach ($fields as $field){
 						
 						if (!empty($row[$field])){
-							$translation = $this->model_kp_translate->translateYandex($row[$field], 'ru', 'uk');	
+							$translation = $this->model_kp_translate->translate($row[$field], 'ru', 'uk');	
 							
 							$json = json_decode($translation, true);
 							if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -159,7 +159,7 @@
 					foreach ($fields as $field){
 						
 						if (!empty($row[$field])){
-							$translation = $this->model_kp_translate->translateYandex($row[$field], 'ru', 'uk');	
+							$translation = $this->model_kp_translate->translate($row[$field], 'ru', 'uk');	
 							
 							$json = json_decode($translation, true);
 							if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -209,7 +209,7 @@
 		
 		public function cronAttributesUA(){
 
-			if (!$this->config->get('config_yandex_translate_api_enable')){
+			if (!$this->config->get('config_translate_api_enable')){
 				return;
 			}
 			
@@ -250,7 +250,7 @@
 						
 						if (!$translated){
 							
-							$translation_ruua = $this->model_kp_translate->translateYandex($text, 'ru', 'uk');	
+							$translation_ruua = $this->model_kp_translate->translate($text, 'ru', 'uk');	
 							
 							$json = json_decode($translation_ruua, true);
 							if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -301,7 +301,7 @@
 		
 		public function cronProductsUA(){
 
-			if (!$this->config->get('config_yandex_translate_api_enable')){
+			if (!$this->config->get('config_translate_api_enable')){
 				return;
 			}
 
@@ -354,7 +354,7 @@
 					echoLine('[TR PROD] Переводим товар ' . $row['name_ruua'] . ', ' . $row['product_id']);
 					
 					$translation_ruua = false;
-					$translated = $this->model_kp_translate->translateYandex($row['name_ruua'], 'ru', 'uk');	
+					$translated = $this->model_kp_translate->translate($row['name_ruua'], 'ru', 'uk');	
 					
 					$json = json_decode($translated, true);
 					if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -437,7 +437,7 @@
 					echoLine('[TR PROD] Переводим товар ' . $row['name'] . ', ' . $row['product_id']);
 					
 					$translation_ruua = false;
-					$translated = $this->model_kp_translate->translateYandex($row['description_ruua'], 'ru', 'uk');	
+					$translated = $this->model_kp_translate->translate($row['description_ruua'], 'ru', 'uk');	
 					
 					$json = json_decode($translated, true);
 					if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -485,7 +485,7 @@
 		
 		public function cronCollectionsUA(){
 
-			if (!$this->config->get('config_yandex_translate_api_enable')){
+			if (!$this->config->get('config_translate_api_enable')){
 				return;
 			}
 			
@@ -524,7 +524,7 @@
 					echoLine('[TR COLL] Переводим коллекцию ' . $row['name'] . ', ' . $row['collection_id']);
 					
 					$translation_ruua = false;
-					$translated = $this->model_kp_translate->translateYandex($row['description_ruua'], 'ru', 'uk');	
+					$translated = $this->model_kp_translate->translate($row['description_ruua'], 'ru', 'uk');	
 					
 					$json = json_decode($translated, true);
 					if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){

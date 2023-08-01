@@ -546,7 +546,7 @@ class ControllerDPRainForest extends Controller {
 		$products = $this->rainforestAmazon->productsRetriever->model_product_get->getVariantsAddQueue();
 
 		if ($products){
-			$this->yandexTranslator->checkIfItIsPossibleToMakeRequest();
+			$this->translateAdaptor->checkIfItIsPossibleToMakeRequest();
 
 			foreach ($products as $product){
 				echoLine('[ControllerDPRainForest::addvariantsqueuecron] Starting with product ' . $product['product_id'] . ', ' . $product['asin'], 'i');					
@@ -622,7 +622,7 @@ class ControllerDPRainForest extends Controller {
 		$asinsSlice 		= [];
 
 		if ($asins){
-			$this->yandexTranslator->checkIfItIsPossibleToMakeRequest();
+			$this->translateAdaptor->checkIfItIsPossibleToMakeRequest();
 
 			echoLine('[ControllerDPRainForest::addasinsqueuecron] Total ASINs in queue: ' . count($asins));
 
@@ -773,7 +773,7 @@ class ControllerDPRainForest extends Controller {
 
 		$otherPageRequests = [];		
 		for ($i = 1; $i <= ($iterations+1); $i++){
-			$this->yandexTranslator->checkIfItIsPossibleToMakeRequest();
+			$this->translateAdaptor->checkIfItIsPossibleToMakeRequest();
 			
 			$timer = new FPCTimer();
 			$this->current_iteration = $i;
@@ -1360,7 +1360,7 @@ class ControllerDPRainForest extends Controller {
 	Фиксит переводы строк
 	*/
 	public function fixtranslations(){		
-		$this->rainforestAmazon->productsRetriever->yandexTranslator->setDebug(true);
+		$this->rainforestAmazon->productsRetriever->translateAdaptor->setDebug(true);
 		$this->rainforestAmazon->productsRetriever->model_product_edit->cleanFailedTranslations();
 
 
@@ -1379,7 +1379,7 @@ class ControllerDPRainForest extends Controller {
 					if ($product['language_id'] == $language['language_id'] && $this->config->get('config_rainforest_enable_language_' . $language_code)){	
 						echoLine('[fixtranslations] Товар: ' . $product['product_id'] . ', ' . $i . '/' . $total);
 
-						$translated = $this->rainforestAmazon->productsRetriever->yandexTranslator->translate($source, $this->config->get('config_rainforest_source_language'), $language_code, true);
+						$translated = $this->rainforestAmazon->productsRetriever->translateAdaptor->translate($source, $this->config->get('config_rainforest_source_language'), $language_code, true);
 
 						$product_translate_data[$language['language_id']] = [
 							$field 			=> $translated						
@@ -1408,7 +1408,7 @@ class ControllerDPRainForest extends Controller {
 				if ($attribute['language_id'] == $language['language_id'] && $this->config->get('config_rainforest_enable_language_' . $language_code)){
 					echoLine('[fixtranslations] Атрибут: ' . $attribute['product_id'] . ':' . $attribute['attribute_id'] . ', ' . $i . '/' . $total);
 
-					$translated = $this->rainforestAmazon->productsRetriever->yandexTranslator->translate($source, $this->config->get('config_rainforest_source_language'), $language_code, true);
+					$translated = $this->rainforestAmazon->productsRetriever->translateAdaptor->translate($source, $this->config->get('config_rainforest_source_language'), $language_code, true);
 
 					$attribute_translate_data[$language['language_id']] = [
 						'text' 			=> $translated						
@@ -1436,7 +1436,7 @@ class ControllerDPRainForest extends Controller {
 				if ($video['language_id'] == $language['language_id'] && $this->config->get('config_rainforest_enable_language_' . $language_code)){
 					echoLine('[fixtranslations] Видео: ' . $video['product_id'] . ':' . $video['product_video_id'] . ', ' . $i . '/' . $total);
 
-					$translated = $this->rainforestAmazon->productsRetriever->yandexTranslator->translate($source, $this->config->get('config_rainforest_source_language'), $language_code, true);
+					$translated = $this->rainforestAmazon->productsRetriever->translateAdaptor->translate($source, $this->config->get('config_rainforest_source_language'), $language_code, true);
 
 					$video_translate_data[$language['language_id']] = [
 						'title' 			=> $translated						
