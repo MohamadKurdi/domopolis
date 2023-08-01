@@ -233,11 +233,18 @@
 					];
 
 					$this->data['ajaxcartproducts'] = $this->model_catalog_product->prepareProductToArray($this->model_catalog_product->getProductSpecials($data));
+
+					if ($this->config->get('config_special_category_id')){
+						$this->data['href_view_all'] = $this->url->link('product/category', 'path=' . $this->config->get('config_special_category_id'));
+					} else {
+						$this->data['href_view_all'] = $this->url->link('product/special');
+					}
 				}
 				
 				$this->data['button_cart'] 		= $this->language->get('button_cart');
 				$this->data['button_wishlist'] 	= $this->language->get('button_wishlist');
-				$this->data['button_compare'] 	= $this->language->get('button_compare');				
+				$this->data['button_compare'] 	= $this->language->get('button_compare');		
+				$this->data['text_view_all'] 	= $this->language->get('text_view_all');		
 				$this->data['text_ajaxcart_head'] 		= $this->language->get('text_ajaxcart_head');
 				$this->data['text_ajaxcart_empty'] 		= $this->language->get('text_ajaxcart_empty');
 				$this->data['text_ajaxcart_continue'] 	= $this->language->get('text_ajaxcart_continue');

@@ -113,6 +113,8 @@ $_['text_dt_preorder'] = 'Під замовлення';
 $_['text_dt_ask_stock'] = 'Наявність уточнюйте';
 $_['text_dt_not_in_stock'] = 'Немає в наявності';
 
+$_['text_view_all'] = 'Подивитись всі';
+
 $_['text_dt_day_text'] = array('день', 'дня', 'днів');
 
 //GENERAL
