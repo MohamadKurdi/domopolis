@@ -351,6 +351,44 @@ class ControllerCommonPanel extends Controller {
 		$this->response->setOutput(json_encode($json));				
 	}
 
+	public function getAzureTranslateInfo(){
+		$body = '';
+		$class= 'good';
+
+		if ($this->config->get('config_azure_translate_api_enable')){
+			try {
+				$result = $this->translateAdaptor->translate('привет', 'ru', 'uk');	
+
+				$json = json_decode($result, true);
+
+				if (!empty($json[0]) && !empty($json[0]['translations']) && !empty($json[0]['translations'][0]) && !empty($json[0]['translations'][0]['text'])){
+					$body = $json[0]['translations'][0]['text'];					
+				} else {
+					$class = 'bad';
+					$body = 'FAIL: ERR';
+					if (!empty($json['error']['message'])){
+						$body = $json['error']['message'];
+					}										
+				}
+
+			} catch (\Exception $e) {
+				$body 	= $e->getMessage();
+				$class 	= 'bad';
+			}
+
+		} else {
+			$body = 'OFF';
+			$class= 'warn';
+		}
+
+		$json = [
+			'body'  	=> $body,
+			'class' 	=> $class,
+		];
+
+		$this->response->setOutput(json_encode($json));
+	}
+
 
 	public function getYandexTranslateInfo(){
 		$body = '';
