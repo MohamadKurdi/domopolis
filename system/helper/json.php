@@ -1,22 +1,35 @@
 <?php
-	
-	if (!function_exists('cmp')) {
-		function cmp($a,$b){
-			return ($a['sort']<$b['sort'])?-1:1;
-		}
+
+if (!function_exists('cmp')) {
+	function cmp($a,$b){
+		return ($a['sort']<$b['sort'])?-1:1;
 	}
-	
-	if (!function_exists('xml2array')) {
-		function xml2array($contents, $get_attributes=1, $priority = 'tag') {
-			if(!$contents) return array();
-			
-			if(!function_exists('xml_parser_create')) {
+}
+
+if (!function_exists('com_create_guid')) {
+	function com_create_guid() {
+		return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
+			mt_rand( 0, 0xffff ),
+			mt_rand( 0, 0x0fff ) | 0x4000,
+			mt_rand( 0, 0x3fff ) | 0x8000,
+			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+		);
+	}
+}
+
+
+if (!function_exists('xml2array')) {
+	function xml2array($contents, $get_attributes=1, $priority = 'tag') {
+		if(!$contents) return array();
+		
+		if(!function_exists('xml_parser_create')) {
 				//print "'xml_parser_create()' function not found!";
-				return array();
-			}
-			
+			return array();
+		}
+		
 			//Get the XML parser of PHP - PHP must have this module for the parser to work
-			$parser = xml_parser_create('');
+		$parser = xml_parser_create('');
 			xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, "UTF-8"); # http://minutillo.com/steve/weblog/2004/6/17/php-xml-and-character-encodings-a-tale-of-sadness-rage-and-data-loss
 			xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
 			xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
@@ -60,7 +73,7 @@
 				
 				//See tag status and do the needed.
 				if($type == "open") {//The starting of the tag '<tag>'
-					$parent[$level-1] = &$current;
+				$parent[$level-1] = &$current;
 					if(!is_array($current) or (!in_array($tag, array_keys($current)))) { //Insert New tag
 						$current[$tag] = $result;
 						if($attributes_data) $current[$tag. '_attr'] = $attributes_data;
@@ -69,7 +82,7 @@
 						$current = &$current[$tag];
 						
 						} else { //There was another element with the same tag name
-						
+							
 						if(isset($current[$tag][0])) {//If there is a 0th element it is already an array
 							$current[$tag][$repeated_tag_index[$tag.'_'.$level]] = $result;
 							$repeated_tag_index[$tag.'_'.$level]++;
