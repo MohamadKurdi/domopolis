@@ -38,8 +38,8 @@ class TranslateAdaptor {
 		}
 
 		if (empty($result)){
-			echoLine('[TranslateAdaptor::checkIfItIsPossibleToMakeRequest] Could not anything, maybe general api fail! ' . $result, 'e');
-			return false;
+			echoLine('[TranslateAdaptor::checkIfItIsPossibleToMakeRequest] Could not anything, maybe general api fail! ' . $result, 'e');			
+			return false;			
 		}			
 
 		echoLine('[TranslateAdaptor::checkIfItIsPossibleToMakeRequest] Can make request!', 's');
@@ -51,7 +51,7 @@ class TranslateAdaptor {
 	public function translate($text, $from, $to, $returnString = false){
 		if (method_exists($this->translateObject, 'translate')){
 			try {
-				$result = $this->translateObject->translate($text, $from, $to, $returnString = false);
+				$result = $this->translateObject->translate($text, $from, $to, $returnString);
 			} catch (\Exception $e){
 				throw new \Exception ($e->getMessage());
 			}

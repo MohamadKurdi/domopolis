@@ -8,9 +8,9 @@ class AzureTranslator
 
 	private $db 	= null;	
 	private $config = null;
-	private $cloud 	= null;
 
 	private $debug = false;
+	private $endpoint = 'https://api.cognitive.microsofttranslator.com/translate/';
 
 	private $enableCheck = false;
 
@@ -21,12 +21,7 @@ class AzureTranslator
 	public function __construct($registry){
 		$this->db 		= $registry->get('db');
 		$this->config 	= $registry->get('config');
-
-		try {
-			$this->cloud = \Panda\Yandex\TranslateSdk\Cloud::createApi($this->config->get('config_yandex_translate_api_key'));							
-		} catch (\Panda\Yandex\TranslateSdk\Exception\ClientException $e) {
-			echoLine($e->getMessage());				
-		}
+		$this->setDebug(true);
 	}
 
 	public function setDebug($debug){
@@ -36,31 +31,30 @@ class AzureTranslator
 
 	public function checkIfItIsPossibleToMakeRequest(){
 		try {
-			$this->translate('hello', 'en', 'ru');
-		} catch (\Panda\Yandex\TranslateSdk\Exception\ClientException $e) {
-			echoLine('[ControllerDPRainForest::addasinsqueuecron] Translator fail, stopping' , 'e');
+			$this->translate('hello', 'en', 'ru', true);
+			echoLine('[AzureTranslator::checkIfItIsPossibleToMakeRequest] Is ok, continue' , 's');
+		} catch (\Exception $e) {
+			echoLine('[AzureTranslator::checkIfItIsPossibleToMakeRequest] Translator fail, stopping' , 'e');
 			die();
 		}		
+
+		return true;
 	}
 
 	public function resultIsBad($result){		
 		$json = json_decode($result, true);
 
-		if (!empty($json['code']) && $json['code'] == 7){
-			if (!empty($json['message'])){
-				return $json['message'];
+		if (!empty($json['error'])){
+			if (!empty($json['error']['message'])){
+				return $json['error']['message'] . ' (' . $json['error']['code'] . ')';
 			}
 		}
 
 		return false;
 	}
 
-	public function translateMulti($data = []){
-	}
-
 	public function translate($text, $from, $to, $returnString = false){
-		$text = trim($text);
-
+		$text 	= trim($text);
 		$result = false;
 
 		if (!mb_strlen($text)){
@@ -70,13 +64,6 @@ class AzureTranslator
 		if (is_numeric($text)){
 			return $text;
 		}			
-
-		if ($this->enableCheck){
-			if ($this->getHourlyAmount() >= ($this->hourLimit*0.95)){
-				echoLine('[YandexTranslator] Лимит на часовой перевод почти достигнут, надо поспать минуту!');
-				sleep(mt_rand(50,60));
-			}
-		}		
 		
 		if (mb_strlen($text, 'UTF-8') > $this->symbolLimit){
 			$translationResult = '';
@@ -96,38 +83,62 @@ class AzureTranslator
 		}
 
 		try {
-			$translate = new \Panda\Yandex\TranslateSdk\Translate($text);
+			$params = [
+				'api-version' 	=> '3.0',    			
+    			'to' 			=> $to
+  			];  			
 
-			if ($from){
-				$translate->setSourceLang($from);
-			}
+  			if ($from){
+  				$params['from'] = $from;
+  			}
 
-			$translate->setTargetLang($to)->setFormat(\Panda\Yandex\TranslateSdk\Format::HTML);
-			$result = $this->cloud->request($translate);
+  			$ch = curl_init($this->endpoint . '?' . http_build_query($params));
+  			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+  			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([['text' => $text]]));
+  			curl_setopt($ch, CURLOPT_HTTPHEADER, [
+  				"Content-type: application/json",
+  				"Ocp-Apim-Subscription-Key: " . $this->config->get('config_azure_translate_api_key'),
+  				"Ocp-Apim-Subscription-Region: eastus",
+  				"X-ClientTraceId: " . com_create_guid()
+  			]);
+
+  			$result = curl_exec($ch);
+  			$info 	= curl_getinfo($ch);
+
+  			if ($info['http_code'] != '200'){
+  				echoLine('[AzureTranslator] Azure Translator Fail, http code is not 200, but: ' . $this->resultIsBad($result), 'e');
+  				throw new \Exception('Azure Translator Fail, http code is not 200, but ' . $info['http_code']);
+  			}
+
+  			curl_close($ch);
 
 			$this->addStats($text);
 
-		} catch (\Panda\Yandex\TranslateSdk\Exception\ClientException $e) {
+		} catch (\Exception $e) {
 			echoLine($e->getMessage(), 'e');
+			throw new \Exception($e->getMessage());			
 			die();		
 		}
 
 		if ($this->resultIsBad($result)){
-			echoLine('[YandexTranslator] YandexTranslator Fail: ' . $this->resultIsBad($result), 'e');
-			throw new \Panda\Yandex\TranslateSdk\Exception\ClientException('YT Fail! ' . $this->resultIsBad($result));			
+			echoLine('[AzureTranslator] AzureTranslator Fail: ' . $this->resultIsBad($result), 'e');
+			throw new \Exception('Azure Translator Fail! ' . $this->resultIsBad($result));			
 		}
 
 		if ($returnString){
 			$json = json_decode($result, true);
 
-			if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
+			if (!empty($json[0]) && !empty($json[0]['translations']) && !empty($json[0]['translations'][0]) && !empty($json[0]['translations'][0]['text'])){
 
 				if ($this->debug){
-					echoLine('[YandexTranslator] ' . $from . ' -> ' . $to);
-					echoLine('[YandexTranslator] ' . $text . ' -> ' . $json['translations'][0]['text']);
+					echoLine('[AzureTranslator] ' . $from . ' -> ' . $to);
+					echoLine('[AzureTranslator] ' . $text . ' -> ' . $json[0]['translations'][0]['text']);
 				}
 
-				return $json['translations'][0]['text'];
+				return $json[0]['translations'][0]['text'];
+			} else {
+				throw new \Exception('No translation got from Azure');
 			}
 		}
 
@@ -148,7 +159,6 @@ class AzureTranslator
 	}
 
 	private function toBigPieces ($text) {
-
 		while (strpos($text, '..') !== false){
 			$text = str_replace(($this->sentensesDelimiter . $this->sentensesDelimiter), $this->sentensesDelimiter, $text);
 		}
@@ -156,8 +166,7 @@ class AzureTranslator
 		$sentArray = $this->toSentenses($text);
 		$i = 0;
 		$bigPiecesArray[0] = '';
-		for ($k = 0; $k < count($sentArray); $k++) {
-				//Если в этой итерации получается так, что 
+		for ($k = 0; $k < count($sentArray); $k++) {				
 			if (mb_strlen($bigPiecesArray[$i] . $sentArray[$k] . $this->sentensesDelimiter) > $this->symbolLimit){
 				$i++;
 				$bigPiecesArray[$i] = $sentArray[$k] . $this->sentensesDelimiter;
