@@ -3562,7 +3562,22 @@
 												<? } ?>
 											</select>
 										</div>	
-									</td>							
+									</td>	
+
+									<td style="width:20%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Отправлять всё через Viber + SMS</span></p>
+											<select name="config_smsgate_library_enable_viber_fallback">
+												<?php if ($config_smsgate_library_enable_viber_fallback) { ?>
+													<option value="1" selected="selected">Да</option>
+													<option value="0">Нет</option>
+												<?php } else { ?>													
+													<option value="1">Да</option>
+													<option value="0"  selected="selected">Нет</option>
+												<? } ?>
+											</select>
+										</div>	
+									</td>						
 								</tr>
 
 							</table>
@@ -3570,27 +3585,50 @@
 							<h2><i class="fa fa-search"></i> Аккаунт сервиса отправки SMS</h2>
 							<table class="form">
 								<tr>
-									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Private Key</span></p>
-										<input type="text" name="config_smsgate_api_key" value="<?php echo $config_smsgate_api_key; ?>" size="40" style="width:200px;" />	
+									<td width="25%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Private Key</span></p>
+											<input type="text" name="config_smsgate_api_key" value="<?php echo $config_smsgate_api_key; ?>" size="40" style="width:200px;" />	
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Public Key</span></p>
+											<input type="text" name="config_smsgate_secret_key" value="<?php echo $config_smsgate_secret_key; ?>" size="40" style="width:200px;" />	
+										</div>
 									</td>
-									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Public Key</span></p>
-										<input type="text" name="config_smsgate_secret_key" value="<?php echo $config_smsgate_secret_key; ?>" size="40" style="width:200px;" />	
+									<td width="25%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">USER</span></p>
+											<input type="text" name="config_smsgate_user" value="<?php echo $config_smsgate_user; ?>" size="40" style="width:200px;" />	
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">PASSWD</span></p>
+											<input type="text" name="config_smsgate_passwd" value="<?php echo $config_smsgate_passwd; ?>" size="40" style="width:200px;" />	
+										</div>
 									</td>
-									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">USER</span></p>
-										<input type="text" name="config_smsgate_user" value="<?php echo $config_smsgate_user; ?>" size="40" style="width:200px;" />	
+									<td width="25%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">VIBER USER</span></p>
+											<input type="text" name="config_smsgate_viber_auth_login" value="<?php echo $config_smsgate_viber_auth_login; ?>" size="40" style="width:200px;" />	
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">VIBER PWD</span></p>
+											<input type="text" name="config_smsgate_viber_auth_pwd" value="<?php echo $config_smsgate_viber_auth_pwd; ?>" size="40" style="width:200px;" />	
+										</div>
 									</td>
-									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">PASSWD</span></p>
-										<input type="text" name="config_smsgate_passwd" value="<?php echo $config_smsgate_passwd; ?>" size="40" style="width:200px;" />	
+									<td width="25%">
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">SMS Альфа-имя</span></p>
+											<input type="text" name="config_sms_from" value="<?php echo $config_sms_from; ?>" maxlength="15" style="width:200px;" />
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">SMS Альфа-имя (совместимость)</span></p>
+											<input type="text" name="config_sms_sign" value="<?php echo $config_sms_sign; ?>"  maxlength="15" style="width:200px;" />
+										</div>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Viber Альфа-имя</span></p>
+											<input type="text" name="config_viber_from" value="<?php echo $config_viber_from; ?>" maxlength="20" style="width:200px;" />
+										</div>										
 									</td>
-									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">ALPHA</span></p>
-										<input type="text" name="config_sms_from" value="<?php echo $config_sms_from; ?>" maxlength="15" style="width:200px;" />
-									</td>
-
 								</tr>
 							</table>
 
@@ -3633,11 +3671,6 @@
 									</td>
 
 									<td style="width:25%" class="left">
-										<div>
-											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Альфа по-умолчанию</span></p>
-											<input type="text" name="config_sms_sign" value="<?php echo $config_sms_sign; ?>" size="11" />
-										</div>
-
 										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Маска телефона</span></p>
 											<input type="text" name="config_phonemask" value="<?php echo $config_phonemask; ?>" size="20" />

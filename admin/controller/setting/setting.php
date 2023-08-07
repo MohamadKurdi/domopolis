@@ -675,12 +675,6 @@ class ControllerSettingSetting extends Controller
 
         }
         
-        if (isset($this->request->post['config_sms_sign'])) {
-            $this->data['config_sms_sign'] = $this->request->post['config_sms_sign'];
-        } else {
-            $this->data['config_sms_sign'] = $this->config->get('config_sms_sign');
-        }
-        
         if (isset($this->request->post['config_email'])) {
             $this->data['config_email'] = $this->request->post['config_email'];
         } else {
@@ -857,6 +851,24 @@ class ControllerSettingSetting extends Controller
             $this->data['config_smsgate_library_enable_viber'] = $this->config->get('config_smsgate_library_enable_viber');
         }
 
+        if (isset($this->request->post['config_smsgate_library_enable_viber_fallback'])) {
+            $this->data['config_smsgate_library_enable_viber_fallback'] = $this->request->post['config_smsgate_library_enable_viber_fallback'];
+        } else {
+            $this->data['config_smsgate_library_enable_viber_fallback'] = $this->config->get('config_smsgate_library_enable_viber_fallback');
+        }
+
+        if (isset($this->request->post['config_smsgate_viber_auth_login'])) {
+            $this->data['config_smsgate_viber_auth_login'] = $this->request->post['config_smsgate_viber_auth_login'];
+        } else {
+            $this->data['config_smsgate_viber_auth_login'] = $this->config->get('config_smsgate_viber_auth_login');
+        }
+
+        if (isset($this->request->post['config_smsgate_viber_auth_pwd'])) {
+            $this->data['config_smsgate_viber_auth_pwd'] = $this->request->post['config_smsgate_viber_auth_pwd'];
+        } else {
+            $this->data['config_smsgate_viber_auth_pwd'] = $this->config->get('config_smsgate_viber_auth_pwd');
+        }
+
         if (isset($this->request->post['config_smsgate_api_key'])) {
             $this->data['config_smsgate_api_key'] = $this->request->post['config_smsgate_api_key'];
         } else {
@@ -867,6 +879,24 @@ class ControllerSettingSetting extends Controller
             $this->data['config_smsgate_secret_key'] = $this->request->post['config_smsgate_secret_key'];
         } else {
             $this->data['config_smsgate_secret_key'] = $this->config->get('config_smsgate_secret_key');
+        }
+
+        if (isset($this->request->post['config_sms_from'])) {
+            $this->data['config_sms_from'] = $this->request->post['config_sms_from'];
+        } else {
+            $this->data['config_sms_from'] = $this->config->get('config_sms_from');
+        }
+
+        if (isset($this->request->post['config_sms_sign'])) {
+            $this->data['config_sms_sign'] = $this->request->post['config_sms_sign'];
+        } else {
+            $this->data['config_sms_sign'] = $this->config->get('config_sms_sign');
+        }
+
+        if (isset($this->request->post['config_viber_from'])) {
+            $this->data['config_viber_from'] = $this->request->post['config_viber_from'];
+        } else {
+            $this->data['config_viber_from'] = $this->config->get('config_viber_from');
         }
 
         if (isset($this->request->post['config_smsgate_user'])) {
@@ -2820,12 +2850,6 @@ class ControllerSettingSetting extends Controller
             $this->data['config_sms_ttn_ready'] = $this->request->post['config_sms_ttn_ready'];
         } else {
             $this->data['config_sms_ttn_ready'] = $this->config->get('config_sms_ttn_ready');
-        }
-        
-        if (isset($this->request->post['config_sms_from'])) {
-            $this->data['config_sms_from'] = $this->request->post['config_sms_from'];
-        } else {
-            $this->data['config_sms_from'] = $this->config->get('config_sms_from');
         }
         
         if (isset($this->request->post['config_sms_message'])) {
