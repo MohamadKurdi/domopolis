@@ -84,4 +84,7 @@ class SmsAdaptor {
 		return $result;
 	}
 
+
+	//SMS SERVICE FUNCTIONS
+
 }

@@ -79,7 +79,7 @@ require_once(DIR_SYSTEM . 'library/weight.php');
 require_once(DIR_SYSTEM . 'library/length.php');
 require_once(DIR_SYSTEM . 'library/cart.php');
 require_once(DIR_SYSTEM . 'library/Bitrix24.php');
-require_once(DIR_SYSTEM . 'library/hobotix/smsQueue.php');
+require_once(DIR_SYSTEM . 'library/hobotix/SmsQueue.php');
 require_once(DIR_SYSTEM . 'library/hobotix/PushQueue.php');
 require_once(DIR_SYSTEM . 'library/hobotix/mAlert.php');
 require_once(DIR_SYSTEM . 'library/hobotix/ShortAlias.php');
