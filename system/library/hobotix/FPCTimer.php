@@ -1,5 +1,7 @@
 <?
 
+namespace hobotix;
+
 class FPCTimer {
 
 	private $timeStart;

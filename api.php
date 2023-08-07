@@ -49,7 +49,7 @@ if (!empty($loaderConfig['preload'])) {
     }
 }
 
-$FPCTimer = new FPCTimer();
+$FPCTimer = new \hobotix\FPCTimer();
 
 $httpHOST           = str_replace('www.', '', $_SERVER['HTTP_HOST']);
 $storesConfig       = loadJsonConfig('stores');

@@ -23,7 +23,7 @@
 		}
 	}
 
-	$FPCTimer = new FPCTimer();
+	$FPCTimer = new \hobotix\FPCTimer();
 	
 	//find http host
 	$httpHOST 			= str_replace('www.', '', $_SERVER['HTTP_HOST']);

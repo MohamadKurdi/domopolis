@@ -17,10 +17,10 @@ if (ini_get('magic_quotes_gpc')) {
 		return $data;
 	}			
 
-	$_GET = clean($_GET);
-	$_POST = clean($_POST);
-	$_REQUEST = clean($_REQUEST);
-	$_COOKIE = clean($_COOKIE);
+	$_GET 		= clean($_GET);
+	$_POST 		= clean($_POST);
+	$_REQUEST 	= clean($_REQUEST);
+	$_COOKIE 	= clean($_COOKIE);
 }
 
 if (!ini_get('date.timezone')) {

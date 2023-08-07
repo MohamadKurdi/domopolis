@@ -614,7 +614,7 @@ class ControllerDPRainForest extends Controller {
 			}
 		}
 
-		$timer = new FPCTimer();
+		$timer = new \hobotix\FPCTimer();
 		$this->load->model('catalog/product');
 
 		$asins = $this->rainforestAmazon->productsRetriever->getAsinAddQueue();	
@@ -758,7 +758,7 @@ class ControllerDPRainForest extends Controller {
 			}
 		}
 
-		$timer = new FPCTimer();
+		$timer = new \hobotix\FPCTimer();
 
 		$this->rainforestAmazon->categoryRetriever->checkSynced();
 		$this->categoriesData = $this->rainforestAmazon->categoryRetriever->getCategories();
@@ -775,7 +775,7 @@ class ControllerDPRainForest extends Controller {
 		for ($i = 1; $i <= ($iterations+1); $i++){
 			$this->translateAdaptor->checkIfItIsPossibleToMakeRequest();
 			
-			$timer = new FPCTimer();
+			$timer = new \hobotix\FPCTimer();
 			$this->current_iteration = $i;
 			echoLine('[addnewproductscron] Шаг 1 Итерация ' . $i . ' из ' . $iterations . ', категории с ' . (\hobotix\RainforestAmazon::categoryRequestLimits * ($i-1)) . ' по ' . \hobotix\RainforestAmazon::categoryRequestLimits * $i);
 			
@@ -862,7 +862,7 @@ class ControllerDPRainForest extends Controller {
 
 			echoLine('[recoverasins] Total products: ' . $total);
 
-			$timer = new FPCTimer();	
+			$timer = new \hobotix\FPCTimer();	
 
 			$slice = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithChangedAsins((int)\hobotix\RainforestAmazon::productRequestLimits);
 			echoLine('[recoverasins] Have ' . count($slice) . ' changed asins, trying to recover...');
@@ -909,7 +909,7 @@ class ControllerDPRainForest extends Controller {
 
 		$total_lost = 0;
 		for ($i = 1; $i <= ($iterations+1); $i++){
-			$timer = new FPCTimer();	
+			$timer = new \hobotix\FPCTimer();	
 
 			echoLine('[fixlostjson] Iteration ' . $i . '/' . $iterations);
 
@@ -971,7 +971,7 @@ class ControllerDPRainForest extends Controller {
 			}
 		}
 
-		$timer = new FPCTimer();
+		$timer = new \hobotix\FPCTimer();
 
 		if ($parsetechcategory){
 			$products = $this->rainforestAmazon->productsRetriever->getProductsFromTechCategory();
@@ -985,7 +985,7 @@ class ControllerDPRainForest extends Controller {
 		$iterations = ceil($total/\hobotix\RainforestAmazon::productRequestLimits);
 
 		for ($i = 1; $i <= ($iterations+1); $i++){
-			$timer = new FPCTimer();
+			$timer = new \hobotix\FPCTimer();
 			echoLine('[editfullproductscron] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . (\hobotix\RainforestAmazon::productRequestLimits * ($i-1)) . ' по ' . \hobotix\RainforestAmazon::productRequestLimits * $i);
 
 			$slice = array_slice($products, \hobotix\RainforestAmazon::productRequestLimits * ($i-1), \hobotix\RainforestAmazon::productRequestLimits);
@@ -1071,7 +1071,7 @@ class ControllerDPRainForest extends Controller {
 			}
 		}
 		
-		$timer = new FPCTimer();
+		$timer = new \hobotix\FPCTimer();
 
 		$products = $this->rainforestAmazon->productsRetriever->getProductsWithFullDataButNotFullfilled();
 

@@ -1,6 +1,6 @@
 {  
 	"preload":[
-		"/system/library/Timer",
+		"/system/library/hobotix/FPCTimer",
 		"/system/library/hobotix/PageCache",	
 		"/system/functions",
 		"/system/constants"

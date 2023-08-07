@@ -37,7 +37,7 @@ class ControllerDPService extends Controller {
         echoLine('[preresize] Всего товаров ' . $total);
 
          for ($i = 1; $i <= ($iterations); $i++) {
-                $timer = new FPCTimer();
+                $timer = new \hobotix\FPCTimer();
                 $totalGet = ceil($this->config->get('config_google_merchant_feed_limit')/$this->config->get('config_google_merchant_one_iteration_limit'));
                 for ($iGet = 1; $iGet <= $totalGet; $iGet++) {
 

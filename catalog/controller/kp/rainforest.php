@@ -69,7 +69,7 @@ class ControllerKPRainForest extends Controller {
 		echoLine('[PARSEASINSCRON] Всего ' . $total . ' товаров!');
 
 		for ($i = 1; $i <= $iterations; $i++){
-			$timer = new FPCTimer();
+			$timer = new \hobotix\FPCTimer();
 			$jsonArray = [];
 
 			echoLine('[PARSEEANSCRON] Итерация ' . $i . ' from ' . $iterations . ', товары с ' . ((int)\hobotix\RainforestAmazon::productRequestLimits * ($i-1)) . ' по ' . (int)\hobotix\RainforestAmazon::productRequestLimits * $i);
@@ -133,7 +133,7 @@ class ControllerKPRainForest extends Controller {
 		echoLine('[PARSEASINSCRON] Всего ' . $total . ' товаров!');
 
 		for ($i = 1; $i <= $iterations; $i++){
-			$timer = new FPCTimer();
+			$timer = new \hobotix\FPCTimer();
 			$jsonArray = [];
 
 			echoLine('[PARSEASINSCRON] Итерация ' . $i . ' from ' . $iterations . ', товары с ' . ((int)\hobotix\RainforestAmazon::productRequestLimits * ($i-1)) . ' по ' . (int)\hobotix\RainforestAmazon::productRequestLimits * $i);
@@ -208,7 +208,7 @@ class ControllerKPRainForest extends Controller {
 		echoLine('[ControllerDPRainForest::parseofferscron], Total in queue: ' . $total, 'i');
 
 		if ($total > 0){
-			$timer = new FPCTimer();
+			$timer = new \hobotix\FPCTimer();
 
 			$products = $this->rainforestAmazon->offersParser->getProductsAmazonOffersQueue();
 
@@ -297,9 +297,9 @@ class ControllerKPRainForest extends Controller {
 		echoLine('[parseofferscron] Total ' . $total . ' products!', 'i');
 
 		$i=1;
-		$timer = new FPCTimer();		
+		$timer = new \hobotix\FPCTimer();		
 		for ($i = 1; $i <= $iterations; $i++){
-			$timer = new FPCTimer();
+			$timer = new \hobotix\FPCTimer();
 
 			$slice = array_slice($products, (int)\hobotix\RainforestAmazon::offerRequestLimits * ($i-1), (int)\hobotix\RainforestAmazon::offerRequestLimits);
 			$results = $this->rainforestAmazon->getProductsOffersASYNC($slice);
@@ -367,10 +367,10 @@ class ControllerKPRainForest extends Controller {
 		echoLine('[parsenoofferscron] Total ' . $total . ' products!', 'i');
 
 		$i=1;
-		$timer = new FPCTimer();		
+		$timer = new \hobotix\FPCTimer();		
 
 		for ($i = 1; $i <= $iterations; $i++){
-			$timer = new FPCTimer();
+			$timer = new \hobotix\FPCTimer();
 
 			$slice = array_slice($products, (int)\hobotix\RainforestAmazon::offerRequestLimits * ($i-1), (int)\hobotix\RainforestAmazon::offerRequestLimits);
 			$results = $this->rainforestAmazon->getProductsOffersASYNC($slice);
@@ -424,10 +424,10 @@ class ControllerKPRainForest extends Controller {
 		echoLine('[parseofferscron] Total ' . $total . ' products!', 'i');
 
 		$i=1;
-		$timer = new FPCTimer();		
+		$timer = new \hobotix\FPCTimer();		
 
 		for ($i = 1; $i <= $iterations; $i++){
-			$timer = new FPCTimer();
+			$timer = new \hobotix\FPCTimer();
 
 			$slice = array_slice($products, (int)\hobotix\RainforestAmazon::offerRequestLimits * ($i-1), (int)\hobotix\RainforestAmazon::offerRequestLimits);
 			$results = $this->rainforestAmazon->getProductsOffersASYNC($slice);

@@ -405,7 +405,7 @@ class ControllerFeedReFeedMaker2 extends Controller
                     for ($i = 1; $i <= ($iterations); $i++) {
                         $output = $this->openXML();
 
-                        $timer = new FPCTimer();
+                        $timer = new \hobotix\FPCTimer();
 
                         if ($language_id == $this->registry->get('excluded_language_id')) {
                             if ($changeID) {
@@ -531,7 +531,7 @@ class ControllerFeedReFeedMaker2 extends Controller
             for ($i = 1; $i <= ($iterations); $i++) {
                 $output = $this->openXML();
 
-                $timer = new FPCTimer();
+                $timer = new \hobotix\FPCTimer();
 
                 if ($language_id == $this->registry->get('excluded_language_id')) {
                     if ($changeID) {

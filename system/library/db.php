@@ -55,7 +55,7 @@ if (!class_exists('DB')){
 
 		public function query($sql) {
 			if (defined('DEBUGSQL') && DEBUGSQL) {		
-				$queryTimer = new FPCTimer();
+				$queryTimer = new \hobotix\FPCTimer();
 				$result = $this->connection->query($sql);					
 
 				$GLOBALS['sql-debug'][] = [
@@ -98,7 +98,7 @@ if (!class_exists('DB')){
 
 		public function non_cached_query($sql) {
 			if (defined('DEBUGSQL') && DEBUGSQL) {		
-				$queryTimer = new FPCTimer();
+				$queryTimer = new \hobotix\FPCTimer();
 
 				$result = $this->connection->non_cached_query($sql);
 
