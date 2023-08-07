@@ -1287,7 +1287,7 @@ public function confirm($order_id, $order_status_id, $comment = '', $notify = fa
 					'to'       => $order_info['telephone'],
 					'from'     => $this->config->get('config_sms_sign'),					
 					'message'  => str_replace(
-						array(
+						[
 							'{ID}',
 							'{SNAME}',
 							'{DATE}',
@@ -1297,8 +1297,8 @@ public function confirm($order_id, $order_status_id, $comment = '', $notify = fa
 							'{FIRSTNAME}',
 							'{LASTNAME}',
 							'{PRODUCTS}',
-						),
-						array(
+						],
+						[
 							$order_id,
 							$this->config->get('config_name'),
 							date('d.m.Y'),
@@ -1308,7 +1308,7 @@ public function confirm($order_id, $order_status_id, $comment = '', $notify = fa
 							$order_info['firstname'],
 							$order_info['lastname'],
 							$products,
-						),
+						],
 						$this->config->get('config_sms_new_order_message')
 					)
 				);
@@ -1527,8 +1527,6 @@ public function confirm($order_id, $order_status_id, $comment = '', $notify = fa
 	public function addOrderToQueue($order_id){
 		$this->db->ncquery("INSERT IGNORE INTO order_to_1c_queue SET `order_id` = '" . (int)$order_id . "'");
 	}
-
-
 
 	public function getOrderTotals($order_id, $code = false) {
 		if ($code){
