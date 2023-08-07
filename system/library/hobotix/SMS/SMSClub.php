@@ -4,7 +4,8 @@ namespace hobotix\SMS;
 
 class SMSClub {
 
-	private $smsClub = null;
+	private $smsClub 		= null;
+	private $viberEndpoint 	= 'https://im.smsclub.mobi/vibers/send';
 
 	public function __construct($registry) {		
 		$this->registry = $registry;
@@ -54,20 +55,81 @@ class SMSClub {
 	public function sendViber($viber){
 		echoLine('[SMSClub::sendViber] Sending Viber to number ' . preparePhone($viber['to']), 'i');
 
+		$data = [
+			'sender' 		=> $this->config->get('config_viber_from'),
+			'phones' 		=> [ $viber['to'] ],
+			'message' 		=> $viber['message'],
+			'lifetime' 		=> 60			
+		];
 
+		if (!empty($viber['picture_url'])){
+			$data['picture_url'] = $viber['picture_url'];
+		}
 
+		if (!empty($viber['button_txt'])){
+			$data['button_txt'] = $viber['button_txt'];
+			$data['button_url'] = $viber['button_url'];
+		}
 
+		if (!empty($viber['messageSms'])){
+			$data['senderSms'] 	= $this->config->get('config_sms_from');
+			$data['messageSms'] = $viber['messageSms'];
+		}
 
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_HTTPHEADER, [
+			'Content-Type: application/json',
+			'Content-Length: ' . strlen(json_encode($data)),
+			'X-Requested-With: XMLHttpRequest',
+			'Accept: application/json, text/javascript, */*; q=0.01'
+		]);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+		curl_setopt($ch, CURLOPT_USERPWD, $this->config->get('config_smsgate_viber_auth_login') . ':' . $this->config->get('config_smsgate_viber_auth_pwd'));
+		curl_setopt($ch, CURLOPT_URL, $this->viberEndpoint);
+		
+		$result = curl_exec($ch);
+		$info 	= curl_getinfo($ch);
+		curl_close($ch);
+		
+		if ($info['http_code'] != '200'){
+			echoLine('[SMSClub::sendViber] SMSClub returned non-200 status!', 'e');	
+			print_r($result);
+			return false;
+		}
 
+		if (!json_decode($result, true)){
+			echoLine('[SMSClub::sendViber] Can not decode result JSON!', 'e');	
+			print_r($result);
+			return false;
+		} else {
+			$result = json_decode($result, true);
+		}
 
+		if (!empty($result['successfulRequest']) && !empty($result['successfulRequest']['requestData']) && !empty($result['successfulRequest']['requestData']['messages'])){
+			if (!empty($result['successfulRequest']['requestData']['messages'][0])){
+				return $result['successfulRequest']['requestData']['messages'][0]['id'];
+			}
+		}
 
-
-
+		return false;
 	}
 
 
 	public function sendSMS($sms){
 		echoLine('[SMSClub::sendSMS] Sending text to number ' . preparePhone($sms['to']), 'i');
+
+		if ($this->config->get('config_smsgate_library_enable_viber_fallback')){
+			return $this->sendViber(
+				[
+					'to' 			=> $sms['to'],
+					'message' 		=> $sms['message'],
+					'messageSms' 	=> $sms['message'],
+				]
+			);
+		}
+
 		try {
 			$signatures = $this->smsClub->getSignatures();
 
