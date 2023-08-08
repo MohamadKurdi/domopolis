@@ -425,7 +425,7 @@
 		unset($registry->get('request')->get['_route_']);
 	}
 
-	//Сортировки
+	//Sorts
 	$sorts = loadJsonConfig('sorts');
 
 	if (!empty($sorts['sorts'])){

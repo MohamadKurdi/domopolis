@@ -15,7 +15,7 @@ class smsQueue {
 	}
 	
 	public function queue($data){							
-		if (mb_strlen($data['message']) > 210){
+		if (empty($data['viber']) && mb_strlen($data['message']) > 210){
 			return false;
 		}
 		
@@ -26,21 +26,6 @@ class smsQueue {
 
 	private function deleteSMSFromQueue($queue_sms_id){
 		$this->db->query("DELETE FROM queue_sms WHERE queue_sms_id = '" . (int)$queue_sms_id . "'");
-	}
-
-	public function test(){
-		$balance = $this->registry->get('smsAdaptor')->getBalance();
-
-		if ($balance){
-			echoLine('[LibrarySmsQueue::test] Got balance: ' . $balance, 'i');
-		}	
-
-		$sms = [		
-			'to' 		=>	'',
-			'message' 	=> 	'TEST - SMSCLUB - 2'
-		];
-
-		$this->registry->get('smsAdaptor')->sendSMS($sms);			
 	}
 
 	public function cron(){	
