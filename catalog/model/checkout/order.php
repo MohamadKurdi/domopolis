@@ -412,12 +412,6 @@ class ModelCheckoutOrder extends Model {
 
 	public function updateDaDataFields($data){	
 
-
-		if ( $_SERVER['REMOTE_ADDR'] == '185.41.249.201'){
-				//	var_dump($data);
-				//	die();
-		}
-
 		$dataArray = array (
 			'payment_custom_unrestricted_value' => 
 			array (
@@ -537,7 +531,6 @@ class ModelCheckoutOrder extends Model {
 		$this->db->ncquery("INSERT INTO simple_custom_data SET object_type = 1, object_id = '" . (int)$data['order_id'] . "', customer_id = '" . (int)$data['customer_id'] . "', data = '" . $this->db->escape(serialize($dataArray)) . "' ON DUPLICATE KEY UPDATE data = '" . $this->db->escape(serialize($dataArray)) . "'");
 	}
 
-
 	public function validateDoubleOrder($data){
 		$this->load->model('account/customer');	
 
@@ -575,60 +568,60 @@ class ModelCheckoutOrder extends Model {
 			$customer_id = $this->model_account_customer->getCustomerByEmail($data['email'])['customer_id'];
 		}		
 
-		$sql = "SELECT * FROM `order` WHERE (customer_id = '" . (int)$data['customer_id'] . "' 
-			OR telephone = '" . $this->db->escape($data['telephone']) . "' 
-			OR email = '" . $this->db->escape($data['email']) . "')
-			AND order_status_id > 0	AND date_added_timestamp >= UNIX_TIMESTAMP(NOW() - INTERVAL 2 MINUTE) ORDER BY date_added_timestamp DESC LIMIT 1";
-			$query = $this->db->non_cached_query($sql);
+		$sql = "SELECT * FROM `order` WHERE (customer_id = '" . (int)$data['customer_id'] . "'";
+		$sql .= " OR telephone = '" . $this->db->escape($data['telephone']) . "'";
+		$sql .= " OR email = '" . $this->db->escape($data['email']) . "') ";
+		$sql .= " AND order_status_id > 0	AND date_added_timestamp >= UNIX_TIMESTAMP(NOW() - INTERVAL 2 MINUTE) ORDER BY date_added_timestamp DESC LIMIT 1";
+		
+		$query = $this->db->non_cached_query($sql);
 			
-			$compare_fields = array(
-				'firstname',
-				'lastname',
-				'telephone',
-				'payment_city',
-				'payment_code',
-				'shipping_city',
-				'shipping_code',
-			);	
-			
-			$exact = true;		
-			$suspected_order_id = false;
-			if ($query->num_rows && $query->row){
-				$suspected_order_id = $query->row['order_id'];
-				
-				
-				foreach ($compare_fields as $field){
-					if ($query->row[$field] != $data[$field]){
-						$exact = false;
-						break;
-					}
-				}			
-			}
-			
-			if ($exact){
-				$query = $this->db->non_cached_query("SELECT * FROM `order_product` WHERE order_id = '" . (int)$suspected_order_id . "'");
-				
-				$exact_products = true;
-				$suspected_products = array();
-				foreach ($query->rows as $row){
-					$suspected_products[$row['product_id']] = $row['quantity'];
+		$compare_fields = array(
+			'firstname',
+			'lastname',
+			'telephone',
+			'payment_city',
+			'payment_code',
+			'shipping_city',
+			'shipping_code',
+		);	
+		
+		$exact = true;		
+		$suspected_order_id = false;
+		if ($query->num_rows && $query->row){
+			$suspected_order_id = $query->row['order_id'];
+
+			foreach ($compare_fields as $field){
+				if ($query->row[$field] != $data[$field]){
+					$exact = false;
+					break;
 				}
-				
-				$data_products = array();
-				foreach ($data['products'] as $product){
-					$data_products[$product['product_id']] = $product['quantity'];
-				}
-				
-				ksort($suspected_products);
-				ksort($data_products);
-			}
-			
-			if ($suspected_products == $data_products){
-				return $suspected_order_id;
-			}
-						
-			return false;
+			}			
 		}
+		
+		if ($exact){
+			$query = $this->db->non_cached_query("SELECT * FROM `order_product` WHERE order_id = '" . (int)$suspected_order_id . "'");
+			
+			$exact_products = true;
+			$suspected_products = array();
+			foreach ($query->rows as $row){
+				$suspected_products[$row['product_id']] = $row['quantity'];
+			}
+			
+			$data_products = array();
+			foreach ($data['products'] as $product){
+				$data_products[$product['product_id']] = $product['quantity'];
+			}
+			
+			ksort($suspected_products);
+			ksort($data_products);
+		}
+		
+		if ($suspected_products == $data_products){
+			return $suspected_order_id;
+		}
+
+		return false;
+	}
 		
 		public function getOrder($order_id) {
 			$order_query = $this->db->non_cached_query("SELECT *, (SELECT os.name FROM `order_status` os WHERE os.order_status_id = o.order_status_id AND os.language_id = o.language_id) AS order_status FROM `order` o WHERE o.order_id = '" . (int)$order_id . "'");
@@ -684,7 +677,7 @@ class ModelCheckoutOrder extends Model {
 					$language_directory = '';
 				}
 				
-				return array(
+				return [
 					'order_id'                => $order_query->row['order_id'],
 					'pwa'               	  => $order_query->row['pwa'],	
 					'yam'               	  => $order_query->row['yam'],
@@ -771,11 +764,11 @@ class ModelCheckoutOrder extends Model {
 					'pay_equire'			 => $order_query->row['pay_equire'],
 					'customer_confirm_url'    => $this->url->link('checkout/customer_confirm', 'order_id='.$order_query->row['order_id'].'&confirm='.md5(sin($order_query->row['order_id']+2))),
 					'changed'				  => $order_query->row['changed'],
-				);
-} else {
-	return false;	
-}
-}
+				];
+		} else {
+			return false;	
+		}
+	}
 
 public function getLegalPersonForOrder(){
 
@@ -785,7 +778,6 @@ public function getLegalPersonForOrder(){
 	} else {
 		return false;
 	}
-
 }
 
 public function getOrderProducts($order_id) {
@@ -1267,18 +1259,8 @@ public function confirm($order_id, $order_status_id, $comment = '', $notify = fa
 
 
 			$order_product_query = $this->db->ncquery("SELECT * FROM order_product WHERE order_id = '" . (int)$order_id . "'");
-			if (!function_exists("getproductname")) {
-				function getproductname($item) {
-					return $item['name'];
-				}
-			}
-			$products = implode(
-				';',
-				array_map(
-				"getproductname", // without lamda function for compatibility with php < 5.3s
-				$order_product_query->rows
-			)
-			);
+
+			$products = implode(';', array_map("getproductname", $order_product_query->rows));
 
 			if ($this->config->get('config_sms_send_new_order')) {
 				$total = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value']);
@@ -1326,11 +1308,9 @@ public function confirm($order_id, $order_status_id, $comment = '', $notify = fa
 					'sms' => $options['message']
 				);			
 
-				$this->addOrderSmsHistory($order_id, $sms_data, $sms_status, $sms_id, (int)$order_info['customer_id']);								
+				$this->smsAdaptor->addOrderSmsHistory($order_id, $sms_data, $sms_status, $sms_id, (int)$order_info['customer_id']);								
 			}
 
-
-				// Admin Alert Mail
 			if ($this->config->get('config_alert_mail')) {
 
 				$template->data['order_link'] = (defined('HTTP_ADMIN') ? HTTP_ADMIN : HTTP_SERVER.'admin/') . 'index.php?route=sale/order/info&order_id=' . $order_id;					
@@ -1537,26 +1517,4 @@ public function confirm($order_id, $order_status_id, $comment = '', $notify = fa
 		$query = $this->db->ncquery("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");			
 		return $query->rows;
 	}
-
-	public function addOrderSmsHistory($order_id, $data, $sms_status, $sms_id, $customer_id = 0) { 		
-		$this->db->ncquery("INSERT INTO `order_sms_history` SET 
-			order_id = '" . (int)$order_id . "', 
-			customer_id = '" . (int)$customer_id . "',
-			order_status_id = '" . (int)$data['order_status_id'] . "', 
-			comment = '" . $this->db->escape(strip_tags($data['sms'])) . "', 
-			date_added = NOW(), 
-			sms_status = '" . $this->db->escape(strip_tags($sms_status)) . "', 
-			sms_id = '".$this->db->escape($sms_id)."'");
-
-
-		if ($customer_id){
-			$this->db->ncquery("INSERT INTO `customer_history` SET
-				customer_id = '" . (int)$customer_id . "',
-				order_id = '" . (int)$order_id . "', 
-				comment = 'Отправлено SMS',
-				sms_id = '".$this->db->escape($sms_id)."',
-				date_added = NOW()");
-
-		}
-	}   
 }																										

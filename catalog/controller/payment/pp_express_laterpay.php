@@ -221,7 +221,7 @@
 					
 					//$log = new Log('order_send_sms.txt');
 					//$log->write(serialize($sms_data) . ', returning: ' . $sms_id);				
-					$this->model_checkout_order->addOrderSmsHistory($order_id, $sms_data, $sms_status, $sms_id);		
+					$this->smsAdaptor->addOrderSmsHistory($order_id, $sms_data, $sms_status, $sms_id);		
 					
 					} else {
 					

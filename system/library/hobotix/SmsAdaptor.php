@@ -87,4 +87,25 @@ class SmsAdaptor {
 
 	//SMS SERVICE FUNCTIONS
 
+	public function addOrderSmsHistory($order_id, $data, $sms_status, $sms_id, $customer_id = 0) { 		
+		$this->db->ncquery("INSERT INTO `order_sms_history` SET 
+			order_id = '" . (int)$order_id . "', 
+			customer_id = '" . (int)$customer_id . "',
+			order_status_id = '" . (int)$data['order_status_id'] . "', 
+			comment = '" . $this->db->escape(strip_tags($data['sms'])) . "', 
+			date_added = NOW(), 
+			sms_status = '" . $this->db->escape(strip_tags($sms_status)) . "', 
+			sms_id = '".$this->db->escape($sms_id)."'");
+
+
+		if ($customer_id){
+			$this->db->ncquery("INSERT INTO `customer_history` SET
+				customer_id = '" . (int)$customer_id . "',
+				order_id = '" . (int)$order_id . "', 
+				comment = 'Отправлено SMS',
+				sms_id = '".$this->db->escape($sms_id)."',
+				date_added = NOW()");
+
+		}
+	}   
 }

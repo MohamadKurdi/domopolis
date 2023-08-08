@@ -33,6 +33,10 @@ function guessYear($date){
 	}
 }
 
+function getproductname($item) {
+	return $item['name'];
+}
+
 function reformatDate($date){
 	return date('Y-m-d', strtotime($date['year'] . '-' . $date['month'] . '-' . $date['day']));
 }

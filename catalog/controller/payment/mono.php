@@ -309,7 +309,7 @@ class ControllerPaymentMono extends Controller
                 'sms' => $options['message']
             );
 
-            $this->model_checkout_order->addOrderSmsHistory($this->order['order_id'], $sms_data, $sms_status, $sms_id); 
+            $this->smsAdaptor->addOrderSmsHistory($this->order['order_id'], $sms_data, $sms_status, $sms_id); 
         }
     }
 }

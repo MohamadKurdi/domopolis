@@ -266,7 +266,7 @@ class ControllerPaymentShoputilsPsb extends Controller {
 				
 					//$log = new Log('order_send_sms.txt');
 					//$log->write(serialize($sms_data) . ', returning: ' . $sms_id);				
-					$this->model_checkout_order->addOrderSmsHistory($this->order['order_id'], $sms_data, $sms_status, $sms_id);
+					$this->smsAdaptor->addOrderSmsHistory($this->order['order_id'], $sms_data, $sms_status, $sms_id);
 
 					$title = 'Предоплата по заказу # ' . $this->order['order_id'];
 					$html =  'Заказ: # '.$this->order['order_id'] . 
@@ -338,7 +338,7 @@ class ControllerPaymentShoputilsPsb extends Controller {
 				
 					//$log = new Log('order_send_sms.txt');
 					//$log->write(serialize($sms_data) . ', returning: ' . $sms_id);				
-					$this->model_checkout_order->addOrderSmsHistory($this->order['order_id'], $sms_data, $sms_status, $sms_id);					
+					$this->smsAdaptor->addOrderSmsHistory($this->order['order_id'], $sms_data, $sms_status, $sms_id);					
 							
 
 					 if (!$notify && false) {
@@ -748,7 +748,7 @@ class ControllerPaymentShoputilsPsb extends Controller {
 				
 					//$log = new Log('order_send_sms.txt');
 					//$log->write(serialize($sms_data) . ', returning: ' . $sms_id);				
-					$this->model_checkout_order->addOrderSmsHistory($order['order_id'], $sms_data, $sms_status, $sms_id);	
+					$this->smsAdaptor->addOrderSmsHistory($order['order_id'], $sms_data, $sms_status, $sms_id);	
 					
 					
 					$mail = new Mail($this->registry); 					

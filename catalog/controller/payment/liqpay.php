@@ -1,32 +1,5 @@
 <?php
-	/**
-		* Liqpay Payment Module
-		*
-		* NOTICE OF LICENSE
-		*
-		* This source file is subject to the Open Software License (OSL 3.0)
-		* that is available through the world-wide-web at this URL:
-		* http://opensource.org/licenses/osl-3.0.php
-		*
-		* @category        Liqpay
-		* @package         Payment
-		* @version         3.0
-		* @author          Liqpay
-		* @copyright       Copyright (c) 2014 Liqpay
-		* @license         http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
-		*
-		* EXTENSION INFORMATION
-		*
-		* OpenCart         1.5.6
-		* LiqPay API       https://www.liqpay.com/ru/doc
-		*
-	*/
-	
-	/**
-		* Payment method liqpay controller (catalog)
-		*
-		* @author      Liqpay <support@liqpay.com>
-	*/
+
 	class ControllerPaymentLiqpay extends Controller
 	{
 		
@@ -45,7 +18,7 @@
 			$order_id = (int)$this->session->data['order_id'];
 			$order_info = $this->model_checkout_order->getOrder($order_id);
 			
-			$description = 'Заказ #'.$order_id;
+			$description = 'Order #'.$order_id;
 			
 			$order_id .= '#'.time();
 			$result_url = $this->url->link('checkout/success', '', 'SSL');
@@ -53,35 +26,37 @@
 			
 			$private_key = $this->config->get('liqpay_private_key');
 			$public_key = $this->config->get('liqpay_public_key');
+
 			$type = 'buy';
 			$currency = $order_info['currency_code'];
-			if ($currency == 'RUR') { $currency = 'RUB'; }
+
+			if ($currency == 'RUR') { 
+				$currency = 'RUB'; 
+			}
 			
 			$amount = $sAmount = number_format($order_info['total_national'], 2, '.', '');		
 			
 			$version  = '3';
-			//$language = $this->language->get('code');
-			
-			//$language = $language == 'ru' ? 'ru' : 'en';
 			$pay_way  = $this->config->get('liqpay_pay_way');
 			$language = $this->config->get('liqpay_language');
 			
-			$send_data = array('version'    => $version,
-			'public_key'  => $public_key,
-			'amount'      => $amount,
-			'currency'    => $currency,
-			'description' => $description,
-			'order_id'    => $order_id,
-			'type'        => $type,
-			'language'    => $language,
-			'server_url'  => $server_url,
-			'result_url'  => $result_url);
+			$send_data = array(
+			'version'    	=> $version,
+			'public_key'  	=> $public_key,
+			'amount'      	=> $amount,
+			'currency'    	=> $currency,
+			'description' 	=> $description,
+			'order_id'    	=> $order_id,
+			'type'        	=> $type,
+			'language'    	=> $language,
+			'server_url'  	=> $server_url,
+			'result_url'  	=> $result_url);
+
 			if(isset($pay_way)){
 				$send_data['pay_way'] = $pay_way;
 			}
 			
-			$data = base64_encode(json_encode($send_data));
-			
+			$data = base64_encode(json_encode($send_data));			
 			$signature = base64_encode(sha1($private_key.$data.$private_key, 1));
 			
 			$this->data['action']         = $this->config->get('liqpay_action');
@@ -98,6 +73,7 @@
 			
 			$this->response->setOutput($this->render());
 		}
+
 		/**
 			* Confirm action
 			*
@@ -199,7 +175,7 @@
 					'sms' => $options['message']
 				);
 				
-				$this->model_checkout_order->addOrderSmsHistory($this->order['order_id'], $sms_data, $sms_status, $sms_id);	
+				$this->smsAdaptor->addOrderSmsHistory($this->order['order_id'], $sms_data, $sms_status, $sms_id);	
 			}
 			
 			if ($this->order['currency_code'] == 'UAH'){
