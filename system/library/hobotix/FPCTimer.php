@@ -52,19 +52,19 @@ class Interval
 		}
 
 		$this->parse($serialized);
-		$this->timezone = new DateTimeZone($timezoneName);
+		$this->timezone = new \DateTimeZone($timezoneName);
 		$this->makeStart();
 		$this->makeEnd();
 	}
 
-	public function contains(DateTimeInterface $date)
+	public function contains(\DateTimeInterface $date)
 	{
 		return $date >= $this->start && $date <= $this->end;
 	}
 
 	public function isNow()
 	{
-		$now = new DateTimeImmutable('now', $this->timezone);
+		$now = new \DateTimeImmutable('now', $this->timezone);
 		return $this->contains($now);
 	}
 
@@ -103,7 +103,7 @@ class Interval
 	{
 		list($day, $month, $year) = explode('.', date('d.m.Y'));
 
-		$date = new DateTime('now', $this->timezone);
+		$date = new \DateTime('now', $this->timezone);
 
 		$date->setDate($year, $month, $day);
 		$date->setTime($hour, $minute);
@@ -115,7 +115,7 @@ class Interval
 	{
 		if ($this->start > $this->end)
 		{
-			$this->end->add(new DateInterval('P1D'));
+			$this->end->add(new \DateInterval('P1D'));
 		}
 	}
 }

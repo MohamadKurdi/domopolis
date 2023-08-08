@@ -53,7 +53,7 @@ class ControllerKPRainForest extends Controller {
 		}
 		
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
-		$this->load->library('Timer');
+		$this->load->library('hobotix/FPCTimer');
 
 			//Второй шаг, мы проверим товары, у которых нету ASIN, но есть EAN, попробуем получить их с амазона, запишем асин и собственно товар, если не найдем,
 			//то ставим метку "товар не найден на амазон"
@@ -116,7 +116,7 @@ class ControllerKPRainForest extends Controller {
 		}
 
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
-		$this->load->library('Timer');
+		$this->load->library('hobotix/FPCTimer');
 		$this->load->model('catalog/product');
 
 
@@ -181,10 +181,10 @@ class ControllerKPRainForest extends Controller {
 			return;
 		}
 
-		$this->load->library('Timer');
+		$this->load->library('hobotix/FPCTimer');
 
 		if ($this->config->has('config_rainforest_offersqueue_parser_time_start') && $this->config->has('config_rainforest_offersqueue_parser_time_end')){
-			$interval = new Interval($this->config->get('config_rainforest_offersqueue_parser_time_start') . '-' . $this->config->get('config_rainforest_offersqueue_parser_time_end'));
+			$interval = new \hobotix\Interval($this->config->get('config_rainforest_offersqueue_parser_time_start') . '-' . $this->config->get('config_rainforest_offersqueue_parser_time_end'));
 
 			if (!$interval->isNow()){
 				echoLine('[ControllerDPRainForest::parseoffersqueuecron] NOT ALLOWED TIME', 'e');
@@ -265,10 +265,10 @@ class ControllerKPRainForest extends Controller {
 			return;
 		}
 
-		$this->load->library('Timer');
+		$this->load->library('hobotix/FPCTimer');
 
 		if ($this->config->has('config_rainforest_offersqueue_parser_time_start') && $this->config->has('config_rainforest_offersqueue_parser_time_end')){
-			$interval = new Interval($this->config->get('config_rainforest_offersqueue_parser_time_start') . '-' . $this->config->get('config_rainforest_offersqueue_parser_time_end'));
+			$interval = new \hobotix\Interval($this->config->get('config_rainforest_offersqueue_parser_time_start') . '-' . $this->config->get('config_rainforest_offersqueue_parser_time_end'));
 
 			if (!$interval->isNow()){
 				echoLine('[ControllerDPRainForest::parseoffersqueuecron] NOT ALLOWED TIME', 'e');
@@ -349,7 +349,7 @@ class ControllerKPRainForest extends Controller {
 		}
 
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
-		$this->load->library('Timer');
+		$this->load->library('hobotix/FPCTimer');
 
 		if (!$this->config->get('config_rainforest_enable_pricing')){
 			echoLine('[parsenoofferscron] RNF AMAZON PRICING NOT ENABLED', 'e');
@@ -400,9 +400,9 @@ class ControllerKPRainForest extends Controller {
 			return;
 		}
 
-		$this->load->library('Timer');
+		$this->load->library('hobotix/FPCTimer');
 		if ($this->config->has('config_rainforest_offers_parser_time_start') && $this->config->has('config_rainforest_offers_parser_time_end')){
-			$interval = new Interval($this->config->get('config_rainforest_offers_parser_time_start') . '-' . $this->config->get('config_rainforest_offers_parser_time_end'));
+			$interval = new \hobotix\Interval($this->config->get('config_rainforest_offers_parser_time_start') . '-' . $this->config->get('config_rainforest_offers_parser_time_end'));
 
 			if (!$interval->isNow()){
 				echoLine('[ControllerKPRainForest::parseofferscron] NOT ALLOWED TIME');

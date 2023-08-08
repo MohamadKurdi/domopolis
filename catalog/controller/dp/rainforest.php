@@ -530,10 +530,10 @@ class ControllerDPRainForest extends Controller {
 			return;
 		}
 
-		$this->load->library('Timer');
+		$this->load->library('hobotix/FPCTimer');
 
 		if ($this->config->has('config_rainforest_add_variants_queue_parser_time_start') && $this->config->has('config_rainforest_add_variants_queue_parser_time_end')){
-			$interval = new Interval($this->config->get('config_rainforest_add_variants_queue_parser_time_start') . '-' . $this->config->get('config_rainforest_add_variants_queue_parser_time_end'));
+			$interval = new \hobotix\Interval($this->config->get('config_rainforest_add_variants_queue_parser_time_start') . '-' . $this->config->get('config_rainforest_add_variants_queue_parser_time_end'));
 
 			if (!$interval->isNow()){
 				echoLine('[ControllerDPRainForest::addvariantsqueuecron] NOT ALLOWED TIME', 'e');
@@ -601,10 +601,10 @@ class ControllerDPRainForest extends Controller {
 			return;
 		}
 
-		$this->load->library('Timer');
+		$this->load->library('hobotix/FPCTimer');
 
 		if ($this->config->has('config_rainforest_add_queue_parser_time_start') && $this->config->has('config_rainforest_add_queue_parser_time_end')){
-			$interval = new Interval($this->config->get('config_rainforest_add_queue_parser_time_start') . '-' . $this->config->get('config_rainforest_add_queue_parser_time_end'));
+			$interval = new \hobotix\Interval($this->config->get('config_rainforest_add_queue_parser_time_start') . '-' . $this->config->get('config_rainforest_add_queue_parser_time_end'));
 
 			if (!$interval->isNow()){
 				echoLine('[ControllerDPRainForest::addasinsqueuecron] NOT ALLOWED TIME', 'e');
@@ -745,10 +745,10 @@ class ControllerDPRainForest extends Controller {
 			return;
 		}
 
-		$this->load->library('Timer');
+		$this->load->library('hobotix/FPCTimer');
 
 		if ($this->config->has('config_rainforest_new_parser_time_start') && $this->config->has('config_rainforest_new_parser_time_end')){
-			$interval = new Interval($this->config->get('config_rainforest_new_parser_time_start') . '-' . $this->config->get('config_rainforest_new_parser_time_end'));
+			$interval = new \hobotix\Interval($this->config->get('config_rainforest_new_parser_time_start') . '-' . $this->config->get('config_rainforest_new_parser_time_end'));
 
 			if (!$interval->isNow()){
 				echoLine('[ControllerDPRainForest::addnewproductscron] NOT ALLOWED TIME', 'e');
@@ -845,7 +845,7 @@ class ControllerDPRainForest extends Controller {
 		}
 
 		if ($this->config->has('config_rainforest_recoverasins_parser_time_start') && $this->config->has('config_rainforest_recoverasins_parser_time_end')){
-			$interval = new Interval($this->config->get('config_rainforest_recoverasins_parser_time_start') . '-' . $this->config->get('config_rainforest_recoverasins_parser_time_end'));
+			$interval = new \hobotix\Interval($this->config->get('config_rainforest_recoverasins_parser_time_start') . '-' . $this->config->get('config_rainforest_recoverasins_parser_time_end'));
 
 			if (!$interval->isNow()){
 				echoLine('[ControllerDPRainForest::recoverasins] NOT ALLOWED TIME', 'e');
@@ -858,7 +858,7 @@ class ControllerDPRainForest extends Controller {
 		if ($this->config->get('config_enable_amazon_specific_modes')){
 			$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithChangedAsins();
 			
-			$this->load->library('Timer');
+			$this->load->library('hobotix/FPCTimer');
 
 			echoLine('[recoverasins] Total products: ' . $total);
 
@@ -901,7 +901,7 @@ class ControllerDPRainForest extends Controller {
 	public function fixlostjson(){
 		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFullData();
 
-		$this->load->library('Timer');
+		$this->load->library('hobotix/FPCTimer');
 
 		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::productRequestLimits);
 		echoLine('[fixlostjson] Total products: ' . $total);
@@ -958,9 +958,9 @@ class ControllerDPRainForest extends Controller {
 		}
 
 		if (!$parsetechcategory){
-			$this->load->library('Timer');
+			$this->load->library('hobotix/FPCTimer');
 			if ($this->config->has('config_rainforest_data_parser_time_start') && $this->config->has('config_rainforest_data_parser_time_end')){
-				$interval = new Interval($this->config->get('config_rainforest_data_parser_time_start') . '-' . $this->config->get('config_rainforest_data_parser_time_end'));
+				$interval = new \hobotix\Interval($this->config->get('config_rainforest_data_parser_time_start') . '-' . $this->config->get('config_rainforest_data_parser_time_end'));
 
 				if (!$interval->isNow()){
 					echoLine('[ControllerDPRainForest::editfullproductscron] NOT ALLOWED TIME', 'e');
@@ -1030,10 +1030,10 @@ class ControllerDPRainForest extends Controller {
 			return;
 		}
 
-		$this->load->library('Timer');
+		$this->load->library('hobotix/FPCTimer');
 
 		if ($this->config->has('config_rainforest_tech_category_parser_time_start') && $this->config->has('config_rainforest_tech_category_parser_time_end')){
-			$interval = new Interval($this->config->get('config_rainforest_tech_category_parser_time_start') . '-' . $this->config->get('config_rainforest_tech_category_parser_time_end'));
+			$interval = new \hobotix\Interval($this->config->get('config_rainforest_tech_category_parser_time_start') . '-' . $this->config->get('config_rainforest_tech_category_parser_time_end'));
 
 			if (!$interval->isNow()){
 				echoLine('[ControllerDPRainForest::editfullproductscron] NOT ALLOWED TIME', 'e');
@@ -1058,10 +1058,10 @@ class ControllerDPRainForest extends Controller {
 			return;
 		}
 
-		$this->load->library('Timer');
+		$this->load->library('hobotix/FPCTimer');
 
 		if ($this->config->has('config_rainforest_data_l2_parser_time_start') && $this->config->has('config_rainforest_data_l2_parser_time_end')){
-			$interval = new Interval($this->config->get('config_rainforest_data_l2_parser_time_start') . '-' . $this->config->get('config_rainforest_data_l2_parser_time_end'));
+			$interval = new \hobotix\Interval($this->config->get('config_rainforest_data_l2_parser_time_start') . '-' . $this->config->get('config_rainforest_data_l2_parser_time_end'));
 
 			if (!$interval->isNow()){
 				echoLine('[ControllerDPRainForest::editfullproductscron] NOT ALLOWED TIME', 'e');
