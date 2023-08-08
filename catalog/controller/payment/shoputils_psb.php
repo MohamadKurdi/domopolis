@@ -189,10 +189,6 @@ class ControllerPaymentShoputilsPsb extends Controller {
 		$this->load->model('checkout/order');
 		$this->load->model('payment/shoputils_psb');
 		
-		
-		$sms_template = "Заказ # {ID}. Оплату в сумме {SUM}, получили, спасибо. Заказ выполняем";
-			
-		
         if (!isset($this->session->data['order_id'])) {
           $this->session->data['order_id'] = $this->order['order_id']; //Добавляем в сессию номер заказа на случай, если в checkout/success на экран пользователю выводится номер заказа
         }
@@ -236,37 +232,7 @@ class ControllerPaymentShoputilsPsb extends Controller {
 					    	$actual_amount = number_format($this->currency->convert($this->model_account_order->getOrderPrepayNational($this->order['order_id']), $this->order['currency_code'], 'RUB'), 2, '.', '');		
 					}
 
-					//SMS
-					$options = array(
-						'to'       => $this->order['telephone'],						
-						'from'     => $this->config->get('config_sms_sign'),						
-						'message'  => str_replace(
-										array(	'{ID}', 												
-												'{SUM}', 
-												), 
-										array(
-												$this->order['order_id'],  
-												$this->currency->format($this->model_account_order->getOrderPrepayNational($this->order['order_id']), $this->order['currency_code'], 1),
-											), 
-											$sms_template)
-					);
-
-					$sms_id = $this->smsQueue->queue($options);
-							
-					if ($sms_id){
-						$sms_status = 'В очереди';					
-					} else {
-						$sms_status = 'Неудача';
-					}
-					
-					$sms_data = array(
-						'order_status_id' => $this->config->get('config_prepayment_paid_order_status_id'),
-						'sms' => $options['message']
-					);
-				
-					//$log = new Log('order_send_sms.txt');
-					//$log->write(serialize($sms_data) . ', returning: ' . $sms_id);				
-					$this->smsAdaptor->addOrderSmsHistory($this->order['order_id'], $sms_data, $sms_status, $sms_id);
+					$this->smsAdaptor->sendPayment($this->order, ['amount' => $this->model_account_order->getOrderPrepayNational($this->order['order_id']), 'order_status_id' => $this->config->get('config_prepayment_paid_order_status_id')]);					
 
 					$title = 'Предоплата по заказу # ' . $this->order['order_id'];
 					$html =  'Заказ: # '.$this->order['order_id'] . 
@@ -309,37 +275,7 @@ class ControllerPaymentShoputilsPsb extends Controller {
 							$actual_amount = number_format($this->currency->convert($this->model_account_order->getOrderTotalNational($this->order['order_id']), $this->order['currency_code'], 'RUB'), 2, '.', '');		
 					}
 
-					//SMS
-					$options = array(
-						'to'       => $this->order['telephone'],						
-						'from'     => $this->config->get('config_sms_sign'),						
-						'message'  => str_replace(
-										array(	'{ID}', 												
-												'{SUM}', 
-												), 
-										array(
-												$this->order['order_id'],  
-												$this->currency->format($this->model_account_order->getOrderTotalNational($this->order['order_id']), $this->order['currency_code'], 1),
-											), 
-											$sms_template)
-					);
-
-					$sms_id = $this->smsQueue->queue($options);
-							
-					if ($sms_id){
-						$sms_status = 'В очереди';					
-					} else {
-						$sms_status = 'Неудача';
-					}
-					$sms_data = array(
-						'order_status_id' => $this->config->get('config_prepayment_paid_order_status_id'),
-						'sms' => $options['message']
-					);
-				
-					//$log = new Log('order_send_sms.txt');
-					//$log->write(serialize($sms_data) . ', returning: ' . $sms_id);				
-					$this->smsAdaptor->addOrderSmsHistory($this->order['order_id'], $sms_data, $sms_status, $sms_id);					
-							
+					$this->smsAdaptor->sendPayment($this->order, ['amount' => $this->model_account_order->getOrderTotalNational($this->order['order_id']), 'order_status_id' => $this->config->get('config_prepayment_paid_order_status_id')]);																
 
 					 if (!$notify && false) {
 						$langdata = $this->config->get('shoputils_psb_langdata');
@@ -689,8 +625,6 @@ class ControllerPaymentShoputilsPsb extends Controller {
 				return false;
 			}	
 			
-			$sms_template = "Заказ # {ID}. / Возврат оплаты  {SUM}.  Проводка транзакции банком до 7 дней";
-			
 			if ($order['currency_code'] == 'RUB') {
 				$total_return = $this->request->post['AMOUNT'];
 			} else {
@@ -718,39 +652,8 @@ class ControllerPaymentShoputilsPsb extends Controller {
 						'<br />Полная оплаченная сумма: ' . $this->request->post['ORG_AMOUNT'] . ' RUB'.
 						'<br />Время: '.date("d:m:Y H:i:s");											
 			
-			
-			$options = array(
-					'to'       => $order['telephone'],						
-					'from'     => $this->config->get('config_sms_sign'),						
-					'message'  => str_replace(
-										array(	'{ID}', 												
-												'{SUM}', 
-												), 
-										array(
-												$order['order_id'],  
-												$this->currency->format($this->request->post['AMOUNT'], $this->order['currency_code'], 1),
-											), 
-											$sms_template)
-					);
-
-					$sms_id = $this->smsQueue->queue($options);
-							
-					if ($sms_id){
-						$sms_status = 'В очереди';					
-					} else {
-						$sms_status = 'Неудача';
-					}
-					
-					$sms_data = array(
-						'order_status_id' => $order['order_status_id'],
-						'sms' => $options['message']
-					);
-				
-					//$log = new Log('order_send_sms.txt');
-					//$log->write(serialize($sms_data) . ', returning: ' . $sms_id);				
-					$this->smsAdaptor->addOrderSmsHistory($order['order_id'], $sms_data, $sms_status, $sms_id);	
-					
-					
+			$this->smsAdaptor->sendPayment($this->order, ['amount' => $this->request->post['AMOUNT'], 'order_status_id' => $order['order_status_id']]);
+	
 					$mail = new Mail($this->registry); 					
 					$mail->setFrom($this->config->get('config_payment_mail_from'));
 					$mail->setSender($this->config->get('config_payment_mail_from'));

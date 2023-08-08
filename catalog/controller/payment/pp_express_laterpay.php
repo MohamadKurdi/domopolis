@@ -121,12 +121,8 @@
 			'RETURNFMFDETAILS' => 1,
 			);
 			
-		//	var_dump($order_id);
-			
-			$paypal_data = array_merge($paypal_data, $this->model_payment_pp_express_laterpay->paymentRequestInfo($order_id));
-			
-		//	var_dump($paypal_data);
-			
+
+			$paypal_data = array_merge($paypal_data, $this->model_payment_pp_express_laterpay->paymentRequestInfo($order_id));	
 			$result = $this->model_payment_pp_express->call($paypal_data);
 			
 			if($result['ACK'] == 'Success') {
@@ -165,10 +161,7 @@
 				}
 				
 				//$this->model_checkout_order->confirm($order_id, $order_status_id);
-				if ($result['PAYMENTINFO_0_PAYMENTSTATUS'] == 'Completed'){
-					
-					$sms_template = "Заказ # {ID}. Оплату в сумме {SUM}, получили, спасибо. Заказ выполняем";	
-					
+				if ($result['PAYMENTINFO_0_PAYMENTSTATUS'] == 'Completed'){					
 					$this->session->data['success'] = 'Оплата прошла успешно. Благодарим за сотрудничество.';
 					
 					//Действия с заказом после получения оплаты
@@ -191,37 +184,9 @@
 					);
 					
 					$this->model_checkout_order->addOrderToQueue($order_id);
-					
-					//SMS
-					$options = array(
-					'to'       => $order_info['telephone'],						
-					'from'     => $this->config->get('config_sms_sign'),						
-					'message'  => str_replace(
-					array(	'{ID}', 												
-					'{SUM}', 
-					), 
-					array(
-					$order_id,  
-					$this->currency->format($this->model_account_order->getOrderTotalNational($order_id), $order_info['currency_code'], 1),
-					), 
-					$sms_template)
-					);
-					
-					$sms_id = $this->smsQueue->queue($options);
-					
-					if ($sms_id){
-						$sms_status = 'В очереди';					
-						} else {
-						$sms_status = 'Неудача';
-					}
-					$sms_data = array(
-					'order_status_id' => $this->config->get('config_prepayment_paid_order_status_id'),
-					'sms' => $options['message']
-					);
-					
-					//$log = new Log('order_send_sms.txt');
-					//$log->write(serialize($sms_data) . ', returning: ' . $sms_id);				
-					$this->smsAdaptor->addOrderSmsHistory($order_id, $sms_data, $sms_status, $sms_id);		
+
+					$this->smsAdaptor->sendPayment(order_info, ['amount' => $this->model_account_order->getOrderTotalNational($order_id), 'order_status_id' => $this->config->get('liqpay_order_status_id')]);
+										
 					
 					} else {
 					

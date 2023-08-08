@@ -284,32 +284,6 @@ class ControllerPaymentMono extends Controller
             ''
         );
 
-        if ($this->config->get('config_sms_payment_recieved_enabled')){
-            $sms_template = $this->config->get('config_sms_payment_recieved');            
-
-            $options = array(
-                'to'       => $this->order['telephone'],                        
-                'from'     => $this->config->get('config_sms_sign'),                        
-                'message'  => str_replace(
-                    [  '{ID}', '{SUM}' ], 
-                    [ $this->order['order_id'], $this->currency->format($this->model_account_order->getOrderTotalNational($this->order['order_id']), $this->order['currency_code'], 1)], 
-                    $sms_template
-                )
-            );
-
-            $sms_id = $this->smsQueue->queue($options);
-
-            if ($sms_id){
-                $sms_status = 'В очереди';                  
-            } else {
-                $sms_status = 'Неудача';
-            }
-            $sms_data = array(
-                'order_status_id' => $this->config->get('mono_order_success_status_id'),
-                'sms' => $options['message']
-            );
-
-            $this->smsAdaptor->addOrderSmsHistory($this->order['order_id'], $sms_data, $sms_status, $sms_id); 
-        }
+        $this->smsAdaptor->sendPayment($this->order, ['amount' => $this->model_account_order->getOrderTotalNational($this->order['order_id']), 'order_status_id' => $this->config->get('mono_order_success_status_id')]);
     }
 }

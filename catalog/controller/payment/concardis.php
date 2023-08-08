@@ -129,51 +129,22 @@
 					'',
 					$this->order['concardis_id']
 					);
-				
 					
-					//SMS
-					if ($this->config->get('config_sms_payment_recieved_enabled')){
-						$sms_template = $this->config->get('config_sms_payment_recieved');  
-						$options = array(
-							'to'       => $this->order['telephone'],						
-							'from'     => $this->config->get('config_sms_sign'),						
-							'message'  => str_replace('{ID}', $this->order['order_id'], $sms_template)					
-						);
-						
-						$sms_id = $this->smsQueue->queue($options);
-						
-						if ($sms_id){
-							$sms_status = 'В очереди';					
-						} else {
-							$sms_status = 'Неудача';
-						}
-						
-						$sms_data = array(
-							'order_status_id' => $this->config->get('concardis_order_status_id'),
-							'sms' => $options['message']
-						);
-						
-						$this->smsAdaptor->addOrderSmsHistory($this->order['order_id'], $sms_data, $sms_status, $sms_id);
-					}
-					
+					$this->smsAdaptor->sendPayment($this->order, ['amount' => $paidByConcardis, 'order_status_id' => $this->config->get('concardis_order_status_id')]);					
 				}
 				
 			}
 		}
 		
 		
-		private function validateToken(){
-			
-			if (isset($this->request->get['token']) && isset($this->request->get['order_id'])){
-				
+		private function validateToken(){			
+			if (isset($this->request->get['token']) && isset($this->request->get['order_id'])){				
 				if (md5(md5(sha1($this->request->get['order_id'] . 'hmIQeCXDQVFOBDcAkE2gFWM0am4CK5Z4'))) == $this->request->get['token']){
 					return true;
 				}
-				
 			}
 			
-			return false;
-			
+			return false;			
 		}
 		
 		public function callback(){
@@ -184,8 +155,7 @@
 			
 			
 		}
-		
-		
+				
 		public function cancel(){	
 			
 			$cLog = new Log('concardis_callback.txt');
@@ -203,8 +173,7 @@
 			}
 		}
 		
-		public function fail(){	
-			
+		public function fail(){				
 			$cLog = new Log('concardis_callback.txt');
 			$cLog->write('FAIL PAYMENT');
 			$cLog->write(serialize($this->request->post));
@@ -238,83 +207,7 @@
 				}
 				
 				$this->redirect($this->url->link('checkout/success', '', 'SSL'));	
-			
-			/*	
-				
-				$sms_template = "Заказ # {ID}. Оплату получили, спасибо. Заказ выполняем";
-				$this->model_checkout_order->addOrderToQueue($this->request->get['order_id']);
-				
-				if (!isset($this->session->data['order_id'])) {
-					$this->session->data['order_id'] = $this->request->get['order_id'];
-				}
-				
-				$this->order = $this->model_checkout_order->getOrder($this->request->get['order_id']);
-				
-				//для совместимости
-				$order_id = $this->order['order_id'];
-				
-				if ($this->order['order_status_id'] != $this->config->get('concardis_order_status_id')) {
-					
-					$this->model_checkout_order->update($this->order['order_id'],
-					$this->config->get('concardis_order_status_id'),
-					'Оплата через Concardis Payengine',
-					true,
-					158);
-					
-					//добавляем транзакцию полной оплаты								  
-					$this->model_account_transaction->addTransaction(
-					'Concardis Payengine: Оплата по заказу # '.$this->order['order_id'], 
-					$this->model_account_order->getOrderTotal($this->order['order_id']),
-					$this->model_account_order->getOrderTotalNational($this->order['order_id']),
-					$this->config->get('config_regional_currency'),
-					$this->order['order_id'],
-					true,
-					'concardis',
-					'',
-					'',
-					$this->order['concardis_id']
-					);
-					
-					$this->session->data['success'] = 'Оплата прошла успешно. Спасибо.';
-					
-					//SMS
-					$options = array(
-					'to'       => $this->order['telephone'],						
-					'from'     => $this->config->get('config_sms_sign'),						
-					'message'  => str_replace(
-					array(	'{ID}', 												
-					'{SUM}', 
-					), 
-					array(
-					$this->order['order_id'],  
-					$this->currency->format($this->model_account_order->getOrderTotalNational($this->order['order_id']), $order_info['currency_code'], 1),
-					), 
-					$sms_template)
-					);
-					
-					$sms_id = $this->smsQueue->queue($options);
-					
-					if ($sms_id){
-						$sms_status = 'В очереди';					
-						} else {
-						$sms_status = 'Неудача';
-					}
-					
-					$sms_data = array(
-					'order_status_id' => $this->config->get('concardis_order_status_id'),
-					'sms' => $options['message']
-					);
-					
-					$this->smsAdaptor->addOrderSmsHistory($this->order['order_id'], $sms_data, $sms_status, $sms_id);
-					
-					$this->redirect($this->url->link('account/order', '', 'SSL'));	
-					
-					} else {
-					$this->redirect($this->url->link('account/order', '', 'SSL'));	
-				}
-				*/
-				
-				
+									
 				} else {
 				
 				$this->redirect($this->url->link('account/order', '', 'SSL'));	
