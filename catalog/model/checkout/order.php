@@ -1257,59 +1257,9 @@ public function confirm($order_id, $order_status_id, $comment = '', $notify = fa
 			$mail->send();
 			$template->sent();
 
-
 			$order_product_query = $this->db->ncquery("SELECT * FROM order_product WHERE order_id = '" . (int)$order_id . "'");
 
-			$products = implode(';', array_map("getproductname", $order_product_query->rows));
-
-			if ($this->config->get('config_sms_send_new_order')) {
-				$total = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value']);
-
-				$options = array(
-					'to'       => $order_info['telephone'],
-					'from'     => $this->config->get('config_sms_sign'),					
-					'message'  => str_replace(
-						[
-							'{ID}',
-							'{SNAME}',
-							'{DATE}',
-							'{TIME}',
-							'{SUM}',
-							'{PHONE}',
-							'{FIRSTNAME}',
-							'{LASTNAME}',
-							'{PRODUCTS}',
-						],
-						[
-							$order_id,
-							$this->config->get('config_name'),
-							date('d.m.Y'),
-							date('H:i'),
-							$total,
-							$order_info['telephone'],
-							$order_info['firstname'],
-							$order_info['lastname'],
-							$products,
-						],
-						$this->config->get('config_sms_new_order_message')
-					)
-				);
-
-				$sms_id = $this->smsQueue->queue($options);
-
-				if ($sms_id){
-					$sms_status = 'В очереди';					
-				} else {
-					$sms_status = 'Неудача';
-				}
-
-				$sms_data = array(
-					'order_status_id' => $this->config->get('config_order_status_id'),
-					'sms' => $options['message']
-				);			
-
-				$this->smsAdaptor->addOrderSmsHistory($order_id, $sms_data, $sms_status, $sms_id, (int)$order_info['customer_id']);								
-			}
+			$this->smsAdaptor->sendNewOrder($order_info);
 
 			if ($this->config->get('config_alert_mail')) {
 
