@@ -33,6 +33,18 @@ function guessYear($date){
 	}
 }
 
+function reTemplate($array, $string){
+	$from 	= [];
+	$to  	= [];
+
+	foreach ($array as $key => $value){
+		$from[] = $key;
+		$to[]	= $value;
+	}
+
+	return str_replace($from, $to, $string);
+}
+
 function getproductname($item) {
 	return $item['name'];
 }
