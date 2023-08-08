@@ -30,7 +30,7 @@ class ControllerApiDeliveryServices extends Controller {
 		}
 
 		if ($this->config->has('config_shipping_enable_tracker_worker_time_start') && $this->config->has('config_shipping_enable_tracker_worker_time_end')){
-			$interval = new Interval($this->config->get('config_shipping_enable_tracker_worker_time_start') . '-' . $this->config->get('config_shipping_enable_tracker_worker_time_end'));
+			$interval = new \hobotix\Interval($this->config->get('config_shipping_enable_tracker_worker_time_start') . '-' . $this->config->get('config_shipping_enable_tracker_worker_time_end'));
 
 			if (!$interval->isNow()){
 				echoLine('[ControllerApiDeliveryServices::track] NOT ALLOWED TIME', 'e');

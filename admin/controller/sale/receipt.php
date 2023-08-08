@@ -1007,7 +1007,7 @@ class ControllerSaleReceipt extends Controller {
 
         $this->load->library('Timer');
 
-        $interval = new Interval('23:00' . '-' . '01:00');
+        $interval = new \hobotix\Interval('23:00' . '-' . '01:00');
         if ($interval->isNow()){
         	echoLine('[ControllerSaleReceipt::cron] NOT ALLOWED TIME ' . date('H:i'), 'e');
         	return;

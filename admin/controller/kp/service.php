@@ -32,7 +32,7 @@
 			}
 
 			if ($this->config->has('config_sms_enable_queue_worker_time_start') && $this->config->has('config_sms_enable_queue_worker_time_end')){
-				$interval = new Interval($this->config->get('config_sms_enable_queue_worker_time_start') . '-' . $this->config->get('config_sms_enable_queue_worker_time_end'));
+				$interval = new \hobotix\Interval($this->config->get('config_sms_enable_queue_worker_time_start') . '-' . $this->config->get('config_sms_enable_queue_worker_time_end'));
 
 				if (!$interval->isNow()){
 					echoLine('[ControllerKPService::smsQueue] NOT ALLOWED TIME', 'e');
