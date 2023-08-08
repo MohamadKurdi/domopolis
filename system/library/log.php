@@ -58,8 +58,7 @@
 			return;
 		}
 		
-		public function debug($variable, $message = false, $sql = false, $echo = false){
-			
+		public function debug($variable, $message = false, $sql = false, $echo = false){			
 			if ((defined('IS_DEBUG') && IS_DEBUG) || $echo || is_cli()) {	
 
 				if (!is_cli()) { print '<pre>';	}
@@ -79,7 +78,6 @@
 				}
 
 				if (!is_cli()) { print '</pre>'; } else { print PHP_EOL; }
-			}
-			
+			}			
 		}
 	}
