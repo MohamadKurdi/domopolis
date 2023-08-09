@@ -51,33 +51,10 @@ class ControllerApiInfo1C extends Controller
 
         $this->db->query("UPDATE `order` SET `ttn` = '" . $this->db->escape($ttn) . "' WHERE order_id = " . (int)$order_id);
         $adding_query = $this->db->query("INSERT IGNORE INTO `order_ttns` SET	order_id = '" . (int)$order_id . "', ttn = '" . $this->db->escape($ttn) . "', delivery_code = '" . $this->db->escape($shipping_code) . "', date_ttn = NOW(), sms_sent = NOW()");
-
-        $smsTEXT = 'SMS sending disabled';
-        if ($adding_query->num_rows && $this->model_setting_setting->getKeySettingValue('config', 'config_sms_ttn_sent_enabled', (int)$order_info['store_id'])){
-            $smsTEXT = str_replace(['{ID}', '{TTN}'], [$order_id, $ttn], $this->model_setting_setting->getKeySettingValue('config', 'config_sms_ttn_sent', (int)$order_info['store_id']));
-
-            $options = array(
-                'to'       => $order_info['telephone'],
-                'from'     => $this->model_setting_setting->getKeySettingValue('config', 'config_sms_sign', (int)$order_info['store_id']),
-                'message'  => $smsTEXT
-            );
-
-            $sms_id = $this->smsQueue->queue($options);
-
-            if ($sms_id) {
-                $sms_status = 'В очереди';
-            } else {
-                $sms_status = 'Неудача';
-            }
-            $sms_data = array(
-                'order_status_id' => $order_info['order_status_id'],
-                'sms' => $options['message']
-            );
-
-            $this->model_sale_order->addOrderSmsHistory($order_id, $sms_data, $sms_status, $sms_id, (int)$order_info['customer_id']);
+       
+        if ($adding_query->num_rows){
+            $this->smsAdaptor->sendPayment($order_info, ['ttn' => $ttn, 'order_status_id' => $order_info['order_status_id']]);
         }
-
-        $this->response->setOutput($smsTEXT);
     }
 
     public function ping1CToUpdateProducts()
@@ -2042,43 +2019,11 @@ class ControllerApiInfo1C extends Controller
                 //check if to send
                     $check_query = $this->db->query("SELECT * FROM order_tracker_sms WHERE tracker_type = 'LeaveMainWarehouse' AND order_id = '" . (int)$order_id . "' AND partie_num = '" . $this->db->escape($json_data['NumPart']) . "'");
 
-                    if (!$check_query->num_rows) {
-                        $message  = str_replace(
-                            array(
-                                '{ID}',
-                                '{FIRSTNAME}',
-                            ),
-                            array(
-                                $order_id,
-                                $order_info['firstname'],
-                            ),
-                           $this->model_setting_setting->getKeySettingValue('config', 'config_sms_tracker_leave_main_warehouse', $order_info['store_id'])
-                        );
-
-                        $options = array(
-                            'to'       => $order_info['telephone'],
-                            'from'     => $this->model_setting_setting->getKeySettingValue('config', 'config_sms_sign', (int)$order_info['store_id']),
-                            'message'  => $message
-                        );
-
-
-
-                        $sms_id = $this->smsQueue->queue($options);
-
-                        if ($sms_id) {
-                            $sms_status = 'В очереди';
-                        } else {
-                            $sms_status = 'Неудача';
-                        }
-                        $sms_data = array(
-                            'order_status_id' => 2,
-                            'sms' => $options['message']
-                        );
-
-
+                    if (!$check_query->num_rows) {                        
                         $this->db->query("INSERT INTO order_tracker_sms SET tracker_type = 'LeaveMainWarehouse', order_id = '" . (int)$order_id . "', partie_num = '" . $this->db->escape($json_data['NumPart']) . "', date_sent = NOW()");
-                        $this->model_sale_order->addOrderSmsHistory($order_id, $sms_data, $sms_status, $sms_id, (int)$order_info['customer_id']);
-                        $return[$order_id] = $options['message'];
+                        
+                        $this->smsAdaptor->sendInWarehouse($order_info, ['order_status_id' => $order_info['order_status_id']]);
+
                     } else {
                         $return[$order_id] = 'already sent';
                     }
