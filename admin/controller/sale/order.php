@@ -5496,21 +5496,13 @@
 		
 		public function getDeliverySMSTextAjax(){
 			$this->load->model('sale/order');
-			$this->load->model('setting/setting');
-
-			$order_id 		= $this->request->post['order_id'];
 			$date 			= $this->request->post['senddate'];
 			$ttn 			= $this->request->post['ttn'];
 			$shipping_code 	= $this->request->post['shipping_code'];
 
-			$order_info = $this->model_sale_order->getOrder($order_id);
+			$order_info = $this->model_sale_order->getOrder($this->request->post['order_id']);
 
-			 $smsTEXT = 'SMS sending disabled';
-			if ($this->model_setting_setting->getKeySettingValue('config', 'config_sms_ttn_sent_enabled', (int)$order_info['store_id'])){
-				$smsTEXT = str_replace(['{ID}', '{TTN}'], [$order_id, $ttn], $this->model_setting_setting->getKeySettingValue('config', 'config_sms_ttn_sent', (int)$order_info['store_id']));
-			}
-
-			$this->response->setOutput($smsTEXT);			
+			$this->response->setOutput($this->smsAdaptor->getDeliveryNoteText($order_info, ['ttn' => $this->request->post['ttn'], 'shipping_code' => $this->request->post['shipping_code'], 'senddate' => $this->request->post['senddate']]));			
 		}
 		
 		public function getTransactionSMSTextAjax(){
@@ -5642,10 +5634,8 @@
 				
 				//complete_order_status_id
 				//UA
-				if ($this->request->post['order_status_id'] == $this->model_setting_setting->getKeySettingValue('config', 'config_complete_status_id', $order['store_id'])){
-					
+				if ($this->request->post['order_status_id'] == $this->model_setting_setting->getKeySettingValue('config', 'config_complete_status_id', $order['store_id'])){					
 					$store_name = $this->model_setting_setting->getKeySettingValue('config', 'config_name', $order['store_id']);
-					
 				} else {
 					$store_name = $this->model_setting_setting->getKeySettingValue('config', 'config_name', $order['store_id']);
 				}
@@ -5718,12 +5708,10 @@
 		public function reject_reason_ajax(){
 			$this->load->model('sale/reject_reason');
 			
-			$this->data['token'] = $this->session->data['token'];
+			$this->data['token'] 			= $this->session->data['token'];			
+			$this->data['reject_reasons'] 	= $this->model_reject_reason->getRejectReasons();
 			
-			$this->data['reject_reasons'] = $this->model_reject_reason->getRejectReasons();
-			
-			$this->template = 'sale/order_reject_reason.tpl';
-			
+			$this->template = 'sale/order_reject_reason.tpl';			
 			$this->response->setOutput($this->render());			
 		}
 		
@@ -5731,8 +5719,7 @@
 			$order_id = $this->request->get['order_id'];
 			
 			if ($this->user->canUnlockOrders()){
-				$this->db->query("UPDATE `order` SET closed = (1 - closed) WHERE order_id = '" . (int)$order_id . "'");		
-				
+				$this->db->query("UPDATE `order` SET closed = (1 - closed) WHERE order_id = '" . (int)$order_id . "'");						
 			}
 			
 			$check = $this->db->query("SELECT closed FROM `order` WHERE order_id = '" . (int)$order_id . "'");
@@ -5754,11 +5741,10 @@
 		public function ttnhistory(){
 			$this->load->model('sale/order');
 			
-			$this->data['ttns'] = array();		
-			
-			
-			$results = $this->model_sale_order->getOrderTtnHistory($this->request->get['order_id']);
-			$this->data['order'] = $this->model_sale_order->getOrder($this->request->get['order_id']);
+			$this->data['ttns'] = [];		
+						
+			$results 				= $this->model_sale_order->getOrderTtnHistory($this->request->get['order_id']);
+			$this->data['order'] 	= $this->model_sale_order->getOrder($this->request->get['order_id']);
 			foreach ($results as $result) {
 				
 				if ($result['sms_sent']!='0000-00-00 00:00:00'){
@@ -5805,12 +5791,12 @@
 			$this->load->model('user/user');					
 			$user_name = $this->model_user_user->getRealUserNameById($this->user->getID());
 			
-			$data = array(
+			$data = [
 			'type' 			=> 'warning',
 			'text' 			=> $user_name.' изменил ТТН. <br />Заказ',
 			'entity_type' 	=> 'order', 
 			'entity_id' 	=> $order_query->row['order_id']
-			);
+			];
 			
 			$this->mAlert->insertAlertForGroup('sales', $data);
 			$this->mAlert->insertAlertForGroup('admins', $data);
@@ -5845,18 +5831,18 @@
 			
 			$order = $this->model_sale_order->getOrder($order_id);
 			
-			$telephone = $order['telephone'];
-			$store_id = $order['store_id'];
-			$order_status_id = $order['order_status_id'];
+			$telephone 			= $order['telephone'];
+			$store_id 			= $order['store_id'];
+			$order_status_id 	= $order['order_status_id'];
 			
 			if (mb_strlen($ttn, 'UTF-8') > 2){				
 				if ($date_sent){
 
 					$this->db->query("INSERT INTO `order_ttns` SET
-					order_id = '" . (int)$order_id . "',
-					ttn = '" .$this->db->escape($ttn) . "',
-					delivery_code = '" .$this->db->escape($order['shipping_code']). "',
-					date_ttn = '" .$this->db->escape($date_sent). "'");	
+					order_id 		= '" . (int)$order_id . "',
+					ttn 			= '" .$this->db->escape($ttn) . "',
+					delivery_code 	= '" .$this->db->escape($order['shipping_code']). "',
+					date_ttn 		= '" .$this->db->escape($date_sent). "'");	
 
 					$this->db->query("UPDATE `order` SET ttn = '" .$this->db->escape($ttn) . "' WHERE order_id = '" . (int)$order_id . "'");
 					$this->db->query("UPDATE `order` SET date_sent = '" .$this->db->escape($date_sent). "' WHERE order_id = '" . (int)$order_id . "'");
@@ -5864,11 +5850,12 @@
 					} else {
 
 					$this->db->query("INSERT INTO `order_ttns` SET
-					order_id = '" . (int)$order_id . "',
-					ttn = '" .$this->db->escape($ttn) . "',
-					delivery_code = '" .$this->db->escape($order['shipping_code']). "',
-					date_ttn = NOW()");				
+					order_id 		= '" . (int)$order_id . "',
+					ttn 			= '" .$this->db->escape($ttn) . "',
+					delivery_code 	= '" .$this->db->escape($order['shipping_code']). "',
+					date_ttn 		= NOW()");				
 				}
+
 				$this->db->query("UPDATE `order` SET ttn = '" .$this->db->escape($ttn) . "' WHERE order_id = '" . (int)$order_id . "'");
 				$this->db->query("UPDATE `order` SET date_sent = NOW() WHERE order_id = '" . (int)$order_id . "'");
 			}
@@ -6055,9 +6042,7 @@
 					'datetime' => date('d.m.Y H:i:s', strtotime($result['datetime'])),
 					'forbidden' => false
 					);
-				}
-				
-				
+				}								
 			}
 			
 			$this->template = 'sale/order_invoice_history.tpl';
@@ -6234,7 +6219,6 @@
 			}
 			$mpdf->WriteHTML($style.$html);
 			
-			// $filename = 'Чек #'.$result['invoice_name']."_a5_".$order_id."_".$id.".pdf";
 			$filename = prepareFileName('Товарный чек '.$result['invoice_name'].".pdf");
 			
 			if ($format == 'small') {
@@ -6345,8 +6329,7 @@
 					}
 				}
 				
-				if (!$this->data['error']) {
-					
+				if (!$this->data['error']) {					
 					$current_status_id = $this->model_sale_order->getOrderLastHistory($order_id);
 					
 					$can_not_change_twice = [$this->config->get('config_partly_delivered_status_id'), $this->config->get('config_complete_status_id')];
@@ -6426,8 +6409,6 @@
 				
 				if (!$this->data['error']) {
 					
-					//ТРАНЗАКЦИИ
-					
 					if ($status_id == $this->config->get('config_complete_status_id')){
 						
 						$this->load->model('sale/order');
@@ -6452,11 +6433,8 @@
 						
 						} elseif ($status_id == $this->config->get('config_cancelled_status_id')){				
 						
-						//var_dump($this->request->post['reject_reason_id']);
-						
-						$reject_reason_id = (int)$this->request->post['reject_reason_id'];
-						
-						$this->db->query("UPDATE `order` SET reject_reason_id = '" .(int)$reject_reason_id. "' WHERE `order_id` = '" . $order_id . "'");	
+							$reject_reason_id = (int)$this->request->post['reject_reason_id'];						
+							$this->db->query("UPDATE `order` SET reject_reason_id = '" . (int)$this->request->post['reject_reason_id'] . "' WHERE `order_id` = '" . $order_id . "'");	
 						
 						} elseif ($status_id == $this->config->get('config_partly_delivered_status_id')){
 						
@@ -6483,7 +6461,6 @@
 						
 					}
 					
-					//to odinass
 					if (in_array((int)$status_id, $this->config->get('config_odinass_order_status_id'))){
 						$check_query = $this->db->query("SELECT pricewd_national FROM order_product WHERE order_id = '" . (int)$order_id . "' AND pricewd_national > 0");
 						if ($check_query->num_rows == 0){
@@ -6493,7 +6470,6 @@
 					
 					$this->model_sale_order->addOrderHistory($this->request->get['order_id'], $this->request->post);
 					
-					//customer_history
 					if ($this->request->post['comment'] && mb_strlen($this->request->post['comment']) > 2){
 						$customer_comment_text = 'изменен статус на: <b>'.$this->model_localisation_order_status->getOrderStatusName($status_id).'</b> ('.$this->request->post['comment'].')';
 						} else {
@@ -6555,15 +6531,11 @@
 						
 						$this->mAlert->insertAlertForGroup('admins', $data);										
 					}
-					
-					
-					
+															
 					$this->data['success'] = $this->language->get('text_success');
 				}
 			}
-			
-			
-			
+									
 			$this->data['text_no_results'] = $this->language->get('text_no_results');
 			
 			$this->data['column_date_added'] = $this->language->get('column_date_added');
@@ -6861,10 +6833,10 @@
 		}
 		
 		public function order_return_ajax(){
-			$order_id = (int)$this->request->post['order_id'];
-			$from = !empty($this->request->post['from'])?$this->request->post['from']:false;
-			$order_product_id = (int)$this->request->post['order_product_id'];
-			$this->data['index'] = (int)$this->request->post['index'];
+			$order_id 				= (int)$this->request->post['order_id'];
+			$from 					= !empty($this->request->post['from'])?$this->request->post['from']:false;
+			$order_product_id 		= (int)$this->request->post['order_product_id'];
+			$this->data['index'] 	= (int)$this->request->post['index'];
 			
 			$this->load->model('sale/order');
 			$this->load->model('sale/customer');
@@ -6902,23 +6874,23 @@
 			
 			if ($return){
 				
-				$order_id = (int)$data['order_id'];
-				$delivery_num = (int)$data['delivery_num'];
-				$cheque_date = ($data['cheque_date'])?date('d.m.Y', strtotime($data['cheque_date'])):date('d.m.Y');
-				$cheque_num = $data['cheque_num'];
-				$cheque_type = $data['cheque_type'];
-				$prim = (int)$data['cheque_prim'];
-				$no_return = (int)$data['cheque_return'];
+				$order_id 		= (int)$data['order_id'];
+				$delivery_num 	= (int)$data['delivery_num'];
+				$cheque_date 	= ($data['cheque_date'])?date('d.m.Y', strtotime($data['cheque_date'])):date('d.m.Y');
+				$cheque_num 	= $data['cheque_num'];
+				$cheque_type 	= $data['cheque_type'];
+				$prim 			= (int)$data['cheque_prim'];
+				$no_return 		= (int)$data['cheque_return'];
 				
 				} else {
 				
-				$order_id = (int)$this->request->post['order_id'];
-				$delivery_num = (int)$this->request->post['delivery_num'];
-				$cheque_date = ($this->request->post['cheque_date'])?date('d.m.Y', strtotime($this->request->post['cheque_date'])):date('d.m.Y');
-				$cheque_num = $this->request->post['cheque_num'];
-				$cheque_type = $this->request->post['cheque_type'];
-				$prim = (int)$this->request->post['cheque_prim'];
-				$no_return = (int)$this->request->post['cheque_return'];
+				$order_id 		= (int)$this->request->post['order_id'];
+				$delivery_num 	= (int)$this->request->post['delivery_num'];
+				$cheque_date 	= ($this->request->post['cheque_date'])?date('d.m.Y', strtotime($this->request->post['cheque_date'])):date('d.m.Y');
+				$cheque_num 	= $this->request->post['cheque_num'];
+				$cheque_type 	= $this->request->post['cheque_type'];
+				$prim 			= (int)$this->request->post['cheque_prim'];
+				$no_return 		= (int)$this->request->post['cheque_return'];
 				
 			}
 			
@@ -6943,15 +6915,13 @@
 			
 			$order_info = $this->model_sale_order->getOrder($order_id);
 			
-			//подменим дату
 			if ($return){
 				$incoming_date = $data['cheque_date'];
 				} else {
 				$incoming_date = $this->request->post['cheque_date'];			
 			}
 			
-			if (!$incoming_date){
-				
+			if (!$incoming_date){				
 				$cheque_date = date('d.m.Y');
 				
 				if ($order_info['date_delivery_to'] && $order_info['date_delivery_to'] != '0000-00-00'){
@@ -6964,8 +6934,7 @@
 				
 				} else {
 				
-				$cheque_date = date('d.m.Y', strtotime($incoming_date));
-				
+				$cheque_date = date('d.m.Y', strtotime($incoming_date));				
 			}
 			
 			$this->data['cheque_date'] = $this->db->escape($cheque_date);
@@ -7910,8 +7879,6 @@
 			$total = 0;
 			foreach ($sums as $sum){
 				$sum = str_replace(' ', '', $sum);
-				//	$sum = str_replace(',', '', $sum);
-				//	$sum = str_replace('.', '', $sum);
 				$sum = trim($sum);
 				
 				preg_match_all('/\-?\d+/', $sum, $matches);
@@ -7940,8 +7907,7 @@
 				'cheque_type'   => $data['cheque_type'],
 				'cheque_date'   => '',
 				'cheque_prim'   => false,
-				'cheque_return' => false,
-				
+				'cheque_return' => false,				
 				);
 				
 				$html = $this->single_invoice(true, $_data_to_invoice);
@@ -7953,11 +7919,7 @@
 				$html = $this->request->post['html'];
 				$order_id = (int)$this->request->post['order_id'];
 				$invoice_name = $this->request->post['invoice_name'];
-				$delivery_num = $this->request->post['delivery_num'];
-				
-				$this->load->model('feed/exchange1c');
-				//	$this->model_feed_exchange1c->makeSalesResultXML($order_id, false, false, false, $delivery_num);
-				
+				$delivery_num = $this->request->post['delivery_num'];				
 			}
 			
 			$real_dir = date('Y') . '/' . date('m') . '/' . date('d') . '/';
@@ -8444,9 +8406,7 @@
 				$filter_groups = MANAGER_GROUPS;
 				$filter_groups[] = 23;
 			}
-			
-			
-			
+									
 			$managers = $this->model_user_user->getUsersByGroupsOwnOrders($filter_groups, true);
 			
 			return $managers;
@@ -8549,16 +8509,14 @@
 			}						
 		}
 		
-		public function removeBillFileAjax(){
-			
+		public function removeBillFileAjax(){			
 			$order_id = $this->request->get['order_id'];
 			
 			$this->load->model('sale/order');
 			if ($this->model_sale_order->getIfOrderClosed($order_id)){
 				die();
 			}
-			
-			
+						
 			$this->db->query("UPDATE `order` SET bill_file='' WHERE order_id = '". (int)$order_id ."'");
 			echo '';		
 		}
@@ -8575,37 +8533,8 @@
 			echo '';		
 		}
 		
-		public function getOrderErrors($order_id){
-			
-			$this->load->model('sale/order');			
-			$order_info = $this->model_sale_order->getOrder($order_id);
-			$this->data['error'] = array();			
-			/*	
-				if ($order_info['date_delivery_to'] == '0000-00-00' && $order_info['date_delivery_actual'] == '0000-00-00' ){
-				
-				if (!in_array($order_info['order_status_id'], array(1, 28, 24, 18, 23, 21))){
-				$this->data['error'][] = 'Не заданы даты актуальной доставки либо крайней даты доставки';
-				}
-				
-				} else {							
-				if (
-				strtotime($order_info['date_added']) > strtotime($order_info['date_delivery_to']) 
-				|| strtotime($order_info['date_added']) > strtotime($order_info['date_delivery']) 
-				|| ($order_info['date_delivery_actual'] != '0000-00-00' && strtotime($order_info['date_added']) > strtotime($order_info['date_delivery_actual']))
-				){
-				$this->data['error'][] = 'Даты поставок раньше чем дата оформления заказа, проверь даты';
-				}
-				}
-				
-				if ($order_info['shipping_country_id'] == 220 && $order_info['pay_type'] == 'Банковской картой' && !$order_info['card_id']){
-				$this->data['error'][] = 'Выбрана оплата банковской картой, однако не выбрана карта для оплаты';
-				}
-				
-				if ($order_info['pay_type'] == 'Безналичный расчет' && !$order_info['legalperson_id']){
-				$this->data['error'][] = 'Выбрана оплата по безналу, однако не выбрано, на какое лицо выставлен счет';
-				}
-			*/
-			return $this->data['error'];
+		public function getOrderErrors($order_id){										
+			return false;
 		}
 		
 		public function resend($order_id = '') {
@@ -8689,7 +8618,6 @@
 			$data = array(
 			'store_id' => $order_info['store_id'],
 			'language_id' => $order_info['language_id'],
-			//	'customer_id' => $order_info['customer_id'],
 			'emailtemplate_key' => 'order.admin',
 			);
 			
@@ -8752,10 +8680,8 @@
 			$template->build();
 			$mail = $template->hook($mail);
 			$mail->setText($template->getPlainText());			
-			
-			
-			
-			echo ($mail->getHtml());
+								
+			$this->response->setOutput($mail->getHtml());
 		}
 		
 		public function showPdfPreview(){
@@ -8943,14 +8869,13 @@
 			$quantites = $this->model_catalog_product->getStockQuantities($product_id);
 			
 			$result = '';
-			$result .= "Германия: ".$quantites['quantity_stock'];
-			$result .= ",&nbsp;&nbsp;Москва: ".$quantites['quantity_stockM'];
-			$result .= ",&nbsp;&nbsp;Киев: ".$quantites['quantity_stockK'];
-			$result .= ",&nbsp;&nbsp;Минск: ".$quantites['quantity_stockM'];
-			$result .= ",&nbsp;&nbsp;Астана: ".$quantites['quantity_stockM'];
-			
-			
-			echo $result;			
+			$result .= "Германия: ".			$quantites['quantity_stock'];
+			$result .= ",&nbsp;&nbsp;Москва: ".	$quantites['quantity_stockM'];
+			$result .= ",&nbsp;&nbsp;Киев: ".	$quantites['quantity_stockK'];
+			$result .= ",&nbsp;&nbsp;Минск: ".	$quantites['quantity_stockM'];
+			$result .= ",&nbsp;&nbsp;Астана: ".	$quantites['quantity_stockM'];
+						
+			$this->response->setOutput($result);			
 		}
 		
 		public function getRelatedProductsAjax(){
@@ -8983,11 +8908,9 @@
 					unset($this->data['main_attributes'][$key]);	
 				}
 			}
-			
-			
+						
 			$products_related = $this->model_catalog_product->getProductRelatedWithoutNotIsStock($product_id);
-			
-			
+						
 			foreach ($products_related as $related_product_id){
 				$result = $this->model_catalog_product->getProduct($related_product_id);
 				$special = $this->model_catalog_product->getProductSpecialOne($related_product_id);
@@ -9003,14 +8926,14 @@
 				}	
 				
 				$this->data['products'][] = array(
-				'product_id' => $result['product_id'],
-				'image'   => $this->model_tool_image->resize($result['image'], 100, 100),
-				'name' => $result['name'],
-				'model' => $result['model'],
-				'main_attributes' => $main_attributes,
-				'special_attributes' => $special_attributes,
-				'price' => $this->currency->format($this->currency->convert($result['price'], $this->config->get('config_currency'), $order['currency_code']), $order['currency_code'], '1'),
-				'special' => ($special)?$this->currency->format($this->currency->convert($special, $this->config->get('config_currency'), $order['currency_code']), $order['currency_code'], '1'):false,
+				'product_id' 		=> $result['product_id'],
+				'image'   			=> $this->model_tool_image->resize($result['image'], 100, 100),
+				'name' 				=> $result['name'],
+				'model' 			=> $result['model'],
+				'main_attributes' 	=> $main_attributes,
+				'special_attributes' 	=> $special_attributes,
+				'price' 				=> $this->currency->format($this->currency->convert($result['price'], $this->config->get('config_currency'), $order['currency_code']), $order['currency_code'], '1'),
+				'special' 				=> ($special)?$this->currency->format($this->currency->convert($special, $this->config->get('config_currency'), $order['currency_code']), $order['currency_code'], '1'):false,
 				
 				);
 			}
@@ -9172,8 +9095,7 @@
 			if (!$this->user->hasPermission('modify', 'sale/order')) {
 				die('no_permission');
 			}
-			
-			
+						
 			$date = $this->request->get['date_delivery_actual'];
 			$order_id = (int)$this->request->get['order_id'];
 			
@@ -9183,9 +9105,9 @@
 			}
 			
 			$this->db->query("UPDATE `order` SET date_delivery_actual = '" . $this->db->escape($date) . "' WHERE order_id = '" . (int)$order_id . "'");
-			$_q = $this->db->query("SELECT date_delivery_actual FROM `order` WHERE order_id = '" . (int)$order_id . "'");
+			$query = $this->db->query("SELECT date_delivery_actual FROM `order` WHERE order_id = '" . (int)$order_id . "'");
 			
-			if ($_q->row['date_delivery_actual'] == '0000-00-00'){
+			if ($query->row['date_delivery_actual'] == '0000-00-00'){
 				echo '0';
 				} else {
 				echo '1';

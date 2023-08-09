@@ -89,6 +89,30 @@ class SmsAdaptor {
 	}
 
 	//Get Texts
+	public function getDeliveryNoteText($order_info, $data){
+		$template = [
+			'{ID}' 			=> $order_info['order_id'], 
+			'{SNAME}'		=> $this->config->get('config_name'), 
+			'{DATE}'		=> date('d.m.Y'), 
+			'{TIME}'		=> date('H:i:s'), 
+			'{PHONE}'		=> $order_info['telephone'], 
+			'{FIRSTNAME}'	=> $order_info['firstname'], 
+			'{LASTNAME}' 	=> $order_info['lastname'],
+			'{TTN}'				=> $data['ttn'],
+			'{SHIPPING_CODE}' 	=> $data['shipping_code'],
+			'{SENDING_DATE}' 	=> $data['senddate'],
+		];
+
+		if ($this->config->get('config_smsgate_library_enable_viber')){			
+			return reTemplate($template, $this->config->get('config_viber_ttn_sent'));
+		} else {			
+			return reTemplate($template, $this->config->get('config_sms_ttn_sent'));
+		}		
+
+		return false;
+	}
+
+
 	public function getTransactionSMSText($order_info, $data){
 		$template = [
 			'{ID}' 			=> $order_info['order_id'], 
