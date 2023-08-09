@@ -90,6 +90,118 @@ class SmsAdaptor {
 
 
 	//SMS+Viber SERVICE FUNCTIONS
+	public function sendInWarehouse($order_info, $data){
+		if ($this->config->get('config_viber_tracker_leave_main_warehouse_enabled')){
+			$template = [
+				'{ID}' 			=> $order_info['order_id'], 
+				'{SNAME}'		=> $this->config->get('config_name'), 
+				'{DATE}'		=> date('d.m.Y'), 
+				'{TIME}'		=> date('H:i:s'), 
+				'{PHONE}'		=> $order_info['telephone'], 
+				'{FIRSTNAME}'	=> $order_info['firstname'], 
+				'{LASTNAME}' 	=> $order_info['lastname']
+			];
+
+			$viber = [
+				'viber' 		=> true,
+				'to' 			=> $order_info['telephone'],
+				'message' 		=> reTemplate($template, $this->config->get('config_viber_tracker_leave_main_warehouse')),
+				'messageSms' 	=> reTemplate($template, $this->config->get('config_sms_tracker_leave_main_warehouse')),
+
+				'button_txt' 	=> $this->config->get('config_viber_tracker_leave_main_warehouse_button_text'),
+				'button_url' 	=> $this->config->get('config_viber_tracker_leave_main_warehouse_button_url'), 				
+			];
+
+			if (!empty($this->config->get('config_viber_tracker_leave_main_warehouse_image')) && file_exists(DIR_IMAGE . $this->config->get('config_viber_tracker_leave_main_warehouse_image'))){
+				$viber['picture_url'] = HTTPS_SERVER . DIR_IMAGE_NAME . $this->config->get('config_viber_tracker_leave_main_warehouse_image');
+			}
+
+			$viberID = $this->registry->get('smsQueue')->queue($viber);
+			$this->addOrderSmsHistory($order_info['order_id'], ['order_status_id' => $data['order_status_id'], 'sms' => $viber['message']], 'Queued', $viberID, (int)$order_info['customer_id']);
+
+			return $viberID;
+		}
+
+		if ($this->config->get('config_sms_tracker_leave_main_warehouse_enabled')) {
+			$template = [
+				'{ID}' 			=> $order_info['order_id'], 
+				'{SNAME}'		=> $this->config->get('config_name'), 
+				'{DATE}'		=> date('d.m.Y'), 
+				'{TIME}'		=> date('H:i:s'), 
+				'{PHONE}'		=> $order_info['telephone'], 
+				'{FIRSTNAME}'	=> $order_info['firstname'], 
+				'{LASTNAME}' 	=> $order_info['lastname']
+			];
+
+			$sms = [
+				'to' 		=> $order_info['telephone'],
+				'message' 	=> reTemplate($template, $this->config->get('config_sms_tracker_leave_main_warehouse'))
+			];
+
+			$smsID = $this->registry->get('smsQueue')->queue($sms);
+			$this->addOrderSmsHistory($order_info['order_id'], ['order_status_id' => $data['order_status_id'], 'sms' => $sms['message']], 'Queued', $viberID, (int)$order_info['customer_id']);
+
+			return $smsID;
+		}
+	}
+
+	public function sendDeliveryNote($order_info, $data){
+		if ($this->config->get('config_viber_ttn_sent_enabled')){
+			$template = [
+				'{ID}' 			=> $order_info['order_id'], 
+				'{SNAME}'		=> $this->config->get('config_name'), 
+				'{DATE}'		=> date('d.m.Y'), 
+				'{TIME}'		=> date('H:i:s'), 
+				'{PHONE}'		=> $order_info['telephone'], 
+				'{FIRSTNAME}'	=> $order_info['firstname'], 
+				'{LASTNAME}' 	=> $order_info['lastname'],
+				'{TTN}'			=> $data['ttn']
+			];
+
+			$viber = [
+				'viber' 		=> true,
+				'to' 			=> $order_info['telephone'],
+				'message' 		=> reTemplate($template, $this->config->get('config_viber_ttn_sent')),
+				'messageSms' 	=> reTemplate($template, $this->config->get('config_sms_ttn_sent')),
+
+				'button_txt' 	=> $this->config->get('config_viber_ttn_sent_button_text'),
+				'button_url' 	=> $this->config->get('config_viber_ttn_sent_button_url'), 				
+			];
+
+			if (!empty($this->config->get('config_viber_ttn_sent_image')) && file_exists(DIR_IMAGE . $this->config->get('config_viber_ttn_sent_image'))){
+				$viber['picture_url'] = HTTPS_SERVER . DIR_IMAGE_NAME . $this->config->get('config_viber_ttn_sent_image');
+			}
+
+			$viberID = $this->registry->get('smsQueue')->queue($viber);
+			$this->addOrderSmsHistory($order_info['order_id'], ['order_status_id' => $data['order_status_id'], 'sms' => $viber['message']], 'Queued', $viberID, (int)$order_info['customer_id']);
+
+			return $viberID;
+		}
+
+		if ($this->config->get('config_sms_ttn_sent_enabled')) {
+			$template = [
+				'{ID}' 			=> $order_info['order_id'], 
+				'{SNAME}'		=> $this->config->get('config_name'), 
+				'{DATE}'		=> date('d.m.Y'), 
+				'{TIME}'		=> date('H:i:s'), 
+				'{PHONE}'		=> $order_info['telephone'], 
+				'{FIRSTNAME}'	=> $order_info['firstname'], 
+				'{LASTNAME}' 	=> $order_info['lastname'],
+				'{TTN}'			=> $data['ttn']
+			];
+
+			$sms = [
+				'to' 		=> $order_info['telephone'],
+				'message' 	=> reTemplate($template, $this->config->get('config_sms_ttn_sent'))
+			];
+
+			$smsID = $this->registry->get('smsQueue')->queue($sms);
+			$this->addOrderSmsHistory($order_info['order_id'], ['order_status_id' => $data['order_status_id'], 'sms' => $sms['message']], 'Queued', $viberID, (int)$order_info['customer_id']);
+
+			return $smsID;
+		}
+	}
+
 	public function sendPayment($order_info, $data){
 		if ($this->config->get('config_viber_payment_recieved_enabled')){
 			$template = [
@@ -109,8 +221,8 @@ class SmsAdaptor {
 				'message' 		=> reTemplate($template, $this->config->get('config_viber_payment_recieved')),
 				'messageSms' 	=> reTemplate($template, $this->config->get('config_sms_payment_recieved')),
 
-				'button_txt' 	=> $this->config->get('config_viber_payment_recieved_text'),
-				'button_url' 	=> $this->config->get('config_viber_payment_recieved_url'), 				
+				'button_txt' 	=> $this->config->get('config_viber_payment_recieved_button_text'),
+				'button_url' 	=> $this->config->get('config_viber_payment_recieved_button_url'), 				
 			];
 
 			if (!empty($this->config->get('config_viber_payment_recieved_image')) && file_exists(DIR_IMAGE . $this->config->get('config_viber_payment_recieved_image'))){
@@ -147,7 +259,6 @@ class SmsAdaptor {
 			return $smsID;
 		}
 	}
-
 
 	public function sendNewOrder($order_info){
 		if ($this->config->get('config_viber_send_new_order')){
