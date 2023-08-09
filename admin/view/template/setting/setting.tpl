@@ -3794,6 +3794,141 @@
 									</td>
 								</tr>
 
+								<tr>
+                                    <td style="width:200px;">
+                                        <span class="status_color" style="text-align: left; background: #ff7f00; color:#fff">
+                                            SMS о ручной транзакции. Успешная оплата.
+                                        </span>
+                                    </td>
+                                    <td style="width:50px" class="center">                                      
+                                    </td>
+                                    <td style="width:300px;">
+                                        <p>
+                                            <span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+                                                Текст
+                                            </span>
+                                        </p>
+
+                                        <textarea name="config_viber_transaction_text_type_1" cols="50" rows="7"><?php echo $config_viber_transaction_text_type_1; ?></textarea>
+                                    </td>
+                                    <td style="width:250px;">
+                                        <div class="image">
+                                            <img src="<?php echo $viber_transaction_text_type_1_image; ?>" alt="" id="thumb-viber_transaction_text_type_1_image" height="150px" />
+                                            <input type="text" style="font-size:10px; width:150px;" class="image-ajax" name="config_viber_transaction_text_type_1_image" value="<?php echo $config_viber_transaction_text_type_1_image; ?>" id="viber_transaction_text_type_1_image" />
+                                            <br />
+                                            <a onclick="image_upload('viber_transaction_text_type_1_image', 'thumb-viber_transaction_text_type_1_image');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb-viber_transaction_text_type_1_image').attr('src', '<?php echo $no_image; ?>'); $('#viber_transaction_text_type_1_image').attr('value', ''); $('#viber_transaction_text_type_1_image').trigger('change');"><?php echo $text_clear; ?></a>
+                                        </div>
+                                    </td>
+                                    <td style="width:200px;">
+                                        <p>
+                                            <span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+                                                Текст кнопки
+                                            </span>
+                                        </p>
+
+                                        <textarea name="config_viber_transaction_text_type_1_button_text" cols="50" rows="7"><?php echo $config_viber_transaction_text_type_1_button_text; ?></textarea>
+                                    </td>
+                                    <td style="width:200px;">
+                                        <p>
+                                            <span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+                                                URL кнопки
+                                            </span>
+                                        </p>
+
+                                        <textarea name="config_viber_transaction_text_type_1_button_url" cols="50" rows="7"><?php echo $config_viber_transaction_text_type_1_button_url; ?></textarea>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="width:200px;">
+                                        <span class="status_color" style="text-align: left; background: #ff7f00; color:#fff">
+                                            SMS о ручной транзакции. Возврат безналичный
+                                        </span>
+                                    </td>
+                                    <td style="width:50px" class="center">                                      
+                                    </td>
+                                    <td style="width:300px;">
+                                        <p>
+                                            <span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+                                                Текст
+                                            </span>
+                                        </p>
+
+                                        <textarea name="config_viber_transaction_text_type_2" cols="50" rows="7"><?php echo $config_viber_transaction_text_type_2; ?></textarea>
+                                    </td>
+                                    <td style="width:250px;">
+                                        <div class="image">
+                                            <img src="<?php echo $viber_transaction_text_type_2_image; ?>" alt="" id="thumb-viber_transaction_text_type_2_image" height="150px" />
+                                            <input type="text" style="font-size:10px; width:150px;" class="image-ajax" name="config_viber_transaction_text_type_2_image" value="<?php echo $config_viber_transaction_text_type_2_image; ?>" id="viber_transaction_text_type_2_image" />
+                                            <br />
+                                            <a onclick="image_upload('viber_transaction_text_type_2_image', 'thumb-viber_transaction_text_type_2_image');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb-viber_transaction_text_type_2_image').attr('src', '<?php echo $no_image; ?>'); $('#viber_transaction_text_type_2_image').attr('value', ''); $('#viber_transaction_text_type_2_image').trigger('change');"><?php echo $text_clear; ?></a>
+                                        </div>
+                                    </td>
+                                    <td style="width:200px;">
+                                        <p>
+                                            <span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+                                                Текст кнопки
+                                            </span>
+                                        </p>
+
+                                        <textarea name="config_viber_transaction_text_type_2_button_text" cols="50" rows="7"><?php echo $config_viber_transaction_text_type_2_button_text; ?></textarea>
+                                    </td>
+                                    <td style="width:200px;">
+                                        <p>
+                                            <span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+                                                URL кнопки
+                                            </span>
+                                        </p>
+
+                                        <textarea name="config_viber_transaction_text_type_2_button_url" cols="50" rows="7"><?php echo $config_viber_transaction_text_type_2_button_url; ?></textarea>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="width:200px;">
+                                        <span class="status_color" style="text-align: left; background: #ff7f00; color:#fff">
+                                            SMS о ручной транзакции. Возврат остальное 
+                                        </span>
+                                    </td>
+                                    <td style="width:50px" class="center">                                      
+                                    </td>
+                                    <td style="width:300px;">
+                                        <p>
+                                            <span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+                                                Текст
+                                            </span>
+                                        </p>
+
+                                        <textarea name="config_viber_transaction_text_type_3" cols="50" rows="7"><?php echo $config_viber_transaction_text_type_3; ?></textarea>
+                                    </td>
+                                    <td style="width:250px;">
+                                        <div class="image">
+                                            <img src="<?php echo $viber_transaction_text_type_3_image; ?>" alt="" id="thumb-viber_transaction_text_type_3_image" height="150px" />
+                                            <input type="text" style="font-size:10px; width:150px;" class="image-ajax" name="config_viber_transaction_text_type_3_image" value="<?php echo $config_viber_transaction_text_type_3_image; ?>" id="viber_transaction_text_type_3_image" />
+                                            <br />
+                                            <a onclick="image_upload('viber_transaction_text_type_3_image', 'thumb-viber_transaction_text_type_3_image');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb-viber_transaction_text_type_3_image').attr('src', '<?php echo $no_image; ?>'); $('#viber_transaction_text_type_3_image').attr('value', ''); $('#viber_transaction_text_type_3_image').trigger('change');"><?php echo $text_clear; ?></a>
+                                        </div>
+                                    </td>
+                                    <td style="width:200px;">
+                                        <p>
+                                            <span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+                                                Текст кнопки
+                                            </span>
+                                        </p>
+
+                                        <textarea name="config_viber_transaction_text_type_3_button_text" cols="50" rows="7"><?php echo $config_viber_transaction_text_type_3_button_text; ?></textarea>
+                                    </td>
+                                    <td style="width:200px;">
+                                        <p>
+                                            <span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+                                                URL кнопки
+                                            </span>
+                                        </p>
+
+                                        <textarea name="config_viber_transaction_text_type_3_button_url" cols="50" rows="7"><?php echo $config_viber_transaction_text_type_3_button_url; ?></textarea>
+                                    </td>
+                                </tr>
+
 							</table>
 						</div>
 
@@ -4033,7 +4168,7 @@
 												<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_payment_recieved" value="<?php echo $config_sms_payment_recieved; ?>" />
 											</td>
 										</tr>
-
+										
 										<tr>
 											<td style="width:200px;">
 												<span class="status_color" style="text-align: left; background: #ef5e67; color: #FFF; ?>;">
@@ -4074,6 +4209,45 @@
 											</td>
 											<td style="padding:5px;">
 												<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="rewardpoints_reminder_sms_text" value="<?php echo $rewardpoints_reminder_sms_text; ?>" />
+											</td>
+										</tr>
+
+										<tr>
+											<td style="width:200px;">
+												<span class="status_color" style="text-align: left; background: #ff7f00; color: #FFF; ?>;">
+													SMS о ручной транзакции. Успешная оплата.
+												</span>
+											</td>
+											<td style="width:50px" class="center">												
+											</td>
+											<td style="padding:5px;">
+												<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_transaction_text_type_1" value="<?php echo $config_sms_transaction_text_type_1; ?>" />
+											</td>
+										</tr>
+
+										<tr>
+											<td style="width:200px;">
+												<span class="status_color" style="text-align: left; background: #ff7f00; color: #FFF; ?>;">
+													SMS о ручной транзакции. Возврат безналичный
+												</span>
+											</td>
+											<td style="width:50px" class="center">												
+											</td>
+											<td style="padding:5px;">
+												<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_transaction_text_type_2" value="<?php echo $config_sms_transaction_text_type_2; ?>" />
+											</td>
+										</tr>
+
+										<tr>
+											<td style="width:200px;">
+												<span class="status_color" style="text-align: left; background: #ff7f00; color: #FFF; ?>;">
+													SMS о ручной транзакции. Возврат остальное
+												</span>
+											</td>
+											<td style="width:50px" class="center">												
+											</td>
+											<td style="padding:5px;">
+												<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_transaction_text_type_3" value="<?php echo $config_sms_transaction_text_type_3; ?>" />
 											</td>
 										</tr>
 									</table>

@@ -2868,6 +2868,24 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_sms_new_order_status_message'] = (array)$this->config->get('config_sms_new_order_status_message');
         }
+        
+        if (isset($this->request->post['config_sms_transaction_text_type_1'])) {
+            $this->data['config_sms_transaction_text_type_1'] = $this->request->post['config_sms_transaction_text_type_1'];
+        } else {
+            $this->data['config_sms_transaction_text_type_1'] = $this->config->get('config_sms_transaction_text_type_1');
+        }
+
+        if (isset($this->request->post['config_sms_transaction_text_type_2'])) {
+            $this->data['config_sms_transaction_text_type_2'] = $this->request->post['config_sms_transaction_text_type_2'];
+        } else {
+            $this->data['config_sms_transaction_text_type_2'] = $this->config->get('config_sms_transaction_text_type_2');
+        }
+
+        if (isset($this->request->post['config_sms_transaction_text_type_3'])) {
+            $this->data['config_sms_transaction_text_type_3'] = $this->request->post['config_sms_transaction_text_type_3'];
+        } else {
+            $this->data['config_sms_transaction_text_type_3'] = $this->config->get('config_sms_transaction_text_type_3');
+        }
 
         //VIBER SETTINGS
 
@@ -2899,14 +2917,29 @@ class ControllerSettingSetting extends Controller
             'config_viber_ttn_ready_enabled',
             'config_viber_ttn_ready',
             'config_viber_ttn_ready_image',
-            'config_viber_ttn_ready_text',
+            'config_viber_ttn_ready_button_text',
             'config_viber_ttn_ready_button_url',
 
             'config_viber_rewardpoints_reminder_enabled',
             'config_viber_rewardpoints_reminder',
             'config_viber_rewardpoints_reminder_image',
-            'config_viber_rewardpoints_reminder_text',
+            'config_viber_rewardpoints_reminder_button_text',
             'config_viber_rewardpoints_reminder_button_url',
+
+            'config_viber_transaction_text_type_1',
+            'config_viber_transaction_text_type_1_image',
+            'config_viber_transaction_text_type_1_button_text',
+            'config_viber_transaction_text_type_1_button_url',
+
+            'config_viber_transaction_text_type_2',
+            'config_viber_transaction_text_type_2_image',
+            'config_viber_transaction_text_type_2_button_text',
+            'config_viber_transaction_text_type_2_button_url',
+
+            'config_viber_transaction_text_type_3',
+            'config_viber_transaction_text_type_3_image',
+            'config_viber_transaction_text_type_3_button_text',
+            'config_viber_transaction_text_type_3_button_url',
         ];
         
         foreach ($viberkeys as $viberkey) {

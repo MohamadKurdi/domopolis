@@ -88,6 +88,52 @@ class SmsAdaptor {
 		return $result;
 	}
 
+	//Get Texts
+	public function getTransactionSMSText($order_info, $data){
+		$template = [
+			'{ID}' 			=> $order_info['order_id'], 
+			'{SNAME}'		=> $this->config->get('config_name'), 
+			'{DATE}'		=> date('d.m.Y'), 
+			'{TIME}'		=> date('H:i:s'), 
+			'{PHONE}'		=> $order_info['telephone'], 
+			'{FIRSTNAME}'	=> $order_info['firstname'], 
+			'{LASTNAME}' 	=> $order_info['lastname'],
+			'{SUM}' 		=> $this->currency->format($data['amount'], $order['currency_code'], '1')
+		];
+
+		if ($this->config->get('config_smsgate_library_enable_viber')){
+			switch ($data['type']){
+			case 0:
+				return reTemplate($template, $this->config->get('config_viber_transaction_text_type_1'));
+				break;
+			case 1:
+				return reTemplate($template, $this->config->get('config_viber_transaction_text_type_2'));
+				break;
+			case 2:
+				return reTemplate($template, $this->config->get('config_viber_transaction_text_type_3'));
+				break;
+			}
+
+			return reTemplate($template, $this->config->get('config_viber_transaction_text_type_1'));
+		} else {
+			switch ($data['type']){
+			case 0:
+				return reTemplate($template, $this->config->get('config_sms_transaction_text_type_1'));
+				break;
+			case 1:
+				return reTemplate($template, $this->config->get('config_sms_transaction_text_type_2'));
+				break;
+			case 2:
+				return reTemplate($template, $this->config->get('config_sms_transaction_text_type_3'));
+				break;
+			}
+
+			return reTemplate($template, $this->config->get('config_sms_transaction_text_type_1'));
+		}		
+
+		return false;
+	}
+
 
 	//SMS+Viber SERVICE FUNCTIONS
 	public function sendInWarehouse($order_info, $data){

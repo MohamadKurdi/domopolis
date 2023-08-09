@@ -153,7 +153,7 @@
 			$has_prepay = false;
 			
 			foreach ($totals as $total){
-				if (bool_real_stripos($total['title'], 'предоплата') || ($total['code'] == 'cod')){
+				if (bool_real_stripos($total['title'], 'предоплата') || bool_real_stripos($total['title'], 'передплата') || ($total['code'] == 'cod')){
 					$has_prepay = true;
 					break;
 				}
@@ -208,9 +208,9 @@
 			$this->load->model('sale/order');
 			
 			if ($this->model_sale_order->getOrder($order_id)){
-				echo $order_id;
+				$this->response->setOutput($order_id);
 				} else {
-				echo 0;
+				$this->response->setOutput(0);
 			}		
 		}
 		
@@ -553,8 +553,6 @@
 				$this->request->post['order_id2'] = '';
 				$this->request->post['order_status_id'] = $this->config->get('config_order_status_id');
 				$new_order_id = $this->model_sale_order->addOrder($this->request->post);
-				
-				var_dump($new_order_id);
 				
 				if ($new_order_id){
 					$this->session->data['success'] = "Создан новый заказ: <a href='".$this->url->link('sale/order/update', 'order_id='.$new_order_id.'&token=' . $this->session->data['token'] . $url, 'SSL')."'>" . $new_order_id . "</a>";
@@ -5092,125 +5090,7 @@
 			if (!$this->user->hasPermission('modify', 'sale/order')) {
 				$this->error['warning'] = $this->language->get('error_permission');
 			}
-			/*
-				if ((utf8_strlen($this->request->post['firstname']) < 1) || (utf8_strlen($this->request->post['firstname']) > 32)) {
-				$this->error['firstname'] = $this->language->get('error_firstname');
-				}
-				
-				if ((utf8_strlen($this->request->post['lastname']) < 1) || (utf8_strlen($this->request->post['lastname']) > 32)) {
-				$this->error['lastname'] = $this->language->get('error_lastname');
-				}
-				
-				if ((utf8_strlen($this->request->post['email']) > 96) || (!preg_match('/^[^\@]+@.*\.[a-z]{2,6}$/i', $this->request->post['email']))) {
-				$this->error['email'] = $this->language->get('error_email');
-				}
-				
-				if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
-				$this->error['telephone'] = $this->language->get('error_telephone');
-				}
-				
-				if ((utf8_strlen($this->request->post['payment_firstname']) < 1) || (utf8_strlen($this->request->post['payment_firstname']) > 32)) {
-				$this->error['payment_firstname'] = $this->language->get('error_firstname');
-				}
-				
-				if ((utf8_strlen($this->request->post['payment_lastname']) < 1) || (utf8_strlen($this->request->post['payment_lastname']) > 32)) {
-				$this->error['payment_lastname'] = $this->language->get('error_lastname');
-				}
-				
-				if ((utf8_strlen($this->request->post['payment_address_1']) < 3) || (utf8_strlen($this->request->post['payment_address_1']) > 128)) {
-				$this->error['payment_address_1'] = $this->language->get('error_address_1');
-				}
-				
-				if ((utf8_strlen($this->request->post['payment_city']) < 3) || (utf8_strlen($this->request->post['payment_city']) > 128)) {
-				$this->error['payment_city'] = $this->language->get('error_city');
-				}
-				
-				$this->load->model('localisation/country');
-				
-				$country_info = $this->model_localisation_country->getCountry($this->request->post['payment_country_id']);
-				
-				if ($country_info) {
-				if ($country_info['postcode_required'] && (utf8_strlen($this->request->post['payment_postcode']) < 2) || (utf8_strlen($this->request->post['payment_postcode']) > 10)) {
-				$this->error['payment_postcode'] = $this->language->get('error_postcode');
-				}
-				
-				// VAT Validation
-				$this->load->helper('vat');
-				
-				if ($this->config->get('config_vat') && $this->request->post['payment_tax_id'] && (vat_validation($country_info['iso_code_2'], $this->request->post['payment_tax_id']) == 'invalid')) {
-				$this->error['payment_tax_id'] = $this->language->get('error_vat');
-				}
-				}
-				
-				if ($this->request->post['payment_country_id'] == '') {
-				$this->error['payment_country'] = $this->language->get('error_country');
-				}
-				
-				if (!isset($this->request->post['payment_zone_id']) || $this->request->post['payment_zone_id'] == '') {
-				$this->error['payment_zone'] = $this->language->get('error_zone');
-				}
-				
-				if (!isset($this->request->post['payment_method']) || $this->request->post['payment_method'] == '') {
-				$this->error['payment_method'] = $this->language->get('error_payment');
-				}
-				
-				// Check if any products require shipping
-				$shipping = false;
-				
-				if (isset($this->request->post['order_product'])) {
-				$this->load->model('catalog/product');
-				
-				foreach ($this->request->post['order_product'] as $order_product) {
-				$product_info = $this->model_catalog_product->getProduct($order_product['product_id']);
-				
-				if ($product_info && $product_info['shipping']) {
-				$shipping = true;
-				}
-				}
-				}
-				
-				if ($shipping) {
-				if ((utf8_strlen($this->request->post['shipping_firstname']) < 1) || (utf8_strlen($this->request->post['shipping_firstname']) > 32)) {
-				$this->error['shipping_firstname'] = $this->language->get('error_firstname');
-				}
-				
-				if ((utf8_strlen($this->request->post['shipping_lastname']) < 1) || (utf8_strlen($this->request->post['shipping_lastname']) > 32)) {
-				$this->error['shipping_lastname'] = $this->language->get('error_lastname');
-				}
-				
-				if ((utf8_strlen($this->request->post['shipping_address_1']) < 3) || (utf8_strlen($this->request->post['shipping_address_1']) > 128)) {
-				$this->error['shipping_address_1'] = $this->language->get('error_address_1');
-				}
-				
-				if ((utf8_strlen($this->request->post['shipping_city']) < 3) || (utf8_strlen($this->request->post['shipping_city']) > 128)) {
-				$this->error['shipping_city'] = $this->language->get('error_city');
-				}
-				
-				$this->load->model('localisation/country');
-				
-				$country_info = $this->model_localisation_country->getCountry($this->request->post['shipping_country_id']);
-				
-				if ($country_info && $country_info['postcode_required'] && (utf8_strlen($this->request->post['shipping_postcode']) < 2) || (utf8_strlen($this->request->post['shipping_postcode']) > 10)) {
-				$this->error['shipping_postcode'] = $this->language->get('error_postcode');
-				}
-				
-				if ($this->request->post['shipping_country_id'] == '') {
-				$this->error['shipping_country'] = $this->language->get('error_country');
-				}
-				
-				if (!isset($this->request->post['shipping_zone_id']) || $this->request->post['shipping_zone_id'] == '') {
-				$this->error['shipping_zone'] = $this->language->get('error_zone');
-				}
-				
-				if (!$this->request->post['shipping_method']) {
-				$this->error['shipping_method'] = $this->language->get('error_shipping');
-				}
-				}
-				
-				if ($this->error && !isset($this->error['warning'])) {
-				$this->error['warning'] = $this->language->get('error_warning');
-				}
-			*/
+			
 			if (!$this->error) {
 				return true;
 				} else {
@@ -5267,35 +5147,37 @@
 			if (!$order_product->num_rows){
 				echo 'error';
 				} else {
+
 				$this->db->query("UPDATE order_product SET quantity = quantity - " . (int)$quantity . " WHERE order_product_id = '" . (int)$order_product_id . "'");
 				$this->db->query("UPDATE order_product SET total = price * " . (int)($order_product->row['quantity'] - $quantity) . ", total_national = price_national * " . (int)($order_product->row['quantity'] - $quantity) . " WHERE order_product_id = '" . (int)$order_product_id . "'");
+
 				$this->db->query("INSERT INTO order_product SET
-				order_id = '" . (int)$order_product->row['order_id'] . "', 
-				product_id = '" . (int)$order_product->row['product_id'] . "', 
-				name = '" . $this->db->escape($order_product->row['name']) . "', 
-				model = '" . $this->db->escape($order_product->row['model']) . "', 
-				quantity = '" . (int)$quantity  . "',
-				ao_id = '" . (int)$order_product->row['ao_id'] . "', 		
-				delivery_num = '" . (int)$order_product->row['delivery_num'] . "', 
-				part_num = '" . $this->db->escape($order_product->row['part_num']) . "', 
-				price = '" . (float)$order_product->row['price'] . "', 
-				price_national = '" . (float)$order_product->row['price_national'] . "',
+				order_id 		= '" . (int)$order_product->row['order_id'] . "', 
+				product_id 		= '" . (int)$order_product->row['product_id'] . "', 
+				name 			= '" . $this->db->escape($order_product->row['name']) . "', 
+				model 			= '" . $this->db->escape($order_product->row['model']) . "', 
+				quantity 		= '" . (int)$quantity  . "',
+				ao_id 			= '" . (int)$order_product->row['ao_id'] . "', 		
+				delivery_num 	= '" . (int)$order_product->row['delivery_num'] . "', 
+				part_num 		= '" . $this->db->escape($order_product->row['part_num']) . "', 
+				price 			= '" . (float)$order_product->row['price'] . "', 
+				price_national 			= '" . (float)$order_product->row['price_national'] . "',
 				original_price_national = '" . (float)$order_product->row['original_price_national'] . "',
-				pricewd_national = '0',
-				total = '" .(float)((int)$quantity * $order_product->row['price']). "',
-				total_national = '" . (float)((int)$quantity * $order_product->row['price_national']) . "',
-				totalwd_national = '0',
-				tax = '0', 
-				reward = '0', 
-				good = '1', 
-				taken = '0',
-				from_stock = '0',
-				from_bd_gift = '0',
-				is_returned = '0'");
+				pricewd_national 		= '0',
+				total 			= '" .(float)((int)$quantity * $order_product->row['price']). "',
+				total_national 	= '" . (float)((int)$quantity * $order_product->row['price_national']) . "',
+				totalwd_national 		= '0',
+				tax 		= '0', 
+				reward 		= '0', 
+				good 		= '1', 
+				taken 		= '0',
+				from_stock 	= '0',
+				from_bd_gift 	= '0',
+				is_returned 	= '0'");
 				
 				$this->resaveOrder($order_product->row['order_id']);
 				
-				echo 'ok';
+				$this->response->setOutput('ok');
 			}			
 		}
 		
@@ -5633,24 +5515,9 @@
 		
 		public function getTransactionSMSTextAjax(){
 			$this->load->model('sale/order');
-			
-			$order_id = (int)$this->request->post['order_id'];	
-			$sum = $this->request->post['sum'];
-			$order = $this->model_sale_order->getOrder($this->request->post['order_id']);
-			
-			$type2 = (int)$this->request->post['type'];
-			
-			$sum = $this->currency->format($sum, $order['currency_code'], '1');
-			
-			if ($type2 == 0) {
-				echo "Заказ #". $order_id .". Оплату в сумме ". $sum .", получили, спасибо. Заказ выполняем.";	
-				} elseif ($type2 == 1) {
-				echo "Заказ #". $order_id ." / Возврат оплаты ". $sum .". Проводка транзакции банком до 7 дней.";
-				} elseif ($type2 == 2) {
-				echo "Заказ #". $order_id ." / Возврат оплаты ". $sum .".";
-				} else {
-				echo "Заказ #". $order_id .". Оплату в сумме ". $sum ."., получили, спасибо. Заказ выполняем.";	
-			}
+			$order_info 		= $this->model_sale_order->getOrder($this->request->post['order_id']);		
+						
+			$this->response->setOutput($this->smsAdaptor->getTransactionSMSText($order_info, ['amount' => $this->request->post['sum'], 'type' => (int)$this->request->post['type']]));
 		}
 		
 		public function reloadManagerAjax(){
@@ -5716,9 +5583,7 @@
 						}
 					}
 					
-				}
-				
-				
+				}								
 				} else {
 				$str .= '';
 			}
