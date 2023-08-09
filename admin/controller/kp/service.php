@@ -21,10 +21,6 @@
 		*/
 		}
 
-		public function smsQueueTest(){
-			$this->smsQueue->test();			
-		}
-		
 		public function smsQueue(){
 			if (!$this->config->get('config_sms_enable_queue_worker')){
 				echoLine('[ControllerKPService::smsQueue] CRON IS DISABLED IN ADMIN', 'e');
@@ -44,7 +40,6 @@
 			
 			$this->smsQueue->cron();
 		}
-
 
 		public function fillSpecialCategory(){
 			if ($this->config->get('config_special_controller_logic') && $this->config->get('config_special_category_id')){
