@@ -3974,6 +3974,36 @@
 
 									<td style="width:20%">
 										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Редактировать СМС в админке</span></p>
+											<select name="config_sms_editing_in_admin">
+												<?php if ($config_sms_editing_in_admin) { ?>
+													<option value="1" selected="selected">Да</option>
+													<option value="0">Нет</option>
+												<?php } else { ?>													
+													<option value="1">Да</option>
+													<option value="0"  selected="selected">Нет</option>
+												<? } ?>
+											</select>
+											<span class="help">Если отключить, то смски в заказе нельзя редактировать, будут использоваться только системные настройки</span>
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Приоритет общей настройки смены статусов</span></p>
+											<select name="config_sms_status_use_only_settings">
+												<?php if ($config_sms_status_use_only_settings) { ?>
+													<option value="1" selected="selected">Да</option>
+													<option value="0">Нет</option>
+												<?php } else { ?>													
+													<option value="1">Да</option>
+													<option value="0"  selected="selected">Нет</option>
+												<? } ?>
+											</select>
+											<span class="help">Если включено, то режим отправки коротких уведомлений зависит от общей настройки статусов</span>
+										</div>		
+									</td>
+
+									<td style="width:20%">
+										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Библиотека поддерживает Viber</span></p>
 											<select name="config_smsgate_library_enable_viber">
 												<?php if ($config_smsgate_library_enable_viber) { ?>

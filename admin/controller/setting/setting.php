@@ -857,6 +857,18 @@ class ControllerSettingSetting extends Controller
             $this->data['config_smsgate_library_enable_viber_fallback'] = $this->config->get('config_smsgate_library_enable_viber_fallback');
         }
 
+        if (isset($this->request->post['config_sms_editing_in_admin'])) {
+            $this->data['config_sms_editing_in_admin'] = $this->request->post['config_sms_editing_in_admin'];
+        } else {
+            $this->data['config_sms_editing_in_admin'] = $this->config->get('config_sms_editing_in_admin');
+        }
+
+        if (isset($this->request->post['config_sms_status_use_only_settings'])) {
+            $this->data['config_sms_status_use_only_settings'] = $this->request->post['config_sms_status_use_only_settings'];
+        } else {
+            $this->data['config_sms_status_use_only_settings'] = $this->config->get('config_sms_status_use_only_settings');
+        }
+
         if (isset($this->request->post['config_smsgate_viber_auth_login'])) {
             $this->data['config_smsgate_viber_auth_login'] = $this->request->post['config_smsgate_viber_auth_login'];
         } else {
