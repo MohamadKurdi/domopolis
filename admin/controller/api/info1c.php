@@ -53,7 +53,7 @@ class ControllerApiInfo1C extends Controller
         $adding_query = $this->db->query("INSERT IGNORE INTO `order_ttns` SET	order_id = '" . (int)$order_id . "', ttn = '" . $this->db->escape($ttn) . "', delivery_code = '" . $this->db->escape($shipping_code) . "', date_ttn = NOW(), sms_sent = NOW()");
        
         if ($adding_query->num_rows){
-            $this->smsAdaptor->sendPayment($order_info, ['ttn' => $ttn, 'order_status_id' => $order_info['order_status_id']]);
+            $this->smsAdaptor->sendDeliveryNote($order_info, ['ttn' => $ttn, 'order_status_id' => $order_info['order_status_id']]);
         }
     }
 

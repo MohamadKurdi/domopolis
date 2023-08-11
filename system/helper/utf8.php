@@ -42,7 +42,11 @@ function reTemplate($array, $string){
 		$to[]	= $value;
 	}
 
-	return str_replace($from, $to, $string);
+	$string = str_replace($from, $to, $string);
+	$string = str_replace('  ', ' ', $string);
+	$string = trim($string);
+
+	return $string;
 }
 
 function getproductname($item) {
