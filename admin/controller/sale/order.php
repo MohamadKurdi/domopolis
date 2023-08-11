@@ -9,14 +9,18 @@
 		);						
 		
 		public function getCityByIpAddrAjax($ip = false){
-			if (!empty($this->request->get['ip'])){
-				$ip = $this->request->get['ip'];
-			}
-			
-			$ipapi = new maciejkrol\ipapicom\ipapi ($this->config->get('config_ip_api_key'));
-			$ipResult = $ipapi->locate($ip);
-			
-			$this->response->setOutput(json_encode($ipResult));		
+			if ($this->config->get('config_ip_api_key')){
+				if (!empty($this->request->get['ip'])){
+					$ip = $this->request->get['ip'];
+				}
+
+				$ipapi 		= new maciejkrol\ipapicom\ipapi ($this->config->get('config_ip_api_key'));
+				$ipResult 	= $ipapi->locate($ip);
+
+				$this->response->setOutput(json_encode($ipResult));					
+			} else {
+				$this->response->setOutput(json_encode(['error' => 'ERROR: IpApi key is not defined!']));	
+			}				
 		}
 			
 		public function customAddressFields($data) {
@@ -5585,124 +5589,50 @@
 		
 		public function getStatusSMSTextAjax(){
 			$this->load->model('sale/order');
+			$this->load->model('localisation/legalperson');
 			$this->load->model('setting/setting');
-			
-			$order_id = (int)$this->request->post['order_id'];					
-			$order = $this->model_sale_order->getOrder($this->request->post['order_id']);
-			$message_settings = $this->model_setting_setting->getKeySettingValue('config', 'config_sms_new_order_status_message', $order['store_id']);
-			
-			$data = array();
-			
-			if (($this->request->post['order_status_id'] == $this->config->get('config_confirmed_nopaid_order_status_id')) && $order['shipping_country_id'] == 220 && $order['pay_type'] == 'Банковской картой' && !$order['card_id']){
-				$data['error'][] = 'Выбрана оплата банковской картой, однако не выбрана карта для оплаты';
+							
+			$order_info = $this->model_sale_order->getOrder($this->request->post['order_id']);
+									
+			if (($this->request->post['order_status_id'] == $this->config->get('config_confirmed_nopaid_order_status_id')) && $order_info['pay_type'] == 'Банковской картой' && !$order['card_id']){
+				$error['error'][] = 'Выбрана оплата банковской картой, однако не выбрана карта для оплаты';
 			}
 			
-			if ($data) {
-				$data['message'] = '';
-				$this->response->setOutput(json_encode($data));
+			if (!empty($error)) {
+				$error['message'] = '';
+				$this->response->setOutput(json_encode($error));
 				return;
 			}
-			
-			if (isset($message_settings[ $this->request->post['order_status_id'] ]['enabled']) && $message_settings[$this->request->post['order_status_id'] ]['enabled'] == 'on' || $message_settings[$this->request->post['order_status_id'] ]['enabled'] == 1){								
-				
-				$this->load->model('setting/setting');
-				$frm = $this->model_setting_setting->getKeySettingValue('config', 'config_sms_sign', $order['store_id']);
-				if (!$frm){
-					$frm = $this->config->get('config_sms_from');
-				}
-				
-				if ($this->getOrderPrepayNational($order_id) > 0){
-					$partly = ' частичную';
-					$_sumtopay = $this->currency->format($this->getOrderPrepayNational($order_id), $order['currency_code'], '1');
-				} else {
-					$partly = '';
-					$_sumtopay = $this->currency->format($order['total_national'], $order['currency_code'], '1');
-				}
-				
-				$array_msk = array('Москва','г.Москва','г Москва','город Москва','Moscow','москва');
-				$array_ky = array('Киев', 'г. Киев', 'г.Киев', 'Kyiv', 'Kiev', 'kyiv', 'kiev', 'киев', 'київ', 'Київ', 'м.Київ', 'м. Київ', 'Києв', 'м. Києв', 'г. Київ');
-				
-				$message_template = $message_settings[$this->request->post['order_status_id']]['message'];
-				$a1 = explode('|', $message_template);
-				if (count($a1) == 2){
-					if (in_array(trim($order['shipping_city']), $array_msk) || in_array(trim($order['shipping_city']), $array_ky)){
-						$message_template = $a1[0];													
-					} else {
-						$message_template = $a1[1];
-					}
-				}
-				
-				//complete_order_status_id
-				//UA
-				if ($this->request->post['order_status_id'] == $this->model_setting_setting->getKeySettingValue('config', 'config_complete_status_id', $order['store_id'])){					
-					$store_name = $this->model_setting_setting->getKeySettingValue('config', 'config_name', $order['store_id']);
-				} else {
-					$store_name = $this->model_setting_setting->getKeySettingValue('config', 'config_name', $order['store_id']);
-				}
-				
-				if ($order['store_id'] == 0){
-					$pick_url = HTTP_CATALOG;
-				} else {
-					$pick_url = $this->model_setting_setting->getKeySettingValue('config', 'config_url', $order['store_id']); 
-				}
-				
-				if (bool_real_stripos($order['shipping_code'], 'pickup_advanced')){				
-					$pick_index = (int)str_replace('pickup_advanced.point_','',$order['shipping_code']);
-				} else {
-					$pick_index = 0;
-				}
-				
-				if ($order['shipping_country_id'] == 220 && $order['card_id']){
-					$this->load->model('localisation/legalperson');
-					$_p24info = ' ' . $this->model_localisation_legalperson->getLegalPersonInfo($order['card_id']) .'. ';
-				} else {
-					$_p24info = ' ';
-				}		 
-				
-				$message  = str_replace(
-					array(
-						'{ID}',
-						'{DATE}',
-						'{TIME}',
-						'{SUM}',
-						'{PHONE}',
-						'{STATUS}',
-						'{FIRSTNAME}',
-						'{LASTNAME}',
-						'{COMMENT}',						
-						'{PARTLY}',
-						'{SNAME}',
-						'{PICKUP_NAME}',
-						'{PICKUP_URL}',
-						'{P24_INFO}',
-						'{SUM_TO_PAY}'
-					),
-					array(
-						$this->request->post['order_id'],
-						date('d.m.Y'),
-						date('H:i'),
-						$this->currency->format($order['total_national'], $order['currency_code'], '1'),
-						$order['telephone'],
-						$this->model_sale_order->getStatusName($this->request->post['order_status_id']),
-						$order['firstname'],
-						$order['lastname'],
-						$this->request->post['comment'],						
-						$partly,
-						$store_name,
-						trim(str_replace('Самовывоз, ', '', $order['shipping_method'])),
-						$pick_url . 'pick' . ($pick_index+1),
-						$_p24info,
-						' ' . $_sumtopay
-					),
-					$message_template);
-				
-				$data['message'] = $message;
-				$this->response->setOutput(json_encode($data));						
+
+			$data = [
+				'order_status_id' 	=> $this->request->post['order_status_id'],
+				'comment' 			=> trim($this->request->post['comment']),
+				'payment_info' 		=> $this->model_localisation_legalperson->getLegalPersonInfo($order_info['card_id']),
+				'order_status_name' => $this->model_sale_order->getStatusName($this->request->post['order_status_id']),
+				'pickup_name' 		=> trim($order_info['shipping_method']),
+			];
+
+			if ($this->getOrderPrepayNational($this->request->post['order_id'])){
+				$data['partly'] = $this->language->get('text_payment_partly');
+				$data['amount'] = $this->getOrderPrepayNational($this->request->post['order_id']);
 			} else {
-				//$data['error'][] = 'Внимание! Отправка SMS для данного статуса не включена в настройках!';
-				$data['message'] = '';
-				$this->response->setOutput(json_encode($data));
+				$data['partly'] = '';
+				$data['amount'] = $order_info['total_national'];
 			}
+
+			if (bool_real_stripos($order_info['shipping_code'], 'pickup_advanced')){	
+				if ($order_info['store_id'] == 0){
+					$data['pickup_url'] = HTTP_CATALOG . 'pick' . ((int)str_replace('pickup_advanced.point_', '', $order_info['shipping_code']) + 1);
+				} else {
+					$data['pickup_url']  = $this->model_setting_setting->getKeySettingValue('config', 'config_url', $order_info['store_id']) . 'pick' . ((int)str_replace('pickup_advanced.point_', '', $order_info['shipping_code']) + 1);
+				}
+			} else {
+				$data['pickup_url']  = '';
+			}
+
+			$this->response->setOutput(json_encode([
+					'message' => $this->smsAdaptor->getStatusSMSText($order_info, $data)
+			]));
 		}
 		
 		public function reject_reason_ajax(){
@@ -5822,70 +5752,34 @@
 		
 		public function addTTNAjax(){
 			$this->load->model('sale/order');
-			
-			$order_id 			= (int)$this->request->post['order_id'];
-			$ttn 				= $this->request->post['ttn'];
-			$date_sent 			= $this->request->post['date_sent'];
-			$send_delivery_sms 	= $this->request->post['send_delivery_sms'];
-			$delivery_sms_text 	= $this->request->post['delivery_sms_text'];
-			
-			$order = $this->model_sale_order->getOrder($order_id);
-			
-			$telephone 			= $order['telephone'];
-			$store_id 			= $order['store_id'];
-			$order_status_id 	= $order['order_status_id'];
-			
-			if (mb_strlen($ttn, 'UTF-8') > 2){				
-				if ($date_sent){
 
-					$this->db->query("INSERT INTO `order_ttns` SET
-					order_id 		= '" . (int)$order_id . "',
-					ttn 			= '" .$this->db->escape($ttn) . "',
-					delivery_code 	= '" .$this->db->escape($order['shipping_code']). "',
-					date_ttn 		= '" .$this->db->escape($date_sent). "'");	
-
-					$this->db->query("UPDATE `order` SET ttn = '" .$this->db->escape($ttn) . "' WHERE order_id = '" . (int)$order_id . "'");
-					$this->db->query("UPDATE `order` SET date_sent = '" .$this->db->escape($date_sent). "' WHERE order_id = '" . (int)$order_id . "'");
-
-					} else {
-
-					$this->db->query("INSERT INTO `order_ttns` SET
-					order_id 		= '" . (int)$order_id . "',
-					ttn 			= '" .$this->db->escape($ttn) . "',
-					delivery_code 	= '" .$this->db->escape($order['shipping_code']). "',
-					date_ttn 		= NOW()");				
-				}
-
-				$this->db->query("UPDATE `order` SET ttn = '" .$this->db->escape($ttn) . "' WHERE order_id = '" . (int)$order_id . "'");
-				$this->db->query("UPDATE `order` SET date_sent = NOW() WHERE order_id = '" . (int)$order_id . "'");
+			if (!empty($this->request->post['date_sent'])){
+				$date_sent = $this->request->post['date_sent'];
+			} else {
+				$date_sent = date('Y-m-d');
 			}
 			
-			if (isset($send_delivery_sms) && $send_delivery_sms && (mb_strlen($delivery_sms_text, 'UTF-8') > 2)){
-				$this->load->model('setting/setting');
-				
-				$options = array(
-				'to'       => $telephone,
-				'from'     => $this->model_setting_setting->getKeySettingValue('config', 'config_sms_sign', $store_id),				
-				'message'  => $delivery_sms_text
-				);
-				
-				$sms_id = $this->smsQueue->queue($options);
-				
-				if ($sms_id){
-					$sms_status = 'В очереди';					
-					} else {
-					$sms_status = 'Неудача';
+			$order_info = $this->model_sale_order->getOrder((int)$this->request->post['order_id']);
+			
+			if (trim($this->request->post['ttn'])){				
+				$this->db->query("INSERT INTO `order_ttns` SET
+					order_id 		= '" . (int)$this->request->post['order_id'] . "',
+					ttn 			= '" .$this->db->escape($this->request->post['ttn']) . "',
+					delivery_code 	= '" .$this->db->escape($order_info['shipping_code']). "',
+					date_ttn 		= '" .$this->db->escape($date_sent). "'"
+				);	
+
+				$this->db->query("UPDATE `order` SET ttn 		= '" .$this->db->escape($this->request->post['ttn']) . "' WHERE order_id = '" . (int)$this->request->post['order_id'] . "'");
+				$this->db->query("UPDATE `order` SET date_sent 	= '" .$this->db->escape($date_sent). "' WHERE order_id = '" . (int)(int)$this->request->post['order_id'] . "'");
+
+				if ($this->config->get('config_sms_status_use_only_settings')){
+					$this->smsAdaptor->sendDeliveryNote($order_info, ['ttn' => $this->request->post['ttn'], 'order_status_id' => $order_info['order_status_id']]);
+				} else {
+					if (!empty($this->request->post['send_delivery_sms']) && !empty(trim($this->request->post['delivery_sms_text']))){
+						$this->smsAdaptor->sendSMS(['to' => $order_info['telephone'], 'message' => trim($this->request->post['delivery_sms_text'])]);
+					}
 				}
-				
-				$sms_data = array(
-				'order_status_id' => $order_status_id,
-				'sms' => $options['message']
-				);
-				
-				
-				$this->db->query("UPDATE `order_ttns` SET sms_sent = NOW() WHERE ttn = '" . $this->db->escape($ttn) . "'");
-				$this->model_sale_order->addOrderSmsDeliveryHistory($order_id, $sms_data, $sms_status, $sms_id);
-			}	
+			}
 		}
 		
 		public function smshistory(){
@@ -6285,7 +6179,7 @@
 			$order_statuses = $this->model_localisation_order_status->getAllowedOrderStatuses($current_status);
 			
 			$html = '';
-			$html .= "<select name=\"order_status_id_tc\" onchange=\"$('#order_status_id').val($(this).val()); getCompleteOrderTextAjax(); getStatusSMSTextAjax(); }\">";
+			$html .= "<select name=\"order_status_id_tc\" onchange=\"$('#order_status_id').val($(this).val()); getCompleteOrderTextAjax(); getStatusSMSTextAjax();\">";
 			foreach ($order_statuses as $order_status){
 				
 				if ($order_status['order_status_id'] == $current_status){
@@ -6303,8 +6197,8 @@
 		public function history() {
 			$this->language->load('sale/order');
 			
-			$this->data['error'] = '';
-			$this->data['success'] = '';
+			$this->data['error'] 	= '';
+			$this->data['success'] 	= '';
 			
 			$this->load->model('sale/order');
 			$this->load->model('sale/customer');
@@ -6339,8 +6233,7 @@
 					}
 				}
 				
-				if (!$this->data['error']) {
-					
+				if (!$this->data['error']) {					
 					$order_id = (int)$this->request->get['order_id'];
 					$status_id = (int)$this->request->post['order_status_id'];
 					
@@ -6403,20 +6296,17 @@
 						}
 						
 					}
-				}
+				}						
 				
-				
-				
-				if (!$this->data['error']) {
-					
+				if (!$this->data['error']) {					
 					if ($status_id == $this->config->get('config_complete_status_id')){
 						
 						$this->load->model('sale/order');
 						$this->load->model('sale/customer');											
-						$order_total = $order_info['total_national'];					
-						$customer_balance_national = $this->model_sale_customer->getTransactionTotalNational($order_info['customer_id']);			
-						$balance_national = $this->model_sale_customer->getTransactionTotalNational($order_info['customer_id'], $order_id);
-						$total_transaction_count = $this->model_sale_customer->getTotalTransactions($order_info['customer_id'], $order_id);
+						$order_total 				= $order_info['total_national'];					
+						$customer_balance_national 	= $this->model_sale_customer->getTransactionTotalNational($order_info['customer_id']);			
+						$balance_national 			= $this->model_sale_customer->getTransactionTotalNational($order_info['customer_id'], $order_id);
+						$total_transaction_count 	= $this->model_sale_customer->getTotalTransactions($order_info['customer_id'], $order_id);
 						
 						
 						$amount_national = ($order_total);
@@ -6441,9 +6331,9 @@
 						$sum_to_take = $this->model_sale_order->getSumForCurrentDelivery($order_id);
 						$current_delivery = $this->model_sale_order->getOrderCurrentDelivery($order_id);
 						if ($sum_to_take){
-							$customer_balance_national = $this->model_sale_customer->getTransactionTotalNational($order_info['customer_id']);
-							$balance_national = $this->model_sale_customer->getTransactionTotalNational($order_info['customer_id'], $order_id);
-							$total_transaction_count = $this->model_sale_customer->getTotalTransactions($order_info['customer_id'], $order_id);
+							$customer_balance_national 	= $this->model_sale_customer->getTransactionTotalNational($order_info['customer_id']);
+							$balance_national 			= $this->model_sale_customer->getTransactionTotalNational($order_info['customer_id'], $order_id);
+							$total_transaction_count 	= $this->model_sale_customer->getTotalTransactions($order_info['customer_id'], $order_id);
 							
 							$amount_national = ($sum_to_take);
 							$amount = $this->currency->convert($amount_national, $order_info['currency_code'], $this->config->get('config_currency'));
@@ -6457,8 +6347,7 @@
 							
 							$this->model_sale_customer->addTransaction($order_info['customer_id'], 'Заказ #'.$order_id.', поставка ' . $current_delivery . ': списание со счета по статусу Частично Отгружен', $amount, $amount_national, $order_info['currency_code'], $order_id, false, false, 'auto_order_close');	
 							
-						}
-						
+						}						
 					}
 					
 					if (in_array((int)$status_id, $this->config->get('config_odinass_order_status_id'))){
@@ -6476,25 +6365,24 @@
 						$customer_comment_text = 'изменен статус на: <b>'.$this->model_localisation_order_status->getOrderStatusName($status_id).'</b>';
 					}
 					
-					$_data = array(
-					'customer_id' 		      => $order_info['customer_id'], 
-					'comment'     		      => $customer_comment_text,
-					'order_id'    		      => $order_id,
-					'call_id'     		      => 0,
-					'manager_id'    	      => 0,
-					'need_call'    			  => 0,
-					'segment_id'    		  => 0,
-					'order_status_id'    	  => $status_id,
-					'prev_order_status_id'    => $current_status_id					
-					);
+					$_data = [
+						'customer_id' 		      => $order_info['customer_id'], 
+						'comment'     		      => $customer_comment_text,
+						'order_id'    		      => $order_id,
+						'call_id'     		      => 0,
+						'manager_id'    	      => 0,
+						'need_call'    			  => 0,
+						'segment_id'    		  => 0,
+						'order_status_id'    	  => $status_id,
+						'prev_order_status_id'    => $current_status_id					
+					];
 					$this->model_sale_customer->addHistoryExtended($_data);
 					
 					$this->load->model('user/user');					
 					$user_name = $this->model_user_user->getRealUserNameById($this->user->getID());
 					
 					//алерт сейлзам, если заказ ОБРАБОТАН
-					if ($status_id == 21){
-						
+					if ($status_id == 21){						
 						$data = array(
 						'type' => 'warning',
 						'text' => $user_name.' изменил статус на <b>ОБРАБОТАН</b>. <br />Заказ', 
@@ -6536,12 +6424,11 @@
 				}
 			}
 									
-			$this->data['text_no_results'] = $this->language->get('text_no_results');
-			
-			$this->data['column_date_added'] = $this->language->get('column_date_added');
-			$this->data['column_status'] = $this->language->get('column_status');
-			$this->data['column_notify'] = $this->language->get('column_notify');
-			$this->data['column_comment'] = $this->language->get('column_comment');
+			$this->data['text_no_results'] 		= $this->language->get('text_no_results');			
+			$this->data['column_date_added'] 	= $this->language->get('column_date_added');
+			$this->data['column_status'] 		= $this->language->get('column_status');
+			$this->data['column_notify'] 		= $this->language->get('column_notify');
+			$this->data['column_comment'] 		= $this->language->get('column_comment');
 			
 			if (isset($this->request->get['page'])) {
 				$page = $this->request->get['page'];
@@ -8715,30 +8602,13 @@
 		}
 		
 		public function getOrderPrepayNational($order_id){
-			$query = $this->db->query("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
-			
-			foreach ($query->rows as $row){
-				if ($row['code'] == 'transfer_plus_prepayment'){
-					return $row['value_national'];				
-				}			
-			}
-			return false;
+			$this->load->model('sale/order');
+			return $this->model_sale_order->getOrderPrepayNational($order_id);
 		}
 		
 		public function getOrderPrepayNationalPercent($order_id){
-			$query = $this->db->query("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
-			
-			foreach ($query->rows as $row){
-				if ($row['code'] == 'transfer_plus_prepayment'){
-					$p = explode('(',$row['title']);
-					$p = $p[1];
-					$p = explode('%', $p);
-					$p = (int)$p[0];
-					
-					return $p;
-				}
-			}
-			return false;
+			$this->load->model('sale/order');
+			return $this->model_sale_order->getOrderPrepayNationalPercent($order_id);
 		}
 		
 		public function loadbottomtext() {
@@ -8781,32 +8651,7 @@
 			}
 			
 			$array_info = array(
-			
-			/*
-				//товар зарезервирован для вас на складе. Если не установлено, используется дата оформления заказа.
-				($order_info['date_buy'] == '0000-00-00')?
-				date('d.m.Y', strtotime($order_info['date_added'])):
-				date('d.m.Y', strtotime($order_info['date_buy'])),
-				//ожидаемое прибытие товара на склад (+1 день). Если не установлено, используется дата оформления заказа +2 недели.
-				($order_info['date_country'] == '0000-00-00')?
-				date('d.m.Y', strtotime($order_info['date_added'])+60*60*24*7*2) . '-' . date('d.m.Y', strtotime($order_info['date_added'])+(60*60*24*7*2)+(60*60*24)) :
-				date('d.m.Y', strtotime($order_info['date_country'])) . '-' . date('d.m.Y', strtotime($order_info['date_country'])+(60*60*24)),
-				
-				//планируемая дата доставки заказа от. Если не установлено, используется дата оформления заказа +2 недели +2 дня.
-				($order_info['date_delivery'] == '0000-00-00')?
-				date('d.m.Y', strtotime($order_info['date_added'])+60*60*24*7*2+60*60*24*2) :
-				date('d.m.Y', strtotime($order_info['date_delivery'])),
-				
-				//планируемая дата доставки заказа до. Если не установлено, используется дата оформления заказа +2 недели +3 дня.
-				($order_info['date_delivery_to'] == '0000-00-00')?
-				date('d.m.Y', strtotime($order_info['date_added'])+60*60*24*7*2+60*60*24*3) :
-				date('d.m.Y', strtotime($order_info['date_delivery_to'])),
-				
-				//условия будут действительны при внесении оплаты до этой даты. Если не установлено, используется дата оформления заказа +2 дня
-				($order_info['date_maxpay'] == '0000-00-00')?
-				date('d.m.Y', strtotime($order_info['date_added'])+60*60*24*2) :
-				date('d.m.Y', strtotime($order_info['date_maxpay'])),
-			*/
+
 			date('d.m.Y', strtotime($order_info['date_added'])),
 			$order_info['order_id'],
 			date('d.m.Y', strtotime($order_info['date_buy'])),

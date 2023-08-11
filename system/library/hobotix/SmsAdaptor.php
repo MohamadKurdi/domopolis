@@ -109,9 +109,8 @@ class SmsAdaptor {
 			return reTemplate($template, $this->config->get('config_sms_ttn_sent'));
 		}		
 
-		return false;
+		return '';
 	}
-
 
 	public function getTransactionSMSText($order_info, $data){
 		$template = [
@@ -122,7 +121,7 @@ class SmsAdaptor {
 			'{PHONE}'		=> $order_info['telephone'], 
 			'{FIRSTNAME}'	=> $order_info['firstname'], 
 			'{LASTNAME}' 	=> $order_info['lastname'],
-			'{SUM}' 		=> $this->currency->format($data['amount'], $order['currency_code'], '1')
+			'{SUM}' 		=> $this->currency->format($data['amount'], $order_info['currency_code'], '1')
 		];
 
 		if ($this->config->get('config_smsgate_library_enable_viber')){
@@ -155,14 +154,102 @@ class SmsAdaptor {
 			return reTemplate($template, $this->config->get('config_sms_transaction_text_type_1'));
 		}		
 
-		return false;
+		return '';
+	}
+
+	public function getStatusSMSText($order_info, $data){
+		$sms_settings 		= $this->config->get('config_sms_new_order_status_message');
+		$viber_settings 	= $this->config->get('config_viber_order_status_message');
+
+		$template = [
+			'{ID}' 			=> $order_info['order_id'], 
+			'{SNAME}'		=> $this->config->get('config_name'), 
+			'{DATE}'		=> date('d.m.Y'), 
+			'{TIME}'		=> date('H:i:s'), 
+			'{PHONE}'		=> $order_info['telephone'], 
+			'{FIRSTNAME}'	=> $order_info['firstname'], 
+			'{LASTNAME}' 	=> $order_info['lastname'],
+			'{STATUS_NAME}' => $data['order_status_name'],
+			'{COMMENT}' 	=> $data['comment'],						
+			'{PARTLY}'		=> $data['partly'],
+			'{PICKUP_NAME}' => $data['pickup_name'],
+			'{PICKUP_URL}'  => $data['pickup_url'],
+			'{PAYMENT_INFO}'=> $data['payment_info'],
+			'{SUM}' 		=> $this->currency->format($data['amount'], $order_info['currency_code'], 1),
+			'{SUM_TO_PAY}'  => $this->currency->format($data['amount'], $order_info['currency_code'], 1)	
+		];
+
+		if (!empty($viber_settings[$data['order_status_id']]['enabled']) && in_array($viber_settings[$data['order_status_id']]['enabled'], ['on', 1])){	
+			return reTemplate($template, $viber_settings[$data['order_status_id']]['message']);
+		}											
+
+		if (!empty($sms_settings[$data['order_status_id']]['enabled']) && in_array($sms_settings[$data['order_status_id']]['enabled'], ['on', 1])){	
+			return reTemplate($template, $sms_settings[$data['order_status_id']]['message']);	
+		}		
+
+		return '';
+	}
+
+	//SMS+Viber SERVICE FUNCTIONS
+	public function sendStatusSMSText($order_info, $data){
+		$template = [
+			'{ID}' 			=> $order_info['order_id'], 
+			'{SNAME}'		=> $this->config->get('config_name'), 
+			'{DATE}'		=> date('d.m.Y'), 
+			'{TIME}'		=> date('H:i:s'), 
+			'{PHONE}'		=> $order_info['telephone'], 
+			'{FIRSTNAME}'	=> $order_info['firstname'], 
+			'{LASTNAME}' 	=> $order_info['lastname'],
+			'{STATUS_NAME}' => $data['order_status_name'],
+			'{COMMENT}' 	=> $data['comment'],						
+			'{PARTLY}'		=> $data['partly'],
+			'{PICKUP_NAME}' => $data['pickup_name'],
+			'{PICKUP_URL}'  => $data['pickup_url'],
+			'{PAYMENT_INFO}'=> $data['payment_info'],
+			'{SUM}' 		=> $this->currency->format($data['amount'], $order_info['currency_code'], 1),
+			'{SUM_TO_PAY}'  => $this->currency->format($data['amount'], $order_info['currency_code'], 1)	
+		];
+
+		$sms_settings 		= $this->config->get('config_sms_new_order_status_message');
+		$viber_settings 	= $this->config->get('config_viber_order_status_message');
+
+		if (!empty($viber_settings[$data['order_status_id']]['enabled']) && in_array($viber_settings[$data['order_status_id']]['enabled'], ['on', 1])){	
+			$viber = [
+				'viber' 		=> true,
+				'to' 			=> $order_info['telephone'],
+				'message' 		=> reTemplate($template, $viber_settings[$data['order_status_id']]['message']),
+				'messageSms' 	=> reTemplate($template, $sms_settings[$data['order_status_id']]['message']),
+
+				'button_txt' 	=> $viber_settings[$data['order_status_id']]['button_text'],
+				'button_url' 	=> $viber_settings[$data['order_status_id']]['button_url'], 				
+			];
+
+			if (!empty($viber_settings[$data['order_status_id']]['image']) && file_exists(DIR_IMAGE . $viber_settings[$data['order_status_id']]['image'])){
+				$viber['picture_url'] = HTTPS_SERVER . DIR_IMAGE_NAME . $viber_settings[$data['order_status_id']]['image'];
+			}
+
+			$viberID = $this->registry->get('smsQueue')->queue($viber);
+			$this->addOrderSmsHistory($order_info['order_id'], ['order_status_id' => $data['order_status_id'], 'sms' => $viber['message']], 'Queued', $viberID, (int)$order_info['customer_id']);
+
+			return $viberID;
+		}
+
+		if (!empty($sms_settings[$data['order_status_id']]['enabled']) && in_array($sms_settings[$data['order_status_id']]['enabled'], ['on', 1])){	
+			
+			$sms = [
+				'to' 		=> $order_info['telephone'],
+				'message' 	=> reTemplate($template, $sms_settings[$data['order_status_id']]['message'])
+			];
+
+			$smsID = $this->registry->get('smsQueue')->queue($sms);
+			$this->addOrderSmsHistory($order_info['order_id'], ['order_status_id' => $data['order_status_id'], 'sms' => $sms['message']], 'Queued', $smsID, (int)$order_info['customer_id']);
+			return $smsID;
+		}	
 	}
 
 
-	//SMS+Viber SERVICE FUNCTIONS
 	public function sendRewardReminder($customer_info, $data){
-		if ($this->config->get('config_viber_rewardpoints_reminder_enabled')){
-			$template = [
+		$template = [
 				'{SNAME}'			=> $this->config->get('config_name'), 
 				'{DATE}'			=> date('d.m.Y'), 
 				'{TIME}'			=> date('H:i:s'), 
@@ -171,8 +258,9 @@ class SmsAdaptor {
 				'{LASTNAME}' 		=> $customer_info['lastname'],
 				'{POINTS_AMOUNT}'		=> $data['points_amount'],
 				'{POINTS_DAYS_LEFT}' 	=> $data['points_days_left'],
-			];
+		];
 
+		if ($this->config->get('config_viber_rewardpoints_reminder_enabled')){
 			$viber = [
 				'viber' 		=> true,
 				'to' 			=> $customer_info['telephone'],
@@ -194,18 +282,6 @@ class SmsAdaptor {
 		}
 
 		if ($this->config->get('rewardpoints_reminder_enable')){
-			$template = [
-				'{SNAME}'			=> $this->config->get('config_name'), 
-				'{DATE}'			=> date('d.m.Y'), 
-				'{TIME}'			=> date('H:i:s'), 
-				'{PHONE}'			=> $customer_info['telephone'], 
-				'{FIRSTNAME}'		=> $customer_info['firstname'], 
-				'{LASTNAME}' 		=> $customer_info['lastname'],
-				'{POINTS_AMOUNT}'		=> $data['points_amount'],
-				'{POINTS_DAYS_LEFT}' 	=> $data['points_days_left'],
-			];
-
-
 			$sms = [
 				'to' 		=> $customer_info['telephone'],
 				'message' 	=> reTemplate($template, $this->config->get('rewardpoints_reminder_sms_text'))
@@ -219,8 +295,7 @@ class SmsAdaptor {
 	}
 
 	public function sendInWarehouse($order_info, $data){
-		if ($this->config->get('config_viber_tracker_leave_main_warehouse_enabled')){
-			$template = [
+		$template = [
 				'{ID}' 			=> $order_info['order_id'], 
 				'{SNAME}'		=> $this->config->get('config_name'), 
 				'{DATE}'		=> date('d.m.Y'), 
@@ -230,6 +305,7 @@ class SmsAdaptor {
 				'{LASTNAME}' 	=> $order_info['lastname']
 			];
 
+		if ($this->config->get('config_viber_tracker_leave_main_warehouse_enabled')){			
 			$viber = [
 				'viber' 		=> true,
 				'to' 			=> $order_info['telephone'],
@@ -250,42 +326,33 @@ class SmsAdaptor {
 			return $viberID;
 		}
 
-		if ($this->config->get('config_sms_tracker_leave_main_warehouse_enabled')) {
-			$template = [
-				'{ID}' 			=> $order_info['order_id'], 
-				'{SNAME}'		=> $this->config->get('config_name'), 
-				'{DATE}'		=> date('d.m.Y'), 
-				'{TIME}'		=> date('H:i:s'), 
-				'{PHONE}'		=> $order_info['telephone'], 
-				'{FIRSTNAME}'	=> $order_info['firstname'], 
-				'{LASTNAME}' 	=> $order_info['lastname']
-			];
-
+		if ($this->config->get('config_sms_tracker_leave_main_warehouse_enabled')) {	
 			$sms = [
 				'to' 		=> $order_info['telephone'],
 				'message' 	=> reTemplate($template, $this->config->get('config_sms_tracker_leave_main_warehouse'))
 			];
 
 			$smsID = $this->registry->get('smsQueue')->queue($sms);
-			$this->addOrderSmsHistory($order_info['order_id'], ['order_status_id' => $data['order_status_id'], 'sms' => $sms['message']], 'Queued', $viberID, (int)$order_info['customer_id']);
+			$this->addOrderSmsHistory($order_info['order_id'], ['order_status_id' => $data['order_status_id'], 'sms' => $sms['message']], 'Queued', $smsID, (int)$order_info['customer_id']);
 
 			return $smsID;
 		}
 	}
 
 	public function sendDeliveryNote($order_info, $data){
-		if ($this->config->get('config_viber_ttn_sent_enabled')){
-			$template = [
-				'{ID}' 			=> $order_info['order_id'], 
-				'{SNAME}'		=> $this->config->get('config_name'), 
-				'{DATE}'		=> date('d.m.Y'), 
-				'{TIME}'		=> date('H:i:s'), 
-				'{PHONE}'		=> $order_info['telephone'], 
-				'{FIRSTNAME}'	=> $order_info['firstname'], 
-				'{LASTNAME}' 	=> $order_info['lastname'],
-				'{TTN}'			=> $data['ttn']
-			];
+		$template = [
+			'{ID}' 			=> $order_info['order_id'], 
+			'{SNAME}'		=> $this->config->get('config_name'), 
+			'{DATE}'		=> date('d.m.Y'), 
+			'{TIME}'		=> date('H:i:s'), 
+			'{PHONE}'		=> $order_info['telephone'], 
+			'{FIRSTNAME}'	=> $order_info['firstname'], 
+			'{LASTNAME}' 	=> $order_info['lastname'],
+			'{TTN}'			=> $data['ttn']
+		];
 
+
+		if ($this->config->get('config_viber_ttn_sent_enabled')){
 			$viber = [
 				'viber' 		=> true,
 				'to' 			=> $order_info['telephone'],
@@ -302,47 +369,38 @@ class SmsAdaptor {
 
 			$viberID = $this->registry->get('smsQueue')->queue($viber);
 			$this->addOrderSmsHistory($order_info['order_id'], ['order_status_id' => $data['order_status_id'], 'sms' => $viber['message']], 'Queued', $viberID, (int)$order_info['customer_id']);
+			$this->setDeliveryDateSent($data['ttn']);
 
 			return $viberID;
 		}
 
 		if ($this->config->get('config_sms_ttn_sent_enabled')) {
-			$template = [
-				'{ID}' 			=> $order_info['order_id'], 
-				'{SNAME}'		=> $this->config->get('config_name'), 
-				'{DATE}'		=> date('d.m.Y'), 
-				'{TIME}'		=> date('H:i:s'), 
-				'{PHONE}'		=> $order_info['telephone'], 
-				'{FIRSTNAME}'	=> $order_info['firstname'], 
-				'{LASTNAME}' 	=> $order_info['lastname'],
-				'{TTN}'			=> $data['ttn']
-			];
-
 			$sms = [
 				'to' 		=> $order_info['telephone'],
 				'message' 	=> reTemplate($template, $this->config->get('config_sms_ttn_sent'))
 			];
 
 			$smsID = $this->registry->get('smsQueue')->queue($sms);
-			$this->addOrderSmsHistory($order_info['order_id'], ['order_status_id' => $data['order_status_id'], 'sms' => $sms['message']], 'Queued', $viberID, (int)$order_info['customer_id']);
+			$this->addOrderSmsHistory($order_info['order_id'], ['order_status_id' => $data['order_status_id'], 'sms' => $sms['message']], 'Queued', $smsID, (int)$order_info['customer_id']);
+			$this->setDeliveryDateSent($data['ttn']);
 
 			return $smsID;
 		}
 	}
 
 	public function sendPayment($order_info, $data){
-		if ($this->config->get('config_viber_payment_recieved_enabled')){
-			$template = [
-				'{ID}' 			=> $order_info['order_id'], 
-				'{SNAME}'		=> $this->config->get('config_name'), 
-				'{DATE}'		=> date('d.m.Y'), 
-				'{TIME}'		=> date('H:i:s'), 
-				'{SUM}'			=> $this->currency->format($data['amount'], $order_info['currency_code'], 1), 
-				'{PHONE}'		=> $order_info['telephone'], 
-				'{FIRSTNAME}'	=> $order_info['firstname'], 
-				'{LASTNAME}' 	=> $order_info['lastname']				
-			];
+		$template = [
+			'{ID}' 			=> $order_info['order_id'], 
+			'{SNAME}'		=> $this->config->get('config_name'), 
+			'{DATE}'		=> date('d.m.Y'), 
+			'{TIME}'		=> date('H:i:s'), 
+			'{SUM}'			=> $this->currency->format($data['amount'], $order_info['currency_code'], 1), 
+			'{PHONE}'		=> $order_info['telephone'], 
+			'{FIRSTNAME}'	=> $order_info['firstname'], 
+			'{LASTNAME}' 	=> $order_info['lastname']				
+		];
 
+		if ($this->config->get('config_viber_payment_recieved_enabled')){
 			$viber = [
 				'viber' 		=> true,
 				'to' 			=> $order_info['telephone'],
@@ -365,17 +423,6 @@ class SmsAdaptor {
 
 
 		if ($this->config->get('config_sms_payment_recieved_enabled')) {
-			$template = [
-				'{ID}' 			=> $order_info['order_id'], 
-				'{SNAME}'		=> $this->config->get('config_name'), 
-				'{DATE}'		=> date('d.m.Y'), 
-				'{TIME}'		=> date('H:i:s'), 
-				'{SUM}'			=> $this->currency->format($data['amount'], $order_info['currency_code'], 1), 
-				'{PHONE}'		=> $order_info['telephone'], 
-				'{FIRSTNAME}'	=> $order_info['firstname'], 
-				'{LASTNAME}' 	=> $order_info['lastname']				
-			];
-
 			$sms = [
 				'to' 		=> $order_info['telephone'],
 				'message' 	=> reTemplate($template, $this->config->get('config_sms_payment_recieved'))
@@ -389,18 +436,18 @@ class SmsAdaptor {
 	}
 
 	public function sendNewOrder($order_info){
-		if ($this->config->get('config_viber_send_new_order')){
-			$template = [
-				'{ID}' 			=> $order_info['order_id'], 
-				'{SNAME}'		=> $this->config->get('config_name'), 
-				'{DATE}'		=> date('d.m.Y', strtotime($order_info['date_added'])), 
-				'{TIME}'		=> date('H:i:s', strtotime($order_info['date_added'])), 
-				'{SUM}'			=> $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value']), 
-				'{PHONE}'		=> $order_info['telephone'], 
-				'{FIRSTNAME}'	=> $order_info['firstname'], 
-				'{LASTNAME}' 	=> $order_info['lastname']				
-			];
+		$template = [
+			'{ID}' 			=> $order_info['order_id'], 
+			'{SNAME}'		=> $this->config->get('config_name'), 
+			'{DATE}'		=> date('d.m.Y', strtotime($order_info['date_added'])), 
+			'{TIME}'		=> date('H:i:s', strtotime($order_info['date_added'])), 
+			'{SUM}'			=> $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value']), 
+			'{PHONE}'		=> $order_info['telephone'], 
+			'{FIRSTNAME}'	=> $order_info['firstname'], 
+			'{LASTNAME}' 	=> $order_info['lastname']				
+		];
 
+		if ($this->config->get('config_viber_send_new_order')){
 			$viber = [
 				'viber' 		=> true,
 				'to' 			=> $order_info['telephone'],
@@ -422,17 +469,6 @@ class SmsAdaptor {
 		}
 
 		if ($this->config->get('config_sms_send_new_order')) {
-			$template = [
-				'{ID}' 			=> $order_info['order_id'], 
-				'{SNAME}'		=> $this->config->get('config_name'), 
-				'{DATE}'		=> date('d.m.Y', strtotime($order_info['date_added'])), 
-				'{TIME}'		=> date('H:i:s', strtotime($order_info['date_added'])), 
-				'{SUM}'			=> $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value']), 
-				'{PHONE}'		=> $order_info['telephone'], 
-				'{FIRSTNAME}'	=> $order_info['firstname'], 
-				'{LASTNAME}' 	=> $order_info['lastname']				
-			];
-
 			$sms = [
 				'to' 		=> $order_info['telephone'],
 				'message' 	=> reTemplate($template, $this->config->get('config_sms_new_order_message'))
@@ -443,6 +479,13 @@ class SmsAdaptor {
 
 			return $smsID;
 		}
+	}
+
+
+
+//SERVICE FUCTIONS
+	public function setDeliveryDateSent($ttn) {
+		$this->db->query("UPDATE `order_ttns` SET sms_sent = NOW() WHERE ttn = '" . $this->db->escape($ttn) . "'");
 	}
 
 	public function addOrderSmsHistory($order_id, $data, $sms_status, $sms_id, $customer_id = 0) {

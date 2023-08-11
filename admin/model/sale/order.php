@@ -3900,31 +3900,45 @@
 				
 				$template->sent();
 			}
-			
-			
-			if (isset($data['notify']) && $data['notify'] && isset($data['history_sms_text']) && (mb_strlen($data['history_sms_text'], 'UTF-8') > 2)){				
-				$this->load->model('setting/setting');
-				
-				$options = array(
-				'to'       => $data['telephone'],
-				'from'     => $this->model_setting_setting->getKeySettingValue('config', 'config_sms_sign', (int)$order_info['store_id']),				
-				'message'  => $data['history_sms_text']
-				);
-				
-				$sms_id = $this->smsQueue->queue($options);
-				
-				if ($sms_id){
-					$sms_status = 'В очереди';					
-					} else {
-					$sms_status = 'Неудача';
+
+			if ($this->config->get('config_sms_status_use_only_settings')){
+				$this->load->model('localisation/legalperson');
+
+				$sms_data = [
+					'order_status_id' 	=> $data['order_status_id'],
+					'comment' 			=> '',
+					'payment_info' 		=> $this->model_localisation_legalperson->getLegalPersonInfo($order_info['card_id']),
+					'order_status_name' => $this->getStatusName($data['order_status_id']),
+					'pickup_name' 		=> trim($order_info['shipping_method']),
+				];
+
+				if ($this->getOrderPrepayNational($order_info['order_id'])){
+					$sms_data['partly'] = $this->language->get('text_payment_partly');
+					$sms_data['amount'] = $this->getOrderPrepayNational($order_info['order_id']);
+				} else {
+					$sms_data['partly'] = '';
+					$sms_data['amount'] = $order_info['total_national'];
 				}
-				$sms_data = array(
-				'order_status_id' => $data['order_status_id'],
-				'sms' => $options['message']
-				);
-				
-				$this->model_sale_order->addOrderSmsHistory($order_id, $sms_data, $sms_status, $sms_id, (int)$order_info['customer_id']);
-			}
+
+				if (bool_real_stripos($order_info['shipping_code'], 'pickup_advanced')){	
+					if ($order_info['store_id'] == 0){
+						$sms_data['pickup_url'] = HTTP_CATALOG . 'pick' . ((int)str_replace('pickup_advanced.point_', '', $order_info['shipping_code']) + 1);
+					} else {
+						$sms_data['pickup_url']  = $this->model_setting_setting->getKeySettingValue('config', 'config_url', $order_info['store_id']) . 'pick' . ((int)str_replace('pickup_advanced.point_', '', $order_info['shipping_code']) + 1);
+					}
+				} else {
+					$sms_data['pickup_url']  = '';
+				}
+
+				$this->smsAdaptor->sendStatusSMSText($order_info, $sms_data);
+
+			} else {
+
+				if (!empty($this->request->post['notify']) && !empty(trim($this->request->post['history_sms_text']))){
+					$this->smsAdaptor->sendSMS(['to' => $order_info['telephone'], 'message' => trim($this->request->post['history_sms_text'])]);
+				}
+			}			
+			
 			
 			$_total_query = $this->db->query("SELECT total_national FROM `order` WHERE `order_id` = '" . (int)$order_id . "'");
 			$_total_total = $_total_query->row['total_national'];
@@ -3945,14 +3959,37 @@
 			}
 			
 		}
+
+		public function getOrderPrepayNational($order_id){
+			$query = $this->db->query("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
+			
+			foreach ($query->rows as $row){
+				if ($row['code'] == 'transfer_plus_prepayment'){
+					return $row['value_national'];				
+				}			
+			}
+			return false;
+		}
 		
-		public function getOrderHistoriesCommentsForCourier($order_id) {
+		public function getOrderPrepayNationalPercent($order_id){
+			$query = $this->db->query("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "' ORDER BY sort_order");
 			
-			$query = $this->db->query("SELECT comment FROM order_history oh WHERE oh.order_id = '" . (int)$order_id . "' AND courier = 1 ORDER BY oh.date_added ASC");
-			
-			
-			return $query->rows;
-			
+			foreach ($query->rows as $row){
+				if ($row['code'] == 'transfer_plus_prepayment'){
+					$p = explode('(',$row['title']);
+					$p = $p[1];
+					$p = explode('%', $p);
+					$p = (int)$p[0];
+					
+					return $p;
+				}
+			}
+			return false;
+		}
+		
+		public function getOrderHistoriesCommentsForCourier($order_id) {			
+			$query = $this->db->query("SELECT comment FROM order_history oh WHERE oh.order_id = '" . (int)$order_id . "' AND courier = 1 ORDER BY oh.date_added ASC");					
+			return $query->rows;			
 		}
 		
 		public function getOrderHistories($order_id, $start = 0, $limit = 30) {

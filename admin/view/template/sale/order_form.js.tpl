@@ -849,7 +849,15 @@
 					} else {
 					$('#span_sms_error').remove();
 				}
-				$('textarea[name=\'history_sms_text\']').val(json.message);
+
+				if (json.message){
+					$('textarea[name=\'history_sms_text\']').val(json.message);
+					$('input#checkbox_notify').attr('checked', 'checked');
+				} else {
+					$('textarea[name=\'history_sms_text\']').val('');
+					$('input#checkbox_notify').removeAttr('checked');
+				}
+				
 				countSMSLength();
 			},
 			error : function(json){

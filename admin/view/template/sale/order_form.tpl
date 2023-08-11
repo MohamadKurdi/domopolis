@@ -339,34 +339,42 @@
 																			url: "index.php?route=sale/order/getCityByIpAddrAjax&ip=<?php echo $ip; ?>&token=<?php echo $token; ?>",
 																			type: 'GET',
 																			dataType: 'json',
-																			success: function(json){
+																			success: function(json){																				
 																				var html = '';
-																				html += 'Страна: ' + json.country + '<br />';
-																				html += 'Регион: ' + json.regionName + '<br />';
-																				html += 'Город: ' + json.city + '<br />';
-																				html += 'Провайдер: ' + json.org + '<br />';
-																				html += 'Индекс: ' + json.zip + '<br />';
-																				html += 'Таймзона: ' + json.timezone + '<br />';
-																				
-																				$('#geoip-results').html(html);
-																				$('#geoip-flag').attr('src','view/image/flags/'+ json.countryCode.toLowerCase() +'.png').show();
-																				
-																				if (json.countryCode){
-																					let selectedDCode = $('select[name=\'shipping_country_id\'] > option:selected').attr('data-iso');
-																					let selectedPCode = $('select[name=\'payment_country_id\'] > option:selected').attr('data-iso');
-																					
-																					if (json.countryCode != selectedDCode){
-																						
-																						$('select[name=\'shipping_country_id\']').parent('td').parent('tr').after("<tr><td></td><td style='background-color:#cf4a61; padding:5px; color:#fff;' colspan='2'>Выбранная страна не совпадает с локацией клиента (" + json.country + ")</td></tr>");
-																						$('select[name=\'shipping_country_id\']').before("<i class='fa fa-question-circle' style='font-size:24px; color:#cf4a61'></i> ");
-																						
-																					}
-																					
-																					if (json.countryCode != selectedPCode){
-																						
-																						$('select[name=\'payment_country_id\']').parent('td').parent('tr').after("<tr><td></td><td style='background-color:#cf4a61; padding:5px; color:#fff;' colspan='2'>Выбранная страна не совпадает с локацией клиента (" + json.country + ")</td></tr>");
-																						$('select[name=\'payment_country_id\']').before("<i class='fa fa-question-circle' style='font-size:24px; color:#cf4a61'></i> ");
-																						
+
+																				if (json){
+																					if (json.error){
+																						html += json.error;
+																						$('#geoip-results').html(html);																						
+																					} else {
+																						html += 'Страна: ' 		+ json.country 		+ '<br />';
+																						html += 'Регион: ' 		+ json.regionName 	+ '<br />';
+																						html += 'Город: ' 		+ json.city 		+ '<br />';
+																						html += 'Провайдер: ' 	+ json.org 			+ '<br />';
+																						html += 'Индекс: ' 		+ json.zip 			+ '<br />';
+																						html += 'Таймзона: ' 	+ json.timezone 	+ '<br />';
+
+																						$('#geoip-results').html(html);
+																						$('#geoip-flag').attr('src','view/image/flags/'+ json.countryCode.toLowerCase() +'.png').show();
+
+																						if (json.countryCode){
+																							let selectedDCode = $('select[name=\'shipping_country_id\'] > option:selected').attr('data-iso');
+																							let selectedPCode = $('select[name=\'payment_country_id\'] > option:selected').attr('data-iso');
+
+																							if (json.countryCode != selectedDCode){
+
+																								$('select[name=\'shipping_country_id\']').parent('td').parent('tr').after("<tr><td></td><td style='background-color:#cf4a61; padding:5px; color:#fff;' colspan='2'>Выбранная страна не совпадает с локацией клиента (" + json.country + ")</td></tr>");
+																								$('select[name=\'shipping_country_id\']').before("<i class='fa fa-question-circle' style='font-size:24px; color:#cf4a61'></i> ");
+
+																							}
+
+																							if (json.countryCode != selectedPCode){
+
+																								$('select[name=\'payment_country_id\']').parent('td').parent('tr').after("<tr><td></td><td style='background-color:#cf4a61; padding:5px; color:#fff;' colspan='2'>Выбранная страна не совпадает с локацией клиента (" + json.country + ")</td></tr>");
+																								$('select[name=\'payment_country_id\']').before("<i class='fa fa-question-circle' style='font-size:24px; color:#cf4a61'></i> ");
+
+																							}
+																						}
 																					}
 																				}
 																			}
@@ -2781,18 +2789,14 @@
 									<?php } ?>
 								</tr>
 								<tr>		
-									<td style="width:130px"><b>SMS</b><br /><span onclick="$('textarea[name=\'history_sms_text\']').val('');" style="cursor:pointer;border-bottom:1px dashed black;" >очистить</span><br />
-										<? if ($shipping_country_id == 176) { ?>
-											<span onclick="$('textarea[name=\'history_sms_text\']').val('Заказ # <? echo $order_id; ?> выполнен. Спасибо за покупку! Ваш <? echo $this->config->get('config_owner'); ?>');" style="cursor:pointer;border-bottom:1px dashed black;" ><? echo $this->config->get('config_owner'); ?></span>
-										<? } elseif ($shipping_country_id == 220) { ?>
-											<span onclick="$('textarea[name=\'history_sms_text\']').val('Заказ # <? echo $order_id; ?> выполнен. Спасибо за покупку! Ваш <? echo $this->config->get('config_owner'); ?>');" style="cursor:pointer;border-bottom:1px dashed black;" ><? echo $this->config->get('config_owner'); ?></span>
-										<? } elseif ($shipping_country_id == 20) { ?>
-											<span onclick="$('textarea[name=\'history_sms_text\']').val('Заказ # <? echo $order_id; ?> выполнен. Спасибо за покупку! Ваш <? echo $this->config->get('config_owner'); ?>');" style="cursor:pointer;border-bottom:1px dashed black;" ><? echo $this->config->get('config_owner'); ?></span>
-										<? } ?>
-										
+									<td style="width:130px"><b>SMS</b>
+										<br /><span onclick="$('textarea[name=\'history_sms_text\']').val('');" style="cursor:pointer;border-bottom:1px dashed black;" >очистить</span><br />
+									
 									</td>
-									<td colspan="3"><textarea id="history_sms_text" name="history_sms_text" cols="40" rows="2" style="width: 99%"></textarea><br />
+									<td colspan="3">
+										<textarea id="history_sms_text" name="history_sms_text" cols="40" rows="2" style="width: 99%"></textarea><br />
 										<span class="help" style="font-size:16px; background-color:#cf4a61; padding:5px; color:#FFF;" >Количество символов: <span id="history_sms_text_count"></span>. <span id="history_sms_text_count_alert"></span></span>
+										
 										<span class="help"><i class="fa fa-info-circle"></i> SMS не будет отправлено в случае, если НЕ стоит галочка "Уведомлять" или в поле ввода пусто.</span>
 									</td>
 									<script>
@@ -3675,29 +3679,49 @@
 																				</td>
 																			</tr>
 																			<th colspan="2">Отправка, ТТН, SMS</th>
-																			<tr><td colspan="2">
-																				<div id="ttn_history"></div>
-																			</td></tr>
+																			<tr>	
+																				<td colspan="2">
+																					<div id="ttn_history"></div>
+																				</td>
+																			</tr>
 																			<tr>
 																				<td>Дата отправки:</td>
-																				<td><input class="date" name="date_sent" value="<? echo date('Y-m-d'); ?>" />&nbsp;&nbsp;&nbsp;
-																					<input type="checkbox" name="send_delivery_sms" value="1"></input><b>Отправить SMS</b></td>
-																				</tr>
-																				<tr>
-																					<td>Накладная ТТН:</td>
-																					<td><input type="text" name="ttn" value="" style="width:400px;" /></td>
-																				</tr>
-																				<tr>
-																				</tr>
-																				<tr>
-																					<td colspan='2'>
-																						<textarea name="delivery_sms_text" rows='3' style="width:100%">
-																						</textarea>
-																					</td>
-																				</tr>
+																				<td>
+																					<input class="date" name="date_sent" value="<? echo date('Y-m-d'); ?>" />&nbsp;&nbsp;&nbsp;
+																					<?php if ($this->config->get('config_sms_status_use_only_settings')) { ?>
+																						<?php if ($this->config->get('config_sms_ttn_sent_enabled')) { ?>
+																							<input type="checkbox" name="send_delivery_sms" value="1" checked="checked"></input><b>Отправить SMS</b>
+																						<?php } else { ?>
+																							<input type="hidden" name="send_delivery_sms" value="0"></input><b>Отправить SMS</b>
+																						<?php } ?>
+																					<?php } else { ?>
+																						<input type="checkbox" name="send_delivery_sms" value="1"></input><b>Отправить SMS</b>
+																					<?php } ?>
+																				</td>
+																			</tr>
+																			<tr>
+																				<td>Накладная ТТН:</td>
+																				<td><input type="text" name="ttn" value="" style="width:400px;" /></td>
+																			</tr>
+																			<tr>
+																				<td colspan='2'>
+																					<?php if ($this->config->get('config_sms_status_use_only_settings')) { ?>																			
+																						<?php if ($this->config->get('config_sms_ttn_sent_enabled')) { ?>
+																							<textarea name="delivery_sms_text" rows='3' style="width:100%"></textarea>
+																							<br /><span class="help" style="background-color:#FFF; padding:10px; color:#cf4a61;">
+																								<i class="fa fa-info-circle"></i> Установлен приоритет общих настроек фрейморка уведомлений! Сообщение формируется и отправляется автоматически, изменения в форме применены при отправке не будут!
+																							</span>
+																						<?php } ?>
+																					<?php } else { ?>
+																						<textarea name="delivery_sms_text" rows='3' style="width:100%"></textarea>
+																					<?php } ?>
+																				</td>
+																			</tr>
+																			<tr>
 																				<td colspan='2' align="right">
 																					<a id="delivery_sms_send_button" onclick="addTTNAjax()" class="button save_button">Добавить ТТН</a>
 																				</td>
+																			</tr>
 																			</table>
 																		</div>
 																	<?php if  ($this->config->get('config_order_bottom_text_enable')) { ?>	
