@@ -32,6 +32,18 @@ class SMSClub {
 		return true;
 	}
 
+	public function checkViber($answer){
+		$answer = json_encode($answer);
+		$answer = json_decode($answer, true);
+
+		if (!empty($answer['errorRequest'])){
+			echoLine('[SMSClub::checkViber] Error! ' . serialize($answer['errorRequest']['errors']), 'e');
+			return false;
+		}
+
+		return true;
+	}
+
 
 	public function getBalance(){
 		try {
@@ -105,6 +117,11 @@ class SMSClub {
 			return false;
 		} else {
 			$result = json_decode($result, true);
+		}
+
+		if (!$this->checkViber($result)){
+			echoLine('[SMSClub::sendViber] Check got errors!', 'e');
+			return false;	
 		}
 
 		if (!empty($result['successfulRequest']) && !empty($result['successfulRequest']['requestData']) && !empty($result['successfulRequest']['requestData']['messages'])){
