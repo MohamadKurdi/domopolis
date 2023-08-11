@@ -3974,20 +3974,6 @@
 
 									<td style="width:20%">
 										<div>
-											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Редактировать СМС в админке</span></p>
-											<select name="config_sms_editing_in_admin">
-												<?php if ($config_sms_editing_in_admin) { ?>
-													<option value="1" selected="selected">Да</option>
-													<option value="0">Нет</option>
-												<?php } else { ?>													
-													<option value="1">Да</option>
-													<option value="0"  selected="selected">Нет</option>
-												<? } ?>
-											</select>
-											<span class="help">Если отключить, то смски в заказе нельзя редактировать, будут использоваться только системные настройки</span>
-										</div>
-
-										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Приоритет общей настройки смены статусов</span></p>
 											<select name="config_sms_status_use_only_settings">
 												<?php if ($config_sms_status_use_only_settings) { ?>
@@ -4117,6 +4103,8 @@
 											<b>{FIRSTNAME}</b> - имя клиента<br />
 											<b>{LASTNAME}</b> - фамилия клиента<br />
 											<b>{TTN}</b> - ТТН службы доставки<br />
+											<b>{PAYMENT_INFO}</b> - данные платежа<br />
+											<b>{PARTLY}</b> - инфо о частичной оплате<br />
 											<b>{DELIVERY_SERVICE}</b> - служба доставки<br />
 											<b>{POINTS_AMOUNT}</b> - количество бонусов на счету<br />
 											<b>{POINTS_DAYS_LEFT}</b> - осталось дней до сгорания бонусов
