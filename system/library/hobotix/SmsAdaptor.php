@@ -160,6 +160,64 @@ class SmsAdaptor {
 
 
 	//SMS+Viber SERVICE FUNCTIONS
+	public function sendRewardReminder($customer_info, $data){
+		if ($this->config->get('config_viber_rewardpoints_reminder_enabled')){
+			$template = [
+				'{SNAME}'			=> $this->config->get('config_name'), 
+				'{DATE}'			=> date('d.m.Y'), 
+				'{TIME}'			=> date('H:i:s'), 
+				'{PHONE}'			=> $customer_info['telephone'], 
+				'{FIRSTNAME}'		=> $customer_info['firstname'], 
+				'{LASTNAME}' 		=> $customer_info['lastname'],
+				'{POINTS_AMOUNT}'		=> $data['points_amount'],
+				'{POINTS_DAYS_LEFT}' 	=> $data['points_days_left'],
+			];
+
+			$viber = [
+				'viber' 		=> true,
+				'to' 			=> $customer_info['telephone'],
+				'message' 		=> reTemplate($template, $this->config->get('config_viber_rewardpoints_reminder')),
+				'messageSms' 	=> reTemplate($template, $this->config->get('rewardpoints_reminder_sms_text')),
+
+				'button_txt' 	=> $this->config->get('config_viber_rewardpoints_reminder_button_text'),
+				'button_url' 	=> $this->config->get('config_viber_rewardpoints_reminder_button_url'), 				
+			];
+
+			if (!empty($this->config->get('config_viber_rewardpoints_reminder_image')) && file_exists(DIR_IMAGE . $this->config->get('config_viber_rewardpoints_reminder_image'))){
+				$viber['picture_url'] = HTTPS_CATALOG . DIR_IMAGE_NAME . $this->config->get('config_viber_rewardpoints_reminder_image');
+			}
+
+			$viberID = $this->registry->get('smsQueue')->queue($viber);
+			$this->addOrderSmsHistory(false, ['sms' => $viber['message']], 'Queued', $viberID, (int)$customer_info['customer_id']);
+
+			return $viberID;
+		}
+
+		if ($this->config->get('rewardpoints_reminder_enable')){
+			$template = [
+				'{SNAME}'			=> $this->config->get('config_name'), 
+				'{DATE}'			=> date('d.m.Y'), 
+				'{TIME}'			=> date('H:i:s'), 
+				'{PHONE}'			=> $customer_info['telephone'], 
+				'{FIRSTNAME}'		=> $customer_info['firstname'], 
+				'{LASTNAME}' 		=> $customer_info['lastname'],
+				'{POINTS_AMOUNT}'		=> $data['points_amount'],
+				'{POINTS_DAYS_LEFT}' 	=> $data['points_days_left'],
+			];
+
+
+			$sms = [
+				'to' 		=> $customer_info['telephone'],
+				'message' 	=> reTemplate($template, $this->config->get('rewardpoints_reminder_sms_text'))
+			];
+
+			$smsID = $this->registry->get('smsQueue')->queue($sms);
+			$this->addOrderSmsHistory(false, ['sms' => $sms['message']], 'Queued', $smsID, (int)$customer_info['customer_id']);
+
+			return $smsID;
+		}
+	}
+
 	public function sendInWarehouse($order_info, $data){
 		if ($this->config->get('config_viber_tracker_leave_main_warehouse_enabled')){
 			$template = [
@@ -387,8 +445,9 @@ class SmsAdaptor {
 		}
 	}
 
-	public function addOrderSmsHistory($order_id, $data, $sms_status, $sms_id, $customer_id = 0) { 		
-		$this->db->ncquery("INSERT INTO `order_sms_history` SET 
+	public function addOrderSmsHistory($order_id, $data, $sms_status, $sms_id, $customer_id = 0) {
+		if ($order_id){
+			$this->db->ncquery("INSERT INTO `order_sms_history` SET 
 			order_id 			= '" . (int)$order_id . "', 
 			customer_id 		= '" . (int)$customer_id . "',
 			order_status_id		= '" . (int)$data['order_status_id'] . "', 
@@ -396,8 +455,8 @@ class SmsAdaptor {
 			date_added 			= NOW(), 
 			sms_status 			= '" . $this->db->escape(strip_tags($sms_status)) . "', 
 			sms_id 				= '".$this->db->escape($sms_id)."'");
-
-
+		} 		
+		
 		if ($customer_id){
 			$this->db->ncquery("INSERT INTO `customer_history` SET
 				customer_id 	= '" . (int)$customer_id . "',

@@ -9,10 +9,9 @@
 				exit;
 			}
 
-
-			$sql = "SELECT DISTINCT(c.customer_id), c.firstname, c.telephone, ";
-			$sql .= " (SELECT SUM(points) as total FROM customer_reward crt WHERE customer_id = c.customer_id) AS total, ";
-			$sql .= " (SELECT " . (int)$this->config->get('config_reward_lifetime') . " - DATEDIFF(NOW(), MAX(date_added)) as days_left FROM customer_reward crdl WHERE points > 0  AND customer_id = c.customer_id) AS days_left ";
+			$sql = "SELECT DISTINCT(c.customer_id), c.firstname, c.lastname, c.telephone, ";
+			$sql .= " (SELECT SUM(points) as total FROM customer_reward crt WHERE customer_id = c.customer_id) AS points_amount, ";
+			$sql .= " (SELECT " . (int)$this->config->get('config_reward_lifetime') . " - DATEDIFF(NOW(), MAX(date_added)) as points_days_left FROM customer_reward crdl WHERE points > 0  AND customer_id = c.customer_id) AS points_days_left ";
 			$sql .= " FROM customer_reward cr LEFT JOIN customer c ON (cr.customer_id = c.customer_id) "; 
 			$sql .= " WHERE ";				
 			$sql .= " customer_reward_id IN ";
@@ -26,27 +25,10 @@
 			if ($query->num_rows){
 				echoLine('[ControllerKPReward::smscron] Have total ' . $query->num_rows . ' customers', 'i');
 
-				foreach ($query->rows as $row){
-					$message = str_replace(['{FIRSTNAME}', '{POINTS_AMOUNT}', '{POINTS_DAYS_LEFT}'], [$row['firstname'], $row['total'], $row['days_left']], $this->config->get('rewardpoints_reminder_sms_text'));
-					echoLine('[ControllerKPReward::smscron] ' . $message . ' to ' . $row['customer_id'] . '/' . $row['telephone'], 's');
-
-					$options = [
-						'to'       => $row['telephone'],
-						'from'     => $this->config->get('config_sms_sign'),
-						'message'  => $message
-					];
-
-					$sms_id = $this->smsQueue->queue($options);
-
-					$this->db->query("INSERT INTO `customer_history` SET
-							customer_id = '" . (int)$row['customer_id'] . "',
-							order_id = '0', 
-							comment = '" . $this->db->escape($message) . "',
-							sms_id = '" . $this->db->escape($sms_id) . "',
-							date_added = NOW()"
-					);
+				foreach ($query->rows as $row){				
+					echoLine('[ControllerKPReward::smscron] Sending reminder to ' . $row['customer_id'] . ' with phone ' . $row['telephone'], 's');
+					$this->smsAdaptor->sendRewardReminder($row, ['points_amount' => $row['points_amount'], 'points_days_left' => $row['points_days_left']]);
 				}
-
 			} else {
 				echoLine('[ControllerKPReward::smscron] Have no customers', 'e');
 			}		
