@@ -5594,7 +5594,7 @@
 							
 			$order_info = $this->model_sale_order->getOrder($this->request->post['order_id']);
 									
-			if (($this->request->post['order_status_id'] == $this->config->get('config_confirmed_nopaid_order_status_id')) && $order_info['pay_type'] == 'Банковской картой' && !$order['card_id']){
+			if (($this->request->post['order_status_id'] == $this->config->get('config_confirmed_nopaid_order_status_id')) && $order_info['pay_type'] == 'Банковской картой' && !$order_info['card_id']){
 				$error['error'][] = 'Выбрана оплата банковской картой, однако не выбрана карта для оплаты';
 			}
 			
