@@ -1679,6 +1679,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_ignore_manual_marker_productnews'] = $this->config->get('config_ignore_manual_marker_productnews');
         }
 
+         if (isset($this->request->post['config_productnews_exclude_added_from_amazon'])) {
+            $this->data['config_productnews_exclude_added_from_amazon'] = $this->request->post['config_productnews_exclude_added_from_amazon'];
+        } else {
+            $this->data['config_productnews_exclude_added_from_amazon'] = $this->config->get('config_productnews_exclude_added_from_amazon');
+        }
+
         if (isset($this->request->post['config_new_days'])) {
             $this->data['config_new_days'] = $this->request->post['config_new_days'];
         } else {

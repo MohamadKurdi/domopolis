@@ -49,7 +49,8 @@
 				<a href="#tab-rainforest"><span style="color:#7F00FF;"><i class="fa fa-amazon"></i> Rainforest API</span></a>
 				<a href="#tab-openai">🤖 <span style="color:#51A62D;">OpenAI</span></a>
 				<a href="#tab-apis"><span style="color:#7F00FF;"><i class="fa fa-cogs"></i> Разные API</span></a>				
-			<div class="clr"></div></div>
+			<div class="clr"></div>
+			</div>
 			<div class="th_style"></div>
 			<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
 				<input type="hidden" name="store_id" value="0"/>
@@ -932,6 +933,21 @@
 									</select>
 									<br />
 									<span class="help">Если включено, то при отборе новинок игнорируется маркер new = 1, который ставится вручную</span>
+								</td>
+
+								<td style="width:15%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Новинки без Amazon</span></p>
+									<select name="config_productnews_exclude_added_from_amazon">
+										<?php if ($config_productnews_exclude_added_from_amazon) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+									<br />
+									<span class="help">Если включено, то при отборе новинок игнорируются добавленные с Amazon товары</span>
 								</td>
 
 								<td style="width:15%">

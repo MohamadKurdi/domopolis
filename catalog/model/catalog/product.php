@@ -1234,6 +1234,11 @@
 				if (!$this->config->get('config_ignore_manual_marker_productnews')){
 					$sql .= " AND p.new = 1 ";
 				}
+
+				if ($this->config->get('config_productnews_exclude_added_from_amazon')){
+					$sql .= " AND p.added_from_amazon = 0 ";
+				}
+
 				$sql .= " AND (DATE(p.new_date_to) > '". date('Y-m-d') . "' OR DATE(p.date_added) > '" . date('Y-m-d', strtotime('-' . $this->config->get('config_new_days') . ' day')) . "')";
 			}
 			
@@ -1241,6 +1246,11 @@
 				if (!$this->config->get('config_ignore_manual_marker_productnews')){
 					$sql .= " AND p.new = 1 ";
 				}
+
+				if ($this->config->get('config_productnews_exclude_added_from_amazon')){
+					$sql .= " AND p.added_from_amazon = 0 ";
+				}
+
 				$sql .= " AND p.date_added > '" . date('Y-m-d H:i:s', strtotime('-' . $this->config->get('config_newlong_days') . ' day')) . "'";
 			}
 			
@@ -2741,6 +2751,11 @@
 				if (!$this->config->get('config_ignore_manual_marker_productnews')){
 					$sql .= " AND p.new = 1 ";
 				}
+
+				if ($this->config->get('config_productnews_exclude_added_from_amazon')){
+					$sql .= " AND p.added_from_amazon = 0 ";
+				}
+
 				$sql .= " AND (DATE(p.new_date_to) > '". date('Y-m-d') . "' OR DATE(p.date_added) > '" . date('Y-m-d', strtotime('-' . $this->config->get('config_new_days') . ' day')) . "')";
 			}
 			
@@ -2748,6 +2763,11 @@
 				if (!$this->config->get('config_ignore_manual_marker_productnews')){
 					$sql .= " AND p.new = 1 ";
 				}
+
+				if ($this->config->get('config_productnews_exclude_added_from_amazon')){
+					$sql .= " AND p.added_from_amazon = 0 ";
+				}
+
 				$sql .= " AND p.date_added > '" . date('Y-m-d H:i:s', strtotime('-' . $this->config->get('config_newlong_days') . ' day')) . "'";
 			}
 			
