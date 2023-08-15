@@ -124,6 +124,17 @@
 			$this->db->query("UPDATE product SET xrating = (SELECT AVG(rating) as xrating FROM review WHERE status = 1 AND product_id = product.product_id GROUP BY product_id)");
 			$this->db->query("UPDATE product SET xreviews = (SELECT COUNT(*) as trating FROM review WHERE status = 1 AND product_id = product.product_id GROUP BY product_id)");
 
+			echoLine('[optimizeProductsDB] Добавление несуществующих языковых записей review', 'i');
+			$query = $this->db->query("SELECT review_id FROM review WHERE review_id NOT IN (SELECT review_id FROM review_description)");
+			$this->load->model('localisation/language');
+			$languages = $this->model_localisation_language->getLanguages();
+			
+			foreach ($query->rows as $row){				
+				foreach ($languages as $language){										
+					$this->db->query("INSERT IGNORE INTO review_description SET review_id = '" . (int)$row['review_id'] . "', language_id = '" . $language['language_id'] . "', text = '', answer = '', good = '', bads = ''");			
+				}
+			}
+
 			echoLine('[optimizeProductsDB] Нормализация наличия видео у товаров', 'i');
 			$this->db->query("UPDATE product SET xhasvideo = 1 WHERE product_id IN (SELECT DISTINCT product_id FROM product_video)");
 

@@ -146,22 +146,19 @@ class ModelCatalogReview extends Model
 			p.image, 
 			r.date_added 
 			FROM review r 
-			LEFT JOIN review_description rd ON (r.review_id = rd.review_id) 
+			LEFT JOIN review_description rd ON (r.review_id = rd.review_id AND rd.language_id = '" . (int)$this->config->get('config_language_id') . "') 
 			LEFT JOIN product p ON (r.product_id = p.product_id) 
 			LEFT JOIN product_description pd ON (p.product_id = pd.product_id) 
 			WHERE p.product_id = '" . (int)$product_id . "' 
 			AND p.date_available <= NOW() 
 			AND p.status = '1' 
 			AND r.status = '1'
-			AND r.rating >= '4' 
-			AND rd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND r.rating >= '4' 			
 			AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
 			ORDER BY r.date_added DESC LIMIT " . $limit;
-
             
         $query = $this->db->query($sql);
-            
-            
+                        
         foreach ($query->rows as &$row) {
             foreach ($this->fields as $field) {
                 if (!empty(trim($row[$field . '_overload']))) {
@@ -206,7 +203,7 @@ class ModelCatalogReview extends Model
 			r.date_added 
 			FROM review r 
 			LEFT JOIN product p ON (r.product_id = p.product_id)
-			LEFT JOIN review_description rd ON (r.review_id = rd.review_id) 
+			LEFT JOIN review_description rd ON (r.review_id = rd.review_id AND rd.language_id = '" . (int)$this->config->get('config_language_id') . "') 
 			LEFT JOIN product_description pd ON (p.product_id = pd.product_id) 
 			WHERE p.product_id = '" . (int)$product_id . "' AND p.date_available <= NOW() 
 			AND p.status = '1' 
@@ -216,9 +213,8 @@ class ModelCatalogReview extends Model
             $sql .= " AND LENGTH(r.text) >= " . (int)$filter_length;
         }
 
-        $sql .= " AND rd.language_id = '" . (int)$this->config->get('config_language_id') . "'
-			AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' 
-			ORDER BY r.date_added DESC LIMIT " . (int)$start . "," . (int)$limit;
+        $sql .= " AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+		$sql .= " ORDER BY r.date_added DESC LIMIT " . (int)$start . "," . (int)$limit;
             
         $query = $this->db->query($sql);
             

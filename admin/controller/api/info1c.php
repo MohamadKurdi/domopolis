@@ -792,6 +792,8 @@ class ControllerApiInfo1C extends Controller
                 $log_odinass->write('[updateStockXML] Всего ' . count($unique_products) . ' товаров');                    
                 $log_odinass->write('[updateStockXML] Всего ' . $total_count . ' единиц товаров');
 
+
+                $bad_products = [];
                 foreach ($unique_products as $key => &$value) {
                     $value['product_id'] = $key;
 
@@ -810,11 +812,13 @@ class ControllerApiInfo1C extends Controller
 
                             if ($product) {
                                 $log_odinass->write('Нашли по артикулу: ' . $value['product_vendor'] . ', код товара: ' . $product['product_id'] . '');
-                                echoLine('[updateStockXML] Нашли по артикулу: ' . $value['product_vendor'] . ', код товара: ' . $product['product_id']);
+                                echoLine('[updateStockXML] Нашли по артикулу: ' . $value['product_vendor'] . ', код товара: ' . $product['product_id'], 's');
                                 $value['product_id'] = $product['product_id'];
                             } else {
                                 $log_odinass->write('Товара '.(int)($value['product_id']).' не существует, артикула: ' . $value['product_vendor'] . ' также не существует');
-                                echoLine('[updateStockXML] Товара '.(int)($value['product_id']).' не существует, артикула: ' . $value['product_vendor'] . ' также не существует');
+                                echoLine('[updateStockXML] Товара '.(int)($value['product_id']).' не существует, артикула: ' . $value['product_vendor'] . ' также не существует', 'e');
+
+                                $bad_products[$value['product_id']] = $value['product_vendor'];
                             }
                         }
                     }
@@ -972,6 +976,9 @@ class ControllerApiInfo1C extends Controller
                             //$this->model_kp_product->copyProductToStock($product_in_stock_id);
                     }
                 }
+
+                $bad_log = new Log('invalid_products_from_1c.txt');
+                echoLine('BAD PRODUCTS: ' . json_encode($bad_products), 'e');
 
                 foreach ($stocks as $k => $v) {
                     $this->db->query("INSERT IGNORE INTO stocks_dynamics SET date_added = DATE(NOW()), warehouse_identifier = '" . $this->db->escape($k) . "', p_count = '" . (int)$total_p_on_stocks[$k] . "', q_count = '" . (int)$total_q_on_stocks[$k] . "' ON DUPLICATE KEY UPDATE p_count = '" . (int)$total_p_on_stocks[$k] . "', q_count = '" . (int)$total_q_on_stocks[$k] . "'");
