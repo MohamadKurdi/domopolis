@@ -813,6 +813,25 @@
 			}
 		});
 	}
+
+	function sendPaymentSMSLinkAjax(payment_link){
+		$.ajax({
+			url	: 'index.php?route=sale/order/sendPaymentSMSLinkAjax&token=<?php echo $token; ?>',
+			type: 'POST',
+			data : {
+				order_id : <? echo $order_id ?>,
+				payment_link: payment_link
+			},
+			dataType : 'html',
+			success : function(html){
+				swal({title: "Ссылка " + payment_link + " отправлена!", type: "success"});
+				$('#order_sms_history').load('index.php?route=sale/order/smshistory&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>');
+			},
+			error : function(text){
+				console.log(text);
+			}
+		});
+	}
 	
 	function countSMSLength(){
 		var length = $('#history_sms_text').val().length;

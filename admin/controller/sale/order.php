@@ -60,8 +60,7 @@
 			return false;
 		}
 		
-		private function percentCurrency($order_currency_info, $price){
-			
+		private function percentCurrency($order_currency_info, $price){			
 			$_price = $price;
 			
 			if ($order_currency_info['plus_percent'][0] == '+'){
@@ -76,9 +75,7 @@
 				$_price = $price + ($price/100*(int)$order_currency_info['plus_percent']);				
 				} else {
 				$_price = $price - ($product['price']/100*(int)$order_currency_info['plus_percent']);	
-			}
-			
-			
+			}						
 			return $_price;			
 		}				
 		
@@ -127,7 +124,7 @@
 		}
 		
 		public function getPickupName($shipping_code){
-			if (!empty($this->registry->get('shippingmethods')[$shipping_code])){
+			if (!empty($this->registry->get('shippingmethods')[$shipping_code]) && !empty($this->registry->get('shippingmethods')[$shipping_code]['name'])){
 				return $this->registry->get('shippingmethods')[$shipping_code]['name'];
 			}
 
@@ -135,7 +132,7 @@
 		}
 		
 		public function getPickupName2($shipping_code){
-			if (!empty($this->registry->get('shippingmethods')[$shipping_code])){
+			if (!empty($this->registry->get('shippingmethods')[$shipping_code]) && !empty($this->registry->get('shippingmethods')[$shipping_code]['address'])){
 				return $this->registry->get('shippingmethods')[$shipping_code]['address'];
 			}
 
@@ -143,7 +140,7 @@
 		}
 		
 		public function getPickupPhone($shipping_code){
-			if (!empty($this->registry->get('shippingmethods')[$shipping_code])){
+			if (!empty($this->registry->get('shippingmethods')[$shipping_code]) && !empty($this->registry->get('shippingmethods')[$shipping_code]['phone'])){				
 				return $this->registry->get('shippingmethods')[$shipping_code]['phone'];
 			}
 
@@ -170,8 +167,7 @@
 		public function getOrderTotalTotal($order_id){
 			$this->load->model('sale/order');
 			$totals = $this->model_sale_order->getOrderTotals($order_id);
-			
-			
+						
 			foreach ($totals as $total){
 				if ($total['code'] == 'total'){
 					return $total['value_national'];
@@ -186,7 +182,6 @@
 			$this->load->model('sale/order');
 			$totals = $this->model_sale_order->getOrderTotals($order_id);
 			
-			
 			foreach ($totals as $total){
 				if ($total['code'] == 'sub_total'){
 					return $total['value_national'];
@@ -198,10 +193,8 @@
 		}
 				
 		public function index() {
-			$this->language->load('sale/order');
-			
-			$this->document->setTitle($this->language->get('heading_title'));
-			
+			$this->language->load('sale/order');			
+			$this->document->setTitle($this->language->get('heading_title'));			
 			$this->load->model('sale/order');
 			
 			$this->getList();
@@ -2971,10 +2964,8 @@
 					if ($_transactions_sum != $_order_to_prepay){
 						$this->data['allowed_to_make_cheque'] = false;
 						$this->data['disallow_cheque_comment'] .= ' Сумма транзакций частичной предоплаты не совпадает с суммой предоплаты в итогах!';
-					}
-					
-				}
-				
+					}					
+				}				
 			}
 			
 			if ($this->data['closed']){
@@ -3729,18 +3720,13 @@
 			$this->data['current_payment_time'] = false;
 			if ($this->data['shipping_city'] || $this->data['payment_city']){
 				if ($this->data['shipping_city'] == $this->data['payment_city']) {
-					
 					$this->data['current_shipping_time'] = $this->data['current_payment_time'] = $this->model_kp_geoip->getCurrentTimeInCity($this->data['shipping_city'], $this->model_localisation_country->getCountryISO2($this->data['shipping_country_id']));				
-					} else { 
+				} else { 
 					if ($this->data['shipping_city']){
-						
-						
 						$this->data['current_shipping_time'] = $this->model_kp_geoip->getCurrentTimeInCity($this->data['shipping_city'], $this->model_localisation_country->getCountryISO2($this->data['shipping_country_id']));	
 					}
 					
 					if ($this->data['payment_city']){
-						
-						
 						$this->data['current_payment_time'] = $this->model_kp_geoip->getCurrentTimeInCity($this->data['payment_city'], $this->model_localisation_country->getCountryISO2($this->data['payment_country_id']));	
 					}
 				}
@@ -3831,6 +3817,18 @@
 			}
 			
 			$this->data['bottom_text_template_try'] = $bottom_text_template_try;
+
+
+			$this->data['payment_links'] = [];
+			foreach (['paykeeper', 'pp_express', 'liqpay', 'wayforpay', 'mono', 'concardis'] as $equiring_method){
+				if ($this->config->get($equiring_method . '_status') || $this->config->get($equiring_method . '_status_fake')){
+					$this->data['payment_links'][$equiring_method] = [
+						'qr_code' => $this->model_sale_order->generatePaymentQR($order_id, $equiring_method),
+						'qr_link' => $this->model_sale_order->generatePaymentQR($order_id, $equiring_method, true),
+						'qr_sms'  => $this->smsAdaptor->getPaymentLinkText($order_info, ['payment_link' => $this->model_sale_order->generatePaymentQR($order_id, $equiring_method, true), 'amount' => $this->getOrderTotalTotal($this->request->get['order_id'])])
+					];
+				}				
+			}
 			
 			if (isset($this->request->post['order_product'])) {
 				$order_products = $this->request->post['order_product'];
@@ -5497,6 +5495,15 @@
 			
 			$this->response->setOutput(json_encode($json));
 		}		
+
+		public function sendPaymentSMSLinkAjax(){
+			$this->load->model('sale/order');
+			$order_info = $this->model_sale_order->getOrder($this->request->post['order_id']);
+			
+			$response = $this->smsAdaptor->sendPaymentLink($order_info, ['amount' => $order_info['total_national'], 'payment_link' => $this->request->post['payment_link']]);
+
+			$this->response->setOutput($response);
+		}
 		
 		public function getDeliverySMSTextAjax(){
 			$this->load->model('sale/order');
@@ -5524,8 +5531,8 @@
 			$order_info = $this->model_sale_order->getOrder($order_id);	
 			
 			$json = array(
-			'id' => $order_info['manager_id'],
-			'name' => $this->model_user_user->getRealUserNameById($order_info['manager_id'])
+			'id' 	=> $order_info['manager_id'],
+			'name' 	=> $this->model_user_user->getRealUserNameById($order_info['manager_id'])
 			);
 			
 			echo json_encode($json);

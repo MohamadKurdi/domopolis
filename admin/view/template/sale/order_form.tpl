@@ -3152,9 +3152,13 @@
 																						<div style="background-color:#4ea24e; padding:5px; text-align:center; color:#FFF">KZT, BYN, RUB</div>
 																						
 																						<br />
-																						<img src="<? echo $this->model_sale_order->generatePaymentQR($order_id, 'paykeeper'); ?>" />
+																						<img src="<? echo $payment_links['paykeeper']['qr_code']; ?>" />
 																						<br />
-																						<a style="font-size:12px" href="<? echo $this->model_sale_order->generatePaymentQR($order_id, 'paykeeper', true); ?>" ><? echo $this->model_sale_order->generatePaymentQR($order_id, 'paykeeper', true); ?></a>
+																						<a style="font-size:12px" href="<? echo $payment_links['paykeeper']['qr_link'] ?>" ><? echo $payment_links['paykeeper']['qr_link'] ?></a>
+
+																						<br />
+																							<a class="button" style="width:80%; margin-top:10px;" onclick='swal({ title: "Отправить ссылку клиенту?", text: "<?php echo $payment_links['paykeeper']['qr_sms'] ?>", type: "warning", showCancelButton: true,  confirmButtonColor: "#F96E64",  confirmButtonText: "Отправить", cancelButtonText: "Отмена",  closeOnConfirm: true }, function() { sendPaymentSMSLinkAjax("<?php echo $payment_links['paykeeper']['qr_link'] ?>") });'><i class="fa fa-telegram"></i> Отправить SMS</a>
+
 																						
 																					</td>
 																				<? } ?>
@@ -3168,15 +3172,17 @@
 																							<div style="background-color:#4ea24e; padding:5px; text-align:center; color:#FFF">RUB</div>
 																							
 																							<br />
-																							<img src="<? echo $this->model_sale_order->generatePaymentQR($order_id, 'pp_express'); ?>" />
+																							<img src="<? echo $payment_links['pp_express']['qr_code']; ?>" />
 																							<br />
-																							<a style="font-size:12px" href="<? echo $this->model_sale_order->generatePaymentQR($order_id, 'pp_express', true); ?>" ><? echo $this->model_sale_order->generatePaymentQR($order_id, 'pp_express', true); ?></a>
+																							<a style="font-size:12px" href="<? echo $payment_links['pp_express']['qr_link'] ?>" ><? echo $payment_links['pp_express']['qr_link'] ?></a>
 																							
+																							<br />
+																							<a class="button" style="width:80%; margin-top:10px;" onclick='swal({ title: "Отправить ссылку клиенту?", text: "<?php echo $payment_links['pp_express']['qr_sms'] ?>", type: "warning", showCancelButton: true,  confirmButtonColor: "#F96E64",  confirmButtonText: "Отправить", cancelButtonText: "Отмена",  closeOnConfirm: true }, function() { sendPaymentSMSLinkAjax("<?php echo $payment_links['pp_express']['qr_link'] ?>") });'><i class="fa fa-telegram"></i> Отправить SMS</a>
+
 																						</td>
 																					<? } ?>
 																				<?php } ?>
-																				<?php if ($currency_code == 'UAH') { ?>	
-																					
+																				<?php if ($currency_code == 'UAH') { ?>																						
 																					<?php if ($this->config->get('liqpay_status_fake')) { ?>
 																						<td style="padding-right:10px; text-align:center;">
 																							<img id="pay_equireLQP_img" src="<? echo HTTPS_CATALOG; ?>catalog/view/image/payment/lqp_logo.jpg" style="cursor:pointer" height="25px"  <? if (!$pay_equireLQP) { ?>class="eq_disabled"<? } ?> />
@@ -3185,9 +3191,14 @@
 																							<div style="background-color:#4ea24e; padding:5px; text-align:center; color:#FFF">UAH</div>
 																							
 																							<br />
-																							<img src="<? echo $this->model_sale_order->generatePaymentQR($order_id, 'liqpay'); ?>" />
+																							<img src="<? echo $payment_links['liqpay']['qr_code']; ?>" />
+																							
 																							<br />
-																							<a style="font-size:12px" href="<? echo $this->model_sale_order->generatePaymentQR($order_id, 'liqpay', true); ?>" ><? echo $this->model_sale_order->generatePaymentQR($order_id, 'liqpay', true); ?></a>
+																							<a style="font-size:12px" href="<? echo $payment_links['liqpay']['qr_link'] ?>" ><? echo $payment_links['liqpay']['qr_link'] ?></a>
+
+																							<br />
+																							<a class="button" style="width:80%; margin-top:10px;" onclick='swal({ title: "Отправить ссылку клиенту?", text: "<?php echo $payment_links['liqpay']['qr_sms'] ?>", type: "warning", showCancelButton: true,  confirmButtonColor: "#F96E64",  confirmButtonText: "Отправить", cancelButtonText: "Отмена",  closeOnConfirm: true }, function() { sendPaymentSMSLinkAjax("<?php echo $payment_links['liqpay']['qr_link'] ?>") });'><i class="fa fa-telegram"></i> Отправить SMS</a>
+
 																						</td>
 																					<?php } ?>
 																					
@@ -3199,9 +3210,12 @@
 																							<div style="background-color:#4ea24e; padding:5px; text-align:center; color:#FFF">UAH</div>
 																							
 																							<br />
-																							<img src="<? echo $this->model_sale_order->generatePaymentQR($order_id, 'wayforpay'); ?>" />
+																							<img src="<? echo $payment_links['wayforpay']['qr_code']; ?>" />
 																							<br />
-																							<a style="font-size:12px" href="<? echo $this->model_sale_order->generatePaymentQR($order_id, 'wayforpay', true); ?>" ><? echo $this->model_sale_order->generatePaymentQR($order_id, 'wayforpay', true); ?></a>
+																							<a style="font-size:12px" href="<? echo $payment_links['wayforpay']['qr_link'] ?>" ><? echo $payment_links['wayforpay']['qr_link'] ?></a>
+
+																							<br />
+																							<a class="button" style="width:80%; margin-top:10px;" onclick='swal({ title: "Отправить ссылку клиенту?", text: "<?php echo $payment_links['wayforpay']['qr_sms'] ?>", type: "warning", showCancelButton: true,  confirmButtonColor: "#F96E64",  confirmButtonText: "Отправить", cancelButtonText: "Отмена",  closeOnConfirm: true }, function() { sendPaymentSMSLinkAjax("<?php echo $payment_links['wayforpay']['qr_link'] ?>") });'><i class="fa fa-telegram"></i> Отправить SMS</a>
 																						</td>
 																					<?php } ?>
 
@@ -3211,9 +3225,12 @@
 																							<input type="hidden" class="onchangeedit_direct" id="pay_equireMono" name="pay_equireMono" value="<? if ($pay_equireMono) { ?>1<? } else { ?>0<? } ?>"  />		
 																							<div style="background-color:#4ea24e; padding:5px; text-align:center; color:#FFF">UAH</div>
 																							<br />
-																							<img src="<? echo $this->model_sale_order->generatePaymentQR($order_id, 'mono'); ?>" />
+																							<img src="<? echo $payment_links['mono']['qr_code']; ?>" />
 																							<br />
-																							<a style="font-size:12px" href="<? echo $this->model_sale_order->generatePaymentQR($order_id, 'mono', true); ?>" ><? echo $this->model_sale_order->generatePaymentQR($order_id, 'mono', true); ?></a>
+																							<a style="font-size:12px" href="<? echo $payment_links['mono']['qr_link'] ?>" ><? echo $payment_links['mono']['qr_link'] ?></a>
+
+																							<br />
+																							<a class="button" style="width:80%; margin-top:10px;" onclick='swal({ title: "Отправить ссылку клиенту?", text: "<?php echo $payment_links['mono']['qr_sms'] ?>", type: "warning", showCancelButton: true,  confirmButtonColor: "#F96E64",  confirmButtonText: "Отправить", cancelButtonText: "Отмена",  closeOnConfirm: true }, function() { sendPaymentSMSLinkAjax("<?php echo $payment_links['mono']['qr_link'] ?>") });'><i class="fa fa-telegram"></i> Отправить SMS</a>
 																						</td>
 																					<?php } ?>
 																					
@@ -3232,11 +3249,15 @@
 																						<? } ?>
 																						
 																						<br />
-																						<img src="<? echo $this->model_sale_order->generatePaymentQR($order_id, 'concardis'); ?>" />
+																						<img src="<? echo $payment_links['concardis']['qr_code']; ?>" />
 																						<br />
-																						<a style="font-size:12px" href="<? echo $this->model_sale_order->generatePaymentQR($order_id, 'concardis', true); ?>" ><? echo $this->model_sale_order->generatePaymentQR($order_id, 'concardis', true); ?></a>
+																						<a style="font-size:12px" href="<? echo $payment_links['concardis']['qr_link'] ?>" ><? echo $payment_links['concardis']['qr_link'] ?></a>
+
+																						<br />
+																							<a class="button" style="width:80%; margin-top:10px;" onclick='swal({ title: "Отправить ссылку клиенту?", text: "<?php echo $payment_links['concardis']['qr_sms'] ?>", type: "warning", showCancelButton: true,  confirmButtonColor: "#F96E64",  confirmButtonText: "Отправить", cancelButtonText: "Отмена",  closeOnConfirm: true }, function() { sendPaymentSMSLinkAjax("<?php echo $payment_links['concardis']['qr_link'] ?>") });'><i class="fa fa-telegram"></i> Отправить SMS</a>
 																					</td>
-																					<? if (in_array($currency_code, array('RUB'))) { ?>
+
+																					<? if (false || in_array($currency_code, array('RUB'))) { ?>
 																						<td style="padding-right:10px; text-align:center;">
 																							<div style="height:30px"></div>
 																							<div style="background-color:#4ea24e; padding:5px; text-align:center; color:#FFF"><? echo $EUR_FOR_CONCARDIS; ?> EUR</div>
@@ -3249,10 +3270,7 @@
 																				<?php } ?>
 																			</tr>
 																		</table>																											
-										<?	/*
-											<img id="pay_equire2_img" src="view/image/payment/shoputils_psb.png" style="cursor:pointer" height="40px"  <? if (!$pay_equire2) { ?>class="eq_disabled"<? } ?> />
-											
-										*/ ?>	
+
 										<input type="hidden" id="pay_equire2" name="pay_equire2" value="<? if ($pay_equire2) { ?>1<? } else { ?>0<? } ?>"  />
 									</td>
 								</tr>

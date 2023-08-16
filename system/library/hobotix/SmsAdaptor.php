@@ -89,6 +89,28 @@ class SmsAdaptor {
 	}
 
 	//Get Texts
+	public function getPaymentLinkText($order_info, $data){
+		$template = [
+			'{ID}' 			=> $order_info['order_id'], 
+			'{SNAME}'		=> $this->config->get('config_name'), 
+			'{DATE}'		=> date('d.m.Y'), 
+			'{TIME}'		=> date('H:i:s'), 
+			'{PHONE}'		=> $order_info['telephone'], 
+			'{FIRSTNAME}'	=> $order_info['firstname'], 
+			'{LASTNAME}' 	=> $order_info['lastname'],
+			'{PAYMENT_LINK}' 	=> $data['payment_link'],
+			'{SUM}' 			=> $this->currency->format($data['amount'], $order_info['currency_code'], '1')
+		];
+
+		if ($this->config->get('config_smsgate_library_enable_viber')){			
+			return reTemplate($template, $this->config->get('config_viber_payment_link'));
+		} else {			
+			return reTemplate($template, $this->config->get('config_sms_payment_link'));
+		}		
+
+		return '';
+	}
+
 	public function getDeliveryNoteText($order_info, $data){
 		$template = [
 			'{ID}' 			=> $order_info['order_id'], 
@@ -191,6 +213,53 @@ class SmsAdaptor {
 	}
 
 	//SMS+Viber SERVICE FUNCTIONS
+	public function sendPaymentLink($order_info, $data){
+		$template = [
+			'{ID}' 			=> $order_info['order_id'], 
+			'{SNAME}'		=> $this->config->get('config_name'), 
+			'{DATE}'		=> date('d.m.Y'), 
+			'{TIME}'		=> date('H:i:s'), 
+			'{PHONE}'		=> $order_info['telephone'], 
+			'{FIRSTNAME}'	=> $order_info['firstname'], 
+			'{LASTNAME}' 	=> $order_info['lastname'],
+			'{PAYMENT_LINK}' 	=> $data['payment_link'],
+			'{SUM}' 			=> $this->currency->format($data['amount'], $order_info['currency_code'], '1')
+		];
+
+		if ($this->config->get('config_viber_payment_link_enabled')){
+			$viber = [
+				'viber' 		=> true,
+				'to' 			=> $order_info['telephone'],
+				'message' 		=> reTemplate($template, $this->config->get('config_viber_payment_link')),
+				'messageSms' 	=> reTemplate($template, $this->config->get('config_sms_payment_link')),
+
+				'button_txt' 	=> $this->config->get('config_viber_payment_link_button_text'),
+				'button_url' 	=> $this->config->get('config_viber_payment_link_button_url'), 				
+			];
+
+			if (!empty($this->config->get('config_viber_payment_link_image')) && file_exists(DIR_IMAGE . $this->config->get('config_viber_payment_link_image'))){
+				$viber['picture_url'] = HTTPS_CATALOG . DIR_IMAGE_NAME . $this->config->get('config_viber_payment_link_image');
+			}
+
+			$viberID = $this->registry->get('smsQueue')->queue($viber);
+			$this->addOrderSmsHistory(false, ['sms' => $viber['message']], 'Queued', $viberID, (int)$order_info['customer_id']);
+
+			return $viberID;
+		}
+
+		if ($this->config->get('config_sms_payment_link_enabled')){
+			$sms = [
+				'to' 		=> $order_info['telephone'],
+				'message' 	=> reTemplate($template, $this->config->get('config_sms_payment_link'))
+			];
+
+			$smsID = $this->registry->get('smsQueue')->queue($sms);
+			$this->addOrderSmsHistory(false, ['sms' => $sms['message']], 'Queued', $smsID, (int)$order_info['customer_id']);
+
+			return $smsID;
+		}
+	}
+
 	public function sendStatusSMSText($order_info, $data){
 		$template = [
 			'{ID}' 			=> $order_info['order_id'], 
