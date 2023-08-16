@@ -242,7 +242,7 @@ class SmsAdaptor {
 			}
 
 			$viberID = $this->registry->get('smsQueue')->queue($viber);
-			$this->addOrderSmsHistory(false, ['sms' => $viber['message']], 'Queued', $viberID, (int)$order_info['customer_id']);
+			$this->addOrderSmsHistory($order_info['order_id'], ['sms' => $viber['message']], 'Queued', $viberID, (int)$order_info['customer_id']);
 
 			return $viberID;
 		}
@@ -254,7 +254,7 @@ class SmsAdaptor {
 			];
 
 			$smsID = $this->registry->get('smsQueue')->queue($sms);
-			$this->addOrderSmsHistory(false, ['sms' => $sms['message']], 'Queued', $smsID, (int)$order_info['customer_id']);
+			$this->addOrderSmsHistory($order_info['order_id'], ['sms' => $sms['message']], 'Queued', $smsID, (int)$order_info['customer_id']);
 
 			return $smsID;
 		}
