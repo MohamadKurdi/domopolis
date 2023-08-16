@@ -2868,11 +2868,17 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_sms_ttn_ready'] = $this->config->get('config_sms_ttn_ready');
         }
-        
-        if (isset($this->request->post['config_sms_message'])) {
-            $this->data['config_sms_message'] = $this->request->post['config_sms_message'];
+
+        if (isset($this->request->post['config_sms_payment_link_enabled'])) {
+            $this->data['config_sms_payment_link_enabled'] = $this->request->post['config_sms_payment_link_enabled'];
         } else {
-            $this->data['config_sms_message'] = $this->config->get('config_sms_message');
+            $this->data['config_sms_payment_link_enabled'] = $this->config->get('config_sms_payment_link_enabled');
+        }
+        
+        if (isset($this->request->post['config_sms_payment_link'])) {
+            $this->data['config_sms_payment_link'] = $this->request->post['config_sms_payment_link'];
+        } else {
+            $this->data['config_sms_payment_link'] = $this->config->get('config_sms_payment_link');
         }
         
         if (isset($this->request->post['config_sms_send_new_order_status'])) {
@@ -2958,6 +2964,12 @@ class ControllerSettingSetting extends Controller
             'config_viber_transaction_text_type_3_image',
             'config_viber_transaction_text_type_3_button_text',
             'config_viber_transaction_text_type_3_button_url',
+
+            'config_viber_payment_link_enabled',
+            'config_viber_payment_link',
+            'config_viber_payment_link_image',
+            'config_viber_payment_link_button_text',
+            'config_viber_payment_link_button_url',
         ];
         
         foreach ($viberkeys as $viberkey) {

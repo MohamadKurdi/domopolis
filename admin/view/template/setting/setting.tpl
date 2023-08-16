@@ -3945,6 +3945,53 @@
                                     </td>
                                 </tr>
 
+                                <tr>
+									<td style="width:200px;">
+										<span class="status_color" style="text-align: left; background: #43B02A; color:#fff">
+											Отправка ссылки на оплату
+										</span>
+									</td>
+									<td style="width:50px" class="center">
+										<input class="checkbox" type="checkbox" name="config_viber_payment_link_enabled" id="config_viber_payment_link_enabled" <?php if ($config_viber_payment_link_enabled) { echo ' checked="checked"'; }?> />
+										<label for="config_viber_payment_link_enabled"></label>
+									</td>
+									<td style="width:300px;">
+										<p>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+												Текст
+											</span>
+										</p>
+
+										<textarea name="config_viber_payment_link" cols="50" rows="7"><?php echo $config_viber_payment_link; ?></textarea>
+									</td>
+									<td style="width:250px;">
+										<div class="image">
+											<img src="<?php echo $viber_payment_link_image; ?>" alt="" id="thumb-viber_payment_link_image" height="150px" />
+											<input type="text" style="font-size:10px; width:150px;" class="image-ajax" name="config_viber_payment_link_image" value="<?php echo $config_viber_payment_link_image; ?>" id="viber_payment_link_image" />
+											<br />
+											<a onclick="image_upload('viber_payment_link_image', 'thumb-viber_payment_link_image');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb-viber_payment_link_image').attr('src', '<?php echo $no_image; ?>'); $('#viber_payment_link_image').attr('value', ''); $('#viber_payment_link_image').trigger('change');"><?php echo $text_clear; ?></a>
+										</div>
+									</td>
+									<td style="width:200px;">
+										<p>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+												Текст кнопки
+											</span>
+										</p>
+
+										<textarea name="config_viber_payment_link_button_text" cols="50" rows="7"><?php echo $config_viber_payment_link_button_text; ?></textarea>
+									</td>
+									<td style="width:200px;">
+										<p>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; text-align: left; background: #43B02A; color:#fff">
+												URL кнопки
+											</span>
+										</p>
+
+										<textarea name="config_viber_payment_link_button_url" cols="50" rows="7"><?php echo $config_viber_payment_link_button_url; ?></textarea>
+									</td>
+								</tr>
+
 							</table>
 						</div>
 
@@ -4120,6 +4167,7 @@
 											<b>{LASTNAME}</b> - фамилия клиента<br />
 											<b>{TTN}</b> - ТТН службы доставки<br />
 											<b>{PAYMENT_INFO}</b> - данные платежа<br />
+											<b>{PAYMENT_LINK}</b> - ссылка на оплату<br />
 											<b>{PARTLY}</b> - инфо о частичной оплате<br />
 											<b>{DELIVERY_SERVICE}</b> - служба доставки<br />
 											<b>{POINTS_AMOUNT}</b> - количество бонусов на счету<br />
@@ -4282,6 +4330,20 @@
 											</td>
 											<td style="padding:5px;">
 												<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_transaction_text_type_3" value="<?php echo $config_sms_transaction_text_type_3; ?>" />
+											</td>
+										</tr>
+
+										<tr>
+											<td style="width:200px;">
+												<span class="status_color" style="text-align: left; background: #43B02A; color: #FFF; ?>;">
+													Линк на оплату
+												</span>
+											</td>
+											<td style="width:50px" class="center">
+												<input class="checkbox" type="checkbox" name="config_sms_payment_link_enabled" id="config_sms_payment_link_enabled"<?php if ($config_sms_payment_link_enabled) { echo ' checked="checked"'; }?>/><label for="config_sms_payment_link_enabled"></label>
+											</td>
+											<td style="padding:5px;">
+												<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_payment_link" value="<?php echo $config_sms_payment_link; ?>" />
 											</td>
 										</tr>
 									</table>
