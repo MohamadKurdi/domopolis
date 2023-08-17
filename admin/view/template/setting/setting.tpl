@@ -7223,6 +7223,11 @@
 											<? } ?>
 										</select>									
 									</td>
+
+									<td width="33%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">API REGION</span></p>
+										<input type="text" name="config_azure_translate_api_region" value="<?php echo $config_azure_translate_api_region; ?>" size="50" style="width:250px;" />
+									</td>	
 									
 									<td width="33%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">API KEY</span></p>

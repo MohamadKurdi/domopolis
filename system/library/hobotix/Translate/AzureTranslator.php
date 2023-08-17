@@ -99,7 +99,7 @@ class AzureTranslator
   			curl_setopt($ch, CURLOPT_HTTPHEADER, [
   				"Content-type: application/json",
   				"Ocp-Apim-Subscription-Key: " . $this->config->get('config_azure_translate_api_key'),
-  				"Ocp-Apim-Subscription-Region: eastus",
+  				"Ocp-Apim-Subscription-Region: " . $this->config->get('config_azure_translate_api_region'),
   				"X-ClientTraceId: " . com_create_guid()
   			]);
 

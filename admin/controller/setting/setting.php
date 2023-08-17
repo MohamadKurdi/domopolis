@@ -4354,10 +4354,16 @@ class ControllerSettingSetting extends Controller
             $this->data['config_azure_translate_api_enable'] = $this->config->get('config_azure_translate_api_enable');
         }
 
-         if (isset($this->request->post['config_azure_translate_api_key'])) {
+        if (isset($this->request->post['config_azure_translate_api_key'])) {
             $this->data['config_azure_translate_api_key'] = $this->request->post['config_azure_translate_api_key'];
         } else {
             $this->data['config_azure_translate_api_key'] = $this->config->get('config_azure_translate_api_key');
+        }
+
+        if (isset($this->request->post['config_azure_translate_api_region'])) {
+            $this->data['config_azure_translate_api_region'] = $this->request->post['config_azure_translate_api_region'];
+        } else {
+            $this->data['config_azure_translate_api_region'] = $this->config->get('config_azure_translate_api_region');
         }
 
             //LDAP AUTH
