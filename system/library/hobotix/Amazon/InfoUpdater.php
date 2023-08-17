@@ -100,7 +100,7 @@ class InfoUpdater extends RainforestRetriever
 		$text = str_ireplace($this->removeFromReview, [''], $text);
 		
 		//Убрать всё остальное кроме нужных букв, цифр и символов
-		$text = preg_replace('/[^a-zA-Z0-9а-щА-ЩЬьЮюЯяЇїІіЄєҐґ:()\-,&Ø\'\.\/\* ]/mui', '', $text, -1);
+		$text = preg_replace('/[^a-zA-Z0-9а-щА-ЩЬьыЫэЭЮюЯяЇїІіЄєҐґ:()\-,&Ø\'\.\/\* ]/mui', '', $text, -1);
 
 		//Убираем двойные пробелы
 		$text = str_replace(['  '], [' '], $text);
@@ -126,7 +126,7 @@ class InfoUpdater extends RainforestRetriever
 		$review = str_ireplace($this->removeFromReview, [''], $review);
 		
 		//Убрать всё остальное кроме нужных букв, цифр и символов
-		$review = preg_replace('/[^a-zA-Z0-9а-щА-ЩЬьЮюЯяЇїІіЄєҐґ()\-,&Ø\'\.\/\* ]/mui', '', $review, -1);
+		$review = preg_replace('/[^a-zA-Z0-9а-щА-ЩЬьыЫэЭЮюЯяЇїІіЄєҐґ()\-,&Ø\'\.\/\* ]/mui', '', $review, -1);
 
 		//Убираем двойные пробелы
 		$review = str_replace(['  '], [' '], $review);
@@ -154,7 +154,7 @@ class InfoUpdater extends RainforestRetriever
 		$name = str_ireplace($this->removeFromName, [''], $name);
 		
 		//Убрать всё остальное кроме нужных букв, цифр и символов
-		$name = preg_replace('/[^a-zA-Z0-9а-щА-ЩЬьЮюЯяЇїІіЄєҐґ()\-,&Ø\'\.\/\* ]/mui', '', $name, -1);
+		$name = preg_replace('/[^a-zA-Z0-9а-щА-ЩЬьыЫэЭЮюЯяЇїІіЄєҐґ()\-,&Ø\'\.\/\* ]/mui', '', $name, -1);
 
 		//Убираем двойные пробелы
 		$name = str_replace(['  '], [' '], $name);
