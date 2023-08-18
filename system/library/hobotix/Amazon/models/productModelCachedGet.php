@@ -59,6 +59,21 @@ class productModelCachedGet extends hoboModel{
 		return false;
 	}
 
+	public function checkIfTempCategoryExists($name){
+		if ($this->cache->get($this->getKey('categories.temp', $name), true)){			
+			return $this->cache->get($this->getKey('categories.temp', $name), true);
+		}
+
+		$query = $this->db->ncquery("SELECT cd.category_id FROM category_description cd LEFT JOIN category c ON (cd.category_id = c.category_id) WHERE cd.language_id = '" . $this->config->get('config_rainforest_source_language_id') . "' AND cd.name LIKE ('" . $this->db->escape($name) . "') LIMIT 1");
+
+		if ($query->num_rows){
+			$this->cache->set($this->getKey('categories.temp', $name), $query->row['category_id']);
+			return $query->row['category_id'];
+		}
+		
+		return false;
+	}
+
 	public function getCategory($name){
 		if ($this->cache->get($this->getKey('categories', $name), true)){			
 			return $this->cache->get($this->getKey('categories', $name), true);
@@ -73,6 +88,4 @@ class productModelCachedGet extends hoboModel{
 		
 		return false;
 	}
-
-
 }

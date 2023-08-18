@@ -763,8 +763,7 @@ class ProductsRetriever extends RainforestRetriever
 
 						echoLine('[ProductsRetriever::parseProductCategories] Brand Logic is ON: ' . $temprorary_category, 'i');
 
-
-						if ($category_id = $this->model_product_cached_get->getCategory(atrim($temprorary_category))){						
+						if ($category_id = $this->model_product_cached_get->checkIfTempCategoryExists(atrim($temprorary_category))){						
 							echoLine('[ProductsRetriever::parseProductCategories] Found BL category: ' . $temprorary_category . ': ' . $category_id, 's');							
 							$this->model_product_edit->editProductCategory($product_id, [$category_id]);
 						} else {
