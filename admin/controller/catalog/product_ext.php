@@ -322,10 +322,10 @@ class ControllerCatalogProductExt extends Controller {
             'separator' => ' :: '
         );
 
-        $this->data['insert'] = $this->url->link('catalog/product/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $this->data['copy'] = $this->url->link('catalog/product_ext/copy', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['copynostock'] = $this->url->link('catalog/product_ext/copynostock', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $this->data['delete'] = $this->url->link('catalog/product_ext/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $this->data['insert']       = $this->url->link('catalog/product/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $this->data['copy']         = $this->url->link('catalog/product_ext/copy', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['copynostock']  = $this->url->link('catalog/product_ext/copynostock', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $this->data['delete']       = $this->url->link('catalog/product_ext/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         $this->data['resize'] = $this->url->link('catalog/product_ext/setpicsize', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
@@ -509,6 +509,18 @@ class ControllerCatalogProductExt extends Controller {
                                 $columns[$column] = '<span style="color:#FFA500;">' . $result['quantity'] . '</span>';
                             } else {
                                 $columns[$column] = '<span style="color:#008000;">' . $result['quantity'] . '</span>';
+                            }
+                        } else if ($column == 'product_offers_count') {
+                            if ((int)$result['product_offers_count'] > 0) {
+                                $columns[$column] = '<span style="color:#008000;">' . $result['product_offers_count'] . '</span>';
+                            } else if ((int)$result['product_offers_count'] <= 0) {
+                                $columns[$column] = '<span style="color:#cf4a61;">' . $this->language->get('text_no') . '</span>';
+                            }
+                        } else if ($column == 'product_warehouse_count') {
+                            if ((int)$result['product_warehouse_count'] > 0) {
+                                $columns[$column] = '<span style="color:#008000;">' . $result['product_warehouse_count'] . '</span>';
+                            } else if ((int)$result['product_warehouse_count'] <= 0) {
+                                $columns[$column] = '<span style="color:#cf4a61;">' . $this->language->get('text_no') . '</span>';
                             }
                         } else if ($column == 'requires_shipping') {
                             $columns['requires_shipping'] = ($result['shipping'] ? $this->language->get('text_yes') : $this->language->get('text_no'));

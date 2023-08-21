@@ -1354,7 +1354,21 @@
 			error_reporting($level);
 		}
 	
-		public function deleteProduct($product_id, $recursion = true, $asin_deletion_mode = false) {				
+		public function deleteProduct($product_id, $recursion = true, $asin_deletion_mode = false) {	
+			if ($this->config->get('config_never_delete_products_in_orders')){
+				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsInOrders($product_id)){
+					$this->disableProduct($product_id);
+					return;
+				}
+			}
+
+			if ($this->config->get('config_never_delete_products_in_warehouse')){
+				if ($this->rainforestAmazon->offersParser->PriceLogic->checkIfProductIsOnAnyWarehouse($product_id)){
+					$this->disableProduct($product_id);
+					return;
+				}
+			}
+
 			if (empty($this->session->data['config_rainforest_asin_deletion_mode'])){
 				$this->session->data['config_rainforest_asin_deletion_mode'] = $this->config->get('config_rainforest_asin_deletion_mode');
 			}

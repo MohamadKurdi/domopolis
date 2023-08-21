@@ -21,6 +21,14 @@ class ModelCatalogProductExt extends Model {
             $sql .= ", (SELECT keyword FROM url_alias WHERE query = CONCAT('product_id=', p.product_id)) AS seo";
         }
 
+        if (in_array("product_offers_count", $columns)) {
+            $sql .= ", (SELECT COUNT(o.order_id) FROM order_product op LEFT JOIN `order` o ON o.order_id = op.order_id WHERE o.order_status_id > 0 AND op.product_id = p.product_id) AS product_offers_count";
+        }
+
+        if (in_array("product_warehouse_count", $columns)) {
+            $sql .= ", (`" . $this->config->get('config_warehouse_identifier') . "` + `" . $this->config->get('config_warehouse_identifier') . "_onway`) as product_warehouse_count";
+        }
+
         if (in_array("manufacturer", $columns)) {
             $sql .= ", m.name AS manufacturer";
         }
@@ -184,6 +192,22 @@ class ModelCatalogProductExt extends Model {
                     $sql .= " AND $value = '" . (int)$data["filter_$key"] . "'";
                 }
             }
+        }
+
+        if (isset($data["filter_product_offers_count"]) && !is_null($data["filter_product_offers_count"])) {
+            if ($data["filter_product_offers_count"] == 1){
+                $sql .= " AND (SELECT COUNT(o.order_id) FROM order_product op LEFT JOIN `order` o ON o.order_id = op.order_id WHERE o.order_status_id > 0 AND op.product_id = p.product_id) > 0";
+            } else {
+                $sql .= " AND (SELECT COUNT(o.order_id) FROM order_product op LEFT JOIN `order` o ON o.order_id = op.order_id WHERE o.order_status_id > 0 AND op.product_id = p.product_id) = 0";
+            }          
+        }
+
+        if (isset($data["filter_product_warehouse_count"]) && !is_null($data["filter_product_warehouse_count"])) {
+            if ($data["filter_product_warehouse_count"] == 1){
+                $sql .= " AND (`" . $this->config->get('config_warehouse_identifier') . "` + `" . $this->config->get('config_warehouse_identifier') . "_onway`) > 0";
+            } else {
+                $sql .= " AND (`" . $this->config->get('config_warehouse_identifier') . "` + `" . $this->config->get('config_warehouse_identifier') . "_onway`) = 0";
+            }          
         }
 
         $anywhere_filters = array(
