@@ -100,6 +100,7 @@ $_['column_store']              = 'Stores';
 $_['column_view_in_store']      = 'View in Store';
 $_['column_download']           = 'Downloads';
 $_['column_filter']             = 'Filters';
+$_['column_cost']             = 'Закупка';
 
 $_['column_product_is_in_offers']  = 'Заказы';
 $_['column_product_is_in_warehouse']      = 'Склады';
