@@ -80,6 +80,8 @@ $_['column_price_delayed']		= 'Цена<i class="fa fa-clock-o"></i>';
 $_['column_amazon_best_price']	= 'Цена<i class="fa fa-amazon"></i>';
 $_['column_amzn_offers_count']	= 'Офферов<i class="fa fa-amazon"></i>';
 $_['column_fill_from_amazon'] 	= 'Загружать<i class="fa fa-amazon"></i>';
+$_['column_product_offers_count'] 	= 'Заказов';
+$_['column_product_warehouse_count'] 	= 'Склад';
 $_['column_tag']                = 'Product Tags';
 $_['column_sku']                = 'SKU';
 $_['column_asin']               = 'ASIN';
@@ -98,6 +100,9 @@ $_['column_store']              = 'Stores';
 $_['column_view_in_store']      = 'View in Store';
 $_['column_download']           = 'Downloads';
 $_['column_filter']             = 'Filters';
+
+$_['column_product_is_in_offers']  = 'Заказы';
+$_['column_product_is_in_warehouse']      = 'Склады';
 
 
 $_['entry_values']          		= 'Добавьте значения для этой опции.';
