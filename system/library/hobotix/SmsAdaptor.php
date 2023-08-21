@@ -26,7 +26,6 @@ class SmsAdaptor {
 		}
 	}
 
-
 	public function getBalance(){
 		if (method_exists($this->smsObject, 'getBalance')){
 			try {
@@ -41,11 +40,12 @@ class SmsAdaptor {
 			return false;
 		}			
 
+		$result = number_format($result, 0, '', '');
+
 		echoLine('[SmsAdaptor::getBalance] Got balance: ' . $result);
 
 		return $result;
 	}
-
 
 	public function sendSMS($sms){
 		if (method_exists($this->smsObject, 'sendSMS')){
@@ -66,7 +66,6 @@ class SmsAdaptor {
 
 		return $result;
 	}
-
 
 	public function sendViber($viber){
 		if ($this->config->get('config_smsgate_library_enable_viber') && method_exists($this->smsObject, 'sendViber')){
@@ -202,11 +201,22 @@ class SmsAdaptor {
 		];
 
 		if (!empty($viber_settings[$data['order_status_id']]['enabled']) && in_array($viber_settings[$data['order_status_id']]['enabled'], ['on', 1])){	
-			return reTemplate($template, $viber_settings[$data['order_status_id']]['message']);
+			if (!empty($viber_settings[$data['order_status_id']]['image']) && file_exists(DIR_IMAGE . $viber_settings[$data['order_status_id']]['image'])){
+				$image = HTTPS_CATALOG . DIR_IMAGE_NAME . $viber_settings[$data['order_status_id']]['image'];
+			} else {
+				$image = '';
+			}
+
+			return [
+				'message' => reTemplate($template, $viber_settings[$data['order_status_id']]['message']),
+				'image'   => $image	
+			];
 		}											
 
 		if (!empty($sms_settings[$data['order_status_id']]['enabled']) && in_array($sms_settings[$data['order_status_id']]['enabled'], ['on', 1])){	
-			return reTemplate($template, $sms_settings[$data['order_status_id']]['message']);	
+			return [
+				'message' => reTemplate($template, $sms_settings[$data['order_status_id']]['message'])
+			];
 		}		
 
 		return '';
@@ -294,7 +304,7 @@ class SmsAdaptor {
 			];
 
 			if (!empty($viber_settings[$data['order_status_id']]['image']) && file_exists(DIR_IMAGE . $viber_settings[$data['order_status_id']]['image'])){
-				$viber['picture_url'] = HTTPS_SERVER . DIR_IMAGE_NAME . $viber_settings[$data['order_status_id']]['image'];
+				$viber['picture_url'] = HTTPS_CATALOG . DIR_IMAGE_NAME . $viber_settings[$data['order_status_id']]['image'];
 			}
 
 			$viberID = $this->registry->get('smsQueue')->queue($viber);
@@ -386,7 +396,7 @@ class SmsAdaptor {
 			];
 
 			if (!empty($this->config->get('config_viber_tracker_leave_main_warehouse_image')) && file_exists(DIR_IMAGE . $this->config->get('config_viber_tracker_leave_main_warehouse_image'))){
-				$viber['picture_url'] = HTTPS_SERVER . DIR_IMAGE_NAME . $this->config->get('config_viber_tracker_leave_main_warehouse_image');
+				$viber['picture_url'] = HTTPS_CATALOG . DIR_IMAGE_NAME . $this->config->get('config_viber_tracker_leave_main_warehouse_image');
 			}
 
 			$viberID = $this->registry->get('smsQueue')->queue($viber);
@@ -433,7 +443,7 @@ class SmsAdaptor {
 			];
 
 			if (!empty($this->config->get('config_viber_ttn_sent_image')) && file_exists(DIR_IMAGE . $this->config->get('config_viber_ttn_sent_image'))){
-				$viber['picture_url'] = HTTPS_SERVER . DIR_IMAGE_NAME . $this->config->get('config_viber_ttn_sent_image');
+				$viber['picture_url'] = HTTPS_CATALOG . DIR_IMAGE_NAME . $this->config->get('config_viber_ttn_sent_image');
 			}
 
 			$viberID = $this->registry->get('smsQueue')->queue($viber);
@@ -481,7 +491,7 @@ class SmsAdaptor {
 			];
 
 			if (!empty($this->config->get('config_viber_payment_recieved_image')) && file_exists(DIR_IMAGE . $this->config->get('config_viber_payment_recieved_image'))){
-				$viber['picture_url'] = HTTPS_SERVER . DIR_IMAGE_NAME . $this->config->get('config_viber_payment_recieved_image');
+				$viber['picture_url'] = HTTPS_CATALOG . DIR_IMAGE_NAME . $this->config->get('config_viber_payment_recieved_image');
 			}
 
 			$viberID = $this->registry->get('smsQueue')->queue($viber);
@@ -528,7 +538,7 @@ class SmsAdaptor {
 			];
 
 			if (!empty($this->config->get('config_viber_new_order_image')) && file_exists(DIR_IMAGE . $this->config->get('config_viber_new_order_image'))){
-				$viber['picture_url'] = HTTPS_SERVER . DIR_IMAGE_NAME . $this->config->get('config_viber_new_order_image');
+				$viber['picture_url'] = HTTPS_CATALOG . DIR_IMAGE_NAME . $this->config->get('config_viber_new_order_image');
 			}
 
 			$viberID = $this->registry->get('smsQueue')->queue($viber);

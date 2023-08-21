@@ -837,15 +837,17 @@
 		var length = $('#history_sms_text').val().length;
 		$("#history_sms_text_count").text(length);
 		
-		if (length > 140){
-			$('#history_sms_text_count_alert').text('Это очень много, более 3 смсок, укороти текст!');
-			$('#button-history-toggler').hide();
-			$('#button-history').attr('disabled', 'disabled');
+		<?php if (!$this->config->get('config_smsgate_library_enable_viber')){ ?>
+			if (length > 210){
+				$('#history_sms_text_count_alert').text('Это очень много, более 3 смсок, укороти текст!');
+				$('#button-history-toggler').hide();
+				$('#button-history').attr('disabled', 'disabled');
 			} else {
-			$('#history_sms_text_count_alert').text('');
-			$('#button-history-toggler').show();
-			$('#button-history').removeAttr('disabled');
-		}
+				$('#history_sms_text_count_alert').text('');
+				$('#button-history-toggler').show();
+				$('#button-history').removeAttr('disabled');
+			}
+		<?php } ?>
 	}
 	
 	$(document).ready(function(){
@@ -875,6 +877,12 @@
 				} else {
 					$('textarea[name=\'history_sms_text\']').val('');
 					$('input#checkbox_notify').removeAttr('checked');
+				}
+
+				if (json.image){
+					$('img[id=\'history_sms_img\']').attr('src', json.image);
+				} else {
+					$('img[id=\'history_sms_img\']').attr('src', '');
 				}
 				
 				countSMSLength();

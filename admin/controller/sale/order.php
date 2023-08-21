@@ -5538,8 +5538,7 @@
 			echo json_encode($json);
 		}
 		
-		public function getCompleteOrderTextAjax(){
-			
+		public function getCompleteOrderTextAjax(){			
 			$order_id = (int)$this->request->post['order_id'];
 			$status_id = (int)$this->request->post['order_status_id'];
 			
@@ -5554,8 +5553,7 @@
 				$customer_balance_national = $this->model_sale_customer->getTransactionTotalNational($order_info['customer_id']);			
 				$balance_national = $this->model_sale_customer->getTransactionTotalNational($order_info['customer_id'], $order_id);
 				
-				$str .= " При установке статуса ВЫПОЛНЕН с счета покупателя будет снята сумма в размере " . $this->currency->format($order_total, $order_info['currency_code'], 1);		
-				$str .= " При установке статуса ВЫПОЛНЕН заказ будет заблокирован для редактирования в дальнейшем!";
+				$str .= " При установке статуса ВЫПОЛНЕН с счета покупателя будет снята сумма в размере " . $this->currency->format($order_total, $order_info['currency_code'], 1) . ' и заказ будет заблокирован для редактирования в дальнейшем!';			
 				
 				} elseif ($status_id == $this->config->get('config_partly_delivered_status_id')) {
 				$this->load->model('sale/order');
@@ -5591,7 +5589,7 @@
 				$str .= '';
 			}
 			
-			echo $str;		
+			$this->response->setOutput(htmlentities($str));		
 		}
 		
 		public function getStatusSMSTextAjax(){
@@ -5636,10 +5634,8 @@
 			} else {
 				$data['pickup_url']  = '';
 			}
-
-			$this->response->setOutput(json_encode([
-					'message' => $this->smsAdaptor->getStatusSMSText($order_info, $data)
-			]));
+			
+			$this->response->setOutput(json_encode($this->smsAdaptor->getStatusSMSText($order_info, $data)));
 		}
 		
 		public function reject_reason_ajax(){
@@ -6226,7 +6222,9 @@
 				
 				if (!$this->data['error']) {
 					if (isset($this->request->post['history_sms_text']) && mb_strlen($this->request->post['history_sms_text']) > 210){
-						$this->data['error'] = 'Смска слишком длинная, более 210 символов. Укороти смску.';
+						if (!$this->config->get('config_smsgate_library_enable_viber')){
+							$this->data['error'] = 'Смска слишком длинная, более 210 символов. Укороти смску.';
+						}						
 					}
 				}
 				

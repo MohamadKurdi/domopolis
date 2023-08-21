@@ -2789,15 +2789,32 @@
 									<?php } ?>
 								</tr>
 								<tr>		
-									<td style="width:130px"><b>SMS</b>
-										<br /><span onclick="$('textarea[name=\'history_sms_text\']').val('');" style="cursor:pointer;border-bottom:1px dashed black;" >очистить</span><br />
+									<td style="width:130px">
+										<?php if ($this->config->get('config_smsgate_library_enable_viber')) { ?><b>Viber</b><?php } else { ?>SMS<?php } ?>
+										<br /><span onclick="$('textarea[name=\'history_sms_text\']').val(''); $('img[id=\'history_sms_img\']').attr('src', '');" style="cursor:pointer;border-bottom:1px dashed black;" >очистить</span><br />
 									
 									</td>
 									<td colspan="3">
-										<textarea id="history_sms_text" name="history_sms_text" cols="40" rows="2" style="width: 99%"></textarea><br />
-										<span class="help" style="font-size:16px; background-color:#cf4a61; padding:5px; color:#FFF;" >Количество символов: <span id="history_sms_text_count"></span>. <span id="history_sms_text_count_alert"></span></span>
+										<?php if ($this->config->get('config_smsgate_library_enable_viber')) { ?>
+											<div>
+												<img id="history_sms_img" src="" style="height:100px; float:left;">
+												<textarea id="history_sms_text" <?php if ($this->config->get('config_sms_status_use_only_settings')) { ?>readonly<?php } ?> name="history_sms_text" cols="40" rows="10" style="width: 80%; float:right;"></textarea>
+											</div>
+										<?php } else { ?>
+
+											<textarea id="history_sms_text" <?php if ($this->config->get('config_sms_status_use_only_settings')) { ?>readonly<?php } ?> name="history_sms_text" cols="40" rows="4" style="width: 99%"></textarea><br />
+											<span class="help" style="font-size:16px; background-color:#cf4a61; padding:5px; color:#FFF;" >Количество символов: <span id="history_sms_text_count"></span>. <span id="history_sms_text_count_alert"></span></span>
 										
-										<span class="help"><i class="fa fa-info-circle"></i> SMS не будет отправлено в случае, если НЕ стоит галочка "Уведомлять" или в поле ввода пусто.</span>
+										<?php } ?>										
+
+										<div class="clr">	
+											<?php if ($this->config->get('config_sms_status_use_only_settings')) { ?>																			
+											<span class="help" style="background-color:#FFF; padding-left:10px; color:#cf4a61;">
+													<i class="fa fa-info-circle"></i> Установлен приоритет общих настроек фрейморка уведомлений! Сообщение формируется и отправляется автоматически, изменения в форме применены при отправке не будут! Текст в форме ввода отображается для демонстрации.
+												</span><br />
+											<?php } ?>																				
+											<span style="background-color:#FFF; padding-left:10px; color:#cf4a61;" class="help"><i class="fa fa-info-circle"></i> SMS/Viber не будет отправлено в случае, если НЕ стоит галочка "Уведомлять" или в поле ввода пусто.</span>
+										</div>
 									</td>
 									<script>
 										$('#history_sms_text').on('change keyup paste', function(){
@@ -3725,7 +3742,7 @@
 																				<td colspan='2'>
 																					<?php if ($this->config->get('config_sms_status_use_only_settings')) { ?>																			
 																						<?php if ($this->config->get('config_sms_ttn_sent_enabled')) { ?>
-																							<textarea name="delivery_sms_text" rows='3' style="width:100%"></textarea>
+																							<textarea name="delivery_sms_text" readonly rows='3' style="width:100%"></textarea>
 																							<br /><span class="help" style="background-color:#FFF; padding:10px; color:#cf4a61;">
 																								<i class="fa fa-info-circle"></i> Установлен приоритет общих настроек фрейморка уведомлений! Сообщение формируется и отправляется автоматически, изменения в форме применены при отправке не будут!
 																							</span>
