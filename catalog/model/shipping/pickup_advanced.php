@@ -257,7 +257,7 @@
 						$point['status'] = true;
 					}
 					
-					if ($point['status'] && $point['city_status'] && $point['geozone_status'])
+					if ($point['status'] && $point['city_status'] && !empty($point['geozone_status']))
 					{
 						$quote_data['point_' . $i] = array
 						(
