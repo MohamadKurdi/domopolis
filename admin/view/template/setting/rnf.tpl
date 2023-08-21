@@ -296,6 +296,19 @@
 							</tr>
 							<tr>
 								<td class="right">
+									<i class="fa fa-refresh"></i> Ручное исправление
+								</td>
+								<td style="width:40px;" class="center">
+									<input id="config_rainforest_enable_nooffers_parser" type="checkbox" class="checkbox" name="config_rainforest_enable_nooffers_parser" <? if ($config_rainforest_enable_nooffers_parser){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_enable_nooffers_parser"></label>
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> Разрешает запуск ручного исправления офферов в случае какого-либо сбоя Amazon или Rainforest API
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td class="right">
 									<i class="fa fa-refresh"></i> Отложенное назначение цен
 								</td>
 								<td style="width:40px;" class="center">

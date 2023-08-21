@@ -22,6 +22,7 @@ class ControllerSettingRnf extends Controller {
         'config_rainforest_data_l2_parser_time_end',
 
         'config_rainforest_enable_offers_parser',
+        'config_rainforest_enable_nooffers_parser',
         'config_rainforest_offers_parser_time_start',
         'config_rainforest_offers_parser_time_end',
 

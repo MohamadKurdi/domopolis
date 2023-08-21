@@ -52,8 +52,7 @@ class OffersParser
 		WHERE p.status = 1 
 		AND p.amzn_ignore = 0		
 		AND p.is_virtual = 0
-		AND p.is_markdown = 0			
-		AND p.stock_status_id <> '" . $this->config->get('config_not_in_stock_status_id') . "'";			
+		AND p.is_markdown = 0 ";		
 
 		if (!$this->config->get('config_rainforest_enable_offers_for_stock')){
 			$sql .= " AND (" . $this->PriceLogic->buildStockQueryField() . " = 0)";
@@ -108,8 +107,7 @@ class OffersParser
 		WHERE p.status = 1 
 		AND p.amzn_ignore = 0		
 		AND p.is_virtual = 0
-		AND p.is_markdown = 0		
-		AND p.stock_status_id <> '" . $this->config->get('config_not_in_stock_status_id') . "'";
+		AND p.is_markdown = 0 ";
 
 		if (!$this->config->get('config_rainforest_enable_offers_for_stock')){
 			$sql .= " AND (" . $this->PriceLogic->buildStockQueryField() . " = 0)";

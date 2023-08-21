@@ -343,7 +343,7 @@ class ControllerKPRainForest extends Controller {
 
 	public function parsenoofferscron(){
 
-		if (!$this->config->get('config_rainforest_enable_offers_parser')){
+		if (!$this->config->get('config_rainforest_enable_nooffers_parser')){
 			echoLine('[ControllerKPRainForest::parsenoofferscron] CRON IS DISABLED IN ADMIN', 'e');
 			return;
 		}
@@ -380,7 +380,6 @@ class ControllerKPRainForest extends Controller {
 					$this->rainforestAmazon->offersParser->addOffersForASIN($asin, $offers);
 					$this->rainforestAmazon->offersParser->clearProductsAmazonQueue($asin);
 				}
-
 			}
 
 			echoLine('[parsenoofferscron] Time for iteration: ' . $i . ' from ' . $iterations .': ' . $timer->getTime() . ' s.', 'i');
