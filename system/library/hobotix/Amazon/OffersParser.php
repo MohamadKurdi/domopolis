@@ -82,7 +82,7 @@ class OffersParser
 		AND p.asin <> 'INVALID'";
 
 		if ($this->config->get('config_rainforest_enable_offers_only_for_filled')){
-			$sql .= "AND p.filled_from_amazon = 1";
+			$sql .= " AND p.filled_from_amazon = 1";
 		}
 
 		$sql .= " AND (p.asin NOT IN (SELECT asin FROM amzn_product_queue)) ";
@@ -137,7 +137,7 @@ class OffersParser
 		AND p.asin <> 'INVALID'";
 
 		if ($this->config->get('config_rainforest_enable_offers_only_for_filled')){
-			$sql .= "AND p.filled_from_amazon = 1";
+			$sql .= " AND p.filled_from_amazon = 1";
 		}
 
 		$sql .= " AND (p.asin NOT IN (SELECT asin FROM amzn_product_queue)) ";
