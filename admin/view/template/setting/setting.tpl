@@ -230,7 +230,8 @@
 								</td>
 
 								<td style="width:20%">
-								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Режим удаления ASIN</span></p>
+								<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Режим удаления ASIN</span></p>
 										<select name="config_rainforest_asin_deletion_mode">
 											<?php if ($config_rainforest_asin_deletion_mode) { ?>
 												<option value="1" selected="selected">Включить</option>
@@ -243,9 +244,7 @@
 									<br />
 									<span class="help">Если включено, при удалении товаров их ASIN запоминается и не будет больше добавлен. Переключается кнопкой в шапке.
 									<a href="<?php echo $product_deletedasin; ?>">Посмотреть список удаленных<i class="fa fa-external-link"></i></a></span>
-								</td>
-
-								<td style="width:20%">
+								</div>
 								<div>
 								<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Режим коррекции перевода</span></p>
 										<select name="config_rainforest_translate_edition_mode">
@@ -320,6 +319,39 @@
 									<span class="help">удалять ли файлы картинок при удалении товаров</span>
 									</div>
 								</td>
+
+								<td style="width:20%">
+									<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Не удалять товары в заказах</span></p>
+									<select name="config_never_delete_products_in_orders">
+										<?php if ($config_never_delete_products_in_orders) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+									<br />
+									<span class="help">невозможно удалить даже вручную в админке</span>
+									</div>
+
+									<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Не удалять товары на складе</span></p>
+									<select name="config_never_delete_products_in_warehouse">
+										<?php if ($config_never_delete_products_in_warehouse) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+									<br />
+									<span class="help">невозможно удалить даже вручную в админке</span>
+									</div>
+								</td>
+
 							</tr>
 						</table>
 						<h2>Настройки режимов работы фронта</h2>

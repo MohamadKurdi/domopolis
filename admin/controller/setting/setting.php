@@ -1477,6 +1477,18 @@ class ControllerSettingSetting extends Controller
             $this->data['config_delete_products_images_enable'] = $this->config->get('config_delete_products_images_enable');
         }
 
+        if (isset($this->request->post['config_never_delete_products_in_orders'])) {
+            $this->data['config_never_delete_products_in_orders'] = $this->request->post['config_never_delete_products_in_orders'];
+        } else {
+            $this->data['config_never_delete_products_in_orders'] = $this->config->get('config_never_delete_products_in_orders');
+        }
+
+        if (isset($this->request->post['config_never_delete_products_in_warehouse'])) {
+            $this->data['config_never_delete_products_in_warehouse'] = $this->request->post['config_never_delete_products_in_warehouse'];
+        } else {
+            $this->data['config_never_delete_products_in_warehouse'] = $this->config->get('config_never_delete_products_in_warehouse');
+        }
+
         if (isset($this->request->post['config_cron_stats_display_enable'])) {
             $this->data['config_cron_stats_display_enable'] = $this->request->post['config_cron_stats_display_enable'];
         } else {
