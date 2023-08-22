@@ -513,6 +513,7 @@ class ControllerCatalogProductExt extends Controller {
                         } else if ($column == 'product_offers_count') {
                             if ((int)$result['product_offers_count'] > 0) {
                                 $columns[$column] = '<span style="color:#008000;">' . $result['product_offers_count'] . '</span>';
+                                $columns[$column] .= ' <a target="_blank" href="' . $this->url->link('sale/order', 'filter_product_id=' . $result['product_id'] . '&token=' . $this->session->data['token'], 'SSL') . '"><i class="fa fa-filter"></i></a>';
                             } else if ((int)$result['product_offers_count'] <= 0) {
                                 $columns[$column] = '<span style="color:#cf4a61;">' . $this->language->get('text_no') . '</span>';
                             }
