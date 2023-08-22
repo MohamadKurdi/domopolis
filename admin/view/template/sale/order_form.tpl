@@ -2730,7 +2730,16 @@
 										</select>
 									</td>
 									<td><input type="checkbox" name="courier" value="1" id="checkbox_courier" class="checkbox" /><label for="checkbox_courier">Для курьера</label></td>
-									<td><input type="checkbox" name="notify" value="1" id="checkbox_notify" class="checkbox" /><label for="checkbox_notify">Уведомление клиенту</label></td>
+
+									
+									<td>
+										<?php if ($this->config->get('config_sms_status_use_only_settings')) { ?>
+											<div style="display:none;"><input type="checkbox" name="notify" value="1" id="checkbox_notify" class="checkbox" /></div>
+										<?php } else { ?>
+											<input type="checkbox" name="notify" value="1" id="checkbox_notify" class="checkbox" /><label for="checkbox_notify">Уведомление клиенту</label>
+										<?php } ?>
+
+									</td>
 								</tr>
 								<tr id="reject_reason" style="<? if ($order_status_id != $this->config->get('config_cancelled_status_id')) { ?>display:none;<? } ?> padding-left:30px;">
 									<td></td>
