@@ -61,13 +61,17 @@
 	
 	function sendInstallEvent(){	
 		console.log('[PWA] Sending PWA install event to engine');				
-		sendSimpleXHR('<?php echo $base;?>index.php?route=kp/pwa/spi');			
+		sendSimpleXHR('<?php echo $pwa_spi_href; ?>');			
 	}
-	
+
+	function getPWAKeys(){	
+		console.log('[PWA] Getting keys');				
+		sendSimpleXHR('<?php echo $pwa_keys_href; ?>');			
+	}	
 	
 	function setPWASession(t){
 		console.log('[PWA] Sending PWA session event to engine');				
-		sendSimpleXHR('<?php echo $base;?>index.php?route=kp/pwa/sps');
+		sendSimpleXHR('<?php echo $pwa_sps_href; ?>');
 	}
 	
 	if ("serviceWorker" in navigator) {
@@ -76,7 +80,7 @@
 			console.log("[PWA] active service worker found, no need to register");
 		} else {
 			navigator.serviceWorker
-			.register("/sw.js?v=109", {scope: "/"})
+			.register("/sw.js?v=110", {scope: "/"})
 			.then(function (reg) {
 				console.log("[PWA] Service worker has been registered for scope: " + reg.scope);
 			});
@@ -97,8 +101,7 @@
 		showInstallListingBlock();
 	});		
 	
-	function showPrompt(){
-		
+	function showPrompt(){		
 		let promptEvent = window.deferredPrompt;
 		if (promptEvent) {
 			
@@ -120,8 +123,7 @@
 				promptEvent = null;
 				
 			});
-		}
-		
+		}		
 	}
 	
 	/* Вешаем триггер установки pwa на кнопку  */
@@ -159,8 +161,7 @@
 	});			
 	
 	/* Вешаем триггеры установки и отсылаем инфу о просмотре в аналитику */
-	document.addEventListener("DOMContentLoaded", function() {
-		
+	document.addEventListener("DOMContentLoaded", function() {		
 		/* При загрузке покажем блоки, ведущие на play store всем, кроме айфонов*/
 		if (!isIphone()){
 			validateAndShowBlockByID('footer_app_google_play');
@@ -185,22 +186,35 @@
 	});
 	
 	/* Функция проверки запуска в режиме TWA / Android Native */
-	function isTWAApp(){
-		
+	function isTWAApp(){		
 		if (document.referrer.includes('android-app://')) {
-			console.log('[PWA] display-mode is standalone: android-app/TWA');
+			console.log('[TWA] User agents contains TWA: android-app/TWA');
+			return true;
+		}
+
+		if (navigator.userAgent.toLowerCase().includes('twa')){
+			console.log('[TWA] User agents contains TWA: TWA');
+			return true;
+		}
+
+		if (typeof twa !== 'undefined'){
+			console.log('[TWA] TWA object is defined');
+			return true;
+		}
+
+		if ('getLaunchingApp' in window && window.getLaunchingApp()){
+			console.log('[TWA] window has getLaunchingApp');
 			return true;
 		}
 
 		<?php if ($this->config->get('config_android_playstore_code')) { ?>
 		if (window.navigator.userAgent.indexOf('<?php echo $this->config->get('config_android_playstore_code'); ?>') !== -1) {
-			console.log('[PWA] display-mode is standalone: android-app/TWA');
+			console.log('[TWA] User agents contains PS code: <?php echo $this->config->get('config_android_playstore_code'); ?>');
 			return true;
 		}
 		<?php } ?>
 		
 		return false;
-		
 	}
 	
 	/* Функция проверки режима запуска приложения */
@@ -208,12 +222,6 @@
 		if (window.matchMedia('(display-mode: standalone)').matches) {
 			console.log('[PWA] display-mode is standalone: display-mode');
 			return true;
-		}
-		
-		/* Вынесли в отдельную функцию */
-		if (document.referrer.includes('android-app://')) {
-			console.log('[PWA] display-mode is standalone: android-app/TWA');
-			//	return true;
 		}
 		
 		if ('standalone' in navigator && window.navigator.standalone === true) {
@@ -296,7 +304,6 @@
 			window.afivacceptable = false;
 			pushImageSupportToDataLayer('AVIF', 'false');
 		}
-
 	}
 
 	function checkWEBPSupport(){		
@@ -315,9 +322,9 @@
 			window.webpacceptable = false;
 			pushImageSupportToDataLayer('WEBP', 'false');
 		}
-
 	}
 
 	checkAVIFSupport();
 	checkWEBPSupport();
+	getPWAKeys();
 </script>

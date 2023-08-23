@@ -73,6 +73,9 @@
 				$this->customer->login($email, '', true);					
 			}			
 
+			$this->data['pwa_keys_href'] = $this->url->link('kp/pwa/keys');
+			$this->data['pwa_sps_href'] = $this->url->link('kp/pwa/sps');
+			$this->data['pwa_spi_href'] = $this->url->link('kp/pwa/spi');
 
 			if (!isset($this->session->data['pages_viewed'])){
 				$this->session->data['pages_viewed'] = 1;	
