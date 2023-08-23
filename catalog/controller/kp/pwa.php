@@ -7,15 +7,13 @@
 		public function index(){
 		}			
 		
-		public function logged(){	
-			
-			$this->response->setOutput(json_encode(array('logged' => $this->customer->isLogged())));
-		
+		public function logged(){				
+			$this->response->setOutput(json_encode(array('logged' => $this->customer->isLogged())));		
 		}
 		
 		public function keys(){			
-			$this->data['pwaInstallKey'] = $this->session->data['pwaInstallKey'] = md5('pwainstall' . $this->request->server['REMOTE_ADDR'] . date('d') . $this->config->get('config_encryption'));
-			$this->data['pwaSessionKey'] = $this->session->data['pwaSessionKey'] = md5('pwasession' . $this->request->server['REMOTE_ADDR'] . date('d') . $this->config->get('config_encryption'));
+			$this->session->data['pwaInstallKey'] = md5('pwainstall' . $this->request->server['REMOTE_ADDR'] . date('d') . $this->config->get('config_encryption'));
+			$this->session->data['pwaSessionKey'] = md5('pwasession' . $this->request->server['REMOTE_ADDR'] . date('d') . $this->config->get('config_encryption'));
 			
 			$this->response->setOutput(json_encode(
 				array(
@@ -25,8 +23,7 @@
 			));
 		}
 		
-		public function sps(){
-			
+		public function sps(){			
 			if (!empty($this->session->data['pwaSessionKey'])){
 				if ($this->validateKey($this->session->data['pwaSessionKey'], 'pwasession')){
 					
@@ -47,7 +44,6 @@
 				} else {
 				$this->response->setOutput('fail, no key');
 			}
-			
 		}
 		
 		public function spi(){
