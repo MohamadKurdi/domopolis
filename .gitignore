@@ -54,6 +54,7 @@
 /offline.*.html
 /browserconfig.xml
 /favicon.ico
+/assetlinks.json
 
 #Статика минификатора
 /min/
