@@ -36,8 +36,10 @@ final class PageCache{
 
 			if (!empty($_SERVER['REMOTE_ADDR'])){
 				require_once(DIR_SYSTEM . 'library/db.php');
+				require_once(DIR_SYSTEM . 'library/log.php');
 				require_once(DIR_SYSTEM . 'library/cache.php');
-				$this->db = new \DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
+				$this->db 	= new \DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
+				$this->log 	= new \Log;
 
 				$query = $this->db->ncquery("SELECT user_id FROM user WHERE ip = '" . $this->db->escape($_SERVER['REMOTE_ADDR']) . "' AND status = 1");
 				if ($query->num_rows){

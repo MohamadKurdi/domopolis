@@ -7,7 +7,9 @@
 			$this->filename = $filename;			
 
 			if ((defined('ADMIN_SESSION_DETECTED') && ADMIN_SESSION_DETECTED) || (defined('IS_DEBUG') && IS_DEBUG)){
-				$this->firePHP = \FirePHP::init();
+				if (class_exists('FirePHP')){
+						$this->firePHP = \FirePHP::init();
+				}			
 			}
 		}
 		
