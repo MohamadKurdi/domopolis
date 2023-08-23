@@ -1,4 +1,4 @@
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-sw.js');
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/7.0.0/workbox-sw.js');
 
 const OFFLINE_HTML 	= '/offline.page.html';
 const PRECACHE = [{url: OFFLINE_HTML, revision: '1003'}];
