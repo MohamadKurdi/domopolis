@@ -12,20 +12,20 @@
 		}
 		
 		public function keys(){			
-			$this->session->data['pwaInstallKey'] = md5('pwainstall' . $this->request->server['REMOTE_ADDR'] . date('d') . $this->config->get('config_encryption'));
-			$this->session->data['pwaSessionKey'] = md5('pwasession' . $this->request->server['REMOTE_ADDR'] . date('d') . $this->config->get('config_encryption'));
+			$this->session->data['xdataU17hay1123719'] = md5('pwainstall' . $this->request->server['REMOTE_ADDR'] . date('d') . $this->config->get('config_encryption'));
+			$this->session->data['ydataUian1612ia9a1'] = md5('pwasession' . $this->request->server['REMOTE_ADDR'] . date('d') . $this->config->get('config_encryption'));
 			
 			$this->response->setOutput(json_encode(
 				array(
-					'pwaInstallKey' => $this->session->data['pwaInstallKey'],
-					'pwaSessionKey' => $this->session->data['pwaSessionKey']
+					'xdataU17hay1123719' => $this->session->data['xdataU17hay1123719'],
+					'ydataUian1612ia9a1' => $this->session->data['ydataUian1612ia9a1']
 				)
 			));
 		}
 		
 		public function sps(){			
-			if (!empty($this->session->data['pwaSessionKey'])){
-				if ($this->validateKey($this->session->data['pwaSessionKey'], 'pwasession')){
+			if (!empty($this->session->data['ydataUian1612ia9a1'])){
+				if ($this->validateKey($this->session->data['ydataUian1612ia9a1'], 'pwasession')){
 					
 					if (!$this->customer->getPWASession()){
 						$this->customer->setPWASession();
@@ -47,8 +47,8 @@
 		}
 		
 		public function spi(){
-			if (!empty($this->session->data['pwaInstallKey'])){
-				if ($this->validateKey($this->session->data['pwaInstallKey'], 'pwainstall')){
+			if (!empty($this->session->data['xdataU17hay1123719'])){
+				if ($this->validateKey($this->session->data['xdataU17hay1123719'], 'pwainstall')){
 					$this->response->setOutput('ok');
 					
 					$this->updateCounter('pwainstall');
