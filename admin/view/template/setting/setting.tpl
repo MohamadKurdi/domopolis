@@ -227,6 +227,21 @@
 										<br />
 										<span class="help">Если включено, то у всех, кроме суперадминистраторов, пропадает возможность сбрасывать кэши</span>
 									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">CSV PP Без брендов</span></p>
+										<select name="config_csvprice_pro_disable_manufacturers">
+											<?php if ($config_csvprice_pro_disable_manufacturers) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+										<br />
+										<span class="help">Если производителей более 10к, CSVPP не работает корректно, нужно включить эту опцию</span>
+									</div>
 								</td>
 
 								<td style="width:20%">

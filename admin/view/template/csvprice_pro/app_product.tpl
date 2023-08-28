@@ -491,6 +491,11 @@
 							</div>
 							<div class="clearfix"></div>
 							<div class="f-row">
+								<?php if ($this->config->get('config_csvprice_pro_disable_manufacturers')) { ?>
+									<label data-prop_id="7">Manufacturer filter disabled!</label>
+									<input type="hidden" name="csv_export[product_manufacturer]" value="0" />
+									<div class="f-input"></div>
+								<?php } else { ?>
 								<label data-prop_id="7"><?php echo $entry_manufacturer; ?></label>
 								<div class="f-input">
 									<input type="hidden" name="csv_export[product_manufacturer]" value="0" />
@@ -511,7 +516,9 @@
 									/ <a class="show_scroll"><?php echo $text_select;?></a>
 									</div>
 								</div>
+								<?php } ?>
 							</div>
+							<div class="clearfix"></div>
 							<div class="f-row">
 								<label data-prop_id="32"><?php echo $entry_image_url; ?></label>
 								<div class="f-input">

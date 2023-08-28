@@ -193,7 +193,7 @@ class ControllerDPRainForest extends Controller {
 
 		if ($this->config->get('config_rainforest_delete_no_offers') && $this->config->get('config_rainforest_delete_no_offers_counter')){
 			echoLine('[ControllerDPRainForest::cleardatabasecron] Starting deletenoofferscron(1)!', 's');
-		//	$this->deletenoofferscron(1);
+			$this->deletenoofferscron(1);
 		}
 		if ($this->config->get('config_rainforest_delete_no_offers_manual') && $this->config->get('config_rainforest_delete_no_offers_counter_manual')){
 			echoLine('[ControllerDPRainForest::cleardatabasecron] Starting deletenoofferscron(0)!', 's');

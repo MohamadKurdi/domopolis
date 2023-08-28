@@ -3620,6 +3620,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_enable_highload_admin_mode'] = $this->config->get('config_enable_highload_admin_mode');
         }
 
+        if (isset($this->request->post['config_csvprice_pro_disable_manufacturers'])) {
+            $this->data['config_csvprice_pro_disable_manufacturers'] = $this->request->post['config_csvprice_pro_disable_manufacturers'];
+        } else {
+            $this->data['config_csvprice_pro_disable_manufacturers'] = $this->config->get('config_csvprice_pro_disable_manufacturers');
+        }
+
         if (isset($this->request->post['config_enable_amazon_asin_file_cache'])) {
             $this->data['config_enable_amazon_asin_file_cache'] = $this->request->post['config_enable_amazon_asin_file_cache'];
         } else {
