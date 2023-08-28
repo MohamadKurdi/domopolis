@@ -125,8 +125,7 @@
 				$smste = trim($smste);
 			}
 			
-			return implode(' / ', $ste);
-			
+			return implode(' / ', $ste);			
 		}
 		
 		public function removeSpaces($st){
@@ -1085,15 +1084,11 @@
 			$this->load->model('tool/image');
 			$this->load->model('localisation/legalperson');
 			
-			if ($order_array && is_array($order_array) && count($order_array)>0) {
-				
+			if ($order_array && is_array($order_array) && count($order_array)>0) {				
 				$orders_string = implode(',', $order_array);
-				$query = $this->db->query("SELECT DISTINCT order_id FROM `" . DB_PREFIX . "order` WHERE `order_id` IN (" . $this->db->escape($orders_string) . ")");
-				
-				} else {
-				
-				$query = $this->db->query("SELECT DISTINCT order_id FROM `" . DB_PREFIX . "order` WHERE `order_id` = '" . (int)$order_id . "'");
-				
+				$query = $this->db->query("SELECT DISTINCT order_id FROM `" . DB_PREFIX . "order` WHERE `order_id` IN (" . $this->db->escape($orders_string) . ")");				
+				} else {				
+				$query = $this->db->query("SELECT DISTINCT order_id FROM `" . DB_PREFIX . "order` WHERE `order_id` = '" . (int)$order_id . "'");				
 			}
 			
 			
@@ -1768,7 +1763,8 @@
 						,'ЯМаркетТоварВФиде'    		    	=> $real_product['yam_in_feed']?'Истина':'Ложь'		
 						,'ЯМаркетТоварСкрыт'    		    	=> $real_product['yam_hidden']?'Истина':'Ложь'		
 						,'ЯМаркетТоварНеСоздан'    		    	=> $real_product['yam_not_created']?'Истина':'Ложь'		
-						,'ЭтоНеликид'    		    			=> $real_product['is_illiquid']?'Истина':'Ложь'		
+						,'ЭтоНеликид'    		    			=> $real_product['is_illiquid']?'Истина':'Ложь'
+						,'АмазонДобавлен'    		    		=> $real_product['added_from_amazon']?'Истина':'Ложь'			
 						,'АмазонНеверныйASIN'    		    	=> $real_product['amzn_invalid_asin']?'Истина':'Ложь'				
 						,'АмазонТоварНеНайден'    		    	=> $real_product['amzn_not_found']?'Истина':'Ложь'		
 						,'АмазонДатаПоследнегоПоиска'    		=> $real_product['amzn_last_search']		
