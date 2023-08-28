@@ -5831,7 +5831,39 @@
 										</div>
 										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Ключ rfAPI</span></p>
-											<input type="text" name="config_rainforest_api_key" value="<?php echo $config_rainforest_api_key; ?>" size="50" style="width:100px;" />
+											<input type="text" name="config_rainforest_api_key" value="<?php echo $config_rainforest_api_key; ?>" size="50" style="width:150px;" />
+											<br/>
+											<span class="help" style="display:inline-block;border-bottom:1px dashed black; cursor:pointer;" onclick="getZipRNFcodes();">получить zipcodes</span>
+											<script>
+												function getZipRNFcodes(){
+													var zipCodeFields = [];
+													for (var i = 1; i <= 5; i++) {
+														var field = $('input[name=config_rainforest_api_zipcode_' + i + ']');
+														zipCodeFields.push(field);
+													}
+
+													$.ajax({
+														url: 'index.php?route=setting/rnf/getZipCodes&token=<?php echo $token; ?>',
+														method: 'GET',
+														dataType: 'json',
+														success: function (ajaxResponse) {
+															for (var i = 0; i < zipCodeFields.length; i++) {
+																if (i < ajaxResponse.length) {
+																	console.log(ajaxResponse[i]);
+																	zipCodeFields[i].val(ajaxResponse[i]);
+																	zipCodeFields[i].trigger('change');
+																} else {
+																	zipCodeFields[i].val('');
+																	zipCodeFields[i].trigger('change');
+																}
+															}
+														},
+														error: function () {
+															console.error('AJAX request failed');
+														}
+													});
+												}
+											</script>
 										</div>
 										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Домен rfAPI - 1</span></p>

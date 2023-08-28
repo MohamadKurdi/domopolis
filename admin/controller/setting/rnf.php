@@ -310,6 +310,23 @@ class ControllerSettingRnf extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
+	public function getZipCodes(){
+		$result = [];
+
+		$zipcodes = $this->rainforestAmazon->checkZipCodes();
+
+		if (!empty($zipcodes['zipcodes']) && !empty($zipcodes['zipcodes'][$this->config->get('config_rainforest_api_domain_1')])){
+			foreach ($zipcodes['zipcodes'][$this->config->get('config_rainforest_api_domain_1')] as $zipcode){
+				if ($zipcode['status'] == 'available'){
+					$result[] = $zipcode['zipcode'];
+				}				
+			}
+		} else {
+		}
+
+		$this->response->setOutput(json_encode($result));
+	}
+
 	public function calculate(){
 		$this->load->model('catalog/product');		
 		$mainFormula 					= $this->request->post['main_formula'];

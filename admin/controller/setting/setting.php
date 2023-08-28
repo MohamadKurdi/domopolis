@@ -4773,7 +4773,7 @@ class ControllerSettingSetting extends Controller
             $this->data['config_clickmap_enable'] = $this->config->get('config_clickmap_enable');
         }
         
-        
+        $this->data['token'] = $this->session->data['token'];
         
         $this->template = 'setting/setting.tpl';
         $this->children = array(
