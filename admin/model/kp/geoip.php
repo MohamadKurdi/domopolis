@@ -107,8 +107,7 @@
 			$city = str_replace('г ', '', $city);
 			$city = trim($city);
 			
-			return $city;
-			
+			return $city;			
 		}
 		
 		public function getCurrentTimeInTimezone($timezone, $full){				
@@ -156,8 +155,6 @@
 				return false;
 				} else {
 				return true;
-				}
-			
+				}		
 		}
-		
 	}							

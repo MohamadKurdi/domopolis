@@ -153,7 +153,6 @@ class RainforestAmazon
 				'parse_mode' => 'HTML',
 			]);
 
-			var_dump($result);
 		} catch (\Longman\TelegramBot\Exception\TelegramException $e) {
 			echoLine($e->getMessage(), 'e');
 		}
@@ -272,7 +271,7 @@ class RainforestAmazon
 		if ($error){
 			if ($this->config->get('config_telegram_bot_enable_alerts')){
 				$text = '😂 <b>Хьюстон, у нас проблема!</b>' . PHP_EOL . PHP_EOL;
-				$text .= '@lexdanelia, тут это, с оплатой Rainforest что-то, мы цены не обновляем!' . PHP_EOL . PHP_EOL;
+				$text .= 'Проблемы с Rainforest API. Скорее всего не оплачен тариф.' . PHP_EOL . PHP_EOL;
 				$text .= 'Сервер отвечает: ' . $api_result . PHP_EOL;
 				$this->sendAlertToTelegram($text);
 			}
