@@ -77,7 +77,7 @@ class RainforestAmazon
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/RainforestLogger.php');
 		$rainforestLogger = new Amazon\RainforestLogger($registry);
 
-		if ($this->config->get('config_rainforest_enable_api')){
+		if ($this->config->get('config_rainforest_enable_api') && $this->config->get('config_rainforest_api_key')){
 			$this->rfClient = new \CaponicaAmazonRainforest\Client\RainforestClient(['api_key' => trim($this->config->get('config_rainforest_api_key'))], $rainforestLogger);
 		} else {
 			$this->rfClient = null;
@@ -120,7 +120,11 @@ class RainforestAmazon
 	}
 
 	public function  getValidAmazonSitesArray(){
-		return $this->rfClient->getValidAmazonSitesArray();
+		if ($this->rfClient){
+			return $this->rfClient->getValidAmazonSitesArray();
+		} else {
+			return [];
+		}
 	}
 
 	public static function getAsinFromRequest($key, $rfOfferList){
