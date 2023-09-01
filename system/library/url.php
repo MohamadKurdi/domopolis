@@ -3,12 +3,13 @@ class Url {
     private $url;
     private $registry   = null;
     private $config     = null;
+    private $cache      = null;
     private $db         = null;
 
     private $rewrite = array();
 
     public function __construct($url, $registry = false) {
-        if ($registry){
+        if ($registry && is_object($registry)){
             $this->registry = $registry;
             $this->config   = $registry->get('config');
             $this->cache    = $registry->get('cache');
@@ -34,7 +35,7 @@ class Url {
 
     public function checkIfGenerate($param){        
         if (!$this->config->get('config_seo_url_do_generate')){
-            if ($this->registry->has('short_uri_queries') && !empty($this->registry->get('short_uri_queries')[$param])){
+            if (is_object($this->registry) && $this->registry->has('short_uri_queries') && !empty($this->registry->get('short_uri_queries')[$param])){
                 return false;
             }
         }
@@ -45,7 +46,7 @@ class Url {
     public function linkfromid($param, $id){
         $keywords = [];
 
-        if ($this->config->get('config_seo_url_from_id') && $this->registry->has('short_uri_queries') && !empty($this->registry->get('short_uri_queries')[$param])){
+        if ($this->config->get('config_seo_url_from_id') && is_object($this->registry) && $this->registry->has('short_uri_queries') && !empty($this->registry->get('short_uri_queries')[$param])){
             foreach ($this->registry->get('languages') as $language){
                 $keywords[$language['language_id']] = $this->registry->get('short_uri_queries')[$param] . $id;
             }
@@ -112,38 +113,49 @@ class Url {
         return $route;
     }
 
-    private function linkCached($route, $args, $language_id = false) {                
+    private function linkUnCached($route, $args, $language_id = false){
         $route = $this->rewriteSimpleCheckout($route);
 
-        if (!$url = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$route], [$args, $language_id]))){
+        if (empty($this->url)) {
+            $url = 'https://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/.\\') . '/index.php?route=' . $route;
+        } else {
+            $url = ($this->url . 'index.php?route=' . $route);
+        }
 
-            if (empty($this->url)) {
-                $url = 'https://' . $_SERVER['HTTP_HOST'] . rtrim(dirname($_SERVER['SCRIPT_NAME']), '/.\\') . '/index.php?route=' . $route;
+        if ($args) {
+            if (is_array($args)) {
+                $url .= '&amp;' . http_build_query($args);
             } else {
-                $url = ($this->url . 'index.php?route=' . $route);
+                $url .= str_replace('&', '&amp;', '&' . ltrim($args, '&'));
             }
+        }
 
-            if ($args) {
-                if (is_array($args)) {
-                    $url .= '&amp;' . http_build_query($args);
-                } else {
-                    $url .= str_replace('&', '&amp;', '&' . ltrim($args, '&'));
-                }
+        foreach ($this->rewrite as $rewrite) {  
+            if ($language_id && method_exists($rewrite, 'rewriteLanguage')){            
+                $url = $rewrite->rewriteLanguage($url, $language_id);
+            } else {
+                $url = $rewrite->rewrite($url);
             }
-
-            foreach ($this->rewrite as $rewrite) {  
-                if ($language_id && method_exists($rewrite, 'rewriteLanguage')){            
-                    $url = $rewrite->rewriteLanguage($url, $language_id);
-                } else {
-                    $url = $rewrite->rewrite($url);
-                }
-            }
-
-            $this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$route], [$args, $language_id]), $url);
         }
 
         if (defined('IS_ADMIN') && IS_ADMIN){
             $url = str_replace('&amp;', '&', $url);
+        }
+
+        return $url;
+    }
+
+    private function linkCached($route, $args, $language_id = false) {                
+        $route = $this->rewriteSimpleCheckout($route);
+
+        if (!empty($this->cache)){
+            return $this->linkUnCached($route, $args, $language_id = false);
+        }
+
+        if (!$url = $this->cache->get($this->registry->createCacheQueryStringData(__METHOD__, [$route], [$args, $language_id]))){
+            $url = $this->linkUnCached($route, $args, $language_id = false);
+
+            $this->cache->set($this->registry->createCacheQueryStringData(__METHOD__, [$route], [$args, $language_id]), $url);
         }
 
         return $url;
