@@ -90,6 +90,8 @@
 		}
 
 		private function longToShortUrlAliasImplementation(){
+			$url = false;				
+
 			if (thisIsAjax()){
 				return $this;
 			}
@@ -99,7 +101,8 @@
 			}
 
 			if ($this->config->get('config_seo_url_from_id') && $this->config->get('config_seo_url_do_redirect_to_new')){
-				if ($this->registry->get('short_uri_queries')){		
+				if ($this->registry->get('short_uri_queries')){	
+
 					$exploded = explode('/', rtrim($this->request->server['REQUEST_URI'], '/'));	
 					$keywords = [];
 					foreach ($exploded as $part){
@@ -108,34 +111,54 @@
 						}
 					}
 
-					$url = '';
-					$url_parts = [];
+					$language_id = (int)$this->config->get('config_language_id');
+					if ($this->config->get('config_seo_url_do_redirect_to_new_with_language')){						
+						if ($this->config->get('config_seo_url_do_redirect_to_new_lang_was_second') && count($keywords) == 1 && !empty($keywords[0])){
+							if ($keywords[0] == $this->config->get('config_seo_url_do_redirect_to_new_lang_was_second')){
+								$url = '/';
+							}
+						}
 
-					foreach ($keywords as $keyword){
-						$old_alias_query = $this->db->ncquery("SELECT * FROM url_alias_old WHERE keyword LIKE '" . $this->db->escape($keyword) . "'");
-						if ($old_alias_query->num_rows){
-							if (!empty($old_alias_query->row['query'])){
-								$exploded = explode('=', $old_alias_query->row['query']);
+						$prefix_exists = false;
+						foreach ($this->registry->get('languages') as $language){
+							if (!empty($keywords[0]) && $keywords[0] == $language['urlcode']){
+								$prefix_exists 	= true;
+								$language_id 	= $language['language_id'];
+								array_shift($keywords);	
+								break;					
+							}					
+						}
+					}			
 
-								if (count($exploded) == 2){
-									if (!empty($this->registry->get('short_uri_queries')[$exploded[0]])){
-										$url_parts[] = $this->registry->get('short_uri_queries')[$exploded[0]] . (int)$exploded[1];								
+					if (!$url){				
+						$url = '';
+						$url_parts = [];
+						foreach ($keywords as $keyword){
+							$old_alias_query = $this->db->ncquery("SELECT * FROM url_alias_old WHERE keyword LIKE '" . $this->db->escape($keyword) . "'");
+							if ($old_alias_query->num_rows){
+								if (!empty($old_alias_query->row['query'])){
+									$exploded = explode('=', $old_alias_query->row['query']);
+
+									if (count($exploded) == 2){
+										if (!empty($this->registry->get('short_uri_queries')[$exploded[0]])){
+											$url_parts[] = $this->registry->get('short_uri_queries')[$exploded[0]] . (int)$exploded[1];								
+										}
 									}
 								}
 							}
 						}
-					}
 
-					if (!empty($url_parts)){
-						$url = '/';
-						$url .= implode('/', $url_parts);
+						if (!empty($url_parts)){
+							$url = '/';
+							$url .= implode('/', $url_parts);
+						}
 					}
 
 					if ($url){
 						header('X-REDIRECT: longToShortUrlAliasImplementation');
 						header('Location: ' . $url, true, 301);						
 						exit();
-					}
+					}		
 				}
 			}
 
