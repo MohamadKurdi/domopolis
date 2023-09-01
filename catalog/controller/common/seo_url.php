@@ -40,7 +40,7 @@
 			$files = glob(DIR_APPLICATION . '/view/shortcodes/*.php');
 			if ($files) {
 				foreach ($files as $file) {
-					require_once(VQMod::modCheck($file));
+					require_once($file);
 					
 					$file       = basename($file, ".php");
 					$extClass   = 'Shortcodes' . preg_replace('/[^a-zA-Z0-9]/', '', $file);
@@ -56,7 +56,7 @@
 			//=== Themes shortcodes : for theme developer
 			$file = DIR_TEMPLATE . $this->config->get('config_template') . '/shortcodes_theme.php';
 			if (file_exists($file)) {
-				require_once(VQMod::modCheck($file));
+				require_once($file);
 				
 				$class         = new ShortcodesTheme($this->registry);
 				$scThemes      = get_class_methods($class);
@@ -68,7 +68,7 @@
 			//=== Custom shortcodes : user power!
 			$file = DIR_TEMPLATE . $this->config->get('config_template') . '/shortcodes_custom.php';
 			if (file_exists($file)) {
-				require_once(VQMod::modCheck($file));
+				require_once($file);
 				
 				$class         = new ShortcodesCustom($this->registry);
 				$scCustom      = get_class_methods($class);
