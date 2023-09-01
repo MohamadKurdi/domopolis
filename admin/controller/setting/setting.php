@@ -3153,6 +3153,7 @@ class ControllerSettingSetting extends Controller
 
         $assets_config_dev = [
             'config_header_min_scripts_dev',
+            'config_preload_links_dev',
             'config_header_excluded_scripts_dev',
             'config_header_min_styles_dev',
             'config_header_excluded_styles_dev',

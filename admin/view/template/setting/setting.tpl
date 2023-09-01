@@ -4559,29 +4559,13 @@
 
 									<td width="20%"> 
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Этот язык был вторичным</span></p>
-										<select name="config_seo_url_do_redirect_to_new_lang_was_second">
-										<?php foreach ($languages as $language) { ?>
-											<?php if ($language['code'] == $config_seo_url_do_redirect_to_new_lang_was_second) { ?>
-												<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
-												<?php } else { ?>
-												<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
-											<?php } ?>
-										<?php } ?>
-										</select>
+										<input type="text" name="config_seo_url_do_redirect_to_new_lang_was_second" value="<?php echo $config_seo_url_do_redirect_to_new_lang_was_second; ?>" size="10" />							
 										<span class="help">Этот язык был вторичным и имел префикс, он будет редиректиться на урл без префикса</span>																				
 									</td>	
 
 									<td width="20%"> 
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Этот язык стал вторичным</span></p>
-										<select name="config_seo_url_do_redirect_to_new_lang_became_second">
-										<?php foreach ($languages as $language) { ?>
-											<?php if ($language['code'] == $config_seo_url_do_redirect_to_new_lang_became_second) { ?>
-												<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
-												<?php } else { ?>
-												<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
-											<?php } ?>
-										<?php } ?>
-										</select>
+										<input type="text" name="config_seo_url_do_redirect_to_new_lang_became_second" value="<?php echo $config_seo_url_do_redirect_to_new_lang_became_second; ?>" size="10" />		
 										<span class="help">Этот язык не имел префикса, а теперь имеет</span>																				
 									</td>
 								</tr>
