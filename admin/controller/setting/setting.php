@@ -2744,6 +2744,24 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_seo_url_do_redirect_to_new'] = $this->config->get('config_seo_url_do_redirect_to_new');
         }
+
+        if (isset($this->request->post['config_seo_url_do_redirect_to_new_with_language'])) {
+            $this->data['config_seo_url_do_redirect_to_new_with_language'] = $this->request->post['config_seo_url_do_redirect_to_new_with_language'];
+        } else {
+            $this->data['config_seo_url_do_redirect_to_new_with_language'] = $this->config->get('config_seo_url_do_redirect_to_new_with_language');
+        }
+
+        if (isset($this->request->post['config_seo_url_do_redirect_to_new_lang_was_second'])) {
+            $this->data['config_seo_url_do_redirect_to_new_lang_was_second'] = $this->request->post['config_seo_url_do_redirect_to_new_lang_was_second'];
+        } else {
+            $this->data['config_seo_url_do_redirect_to_new_lang_was_second'] = $this->config->get('config_seo_url_do_redirect_to_new_lang_was_second');
+        }
+
+        if (isset($this->request->post['config_seo_url_do_redirect_to_new_lang_became_second'])) {
+            $this->data['config_seo_url_do_redirect_to_new_lang_became_second'] = $this->request->post['config_seo_url_do_redirect_to_new_lang_became_second'];
+        } else {
+            $this->data['config_seo_url_do_redirect_to_new_lang_became_second'] = $this->config->get('config_seo_url_do_redirect_to_new_lang_became_second');
+        }
         
         if (isset($this->request->post['config_file_extension_allowed'])) {
             $this->data['config_file_extension_allowed'] = $this->request->post['config_file_extension_allowed'];

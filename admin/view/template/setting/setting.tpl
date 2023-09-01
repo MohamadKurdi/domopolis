@@ -4477,21 +4477,11 @@
 												<option value="0"  selected="selected">Не генерировать</option>
 											<? } ?>
 										</select>
-										<span class="help">Только для ЧПУ = идентификатор, позволяет значительно разгрузить базу. используется конфиг shorturlmap.json</span>										
+										<span class="help">Только для ЧПУ = идентификатор, позволяет при отключении значительно разгрузить базу. используется конфиг shorturlmap.json</span>										
 									</td>
 
 									<td width="20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">301 Редирект ЧПУ</span></p>
-										<select name="config_seo_url_do_redirect_to_new">
-											<?php if ($config_seo_url_do_redirect_to_new) { ?>
-												<option value="1" selected="selected">Переадресация</option>
-												<option value="0">Нет переадресации</option>
-											<?php } else { ?>													
-												<option value="1">Переадресация</option>
-												<option value="0"  selected="selected">Нет переадресации</option>
-											<? } ?>
-										</select>
-										<span class="help">Делать редирект при переходе на новую логику. Нужна табличка url_alias_old</span>										
+
 									</td>
 
 									<td width="20%">
@@ -4536,6 +4526,64 @@
 										<span class="help">Настройка только для совместимости, либо для магазина в разработке</span>										
 									</td>
 
+								</tr>
+
+								<tr>
+									<td width="20%"> 
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">301 Редирект ЧПУ</span></p>
+										<select name="config_seo_url_do_redirect_to_new">
+											<?php if ($config_seo_url_do_redirect_to_new) { ?>
+												<option value="1" selected="selected">Переадресация</option>
+												<option value="0">Нет переадресации</option>
+											<?php } else { ?>													
+												<option value="1">Переадресация</option>
+												<option value="0"  selected="selected">Нет переадресации</option>
+											<? } ?>
+										</select>
+										<span class="help">Делать редирект при переходе на новую логику. Нужна табличка url_alias_old</span>																				
+									</td>	
+
+									<td width="20%"> 
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">301 редирект языка</span></p>
+										<select name="config_seo_url_do_redirect_to_new_with_language">
+											<?php if ($config_seo_url_do_redirect_to_new_with_language) { ?>
+												<option value="1" selected="selected">Да</option>
+												<option value="0">Нет</option>
+											<?php } else { ?>													
+												<option value="1">Да</option>
+												<option value="0"  selected="selected">Нет</option>
+											<? } ?>
+										</select>
+										<span class="help">Вместе с сменой логики урлов также был изменен язык</span>																				
+									</td>	
+
+									<td width="20%"> 
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Этот язык был вторичным</span></p>
+										<select name="config_seo_url_do_redirect_to_new_lang_was_second">
+										<?php foreach ($languages as $language) { ?>
+											<?php if ($language['code'] == $config_seo_url_do_redirect_to_new_lang_was_second) { ?>
+												<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
+												<?php } else { ?>
+												<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+										</select>
+										<span class="help">Этот язык был вторичным и имел префикс, он будет редиректиться на урл без префикса</span>																				
+									</td>	
+
+									<td width="20%"> 
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Этот язык стал вторичным</span></p>
+										<select name="config_seo_url_do_redirect_to_new_lang_became_second">
+										<?php foreach ($languages as $language) { ?>
+											<?php if ($language['code'] == $config_seo_url_do_redirect_to_new_lang_became_second) { ?>
+												<option value="<?php echo $language['code']; ?>" selected="selected"><?php echo $language['name']; ?></option>
+												<?php } else { ?>
+												<option value="<?php echo $language['code']; ?>"><?php echo $language['name']; ?></option>
+											<?php } ?>
+										<?php } ?>
+										</select>
+										<span class="help">Этот язык не имел префикса, а теперь имеет</span>																				
+									</td>
 								</tr>
 							</table>
 
