@@ -75,6 +75,10 @@ class Suppliers
 
 	public function addSupplier($name) {
 
+		if (!$name){
+			return 0;
+		}
+
 		if (!$this->checkIfSupplierExistsInDataBase($name)){
 
 			$this->db->query("INSERT INTO suppliers SET 
