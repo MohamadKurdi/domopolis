@@ -9,8 +9,10 @@ class ModelSaleRejectReason extends Model {
 	function getRejectReasonName($reject_reason_id){
 		$query = $this->db->query("SELECT name FROM order_reject_reason WHERE reject_reason_id = '" . $reject_reason_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "' LIMIT 1");
 		
-		return $query->row['name'];
-	}
-	
-	
+		if ($query->num_rows){
+			return $query->row['name'];
+		} else {
+			return 'Unknown';
+		}	
+	}	
 }
