@@ -257,20 +257,20 @@
 				$sql = "SELECT * FROM language";
 				
 				$sort_data = array(
-				'name',
-				'code',
-				'sort_order'
+					'name',
+					'code',
+					'sort_order'
 				);	
 				
 				if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 					$sql .= " ORDER BY " . $data['sort'];	
-					} else {
+				} else {
 					$sql .= " ORDER BY sort_order, name";	
 				}
 				
 				if (isset($data['order']) && ($data['order'] == 'DESC')) {
 					$sql .= " DESC";
-					} else {
+				} else {
 					$sql .= " ASC";
 				}
 				
@@ -289,21 +289,19 @@
 				$query = $this->db->query($sql);
 				
 				return $query->rows;
-				} else {
-				//$language_data = $this->cache->get('language');
-				$language_data = false;
+			} else {
+
+				$language_data = array();
 				
-				if (!$language_data) {
-					$language_data = array();
-					
-					$query = $this->db->query("SELECT * FROM language ORDER BY sort_order, name");
-					
-					foreach ($query->rows as $result) {
-						$language_data[$result['code']] = array(
+				$query = $this->db->query("SELECT * FROM language ORDER BY sort_order, name");
+				
+				foreach ($query->rows as $result) {
+					$language_data[$result['code']] = array(
 						'language_id' => $result['language_id'],
 						'name'        => $result['code'],//$result['name']
 						'code'        => $result['code'],
-						'hreflang'        => $result['hreflang'],
+						'urlcode'     => $result['urlcode'],
+						'hreflang'    => $result['hreflang'],
 						'locale'      => $result['locale'],
 						'image'       => $result['image'],
 						'directory'   => $result['directory'],
@@ -311,9 +309,7 @@
 						'sort_order'  => $result['sort_order'],
 						'front'       => $result['front'],
 						'status'      => $result['status']
-						);
-					}
-					//	$this->cache->set('language', $language_data);
+					);
 				}
 				
 				return $language_data;			
