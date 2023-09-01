@@ -1,0 +1,6 @@
+{
+	"product/product/getProductsArrayDataJSON": "config.php",
+	"product/product/getDeliveryInfo": "config.php",
+	"product/product/getPriceInfo": "config.php",
+	"product/product/review": "config.php"
+}

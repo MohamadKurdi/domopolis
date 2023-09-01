@@ -1,0 +1,10 @@
+{
+	"quality":{
+		"config_image_jpeg_quality" : "80",
+		"config_image_webp_quality" : "60",
+		"config_image_avif_quality" : "50"
+	},
+	"fallback":{
+		"png" : "webp"
+	}
+}

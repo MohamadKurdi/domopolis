@@ -1,0 +1,50 @@
+{
+	"sorts" : [
+		{
+			"name":				"Популярные",
+			"text_variable":	"populars",
+			"field":			"stock_status_id ASC, p.sort_order",
+			"order":			"DESC",
+			"visible":			true
+		},
+		{
+			"name":				"Цена по возрастанию",
+			"text_variable":	"price_asc",
+			"field":			"p.price",
+			"order":			"ASC",
+			"visible":			true
+		},
+		{
+			"name":				"Цена по убыванию",
+			"text_variable":	"price_desc",
+			"field":			"p.price",
+			"order":			"DESC",
+			"visible":			true
+		}
+	],
+
+	"sorts_available": {
+		"По названию" 						: 	"pd.name",
+		"По id"	 							: 	"p.product_id",
+		"По артикулу" 						: 	"p.model",
+		"По количеству" 					: 	"p.quantity",
+		"По цене" 							: 	"p.price",
+		"По внутреннему рейтингу" 			:	"rating",
+		"По рейтингу Amazon" 				:	"p.amzn_rating",
+		"По полю сортировки" 				:	"p.sort_order",
+		"По дате добавления" 				:	"p.date_added",
+		"По просмотрам" 					:	"p.viewed",
+		"По количеству" 					:	"p.quantity",
+		"Случайно без кэширования"			:	"rand",
+		"Случайно с кэшированием 10"		:	"rand-10",
+		"Случайно с кэшированием 100"		:	"rand-100",
+		"По бренду" 						:	"p.manufacturer_id",
+		"По наличию + дате добавления" 		:	"stock_status_id ASC, p.date_added",
+		"По наличию + полю сортировки" 		:	"stock_status_id ASC, p.sort_order",
+		"По наличию + просмотрам" 			:	"stock_status_id ASC, p.viewed"	
+	},
+
+	"sort_default"	: "stock_status_id ASC, p.sort_order",
+	"order_default"	: "ASC"
+
+}
