@@ -224,12 +224,12 @@ class ControllerCommonHeader extends Controller
             $this->data['ocfilter'] = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['ocfilter_page'] = $this->url->link('catalog/ocfilter/page', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['ocfilter_module'] = $this->url->link('module/ocfilter', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['megafilter_module'] = $this->url->link('module/mega_filter', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
 
             $this->data['sale_checkbox'] = $this->url->link('sale/receipt', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['module_checkbox'] = $this->url->link('module/receipt', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['log_checkbox'] = $this->url->link('tool/receipt_log', 'token=' . $this->session->data['token'], 'SSL');
-
 
             $this->data['addspecials'] = $this->url->link('catalog/addspecials', 'token='.$this->session->data['token'], 'SSL');
             $this->data['labelmaker'] = $this->url->link('module/labelmaker', 'token=' . $this->session->data['token'], 'SSL');

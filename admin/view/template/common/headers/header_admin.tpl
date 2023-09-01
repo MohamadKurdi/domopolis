@@ -384,7 +384,9 @@
 										<li><a href="<?php echo $mod_featured; ?>"><i class="fa fa-thumbs-up"></i><span>Рекомендуемые табами (ручное)</span></a></li>
 										<li><a href="<?php echo $mod_featuredreview; ?>"><i class="fa fa-comment"></i><span>Последние с отзывами (авто)</span></a></li>
 									</ul>										
-								</li>		
+								</li>
+								<li><a class="home_icon_style"  href="<?php echo $ocfilter_module; ?>" target="_blank"><i class="fa fa-server"></i><span>OcFilter <sup style="color:red">DEV</sup></span></a></li>		
+								<li><a class="home_icon_style"  href="<?php echo $megafilter_module; ?>" target="_blank"><i class="fa fa-server"></i><span>MegaFilter <sup style="color:green">CURRENT</sup></span></a></li>		
 								<li><a class="home_icon_style" href="<?php echo $notify_bar; ?>"><i class="fa fa-cog"></i><span>Верхняя полоса</span></a></li>								
 								<li><a class="home_icon_style" href="<?php echo $etemplate; ?>"><i class="fa fa-cog"></i><span>Настройка шаблонов EMail</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $shipping; ?>"><i class="fa fa-truck"></i><span><?php echo $text_shipping; ?></span></a></li>
@@ -482,8 +484,7 @@
 								</li>							
 								<li><a class="home_icon_style"  href="<?php echo $courier_face2; ?>" target="_blank"><i class="fa fa-bus" ></i><span>Интерфейс курьера</span></a></li>								
 								<li><a class="home_icon_style"  href="<?php echo $simple_module; ?>" target="_blank"><i class="fa fa-server"></i><span>Чекаут</span></a></li>
-								<li><a class="home_icon_style"  href="<?php echo $simple_module_abandoned; ?>"><i class="fa fa-server"></i><span>Брошенные корзины</span></a></li>								
-								<li><a class="home_icon_style"  href="<?php echo $ocfilter_module; ?>" target="_blank"><i class="fa fa-server"></i><span>Модуль фильтра</span></a></li>								
+								<li><a class="home_icon_style"  href="<?php echo $simple_module_abandoned; ?>"><i class="fa fa-server"></i><span>Брошенные корзины</span></a></li>																
 								<li><a class="home_icon_style" href="<?php echo $setting; ?>"><i class="fa fa-cog"></i><span><?php echo $text_setting; ?></span></a></li>
 								<li><a class="home_icon_style" href="<? echo $adminlog_url; ?>"><i class="fa fa-user"></i><span>Журнал доступа</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $error_log; ?>"><i class="fa fa-bars"></i><span>Журналы системы</span></a></li>								
