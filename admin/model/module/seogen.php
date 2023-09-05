@@ -1,16 +1,13 @@
 <?php
 	
 	class ModelModuleSeogen extends Model {
-		public $keywords = false;
-		private $manufr_desc = false;
+		public $keywords 		= false;
+		private $manufacturer_has_description 	= true;
 		
 		public function __construct($registry) {
 			parent::__construct($registry);
 			
 			require_once(DIR_SYSTEM . 'library/urlify.php');
-			
-			$query = $this->db->query("SHOW TABLES LIKE 'manufacturer_description'");
-			$this->manufr_desc = $query->num_rows;
 		}
 		
 		public function loadKeywords() {
@@ -31,13 +28,25 @@
 			$this->generateCategory($category[0], $this->config->get('seogen'));
 		}
 		
-		public function urlifyProduct($product_id) {
+		public function urlifyProduct($product_id, $language_id = false) {
 			$seogen = $this->config->get('seogen');
 			
-			$product = $this->getProducts($seogen, $product_id);
-			if (count($product)) {
-				$this->generateProduct($product[0], $seogen);
+			if (!$language_id){
+				$seogen['language_id'] = $this->registry->get('languages')[$this->config->get('config_language')]['language_id'];
+			} else {
+				$seogen['language_id'] = $language_id;
 			}
+
+			if (!empty($seogen[$seogen['language_id']])){
+				$seogen = array_merge($seogen, $seogen[$seogen['language_id']]);
+			}
+			
+			$product = $this->getProducts($seogen, $product_id);
+			if (count($product)) {		
+				return $this->generateProduct($product[0], $seogen);
+			}
+
+			return false;
 		}
 		
 		public function urlifyManufacturer($manufacturer_id) {
@@ -88,9 +97,6 @@
 			if(!empty($data['products_template'])) {
 				if(isset($data['products_overwrite'])) {
 					if(isset($data['only_categories']) && count($data['only_categories'])) {
-						/*	$this->db->query("DELETE FROM `url_alias` WHERE `query` IN " .
-							"(SELECT concat('product_id=', product_id) FROM `product_to_category` WHERE category_id IN (" . implode(",", $data['only_categories']) . ") )");
-						*/
 						} else {
 						$this->db->query("DELETE FROM `url_alias` WHERE `query` LIKE ('product_id=%');");
 					}
@@ -255,30 +261,31 @@
 		}
 		
 		
-		public function generateProduct($product, $data, $return = false) {
+		public function generateProduct($product, $data, $simulate = false) {
 			
 			$tags = array(
-			'[product_name]' 		=> $product['name'],
-			'[product_id]' 			=> $product['product_id'],
-			'[product_description]' => strip_tags(html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8')),
-			'[model_name]' 			=> $product['model'],
-			'[manufacturer_name]' 	=> $product['manufacturer']?$product['manufacturer'].'.':'',
-			'[category_name]' 		=> $product['category'],
-			'[location]' 			=> $product['location'],
-			'[sku]' 				=> $product['sku'],
-			'[madeof]' 				=> $product['madeof']?$product['madeof'].', ':'',
-			'[type]' 				=> $product['type']?$product['type']:'',
-			'[price]' 				=> $this->currency->format($product['price']),
+				'[product_name]' 		=> $product['name'],
+				'[product_id]' 			=> $product['product_id'],
+				'[product_description]' => strip_tags(html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8')),
+				'[model_name]' 			=> $product['model'],
+				'[manufacturer_name]' 	=> $product['manufacturer']?$product['manufacturer'].'.':'',
+				'[category_name]' 		=> $product['category'],
+				'[location]' 			=> $product['location'],
+				'[sku]' 				=> $product['sku'],
+				'[madeof]' 				=> $product['madeof']?$product['madeof'].', ':'',
+				'[type]' 				=> $product['type']?$product['type']:'',
+				'[price]' 				=> $this->currency->format($product['price']),
 			);
 			
-			if (isset($data['language_id'])){
-				
-				$updates = array();
-				if($return || (isset($product['seo_h1']) && (isset($data['products_h1_overwrite']) || (strlen(trim($product['seo_h1']))) == 0))) {
+			if (isset($data['language_id'])){	
+				$updates = [];
+
+				if($simulate || (isset($product['seo_h1']) && (isset($data['products_h1_overwrite']) || (strlen(trim($product['seo_h1']))) == 0))) {
 					$h1 = trim(strtr($data['products_h1_template'], $tags));
 					$updates[] = "`seo_h1`='" . $this->db->escape($h1) . "'";
 				}
-				if($return || (isset($product['seo_title']) && (isset($data['products_title_overwrite']) || (strlen(trim($product['seo_title']))) == 0))) {
+
+				if($simulate || (isset($product['seo_title']) && (isset($data['products_title_overwrite']) || (strlen(trim($product['seo_title']))) == 0))) {
 					$products_title_template = $data['products_title_template'];
 					
 					if (isset($data['products_use_expressions'])) {
@@ -288,12 +295,14 @@
 					$title = trim(strtr($products_title_template, $tags));
 					$updates[] = "`seo_title`='" . $this->db->escape($title) . "'";
 				}
-				if($return || (isset($product['meta_keyword']) && (isset($data['products_meta_keyword_overwrite']) || (strlen(trim($product['meta_keyword']))) == 0))) {
+
+				if($simulate || (isset($product['meta_keyword']) && (isset($data['products_meta_keyword_overwrite']) || (strlen(trim($product['meta_keyword']))) == 0))) {
 					$meta_keyword = trim(strtr($data['products_meta_keyword_template'], $tags));
 					
 					$updates[] = "`meta_keyword`='" . $this->db->escape($meta_keyword) . "'";
 				}
-				if($return || (isset($product['meta_description']) && (isset($data['products_meta_description_overwrite']) || (strlen(trim($product['meta_description']))) == 0))) {
+
+				if($simulate || (isset($product['meta_description']) && (isset($data['products_meta_description_overwrite']) || (strlen(trim($product['meta_description']))) == 0))) {
 					$products_meta_description_template = $data['products_meta_description_template'];
 					if (isset($data['products_use_expressions'])) {
 						$products_meta_description_template = $this->parseTemplate($products_meta_description_template);
@@ -307,7 +316,7 @@
 					$updates[] = "`meta_description`='" . $this->db->escape($meta_description) . "'";
 				}
 				
-				if($return || (isset($product['description']) && (isset($data['products_description_overwrite']) || (strlen(trim($product['description']))) == 0))) {
+				if($simulate || (isset($product['description']) && (isset($data['products_description_overwrite']) || (strlen(trim($product['description']))) == 0))) {
 					$products_description_template = $data['products_description_template'];
 					if (isset($data['products_use_expressions'])) {
 						$products_description_template = $this->parseTemplate($products_description_template);
@@ -317,24 +326,19 @@
 				}
 			}
 			
-			
-			if ($return){
-				echo ${$return};				
-				exit();
-			}
-			
-			
 			if(isset($product['model']) && (isset($data['products_model_overwrite']) || (strlen(trim($product['model']))) == 0)) {
 				$products_model_template = trim(strtr($data['products_model_template'], $tags));
 				$this->db->query("UPDATE `product`" .
-				" SET `model`='" . $this->db->escape($products_model_template) . "' WHERE product_id='" . (int)$product['product_id'] . "'");
+					" SET `model`='" . $this->db->escape($products_model_template) . "' WHERE product_id='" . (int)$product['product_id'] . "'");
 			}
-			
-			if(count($updates)  && $data['language_id'] > 0) {
+
+			if(count($updates)  && !empty($data['language_id'])) {
 				$this->db->query("UPDATE `product_description`" .
-				" SET " . implode(", ", $updates) .
-				" WHERE product_id='" . (int)$product['product_id'] . "' AND language_id='" . (int)$data['language_id'] . "'");
+					" SET " . implode(", ", $updates) .
+					" WHERE product_id='" . (int)$product['product_id'] . "' AND language_id='" . (int)$data['language_id'] . "'");
 			}
+
+			return $updates;								
 		}
 		
 		
@@ -546,7 +550,7 @@
 		}
 		
 		private function getManufacturers($manufacturer_id = false, $language_id = 2) {
-			if($this->manufr_desc) {
+			if($this->manufacturer_has_description) {
 				$query = $this->db->query("SELECT md.*, u.keyword, m.name" .
 				" FROM `manufacturer` m" .
 				" LEFT JOIN `manufacturer_description` md ON (m.manufacturer_id=md.manufacturer_id)" .

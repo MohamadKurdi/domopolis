@@ -9,8 +9,7 @@ class ModelCatalogSeogen extends Model {
 		LEFT JOIN " . DB_PREFIX . "category_description cd on cd.category_id = pc.category_id AND cd.language_id = ".$lang."
 		LEFT JOIN " . DB_PREFIX . "manufacturer m on m.manufacturer_id = p.manufacturer_id;");
 				
-		foreach ($query->rows as $product) {
-			
+		foreach ($query->rows as $product) {		
 			$product['price'] = $this->currency->format($product['price']);
 			
 			$needle = Array($product['pname'], $product['model'], $product['price'], $product['cname'], $product['brand']);
@@ -23,10 +22,8 @@ class ModelCatalogSeogen extends Model {
 				
 			$this->db->query("UPDATE " . DB_PREFIX . "product_description SET seo_title = '". htmlspecialchars($ch2s) ."' WHERE product_id = ".$product['product_id']." AND language_id = '" . (int)$lang . "'");
 			
-		} 
-		
-		return;
-		
+		} 		
+		return;		
 	}
 	
 	public function titleMan($data, $lang) {
@@ -66,9 +63,6 @@ class ModelCatalogSeogen extends Model {
 				
 			}
 			
-			/* $query3 = $this->db->query("SELECT max(coalesce((SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1), (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1), p.price) ) AS max_price, min(coalesce((SELECT price FROM " . DB_PREFIX . "product_discount pd2 WHERE pd2.product_id = p.product_id AND pd2.quantity = '1' AND ((pd2.date_start = '0000-00-00' OR pd2.date_start < NOW()) AND (pd2.date_end = '0000-00-00' OR pd2.date_end > NOW())) ORDER BY pd2.priority ASC, pd2.price ASC LIMIT 1), (SELECT price FROM " . DB_PREFIX . "product_special ps WHERE ps.product_id = p.product_id AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW())) ORDER BY ps.priority ASC, ps.price ASC LIMIT 1), p.price) ) AS min_price FROM " . DB_PREFIX . "product p 
-					LEFT JOIN " . DB_PREFIX . "product_option_value pov ON (pov.product_id=p.product_id)
-					LEFT JOIN " . DB_PREFIX . "product_to_store p2s ON (p2s.product_id=p.product_id) WHERE p.status = '1' AND p.manufacturer_id = '" . (int)$row['manufacturer_id'] . "'"); */
 			$query3 = $this->db->query("SELECT round(min(price)) as min, round(max(price)) as max FROM " . DB_PREFIX . "product P            
             WHERE P.manufacturer_id = '" . (int)$row['manufacturer_id'] . "' AND P.status = 1");
 			

@@ -86,15 +86,15 @@ class ControllerCatalogShortNames extends Controller {
 			);
 		}
 
-		$this->data['heading_title'] = 'Редактор экспортных наименований товаров';
-		$this->data['text_list'] = $this->language->get('text_list');
-		$this->data['text_no_results'] = $this->language->get('text_no_results');
-		$this->data['text_confirm'] = $this->language->get('text_confirm');
-		$this->data['text_none'] = $this->language->get('text_none');
-		$this->data['column_name'] = $this->language->get('column_name');
-		$this->data['column_model'] = $this->language->get('column_model');
-		$this->data['column_viewed'] = $this->language->get('column_viewed');
-		$this->data['column_percent'] = $this->language->get('column_percent');
+		$this->data['heading_title'] 	= 'Редактор экспортных наименований товаров';
+		$this->data['text_list'] 		= $this->language->get('text_list');
+		$this->data['text_no_results'] 	= $this->language->get('text_no_results');
+		$this->data['text_confirm'] 	= $this->language->get('text_confirm');
+		$this->data['text_none'] 		= $this->language->get('text_none');
+		$this->data['column_name'] 		= $this->language->get('column_name');
+		$this->data['column_model'] 	= $this->language->get('column_model');
+		$this->data['column_viewed'] 	= $this->language->get('column_viewed');
+		$this->data['column_percent'] 	= $this->language->get('column_percent');
 
 		$this->data['button_reset'] = $this->language->get('button_reset');
 
@@ -137,7 +137,9 @@ class ControllerCatalogShortNames extends Controller {
 		$this->response->setOutput($this->render());
 	}
 
-	public function write(){
+	public function write(){		
+		$this->load->model('module/seogen');
+
 		if ($this->user->hasPermission('modify', 'catalog/product')) {
 			if ($this->request->method == 'POST'){
 
@@ -150,15 +152,19 @@ class ControllerCatalogShortNames extends Controller {
 
 					$this->db->query("UPDATE product_description SET name = '" . $this->db->escape($this->request->data['text']) . "' WHERE product_id = '" . (int)$this->request->data['product_id'] . "' AND language_id = '" . (int)$this->request->data['language_id'] . "'");
 
+					$this->model_module_seogen->urlifyProduct($this->request->data['product_id'], $this->request->data['language_id']);
+
 					if ($this->config->get('config_edit_simultaneously')){						
 						if (in_array($this->request->data['language_id'], $languages_to_edit_simultanelously)){
 							foreach ($languages_to_edit_simultanelously as $language_id){
 								if ($this->request->data['language_id'] != $language_id){
 									$this->db->query("UPDATE product_description SET name = '" . $this->db->escape($this->request->data['text']) . "' WHERE product_id = '" . (int)$this->request->data['product_id'] . "' AND language_id = '" . (int)$language_id . "'");
+
+									$this->model_module_seogen->urlifyProduct($this->request->data['product_id'], $language_id);
 								}
 							}
 						}						
-					}
+					}					
 
 
 				} elseif ($this->request->data['name'] == 'short') {
