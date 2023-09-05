@@ -2688,8 +2688,7 @@
 		}
 		
 		
-		function array_to_xml($data, &$xml) {
-			
+		function array_to_xml($data, &$xml) {			
 			foreach($data as $key => $value) {
 				if (is_array($value)) {
 					if (!is_numeric($key)) {
