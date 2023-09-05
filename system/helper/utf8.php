@@ -33,6 +33,13 @@ function guessYear($date){
 	}
 }
 
+function removeEOLS($s){			
+	$s = str_replace(PHP_EOL, ' ', $s);			
+	$s = trim(preg_replace('/\s+/', ' ', $s));
+
+	return $s;
+}
+
 function reTemplate($array, $string){
 	$from 	= [];
 	$to  	= [];
