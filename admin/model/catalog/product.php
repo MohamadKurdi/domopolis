@@ -432,9 +432,12 @@
 				model 					= '" . $this->db->escape($data['model']) . "', 
 				short_name 				= '" . $this->db->escape($data['short_name']) . "', 
 				short_name_de 			= '" . $this->db->escape($data['short_name_de']) . "', 
-				sku 					= '" . $this->db->escape($data['sku']) . "', upc = '" . $this->db->escape($data['upc']) . "', 
-				ean 					= '" . $this->db->escape($data['ean']) . "', jan = '" . $this->db->escape($data['jan']) . "', 
-				isbn 					= '" . $this->db->escape($data['isbn']) . "', mpn = '" . $this->db->escape($data['mpn']) . "', 
+				sku 					= '" . $this->db->escape($data['sku']) . "',
+				upc 					= '" . $this->db->escape($data['upc']) . "', 
+				ean 					= '" . $this->db->escape($data['ean']) . "', 
+				jan 					= '" . $this->db->escape($data['jan']) . "', 
+				isbn 					= '" . $this->db->escape($data['isbn']) . "', 
+				mpn 					= '" . $this->db->escape($data['mpn']) . "', 
 				asin 					= '" . $this->db->escape($data['asin']) . "', 
 				old_asin 				= '" . $this->db->escape($data['old_asin']) . "', 
 				color_group 			= '" . $this->db->escape($data['color_group']) . "', 
@@ -483,14 +486,14 @@
 				quantity_stock 			= '" . (int)$data['quantity_stock'] . "', 
 				min_buy 				= '" . (int)$data['min_buy'] . "', 
 				max_buy 				= '" . (int)$data['max_buy'] . "', 
-				quantity_stockM 		= '" . (int)$data['quantity_stockM'] . "', 
-				quantity_stockK 		= '" . (int)$data['quantity_stockK'] . "', 
-				quantity_stockMN 		= '" . (int)$data['quantity_stockMN'] . "', 
-				quantity_stockAS 		= '" . (int)$data['quantity_stockAS'] . "', 
-				quantity_stockM_onway 	= '" . (int)$data['quantity_stockM_onway'] . "', 
-				quantity_stockK_onway 	= '" . (int)$data['quantity_stockK_onway'] . "', 
-				quantity_stockMN_onway 	= '" . (int)$data['quantity_stockMN_onway'] . "', 
-				quantity_stockAS_onway 	= '" . (int)$data['quantity_stockAS_onway'] . "', 
+				quantity_stockM 		= '" . (!empty($data['quantity_stockM'])?(int)$data['quantity_stockM']:'0') . "', 
+				quantity_stockK 		= '" . (!empty($data['quantity_stockK'])?(int)$data['quantity_stockK']:'0') . "',
+				quantity_stockMN 		= '" . (!empty($data['quantity_stockMN'])?(int)$data['quantity_stockMN']:'0') . "', 
+				quantity_stockAS 		= '" . (!empty($data['quantity_stockAS'])?(int)$data['quantity_stockAS']:'0') . "', 
+				quantity_stockM_onway 	= '" . (!empty($data['quantity_stockM_onway'])?(int)$data['quantity_stockM_onway']:'0') . "', 
+				quantity_stockK_onway 	= '" . (!empty($data['quantity_stockK_onway'])?(int)$data['quantity_stockK_onway']:'0') . "',
+				quantity_stockMN_onway 	= '" . (!empty($data['quantity_stockMN_onway'])?(int)$data['quantity_stockMN_onway']:'0') . "', 
+				quantity_stockAS_onway 	= '" . (!empty($data['quantity_stockAS_onway'])?(int)$data['quantity_stockAS_onway']:'0') . "', 
 				tnved 					= '" . $data['tnved'] . "', 
 				ignore_parse 			= '" . (int)$data['ignore_parse'] . "', 
 				big_business 			= '" . (int)$data['big_business'] . "', 
@@ -623,17 +626,20 @@
 
 			if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_translate_edition_mode'] && !empty($rainforest_source_text)){
 				foreach ($fields_to_copy as $field){
+					if (!empty($copy_product_description[$field])){
+						foreach ($copy_product_description[$field] as $language_id => $value){
+							if (!empty($value) && !empty($rainforest_source_text[$field])){
 
-					foreach ($copy_product_description[$field] as $language_id => $value){
-						if (!empty($value) && !empty($rainforest_source_text[$field])){
-						$sql = "UPDATE product_description SET `" . $field . "` = '" . $this->db->escape($value) . "' 
-									WHERE product_id IN 
-									(SELECT p2.product_id FROM product_description p2 WHERE p2.language_id = '" . $this->config->get('config_rainforest_source_language_id') . "' 
-									AND p2.`" . $field . "` LIKE ('" . $this->db->escape($rainforest_source_text[$field]) . "')) 
-									AND language_id = '" . (int)$language_id . "'";
+								$sql = " UPDATE product_description p1 INNER JOIN product_description p2 ";
+								$sql .= " ON p1.product_id = p2.product_id ";
+								$sql .= " AND p2.language_id = '" . (int)$this->config->get('config_rainforest_source_language_id') . "'";
+								$sql .= " AND p2.`" . $field . "` LIKE '" . $this->db->escape($rainforest_source_text[$field]) . "'";
+								$sql .= " SET p1.`" . $field . "` = '" . $this->db->escape($value) . "' ";
+								$sql .= " WHERE p1.language_id = '" . (int)$language_id . "'";
+
+								$this->db->query($sql);
+							}
 						}
-
-						$this->db->query($sql);
 					}
 				}
 			}		
@@ -670,10 +676,14 @@
 
 						if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_translate_edition_mode'] && !empty($rainforest_source_text)){
 							foreach ($copy_product_attribute_description as $language_id => $copy_attribute_description) {	
-								$sql = "UPDATE product_attribute SET text = '" . $this->db->escape($copy_attribute_description['text']) . "' 
-									WHERE product_id IN 
-									(SELECT p2.product_id FROM product_attribute p2 WHERE p2.attribute_id = '" . (int)$product_attribute['attribute_id'] . "' AND p2.language_id = '" . $this->config->get('config_rainforest_source_language_id') . "' AND p2.text LIKE ('" . $this->db->escape($rainforest_source_text) . "')) 
-									AND attribute_id = '" . (int)(int)$product_attribute['attribute_id'] . "' AND language_id = '" . (int)$language_id . "'";
+
+								$sql = "UPDATE product_attribute p1 INNER JOIN product_attribute p2 ON p1.product_id = p2.product_id ";
+								$sql .= " AND p2.language_id = '" . (int)$this->config->get('config_rainforest_source_language_id') . "'";
+								$sql .= " AND p2.attribute_id = '" . (int)$product_attribute['attribute_id'] . "'";
+								$sql .= " AND p2.text LIKE '" . $this->db->escape($rainforest_source_text) . "'";
+								$sql .= " SET p1.text = '" . $this->db->escape($copy_attribute_description['text']) . "'";
+								$sql .= " WHERE p1.attribute_id = '" . (int)$product_attribute['attribute_id'] . "'";
+								$sql .= " AND p1.language_id = '" . (int)$language_id . "'";
 
 								$this->db->query($sql);
 							}
@@ -708,10 +718,14 @@
 
 							if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_translate_edition_mode'] && !empty($rainforest_source_text)){
 								foreach ($copy_product_feature_description as $language_id => $copy_feature_description) {	
-									$sql = "UPDATE product_feature SET text = '" . $this->db->escape($copy_feature_description['text']) . "' 
-									WHERE product_id IN 
-									(SELECT p2.product_id FROM product_feature p2 WHERE p2.feature_id = '" . (int)$product_feature['feature_id'] . "' AND p2.language_id = '" . $this->config->get('config_rainforest_source_language_id') . "' AND p2.text LIKE ('" . $this->db->escape($rainforest_source_text) . "')) 
-									AND feature_id = '" . (int)(int)$product_feature['feature_id'] . "' AND language_id = '" . (int)$language_id . "'";
+
+									$sql = "UPDATE product_feature p1 INNER JOIN product_feature p2 ON p1.product_id = p2.product_id ";
+									$sql .= " AND p2.language_id = '" . (int)$this->config->get('config_rainforest_source_language_id') . "'";
+									$sql .= " AND p2.feature_id = '" . (int)$product_feature['feature_id'] . "'";
+									$sql .= " AND p2.text LIKE '" . $this->db->escape($rainforest_source_text) . "'";
+									$sql .= " SET p1.text = '" . $this->db->escape($copy_feature_description['text']) . "'";
+									$sql .= " WHERE p1.feature_id = '" . (int)$product_feature['feature_id'] . "'";
+									$sql .= " AND p1.language_id = '" . (int)$language_id . "'";
 
 									$this->db->query($sql);
 								}
@@ -1130,14 +1144,22 @@
 			
 			$this->db->query("DELETE FROM `product_profile` WHERE product_id = " . (int)$product_id);	
 			
-			if (isset($data['product_profiles'])) {			
-				
+			if (isset($data['product_profiles'])) {							
 				foreach ($data['product_profiles'] as $profile) {			
 					$this->db->query("INSERT INTO `product_profile` SET `product_id` = " . (int)$product_id . ", customer_group_id = " . (int)$profile['customer_group_id'] . ", `profile_id` = " . (int)$profile['profile_id']);		
 				}		
 			}		
 			
 			$this->rainforestAmazon->offersParser->PriceLogic->priceUpdaterQueue->addToQueue($product_id);
+
+
+			if ($this->config->get('seogen_status')){
+				$this->load->model('module/seogen');
+
+				foreach ($data['product_description'] as $language_id => $value) {
+					$this->model_module_seogen->urlifyProduct($product_id, $language_id);
+				}
+			}
 
 			$this->load->model('kp/content');
 			$this->model_kp_content->addContent(['action' => 'edit', 'entity_type' => 'product', 'entity_id' => $product_id]);
