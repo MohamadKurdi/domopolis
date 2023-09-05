@@ -337,33 +337,48 @@
 
 								<td style="width:20%">
 									<div>
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Не удалять товары в заказах</span></p>
-									<select name="config_never_delete_products_in_orders">
-										<?php if ($config_never_delete_products_in_orders) { ?>
-											<option value="1" selected="selected">Включить</option>
-											<option value="0">Отключить</option>
-										<?php } else { ?>													
-											<option value="1">Включить</option>
-											<option value="0"  selected="selected">Отключить</option>
-										<? } ?>
-									</select>
-									<br />
-									<span class="help">невозможно удалить даже вручную в админке</span>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Не удалять товары в заказах</span></p>
+										<select name="config_never_delete_products_in_orders">
+											<?php if ($config_never_delete_products_in_orders) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+										<br />
+										<span class="help">невозможно удалить даже вручную в админке</span>
 									</div>
 
 									<div>
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Не удалять товары на складе</span></p>
-									<select name="config_never_delete_products_in_warehouse">
-										<?php if ($config_never_delete_products_in_warehouse) { ?>
-											<option value="1" selected="selected">Включить</option>
-											<option value="0">Отключить</option>
-										<?php } else { ?>													
-											<option value="1">Включить</option>
-											<option value="0"  selected="selected">Отключить</option>
-										<? } ?>
-									</select>
-									<br />
-									<span class="help">невозможно удалить даже вручную в админке</span>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Не удалять товары на складе</span></p>
+										<select name="config_never_delete_products_in_warehouse">
+											<?php if ($config_never_delete_products_in_warehouse) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+										<br />
+										<span class="help">невозможно удалить даже вручную в админке</span>
+									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Фильтровать шаблоны акций</span></p>
+										<select name="config_customer_filter_actiontemplates">
+											<?php if ($config_customer_filter_actiontemplates) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+										<br />
+										<span class="help">включает логику привязки шаблонов рассылок и промокодов к менеджерам</span>
 									</div>
 								</td>
 

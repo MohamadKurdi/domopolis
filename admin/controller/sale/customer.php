@@ -15,14 +15,7 @@
 				} else {
 				$this->getList();
 			}
-		}
-		
-		private function removeNewLines($s){			
-			$s = str_replace(PHP_EOL, ' ', $s);			
-			$s = trim(preg_replace('/\s+/', ' ', $s));
-			
-			return $s;
-		}
+		}				
 		
 		public function insert() {
 			$this->language->load('sale/customer');
@@ -965,27 +958,16 @@
 					$results = $this->model_sale_customer->getCustomers($data);
 					
 					foreach ($results as $r) {
-						$yu++;
-						
-						$csvdata = array(
-						$this->removeNewLines($r['telephone'])
-						);
-						
+						$yu++;						
+						$csvdata = [removeEOLS($r['telephone'])];						
 						fputcsv($file, $csvdata);
 					}
 				}
 				
 				} else {
 				
-				$header = array(
-				'EMAIL',
-				'FNAME',
-				'LNAME',
-				'UTOKEN',
-				);
+				$header = ['EMAIL',	'FNAME', 'LNAME', 'UTOKEN'];
 				
-				//	fputcsv($file, array('TOTAL: ', $total, '', ''));
-				//	fputcsv($file, array(' ', ' ', ' ', ' '));
 				fputcsv($file, $header);
 				
 				
@@ -1001,8 +983,7 @@
 					
 					
 					foreach ($results as $r) {
-						$yu++;
-						// $rArray[] = array($r['email'], str_replace('\n', " ", $r['firstname']), str_replace('\n', " ", $r['lastname']), $r['utoken']);
+						$yu++;						
 						fputcsv($file, array($r['email'], str_replace('\n', " ", $r['firstname']), str_replace('\n', " ", $r['lastname']), $r['utoken']));
 					}
 				}
@@ -2562,9 +2543,16 @@
 			
 			$this->load->model('catalog/actiontemplate');
 			$this->load->model('tool/image');
-			$atdata = array(
-			'manager_id' => $this->user->getID()			
-			);
+			
+			if ($this->config->get('config_customer_filter_actiontemplates')){
+				$atdata = [
+					'manager_id' => $this->user->getID()			
+				];
+			} else {
+				$atdata = [];
+			}
+			
+
 			$this->data['actiontemplates'] = $this->model_catalog_actiontemplate->getactiontemplates($atdata);
 			
 			foreach ($this->data['actiontemplates'] as &$at){

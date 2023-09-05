@@ -524,9 +524,13 @@
 				<div id="tab-marketingmail">
 					<div id="actiontemplateslist" style="float:left; width:450px;">
 						<? foreach ($actiontemplates as $template) { ?>
-							<div class="tselector" style="cursor:pointer; float:left; margin-left:20px; margin-bottom:20px; padding:5px; width:110px; text-align:center; border:2px solid #ccc; border-radius:5px;" data-id="<? echo $template['actiontemplate_id'] ?>" data-customer-id="<? echo $customer_id; ?>">
-								<img src="<? echo $template['image'] ?>" /><br />
-								<? echo $template['title']; ?><br />
+							<div class="tselector" style="cursor:pointer; float:left; margin-left:20px; margin-bottom:20px; padding:5px; width:110px; height:220px; text-align:center; border:2px solid #ccc; border-radius:5px;" data-id="<? echo $template['actiontemplate_id'] ?>" data-customer-id="<? echo $customer_id; ?>">
+								<img src="<? echo $template['image'] ?>" />
+
+								<div style="height:70px; overflow-y:hidden;">
+									<? echo $template['title']; ?>
+								</div>
+
 								
 								<? if ($template['code']) { ?>
 									<span style="font-size:8px;"><? echo $template['code']; ?></span><br />
