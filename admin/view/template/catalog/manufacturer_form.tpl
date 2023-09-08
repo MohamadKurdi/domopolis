@@ -82,6 +82,7 @@
 										<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
 									<?php } ?>
 								</select>
+								<span class="help">Если включено, то на странице бренда выводится по штатной логике список товаров, иначе - кнопки с коллекциями, новинками, итд</span>
 							</td>
 							<td>
 								<input type="text" name="sort_order" value="<?php echo $sort_order; ?>" size="1" />

@@ -206,6 +206,7 @@ class ControllerCatalogManufacturer extends Controller {
 				'name'            => $result['name'],
 				'image'			  => $image,
 				'menu_brand'      => $result['menu_brand'],
+				'show_goods'      => $result['show_goods'],
 				'sort_order'      => $result['sort_order'],
 				'selected'        => isset($this->request->post['selected']) && in_array($result['manufacturer_id'], $this->request->post['selected']),
 				'action'          => $action

@@ -40,6 +40,7 @@
 							<?php } ?></td>
 							<td class="right" >Товаров</td>
 							<td class="right" style="word-wrap: normal; min-width:100px;">Домашняя</td>
+							<td class="right" style="word-wrap: normal; min-width:100px;">Только товары</td>
 							<td class="right" style="word-wrap: normal; min-width:100px;">Магазины</td>
 							<td class="right" style="word-wrap: normal; min-width:100px;">Страна</td>
 							<td class="right" style="word-wrap: normal; min-width:100px;">SEO URL</td>
@@ -82,6 +83,14 @@
 
 									<td class="center">
 										<? if ($manufacturer['menu_brand']) { ?>
+											<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+										<? } else { ?>
+											<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+										<? } ?>
+									</td>
+
+									<td class="center">
+										<? if ($manufacturer['show_goods']) { ?>
 											<i class="fa fa-check-circle" style="color:#4ea24e"></i>
 										<? } else { ?>
 											<i class="fa fa-times-circle" style="color:#cf4a61"></i>
