@@ -66,7 +66,6 @@
                     $this->model_account_customer->editPassword($this->customer->getEmail(), $this->session->data['simple']['edit']['password']);
                 }
                 
-                // hack for mijoshop
                 unset($this->session->data['simple']['edit']['password']);
                 
                 if ($this->simpleedit->getOpencartVersion() < 300) {
@@ -96,6 +95,10 @@
                 if ($this->simpleedit->isFieldUsed('viber_news')) {
                     $this->model_account_customer->editViberNews($this->session->data['simple']['edit']['viber_news']);
                 }
+
+                 if ($this->simpleedit->isFieldUsed('birthday')) {
+                    $this->model_account_customer->editBirthDay($this->session->data['simple']['edit']['birthday']);
+                }
                 
                 $this->session->data['success'] = $this->language->get('text_success');
                 
@@ -111,9 +114,9 @@
                 }
                 
                 if ($this->simpleedit->isAjaxRequest()) {
-                    $this->_templateData['redirect'] = $this->url->link('account/simpleedit', '', 'SSL');
+                        $this->_templateData['redirect'] = $this->url->link('account/simpleedit', '', 'SSL');
                     } else {
-                    $this->simpleedit->redirect($this->url->link('account/simpleedit','','SSL'));
+                        $this->simpleedit->redirect($this->url->link('account/simpleedit','','SSL'));
                 }
             }
             

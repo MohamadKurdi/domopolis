@@ -155,6 +155,14 @@
 			
 			$this->customer->addToEMAQueue();
 		}
+
+		public function editBirthday($birthday) {
+			$this->db->non_cached_query("UPDATE customer SET birthday = '" . $this->db->escape(date('Y-m-d', strtotime($birthday))) . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");
+			$this->db->non_cached_query("UPDATE customer SET birthday_month = '" . (int)date('m', strtotime($birthday)) . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");
+			$this->db->non_cached_query("UPDATE customer SET birthday_date = '" . (int)date('d', strtotime($birthday)) . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");
+			
+			$this->customer->addToEMAQueue();
+		}
 		
 		public function getCustomer($customer_id) {
 			$query = $this->db->non_cached_query("SELECT * FROM customer WHERE customer_id = '" . (int)$customer_id . "'");
