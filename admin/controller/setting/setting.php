@@ -4138,6 +4138,7 @@ class ControllerSettingSetting extends Controller
             'social_link_instagram',
             'social_link_youtube',
             'social_link_twitter',
+            'social_link_telegram',
             'social_link_viber_bot',
             'social_link_telegram_bot',
             'social_link_messenger_bot',

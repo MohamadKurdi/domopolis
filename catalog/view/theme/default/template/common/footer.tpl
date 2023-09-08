@@ -74,16 +74,6 @@
 				</div>
 				<!--/social-contact-->
 				<div class="footer__time-work">
-					<?php if ($this->config->get('config_store_id') == 5) {?>
-						
-						<p hidden="hidden">ООО "Китчен профи"<br>
-							УНП 193533874<br>
-							Республика Беларусь, г. Минск, ул. Тимирязева 65Б<br>
-							
-							Свидетельство о государственной регистрации № 193533874 от 13.04.2021<br>
-							выдано Минским горисполкомом<br>
-						Интернет-магазин зарегистрирован в Торговом реестре РБ 21.04.2021 <br></p>
-					<?php } ?>
 					<?php if ($this->config->get('config_store_id') == 5) {?><span class="by_schedule"><?php } ?>
 						<?php echo $text_retranslate_1; ?><br />
 						<?php echo $text_retranslate_2; ?><br />
@@ -95,20 +85,34 @@
 				</div>
 				<ul class="footer__social">
 					<?php if ($this->config->get('social_link_twitter')) { ?>
-					<li><a href="<?php echo $this->config->get('social_link_twitter'); ?>" target="_blank" class="twitter element-target-click-event" data-gtm-event="soc-seti" data-ym-event="soc-seti" title="Twitter" rel="noindex nofollow"></a></li>
+					<li>
+						<a href="<?php echo $this->config->get('social_link_twitter'); ?>" target="_blank" class="twitter element-target-click-event" data-gtm-event="soc-seti" data-ym-event="soc-seti" title="Twitter" rel="noindex nofollow"></a>
+					</li>
 					<?php } ?>
+
 					<?php if ($this->config->get('social_link_facebook')) { ?>
-					<li><a href="<?php echo $this->config->get('social_link_facebook'); ?>" target="_blank" class="facebook element-target-click-event" data-gtm-event="soc-seti" data-ym-event="soc-seti" title="Facebook" rel="noindex nofollow"></a></li>
+					<li>
+						<a href="<?php echo $this->config->get('social_link_facebook'); ?>" target="_blank" class="facebook element-target-click-event" data-gtm-event="soc-seti" data-ym-event="soc-seti" title="Facebook" rel="noindex nofollow"></a>
+					</li>
 					<?php } ?>
+
 					<?php if ($this->config->get('social_link_instagram')) { ?>
-					<li><a href="<?php echo $this->config->get('social_link_instagram'); ?>" target="_blank" class="instagram element-target-click-event" data-gtm-event="soc-seti" data-ym-event="soc-seti" title="Instagram" rel="noindex nofollow"></a></li>
+					<li>
+						<a href="<?php echo $this->config->get('social_link_instagram'); ?>" target="_blank" class="instagram element-target-click-event" data-gtm-event="soc-seti" data-ym-event="soc-seti" title="Instagram" rel="noindex nofollow"></a>
+					</li>
 					<?php } ?>
-					<? if ($this->config->get('config_store_id') == 1) { ?>                        
-						<? } else { ?>
-							<?php if ($this->config->get('social_link_vkontakte')) { ?>
-						<li><a href="<?php echo $this->config->get('social_link_vkontakte'); ?>" target="_blank" data-gtm-event="soc-seti" data-ym-event="soc-seti" class="vk element-target-click-event" title="vk" rel="noindex nofollow"></a></li>
-						<?php } ?>
-					<? } ?>
+
+					<?php if ($this->config->get('social_link_telegram')) { ?>
+					<li>
+						<a href="<?php echo $this->config->get('social_link_telegram'); ?>" target="_blank" class="telegram element-target-click-event" data-gtm-event="soc-seti" data-ym-event="soc-seti" title="Telegram Channel" rel="noindex nofollow"></a>
+					</li>
+					<?php } ?>
+
+					<?php if ($this->config->get('social_link_vkontakte')) { ?>
+						<li>
+							<a href="<?php echo $this->config->get('social_link_vkontakte'); ?>" target="_blank" data-gtm-event="soc-seti" data-ym-event="soc-seti" class="vk element-target-click-event" title="vk" rel="noindex nofollow"></a>
+						</li>
+					<?php } ?>
 				</ul>
 				
 				<?php if ($this->config->get('config_store_id') == 1) {?>

@@ -7753,35 +7753,43 @@
 						</div>
 						
 						<div id="tab-google-ya-fb-vk">
-							<h2 style="color:#57AC79">Соцсети и мессенджеры</h2>
+							<h2 style="color:#57AC79">Соцсети</h2>
 							<table class="form">
 								<tr>		
-									<td width="20%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ссылка на Facebook</span></p>
-										<input type="text" name="social_link_facebook" value="<?php echo $social_link_facebook; ?>" size="30" style="width:150px;" />
+										<input type="text" name="social_link_facebook" value="<?php echo $social_link_facebook; ?>" size="30" style="width:200px;" />
 									</td>
 									
-									<td width="20%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ссылка на VK</span></p>
-										<input type="text" name="social_link_vkontakte" value="<?php echo $social_link_vkontakte; ?>" size="30" style="width:150px;" />
+										<input type="text" name="social_link_vkontakte" value="<?php echo $social_link_vkontakte; ?>" size="30" style="width:200px;" />
 									</td>	
 
-									<td width="20%">
+									<td width="15%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ссылка на Instagram</span></p>
-										<input type="text" name="social_link_instagram" value="<?php echo $social_link_instagram; ?>" size="30" style="width:150px;" />
+										<input type="text" name="social_link_instagram" value="<?php echo $social_link_instagram; ?>" size="30" style="width:200px;" />
 									</td>
 
-									<td width="20%">
+									<td width="15%">
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ссылка на Youtube</span></p>
-											<input type="text" name="social_link_youtube" value="<?php echo $social_link_youtube; ?>" size="30" style="width:150px;" />
+											<input type="text" name="social_link_youtube" value="<?php echo $social_link_youtube; ?>" size="30" style="width:200px;" />
 									</td>
 
-									<td width="20%">
+									<td width="15%">
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ссылка на Twitter</span></p>
-											<input type="text" name="social_link_twitter" value="<?php echo $social_link_twitter; ?>" size="30" style="width:150px;" />
+											<input type="text" name="social_link_twitter" value="<?php echo $social_link_twitter; ?>" size="30" style="width:200px;" />
+									</td>
+
+									<td width="15%">
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Ссылка на TG-канал</span></p>
+											<input type="text" name="social_link_telegram" value="<?php echo $social_link_telegram; ?>" size="30" style="width:200px;" />
 									</td>
 								</tr>
+							</table>
 
+							<h2 style="color:#57AC79">Боты и мессенджеры</h2>
+							<table class="form">
 								<tr>		
 									<td width="20%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ef5e67; color:#FFF">Messenger BOT</span></p>
