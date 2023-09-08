@@ -610,6 +610,7 @@
 							'price_recommend'          => $price_recommend,
 							'currency'                 => $query->row['currency'],		
 							'special'                  => $special,
+							'has_video' 			   => $query->row['xhasvideo'],
 							'special_date_end'         => $query->row['special_date_end'],
 							'quantity'                 => $query->row['quantity'],							
 							'quantity_stock'           => $query->row['quantity_stock'],
