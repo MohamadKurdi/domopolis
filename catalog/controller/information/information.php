@@ -43,13 +43,6 @@ class ControllerInformationInformation extends Controller {
 
 				$this->document->addOpenGraph('og:image', HTTP_SERVER . 'image/' . $this->config->get('config_logo'));
 				$this->document->addOpenGraph('og:url', $this->url->link('information/information', 'information_id=' .  $information_id));
-					//$this->document->addOpenGraph('article:publisher', $this->config->get('hb_snippets_fb_page'));
-
-				$this->data['breadcrumbs'][] = array(
-					'text'      => $information_info['title'],
-					'href'      => $this->url->link('information/information', 'information_id=' .  $information_id),      		
-					'separator' => $this->language->get('text_separator')
-				);
 
 				$this->data['heading_title'] = $information_info['title'];
 
@@ -183,9 +176,17 @@ class ControllerInformationInformation extends Controller {
 
 				if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/stylesheet/information_styles/' . $shortname.'.css')){
 					$this->document->addStyle('catalog/view/theme/'.$this->config->get('config_template').'/stylesheet/information_styles/' . $shortname.'.css');				
-				} else {
-						//	fopen(DIR_TEMPLATE . $this->config->get('config_template') . '/stylesheet/information_styles/' . $shortname.'.css','w');
 				}
+
+				$this->data['certs_names'] = [
+					'newcertificate' => $this->language->get('text_newyear_present_certificate'),
+					'certificate' => $this->language->get('text_present_certificate')
+				];
+
+				$this->data['certs_imgs'] = array(
+					'newcertificate' 	=> $this->model_tool_image->resize('certificate/newcertificate.jpg', 600, 600),
+					'certificate' 		=> $this->model_tool_image->resize('certificate/certificate.jpg', 600, 600),
+				);
 
 				$this->document->addLink('canonical', $canonical);
 				$this->load->model('design/layout');
