@@ -491,7 +491,8 @@ class ControllerSettingRnf extends Controller {
 					'INVOICE' 			=> (float)$this->config->get('config_rainforest_formula_invoice_0')										
 				];
 
-				$result['counted_price']  = $this->rainforestAmazon->offersParser->PriceLogic->mainFormula($product['amazon_best_price'], $params, $mainFormula);
+				$result['counted_price']  	= $this->rainforestAmazon->offersParser->PriceLogic->mainFormula($product['amazon_best_price'], $params, $mainFormula);
+				$result['compiled_formula'] = $this->rainforestAmazon->offersParser->PriceLogic->compileFormula($product['amazon_best_price'], $params, $mainFormula);
 
 				$result['amazon_best_price'] 		= $this->currency->format($product['amazon_best_price'], 'EUR', 1);
 				$result['counted_price_eur'] 		= $this->currency->format($result['counted_price'], 'EUR', 1);

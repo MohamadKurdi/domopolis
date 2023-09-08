@@ -448,8 +448,12 @@ class PriceLogic
 		return false;
 	}
 
+	public function compileFormula($amazonBestPrice, $data, $overloadMainFormula = false){
+		return $this->mainFormula($amazonBestPrice, $data, $overloadMainFormula, true);
+	}
+
 	//Это прямо самая важная функция)))
-	public function mainFormula($amazonBestPrice, $data, $overloadMainFormula = false){
+	public function mainFormula($amazonBestPrice, $data, $overloadMainFormula = false, $just_compile = false){
 
 		if ($overloadMainFormula){
 			$mainFormula = $overloadMainFormula;
@@ -491,14 +495,26 @@ class PriceLogic
 			$mainFormula = str_replace($from, $to, $mainFormula);
 		//	echoLine('Compiled formula:' . $mainFormula, 'i');
 
+			if ($just_compile){
+				return $mainFormula;
+			}
+
 			$resultPrice = eval('return ' . $mainFormula . ';');
 
 			if ($resultPrice > $amazonBestPrice * $data['MAX_MULTIPLIER']){
 				$resultPrice = $amazonBestPrice * $data['DEFAULT_MULTIPLIER'];
+
+				if ($just_compile){
+					return 'MAX_MULTIPLIER TRIGGER: ' . $amazonBestPrice . ' * ' . $data['DEFAULT_MULTIPLIER'];
+				}
 			}
 
 		} else {
 			$resultPrice = $amazonBestPrice * $data['DEFAULT_MULTIPLIER'];
+
+			if ($just_compile){
+				return 'NO_WEIGHT TRIGGER: ' . $amazonBestPrice . ' * ' . $data['DEFAULT_MULTIPLIER'];
+			}
 		}		
 
 		return $resultPrice;
