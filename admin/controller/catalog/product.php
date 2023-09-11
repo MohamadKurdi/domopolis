@@ -1710,9 +1710,8 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['special_cost'] = '';
 		}
 
-		$this->data['parser_price'] = isset($product_info)?$product_info['parser_price']:false;
-		$this->data['parser_special_price'] = isset($product_info)?$product_info['parser_special_price']:false;
-
+		$this->data['parser_price'] = !empty($product_info['parser_price'])?$product_info['parser_price']:false;
+		$this->data['parser_special_price'] = !empty($product_info['parser_special_price'])?$product_info['parser_special_price']:false;
 
 		if (isset($this->request->post['min_buy'])) {
 			$this->data['min_buy'] = $this->request->post['min_buy'];

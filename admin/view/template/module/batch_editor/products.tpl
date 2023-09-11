@@ -33,7 +33,7 @@
 						</td>
 						<td class="left" width="1"><a class="related" onclick="editProducts('related_to', <?php echo $product['product_id']; ?>)" title="<?php echo $text_related; ?>"></a></td>
 						<td class="left" width="1"><a class="link" target="_blank" href="<?php echo HTTP_CATALOG; ?>index.php?route=product/product&product_id=<?php echo $product['product_id']; ?>" title="<?php echo $text_view; ?>"></a></td>
-						<td class="left" width="1"><a class="edit" target="_blank" href="index.php?route=catalog/product/update&token=<?php echo $token; ?>&product_id=<?php echo $product['product_id']; ?>" title="<?php echo $text_edit; ?>"></a></td>
+						<td class="left" width="1"><a class="edit" target="_blank" href="index.php?route=catalog/product/update&token=<?php echo $token; ?>&product_id=<?php echo $product['product_id']; ?>" title=""></a></td>
 						<?php foreach ($setting['fields'] as $name=>$field) { ?>
 							<?php if ($name == 'image') { ?>
 								<td class="center">
@@ -62,14 +62,14 @@
 								<td class="left product_name">
 									<span class="input-name-<?php echo $product['product_id']; ?>"><?php echo $product['name']; ?></span>
 									<div>
-										<a class="button" style="margin-top: 2px;" onclick="getProductList(<?php echo $product['product_id']; ?>, 'descriptions')"><?php echo $column_descriptions; ?></a>
-										<a class="button" style="margin-top: 2px;" onclick="getProductList(<?php echo $product['product_id']; ?>, 'categories')"><?php echo $column_categories; ?><?php echo ($setting['counter']) ? '(' . $product['categories'] . ')' : ''; ?></a>
-										<a class="button" style="margin-top: 2px;" onclick="getProductList(<?php echo $product['product_id']; ?>, 'attributes')"><?php echo $column_attributes; ?><?php echo ($setting['counter']) ? '(' . $product['attributes'] . ')' : ''; ?></a>
-										<a class="button" style="margin-top: 2px;" onclick="getProductList(<?php echo $product['product_id']; ?>, 'options')"><?php echo $column_options; ?><?php echo ($setting['counter']) ? '(' . $product['options'] . ')' : ''; ?></a>
-										<a class="button" style="margin-top: 2px;" onclick="getProductList(<?php echo $product['product_id']; ?>, 'specials')"><?php echo $column_specials; ?><?php echo ($setting['counter']) ? '(' . $product['specials'] . ')' : ''; ?></a>
-										<a class="button" style="margin-top: 2px;" onclick="getProductList(<?php echo $product['product_id']; ?>, 'discounts')"><?php echo $column_discounts; ?><?php echo ($setting['counter']) ? '(' . $product['discounts'] . ')' : ''; ?></a>
-										<a class="button" style="margin-top: 2px;" onclick="getProductList(<?php echo $product['product_id']; ?>, 'related')"><?php echo $column_related; ?><?php echo ($setting['counter']) ? '(' . $product['related'] . ')' : ''; ?></a>
-										<a class="button" style="margin-top: 2px;" onclick="getProductList(<?php echo $product['product_id']; ?>, 'stores')"><?php echo $column_stores; ?><?php echo ($setting['counter']) ? '(' . $product['stores'] . ')' : ''; ?></a>
+										<a style="margin-top: 2px;" onclick="getProductList(<?php echo $product['product_id']; ?>, 'descriptions')"><?php echo $column_descriptions; ?></a>
+										<a style="margin-top: 2px;" onclick="getProductList(<?php echo $product['product_id']; ?>, 'categories')"><?php echo $column_categories; ?><?php echo ($setting['counter']) ? '(' . $product['categories'] . ')' : ''; ?></a>
+										<a style="margin-top: 2px;" onclick="getProductList(<?php echo $product['product_id']; ?>, 'attributes')"><?php echo $column_attributes; ?><?php echo ($setting['counter']) ? '(' . $product['attributes'] . ')' : ''; ?></a>
+										<a style="margin-top: 2px;" onclick="getProductList(<?php echo $product['product_id']; ?>, 'options')"><?php echo $column_options; ?><?php echo ($setting['counter']) ? '(' . $product['options'] . ')' : ''; ?></a>
+										<a style="margin-top: 2px;" onclick="getProductList(<?php echo $product['product_id']; ?>, 'specials')"><?php echo $column_specials; ?><?php echo ($setting['counter']) ? '(' . $product['specials'] . ')' : ''; ?></a>
+										<a style="margin-top: 2px;" onclick="getProductList(<?php echo $product['product_id']; ?>, 'discounts')"><?php echo $column_discounts; ?><?php echo ($setting['counter']) ? '(' . $product['discounts'] . ')' : ''; ?></a>
+										<a style="margin-top: 2px;" onclick="getProductList(<?php echo $product['product_id']; ?>, 'related')"><?php echo $column_related; ?><?php echo ($setting['counter']) ? '(' . $product['related'] . ')' : ''; ?></a>
+										<a style="margin-top: 2px;" onclick="getProductList(<?php echo $product['product_id']; ?>, 'stores')"><?php echo $column_stores; ?><?php echo ($setting['counter']) ? '(' . $product['stores'] . ')' : ''; ?></a>
 									<? /*	<a class="button" style="margin-top: 2px;" onclick="getProductList(<?php echo $product['product_id']; ?>, 'downloads')"><?php echo $column_downloads; ?><?php echo ($setting['counter']) ? '(' . $product['downloads'] . ')' : ''; ?></a>
 									*/ ?>
 									

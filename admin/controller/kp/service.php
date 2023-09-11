@@ -141,13 +141,31 @@
 			echoLine('[optimizeProductsDB] Выравнивание количества офферов', 'i');
 			$this->db->query("UPDATE product SET product.amzn_offers_count = (SELECT COUNT(*) FROM product_amzn_offers WHERE product_amzn_offers.asin = product.asin)");
 			$this->db->query("UPDATE product SET product.amzn_no_offers = 1 WHERE amzn_offers_count = 0 AND amzn_last_offers <> '0000-00-00 00:00:00'");
-			$this->db->query("UPDATE product SET product.amzn_no_offers = 0 WHERE amzn_offers_count > 0 OR amzn_last_offers = '0000-00-00 00:00:00'");			
+			$this->db->query("UPDATE product SET product.amzn_no_offers = 0 WHERE amzn_offers_count > 0 OR amzn_last_offers = '0000-00-00 00:00:00'");	
+
+			$bought_fields = [
+				'bought_for_week' 		=> '7 DAY',
+				'bought_for_month' 		=> '1 MONTH',
+				'bought_for_3month' 	=> '3 MONTH',
+				'bought_for_6month' 	=> '7 DAY',
+				'bought_for_12month' 	=> '12 MONTH',
+				'bought_for_alltime' 	=> '',
+			];		
 			
-			echoLine('[optimizeProductsDB] Подсчет количества продаж за неделю', 'i');			
-			$this->db->query("UPDATE product p SET bought_for_week = (SELECT SUM(quantity) FROM order_product op WHERE op.product_id = p.product_id AND op.order_id IN (SELECT o.order_id FROM `order` o WHERE o.order_status_id > 0 AND  DATE(o.date_added) >= DATE(DATE_SUB(NOW(),INTERVAL 7 DAY))))");
-			
-			echoLine('[optimizeProductsDB] Подсчет количества продаж за месяц', 'i');			
-			$this->db->query("UPDATE product p SET bought_for_month = (SELECT SUM(quantity) FROM order_product op WHERE op.product_id = p.product_id AND op.order_id IN (SELECT o.order_id FROM `order` o WHERE o.order_status_id > 0 AND DATE(o.date_added) >= DATE(DATE_SUB(NOW(),INTERVAL 30 DAY))))");
+			foreach ($bought_fields as $field => $interval){
+				echoLine('[optimizeProductsDB] Подсчет количества продаж за ' . $interval, 'i');	
+
+				$sql = "UPDATE product p SET p.`" . $field . "` = ";
+				$sql .= " (SELECT SUM(quantity) FROM order_product op WHERE op.product_id = p.product_id AND op.order_id IN (SELECT o.order_id FROM `order` o WHERE o.order_status_id = '" . (int)$this->config->get('config_complete_status_id') . "' ";
+
+				if ($interval){
+					$sql .= " AND DATE(o.date_added) >= DATE(DATE_SUB(NOW(), INTERVAL " . $this->db->escape($interval) ."))";
+				}
+
+				$sql .= "))";
+
+				$this->db->query($sql);
+			}			
 
 			echoLine('[optimizeProductsDB] Подсчёт продаж по категориям', 'i');	
 			$this->db->query("UPDATE category SET bought_for_month = (SELECT SUM(quantity) FROM order_product op WHERE op.product_id IN (SELECT product_id FROM product_to_category WHERE category_id = category.category_id) AND op.order_id IN (SELECT o.order_id FROM `order` o WHERE o.order_status_id > 0 AND DATE(o.date_added) >= DATE(DATE_SUB(NOW(),INTERVAL 30 DAY))))");
@@ -156,7 +174,7 @@
 			$this->db->query("UPDATE category SET final = 0 WHERE 1");
 			$this->db->query("UPDATE category SET final = 1 WHERE category_id NOT IN ( SELECT parent_id FROM ( SELECT parent_id FROM category ) AS subquery )");
 			
-			echoLine('[optimizeProductsDB] Обнуление количества товаров со статусом нет в наличии', 'i');
+		//	echoLine('[optimizeProductsDB] Обнуление количества товаров со статусом нет в наличии', 'i');
 		//	$this->db->query("UPDATE product p SET quantity = 0, quantity_stock = 0, quantity_stockK = 0, quantity_stockM = 0, quantity_stockMN = 0, quantity_stockAS = 0, quantity_stock_onway = 0, quantity_stockK_onway = 0, quantity_stockM_onway = 0 WHERE stock_status_id IN (10,9)");
 
 			echoLine('[optimizeProductsDB] Выравнивание количества со складами', 'i');

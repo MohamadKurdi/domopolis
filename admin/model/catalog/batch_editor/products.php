@@ -4,14 +4,14 @@ class ModelCatalogBatchEditorProducts extends Model {
 		$sql = "SELECT " . $data['sql_fields'];
 		
 		if ($data['counter']) {
-			$sql .= " (SELECT COUNT(pa.product_id) FROM " . DB_PREFIX . "product_attribute pa WHERE p.product_id = pa.product_id AND pa.language_id = '" . (int) $this->config->get('config_language_id') . "') AS attributes, (SELECT COUNT(po.product_id) FROM " . DB_PREFIX . "product_option po WHERE p.product_id = po.product_id)  AS options, (SELECT COUNT(p2c.product_id) FROM " . DB_PREFIX . "product_to_category p2c WHERE p.product_id = p2c.product_id) AS categories, (SELECT COUNT(psp.product_id) FROM " . DB_PREFIX . "product_special psp WHERE p.product_id = psp.product_id) AS specials, (SELECT COUNT(pdi.product_id) FROM " . DB_PREFIX . "product_discount pdi WHERE p.product_id = pdi.product_id) AS discounts, (SELECT COUNT(pre.product_id) FROM " . DB_PREFIX . "product_related pre WHERE p.product_id = pre.product_id) AS related, (SELECT COUNT(p2s.product_id) FROM " . DB_PREFIX . "product_to_store p2s WHERE p.product_id = p2s.product_id) AS stores, (SELECT COUNT(p2d.product_id) FROM " . DB_PREFIX . "product_to_download p2d WHERE p.product_id = p2d.product_id) AS downloads, (SELECT COUNT(pi.product_id) FROM " . DB_PREFIX . "product_image pi WHERE p.product_id = pi.product_id) AS images, (SELECT COUNT(p2l.product_id) FROM " . DB_PREFIX . "product_to_layout p2l WHERE p.product_id = p2l.product_id) AS layouts, ";
+			$sql .= " (SELECT COUNT(pa.product_id) FROM product_attribute pa WHERE p.product_id = pa.product_id AND pa.language_id = '" . (int) $this->config->get('config_language_id') . "') AS attributes, (SELECT COUNT(po.product_id) FROM product_option po WHERE p.product_id = po.product_id)  AS options, (SELECT COUNT(p2c.product_id) FROM product_to_category p2c WHERE p.product_id = p2c.product_id) AS categories, (SELECT COUNT(psp.product_id) FROM product_special psp WHERE p.product_id = psp.product_id) AS specials, (SELECT COUNT(pdi.product_id) FROM product_discount pdi WHERE p.product_id = pdi.product_id) AS discounts, (SELECT COUNT(pre.product_id) FROM product_related pre WHERE p.product_id = pre.product_id) AS related, (SELECT COUNT(p2s.product_id) FROM product_to_store p2s WHERE p.product_id = p2s.product_id) AS stores, (SELECT COUNT(p2d.product_id) FROM product_to_download p2d WHERE p.product_id = p2d.product_id) AS downloads, (SELECT COUNT(pi.product_id) FROM product_image pi WHERE p.product_id = pi.product_id) AS images, (SELECT COUNT(p2l.product_id) FROM product_to_layout p2l WHERE p.product_id = p2l.product_id) AS layouts, ";
 			
 			if (VERSION >= '1.5.5') {
-				$sql .= "(SELECT COUNT(pf.product_id) FROM " . DB_PREFIX . "product_filter pf WHERE p.product_id = pf.product_id) AS filters, ";
+				$sql .= "(SELECT COUNT(pf.product_id) FROM product_filter pf WHERE p.product_id = pf.product_id) AS filters, ";
 			}
 		}
 		
-		$sql .= "p.product_id AS product_id FROM " . DB_PREFIX . "product p " . $data['sql_tables'] . " WHERE p.product_id " . $this->getFilterSql($data) . " AND p.is_virtual = 0 GROUP BY p.product_id ORDER BY " . $data['sort'] . " " . $data['order'];
+		$sql .= "p.product_id AS product_id FROM product p " . $data['sql_tables'] . " WHERE p.product_id " . $this->getFilterSql($data) . " AND p.is_virtual = 0 GROUP BY p.product_id ORDER BY " . $data['sort'] . " " . $data['order'];
 		
 		$sql .= " LIMIT " . $data['start'] . "," . $data['limit'];
 		
@@ -21,7 +21,7 @@ class ModelCatalogBatchEditorProducts extends Model {
 	}
 	
 	public function getTotalProducts($data = array ()) {
-		$sql = "SELECT COUNT(DISTINCT p.product_id) AS total FROM " . DB_PREFIX . "product p LEFT JOIN " . DB_PREFIX . "product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND p.is_virtual = 0";
+		$sql = "SELECT COUNT(DISTINCT p.product_id) AS total FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE pd.language_id = '" . (int) $this->config->get('config_language_id') . "' AND p.is_virtual = 0";
 		
 		$sql .= $this->getFilterSql($data);
 		
@@ -70,15 +70,14 @@ class ModelCatalogBatchEditorProducts extends Model {
 		
 		foreach ($fields_2 as $key => $field) {
 			if (is_integer ($key)) {
-				$sql .= (!empty ($data['filter_' . $field]) || $data['filter_' . $field][0] == '0') ? " AND p." . $field . "_id " . $data['filter'][$field . '_not'] . " IN (" . $data['filter_' . $field] . ")" : FALSE;
+				$sql .= (!empty ($data['filter_' . $field]) || (!empty($data['filter_' . $field][0]) && $data['filter_' . $field][0] == '0')) ? " AND p." . $field . "_id " . $data['filter'][$field . '_not'] . " IN (" . $data['filter_' . $field] . ")" : FALSE;
 			} else {
-				$sql .= (!empty ($data['filter_' . $field])) ? " AND p.product_id " . $data['filter'][$field . '_not'] . " IN (SELECT product_id FROM " . DB_PREFIX . "product_" . $key . " WHERE " . $field . "_id IN (" . $data['filter_' . $field] . "))" : FALSE;
+				$sql .= (!empty ($data['filter_' . $field])) ? " AND p.product_id " . $data['filter'][$field . '_not'] . " IN (SELECT product_id FROM product_" . $key . " WHERE " . $field . "_id IN (" . $data['filter_' . $field] . "))" : FALSE;
 				
-				$sql .= (empty ($data['filter_' . $field]) && $data['filter'][$field . '_not']) ? " AND p.product_id " . $data['filter'][$field . '_not'] . " IN (SELECT product_id FROM " . DB_PREFIX . "product_" . $key . ")" : FALSE;
+				$sql .= (empty ($data['filter_' . $field]) && $data['filter'][$field . '_not']) ? " AND p.product_id " . $data['filter'][$field . '_not'] . " IN (SELECT product_id FROM product_" . $key . ")" : FALSE;
 			}
 		}
 		
 		return $sql;
 	}
 }
-?>
