@@ -79,6 +79,16 @@
 					$this->db->query("INSERT INTO product_to_store SET product_id = '" . (int)$product_id . "', store_id = '" . (int)$store_id . "'");
 				}
 			}
+
+			if ($this->config->get('ukrcredits_status')){
+				if (isset($data['partscount_pp'])) {
+					if ($data['partscount_pp'] || $data['partscount_ii'] || $data['partscount_mb'] || $data['product_pp'] || $data['product_ii'] || $data['product_mb'] || $data['markup_pp'] || $data['markup_ii'] || $data['markup_mb']) {
+						$this->db->query("DELETE FROM product_ukrcredits WHERE product_id = '" . (int)$product_id . "'");
+
+						$this->db->query("INSERT INTO product_ukrcredits SET product_id = '" . (int)$product_id . "', product_ii = '" . $this->db->escape($data['product_ii']) . "', product_pp = '" . $this->db->escape($data['product_pp']) . "', product_mb = '" . $this->db->escape($data['product_mb']) . "', partscount_pp = '" . $this->db->escape($data['partscount_pp']) . "', partscount_ii = '" . $this->db->escape($data['partscount_ii']) . "', partscount_mb = '" . $this->db->escape($data['partscount_mb']) . "', markup_pp = '" . $this->db->escape($data['markup_pp']) . "', markup_ii = '" . $this->db->escape($data['markup_ii']) . "', markup_mb = '" . $this->db->escape($data['markup_mb']) . "'");
+					}
+				}
+			}
 			
 			if (isset($data['product_attribute'])) {
 				foreach ($data['product_attribute'] as $product_attribute) {
@@ -651,6 +661,16 @@
 					$this->db->query("INSERT INTO product_to_store SET product_id = '" . (int)$product_id . "', store_id = '" . (int)$store_id . "'");
 				}
 			}
+
+			if ($this->config->get('ukrcredits_status')){
+				if (isset($data['partscount_pp'])) {
+					if ($data['partscount_pp'] || $data['partscount_ii'] || $data['partscount_mb'] || $data['product_pp'] || $data['product_ii'] || $data['product_mb'] || $data['markup_pp'] || $data['markup_ii'] || $data['markup_mb']) {
+						$this->db->query("DELETE FROM product_ukrcredits WHERE product_id = '" . (int)$product_id . "'");
+						$this->db->query("INSERT INTO product_ukrcredits SET product_id = '" . (int)$product_id . "', product_ii = '" . $this->db->escape($data['product_ii']) . "', product_pp = '" . $this->db->escape($data['product_pp']) . "', product_mb = '" . $this->db->escape($data['product_mb']) . "', partscount_pp = '" . $this->db->escape($data['partscount_pp']) . "', partscount_ii = '" . $this->db->escape($data['partscount_ii']) . "', partscount_mb = '" . $this->db->escape($data['partscount_mb']) . "', markup_pp = '" . $this->db->escape($data['markup_pp']) . "', markup_ii = '" . $this->db->escape($data['markup_ii']) . "', markup_mb = '" . $this->db->escape($data['markup_mb']) . "'");
+					}
+				}					
+			}
+			
 			
 			$this->db->query("DELETE FROM product_attribute WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -1181,6 +1201,10 @@
 				$data = array_merge($data, array('product_attribute' => $this->getProductAttributes($product_id)));
 				$data = array_merge($data, array('product_description' => $this->getProductDescriptions($product_id)));			
 				$data = array_merge($data, array('product_discount' => $this->getProductDiscounts($product_id)));
+
+				if ($this->config->get('ukrcredits_status')){
+					$data = array_merge($data, $this->getProductUkrcredits($product_id));
+				}				
 				
 				$this->load->model('catalog/ocfilter');
 				$data = array_merge($data, array('ocfilter_product_option' => $this->model_catalog_ocfilter->getProductOCFilterValues($product_id)));
@@ -2185,6 +2209,12 @@
 			}
 			
 			return $product_filter_data;
+		}
+
+		public function getProductUkrcredits($product_id) {
+			$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_ukrcredits WHERE product_id = '" . (int)$product_id . "'");
+
+			return $query->row;
 		}
 		
 		public function getProductAttributes($product_id) {
