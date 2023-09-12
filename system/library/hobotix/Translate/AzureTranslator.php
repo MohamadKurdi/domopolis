@@ -73,6 +73,10 @@ class AzureTranslator
 				$translationResult .= $this->translate($translateItem, $from, $to, true);
 			}
 			
+			if ($returnString){
+				return $translationResult;
+			}
+
 			return json_encode([
 				'translations' => [
 					'0' => [
@@ -112,7 +116,6 @@ class AzureTranslator
   			}
 
   			curl_close($ch);
-
 			$this->addStats($text);
 
 		} catch (\Exception $e) {

@@ -52,12 +52,8 @@
 					foreach ($fields as $field){
 						
 						if (!empty($row[$field])){
-							$translation = $this->model_kp_translate->translate($row[$field], 'uk', 'ru');	
-							
-							$json = json_decode($translation, true);
-							if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
-								$translated = $json['translations'][0]['text'] = htmlspecialchars_decode($json['translations'][0]['text'], ENT_QUOTES);
-							}
+							$translation = $this->translateAdaptor->translate($row[$field], 'uk', 'ru', true);	
+							$translated = htmlspecialchars_decode($translated, ENT_QUOTES);
 							
 							if ($translated){
 								echoLine('[TR UATR] ' . trim(str_replace(PHP_EOL, '', substr(strip_tags($translated), 0, 100))));	
@@ -138,7 +134,7 @@
 
 				$text = $ruquery->row['name'];
 
-				$translation_ruua = $this->model_kp_translate->translate($text, 'uk', 'ru');	
+				$translation_ruua = $this->translateAdaptor->translate($text, 'uk', 'ru');	
 
 				$json = json_decode($translation_ruua, true);
 				if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -199,7 +195,7 @@
 						
 						if (!$translated){
 							
-							$translation_ruua = $this->model_kp_translate->translate($text, 'uk', 'ru');	
+							$translation_ruua = $this->translateAdaptor->translate($text, 'uk', 'ru');	
 							
 							$json = json_decode($translation_ruua, true);
 							if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -299,7 +295,7 @@
 					echoLine('[TR PROD] Переводим товар ' . $row['name_ruua'] . ', ' . $row['product_id']);
 					
 					$translation_ruua = false;
-					$translated = $this->model_kp_translate->translate($row['name_ruua'], 'uk', 'ru');	
+					$translated = $this->translateAdaptor->translate($row['name_ruua'], 'uk', 'ru');	
 					
 					$json = json_decode($translated, true);
 					if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -378,7 +374,7 @@
 					echoLine('[TR PROD] Переводим товар ' . $row['name'] . ', ' . $row['product_id']);
 					
 					$translation_ruua = false;
-					$translated = $this->model_kp_translate->translate($row['description_ruua'], 'uk', 'ru');	
+					$translated = $this->translateAdaptor->translate($row['description_ruua'], 'uk', 'ru');	
 					
 					$json = json_decode($translated, true);
 					if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
@@ -464,7 +460,7 @@
 					echoLine('[TR COLL] Переводим коллекцию ' . $row['name'] . ', ' . $row['collection_id']);
 					
 					$translation_ruua = false;
-					$translated = $this->model_kp_translate->translate($row['description_ruua'], 'uk', 'ru');	
+					$translated = $this->translateAdaptor->translate($row['description_ruua'], 'uk', 'ru');	
 					
 					$json = json_decode($translated, true);
 					if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){

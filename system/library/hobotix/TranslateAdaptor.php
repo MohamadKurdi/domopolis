@@ -3,10 +3,10 @@
 namespace hobotix;
 
 class TranslateAdaptor {	
-	private $registry	= null;
-	private $config		= null;
-	private $db  		= null;
-	private $smsObject 	= null;
+	private $registry			= null;
+	private $config				= null;
+	private $db  				= null;
+	private $translateObject 	= null;
 
 	public function __construct($registry) {		
 		$this->registry = $registry;
@@ -59,5 +59,4 @@ class TranslateAdaptor {
 
 		return $result;
 	}
-
 }

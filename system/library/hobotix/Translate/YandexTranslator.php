@@ -85,6 +85,10 @@ class YandexTranslator
 			foreach ($translateArray as $translateItem){
 				$translationResult .= $this->translate($translateItem, $from, $to, true);
 			}
+
+			if ($returnString){
+				return $translationResult;
+			}
 			
 			return json_encode([
 				'translations' => [

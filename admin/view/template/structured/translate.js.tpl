@@ -46,7 +46,7 @@
 			text.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 		}
 		$.ajax({
-			url: 'index.php?route=kp/translate/ajax&token=<?php echo $token; ?>',
+			url: 'index.php?route=api/translate/ajax&token=<?php echo $token; ?>',
 			type: 'post',
 			data: 'format=' + format + '&source=' + source + '&target=' + target + '&q=' + encodeURIComponent(text),
 			beforeSend: function() {			
@@ -68,7 +68,7 @@
 						CKEDITOR.instances[to_el.attr('id')].setData(response.translations[0].text);
 					}
 
-					to_el.val(response[0].translations[0].text);
+					to_el.val(response.translations[0].text);
 				}
 			},
 			error: function(jqXHR, textStatus, errorThrown){
