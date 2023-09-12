@@ -38,7 +38,7 @@
                     <?php foreach ($banners as $banner) { ?>
                       <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
                       <div class="<?php echo $class; ?>">
-                        <?php if (in_array($banner['banner_id'], [$module['banner_id']])) { ?>
+                        <?php if (is_array($module['banner_id']) && in_array($banner['banner_id'], $module['banner_id'])) { ?>
                           <input id="banner_module_<?php echo $module_row; ?>_<?php echo $banner['banner_id']; ?>" class="checkbox" type="checkbox" name="banner_module[<?php echo $module_row; ?>][banner_id][]" value="<?php echo $banner['banner_id']; ?>" checked="checked" />
                           <label for="banner_module_<?php echo $module_row; ?>_<?php echo $banner['banner_id']; ?>"><?php echo $banner['name']; ?></label>
                         <?php } else { ?>

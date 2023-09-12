@@ -18,6 +18,7 @@ class ControllerModuleBanner extends Controller {
 				'images'  	=> []
 			];
 
+			$this->data['page'] = tryToGuessPageType($this->request->get);
 
 			foreach ($result['images'] as $image){
 				if (empty($image['width'])){
