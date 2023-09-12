@@ -77,7 +77,8 @@
         "google/apiclient": "^2.13",
         "google/auth": "^1.25",
         "vzaichikov/bsg-php": "dev-master",
-        "smsclub/sms-sender": "dev-main"            
+        "smsclub/sms-sender": "dev-main",
+        "deeplcom/deepl-php": "^1.4"            
     },
     "config": {
         "platform-check": false,
