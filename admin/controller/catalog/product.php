@@ -1097,8 +1097,103 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['token'] = $this->session->data['token'];
 
 		$this->load->model('localisation/language');
-
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
+
+		if ($this->config->get('ukrcredits_status')) {
+			$this->data['ukrcredits_status'] 	= true;
+			$this->data['tab_ukrcredits'] 		= $this->language->get('tab_ukrcredits');
+			$this->data['credit_type'] 			= $this->language->get('credit_type');
+			$this->data['credit_type_ii'] 		= $this->language->get('credit_type_ii');
+			$this->data['credit_type_pp'] 		= $this->language->get('credit_type_pp');
+			$this->data['credit_type_mb'] 		= $this->language->get('credit_type_mb');
+			$this->data['partsCount'] 			= $this->language->get('partsCount');
+			$this->data['markup'] 				= $this->language->get('markup');
+			$this->data['help_partsCount'] 		= $this->language->get('help_partsCount');
+			$this->data['help_markup'] 			= $this->language->get('help_markup');			
+		
+            if (isset($this->request->get['product_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
+                $credit_info = $this->model_catalog_product->getProductUkrcredits($this->request->get['product_id']);
+            }
+
+			$this->data['partscounts'] = array();
+			for($i=24; $i>=1; $i--){
+				$this->data['partscounts'][] = $i;           
+			}
+			
+			if (isset($this->request->post['product_pp'])) {
+				$this->data['product_pp'] = $this->request->post['product_pp'];
+			} elseif (!empty($credit_info)) {
+				$this->data['product_pp'] = $credit_info['product_pp'];
+			} else {
+				$this->data['product_pp'] = '';
+			}
+
+			if (isset($this->request->post['product_ii'])) {
+				$this->data['product_ii'] = $this->request->post['product_ii'];
+			} elseif (!empty($credit_info)) {
+				$this->data['product_ii'] = $credit_info['product_ii'];
+			} else {
+				$this->data['product_ii'] = '';
+			}
+			
+			if (isset($this->request->post['product_mb'])) {
+				$this->data['product_mb'] = $this->request->post['product_mb'];
+			} elseif (!empty($credit_info)) {
+				$this->data['product_mb'] = $credit_info['product_mb'];
+			} else {
+				$this->data['product_mb'] = '';
+			}
+			
+			if (isset($this->request->post['partscount_pp'])) {
+				$this->data['partscount_pp'] = $this->request->post['partscount_pp'];
+			} elseif (!empty($credit_info)) {
+				$this->data['partscount_pp'] = $credit_info['partscount_pp'];
+			} else {
+				$this->data['partscount_pp'] = '';
+			}
+			
+			if (isset($this->request->post['partscount_ii'])) {
+				$this->data['partscount_ii'] = $this->request->post['partscount_ii'];
+			} elseif (!empty($credit_info)) {
+				$this->data['partscount_ii'] = $credit_info['partscount_ii'];
+			} else {
+				$this->data['partscount_ii'] = '';
+			}
+			
+			if (isset($this->request->post['partscount_mb'])) {
+				$this->data['partscount_mb'] = $this->request->post['partscount_mb'];
+			} elseif (!empty($credit_info)) {
+				$this->data['partscount_mb'] = $credit_info['partscount_mb'];
+			} else {
+				$this->data['partscount_mb'] = '';
+			}
+
+			if (isset($this->request->post['markup_pp'])) {
+				$this->data['markup_pp'] = $this->request->post['markup_pp'];
+			} elseif (!empty($credit_info)) {
+				$this->data['markup_pp'] = $credit_info['markup_pp'];
+			} else {
+				$this->data['markup_pp'] = '';
+			}
+			
+			if (isset($this->request->post['markup_ii'])) {
+				$this->data['markup_ii'] = $this->request->post['markup_ii'];
+			} elseif (!empty($credit_info)) {
+				$this->data['markup_ii'] = $credit_info['markup_ii'];
+			} else {
+				$this->data['markup_ii'] = '';
+			}
+
+			if (isset($this->request->post['markup_mb'])) {
+				$this->data['markup_mb'] = $this->request->post['markup_mb'];
+			} elseif (!empty($credit_info)) {
+				$this->data['markup_mb'] = $credit_info['markup_mb'];
+			} else {
+				$this->data['markup_mb'] = '';
+			}			
+		} else {
+			$this->data['ukrcredits_status'] = false;
+		}
 
 		if (isset($this->request->post['product_description'])) {
 			$this->data['product_description'] = $this->request->post['product_description'];

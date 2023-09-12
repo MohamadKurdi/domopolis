@@ -64,6 +64,7 @@ class ControllerExtensionPayment extends Controller {
 		if ($files) {
 			foreach ($files as $file) {
 				$extension = basename($file, '.php');
+				if ($extension == 'ukrcredits_pp' || $extension == 'ukrcredits_ii' || $extension == 'ukrcredits_mb') break;
 
 				$this->language->load('payment/' . $extension);
 
