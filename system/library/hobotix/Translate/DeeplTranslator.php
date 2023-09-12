@@ -65,6 +65,11 @@ class DeeplTranslator
 
 		if (is_numeric($text)){
 			return $text;
+		}
+
+		//STRONG TYPE IN DEEPL
+		if (!$from){
+			$from = null;
 		}			
 
 		if (mb_strlen($text, 'UTF-8') > $this->symbolLimit){
@@ -78,7 +83,7 @@ class DeeplTranslator
 			if ($returnString){
 				return $translationResult;
 			}
-			
+
 			return json_encode([
 				'translations' => [
 					'0' => [
@@ -93,13 +98,13 @@ class DeeplTranslator
 			$text = $deeplResult->text;
 
 			if ($deeplResult->text){
-				$result = [[
+				$result = [
 					'translations' => [
 							'0' => [
 								'text' => $deeplResult->text
 							]
 						]
-				]];
+				];
 			}
 
 			$this->addStats($text);
@@ -125,7 +130,6 @@ class DeeplTranslator
 		}
 
 		return $result;
-
 	}
 
 
