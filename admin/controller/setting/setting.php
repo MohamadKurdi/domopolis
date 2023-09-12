@@ -4391,6 +4391,19 @@ class ControllerSettingSetting extends Controller
             $this->data['config_yandex_translate_api_id'] = $this->config->get('config_yandex_translate_api_id');
         }
 
+         //DL Translate
+        if (isset($this->request->post['config_deepl_translate_api_enable'])) {
+            $this->data['config_deepl_translate_api_enable'] = $this->request->post['config_deepl_translate_api_enable'];
+        } else {
+            $this->data['config_deepl_translate_api_enable'] = $this->config->get('config_deepl_translate_api_enable');
+        }
+
+        if (isset($this->request->post['config_deepl_translate_api_key'])) {
+            $this->data['config_deepl_translate_api_key'] = $this->request->post['config_deepl_translate_api_key'];
+        } else {
+            $this->data['config_deepl_translate_api_key'] = $this->config->get('config_deepl_translate_api_key');
+        }
+
         //MS Translate
         if (isset($this->request->post['config_azure_translate_api_enable'])) {
             $this->data['config_azure_translate_api_enable'] = $this->request->post['config_azure_translate_api_enable'];

@@ -7347,6 +7347,32 @@
 								</tr>
 							</table>
 
+							<h2> Deepl Translate API</h2>
+							<table class="form">
+								<tr>
+									<td width="33%">	
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Включить Deepl Translate API</span></p>
+										<select name="config_deepl_translate_api_enable">
+											<?php if ($config_deepl_translate_api_enable) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>									
+									</td>
+									
+									<td width="33%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffcc00; color:#FFF">API KEY</span></p>
+										<input type="text" name="config_deepl_translate_api_key" value="<?php echo $config_deepl_translate_api_key; ?>" size="50" style="width:250px;" />
+									</td>
+									
+									<td width="33%">										
+									</td>										
+								</tr>
+							</table>
+
 							<h2> Microsoft Azure Cloud API</h2>
 							<table class="form">
 								<tr>
