@@ -2,7 +2,7 @@
 	class ModelKpTranslate extends Model {
 		
 		public function translate($text, $from, $to, $returnString = false){
-			return $this->translateAdaptor->setDebug(true)->translate($text, $from, $to, $returnString = false);
+			return $this->translateAdaptor->setDebug(true)->translate($text, $from, $to, $returnString);
 		}	
 		
 		public function updateAttributeTranslation($product_id, $attribute_id, $language_id, $text){

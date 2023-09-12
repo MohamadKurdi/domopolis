@@ -18,10 +18,7 @@
 		to_el.val(from_el.val());
 	}
 	
-	function htmlentities(s){	// Convert all applicable characters to HTML entities
-		// 
-		// +   original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-		
+	function htmlentities(s){
 		var div = document.createElement('div');
 		var text = document.createTextNode(s);
 		div.appendChild(text);
@@ -70,7 +67,8 @@
 					if (typeof (CKEDITOR.instances[to_el.attr('id')]) == 'object'){
 						CKEDITOR.instances[to_el.attr('id')].setData(response.translations[0].text);
 					}
-					to_el.val(response.translations[0].text);
+
+					to_el.val(response[0].translations[0].text);
 				}
 			},
 			error: function(jqXHR, textStatus, errorThrown){
