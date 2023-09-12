@@ -193,6 +193,18 @@
 				</div>
 
 				<div class="tile-block">
+					<div class="tile info-loader unknown" data-path="common/panel/getDeeplTranslateInfo" data-update-interval="600000">
+						<div class="tile-heading">🤖 Deepl Translate API</div>
+						<div class="tile-body"><i class="fa fa-refresh"></i>
+							<span class="tile-result small"></span>
+						</div>
+						<div class="tile-footer">
+							автоматический перевод
+						</div>
+					</div>
+				</div>
+
+				<div class="tile-block">
 					<div class="tile info-loader unknown" data-path="common/panel/getMailGunInfo">
 						<div class="tile-heading">MailGun</div>
 						<div class="tile-body"><i class="fa fa-envelope"></i>

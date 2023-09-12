@@ -351,6 +351,41 @@ class ControllerCommonPanel extends Controller {
 		$this->response->setOutput(json_encode($json));				
 	}
 
+	public function getDeeplTranslateInfo(){
+		$body = '';
+		$class= 'good';
+
+		if ($this->config->get('config_deepl_translate_api_enable')){
+			try {
+				$result = $this->translateAdaptor->translate('привет', 'ru', 'uk');	
+
+				$json = json_decode($result, true);
+
+				if (!empty($json) && !empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
+					$body = $json[0]['translations'][0]['text'];					
+				} else {
+					$class = 'bad';
+					$body = 'FAIL: ERR';									
+				}
+
+			} catch (\Exception $e) {
+				$body 	= $e->getMessage();
+				$class 	= 'bad';
+			}
+
+		} else {
+			$body = 'OFF';
+			$class= 'warn';
+		}
+
+		$json = [
+			'body'  	=> $body,
+			'class' 	=> $class,
+		];
+
+		$this->response->setOutput(json_encode($json));
+	}
+
 	public function getAzureTranslateInfo(){
 		$body = '';
 		$class= 'good';
