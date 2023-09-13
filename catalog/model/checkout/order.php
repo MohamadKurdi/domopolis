@@ -761,7 +761,7 @@ class ModelCheckoutOrder extends Model {
 					'accept_language'         => $order_query->row['accept_language'],				
 					'date_modified'           => $order_query->row['date_modified'],
 					'date_added'              => $order_query->row['date_added'],
-					'pay_equire'			 => $order_query->row['pay_equire'],
+					'pay_equire'			  => $order_query->row['pay_equire'],
 					'customer_confirm_url'    => $this->url->link('checkout/customer_confirm', 'order_id='.$order_query->row['order_id'].'&confirm='.md5(sin($order_query->row['order_id']+2))),
 					'changed'				  => $order_query->row['changed'],
 				];
@@ -778,6 +778,32 @@ public function getLegalPersonForOrder(){
 	} else {
 		return false;
 	}
+}
+
+public function setUkrcreditsOrderId($order_id, $paymenttype, $mono_order_id, $mono_order_status, $mono_order_substatus = false) {
+	$order_info = $this->getOrder($order_id);
+
+	if ($order_info && !$order_info['order_status_id']) {
+		$this->db->query("INSERT INTO order_ukrcredits SET order_id = '" . (int)$order_id . "', ukrcredits_payment_type = '" . $this->db->escape($paymenttype) . "', ukrcredits_order_id = '" . $this->db->escape($mono_order_id) . "', ukrcredits_order_status = '" . $this->db->escape($mono_order_status) . "', ukrcredits_order_substatus = '" . $this->db->escape($mono_order_substatus) . "'");
+	}		
+}			
+
+
+public function getOrderMb($mono_order_id) {
+	$ordermb_query = $this->db->query("SELECT * FROM `order_ukrcredits` WHERE ukrcredits_order_id = '" . $this->db->escape($mono_order_id) . "'");
+	if ($ordermb_query->num_rows) {
+		return $ordermb_query->row;			
+	} else {
+		return false;
+	}
+}
+
+public function updateUkrcreditsOrderMono($order_id, $state, $substate) {
+	$this->db->query("UPDATE order_ukrcredits SET ukrcredits_order_status = '" . $this->db->escape($state) . "', ukrcredits_order_substatus = '" . $this->db->escape($substate) . "' WHERE order_id = '" . (int)$order_id . "'");
+}	
+
+public function updateUkrcreditsOrderPrivat($order_id, $privat_order_status) {
+	$this->db->query("UPDATE order_ukrcredits SET ukrcredits_order_status = '" . $this->db->escape($privat_order_status) . "' WHERE order_id = '" . (int)$order_id . "'");
 }
 
 public function getOrderProducts($order_id) {

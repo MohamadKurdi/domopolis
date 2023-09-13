@@ -3,48 +3,48 @@
     class ModelCatalogProduct extends Model
     {
 		
-		public function getProductActiveCoupons($product_id){
-			
-			if (!$this->config->get('coupon_status')){
-				return false;
-			}
-			
-			$sql = "SELECT * FROM coupon  
-			WHERE 
-			status = 1
-			AND display_list = 1
-			AND birthday = 0
-			AND (DATE(date_start) <= NOW() OR DATE(date_start) = '0000-00-00')
-			AND (DATE(date_end) >= NOW() OR DATE(date_end) = '0000-00-00')
-			AND ((type = 'F' AND currency = '" . $this->db->escape($this->config->get('config_regional_currency')) . "') OR (type = 'P')) ";
-			$sql .= " AND (coupon_id IN (SELECT coupon_id FROM coupon_category WHERE category_id IN (SELECT p2c.category_id FROM product_to_category p2c ";
-			if (!$this->config->get('config_single_store_enable')){
-				$sql .= " LEFT JOIN category_to_store c2s ON (p2c.category_id = c2s.category_id) ";
-			}
+    	public function getProductActiveCoupons($product_id){
 
-			$sql .= " WHERE product_id = '" . (int)$product_id . "'";
+    		if (!$this->config->get('coupon_status')){
+    			return false;
+    		}
 
-			if (!$this->config->get('config_single_store_enable')){
-				$sql .= " AND store_id = '" . (int)$this->config->get('config_store_id') . "'";
-			}
+    		$sql = "SELECT * FROM coupon  
+    		WHERE 
+    		status = 1
+    		AND display_list = 1
+    		AND birthday = 0
+    		AND (DATE(date_start) <= NOW() OR DATE(date_start) = '0000-00-00')
+    		AND (DATE(date_end) >= NOW() OR DATE(date_end) = '0000-00-00')
+    		AND ((type = 'F' AND currency = '" . $this->db->escape($this->config->get('config_regional_currency')) . "') OR (type = 'P')) ";
+    			$sql .= " AND (coupon_id IN (SELECT coupon_id FROM coupon_category WHERE category_id IN (SELECT p2c.category_id FROM product_to_category p2c ";
+    			if (!$this->config->get('config_single_store_enable')){
+    				$sql .= " LEFT JOIN category_to_store c2s ON (p2c.category_id = c2s.category_id) ";
+    			}
 
-			$sql .= ")) ";			
-			$sql .= " OR coupon_id IN (SELECT coupon_id FROM coupon_collection WHERE collection_id IN (SELECT collection_id FROM product WHERE product_id = '" . (int)$product_id . "'))
-			OR coupon_id IN (SELECT coupon_id FROM coupon_manufacturer WHERE manufacturer_id IN (SELECT manufacturer_id FROM product WHERE product_id = '" . (int)$product_id . "'))
-			OR coupon_id IN (SELECT coupon_id FROM coupon_product WHERE product_id = '" . (int)$product_id . "'))";
-			
-			$sql .= " AND (only_in_stock = 0 OR (only_in_stock = 1 AND (SELECT `" . $this->config->get('config_warehouse_identifier') . "` FROM product WHERE product_id = '" . (int)$product_id . "') > 0))";
-			
-			if ($this->customer->isLogged()){
-				$sql .= " AND (uses_customer = 0 OR uses_customer > (SELECT COUNT(*) FROM coupon_history WHERE customer_id = '" . $this->customer->getID() . "' AND coupon_id = coupon.coupon_id))";
-			}
-			
-			$sql .= " ORDER BY date_start DESC LIMIT 1";	
-			
-			$query = $this->db->query($sql);
-			
-			return $query->row;
-		}
+    			$sql .= " WHERE product_id = '" . (int)$product_id . "'";
+
+    			if (!$this->config->get('config_single_store_enable')){
+    				$sql .= " AND store_id = '" . (int)$this->config->get('config_store_id') . "'";
+    			}
+
+    			$sql .= ")) ";			
+    			$sql .= " OR coupon_id IN (SELECT coupon_id FROM coupon_collection WHERE collection_id IN (SELECT collection_id FROM product WHERE product_id = '" . (int)$product_id . "'))
+    			OR coupon_id IN (SELECT coupon_id FROM coupon_manufacturer WHERE manufacturer_id IN (SELECT manufacturer_id FROM product WHERE product_id = '" . (int)$product_id . "'))
+    			OR coupon_id IN (SELECT coupon_id FROM coupon_product WHERE product_id = '" . (int)$product_id . "'))";
+
+    			$sql .= " AND (only_in_stock = 0 OR (only_in_stock = 1 AND (SELECT `" . $this->config->get('config_warehouse_identifier') . "` FROM product WHERE product_id = '" . (int)$product_id . "') > 0))";
+
+    			if ($this->customer->isLogged()){
+    				$sql .= " AND (uses_customer = 0 OR uses_customer > (SELECT COUNT(*) FROM coupon_history WHERE customer_id = '" . $this->customer->getID() . "' AND coupon_id = coupon.coupon_id))";
+    			}
+
+    			$sql .= " ORDER BY date_start DESC LIMIT 1";	
+
+    			$query = $this->db->query($sql);
+
+    			return $query->row;
+    	}
 		
 		public function getAllProductActiveCoupons($product_id){
 			
@@ -3148,6 +3148,11 @@
 				$this->db->query("DELETE FROM product_to_category WHERE category_id = '" . (int)$this->config->get('config_special_category_id') . "'");
 				$this->db->query("INSERT IGNORE INTO product_to_category (product_id, category_id) SELECT DISTINCT ps.product_id, '" . $this->config->get('config_special_category_id') . "' FROM product_special ps LEFT JOIN product p ON ps.product_id = p.product_id WHERE p.status = 1 AND p.quantity > 0 AND ps.price < p.price AND ps.price > 0 AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW()))");
 			}
+		}
+
+		public function getProductUkrcredits($product_id) {
+			$query = $this->db->query("SELECT * FROM product_ukrcredits WHERE product_id = '" . (int)$product_id . "'");
+			return $query->row;
 		}
 		
 		public function getTotalProductSpecials($data = []){
