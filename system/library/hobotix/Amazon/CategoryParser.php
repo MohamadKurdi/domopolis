@@ -103,7 +103,10 @@ class CategoryParser
 		if ($query->num_rows){
 			return $query->row;
 		} else {
-			return false;
+			return [
+				'full_name_native' 	=> 'not set',
+				'name_native' 		=> 'not_set'
+			];
 		}
 	}
 

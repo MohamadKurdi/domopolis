@@ -2485,13 +2485,18 @@
 				$this->data['tip_total'] = round($this->data['total']);
 				$this->data['tip_total_txt'] =  $this->currency->format(round($this->data['total']), $order_info['currency_code'], 1);
 			}
-			$this->data['total_num'] = $order_info['total'];	
-			$this->data['currency_code'] = $order_info['currency_code'];
+			$this->data['total_num'] 		= $order_info['total'];	
+			$this->data['currency_code'] 	= $order_info['currency_code'];
+
+			$this->data['text_confirm'] = $this->language->get('text_confirm');
+			$this->data['text_wait'] 	= $this->language->get('text_wait');
+			$this->data['ukrcredits_order_substatus'] 	= $order_info['ukrcredits_order_substatus']; 
+			$this->data['ukrcredits_order_status'] 		= $order_info['ukrcredits_order_status']; 
+			$this->data['ukrcredits_order_id'] 			= $order_info['ukrcredits_order_id']; 
 			
-			$this->data['bill_file'] = $order_info['bill_file'];
-			$this->data['bill_file2'] = $order_info['bill_file2'];
-			
-			$this->data['order_id2'] = $order_info['order_id2'];
+			$this->data['bill_file'] 		= $order_info['bill_file'];
+			$this->data['bill_file2'] 		= $order_info['bill_file2'];			
+			$this->data['order_id2'] 		= $order_info['order_id2'];
 			
 			if ($order_info['order_id2']){
 				$_oid2 = explode('-', $order_info['order_id2']);

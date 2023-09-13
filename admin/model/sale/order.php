@@ -2176,10 +2176,9 @@
 				$this->db->query("DELETE FROM order_option WHERE order_id = '" . (int)$order_id . "'");
 				$this->db->query("DELETE FROM order_download WHERE order_id = '" . (int)$order_id . "'");
 				$this->db->query("DELETE FROM order_voucher WHERE order_id = '" . (int)$order_id . "'");
-				$this->db->query("DELETE FROM order_total WHERE order_id = '" . (int)$order_id . "'");
-				//	$this->db->query("DELETE FROM order_history WHERE order_id = '" . (int)$order_id . "'");
+				$this->db->query("DELETE FROM order_total WHERE order_id = '" . (int)$order_id . "'");				
 				$this->db->query("DELETE FROM order_fraud WHERE order_id = '" . (int)$order_id . "'");
-				//	$this->db->query("DELETE FROM customer_transaction WHERE order_id = '" . (int)$order_id . "'");
+				$this->db->query("DELETE FROM order_ukrcredits WHERE order_id = '" . (int)$order_id . "'");
 				$this->db->query("DELETE FROM customer_reward WHERE order_id = '" . (int)$order_id . "'");
 				$this->db->query("DELETE FROM affiliate_transaction WHERE order_id = '" . (int)$order_id . "'");
 				$this->db->query("DELETE `or`, ort FROM order_recurring `or`, order_recurring_transaction ort WHERE order_id = '" . (int)$order_id . "' AND ort.order_recurring_id = `or`.order_recurring_id");
@@ -2263,13 +2262,25 @@
 				$language_info = $this->model_localisation_language->getLanguage($order_query->row['language_id']);
 				
 				if ($language_info) {
-					$language_code = $language_info['code'];
-					$language_filename = $language_info['filename'];
+					$language_code 		= $language_info['code'];
+					$language_filename 	= $language_info['filename'];
 					$language_directory = $language_info['directory'];
 					} else {
-					$language_code = '';
-					$language_filename = '';
+					$language_code 		= '';
+					$language_filename 	= '';
 					$language_directory = '';
+				}
+
+				$order_ukrcredits_query = $this->db->query("SELECT * FROM order_ukrcredits WHERE order_id = '" . (int)$order_id . "'");
+
+				if ($order_ukrcredits_query->num_rows) {
+					$ukrcredits_order_id 		= $order_ukrcredits_query->row['ukrcredits_order_id'];
+					$ukrcredits_order_status 	= $order_ukrcredits_query->row['ukrcredits_order_status'];
+					$ukrcredits_order_substatus = $order_ukrcredits_query->row['ukrcredits_order_substatus'];
+				} else {
+					$ukrcredits_order_id 		= '';
+					$ukrcredits_order_status 	= '';
+					$ukrcredits_order_substatus = '';
 				}				
 				
 				return array(
@@ -2397,6 +2408,9 @@
 				'pay_equireWPP'			 => $order_query->row['pay_equireWPP'],
 				'pay_equireMono'		 => $order_query->row['pay_equireMono'],
 				'pay_equireCP'			 => $order_query->row['pay_equireCP'],
+				'ukrcredits_order_id'         => $ukrcredits_order_id,
+				'ukrcredits_order_status'     => $ukrcredits_order_status,
+				'ukrcredits_order_substatus'  => $ukrcredits_order_substatus,
 				'pay_type'			     => $order_query->row['pay_type'],
 				'bill_file'				 => $order_query->row['bill_file'],
 				'bill_file2'		     => $order_query->row['bill_file2'],

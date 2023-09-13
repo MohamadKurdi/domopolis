@@ -1,7 +1,7 @@
 <?php
 class ControllerPaymentUkrCredits extends Controller {
 	protected $version = '1.0.5';
-    private $error = array();
+    private $error = [];
 
     public function index() {
 
@@ -10,7 +10,7 @@ class ControllerPaymentUkrCredits extends Controller {
 		$dir = version_compare(VERSION,'2.3','>=') ? 'extension/payment' : 'payment';
 		$payments_page = version_compare(VERSION,'3.0','>=') ? 'marketplace/extension' : (version_compare(VERSION,'2.3','>=') ? 'extension/extension' : 'extension/payment');
 		
-		$data = array();
+		$data = [];
 		$data += $this->load->language($dir.'/ukrcredits');
 		
         $this->document->setTitle($this->language->get('heading_title'));
@@ -22,26 +22,28 @@ class ControllerPaymentUkrCredits extends Controller {
 		} elseif ($this->config->get('ukrcredits_settings')) {
 			$data += $this->config->get('ukrcredits_settings');
 		} else {
-			$data['pp_shop_id'] = '';
-			$data['pp_shop_password'] = '';
-			$data['pp_status'] = 0;
-			$data['pp_sort_order'] = 10;
-			$data['pp_hold'] = 0;
-			$data['pp_discount'] = 0;
-			$data['pp_special'] = 0;
-			$data['pp_stock'] = 0;
-			$data['pp_stock_status_id'] = 0;
-			$data['pp_pq'] = 24;
-			$data['pp_min_total'] = '';
-			$data['pp_max_total'] = 100000;
-			$data['pp_merchantType'] = 'PP';
-			$data['pp_markup_type'] = 'fixed';			
-			$data['pp_markup_custom_PP'] = array(1 => 1.5, 2 => 2.5, 3 => 4.5, 4 => 7, 5 => 9, 6 => 11.5, 7 => 13.5, 8 => 15.5, 9 => 16.5, 10 => 17, 11 => 17.5, 12 => 19, 13 => 20.5, 14 => 22, 15 => 23.5, 16 => 24.5, 17 => 26, 18 => 27, 19 => 28.5, 20 => 29.5, 21 => 31, 22 => 32, 23 => 33, 24 => 34.5); 
-			$data['pp_markup_acquiring'] = '2.0';			
-			$data['pp_markup'] = 1.000;
-			$data['pp_enabled'] = 0;
-			$data['pp_product_allowed'] = array();
-			$data['pp_geo_zone_id'] = 0;
+			$data['pp_shop_id'] 			= '';
+			$data['pp_shop_password'] 		= '';
+			$data['pp_status'] 				= 0;
+			$data['pp_sort_order'] 			= 10;
+			$data['pp_hold'] 				= 0;
+			$data['pp_discount'] 			= 0;
+			$data['pp_special'] 			= 0;
+			$data['pp_stock'] 				= 0;
+			$data['pp_stock_status_id'] 	= 0;
+			$data['pp_pq'] 					= 24;
+			$data['pp_min_total'] 			= '';
+			$data['pp_max_total'] 			= 100000;
+			$data['pp_merchantType'] 		= 'PP';
+			$data['pp_markup_type'] 		= 'fixed';			
+			$data['pp_markup_custom_PP'] 	= [1 => 1.5, 2 => 2.5, 3 => 4.5, 4 => 7, 5 => 9, 6 => 11.5, 7 => 13.5, 8 => 15.5, 9 => 16.5, 10 => 17, 11 => 17.5, 12 => 19, 13 => 20.5, 14 => 22, 15 => 23.5, 16 => 24.5, 17 => 26, 18 => 27, 19 => 28.5, 20 => 29.5, 21 => 31, 22 => 32, 23 => 33, 24 => 34.5]; 
+			$data['pp_markup_acquiring'] 	= '2.0';			
+			$data['pp_markup'] 				= 1.000;
+			$data['pp_enabled'] 			= 0;
+			$data['pp_product_allowed'] 		= [];
+			$data['pp_categories_allowed'] 		= [];
+			$data['pp_manufacturers_allowed'] 	= [];
+			$data['pp_geo_zone_id'] 		= 0;
 
 			$data['ii_shop_id'] = '';
 			$data['ii_shop_password'] = '';
@@ -60,7 +62,7 @@ class ControllerPaymentUkrCredits extends Controller {
 			$data['ii_markup_acquiring'] = '0';			
 			$data['ii_markup'] = 1.000;
 			$data['ii_enabled'] = 0;
-			$data['ii_product_allowed'] = array();
+			$data['ii_product_allowed'] = [];
 			$data['ii_geo_zone_id'] = 0;
 			
 			$data['mb_shop_id'] = '';
@@ -79,7 +81,7 @@ class ControllerPaymentUkrCredits extends Controller {
 			$data['mb_markup_acquiring'] = '0';
 			$data['mb_markup'] = 1.000;
 			$data['mb_enabled'] = 0;
-			$data['mb_product_allowed'] = array();
+			$data['mb_product_allowed'] = [];
 			$data['mb_geo_zone_id'] = 0;
 			
 			$data['completed_status_id'] = 0;
@@ -100,59 +102,82 @@ class ControllerPaymentUkrCredits extends Controller {
 			$data['css_custom'] = '';
 		}
 		
-		if ($this->config->get($type . "ukrcredits_status")) {
-			$setting[$type . "ukrcredits_status"] = $this->config->get($type . "ukrcredits_status");
+		if ($this->config->get("ukrcredits_status")) {
+			$setting["ukrcredits_status"] = $this->config->get("ukrcredits_status");
 		}
-		if ($this->config->get($type . "ukrcredits_pp_status")) {
-			$setting[$type . "ukrcredits_pp_status"] = $this->config->get($type . "ukrcredits_pp_status");
+
+		if ($this->config->get("ukrcredits_pp_status")) {
+			$setting["ukrcredits_pp_status"] = $this->config->get("ukrcredits_pp_status");
 		}
-		if ($this->config->get($type . "ukrcredits_ii_status")) {
-			$setting[$type . "ukrcredits_ii_status"] = $this->config->get($type . "ukrcredits_ii_status");
+
+		if ($this->config->get("ukrcredits_ii_status")) {
+			$setting["ukrcredits_ii_status"] = $this->config->get("ukrcredits_ii_status");
 		}
-		if ($this->config->get($type . "ukrcredits_mb_status")) {
-			$setting[$type . "ukrcredits_mb_status"] = $this->config->get($type . "ukrcredits_mb_status");
+
+		if ($this->config->get("ukrcredits_mb_status")) {
+			$setting["ukrcredits_mb_status"] = $this->config->get("ukrcredits_mb_status");
 		}
-		if ($this->config->get($type . "ukrcredits_pp_sort_order")) {
-			$setting[$type . "ukrcredits_pp_sort_order"] = $this->config->get($type . "ukrcredits_pp_sort_order");
+
+		if ($this->config->get("ukrcredits_pp_sort_order")) {
+			$setting["ukrcredits_pp_sort_order"] = $this->config->get("ukrcredits_pp_sort_order");
 		}
-		if ($this->config->get($type . "ukrcredits_ii_sort_order")) {
-			$setting[$type . "ukrcredits_ii_sort_order"] = $this->config->get($type . "ukrcredits_ii_sort_order");
+
+		if ($this->config->get("ukrcredits_ii_sort_order")) {
+			$setting["ukrcredits_ii_sort_order"] = $this->config->get("ukrcredits_ii_sort_order");
 		}
-		if ($this->config->get($type . "ukrcredits_mb_sort_order")) {
-			$setting[$type . "ukrcredits_mb_sort_order"] = $this->config->get($type . "ukrcredits_mb_sort_order");
+
+		if ($this->config->get("ukrcredits_mb_sort_order")) {
+			$setting["ukrcredits_mb_sort_order"] = $this->config->get("ukrcredits_mb_sort_order");
 		}
-		$setting[$type . "ukrcredits_settings"] = $this->config->get($type . "ukrcredits_settings");
-		$this->model_setting_setting->editSetting($type . "ukrcredits", $setting);
+
+		$setting["ukrcredits_settings"] = $this->config->get("ukrcredits_settings");
+		$this->model_setting_setting->editSetting("ukrcredits", $setting);
 
 		if ($this->request->server["REQUEST_METHOD"] == "POST" && $this->validate()) {
 			if ($this->request->post["pp_status"] || $this->request->post["ii_status"] || $this->request->post["mb_status"]) {
-				$setting[$type . "ukrcredits_status"] = 1;
+				$setting["ukrcredits_status"] = 1;
 			}
+
 			if ($this->request->post["pp_status"]) {
-				$setting[$type . "ukrcredits_pp_status"] = 1;
+				$setting["ukrcredits_pp_status"] = 1;
 			}
+
 			if ($this->request->post["ii_status"]) {
-				$setting[$type . "ukrcredits_ii_status"] = 1;
+				$setting["ukrcredits_ii_status"] = 1;
 			}
+
 			if ($this->request->post["mb_status"]) {
-				$setting[$type . "ukrcredits_mb_status"] = 1;
+				$setting["ukrcredits_mb_status"] = 1;
 			}
+
 			if (!isset($this->request->post["pp_product_allowed"])) {
-				$this->request->post["pp_product_allowed"] = array();
+				$this->request->post["pp_product_allowed"] = [];
 			}
+
+			if (!isset($this->request->post["pp_categories_allowed"])) {
+				$this->request->post["pp_categories_allowed"] = [];
+			}
+
+			if (!isset($this->request->post["pp_manufacturers_allowed"])) {
+				$this->request->post["pp_manufacturers_allowed"] = [];
+			}
+
 			if (!isset($this->request->post["ii_product_allowed"])) {
-				$this->request->post["ii_product_allowed"] = array();
+				$this->request->post["ii_product_allowed"] = [];
 			}
+
 			if (!isset($this->request->post["mb_product_allowed"])) {
-				$this->request->post["mb_product_allowed"] = array();
+				$this->request->post["mb_product_allowed"] = [];
 			}
-			$setting[$type . "ukrcredits_sort_order"] 		= $this->request->post["pp_sort_order"] . "," . $this->request->post["ii_sort_order"] . "," . $this->request->post["mb_sort_order"];
-			$setting[$type . "ukrcredits_pp_sort_order"] 	= $this->request->post["pp_sort_order"];
-			$setting[$type . "ukrcredits_ii_sort_order"] 	= $this->request->post["ii_sort_order"];
-			$setting[$type . "ukrcredits_mb_sort_order"] 	= $this->request->post["mb_sort_order"];
-			$setting[$type . "ukrcredits_license"] 			= $this->config->get($type . "ukrcredits_license");
-			$setting[$type . "ukrcredits_settings"] 		= $this->request->post;
-			$this->model_setting_setting->editSetting($type . "ukrcredits", $setting);
+
+			$setting["ukrcredits_sort_order"] 		= $this->request->post["pp_sort_order"] . "," . $this->request->post["ii_sort_order"] . "," . $this->request->post["mb_sort_order"];
+			$setting["ukrcredits_pp_sort_order"] 	= $this->request->post["pp_sort_order"];
+			$setting["ukrcredits_ii_sort_order"] 	= $this->request->post["ii_sort_order"];
+			$setting["ukrcredits_mb_sort_order"] 	= $this->request->post["mb_sort_order"];
+			$setting["ukrcredits_license"] 			= $this->config->get("ukrcredits_license");
+			$setting["ukrcredits_settings"] 		= $this->request->post;
+
+			$this->model_setting_setting->editSetting("ukrcredits", $setting);
 			if (version_compare(VERSION, "2.2", ">=")) {
 				$ukrcreditslines = file(DIR_CATALOG . "model/total/totalukrcredits.php", FILE_IGNORE_NEW_LINES);
 				$ukrcreditslines[2] = "\tpublic function getTotal(\$total) {";
@@ -229,7 +254,7 @@ class ControllerPaymentUkrCredits extends Controller {
             $data['error_pq_mb'] = '';
         }  
         
-		$data['breadcrumbs'] = array();
+		$data['breadcrumbs'] = [];
 
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_home'),
@@ -263,23 +288,56 @@ class ControllerPaymentUkrCredits extends Controller {
 
         $this->load->model('catalog/product');
 		
-		$data['pp_products_allowed'] = array();
+		$data['pp_products_allowed'] = [];
 		if (!isset($data['pp_product_allowed'])) {
-			$data['pp_product_allowed'] = array();
+			$data['pp_product_allowed'] = [];
 		}
 		foreach ($data['pp_product_allowed'] as $product_id) {
 			$product_info = $this->model_catalog_product->getProduct($product_id);
 			if ($product_info) {
 				$data['pp_products_allowed'][] = array(
-					'product_id' => $product_info['product_id'],
-					'name'        => $product_info['name']
+					'product_id' 	=> $product_info['product_id'],
+					'name'        	=> $product_info['name']
+				);
+			}
+		}
+
+		$this->load->model('catalog/category');
+		$data['pp_category_allowed'] = [];
+		if (!isset($data['pp_categories_allowed'])) {
+			$data['pp_categories_allowed'] = [];
+		}
+
+		foreach ($data['pp_categories_allowed'] as $category_id) {
+			$category_info = $this->model_catalog_category->getCategories(['filter_category_id' => $category_id])[0];
+			if ($category_info) {
+				$data['pp_category_allowed'][] = array(
+					'category_id' 	=> $category_info['category_id'],
+					'name'        	=> $category_info['name']
+				);
+			}
+		}
+
+
+		$this->load->model('catalog/manufacturer');
+		$data['pp_manufacturer_allowed'] = [];
+		if (!isset($data['pp_manufacturers_allowed'])) {
+			$data['pp_manufacturers_allowed'] = [];
+		}
+
+		foreach ($data['pp_manufacturers_allowed'] as $manufacturer_id) {
+			$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
+			if ($manufacturer_info) {
+				$data['pp_manufacturer_allowed'][] = array(
+					'manufacturer_id' 	=> $manufacturer_info['manufacturer_id'],
+					'name'        		=> $manufacturer_info['name']
 				);
 			}
 		}
 		
-		$data['ii_products_allowed'] = array();
+		$data['ii_products_allowed'] = [];
 		if (!isset($data['ii_product_allowed'])) {
-			$data['ii_product_allowed'] = array();
+			$data['ii_product_allowed'] = [];
 		}		
 		foreach ($data['ii_product_allowed'] as $product_id) {
 			$product_info = $this->model_catalog_product->getProduct($product_id);
@@ -291,9 +349,9 @@ class ControllerPaymentUkrCredits extends Controller {
 			}
 		}
 
-		$data['mb_products_allowed'] = array();
+		$data['mb_products_allowed'] = [];
 		if (!isset($data['mb_product_allowed'])) {
-			$data['mb_product_allowed'] = array();
+			$data['mb_product_allowed'] = [];
 		}		
 		foreach ($data['mb_product_allowed'] as $product_id) {
 			$product_info = $this->model_catalog_product->getProduct($product_id);
@@ -391,7 +449,7 @@ class ControllerPaymentUkrCredits extends Controller {
     }
 
 	public function install() {
-		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "product_ukrcredits` (
+		$this->db->query("CREATE TABLE IF NOT EXISTS `product_ukrcredits` (
 		  `product_id` int(11) NOT NULL,
 		  `product_pp` int(1) NOT NULL,
 		  `product_ii` int(1) NOT NULL,
@@ -411,7 +469,7 @@ class ControllerPaymentUkrCredits extends Controller {
 		  PRIMARY KEY (`product_id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 		
-		$this->db->query("CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "order_ukrcredits` (
+		$this->db->query("CREATE TABLE IF NOT EXISTS `order_ukrcredits` (
 		  `order_id` int(11) NOT NULL,
 		  `ukrcredits_payment_type` varchar(2) NOT NULL,
 		  `ukrcredits_order_id` varchar(64) NOT NULL,
