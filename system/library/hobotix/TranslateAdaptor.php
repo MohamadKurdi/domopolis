@@ -12,14 +12,20 @@ class TranslateAdaptor {
 		$this->registry = $registry;
 		$this->config 	= $registry->get('config');
 		$this->db 		= $registry->get('db');
+		
+		$this->use($this->config->get('config_translation_library'));
+	}
 
-		$translateClass = $this->config->get('config_translation_library');
-
+	public function use($translateClass){
 		if (file_exists(DIR_SYSTEM . '/library/hobotix/Translate/' . $translateClass . '.php')){
 			require_once (DIR_SYSTEM . '/library/hobotix/Translate/' . $translateClass . '.php');
 			$translateClass = "hobotix" . "\\" . "Translate" . "\\" . $translateClass;
-			$this->translateObject = new $translateClass($this->registry);			
-		} 
+			$this->translateObject = new $translateClass($this->registry);
+
+			echoLine('[TranslateAdaptor::use] Using ' . $translateClass . ' translation library', 's');			
+		} 		
+
+		return $this;
 	}
 
 	public function setDebug($debug){

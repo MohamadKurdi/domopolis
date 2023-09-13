@@ -8,8 +8,8 @@ class AzureTranslator
 
 	private $db 	= null;	
 	private $config = null;
-
 	private $debug = false;
+	
 	private $endpoint = 'https://api.cognitive.microsofttranslator.com/translate/';
 
 	private $enableCheck = false;

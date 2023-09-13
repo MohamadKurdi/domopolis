@@ -8,6 +8,7 @@ class DeeplTranslator
 
 	private $db 	= null;	
 	private $config = null;
+	private $debug  = null;
 
 	private $deeplTranslator = null;
 
@@ -67,7 +68,6 @@ class DeeplTranslator
 			return $text;
 		}
 
-		//STRONG TYPE IN DEEPL
 		if (!$from){
 			$from = null;
 		}			
@@ -98,13 +98,13 @@ class DeeplTranslator
 			$text = $deeplResult->text;
 
 			if ($deeplResult->text){
-				$result = [
+				$result = json_encode([
 					'translations' => [
 							'0' => [
 								'text' => $deeplResult->text
 							]
 						]
-				];
+				]);
 			}
 
 			$this->addStats($text);

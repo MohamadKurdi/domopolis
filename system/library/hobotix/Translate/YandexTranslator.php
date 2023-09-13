@@ -7,11 +7,11 @@ class YandexTranslator
 {
 
 	private $db 	= null;	
-	private $config = null;
-	private $cloud 	= null;
-
+	private $config = null;	
 	private $debug = false;
-
+	
+	private $cloud 	= null;
+	
 	private $enableCheck = false;
 
 	private $hourLimit = 10000000;

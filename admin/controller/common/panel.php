@@ -357,12 +357,12 @@ class ControllerCommonPanel extends Controller {
 
 		if ($this->config->get('config_deepl_translate_api_enable')){
 			try {
-				$result = $this->translateAdaptor->translate('привет', 'ru', 'uk');	
+				$result = $this->translateAdaptor->use('DeeplTranslator')->translate('привет', 'ru', 'uk');	
 
 				$json = json_decode($result, true);
 
 				if (!empty($json) && !empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
-					$body = $json[0]['translations'][0]['text'];					
+					$body = $json['translations'][0]['text'];					
 				} else {
 					$class = 'bad';
 					$body = 'FAIL: ERR';									
@@ -392,7 +392,7 @@ class ControllerCommonPanel extends Controller {
 
 		if ($this->config->get('config_azure_translate_api_enable')){
 			try {
-				$result = $this->translateAdaptor->translate('привет', 'ru', 'uk');	
+				$result = $this->translateAdaptor->use('AzureTranslator')->translate('привет', 'ru', 'uk');	
 
 				$json = json_decode($result, true);
 
@@ -432,7 +432,7 @@ class ControllerCommonPanel extends Controller {
 		if ($this->config->get('config_yandex_translate_api_enable')){
 
 			try {
-				$result = $this->translateAdaptor->translate('привет', 'ru', 'uk');				
+				$result = $this->translateAdaptor->use('YandexTranslator')->translate('привет', 'ru', 'uk');				
 
 				$json = json_decode($result, true);
 				if (!empty($json['translations']) && !empty($json['translations'][0]) && !empty($json['translations'][0]['text'])){
