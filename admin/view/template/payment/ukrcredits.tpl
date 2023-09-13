@@ -165,6 +165,23 @@
                   </label>
                 </div>
               </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-pp_stock_status_id">Разрешить только этот статус</label>
+                <div class="col-sm-10">
+                  <select name="pp_stock_status_id" id="input-pp_stock_status_id" class="form-control">
+                    <option value="0">Любой статус</option>
+                    <?php foreach ($stock_statuses as $stock_status) { ?>
+                      <?php if ($stock_status['stock_status_id'] == $pp_stock_status_id) { ?>
+                        <option value="<?php echo $stock_status['stock_status_id']; ?>" selected="selected"><?php echo $stock_status['name']; ?></option>
+                      <?php } else { ?>
+                        <option value="<?php echo $stock_status['stock_status_id']; ?>"><?php echo $stock_status['name']; ?></option>
+                      <?php } ?>
+                    <?php } ?>
+                  </select>
+                </div>
+              </div>  
+
               <div class="form-group required">                
                 <label class="col-sm-2 control-label" for="input-ii-pq"><span data-toggle="tooltip" title="<?php echo $help_pq; ?>"><?php echo $entry_pq; ?></span></label>
                 <div class="col-sm-10">
@@ -292,23 +309,23 @@
                     <input type="radio" id="enabled_selected_pp" name="pp_enabled" value="0" <?php echo $pp_products_allowed?'disabled':''; ?>/>
                     <?php echo $entry_enabled_all; ?>
                     <?php } ?>
-				  </label>
+				    </label>
                 </div>
               </div>
-			  <div class="form-group">
-				<label class="col-sm-2"></label>
-				<div class="col-sm-10">
-					<input type="text" name="allowed_pp" value="" placeholder="<?php echo $entry_enabled; ?>" id="input-allowed" class="form-control" />
-					<input type="text" name="category_allowed_pp" value="" placeholder="<?php echo $entry_enabled_cat; ?>" class="form-control" />
-					<div id="product-allowed_pp" class="well well-sm" style="height: 300px; overflow: auto;">
-					<?php foreach ($pp_products_allowed as $product_allowed) { ?>
-					<div id="product-allowed_pp<?php echo $product_allowed['product_id']; ?>"><?php if ($oc15) { ?><img src="view/image/delete.png" alt="" /><?php } else { ?><i class="fa fa-minus-circle"></i><?php } ?> <?php echo $product_allowed['name']; ?>
-					<input type="hidden" name="pp_product_allowed[]" value="<?php echo $product_allowed['product_id']; ?>" />
-					</div> 
-					<?php } ?>
-				  </div>
-				</div>
-			  </div>
+              <div class="form-group">
+                <label class="col-sm-2"></label>
+                <div class="col-sm-10">
+                 <input type="text" name="allowed_pp" value="" placeholder="<?php echo $entry_enabled; ?>" id="input-allowed" class="form-control" />
+                 <input type="text" name="category_allowed_pp" value="" placeholder="<?php echo $entry_enabled_cat; ?>" class="form-control" />
+                 <div id="product-allowed_pp" class="well well-sm" style="height: 300px; overflow: auto;">
+                   <?php foreach ($pp_products_allowed as $product_allowed) { ?>
+                     <div id="product-allowed_pp<?php echo $product_allowed['product_id']; ?>"><?php if ($oc15) { ?><img src="view/image/delete.png" alt="" /><?php } else { ?><i class="fa fa-minus-circle"></i><?php } ?> <?php echo $product_allowed['name']; ?>
+                     <input type="hidden" name="pp_product_allowed[]" value="<?php echo $product_allowed['product_id']; ?>" />
+                   </div> 
+                 <?php } ?>
+               </div>
+             </div>
+           </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-geo-zone"><?php echo $entry_geo_zone; ?></label>
                 <div class="col-sm-10">

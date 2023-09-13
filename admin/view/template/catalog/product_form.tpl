@@ -4690,7 +4690,7 @@ getProductsBatchOption();
 
 //--></script>
 
-<? /* ?>
+
 <script type="text/javascript"><!--
 ocfilter.php = {
 	text_select: '<?php echo $text_select; ?>',
@@ -4710,7 +4710,6 @@ ocfilter.php.languages = [];
 <?php } ?>
 
 //--></script>
-<? */ ?>
 
 <script type="text/javascript"><!--
 var image_row = <?php echo $image_row; ?>;

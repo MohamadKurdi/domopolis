@@ -6,6 +6,7 @@ class ControllerPaymentUkrCredits extends Controller {
     public function index() {
 
 		$token = version_compare(VERSION,'3.0','>=') ? 'user_' : '';
+		$type = '';
 		$dir = version_compare(VERSION,'2.3','>=') ? 'extension/payment' : 'payment';
 		$payments_page = version_compare(VERSION,'3.0','>=') ? 'marketplace/extension' : (version_compare(VERSION,'2.3','>=') ? 'extension/extension' : 'extension/payment');
 		
@@ -29,6 +30,7 @@ class ControllerPaymentUkrCredits extends Controller {
 			$data['pp_discount'] = 0;
 			$data['pp_special'] = 0;
 			$data['pp_stock'] = 0;
+			$data['pp_stock_status_id'] = 0;
 			$data['pp_pq'] = 24;
 			$data['pp_min_total'] = '';
 			$data['pp_max_total'] = 100000;
@@ -252,6 +254,9 @@ class ControllerPaymentUkrCredits extends Controller {
 
         $this->load->model('localisation/order_status');
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+
+        $this->load->model('localisation/stock_status');
+        $data['stock_statuses'] = $this->model_localisation_stock_status->getStockStatuses();
 		
 		$this->load->model('localisation/language');
 		$data['languages'] = $this->model_localisation_language->getLanguages();
@@ -300,23 +305,16 @@ class ControllerPaymentUkrCredits extends Controller {
 			}
 		}
 		
-		if (version_compare(VERSION,'2.0','>=')) {
-			$data['oc15'] = false;
-			$data['header'] = $this->load->controller('common/header');
-			$data['column_left'] = $this->load->controller('common/column_left');
-			$data['footer'] = $this->load->controller('common/footer');
-		} else {
-			$data['oc15'] = true;
-			$this->document->addScript('view/javascript/jquery/uctabs.js');
-			$this->document->addStyle('view/stylesheet/bootstrap.css');
-			$data['column_left'] = false;
-			$this->data = $data;
-			$this->template = 'payment/ukrcredits.tpl';
-			$this->children = array(
-				'common/header',
-				'common/footer'
-			);		
-		}
+		$data['oc15'] = true;
+		$this->document->addScript('view/javascript/jquery/uctabs.js');
+		$this->document->addStyle('view/stylesheet/bootstrap.css');
+		$data['column_left'] = false;
+		$this->data = $data;
+		$this->template = 'payment/ukrcredits.tpl';
+		$this->children = array(
+			'common/header',
+			'common/footer'
+		);	
 
 		if (version_compare(VERSION, '3.0.0', '>=')) {
 			$template_engine = $this->registry->get('config')->get('template_engine');
