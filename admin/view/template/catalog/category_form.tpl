@@ -27,13 +27,11 @@
 				<a href="#tab-general"><?php echo $tab_general; ?></a>
 				<a href="#tab-data"><?php echo $tab_data; ?></a>
 				<a href="#tab-products">Настройки товаров</a>
-				<a href="#tab-reward">Бонусная программа</a>
-				<?php if ($this->config->get('config_yam_enable_category_tree') || $this->config->get('config_rainforest_enable_api')) { ?>
+				<a href="#tab-reward">Бонусная программа</a>				
 					<a href="#tab-amazon-sync" style="color:#FF9900;font-weight:700;">
 						<i class="fa fa-amazon"></i> Синхронизация Amazon (RNF API)
 						<?php if ($this->config->get('config_country_id') == 176) { ?>,<span style="color:#cf4a61"><i class="fa fa-yahoo"></i> Yandex Market</span><?php } ?>
-					</a>
-				<?php } ?>
+					</a>				
 				<a href="#tab-related-data">Умные подборы</a>
 				<a href="#tab-design"><?php echo $tab_design; ?></a>
 				<a href="#tab-menucontent">Контент в меню</a><div class="clr"></div>
@@ -717,10 +715,12 @@
 									<span  style="color:#00ad07"> 
 										<i class="fa fa-check"></i> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $this->config->get('config_rainforest_source_language');?>.png" /> <?php echo $amazon_category_full_information['full_name']; ?> (<?php echo $amazon_category_full_information['name']; ?>)
 									</span>
-									<br />
-									<span  style="color:#00ad07"> 
-										<i class="fa fa-check"></i> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $this->config->get('config_admin_language');?>.png" /> <?php echo $amazon_category_full_information['full_name_native']; ?> (<?php echo $amazon_category_full_information['name_native']; ?>)
-									</span>
+									<?php if (!empty($amazon_category_full_information['name_native'])) { ?>
+										<br />
+										<span  style="color:#00ad07"> 
+											<i class="fa fa-check"></i> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $this->config->get('config_admin_language');?>.png" /> <?php echo $amazon_category_full_information['full_name_native']; ?> (<?php echo $amazon_category_full_information['name_native']; ?>)
+										</span>
+									<?php } ?>
 								<?php } else { ?>													
 									<br /><span style="color:#ef5e67"><i class="fa fa-exclamation-triangle"></i> категория не существует в сохраненном дереве категорий, это может привести к нелогичному поведению дерева категорий
 								<?php } ?>
