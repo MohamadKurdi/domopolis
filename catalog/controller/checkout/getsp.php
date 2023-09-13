@@ -184,11 +184,9 @@
 						$add = !$this->config->get($result['code'] . '_ismethod');
 					}
 				
-					$this->load->model('payment/' . $result['code']);
-					
+					$this->load->model('payment/' . $result['code']);					
 					$method = $this->{'model_payment_' . $result['code']}->getMethod($address_data, false, true); 	
-					
-					
+										
 					if ($method && $add) {					
 						
 						if (isset($method['quote'])) {
