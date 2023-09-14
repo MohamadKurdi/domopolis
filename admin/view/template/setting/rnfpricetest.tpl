@@ -3,7 +3,7 @@
 	<?php $exploded = explode('_', $zone); ?>
 
 		<tr>
-			<td colspan="6" class="left" style="color:#D69241;">
+			<td colspan="8" class="left" style="color:#D69241;">
 				<i class="fa fa-calculator"></i> <b>Ценовой диапазон: от <?php echo $exploded['1']; ?> до <?php echo $exploded['2']; ?></b>
 			</td>
 		</tr>
@@ -20,6 +20,12 @@
 			</td>
 			<td style="white-space: nowrap;">
 				Факт. вес
+			</td>
+			<td style="white-space: nowrap;">
+				СС EUR
+			</td>
+			<td style="white-space: nowrap;">
+				СС <?php echo $this->config->get('config_regional_currency'); ?>
 			</td>
 			<td style="white-space: nowrap;">
 				EUR
@@ -42,7 +48,9 @@
 
 
 				<div class="clr"></div>
-				<small style="color:#cf4a61"><?php echo $product['compiled_formula']; ?></small>
+				<small style="color:#cf4a61; font-size:8px">MAIN: <?php echo $product['compiled_formula']; ?></small>
+				<div class="clr"></div>
+				<small style="color:#cf4a61; font-size:8px;">CC: <?php echo $product['compiled_costprice_formula']; ?></small>
 			</td>
 			<td style="white-space: nowrap;">
 				<?php echo $product['amazon_best_price']; ?>
@@ -59,6 +67,14 @@
 			<td style="white-space: nowrap;">
 				<?php echo $product['counted_weight']; ?>				
 			</td style="white-space: nowrap;">
+
+			<td style="white-space: nowrap;">
+				<b><?php echo $product['counted_сostprice_eur']; ?></b>
+			</td>
+			<td style="white-space: nowrap;">
+				<b><?php echo $product['counted_сostprice_national']; ?></b>
+			</td>
+
 			<td style="white-space: nowrap;">
 				<b><?php echo $product['counted_price_eur']; ?></b>
 			</td>

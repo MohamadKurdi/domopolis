@@ -411,6 +411,15 @@ class PriceLogic
 		$this->priceUpdaterQueue->addToQueue($product_id);
 	}
 
+	public function updateProductCostPriceInDatabase($product_id, $costprice){
+		$this->db->query("UPDATE product SET 
+			costprice 			= '" . (float)$costprice . "' 
+			WHERE product_id 	= '" . (int)$product_id . "'
+			AND is_markdown 	= 0");
+
+		$this->priceUpdaterQueue->addToQueue($product_id);
+	}
+
 	public function updateProductPriceToStoreInDatabase($product_id, $price, $store_id){
 
 		$field = 'price';
@@ -454,8 +463,16 @@ class PriceLogic
 		return $this->mainFormula($amazonBestPrice, $data, $overloadMainFormula, true);
 	}
 
-	//Это прямо самая важная функция)))
-	public function mainFormula($amazonBestPrice, $data, $overloadMainFormula = false, $just_compile = false){
+	public function mainCostPriceFormula($amazonBestPrice, $data, $overloadMainFormula = false){
+		return $this->mainFormula($amazonBestPrice, $data, $overloadMainFormula, false, true);
+	}
+
+	public function compileCostPriceFormula($amazonBestPrice, $data, $overloadMainFormula = false){
+		return $this->mainFormula($amazonBestPrice, $data, $overloadMainFormula, true, true);
+	}
+
+	//This is main function to compile and eval main price formula
+	public function mainFormula($amazonBestPrice, $data, $overloadMainFormula = false, $justCompile = false, $countCostPrice = false){
 
 		if ($overloadMainFormula){
 			$mainFormula = $overloadMainFormula;
@@ -472,8 +489,7 @@ class PriceLogic
 				'VAT_DST',
 				'TAX',
 				'SUPPLIER',
-				'INVOICE',
-				':COSTDVDR:',
+				'INVOICE',				
 				'PLUS', 
 				'MINUS',
 				'MULTIPLY', 
@@ -489,35 +505,61 @@ class PriceLogic
 				$data['TAX'],
 				$data['SUPPLIER'],
 				$data['INVOICE'],
-				'',
 				'+', 
 				'-',
 				'*', 
 				'/'
 			];
 
-			$mainFormula = str_replace($from, $to, $mainFormula);
-		//	echoLine('Compiled formula:' . $mainFormula, 'i');
+			if ($countCostPrice){
+				$exploded = explode(':COSTDVDR:', $mainFormula);
 
-			if ($just_compile){
+				if (count($exploded) == 2 && !empty($exploded[0])){
+					$mainFormula = $exploded[0];
+				}
+
+			} else {
+				$from[] 	= ':COSTDVDR:';
+				$to[] 		= '';
+			}			
+
+			$mainFormula = str_replace($from, $to, $mainFormula);
+
+			if ($justCompile){
 				return $mainFormula;
 			}
 
 			$resultPrice = eval('return ' . $mainFormula . ';');
 
 			if ($resultPrice > $amazonBestPrice * $data['MAX_MULTIPLIER']){
-				$resultPrice = $amazonBestPrice * $data['DEFAULT_MULTIPLIER'];
+				if ($countCostPrice){
+					$resultPrice = $amazonBestPrice * $data['DEFAULT_COSTPRICE_MULTIPLIER'];
+				} else {
+					$resultPrice = $amazonBestPrice * $data['DEFAULT_MULTIPLIER'];
+				}
 
-				if ($just_compile){
-					return 'MAX_MULTIPLIER TRIGGER: ' . $amazonBestPrice . ' * ' . $data['DEFAULT_MULTIPLIER'];
+				if ($justCompile){
+					if ($countCostPrice){
+						return 'MAX_MULTIPLIER TRIGGER: ' . $amazonBestPrice . ' * ' . $data['DEFAULT_COSTPRICE_MULTIPLIER'];
+					} else {
+						return 'MAX_MULTIPLIER TRIGGER: ' . $amazonBestPrice . ' * ' . $data['DEFAULT_MULTIPLIER'];
+					}					
 				}
 			}
 
 		} else {
-			$resultPrice = $amazonBestPrice * $data['DEFAULT_MULTIPLIER'];
+			if ($countCostPrice){
+				$resultPrice = $amazonBestPrice * $data['DEFAULT_COSTPRICE_MULTIPLIER'];
+			} else {
+				$resultPrice = $amazonBestPrice * $data['DEFAULT_MULTIPLIER'];
+			}
 
-			if ($just_compile){
-				return 'NO_WEIGHT TRIGGER: ' . $amazonBestPrice . ' * ' . $data['DEFAULT_MULTIPLIER'];
+			if ($justCompile){
+				if ($countCostPrice){
+					return 'NO_WEIGHT TRIGGER: ' . $amazonBestPrice . ' * ' . $data['DEFAULT_COSTPRICE_MULTIPLIER'];
+				} else {
+					return 'NO_WEIGHT TRIGGER: ' . $amazonBestPrice . ' * ' . $data['DEFAULT_MULTIPLIER'];
+				}				
 			}
 		}		
 
@@ -558,35 +600,40 @@ class PriceLogic
 
 							if ($this->config->get('config_rainforest_kg_price_' . $store_id) || $this->config->get('config_rainforest_default_multiplier_' . $store_id)){
 								if ($this->checkIfWeCanUpdateProductOffers($product_id, $warehouse_identifier)){
-
 									$params = [
-										'WEIGHT' 				=> (float)$productWeight,
-										'KG_LOGISTIC' 			=> (float)$this->config->get('config_rainforest_kg_price_' . $store_id),
-										'DEFAULT_MULTIPLIER' 	=> (float)$this->config->get('config_rainforest_default_multiplier_' . $store_id),
-										'COSTPRICE' 			=> (float)$this->config->get('config_rainforest_default_costprice_multiplier_' . $store_id),
-										'MAX_MULTIPLIER' 		=> (float)$this->config->get('config_rainforest_max_multiplier_' . $store_id),
-										'VAT_SRC' 				=> (float)$this->config->get('config_rainforest_formula_vat_src_' . $store_id),
-										'VAT_DST' 				=> (float)$this->config->get('config_rainforest_formula_vat_dst_' . $store_id),
-										'TAX' 					=> (float)$this->config->get('config_rainforest_formula_tax_' . $store_id),
-										'SUPPLIER' 				=> (float)$this->config->get('config_rainforest_formula_supplier_' . $store_id),
-										'INVOICE' 				=> (float)$this->config->get('config_rainforest_formula_invoice_' . $store_id),										
+										'WEIGHT' 						=> (float)$productWeight,
+										'KG_LOGISTIC' 					=> (float)$this->config->get('config_rainforest_kg_price_' . $store_id),
+										'DEFAULT_MULTIPLIER' 			=> (float)$this->config->get('config_rainforest_default_multiplier_' . $store_id),
+										'DEFAULT_COSTPRICE_MULTIPLIER' 	=> (float)$this->config->get('config_rainforest_default_costprice_multiplier_' . $store_id),
+										'MAX_MULTIPLIER' 				=> (float)$this->config->get('config_rainforest_max_multiplier_' . $store_id),
+										'VAT_SRC' 						=> (float)$this->config->get('config_rainforest_formula_vat_src_' . $store_id),
+										'VAT_DST' 						=> (float)$this->config->get('config_rainforest_formula_vat_dst_' . $store_id),
+										'TAX' 							=> (float)$this->config->get('config_rainforest_formula_tax_' . $store_id),
+										'SUPPLIER' 						=> (float)$this->config->get('config_rainforest_formula_supplier_' . $store_id),
+										'INVOICE' 						=> (float)$this->config->get('config_rainforest_formula_invoice_' . $store_id),										
 									];
 
 									if ($overloadMainFormula = $this->checkOverloadFormula($amazonBestPrice)){
-										$params['DEFAULT_MULTIPLIER'] = $overloadMainFormula['default'];
-										$newPrice = $this->mainFormula($amazonBestPrice, $params, $overloadMainFormula['formula']);
+										$params['DEFAULT_MULTIPLIER'] 			= $overloadMainFormula['default'];
+										$params['DEFAULT_COSTPRICE_MULTIPLIER'] = $overloadMainFormula['costprice'];
+
+										$newPrice 	= $this->mainFormula($amazonBestPrice, $params, $overloadMainFormula['formula']);
+										$newCost 	= $this->mainCostPriceFormula($amazonBestPrice, $params, $overloadMainFormula['formula']);
 									} else {
-										$newPrice = $this->mainFormula($amazonBestPrice, $params);
+										$newPrice 	= $this->mainFormula($amazonBestPrice, $params);
+										$newCost 	= $this->mainCostPriceFormula($amazonBestPrice, $params);
 									}									
 
-									$logString = ' Product ' . $product_id . ', ' . $asin . ', price ' . $amazonBestPrice . ', wght: ' . $productWeight . ', price for store ' . $store_id . ' is ' . $newPrice . ' EUR';
-									$this->log->write($logString);
-									echoLine('[PriceLogic]' . $logString, 'i');
+									echoLine('[PriceLogic::updateProductPrices]' . 'Product ' . $product_id . ', ' . $asin . ', price ' . $amazonBestPrice . ', wght: ' . $productWeight, 'i');
+									echoLine('[PriceLogic::updateProductPrices] PRICE: store ' . $store_id . ' is ' . $newPrice . ' EUR', 'w');							
+									echoLine('[PriceLogic::updateProductPrices] COST: store ' . $store_id . ' is ' . $newCost . ' EUR', 'w');	
 
 									if ($this->config->get('config_rainforest_default_store_id') != -1 && $store_id == $this->config->get('config_rainforest_default_store_id')){
 										$this->updateProductPriceInDatabase($product_id, $newPrice);
+										$this->updateProductCostPriceInDatabase($product_id, $newCost);
 									} else {
 										$this->updateProductPriceToStoreInDatabase($product_id, $newPrice, $store_id);
+										$this->updateProductCostPriceInDatabase($product_id, $newCost);
 									}
 								}
 							}

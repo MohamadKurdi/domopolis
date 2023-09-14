@@ -344,6 +344,7 @@ class ControllerSettingRnf extends Controller {
 		$mainFormula 					= $this->request->post['main_formula'];
 		$weightCoefficient 				= $this->request->post['weight_coefficient'];
 		$defaultMultiplier				= $this->request->post['default_multiplier'];
+		$defaultCostPriceMultiplier		= $this->request->post['default_costprice_multipiler'];
 		$maxMultiplier					= $this->request->post['max_multiplier'];
 		$useVolumetricWeight			= $this->request->post['use_volumetric_weight'];
 		$volumetricWeightCoefficient 	= $this->request->post['volumetric_weight_coefficient'];
@@ -367,12 +368,14 @@ class ControllerSettingRnf extends Controller {
 		for ($crmfc = 1; $crmfc <= $this->config->get('config_rainforest_main_formula_count'); $crmfc++){			
 			if (!empty($this->request->post['main_formula_min_' . $crmfc])
 				&& !empty($this->request->post['main_formula_max_' . $crmfc])
+				&& !empty($this->request->post['main_formula_costprice_' . $crmfc])
 				&& !empty($this->request->post['main_formula_default_' . $crmfc])
 				&& !empty($this->request->post['main_formula_overload_' . $crmfc])
 			){
 				$formulaOverloadData[$crmfc] = [
 					'min' 		=> (float)$this->request->post['main_formula_min_' . $crmfc],
 					'max' 		=> (float)$this->request->post['main_formula_max_' . $crmfc],
+					'costprice' => (float)$this->request->post['main_formula_costprice_' . $crmfc],
 					'default' 	=> (float)$this->request->post['main_formula_default_' . $crmfc],
 					'formula' 	=> trim($this->request->post['main_formula_overload_' . $crmfc])
 				];
@@ -477,38 +480,47 @@ class ControllerSettingRnf extends Controller {
 
 				$result['counted_weight'] =  $this->weight->format($product['counted_weight'], $this->config->get('config_weight_class_id'));
 
-				$result['used_default_multiplier'] 	= $defaultMultiplier;
-				$result['used_formula'] 			= $mainFormula;
+				$result['used_default_multiplier'] 				= $defaultMultiplier;
+				$result['used_default_costprice_multiplier'] 	= $defaultCostPriceMultiplier;
+				$result['used_formula'] 						= $mainFormula;
 
 				if ($formulaOverloadData && $overloadFormula = $this->rainforestAmazon->offersParser->PriceLogic->checkOverloadFormula($product['amazon_best_price'], $formulaOverloadData)){
-					$defaultMultiplier 		= $overloadFormula['default'];
-					$mainFormula 			= $overloadFormula['formula'];
+					$defaultMultiplier 			= $overloadFormula['default'];
+					$defaultCostPriceMultiplier = $overloadFormula['costprice'];
+					$mainFormula 				= $overloadFormula['formula'];
 
 					$result['formula_overloaded'] 		= true;
 					$result['used_min'] 				= $this->currency->format($overloadFormula['min'], 'EUR', 1);
 					$result['used_max'] 				= $this->currency->format($overloadFormula['max'], 'EUR', 1);
-					$result['used_default_multiplier'] 	= $overloadFormula['default'];
-					$result['used_formula'] 			= $overloadFormula['formula'];
+					$result['used_default_multiplier'] 				= $overloadFormula['default'];
+					$result['used_default_costprice_multiplier'] 	= $overloadFormula['costprice'];
+					$result['used_formula'] 						= $overloadFormula['formula'];
 				}
 
 				$params = [
-					'WEIGHT' 				=> (float)$product['counted_weight'],
-					'KG_LOGISTIC' 			=> (float)$weightCoefficient,
-					'DEFAULT_MULTIPLIER' 	=> (float)$defaultMultiplier,
-					'MAX_MULTIPLIER' 		=> (float)$maxMultiplier,
-					'VAT_SRC' 			=> (float)$this->config->get('config_rainforest_formula_vat_src_0'),
-					'VAT_DST' 			=> (float)$this->config->get('config_rainforest_formula_vat_dst_0'),
-					'TAX' 				=> (float)$this->config->get('config_rainforest_formula_tax_0'),
-					'SUPPLIER' 			=> (float)$this->config->get('config_rainforest_formula_supplier_0'),
-					'INVOICE' 			=> (float)$this->config->get('config_rainforest_formula_invoice_0')										
+					'WEIGHT' 						=> (float)$product['counted_weight'],
+					'KG_LOGISTIC' 					=> (float)$weightCoefficient,
+					'DEFAULT_MULTIPLIER' 			=> (float)$defaultMultiplier,
+					'DEFAULT_COSTPRICE_MULTIPLIER' 	=> (float)$defaultCostPriceMultiplier,
+					'MAX_MULTIPLIER' 				=> (float)$maxMultiplier,
+					'VAT_SRC' 						=> (float)$this->config->get('config_rainforest_formula_vat_src_0'),
+					'VAT_DST' 						=> (float)$this->config->get('config_rainforest_formula_vat_dst_0'),
+					'TAX' 							=> (float)$this->config->get('config_rainforest_formula_tax_0'),
+					'SUPPLIER' 						=> (float)$this->config->get('config_rainforest_formula_supplier_0'),
+					'INVOICE' 						=> (float)$this->config->get('config_rainforest_formula_invoice_0')										
 				];
 
 				$result['counted_price']  	= $this->rainforestAmazon->offersParser->PriceLogic->mainFormula($product['amazon_best_price'], $params, $mainFormula);
-				$result['compiled_formula'] = $this->rainforestAmazon->offersParser->PriceLogic->compileFormula($product['amazon_best_price'], $params, $mainFormula);
+				$result['compiled_formula'] = $this->rainforestAmazon->offersParser->PriceLogic->compileFormula($product['amazon_best_price'], $params, $mainFormula);							
 
 				$result['amazon_best_price'] 		= $this->currency->format($product['amazon_best_price'], 'EUR', 1);
 				$result['counted_price_eur'] 		= $this->currency->format($result['counted_price'], 'EUR', 1);
 				$result['counted_price_national'] 	= $this->currency->format($this->currency->convert($result['counted_price'], 'EUR', $this->config->get('config_regional_currency')), $this->config->get('config_regional_currency'), 1);
+
+				$result['counted_costprice']  			= $this->rainforestAmazon->offersParser->PriceLogic->mainCostPriceFormula($product['amazon_best_price'], $params, $mainFormula);
+				$result['compiled_costprice_formula'] 	= $this->rainforestAmazon->offersParser->PriceLogic->compileCostPriceFormula($product['amazon_best_price'], $params, $mainFormula);
+				$result['counted_сostprice_eur'] 		= $this->currency->format($result['counted_costprice'], 'EUR', 1);
+				$result['counted_сostprice_national'] 	= $this->currency->format($this->currency->convert($result['counted_costprice'], 'EUR', $this->config->get('config_regional_currency')), $this->config->get('config_regional_currency'), 1);
 
 				$results[$zone][] = $result;
 			}
