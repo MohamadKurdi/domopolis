@@ -6489,6 +6489,8 @@
 											<i class="fa fa-info"></i> <b>TAX</b> = дополнительный налог<br />
 											<i class="fa fa-info"></i> <b>SUPPLIER</b> = процент поставщика<br />
 											<i class="fa fa-info"></i> <b>INVOICE</b> = коэффициент инвойса<br />
+
+											<i class="fa fa-info"></i> <b>:COSTPRICE:</b> = разделитель себестоимости<br />
 											
 											<i class="fa fa-info"></i> <b>PLUS</b> = знак + нужно заменять на слово, в силу технических ограничений<br />
 											<i class="fa fa-info"></i> <b>MULTIPLY</b> = знак * нужно заменять на слово, в силу технических ограничений<br />
@@ -6509,6 +6511,9 @@
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Цена закупки до, <?php echo $config_currency; ?></span>
 									</td>
 									<td width="10%">
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Себестоимость, если нет веса</span>
+									</td>
+									<td width="10%">
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Если нет веса</span>
 									</td>
 									<td width="69%">
@@ -6527,9 +6532,12 @@
 											<input type="number" step="1" name="config_rainforest_main_formula_max_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_max_' . $crmfc}; ?>" size="50" style="width:100px; border-color:#cf4a61;" />
 										</td>
 										<td width="10%">
+											<input type="number" step="1" name="config_rainforest_main_formula_costprice_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_costprice_' . $crmfc}; ?>" size="50" style="width:100px; border-color:#cf4a61;" />
+										</td>
+										<td width="10%">
 											<input type="number" step=".1" name="config_rainforest_main_formula_default_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_default_' . $crmfc}; ?>" size="50" style="width:100px; border-color:#D69241;" />
 										</td>
-										<td width="79%">
+										<td width="59%">
 											<input type="text" name="config_rainforest_main_formula_overload_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_overload_' . $crmfc}; ?>" style="width:90%;  border-color:#7F00FF;" />
 										</td>
 									</tr>
@@ -6813,6 +6821,17 @@
 										<td width="<?php echo (int)(100/count($stores))?>%">
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-eur"></i> Умножать если нет веса: <?php echo $store['name']; ?></span></p>
 											<input type="number" step="0.1" name="config_rainforest_default_multiplier_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_default_multiplier_' . $store['store_id']}; ?>" style="width:200px;" />
+										</td>
+									<?php } ?>
+								</tr>
+							</table>
+
+							<table class="form">
+								<tr>									
+									<?php foreach ($stores as $store) { ?>
+										<td width="<?php echo (int)(100/count($stores))?>%">
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF"><i class="fa fa-eur"></i> Множитель себестоимости, если нет веса: <?php echo $store['name']; ?></span></p>
+											<input type="number" step="0.01" name="config_rainforest_default_costprice_multiplier_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_default_costprice_multiplier_' . $store['store_id']}; ?>" style="width:200px;" />
 										</td>
 									<?php } ?>
 								</tr>
@@ -7146,6 +7165,33 @@
 									</td>
 
 									<td style="width:15%">
+										<div>		
+											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Включить до перевода</span></p>
+											<select name="config_openai_enable_shorten_names_before_tranlslation">
+												<?php if ($config_openai_enable_shorten_names_before_tranlslation) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>									
+										</div>
+										<div>
+											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Точка входа</span></p>
+											<select name="config_openai_shortennames_endpoint">
+												<?php foreach ($openai_endpoints as $openai_endpoint) { ?>
+													<?php if ($config_openai_shortennames_endpoint == $openai_endpoint) { ?>
+														<option value="<?php echo $openai_endpoint; ?>" selected="selected"><?php echo $openai_endpoint; ?></option>												
+													<?php } else { ?>													
+														<option value="<?php echo $openai_endpoint; ?>"><?php echo $openai_endpoint; ?></option>
+													<? } ?>
+												<?php } ?>
+											</select>											
+										</div>
+									</td>
+
+									<td style="width:15%">
 										<div>
 											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Длина</span></p>
 											<input type="number" step="1" min="10" max="100" name="config_openai_shortennames_length" value="<?php echo $config_openai_shortennames_length; ?>" size="50" style="width:60px;" />
@@ -7176,7 +7222,7 @@
 									</td>
 
 
-									<td style="width:55%">
+									<td style="width:35%">
 										<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Запрос к AI</span></p>	
 										<?php foreach ($languages as $language) { ?>											
 											<div style="margin-bottom: 10px;">											

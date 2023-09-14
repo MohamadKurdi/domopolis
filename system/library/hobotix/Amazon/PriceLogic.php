@@ -45,12 +45,14 @@ class PriceLogic
 		for ($crmfc = 1; $crmfc <= (int)$this->config->get('config_rainforest_main_formula_count'); $crmfc++){
 			if (!empty($this->config->get('config_rainforest_main_formula_min_' . $crmfc))
 				&& !empty($this->config->get('config_rainforest_main_formula_max_' . $crmfc))
+				&& !empty($this->config->get('config_rainforest_main_formula_costprice_' . $crmfc))
 				&& !empty($this->config->get('config_rainforest_main_formula_default_' . $crmfc))
 				&& !empty($this->config->get('config_rainforest_main_formula_overload_' . $crmfc))
 			){
 				$this->formulaOverloadData[$crmfc] = [					
 					'min' 		=> (float)$this->config->get('config_rainforest_main_formula_min_' . $crmfc),
 					'max' 		=> (float)$this->config->get('config_rainforest_main_formula_max_' . $crmfc),
+					'costprice' => (float)$this->config->get('config_rainforest_main_formula_costprice_' . $crmfc),
 					'default' 	=> (float)$this->config->get('config_rainforest_main_formula_default_' . $crmfc),
 					'formula' 	=> trim($this->config->get('config_rainforest_main_formula_overload_' . $crmfc))
 				];
@@ -471,6 +473,7 @@ class PriceLogic
 				'TAX',
 				'SUPPLIER',
 				'INVOICE',
+				':COSTDVDR:',
 				'PLUS', 
 				'MINUS',
 				'MULTIPLY', 
@@ -486,6 +489,7 @@ class PriceLogic
 				$data['TAX'],
 				$data['SUPPLIER'],
 				$data['INVOICE'],
+				'',
 				'+', 
 				'-',
 				'*', 
@@ -559,12 +563,13 @@ class PriceLogic
 										'WEIGHT' 				=> (float)$productWeight,
 										'KG_LOGISTIC' 			=> (float)$this->config->get('config_rainforest_kg_price_' . $store_id),
 										'DEFAULT_MULTIPLIER' 	=> (float)$this->config->get('config_rainforest_default_multiplier_' . $store_id),
+										'COSTPRICE' 			=> (float)$this->config->get('config_rainforest_default_costprice_multiplier_' . $store_id),
 										'MAX_MULTIPLIER' 		=> (float)$this->config->get('config_rainforest_max_multiplier_' . $store_id),
 										'VAT_SRC' 				=> (float)$this->config->get('config_rainforest_formula_vat_src_' . $store_id),
 										'VAT_DST' 				=> (float)$this->config->get('config_rainforest_formula_vat_dst_' . $store_id),
 										'TAX' 					=> (float)$this->config->get('config_rainforest_formula_tax_' . $store_id),
 										'SUPPLIER' 				=> (float)$this->config->get('config_rainforest_formula_supplier_' . $store_id),
-										'INVOICE' 				=> (float)$this->config->get('config_rainforest_formula_invoice_' . $store_id)										
+										'INVOICE' 				=> (float)$this->config->get('config_rainforest_formula_invoice_' . $store_id),										
 									];
 
 									if ($overloadMainFormula = $this->checkOverloadFormula($amazonBestPrice)){

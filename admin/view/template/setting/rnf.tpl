@@ -929,7 +929,7 @@
 							</td>
 							<td>
 								<span class="help">
-									<i class="fa fa-info-circle"></i> Если OpenAI включен, то при добавлении товара будет автоматически создаваться название товара для экспортных документов, длиной не более 50 символов. Для расширенной настройки нужно изменять значения в настройках магазина, в разделе OpenAI.
+									<i class="fa fa-info-circle"></i> Если OpenAI включен, то при добавлении товара будет автоматически создаваться название товара для экспортных документов, длиной не более 50 символов (либо слов, зависит от запроса к AI). Для расширенной настройки нужно изменять значения в настройках магазина, в разделе OpenAI.
 								</span>
 							</td>
 						</tr>
@@ -943,7 +943,7 @@
 							</td>
 							<td>
 								<span class="help">
-									<i class="fa fa-info-circle"></i> Длина задается в символах
+									<i class="fa fa-info-circle"></i> Длина задается в символах, либо словах (зависит от запроса к AI)
 								</span>
 							</td>
 						</tr>
@@ -957,7 +957,7 @@
 							</td>
 							<td>
 								<span class="help">
-									<i class="fa fa-info-circle"></i> Если OpenAI включен, то при добавлении товара его название будет сокращено до 150 символов (можно изменить в настройках) при помощи OpenAI
+									<i class="fa fa-info-circle"></i> Если OpenAI включен, то при добавлении товара его название будет сокращено (можно изменить в настройках) при помощи OpenAI
 								</span>
 							</td>
 						</tr>
@@ -971,7 +971,7 @@
 							</td>
 							<td>
 								<span class="help">
-									<i class="fa fa-info-circle"></i> Длина задается в символах
+									<i class="fa fa-info-circle"></i> Длина задается в символах, либо словах (зависит от запроса к AI)
 								</span>
 							</td>
 						</tr>
@@ -1351,7 +1351,7 @@
 				<div id="tab-priceformula">									
 					<div style="float:left; width:59%;">
 						<div>							
-							<textarea name="config_rainforest_main_formula" rows="5" style="width:70%; font-size:11px; padding:6px; float:left; border-color:#7F00FF;" ><?php echo $config_rainforest_main_formula; ?></textarea>
+							<textarea name="config_rainforest_main_formula" rows="6" style="width:70%; font-size:11px; padding:6px; float:left; border-color:#7F00FF;" ><?php echo $config_rainforest_main_formula; ?></textarea>
 
 							<span style="float:right; width:10%; font-size:32px; margin-left:20px; cursor:pointer;" onclick="$('#formulas_overload').toggle();">ЕЩЕ <i class="fa fa-caret-down"></i></span>
 							<input type="number" step="1" name="config_rainforest_main_formula_count" value="<?php echo $config_rainforest_main_formula_count; ?>" size="50" style="float:right; width:10%;font-size:14px; padding:6px;" />						
@@ -1368,6 +1368,9 @@
 									</td>
 									<td width="5%">
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Цена закупки до, <?php echo $config_currency; ?></span>
+									</td>
+									<td width="5%">
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Себестоимость, если нет веса</span>
 									</td>
 									<td width="5%">
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Умножать, если нет веса</span>
@@ -1388,10 +1391,13 @@
 											<input type="number" step="1" name="config_rainforest_main_formula_max_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_max_' . $crmfc}; ?>" size="50" style="width:100px; border-color:#cf4a61;" />
 										</td>
 										<td width="5%">
+											<input type="number" step=".01" name="config_rainforest_main_formula_costprice_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_costprice_' . $crmfc}; ?>" size="50" style="width:100px; border-color:#D69241;" />
+										</td>
+										<td width="5%">
 											<input type="number" step=".1" name="config_rainforest_main_formula_default_<?php echo $crmfc; ?>" value="<?php echo ${'config_rainforest_main_formula_default_' . $crmfc}; ?>" size="50" style="width:100px; border-color:#D69241;" />
 										</td>
 										<td width="84%">
-											<textarea name="config_rainforest_main_formula_overload_<?php echo $crmfc; ?>" rows="5" style="width:95%; font-size:11px; border-color:#7F00FF;" ><?php echo ${'config_rainforest_main_formula_overload_' . $crmfc}; ?></textarea>
+											<textarea name="config_rainforest_main_formula_overload_<?php echo $crmfc; ?>" rows="6" style="width:95%; font-size:11px; border-color:#7F00FF;" ><?php echo ${'config_rainforest_main_formula_overload_' . $crmfc}; ?></textarea>
 										</td>
 									</tr>
 								<?php } ?>
@@ -1512,6 +1518,10 @@
 									</td>
 								</tr>
 							<?php } ?>
+
+							<tr>
+								<td><b>:COSTDVDR:</b></td><td><i class="fa fa-info-circle"></i> разделитель себестоимости для подсчёта рентабельности</td>
+							</tr>
 
 							<tr>
 								<td><b>PLUS</b></td><td><i class="fa fa-info-circle"></i> операция добавления (знак +)</td>
@@ -1663,6 +1673,22 @@
 								<td>
 									<span class="help">
 										<i class="fa fa-info-circle"></i> В случае если у товара не задан вес, а также не задан вес по-умолчанию для основной категории товара, то к такому товару применяется простая модель ЦО (умножать на этот множитель)
+									</span>
+								</td>
+							</tr>
+						<?php } ?>
+
+						<?php foreach ($stores as $store) { ?>
+							<tr>
+								<td class="right">
+									Множитель себестоимости, <?php echo $store['name']; ?>
+								</td>
+								<td style="width:100px;" class="center">
+									<input type="number" step="0.01" name="config_rainforest_default_costprice_multiplier_<?php echo $store['store_id']?>" value="<?php echo ${'config_rainforest_default_costprice_multiplier_' . $store['store_id']}; ?>" style="width:100px;" />
+								</td>
+								<td>
+									<span class="help">
+										<i class="fa fa-info-circle"></i> В случае если у товара не задан вес, а также не задан вес по-умолчанию для основной категории товара, то для подсчёта себестоимости и рентабельности нужно задать этот коэффициент
 									</span>
 								</td>
 							</tr>
@@ -1999,12 +2025,17 @@
 						saveSettingAjax('config_rainforest_main_formula_min_<?php echo $crmfc; ?>', $('input[name=config_rainforest_main_formula_min_<?php echo $crmfc; ?>]').val(), $('input[name=config_rainforest_main_formula_min_<?php echo $crmfc; ?>]'));
 						saveSettingAjax('config_rainforest_main_formula_max_<?php echo $crmfc; ?>', $('input[name=config_rainforest_main_formula_max_<?php echo $crmfc; ?>]').val(), $('input[name=config_rainforest_main_formula_max_<?php echo $crmfc; ?>]'));
 						saveSettingAjax('config_rainforest_main_formula_default_<?php echo $crmfc; ?>', $('input[name=config_rainforest_main_formula_default_<?php echo $crmfc; ?>]').val(), $('input[name=config_rainforest_main_formula_default_<?php echo $crmfc; ?>]'));
+
+						saveSettingAjax('config_rainforest_main_formula_costprice_<?php echo $crmfc; ?>', $('input[name=config_rainforest_main_formula_costprice_<?php echo $crmfc; ?>]').val(), $('input[name=config_rainforest_main_formula_costprice_<?php echo $crmfc; ?>]'));
+
 						saveSettingAjax('config_rainforest_main_formula_overload_<?php echo $crmfc; ?>', $('textarea[name=config_rainforest_main_formula_overload_<?php echo $crmfc; ?>]').val(), $('textarea[name=config_rainforest_main_formula_overload_<?php echo $crmfc; ?>]'));
 					<?php } ?>
 
 					<?php foreach ($stores as $store) { ?>
 						saveSettingAjax('config_rainforest_kg_price_<?php echo $store['store_id']?>', $('input[name=config_rainforest_kg_price_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_kg_price_<?php echo $store['store_id']?>]'));
 						saveSettingAjax('config_rainforest_default_multiplier_<?php echo $store['store_id']?>', $('input[name=config_rainforest_default_multiplier_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_default_multiplier_<?php echo $store['store_id']?>]'));
+
+						saveSettingAjax('config_rainforest_default_costprice_multiplier_<?php echo $store['store_id']?>', $('input[name=config_rainforest_default_costprice_multiplier_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_default_costprice_multiplier_<?php echo $store['store_id']?>]'));
 
 						saveSettingAjax('config_rainforest_max_multiplier_<?php echo $store['store_id']?>', $('input[name=config_rainforest_max_multiplier_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_max_multiplier_<?php echo $store['store_id']?>]'));
 
@@ -2040,6 +2071,11 @@
 							return;
 						}
 
+						if (key == 'config_rainforest_main_formula_costprice_<?php echo $crmfc; ?>'){
+							console.log('Pricelogic skip autosave: ' + key);
+							return;
+						}
+
 						if (key == 'config_rainforest_main_formula_overload_<?php echo $crmfc; ?>'){
 							console.log('Pricelogic skip autosave: ' + key);
 							return;
@@ -2048,6 +2084,11 @@
 
 					<?php foreach ($stores as $store) { ?>
 						if (key == 'config_rainforest_default_multiplier_<?php echo $store['store_id']?>'){
+							console.log('Pricelogic skip autosave: ' + key);
+							return;
+						}
+
+						if (key == 'config_rainforest_default_costprice_multiplier_<?php echo $store['store_id']?>'){
 							console.log('Pricelogic skip autosave: ' + key);
 							return;
 						}

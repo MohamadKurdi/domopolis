@@ -208,6 +208,12 @@ class ControllerSettingRnf extends Controller {
                 $this->data['config_rainforest_main_formula_default_' . $crmfc] = $this->config->get('config_rainforest_main_formula_default_' . $crmfc);
             }
 
+            if (isset($this->request->post['config_rainforest_main_formula_costprice_' . $crmfc])) {
+                $this->data['config_rainforest_main_formula_costprice_' . $crmfc] = $this->request->post['config_rainforest_main_formula_costprice_' . $crmfc];
+            } else {
+                $this->data['config_rainforest_main_formula_costprice_' . $crmfc] = $this->config->get('config_rainforest_main_formula_costprice_' . $crmfc);
+            }
+
             if (isset($this->request->post['config_rainforest_main_formula_max_' . $crmfc])) {
                 $this->data['config_rainforest_main_formula_max_' . $crmfc] = $this->request->post['config_rainforest_main_formula_max_' . $crmfc];
             } else {
@@ -272,6 +278,12 @@ class ControllerSettingRnf extends Controller {
 				$this->data['config_rainforest_default_multiplier_' . $store['store_id']] = $this->request->post['config_rainforest_default_multiplier_' . $store['store_id']]; 
 			} else {
 				$this->data['config_rainforest_default_multiplier_' . $store['store_id']] = $this->config->get('config_rainforest_default_multiplier_' . $store['store_id']);
+			}
+
+			if (isset($this->request->post['config_rainforest_default_costprice_multiplier_' . $store['store_id']])) {
+				$this->data['config_rainforest_default_costprice_multiplier_' . $store['store_id']] = $this->request->post['config_rainforest_default_costprice_multiplier_' . $store['store_id']]; 
+			} else {
+				$this->data['config_rainforest_default_costprice_multiplier_' . $store['store_id']] = $this->config->get('config_rainforest_default_costprice_multiplier_' . $store['store_id']);
 			}
 		}		
 
