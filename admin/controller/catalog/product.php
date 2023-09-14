@@ -1846,13 +1846,20 @@ class ControllerCatalogProduct extends Controller {
 			}		
 		}	
 
-
 		if (isset($this->request->post['cost'])) {
 			$this->data['cost'] = $this->request->post['cost'];
 		} elseif (!empty($product_info)) {
 			$this->data['cost'] = $product_info['cost'];
 		} else {
 			$this->data['cost'] = '';
+		}
+
+		if (isset($this->request->post['costprice'])) {
+			$this->data['costprice'] = $this->request->post['costprice'];
+		} elseif (!empty($product_info)) {
+			$this->data['costprice'] = $product_info['costprice'];
+		} else {
+			$this->data['costprice'] = '';
 		}
 
 		if (isset($this->request->post['price_national'])) {

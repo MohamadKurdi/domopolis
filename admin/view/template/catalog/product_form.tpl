@@ -1103,6 +1103,16 @@
 
 																								<span class="help">Будет назначена при переформировании гугл-фидов</span>			
 																							</td>									
+																						</tr>																						
+																						<tr>
+																							<td>
+																								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Себестоимость</span>																								
+																							</td>
+																							<td>
+																								<input type="text" name="costprice" value="<?php echo $costprice; ?>" />&nbsp;<span class="status_color" style="display:inline-block; padding:3px 5px; background:grey; color:#FFF"><? echo $this->config->get('config_currency'); ?></span>	
+
+																								<span class="help">себестоимость, определенная по формулам, если используется Rainforest API, либо можно задавать вручную</span>			
+																							</td>									
 																						</tr>
 																						<tr>
 																							<td><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Не обновлять цены</span></td>
