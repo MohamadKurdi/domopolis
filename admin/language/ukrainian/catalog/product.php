@@ -78,6 +78,7 @@ $_['column_filled_from_amazon'] = 'Загружен<i class="fa fa-amazon"></i>'
 $_['column_amzn_no_offers'] 	= 'Нету<i class="fa fa-amazon"></i>';
 $_['column_price_delayed']		= 'Цена<i class="fa fa-clock-o"></i>';
 $_['column_amazon_best_price']	= 'Цена<i class="fa fa-amazon"></i>';
+$_['column_costprice']	= 'Себестоимость';
 $_['column_amzn_offers_count']	= 'Офферов<i class="fa fa-amazon"></i>';
 $_['column_fill_from_amazon'] 	= 'Загружать<i class="fa fa-amazon"></i>';
 $_['column_product_offers_count'] 	= 'Заказов';

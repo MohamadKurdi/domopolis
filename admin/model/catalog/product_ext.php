@@ -154,6 +154,7 @@ class ModelCatalogProductExt extends Model {
             'price_delayed'     => 'p.price_delayed',
             'cost'              => 'p.cost',
             'amazon_best_price' => 'p.amazon_best_price',
+            'costprice'         => 'p.costprice',
             'amzn_offers_count' => 'p.amzn_offers_count'
             );
 
@@ -307,6 +308,7 @@ class ModelCatalogProductExt extends Model {
             'p.price_delayed',
             'p.cost',
             'p.amazon_best_price',
+            'p.costprice',
             'p.amzn_offers_count',
             'p.amzn_no_offers',
             'p.quantity',
