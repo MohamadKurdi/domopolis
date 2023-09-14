@@ -1938,6 +1938,7 @@
 					var mainFormula 				= $('textarea[name=config_rainforest_main_formula]').val();
 					var weightCoefficient 			= $('input[name=config_rainforest_kg_price_0]').val();
 					var defaultMultiplier 			= $('input[name=config_rainforest_default_multiplier_0]').val();
+					var defaultCostPriceMultiplier	= $('input[name=config_rainforest_default_costprice_multiplier_0]').val();
 					var maxMultiplier 				= $('input[name=config_rainforest_max_multiplier_0]').val();
 					var useVolumetricWeight 		= $('input[name=config_rainforest_use_volumetric_weight_0]').attr('checked')?1:0;
 					var volumetricWeightCoefficient = $('input[name=config_rainforest_volumetric_weight_coefficient_0]').val();
@@ -1949,6 +1950,7 @@
 					<?php for ($crmfc = 1; $crmfc <= $this->data['config_rainforest_main_formula_count']; $crmfc++){ ?>	
 						var mainFormula_min_<?php echo $crmfc; ?> = $('input[name=config_rainforest_main_formula_min_<?php echo $crmfc; ?>]').val();
 						var mainFormula_max_<?php echo $crmfc; ?> = $('input[name=config_rainforest_main_formula_max_<?php echo $crmfc; ?>]').val();
+						var mainFormula_costprice_<?php echo $crmfc; ?> = $('input[name=config_rainforest_main_formula_costprice_<?php echo $crmfc; ?>]').val();
 						var mainFormula_default_<?php echo $crmfc; ?> = $('input[name=config_rainforest_main_formula_default_<?php echo $crmfc; ?>]').val();
 						var mainFormula_overload_<?php echo $crmfc; ?> = $('textarea[name=config_rainforest_main_formula_overload_<?php echo $crmfc; ?>]').val();						
 					<?php } ?>
@@ -1962,11 +1964,13 @@
 							<?php for ($crmfc = 1; $crmfc <= $this->data['config_rainforest_main_formula_count']; $crmfc++){ ?>	
 								main_formula_min_<?php echo $crmfc; ?>: mainFormula_min_<?php echo $crmfc; ?>,
 								main_formula_max_<?php echo $crmfc; ?>: mainFormula_max_<?php echo $crmfc; ?>,
+								mainFormula_costprice_<?php echo $crmfc; ?>: mainFormula_costprice_<?php echo $crmfc; ?>,
 								main_formula_default_<?php echo $crmfc; ?>: mainFormula_default_<?php echo $crmfc; ?>,
 								main_formula_overload_<?php echo $crmfc; ?>: mainFormula_overload_<?php echo $crmfc; ?>,
 							<?php } ?>
 							weight_coefficient: 			weightCoefficient,					
 							default_multiplier: 			defaultMultiplier,
+							default_costprice_multipiler:   defaultCostPriceMultiplier,
 							max_multiplier: 				maxMultiplier,
 							use_volumetric_weight: 			useVolumetricWeight,
 							volumetric_weight_coefficient: 	volumetricWeightCoefficient,
@@ -2023,7 +2027,9 @@
 
 					<?php for ($crmfc = 1; $crmfc <= $this->data['config_rainforest_main_formula_count']; $crmfc++){ ?>
 						saveSettingAjax('config_rainforest_main_formula_min_<?php echo $crmfc; ?>', $('input[name=config_rainforest_main_formula_min_<?php echo $crmfc; ?>]').val(), $('input[name=config_rainforest_main_formula_min_<?php echo $crmfc; ?>]'));
+
 						saveSettingAjax('config_rainforest_main_formula_max_<?php echo $crmfc; ?>', $('input[name=config_rainforest_main_formula_max_<?php echo $crmfc; ?>]').val(), $('input[name=config_rainforest_main_formula_max_<?php echo $crmfc; ?>]'));
+
 						saveSettingAjax('config_rainforest_main_formula_default_<?php echo $crmfc; ?>', $('input[name=config_rainforest_main_formula_default_<?php echo $crmfc; ?>]').val(), $('input[name=config_rainforest_main_formula_default_<?php echo $crmfc; ?>]'));
 
 						saveSettingAjax('config_rainforest_main_formula_costprice_<?php echo $crmfc; ?>', $('input[name=config_rainforest_main_formula_costprice_<?php echo $crmfc; ?>]').val(), $('input[name=config_rainforest_main_formula_costprice_<?php echo $crmfc; ?>]'));
@@ -2033,6 +2039,7 @@
 
 					<?php foreach ($stores as $store) { ?>
 						saveSettingAjax('config_rainforest_kg_price_<?php echo $store['store_id']?>', $('input[name=config_rainforest_kg_price_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_kg_price_<?php echo $store['store_id']?>]'));
+
 						saveSettingAjax('config_rainforest_default_multiplier_<?php echo $store['store_id']?>', $('input[name=config_rainforest_default_multiplier_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_default_multiplier_<?php echo $store['store_id']?>]'));
 
 						saveSettingAjax('config_rainforest_default_costprice_multiplier_<?php echo $store['store_id']?>', $('input[name=config_rainforest_default_costprice_multiplier_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_default_costprice_multiplier_<?php echo $store['store_id']?>]'));
@@ -2040,6 +2047,7 @@
 						saveSettingAjax('config_rainforest_max_multiplier_<?php echo $store['store_id']?>', $('input[name=config_rainforest_max_multiplier_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_max_multiplier_<?php echo $store['store_id']?>]'));
 
 						saveSettingAjax('config_rainforest_use_volumetric_weight_<?php echo $store['store_id']?>', $('input[name=config_rainforest_use_volumetric_weight_<?php echo $store['store_id']?>]').attr('checked')?1:0, $('input[name=config_rainforest_use_volumetric_weight_<?php echo $store['store_id']?>]'));
+
 						saveSettingAjax('config_rainforest_volumetric_weight_coefficient_<?php echo $store['store_id']?>', $('input[name=config_rainforest_volumetric_weight_coefficient_<?php echo $store['store_id']?>]').val(), $('input[name=config_rainforest_volumetric_weight_coefficient_<?php echo $store['store_id']?>]'));
 					<?php } ?>
 				}
@@ -2125,9 +2133,7 @@
 						}
 					}
 
-					saveSettingAjax(key, value, elem);
-					
-
+					saveSettingAjax(key, value, elem);				
 				});
 			</script>
 
