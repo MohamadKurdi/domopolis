@@ -1251,15 +1251,19 @@ class ProductsRetriever extends RainforestRetriever
 			$this->registry->get('rainforestAmazon')->offersParser->PriceLogic->updateProductPrices($data['asin'], $data['amazon_best_price'], true);
 		}
 		
-		$this->db->query("DELETE FROM product_to_store WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("INSERT INTO product_to_store SET product_id = '" . (int)$product_id . "', store_id = '0'");				
-		$this->db->query("DELETE FROM product_to_category WHERE product_id = '" . (int)$product_id . "'");
-		$this->db->query("INSERT INTO product_to_category SET product_id = '" . (int)$product_id . "', category_id = '" . (int)$data['category_id'] . "', main_category = 1");		
-		$this->db->query("DELETE FROM product_description WHERE product_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_to_store WHERE product_id 	= '" . (int)$product_id . "'");
+		$this->db->query("INSERT INTO product_to_store SET product_id 		= '" . (int)$product_id . "', store_id = '0'");				
+		$this->db->query("DELETE FROM product_to_category WHERE product_id 	= '" . (int)$product_id . "'");
+		$this->db->query("INSERT INTO product_to_category SET product_id 	= '" . (int)$product_id . "', category_id = '" . (int)$data['category_id'] . "', main_category = 1");		
+		$this->db->query("DELETE FROM product_description WHERE product_id 	= '" . (int)$product_id . "'");
+
+
+		if ($this->config->get('config_openai_enable') && $this->config->get('config_openai_enable_shorten_names') && $this->config->get('config_rainforest_short_names_with_openai') && $this->config->get('config_openai_enable_shorten_names_before_translation')){
+			$data['name'] = $this->registry->get('openaiAdaptor')->shortenName($data['name'], $this->config->get('config_rainforest_source_language'));
+		}
 
 		$product_name_data = [];		
 		foreach ($this->registry->get('languages') as $language_code => $language) {
-
 			$name = $this->translateWithCheck($data['name'], $language['code']);
 
 			$translated = false;
@@ -1277,7 +1281,7 @@ class ProductsRetriever extends RainforestRetriever
 				$product_name_data[$language['language_id']]['name'] = $this->registry->get('rainforestAmazon')->infoUpdater->normalizeProductName($name);
 			}
 
-			if ($this->config->get('config_openai_enable') && $this->config->get('config_openai_enable_shorten_names') && $this->config->get('config_rainforest_short_names_with_openai')){
+			if ($this->config->get('config_openai_enable') && $this->config->get('config_openai_enable_shorten_names') && $this->config->get('config_rainforest_short_names_with_openai') && $this->config->get('config_openai_enable_shorten_names_after_translation')){
 				$product_name_data[$language['language_id']]['name'] = $this->registry->get('openaiAdaptor')->shortenName($product_name_data[$language['language_id']]['name'], $language['code']);
 			}
 

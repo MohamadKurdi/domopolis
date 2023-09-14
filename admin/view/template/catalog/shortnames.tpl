@@ -88,7 +88,7 @@
                                             <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $native_language['image']; ?>" title="<?php echo $native_language['name']; ?>" />                                          
 
                                            <?php if (mb_strlen($product['native_name']) >= $this->config->get('config_openai_shortennames_length') && $this->config->get('config_openai_enable_shorten_names')) { ?>   
-                                               <span class="smallbutton black" onclick="shortenbyai($(this), 'native', '<?php echo $native_language['code']; ?>', <?php echo $product['product_id']; ?>)">🤖 AI до <?php echo $this->config->get('config_openai_shortennames_length'); ?> символов</span><span></span>
+                                               <span class="smallbutton black" onclick="shortenbyai($(this), 'native', '<?php echo $native_language['code']; ?>', <?php echo $product['product_id']; ?>)">🤖 AI до <?php echo $this->config->get('config_openai_shortennames_length'); ?> символов или слов</span><span></span>
                                            <?php } ?>
                                        </div>
                                         
@@ -100,7 +100,7 @@
                                             <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $amazon_language['image']; ?>" title="<?php echo $amazon_language['name']; ?>" />
 
                                               <?php if (mb_strlen($product['amazon_name']) >= $this->config->get('config_openai_shortennames_length') && $this->config->get('config_openai_enable_shorten_names')) { ?>   
-                                               <span class="smallbutton black" onclick="shortenbyai($(this), 'amazon', '<?php echo $amazon_language['code']; ?>', <?php echo $product['product_id']; ?>)">🤖 AI до <?php echo $this->config->get('config_openai_shortennames_length'); ?> символов</span><span></span>
+                                               <span class="smallbutton black" onclick="shortenbyai($(this), 'amazon', '<?php echo $amazon_language['code']; ?>', <?php echo $product['product_id']; ?>)">🤖 AI до <?php echo $this->config->get('config_openai_shortennames_length'); ?> символов или слов</span><span></span>
                                              <?php } ?>                                  
                                             </div>
 

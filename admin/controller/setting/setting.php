@@ -3464,6 +3464,18 @@ class ControllerSettingSetting extends Controller
             $this->data['config_openai_enable_shorten_names'] = $this->config->get('config_openai_enable_shorten_names');
         }
 
+        if (isset($this->request->post['config_openai_enable_shorten_names_before_translation'])) {
+            $this->data['config_openai_enable_shorten_names_before_translation'] = $this->request->post['config_openai_enable_shorten_names_before_translation'];
+        } else {
+            $this->data['config_openai_enable_shorten_names_before_translation'] = $this->config->get('config_openai_enable_shorten_names_before_translation');
+        }
+
+        if (isset($this->request->post['config_openai_enable_shorten_names_after_translation'])) {
+            $this->data['config_openai_enable_shorten_names_after_translation'] = $this->request->post['config_openai_enable_shorten_names_after_translation'];
+        } else {
+            $this->data['config_openai_enable_shorten_names_after_translation'] = $this->config->get('config_openai_enable_shorten_names_after_translation');
+        }
+
         if (isset($this->request->post['config_openai_shortennames_endpoint'])) {
             $this->data['config_openai_shortennames_endpoint'] = $this->request->post['config_openai_shortennames_endpoint'];
         } else {

@@ -7177,17 +7177,17 @@
 												<? } ?>
 											</select>									
 										</div>
-										<div>
-											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Точка входа</span></p>
-											<select name="config_openai_shortennames_endpoint">
-												<?php foreach ($openai_endpoints as $openai_endpoint) { ?>
-													<?php if ($config_openai_shortennames_endpoint == $openai_endpoint) { ?>
-														<option value="<?php echo $openai_endpoint; ?>" selected="selected"><?php echo $openai_endpoint; ?></option>												
-													<?php } else { ?>													
-														<option value="<?php echo $openai_endpoint; ?>"><?php echo $openai_endpoint; ?></option>
-													<? } ?>
-												<?php } ?>
-											</select>											
+										<div>		
+											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Включить после перевода</span></p>
+											<select name="config_openai_enable_shorten_names_after_translation">
+												<?php if ($config_openai_enable_shorten_names_after_translation) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>									
 										</div>
 									</td>
 
