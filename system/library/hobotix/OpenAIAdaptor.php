@@ -174,7 +174,7 @@ final class OpenAIAdaptor
 				echoLine('[OpenAIAdaptor::shortenName] New name: ' . $text, 's');
 				return $text;
 			} else {
-				return false;
+				return $name;
 			}
 		}
 
@@ -215,7 +215,7 @@ final class OpenAIAdaptor
 				echoLine('[OpenAIAdaptor::exportName] New name: ' . $text, 's');
 				return $text;
 			} else {
-				return false;
+				return $name;
 			}
 		}
 

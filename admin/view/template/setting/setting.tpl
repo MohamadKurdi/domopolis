@@ -7167,8 +7167,8 @@
 									<td style="width:15%">
 										<div>		
 											<p>🤖 <span class="status_color" style="display:inline-block; padding:3px 5px; background:#353740; color:#FFF">Включить до перевода</span></p>
-											<select name="config_openai_enable_shorten_names_before_tranlslation">
-												<?php if ($config_openai_enable_shorten_names_before_tranlslation) { ?>
+											<select name="config_openai_enable_shorten_names_before_translation">
+												<?php if ($config_openai_enable_shorten_names_before_translation) { ?>
 													<option value="1" selected="selected">Включить</option>
 													<option value="0">Отключить</option>
 												<?php } else { ?>													
