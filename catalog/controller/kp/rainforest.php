@@ -47,7 +47,7 @@ class ControllerKPRainForest extends Controller {
 	public function profitability(){
 		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
 
-		$query = $this->db->query("SELECT * FROM `order` WHERE order_status_id > 0 ORDER BY date_added DESC LIMIT 20");
+		$query = $this->db->query("SELECT * FROM `order` WHERE order_status_id > 0 ORDER BY date_added DESC");
 
 		foreach ($query->rows as $row){
 			$this->rainforestAmazon->offersParser->PriceLogic->countOrderProfitablility($row['order_id']);
