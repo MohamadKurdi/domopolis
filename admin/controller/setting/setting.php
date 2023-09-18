@@ -3657,10 +3657,16 @@ class ControllerSettingSetting extends Controller
             $this->data['config_csvprice_pro_disable_manufacturers'] = $this->config->get('config_csvprice_pro_disable_manufacturers');
         }
 
-         if (isset($this->request->post['config_customer_filter_actiontemplates'])) {
+        if (isset($this->request->post['config_customer_filter_actiontemplates'])) {
             $this->data['config_customer_filter_actiontemplates'] = $this->request->post['config_customer_filter_actiontemplates'];
         } else {
             $this->data['config_customer_filter_actiontemplates'] = $this->config->get('config_customer_filter_actiontemplates');
+        }
+
+        if (isset($this->request->post['config_show_profitability_in_order_list'])) {
+            $this->data['config_show_profitability_in_order_list'] = $this->request->post['config_show_profitability_in_order_list'];
+        } else {
+            $this->data['config_show_profitability_in_order_list'] = $this->config->get('config_show_profitability_in_order_list');
         }
 
         if (isset($this->request->post['config_enable_amazon_asin_file_cache'])) {

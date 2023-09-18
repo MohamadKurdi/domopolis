@@ -29,6 +29,7 @@ class PriceLogic
 		$this->db 		= $registry->get('db');
 		$this->weight 	= $registry->get('weight');
 		$this->length 	= $registry->get('length');
+		$this->currency = $registry->get('currency');
 
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/PriceUpdaterQueue.php');
 		$this->priceUpdaterQueue = new PriceUpdaterQueue($registry);
@@ -116,6 +117,48 @@ class PriceLogic
 	public function getStoreSettings(){
 		return $this->storesWarehouses;		
 	}
+
+	public function countOrderProfitablility($order_id){
+		$order_query	= $this->db->query("SELECT total_national, currency_code FROM `order` WHERE order_id = '" . (int)$order_id . "'");
+		$products_query = $this->db->query("SELECT op.*, p.costprice FROM order_product op LEFT JOIN product p ON (p.product_id = op.product_id) WHERE op.order_id = '" . (int)$order_id . "'");
+		$totals_query 	= $this->db->query("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "'");
+
+		$costprice = 0;
+
+		if ($products_query->num_rows && $totals_query->num_rows){
+			foreach ($products_query->rows as $product){
+				if ($product['costprice']){
+					$costprice += $product['costprice'];
+				} else {
+					$costprice += ($product['price'] / $this->config->get('config_rainforest_default_costprice_multiplier_' . $this->config->get('config_store_id')));
+				}
+			}
+			
+			$this->db->query("UPDATE `order` SET costprice = '" . (float)$costprice . "' WHERE order_id = '" . (int)$order_id . "'");		
+
+			$total = $order_query->row['total_national'];
+			foreach ($totals_query->rows as $total_line){
+				if ($total_line['code'] == 'total'){
+					$total = $total_line['value_national'];
+					break;
+				}	
+			}
+
+			$total = round($this->currency->real_convert($total, $order_query->row['currency_code'], $this->config->get('config_currency')), 2);
+
+			$diff = $total - $costprice;
+			$profitability = round(($diff / $total), 2) * 100;
+
+			echoLine('[PriceLogic::countOrderProfitablility] Order ' . $order_id . ' has costprice ' . $costprice . ' EUR, and total '. $total . ' EUR', 'i');	
+			echoLine('[PriceLogic::countOrderProfitablility] Order ' . $order_id . ' has profitability ' . $profitability . '%', 'w');
+
+			$this->db->query("UPDATE `order` SET profitability = '" . (float)$profitability . "' WHERE order_id = '" . (int)$order_id . "'");		
+
+		} else {
+			echoLine('[PriceLogic::countOrderProfitablility] Order ' . $order_id . ' has no products', 'e');			
+		}
+	
+	}	
 
 	private function cacheCategoryDimensions(){
 		$query = $this->db->query("SELECT category_id, default_length, default_width, default_height, default_weight, default_length_class_id, default_weight_class_id FROM category WHERE 1");

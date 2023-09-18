@@ -615,6 +615,8 @@
 			
 			$this->load->model('module/affiliate');
 			$this->model_module_affiliate->validate($order_id, $data, $commission);
+
+			$this->registry->get('rainforestAmazon')->offersParser->PriceLogic->countOrderProfitablility($order_id);
 			
 			return (int)$order_id;
 		}
@@ -2067,6 +2069,8 @@
 			
 			//fixing doubles
 			$this->db->query("UPDATE `order_product` op SET product_id = (SELECT p.stock_product_id FROM product p WHERE p.product_id = op.product_id LIMIT 1) WHERE product_id IN (SELECT product_id FROM product WHERE stock_product_id > 0)");
+
+			$this->registry->get('rainforestAmazon')->offersParser->PriceLogic->countOrderProfitablility($order_id);
 			
 			//saving orderxml for odinass
 			if (in_array((int)$data['order_status_id'], $this->config->get('config_odinass_order_status_id')) /* && $total_national > 0 */){

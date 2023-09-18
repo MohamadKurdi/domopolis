@@ -380,6 +380,21 @@
 										<br />
 										<span class="help">включает логику привязки шаблонов рассылок и промокодов к менеджерам</span>
 									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Рентабельность в заказах</span></p>
+										<select name="config_show_profitability_in_order_list">
+											<?php if ($config_show_profitability_in_order_list) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+											<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+										<br />
+										<span class="help">показать процент рентабельности по каждому заказу в списках</span>
+									</div>
 								</td>
 
 							</tr>
