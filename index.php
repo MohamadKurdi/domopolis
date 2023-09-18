@@ -377,7 +377,6 @@
 	$response->setCompression($registry->get('config')->get('config_compression'));
 	$registry->set('response', $response); 
 
-	$registry->set('bypass_rainforest_caches_and_settings', true);
 	
 	//Other libraries
 	$registry->set('document', 			new Document()); 				
@@ -398,8 +397,11 @@
 	$registry->set('courierServices', 	new hobotix\CourierServices($registry));
 	$registry->set('openaiAdaptor', 	new hobotix\OpenAIAdaptor($registry));
 	$registry->set('phoneValidator', 	new hobotix\phoneValidator($registry));
-	$registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
 	$registry->set('smsAdaptor', 		new hobotix\SmsAdaptor($registry));
+	
+	$registry->set('bypass_rainforest_caches_and_settings', true);
+	$registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
+	
 
 	if ($registry->get('customer')->getTracking()) {
 		setcookie('tracking', $registry->get('customer')->getTracking(), time() + 3600 * 24 * 1000, '/');
