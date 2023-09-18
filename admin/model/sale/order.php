@@ -616,7 +616,9 @@
 			$this->load->model('module/affiliate');
 			$this->model_module_affiliate->validate($order_id, $data, $commission);
 
-			$this->registry->get('rainforestAmazon')->offersParser->PriceLogic->countOrderProfitablility($order_id);
+			if ($this->config->get('config_show_profitability_in_order_list')){
+				$this->registry->get('rainforestAmazon')->offersParser->PriceLogic->countOrderProfitablility($order_id);
+			}
 			
 			return (int)$order_id;
 		}
@@ -2190,8 +2192,7 @@
 		}
 		
 		public function getOrder($order_id) {
-			$order_query = $this->db->query("
-			SELECT *, 
+			$order_query = $this->db->query("SELECT *, 
 			(SELECT CONCAT(c.firstname, ' ', c.lastname) FROM customer c WHERE c.customer_id = o.customer_id) AS customer,
 			(SELECT nbt_csi FROM customer c2 WHERE c2.customer_id = o.customer_id) AS nbt_csi, 
 			(SELECT status FROM order_courier_history och WHERE och.order_id = o.order_id ORDER BY date_added DESC LIMIT 1) as courier_status,
@@ -2361,6 +2362,8 @@
 				'shipping_method'         => $order_query->row['shipping_method'],
 				'shipping_code'           => $order_query->row['shipping_code'],
 				'comment'                 => $order_query->row['comment'],
+				'costprice'				  => $order_query->row['costprice'],
+				'profitability'			  => $order_query->row['profitability'],
 				'total'                   => $order_query->row['total'],
 				'total_national'          => $order_query->row['total_national'],
 				'total_paid'              => $order_query->row['total_paid'],
@@ -2470,7 +2473,7 @@
 		}
 		
 		public function getOrders($data = array()) {
-			$sql = "SELECT DISTINCT o.order_id, o.preorder, o.pwa, o.yam, o.yam_id, o.yam_shipment_date, o.yam_shipment_id, o.yam_box_id, o.yam_fake, o.yam_status, o.yam_substatus, o.template, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.customer_id, o.tracker_xml, o.shipping_code, o.needs_checkboxua, o.paid_by,
+			$sql = "SELECT DISTINCT o.order_id, o.preorder, o.pwa, o.yam, o.yam_id, o.yam_shipment_date, o.yam_shipment_id, o.yam_box_id, o.yam_fake, o.yam_status, o.yam_substatus, o.template, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.customer_id, o.tracker_xml, o.shipping_code, o.needs_checkboxua, o.paid_by, o.costprice, o.profitability,
 			(SELECT SUM(reward) FROM order_product WHERE order_id = o.order_id) as reward,
 			(SELECT value_national FROM order_total WHERE order_id = o.order_id AND code = 'reward' LIMIT 1) as reward_used,
 			(SELECT os.name FROM order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status, 

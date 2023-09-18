@@ -1495,12 +1495,13 @@
 				'histories'    				=> $this->model_sale_order->getTotalOrderHistoriesByOrderStatusId($result['order_id']),
 				'total'         			=> $total,
 				'yam_comission'			  	=> ($result['yam'])?$this->currency->format(-1 * ($sub_total/100*12), $result['currency_code'], '1'):false,
+				'costprice'				  	=> $this->currency->format($result['costprice'], $this->config->get('config_currency'), 1),
+				'costprice_national'	  	=> $this->currency->format($this->currency->convert($result['costprice'], $this->config->get('config_currency'), $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', $result['store_id'])), $this->config->get('config_regional_currency'), 1),
+				'profitability'			  	=> $result['profitability'],
 				'totals'         			=> $totals2,
 				'total_discount'         	=> ($total_discount<0)?$this->currency->format($total_discount, $result['currency_code'], '1'):false,
 				'total_discount_percent'    => ($total_discount<0)?round(($total_discount/$sub_total) * 100, 2):false,
 				'total_isnull'         		=> max($result['total_national'], $result['total']) == 0,
-				//		'date_added'    			=> date($this->language->get('date_format_short'), strtotime($result['date_added'])).'<br /> в '.date('H:i:s', strtotime($result['date_added'])),
-				//		'date_modified' 			=> date($this->language->get('date_format_short'), strtotime($result['date_modified'])).'<br /> в '.date('H:i:s', strtotime($result['date_modified'])),
 				'date_added'    			=> date('d.m.Y', strtotime($result['date_added'])),
 				'time_added'    			=> date('H:i', strtotime($result['date_added'])),
 				'date_modified' 			=> date('d.m.Y', strtotime($result['date_modified'])),
@@ -1536,7 +1537,6 @@
 				'text_link'      			=> $this->checkBoxUA->getReceiptLink($result['receipt_id'],'text'),
 				'png_link'      			=> $this->checkBoxUA->getReceiptLink($result['receipt_id'],'png'),
 				'qrcode_link'      			=> $this->checkBoxUA->getReceiptLink($result['receipt_id'],'qrcode'),
-
 				'newversion'				=> ($result['template'] == 'kp'),
 				'reward'     				=> $this->currency->formatBonus($result['reward'], true),
 				'reward_used'   			=> $result['reward_used']?$this->currency->formatNegativeBonus($result['reward_used'], true):false,
@@ -8162,32 +8162,33 @@
 				
 				$order_product_id = $this->request->get['order_product_id'];
 				
-				$isgood_query = $this->db->query("SELECT good, product_id FROM `".DB_PREFIX."order_product` WHERE `order_product_id` = '". (int)$order_product_id ."' LIMIT 1");		
+				$isgood_query = $this->db->query("SELECT good, product_id FROM `order_product` WHERE `order_product_id` = '". (int)$order_product_id ."' LIMIT 1");		
 				if ($isgood_query->row){
-					//находится в обычной табличке - есть в наличии. перемещаем в нетвналичии табличку	
-					$order_product_query = $this->db->query("SELECT * FROM `".DB_PREFIX."order_product` WHERE `order_product_id` = '". (int)$order_product_id ."' LIMIT 1");
-					$order_product = $order_product_query->row;
-					$this->db->query("DELETE FROM `".DB_PREFIX."order_product_nogood` WHERE `order_product_id` = '". (int)$order_product_id ."'");
+					$order_product_query 	= $this->db->query("SELECT * FROM `order_product` WHERE `order_product_id` = '". (int)$order_product_id ."' LIMIT 1");
+					$order_product 			= $order_product_query->row;
+
+					$this->db->query("DELETE FROM `order_product_nogood` WHERE `order_product_id` = '". (int)$order_product_id ."'");
+					
 					$this->db->query("INSERT INTO order_product_nogood SET
-					order_product_id = '" . (int)$order_product['order_product_id'] . "', 
-					order_id = '" . (int)$order_product['order_id'] . "', 
-					product_id = '" . (int)$order_product['product_id'] . "',
-					ao_id = '" . (int)$order_product['ao_id'] . "', 	
-					ao_product_id = '" . (int)$order_product['ao_product_id'] . "',
-					name = '" . $this->db->escape($order_product['name']) . "', 
-					model = '" . $this->db->escape($order_product['model']) . "', 
-					quantity = '" . (int)$order_product['quantity'] . "', 
-					price = '" . (float)$order_product['price'] . "', 
-					price_national = '" . (float)$order_product['price_national'] . "',
+					order_product_id 	= '" . (int)$order_product['order_product_id'] . "', 
+					order_id 			= '" . (int)$order_product['order_id'] . "', 
+					product_id 			= '" . (int)$order_product['product_id'] . "',
+					ao_id 				= '" . (int)$order_product['ao_id'] . "', 	
+					ao_product_id 		= '" . (int)$order_product['ao_product_id'] . "',
+					name 				= '" . $this->db->escape($order_product['name']) . "', 
+					model 				= '" . $this->db->escape($order_product['model']) . "', 
+					quantity 			= '" . (int)$order_product['quantity'] . "', 
+					price 				= '" . (float)$order_product['price'] . "', 
+					price_national 		= '" . (float)$order_product['price_national'] . "',
 					original_price_national = '" . (float)$order_product['original_price_national'] . "',
-					total = '" . (float)$order_product['total'] . "',
-					total_national = '" . (float)$order_product['total_national'] . "',
-					tax = '" . (float)$order_product['tax'] . "', 
-					reward = '" . (int)$order_product['reward'] . "', 
-					good = '0',
-					waitlist = '0',
-					taken = '" . (int)$order_product['taken'] . "'");
-					$this->db->query("DELETE FROM `".DB_PREFIX."order_product` WHERE `order_product_id` = '". (int)$order_product_id ."'");
+					total 				= '" . (float)$order_product['total'] . "',
+					total_national 		= '" . (float)$order_product['total_national'] . "',
+					tax					= '" . (float)$order_product['tax'] . "', 
+					reward 				= '" . (int)$order_product['reward'] . "', 
+					good 				= '0',
+					waitlist 			= '0',
+					taken 				= '" . (int)$order_product['taken'] . "'");
+					$this->db->query("DELETE FROM `order_product` WHERE `order_product_id` = '". (int)$order_product_id ."'");
 					$r = false;
 					
 					$customer_comment_text = "Товар " . $order_product['model'] . " помечен как нет в наличии";
@@ -8209,29 +8210,32 @@
 					$this->model_sale_customer->addHistoryExtended($_data);
 					
 					} else {
-					//находится в необычной табличке	
-					$order_product_query = $this->db->query("SELECT * FROM `".DB_PREFIX."order_product_nogood` WHERE `order_product_id` = '". (int)$order_product_id ."' LIMIT 1");
+						
+					$order_product_query = $this->db->query("SELECT * FROM `order_product_nogood` WHERE `order_product_id` = '". (int)$order_product_id ."' LIMIT 1");
 					$order_product = $order_product_query->row;
-					$this->db->query("DELETE FROM `".DB_PREFIX."order_product` WHERE `order_product_id` = '". (int)$order_product_id ."'");
+
+					$this->db->query("DELETE FROM `order_product` WHERE `order_product_id` = '". (int)$order_product_id ."'");
+					
 					$this->db->query("INSERT INTO order_product SET
-					order_product_id = '" . (int)$order_product['order_product_id'] . "', 
-					order_id = '" . (int)$order_product['order_id'] . "', 
-					product_id = '" . (int)$order_product['product_id'] . "',
-					ao_id = '" . (int)$order_product['ao_id'] . "',
-					ao_product_id = '" . (int)$order_product['ao_product_id'] . "',
-					name = '" . $this->db->escape($order_product['name']) . "', 
-					model = '" . $this->db->escape($order_product['model']) . "', 
-					quantity = '" . (int)$order_product['quantity'] . "', 
-					price = '" . (float)$order_product['price'] . "', 
-					price_national = '" . (float)$order_product['price_national'] . "',
+					order_product_id 		= '" . (int)$order_product['order_product_id'] . "', 
+					order_id 				= '" . (int)$order_product['order_id'] . "', 
+					product_id 				= '" . (int)$order_product['product_id'] . "',
+					ao_id 					= '" . (int)$order_product['ao_id'] . "',
+					ao_product_id 			= '" . (int)$order_product['ao_product_id'] . "',
+					name 					= '" . $this->db->escape($order_product['name']) . "', 
+					model 					= '" . $this->db->escape($order_product['model']) . "', 
+					quantity 				= '" . (int)$order_product['quantity'] . "', 
+					price 					= '" . (float)$order_product['price'] . "', 
+					price_national 			= '" . (float)$order_product['price_national'] . "',
 					original_price_national = '" . (float)$order_product['original_price_national'] . "',
-					total = '" . (float)$order_product['total'] . "',
-					total_national = '" . (float)$order_product['total_national'] . "',
-					tax = '" . (float)$order_product['tax'] . "', 
-					reward = '" . (int)$order_product['reward'] . "', 
-					good = '1', 
-					taken = '" . (int)$order_product['taken'] . "'");
-					$this->db->query("DELETE FROM `".DB_PREFIX."order_product_nogood` WHERE `order_product_id` = '". (int)$order_product_id ."'");
+					total 					= '" . (float)$order_product['total'] . "',
+					total_national 			= '" . (float)$order_product['total_national'] . "',
+					tax 					= '" . (float)$order_product['tax'] . "', 
+					reward 					= '" . (int)$order_product['reward'] . "', 
+					good 					= '1', 
+					taken 					= '" . (int)$order_product['taken'] . "'");
+
+					$this->db->query("DELETE FROM `order_product_nogood` WHERE `order_product_id` = '". (int)$order_product_id ."'");
 					$r = true;	
 					
 					$customer_comment_text = "Товар " . $order_product['model'] . " помечен как есть в наличии";
@@ -8252,6 +8256,11 @@
 					
 					$this->model_sale_customer->addHistoryExtended($_data);
 				}
+
+				
+				if ($this->config->get('config_show_profitability_in_order_list')){
+					$this->registry->get('rainforestAmazon')->offersParser->PriceLogic->countOrderProfitablility($order_product['order_id']);
+				}
 				
 				echo $r?'Есть':'Нет';		
 				} else {
@@ -8262,9 +8271,9 @@
 		public function setTakenProduct(){			
 			if (in_array($this->user->getUserGroup(), array(1, 15, 12, 19, 27, 13, 23)) or $this->user->getIsAV()) {
 				$order_product_id = $this->request->get['order_product_id'];
-				$this->db->query("UPDATE `".DB_PREFIX."order_product` SET `taken` = NOT(`taken`) WHERE `order_product_id` = '". (int)$order_product_id ."'");	
+				$this->db->query("UPDATE `order_product` SET `taken` = NOT(`taken`) WHERE `order_product_id` = '". (int)$order_product_id ."'");	
 				
-				$q = $this->db->query("SELECT taken FROM `".DB_PREFIX."order_product` WHERE `order_product_id` = '". (int)$order_product_id ."'");	
+				$q = $this->db->query("SELECT taken FROM `order_product` WHERE `order_product_id` = '". (int)$order_product_id ."'");	
 				$r = $q->row['taken'];
 				
 				echo $r?'Да':'Нет';		
@@ -8317,7 +8326,7 @@
 			$prepayment_paid_date = isset($this->request->post['prepayment_paid_date'])?$this->request->post['prepayment_paid_date']:'0000-00-00 00:00:00';
 			
 			if ($this->request->post['prepayment_paid']){
-				$this->db->query("UPDATE `".DB_PREFIX."order` SET prepayment_paid = 1, prepayment_paid_date = '" .$this->db->escape($prepayment_paid_date). "' WHERE `order_id` = '". (int)$order_id ."'");	
+				$this->db->query("UPDATE `order` SET prepayment_paid = 1, prepayment_paid_date = '" .$this->db->escape($prepayment_paid_date). "' WHERE `order_id` = '". (int)$order_id ."'");	
 				
 				$this->load->model('setting/setting');
 				$order_status_id = $this->model_setting_setting->getKeySettingValue('config', 'config_prepayment_paid_order_status_id', (int)$order['store_id']);
@@ -8339,7 +8348,7 @@
 				
 				echo json_encode($json);		
 				} else {
-				$this->db->query("UPDATE `".DB_PREFIX."order` SET prepayment_paid = 0, prepayment_paid_date = '" .$this->db->escape('0000-00-00 00:00:00'). "' WHERE `order_id` = '". (int)$order_id ."'");
+				$this->db->query("UPDATE `order` SET prepayment_paid = 0, prepayment_paid_date = '" .$this->db->escape('0000-00-00 00:00:00'). "' WHERE `order_id` = '". (int)$order_id ."'");
 				
 				$this->load->model('setting/setting');
 				$order_status_id = $this->model_setting_setting->getKeySettingValue('config', 'config_confirmed_order_status_id', (int)$order['store_id']);
@@ -8367,12 +8376,12 @@
 			$total_paid_date = isset($this->request->post['total_paid_date'])?$this->request->post['total_paid_date']:'0000-00-00 00:00:00';;
 			
 			if ($this->request->post['total_paid']){
-				$this->db->query("UPDATE `".DB_PREFIX."order` SET total_paid = 1, total_paid_date = '" .$this->db->escape($total_paid_date). "' WHERE `order_id` = '". (int)$order_id ."'");	
+				$this->db->query("UPDATE `order` SET total_paid = 1, total_paid_date = '" .$this->db->escape($total_paid_date). "' WHERE `order_id` = '". (int)$order_id ."'");	
 				
 				echo 'Ок, факт оплаты зафиксирован!. Оплачено '.$this->db->escape($total_paid_date);
 				
 				} else {
-				$this->db->query("UPDATE `".DB_PREFIX."order` SET total_paid = 0, total_paid_date = '" .$this->db->escape('0000-00-00 00:00:00'). "' WHERE `order_id` = '". (int)$order_id ."'");	
+				$this->db->query("UPDATE `order` SET total_paid = 0, total_paid_date = '" .$this->db->escape('0000-00-00 00:00:00'). "' WHERE `order_id` = '". (int)$order_id ."'");	
 				
 				echo 'Ок, факт оплаты отменен!';	
 			}			
@@ -8383,7 +8392,7 @@
 			$order_id = $this->request->get['order_id'];
 			$manager_id = $this->request->get['manager_id'];
 			if ($this->user->getIsAV() || $this->user->getIsMM()){
-				$this->db->query("UPDATE `".DB_PREFIX."order` SET `manager_id` = ".(int)$manager_id ." WHERE `order_id` = '". (int)$order_id ."'");	
+				$this->db->query("UPDATE `order` SET `manager_id` = ".(int)$manager_id ." WHERE `order_id` = '". (int)$order_id ."'");	
 				if ($manager_id > 0) {	
 					$manager = array(							
 					'name'     => $this->model_user_user->getUserNameById($manager_id), 

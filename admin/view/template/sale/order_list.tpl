@@ -515,7 +515,15 @@
 								<a href="<?php echo $sort_manager_id; ?>" class="<?php echo strtolower($order); ?>">Люди</a>
 								<?php } else { ?>
 								<a href="<?php echo $sort_manager_id; ?>">Люди</a>
-							<?php } ?></td>
+							<?php } ?>
+							</td>
+
+							<?php if ($this->config->get('config_show_profitability_in_order_list')){ ?>
+							<td class="right">
+								Рентабельность
+							</td>
+							<?php } ?>
+
 							<td class="right">
 								<?php if ($sort == 'o.total') { ?>
 									<a href="<?php echo $sort_total; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_total; ?></a>
@@ -638,10 +646,6 @@
 										<? } ?>
 									<?php } ?>
 								</span>
-								<!--
-									изм. <?php echo $order['changed']; ?> раз<br />
-									истор: <?php echo $order['histories']; ?><br />
-								-->
 							</td>
 							<td class="left" style="color: #<?php echo $order['status_txt_color']; ?>;" aria-label="Имя / ID / Email">
 								<? if ($order['customer_has_birthday']) { ?>
@@ -652,14 +656,7 @@
 								<? if ($order['is_mudak']) { ?>
 									<span style="background:white; color:red; padding:3px;"><i class='fa fa-ambulance' style='color:red; font-size:16px;'></i>&nbsp;&nbsp;
 									<? } ?>	
-									<a href="<? echo $order['customer_href']; ?>" style="font-size:16px;" target="_blank"><?php echo $order['customer']; ?></a>&nbsp;<span class="add2ticket" data-query="object=order&object_value=<?php echo $order['order_id']; ?>"></span>&nbsp;<span><a href="<? echo $order['customer_pl']; ?>" target="_blank"><i class="fa fa-envelope" aria-hidden="true"></i></a></span>
-									<? /* if (isset($order['customer_info']['discount_card']) && $order['customer_info']['discount_card']) { ?>
-										<br />
-										<div style="padding:3px; background:#d4ffaa; border:1px dotted #CCC; font-size:11px; display:inline-block;">
-										<i class="fa fa-credit-card-alt" aria-hidden="true"></i> Карта # <? echo $order['customer_info']['discount_card']; ?>, скидка <? echo $order['customer_info']['discount_percent']; ?>%
-										</div>
-									<? } */ ?>
-									
+									<a href="<? echo $order['customer_href']; ?>" style="font-size:16px;" target="_blank"><?php echo $order['customer']; ?></a>&nbsp;<span class="add2ticket" data-query="object=order&object_value=<?php echo $order['order_id']; ?>"></span>&nbsp;<span><a href="<? echo $order['customer_pl']; ?>" target="_blank"><i class="fa fa-envelope" aria-hidden="true"></i></a></span>									
 									
 									<?php if ($order['yam'] && $order['yam_fake']) { ?>
 										<br />
@@ -1065,7 +1062,22 @@
 											
 											
 										</td>
-										<td class="right" style="color: #<?php echo $order['status_txt_color']; ?>;" aria-label="Итого">
+
+									<?php if ($this->config->get('config_show_profitability_in_order_list')){ ?>
+										<td clas="right">
+											<?php if ((float)$order['profitability'] > 0) { ?>
+												<span style="display:inline-block;padding:2px 3px; font-size:12px; background:#000; color:#fff; white-space:nowrap;"><? echo $order['profitability']; ?> %</span>
+
+												<br />
+												<span style="display:inline-block;padding:2px 3px; font-size:10px; background:#ff5656; color:#FFF; white-space:nowrap;"><? echo $order['costprice']; ?></span>
+
+												<br />
+												<span style="display:inline-block;padding:2px 3px; font-size:10px; background:#ff5656; color:#FFF; white-space:nowrap;"><? echo $order['costprice_national']; ?></span>
+											<?php } ?>
+										</td>
+									<?php } ?>
+
+									<td class="right" style="color: #<?php echo $order['status_txt_color']; ?>;" aria-label="Итого">
 											<?php if ($order['preorder']) { ?>
 												<div style="white-space: nowrap; display:inline-block; margin-top:4px; padding:3px; background-color:#000; color:#fff;"><b>
 												<i class="fa fa-question-circle" aria-hidden="true"></i></b> уточнить</b></div>
@@ -1082,8 +1094,6 @@
 													<br />
 													<span style="display:inline-block;padding:2px 3px; font-size:12px; background:#ff5656; color:#FFF; white-space:nowrap;"><? echo $order['reward_used']; ?></span>
 												<?php } ?>
-												
-												
 										<?php } ?>
 									</td>
 									

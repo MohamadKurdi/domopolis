@@ -158,9 +158,7 @@
 			'limit' => 30
 			);
 			
-			$results = $this->model_sale_order->getOrders($data);
-			
-
+			$results = $this->model_sale_order->getOrders($data);		
 			
 			foreach ($results as $result) {
 				$action = array();
@@ -247,8 +245,11 @@
 				'reward'     		=> $this->currency->formatBonus($result['reward'], true),
 				'reward_used'   	=> $result['reward_used']?$this->currency->formatNegativeBonus($result['reward_used'], true):false,
 				'status_id' 		=> $result['order_status_id'],
-				'flag'      		=> $this->model_setting_setting->getKeySettingValue('config', 'config_language', $result['store_id']),
-				'affiliate' 		=> $this->model_sale_affiliate->getAffiliate($result['affiliate_id']),
+				'costprice'			=> $this->currency->format($result['costprice'], $this->config->get('config_currency'), 1),
+				'costprice_national'	  	=> $this->currency->format($this->currency->convert($result['costprice'], $this->config->get('config_currency'), $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', $result['store_id'])), $this->config->get('config_regional_currency'), 1),
+				'profitability'			  	=> $result['profitability'],
+				'flag'      				=> $this->model_setting_setting->getKeySettingValue('config', 'config_language', $result['store_id']),
+				'affiliate' 				=> $this->model_sale_affiliate->getAffiliate($result['affiliate_id']),
 				'totals'         			=> $totals2,
 				'total_discount'         	=> ($total_discount<0)?$this->currency->format($total_discount, $result['currency_code'], '1'):false,
 				'total_discount_percent'    => ($total_discount<0)?round(($total_discount/$sub_total) * 100, 2):false,

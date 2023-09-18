@@ -361,6 +361,10 @@ class ModelCheckoutOrder extends Model {
 			if ($total['code'] == 'total'){
 				$this->db->ncquery("UPDATE `order` SET total_national = '" . (float)$total['value_national'] . "' WHERE order_id = '" . (int)$order_id . "'");
 			}
+		}
+
+		if ($this->config->get('config_show_profitability_in_order_list')){
+			$this->registry->get('rainforestAmazon')->offersParser->PriceLogic->countOrderProfitablility($order_id);
 		}	
 
 		return $order_id;
@@ -1358,7 +1362,12 @@ public function confirm($order_id, $order_status_id, $comment = '', $notify = fa
 					}	
 				}
 							
-			}		
+			}
+
+			if ($this->config->get('config_show_profitability_in_order_list')){
+				$this->registry->get('rainforestAmazon')->offersParser->PriceLogic->countOrderProfitablility($order_id);
+			}
+				
 		}
 	}
 
