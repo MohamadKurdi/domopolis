@@ -5,6 +5,9 @@ class ModelTotalPaymentMethodDiscounts extends Model {
 		if(isset($this->session->data['payment_method'])){
 
 			$discounts = $this->config->get('paymentmethoddiscounts_discount');
+			if (!$discounts){
+				$discounts = [];
+			}
 
 			$payment_method='';
 			if (isset($this->session->data['payment_method'])) {
