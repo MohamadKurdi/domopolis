@@ -4700,7 +4700,7 @@ getProductsBatchOption();
 
 //--></script>
 
-
+<?php if ($this->config->get('config_load_ocfilter_in_product')) { ?>
 <script type="text/javascript"><!--
 ocfilter.php = {
 	text_select: '<?php echo $text_select; ?>',
@@ -4718,8 +4718,8 @@ ocfilter.php.languages = [];
 		'image': '<?php echo $language['image']; ?>'
 	});
 <?php } ?>
-
-//--></script>
+</script>
+<?php } ?>
 
 <script type="text/javascript"><!--
 var image_row = <?php echo $image_row; ?>;
