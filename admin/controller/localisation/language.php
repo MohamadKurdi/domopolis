@@ -220,8 +220,7 @@
 			
 			foreach ($query->rows as $profile) {
 				$this->db->query("INSERT INTO " . DB_PREFIX . "profile_description SET profile_id = '" . (int)$profile['profile_id'] . "', language_id = '" . (int)$language_id . "', name = '" . $this->db->escape($profile['name']));
-			}
-			
+			}		
 		}
 		
 		public function insert() {
