@@ -80,8 +80,8 @@
 
 						<?php if ($this->config->get('config_show_profitability_in_order_list')){ ?>
 							<td clas="right" style="text-align: center;">
-								<?php if ((float)$order['profitability'] > 0) { ?>
-									<span style="display:inline-block;padding:2px 3px; font-size:12px; background:#000; color:#fff; white-space:nowrap;"><? echo $order['profitability']; ?> %</span>
+								<?php if ((float)$order['profitability'] != 0) { ?>
+									<span style="display:inline-block;padding:2px 3px; font-size:12px; <?php if ((float)$order['profitability'] < 0) { ?>background:#ff5656;<?php } else { ?>background:#000;<?php } ?> color:#fff; white-space:nowrap;"><? echo $order['profitability']; ?> %</span>
 								<?php } ?>
 							</td>
 						<?php } ?>

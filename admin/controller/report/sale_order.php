@@ -85,17 +85,21 @@ class ControllerReportSaleOrder extends Controller {
 		);
 
 		$order_total = $this->model_report_sale->getTotalOrders($data);
-
 		$results = $this->model_report_sale->getOrders($data);
 
 		foreach ($results as $result) {
 			$this->data['orders'][] = array(
-				'date_start' => date($this->language->get('date_format_short'), strtotime($result['date_start'])),
-				'date_end'   => date($this->language->get('date_format_short'), strtotime($result['date_end'])),
-				'orders'     => $result['orders'],
-				'products'   => $result['products'],
-				'tax'        => $this->currency->format($result['tax'], $this->config->get('config_currency')),
-				'total'      => $this->currency->format($result['total'], $this->config->get('config_currency'))
+				'date_start' 			=> date($this->language->get('date_format_short'), strtotime($result['date_start'])),
+				'date_end'   			=> date($this->language->get('date_format_short'), strtotime($result['date_end'])),
+				'orders'     			=> $result['orders'],
+				'products'   			=> $result['products'],
+				'avg_profitability'		=> round($result['avg_profitability'], 2),
+				'min_profitability'		=> round($result['min_profitability'], 2),
+				'max_profitability'		=> round($result['max_profitability'], 2),
+				'avg_total'				=> $this->currency->format($result['avg_total'], $this->config->get('config_currency')),
+				'avg_total_national'	=> $this->currency->format($result['avg_total'], $this->config->get('config_regional_currency')),
+				'total'      			=> $this->currency->format($result['total'], $this->config->get('config_currency')),
+				'total_national'      	=> $this->currency->format($result['total'], $this->config->get('config_regional_currency'))
 			);
 		}
 

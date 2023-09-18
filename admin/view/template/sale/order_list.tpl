@@ -1065,14 +1065,14 @@
 
 									<?php if ($this->config->get('config_show_profitability_in_order_list')){ ?>
 										<td clas="right">
-											<?php if ((float)$order['profitability'] > 0) { ?>
-												<span style="display:inline-block;padding:2px 3px; font-size:12px; background:#000; color:#fff; white-space:nowrap;"><? echo $order['profitability']; ?> %</span>
+											<?php if ((float)$order['profitability'] != 0) { ?>
+												<span style="display:inline-block;padding:2px 3px; font-size:12px; <?php if ((float)$order['profitability'] < 0) { ?>background:#ff5656;<?php } else { ?>background:#000;<?php } ?> color:#fff; white-space:nowrap;"><? echo $order['profitability']; ?> %</span>
 
 												<br />
-												<span style="display:inline-block;padding:2px 3px; font-size:10px; background:#ff5656; color:#FFF; white-space:nowrap;"><? echo $order['costprice']; ?></span>
+												<span style="display:inline-block;padding:2px 3px; font-size:10px; background:#ff7f00; color:#FFF; white-space:nowrap;"><? echo $order['costprice']; ?></span>
 
 												<br />
-												<span style="display:inline-block;padding:2px 3px; font-size:10px; background:#ff5656; color:#FFF; white-space:nowrap;"><? echo $order['costprice_national']; ?></span>
+												<span style="display:inline-block;padding:2px 3px; font-size:10px; background:#ff7f00; color:#FFF; white-space:nowrap;"><? echo $order['costprice_national']; ?></span>
 											<?php } ?>
 										</td>
 									<?php } ?>
