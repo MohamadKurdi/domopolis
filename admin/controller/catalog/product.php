@@ -833,10 +833,10 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['entry_info'] = $this->language->get('entry_info');
 		$this->data['text_sku_override'] = $this->language->get('text_sku_override');
 
-		$this->document->addStyle('view/stylesheet/ocfilter/ocfilter.css');
-		$this->document->addScript('view/javascript/ocfilter/ocfilter.js');
-
-
+		if ($this->config->get('config_load_ocfilter_in_product')) {
+			$this->document->addStyle('view/stylesheet/ocfilter/ocfilter.css');
+			$this->document->addScript('view/javascript/ocfilter/ocfilter.js');
+		}
 
 		$this->data['text_enabled'] = $this->language->get('text_enabled');
 		$this->data['text_disabled'] = $this->language->get('text_disabled');
