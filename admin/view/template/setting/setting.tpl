@@ -305,6 +305,22 @@
 									<br />
 									<span class="help">показать на главной странице в админке счетчики категорий, товаров и процесса обработки данных, загруженных из amazon</span>
 									</div>
+
+									<div>
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Загружать Ocfilter в карте товара</span></p>
+									<select name="config_load_ocfilter_in_product">
+										<?php if ($config_load_ocfilter_in_product) { ?>
+											<option value="1" selected="selected">Включить</option>
+											<option value="0">Отключить</option>
+										<?php } else { ?>													
+											<option value="1">Включить</option>
+											<option value="0"  selected="selected">Отключить</option>
+										<? } ?>
+									</select>
+									<br />
+									<span class="help">в случае большого количества атрибутов и их значений оцфильтр ложит карту товара, нужно отключать</span>
+									</div>
+
 									<div>
 									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Монитор cron на главной</span></p>
 									<select name="config_cron_stats_display_enable">

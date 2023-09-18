@@ -1471,6 +1471,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_amazon_product_stats_enable'] = $this->config->get('config_amazon_product_stats_enable');
         }
 
+        if (isset($this->request->post['config_load_ocfilter_in_product'])) {
+            $this->data['config_load_ocfilter_in_product'] = $this->request->post['config_load_ocfilter_in_product'];
+        } else {
+            $this->data['config_load_ocfilter_in_product'] = $this->config->get('config_load_ocfilter_in_product');
+        }
+
         if (isset($this->request->post['config_delete_products_images_enable'])) {
             $this->data['config_delete_products_images_enable'] = $this->request->post['config_delete_products_images_enable'];
         } else {
