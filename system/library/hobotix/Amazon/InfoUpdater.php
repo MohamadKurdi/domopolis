@@ -41,7 +41,10 @@ class InfoUpdater extends RainforestRetriever
 	public function __construct($registry){
 
 		parent::__construct($registry);
-		$this->setDimensionsCache();
+
+		if (!$registry->get('bypass_rainforest_caches_and_settings')){
+			$this->setDimensionsCache();
+		}
 
 	}
 
@@ -443,6 +446,10 @@ class InfoUpdater extends RainforestRetriever
 
 		if (count($exploded1) != 2){
 			return false;
+		}
+
+		if (empty($this->weightCache) || empty($this->lengthCache)){
+			$this->setDimensionsCache();
 		}
 
 		$exploded_length = explode('x', atrim($exploded1[0]));

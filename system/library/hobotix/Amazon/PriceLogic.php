@@ -37,7 +37,9 @@ class PriceLogic
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/PriceHistory.php');
 		$this->priceHistory = new PriceHistory($registry);
 
-		$this->cacheCategoryDimensions()->setStoreSettings()->cacheFormulaOverloadData();
+		if (!$registry->get('bypass_rainforest_caches_and_settings')){
+			$this->cacheCategoryDimensions()->setStoreSettings()->cacheFormulaOverloadData();
+		}		
 
 		$this->log = new \Log('amazon_offers_priceupdate.txt');
 	}
@@ -119,9 +121,9 @@ class PriceLogic
 	}
 
 	public function countOrderProfitablility($order_id){
-		$order_query	= $this->db->query("SELECT total_national, currency_code FROM `order` WHERE order_id = '" . (int)$order_id . "'");
-		$products_query = $this->db->query("SELECT op.*, p.costprice FROM order_product op LEFT JOIN product p ON (p.product_id = op.product_id) WHERE op.order_id = '" . (int)$order_id . "'");
-		$totals_query 	= $this->db->query("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "'");
+		$order_query	= $this->db->ncquery("SELECT total_national, currency_code FROM `order` WHERE order_id = '" . (int)$order_id . "'");
+		$products_query = $this->db->ncquery("SELECT op.*, p.costprice FROM order_product op LEFT JOIN product p ON (p.product_id = op.product_id) WHERE op.order_id = '" . (int)$order_id . "'");
+		$totals_query 	= $this->db->ncquery("SELECT * FROM order_total WHERE order_id = '" . (int)$order_id . "'");
 
 		$costprice = 0;
 
@@ -130,7 +132,9 @@ class PriceLogic
 				if ($product['costprice']){
 					$costprice += $product['costprice'];
 				} else {
-					$costprice += ($product['price'] / $this->config->get('config_rainforest_default_costprice_multiplier_' . $this->config->get('config_store_id')));
+					if ((float)$this->config->get('config_rainforest_default_costprice_multiplier_' . $this->config->get('config_store_id')) > 0){
+						$costprice += ($product['price'] / $this->config->get('config_rainforest_default_costprice_multiplier_' . $this->config->get('config_store_id')));
+					}					
 				}
 			}
 			
@@ -147,7 +151,7 @@ class PriceLogic
 			$total = round($this->currency->real_convert($total, $order_query->row['currency_code'], $this->config->get('config_currency')), 2);
 
 			$diff = $total - $costprice;
-			$profitability = round(($diff / $total), 2) * 100;
+			$profitability = round(($diff / $total), 3) * 100;
 
 			echoLine('[PriceLogic::countOrderProfitablility] Order ' . $order_id . ' has costprice ' . $costprice . ' EUR, and total '. $total . ' EUR', 'i');	
 			echoLine('[PriceLogic::countOrderProfitablility] Order ' . $order_id . ' has profitability ' . $profitability . '%', 'w');
@@ -155,6 +159,8 @@ class PriceLogic
 			$this->db->query("UPDATE `order` SET profitability = '" . (float)$profitability . "' WHERE order_id = '" . (int)$order_id . "'");		
 
 		} else {
+			$this->db->query("UPDATE `order` SET profitability = '0' WHERE order_id = '" . (int)$order_id . "'");
+			$this->db->query("UPDATE `order` SET costprice = '0' WHERE order_id = '" . (int)$order_id . "'");
 			echoLine('[PriceLogic::countOrderProfitablility] Order ' . $order_id . ' has no products', 'e');			
 		}
 	
@@ -179,6 +185,10 @@ class PriceLogic
 	}
 
 	public function getProductDimensions($product){
+
+		if (empty($this->defaultDimensions)){
+			$this->cacheCategoryDimensions();
+		}
 
 		$weight = (float)$product['weight'];
 		$weight_class_id = (int)$product['weight_class_id'];

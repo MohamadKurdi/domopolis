@@ -366,18 +366,20 @@
 		$registry->get('config')->set('config_warehouse_identifier', 'quantity_stock');
 	}
 	
-	//Язык	
+	//Language	
 	$language = new Language($languages[$code]['directory'], $registry);
 	$language->load($languages[$code]['filename']);	
 	$registry->set('language', $language); 
 	
-	//Библиотека респонса
+	//Response lib
 	$response = new Response($registry);
 	$response->addHeader('Content-Type: text/html; charset=utf-8');
 	$response->setCompression($registry->get('config')->get('config_compression'));
 	$registry->set('response', $response); 
+
+	$registry->set('bypass_rainforest_caches_and_settings', true);
 	
-	//Остальные библиотеки	
+	//Other libraries
 	$registry->set('document', 			new Document()); 				
 	$registry->set('Bitrix24', 			new Bitrix24($registry));
 	$registry->set('customer', 			new Customer($registry));
@@ -396,6 +398,7 @@
 	$registry->set('courierServices', 	new hobotix\CourierServices($registry));
 	$registry->set('openaiAdaptor', 	new hobotix\OpenAIAdaptor($registry));
 	$registry->set('phoneValidator', 	new hobotix\phoneValidator($registry));
+	$registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
 	$registry->set('smsAdaptor', 		new hobotix\SmsAdaptor($registry));
 
 	if ($registry->get('customer')->getTracking()) {
