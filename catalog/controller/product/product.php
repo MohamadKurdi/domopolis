@@ -2103,7 +2103,7 @@ public function index($product_id = false, $just_price = false)
                 
                 $this->data['original_data'] = $this->data;
 
-                $this->children = array(
+                $this->children = [
                     'common/column_left',
                     'common/column_right',
                     'common/content_top',
@@ -2113,7 +2113,16 @@ public function index($product_id = false, $just_price = false)
                     'common/header',
                     'product/product/onereview',
                     'product/product/review',
-                );
+                ];
+
+                $this->data['ukrcredits_status'] = false;
+                if ($this->config->get('ukrcredits_status')){
+                    $children[] = 'module/ukrcredits';
+                    $this->data['ukrcredits_status'] = true;
+                    $this->data['ukrcredits_selector_button'] = $this->config->get('ukrcredits_settings')['selector_button'];
+                    $this->data['ukrcredits_selector_block'] = $this->config->get('ukrcredits_settings')['selector_block'];
+                    $this->data['ukrcredits_css_custom'] = $this->config->get('ukrcredits_settings')['css_custom'];
+                }
 
                 if (!empty($return)) {
                     return $this->data;

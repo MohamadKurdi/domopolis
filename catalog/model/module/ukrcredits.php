@@ -3,15 +3,15 @@ class ModelModuleUkrcreditsMain extends Model {
 
 	public function checkproduct($product, $quantity = 1, $options = false, $price = false, $specialprice = false) {
 		$dir = version_compare(VERSION,'2.3','>=') ? 'extension/module' : 'module';
-		$type = version_compare(VERSION,'3.0','>=') ? 'payment_' : '';
-		$setting = $this->config->get($type.'ukrcredits_settings');
-		$this->load->language($dir.'/ukrcredits');		
+		$setting = $this->config->get('ukrcredits_settings');
+
+		$this->load->language('module/ukrcredits');		
 		$status_pp = false;
 		$status_ii = false;
 		$status_mb = false;
 		$replace_array = array($this->currency->getSymbolLeft($this->session->data['currency']),$this->currency->getSymbolRight($this->session->data['currency']),$this->language->get('thousand_point'));
 		
-		if ($this->config->get($type.'ukrcredits_status')) {
+		if ($this->config->get('ukrcredits_status')) {
 			$credit_info = $this->getProductUkrcredit($product['product_id']);
 
 			if (($setting['pp_status'] && ($setting['pp_stock'] && $product['quantity'])) || ($setting['pp_status'] && !$setting['pp_stock'])) {
