@@ -110,6 +110,13 @@ class ModelCatalogCategory extends Model {
 				}
 			}
 		}
+
+		$this->db->query("DELETE FROM category_overprice_rules WHERE category_id = '" . (int)$category_id . "'");
+		if (isset($data['category_overprice_rules'])) {
+			foreach ($data['category_overprice_rules'] as $category_overprice_rule) {
+				$this->db->query(("INSERT INTO category_overprice_rules SET category_id = '" . (int)$category_id . "', multiplier = '" . (float)$category_overprice_rule['multiplier'] . "', default_multiplier = '" . (float)$category_overprice_rule['default_multiplier'] . "', min = '" . (int)$category_overprice_rule['min'] . "', max = '" . (int)$category_overprice_rule['max'] . "'"));
+			}
+		}
 		
 		if (isset($data['related_category'])) {
 			foreach ($data['related_category'] as $related_category) {
@@ -208,7 +215,6 @@ class ModelCatalogCategory extends Model {
 		$this->db->query("DELETE FROM category_menu_content WHERE category_id = '" . (int)$category_id . "'");
 		
 		if (isset($data['copyrussian']) && $data['copyrussian'] == 1){
-			
 			$rucontent = $data['category_menu_content'][2];
 			$lquery = $this->db->query("SELECT DISTINCT language_id FROM language WHERE language_id <> 26");
 			
@@ -219,7 +225,6 @@ class ModelCatalogCategory extends Model {
 			
 			foreach ($lcodes as $language_id) {				
 				foreach ($rucontent as $value){
-					
 					$this->db->query("INSERT INTO category_menu_content SET 
 						category_id = '" . (int)$category_id . "', 
 						language_id = '" . (int)$language_id . "', 
@@ -233,14 +238,9 @@ class ModelCatalogCategory extends Model {
 						sort_order = '" . (int)$value['sort_order'] . "'");					
 				}				
 			}
-			
-			
 		} else {
-			
 			foreach ($data['category_menu_content'] as $language_id => $contents) {
-				
 				foreach ($contents as $value){
-					
 					$this->db->query("INSERT INTO category_menu_content SET 
 						category_id = '" . (int)$category_id . "', 
 						language_id = '" . (int)$language_id . "', 
@@ -252,16 +252,11 @@ class ModelCatalogCategory extends Model {
 						height = '" . (int)$value['height'] . "', 
 						standalone = '" . (int)$value['standalone'] . "', 
 						sort_order = '" . (int)$value['sort_order'] . "'");
-					
 				}
-				
 			}
-			
-			
 		}
 
-		$query = $this->db->query("SELECT * FROM `category_path` WHERE path_id = '" . (int)$category_id . "' ORDER BY level ASC");
-		
+		$query = $this->db->query("SELECT * FROM `category_path` WHERE path_id = '" . (int)$category_id . "' ORDER BY level ASC");		
 		if ($query->rows) {
 			foreach ($query->rows as $category_path) {
 				$this->db->query("DELETE FROM `category_path` WHERE category_id = '" . (int)$category_path['category_id'] . "' AND level < '" . (int)$category_path['level'] . "'");
@@ -303,7 +298,6 @@ class ModelCatalogCategory extends Model {
 			$this->db->query("REPLACE INTO `category_path` SET category_id = '" . (int)$category_id . "', `path_id` = '" . (int)$category_id . "', level = '" . (int)$level . "'");
 		}
 
-
 		if ($data['status_tree']){
 			$this->db->query("UPDATE category SET status = '" . (int)$data['status'] . "' WHERE category_id IN (SELECT category_id FROM category_path WHERE path_id = '" . (int)$category_id . "')");
 		}
@@ -311,18 +305,15 @@ class ModelCatalogCategory extends Model {
 		if ($data['status_children']){
 			$this->db->query("UPDATE category SET status = '" . (int)$data['status'] . "' WHERE category_id IN (SELECT category_id FROM category WHERE parent_id = '" . (int)$category_id . "')");
 		}
-
-		
-		$this->db->query("DELETE FROM category_filter WHERE category_id = '" . (int)$category_id . "'");
-		
+	
+		$this->db->query("DELETE FROM category_filter WHERE category_id = '" . (int)$category_id . "'");		
 		if (isset($data['category_filter'])) {
 			foreach ($data['category_filter'] as $filter_id) {
 				$this->db->query("INSERT INTO category_filter SET category_id = '" . (int)$category_id . "', filter_id = '" . (int)$filter_id . "'");
 			}		
 		}
 		
-		$this->db->query("DELETE FROM category_to_store WHERE category_id = '" . (int)$category_id . "'");
-		
+		$this->db->query("DELETE FROM category_to_store WHERE category_id = '" . (int)$category_id . "'");		
 		if (isset($data['category_store'])) {		
 			foreach ($data['category_store'] as $store_id) {
 				$this->db->query("INSERT INTO category_to_store SET category_id = '" . (int)$category_id . "', store_id = '" . (int)$store_id . "'");
@@ -336,8 +327,7 @@ class ModelCatalogCategory extends Model {
 			}
 		}
 		
-		$this->db->query("DELETE FROM category_to_layout WHERE category_id = '" . (int)$category_id . "'");
-		
+		$this->db->query("DELETE FROM category_to_layout WHERE category_id = '" . (int)$category_id . "'");		
 		if (isset($data['category_layout'])) {
 			foreach ($data['category_layout'] as $store_id => $layout) {
 				if ($layout['layout_id']) {
@@ -355,9 +345,15 @@ class ModelCatalogCategory extends Model {
 				}
 			}
 		}
+
+		$this->db->query("DELETE FROM category_overprice_rules WHERE category_id = '" . (int)$category_id . "'");
+		if (isset($data['category_overprice_rules'])) {
+			foreach ($data['category_overprice_rules'] as $category_overprice_rule) {
+				$this->db->query(("INSERT INTO category_overprice_rules SET category_id = '" . (int)$category_id . "', multiplier = '" . (float)$category_overprice_rule['multiplier'] . "', default_multiplier = '" . (float)$category_overprice_rule['default_multiplier'] . "', min = '" . (int)$category_overprice_rule['min'] . "', max = '" . (int)$category_overprice_rule['max'] . "'"));
+			}
+		}
 		
-		$this->db->query("DELETE FROM category_related WHERE category_id=" . (int)$category_id);	
-		
+		$this->db->query("DELETE FROM category_related WHERE category_id=" . (int)$category_id);			
 		if (isset($data['related_category'])) {
 			foreach ($data['related_category'] as $related_category) {
 				$this->db->query(("INSERT INTO category_related (related_category_id, category_id) VALUES  (" . (int)$related_category . ", " . (int)$category_id . ")"));
@@ -671,6 +667,14 @@ class ModelCatalogCategory extends Model {
 		
 		return $category_description_data;
 	}	
+
+	public function getCategoryOverpriceRules($category_id) {
+		$category_overprice_rules = array();
+		
+		$query = $this->db->query("SELECT * FROM category_overprice_rules WHERE category_id = '" . (int)$category_id . "'");
+		
+		return $query->rows;
+	}	
 	
 	public function getCategoryMenuContent($category_id) {
 		$category_menu_content_data = array();
@@ -678,9 +682,7 @@ class ModelCatalogCategory extends Model {
 		$query = $this->db->query("SELECT * FROM category_menu_content WHERE category_id = '" . (int)$category_id . "'");
 		
 		foreach ($query->rows as $result) {
-			
 			$category_menu_content_data[$result['language_id']][$result['category_menu_content_id']] = $result;
-			
 		}
 		
 		return $category_menu_content_data;
@@ -695,14 +697,12 @@ class ModelCatalogCategory extends Model {
 		} else {
 			return '';
 		}
-		
 	}
 	
 	public function getGoogleCategoryByName($filter){
 		$query = $this->db->query("SELECT * FROM google_base_category WHERE google_base_category_id = '" . (int)trim($filter) . "' OR LOWER(name) LIKE ('%" . $this->db->escape(mb_strtolower($filter)) . "%') ORDER BY name DESC LIMIT 30");
 		
 		return $query->rows;			
-		
 	}
 	
 	
@@ -754,7 +754,7 @@ class ModelCatalogCategory extends Model {
 		return $category_layout_data;
 	}
 	
-	public function getTotalCategories() {
+	public function getTotalCategories($data = []) {
 		$sql = "SELECT COUNT(*) AS total FROM category WHERE 1";
 
 		if (isset($data['filter_status'])) {

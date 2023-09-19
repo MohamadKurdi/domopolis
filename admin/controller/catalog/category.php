@@ -351,17 +351,17 @@ class ControllerCatalogCategory extends Controller {
 			'separator' => ' :: '
 		);
 
-		$this->data['insert'] = $this->url->link('catalog/category/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['delete'] = $this->url->link('catalog/category/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['repair'] = $this->url->link('catalog/category/repair', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['rollup'] = $this->url->link('catalog/category/rollup', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['insert'] 		= $this->url->link('catalog/category/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['delete'] 		= $this->url->link('catalog/category/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['repair'] 		= $this->url->link('catalog/category/repair', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['rollup'] 		= $this->url->link('catalog/category/rollup', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['hidedisabled'] = $this->url->link('catalog/category/hidedisabled', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['simpleview'] = $this->url->link('catalog/category/simpleview', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['rollup_all'] = $this->url->link('catalog/category/rollup_all', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['simpleview'] 	= $this->url->link('catalog/category/simpleview', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['rollup_all'] 	= $this->url->link('catalog/category/rollup_all', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		$this->data['rollup_enabled'] = !empty($this->session->data['category_rollup']);
+		$this->data['rollup_enabled'] 		= !empty($this->session->data['category_rollup']);
 		$this->data['hidedisabled_enabled'] = !empty($this->session->data['category_hidedisabled']);
-		$this->data['simpleview_enabled'] = !empty($this->session->data['simpleview']);
+		$this->data['simpleview_enabled'] 	= !empty($this->session->data['simpleview']);
 
 		if (isset($this->request->get['path'])) {
 			if ($this->request->get['path'] != '') {
@@ -779,6 +779,14 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['virtual_parent_id'] = $category_info['virtual_parent_id'];
 		} else {
 			$this->data['virtual_parent_id'] = '-1';
+		}
+
+		if (isset($this->request->post['category_overprice_rules'])) {
+			$category_overprice_rules = $this->request->post['category_overprice_rules'];
+		} elseif (isset($this->request->get['category_id'])) {		
+			$category_overprice_rules = $this->model_catalog_category->getCategoryOverpriceRules($this->request->get['category_id']);
+		} else {
+			$category_overprice_rules = array();
 		}
 
 		$this->load->model('catalog/filter');
