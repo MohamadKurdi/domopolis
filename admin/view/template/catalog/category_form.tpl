@@ -700,21 +700,23 @@
 
 								<?php if ($amazon_category_full_information) { ?>		
 									<br />
-									<?php if ($amazon_category_full_information['final_category']) { ?>										
+									<?php if (!empty($amazon_category_full_information['final_category'])) { ?>										
 										<span  style="color:#00ad07"> 
 											<i class="fa fa-check"></i> это финальная категория на Amazon
 										</span>
 									<?php } else { ?>
-
 										<span  style="color:#ef5e67"> 
 											<i class="fa fa-exclamation-triangle"></i> это не финальная категория на Amazon, возможно стоит поискать другое соответствие
 										</span>
 									<?php } ?>
 
+									<?php if (!empty($amazon_category_full_information['full_name'])) { ?>
 									<br />
 									<span  style="color:#00ad07"> 
 										<i class="fa fa-check"></i> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $this->config->get('config_rainforest_source_language');?>.png" /> <?php echo $amazon_category_full_information['full_name']; ?> (<?php echo $amazon_category_full_information['name']; ?>)
 									</span>
+									<?php } ?>
+									
 									<?php if (!empty($amazon_category_full_information['name_native'])) { ?>
 										<br />
 										<span  style="color:#00ad07"> 
@@ -836,12 +838,109 @@
 					</table>
 
 
-					<h2> AMAZON RAINFOREST API - правила переназначения цен</h2>
-					<table class="form">
+					<h2>AMAZON RAINFOREST API - правила переназначения цен</h2>
 
 
+					<table class="form" id="category_overprice_rules" >
+						<thead>
+							<tr>
+								<td class="center">
+									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Цена закупки от, <?php echo $this->config->get('config_currency'); ?></span>
+								</td>
+								<td class="center">
+									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Цена закупки до, <?php echo $this->config->get('config_currency'); ?></span>
+								</td>
+								<td class="center">
+									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Множитель для формулы с весом</span>									
+								</td>	
+								<td class="center"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Множитель для формулы без веса</span>
+								</td>
+								<td>
+									<a onclick="copyDefaultValues();" class="button">Скопировать из общих</a>
+								</td>
+							</tr>
+						</thead>
+						<?php $category_overprice_rules_row = 0; ?>
 
+						<?php foreach ($category_overprice_rules as $category_overprice_rule) { ?>
+							<tbody id="category_overprice_rules-row<?php echo $category_overprice_rules_row; ?>">
+								<tr>									
+									<td class="center">
+										<input type="number" step="10" name="category_overprice_rules[<?php echo $category_overprice_rules_row; ?>][min]" value="<?php echo $category_overprice_rule['min']; ?>" size="10" />
+									</td>
+									<td class="center">
+										<input type="number" step="10" name="category_overprice_rules[<?php echo $category_overprice_rules_row; ?>][max]" value="<?php echo $category_overprice_rule['max']; ?>" size="10" />
+									</td>
+									<td class="center">
+										<input type="number" step="0.01" name="category_overprice_rules[<?php echo $category_overprice_rules_row; ?>][multiplier]" value="<?php echo $category_overprice_rule['multiplier']; ?>" size="10" />
+									</td>
+									<td class="center">
+										<input type="number" step="0.01" name="category_overprice_rules[<?php echo $category_overprice_rules_row; ?>][default_multiplier]" value="<?php echo $category_overprice_rule['default_multiplier']; ?>" size="10" />
+									</td>
+									<td class="right">
+										<a onclick="$('#category_overprice_rules-row<?php echo $category_overprice_rules_row; ?>').remove();" class="button">Удалить</a>
+									</td>
+								</tr>
+							</tbody>
+							<?php $category_overprice_rules_row++; ?>
+						<?php } ?>
+						<tfoot>
+							<tr>
+								<td colspan="4"></td>
+								<td class="right" colspan="1">
+									<a onclick="addCategoryOverpriceRule();" class="button">Добавить</a>									
+								</td>
+							</tr>
+						</tfoot>
 					</table>
+
+					<script type="text/javascript">
+						var category_overprice_rules_row = <?php echo $category_overprice_rules_row; ?>;
+
+						function copyDefaultValues(){
+							$('.category_overprice_rules-rows').remove();
+							category_overprice_rules_row = 0;
+
+							<?php for ($crmfc = 1; $crmfc <= $config_rainforest_main_formula_count; $crmfc++){ ?>	
+
+								html  = '<tbody class="category_overprice_rules-rows" id="category_overprice_rules-row' + category_overprice_rules_row + '">';
+								html += '  <tr>'; 
+
+								html += '    <td class="center"><input type="number" step="10" name="category_overprice_rules[' + category_overprice_rules_row + '][min]" value="<?php echo ${'config_rainforest_main_formula_min_' . $crmfc}; ?>" size="10" /></td>';
+								html += '    <td class="center"><input type="number" step="10" name="category_overprice_rules[' + category_overprice_rules_row + '][max]" value="<?php echo ${'config_rainforest_main_formula_max_' . $crmfc}; ?>" size="10" /></td>';
+								html += '    <td class="center"><input type="number" step="0.01" name="category_overprice_rules[' + category_overprice_rules_row + '][multiplier]" value="<?php echo ${'config_rainforest_main_formula_multiplier_' . $crmfc}; ?>" size="10" /></td>';
+								html += '    <td class="center"><input type="number" step="0.01" name="category_overprice_rules[' + category_overprice_rules_row + '][default_multiplier]" value="<?php echo ${'config_rainforest_main_formula_default_' . $crmfc}; ?>" size="10" /></td>';
+
+								html += '    <td class="right"><a onclick="$(\'#category_overprice_rules-row' + category_overprice_rules_row + '\').remove();" class="button">Удалить</a></td>';
+
+								html += '  </tr>';
+								html += '</tbody>';
+
+								$('#category_overprice_rules tfoot').before(html);
+
+								category_overprice_rules_row++;
+							<?php } ?>
+						}							
+
+						function addCategoryOverpriceRule() {
+							html  = '<tbody class="category_overprice_rules-rows" id="category_overprice_rules-row' + category_overprice_rules_row + '">';
+							html += '  <tr>'; 
+
+							html += '    <td class="center"><input type="number" step="10" name="category_overprice_rules[' + category_overprice_rules_row + '][min]" value="" size="10" /></td>';
+							html += '    <td class="center"><input type="number" step="10" name="category_overprice_rules[' + category_overprice_rules_row + '][max]" value="" size="10" /></td>';
+							html += '    <td class="center"><input type="number" step="0.01" name="category_overprice_rules[' + category_overprice_rules_row + '][multiplier]" value="" size="10" /></td>';
+							html += '    <td class="center"><input type="number" step="0.01" name="category_overprice_rules[' + category_overprice_rules_row + '][default_multiplier]" value="" size="10" /></td>';
+
+							html += '    <td class="right"><a onclick="$(\'#category_overprice_rules-row' + category_overprice_rules_row + '\').remove();" class="button">Удалить</a></td>';
+
+							html += '  </tr>';
+							html += '</tbody>';
+
+							$('#category_overprice_rules tfoot').before(html);
+
+							category_overprice_rules_row++;
+						}
+					</script>
 				</div>
 				
 				<div id="tab-related-data">

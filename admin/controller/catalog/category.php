@@ -1,8 +1,8 @@
 <?php 
 class ControllerCatalogCategory extends Controller { 
-	private $error = array();	
+	private $error = [];	
 	private $category_id = 0;
-	private $path = array();
+	private $path = [];
 	private $levels = [
 		'#34913e','#ff7815','#64a1e1','#7f00ff','#3276c2','#24a4c1','#f91c02'
 	];
@@ -68,9 +68,9 @@ class ControllerCatalogCategory extends Controller {
 
 		$this->load->model('catalog/category');
 
-		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
+		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {		
 			$this->model_catalog_category->editCategory($this->request->get['category_id'], $this->request->post);
-
+			
 			$this->session->data['success'] = $this->language->get('text_success');
 
 			$url = '';
@@ -193,7 +193,7 @@ class ControllerCatalogCategory extends Controller {
 
 		if (!empty($this->session->data['category_rollup'])){
 			$category_id = array_shift($this->path);
-			$output = array();
+			$output = [];
 
 			$results = $this->model_catalog_category->getCategoriesByParentId($parent_id);
 			//$results = $this->model_catalog_category->getCategories(['filter_parent_id' => $parent_id]);
@@ -227,7 +227,7 @@ class ControllerCatalogCategory extends Controller {
 			}
 
 			$real_category = $this->model_catalog_category->getCategory($result['category_id']);
-			$action = array();
+			$action = [];
 
 			$action[] = array(
 				'text' => $this->language->get('text_edit'),
@@ -271,6 +271,7 @@ class ControllerCatalogCategory extends Controller {
 					'filled'       				=> $this->model_catalog_category->getTotalFilledProductInCategoryWithSubcategories($result['category_id']),
 					'has_price'       			=> $this->model_catalog_category->getTotalProductNoZeroPriceInCategoryWithSubcategories($result['category_id']),
 					'enabled'       			=> $this->model_catalog_category->getTotalProductNoZeroPriceAndEnabledInCategoryWithSubcategories($result['category_id']),
+					'category_overprice_rules'  => $this->model_catalog_category->countCategoryOverpriceRules($result['category_id']),
 					'filter'					=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_category=' . $result['category_id'], 'SSL'),
 					'filter_filled'				=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_filled_from_amazon=1&filter_category=' . $result['category_id'], 'SSL'),
 					'filter_has_price'			=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_price=>0&filter_category=' . $result['category_id'], 'SSL'),
@@ -337,7 +338,7 @@ class ControllerCatalogCategory extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -411,12 +412,12 @@ class ControllerCatalogCategory extends Controller {
 
 			$category_total = $this->model_catalog_category->getTotalCategories();
 
-			$pagination = new Pagination();
-			$pagination->total = $category_total;
-			$pagination->page = $page;
-			$pagination->limit = $this->config->get('config_admin_limit');
-			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('catalog/category', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+			$pagination 		= new Pagination();
+			$pagination->total 	= $category_total;
+			$pagination->page 	= $page;
+			$pagination->limit 	= $this->config->get('config_admin_limit');
+			$pagination->text 	= $this->language->get('text_pagination');
+			$pagination->url 	= $this->url->link('catalog/category', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 
 			$this->data['pagination'] = $pagination->render();
 
@@ -488,10 +489,10 @@ class ControllerCatalogCategory extends Controller {
 		if (isset($this->error['name'])) {
 			$this->data['error_name'] = $this->error['name'];
 		} else {
-			$this->data['error_name'] = array();
+			$this->data['error_name'] = [];
 		}
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -528,7 +529,7 @@ class ControllerCatalogCategory extends Controller {
 		} elseif (isset($this->request->get['category_id'])) {
 			$this->data['category_description'] = $this->model_catalog_category->getCategoryDescriptions($this->request->get['category_id']);
 		} else {
-			$this->data['category_description'] = array();
+			$this->data['category_description'] = [];
 		}
 
 		if (isset($this->data['category_description'][$this->config->get('config_language_id')])){
@@ -540,7 +541,7 @@ class ControllerCatalogCategory extends Controller {
 		} elseif (isset($this->request->get['category_id'])) {
 			$this->data['category_menu_content'] = $this->model_catalog_category->getCategoryMenuContent($this->request->get['category_id']);
 		} else {
-			$this->data['category_menu_content'] = array();
+			$this->data['category_menu_content'] = [];
 		}
 
 		$this->load->model('kp/reward');
@@ -549,7 +550,7 @@ class ControllerCatalogCategory extends Controller {
 		} elseif (isset($this->request->get['category_id'])) {
 			$this->data['rewards'] = $this->model_kp_reward->getEntityRewards($this->request->get['category_id'], 'c');
 		} else {
-			$this->data['rewards'] = array();
+			$this->data['rewards'] = [];
 		}
 
 		$this->load->model('tool/image');
@@ -781,12 +782,21 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['virtual_parent_id'] = '-1';
 		}
 
+        $this->data['config_rainforest_main_formula_count'] = $this->config->get('config_rainforest_main_formula_count');
+        for ($crmfc = 1; $crmfc <= $this->data['config_rainforest_main_formula_count']; $crmfc++){
+            	$this->data['config_rainforest_main_formula_overload_' . $crmfc] 	= $this->config->get('config_rainforest_main_formula_overload_' . $crmfc);
+             	$this->data['config_rainforest_main_formula_min_' . $crmfc] 		= $this->config->get('config_rainforest_main_formula_min_' . $crmfc);
+             	$this->data['config_rainforest_main_formula_max_' . $crmfc] 		= $this->config->get('config_rainforest_main_formula_max_' . $crmfc);
+             	$this->data['config_rainforest_main_formula_default_' . $crmfc] 	= $this->config->get('config_rainforest_main_formula_default_' . $crmfc);           
+             	$this->data['config_rainforest_main_formula_multiplier_' . $crmfc] 	= $this->rainforestAmazon->offersParser->PriceLogic->getMainMultiplier($this->config->get('config_rainforest_main_formula_overload_' . $crmfc));           
+        }
+
 		if (isset($this->request->post['category_overprice_rules'])) {
-			$category_overprice_rules = $this->request->post['category_overprice_rules'];
+			$this->data['category_overprice_rules'] = $this->request->post['category_overprice_rules'];
 		} elseif (isset($this->request->get['category_id'])) {		
-			$category_overprice_rules = $this->model_catalog_category->getCategoryOverpriceRules($this->request->get['category_id']);
+			$this->data['category_overprice_rules'] = $this->model_catalog_category->getCategoryOverpriceRules($this->request->get['category_id']);
 		} else {
-			$category_overprice_rules = array();
+			$this->data['category_overprice_rules'] = [];
 		}
 
 		$this->load->model('catalog/filter');
@@ -796,10 +806,10 @@ class ControllerCatalogCategory extends Controller {
 		} elseif (isset($this->request->get['category_id'])) {		
 			$filters = $this->model_catalog_category->getCategoryFilters($this->request->get['category_id']);
 		} else {
-			$filters = array();
+			$filters = [];
 		}
 
-		$this->data['category_filters'] = array();
+		$this->data['category_filters'] = [];
 
 		foreach ($filters as $filter_id) {
 			$filter_info = $this->model_catalog_filter->getFilter($filter_id);
@@ -819,10 +829,10 @@ class ControllerCatalogCategory extends Controller {
 		} elseif (isset($this->request->get['category_id'])) {		
 			$actions = $this->model_catalog_category->getCategoryActions($this->request->get['category_id']);
 		} else {
-			$actions = array();
+			$actions = [];
 		}
 
-		$this->data['category_actions'] = array();
+		$this->data['category_actions'] = [];
 
 		foreach ($actions as $actions_id) {
 			$actions_info = $this->model_catalog_actions->getActions($actions_id);
@@ -852,7 +862,7 @@ class ControllerCatalogCategory extends Controller {
 		} elseif (!empty($category_info)) {
 			$this->data['keyword'] = $this->model_catalog_category->getKeyWords($this->request->get['category_id']);
 		} else {
-			$this->data['keyword'] = array();
+			$this->data['keyword'] = [];
 		}
 
 		if (isset($this->request->post['menu_icon'])) {
@@ -1014,7 +1024,7 @@ class ControllerCatalogCategory extends Controller {
 		} elseif (isset($this->request->get['category_id'])) {
 			$this->data['category_layout'] = $this->model_catalog_category->getCategoryLayouts($this->request->get['category_id']);
 		} else {
-			$this->data['category_layout'] = array();
+			$this->data['category_layout'] = [];
 		}
 
 		$this->load->model('catalog/attribute');
@@ -1033,12 +1043,12 @@ class ControllerCatalogCategory extends Controller {
 			);
 		}
 
-		$this->data['attributes_category'] = array();
+		$this->data['attributes_category'] = [];
 		if (isset($this->request->get['category_id'])) {
 			$this->data['attributes_category'] = $this->model_catalog_category->getAttributesByCategory($this->request->get['category_id']);
 		}
 
-		$this->data['attributes_similar_category'] = array();
+		$this->data['attributes_similar_category'] = [];
 		if (isset($this->request->get['category_id'])) {
 			$this->data['attributes_similar_category'] = $this->model_catalog_category->getAttributesSimilarByCategory($this->request->get['category_id']);
 		}
@@ -1050,10 +1060,10 @@ class ControllerCatalogCategory extends Controller {
 		} elseif (isset($this->request->get['category_id'])) {		
 			$related_categories = $this->model_catalog_category->getRelatedCategories($this->request->get['category_id']);
 		} else {
-			$related_categories = array();
+			$related_categories = [];
 		}
 
-		$this->data['related_categories'] = array();
+		$this->data['related_categories'] = [];
 
 		foreach ($related_categories as $category_id) {
 			$category_info = $this->model_catalog_category->getCategory($category_id);
@@ -1162,7 +1172,7 @@ class ControllerCatalogCategory extends Controller {
 	}
 
 	public function google_autocomplete() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['filter_name']) && mb_strlen($this->request->get['filter_name']) > 2) {
 			$this->load->model('catalog/category');
@@ -1176,7 +1186,7 @@ class ControllerCatalogCategory extends Controller {
 			}		
 		}
 
-		$sort_order = array();
+		$sort_order = [];
 
 		foreach ($json as $key => $value) {
 			$sort_order[$key] = $value['name'];
@@ -1190,7 +1200,7 @@ class ControllerCatalogCategory extends Controller {
 	public function amazon_info() {	
 		$this->load->model('catalog/category');
 
-		$json = array();
+		$json = [];
 
 		$result = $this->model_catalog_category->getCategory($this->request->get['category_id']);
 
@@ -1204,7 +1214,7 @@ class ControllerCatalogCategory extends Controller {
 	public function amazon_info_by_amazon_id() {	
 		$this->load->model('catalog/category');
 
-		$json = array();
+		$json = [];
 
 		$category_id = $this->model_catalog_category->getCategoryIdByAmazonCategoryId($this->request->get['amazon_category_id']);
 
@@ -1231,7 +1241,7 @@ class ControllerCatalogCategory extends Controller {
 	public function yandex_autocomplete() {	
 		$this->load->model('catalog/category');
 
-		$json = array();
+		$json = [];
 
 		$results = $this->model_catalog_category->getYandexCategories($this->request->get['filter_name']);
 
@@ -1257,7 +1267,7 @@ class ControllerCatalogCategory extends Controller {
 	}				
 
 	public function amazon_autocomplete() {				
-		$json = array();
+		$json = [];
 
 		if ($this->config->get('config_rainforest_enable_api') && isset($this->request->get['filter_name']) && mb_strlen($this->request->get['filter_name']) > 3) {
 
@@ -1297,7 +1307,7 @@ class ControllerCatalogCategory extends Controller {
 	}
 
 	public function autocomplete_final() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['filter_name'])) {
 			$this->load->model('catalog/category');
@@ -1319,7 +1329,7 @@ class ControllerCatalogCategory extends Controller {
 			}		
 		}
 
-		$sort_order = array();
+		$sort_order = [];
 
 		foreach ($json as $key => $value) {
 			$sort_order[$key] = $value['name'];
@@ -1331,7 +1341,7 @@ class ControllerCatalogCategory extends Controller {
 	}	
 
 	public function autocomplete() {
-		$json = array();
+		$json = [];
 
 		if (isset($this->request->get['filter_name'])) {
 			$this->load->model('catalog/category');
@@ -1352,7 +1362,7 @@ class ControllerCatalogCategory extends Controller {
 			}		
 		}
 
-		$sort_order = array();
+		$sort_order = [];
 
 		foreach ($json as $key => $value) {
 			$sort_order[$key] = $value['name'];

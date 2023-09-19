@@ -70,7 +70,8 @@
 								<td class="left" style="width:30px;">Amzn Sync</td>
 								<td class="left" style="width:30px;">Amzn Synced</td>
 								<td class="left" style="width:30px;">Amzn Final</td>
-								<td class="left" style="width:30px;">Amzn Allow Full</td>								
+								<td class="left" style="width:30px;">Amzn Allow Full</td>	
+								<td class="left" style="width:30px;"><i class="fa fa-refresh"></i>ЦО</td>							
 							<?php } ?>
 							<td class="left" style="width:100px;">Google</td>
 							<?php if ($this->config->get('config_country_id') == 176) { ?>	
@@ -84,7 +85,7 @@
 							<td class="left" style="width:30px;">Меню в доч.</td>
 							<td class="left" style="width:30px;">Пересеч.</td>
 							<td class="left" style="width:30px;">Искл. из пересеч</td>
-							<td class="left" style="width:30px;">Priceva/PriceControl</td>
+							<td class="left" style="width:30px;">Ср. цен</td>
 							<td class="left" style="width:30px;">ТНВЭД</td>
 							<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
 								<td class="right" style="width:100px;">Товары -></td>	
@@ -117,7 +118,8 @@
 											<td class="left" style="width:30px;">Amzn Sync</td>
 											<td class="left" style="width:30px;">Amzn Synced</td>
 											<td class="left" style="width:30px;">Amzn Final</td>
-											<td class="left" style="width:30px;">Amzn Allow Full</td>								
+											<td class="left" style="width:30px;">Amzn Allow Full</td>
+											<td class="left" style="width:30px;"><i class="fa fa-refresh"></i>ЦО</td>								
 										<?php } ?>
 										<td class="left" style="width:100px;">Google</td>
 										<?php if ($this->config->get('config_country_id') == 176) { ?>	
@@ -255,7 +257,15 @@
 														<? } else { ?>
 															<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 														<? } ?>
-													</td>													
+													</td>
+
+													<td class="center">
+														<? if ($category['category_overprice_rules']) { ?>
+															<i class="fa fa-check-circle" style="color:#4ea24e"></i> <?php echo $category['category_overprice_rules']; ?>
+														<? } else { ?>
+															<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+														<? } ?>
+													</td>														
 												<?php } ?>
 
 												<td class="center">
@@ -300,13 +310,13 @@
 													<? if ((float)$category['default_weight']) { ?>
 														<small class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Вес: <?php echo (int)$category['default_weight']; ?></small>
 													<? } else { ?>
-														<small class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Вес не задан</small>
+														<small class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><i class="fa fa-times-circle" style="color:#FFF"></i> Вес</small>
 													<? } ?>
 													<br />
 													<? if ((float)$category['default_length'] && (float)$category['default_width'] && (float)$category['default_height']) { ?>
 														<small class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Размер: <?php echo (int)$category['default_length']; ?> / <?php echo (int)$category['default_width']; ?> / <?php echo (int)$category['default_height']; ?></small>
 													<? } else { ?>
-														<small class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Размер не задан</small>
+														<small class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><i class="fa fa-times-circle" style="color:#FFF"></i> Размер</small>
 													<? } ?>
 												</td>
 

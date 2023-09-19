@@ -175,12 +175,12 @@ class ModelCatalogCategory extends Model {
 			priceva_enable 			= '" . (int)$data['priceva_enable'] . "', 
 			submenu_in_children 	= '" . (int)$data['submenu_in_children'] . "',
 			amazon_sync_enable 		= '" . (int)$data['amazon_sync_enable'] . "', 
-			amazon_synced 			= '" . (int)($data['amazon_synced']) . "',
+			amazon_synced 			= '" . (!empty($data['amazon_synced'])?(int)($data['amazon_synced']):0) . "',
 			amazon_last_sync 		= '" . $this->db->escape($data['amazon_last_sync']) . "', 
 			amazon_category_id 		= '" . $this->db->escape($data['amazon_category_id']) . "', 
 			amazon_category_name 	= '" . $this->db->escape($data['amazon_category_name']) . "', 
-			yandex_category_name 	= '" . $this->db->escape($data['yandex_category_name']) . "',
-			amazon_overprice_rules	= '" . $this->db->escape($data['amazon_overprice_rules']) . "', 
+			yandex_category_name 	= '" . (!empty($data['yandex_category_name'])?$this->db->escape($data['yandex_category_name']):'') . "',
+			amazon_overprice_rules	= '" . (!empty($data['amazon_overprice_rules'])?$this->db->escape($data['amazon_overprice_rules']):'') . "', 
 			amazon_parent_category_id 		= '" . $this->db->escape($data['amazon_parent_category_id']) . "', 			
 			amazon_final_category 			= '" . (int)$data['amazon_final_category'] . "',
 			amazon_can_get_full 			= '" . (int)$data['amazon_can_get_full'] . "',
@@ -214,44 +214,46 @@ class ModelCatalogCategory extends Model {
 		
 		$this->db->query("DELETE FROM category_menu_content WHERE category_id = '" . (int)$category_id . "'");
 		
-		if (isset($data['copyrussian']) && $data['copyrussian'] == 1){
-			$rucontent = $data['category_menu_content'][2];
-			$lquery = $this->db->query("SELECT DISTINCT language_id FROM language WHERE language_id <> 26");
-			
-			$lcodes = array();
-			foreach ($lquery->rows as $lrow){
-				$lcodes[] = $lrow['language_id'];
-			} 
-			
-			foreach ($lcodes as $language_id) {				
-				foreach ($rucontent as $value){
-					$this->db->query("INSERT INTO category_menu_content SET 
-						category_id = '" . (int)$category_id . "', 
-						language_id = '" . (int)$language_id . "', 
-						title = '" . $this->db->escape($value['title']) . "', 
-						content = '" . $this->db->escape($value['content']) . "',
-						href = '" . $this->db->escape($value['href']) . "', 
-						image = '" . $this->db->escape($value['image']) . "', 
-						width = '" . (int)$value['width'] . "', 
-						height = '" . (int)$value['height'] . "', 
-						standalone = '" . (int)$value['standalone'] . "', 
-						sort_order = '" . (int)$value['sort_order'] . "'");					
-				}				
-			}
-		} else {
-			foreach ($data['category_menu_content'] as $language_id => $contents) {
-				foreach ($contents as $value){
-					$this->db->query("INSERT INTO category_menu_content SET 
-						category_id = '" . (int)$category_id . "', 
-						language_id = '" . (int)$language_id . "', 
-						title = '" . $this->db->escape($value['title']) . "', 
-						content = '" . $this->db->escape($value['content']) . "',
-						href = '" . $this->db->escape($value['href']) . "', 
-						image = '" . $this->db->escape($value['image']) . "', 
-						width = '" . (int)$value['width'] . "', 
-						height = '" . (int)$value['height'] . "', 
-						standalone = '" . (int)$value['standalone'] . "', 
-						sort_order = '" . (int)$value['sort_order'] . "'");
+		if (!empty($data['category_menu_content'])){
+			if (isset($data['copyrussian']) && $data['copyrussian'] == 1){
+				$rucontent = $data['category_menu_content'][2];
+				$lquery = $this->db->query("SELECT DISTINCT language_id FROM language WHERE language_id <> 26");
+
+				$lcodes = array();
+				foreach ($lquery->rows as $lrow){
+					$lcodes[] = $lrow['language_id'];
+				} 
+
+				foreach ($lcodes as $language_id) {				
+					foreach ($rucontent as $value){
+						$this->db->query("INSERT INTO category_menu_content SET 
+							category_id = '" . (int)$category_id . "', 
+							language_id = '" . (int)$language_id . "', 
+							title = '" . $this->db->escape($value['title']) . "', 
+							content = '" . $this->db->escape($value['content']) . "',
+							href = '" . $this->db->escape($value['href']) . "', 
+							image = '" . $this->db->escape($value['image']) . "', 
+							width = '" . (int)$value['width'] . "', 
+							height = '" . (int)$value['height'] . "', 
+							standalone = '" . (int)$value['standalone'] . "', 
+							sort_order = '" . (int)$value['sort_order'] . "'");					
+					}				
+				}
+			} else {
+				foreach ($data['category_menu_content'] as $language_id => $contents) {
+					foreach ($contents as $value){
+						$this->db->query("INSERT INTO category_menu_content SET 
+							category_id = '" . (int)$category_id . "', 
+							language_id = '" . (int)$language_id . "', 
+							title = '" . $this->db->escape($value['title']) . "', 
+							content = '" . $this->db->escape($value['content']) . "',
+							href = '" . $this->db->escape($value['href']) . "', 
+							image = '" . $this->db->escape($value['image']) . "', 
+							width = '" . (int)$value['width'] . "', 
+							height = '" . (int)$value['height'] . "', 
+							standalone = '" . (int)$value['standalone'] . "', 
+							sort_order = '" . (int)$value['sort_order'] . "'");
+					}
 				}
 			}
 		}
@@ -354,7 +356,7 @@ class ModelCatalogCategory extends Model {
 		}
 		
 		$this->db->query("DELETE FROM category_related WHERE category_id=" . (int)$category_id);			
-		if (isset($data['related_category'])) {
+		if (!empty($data['related_category'])) {
 			foreach ($data['related_category'] as $related_category) {
 				$this->db->query(("INSERT INTO category_related (related_category_id, category_id) VALUES  (" . (int)$related_category . ", " . (int)$category_id . ")"));
 			}
@@ -674,6 +676,18 @@ class ModelCatalogCategory extends Model {
 		$query = $this->db->query("SELECT * FROM category_overprice_rules WHERE category_id = '" . (int)$category_id . "'");
 		
 		return $query->rows;
+	}	
+
+	public function countCategoryOverpriceRules($category_id) {
+		$category_overprice_rules = array();
+		
+		$query = $this->db->query("SELECT COUNT(*) as total FROM category_overprice_rules WHERE category_id = '" . (int)$category_id . "'");
+
+		if ($query->num_rows){
+			return $query->row['total'];
+		}
+		
+		return 0;
 	}	
 	
 	public function getCategoryMenuContent($category_id) {
