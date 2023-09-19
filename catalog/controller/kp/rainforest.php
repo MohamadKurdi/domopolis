@@ -54,6 +54,10 @@ class ControllerKPRainForest extends Controller {
 		}		
 	}
 
+	public function testProductOverPriceRules(){
+		$this->registry->get('rainforestAmazon')->offersParser->PriceLogic->getProductOverPriceRules(1077710);
+	}
+
 	public function parseeanscron(){
 
 		if (!$this->config->get('config_rainforest_enable_eans_parser')){

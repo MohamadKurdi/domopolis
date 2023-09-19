@@ -21,6 +21,8 @@ class PriceLogic
 	private $warehousesStores 				= [];
 	private $formulaOverloadData 			= [];
 
+	private $costDividerSymbol 				= ':COSTDVDR:';
+
 	private $storesSettingsFields 	= ['config_warehouse_identifier_local', 'config_warehouse_identifier'];
 	private $storesSettingsFields2 	= ['config_rainforest_use_volumetric_weight', 'config_rainforest_volumetric_weight_coefficient'];
 
@@ -193,15 +195,15 @@ class PriceLogic
 		$weight = (float)$product['weight'];
 		$weight_class_id = (int)$product['weight_class_id'];
 		if ($product['pack_weight']){
-			$weight = (float)$product['pack_weight'];
-			$weight_class_id = (int)$product['pack_weight_class_id'];
+			$weight 			= (float)$product['pack_weight'];
+			$weight_class_id 	= (int)$product['pack_weight_class_id'];
 		}
 
 		$length = (float)$product['length'];
 		$length_class_id = (int)$product['length_class_id'];
 		if ($product['pack_length']){
-			$length = (float)$product['pack_length'];
-			$length_class_id = (int)$product['pack_length_class_id'];
+			$length 			= (float)$product['pack_length'];
+			$length_class_id 	= (int)$product['pack_length_class_id'];
 		}
 
 		$width = (float)$product['width'];
@@ -215,13 +217,13 @@ class PriceLogic
 		}			
 
 		if (!$weight && !empty($this->defaultDimensions[$product['main_category_id']]['default_weight'])){
-			$weight = (float)$this->defaultDimensions[$product['main_category_id']]['default_weight'];
-			$weight_class_id = (int)$this->defaultDimensions[$product['main_category_id']]['default_weight_class_id'];
+			$weight 			= (float)$this->defaultDimensions[$product['main_category_id']]['default_weight'];
+			$weight_class_id 	= (int)$this->defaultDimensions[$product['main_category_id']]['default_weight_class_id'];
 		}
 
 		if (!$length && !empty($this->defaultDimensions[$product['main_category_id']]['default_length'])){
-			$length = (float)$this->defaultDimensions[$product['main_category_id']]['default_length'];
-			$length_class_id = (int)$this->defaultDimensions[$product['main_category_id']]['default_length_class_id'];
+			$length 			= (float)$this->defaultDimensions[$product['main_category_id']]['default_length'];
+			$length_class_id 	= (int)$this->defaultDimensions[$product['main_category_id']]['default_length_class_id'];
 		}
 
 		if (!$width && !empty($this->defaultDimensions[$product['main_category_id']]['default_width'])){
@@ -323,6 +325,48 @@ class PriceLogic
 
 			return false;
 	}
+
+	public function getProductMainCategoryID($product_id){
+		$query = $this->db->query("SELECT category_id FROM product_to_category p2cm WHERE p2cm.product_id = '" . (int)$product_id . "' AND category_id NOT IN (" . implode(',', $this->excluded_categories) . ") ORDER BY main_category DESC LIMIT 1");
+
+		if ($query->num_rows){
+			return $query->row['category_id'];		
+		}
+
+		return false;
+	}
+
+	public function getCategoryOverpriceRules($category_id) {
+		$category_overprice_rules = array();
+		
+		$query = $this->db->query("SELECT * FROM category_overprice_rules WHERE category_id = '" . (int)$category_id . "'");
+		
+		if ($query->num_rows){
+			return $query->rows;	
+		}
+		
+		return false;
+	}	
+
+
+	public function getProductOverPriceRules($product_id){
+		$category_id = $this->getProductMainCategoryID($product_id);
+		if (!$category_id){
+			return false;
+		}
+
+		$category_overprice_rules = false;
+		while ($category_id && !$category_overprice_rules){
+			$category_overprice_rules = $this->getCategoryOverpriceRules($category_id);
+			
+			if (!$category_overprice_rules){
+				$category_id = $this->db->query("SELECT parent_id FROM category WHERE category_id = '" . (int)$category_id . "' LIMIT 1")->row['parent_id'];
+			}			
+		}
+		
+		return $category_overprice_rules;
+	}
+
 
 	public function checkIfWeCanUpdateProductOffers($product_id, $warehouse_identifier = 'current'){		
 		if (!$this->config->get('config_rainforest_enable_pricing')){
@@ -495,6 +539,35 @@ class PriceLogic
 		$this->priceUpdaterQueue->addToQueue($product_id);
 	}
 
+	public function getMainMultiplier($formula){
+		$multiplier = $this->config->get('config_rainforest_default_multiplier_' . $this->config->get('config_store_id'));
+		$exploded = explode($this->costDividerSymbol, $formula);
+
+		if (count($exploded) == 2 && !empty($exploded[1])){
+			$guess = trim(str_replace('MULTIPLY', '', $exploded[1]));
+
+			if (is_numeric($guess)){
+				$multiplier = (float)$guess;
+			}
+		}
+
+		return $multiplier;
+	}
+
+	public function replaceMainMultiplier($formula, $multiplier){
+		$exploded = explode($this->costDividerSymbol, $formula);
+
+		if (count($exploded) == 2 && !empty($exploded[0])){
+			$mainFormula = $exploded[0];
+			$mainFormula .= ' ' . $this->costDividerSymbol . ' ';
+			$mainFormula .= ' MULTIPLY ' . $multiplier;
+
+			return $mainFormula;
+		}
+
+		return $formula;
+	}
+
 
 	//Проверяет вхождение товара в ценовые диапазоны перезагружающих основную формулу
 	public function checkOverloadFormula($amazonBestPrice, $formulaOverloadData = []){
@@ -565,7 +638,7 @@ class PriceLogic
 			];
 
 			if ($countCostPrice){
-				$exploded = explode(':COSTDVDR:', $mainFormula);
+				$exploded = explode($this->costDividerSymbol, $mainFormula);
 
 				if (count($exploded) == 2 && !empty($exploded[0])){
 					$mainFormula = $exploded[0];
