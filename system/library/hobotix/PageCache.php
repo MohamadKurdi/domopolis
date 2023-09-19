@@ -111,7 +111,6 @@ final class PageCache{
 	}
 
 	private function validateTTLFile(){
-
 		if (file_exists(DIR_CACHE . PAGECACHE_DIR . 'nopagecache')){
 			$time = time() - filemtime(DIR_CACHE . PAGECACHE_DIR . 'nopagecache');
 
@@ -127,7 +126,6 @@ final class PageCache{
 	}
 
 	public function validateIfToCache(){		
-
 		if (!$this->validateTTLFile()){
 			header('X-NO-FPC-REASON: validateTTLFile');
 			return false;
@@ -214,16 +212,21 @@ final class PageCache{
 		return false;
 	}
 
-	public function prepareCacheDirAndGetCachePath($check = true){		
+	public function prepareCacheDirAndGetCachePath($check = true, $return_simple_path = false){		
 		$cacheRouteString = md5(json_encode($_REQUEST) . $_SERVER['HTTP_HOST'] . (int)ADD_METRICS_TO_FRONT . (int)WEBPACCEPTABLE . (int)AVIFACCEPTABLE . (int)IS_MOBILE_SESSION . (int)IS_TABLET_SESSION);
 
-		$cacheDir = DIR_CACHE . PAGECACHE_DIR;
-		$cacheDir .= $cacheRouteString[0] . $cacheRouteString[1] . '/';  
-		$cacheDir .= $cacheRouteString[2] . $cacheRouteString[3] . '/';
-		$cacheDir .= $cacheRouteString[4] . $cacheRouteString[5] . '/';
+		$cacheRouteDirShort 	= '';
+		$cacheRouteDirShort .= $cacheRouteString[0] . $cacheRouteString[1] . '/';  
+		$cacheRouteDirShort .= $cacheRouteString[2] . $cacheRouteString[3] . '/';
+		$cacheRouteDirShort .= $cacheRouteString[4] . $cacheRouteString[5] . '/';
 
+		$cacheDir = DIR_CACHE . PAGECACHE_DIR . $cacheRouteDirShort;
 		if ($check && !is_dir($cacheDir)){
 			mkdir($cacheDir, 0775, true);
+		}
+
+		if ($return_simple_path){
+			return $cacheRouteString;
 		}
 
 		return $cacheDir . $cacheRouteString . '.cache';
@@ -254,6 +257,9 @@ final class PageCache{
 	public function getCache(){		
 		if ($this->validateIfToCache()){
 			if (file_exists($path = $this->prepareCacheDirAndGetCachePath(false))){
+				header('X-FPC-FILEMTIME: ' . filemtime($path));
+				header('X-FPC-FILEHASH: ' . $this->prepareCacheDirAndGetCachePath(false, true));
+
 				if (filemtime($path) < (time() - $this->lifetime)){
 					@unlink($path);
 					return false;
