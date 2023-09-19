@@ -28,10 +28,10 @@
 				<a href="#tab-data"><?php echo $tab_data; ?></a>
 				<a href="#tab-products">Настройки товаров</a>
 				<a href="#tab-reward">Бонусная программа</a>				
-					<a href="#tab-amazon-sync" style="color:#FF9900;font-weight:700;">
-						<i class="fa fa-amazon"></i> Синхронизация Amazon (RNF API)
-						<?php if ($this->config->get('config_country_id') == 176) { ?>,<span style="color:#cf4a61"><i class="fa fa-yahoo"></i> Yandex Market</span><?php } ?>
-					</a>				
+				<a href="#tab-amazon-sync" style="color:#FF9900;font-weight:700;">
+					<i class="fa fa-amazon"></i> Синхронизация Amazon (RNF API)
+					<?php if ($this->config->get('config_country_id') == 176) { ?>,<span style="color:#cf4a61"><i class="fa fa-yahoo"></i> Yandex Market</span><?php } ?>
+				</a>				
 				<a href="#tab-related-data">Умные подборы</a>
 				<a href="#tab-design"><?php echo $tab_design; ?></a>
 				<a href="#tab-menucontent">Контент в меню</a><div class="clr"></div>
@@ -814,10 +814,7 @@
 							</td>
 							<td style="width:15%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Синхронизировано</span>
-							</td>
-							<td style="width:75%">
-								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF9900; color:#FFF">Правила наценки</span>
-							</td>							
+							</td>						
 						</tr>
 						<tr style="border-bottom:1px dashed gray">
 							<td style="width:25%">
@@ -834,13 +831,16 @@
 									<?php } ?>
 								</select>
 								<br /><span class="help">Синхронизирована категория или нет в рамках текущей итерации обновления</span>
-							</td>
-							<td style="width:75%">
-								<input type="text" name="amazon_overprice_rules" value="<?php echo $amazon_overprice_rules; ?>" style="width:90%;"  />
-								<br />
-								<span class="help"><i class="fa fa-info-circle"></i> наценка задается порогами в процентах, что-то вроде 0:10;100:5;200:10;300:15</span>
-							</td>
+							</td>							
 						</tr>
+					</table>
+
+
+					<h2> AMAZON RAINFOREST API - правила переназначения цен</h2>
+					<table class="form">
+
+
+
 					</table>
 				</div>
 				
