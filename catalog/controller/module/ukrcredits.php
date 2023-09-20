@@ -1,44 +1,12 @@
 <?php
 class ControllerModuleUkrcredits extends Controller {
 
-	public function index() {
-		$status = false;
-		$type = version_compare(VERSION,'3.0','>=') ? 'payment_' : '';
-		$ukrcredits_setting = $this->config->get($type.'ukrcredits_settings');
-		$data['text_loading'] = $this->language->get('text_loading');
-		
-		$data['ukrcredits_button_name'] = $ukrcredits_setting['button_name'][$this->config->get('config_language_id')];
-		$data['ukrcredits_css_button'] = $ukrcredits_setting['css_button'];		
-		$data['ukrcredits_icons_size'] = $ukrcredits_setting['icons_size'];
-		$data['ukrcredits_show_icons'] = $ukrcredits_setting['show_icons'];
-
-        if (isset($this->request->get['product_id'])) {
-            $product_id = $this->request->get['product_id'];
-        } else {
-            $product_id = 0;
-        }
-		
-		$this->load->model('catalog/product');
-		$product_info = $this->model_catalog_product->getProduct($product_id);
-
-		if ($product_info) {
-			$this->load->model('module/ukrcredits');
-			$data['credits_data'] = $this->model_module_ukrcredits->checkproduct($product_info);			
-			if ($data['credits_data']['pp'] || $data['credits_data']['ii'] || $data['credits_data']['mb']) {
-				$status = true;
-			}
-		}
-
-		if ($status) {
-			$this->template = 'module/ukrcredits_button.tpl';
-			$this->render();
-		}
-    }
 	
 	public function loadpopup(){
 		$type = version_compare(VERSION,'3.0','>=') ? 'payment_' : '';
 		$dir = version_compare(VERSION,'2.2','>=') ? 'extension/module' : 'module';
-		$this->load->language($dir.'/ukrcredits');		
+		$this->load->language($dir.'/ukrcredits');	
+			
 		$ukrcredits_setting = $this->config->get($type.'ukrcredits_settings');
 		$data['ukrcredits_setting'] = $this->config->get($type.'ukrcredits_settings');
 		$data['ukrcredits_selector_block'] = $ukrcredits_setting['selector_block'];

@@ -827,6 +827,7 @@ public function index($product_id = false, $just_price = false)
                 $this->data['tab_attribute']        = $this->language->get('tab_attribute');
                 $this->data['tab_review']           = sprintf($this->language->get('tab_review'), $product_info['reviews']);
                 $this->data['tab_related']          = $this->language->get('tab_related');
+                $this->data['text_loading']         = $this->language->get('text_loading');
                 
                 $this->data['product_id']   = (int)$this->request->get['product_id'];
                 $this->data['manufacturer'] = $product_info['manufacturer'];
@@ -2115,13 +2116,28 @@ public function index($product_id = false, $just_price = false)
                     'product/product/review',
                 ];
 
-                $this->data['ukrcredits_status'] = false;
+                $this->data['ukrcredits_status']    = false;
+                $this->data['credits_status']       = false;
                 if ($this->config->get('ukrcredits_status')){
-                    $children[] = 'module/ukrcredits';
+                    $ukrcredits_setting = $this->config->get('ukrcredits_settings');
+
                     $this->data['ukrcredits_status'] = true;
-                    $this->data['ukrcredits_selector_button'] = $this->config->get('ukrcredits_settings')['selector_button'];
-                    $this->data['ukrcredits_selector_block'] = $this->config->get('ukrcredits_settings')['selector_block'];
-                    $this->data['ukrcredits_css_custom'] = $this->config->get('ukrcredits_settings')['css_custom'];
+                    $this->data['ukrcredits_selector_button']   = $ukrcredits_setting['selector_button'];
+                    $this->data['ukrcredits_selector_block']    = $ukrcredits_setting['selector_block'];
+                    $this->data['ukrcredits_css_custom']        = $ukrcredits_setting['css_custom'];
+                    $this->data['ukrcredits_button_name'] = $ukrcredits_setting['button_name'][$this->config->get('config_language_id')];
+                    $this->data['ukrcredits_css_button'] = $ukrcredits_setting['css_button'];     
+                    $this->data['ukrcredits_icons_size'] = $ukrcredits_setting['icons_size'];
+                    $this->data['ukrcredits_show_icons'] = $ukrcredits_setting['show_icons'];
+
+                    $this->load->model('module/ukrcredits');
+                    $this->data['credits_data'] = $this->model_module_ukrcredits->checkproduct($product_info);           
+                    
+                //    $this->log->debug($this->data['credits_data']);           
+
+                    if (!empty($this->data['credits_data']['pp']) || !empty($this->data['credits_data']['ii']) || !empty($this->data['credits_data']['mb'])) {
+                         $this->data['credits_status'] = true;
+                    }
                 }
 
                 if (!empty($return)) {

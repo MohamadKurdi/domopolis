@@ -175,18 +175,23 @@
               </div>
 
               <div class="form-group">
-                <label class="col-sm-2 control-label" for="input-pp_stock_status_id">Разрешить только этот статус</label>
+                <label class="col-sm-2 control-label" for="input-pp_stock_status_id">Разрешить только этот статусы</label>
                 <div class="col-sm-10">
-                  <select name="pp_stock_status_id" id="input-pp_stock_status_id" class="form-control">
-                    <option value="0">Любой статус</option>
+                  <div class="scrollbox" style="height:300px;">
+                    <?php $class = 'odd'; ?>
                     <?php foreach ($stock_statuses as $stock_status) { ?>
-                      <?php if ($stock_status['stock_status_id'] == $pp_stock_status_id) { ?>
-                        <option value="<?php echo $stock_status['stock_status_id']; ?>" selected="selected"><?php echo $stock_status['name']; ?></option>
-                      <?php } else { ?>
-                        <option value="<?php echo $stock_status['stock_status_id']; ?>"><?php echo $stock_status['name']; ?></option>
-                      <?php } ?>
+                      <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                      <div class="<?php echo $class; ?>">
+                        <?php if (in_array($stock_status['stock_status_id'], $pp_stock_status_id)) { ?>
+                          <input id="pp_stock_status_id_<?php echo $stock_status['stock_status_id']; ?>" class="checkbox" type="checkbox" name="pp_stock_status_id[]" value="<?php echo $stock_status['stock_status_id']; ?>" checked="checked" />
+                          <label for="pp_stock_status_id_<?php echo $stock_status['stock_status_id']; ?>"><?php echo $stock_status['name']; ?></label>
+                          <?php } else { ?>
+                          <input id="pp_stock_status_id_<?php echo $stock_status['stock_status_id']; ?>" class="checkbox" type="checkbox" name="pp_stock_status_id[]" value="<?php echo $stock_status['stock_status_id']; ?>" />
+                          <label for="pp_stock_status_id_<?php echo $stock_status['stock_status_id']; ?>"><?php echo $stock_status['name']; ?></label>
+                        <?php } ?>
+                      </div>
                     <?php } ?>
-                  </select>
+                  </div>
                 </div>
               </div>  
 

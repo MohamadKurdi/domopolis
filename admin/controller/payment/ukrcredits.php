@@ -30,7 +30,7 @@ class ControllerPaymentUkrCredits extends Controller {
 			$data['pp_discount'] 			= 0;
 			$data['pp_special'] 			= 0;
 			$data['pp_stock'] 				= 0;
-			$data['pp_stock_status_id'] 	= 0;
+			$data['pp_stock_status_id'] 	= [];
 			$data['pp_pq'] 					= 24;
 			$data['pp_min_total'] 			= '';
 			$data['pp_max_total'] 			= 100000;
@@ -152,6 +152,10 @@ class ControllerPaymentUkrCredits extends Controller {
 
 			if (!isset($this->request->post["pp_product_allowed"])) {
 				$this->request->post["pp_product_allowed"] = [];
+			}
+
+			if (!isset($this->request->post["pp_stock_status_id"])) {
+				$this->request->post["pp_stock_status_id"] = [];
 			}
 
 			if (!isset($this->request->post["pp_categories_allowed"])) {

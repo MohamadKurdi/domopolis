@@ -11,17 +11,19 @@ class ModelModuleUkrcreditsMain extends Model {
 		$status_mb = false;
 		$replace_array = array($this->currency->getSymbolLeft($this->session->data['currency']),$this->currency->getSymbolRight($this->session->data['currency']),$this->language->get('thousand_point'));
 		
-		if ($this->config->get('ukrcredits_status')) {
-			$credit_info = $this->getProductUkrcredit($product['product_id']);
+		if ($this->config->get('ukrcredits_status')) {			
+			if ($setting['pp_status']) {
+				$credit_info = $this->getProductUkrcredit($product['product_id']);
 
-			if (($setting['pp_status'] && ($setting['pp_stock'] && $product['quantity'])) || ($setting['pp_status'] && !$setting['pp_stock'])) {
-				if (
-					(!$setting['pp_product_allowed'] && !$setting['pp_enabled']) || 
-					($setting['pp_product_allowed'] && in_array($product['product_id'], $setting['pp_product_allowed'])) ||
-					($setting['pp_enabled'] && isset($credit_info['product_pp']) && $credit_info['product_pp'])
-					) {
+				$stock_status_ok 				= (!empty($setting['pp_stock_status_id']) && in_array($product['stock_status_id'], $setting['pp_stock_status_id']));
+				$credit_enabled_for_product		= ($setting['pp_enabled'] && (in_array($product['product_id'], $setting['pp_product_allowed']) || !empty($credit_info['product_pp'])));
+				$settings_enable_all_products 	= (!$setting['pp_product_allowed'] && !$setting['pp_enabled']);
+				$default_stock_logic  			= ($setting['pp_stock'] && $product['quantity']);
+
+				if (($stock_status_ok && $credit_enabled_for_product) || $settings_enable_all_products || $default_stock_logic){
 					$status_pp = true;
 				}
+
 				if ($status_pp) {
 					$pp_price = $product['price'];
 					if (!$setting['pp_discount'] && $quantity > 1) {
@@ -29,10 +31,12 @@ class ModelModuleUkrcreditsMain extends Model {
 						if ($product_discount_query->num_rows) {
 							$pp_price = $product_discount_query->row['price'];
 						}
-					}			
+					}
+
 					if (!$setting['pp_special'] && (float)$product['special']) {
 						$pp_price = $product['special'];
 					}
+
 					if ($setting['pp_min_total'] >= $pp_price || $setting['pp_max_total'] <= $pp_price) {
 						$status_pp = false;
 					}
@@ -135,14 +139,17 @@ class ModelModuleUkrcreditsMain extends Model {
 					$partsCountpp = (isset($credit_info['partscount_pp']) && $credit_info['partscount_pp'] !=0) ? $credit_info['partscount_pp'] : (!$setting['pp_pq'] ? '24' : $setting['pp_pq']);
 					$markup_pp = (isset($credit_info['markup_pp']) && $credit_info['markup_pp'] !=0) ? $credit_info['markup_pp'] : (!$setting['pp_markup'] ? '24' : $setting['pp_markup']);
 					$pp_price = ($pp_price + $option_price) * $markup_pp * $quantity;
+
 					$pp_type = $setting['pp_merchantType'];
 					if ($pp_type == 'PP') {
 						$mounthprice = strip_tags($this->currency->format($this->tax->calculate($pp_price*$markup_pp/($partsCountpp+1), $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']));
 						$mounthprice_text_pp = sprintf($this->language->get('text_min_pp'), $partsCountpp, $mounthprice);
+
 						$pp_name = $this->language->get('text_title_pp');
 					} else {
 						$mounthprice = strip_tags($this->currency->format($this->tax->calculate($pp_price*$markup_pp/($partsCountpp+1), $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']));
 						$mounthprice_text_pp = sprintf($this->language->get('text_min_pb'), $partsCountpp, $mounthprice);
+						
 						$pp_name = $this->language->get('text_title_pb');
 					}
 					if ($price) {
@@ -476,26 +483,30 @@ class ModelModuleUkrcreditsMain extends Model {
 			$mb = false;
 		}
 		
-		$credits_data = array(
-			'pp' => $pp,
-			'ii' => $ii,
-			'mb' => $mb,
-		);
-/*
-		function sort_function($a, $b){
-			return ($a['sort_order'] > $b['sort_order']);
+		$credits_data = [];
+		if ($pp){
+			$credits_data['pp'] = $pp;
 		}
-		uasort($credits_data, 'sort_function');
-*/		
-		uasort($credits_data, $this->sort_function('sort_order'));
-		
-		return $credits_data;
-	}
 
-	private function sort_function($key){
-		return function ($a, $b) use ($key) {
-			return strnatcmp($a[$key], $b[$key]);
-		};
+		if ($ii){
+			$credits_data['ii'] = $ii;
+		}
+
+		if ($ii){
+			$credits_data['mb'] = $mb;
+		}
+
+		if (!empty($credits_data['pp']) || !empty($credits_data['ii']) || !empty($credits_data['mb'])){
+			$cs_sort_order_l2 = [];
+
+			foreach ($credits_data as $key => $value) {
+				$cs_sort_order_l2[$key] = $value['sort_order'];
+			}
+
+			array_multisort($cs_sort_order_l2, SORT_ASC, $credits_data);
+		}
+
+		return $credits_data;
 	}
 }
 
