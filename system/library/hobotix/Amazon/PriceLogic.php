@@ -543,16 +543,26 @@ class PriceLogic
 
 		return $query->num_rows;
 	}
+
+	public function updateProfitability($product_id = false){
+		if ($product_id){
+			$this->db->query("UPDATE product SET profitability = ((price - costprice)/price*100) WHERE product_id = '" . (int)$product_id . "' price > 0");
+		} else {
+			$this->db->query("UPDATE product SET profitability = ((price - costprice)/price*100) WHERE price > 0");
+		}
+	}
 	
 	public function updatePricesFromDelayed(){		
 		if ($this->config->get('config_rainforest_delay_price_setting')){
 			echoLine('[PriceLogic::updatePricesFromDelayed] DELAYED PRICES IS ON!', 'w');
 
 			$this->db->query("UPDATE product SET price = price_delayed WHERE price_delayed > 0");			
-			$this->db->query("UPDATE product SET price_delayed = 0 WHERE price_delayed > 0");
+			$this->db->query("UPDATE product SET price_delayed = 0 WHERE price_delayed > 0");		
+
+			$this->updateProfitability();	
 
 			$this->db->query("UPDATE product_price_to_store SET price = price_delayed WHERE price_delayed > 0");	
-			$this->db->query("UPDATE product_price_to_store SET price_delayed = 0 WHERE price_delayed > 0");		
+			$this->db->query("UPDATE product_price_to_store SET price_delayed = 0 WHERE price_delayed > 0");					
 		} else {
 			echoLine('[PriceLogic::updatePricesFromDelayed] DELAYED PRICES IS OFF, UPDATING IN LIVE!', 'w');
 		}
@@ -575,6 +585,8 @@ class PriceLogic
 			AND price = 0
 			AND is_markdown 	= 0");
 
+		$this->updateProfitability($product_id);
+
 		$this->priceUpdaterQueue->addToQueue($product_id);
 	}
 
@@ -582,7 +594,9 @@ class PriceLogic
 		$this->db->query("UPDATE product SET 
 			costprice 			= '" . (float)$costprice . "' 
 			WHERE product_id 	= '" . (int)$product_id . "'
-			AND is_markdown 	= 0");
+			AND is_markdown 	= 0");		
+
+		$this->updateProfitability($product_id);
 
 		$this->priceUpdaterQueue->addToQueue($product_id);
 	}
