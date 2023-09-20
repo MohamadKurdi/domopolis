@@ -16,22 +16,25 @@
 				<i class="fa fa-amazon"></i>
 			</td>
 			<td style="white-space: nowrap;">
-				О. вес
+				<i class="fa fa-circle-o-notch" aria-hidden="true"></i> <i class="fa fa-balance-scale" aria-hidden="true"></i>
 			</td>
 			<td style="white-space: nowrap;">
-				Факт. вес
+				<i class="fa fa-balance-scale" aria-hidden="true"></i>
 			</td>
 			<td style="white-space: nowrap;">
-				СС EUR
+				<i class="fa fa-shopping-basket" aria-hidden="true"></i> <?php echo $this->config->get('config_currency'); ?>
 			</td>
 			<td style="white-space: nowrap;">
-				СС <?php echo $this->config->get('config_regional_currency'); ?>
+				<i class="fa fa-shopping-basket" aria-hidden="true"></i> <?php echo $this->config->get('config_regional_currency'); ?>
 			</td>
 			<td style="white-space: nowrap;">
-				EUR
+				<i class="fa fa-percent" aria-hidden="true"></i>
 			</td>
 			<td style="white-space: nowrap;">
-				Фронт
+				<i class="fa fa-shopping-cart" aria-hidden="true"></i> <?php echo $this->config->get('config_currency'); ?>
+			</td>
+			<td style="white-space: nowrap;">
+				<i class="fa fa-shopping-cart" aria-hidden="true"></i> <?php $this->config->get('config_regional_currency'); ?>
 			</td>
 		</tr>
 
@@ -46,11 +49,18 @@
 
 				<span style="font-size:10px; display:inline-block; float:left; padding:3px; color:#FFF; background-color:#7F00FF;"><?php echo $product['weight']; ?>, <?php echo $product['length']; ?> * <?php echo $product['width']; ?> * <?php echo $product['height']; ?></span>
 
+				<?php if (!empty($product['formula_overloaded_from'])) { ?>
+					<div class="clr"></div>
+					<small style="color:#cf4a61; font-size:8px">PriceLogic: <?php echo $product['formula_overloaded_from']; ?></small>
+				<?php } ?>
 
 				<div class="clr"></div>
-				<small style="color:#cf4a61; font-size:8px">MAIN: <?php echo $product['compiled_formula']; ?></small>
-				<div class="clr"></div>
-				<small style="color:#cf4a61; font-size:8px;">CC: <?php echo $product['compiled_costprice_formula']; ?></small>
+				<small style="color:#cf4a61; font-size:6px">Формула: <?php echo $product['compiled_formula']; ?></small>
+
+				<?php /* ?>
+					<div class="clr"></div>
+					<small style="color:#cf4a61; font-size:8px;">Себестоимость: <?php echo $product['compiled_costprice_formula']; ?></small>
+				<?php */ ?>
 			</td>
 			<td style="white-space: nowrap;">
 				<?php echo $product['amazon_best_price']; ?>
@@ -69,17 +79,27 @@
 			</td style="white-space: nowrap;">
 
 			<td style="white-space: nowrap;">
-				<b><?php echo $product['counted_сostprice_eur']; ?></b>
+				<b style="color:#ff5656;"><?php echo $product['counted_сostprice_eur']; ?></b>
 			</td>
 			<td style="white-space: nowrap;">
-				<b><?php echo $product['counted_сostprice_national']; ?></b>
+				<b style="color:#ff5656;"><?php echo $product['counted_сostprice_national']; ?></b>
 			</td>
 
 			<td style="white-space: nowrap;">
-				<b><?php echo $product['counted_price_eur']; ?></b>
+				<span style="display:inline-block;padding:2px 3px; font-size:12px; <?php if ((float)$product['profitability'] < 0) { ?>background:#ff5656;<?php } else { ?>background:#000;<?php } ?> color:#fff; white-space:nowrap;"><? echo $product['profitability']; ?> %</span>
+
+				<br />
+				<span style="display:inline-block;padding:2px 3px; font-size:10px; background:#ff7f00; color:#FFF; white-space:nowrap;"><? echo $product['diff_eur']; ?></span>
+
+				<br />
+				<span style="display:inline-block;padding:2px 3px; font-size:10px; background:#ff7f00; color:#FFF; white-space:nowrap;"><? echo $product['diff_national']; ?></span>
+			</td>
+
+			<td style="white-space: nowrap;">
+				<b style="color:#00ad07"><?php echo $product['counted_price_eur']; ?></b>
 			</td>
 			<td style="white-space: nowrap;">
-				<b><?php echo $product['counted_price_national']; ?></b>
+				<b style="color:#00ad07"><?php echo $product['counted_price_national']; ?></b>
 			</td>
 		</tr>
 

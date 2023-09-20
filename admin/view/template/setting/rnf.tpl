@@ -1569,7 +1569,7 @@
 								<span class="help"><i class="fa fa-info-circle"></i> от-до через пробел</span>
 							</td>
 							<td>
-								<input type="text" name="calculator_zones_config" value="0 20 50 100 1000 10000" style="width:90%;" />								
+								<input type="text" name="calculator_zones_config" value="<?php echo $zones_config;?>" style="width:90%;" />								
 							</td>
 						</tr>
 						<tr>
@@ -1583,10 +1583,18 @@
 						</tr>
 						<tr>
 							<td>
-								Еще раз
+								Товары из категорий
+								<span class="help"><i class="fa fa-info-circle"></i> идентификаторы через пробел</span>
 							</td>
 							<td>
-								<span class="button" style="cursor:pointer;" onclick="recalculate(); return false;"><i class="fa fa-refresh"></i> пересчитать</span>
+								<input type="text" name="calculator_explicit_categories" value="" style="width:90%;" />								
+							</td>
+						</tr>
+						<tr>
+							<td>								
+							</td>
+							<td>
+								<button class="button" style="cursor:pointer;padding: 7px; color: #6A6A6A;  border: 2px solid #6A6A6A;  border-radius: 5px;  background-color: #fff;" onclick="recalculate(); return false;"><i class="fa fa-refresh"></i> пересчитать</button>
 							</td>
 						</tr>
 					</table>
@@ -1947,6 +1955,7 @@
 					var limitProducts				= $('input[name=calculator_limit_products]').val();
 					var zonesConfig					= $('input[name=calculator_zones_config]').val();
 					var explicitProducts			= $('input[name=calculator_explicit_products]').val();
+					var explicitCategories			= $('input[name=calculator_explicit_categories]').val();
 					<?php for ($crmfc = 1; $crmfc <= $this->data['config_rainforest_main_formula_count']; $crmfc++){ ?>	
 						var mainFormula_min_<?php echo $crmfc; ?> = $('input[name=config_rainforest_main_formula_min_<?php echo $crmfc; ?>]').val();
 						var mainFormula_max_<?php echo $crmfc; ?> = $('input[name=config_rainforest_main_formula_max_<?php echo $crmfc; ?>]').val();
@@ -1964,7 +1973,7 @@
 							<?php for ($crmfc = 1; $crmfc <= $this->data['config_rainforest_main_formula_count']; $crmfc++){ ?>	
 								main_formula_min_<?php echo $crmfc; ?>: mainFormula_min_<?php echo $crmfc; ?>,
 								main_formula_max_<?php echo $crmfc; ?>: mainFormula_max_<?php echo $crmfc; ?>,
-								mainFormula_costprice_<?php echo $crmfc; ?>: mainFormula_costprice_<?php echo $crmfc; ?>,
+								main_formula_costprice_<?php echo $crmfc; ?>: mainFormula_costprice_<?php echo $crmfc; ?>,
 								main_formula_default_<?php echo $crmfc; ?>: mainFormula_default_<?php echo $crmfc; ?>,
 								main_formula_overload_<?php echo $crmfc; ?>: mainFormula_overload_<?php echo $crmfc; ?>,
 							<?php } ?>
@@ -1978,7 +1987,8 @@
 							show_random_products:  			showRandomProducts,
 							limit_products:  				limitProducts,
 							zones_config:  					zonesConfig,
-							explicit_products: 				explicitProducts
+							explicit_products: 				explicitProducts,
+							explicit_categories: 			explicitCategories
 						},
 						beforeSend: function(){
 							$('#calculator_results').html('<i class="fa fa-calculator" style="font-size:128px"></i>');
@@ -2056,7 +2066,7 @@
 				$('select, textarea, input[type=checkbox], input[type=text], input[type=time], input[type=number]').bind('change', function() {
 					var key  = $(this).attr('name');
 
-					<?php foreach (['config_rainforest_main_formula', 'config_rainforest_volumetric_max_wc_multiplier', 'config_rainforest_default_store_id', 'calculator_show_random', 'calculator_limit_products', 'calculator_zones_config', 'calculator_explicit_products'] as $not_change_input) { ?>
+					<?php foreach (['config_rainforest_main_formula', 'config_rainforest_volumetric_max_wc_multiplier', 'config_rainforest_default_store_id', 'calculator_show_random', 'calculator_limit_products', 'calculator_zones_config', 'calculator_explicit_products', 'calculator_explicit_categories'] as $not_change_input) { ?>
 						if (key == '<?php echo $not_change_input; ?>'){
 							console.log('Pricelogic skip autosave: ' + key);
 							return;

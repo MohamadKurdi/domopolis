@@ -189,17 +189,12 @@ class ControllerSettingRnf extends Controller {
             $this->data['config_rainforest_main_formula_count'] = $this->config->get('config_rainforest_main_formula_count');
         }
 
+        $this->data['zones_config'] = [];
         for ($crmfc = 1; $crmfc <= $this->data['config_rainforest_main_formula_count']; $crmfc++){
             if (isset($this->request->post['config_rainforest_main_formula_overload_' . $crmfc])) {
                 $this->data['config_rainforest_main_formula_overload_' . $crmfc] = $this->request->post['config_rainforest_main_formula_overload_' . $crmfc];
             } else {
                 $this->data['config_rainforest_main_formula_overload_' . $crmfc] = $this->config->get('config_rainforest_main_formula_overload_' . $crmfc);
-            }
-
-            if (isset($this->request->post['config_rainforest_main_formula_min_' . $crmfc])) {
-                $this->data['config_rainforest_main_formula_min_' . $crmfc] = $this->request->post['config_rainforest_main_formula_min_' . $crmfc];
-            } else {
-                $this->data['config_rainforest_main_formula_min_' . $crmfc] = $this->config->get('config_rainforest_main_formula_min_' . $crmfc);
             }
 
             if (isset($this->request->post['config_rainforest_main_formula_default_' . $crmfc])) {
@@ -214,12 +209,33 @@ class ControllerSettingRnf extends Controller {
                 $this->data['config_rainforest_main_formula_costprice_' . $crmfc] = $this->config->get('config_rainforest_main_formula_costprice_' . $crmfc);
             }
 
+            if (isset($this->request->post['config_rainforest_main_formula_min_' . $crmfc])) {
+                $this->data['config_rainforest_main_formula_min_' . $crmfc] = $this->request->post['config_rainforest_main_formula_min_' . $crmfc];
+            } else {
+                $this->data['config_rainforest_main_formula_min_' . $crmfc] = $this->config->get('config_rainforest_main_formula_min_' . $crmfc);
+            }
+
+            $this->data['zones_config'][] = (float)$this->data['config_rainforest_main_formula_min_' . $crmfc];
+
             if (isset($this->request->post['config_rainforest_main_formula_max_' . $crmfc])) {
                 $this->data['config_rainforest_main_formula_max_' . $crmfc] = $this->request->post['config_rainforest_main_formula_max_' . $crmfc];
             } else {
                 $this->data['config_rainforest_main_formula_max_' . $crmfc] = $this->config->get('config_rainforest_main_formula_max_' . $crmfc);
             }
+
+            $this->data['zones_config'][] = (float)$this->data['config_rainforest_main_formula_max_' . $crmfc];
+        } 
+
+        if (!$this->data['zones_config']){
+        	$this->data['zones_config'] = [0, 20, 50, 100, 1000, 10000];
+        } else {
+        	$this->data['zones_config'] = array_unique($this->data['zones_config']);
         }
+
+        asort($this->data['zones_config'], SORT_NUMERIC);
+
+        $this->data['zones_config'] = implode(' ', $this->data['zones_config']);
+
 
 		foreach ($this->pricing_settings as $pricing_setting){
 			$this->data[$pricing_setting] = $this->config->get($pricing_setting);		
@@ -353,6 +369,7 @@ class ControllerSettingRnf extends Controller {
 		$limitProducts 					= $this->request->post['limit_products'];
 		$zonesConfig 					= $this->request->post['zones_config'];
 		$explicitProducts 				= $this->request->post['explicit_products'];
+		$explicitCategories 			= $this->request->post['explicit_categories'];
 
 		$formulaOverloadData			= []; 	
 
@@ -365,7 +382,16 @@ class ControllerSettingRnf extends Controller {
 			}
 		}
 
-		for ($crmfc = 1; $crmfc <= $this->config->get('config_rainforest_main_formula_count'); $crmfc++){			
+		if ($explicitCategories){
+			$explodedExplicitCategories = explode(' ', $explicitCategories);
+			$explicitCategories = [];
+
+			foreach ($explodedExplicitCategories as $explicitCategory){
+				$explicitCategories[] = (int)trim($explicitCategory);
+			}
+		}
+
+		for ($crmfc = 1; $crmfc <= $this->config->get('config_rainforest_main_formula_count'); $crmfc++){		
 			if (!empty($this->request->post['main_formula_min_' . $crmfc])
 				&& !empty($this->request->post['main_formula_max_' . $crmfc])
 				&& !empty($this->request->post['main_formula_costprice_' . $crmfc])
@@ -404,6 +430,10 @@ class ControllerSettingRnf extends Controller {
 						AND p.amazon_best_price <= '" . (int)$zones[$i+1] . "' 
 						AND p.asin <> ''												
 						AND p.asin <> 'INVALID'";
+
+						if ($explicitCategories){
+							$sql .= " AND p2c.category_id IN (" . implode(',', $explicitCategories) . ")";							
+						}
 
 						if ($explicitProducts){
 							$sql .= " AND p.product_id IN (" . implode(',', $explicitProducts) . ")";
@@ -484,12 +514,29 @@ class ControllerSettingRnf extends Controller {
 				$result['used_default_costprice_multiplier'] 	= $defaultCostPriceMultiplier;
 				$result['used_formula'] 						= $mainFormula;
 
-				if ($formulaOverloadData && $overloadFormula = $this->rainforestAmazon->offersParser->PriceLogic->checkOverloadFormula($product['amazon_best_price'], $formulaOverloadData)){
+				$overloadFormulaForProduct = $this->rainforestAmazon->offersParser->PriceLogic->getProductOverPriceFormula($product['product_id'], $product['amazon_best_price']);
+				if ($overloadFormulaForProduct){
+					$defaultMultiplier 			= $overloadFormulaForProduct['default'];
+					$defaultCostPriceMultiplier = $overloadFormulaForProduct['costprice'];
+					$mainFormula 				= $overloadFormulaForProduct['formula'];
+
+					$result['formula_overloaded'] 		= true;
+					$result['formula_overloaded_from'] 	= 'FROM CATEGORY + BY PRICE';
+					$result['used_min'] 				= $this->currency->format($overloadFormulaForProduct['min'], 'EUR', 1);
+					$result['used_max'] 				= $this->currency->format($overloadFormulaForProduct['max'], 'EUR', 1);
+					$result['used_default_multiplier'] 				= $overloadFormulaForProduct['default'];
+					$result['used_default_costprice_multiplier'] 	= $overloadFormulaForProduct['costprice'];
+					$result['used_formula'] 						= $overloadFormulaForProduct['formula'];
+				} 
+
+				$overloadFormula = $this->rainforestAmazon->offersParser->PriceLogic->checkOverloadFormula($product['amazon_best_price'], $formulaOverloadData);
+				if ($formulaOverloadData && $overloadFormula && !$overloadFormulaForProduct){
 					$defaultMultiplier 			= $overloadFormula['default'];
 					$defaultCostPriceMultiplier = $overloadFormula['costprice'];
 					$mainFormula 				= $overloadFormula['formula'];
 
 					$result['formula_overloaded'] 		= true;
+					$result['formula_overloaded_from'] 	= 'MAIN SETTINGS BY PRICE';
 					$result['used_min'] 				= $this->currency->format($overloadFormula['min'], 'EUR', 1);
 					$result['used_max'] 				= $this->currency->format($overloadFormula['max'], 'EUR', 1);
 					$result['used_default_multiplier'] 				= $overloadFormula['default'];
@@ -511,7 +558,8 @@ class ControllerSettingRnf extends Controller {
 				];
 
 				$result['counted_price']  	= $this->rainforestAmazon->offersParser->PriceLogic->mainFormula($product['amazon_best_price'], $params, $mainFormula);
-				$result['compiled_formula'] = $this->rainforestAmazon->offersParser->PriceLogic->compileFormula($product['amazon_best_price'], $params, $mainFormula);							
+				$result['compiled_formula'] = $this->rainforestAmazon->offersParser->PriceLogic->compileFormula($product['amazon_best_price'], $params, $mainFormula);	
+				$result['compiled_multiplier'] = $this->rainforestAmazon->offersParser->PriceLogic->getMainMultiplier($result['compiled_formula']);										
 
 				$result['amazon_best_price'] 		= $this->currency->format($product['amazon_best_price'], 'EUR', 1);
 				$result['counted_price_eur'] 		= $this->currency->format($result['counted_price'], 'EUR', 1);
@@ -521,6 +569,12 @@ class ControllerSettingRnf extends Controller {
 				$result['compiled_costprice_formula'] 	= $this->rainforestAmazon->offersParser->PriceLogic->compileCostPriceFormula($product['amazon_best_price'], $params, $mainFormula);
 				$result['counted_сostprice_eur'] 		= $this->currency->format($result['counted_costprice'], 'EUR', 1);
 				$result['counted_сostprice_national'] 	= $this->currency->format($this->currency->convert($result['counted_costprice'], 'EUR', $this->config->get('config_regional_currency')), $this->config->get('config_regional_currency'), 1);
+
+				$result['diff']				= $result['counted_price'] - $result['counted_costprice'];			 
+				$result['profitability']	= round(($result['diff'] / $result['counted_price']), 3) * 100;
+
+				$result['diff_eur']			= $this->currency->format($result['diff'], 'EUR', 1);
+				$result['diff_national']	= $this->currency->format($this->currency->convert($result['diff'], 'EUR', $this->config->get('config_regional_currency')), $this->config->get('config_regional_currency'), 1);
 
 				$results[$zone][] = $result;
 			}
