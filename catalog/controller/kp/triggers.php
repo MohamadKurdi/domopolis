@@ -394,7 +394,7 @@
 				
 				$this->setTitle($this->data['title'] = trim($order['firstname']) . ', не пропустите товары которые могут Вас заинтересовать');
 				
-				$this->template = $this->config->get('config_template') . '/template/triggers/trigger.cancelled.tpl';
+				$this->template = 'triggers/trigger.cancelled.tpl';
 				$html = $this->render();	
 				
 				$this->setTo($row['email']);
@@ -539,7 +539,7 @@
 				
 				$this->setTitle($this->data['title'] = trim($order['firstname']) . ', товары с экспресс доставкой, специально для Вас!');
 				
-				$this->template = $this->config->get('config_template') . '/template/triggers/trigger.cancelledbyterms.tpl';
+				$this->template = 'triggers/trigger.cancelledbyterms.tpl';
 				
 				// Если нет товаров то нет что отправлять
 				if (empty($this->data['products'])) {				
@@ -853,7 +853,7 @@
 				
 				$this->setTitle($this->data['title'] = trim($order['firstname']) . ', не пропустите рекомендации к Вашей покупке! ');
 				
-				$this->template = $this->config->get('config_template') . '/template/triggers/trigger.completed.tpl';
+				$this->template = 'triggers/trigger.completed.tpl';
 
 				// Если нет товаров то нет что отправлять
 				if (empty($this->data['products']['similar'])) {				
