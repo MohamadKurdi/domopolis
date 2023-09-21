@@ -350,7 +350,7 @@
 				$sql = '';		
 				$sql .= "SELECT DISTINCT *, ";				
 				if ($simple != 'simple'){
-					$sql .= " p.image, p.xhasvideo as has_video, p.xrating as rating, p.xreviews as reviews, p.sort_order, ";
+					$sql .= " p.image, p.asin, p.xhasvideo as has_video, p.xrating as rating, p.xreviews as reviews, p.sort_order, ";
 					$sql .= " pd.name AS name, pd.color AS color, pd.material AS material, pd.alt_image, pd.title_image, pd.manufacturer_name, ";
 					$sql .= " m.name AS manufacturer, m.image as manufacturer_img, ";
 					$sql .= " (SELECT st.set_id FROM `set` st WHERE p.product_id = st.product_id LIMIT 1) as set_id, ";
@@ -418,11 +418,9 @@
 					$sql .= "(SELECT name FROM stock_status sst WHERE sst.stock_status_id = (SELECT stock_status_id FROM product_stock_status pss WHERE pss.product_id = p.product_id AND pss.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) AND sst.language_id = '" . (int)$this->config->get('config_language_id') . "') as overload_stock_status,	";
 				}
 
-
 				$sql .= "(SELECT ss.name FROM stock_status ss WHERE ss.stock_status_id = p.stock_status_id AND ss.language_id = '" . (int)$this->config->get('config_language_id') . "') AS stock_status, ";
 				$sql .= "(SELECT pdde.name FROM product_description pdde WHERE p.product_id = pdde.product_id AND pdde.language_id = '" . (int)$this->registry->get('languages_all')[$this->config->get('config_de_language')] . "') AS de_name ";
 				
-
 				$sql .= " FROM product p 
 				LEFT JOIN product_description pd ON (p.product_id = pd.product_id) ";
 
@@ -611,6 +609,7 @@
 							'currency'                 => $query->row['currency'],		
 							'special'                  => $special,
 							'has_video' 			   => $query->row['xhasvideo'],
+							'asin' 			   		   => $query->row['asin'],
 							'special_date_end'         => $query->row['special_date_end'],
 							'quantity'                 => $query->row['quantity'],							
 							'quantity_stock'           => $query->row['quantity_stock'],
