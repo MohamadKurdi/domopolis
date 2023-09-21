@@ -1594,7 +1594,7 @@
 							<td>								
 							</td>
 							<td>
-								<button class="button" style="cursor:pointer;padding: 7px; color: #6A6A6A;  border: 2px solid #6A6A6A;  border-radius: 5px;  background-color: #fff;" onclick="recalculate(); return false;"><i class="fa fa-refresh"></i> пересчитать</button>
+								<button class="button" id="button-recalculate" style="cursor:pointer;padding: 7px; color: #6A6A6A;  border: 2px solid #6A6A6A;  border-radius: 5px;  background-color: #fff;" onclick="recalculate(); return false;"><i class="fa fa-refresh"></i> Пересчитать</button>
 							</td>
 						</tr>
 					</table>
@@ -1992,9 +1992,11 @@
 						},
 						beforeSend: function(){
 							$('#calculator_results').html('<i class="fa fa-calculator" style="font-size:128px"></i>');
+							$('#button-recalculate').html('<i class="fa fa-spinner fa-spin"></i> считаем');
 						},
 						success: function(html){
 							$('#calculator_results').html(html);
+							$('#button-recalculate').html('<i class="fa fa-refresh"></i> Пересчитать');
 						}
 					});					
 				}

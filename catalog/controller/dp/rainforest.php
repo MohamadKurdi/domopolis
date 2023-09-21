@@ -200,7 +200,6 @@ class ControllerDPRainForest extends Controller {
 		//	$this->deletenoofferscron(0);
 		}		
 
-
 		if ($this->config->get('config_rainforest_delete_invalid_asins')){
 			echoLine('[ControllerDPRainForest::cleardatabasecron] Starting deleteinvalidasinscron(1)!', 's');
 			$this->deleteinvalidasinscron(1);
@@ -209,7 +208,6 @@ class ControllerDPRainForest extends Controller {
 			echoLine('[ControllerDPRainForest::cleardatabasecron] Starting deleteinvalidasinscron(0)!', 's');
 			$this->deleteinvalidasinscron(0);
 		}
-
 
 		if ($this->config->get('config_rainforest_skip_low_price_products') > 0 && $this->config->get('config_rainforest_drop_low_price_products')){
 			echoLine('[ControllerDPRainForest::cleardatabasecron] Starting deletecheapcron(1)!', 's');
@@ -225,6 +223,9 @@ class ControllerDPRainForest extends Controller {
 
 		echoLine('[ControllerDPRainForest::cleardatabasecron] Starting deletebadfromqueuecron(0)!', 's');
 		$this->deletebadfromqueuecron();	
+
+		echoLine('[ControllerDPRainForest::cleardatabasecron] Starting cleanofferstablecron!', 's');
+		$this->cleanofferstablecron();
 	}
 
 	/*
@@ -235,6 +236,31 @@ class ControllerDPRainForest extends Controller {
 			echoLine('[ControllerDPRainForest::deletenoofferscron] Cleaning bad queue products!', 'w');
 			$this->db->query("DELETE FROM amzn_add_queue WHERE product_id = '-1'");
 		}
+	}
+
+	/*
+	Функционал очистки таблички офферов, невозможно выполнить одним запросом на больших объемах 
+	*/
+	public function cleanofferstablecron(){
+		$query = $this->db->query("SELECT DISTINCT(asin) FROM product_amzn_offers WHERE 1");
+
+		echoLine('[ControllerDPRainForest::cleanofferstablecron] Total asins in offers table: ' . $query->num_rows);
+
+		$i = 1;		
+		foreach ($query->rows as $row){
+			$check = $this->db->query("SELECT product_id FROM product WHERE asin = '" . $row['asin'] . "' LIMIT 1");
+
+			if ($check->num_rows){
+				echoLine('[ControllerDPRainForest::cleanofferstablecron] ' . $i . '/' . $query->num_rows . ' Product ' . $row['asin'] . ' exists: ' . $check->row['product_id'], 's');
+			} else {
+				echoLine('[ControllerDPRainForest::cleanofferstablecron] ' . $i . '/' . $query->num_rows . ' Product ' . $row['asin'] . ' does not exist', 'e');
+				$this->db->query("DELETE FROM product_amzn_offers WHERE asin = '" . $row['asin'] . "'");
+			}
+
+			$i++;
+		}
+
+		$this->db->query("OPTIMIZE TABLE product_amzn_offers");
 	}
 
 	/*
