@@ -322,6 +322,7 @@
 									<ul>
 										<li><a href="<?php echo $customer; ?>"><i class="fa fa-list-ol"></i> <?php echo $text_customer; ?></a></li>
 										<li><a href="<?php echo $customer_group; ?>"><i class="fa fa-newspaper-o"></i> <?php echo $text_customer_group; ?></a></li>
+										<li><a href="<?php echo $customer_manual; ?>"><i class="fa fa-phone"></i> Обзвон старых клиентов</a></li>
 										<li><a href="<?php echo $segments_link; ?>"><i class="fa fa-bar-chart"></i> Настройка сегментации</a></li>
 										<li><a href="<?php echo $actiontemplate; ?>"><i class="fa fa-envelope-o"></i> Шаблоны регулярных рассылок</a></li>
 										<li><a href="<?php echo $customer_ban_ip; ?>"><i class="fa fa-refresh"></i> <?php echo $text_customer_ban_ip; ?></a></li>

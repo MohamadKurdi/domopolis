@@ -1388,18 +1388,18 @@
 			'separator' => ' :: '
 			);
 			
-			$this->data['approve'] = $this->url->link('sale/customer/approve', 'token=' . $this->session->data['token'] . $url, 'SSL');
-			$this->data['insert'] = $this->url->link('sale/customer/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-			$this->data['delete'] = $this->url->link('sale/customer/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['approve'] 	= $this->url->link('sale/customer/approve', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['insert'] 	= $this->url->link('sale/customer/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['delete'] 	= $this->url->link('sale/customer/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 			
 			$this->load->model('localisation/country');
 			$this->data['countries'] = $this->model_localisation_country->getCountries();
 			
-			$tmp = array();
-			foreach ($this->data['countries'] as $c){
-				$tmp[$c['country_id']] = $c;
+			$countries = array();
+			foreach ($this->data['countries'] as $country){
+				$countries[$c['country_id']] = $country;
 			}
-			$this->data['countries'] = $tmp;
+			$this->data['countries'] = $countries;
 			
 			$this->data['sources'] = $this->model_sale_customer->getSources();			
 			$this->data['customers'] = array();
@@ -1446,17 +1446,12 @@
 			'campaing_id'              => isset($_GET['campaing_id']) ? $_GET['campaing_id'] : false,
 			);
 			
-			//		$this->config->set('config_admin_limit', 5);
-			
 			$customer_total = $this->model_sale_customer->getTotalCustomers($data);
-			// Експорт в ЦСВ
 			if (!$export) {
 				$data['start'] = ($page - 1) * $this->config->get('config_admin_limit');
 				$data['limit'] = $this->config->get('config_admin_limit');
 			}
 			$results = $this->model_sale_customer->getCustomers($data);
-			
-			//			var_dump($results);
 			
 			if ($export) {
 				header('Content-Type: text/csv charset=utf-8');
@@ -1578,7 +1573,6 @@
 				);
 			}
 			
-			//for filter
 			$this->load->model('catalog/manufacturer');
 			$this->data['manufacturers'] = $this->model_catalog_manufacturer->getManufacturers();
 			
@@ -1760,8 +1754,7 @@
 			if (isset($this->request->get['filter_segment_intersection'])) {
 				$url .= '&filter_segment_intersection=1';
 			}
-			
-			
+						
 			if ($order == 'ASC') {
 				$url .= '&order=DESC';
 				} else {
@@ -1772,16 +1765,16 @@
 				$url .= '&page=' . $this->request->get['page'];
 			}
 			
-			$this->data['sort_name'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-			$this->data['sort_email'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
-			$this->data['sort_customer_group'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=customer_group' . $url, 'SSL');
-			$this->data['sort_status'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
-			$this->data['sort_approved'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.approved' . $url, 'SSL');
-			$this->data['sort_ip'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
-			$this->data['sort_date_added'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
-			$this->data['export_to_csv'] = $this->url->link('sale/customer/getCSV', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
-			$this->data['export_to_csv_gc'] = $this->url->link('sale/customer/getCSV', 'token=' . $this->session->data['token'] . '&sort=c.date_added&gc_format=1' . $url, 'SSL');
-			$this->data['export_to_csv_viber'] = $this->url->link('sale/customer/getCSV', 'token=' . $this->session->data['token'] . '&sort=c.date_added&viber_format=1&filter_custom_filter=hasviberphone' . $url, 'SSL');
+			$this->data['sort_name'] 			= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+			$this->data['sort_email'] 			= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
+			$this->data['sort_customer_group'] 	= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=customer_group' . $url, 'SSL');
+			$this->data['sort_status'] 			= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
+			$this->data['sort_approved'] 		= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.approved' . $url, 'SSL');
+			$this->data['sort_ip'] 				= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
+			$this->data['sort_date_added'] 		= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
+			$this->data['export_to_csv'] 		= $this->url->link('sale/customer/getCSV', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
+			$this->data['export_to_csv_gc'] 	= $this->url->link('sale/customer/getCSV', 'token=' . $this->session->data['token'] . '&sort=c.date_added&gc_format=1' . $url, 'SSL');
+			$this->data['export_to_csv_viber'] 	= $this->url->link('sale/customer/getCSV', 'token=' . $this->session->data['token'] . '&sort=c.date_added&viber_format=1&filter_custom_filter=hasviberphone' . $url, 'SSL');
 			
 			$url = '';
 			
@@ -2085,56 +2078,55 @@
 				$url .= '&order=' . $this->request->get['order'];
 			}
 			
-			$pagination = new Pagination();
-			$pagination->total = $customer_total;
-			$pagination->page = $page;
-			$pagination->limit = $this->config->get('config_admin_limit');
-			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+			$pagination 			= new Pagination();
+			$pagination->total 		= $customer_total;
+			$pagination->page 		= $page;
+			$pagination->limit 		= $this->config->get('config_admin_limit');
+			$pagination->text 		= $this->language->get('text_pagination');
+			$pagination->url 		= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 			
 			$this->data['pagination'] = $pagination->render();
 			
-			$this->data['filter_name'] = $filter_name;
-			$this->data['filter_email'] = $filter_email;
-			$this->data['filter_phone'] = $filter_phone;
-			$this->data['filter_source'] = $filter_source;
-			$this->data['filter_gender'] = $filter_gender;
+			$this->data['filter_name'] 			= $filter_name;
+			$this->data['filter_email'] 		= $filter_email;
+			$this->data['filter_phone'] 		= $filter_phone;
+			$this->data['filter_source'] 		= $filter_source;
+			$this->data['filter_gender'] 		= $filter_gender;
 			$this->data['filter_customer_group_id'] = $filter_customer_group_id;
-			$this->data['filter_status'] = $filter_status;
-			$this->data['filter_approved'] = $filter_approved;
-			$this->data['filter_country_id'] = $filter_country_id;
-			$this->data['filter_ip'] = $filter_ip;
-			$this->data['filter_date_added'] = $filter_date_added;
+			$this->data['filter_status'] 		= $filter_status;
+			$this->data['filter_approved'] 		= $filter_approved;
+			$this->data['filter_country_id'] 	= $filter_country_id;
+			$this->data['filter_ip'] 			= $filter_ip;
+			$this->data['filter_date_added'] 	= $filter_date_added;
 			$this->data['filter_birthday_from'] = $filter_birthday_from;
-			$this->data['filter_birthday_to'] = $filter_birthday_to;
-			$this->data['order_first_date_from'] = $order_first_date_from;
-			$this->data['order_first_date_to'] = $order_first_date_to;
-			$this->data['filter_order_count'] = $filter_order_count;
-			$this->data['filter_order_good_count'] = $filter_order_good_count;
-			$this->data['filter_total_sum'] = $filter_total_sum;
-			$this->data['filter_avg_cheque'] = $filter_avg_cheque;
-			$this->data['filter_interest_brand'] = $filter_interest_brand;
+			$this->data['filter_birthday_to'] 	= $filter_birthday_to;
+			$this->data['order_first_date_from'] 	= $order_first_date_from;
+			$this->data['order_first_date_to'] 		= $order_first_date_to;
+			$this->data['filter_order_count'] 		= $filter_order_count;
+			$this->data['filter_order_good_count'] 	= $filter_order_good_count;
+			$this->data['filter_total_sum'] 		= $filter_total_sum;
+			$this->data['filter_avg_cheque'] 		= $filter_avg_cheque;
+			$this->data['filter_interest_brand'] 	= $filter_interest_brand;
 			$this->data['filter_interest_category'] = $filter_interest_category;
-			$this->data['filter_segment_id'] = $filter_segment_id;
-			$this->data['filter_has_discount'] = $filter_has_discount;
-			$this->data['filter_no_discount'] = $filter_no_discount;
-			$this->data['filter_no_birthday'] = $filter_no_birthday;
-			$this->data['filter_mail_status'] = $filter_mail_status;
-			$this->data['filter_mail_opened'] = $filter_mail_opened;
-			$this->data['filter_mail_checked'] = $filter_mail_checked;
-			$this->data['filter_push_signed'] = $filter_push_signed;
-			$this->data['filter_nbt_customer'] = $filter_nbt_customer;
-			$this->data['filter_last_call'] = $filter_last_call;
+			$this->data['filter_segment_id'] 		= $filter_segment_id;
+			$this->data['filter_has_discount'] 		= $filter_has_discount;
+			$this->data['filter_no_discount'] 		= $filter_no_discount;
+			$this->data['filter_no_birthday'] 		= $filter_no_birthday;
+			$this->data['filter_mail_status'] 		= $filter_mail_status;
+			$this->data['filter_mail_opened'] 		= $filter_mail_opened;
+			$this->data['filter_mail_checked'] 		= $filter_mail_checked;
+			$this->data['filter_push_signed'] 		= $filter_push_signed;
+			$this->data['filter_nbt_customer'] 		= $filter_nbt_customer;
+			$this->data['filter_last_call'] 		= $filter_last_call;
 			$this->data['filter_nbt_customer_exclude'] = $filter_nbt_customer_exclude;
 			$this->data['filter_segment_intersection'] = $filter_segment_intersection;
-			$this->data['filter_custom_filter'] = $filter_custom_filter;
+			$this->data['filter_custom_filter'] 	= $filter_custom_filter;
 			
 			
 			$this->load->model('sale/customer_group');
 			
 			$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
 			$this->data['mail_status'] = $this->model_sale_customer->getMailStatus();
-			// Нужно получить все рассылки
 			$this->data['mail_campaings'] = $this->model_sale_customer->getAllMailCampaings();
 			$this->data['filter_mail_campaings'] = isset($_GET['campaing_id']) ? $_GET['campaing_id'] : false;
 			
@@ -2181,8 +2173,7 @@
 				
 				$this->template = 'sale/letter110x220.tpl';
 				$this->response->setOutput($this->render());
-			}
-			else die('Нет такого покупателя');
+			} else die('Нет такого покупателя');
 		}
 		
 		protected function getForm() {
@@ -2511,8 +2502,6 @@
 			if (isset($this->request->get['customer_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 				$customer_info = $this->model_sale_customer->getCustomer($this->request->get['customer_id']);
 				
-				
-				//mail info
 				if ($customer_info['mail_status']){
 					if ($customer_info['mail_status'] == 'delivery'){
 						$mail_status = "<span style='color:white; padding:3px; background:#4ea24e;'>".$customer_info['mail_status']."</span>";
@@ -2551,7 +2540,6 @@
 			} else {
 				$atdata = [];
 			}
-			
 
 			$this->data['actiontemplates'] = $this->model_catalog_actiontemplate->getactiontemplates($atdata);
 			
@@ -2580,8 +2568,7 @@
 				'last_modified' => date('d.m.Y', strtotime($ofco['date_modified']))
 				);
 			}
-			
-			
+						
 			$this->load->model('setting/store');
 			$this->data['stores'] = $this->model_setting_store->getStores();
 			
@@ -2882,11 +2869,7 @@
 					$this->error['warning'] = $this->language->get('error_exists');
 				}
 			}
-			/*
-				if ((utf8_strlen($this->request->post['telephone']) < 3) || (utf8_strlen($this->request->post['telephone']) > 32)) {
-				$this->error['telephone'] = $this->language->get('error_telephone');
-				}
-			*/
+
 			if ($this->request->post['password'] || (!isset($this->request->get['customer_id']))) {
 				if ((utf8_strlen($this->request->post['password']) < 4) || (utf8_strlen($this->request->post['password']) > 20)) {
 					$this->error['password'] = $this->language->get('error_password');
@@ -3007,8 +2990,6 @@
 			$this->load->model('tool/image');
 			$customer_id = $this->request->get['customer_id'];
 			
-			
-			//get categories
 			$results = $this->model_sale_customer->getCustomerViews('c', $customer_id, 20);
 			$this->data['categories'] = array();
 			
@@ -3016,18 +2997,15 @@
 				$category = $this->model_catalog_category->getCategory($result['entity_id']);
 				
 				if ($category) {
-					
 					$this->data['categories'][] = array(
 					'category_id' => $result['entity_id'],
 					'name'        => $category['name'],
 					'image'		  => $this->model_tool_image->resize($category['image'], 20, 20),
 					'times'       => $result['times']
 					);
-					
 				}
 			}
 			
-			//get manufacturers
 			$results = $this->model_sale_customer->getCustomerViews('m', $customer_id, 20);
 			$this->data['manufacturers'] = array();
 			
@@ -3046,7 +3024,6 @@
 				}
 			}
 			
-			//get products
 			$results = $this->model_sale_customer->getCustomerViews('p', $customer_id, 30);
 			$this->data['products'] = array();
 			
@@ -3074,8 +3051,6 @@
 			$this->template = 'sale/customer_viewed.tpl';
 			
 			$this->response->setOutput($this->render());
-			
-			
 		}
 		
 		public function history() {
@@ -3329,8 +3304,7 @@
 				$this->model_feed_exchange1c->addOrderToQueue($order_id);
 				$this->model_feed_exchange1c->getOrderTransactionsXML($order_id);
 				
-				} else {
-				
+				} else {		
 			}
 		}
 		
@@ -3353,8 +3327,7 @@
 			$check = $this->db->query("SELECT rja_customer FROM `customer` WHERE customer_id = '" . (int)$customer_id . "'");
 			echo (int)$check->row['rja_customer'];
 		}
-		
-		
+				
 		public function transactionorder() {
 			$this->language->load('sale/customer');
 			
@@ -3539,8 +3512,7 @@
 			
 			$this->template = 'sale/customer_calls.tpl';
 			
-			$this->response->setOutput($this->render());
-			
+			$this->response->setOutput($this->render());		
 		}
 		
 		public function reward() {
@@ -3549,11 +3521,7 @@
 			$this->load->model('sale/customer');
 			
 			if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->user->hasPermission('modify', 'sale/customer')) {
-				$this->model_sale_customer->addReward($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['points'], false, 'MANUAL');
-				
-				
-				//$this->customer->addReward($this->request->get['customer_id'], 'ТЕСТ', -5010, 232814, 'ORDER_PAYMENT');
-				
+				$this->model_sale_customer->addReward($this->request->get['customer_id'], $this->request->post['description'], $this->request->post['points'], false, 'MANUAL');				
 				$this->data['success'] = $this->language->get('text_success');
 				} else {
 				$this->data['success'] = '';
@@ -3771,8 +3739,7 @@
 				}
 				
 				echo $this->db->escape($data['value']);				
-			}
-			
+			}		
 		}
 		
 		public function updateCumulativeDiscountPercent(){
@@ -3827,9 +3794,6 @@
 					}
 				}
 			}
-			
-			
-			
 		}
 		
 		public function updateGenders(){

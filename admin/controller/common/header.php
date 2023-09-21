@@ -197,6 +197,7 @@ class ControllerCommonHeader extends Controller
             $this->data['courier_face2'] = $this->url->link('sale/courier2', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['currency'] = $this->url->link('localisation/currency', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['customer_manual'] = $this->url->link('sale/customer_manual', 'token=' . $this->session->data['token'], 'SSL');            
             $this->data['customer_fields'] = $this->url->link('sale/customer_field', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['customer_group'] = $this->url->link('sale/customer_group', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['customer_ban_ip'] = $this->url->link('sale/customer_ban_ip', 'token=' . $this->session->data['token'], 'SSL');
