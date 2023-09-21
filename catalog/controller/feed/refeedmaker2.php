@@ -139,6 +139,8 @@ class ControllerFeedReFeedMaker2 extends Controller
             }
         }
 
+        $output = str_replace(max($this->steps), 'MORE', $output);
+
         if ((float)$product['special']) {
              $output .= '  <g:custom_label_2><![CDATA[HAS_DISCOUNT]]></g:custom_label_2>' . PHP_EOL;
         }
@@ -147,7 +149,14 @@ class ControllerFeedReFeedMaker2 extends Controller
              $output .= '  <g:custom_label_3><![CDATA[HAS_VIDEO]]></g:custom_label_3>' . PHP_EOL;
         }
 
-        $output = str_replace(max($this->steps), 'MORE', $output);
+        $offersInfo = $this->rainforestAmazon->offersParser->checkIfAsinHasAmazonAndPrimeOffers($product['asin']);
+        if ($offersInfo['HAS_AMAZON'] && $offersInfo['HAS_PRIME']){
+            $output .= '  <g:custom_label_4><![CDATA[HAS_AMAZON_AND_PRIME_OFFERS]]></g:custom_label_4>' . PHP_EOL;
+        } elseif ($offersInfo['HAS_AMAZON']){
+            $output .= '  <g:custom_label_4><![CDATA[HAS_AMAZON_OFFERS]]></g:custom_label_4>' . PHP_EOL;
+        } elseif ($offersInfo['HAS_PRIME']){
+            $output .= '  <g:custom_label_4><![CDATA[HAS_PRIME_OFFERS]]></g:custom_label_4>' . PHP_EOL;
+        }  
 
         $output .= '  <g:availability><![CDATA[' . ($product['quantity'] ? 'in stock' : 'out of stock') . ']]></g:availability>'. PHP_EOL;
         $output .= '</item>'. PHP_EOL;
@@ -313,6 +322,15 @@ class ControllerFeedReFeedMaker2 extends Controller
              $output .= '  <g:custom_label_3><![CDATA[HAS_VIDEO]]></g:custom_label_3>' . PHP_EOL;
         }
 
+        $offersInfo = $this->rainforestAmazon->offersParser->checkIfAsinHasAmazonAndPrimeOffers($product['asin']);
+        if ($offersInfo['HAS_AMAZON'] && $offersInfo['HAS_PRIME']){
+            $output .= '  <g:custom_label_4><![CDATA[HAS_AMAZON_AND_PRIME_OFFERS]]></g:custom_label_4>' . PHP_EOL;
+        } elseif ($offersInfo['HAS_AMAZON']){
+            $output .= '  <g:custom_label_4><![CDATA[HAS_AMAZON_OFFERS]]></g:custom_label_4>' . PHP_EOL;
+        } elseif ($offersInfo['HAS_PRIME']){
+            $output .= '  <g:custom_label_4><![CDATA[HAS_PRIME_OFFERS]]></g:custom_label_4>' . PHP_EOL;
+        }   
+
         if (!empty($product['main_category_id'])){
             $output .= '    <g:product_type><![CDATA[' . str_replace('/', ' > ', $this->model_catalog_product->getGoogleCategoryPathForCategory($product['main_category_id'])) . ']]></g:product_type>'. PHP_EOL;
         }
@@ -332,8 +350,7 @@ class ControllerFeedReFeedMaker2 extends Controller
 
         if (!empty($product['material'])) {
             $output .= '    <g:material><![CDATA[' . $product['material'] . ']]></g:material>'. PHP_EOL;
-        }
-        
+        }        
 
         $output .= '    <g:quantity>' . $product['quantity'] . '</g:quantity>'. PHP_EOL;
         $output .= '    <g:weight>' . $this->weight->format($product['weight'], $product['weight_class_id']) . '</g:weight>'. PHP_EOL;

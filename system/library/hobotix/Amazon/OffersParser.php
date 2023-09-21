@@ -226,6 +226,41 @@ class OffersParser
 		return $query->rows;
 	}
 
+	public function getAmazonOffersForAsin($asin){
+		$query = $this->db->query("SELECT * FROM product_amzn_offers WHERE asin = '" . $this->db->escape($asin) . "'");
+
+		return $query->rows;
+	}
+
+	public function getAmazonOffersForAsinSimple($asin){
+		$query = $this->db->query("SELECT asin, sellerName, isPrime FROM product_amzn_offers WHERE asin = '" . $this->db->escape($asin) . "'");
+
+		return $query->rows;
+	}
+
+	public function checkIfAsinHasAmazonAndPrimeOffers($asin){
+		$offers = $this->getAmazonOffersForAsinSimple($asin);
+
+		$result = [
+			'HAS_AMAZON' 	=> false,
+			'HAS_PRIME' 	=> false,
+		];
+
+		if ($offers){
+			foreach ($offers as $offer){
+				if ($offer['sellerName'] == 'Amazon'){
+					$result['HAS_AMAZON'] = true;
+				}
+
+				if ($offer['isPrime']){
+					$result['HAS_PRIME'] = true;
+				}
+			}
+		}
+
+		return $result;
+	}
+
 	public function setAmazonOfferDates($amazon_offer_id, $data){
 		$this->db->query("UPDATE product_amzn_offers SET 
 			minDays 		= '" . (int)$data['minDays'] . "', 
