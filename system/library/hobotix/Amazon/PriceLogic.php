@@ -546,7 +546,7 @@ class PriceLogic
 
 	public function updateProfitability($product_id = false){
 		if ($product_id){
-			$this->db->query("UPDATE product SET profitability = ((price - costprice)/price*100) WHERE product_id = '" . (int)$product_id . "' price > 0");
+			$this->db->query("UPDATE product SET profitability = ((price - costprice)/price*100) WHERE product_id = '" . (int)$product_id . "' AND price > 0");
 		} else {
 			$this->db->query("UPDATE product SET profitability = ((price - costprice)/price*100) WHERE price > 0");
 		}
