@@ -74,14 +74,14 @@ a.button:active,.list a.button:active{color:#fff;background-color:#898989;border
 a.redbg{background-color:#cf4a61!important;color:#FFF!important;font-weight:400;border:2px solid #cf4a61!important;}
 a.redbg:hover{opacity:1;background:#7a7878;border:2px solid #7a7878!important;}
 .list{border-collapse:collapse;width:100%;margin-bottom:20px}
-.list thead td{padding:0 5px;border:1px solid #ddd}
-.list thead td a,.list thead td{text-decoration:none;color:gray;font-size:11px}
+.list thead td{padding:10 5px;border:1px solid #ddd; background: aliceblue;}
+.list thead td a,.list thead td{text-decoration:none;color:gray;font-size:14px}
 .list tbody td a{text-decoration:underline}
 .list tbody tr{background:#fff}
 .list tbody td{vertical-align:middle;padding:0 5px;border-bottom:1px solid #eee;border-left:1px solid #eee;border-right:1px solid #eee}
-.list .left{text-align:left;padding:4px}
-.list .right{text-align:right;padding:4px;min-width:40px}
-.list .center{text-align:center;padding:4px}
+.list .left{text-align:left;padding:8px 5px;}
+.list .right{text-align:right;padding:8px 5px;min-width:40px}
+.list .center{text-align:center;padding:8px 5px;}
 .list .asc{padding-right:15px;background:url(../image/asc.png) right center no-repeat}
 .list .desc{padding-right:15px;background:url(../image/desc.png) right center no-repeat}
 .list tr.filter td{padding:5px;border:1px solid #eee;color:#999}
