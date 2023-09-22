@@ -22,14 +22,22 @@
 					<thead>
 						<tr>
 							<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
-							<td class="left" width="100px" >
+							<td class="left" width="60px" >
 								Миниатюра
 							</td>
-							<td class="left"><?php if ($sort == 'id.title') { ?>
-								<a href="<?php echo $sort_title; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_title; ?></a>
+							<td class="left">
+								<?php if ($sort == 'id.title') { ?>
+									<a href="<?php echo $sort_title; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_title; ?></a>
 								<?php } else { ?>
-								<a href="<?php echo $sort_title; ?>"><?php echo $column_title; ?></a>
-							<?php } ?></td>
+									<a href="<?php echo $sort_title; ?>"><?php echo $column_title; ?></a>
+								<?php } ?>
+							</td>
+							<td class="left">
+								Связанные промокоды
+							</td>
+							<td class="left">
+								Текущий обзвон
+							</td>
 							<td class="left">
 								Просмотров
 							</td>
@@ -45,15 +53,39 @@
 						<?php if ($actiontemplates) { ?>
 							<?php foreach ($actiontemplates as $actiontemplate) { ?>
 								<tr>
-									<td style="text-align: center;"><?php if ($actiontemplate['selected']) { ?>
-										<input type="checkbox" name="selected[]" value="<?php echo $actiontemplate['actiontemplate_id']; ?>" checked="checked" />
+									<td style="text-align: center;">
+										<?php if ($actiontemplate['selected']) { ?>
+											<input type="checkbox" name="selected[]" value="<?php echo $actiontemplate['actiontemplate_id']; ?>" checked="checked" />
 										<?php } else { ?>
-										<input type="checkbox" name="selected[]" value="<?php echo $actiontemplate['actiontemplate_id']; ?>" />
-									<?php } ?></td>
-									<td class="left"><img src="<?php echo $actiontemplate['image']; ?>" width="100px" height="100px" /></td>
-									<td class="left"><?php echo $actiontemplate['title']; ?></td>
-									<td class="left"><?php echo $actiontemplate['viewed']; ?></td>
-									<td class="right"><?php echo $actiontemplate['sort_order']; ?></td>
+											<input type="checkbox" name="selected[]" value="<?php echo $actiontemplate['actiontemplate_id']; ?>" />
+										<?php } ?>
+									</td>
+									<td class="left">
+										<img src="<?php echo $actiontemplate['image']; ?>" width="30px" height="30px" />
+									</td>
+									<td class="left">
+										<b><?php echo $actiontemplate['title']; ?></b>
+									</td>
+									<td class="left">
+										<?php foreach ($actiontemplate['coupons'] as $coupon) { ?>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#000; color:#FFF; margin-right:5px; margin-top: 5px;">
+												<?php echo $coupon['code']; ?>												
+											</span>
+										<?php } ?>
+									</td>
+									<td class="center">
+										<? if ($actiontemplate['use_for_manual']) { ?>
+											<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+										<? } else { ?>
+											<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+										<? } ?>											
+									</td>
+									<td class="center">
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ccc;"><?php echo $actiontemplate['viewed']; ?></span>											
+									</td>
+									<td class="center">
+										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#000; color:#FFF"><?php echo $actiontemplate['sort_order']; ?></span>
+									</td>
 									<td class="right"><?php foreach ($actiontemplate['action'] as $action) { ?>
 										<a class="button" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
 									<?php } ?></td>

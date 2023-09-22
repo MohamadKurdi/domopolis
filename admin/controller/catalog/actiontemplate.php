@@ -187,12 +187,14 @@
 				
 				$this->data['actiontemplates'][] = array(
 				'actiontemplate_id' => $result['actiontemplate_id'],
-				'title'          => $result['title'],
-				'image'			 => $this->model_tool_image->resize($result['image'], 100, 100),
-				'sort_order'     => $result['sort_order'],
-				'viewed'         => $result['viewed'],
-				'selected'       => isset($this->request->post['selected']) && in_array($result['actiontemplate_id'], $this->request->post['selected']),
-				'action'         => $action
+				'title'          	=> $result['title'],
+				'image'			 	=> $this->model_tool_image->resize($result['image'], 50, 50),
+				'sort_order'     	=> $result['sort_order'],
+				'use_for_manual' 	=> $result['use_for_manual'],
+				'coupons'			=> $this->model_catalog_actiontemplate->getActionTemplateCoupons($result['actiontemplate_id']),
+				'viewed'         	=> $result['viewed'],
+				'selected'       	=> isset($this->request->post['selected']) && in_array($result['actiontemplate_id'], $this->request->post['selected']),
+				'action'         	=> $action
 				);
 			}	
 			
@@ -399,7 +401,14 @@
 				} else {
 				$this->data['image'] = '';
 			}
-			
+
+			if (isset($this->request->post['use_for_manual'])) {
+				$this->data['use_for_manual'] = $this->request->post['use_for_manual'];
+				} elseif (!empty($actiontemplate_info)) {
+				$this->data['use_for_manual'] = $actiontemplate_info['use_for_manual'];
+				} else {
+				$this->data['use_for_manual'] = '';
+			}			
 			
 			if (isset($this->request->post['sort_order'])) {
 				$this->data['sort_order'] = $this->request->post['sort_order'];
@@ -433,8 +442,7 @@
 			
 			$this->response->setOutput($this->render());
 		}
-		
-		
+				
 		public function loadTemplate($customer_id = false, $template_id = false, $do_return = false){
 			
 			if (!$do_return){
@@ -539,25 +547,16 @@
 			}
 											
 		}
-		
-				
-		
+						
 		protected function validateForm() {
 			if (!$this->user->hasPermission('modify', 'catalog/actiontemplate')) {
 				$this->error['warning'] = $this->language->get('error_permission');
 			}
 			
 			foreach ($this->request->post['actiontemplate_description'] as $language_id => $value) {
-				
-				
 				if ((utf8_strlen($value['title']) < 3) || (utf8_strlen($value['title']) > 64)) {
 					$this->error['title'][$language_id] = $this->language->get('error_title');
 				}
-				/*
-					if (utf8_strlen($value['description']) < 3) {
-					$this->error['description'][$language_id] = $this->language->get('error_description');
-					}
-				*/
 			}
 			
 			if ($this->error && !isset($this->error['warning'])) {
@@ -589,4 +588,3 @@
 			}
 		}
 	}
-?>

@@ -1,7 +1,7 @@
 <?php
 	class ModelCatalogactiontemplate extends Model {
 		public function addactiontemplate($data) {
-			$this->db->query("INSERT INTO actiontemplate SET sort_order = '" . (int)$data['sort_order'] . "', bottom = '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', status = '" . (int)$data['status'] . "', image = '" . $this->db->escape($data['image']) . "'");
+			$this->db->query("INSERT INTO actiontemplate SET sort_order = '" . (int)$data['sort_order'] . "', bottom = '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', status = '" . (int)$data['status'] . "', use_for_manual = '" . (int)$data['use_for_manual'] . "', image = '" . $this->db->escape($data['image']) . "'");
 			
 			$actiontemplate_id = $this->db->getLastId(); 
 			
@@ -15,12 +15,10 @@
 					if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'actiontemplate_id=" . (int)$actiontemplate_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
 				}
 			}
-			
-			$this->cache->delete('actiontemplate');
 		}
 		
 		public function editactiontemplate($actiontemplate_id, $data) {
-			$this->db->query("UPDATE actiontemplate SET sort_order = '" . (int)$data['sort_order'] . "', bottom = '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', status = '" . (int)$data['status'] . "', image = '" . $this->db->escape($data['image']) . "' WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");
+			$this->db->query("UPDATE actiontemplate SET sort_order = '" . (int)$data['sort_order'] . "', bottom = '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', status = '" . (int)$data['status'] . "', use_for_manual = '" . (int)$data['use_for_manual'] . "', image = '" . $this->db->escape($data['image']) . "' WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");
 			
 			$this->db->query("DELETE FROM actiontemplate_description WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");
 			
@@ -36,8 +34,6 @@
 					if ($keyword) {$this->db->query("INSERT INTO url_alias SET query = 'actiontemplate_id=" . (int)$actiontemplate_id . "', keyword = '" . $this->db->escape($keyword) . "', language_id = " . $language_id);}
 				}
 			}
-			
-			$this->cache->delete('actiontemplate');
 		}
 		
 		public function deleteactiontemplate($actiontemplate_id) {
@@ -45,8 +41,6 @@
 			$this->db->query("DELETE FROM emailmarketing_logs WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");
 			$this->db->query("DELETE FROM actiontemplate_description WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");		
 			$this->db->query("DELETE FROM url_alias WHERE query = 'actiontemplate_id=" . (int)$actiontemplate_id . "'");
-			
-			$this->cache->delete('actiontemplate');
 		}	
 		
 		public function getactiontemplate($actiontemplate_id) {
@@ -54,9 +48,15 @@
 			
 			return $query->row;
 		}
+
+		public function getActionTemplateCoupons($actiontemplate_id) {
+			$query = $this->db->query("SELECT DISTINCT * FROM coupon WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");
+			
+			return $query->rows;
+		}
 		
 		public function getKeyWords($actiontemplate_id) {
-			$keywords = array();
+			$keywords = [];
 			
 			$query = $this->db->query("SELECT * FROM url_alias WHERE query = 'actiontemplate_id=" . (int)$actiontemplate_id . "'");
 			
@@ -68,23 +68,18 @@
 		}
 		
 		public function getActionTemplateHistory($customer_id, $actiontemplate_id){
-			
 			$query = $this->db->query("SELECT DISTINCT * FROM emailmarketing_logs WHERE customer_id = '" . (int)$customer_id . "' AND  actiontemplate_id = '" . (int)$actiontemplate_id . "'");
 			
 			return $query->rows;
-			
 		}
 		
 		public function getActionTemplateSendCount($actiontemplate_id){
-			
 			$query = $this->db->query("SELECT count(*) as total FROM emailmarketing_logs WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");
 			
 			return $query->row['total'];
-			
 		}		
 		
 		public function getActionTemplateSendCountByUser($actiontemplate_id, $user_id){
-			
 			$query = $this->db->query("SELECT count(*) as total FROM emailmarketing_logs WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "' AND user_id = '" . (int)$user_id . "'");
 			
 			if ($query->num_rows && isset($query->row['total'])){
@@ -92,11 +87,9 @@
 			} else {
 				return 0;
 			}
-			
 		}	
 		
 		public function getActionTemplateSendCountByMonth($actiontemplate_id, $user_id, $month, $year){
-			
 			$query = $this->db->query("SELECT count(*) as total FROM emailmarketing_logs WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "' AND MONTH(date_sent) = '" . (int)$month . "' AND YEAR(date_sent) = '" . (int)$year . "' AND user_id = '" . (int)$user_id . "'");
 			
 			if ($query->num_rows && isset($query->row['total'])){
@@ -104,11 +97,9 @@
 			} else {
 				return 0;
 			}
-			
 		}
 		
 		public function getActionTemplateSendParamsCountByMonth($actiontemplate_id, $user_id, $month, $year, $param){
-			
 			$query = $this->db->query("SELECT SUM(`" . $this->db->escape($param) . "`) as total FROM emailmarketing_logs WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "' AND MONTH(date_sent) = '" . (int)$month . "' AND YEAR(date_sent) = '" . (int)$year . "' AND user_id = '" . (int)$user_id . "' GROUP BY actiontemplate_id");
 			
 			if ($query->num_rows && isset($query->row['total'])){
@@ -116,27 +107,21 @@
 			} else {
 				return 0;
 			}
-			
 		}
 		
 		public function getActionTemplateDatesCount($actiontemplate_id){
-			
 			$query = $this->db->query("SELECT MIN(date_sent) as min_date, MAX(date_sent) as max_date FROM emailmarketing_logs WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");
 			
 			return $query->row;
-			
 		}
 		
 		public function getActionTemplateLastHistory($customer_id, $actiontemplate_id){
-			
 			$query = $this->db->query("SELECT DISTINCT * FROM emailmarketing_logs WHERE customer_id = '" . (int)$customer_id . "' AND  actiontemplate_id = '" . (int)$actiontemplate_id . "' ORDER BY date_sent DESC LIMIT 1");
 			
 			return $query->row;
-			
 		}
 		
 		public function getActionTemplatesHistoryByCustomer($customer_id){
-			
 			$query = $this->db->query("SELECT 
 			DISTINCT at.image, el.date_sent, atd.title,
 			COUNT(emailmarketing_log_id) as count
@@ -147,7 +132,6 @@
 			GROUP BY el.actiontemplate_id ORDER BY el.date_sent DESC");
 			
 			return $query->rows;
-			
 		}
 		
 		public function getactiontemplates($data = array()) {
@@ -195,7 +179,7 @@
 		}
 		
 		public function getactiontemplateDescriptions($actiontemplate_id) {
-			$actiontemplate_description_data = array();
+			$actiontemplate_description_data = [];
 			
 			$query = $this->db->query("SELECT * FROM actiontemplate_description WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");
 			
@@ -213,34 +197,29 @@
 		}
 		
 		public function getactiontemplateDescription($actiontemplate_id, $language_id) {
-			$actiontemplate_description_data = array();
+			$actiontemplate_description_data = [];
 			
 			$query = $this->db->query("SELECT * FROM actiontemplate_description WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "' AND language_id = '" . (int)$language_id . "'");
-			
-			
-			
+
 			return $query->row['description'];
 		}
 		
 		public function getactiontemplateTitle($actiontemplate_id, $language_id) {
-			$actiontemplate_description_data = array();
+			$actiontemplate_description_data = [];
 			
 			$query = $this->db->query("SELECT * FROM actiontemplate_description WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "' AND language_id = '" . (int)$language_id . "'");
-			
-			
-			
+
 			return $query->row['seo_title'];
 		}
 		
 		public function getActionTemplateName($actiontemplate_id) {
 			$query = $this->db->query("SELECT * FROM actiontemplate_description WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
-			
-			
+
 			return isset($query->row['title'])?$query->row['title']:false;
 		}	
 		
 		public function getactiontemplateStores($actiontemplate_id) {
-			$actiontemplate_store_data = array();
+			$actiontemplate_store_data = [];
 			
 			$query = $this->db->query("SELECT * FROM actiontemplate_to_store WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");
 			
@@ -257,6 +236,4 @@
 			
 			return $query->row['total'];
 		}	
-		
 	}
-?>

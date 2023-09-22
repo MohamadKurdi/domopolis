@@ -76,19 +76,40 @@
 							<br /><a onclick="image_upload('image', 'thumb');">Выбрать</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb').attr('src', '<?php echo $no_image; ?>'); $('#image').attr('value', '');">Очистить</a></div></td>
 						</tr>
 						<tr>
+							<td>
+								Использовать в текущем ручном обзвоне
+							</td>
+							<td>
+								<select name="use_for_manual">
+									<?php if ($use_for_manual) { ?>
+										<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+										<option value="0"><?php echo $text_disabled; ?></option>
+									<?php } else { ?>
+										<option value="1"><?php echo $text_enabled; ?></option>
+										<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+									<?php } ?>
+								</select>
+							</td>
+						</tr>  
+						<tr>
 							<td>Отобразить обертку магазина
 							<span class="help">Хедер, футер</span></td>
-							<td><?php if ($bottom) { ?>
-								<input id="markup_bottom" class="checkbox" type="checkbox" name="bottom" value="1" checked="checked" />
-								<label for="markup_bottom"></label>
-								<?php } else { ?>
-								<input id="markup_bottom" class="checkbox" type="checkbox" name="bottom" value="1" />
-								<label for="markup_bottom"></label>
-							<?php } ?></td>
+							<td>
+								<select name="bottom">
+									<?php if ($bottom) { ?>
+										<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+										<option value="0"><?php echo $text_disabled; ?></option>
+									<?php } else { ?>
+										<option value="1"><?php echo $text_enabled; ?></option>
+										<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+									<?php } ?>
+								</select>
+							</td>
 						</tr>            
 						<tr>
 							<td><?php echo $entry_status; ?></td>
-							<td><select name="status">
+							<td>
+								<select name="status">
 								<?php if ($status) { ?>
 									<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
 									<option value="0"><?php echo $text_disabled; ?></option>
@@ -96,7 +117,8 @@
 									<option value="1"><?php echo $text_enabled; ?></option>
 									<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
 								<?php } ?>
-							</select></td>
+							</select>
+							</td>
 						</tr>
 						<tr>
 							<td><?php echo $entry_sort_order; ?></td>
