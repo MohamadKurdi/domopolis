@@ -1,37 +1,53 @@
 <?php
 	class Cart {
-		private $config;
-		private $db;
-		private $data = array();
-		private $data_recurring = array();
+		private $registry 	= null;
+		private $load 		= null;
+		private $config 	= null;
+		private $db 		= null;
+		private $customer 	= null;
+		private $language 	= null;
+		private $session 	= null;
+		private $log 		= null;
+		private $tax 		= null;
+		private $weight 	= null;
+		private $currency 	= null;
+
+		private $credits		= ['ukrcredits_pp', 'ukrcredits_ii', 'ukrcredits_mb'];
+		private $credit_code 	= 'ukrcredits';
+		private $credits_config = null;
+
+
+		private $data 			= [];
+		private $data_recurring = [];
 		
 		public function __construct($registry) {
 			if ($registry->get('customer')) {
 				$registry->get('customer')->refrefh($registry);
 			}
-			$this->config = $registry->get('config');
+			$this->config 	= $registry->get('config');
 			$this->customer = $registry->get('customer');
 			$this->language = $registry->get('language');
-			$this->session = $registry->get('session');
-			$this->db = $registry->get('db');
-			$this->log = $registry->get('log');
-			$this->tax = $registry->get('tax');
-			$this->weight = $registry->get('weight');
+			$this->session 	= $registry->get('session');
+			$this->db 		= $registry->get('db');
+			$this->log 		= $registry->get('log');
+			$this->tax 		= $registry->get('tax');
+			$this->weight 	= $registry->get('weight');
 			$this->currency = $registry->get('currency');
 			
 			$this->registry = $registry;
-			$this->load = $this->registry->get('load');
+			$this->load 	= $this->registry->get('load');
+
+			$this->credits_config = $this->config->get('ukrcredits_settings');
 			
 			if (!isset($this->session->data['cart']) || !is_array($this->session->data['cart'])) {
-				$this->session->data['cart'] = array();
+				$this->session->data['cart'] = [];
 			}
 		}
 		
 		public function getProducts() {
 			if (!$this->data) {
 				
-				//Массив исключительно кодов товаров. Да, придется пройти массив 2 раза. Иначе как мы поймем, что основной товар для спецпредложения есть в корзине.
-				$just_products_ids = array();
+				$just_products_ids = [];
 				foreach ($this->session->data['cart'] as $key => $quantity) {
 					$product = explode(':', $key);
 					$just_products_ids[$product[0]] = $quantity;
@@ -43,10 +59,9 @@
 					$customer_group_id = $this->config->get('config_customer_group_id');
 				}
 				
-				//Массив ВАЛИДНЫХ спецпредложений
-				$all_ao_ids = array();
-				$main_product_to_ao_ids = array();
-				$amount_of_aos_for_one_main_product_id = array();
+				$all_ao_ids = [];
+				$main_product_to_ao_ids = [];
+				$amount_of_aos_for_one_main_product_id = [];
 				foreach ($this->session->data['cart'] as $key => $quantity) {
 					$product = explode(':', $key);
 					
@@ -90,7 +105,7 @@
 						$temp = explode('-', $product[1]);
 						$options = unserialize(base64_decode($temp[0]));
 						} else {
-						$options = array();
+						$options = [];
 					}
 					
 					// Profile
@@ -104,9 +119,6 @@
 					// Комплект
 					if (!empty($product[3])) {
 						$set_id = $product[3];
-						
-						// Получаем товар, родительский в наборе
-						
 						} else {
 						$set_id = 0;
 					}
@@ -154,7 +166,7 @@
 						$option_points = 0;
 						$option_weight = 0;
 						
-						$option_data = array();
+						$option_data = [];
 						$prod_image = $product_query->row['image'];	
 						
 						if ($this->config->get('config_product_options_enable')){						
@@ -330,54 +342,56 @@
 							}
 						}
 						
-						$product_discount_query = $this->db->ncquery("SELECT price, points FROM product_discount WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND quantity <= '" . (int)$discount_quantity . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity DESC, priority ASC, price ASC LIMIT 1");
-						
-						if ($product_discount_query->num_rows) {
-							$price_old = $price;
-							$price = $product_discount_query->row['price'];
-							$points = (isset($product_discount_query->row['points']) && $product_discount_query->row['points'] > 0) ? $product_discount_query->row['points'] : $points;
+						if ($this->creditAllowDiscounts('discount')){
+							$product_discount_query = $this->db->ncquery("SELECT price, points FROM product_discount WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND quantity <= '" . (int)$discount_quantity . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity DESC, priority ASC, price ASC LIMIT 1");
+
+							if ($product_discount_query->num_rows) {
+								$price_old = $price;
+								$price = $product_discount_query->row['price'];
+								$points = (isset($product_discount_query->row['points']) && $product_discount_query->row['points'] > 0) ? $product_discount_query->row['points'] : $points;
+							}
 						}
 						
-						$product_special_query = $this->db->ncquery("SELECT price, points_special, currency_scode FROM product_special WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) AND (store_id = '" . (int)$this->config->get('config_store_id') . "' OR store_id = -1) ORDER BY store_id DESC, priority ASC LIMIT 1");
-						
-						if ($product_special_query->num_rows) {
-							
-							$special = $product_special_query->row['price'];
-							
-							if ($product_special_query->row['currency_scode'] && $product_special_query->row['currency_scode'] != $this->config->get('config_currency')){
-								$special = $this->currency->convert($special, $product_special_query->row['currency_scode'], $this->config->get('config_currency'), false, false);
-							}
-							
-							$special_tmp = false;
-							if ($this->currency->percent){						
-								if ($this->currency->plus){
-									$special_tmp = $special + ($special/100*(int)$this->currency->percent);																				
-									} else {
-									$special_tmp = $special - ($special/100*(int)$this->currency->percent);								
+						$special = false;
+						if ($this->creditAllowDiscounts('special')){
+							$product_special_query = $this->db->ncquery("SELECT price, points_special, currency_scode FROM product_special WHERE product_id = '" . (int)$product_id . "' AND customer_group_id = '" . (int)$customer_group_id . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) AND (store_id = '" . (int)$this->config->get('config_store_id') . "' OR store_id = -1) ORDER BY store_id DESC, priority ASC LIMIT 1");
+
+							if ($product_special_query->num_rows) {						
+								$special = $product_special_query->row['price'];
+
+								if ($product_special_query->row['currency_scode'] && $product_special_query->row['currency_scode'] != $this->config->get('config_currency')){
+									$special = $this->currency->convert($special, $product_special_query->row['currency_scode'], $this->config->get('config_currency'), false, false);
 								}
-							}																
-							
-							if ($overload_price_national){
-								if ($special_tmp && $price > $special_tmp){
-									$price = $special_tmp;							
+
+								$special_tmp = false;
+								if ($this->currency->percent){						
+									if ($this->currency->plus){
+										$special_tmp = $special + ($special/100*(int)$this->currency->percent);																				
 									} else {
+										$special_tmp = $special - ($special/100*(int)$this->currency->percent);								
+									}
+								}																
+
+								if ($overload_price_national){
+									if ($special_tmp && $price > $special_tmp){
+										$price = $special_tmp;							
+									} else {
+										if ($price > $special){
+											$price_old = $price;
+											$price = $special;							
+										}	
+									}							
+
+								} else {
 									if ($price > $special){
 										$price_old = $price;
 										$price = $special;							
 									}	
-								}							
-								
-								} else {
-								if ($price > $special){
-									$price_old = $price;
-									$price = $special;							
-								}	
+								}
+
+								$points = ($product_special_query->row['points_special'] > 0) ? $product_special_query->row['points_special'] : $points;
 							}
-							
-							$points = ($product_special_query->row['points_special'] > 0) ? $product_special_query->row['points_special'] : $points;
-							} else {
-							$special = false;
-						}	
+						}
 						
 						$this->load->model('catalog/product');				
 						$reward = $this->getCurrentProductReward($this->registry->get('model_catalog_product')->getProduct($product_id));
@@ -385,9 +399,7 @@
 						
 						$this_is_special_offer = false;
 						$this_is_special_offer_present = false;					
-						//Спецпредложения. Блять, а как проверить, есть ли исходный товар в корзине-то, а?) Решение найдено, в самом начале этой функции.
 						if (!empty($product[4])) {
-							
 							$product_additional_offer_id = (int)$product[4];
 							
 							//Код спецпредложения - 4 элемент. Понимаем, есть ли основной товар в корзине, его количество. А также запросом выясним, не истек ли срок спецпредложения, и валидна ли группа. Если все валидно - подменим цену и поставим на вывод флаг спецпредложения!
@@ -422,18 +434,9 @@
 											$price = $price - ($price * $ao_query->row['percent'] / 100);
 											$reward = $reward - ($reward * $ao_query->row['percent'] / 100);
 										}
-										
-										
 									}
-									
-									} else {
-									//Вроде бы это и спецпредложение, но оно, одначе, невалидно на данном этапе. Соответственно, хуй на него дальше.	
-									
 								}
-								} else {
-								//Вроде бы это и спецпредложение, но оно, одначе, невалидно на данном этапе. Соответственно, хуй на него дальше.	
-								
-							}						
+							}					
 						}
 						
 						//OVERLOADING REWARD TO ZERO
@@ -441,9 +444,7 @@
 							$reward = 0;
 						}
 						
-						// Downloads
-						$download_data = array();
-						
+						$download_data = [];						
 						if ($this->config->get('config_product_downloads_enable')){
 							$download_query = $this->db->ncquery("SELECT * FROM product_to_download p2d LEFT JOIN download d ON (p2d.download_id = d.download_id) LEFT JOIN download_description dd ON (d.download_id = dd.download_id) WHERE p2d.product_id = '" . (int)$product_id . "' AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 							
@@ -458,7 +459,6 @@
 							}
 						}
 						
-						// Stock
 						if (!$product_query->row['quantity'] || ($product_query->row['quantity'] < $quantity)) {
 							$stock = false;
 						}
@@ -481,20 +481,19 @@
 							if ($profile_info) {
 								$profile_name = $profile_info['name'];
 								
-								$recurring = true;
-								$recurring_frequency = $profile_info['frequency'];
-								$recurring_price = $profile_info['price'];
-								$recurring_cycle = $profile_info['cycle'];
-								$recurring_duration = $profile_info['duration'];
-								$recurring_trial_frequency = $profile_info['trial_frequency'];
-								$recurring_trial_status = $profile_info['trial_status'];
-								$recurring_trial_price = $profile_info['trial_price'];
-								$recurring_trial_cycle = $profile_info['trial_cycle'];
-								$recurring_trial_duration = $profile_info['trial_duration'];
+								$recurring 				= true;
+								$recurring_frequency 	= $profile_info['frequency'];
+								$recurring_price 		= $profile_info['price'];
+								$recurring_cycle 		= $profile_info['cycle'];
+								$recurring_duration 	= $profile_info['duration'];
+								$recurring_trial_frequency 	= $profile_info['trial_frequency'];
+								$recurring_trial_status 	= $profile_info['trial_status'];
+								$recurring_trial_price 		= $profile_info['trial_price'];
+								$recurring_trial_cycle 		= $profile_info['trial_cycle'];
+								$recurring_trial_duration 	= $profile_info['trial_duration'];
 							}
 						}
 						
-						//Остальные обработки назначения цены ТОЛЬКО В СЛУЧАЕ если этот товар - не спецпредложение
 						if (!$this_is_special_offer){
 							$price = $model_catalog_group_price->updatePrice($product_query->row['product_id'], $price);
 						}
@@ -513,7 +512,6 @@
 							}			
 						}
 						
-						//И сюда тоже исключаем спецпредложение
 						if ($product_query->row['price_national'] && $product_query->row['price_national'] > 0 && $product_query->row['currency'] == $this->currency->getCode() && !$this_is_special_offer){
 							$price_national = $model_catalog_group_price->updatePrice($product_query->row['product_id'], $product_query->row['price_national']);
 							} else {
@@ -530,20 +528,15 @@
 								} else {
 								$this->data['set_'.$set_id]['price'] = ($priceOptional * $quantity);
 							}
-							// $priceOptional = 0;
 							
 							if (isset($this->data['set_'.$set_id]['quantity'])) {
 								// $this->data['set_'.$set_id]['quantity'] += 1;
 								} else {
 								// $this->data['set_'.$set_id]['quantity'] = 1;
 							}
-						}
+						}						
 						
-						/*if ($set_id && isset($this->session->data['cart']['set_'.$set_id]) && $this->session->data['cart']['set_'.$set_id]) {
-							$quantity = $quantity * $this->session->data['cart']['set_'.$set_id];
-						}*/
-						
-						$childProductArray = array();
+						$childProductArray = [];
 						
 						if ($set_id) {
 							$tmp = $this->db->ncquery("SELECT ps.quantity, p.short_name FROM product_to_set ps RIGHT JOIN product p ON (ps.product_id = p.product_id) WHERE ps.set_id = '" . (int)$set_id."'");
@@ -567,8 +560,63 @@
 						if ($this->config->get('config_warehouse_identifier')){
 							$stock_field_identifier = trim($this->config->get('config_warehouse_identifier'));
 						}
+
+						$creditMultiplier = 1;	
+						if (!$this->config->get('totalukrcredits_status')) {
+							if (isset($this->session->data['payment_method']['code'])) {
+								if ($this->session->data['payment_method']['code'] == 'ukrcredits_pp') {
+									$ukrcredits_query = $this->db->query("SELECT * FROM product_ukrcredits WHERE product_id = '" . (int)$product_query->row['product_id'] . "'");
+									if (isset($ukrcredits_query->row)) {
+										if (isset($ukrcredits_query->row['markup_pp']) && $ukrcredits_query->row['markup_pp'] != 0) {
+											$creditMultiplier = $ukrcredits_query->row['markup_pp'];
+										} else {
+											$creditMultiplier = $this->credits_config['pp_markup'];
+										}
+									}
+									if ($this->credits_config['pp_markup_type'] == 'custom') {
+										$ukrcredits_pp_sel = isset($this->session->data['ukrcredits_pp_sel'])?$this->session->data['ukrcredits_pp_sel']:1;
+										$creditMultiplier = ($this->credits_config['pp_markup_custom_PP'][$ukrcredits_pp_sel] + $this->credits_config['pp_markup_acquiring']) / 100 + 1;
+									}
+								}
+								if ($this->session->data['payment_method']['code'] == 'ukrcredits_ii') {
+									$ukrcredits_query = $this->db->query("SELECT * FROM product_ukrcredits WHERE product_id = '" . (int)$product_query->row['product_id'] . "'");
+									if (isset($ukrcredits_query->row)) {
+										if (isset($ukrcredits_query->row['markup_ii']) && $ukrcredits_query->row['markup_ii'] != 0) {
+											$creditMultiplier = $ukrcredits_query->row['markup_ii'];
+										} else {
+											$creditMultiplier = $this->credits_config['ii_markup'];
+										}
+									}
+									if ($this->credits_config['ii_markup_type'] == 'custom') {
+										$ukrcredits_ii_sel = isset($this->session->data['ukrcredits_ii_sel'])?$this->session->data['ukrcredits_ii_sel']:1;
+										$creditMultiplier = ($this->credits_config['ii_markup_custom_II'][$ukrcredits_ii_sel] + $this->credits_config['ii_markup_acquiring']) / 100 + 1;
+									}
+								}
+								if ($this->session->data['payment_method']['code'] == 'ukrcredits_mb') {
+									$ukrcredits_query = $this->db->query("SELECT * FROM product_ukrcredits WHERE product_id = '" . (int)$product_query->row['product_id'] . "'");
+									if (isset($ukrcredits_query->row)) {
+										if (isset($ukrcredits_query->row['markup_mb']) && $ukrcredits_query->row['markup_mb'] != 0) {
+											$creditMultiplier = $ukrcredits_query->row['markup_mb'];
+										} else {
+											$creditMultiplier = $this->credits_config['mb_markup'];
+										}
+									}
+									if ($this->credits_config['mb_markup_type'] == 'custom') {
+										$ukrcredits_mb_sel = isset($this->session->data['ukrcredits_mb_sel'])?$this->session->data['ukrcredits_mb_sel']:2;
+										$creditMultiplier = ($this->credits_config['mb_markup_custom_MB'][$ukrcredits_mb_sel] + $this->credits_config['mb_markup_acquiring']) / 100 + 1;
+									}
+								}
+							}
+
+
+
+							if ($creditMultiplier <> 1){
+								$priceOptional 	= $priceOptional * $creditMultiplier;							
+								$price_national = $price_national * $creditMultiplier;
+							}
+						}
 						
-						$this->data[$key] = array(
+						$this->data[$key] = [
 						'key'                       => $key,
 						'product_id'                => ($real_product_id)?$real_product_id:$product_query->row['product_id'],
 						'from_stock'				=> ($real_product_id)?true:false,
@@ -625,12 +673,14 @@
 						'recurring_trial_duration'  => $recurring_trial_duration,
 						'set'                       => $set_id,
 						'childProductArray'         => $childProductArray,
-						);
+						];
+
 						if (!isset($this->data[$key]['set_name'])) {
 							$this->data[$key]['set_name'] = '';
 						}
+
 						} else {
-						$this->remove($key);
+							$this->remove($key);
 					}
 				}
 			}
@@ -641,7 +691,7 @@
 		}
 		
 		public function getRecurringProducts() {
-			$recurring_products = array();
+			$recurring_products = [];
 			
 			foreach ($this->getProducts() as $key => $value) {
 				if ($value['recurring']) {
@@ -703,7 +753,7 @@
 				}
 			}
 			
-			$this->data = array();
+			$this->data = [];
 		}
 		
 		public function makeCartKey ($product_id, $option, $profile_id, $set_id, $ao_id) {
@@ -760,11 +810,11 @@
 					$this->session->data['cart'][$key] = $qty;
 					} else {
 					$this->session->data['cart'][$key] = (int)$qty;
-					$this->data = array();
+					$this->data = [];
 				}
 				} else {
 				$this->remove($key);
-				$this->data = array();
+				$this->data = [];
 			}			
 		}
 		
@@ -773,13 +823,13 @@
 				unset($this->session->data['cart'][$key]);				
 			}
 			
-			$this->data = array();
+			$this->data = [];
 		}
 		
 		public function clear() {
 			unset($this->session->data['cart']);
-			$this->session->data['cart'] = array();
-			$this->data = array();
+			$this->session->data['cart'] = [];
+			$this->data = [];
 			if ($this->customer->isLogged()){
 				$this->db->non_cached_query("UPDATE customer SET cart = '' WHERE customer_id = '" . (int)$this->customer->getId() . "'");
 			}
@@ -855,7 +905,7 @@
 		}
 		
 		public function getTaxes() {
-			$tax_data = array();
+			$tax_data = [];
 			
 			foreach ($this->getProducts() as $product) {
 				if ($product['tax_class_id']) {
@@ -916,7 +966,6 @@
 		}
 		
 		public function hasAdditionalOffer() {
-			
 			$products = $this->getProducts();
 			
 			foreach ($products as $product) {
@@ -962,8 +1011,7 @@
 			return true;
 		}
 		
-		public function getEntityReward($entity_type, $entity_id, $store_id = false){
-		
+		public function getEntityReward($entity_type, $entity_id, $store_id = false){	
 			if (!$store_id){
 				$store_id = $this->config->get('config_store_id');
 			}
@@ -983,7 +1031,6 @@
 		}
 		
 		public function getCurrentProductReward($product, $store_id = false, $currency = false, $customer_group_id = false){
-
 			if (!$this->config->get('reward_status')){
 				return false;
 			}
@@ -1094,6 +1141,26 @@
 			
 			return false;
 		}
+
+		public function creditAllowDiscounts($code = 'discount'){
+			if (!isset($this->session->data['payment_method']['code'])){
+				return true;
+			}
+
+			if (!in_array($this->session->data['payment_method']['code'], $this->credits)){
+				return true;
+			}
+
+			foreach ($this->credits as $credit){
+				if ($this->session->data['payment_method']['code'] == $credit){
+					if ($this->credits_config[str_replace($this->credit_code . '_', '', $credit) . '_' . $code]){
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
 		
 		public function hasStock() {
 			$stock = true;
@@ -1107,9 +1174,6 @@
 			return $stock;
 		}
 		
-		/*
-			Function changed due to every product in this universe can bi shipped
-		*/
 		public function hasShipping() {
 			return true;
 		}
