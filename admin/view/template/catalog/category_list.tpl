@@ -217,7 +217,6 @@
 
 														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56; color:#FFF; font-size:10px;">
 															<?php echo $category['amazon_category_id']; ?></span>
-
 														<? } else { ?>
 															<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 														<? } ?>

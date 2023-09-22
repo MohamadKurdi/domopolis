@@ -121,28 +121,31 @@
 									</td>
 									<td class="center">
 									<? if ($coupon['display_list']) { ?>
-										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-										<? } else { ?>
-										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+										<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+									<? } else { ?>
+										<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 									<? } ?>
 									</td>
 									
-									<td class="center"><? if ($coupon['only_in_stock']) { ?>
-										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-										<? } else { ?>
-										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+									<td class="center">
+										<? if ($coupon['only_in_stock']) { ?>
+										<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+									<? } else { ?>
+										<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 									<? } ?>
 									</td>
 									
-									<td class="center"><?php if ($coupon['promo_type']) { ?>
-									<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ccc;"><?php echo $coupon['promo_type']; ?></span><? } ?>
+									<td class="center">
+										<?php if ($coupon['promo_type']) { ?>
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ccc;"><?php echo $coupon['promo_type']; ?></span>
+										<? } ?>
 									</td>
 									
 									<td class="center">
 									<? if ($coupon['display_in_account']) { ?>
-										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-										<? } else { ?>
-										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
+									<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+														<? } else { ?>
+										<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 									<? } ?>
 									</td>
 									
@@ -168,29 +171,33 @@
 									*/ ?>
 									<td class="center">
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF"><?php echo $coupon['usage_good']; ?></span>
-										
 									</td>
 									<td class="center">
 										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF"><?php echo $coupon['usage_bad']; ?></span>
-										
 									</td>
 									
 									<td class="left"><?php echo $coupon['date_start']; ?></td>
 									<td class="left"><?php echo $coupon['date_end']; ?></td>
-									<td class="left"><? if ($coupon['status']) { ?>
-										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Вкл</span>
-										<? } else { ?>
-										<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Выкл</span>
-									<? } ?></td>
+									<td class="left">
+										<? if ($coupon['status']) { ?>
+										<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+														<? } else { ?>
+										<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+									<? } ?>
+									</td>
+
 									<td class="left">
 										<? if ($coupon['show_in_segments']) { ?>
-											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Да</span>
-											<? } else { ?>
-											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Нет</span>
-										<? } ?></td>									
-										<td class="right"><?php foreach ($coupon['action'] as $action) { ?>
+											<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+														<? } else { ?>
+											<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+										<? } ?>
+									</td>									
+									<td class="right">
+										<?php foreach ($coupon['action'] as $action) { ?>
 											<a class="button" href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
-										<?php } ?></td>
+										<?php } ?>
+									</td>
 								</tr>
 							<?php } ?>
 							<?php } else { ?>
