@@ -146,7 +146,7 @@
 				$template->load('admin.customer_create');
 				
 				$template->send(); 
-			} // notify
+			}
 		}
 		
 		public function addCustomerCall($data){
@@ -324,11 +324,27 @@
 			}
 			
 			return $products;
+		}
+
+		public function getCustomerPreauthLink($email, $store_id){
+			$this->load->model('setting/setting');
+			$storeURL = ($store_id == 0)?HTTP_CATALOG:$this->model_setting_setting->getKeySettingValue('config', 'config_url' , $store_id);
 			
+			return $storeURL . '?utm_term=' . $email. '&utoken=' . md5(md5($email . $email));
+		}
+
+		public function getCustomerOrderManufacturers($customer_id){
+			$query = $this->db->query("SELECT DISTINCT m.manufacturer_id FROM order_product op LEFT JOIN `order` o ON o.order_id = op.order_id LEFT JOIN product p ON op.product_id = p.product_id LEFT JOIN manufacturer m ON m.manufacturer_id = p.manufacturer_id WHERE o.customer_id = '" .(int)$customer_id. "' AND o.order_status_id = '" . (int)$this->config->get('config_complete_status_id') . "'");
+			
+			$manufacturers = array();
+			foreach ($query->rows as $row){
+				$manufacturers[] = $row['manufacturer_id'];
+			}
+			
+			return $manufacturers;
 		}
 		
 		public function getCustomerByPhone($phone){
-			//only ints
 			$phone = trim(preg_replace("([^0-9])", "", $phone));
 			
 			$sql = "SELECT customer_id, firstname, lastname FROM `customer` WHERE ";
@@ -343,7 +359,6 @@
 				} else {
 				return false;
 			}
-			
 		}
 		
 		public function getCustomers($data = array()) {
@@ -364,9 +379,7 @@
 			
 			if (!empty($data['filter_order_count'])){
 				$data['filter_order_count'] = trim($data['filter_order_count']);
-				
-				//первый символ < или >
-				
+
 				if (html_entity_decode($data['filter_order_count'])[0] == '<' || html_entity_decode($data['filter_order_count'])[0] == '>'){
 					
 					$data['filter_order_count'] = html_entity_decode($data['filter_order_count']);
@@ -382,21 +395,15 @@
 					} elseif (count(explode('-', $data['filter_order_count'])) == 2){
 					
 					$nums = explode('-', $data['filter_order_count']);
-					
 					$implode[] = " order_count >= '" . (int)$nums[0] . "' AND order_count <= '" . (int)$nums[1] . "'";
-					
 					} else {
-					
 					$implode[] = " order_count >= '" . (int)$data['filter_order_count'] . "'";
-					
 				} 																														
 			}
 			
 			if (!empty($data['filter_order_good_count'])){
 				$data['filter_order_good_count'] = trim($data['filter_order_good_count']);
-				
-				//первый символ < или >
-				
+
 				if (html_entity_decode($data['filter_order_good_count'])[0] == '<' || html_entity_decode($data['filter_order_good_count'])[0] == '>'){
 					
 					$data['filter_order_good_count'] = html_entity_decode($data['filter_order_good_count']);
@@ -412,21 +419,16 @@
 					} elseif (count(explode('-', $data['filter_order_good_count'])) == 2){
 					
 					$nums = explode('-', $data['filter_order_good_count']);
-					
 					$implode[] = " order_good_count >= '" . (int)$nums[0] . "' AND order_good_count <= '" . (int)$nums[1] . "'";
 					
 					} else {
-					
 					$implode[] = " order_good_count >= '" . (int)$data['filter_order_good_count'] . "'";
-					
 				} 																														
 			}
 			
 			if (!empty($data['filter_total_sum'])){
 				$data['filter_total_sum'] = trim($data['filter_total_sum']);
-				
-				//первый символ < или >
-				
+
 				if (html_entity_decode($data['filter_total_sum'])[0] == '<' || html_entity_decode($data['filter_total_sum'])[0] == '>'){
 					
 					$data['filter_total_sum'] = html_entity_decode($data['filter_total_sum']);
@@ -446,17 +448,12 @@
 					$implode[] = " total_cheque >= '" . (int)$nums[0] . "' AND total_cheque <= '" . (int)$nums[1] . "'";
 					
 					} else {
-					
 					$implode[] = " total_cheque >= '" . (int)$data['filter_total_sum'] . "'";
-					
 				} 																														
 			}
 			
 			if (!empty($data['filter_avg_cheque'])){
 				$data['filter_avg_cheque'] = trim($data['filter_avg_cheque']);
-				
-				//первый символ < или >
-				
 				if (html_entity_decode($data['filter_avg_cheque'])[0] == '<' || html_entity_decode($data['filter_avg_cheque'])[0] == '>'){
 					
 					$data['filter_avg_cheque'] = html_entity_decode($data['filter_avg_cheque']);
@@ -474,11 +471,8 @@
 					$nums = explode('-', $data['filter_avg_cheque']);
 					
 					$implode[] = " avg_cheque >= '" . (int)$nums[0] . "' AND avg_cheque <= '" . (int)$nums[1] . "'";
-					
 					} else {
-					
 					$implode[] = " avg_cheque >= '" . (int)$data['filter_avg_cheque'] . "'";
-					
 				} 																														
 			}
 			
@@ -489,17 +483,14 @@
 			}
 			
 			if (!empty($data['filter_last_call'])){
-				
 				$implode[] = "DATE(cc.date_end) <= '" . $this->db->escape($data['filter_last_call']) . "' AND cc.length > 0  AND cc.manager_id = '" . (int)$this->user->getID() . "'";
-				
 			}
 			
 			if (!empty($data['filter_simple_email'])) {
 				$implode[] = "c.email LIKE ('%@%')";				
 			}
 			
-			if (!empty($data['filter_email'])) {
-				
+			if (!empty($data['filter_email'])) {				
 				if ($data['filter_email'][0] == '!'){
 					$emails = explode(',',$data['filter_email']);
 					foreach ($emails as $email){
@@ -537,6 +528,10 @@
 			
 			if (!empty($data['filter_customer_group_id'])) {
 				$implode[] = "c.customer_group_id = '" . (int)$data['filter_customer_group_id'] . "'";
+			}
+
+			if (!empty($data['filter_exclude_customer_id'])) {
+				$implode[] = "c.customer_id <> '" . (int)$data['filter_exclude_customer_id'] . "'";
 			}
 			
 			if (!empty($data['filter_ip'])) {
@@ -594,6 +589,10 @@
 			if (!empty($data['filter_nbt_customer_exclude'])) {
 				$implode[] = "nbt_customer = 0";
 			}
+
+			if (!empty($data['filter_had_not_sent_old_alert'])) {
+				$implode[] = "sent_old_alert = 0";
+			}
 			
 			if (!empty($data['filter_birthday_to'])) {
 				if ($data['filter_birthday_to'][0] == '+' || $data['filter_birthday_to'][0] == '-'){
@@ -616,14 +615,21 @@
 					$implode[] = "DATE_ADD(birthday, INTERVAL YEAR(CURDATE())-YEAR(birthday) YEAR) <= DATE(CONCAT(YEAR(CURDATE()),'-01-01'))";
 				}
 			}
-			
-			
+						
 			if (!empty($data['order_first_date_from']) || !empty($data['order_first_date_to'])) {				
 				$implode[] = $this->buildDateMagicSQL($data['order_first_date_from'], $data['order_first_date_to'], 'order_first_date', false);
 			}	
 			
 			if (!empty($data['order_last_date_from']) || !empty($data['order_last_date_to'])) {				
 				$implode[] = $this->buildDateMagicSQL($data['order_last_date_from'], $data['order_last_date_to'], 'order_last_date', false);
+			}	
+
+			if (!empty($data['order_good_first_date_from']) || !empty($data['order_good_first_date_to'])) {				
+				$implode[] = $this->buildDateMagicSQL($data['order_good_first_date_from'], $data['order_good_first_date_to'], 'order_good_first_date', false);
+			}	
+			
+			if (!empty($data['order_good_last_date_from']) || !empty($data['order_good_last_date_to'])) {				
+				$implode[] = $this->buildDateMagicSQL($data['order_good_last_date_from'], $data['order_good_last_date_to'], 'order_good_last_date', false);
 			}	
 			
 			if (!empty($data['campaing_id'])) {
@@ -672,8 +678,7 @@
 					
 				}  
 			}
-			
-			
+						
 			if ($implode) {
 				$sql .= " AND " . implode(" AND ", $implode);
 			}
@@ -695,39 +700,27 @@
 			);
 			
 			if (!empty($data['filter_custom_filter'])){
-				
 				if ($data['filter_custom_filter'] == 'nodiscount')	{
-					
 					$sql .= " ORDER BY printed2912";
-					
 				}
-				
-				} else {
-				
+			} else {
 				if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
 					$sql .= " ORDER BY " . $data['sort'];
-					} else {
+				} else {
 					$sql .= " ORDER BY name";
 				}
-				
 			}
 			
 			if (!empty($data['filter_custom_filter'])){
-				
 				if ($data['filter_custom_filter'] == 'nodiscount')	{
-					
 					$sql .= " DESC";
-					
 				}
-				
-				} else {
-				
+			} else {
 				if (isset($data['order']) && ($data['order'] == 'DESC')) {
 					$sql .= " DESC";
-					} else {
+				} else {
 					$sql .= " ASC";
 				}
-				
 			}
 			
 			if (isset($data['start']) || isset($data['limit'])) {
@@ -890,11 +883,9 @@
 				return $query->row;
 				} else {
 				return false;
-			}
-			
+			}			
 		}
-		
-		
+			
 		public function getTotalCustomers($data = array()) {
 			$sql = "SELECT COUNT(*) AS total FROM customer c";
 			
@@ -941,8 +932,6 @@
 			if (!empty($data['filter_order_good_count'])){
 				$data['filter_order_good_count'] = trim($data['filter_order_good_count']);
 				
-				//первый символ < или >
-				
 				if (html_entity_decode($data['filter_order_good_count'])[0] == '<' || html_entity_decode($data['filter_order_good_count'])[0] == '>'){
 					
 					$data['filter_order_good_count'] = html_entity_decode($data['filter_order_good_count']);
@@ -971,8 +960,6 @@
 			if (!empty($data['filter_total_sum'])){
 				$data['filter_total_sum'] = trim($data['filter_total_sum']);
 				
-				//первый символ < или >
-				
 				if (html_entity_decode($data['filter_total_sum'])[0] == '<' || html_entity_decode($data['filter_total_sum'])[0] == '>'){
 					
 					$data['filter_total_sum'] = html_entity_decode($data['filter_total_sum']);
@@ -1000,8 +987,6 @@
 			
 			if (!empty($data['filter_avg_cheque'])){
 				$data['filter_avg_cheque'] = trim($data['filter_avg_cheque']);
-				
-				//первый символ < или >
 				
 				if (html_entity_decode($data['filter_avg_cheque'])[0] == '<' || html_entity_decode($data['filter_avg_cheque'])[0] == '>'){
 					
@@ -1069,6 +1054,10 @@
 			if (!empty($data['filter_customer_group_id'])) {
 				$implode[] = "customer_group_id = '" . (int)$data['filter_customer_group_id'] . "'";
 			}
+
+			if (!empty($data['filter_exclude_customer_id'])) {
+				$implode[] = "c.customer_id <> '" . (int)$data['filter_exclude_customer_id'] . "'";
+			}
 			
 			if (!empty($data['filter_ip'])) {
 				$implode[] = "customer_id IN (SELECT customer_id FROM customer_ip WHERE ip = '" . $this->db->escape($data['filter_ip']) . "')";
@@ -1120,6 +1109,10 @@
 			if (!empty($data['filter_nbt_customer_exclude'])) {
 				$implode[] = "nbt_customer = 0";
 			}
+
+			if (!empty($data['filter_had_not_sent_old_alert'])) {
+				$implode[] = "sent_old_alert = 0";
+			}
 			
 			if (isset($data['filter_no_birthday']) && !is_null($data['filter_no_birthday'])) {
 				$implode[] = " (birthday = '0000-00-00' OR NOT birthday)";
@@ -1155,6 +1148,13 @@
 				$implode[] = $this->buildDateMagicSQL($data['order_last_date_from'], $data['order_last_date_to'], 'order_last_date', false);
 			}	
 			
+			if (!empty($data['order_good_first_date_from']) || !empty($data['order_good_first_date_to'])) {				
+				$implode[] = $this->buildDateMagicSQL($data['order_good_first_date_from'], $data['order_good_first_date_to'], 'order_good_first_date', false);
+			}	
+			
+			if (!empty($data['order_good_last_date_from']) || !empty($data['order_good_last_date_to'])) {				
+				$implode[] = $this->buildDateMagicSQL($data['order_good_last_date_from'], $data['order_good_last_date_to'], 'order_good_last_date', false);
+			}	
 			
 			if (!empty($data['campaing_id'])) {
 				$implode[] = "c.customer_id IN (SELECT `customer_id` FROM `customer_email_campaigns` WHERE `campaign_id` = '".$data['campaing_id']."')";
@@ -1394,8 +1394,6 @@
 			added_from 			= '" . $this->db->escape($data['added_from']) . "', 
 			legalperson_id 		= '" . (int)$data['legalperson_id'] . "', 
 			guid 				= '" . $this->db->escape($data['guid']) . "'");
-			
-			
 			
 			return $this->db->getLastId();
 		}

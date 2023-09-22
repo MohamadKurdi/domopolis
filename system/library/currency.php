@@ -159,25 +159,21 @@
 			
 			$string .= number_format(round($value, (int)$decimal_place), (int)$decimal_place, $decimal_point, $thousand_point);
 			
-			if (!$real_code) {
-				
+			if (!$real_code) {				
 				if (($symbol_right) && ($format)) {
 					$string .= ' ' . $symbol_right;
-				}
-				
-				} else {
+				}				
+			} else {
 				
 				if (($this->code) && ($format)) {
 					$string .= $this->code;
-				}
-				
+				}				
 			}
 			
 			return $string;
 		}
 		
-		public function reconvert($value, $cource){
-			
+		public function reconvert($value, $cource){		
 			if ($cource == 0){
 				return $value;			
 			}
@@ -229,15 +225,11 @@
 					$result = $value * ($to / $from);	
 				}
 			}
-			/*	if ($result < ($value * ($to / $from))){ $result += 1; 	} */
-			
-			//$result = $value * ($to / $from);
-			//OVERLOAD FOR EUR
+
 			if ($_from == 'EUR' && $_to == 'EUR'){
 				$result = $value * ($to / $from);
 			}
-			
-			
+						
 			return $result;
 		}
 		
@@ -377,8 +369,7 @@
 			}			
 		}
 		
-		public function formatBonus($points, $strong = false) {
-			
+		public function formatBonus($points, $strong = false) {			
 			if ((int)$points){
 				
 				if ($strong){
@@ -664,5 +655,4 @@
 				return false;
 			}
 		}
-
 	}				
