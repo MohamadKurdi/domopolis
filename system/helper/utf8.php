@@ -64,6 +64,41 @@ function reformatDate($date){
 	return date('Y-m-d', strtotime($date['year'] . '-' . $date['month'] . '-' . $date['day']));
 }
 
+function formatDateInterval($mysqlDate){
+	$date 	= new DateTime($mysqlDate);
+	$now 	= new DateTime(); 
+
+	$interval = $now->diff($date);
+	$days = $interval->days;
+	$years = floor($days / 365);
+	$days -= $years * 365;
+	$months = floor($days / 30); 
+	$days -= $months * 30;
+
+	$result = '';
+	if ($years){
+		$result = $years . ' лет';
+	}
+
+	if ($months){
+		if ($result){
+			$result .= ', ';
+		}
+
+		$result .= $months . ' мес.';
+	}
+
+	if ($days){
+		if ($result){
+			$result .= ', ';
+		}
+		
+		$result .= $days . ' дн.';
+	}
+
+	return $result;
+}
+
 function days_diff($target){	
 	return (int)date_diff(date_create(date('Y-m-d')), date_create($target))->format('%a');
 }
