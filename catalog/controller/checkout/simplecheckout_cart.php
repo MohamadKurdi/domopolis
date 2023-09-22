@@ -500,18 +500,15 @@
             self::$updated = true;
             
             $this->init();
-            
-            /*if (!isset($this->session->data['vouchers'])) {
-                $this->session->data['vouchers'] = array();
-            }*/
-            
+
+            if (!empty($this->request->post['payment_method'])) {
+               // $this->session->data['payment_method']['code'] = $this->request->post['payment_method'];
+            }
+
             // Update
             if (!empty($this->request->post['quantity'])) {
-                //$keys =  isset($this->session->data['cart']) ? $this->session->data['cart'] : array();
                 foreach ($this->request->post['quantity'] as $key => $value) {
-                    //if (!empty($keys) && array_key_exists($key, $keys)) {
                     $this->cart->update($key, $value);
-                    //}
                 }
             }
             
