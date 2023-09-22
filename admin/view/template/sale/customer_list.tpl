@@ -330,7 +330,8 @@
 							
 							<td colspan="6" align="right">
 								<p>	&#160;</p>
-							<a onclick="filter();" class="button"><?php echo $button_filter; ?></a></td>
+							<a onclick="filter();" class="button"><?php echo $button_filter; ?></a>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -417,10 +418,8 @@
 												<div style="display:inline-block; padding:3px; background:#d4ffaa; border:1px dotted #CCC; font-size:12px;  margin-bottom:7px;">
 													<i class="fa fa-credit-card-alt" aria-hidden="true"></i> Карта #<? echo $customer['discount_card']; ?><? /*, скидка <? echo $customer['discount_percent']; ?>% */ ?>		
 												</div>		
-												
-												
+																								
 												<div style="display:inline-block; padding:3px; font-size:12px;">
-													
 													<? if ($customer['csi_reject']) { ?>
 														<div style="margin-bottom:5px; padding:4px 7px; font-weight:400; font-size:12px; background-color:#F96E64; display:inline-block; color:#FFF">
 															<i class="fa fa-user"></i> CSI: отказ
@@ -460,9 +459,16 @@
 											<? } ?>
 										</div>
 									</td>
-									<td><span class="load_order_history" data-customer-id="<?php echo $customer['customer_id']; ?>" style="cursor:pointer; border-bottom:1px dashed grey;">
-									Заказов <? echo $customer['order_good_count']; ?> / <? echo $customer['order_count']; ?></span>
-									<? if ($customer['order_count']) { ?><br /><span style="padding:2px; background:#ecf3e6; display:inline-block; margin-top:2px;">Σ <? echo (int)$customer['total_cheque']; ?>&nbsp;<? echo $customer['currency']; ?><? } ?></span><? if ($customer['order_count']) { ?><br /><span style="padding:2px; background:#e6e9f3; display:inline-block; margin-top:2px;">СР <? echo (int)$customer['avg_cheque']; ?>&nbsp;<? echo $customer['currency']; ?><? } ?></span>								
+									<td>
+										<span class="load_order_history" data-customer-id="<?php echo $customer['customer_id']; ?>" style="cursor:pointer; border-bottom:1px dashed grey;">
+									Заказов <? echo $customer['order_good_count']; ?> / <? echo $customer['order_count']; ?>
+										
+									</span>
+
+									<? if ($customer['order_count']) { ?>
+										<br /><span style="padding:2px; background:#ecf3e6; display:inline-block; margin-top:2px;">Σ <? echo (int)$customer['total_cheque']; ?>&nbsp;<? echo $customer['currency']; ?><? } ?></span><? if ($customer['order_count']) { ?><br /><span style="padding:2px; background:#e6e9f3; display:inline-block; margin-top:2px;">СР <? echo (int)$customer['avg_cheque']; ?>&nbsp;<? echo $customer['currency']; ?><? } ?>
+										
+										</span>								
 									</td>
 									<td class="left"><?php echo !in_array($customer['birthday'], array('30.11.-0001'))?$customer['birthday']:''; ?></td>
 									<td class="left" style="vertical-align:top;">
@@ -479,14 +485,14 @@
 										<? } ?>
 									</td>
 									<td class="left" style="vertical-align:top;">
-										<div style="<?php if ($customer['email_bad']) { ?>color:#ff5656<?php } else { ?>color:#02760e<? } ?>">
+										<div style="<?php if ($customer['email_bad']) { ?>color:#ff5656<?php } else { ?>color:#00AD07<? } ?>">
 											<? echo $customer['email']; ?>
 											<?php if ($customer['email_bad']) { ?><i class="fa fa-exclamation-triangle" style="color:#ff5656"></i><?php } ?>
-											<?php if (!$customer['email_bad']) { ?><i class="fa fa-check-circle" style="color:#02760e"></i><?php } ?>
+											<?php if (!$customer['email_bad']) { ?><i class="fa fa-check-circle" style="color:#00AD07"></i><?php } ?>
 										</div>
 										
 										<div>
-											<span style="display:inline-block; padding:3px 4px; font-size:10px; <?php if ($customer['email_bad']) { ?>background:#ff5656; color:#FFF<?php } else { ?>background:#02760e; color:#FFF<?php } ?>">
+											<span style="display:inline-block; padding:3px 4px; font-size:10px; <?php if ($customer['email_bad']) { ?>background:#ff5656; color:#FFF<?php } else { ?>background:#00AD07; color:#FFF<?php } ?>">
 												<? echo $customer['mail_status']; ?>
 											</span>
 											<span style="font-size:10px;">
@@ -534,17 +540,19 @@
 									</td>
 									
 									<td class="left"><?php echo $customer['customer_group']; ?><br /><?php echo $customer['status']; ?> / <?php echo $customer['approved']; ?></td>
-									<td class="left"><? if ($customer['country']) { ?><img src="<? echo HTTPS_IMAGE ?>flags/<? echo mb_strtolower($customer['country']) ?>.png" /><? } ?>&nbsp;&nbsp;<span style="font-size:10px;"><?php echo $customer['city']; ?></span></td>
+									<td class="left">
+										<? if ($customer['country']) { ?><img src="<? echo HTTPS_IMAGE ?>flags/<? echo mb_strtolower($customer['country']) ?>.png" /><? } ?>&nbsp;&nbsp;<span style="font-size:10px;"><?php echo $customer['city']; ?></span></td>
 									<td class="left" style="font-size:10px;"><?php echo $customer['ip']; ?><br /><?php echo $customer['source']; ?><br /><?php echo $customer['date_added']; ?></td>							
 									<td class="right">
-										<a class="button"  <? if ($customer['printed2912']) { ?>style="color:#FF0000; border-color:#FF0000;"<? } ?> href="<? echo $customer['letter_href']; ?>" target="_blank"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>
+										<a class="button" <? if ($customer['printed2912']) { ?>style="color:#FF0000; border-color:#FF0000;"<? } ?> href="<? echo $customer['letter_href']; ?>" target="_blank"><i class="fa fa-envelope-o" aria-hidden="true"></i></a>
 										<a class="button" onclick=" swal({title: 'Ссылка для входа без пароля',text: '<? echo $customer['preauth_url']; ?>', html: true,  type: 'info',  customClass: 'swal-wide',  showCancelButton: true,  showConfirmButton:false });"><i class="fa fa-link" aria-hidden="true"></i></a>										
 										<a class="button go_to_store" data-customer-id="<?php echo $customer['customer_id']; ?>" data-store-id="<?php echo $customer['store_id']; ?>">
 											<i style="font-size:16px; cursor:pointer;" class="fa fa-sign-in"></i>
 										</a>
 										<?php foreach ($customer['action'] as $action) { ?>											
 											<a class='button' href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a>
-										<?php } ?></td>
+										<?php } ?>
+									</td>
 								</tr>
 							<?php } ?>
 							<?php } else { ?>
@@ -632,8 +640,7 @@
 				window.open('index.php?route=sale/customer/login&token=<?php echo $token; ?>&customer_id='+customer_id+'&store_id=' + store_id)
 			});
 			
-		});
-		
+		});		
 	});
 	
 	function filter() {

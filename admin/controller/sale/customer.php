@@ -839,16 +839,16 @@
 			'filter_approved'          	=> $filter_approved,
 			'filter_date_added'        	=> $filter_date_added,
 			'filter_birthday_from'      => $filter_birthday_from,
-			'filter_birthday_to'        	=> $filter_birthday_to,
-			'order_first_date_from'        => $order_first_date_from,
-			'order_first_date_to'        => $order_first_date_to,
+			'filter_birthday_to'       	=> $filter_birthday_to,
+			'order_first_date_from'     => $order_first_date_from,
+			'order_first_date_to'       => $order_first_date_to,
 			'filter_order_count'        => $filter_order_count,
-			'filter_order_good_count'        => $filter_order_good_count,
-			'filter_total_sum'        => $filter_total_sum,
+			'filter_order_good_count'   => $filter_order_good_count,
+			'filter_total_sum'       	=> $filter_total_sum,
 			'filter_avg_cheque'        => $filter_avg_cheque,
-			'filter_interest_brand'        => $filter_interest_brand,
-			'filter_interest_category'        => $filter_interest_category,
-			'filter_custom_filter'        => $filter_custom_filter,
+			'filter_interest_brand'    => $filter_interest_brand,
+			'filter_interest_category' => $filter_interest_category,
+			'filter_custom_filter'     => $filter_custom_filter,
 			'filter_segment_id'        => $filter_segment_id,
 			'filter_mail_status'       => $filter_mail_status,
 			'filter_mail_checked'      => $filter_mail_checked,
@@ -1397,7 +1397,7 @@
 			
 			$countries = array();
 			foreach ($this->data['countries'] as $country){
-				$countries[$c['country_id']] = $country;
+				$countries[$country['country_id']] = $country;
 			}
 			$this->data['countries'] = $countries;
 			
@@ -1480,21 +1480,16 @@
 			$this->load->model('kp/csi');
 			$this->load->model('sale/order');
 			$this->load->model('localisation/order_status');
-			
-			
+			$this->load->model('setting/setting');
+						
 			foreach ($results as $result) {
 				$action = array();
 				
 				$action[] = array(
 				'text' => '<i class="fa fa-edit"></i>',
 				'href' => $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL')
-				);
-				
-				$this->load->model('setting/setting');
-				$store_url = ($result['store_id']==0)?HTTP_CATALOG:$this->model_setting_setting->getKeySettingValue('config', 'config_url' , $result['store_id']);
-				$preauth_url = $store_url.'?utm_term='.$result['email'].'&utoken='.md5(md5($result['email'].$result['email']));
-				
-				
+				);								
+								
 				$actiontemplate_results = $this->model_catalog_actiontemplate->getActionTemplatesHistoryByCustomer($result['customer_id']);
 				
 				$actiontemplate_history = array();
@@ -1520,6 +1515,7 @@
 					);
 				}
 				
+				$currency = $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', (int)$result['store_id']);
 				
 				$this->data['customers'][] = array(
 				'customer_id'    => $result['customer_id'],
@@ -1531,11 +1527,11 @@
 				'gender'		 => $result['gender'],
 				'source'         => $result['source'],
 				'order_count'    => $result['order_count'],
-				'total_cheque'   => $result['total_cheque'],
-				'avg_cheque'     => $result['avg_cheque'],
+				'total_cheque'   => $this->currency->format($result['total_cheque'], $currency, 1),
+				'avg_cheque'     => $this->currency->format($result['avg_cheque'], $currency, 1),
 				'order_good_count'  => $result['order_good_count'],
 				'total_calls'    => $result['total_calls'],
-				'currency'       => $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', (int)$result['store_id']),
+				'currency'       => $currency,
 				'country'        => $result['country_id']?$this->data['countries'][$result['country_id']]['iso_code_2']:false,
 				'city'           => $result['city'],
 				'discount_card'  => $result['discount_card'],
@@ -1561,7 +1557,7 @@
 				'date_added'     => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 				'selected'       => isset($this->request->post['selected']) && in_array($result['customer_id'], $this->request->post['selected']),
 				'letter_href'    => $this->url->link('sale/customer/printlist', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
-				'preauth_url'    => $preauth_url,
+				'preauth_url'    => $this->model_sale_customer->getCustomerPreauthLink($result['email'], $result['store_id']),
 				'mail_status'    => $result['mail_status'],
 				'mail_opened'    => $result['mail_opened'],
 				'mail_clicked'   => $result['mail_clicked'],
