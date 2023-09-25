@@ -2131,11 +2131,11 @@ public function index($product_id = false, $just_price = false)
                     $this->data['ukrcredits_show_icons'] = $ukrcredits_setting['show_icons'];
 
                     $this->load->model('module/ukrcredits');
-                    $this->data['credits_data'] = $this->model_module_ukrcredits->checkproduct($product_info);           
+                    $this->data['credits_info'] = $this->model_module_ukrcredits->checkproduct($product_info);           
                     
                 //    $this->log->debug($this->data['credits_data']);           
 
-                    if (!empty($this->data['credits_data']['pp']) || !empty($this->data['credits_data']['ii']) || !empty($this->data['credits_data']['mb'])) {
+                    if (!empty($this->data['credits_info']['pp']) || !empty($this->data['credits_info']['ii']) || !empty($this->data['credits_info']['mb'])) {
                          $this->data['credits_status'] = true;
                     }
                 }
@@ -2840,12 +2840,7 @@ public function index($product_id = false, $just_price = false)
             }
             
             
-            if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/setproductform.tpl')) {
-                $this->template = $this->config->get('config_template') . '/template/module/setproductform.tpl';
-            } else {
-                $this->template = 'default/template/module/setproductform.tpl';
-            }
-            
+            $this->template = 'module/setproductform.tpl';
             return $this->render();
         }
         
