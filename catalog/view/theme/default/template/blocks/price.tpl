@@ -327,9 +327,12 @@
 							<?php } ?>
 							
 						</button> 
+						<?php if (!$this->config->get('config_disable_fast_orders')) { ?>
 						<div id="quick-order-block">										
 							<input type='button' data-product_id="<?=$product_id; ?>"  id="quick-order-btn" class="price__btn-quick-order do-popup-element js-fast-byu" value='<?php echo $text_retranslate_34; ?>' data-target="quick_popup"  />
 						</div>
+						<?php }?>
+						
 						<?php if ($this->config->get('show_wishlist') == '1')  { ?>                  
 							<?php if ($logged) { ?>	
 								<button onclick="addToWishList('<?php echo $product_id; ?>');"  class="price__btn-favorite" title="<?php echo $button_wishlist; ?>">
