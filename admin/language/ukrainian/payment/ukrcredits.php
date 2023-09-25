@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']    					= 'Кредиты от Приватбанка и Монобанка';
+$_['heading_title']    					= 'Кредиты';
 
 //Text
 $_['text_module']						= 'Оплата';
