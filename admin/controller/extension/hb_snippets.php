@@ -10,8 +10,6 @@ class ControllerExtensionHbSnippets extends Controller {
 
 		$this->load->model('setting/setting');
 
-		
-		//Save the settings if the user has submitted the admin form (ie if someone has pressed save).
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			$this->model_setting_setting->editSetting('hb_snippets', $this->request->post);	
 			$this->session->data['success'] = $this->language->get('text_success');
@@ -40,8 +38,7 @@ class ControllerExtensionHbSnippets extends Controller {
 		foreach ($text_strings as $text) {
 			$this->data[$text] = $this->language->get($text);
 		}
-	
-		//This creates an error message. The error['warning'] variable is set by the call to function validate() in this controller (below)
+
  		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -52,13 +49,13 @@ class ControllerExtensionHbSnippets extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+					'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
       		'separator' => false
    		);
 		
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('extension/hb_snippets', 'token=' . $this->session->data['token'], 'SSL'),
+					'href'      => $this->url->link('extension/hb_snippets', 'token=' . $this->session->data['token'], 'SSL'),
       		'separator' => ' :: '
    		);
 		
@@ -126,57 +123,57 @@ class ControllerExtensionHbSnippets extends Controller {
 		
 		$code = '<script type="application/ld+json">';
 		$code .= '
-{
-      "@context": "http://schema.org",
-      "@type": "Organization",
-      "url": "{store_url}"';
-	  
-	  if ($hb_snippets_logo_url == 1){
-     	 $logo = ',"logo": "{store_logo}"';
-		 $code .= $logo;
-	  }
-	  
-	  if ($hb_snippets_search_enable == 1){
-     	 $search = ',"potentialAction": {
-				"@type": "SearchAction",
-				"target": "{store_url}index.php?route=product/search&search={search_term_string}",
-				"query-input": "required name=search_term_string"
-			  }';
-		 $code .= $search;
-	  }
-	  
-	  if ($hb_snippets_contact_enable == 1){
-     	 $contact_s  = ',"contactPoint" : [';
-		 $contact_c = '';
-		 foreach ($hb_snippets_contact as $contact){
-		 	$contact_c .= '
-	{
-    "@type" : "ContactPoint",
-    "telephone" : "'.$contact['n'].'",
-    "contactType" : "'.$contact['t'].'"
-	},'; 
-		 }
-		 $contact_e = ']';
-		 $code .= $contact_s.rtrim($contact_c,',').$contact_e;
-	  }
-	  
-	  if ($hb_snippets_social_enable == 1){
-	  	$social_s  = ',"sameAs" : [';
-		$social_c = '';
-		 foreach ($hb_snippets_socials as $social){
-		 	$social_c .= '"'.$social.'",'; 
-		 }
-		 $social_e = ']';
-		 $code .= $social_s.rtrim($social_c,',').$social_e;
-	  }
-	  
-		$code .= '}
-		</script>';
-		
-		$json['success'] = $code;
-		$this->response->setOutput(json_encode($json));
+		{
+			"@context": "http://schema.org",
+			"@type": "Organization",
+			"url": "{store_url}"';
+			
+			if ($hb_snippets_logo_url == 1){
+				$logo = ',"logo": "{store_logo}"';
+				$code .= $logo;
+			}
+			
+			if ($hb_snippets_search_enable == 1){
+				$search = ',"potentialAction": {
+					"@type": "SearchAction",
+					"target": "{store_url}index.php?route=product/search&search={search_term_string}",
+					"query-input": "required name=search_term_string"
+				}';
+				$code .= $search;
+			}
+			
+			if ($hb_snippets_contact_enable == 1){
+				$contact_s  = ',"contactPoint" : [';
+				$contact_c = '';
+				foreach ($hb_snippets_contact as $contact){
+					$contact_c .= '
+					{
+						"@type" : "ContactPoint",
+						"telephone" : "'.$contact['n'].'",
+						"contactType" : "'.$contact['t'].'"
+					},'; 
+				}
+				$contact_e = ']';
+				$code .= $contact_s.rtrim($contact_c,',').$contact_e;
+			}
+			
+			if ($hb_snippets_social_enable == 1){
+				$social_s  = ',"sameAs" : [';
+				$social_c = '';
+				foreach ($hb_snippets_socials as $social){
+					$social_c .= '"'.$social.'",'; 
+				}
+				$social_e = ']';
+				$code .= $social_s.rtrim($social_c,',').$social_e;
+			}
+			
+			$code .= '}
+			</script>';
+			
+			$json['success'] = $code;
+			$this->response->setOutput(json_encode($json));
 
-	}
+		}
 	
 	public function generatelocalsnippet(){
 		$name = $_POST['name'];
@@ -190,33 +187,32 @@ class ControllerExtensionHbSnippets extends Controller {
 		$price_range = $_POST['price_range'];
 		$state = $_POST['state'];
 		$store_url = HTTPS_CATALOG;
-		//$logo = HTTPS_CATALOG . 'image/' . $this->config->get('config_logo');
+		
 		
 		$code = '<script type="application/ld+json">
 		{
-  "@context": "http://schema.org",
-  "@type": "Store",
-  "@id": "'.$store_url.'",
-  "image": "'.$store_image.'",
-  "name": "'.$name.'",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "'.$street.'",
-    "addressLocality": "'.$location.'",
-    "addressRegion": "'.$state.'",
-    "postalCode": "'.$postal.'",
-    "addressCountry": "'.$country.'"
-  },
-"telephone": "'.$phone.'",
-"priceRange": "'.$price_range.'"
-}</script>';
-		$json['success'] = $code;
-		$this->response->setOutput(json_encode($json));
-	}
-	
-	public function resetoldseopack(){
-	$this->db->query("DELETE from `".DB_PREFIX."setting` where `group` = 'hb_snippets_suite' and `key` = 'hb_snippets_local_snippet'");
-	}
+			"@context": "http://schema.org",
+			"@type": "Store",
+			"@id": "'.$store_url.'",
+			"image": "'.$store_image.'",
+			"name": "'.$name.'",
+			"address": {
+				"@type": "PostalAddress",
+				"streetAddress": "'.$street.'",
+				"addressLocality": "'.$location.'",
+				"addressRegion": "'.$state.'",
+				"postalCode": "'.$postal.'",
+				"addressCountry": "'.$country.'"
+				},
+				"telephone": "'.$phone.'",
+				"priceRange": "'.$price_range.'"
+			}</script>';
+			$json['success'] = $code;
+			$this->response->setOutput(json_encode($json));
+		}
+		
+		public function resetoldseopack(){
+			$this->db->query("DELETE from `setting` where `group` = 'hb_snippets_suite' and `key` = 'hb_snippets_local_snippet'");
+		}
 
 }
-?>

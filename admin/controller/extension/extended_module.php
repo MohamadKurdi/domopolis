@@ -501,4 +501,3 @@ class ControllerExtensionExtendedModule extends Controller {
 	}
 
 }
-?>

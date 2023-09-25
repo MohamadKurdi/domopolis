@@ -53,6 +53,7 @@ class ControllerPaymentUkrCredits extends Controller {
 			$data['ii_discount'] = 0;
 			$data['ii_special'] = 0;
 			$data['ii_stock'] = 0;
+			$data['ii_stock_status_id'] 	= [];
 			$data['ii_pq'] = 24;
 			$data['ii_min_total'] = '';
 			$data['ii_max_total'] = 100000;
@@ -63,6 +64,8 @@ class ControllerPaymentUkrCredits extends Controller {
 			$data['ii_markup'] = 1.000;
 			$data['ii_enabled'] = 0;
 			$data['ii_product_allowed'] = [];
+			$data['ii_categories_allowed'] 		= [];
+			$data['ii_manufacturers_allowed'] 	= [];
 			$data['ii_geo_zone_id'] = 0;
 			
 			$data['mb_shop_id'] = '';
@@ -72,6 +75,7 @@ class ControllerPaymentUkrCredits extends Controller {
 			$data['mb_discount'] = 0;
 			$data['mb_special'] = 0;
 			$data['mb_stock'] = 0;
+			$data['mb_stock_status_id'] 	= [];
 			$data['mb_pq'] = 24;
 			$data['mb_min_total'] = 500;
 			$data['mb_max_total'] = 100000;
@@ -82,6 +86,8 @@ class ControllerPaymentUkrCredits extends Controller {
 			$data['mb_markup'] = 1.000;
 			$data['mb_enabled'] = 0;
 			$data['mb_product_allowed'] = [];
+			$data['mb_categories_allowed'] 		= [];
+			$data['mb_manufacturers_allowed'] 	= [];
 			$data['mb_geo_zone_id'] = 0;
 			
 			$data['completed_status_id'] = 0;
@@ -166,12 +172,36 @@ class ControllerPaymentUkrCredits extends Controller {
 				$this->request->post["pp_manufacturers_allowed"] = [];
 			}
 
+			if (!isset($this->request->post["ii_stock_status_id"])) {
+				$this->request->post["ii_stock_status_id"] = [];
+			}
+
 			if (!isset($this->request->post["ii_product_allowed"])) {
 				$this->request->post["ii_product_allowed"] = [];
 			}
 
+			if (!isset($this->request->post["ii_categories_allowed"])) {
+				$this->request->post["ii_categories_allowed"] = [];
+			}
+
+			if (!isset($this->request->post["pp_manufacturers_allowed"])) {
+				$this->request->post["pp_manufacturers_allowed"] = [];
+			}
+
 			if (!isset($this->request->post["mb_product_allowed"])) {
 				$this->request->post["mb_product_allowed"] = [];
+			}
+
+			if (!isset($this->request->post["mb_stock_status_id"])) {
+				$this->request->post["mb_stock_status_id"] = [];
+			}
+
+			if (!isset($this->request->post["mb_categories_allowed"])) {
+				$this->request->post["mb_categories_allowed"] = [];
+			}
+
+			if (!isset($this->request->post["mb_manufacturers_allowed"])) {
+				$this->request->post["mb_manufacturers_allowed"] = [];
 			}
 
 			$setting["ukrcredits_sort_order"] 		= $this->request->post["pp_sort_order"] . "," . $this->request->post["ii_sort_order"] . "," . $this->request->post["mb_sort_order"];
@@ -291,6 +321,8 @@ class ControllerPaymentUkrCredits extends Controller {
 		$data['languages'] = $this->model_localisation_language->getLanguages();
 
         $this->load->model('catalog/product');
+        $this->load->model('catalog/category');
+        $this->load->model('catalog/manufacturer');
 		
 		$data['pp_products_allowed'] = [];
 		if (!isset($data['pp_product_allowed'])) {
@@ -306,7 +338,6 @@ class ControllerPaymentUkrCredits extends Controller {
 			}
 		}
 
-		$this->load->model('catalog/category');
 		$data['pp_category_allowed'] = [];
 		if (!isset($data['pp_categories_allowed'])) {
 			$data['pp_categories_allowed'] = [];
@@ -321,9 +352,7 @@ class ControllerPaymentUkrCredits extends Controller {
 				);
 			}
 		}
-
-
-		$this->load->model('catalog/manufacturer');
+		
 		$data['pp_manufacturer_allowed'] = [];
 		if (!isset($data['pp_manufacturers_allowed'])) {
 			$data['pp_manufacturers_allowed'] = [];
@@ -353,6 +382,36 @@ class ControllerPaymentUkrCredits extends Controller {
 			}
 		}
 
+		$data['ii_category_allowed'] = [];
+		if (!isset($data['ii_categories_allowed'])) {
+			$data['ii_categories_allowed'] = [];
+		}
+
+		foreach ($data['ii_categories_allowed'] as $category_id) {
+			$category_info = $this->model_catalog_category->getCategories(['filter_category_id' => $category_id])[0];
+			if ($category_info) {
+				$data['ii_category_allowed'][] = array(
+					'category_id' 	=> $category_info['category_id'],
+					'name'        	=> $category_info['name']
+				);
+			}
+		}
+		
+		$data['ii_manufacturer_allowed'] = [];
+		if (!isset($data['ii_manufacturers_allowed'])) {
+			$data['ii_manufacturers_allowed'] = [];
+		}
+
+		foreach ($data['ii_manufacturers_allowed'] as $manufacturer_id) {
+			$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
+			if ($manufacturer_info) {
+				$data['ii_manufacturer_allowed'][] = array(
+					'manufacturer_id' 	=> $manufacturer_info['manufacturer_id'],
+					'name'        		=> $manufacturer_info['name']
+				);
+			}
+		}
+
 		$data['mb_products_allowed'] = [];
 		if (!isset($data['mb_product_allowed'])) {
 			$data['mb_product_allowed'] = [];
@@ -363,6 +422,36 @@ class ControllerPaymentUkrCredits extends Controller {
 				$data['mb_products_allowed'][] = array(
 					'product_id' => $product_info['product_id'],
 					'name'        => $product_info['name']
+				);
+			}
+		}
+
+		$data['mb_category_allowed'] = [];
+		if (!isset($data['mb_categories_allowed'])) {
+			$data['mb_categories_allowed'] = [];
+		}
+
+		foreach ($data['mb_categories_allowed'] as $category_id) {
+			$category_info = $this->model_catalog_category->getCategories(['filter_category_id' => $category_id])[0];
+			if ($category_info) {
+				$data['mb_category_allowed'][] = array(
+					'category_id' 	=> $category_info['category_id'],
+					'name'        	=> $category_info['name']
+				);
+			}
+		}
+		
+		$data['mb_manufacturer_allowed'] = [];
+		if (!isset($data['mb_manufacturers_allowed'])) {
+			$data['mb_manufacturers_allowed'] = [];
+		}
+
+		foreach ($data['mb_manufacturers_allowed'] as $manufacturer_id) {
+			$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
+			if ($manufacturer_info) {
+				$data['mb_manufacturer_allowed'][] = array(
+					'manufacturer_id' 	=> $manufacturer_info['manufacturer_id'],
+					'name'        		=> $manufacturer_info['name']
 				);
 			}
 		}
@@ -378,26 +467,7 @@ class ControllerPaymentUkrCredits extends Controller {
 			'common/footer'
 		);	
 
-		if (version_compare(VERSION, '3.0.0', '>=')) {
-			$template_engine = $this->registry->get('config')->get('template_engine');
-			$template_directory = $this->registry->get('config')->get('template_directory');
-			$this->registry->get('config')->set('template_engine', 'template');
-			if (!file_exists(DIR_TEMPLATE . $template_directory . 'payment/ukrcredits' . '.tpl')) {
-				$this->registry->get('config')->set('template_directory', 'default/template/');
-			}
-			$template = $this->load->view('payment/ukrcredits', $data);
-			
-			$this->registry->get('config')->set('template_engine', $template_engine);
-			$this->registry->get('config')->set('template_directory', $template_directory);
-
-			$this->response->setOutput($template);
-		} else if (version_compare(VERSION,'2.3','>=')) {
-			$this->response->setOutput($this->load->view('payment/ukrcredits', $data));
-		} else if (version_compare(VERSION,'2.0','>=')) {
-			$this->response->setOutput($this->load->view('payment/ukrcredits.tpl', $data));
-		} else {
-			$this->response->setOutput($this->render());
-		}
+		$this->response->setOutput($this->render());
     }
 	
 	public function license() {

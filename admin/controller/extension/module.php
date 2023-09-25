@@ -101,9 +101,6 @@ class ControllerExtensionModule extends Controller {
 	}
 
 	public function install() {
-		
-		var_dump(11);
-	
 		$this->language->load('extension/module');
 
 		if (!$this->user->hasPermission('modify', 'extension/module')) {

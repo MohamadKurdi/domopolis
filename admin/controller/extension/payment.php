@@ -64,7 +64,9 @@ class ControllerExtensionPayment extends Controller {
 		if ($files) {
 			foreach ($files as $file) {
 				$extension = basename($file, '.php');
-				if ($extension == 'ukrcredits_pp' || $extension == 'ukrcredits_ii' || $extension == 'ukrcredits_mb') break;
+
+				if ($extension == 'ukrcredits_pp' || $extension == 'ukrcredits_ii' || $extension == 'ukrcredits_mb') continue;
+				if ($this->config->get('config_country_id') == '220' && $extension == 'shoputils_psb') continue;		
 
 				$this->language->load('payment/' . $extension);
 
@@ -172,4 +174,3 @@ class ControllerExtensionPayment extends Controller {
 		}			
 	}
 }
-?>
