@@ -32,6 +32,7 @@ class ControllerModuleUkrcreditsSimple extends Controller {
 					}
 				}
 			}
+			
 			if ($partsCount == 24) {
 				$partsCount = $setting[$type.'_pq'];
 			}
@@ -42,7 +43,6 @@ class ControllerModuleUkrcreditsSimple extends Controller {
 			$total = 0;
 			$taxes = $this->cart->getTaxes();
 
-				// Display prices
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
 				$sort_order = array(); 
 
@@ -75,14 +75,16 @@ class ControllerModuleUkrcreditsSimple extends Controller {
 			$data['total'] = str_replace($replace_array,"",$this->currency->format($this->tax->calculate($total, $this->config->get('tax_class_id'), $this->config->get('config_tax')), $this->session->data['currency']));
 			
 			$data['credit'] = array(
-				'type' => $setting[$type.'_merchantType'],
-				'name' => $this->language->get('text_title_'.mb_strtolower($setting[$type.'_merchantType'])),
-				'partsCount' => $partsCount,
-				'price' => $data['total']
+				'type' 				=> $setting[$type.'_merchantType'],
+				'name' 				=> $this->language->get('text_title_'.mb_strtolower($setting[$type.'_merchantType'])),
+				'text_in_product'	=> $setting['text_in_product_' . $type][$this->config->get('config_language_id')],
+				'text_in_cart'		=> $setting['text_in_cart_' . $type][$this->config->get('config_language_id')],
+				'partsCount' 		=> $partsCount,
+				'price' 			=> $data['total']
 			);
 			
-			if (isset($this->session->data['ukrcredits_'.$type.'_sel'])) {
-				$data['credit']['partsCountSel'] = $this->session->data['ukrcredits_'.$type.'_sel'];
+			if (isset($this->session->data['ukrcredits_' . $type . '_sel'])) {
+				$data['credit']['partsCountSel'] = $this->session->data['ukrcredits_' . $type . '_sel'];
 			} else {
 				$data['credit']['partsCountSel'] = '';
 			}
