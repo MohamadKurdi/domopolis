@@ -1,28 +1,34 @@
 <?php
 class ModelModuleUkrcreditsMain extends Model {
 
-	public function checkproduct($product, $quantity = 1, $options = false, $price = false, $specialprice = false) {
-		$dir = version_compare(VERSION,'2.3','>=') ? 'extension/module' : 'module';
+	public function checkproduct($product, $quantity = 1, $options = false, $price = false, $specialprice = false) {		
 		$setting = $this->config->get('ukrcredits_settings');
 
 		$this->load->language('module/ukrcredits');		
+		$this->load->model('catalog/product');
+
 		$status_pp = false;
 		$status_ii = false;
 		$status_mb = false;
 		$replace_array = array($this->currency->getSymbolLeft($this->session->data['currency']),$this->currency->getSymbolRight($this->session->data['currency']),$this->language->get('thousand_point'));
 		
 		if ($this->config->get('ukrcredits_status')) {			
-			if ($setting['pp_status']) {
-				$credit_info = $this->getProductUkrcredit($product['product_id']);
+			$credit_info 					= $this->getProductUkrcredit($product['product_id']);
 
+			if ($setting['pp_status']) {
 				$stock_status_ok 				= (!empty($setting['pp_stock_status_id']) && in_array($product['stock_status_id'], $setting['pp_stock_status_id']));
 				$credit_enabled_for_product		= ($setting['pp_enabled'] && (in_array($product['product_id'], $setting['pp_product_allowed']) || !empty($credit_info['product_pp'])));
 				$settings_enable_all_products 	= (!$setting['pp_product_allowed'] && !$setting['pp_enabled']);
 				$default_stock_logic  			= ($setting['pp_stock'] && $product['quantity']);
 
+				$manufacturer_check				= (empty($setting['allowed_mans_pp']) || in_array($product['manufacturer_id'], $setting['allowed_mans_pp']));
+				$category_check					= (empty($setting['allowed_сats_pp']) || in_array($product['main_category_id'], $setting['allowed_сats_pp']));
+
 				if (($stock_status_ok && $credit_enabled_for_product) || $settings_enable_all_products || $default_stock_logic){
-					$status_pp = true;
-				}
+					if ($manufacturer_check && $category_check){
+						$status_pp = true;
+					}					
+				}				
 
 				if ($status_pp) {
 					$pp_price = $product['price'];
@@ -105,7 +111,6 @@ class ModelModuleUkrcreditsMain extends Model {
 					  foreach($option_price_arr as $operations){
 						  foreach($operations as $operation=>$value){
 							  if ($operation == '=') {
-								  //цена опции становится основной
 								  if (!$has_eq_mod){
 									  $new_price = 0;
 									  $new_option_price = $value;
@@ -163,14 +168,23 @@ class ModelModuleUkrcreditsMain extends Model {
 				}
 			}
 
-			if (($setting['ii_status'] && ($setting['ii_stock'] && $product['quantity'])) || ($setting['ii_status'] && !$setting['ii_stock'])) {
-				if (
-					(!$setting['ii_product_allowed'] && !$setting['ii_enabled']) || 
-					($setting['ii_product_allowed'] && in_array($product['product_id'], $setting['ii_product_allowed'])) ||
-					($setting['ii_enabled'] && isset($credit_info['product_ii']) && $credit_info['product_ii'])
-					) {
-					$status_ii = true;
+			if ($setting['ii_status']) {
+				
+				$stock_status_ok 				= (!empty($setting['ii_stock_status_id']) && in_array($product['stock_status_id'], $setting['ii_stock_status_id']));
+				$credit_enabled_for_product		= ($setting['ii_enabled'] && (in_array($product['product_id'], $setting['ii_product_allowed']) || !empty($credit_info['product_ii'])));
+				$settings_enable_all_products 	= (!$setting['ii_product_allowed'] && !$setting['ii_enabled']);
+				$default_stock_logic  			= ($setting['ii_stock'] && $product['quantity']);
+
+				$manufacturer_check				= (empty($setting['allowed_mans_ii']) || in_array($product['manufacturer_id'], $setting['allowed_mans_ii']));
+				$category_check					= (empty($setting['allowed_сats_ii']) || in_array($product['main_category_id'], $setting['allowed_сats_ii']));
+
+				if (($stock_status_ok && $credit_enabled_for_product) || $settings_enable_all_products || $default_stock_logic){
+					if ($manufacturer_check && $category_check){
+						$status_ii = true;
+					}
 				}
+
+
 				if ($status_ii) {
 					$ii_price = $product['price'];
 					if (!$setting['ii_discount'] && $quantity > 1) {
@@ -303,14 +317,22 @@ class ModelModuleUkrcreditsMain extends Model {
 				}
 			}
 			
-			if (($setting['mb_status'] && ($setting['mb_stock'] && $product['quantity'])) || ($setting['mb_status'] && !$setting['mb_stock'])) {
-				if (
-					(!$setting['mb_product_allowed'] && !$setting['mb_enabled']) || 
-					($setting['mb_product_allowed'] && in_array($product['product_id'], $setting['mb_product_allowed'])) ||
-					($setting['mb_enabled'] && isset($credit_info['product_mb']) && $credit_info['product_mb'])
-					) {
-					$status_mb = true;
+			if ($setting['mb_status']) {
+				
+				$stock_status_ok 				= (!empty($setting['ii_stock_status_id']) && in_array($product['stock_status_id'], $setting['ii_stock_status_id']));
+				$credit_enabled_for_product		= ($setting['ii_enabled'] && (in_array($product['product_id'], $setting['ii_product_allowed']) || !empty($credit_info['product_ii'])));
+				$settings_enable_all_products 	= (!$setting['ii_product_allowed'] && !$setting['ii_enabled']);
+				$default_stock_logic  			= ($setting['ii_stock'] && $product['quantity']);
+
+				$manufacturer_check				= (empty($setting['allowed_mans_ii']) || in_array($product['manufacturer_id'], $setting['allowed_mans_ii']));
+				$category_check					= (empty($setting['allowed_сats_ii']) || in_array($product['main_category_id'], $setting['allowed_сats_ii']));
+
+				if (($stock_status_ok && $credit_enabled_for_product) || $settings_enable_all_products || $default_stock_logic){
+					if ($manufacturer_check && $category_check){					
+						$status_ii = true;
+					}
 				}
+
 				if ($status_mb) {
 					$mb_price = $product['price'];
 					if (!$setting['mb_discount'] && $quantity > 1) {

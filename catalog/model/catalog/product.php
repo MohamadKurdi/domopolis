@@ -276,6 +276,8 @@
 						'stock_text'  				=> $result['stock_text'],						
 						'show_delivery_terms' 		=> $stock_data['show_delivery_terms'],
 						'manufacturer' 				=> $result['manufacturer'],
+						'main_category_id'         	=> $result['main_category_id'],
+						'manufacturer_id'          	=> $result['manufacturer_id'],
 						'thumb'       				=> $image,						
 						'is_set' 	  				=> $result['set_id'],
 						'name'        				=> $result['name'],
