@@ -58,6 +58,7 @@
 			
 			$this->_templateData['heading_title'] = $this->language->get('heading_title');
 			$this->_templateData['mask'] = $this->config->get('config_phonemask');
+			$this->_templateData['config_disable_fast_orders']   = $this->config->get('config_disable_fast_orders');
 			
 			$this->simplecheckout->clearPreventDeleteFlag();
 			$this->simplecheckout->clearSimpleSession();

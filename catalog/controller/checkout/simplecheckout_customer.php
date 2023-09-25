@@ -44,13 +44,13 @@
             $this->_templateData['text_you_will_be_registered']  = $this->language->get('text_you_will_be_registered');
             $this->_templateData['text_account_created']         = $this->language->get('text_account_created');
             $this->_templateData['entry_address_same']           = $this->language->get('entry_address_same');
+            $this->_templateData['config_disable_fast_orders']   = $this->config->get('config_disable_fast_orders');
             
             $this->_templateData['display_login']               = !$this->customer->isLogged() && $this->simplecheckout->getSettingValue('displayLogin', 'customer');
             $this->_templateData['display_registered']          = !empty($this->session->data['simple']['registered']) ? true : false;
             
             $this->_templateData['rows'] = $this->simplecheckout->getRows('customer');
-           
-            
+                       
             if (!$this->simplecheckout->validateFields('customer')) {
                 $this->simplecheckout->addError('customer');
             }

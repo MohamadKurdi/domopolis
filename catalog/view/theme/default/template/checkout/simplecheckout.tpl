@@ -20,6 +20,11 @@
             }
             }
         <?php } ?>
+
+        <?php if ($config_disable_fast_orders) { ?>
+            #quick_order_simplecheckout_btn{display:none!important;}
+        <?php } ?>
+
         <?php if ($customer_with_payment_address) { ?>
             #simplecheckout_customer {
             margin-bottom: 0;

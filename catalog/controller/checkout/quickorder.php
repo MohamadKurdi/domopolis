@@ -115,7 +115,6 @@ class ControllerCheckoutQuickorder extends Controller {
 	}
 
 	public function createpreorder(){
-
 		$json = array();
 		$this->language->load('checkout/cart');
 
@@ -551,7 +550,11 @@ class ControllerCheckoutQuickorder extends Controller {
 		}
 	}	
 
-	public function createorderfast(){		
+	public function createorderfast(){	
+		if ($this->config->get('config_disable_fast_orders')){
+			return;
+		}
+
 		$this->load->model('setting/extension');
 
 		$this->language->load('checkout/cart');	
@@ -931,6 +934,10 @@ class ControllerCheckoutQuickorder extends Controller {
 	}
 
 	public function createorder() {
+		if ($this->config->get('config_disable_fast_orders')){
+			return;
+		}
+		
 		$json = array();
 		$this->language->load('checkout/cart');		
 		$this->language->load('checkout/checkout');

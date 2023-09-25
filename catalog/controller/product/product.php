@@ -1053,7 +1053,7 @@ public function index($product_id = false, $just_price = false)
                         }
                     }
 
-                    if (!$this->config->get('config_delivery_outstock_enable') && !$product[$this->config->get('config_warehouse_identifier')]) {
+                    if (!$this->config->get('config_delivery_outstock_enable') && !$product_info[$this->config->get('config_warehouse_identifier')]) {
                         $this->data['show_delivery_terms'] = false;
                     }
 

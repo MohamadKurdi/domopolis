@@ -32,6 +32,3 @@ class ControllerCheckoutSimpleCheckoutBlock extends Controller {
         }
     }
 }
-
-
-?>
