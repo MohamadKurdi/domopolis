@@ -284,6 +284,10 @@
 				if (isset($this->request->get['filter_pwa'])) {
 					$url .= '&filter_pwa=' . $this->request->get['filter_pwa'];
 				}
+
+				if (isset($this->request->get['filter_is_credit_order'])) {
+					$url .= '&filter_is_credit_order=' . $this->request->get['filter_is_credit_order'];
+				}
 				
 				if (isset($this->request->get['filter_yam'])) {
 					$url .= '&filter_yam=' . $this->request->get['filter_yam'];
@@ -486,6 +490,10 @@
 					if (isset($this->request->get['filter_pwa'])) {
 						$url .= '&filter_pwa=' . $this->request->get['filter_pwa'];
 					}
+
+					if (isset($this->request->get['filter_is_credit_order'])) {
+						$url .= '&filter_is_credit_order=' . $this->request->get['filter_is_credit_order'];
+					}
 					
 					if (isset($this->request->get['filter_yam'])) {
 						$url .= '&filter_yam=' . $this->request->get['filter_yam'];
@@ -622,6 +630,10 @@
 				if (isset($this->request->get['filter_pwa'])) {
 					$url .= '&filter_pwa=' . $this->request->get['filter_pwa'];
 				}
+
+				if (isset($this->request->get['filter_is_credit_order'])) {
+					$url .= '&filter_is_credit_order=' . $this->request->get['filter_is_credit_order'];
+				}
 				
 				if (isset($this->request->get['filter_yam'])) {
 					$url .= '&filter_yam=' . $this->request->get['filter_yam'];
@@ -747,6 +759,10 @@
 				
 				if (isset($this->request->get['filter_pwa'])) {
 					$url .= '&filter_pwa=' . $this->request->get['filter_pwa'];
+				}
+
+				if (isset($this->request->get['filter_is_credit_order'])) {
+					$url .= '&filter_is_credit_order=' . $this->request->get['filter_is_credit_order'];
 				}
 				
 				if (isset($this->request->get['filter_yam'])) {
@@ -951,6 +967,12 @@
 				} else {
 				$filter_pwa = null;
 			}
+
+			if (isset($this->request->get['filter_is_credit_order'])) {
+				$filter_is_credit_order = $this->request->get['filter_is_credit_order'];
+				} else {
+				$filter_is_credit_order = null;
+			}
 			
 			if (isset($this->request->get['filter_yam'])) {
 				$filter_yam = $this->request->get['filter_yam'];
@@ -1091,6 +1113,10 @@
 			if (isset($this->request->get['filter_pwa'])) {
 				$url .= '&filter_pwa=' . $this->request->get['filter_pwa'];
 			}
+
+			if (isset($this->request->get['filter_is_credit_order'])) {
+				$url .= '&filter_is_credit_order=' . $this->request->get['filter_is_credit_order'];
+			}
 			
 			if (isset($this->request->get['filter_yam'])) {
 				$url .= '&filter_yam=' . $this->request->get['filter_yam'];
@@ -1183,6 +1209,7 @@
 			'filter_payment_method'  => $filter_payment_method,
 			'filter_urgent'    		 => $filter_urgent,
 			'filter_pwa'    		 => $filter_pwa,
+			'filter_is_credit_order' => $filter_is_credit_order,
 			'filter_yam'    		 => $filter_yam,
 			'filter_yam_id'    		 => $filter_yam_id,
 			'filter_preorder'    	 => $filter_preorder,
@@ -1419,7 +1446,7 @@
 				if ($result['preorder']){
 					$totals2 = [];
 					$total_discount = false;
-				}
+				}				
 				
 				$this->data['orders'][] = array(
 				'order_id'      			=> $result['order_id'],
@@ -1432,6 +1459,8 @@
 				'yam_status'              	=> $result['yam_status'],
 				'yam_substatus'           	=> $result['yam_substatus'],
 				'yam_fake'           	  	=> $result['yam_fake'],
+				'ukrcredits_order_status'      => $result['ukrcredits_order_status'],
+				'ukrcredits_order_substatus'   => $result['ukrcredits_order_substatus'],
 				'customer'      			=> $result['customer'],
 				'email'      				=> $result['email'],
 				'email_bad'					=> !$this->emailBlackList->check($result['email']),
@@ -1664,6 +1693,10 @@
 			if (isset($this->request->get['filter_pwa'])) {
 				$url .= '&filter_pwa=' . $this->request->get['filter_pwa'];
 			}
+
+			if (isset($this->request->get['filter_is_credit_order'])) {
+				$url .= '&filter_is_credit_order=' . $this->request->get['filter_is_credit_order'];
+			}
 			
 			if (isset($this->request->get['filter_yam'])) {
 				$url .= '&filter_yam=' . $this->request->get['filter_yam'];
@@ -1809,6 +1842,10 @@
 			if (isset($this->request->get['filter_pwa'])) {
 				$url .= '&filter_pwa=' . $this->request->get['filter_pwa'];
 			}
+
+			if (isset($this->request->get['filter_is_credit_order'])) {
+				$url .= '&filter_is_credit_order=' . $this->request->get['filter_is_credit_order'];
+			}
 			
 			if (isset($this->request->get['filter_yam'])) {
 				$url .= '&filter_yam=' . $this->request->get['filter_yam'];
@@ -1851,34 +1888,35 @@
 			
 			$this->data['pagination'] = $pagination->render();
 			
-			$this->data['filter_order_id'] = $filter_order_id;
-			$this->data['filter_customer'] = $filter_customer;
-			$this->data['filter_referrer'] = $filter_referrer;
-			$this->data['filter_discount_card'] = $filter_discount_card;
-			$this->data['filter_order_status_id'] = $filter_order_status_id;
-			$this->data['filter_reject_reason_id'] = $filter_reject_reason_id;
-			$this->data['filter_order_store_id'] = $filter_order_store_id;
-			$this->data['filter_total'] = $filter_total;
-			$this->data['filter_date_added'] = $filter_date_added;
-			$this->data['filter_date_added_to'] = $filter_date_added_to;
-			$this->data['filter_date_modified'] = $filter_date_modified;
-			$this->data['filter_date_delivery'] = $filter_date_delivery;
-			$this->data['filter_manager_id'] = $filter_manager_id;
-			$this->data['filter_courier_id'] = $filter_courier_id;
-			$this->data['filter_affiliate_id'] = $filter_affiliate_id;
-			$this->data['filter_product_id'] = $filter_product_id;
-			$this->data['filter_ttn'] = $filter_ttn;
-			$this->data['filter_courier_status'] = $filter_courier_status;
-			$this->data['filter_shipping_method'] = $filter_shipping_method;
-			$this->data['filter_payment_method'] = $filter_payment_method;
-			$this->data['filter_urgent'] = $filter_urgent;
-			$this->data['filter_pwa'] = $filter_pwa;
-			$this->data['filter_yam'] = $filter_yam;
-			$this->data['filter_yam_id'] = $filter_yam_id;
-			$this->data['filter_preorder'] = $filter_preorder;
-			$this->data['filter_urgent_buy'] = $filter_urgent_buy;
-			$this->data['filter_wait_full'] = $filter_wait_full;
-			$this->data['filter_ua_logistics'] = $filter_ua_logistics;
+			$this->data['filter_order_id'] 			= $filter_order_id;
+			$this->data['filter_customer'] 			= $filter_customer;
+			$this->data['filter_referrer'] 			= $filter_referrer;
+			$this->data['filter_discount_card'] 	= $filter_discount_card;
+			$this->data['filter_order_status_id'] 	= $filter_order_status_id;
+			$this->data['filter_reject_reason_id'] 	= $filter_reject_reason_id;
+			$this->data['filter_order_store_id'] 	= $filter_order_store_id;
+			$this->data['filter_total'] 			= $filter_total;
+			$this->data['filter_date_added'] 		= $filter_date_added;
+			$this->data['filter_date_added_to'] 	= $filter_date_added_to;
+			$this->data['filter_date_modified'] 	= $filter_date_modified;
+			$this->data['filter_date_delivery'] 	= $filter_date_delivery;
+			$this->data['filter_manager_id'] 		= $filter_manager_id;
+			$this->data['filter_courier_id'] 		= $filter_courier_id;
+			$this->data['filter_affiliate_id'] 		= $filter_affiliate_id;
+			$this->data['filter_product_id'] 		= $filter_product_id;
+			$this->data['filter_ttn'] 				= $filter_ttn;
+			$this->data['filter_courier_status'] 	= $filter_courier_status;
+			$this->data['filter_shipping_method'] 	= $filter_shipping_method;
+			$this->data['filter_payment_method'] 	= $filter_payment_method;
+			$this->data['filter_urgent'] 			= $filter_urgent;
+			$this->data['filter_pwa']				= $filter_pwa;
+			$this->data['filter_is_credit_order'] 	= $filter_is_credit_order;
+			$this->data['filter_yam'] 				= $filter_yam;
+			$this->data['filter_yam_id'] 			= $filter_yam_id;
+			$this->data['filter_preorder'] 			= $filter_preorder;
+			$this->data['filter_urgent_buy'] 		= $filter_urgent_buy;
+			$this->data['filter_wait_full'] 		= $filter_wait_full;
+			$this->data['filter_ua_logistics'] 		= $filter_ua_logistics;
 			
 			$this->data['all_managers'] = $this->getAllManagersWhoCanOwnOrders();			
 			$this->data['all_couriers'] = $this->getAllCouriers();
@@ -2476,23 +2514,25 @@
 			}
 			
 			if ($order_info['total_national'] > 0){
-				$this->data['total'] = $this->currency->format($order_info['total_national'], $order_info['currency_code'], '1');
-				
-				$this->data['tip_total'] = $order_info['total_national'];
-				$this->data['tip_total_txt'] =  $this->currency->format($order_info['total_national'], $order_info['currency_code'], 1);
+				$this->data['total'] 			= $this->currency->format($order_info['total_national'], $order_info['currency_code'], '1');				
+				$this->data['tip_total'] 		= $order_info['total_national'];
+				$this->data['tip_total_txt'] 	=  $this->currency->format($order_info['total_national'], $order_info['currency_code'], 1);
 				} else {
-				$this->data['total'] = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value']);
-				$this->data['tip_total'] = round($this->data['total']);
-				$this->data['tip_total_txt'] =  $this->currency->format(round($this->data['total']), $order_info['currency_code'], 1);
+				$this->data['total'] 			= $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value']);
+				$this->data['tip_total'] 		= round($this->data['total']);
+				$this->data['tip_total_txt'] 	=  $this->currency->format(round($this->data['total']), $order_info['currency_code'], 1);
 			}
+
 			$this->data['total_num'] 		= $order_info['total'];	
 			$this->data['currency_code'] 	= $order_info['currency_code'];
-
-			$this->data['text_confirm'] = $this->language->get('text_confirm');
-			$this->data['text_wait'] 	= $this->language->get('text_wait');
+			$this->data['payment_code'] 	= $order_info['payment_code'];
+			$this->data['ukrcredits_payment_type'] 		= $order_info['ukrcredits_payment_type']; 
 			$this->data['ukrcredits_order_substatus'] 	= $order_info['ukrcredits_order_substatus']; 
 			$this->data['ukrcredits_order_status'] 		= $order_info['ukrcredits_order_status']; 
 			$this->data['ukrcredits_order_id'] 			= $order_info['ukrcredits_order_id']; 
+
+			$this->data['text_confirm'] 				= $this->language->get('text_confirm');
+			$this->data['text_wait'] 					= $this->language->get('text_wait');
 			
 			$this->data['bill_file'] 		= $order_info['bill_file'];
 			$this->data['bill_file2'] 		= $order_info['bill_file2'];			

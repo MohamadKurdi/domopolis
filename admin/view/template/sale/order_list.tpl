@@ -465,6 +465,13 @@
 								<input id="checkbox_14" class="checkbox" type="checkbox" name="filter_pwa" <? if ($filter_pwa) { ?>checked="checked"<? } ?> value="1" /> 
 								<label for="checkbox_14" style="color:#7F00FF;"><i class="fa fa-download" style="padding: 3px 3px;background-color: #7F00FF;color: #FFF;"></i>&nbsp;PWA/APP Заказы</label>								
 							</div>
+
+							<?php if ($this->config->get('ukrcredits_status')) { ?>
+								<div style="margin-top:5px;">
+									<input id="checkbox_149" class="checkbox" type="checkbox" name="filter_is_credit_order" <? if ($filter_is_credit_order) { ?>checked="checked"<? } ?> value="1" /> 
+									<label for="checkbox_149" style="color:#00AD07;"><i class="fa fa-percent" style="padding: 3px 3px;background-color: #00AD07;color: #FFF;"></i>&nbsp;Кредитные Заказы</label>								
+								</div>
+							<?php } ?>
 							
 							<?php if ($this->config->get('config_country_id') == 176) { ?>
 								<div style="margin-top:5px;">
@@ -777,7 +784,13 @@
 											<br/>
 											<?php if ($order['payment_method']) { ?>
 												<span style="font-size:11px; line-height:14px;"><?php echo $order['payment_method']; ?></span> 
-												<span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:black;"><?php echo $order['payment_code']; ?></span>
+												<span style="font-size:10px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:black;"><?php echo $order['payment_code']; ?></span>
+
+												<?php if ($this->config->get('ukrcredits_status') && $order['ukrcredits_order_status']) { ?>
+													<span style="font-size:10px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:#00AD07;">
+														<i class="fa fa-percent"></i> <?php echo $order['ukrcredits_order_status']; ?>
+													</span>
+												<?php } ?>
 
 												<?php if ($order['paid_by']) { ?>
 													<span style="font-size:9px; line-height:10px; display:inline-block; padding:3px; color:#FFF; background-color:black;"><i class="fa fa-check"></i> <?php echo $order['paid_by']; ?></span>
@@ -1408,6 +1421,12 @@
 		
 		if (filter_pwa !== undefined) {
 			url += '&filter_pwa=1';
+		}
+
+		var filter_is_credit_order = $('input[name=\'filter_is_credit_order\']:checked').val();
+		
+		if (filter_is_credit_order !== undefined) {
+			url += '&filter_is_credit_order=1';
 		}
 		
 		<?php if ($this->config->get('config_country_id') == 176) { ?>	

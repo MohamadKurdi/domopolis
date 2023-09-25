@@ -3300,9 +3300,51 @@
 										<input type="hidden" id="pay_equire2" name="pay_equire2" value="<? if ($pay_equire2) { ?>1<? } else { ?>0<? } ?>"  />
 									</td>
 								</tr>
+
+								<?php if ($this->config->get('ukrcredits_status')) { ?>
+									<tr>
+										<td><b>Кредит</b></td>	
+										<td>
+											<div style="float:left" id="div-credits">
+												<?php if ($payment_code) { ?>
+													<b id="ukrcredits_payment_code" style="display: inline-block;padding: 2px 3px; font-size:14px; color:#FFF; background-color: #7F00FF; margin-left:10px;"><?php echo $payment_code; ?></b>
+												<?php } ?>
+
+												<?php if ($ukrcredits_payment_type) { ?>
+													<b id="ukrcredits_order_type" style="display: inline-block;padding: 2px 3px; font-size:14px; color:#FFF; background-color: #7F00FF; margin-left:10px;"><?php echo $ukrcredits_payment_type; ?></b>
+												<?php } ?>
+												
+												<?php if ($ukrcredits_order_status) { ?>
+												<b id="ukrcredits_order_status" style="display: inline-block;padding: 2px 3px; font-size:14px; color:#FFF; background-color: #7F00FF;">
+													<?php echo $ukrcredits_order_status; ?> <?php echo $ukrcredits_order_substatus ? '/ '.$ukrcredits_order_substatus : ''; ?>
+												</b>
+												<?php } ?>
+											</div>
+											<?php if ($ukrcredits_order_status) { ?>
+												<div style="float:right">
+													<?php if ($ukrcredits_order_status == 'LOCKED') { ?>
+														<a id="button-confirm" class="button">Подтвердить</a> <a id="button-cancel" class="button"><?php echo $button_cancel; ?></a>
+													<?php } ?>
+													<?php if ($ukrcredits_order_status == 'IN_PROCESS' && $ukrcredits_order_substatus == 'WAITING_FOR_STORE_CONFIRM') { ?>
+														<a id="button-confirm-mb" class="button">Подтвердить</a> <a id="button-cancel-mb" class="button"><?php echo $button_cancel; ?></a>
+													<?php } ?>
+													<?php if ($payment_code == 'ukrcredits_mb') { ?>
+														<a id="button-status-mb" class="button">Обновить</a>
+													<?php } else { ?>
+														<a id="button-status" class="button">Обновить</a>
+													<?php } ?>
+												</div>
+
+												<? require_once(dirname(__FILE__) . '/order_form.js.credits.tpl'); ?>
+											<?php } ?>
+											<div class="clr"></div>
+										</td>	
+									</tr>
+								<?php } ?>
+
 								<?php if ($this->config->get('concardis_status')) { ?>
 									<tr>
-										<td><b>Concardis debug:</b></td>													
+										<td><b>Отладка Concardis:</b></td>													
 										<td>Код заявки: <input type="text" id="concardis_id" name="concardis_id" value="<? echo $concardis_id; ?>" style="width:150px;" /> 
 											<a id="get_cc_info" class="button"><i class="fa fa-info"></i> инфо по заявке</a> 
 											<a id="clear_cc_order_id" class="button redbg" onclick="$('#concardis_id').val('');"><i class="fa fa-trash" aria-hidden="true"></i> удалить заявку</a>

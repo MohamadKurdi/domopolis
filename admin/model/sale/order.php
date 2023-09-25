@@ -2279,10 +2279,12 @@
 				$order_ukrcredits_query = $this->db->query("SELECT * FROM order_ukrcredits WHERE order_id = '" . (int)$order_id . "'");
 
 				if ($order_ukrcredits_query->num_rows) {
+					$ukrcredits_payment_type 	= $order_ukrcredits_query->row['ukrcredits_payment_type'];
 					$ukrcredits_order_id 		= $order_ukrcredits_query->row['ukrcredits_order_id'];
 					$ukrcredits_order_status 	= $order_ukrcredits_query->row['ukrcredits_order_status'];
 					$ukrcredits_order_substatus = $order_ukrcredits_query->row['ukrcredits_order_substatus'];
 				} else {
+					$ukrcredits_payment_type 	= '';
 					$ukrcredits_order_id 		= '';
 					$ukrcredits_order_status 	= '';
 					$ukrcredits_order_substatus = '';
@@ -2415,6 +2417,7 @@
 				'pay_equireWPP'			 => $order_query->row['pay_equireWPP'],
 				'pay_equireMono'		 => $order_query->row['pay_equireMono'],
 				'pay_equireCP'			 => $order_query->row['pay_equireCP'],
+				'ukrcredits_payment_type'     => $ukrcredits_payment_type,
 				'ukrcredits_order_id'         => $ukrcredits_order_id,
 				'ukrcredits_order_status'     => $ukrcredits_order_status,
 				'ukrcredits_order_substatus'  => $ukrcredits_order_substatus,
@@ -2473,8 +2476,13 @@
 		}
 		
 		public function getOrders($data = array()) {
-			$sql = "SELECT DISTINCT o.order_id, o.preorder, o.pwa, o.yam, o.yam_id, o.yam_shipment_date, o.yam_shipment_id, o.yam_box_id, o.yam_fake, o.yam_status, o.yam_substatus, o.template, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.customer_id, o.tracker_xml, o.shipping_code, o.needs_checkboxua, o.paid_by, o.costprice, o.profitability,
-			(SELECT SUM(reward) FROM order_product WHERE order_id = o.order_id) as reward,
+			$sql = "SELECT DISTINCT o.order_id, o.preorder, o.pwa, o.yam, o.yam_id, o.yam_shipment_date, o.yam_shipment_id, o.yam_box_id, o.yam_fake, o.yam_status, o.yam_substatus, o.template, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.customer_id, o.tracker_xml, o.shipping_code, o.needs_checkboxua, o.paid_by, o.costprice, o.profitability, ";
+
+			if ($this->config->get('ukrcredits_status')){
+				$sql .= " ouc.ukrcredits_order_status, ouc.ukrcredits_order_substatus, ";
+			}
+
+			$sql .= " (SELECT SUM(reward) FROM order_product WHERE order_id = o.order_id) as reward,
 			(SELECT value_national FROM order_total WHERE order_id = o.order_id AND code = 'reward' LIMIT 1) as reward_used,
 			(SELECT os.name FROM order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status, 
 			(SELECT status FROM order_courier_history och WHERE och.order_id = o.order_id ORDER BY date_added DESC LIMIT 1) as courier_status,
@@ -2485,6 +2493,10 @@
 			(SELECT os.status_fa_icon FROM order_status os WHERE os.order_status_id = o.order_status_id AND os.language_id = '" . (int)$this->config->get('config_language_id') . "') AS status_fa_icon, o.currency_code, o.currency_value, o.date_added, o.date_modified, o.store_id, o.affiliate_id, o.telephone, o.fax, o.faxname, o.shipping_country, o.shipping_zone, o.shipping_address_1, o.payment_address_1, o.shipping_address_struct, o.shipping_city, o.email, o.comment, o.payment_postcode, o.payment_method, o.payment_code, o.payment_secondary_method, o.shipping_method, o.total, o.total_national, o.order_status_id, o.currency_code, o.currency_value, o.date_added, o.date_modified, o.courier_id, o.manager_id, o.store_url, o.part_num, o.pay_type, o.ttn, o.reject_reason_id, o.from_waitlist, o.urgent, o.urgent_buy, o.wait_full, o.first_referrer, o.last_referrer, o.ua_logistics, o.date_delivery_actual, o.shipping_country_id, o.probably_cancel, o.probably_cancel_reason,o.probably_close,o.probably_close_reason,o.csi_average,o.csi_reject,o.probably_problem,o.probably_problem_reason, (SELECT delivery_code FROM order_ttns WHERE order_id = o.order_id AND ttn LIKE (o.ttn) LIMIT 1) as delivery_code, changed, o.closed, o.salary_paid, orec.receipt_id, orec.serial, orec.fiscal_code, orec.is_created_offline, orec.is_sent_dps, orec.sent_dps_at, orec.fiscal_date FROM `order` o";
 			
 			$sql .= " LEFT JOIN order_receipt orec ON (o.order_id = orec.order_id)  ";
+
+			if ($this->config->get('ukrcredits_status')){
+				$sql .= " LEFT JOIN order_ukrcredits ouc ON (o.order_id = ouc.order_id) ";
+			}
 
 			if (!empty($data['filter_order_id']) || !empty($data['filter_product_id'])) {
 				if (!is_numeric($data['filter_order_id']) || !empty($data['filter_product_id'])){				
@@ -2577,6 +2589,10 @@
 			
 			if (!empty($data['filter_courier_status'])){
 				$sql .= " AND och.status = '" . $this->db->escape($data['filter_courier_status']) . "'";
+			}
+
+			if (!empty($data['filter_is_credit_order'])){
+				$sql .= " AND NOT ISNULL(ouc.ukrcredits_order_status)";
 			}
 			
 			if (!empty($data['filter_pwa'])){
@@ -3147,12 +3163,15 @@
 		public function getTotalOrders($data = array()) {
 			$sql = "SELECT COUNT(DISTINCT o.order_id) AS total, SUM(o.total_national) as sum FROM `order` o";
 			
+			if ($this->config->get('ukrcredits_status')){
+				$sql .= " LEFT JOIN order_ukrcredits ouc ON (o.order_id = ouc.order_id) ";
+			}
+
 			if (!empty($data['filter_order_id']) || !empty($data['filter_product_id'])) {
 				if (!is_numeric($data['filter_order_id']) || !empty($data['filter_product_id'])){				
 					$sql .= " LEFT JOIN order_product op ON op.order_id = o.order_id";
 				}
-			}
-			
+			}			
 			
 			if (!empty($data['filter_customer']) || (!empty($data['filter_discount_card'])) || (!empty($data['filter_order_status_id']) && $data['filter_order_status_id'] == 'nbt_csi') || (!empty($data['filter_order_status_id']) && strpos($data['filter_order_status_id'], 'need_csi') !== false)) {
 				$sql .= " LEFT JOIN customer c ON c.customer_id = o.customer_id";
@@ -3222,8 +3241,7 @@
 			}
 			
 			
-			if (!empty($data['filter_order_id'])) {
-				
+			if (!empty($data['filter_order_id'])) {				
 				if (is_numeric($data['filter_order_id'])){
 					$sql .= " AND o.order_id = '" . (int)$data['filter_order_id'] . "'";
 					} else {
@@ -3242,6 +3260,10 @@
 			
 			if (!empty($data['filter_courier_status'])){
 				$sql .= " AND och.status = '" . $this->db->escape($data['filter_courier_status']) . "'";
+			}
+
+			if (!empty($data['filter_is_credit_order'])){
+				$sql .= " AND NOT ISNULL(ouc.ukrcredits_order_status)";
 			}
 			
 			if (!empty($data['filter_shipping_method'])){
