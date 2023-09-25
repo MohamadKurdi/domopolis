@@ -698,6 +698,21 @@
 											<? } ?>       
 										</select>										
 									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Отключить логику быстрого заказа</span></p>
+										<select type="select" name="config_disable_fast_orders">
+											<? if ($config_disable_fast_orders) { ?>
+												<option value="1" selected='selected' >Да</option>
+												<option value="0" >Нет</option>
+											<? } else { ?>
+												<option value="1" >Да</option>
+												<option value="0"  selected='selected' >Нет</option>
+											<? } ?>       
+										</select>
+										<br />
+										<span class="help">Если включено, то невозможно оформить быстрый заказ на сайте</span>											
+									</div>
 								</td>
 
 								<td style="width:18%">

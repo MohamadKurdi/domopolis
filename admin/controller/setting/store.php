@@ -838,6 +838,14 @@
 				} else {
 				$this->data['config_show_goods_overload'] = '';
 			}
+
+			if (isset($this->request->post['config_disable_fast_orders'])) {
+				$this->data['config_disable_fast_orders'] = $this->request->post['config_disable_fast_orders'];
+				} elseif (isset($store_info['config_disable_fast_orders'])) {
+				$this->data['config_disable_fast_orders'] = $store_info['config_disable_fast_orders'];
+				} else {
+				$this->data['config_disable_fast_orders'] = '';
+			}
 			
 			if (isset($this->request->post['config_title'])) {
 				$this->data['config_title'] = $this->request->post['config_title'];

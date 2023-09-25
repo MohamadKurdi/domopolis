@@ -626,6 +626,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_enable_non_empty_categories'] = $this->config->get('config_enable_non_empty_categories');
         }
 
+        if (isset($this->request->post['config_disable_fast_orders'])) {
+            $this->data['config_disable_fast_orders'] = $this->request->post['config_disable_fast_orders'];
+        } else {
+            $this->data['config_disable_fast_orders'] = $this->config->get('config_disable_fast_orders');
+        }
+
         if (isset($this->request->post['config_ssl'])) {
             $this->data['config_ssl'] = $this->request->post['config_ssl'];
         } else {

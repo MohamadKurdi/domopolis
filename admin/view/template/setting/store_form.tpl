@@ -229,6 +229,24 @@
 												</select>	
 											</td>
 										</tr>
+
+										<tr>
+											<td>Отключить логику быстрого заказа</td>
+											<td>
+												<select type="select" name="config_disable_fast_orders">
+													<? if ($config_disable_fast_orders) { ?>
+														<option value="1" selected='selected' >Да</option>
+														<option value="0" >Нет</option>
+														<? } else { ?>
+														<option value="1" >Да</option>
+														<option value="0"  selected='selected' >Нет</option>
+													<? } ?>       
+												</select>	
+												<br />
+												<span class="help">Если включено, то невозможно оформить быстрый заказ на сайте</span>		
+											</td>
+										</tr>
+
 										<tr>
 											<td>Логика раздела "все скидки"</td>
 											<td>

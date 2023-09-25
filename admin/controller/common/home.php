@@ -240,6 +240,8 @@
 				'status'     		=> $result['status'],
 				'pwa'     			=> $result['pwa'],
 				'preorder'     		=> $result['preorder'],
+				'ukrcredits_order_status'      => $result['ukrcredits_order_status'],
+				'ukrcredits_order_substatus'   => $result['ukrcredits_order_substatus'],
 				'yam'     			=> $result['yam'],				
 				'yam_comission'		=> ($result['yam'])?$this->currency->format(-1 * ($sub_total/100*12), $result['currency_code'], '1'):false,
 				'reward'     		=> $this->currency->formatBonus($result['reward'], true),
@@ -335,20 +337,6 @@
 			$this->data['orders_pwa_now'] = $this->model_sale_order->getTotalOrders($data);
 			$this->data['pwa_percent_for_last_month'] = $this->data['orders_now']?round((($this->data['orders_pwa_now'] / $this->data['orders_now']) * 100), 1):0;
 
-			if ($this->config->get('ukrcredits_status')){
-				$this->data['total_credit_orders'] = $this->model_setting_setting->getCreditTotalOrders();
-
-				$data = array(
-					'filter_date_added' 			=> date('Y-m-d', strtotime("-1 month")),
-					'filter_date_added_to' 			=> date('Y-m-d'),
-					'filter_is_credit_order'		=> true,
-					'filter_order_status_notnull' 	=> true
-				);
-
-				$this->data['orders_credit_now'] 	= $this->model_sale_order->getTotalOrders($data);
-				$this->data['credit_percent_for_last_month'] = $this->data['orders_now']?round((($this->data['orders_credit_now'] / $this->data['orders_now']) * 100), 1):0;
-			}			
-			
 			if ($this->config->get('config_country_id') == 176) {
 				$this->data['total_yam_orders'] = $this->model_setting_setting->getYAMTotalOrders();
 
