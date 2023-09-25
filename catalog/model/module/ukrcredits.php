@@ -60,37 +60,36 @@ class ModelModuleUkrcreditsMain extends Model {
 									
 									if ($option_value_query->num_rows) {
 									  //знаки равно нужными первыми
-									  if ($option_value_query->row['price_prefix'] == '=') {
-										  $sort_key=count($option_price_arr) + 1;
-									  } else {
-										  $sort_key=count($option_price_arr)+10;
-									  }
-									  
-									  $option_price_arr[$sort_key] = array(
-										  $option_value_query->row['price_prefix']=>$option_value_query->row['price'],
-									  );
+										if ($option_value_query->row['price_prefix'] == '=') {
+											$sort_key=count($option_price_arr) + 1;
+										} else {
+											$sort_key=count($option_price_arr)+10;
+										}
+
+										$option_price_arr[$sort_key] = array(
+											$option_value_query->row['price_prefix']=>$option_value_query->row['price'],
+										);
 										if ($option_value_query->row['price_prefix'] == '+') {
 											$option_price += $option_value_query->row['price'];
 										} elseif ($option_value_query->row['price_prefix'] == '-') {
 											$option_price -= $option_value_query->row['price'];
 										}
-							
+
 									}
 								} elseif ($option_query->row['type'] == 'checkbox' && is_array($option_value)) {
 									foreach ($option_value as $product_option_value_id) {
 										$option_value_query = $this->db->query("SELECT pov.option_value_id, ovd.name, pov.quantity, pov.subtract, pov.price, pov.price_prefix, pov.points, pov.points_prefix, pov.weight, pov.weight_prefix FROM product_option_value pov LEFT JOIN option_value ov ON (pov.option_value_id = ov.option_value_id) LEFT JOIN option_value_description ovd ON (ov.option_value_id = ovd.option_value_id) WHERE pov.product_option_value_id = '" . (int)$product_option_value_id . "' AND pov.product_option_id = '" . (int)$product_option_id . "' AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 										
 										if ($option_value_query->num_rows) {
-										  //знаки равно нужными первыми
-										  if ($option_value_query->row['price_prefix'] == '=') {
-											  $sort_key=count($option_price_arr) + 1;
-										  } else {
-											  $sort_key=count($option_price_arr)+10;
-										  }
-										  
-										  $option_price_arr[$sort_key] = array(
-											  $option_value_query->row['price_prefix']=>$option_value_query->row['price'],
-										  );
+											if ($option_value_query->row['price_prefix'] == '=') {
+												$sort_key=count($option_price_arr) + 1;
+											} else {
+												$sort_key=count($option_price_arr)+10;
+											}
+
+											$option_price_arr[$sort_key] = array(
+												$option_value_query->row['price_prefix']=>$option_value_query->row['price'],
+											);
 											if ($option_value_query->row['price_prefix'] == '+') {
 												$option_price += $option_value_query->row['price'];
 											} elseif ($option_value_query->row['price_prefix'] == '-') {
@@ -150,12 +149,21 @@ class ModelModuleUkrcreditsMain extends Model {
 						$mounthprice = strip_tags($this->currency->format($this->tax->calculate($pp_price*$markup_pp/($partsCountpp+1), $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']));
 						$mounthprice_text_pp = sprintf($this->language->get('text_min_pp'), $partsCountpp, $mounthprice);
 
-						$pp_name = $this->language->get('text_title_pp');
+						if (!empty($setting['title_pp']) && !empty($setting['title_pp'][$this->config->get('config_language_id')])){
+							$pp_name = $setting['title_pp'][$this->config->get('config_language_id')];
+						} else {
+							$pp_name = $this->language->get('text_title_pp');
+						}
+						
 					} else {
 						$mounthprice = strip_tags($this->currency->format($this->tax->calculate($pp_price*$markup_pp/($partsCountpp+1), $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']));
 						$mounthprice_text_pp = sprintf($this->language->get('text_min_pb'), $partsCountpp, $mounthprice);
 						
-						$pp_name = $this->language->get('text_title_pb');
+						if (!empty($setting['title_pp']) && !empty($setting['title_pp'][$this->config->get('config_language_id')])){
+							$pp_name = $setting['title_pp'][$this->config->get('config_language_id')];
+						} else {
+							$pp_name = $this->language->get('text_title_pb');
+						}
 					}
 					if ($price) {
 						$pp_price = $price;
@@ -183,7 +191,6 @@ class ModelModuleUkrcreditsMain extends Model {
 						$status_ii = true;
 					}
 				}
-
 
 				if ($status_ii) {
 					$ii_price = $product['price'];
@@ -300,11 +307,21 @@ class ModelModuleUkrcreditsMain extends Model {
 					if ($ii_type == 'II') {
 						$mounthprice = strip_tags($this->currency->format($this->tax->calculate(($ii_price*$markup_ii/($partsCountii+1))+(($ii_price*$markup_ii)*(2.9/100)), $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']));
 						$mounthprice_text_ii = sprintf($this->language->get('text_min_ii'), $partsCountii, $mounthprice);
-						$ii_name = $this->language->get('text_title_ii');
+
+						if (!empty($setting['title_ii']) && !empty($setting['title_ii'][$this->config->get('config_language_id')])){
+							$ii_name = $setting['title_ii'][$this->config->get('config_language_id')];
+						} else {
+							$ii_name = $this->language->get('text_title_ii');
+						}
 					} else {
 						$mounthprice = strip_tags($this->currency->format($this->tax->calculate(($ii_price*$markup_ii/($partsCountii+1))+(($ii_price*$markup_ii)*(0.99/100)), $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']));
 						$mounthprice_text_ii = sprintf($this->language->get('text_min_ia'), $partsCountii, $mounthprice);
-						$ii_name = $this->language->get('text_title_ia');
+
+						if (!empty($setting['title_ii']) && !empty($setting['title_ii'][$this->config->get('config_language_id')])){
+							$ii_name = $setting['title_ii'][$this->config->get('config_language_id')];
+						} else {
+							$ii_name = $this->language->get('text_title_ia');
+						}
 					}
 					if ($price) {
 						$ii_price = $price;
@@ -447,8 +464,13 @@ class ModelModuleUkrcreditsMain extends Model {
 					$mb_type = $setting['mb_merchantType'];
 					$mounthprice = strip_tags($this->currency->format($this->tax->calculate(($mb_price*$markup_mb/($partsCountmb+1)), $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']));
 					$mounthprice_text_mb = sprintf($this->language->get('text_min_mb'), $partsCountmb, $mounthprice);
-					$mb_name = $this->language->get('text_title_mb');
-					
+
+					if (!empty($setting['title_mb']) && !empty($setting['title_mb'][$this->config->get('config_language_id')])){
+						$mb_name = $setting['title_mb'][$this->config->get('config_language_id')];
+					} else {
+						$mb_name = $this->language->get('text_title_mb');
+					}
+
 					if ($price) {
 						$mb_price = $price;
 						if (!$setting['mb_special'] && $specialprice) {
@@ -462,12 +484,15 @@ class ModelModuleUkrcreditsMain extends Model {
 		}		
 		if ($status_pp) {
 			$pp = array(
-				'type' 			=> $pp_type,
-				'price' 		=> $pp_price,
-				'partsCount' 	=> $partsCountpp,
-				'partsCountSel' => isset($this->session->data['ukrcredits_pp_sel'])?$this->session->data['ukrcredits_pp_sel']:'',
-				'name' 			=> $pp_name,
-				'info' 			=> $this->language->get('text_info_'.$pp_type),
+				'type' 				=> $pp_type,
+				'price' 			=> $pp_price,
+				'partsCount' 		=> $partsCountpp,
+				'partsCountSel' 	=> isset($this->session->data['ukrcredits_pp_sel'])?$this->session->data['ukrcredits_pp_sel']:'',
+				'name' 				=> $pp_name,
+				'info' 				=> $this->language->get('text_info_'.$pp_type),
+				'text_in_product'	=> $setting['text_in_product_pp'][$this->config->get('config_language_id')],
+				'text_in_cart'		=> $setting['text_in_cart_pp'][$this->config->get('config_language_id')],
+				'svg'				=> $setting['pp_svg_logo'],
 				'mounthprice_text' 	=> $mounthprice_text_pp,
 				'sort_order' 		=> $setting['pp_sort_order']
 			);
@@ -477,12 +502,15 @@ class ModelModuleUkrcreditsMain extends Model {
 		
 		if ($status_ii) {
 			$ii = array(
-				'type' 			=> $ii_type,
-				'price' 		=> $ii_price,
-				'partsCount' 	=> $partsCountii,
-				'partsCountSel' => isset($this->session->data['ukrcredits_ii_sel'])?$this->session->data['ukrcredits_ii_sel']:'',
-				'name' 			=> $ii_name,
-				'info' 			=> $this->language->get('text_info_'.$ii_type),
+				'type' 				=> $ii_type,
+				'price' 			=> $ii_price,
+				'partsCount' 		=> $partsCountii,
+				'partsCountSel' 	=> isset($this->session->data['ukrcredits_ii_sel'])?$this->session->data['ukrcredits_ii_sel']:'',
+				'name' 				=> $ii_name,
+				'info' 				=> $this->language->get('text_info_'.$ii_type),
+				'text_in_product'	=> $setting['text_in_product_ii'][$this->config->get('config_language_id')],
+				'text_in_cart'		=> $setting['text_in_cart_ii'][$this->config->get('config_language_id')],
+				'svg'				=> $setting['ii_svg_logo'],
 				'mounthprice_text' 	=> $mounthprice_text_ii,
 				'sort_order' 		=> $setting['ii_sort_order']
 			);
@@ -492,12 +520,15 @@ class ModelModuleUkrcreditsMain extends Model {
 		
 		if ($status_mb) {
 			$mb = array(
-				'type' 			=> $mb_type,
-				'price' 		=> $mb_price,
-				'partsCount' 	=> $partsCountmb,
-				'partsCountSel' => isset($this->session->data['ukrcredits_mb_sel'])?$this->session->data['ukrcredits_mb_sel']:'',
-				'name' 			=> $mb_name,
-				'info' 			=> $this->language->get('text_info_'.$mb_type),
+				'type' 				=> $mb_type,
+				'price' 			=> $mb_price,
+				'partsCount' 		=> $partsCountmb,
+				'partsCountSel' 	=> isset($this->session->data['ukrcredits_mb_sel'])?$this->session->data['ukrcredits_mb_sel']:'',
+				'name' 				=> $mb_name,
+				'info' 				=> $this->language->get('text_info_'.$mb_type),
+				'text_in_product'	=> $setting['text_in_product_mb'][$this->config->get('config_language_id')],
+				'text_in_cart'		=> $setting['text_in_cart_mb'][$this->config->get('config_language_id')],
+				'svg'				=> $setting['mb_svg_logo'],
 				'mounthprice_text' 	=> $mounthprice_text_mb,
 				'sort_order' 		=> $setting['mb_sort_order']
 			);

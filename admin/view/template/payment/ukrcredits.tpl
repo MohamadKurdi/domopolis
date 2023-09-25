@@ -56,6 +56,49 @@
                 </div>                
               </div>
 
+              <div class="form-group">                
+                <label class="col-sm-2 control-label" for="input-title_pp">Название</label>
+                <?php foreach ($languages as $language) { ?>
+                  <div class="col-sm-3">
+                    <div class="input-group"><span class="input-group-addon"><img src="<?php echo strlen($language['code']) > 2 ? 'language/'.$language['code'].'/'.$language['code'].'.png' : 'view/image/flags/'.$language['image']; ?>" title="<?php echo $language['name']; ?>" /></span>
+                      <input type="text" name="title_pp[<?php echo $language['language_id']; ?>]" value="<?php if (isset($title_pp)) { echo $title_pp[$language['language_id']]; } ?>" placeholder="<?php echo strip_tags($tab_pp); ?>" id="input-title_pp-<?php echo $language['language_id']; ?>" class="form-control" />
+                    </div>
+                  </div>
+                <?php } ?>
+              </div>
+
+              <div class="form-group">                
+                <label class="col-sm-2 control-label" for="input-text_in_product_pp">Текст в попапе и карте товара</label>
+                <?php foreach ($languages as $language) { ?>
+                  <div class="col-sm-3">
+                    <div class="input-group"><span class="input-group-addon"><img src="<?php echo strlen($language['code']) > 2 ? 'language/'.$language['code'].'/'.$language['code'].'.png' : 'view/image/flags/'.$language['image']; ?>" title="<?php echo $language['name']; ?>" /></span>
+                      <textarea name="text_in_product_pp[<?php echo $language['language_id']; ?>]" rows="10" placeholder="<?php echo strip_tags($tab_pp); ?>" id="input-text_in_product_pp-<?php echo $language['language_id']; ?>" class="form-control"><?php if (isset($text_in_product_pp)) { echo $text_in_product_pp[$language['language_id']]; } ?></textarea>
+                    </div>
+                  </div>
+                <?php } ?>
+              </div>
+
+              <div class="form-group">                
+                <label class="col-sm-2 control-label" for="input-text_in_cart_pp">Текст в корзине</label>
+                <?php foreach ($languages as $language) { ?>
+                  <div class="col-sm-3">
+                    <div class="input-group"><span class="input-group-addon"><img src="<?php echo strlen($language['code']) > 2 ? 'language/'.$language['code'].'/'.$language['code'].'.png' : 'view/image/flags/'.$language['image']; ?>" title="<?php echo $language['name']; ?>" /></span>
+                      <textarea name="text_in_cart_pp[<?php echo $language['language_id']; ?>]" rows="10" placeholder="<?php echo strip_tags($tab_pp); ?>" id="input-text_in_cart_pp-<?php echo $language['language_id']; ?>" class="form-control"><?php if (isset($text_in_cart_pp)) { echo $text_in_cart_pp[$language['language_id']]; } ?></textarea>
+                    </div>
+                  </div>
+                <?php } ?>
+              </div>
+
+               <div class="form-group">                
+                <label class="col-sm-2 control-label" for="input-pp_svg_logo">Иконка</label>
+                  <div class="col-sm-6">
+                    <div class="input-group">
+                        <span class="input-group-addon">SVG</span>
+                        <textarea name="pp_svg_logo" rows="5" placeholder="<?php echo strip_tags($tab_pp); ?>" id="input-pp_svg_logo" class="form-control"><?php if (isset($pp_svg_logo)) { echo $pp_svg_logo; } ?></textarea>
+                    </div>
+                  </div>
+              </div>
+
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
                 <div class="col-sm-10">
@@ -421,6 +464,39 @@
                   <?php } ?>                   
                 </div>                
               </div>
+
+              <div class="form-group">                
+                <label class="col-sm-2 control-label" for="input-text_in_product_ii">Текст в попапе и карте товара</label>
+                <?php foreach ($languages as $language) { ?>
+                  <div class="col-sm-3">
+                    <div class="input-group"><span class="input-group-addon"><img src="<?php echo strlen($language['code']) > 2 ? 'language/'.$language['code'].'/'.$language['code'].'.png' : 'view/image/flags/'.$language['image']; ?>" title="<?php echo $language['name']; ?>" /></span>
+                      <textarea name="text_in_product_ii[<?php echo $language['language_id']; ?>]" rows="10" placeholder="<?php echo strip_tags($tab_ii); ?>" id="input-text_in_product_ii-<?php echo $language['language_id']; ?>" class="form-control"><?php if (isset($text_in_product_ii)) { echo $text_in_product_ii[$language['language_id']]; } ?></textarea>
+                    </div>
+                  </div>
+                <?php } ?>
+              </div>
+
+              <div class="form-group">                
+                <label class="col-sm-2 control-label" for="input-text_in_cart_ii">Текст в корзине</label>
+                <?php foreach ($languages as $language) { ?>
+                  <div class="col-sm-3">
+                    <div class="input-group"><span class="input-group-addon"><img src="<?php echo strlen($language['code']) > 2 ? 'language/'.$language['code'].'/'.$language['code'].'.png' : 'view/image/flags/'.$language['image']; ?>" title="<?php echo $language['name']; ?>" /></span>
+                      <textarea name="text_in_cart_ii[<?php echo $language['language_id']; ?>]" rows="10" placeholder="<?php echo strip_tags($tab_ii); ?>" id="input-text_in_cart_ii-<?php echo $language['language_id']; ?>" class="form-control"><?php if (isset($text_in_cart_ii)) { echo $text_in_cart_ii[$language['language_id']]; } ?></textarea>
+                    </div>
+                  </div>
+                <?php } ?>
+              </div>
+
+               <div class="form-group">                
+                <label class="col-sm-2 control-label" for="input-ii_svg_logo">Иконка</label>
+                  <div class="col-sm-6">
+                    <div class="input-group">
+                        <span class="input-group-addon">SVG</span>
+                        <textarea name="ii_svg_logo" rows="5" placeholder="<?php echo strip_tags($tab_ii); ?>" id="input-ii_svg_logo" class="form-control"><?php if (isset($ii_svg_logo)) { echo $ii_svg_logo; } ?></textarea>
+                    </div>
+                  </div>
+              </div>
+
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
                 <div class="col-sm-10">
@@ -774,6 +850,39 @@
                   <?php } ?>                   
                 </div>                
               </div>
+
+              <div class="form-group">                
+                <label class="col-sm-2 control-label" for="input-text_in_product_mb">Текст в попапе и карте товара</label>
+                <?php foreach ($languages as $language) { ?>
+                  <div class="col-sm-3">
+                    <div class="input-group"><span class="input-group-addon"><img src="<?php echo strlen($language['code']) > 2 ? 'language/'.$language['code'].'/'.$language['code'].'.png' : 'view/image/flags/'.$language['image']; ?>" title="<?php echo $language['name']; ?>" /></span>
+                      <textarea name="text_in_product_mb[<?php echo $language['language_id']; ?>]" rows="10" placeholder="<?php echo strip_tags($tab_mb); ?>" id="input-text_in_product_mb-<?php echo $language['language_id']; ?>" class="form-control"><?php if (isset($text_in_product_mb)) { echo $text_in_product_mb[$language['language_id']]; } ?></textarea>
+                    </div>
+                  </div>
+                <?php } ?>
+              </div>
+
+              <div class="form-group">                
+                <label class="col-sm-2 control-label" for="input-text_in_cart_mb">Текст в корзине</label>
+                <?php foreach ($languages as $language) { ?>
+                  <div class="col-sm-3">
+                    <div class="input-group"><span class="input-group-addon"><img src="<?php echo strlen($language['code']) > 2 ? 'language/'.$language['code'].'/'.$language['code'].'.png' : 'view/image/flags/'.$language['image']; ?>" title="<?php echo $language['name']; ?>" /></span>
+                      <textarea name="text_in_cart_mb[<?php echo $language['language_id']; ?>]" rows="10" placeholder="<?php echo strip_tags($tab_mb); ?>" id="input-text_in_cart_mb-<?php echo $language['language_id']; ?>" class="form-control"><?php if (isset($text_in_cart_mb)) { echo $text_in_cart_mb[$language['language_id']]; } ?></textarea>
+                    </div>
+                  </div>
+                <?php } ?>
+              </div>
+
+              <div class="form-group">                
+                <label class="col-sm-2 control-label" for="input-mb_svg_logo">Иконка</label>
+                  <div class="col-sm-6">
+                    <div class="input-group">
+                        <span class="input-group-addon">SVG</span>
+                        <textarea name="mb_svg_logo" rows="5" placeholder="<?php echo strip_tags($tab_mb); ?>" id="input-mb_svg_logo" class="form-control"><?php if (isset($mb_svg_logo)) { echo $mb_svg_logo; } ?></textarea>
+                    </div>
+                  </div>
+              </div>
+
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-status"><?php echo $entry_status; ?></label>
                 <div class="col-sm-10">

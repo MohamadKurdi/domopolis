@@ -260,6 +260,9 @@
 						'category' 	=> prepareEcommString($this->getGoogleCategoryPathForCategory($result['main_category_id']))
 					);
 
+					if ($this->config->get('ukrcredits_status')){
+						$this->load->model('module/ukrcredits');
+					}
 					
 					$array[] = array(
 						'new'         				=> $result['new'],
@@ -268,6 +271,7 @@
 						'additional_offer_product' 	=> $result['additional_offer_product'],
 						'active_coupon'				=> $ajax?$this->recalculateCouponPrice($result, $this->getProductActiveCoupons($result['product_id'])):false,
 						'active_actions'			=> $ajax?$this->getAllProductActiveActionsForLabel($result['product_id']):false,
+						'credits_info'				=> $this->config->get('ukrcredits_status')?$this->model_module_ukrcredits->checkproduct($result):false,
 						'product_id'  				=> $result['product_id'],
 						'is_certificate'			=> (strpos($result['location'], 'certificate') !== false),
 						'ecommerceData'				=> $ecommerceData,

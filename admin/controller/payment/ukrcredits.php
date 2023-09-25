@@ -16,6 +16,9 @@ class ControllerPaymentUkrCredits extends Controller {
         $this->document->setTitle($this->language->get('heading_title'));
 
         $this->load->model('setting/setting');
+        $this->load->model('localisation/language');
+		
+		$data['languages'] = $this->model_localisation_language->getLanguages();
 
 		if ($this->request->server['REQUEST_METHOD'] == 'POST') {
 			$data += $this->request->post;
@@ -44,51 +47,54 @@ class ControllerPaymentUkrCredits extends Controller {
 			$data['pp_categories_allowed'] 		= [];
 			$data['pp_manufacturers_allowed'] 	= [];
 			$data['pp_geo_zone_id'] 		= 0;
+			$data['pp_svg_logo'] 			= '';
 
-			$data['ii_shop_id'] = '';
-			$data['ii_shop_password'] = '';
-			$data['ii_status'] = 0;
-			$data['ii_sort_order'] = 11;
-			$data['ii_hold'] = 0;
-			$data['ii_discount'] = 0;
-			$data['ii_special'] = 0;
-			$data['ii_stock'] = 0;
+			$data['ii_shop_id'] 			= '';
+			$data['ii_shop_password'] 		= '';
+			$data['ii_status'] 				= 0;
+			$data['ii_sort_order'] 			= 11;
+			$data['ii_hold'] 				= 0;
+			$data['ii_discount'] 			= 0;
+			$data['ii_special'] 			= 0;
+			$data['ii_stock'] 				= 0;
 			$data['ii_stock_status_id'] 	= [];
-			$data['ii_pq'] = 24;
-			$data['ii_min_total'] = '';
-			$data['ii_max_total'] = 100000;
-			$data['ii_merchantType'] = 'II';
-			$data['ii_markup_type'] = 'fixed';			
-			$data['ii_markup_custom_II'] = array(1 => 1.5, 2 => 2.5, 3 => 4.5, 4 => 6.4, 5 => 7.6, 6 => 8.2, 7 => 8.7, 8 => 9.7, 9 => 10.6, 10 => 11.6, 11 => 12.2, 12 => 12.5, 13 => 12.8, 14 => 13.1, 15 => 13.4, 16 => 13.7, 17 => 14, 18 => 14.3, 19 => 14.7, 20 => 15.5, 21 => 16.2, 22 => 17, 23 => 17.6, 24 => 18.3); 
-			$data['ii_markup_acquiring'] = '0';			
-			$data['ii_markup'] = 1.000;
-			$data['ii_enabled'] = 0;
-			$data['ii_product_allowed'] = [];
+			$data['ii_pq'] 					= 24;
+			$data['ii_min_total'] 			= '';
+			$data['ii_max_total'] 			= 100000;
+			$data['ii_merchantType'] 		= 'II';
+			$data['ii_markup_type'] 		= 'fixed';			
+			$data['ii_markup_custom_II'] 	= array(1 => 1.5, 2 => 2.5, 3 => 4.5, 4 => 6.4, 5 => 7.6, 6 => 8.2, 7 => 8.7, 8 => 9.7, 9 => 10.6, 10 => 11.6, 11 => 12.2, 12 => 12.5, 13 => 12.8, 14 => 13.1, 15 => 13.4, 16 => 13.7, 17 => 14, 18 => 14.3, 19 => 14.7, 20 => 15.5, 21 => 16.2, 22 => 17, 23 => 17.6, 24 => 18.3); 
+			$data['ii_markup_acquiring'] 	= '0';			
+			$data['ii_markup'] 				= 1.000;
+			$data['ii_enabled'] 			= 0;
+			$data['ii_product_allowed'] 		= [];
 			$data['ii_categories_allowed'] 		= [];
 			$data['ii_manufacturers_allowed'] 	= [];
-			$data['ii_geo_zone_id'] = 0;
+			$data['ii_geo_zone_id'] 		= 0;
+			$data['ii_svg_logo'] 			= '';
 			
-			$data['mb_shop_id'] = '';
-			$data['mb_shop_password'] = '';
-			$data['mb_status'] = 0;
-			$data['mb_sort_order'] = 12;
-			$data['mb_discount'] = 0;
-			$data['mb_special'] = 0;
-			$data['mb_stock'] = 0;
+			$data['mb_shop_id'] 			= '';
+			$data['mb_shop_password'] 		= '';
+			$data['mb_status'] 				= 0;
+			$data['mb_sort_order'] 			= 12;
+			$data['mb_discount'] 			= 0;
+			$data['mb_special'] 			= 0;
+			$data['mb_stock'] 				= 0;
 			$data['mb_stock_status_id'] 	= [];
-			$data['mb_pq'] = 24;
-			$data['mb_min_total'] = 500;
-			$data['mb_max_total'] = 100000;
-			$data['mb_merchantType'] = 'MB';
-			$data['mb_markup_type'] = 'fixed';
-			$data['mb_markup_custom_MB'] = array(2 => 2.9, 3 => 4.1, 4 => 5.9, 5 => 7.2, 6 => 8.3, 7 => 9.5, 8 => 10.8, 9 => 12, 10 => 13.2, 11 => 14.3, 12 => 15.5, 13 => 16.6, 14 => 17.7, 15 => 18.8, 16 => 19.8, 17 => 20.9, 18 => 21.9, 19 => 23, 20 => 24, 21 => 29.4, 22 => 25.9, 23 => 26.8, 24 => 27.8); 
-			$data['mb_markup_acquiring'] = '0';
-			$data['mb_markup'] = 1.000;
-			$data['mb_enabled'] = 0;
-			$data['mb_product_allowed'] = [];
+			$data['mb_pq'] 					= 24;
+			$data['mb_min_total'] 			= 500;
+			$data['mb_max_total'] 			= 100000;
+			$data['mb_merchantType'] 		= 'MB';
+			$data['mb_markup_type'] 		= 'fixed';
+			$data['mb_markup_custom_MB'] 	= array(2 => 2.9, 3 => 4.1, 4 => 5.9, 5 => 7.2, 6 => 8.3, 7 => 9.5, 8 => 10.8, 9 => 12, 10 => 13.2, 11 => 14.3, 12 => 15.5, 13 => 16.6, 14 => 17.7, 15 => 18.8, 16 => 19.8, 17 => 20.9, 18 => 21.9, 19 => 23, 20 => 24, 21 => 29.4, 22 => 25.9, 23 => 26.8, 24 => 27.8); 
+			$data['mb_markup_acquiring'] 	= '0';
+			$data['mb_markup'] 				= 1.000;
+			$data['mb_enabled'] 			= 0;
+			$data['mb_product_allowed'] 		= [];
 			$data['mb_categories_allowed'] 		= [];
 			$data['mb_manufacturers_allowed'] 	= [];
-			$data['mb_geo_zone_id'] = 0;
+			$data['mb_geo_zone_id'] 		= 0;
+			$data['mb_svg_logo'] 			= '';
 			
 			$data['completed_status_id'] = 0;
 			$data['canceled_status_id'] = 0;
@@ -97,15 +103,28 @@ class ControllerPaymentUkrCredits extends Controller {
 			$data['failed_status_id'] = 0;
 			$data['rejected_status_id'] = 0;
 			
-			$data['button_name'][1] = 'Купить в кредит';
-			$data['button_name'][2] = 'Купить в кредит';
-			$data['button_name'][3] = 'Купить в кредит';
 			$data['icons_size'] = '25';
 			$data['css_button'] = 'btn btn-primary btn-lg btn-block';
 			$data['selector_button'] = '#button-cart';
 			$data['selector_block'] = '#product';
 			$data['show_icons'] = 1;
 			$data['css_custom'] = '';
+
+			foreach ($data['languages'] as $language){
+				$data['button_name'][$language['language_id']] 	= 'Купить в кредит';
+
+				$data['title_pp'][$language['language_id']]    				= '';
+				$data['text_in_product_pp'][$language['language_id']]    	= '';
+				$data['text_in_cart_pp'][$language['language_id']]    		= '';
+
+				$data['title_ii'][$language['language_id']]    				= '';
+				$data['text_in_product_ii'][$language['language_id']]    	= '';
+				$data['text_in_cart_ii'][$language['language_id']]    		= '';
+
+				$data['title_mb'][$language['language_id']]    				= '';
+				$data['text_in_product_mb'][$language['language_id']]    	= '';
+				$data['text_in_cart_mb'][$language['language_id']]    		= '';
+			}
 		}
 		
 		if ($this->config->get("ukrcredits_status")) {
@@ -212,11 +231,6 @@ class ControllerPaymentUkrCredits extends Controller {
 			$setting["ukrcredits_settings"] 		= $this->request->post;
 
 			$this->model_setting_setting->editSetting("ukrcredits", $setting);
-			if (version_compare(VERSION, "2.2", ">=")) {
-				$ukrcreditslines = file(DIR_CATALOG . "model/total/totalukrcredits.php", FILE_IGNORE_NEW_LINES);
-				$ukrcreditslines[2] = "\tpublic function getTotal(\$total) {";
-				file_put_contents(DIR_CATALOG . "model/total/totalukrcredits.php", implode(PHP_EOL, $ukrcreditslines));
-			}
 			$this->session->data["success"] = $this->language->get("text_success");
 			if (version_compare(VERSION, "2.0", ">=")) {
 				$this->response->redirect($this->url->link($payments_page, $token . "token=" . $this->session->data[$token . "token"] . "&type=payment", true));
@@ -316,9 +330,6 @@ class ControllerPaymentUkrCredits extends Controller {
 
         $this->load->model('localisation/stock_status');
         $data['stock_statuses'] = $this->model_localisation_stock_status->getStockStatuses();
-		
-		$this->load->model('localisation/language');
-		$data['languages'] = $this->model_localisation_language->getLanguages();
 
         $this->load->model('catalog/product');
         $this->load->model('catalog/category');
