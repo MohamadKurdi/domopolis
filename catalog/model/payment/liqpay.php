@@ -1,28 +1,5 @@
 <?php
 	/**
-		* Liqpay Payment Module
-		*
-		* NOTICE OF LICENSE
-		*
-		* This source file is subject to the Open Software License (OSL 3.0)
-		* that is available through the world-wide-web at this URL:
-		* http://opensource.org/licenses/osl-3.0.php
-		*
-		* @category        Liqpay
-		* @package         Payment
-		* @version         3.0
-		* @author          Liqpay
-		* @copyright       Copyright (c) 2014 Liqpay
-		* @license         http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
-		*
-		* EXTENSION INFORMATION
-		*
-		* OpenCart         1.5.6
-		* LiqPay API       https://www.liqpay.com/ru/doc
-		*
-	*/
-	
-	/**
 		* Payment method liqpay model (catalog)
 		*
 		* @author      Liqpay <support@liqpay.com>
@@ -40,10 +17,10 @@
 		{
 			$this->language->load('payment/liqpay');
 			
-			$tbl_zone_to_geo_zone = DB_PREFIX.'zone_to_geo_zone';
-			$liqpay_geo_zone_id = (int)$this->config->get('liqpay_geo_zone_id');
-			$country_id = (int)$address['country_id'];
-			$zone_id = (int)$address['zone_id'];
+			$tbl_zone_to_geo_zone 	= 'zone_to_geo_zone';
+			$liqpay_geo_zone_id 	= (int)$this->config->get('liqpay_geo_zone_id');
+			$country_id 			= (int)$address['country_id'];
+			$zone_id 				= (int)$address['zone_id'];
 			
 			$sql = "
 			SELECT *
@@ -65,15 +42,7 @@
 				$status = false;
 			}
 			
-			$method_data = array();
-			
-			/*	
-				$status = false;
-				if ($_SERVER['REMOTE_ADDR'] == '37.57.184.228' || $this->customer->getID() == 1499730) {
-				$status = true;
-				}
-				
-			*/
+			$method_data = array();			
 			
 			if ($status){
 				$status = true;
@@ -107,7 +76,6 @@
 			$query = $this->db->non_cached_query("SELECT * FROM `order` WHERE order_id = '" . (int)$order_id . "'");
 			$result = $query->num_rows ? $query->row : false;
 			if ($result) {
-				//Compatibles for v1.5.1.3 and low
 				if (!isset($result['payment_code'])) {
 					$method_code = self::METHOD_CODE;
 					$result['payment_code'] = strtoupper($result['payment_method']) == strtoupper(self::METHOD_CODE) ? self::METHOD_CODE : '';

@@ -1,13 +1,13 @@
 <?php
 class ModelPaymentUkrcreditsIi extends Model {
-	public function getMethod($address, $total) {
+	public function getMethod($address, $total, $explicit_show = false) {
 		$type = version_compare(VERSION,'3.0','>=') ? 'payment_' : '';
 		$dir = version_compare(VERSION,'2.2','>=') ? 'extension/module' : 'module';
 		$setting = $this->config->get($type.'ukrcredits_settings');
 
-		$this->load->language($dir.'/ukrcredits');
+		$this->load->language('module/ukrcredits');
 
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$setting['ii_geo_zone_id'] . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+		$query = $this->db->query("SELECT * FROM zone_to_geo_zone WHERE geo_zone_id = '" . (int)$setting['ii_geo_zone_id'] . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 
 		$status = false;
 
@@ -18,8 +18,7 @@ class ModelPaymentUkrcreditsIi extends Model {
 		$k = 0;
 
 		if (!$setting['ii_geo_zone_id'] || $query->num_rows) {
-			foreach ($products as $product) {
-				
+			foreach ($products as $product) {				
 				$temp_status = false;
 				if ((!$setting['ii_product_allowed'] && !$setting['ii_enabled']) || ($setting['ii_product_allowed'] && in_array($product['product_id'], $setting['ii_product_allowed']))) {
 					if (($setting['ii_min_total'] <= $total) && (($setting['ii_max_total']) >= $total)) {
@@ -45,6 +44,10 @@ class ModelPaymentUkrcreditsIi extends Model {
 		
 		if ($k > $i) {
 			$status = false;
+		}
+
+		if ($setting['ii_status'] && $explicit_show){
+			$status = true;
 		}
 
 		$method_data = array();

@@ -93,22 +93,20 @@
 		}
 		
 		public function getPayments(){
+			$json = [];
+
 			$this->language->load('checkout/manual');
-			$json = array();
 			$this->load->library('user');		
-			$this->user = new User($this->registry);
-			
+			$this->user = new User($this->registry);			
 			
 			$this->load->model('setting/setting');
 			$this->load->model('localisation/country');
 			$this->load->model('localisation/zone');
-			$this->load->model('setting/extension');
-			
+			$this->load->model('setting/extension');			
 			
 			$this->config->set('config_currency', $this->request->post['currency_code']);
 			$this->config->set('config_store_id', $this->request->post['store_id']);
 			
-			//Перезагрузка настроек магазина
 			$settings = $this->cache->get('settings.structure'.(int)$this->config->get('config_store_id'));
 			if (!$settings) {	
 				$query = $this->db->query("SELECT * FROM setting WHERE store_id = '0' OR store_id = '" . (int)$this->config->get('config_store_id') . "' ORDER BY store_id ASC");
@@ -125,20 +123,20 @@
 				}
 			}
 			
-			$total = (float)$this->request->post['total_num'];
-			$secondary = (int)$this->request->get['secondary'];
+			$total 		= (float)$this->request->post['total_num'];
+			$secondary 	= (int)$this->request->get['secondary'];
 			
 			$country_info = $this->model_localisation_country->getCountry($this->request->post['payment_country_id']);
 			
 			if ($country_info) {
-				$country = $country_info['name'];
-				$iso_code_2 = $country_info['iso_code_2'];
-				$iso_code_3 = $country_info['iso_code_3'];
+				$country 		= $country_info['name'];
+				$iso_code_2 	= $country_info['iso_code_2'];
+				$iso_code_3 	= $country_info['iso_code_3'];
 				$address_format = $country_info['address_format'];
 				} else {
-				$country = '';
-				$iso_code_2 = '';
-				$iso_code_3 = '';	
+				$country 		= '';
+				$iso_code_2 	= '';
+				$iso_code_3 	= '';	
 				$address_format = '';
 			}
 			
@@ -174,10 +172,8 @@
 			
 			$results = $this->model_setting_extension->getExtensions('payment');
 			
-			foreach ($results as $result) {									
-				
-				if ($this->config->get($result['code'] . '_status')) {
-					
+			foreach ($results as $result) {													
+				if ($this->config->get($result['code'] . '_status')) {					
 					if ($secondary){
 						$add = $this->config->get($result['code'] . '_ismethod');
 						} else {
@@ -187,8 +183,7 @@
 					$this->load->model('payment/' . $result['code']);					
 					$method = $this->{'model_payment_' . $result['code']}->getMethod($address_data, false, true); 	
 										
-					if ($method && $add) {					
-						
+					if ($method && $add) {											
 						if (isset($method['quote'])) {
 							foreach ($method['quote'] as $val) {
 								$json['payment_method'][$val['code']] = $val;
@@ -210,6 +205,4 @@
 			
 			$this->response->setOutput(json_encode($json));	
 		}
-		
-		
 	}	
