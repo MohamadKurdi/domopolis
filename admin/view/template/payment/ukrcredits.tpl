@@ -533,6 +533,28 @@
                   </label>
                 </div>
               </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-ii_stock_status_id">Разрешить только этот статусы</label>
+                <div class="col-sm-10">
+                  <div class="scrollbox" style="height:300px;">
+                    <?php $class = 'odd'; ?>
+                    <?php foreach ($stock_statuses as $stock_status) { ?>
+                      <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                      <div class="<?php echo $class; ?>">
+                        <?php if (in_array($stock_status['stock_status_id'], $ii_stock_status_id)) { ?>
+                          <input id="ii_stock_status_id_<?php echo $stock_status['stock_status_id']; ?>" class="checkbox" type="checkbox" name="ii_stock_status_id[]" value="<?php echo $stock_status['stock_status_id']; ?>" checked="checked" />
+                          <label for="ii_stock_status_id_<?php echo $stock_status['stock_status_id']; ?>"><?php echo $stock_status['name']; ?></label>
+                          <?php } else { ?>
+                          <input id="ii_stock_status_id_<?php echo $stock_status['stock_status_id']; ?>" class="checkbox" type="checkbox" name="ii_stock_status_id[]" value="<?php echo $stock_status['stock_status_id']; ?>" />
+                          <label for="ii_stock_status_id_<?php echo $stock_status['stock_status_id']; ?>"><?php echo $stock_status['name']; ?></label>
+                        <?php } ?>
+                      </div>
+                    <?php } ?>
+                  </div>
+                </div>
+              </div>  
+
               <div class="form-group required">                
                 <label class="col-sm-2 control-label" for="input-ii-pq"><span data-toggle="tooltip" title="<?php echo $help_pq; ?>"><?php echo $entry_pq; ?></span></label>
                 <div class="col-sm-10">
@@ -663,20 +685,59 @@
 				  </label>
                 </div>
               </div>
-			  <div class="form-group">
-				<label class="col-sm-2"></label>
-				<div class="col-sm-10">
-					<input type="text" name="allowed_ii" value="" placeholder="<?php echo $entry_enabled; ?>" id="input-allowed" class="form-control" />
-					<input type="text" name="category_allowed_ii" value="" placeholder="<?php echo $entry_enabled_cat; ?>" class="form-control" />
-					<div id="product-allowed_ii" class="well well-sm" style="height: 300px; overflow: auto;">
-					<?php foreach ($ii_products_allowed as $product_allowed) { ?>
-					<div id="product-allowed_ii<?php echo $product_allowed['product_id']; ?>"><?php if ($oc15) { ?><img src="view/image/delete.png" alt="" /><?php } else { ?><i class="fa fa-minus-circle"></i><?php } ?> <?php echo $product_allowed['name']; ?>
-					<input type="hidden" name="ii_product_allowed[]" value="<?php echo $product_allowed['product_id']; ?>" />
-					</div> 
-					<?php } ?>
-				  </div>
-				</div>
-			  </div>
+			  
+               <div class="row">  
+              <div class="col-sm-4">
+                <div class="form-group">   
+                  <label class="col-sm-12">Товары</label>             
+                  <div class="col-sm-12">
+                   <input type="text" name="allowed_ii" value="" placeholder="Автодополнение" id="input-allowed" class="form-control" />                 
+                   <div id="product-allowed_ii" class="well well-sm" style="height: 300px; overflow: auto;">
+                     <?php foreach ($ii_products_allowed as $product_allowed) { ?>
+                       <div id="product-allowed_ii<?php echo $product_allowed['product_id']; ?>"><img src="view/image/delete.png" alt="" /><?php echo $product_allowed['name']; ?>
+                       <input type="hidden" name="ii_product_allowed[]" value="<?php echo $product_allowed['product_id']; ?>" />
+                     </div> 
+                   <?php } ?>
+                 </div>
+               </div>
+             </div>
+           </div>
+
+           <div class="col-sm-4">
+             <div class="form-group">     
+                  <label class="col-sm-12">Категории</label>
+                  <div class="col-sm-12">
+                    <input type="text" name="allowed_сats_ii" value="" placeholder="Автодополнение" id="input-allowed_сats_ii" class="form-control" />   
+
+                    <div id="categories-allowed_ii" class="well well-sm" style="height: 300px; overflow: auto;">
+                     <?php foreach ($ii_category_allowed as $category_allowed) { ?>
+                        <div id="category-allowed_ii<?php echo $category_allowed['category_id']; ?>"><img src="view/image/delete.png" alt="" /><?php echo $category_allowed['name']; ?>
+                        <input type="hidden" name="ii_categories_allowed[]" value="<?php echo $category_allowed['category_id']; ?>" />
+                      </div> 
+                    <?php } ?>
+                  </div>
+                  </div>
+                </div>
+            </div>
+
+             <div class="col-sm-4">
+             <div class="form-group">     
+              <label class="col-sm-12">Бренды</label>          
+                  <div class="col-sm-12">
+                      <input type="text" name="allowed_mans_ii" value="" placeholder="Автодополнение" id="input-allowed_mans_ii" class="form-control" />   
+
+                      <div id="manufacturers-allowed_ii" class="well well-sm" style="height: 300px; overflow: auto;">
+                     <?php foreach ($ii_manufacturer_allowed as $manufacturer_allowed) { ?>
+                        <div id="manufacturer-allowed_ii<?php echo $manufacturer_allowed['manufacturer_id']; ?>"><img src="view/image/delete.png" alt="" /><?php echo $manufacturer_allowed['name']; ?>
+                        <input type="hidden" name="ii_manufacturers_allowed[]" value="<?php echo $manufacturer_allowed['manufacturer_id']; ?>" />
+                      </div> 
+                    <?php } ?>
+                  </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-geo-zone"><?php echo $entry_geo_zone; ?></label>
                 <div class="col-sm-10">
@@ -816,6 +877,28 @@
                   </label>
                 </div>
               </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="input-mb_stock_status_id">Разрешить только этот статусы</label>
+                <div class="col-sm-10">
+                  <div class="scrollbox" style="height:300px;">
+                    <?php $class = 'odd'; ?>
+                    <?php foreach ($stock_statuses as $stock_status) { ?>
+                      <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                      <div class="<?php echo $class; ?>">
+                        <?php if (in_array($stock_status['stock_status_id'], $mb_stock_status_id)) { ?>
+                          <input id="mb_stock_status_id_<?php echo $stock_status['stock_status_id']; ?>" class="checkbox" type="checkbox" name="mb_stock_status_id[]" value="<?php echo $stock_status['stock_status_id']; ?>" checked="checked" />
+                          <label for="mb_stock_status_id_<?php echo $stock_status['stock_status_id']; ?>"><?php echo $stock_status['name']; ?></label>
+                          <?php } else { ?>
+                          <input id="mb_stock_status_id_<?php echo $stock_status['stock_status_id']; ?>" class="checkbox" type="checkbox" name="mb_stock_status_id[]" value="<?php echo $stock_status['stock_status_id']; ?>" />
+                          <label for="mb_stock_status_id_<?php echo $stock_status['stock_status_id']; ?>"><?php echo $stock_status['name']; ?></label>
+                        <?php } ?>
+                      </div>
+                    <?php } ?>
+                  </div>
+                </div>
+              </div>  
+
               <div class="form-group required">                
                 <label class="col-sm-2 control-label" for="input-mb-pq"><span data-toggle="tooltip" title="<?php echo $help_pq; ?>"><?php echo $entry_pq; ?></span></label>
                 <div class="col-sm-10">
@@ -922,20 +1005,59 @@
 				  </label>
                 </div>
               </div>
-			  <div class="form-group">
-				<label class="col-sm-2"></label>
-				<div class="col-sm-10">
-					<input type="text" name="allowed_mb" value="" placeholder="<?php echo $entry_enabled; ?>" id="input-allowed" class="form-control" />
-					<input type="text" name="category_allowed_mb" value="" placeholder="<?php echo $entry_enabled_cat; ?>" class="form-control" />
-					<div id="product-allowed_mb" class="well well-sm" style="height: 300px; overflow: auto;">
-					<?php foreach ($mb_products_allowed as $product_allowed) { ?>
-					<div id="product-allowed_mb<?php echo $product_allowed['product_id']; ?>"><?php if ($oc15) { ?><img src="view/image/delete.png" alt="" /><?php } else { ?><i class="fa fa-minus-circle"></i><?php } ?> <?php echo $product_allowed['name']; ?>
-					<input type="hidden" name="mb_product_allowed[]" value="<?php echo $product_allowed['product_id']; ?>" />
-					</div> 
-					<?php } ?>
-				  </div>
-				</div>
-			  </div>
+			 
+               <div class="row">  
+              <div class="col-sm-4">
+                <div class="form-group">   
+                  <label class="col-sm-12">Товары</label>             
+                  <div class="col-sm-12">
+                   <input type="text" name="allowed_mb" value="" placeholder="Автодополнение" id="input-allowed" class="form-control" />                 
+                   <div id="product-allowed_mb" class="well well-sm" style="height: 300px; overflow: auto;">
+                     <?php foreach ($mb_products_allowed as $product_allowed) { ?>
+                       <div id="product-allowed_mb<?php echo $product_allowed['product_id']; ?>"><img src="view/image/delete.png" alt="" /><?php echo $product_allowed['name']; ?>
+                       <input type="hidden" name="mb_product_allowed[]" value="<?php echo $product_allowed['product_id']; ?>" />
+                     </div> 
+                   <?php } ?>
+                 </div>
+               </div>
+             </div>
+           </div>
+
+           <div class="col-sm-4">
+             <div class="form-group">     
+                  <label class="col-sm-12">Категории</label>
+                  <div class="col-sm-12">
+                    <input type="text" name="allowed_сats_mb" value="" placeholder="Автодополнение" id="input-allowed_сats_mb" class="form-control" />   
+
+                    <div id="categories-allowed_mb" class="well well-sm" style="height: 300px; overflow: auto;">
+                     <?php foreach ($mb_category_allowed as $category_allowed) { ?>
+                        <div id="category-allowed_mb<?php echo $category_allowed['category_id']; ?>"><img src="view/image/delete.png" alt="" /><?php echo $category_allowed['name']; ?>
+                        <input type="hidden" name="mb_categories_allowed[]" value="<?php echo $category_allowed['category_id']; ?>" />
+                      </div> 
+                    <?php } ?>
+                  </div>
+                  </div>
+                </div>
+            </div>
+
+             <div class="col-sm-4">
+             <div class="form-group">     
+              <label class="col-sm-12">Бренды</label>          
+                  <div class="col-sm-12">
+                      <input type="text" name="allowed_mans_mb" value="" placeholder="Автодополнение" id="input-allowed_mans_mb" class="form-control" />   
+
+                      <div id="manufacturers-allowed_mb" class="well well-sm" style="height: 300px; overflow: auto;">
+                     <?php foreach ($mb_manufacturer_allowed as $manufacturer_allowed) { ?>
+                        <div id="manufacturer-allowed_mb<?php echo $manufacturer_allowed['manufacturer_id']; ?>"><img src="view/image/delete.png" alt="" /><?php echo $manufacturer_allowed['name']; ?>
+                        <input type="hidden" name="mb_manufacturers_allowed[]" value="<?php echo $manufacturer_allowed['manufacturer_id']; ?>" />
+                      </div> 
+                    <?php } ?>
+                  </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="input-geo-zone"><?php echo $entry_geo_zone; ?></label>
                 <div class="col-sm-10">
@@ -1309,48 +1431,6 @@ $('#manufacturers-allowed_pp div img').live('click', function() {
 });
 
 
-
-
-
-
-$('input[name=\'category_allowed_ii\']').autocomplete({
-	delay: 200,
-    source: function(request, response) {
-      $.ajax({
-        url: 'index.php?route=catalog/category/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
-        dataType: 'json',
-        success: function(json) {		
-          response($.map(json, function(item) {
-            return {
-              label: item.name,
-			  value: item.category_id
-            }
-          }));
-        }
-      });
-    }, 
-    select: function(event, ui) {
-      $.ajax({
-        url: 'index.php?route=catalog/category/productsAutocomplete&token=<?php echo $token; ?>&filter_category_id=' +  ui.item.value,
-        dataType: 'json',
-        success: function(data) {          
-          $.each(data, function(index, item) {
-            $('#product-allowed_ii' + item.product_id).remove();
-            $('#product-allowed_ii').append('<div id="product-allowed' + item.product_id + '"><img src="view/image/delete.png" alt="" />' + item.name + '<input type="hidden" name="pp_product_allowed[]" value="' + item.product_id + '" /></div>');
-			$('#product-allowed_ii div:odd').attr('class', 'odd');
-			$('#product-allowed_ii div:even').attr('class', 'even');
-			$('#enabled_selected_ii').prop('disabled',true);
-			$('#enabled_all_ii').attr('checked', 'checked');
-          });  
-        }
-      });
-      return false;
-    },
-    focus: function(event, ui) {
-        return false;
-    }
-});
-
 $('input[name=\'allowed_ii\']').autocomplete({
 	delay: 200,
 	source: function(request, response) {
@@ -1369,7 +1449,7 @@ $('input[name=\'allowed_ii\']').autocomplete({
 	},
 	select: function(event, ui) {
 		$('#product-allowed_ii' + ui.item.value).remove();
-		$('#product-allowed_ii').append('<div id="product-allowed' + ui.item.value + '"><img src="view/image/delete.png" alt="" />' + ui.item.label + '<input type="hidden" name="pp_product_allowed[]" value="' + ui.item.value + '" /></div>');
+		$('#product-allowed_ii').append('<div id="product-allowed' + ui.item.value + '"><img src="view/image/delete.png" alt="" />' + ui.item.label + '<input type="hidden" name="ii_product_allowed[]" value="' + ui.item.value + '" /></div>');
 		$('#product-allowed_ii div:odd').attr('class', 'odd');
 		$('#product-allowed_ii div:even').attr('class', 'even');
 		$('#enabled_selected_ii').prop('disabled',true);
@@ -1391,43 +1471,75 @@ $('#product-allowed_ii div img').live('click', function() {
 	}
 });
 
-$('input[name=\'category_allowed_mb\']').autocomplete({
-	delay: 200,
-    source: function(request, response) {
-      $.ajax({
-        url: 'index.php?route=catalog/category/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
-        dataType: 'json',
-        success: function(json) {		
-          response($.map(json, function(item) {
-            return {
-              label: item.name,
-			  value: item.category_id
-            }
-          }));
-        }
-      });
-    }, 
-    select: function(event, ui) {
-      $.ajax({
-        url: 'index.php?route=catalog/category/productsAutocomplete&token=<?php echo $token; ?>&filter_category_id=' +  ui.item.value,
-        dataType: 'json',
-        success: function(data) {          
-          $.each(data, function(index, item) {
-            $('#product-allowed_mb' + item.product_id).remove();
-            $('#product-allowed_mb').append('<div id="product-allowed' + item.product_id + '"><img src="view/image/delete.png" alt="" />' + item.name + '<input type="hidden" name="pp_product_allowed[]" value="' + item.product_id + '" /></div>');
-			$('#product-allowed_mb div:odd').attr('class', 'odd');
-			$('#product-allowed_mb div:even').attr('class', 'even');
-			$('#enabled_selected_mb').prop('disabled',true);
-			$('#enabled_all_mb').attr('checked', 'checked');
-          });  
-        }
-      });
+$('input[name=\'allowed_сats_ii\']').autocomplete({
+  delay: 200,
+  source: function(request, response) {
+    $.ajax({
+      url: 'index.php?route=catalog/category/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+      dataType: 'json',
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item.name,
+            value: item.category_id
+          }
+        }));
+      }
+    });
+  },
+  select: function(event, ui) {
+    $('#categories-allowed_ii' + ui.item.value).remove();
+    $('#categories-allowed_ii').append('<div id="category-allowed_ii' + ui.item.value + '"><img src="view/image/delete.png" alt="" />' + ui.item.label + '<input type="hidden" name="ii_categories_allowed[]" value="' + ui.item.value + '" /></div>');
+    $('#categories-allowed_ii div:odd').attr('class', 'odd');
+    $('#categories-allowed_ii div:even').attr('class', 'even');
+    return false;   
+  },
+  focus: function(event, ui) {
       return false;
-    },
-    focus: function(event, ui) {
-        return false;
-    }
+  }
 });
+
+$('#categories-allowed_ii div img').live('click', function() {
+  $(this).parent().remove();
+  $('#categories-allowed_ii div:odd').attr('class', 'odd');
+  $('#categories-allowed_ii div:even').attr('class', 'even');
+});
+
+
+$('input[name=\'allowed_mans_ii\']').autocomplete({
+  delay: 200,
+  source: function(request, response) {
+    $.ajax({
+      url: 'index.php?route=catalog/manufacturer/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+      dataType: 'json',
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item.name,
+            value: item.manufacturer_id
+          }
+        }));
+      }
+    });
+  },
+  select: function(event, ui) {
+    $('#manufacturers-allowed_ii' + ui.item.value).remove();
+    $('#manufacturers-allowed_ii').append('<div id="manufacturer-allowed_ii' + ui.item.value + '"><img src="view/image/delete.png" alt="" />' + ui.item.label + '<input type="hidden" name="ii_manufacturers_allowed[]" value="' + ui.item.value + '" /></div>');
+    $('#manufacturers-allowed_ii div:odd').attr('class', 'odd');
+    $('#manufacturers-allowed_ii div:even').attr('class', 'even');
+    return false;   
+  },
+  focus: function(event, ui) {
+      return false;
+  }
+});
+
+$('#manufacturers-allowed_ii div img').live('click', function() {
+  $(this).parent().remove();
+  $('#manufacturers-allowed_ii div:odd').attr('class', 'odd');
+  $('#manufacturers-allowed_ii div:even').attr('class', 'even');
+});
+
 
 $('input[name=\'allowed_mb\']').autocomplete({
 	delay: 200,
@@ -1447,7 +1559,7 @@ $('input[name=\'allowed_mb\']').autocomplete({
 	},
 	select: function(event, ui) {
 		$('#product-allowed_mb' + ui.item.value).remove();
-		$('#product-allowed_mb').append('<div id="product-allowed' + ui.item.value + '"><img src="view/image/delete.png" alt="" />' + ui.item.label + '<input type="hidden" name="pp_product_allowed[]" value="' + ui.item.value + '" /></div>');
+		$('#product-allowed_mb').append('<div id="product-allowed' + ui.item.value + '"><img src="view/image/delete.png" alt="" />' + ui.item.label + '<input type="hidden" name="mb_product_allowed[]" value="' + ui.item.value + '" /></div>');
 		$('#product-allowed_mb div:odd').attr('class', 'odd');
 		$('#product-allowed_mb div:even').attr('class', 'even');
 		$('#enabled_selected_mb').prop('disabled',true);
@@ -1467,6 +1579,75 @@ $('#product-allowed_mb div img').live('click', function() {
 	if ($('#product-allowed_mb').html().trim() === '') {
 		$('#enabled_selected_mb').prop('disabled',false);
 	}
+});
+
+$('input[name=\'allowed_сats_mb\']').autocomplete({
+  delay: 200,
+  source: function(request, response) {
+    $.ajax({
+      url: 'index.php?route=catalog/category/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+      dataType: 'json',
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item.name,
+            value: item.category_id
+          }
+        }));
+      }
+    });
+  },
+  select: function(event, ui) {
+    $('#categories-allowed_mb' + ui.item.value).remove();
+    $('#categories-allowed_mb').append('<div id="category-allowed_mb' + ui.item.value + '"><img src="view/image/delete.png" alt="" />' + ui.item.label + '<input type="hidden" name="mb_categories_allowed[]" value="' + ui.item.value + '" /></div>');
+    $('#categories-allowed_mb div:odd').attr('class', 'odd');
+    $('#categories-allowed_mb div:even').attr('class', 'even');
+    return false;   
+  },
+  focus: function(event, ui) {
+      return false;
+  }
+});
+
+$('#categories-allowed_mb div img').live('click', function() {
+  $(this).parent().remove();
+  $('#categories-allowed_mb div:odd').attr('class', 'odd');
+  $('#categories-allowed_mb div:even').attr('class', 'even');
+});
+
+
+$('input[name=\'allowed_mans_mb\']').autocomplete({
+  delay: 200,
+  source: function(request, response) {
+    $.ajax({
+      url: 'index.php?route=catalog/manufacturer/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+      dataType: 'json',
+      success: function(json) {
+        response($.map(json, function(item) {
+          return {
+            label: item.name,
+            value: item.manufacturer_id
+          }
+        }));
+      }
+    });
+  },
+  select: function(event, ui) {
+    $('#manufacturers-allowed_mb' + ui.item.value).remove();
+    $('#manufacturers-allowed_mb').append('<div id="manufacturer-allowed_mb' + ui.item.value + '"><img src="view/image/delete.png" alt="" />' + ui.item.label + '<input type="hidden" name="mb_manufacturers_allowed[]" value="' + ui.item.value + '" /></div>');
+    $('#manufacturers-allowed_mb div:odd').attr('class', 'odd');
+    $('#manufacturers-allowed_mb div:even').attr('class', 'even');
+    return false;   
+  },
+  focus: function(event, ui) {
+      return false;
+  }
+});
+
+$('#manufacturers-allowed_mb div img').live('click', function() {
+  $(this).parent().remove();
+  $('#manufacturers-allowed_mb div:odd').attr('class', 'odd');
+  $('#manufacturers-allowed_mb div:even').attr('class', 'even');
 });
 </script>
 
