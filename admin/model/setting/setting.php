@@ -90,42 +90,33 @@ class ModelSettingSetting extends Model {
 	}
 	
 	public function getCounterTotal($counter){
-		
 		$query = $this->db->query("SELECT SUM(value) as total FROM `counters` WHERE counter = '". $this->db->escape($counter) ."' GROUP BY counter");
 		
 		return $query->row['total'];
-	
 	}
 	
-	public function getPWAOrders($store_id){
-		
+	public function getPWAOrders($store_id){		
 		$query = $this->db->query("SELECT COUNT(DISTINCT order_id) as total FROM `order` WHERE pwa = 1 AND store_id = '" . (int)$store_id . "' AND order_status_id > 0");
 		
 		return $query->row['total'];
 	}
 	
-	public function getPWAOrdersTotal(){
-		
+	public function getPWAOrdersTotal(){		
 		$query = $this->db->query("SELECT COUNT(DISTINCT order_id) as total FROM `order` WHERE pwa = 1 AND order_status_id > 0");
 		
 		return $query->row['total'];
-	
 	}
 	
 	public function getYAMTotalOrders(){
-		
 		$query = $this->db->query("SELECT COUNT(DISTINCT order_id) as total FROM `order` WHERE yam = 1 AND order_status_id > 0 AND store_id = 0 AND order_status_id <> '" . $this->config->get('config_cancelled_status_id') . "' AND yam_fake = 0");
 		
 		return $query->row['total'];
-	
 	}
 	
-	public function getYAMOrdersTotal(){
-		
+	public function getYAMOrdersTotal(){		
 		$query = $this->db->query("SELECT SUM(total_national) as total FROM `order` WHERE yam = 1 AND order_status_id > 0 AND store_id = 0 AND order_status_id <> '" . $this->config->get('config_cancelled_status_id') . "'  AND yam_fake = 0");
 		
-		return $query->row['total'];
-	
+		return $query->row['total'];	
 	}
 
 	public function getTranslatedTotal(){

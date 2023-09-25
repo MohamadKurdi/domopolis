@@ -309,8 +309,7 @@
 			$this->data['order_total'] = formatLongNumber($order_total);
 			
 			$date_first_order = $this->model_sale_order->getFirstOrderDate();
-			$this->data['date_first_order'] = date('d.m.Y', strtotime($date_first_order));
-			
+			$this->data['date_first_order'] = date('d.m.Y', strtotime($date_first_order));			
 			
 			$this->data['customers_now'] = $this->model_sale_customer->getTotalInvolvedCustomers();
 			$this->data['customers_yesterday'] = $this->model_sale_customer->getTotalInvolvedCustomersLastWeek();
@@ -335,37 +334,52 @@
 			);
 			$this->data['orders_pwa_now'] = $this->model_sale_order->getTotalOrders($data);
 			$this->data['pwa_percent_for_last_month'] = $this->data['orders_now']?round((($this->data['orders_pwa_now'] / $this->data['orders_now']) * 100), 1):0;
-			
-			
-			$this->data['total_yam_orders'] = $this->model_setting_setting->getYAMTotalOrders();
-			
-			$data = array(
-			'filter_date_added' 			=> date('Y-m-d', strtotime("-1 month")),
-			'filter_date_added_to' 			=> date('Y-m-d'),
-			'filter_yam'					=> true,
-			'filter_order_status_notnull' 	=> true,
-			'filter_not_preorder'			=> true,
-			'filter_order_store_id'			=> 0
-			);
-			$this->data['orders_yam_now'] = $this->model_sale_order->getTotalOrders($data);
 
-			$data = array(
-			'filter_date_added' 			=> date('Y-m-d', strtotime("-1 month")),
-			'filter_date_added_to' 			=> date('Y-m-d'),
-			'filter_order_status_notnull' 	=> true,
-			'filter_not_preorder'			=> true,
-			'filter_order_store_id'			=> 0
-			);
-			$this->data['orders_ru_now'] = $this->model_sale_order->getTotalOrders($data);
-			$this->data['yam_percent_for_last_month'] = $this->data['orders_ru_now']?round((($this->data['orders_yam_now'] / $this->data['orders_ru_now']) * 100), 1):0;
+			if ($this->config->get('ukrcredits_status')){
+				$this->data['total_credit_orders'] = $this->model_setting_setting->getCreditTotalOrders();
+
+				$data = array(
+					'filter_date_added' 			=> date('Y-m-d', strtotime("-1 month")),
+					'filter_date_added_to' 			=> date('Y-m-d'),
+					'filter_is_credit_order'		=> true,
+					'filter_order_status_notnull' 	=> true
+				);
+
+				$this->data['orders_credit_now'] 	= $this->model_sale_order->getTotalOrders($data);
+				$this->data['credit_percent_for_last_month'] = $this->data['orders_now']?round((($this->data['orders_credit_now'] / $this->data['orders_now']) * 100), 1):0;
+			}			
 			
-			$this->data['yam_orders_total'] = $this->model_setting_setting->getYAMOrdersTotal();
-			$this->data['yam_comission'] = ($this->data['yam_orders_total'] / 100) * 12;
-			$this->data['yam_comission'] = formatLongNumber($this->data['yam_comission']);
-			
+			if ($this->config->get('config_country_id') == 176) {
+				$this->data['total_yam_orders'] = $this->model_setting_setting->getYAMTotalOrders();
+
+				$data = array(
+					'filter_date_added' 			=> date('Y-m-d', strtotime("-1 month")),
+					'filter_date_added_to' 			=> date('Y-m-d'),
+					'filter_yam'					=> true,
+					'filter_order_status_notnull' 	=> true,
+					'filter_not_preorder'			=> true,
+					'filter_order_store_id'			=> 0
+				);
+				$this->data['orders_yam_now'] = $this->model_sale_order->getTotalOrders($data);
+
+				$data = array(
+					'filter_date_added' 			=> date('Y-m-d', strtotime("-1 month")),
+					'filter_date_added_to' 			=> date('Y-m-d'),
+					'filter_order_status_notnull' 	=> true,
+					'filter_not_preorder'			=> true,
+					'filter_order_store_id'			=> 0
+				);
+				$this->data['orders_ru_now'] = $this->model_sale_order->getTotalOrders($data);
+				$this->data['yam_percent_for_last_month'] = $this->data['orders_ru_now']?round((($this->data['orders_yam_now'] / $this->data['orders_ru_now']) * 100), 1):0;
+
+				$this->data['yam_orders_total'] = $this->model_setting_setting->getYAMOrdersTotal();
+				$this->data['yam_comission'] = ($this->data['yam_orders_total'] / 100) * 12;
+				$this->data['yam_comission'] = formatLongNumber($this->data['yam_comission']);
+
 			//$this->data['yam_comission1'] = $this->currency->format($this->data['yam_comission'], 'RUB', '1');
-			$this->data['yam_orders_total'] = $this->currency->format($this->data['yam_orders_total'], 'RUB', '1');
-			$this->data['yam_orders_total'] = formatLongNumber($this->data['yam_orders_total']);
+				$this->data['yam_orders_total'] = $this->currency->format($this->data['yam_orders_total'], 'RUB', '1');
+				$this->data['yam_orders_total'] = formatLongNumber($this->data['yam_orders_total']);
+			}
 			
 			
 			$this->template = 'homestats/prettystats.tpl';
