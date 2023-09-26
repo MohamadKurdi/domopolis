@@ -16,6 +16,7 @@
 /admin/favicon.ico
 /admin/offline.html
 /admin/view/template/sale/bottom_texts/*
+/admin/view/template/sale/actiontemplates/*
 
 #Основные конфиги
 /config*.php
