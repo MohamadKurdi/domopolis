@@ -135,6 +135,8 @@
 							Бренды
 						</td>
 
+						<td class="center" width="50px"></td>
+						<td class="center" width="50px"></td>
 						<td class="right"></td>
 					</thead>
 
@@ -195,7 +197,7 @@
 									<?php } ?>
 								</td>
 
-								<td class="left">
+								<td class="left" style="white-space: nowrap;">
 									<div>
 										<span style="padding:2px; background:#00AD07; display:inline-block; color:white;"><? echo $customer['order_good_first_date']; ?></span>	
 									</div>
@@ -246,6 +248,14 @@
 									<?php } ?>
 								</td>
 
+								<td class="center" width="50px">
+									<i class="fa fa-envelope" style="font-size:36px; color:#00AD07; cursor:pointer;"></i>
+								</td>
+
+								<td class="center" width="50px">
+									<i class="fa fa-eye" style="font-size:36px; color:#FF7815; cursor:pointer;"></i>
+								</td>
+
 								<td class="right">
 										<a class="button" onclick=" swal({title: 'Ссылка для входа без пароля',text: '<? echo $customer['preauth_url']; ?>', html: true,  type: 'info',  customClass: 'swal-wide',  showCancelButton: true,  showConfirmButton:false });"><i class="fa fa-link" aria-hidden="true"></i>
 										</a>										
@@ -259,15 +269,6 @@
 										<?php } ?>
 									</td>
 							</tr>
-
-
-
-
-
-
-
-
-
 						<?php } ?>
 					<?php } else { ?>
 						<tr>

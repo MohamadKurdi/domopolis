@@ -9,6 +9,7 @@
 			$this->document->setTitle($this->language->get('heading_title'));
 			
 			$this->load->model('catalog/actiontemplate');
+			$this->load->model('catalog/actiontemplate_functions');
 			
 			$this->getList();
 		}
@@ -21,7 +22,7 @@
 			$this->load->model('catalog/actiontemplate');
 			
 			if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-				$this->model_catalog_actiontemplate->addactiontemplate($this->request->post);
+				$this->model_catalog_actiontemplate->addActionTemplate($this->request->post);
 				
 				$this->session->data['success'] = $this->language->get('text_success');
 				
@@ -53,7 +54,7 @@
 			$this->load->model('catalog/actiontemplate');
 			
 			if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
-				$this->model_catalog_actiontemplate->editactiontemplate($this->request->get['actiontemplate_id'], $this->request->post);
+				$this->model_catalog_actiontemplate->editActionTemplate($this->request->get['actiontemplate_id'], $this->request->post);
 				
 				$this->session->data['success'] = $this->language->get('text_success');
 				
@@ -86,7 +87,7 @@
 			
 			if (isset($this->request->post['selected']) && $this->validateDelete()) {
 				foreach ($this->request->post['selected'] as $actiontemplate_id) {
-					$this->model_catalog_actiontemplate->deleteactiontemplate($actiontemplate_id);
+					$this->model_catalog_actiontemplate->deleteActionTemplate($actiontemplate_id);
 				}
 				
 				$this->session->data['success'] = $this->language->get('text_success');
@@ -173,7 +174,7 @@
 			'limit' => $this->config->get('config_admin_limit')
 			);
 			
-			$actiontemplate_total = $this->model_catalog_actiontemplate->getTotalactiontemplates();
+			$actiontemplate_total = $this->model_catalog_actiontemplate->getTotalActionTemplates();
 			
 			$results = $this->model_catalog_actiontemplate->getactiontemplates($data);
 			
@@ -191,6 +192,8 @@
 				'image'			 	=> $this->model_tool_image->resize($result['image'], 50, 50),
 				'sort_order'     	=> $result['sort_order'],
 				'use_for_manual' 	=> $result['use_for_manual'],
+				'data_function' 	=> $result['data_function'],
+				'file_template' 	=> $result['file_template'],
 				'coupons'			=> $this->model_catalog_actiontemplate->getActionTemplateCoupons($result['actiontemplate_id']),
 				'viewed'         	=> $result['viewed'],
 				'selected'       	=> isset($this->request->post['selected']) && in_array($result['actiontemplate_id'], $this->request->post['selected']),
@@ -402,13 +405,37 @@
 				$this->data['image'] = '';
 			}
 
+			$this->data['functions'] = [];
+			$this->load->model('catalog/actiontemplate_functions');
+
+			$classMethods = get_class_methods('ModelCatalogActionTemplateFunctions');
+			foreach ($classMethods as $classMethod){
+				if (!in_array($classMethod, ['__construct', '__get', '__set'])){
+					$this->data['functions'][] = $classMethod;
+				}
+			}
+
+			if (isset($this->request->post['data_function'])) {
+				$this->data['data_function'] = $this->request->post['data_function'];
+				} elseif (!empty($actiontemplate_info)) {
+				$this->data['data_function'] = $actiontemplate_info['data_function'];
+				} else {
+				$this->data['data_function'] = '';
+			}
+
 			if (isset($this->request->post['use_for_manual'])) {
 				$this->data['use_for_manual'] = $this->request->post['use_for_manual'];
 				} elseif (!empty($actiontemplate_info)) {
 				$this->data['use_for_manual'] = $actiontemplate_info['use_for_manual'];
 				} else {
 				$this->data['use_for_manual'] = '';
-			}			
+			}	
+
+			$this->data['file_templates'] = [];
+			$file_templates = glob(DIR_APPLICATION . '/view/template/sale/actiontemplates/*.tpl');        
+        	foreach ($file_templates as $file_template) {
+            	$this->data['file_templates'][] = pathinfo($file_template,  PATHINFO_FILENAME);
+        	}
 			
 			if (isset($this->request->post['sort_order'])) {
 				$this->data['sort_order'] = $this->request->post['sort_order'];
@@ -453,18 +480,17 @@
 			$this->load->model('catalog/actiontemplate');
 			$this->load->model('sale/customer');
 			$this->load->model('setting/setting');
-			
-			
-			$customer = $this->model_sale_customer->getCustomer($customer_id);
-			$template = $this->model_catalog_actiontemplate->getactiontemplateDescription($template_id, $customer['language_id']);
-			$title = $this->model_catalog_actiontemplate->getactiontemplateTitle($template_id, $customer['language_id']);
+						
+			$customer 	= $this->model_sale_customer->getCustomer($customer_id);
+			$template 	= $this->model_catalog_actiontemplate->getactiontemplateDescription($template_id, $customer['language_id']);
+			$title 		= $this->model_catalog_actiontemplate->getactiontemplateTitle($template_id, $customer['language_id']);
 
 			$tags = array(
-			'{customer_name}' => 'customer-firstname',
-			'{customer_lastname}' => 'customer-lastname',
-			'{customer_email}' => 'customer-email',
-			'{customer_utoken}' => 'customer-utoken',
-			'{store_url}'       => $customer['store_id']==0?HTTPS_CATALOG:$this->model_setting_setting->getKeySettingValue('config', 'config_url', (int)$customer['store_id']),
+			'{customer_name}' 		=> 'customer-firstname',
+			'{customer_lastname}' 	=> 'customer-lastname',
+			'{customer_email}' 		=> 'customer-email',
+			'{customer_utoken}' 	=> 'customer-utoken',
+			'{store_url}'       	=> $customer['store_id']==0?HTTPS_CATALOG:$this->model_setting_setting->getKeySettingValue('config', 'config_url', (int)$customer['store_id']),
 			);
 			
 			foreach ($tags as $key => $value){
@@ -513,19 +539,19 @@
 			$this->load->model('kp/work');
 			$this->model_kp_work->updateFieldPlusOne('sent_mail_count');
 		
-			$data = $this->request->post;
-			$template = $this->loadTemplate($data['customer_id'], $data['template_id'], true);
-			$customer = $this->model_sale_customer->getCustomer($data['customer_id']);
+			$data 		= $this->request->post;
+			$template 	= $this->loadTemplate($data['customer_id'], $data['template_id'], true);
+			$customer 	= $this->model_sale_customer->getCustomer($data['customer_id']);
 					
-			$mail_info = array(
-				'mail_from' => $this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$customer['store_id']),
-				'mail_from_email' => $this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$customer['store_id']),
-				'mail_to' => $customer['firstname'] . ' ' . $customer['lastname'],
-				'mail_to_email' => $customer['email'],
-				'store_id'    => $customer['store_id'],
-				'customer_id'    => $customer['customer_id'],
-				'template_id'    => (int)$data['template_id']
-			);
+			$mail_info = [
+				'mail_from' 		=> $this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$customer['store_id']),
+				'mail_from_email' 	=> $this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$customer['store_id']),
+				'mail_to' 			=> $customer['firstname'] . ' ' . $customer['lastname'],
+				'mail_to_email' 	=> $customer['email'],
+				'store_id'    		=> $customer['store_id'],
+				'customer_id'    	=> $customer['customer_id'],
+				'template_id'    	=> (int)$data['template_id']
+			];
 			$data = array_merge($data, $template, $customer, $mail_info);
 			
 			

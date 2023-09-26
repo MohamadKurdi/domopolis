@@ -33,6 +33,12 @@
 								<?php } ?>
 							</td>
 							<td class="left">
+								Шаблон
+							</td>
+							<td class="left">
+								Функция подбора
+							</td>
+							<td class="left">
 								Связанные промокоды
 							</td>
 							<td class="left">
@@ -65,6 +71,20 @@
 									</td>
 									<td class="left">
 										<b><?php echo $actiontemplate['title']; ?></b>
+									</td>
+									<td class="center">
+										<? if ($actiontemplate['file_template']) { ?>
+											<span style="font-family: 'courier new'; font-size:10px;"><?php echo $actiontemplate['file_template']; ?>
+										<? } else { ?>
+											<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+										<? } ?>		
+									</td>
+									<td class="center">
+										<? if ($actiontemplate['data_function']) { ?>
+											<span style="font-family: 'courier new'; font-size:10px;"><?php echo $actiontemplate['data_function']; ?>()
+										<? } else { ?>
+											<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+										<? } ?>		
 									</td>
 									<td class="left">
 										<?php foreach ($actiontemplate['coupons'] as $coupon) { ?>

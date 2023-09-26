@@ -1,12 +1,26 @@
 <?php
-	class ModelCatalogactiontemplate extends Model {
-		public function addactiontemplate($data) {
-			$this->db->query("INSERT INTO actiontemplate SET sort_order = '" . (int)$data['sort_order'] . "', bottom = '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', status = '" . (int)$data['status'] . "', use_for_manual = '" . (int)$data['use_for_manual'] . "', image = '" . $this->db->escape($data['image']) . "'");
+	class ModelCatalogActionTemplate extends Model {
+		public function addActionTemplate($data) {
+			$this->db->query("INSERT INTO actiontemplate SET 
+				sort_order 		= '" . (int)$data['sort_order'] . "', 
+				bottom 			= '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', 
+				status 			= '" . (int)$data['status'] . "', 
+				use_for_manual 	= '" . (int)$data['use_for_manual'] . "',
+				data_function	= '" . $this->db->escape($data['data_function']) . "',
+				image 			= '" . $this->db->escape($data['image']) . "'");
 			
 			$actiontemplate_id = $this->db->getLastId(); 
 			
 			foreach ($data['actiontemplate_description'] as $language_id => $value) {
-				$this->db->query("INSERT INTO actiontemplate_description SET actiontemplate_id = '" . (int)$actiontemplate_id . "', language_id = '" . (int)$language_id . "', seo_title = '" . ((isset($value['seo_title']))?($this->db->escape($value['seo_title'])):'') . "', title = '" . $this->db->escape($value['title']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "',  description = '" . $this->db->escape($value['description']) . "'");
+				$this->db->query("INSERT INTO actiontemplate_description SET 
+					actiontemplate_id 	= '" . (int)$actiontemplate_id . "', 
+					language_id 		= '" . (int)$language_id . "', 
+					seo_title 			= '" . ((isset($value['seo_title']))?($this->db->escape($value['seo_title'])):'') . "', 
+					title 				= '" . $this->db->escape($value['title']) . "',
+					file_template 		= '" . $this->db->escape($value['file_template']) . "', 
+					meta_description 	= '" . $this->db->escape($value['meta_description']) . "', 
+					meta_keyword 		= '" . $this->db->escape($value['meta_keyword']) . "',  
+					description 		= '" . $this->db->escape($value['description']) . "'");
 			}
 			
 			
@@ -17,13 +31,28 @@
 			}
 		}
 		
-		public function editactiontemplate($actiontemplate_id, $data) {
-			$this->db->query("UPDATE actiontemplate SET sort_order = '" . (int)$data['sort_order'] . "', bottom = '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', status = '" . (int)$data['status'] . "', use_for_manual = '" . (int)$data['use_for_manual'] . "', image = '" . $this->db->escape($data['image']) . "' WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");
+		public function editActionTemplate($actiontemplate_id, $data) {
+			$this->db->query("UPDATE actiontemplate SET 
+				sort_order 		= '" . (int)$data['sort_order'] . "', 
+				bottom 			= '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', 
+				status 			= '" . (int)$data['status'] . "', 
+				use_for_manual 	= '" . (int)$data['use_for_manual'] . "', 
+				data_function	= '" . $this->db->escape($data['data_function']) . "',
+				image 			= '" . $this->db->escape($data['image']) . "' 
+				WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");
 			
 			$this->db->query("DELETE FROM actiontemplate_description WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");
 			
 			foreach ($data['actiontemplate_description'] as $language_id => $value) {
-				$this->db->query("INSERT INTO actiontemplate_description SET actiontemplate_id = '" . (int)$actiontemplate_id . "', language_id = '" . (int)$language_id . "', seo_title = '" . ((isset($value['seo_title']))?($this->db->escape($value['seo_title'])):'') . "', title = '" . $this->db->escape($value['title']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "',  description = '" . $this->db->escape($value['description']) . "'");
+				$this->db->query("INSERT INTO actiontemplate_description SET 
+					actiontemplate_id 	= '" . (int)$actiontemplate_id . "', 
+					language_id 		= '" . (int)$language_id . "', 
+					seo_title 			= '" . ((isset($value['seo_title']))?($this->db->escape($value['seo_title'])):'') . "', 
+					title 				= '" . $this->db->escape($value['title']) . "',
+					file_template 		= '" . $this->db->escape($value['file_template']) . "', 
+					meta_description 	= '" . $this->db->escape($value['meta_description']) . "', 
+					meta_keyword 		= '" . $this->db->escape($value['meta_keyword']) . "',  
+					description 		= '" . $this->db->escape($value['description']) . "'");
 			}
 			
 			
@@ -36,7 +65,7 @@
 			}
 		}
 		
-		public function deleteactiontemplate($actiontemplate_id) {
+		public function deleteActionTemplate($actiontemplate_id) {
 			$this->db->query("DELETE FROM actiontemplate WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");
 			$this->db->query("DELETE FROM emailmarketing_logs WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");
 			$this->db->query("DELETE FROM actiontemplate_description WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");		
@@ -189,7 +218,8 @@
                 'title'             => $result['title'],
                 'meta_description'  => $result['meta_description'],
                 'meta_keyword'      => $result['meta_keyword'],
-				'description'       => $result['description']
+				'description'       => $result['description'],
+				'file_template'     => $result['file_template']
 				);
 			}
 			
@@ -231,7 +261,7 @@
 		}
 		
 		
-		public function getTotalactiontemplates() {
+		public function getTotalActionTemplates() {
 			$query = $this->db->query("SELECT COUNT(*) AS total FROM actiontemplate");
 			
 			return $query->row['total'];

@@ -38,6 +38,18 @@
 									<td><span class="required">*</span> Заголовок письма</td>
 									<td><input type="text" name="actiontemplate_description[<?php echo $language['language_id']; ?>][seo_title]" size="100" value="<?php echo isset($actiontemplate_description[$language['language_id']]) ? $actiontemplate_description[$language['language_id']]['seo_title'] : ''; ?>" /></td>
 								</tr>
+
+								<tr>       
+									<td>Использовать файл шаблона</td>        
+									<td>
+										<select name="actiontemplate_description[<?php echo $language['language_id']; ?>][file_template]">
+											<option value="">Использовать шаблон из формы</option>
+											<?php foreach ($file_templates as $file_template_one) { ?>
+												<option value="<?php echo $file_template_one; ?>" <?php if (!empty($actiontemplate_description[$language['language_id']]) && $file_template_one == $actiontemplate_description[$language['language_id']]['file_template']) { ?>selected="selected"<?php } ?>><?php echo $file_template_one; ?></option>
+											<?php } ?>
+										</select>
+									</td>
+								</tr>
 								
 								<tr>               
 									<td colspan="2"><textarea name="actiontemplate_description[<?php echo $language['language_id']; ?>][description]" id="description<?php echo $language['language_id']; ?>"><?php echo isset($actiontemplate_description[$language['language_id']]) ? $actiontemplate_description[$language['language_id']]['description'] : ''; ?></textarea>
@@ -75,6 +87,21 @@
 								<input type="hidden" name="image" value="<?php echo $image; ?>" id="image" />
 							<br /><a onclick="image_upload('image', 'thumb');">Выбрать</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb').attr('src', '<?php echo $no_image; ?>'); $('#image').attr('value', '');">Очистить</a></div></td>
 						</tr>
+						<tr>
+							<td>
+								Использовать функцию подбора данных для компиляции шаблона
+							</td>
+							<td>
+								<select name="data_function">
+									<option value="">Не использовать</option>
+									<?php foreach ($functions as $function_one) { ?>
+										<option value="<?php echo $function_one; ?>" <?php if ($function_one == $data_function) { ?>selected="selected"<?php } ?>><?php echo $function_one; ?></option>
+									<?php } ?>
+								</select>
+
+								<span class="help">Функции из модели catalog/ModelCatalogActionTemplateFunctions</span>
+							</td>
+						</tr> 
 						<tr>
 							<td>
 								Использовать в текущем ручном обзвоне
