@@ -511,55 +511,6 @@
 								}						
 							}			
 						}
-						
-						if ($product_query->row['price_national'] && $product_query->row['price_national'] > 0 && $product_query->row['currency'] == $this->currency->getCode() && !$this_is_special_offer){
-							$price_national = $model_catalog_group_price->updatePrice($product_query->row['product_id'], $product_query->row['price_national']);
-							} else {
-							$price_national = $this->currency->convert($price + $option_price , $this->config->get('config_currency'), $this->config->get('config_regional_currency'));
-						}
-						
-						$total_national = $price_national * $quantity;
-						$total = $this->currency->convert($total_national, $this->config->get('config_regional_currency'), $this->config->get('config_currency'));
-						
-						$priceOptional = ($price + $option_price);
-						if (isset($this->data['set_'.$set_id])) {
-							if (isset($this->data['set_'.$set_id]['price'])) {
-								$this->data['set_'.$set_id]['price'] += ($priceOptional * $quantity);
-								} else {
-								$this->data['set_'.$set_id]['price'] = ($priceOptional * $quantity);
-							}
-							
-							if (isset($this->data['set_'.$set_id]['quantity'])) {
-								// $this->data['set_'.$set_id]['quantity'] += 1;
-								} else {
-								// $this->data['set_'.$set_id]['quantity'] = 1;
-							}
-						}						
-						
-						$childProductArray = [];
-						
-						if ($set_id) {
-							$tmp = $this->db->ncquery("SELECT ps.quantity, p.short_name FROM product_to_set ps RIGHT JOIN product p ON (ps.product_id = p.product_id) WHERE ps.set_id = '" . (int)$set_id."'");
-							if ($tmp->num_rows) {
-								foreach ($tmp->rows as $p) {
-									$childProductArray[] = array(
-									'name' => $p['short_name'],
-									'quantity' => $quantity * $p['quantity'],
-									);
-								}                            
-							}
-						}
-						
-						$saving = false;
-						if ($price_old){
-							$saving = round((($priceOptional - $price_old)/($price_old + 0.01))*100, 0);
-						}
-						
-						$stock_field_identifier = 'quantity_stock';
-						
-						if ($this->config->get('config_warehouse_identifier')){
-							$stock_field_identifier = trim($this->config->get('config_warehouse_identifier'));
-						}
 
 						$creditMultiplier = 1;	
 						if (!$this->config->get('totalukrcredits_status')) {
@@ -607,14 +558,55 @@
 									}
 								}
 							}
+						}
 
-
-
-							if ($creditMultiplier <> 1){
-								$priceOptional 	= $priceOptional * $creditMultiplier;							
-								$price_national = $price_national * $creditMultiplier;
+						if ($creditMultiplier <> 1){
+							$price 			= $price * (float)$creditMultiplier;
+							$option_price 	= $option_price * (float)$creditMultiplier;							
+						}
+						
+						if ($product_query->row['price_national'] && $product_query->row['price_national'] > 0 && $product_query->row['currency'] == $this->currency->getCode() && !$this_is_special_offer){
+							$price_national = $model_catalog_group_price->updatePrice($product_query->row['product_id'], $product_query->row['price_national']);
+							} else {
+							$price_national = $this->currency->convert($price + $option_price , $this->config->get('config_currency'), $this->config->get('config_regional_currency'));
+						}
+						
+						$total_national = $price_national * $quantity;
+						$total = $this->currency->convert($total_national, $this->config->get('config_regional_currency'), $this->config->get('config_currency'));
+						
+						$priceOptional = ($price + $option_price);
+						if (isset($this->data['set_'.$set_id])) {
+							if (isset($this->data['set_'.$set_id]['price'])) {
+								$this->data['set_'.$set_id]['price'] += ($priceOptional * $quantity);
+								} else {
+								$this->data['set_'.$set_id]['price'] = ($priceOptional * $quantity);
+							}
+						}							
+						
+						$childProductArray = [];
+						
+						if ($set_id) {
+							$tmp = $this->db->ncquery("SELECT ps.quantity, p.short_name FROM product_to_set ps RIGHT JOIN product p ON (ps.product_id = p.product_id) WHERE ps.set_id = '" . (int)$set_id."'");
+							if ($tmp->num_rows) {
+								foreach ($tmp->rows as $p) {
+									$childProductArray[] = array(
+									'name' => $p['short_name'],
+									'quantity' => $quantity * $p['quantity'],
+									);
+								}                            
 							}
 						}
+						
+						$saving = false;
+						if ($price_old){
+							$saving = round((($priceOptional - $price_old)/($price_old + 0.01))*100, 0);
+						}
+						
+						$stock_field_identifier = 'quantity_stock';
+						
+						if ($this->config->get('config_warehouse_identifier')){
+							$stock_field_identifier = trim($this->config->get('config_warehouse_identifier'));
+						}						
 						
 						$this->data[$key] = [
 						'key'                       => $key,
@@ -964,6 +956,16 @@
 		public function countProductsNoQuantity() {
 			return count($this->getProducts());
 		}
+
+		public function isUsingCreditPayments() {
+			if (!empty($this->session->data['payment_method']) && !empty($this->session->data['payment_method']['code'])){				
+				if (mb_stripos($this->session->data['payment_method']['code'], 'credit') !== false){					
+					return true;
+				}
+			}
+
+			return false;
+		}
 		
 		public function hasAdditionalOffer() {
 			$products = $this->getProducts();
@@ -993,6 +995,10 @@
 			}	
 			
 			if (!empty($this->session->data['coupon'])){
+				return false;
+			}
+
+			if ($this->isUsingCreditPayments()){
 				return false;
 			}
 			
