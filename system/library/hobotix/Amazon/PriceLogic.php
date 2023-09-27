@@ -733,10 +733,6 @@ class PriceLogic
 
 			$mainFormula = str_replace($from, $to, $mainFormula);
 
-			if ($justCompile){
-				return $mainFormula;
-			}
-
 			$resultPrice = eval('return ' . $mainFormula . ';');
 
 			if ($resultPrice > $amazonBestPrice * $data['MAX_MULTIPLIER']){
@@ -753,6 +749,10 @@ class PriceLogic
 						return 'MAX_MULTIPLIER TRIGGER: ' . $amazonBestPrice . ' * ' . $data['DEFAULT_MULTIPLIER'];
 					}					
 				}
+			}
+
+			if ($justCompile){
+				return $mainFormula;
 			}
 
 		} else {
