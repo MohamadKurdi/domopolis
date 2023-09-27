@@ -465,6 +465,17 @@
                 </div>                
               </div>
 
+               <div class="form-group">                
+                <label class="col-sm-2 control-label" for="input-title_ii">Название</label>
+                <?php foreach ($languages as $language) { ?>
+                  <div class="col-sm-3">
+                    <div class="input-group"><span class="input-group-addon"><img src="<?php echo strlen($language['code']) > 2 ? 'language/'.$language['code'].'/'.$language['code'].'.png' : 'view/image/flags/'.$language['image']; ?>" title="<?php echo $language['name']; ?>" /></span>
+                      <input type="text" name="title_ii[<?php echo $language['language_id']; ?>]" value="<?php if (isset($title_pp)) { echo $title_ii[$language['language_id']]; } ?>" placeholder="<?php echo strip_tags($tab_ii); ?>" id="input-title_ii-<?php echo $language['language_id']; ?>" class="form-control" />
+                    </div>
+                  </div>
+                <?php } ?>
+              </div>
+
               <div class="form-group">                
                 <label class="col-sm-2 control-label" for="input-text_in_product_ii">Текст в попапе и карте товара</label>
                 <?php foreach ($languages as $language) { ?>
@@ -849,6 +860,17 @@
                   <div class="text-danger"><?php echo $error_shop_password; ?></div>
                   <?php } ?>                   
                 </div>                
+              </div>
+
+              <div class="form-group">                
+                <label class="col-sm-2 control-label" for="input-title_mb">Название</label>
+                <?php foreach ($languages as $language) { ?>
+                  <div class="col-sm-3">
+                    <div class="input-group"><span class="input-group-addon"><img src="<?php echo strlen($language['code']) > 2 ? 'language/'.$language['code'].'/'.$language['code'].'.png' : 'view/image/flags/'.$language['image']; ?>" title="<?php echo $language['name']; ?>" /></span>
+                      <input type="text" name="title_mb[<?php echo $language['language_id']; ?>]" value="<?php if (isset($title_mb)) { echo $title_mb[$language['language_id']]; } ?>" placeholder="<?php echo strip_tags($tab_mb); ?>" id="input-title_mb-<?php echo $language['language_id']; ?>" class="form-control" />
+                    </div>
+                  </div>
+                <?php } ?>
               </div>
 
               <div class="form-group">                
