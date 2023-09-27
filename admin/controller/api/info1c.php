@@ -932,7 +932,8 @@ class ControllerApiInfo1C extends Controller
                     }
                 }
 
-                $this->db->query("UPDATE `product` SET `quantity_stock`= '0', `quantity_stockK`= '0', `quantity_stockM`= '0', `quantity_stockMN` = '0',`quantity_stockAS`= '0' WHERE `quantity_updateMarker` = '0'");               
+                $this->db->query("UPDATE `product` SET `quantity_stock`= '0', `quantity_stockK`= '0', `quantity_stockM`= '0', `quantity_stockMN` = '0',`quantity_stockAS`= '0' WHERE `quantity_updateMarker` = '0'");                   
+                $this->db->query("UPDATE `product` SET `stock_status_id` = '" . (int)$this->config->get('config_stock_status_id') . "' WHERE `quantity_updateMarker` = '0' AND stock_status_id = '" . (int)$this->config->get('config_in_stock_status_id') . "'");            
                 
                 if ($this->config->get('config_yam_fbs_campaign_id')){
                     $this->db->query("INSERT INTO yandex_stock_queue (yam_product_id, stock) SELECT yam_product_id, quantity_stockM FROM product WHERE (quantity_stockM > 0 OR yam_in_feed = 1) ON DUPLICATE KEY UPDATE stock = quantity_stockM");

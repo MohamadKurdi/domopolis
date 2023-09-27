@@ -4,7 +4,6 @@
     {
 		
     	public function getProductActiveCoupons($product_id){
-
     		if (!$this->config->get('coupon_status')){
     			return false;
     		}
@@ -46,8 +45,7 @@
     			return $query->row;
     	}
 		
-		public function getAllProductActiveCoupons($product_id){
-			
+		public function getAllProductActiveCoupons($product_id){			
 			if (!$this->config->get('coupon_status')){
 				return false;
 			}

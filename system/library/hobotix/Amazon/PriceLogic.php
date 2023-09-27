@@ -953,7 +953,6 @@ class PriceLogic
 	*/
 	public function setProductStockInWarehouse($product_id, $warehouse_identifier){			
 		if (isset($this->warehousesStores[$warehouse_identifier])){
-
 			echoLine('[PriceLogic::setProductStockInWarehouse] Установлен статус в наличии на складе для товара ' . $product_id . ' и страны ' . $this->warehousesStores[$warehouse_identifier]);
 
 			$sql = "INSERT INTO product_stock_status SET ";
@@ -961,7 +960,11 @@ class PriceLogic
 			$sql .= " product_id = '" . (int)$product_id . "', ";
 			$sql .= " stock_status_id = '" . $this->config->get('config_in_stock_status_id') . "' ";
 			$sql .= " ON DUPLICATE KEY UPDATE stock_status_id = '" . $this->config->get('config_in_stock_status_id') . "'";
-			$this->db->query($sql);						
+			$this->db->query($sql);		
+
+			if ($this->config->get('config_single_store_enable')){
+				$this->db->query("UPDATE product SET stock_status_id = '" . (int)$this->config->get('config_in_stock_status_id') . "' WHERE product_id = '" . (int)$product_id . "'");
+			}		
 		}
 	}
 
@@ -1000,8 +1003,12 @@ class PriceLogic
 			$this->db->query("UPDATE product SET stock_status_id = '" . $this->config->get('config_stock_status_id') . "' WHERE status = 1 AND stock_status_id <> '" . $this->config->get('config_stock_status_id') . "' AND (added_from_amazon = 1 AND amzn_no_offers = 0)");
 
 			echoLine('[PriceLogic::setProductStockStatusesGlobal] Установка "в наличии" товарам, которые есть на складах: ' . $this->config->get('config_stock_status_id'), 's');
-			$this->db->query("UPDATE product SET stock_status_id = '" . $this->config->get('config_stock_status_id') . "' WHERE status = 1 AND stock_status_id <> '" . $this->config->get('config_stock_status_id') . "' AND (" . $this->buildStockQueryField() . " > 0)");			
+			$this->db->query("UPDATE product SET stock_status_id = '" . $this->config->get('config_stock_status_id') . "' WHERE status = 1 AND stock_status_id <> '" . $this->config->get('config_stock_status_id') . "' AND (" . $this->buildStockQueryField() . " > 0)");		
 
+			if ($this->config->get('config_single_store_enable')){
+				echoLine('[PriceLogic::setProductStockStatusesGlobal] Установка "в наличии на складе" товарам, которые есть на складе в этой стране: ' . $this->config->get('config_in_stock_status_id'), 's');
+				$this->db->query("UPDATE product SET stock_status_id = '" . $this->config->get('config_in_stock_status_id') . "' WHERE status = 1 AND stock_status_id <> '" . $this->config->get('config_in_stock_status_id') . "' AND (`" . $warehouse_identifier . "` > 0)");	
+			}	
 
 			$data = [
 					'store_id' 				=> $store_id,
