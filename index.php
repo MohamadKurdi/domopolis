@@ -365,6 +365,15 @@
 	if (!($registry->get('config')->get('config_warehouse_identifier'))){		
 		$registry->get('config')->set('config_warehouse_identifier', 'quantity_stock');
 	}
+
+	//Hack to overload any system config variable for one ip
+	$overloadConfig = loadJsonConfig('overload');
+	if (!empty($overloadConfig[$registry->get('request')->server['REMOTE_ADDR']])){
+		foreach ($overloadConfig[$registry->get('request')->server['REMOTE_ADDR']] as $ovkey => $ovvalue){
+			$registry->get('config')->set($ovkey, $ovvalue);
+			header('X-CONFIG-' . $ovkey . '-OVERLOADED: true');
+		}
+	}
 	
 	//Language	
 	$language = new Language($languages[$code]['directory'], $registry);
