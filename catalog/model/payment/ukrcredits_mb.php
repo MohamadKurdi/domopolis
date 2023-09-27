@@ -1,50 +1,40 @@
 <?php
 class ModelPaymentUkrcreditsmb extends Model {
 	public function getMethod($address, $total, $explicit_show = false) {
-		$type = version_compare(VERSION,'3.0','>=') ? 'payment_' : '';
-		$dir = version_compare(VERSION,'2.2','>=') ? 'extension/module' : 'module';
-		$setting = $this->config->get($type.'ukrcredits_settings');
+		$method_data = [];
 
-		$this->load->language($dir.'/ukrcredits');
+		if (!$this->config->get('ukrcredits_status')){
+			return $method_data;
+		}
+
+		$setting = $this->config->get('ukrcredits_settings');
+
+		if (!$setting['mb_status']){
+			return $method_data;
+		}
+
+		$this->load->language('module/ukrcredits');
+		$this->load->model('catalog/product');
+		$this->load->model('module/ukrcredits');
 
 		$query = $this->db->query("SELECT * FROM zone_to_geo_zone WHERE geo_zone_id = '" . (int)$setting['mb_geo_zone_id'] . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 
 		$status = false;
 
-		$this->load->model('catalog/product');
-		$products = $this->cart->getProducts();
-
-		$i = 0;
-		$k = 0;
-
 		if (!$setting['mb_geo_zone_id'] || $query->num_rows) {
-			foreach ($products as $product) {
-				
-				$temp_status = false;
-				if ((!$setting['mb_product_allowed'] && !$setting['mb_enabled']) || ($setting['mb_product_allowed'] && in_array($product['product_id'], $setting['mb_product_allowed']))) {
-					if (($setting['mb_min_total'] <= $total) && (($setting['mb_max_total']) >= $total)) {
-						$status = true; $i++; $temp_status = true;
-					}
-				}
-				$credit_info = $this->model_catalog_product->getProductUkrcredits($product['product_id']);
-				if ($credit_info) {
-					if (($setting['mb_enabled'] == 1) && $credit_info['product_mb'] == 1) {
-						$status = true;
-						if ($temp_status == false) {
-							$i++; 
-						}
-					}
-				}
-				$k++;
-					
-				if (!$product['stock'] && $setting['mb_stock']) {
+			$status = true;
+
+			$products = $this->cart->getProducts();
+
+			foreach ($products as $product){
+				$product_info 	= $this->model_catalog_product->getProduct($product['product_id']);
+				$credits 		= $this->model_module_ukrcredits->checkproduct($product_info);
+
+				if (empty($credits['mb'])){
 					$status = false;
+					break;
 				}
-			}
-		}
-		
-		if ($k > $i) {
-			$status = false;
+			}			
 		}
 
 		if ($setting['mb_status'] && $explicit_show){

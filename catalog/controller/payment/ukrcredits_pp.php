@@ -21,7 +21,7 @@ class ControllerPaymentUkrcreditsPp extends Controller {
 		
         $partsCount = 24;
 		foreach ($this->cart->getProducts() as $cart) {
-			$privat_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_ukrcredits WHERE product_id = '" . (int)$cart['product_id'] . "'");
+			$privat_query = $this->db->query("SELECT * FROM product_ukrcredits WHERE product_id = '" . (int)$cart['product_id'] . "'");
 			if ($privat_query->row) {
 				if ($privat_query->row['partscount_pp'] <= $partsCount && $privat_query->row['partscount_pp'] !=0) {
 					$partsCount = (int)$privat_query->row['partscount_pp'];
