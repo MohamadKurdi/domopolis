@@ -279,6 +279,11 @@ $controller = new Front($registry);
 $controller->addPreAction(new Action('common/home/login'));
 $controller->addPreAction(new Action('common/home/permission'));
 
+/* We can need this to get front URLs in admin while getting some ajax templates */
+if (!empty($request->request['use_seo_urls'])){
+	$controller->addPreAction(new Action('common/seo_pro'));
+}
+
 if (isset($request->get['route'])) {
 	$action = new Action($request->get['route']);
 } else {
