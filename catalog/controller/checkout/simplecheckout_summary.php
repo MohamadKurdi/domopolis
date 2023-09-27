@@ -410,7 +410,7 @@
 				
 				array_multisort($sort_order, SORT_ASC, $totals);
 			}          
-            
+
             $this->_templateData['totals'] = $totals;
             
 			
@@ -433,8 +433,7 @@
 				
 				if (!$this->cart->canUseRewards()){
 					$this->_templateData['can_not_use_reward_at_all'] = true;
-				}
-				
+				}				
 			}
             
             $this->_templateData['reward']  = isset($this->session->data['reward']) ? $this->session->data['reward'] : '';
@@ -442,11 +441,12 @@
             $this->_templateData['coupon']  = isset($this->session->data['coupon']) ? $this->session->data['coupon'] : '';
 			
 			//FUCK COUPON
-			if (!empty($this->session->data['coupon']) && $this->cart->hasAdditionalOffer()){
+			if (!empty($this->session->data['coupon']) && ($this->cart->hasAdditionalOffer() || $this->cart->isUsingCreditPayments())){
 				unset($this->session->data['coupon']);
 			}
 			
 			$this->_templateData['cart_has_additional_offer'] = $this->cart->hasAdditionalOffer();
+			$this->_templateData['cart_is_using_credit_payments'] = $this->cart->isUsingCreditPayments();
             
             $customer = $this->session->data['simple']['customer'];
             

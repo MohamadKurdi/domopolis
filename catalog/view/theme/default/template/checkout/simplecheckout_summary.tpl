@@ -4,14 +4,16 @@
 	<?php } ?>
 	
 		
-    <?php if (isset($modules['coupon'])) { ?> 
-		
+    <?php if (isset($modules['coupon'])) { ?> 		
 		<?php if ($cart_has_additional_offer) { ?>
 			  <div class="simplecheckout-cart-total promo-code no_coupon">
 				<span class="promo-code-txt"><?php echo $text_retranslate_no_coupon; ?></span>
 			  </div>
-		<?php } else { ?>
-		
+		<?php } elseif ($cart_is_using_credit_payments) { ?>
+				<div class="simplecheckout-cart-total promo-code no_coupon">
+				<span class="promo-code-txt"><?php echo $text_retranslate_no_coupon_credit; ?></span>
+			  </div>
+		<?php } else { ?>		
         <div class="simplecheckout-cart-total promo-code">
             <span class="inputs"><input class="form-control field" type="text" data-onchange="reloadAll" name="coupon" value="<?php echo $coupon; ?>" placeholder="<?php echo $entry_coupon; ?>" /></span>
             <span class="inputs buttons"><a id="simplecheckout_button_cart"  class="button btn-primary button_oc btn oct-button"><span class="promo-code-txt"><?php echo $text_retranslate_15; ?></span></a></span>
@@ -20,10 +22,16 @@
 	<?php } ?>
 	
     <?php if (isset($modules['voucher'])) { ?>
+    	<?php if ($cart_is_using_credit_payments) { ?>
+    		<div class="simplecheckout-cart-total promo-code no_coupon">
+				<span class="promo-code-txt"><?php echo $text_retranslate_no_voucher_credit; ?></span>
+			  </div>
+    	<?php } else { ?>
         <div class="simplecheckout-cart-total voucher-code">
             <span class="inputs"><input class="form-control field" type="text" name="voucher" data-onchange="reloadAll" value="<?php echo $voucher; ?>" placeholder="<?php echo $entry_voucher; ?>"/></span>
             <span class="inputs buttons"><a id="simplecheckout_button_cart" data-onclick="reloadAll" class="button btn-primary button_oc btn oct-button"><span class="voucher-code-txt"><?php echo $text_retranslate_17; ?></span></a></span>
 		</div>
+		<?php } ?>	
 	<?php } ?>
 	
 	
