@@ -1451,8 +1451,13 @@ class ControllerCatalogProduct extends Controller {
 					$this->data['front'][$store['name']] = [];
 					$catalogProduct = $this->modelCatalogProduct->getUncachedProductForStore($this->request->get['product_id'], $store['store_id']);
 
-					$catalogProduct['price'] = $this->currency->convert($catalogProduct['price'], $this->config->get('config_currency'), $catalogCurrency);
-					$catalogProduct['special'] = $this->currency->convert($catalogProduct['special'], $this->config->get('config_currency'), $catalogCurrency);
+					if (!empty($catalogProduct)){
+						$catalogProduct['price'] 	= $this->currency->convert($catalogProduct['price'], $this->config->get('config_currency'), $catalogCurrency);
+						$catalogProduct['special'] 	= $this->currency->convert($catalogProduct['special'], $this->config->get('config_currency'), $catalogCurrency);
+					} else {
+						$catalogProduct['price'] 	= 0;
+						$catalogProduct['special'] 	= 0;
+					}				
 
 					$this->data['front'][$store['name']]['price'] = $this->currency->format_with_left($catalogProduct['price'], $catalogCurrency, 1);
 					$this->data['front'][$store['name']]['special'] = $this->currency->format_with_left($catalogProduct['special'], $catalogCurrency, 1);
