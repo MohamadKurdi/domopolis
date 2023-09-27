@@ -14,6 +14,9 @@
 			<?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
 		<?php } ?>
 	</div>
+	<?php if (empty($actiontemplate_id)) { ?>
+		<div class="warning">Не задан шаблон для отправки писем!</div>
+	<?php } ?>
 	<?php if ($error_warning) { ?>
 		<div class="warning"><?php echo $error_warning; ?></div>
 	<?php } ?>
@@ -22,7 +25,9 @@
 	<?php } ?>
 	<div class="box">
 		<div class="heading order_head">
-			<h1><img src="view/image/customer.png" alt="" /><?php echo $heading_title; ?></h1>			
+			<h1>
+				<?php echo $heading_title; ?>
+			</h1>			
 		</div>
 		<div style="clear:both;"></div>
 		<div class="content">
@@ -49,6 +54,11 @@
 								<div style="margin-top:5px;">
 									<input id="checkbox_14" class="checkbox" type="checkbox" name="filter_simple_email" <? if ($filter_simple_email) { ?>checked="checked"<? } ?> value="1" /> 
 									<label for="checkbox_14" style="color:#7F00FF;"><i class="fa fa-envelope" style="color: #7F00FF;"></i>&nbsp;Простая проверка email</label>								
+								</div>
+
+								<div style="margin-top:5px;">
+									<input id="checkbox_141" class="checkbox" type="checkbox" name="filter_mail_status" <? if ($filter_mail_status && $filter_mail_status != '*') { ?>checked="checked"<? } ?> value="1" /> 
+									<label for="checkbox_141" style="color:#FF5656;"><i class="fa fa-envelope" style="color: #FF5656;"></i>&nbsp;Жесткая проверка email на валидность</label>								
 								</div>
 
 								<div style="margin-top:5px;">
@@ -135,6 +145,10 @@
 							Бренды
 						</td>
 
+						<td class="left">
+							Коллекции
+						</td>
+
 						<td class="center" width="50px"></td>
 						<td class="center" width="50px"></td>
 						<td class="right"></td>
@@ -202,7 +216,7 @@
 										<span style="padding:2px; background:#00AD07; display:inline-block; color:white;"><? echo $customer['order_good_first_date']; ?></span>	
 									</div>
 									<div>
-										<span style="padding:2px; background:#00AD07; display:inline-block; color:white;"><? echo $customer['order_good_first_date_diff']; ?></span>	
+										<span style="padding:2px; background:#00AD07; display:inline-block; font-size:8px; color:white;"><? echo $customer['order_good_first_date_diff']; ?></span>	
 									</div>
 								</td>
 
@@ -212,7 +226,7 @@
 									</div>
 
 									<div>
-										<span style="padding:2px; background:#ff5656; display:inline-block;  color:white;"><? echo $customer['order_good_last_date_diff']; ?></span>	
+										<span style="padding:2px; background:#ff5656; display:inline-block; font-size:8px; color:white;"><? echo $customer['order_good_last_date_diff']; ?></span>	
 									</div>
 								</td>	
 
@@ -242,18 +256,29 @@
 										</div>															
 								</td>
 
-								<td class="left" width="300px">
+								<td class="left" width="250px">
 									<?php foreach ($customer['manufacturers'] as $manufacturer) { ?>
 										<img src="<?php echo $manufacturer['image']; ?>" title="<?php echo $manufacturer['name']; ?>" style="float:left; margin-right:5px;" />
 									<?php } ?>
 								</td>
 
-								<td class="center" width="50px">
-									<i class="fa fa-envelope" style="font-size:36px; color:#00AD07; cursor:pointer;"></i>
+								<td class="left" width="250px">
+									<?php foreach ($customer['collections'] as $manufacturer_name => $collections) { ?>
+										<div style="float:left; margin-right:5px; margin-bottom:5px; padding:5px; border:1px solid #ccc; border-radius: 3px;">
+											<span style="display:inline-block; padding:3px 4px; font-size:10px; margin-bottom:5px; background:#7F00FF; color:#FFF;"><?php echo $manufacturer_name; ?></span><br />
+											<?php foreach ($collections as $collection) { ?>
+												<img src="<?php echo $collection['image']; ?>" title="<?php echo $collection['name']; ?>" style="float:left; margin-right:5px;" />
+											<?php } ?>
+										</div>
+									<?php } ?>
 								</td>
 
 								<td class="center" width="50px">
-									<i class="fa fa-eye" style="font-size:36px; color:#FF7815; cursor:pointer;"></i>
+									<i class="fa fa-envelope" style="font-size:36px; color:#00AD07; cursor:pointer;" data-customer-id="<?php echo $customer['customer_id']; ?>" onclick="send(<?php echo $customer['customer_id']; ?>, <?php echo $customer['language_id']; ?>)"></i>
+								</td>
+
+								<td class="center" width="50px">
+									<i class="fa fa-eye" style="font-size:36px; color:#FF7815; cursor:pointer;" data-customer-id="<?php echo $customer['customer_id']; ?>" onclick="view(<?php echo $customer['customer_id']; ?>, <?php echo $customer['language_id']; ?>)"></i>
 								</td>
 
 								<td class="right">
@@ -283,6 +308,28 @@
 </div>
 <div id="mailpreview"></div>
 </div>
+
+<script>
+	function view(customer_id, language_id){
+		$.ajax({
+			type: 'POST',
+			url: 'index.php?route=catalog/actiontemplate/loadTemplateV2&token=<?php echo $token; ?>',
+			data: {
+				customer_id: 		customer_id,
+				language_id: 		language_id,
+				use_seo_urls:       true, 
+				actiontemplate_id:  <?php echo $actiontemplate_id; ?>
+			},
+
+			dataType: 'html',
+			success : function(html){
+				$('#mailpreview').html(html).dialog({width:1024, modal:true, title: '<?php echo $actiontemplate_title; ?>', resizable:true,position:{my: 'center', at:'center center', of: window}, closeOnEscape: true})				
+			}
+		})	
+	}
+
+</script>
+
 <script>
 $(document).ready(function(){
 		$('.go_to_store').on('click', function(){
@@ -307,213 +354,67 @@ $(document).ready(function(){
 	});	
 	
 	function filter() {
-		url = 'index.php?route=sale/customer&token=<?php echo $token; ?>';
+		url = 'index.php?route=sale/customer_manual&token=<?php echo $token; ?>';
 		
-		var filter_name = $('input[name=\'filter_name\']').prop('value');
-		
-		if (filter_name) {
-			url += '&filter_name=' + encodeURIComponent(filter_name);
-		}
-		
-		var filter_email = $('input[name=\'filter_email\']').prop('value');
-		
-		if (filter_email) {
-			url += '&filter_email=' + encodeURIComponent(filter_email);
-		}
-		
-		var filter_phone = $('input[name=\'filter_phone\']').prop('value');
-		
-		if (filter_phone) {
-			url += '&filter_phone=' + encodeURIComponent(filter_phone);
-		}
-		
-		
-		var filter_customer_group_id = $('select[name=\'filter_customer_group_id\']').children("option:selected").val();
-		
-		if (filter_customer_group_id != '*') {
-			url += '&filter_customer_group_id=' + encodeURIComponent(filter_customer_group_id);
-		}
-		
-		var filter_status = $('select[name=\'filter_status\']').children("option:selected").val();
-		
-		if (filter_status != '*') {
-			url += '&filter_status=' + encodeURIComponent(filter_status);
-		}
-		
-		var filter_gender = $('select[name=\'filter_gender\']').children("option:selected").val();
-		
-		if (filter_gender != '*') {
-			url += '&filter_gender=' + encodeURIComponent(filter_gender);
-		}
-		
-		var filter_mail_status = $('select[name=\'filter_mail_status\']').children("option:selected").val();
-		
-		if (filter_mail_status != '*') {
-			url += '&filter_mail_status=' + encodeURIComponent(filter_mail_status);
-		}
-		
-		var filter_mail_opened = $('input[name=\'mail_opened\']:checked').val();
-		
-		if (filter_mail_opened !== undefined) {
-			url += '&filter_mail_opened=1';
-		}
-		
-		var filter_mail_checked = $('input[name=\'mail_checked\']:checked').val();
-		
-		if (filter_mail_checked !== undefined) {
-			url += '&filter_mail_checked=1';
-		}
-		
-		var filter_push_signed = $('input[name=\'push_sign\']:checked').val();
-		
-		if (filter_push_signed  !== undefined) {
-			url += '&filter_push_signed=1';
-		}
-		
-		var filter_nbt_customer = $('input[name=\'nbt_customer\']:checked').val();
-		
-		if (filter_nbt_customer  !== undefined) {
-			url += '&filter_nbt_customer=1';
-		}
-		
-		var filter_nbt_customer_exclude = $('input[name=\'nbt_customer_exclude\']:checked').val();
-		
-		if (filter_nbt_customer_exclude  !== undefined) {
-			url += '&filter_nbt_customer_exclude=1';
-		}
-		
-		var filter_segment_intersection = $('input[name=\'filter_segment_intersection\']:checked').val();
-		
-		if (filter_segment_intersection  !== undefined) {
-			url += '&filter_segment_intersection=1';
-		}
-		
-		var filter_has_discount = $('input[name=\'filter_has_discount\']:checked').val();
-		
-		if (filter_has_discount !== undefined) {
-			url += '&filter_has_discount=1';
-		}
-		
-		var filter_no_discount = $('input[name=\'filter_no_discount\']:checked').val();
-		
-		if (filter_no_discount !== undefined) {
-			url += '&filter_no_discount=1';
-		}
-		
-		var filter_no_birthday = $('input[name=\'filter_no_birthday\']:checked').val();
-		
-		if (filter_no_birthday !== undefined) {
-			url += '&filter_no_birthday=1';
-		}
-		
-		
-		var filter_approved = $('select[name=\'filter_approved\']').children("option:selected").val();
-		
-		if (filter_approved != '*') {
-			url += '&filter_approved=' + encodeURIComponent(filter_approved);
-		}
-		
-		var filter_ip = $('input[name=\'filter_ip\']').prop('value');
-		
-		if (filter_ip) {
-			url += '&filter_ip=' + encodeURIComponent(filter_ip);
-		}
-		
-		var filter_country_id = $('select[name=\'filter_country_id\']').children("option:selected").val();
-		
-		if (filter_country_id != '*') {
-			url += '&filter_country_id=' + encodeURIComponent(filter_country_id);
-		}
-		
-		var filter_source = $('select[name=\'filter_source\']').children("option:selected").val();
-		
-		if (filter_source != '*') {
-			url += '&filter_source=' + encodeURIComponent(filter_source);
-		}
-		
-		var filter_date_added = $('input[name=\'filter_date_added\']').prop('value');
-		
-		if (filter_date_added) {
-			url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
-		}
-		
-		var filter_date_added = $('input[name=\'filter_date_added\']').prop('value');
-		
-		if (filter_date_added) {
-			url += '&filter_date_added=' + encodeURIComponent(filter_date_added);
-		}
-		
-		var filter_last_call = $('input[name=\'filter_last_call\']').prop('value');
-		
-		if (filter_last_call) {
-			url += '&filter_last_call=' + encodeURIComponent(filter_last_call);
-		}
-		
-		var filter_birthday_from = $('input[name=\'filter_birthday_from\']').prop('value');
-		
-		if (filter_birthday_from) {
-			url += '&filter_birthday_from=' + encodeURIComponent(filter_birthday_from);
-		}
-		
-		var filter_birthday_to = $('input[name=\'filter_birthday_to\']').prop('value');
-		
-		if (filter_birthday_to) {
-			url += '&filter_birthday_to=' + encodeURIComponent(filter_birthday_to);
-		}
-		
-		var order_first_date_from = $('input[name=\'order_first_date_from\']').prop('value');
-		
-		if (order_first_date_from) {
-			url += '&order_first_date_from=' + encodeURIComponent(order_first_date_from);
-		}
-		
-		var order_first_date_to = $('input[name=\'order_first_date_to\']').prop('value');
-		
-		if (order_first_date_to) {
-			url += '&order_first_date_to=' + encodeURIComponent(order_first_date_to);
-		}
-		
-		var filter_order_count = $('input[name=\'filter_order_count\']').prop('value');
-		
-		if (filter_order_count) {
-			url += '&filter_order_count=' + encodeURIComponent(filter_order_count);
-		}
-		
-		var filter_order_good_count = $('input[name=\'filter_order_good_count\']').prop('value');
-		
+		var filter_order_good_count = $('input[name=\'filter_order_good_count\']').prop('value');		
 		if (filter_order_good_count) {
 			url += '&filter_order_good_count=' + encodeURIComponent(filter_order_good_count);
 		}
-		
-		var filter_total_sum = $('input[name=\'filter_total_sum\']').prop('value');
-		
-		if (filter_total_sum) {
-			url += '&filter_total_sum=' + encodeURIComponent(filter_total_sum);
+
+		var order_good_last_date_from = $('input[name=\'order_good_last_date_from\']').prop('value');		
+		if (order_good_last_date_from) {
+			url += '&order_good_last_date_from=' + encodeURIComponent(order_good_last_date_from);
+		}
+
+		var order_good_last_date_to = $('input[name=\'order_good_last_date_to\']').prop('value');		
+		if (order_good_last_date_to) {
+			url += '&order_good_last_date_to=' + encodeURIComponent(order_good_last_date_to);
 		}
 		
-		var filter_avg_cheque = $('input[name=\'filter_avg_cheque\']').prop('value');
-		
-		if (filter_avg_cheque) {
-			url += '&filter_avg_cheque=' + encodeURIComponent(filter_avg_cheque);
+		var filter_simple_email = $('input[name=\'filter_simple_email\']:checked').val();		
+		if (filter_simple_email  !== undefined) {
+			url += '&filter_simple_email=1';
+		} else {
+			url += '&filter_simple_email=0';
 		}
-		
-		var filter_interest_brand = $('input[name=\'filter_interest_brand\']').prop('value');
-		
-		if (filter_interest_brand) {
-			url += '&filter_interest_brand=' + encodeURIComponent(filter_interest_brand);
+
+		var filter_mail_status = $('input[name=\'filter_mail_status\']:checked').val();		
+		if (filter_mail_status  !== undefined) {
+			url += '&filter_mail_status=delivered';
+		} else {
+			url += '&filter_mail_status=*';
 		}
-		
-		var filter_interest_category = $('input[name=\'filter_interest_category\']').prop('value');
-		
-		if (filter_interest_category) {
-			url += '&filter_interest_category=' + encodeURIComponent(filter_interest_category);
+
+		var had_not_sent_old_alert = $('input[name=\'had_not_sent_old_alert\']:checked').val();		
+		if (had_not_sent_old_alert  !== undefined) {
+			url += '&had_not_sent_old_alert=1';
+		} else {
+			url += '&had_not_sent_old_alert=0';
 		}
-		
-		var filter_segment_id = $('input:checkbox:checked.filter_segment_id').map(function(){
-		return this.value; }).get().join(",");
-		
-		if (filter_segment_id) {
-			url += '&filter_segment_id=' + encodeURIComponent(filter_segment_id);
+
+		var filter_nbt_customer = $('input[name=\'filter_nbt_customer\']:checked').val();		
+		if (filter_nbt_customer  !== undefined) {
+			url += '&filter_nbt_customer=1';
+		}
+
+		var nbt_customer_exclude = $('input[name=\'nbt_customer_exclude\']:checked').val();		
+		if (nbt_customer_exclude  !== undefined) {
+			url += '&nbt_customer_exclude=1';
+		}
+
+		var filter_name = $('input[name=\'filter_name\']').prop('value');		
+		if (filter_name) {
+			url += '&filter_name=' + encodeURIComponent(filter_name);
+		}
+
+		var filter_phone = $('input[name=\'filter_phone\']').prop('value');		
+		if (filter_phone) {
+			url += '&filter_phone=' + encodeURIComponent(filter_phone);
+		}
+
+		var filter_email = $('input[name=\'filter_email\']').prop('value');		
+		if (filter_email) {
+			url += '&filter_email=' + encodeURIComponent(filter_email);
 		}
 		
 		location = url;

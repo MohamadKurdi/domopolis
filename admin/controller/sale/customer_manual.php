@@ -1,6 +1,7 @@
 <?php
 	class ControllerSaleCustomerManual extends Controller {
-		private $manufacturers = [];
+		private $manufacturers 	= [];
+		private $collections 	= [];
 
 		
 		public function index() {
@@ -8,9 +9,10 @@
 			$this->load->model('sale/customer');
 			$this->load->model('tool/image');
 			$this->load->model('catalog/manufacturer');
+			$this->load->model('catalog/collection');
 			$this->load->model('setting/setting');
 			
-			$this->document->setTitle('Обзвон старых покупателей');
+			$this->document->setTitle('Обзвон покупателей');
 
 			$this->getList();
 
@@ -35,9 +37,27 @@
 			return $manufacturer;
 		}
 
-		protected function getList() {
+		private function getCollection($collection_id){
+			if (!empty($this->collections[$collection_id])){
+				return $this->collections[$collection_id];
+			}
 
-			$this->data['heading_title'] = 'Обзвон старых покупателей';
+			$collection = $this->model_catalog_collection->getCollection($collection_id);
+
+			if ($collection){
+				$collection = [
+					'name' 	=> $collection['name'],
+					'image' => $this->model_tool_image->resize($collection['image'], 30, 30)
+				];
+
+				$this->collections[$collection_id] = $collection;
+			}
+
+			return $collection;
+		}
+
+		protected function getList() {
+			$this->data['heading_title'] = 'Обзвон покупателей';
 
 			$filters = [
 				'filter_order_good_count' 	=> 5,
@@ -47,6 +67,7 @@
 				'filter_simple_email' 			=> true,
 				'filter_nbt_customer' 			=> false,
 				'filter_nbt_customer_exclude' 	=> false,
+				'filter_mail_status' 			=> 'delivered',
 				'filter_phone'			 => '',
 				'filter_name'			 => '',
 				'filter_email'			 => '',
@@ -103,6 +124,17 @@
 				$url .= '&page=' . $this->request->get['page'];
 			}
 
+			$this->load->model('catalog/actiontemplate');
+			$current_actiontemplate = $this->model_catalog_actiontemplate->getActionTemplates(['filter_use_for_manual' => true]);
+
+			$this->data['actiontemplate_id'] 	= null;
+			$this->data['actiontemplate_title'] = null;
+			if (!empty($current_actiontemplate) && !empty($current_actiontemplate['actiontemplate_id'])){
+				$this->data['actiontemplate_id'] 	= $current_actiontemplate['actiontemplate_id'];
+				$this->data['actiontemplate_title'] = $current_actiontemplate['title'];
+
+				$this->data['heading_title']		.= ' (' . $current_actiontemplate['title'] . ')';
+			}
 
 			$this->data['customers'] = [];
 
@@ -135,11 +167,27 @@
 					}
 				}
 
+				$customer_collections 	= [];
+				$ordered_collections 	= $this->model_sale_customer->getCustomerOrderCollections($result['customer_id']);
+
+				foreach ($ordered_collections as $collection){
+					if ($collection){
+						$manufacturer_name = $this->getManufacturer($collection['manufacturer_id'])['name'];
+
+						if (empty($customer_collections[$manufacturer_name])){
+							$customer_collections[$manufacturer_name] = [];
+						}
+
+						$customer_collections[$manufacturer_name][] = $this->getCollection($collection['collection_id']);
+					}
+				}
+
 				$currency = $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', (int)$result['store_id']);
 
 				$this->data['customers'][] = array(
 					'customer_id'    => $result['customer_id'],
 					'store_id'       => $result['store_id'],
+					'language_id'    => $result['language_id'],
 					'name'           => $result['name'],
 					'source'         => $result['source'],
 					'total_cheque'   => $this->currency->format($result['total_cheque'], $currency, 1),
@@ -167,6 +215,7 @@
 					'mail_opened'    => $result['mail_opened'],
 					'mail_clicked'   => $result['mail_clicked'],
 					'manufacturers'	 => $customer_manufacturers,
+					'collections'	 => $customer_collections,
 					'preauth_url'    => $this->model_sale_customer->getCustomerPreauthLink($result['email'], $result['store_id']),
 					'customer_href'  => $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
 					'action'         => $action
