@@ -293,7 +293,7 @@
 									<li><a class="home_icon_style" href="<?php echo $customer; ?>"><i class="fa fa-user-plus"></i><span><?php echo $text_customer; ?></span></a></li>
 									<li><a class="home_icon_style" href="<?php echo $customer_group; ?>"><i class="fa fa-users"></i><span><?php echo $text_customer_group; ?></span></a></li>
 									<li><a class="home_icon_style" href="<?php echo $customer_ban_ip; ?>"><i class="fa fa-minus-circle"></i><span><?php echo $text_customer_ban_ip; ?></span></a></li>
-									<li><a href="<?php echo $customer_manual; ?>"><i class="fa fa-phone"></i> Обзвон старых клиентов</a></li>
+									<li><a href="<?php echo $customer_manual; ?>"><i class="fa fa-phone"></i> Обзвон клиентов</a></li>
 									<li><a href="<?php echo $segments_link; ?>"><i class="fa fa-bar-chart"></i> Настройка сегментации</a></li>
 									<li><a href="<?php echo $actiontemplate; ?>"><i class="fa fa-envelope-o"></i> Шаблоны регулярных рассылок</a></li>	
 									<li><a class="home_icon_style" href="<?php echo $coupon; ?>"><i class="fa fa-barcode"></i><span>Промокоды</span></a></li>
