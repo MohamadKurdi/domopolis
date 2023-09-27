@@ -46,7 +46,7 @@ class ModelPaymentUkrcreditsPp extends Model {
 				'code'       => 'ukrcredits_pp',
 				'title'      => $this->language->get('text_title_'.mb_strtolower($setting['pp_merchantType'])),
 				'terms'      => '',
-				'sort_order' => $this->config->get($type.'ukrcredits_pp_sort_order')
+				'sort_order' => $this->config->get('ukrcredits_pp_sort_order')
 			);
 		}
         

@@ -48,7 +48,7 @@ class ModelPaymentUkrcreditsmb extends Model {
 				'code'       => 'ukrcredits_mb',
 				'title'      => $this->language->get('text_title_'.mb_strtolower($setting['mb_merchantType'])),
 				'terms'      => '',
-				'sort_order' => $this->config->get($type.'ukrcredits_mb_sort_order')
+				'sort_order' => $this->config->get('ukrcredits_mb_sort_order')
 			);
 		}
         
