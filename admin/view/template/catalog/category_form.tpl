@@ -840,6 +840,54 @@
 
 					<h2>AMAZON RAINFOREST API - правила переназначения цен</h2>
 
+					<table class="form" id="category_overload_multipliers">
+						<tr>
+							<td class="left" style="width:200px;">
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Максимальный множитель цены</span>
+							</td>
+							<td class="left">
+								<td style="width:100px;" class="center">
+									<input type="number" step="0.1" name="overload_max_multiplier" value="<?php echo $overload_max_multiplier; ?>" style="width:100px;" />
+								</td>
+							</td>
+							<td class="left">
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Максимальная наценка, Х раз. Для товаров у которых вес задан очень некорректно. Если продажная цена по формулам будет в Х раз больше, чем цена закупки, то будет использован "множитель без веса"
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="left" style="width:200px;">
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Игнорировать объемный вес</span>
+							</td>
+							<td class="left">
+								<td style="width:100px;" class="center">
+									<input id="overload_ignore_volumetric_weight" type="checkbox" class="checkbox" name="overload_ignore_volumetric_weight" <? if ($overload_ignore_volumetric_weight){ ?> checked="checked" <? } ?> value="1" />
+									<label for="overload_ignore_volumetric_weight"></label>
+								</td>
+							</td>
+							<td class="left">
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Игнорировать подсчёт объемного веса для этой категории. Использовать только обычный вес.
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="left" style="width:200px;">
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Максимальный множитель объемного веса</span>
+							</td>
+							<td class="left">
+								<td style="width:100px;" class="center">
+									<input type="number" step="0.1" name="overload_max_wc_multiplier" value="<?php echo $overload_max_wc_multiplier; ?>" style="width:100px;" />
+								</td>
+							</td>
+							<td class="left">
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Защита от некорректного большого объемного веса, в случае если Амазон отдает габарит товара, который фактически складывается. Если объемный вес будет больше в Х раз чем фактический, то объемный учтён не будет.
+								</span>
+							</td>
+						</tr>
+					</table>
 
 					<table class="form" id="category_overprice_rules" >
 						<thead>

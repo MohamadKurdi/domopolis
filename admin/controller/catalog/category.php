@@ -272,6 +272,9 @@ class ControllerCatalogCategory extends Controller {
 					'has_price'       			=> $this->model_catalog_category->getTotalProductNoZeroPriceInCategoryWithSubcategories($result['category_id']),
 					'enabled'       			=> $this->model_catalog_category->getTotalProductNoZeroPriceAndEnabledInCategoryWithSubcategories($result['category_id']),
 					'category_overprice_rules'  => $this->model_catalog_category->countCategoryOverpriceRules($result['category_id']),
+					'overload_max_wc_multiplier' 		=> $result['overload_max_wc_multiplier'],
+					'overload_max_multiplier' 			=> $result['overload_max_multiplier'],
+					'overload_ignore_volumetric_weight' => $result['overload_ignore_volumetric_weight'],
 					'filter'					=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_category=' . $result['category_id'], 'SSL'),
 					'filter_filled'				=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_filled_from_amazon=1&filter_category=' . $result['category_id'], 'SSL'),
 					'filter_has_price'			=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_price=>0&filter_category=' . $result['category_id'], 'SSL'),
@@ -697,6 +700,30 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['amazon_overprice_rules'] = $category_info['amazon_overprice_rules'];
 		} else {
 			$this->data['amazon_overprice_rules'] = '';
+		}
+
+		if (isset($this->request->post['overload_max_wc_multiplier'])) {
+			$this->data['overload_max_wc_multiplier'] = $this->request->post['overload_max_wc_multiplier'];
+		} elseif (!empty($category_info)) {
+			$this->data['overload_max_wc_multiplier'] = $category_info['overload_max_wc_multiplier'];
+		} else {
+			$this->data['overload_max_wc_multiplier'] = '0';
+		}
+
+		if (isset($this->request->post['overload_max_multiplier'])) {
+			$this->data['overload_max_multiplier'] = $this->request->post['overload_max_multiplier'];
+		} elseif (!empty($category_info)) {
+			$this->data['overload_max_multiplier'] = $category_info['overload_max_multiplier'];
+		} else {
+			$this->data['overload_max_multiplier'] = '0';
+		}
+
+		if (isset($this->request->post['overload_ignore_volumetric_weight'])) {
+			$this->data['overload_ignore_volumetric_weight'] = $this->request->post['overload_ignore_volumetric_weight'];
+		} elseif (!empty($category_info)) {
+			$this->data['overload_ignore_volumetric_weight'] = $category_info['overload_ignore_volumetric_weight'];
+		} else {
+			$this->data['overload_ignore_volumetric_weight'] = '0';
 		}
 
 		if (isset($this->request->post['overprice'])) {

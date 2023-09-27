@@ -260,7 +260,7 @@
 
 													<td class="center">
 														<? if ($category['category_overprice_rules']) { ?>
-															<i class="fa fa-check-circle" style="color:#4ea24e"></i> <?php echo $category['category_overprice_rules']; ?>
+															<b style="color:#4ea24e"><?php echo $category['category_overprice_rules']; ?></b>
 														<? } else { ?>
 															<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 														<? } ?>

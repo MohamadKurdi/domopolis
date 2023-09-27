@@ -38,7 +38,10 @@ class ModelCatalogCategory extends Model {
 			amazon_final_category 			= '" . (int)$data['amazon_final_category'] . "',
 			amazon_can_get_full 			= '" . (int)$data['amazon_can_get_full'] . "',
 			yandex_category_name 	= '" . $this->db->escape($data['yandex_category_name']) . "',
-			amazon_overprice_rules 	= '" . $this->db->escape($data['amazon_overprice_rules']) . "', 
+			amazon_overprice_rules 			= '" . $this->db->escape($data['amazon_overprice_rules']) . "',
+			overload_max_wc_multiplier 			= '" . (float)$data['overload_max_wc_multiplier'] . "',
+			overload_max_multiplier 			= '" . (float)$data['overload_max_multiplier'] . "', 
+			overload_ignore_volumetric_weight 	= '" . (float)$data['overload_ignore_volumetric_weight'] . "',
 			date_modified 			= NOW(), 
 			date_added 				= NOW()");
 		
@@ -184,6 +187,9 @@ class ModelCatalogCategory extends Model {
 			amazon_parent_category_id 		= '" . $this->db->escape($data['amazon_parent_category_id']) . "', 			
 			amazon_final_category 			= '" . (int)$data['amazon_final_category'] . "',
 			amazon_can_get_full 			= '" . (int)$data['amazon_can_get_full'] . "',
+			overload_max_wc_multiplier 			= '" . (float)$data['overload_max_wc_multiplier'] . "',
+			overload_max_multiplier 			= '" . (float)$data['overload_max_multiplier'] . "',
+			overload_ignore_volumetric_weight 	= '" . (float)$data['overload_ignore_volumetric_weight'] . "',
 			date_modified = NOW() 
 			WHERE
 			category_id = '" . (int)$category_id . "'");
