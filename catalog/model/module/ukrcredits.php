@@ -18,17 +18,20 @@ class ModelModuleUkrcreditsMain extends Model {
 			if ($setting['pp_status']) {
 				$stock_status_ok 				= (!empty($setting['pp_stock_status_id']) && in_array($product['stock_status_id'], $setting['pp_stock_status_id']));
 				$credit_enabled_for_product		= ($setting['pp_enabled'] && (in_array($product['product_id'], $setting['pp_product_allowed']) || !empty($credit_info['product_pp'])));
-				$settings_enable_all_products 	= (!$setting['pp_product_allowed'] && !$setting['pp_enabled']);
-				$default_stock_logic  			= ($setting['pp_stock'] && $product['quantity']);
+				$settings_enable_all_products 	= (!$setting['pp_product_allowed'] && !$setting['pp_enabled']);				
 
 				$manufacturer_check				= (empty($setting['allowed_mans_pp']) || in_array($product['manufacturer_id'], $setting['allowed_mans_pp']));
 				$category_check					= (empty($setting['allowed_сats_pp']) || in_array($product['main_category_id'], $setting['allowed_сats_pp']));
 
-				if (($stock_status_ok && $credit_enabled_for_product) || $settings_enable_all_products || $default_stock_logic){
+				if ($stock_status_ok || $credit_enabled_for_product || $settings_enable_all_products){
 					if ($manufacturer_check && $category_check){
 						$status_pp = true;
 					}					
-				}				
+				}			
+
+				if ($setting['pp_stock'] && !$product['quantity']){
+					$status_pp = false;
+				}
 
 				if ($status_pp) {
 					$pp_price = $product['price'];
@@ -180,16 +183,19 @@ class ModelModuleUkrcreditsMain extends Model {
 				
 				$stock_status_ok 				= (!empty($setting['ii_stock_status_id']) && in_array($product['stock_status_id'], $setting['ii_stock_status_id']));
 				$credit_enabled_for_product		= ($setting['ii_enabled'] && (in_array($product['product_id'], $setting['ii_product_allowed']) || !empty($credit_info['product_ii'])));
-				$settings_enable_all_products 	= (!$setting['ii_product_allowed'] && !$setting['ii_enabled']);
-				$default_stock_logic  			= ($setting['ii_stock'] && $product['quantity']);
+				$settings_enable_all_products 	= (!$setting['ii_product_allowed'] && !$setting['ii_enabled']);				
 
 				$manufacturer_check				= (empty($setting['allowed_mans_ii']) || in_array($product['manufacturer_id'], $setting['allowed_mans_ii']));
 				$category_check					= (empty($setting['allowed_сats_ii']) || in_array($product['main_category_id'], $setting['allowed_сats_ii']));
 
-				if (($stock_status_ok && $credit_enabled_for_product) || $settings_enable_all_products || $default_stock_logic){
+				if ($stock_status_ok || $credit_enabled_for_product || $settings_enable_all_products){
 					if ($manufacturer_check && $category_check){
 						$status_ii = true;
 					}
+				}
+
+				if ($setting['ii_stock'] && !$product['quantity']){
+					$status_ii = false;
 				}
 
 				if ($status_ii) {
@@ -336,18 +342,21 @@ class ModelModuleUkrcreditsMain extends Model {
 			
 			if ($setting['mb_status']) {
 				
-				$stock_status_ok 				= (!empty($setting['ii_stock_status_id']) && in_array($product['stock_status_id'], $setting['ii_stock_status_id']));
-				$credit_enabled_for_product		= ($setting['ii_enabled'] && (in_array($product['product_id'], $setting['ii_product_allowed']) || !empty($credit_info['product_ii'])));
-				$settings_enable_all_products 	= (!$setting['ii_product_allowed'] && !$setting['ii_enabled']);
-				$default_stock_logic  			= ($setting['ii_stock'] && $product['quantity']);
+				$stock_status_ok 				= (!empty($setting['mb_stock_status_id']) && in_array($product['stock_status_id'], $setting['mb_stock_status_id']));
+				$credit_enabled_for_product		= ($setting['mb_enabled'] && (in_array($product['product_id'], $setting['mb_product_allowed']) || !empty($credit_info['product_mb'])));
+				$settings_enable_all_products 	= (!$setting['mb_product_allowed'] && !$setting['mb_enabled']);
 
-				$manufacturer_check				= (empty($setting['allowed_mans_ii']) || in_array($product['manufacturer_id'], $setting['allowed_mans_ii']));
-				$category_check					= (empty($setting['allowed_сats_ii']) || in_array($product['main_category_id'], $setting['allowed_сats_ii']));
+				$manufacturer_check				= (empty($setting['allowed_mans_mb']) || in_array($product['manufacturer_id'], $setting['allowed_mans_mb']));
+				$category_check					= (empty($setting['allowed_сats_mb']) || in_array($product['main_category_id'], $setting['allowed_сats_mb']));
 
-				if (($stock_status_ok && $credit_enabled_for_product) || $settings_enable_all_products || $default_stock_logic){
+				if ($stock_status_ok || $credit_enabled_for_product || $settings_enable_all_products){
 					if ($manufacturer_check && $category_check){					
-						$status_ii = true;
+						$status_mb = true;
 					}
+				}
+
+				if ($setting['mb_stock'] && !$product['quantity']){
+					$status_mb = false;
 				}
 
 				if ($status_mb) {
@@ -545,14 +554,14 @@ class ModelModuleUkrcreditsMain extends Model {
 			$credits_data['ii'] = $ii;
 		}
 
-		if ($ii){
+		if ($mb){
 			$credits_data['mb'] = $mb;
 		}
 
 		if (!empty($credits_data['pp']) || !empty($credits_data['ii']) || !empty($credits_data['mb'])){
 			$cs_sort_order_l2 = [];
 
-			foreach ($credits_data as $key => $value) {
+			foreach ($credits_data as $key => $value) {				
 				$cs_sort_order_l2[$key] = $value['sort_order'];
 			}
 
