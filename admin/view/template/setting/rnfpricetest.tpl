@@ -55,12 +55,10 @@
 				<?php } ?>
 
 				<div class="clr"></div>
-				<small style="color:#cf4a61; font-size:6px">Формула: <?php echo $product['compiled_formula']; ?></small>
-
-				<?php /* ?>
-					<div class="clr"></div>
-					<small style="color:#cf4a61; font-size:8px;">Себестоимость: <?php echo $product['compiled_costprice_formula']; ?></small>
-				<?php */ ?>
+				<small style="color:#cf4a61; font-size:8px">Формула: <?php echo $product['compiled_formula']; ?></small>
+				
+				<div class="clr"></div>
+				<small style="color:#cf4a61; font-size:8px;">Себестоимость: <?php echo $product['compiled_costprice_formula']; ?></small>				
 			</td>
 			<td style="white-space: nowrap;">
 				<?php echo $product['amazon_best_price']; ?>
