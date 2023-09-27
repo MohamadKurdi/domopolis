@@ -27,7 +27,9 @@ $(document).ready(function(){
 							$('.success, .warning, .attention').remove();
                             $('#div-credits').prepend('<div class="warning">При обновлении статуса заказа произошла ошибка: ' + data['message'] + '</div>');
 							break;
-                    }                                 
+                    }
+
+                    $('#cc_debug_result').html('<pre>' + syntaxHighlight(JSON.stringify(data, null, 2)) + '</pre>').dialog({title:'Информация о транзакции', width:900, height:700, modal:true,resizable:true,position:{my: 'center', at:'center top', of: window}, closeOnEscape: true})	;                                 
                }    
         });
         return false;    
@@ -80,6 +82,7 @@ $(document).ready(function(){
         return false;   
 	}
     });
+
     $("#button-cancel").click(function(){
 	if(confirm('<?php echo $text_confirm; ?>')){
         $.ajax({

@@ -706,7 +706,7 @@
                   <input type="text" name="ii_markup" value="<?php echo $ii_markup; ?>" placeholder="<?php echo $entry_markup; ?>" id="input-ii_markup" class="form-control"/>
                 </div>
               </div> 
-              <div id="ii_markup_custom" class="form-group" style="display:none">                
+              <div id="ii_markup_custom" class="form-group">                
                 <label class="col-sm-2 control-label" for="input-ii_markup_custom"><span data-toggle="tooltip" title="<?php echo $help_markup_custom; ?>"><?php echo $entry_markup_custom; ?></span></label>
 				<div class="col-sm-10">
 					<?php 
@@ -1059,7 +1059,7 @@
                   <input type="text" name="mb_markup" value="<?php echo $mb_markup; ?>" placeholder="<?php echo $entry_markup; ?>" id="input-mb_markup" class="form-control"/>
                 </div>
               </div>  
-              <div id="mb_markup_custom" class="form-group" style="display:none">                
+              <div id="mb_markup_custom" class="form-group">                
                 <label class="col-sm-2 control-label" for="input-mb_markup_custom"><span data-toggle="tooltip" title="<?php echo $help_markup_custom; ?>"><?php echo $entry_markup_custom; ?></span></label>
 				<div class="col-sm-10">
 					<?php 

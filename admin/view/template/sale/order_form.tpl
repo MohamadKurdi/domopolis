@@ -3305,39 +3305,79 @@
 									<tr>
 										<td><b>Кредит</b></td>	
 										<td>
-											<div style="float:left" id="div-credits">
-												<?php if ($payment_code) { ?>
-													<b id="ukrcredits_payment_code" style="display: inline-block;padding: 2px 3px; font-size:14px; color:#FFF; background-color: #7F00FF; margin-left:10px;"><?php echo $payment_code; ?></b>
-												<?php } ?>
+											<div id="div-credits">
+												<table class="list">
+													<?php if ($payment_code) { ?>
+														<tr>
+															<td class="left">
+																Код платежной системы
+															</td>
+															<td>
+																<b id="ukrcredits_payment_code" style="display: inline-block;padding: 2px 3px; font-size:16px; color:#FFF; background-color: #7F00FF;"><?php echo $payment_code; ?></b>
+															</td>
+														</tr>
+													<?php } ?>
 
-												<?php if ($ukrcredits_payment_type) { ?>
-													<b id="ukrcredits_order_type" style="display: inline-block;padding: 2px 3px; font-size:14px; color:#FFF; background-color: #7F00FF; margin-left:10px;"><?php echo $ukrcredits_payment_type; ?></b>
-												<?php } ?>
-												
-												<?php if ($ukrcredits_order_status) { ?>
-												<b id="ukrcredits_order_status" style="display: inline-block;padding: 2px 3px; font-size:14px; color:#FFF; background-color: #7F00FF;">
-													<?php echo $ukrcredits_order_status; ?> <?php echo $ukrcredits_order_substatus ? '/ '.$ukrcredits_order_substatus : ''; ?>
-												</b>
-												<?php } ?>
+													<?php if ($ukrcredits_payment_type) { ?>
+														<tr>
+															<td class="left">
+																Тип кредита
+															</td>
+															<td class="left">
+																<b id="ukrcredits_order_type" style="display: inline-block;padding: 2px 3px; font-size:16px; color:#FFF; background-color: #7F00FF;"><?php echo $ukrcredits_payment_type; ?></b>
+															</td>
+														</tr>
+													<?php } ?>
+
+													<?php if ($ukrcredits_order_id) { ?>
+														<tr>
+															<td class="left">
+																Код заявки
+															</td>
+															<td class="left">
+																<b id="ukrcredits_order_id" style="display: inline-block;padding: 2px 3px; font-size:12px; color:#FFF; background-color: #7F00FF;"><?php echo $ukrcredits_order_id; ?></b>
+															</td>
+														</tr>
+
+													<?php } ?>
+
+													<?php if ($ukrcredits_order_status) { ?>
+														<tr>
+															<td class="left">
+																Статус банка
+															</td>
+															<td class="left">
+																<b id="ukrcredits_order_status" style="display: inline-block;padding: 2px 3px; font-size:16px; color:#FFF; <?php if ($ukrcredits_order_status == 'SUCCESS') { ?>background-color: #4ea24e;<?php } else { ?>background-color: #cf4a61;<?php } ?>">
+																	<?php echo $ukrcredits_order_status; ?> <?php echo $ukrcredits_order_substatus ? '/ '.$ukrcredits_order_substatus : ''; ?>
+																</b>
+															</td>
+														</tr>
+													<?php } ?>
+
+													<tr>
+														<td></td>
+														<td class="right">
+															<?php if ($ukrcredits_order_status) { ?>
+																<div>
+																	<?php if ($ukrcredits_order_status == 'LOCKED') { ?>
+																		<a id="button-confirm" class="button">Подтвердить</a> <a id="button-cancel" class="button"><?php echo $button_cancel; ?></a>
+																	<?php } ?>
+																	<?php if ($ukrcredits_order_status == 'IN_PROCESS' && $ukrcredits_order_substatus == 'WAITING_FOR_STORE_CONFIRM') { ?>
+																		<a id="button-confirm-mb" class="button">Подтвердить</a> <a id="button-cancel-mb" class="button"><?php echo $button_cancel; ?></a>
+																	<?php } ?>
+																	<?php if ($payment_code == 'ukrcredits_mb') { ?>
+																		<a id="button-status-mb" class="button"><i class="fa fa-info"></i> Обновить + инфо о заявке</a>
+																	<?php } else { ?>
+																		<a id="button-status" class="button"><i class="fa fa-info"></i> Обновить + инфо о заявке</a>
+																	<?php } ?>
+																</div>
+
+																<? require_once(dirname(__FILE__) . '/order_form.js.credits.tpl'); ?>
+															<?php } ?>
+														</td>
+													</tr>
+												</table>
 											</div>
-											<?php if ($ukrcredits_order_status) { ?>
-												<div style="float:right">
-													<?php if ($ukrcredits_order_status == 'LOCKED') { ?>
-														<a id="button-confirm" class="button">Подтвердить</a> <a id="button-cancel" class="button"><?php echo $button_cancel; ?></a>
-													<?php } ?>
-													<?php if ($ukrcredits_order_status == 'IN_PROCESS' && $ukrcredits_order_substatus == 'WAITING_FOR_STORE_CONFIRM') { ?>
-														<a id="button-confirm-mb" class="button">Подтвердить</a> <a id="button-cancel-mb" class="button"><?php echo $button_cancel; ?></a>
-													<?php } ?>
-													<?php if ($payment_code == 'ukrcredits_mb') { ?>
-														<a id="button-status-mb" class="button">Обновить</a>
-													<?php } else { ?>
-														<a id="button-status" class="button">Обновить</a>
-													<?php } ?>
-												</div>
-
-												<? require_once(dirname(__FILE__) . '/order_form.js.credits.tpl'); ?>
-											<?php } ?>
-											<div class="clr"></div>
 										</td>	
 									</tr>
 								<?php } ?>
