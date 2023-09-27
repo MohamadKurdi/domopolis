@@ -5,7 +5,7 @@ class ControllerModuleUkrcreditsSimple extends Controller {
 		$setting = $this->config->get('ukrcredits_settings');
 		$this->load->language('module/ukrcredits');	
 
-		$data['ukrcredits_setting'] = $this->config->get($type.'ukrcredits_settings');
+		$data['ukrcredits_setting'] = $this->config->get('ukrcredits_settings');
 		$data['currency_left'] 		= $this->currency->getSymbolLeft($this->session->data['currency']);
 		$data['currency_right'] 	= $this->currency->getSymbolRight($this->session->data['currency']);
 		$data['button_confirm'] 	= $this->language->get('button_confirm');
@@ -41,6 +41,7 @@ class ControllerModuleUkrcreditsSimple extends Controller {
 
 			$total_data = array();					
 			$total = 0;
+			$total_national = 0;
 			$taxes = $this->cart->getTaxes();
 
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
@@ -69,18 +70,26 @@ class ControllerModuleUkrcreditsSimple extends Controller {
 
 					array_multisort($sort_order, SORT_ASC, $total_data);
 				}		
+			}		
+
+			$data['total'] = $total;
+			foreach ($total_data as $total_line){
+				if ($total_line['code'] == 'total'){
+					$data['total'] = $total_line['value_national'];
+				}
 			}
-			
-			$replace_array = array($this->currency->getSymbolLeft($this->session->data['currency']),$this->currency->getSymbolRight($this->session->data['currency']),$this->language->get('thousand_point'));
-			$data['total'] = str_replace($replace_array,"",$this->currency->format($this->tax->calculate($total, $this->config->get('tax_class_id'), $this->config->get('config_tax')), $this->session->data['currency']));
-			
+
+			$price 						= $data['total'];
+			$price_txt 					= $this->currency->format($price, $this->config->get('config_regional_currency'), 1);
+
 			$data['credit'] = array(
 				'type' 				=> $setting[$type.'_merchantType'],
 				'name' 				=> $this->language->get('text_title_'.mb_strtolower($setting[$type.'_merchantType'])),
 				'text_in_product'	=> $setting['text_in_product_' . $type][$this->config->get('config_language_id')],
 				'text_in_cart'		=> $setting['text_in_cart_' . $type][$this->config->get('config_language_id')],
 				'partsCount' 		=> $partsCount,
-				'price' 			=> $data['total']
+				'price' 			=> $price,
+				'price_txt'			=> $price_txt
 			);
 			
 			if (isset($this->session->data['ukrcredits_' . $type . '_sel'])) {
