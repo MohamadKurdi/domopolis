@@ -98,20 +98,17 @@
 				$template = DIR_TEMPLATE . $route . '.tpl';
 				$isTwig = false;
 			}
-			
-			
+						
 			$code = '';
 			
-			if (file_exists($template)) {
-				
+			if (file_exists($template)) {				
 				if ($isTwig){
 					$twigLoader = new \Twig\Loader\FilesystemLoader(DIR_TEMPLATE);
 					$twig = new \Twig\Environment($twigLoader);
 					$template = $twig->load($route . '.twig');
 					
 					return $template->render($data);
-					} else {
-					
+				} else {					
 					extract($data);
 					ob_start();					
 					require($template);
@@ -121,7 +118,7 @@
 					return $output;					
 				}
 				
-				} else {
+			} else {
 				return '[' . $this->template . '] DOESNT EXIST';
 				trigger_error('Error: Could not load template ' . DIR_TEMPLATE . $this->template . '!');
 				exit();				

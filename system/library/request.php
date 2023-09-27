@@ -69,7 +69,6 @@ class Request {
 	}
 
 	public function cleanParam($value, $key){
-
 		if ($key && in_array($key, $this->numericParams)){
 			return (int)preg_replace('/\D/', '', $value);
 		}
