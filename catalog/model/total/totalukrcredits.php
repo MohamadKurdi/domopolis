@@ -16,7 +16,7 @@ class ModelTotalTotalukrcredits extends Model {
 				
 				if (isset($this->session->data['payment_method']['code'])) {
 					if ($this->session->data['payment_method']['code'] == 'ukrcredits_pp') {
-						$ukrcredits_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_ukrcredits WHERE product_id = '" . (int)$product['product_id'] . "'");
+						$ukrcredits_query = $this->db->query("SELECT * FROM product_ukrcredits WHERE product_id = '" . (int)$product['product_id'] . "'");
 						if (isset($ukrcredits_query->row)) {
 							if (isset($ukrcredits_query->row['markup_pp']) && $ukrcredits_query->row['markup_pp'] != 0) {
 								$ucmarkup = $ukrcredits_query->row['markup_pp'];
@@ -31,7 +31,7 @@ class ModelTotalTotalukrcredits extends Model {
 						$priceup += ($product['total'] * $ucmarkup) - $product['total'];
 					}
 					if ($this->session->data['payment_method']['code'] == 'ukrcredits_ii') {
-						$ukrcredits_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_ukrcredits WHERE product_id = '" . (int)$product['product_id'] . "'");
+						$ukrcredits_query = $this->db->query("SELECT * FROM product_ukrcredits WHERE product_id = '" . (int)$product['product_id'] . "'");
 						if (isset($ukrcredits_query->row)) {
 							if (isset($ukrcredits_query->row['markup_ii']) && $ukrcredits_query->row['markup_ii'] != 0) {
 								$ucmarkup = $ukrcredits_query->row['markup_ii'];
@@ -46,7 +46,7 @@ class ModelTotalTotalukrcredits extends Model {
 						$priceup += ($product['total'] * $ucmarkup) - $product['total'];
 					}
 					if ($this->session->data['payment_method']['code'] == 'ukrcredits_mb') {
-						$ukrcredits_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_ukrcredits WHERE product_id = '" . (int)$product['product_id'] . "'");
+						$ukrcredits_query = $this->db->query("SELECT * FROM product_ukrcredits WHERE product_id = '" . (int)$product['product_id'] . "'");
 						if (isset($ukrcredits_query->row)) {
 							if (isset($ukrcredits_query->row['markup_mb']) && $ukrcredits_query->row['markup_mb'] != 0) {
 								$ucmarkup = $ukrcredits_query->row['markup_mb'];

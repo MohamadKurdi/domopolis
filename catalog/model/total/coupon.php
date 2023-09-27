@@ -6,6 +6,10 @@ class ModelTotalCoupon extends Model {
 		if ($this->cart->hasAdditionalOffer()){
 			return;
 		}
+
+		if ($this->cart->isUsingCreditPayments()){
+			return;
+		}
 		
 		if (isset($this->session->data['coupon'])) {
 			$this->language->load('total/coupon');

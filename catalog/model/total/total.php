@@ -19,7 +19,7 @@
 			'code'       => 'total',
 			'title'      => $this->language->get('text_total'),
 			'text'       => $this->currency->format(max(0, $total_national), $this->config->get('config_regional_currency'), 1),
-			'value'      => $this->currency->convert($total_national, $this->config->get('config_regional_currency'), $this->config->get('config_currency')),//max(0, $total),
+			'value'      => $this->currency->convert($total_national, $this->config->get('config_regional_currency'), $this->config->get('config_currency')),
 			'value_national' => $total_national,
 			'sort_order' => $this->config->get('total_sort_order')
 			);
