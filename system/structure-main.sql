@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Sep 06, 2023 at 11:33 AM
--- Server version: 10.6.7-MariaDB-2ubuntu1.1-log
--- PHP Version: 8.1.9
+-- Host: localhost
+-- Generation Time: Sep 27, 2023 at 10:28 AM
+-- Server version: 10.11.2-MariaDB-1:10.11.2+maria~ubu2204-log
+-- PHP Version: 8.1.18
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `dp_domopolis`
+-- Database: `kp_kitchenprofi`
 --
 
 -- --------------------------------------------------------
@@ -29,18 +29,18 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `actions` (
   `actions_id` int(11) NOT NULL,
-  `image` varchar(255) COLLATE utf8mb3_bin DEFAULT NULL,
-  `image_to_cat` varchar(500) COLLATE utf8mb3_bin NOT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `image_to_cat` varchar(500) NOT NULL,
   `image_size` int(11) NOT NULL DEFAULT 0,
   `date_start` int(11) NOT NULL DEFAULT 0,
   `date_end` int(11) NOT NULL DEFAULT 0,
   `status` int(11) NOT NULL DEFAULT 0,
   `fancybox` int(11) NOT NULL DEFAULT 0,
-  `product_related` text COLLATE utf8mb3_bin DEFAULT NULL,
+  `product_related` text DEFAULT NULL,
   `category_related_id` int(11) NOT NULL,
   `category_related_no_intersections` tinyint(1) NOT NULL,
   `category_related_limit_products` int(11) NOT NULL,
-  `ao_group` varchar(100) COLLATE utf8mb3_bin NOT NULL,
+  `ao_group` varchar(100) NOT NULL,
   `manufacturer_id` int(11) NOT NULL,
   `deletenotinstock` tinyint(1) NOT NULL DEFAULT 0,
   `only_in_stock` int(11) NOT NULL DEFAULT 0,
@@ -56,20 +56,20 @@ CREATE TABLE `actions` (
 CREATE TABLE `actions_description` (
   `actions_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `title` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `meta_keywords` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `meta_description` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `h1` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `caption` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `anonnce` text COLLATE utf8mb3_bin NOT NULL,
-  `description` text COLLATE utf8mb3_bin NOT NULL,
-  `content` text COLLATE utf8mb3_bin NOT NULL,
-  `image_overload` varchar(255) COLLATE utf8mb3_bin NOT NULL,
-  `image_to_cat_overload` varchar(255) COLLATE utf8mb3_bin NOT NULL,
-  `label` varchar(64) COLLATE utf8mb3_bin NOT NULL,
-  `label_background` varchar(32) COLLATE utf8mb3_bin NOT NULL,
-  `label_color` varchar(32) COLLATE utf8mb3_bin NOT NULL,
-  `label_text` text COLLATE utf8mb3_bin NOT NULL
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `meta_keywords` varchar(255) NOT NULL DEFAULT '',
+  `meta_description` varchar(255) NOT NULL DEFAULT '',
+  `h1` varchar(255) NOT NULL DEFAULT '',
+  `caption` varchar(255) NOT NULL DEFAULT '',
+  `anonnce` text NOT NULL,
+  `description` text NOT NULL,
+  `content` text NOT NULL,
+  `image_overload` varchar(255) NOT NULL,
+  `image_to_cat_overload` varchar(255) NOT NULL,
+  `label` varchar(64) NOT NULL,
+  `label_background` varchar(32) NOT NULL,
+  `label_color` varchar(32) NOT NULL,
+  `label_text` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- --------------------------------------------------------
@@ -81,7 +81,7 @@ CREATE TABLE `actions_description` (
 CREATE TABLE `actions_to_category` (
   `actions_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -92,7 +92,7 @@ CREATE TABLE `actions_to_category` (
 CREATE TABLE `actions_to_category_in` (
   `actions_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -115,7 +115,7 @@ CREATE TABLE `actions_to_layout` (
 CREATE TABLE `actions_to_product` (
   `actions_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -140,8 +140,10 @@ CREATE TABLE `actiontemplate` (
   `sort_order` int(11) NOT NULL DEFAULT 0,
   `status` tinyint(1) NOT NULL DEFAULT 1,
   `image` varchar(255) NOT NULL,
-  `viewed` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `use_for_manual` tinyint(1) DEFAULT 0,
+  `viewed` int(11) NOT NULL DEFAULT 0,
+  `data_function` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -154,11 +156,12 @@ CREATE TABLE `actiontemplate_description` (
   `language_id` int(11) NOT NULL,
   `title` varchar(64) NOT NULL,
   `description` longtext NOT NULL,
+  `file_template` varchar(255) DEFAULT NULL,
   `seo_title` varchar(255) DEFAULT '',
   `meta_description` text DEFAULT NULL,
   `meta_keyword` text DEFAULT NULL,
   `tag` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -186,7 +189,7 @@ CREATE TABLE `address` (
   `passport_given` text NOT NULL,
   `verified` tinyint(1) DEFAULT 0,
   `for_print` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -197,7 +200,7 @@ CREATE TABLE `address` (
 CREATE TABLE `address_simple_fields` (
   `address_id` int(11) NOT NULL,
   `metadata` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -214,7 +217,7 @@ CREATE TABLE `adminlog` (
   `url` varchar(200) NOT NULL,
   `ip` varchar(40) NOT NULL,
   `date` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -231,7 +234,7 @@ CREATE TABLE `advanced_coupon` (
   `date_end` date NOT NULL,
   `status` int(11) NOT NULL,
   `date_added` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -246,7 +249,7 @@ CREATE TABLE `advanced_coupon_history` (
   `customer_id` int(11) NOT NULL,
   `amount` decimal(15,4) NOT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -304,7 +307,7 @@ CREATE TABLE `affiliate` (
   `SagePay` varchar(100) NOT NULL DEFAULT '',
   `twoCheckout` varchar(100) NOT NULL DEFAULT '',
   `GoogleWallet` varchar(100) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -318,7 +321,7 @@ CREATE TABLE `affiliate_statistics` (
   `date_added` date NOT NULL,
   `count_transitions` int(11) NOT NULL DEFAULT 0,
   `affiliate_ip_name` varchar(300) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -333,7 +336,7 @@ CREATE TABLE `affiliate_transaction` (
   `description` text NOT NULL,
   `amount` decimal(15,4) NOT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -348,7 +351,7 @@ CREATE TABLE `albums` (
   `sort_order` int(11) NOT NULL,
   `last_modified` datetime NOT NULL,
   `album_data` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -364,7 +367,7 @@ CREATE TABLE `alertlog` (
   `entity_type` varchar(20) NOT NULL,
   `entity_id` int(11) NOT NULL,
   `datetime` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -378,7 +381,7 @@ CREATE TABLE `alsoviewed` (
   `high` int(11) DEFAULT 0,
   `number` int(11) DEFAULT 0,
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -394,7 +397,7 @@ CREATE TABLE `amazon_orders` (
   `grand_total` decimal(15,4) NOT NULL,
   `gift_card` decimal(15,4) NOT NULL,
   `cancelled` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -405,7 +408,7 @@ CREATE TABLE `amazon_orders` (
 CREATE TABLE `amazon_orders_blobs` (
   `amazon_id` varchar(30) NOT NULL,
   `amazon_blob` longtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -439,7 +442,7 @@ CREATE TABLE `amazon_orders_products` (
   `date_arriving_exact` date NOT NULL,
   `date_arriving_from` date NOT NULL,
   `date_arriving_to` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -454,7 +457,7 @@ CREATE TABLE `amzn_add_queue` (
   `category_id` int(11) NOT NULL,
   `brand_logic` tinyint(1) NOT NULL DEFAULT 0,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -466,7 +469,7 @@ CREATE TABLE `amzn_add_variants_queue` (
   `product_id` int(11) NOT NULL,
   `asin` varchar(16) NOT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -475,7 +478,7 @@ CREATE TABLE `amzn_add_variants_queue` (
 --
 
 CREATE TABLE `amzn_product_queue` (
-  `asin` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `asin` varchar(32) NOT NULL,
   `date_added` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -488,7 +491,7 @@ CREATE TABLE `amzn_product_queue` (
 CREATE TABLE `apri` (
   `order_id` int(11) NOT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -499,7 +502,7 @@ CREATE TABLE `apri` (
 CREATE TABLE `apri_unsubscribe` (
   `md5_email` varchar(255) NOT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -512,7 +515,7 @@ CREATE TABLE `attribute` (
   `attribute_group_id` int(11) NOT NULL,
   `dimension_type` enum('length','width','height','dimensions','weight','all') DEFAULT NULL,
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -523,7 +526,7 @@ CREATE TABLE `attribute` (
 CREATE TABLE `attributes_category` (
   `attribute_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -534,7 +537,7 @@ CREATE TABLE `attributes_category` (
 CREATE TABLE `attributes_similar_category` (
   `attribute_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci ROW_FORMAT=COMPACT;
 
 -- --------------------------------------------------------
 
@@ -545,8 +548,8 @@ CREATE TABLE `attributes_similar_category` (
 CREATE TABLE `attribute_description` (
   `attribute_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `name` varchar(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `name` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -557,7 +560,7 @@ CREATE TABLE `attribute_description` (
 CREATE TABLE `attribute_group` (
   `attribute_group_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -569,7 +572,7 @@ CREATE TABLE `attribute_group_description` (
   `attribute_group_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -581,7 +584,7 @@ CREATE TABLE `attribute_group_tooltip` (
   `attribute_group_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `tooltip` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -593,7 +596,7 @@ CREATE TABLE `attribute_tooltip` (
   `attribute_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `tooltip` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -607,7 +610,7 @@ CREATE TABLE `attribute_value_image` (
   `attribute_value` varchar(255) NOT NULL,
   `image` varchar(255) NOT NULL,
   `information_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -622,7 +625,7 @@ CREATE TABLE `banner` (
   `class` varchar(256) NOT NULL,
   `class_sm` varchar(256) NOT NULL,
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -644,7 +647,7 @@ CREATE TABLE `banner_image` (
   `class_sm` varchar(255) NOT NULL,
   `block` int(11) NOT NULL,
   `block_sm` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -662,7 +665,260 @@ CREATE TABLE `banner_image_description` (
   `button_text` varchar(255) NOT NULL,
   `overload_image` varchar(255) NOT NULL,
   `overload_image_sm` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barbara_blog_category`
+--
+
+CREATE TABLE `barbara_blog_category` (
+  `category_id` int(10) UNSIGNED NOT NULL,
+  `status` varchar(11) NOT NULL DEFAULT 'publish',
+  `sort_order` int(11) NOT NULL,
+  `parent_id` int(11) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `date_added` datetime NOT NULL,
+  `date_modified` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barbara_blog_category_description`
+--
+
+CREATE TABLE `barbara_blog_category_description` (
+  `category_id` int(10) UNSIGNED NOT NULL,
+  `language_id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `description` longtext NOT NULL,
+  `meta_description` varchar(255) NOT NULL,
+  `meta_keyword` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barbara_blog_category_filter`
+--
+
+CREATE TABLE `barbara_blog_category_filter` (
+  `category_id` int(11) NOT NULL,
+  `filter_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barbara_blog_category_path`
+--
+
+CREATE TABLE `barbara_blog_category_path` (
+  `category_id` int(11) NOT NULL,
+  `path_id` int(11) NOT NULL,
+  `level` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barbara_blog_category_to_layout`
+--
+
+CREATE TABLE `barbara_blog_category_to_layout` (
+  `category_id` int(11) NOT NULL,
+  `store_id` int(11) NOT NULL,
+  `layout_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barbara_blog_category_to_store`
+--
+
+CREATE TABLE `barbara_blog_category_to_store` (
+  `category_id` int(10) UNSIGNED NOT NULL,
+  `store_id` int(10) UNSIGNED NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barbara_blog_post`
+--
+
+CREATE TABLE `barbara_blog_post` (
+  `ID` bigint(20) UNSIGNED NOT NULL,
+  `post_author` bigint(20) UNSIGNED NOT NULL DEFAULT 0,
+  `sort_order` int(11) NOT NULL,
+  `post_status` varchar(20) NOT NULL DEFAULT 'publish',
+  `view` int(11) NOT NULL DEFAULT 0,
+  `post_thumb` varchar(255) DEFAULT NULL,
+  `date_available` date NOT NULL,
+  `date_added` datetime NOT NULL,
+  `date_modified` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barbara_blog_postmeta`
+--
+
+CREATE TABLE `barbara_blog_postmeta` (
+  `meta_id` bigint(20) UNSIGNED NOT NULL,
+  `post_id` bigint(20) UNSIGNED NOT NULL DEFAULT 0,
+  `meta_key` varchar(255) DEFAULT NULL,
+  `meta_value` longtext DEFAULT NULL,
+  `sort_order` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barbara_blog_post_description`
+--
+
+CREATE TABLE `barbara_blog_post_description` (
+  `post_id` int(10) UNSIGNED NOT NULL,
+  `language_id` int(10) UNSIGNED NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `content` longtext NOT NULL,
+  `excerpt` text NOT NULL,
+  `meta_description` varchar(255) NOT NULL,
+  `meta_keyword` varchar(255) NOT NULL,
+  `tag` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barbara_blog_post_filter`
+--
+
+CREATE TABLE `barbara_blog_post_filter` (
+  `post_id` int(11) NOT NULL,
+  `filter_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barbara_blog_post_to_category`
+--
+
+CREATE TABLE `barbara_blog_post_to_category` (
+  `post_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barbara_blog_post_to_layout`
+--
+
+CREATE TABLE `barbara_blog_post_to_layout` (
+  `post_id` int(11) NOT NULL,
+  `store_id` int(11) NOT NULL,
+  `layout_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barbara_blog_post_to_store`
+--
+
+CREATE TABLE `barbara_blog_post_to_store` (
+  `post_id` int(10) UNSIGNED NOT NULL,
+  `store_id` int(10) UNSIGNED NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barbara_blog_related_product`
+--
+
+CREATE TABLE `barbara_blog_related_product` (
+  `post_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barbara_blog_setting`
+--
+
+CREATE TABLE `barbara_blog_setting` (
+  `setting_id` bigint(20) UNSIGNED NOT NULL,
+  `setting_keyword` varchar(255) NOT NULL,
+  `setting_name` varchar(64) NOT NULL DEFAULT '',
+  `setting_value` longtext NOT NULL,
+  `position` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barbara_blog_setting_general`
+--
+
+CREATE TABLE `barbara_blog_setting_general` (
+  `setting_id` int(10) UNSIGNED NOT NULL,
+  `language_id` int(10) UNSIGNED NOT NULL,
+  `setting_name` varchar(255) NOT NULL,
+  `setting_value` longtext NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barbara_singleclick`
+--
+
+CREATE TABLE `barbara_singleclick` (
+  `id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL DEFAULT 0,
+  `product` varchar(255) NOT NULL,
+  `model` varchar(128) NOT NULL,
+  `price` varchar(255) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `order_status_id` int(11) NOT NULL DEFAULT 0,
+  `date` datetime NOT NULL,
+  `date_modified` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `barbara_stickers`
+--
+
+CREATE TABLE `barbara_stickers` (
+  `stickers_id` int(11) NOT NULL,
+  `langdata` text NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `foncolor` varchar(255) NOT NULL DEFAULT '0',
+  `priority` int(11) NOT NULL,
+  `available` int(11) NOT NULL DEFAULT 0,
+  `type` int(11) NOT NULL,
+  `objects_type` int(11) NOT NULL,
+  `categories` text NOT NULL,
+  `products` text NOT NULL,
+  `manufacturers` text NOT NULL,
+  `enabled` int(11) NOT NULL DEFAULT 1,
+  `sort_order` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -686,7 +942,7 @@ CREATE TABLE `callback` (
   `is_cheaper` tinyint(1) NOT NULL,
   `product_id` int(11) NOT NULL,
   `sip_queue` varchar(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -699,7 +955,7 @@ CREATE TABLE `category` (
   `image` varchar(255) DEFAULT NULL,
   `menu_image` tinyint(1) NOT NULL DEFAULT 1,
   `not_update_image` tinyint(1) NOT NULL DEFAULT 0,
-  `parent_id` int(11) DEFAULT 0,
+  `parent_id` int(11) NOT NULL DEFAULT 0,
   `virtual_parent_id` int(11) NOT NULL DEFAULT -1,
   `top` tinyint(1) NOT NULL,
   `column` int(11) NOT NULL,
@@ -737,15 +993,18 @@ CREATE TABLE `category` (
   `amazon_can_get_full` tinyint(1) NOT NULL DEFAULT 0,
   `amazon_last_sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `amazon_synced` tinyint(1) NOT NULL DEFAULT 0,
-  `amazon_overprice_rules` varchar(512) NOT NULL,
+  `amazon_overprice_rules` longtext NOT NULL,
   `yandex_category_name` varchar(1024) NOT NULL,
   `final` tinyint(1) NOT NULL DEFAULT 0,
   `homepage` tinyint(1) NOT NULL,
   `popular` tinyint(1) NOT NULL,
   `special` tinyint(1) NOT NULL DEFAULT 0,
-  `viewed` int(11) DEFAULT 0,
-  `bought_for_month` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `viewed` int(11) NOT NULL,
+  `bought_for_month` int(11) DEFAULT NULL,
+  `overload_formula_data` longtext NOT NULL,
+  `max_wc_multiplier` double(15,2) DEFAULT 0.00,
+  `max_multiplier` double(15,2) DEFAULT 0.00
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -762,7 +1021,7 @@ CREATE TABLE `category_amazon_bestseller_tree` (
   `full_name` varchar(1024) DEFAULT NULL,
   `full_name_native` varchar(1024) NOT NULL,
   `link` varchar(1024) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -775,9 +1034,8 @@ CREATE TABLE `category_amazon_tree` (
   `parent_id` varchar(255) NOT NULL,
   `final_category` tinyint(1) NOT NULL,
   `name` varchar(512) NOT NULL,
-  `full_name` varchar(1024) NOT NULL,
-  `link` varchar(1024) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `full_name` varchar(1024) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -803,7 +1061,7 @@ CREATE TABLE `category_description` (
   `alt_image` text DEFAULT NULL,
   `title_image` text DEFAULT NULL,
   `google_tree` varchar(1024) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -814,7 +1072,7 @@ CREATE TABLE `category_description` (
 CREATE TABLE `category_filter` (
   `category_id` int(11) NOT NULL,
   `filter_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -834,7 +1092,22 @@ CREATE TABLE `category_menu_content` (
   `href` varchar(1024) NOT NULL,
   `standalone` tinyint(1) NOT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `category_overprice_rules`
+--
+
+CREATE TABLE `category_overprice_rules` (
+  `rule_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `multiplier` decimal(15,2) NOT NULL,
+  `default_multiplier` decimal(15,2) NOT NULL,
+  `min` int(11) NOT NULL,
+  `max` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -846,7 +1119,7 @@ CREATE TABLE `category_path` (
   `category_id` int(11) NOT NULL,
   `path_id` int(11) NOT NULL,
   `level` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -858,7 +1131,7 @@ CREATE TABLE `category_product_count` (
   `category_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `product_count` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -872,7 +1145,7 @@ CREATE TABLE `category_psm_template` (
   `category_id` int(11) DEFAULT NULL,
   `l_code` varchar(5) DEFAULT NULL,
   `template` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -883,7 +1156,7 @@ CREATE TABLE `category_psm_template` (
 CREATE TABLE `category_related` (
   `category_id` int(11) NOT NULL,
   `related_category_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -901,7 +1174,7 @@ CREATE TABLE `category_review` (
   `status` tinyint(1) NOT NULL DEFAULT 0,
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -912,7 +1185,7 @@ CREATE TABLE `category_review` (
 CREATE TABLE `category_to_actions` (
   `category_id` int(11) NOT NULL,
   `actions_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -924,7 +1197,7 @@ CREATE TABLE `category_to_layout` (
   `category_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -935,7 +1208,7 @@ CREATE TABLE `category_to_layout` (
 CREATE TABLE `category_to_store` (
   `category_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -949,7 +1222,7 @@ CREATE TABLE `category_yam_tree` (
   `final_category` tinyint(1) NOT NULL,
   `name` varchar(512) NOT NULL,
   `full_name` varchar(1024) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -960,28 +1233,28 @@ CREATE TABLE `category_yam_tree` (
 CREATE TABLE `cdek_cities` (
   `city_id` int(11) NOT NULL,
   `code` int(11) NOT NULL,
-  `city` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `kladr_code` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `country_code` varchar(2) COLLATE utf8mb4_bin NOT NULL,
+  `city` varchar(255) NOT NULL,
+  `kladr_code` varchar(255) NOT NULL,
+  `country_code` varchar(2) NOT NULL,
   `country_id` int(11) NOT NULL,
-  `country` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `region` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `country` varchar(255) NOT NULL,
+  `region` varchar(255) NOT NULL,
   `region_code` int(11) NOT NULL,
-  `fias_guid` varchar(64) COLLATE utf8mb4_bin NOT NULL,
-  `sub_region` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `postal_codes` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `longitude` varchar(32) COLLATE utf8mb4_bin NOT NULL,
-  `latitude` varchar(32) COLLATE utf8mb4_bin NOT NULL,
-  `time_zone` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `fias_guid` varchar(64) NOT NULL,
+  `sub_region` varchar(255) NOT NULL,
+  `postal_codes` varchar(255) NOT NULL,
+  `longitude` varchar(32) NOT NULL,
+  `latitude` varchar(32) NOT NULL,
+  `time_zone` varchar(255) NOT NULL,
   `WarehouseCount` int(11) NOT NULL,
-  `dadata_BELTWAY_HIT` varchar(10) COLLATE utf8mb4_bin DEFAULT NULL,
+  `dadata_BELTWAY_HIT` varchar(10) DEFAULT NULL,
   `dadata_BELTWAY_DISTANCE` int(11) NOT NULL DEFAULT 0,
   `deliveryPeriodMin` int(11) NOT NULL,
   `deliveryPeriodMax` int(11) NOT NULL,
   `min_WD` decimal(15,2) NOT NULL,
   `min_WW` decimal(15,2) NOT NULL,
   `parsed` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -998,7 +1271,7 @@ CREATE TABLE `cdek_city` (
   `cache_limit` float(5,4) NOT NULL,
   `deliveryPeriodMin` int(11) NOT NULL,
   `deliveryPeriodMax` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1008,27 +1281,27 @@ CREATE TABLE `cdek_city` (
 
 CREATE TABLE `cdek_deliverypoints` (
   `deliverypoint_id` int(11) NOT NULL,
-  `code` varchar(12) COLLATE utf8mb4_bin NOT NULL,
-  `name` varchar(50) COLLATE utf8mb4_bin NOT NULL,
-  `country_code` varchar(2) COLLATE utf8mb4_bin NOT NULL,
+  `code` varchar(12) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `country_code` varchar(2) NOT NULL,
   `region_code` int(11) NOT NULL,
-  `region` varchar(64) COLLATE utf8mb4_bin NOT NULL,
+  `region` varchar(64) NOT NULL,
   `city_code` int(11) NOT NULL,
-  `city` varchar(64) COLLATE utf8mb4_bin NOT NULL,
-  `postal_сode` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `longitude` varchar(32) COLLATE utf8mb4_bin NOT NULL,
-  `latitude` varchar(32) COLLATE utf8mb4_bin NOT NULL,
-  `address` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `address_full` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `address_comment` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `nearest_station` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `nearest_metro_station` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `work_time` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `phones` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `note` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `type` varchar(32) COLLATE utf8mb4_bin NOT NULL,
-  `owner_сode` varchar(32) COLLATE utf8mb4_bin NOT NULL,
+  `city` varchar(64) NOT NULL,
+  `postal_сode` varchar(255) NOT NULL,
+  `longitude` varchar(32) NOT NULL,
+  `latitude` varchar(32) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `address_full` varchar(255) NOT NULL,
+  `address_comment` varchar(255) NOT NULL,
+  `nearest_station` varchar(255) NOT NULL,
+  `nearest_metro_station` varchar(255) NOT NULL,
+  `work_time` varchar(255) NOT NULL,
+  `phones` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `note` varchar(255) NOT NULL,
+  `type` varchar(32) NOT NULL,
+  `owner_сode` varchar(32) NOT NULL,
   `take_only` tinyint(1) NOT NULL,
   `is_handout` tinyint(1) NOT NULL,
   `is_reception` tinyint(1) NOT NULL,
@@ -1036,13 +1309,13 @@ CREATE TABLE `cdek_deliverypoints` (
   `have_cashless` tinyint(1) NOT NULL,
   `have_cash` tinyint(1) NOT NULL,
   `allowed_cod` tinyint(1) NOT NULL,
-  `site` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `office_image_list` varchar(500) COLLATE utf8mb4_bin NOT NULL,
-  `work_time_list` text COLLATE utf8mb4_bin NOT NULL,
+  `site` varchar(255) NOT NULL,
+  `office_image_list` varchar(500) NOT NULL,
+  `work_time_list` text NOT NULL,
   `weight_min` decimal(14,2) NOT NULL,
   `weight_max` decimal(14,2) NOT NULL,
-  `weight_limits` varchar(255) COLLATE utf8mb4_bin NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+  `weight_limits` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1055,7 +1328,7 @@ CREATE TABLE `cdek_dispatch` (
   `dispatch_number` varchar(30) NOT NULL,
   `date` varchar(32) NOT NULL,
   `server_date` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1099,7 +1372,7 @@ CREATE TABLE `cdek_order` (
   `currency` varchar(3) DEFAULT 'RUB',
   `currency_cod` varchar(3) DEFAULT 'RUB',
   `last_exchange` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1112,7 +1385,7 @@ CREATE TABLE `cdek_order_add_service` (
   `order_id` int(11) NOT NULL,
   `description` varchar(100) DEFAULT NULL,
   `price` float(8,4) NOT NULL DEFAULT 0.0000
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1133,7 +1406,7 @@ CREATE TABLE `cdek_order_call` (
   `address_house` varchar(30) NOT NULL,
   `address_flat` varchar(10) NOT NULL,
   `comment` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1145,7 +1418,7 @@ CREATE TABLE `cdek_order_call_history_delay` (
   `order_id` int(11) NOT NULL,
   `date` int(11) NOT NULL,
   `date_next` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1158,7 +1431,7 @@ CREATE TABLE `cdek_order_call_history_fail` (
   `fail_id` int(11) NOT NULL,
   `date` int(11) NOT NULL,
   `description` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1170,7 +1443,7 @@ CREATE TABLE `cdek_order_call_history_good` (
   `order_id` int(11) NOT NULL,
   `date` int(11) NOT NULL,
   `date_deliv` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1194,7 +1467,7 @@ CREATE TABLE `cdek_order_courier` (
   `address_house` varchar(30) NOT NULL,
   `address_flat` varchar(10) NOT NULL,
   `comment` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1207,7 +1480,7 @@ CREATE TABLE `cdek_order_delay_history` (
   `delay_id` int(11) NOT NULL,
   `date` int(11) NOT NULL,
   `description` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1224,7 +1497,7 @@ CREATE TABLE `cdek_order_package` (
   `size_a` float(15,4) DEFAULT 0.0000,
   `size_b` float(15,4) DEFAULT 0.0000,
   `size_c` float(15,4) DEFAULT 0.0000
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1242,7 +1515,7 @@ CREATE TABLE `cdek_order_package_item` (
   `amount` int(11) NOT NULL,
   `cost` float(15,4) NOT NULL DEFAULT 0.0000,
   `payment` float(15,4) NOT NULL DEFAULT 0.0000
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1255,7 +1528,7 @@ CREATE TABLE `cdek_order_reason` (
   `order_id` int(11) NOT NULL,
   `date` int(11) NOT NULL,
   `description` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1276,7 +1549,7 @@ CREATE TABLE `cdek_order_schedule` (
   `address_flat` varchar(10) DEFAULT NULL,
   `address_pvz_code` varchar(10) DEFAULT NULL,
   `comment` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1289,7 +1562,7 @@ CREATE TABLE `cdek_order_schedule_delay` (
   `attempt_id` int(11) NOT NULL,
   `delay_id` int(11) NOT NULL,
   `description` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1304,7 +1577,7 @@ CREATE TABLE `cdek_order_status_history` (
   `date` int(11) NOT NULL,
   `city_id` int(11) NOT NULL,
   `city_name` varchar(128) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1315,11 +1588,11 @@ CREATE TABLE `cdek_order_status_history` (
 CREATE TABLE `cdek_zones` (
   `zone_id` int(11) NOT NULL,
   `country_id` int(11) NOT NULL,
-  `country_code` varchar(2) COLLATE utf8mb4_bin NOT NULL,
-  `country` varchar(255) COLLATE utf8mb4_bin NOT NULL,
-  `region` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `country_code` varchar(2) NOT NULL,
+  `country` varchar(255) NOT NULL,
+  `region` varchar(255) NOT NULL,
   `region_code` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1338,7 +1611,7 @@ CREATE TABLE `collection` (
   `virtual` tinyint(1) NOT NULL DEFAULT 0,
   `no_brand` tinyint(1) NOT NULL DEFAULT 0,
   `sort_order` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1358,7 +1631,7 @@ CREATE TABLE `collection_description` (
   `meta_keyword` varchar(255) NOT NULL,
   `seo_title` varchar(255) NOT NULL,
   `seo_h1` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1370,7 +1643,7 @@ CREATE TABLE `collection_image` (
   `collection_id` int(11) NOT NULL,
   `image` varchar(500) NOT NULL,
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1381,7 +1654,7 @@ CREATE TABLE `collection_image` (
 CREATE TABLE `collection_to_store` (
   `collection_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1394,7 +1667,7 @@ CREATE TABLE `competitors` (
   `name` varchar(255) NOT NULL,
   `classname` varchar(255) NOT NULL,
   `currency` varchar(5) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1412,7 +1685,7 @@ CREATE TABLE `competitor_price` (
   `our_cost` decimal(15,2) NOT NULL,
   `currency` varchar(5) NOT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1425,7 +1698,7 @@ CREATE TABLE `competitor_urls` (
   `url` text NOT NULL,
   `date_added` date NOT NULL,
   `sku` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1436,7 +1709,7 @@ CREATE TABLE `competitor_urls` (
 CREATE TABLE `counters` (
   `counter_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
-  `counter` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `counter` varchar(32) NOT NULL,
   `value` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1455,7 +1728,7 @@ CREATE TABLE `country` (
   `address_format` text NOT NULL,
   `postcode_required` tinyint(1) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1471,7 +1744,7 @@ CREATE TABLE `countrybrand` (
   `template` varchar(255) NOT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0,
   `flag` varchar(3) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1491,7 +1764,7 @@ CREATE TABLE `countrybrand_description` (
   `meta_keyword` varchar(255) NOT NULL,
   `seo_title` varchar(255) NOT NULL,
   `seo_h1` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1503,7 +1776,7 @@ CREATE TABLE `countrybrand_image` (
   `countrybrand_id` int(11) NOT NULL,
   `image` varchar(500) NOT NULL,
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1514,7 +1787,7 @@ CREATE TABLE `countrybrand_image` (
 CREATE TABLE `countrybrand_to_store` (
   `countrybrand_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1525,7 +1798,7 @@ CREATE TABLE `countrybrand_to_store` (
 CREATE TABLE `country_to_fias` (
   `country_id` int(11) NOT NULL,
   `fias_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1561,7 +1834,7 @@ CREATE TABLE `coupon` (
   `action_id` int(11) NOT NULL,
   `only_in_stock` tinyint(1) NOT NULL DEFAULT 0,
   `display_in_account` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1572,7 +1845,7 @@ CREATE TABLE `coupon` (
 CREATE TABLE `coupon_category` (
   `coupon_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1583,7 +1856,7 @@ CREATE TABLE `coupon_category` (
 CREATE TABLE `coupon_collection` (
   `coupon_id` int(11) NOT NULL,
   `collection_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1597,7 +1870,7 @@ CREATE TABLE `coupon_description` (
   `full_name` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `short_description` varchar(1024) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1612,7 +1885,7 @@ CREATE TABLE `coupon_history` (
   `customer_id` int(11) NOT NULL,
   `amount` decimal(15,4) NOT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1623,7 +1896,7 @@ CREATE TABLE `coupon_history` (
 CREATE TABLE `coupon_manufacturer` (
   `coupon_id` int(11) NOT NULL,
   `manufacturer_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1635,7 +1908,7 @@ CREATE TABLE `coupon_product` (
   `coupon_product_id` int(11) NOT NULL,
   `coupon_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1645,7 +1918,7 @@ CREATE TABLE `coupon_product` (
 
 CREATE TABLE `coupon_review` (
   `coupon_id` int(11) NOT NULL,
-  `code` varchar(8) COLLATE utf8mb3_bin NOT NULL,
+  `code` varchar(8) NOT NULL,
   `coupon_history_id` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
@@ -1660,7 +1933,7 @@ CREATE TABLE `csvprice_pro` (
   `key` varchar(64) NOT NULL,
   `value` text DEFAULT NULL,
   `serialized` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1679,7 +1952,7 @@ CREATE TABLE `csvprice_pro_crontab` (
   `job_data` text DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 0,
   `serialized` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1691,7 +1964,7 @@ CREATE TABLE `csvprice_pro_images` (
   `catalog_id` int(11) NOT NULL,
   `image_key` char(32) NOT NULL,
   `image_path` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1705,7 +1978,7 @@ CREATE TABLE `csvprice_pro_profiles` (
   `name` varchar(128) NOT NULL,
   `value` text DEFAULT NULL,
   `serialized` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1735,7 +2008,7 @@ CREATE TABLE `currency` (
   `auto_percent` decimal(15,2) NOT NULL,
   `status` tinyint(1) NOT NULL,
   `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1769,7 +2042,7 @@ CREATE TABLE `customer` (
   `address_id` int(11) NOT NULL DEFAULT 0,
   `customer_group_id` int(11) NOT NULL,
   `ip` varchar(40) NOT NULL DEFAULT '0',
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `status` tinyint(1) NOT NULL,
   `approved` tinyint(1) NOT NULL,
   `discount_card` varchar(10) NOT NULL,
   `discount_percent` int(11) NOT NULL,
@@ -1821,8 +2094,9 @@ CREATE TABLE `customer` (
   `rja_customer` tinyint(1) NOT NULL DEFAULT 0,
   `cron_sent` tinyint(1) NOT NULL DEFAULT 0,
   `printed2912` tinyint(1) NOT NULL DEFAULT 0,
-  `social_id` varchar(512) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `sent_old_alert` tinyint(1) NOT NULL DEFAULT 0,
+  `social_id` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1833,7 +2107,7 @@ CREATE TABLE `customer` (
 CREATE TABLE `customer_ban_ip` (
   `customer_ban_ip_id` int(11) NOT NULL,
   `ip` varchar(40) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1854,7 +2128,7 @@ CREATE TABLE `customer_calls` (
   `filelink` varchar(1024) NOT NULL,
   `order_id` int(11) NOT NULL,
   `sip_queue` varchar(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1863,8 +2137,8 @@ CREATE TABLE `customer_calls` (
 --
 
 CREATE TABLE `customer_emails_blacklist` (
-  `email` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL
+  `email` varchar(128) NOT NULL,
+  `status` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1874,8 +2148,8 @@ CREATE TABLE `customer_emails_blacklist` (
 --
 
 CREATE TABLE `customer_emails_whitelist` (
-  `email` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL
+  `email` varchar(128) NOT NULL,
+  `status` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1891,7 +2165,7 @@ CREATE TABLE `customer_email_campaigns` (
   `mail_status` varchar(50) NOT NULL,
   `mail_opened` int(11) NOT NULL DEFAULT 0,
   `mail_clicked` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1902,7 +2176,7 @@ CREATE TABLE `customer_email_campaigns` (
 CREATE TABLE `customer_email_campaigns_names` (
   `email_campaign_mailwizz_id` varchar(100) NOT NULL,
   `email_campaign_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1917,7 +2191,7 @@ CREATE TABLE `customer_field` (
   `name` int(11) NOT NULL,
   `value` text NOT NULL,
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1933,7 +2207,7 @@ CREATE TABLE `customer_group` (
   `tax_id_display` int(11) NOT NULL,
   `tax_id_required` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1946,7 +2220,7 @@ CREATE TABLE `customer_group_description` (
   `language_id` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
   `description` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1959,7 +2233,7 @@ CREATE TABLE `customer_group_price` (
   `category_id` int(11) NOT NULL,
   `price` float NOT NULL,
   `type` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1982,7 +2256,7 @@ CREATE TABLE `customer_history` (
   `email_id` int(11) NOT NULL DEFAULT 0,
   `need_call` datetime DEFAULT NULL,
   `is_error` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1995,7 +2269,7 @@ CREATE TABLE `customer_ip` (
   `customer_id` int(11) NOT NULL,
   `ip` varchar(40) NOT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2012,7 +2286,7 @@ CREATE TABLE `customer_online` (
   `useragent` varchar(400) NOT NULL,
   `is_bot` tinyint(1) NOT NULL,
   `is_pwa` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2023,7 +2297,7 @@ CREATE TABLE `customer_online` (
 CREATE TABLE `customer_online_history` (
   `customer_count` int(11) NOT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2035,7 +2309,7 @@ CREATE TABLE `customer_push_ids` (
   `customer_id` int(11) NOT NULL,
   `sendpulse_push_id` varchar(255) NOT NULL,
   `onesignal_push_id` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2055,7 +2329,7 @@ CREATE TABLE `customer_reward` (
   `date_paid` date NOT NULL,
   `burned` tinyint(1) NOT NULL DEFAULT 0,
   `user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2067,8 +2341,8 @@ CREATE TABLE `customer_reward_queue` (
   `customer_reward_queue_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
-  `description` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `reason_code` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `reason_code` varchar(32) NOT NULL,
   `date_added` date NOT NULL,
   `points` int(11) NOT NULL,
   `date_activate` date NOT NULL
@@ -2083,7 +2357,7 @@ CREATE TABLE `customer_reward_queue` (
 CREATE TABLE `customer_search_history` (
   `customer_history_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
-  `text` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `text` varchar(500) NOT NULL,
   `date_added` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -2097,7 +2371,7 @@ CREATE TABLE `customer_segments` (
   `customer_id` int(11) NOT NULL,
   `segment_id` int(11) NOT NULL,
   `date_added` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2110,8 +2384,9 @@ CREATE TABLE `customer_simple_fields` (
   `metadata` text DEFAULT NULL,
   `newsletter_news` text DEFAULT NULL,
   `newsletter_personal` text DEFAULT NULL,
-  `viber_news` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `viber_news` text DEFAULT NULL,
+  `birthday` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2122,7 +2397,7 @@ CREATE TABLE `customer_simple_fields` (
 CREATE TABLE `customer_test` (
   `email` varchar(255) NOT NULL,
   `firstname` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2153,7 +2428,7 @@ CREATE TABLE `customer_transaction` (
   `pspReference` varchar(128) NOT NULL,
   `guid` varchar(128) NOT NULL,
   `json` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2166,7 +2441,7 @@ CREATE TABLE `customer_viewed` (
   `type` enum('c','m','p') NOT NULL,
   `entity_id` int(11) NOT NULL,
   `times` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2182,7 +2457,7 @@ CREATE TABLE `custom_field` (
   `location` varchar(32) NOT NULL,
   `position` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2194,7 +2469,7 @@ CREATE TABLE `custom_field_description` (
   `custom_field_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2205,7 +2480,7 @@ CREATE TABLE `custom_field_description` (
 CREATE TABLE `custom_field_to_customer_group` (
   `custom_field_id` int(11) NOT NULL,
   `customer_group_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2217,7 +2492,7 @@ CREATE TABLE `custom_field_value` (
   `custom_field_value_id` int(11) NOT NULL,
   `custom_field_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2230,7 +2505,7 @@ CREATE TABLE `custom_field_value_description` (
   `language_id` int(11) NOT NULL,
   `custom_field_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2243,7 +2518,7 @@ CREATE TABLE `custom_url_404` (
   `hit` int(11) DEFAULT NULL,
   `url_404` varchar(255) DEFAULT NULL,
   `url_redirect` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2256,7 +2531,7 @@ CREATE TABLE `deleted_asins` (
   `name` varchar(1024) NOT NULL,
   `date_added` datetime NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -2265,8 +2540,8 @@ CREATE TABLE `deleted_asins` (
 --
 
 CREATE TABLE `direct_timezones` (
-  `geomd5` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `timezone` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL
+  `geomd5` varchar(64) NOT NULL,
+  `timezone` varchar(40) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2281,7 +2556,7 @@ CREATE TABLE `download` (
   `mask` varchar(128) NOT NULL,
   `remaining` int(11) NOT NULL DEFAULT 0,
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2293,7 +2568,7 @@ CREATE TABLE `download_description` (
   `download_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2318,7 +2593,7 @@ CREATE TABLE `emailmarketing_logs` (
   `mail_opened` int(11) NOT NULL,
   `mail_clicked` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2358,7 +2633,7 @@ CREATE TABLE `emailtemplate` (
   `store_id` int(11) DEFAULT NULL,
   `customer_group_id` int(11) DEFAULT NULL,
   `order_status_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2431,7 +2706,7 @@ CREATE TABLE `emailtemplate_config` (
   `customer_group_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2449,7 +2724,7 @@ CREATE TABLE `emailtemplate_description` (
   `emailtemplate_description_content3` longtext NOT NULL,
   `emailtemplate_description_comment` longtext NOT NULL,
   `emailtemplate_description_unsubscribe_text` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2480,7 +2755,7 @@ CREATE TABLE `emailtemplate_logs` (
   `mail_opened` int(11) NOT NULL DEFAULT 0,
   `mail_clicked` int(11) NOT NULL DEFAULT 0,
   `marketing` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2494,7 +2769,7 @@ CREATE TABLE `emailtemplate_shortcode` (
   `emailtemplate_shortcode_type` enum('language','auto','auto_serialize') NOT NULL DEFAULT 'language',
   `emailtemplate_shortcode_example` text NOT NULL,
   `emailtemplate_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2504,7 +2779,7 @@ CREATE TABLE `emailtemplate_shortcode` (
 
 CREATE TABLE `email_emailto` (
   `email` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2515,7 +2790,7 @@ CREATE TABLE `email_emailto` (
 CREATE TABLE `entity_reward` (
   `entity_reward_id` int(11) NOT NULL,
   `entity_id` int(11) NOT NULL,
-  `entity_type` enum('c','m','co','') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `entity_type` enum('c','m','co','') NOT NULL,
   `points` int(11) NOT NULL DEFAULT 0,
   `percent` int(11) NOT NULL DEFAULT 0,
   `date_start` date NOT NULL DEFAULT '0000-00-00',
@@ -2536,7 +2811,7 @@ CREATE TABLE `excluded_asins` (
   `times` int(11) NOT NULL,
   `date_added` datetime NOT NULL,
   `user_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -2548,7 +2823,7 @@ CREATE TABLE `extension` (
   `extension_id` int(11) NOT NULL,
   `type` varchar(32) NOT NULL,
   `code` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2559,7 +2834,7 @@ CREATE TABLE `extension` (
 CREATE TABLE `facategory` (
   `facategory_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2570,7 +2845,7 @@ CREATE TABLE `facategory` (
 CREATE TABLE `facategory_to_faproduct` (
   `facategory_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2581,7 +2856,7 @@ CREATE TABLE `facategory_to_faproduct` (
 CREATE TABLE `faproduct_to_facategory` (
   `product_id` int(11) NOT NULL,
   `facategory_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2604,7 +2879,7 @@ CREATE TABLE `faq_category` (
 CREATE TABLE `faq_category_description` (
   `category_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT ''
+  `name` varchar(255) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- --------------------------------------------------------
@@ -2629,8 +2904,8 @@ CREATE TABLE `faq_question` (
 CREATE TABLE `faq_question_description` (
   `question_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `title` text COLLATE utf8mb3_bin NOT NULL,
-  `description` text COLLATE utf8mb3_bin NOT NULL
+  `title` text NOT NULL,
+  `description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- --------------------------------------------------------
@@ -2641,7 +2916,7 @@ CREATE TABLE `faq_question_description` (
 
 CREATE TABLE `feed_queue` (
   `category_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2653,7 +2928,7 @@ CREATE TABLE `filter` (
   `filter_id` int(11) NOT NULL,
   `filter_group_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2664,7 +2939,7 @@ CREATE TABLE `filter` (
 CREATE TABLE `filterpro_seo` (
   `url` varchar(255) NOT NULL,
   `data` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2677,7 +2952,7 @@ CREATE TABLE `filter_description` (
   `language_id` int(11) NOT NULL,
   `filter_group_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2688,7 +2963,7 @@ CREATE TABLE `filter_description` (
 CREATE TABLE `filter_group` (
   `filter_group_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2700,7 +2975,7 @@ CREATE TABLE `filter_group_description` (
   `filter_group_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2718,7 +2993,7 @@ CREATE TABLE `geo` (
   `lat` double(10,6) NOT NULL,
   `long` float(10,6) NOT NULL,
   `population` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2735,7 +3010,7 @@ CREATE TABLE `geoname_alternatename` (
   `isShortName` tinyint(1) DEFAULT NULL,
   `isColloquial` tinyint(1) DEFAULT NULL,
   `isHistoric` tinyint(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2763,7 +3038,7 @@ CREATE TABLE `geoname_geoname` (
   `gtopo30` int(11) DEFAULT NULL,
   `timezone` varchar(40) DEFAULT NULL,
   `moddate` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2775,7 +3050,7 @@ CREATE TABLE `geo_ip` (
   `start` bigint(20) NOT NULL,
   `end` bigint(20) NOT NULL,
   `geo_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2789,7 +3064,7 @@ CREATE TABLE `geo_zone` (
   `description` varchar(255) NOT NULL,
   `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2800,7 +3075,7 @@ CREATE TABLE `geo_zone` (
 CREATE TABLE `google_base_category` (
   `google_base_category_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2815,7 +3090,7 @@ CREATE TABLE `hj_any_feed_feeds` (
   `version` varchar(64) DEFAULT NULL,
   `preset` int(11) DEFAULT NULL,
   `fields` blob DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2828,7 +3103,7 @@ CREATE TABLE `imagemaps` (
   `module_code` varchar(64) NOT NULL,
   `module_id` int(11) NOT NULL,
   `data` longtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2844,7 +3119,7 @@ CREATE TABLE `information` (
   `image` varchar(255) NOT NULL,
   `igroup` varchar(50) NOT NULL,
   `show_category_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2860,7 +3135,7 @@ CREATE TABLE `information_attribute` (
   `image` varchar(255) NOT NULL,
   `igroup` varchar(50) NOT NULL,
   `show_category_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2877,7 +3152,7 @@ CREATE TABLE `information_attribute_description` (
   `meta_description` text DEFAULT NULL,
   `meta_keyword` text DEFAULT NULL,
   `tag` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2889,7 +3164,7 @@ CREATE TABLE `information_attribute_to_layout` (
   `information_attribute_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2900,7 +3175,7 @@ CREATE TABLE `information_attribute_to_layout` (
 CREATE TABLE `information_attribute_to_store` (
   `information_attribute_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2912,12 +3187,12 @@ CREATE TABLE `information_description` (
   `information_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `title` varchar(64) NOT NULL,
-  `description` longtext NOT NULL,
+  `description` text NOT NULL,
   `seo_title` varchar(255) DEFAULT '',
   `meta_description` text DEFAULT NULL,
   `meta_keyword` text DEFAULT NULL,
   `tag` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2929,7 +3204,7 @@ CREATE TABLE `information_to_layout` (
   `information_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2940,7 +3215,7 @@ CREATE TABLE `information_to_layout` (
 CREATE TABLE `information_to_store` (
   `information_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2957,7 +3232,7 @@ CREATE TABLE `interplusplus` (
   `status` text DEFAULT NULL,
   `date_created` datetime DEFAULT NULL,
   `date_enroled` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -2967,14 +3242,14 @@ CREATE TABLE `interplusplus` (
 
 CREATE TABLE `justin_cities` (
   `city_id` int(11) NOT NULL,
-  `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Descr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Code` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `RegionUuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `RegionDescr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `RegionDescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `SCOATOU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Uuid` varchar(64) NOT NULL,
+  `Descr` varchar(255) NOT NULL,
+  `DescrRU` varchar(255) NOT NULL,
+  `Code` varchar(255) NOT NULL,
+  `RegionUuid` varchar(64) NOT NULL,
+  `RegionDescr` varchar(255) NOT NULL,
+  `RegionDescrRU` varchar(255) NOT NULL,
+  `SCOATOU` varchar(255) NOT NULL,
   `WarehouseCount` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -2986,14 +3261,14 @@ CREATE TABLE `justin_cities` (
 
 CREATE TABLE `justin_city_regions` (
   `region_id` int(11) NOT NULL,
-  `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Descr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Code` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityUuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityDescr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityDescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `SCOATOU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+  `Uuid` varchar(64) NOT NULL,
+  `Descr` varchar(255) NOT NULL,
+  `DescrRU` varchar(255) NOT NULL,
+  `Code` varchar(255) NOT NULL,
+  `CityUuid` varchar(64) NOT NULL,
+  `CityDescr` varchar(255) NOT NULL,
+  `CityDescrRU` varchar(255) NOT NULL,
+  `SCOATOU` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -3004,13 +3279,13 @@ CREATE TABLE `justin_city_regions` (
 
 CREATE TABLE `justin_streets` (
   `street_id` int(11) NOT NULL,
-  `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Code` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Descr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityUuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityDescr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityDescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+  `Uuid` varchar(64) NOT NULL,
+  `Code` varchar(64) NOT NULL,
+  `Descr` varchar(255) NOT NULL,
+  `DescrRU` varchar(255) NOT NULL,
+  `CityUuid` varchar(64) NOT NULL,
+  `CityDescr` varchar(255) NOT NULL,
+  `CityDescrRU` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -3021,31 +3296,31 @@ CREATE TABLE `justin_streets` (
 
 CREATE TABLE `justin_warehouses` (
   `warehouse_id` int(11) NOT NULL,
-  `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Descr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Code` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `RegionUuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityUuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityDescr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityDescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Uuid` varchar(64) NOT NULL,
+  `Descr` varchar(255) NOT NULL,
+  `DescrRU` varchar(255) NOT NULL,
+  `Code` varchar(64) NOT NULL,
+  `RegionUuid` varchar(64) NOT NULL,
+  `CityUuid` varchar(64) NOT NULL,
+  `CityDescr` varchar(255) NOT NULL,
+  `CityDescrRU` varchar(255) NOT NULL,
   `possibility_to_pay_by_card` tinyint(1) NOT NULL,
   `possibility_to_accept_payment` tinyint(1) NOT NULL,
   `availability_of_parcel_locker` tinyint(1) NOT NULL,
-  `Address` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Lat` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Lng` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Address` varchar(500) NOT NULL,
+  `Lat` varchar(32) NOT NULL,
+  `Lng` varchar(32) NOT NULL,
   `departNumber` int(11) NOT NULL,
-  `houseNumber` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `houseNumber` varchar(32) NOT NULL,
   `StatusDepart` int(11) NOT NULL,
   `parcels_without_pay` tinyint(1) NOT NULL,
-  `Monday` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Tuesday` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Wednesday` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Thursday` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Friday` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Saturday` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Sunday` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL
+  `Monday` varchar(32) NOT NULL,
+  `Tuesday` varchar(32) NOT NULL,
+  `Wednesday` varchar(32) NOT NULL,
+  `Thursday` varchar(32) NOT NULL,
+  `Friday` varchar(32) NOT NULL,
+  `Saturday` varchar(32) NOT NULL,
+  `Sunday` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -3056,11 +3331,11 @@ CREATE TABLE `justin_warehouses` (
 
 CREATE TABLE `justin_zones` (
   `zone_id` int(11) NOT NULL,
-  `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Code` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Descr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DescrRu` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `SCOATOU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+  `Uuid` varchar(64) NOT NULL,
+  `Code` varchar(32) NOT NULL,
+  `Descr` varchar(255) NOT NULL,
+  `DescrRu` varchar(255) NOT NULL,
+  `SCOATOU` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -3071,14 +3346,14 @@ CREATE TABLE `justin_zones` (
 
 CREATE TABLE `justin_zone_regions` (
   `region_id` int(11) NOT NULL,
-  `Uuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Code` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Descr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ZoneUuid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ZoneDescr` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ZoneDescrRU` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ZoneType` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+  `Uuid` varchar(64) NOT NULL,
+  `Code` varchar(64) NOT NULL,
+  `Descr` varchar(255) NOT NULL,
+  `DescrRU` varchar(255) NOT NULL,
+  `ZoneUuid` varchar(64) NOT NULL,
+  `ZoneDescr` varchar(255) NOT NULL,
+  `ZoneDescrRU` varchar(255) NOT NULL,
+  `ZoneType` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -3091,7 +3366,7 @@ CREATE TABLE `keyworder` (
   `keyworder_id` int(11) NOT NULL,
   `manufacturer_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3110,7 +3385,7 @@ CREATE TABLE `keyworder_description` (
   `category_status` tinyint(1) NOT NULL DEFAULT 1,
   `keyworder_status` tinyint(1) NOT NULL DEFAULT 1,
   `image` varchar(500) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3125,7 +3400,7 @@ CREATE TABLE `landingpage` (
   `status` tinyint(1) NOT NULL DEFAULT 1,
   `image` varchar(255) NOT NULL,
   `viewed` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3142,7 +3417,7 @@ CREATE TABLE `landingpage_description` (
   `meta_description` text DEFAULT NULL,
   `meta_keyword` text DEFAULT NULL,
   `tag` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3154,7 +3429,7 @@ CREATE TABLE `landingpage_to_layout` (
   `landingpage_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3165,7 +3440,7 @@ CREATE TABLE `landingpage_to_layout` (
 CREATE TABLE `landingpage_to_store` (
   `landingpage_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3188,7 +3463,7 @@ CREATE TABLE `language` (
   `status` tinyint(1) NOT NULL,
   `fasttranslate` longtext NOT NULL,
   `front` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3199,7 +3474,7 @@ CREATE TABLE `language` (
 CREATE TABLE `layout` (
   `layout_id` int(11) NOT NULL,
   `name` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3213,7 +3488,7 @@ CREATE TABLE `layout_route` (
   `store_id` int(11) NOT NULL,
   `route` varchar(255) NOT NULL,
   `template` varchar(500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3231,7 +3506,7 @@ CREATE TABLE `legalperson` (
   `legalperson_legal` tinyint(1) NOT NULL,
   `legalperson_country_id` int(11) NOT NULL,
   `account_info` mediumtext DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3245,7 +3520,7 @@ CREATE TABLE `length_class` (
   `system_key` varchar(100) NOT NULL,
   `amazon_key` varchar(100) NOT NULL,
   `variants` varchar(2048) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3258,7 +3533,7 @@ CREATE TABLE `length_class_description` (
   `language_id` int(11) NOT NULL,
   `title` varchar(32) NOT NULL,
   `unit` varchar(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3277,7 +3552,7 @@ CREATE TABLE `local_supplier_products` (
   `currency` varchar(3) NOT NULL,
   `stock` int(11) NOT NULL,
   `product_xml` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3299,7 +3574,7 @@ CREATE TABLE `manager_kpi` (
   `manager_id` int(11) NOT NULL,
   `date_added` date NOT NULL,
   `kpi_json` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3312,7 +3587,7 @@ CREATE TABLE `manager_order_status_dynamics` (
   `order_status_id` int(11) NOT NULL,
   `date` date NOT NULL,
   `count` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3325,7 +3600,7 @@ CREATE TABLE `manager_order_status_dynamics2` (
   `order_status_id` int(11) NOT NULL,
   `date` date NOT NULL,
   `count` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3349,7 +3624,7 @@ CREATE TABLE `manufacturer` (
   `priceva_enable` tinyint(4) NOT NULL DEFAULT 0,
   `priceva_feed` varchar(32) NOT NULL DEFAULT '0',
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3360,28 +3635,28 @@ CREATE TABLE `manufacturer` (
 CREATE TABLE `manufacturer_description` (
   `manufacturer_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `description` text COLLATE utf8mb3_bin NOT NULL,
-  `alternate_name` longtext COLLATE utf8mb3_bin NOT NULL,
-  `location` varchar(255) COLLATE utf8mb3_bin NOT NULL,
-  `short_description` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `meta_description` varchar(255) COLLATE utf8mb3_bin NOT NULL,
-  `meta_keyword` varchar(255) COLLATE utf8mb3_bin NOT NULL,
+  `description` text NOT NULL,
+  `alternate_name` longtext NOT NULL,
+  `location` varchar(255) NOT NULL,
+  `short_description` varchar(500) NOT NULL,
+  `meta_description` varchar(255) NOT NULL,
+  `meta_keyword` varchar(255) NOT NULL,
   `auto_gen` tinyint(1) NOT NULL DEFAULT 0,
-  `seo_title` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `seo_h1` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `tag` text COLLATE utf8mb3_bin DEFAULT NULL,
-  `products_title` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `products_meta_description` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `collections_title` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `collections_meta_description` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `categories_title` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `categories_meta_description` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `articles_title` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `articles_meta_description` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `newproducts_title` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `newproducts_meta_description` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `special_title` varchar(500) COLLATE utf8mb3_bin NOT NULL,
-  `special_meta_description` varchar(500) COLLATE utf8mb3_bin NOT NULL
+  `seo_title` varchar(255) NOT NULL DEFAULT '',
+  `seo_h1` varchar(255) NOT NULL DEFAULT '',
+  `tag` text DEFAULT NULL,
+  `products_title` varchar(500) NOT NULL,
+  `products_meta_description` varchar(500) NOT NULL,
+  `collections_title` varchar(500) NOT NULL,
+  `collections_meta_description` varchar(500) NOT NULL,
+  `categories_title` varchar(500) NOT NULL,
+  `categories_meta_description` varchar(500) NOT NULL,
+  `articles_title` varchar(500) NOT NULL,
+  `articles_meta_description` varchar(500) NOT NULL,
+  `newproducts_title` varchar(500) NOT NULL,
+  `newproducts_meta_description` varchar(500) NOT NULL,
+  `special_title` varchar(500) NOT NULL,
+  `special_meta_description` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- --------------------------------------------------------
@@ -3401,7 +3676,7 @@ CREATE TABLE `manufacturer_page_content` (
   `type` varchar(20) NOT NULL,
   `content` text NOT NULL,
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3413,7 +3688,7 @@ CREATE TABLE `manufacturer_to_layout` (
   `manufacturer_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3424,7 +3699,7 @@ CREATE TABLE `manufacturer_to_layout` (
 CREATE TABLE `manufacturer_to_store` (
   `manufacturer_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3436,24 +3711,7 @@ CREATE TABLE `maxmind_geo_country` (
   `start` bigint(20) NOT NULL,
   `end` bigint(20) NOT NULL,
   `iso_code_2` varchar(2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `mono_orders`
---
-
-CREATE TABLE `mono_orders` (
-  `Id` int(11) NOT NULL,
-  `InvoiceId` varchar(50) DEFAULT NULL,
-  `OrderId` int(10) DEFAULT NULL,
-  `SecretKey` varchar(51) DEFAULT NULL,
-  `is_refunded` int(10) DEFAULT 0,
-  `amount_refunded` decimal(15,4) DEFAULT 0.0000,
-  `refund_status` varchar(51) DEFAULT NULL,
-  `is_hold` int(10) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3472,7 +3730,7 @@ CREATE TABLE `multi_pay_payment` (
   `description` varchar(250) DEFAULT NULL,
   `order_id` int(11) DEFAULT NULL,
   `customer_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3482,9 +3740,9 @@ CREATE TABLE `multi_pay_payment` (
 
 CREATE TABLE `nauthor` (
   `nauthor_id` int(11) NOT NULL,
-  `adminid` varchar(64) COLLATE utf8mb3_bin NOT NULL,
-  `name` varchar(64) COLLATE utf8mb3_bin NOT NULL,
-  `image` varchar(255) COLLATE utf8mb3_bin DEFAULT NULL
+  `adminid` varchar(64) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `image` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- --------------------------------------------------------
@@ -3496,10 +3754,10 @@ CREATE TABLE `nauthor` (
 CREATE TABLE `nauthor_description` (
   `nauthor_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `ctitle` varchar(255) COLLATE utf8mb3_bin NOT NULL,
-  `description` text COLLATE utf8mb3_bin NOT NULL,
-  `meta_description` varchar(255) COLLATE utf8mb3_bin NOT NULL,
-  `meta_keyword` varchar(255) COLLATE utf8mb3_bin NOT NULL
+  `ctitle` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `meta_description` varchar(255) NOT NULL,
+  `meta_keyword` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- --------------------------------------------------------
@@ -3510,7 +3768,7 @@ CREATE TABLE `nauthor_description` (
 
 CREATE TABLE `ncategory` (
   `ncategory_id` int(11) NOT NULL,
-  `image` varchar(255) COLLATE utf8mb3_bin DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
   `parent_id` int(11) NOT NULL DEFAULT 0,
   `top` tinyint(1) NOT NULL,
   `column` int(11) NOT NULL,
@@ -3529,10 +3787,10 @@ CREATE TABLE `ncategory` (
 CREATE TABLE `ncategory_description` (
   `ncategory_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `name` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `description` text COLLATE utf8mb3_bin NOT NULL,
-  `meta_description` varchar(255) COLLATE utf8mb3_bin NOT NULL,
-  `meta_keyword` varchar(255) COLLATE utf8mb3_bin NOT NULL
+  `name` varchar(255) NOT NULL DEFAULT '',
+  `description` text NOT NULL,
+  `meta_description` varchar(255) NOT NULL,
+  `meta_keyword` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- --------------------------------------------------------
@@ -3569,8 +3827,8 @@ CREATE TABLE `ncomments` (
   `news_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `reply_id` int(11) NOT NULL DEFAULT 0,
-  `author` varchar(64) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `text` text COLLATE utf8mb3_bin NOT NULL,
+  `author` varchar(64) NOT NULL DEFAULT '',
+  `text` text NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 0,
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
@@ -3612,18 +3870,18 @@ CREATE TABLE `news` (
 CREATE TABLE `news_description` (
   `news_id` int(11) NOT NULL DEFAULT 0,
   `language_id` int(11) NOT NULL DEFAULT 0,
-  `title` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `ctitle` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `ctitle` varchar(255) NOT NULL DEFAULT '',
   `description` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
   `description2` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
-  `meta_desc` varchar(255) COLLATE utf8mb3_bin NOT NULL,
-  `meta_key` varchar(255) COLLATE utf8mb3_bin NOT NULL,
+  `meta_desc` varchar(255) NOT NULL,
+  `meta_key` varchar(255) NOT NULL,
   `ntags` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
-  `recipe` text COLLATE utf8mb3_bin NOT NULL,
-  `cfield1` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `cfield2` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `cfield3` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT '',
-  `cfield4` varchar(255) COLLATE utf8mb3_bin NOT NULL DEFAULT ''
+  `recipe` text NOT NULL,
+  `cfield1` varchar(255) NOT NULL DEFAULT '',
+  `cfield2` varchar(255) NOT NULL DEFAULT '',
+  `cfield3` varchar(255) NOT NULL DEFAULT '',
+  `cfield4` varchar(255) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- --------------------------------------------------------
@@ -3638,7 +3896,7 @@ CREATE TABLE `news_gallery` (
   `image` varchar(512) DEFAULT NULL,
   `text` text NOT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3694,8 +3952,8 @@ CREATE TABLE `news_to_store` (
 CREATE TABLE `news_video` (
   `news_video_id` int(11) NOT NULL,
   `news_id` int(11) NOT NULL,
-  `text` text COLLATE utf8mb3_bin NOT NULL,
-  `video` varchar(255) COLLATE utf8mb3_bin DEFAULT NULL,
+  `text` text NOT NULL,
+  `video` varchar(255) DEFAULT NULL,
   `width` int(11) NOT NULL,
   `height` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0
@@ -3737,7 +3995,7 @@ CREATE TABLE `novaposhta_cities` (
   `SpecialCashCheck` tinyint(1) NOT NULL,
   `Warehouse` int(11) NOT NULL,
   `WarehouseCount` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3747,9 +4005,9 @@ CREATE TABLE `novaposhta_cities` (
 
 CREATE TABLE `novaposhta_cities_ww` (
   `CityID` int(11) NOT NULL,
-  `Ref` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Description` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DescriptionRu` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Ref` varchar(64) NOT NULL,
+  `Description` varchar(255) NOT NULL,
+  `DescriptionRu` varchar(255) NOT NULL,
   `Delivery1` int(11) NOT NULL,
   `Delivery2` int(11) NOT NULL,
   `Delivery3` int(11) NOT NULL,
@@ -3757,9 +4015,9 @@ CREATE TABLE `novaposhta_cities_ww` (
   `Delivery5` int(11) NOT NULL,
   `Delivery6` int(11) NOT NULL,
   `Delivery7` int(11) NOT NULL,
-  `Area` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `SettlementType` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `SettlementTypeDescriptionRu` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Area` varchar(64) NOT NULL,
+  `SettlementType` varchar(64) NOT NULL,
+  `SettlementTypeDescriptionRu` varchar(255) NOT NULL,
   `SettlementTypeDescription` int(11) NOT NULL,
   `WarehouseCount` int(11) NOT NULL DEFAULT 0,
   `deliveryPeriod` int(11) NOT NULL
@@ -3773,12 +4031,12 @@ CREATE TABLE `novaposhta_cities_ww` (
 
 CREATE TABLE `novaposhta_streets` (
   `StreetID` int(11) NOT NULL,
-  `Ref` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `CityRef` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Description` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DescriptionRu` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `StreetsTypeRef` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `StreetsType` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+  `Ref` varchar(64) NOT NULL,
+  `CityRef` varchar(64) NOT NULL,
+  `Description` varchar(500) NOT NULL,
+  `DescriptionRu` varchar(500) NOT NULL,
+  `StreetsTypeRef` varchar(255) NOT NULL,
+  `StreetsType` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -3818,7 +4076,7 @@ CREATE TABLE `novaposhta_warehouses` (
   `DistrictCode` varchar(20) NOT NULL,
   `WarehouseStatus` varchar(20) NOT NULL,
   `CategoryOfWarehouse` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3828,10 +4086,10 @@ CREATE TABLE `novaposhta_warehouses` (
 
 CREATE TABLE `novaposhta_zones` (
   `ZoneID` int(11) NOT NULL,
-  `Ref` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Description` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `DescriptionRu` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `AreasCenter` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL
+  `Ref` varchar(64) NOT NULL,
+  `Description` varchar(255) NOT NULL,
+  `DescriptionRu` varchar(255) NOT NULL,
+  `AreasCenter` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -3850,7 +4108,7 @@ CREATE TABLE `ocfilter_option` (
   `image` tinyint(1) NOT NULL DEFAULT 0,
   `status` tinyint(1) NOT NULL DEFAULT 1,
   `sort_order` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3864,7 +4122,7 @@ CREATE TABLE `ocfilter_option_description` (
   `name` varchar(255) NOT NULL DEFAULT '',
   `postfix` varchar(32) NOT NULL DEFAULT '',
   `description` varchar(255) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3875,7 +4133,7 @@ CREATE TABLE `ocfilter_option_description` (
 CREATE TABLE `ocfilter_option_to_category` (
   `option_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3886,7 +4144,7 @@ CREATE TABLE `ocfilter_option_to_category` (
 CREATE TABLE `ocfilter_option_to_store` (
   `option_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3901,7 +4159,7 @@ CREATE TABLE `ocfilter_option_value` (
   `color` varchar(6) NOT NULL DEFAULT '',
   `image` varchar(255) NOT NULL DEFAULT '',
   `sort_order` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3914,7 +4172,7 @@ CREATE TABLE `ocfilter_option_value_description` (
   `option_id` int(11) NOT NULL,
   `language_id` tinyint(4) NOT NULL,
   `name` varchar(255) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3929,7 +4187,7 @@ CREATE TABLE `ocfilter_option_value_to_product` (
   `value_id` bigint(20) NOT NULL,
   `slide_value_min` decimal(15,4) NOT NULL DEFAULT 0.0000,
   `slide_value_max` decimal(15,4) NOT NULL DEFAULT 0.0000
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3943,7 +4201,7 @@ CREATE TABLE `ocfilter_option_value_to_product_description` (
   `option_id` int(11) NOT NULL,
   `language_id` tinyint(4) NOT NULL,
   `description` varchar(255) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3962,7 +4220,7 @@ CREATE TABLE `ocfilter_page` (
   `title` varchar(255) NOT NULL,
   `keyword` varchar(255) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3976,7 +4234,7 @@ CREATE TABLE `oc_feedback` (
   `status` tinyint(1) NOT NULL,
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -3989,7 +4247,7 @@ CREATE TABLE `oc_sms_log` (
   `phone` varchar(255) NOT NULL,
   `text` text NOT NULL,
   `date_send` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4004,7 +4262,7 @@ CREATE TABLE `oc_yandex_category` (
   `level3` varchar(50) NOT NULL,
   `level4` varchar(50) NOT NULL,
   `level5` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=cp1251;
+) ENGINE=InnoDB DEFAULT CHARSET=cp1251 COLLATE=cp1251_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4026,7 +4284,7 @@ CREATE TABLE `option` (
   `option_id` int(11) NOT NULL,
   `type` varchar(32) NOT NULL,
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4038,7 +4296,7 @@ CREATE TABLE `option_description` (
   `option_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4050,7 +4308,7 @@ CREATE TABLE `option_tooltip` (
   `option_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `tooltip` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4063,7 +4321,7 @@ CREATE TABLE `option_value` (
   `option_id` int(11) NOT NULL,
   `image` varchar(255) NOT NULL,
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4076,7 +4334,7 @@ CREATE TABLE `option_value_description` (
   `language_id` int(11) NOT NULL,
   `option_id` int(11) NOT NULL,
   `name` varchar(128) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4141,6 +4399,8 @@ CREATE TABLE `order` (
   `shipping_code` varchar(128) NOT NULL COMMENT 'Метод доставки (код)',
   `comment` longtext NOT NULL COMMENT 'Комментарий покупателя',
   `original_comment` longtext NOT NULL,
+  `costprice` decimal(15,2) NOT NULL,
+  `profitability` decimal(15,1) NOT NULL,
   `total` decimal(15,4) NOT NULL DEFAULT 0.0000 COMMENT 'Итог в основной валюте (EUR)',
   `total_national` decimal(15,4) NOT NULL COMMENT 'Итог в национальной валюте',
   `prepayment` decimal(10,2) NOT NULL COMMENT 'Предоплата в основной валюте (не используется) ',
@@ -4187,7 +4447,7 @@ CREATE TABLE `order` (
   `pay_equire2` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Включить еще какой-то эквайринг (не используется) ',
   `pay_equirePP` tinyint(4) NOT NULL DEFAULT 0 COMMENT 'Включить оплату PayPal',
   `pay_equireLQP` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Включить оплату LiqPay',
-  `pay_equireWPP` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Включить оплату Mono',
+  `pay_equireWPP` tinyint(1) NOT NULL DEFAULT 0,
   `pay_equireMono` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Включить оплату Mono',
   `pay_equireCP` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Включить оплату Concardis Payengine',
   `pay_type` varchar(50) NOT NULL COMMENT 'Тип оплаты (нал, безнал, банк)',
@@ -4239,8 +4499,8 @@ CREATE TABLE `order` (
   `yam_box_id` int(11) NOT NULL,
   `fcheque_link` varchar(1024) NOT NULL,
   `needs_checkboxua` tinyint(1) NOT NULL DEFAULT 0,
-  `paid_by` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `paid_by` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4252,7 +4512,7 @@ CREATE TABLE `order_amazon` (
   `order_id` int(11) NOT NULL,
   `amazon_order_id` varchar(255) NOT NULL,
   `free_shipping` tinyint(4) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4263,7 +4523,7 @@ CREATE TABLE `order_amazon` (
 CREATE TABLE `order_amazon_product` (
   `order_product_id` int(11) NOT NULL,
   `amazon_order_item_code` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4276,7 +4536,7 @@ CREATE TABLE `order_amazon_report` (
   `submission_id` varchar(255) NOT NULL,
   `status` enum('processing','error','success') NOT NULL,
   `text` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4292,7 +4552,7 @@ CREATE TABLE `order_courier_history` (
   `status` varchar(100) NOT NULL,
   `comment` text NOT NULL,
   `json` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4308,7 +4568,7 @@ CREATE TABLE `order_download` (
   `filename` varchar(128) NOT NULL,
   `mask` varchar(128) NOT NULL,
   `remaining` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4323,7 +4583,7 @@ CREATE TABLE `order_field` (
   `name` int(11) NOT NULL,
   `value` text NOT NULL,
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4385,7 +4645,7 @@ CREATE TABLE `order_fraud` (
   `maxmind_id` varchar(8) NOT NULL,
   `error` text NOT NULL,
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4404,7 +4664,7 @@ CREATE TABLE `order_history` (
   `courier` tinyint(1) NOT NULL,
   `yam_status` varchar(32) NOT NULL,
   `yam_substatus` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4421,7 +4681,7 @@ CREATE TABLE `order_invoice_history` (
   `user_id` int(11) NOT NULL,
   `filename` varchar(255) NOT NULL,
   `auto_gen` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4438,7 +4698,7 @@ CREATE TABLE `order_option` (
   `name` varchar(255) NOT NULL,
   `value` text NOT NULL,
   `type` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4479,7 +4739,7 @@ CREATE TABLE `order_product` (
   `sort_order` int(11) NOT NULL,
   `totals_json` text NOT NULL,
   `date_added_fo` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4494,7 +4754,7 @@ CREATE TABLE `order_product_bought` (
   `quantity` int(11) NOT NULL,
   `price` decimal(14,2) NOT NULL,
   `supplier` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4521,7 +4781,7 @@ CREATE TABLE `order_product_history` (
   `tax` decimal(15,4) NOT NULL DEFAULT 0.0000,
   `reward` int(11) NOT NULL,
   `from_stock` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4558,7 +4818,7 @@ CREATE TABLE `order_product_nogood` (
   `waitlist` tinyint(1) NOT NULL DEFAULT 1,
   `supplier_has` tinyint(1) NOT NULL DEFAULT 0,
   `new_order_id` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4573,7 +4833,7 @@ CREATE TABLE `order_product_reserves` (
   `country_code` varchar(3) NOT NULL,
   `not_changeable` tinyint(1) NOT NULL DEFAULT 0,
   `uuid` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4595,7 +4855,7 @@ CREATE TABLE `order_product_supply` (
   `currency` varchar(5) NOT NULL,
   `url` text NOT NULL,
   `comment` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4609,7 +4869,7 @@ CREATE TABLE `order_product_tracker` (
   `quantity` int(11) NOT NULL,
   `order_product_status` varchar(255) NOT NULL,
   `date_added` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4650,7 +4910,7 @@ CREATE TABLE `order_product_untaken` (
   `sort_order` int(11) NOT NULL,
   `totals_json` text NOT NULL,
   `date_added_fo` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4671,7 +4931,7 @@ CREATE TABLE `order_receipt` (
   `sent_dps_at` varchar(64) NOT NULL,
   `all_json_data` mediumtext NOT NULL,
   `type` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4700,7 +4960,7 @@ CREATE TABLE `order_recurring` (
   `trial_duration` smallint(6) NOT NULL,
   `trial_price` decimal(10,4) NOT NULL,
   `profile_reference` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4714,7 +4974,7 @@ CREATE TABLE `order_recurring_transaction` (
   `created` datetime NOT NULL,
   `amount` decimal(10,4) NOT NULL,
   `type` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4726,7 +4986,7 @@ CREATE TABLE `order_reject_reason` (
   `reject_reason_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4737,7 +4997,7 @@ CREATE TABLE `order_reject_reason` (
 CREATE TABLE `order_related` (
   `order_id` int(11) NOT NULL,
   `related_order_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4751,7 +5011,7 @@ CREATE TABLE `order_save_history` (
   `user_id` int(11) NOT NULL,
   `datetime` datetime NOT NULL,
   `data` longtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4781,7 +5041,7 @@ CREATE TABLE `order_set` (
   `total_national` decimal(15,2) NOT NULL,
   `tax` decimal(15,4) NOT NULL DEFAULT 0.0000,
   `reward` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4813,7 +5073,7 @@ CREATE TABLE `order_simple_fields` (
   `test_field` text DEFAULT NULL,
   `newsletter_news` int(11) NOT NULL,
   `newsletter_personal` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4831,7 +5091,7 @@ CREATE TABLE `order_sms_history` (
   `comment` text NOT NULL,
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `is_ttn` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4847,7 +5107,7 @@ CREATE TABLE `order_status` (
   `status_txt_color` varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT '',
   `status_fa_icon` varchar(50) NOT NULL,
   `front_bg_color` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4858,7 +5118,7 @@ CREATE TABLE `order_status` (
 CREATE TABLE `order_status_linked` (
   `order_status_id` int(11) NOT NULL,
   `linked_order_status_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4876,7 +5136,7 @@ CREATE TABLE `order_total` (
   `value_national` decimal(15,4) NOT NULL,
   `sort_order` int(11) NOT NULL,
   `for_delivery` smallint(6) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4888,7 +5148,7 @@ CREATE TABLE `order_total_tax` (
   `order_total_id` int(11) NOT NULL DEFAULT 0,
   `code` varchar(255) DEFAULT NULL,
   `tax` decimal(10,4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4898,7 +5158,20 @@ CREATE TABLE `order_total_tax` (
 
 CREATE TABLE `order_to_1c_queue` (
   `order_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_to_sdek`
+--
+
+CREATE TABLE `order_to_sdek` (
+  `order_to_sdek_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `cityId` int(11) NOT NULL,
+  `pvz_code` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4911,7 +5184,7 @@ CREATE TABLE `order_tracker` (
   `order_id` int(11) NOT NULL,
   `order_status` varchar(255) NOT NULL,
   `date_added` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4925,7 +5198,7 @@ CREATE TABLE `order_tracker_sms` (
   `partie_num` varchar(10) NOT NULL,
   `tracker_type` varchar(20) NOT NULL,
   `date_sent` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4945,7 +5218,21 @@ CREATE TABLE `order_ttns` (
   `taken` tinyint(1) DEFAULT 0,
   `rejected` tinyint(1) NOT NULL DEFAULT 0,
   `waiting` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_ukrcredits`
+--
+
+CREATE TABLE `order_ukrcredits` (
+  `order_id` int(11) NOT NULL,
+  `ukrcredits_payment_type` varchar(2) NOT NULL,
+  `ukrcredits_order_id` varchar(64) NOT NULL,
+  `ukrcredits_order_status` varchar(64) NOT NULL,
+  `ukrcredits_order_substatus` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4966,7 +5253,7 @@ CREATE TABLE `order_voucher` (
   `voucher_theme_id` int(11) NOT NULL,
   `message` text NOT NULL,
   `amount` decimal(15,4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4979,7 +5266,7 @@ CREATE TABLE `parser_queue` (
   `manufacturer_id` int(11) NOT NULL,
   `add_date` datetime NOT NULL,
   `processed` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -4991,7 +5278,7 @@ CREATE TABLE `pavoslidergroups` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `params` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5009,7 +5296,89 @@ CREATE TABLE `pavosliderlayers` (
   `image` varchar(255) NOT NULL,
   `status` tinyint(1) NOT NULL,
   `position` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `paypal_iframe_order`
+--
+
+CREATE TABLE `paypal_iframe_order` (
+  `paypal_iframe_order_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  `capture_status` enum('Complete','NotComplete') DEFAULT NULL,
+  `currency_code` char(3) NOT NULL,
+  `authorization_id` varchar(30) NOT NULL,
+  `total` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `paypal_iframe_order_transaction`
+--
+
+CREATE TABLE `paypal_iframe_order_transaction` (
+  `paypal_iframe_order_transaction_id` int(11) NOT NULL,
+  `paypal_iframe_order_id` int(11) NOT NULL,
+  `transaction_id` char(20) NOT NULL,
+  `parent_transaction_id` char(20) NOT NULL,
+  `created` datetime NOT NULL,
+  `note` varchar(255) NOT NULL,
+  `msgsubid` char(38) NOT NULL,
+  `receipt_id` char(20) NOT NULL,
+  `payment_type` enum('none','echeck','instant','refund','void') DEFAULT NULL,
+  `payment_status` char(20) NOT NULL,
+  `pending_reason` char(50) NOT NULL,
+  `transaction_entity` char(50) NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `debug_data` text NOT NULL,
+  `call_data` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `paypal_order`
+--
+
+CREATE TABLE `paypal_order` (
+  `paypal_order_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  `capture_status` enum('Complete','NotComplete') DEFAULT NULL,
+  `currency_code` char(3) NOT NULL,
+  `authorization_id` varchar(30) NOT NULL,
+  `total` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `paypal_order_transaction`
+--
+
+CREATE TABLE `paypal_order_transaction` (
+  `paypal_order_transaction_id` int(11) NOT NULL,
+  `paypal_order_id` int(11) NOT NULL,
+  `transaction_id` char(20) NOT NULL,
+  `parent_transaction_id` char(20) NOT NULL,
+  `created` datetime NOT NULL,
+  `note` varchar(255) NOT NULL,
+  `msgsubid` char(38) NOT NULL,
+  `receipt_id` char(20) NOT NULL,
+  `payment_type` enum('none','echeck','instant','refund','void') DEFAULT NULL,
+  `payment_status` char(20) NOT NULL,
+  `pending_reason` char(50) NOT NULL,
+  `transaction_entity` char(50) NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `debug_data` text NOT NULL,
+  `call_data` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5020,12 +5389,12 @@ CREATE TABLE `pavosliderlayers` (
 CREATE TABLE `priceva_data` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
-  `name` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `articul` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `category_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `brand_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `default_currency` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(512) NOT NULL,
+  `articul` varchar(255) NOT NULL,
+  `category_name` varchar(255) NOT NULL,
+  `brand_name` varchar(255) NOT NULL,
+  `url` varchar(1024) NOT NULL,
+  `default_currency` varchar(5) NOT NULL,
   `default_price` decimal(15,2) NOT NULL,
   `default_available` tinyint(1) NOT NULL,
   `default_discount` decimal(15,2) NOT NULL,
@@ -5041,13 +5410,13 @@ CREATE TABLE `priceva_data` (
 CREATE TABLE `priceva_sources` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
-  `url` varchar(2048) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url_md5` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `company_name` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `region_name` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `url` varchar(2048) NOT NULL,
+  `url_md5` varchar(64) NOT NULL,
+  `company_name` varchar(512) NOT NULL,
+  `region_name` varchar(512) NOT NULL,
   `active` tinyint(1) NOT NULL,
   `status` tinyint(1) NOT NULL,
-  `currency` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `currency` varchar(5) NOT NULL,
   `last_check_date` datetime NOT NULL,
   `relevance_status` int(11) NOT NULL DEFAULT 0,
   `price` decimal(15,2) NOT NULL,
@@ -5098,6 +5467,8 @@ CREATE TABLE `product` (
   `collection_id` bigint(20) NOT NULL,
   `shipping` tinyint(1) NOT NULL DEFAULT 1,
   `cost` decimal(15,2) NOT NULL,
+  `costprice` decimal(15,2) NOT NULL,
+  `profitability` decimal(15,1) NOT NULL,
   `actual_cost` decimal(15,2) NOT NULL DEFAULT 0.00,
   `actual_cost_date` date NOT NULL DEFAULT '0000-00-00',
   `price` decimal(15,2) NOT NULL DEFAULT 0.00,
@@ -5161,8 +5532,12 @@ CREATE TABLE `product` (
   `min_buy` int(11) NOT NULL,
   `max_buy` int(11) NOT NULL,
   `can_be_presented` tinyint(1) NOT NULL,
-  `bought_for_week` int(11) NOT NULL,
-  `bought_for_month` int(11) NOT NULL,
+  `bought_for_week` int(11) DEFAULT NULL,
+  `bought_for_month` int(11) DEFAULT NULL,
+  `bought_for_3month` int(11) DEFAULT NULL,
+  `bought_for_6month` int(11) DEFAULT NULL,
+  `bought_for_12month` int(11) DEFAULT NULL,
+  `bought_for_alltime` int(11) DEFAULT NULL,
   `big_business` tinyint(1) NOT NULL DEFAULT 0,
   `is_markdown` int(11) NOT NULL,
   `markdown_product_id` int(11) NOT NULL,
@@ -5182,15 +5557,15 @@ CREATE TABLE `product` (
   `amzn_last_search` date DEFAULT NULL COMMENT 'Дата последнего обновления данных Amazon',
   `amzn_no_offers` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Нет предложений на Amazon',
   `amzn_no_offers_counter` int(11) NOT NULL DEFAULT 0,
-  `amzn_offers_count` int(11) NOT NULL DEFAULT 0 COMMENT 'Количество офферов на Amazon',
+  `amzn_offers_count` int(11) NOT NULL,
   `amzn_last_offers` datetime NOT NULL COMMENT 'Дата и время последнего обновления офферов Amazon',
   `amzn_ignore` tinyint(1) NOT NULL COMMENT 'Не обновлять цену с Amazon',
   `amzn_rating` decimal(15,2) NOT NULL,
-  `amazon_best_price` decimal(15,2) NOT NULL DEFAULT 0.00 COMMENT 'Лучший оффер на Amazon',
+  `amazon_best_price` decimal(15,4) NOT NULL DEFAULT 0.0000 COMMENT 'Лучший оффер на Amazon',
   `amazon_lowest_price` decimal(15,2) NOT NULL,
   `added_from_amazon` tinyint(1) NOT NULL DEFAULT 0,
   `fill_from_amazon` tinyint(1) NOT NULL DEFAULT 0,
-  `filled_from_amazon` tinyint(1) NOT NULL DEFAULT 0,
+  `filled_from_amazon` tinyint(1) DEFAULT 0,
   `description_filled_from_amazon` tinyint(4) NOT NULL DEFAULT 0,
   `amazon_product_link` varchar(1024) DEFAULT NULL,
   `amazon_product_image` varchar(1024) DEFAULT NULL,
@@ -5198,11 +5573,11 @@ CREATE TABLE `product` (
   `variant_1_is_color` tinyint(1) DEFAULT 0,
   `variant_2_is_color` tinyint(1) DEFAULT 0,
   `display_in_catalog` tinyint(1) DEFAULT 0,
-  `reviews_parsed` tinyint(1) NOT NULL DEFAULT 0,
+  `reviews_parsed` tinyint(1) NOT NULL,
   `xrating` decimal(15,2) DEFAULT 0.00,
   `xreviews` int(11) DEFAULT 0,
   `xhasvideo` tinyint(1) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5224,7 +5599,7 @@ CREATE TABLE `product_additional_offer` (
   `date_end` date NOT NULL DEFAULT '0000-00-00',
   `image` varchar(255) NOT NULL,
   `description` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5246,7 +5621,7 @@ CREATE TABLE `product_additional_offer_to_store` (
 CREATE TABLE `product_also_bought` (
   `product_id` int(11) NOT NULL,
   `also_bought_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -5257,7 +5632,7 @@ CREATE TABLE `product_also_bought` (
 CREATE TABLE `product_also_viewed` (
   `product_id` int(11) NOT NULL,
   `also_viewed_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -5267,9 +5642,9 @@ CREATE TABLE `product_also_viewed` (
 
 CREATE TABLE `product_amzn_data` (
   `product_id` int(11) NOT NULL,
-  `asin` varchar(255) COLLATE utf8mb3_bin NOT NULL,
-  `file` varchar(512) COLLATE utf8mb3_bin NOT NULL,
-  `json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
+  `asin` varchar(255) NOT NULL,
+  `file` varchar(512) NOT NULL,
+  `json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`json`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- --------------------------------------------------------
@@ -5280,25 +5655,25 @@ CREATE TABLE `product_amzn_data` (
 
 CREATE TABLE `product_amzn_offers` (
   `amazon_offer_id` int(11) NOT NULL,
-  `asin` varchar(128) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `priceCurrency` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `asin` varchar(128) NOT NULL,
+  `priceCurrency` varchar(5) NOT NULL,
   `priceAmount` decimal(15,2) NOT NULL,
-  `importFeeCurrency` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `importFeeCurrency` varchar(5) NOT NULL,
   `importFeeAmount` decimal(15,2) NOT NULL,
-  `deliveryCurrency` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deliveryCurrency` varchar(5) NOT NULL,
   `deliveryAmount` decimal(15,2) NOT NULL,
   `deliveryIsFree` tinyint(1) NOT NULL,
   `deliveryIsFba` tinyint(1) NOT NULL,
   `deliveryIsShippedCrossBorder` tinyint(1) NOT NULL,
-  `deliveryComments` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `deliveryComments` varchar(512) NOT NULL,
   `minDays` int(11) NOT NULL,
   `deliveryFrom` date NOT NULL,
   `deliveryTo` date NOT NULL,
   `conditionIsNew` tinyint(1) NOT NULL,
-  `conditionTitle` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `conditionComments` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `sellerName` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `sellerLink` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `conditionTitle` varchar(512) NOT NULL,
+  `conditionComments` varchar(512) NOT NULL,
+  `sellerName` varchar(512) NOT NULL,
+  `sellerLink` varchar(1024) NOT NULL,
   `sellerRating50` int(11) NOT NULL,
   `sellerRatingsTotal` int(11) NOT NULL,
   `sellerPositiveRatings100` int(11) NOT NULL,
@@ -5308,7 +5683,7 @@ CREATE TABLE `product_amzn_offers` (
   `isBuyBoxWinner` tinyint(1) NOT NULL DEFAULT 0,
   `isBestOffer` tinyint(1) NOT NULL,
   `offerRating` decimal(15,2) NOT NULL,
-  `offer_id` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL
+  `offer_id` varchar(512) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -5320,7 +5695,7 @@ CREATE TABLE `product_amzn_offers` (
 CREATE TABLE `product_anyrelated` (
   `product_id` int(11) NOT NULL,
   `anyrelated_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5333,7 +5708,21 @@ CREATE TABLE `product_attribute` (
   `attribute_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `text` varchar(1024) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_barbara_tab`
+--
+
+CREATE TABLE `product_barbara_tab` (
+  `product_additional_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `name` text NOT NULL,
+  `description` text NOT NULL,
+  `sort_order` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5344,7 +5733,7 @@ CREATE TABLE `product_attribute` (
 CREATE TABLE `product_child` (
   `product_id` int(11) NOT NULL,
   `child_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5356,7 +5745,7 @@ CREATE TABLE `product_costs` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `cost` decimal(15,2) NOT NULL,
-  `currency` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `currency` varchar(5) NOT NULL,
   `min_sale_price` decimal(15,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -5369,7 +5758,7 @@ CREATE TABLE `product_costs` (
 CREATE TABLE `product_description` (
   `product_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `name` varchar(1024) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `short_name_d` varchar(50) NOT NULL,
   `name_of_option` varchar(255) NOT NULL,
   `description` text NOT NULL,
@@ -5394,7 +5783,7 @@ CREATE TABLE `product_description` (
   `alt_image` text DEFAULT NULL,
   `title_image` text DEFAULT NULL,
   `manufacturer_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5412,7 +5801,7 @@ CREATE TABLE `product_discount` (
   `points` decimal(15,4) NOT NULL,
   `date_start` date NOT NULL DEFAULT '0000-00-00',
   `date_end` date NOT NULL DEFAULT '0000-00-00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5425,7 +5814,7 @@ CREATE TABLE `product_feature` (
   `feature_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `text` varchar(2048) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5436,7 +5825,7 @@ CREATE TABLE `product_feature` (
 CREATE TABLE `product_filter` (
   `product_id` int(11) NOT NULL,
   `filter_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5450,7 +5839,7 @@ CREATE TABLE `product_front_price` (
   `price` decimal(15,2) NOT NULL,
   `special` decimal(15,2) NOT NULL,
   `reward` decimal(15,2) NOT NULL,
-  `currency` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL
+  `currency` varchar(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -5464,7 +5853,7 @@ CREATE TABLE `product_image` (
   `product_id` int(11) NOT NULL,
   `image` varchar(255) DEFAULT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5476,7 +5865,7 @@ CREATE TABLE `product_master` (
   `master_product_id` int(11) NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
   `special_attribute_group_id` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5490,7 +5879,7 @@ CREATE TABLE `product_option` (
   `option_id` int(11) NOT NULL,
   `option_value` text NOT NULL,
   `required` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5517,7 +5906,7 @@ CREATE TABLE `product_option_value` (
   `ob_image` varchar(255) NOT NULL DEFAULT '',
   `ob_sku_override` int(11) NOT NULL DEFAULT 0,
   `this_is_product_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5529,9 +5918,9 @@ CREATE TABLE `product_price_history` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `price` int(11) NOT NULL,
-  `currency` varchar(8) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `source` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `currency` varchar(8) NOT NULL,
+  `type` varchar(64) NOT NULL,
+  `source` varchar(64) NOT NULL,
   `date_added` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -5549,7 +5938,7 @@ CREATE TABLE `product_price_national_to_store` (
   `currency` varchar(4) NOT NULL,
   `dot_not_overload_1c` tinyint(1) NOT NULL DEFAULT 0,
   `settled_from_1c` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5565,7 +5954,7 @@ CREATE TABLE `product_price_national_to_store1` (
   `currency` varchar(4) NOT NULL,
   `dot_not_overload_1c` tinyint(1) NOT NULL DEFAULT 0,
   `settled_from_1c` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5581,7 +5970,7 @@ CREATE TABLE `product_price_national_to_yam` (
   `currency` varchar(4) NOT NULL,
   `dot_not_overload_1c` tinyint(1) NOT NULL DEFAULT 0,
   `settled_from_1c` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5597,7 +5986,7 @@ CREATE TABLE `product_price_to_store` (
   `special` decimal(15,2) NOT NULL,
   `settled_from_1c` tinyint(1) NOT NULL DEFAULT 0,
   `dot_not_overload_1c` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5612,7 +6001,7 @@ CREATE TABLE `product_product_option` (
   `type` varchar(32) NOT NULL,
   `required` tinyint(1) NOT NULL,
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5626,7 +6015,7 @@ CREATE TABLE `product_product_option_value` (
   `product_id` int(11) NOT NULL,
   `product_option_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5638,7 +6027,7 @@ CREATE TABLE `product_profile` (
   `product_id` int(11) NOT NULL,
   `profile_id` int(11) NOT NULL,
   `customer_group_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5654,7 +6043,7 @@ CREATE TABLE `product_purchase` (
   `price` decimal(15,2) NOT NULL,
   `currency` varchar(3) NOT NULL,
   `date_added` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -5665,7 +6054,7 @@ CREATE TABLE `product_purchase` (
 CREATE TABLE `product_recurring` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5677,7 +6066,7 @@ CREATE TABLE `product_related` (
   `product_id` int(11) NOT NULL,
   `related_id` int(11) NOT NULL,
   `auto_gen` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5688,7 +6077,7 @@ CREATE TABLE `product_related` (
 CREATE TABLE `product_related_set` (
   `product_id` int(11) NOT NULL,
   `related_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5707,7 +6096,7 @@ CREATE TABLE `product_reward` (
   `coupon_acts` tinyint(1) NOT NULL DEFAULT 0,
   `date_start` date NOT NULL DEFAULT '0000-00-00',
   `date_end` date NOT NULL DEFAULT '0000-00-00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5718,7 +6107,7 @@ CREATE TABLE `product_reward` (
 CREATE TABLE `product_shop_by_look` (
   `product_id` int(11) NOT NULL,
   `shop_by_look_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -5729,7 +6118,7 @@ CREATE TABLE `product_shop_by_look` (
 CREATE TABLE `product_similar` (
   `product_id` int(11) NOT NULL,
   `similar_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -5740,7 +6129,7 @@ CREATE TABLE `product_similar` (
 CREATE TABLE `product_similar_to_consider` (
   `product_id` int(11) NOT NULL,
   `similar_to_consider_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -5753,7 +6142,7 @@ CREATE TABLE `product_sources` (
   `product_id` int(11) NOT NULL,
   `source` varchar(500) NOT NULL,
   `supplier_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5777,7 +6166,7 @@ CREATE TABLE `product_special` (
   `set_by_stock` tinyint(1) NOT NULL DEFAULT 0,
   `set_by_stock_illiquid` tinyint(1) NOT NULL DEFAULT 0,
   `date_settled_by_stock` date NOT NULL DEFAULT '0000-00-00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5789,7 +6178,7 @@ CREATE TABLE `product_special_attribute` (
   `product_special_attribute_id` int(10) UNSIGNED NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
   `special_attribute_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=cp1251;
+) ENGINE=InnoDB DEFAULT CHARSET=cp1251 COLLATE=cp1251_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5810,7 +6199,7 @@ CREATE TABLE `product_special_backup` (
   `date_end` date NOT NULL DEFAULT '0000-00-00',
   `parser_info_price` date NOT NULL,
   `set_by_stock` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5821,7 +6210,7 @@ CREATE TABLE `product_special_backup` (
 CREATE TABLE `product_sponsored` (
   `product_id` int(11) NOT NULL,
   `sponsored_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -5835,7 +6224,7 @@ CREATE TABLE `product_status` (
   `product_show` int(11) NOT NULL,
   `category_show` tinyint(1) NOT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5853,7 +6242,7 @@ CREATE TABLE `product_sticker` (
   `available` int(11) NOT NULL,
   `type` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5866,7 +6255,7 @@ CREATE TABLE `product_stock_limits` (
   `store_id` int(11) NOT NULL,
   `min_stock` int(11) NOT NULL DEFAULT 0,
   `rec_stock` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5893,7 +6282,7 @@ CREATE TABLE `product_stock_waits` (
   `quantity_stockK` int(11) NOT NULL DEFAULT 0,
   `quantity_stockMN` int(11) NOT NULL DEFAULT 0,
   `quantity_stockAS` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -5905,8 +6294,8 @@ CREATE TABLE `product_tab` (
   `tab_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 0,
-  `type` enum('default','regular','reserved') COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT 'regular',
-  `key` varchar(128) COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT '',
+  `type` enum('default','regular','reserved') NOT NULL DEFAULT 'regular',
+  `key` varchar(128) NOT NULL DEFAULT '',
   `login` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
@@ -5920,7 +6309,7 @@ CREATE TABLE `product_tab_content` (
   `product_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `tab_id` int(11) NOT NULL,
-  `content` text COLLATE utf8mb3_unicode_ci NOT NULL
+  `content` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 -- --------------------------------------------------------
@@ -5932,7 +6321,7 @@ CREATE TABLE `product_tab_content` (
 CREATE TABLE `product_tab_default` (
   `tab_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `content` text COLLATE utf8mb3_unicode_ci NOT NULL
+  `content` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 -- --------------------------------------------------------
@@ -5944,7 +6333,7 @@ CREATE TABLE `product_tab_default` (
 CREATE TABLE `product_tab_name` (
   `tab_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `name` varchar(64) COLLATE utf8mb3_unicode_ci NOT NULL
+  `name` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 -- --------------------------------------------------------
@@ -6041,7 +6430,7 @@ CREATE TABLE `product_tmp` (
   `bought_for_week` int(11) NOT NULL,
   `bought_for_month` int(11) NOT NULL,
   `big_business` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6054,7 +6443,7 @@ CREATE TABLE `product_to_category` (
   `category_id` int(11) NOT NULL,
   `main_category` int(11) NOT NULL DEFAULT 0,
   `sort_order` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6065,7 +6454,7 @@ CREATE TABLE `product_to_category` (
 CREATE TABLE `product_to_download` (
   `product_id` int(11) NOT NULL,
   `download_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6077,7 +6466,7 @@ CREATE TABLE `product_to_layout` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `layout_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6095,7 +6484,7 @@ CREATE TABLE `product_to_set` (
   `present` int(11) DEFAULT NULL,
   `show_in_product` int(11) DEFAULT NULL,
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6106,7 +6495,7 @@ CREATE TABLE `product_to_set` (
 CREATE TABLE `product_to_store` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6123,13 +6512,38 @@ CREATE TABLE `product_to_tab` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `product_ukrcredits`
+--
+
+CREATE TABLE `product_ukrcredits` (
+  `product_id` int(11) NOT NULL,
+  `product_pp` int(1) NOT NULL,
+  `product_ii` int(1) NOT NULL,
+  `product_mb` int(1) NOT NULL,
+  `partscount_pp` int(2) NOT NULL,
+  `partscount_ii` int(2) NOT NULL,
+  `partscount_mb` int(2) NOT NULL,
+  `markup_pp` decimal(15,4) NOT NULL,
+  `markup_ii` decimal(15,4) NOT NULL,
+  `markup_mb` decimal(15,4) NOT NULL,
+  `special_pp` int(1) NOT NULL,
+  `special_ii` int(1) NOT NULL,
+  `special_mb` int(1) NOT NULL,
+  `discount_pp` int(1) NOT NULL,
+  `discount_ii` int(1) NOT NULL,
+  `discount_mb` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `product_variants`
 --
 
 CREATE TABLE `product_variants` (
   `main_asin` varchar(32) NOT NULL,
   `variant_asin` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -6140,7 +6554,7 @@ CREATE TABLE `product_variants` (
 CREATE TABLE `product_variants_ids` (
   `product_id` int(11) NOT NULL,
   `variant_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -6154,7 +6568,7 @@ CREATE TABLE `product_video` (
   `image` varchar(255) DEFAULT NULL,
   `video` varchar(1024) DEFAULT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6167,7 +6581,7 @@ CREATE TABLE `product_video_description` (
   `product_id` int(11) NOT NULL,
   `language_id` varchar(255) DEFAULT NULL,
   `title` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6178,7 +6592,7 @@ CREATE TABLE `product_video_description` (
 CREATE TABLE `product_view_to_purchase` (
   `product_id` int(11) NOT NULL,
   `view_to_purchase_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -6189,10 +6603,10 @@ CREATE TABLE `product_view_to_purchase` (
 CREATE TABLE `product_yam_data` (
   `product_id` int(11) NOT NULL,
   `yam_real_price` decimal(15,2) NOT NULL,
-  `yam_hidings` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `yam_category_name` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `yam_hidings` text NOT NULL,
+  `yam_category_name` varchar(1024) NOT NULL,
   `yam_category_id` int(11) NOT NULL,
-  `yam_fees` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `yam_fees` text NOT NULL,
   `AGENCY_COMMISSION` decimal(15,2) NOT NULL,
   `FEE` decimal(15,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -6206,7 +6620,7 @@ CREATE TABLE `product_yam_data` (
 CREATE TABLE `product_yam_recommended_prices` (
   `product_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
-  `currency` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `currency` varchar(5) NOT NULL,
   `BUYBOX` decimal(15,2) NOT NULL,
   `DEFAULT_OFFER` decimal(15,2) NOT NULL,
   `MIN_PRICE_MARKET` decimal(15,2) NOT NULL,
@@ -6233,7 +6647,7 @@ CREATE TABLE `profile` (
   `trial_frequency` enum('day','week','semi_month','month','year') NOT NULL,
   `trial_duration` int(10) UNSIGNED NOT NULL,
   `trial_cycle` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6245,7 +6659,7 @@ CREATE TABLE `profile_description` (
   `profile_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6256,7 +6670,7 @@ CREATE TABLE `profile_description` (
 CREATE TABLE `queue_mail` (
   `queue_mail_id` int(11) NOT NULL,
   `body` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6268,7 +6682,7 @@ CREATE TABLE `queue_push` (
   `queue_push_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
   `body` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6279,7 +6693,7 @@ CREATE TABLE `queue_push` (
 CREATE TABLE `queue_sms` (
   `queue_sms_id` int(11) NOT NULL,
   `body` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6290,8 +6704,8 @@ CREATE TABLE `queue_sms` (
 CREATE TABLE `redirect` (
   `redirect_id` int(11) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 0,
-  `from_url` varchar(600) COLLATE utf8mb3_bin NOT NULL,
-  `to_url` varchar(600) COLLATE utf8mb3_bin NOT NULL,
+  `from_url` varchar(600) NOT NULL,
+  `to_url` varchar(600) NOT NULL,
   `response_code` int(11) NOT NULL DEFAULT 301,
   `date_start` date NOT NULL DEFAULT '0000-00-00',
   `date_end` date NOT NULL DEFAULT '0000-00-00',
@@ -6309,7 +6723,7 @@ CREATE TABLE `referrer_patterns` (
   `name` varchar(128) NOT NULL,
   `url_mask` varchar(256) NOT NULL,
   `url_param` varchar(256) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6346,7 +6760,7 @@ CREATE TABLE `return` (
   `date_modified` datetime NOT NULL,
   `to_supplier` tinyint(4) NOT NULL DEFAULT 0,
   `reorder_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6358,7 +6772,7 @@ CREATE TABLE `return_action` (
   `return_action_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL DEFAULT 0,
   `name` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6373,7 +6787,7 @@ CREATE TABLE `return_history` (
   `notify` tinyint(1) NOT NULL,
   `comment` text NOT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6385,7 +6799,7 @@ CREATE TABLE `return_reason` (
   `return_reason_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL DEFAULT 0,
   `name` varchar(128) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6397,7 +6811,7 @@ CREATE TABLE `return_status` (
   `return_status_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL DEFAULT 0,
   `name` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6408,8 +6822,8 @@ CREATE TABLE `return_status` (
 CREATE TABLE `review` (
   `review_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
-  `parent_id` int(11) NOT NULL DEFAULT 0,
-  `sorthex` int(11) NOT NULL DEFAULT 0,
+  `parent_id` int(11) NOT NULL,
+  `sorthex` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
   `author` varchar(255) NOT NULL,
   `text` text NOT NULL,
@@ -6425,7 +6839,7 @@ CREATE TABLE `review` (
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `auto_gen` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6436,10 +6850,10 @@ CREATE TABLE `review` (
 CREATE TABLE `review_description` (
   `review_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `text` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `answer` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `bads` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `good` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL
+  `text` mediumtext NOT NULL,
+  `answer` mediumtext NOT NULL,
+  `bads` mediumtext NOT NULL,
+  `good` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -6452,7 +6866,7 @@ CREATE TABLE `review_fields` (
   `review_id` int(11) NOT NULL,
   `mark` varchar(255) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `comm_comfort` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6464,7 +6878,7 @@ CREATE TABLE `review_name` (
   `review_name_id` int(11) NOT NULL,
   `l_code` varchar(5) DEFAULT NULL,
   `text` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6476,7 +6890,7 @@ CREATE TABLE `review_template` (
   `review_template_id` int(11) NOT NULL,
   `l_code` varchar(5) DEFAULT NULL,
   `text` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6485,7 +6899,7 @@ CREATE TABLE `review_template` (
 --
 
 CREATE TABLE `search_history` (
-  `text` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `text` varchar(500) NOT NULL,
   `times` int(11) NOT NULL,
   `results` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -6515,7 +6929,7 @@ CREATE TABLE `segments` (
   `avg_csi` float(2,1) NOT NULL,
   `new_days` int(11) NOT NULL DEFAULT 7,
   `group` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6534,7 +6948,7 @@ CREATE TABLE `segments_dynamics` (
   `order_good_to_bad` int(11) NOT NULL,
   `avg_csi` float(2,1) NOT NULL,
   `date_added` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6550,7 +6964,7 @@ CREATE TABLE `seocities` (
   `seocity_phone2` varchar(255) NOT NULL,
   `seocity_delivery_info` varchar(255) NOT NULL,
   `store_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6562,7 +6976,7 @@ CREATE TABLE `seo_hreflang` (
   `language_id` int(11) NOT NULL,
   `query` varchar(255) NOT NULL,
   `url` varchar(500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6583,7 +6997,7 @@ CREATE TABLE `set` (
   `date_added` datetime NOT NULL,
   `count_persone` int(11) NOT NULL,
   `set_group` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6598,7 +7012,22 @@ CREATE TABLE `setting` (
   `key` varchar(64) NOT NULL,
   `value` longtext DEFAULT NULL,
   `serialized` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `setting_tmp`
+--
+
+CREATE TABLE `setting_tmp` (
+  `setting_id` int(11) NOT NULL,
+  `store_id` int(11) NOT NULL DEFAULT 0,
+  `group` varchar(32) NOT NULL,
+  `key` varchar(64) NOT NULL,
+  `value` longtext DEFAULT NULL,
+  `serialized` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6611,7 +7040,7 @@ CREATE TABLE `set_description` (
   `language_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6622,7 +7051,7 @@ CREATE TABLE `set_description` (
 CREATE TABLE `set_to_category` (
   `set_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6633,7 +7062,7 @@ CREATE TABLE `set_to_category` (
 CREATE TABLE `set_to_store` (
   `set_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6648,7 +7077,7 @@ CREATE TABLE `shift` (
   `status` varchar(32) NOT NULL,
   `z_report_id` varchar(64) NOT NULL,
   `all_json_data` mediumtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6660,7 +7089,7 @@ CREATE TABLE `shoputils_citycourier_description` (
   `language_id` int(11) NOT NULL,
   `name` text NOT NULL,
   `description` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Shoputils citycourier shipping ';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci COMMENT='Shoputils citycourier shipping ';
 
 -- --------------------------------------------------------
 
@@ -6673,7 +7102,7 @@ CREATE TABLE `shoputils_cumulative_discounts` (
   `days` int(11) NOT NULL DEFAULT 0,
   `summ` decimal(11,2) NOT NULL DEFAULT 0.00,
   `percent` decimal(5,2) NOT NULL,
-  `currency` varchar(3) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `currency` varchar(3) NOT NULL,
   `products_special` tinyint(1) NOT NULL DEFAULT 0,
   `first_order` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci COMMENT='Cumulative discounts';
@@ -6687,8 +7116,8 @@ CREATE TABLE `shoputils_cumulative_discounts` (
 CREATE TABLE `shoputils_cumulative_discounts_cmsdata` (
   `language_id` int(11) NOT NULL,
   `store_id` int(11) DEFAULT 0,
-  `description_before` text COLLATE utf8mb3_unicode_ci NOT NULL,
-  `description_after` text COLLATE utf8mb3_unicode_ci NOT NULL
+  `description_before` text NOT NULL,
+  `description_after` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci COMMENT='Cumulative discounts CMS data';
 
 -- --------------------------------------------------------
@@ -6700,7 +7129,7 @@ CREATE TABLE `shoputils_cumulative_discounts_cmsdata` (
 CREATE TABLE `shoputils_cumulative_discounts_description` (
   `discount_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `description` text COLLATE utf8mb3_unicode_ci NOT NULL
+  `description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci COMMENT='Cumulative discounts descriptions';
 
 -- --------------------------------------------------------
@@ -6723,7 +7152,7 @@ CREATE TABLE `shoputils_cumulative_discounts_to_customer_group` (
 CREATE TABLE `shoputils_cumulative_discounts_to_manufacturer` (
   `discount_id` int(11) NOT NULL,
   `manufacturer_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6748,13 +7177,13 @@ CREATE TABLE `shop_rating` (
   `customer_id` int(11) DEFAULT NULL,
   `date_added` datetime NOT NULL,
   `rate_status` int(11) NOT NULL,
-  `customer_name` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `customer_email` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `customer_name` varchar(255) NOT NULL,
+  `customer_email` varchar(255) NOT NULL,
   `shop_rate` int(11) DEFAULT NULL,
   `site_rate` int(11) DEFAULT NULL,
-  `comment` text COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `good` text COLLATE utf8mb3_unicode_ci DEFAULT NULL,
-  `bad` text COLLATE utf8mb3_unicode_ci DEFAULT NULL
+  `comment` text DEFAULT NULL,
+  `good` text DEFAULT NULL,
+  `bad` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 -- --------------------------------------------------------
@@ -6768,7 +7197,7 @@ CREATE TABLE `shop_rating_answers` (
   `rate_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `date_added` datetime NOT NULL,
-  `comment` text COLLATE utf8mb3_unicode_ci NOT NULL,
+  `comment` text NOT NULL,
   `notified` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
@@ -6780,7 +7209,7 @@ CREATE TABLE `shop_rating_answers` (
 
 CREATE TABLE `shop_rating_custom_types` (
   `id` int(11) NOT NULL,
-  `title` varchar(255) COLLATE utf8mb3_unicode_ci NOT NULL,
+  `title` varchar(255) NOT NULL,
   `status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
@@ -6806,10 +7235,10 @@ CREATE TABLE `shop_rating_custom_values` (
 CREATE TABLE `shop_rating_description` (
   `rate_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `comment` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `good` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `bad` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `answer` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL
+  `comment` mediumtext NOT NULL,
+  `good` mediumtext NOT NULL,
+  `bad` mediumtext NOT NULL,
+  `answer` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -6824,7 +7253,7 @@ CREATE TABLE `short_url_alias` (
   `alias` varchar(1024) NOT NULL,
   `used` int(11) NOT NULL DEFAULT 0,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6842,7 +7271,7 @@ CREATE TABLE `simple_cart` (
   `telephone` varchar(32) DEFAULT NULL,
   `products` text DEFAULT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6855,7 +7284,7 @@ CREATE TABLE `simple_custom_data` (
   `object_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL,
   `data` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6868,7 +7297,7 @@ CREATE TABLE `sms_log` (
   `phone` varchar(255) NOT NULL,
   `text` text NOT NULL,
   `date_send` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6884,7 +7313,7 @@ CREATE TABLE `socnetauth2_customer2account` (
   `provider` varchar(300) NOT NULL,
   `email` varchar(300) NOT NULL,
   `data` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6897,7 +7326,7 @@ CREATE TABLE `socnetauth2_precode` (
   `identity` varchar(300) NOT NULL,
   `code` varchar(300) NOT NULL,
   `cdate` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6910,7 +7339,7 @@ CREATE TABLE `socnetauth2_records` (
   `state` varchar(100) NOT NULL,
   `redirect` varchar(300) NOT NULL,
   `cdate` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6923,7 +7352,7 @@ CREATE TABLE `special_attribute` (
   `special_attribute_group_id` int(10) UNSIGNED NOT NULL,
   `special_attribute_name` varchar(100) NOT NULL DEFAULT '',
   `special_attribute_value` varchar(2000) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6935,7 +7364,7 @@ CREATE TABLE `special_attribute_group` (
   `special_attribute_group_id` int(10) UNSIGNED NOT NULL,
   `special_attribute_group_name` varchar(100) NOT NULL DEFAULT '',
   `special_attribute_group_description` varchar(4000) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6948,7 +7377,7 @@ CREATE TABLE `sphinx_suggestions` (
   `keyword` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
   `trigrams` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin NOT NULL,
   `freq` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6962,7 +7391,7 @@ CREATE TABLE `status` (
   `image` varchar(255) NOT NULL,
   `name` text NOT NULL,
   `url` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6976,7 +7405,7 @@ CREATE TABLE `stocks_dynamics` (
   `warehouse_identifier` varchar(30) NOT NULL,
   `p_count` int(11) NOT NULL,
   `q_count` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -6988,7 +7417,7 @@ CREATE TABLE `stock_status` (
   `stock_status_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7001,7 +7430,7 @@ CREATE TABLE `store` (
   `name` varchar(64) NOT NULL,
   `url` varchar(255) NOT NULL,
   `ssl` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7013,7 +7442,7 @@ CREATE TABLE `subscribe` (
   `subscribe_id` int(11) NOT NULL,
   `email` text NOT NULL,
   `status` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7025,7 +7454,7 @@ CREATE TABLE `subscribe_auth_description` (
   `subscribe_auth_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `subscribe_authorization` mediumtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7037,7 +7466,7 @@ CREATE TABLE `subscribe_email_description` (
   `subscribe_desc_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `subscribe_descriptions` mediumtext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7051,7 +7480,7 @@ CREATE TABLE `superstat_viewed` (
   `store_id` int(11) NOT NULL,
   `date` date NOT NULL,
   `times` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7079,7 +7508,7 @@ CREATE TABLE `suppliers` (
   `amzn_good` tinyint(1) NOT NULL,
   `amzn_bad` tinyint(1) NOT NULL,
   `amzn_coefficient` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7093,7 +7522,7 @@ CREATE TABLE `tax_class` (
   `description` varchar(255) NOT NULL,
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7109,7 +7538,7 @@ CREATE TABLE `tax_rate` (
   `type` char(1) NOT NULL,
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7120,7 +7549,7 @@ CREATE TABLE `tax_rate` (
 CREATE TABLE `tax_rate_to_customer_group` (
   `tax_rate_id` int(11) NOT NULL,
   `customer_group_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7134,7 +7563,7 @@ CREATE TABLE `tax_rule` (
   `tax_rate_id` int(11) NOT NULL,
   `based` varchar(10) NOT NULL,
   `priority` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7148,7 +7577,7 @@ CREATE TABLE `telegram_chats` (
   `title` char(255) DEFAULT '' COMMENT 'chat title null if case of single chat with the bot',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Entry date creation',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Entry date update'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7181,7 +7610,7 @@ CREATE TABLE `telegram_messages` (
   `new_chat_photo` text DEFAULT NULL COMMENT 'Array of PhotoSize objects. A group photo was change to this value',
   `delete_chat_photo` tinyint(1) DEFAULT 0 COMMENT 'Informs that the group photo was deleted',
   `group_chat_created` tinyint(1) DEFAULT 0 COMMENT 'Informs that the group has been created'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7196,7 +7625,7 @@ CREATE TABLE `telegram_users` (
   `username` char(255) DEFAULT '' COMMENT 'User username',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Entry date creation',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Entry date update'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7207,7 +7636,7 @@ CREATE TABLE `telegram_users` (
 CREATE TABLE `telegram_users_chats` (
   `user_id` bigint(20) NOT NULL DEFAULT 0 COMMENT 'Unique user identifier',
   `chat_id` bigint(20) NOT NULL DEFAULT 0 COMMENT 'Unique user or chat identifier'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7219,7 +7648,7 @@ CREATE TABLE `temp` (
   `key` varchar(255) NOT NULL,
   `value` longtext NOT NULL,
   `date_modified` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7244,7 +7673,7 @@ CREATE TABLE `tickets` (
   `date_at` datetime NOT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0,
   `status` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7255,7 +7684,7 @@ CREATE TABLE `tickets` (
 CREATE TABLE `ticket_sort` (
   `ticket_id` int(11) NOT NULL,
   `sort_order` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7278,7 +7707,7 @@ CREATE TABLE `tracker` (
   `request_uri` text DEFAULT NULL,
   `isbot` int(11) DEFAULT NULL,
   `current_page` varchar(2048) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7289,7 +7718,7 @@ CREATE TABLE `tracker` (
 CREATE TABLE `translate_stats` (
   `time` datetime NOT NULL,
   `amount` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -7304,7 +7733,7 @@ CREATE TABLE `trigger_history` (
   `actiontemplate_id` int(11) NOT NULL,
   `type` varchar(64) NOT NULL,
   `date_added` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7316,8 +7745,9 @@ CREATE TABLE `url_alias` (
   `url_alias_id` int(11) NOT NULL,
   `query` varchar(255) NOT NULL,
   `keyword` varchar(255) NOT NULL,
-  `language_id` int(11) NOT NULL DEFAULT -1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `language_id` int(11) NOT NULL DEFAULT -1,
+  `auto_gen` varchar(24) DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7328,11 +7758,23 @@ CREATE TABLE `url_alias` (
 CREATE TABLE `url_alias_cached` (
   `store_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
-  `route` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `args` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `checksum` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `url` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL
+  `route` varchar(255) NOT NULL,
+  `args` varchar(255) NOT NULL,
+  `checksum` varchar(64) NOT NULL,
+  `url` varchar(1024) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `url_alias_old`
+--
+
+CREATE TABLE `url_alias_old` (
+  `query` varchar(255) NOT NULL,
+  `keyword` varchar(255) NOT NULL,
+  `language_id` int(11) NOT NULL DEFAULT -1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7368,7 +7810,7 @@ CREATE TABLE `user` (
   `unlock_orders` tinyint(1) NOT NULL,
   `do_transactions` tinyint(1) NOT NULL,
   `dev_template` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7383,7 +7825,7 @@ CREATE TABLE `user_content` (
   `action` varchar(10) NOT NULL,
   `entity_type` varchar(32) NOT NULL,
   `entity_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -7400,7 +7842,7 @@ CREATE TABLE `user_group` (
   `ticket` tinyint(1) NOT NULL,
   `sip_queue` varchar(4) NOT NULL,
   `bitrix_id` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7411,7 +7853,7 @@ CREATE TABLE `user_group` (
 CREATE TABLE `user_group_to_store` (
   `user_group_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7440,7 +7882,20 @@ CREATE TABLE `user_worktime` (
   `confirmed_order_count` int(11) NOT NULL DEFAULT 0,
   `problem_order_count` int(11) NOT NULL DEFAULT 0,
   `edit_csi_count` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vb_temp`
+--
+
+CREATE TABLE `vb_temp` (
+  `href` varchar(500) NOT NULL,
+  `sku` varchar(255) NOT NULL,
+  `price` decimal(10,4) NOT NULL,
+  `special` decimal(10,4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7452,7 +7907,7 @@ CREATE TABLE `vk_export_album` (
   `category_id` int(11) NOT NULL,
   `vk_album_id` varchar(32) NOT NULL,
   `mode` enum('user','group') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7466,7 +7921,7 @@ CREATE TABLE `vk_export_photo` (
   `category_id` int(11) NOT NULL,
   `date` datetime NOT NULL,
   `location` enum('albums','wall') NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7489,7 +7944,7 @@ CREATE TABLE `voucher` (
   `amount_national` decimal(15,4) NOT NULL,
   `status` tinyint(1) NOT NULL,
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7503,7 +7958,7 @@ CREATE TABLE `voucher_history` (
   `order_id` int(11) NOT NULL,
   `amount` decimal(15,4) NOT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7514,7 +7969,7 @@ CREATE TABLE `voucher_history` (
 CREATE TABLE `voucher_theme` (
   `voucher_theme_id` int(11) NOT NULL,
   `image` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7526,7 +7981,7 @@ CREATE TABLE `voucher_theme_description` (
   `voucher_theme_id` int(11) NOT NULL,
   `language_id` int(11) NOT NULL,
   `name` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7538,7 +7993,7 @@ CREATE TABLE `wc_continents` (
   `code` char(2) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `geonameId` char(7) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7552,7 +8007,7 @@ CREATE TABLE `wc_countries` (
   `iso3` char(3) NOT NULL,
   `number` smallint(3) UNSIGNED ZEROFILL NOT NULL,
   `continent_code` char(2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7566,7 +8021,7 @@ CREATE TABLE `weight_class` (
   `system_key` varchar(100) NOT NULL,
   `amazon_key` varchar(100) NOT NULL,
   `variants` varchar(2048) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7579,7 +8034,7 @@ CREATE TABLE `weight_class_description` (
   `language_id` int(11) NOT NULL,
   `title` varchar(32) NOT NULL,
   `unit` varchar(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7593,7 +8048,7 @@ CREATE TABLE `yandex_feeds` (
   `entity_type` varchar(1) NOT NULL,
   `entity_id` int(11) NOT NULL,
   `path` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7603,8 +8058,8 @@ CREATE TABLE `yandex_feeds` (
 
 CREATE TABLE `yandex_queue` (
   `order_id` int(11) NOT NULL,
-  `status` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `substatus` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL
+  `status` varchar(32) NOT NULL,
+  `substatus` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -7614,7 +8069,7 @@ CREATE TABLE `yandex_queue` (
 --
 
 CREATE TABLE `yandex_stock_queue` (
-  `yam_product_id` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `yam_product_id` varchar(32) NOT NULL,
   `stock` int(11) NOT NULL,
   `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -7631,7 +8086,7 @@ CREATE TABLE `zone` (
   `name` varchar(128) NOT NULL,
   `code` varchar(32) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7646,7 +8101,7 @@ CREATE TABLE `zone_to_geo_zone` (
   `geo_zone_id` int(11) NOT NULL,
   `date_added` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `date_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7656,7 +8111,7 @@ CREATE TABLE `zone_to_geo_zone` (
 
 CREATE TABLE `_temp` (
   `value` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 -- --------------------------------------------------------
 
@@ -7667,7 +8122,7 @@ CREATE TABLE `_temp` (
 CREATE TABLE `_temp_discount` (
   `id` int(11) NOT NULL,
   `card_id` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 --
 -- Indexes for dumped tables
@@ -7732,7 +8187,8 @@ ALTER TABLE `actions_to_store`
 -- Indexes for table `actiontemplate`
 --
 ALTER TABLE `actiontemplate`
-  ADD PRIMARY KEY (`actiontemplate_id`);
+  ADD PRIMARY KEY (`actiontemplate_id`),
+  ADD KEY `use_for_manual` (`use_for_manual`);
 
 --
 -- Indexes for table `actiontemplate_description`
@@ -7876,7 +8332,7 @@ ALTER TABLE `amazon_orders_products`
 -- Indexes for table `amzn_add_queue`
 --
 ALTER TABLE `amzn_add_queue`
-  ADD UNIQUE KEY `asin` (`asin`) USING BTREE,
+  ADD PRIMARY KEY (`asin`) USING BTREE,
   ADD KEY `product_id` (`product_id`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `date_added` (`date_added`);
@@ -7893,8 +8349,7 @@ ALTER TABLE `amzn_add_variants_queue`
 -- Indexes for table `amzn_product_queue`
 --
 ALTER TABLE `amzn_product_queue`
-  ADD UNIQUE KEY `asin` (`asin`),
-  ADD KEY `date_added` (`date_added`);
+  ADD UNIQUE KEY `asin` (`asin`);
 
 --
 -- Indexes for table `apri`
@@ -7907,7 +8362,6 @@ ALTER TABLE `apri`
 --
 ALTER TABLE `attribute`
   ADD PRIMARY KEY (`attribute_id`),
-  ADD KEY `attribute_group_id` (`attribute_group_id`),
   ADD KEY `dimension_type` (`dimension_type`);
 
 --
@@ -7984,6 +8438,114 @@ ALTER TABLE `banner_image_description`
   ADD KEY `banner_id` (`banner_id`);
 
 --
+-- Indexes for table `barbara_blog_category`
+--
+ALTER TABLE `barbara_blog_category`
+  ADD PRIMARY KEY (`category_id`);
+
+--
+-- Indexes for table `barbara_blog_category_description`
+--
+ALTER TABLE `barbara_blog_category_description`
+  ADD PRIMARY KEY (`category_id`,`language_id`);
+
+--
+-- Indexes for table `barbara_blog_category_filter`
+--
+ALTER TABLE `barbara_blog_category_filter`
+  ADD PRIMARY KEY (`category_id`,`filter_id`);
+
+--
+-- Indexes for table `barbara_blog_category_path`
+--
+ALTER TABLE `barbara_blog_category_path`
+  ADD PRIMARY KEY (`category_id`,`path_id`);
+
+--
+-- Indexes for table `barbara_blog_category_to_layout`
+--
+ALTER TABLE `barbara_blog_category_to_layout`
+  ADD PRIMARY KEY (`category_id`,`store_id`);
+
+--
+-- Indexes for table `barbara_blog_category_to_store`
+--
+ALTER TABLE `barbara_blog_category_to_store`
+  ADD PRIMARY KEY (`category_id`,`store_id`);
+
+--
+-- Indexes for table `barbara_blog_post`
+--
+ALTER TABLE `barbara_blog_post`
+  ADD PRIMARY KEY (`ID`);
+
+--
+-- Indexes for table `barbara_blog_postmeta`
+--
+ALTER TABLE `barbara_blog_postmeta`
+  ADD PRIMARY KEY (`meta_id`);
+
+--
+-- Indexes for table `barbara_blog_post_description`
+--
+ALTER TABLE `barbara_blog_post_description`
+  ADD PRIMARY KEY (`post_id`,`language_id`);
+
+--
+-- Indexes for table `barbara_blog_post_filter`
+--
+ALTER TABLE `barbara_blog_post_filter`
+  ADD PRIMARY KEY (`post_id`,`filter_id`);
+
+--
+-- Indexes for table `barbara_blog_post_to_category`
+--
+ALTER TABLE `barbara_blog_post_to_category`
+  ADD PRIMARY KEY (`post_id`,`category_id`);
+
+--
+-- Indexes for table `barbara_blog_post_to_layout`
+--
+ALTER TABLE `barbara_blog_post_to_layout`
+  ADD PRIMARY KEY (`post_id`,`store_id`);
+
+--
+-- Indexes for table `barbara_blog_post_to_store`
+--
+ALTER TABLE `barbara_blog_post_to_store`
+  ADD PRIMARY KEY (`post_id`,`store_id`);
+
+--
+-- Indexes for table `barbara_blog_related_product`
+--
+ALTER TABLE `barbara_blog_related_product`
+  ADD PRIMARY KEY (`post_id`,`product_id`);
+
+--
+-- Indexes for table `barbara_blog_setting`
+--
+ALTER TABLE `barbara_blog_setting`
+  ADD PRIMARY KEY (`setting_id`);
+
+--
+-- Indexes for table `barbara_blog_setting_general`
+--
+ALTER TABLE `barbara_blog_setting_general`
+  ADD PRIMARY KEY (`setting_id`);
+
+--
+-- Indexes for table `barbara_singleclick`
+--
+ALTER TABLE `barbara_singleclick`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `barbara_stickers`
+--
+ALTER TABLE `barbara_stickers`
+  ADD PRIMARY KEY (`stickers_id`);
+
+--
 -- Indexes for table `callback`
 --
 ALTER TABLE `callback`
@@ -8013,8 +8575,8 @@ ALTER TABLE `category`
   ADD KEY `amazon_category_id` (`amazon_category_id`),
   ADD KEY `yandex_category_name` (`yandex_category_name`),
   ADD KEY `amazon_category_name` (`amazon_category_name`),
-  ADD KEY `amazon_parent_category_id` (`amazon_parent_category_id`),
   ADD KEY `amazon_parent_category_name` (`amazon_parent_category_name`),
+  ADD KEY `amazon_parent_category_id` (`amazon_parent_category_id`),
   ADD KEY `amazon_final_category` (`amazon_final_category`),
   ADD KEY `amazon_can_get_full` (`amazon_can_get_full`),
   ADD KEY `exclude_from_intersections` (`exclude_from_intersections`),
@@ -8072,6 +8634,13 @@ ALTER TABLE `category_menu_content`
   ADD KEY `category_id_2` (`category_id`,`language_id`);
 
 --
+-- Indexes for table `category_overprice_rules`
+--
+ALTER TABLE `category_overprice_rules`
+  ADD PRIMARY KEY (`rule_id`),
+  ADD KEY `category_id` (`category_id`);
+
+--
 -- Indexes for table `category_path`
 --
 ALTER TABLE `category_path`
@@ -8097,7 +8666,6 @@ ALTER TABLE `category_psm_template`
 -- Indexes for table `category_related`
 --
 ALTER TABLE `category_related`
-  ADD UNIQUE KEY `category_id_2` (`category_id`,`related_category_id`),
   ADD KEY `category_id` (`category_id`);
 
 --
@@ -8533,7 +9101,7 @@ ALTER TABLE `customer`
   ADD KEY `birthday_date` (`birthday_date`),
   ADD KEY `cron_sent` (`cron_sent`),
   ADD KEY `rja_customer` (`rja_customer`),
-  ADD KEY `social_id` (`social_id`),
+  ADD KEY `social_id` (`social_id`(1024)),
   ADD KEY `firstname` (`firstname`),
   ADD KEY `password` (`password`),
   ADD KEY `token` (`token`),
@@ -8547,7 +9115,8 @@ ALTER TABLE `customer`
   ADD KEY `mailwizz_uid` (`newsletter_ema_uid`),
   ADD KEY `newsletter_news_ema_uid` (`newsletter_news_ema_uid`),
   ADD KEY `newsletter_personal_ema_uid` (`newsletter_personal_ema_uid`),
-  ADD KEY `viber_news` (`viber_news`);
+  ADD KEY `viber_news` (`viber_news`),
+  ADD KEY `sent_old_alert` (`sent_old_alert`);
 
 --
 -- Indexes for table `customer_ban_ip`
@@ -8636,8 +9205,7 @@ ALTER TABLE `customer_history`
 ALTER TABLE `customer_ip`
   ADD PRIMARY KEY (`customer_ip_id`),
   ADD KEY `ip` (`ip`),
-  ADD KEY `customer_id` (`customer_id`),
-  ADD KEY `customer_id_customer_ip` (`customer_id`,`ip`) USING BTREE;
+  ADD KEY `customer_id` (`customer_id`);
 
 --
 -- Indexes for table `customer_online`
@@ -8874,9 +9442,7 @@ ALTER TABLE `excluded_asins`
 -- Indexes for table `extension`
 --
 ALTER TABLE `extension`
-  ADD PRIMARY KEY (`extension_id`),
-  ADD KEY `type` (`type`),
-  ADD KEY `code` (`code`);
+  ADD PRIMARY KEY (`extension_id`);
 
 --
 -- Indexes for table `facategory`
@@ -9191,8 +9757,6 @@ ALTER TABLE `language`
   ADD PRIMARY KEY (`language_id`),
   ADD KEY `name` (`name`),
   ADD KEY `urlcode` (`urlcode`),
-  ADD KEY `code` (`code`),
-  ADD KEY `status` (`status`),
   ADD KEY `front` (`front`);
 
 --
@@ -9207,10 +9771,7 @@ ALTER TABLE `layout`
 ALTER TABLE `layout_route`
   ADD PRIMARY KEY (`layout_route_id`),
   ADD KEY `layout_id` (`layout_id`),
-  ADD KEY `store_id` (`store_id`),
-  ADD KEY `route` (`route`),
-  ADD KEY `store_id_route` (`store_id`,`route`) USING BTREE,
-  ADD KEY `layout_id_store_id` (`layout_id`,`store_id`) USING BTREE;
+  ADD KEY `store_id` (`store_id`);
 
 --
 -- Indexes for table `legalperson`
@@ -9283,7 +9844,7 @@ ALTER TABLE `manufacturer`
   ADD PRIMARY KEY (`manufacturer_id`),
   ADD KEY `priceva_enable` (`priceva_enable`),
   ADD KEY `priceva_feed` (`priceva_feed`),
-  ADD KEY `menu_brand` (`menu_brand`),
+  ADD KEY `sort_order` (`sort_order`),
   ADD KEY `homepage` (`homepage`);
 
 --
@@ -9318,13 +9879,6 @@ ALTER TABLE `manufacturer_to_store`
 --
 ALTER TABLE `maxmind_geo_country`
   ADD PRIMARY KEY (`start`,`end`);
-
---
--- Indexes for table `mono_orders`
---
-ALTER TABLE `mono_orders`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `OrderId` (`OrderId`);
 
 --
 -- Indexes for table `multi_pay_payment`
@@ -9661,8 +10215,7 @@ ALTER TABLE `order`
   ADD KEY `yam_status` (`yam_status`),
   ADD KEY `yam_substatus` (`yam_substatus`),
   ADD KEY `yam_shipment_id` (`yam_shipment_id`),
-  ADD KEY `fcheque_link` (`fcheque_link`),
-  ADD KEY `needs_checkboxua` (`needs_checkboxua`);
+  ADD KEY `fcheque_link` (`fcheque_link`);
 
 --
 -- Indexes for table `order_amazon`
@@ -9818,15 +10371,6 @@ ALTER TABLE `order_product_untaken`
   ADD KEY `product_id` (`product_id`);
 
 --
--- Indexes for table `order_receipt`
---
-ALTER TABLE `order_receipt`
-  ADD PRIMARY KEY (`order_receipt_id`),
-  ADD KEY `order_id` (`order_id`),
-  ADD KEY `fiscal_code` (`fiscal_code`),
-  ADD KEY `is_sent_dps` (`is_sent_dps`);
-
---
 -- Indexes for table `order_recurring`
 --
 ALTER TABLE `order_recurring`
@@ -9889,14 +10433,6 @@ ALTER TABLE `order_sms_history`
   ADD KEY `customer_id` (`customer_id`);
 
 --
--- Indexes for table `order_status`
---
-ALTER TABLE `order_status`
-  ADD PRIMARY KEY (`order_status_id`,`language_id`),
-  ADD KEY `language_id` (`language_id`),
-  ADD KEY `order_status_id` (`order_status_id`);
-
---
 -- Indexes for table `order_total`
 --
 ALTER TABLE `order_total`
@@ -9907,18 +10443,6 @@ ALTER TABLE `order_total`
   ADD KEY `for_delivery` (`for_delivery`),
   ADD KEY `value_national` (`value_national`),
   ADD KEY `code` (`code`,`title`);
-
---
--- Indexes for table `order_total_tax`
---
-ALTER TABLE `order_total_tax`
-  ADD PRIMARY KEY (`order_total_id`);
-
---
--- Indexes for table `order_to_1c_queue`
---
-ALTER TABLE `order_to_1c_queue`
-  ADD PRIMARY KEY (`order_id`);
 
 --
 -- Indexes for table `order_tracker`
@@ -9941,12 +10465,19 @@ ALTER TABLE `order_tracker_sms`
 --
 ALTER TABLE `order_ttns`
   ADD PRIMARY KEY (`order_ttn_id`),
-  ADD UNIQUE KEY `order_id_ttn` (`order_id`,`ttn`) USING BTREE,
+  ADD UNIQUE KEY `order_id_2` (`order_id`,`ttn`),
   ADD KEY `status` (`tracking_status`),
-  ADD KEY `ttn` (`ttn`),
-  ADD KEY `order_id` (`order_id`),
   ADD KEY `rejected` (`rejected`),
-  ADD KEY `waiting` (`waiting`);
+  ADD KEY `waiting` (`waiting`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `ttn` (`ttn`),
+  ADD KEY `taken` (`taken`);
+
+--
+-- Indexes for table `order_ukrcredits`
+--
+ALTER TABLE `order_ukrcredits`
+  ADD PRIMARY KEY (`order_id`);
 
 --
 -- Indexes for table `order_voucher`
@@ -9975,6 +10506,18 @@ ALTER TABLE `pavoslidergroups`
 ALTER TABLE `pavosliderlayers`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id` (`id`);
+
+--
+-- Indexes for table `paypal_iframe_order`
+--
+ALTER TABLE `paypal_iframe_order`
+  ADD PRIMARY KEY (`paypal_iframe_order_id`);
+
+--
+-- Indexes for table `paypal_order`
+--
+ALTER TABLE `paypal_order`
+  ADD PRIMARY KEY (`paypal_order_id`);
 
 --
 -- Indexes for table `priceva_data`
@@ -10008,9 +10551,11 @@ ALTER TABLE `product`
   ADD KEY `model` (`model`),
   ADD KEY `sku` (`sku`),
   ADD KEY `ean` (`ean`),
+  ADD KEY `isbn` (`isbn`),
   ADD KEY `mpn` (`mpn`),
   ADD KEY `manufacturer_id` (`manufacturer_id`),
-  ADD KEY `upc` (`upc`) USING BTREE,
+  ADD KEY `product_id` (`product_id`,`model`,`sku`,`manufacturer_id`,`sort_order`,`status`),
+  ADD KEY `virtual_isbn` (`virtual_isbn`),
   ADD KEY `color_group` (`color_group`),
   ADD KEY `is_virtual` (`is_virtual`),
   ADD KEY `asin` (`asin`),
@@ -10020,49 +10565,50 @@ ALTER TABLE `product`
   ADD KEY `collection_id` (`collection_id`),
   ADD KEY `stock_product_id` (`stock_product_id`),
   ADD KEY `has_child` (`has_child`),
+  ADD KEY `big_business` (`big_business`),
   ADD KEY `quantity` (`quantity`),
   ADD KEY `weight_class_id` (`weight_class_id`),
   ADD KEY `length_class_id` (`length_class_id`),
   ADD KEY `quantity_stock` (`quantity_stock`),
+  ADD KEY `quantity_stockM` (`quantity_stockM`),
   ADD KEY `quantity_stockK` (`quantity_stockK`),
   ADD KEY `new` (`new`),
   ADD KEY `stock_status_id` (`stock_status_id`),
   ADD KEY `is_markdown` (`is_markdown`),
   ADD KEY `markdown_product_id` (`markdown_product_id`),
   ADD KEY `lock_points` (`lock_points`),
+  ADD KEY `yam_disable` (`yam_disable`),
   ADD KEY `priceva_enable` (`priceva_enable`),
   ADD KEY `priceva_disable` (`priceva_disable`),
   ADD KEY `yam_product_id` (`yam_product_id`),
   ADD KEY `yam_in_feed` (`yam_in_feed`),
   ADD KEY `yam_hidden` (`yam_hidden`),
   ADD KEY `is_illiquid` (`is_illiquid`),
+  ADD KEY `yam_marketSku` (`yam_marketSku`),
+  ADD KEY `yam_not_created` (`yam_not_created`),
+  ADD KEY `quantity_stockMN` (`quantity_stockMN`),
   ADD KEY `amzn_invalid_asin` (`amzn_invalid_asin`),
   ADD KEY `amzn_not_found` (`amzn_not_found`),
   ADD KEY `amzn_last_search` (`amzn_last_search`),
   ADD KEY `amzn_no_offers` (`amzn_no_offers`),
   ADD KEY `amzn_ignore` (`amzn_ignore`),
+  ADD KEY `ozon_in_feed` (`ozon_in_feed`),
   ADD KEY `quantity_stockK_onway` (`quantity_stockK_onway`),
+  ADD KEY `quantity_stockM_onway` (`quantity_stockM_onway`),
   ADD KEY `quantity_stock_onway` (`quantity_stock_onway`),
+  ADD KEY `quantity_stockMN_onway` (`quantity_stockMN_onway`),
+  ADD KEY `quantity_stockAS_onway` (`quantity_stockAS_onway`),
   ADD KEY `date_added` (`date_added`),
   ADD KEY `new_date_to` (`new_date_to`),
-  ADD KEY `added_from_amazon` (`added_from_amazon`),
   ADD KEY `main_variant_id` (`main_variant_id`),
   ADD KEY `display_in_catalog` (`display_in_catalog`),
-  ADD KEY `variant_1_is_color` (`variant_1_is_color`),
-  ADD KEY `variant_2_is_color` (`variant_2_is_color`),
   ADD KEY `filled_from_amazon` (`filled_from_amazon`),
   ADD KEY `fill_from_amazon` (`fill_from_amazon`),
   ADD KEY `price` (`price`),
   ADD KEY `price_national` (`price_national`),
-  ADD KEY `amzn_offers_count` (`amzn_offers_count`),
   ADD KEY `amzn_rating` (`amzn_rating`),
   ADD KEY `xrating` (`xrating`),
-  ADD KEY `amazon_best_price` (`amazon_best_price`),
-  ADD KEY `viewed` (`viewed`),
   ADD KEY `quantity_updateMarker` (`quantity_updateMarker`),
-  ADD KEY `getProduct` (`product_id`,`date_available`,`status`),
-  ADD KEY `Amazon Filled` (`added_from_amazon`,`filled_from_amazon`),
-  ADD KEY `getProducts` (`status`,`date_available`,`is_markdown`,`main_variant_id`,`display_in_catalog`,`price`,`price_national`,`added_from_amazon`,`filled_from_amazon`) USING BTREE,
   ADD KEY `price_delayed` (`price_delayed`);
 
 --
@@ -10135,9 +10681,16 @@ ALTER TABLE `product_attribute`
   ADD KEY `attribute_id` (`attribute_id`),
   ADD KEY `language_id` (`language_id`),
   ADD KEY `product_id` (`product_id`),
-  ADD KEY `product_id_language_id` (`product_id`,`language_id`) USING BTREE,
-  ADD KEY `attribute_id_language_id` (`attribute_id`,`language_id`) USING BTREE,
+  ADD KEY `product_id_2` (`product_id`,`language_id`),
+  ADD KEY `attribute_id_2` (`attribute_id`,`language_id`),
   ADD KEY `text` (`text`) USING BTREE;
+
+--
+-- Indexes for table `product_barbara_tab`
+--
+ALTER TABLE `product_barbara_tab`
+  ADD PRIMARY KEY (`product_additional_id`),
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `product_child`
@@ -10167,10 +10720,7 @@ ALTER TABLE `product_description`
   ADD KEY `material` (`material`),
   ADD KEY `variant_name` (`variant_name`),
   ADD KEY `variant_name_1` (`variant_name_1`),
-  ADD KEY `variant_name_2` (`variant_name_2`),
-  ADD KEY `variant_value_1` (`variant_value_1`),
-  ADD KEY `variant_value_2` (`variant_value_2`),
-  ADD KEY `short_name_d` (`short_name_d`);
+  ADD KEY `variant_name_2` (`variant_name_2`);
 
 --
 -- Indexes for table `product_discount`
@@ -10187,7 +10737,9 @@ ALTER TABLE `product_feature`
   ADD KEY `feature_id` (`feature_id`),
   ADD KEY `language_id` (`language_id`),
   ADD KEY `product_id` (`product_id`),
-  ADD KEY `product_id_language_id` (`product_id`,`language_id`) USING BTREE;
+  ADD KEY `product_id_language_id` (`product_id`,`language_id`) USING BTREE,
+  ADD KEY `feature_id_language_id` (`feature_id`,`language_id`) USING BTREE,
+  ADD KEY `text` (`text`(1024)) USING BTREE;
 
 --
 -- Indexes for table `product_filter`
@@ -10257,8 +10809,7 @@ ALTER TABLE `product_price_national_to_store`
   ADD KEY `product_id` (`product_id`),
   ADD KEY `store_id` (`store_id`),
   ADD KEY `currency` (`currency`),
-  ADD KEY `price` (`price`),
-  ADD KEY `getProduct` (`product_id`,`store_id`,`price`);
+  ADD KEY `price` (`price`);
 
 --
 -- Indexes for table `product_price_national_to_store1`
@@ -10398,10 +10949,7 @@ ALTER TABLE `product_special`
   ADD KEY `price` (`price`),
   ADD KEY `set_by_stock` (`set_by_stock`),
   ADD KEY `set_by_stock_illiquid` (`set_by_stock_illiquid`),
-  ADD KEY `date_settled_by_stock` (`date_settled_by_stock`),
-  ADD KEY `date_start` (`date_start`),
-  ADD KEY `date_end` (`date_end`),
-  ADD KEY `getProduct` (`product_id`,`customer_group_id`,`price`,`store_id`,`date_start`,`date_end`);
+  ADD KEY `date_settled_by_stock` (`date_settled_by_stock`);
 
 --
 -- Indexes for table `product_special_attribute`
@@ -10576,17 +11124,22 @@ ALTER TABLE `product_to_tab`
   ADD PRIMARY KEY (`product_id`,`tab_id`);
 
 --
+-- Indexes for table `product_ukrcredits`
+--
+ALTER TABLE `product_ukrcredits`
+  ADD PRIMARY KEY (`product_id`);
+
+--
 -- Indexes for table `product_variants`
 --
 ALTER TABLE `product_variants`
-  ADD UNIQUE KEY `variant_asin` (`variant_asin`) USING BTREE,
-  ADD KEY `main_asin` (`main_asin`) USING BTREE;
+  ADD UNIQUE KEY `main_asin` (`main_asin`) USING BTREE,
+  ADD KEY `variant_asin` (`variant_asin`) USING BTREE;
 
 --
 -- Indexes for table `product_variants_ids`
 --
 ALTER TABLE `product_variants_ids`
-  ADD UNIQUE KEY `variant_id` (`variant_id`),
   ADD KEY `product_id` (`product_id`);
 
 --
@@ -10814,6 +11367,17 @@ ALTER TABLE `setting`
   ADD KEY `group_2` (`group`,`key`);
 
 --
+-- Indexes for table `setting_tmp`
+--
+ALTER TABLE `setting_tmp`
+  ADD PRIMARY KEY (`setting_id`),
+  ADD KEY `store_id` (`store_id`),
+  ADD KEY `group` (`group`),
+  ADD KEY `key` (`key`),
+  ADD KEY `value` (`value`(1024)),
+  ADD KEY `group_2` (`group`,`key`);
+
+--
 -- Indexes for table `set_description`
 --
 ALTER TABLE `set_description`
@@ -10833,12 +11397,6 @@ ALTER TABLE `set_to_category`
 ALTER TABLE `set_to_store`
   ADD PRIMARY KEY (`set_id`,`store_id`),
   ADD KEY `store_id` (`store_id`);
-
---
--- Indexes for table `shift`
---
-ALTER TABLE `shift`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `shoputils_citycourier_description`
@@ -11051,8 +11609,7 @@ ALTER TABLE `suppliers`
   ADD KEY `1c_uuid` (`1c_uuid`),
   ADD KEY `amzn_good` (`amzn_good`),
   ADD KEY `amzn_bad` (`amzn_bad`),
-  ADD KEY `supplier_type` (`supplier_type`),
-  ADD KEY `supplier_code` (`supplier_code`);
+  ADD KEY `supplier_type` (`supplier_type`);
 
 --
 -- Indexes for table `tax_class`
@@ -11184,6 +11741,14 @@ ALTER TABLE `url_alias_cached`
   ADD KEY `checksum` (`checksum`);
 
 --
+-- Indexes for table `url_alias_old`
+--
+ALTER TABLE `url_alias_old`
+  ADD KEY `keyword` (`keyword`) USING BTREE,
+  ADD KEY `language_id` (`language_id`),
+  ADD KEY `keyword_language_id` (`keyword`,`language_id`) USING BTREE;
+
+--
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
@@ -11206,9 +11771,7 @@ ALTER TABLE `user`
 ALTER TABLE `user_content`
   ADD KEY `user_id` (`user_id`),
   ADD KEY `date` (`date`),
-  ADD KEY `entity_type` (`entity_type`),
-  ADD KEY `action` (`action`),
-  ADD KEY `user_id_2` (`user_id`,`date`,`action`);
+  ADD KEY `action` (`action`);
 
 --
 -- Indexes for table `user_group`
@@ -11463,6 +12026,48 @@ ALTER TABLE `banner`
 --
 ALTER TABLE `banner_image`
   MODIFY `banner_image_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `barbara_blog_category`
+--
+ALTER TABLE `barbara_blog_category`
+  MODIFY `category_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `barbara_blog_post`
+--
+ALTER TABLE `barbara_blog_post`
+  MODIFY `ID` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `barbara_blog_postmeta`
+--
+ALTER TABLE `barbara_blog_postmeta`
+  MODIFY `meta_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `barbara_blog_setting`
+--
+ALTER TABLE `barbara_blog_setting`
+  MODIFY `setting_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `barbara_blog_setting_general`
+--
+ALTER TABLE `barbara_blog_setting_general`
+  MODIFY `setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `barbara_singleclick`
+--
+ALTER TABLE `barbara_singleclick`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `barbara_stickers`
+--
+ALTER TABLE `barbara_stickers`
+  MODIFY `stickers_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `callback`
@@ -11933,12 +12538,6 @@ ALTER TABLE `manufacturer_page_content`
   MODIFY `manufacturer_page_content_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `mono_orders`
---
-ALTER TABLE `mono_orders`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `multi_pay_payment`
 --
 ALTER TABLE `multi_pay_payment`
@@ -12137,12 +12736,6 @@ ALTER TABLE `order_product_tracker`
   MODIFY `order_product_tracker_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `order_receipt`
---
-ALTER TABLE `order_receipt`
-  MODIFY `order_receipt_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `order_recurring`
 --
 ALTER TABLE `order_recurring`
@@ -12177,12 +12770,6 @@ ALTER TABLE `order_set`
 --
 ALTER TABLE `order_sms_history`
   MODIFY `order_history_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `order_status`
---
-ALTER TABLE `order_status`
-  MODIFY `order_status_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `order_total`
@@ -12233,6 +12820,18 @@ ALTER TABLE `pavosliderlayers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `paypal_iframe_order`
+--
+ALTER TABLE `paypal_iframe_order`
+  MODIFY `paypal_iframe_order_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `paypal_order`
+--
+ALTER TABLE `paypal_order`
+  MODIFY `paypal_order_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
@@ -12249,6 +12848,12 @@ ALTER TABLE `product_additional_offer`
 --
 ALTER TABLE `product_amzn_offers`
   MODIFY `amazon_offer_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `product_barbara_tab`
+--
+ALTER TABLE `product_barbara_tab`
+  MODIFY `product_additional_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `product_discount`
@@ -12449,10 +13054,10 @@ ALTER TABLE `setting`
   MODIFY `setting_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `shift`
+-- AUTO_INCREMENT for table `setting_tmp`
 --
-ALTER TABLE `shift`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `setting_tmp`
+  MODIFY `setting_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `shoputils_cumulative_discounts`
