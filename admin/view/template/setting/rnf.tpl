@@ -1414,6 +1414,68 @@
 							<button class="button" style="padding:10px; width:100%; font-size:20px; margin-right:4px;" onclick="savePriceModel();"><i class="fa fa-check"></i> Сохранить</button>
 							<span class="help"><i class="fa fa-info-circle"></i> В этом разделе изменение полей на лету отключено, чтоб изменения формулы и коэффициентов не влияли на текущую модель. Если хочешь изменить модель ценообразования после тестирования формул и (или) коэффициентов - нужно нажать кнопку сохранить и дождаться окончания процесса. После нажатия кнопки ценовая модель изменится и цены товара будут формироваться исходя из новой модели. Любое изменение поля вызывает запрос на тестовый пересчёт цен.</span>
 						</div>
+
+						<table class="list">
+						<tr>
+							<td colspan="2" class="left" style="color:#D69241;">
+								<i class="fa fa-calculator"></i> <b>Калькулятор</b>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Рандомные товары
+								<span class="help"><i class="fa fa-info-circle"></i> иначе от дешевых к дорогим</span>
+							</td>
+							<td>
+								<input id="calculator_show_random" type="checkbox" class="checkbox" name="calculator_show_random" value="1" /><label for="calculator_show_random"></label>								
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Лимит товаров
+								<span class="help"><i class="fa fa-info-circle"></i> на каждый ценовой диапазон</span>
+							</td>
+							<td>
+								<input type="number" step="1" name="calculator_limit_products" value="3" style="width:100px;" />								
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Ценовые диапазоны
+								<span class="help"><i class="fa fa-info-circle"></i> от-до через пробел</span>
+							</td>
+							<td>
+								<input type="text" name="calculator_zones_config" value="<?php echo $zones_config;?>" style="width:90%;" />								
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Конкретные товары
+								<span class="help"><i class="fa fa-info-circle"></i> идентификаторы через пробел</span>
+							</td>
+							<td>
+								<input type="text" name="calculator_explicit_products" value="" style="width:90%;" />								
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Товары из категорий
+								<span class="help"><i class="fa fa-info-circle"></i> идентификаторы через пробел</span>
+							</td>
+							<td>
+								<input type="text" name="calculator_explicit_categories" value="" style="width:90%;" />								
+							</td>
+						</tr>
+						<tr>
+							<td>								
+							</td>
+							<td>
+								<button class="button" id="button-recalculate" style="cursor:pointer;padding: 7px; color: #6A6A6A;  border: 2px solid #6A6A6A;  border-radius: 5px;  background-color: #fff;" onclick="recalculate(); return false;"><i class="fa fa-refresh"></i> Пересчитать</button>
+							</td>
+						</tr>
+					</table>
+
+						
 						<table class="list">
 							<tr>
 								<td colspan="2" class="left" style="color:#D69241;">
@@ -1539,66 +1601,7 @@
 								<td><b>DIVIDE</b></td><td><i class="fa fa-info-circle"></i> операция деления (знак /)</td>
 							</tr>	
 						</table>
-					<table class="list">
-						<tr>
-							<td colspan="2" class="left" style="color:#D69241;">
-								<i class="fa fa-calculator"></i> <b>Калькулятор</b>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								Рандомные товары
-								<span class="help"><i class="fa fa-info-circle"></i> иначе от дешевых к дорогим</span>
-							</td>
-							<td>
-								<input id="calculator_show_random" type="checkbox" class="checkbox" name="calculator_show_random" value="1" /><label for="calculator_show_random"></label>								
-							</td>
-						</tr>
-						<tr>
-							<td>
-								Лимит товаров
-								<span class="help"><i class="fa fa-info-circle"></i> на каждый ценовой диапазон</span>
-							</td>
-							<td>
-								<input type="number" step="1" name="calculator_limit_products" value="3" style="width:100px;" />								
-							</td>
-						</tr>
-						<tr>
-							<td>
-								Ценовые диапазоны
-								<span class="help"><i class="fa fa-info-circle"></i> от-до через пробел</span>
-							</td>
-							<td>
-								<input type="text" name="calculator_zones_config" value="<?php echo $zones_config;?>" style="width:90%;" />								
-							</td>
-						</tr>
-						<tr>
-							<td>
-								Конкретные товары
-								<span class="help"><i class="fa fa-info-circle"></i> идентификаторы через пробел</span>
-							</td>
-							<td>
-								<input type="text" name="calculator_explicit_products" value="" style="width:90%;" />								
-							</td>
-						</tr>
-						<tr>
-							<td>
-								Товары из категорий
-								<span class="help"><i class="fa fa-info-circle"></i> идентификаторы через пробел</span>
-							</td>
-							<td>
-								<input type="text" name="calculator_explicit_categories" value="" style="width:90%;" />								
-							</td>
-						</tr>
-						<tr>
-							<td>								
-							</td>
-							<td>
-								<button class="button" id="button-recalculate" style="cursor:pointer;padding: 7px; color: #6A6A6A;  border: 2px solid #6A6A6A;  border-radius: 5px;  background-color: #fff;" onclick="recalculate(); return false;"><i class="fa fa-refresh"></i> Пересчитать</button>
-							</td>
-						</tr>
-					</table>
-
+					
 					<table class="list">
 						<tr>
 							<td colspan="3" class="left" style="color:#D69241;">
@@ -1712,7 +1715,7 @@
 								</td>
 								<td>
 									<span class="help">
-										<i class="fa fa-info-circle"></i> Максимальная наценка, раз. Для товаров у которых вес задан очень некорректно.
+										<i class="fa fa-info-circle"></i> Максимальная наценка, Х раз. Для товаров у которых вес задан очень некорректно. Если продажная цена по формулам будет в Х раз больше, чем цена закупки, то будет использован "множитель без веса"
 									</span>
 								</td>
 							</tr>

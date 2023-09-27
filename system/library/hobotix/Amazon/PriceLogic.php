@@ -7,11 +7,12 @@ class PriceLogic
 	
 	const CLASS_NAME = 'hobotix\\Amazon\\PriceLogic';
 	
-	private $db;	
-	private $config;
-	private $weight;
-	private $length;
-	private $cache;
+	private $db 		= null;	
+	private $config 	= null;
+	private $weight 	= null;
+	private $length 	= null;
+	private $cache 		= null;
+	private $log 		= null;
 
 	private $excluded_categories = [8307, 6475, 6474, BIRTHDAY_DISCOUNT_CATEGORY, GENERAL_DISCOUNT_CATEGORY, GENERAL_MARKDOWN_CATEGORY];
 
@@ -22,6 +23,7 @@ class PriceLogic
 	private $warehousesStores 				= [];
 	private $formulaOverloadData 			= [];
 	private $categoriesOverPriceRules		= [];
+	private $categoriesOverloadRules		= [];
 
 	private $costDividerSymbol 				= ':COSTDVDR:';
 
@@ -35,6 +37,7 @@ class PriceLogic
 		$this->length 	= $registry->get('length');
 		$this->currency = $registry->get('currency');
 		$this->cache 	= $registry->get('cache');
+		$this->log 		= $registry->get('log');
 
 		require_once(DIR_SYSTEM . 'library/hobotix/Amazon/PriceUpdaterQueue.php');
 		$this->priceUpdaterQueue = new PriceUpdaterQueue($registry);
@@ -43,7 +46,7 @@ class PriceLogic
 		$this->priceHistory = new PriceHistory($registry);
 
 		if (!$registry->get('bypass_rainforest_caches_and_settings')){
-			$this->cacheCategoryDimensions()->cacheCategoryOverPriceRules()->setStoreSettings()->cacheFormulaOverloadData();
+			$this->cacheCategoryDimensions()->cacheCategoryOverloadRules()->cacheCategoryOverPriceRules()->setStoreSettings()->cacheFormulaOverloadData();
 		}		
 
 		$this->log = new \Log('amazon_offers_priceupdate.txt');
@@ -65,6 +68,81 @@ class PriceLogic
 					'formula' 	=> trim($this->config->get('config_rainforest_main_formula_overload_' . $crmfc))
 				];
 			}
+		}
+
+		return $this;
+	}
+
+	private function cacheCategoryOverloadRules(){
+		$cachestring = 'amazonrainforest.pricelogic.categoriesOverloadRules';
+
+		$categoriesOverloadRules = $this->cache->get($cachestring);
+
+		if ($categoriesOverloadRules){
+			$this->categoriesOverloadRules = $categoriesOverloadRules;
+		} else {
+			$query = $this->db->query("SELECT category_id, overload_max_multiplier, overload_max_wc_multiplier, overload_ignore_volumetric_weight FROM category 
+				WHERE (overload_max_multiplier + overload_max_wc_multiplier + overload_ignore_volumetric_weight) > 0 ");
+
+			foreach ($query->rows as $row){
+				$this->categoriesOverloadRules[$row['category_id']] = array(
+					'overload_max_multiplier' 				=> $row['overload_max_multiplier'],
+					'overload_max_wc_multiplier' 			=> $row['overload_max_wc_multiplier'],
+					'overload_ignore_volumetric_weight' 	=> $row['overload_ignore_volumetric_weight']
+				);
+			}
+
+			$this->cache->set($cachestring, $this->categoriesOverloadRules);
+		}
+
+		return $this;
+	}
+
+	private function cacheCategoryDimensions(){
+		$cachestring = 'amazonrainforest.pricelogic.defaultDimensions';
+
+		$defaultDimensions = $this->cache->get($cachestring);
+
+		if ($defaultDimensions){
+			$this->defaultDimensions = $defaultDimensions;
+		} else {
+			$query = $this->db->query("SELECT category_id, default_length, default_width, default_height, default_weight, default_length_class_id, default_weight_class_id FROM category WHERE 1");
+
+			foreach ($query->rows as $row){
+				$this->defaultDimensions[$row['category_id']] = array(
+					'default_length' 			=> $row['default_length'],
+					'default_width' 			=> $row['default_width'],
+					'default_height' 			=> $row['default_height'],
+					'default_weight' 			=> $row['default_weight'],
+					'default_length_class_id' 	=> $row['default_length_class_id'],
+					'default_weight_class_id' 	=> $row['default_weight_class_id'],	
+				);
+			}
+
+			$this->cache->set($cachestring, $this->defaultDimensions);
+		}
+
+		return $this;
+	}
+
+	private function cacheCategoryOverPriceRules(){
+		$cachestring = 'amazonrainforest.pricelogic.categoriesOverPriceRules';
+
+		$categoriesOverPriceRules = $this->cache->get($cachestring);
+
+		if ($categoriesOverPriceRules){
+			$this->categoriesOverPriceRules = $categoriesOverPriceRules;
+		} else {
+			$query = $this->db->query("SELECT * FROM category_overprice_rules WHERE 1");
+
+			foreach ($query->rows as $row){
+				if (empty($this->categoriesOverPriceRules[$row['category_id']])){
+					$this->categoriesOverPriceRules[$row['category_id']] = [$row];
+				} else {
+					$this->categoriesOverPriceRules[$row['category_id']][] = $row;
+				}		
+			}
+			$this->cache->set($cachestring, $this->categoriesOverPriceRules);
 		}
 
 		return $this;
@@ -135,10 +213,10 @@ class PriceLogic
 		if ($products_query->num_rows && $totals_query->num_rows){
 			foreach ($products_query->rows as $product){
 				if ($product['costprice']){
-					$costprice += $product['costprice'];
+					$costprice += ($product['costprice'] * $product['quantity']);
 				} else {
 					if ((float)$this->config->get('config_rainforest_default_costprice_multiplier_' . $this->config->get('config_store_id')) > 0){
-						$costprice += ($product['price'] / $this->config->get('config_rainforest_default_costprice_multiplier_' . $this->config->get('config_store_id')));
+						$costprice += (($product['price'] / $this->config->get('config_rainforest_default_costprice_multiplier_' . $this->config->get('config_store_id'))) * $product['quantity']);
 					}					
 				}
 			}
@@ -170,56 +248,6 @@ class PriceLogic
 		}
 	
 	}	
-
-	private function cacheCategoryDimensions(){
-		$cachestring = 'amazonrainforest.pricelogic.defaultDimensions';
-
-		$defaultDimensions = $this->cache->get($cachestring);
-
-		if ($defaultDimensions){
-			$this->defaultDimensions = $defaultDimensions;
-		} else {
-			$query = $this->db->query("SELECT category_id, default_length, default_width, default_height, default_weight, default_length_class_id, default_weight_class_id FROM category WHERE 1");
-
-			foreach ($query->rows as $row){
-				$this->defaultDimensions[$row['category_id']] = array(
-					'default_length' 			=> $row['default_length'],
-					'default_width' 			=> $row['default_width'],
-					'default_height' 			=> $row['default_height'],
-					'default_weight' 			=> $row['default_weight'],
-					'default_length_class_id' 	=> $row['default_length_class_id'],
-					'default_weight_class_id' 	=> $row['default_weight_class_id'],	
-				);
-			}
-
-			$this->cache->set($cachestring, $this->defaultDimensions);
-		}
-
-		return $this;
-	}
-
-	private function cacheCategoryOverPriceRules(){
-		$cachestring = 'amazonrainforest.pricelogic.categoriesOverPriceRules';
-
-		$categoriesOverPriceRules = $this->cache->get($cachestring);
-
-		if ($categoriesOverPriceRules){
-			$this->categoriesOverPriceRules = $categoriesOverPriceRules;
-		} else {
-			$query = $this->db->query("SELECT * FROM category_overprice_rules WHERE 1");
-
-			foreach ($query->rows as $row){
-				if (empty($this->categoriesOverPriceRules[$row['category_id']])){
-					$this->categoriesOverPriceRules[$row['category_id']] = [$row];
-				} else {
-					$this->categoriesOverPriceRules[$row['category_id']][] = $row;
-				}		
-			}
-			$this->cache->set($cachestring, $this->categoriesOverPriceRules);
-		}
-
-		return $this;
-	}
 
 	public function getProductDimensions($product){
 
@@ -388,6 +416,25 @@ class PriceLogic
 		return false;
 	}	
 
+	public function getCategoryOverloadRules($category_id) {
+		$category_overload_rules = [];
+
+		if (!empty($this->categoriesOverloadRules[$category_id])){
+			return $this->categoriesOverloadRules[$category_id];
+		}
+		
+		$query = $this->db->query("SELECT category_id, overload_max_multiplier, overload_max_wc_multiplier, overload_ignore_volumetric_weight FROM category 
+			WHERE category_id = '" . (int)$category_id . "' 
+			AND (overload_max_multiplier + overload_max_wc_multiplier + overload_ignore_volumetric_weight) > 0 LIMIT 1");
+		
+		if ($query->num_rows){
+			$this->categoriesOverloadRules[$category_id] = $query->row;
+			return $query->row;	
+		}
+		
+		return false;
+	}	
+
 	public function getProductOverPriceRules($product_id){
 		$category_id = $this->getProductMainCategoryID($product_id);
 		if (!$category_id){
@@ -405,6 +452,24 @@ class PriceLogic
 
 		return $category_overprice_rules;
 	}
+
+	public function getProductOverloadRules($product_id){
+		$category_id = $this->getProductMainCategoryID($product_id);
+		if (!$category_id){
+			return false;
+		}		
+
+		$category_overload_rules = false;
+		while ($category_id && !$category_overload_rules){
+			$category_overload_rules = $this->getCategoryOverloadRules($category_id);
+			
+			if (!$category_overload_rules){
+				$category_id = $this->db->query("SELECT parent_id FROM category WHERE category_id = '" . (int)$category_id . "' LIMIT 1")->row['parent_id'];
+			}			
+		}
+
+		return $category_overload_rules;
+	}	
 
 	public function getProductOverPriceFormula($product_id, $amazonBestPrice = false, $store_id = 0){
 		if (!$amazonBestPrice){
@@ -496,7 +561,6 @@ class PriceLogic
 				$proceedWithPrice = false;
 			}
 
-			//Пропускать обновление цены, если поставлена метка ignore_parse и это включено в настройках
 			if ($proceedWithPrice && $this->config->get('config_rainforest_disable_offers_use_field_ignore_parse')){
 				if ($query->row['ignore_parse'] && $query->row['ignore_parse_date_to'] == '0000-00-00'){
 					echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Product must be ignored because of ignore_parse set, skipping', 'e');
@@ -735,6 +799,14 @@ class PriceLogic
 
 			$resultPrice = eval('return ' . $mainFormula . ';');
 
+			if (!empty($data['PRODUCT_ID'])){
+				$productOverloadRules = $this->getProductOverloadRules($data['PRODUCT_ID']);
+
+				if (!empty($productOverloadRules['overload_max_multiplier'])){
+					$data['MAX_MULTIPLIER'] = (float)$productOverloadRules['overload_max_multiplier'];
+				}
+			}
+
 			if ($resultPrice > $amazonBestPrice * $data['MAX_MULTIPLIER']){
 				if ($countCostPrice){
 					$resultPrice = $amazonBestPrice * $data['DEFAULT_COSTPRICE_MULTIPLIER'];
@@ -744,9 +816,9 @@ class PriceLogic
 
 				if ($justCompile){
 					if ($countCostPrice){
-						return 'MAX_MULTIPLIER TRIGGER: ' . $amazonBestPrice . ' * ' . $data['DEFAULT_COSTPRICE_MULTIPLIER'];
+						return 'MAX_MULTIPLIER x' . $data['MAX_MULTIPLIER'] . ' TRIGGER: ' . $amazonBestPrice . ' * ' . $data['DEFAULT_COSTPRICE_MULTIPLIER'];
 					} else {
-						return 'MAX_MULTIPLIER TRIGGER: ' . $amazonBestPrice . ' * ' . $data['DEFAULT_MULTIPLIER'];
+						return 'MAX_MULTIPLIER x' . $data['MAX_MULTIPLIER'] . ' TRIGGER: ' . $amazonBestPrice . ' * ' . $data['DEFAULT_MULTIPLIER'];
 					}					
 				}
 			}
@@ -774,6 +846,45 @@ class PriceLogic
 		return $resultPrice;
 	}
 
+	public function recalculateProductWeight($product, $store_id, $justCompile = false){
+		$data = [];
+		$productOverloadRules = $this->getProductOverloadRules($product['product_id']);		
+
+		$productWeight 		= $this->getProductVolumetricWeight($product, $store_id);
+		$productWeightReal 	= $this->getProductWeight($product);
+
+		$data['Product Weight'] 		= $this->weight->format($productWeight, $this->config->get('config_weight_class_id'));
+		$data['Product Weight Real'] 	= $this->weight->format($productWeightReal, $this->config->get('config_weight_class_id'));
+
+		$config_rainforest_use_volumetric_weight = $this->storesVolumetricWeightSettings[$store_id]['config_rainforest_use_volumetric_weight'];
+		if (!empty($productOverloadRules['overload_ignore_volumetric_weight'])){
+			$config_rainforest_use_volumetric_weight = false;
+			$data['USE_VOLUMETRIC'] = 'OFF, OVERLOAD FROM CATEGORY';
+		}
+
+		$config_rainforest_volumetric_max_wc_multiplier = $this->config->get('config_rainforest_volumetric_max_wc_multiplier');
+		if (!empty($productOverloadRules['overload_max_wc_multiplier'])){
+			$config_rainforest_volumetric_max_wc_multiplier = (float)$productOverloadRules['overload_max_wc_multiplier'];
+			$data['MAX_WC_MULTIPLIER'] = (float)$productOverloadRules['overload_max_wc_multiplier'] . ', OVERLOAD FROM CATEGORY';
+		}
+
+		if ($config_rainforest_use_volumetric_weight){
+			if ($productWeight > ($productWeightReal * (float)$config_rainforest_volumetric_max_wc_multiplier)){
+				$productWeight = $productWeightReal;
+			}
+		} else {
+			$productWeight = $productWeightReal;
+		}
+
+		$data['Compiled Weight'] = $this->weight->format($productWeight, $this->config->get('config_weight_class_id'));
+
+		if ($justCompile){
+			return $data;
+		}
+
+		return $productWeight;
+	}
+
 	public function updateProductPrices($asin, $amazonBestPrice, $explicit = false){		
 		if ($this->config->get('config_rainforest_enable_pricing')){
 
@@ -785,28 +896,17 @@ class PriceLogic
 
 			if ($products){
 				foreach ($products as $product_id => $product){							
-					if (!$product['amzn_ignore']){
+					if (!$product['amzn_ignore']){						
 						//Для всех настроек магазинов проверяем наличие на складе
 						foreach ($this->storesWarehouses as $store_id => $storeWarehouses){
 							$warehouse_identifier = $storeWarehouses['config_warehouse_identifier_local'];
 
-							if ($this->storesVolumetricWeightSettings[$store_id]['config_rainforest_use_volumetric_weight']){
-								$productWeight = $this->getProductVolumetricWeight($product, $store_id);
-								$productWeightReal = $this->getProductWeight($product);
-
-								if ($this->config->get('config_rainforest_volumetric_max_wc_multiplier')){
-									if ($productWeight > ($productWeightReal * (float)$this->config->get('config_rainforest_volumetric_max_wc_multiplier'))){
-										$productWeight = $productWeightReal;
-									}
-								}
-
-							} else {
-								$productWeight = $this->getProductWeight($product);
-							}
+							$productWeight = $this->recalculateProductWeight($product, $store_id);
 
 							if ($this->config->get('config_rainforest_kg_price_' . $store_id) || $this->config->get('config_rainforest_default_multiplier_' . $store_id)){
 								if ($this->checkIfWeCanUpdateProductOffers($product_id, $warehouse_identifier)){
 									$params = [
+										'PRODUCT_ID'					=> (float)$product['product_id'],
 										'WEIGHT' 						=> (float)$productWeight,
 										'KG_LOGISTIC' 					=> (float)$this->config->get('config_rainforest_kg_price_' . $store_id),
 										'DEFAULT_MULTIPLIER' 			=> (float)$this->config->get('config_rainforest_default_multiplier_' . $store_id),

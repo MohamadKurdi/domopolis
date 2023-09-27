@@ -494,21 +494,10 @@ class ControllerSettingRnf extends Controller {
 				$result['counted_volumetric_weight'] 			= $this->rainforestAmazon->offersParser->PriceLogic->getProductVolumetricWeight($product, 0, true, $volumetricWeightCoefficient);
 				$result['counted_volumetric_weight_format']   	= $this->weight->format($result['counted_volumetric_weight'], $this->config->get('config_weight_class_id'));
 
-				if ($useVolumetricWeight){
-					$product['counted_weight'] 		= $this->rainforestAmazon->offersParser->PriceLogic->getProductVolumetricWeight($product, 0, false, $volumetricWeightCoefficient);
-					$product['counted_weight_real'] = $this->rainforestAmazon->offersParser->PriceLogic->getProductWeight($product);
+				$product['counted_weight'] = $this->rainforestAmazon->offersParser->PriceLogic->recalculateProductWeight($product, 0);
 
-					if ($volumetricMaxWCMultiplier){
-						if ((float)$product['counted_weight'] > ((float)$product['counted_weight_real'] * (float)$volumetricMaxWCMultiplier)){
-							$product['counted_weight'] = $product['counted_weight_real'];
-						}
-					}
-
-				} else {
-					$product['counted_weight'] = $this->rainforestAmazon->offersParser->PriceLogic->getProductWeight($product);
-				}
-
-				$result['counted_weight'] =  $this->weight->format($product['counted_weight'], $this->config->get('config_weight_class_id'));
+				$result['counted_weight'] 	=  $this->weight->format($product['counted_weight'], $this->config->get('config_weight_class_id'));
+				$result['compiled_weight'] 	= $this->rainforestAmazon->offersParser->PriceLogic->recalculateProductWeight($product, 0, true);
 
 				$result['used_default_multiplier'] 				= $defaultMultiplier;
 				$result['used_default_costprice_multiplier'] 	= $defaultCostPriceMultiplier;
@@ -545,6 +534,7 @@ class ControllerSettingRnf extends Controller {
 				}
 
 				$params = [
+					'PRODUCT_ID' 					=> (int)$product['product_id'],
 					'WEIGHT' 						=> (float)$product['counted_weight'],
 					'KG_LOGISTIC' 					=> (float)$weightCoefficient,
 					'DEFAULT_MULTIPLIER' 			=> (float)$defaultMultiplier,
@@ -557,9 +547,9 @@ class ControllerSettingRnf extends Controller {
 					'INVOICE' 						=> (float)$this->config->get('config_rainforest_formula_invoice_0')										
 				];
 
-				$result['counted_price']  	= $this->rainforestAmazon->offersParser->PriceLogic->mainFormula($product['amazon_best_price'], $params, $mainFormula);
-				$result['compiled_formula'] = $this->rainforestAmazon->offersParser->PriceLogic->compileFormula($product['amazon_best_price'], $params, $mainFormula);	
-				$result['compiled_multiplier'] = $this->rainforestAmazon->offersParser->PriceLogic->getMainMultiplier($result['compiled_formula']);										
+				$result['counted_price']  		= $this->rainforestAmazon->offersParser->PriceLogic->mainFormula($product['amazon_best_price'], $params, $mainFormula);
+				$result['compiled_formula'] 	= $this->rainforestAmazon->offersParser->PriceLogic->compileFormula($product['amazon_best_price'], $params, $mainFormula);	
+				$result['compiled_multiplier'] 	= $this->rainforestAmazon->offersParser->PriceLogic->getMainMultiplier($result['compiled_formula']);										
 
 				$result['amazon_best_price'] 		= $this->currency->format($product['amazon_best_price'], 'EUR', 1);
 				$result['counted_price_eur'] 		= $this->currency->format($result['counted_price'], 'EUR', 1);
