@@ -275,7 +275,7 @@
 		private function checkIfHasBirthday($month, $day){
 			$today = date('Y-m-d');
 			
-			$dates = array();
+			$dates = [];
 			for ($i=-2; $i<=7; $i++){				
 				$dates[] = date('m-d', strtotime("$i day"));
 			}
@@ -318,7 +318,7 @@
 		public function getCustomerOrderProducts($customer_id){
 			$query = $this->db->query("SELECT DISTINCT op.product_id FROM order_product op LEFT JOIN `order` o ON o.order_id = op.order_id WHERE o.customer_id = '" .(int)$customer_id. "'");
 			
-			$products = array();
+			$products = [];
 			foreach ($query->rows as $row){
 				$products[] = $row['product_id'];
 			}
@@ -334,14 +334,28 @@
 		}
 
 		public function getCustomerOrderManufacturers($customer_id){
-			$query = $this->db->query("SELECT DISTINCT m.manufacturer_id FROM order_product op LEFT JOIN `order` o ON o.order_id = op.order_id LEFT JOIN product p ON op.product_id = p.product_id LEFT JOIN manufacturer m ON m.manufacturer_id = p.manufacturer_id WHERE o.customer_id = '" .(int)$customer_id. "' AND o.order_status_id = '" . (int)$this->config->get('config_complete_status_id') . "'");
+			$query = $this->db->query("SELECT DISTINCT m.manufacturer_id FROM order_product op LEFT JOIN `order` o ON o.order_id = op.order_id LEFT JOIN product p ON op.product_id = p.product_id LEFT JOIN manufacturer m ON m.manufacturer_id = p.manufacturer_id WHERE o.customer_id = '" .(int)$customer_id. "' AND p.manufacturer_id <> 0 AND o.order_status_id = '" . (int)$this->config->get('config_complete_status_id') . "'");
 			
-			$manufacturers = array();
+			$manufacturers = [];
 			foreach ($query->rows as $row){
-				$manufacturers[] = $row['manufacturer_id'];
+				$manufacturers[$row['manufacturer_id']] = $row['manufacturer_id'];
 			}
 			
 			return $manufacturers;
+		}
+
+		public function getCustomerOrderCollections($customer_id){
+			$query = $this->db->query("SELECT DISTINCT co.collection_id, co.manufacturer_id FROM order_product op LEFT JOIN `order` o ON o.order_id = op.order_id LEFT JOIN product p ON op.product_id = p.product_id LEFT JOIN collection co ON co.collection_id = p.collection_id WHERE o.customer_id = '" .(int)$customer_id. "' AND p.collection_id <> 0 AND o.order_status_id = '" . (int)$this->config->get('config_complete_status_id') . "'");
+			
+			$collections = [];
+			foreach ($query->rows as $row){
+				$collections[$row['collection_id']] = [
+					'collection_id' 	=> $row['collection_id'],
+					'manufacturer_id' 	=> $row['manufacturer_id']
+				];
+			}
+			
+			return $collections;
 		}
 		
 		public function getCustomerByPhone($phone){
@@ -374,8 +388,8 @@
 			
 			$sql .= "WHERE 1 AND cgd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
 			
-			$implode = array();
-			$having_implode = array();				
+			$implode = [];
+			$having_implode = [];				
 			
 			if (!empty($data['filter_order_count'])){
 				$data['filter_order_count'] = trim($data['filter_order_count']);
@@ -498,7 +512,7 @@
 					}
 					} else {
 					$emails = explode(',',$data['filter_email']);
-					$implode_OR = array();
+					$implode_OR = [];
 					foreach ($emails as $email){
 						$implode_OR[] = "email LIKE '%" . $this->db->escape($email) . "%'";	
 					}		
@@ -554,7 +568,7 @@
 				$implode[] = "DATE(c.date_added) >= DATE('" . $this->db->escape($data['filter_date_added']) . "')";
 			}
 			
-			if (!empty($data['filter_mail_status'])) {
+			if (!empty($data['filter_mail_status']) && $data['filter_mail_status'] != '*') {
 				$implode[] = "mail_status = '" . $this->db->escape($data['filter_mail_status']) . "'";
 			}
 			
@@ -860,7 +874,7 @@
 		}
 		
 		public function getAddresses($customer_id) {
-			$address_data = array();
+			$address_data = [];
 			
 			$query = $this->db->query("SELECT address_id FROM address WHERE customer_id = '" . (int)$customer_id . "'");
 			
@@ -893,7 +907,7 @@
 				$sql .= " LEFT JOIN customer_calls cc ON (cc.customer_id = c.customer_id)";			
 			}
 			
-			$implode = array();
+			$implode = [];
 			
 			if (!empty($data['filter_name'])) {
 				$implode[] = "(CONCAT(c.firstname, ' ', c.lastname) LIKE '%" . $this->db->escape($data['filter_name']) . "%'
@@ -1021,7 +1035,7 @@
 					}
 					} else {
 					$emails = explode(',',$data['filter_email']);
-					$implode_OR = array();
+					$implode_OR = [];
 					foreach ($emails as $email){
 						$implode_OR[] = "email LIKE '%" . $this->db->escape($email) . "%'";	
 					}
@@ -1086,8 +1100,12 @@
 			if (!empty($data['filter_date_added'])) {
 				$implode[] = "DATE(date_added) >= DATE('" . $this->db->escape($data['filter_date_added']) . "')";
 			}
+
+			if (!empty($data['filter_simple_email'])) {
+				$implode[] = "c.email LIKE ('%@%')";				
+			}
 			
-			if (!empty($data['filter_mail_status'])) {
+			if (!empty($data['filter_mail_status']) && $data['filter_mail_status'] != '*') {
 				$implode[] = "mail_status = '" . $this->db->escape($data['filter_mail_status']) . "'";
 			}
 			if (!empty($data['filter_mail_checked'])) {
@@ -1811,7 +1829,7 @@
 			$sql = "SELECT DISTINCT (`mail_status`) FROM `customer` WHERE 1 = 1";
 			$query = $this->db->query($sql);
 			
-			$statusArray = array();
+			$statusArray = [];
 			foreach ($query->rows as $r) {
 				if ($r['mail_status']) {
 					$statusArray[] = $r['mail_status'];

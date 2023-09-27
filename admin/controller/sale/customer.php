@@ -2537,7 +2537,7 @@
 				$atdata = [];
 			}
 
-			$this->data['actiontemplates'] = $this->model_catalog_actiontemplate->getactiontemplates($atdata);
+			$this->data['actiontemplates'] = $this->model_catalog_actiontemplate->getActionTemplate($atdata);
 			
 			foreach ($this->data['actiontemplates'] as &$at){
 				$at['image'] = $this->model_tool_image->resize($at['image'], 100, 100);
