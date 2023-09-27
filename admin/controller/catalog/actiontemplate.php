@@ -1,9 +1,8 @@
 <?php
-	class ControllerCatalogactiontemplate extends Controller { 
+	class ControllerCatalogActionTemplate extends Controller { 
 		private $error = array();
 		
-		public function index() {
-			
+		public function index() {		
 			$this->language->load('catalog/actiontemplate');
 			
 			$this->document->setTitle($this->language->get('heading_title'));
@@ -174,9 +173,8 @@
 			'limit' => $this->config->get('config_admin_limit')
 			);
 			
-			$actiontemplate_total = $this->model_catalog_actiontemplate->getTotalActionTemplates();
-			
-			$results = $this->model_catalog_actiontemplate->getactiontemplates($data);
+			$actiontemplate_total = $this->model_catalog_actiontemplate->getTotalActionTemplates();			
+			$results = $this->model_catalog_actiontemplate->getActionTemplates($data);
 			
 			foreach ($results as $result) {									
 				$action = array();
@@ -469,6 +467,27 @@
 			
 			$this->response->setOutput($this->render());
 		}
+
+		public function loadTemplateV2(){
+			$this->load->model('catalog/actiontemplate');
+			$this->load->model('catalog/actiontemplate_functions');
+
+			$data = $this->request->post;
+
+			$actionTemplate = $this->model_catalog_actiontemplate->getActionTemplate($data['actiontemplate_id']);
+
+			if (!empty($actionTemplate['data_function']) && (method_exists($this->model_catalog_actiontemplate_functions, $actionTemplate['data_function']))){
+				$data += $this->model_catalog_actiontemplate_functions->{$actionTemplate['data_function']}($data);
+			}
+
+			if (!empty($actionTemplate['file_template'])){
+				$this->template = 'sale/actiontemplates/' . $actionTemplate['file_template'] . '.tpl';
+			} else {
+				$this->template = $actionTemplate['description'];
+			}
+
+			$this->response->setOutput($this->render());
+		}
 				
 		public function loadTemplate($customer_id = false, $template_id = false, $do_return = false){
 			
@@ -518,14 +537,13 @@
 			
 			$template = preg_replace_callback('/\{date (plus|minus) (\d+) days\}/', "makedate", $template);
 			
-			$responce = array(
-			'title' => $title,
-			'html'  => html_entity_decode($template)
-			
-			);
+			$response = [
+				'title' => $title,
+				'html'  => html_entity_decode($template)			
+			];
 			
 			if (!$do_return){
-				$this->response->setOutput(json_encode($responce));
+				$this->response->setOutput(json_encode($response));
 				} else {
 				return $responce;
 			}
@@ -552,8 +570,7 @@
 				'customer_id'    	=> $customer['customer_id'],
 				'template_id'    	=> (int)$data['template_id']
 			];
-			$data = array_merge($data, $template, $customer, $mail_info);
-			
+			$data = array_merge($data, $template, $customer, $mail_info);			
 			
 			$mail = new Mail($this->registry); 
 			$mail->setEmailTemplate(new EmailTemplate($this->request, $this->registry));

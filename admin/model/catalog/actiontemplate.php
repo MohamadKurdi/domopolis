@@ -1,6 +1,11 @@
 <?php
 	class ModelCatalogActionTemplate extends Model {
 		public function addActionTemplate($data) {
+
+			if ($data['use_for_manual']){
+				$this->db->query("UPDATE actiontemplate SET use_for_manual = 0 WHERE 1");
+			}
+			
 			$this->db->query("INSERT INTO actiontemplate SET 
 				sort_order 		= '" . (int)$data['sort_order'] . "', 
 				bottom 			= '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', 
@@ -32,6 +37,11 @@
 		}
 		
 		public function editActionTemplate($actiontemplate_id, $data) {
+
+			if ($data['use_for_manual']){
+				$this->db->query("UPDATE actiontemplate SET use_for_manual = 0 WHERE 1");
+			}
+
 			$this->db->query("UPDATE actiontemplate SET 
 				sort_order 		= '" . (int)$data['sort_order'] . "', 
 				bottom 			= '" . (isset($data['bottom']) ? (int)$data['bottom'] : 0) . "', 
@@ -72,8 +82,15 @@
 			$this->db->query("DELETE FROM url_alias WHERE query = 'actiontemplate_id=" . (int)$actiontemplate_id . "'");
 		}	
 		
-		public function getactiontemplate($actiontemplate_id) {
-			$query = $this->db->query("SELECT DISTINCT * FROM actiontemplate WHERE actiontemplate_id = '" . (int)$actiontemplate_id . "'");
+		public function getActionTemplate($actiontemplate_id, $language_id = false) {
+			if (!$language_id){
+				$language_id = $this->config->get('config_language_id');
+			}
+
+			$query = $this->db->query("SELECT DISTINCT at.*, ad.title, ad.file_template FROM 
+				actiontemplate at 
+				LEFT JOIN actiontemplate_description ad ON (at.actiontemplate_id = ad.actiontemplate_id AND language_id = '" . (int)$language_id . "')
+				WHERE at.actiontemplate_id = '" . (int)$actiontemplate_id . "'");
 			
 			return $query->row;
 		}
@@ -163,7 +180,7 @@
 			return $query->rows;
 		}
 		
-		public function getactiontemplates($data = array()) {
+		public function getActionTemplates($data = array()) {
 			$sql = "SELECT i.*, id.*, c.code, c.currency, c.manager_id FROM actiontemplate i 
 					LEFT JOIN actiontemplate_description id ON (i.actiontemplate_id = id.actiontemplate_id) 
 					LEFT JOIN coupon c ON (i.actiontemplate_id = c.actiontemplate_id) 
@@ -176,6 +193,10 @@
 			
 			if (!empty($data['manager_id'])){				
 				$sql .= " AND (ISNULL(c.manager_id) OR c.manager_id = 0 OR c.manager_id = '" . (int)$data['manager_id'] . "')";			
+			}
+
+			if (!empty($data['filter_use_for_manual'])){				
+				$sql .= " AND use_for_manual = 1";			
 			}
 			
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -204,6 +225,10 @@
 			
 			$query = $this->db->query($sql);
 			
+			if (!empty($data['filter_use_for_manual']) && $query->num_rows){
+				return $query->row;
+			}
+
 			return $query->rows;	
 		}
 		
