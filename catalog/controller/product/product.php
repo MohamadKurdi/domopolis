@@ -1087,8 +1087,11 @@ public function index($product_id = false, $just_price = false)
                             } else {
                                 $this->data['manufacturers_img']        = false;
                                 $this->data['manufacturers_img_260']    = false;
-                            }
-                            
+                            }                            
+                        } else {
+                            $this->data['manufacturers']            = false;
+                            $this->data['manufacturers_img']        = false;
+                            $this->data['manufacturers_img_260']    = false;
                         }
 
                         if ($product_info['image']) {
