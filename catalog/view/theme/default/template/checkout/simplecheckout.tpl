@@ -131,7 +131,7 @@
                         mainUrl: "<?php echo $action; ?>",
                         mainContainer: "#simplecheckout_form_<?php echo $group ?>",
                         currentTheme: "<?php echo $current_theme ?>",
-                        <? /*    loginBoxBefore: "<?php echo $login_type == 'flat' ? '#simplecheckout_customer .simplecheckout-block-content:first' : '' ?>", */ ?>
+                        <?php /* loginBoxBefore: "<?php echo $login_type == 'flat' ? '#simplecheckout_customer .simplecheckout-block-content:first' : '' ?>", */ ?>
                         loginBoxBefore: "#simplecheckout-block-login-ajax",
                         displayProceedText: <?php echo $display_proceed_text ? 1 : 0 ?>,
                         scrollToError: <?php echo $scroll_to_error ? 1 : 0 ?>,

@@ -147,7 +147,7 @@
     <?php if (!$display_products && $display_totals_block && !empty($display_totals)) { ?>
 		<div class="simplecheckout-summary-totals">
 		<?php } ?>
-        <button id="simplecheckout-button-main-confirm" class="btn simplecheckout_button_confirm"  onclick="doSubmitOrderByFakeButton();"><?php echo $text_retranslate_40; ?></button>
+        <button id="simplecheckout-button-main-confirm" class="btn simplecheckout_button_confirm" <?php if ($block_order) { ?>disabled="disabled"<?php } ?> onclick="doSubmitOrderByFakeButton();"><?php echo $text_retranslate_40; ?></button>
 	</div>
     <?php /* if (!$display_products && $display_totals_block && !empty($display_totals)) { ?>
 		<div id="report_bug_simple">
@@ -169,15 +169,14 @@
 		
 		if ($('input[name=\'payment_method_current\']').val() != ''){
 			if (typeof window.simplecheckout_0 == 'object' && window.simplecheckout_0.isPaymentFormEmpty()){										
-				window.simplecheckout_0.copyPaymentFormFromDefaultIfIsEmptyAndFinishOrder();
+			//	window.simplecheckout_0.copyPaymentFormFromDefaultIfIsEmptyAndFinishOrder();
+				window.simplecheckout_0.copyPaymentFormFromDefaultIfIsEmpty();
 			}
 		}
 		
 		$('#simplecheckout_button_confirm').trigger('click');
 	}
 </script>
-
-
 
 <?php if ($display_comment) { ?>
 	<?php if ($summary_comment) { ?>
