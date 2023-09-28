@@ -32,12 +32,12 @@ class ControllerPaymentUkrcreditsPp extends Controller {
 			$partsCount = $setting['pp_pq'];
 		}
 
-		$total_data = array();					
+		$total_data = [];					
 		$total = 0;
 		$taxes = $this->cart->getTaxes();
 
 		if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-			$sort_order = array(); 
+			$sort_order = []; 
 
 			$results = $this->model_setting_extension->getExtensions('total');
 
@@ -54,7 +54,7 @@ class ControllerPaymentUkrcreditsPp extends Controller {
 					$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
 				}
 
-				$sort_order = array(); 
+				$sort_order = []; 
 
 				foreach ($total_data as $key => $value) {
 					$sort_order[$key] = $value['sort_order'];
@@ -64,15 +64,21 @@ class ControllerPaymentUkrcreditsPp extends Controller {
 			}		
 		}
 
-		$replace_array = array($this->currency->getSymbolLeft($this->session->data['currency']),$this->currency->getSymbolRight($this->session->data['currency']),$this->language->get('thousand_point'));
-		$data['total'] = str_replace($replace_array,"",$this->currency->format($this->tax->calculate($total, $this->config->get('tax_class_id'), $this->config->get('config_tax')), $this->session->data['currency']));
+		$data['total'] = $total;
+		foreach ($total_data as $total_line){
+			if ($total_line['code'] == 'total'){
+				$data['total'] = $total_line['value_national'];
+				break;
+			}
+		}
+
         $data['action'] = $this->url->link('payment/ukrcredits_pp/sendDataDeal', '', 'SSL');	
 		
 		$data['credit'] = array(
-			'type' => $setting['pp_merchantType'],
-			'name' => $this->language->get('text_title_'.mb_strtolower($setting['pp_merchantType'])),
-			'partsCount' => $partsCount,
-			'price' => $data['total']
+			'type' 			=> $setting['pp_merchantType'],
+			'name' 			=> $this->language->get('text_title_'.mb_strtolower($setting['pp_merchantType'])),
+			'partsCount' 	=> $partsCount,
+			'price' 		=> $data['total']
 		);
 		
 		if (isset($this->session->data['ukrcredits_pp_sel'])) {
@@ -85,7 +91,6 @@ class ControllerPaymentUkrcreditsPp extends Controller {
 		$this->data = $data;
 		$this->template = 'payment/ukrcredits.tpl';		
 		$this->render();		
-
     }
     
     private function generateAnswerSignature ($dataAnsweArr){
@@ -103,8 +108,7 @@ class ControllerPaymentUkrcreditsPp extends Controller {
                               
         $signatureAnswer = base64_encode(SHA1($signatureAnswerStr, true));		
 		
-        return $signatureAnswer;                               
-        
+        return $signatureAnswer;                                      
     }
     
     private function generateSignature ($dataArr){
@@ -147,7 +151,6 @@ class ControllerPaymentUkrcreditsPp extends Controller {
                         $dataArr['storeId'].
                         $dataArr['orderId'].
                         $amountStr.
- //                       $dataArr['currency'].
                         $dataArr['partsCount'].
                         $dataArr['merchantType'].
                         $dataArr['responseUrl'].
@@ -177,8 +180,6 @@ class ControllerPaymentUkrcreditsPp extends Controller {
         
         if (isset($this->session->data['order_id'])) {
             $this->cart->clear();
-
-            // Add to activity log
             $this->load->model('account/activity');
 
             if ($this->customer->isLogged()) {
@@ -214,13 +215,15 @@ class ControllerPaymentUkrcreditsPp extends Controller {
     }
 
 	public function setUkrcreditsType(){
-		$json = array();
-		$dir = version_compare(VERSION,'2.3','>=') ? 'extension/module' : 'module';
-		$this->language->load($dir.'/ukrcredits');
+		$json = [];		
+		$this->language->load('module/ukrcredits');
+
 		$this->session->data['payment_method']['title'] = $this->language->get('text_title_pp');
-		$this->session->data['payment_method']['code'] = 'ukrcredits_pp';
+		$this->session->data['payment_method']['code'] 	= 'ukrcredits_pp';
+		$this->session->data['ukrcredits_pp_sel'] 		= $this->request->post['partsCount'];
+
 		setcookie('payment_method', 'ukrcredits_pp', time() + 60 * 60 * 24 * 30);
-		$this->session->data['ukrcredits_pp_sel'] = $this->request->post['partsCount'];        
+		        
         $json['success'] = TRUE;
  
 		if ($this->request->get['route'] != 'checkout/checkout') {
@@ -231,207 +234,71 @@ class ControllerPaymentUkrcreditsPp extends Controller {
 	}
 	
     public function sendDataDeal(){
-		$type = version_compare(VERSION,'3.0','>=') ? 'payment_' : '';
-        $setting = $this->config->get($type.'ukrcredits_settings');
+        $setting = $this->config->get('ukrcredits_settings');
         $this->load->model('checkout/order');
 		$this->load->model('module/ukrcredits');
+		$this->load->model('setting/extension');
 
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
            
         if ($order_info) {
-            $data_deal['storeId'] = $setting['pp_shop_id'];
-            $data_deal['orderId'] = $this->generateOrderId($order_info['order_id']);
-            $data_deal['partsCount'] = $this->request->post['partsCount'];
-            $data_deal['merchantType'] = $setting['pp_merchantType'];
-            $data_deal['products'] = array();
-			
-			if (version_compare(VERSION, '3.0', '>=')) {
-				// Totals
-				$this->load->model('setting/extension');
-
-				$totals = array();
-				$taxes = $this->cart->getTaxes();
-				$total = 0;
+            $data_deal['storeId'] 		= $setting['pp_shop_id'];
+            $data_deal['orderId'] 		= $this->generateOrderId($order_info['order_id']);
+            $data_deal['partsCount'] 	= $this->request->post['partsCount'];
+            $data_deal['merchantType'] 	= $setting['pp_merchantType'];
+            $data_deal['products'] 		= [];
 				
-				// Because __call can not keep var references so we put them into an array. 			
-				$total_data = array(
-					'totals' => &$totals,
-					'taxes'  => &$taxes,
-					'total'  => &$total
-				);
-				
-				// Display prices
-				if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
-					$sort_order = array();
+			$total_data = [];					
+			$total = 0;
+			$taxes = $this->cart->getTaxes();
 
-					$results = $this->model_setting_extension->getExtensions('total');
+			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
+				$sort_order = []; 
 
-					foreach ($results as $key => $value) {
-						$sort_order[$key] = $this->config->get('total_' . $value['code'] . '_sort_order');
+				$results = $this->model_setting_extension->getExtensions('total');
+
+				foreach ($results as $key => $value) {
+					$sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
+				}
+
+				array_multisort($sort_order, SORT_ASC, $results);
+
+				foreach ($results as $result) {
+					if ($this->config->get($result['code'] . '_status')) {
+						$this->load->model('total/' . $result['code']);
+
+						$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
 					}
 
-					array_multisort($sort_order, SORT_ASC, $results);
+					$sort_order = []; 
 
-					foreach ($results as $result) {
-						if ($this->config->get('total_' . $result['code'] . '_status')) {
-							$this->load->model('extension/total/' . $result['code']);
-							
-							// We have to put the totals in an array so that they pass by reference.
-							$this->{'model_extension_total_' . $result['code']}->getTotal($total_data);
-						}
-					}
-
-					$sort_order = array();
-
-					foreach ($totals as $key => $value) {
+					foreach ($total_data as $key => $value) {
 						$sort_order[$key] = $value['sort_order'];
 					}
 
-					array_multisort($sort_order, SORT_ASC, $totals);
-				}			
-			} else if (version_compare(VERSION, '2.3', '>=')) {
-				// Totals
-				$this->load->model('extension/extension');
-
-				$totals = array();
-				$taxes = $this->cart->getTaxes();
-				$total = 0;
-
-				// Because __call can not keep var references so we put them into an array.
-				$total_data = array(
-					'totals' => &$totals,
-					'taxes'  => &$taxes,
-					'total'  => &$total
-				);
-					
-				// Display prices
-				if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
-					$sort_order = array();
-
-					$results = $this->model_extension_extension->getExtensions('total');
-
-					foreach ($results as $key => $value) {
-						$sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
-					}
-
-					array_multisort($sort_order, SORT_ASC, $results);
-
-					foreach ($results as $result) {
-						if ($this->config->get($result['code'] . '_status')) {
-							$this->load->model('extension/total/' . $result['code']);
-
-							$this->{'model_extension_total_' . $result['code']}->getTotal($total_data);
-						}
-					}
-
-					$sort_order = array();
-
-					foreach ($totals as $key => $value) {
-						$sort_order[$key] = $value['sort_order'];
-					}
-
-					array_multisort($sort_order, SORT_ASC, $totals);
-				}
-			} else if (version_compare(VERSION, '2.0', '>=')) {
-				// Totals
-				$this->load->model('extension/extension');
-				$total_data = array();
-				$total = 0;
-				$taxes = $this->cart->getTaxes();
-				
-				if(version_compare( VERSION, '2.2.0.0', '>=' )) {
-					$total_data = array(
-						'totals' => &$totals,
-						'taxes'  => &$taxes,
-						'total'  => &$total
-					);
-				}
-				
-				// Display prices
-				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-					$sort_order = array();
-						$results = $this->model_extension_extension->getExtensions('total');
-						foreach ($results as $key => $value) {
-							$sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
-						}
-						array_multisort($sort_order, SORT_ASC, $results);
-						foreach ($results as $result) {
-						if ($this->config->get($result['code'] . '_status')) {
-							$this->load->model('total/' . $result['code']);
-								if(version_compare( VERSION, '2.2.0.0', '>=' )) {
-								$this->{'model_total_' . $result['code']}->getTotal($total_data);
-							} else {
-								$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
-							}
-						}
-					}
-					$sort_order = array();
-					if(version_compare( VERSION, '2.2.0.0', '>=' )) {
-						foreach ($totals as $key => $value) {
-							$sort_order[$key] = $value['sort_order'];
-						}
-						array_multisort($sort_order, SORT_ASC, $totals);
-					} else {
-						foreach ($total_data as $key => $value) {
-							$sort_order[$key] = $value['sort_order'];
-						}
-						array_multisort($sort_order, SORT_ASC, $total_data);
-						$totals = $total_data; 
-					}
-				}			
-			} else {
-				// Totals
-				$this->load->model('setting/extension');
-				
-				$total_data = array();					
-				$total = 0;
-				$taxes = $this->cart->getTaxes();
-				
-				// Display prices
-				if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-					$sort_order = array(); 
-					
-					$results = $this->model_setting_extension->getExtensions('total');
-					
-					foreach ($results as $key => $value) {
-						$sort_order[$key] = $this->config->get($value['code'] . '_sort_order');
-					}
-					
-					array_multisort($sort_order, SORT_ASC, $results);
-					
-					foreach ($results as $result) {
-						if ($this->config->get($result['code'] . '_status')) {
-							$this->load->model('total/' . $result['code']);
-				
-							$this->{'model_total_' . $result['code']}->getTotal($total_data, $total, $taxes);
-						}
-						
-						$sort_order = array(); 
-					  
-						foreach ($total_data as $key => $value) {
-							$sort_order[$key] = $value['sort_order'];
-						}
-			
-						array_multisort($sort_order, SORT_ASC, $total_data);
-					}		
-				}
-				$totals = $total_data;
+					array_multisort($sort_order, SORT_ASC, $total_data);
+				}		
 			}
+			$totals = $total_data;
 
 			$sumtotal =0;
 			$discount = 0;
 
 			foreach ($totals as $total) {
+				if (empty($total['value_national'])){
+					$total['value_national'] = 0;
+				}
+
 				if (($total['code'] != 'sub_total') && ($total['code'] != 'total')) {
-					if ($total['value'] > 0) {
+					if ($total['value_national'] > 0) {
 						$data_deal['products'][] = array(
-							'name' => htmlspecialchars_decode(trim($total['title'])),
-							'count' => 1,
-							'price'    => $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value'], false)
+							'name' 		=> htmlspecialchars_decode(trim($total['title'])),
+							'count' 	=> 1,
+							'price'    	=> $total['value_national']
 						);
-						$sumtotal += $this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value'], false);
+						$sumtotal += $total['value_national'];
 					} else {
-						$discount += abs($this->currency->format($total['value'], $order_info['currency_code'], $order_info['currency_value'], false));
+						$discount += abs($total['value_national']);
 					}
 				}
 			}
@@ -440,30 +307,30 @@ class ControllerPaymentUkrcreditsPp extends Controller {
 			$minus = $discount / $productquantity;
 
             foreach ($this->cart->getProducts() as $product) {
-				if (($this->currency->format($product['price'], $order_info['currency_code'], $order_info['currency_value'], false) - $minus) <= 0) {
+				if (($product['price_national'] - $minus) <= 0) {
 					$productquantity = $productquantity - $product['quantity'];
 					$data_deal['products'][] = array(
-						'name'     => htmlspecialchars(trim($product['name'])),
-						'count' => $product['quantity'],
-						'price'    => $this->currency->format($product['price'], $order_info['currency_code'], $order_info['currency_value'], false)
+						'name'     	=> htmlspecialchars(trim($product['name'])),
+						'count' 	=> $product['quantity'],
+						'price'    	=> $product['price_national']
 					);
-					$sumtotal += $this->currency->format($product['price'], $order_info['currency_code'], $order_info['currency_value'], false) * $product['quantity'];
+					$sumtotal += $product['price_national'] * $product['quantity'];
 				}
             }
+
 			$minus = $discount / $productquantity;
             foreach ($this->cart->getProducts() as $product) {
-				if (($this->currency->format($product['price'], $order_info['currency_code'], $order_info['currency_value'], false) - $minus) > 0) {
+				if (($product['price_national'] - $minus) > 0) {
 					$data_deal['products'][] = array(
-						'name'     => htmlspecialchars(trim($product['name'])),
-						'count' => $product['quantity'],
-						'price'    => $this->currency->format($product['price'], $order_info['currency_code'], $order_info['currency_value'], false) - $minus
+						'name'     	=> htmlspecialchars(trim($product['name'])),
+						'count' 	=> $product['quantity'],
+						'price'    	=> $product['price_national'] - $minus
 					);
-					$sumtotal += ($this->currency->format($product['price'], $order_info['currency_code'], $order_info['currency_value'], false) - $minus) * $product['quantity'];
+					$sumtotal += $product['price_national'] * $product['quantity'];
 				}
             }	
 			
 			$data_deal['amount'] = $sumtotal;
-
 
             $data_deal['responseUrl'] = $this->url->link('payment/ukrcredits_pp/callback', '', 'SSL');
             $data_deal['redirectUrl'] = $this->url->link('checkout/checkout');
@@ -495,9 +362,8 @@ class ControllerPaymentUkrcreditsPp extends Controller {
 			}
             echo  json_encode($responseResDeal);         
         } else {
-            echo json_encode(array('state'=>'sys_error','message'=>$responseResDeal));
-        }
-     
+            echo json_encode(['state' => 'sys_error','message' => $responseResDeal]);
+        }     
     }                        
 
     public function callback() {
@@ -508,13 +374,13 @@ class ControllerPaymentUkrcreditsPp extends Controller {
 
         $this->load->model('checkout/order');
 
-        $orderIdArr = explode('_',$requestArr['orderId']);
-        $order_id = $orderIdArr[1];
-		$privat_order_id = $requestArr['orderId'];
-		$privat_order_status = $requestArr['paymentState'];
-        $comment = $requestArr['message'];
-        $localAnswerSignature = $this->generateAnswerSignature ($requestArr);
-        $order_info = $this->model_checkout_order->getOrder($order_id);
+        $orderIdArr 			= explode('_',$requestArr['orderId']);
+        $order_id 				= $orderIdArr[1];
+		$privat_order_id 		= $requestArr['orderId'];
+		$privat_order_status 	= $requestArr['paymentState'];
+        $comment 				= $requestArr['message'];
+        $localAnswerSignature 	= $this->generateAnswerSignature ($requestArr);
+        $order_info 			= $this->model_checkout_order->getOrder($order_id);
         
         if ($order_info) {        
             if (strcmp($requestArr['signature'], $localAnswerSignature) == 0) {
