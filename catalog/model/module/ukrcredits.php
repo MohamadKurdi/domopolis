@@ -224,7 +224,6 @@ class ModelModuleUkrcreditsMain extends Model {
 									$option_value_query = $this->db->query("SELECT pov.option_value_id, ovd.name, pov.quantity, pov.subtract, pov.price, pov.price_prefix, pov.points, pov.points_prefix, pov.weight, pov.weight_prefix FROM product_option_value pov LEFT JOIN option_value ov ON (pov.option_value_id = ov.option_value_id) LEFT JOIN option_value_description ovd ON (ov.option_value_id = ovd.option_value_id) WHERE pov.product_option_value_id = '" . (int)$option_value . "' AND pov.product_option_id = '" . (int)$product_option_id . "' AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 									
 									if ($option_value_query->num_rows) {
-									  //знаки равно нужными первыми
 									  if ($option_value_query->row['price_prefix'] == '=') {
 										  $sort_key=count($option_price_arr) + 1;
 									  } else {
@@ -246,7 +245,6 @@ class ModelModuleUkrcreditsMain extends Model {
 										$option_value_query = $this->db->query("SELECT pov.option_value_id, ovd.name, pov.quantity, pov.subtract, pov.price, pov.price_prefix, pov.points, pov.points_prefix, pov.weight, pov.weight_prefix FROM product_option_value pov LEFT JOIN option_value ov ON (pov.option_value_id = ov.option_value_id) LEFT JOIN option_value_description ovd ON (ov.option_value_id = ovd.option_value_id) WHERE pov.product_option_value_id = '" . (int)$product_option_value_id . "' AND pov.product_option_id = '" . (int)$product_option_id . "' AND ovd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 										
 										if ($option_value_query->num_rows) {
-										  //знаки равно нужными первыми
 										  if ($option_value_query->row['price_prefix'] == '=') {
 											  $sort_key=count($option_price_arr) + 1;
 										  } else {
@@ -276,7 +274,6 @@ class ModelModuleUkrcreditsMain extends Model {
 					  foreach($option_price_arr as $operations){
 						  foreach($operations as $operation=>$value){
 							  if ($operation == '=') {
-								  //цена опции становится основной
 								  if (!$has_eq_mod){
 									  $new_price = 0;
 									  $new_option_price = $value;
@@ -311,7 +308,8 @@ class ModelModuleUkrcreditsMain extends Model {
 					$ii_price = ($ii_price + $option_price) * $markup_ii * $quantity;
 					$ii_type = $setting['ii_merchantType'];
 					if ($ii_type == 'II') {
-						$mounthprice = strip_tags($this->currency->format($this->tax->calculate(($ii_price*$markup_ii/($partsCountii+1))+(($ii_price*$markup_ii)*(2.9/100)), $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']));
+						$mounthprice = strip_tags($this->currency->format($this->tax->calculate(($ii_price*$markup_ii/($partsCountii+1))+(($ii_price*$markup_ii)*(1.9/100)), $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']));
+
 						$mounthprice_text_ii = sprintf($this->language->get('text_min_ii'), $partsCountii, $mounthprice);
 
 						if (!empty($setting['title_ii']) && !empty($setting['title_ii'][$this->config->get('config_language_id')])){
@@ -495,6 +493,7 @@ class ModelModuleUkrcreditsMain extends Model {
 			$pp = array(
 				'type' 				=> $pp_type,
 				'price' 			=> $pp_price,
+				'price_txt' 		=> $this->currency->format($pp_price, $this->config->get('config_regional_currency'), 1),
 				'partsCount' 		=> $partsCountpp,
 				'partsCountSel' 	=> isset($this->session->data['ukrcredits_pp_sel'])?$this->session->data['ukrcredits_pp_sel']:'',
 				'name' 				=> $pp_name,
@@ -513,6 +512,7 @@ class ModelModuleUkrcreditsMain extends Model {
 			$ii = array(
 				'type' 				=> $ii_type,
 				'price' 			=> $ii_price,
+				'price_txt' 		=> $this->currency->format($ii_price, $this->config->get('config_regional_currency'), 1),
 				'partsCount' 		=> $partsCountii,
 				'partsCountSel' 	=> isset($this->session->data['ukrcredits_ii_sel'])?$this->session->data['ukrcredits_ii_sel']:'',
 				'name' 				=> $ii_name,
@@ -531,6 +531,7 @@ class ModelModuleUkrcreditsMain extends Model {
 			$mb = array(
 				'type' 				=> $mb_type,
 				'price' 			=> $mb_price,
+				'price_txt' 		=> $this->currency->format($mb_price, $this->config->get('config_regional_currency'), 1),
 				'partsCount' 		=> $partsCountmb,
 				'partsCountSel' 	=> isset($this->session->data['ukrcredits_mb_sel'])?$this->session->data['ukrcredits_mb_sel']:'',
 				'name' 				=> $mb_name,

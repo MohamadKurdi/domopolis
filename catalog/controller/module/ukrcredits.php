@@ -7,27 +7,30 @@ class ControllerModuleUkrcredits extends Controller {
 		$dir = version_compare(VERSION,'2.2','>=') ? 'extension/module' : 'module';
 		$this->load->language($dir.'/ukrcredits');	
 			
-		$ukrcredits_setting = $this->config->get($type.'ukrcredits_settings');
-		$data['ukrcredits_setting'] = $this->config->get($type.'ukrcredits_settings');
-		$data['ukrcredits_selector_block'] = $ukrcredits_setting['selector_block'];
-		$data['ukrcredits_icons_size'] = $ukrcredits_setting['icons_size'];
-		$data['currency_left'] = $this->currency->getSymbolLeft($this->session->data['currency']);
-		$data['currency_right'] = $this->currency->getSymbolRight($this->session->data['currency']);		
-		$data['text_credithead'] = $this->language->get('text_credithead');
+		$ukrcredits_setting 				= $this->config->get($type.'ukrcredits_settings');
+		$data['ukrcredits_setting'] 		= $this->config->get($type.'ukrcredits_settings');
+		$data['ukrcredits_selector_block'] 	= $ukrcredits_setting['selector_block'];
+		$data['ukrcredits_icons_size'] 		= $ukrcredits_setting['icons_size'];
+		$data['currency_left'] 				= $this->currency->getSymbolLeft($this->session->data['currency']);
+		$data['currency_right'] 			= $this->currency->getSymbolRight($this->session->data['currency']);		
+		$data['text_credithead'] 			= $this->language->get('text_credithead');
 
-		$data['text_mounth'] = $this->language->get('text_mounth');
-		$data['text_loading'] = $this->language->get('text_loading');
-		$data['text_payments'] = $this->language->get('text_payments');
-		$data['text_submit'] = $this->language->get('text_submit');
-		$data['text_per'] = $this->language->get('text_per');
-		$data['text_total'] = $this->language->get('text_total');
-		
-		$data['credit_text'] = $this->language->get('credit_text');
+		$data['text_mounth'] 	= $this->language->get('text_mounth');
+		$data['text_loading'] 	= $this->language->get('text_loading');
+		$data['text_payments'] 	= $this->language->get('text_payments');
+		$data['text_submit'] 	= $this->language->get('text_submit');
+		$data['text_per'] 		= $this->language->get('text_per');
+		$data['text_total'] 	= $this->language->get('text_total');		
+		$data['credit_text'] 	= $this->language->get('credit_text');
 		
 		if (isset($this->request->get['product_id'])) {
 			$product_id = $this->request->get['product_id'];
 		} else {
 			$product_id = 0;
+		}
+
+		if (isset($this->request->get['x'])) {
+			$product_id = $this->request->get['x'];
 		}
 		
 		$this->load->model('catalog/product');
@@ -48,7 +51,7 @@ class ControllerModuleUkrcredits extends Controller {
 		}
 
 		$this->load->model('module/ukrcredits');
-		$data['credits_data'] = $this->model_module_ukrcredits->checkproduct($product_info, $quantity, $option);			
+		$data['credits_data'] = $this->model_module_ukrcredits->checkproduct($product_info, $quantity, $option);				
 
 		$this->data = $data;
 		$this->template = 'module/ukrcredits.tpl';

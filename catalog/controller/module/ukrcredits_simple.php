@@ -76,13 +76,14 @@ class ControllerModuleUkrcreditsSimple extends Controller {
 			foreach ($total_data as $total_line){
 				if ($total_line['code'] == 'total'){
 					$data['total'] = $total_line['value_national'];
+					break;
 				}
 			}
 
 			$price 						= $data['total'];
 			$price_txt 					= $this->currency->format($price, $this->config->get('config_regional_currency'), 1);
 
-			$data['credit'] = array(
+			$data['credit'] = [
 				'type' 				=> $setting[$type.'_merchantType'],
 				'name' 				=> $this->language->get('text_title_'.mb_strtolower($setting[$type.'_merchantType'])),
 				'text_in_product'	=> $setting['text_in_product_' . $type][$this->config->get('config_language_id')],
@@ -90,7 +91,7 @@ class ControllerModuleUkrcreditsSimple extends Controller {
 				'partsCount' 		=> $partsCount,
 				'price' 			=> $price,
 				'price_txt'			=> $price_txt
-			);
+			];
 			
 			if (isset($this->session->data['ukrcredits_' . $type . '_sel'])) {
 				$data['credit']['partsCountSel'] = $this->session->data['ukrcredits_' . $type . '_sel'];
