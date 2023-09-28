@@ -668,6 +668,23 @@
                 $(self.params.mainContainer).find(self.selectors.proceedText).show();            
             }
         };
+
+        this.copyPaymentFormFromDefaultIfIsEmpty  = function(){
+            var self = this;
+            
+            if (self.isPaymentFormEmpty()){
+                console.log('[Simple] Payment Form EMPTY!');
+                let paymentFormCode = $(self.selectors.defaultPaymentForm).html();
+                $(self.selectors.defaultPaymentForm).html('');
+                $(self.selectors.paymentForm).html(paymentFormCode);
+                
+                $(self.selectors.paymentForm).promise().done(console.log('[Simple] Init default payment form done!'));
+                
+                return true;
+            }
+            
+            return false;
+        }
         
         this.copyPaymentFormFromDefaultIfIsEmptyAndFinishOrder  = function(){
             var self = this;
@@ -1176,11 +1193,15 @@
         this.createOrder = function() {
             var self = this;
             
+           console.log('[Simple] createOrder call');
+
             self.validate(false).then(function(result) {
+                console.log('[Simple] ' + result);
                 if (result) {
                     self.isCreateOrderClicked = true;
                     self.submitForm();
-                    } else {
+                
+                } else {
                     if (typeof toastr !== 'undefined' && self.params.notificationCheckForm) {
                         toastr.error(self.params.notificationCheckFormText);
                     }
@@ -1365,10 +1386,13 @@
             });
         };
         
-        this.reloadBlock = function(container, callback) {
+        this.reloadBlock = function(container, callback, explicit = false) {
             var self = this;
             if (self.isReloading) {
-                return;
+                console.log('[Simple] is now reloading, skipping reloadBlock ' + container);
+                if (!explicit){
+                    return;
+                }                
             }
             self.isReloading = true;
             var postData = $(self.params.mainContainer).find("input,select,textarea").serialize();
