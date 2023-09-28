@@ -330,7 +330,6 @@
 				}
 			}
             
-            // Gift Voucher
             $this->_templateData['vouchers'] = array();
             
             if (!empty($this->session->data['vouchers'])) {
@@ -649,6 +648,8 @@
             if (!$this->_templateData['display_products'] && !$this->_templateData['display_totals_block'] && !$this->_templateData['display_comment'] && !$this->_templateData['display_address']) {            
 				$this->_templateData['hide'] = true;
 			}
+
+			$this->_templateData['block_order'] = $this->simplecheckout->isOrderBlocked();
             
             $this->setOutputContent($this->renderPage('checkout/simplecheckout_summary', $this->_templateData));
 		}

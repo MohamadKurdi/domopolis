@@ -198,11 +198,11 @@
 					}
 				}
 				
+				$this->_templateData['block_order'] = $this->simplecheckout->isOrderBlocked();
+
 				if ($this->simplecheckout->hasBlock('summary')) {
 					$this->_templateData['simple_blocks']['summary'] = $this->getChildController('checkout/simplecheckout_summary');
 				}
-				
-				$this->_templateData['block_order'] = $this->simplecheckout->isOrderBlocked();
 				
 				if ($this->request->server['REQUEST_METHOD'] == 'POST') {
 					$this->_templateData['agreements'] = !empty($this->request->post['agreements']) ? $this->request->post['agreements'] : array();
