@@ -277,11 +277,9 @@
 										
 										$row['query'] = $this->mapQueryRev($row['query']);
 									}
-								}
-								
+								}								
 								$rowCounter++;
 							}
-							
 						}
 					}
 				}		
@@ -302,8 +300,7 @@
 								}
 								
 								$rowCounter++;
-							}
-							
+							}							
 						}
 					}
 				}

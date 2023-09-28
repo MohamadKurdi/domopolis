@@ -10,8 +10,7 @@
 				if ($total['code'] == 'shipping'){
 					return $total['value_national'];
 				}
-			}
-			
+			}			
 		}
 		
 		public function getOrderTotal($order_id){
@@ -22,8 +21,7 @@
 				if ($total['code'] == 'total'){
 					return $total['value_national'];
 				}
-			}
-			
+			}			
 		}
 		
 		public function index() { 	
@@ -32,7 +30,6 @@
 				$this->session->data['order_id'] = 213196;
 			}
 			
-			//detecting mobile
 			$this->data['is_pc'] = (!IS_MOBILE_SESSION && !IS_TABLET_SESSION);
 			
 			$this->load->model('tool/image');
@@ -84,14 +81,11 @@
                             } elseif ($percent == 100) {
 							$discount = "free";
                             } else {
-							// print $query->row['price'];
 							$discount = $this->currency->format($this->tax->calculate($query->row['price'], 0, $this->config->get('config_tax')));
 						}
-					}
-					
+					}					
 				}
-				
-				
+								
 				// $this->data['discount'] = $discount;
 				
 				$this->data['actions_all'][] = array(
@@ -106,8 +100,7 @@
 				);					
 			}
 			
-			if (isset($this->session->data['order_id'])) {
-				
+			if (isset($this->session->data['order_id'])) {				
 				$this->session->data['last_order_id'] = $this->session->data['order_id'];
 				$this->load->model('checkout/order');
 				$this->load->model('catalog/product');
@@ -173,32 +166,36 @@
 				foreach ($products as $product){
 					$realProduct = $this->model_catalog_product->getProduct($product['product_id'], false);
 					
-					$gtin = false;
-					if (\BarcodeValidator::IsValidEAN13($realProduct['ean']) || \BarcodeValidator::IsValidEAN8($realProduct['ean'])){
-						$gtin = $realProduct['ean'];
-					}
-					
-					if ($realProduct['current_in_stock']){
-						$productsOnStock++;
-					}
-					
-					$transactionProduct = array(
-					'id'  			=> $product['product_id'],
-					'sku' 			=> $realProduct['sku']?$realProduct['sku']:$realProduct['model'],
-					'name' 			=> $realProduct['name'],
-					'manufacturer' 	=> $realProduct['manufacturer'],
-					'category' 		=> $this->model_catalog_product->getGoogleCategoryPath($realProduct['product_id']),
-					'price' 		=> $product['price_national'],
-					'total' 		=> $product['total_national'],
-					'quantity' 		=> $product['quantity'],
-					);										
-					
-					if ($gtin){
-						$transactionGTINS[] = '{"gtin":"' . prepareEcommString($gtin) . '"}';
-					}
-					
-					$transactionProduct = array_map('prepareEcommString', $transactionProduct);					
-					$transactionProducts[] = $transactionProduct;			
+					if ($realProduct){
+						$gtin = false;
+						if (!empty($realProduct['ean'])){
+							if (\BarcodeValidator::IsValidEAN13($realProduct['ean']) || \BarcodeValidator::IsValidEAN8($realProduct['ean'])){
+								$gtin = $realProduct['ean'];
+							}
+						}
+						
+						if ($realProduct['current_in_stock']){
+							$productsOnStock++;
+						}
+						
+						$transactionProduct = array(
+							'id'  			=> $product['product_id'],
+							'sku' 			=> $realProduct['sku']?$realProduct['sku']:$realProduct['model'],
+							'name' 			=> $realProduct['name'],
+							'manufacturer' 	=> $realProduct['manufacturer'],
+							'category' 		=> $this->model_catalog_product->getGoogleCategoryPath($realProduct['product_id']),
+							'price' 		=> $product['price_national'],
+							'total' 		=> $product['total_national'],
+							'quantity' 		=> $product['quantity'],
+						);										
+						
+						if ($gtin){
+							$transactionGTINS[] = '{"gtin":"' . prepareEcommString($gtin) . '"}';
+						}
+						
+						$transactionProduct = array_map('prepareEcommString', $transactionProduct);					
+						$transactionProducts[] = $transactionProduct;	
+					}		
 				}
 				
 				
