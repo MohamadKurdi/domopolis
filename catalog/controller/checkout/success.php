@@ -24,12 +24,7 @@
 			}			
 		}
 		
-		public function index() { 	
-			
-			if (!isset($this->session->data['order_id']) && IS_DEBUG){
-				$this->session->data['order_id'] = 213196;
-			}
-			
+		public function index() { 				
 			$this->data['is_pc'] = (!IS_MOBILE_SESSION && !IS_TABLET_SESSION);
 			
 			$this->load->model('tool/image');
