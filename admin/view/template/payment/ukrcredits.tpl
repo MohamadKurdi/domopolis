@@ -1425,6 +1425,7 @@
  } else {
    $('#mb_markup_custom').show();
  }
+ 
  $('input[name=\'mb_markup_type\']').change(function() {
    if ($('input[name=\'mb_markup_type\']:checked').val() == 'fixed') {
     $('#mb_markup_custom').hide();
