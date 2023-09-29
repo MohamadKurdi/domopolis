@@ -1342,6 +1342,48 @@ class ControllerSettingSetting extends Controller
                 $this->data['config_pickup_dayoff_' . $i] = $this->config->get('config_pickup_dayoff_' . $i);
             }
         }
+
+        if (isset($this->request->post['config_firstorder_send_promocode'])) {
+            $this->data['config_firstorder_send_promocode'] = $this->request->post['config_firstorder_send_promocode'];
+        } else {
+            $this->data['config_firstorder_send_promocode'] = $this->config->get('config_firstorder_send_promocode');
+        }
+
+        if (isset($this->request->post['config_firstorder_promocode'])) {
+            $this->data['config_firstorder_promocode'] = $this->request->post['config_firstorder_promocode'];
+        } else {
+            $this->data['config_firstorder_promocode'] = $this->config->get('config_firstorder_promocode');
+        }
+
+        if (isset($this->request->post['config_firstorder_sms_enable'])) {
+            $this->data['config_firstorder_sms_enable'] = $this->request->post['config_firstorder_sms_enable'];
+        } else {
+            $this->data['config_firstorder_sms_enable'] = $this->config->get('config_firstorder_sms_enable');
+        }  
+
+        if (isset($this->request->post['config_firstorder_viber_enable'])) {
+            $this->data['config_firstorder_viber_enable'] = $this->request->post['config_firstorder_viber_enable'];
+        } else {
+            $this->data['config_firstorder_viber_enable'] = $this->config->get('config_firstorder_viber_enable');
+        }  
+
+        if (isset($this->request->post['config_firstorder_sms_text'])) {
+            $this->data['config_firstorder_sms_text'] = $this->request->post['config_firstorder_sms_text'];
+        } else {
+            $this->data['config_firstorder_sms_text'] = $this->config->get('config_firstorder_sms_text');
+        }      
+
+        if (isset($this->request->post['config_firstorder_email_enable'])) {
+            $this->data['config_firstorder_email_enable'] = $this->request->post['config_firstorder_email_enable'];
+        } else {
+            $this->data['config_firstorder_email_enable'] = $this->config->get('config_firstorder_email_enable');
+        }  
+
+        if (isset($this->request->post['config_firstorder_email_template'])) {
+            $this->data['config_firstorder_email_template'] = $this->request->post['config_firstorder_email_template'];
+        } else {
+            $this->data['config_firstorder_email_template'] = $this->config->get('config_firstorder_email_template');
+        }
          
         if (isset($this->request->post['config_cdek_api_login'])) {
             $this->data['config_cdek_api_login'] = $this->request->post['config_cdek_api_login'];

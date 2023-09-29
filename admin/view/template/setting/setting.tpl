@@ -1979,8 +1979,71 @@
 						</table>
 					</div>
 					<div id="tab-option">
-						<h2>Бонусная система</h2>
-						
+						<h2>Действие при успешном выполненнии первого заказа</h2>
+						<table class="form">														
+							<tr>
+								<td style="width:25%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Выполнять действие</span></p>
+									<select name="config_firstorder_send_promocode">
+										<?php if ($config_firstorder_send_promocode) { ?>
+											<option value="1" selected="selected">Отправлять промокод</option>
+											<option value="0">Ничего не делать</option>
+										<?php } else { ?>													
+											<option value="1">Отправлять промокод</option>
+											<option value="0"  selected="selected">Ничего не делать</option>
+										<? } ?>
+									</select>
+								</td>
+	
+								<td style="width:25%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Код промокода</span></p>
+									<input type="text" name="config_firstorder_promocode" value="<?php echo $config_firstorder_promocode; ?>" size="20" />
+									<span class="help">код нужно скопировать из списка промокодов</span>
+								</td>
+
+								<td style="width:25%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Отправлять почту</span></p>
+									<select name="config_firstorder_email_enable">
+										<?php if ($config_firstorder_email_enable) { ?>
+											<option value="1" selected="selected">Да</option>
+											<option value="0">Нет</option>
+										<?php } else { ?>													
+											<option value="1">Да</option>
+											<option value="0"  selected="selected">Нет</option>
+										<? } ?>
+									</select>
+									<span class="help">если у покупателя задан email</span>
+								</td>
+
+								<td style="width:25%">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Отправлять SMS</span></p>
+									<select name="config_firstorder_sms_enable">
+										<?php if ($config_firstorder_sms_enable) { ?>
+											<option value="1" selected="selected">Да</option>
+											<option value="0">Нет</option>
+										<?php } else { ?>													
+											<option value="1">Да</option>
+											<option value="0"  selected="selected">Нет</option>
+										<? } ?>
+									</select>
+									<span class="help">телефон покупателя есть в 100% случаев</span>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Шаблон почты</span></p>
+									<input type="text" name="config_firstorder_email_template" value="<?php echo $config_firstorder_email_template; ?>" size="50" />
+									<span class="help">код нужно скопировать из списка шаблонов почты, например customer.firstorder_coupon</span>
+								</td>
+								<td colspan="2">
+									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF7815; color:#FFF">Текст SMS</span></p>
+									<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_firstorder_sms_text" value="<?php echo $config_firstorder_sms_text; ?>" />
+									<span class="help"><b>{FIRSTNAME}, {PROMOCODE}</b></span>
+								</td>
+							</tr>	
+						</table>
+
+						<h2>Бонусная система</h2>						
 						<table class="form">								
 							<tr>
 								<td style="width:25%">
