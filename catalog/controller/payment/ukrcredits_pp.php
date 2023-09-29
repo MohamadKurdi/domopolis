@@ -9,7 +9,7 @@ class ControllerPaymentUkrcreditsPp extends Controller {
 		$setting 					= $this->config->get('ukrcredits_settings');
 		$data['ukrcredits_setting'] = $this->config->get('ukrcredits_settings');
 		
-		$data['currency_left'] = $this->currency->getSymbolLeft($this->session->data['currency']);
+		$data['currency_left'] 	= $this->currency->getSymbolLeft($this->session->data['currency']);
 		$data['currency_right'] = $this->currency->getSymbolRight($this->session->data['currency']);
 		$data['button_confirm'] = $this->language->get('button_confirm');
 
@@ -406,19 +406,15 @@ class ControllerPaymentUkrcreditsPp extends Controller {
                       break;                                                            
                 }
 				$this->model_checkout_order->updateUkrcreditsOrderPrivat($order_id, $privat_order_status);
-				if (version_compare(VERSION,'2.0','>=')) {
-					$this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment);
-				} else {
-					$this->model_checkout_order->update($order_id, $order_status_id, $comment, $notify = true);
-				}
+				$this->model_checkout_order->update($order_id, $order_status_id, $comment, $notify = true);
+
+				if ($order_status_id == $setting['completed_status_id']){
+					$this->model_checkout_order->addOrderToQueue($order_id);            
+				}	
                 
             } else {
                 $this->log->write('ukrcredits_PP :: RECEIVED SIGNATURE MISMATCH!  ORDER_ID:'.$order_id .' RECEIVED SIGNATURE:'. $requestArr['signature']);
-				if (version_compare(VERSION,'2.0','>=')) {
-					$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('config_order_status_id'));
-				} else {
-					$this->model_checkout_order->update($order_id, $this->config->get('config_order_status_id'), $notify = true);
-				}
+				$this->model_checkout_order->update($order_id, $this->config->get('config_order_status_id'), $notify = true);
             } 
         }
     }

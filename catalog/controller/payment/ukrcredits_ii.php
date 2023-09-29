@@ -151,7 +151,6 @@ class ControllerPaymentUkrcreditsIi extends Controller {
                         $dataArr['storeId'].
                         $dataArr['orderId'].
                         $amountStr.
- //                       $dataArr['currency'].
                         $dataArr['partsCount'].
                         $dataArr['merchantType'].
                         $dataArr['responseUrl'].
@@ -367,8 +366,7 @@ class ControllerPaymentUkrcreditsIi extends Controller {
             echo  json_encode($responseResDeal);         
         } else {
             echo json_encode(['state' => 'sys_error','message' => $responseResDeal]);
-        }
-     
+        }    
     }                        
 
     public function callback() {
@@ -392,7 +390,7 @@ class ControllerPaymentUkrcreditsIi extends Controller {
                 switch($requestArr['paymentState']) {
                   case 'SUCCESS':
                       $order_status_id = $setting['completed_status_id'];
-                      $this->clearCartOnSuccess($order_id);
+                      $this->clearCartOnSuccess($order_id);                      
                       break;
                   case 'LOCKED':
                       $order_status_id = $setting['created_status_id'];
@@ -411,19 +409,15 @@ class ControllerPaymentUkrcreditsIi extends Controller {
                       break;                                                            
                 }
 				$this->model_checkout_order->updateUkrcreditsOrderPrivat($order_id, $privat_order_status);
-				if (version_compare(VERSION,'2.0','>=')) {
-					$this->model_checkout_order->addOrderHistory($order_id, $order_status_id, $comment);
-				} else {
-					$this->model_checkout_order->update($order_id, $order_status_id, $comment, $notify = true);
-				}               
+				$this->model_checkout_order->update($order_id, $order_status_id, $comment, $notify = true);
+
+				if ($order_status_id == $setting['completed_status_id']){
+					$this->model_checkout_order->addOrderToQueue($order_id);            
+				}				
                 
             } else {
                 $this->log->write('ukrcredits_ii :: RECEIVED SIGNATURE MISMATCH!  ORDER_ID:'.$order_id .' RECEIVED SIGNATURE:'. $requestArr['signature']);
-				if (version_compare(VERSION,'2.0','>=')) {
-					$this->model_checkout_order->addOrderHistory($order_id, $this->config->get('config_order_status_id'));
-				} else {
-					$this->model_checkout_order->update($order_id, $this->config->get('config_order_status_id'), $notify = true);
-				}
+				$this->model_checkout_order->update($order_id, $this->config->get('config_order_status_id'), $notify = true);
             } 
         }
     }
