@@ -483,6 +483,14 @@
 				} else {
 				$this->data['currency'] = '';
 			}
+
+			if (isset($this->request->post['min_currency'])) {
+				$this->data['min_currency'] = $this->request->post['min_currency'];
+				} elseif (!empty($coupon_info)) {
+				$this->data['min_currency'] = $coupon_info['min_currency'];
+				} else {
+				$this->data['min_currency'] = '';
+			}
 			
 			if (isset($this->request->post['logged'])) {
 				$this->data['logged'] = $this->request->post['logged'];

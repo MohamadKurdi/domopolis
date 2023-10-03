@@ -30,26 +30,25 @@
 							<td colspan="4">
 								<table>
 									<tr>
-										<td>
+										<td style="width:15%">
 											<span class="required">*</span> <span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Название для списков</span>
 										</td>
-										<td>
+										<td style="width:15%">
 											<span class="required">*</span> <span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Код</span>
-											
 										</td>
-										<td>
+										<td style="width:15%">
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Статус</span>
 										</td>
-										<td>
+										<td style="width:15%">
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Сегментация</span>
 										</td>
-										<td>
+										<td style="width:15%">
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">В товарах</span>
 										</td>
-										<td>
+										<td style="width:15%">
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Только в наличии</span>
 										</td>
-										<td>
+										<td style="width:15%">
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Тип промокода</span>
 										</td>	
 									</tr>
@@ -151,16 +150,24 @@
 							<td colspan="4">
 								<table>
 									<tr>
-										<td>
+										<td style="width:15%">
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Промо-группа</span>
 										</td>
 										
-										<td>
+										<td style="width:15%">
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Менеджер</span>
 										</td>
 										
-										<td>
+										<td style="width:15%">
 											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#f91c02; color:#FFF">Отображать в личном кабинете</span>
+										</td>
+
+										<td style="width:15%">
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Минимальный чек</span>
+										</td>
+
+										<td style="width:15%">
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Валюта минимального чека</span>
 										</td>
 									</tr>
 									<tr>
@@ -187,6 +194,17 @@
 												<?php } ?>
 											</select>
 										</td>
+
+										<td>
+											<input type="text" name="total" value="<?php echo $total; ?>" />
+										</td>
+										<td>
+											<input type="text" name="min_currency" value="<?php if (isset($min_currency)) echo $min_currency; ?>" size="5" />&nbsp;&nbsp;	
+											<? foreach ($currencies as $c) { ?>
+												<? echo $c['code']; ?>&nbsp;							
+											<? } ?>
+										</td>
+											
 									</tr>
 								</table>
 							</td>
@@ -197,32 +215,23 @@
 								<table>
 									<tr>
 										<td>
-											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Скидка</span>
-										</td>
-										
-										
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Скидка фикс или процент</span>
+										</td>										
+
 										<td>
-											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Минимальный чек</span>
-										</td>
-										
-										<td>
-											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Валюта стоимости</span>
-										</td>
-										
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Валюта скидки, если фикс</span>
+										</td>															
 									</tr>
 									<tr>							
 										<td>
 											<input type="text" name="discount" value="<?php echo $discount; ?>" />
-										</td>	
-										<td>
-											<input type="text" name="total" value="<?php echo $total; ?>" />
 										</td>
 										<td>
 											<input type="text" name="currency" value="<?php if (isset($currency)) echo $currency; ?>" size="5" />&nbsp;&nbsp;	
 											<? foreach ($currencies as $c) { ?>
 												<? echo $c['code']; ?>&nbsp;							
 											<? } ?>
-										</td>
+										</td>											
 									</tr>
 								</table>
 							</td>

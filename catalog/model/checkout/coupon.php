@@ -48,15 +48,18 @@ class ModelCheckoutCoupon extends Model {
 
 			$sub_total = $this->cart->getSubTotal();
 
-			if ($coupon_query->row['currency']!=''){
-				$subtotal_national = $this->currency->convert($sub_total, $this->config->get('config_currency'), $coupon_query->row['currency']);
+			$coupon_query->row['min_currency'] = trim($coupon_query->row['min_currency']);
+			if ($coupon_query->row['min_currency'] != ''){
+				$subtotal_national = $this->currency->convert($sub_total, $this->config->get('config_currency'), $coupon_query->row['min_currency']);
 			} else {
 				$subtotal_national = $sub_total;								
 			}								
 
-			if ((int)$coupon_query->row['total'] > 0 && ($coupon_query->row['total'] >= (int)$subtotal_national)) {
-				$status = false;
-			}						
+			if ((float)$coupon_query->row['total'] > 0){
+				if ((float)$coupon_query->row['total'] >= (float)$subtotal_national) {
+					$status = false;
+				}
+			}					
 
 			$coupon_history_query = $this->db->non_cached_query("SELECT COUNT(*) AS total FROM `coupon_history` ch WHERE ch.coupon_id = '" . (int)$coupon_query->row['coupon_id'] . "'");
 

@@ -36,7 +36,7 @@ class ModelTotalCoupon extends Model {
 					}					
 				}											
 
-
+				$coupon_info['currency'] = trim($coupon_info['currency']);
 				if ($coupon_info['currency'] != ''){
 					if ($coupon_info['currency'] == $this->config->get('config_regional_currency')){
 						$subtotal_national = $sub_total_national;
@@ -73,7 +73,7 @@ class ModelTotalCoupon extends Model {
 					foreach ($this->cart->getProducts() as $product) {		
 						$discount = 0;
 
-						if ($coupon_info['currency']!=''){
+						if ($coupon_info['currency'] != ''){
 							if ($coupon_info['currency'] == $this->config->get('config_regional_currency')){
 								$product['total'] = $product['total'];
 							} else {						
@@ -118,7 +118,7 @@ class ModelTotalCoupon extends Model {
 				}
 
 				if ($coupon_info['type'] == 'F') {							
-					if ($coupon_info['currency']!=''){
+					if ($coupon_info['currency'] != ''){
 						if ($coupon_info['currency'] == $this->config->get('config_regional_currency')){
 							$discount_total = $coupon_info['discount'];	
 						} else {						
@@ -142,13 +142,11 @@ class ModelTotalCoupon extends Model {
 				}
 
 				if ($coupon_info['type'] == '3'){
-					$this->log->debug($this->model_checkout_coupon->countTotalActiveCartProducts($coupon_info, 3));
-
 					if ($this->model_checkout_coupon->countTotalActiveCartProducts($coupon_info, 3)){
 
 						$discount_total = $this->model_checkout_coupon->getCheapestCartProductFromActive($coupon_info, 'min');
 
-						if ($coupon_info['currency']!=''){
+						if ($coupon_info['currency'] != ''){
 							$discount_total_national 	= $discount_total;
 							$discount_total 			= $this->currency->convert($discount_total, $coupon_info['currency'], $this->config->get('config_currency'));					
 						} else {
@@ -162,7 +160,7 @@ class ModelTotalCoupon extends Model {
 
 						$discount_total = $this->model_checkout_coupon->getCheapestCartProductFromActive($coupon_info, 'min');
 
-						if ($coupon_info['currency']!=''){
+						if ($coupon_info['currency'] != ''){
 							$discount_total_national 	= $discount_total;
 							$discount_total 			= $this->currency->convert($discount_total, $coupon_info['currency'], $this->config->get('config_currency'));					
 						} else {
@@ -176,7 +174,7 @@ class ModelTotalCoupon extends Model {
 
 						$discount_total = $this->model_checkout_coupon->getCheapestCartProductFromActive($coupon_info, 'min');
 
-						if ($coupon_info['currency']!=''){
+						if ($coupon_info['currency'] != ''){
 							$discount_total_national 	= $discount_total;
 							$discount_total 			= $this->currency->convert($discount_total, $coupon_info['currency'], $this->config->get('config_currency'));					
 						} else {
@@ -185,7 +183,7 @@ class ModelTotalCoupon extends Model {
 					}				
 				}
 
-				if ($coupon_info['currency']!=''){
+				if ($coupon_info['currency'] != ''){
 					if ($coupon_info['currency'] == $this->config->get('config_regional_currency')){
 						$discount_total_national 	= $discount_total;
 						$discount_total 			= $this->currency->convert($discount_total, $coupon_info['currency'], $this->config->get('config_currency'));
