@@ -276,7 +276,7 @@ class RainforestAmazon
 			if ($this->config->get('config_telegram_bot_enable_alerts')){
 				$text = '😂 <b>Хьюстон, у нас проблема!</b>' . PHP_EOL . PHP_EOL;
 				$text .= 'Проблемы с Rainforest API. Скорее всего не оплачен тариф.' . PHP_EOL . PHP_EOL;
-				$text .= 'Сервер отвечает: ' . $api_result . PHP_EOL;
+				$text .= 'Сервер отвечает: ' . $answer . PHP_EOL;
 				$this->sendAlertToTelegram($text);
 			}
 
