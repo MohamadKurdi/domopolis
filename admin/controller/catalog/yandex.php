@@ -32,13 +32,10 @@
 			
 			if ($this->config->get('config_yam_fbs_campaign_id')){
 				$hiddenOffersClient = new \Yandex\Marketplace\Partner\Clients\HiddenOffersClient($this->config->get('config_yam_yandexOauthID'), $this->config->get('config_yam_yandexAccessToken'));
-				
-				
+
 				$query = $this->db->query("SELECT yam_product_id, yam_hidden FROM product WHERE product_id = '" . $product_id . "'");
 				
 				if ($query->num_rows){	
-					
-					
 					if ($query->row['yam_hidden']){
 						
 						$json = ['hiddenOffers' => [
@@ -60,11 +57,9 @@
 						]];
 						
 						$hiddenOffersClientResponse = $hiddenOffersClient->hideOffers($this->config->get('config_yam_fbs_campaign_id'), $json);
-						
 					}
 					
-					if ($hiddenOffersClientResponse->getStatus() == 'OK'){
-						
+					if ($hiddenOffersClientResponse->getStatus() == 'OK'){					
 						$this->db->query("UPDATE product SET yam_hidden = 1 - yam_hidden WHERE product_id = '" . $product_id . "'");
 						$query = $this->db->query("SELECT yam_hidden FROM product WHERE product_id = '" . $product_id . "'");
 						
@@ -72,17 +67,12 @@
 							$this->response->setOutput('скрыт');
 						} else {
 							$this->response->setOutput('ок');
-						}
-						
-					} else {
-					
+						}						
+					} else {					
 						$this->response->setOutput('BUG!');
-					
 					}
-					
 				}
 			}
-			
 		}
 		
 		
@@ -91,8 +81,6 @@
 			if ($this->config->get('config_yam_offer_id_price_enable') && $this->config->get('config_yam_fbs_campaign_id') && !$this->config->get('config_yam_enable_plus_percent')){
 				
 				$this->load->model('catalog/product');
-				
-				//Получаем цену для YAM
 				$query = $this->db->query("SELECT yam_product_id, yam_price, yam_special FROM product WHERE product_id = '" . $product_id . "'");
 				
 				if ($query->num_rows){
@@ -328,14 +316,18 @@
 			
 			$this->data['yandex_pricetypes'] = $this->controllerYaMarketApi->getYamAPIValue('priceTypes');
 			
-			$product_total = $this->model_kp_yandex->getTotalProducts($data);
-			$results = $this->model_kp_yandex->getProducts($data);
+			$product_total 	= $this->model_kp_yandex->getTotalProducts($data);
+			$results 		= $this->model_kp_yandex->getProducts($data);
 			
 			foreach ($results as $result) {
 				$action = array();
 				
 				$image = $this->model_tool_image->resize($result['image'], 60, 60);
 				$product_info = $this->modelCatalogProduct->getProduct($result['product_id'], false);
+
+				if (!$product_info){
+					continue;
+				}
 				
 				$price = $this->currency->format_with_left($product_info['price'], $this->config->get('config_regional_currency'));
 				
@@ -343,8 +335,7 @@
 				if ((float)$product_info['special']) {
 					$special = $this->currency->format_with_left($product_info['special'], $this->config->get('config_regional_currency'));
 				}
-				
-				
+								
 				if ((float)$product_info['yam_price_national'] > 0){
 					$yam_price = $this->currency->format_with_left($product_info['yam_price_national'], $this->config->get('config_regional_currency'), 1);
 					
@@ -360,7 +351,6 @@
 					$yam_special = $special;
 					
 					$yam_set = false;
-					
 				}
 				
 				
