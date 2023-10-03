@@ -3287,6 +3287,17 @@
 																						filebrowserFlashUploadUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>'
 																					});
 
+																					<?php if ($this->config->get('config_rainforest_description_symbol_limit')){ ?>
+																						CKEDITOR.replace('description_full<?php echo $language['language_id']; ?>', {
+																						filebrowserBrowseUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
+																						filebrowserImageBrowseUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
+																						filebrowserFlashBrowseUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
+																						filebrowserUploadUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
+																						filebrowserImageUploadUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
+																						filebrowserFlashUploadUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>'
+																					});
+																					<?php } ?>
+
 																					CKEDITOR.replace('markdown_appearance<?php echo $language['language_id']; ?>', {
 																						filebrowserBrowseUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
 																						filebrowserImageBrowseUrl: 'index.php?route=common/filemanager&token=<?php echo $token; ?>',
