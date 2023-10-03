@@ -50,6 +50,19 @@ class ControllerDPRainForest extends Controller {
 		$this->editfullproductscronl2();
 	}
 
+	public function test_limit_text_by_sentences(){
+		$query = $this->db->query("SELECT description FROM product_description WHERE length(description)>3000 LIMIT 10");
+
+		foreach ($query->rows as $row){
+			echoLine($row['description'], 's');
+
+			$row['description'] = limit_text_by_sentences($row['description']);
+
+			echoLine($row['description'], 'w');
+
+		}
+	}
+
 	private function fullFillExistentAsins(){
 		$query = $this->db->ncquery("SELECT DISTINCT asin FROM product");
 
