@@ -20,7 +20,7 @@ class ModelCheckoutCoupon extends Model {
 		foreach ($this->cart->getProducts() as $product) {
 			if (in_array($product['product_id'], $coupon_info['product'])) {
 				if ($product['price'] <= $min){
-					$min = $product_price;
+					$min 		= $product['price'];
 					$product_id = $product['product_id'];
 				}
 
@@ -123,7 +123,7 @@ class ModelCheckoutCoupon extends Model {
 				}
 
 				if (!empty($coupon_query->row['action_id'])){
-					$action_product_query = $this->db->non_cached_query("SELECT * FROM `actions_to_product` WHERE action_id = '" . (int)$coupon_query->row['action_id'] . "'");
+					$action_product_query = $this->db->non_cached_query("SELECT * FROM `actions_to_product` WHERE actions_id = '" . (int)$coupon_query->row['action_id'] . "'");
 
 					foreach ($action_product_query->rows as $product) {
 						$coupon_product_data[] = $product['product_id'];
