@@ -25,7 +25,7 @@ function parseAmazonDeliveryDateToEnglish($date){
 	return $date;
 }
 
-function limit_text_by_sentences($text, $max_symbols) {
+function limit_text_by_sentences($text, $max_symbols = 1000) {
 	$text = str_replace(' ', ' ', $text);
 
 	$sentences = preg_split('/([.?!]+)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
