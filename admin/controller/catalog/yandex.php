@@ -28,8 +28,6 @@
 		}
 		
 		private function hideOrShowProductInMarketViaAPI($product_id){
-			
-			
 			if ($this->config->get('config_yam_fbs_campaign_id')){
 				$hiddenOffersClient = new \Yandex\Marketplace\Partner\Clients\HiddenOffersClient($this->config->get('config_yam_yandexOauthID'), $this->config->get('config_yam_yandexAccessToken'));
 
@@ -363,17 +361,20 @@
 				}
 				
 				$market_data = $this->model_kp_yandex->getYandexMarketAdditionalData($result['product_id']);
-				$yam_real_price = $this->currency->format_with_left($market_data['yam_real_price'], $this->config->get('config_regional_currency'), 1);
+
+				if (!$market_data){
+					$yam_real_price = $this->currency->format_with_left($market_data['yam_real_price'], $this->config->get('config_regional_currency'), 1);
+				} else {
+					$yam_real_price = 0;
+				}
 				
-				//ЕСЛИ НЕ ЗАДАНЫ ЦЕНЫ КОМИСИИ ИЗ АПИ СТАТИСТИКИ
+				
 				if ($yam_special){
 					$yam_tmp = preg_replace("([^0-9])", "", $yam_special);
 					} else {
 					$yam_tmp = preg_replace("([^0-9])", "", $yam_price);	
 				}
-				
-				
-				
+											
 				if (!empty($market_data['AGENCY_COMMISSION']) && !empty($market_data['FEE'])){
 					$yam_money = $yam_tmp - ((float)$market_data['AGENCY_COMMISSION'] + (float)$market_data['FEE']);
 					$yam_money = $this->currency->format_with_left($yam_money, $this->config->get('config_regional_currency'), 1);
