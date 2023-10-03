@@ -168,11 +168,13 @@ class ProductsRetriever extends RainforestRetriever
 
 			$product['description'] = atrim($product['description']);
 
-			if ($this->config->get('config_rainforest_description_symbol_limit')){
+			if ((int)$this->config->get('config_rainforest_description_symbol_limit') > 0){				
 				$this->model_product_edit->backupFullDescription($product_id, ['description_full' => $product['description']], $this->config->get('config_rainforest_source_language_id'));
-			
-				$product['description'] = limit_text_by_sentences($product['description'], (int)$this->config->get('config_rainforest_description_symbol_limit'));
-				echoLine('[parseProductDescriptions] Truncated description to ' . $this->config->get('config_rainforest_description_symbol_limit') . ' symbols!', 'w');
+
+				if (mb_strlen($product['description']) >= ((int)$this->config->get('config_rainforest_description_symbol_limit') + ((int)$this->config->get('config_rainforest_description_symbol_limit')/10))){			
+					$product['description'] = limit_text_by_sentences($product['description'], (int)$this->config->get('config_rainforest_description_symbol_limit'));
+					echoLine('[parseProductDescriptions] Truncated description to ' . $this->config->get('config_rainforest_description_symbol_limit') . ' symbols!', 'w');
+				}
 			}
 
 			foreach ($this->registry->get('languages') as $language_code => $language) {
