@@ -115,14 +115,24 @@ class ModelCheckoutCoupon extends Model {
 				}
 				
 				
-				$coupon_product_data = array();				
-				$coupon_product_query = $this->db->non_cached_query("SELECT * FROM `coupon_product` WHERE coupon_id = '" . (int)$coupon_query->row['coupon_id'] . "'");
+				$coupon_product_data = [];				
+				$coupon_product_query = $this->db->non_cached_query("SELECT * FROM `coupon_product` WHERE coupon_id = '" . (int)$coupon_query->row['coupon_id'] . "'");				
 				
 				foreach ($coupon_product_query->rows as $product) {
 					$coupon_product_data[] = $product['product_id'];
 				}
+
+				if (!empty($coupon_query->row['action_id'])){
+					$action_product_query = $this->db->non_cached_query("SELECT * FROM `actions_to_product` WHERE action_id = '" . (int)$coupon_query->row['action_id'] . "'");
+
+					foreach ($action_product_query->rows as $product) {
+						$coupon_product_data[] = $product['product_id'];
+					}
+				}
+
+				$coupon_product_data = array_unique($coupon_product_data);
 				
-				$coupon_category_data = array();				
+				$coupon_category_data = [];				
 				$coupon_category_query = $this->db->non_cached_query("SELECT * FROM `coupon_category` cc LEFT JOIN `category_path` cp ON (cc.category_id = cp.path_id) WHERE cc.coupon_id = '" . (int)$coupon_query->row['coupon_id'] . "'");
 				
 				foreach ($coupon_category_query->rows as $category) {
@@ -130,21 +140,21 @@ class ModelCheckoutCoupon extends Model {
 				}
 				
 
-				$coupon_collection_data = array();			
+				$coupon_collection_data = [];			
 				$coupon_collection_query = $this->db->non_cached_query("SELECT * FROM `coupon_collection` WHERE coupon_id = '" . (int)$coupon_query->row['coupon_id'] . "'");
 				
 				foreach ($coupon_collection_query->rows as $collection) {
 					$coupon_collection_data[] = $collection['collection_id'];
 				}
 				
-				$coupon_manufacturer_data = array();				
+				$coupon_manufacturer_data = [];				
 				$coupon_manufacturer_query = $this->db->non_cached_query("SELECT * FROM `coupon_manufacturer` WHERE coupon_id = '" . (int)$coupon_query->row['coupon_id'] . "'");
 				
 				foreach ($coupon_manufacturer_query->rows as $manufacturer) {
 					$coupon_manufacturer_data[] = $manufacturer['manufacturer_id'];
 				}
 				
-				$product_data = array();
+				$product_data = [];
 				
 				if ($coupon_product_data || $coupon_category_data || $coupon_manufacturer_data || $coupon_collection_data) {
 					foreach ($this->cart->getProducts() as $product) {						
@@ -199,7 +209,7 @@ class ModelCheckoutCoupon extends Model {
 				}	
 
 				if ($this->config->get('discount_regular_status') && $this->customer->isLogged() && $this->customer->getHasBirthday() && $product_data) {
-					$_tmp_product_data = array();
+					$_tmp_product_data = [];
 					foreach ($product_data as $__product_id){
 						$check_birthday_category_query = $this->db->non_cached_query("SELECT COUNT(*) AS total FROM `product_to_category` WHERE `product_id` = '" . (int)$__product_id . "' AND category_id = '" . (int)BIRTHDAY_DISCOUNT_CATEGORY . "'");
 

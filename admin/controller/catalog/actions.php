@@ -145,11 +145,8 @@ class ControllerCatalogActions extends Controller {
 
 		$data = array('sort' => $sort, 'order' => $order, 'start' => ($page - 1) * $this->config->get('config_admin_limit'), 'limit' => $this->config->get('config_admin_limit'));
 
-		$actions_total = $this->model_catalog_actions->getTotalActionss();
-
-		$results = $this->model_catalog_actions->getActionss($data);
-
-
+		$actions_total 	= $this->model_catalog_actions->getTotalActionss();
+		$results 		= $this->model_catalog_actions->getActionss($data);
 
 		foreach ($results as $result) {
 			$action = array();
@@ -171,8 +168,6 @@ class ControllerCatalogActions extends Controller {
 					);
 				}
 			}
-
-
 
 			$this->data['actionss'][] = array(
 				'actions_id' 		=> $result['actions_id'], 
@@ -411,7 +406,6 @@ class ControllerCatalogActions extends Controller {
 		}
 
 		foreach ($this->data['languages'] as $language){
-
 			if (!empty($this->data['actions_description'][$language['language_id']])){
 				$this->data['actions_description'][$language['language_id']]['thumb_overload'] = $this->model_tool_image->resize($this->data['actions_description'][$language['language_id']]['image_overload'], 100, 100);
 

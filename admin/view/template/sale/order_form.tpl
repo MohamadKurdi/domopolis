@@ -3493,9 +3493,6 @@
 												На текущий момент на счету <b id="clp_at_this_moment"><? echo $current_legalperson['info']['at_this_moment']; ?></b><br />
 												Оплачено по безналу с начала месяца <b id="clp_total_already_paid"><? echo $current_legalperson['info']['total_already_paid']; ?></b><br />
 												Выставлено неоплаченных счетов на <b id="clp_total_need_to_pay"><? echo $current_legalperson['info']['total_need_to_pay']; ?></b>
-												
-												<? if ($currency_code == 'RUB') { ?><br /><br /><i class="fa fa-warning" aria-hidden="true" style="color:#f91c02"></i> По ИП Башлаев крайне не рекомендуется превышать<br /> месячный лимит оплат в <b>900 тыс. руб</b><? } ?>
-												<? if ($currency_code == 'UAH') { ?><br /><br /><i class="fa fa-warning" aria-hidden="true" style="color:#f91c02"></i> По ИП Домбровский и ИП Романченко не рекомендуется превышать<br /> месячный лимит оплат в <b>100 тыс. грн</b><? } ?>
 											</div>
 										<? } ?>
 										<div style="clear:both; height:4px;"></div>
