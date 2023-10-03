@@ -569,6 +569,12 @@ class SmsAdaptor {
 
 	public function addOrderSmsHistory($order_id, $data, $sms_status, $sms_id, $customer_id = 0) {
 		if ($order_id){
+
+			if (empty($data['order_status_id'])){
+				$query = $this->db->query("SELECT order_status_id FROM `order` WHERE order_id = '" . (int)$order_id . "'");
+				$data['order_status_id'] = $query->row['order_status_id'];
+			}
+
 			$this->db->ncquery("INSERT INTO `order_sms_history` SET 
 			order_id 			= '" . (int)$order_id . "', 
 			customer_id 		= '" . (int)$customer_id . "',
