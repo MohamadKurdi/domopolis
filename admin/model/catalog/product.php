@@ -16,7 +16,90 @@
 				$data['product_category'] = array(GENERAL_MARKDOWN_CATEGORY);	
 			}
 			
-			$this->db->query("INSERT INTO product SET model = '" . $this->db->escape($data['model']) . "', short_name = '" . $this->db->escape($data['short_name']) . "', short_name_de = '" . $this->db->escape($data['short_name_de']) . "', sku = '" . $this->db->escape($data['sku']) . "', upc = '" . $this->db->escape($data['upc']) . "', ean = '" . $this->db->escape($data['ean']) . "', jan = '" . $this->db->escape($data['jan']) . "', isbn = '" . $this->db->escape($data['isbn']) . "', mpn = '" . $this->db->escape($data['mpn']) . "', asin = '" . $this->db->escape($data['asin']) . "', location = '" . $this->db->escape($data['location']) . "', color_group = '" . $this->db->escape($data['color_group']) . "', source = '" . $this->db->escape($data['source']) . "', competitors = '" . $this->db->escape($data['competitors']) . "', competitors_ua = '" . $this->db->escape($data['competitors_ua']) . "', quantity = '" . (int)$data['quantity'] . "', minimum = '" . (int)$data['minimum'] . "', package = '" . (int)$data['package'] . "', subtract = '" . (int)$data['subtract'] . "', has_child = '" . (int)$data['has_child'] . "', stock_status_id = '" . (int)$data['stock_status_id'] . "', date_available = '" . $this->db->escape($data['date_available']) . "', manufacturer_id = '" . (int)$data['manufacturer_id'] . "', collection_id = '" . (int)$data['collection_id'] . "', shipping = '" . (int)$data['shipping'] . "', price = '" . (float)$data['price'] . "', price_delayed = '" . (float)$data['price_delayed'] . "', mpp_price = '" . (float)$data['mpp_price'] . "', cost = '" . (float)$data['cost'] . "', costprice = '" . (float)$data['costprice'] . "', price_national = '" . (float)$data['price_national'] . "', currency = '" . $this->db->escape($data['currency']) . "', points = '" . (int)$data['points'] . "', weight = '" . (float)$data['weight'] . "', weight_class_id = '" . (int)$data['weight_class_id'] . "', weight_amazon_key = '" . $this->db->escape($data['weight_amazon_key']) . "', length = '" . (float)$data['length'] . "', width = '" . (float)$data['width'] . "', height = '" . (float)$data['height'] . "', length_class_id = '" . (int)$data['length_class_id'] . "', length_amazon_key = '" . $this->db->escape($data['length_amazon_key']) . "', pack_weight = '" . (float)$data['pack_weight'] . "', pack_weight_class_id = '" . (int)$data['pack_weight_class_id'] . "', pack_weight_amazon_key = '" . $this->db->escape($data['pack_weight_amazon_key']) . "', pack_length = '" . (float)$data['pack_length'] . "', pack_width = '" . (float)$data['pack_width'] . "', pack_height = '" . (float)$data['pack_height'] . "', pack_length_class_id = '" . (int)$data['pack_length_class_id'] . "', pack_length_amazon_key = '" . $this->db->escape($data['pack_length_amazon_key']) . "', status = '" . (int)$data['status'] . "', tax_class_id = '" . $this->db->escape($data['tax_class_id']) . "', sort_order = '" . (int)$data['sort_order'] . "', quantity_stock = '" . (int)$data['quantity_stock'] . "', min_buy = '" . (int)$data['min_buy'] . "', max_buy = '" . (int)$data['max_buy'] . "', quantity_stockM = '" . (int)$data['quantity_stockM'] . "', quantity_stockK = '" . (int)$data['quantity_stockK'] . "', tnved = '" . $data['tnved'] . "', ignore_parse = '" . (int)$data['ignore_parse'] . "', big_business = '" . (int)$data['big_business'] . "', new = '" . (int)$data['new'] . "', ignore_parse_date_to = '" .  $this->db->escape($data['ignore_parse_date_to']) . "', new_date_to = '" .  $this->db->escape($data['new_date_to']) . "', is_markdown = '" . (int)$data['is_markdown'] . "', markdown_product_id = '" . (int)$data['markdown_product_id'] . "', main_variant_id = '" . (int)$data['main_variant_id'] . "', variant_1_is_color = '" . (int)$data['variant_1_is_color'] . "', variant_2_is_color = '" . (int)$data['variant_2_is_color'] . "', display_in_catalog = '" . (int)$data['display_in_catalog'] . "', is_option_with_id = '" . (int)$data['is_option_with_id'] . "', yam_disable = '" . (int)$data['yam_disable'] . "', is_illiquid = '" . (int)$data['is_illiquid'] . "', yam_price = '" . (float)$data['yam_price'] . "', yam_percent = '" . (float)$data['yam_percent'] . "', yam_special = '" . (float)$data['yam_special'] . "', yam_special_percent = '" . (float)$data['yam_special_percent'] . "', yam_currency = '" . $this->db->escape($data['yam_currency']) . "', yam_product_id = '" . $this->db->escape($this->config->get('config_yam_offer_id_prefix') . $product_id) . "', priceva_enable = '" . (int)$data['priceva_enable'] . "', priceva_disable = '" . (int)$data['priceva_disable'] . "', amzn_ignore = '" . (int)$data['amzn_ignore'] . "', date_added = NOW()");
+			$this->db->query("INSERT INTO product SET 
+				INSERT INTO product SET
+				model 				= '" . $this->db->escape($data['model']) . "',
+				short_name 			= '" . $this->db->escape($data['short_name']) . "',
+				short_name_de 		= '" . $this->db->escape($data['short_name_de']) . "',
+				sku 				= '" . $this->db->escape($data['sku']) . "',
+				upc 				= '" . $this->db->escape($data['upc']) . "',
+				ean 				= '" . $this->db->escape($data['ean']) . "',
+				jan 				= '" . $this->db->escape($data['jan']) . "',
+				isbn 				= '" . $this->db->escape($data['isbn']) . "',
+				mpn 				= '" . $this->db->escape($data['mpn']) . "',
+				asin 				= '" . $this->db->escape($data['asin']) . "',
+				location 			= '" . $this->db->escape($data['location']) . "',
+				color_group 		= '" . $this->db->escape($data['color_group']) . "',
+				source 				= '" . $this->db->escape($data['source']) . "',
+				competitors 		= '" . $this->db->escape($data['competitors']) . "',
+				competitors_ua 		= '" . $this->db->escape($data['competitors_ua']) . "',
+				quantity 			= '" . (int)$data['quantity'] . "',
+				minimum 			= '" . (int)$data['minimum'] . "',
+				package 			= '" . (int)$data['package'] . "',
+				subtract 			= '" . (int)$data['subtract'] . "',
+				has_child 			= '" . (int)$data['has_child'] . "',
+				stock_status_id 	= '" . (int)$data['stock_status_id'] . "',
+				date_available 		= '" . $this->db->escape($data['date_available']) . "',
+				manufacturer_id 	= '" . (int)$data['manufacturer_id'] . "',
+				collection_id 		= '" . (int)$data['collection_id'] . "',
+				shipping 			= '" . (int)$data['shipping'] . "',
+				price 				= '" . (float)$data['price'] . "',
+				price_delayed 		= '" . (float)$data['price_delayed'] . "',
+				mpp_price 			= '" . (float)$data['mpp_price'] . "',
+				cost 				= '" . (float)$data['cost'] . "',
+				costprice 			= '" . (float)$data['costprice'] . "',
+				price_national 		= '" . (float)$data['price_national'] . "',
+				currency 			= '" . $this->db->escape($data['currency']) . "',
+				points 				= '" . (int)$data['points'] . "',
+				weight 				= '" . (float)$data['weight'] . "',
+				weight_class_id 	= '" . (int)$data['weight_class_id'] . "',
+				weight_amazon_key 	= '" . $this->db->escape($data['weight_amazon_key']) . "',
+				length 				= '" . (float)$data['length'] . "',
+				width 				= '" . (float)$data['width'] . "',
+				height 				= '" . (float)$data['height'] . "',
+				length_class_id 	= '" . (int)$data['length_class_id'] . "',
+				length_amazon_key 	= '" . $this->db->escape($data['length_amazon_key']) . "',
+				pack_weight 		= '" . (float)$data['pack_weight'] . "',
+				pack_weight_class_id 	= '" . (int)$data['pack_weight_class_id'] . "',
+				pack_weight_amazon_key 	= '" . $this->db->escape($data['pack_weight_amazon_key']) . "',
+				pack_length 			= '" . (float)$data['pack_length'] . "',
+				pack_width 			= '" . (float)$data['pack_width'] . "',
+				pack_height 		= '" . (float)$data['pack_height'] . "',
+				pack_length_class_id 	= '" . (int)$data['pack_length_class_id'] . "',
+				pack_length_amazon_key 	= '" . $this->db->escape($data['pack_length_amazon_key']) . "',
+				status 				= '" . (int)$data['status'] . "',
+				tax_class_id 		= '" . $this->db->escape($data['tax_class_id']) . "',
+				sort_order 			= '" . (int)$data['sort_order'] . "',
+				quantity_stock 		= '" . (int)$data['quantity_stock'] . "',
+				min_buy 			= '" . (int)$data['min_buy'] . "',
+				max_buy 			= '" . (int)$data['max_buy'] . "',
+				quantity_stockM 	= '" . (int)$data['quantity_stockM'] . "',
+				quantity_stockK 	= '" . (int)$data['quantity_stockK'] . "',
+				tnved 				= '" . $data['tnved'] . "',
+				ignore_parse 		= '" . (int)$data['ignore_parse'] . "',
+				big_business 		= '" . (int)$data['big_business'] . "',
+				new 				= '" . (int)$data['new'] . "',
+				ignore_parse_date_to 	= '" .  $this->db->escape($data['ignore_parse_date_to']) . "',
+				new_date_to 			= '" .  $this->db->escape($data['new_date_to']) . "',
+				is_markdown 			= '" . (int)$data['is_markdown'] . "',
+				markdown_product_id 	= '" . (int)$data['markdown_product_id'] . "',
+				main_variant_id 		= '" . (int)$data['main_variant_id'] . "',
+				variant_1_is_color 		= '" . (int)$data['variant_1_is_color'] . "',
+				variant_2_is_color 		= '" . (int)$data['variant_2_is_color'] . "',
+				display_in_catalog 		= '" . (int)$data['display_in_catalog'] . "',
+				is_option_with_id 		= '" . (int)$data['is_option_with_id'] . "',
+				yam_disable 		= '" . (int)$data['yam_disable'] . "',
+				is_illiquid 		= '" . (int)$data['is_illiquid'] . "',
+				yam_price 			= '" . (float)$data['yam_price'] . "',
+				yam_percent 		= '" . (float)$data['yam_percent'] . "',
+				yam_special 		= '" . (float)$data['yam_special'] . "',
+				yam_special_percent = '" . (float)$data['yam_special_percent'] . "',
+				yam_currency 		= '" . $this->db->escape($data['yam_currency']) . "',
+				yam_product_id 		= '" . $this->db->escape($this->config->get('config_yam_offer_id_prefix') . $product_id) . "',
+				priceva_enable 		= '" . (int)$data['priceva_enable'] . "',
+				priceva_disable 	= '" . (int)$data['priceva_disable'] . "',
+				amzn_ignore 		= '" . (int)$data['amzn_ignore'] . "',
+				date_added 			= NOW()");
 			
 			$product_id = $this->db->getLastId();
 			
@@ -48,30 +131,31 @@
 				}
 
 				$this->db->query("INSERT INTO product_description SET 
-					product_id = '" . (int)$product_id . "', 
-					language_id = '" . (int)$language_id . "', 
-					name = '" . $this->db->escape($value['name']) . "', 
-					short_name_d = '" . $this->db->escape($value['short_name_d']) . "', 
-					name_of_option = '" . $this->db->escape($value['name_of_option']) . "', 
-					meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', 
-					seo_title = '" . ((isset($value['seo_title']))?($this->db->escape($value['seo_title'])):'') . "', 
-					seo_h1 = '" . ((isset($value['seo_h1']))?($this->db->escape($value['seo_h1'])):'') . "', 
-					meta_description = '" . $this->db->escape($value['meta_description']) . "', 
-					description = '" . $this->db->escape($value['description']) . "', 
-					tag = '" . $this->db->escape($value['tag']) . "', 
-					color = '" . $this->db->escape($value['color']) . "', 
-					material = '" . $this->db->escape($value['material']) . "', 
-					variant_name = '" . $this->db->escape($value['variant_name']) . "', 
-					variant_name_1  = '" . $this->db->escape($value['variant_name_1']) . "', 
-					variant_name_2 = '" . $this->db->escape($value['variant_name_2']) . "', 
-					variant_value_1  = '" . $this->db->escape($value['variant_value_1']) . "', 
-					variant_value_2 = '" . $this->db->escape($value['variant_value_2']) . "',
+					product_id 			= '" . (int)$product_id . "', 
+					language_id 		= '" . (int)$language_id . "', 
+					name 				= '" . $this->db->escape($value['name']) . "', 
+					short_name_d 		= '" . $this->db->escape($value['short_name_d']) . "', 
+					name_of_option 		= '" . $this->db->escape($value['name_of_option']) . "', 
+					meta_keyword 		= '" . $this->db->escape($value['meta_keyword']) . "', 
+					seo_title 			= '" . ((isset($value['seo_title']))?($this->db->escape($value['seo_title'])):'') . "', 
+					seo_h1 				= '" . ((isset($value['seo_h1']))?($this->db->escape($value['seo_h1'])):'') . "', 
+					meta_description 	= '" . $this->db->escape($value['meta_description']) . "', 
+					description 		= '" . $this->db->escape($value['description']) . "',
+					description_full 	= '" . ((isset($value['description_full']))?($this->db->escape($value['description_full'])):'') . "',  
+					tag 				= '" . $this->db->escape($value['tag']) . "', 
+					color 				= '" . $this->db->escape($value['color']) . "', 
+					material 			= '" . $this->db->escape($value['material']) . "', 
+					variant_name 		= '" . $this->db->escape($value['variant_name']) . "', 
+					variant_name_1  	= '" . $this->db->escape($value['variant_name_1']) . "', 
+					variant_name_2 		= '" . $this->db->escape($value['variant_name_2']) . "', 
+					variant_value_1  	= '" . $this->db->escape($value['variant_value_1']) . "', 
+					variant_value_2 	= '" . $this->db->escape($value['variant_value_2']) . "',
 					markdown_appearance = '" . $this->db->escape($value['markdown_appearance']) . "', 
-					markdown_condition = '" . $this->db->escape($value['markdown_condition']) . "', 
-					markdown_pack = '" . $this->db->escape($value['markdown_pack']) . "', 
-					markdown_equipment = '" . $this->db->escape($value['markdown_equipment']) . "', 
-					manufacturer_name = '" . $this->db->escape($value['manufacturer_name']) . "',
-					translated = '" . (int)$value['translated'] . "'");
+					markdown_condition 	= '" . $this->db->escape($value['markdown_condition']) . "', 
+					markdown_pack 		= '" . $this->db->escape($value['markdown_pack']) . "', 
+					markdown_equipment 	= '" . $this->db->escape($value['markdown_equipment']) . "', 
+					manufacturer_name 	= '" . $this->db->escape($value['manufacturer_name']) . "',
+					translated 			= '" . (int)$value['translated'] . "'");
 			}
 			
 			if (isset($data['product_store'])) {
@@ -594,7 +678,8 @@
 					seo_title 			= '" . ((isset($value['seo_title']))?($this->db->escape($value['seo_title'])):'') . "', 
 					seo_h1 				= '" . ((isset($value['seo_h1']))?($this->db->escape($value['seo_h1'])):'') . "', 
 					meta_description 	= '" . $this->db->escape($value['meta_description']) . "', 
-					description 		= '" . $this->db->escape($value['description']) . "', 
+					description 		= '" . $this->db->escape($value['description']) . "',
+					description_full 	= '" . ((isset($value['description_full']))?($this->db->escape($value['description_full'])):'') . "',
 					tag 				= '" . $this->db->escape($value['tag']) . "', 
 					color 				= '" . $this->db->escape($value['color']) . "', 
 					material 			= '" . $this->db->escape($value['material']) . "', 
@@ -1199,9 +1284,9 @@
 				$data['keyword'] = array();
 				$data['status'] = '0';
 				
-				$data = array_merge($data, array('product_attribute' => $this->getProductAttributes($product_id)));
-				$data = array_merge($data, array('product_description' => $this->getProductDescriptions($product_id)));			
-				$data = array_merge($data, array('product_discount' => $this->getProductDiscounts($product_id)));
+				$data = array_merge($data, array('product_attribute' 	=> $this->getProductAttributes($product_id)));
+				$data = array_merge($data, array('product_description' 	=> $this->getProductDescriptions($product_id)));			
+				$data = array_merge($data, array('product_discount' 	=> $this->getProductDiscounts($product_id)));
 
 				if ($this->config->get('ukrcredits_status')){
 					$data = array_merge($data, $this->getProductUkrcredits($product_id));
@@ -1210,19 +1295,19 @@
 				$this->load->model('catalog/ocfilter');
 				$data = array_merge($data, array('ocfilter_product_option' => $this->model_catalog_ocfilter->getProductOCFilterValues($product_id)));
 				
-				$data = array_merge($data, array('product_filter' => $this->getProductFilters($product_id)));
-				$data = array_merge($data, array('product_image' => $this->getProductImages($product_id)));		
-				$data = array_merge($data, array('product_option' => $this->getProductOptions($product_id)));
-				$data = array_merge($data, array('product_related' => $this->getProductRelated($product_id)));
-				$data = array_merge($data, array('product_reward' => $this->getProductRewards($product_id)));
-				$data = array_merge($data, array('product_special' => $this->getProductSpecials($product_id)));
+				$data = array_merge($data, array('product_filter' 	=> $this->getProductFilters($product_id)));
+				$data = array_merge($data, array('product_image' 	=> $this->getProductImages($product_id)));		
+				$data = array_merge($data, array('product_option'	=> $this->getProductOptions($product_id)));
+				$data = array_merge($data, array('product_related' 	=> $this->getProductRelated($product_id)));
+				$data = array_merge($data, array('product_reward' 	=> $this->getProductRewards($product_id)));
+				$data = array_merge($data, array('product_special' 	=> $this->getProductSpecials($product_id)));
 				$data = array_merge($data, array('product_category' => $this->getProductCategories($product_id)));
 				$data = array_merge($data, array('faproduct_facategory' => $this->model_catalog_faproduct ->getFAProductCategories($product_id)));
                 $data = array_merge($data, array('faproduct_facategory' => $this->model_catalog_faproduct ->getFAcategoryShow($product_id)));
-				$data = array_merge($data, array('product_download' => $this->getProductDownloads($product_id)));
-				$data = array_merge($data, array('product_layout' => $this->getProductLayouts($product_id)));
-				$data = array_merge($data, array('product_store' => $this->getProductStores($product_id)));
-				$data = array_merge($data, array('product_profiles' => $this->getProfiles($product_id)));
+				$data = array_merge($data, array('product_download' 	=> $this->getProductDownloads($product_id)));
+				$data = array_merge($data, array('product_layout' 		=> $this->getProductLayouts($product_id)));
+				$data = array_merge($data, array('product_store' 		=> $this->getProductStores($product_id)));
+				$data = array_merge($data, array('product_profiles' 	=> $this->getProfiles($product_id)));
 				
 				$new_product_id = $this->addProduct($data);
 				
@@ -2163,19 +2248,20 @@
 				'short_name_d'     	=> $result['short_name_d'],
 				'name_of_option'   	=> $result['name_of_option'],
 				'description'      	=> $result['description'],
+				'description_full'  => $result['description_full'],
 				'meta_keyword'     	=> $result['meta_keyword'],
                 'seo_title'        	=> $result['seo_title'],
 				'seo_h1' 				=> $result['seo_h1'],
                 'meta_description' 		=> $result['meta_description'],
 				'tag'              		=> $result['tag'],
-				'color'              		=> $result['color'],
-				'material'              	=> $result['material'],
-				'material'              	=> $result['material'],
-				'variant_name'              => $result['variant_name'],
-				'variant_name_1'            => $result['variant_name_1'],
-				'variant_name_2'            => $result['variant_name_2'],
-				'variant_value_1'            => $result['variant_value_1'],
-				'variant_value_2'            => $result['variant_value_2'],
+				'color'              	=> $result['color'],
+				'material'              => $result['material'],
+				'material'              => $result['material'],
+				'variant_name'          => $result['variant_name'],
+				'variant_name_1'        => $result['variant_name_1'],
+				'variant_name_2'        => $result['variant_name_2'],
+				'variant_value_1'       => $result['variant_value_1'],
+				'variant_value_2'		=> $result['variant_value_2'],
 				'translated'			=> $result['translated'],
 				'markdown_appearance'  	=> $result['markdown_appearance'],
 				'markdown_condition' 	=> $result['markdown_condition'],

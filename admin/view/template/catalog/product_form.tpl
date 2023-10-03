@@ -345,6 +345,43 @@
 															<textarea name="product_description[<?php echo $language['language_id']; ?>][description]" id="description<?php echo $language['language_id']; ?>"><?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['description'] : ''; ?></textarea>
 														</td>
 													</tr>
+												<?php if ($this->config->get('config_rainforest_description_symbol_limit')) { ?>	
+													<tr>
+													<td>Полное описание</td>
+														<td>
+															<div class="translate_wrap">
+																<a class="btn-copy<?php echo $language['language_id']; ?> btn-copy" onclick="getCopy($(this),'input','product_description[2]');"><i class="fa fa-copy"></i> Копировать с <?php echo $this->config->get('config_admin_language'); ?></a>
+
+																<?php if ($this->config->get('config_translate_from_ru') && in_array($language['code'], $this->config->get('config_translate_from_ru'))) { ?>
+																	<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'ru','<?php echo $language['code']; ?>','input','product_description[6]');">Перевести <img src="<?php echo DIR_FLAGS_NAME; ?>ru.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>
+																<?php } ?>
+
+																<?php if ($this->config->get('config_translate_from_de') && in_array($language['code'], $this->config->get('config_translate_from_de'))) { ?>
+																	<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'de','<?php echo $language['code']; ?>','input','product_description[26]');">Перевести <img src="<?php echo DIR_FLAGS_NAME; ?>de.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>	
+																<?php } ?>
+
+																<?php if ($this->config->get('config_translate_from_uk') && in_array($language['code'], $this->config->get('config_translate_from_uk'))) { ?>
+																	<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'uk','<?php echo $language['code']; ?>','input','product_description[2]');">Перевести <img src="<?php echo DIR_FLAGS_NAME; ?>uk.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /></a>	
+																<?php } ?>
+
+																<?php if ($language['code'] == $this->config->get('config_admin_language')) { ?>
+																	<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'de','<?php echo $language['code']; ?>','input','product_description[26]');">
+																		Перевести <img src="<?php echo DIR_FLAGS_NAME; ?>de.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+																	</a>&nbsp;
+
+																	<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'en','<?php echo $language['code']; ?>','input','product_description[26]');">
+																		Перевести <img src="<?php echo DIR_FLAGS_NAME; ?>gb.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+																	</a>&nbsp;
+
+																	<a class="btn-translate<?php echo $language['language_id']; ?> btn-translate" onclick="getTranslate($(this), 'fr','<?php echo $language['code']; ?>','input','product_description[26]');">
+																		Перевести <img src="<?php echo DIR_FLAGS_NAME; ?>fr.png" /> <i class="fa fa-arrow-circle-right" aria-hidden="true"></i> <img src="<?php echo DIR_FLAGS_NAME; ?><?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" />
+																	</a>
+																<?php } ?>
+															</div>
+															<textarea name="product_description[<?php echo $language['language_id']; ?>][description_full]" id="description_full<?php echo $language['language_id']; ?>"><?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['description_full'] : ''; ?></textarea>
+														</td>
+													</tr>
+													<?php } ?>	
 													<tr>
 														<td><?php echo $entry_tag; ?></td>
 														<td><input type="text" name="product_description[<?php echo $language['language_id']; ?>][tag]" value="<?php echo isset($product_description[$language['language_id']]) ? $product_description[$language['language_id']]['tag'] : ''; ?>" size="80" /></td>
