@@ -472,12 +472,13 @@
 			$this->load->model('catalog/actiontemplate');
 			$this->load->model('catalog/actiontemplate_functions');
 
-			$data = $this->request->post;
+			$data 		= $this->request->post;
+			$this->data = $data;
 
 			$actionTemplate = $this->model_catalog_actiontemplate->getActionTemplate($data['actiontemplate_id']);
 
 			if (!empty($actionTemplate['data_function']) && (method_exists($this->model_catalog_actiontemplate_functions, $actionTemplate['data_function']))){
-				$data += $this->model_catalog_actiontemplate_functions->{$actionTemplate['data_function']}($data);
+				$this->data += $this->model_catalog_actiontemplate_functions->{$actionTemplate['data_function']}($data);
 			}
 
 			if (!empty($actionTemplate['file_template'])){

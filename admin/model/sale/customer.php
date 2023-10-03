@@ -345,7 +345,7 @@
 		}
 
 		public function getCustomerOrderCollections($customer_id){
-			$query = $this->db->query("SELECT DISTINCT co.collection_id, co.manufacturer_id FROM order_product op LEFT JOIN `order` o ON o.order_id = op.order_id LEFT JOIN product p ON op.product_id = p.product_id LEFT JOIN collection co ON co.collection_id = p.collection_id WHERE o.customer_id = '" .(int)$customer_id. "' AND p.collection_id <> 0 AND o.order_status_id = '" . (int)$this->config->get('config_complete_status_id') . "'");
+			$query = $this->db->query("SELECT DISTINCT co.collection_id, co.manufacturer_id FROM order_product op LEFT JOIN `order` o ON o.order_id = op.order_id LEFT JOIN product p ON op.product_id = p.product_id LEFT JOIN collection co ON co.collection_id = p.collection_id WHERE o.customer_id = '" . (int)$customer_id. "' AND p.collection_id <> 0 AND o.order_status_id = '" . (int)$this->config->get('config_complete_status_id') . "'");
 			
 			$collections = [];
 			foreach ($query->rows as $row){
