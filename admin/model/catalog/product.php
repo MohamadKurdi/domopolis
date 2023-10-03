@@ -1804,6 +1804,18 @@
 			if (isset($data['collection_id']) && !is_null($data['collection_id'])) {
 				$sql .= " AND p.collection_id = '" . $this->db->escape($data['collection_id']) . "'";
 			}
+
+			if (isset($data['filter_stock_status_ids']) && is_array($data['filter_stock_status_ids'])) {
+				$sql .= " AND p.stock_status_id IN (" . implode(',', $data['filter_stock_status_ids']) . ")";
+			}
+
+			if (isset($data['filter_has_image']) && !is_null($data['filter_has_image'])) {
+				$sql .= " AND p.image <> ''";
+			}
+
+			if (isset($data['filter_date_added_from']) && $data['filter_date_added_from']) {
+				$sql .= " AND p.date_added <= '" . date('Y-m-d', strtotime($data['filter_date_added_from'])) . "'";
+			}
 			
 			if (!empty($data['filter_price'])) {
 				$sql .= " AND p.price LIKE '" . $this->db->escape($data['filter_price']) . "%'";
@@ -1829,7 +1841,9 @@
 			'p.price',
 			'p.quantity',
 			'p.status',
-			'p.sort_order'
+			'p.sort_order',
+			'p.date_added',
+			'RAND()'
 			);	
 			
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -1838,7 +1852,7 @@
 				$sql .= " ORDER BY pd.name";	
 			}
 			
-			if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			if (isset($data['order']) && ($data['order'] == 'DESC') && $data['sort'] != 'RAND()') {
 				$sql .= " DESC";
 				} else {
 				$sql .= " ASC";
