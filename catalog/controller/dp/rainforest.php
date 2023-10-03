@@ -51,15 +51,17 @@ class ControllerDPRainForest extends Controller {
 	}
 
 	public function test_limit_text_by_sentences(){
-		$query = $this->db->query("SELECT description FROM product_description WHERE length(description)>3000 LIMIT 10");
+		$query = $this->db->query("SELECT description FROM product_description WHERE length(description)>3000 AND language_id = 18 LIMIT 10");
 
 		foreach ($query->rows as $row){
+			echoLine(mb_strlen($row['description']), 'e');
 			echoLine($row['description'], 's');
 
 			$row['description'] = limit_text_by_sentences($row['description']);
 
+			echoLine(mb_strlen($row['description']), 'e');
 			echoLine($row['description'], 'w');
-
+			echoLine('---------------------------------------------------------', e);
 		}
 	}
 
