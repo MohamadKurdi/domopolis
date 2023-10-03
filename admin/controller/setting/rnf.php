@@ -106,8 +106,11 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_enable_shop_by_look_adding',
 
 		'config_rainforest_source_language',
+		'config_rainforest_description_symbol_limit',
 		'config_rainforest_export_names_with_openai',
 		'config_rainforest_short_names_with_openai',
+		'config_openai_enable_shorten_names_before_translation',
+		'config_openai_enable_shorten_names_after_translation',
 		'config_openai_shortennames_length',
 		'config_openai_exportnames_length'
 	];

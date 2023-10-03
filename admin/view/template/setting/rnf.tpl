@@ -870,7 +870,21 @@
 
 						<tr>
 							<td colspan="3" class="left" style="color:#00ad07;">
-								<i class="fa fa-cogs"></i> <b>Переводчик</b>
+								<i class="fa fa-cogs"></i> <b>Переводчик, текст</b>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Ограничить описание до перевода
+							</td>
+							<td>
+								<input type="number" name="config_rainforest_description_symbol_limit" value="<?php echo $config_rainforest_description_symbol_limit; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Ограничит описание заданным количеством символов по предложениям. Результирующее количество может быть несколько больше заданного числа.
+								</span>
 							</td>
 						</tr>
 
@@ -972,6 +986,34 @@
 							<td>
 								<span class="help">
 									<i class="fa fa-info-circle"></i> Длина задается в символах, либо словах (зависит от запроса к AI)
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Сокращать до перевода
+							</td>
+							<td>
+								<input id="config_openai_enable_shorten_names_before_translation" type="checkbox" class="checkbox" name="config_openai_enable_shorten_names_before_translation" <? if ($config_openai_enable_shorten_names_before_translation){ ?> checked="checked" <? } ?> value="1" /><label for="config_openai_enable_shorten_names_before_translation"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> сокращает названия до заданного количества символов до перевода
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Сокращать после перевода
+							</td>
+							<td>
+								<input id="config_openai_enable_shorten_names_after_translation" type="checkbox" class="checkbox" name="config_openai_enable_shorten_names_after_translation" <? if ($config_openai_enable_shorten_names_after_translation){ ?> checked="checked" <? } ?> value="1" /><label for="config_openai_enable_shorten_names_after_translation"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> сокращает названия до заданного количества символов после перевода
 								</span>
 							</td>
 						</tr>

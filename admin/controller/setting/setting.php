@@ -632,6 +632,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_disable_fast_orders'] = $this->config->get('config_disable_fast_orders');
         }
 
+        if (isset($this->request->post['config_enable_form_bugfix_in_simplecheckout'])) {
+            $this->data['config_enable_form_bugfix_in_simplecheckout'] = $this->request->post['config_enable_form_bugfix_in_simplecheckout'];
+        } else {
+            $this->data['config_enable_form_bugfix_in_simplecheckout'] = $this->config->get('config_enable_form_bugfix_in_simplecheckout');
+        }
+
         if (isset($this->request->post['config_ssl'])) {
             $this->data['config_ssl'] = $this->request->post['config_ssl'];
         } else {
@@ -3949,6 +3955,21 @@ class ControllerSettingSetting extends Controller
             $this->data['config_rainforest_source_language'] = $this->request->post['config_rainforest_source_language'];
         } else {
             $this->data['config_rainforest_source_language'] = $this->config->get('config_rainforest_source_language');
+        }
+
+        if (isset($this->request->post['config_rainforest_description_symbol_limit'])) {
+            $this->data['config_rainforest_description_symbol_limit'] = $this->request->post['config_rainforest_description_symbol_limit'];
+        } else {
+            $this->data['config_rainforest_description_symbol_limit'] = $this->config->get('config_rainforest_description_symbol_limit');
+        }
+
+        $this->load->model('setting/store');            
+        $this->data['stores'] = $this->model_setting_store->getStores();
+
+        if (isset($this->request->post['config_rainforest_add_to_stores'])) {
+            $this->data['config_rainforest_add_to_stores'] = $this->request->post['config_rainforest_add_to_stores'];
+        } else {
+            $this->data['config_rainforest_add_to_stores'] = [0];
         }
 
         foreach ($this->data['languages'] as $rnf_language) {

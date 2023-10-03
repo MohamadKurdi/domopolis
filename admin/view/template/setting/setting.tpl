@@ -713,6 +713,21 @@
 										<br />
 										<span class="help">Если включено, то невозможно оформить быстрый заказ на сайте</span>											
 									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включить багфикс Simplecheckout</span></p>
+										<select type="select" name="config_enable_form_bugfix_in_simplecheckout">
+											<? if ($config_enable_form_bugfix_in_simplecheckout) { ?>
+												<option value="1" selected='selected' >Да</option>
+												<option value="0" >Нет</option>
+											<? } else { ?>
+												<option value="1" >Да</option>
+												<option value="0"  selected='selected' >Нет</option>
+											<? } ?>       
+										</select>
+										<br />
+										<span class="help">В случае проблем с некоторыми методами оплаты переводить на подтверждение по-умолчанию</span>											
+									</div>
 								</td>
 
 								<td style="width:18%">
@@ -6162,6 +6177,19 @@
 												<? } ?>
 											</select>
 										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Ограничить описание</span></p>
+											<select name="config_rainforest_description_symbol_limit">
+												<?php if ($config_rainforest_description_symbol_limit) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
 									</td>
 
 									<td style="width:20%">
@@ -6195,23 +6223,46 @@
 									
 									
 									<td style="width:20%">
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Фильтры rfAPI - 1</span></p>
-										<div class="scrollbox" style="height:200px;">
-											<?php $class = 'odd'; ?>
-											<?php foreach ($amazon_filters as $amazon_filter) { ?>
-												<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-												<div class="<?php echo $class; ?>">
-													<?php if (!empty($config_rainforest_amazon_filters_1) && in_array($amazon_filter, $config_rainforest_amazon_filters_1)) { ?>
-														<input id="config_rainforest_amazon_filters_1<?php echo $amazon_filter; ?>" class="checkbox" type="checkbox" name="config_rainforest_amazon_filters_1[]" value="<?php echo $amazon_filter; ?>" checked="checked" />
-														<label for="config_rainforest_amazon_filters_1<?php echo $amazon_filter; ?>"><?php echo $amazon_filter; ?></label>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Фильтры rfAPI - 1</span></p>
+											<div class="scrollbox" style="height:200px;">
+												<?php $class = 'odd'; ?>
+												<?php foreach ($amazon_filters as $amazon_filter) { ?>
+													<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+													<div class="<?php echo $class; ?>">
+														<?php if (!empty($config_rainforest_amazon_filters_1) && in_array($amazon_filter, $config_rainforest_amazon_filters_1)) { ?>
+															<input id="config_rainforest_amazon_filters_1<?php echo $amazon_filter; ?>" class="checkbox" type="checkbox" name="config_rainforest_amazon_filters_1[]" value="<?php echo $amazon_filter; ?>" checked="checked" />
+															<label for="config_rainforest_amazon_filters_1<?php echo $amazon_filter; ?>"><?php echo $amazon_filter; ?></label>
 														<?php } else { ?>
-														<input id="config_rainforest_amazon_filters_1<?php echo $amazon_filter; ?>" class="checkbox" type="checkbox" name="config_rainforest_amazon_filters_1[]" value="<?php echo $amazon_filter; ?>" />
-														<label for="config_rainforest_amazon_filters_1<?php echo $amazon_filter; ?>"><?php echo $amazon_filter; ?></label>
-													<?php } ?>
-												</div>
-											<?php } ?>
+															<input id="config_rainforest_amazon_filters_1<?php echo $amazon_filter; ?>" class="checkbox" type="checkbox" name="config_rainforest_amazon_filters_1[]" value="<?php echo $amazon_filter; ?>" />
+															<label for="config_rainforest_amazon_filters_1<?php echo $amazon_filter; ?>"><?php echo $amazon_filter; ?></label>
+														<?php } ?>
+													</div>
+												<?php } ?>
+											</div>
+											<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);">Выделить всё</a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);">Снять выделение</a>
 										</div>
-										<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);">Выделить всё</a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);">Снять выделение</a>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Добавлять в магазины</span></p>
+											<div class="scrollbox" style="min-height: 150px;">
+												<?php $class = 'even'; ?>
+												<?php foreach ($stores as $store) { ?>
+													<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+													<div class="<?php echo $class; ?>">
+														<?php if (in_array($store['store_id'], $config_rainforest_add_to_stores)) { ?>
+															<input id="config_rainforest_add_to_stores_<?php echo $store['store_id']; ?>" class="checkbox" type="checkbox" name="config_rainforest_add_to_stores[]" value="<?php echo $store['store_id']; ?>" checked="checked" />
+															<label for="config_rainforest_add_to_stores_<?php echo $store['store_id']; ?>"><?php echo $store['name']; ?></label>
+														<?php } else { ?>
+															<input id="config_rainforest_add_to_stores_<?php echo $store['store_id']; ?>" class="checkbox" type="checkbox" name="config_rainforest_add_to_stores[]" value="<?php echo $store['store_id']; ?>" />
+															<label for="config_rainforest_add_to_stores_<?php echo $store['store_id']; ?>"><?php echo $store['name']; ?></label>
+														<?php } ?>
+													</div>
+												<?php } ?>
+
+											</div>
+											<a class="select_all" onclick="$(this).parent().find(':checkbox').attr('checked', true);">Выделить всё</a><a class="remove_selection" onclick="$(this).parent().find(':checkbox').attr('checked', false);">Снять выделение</a>
+										</div>
 									</td>									
 								</tr>
 
