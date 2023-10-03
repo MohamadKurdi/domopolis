@@ -1251,8 +1251,17 @@ class ProductsRetriever extends RainforestRetriever
 			$this->registry->get('rainforestAmazon')->offersParser->PriceLogic->updateProductPrices($data['asin'], $data['amazon_best_price'], true);
 		}
 		
-		$this->db->query("DELETE FROM product_to_store WHERE product_id 	= '" . (int)$product_id . "'");
-		$this->db->query("INSERT INTO product_to_store SET product_id 		= '" . (int)$product_id . "', store_id = '0'");				
+		$this->db->query("DELETE FROM product_to_store WHERE product_id 	= '" . (int)$product_id . "'");		
+		$this->db->query("INSERT INTO product_to_store SET product_id 		= '" . (int)$product_id . "', store_id = '0'");
+
+		if ($this->config->get('config_rainforest_add_to_stores')){
+			foreach ($this->config->get('config_rainforest_add_to_stores') as $store_id){
+				if ($store_id > 0){
+					$this->db->query("INSERT INTO product_to_store SET product_id 		= '" . (int)$product_id . "', store_id = '" . (int)$store_id . "'");
+				}				
+			}
+		}
+
 		$this->db->query("DELETE FROM product_to_category WHERE product_id 	= '" . (int)$product_id . "'");
 		$this->db->query("INSERT INTO product_to_category SET product_id 	= '" . (int)$product_id . "', category_id = '" . (int)$data['category_id'] . "', main_category = 1");		
 		$this->db->query("DELETE FROM product_description WHERE product_id 	= '" . (int)$product_id . "'");
