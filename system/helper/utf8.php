@@ -25,12 +25,16 @@ function parseAmazonDeliveryDateToEnglish($date){
 	return $date;
 }
 
-function limit_text_by_sentences($text, $max_symbols = 1000) {
+function limit_text_by_sentences($text, $max_symbols = 1000) {	
 	$text = str_replace('  ', ' ', $text);
 
-	$sentences = preg_split('/([.?!]+)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
-	$limited_text = '';
-	$symbol_count = 0;
+	if (mb_strlen($text) <= ($max_symbols + ($max_symbols/10))){
+		return $text;
+	}
+
+	$sentences 		= preg_split('/([.?!]+)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+	$limited_text 	= '';
+	$symbol_count 	= 0;
 
 	foreach ($sentences as $sentence) {
 		$symbol_count += mb_strlen($sentence);
