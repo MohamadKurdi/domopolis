@@ -1,9 +1,9 @@
 <?php
 final class Action {
-	protected $file;
-	protected $class;
-	protected $method;
-	protected $args = array();
+	protected $file 	= null;
+	protected $class 	= null;
+	protected $method 	= null;
+	protected $args 	= [];
 
 	public function __construct($route, $args = array()) {
 		$path = '';
@@ -20,7 +20,7 @@ final class Action {
 				
 				continue;
 			}
-			
+
 			if (is_file(DIR_APPLICATION . 'controller/' . str_replace(array('../', '..\\', '..'), '', $path) . '.php')) {
 				$this->file = DIR_APPLICATION . 'controller/' . str_replace(array('../', '..\\', '..'), '', $path) . '.php';
 				

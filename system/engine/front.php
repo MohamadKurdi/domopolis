@@ -50,7 +50,7 @@ final class Front {
 	}
 
 	private function execute($action) {
-		if (file_exists($action->getFile())) {
+		if ($action->getFile() && file_exists($action->getFile())) {
 			require_once($action->getFile());
 
 			$class = $action->getClass();
