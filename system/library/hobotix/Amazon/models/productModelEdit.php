@@ -321,6 +321,13 @@ class productModelEdit extends hoboModel{
 		}		
 	}
 
+	public function backupFullDescription($product_id, $data, $language_id){			
+		$this->db->query("UPDATE product_description SET 
+				description_full 	= '" . $this->db->escape($data['description_full']) . "'				
+				WHERE product_id 	= '" . (int)$product_id . "'
+				AND language_id 	= '" . (int)$language_id . "'");
+	}
+
 	public function editProductDescriptions($product_id, $data){			
 		foreach ($data as $language_id => $value) {
 			$this->db->query("UPDATE product_description SET 

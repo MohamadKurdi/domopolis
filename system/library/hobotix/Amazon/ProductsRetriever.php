@@ -165,9 +165,17 @@ class ProductsRetriever extends RainforestRetriever
 	public function parseProductDescriptions($product_id, $product){			
 		if (!empty($product['description'])){
 			$product_description = [];			
-			foreach ($this->registry->get('languages') as $language_code => $language) {
-				$product['description'] = atrim($product['description']);
 
+			$product['description'] = atrim($product['description']);
+
+			if ($this->config->get('config_rainforest_description_symbol_limit')){
+				$this->model_product_edit->backupFullDescription($product_id, ['description_full' => $product['description']], $this->config->get('config_rainforest_source_language_id'));
+			
+				$product['description'] = limit_text_by_sentences($product['description'], (int)$this->config->get('config_rainforest_description_symbol_limit'));
+				echoLine('[parseProductDescriptions] Truncated description to ' . $this->config->get('config_rainforest_description_symbol_limit') . ' symbols!', 'w');
+			}
+
+			foreach ($this->registry->get('languages') as $language_code => $language) {
 				$description = $this->translateWithCheck($product['description'], $language_code);				
 				
 				$product_description[$language['language_id']] = [
@@ -1254,10 +1262,10 @@ class ProductsRetriever extends RainforestRetriever
 		$this->db->query("DELETE FROM product_to_store WHERE product_id 	= '" . (int)$product_id . "'");		
 		$this->db->query("INSERT INTO product_to_store SET product_id 		= '" . (int)$product_id . "', store_id = '0'");
 
-		if ($this->config->get('config_rainforest_add_to_stores')){
+		if (!empty($this->config->get('config_rainforest_add_to_stores'))){
 			foreach ($this->config->get('config_rainforest_add_to_stores') as $store_id){
 				if ($store_id > 0){
-					$this->db->query("INSERT INTO product_to_store SET product_id 		= '" . (int)$product_id . "', store_id = '" . (int)$store_id . "'");
+					$this->db->query("INSERT INTO product_to_store SET product_id = '" . (int)$product_id . "', store_id = '" . (int)$store_id . "'");
 				}				
 			}
 		}
@@ -1265,7 +1273,6 @@ class ProductsRetriever extends RainforestRetriever
 		$this->db->query("DELETE FROM product_to_category WHERE product_id 	= '" . (int)$product_id . "'");
 		$this->db->query("INSERT INTO product_to_category SET product_id 	= '" . (int)$product_id . "', category_id = '" . (int)$data['category_id'] . "', main_category = 1");		
 		$this->db->query("DELETE FROM product_description WHERE product_id 	= '" . (int)$product_id . "'");
-
 
 		if ($this->config->get('config_openai_enable') && $this->config->get('config_openai_enable_shorten_names') && $this->config->get('config_rainforest_short_names_with_openai') && $this->config->get('config_openai_enable_shorten_names_before_translation')){
 			$data['name'] = $this->registry->get('openaiAdaptor')->shortenName($data['name'], $this->config->get('config_rainforest_source_language'));
