@@ -168,9 +168,12 @@
 	function doSubmitOrderByFakeButton(){
 		
 		if ($('input[name=\'payment_method_current\']').val() != ''){
-			if (typeof window.simplecheckout_0 == 'object' && window.simplecheckout_0.isPaymentFormEmpty()){										
-			//	window.simplecheckout_0.copyPaymentFormFromDefaultIfIsEmptyAndFinishOrder();
-				window.simplecheckout_0.copyPaymentFormFromDefaultIfIsEmpty();
+			if (typeof window.simplecheckout_0 == 'object' && window.simplecheckout_0.isPaymentFormEmpty()){
+				<?php if ($config_enable_form_bugfix_in_simplecheckout) { ?>										
+					window.simplecheckout_0.copyPaymentFormFromDefaultIfIsEmptyAndFinishOrder();
+				<?php } else { ?>
+					window.simplecheckout_0.copyPaymentFormFromDefaultIfIsEmpty();
+				<?php } ?>
 			}
 		}
 		

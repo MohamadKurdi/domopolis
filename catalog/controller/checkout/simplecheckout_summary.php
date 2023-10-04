@@ -147,15 +147,12 @@
             $this->_templateData['text_recurring']                = $this->language->get('text_recurring');
             $this->_templateData['text_length']                   = $this->language->get('text_length');
             $this->_templateData['text_recurring_item']           = $this->language->get('text_recurring_item');
-            $this->_templateData['text_payment_profile']          = $this->language->get('text_payment_profile');
-            
-            $this->_templateData['entry_coupon'] = $this->language->get('entry_coupon');
-            $this->_templateData['entry_voucher'] = $this->language->get('entry_voucher');
-            
-            $this->_templateData['button_coupon'] = $this->language->get('button_coupon');
-            $this->_templateData['button_voucher'] = $this->language->get('button_voucher');
-            
-            $this->_templateData['button_update'] = $this->language->get('button_update');
+            $this->_templateData['text_payment_profile']          = $this->language->get('text_payment_profile');            
+            $this->_templateData['entry_coupon'] 	= $this->language->get('entry_coupon');
+            $this->_templateData['entry_voucher'] 	= $this->language->get('entry_voucher');            
+            $this->_templateData['button_coupon'] 	= $this->language->get('button_coupon');
+            $this->_templateData['button_voucher'] 	= $this->language->get('button_voucher');            
+            $this->_templateData['button_update'] 	= $this->language->get('button_update');
 			
 			$this->_templateData['text_retranslate_43'] = $this->_templateData['text_retranslate_43'] . ' ' . $this->config->get('config_reward_maxsalepercent') . '%';
             
@@ -165,8 +162,7 @@
             
             $points_total = 0;
             
-            foreach ($products as $product) {
-				
+            foreach ($products as $product) {				
 				$product_total = 0;
 				
 				foreach ($products as $product_2) {
@@ -444,8 +440,9 @@
 				unset($this->session->data['coupon']);
 			}
 			
-			$this->_templateData['cart_has_additional_offer'] = $this->cart->hasAdditionalOffer();
-			$this->_templateData['cart_is_using_credit_payments'] = $this->cart->isUsingCreditPayments();
+			$this->_templateData['cart_has_additional_offer'] 					= $this->cart->hasAdditionalOffer();
+			$this->_templateData['cart_is_using_credit_payments'] 				= $this->cart->isUsingCreditPayments();
+			$this->_templateData['config_enable_form_bugfix_in_simplecheckout'] = $this->config->get('config_enable_form_bugfix_in_simplecheckout');
             
             $customer = $this->session->data['simple']['customer'];
             
