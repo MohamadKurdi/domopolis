@@ -87,9 +87,8 @@
 				$language_id = $this->config->get('config_language_id');
 			}
 
-			$query = $this->db->query("SELECT DISTINCT at.*, ad.title, ad.file_template FROM 
-				actiontemplate at 
-				LEFT JOIN actiontemplate_description ad ON (at.actiontemplate_id = ad.actiontemplate_id AND language_id = '" . (int)$language_id . "')
+			$query = $this->db->query("SELECT DISTINCT at.*, ad.title, ad.seo_title, ad.file_template FROM 
+				actiontemplate at LEFT JOIN actiontemplate_description ad ON (at.actiontemplate_id = ad.actiontemplate_id AND language_id = '" . (int)$language_id . "')
 				WHERE at.actiontemplate_id = '" . (int)$actiontemplate_id . "'");
 			
 			return $query->row;

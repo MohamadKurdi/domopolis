@@ -468,7 +468,7 @@
 			$this->response->setOutput($this->render());
 		}
 
-		public function loadTemplateV2(){
+		public function loadTemplateV2($return_html = false){
 			$this->load->model('catalog/actiontemplate');
 			$this->load->model('catalog/actiontemplate_functions');
 
@@ -487,7 +487,59 @@
 				$this->template = $actionTemplate['description'];
 			}
 
-			$this->response->setOutput($this->render());
+			if ($return_html){
+				return $this->render();
+			} else {
+				$this->response->setOutput($this->render());
+			}
+		}
+
+		public function sendMailV2(){
+			$this->load->model('catalog/actiontemplate');
+			$this->load->model('catalog/actiontemplate_functions');
+			$this->load->model('sale/customer');
+			$this->load->model('setting/setting');			
+			$this->load->model('kp/work');
+
+			$data 				= $this->request->post;
+			$customer 			= $this->model_sale_customer->getCustomer($data['customer_id']);
+			$actionTemplate   	= $this->model_catalog_actiontemplate->getActionTemplate($data['actiontemplate_id'], $customer['language_id']);			
+
+			$mail_info = [
+				'mail_from' 		=> $this->config->get('config_mail_trigger_name_from'),
+				'mail_from_email' 	=> $this->config->get('config_mail_trigger_mail_from'),
+				'mail_to' 			=> $customer['firstname'] . ' ' . $customer['lastname'],
+				'mail_to_email' 	=> $customer['email'],
+				'store_id'    		=> $customer['store_id'],
+				'customer_id'    	=> $customer['customer_id'],
+				'template_id'    	=> (int)$data['actiontemplate_id']
+			];
+
+			$data['html'] = $this->loadTemplateV2(true);
+
+			$data = array_merge($data, $actionTemplate, $customer, $mail_info);					
+			
+			$mail = new Mail($this->registry); 
+			$mail->setProtocol($this->config->get('config_mail_protocol'));
+			$mail->setEmailTemplate(new EmailTemplate($this->request, $this->registry));
+			$mail->setFrom($this->config->get('config_mail_trigger_mail_from'));
+			$mail->setSender($this->config->get('config_mail_trigger_name_from'));
+			$mail->setIsMarketing(true);
+			$mail->setSubject($actionTemplate['seo_title']);
+			$mail->setTo($customer['email']);
+			$mail->setHTML($data['html']);
+			$transmission_id = $mail->send(true, $data, true);
+
+			if ($transmission_id){
+				//$this->model_sale_customer->setSentManualLetter($data['customer_id'], true);
+			}
+			
+			$json = [
+					'transmission_id' => $transmission_id,
+					'date_sent'       => date('d.m.Y')
+				];
+
+			$this->response->setOutput(json_encode($json));				
 		}
 				
 		public function loadTemplate($customer_id = false, $template_id = false, $do_return = false){
@@ -574,19 +626,18 @@
 			$data = array_merge($data, $template, $customer, $mail_info);			
 			
 			$mail = new Mail($this->registry); 
-			$mail->setEmailTemplate(new EmailTemplate($this->request, $this->registry));
 			$mail->setFrom($this->model_setting_setting->getKeySettingValue('config', 'config_email', (int)$customer['store_id']));
 			$mail->setSender($this->model_setting_setting->getKeySettingValue('config', 'config_name', (int)$customer['store_id']));
-			$mail->setSubject($template['title']);
+			$mail->setSubject($template['seo_title']);
 			$mail->setTo($customer['email']);
 			$mail->setHTML($template['html']);
 			$transmission_id = $mail->send(true, $data, true);
 			
 			if ($transmission_id){
-				$responce = array(
+				$responce = [
 					'transmission_id' => $transmission_id,
 					'date_sent'       => date('d.m.Y')
-				);
+				];
 				$this->response->setOutput(json_encode($responce));				
 			}
 											

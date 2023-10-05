@@ -1,15 +1,15 @@
 <?php
 
 	abstract class Controller {
-		protected $registry;	
-		protected $id;
-		protected $layout;
-		protected $template;
-		protected $overrided_template;
-		protected $children = [];
-		protected $data = [];
-		protected $output;
-		protected $minifier;
+		protected $registry 	= null;	
+		protected $id 			= null;
+		protected $layout 		= null;
+		protected $template 	= null; 
+		protected $overrided_template= null;
+		protected $children 	= [];
+		protected $data 		= [];
+		protected $output 		= null;
+		protected $minifier 	= null;
 
 		private $default_template = 'default';
 		
@@ -100,7 +100,7 @@
 				
 				if(method_exists($controller, $action->getMethod())){
 					return true;
-					}else{
+					} else {
 					return false;
 				}
 				} else {
@@ -108,86 +108,60 @@
 			}		
 		}
 		
-		protected function minify($content){
-			
-			$search = array(
-			'/\>[^\S ]+/s', 
-			'/[^\S ]+\</s',
-			'/(\s)+/s'
-			);
-			
-			$replace = array(
-			'>',
-			'<',
-			'\\1'
-			);
+		protected function minify($content){			
+			$search = ['/\>[^\S ]+/s', '/[^\S ]+\</s', '/(\s)+/s'];			
+			$replace = ['>', '<', '\\1'];
 			
 			return preg_replace($search, $replace, $content);
 		}
 
 		protected function setCachedOutput($out){
-
 			if (IS_HTTPS){
 				$out = str_ireplace('http://', 'https://', $out);
 			}
 			
 			$this->output = $out;
-
 		}
 		
 		protected function setBlockCachedOutput($out){
-			
 			if (IS_HTTPS){
 				$out = str_ireplace('http://', 'https://', $out);
 			}
 			
 			$this->output = $out;
-			
 		}
 
-		protected function setDataLang($field_name)
-		{
+		protected function setDataLang($field_name){
 			$this->data[$field_name] = $this->language->get($field_name);
 		}
 		
 
-		protected function setData($field_name, $default_value)
-		{
+		protected function setData($field_name, $default_value){
 			$this->data[$field_name] = $this->getData($field_name, $default_value);
-		}
-		
+		}		
 
-		protected function getData($field_name, $default_value)
-		{
-			if (isset($this->request->post[$field_name]))
-			{
+		protected function getData($field_name, $default_value){
+			if (isset($this->request->post[$field_name])){
 				return $this->request->post[$field_name];
-			}
-			elseif ($this->config->has($field_name))
-			{ 
+			} elseif ($this->config->has($field_name)){ 
 				return $this->config->get($field_name);
 			}
 			
 			return $default_value;
 		}			
 		
-
-		protected function getDataImage($field_name, $width, $height)
-		{
+		protected function getDataImage($field_name, $width, $height){
 			$this->load->model('tool/image');
 			
-			if (isset($this->request->post[$field_name]) && file_exists(DIR_IMAGE . $this->request->post[$field_name]))
-			{
+			if (isset($this->request->post[$field_name]) && file_exists(DIR_IMAGE . $this->request->post[$field_name])){
 				return $this->model_tool_image->resize($this->request->post[$field_name], $width, $height);
-			}
-			elseif ($this->config->has($field_name))
-			{ 
+			} elseif ($this->config->has($field_name)){ 
 				return $this->model_tool_image->resize($this->config->get($field_name), $width, $height);
-			}
-			else
-			{
+			} else {
 				return $this->model_tool_image->resize('no_image.jpg', $width, $height);
 			}
+
+			return $this->model_tool_image->resize('no_image.jpg', $width, $height);
 		}
 
 		protected function checkTemplate($currentDir, $includeTemplate){
@@ -223,13 +197,11 @@
 				print "<br />";
 			}
 			
-			if (!defined('IS_ADMIN')){
-			//Removing theme name from template name		
+			if (!defined('IS_ADMIN')){		
 				if (stripos($this->template, $this->config->get('config_template')) === 0){
 					$this->template = substr($this->template, mb_strlen($this->config->get('config_template')));
 				}
 
-			//If theme name is default
 				if (stripos($this->template, $this->default_template) === 0){
 					$this->template = substr($this->template, mb_strlen($this->default_template));
 				}

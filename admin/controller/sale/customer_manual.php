@@ -63,7 +63,7 @@
 				'filter_order_good_count' 	=> 5,
 				'order_good_last_date_to' 		=> date('Y-m-d', strtotime('-3 month')),
 				'order_good_last_date_from' 	=> date('Y-m-d', strtotime('-15 month')),
-				'filter_had_not_sent_old_alert' => true, 
+				'filter_had_not_sent_manual_letter' => true, 
 				'filter_simple_email' 			=> true,
 				'filter_nbt_customer' 			=> false,
 				'filter_nbt_customer_exclude' 	=> false,
@@ -275,29 +275,4 @@
 			
 			$this->response->setOutput($this->render());
 		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	}

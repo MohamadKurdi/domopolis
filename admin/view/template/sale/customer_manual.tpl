@@ -62,8 +62,8 @@
 								</div>
 
 								<div style="margin-top:5px;">
-									<input id="had_not_sent_old_alert" class="checkbox" type="checkbox" name="had_not_sent_old_alert" value="1" <?php if ($filter_had_not_sent_old_alert) print 'checked'; ?>>
-									<label for="had_not_sent_old_alert" style="color:#ff5656;"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;Не отправляли ручную рассылку</label>
+									<input id="had_not_sent_manual_letter" class="checkbox" type="checkbox" name="had_not_sent_manual_letter" value="1" <?php if ($filter_had_not_sent_manual_letter) print 'checked'; ?>>
+									<label for="had_not_sent_manual_letter" style="color:#ff5656;"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;Не отправляли ручную рассылку</label>
 								</div>		
 							</td>		
 
@@ -156,7 +156,7 @@
 
 					<?php if ($customers) { ?>
 						<?php foreach ($customers as $customer) { ?>
-							<tr>
+							<tr id="tr-customer-<?php echo $customer['customer_id']; ?>">
 								<td class="left">
 									<span style="font-weight:400; font-size:20px;">
 										<a href="<? echo $customer['customer_href']; ?>" style="font-size:18px;" target="_blank"><?php echo $customer['name']; ?></a>
@@ -274,7 +274,7 @@
 								</td>
 
 								<td class="center" width="50px">
-									<i class="fa fa-envelope" style="font-size:36px; color:#00AD07; cursor:pointer;" data-customer-id="<?php echo $customer['customer_id']; ?>" onclick="send(<?php echo $customer['customer_id']; ?>, <?php echo $customer['language_id']; ?>)"></i>
+									<i class="fa fa-envelope" style="font-size:36px; color:#00AD07; cursor:pointer;" id="btn-send-customer-<?php echo $customer['customer_id']; ?>" data-customer-id="<?php echo $customer['customer_id']; ?>" onclick='swal({ title: "Отправить письмо <?php echo $customer['name']; ?>?", text: "На почту <? echo $customer['email']; ?>", type: "warning", showCancelButton: true,  confirmButtonColor: "#F96E64",  confirmButtonText: "Отправить", cancelButtonText: "Отмена",  closeOnConfirm: true }, function() { send(<?php echo $customer['customer_id']; ?>, <?php echo $customer['language_id']; ?>) });'></i>
 								</td>
 
 								<td class="center" width="50px">
@@ -282,7 +282,7 @@
 								</td>
 
 								<td class="right">
-										<a class="button" onclick=" swal({title: 'Ссылка для входа без пароля',text: '<? echo $customer['preauth_url']; ?>', html: true,  type: 'info',  customClass: 'swal-wide',  showCancelButton: true,  showConfirmButton:false });"><i class="fa fa-link" aria-hidden="true"></i>
+										<a class="button" onclick="swal({title: 'Ссылка для входа без пароля',text: '<? echo $customer['preauth_url']; ?>', html: true,  type: 'info',  customClass: 'swal-wide',  showCancelButton: true,  showConfirmButton:false });"><i class="fa fa-link" aria-hidden="true"></i>
 										</a>										
 
 										<a class="button go_to_store" data-customer-id="<?php echo $customer['customer_id']; ?>" data-store-id="<?php echo $customer['store_id']; ?>">
@@ -324,6 +324,31 @@
 			dataType: 'html',
 			success : function(html){
 				$('#mailpreview').html(html).dialog({width:1024, modal:true, title: '<?php echo $actiontemplate_title; ?>', resizable:true,position:{my: 'center', at:'center center', of: window}, closeOnEscape: true})				
+			}
+		})	
+	}
+
+	function send(customer_id, language_id){
+		$.ajax({
+			type: 'POST',
+			url: 'index.php?route=catalog/actiontemplate/sendMailV2&token=<?php echo $token; ?>',
+			data: {
+				customer_id: 		customer_id,
+				language_id: 		language_id,
+				use_seo_urls:       true, 
+				actiontemplate_id:  <?php echo $actiontemplate_id; ?>
+			},
+
+			dataType: 'html',
+			beforeSend: function(){
+				$('#btn-send-customer-' + customer_id).removeClass('fa-envelope').addClass('fa-spinner fa-spin');
+			},
+			success : function(html){
+				$('#btn-send-customer-' + customer_id).removeClass('fa-spinner fa-spin').addClass('fa-check');
+				setTimeout(() => {$('#tr-customer-' + customer_id).fadeOut('slow') }, 1000);				
+			},
+			error: function(html){
+				$('#btn-send-customer-' + customer_id).removeClass('fa-spinner fa-spin').addClass('fa-times text-danger');
 			}
 		})	
 	}
@@ -385,11 +410,11 @@ $(document).ready(function(){
 			url += '&filter_mail_status=*';
 		}
 
-		var had_not_sent_old_alert = $('input[name=\'had_not_sent_old_alert\']:checked').val();		
-		if (had_not_sent_old_alert  !== undefined) {
-			url += '&had_not_sent_old_alert=1';
+		var had_not_sent_manual_letter = $('input[name=\'had_not_sent_manual_letter\']:checked').val();		
+		if (had_not_sent_manual_letter  !== undefined) {
+			url += '&had_not_sent_manual_letter=1';
 		} else {
-			url += '&had_not_sent_old_alert=0';
+			url += '&had_not_sent_manual_letter=0';
 		}
 
 		var filter_nbt_customer = $('input[name=\'filter_nbt_customer\']:checked').val();		
