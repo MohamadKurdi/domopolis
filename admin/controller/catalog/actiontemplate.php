@@ -531,7 +531,9 @@
 			$transmission_id = $mail->send(true, $data, true);
 
 			if ($transmission_id){
-				//$this->model_sale_customer->setSentManualLetter($data['customer_id'], true);
+				if (!$this->config->get('config_customer_manual_test_mode')){
+					$this->model_sale_customer->setSentManualLetter($data['customer_id'], true);
+				}				
 			}
 			
 			$json = [

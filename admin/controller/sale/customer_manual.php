@@ -124,6 +124,8 @@
 				$url .= '&page=' . $this->request->get['page'];
 			}
 
+			$this->data['config_customer_manual_test_mode'] = $this->config->get('config_customer_manual_test_mode');
+
 			$this->load->model('catalog/actiontemplate');
 			$current_actiontemplate = $this->model_catalog_actiontemplate->getActionTemplates(['filter_use_for_manual' => true]);
 

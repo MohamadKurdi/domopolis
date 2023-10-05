@@ -25,9 +25,42 @@
 	<?php } ?>
 	<div class="box">
 		<div class="heading order_head">
-			<h1>
+			<h1 style="width:60%; float:left;">
 				<?php echo $heading_title; ?>
-			</h1>			
+			</h1>		
+			<div style="width:38%; float:right; text-align: right;">	
+				<input id="config_customer_manual_test_mode" type="checkbox" class="checkbox" name="config_customer_manual_test_mode" <? if ($config_customer_manual_test_mode){ ?> checked="checked" <? } ?> value="1" /><label for="config_customer_manual_test_mode"></label> Тестовый режим
+
+				<script>
+					$('input[name=config_customer_manual_test_mode]').bind('change', function() {
+						var key  			= $(this).attr('name');
+						var elem 			= $(this);
+
+						if (elem.attr('checked')){
+							value = elem.val();
+						} else {
+							value = 0;
+						}
+
+						$.ajax({
+							type: 'POST',
+							url: 'index.php?route=setting/setting/editSettingAjax&store_id=0&token=<?php echo $token; ?>',
+							data: {						
+								key: key,
+								value: value
+							},
+							beforeSend: function(){
+								elem.css('border-color', 'yellow');
+								elem.css('border-width', '2px');						
+							},
+							success: function(){
+								elem.css('border-color', 'green');
+								elem.css('border-width', '2px');
+							}
+						});
+					});
+				</script>
+			</div>
 		</div>
 		<div style="clear:both;"></div>
 		<div class="content">
@@ -345,7 +378,10 @@
 			},
 			success : function(html){
 				$('#btn-send-customer-' + customer_id).removeClass('fa-spinner fa-spin').addClass('fa-check');
-				setTimeout(() => {$('#tr-customer-' + customer_id).fadeOut('slow') }, 1000);				
+
+				if ($('input[name=config_customer_manual_test_mode]').attr('checked') != 'checked'){
+					setTimeout(() => {$('#tr-customer-' + customer_id).fadeOut('slow') }, 1000);		
+				}		
 			},
 			error: function(html){
 				$('#btn-send-customer-' + customer_id).removeClass('fa-spinner fa-spin').addClass('fa-times text-danger');
