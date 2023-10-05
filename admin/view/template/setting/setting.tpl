@@ -3477,6 +3477,13 @@
 									</tr>
 
 									<tr>
+										<td>Домен для триггеров и маркетинга</td>
+										<td>
+											<input type="text" name="config_mailgun_api_marketing_domain" value="<?php echo $config_mailgun_api_marketing_domain; ?>" size="50" />								
+										</td>
+									</tr>
+
+									<tr>
 										<td>MailGun API URL (EU/US)</td>
 										<td>
 											<input type="text" name="config_mailgun_api_url" value="<?php echo $config_mailgun_api_url; ?>" size="50" />								

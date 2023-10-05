@@ -8,6 +8,7 @@ class Mail {
 	protected $bcc;
 	protected $cc;
 	protected $emailtemplate;
+	protected $is_marketing;
 	protected $text;
 	protected $html;
 	protected $attachments = [];	
@@ -36,6 +37,16 @@ class Mail {
 
 	public function setFrom($from) {
 		$this->from = trim($from);
+		return $this;
+	}
+
+	public function setProtocol($protocol){
+		$this->protocol = trim($protocol);
+		return $this;
+	}
+
+	public function setIsMarketing($is_marketing){
+		$this->is_marketing = trim($is_marketing);
 		return $this;
 	}
 
@@ -460,7 +471,6 @@ class Mail {
 				exit();						
 			}
 
-					// According to rfc 821 we should not send more than 1000 including the CRLF
 			$this->message = str_replace("\r\n", "\n",  $this->header . $this->message);
 			$this->message = str_replace("\r", "\n", $this->message);
 
@@ -516,8 +526,16 @@ class Mail {
 		}
 	}
 
-	private function send_mailgun(){
+	private function send_mailgun($domain = false){
 		$mgClient = \Mailgun\Mailgun::create($this->config->get('config_mailgun_api_private_key'), $this->config->get('config_mailgun_api_url'));
+
+		if (!$domain){
+			if ($this->is_marketing){
+				$domain = $this->config->get('config_mailgun_api_marketing_domain');
+			} else {
+				$domain = $this->config->get('config_mailgun_api_transaction_domain');
+			}			
+		}
 
 		try{	
 			setlocale(LC_ALL, "ru_RU.UTF-8");
@@ -529,7 +547,7 @@ class Mail {
 				}
 			}
 
-			$result = $mgClient->messages()->send($this->config->get('config_mailgun_api_transaction_domain'), array(
+			$result = $mgClient->messages()->send($domain, array(
 				'from'    => $this->sender .'<' . $this->from . '>',			
 				'to'      => $this->to,
 				'subject' => $this->subject,

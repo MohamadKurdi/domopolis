@@ -2589,6 +2589,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_mailgun_api_transaction_domain'] = $this->config->get('config_mailgun_api_transaction_domain');
         }
 
+        if (isset($this->request->post['config_mailgun_api_marketing_domain'])) {
+            $this->data['config_mailgun_api_marketing_domain'] = $this->request->post['config_mailgun_api_marketing_domain'];
+        } else {
+            $this->data['config_mailgun_api_marketing_domain'] = $this->config->get('config_mailgun_api_marketing_domain');
+        }
+
         if (isset($this->request->post['config_mailgun_api_public_key'])) {
             $this->data['config_mailgun_api_public_key'] = $this->request->post['config_mailgun_api_public_key'];
         } else {
