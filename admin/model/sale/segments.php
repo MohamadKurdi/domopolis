@@ -1,39 +1,5 @@
 <?php
-	class ModelSaleSegments extends Model {
-		/*
-			'order_count' +
-			'order_good_count', +
-			'order_bad_count', +
-			'total_cheque', +
-			'avg_cheque', +
-			'city',
-			'gender', +
-			'order_first_date_from',
-			'order_first_date_to',
-			'order_last_date_from',
-			'order_last_date_to',
-			'order_good_first_date_from',
-			'order_good_first_date_to',
-			'order_good_last_date_from',
-			'order_good_last_date_to',
-			'date_added_from',
-			'date_added_to',
-			'birthday_from',
-			'birthday_to',
-			'birthday_year',
-			'mail_opened',+
-			'total_calls',+
-			'avg_calls_duration',+
-			
-			'country_id',+
-			'manufacturer_view',
-			'manufacturer_bought',
-			'category_view',
-			'first_order_source',
-			'source', +
-			'customer_group' +
-		*/
-		
+	class ModelSaleSegments extends Model {		
 		public function getCustomersNowInSegment($segment_id){
 			$query = $this->db->query("SELECT customer_id FROM customer_segments WHERE segment_id = '" . (int)$segment_id . "'");
 			
@@ -45,102 +11,7 @@
 			return $result;
 		}
 		
-		private function buildRelativeDate($string){
-			$now = date_create();
-			
-			if ($string[0] == '+'){
-				$invert = false;
-				} elseif ($string[0] == '-') {
-				$invert = true;
-				} else {
-				return date();
-			}
-			
-			$string = substr($string, 1);
-			
-			$_srd_ru = array('дней', 'дня', 'дня', 'день', 'неделя', 'недели', 'месяц', 'месяца', 'месяцев', 'полгода', 'год', 'года');
-			$_srd_php = array('days', 'days', 'days', 'days', 'weeks', 'weeks', 'months', 'months', 'months', '6 month', 'years', 'years');
-			
-			$diff = date_interval_create_from_date_string(str_replace($_srd_ru, $_srd_php, $string));
-			
-			if ($invert){
-				return date_format(date_sub($now, $diff), 'Y-m-d');
-				} else {
-				return date_format(date_add($now, $diff), 'Y-m-d');
-			}
-			
-		}
-		
-		
-		private function buildDateMagicSQL($date_from, $date_to, $param, $remove_year = false){
-			
-			$sql = "";
-			
-			$date_from = trim($date_from);
-			$date_to = trim($date_to);
-			//let's parse relative dates
-			if ($date_from[0] == '+' || $date_from[0] == '-'){
-				$date_from = $this->buildRelativeDate($date_from);
-			}
-			
-			if ($date_to[0] == '+' || $date_to[0] == '-'){
-				$date_to = $this->buildRelativeDate($date_to);
-			}
-			
-			
-			if ($remove_year){
-				
-				$date_from = date('m-d', strtotime($date_from));
-				$date_to = date('m-d', strtotime($date_to));
-				
-				if (!empty($date_from)) {
-					$sql .= " DATE_ADD($param, INTERVAL YEAR(CURDATE())-YEAR($param) YEAR) >= DATE(CONCAT(YEAR(CURDATE()),'-".$date_from."'))";
-					$sql .= " AND DATE($param) > '0000-00-00'";
-					
-					if (empty($date_to)){
-						$sql .= " AND DATE_ADD($param, INTERVAL YEAR(CURDATE())-YEAR($param) YEAR) <= DATE(CONCAT(YEAR(CURDATE()),'-01-01'))";
-					}
-				}
-				
-				
-				if (!empty($date_to)) {
-					if ($sql){
-						$and = " AND ";
-					}
-					$sql .= " $and DATE_ADD($param, INTERVAL YEAR(CURDATE())-YEAR($param) YEAR) <= DATE(CONCAT(YEAR(CURDATE()),'-".$date_to."'))";
-					$sql .= " AND DATE($param) > '0000-00-00'";
-					
-					if (empty($date_from)){
-						$sql .= " AND DATE_ADD($param, INTERVAL YEAR(CURDATE())-YEAR($param) YEAR) >= DATE(CONCAT(YEAR(CURDATE()),'-01-01'))";
-					}
-				}
-				
-				
-				} else {
-				
-				if (!empty($date_from)) {
-					$sql .= " DATE($param) >= '$date_from'";
-				}
-				
-				if ($sql){
-					$and = " AND ";
-				}
-				
-				if (!empty($date_to)) {
-					$sql .= " $and DATE($param) <= '$date_to'";
-					
-					if (empty($date_from)){
-						$sql .= " AND DATE($param) > '0000-00-00'";
-					}
-				}
-				
-			}
-			
-			return $sql;
-		}
-		
-		private function buildLikeArrayOrSQL($array, $param){
-			
+		private function buildLikeArrayOrSQL($array, $param){			
 			$sql = "(";
 			
 			$or = '';
@@ -153,8 +24,7 @@
 			return $sql;
 		}
 		
-		private function buildLikeNonStrictArrayOrSQL($array, $param){
-			
+		private function buildLikeNonStrictArrayOrSQL($array, $param){	
 			$sql = "(";
 			
 			$or = '';
@@ -168,7 +38,6 @@
 		}
 		
 		private function buildLikeArrayANDSQL($array, $param){
-			
 			$sql = "(";
 			
 			$and = '';
@@ -182,7 +51,6 @@
 		}
 		
 		private function buildComplexLikeArrayOrSQL($array, $param){
-			
 			if (!is_array($array)){
 				$array = explode(PHP_EOL, $array);
 			}
@@ -213,7 +81,6 @@
 			}
 			
 			return $sql;
-			
 		}
 		
 		private function buildInArraySQL($array, $param){			
@@ -276,7 +143,7 @@
 				for ($i = 0; $i < 7; $i++) {
 					$date = date('Y-m-d', $date_start + ($i * 86400));
 					
-					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "segments_dynamics` WHERE segment_id = '" . (int)$segment_id . "' AND (DATE(date_added) = '" . $this->db->escape($date) . "') ORDER BY date_added DESC LIMIT 1");
+					$query = $this->db->query("SELECT * FROM `segments_dynamics` WHERE segment_id = '" . (int)$segment_id . "' AND (DATE(date_added) = '" . $this->db->escape($date) . "') ORDER BY date_added DESC LIMIT 1");
 					
 					if ($query->num_rows) {
 						$data['customer_count']['data'][] = array($i, (int)$query->row['customer_count']);
@@ -303,7 +170,7 @@
 				for ($i = 1; $i <= date('t'); $i++) {
 					$date = date('Y') . '-' . date('m') . '-' . $i;
 					
-					$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "segments_dynamics` WHERE segment_id = '" . (int)$segment_id . "' AND (DATE(date_added) = '" . $this->db->escape($date) . "') ORDER BY date_added DESC LIMIT 1");
+					$query = $this->db->query("SELECT * FROM `segments_dynamics` WHERE segment_id = '" . (int)$segment_id . "' AND (DATE(date_added) = '" . $this->db->escape($date) . "') ORDER BY date_added DESC LIMIT 1");
 					
 					if ($query->num_rows) {
 						$data['customer_count']['data'][] = array($i, (int)$query->row['customer_count']);
@@ -328,7 +195,7 @@
 				
 				case 'year':
 				for ($i = 1; $i <= 12; $i++) {
-					$query = $this->db->query("SELECT AVG(customer_count) as customer_count, AVG(total_cheque) as total_cheque, AVG(avg_cheque) as avg_cheque, AVG(order_good_count) as order_good_count, AVG(order_bad_count) as order_bad_count FROM `" . DB_PREFIX . "segments_dynamics` WHERE segment_id = '" . (int)$segment_id . "' AND YEAR(date_added) = '" . date('Y') . "' AND MONTH(date_added) = '" . $i . "' GROUP BY MONTH(date_added)");
+					$query = $this->db->query("SELECT AVG(customer_count) as customer_count, AVG(total_cheque) as total_cheque, AVG(avg_cheque) as avg_cheque, AVG(order_good_count) as order_good_count, AVG(order_bad_count) as order_bad_count FROM `segments_dynamics` WHERE segment_id = '" . (int)$segment_id . "' AND YEAR(date_added) = '" . date('Y') . "' AND MONTH(date_added) = '" . $i . "' GROUP BY MONTH(date_added)");
 					
 					if ($query->num_rows) {
 						$data['customer_count']['data'][] = array($i, (int)$query->row['customer_count']);
@@ -350,7 +217,7 @@
 				break;
 				
 				case 'last100':
-				$query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "segments_dynamics` WHERE segment_id = '" . (int)$segment_id . "' ORDER BY date_added DESC LIMIT 100");
+				$query = $this->db->query("SELECT * FROM `segments_dynamics` WHERE segment_id = '" . (int)$segment_id . "' ORDER BY date_added DESC LIMIT 100");
 				
 				if ($query->num_rows) {
 					$i = 0;
@@ -514,30 +381,30 @@
 				if (empty($data['added_year'])){
 					$data['added_year'] = false;
 				}
-				$implode[] = $this->buildDateMagicSQL($data['date_added_from'], $data['date_added_to'], 'date_added', $data['added_year']);
+				$implode[] = buildDateMagicSQL($data['date_added_from'], $data['date_added_to'], 'date_added', $data['added_year']);
 			}
 			
 			if (!empty($data['birthday_from']) || !empty($data['birthday_to'])) {
 				if (empty($data['birthday_year'])){
 					$data['birthday_year'] = false;
 				}
-				$implode[] = " (" . $this->buildDateMagicSQL($data['birthday_from'], $data['birthday_to'], 'birthday', $data['birthday_year']) . ") ";
+				$implode[] = " (" . buildDateMagicSQL($data['birthday_from'], $data['birthday_to'], 'birthday', $data['birthday_year']) . ") ";
 			}		
 			
 			if (!empty($data['order_first_date_from']) || !empty($data['order_first_date_to'])) {				
-				$implode[] = $this->buildDateMagicSQL($data['order_first_date_from'], $data['order_first_date_to'], 'order_first_date', false);
+				$implode[] = buildDateMagicSQL($data['order_first_date_from'], $data['order_first_date_to'], 'order_first_date', false);
 			}	
 			
 			if (!empty($data['order_last_date_from']) || !empty($data['order_last_date_to'])) {				
-				$implode[] = $this->buildDateMagicSQL($data['order_last_date_from'], $data['order_last_date_to'], 'order_last_date', false);
+				$implode[] = buildDateMagicSQL($data['order_last_date_from'], $data['order_last_date_to'], 'order_last_date', false);
 			}	
 			
 			if (!empty($data['order_good_first_date_from']) || !empty($data['order_good_first_date_to'])) {				
-				$implode[] = $this->buildDateMagicSQL($data['order_good_first_date_from'], $data['order_good_first_date_to'], 'order_good_first_date', false);
+				$implode[] = buildDateMagicSQL($data['order_good_first_date_from'], $data['order_good_first_date_to'], 'order_good_first_date', false);
 			}
 			
 			if (!empty($data['order_good_last_date_from']) || !empty($data['order_good_last_date_to'])) {				
-				$implode[] = $this->buildDateMagicSQL($data['order_good_last_date_from'], $data['order_good_last_date_to'], 'order_good_last_date', false);
+				$implode[] = buildDateMagicSQL($data['order_good_last_date_from'], $data['order_good_last_date_to'], 'order_good_last_date', false);
 			}
 			
 			if (!empty($data['coupon'])){

@@ -1,108 +1,6 @@
 <?php
 	class ModelSaleCustomer extends Model {
 		
-		private function buildRelativeDate($string){
-			$now = date_create();
-			
-			if ($string[0] == '+'){
-				$invert = false;
-				} elseif ($string[0] == '-') {
-				$invert = true;
-				} else {
-				return date();
-			}
-			
-			$string = substr($string, 1);
-			
-			$_srd_ru = array('дней', 'дня', 'дня', 'день', 'неделя', 'недели', 'месяц', 'месяца', 'месяцев', 'полгода', 'год', 'года');
-			$_srd_php = array('days', 'days', 'days', 'days', 'weeks', 'weeks', 'months', 'months', 'months', '6 month', 'years', 'years');
-			
-			$diff = date_interval_create_from_date_string(str_replace($_srd_ru, $_srd_php, $string));
-			
-			if ($invert){
-				return date_format(date_sub($now, $diff), 'Y-m-d');
-				} else {
-				return date_format(date_add($now, $diff), 'Y-m-d');
-			}
-			
-		}
-		
-		private function buildDateMagicSQL($date_from, $date_to, $param, $remove_year = false){
-			
-			$sql = "";
-			
-			$date_from = trim($date_from);
-			$date_to = trim($date_to);
-			//let's parse relative dates
-			if (!$date_to){
-				$date_to = date('Y-m-d');
-			}
-			
-			if (!$date_from){
-				$date_from = date('Y-m-d');
-			}
-			
-			if ($date_from[0] == '+' || $date_from[0] == '-'){
-				$date_from = $this->buildRelativeDate($date_from);
-			}
-			
-			if ($date_to[0] == '+' || $date_to[0] == '-'){
-				$date_to = $this->buildRelativeDate($date_to);
-			}
-			
-			
-			if ($remove_year){
-				
-				$date_from = date('m-d', strtotime($date_from));
-				$date_to = date('m-d', strtotime($date_to));
-				
-				if (!empty($date_from)) {
-					$sql .= " DATE_ADD($param, INTERVAL YEAR(CURDATE())-YEAR($param) YEAR) >= DATE(CONCAT(YEAR(CURDATE()),'-".$date_from."'))";
-					$sql .= " AND DATE($param) > '0000-00-00'";
-					
-					if (empty($date_to)){
-						$sql .= " AND DATE_ADD($param, INTERVAL YEAR(CURDATE())-YEAR($param) YEAR) <= DATE(CONCAT(YEAR(CURDATE()),'-01-01'))";
-					}
-				}
-				
-				
-				if (!empty($date_to)) {
-					if ($sql){
-						$and = " AND ";
-					}
-					$sql .= " $and DATE_ADD($param, INTERVAL YEAR(CURDATE())-YEAR($param) YEAR) <= DATE(CONCAT(YEAR(CURDATE()),'-".$date_to."'))";
-					$sql .= " AND DATE($param) > '0000-00-00'";
-					
-					if (empty($date_from)){
-						$sql .= " AND DATE_ADD($param, INTERVAL YEAR(CURDATE())-YEAR($param) YEAR) >= DATE(CONCAT(YEAR(CURDATE()),'-01-01'))";
-					}
-				}
-				
-				
-				} else {
-				
-				if (!empty($date_from)) {
-					$sql .= " DATE($param) >= '$date_from'";
-				}
-				
-				if ($sql){
-					$and = " AND ";
-				}
-				
-				if (!empty($date_to)) {
-					$sql .= " $and DATE($param) <= '$date_to'";
-					
-					if (empty($date_from)){
-						$sql .= " AND DATE($param) > '0000-00-00'";
-					}
-				}
-				
-			}
-			
-			return $sql;
-		}
-		
-		
 		public function addCustomer($data) {
 			$this->db->query("INSERT INTO customer SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', store_id = '" . $this->db->escape($data['store_id']) . "', customer_comment = '" . $this->db->escape($data['customer_comment']) . "', cashless_info = '" . $this->db->escape($data['cashless_info']) . "', discount_card = '" . $this->db->escape($data['discount_card']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', passport_serie = '" . $this->db->escape($data['passport_serie']) . "', passport_given = '" . $this->db->escape($data['passport_given']) . "', birthday = '" . $this->db->escape(date('Y-m-d',strtotime($data['birthday']))) . "',  newsletter = '" . (int)$data['newsletter'] . "',  viber_news = '" . (int)$data['viber_news'] . "',  newsletter_news = '" . (int)$data['newsletter_news'] . "',  newsletter_personal = '" . (int)$data['newsletter_personal'] . "', customer_group_id = '" . (int)$data['customer_group_id'] . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', status = '" . (int)$data['status'] . "', mudak = '" . (int)$data['mudak'] . "', gender = '" . (int)$data['gender'] . "', cron_sent = '" . (int)$data['cron_sent'] . "', printed2912 = '" . (int)$data['printed2912'] . "'  date_added = NOW()");
 			
@@ -149,20 +47,26 @@
 			}
 		}
 		
-		public function addCustomerCall($data){
-			
+		public function addCustomerCall($data){			
 			$this->db->query("INSERT INTO customer_calls
-			SET
-			customer_id = '" . (int)$data['customer_id'] . "',
-			customer_phone = '" . $this->db->escape($data['customer_phone']) . "',
-			date_start = '" . $this->db->escape($data['date_start']) . "',
-			date_end = '" . $this->db->escape($data['date_end']) . "',
-			comment = '" . $this->db->escape($data['comment']) . "',
-			manager_id = '" . (int)$data['manager_id'] . "',
-			filelink = '" . $this->db->escape($data['filelink']) . "',
-			order_id = '" . (int)$data['order_id'] . "'
-			");
-			
+				SET
+				customer_id = '" . (int)$data['customer_id'] . "',
+				customer_phone = '" . $this->db->escape($data['customer_phone']) . "',
+				date_start = '" . $this->db->escape($data['date_start']) . "',
+				date_end = '" . $this->db->escape($data['date_end']) . "',
+				comment = '" . $this->db->escape($data['comment']) . "',
+				manager_id = '" . (int)$data['manager_id'] . "',
+				filelink = '" . $this->db->escape($data['filelink']) . "',
+				order_id = '" . (int)$data['order_id'] . "'
+				");			
+		}
+
+		public function setSentManualLetter($customer_id, $sent_manual){
+			$query = $this->db->query("UPDATE customer SET sent_manual_letter = '" . (int)$sent_manual . "' WHERE customer_id = '" . (int)$customer_id . "'");			
+		}
+
+		public function setSentManualLetterForAll(){
+			$query = $this->db->query("UPDATE customer SET sent_manual_letter = '0'");			
 		}
 		
 		public function getCustomerCallByID($customer_call_id){
@@ -201,8 +105,7 @@
 			return $query->row['total'];
 		}
 		
-		public function editCustomer($customer_id, $data) {
-			
+		public function editCustomer($customer_id, $data) {			
 			$query = $this->db->query("SELECT birthday FROM customer WHERE customer_id = '" . (int)$customer_id . "'");
 			$birthday = date('Y-m-d',strtotime($query->row['birthday']));
 			
@@ -259,8 +162,6 @@
 		
 		public function deleteCustomer($customer_id) {
 			$this->db->query("DELETE FROM customer WHERE customer_id = '" . (int)$customer_id . "'");
-		//	$this->db->query("DELETE FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "'");
-		//	$this->db->query("DELETE FROM customer_transaction WHERE customer_id = '" . (int)$customer_id . "'");
 			$this->db->query("DELETE FROM customer_ip WHERE customer_id = '" . (int)$customer_id . "'");
 			$this->db->query("DELETE FROM address WHERE customer_id = '" . (int)$customer_id . "'");
 			$this->db->query("DELETE FROM customer_segments WHERE customer_id = '" . (int)$customer_id . "'");
@@ -604,13 +505,13 @@
 				$implode[] = "nbt_customer = 0";
 			}
 
-			if (!empty($data['filter_had_not_sent_old_alert'])) {
-				$implode[] = "sent_old_alert = 0";
+			if (!empty($data['filter_had_not_sent_manual_letter'])) {
+				$implode[] = "sent_manual_letter = 0";
 			}
 			
 			if (!empty($data['filter_birthday_to'])) {
 				if ($data['filter_birthday_to'][0] == '+' || $data['filter_birthday_to'][0] == '-'){
-					$data['filter_birthday_to'] = $this->buildRelativeDate($data['filter_birthday_to']);
+					$data['filter_birthday_to'] = buildRelativeDate($data['filter_birthday_to']);
 				}
 				
 				$implode[] = "DATE_ADD(birthday, INTERVAL YEAR(CURDATE())-YEAR(birthday) YEAR) <= DATE(CONCAT(YEAR(CURDATE()),'-".$data['filter_birthday_to']."'))";
@@ -631,19 +532,19 @@
 			}
 						
 			if (!empty($data['order_first_date_from']) || !empty($data['order_first_date_to'])) {				
-				$implode[] = $this->buildDateMagicSQL($data['order_first_date_from'], $data['order_first_date_to'], 'order_first_date', false);
+				$implode[] = buildDateMagicSQL($data['order_first_date_from'], $data['order_first_date_to'], 'order_first_date', false);
 			}	
 			
 			if (!empty($data['order_last_date_from']) || !empty($data['order_last_date_to'])) {				
-				$implode[] = $this->buildDateMagicSQL($data['order_last_date_from'], $data['order_last_date_to'], 'order_last_date', false);
+				$implode[] = buildDateMagicSQL($data['order_last_date_from'], $data['order_last_date_to'], 'order_last_date', false);
 			}	
 
 			if (!empty($data['order_good_first_date_from']) || !empty($data['order_good_first_date_to'])) {				
-				$implode[] = $this->buildDateMagicSQL($data['order_good_first_date_from'], $data['order_good_first_date_to'], 'order_good_first_date', false);
+				$implode[] = buildDateMagicSQL($data['order_good_first_date_from'], $data['order_good_first_date_to'], 'order_good_first_date', false);
 			}	
 			
 			if (!empty($data['order_good_last_date_from']) || !empty($data['order_good_last_date_to'])) {				
-				$implode[] = $this->buildDateMagicSQL($data['order_good_last_date_from'], $data['order_good_last_date_to'], 'order_good_last_date', false);
+				$implode[] = buildDateMagicSQL($data['order_good_last_date_from'], $data['order_good_last_date_to'], 'order_good_last_date', false);
 			}	
 			
 			if (!empty($data['campaing_id'])) {
@@ -889,8 +790,7 @@
 			return $address_data;
 		}
 		
-		public function getMyLastCall($customer_id){
-			
+		public function getMyLastCall($customer_id){			
 			$query = $this->db->query("SELECT * FROM customer_calls WHERE customer_id = '" . (int)$customer_id . "' AND manager_id = '" . (int)$this->user->getID() . "' ORDER BY date_end ASC LIMIT 1");	
 			
 			if ($query->num_rows){
@@ -1128,8 +1028,8 @@
 				$implode[] = "nbt_customer = 0";
 			}
 
-			if (!empty($data['filter_had_not_sent_old_alert'])) {
-				$implode[] = "sent_old_alert = 0";
+			if (!empty($data['filter_had_not_sent_manual_letter'])) {
+				$implode[] = "sent_manual_letter = 0";
 			}
 			
 			if (isset($data['filter_no_birthday']) && !is_null($data['filter_no_birthday'])) {
@@ -1159,19 +1059,19 @@
 			}
 			
 			if (!empty($data['order_first_date_from']) || !empty($data['order_first_date_to'])) {				
-				$implode[] = $this->buildDateMagicSQL($data['order_first_date_from'], $data['order_first_date_to'], 'order_first_date', false);
+				$implode[] = buildDateMagicSQL($data['order_first_date_from'], $data['order_first_date_to'], 'order_first_date', false);
 			}	
 			
 			if (!empty($data['order_last_date_from']) || !empty($data['order_last_date_to'])) {				
-				$implode[] = $this->buildDateMagicSQL($data['order_last_date_from'], $data['order_last_date_to'], 'order_last_date', false);
+				$implode[] = buildDateMagicSQL($data['order_last_date_from'], $data['order_last_date_to'], 'order_last_date', false);
 			}	
 			
 			if (!empty($data['order_good_first_date_from']) || !empty($data['order_good_first_date_to'])) {				
-				$implode[] = $this->buildDateMagicSQL($data['order_good_first_date_from'], $data['order_good_first_date_to'], 'order_good_first_date', false);
+				$implode[] = buildDateMagicSQL($data['order_good_first_date_from'], $data['order_good_first_date_to'], 'order_good_first_date', false);
 			}	
 			
 			if (!empty($data['order_good_last_date_from']) || !empty($data['order_good_last_date_to'])) {				
-				$implode[] = $this->buildDateMagicSQL($data['order_good_last_date_from'], $data['order_good_last_date_to'], 'order_good_last_date', false);
+				$implode[] = buildDateMagicSQL($data['order_good_last_date_from'], $data['order_good_last_date_to'], 'order_good_last_date', false);
 			}	
 			
 			if (!empty($data['campaing_id'])) {
@@ -1381,37 +1281,35 @@
 			return $query->row['total'];
 		}
 
-		public function updateTransactionFromAPI($customer_transaction_id, $data){
-			
+		public function updateTransactionFromAPI($customer_transaction_id, $data){			
 			$query = $this->db->query("UPDATE customer_transaction SET 
-			customer_id 		= '" . (int)$data['customer_id'] . "', 
-			order_id 			= '" . (int)$data['order_id'] . "', 
-			description 		= '" . $this->db->escape($data['description']) . "', 
-			amount 				= '" . (float)$data['amount'] . "', 
-			amount_national 	= '" . (float)$data['amount_national'] . "', 
-			currency_code 		= '" . $this->db->escape($data['currency_code']) . "', 
-			date_added 			= '" . $this->db->escape($data['date_added']) . "', 				
-			added_from 			= '" . $this->db->escape($data['added_from']) . "', 
-			legalperson_id 		= '" . (int)$data['legalperson_id'] . "', 
-			guid 				= '" . $this->db->escape($data['guid']) . "'
-			WHERE customer_transaction_id = '" . (int)$customer_transaction_id . "'");
+				customer_id 		= '" . (int)$data['customer_id'] . "', 
+				order_id 			= '" . (int)$data['order_id'] . "', 
+				description 		= '" . $this->db->escape($data['description']) . "', 
+				amount 				= '" . (float)$data['amount'] . "', 
+				amount_national 	= '" . (float)$data['amount_national'] . "', 
+				currency_code 		= '" . $this->db->escape($data['currency_code']) . "', 
+				date_added 			= '" . $this->db->escape($data['date_added']) . "', 				
+				added_from 			= '" . $this->db->escape($data['added_from']) . "', 
+				legalperson_id 		= '" . (int)$data['legalperson_id'] . "', 
+				guid 				= '" . $this->db->escape($data['guid']) . "'
+				WHERE customer_transaction_id = '" . (int)$customer_transaction_id . "'");
 
 			return $customer_transaction_id;
 		}
 		
-		public function addTransactionFromAPI($data){
-			
+		public function addTransactionFromAPI($data){			
 			$query = $this->db->query("INSERT INTO customer_transaction SET 
-			customer_id 		= '" . (int)$data['customer_id'] . "', 
-			order_id 			= '" . (int)$data['order_id'] . "', 
-			description 		= '" . $this->db->escape($data['description']) . "', 
-			amount 				= '" . (float)$data['amount'] . "', 
-			amount_national 	= '" . (float)$data['amount_national'] . "', 
-			currency_code 		= '" . $this->db->escape($data['currency_code']) . "', 
-			date_added 			= '" . $this->db->escape($data['date_added']) . "', 				
-			added_from 			= '" . $this->db->escape($data['added_from']) . "', 
-			legalperson_id 		= '" . (int)$data['legalperson_id'] . "', 
-			guid 				= '" . $this->db->escape($data['guid']) . "'");
+				customer_id 		= '" . (int)$data['customer_id'] . "', 
+				order_id 			= '" . (int)$data['order_id'] . "', 
+				description 		= '" . $this->db->escape($data['description']) . "', 
+				amount 				= '" . (float)$data['amount'] . "', 
+				amount_national 	= '" . (float)$data['amount_national'] . "', 
+				currency_code 		= '" . $this->db->escape($data['currency_code']) . "', 
+				date_added 			= '" . $this->db->escape($data['date_added']) . "', 				
+				added_from 			= '" . $this->db->escape($data['added_from']) . "', 
+				legalperson_id 		= '" . (int)$data['legalperson_id'] . "', 
+				guid 				= '" . $this->db->escape($data['guid']) . "'");
 			
 			return $this->db->getLastId();
 		}
@@ -1516,8 +1414,7 @@
 				return $query->row;
 				} else {
 				return false;
-			}
-			
+			}			
 		}
 		
 		public function getTransactions($customer_id, $start = 0, $limit = 10, $order_id = false) {
@@ -1580,8 +1477,7 @@
 			$query = $this->db->query("SELECT DISTINCT first_order_source FROM customer WHERE NOT ISNULL(first_order_source)");
 			
 			return $query->rows;
-		}
-		
+		}		
 		
 		public function addReward($customer_id, $description = '', $points = 0, $order_id = 0, $reason_code = 'UNKNOWN') {
 			$this->load->model('setting/setting');
@@ -1662,10 +1558,10 @@
 			
 			
 			if ($query->row){
-			return true;
+				return true;
 			} else {
-			return false;
-		}
+				return false;
+			}
 		}
 		
 		public function getCustomerSegments($customer_id){					
@@ -1676,17 +1572,14 @@
 			
 			return $query->rows;		
 		}
-		
-		
-		
+						
 		public function setIsMudakAjax(){
 			$customer_id = (int)$this->request->get['customer_id'];
 			$mudak_group_id = $this->config->get('config_bad_customer_group_id');
 			
 			$this->db->query("UPDATE customer SET mudak = '1', customer_group_id = '" . (int)$mudak_group_id . "' WHERE customer_id = '" . (int)$customer_id . "'");
 			
-			return $this->getIsMudak($customer_id);
-			
+			return $this->getIsMudak($customer_id);			
 		}
 		
 		public function deleteReward($order_id) {
@@ -1696,16 +1589,14 @@
 		public function getAllPositiveRewards($customer_id){
 			$query = $this->db->query("SELECT * FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "' AND points > 0 ORDER BY date_added ASC");
 			
-			return $query->rows;
-			
+			return $query->rows;			
 		}
 		
 		public function getRewardsQueue($customer_id) {
 			$query = $this->db->query("SELECT * FROM customer_reward_queue WHERE customer_id = '" . (int)$customer_id . "' ORDER BY date_added ASC");
 			
 			return $query->rows;
-		}
-		
+		}		
 		
 		public function getRewards($customer_id, $start = 0, $limit = 50) {
 			$query = $this->db->query("SELECT * FROM customer_reward WHERE customer_id = '" . (int)$customer_id . "' ORDER BY date_added ASC LIMIT " . (int)$start . "," . (int)$limit);
@@ -1713,8 +1604,7 @@
 			return $query->rows;
 		}
 		
-		public function getTotalRewards($customer_id) {
-		
+		public function getTotalRewards($customer_id) {		
 			if (defined('YANDEX_MARKET_CUSTOMER_ID') && $customer_id == YANDEX_MARKET_CUSTOMER_ID){
 				$this->db->query("DELETE FROM customer_reward WHERE customer_id = '" . (int)YANDEX_MARKET_CUSTOMER_ID . "'");
 				$this->db->query("DELETE FROM customer_reward_queue WHERE customer_id = '" . (int)YANDEX_MARKET_CUSTOMER_ID . "'");
@@ -1748,8 +1638,7 @@
 			
 			return $query->row['total'];
 		}
-		
-		
+				
 		public function getTotalCalls($customer_id) {
 			$query = $this->db->query("SELECT count(*) AS total FROM `customer_calls` WHERE customer_id = '" . (int)$customer_id . "'");
 			
@@ -1800,8 +1689,7 @@
 			return $query->row['total'];
 		}
 		
-		public function getCustomerCalls($customer_id, $data=array()){
-			
+		public function getCustomerCalls($customer_id, $data=array()){			
 			$sql = "SELECT *, CONCAT(c.firstname, ' ', c.lastname) as customer_name FROM customer_calls cc LEFT JOIN customer c ON cc.customer_id = c.customer_id WHERE cc.customer_id = '". (int)$customer_id ."'";
 			
 			if (!empty($data['filter_date_end'])) {
@@ -1821,9 +1709,7 @@
 			return $query->rows;
 		}
 		
-		public function get_gender( $name ) {			
-			
-		}
+		public function get_gender( $name ) {}
 		
 		public function getMailStatus () {
 			$sql = "SELECT DISTINCT (`mail_status`) FROM `customer` WHERE 1 = 1";
