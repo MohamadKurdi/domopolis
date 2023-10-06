@@ -40,3 +40,4 @@ $_['text_retranslate_app_install'] = 'Установить приложение'
 $_['text_retranslate_app_header'] = 'Наши приложения';
 $_['text_retranslate_app_button_line_1'] = 'Установить';
 $_['text_retranslate_app_button_line_2'] = 'Приложение';
+$_['text_credit_details'] = 'Подробнее';

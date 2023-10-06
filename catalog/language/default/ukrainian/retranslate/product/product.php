@@ -125,3 +125,4 @@ $_['pickup_text_dayoff_from'] = $_['pickup_text_datomorrow_from'] = 'Самов�
 $_['text_by_complect']      = 'Купити комплект';
 $_['text_weight'] = 'Вага';
 $_['text_dimensions'] = 'Розмір';
+$_['text_credit_details'] = 'Детальніше';

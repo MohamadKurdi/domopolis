@@ -2240,6 +2240,7 @@ class ControllerSettingSetting extends Controller
             'config_discounts_article_id',
             'config_present_certificates_article_id',
             'config_about_article_id',
+            'config_credits_article_id',
             'config_vendors_article_id',
             'config_agreement_article_id',
             'config_personaldata_article_id'

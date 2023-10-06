@@ -7,6 +7,7 @@ $_['text_contact']      = 'Связаться с нами';
 $_['text_return']       = 'Возврат товара';
 $_['text_sitemap']      = 'Весь каталог';
 $_['text_manufacturer'] = 'Бренды';
+$_['text_credits'] 		= 'Покупка в кредит';
 
 $_['text_voucher']      = 'Подарочные сертификаты';
 $_['text_affiliate']    = 'Партнёрская программа';

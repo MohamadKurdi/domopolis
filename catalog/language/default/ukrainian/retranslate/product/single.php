@@ -41,3 +41,4 @@ $_['text_retranslate_app_install'] = 'Встановити додаток';
 $_['text_retranslate_app_header'] = 'Наші додатки';
 $_['text_retranslate_app_button_line_1'] = 'Встановити';
 $_['text_retranslate_app_button_line_2'] = 'додаток';
+$_['text_credit_details'] = 'Детальніше';

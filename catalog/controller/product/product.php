@@ -1151,6 +1151,10 @@ public function index($product_id = false, $just_price = false)
                         $delivery_full = $this->model_catalog_information->getInformation($this->config->get('config_delivery_article_id'));
                         $this->data['delivery_info'] = isset($delivery_full['description'])?html_entity_decode($delivery_full['description'], ENT_QUOTES, 'UTF-8'):'';
 
+                        if ($this->config->get('config_credits_article_id')){
+                            $this->data['href_credits']     = $this->url->link('information/information', 'information_id=' . $this->config->get('config_credits_article_id'));
+                        }
+
                         $this->data['youtubes'] = false;
                         $this->data['videoInt'] = 0;
 

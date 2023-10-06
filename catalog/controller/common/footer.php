@@ -183,28 +183,29 @@ class ControllerCommonFooter extends Controller {
 		$this->language->load('common/footer');
 		
 		$this->data['text_information'] = $this->language->get('text_information');
-		$this->data['text_service'] = $this->language->get('text_service');
-		$this->data['text_extra'] = $this->language->get('text_extra');
-		$this->data['text_contact'] = $this->language->get('text_contact');
-		$this->data['text_return'] = $this->language->get('text_return');
-		$this->data['text_sitemap'] = $this->language->get('text_sitemap');
-		$this->data['text_manufacturer'] = $this->language->get('text_manufacturer');
-		$this->data['text_voucher'] = $this->language->get('text_voucher');
-		$this->data['text_affiliate'] = $this->language->get('text_affiliate');
-		$this->data['text_special'] = $this->language->get('text_special');
-		$this->data['text_account'] = $this->language->get('text_account');
-		$this->data['text_order'] = $this->language->get('text_order');
-		$this->data['text_wishlist'] = $this->language->get('text_wishlist');
-		$this->data['text_newsletter'] = $this->language->get('text_newsletter');
+		$this->data['text_service'] 	= $this->language->get('text_service');
+		$this->data['text_extra'] 		= $this->language->get('text_extra');
+		$this->data['text_contact'] 	= $this->language->get('text_contact');
+		$this->data['text_return'] 		= $this->language->get('text_return');
+		$this->data['text_sitemap'] 	= $this->language->get('text_sitemap');
+		$this->data['text_manufacturer'] 	= $this->language->get('text_manufacturer');
+		$this->data['text_voucher'] 		= $this->language->get('text_voucher');
+		$this->data['text_affiliate'] 		= $this->language->get('text_affiliate');
+		$this->data['text_special'] 		= $this->language->get('text_special');
+		$this->data['text_account'] 		= $this->language->get('text_account');
+		$this->data['text_order'] 			= $this->language->get('text_order');
+		$this->data['text_wishlist'] 		= $this->language->get('text_wishlist');
+		$this->data['text_newsletter'] 		= $this->language->get('text_newsletter');
+		$this->data['text_credits'] 		= $this->language->get('text_credits');
 		
-		$this->data['text_site_map'] = $this->language->get('site_map');
-		$this->data['text_contacts'] = $this->language->get('contacts');
-		$this->data['text_we_hav_payment'] = $this->language->get('we_hav_payment');
-		$this->data['text_text_1'] = $this->language->get('text_1');
-		$this->data['text_send_me_latter'] = $this->language->get('send_me_latter');
-		$this->data['text_send_latter_to_director'] = $this->language->get('send_latter_to_director');
+		$this->data['text_site_map'] 	= $this->language->get('site_map');
+		$this->data['text_contacts'] 	= $this->language->get('contacts');
+		$this->data['text_we_hav_payment'] 	= $this->language->get('we_hav_payment');
+		$this->data['text_text_1'] 			= $this->language->get('text_1');
+		$this->data['text_send_me_latter'] 	= $this->language->get('send_me_latter');
+		$this->data['text_send_latter_to_director'] 	= $this->language->get('send_latter_to_director');
 		$this->data['text_subscribe_in_social_network'] = $this->language->get('subscribe_in_social_network');
-		$this->data['text_cooking'] = $this->language->get('cooking');
+		$this->data['text_cooking'] 					= $this->language->get('cooking');
 		
 		$this->load->model('module/referrer');
 		$this->model_module_referrer->checkReferrer();
@@ -266,7 +267,6 @@ class ControllerCommonFooter extends Controller {
 		
 		$this->data['contact'] 			= $this->url->link('information/contact');
 		$this->data['faq_url'] 			= $this->url->link('information/faq_system');
-		$this->data['about_url'] 		= $this->url->link('information/information', 'information_id=' . $this->config->get('config_about_article_id'));
 		$this->data['site_map_url'] 	= $this->url->link('information/sitemap');				
 		$this->data['return'] 			= $this->url->link('account/return/insert');
 		$this->data['sitemap'] 			= $this->url->link('information/sitemap');
@@ -290,9 +290,11 @@ class ControllerCommonFooter extends Controller {
 		$this->data['href_vendors'] 	= $this->url->link('information/information', 'information_id=' . $this->config->get('config_vendors_article_id'));		
 		$this->data['href_cashback'] 	= $this->url->link('information/information', 'information_id=' . $this->config->get('config_reward_article_id'));		
 		$this->data['href_discounts'] 	= $this->url->link('information/information', 'information_id=' . $this->config->get('config_discounts_article_id'));
-		$this->data['href_present_sertificate'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_present_certificates_article_id'));
-		
+		$this->data['href_present_sertificate'] = $this->url->link('information/information', 'information_id=' . $this->config->get('config_present_certificates_article_id'));		
 		$this->data['href_about'] 		= $this->url->link('information/information', 'information_id=' . $this->config->get('config_about_article_id'));
+		$this->data['about_url'] 		= $this->url->link('information/information', 'information_id=' . $this->config->get('config_about_article_id'));
+		$this->data['href_credits'] 	= $this->url->link('information/information', 'information_id=' . $this->config->get('config_credits_article_id'));
+		
 		$this->data['href_faq'] 		= $this->url->link('information/faq_system');
 		$this->data['href_contact'] 	= $this->url->link('information/contact');
 		$this->data['href_shop_rating'] = $this->url->link('information/shop_rating');
