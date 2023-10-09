@@ -74,6 +74,9 @@
 								<td class="left" style="width:30px;"><i class="fa fa-refresh"></i>ЦО</td>							
 							<?php } ?>
 							<td class="left" style="width:100px;">Google</td>
+							<?php if ($this->config->get('config_country_id') == 220 && $this->config->get('config_hotline_feed_enable')) { ?>	
+								<td class="left" style="width:100px;">Hotline</td>
+							<?php } ?>
 							<?php if ($this->config->get('config_country_id') == 176) { ?>	
 								<td class="left" style="width:100px;">Yandex</td>
 							<?php } ?>
@@ -122,6 +125,9 @@
 											<td class="left" style="width:30px;"><i class="fa fa-refresh"></i>ЦО</td>								
 										<?php } ?>
 										<td class="left" style="width:100px;">Google</td>
+										<?php if ($this->config->get('config_country_id') == 220 && $this->config->get('config_hotline_feed_enable')) { ?>	
+											<td class="left" style="width:100px;">Hotline</td>
+										<?php } ?>
 										<?php if ($this->config->get('config_country_id') == 176) { ?>	
 											<td class="left" style="width:100px;">Yandex</td>
 										<?php } ?>
@@ -278,6 +284,18 @@
 														<?php } ?>
 													<? } ?>
 												</td>	
+
+												<?php if ($this->config->get('config_country_id') == 220 && $this->config->get('config_hotline_feed_enable')) { ?>
+												<td class="center">	
+													<? if ($category['hotline_enable'] && $category['hotline_category_name']) { ?>
+														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF; font-size:10px;"><?php echo $category['hotline_category_name']; ?></span>
+													<? } elseif ($category['hotline_enable']) { ?>
+														<i class="fa fa-question-circle" style="color:#7F00FF"></i>
+													<?php } else { ?>
+														<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+													<?php } ?>		
+													</td>	
+												<?php } ?>
 
 											<?php if ($this->config->get('config_country_id') == 176) { ?>	
 												<td class="center">

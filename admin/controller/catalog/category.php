@@ -239,7 +239,12 @@ class ControllerCatalogCategory extends Controller {
 			$yandex_category_name = false;
 			if ($real_category['yandex_category_name']){
 				$yandex_category_name = $real_category['yandex_category_name'];
-			}			
+			}	
+
+			$hotline_category_name = false;
+			if ($real_category['hotline_category_name']){
+				$hotline_category_name = $real_category['hotline_category_name'];
+			}		
 
 			$mark = false;
 			if (!empty($this->session->data['category_rollup'])) {
@@ -294,6 +299,8 @@ class ControllerCatalogCategory extends Controller {
 					'amazon_can_get_full'  		=> $real_category['amazon_can_get_full'],
 					'amazon_category_link'  	=> $real_category['amazon_category_link'],
 					'yandex_category_name'  	=> $yandex_category_name,
+					'hotline_category_name'  	=> $hotline_category_name,
+					'hotline_enable'			=> $real_category['hotline_enable'],
 					'google_category' 			=> $this->model_catalog_category->getGoogleCategoryByID($real_category['google_category_id']),
 					'no_general_feed'			=> $real_category['no_general_feed'],
 					'tnved'						=> $real_category['tnved'],
@@ -676,6 +683,22 @@ class ControllerCatalogCategory extends Controller {
 			$this->data['yandex_category_name'] = $category_info['yandex_category_name'];
 		} else {
 			$this->data['yandex_category_name'] = '';
+		}
+
+		if (isset($this->request->post['hotline_category_name'])) {
+			$this->data['hotline_category_name'] = $this->request->post['hotline_category_name'];
+		} elseif (!empty($category_info)) {
+			$this->data['hotline_category_name'] = $category_info['hotline_category_name'];
+		} else {
+			$this->data['hotline_category_name'] = '';
+		}
+
+		if (isset($this->request->post['hotline_enable'])) {
+			$this->data['hotline_enable'] = $this->request->post['hotline_enable'];
+		} elseif (!empty($category_info)) {
+			$this->data['hotline_enable'] = $category_info['hotline_enable'];
+		} else {
+			$this->data['hotline_enable'] = '0';
 		}
 
 		if (isset($this->request->post['amazon_last_sync'])) {
@@ -1292,6 +1315,35 @@ class ControllerCatalogCategory extends Controller {
 
 		$this->response->setOutput(json_encode($json));
 	}				
+
+	public function hotline_autocomplete() {	
+		$this->load->model('catalog/category');
+
+		$json = [];
+
+		$results = $this->model_catalog_category->getHotlineCategories($this->request->get['filter_name']);
+
+		foreach ($results as $result){
+			
+			if ($result['final_category']){
+				$labeled_name= '[FINAL] ' . $result['full_name'];
+			} else {
+				$labeled_name = '[TREE] ' . $result['full_name'];
+			}
+			
+			$json[] = [
+				'name'  => $labeled_name,
+				'name2' => $result['full_name'],
+				'id'	=> $result['category_id']
+			];
+			
+		}
+
+		array_unshift($json, ['name' => 'Не назначать', 'id' => 0]);
+
+		$this->response->setOutput(json_encode($json));
+	}				
+
 
 	public function amazon_autocomplete() {				
 		$json = [];

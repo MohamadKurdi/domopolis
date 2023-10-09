@@ -26,7 +26,8 @@ class ModelCatalogCategory extends Model {
 			default_width 			= '" . (float)$data['default_width'] . "', 
 			default_height 			= '" . (float)$data['default_height'] . "', 
 			default_length_class_id = '" . (int)$data['default_length_class_id'] . "', 
-			priceva_enable 			= '" . (int)$data['priceva_enable'] . "', 
+			priceva_enable 			= '" . (int)$data['priceva_enable'] . "',
+			hotline_enable 			= '" . (int)$data['hotline_enable'] . "',
 			submenu_in_children 	= '" . (int)$data['submenu_in_children'] . "', 
 			amazon_sync_enable 		= '" . (int)$data['amazon_sync_enable'] . "', 
 			amazon_last_sync 		= '" . $this->db->escape($data['amazon_last_sync']) . "', 
@@ -38,6 +39,7 @@ class ModelCatalogCategory extends Model {
 			amazon_final_category 			= '" . (int)$data['amazon_final_category'] . "',
 			amazon_can_get_full 			= '" . (int)$data['amazon_can_get_full'] . "',
 			yandex_category_name 	= '" . $this->db->escape($data['yandex_category_name']) . "',
+			hotline_category_name 	= '" . $this->db->escape($data['hotline_category_name']) . "',
 			amazon_overprice_rules 			= '" . $this->db->escape($data['amazon_overprice_rules']) . "',
 			overload_max_wc_multiplier 			= '" . (float)$data['overload_max_wc_multiplier'] . "',
 			overload_max_multiplier 			= '" . (float)$data['overload_max_multiplier'] . "', 
@@ -176,6 +178,7 @@ class ModelCatalogCategory extends Model {
 			default_height 			= '" . (float)$data['default_height'] . "', 
 			default_length_class_id = '" . (int)$data['default_length_class_id'] . "', 
 			priceva_enable 			= '" . (int)$data['priceva_enable'] . "', 
+			hotline_enable 			= '" . (int)$data['hotline_enable'] . "', 
 			submenu_in_children 	= '" . (int)$data['submenu_in_children'] . "',
 			amazon_sync_enable 		= '" . (int)$data['amazon_sync_enable'] . "', 
 			amazon_synced 			= '" . (!empty($data['amazon_synced'])?(int)($data['amazon_synced']):0) . "',
@@ -183,6 +186,7 @@ class ModelCatalogCategory extends Model {
 			amazon_category_id 		= '" . $this->db->escape($data['amazon_category_id']) . "', 
 			amazon_category_name 	= '" . $this->db->escape($data['amazon_category_name']) . "', 
 			yandex_category_name 	= '" . (!empty($data['yandex_category_name'])?$this->db->escape($data['yandex_category_name']):'') . "',
+			hotline_category_name 	= '" . (!empty($data['hotline_category_name'])?$this->db->escape($data['hotline_category_name']):'') . "',
 			amazon_overprice_rules	= '" . (!empty($data['amazon_overprice_rules'])?$this->db->escape($data['amazon_overprice_rules']):'') . "', 
 			amazon_parent_category_id 		= '" . $this->db->escape($data['amazon_parent_category_id']) . "', 			
 			amazon_final_category 			= '" . (int)$data['amazon_final_category'] . "',
@@ -598,7 +602,22 @@ class ModelCatalogCategory extends Model {
 	}
 	
 	public function getCategories($data) {
-		$sql = "SELECT cp.category_id AS category_id, c.tnved, c.priceva_enable, c.deletenotinstock, c.intersections, c.google_category_id, cd2.menu_name, cd2.alternate_name, c.parent_id, c.sort_order,
+		$sql = "SELECT cp.category_id AS category_id, 
+		c.tnved, 
+		c.priceva_enable, 
+		c.hotline_enable, 
+		c.deletenotinstock,
+		c.overload_max_wc_multiplier, 
+		c.overload_max_multiplier, 
+		c.overload_ignore_volumetric_weight, 
+		c.intersections, 
+		c.google_category_id, 
+		c.hotline_category_name,
+		c.yandex_category_name,
+		cd2.menu_name, 
+		cd2.alternate_name, 
+		c.parent_id, 
+		c.sort_order,
 		(SELECT menu_icon FROM category c4 WHERE c4.category_id = cp.category_id) as menu_icon, 
 		(SELECT image FROM category c5 WHERE c5.category_id = cp.category_id) as image, 
 		GROUP_CONCAT(cd1.name ORDER BY cp.level SEPARATOR ' &gt; ') AS name 
@@ -970,6 +989,12 @@ class ModelCatalogCategory extends Model {
 
 				public function getYandexCategories($name){	
 					$query = $this->db->query("SELECT * FROM category_yam_tree WHERE LOWER(name) LIKE '%" . $this->db->escape(mb_strtolower($name)) . "%' ORDER BY final_category DESC");
+
+					return $query->rows;
+				}
+
+				public function getHotlineCategories($name){	
+					$query = $this->db->query("SELECT * FROM category_hotline_tree WHERE LOWER(full_name) LIKE '%" . $this->db->escape(mb_strtolower($name)) . "%' ORDER BY final_category DESC");
 
 					return $query->rows;
 				}
