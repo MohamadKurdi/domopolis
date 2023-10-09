@@ -122,6 +122,7 @@ $_['text_retranslate_term_5_7'] = '5-7 дней';
 
 $_['text_dt_in_stock'] = 'В наличии';
 $_['text_dt_preorder'] = 'Под заказ';
+$_['text_dt_preorder_delivery'] = 'Отправка';
 $_['text_dt_ask_stock'] = 'Наличие уточняйте';
 $_['text_dt_not_in_stock'] = 'Нет в наличии';
 

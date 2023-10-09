@@ -3426,15 +3426,17 @@
 			
 			//Значение по-умолчанию для статуса "есть в наличии"
 			if ($product['stock_status_id'] == $this->config->get('config_stock_status_id') || $product['stock_status_id'] == $this->config->get('config_in_stock_status_id')){
-				$stockText = $this->language->get('text_dt_preorder');	
+				if (!$this->config->get('config_display_dt_preorder_text')){
+					$stockText = $this->language->get('text_dt_preorder');
+				} else {
+					$stockText = $this->language->get('text_dt_preorder_delivery');
+				}				
 				$stockTerm = $this->config->get('config_delivery_outstock_term');
 				$stockClass = 'good';
 			}
 			
 			//Если есть на складе в текущей стране (самый простой случай)
-			if ($product[$this->config->get('config_warehouse_identifier_local')]) {
-				
-				//Поскольку заменяется КЗ и БЕ на рашку где-то, то это вот для обратной совместимости
+			if ($product[$this->config->get('config_warehouse_identifier_local')]) {				
 				if (in_array($this->config->get('config_warehouse_identifier_local'), array('quantity_stockMN', 'quantity_stockAS'))){
 					
 					$stockText = $this->language->get('text_dt_in_stock');				
@@ -3473,11 +3475,15 @@
 			$result = '';
 			
 			if ($stockText && $stockTerm){
-				$result = $stockText . ', ' . $this->parseStockTerm($stockTerm);
+				if (!$this->config->get('config_display_dt_preorder_text')){
+					$result = $stockText . ', ' . $this->parseStockTerm($stockTerm);
+				} else {
+					$result = $stockText . ' ' . $this->parseStockTerm($stockTerm);
+				}
 				} elseif ($stockText){
 				$result = $stockText;
 				} elseif ($stockTerm){
-				$result = $stockTerm;
+				$result = $this->parseStockTerm($stockTerm);
 			}
 			
 			if (is_array($result)){

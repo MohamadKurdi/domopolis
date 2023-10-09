@@ -1318,6 +1318,7 @@ class ControllerSettingSetting extends Controller
             'config_delivery_outstock_enable',
             'config_order_bottom_text_enable',
             'config_divide_cart_by_stock',
+            'config_display_dt_preorder_text',
             'config_delivery_display_logic'
         ];
         

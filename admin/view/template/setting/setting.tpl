@@ -1377,16 +1377,32 @@
 								</td>
 
 								<td style="width:33%">
-									<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Разделять корзину по наличию</span></p>
-									<select name="config_divide_cart_by_stock">
-										<?php if ($config_divide_cart_by_stock) { ?>
-											<option value="1" selected="selected">Разделять</option>
-											<option value="0">Не разделять</option>
-										<?php } else { ?>													
-											<option value="1">Разделять</option>
-											<option value="0"  selected="selected">Не разделять</option>
-										<? } ?>
-									</select>
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Разделять корзину по наличию</span></p>
+										<select name="config_divide_cart_by_stock">
+											<?php if ($config_divide_cart_by_stock) { ?>
+												<option value="1" selected="selected">Разделять</option>
+												<option value="0">Не разделять</option>
+											<?php } else { ?>													
+												<option value="1">Разделять</option>
+												<option value="0"  selected="selected">Не разделять</option>
+											<? } ?>
+										</select>
+									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Не показывать текст "под заказ"</span></p>
+										<select name="config_display_dt_preorder_text">
+											<?php if ($config_display_dt_preorder_text) { ?>
+												<option value="1" selected="selected">Только сроки</option>
+												<option value="0">Показывать</option>
+											<?php } else { ?>													
+												<option value="1">Только сроки</option>
+												<option value="0"  selected="selected">Показывать</option>
+											<? } ?>
+										</select>
+										<span class="help">Под заказ, x-y дней, либо только х-y дней</span>
+									</div>
 								</td>
 
 								<td style="width:33%">
