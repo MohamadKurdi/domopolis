@@ -224,9 +224,7 @@ class ControllerFeedYandexKP extends Controller {
 				} else {
 					$this->yml .= '<category id="' . ($max_category_id + $row['category_id']) . '">' . $this->prepareField($row['name']) . '</category>' . PHP_EOL;
 				}
-
 			}
-
 		}
 
 		$this->yml .= '</categories>' . PHP_EOL;

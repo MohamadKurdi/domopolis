@@ -263,6 +263,17 @@ function normalizeForGoogle($text){
 	return $text;
 }
 
+function normalizeForYML($field) {
+	$field = htmlspecialchars_decode($field);
+	$field = strip_tags($field);
+	$from = array('"', '&', '>', '<', '\'', '&nbsp;');
+	$to = array('&quot;', '&amp;', '&gt;', '&lt;', '&apos;', ' ');
+	$field = str_replace($from, $to, $field);
+	$field = preg_replace('#[\x00-\x08\x0B-\x0C\x0E-\x1F]+#is', ' ', $field);
+
+	return trim($field);
+}
+
 function shortentext($text, $length = 150){
 	$exploded 	= explode(' ', $text);
 	$current 	= 0;
