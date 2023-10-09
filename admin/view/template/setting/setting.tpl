@@ -43,9 +43,14 @@
 				<a href="#tab-server"><i class="fa fa-cogs"></i> Сервер, SEO</a>
 				<a href="#tab-telephony"><span style="color:#7F00FF;"><i class="fa fa-phone"></i> АТС, LDAP</span></a>
 				<a href="#tab-google-ya-fb-vk"><i class="fa fa-google"></i> <span style="color:#57AC79;">Google</span>, <span style="color:red;">Ya</span>, <span style="color:#7F00FF;">FB</span>, <span style="color:#3F6AD8;">VK</span></a>
-				<?php if ($config_country_id == 176) { ?>
-					<a href="#tab-ya-market"><span style="color:red;"><i class="fa fa-yahoo"></i> Yandex.Market, Ozon.Seller</span></a>
-				<? } ?>
+				<a href="#tab-marketplace">
+					<?php if ($config_country_id == 176) { ?>
+						<span style="color:red;"><i class="fa fa-yahoo"></i> Маркетплейсы: Yandex.Market, Ozon.Seller</span>
+					<? } ?>
+					<?php if ($config_country_id == 220) { ?>
+						<span style="color:#FFAA56;"><i class="fa fa-bars"></i> Маркетплейсы: Hotline</span>
+					<?php } ?>
+				</a>
 				<a href="#tab-rainforest"><span style="color:#7F00FF;"><i class="fa fa-amazon"></i> Rainforest API</span></a>
 				<a href="#tab-openai">🤖 <span style="color:#51A62D;">OpenAI</span></a>
 				<a href="#tab-apis"><span style="color:#7F00FF;"><i class="fa fa-cogs"></i> Разные API</span></a>				
@@ -5157,7 +5162,60 @@
 						
 						
 
-						<div id="tab-ya-market" <?php if ($config_country_id != 176) { ?>style="display: none;"<?php } ?>>
+						<div id="tab-marketplace">
+						<?php if ($this->config->get('config_country_id') == 220) { ?>
+							<h2>Настройки Hotline</h2>
+							<table class="form">
+								<tr>		
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включить выгрузку на Hotline</span></p>
+										<select name="config_hotline_feed_enable">
+											<?php if ($config_hotline_feed_enable) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+									</td>
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Идентификатор магазина</span></p>
+										<input type="text" name="config_hotline_merchant_id" value="<?php echo $config_hotline_merchant_id; ?>" size="30" style="width:150px;" />
+									</td>	
+
+									<td width="20%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Использовать категории Hotline</span></p>
+										<select name="config_hotline_enable_category_tree">
+											<?php if ($config_hotline_enable_category_tree) { ?>
+												<option value="1" selected="selected">Включить</option>
+												<option value="0">Отключить</option>
+												<?php } else { ?>													
+												<option value="1">Включить</option>
+												<option value="0"  selected="selected">Отключить</option>
+											<? } ?>
+										</select>
+										<br />
+										<span class="help">Добавлять в наше дерево категорий также дерево категорий Hotline и пытаться сопоставить категории при формировании фидов</span>
+									</td>	
+									<td width="20%">
+											<div>
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Лимит товаров на фид</span></p>
+												<input type="number" step="1000" name="config_hotline_feed_limit" value="<?php echo $config_hotline_feed_limit; ?>" size="30" style="width:150px;" />	
+											</div>
+											<div>
+												<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#57AC79; color:#FFF">Лимит товаров на выборку</span></p>
+												<input type="number" step="100" name="config_hotline_one_iteration_limit" value="<?php echo $config_hotline_one_iteration_limit; ?>" size="30" style="width:150px;" />	
+											</div>									
+										</td>	
+									<td width="20%"></td>
+								</tr>
+
+							</table>
+						<?php } ?>
+
+						<?php if ($this->config->get('config_country_id') == 176) { ?>	
 							<h2>Настройки Ozon Seller + исключение брендов</h2>
 
 							<table class="form">
@@ -5229,7 +5287,6 @@
 
 								</tr>
 							</table>
-
 
 							<h2>Yandex Market Ценообразование</h2>
 							<table class="form">
@@ -5331,11 +5388,9 @@
 										<span class="help">Средняя по больнице комиссия ЯМ для подсчетов</span>
 									</td>
 									
-								</tr>
-								
+								</tr>								
 							</table>
-							
-							
+														
 							<h2>Yandex Market НАСТРОЙКИ</h2>
 							<table class="form">
 								<tr>		
@@ -5471,9 +5526,10 @@
 										<br />
 										<span class="help">в случае если не получилось никак определить</span>
 									</td>
-								</tr>
-								
+								</tr>								
 							</table>
+
+						<?php } ?>
 						</div>
 
 						<div id="tab-deliveryapis">

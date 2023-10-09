@@ -4725,6 +4725,35 @@ class ControllerSettingSetting extends Controller
             $this->data['config_elasticsearch_use_local_stock'] = $this->config->get('config_elasticsearch_use_local_stock');
         }
 
+        if (isset($this->request->post['config_hotline_feed_enable'])) {
+            $this->data['config_hotline_feed_enable'] = $this->request->post['config_hotline_feed_enable'];
+        } else {
+            $this->data['config_hotline_feed_enable'] = $this->config->get('config_hotline_feed_enable');
+        }
+
+        if (isset($this->request->post['config_hotline_merchant_id'])) {
+            $this->data['config_hotline_merchant_id'] = $this->request->post['config_hotline_merchant_id'];
+        } else {
+            $this->data['config_hotline_merchant_id'] = $this->config->get('config_hotline_merchant_id');
+        }
+
+        if (isset($this->request->post['config_hotline_feed_limit'])) {
+            $this->data['config_hotline_feed_limit'] = $this->request->post['config_hotline_feed_limit'];
+        } else {
+            $this->data['config_hotline_feed_limit'] = $this->config->get('config_hotline_feed_limit');
+        }
+
+        if (isset($this->request->post['config_hotline_one_iteration_limit'])) {
+            $this->data['config_hotline_one_iteration_limit'] = $this->request->post['config_hotline_one_iteration_limit'];
+        } else {
+            $this->data['config_hotline_one_iteration_limit'] = $this->config->get('config_hotline_one_iteration_limit');
+        }
+
+        if (isset($this->request->post['config_hotline_enable_category_tree'])) {
+            $this->data['config_hotline_enable_category_tree'] = $this->request->post['config_hotline_enable_category_tree'];
+        } else {
+            $this->data['config_hotline_enable_category_tree'] = $this->config->get('config_hotline_enable_category_tree');
+        }
 
         //OZON
         if (isset($this->request->post['config_ozon_enable_price_yam'])) {
