@@ -58,6 +58,8 @@
 						'main_text'	  		=> $notify['notify_bar_description'][$this->config->get('config_language_id')]['main_text'],
 						'link'	  			=> $notify['notify_bar_description'][$this->config->get('config_language_id')]['link'],
 						'link_text'	  		=> $notify['notify_bar_description'][$this->config->get('config_language_id')]['link_text'],
+						'image_pc'	  		=> $this->config->get('config_url') . DIR_IMAGE_NAME . $notify['image_pc'],
+						'image_mobile'	  	=> $this->config->get('config_url') . DIR_IMAGE_NAME . $notify['image_mobile'],
 						);
 						
 					}
@@ -73,9 +75,9 @@
 				$this->customer->login($email, '', true);					
 			}			
 
-			$this->data['pwa_keys_href'] = $this->url->link('kp/pwa/keys');
-			$this->data['pwa_sps_href'] = $this->url->link('kp/pwa/sps');
-			$this->data['pwa_spi_href'] = $this->url->link('kp/pwa/spi');
+			$this->data['pwa_keys_href'] 	= $this->url->link('kp/pwa/keys');
+			$this->data['pwa_sps_href'] 	= $this->url->link('kp/pwa/sps');
+			$this->data['pwa_spi_href'] 	= $this->url->link('kp/pwa/spi');
 
 			if (!isset($this->session->data['pages_viewed'])){
 				$this->session->data['pages_viewed'] = 1;	
@@ -281,7 +283,7 @@
 			$this->data['loginb2b'] 				= $this->url->link('account/simpleregisterb2b');
 			
 			$this->data['text_welcome'] = sprintf($this->language->get('text_welcome'), $this->url->link('account/login'), $this->url->link('account/register'));
-			$this->data['text_logged'] = '';
+			$this->data['text_logged'] 	= '';
 		
 			
 			$this->data['compare']			 	= $this->url->link('product/compare');
@@ -342,8 +344,15 @@
 				$this->data['config_gtm_body'] = html_entity_decode($this->config->get('config_gtm_body'), ENT_QUOTES, 'UTF-8');
 			}			
 
-			$this->data['config_fb_pixel_header'] = html_entity_decode($this->config->get('config_fb_pixel_header'), ENT_QUOTES, 'UTF-8');
-			$this->data['config_fb_pixel_body'] = html_entity_decode($this->config->get('config_fb_pixel_body'), ENT_QUOTES, 'UTF-8');
+			$this->data['config_fb_pixel_header'] = '';
+			if ($this->config->get('config_fb_pixel_header')){
+				$this->data['config_fb_pixel_header'] = html_entity_decode($this->config->get('config_fb_pixel_header'), ENT_QUOTES, 'UTF-8');
+			}
+
+			$this->data['config_fb_pixel_body'] = '';
+			if ($this->config->get('config_fb_pixel_body')){
+				$this->data['config_fb_pixel_body'] = html_entity_decode($this->config->get('config_fb_pixel_body'), ENT_QUOTES, 'UTF-8');
+			}
 
 			$this->data['config_vk_pixel_header'] = '';
 			if ($this->config->get('config_vk_pixel_header')){
@@ -356,12 +365,9 @@
 			}
 
 			$this->data['config_vk_pixel_id'] 		= $this->config->get('config_vk_pixel_id');
-			$this->data['config_vk_enable_pixel'] 	= $this->config->get('config_vk_enable_pixel');
-
+			$this->data['config_vk_enable_pixel'] 	= $this->config->get('config_vk_enable_pixel');			
+			$this->data['google_ecommerce_enable'] 	= (int)$this->config->get('config_google_ecommerce_enable');
 			
-			$this->data['google_ecommerce_enable'] = (int)$this->config->get('config_google_ecommerce_enable');
-			
-			//Language Switcher
 			$this->data['language_switcher'] = array();
 			if ($this->config->get('config_second_language')){
 				foreach (($hreflangs = $this->document->getHrefLangs()) as $language_id => $link){
@@ -370,10 +376,10 @@
 						$text_code = $this->registry->get('languages')[$link['code']]['switch'];
 						
 						$this->data['language_switcher'][] = array(
-						'code' 		=> $link['code'],
-						'text_code' => $text_code,
-						'href' 		=> $link['link'],
-						'active' 	=> ($language_id == $this->config->get('config_language_id'))
+							'code' 		=> $link['code'],
+							'text_code' => $text_code,
+							'href' 		=> $link['link'],
+							'active' 	=> ($language_id == $this->config->get('config_language_id'))
 						);						
 
 						$this->data['language_switcher'] = array_reverse($this->data['language_switcher']);
@@ -385,8 +391,7 @@
 				$route = (string)$this->request->get['route'];
 				} else {
 				$route = 'common/home';
-			}
-			
+			}			
 			
 			$this->data['links'] 		= $this->document->getLinks();	
 			$this->data['extra_tags'] 	= $this->document->getExtraTags();					
@@ -451,8 +456,7 @@
 				'module/currency',
 				'module/mmenu',
 				'common/topcontent',
-			);					
-			
+			);								
 			
 			$this->data['logged'] = $this->customer->isLogged();
 			

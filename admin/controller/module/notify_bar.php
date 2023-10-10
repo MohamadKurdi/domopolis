@@ -3,12 +3,12 @@ class ControllerModuleNotifyBar extends Controller {
 	private $error = array(); 
 
 	public function index() {
-		// Mini hack work at all version of OpenCart :)
 		$this->data = $this->language->load('module/notify_bar');
 
 		$this->document->setTitle($this->language->get('heading_title')); 
 
 		$this->load->model('setting/setting');
+		$this->load->model('tool/image');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 
@@ -45,25 +45,38 @@ class ControllerModuleNotifyBar extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-   		$this->data['action'] = $this->url->link('module/notify_bar', 'token=' . $this->session->data['token'], 'SSL');
-		
+		$this->data['no_image'] = $this->model_tool_image->resize($this->config->get('config_noimage'), 100, 100);
+
+   		$this->data['action'] = $this->url->link('module/notify_bar', 'token=' . $this->session->data['token'], 'SSL');	
 		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
-
-		$this->data['notify_bar'] = array();
-
+		$this->data['notify_bar'] = [];
 		
 		if (isset($this->request->post['notify_bar'])) {
 			$this->data['notify_bars'] = $this->request->post['notify_bar'];
 		} elseif ($this->config->get('notify_bar')) { 
 			$this->data['notify_bars'] = $this->config->get('notify_bar');
 		}
+
+		foreach ($this->data['notify_bars'] as &$notify_bar){
+			if ($notify_bar['image_mobile']){
+				$notify_bar['thumb_mobile'] = $this->model_tool_image->resize($notify_bar['image_mobile'], 100, 100);
+			} else {
+				$notify_bar['thumb_mobile'] = $this->model_tool_image->resize($this->config->get('config_noimage'), 100, 100);
+			}	
+
+			if ($notify_bar['image_pc']){
+				$notify_bar['thumb_pc'] = $this->model_tool_image->resize($notify_bar['image_pc'], 100, 100);
+			} else {
+				$notify_bar['thumb_pc'] = $this->model_tool_image->resize($this->config->get('config_noimage'), 100, 100);
+			}	
+		}
+
+		$this->data['token'] = $this->session->data['token'];
 		
 		$this->load->model('localisation/language');
-
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
 
-		$this->load->model('design/layout');
-		
+		$this->load->model('design/layout');		
 		$this->data['layouts'] = $this->model_design_layout->getLayouts();
 
    		$this->template = 'module/notify_bar.tpl';
@@ -72,7 +85,7 @@ class ControllerModuleNotifyBar extends Controller {
 			'common/footer'	
 		);
 
- 		$this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
+ 		$this->response->setOutput($this->render());
 	}
 
 	private function validate() {
@@ -82,15 +95,9 @@ class ControllerModuleNotifyBar extends Controller {
 
 		if (isset($this->request->post['notify_bar'])) {
 			foreach ($this->request->post['notify_bar'] as $key => $value) {
-
-				if (utf8_strlen($value['text']) < 1) {
-				//	$this->error['warning'] = $this->language->get('error_empty');
-				}
-
 				if (!is_numeric($value['sort_order'])) {
 					$this->error['warning'] = $this->language->get('error_sort_order');
 				}
-
 			}
 		}
 

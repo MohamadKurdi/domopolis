@@ -160,9 +160,9 @@
 	
 	
 	if (!$store_id) {
-		$registry->get('config')->set('config_url', 				HTTP_SERVER);
+		$registry->get('config')->set('config_url', 				HTTPS_SERVER);
 		$registry->get('config')->set('config_ssl', 				HTTPS_SERVER);			
-		$registry->get('config')->set('config_img_url', 			HTTP_IMG_SERVER);
+		$registry->get('config')->set('config_img_url', 			HTTPS_IMG_SERVER);
 		$registry->get('config')->set('config_img_ssl', 			HTTPS_IMG_SERVER);		
 		$registry->get('config')->set('config_img_urls', 			HTTP_IMG_SERVERS);
 		$registry->get('config')->set('config_img_ssls', 			HTTPS_IMG_SERVERS);			

@@ -173,9 +173,8 @@ class ControllerDesignBanner extends Controller {
 			'limit' => $this->config->get('config_admin_limit')
 		);
 
-		$banner_total = $this->model_design_banner->getTotalBanners();
-
-		$results = $this->model_design_banner->getBanners($data);
+		$banner_total 	= $this->model_design_banner->getTotalBanners();
+		$results 		= $this->model_design_banner->getBanners($data);
 
 		foreach ($results as $result) {
 			$action = array();
