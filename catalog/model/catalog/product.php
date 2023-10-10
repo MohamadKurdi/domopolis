@@ -1184,6 +1184,10 @@
 			if (!empty($data['filter_manufacturer_id'])) {
 				$sql .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer_id'] . "'";
 			}
+
+			if (!empty($data['filter_manufacturer_ids'])) {
+				$sql .= " AND p.manufacturer_id IN (" . implode(',', $data['filter_manufacturer_ids']) . ")";
+			}
 			
 			if (!empty($data['filter_ocfilter'])) {
 				$this->load->model('catalog/ocfilter');
@@ -2735,6 +2739,10 @@
 			
 			if (!empty($data['filter_manufacturer_id'])) {
 				$sql .= " AND p.manufacturer_id = '" . (int)$data['filter_manufacturer_id'] . "'";
+			}
+
+			if (!empty($data['filter_manufacturer_ids'])) {
+				$sql .= " AND p.manufacturer_id IN (" . implode(',', $data['filter_manufacturer_ids']) . ")";
 			}
 			
 			if (!empty($data['filter_ocfilter'])) {
