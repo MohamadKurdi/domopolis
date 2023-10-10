@@ -1,23 +1,4 @@
 <?php
-/***********************************************************************************************************************
-
-Version 1.5.6
-Created 23:02 15.01.2014 UTF-8
-Copyright (C) 2010 Ukrainian Localization by OpenCart Ukrainian Team (http://opencart.ua). All rights reserved.
-
-Translators:
- Aleksandr Rebrov (admin@webplaneta.com.ua)
- Eugene Kuligin (k.evgen@meta.ua)
- and others.
-
-Responsible for Translation:
- Eugene Kuligin (admin@opencart.ua)
-
-License http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
-Ask a question http://forum.opencart.ua
-
-************************************************************************************************************************/
-
 $_['text_quickorder_success'] = "Дякуємо. Ваше замовлення прийнято. Номер замовлення: <span style='color:#e85c9e;'>%s</span><br /><span style = 'font-size: 12px;'> Ми зв'яжемося з вами найближчим часом.</span>";
 
 $_['heading_title'] = 'Кошик'; #44211
@@ -82,3 +63,4 @@ $_['text_recurring'] = '%s кожні %s %s'; #51098
 $_['text_length'] = ' протягом %s платежів '; #51099
 $_['text_client'] = 'Клієнт';
 $_['text_fastorder'] = 'Це замовлення оформлене, як швидке!';
+$_['text_preorder_success'] = "Дякуємо! Вашу заявку на попереднє замовлення прийнято! Ми зв'яжемося з вами найближчим часом.";

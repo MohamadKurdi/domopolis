@@ -529,10 +529,7 @@ class ControllerCheckoutQuickorder extends Controller {
 						$json['total'] = 0;
 						$json['currency'] =  $this->currency->getCode();
 
-						$json['success'] = $json['html'] = "<span>Спасибо! Ваша заявка на предзаказ принята! Мы свяжемся с вами в ближайшее время.</span>";
-							//$json['success'] = true;
-
-
+						$json['success'] = $json['html'] = "<span>" . $this->language->get('text_preorder_success') . "</span>";
 						$this->cart->remove($cart_key);
 						$this->session->data['cart'] = $temp_array;
 
