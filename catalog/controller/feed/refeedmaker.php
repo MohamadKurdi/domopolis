@@ -343,7 +343,7 @@ class ControllerFeedReFeedMaker extends Controller
                 $filter = array(
                     'filter_category_id'    => $google_base_category['category_id'],
                     'start'                 => 0,
-                    'limit'                 => 100000,
+                    'limit'                 => PHP_INT_MAX,
                     'filter_status'         => true,
                     'filter_not_bad'        => true,
                     'filter_return_simple'  => true,

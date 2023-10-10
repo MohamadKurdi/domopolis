@@ -573,12 +573,12 @@
 					
 					//Логика подмены SKU
 					if ($this->config->get('config_product_replace_sku_with_product_id')){
-						$query->row['sku'] = $query->row['product_id'];
-						$query->row['model'] = $query->row['product_id'];
+						$query->row['sku'] 		= $query->row['product_id'];
+						$query->row['model'] 	= $query->row['product_id'];
 						
 						if ($this->config->get('config_product_use_sku_prefix')){
-							$query->row['sku'] = trim($this->config->get('config_product_use_sku_prefix')) . $query->row['sku'];
-							$query->row['model'] = trim($this->config->get('config_product_use_sku_prefix')) . $query->row['model'];
+							$query->row['sku'] 		= trim($this->config->get('config_product_use_sku_prefix')) . $query->row['sku'];
+							$query->row['model'] 	= trim($this->config->get('config_product_use_sku_prefix')) . $query->row['model'];
 						}
 					}
 
