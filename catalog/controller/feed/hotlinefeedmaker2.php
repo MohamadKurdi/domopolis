@@ -17,8 +17,10 @@ class ControllerFeedHotlineFeedMaker2 extends Controller
     private $iteration              = 0;
 
     private $maxCategoryId = 0;
-    private $hotlineCategories           = [];
-    private $hotlineCategoriesMapping    = [];
+    private $hotlineCategories          = [];
+    private $hotlineCategoriesMapping   = [];
+    private $allowedManufacturers       = [];
+
 
 
     public function __construct($registry){
@@ -36,6 +38,12 @@ class ControllerFeedHotlineFeedMaker2 extends Controller
 
          foreach ($query->rows as $row){
             $this->hotlineCategoriesMapping[$row['category_id']] = $row['hotline_category_name'];
+        }
+
+        $query = $this->db->query("SELECT manufacturer_id FROM manufacturer WHERE hotline_enable = 1");
+
+         foreach ($query->rows as $row){
+            $this->allowedManufacturers[] = $row['manufacturer_id'];
         }
 
         echoLine('[ControllerFeedHotlineFeedMaker2] Cache is built', 's');
@@ -258,6 +266,10 @@ class ControllerFeedHotlineFeedMaker2 extends Controller
                 'filter_return_simple'  => true,
                 'filter_exclude_certs'  => true
             ];
+
+            if ($this->allowedManufacturers){
+                $filter['filter_manufacturer_ids'] = $this->allowedManufacturers;
+            }
 
             $total = $this->model_catalog_product->getTotalProducts($filter);
             echoLine('[ControllerFeedHotlineFeedMaker2] Total Products: ' . $total,'w');

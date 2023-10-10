@@ -94,7 +94,10 @@
 					<table class="form">						
 						
 						<tr>
-							<td style="width:40%">
+							<td style="width:20%">
+								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Выгрузка на Hotline</span>
+							</td>
+							<td style="width:20%">
 								<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Мониторинг цен Priceva/PriceControl</span>
 							</td>
 							<td style="width:60%">
@@ -103,6 +106,17 @@
 						</tr>
 						
 						<tr style="border-bottom:1px dashed gray">
+							<td>
+								<select name="hotline_enable">
+									<?php if ($hotline_enable) { ?>
+										<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+										<option value="0"><?php echo $text_disabled; ?></option>
+										<?php } else { ?>
+										<option value="1"><?php echo $text_enabled; ?></option>
+										<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+									<?php } ?>
+								</select>
+							</td>
 							<td>
 								<select name="priceva_enable">
 									<?php if ($priceva_enable) { ?>

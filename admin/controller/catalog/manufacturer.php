@@ -206,6 +206,7 @@ class ControllerCatalogManufacturer extends Controller {
 				'name'            => $result['name'],
 				'image'			  => $image,
 				'menu_brand'      => $result['menu_brand'],
+				'hotline_enable'  => $result['hotline_enable'],
 				'show_goods'      => $result['show_goods'],
 				'sort_order'      => $result['sort_order'],
 				'selected'        => isset($this->request->post['selected']) && in_array($result['manufacturer_id'], $this->request->post['selected']),
@@ -419,8 +420,15 @@ class ControllerCatalogManufacturer extends Controller {
 		} else {	
 			$this->data['priceva_feed'] = '';
 		}
-		
-		
+
+		if (isset($this->request->post['hotline_enable'])) {
+			$this->data['hotline_enable'] = $this->request->post['hotline_enable'];
+		} elseif (!empty($manufacturer_info)) {
+			$this->data['hotline_enable'] = $manufacturer_info['hotline_enable'];
+		} else {
+			$this->data['hotline_enable'] = 0;
+		}
+				
 		$this->load->model('catalog/product');
 		$this->load->model('catalog/collection');
 		$this->load->model('catalog/category');
@@ -680,4 +688,3 @@ class ControllerCatalogManufacturer extends Controller {
 		$this->response->setOutput(json_encode($json));
 	}	
 }
-?>

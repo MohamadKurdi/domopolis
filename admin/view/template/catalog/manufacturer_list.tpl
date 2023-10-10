@@ -38,9 +38,12 @@
 								<?php } else { ?>
 								<a href="<?php echo $sort_sort_order; ?>">Сортировка</a>
 							<?php } ?></td>
-							<td class="right" >Товаров</td>
+							<td class="right" style="word-wrap: normal; width:100px;">Товаров</td>
 							<td class="right" style="word-wrap: normal; min-width:100px;">Домашняя</td>
-							<td class="right" style="word-wrap: normal; min-width:100px;">Только товары</td>
+							<td class="right" style="word-wrap: normal; width:50px;">Только товары</td>
+							<?php if ($this->config->get('config_hotline_feed_enable')) { ?>
+								<td class="right" style="word-wrap: normal; width:50px;">Hotline</td>
+							<?php } ?>
 							<td class="right" style="word-wrap: normal; min-width:100px;">Магазины</td>
 							<td class="right" style="word-wrap: normal; min-width:100px;">Страна</td>
 							<td class="right" style="word-wrap: normal; min-width:100px;">SEO URL</td>
@@ -96,6 +99,16 @@
 											<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 										<? } ?>
 									</td>
+
+									<?php if ($this->config->get('config_hotline_feed_enable')) { ?>
+										<td class="center">
+											<? if ($manufacturer['hotline_enable']) { ?>
+												<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+											<? } else { ?>
+												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+											<? } ?>
+										</td>
+									<?php } ?>
 									
 									<td class="left">										
 										<?php foreach ($stores as $store) { ?>												

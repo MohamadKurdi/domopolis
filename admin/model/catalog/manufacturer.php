@@ -1,7 +1,17 @@
 <?php
 	class ModelCatalogManufacturer extends Model {
 		public function addManufacturer($data) {
-			$this->db->query("INSERT INTO manufacturer SET name = '" . $this->db->escape($data['name']) . "', tip = '" . $this->db->escape($data['tip']) . "', menu_brand = '" . (int)$data['menu_brand'] . "', show_goods = '" . (int)$data['show_goods'] . "', priceva_enable = '" . (int)$data['priceva_enable'] . "', priceva_feed = '" . $this->db->escape($data['priceva_feed']) . "',  sort_order = '" . (int)$data['sort_order'] . "', banner_width = '" . (int)$data['banner_width'] . "', banner_height = '" . (int)$data['banner_height'] . "'");
+			$this->db->query("INSERT INTO manufacturer SET 
+				name 			= '" . $this->db->escape($data['name']) . "', 
+				tip 			= '" . $this->db->escape($data['tip']) . "', 
+				menu_brand 		= '" . (int)$data['menu_brand'] . "', 
+				show_goods 		= '" . (int)$data['show_goods'] . "', 
+				priceva_enable 	= '" . (int)$data['priceva_enable'] . "', 
+				priceva_feed 	= '" . $this->db->escape($data['priceva_feed']) . "', 
+				hotline_enable 	= '" . (int)$data['hotline_enable'] . "',  
+				sort_order 		= '" . (int)$data['sort_order'] . "', 
+				banner_width 	= '" . (int)$data['banner_width'] . "', 
+				banner_height 	= '" . (int)$data['banner_height'] . "'");
 			
 			$manufacturer_id = $this->db->getLastId();
 			
@@ -28,20 +38,28 @@
 			
 			$this->db->query("DELETE FROM manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			foreach ($data['manufacturer_description'] as $language_id => $value) {
-				$this->db->query("INSERT INTO manufacturer_description SET manufacturer_id = '" . (int)$manufacturer_id . "', language_id = '" . (int)$language_id . "', seo_title = '" . $this->db->escape($value['seo_title']) . "', seo_h1 = '" . $this->db->escape($value['seo_h1']) . "', meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', description = '" . $this->db->escape($value['description']) . "', location = '" . $this->db->escape($value['location']) . "', short_description = '" . $this->db->escape($value['short_description']) . "',
-				alternate_name = '" . $this->db->escape($value['alternate_name']) . "',
-				products_title = '" . $this->db->escape($value['products_title']) . "',
-				products_meta_description = '" . $this->db->escape($value['products_meta_description']) . "',
-				collections_title = '" . $this->db->escape($value['collections_title']) . "',
-				collections_meta_description = '" . $this->db->escape($value['collections_meta_description']) . "',
-				categories_title = '" . $this->db->escape($value['categories_title']) . "',
-				categories_meta_description = '" . $this->db->escape($value['categories_meta_description']) . "',
-				articles_title = '" . $this->db->escape($value['articles_title']) . "',
-				articles_meta_description = '" . $this->db->escape($value['articles_meta_description']) . "',
-				newproducts_title = '" . $this->db->escape($value['newproducts_title']) . "',
-				newproducts_meta_description = '" . $this->db->escape($value['newproducts_meta_description']) . "',
-				special_title = '" . $this->db->escape($value['special_title']) . "',
-				special_meta_description = '" . $this->db->escape($value['short_description']) . "'");
+				$this->db->query("INSERT INTO manufacturer_description SET manufacturer_id = '" . (int)$manufacturer_id . "', 
+					language_id 				= '" . (int)$language_id . "', 
+					seo_title 					= '" . $this->db->escape($value['seo_title']) . "', 
+					seo_h1 						= '" . $this->db->escape($value['seo_h1']) . "',
+					meta_keyword		 		= '" . $this->db->escape($value['meta_keyword']) . "', 
+					meta_description 			= '" . $this->db->escape($value['meta_description']) . "', 
+					description 				= '" . $this->db->escape($value['description']) . "', 
+					location 					= '" . $this->db->escape($value['location']) . "', 
+					short_description 			= '" . $this->db->escape($value['short_description']) . "',
+					alternate_name 				= '" . $this->db->escape($value['alternate_name']) . "',
+					products_title 				= '" . $this->db->escape($value['products_title']) . "',
+					products_meta_description 	= '" . $this->db->escape($value['products_meta_description']) . "',
+					collections_title 			= '" . $this->db->escape($value['collections_title']) . "',
+					collections_meta_description 	= '" . $this->db->escape($value['collections_meta_description']) . "',
+					categories_title 				= '" . $this->db->escape($value['categories_title']) . "',
+					categories_meta_description 	= '" . $this->db->escape($value['categories_meta_description']) . "',
+					articles_title 					= '" . $this->db->escape($value['articles_title']) . "',
+					articles_meta_description 		= '" . $this->db->escape($value['articles_meta_description']) . "',
+					newproducts_title 				= '" . $this->db->escape($value['newproducts_title']) . "',
+					newproducts_meta_description 	= '" . $this->db->escape($value['newproducts_meta_description']) . "',
+					special_title 					= '" . $this->db->escape($value['special_title']) . "',
+					special_meta_description 		= '" . $this->db->escape($value['short_description']) . "'");
 			}
 			
 			if (isset($data['manufacturer_store'])) {
@@ -68,7 +86,18 @@
 		}
 		
 		public function editManufacturer($manufacturer_id, $data) {
-			$this->db->query("UPDATE manufacturer SET name = '" . $this->db->escape($data['name']) . "', tip = '" . $this->db->escape($data['tip']) . "', menu_brand = '" . (int)$data['menu_brand'] . "', show_goods = '" . (int)$data['show_goods'] . "', sort_order = '" . (int)$data['sort_order'] . "', priceva_enable = '" . (int)$data['priceva_enable'] . "', priceva_feed = '" . $this->db->escape($data['priceva_feed']) . "', banner_width = '" . (int)$data['banner_width'] . "', banner_height = '" . (int)$data['banner_height'] . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
+			$this->db->query("UPDATE manufacturer SET 
+				name 			= '" . $this->db->escape($data['name']) . "', 
+				tip 			= '" . $this->db->escape($data['tip']) . "', 
+				menu_brand 		= '" . (int)$data['menu_brand'] . "', 
+				show_goods 		= '" . (int)$data['show_goods'] . "', 
+				sort_order 		= '" . (int)$data['sort_order'] . "', 
+				priceva_enable 	= '" . (int)$data['priceva_enable'] . "', 
+				priceva_feed 	= '" . $this->db->escape($data['priceva_feed']) . "', 
+				hotline_enable 	= '" . (int)$data['hotline_enable'] . "',  
+				banner_width 	= '" . (int)$data['banner_width'] . "', 
+				banner_height 	= '" . (int)$data['banner_height'] . "' 
+				WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			
 			if (isset($data['image'])) {
 				$this->db->query("UPDATE manufacturer SET image = '" . $this->db->escape(html_entity_decode($data['image'], ENT_QUOTES, 'UTF-8')) . "' WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
@@ -85,20 +114,29 @@
 			$this->db->query("DELETE FROM manufacturer_description WHERE manufacturer_id = '" . (int)$manufacturer_id . "'");
 			
 			foreach ($data['manufacturer_description'] as $language_id => $value) {
-				$this->db->query("INSERT INTO manufacturer_description SET manufacturer_id = '" . (int)$manufacturer_id . "', language_id = '" . (int)$language_id . "', seo_title = '" . $this->db->escape($value['seo_title']) . "', seo_h1 = '" . $this->db->escape($value['seo_h1']) . "',  meta_keyword = '" . $this->db->escape($value['meta_keyword']) . "', meta_description = '" . $this->db->escape($value['meta_description']) . "', description = '" . $this->db->escape($value['description']) . "', location = '" . $this->db->escape($value['location']) . "', short_description = '" . $this->db->escape($value['short_description']) . "',
-				alternate_name = '" . $this->db->escape($value['alternate_name']) . "',
-				products_title = '" . $this->db->escape($value['products_title']) . "',
-				products_meta_description = '" . $this->db->escape($value['products_meta_description']) . "',
-				collections_title = '" . $this->db->escape($value['collections_title']) . "',
-				collections_meta_description = '" . $this->db->escape($value['collections_meta_description']) . "',
-				categories_title = '" . $this->db->escape($value['categories_title']) . "',
-				categories_meta_description = '" . $this->db->escape($value['categories_meta_description']) . "',
-				articles_title = '" . $this->db->escape($value['articles_title']) . "',
-				articles_meta_description = '" . $this->db->escape($value['articles_meta_description']) . "',
-				newproducts_title = '" . $this->db->escape($value['newproducts_title']) . "',
-				newproducts_meta_description = '" . $this->db->escape($value['newproducts_meta_description']) . "',
-				special_title = '" . $this->db->escape($value['special_title']) . "',
-				special_meta_description = '" . $this->db->escape($value['short_description']) . "'");
+				$this->db->query("INSERT INTO manufacturer_description SET 
+					manufacturer_id 		= '" . (int)$manufacturer_id . "', 
+					language_id 			= '" . (int)$language_id . "', 
+					seo_title 				= '" . $this->db->escape($value['seo_title']) . "', 
+					seo_h1 					= '" . $this->db->escape($value['seo_h1']) . "',  
+					meta_keyword 			= '" . $this->db->escape($value['meta_keyword']) . "', 
+					meta_description 		= '" . $this->db->escape($value['meta_description']) . "', 
+					description 			= '" . $this->db->escape($value['description']) . "', 
+					location 				= '" . $this->db->escape($value['location']) . "', 
+					short_description 		= '" . $this->db->escape($value['short_description']) . "',
+					alternate_name 			= '" . $this->db->escape($value['alternate_name']) . "',
+					products_title 			= '" . $this->db->escape($value['products_title']) . "',
+					products_meta_description 	= '" . $this->db->escape($value['products_meta_description']) . "',
+					collections_title 			= '" . $this->db->escape($value['collections_title']) . "',
+					collections_meta_description 	= '" . $this->db->escape($value['collections_meta_description']) . "',
+					categories_title 				= '" . $this->db->escape($value['categories_title']) . "',
+					categories_meta_description 	= '" . $this->db->escape($value['categories_meta_description']) . "',
+					articles_title 					= '" . $this->db->escape($value['articles_title']) . "',
+					articles_meta_description 		= '" . $this->db->escape($value['articles_meta_description']) . "',
+					newproducts_title 				= '" . $this->db->escape($value['newproducts_title']) . "',
+					newproducts_meta_description 	= '" . $this->db->escape($value['newproducts_meta_description']) . "',
+					special_title 					= '" . $this->db->escape($value['special_title']) . "',
+					special_meta_description 		= '" . $this->db->escape($value['short_description']) . "'");
 			}
 			
 			
