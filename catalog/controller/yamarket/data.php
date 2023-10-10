@@ -118,18 +118,4 @@
 			
 			$this->updateFinalCategories();
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	}				
