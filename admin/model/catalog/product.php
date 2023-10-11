@@ -1744,7 +1744,9 @@
 		}
 		
 		public function getProducts($data = array()) {
-			$sql = "SELECT * FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id)";
+			$sql = "SELECT p.*, pd.*, c.name as collection_name FROM product p ";
+			$sql .= " LEFT JOIN product_description pd ON (p.product_id = pd.product_id)";
+			$sql .= " LEFT JOIN collection c ON (p.collection_id = c.collection_id)";
 			
 			if (!empty($data['filter_category'])) {
 					$data['filter_category_id'] = $data['filter_category'];
@@ -1753,8 +1755,6 @@
 			if (!empty($data['filter_category_id'])) {
 				$sql .= " LEFT JOIN product_to_category p2c ON (p.product_id = p2c.product_id)";			
 			}
-
-
 			
 			$sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'"; 
 			
@@ -1801,8 +1801,12 @@
 				}
 			}
 			
-			if (isset($data['collection_id']) && !is_null($data['collection_id'])) {
-				$sql .= " AND p.collection_id = '" . $this->db->escape($data['collection_id']) . "'";
+			if (isset($data['filter_collection_id']) && !is_null($data['filter_collection_id'])) {
+				$sql .= " AND p.collection_id = '" . $this->db->escape($data['filter_collection_id']) . "'";
+			}
+
+			if (isset($data['filter_manufacturer_id']) && !is_null($data['filter_manufacturer_id'])) {
+				$sql .= " AND p.manufacturer_id = '" . $this->db->escape($data['filter_manufacturer_id']) . "'";
 			}
 
 			if (isset($data['filter_stock_status_ids']) && is_array($data['filter_stock_status_ids'])) {
@@ -1814,7 +1818,7 @@
 			}
 
 			if (isset($data['filter_date_added_from']) && $data['filter_date_added_from']) {
-				$sql .= " AND p.date_added <= '" . date('Y-m-d', strtotime($data['filter_date_added_from'])) . "'";
+				$sql .= " AND p.date_added >= '" . date('Y-m-d', strtotime($data['filter_date_added_from'])) . "'";
 			}
 			
 			if (!empty($data['filter_price'])) {
@@ -1843,16 +1847,21 @@
 			'p.status',
 			'p.sort_order',
 			'p.date_added',
-			'RAND()'
+			'RAND()',
+			'on_stock+RAND()'
 			);	
 			
 			if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
-				$sql .= " ORDER BY " . $data['sort'];	
+				if ($data['sort'] == 'on_stock+RAND()'){
+					$sql .= " ORDER BY (" . $this->config->get('config_warehouse_identifier') . " > 0), RAND()";	
+				} else {
+					$sql .= " ORDER BY " . $data['sort'];	
+				}				
 				} else {
 				$sql .= " ORDER BY pd.name";	
 			}
 			
-			if (isset($data['order']) && ($data['order'] == 'DESC') && $data['sort'] != 'RAND()') {
+			if (isset($data['order']) && ($data['order'] == 'DESC') && mb_strpos($data['order'], 'RAND') === false) {
 				$sql .= " DESC";
 				} else {
 				$sql .= " ASC";

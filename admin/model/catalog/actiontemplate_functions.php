@@ -16,8 +16,10 @@
 
 				$products[] = [
 					'image' 		=> $image,
+					'date_added'  	=> date('d.m.Y', strtotime($result['date_added'])),
 					'name'      	=> $result['name'],
 					'product_id'	=> $result['product_id'],
+					'collection'	=> $result['collection_name'],
 					'href'			=> $this->url->link('product/product', 'product_id=' . $result['product_id'])
 				];
 			}
@@ -73,14 +75,14 @@
 				if (!empty($collections_to_manufacturers[$manufacturer_id])){
 					foreach ($collections_to_manufacturers[$manufacturer_id] as $collection_id){
 						$filter_data = [
-							'manufacturer_id' 			=> $manufacturer_id,
-							'collection_id' 			=> $collection_id,
+							'filter_manufacturer_id' 	=> $manufacturer_id,
+							'filter_collection_id' 		=> $collection_id,
 							'filter_status'  			=> true,
 							'filter_has_image' 			=> true,
 							'filter_stock_status_ids'  	=> [$this->config->get('config_in_stock_status_id'), $this->config->get('config_stock_status_id')],
 							'filter_date_added_from'  	=> date('Y-m-d', strtotime($customer['order_good_last_date'])),
-							'order'  					=> 'p.date_added',
-							'sort' 						=> 'DESC',
+							'sort'  					=> $this->config->get('config_warehouse_identifier') . ' > 0, RAND()',
+							'order' 					=> 'DESC',
 							'start'						=> 0,
 							'limit' 					=> $collection_limit
 						];
@@ -102,13 +104,13 @@
 
 				if (empty($collections)){
 					$filter_data = [
-						'manufacturer_id' 			=> $manufacturer_id,
+						'filter_manufacturer_id' 	=> $manufacturer_id,
 						'filter_status'  			=> true,
 						'filter_has_image' 			=> true,
 						'filter_stock_status_ids'  	=> [$this->config->get('config_in_stock_status_id'), $this->config->get('config_stock_status_id')],
 						'filter_date_added_from'  	=> date('Y-m-d', strtotime($customer['order_good_last_date'])),
-						'order'  					=> 'RAND()',
-						'sort' 						=> 'DESC',
+						'sort'  					=> $this->config->get('config_warehouse_identifier') . ' > 0, RAND()',
+						'order' 					=> 'DESC',
 						'start'						=> 0,
 						'limit' 					=> $general_limit
 					];

@@ -472,7 +472,7 @@
 			$this->load->model('catalog/actiontemplate');
 			$this->load->model('catalog/actiontemplate_functions');
 
-			$data 		= $this->request->post;
+			$data 		= $this->request->post + $this->request->get;			
 			$this->data = $data;
 
 			$actionTemplate = $this->model_catalog_actiontemplate->getActionTemplate($data['actiontemplate_id']);
@@ -480,6 +480,8 @@
 			if (!empty($actionTemplate['data_function']) && (method_exists($this->model_catalog_actiontemplate_functions, $actionTemplate['data_function']))){
 				$this->data += $this->model_catalog_actiontemplate_functions->{$actionTemplate['data_function']}($data);
 			}
+
+			$this->data['config_customer_manual_test_mode'] = $this->config->get('config_customer_manual_test_mode');
 
 			if (!empty($actionTemplate['file_template'])){
 				$this->template = 'sale/actiontemplates/' . $actionTemplate['file_template'] . '.tpl';
