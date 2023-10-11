@@ -122,7 +122,7 @@ class ControllerFeedHotlineFeedMaker2 extends Controller
         foreach ($query->rows as $row){
             $this->hml .= ' <category>' . PHP_EOL; 
             $this->hml .= '     <id>' . $row['category_id'] . '</id>' . PHP_EOL; 
-            $this->hml .= '     <name>' . normalizeForYML($row['name']) . '</name>' . PHP_EOL; 
+            $this->hml .= '     <name><![CDATA[' . normalizeForYML($row['name']) . ']]></name>' . PHP_EOL; 
 
             if (!empty($row['parent_id'])){
                 $this->hml .= '     <parentId>' . $row['parent_id'] . '</parentId>' . PHP_EOL; 
@@ -137,7 +137,7 @@ class ControllerFeedHotlineFeedMaker2 extends Controller
             foreach ($query->rows as $row){
                 $this->hml .= ' <category>' . PHP_EOL; 
                 $this->hml .= '     <id>' . (int)($this->maxCategoryId + $row['category_id']) . '</id>' . PHP_EOL; 
-                $this->hml .= '     <name>' . normalizeForYML($row['name']) . '</name>' . PHP_EOL; 
+                $this->hml .= '     <name><![CDATA[' . normalizeForYML($row['name']) . ']]></name>' . PHP_EOL; 
 
                 if (!empty($row['parent_id'])){
                     $this->hml .= '     <parentId>' . (int)($this->maxCategoryId + $row['parent_id']) . '</parentId>' . PHP_EOL; 

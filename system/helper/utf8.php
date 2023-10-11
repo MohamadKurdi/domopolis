@@ -178,6 +178,38 @@ function getproductname($item) {
 	return $item['name'];
 }
 
+function addTrackingToHTML($html, $tracking){
+	libxml_use_internal_errors(true);
+
+	$doc = new DOMDocument();
+	$doc->encoding = 'UTF-8';
+	$doc->loadHTML($html);
+
+	$anchors = $doc->getElementsByTagName('a');
+	foreach ($anchors as $anchor) {
+		$href = $anchor->getAttribute('href');
+
+		if ($href){
+
+			$url = parse_url($href);
+
+			if (isset($url['query'])) {    
+				$url['query'] .= '&tracking=' . $tracking;
+			} else {
+				$url['query'] = 'tracking=' . $tracking; 
+			}
+
+			$newHref = $url['scheme'] . '://' . $url['host'] . $url['path'] . '?' . $url['query'];
+			$anchor->setAttribute('href', $newHref);
+
+		}
+
+	}
+
+	$html = $doc->saveHTML(); 
+	return $html;
+}
+
 function reformatDate($date){
 	return date('Y-m-d', strtotime($date['year'] . '-' . $date['month'] . '-' . $date['day']));
 }
@@ -266,9 +298,7 @@ function normalizeForGoogle($text){
 function normalizeForYML($field) {
 	$field = htmlspecialchars_decode($field);
 	$field = strip_tags($field);
-	$from = array('"', '&', '>', '<', '\'', '&nbsp;');
-	$to = array('&quot;', '&amp;', '&gt;', '&lt;', '&apos;', ' ');
-	$field = str_replace($from, $to, $field);
+	$field = str_replace(['"', '>', '<', '&nbsp;', '&amp;quot;'], ['', '&gt;', '&lt;', ' ', '"'], $field);
 	$field = preg_replace('#[\x00-\x08\x0B-\x0C\x0E-\x1F]+#is', ' ', $field);
 
 	return trim($field);
