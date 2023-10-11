@@ -6,6 +6,7 @@
 		private $languageSettingsCacheData 	= [];
 		private $mapFrom 					= ['intersection_id'];
 		private $mapTo 						= ['category_id'];
+		private $allowedGetParams			= ['tracking','utm_term','utm_source','utm_medium','utm_campaign','utoken','oid','gclid','hello','search'];
 		
 		public function __construct($registry) {
 			parent::__construct($registry);			
@@ -31,7 +32,6 @@
 				return $this->registry->get('short_uri_queries')[$exploded_query[0]] . (int)$exploded_query[1];				
 			}
 
-			//FALLBACK TO CACHE
 			if (isset($this->cache_data['queries'][$query])){
 				return $this->cache_data['queries'][$query];
 			}
@@ -49,7 +49,6 @@
 				}
 			}
 
-			//FALLBACK TO CACHE
 			if (isset($this->cache_data['keywords'][$keyword])){
 				return $this->cache_data['keywords'][$keyword];
 			}
@@ -65,13 +64,11 @@
 			return false;
 		}
 		
-		private function mapQuery($query){
-			
+		private function mapQuery($query){			
 			return str_replace($this->mapFrom, $this->mapTo, $query);		
 		}
 		
-		private function mapQueryRev($query){
-			
+		private function mapQueryRev($query){			
 			return str_replace($this->mapTo, $this->mapFrom, $query);		
 		}
 		
@@ -462,41 +459,16 @@
 						if (!$data['path']) return $link;
 					}
 					$data['product_id'] = $tmp['product_id'];
-					if (isset($tmp['tracking'])) {
-						$data['tracking'] = $tmp['tracking'];
-					}
-					if (isset($tmp['utm_term'])) {
-						$data['utm_term'] = $tmp['utm_term'];
-					}
-					if (isset($tmp['utm_source'])) {
-						$data['utm_source'] = $tmp['utm_source'];
-					}
-					if (isset($tmp['utm_medium'])) {
-						$data['utm_medium'] = $tmp['utm_medium'];
-					}
-					if (isset($tmp['utm_campaign'])) {
-						$data['utm_campaign'] = $tmp['utm_campaign'];
-					}
-					if (isset($tmp['utoken'])) {
-						$data['utoken'] = $tmp['utoken'];
-					}
-					if (isset($tmp['oid'])) {
-						$data['oid'] = $tmp['oid'];
-					}
-					if (isset($tmp['gclid'])) {
-						$data['gclid'] = $tmp['gclid'];
-					}
-					if (isset($tmp['hello'])) {
-						$data['hello'] = $tmp['hello'];
-					}
-					if (isset($tmp['search'])) {
-						$data['search'] = $tmp['search'];
-					}
+
+					foreach ($this->allowedGetParams as $allowedGetParam){
+						if (isset($tmp[$allowedGetParam])) {
+							$data[$allowedGetParam] = $tmp[$allowedGetParam];
+						}
+					}					
 				}
 				break;				
 				
-				case 'product/countrybrand':
-				
+				case 'product/countrybrand':				
 				break;
 				
 				case 'product/collection':
@@ -754,7 +726,6 @@
 			$rows = array();
 			foreach($queries as $query) {										
 				$query = $this->mapQuery($query);	
-
 				if (($keyword_result = $this->getKeyword($query)) !== false){
 					$rows[] = ['query' => $query, 'keyword' => $keyword_result];
 				}
@@ -776,28 +747,23 @@
 			$this->load->model('localisation/language');
 			$config_language = $this->getLanguageCodeForStoreID($this->config->get('config_store_id'));			
 			
-			if ($seo_url == ''){
-				
+			if ($seo_url == ''){				
 				if(!empty($this->language_code) && $this->language_code != $config_language){
 					$language = $this->getFullLanguageByCode($this->language_code);
 					if ($language && !empty($language['urlcode'])) {											
-						if (!$this->checkIfUriISUnrouted($link)){
-							
+						if (!$this->checkIfUriISUnrouted($link)){							
 							$link = str_replace($this->config->get('config_ssl'), '', $link);					
 							$link = $language['urlcode'] . '/' . $link;
-							$link = $this->config->get('config_ssl') . $link;
-							
+							$link = $this->config->get('config_ssl') . $link;							
 						}
 					}
-				}
-				
+				}				
 				return $link;
 			}
 			
 			$seo_url = trim($seo_url, '/');	
 			
 			if(!empty($this->language_code) && $this->language_code != $config_language){
-				
 				$language = $this->getFullLanguageByCode($this->language_code);
 				if ($language && !empty($language['urlcode'])) {
 					
@@ -997,8 +963,7 @@
 			return $path[$category_id];
 		}
 		
-		private function validate() {
-			
+		private function validate() {		
 			$do_not_check_routes = array(
 			'error/not_found',
 			'feed/robots_txt',
