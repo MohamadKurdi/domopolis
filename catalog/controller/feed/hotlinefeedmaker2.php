@@ -49,7 +49,6 @@ class ControllerFeedHotlineFeedMaker2 extends Controller
         echoLine('[ControllerFeedHotlineFeedMaker2] Cache is built', 's');
     }
 
-
     public function tree(){        
         $this->db->query("TRUNCATE category_hotline_tree");
 
@@ -176,7 +175,7 @@ class ControllerFeedHotlineFeedMaker2 extends Controller
         }
         
         if ($product['ean'] && (\BarcodeValidator::IsValidEAN13($product['ean']) || \BarcodeValidator::IsValidEAN8($product['ean']))) {
-            $this->hml .= '     <barcode><![CDATA[' . $product['ean'] . '</barcode>' . PHP_EOL;
+            $this->hml .= '     <barcode><![CDATA[' . $product['ean'] . ']]></barcode>' . PHP_EOL;
         }
 
         if ($product['manufacturer']){
@@ -190,7 +189,7 @@ class ControllerFeedHotlineFeedMaker2 extends Controller
         $this->hml .= '     <url><![CDATA[' . $this->url->link('product/product', 'product_id=' . $product['product_id']) . ']]></url>' . PHP_EOL;
 
         if ($product['image']){
-            $this->hml .= '     <barcode><![CDATA[' . $this->model_tool_image->resize($product['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')) . '</barcode>' . PHP_EOL;
+            $this->hml .= '     <image><![CDATA[' . $this->model_tool_image->resize($product['image'], $this->config->get('config_image_popup_width'), $this->config->get('config_image_popup_height')) . ']]></image>' . PHP_EOL;
         }
 
         if ((float)$product['special']) {
@@ -224,7 +223,6 @@ class ControllerFeedHotlineFeedMaker2 extends Controller
 
         $this->hml .= ' </item>' . PHP_EOL;
     }
-
 
     public function makefeed(){        
      //   $this->rainforestAmazon->offersParser->PriceLogic->updatePricesFromDelayed();    
