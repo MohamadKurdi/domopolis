@@ -489,10 +489,16 @@
 				$this->template = $actionTemplate['description'];
 			}
 
+			$html = $this->render();
+
+			if ($this->config->get('config_customer_manual_tracking_code')){
+				$html = addTrackingToHTML($html, $this->config->get('config_customer_manual_tracking_code'));
+			}
+
 			if ($return_html){
-				return $this->render();
+				return $html;
 			} else {
-				$this->response->setOutput($this->render());
+				$this->response->setOutput($html);
 			}
 		}
 

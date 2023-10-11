@@ -119,10 +119,17 @@
 				}
 
 				if ($products || $collections){
+
+					if ($manufacturer['image']){
+						$image = $this->model_tool_image->resize($manufacturer['image'], 185, 185);
+					} else {
+						$image = $this->model_tool_image->resize($this->config->get('config_noimage'), 185, 185);
+					}
+
 					$result['manufacturers'][] = [
 						'manufacturer' => [
 							'name' 	=> $manufacturer['name'],
-							'image' => $this->model_tool_image->resize($manufacturer['image'], 150, 150),
+							'image' => $image,
 							'href' 	=> $this->url->link('product/manufacturer', 'manufacturer_id=' . $manufacturer_id)
 						],
 						'collections' => $collections,

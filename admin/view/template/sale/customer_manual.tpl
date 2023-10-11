@@ -29,7 +29,7 @@
 				<?php echo $heading_title; ?>
 			</h1>		
 			<div style="width:38%; float:right; text-align: right;">	
-				<input id="config_customer_manual_tracking_code" type="text" value="<?php echo $config_customer_manual_test_mode; ?>"/> Трек-код
+				<input id="config_customer_manual_tracking_code" name="config_customer_manual_tracking_code" type="text" value="<?php echo $config_customer_manual_tracking_code; ?>"/> Трек-код
 
 				<input id="config_customer_manual_test_mode" type="checkbox" class="checkbox" name="config_customer_manual_test_mode" <? if ($config_customer_manual_test_mode){ ?> checked="checked" <? } ?> value="1" /><label for="config_customer_manual_test_mode"></label> Тестовый режим
 
@@ -38,10 +38,13 @@
 						var key  			= $(this).attr('name');
 						var elem 			= $(this);
 
-						if (elem.attr('checked')){
-							value = elem.val();
-						} else {
-							value = 0;
+						value = elem.val();
+						if (elem.attr('type') == 'checkbox'){
+							if (elem.attr('checked')){
+								value = elem.val();
+							} else {
+								value = 0;
+							}
 						}
 
 						$.ajax({
