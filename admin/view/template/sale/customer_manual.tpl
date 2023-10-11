@@ -29,10 +29,12 @@
 				<?php echo $heading_title; ?>
 			</h1>		
 			<div style="width:38%; float:right; text-align: right;">	
+				<input id="config_customer_manual_tracking_code" type="text" value="<?php echo $config_customer_manual_test_mode; ?>"/> Трек-код
+
 				<input id="config_customer_manual_test_mode" type="checkbox" class="checkbox" name="config_customer_manual_test_mode" <? if ($config_customer_manual_test_mode){ ?> checked="checked" <? } ?> value="1" /><label for="config_customer_manual_test_mode"></label> Тестовый режим
 
 				<script>
-					$('input[name=config_customer_manual_test_mode]').bind('change', function() {
+					$('input[name=config_customer_manual_test_mode], input[name=config_customer_manual_tracking_code]').bind('change', function() {
 						var key  			= $(this).attr('name');
 						var elem 			= $(this);
 
