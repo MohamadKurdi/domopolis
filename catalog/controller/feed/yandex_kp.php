@@ -356,16 +356,11 @@ class ControllerFeedYandexKP extends Controller {
 			($this->type == 'ozon' && $this->config->get('config_ozon_enable_price_yam') && $this->config->get('config_yam_offer_id_price_enable') && (float)$product['yam_price_national'])
 			){
 
-					//Теперь цены в фиде берутся из карточек товара, включа
 				if ($product['yam_special_national'] > 0 && $product['yam_special_national'] < $product['yam_price_national']) {
-
 					$this->yml .= '	<price>' 	. $this->format_national($product['yam_special_national']) . '</price>' . PHP_EOL;
 					$this->yml .= '	<oldprice>' 	. $this->format_national($product['yam_price_national']) . '</oldprice>' . PHP_EOL;
-
 				} else {
-
 					$this->yml .= '	<price>' 	. $this->format_national($product['yam_price_national']) . '</price>' . PHP_EOL;
-
 				}
 
 			} else {
@@ -688,7 +683,7 @@ class ControllerFeedYandexKP extends Controller {
 
 			$this->products[$product_id]['dimensions'] 	= $this->getProductDimensions($this->products[$product_id]);
 			$this->products[$product_id]['pickup']		= (in_array($this->config->get('config_store_id'), $this->pickup_available));				
-			$this->products[$product_id]['images'] = [$this->products[$product_id]['image']];
+			$this->products[$product_id]['images'] 		= [$this->products[$product_id]['image']];
 
 			if (!empty($this->images[$product_id])){
 				$this->products[$product_id]['images'] = array_merge($this->products[$product_id]['images'], $this->images[$product_id]);
@@ -833,9 +828,7 @@ class ControllerFeedYandexKP extends Controller {
 
 			//TRUNCATED FEED
 			$this->openYML()->addShop()->setProducts($products->rows)->addOffersOzonTruncated();
-			$this->closeYML()->writeFeed($this->ozon_path[0]);
-
-			
+			$this->closeYML()->writeFeed($this->ozon_path[0]);			
 		}
 	}
 
