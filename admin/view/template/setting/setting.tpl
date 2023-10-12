@@ -7010,6 +7010,20 @@
 											<span class="help"><i class="fa fa-exclamation-circle"></i> если эта настройка выключена, также не будут изменяться статусы</span>									
 										</div>
 										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Получать офферы только для добавленных с амазон</span></p>
+											<select name="config_rainforest_enable_offers_for_added_from_amazon">
+												<?php if ($config_rainforest_enable_offers_for_added_from_amazon) { ?>
+													<option value="1" selected="selected">Да</option>
+													<option value="0">Нет</option>
+												<?php } else { ?>													
+													<option value="1">Да</option>
+													<option value="0"  selected="selected">Нет</option>
+												<? } ?>
+											</select>	
+											<br />
+											<span class="help"><i class="fa fa-exclamation-circle"></i> Флаг added_from_amazon = 1. Игнорируется цена и наличие</span>									
+										</div>
+										<div>
 											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Получать офферы сразу после заказа</span></p>
 											<select name="config_rainforest_enable_offers_after_order">
 												<?php if ($config_rainforest_enable_offers_after_order) { ?>

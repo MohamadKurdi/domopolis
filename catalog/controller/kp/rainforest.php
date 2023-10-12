@@ -270,7 +270,6 @@ class ControllerKPRainForest extends Controller {
 		}
 	}
 
-
 	/*
 		Parses the whole queue by pieces
 	*/

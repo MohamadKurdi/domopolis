@@ -58,6 +58,10 @@ class OffersParser
 			$sql .= " AND (" . $this->PriceLogic->buildStockQueryField() . " = 0)";
 		}
 
+		if (!$this->config->get('config_rainforest_enable_offers_for_added_from_amazon')){
+			$sql .= " AND (p.added_from_amazon = 1)";
+		}
+
 		if ($this->config->get('config_rainforest_pass_offers_for_ordered')){
 			$sql .= " AND ( p.actual_cost_date = '0000-00-00' ";
 
@@ -108,6 +112,10 @@ class OffersParser
 		AND p.amzn_ignore = 0		
 		AND p.is_virtual = 0
 		AND p.is_markdown = 0 ";
+
+		if (!$this->config->get('config_rainforest_enable_offers_for_stock')){
+			$sql .= " AND (" . $this->PriceLogic->buildStockQueryField() . " = 0)";
+		}
 
 		if (!$this->config->get('config_rainforest_enable_offers_for_stock')){
 			$sql .= " AND (" . $this->PriceLogic->buildStockQueryField() . " = 0)";
@@ -518,8 +526,6 @@ class OffersParser
 
 		if ((int)$this->config->get('config_rainforest_skip_low_price_products') > 0){
 			if ((int)$amazonBestPrice > 0 && (int)$amazonBestPrice < (int)$this->config->get('config_rainforest_skip_low_price_products')){
-
-
 				foreach ($products as $product_id){
 					$is_added_from_amazon = $this->model_product_get->getProductsByAsin($product_id);
 
@@ -542,9 +548,7 @@ class OffersParser
 							return 'deleted';
 						}
 					}
-
 				}
-
 			}
 		}
 

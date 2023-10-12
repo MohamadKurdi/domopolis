@@ -4080,6 +4080,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_rainforest_enable_offers_for_stock'] = $this->config->get('config_rainforest_enable_offers_for_stock');
         }
 
+        if (isset($this->request->post['config_rainforest_enable_offers_for_added_from_amazon'])) {
+            $this->data['config_rainforest_enable_offers_for_added_from_amazon'] = $this->request->post['config_rainforest_enable_offers_for_added_from_amazon'];
+        } else {
+            $this->data['config_rainforest_enable_offers_for_added_from_amazon'] = $this->config->get('config_rainforest_enable_offers_for_added_from_amazon');
+        }
+
         if (isset($this->request->post['config_rainforest_pass_offers_for_ordered'])) {
             $this->data['config_rainforest_pass_offers_for_ordered'] = $this->request->post['config_rainforest_pass_offers_for_ordered'];
         } else {

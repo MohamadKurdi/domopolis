@@ -556,6 +556,13 @@ class PriceLogic
 				$proceedWithPrice = false;
 			}
 
+			if ($this->config->get('config_rainforest_enable_offers_for_added_from_amazon')){
+				if ($proceedWithPrice && !$query->row['added_from_amazon']){
+					echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Product must be ignored due of config_rainforest_enable_offers_for_added_from_amazon = ON and is not added from amazon, skipping', 'e');
+					$proceedWithPrice = false;
+				}
+			}
+
 			if ($proceedWithPrice && $query->row['is_markdown']){
 				echoLine('[PriceLogic::checkIfWeCanUpdateProductOffers] Product is markdown, skipping', 'e');
 				$proceedWithPrice = false;
