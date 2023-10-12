@@ -10,6 +10,10 @@
 			if (!isset($data['markdown_product_id'])){
 				$data['markdown_product_id'] = 0;				
 			}
+
+			if (!isset($data['big_business'])){
+				$data['big_business'] = 0;				
+			}
 			
 			if ($data['is_markdown']){
 				$data['main_category_id'] = GENERAL_MARKDOWN_CATEGORY;	
@@ -17,7 +21,6 @@
 			}
 			
 			$this->db->query("INSERT INTO product SET 
-				INSERT INTO product SET
 				model 				= '" . $this->db->escape($data['model']) . "',
 				short_name 			= '" . $this->db->escape($data['short_name']) . "',
 				short_name_de 		= '" . $this->db->escape($data['short_name_de']) . "',
@@ -95,13 +98,15 @@
 				yam_special 		= '" . (float)$data['yam_special'] . "',
 				yam_special_percent = '" . (float)$data['yam_special_percent'] . "',
 				yam_currency 		= '" . $this->db->escape($data['yam_currency']) . "',
-				yam_product_id 		= '" . $this->db->escape($this->config->get('config_yam_offer_id_prefix') . $product_id) . "',
+				yam_product_id 		= '" . "',
 				priceva_enable 		= '" . (int)$data['priceva_enable'] . "',
 				priceva_disable 	= '" . (int)$data['priceva_disable'] . "',
 				amzn_ignore 		= '" . (int)$data['amzn_ignore'] . "',
 				date_added 			= NOW()");
 			
 			$product_id = $this->db->getLastId();
+
+			$this->db->query("UPDATE product SET yam_product_id = '" . $this->db->escape($this->config->get('config_yam_offer_id_prefix') . $product_id) . "' WHERE product_id = '" . (int)$product_id . "'");
 			
 			if (isset($data['youtube'])) {
 				$this->db->query("UPDATE product SET youtube = '" . $this->db->escape($data['youtube']) . "' WHERE product_id = '" . (int)$product_id . "'");

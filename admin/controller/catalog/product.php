@@ -38,7 +38,6 @@ class ControllerCatalogProduct extends Controller {
 		$result = $this->model_kp_product->parseVariantNames($this->request->post['product_id'], $this->request->post['language_id'], $this->request->post['name']);
 
 		$this->response->setOutput(json_encode($result));
-
 	}
 
 	public function index() {
