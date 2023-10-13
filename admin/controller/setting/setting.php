@@ -1368,12 +1368,6 @@ class ControllerSettingSetting extends Controller
             $this->data['config_firstorder_sms_enable'] = $this->config->get('config_firstorder_sms_enable');
         }  
 
-        if (isset($this->request->post['config_firstorder_viber_enable'])) {
-            $this->data['config_firstorder_viber_enable'] = $this->request->post['config_firstorder_viber_enable'];
-        } else {
-            $this->data['config_firstorder_viber_enable'] = $this->config->get('config_firstorder_viber_enable');
-        }  
-
         if (isset($this->request->post['config_firstorder_sms_text'])) {
             $this->data['config_firstorder_sms_text'] = $this->request->post['config_firstorder_sms_text'];
         } else {
@@ -2202,8 +2196,7 @@ class ControllerSettingSetting extends Controller
             $this->data['config_partly_in_stock_status_id'] = $this->config->get('config_partly_in_stock_status_id');
         }
         
-        $this->load->model('localisation/stock_status');
-        
+        $this->load->model('localisation/stock_status');        
         $this->data['stock_statuses'] = $this->model_localisation_stock_status->getStockStatuses();
         
         if (isset($this->request->post['config_affiliate_id'])) {
@@ -3067,7 +3060,13 @@ class ControllerSettingSetting extends Controller
             'config_viber_payment_link',
             'config_viber_payment_link_image',
             'config_viber_payment_link_button_text',
-            'config_viber_payment_link_button_url',
+            'config_viber_payment_link_button_url',            
+
+            'config_viber_firstorder_enable',
+            'config_viber_firstorder_link',
+            'config_viber_firstorder_link_image',
+            'config_viber_firstorder_link_button_text',
+            'config_viber_firstorder_link_button_url',
         ];
         
         foreach ($viberkeys as $viberkey) {
