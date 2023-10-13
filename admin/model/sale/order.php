@@ -1,16 +1,5 @@
 <?php
-	class ModelSaleOrder extends Model {
-		private function bool_real_stripos($haystack, $needle){
-			
-			return !(stripos($haystack, $needle) === false);
-			
-		}
-		
-		private function mb_ucfirst($word)
-		{
-			return mb_strtoupper(mb_substr($word, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($word, 1, mb_strlen($word), 'UTF-8');
-		}
-		
+	class ModelSaleOrder extends Model {		
 		public function generatePaymentQR2($order_id, $qr_payment_code = 'concardis', $return_link = false, $currency = false){
 			$this->load->model('sale/customer');
 			
@@ -158,15 +147,14 @@
 			}
 			
 			
-			return false;
-			
+			return false;			
 		}
 		
 		public function checkIfOrderHasBirthdayDiscount($order_id){			
 			$totals = $this->getOrderTotals($order_id);
 			
 			foreach ($totals as $o_total){
-				if ($o_total['code'] == 'discount_regular' || $this->bool_real_stripos($o_total['title'], 'рождения')){
+				if ($o_total['code'] == 'discount_regular' || bool_real_stripos($o_total['title'], 'рождения')){
 					return true;					
 					break;
 				}							
@@ -177,7 +165,7 @@
 		
 		public function checkIfOrderHasBirthdayDiscountFromTotals($order_totals){
 			foreach ($order_totals as $order_total) {
-				if (($order_total['value_national'] < 0) && ($this->bool_real_stripos($order_total['title'], 'рождения') && !$this->bool_real_stripos($order_total['title'], '%') || $order_total['code'] == 'discount_regular')){
+				if (($order_total['value_national'] < 0) && (bool_real_stripos($order_total['title'], 'рождения') && !bool_real_stripos($order_total['title'], '%') || $order_total['code'] == 'discount_regular')){
 					return true;
 					break;
 				}
@@ -832,16 +820,16 @@
 			
 			$this->db->query("UPDATE `order` SET 		
 			order_id2 				= '" . $this->db->escape($data['order_id2']) . "',
-			firstname 				= '" . $this->db->escape($this->mb_ucfirst($data['firstname'])) . "', 
-			lastname 				= '" . $this->db->escape($this->mb_ucfirst($data['lastname'])) . "', 
+			firstname 				= '" . $this->db->escape(mb_ucfirst($data['firstname'])) . "', 
+			lastname 				= '" . $this->db->escape(mb_ucfirst($data['lastname'])) . "', 
 			email 					= '" . $this->db->escape(trim($data['email'])) . "', 
 			telephone 				= '" . $this->db->escape($data['telephone']) . "',				
 			fax 					= '" . $this->db->escape($data['fax']) . "', 
 			faxname 				= '" . $this->db->escape($data['faxname']) . "', 
 			customer_id 			= '" . (int)$data['customer_id'] . "',
 			customer_group_id 		= '" . (int)$data['customer_group_id'] . "',
-			payment_firstname 		= '" . $this->db->escape($this->mb_ucfirst($data['payment_firstname'])) . "', 
-			payment_lastname 		= '" . $this->db->escape($this->mb_ucfirst($data['payment_lastname'])) . "', 
+			payment_firstname 		= '" . $this->db->escape(mb_ucfirst($data['payment_firstname'])) . "', 
+			payment_lastname 		= '" . $this->db->escape(mb_ucfirst($data['payment_lastname'])) . "', 
 			payment_company 		= '" . $this->db->escape($data['payment_company']) . "', 
 			payment_company_id 		= '" . $this->db->escape($data['payment_company_id']) . "', 
 			payment_tax_id 			= '" . $this->db->escape($data['payment_tax_id']) . "', 
@@ -858,8 +846,8 @@
 			payment_code 			= '" . $this->db->escape($data['payment_code']) . "', 
 			payment_secondary_method 	= '" . $this->db->escape($data['payment_secondary_method']) . "', 
 			payment_secondary_code 		= '" . $this->db->escape($data['payment_secondary_code']) . "',
-			shipping_firstname 		= '" . $this->db->escape($this->mb_ucfirst($data['shipping_firstname'])) . "', 
-			shipping_lastname 		= '" . $this->db->escape($this->mb_ucfirst($data['shipping_lastname'])) . "', 
+			shipping_firstname 		= '" . $this->db->escape(mb_ucfirst($data['shipping_firstname'])) . "', 
+			shipping_lastname 		= '" . $this->db->escape(mb_ucfirst($data['shipping_lastname'])) . "', 
 			shipping_passport_serie  	=  '" . $this->db->escape($data['shipping_passport_serie']) . "',
 			shipping_passport_given   	=  '" . $this->db->escape($data['shipping_passport_given']) . "',		
 			shipping_company 			= '" . $this->db->escape($data['shipping_company']) . "', 
@@ -1294,7 +1282,7 @@
 							$order_total['value'] = $this->currency->convert($order_total['value_national'], $data['currency_code'], $main_currency);	
 							$order_total['text'] = $order_total['text'];
 							//Это накопительная скидка! Исключаются товары определенных брендов
-							} elseif ($order_total['code']  ==  'shoputils_cumulative_discounts' || $this->bool_real_stripos($order_total['title'], 'накопительная')) {
+							} elseif ($order_total['code']  ==  'shoputils_cumulative_discounts' || bool_real_stripos($order_total['title'], 'накопительная')) {
 							$this->load->model('total/scd_recount');	
 							$this->load->model('catalog/product');											
 							
@@ -1369,7 +1357,7 @@
 							}
 							
 							//Это скидка ко дню рождения чпокупателя
-							} elseif (($order_total['value_national'] < 0) && (($this->bool_real_stripos($order_total['title'], 'рождения') && $this->bool_real_stripos($order_total['title'], '%')) || $order_total['code'] == 'discount_regular')){
+							} elseif (($order_total['value_national'] < 0) && ((bool_real_stripos($order_total['title'], 'рождения') && bool_real_stripos($order_total['title'], '%')) || $order_total['code'] == 'discount_regular')){
 							
 							$has_birthday_discount_explicit = true;
 							$percent_of_discount = (int)preg_replace('~[^0-9]+~','', $order_total['title']);
@@ -1446,7 +1434,7 @@
 							}
 							
 							//Это целочисленная скидка, мать его еби!											
-							} elseif (($order_total['value_national'] < 0) && $this->bool_real_stripos($order_total['title'], 'Скидка') && !$this->bool_real_stripos($order_total['title'], '%')){
+							} elseif (($order_total['value_national'] < 0) && bool_real_stripos($order_total['title'], 'Скидка') && !bool_real_stripos($order_total['title'], '%')){
 							
 							//пересчитываем процентную скидку в случае если она считается ТОЛЬКО на поставку номер N													
 							if ($order_total['for_delivery']){
@@ -1516,7 +1504,7 @@
 							
 							
 							//Это бонусы
-							} elseif (($order_total['value_national'] < 0) && ($this->bool_real_stripos($order_total['title'], 'Бонус') || $order_total['code'] == 'reward')) {
+							} elseif (($order_total['value_national'] < 0) && (bool_real_stripos($order_total['title'], 'Бонус') || $order_total['code'] == 'reward')) {
 							
 							$max_points_to_use = (int)($sub_total * ($this->model_setting_setting->getKeySettingValue('config', 'config_reward_maxsalepercent', (int)$data['store_id']) / 100));
 							
@@ -1563,7 +1551,7 @@
 							
 							$order_has_reward = true;
 							
-							} elseif (($order_total['value_national'] < 0) && $this->bool_real_stripos($order_total['title'], 'Скидка') && $this->bool_real_stripos($order_total['title'], '%')){					
+							} elseif (($order_total['value_national'] < 0) && bool_real_stripos($order_total['title'], 'Скидка') && bool_real_stripos($order_total['title'], '%')){					
 							
 							//пересчитываем процентную скидку в случае если она считается ТОЛЬКО на поставку номер N
 							$percent_of_discount = (int)preg_replace('~[^0-9]+~','', $order_total['title']);
@@ -1630,7 +1618,7 @@
 							$order_total['code']  = $order_total['code'];
 							
 							//Наценка на оплату
-							} elseif (($order_total['value_national'] >= 0) && ($this->bool_real_stripos($order_total['title'], 'Комиссия') || $order_total['code']  ==  'paymentmethoddiscounts')) {
+							} elseif (($order_total['value_national'] >= 0) && (bool_real_stripos($order_total['title'], 'Комиссия') || $order_total['code']  ==  'paymentmethoddiscounts')) {
 							
 							$percent_of_discount = (int)preg_replace('~[^0-9]+~','', $order_total['title']);							
 							
@@ -1658,7 +1646,7 @@
 								$order_total['code']  = $order_total['code'];
 							}
 							
-							} elseif (($order_total['value_national'] <= 0) && $this->bool_real_stripos($order_total['title'], 'Промокод') && $order_total['code']  ==  'coupon'){
+							} elseif (($order_total['value_national'] <= 0) && bool_real_stripos($order_total['title'], 'Промокод') && $order_total['code']  ==  'coupon'){
 							
 							$coupon_name = $this->getCouponName($order_total['title']);
 							$coupon_query = $this->db->query("SELECT * FROM `coupon` WHERE code = '" . $this->db->escape($coupon_name) . "'");
