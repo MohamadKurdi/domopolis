@@ -3062,11 +3062,11 @@ class ControllerSettingSetting extends Controller
             'config_viber_payment_link_button_text',
             'config_viber_payment_link_button_url',            
 
-            'config_viber_firstorder_enable',
-            'config_viber_firstorder_link',
-            'config_viber_firstorder_link_image',
-            'config_viber_firstorder_link_button_text',
-            'config_viber_firstorder_link_button_url',
+            'config_viber_firstorder_enabled',
+            'config_viber_firstorder',
+            'config_viber_firstorder_image',
+            'config_viber_firstorder_button_text',
+            'config_viber_firstorder_button_url',
         ];
         
         foreach ($viberkeys as $viberkey) {
