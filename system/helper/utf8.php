@@ -286,6 +286,8 @@ function formatLongNumber($number, $format = true){
 	return $number;
 }
 
+
+
 function normalizeForGoogle($text){
 	$text = html_entity_decode($text);
 	$text = str_replace('&nbsp;', ' ', $text);

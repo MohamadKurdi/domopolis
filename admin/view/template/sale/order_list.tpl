@@ -372,7 +372,7 @@
 							</div>
 							
 							<div style="margin-top:10px;">								
-								<input type="text" name="filter_ttn" placeholder="TTH" value="<?php echo $filter_ttn; ?>" size="25" style="text-align: left; width:120px;" />
+								<input type="text" name="filter_ttn" placeholder="TTH" value="<?php echo $filter_ttn; ?>" size="25" style="text-align: left; width:160px;" />
 							</div>
 						</td>
 						<td>
