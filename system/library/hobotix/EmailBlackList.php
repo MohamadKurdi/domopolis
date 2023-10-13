@@ -6,7 +6,8 @@
 	final class EmailBlackList
 	{
 		
-		private $db;	
+		private $db		 = null;	
+		private $config	 = null;	
 		private $exclude = ['kitchen-profi', 'ims-group'];
 		
 		private $reacherCONFIG = [];
@@ -22,8 +23,8 @@
 		
 		public function __construct($registry){
 			
-			$this->config = $registry->get('config');
-			$this->db = $registry->get('db');
+			$this->config 	= $registry->get('config');
+			$this->db 		= $registry->get('db');
 
 			$this->reacherCONFIG = [
 				'URI' 	=> 	$this->config->get('config_reacher_uri'),
@@ -31,12 +32,10 @@
 				'KEY'	=> 	$this->config->get('config_reacher_key'),
 				'FROM'	=> 	$this->config->get('config_reacher_from'),
 				'HELO'	=> 	$this->config->get('config_reacher_helo')
-			];
-			
+			];			
 		}
 		
 		public function reacherVerify($email){
-
 			if (!$this->config->get('config_reacher_enable')){
 				return [];
 			}
@@ -264,6 +263,5 @@
 			
 			$query = $this->db->ncquery("DELETE FROM customer_emails_blacklist WHERE email LIKE '" . $this->db->escape($email) . "'");
 		}
-
 		
 	}											

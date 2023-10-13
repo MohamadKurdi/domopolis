@@ -2,20 +2,6 @@
 
 namespace hobotix;
 
-/*
-    Отправляем вам данные для подключения и тестирования:URL: 
-    https://dev-api.checkbox.in.ua/api/docs#/ 
-     
-    Полное описание API можно просмотреть онлайн по адресу 
-    https://dev-api.checkbox.in.ua/api/redoc (ReDoc) 
-    или 
-    https://dev-api.checkbox.in.ua/api/docs (Swagger )
-
-    Адреса промислового серверу http://api.checkbox.in.ua
-    Адреса тестового серверу http://dev-api.checkbox.in.ua
-    Поточна версія API - v1
-*/
-
 class CheckBoxUA {
     protected $base_url         = 'https://api.checkbox.in.ua/api/v1/';
     protected $x_client_name    = 'Hobotix OC 1.5';
