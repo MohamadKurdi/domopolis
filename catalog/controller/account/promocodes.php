@@ -15,8 +15,7 @@
 				$this->data[$translationСode] = $translationText;
 			}
 			
-			$this->document->setTitle($this->data['heading_title']);		
-			
+			$this->document->setTitle($this->data['heading_title']);					
 			
 			$this->data['breadcrumbs'] = array();
 			
@@ -51,11 +50,8 @@
 					if ($action){
 						$action['href'] = $this->url->link('information/actions','actions_id=' . $promocode['action_id']);				
 					}
-					
-					$this->log->debug($action);
 				}
-				
-				//Если промокод привязан к акции, но она неактивна в текущей стране или с ней что-то не так			
+					
 				if ($promocode['action_id'] && empty($action)){
 					continue;
 				}
@@ -71,8 +67,7 @@
 				}
 				
 				$categories = [];
-				if ($promocode_categories = $this->model_account_promocodes->getCouponCategories($promocode['coupon_id'])){
-				
+				if ($promocode_categories = $this->model_account_promocodes->getCouponCategories($promocode['coupon_id'])){				
 					foreach ($promocode_categories as $category_id){
 						$category = $this->model_catalog_category->getCategory($category_id);
 						
@@ -83,13 +78,11 @@
 							];
 						}
 					
-					}
-				
+					}			
 				}
 				
 				$manufacturers = [];
-				if ($promocode_manufacturers = $this->model_account_promocodes->getCouponManufacturers($promocode['coupon_id'])){
-					
+				if ($promocode_manufacturers = $this->model_account_promocodes->getCouponManufacturers($promocode['coupon_id'])){					
 					foreach ($promocode_manufacturers as $manufacturer_id){
 						$manufacturer = $this->model_catalog_manufacturer->getManufacturer($manufacturer_id);
 						
@@ -100,9 +93,7 @@
 							];
 						}
 					
-					}
-				
-				
+					}							
 				}
 				
 				$collections = [];
@@ -174,7 +165,7 @@
 				
 			}
 			
-			$this->template = $this->config->get('config_template') . '/template/account/promocodes.tpl';
+			$this->template = 'account/promocodes.tpl';
 			
 			$this->children = array(
 			'common/column_left',
