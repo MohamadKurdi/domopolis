@@ -444,8 +444,6 @@ $(document).ready(function(){
 		var filter_simple_email = $('input[name=\'filter_simple_email\']:checked').val();		
 		if (filter_simple_email  !== undefined) {
 			url += '&filter_simple_email=1';
-		} else {
-			url += '&filter_simple_email=0';
 		}
 
 		var filter_mail_status = $('input[name=\'filter_mail_status\']:checked').val();		
@@ -458,8 +456,6 @@ $(document).ready(function(){
 		var had_not_sent_manual_letter = $('input[name=\'had_not_sent_manual_letter\']:checked').val();		
 		if (had_not_sent_manual_letter  !== undefined) {
 			url += '&filter_had_not_sent_manual_letter=1';
-		} else {
-			url += '&filter_had_not_sent_manual_letter=0';
 		}
 
 		var filter_nbt_customer = $('input[name=\'filter_nbt_customer\']:checked').val();		
