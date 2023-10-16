@@ -43,7 +43,7 @@
 				$cond[] = "`emailtemplate_config_id` = '" . intval($data) . "'";
 			}
 			
-			$query = "SELECT * FROM `{$p}emailtemplate_config`";
+			$query = "SELECT * FROM `emailtemplate_config`";
 			if(!empty($cond)){
 				$query .= " WHERE " . implode(" AND ", $cond);
 			}
@@ -177,7 +177,7 @@
 				}
 			}
 			
-			$query = "SELECT ec.* FROM `{$p}emailtemplate_config` ec";
+			$query = "SELECT ec.* FROM `emailtemplate_config` ec";
 			if(!empty($cond)){
 				$query .= ' WHERE ' . ltrim(implode(' ', $cond), 'AND');
 			}
@@ -303,8 +303,8 @@
 				$colsInsert .= "{$value}, ";
 			}
 			
-			$stmnt = "INSERT INTO {$p}emailtemplate_config (".implode(array_keys($cols),', ').", store_id, language_id, customer_group_id)
-			SELECT ".$colsInsert." '{$store_id}', '{$language_id}', '{$customer_group_id}' FROM {$p}emailtemplate_config WHERE emailtemplate_config_id = '{$id}'";
+			$stmnt = "INSERT INTO emailtemplate_config (".implode(array_keys($cols),', ').", store_id, language_id, customer_group_id)
+			SELECT ".$colsInsert." '{$store_id}', '{$language_id}', '{$customer_group_id}' FROM emailtemplate_config WHERE emailtemplate_config_id = '{$id}'";
 			$this->db->non_cached_query($stmnt);
 			
 			$this->_deleteCache();
@@ -329,7 +329,7 @@
 			$updates = $this->_build_query($cols, $data);
 			if (!$updates) return false;
 			
-			$sql = "UPDATE {$p}emailtemplate_config SET ".implode($updates,", ") . " WHERE emailtemplate_config_id = '{$id}'";
+			$sql = "UPDATE emailtemplate_config SET ".implode($updates,", ") . " WHERE emailtemplate_config_id = '{$id}'";
 			$this->db->non_cached_query($sql);
 			
 			$this->_deleteCache();
@@ -360,8 +360,8 @@
 			}
 			
 			$queries = array();
-			$queries[] = "DELETE FROM {$p}emailtemplate_config WHERE emailtemplate_config_id IN('".implode("', '", $ids)."')";
-			$queries[] = "UPDATE {$p}emailtemplate SET emailtemplate_config_id = '' WHERE emailtemplate_config_id IN('".implode("', '", $ids)."')";
+			$queries[] = "DELETE FROM emailtemplate_config WHERE emailtemplate_config_id IN('".implode("', '", $ids)."')";
+			$queries[] = "UPDATE emailtemplate SET emailtemplate_config_id = '' WHERE emailtemplate_config_id IN('".implode("', '", $ids)."')";
 			
 			$affected = 0;
 			foreach($queries as $query){
@@ -392,7 +392,7 @@
 				$cond = "`emailtemplate_key` = '" . $this->db->escape($ident) . "' AND `emailtemplate_default` = 1";
 			}
 			
-			$query = "SELECT * FROM {$p}emailtemplate WHERE " . $cond . " LIMIT 1";
+			$query = "SELECT * FROM emailtemplate WHERE " . $cond . " LIMIT 1";
 			$result = $this->_fetch($query);
 			
 			if($result->row){
@@ -447,7 +447,7 @@
 		public function getTemplateDescription($data = array(), $limit = null){
 			$p = '';
 			$cond = array();
-			$query = "SELECT * FROM {$p}emailtemplate_description";
+			$query = "SELECT * FROM emailtemplate_description";
 			
 			if(isset($data['emailtemplate_id'])){
 				$cond[] = "`emailtemplate_id` = '".intval($data['emailtemplate_id'])."'";
@@ -523,7 +523,7 @@
 				}
 			}
 			
-			$query = "SELECT e.* FROM `{$p}emailtemplate` e";
+			$query = "SELECT e.* FROM `emailtemplate` e";
 			
 			if(!empty($cond)){
 				$query .= ' WHERE ' . implode(' AND ', $cond);
@@ -605,7 +605,7 @@
 			
 			if(!$id) return $return;
 			
-			$query = "SELECT * FROM {$p}emailtemplate_logs WHERE `emailtemplate_log_id` = '{$id}'";
+			$query = "SELECT * FROM emailtemplate_logs WHERE `emailtemplate_log_id` = '{$id}'";
 			$result = $this->db->non_cached_query($query);
 			$return = ($result->row) ? $result->row : array();
 			
@@ -630,7 +630,7 @@
 		public function getTemplateLogs($data = array(), $outputFormatting = false, $keyCleanUp = false){
 			$p = '';
 			$cond = array();
-			$query = "SELECT el.* FROM `{$p}emailtemplate_logs` el";
+			$query = "SELECT el.* FROM `emailtemplate_logs` el";
 			
 			if (isset($data['store_id']) && is_numeric($data['store_id'])) {
 				if(is_numeric($data['store_id'])){
@@ -748,7 +748,7 @@
 				}
 			}
 			
-			$query = "SELECT COUNT(*) AS total FROM `{$p}emailtemplate_logs` el";
+			$query = "SELECT COUNT(*) AS total FROM `emailtemplate_logs` el";
 			if(!empty($cond)){
 				$query .= ' WHERE ' . implode(' AND ', $cond);
 			}
@@ -765,7 +765,7 @@
 		*/
 		public function getLastTemplateLogId(){
 			$p = '';
-			$query = "SELECT MAX(emailtemplate_log_id) as emailtemplate_log_id FROM `{$p}emailtemplate_logs`";
+			$query = "SELECT MAX(emailtemplate_log_id) as emailtemplate_log_id FROM `emailtemplate_logs`";
 			$result = $this->db->non_cached_query($query);
 			
 			return $result->row['emailtemplate_log_id'];
@@ -834,7 +834,7 @@
 				}
 			}
 			
-			$query = "SELECT COUNT(*) AS total FROM `{$p}emailtemplate` e";
+			$query = "SELECT COUNT(*) AS total FROM `emailtemplate` e";
 			if(!empty($cond)){
 				$query .= ' WHERE ' . implode(' AND ', $cond);
 			}
@@ -882,7 +882,7 @@
 			if (empty($inserts)) return false;
 			
 			$p = '';
-			$this->db->non_cached_query("INSERT INTO {$p}emailtemplate SET ".implode($inserts,", "));
+			$this->db->non_cached_query("INSERT INTO emailtemplate SET ".implode($inserts,", "));
 			
 			$new_id = $this->db->getLastId();
 			
@@ -948,7 +948,7 @@
 			$inserts = $this->_build_query($cols, $data);
 			if (empty($inserts)) return false;
 			
-			$sql = "INSERT INTO {$p}emailtemplate_description SET ".implode($inserts,", ");
+			$sql = "INSERT INTO emailtemplate_description SET ".implode($inserts,", ");
 			$this->db->non_cached_query($sql);
 			
 			$new_id = $this->db->getLastId();
@@ -967,7 +967,7 @@
 			$p = '';
 			$return = 0;
 			
-			$this->db->non_cached_query("DELETE FROM {$p}emailtemplate_shortcode WHERE `emailtemplate_id` = '{$id}'");
+			$this->db->non_cached_query("DELETE FROM emailtemplate_shortcode WHERE `emailtemplate_id` = '{$id}'");
 			
 			foreach($data as $code => $example){
 				if($code == 'emailtemplate' || $code == 'config') continue;
@@ -975,30 +975,30 @@
 				if(is_array($example) && $example){
 					$example = base64_encode(serialize($example));
 					$data = array(
-					'emailtemplate_id' => $id,
-					'emailtemplate_shortcode_type' => 'auto_serialize',
-					'emailtemplate_shortcode_code' => $code,
-					'emailtemplate_shortcode_example' => $example
+					'emailtemplate_id' 					=> $id,
+					'emailtemplate_shortcode_type' 		=> 'auto_serialize',
+					'emailtemplate_shortcode_code' 		=> $code,
+					'emailtemplate_shortcode_example' 	=> $example
 					);
 					} else {
 					$data = array(
-					'emailtemplate_id' => $id,
-					'emailtemplate_shortcode_type' => 'auto',
-					'emailtemplate_shortcode_code' => $code,
-					'emailtemplate_shortcode_example' => $example
+					'emailtemplate_id' 					=> $id,
+					'emailtemplate_shortcode_type' 		=> 'auto',
+					'emailtemplate_shortcode_code' 		=> $code,
+					'emailtemplate_shortcode_example' 	=> $example
 					);
 				}
 				
 				$inserts = $this->_build_query($cols, $data);
 				if (empty($inserts)) continue;
 				
-				$sql = "INSERT INTO {$p}emailtemplate_shortcode SET ".implode($inserts,", ");
+				$sql = "INSERT INTO emailtemplate_shortcode SET ".implode($inserts,", ");
 				$this->db->non_cached_query($sql);
 				
 				$return++;
 			}
 			
-			$this->db->non_cached_query("UPDATE {$p}emailtemplate SET `emailtemplate_shortcodes` = '1' WHERE `emailtemplate_id` = '{$id}'");
+			$this->db->non_cached_query("UPDATE emailtemplate SET `emailtemplate_shortcodes` = '1' WHERE `emailtemplate_id` = '{$id}'");
 			
 			$this->_deleteCache();
 			
@@ -1023,7 +1023,7 @@
 			$updates = $this->_build_query($cols, $data);
 			
 			if ($updates){
-				$sql = "UPDATE {$p}emailtemplate SET ".implode($updates,", ") . " WHERE `emailtemplate_id` = '{$id}'";
+				$sql = "UPDATE emailtemplate SET ".implode($updates,", ") . " WHERE `emailtemplate_id` = '{$id}'";
 				$this->db->non_cached_query($sql);
 				
 				$affected += $this->db->countAffected();
@@ -1048,16 +1048,16 @@
 				$updates = $this->_build_query($cols, $data);
 				if (empty($updates)) continue;
 				
-				$result = $this->db->non_cached_query("SELECT count(`emailtemplate_id`) AS total FROM {$p}emailtemplate_description WHERE `emailtemplate_id` = '{$id}' AND `language_id` = '{$langId}'");
+				$result = $this->db->non_cached_query("SELECT count(`emailtemplate_id`) AS total FROM emailtemplate_description WHERE `emailtemplate_id` = '{$id}' AND `language_id` = '{$langId}'");
 				if($result->row['total'] == 0){
-					$query = "INSERT INTO {$p}emailtemplate_description SET `emailtemplate_id` = '{$id}', `language_id` = '{$langId}', ".implode($updates,", ");
+					$query = "INSERT INTO emailtemplate_description SET `emailtemplate_id` = '{$id}', `language_id` = '{$langId}', ".implode($updates,", ");
 					} else {
-					$query = "UPDATE {$p}emailtemplate_description SET ".implode($updates,", ") . " WHERE `emailtemplate_id` = '{$id}' AND `language_id` = '{$langId}'";
+					$query = "UPDATE emailtemplate_description SET ".implode($updates,", ") . " WHERE `emailtemplate_id` = '{$id}' AND `language_id` = '{$langId}'";
 				}
 				$this->db->non_cached_query($query);
 				
 				if($affected == 0 && $this->db->countAffected()){
-					$this->db->non_cached_query("UPDATE {$p}emailtemplate SET `emailtemplate_modified` = NOW() WHERE `emailtemplate_id` = '{$id}'");
+					$this->db->non_cached_query("UPDATE emailtemplate SET `emailtemplate_modified` = NOW() WHERE `emailtemplate_id` = '{$id}'");
 				}
 				$affected += $this->db->countAffected();
 			}
@@ -1095,7 +1095,7 @@
 			}
 			
 			foreach($ids as $id){
-				$sql = "SELECT emailtemplate_id FROM {$p}emailtemplate WHERE emailtemplate_key = (SELECT emailtemplate_key FROM {$p}emailtemplate WHERE emailtemplate_id = '{$id}' AND emailtemplate_default = 1) AND emailtemplate_id != '{$id}'";
+				$sql = "SELECT emailtemplate_id FROM emailtemplate WHERE emailtemplate_key = (SELECT emailtemplate_key FROM emailtemplate WHERE emailtemplate_id = '{$id}' AND emailtemplate_default = 1) AND emailtemplate_id != '{$id}'";
 				$result = $this->db->non_cached_query($sql);
 				foreach($result->rows as $row){
 					$ids[] = $row['emailtemplate_id'];
@@ -1103,9 +1103,9 @@
 			}
 			
 			$queries = array();
-			$queries[] = "DELETE FROM `{$p}emailtemplate_description` WHERE `emailtemplate_id` IN('".implode("', '", $ids)."')";
-			$queries[] = "DELETE FROM `{$p}emailtemplate_shortcode` WHERE `emailtemplate_id` IN('".implode("', '", $ids)."')";
-			$queries[] = "DELETE FROM `{$p}emailtemplate` WHERE `emailtemplate_id` IN('".implode("', '", $ids)."')";
+			$queries[] = "DELETE FROM `emailtemplate_description` WHERE `emailtemplate_id` IN('".implode("', '", $ids)."')";
+			$queries[] = "DELETE FROM `emailtemplate_shortcode` WHERE `emailtemplate_id` IN('".implode("', '", $ids)."')";
+			$queries[] = "DELETE FROM `emailtemplate` WHERE `emailtemplate_id` IN('".implode("', '", $ids)."')";
 			
 			foreach($queries as $query){
 				$this->db->non_cached_query($query);
@@ -1141,7 +1141,7 @@
 				$ids[] = intval($data);
 			}
 			
-			$query = "DELETE FROM `{$p}emailtemplate_logs` WHERE `emailtemplate_log_id` IN('".implode("', '", $ids)."')";
+			$query = "DELETE FROM `emailtemplate_logs` WHERE `emailtemplate_log_id` IN('".implode("', '", $ids)."')";
 			
 			$this->db->non_cached_query($query);
 			
@@ -1166,7 +1166,7 @@
 				$cond[] = "`language_id` = '" . intval($data['language_id']) . "'";
 			}
 			
-			$query = "DELETE FROM `{$p}emailtemplate_description` WHERE ".implode("', '", $cond);
+			$query = "DELETE FROM `emailtemplate_description` WHERE ".implode("', '", $cond);
 			$this->db->non_cached_query($query);
 			
 			$this->_deleteCache();
@@ -1182,7 +1182,7 @@
 			$p = '';
 			$return = array();
 			$query = "SELECT `emailtemplate_key`, count(`emailtemplate_id`) AS `total`
-			FROM `{$p}emailtemplate`
+			FROM `emailtemplate`
 			WHERE `emailtemplate_default` = 1 AND `emailtemplate_key` != ''
 			GROUP BY `emailtemplate_key`
 			ORDER BY `emailtemplate_key` ASC";
@@ -1219,14 +1219,14 @@
 				}
 				
 				if (isset($data['emailtemplate_key'])) {
-					$result = $this->_fetch("SELECT emailtemplate_id FROM {$p}emailtemplate WHERE emailtemplate_key = '".$this->db->escape($data['emailtemplate_key'])."' AND emailtemplate_default = 1 LIMIT 1");
+					$result = $this->_fetch("SELECT emailtemplate_id FROM emailtemplate WHERE emailtemplate_key = '".$this->db->escape($data['emailtemplate_key'])."' AND emailtemplate_default = 1 LIMIT 1");
 					$cond[] = "es.`emailtemplate_id` = '".intval($result->row['emailtemplate_id'])."'";
 				}
 				} else {
 				$cond[] = "es.`emailtemplate_id` = '".intval($data)."'";
 			}
 			
-			$query = "SELECT es.* FROM `{$p}emailtemplate_shortcode` es";
+			$query = "SELECT es.* FROM `emailtemplate_shortcode` es";
 			if(!empty($cond)){
 				$query .= ' WHERE ' . implode(' AND ', $cond);
 			}
@@ -1302,7 +1302,7 @@
 			$updates = $this->_build_query($cols, $data);
 			if (!$updates) return false;
 			
-			$sql = "UPDATE {$p}emailtemplate_shortcode SET ".implode($updates,", ") . " WHERE emailtemplate_shortcode_id = '{$id}'";
+			$sql = "UPDATE emailtemplate_shortcode SET ".implode($updates,", ") . " WHERE emailtemplate_shortcode_id = '{$id}'";
 			$this->db->non_cached_query($sql);
 			
 			$this->_deleteCache();
@@ -1335,15 +1335,15 @@
 				$cond[] = "`emailtemplate_shortcode_id` IN('" . implode("', '", $selectedCond) . "')";
 			}
 			
-			$query = "DELETE FROM `{$p}emailtemplate_shortcode` WHERE ".implode(" AND ", $cond);
+			$query = "DELETE FROM `emailtemplate_shortcode` WHERE ".implode(" AND ", $cond);
 			$this->db->non_cached_query($query);
 			$affected = $this->db->countAffected();
 			
 			if($affected > 0){
-				$query = "SELECT 1 FROM `{$p}emailtemplate_shortcode` WHERE emailtemplate_id = '{$id}' LIMIT 1";
+				$query = "SELECT 1 FROM `emailtemplate_shortcode` WHERE emailtemplate_id = '{$id}' LIMIT 1";
 				$result = $this->db->non_cached_query($query);
 				if($result->num_rows == 0){
-					$query = "UPDATE `{$p}emailtemplate` SET `emailtemplate_shortcodes` = 0 WHERE `emailtemplate_id` = ".$id;
+					$query = "UPDATE `emailtemplate` SET `emailtemplate_shortcodes` = 0 WHERE `emailtemplate_id` = ".$id;
 					$this->db->non_cached_query($query);
 				}
 				$this->_deleteCache();
@@ -1998,27 +1998,27 @@
 				$queries = array();
 				
 				// Check settings table has serialised - OC Version: < 1.5.0.5
-				$chk = $this->db->non_cached_query("SHOW COLUMNS FROM `{$p}setting` LIKE 'serialized'");
+				$chk = $this->db->non_cached_query("SHOW COLUMNS FROM `setting` LIKE 'serialized'");
 				if(!$chk->num_rows){
-					$result = $this->db->non_cached_query("ALTER TABLE `{$p}setting` ADD `serialized` tinyint(1) NOT NULL DEFAULT 0");
+					$result = $this->db->non_cached_query("ALTER TABLE `setting` ADD `serialized` tinyint(1) NOT NULL DEFAULT 0");
 				}
 				
 				// Opencart missing ability to find a registered customers language
-				$chk = $this->db->non_cached_query("SHOW COLUMNS FROM `{$p}customer` LIKE 'language_id'");
+				$chk = $this->db->non_cached_query("SHOW COLUMNS FROM `customer` LIKE 'language_id'");
 				if(!$chk->num_rows){
-					$result = $this->db->non_cached_query("ALTER TABLE `{$p}customer` ADD `language_id` int(11) NOT NULL DEFAULT '0' AFTER `store_id`");
+					$result = $this->db->non_cached_query("ALTER TABLE `customer` ADD `language_id` int(11) NOT NULL DEFAULT '0' AFTER `store_id`");
 				}
 				
 				// Add order PDf field
-				$chk = $this->db->non_cached_query("SHOW COLUMNS FROM `{$p}order` LIKE 'invoice_filename'");
+				$chk = $this->db->non_cached_query("SHOW COLUMNS FROM `order` LIKE 'invoice_filename'");
 				if(!$chk->num_rows){
-					$result = $this->db->non_cached_query("ALTER TABLE `{$p}order` ADD `invoice_filename` varchar(255) NOT NULL AFTER `invoice_prefix`");
+					$result = $this->db->non_cached_query("ALTER TABLE `order` ADD `invoice_filename` varchar(255) NOT NULL AFTER `invoice_prefix`");
 				}
 				
 				// Add order weight
-				$chk = $this->db->non_cached_query("SHOW COLUMNS FROM `{$p}order` LIKE 'weight'");
+				$chk = $this->db->non_cached_query("SHOW COLUMNS FROM `order` LIKE 'weight'");
 				if(!$chk->num_rows){
-					$result = $this->db->non_cached_query("ALTER TABLE `{$p}order` ADD `weight` decimal(15,8) NOT NULL DEFAULT '0.00000000' AFTER `invoice_prefix`");
+					$result = $this->db->non_cached_query("ALTER TABLE `order` ADD `weight` decimal(15,8) NOT NULL DEFAULT '0.00000000' AFTER `invoice_prefix`");
 				}
 				
 				// Default install
@@ -2044,7 +2044,7 @@
 						$this->db->non_cached_query($stmt);
 					}
 					} else {
-					$this->db->non_cached_query("UPDATE `{$p}emailtemplate` SET `emailtemplate_shortcodes` = '0' WHERE `emailtemplate_id` != 1");
+					$this->db->non_cached_query("UPDATE `emailtemplate` SET `emailtemplate_shortcodes` = '0' WHERE `emailtemplate_id` != 1");
 				}
 				
 				// Delete old files
@@ -2179,9 +2179,9 @@
 				$this->deleteTemplateDescription(array('language_id' => 0));
 				
 				if(!empty($req['install_cleanup'])){
-					$result = $this->db->non_cached_query("SHOW TABLES LIKE '{$p}email_templates'");
+					$result = $this->db->non_cached_query("SHOW TABLES LIKE 'email_templates'");
 					if($result->rows){
-						$result = $this->db->non_cached_query("SELECT * FROM `{$p}email_templates`");
+						$result = $this->db->non_cached_query("SELECT * FROM `email_templates`");
 						
 						if($result->rows){
 							foreach($result->rows as $row){
@@ -2209,7 +2209,7 @@
 							}
 						}
 						
-						$this->db->non_cached_query("DROP TABLE IF EXISTS `{$p}email_templates`");
+						$this->db->non_cached_query("DROP TABLE IF EXISTS `email_templates`");
 					}
 				}
 				
@@ -2231,15 +2231,15 @@
 				if(!is_dir($dir) || !$current_ver) return false;
 				
 				// 2.3
-				$chk = $this->db->non_cached_query("SHOW COLUMNS FROM `{$p}order` LIKE 'weight'");
+				$chk = $this->db->non_cached_query("SHOW COLUMNS FROM `order` LIKE 'weight'");
 				if(!$chk->num_rows){
-					$result = $this->db->non_cached_query("ALTER TABLE `{$p}order` ADD `weight` decimal(15,8) NOT NULL DEFAULT '0.00000000' AFTER `invoice_prefix`");
+					$result = $this->db->non_cached_query("ALTER TABLE `order` ADD `weight` decimal(15,8) NOT NULL DEFAULT '0.00000000' AFTER `invoice_prefix`");
 				}
 				
 				// 1.18
-				$chk = $this->db->non_cached_query("SHOW COLUMNS FROM `{$p}emailtemplate_description` LIKE 'emailtemplate_description_comment'");
+				$chk = $this->db->non_cached_query("SHOW COLUMNS FROM `emailtemplate_description` LIKE 'emailtemplate_description_comment'");
 				if(!$chk->num_rows){
-					$this->db->non_cached_query("ALTER TABLE `{$p}emailtemplate_description` ADD `emailtemplate_description_comment` longtext NOT NULL");
+					$this->db->non_cached_query("ALTER TABLE `emailtemplate_description` ADD `emailtemplate_description_comment` longtext NOT NULL");
 				}
 				
 				$upgrades = glob($dir.'*.sql');
@@ -2256,7 +2256,7 @@
 					}
 				}
 				
-				$this->db->non_cached_query("UPDATE `{$p}emailtemplate_config` SET emailtemplate_config_version = '".EmailTemplate::$version."'");
+				$this->db->non_cached_query("UPDATE `emailtemplate_config` SET emailtemplate_config_version = '".EmailTemplate::$version."'");
 				
 				$this->_updateVqmod();
 				
@@ -2271,10 +2271,10 @@
 			public function uninstall(){
 				$p = '';
 				$queries = array();
-				$queries[] = "DROP TABLE IF EXISTS `{$p}emailtemplate`";
-				$queries[] = "DROP TABLE IF EXISTS `{$p}emailtemplate_config`";
-				$queries[] = "DROP TABLE IF EXISTS `{$p}emailtemplate_description`";
-				$queries[] = "DROP TABLE IF EXISTS `{$p}emailtemplate_shortcode`";
+				$queries[] = "DROP TABLE IF EXISTS `emailtemplate`";
+				$queries[] = "DROP TABLE IF EXISTS `emailtemplate_config`";
+				$queries[] = "DROP TABLE IF EXISTS `emailtemplate_description`";
+				$queries[] = "DROP TABLE IF EXISTS `emailtemplate_shortcode`";
 				foreach($queries as $query){
 					$this->db->non_cached_query($query);
 				}
@@ -2297,12 +2297,12 @@
 			*/
 			public function checkVersion(){
 				$p = '';
-				$chk = $this->db->non_cached_query("SHOW COLUMNS FROM `{$p}emailtemplate_config` LIKE 'emailtemplate_config_version'");
+				$chk = $this->db->non_cached_query("SHOW COLUMNS FROM `emailtemplate_config` LIKE 'emailtemplate_config_version'");
 				if(!$chk->num_rows){
-					$result = $this->db->non_cached_query("ALTER TABLE `{$p}emailtemplate_config` ADD `emailtemplate_config_version` varchar(64) NOT NULL");
+					$result = $this->db->non_cached_query("ALTER TABLE `emailtemplate_config` ADD `emailtemplate_config_version` varchar(64) NOT NULL");
 					return '0.1';
 					} else {
-					$result = $this->db->non_cached_query("SELECT `emailtemplate_config_version` FROM `{$p}emailtemplate_config` WHERE `emailtemplate_config_id` = 1 LIMIT 1");
+					$result = $this->db->non_cached_query("SELECT `emailtemplate_config_version` FROM `emailtemplate_config` WHERE `emailtemplate_config_id` = 1 LIMIT 1");
 					
 					if(version_compare(EmailTemplate::$version, $result->row['emailtemplate_config_version']) > 0){
 						return $result->row['emailtemplate_config_version'];
@@ -2336,7 +2336,7 @@
 				$inserts = $this->_build_query($cols, $logData);
 				if (empty($inserts)) return false;
 				
-				$query = "INSERT IGNORE INTO {$p}emailtemplate_logs SET ". implode(", ", $inserts);
+				$query = "INSERT IGNORE INTO emailtemplate_logs SET ". implode(", ", $inserts);
 				
 				$this->db->non_cached_query($query);
 				
@@ -2701,7 +2701,7 @@
 			*/
 			private function _parse_sql($file){
 				$sql = @fread(@fopen($file, 'r'), @filesize($file)) or die('problem reading sql:'.$file);
-				$sql = str_replace('{$p}', DB_PREFIX, $sql);
+				$sql = str_replace('', DB_PREFIX, $sql);
 				
 				$lines = explode("\n", $sql);
 				$linecount = count($lines);

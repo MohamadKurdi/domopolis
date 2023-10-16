@@ -53,14 +53,14 @@
 			* @param Request $request
 		*/
 		public function __construct(Request $request, Registry $registry) {
-			$this->registry = $registry;
-			$this->request = $request;
-			$this->config = $registry->get('config');
-			$this->language = $registry->get('language');
-			$this->load = $registry->get('load');
-			$this->db = $registry->get('db');
-			$this->user = $registry->get('user');
-			$this->customer = $registry->get('customer');
+			$this->registry 	= $registry;
+			$this->request 		= $request;
+			$this->config 		= $registry->get('config');
+			$this->language 	= $registry->get('language');
+			$this->load 		= $registry->get('load');
+			$this->db 			= $registry->get('db');
+			$this->user 		= $registry->get('user');
+			$this->customer 	= $registry->get('customer');
 			
 			$this->language_id = $this->config->get("config_language_id");
 			
@@ -156,9 +156,9 @@
 			}
 			
 			$keys = array(
-			'language_id' => $this->language_id,
+			'language_id' 		=> $this->language_id,
 			'customer_group_id' => $this->customer_group_id,
-			'store_id' => $this->store_id
+			'store_id' 			=> $this->store_id
 			);
 			
 			if(isset($data['order_status_id'])){
