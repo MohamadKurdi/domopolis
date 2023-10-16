@@ -993,12 +993,7 @@
 			fclose($file);
 		}
 		
-		protected function getList() {
-			
-			if ($this->user->getID() == 17 || $this->user->getID() == 75){
-				$this->config->set('config_admin_limit', 25);
-			}
-			
+		protected function getList() {			
 			if (isset($this->request->get['filter_name'])) {
 				$filter_name = $this->request->get['filter_name'];
 				} else {

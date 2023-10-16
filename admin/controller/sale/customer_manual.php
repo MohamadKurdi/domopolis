@@ -2,6 +2,7 @@
 	class ControllerSaleCustomerManual extends Controller {
 		private $manufacturers 	= [];
 		private $collections 	= [];
+		private $limit 			= 30;
 
 		
 		public function index() {
@@ -141,6 +142,9 @@
 
 			$this->data['customers'] = [];
 
+			$data['start'] = ($page - 1) * $this->limit;
+			$data['limit'] = $this->limit;
+
 			$customer_total = $this->model_sale_customer->getTotalCustomers($data);
 			$results 		= $this->model_sale_customer->getCustomers($data);
 
@@ -243,7 +247,7 @@
 			$pagination 			= new Pagination();
 			$pagination->total 		= $customer_total;
 			$pagination->page 		= $page;
-			$pagination->limit 		= $this->config->get('config_admin_limit');
+			$pagination->limit 		= $this->limit;
 			$pagination->text 		= $this->language->get('text_pagination');
 			$pagination->url 		= $this->url->link('sale/customer_manual', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
 			
