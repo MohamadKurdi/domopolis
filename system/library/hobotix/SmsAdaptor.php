@@ -222,6 +222,54 @@ class SmsAdaptor {
 		return '';
 	}
 
+
+	public function sendSMSFirstOrderPromo($order_info, $data){
+		$template = [
+			'{ID}' 			=> $order_info['order_id'], 
+			'{SNAME}'		=> $this->config->get('config_name'), 
+			'{DATE}'		=> date('d.m.Y'), 
+			'{TIME}'		=> date('H:i:s'), 
+			'{PHONE}'		=> $order_info['telephone'], 
+			'{FIRSTNAME}'	=> $order_info['firstname'], 
+			'{LASTNAME}' 	=> $order_info['lastname'],
+			'{PROMOCODE}'   => $this->config->get('config_firstorder_promocode')
+		];
+
+		if ($this->config->get('config_viber_firstorder_enabled')){
+			$viber = [
+				'viber' 		=> true,
+				'to' 			=> $order_info['telephone'],
+				'message' 		=> reTemplate($template, $this->config->get('config_viber_firstorder')),
+				'messageSms' 	=> reTemplate($template, $this->config->get('config_firstorder_sms_text')),
+
+				'button_txt' 	=> $this->config->get('config_viber_firstorder_button_text'),
+				'button_url' 	=> $this->config->get('config_viber_firstorder_button_url'), 				
+			];
+
+			if (!empty($this->config->get('config_viber_firstorder_image')) && file_exists(DIR_IMAGE . $this->config->get('config_viber_firstorder_image'))){
+				$viber['picture_url'] = HTTPS_CATALOG . DIR_IMAGE_NAME . $this->config->get('config_viber_firstorder_image');
+			}
+
+			$viberID = $this->registry->get('smsQueue')->queue($viber);
+			$this->addOrderSmsHistory(false, ['sms' => $viber['message']], 'Queued', $viberID, (int)$order_info['customer_id']);
+
+			return $viberID;
+		}
+
+		if ($this->config->get('config_firstorder_sms_enable')){
+			$sms = [
+				'to' 		=> $order_info['telephone'],
+				'message' 	=> reTemplate($template, $this->config->get('config_firstorder_sms_text'))
+			];
+
+			$smsID = $this->registry->get('smsQueue')->queue($sms);
+			$this->addOrderSmsHistory(false, ['sms' => $sms['message']], 'Queued', $smsID, (int)$order_info['customer_id']);
+
+			return $smsID;
+		}
+
+	}
+
 	//SMS+Viber SERVICE FUNCTIONS
 	public function sendPaymentLink($order_info, $data){
 		$template = [
