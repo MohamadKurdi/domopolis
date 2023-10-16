@@ -457,9 +457,9 @@ $(document).ready(function(){
 
 		var had_not_sent_manual_letter = $('input[name=\'had_not_sent_manual_letter\']:checked').val();		
 		if (had_not_sent_manual_letter  !== undefined) {
-			url += '&had_not_sent_manual_letter=1';
+			url += '&filter_had_not_sent_manual_letter=1';
 		} else {
-			url += '&had_not_sent_manual_letter=0';
+			url += '&filter_had_not_sent_manual_letter=0';
 		}
 
 		var filter_nbt_customer = $('input[name=\'filter_nbt_customer\']:checked').val();		
@@ -469,7 +469,7 @@ $(document).ready(function(){
 
 		var nbt_customer_exclude = $('input[name=\'nbt_customer_exclude\']:checked').val();		
 		if (nbt_customer_exclude  !== undefined) {
-			url += '&nbt_customer_exclude=1';
+			url += '&filter_nbt_customer_exclude=1';
 		}
 
 		var filter_name = $('input[name=\'filter_name\']').prop('value');		
