@@ -19,6 +19,7 @@
 		private $customer_group_id 		= null;
 		private $address_id 		= null;
 		private $sendpulse_push_id 	= null;
+		private $order_good_count 	= null;
 		private $tracking 			= null;
 		private $is_opt 			= null;
 		private $affiliateNZ 		= null;
@@ -72,6 +73,7 @@
 					$this->address_id 				= $customer_query->row['address_id'];
 					$this->sendpulse_push_id 		= $customer_query->row['sendpulse_push_id'];
 					$this->tracking 				= $customer_query->row['tracking'];
+					$this->order_good_count 		= $customer_query->row['order_good_count'];
 					$this->is_opt 					= in_array($this->customer_group_id, $this->opt_group_array);
 					
 					$this->db->ncquery("UPDATE customer SET cart = '" . $this->db->escape(isset($this->session->data['cart']) ? serialize($this->session->data['cart']) : '') . "', wishlist = '" . $this->db->escape(isset($this->session->data['wishlist']) ? serialize($this->session->data['wishlist']) : '') . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
@@ -194,6 +196,7 @@
 				$this->address_id 			= $customer_query->row['address_id'];
 				$this->sendpulse_push_id 	= $customer_query->row['sendpulse_push_id'];
 				$this->tracking 			= $customer_query->row['tracking'];
+				$this->order_good_count 	= $customer_query->row['order_good_count'];
 				$this->is_opt 				= in_array($this->customer_group_id, $this->opt_group_array);
 				
 				$this->db->ncquery("UPDATE customer SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE customer_id = '" . (int)$this->customer_id . "'");
@@ -270,6 +273,7 @@
 			$this->customer_group_id 	= '';
 			$this->address_id 			= '';
 			$this->sendpulse_push_id 	= '';
+			$this->order_good_count 	= '';
 						
 			$this->affiliate_paid = '';
 			if (!empty($this->affiliateNZ) && is_object($this->affiliateNZ) && $this->affiliateNZ->isLogged()) {
@@ -354,6 +358,10 @@
 		
 		public function getDiscountPercent() {
 			return $this->discount_percent;
+		}
+
+		public function getOrderGoodCount() {
+			return $this->order_good_count;
 		}
 		
 		public function getEmail() {

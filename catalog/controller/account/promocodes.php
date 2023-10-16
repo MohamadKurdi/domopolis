@@ -41,8 +41,7 @@
 			
 			$this->data['promocodes'] = array();
 			
-			foreach ($promocodes as $promocode){
-				
+			foreach ($promocodes as $promocode){							
 				$action = [];
 				if ($promocode['action_id']){
 					$action = $this->model_catalog_actions->getActions($promocode['action_id']);
@@ -54,6 +53,12 @@
 					
 				if ($promocode['action_id'] && empty($action)){
 					continue;
+				}
+
+				if ($promocode['code'] == $this->config->get('config_firstorder_promocode')){
+					if ($this->customer->getOrderGoodCount() == 0){
+						continue;
+					}
 				}
 				
 				$label = [];
