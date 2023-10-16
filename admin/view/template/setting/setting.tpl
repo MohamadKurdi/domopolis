@@ -4244,7 +4244,7 @@
 									<td style="width:250px;">
 										<div class="image">
 											<img src="<?php echo $viber_firstorder_image; ?>" alt="" id="thumb-viber_firstorder_image" height="150px" />
-											<input type="text" style="font-size:10px; width:150px;" class="image-ajax" name="viber_firstorder_image" value="<?php echo $config_viber_firstorder_image; ?>" id="viber_firstorder_image" />
+											<input type="text" style="font-size:10px; width:150px;" class="image-ajax" name="config_viber_firstorder_image" value="<?php echo $config_viber_firstorder_image; ?>" id="viber_firstorder_image" />
 											<br />
 											<a onclick="image_upload('viber_firstorder_image', 'thumb-viber_firstorder_image');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb-viber_firstorder_image').attr('src', '<?php echo $no_image; ?>'); $('#viber_firstorder_image').attr('value', ''); $('#viber_firstorder_image').trigger('change');"><?php echo $text_clear; ?></a>
 										</div>
