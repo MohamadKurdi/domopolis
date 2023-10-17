@@ -5,8 +5,7 @@ class ControllerPaymentMono extends Controller
 
     const CURRENCY_CODE = ['UAH','EUR','USD'];
 
-    public function index($order_id = false, $redirect = false)
-    {
+    public function index($order_id = false, $redirect = false){
         $monolog = new Log('monopay.txt');
 
         $data = $this->language->load('payment/mono');
@@ -43,7 +42,7 @@ class ControllerPaymentMono extends Controller
                 throw new \Exception($this->language->get('text_currency_error'));
             }
 
-            $randKey = $this->generateRandomString();
+            $randKey = generateRandomString();
             $Params = [
                 'order_id'              => $orderID,
                 'merchant_id'           => $this->config->get('mono_merchant'),
@@ -96,19 +95,7 @@ class ControllerPaymentMono extends Controller
         return true;
     }       
 
-
-    public function generateRandomString($length = 50) {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, strlen($characters) - 1)];
-        }
-        return $randomString;
-    }
-
-
-    public function response()
-    {
+    public function response(){
         $this->language->load('payment/mono');
         $this->load->model('payment/mono');
         $this->load->model('checkout/order');
@@ -176,7 +163,6 @@ class ControllerPaymentMono extends Controller
             }
         }    
     }
-
 
     public function getStatus($InvoiceId) {
         $curl = curl_init();
@@ -263,6 +249,123 @@ class ControllerPaymentMono extends Controller
         }
     }
 
+    public function checkoutorder(){
+        $this->load->model('payment/mono');
+        $this->load->model('payment/mono_checkout');
+        $this->load->model('catalog/product');
+        $this->load->model('checkout/order');
+
+        $monolog = new Log('monocheckout.txt');
+
+        $json = [];
+
+        if ($this->request->server['REQUEST_METHOD'] == 'POST' && $this->config->get('mono_monocheckout_enable') && isset($this->request->post['product_id'])) {
+
+            if (isset($this->request->post['product_id'])) {
+                $product_id = $this->request->post['product_id'];
+            } else {
+                $product_id = 0;
+            }
+
+            $product_info = $this->model_catalog_product->getProduct($product_id);
+            if ($product_info) {
+
+                if (isset($this->request->post['quantity'])) {
+                    $quantity = $this->request->post['quantity'];
+                } else {
+                    $quantity = 1;
+                }
+
+                if (isset($this->request->post['option'])) {
+                    $option = array_filter($this->request->post['option']);
+                } else {
+                    $option = array();
+                }
+
+                if (isset($this->request->post['profile_id'])) {
+                    $profile_id = $this->request->post['profile_id'];
+                } else {
+                    $profile_id = 0;
+                }
+
+                $temp_cart = $this->session->data['cart'];                 
+                unset($this->session->data['cart']);
+                $this->cart->add($product_id, $quantity, $option, $profile_id);
+
+                $cart_key = $this->cart->makeCartKey($product_id, $option, $profile_id, false, false);      
+
+                $order_id = $this->model_checkout_order->addOrderSimple(['monocheckout' => 1]);
+                $this->session->data['order_id'] = $order_id;
+
+                $secretKey = $this->model_payment_mono_checkout->addOrderKey($order_id);
+
+                $monolog->write('[ControllerPaymentMono::checkoutorder] Added Order: ' . $order_id);                
+
+                $this->cart->remove($cart_key);
+                $this->session->data['cart'] = $temp_cart;
+
+                try {
+                    $result = $this->model_payment_mono_checkout->sendToAPI(['order_id' => $order_id, 'order_key' => $secretKey]);
+
+                    $json = [
+                        'success'       => true,
+                        'order_id'      => $order_id,
+                        'mono_order_id' => $result['result']['order_id'],
+                        'mono_redirect' => $result['result']['redirect_url'],
+                    ];
+
+                } catch (\Exception $e){
+
+                    $json = [
+                        'success'  => false,
+                        'message'  => $e->getMessage(),
+                    ];
+                }               
+            }
+        } else {
+            $json['error'] = true;
+        }
+
+        $this->response->setOutput(json_encode($json));
+    }
+
+    public function checkoutcallback(){
+        $this->language->load('payment/mono');
+        $this->load->model('checkout/order');
+        $this->load->model('payment/mono');
+        $this->load->model('payment/mono_checkout');
+
+        $json = $clear_json = file_get_contents("php://input");         
+        $json = json_decode($json, true);
+
+        $monolog = new Log('monocheckout.txt');
+        $monolog->write('[ControllerPaymentMono::checkoutcallback] GOT JSON:' . $clear_json);
+
+        if (!$json){
+            header("HTTP/1.1 400 Bad Request");
+            die();
+        }
+
+        $order      = $this->model_payment_mono_checkout->getOrder($json['basket_id'], $json['orderId']);
+        if ($order){
+            $order_info = $this->model_checkout_order->getOrder($order['OrderId']);
+        }
+
+        if (!$order || !$order_info){
+            header("HTTP/1.1 404 Order Not Found");
+            die();
+        }
+
+        $result = $this->model_payment_mono_checkout->updateOrder($order_info, $json);       
+
+        if ($result){
+            $this->response->setOutput(json_encode($result));
+        } else {
+            header("HTTP/1.1 500 Server Error");
+            die();
+        }
+
+    }
 
     private function success(){
         $this->load->model('account/transaction');
@@ -273,7 +376,7 @@ class ControllerPaymentMono extends Controller
         $this->language->load('payment/mono');
 
         $this->model_account_transaction->addTransaction(
-            'Mono: Оплата по заказу # '. $this->order['order_id'], 
+            'Mono: Оплата по замовленню # '. $this->order['order_id'], 
             $this->model_account_order->getOrderTotal($this->order['order_id']),
             $this->model_account_order->getOrderTotalNational($this->order['order_id']),
             $this->config->get('config_regional_currency'),

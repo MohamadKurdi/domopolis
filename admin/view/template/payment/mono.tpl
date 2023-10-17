@@ -93,6 +93,23 @@
                 </td>
             </tr>
 
+             <tr>
+                <td>
+                    Моно Чекаут включить (экспериментальная фишка)                
+                </td>
+                <td>
+                    <select name="mono_monocheckout_enable" class="form-control">
+                       <?php if ( $mono_monocheckout_enable == 1 ) { ?>
+                            <option class="mono-option" value="1"  selected="selected" ><?php echo $text_enabled; ?></option>
+                            <option class="mono-option" value="0"><?php echo $text_disabled; ?></option>
+                        <?php } else { ?>
+                            <option class="mono-option" value="1"><?php echo $text_enabled; ?></option>
+                            <option class="mono-option" value="0"  selected="selected"><?php echo $text_disabled; ?></option>
+                    <?php } ?>
+                    </select>
+                </td>
+            </tr>
+
 
             <tr>
                 <td>

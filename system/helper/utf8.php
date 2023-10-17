@@ -48,6 +48,15 @@ function limit_text_by_sentences($text, $max_symbols = 1000) {
 	return $limited_text;
 }
 
+function generateRandomString($length = 50) {
+	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	$randomString = '';
+	for ($i = 0; $i < $length; $i++) {
+		$randomString .= $characters[rand(0, strlen($characters) - 1)];
+	}
+	return $randomString;
+}
+
 function buildRelativeDate($string){
 	$now = date_create();
 

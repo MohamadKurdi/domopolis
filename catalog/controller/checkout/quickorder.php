@@ -41,11 +41,7 @@ class ControllerCheckoutQuickorder extends Controller {
 		$this->data['quickorder_key'] = $key;
 		$this->session->data['quickorder_key'] = $key;		
 
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/quickorder.tpl')) {
-			$this->template = $this->config->get('config_template') . '/template/checkout/quickorder.tpl';
-		} else {
-			$this->template = 'default/template/checkout/quickorder.tpl';
-		}
+		$this->template = 'checkout/quickorder.tpl';
 
 		$this->response->setOutput($this->render());					
 	}
@@ -124,9 +120,6 @@ class ControllerCheckoutQuickorder extends Controller {
 				$phone = $this->request->post['waitlist-phone'];					
 
 				if (!$this->error){
-
-						//обработка для использования $cart->add
-						//копируем из модуля аякс-корзины
 					if (isset($this->request->post['product_id'])) {
 						$product_id = $this->request->post['product_id'];
 					} else {
@@ -138,7 +131,6 @@ class ControllerCheckoutQuickorder extends Controller {
 					$product_info = $this->model_catalog_product->getProduct($product_id);
 
 					if ($product_info) {
-							// Пытаемся узнать, залогинен ли пользователя?
 						if (!$this->customer->isLogged()) {
 							if (!$this->customer->login($phone, false, true)) {
 								$this->load->model('account/customer');
@@ -163,7 +155,6 @@ class ControllerCheckoutQuickorder extends Controller {
 									'company' => '',
 								));
 								$this->customer->login($phone, false, true);
-
 							}
 						}
 
@@ -189,7 +180,6 @@ class ControllerCheckoutQuickorder extends Controller {
 						unset($this->session->data['cart']);
 						$this->cart->add($this->request->post['product_id'], $quantity, $option, $profile_id);
 
-							//ключ корзины, для того, чтоб удалить товар после оформления заказа.
 						$cart_key = $this->cart->makeCartKey($product_id, $option, $profile_id, false, false);										
 
 						$total_data = array();
@@ -235,8 +225,8 @@ class ControllerCheckoutQuickorder extends Controller {
 						$data = array();
 
 						$data['invoice_prefix'] = $this->config->get('config_invoice_prefix');
-						$data['store_id'] = $this->config->get('config_store_id');
-						$data['store_name'] = $this->config->get('config_name');
+						$data['store_id'] 		= $this->config->get('config_store_id');
+						$data['store_name'] 	= $this->config->get('config_name');
 
 						if ($data['store_id']) {
 							$data['store_url'] = $this->config->get('config_url');		
@@ -245,22 +235,20 @@ class ControllerCheckoutQuickorder extends Controller {
 						}
 
 						if ($this->customer->isLogged()) {
-							$data['customer_id'] = $this->customer->getId();
-							$data['customer_group_id'] = $this->customer->getCustomerGroupId();
-							$data['firstname'] = $this->customer->getFirstName();
-							$data['lastname'] = $this->customer->getLastName();
-							$data['email'] = $this->customer->getEmail();
-							$data['telephone'] = $this->customer->getTelephone();
-							$data['fax'] = $this->customer->getFax();
+							$data['customer_id'] 		= $this->customer->getId();
+							$data['customer_group_id'] 	= $this->customer->getCustomerGroupId();
+							$data['firstname'] 			= $this->customer->getFirstName();
+							$data['lastname'] 			= $this->customer->getLastName();
+							$data['email'] 				= $this->customer->getEmail();
+							$data['telephone'] 			= $this->customer->getTelephone();
+							$data['fax'] 				= $this->customer->getFax();
 
 							$this->load->model('account/address');
 
-								// $payment_address = $this->model_account_address->getAddress($this->session->data['payment_address_id']);
 							$payment_address = '';
 						} else {
 							$data['customer_id'] = 0;
 							$data['lastname'] = '';
-								// TODO
 							$data['firstname'] = $this->language->get('text_client');
 							$data['email'] = $phone;
 							$data['fax'] ='';
@@ -286,21 +274,19 @@ class ControllerCheckoutQuickorder extends Controller {
 						$data['telephone'] = $phone;
 						$data['email'] = $phone;
 
-							//$data['payment_firstname'] = $this->request->post['quickorder-dialog-name'];
-						$data['payment_firstname'] = (isset($payment_address['firstname']))?$payment_address['firstname']:'';
-						$data['payment_lastname'] = (isset($payment_address['lastname']))?$payment_address['lastname']:'';
-						$data['payment_company'] = (isset($payment_address['company']))?$payment_address['company']:'';	
-						$data['payment_company_id'] = (isset($payment_address['company_id']))?$payment_address['company_id']:'';	
-						$data['payment_tax_id'] = (isset($payment_address['tax_id']))?$payment_address['tax_id']:'';
-						$data['payment_address_1'] = (isset($payment_address['address_1']))?$payment_address['address_1']:'';
-						$data['payment_address_2'] = (isset($payment_address['address_2']))?$payment_address['address_2']:'';
-						$data['payment_city'] = (isset($payment_address['city']))?$payment_address['city']:'';
-							// $data['payment_postcode'] = (isset($payment_address['postcode']))?$payment_address['postcode']:'';	$payment_address['postcode'];
-						$data['payment_postcode'] = '';
-						$data['payment_zone'] = (isset($payment_address['zone']))?$payment_address['zone']:'';
-						$data['payment_zone_id'] = (isset($payment_address['zone_id']))?$payment_address['zone_id']:'';
-						$data['payment_country'] = (isset($payment_address['country']))?$payment_address['country']:'';	
-						$data['payment_country_id'] = (isset($payment_address['country_id']))?$payment_address['country_id']:'';	
+						$data['payment_firstname'] 		= (isset($payment_address['firstname']))?$payment_address['firstname']:'';
+						$data['payment_lastname'] 		= (isset($payment_address['lastname']))?$payment_address['lastname']:'';
+						$data['payment_company'] 		= (isset($payment_address['company']))?$payment_address['company']:'';	
+						$data['payment_company_id'] 	= (isset($payment_address['company_id']))?$payment_address['company_id']:'';	
+						$data['payment_tax_id'] 		= (isset($payment_address['tax_id']))?$payment_address['tax_id']:'';
+						$data['payment_address_1'] 		= (isset($payment_address['address_1']))?$payment_address['address_1']:'';
+						$data['payment_address_2'] 		= (isset($payment_address['address_2']))?$payment_address['address_2']:'';
+						$data['payment_city'] 			= (isset($payment_address['city']))?$payment_address['city']:'';
+						$data['payment_postcode'] 		= '';
+						$data['payment_zone'] 			= (isset($payment_address['zone']))?$payment_address['zone']:'';
+						$data['payment_zone_id'] 		= (isset($payment_address['zone_id']))?$payment_address['zone_id']:'';
+						$data['payment_country'] 		= (isset($payment_address['country']))?$payment_address['country']:'';	
+						$data['payment_country_id'] 	= (isset($payment_address['country_id']))?$payment_address['country_id']:'';	
 						$data['payment_address_format'] = (isset($payment_address['address_format']))?$payment_address['address_format']:'';	
 
 						if (isset($this->session->data['payment_method']['title'])) {
@@ -369,17 +355,17 @@ class ControllerCheckoutQuickorder extends Controller {
 							}
 
 								// $data['shipping_firstname'] = $this->request->post['quickorder-dialog-name'];
-							$data['shipping_lastname'] = (isset($shipping_address['lastname']))?$shipping_address['lastname']:'';	
-							$data['shipping_company'] = (isset($shipping_address['company']))?$shipping_address['company']:'';
-							$data['shipping_address_1'] = (isset($shipping_address['address_1']))?$shipping_address['address_1']:'';
-							$data['shipping_address_2'] = (isset($shipping_address['address_2']))?$shipping_address['address_2']:'';
-							$data['shipping_city'] = (isset($shipping_address['city']))?$shipping_address['city']:'';
-							$data['shipping_postcode'] = (isset($shipping_address['postcode']))?$shipping_address['postcode']:'';
-							$data['shipping_zone'] = (isset($shipping_address['zone']))?$shipping_address['zone']:'';
-							$data['shipping_zone_id'] = (isset($shipping_address['zone_id']))?$shipping_address['zone_id']:'';
-							$data['shipping_country'] =(isset($shipping_address['country']))?$shipping_address['country']:'';
-							$data['shipping_country_id'] = (isset($shipping_address['country_id']))?$shipping_address['country_id']:'';
-							$data['shipping_address_format'] = (isset($shipping_address['address_format']))?$shipping_address['address_format']:'';
+							$data['shipping_lastname'] 			= (isset($shipping_address['lastname']))?$shipping_address['lastname']:'';	
+							$data['shipping_company'] 			= (isset($shipping_address['company']))?$shipping_address['company']:'';
+							$data['shipping_address_1'] 		= (isset($shipping_address['address_1']))?$shipping_address['address_1']:'';
+							$data['shipping_address_2'] 		= (isset($shipping_address['address_2']))?$shipping_address['address_2']:'';
+							$data['shipping_city'] 				= (isset($shipping_address['city']))?$shipping_address['city']:'';
+							$data['shipping_postcode'] 			= (isset($shipping_address['postcode']))?$shipping_address['postcode']:'';
+							$data['shipping_zone'] 				= (isset($shipping_address['zone']))?$shipping_address['zone']:'';
+							$data['shipping_zone_id'] 			= (isset($shipping_address['zone_id']))?$shipping_address['zone_id']:'';
+							$data['shipping_country'] 			= (isset($shipping_address['country']))?$shipping_address['country']:'';
+							$data['shipping_country_id'] 		= (isset($shipping_address['country_id']))?$shipping_address['country_id']:'';
+							$data['shipping_address_format'] 	= (isset($shipping_address['address_format']))?$shipping_address['address_format']:'';
 
 							if (isset($this->session->data['shipping_method']['title'])) {
 								$data['shipping_method'] = $this->session->data['shipping_method']['title'];
@@ -481,11 +467,11 @@ class ControllerCheckoutQuickorder extends Controller {
 							$data['commission'] = 0;
 						}
 
-						$data['language_id'] = $this->config->get('config_language_id');
-						$data['currency_id'] = $this->currency->getId();
-						$data['currency_code'] = $this->currency->getCode();
+						$data['language_id'] 	= $this->config->get('config_language_id');
+						$data['currency_id'] 	= $this->currency->getId();
+						$data['currency_code'] 	= $this->currency->getCode();
 						$data['currency_value'] = $this->currency->getValue($this->currency->getCode());
-						$data['ip'] = $this->request->server['REMOTE_ADDR'];
+						$data['ip'] 			= $this->request->server['REMOTE_ADDR'];
 
 						if (!empty($this->request->server['HTTP_X_FORWARDED_FOR'])) {
 							$data['forwarded_ip'] = $this->request->server['HTTP_X_FORWARDED_FOR'];	

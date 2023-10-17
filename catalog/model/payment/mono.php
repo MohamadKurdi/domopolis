@@ -4,8 +4,7 @@ class ModelPaymentMono extends Model
 {
     const CURRENCY_CODE = ['UAH','EUR','USD'];
 
-    public function getMethod($address, $total)
-    {
+    public function getMethod($address, $total){
         $this->language->load('payment/mono');
 
         $query = $this->db->ncquery("SELECT * FROM zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('mono_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
@@ -34,8 +33,7 @@ class ModelPaymentMono extends Model
         return $method_data;
     }
 
-    public function addOrder($args)
-    {
+    public function addOrder($args){
         $query = $this->db->ncquery("SELECT * FROM `mono_orders` WHERE OrderId = '" . (int)$args['order_id'] . "'");
 
         if($query->num_rows) {
@@ -45,8 +43,7 @@ class ModelPaymentMono extends Model
         }
     }
 
-    public function getInvoiceId($OrderId)
-    {
+    public function getInvoiceId($OrderId){
         $q = $this->db->ncquery("SELECT * FROM `mono_orders` WHERE OrderId = '". (int)$OrderId . "'");
 
         return $q->num_rows ? $q->row : false;
@@ -58,8 +55,7 @@ class ModelPaymentMono extends Model
         return $q->num_rows ? $q->row : false;
     }
 
-    public function getCheckoutUrl($requestData)
-    {
+    public function getCheckoutUrl($requestData){
         $request = $this->sendToAPI($requestData);
         return $request['pageUrl'];
     }
@@ -155,12 +151,11 @@ class ModelPaymentMono extends Model
         return $products;
     }
 
-    public function sendToAPI($requestData)
-    {
-        $basketOrder =$this->getEncodedProducts($requestData['order_id']);
+    public function sendToAPI($requestData){
+        $basketOrder    =  $this->getEncodedProducts($requestData['order_id']);
 
-        $redirect_url = $this->config->get('mono_redirect_url');
-        $destination = $this->config->get('mono_destination');
+        $redirect_url   = $this->config->get('mono_redirect_url');
+        $destination    = $this->config->get('mono_destination');
 
         $currencyCode = $this->session->data['currency'];
 
@@ -180,51 +175,51 @@ class ModelPaymentMono extends Model
 
         $holdStatus = $this->config->get('mono_hold_mode');
         if($holdStatus == 1){
-        $data = [
-            'amount' => $requestData['amount'],
-            'ccy' => $currencyDecode,
-            'merchantPaymInfo' => [
-                'reference' => (string)$requestData['order_id'],
-                'destination' => $destination,
-                'basketOrder' => $basketOrder,
-            ],
-            'redirectUrl' => HTTPS_SERVER . $redirect_url,
-            'webHookUrl' => str_replace('&amp;', '&', $requestData['server_callback_url']),
-            'paymentType' => 'hold',
-            
-        ];
-    }else{
-        $data = [
-            'amount' => $requestData['amount'],
-            'ccy' => $currencyDecode,
-            'merchantPaymInfo' => [
-                'reference' => (string)$requestData['order_id'],
-                'destination' => $destination,
-                'basketOrder' => $basketOrder,
-            ],
-            'redirectUrl' => HTTPS_SERVER . $redirect_url,
-            'webHookUrl' => str_replace('&amp;', '&', $requestData['server_callback_url']),
-        ];
-    }
+            $data = [
+                'amount' => $requestData['amount'],
+                'ccy' => $currencyDecode,
+                'merchantPaymInfo' => [
+                    'reference' => (string)$requestData['order_id'],
+                    'destination' => $destination,
+                    'basketOrder' => $basketOrder,
+                ],
+                'redirectUrl' => HTTPS_SERVER . $redirect_url,
+                'webHookUrl' => str_replace('&amp;', '&', $requestData['server_callback_url']),
+                'paymentType' => 'hold',
+
+            ];
+        }else{
+            $data = [
+                'amount' => $requestData['amount'],
+                'ccy' => $currencyDecode,
+                'merchantPaymInfo' => [
+                    'reference' => (string)$requestData['order_id'],
+                    'destination' => $destination,
+                    'basketOrder' => $basketOrder,
+                ],
+                'redirectUrl' => HTTPS_SERVER . $redirect_url,
+                'webHookUrl' => str_replace('&amp;', '&', $requestData['server_callback_url']),
+            ];
+        }
 
         $monolog = new Log('monopay.txt');
         $monolog->write('[ModelPaymentMono::sendToAPI] Creating invoice: ' . json_encode($data));
 
         $curl = curl_init();
         curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://api.monobank.ua/api/merchant/invoice/create',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => json_encode($data),
-        CURLOPT_HTTPHEADER => array(
-            'Content-Type: application/json',
-            'X-Token: '.$requestData['merchant_id'].''
-            ),
+            CURLOPT_URL             => 'https://api.monobank.ua/api/merchant/invoice/create',
+            CURLOPT_RETURNTRANSFER  => true,
+            CURLOPT_ENCODING        => '',
+            CURLOPT_MAXREDIRS       => 10,
+            CURLOPT_TIMEOUT         => 0,
+            CURLOPT_FOLLOWLOCATION  => true,
+            CURLOPT_HTTP_VERSION    => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST   => 'POST',
+            CURLOPT_POSTFIELDS      => json_encode($data),
+            CURLOPT_HTTPHEADER      => [
+                'Content-Type: application/json',
+                'X-Token: '.$requestData['merchant_id'].''
+            ],
         ));
 
         $response = curl_exec($curl);
