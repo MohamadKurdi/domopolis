@@ -239,6 +239,7 @@
 				'email_bad'			=> !$this->emailBlackList->check($result['email']),
 				'status'     		=> $result['status'],
 				'pwa'     			=> $result['pwa'],
+				'monocheckout'     	=> $result['monocheckout'],
 				'preorder'     		=> $result['preorder'],
 				'ukrcredits_order_status'      => !empty($result['ukrcredits_order_status'])?$result['ukrcredits_order_status']:false,
 				'ukrcredits_order_substatus'   => !empty($result['ukrcredits_order_status'])?$result['ukrcredits_order_substatus']:false,
