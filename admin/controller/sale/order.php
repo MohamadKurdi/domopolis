@@ -1451,6 +1451,7 @@
 				$this->data['orders'][] = array(
 				'order_id'      			=> $result['order_id'],
 				'pwa'      					=> $result['pwa'],
+				'monocheckout'      		=> $result['monocheckout'],
 				'yam'      					=> $result['yam'],
 				'yam_id'      				=> $result['yam_id'],
 				'yam_shipment_date'      	=> $result['yam_shipment_date'],

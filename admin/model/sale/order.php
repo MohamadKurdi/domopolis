@@ -2464,7 +2464,7 @@
 		}
 		
 		public function getOrders($data = array()) {
-			$sql = "SELECT DISTINCT o.order_id, o.preorder, o.pwa, o.yam, o.yam_id, o.yam_shipment_date, o.yam_shipment_id, o.yam_box_id, o.yam_fake, o.yam_status, o.yam_substatus, o.template, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.customer_id, o.tracker_xml, o.shipping_code, o.needs_checkboxua, o.paid_by, o.costprice, o.profitability, ";
+			$sql = "SELECT DISTINCT o.order_id, o.preorder, o.pwa, o.monocheckout, o.yam, o.yam_id, o.yam_shipment_date, o.yam_shipment_id, o.yam_box_id, o.yam_fake, o.yam_status, o.yam_substatus, o.template, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.customer_id, o.tracker_xml, o.shipping_code, o.needs_checkboxua, o.paid_by, o.costprice, o.profitability, ";
 
 			if ($this->config->get('ukrcredits_status')){
 				$sql .= " ouc.ukrcredits_order_status, ouc.ukrcredits_order_substatus, ";

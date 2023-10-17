@@ -603,6 +603,12 @@
 										</div>																						
 									<? } ?>
 
+									<? if ($order['monocheckout']) { ?>											
+										<div style="display:inline-block; padding:2px 3px; font-size:10px; margin:3px; background:#000; color:#FFF;" >
+											<i class="fa fa-chevron-circle-right" aria-hidden="true"></i> MonoCheckout
+										</div>																						
+									<? } ?>
+
 									<? if ($order['ukrcredits_order_status']) { ?>	
 										<div style="display:inline-block; padding:2px 3px; font-size:9px; margin:3px; background:#00AD07; color:#FFF;" >
 												<i class="fa fa-percent" aria-hidden="true"></i> Кредит
