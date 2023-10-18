@@ -154,60 +154,7 @@
 		});
 	<?php } ?>
 
-	<?php if ($this->config->get('config_vk_enable_pixel')) { ?>
-		<?php if ($products && !empty($page_type) && $page_type == 'category') { ?>
-			var VKRetargetFunction = function(){
-				if((typeof VK !== 'undefined')){
-					console.log('VK trigger view_category');
-					
-					let vkitems = [
-						<?php $i = 0; foreach ($products as $product) { ?>
-						{'id': '<?php echo $product['product_id']; ?>', 'price': '<?php echo ($product['special'])?prepareEcommPrice($product['special']):prepareEcommPrice($product['price']); ?>'}
-						<?php if ($i < (count($products) - 1)) {?>,<?php } ?>
-						<?php } ?>
-					];					
-
-					VK.Retargeting.ProductEvent(<?php echo $this->config->get('config_vk_pricelist_id'); ?>, 'view_category', { 'category_ids' : '<?php echo $category_id; ?>', 'products' : vkitems, 'currency_code': '<?php echo $this->config->get('config_regional_currency'); ?>', 'total_price': '<?php echo prepareEcommPrice($productPriceSum); ?>' });
-				} else {
-					console.log('VK is undefined');
-				}
-			};			
-		<?php } elseif ($products && !empty($page_type) && $page_type == 'search_page') { ?>
-			var VKRetargetFunction = function(){
-				if((typeof VK !== 'undefined')){
-					console.log('VK trigger view_search');
-
-					let vkitems = [
-						<?php $i = 0; foreach ($products as $product) { ?>
-						{'id': '<?php echo $product['product_id']; ?>', 'price': '<?php echo ($product['special'])?prepareEcommPrice($product['special']):prepareEcommPrice($product['price']); ?>'}
-						<?php if ($i < (count($products) - 1)) {?>,<?php } ?>
-						<?php } ?>
-					];
-
-					VK.Retargeting.ProductEvent(<?php echo $this->config->get('config_vk_pricelist_id'); ?>, 'view_search', { 'search_string' : '<?php echo prepareEcommString($search); ?>', 'products' : vkitems, 'currency_code': '<?php echo $this->config->get('config_regional_currency'); ?>', 'total_price': '<?php echo prepareEcommPrice($productPriceSum); ?>' }); 
-				} else {
-					console.log('VK is undefined');
-				}
-			};
-		<?php } elseif ($products) { ?>
-			var VKRetargetFunction = function(){
-				if((typeof VK !== 'undefined')){
-					console.log('VK trigger view_other');
-
-					let vkitems = [
-						<?php $i = 0; foreach ($products as $product) { ?>
-						{'id': '<?php echo $product['product_id']; ?>', 'price': '<?php echo ($product['special'])?prepareEcommPrice($product['special']):prepareEcommPrice($product['price']); ?>'}
-						<?php if ($i < (count($products) - 1)) {?>,<?php } ?>
-						<?php } ?>
-					];
-
-					VK.Retargeting.ProductEvent(<?php echo $this->config->get('config_vk_pricelist_id'); ?>, 'view_other', {'products' : vkitems, 'currency_code': '<?php echo $this->config->get('config_regional_currency'); ?>', 'total_price': '<?php echo prepareEcommPrice($productPriceSum); ?>' }); 
-				} else {
-					console.log('VK is undefined');
-				}
-			};
-		<?php } ?>
-
+	<?php if ($this->config->get('config_vk_enable_pixel')) { ?>	
 	<?php } ?>
 	
 	

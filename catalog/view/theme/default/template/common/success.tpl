@@ -184,25 +184,7 @@
 
 
 								<?php if ($this->config->get('config_vk_enable_pixel')) { ?>
-									var VKRetargetFunction = function(){
-										if((typeof VK !== 'undefined')){
-											var vkproduct = [<?php $i = 0; $total_vk_price = 0; foreach ($google_ecommerce_info['transactionProducts'] as $product) { ?>                 
-												{                   
-													'id': '<?php echo prepareEcommString($product['id']); ?>',
-													'price': '<?php echo $product['price'] ?>',
-													'price_from': 0                  
-												}<?php if ($i < (count($google_ecommerce_info['transactionProducts']) - 1)) {?>,<?php } ?>
-												<?php $i++; $total_vk_price+=$product['price']; ?>
-												<?php } ?>]; 
-
-												console.log('VK trigger purchase');      
-												VK.Retargeting.ProductEvent(<?php echo $this->config->get('config_vk_pricelist_id'); ?>, 'purchase', {
-													'products' : vkproduct, 
-													'currency_code': '<?php echo $this->config->get('config_regional_currency'); ?>', 
-													'total_price': '<?php echo $total_vk_price; ?>'
-												});  
-											}
-										}
+									
 									<?php } ?>
 
 

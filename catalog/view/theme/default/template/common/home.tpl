@@ -469,14 +469,7 @@
 
 	<?php if ($this->config->get('config_vk_enable_pixel')) { ?>
 		<script>
-			var VKRetargetFunction = function(){
-				if((typeof VK !== 'undefined')){
-					console.log('VK trigger view_home');
-					VK.Retargeting.ProductEvent(<?php echo $this->config->get('config_vk_pricelist_id'); ?>, 'view_home', {}); 
-				} else {
-					console.log('VK is undefined');
-				}
-			};
+			
 		</script>
 	<?php } ?>
 

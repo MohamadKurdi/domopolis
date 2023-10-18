@@ -78,12 +78,6 @@
 							});	
 
 							<?php if ($this->config->get('config_vk_enable_pixel')) { ?>
-								if((typeof VK !== 'undefined')){
-									console.log('VK trigger purchase');		
-									VK.Retargeting.ProductEvent(<?php echo $this->config->get('config_vk_pricelist_id'); ?>, 'purchase', {'products' : vkproduct, 'currency_code': '<?php echo $this->config->get('config_regional_currency'); ?>', 'total_price': data.google_ecommerce_info.transactionProducts[0].price}); 
-								} else {
-									console.log('VK is undefined');
-								}
 							<?php } ?>			
 							
 							if (data.google_ecommerce_info.display_survey == true){

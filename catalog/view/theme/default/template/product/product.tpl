@@ -1961,26 +1961,6 @@ unset($this->session->data['gac:listfrom']); }
 				});
 
 				<?php if ($this->config->get('config_vk_enable_pixel')) { ?>
-
-					var vkproduct = [{
-						'id': '<?php echo $product_id; ?>',
-						<?php if ($special) { ?>
-							'price': '<?php echo prepareEcommPrice($special); ?>',	
-							'price_old': '<?php echo prepareEcommPrice($price); ?>'	
-						<?php } else { ?>
-							'price': '<?php echo prepareEcommPrice($price); ?>',	
-						<?php } ?>
-						'price_from': '0'									
-					}];	
-
-					var VKRetargetFunction = function(){
-						if((typeof VK !== 'undefined')){
-							console.log('VK trigger view_product');		
-							VK.Retargeting.ProductEvent(<?php echo $this->config->get('config_vk_pricelist_id'); ?>, 'view_product', {'products' : vkproduct, 'currency_code': '<?php echo $this->config->get('config_regional_currency'); ?>', 'total_price': '<?php echo ($special)?prepareEcommPrice($special):prepareEcommPrice($price); ?>'}); 
-						} else {
-							console.log('VK is undefined');
-						}
-					};
 				<?php } ?>
 
 				window.dataLayer = window.dataLayer || [];
@@ -2135,15 +2115,6 @@ unset($this->session->data['gac:listfrom']); }
 							});	
 
 							<?php if ($this->config->get('config_vk_enable_pixel')) { ?>
-								if((typeof VK !== 'undefined')){
-									console.log('VK trigger add_to_cart');		
-									VK.Retargeting.ProductEvent(<?php echo $this->config->get('config_vk_pricelist_id'); ?>, 'add_to_cart', {'products' : vkproduct, 'currency_code': '<?php echo $this->config->get('config_regional_currency'); ?>', 'total_price': '<?php echo ($special)?prepareEcommPrice($special):prepareEcommPrice($price); ?>'}); 
-
-									console.log('VK trigger init_checkout');	
-									VK.Retargeting.ProductEvent(<?php echo $this->config->get('config_vk_pricelist_id'); ?>, 'init_checkout', {'products' : vkproduct, 'currency_code': '<?php echo $this->config->get('config_regional_currency'); ?>', 'total_price': '<?php echo ($special)?prepareEcommPrice($special):prepareEcommPrice($price); ?>'}); 
-								} else {
-									console.log('VK is undefined');
-								}
 							<?php } ?>
 							
 							

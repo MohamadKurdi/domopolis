@@ -582,24 +582,7 @@
 
 <?php if ($this->config->get('config_vk_enable_pixel')) { ?>
 	<script>
-		<?php if ($products) { ?>
-				var VKRetargetFunction = function(){
-				if((typeof VK !== 'undefined')){
-					console.log('VK trigger view_other');
-
-					let vkitems = [
-						<?php $i = 0; foreach ($products as $product) { ?>
-						{'id': '<?php echo $product['product_id']; ?>', 'price': '<?php echo ($product['special'])?prepareEcommPrice($product['special']):prepareEcommPrice($product['price']); ?>'}
-						<?php if ($i < (count($products) - 1)) {?>,<?php } ?>
-						<?php } ?>
-					];
-
-					VK.Retargeting.ProductEvent(<?php echo $this->config->get('config_vk_pricelist_id'); ?>, 'view_other', {'products' : vkitems, 'currency_code': '<?php echo $this->config->get('config_regional_currency'); ?>', 'total_price': '<?php echo prepareEcommPrice($productPriceSum); ?>' }); 
-				} else {
-					console.log('VK is undefined');
-				}
-			};
-		<?php } ?>
+		
 	</script>
 <?php } ?>
 
