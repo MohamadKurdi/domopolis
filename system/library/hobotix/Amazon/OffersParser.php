@@ -246,9 +246,11 @@ class OffersParser
 		return $query->rows;
 	}
 
-	public function checkIfAsinHasAmazonAndPrimeOffers($asin){
-		$offers = $this->getAmazonOffersForAsinSimple($asin);
-
+	public function checkIfAsinHasAmazonAndPrimeOffers($asin, $offers = []){
+		if (!$offers){
+			$offers = $this->getAmazonOffersForAsinSimple($asin);
+		}
+		
 		$result = [
 			'HAS_AMAZON' 	=> false,
 			'HAS_PRIME' 	=> false,
@@ -267,6 +269,29 @@ class OffersParser
 		}
 
 		return $result;
+	}
+
+	public function setAsinOffersType($asin, $offers = []){
+		$result = $this->checkIfAsinHasAmazonAndPrimeOffers($asin, $offers);
+
+		$offers_type = 'O';
+		if ($result['HAS_AMAZON'] && $result['HAS_PRIME']){
+			$offers_type = 'AP';			
+		} elseif ($result['HAS_AMAZON']){
+			$offers_type = 'A';
+		} elseif ($result['HAS_PRIME']){
+			$offers_type = 'P';
+		} else {
+			if (count($offers)){
+				$offers_type = 'O';
+			} else {
+				$offers_type = 'N';
+			}
+		}
+
+		echoLine('[OffersParser::setAsinOffersType] Set marker type ' . $offers_type . ' for asin ' . $asin, 'i');
+
+		$this->db->query("UPDATE product SET amazon_offers_type = '" . $this->db->escape($offers_type) . "' WHERE asin LIKE '" . $this->db->escape($asin) . "'");
 	}
 
 	public function setAmazonOfferDates($amazon_offer_id, $data){
@@ -569,8 +594,8 @@ class OffersParser
 			$this->setProductOffers($asin)->setProductOffersCount($asin, count($rfOffers));
 		}
 
+		$arrOffers  = [];
 		foreach ($rfOffers as $key => $rfOffer){			
-
 			//Best Amazon Price
 			if ($key == $ratingKeys['maxRatingKey']){
 				$amazonBestPrice = (float)$rfOffer->getPriceAmount() + (float)$rfOffer->getDeliveryAmount();
@@ -611,6 +636,11 @@ class OffersParser
 				$offerDates = $this->parseAmazonDeliveryComment($rfOffer->getDeliveryComments());
 			}
 
+			$arrOffers[] = [
+				'sellerName' 	=> $rfOffer->getSellerName(),
+				'isPrime' 		=> (int)$rfOffer->getIsPrime()
+			];
+
 			$this->db->query("INSERT INTO product_amzn_offers SET
 				asin 							= '" . $this->db->escape($asin) . "', 			
 				priceCurrency 					= '" . $this->db->escape($rfOffer->getPriceCurrency()) . "',
@@ -642,6 +672,8 @@ class OffersParser
 				offer_id 						= '" . $this->db->escape($offer_id) . "',
 				date_added						= NOW()");
 		}
+
+		$this->setAsinOffersType($asin, $arrOffers);
 	}
 
 	public function calculateOffersRatings($rfOfferList){
