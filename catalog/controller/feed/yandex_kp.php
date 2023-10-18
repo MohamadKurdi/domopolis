@@ -6,6 +6,7 @@ class ControllerFeedYandexKP extends Controller {
 	private $stock_path = ['yandex_market_feed_{store_id}{yam_prefix}.xml'];
 	private $direct_stock_path = ['yandex_direct_stock_feed_{store_id}.xml'];
 
+	private $vk_full_path 			= ['vk_feed_{store_id}.xml'];	
 	private $ozon_full_path 		= ['ozon_feed_full_{store_id}.xml'];
 	private $ozon_path 				= ['ozon_feed_{store_id}.xml'];
 	private $priceva_path 			= ['{dir}/{dir}_{brand}_{store_id}.xml'];		
@@ -16,8 +17,8 @@ class ControllerFeedYandexKP extends Controller {
 		
 	private $yandexWeightClassID = 1;
 	private $yandexLengthClassID = 1;
-	private $ozonWeightClassID = 2;
-	private $ozonLengthClassID = 2;
+	private $ozonWeightClassID 	= 2;
+	private $ozonLengthClassID 	= 2;
 		
 	private $excludeOzonManufacturers 	= [];
 	private $excludeYandexManufacturers = [];	
@@ -48,7 +49,6 @@ class ControllerFeedYandexKP extends Controller {
 		$this->excludeYandexManufacturers 	= $this->config->get('config_yandex_exclude_manufacturers');
 
 		if ($this->type == 'ozon'){
-
 			echoLine('Тип фида: Озон');
 
 			$this->currentWeightClassID = $this->ozonWeightClassID;
@@ -125,7 +125,6 @@ class ControllerFeedYandexKP extends Controller {
 	}
 
 	private function openYML(){
-
 		$this->yml 	= '';
 		$this->yml .= '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
 		$this->yml .= '<!DOCTYPE yml_catalog SYSTEM "shops.dtd">' . PHP_EOL;
@@ -136,7 +135,6 @@ class ControllerFeedYandexKP extends Controller {
 	}
 
 	private function closeYML(){
-
 		$this->yml .= '</shop>' . PHP_EOL;
 		$this->yml .= '</yml_catalog>' . PHP_EOL;
 
@@ -253,7 +251,6 @@ class ControllerFeedYandexKP extends Controller {
 	}
 
 	private function getCategoryDefaultDimensions($category_id){
-
 		$query = $this->db->query("SELECT default_length, default_width, default_height, default_weight, default_length_class_id, default_weight_class_id FROM category WHERE category_id = '" . (int)$category_id . "'");
 
 		return $query->row;
@@ -404,6 +401,10 @@ class ControllerFeedYandexKP extends Controller {
 				$this->updateOzonInFeed($product['product_id']);
 			}
 
+			if ($this->type == 'vkontakte'){
+				$this->updateVkontakteInFeed($product['product_id']);
+			}
+
 			if ($this->type == 'market' && $this->config->get('config_yam_offer_id_prefix_enable') && $this->config->get('config_yam_offer_id_prefix')){
 				$this->yml .= '<offer id="' . $product['yam_product_id'] . '" available="' . $product['available'] . '" type="vendor.model">' . PHP_EOL;
 			} else {
@@ -502,10 +503,7 @@ class ControllerFeedYandexKP extends Controller {
 
 			$weight = $this->weight->convert($product['dimensions']['weight'], $product['dimensions']['weight_class_id'], $this->currentWeightClassID);			
 			if ($weight) {
-
-				$this->yml .= '	<weight>' . (float)$weight . '</weight>' . PHP_EOL;								
-					//	echoLine('Вес: ' . (float)$weight );
-
+				$this->yml .= '	<weight>' . (float)$weight . '</weight>' . PHP_EOL;													
 			}
 
 			$length = $this->length->convert($product['dimensions']['length'], $product['dimensions']['length_class_id'], $this->currentLengthClassID);
@@ -514,8 +512,6 @@ class ControllerFeedYandexKP extends Controller {
 
 			if ($length > 0 && $width > 0 && $height > 0) {					
 				$this->yml .= '	<dimensions>' . (float)$length . '/' . (float)$width . '/' . (float)$height . '</dimensions>' . PHP_EOL;	
-
-					//	echoLine('Размеры: ' . (float)$length . '/' . (float)$width . '/' . (float)$height);
 			}
 
 			$this->yml .= '</offer>' . PHP_EOL;
@@ -665,9 +661,8 @@ class ControllerFeedYandexKP extends Controller {
 			if ($this->config->get('config_yam_enable_category_tree')){
 				if (!empty($this->yandexCategoriesMapping[$this->products[$product_id]['main_category_id']])){
 					$this->products[$product_id]['main_category_id'] = $this->yandexCategoriesMapping[$this->products[$product_id]['main_category_id']];
-				} else {	
-					echoLine('');				
-					echoLine('[YML] No yandex category mapping: ' . $this->products[$product_id]['main_category_id'], 'e');
+				} else {				
+				//	echoLine('[YML] No yandex category mapping: ' . $this->products[$product_id]['main_category_id'], 'e');
 					$invalidCategories[$this->products[$product_id]['main_category_id']] = $this->products[$product_id]['main_category_id'];
 				}
 			}				
@@ -733,105 +728,6 @@ class ControllerFeedYandexKP extends Controller {
 		return $this;
 	}
 
-	public function makePricevaFeeds(){
-
-		if ($this->config->get('config_priceva_enable_api') || $this->config->get('config_pricecontrol_enable_api')){
-
-			ini_set('memory_limit', '2G');
-			$stores = [0];
-			$this->setProductImages();
-
-			$feedsQuery = $this->db->query("SELECT manufacturer_id, priceva_feed FROM manufacturer WHERE priceva_enable = 1 AND TRIM(priceva_feed) <> ''");
-			$feedsArray = array();
-
-			foreach ($feedsQuery->rows as $feed){
-				if (empty($feedsArray[$feed['priceva_feed']])){
-					$feedsArray[$feed['priceva_feed']] = array($feed['manufacturer_id']);
-				} else {
-					$feedsArray[$feed['priceva_feed']][] = $feed['manufacturer_id'];
-				}
-			}
-
-			foreach ($feedsArray as $pricevaFeed => $pricevaManufacturers){	
-
-				foreach ($stores as $store_id){
-					echoLine('[PRICEVA] ' . implode(',', $pricevaManufacturers) . ' ' .  $store_id);
-					$this->loadSettings($store_id)->openYML()->addShop()->addCategories()->setFeedType('priceva');
-
-					$sql = "SELECT DISTINCT(p.product_id) FROM product p 
-					LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
-					LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
-					WHERE 
-					p.status = 1 
-					AND p.is_virtual = 0
-					AND p.is_markdown = 0
-					AND p.priceva_disable <> 1
-					AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
-					AND p2s.store_id = '" . $this->config->get('config_store_id') . "'";
-					$sql .= " AND p.manufacturer_id IN (". implode(',', $pricevaManufacturers) .")";
-					$sql .= " AND (p.product_id IN (SELECT product_id FROM category_path cp LEFT JOIN product_to_category p2c ON (cp.category_id = p2c.category_id) WHERE cp.path_id IN (SELECT category_id FROM category WHERE priceva_enable = 1)) OR p.priceva_enable = 1)";
-
-					$products = $this->db->query($sql);	
-
-					$this->setProducts($products->rows)->addPricevaOffers();
-					$this->closeYML()->writeFeed(str_replace(['{brand}', '{dir}'], [$pricevaFeed, $this->config->get('config_priceva_directory_name')], $this->priceva_path[0]));
-				}
-			}
-		}
-	}
-
-	public function makeOzonFeed(){
-		ini_set('memory_limit', '2G');
-
-		$stores = [0];
-
-		foreach ($stores as $store_id){
-			echoLine('[YML] ' . $store_id);
-
-			if ($store_id == 0){
-				$this->updateOzonSetAllNotInFeed();
-			}			
-
-			$this->setProductImages()->cacheCategoryDimensions();
-			$this->loadSettings($store_id)->openYML()->addShop()->addCategories()->setFeedType('ozon');
-
-			//Товары в наличии
-			$sql = "SELECT DISTINCT(p.product_id) FROM product p 
-			LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
-			LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
-			WHERE 
-			p.`". $this->config->get('config_warehouse_identifier') ."` > 0 
-			AND p.status = 1 
-			AND p.quantity > 0
-			AND p.is_virtual = 0
-			AND p.is_markdown = 0
-			AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
-			AND p2s.store_id = '" . $this->config->get('config_store_id') . "'";
-			
-			if ($this->excludeOzonManufacturers){
-				$sql .= " AND p.manufacturer_id NOT IN (";
-				$sql .= implode(',', $this->excludeOzonManufacturers);
-				$sql .= ")";
-			}
-			
-			$products = $this->db->query($sql);	
-
-			if ($this->config->get('config_ozon_enable_price_yam') && !$this->config->get('config_yam_enable_sync_from_1c') && $this->config->get('config_yam_enable_plus_percent') && (float)$this->config->get('config_yam_plus_percent') <> 0){
-
-				echoLine('Включена настройка использования логики Маркета. Запускаем формирование.');
-
-				$this->updateYandexMarketPrices($products->rows)->flushCache();
-			}
-			
-			$this->setProducts($products->rows)->addOffers();			
-			$this->closeYML()->writeFeed($this->ozon_full_path[0]);
-
-			//TRUNCATED FEED
-			$this->openYML()->addShop()->setProducts($products->rows)->addOffersOzonTruncated();
-			$this->closeYML()->writeFeed($this->ozon_path[0]);			
-		}
-	}
-
 	public function flushCache(){			
 		echoLine('[YML] Сбрасываем кэш');
 		$this->cache->flush();	
@@ -857,6 +753,16 @@ class ControllerFeedYandexKP extends Controller {
 
 	public function updateYandexMarketInFeed($product_id){
 		$this->db->query("UPDATE product SET yam_in_feed = '1' WHERE product_id = '" . (int)$product_id . "'");
+	}
+
+	public function updateVkontakteSetAllNotInFeed(){
+		$this->db->query("UPDATE product SET vk_in_feed = '0' WHERE 1");
+
+		return $this;
+	}
+
+	public function updateVkontakteInFeed($product_id){
+		$this->db->query("UPDATE product SET vk_in_feed = '1' WHERE product_id = '" . (int)$product_id . "'");
 	}
 
 	public function updateYandexMarketPriceNational($product_id, $price, $special){
@@ -1083,7 +989,7 @@ class ControllerFeedYandexKP extends Controller {
 		}
 		
 		foreach ($stores as $store_id){
-			echoLine('[YML] ' . $store_id);
+			echoLine('[ControllerFeedYandexKP::makeFullFeed] Working in store:' . $store_id, 'i');
 
 			$this->setProductImages()->cacheCategoryDimensions();
 			$this->loadSettings($store_id)->openYML()->addShop()->addCategories();
@@ -1095,16 +1001,160 @@ class ControllerFeedYandexKP extends Controller {
 			WHERE 
 			p.status = 1 
 			AND p.stock_status_id NOT IN (" . $this->config->get('config_not_in_stock_status_id') . ")
-				AND p.quantity > 0
-				AND p.is_virtual = 0
-				AND p.is_markdown = 0
-				AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
-				AND p2s.store_id = '" . $this->config->get('config_store_id') . "'";
-				
-				$products = $this->db->query($sql);	
-				$this->setProducts($products->rows)->addOffers();
-				
-				$this->closeYML()->writeFeed($this->full_path[0]);				
+			AND p.quantity > 0
+			AND p.is_virtual = 0
+			AND p.is_markdown = 0
+			AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND p2s.store_id = '" . $this->config->get('config_store_id') . "'";
+
+			$products = $this->db->query($sql);	
+			$this->setProducts($products->rows)->addOffers();
+
+			$this->closeYML()->writeFeed($this->full_path[0]);				
+		}
+	}
+
+	public function makePricevaFeeds(){
+		if ($this->config->get('config_priceva_enable_api') || $this->config->get('config_pricecontrol_enable_api')){
+			ini_set('memory_limit', '2G');
+			$stores = [0];
+			$this->setProductImages();
+
+			$feedsQuery = $this->db->query("SELECT manufacturer_id, priceva_feed FROM manufacturer WHERE priceva_enable = 1 AND TRIM(priceva_feed) <> ''");
+			$feedsArray = array();
+
+			foreach ($feedsQuery->rows as $feed){
+				if (empty($feedsArray[$feed['priceva_feed']])){
+					$feedsArray[$feed['priceva_feed']] = array($feed['manufacturer_id']);
+				} else {
+					$feedsArray[$feed['priceva_feed']][] = $feed['manufacturer_id'];
+				}
 			}
+
+			foreach ($feedsArray as $pricevaFeed => $pricevaManufacturers){	
+
+				foreach ($stores as $store_id){
+					echoLine('[PRICEVA] ' . implode(',', $pricevaManufacturers) . ' ' .  $store_id);
+					$this->loadSettings($store_id)->openYML()->addShop()->addCategories()->setFeedType('priceva');
+
+					$sql = "SELECT DISTINCT(p.product_id) FROM product p 
+					LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
+					LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
+					WHERE 
+					p.status = 1 
+					AND p.is_virtual = 0
+					AND p.is_markdown = 0
+					AND p.priceva_disable <> 1
+					AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+					AND p2s.store_id = '" . $this->config->get('config_store_id') . "'";
+					$sql .= " AND p.manufacturer_id IN (". implode(',', $pricevaManufacturers) .")";
+					$sql .= " AND (p.product_id IN (SELECT product_id FROM category_path cp LEFT JOIN product_to_category p2c ON (cp.category_id = p2c.category_id) WHERE cp.path_id IN (SELECT category_id FROM category WHERE priceva_enable = 1)) OR p.priceva_enable = 1)";
+
+					$products = $this->db->query($sql);	
+
+					$this->setProducts($products->rows)->addPricevaOffers();
+					$this->closeYML()->writeFeed(str_replace(['{brand}', '{dir}'], [$pricevaFeed, $this->config->get('config_priceva_directory_name')], $this->priceva_path[0]));
+				}
+			}
+		}
+	}
+
+	public function makeOzonFeed(){
+		ini_set('memory_limit', '2G');
+		$stores = [0];
+
+		foreach ($stores as $store_id){
+			echoLine('[ControllerFeedYandexKP::makeOzonFeed] Working in store:' . $store_id, 'i');
+
+			if ($store_id == 0){
+				$this->updateOzonSetAllNotInFeed();
+			}			
+
+			$this->setProductImages()->cacheCategoryDimensions();
+			$this->loadSettings($store_id)->openYML()->addShop()->addCategories()->setFeedType('ozon');
+
+			$sql = "SELECT DISTINCT(p.product_id) FROM product p 
+			LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
+			LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
+			WHERE 
+			p.`". $this->config->get('config_warehouse_identifier') ."` > 0 
+			AND p.status = 1 
+			AND p.quantity > 0
+			AND p.is_virtual = 0
+			AND p.is_markdown = 0
+			AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND p2s.store_id = '" . $this->config->get('config_store_id') . "'";
+			
+			if ($this->excludeOzonManufacturers){
+				$sql .= " AND p.manufacturer_id NOT IN (";
+				$sql .= implode(',', $this->excludeOzonManufacturers);
+				$sql .= ")";
+			}
+			
+			$products = $this->db->query($sql);	
+
+			if ($this->config->get('config_ozon_enable_price_yam') && !$this->config->get('config_yam_enable_sync_from_1c') && $this->config->get('config_yam_enable_plus_percent') && (float)$this->config->get('config_yam_plus_percent') <> 0){
+				echoLine('[ControllerFeedYandexKP::makeOzonFeed] Включена настройка использования логики Маркета. Запускаем формирование.', 'w');
+				$this->updateYandexMarketPrices($products->rows)->flushCache();
+			}
+			
+			$this->setProducts($products->rows)->addOffers();			
+			$this->closeYML()->writeFeed($this->ozon_full_path[0]);
+
+			$this->openYML()->addShop()->setProducts($products->rows)->addOffersOzonTruncated();
+			$this->closeYML()->writeFeed($this->ozon_path[0]);			
+		}
+	}		
+
+	public function makeVkontakteFeed(){
+		if (!$this->config->get('config_vk_enable_pixel')){
+			echoLine('[ControllerFeedYandexKP::makeVkontakteFeed] VK Pixel is disabled in settings!');
+			exit();
 		}		
-	}																																														
+
+		ini_set('memory_limit', '2G');
+
+		if ($this->config->get('config_single_store_enable')){
+			$stores = [0];
+		} else {
+			$stores = [0];
+		}
+		
+		foreach ($stores as $store_id){
+			echoLine('[ControllerFeedYandexKP::makeVkontakteFeed] Working in store:' . $store_id, 'i');
+
+			if ($store_id == 0){
+				$this->updateVkontakteSetAllNotInFeed();
+			}
+
+			$this->setProductImages()->cacheCategoryDimensions();
+			$this->loadSettings($store_id)->openYML()->addShop()->addCategories()->setFeedType('vkontakte');
+
+			$sql = "SELECT DISTINCT(p.product_id) FROM product p 
+				LEFT JOIN product_description pd ON (p.product_id = pd.product_id)
+				LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id) 
+				WHERE 
+				p.status = 1 ";
+			
+			if ($this->config->get('config_vk_feed_only_in_stock')){
+				$sql .= "AND p.stock_status_id NOT IN (" . $this->config->get('config_not_in_stock_status_id') . ")
+						 AND p.quantity > 0 ";
+			}
+			
+
+			$sql .= "AND p.is_virtual = 0
+			AND p.is_markdown = 0
+			AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "'
+			AND p2s.store_id = '" . $this->config->get('config_store_id') . "'";
+
+			if (!empty($this->config->get('config_vk_feed_include_manufacturers')) && is_array($this->config->get('config_vk_feed_include_manufacturers'))){
+				$sql .= " AND p.manufacturer_id IN (" . implode(',', $this->config->get('config_vk_feed_include_manufacturers')) . ")";
+			}
+
+			$products = $this->db->query($sql);	
+			$this->setProducts($products->rows)->addOffers();
+
+			$this->closeYML()->writeFeed($this->vk_full_path[0]);				
+		}
+	}
+}																																														
