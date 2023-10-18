@@ -223,7 +223,7 @@ class ModelCatalogProductExt extends Model {
             'name'      => 'pd.name',
             'model'     => 'p.model',
             'download'  => 'dd.name',
-            'filter'    => 'fd.name',
+            'filter'    => 'fd.name'
             );
 
         foreach ($anywhere_filters as $key => $value) {
@@ -234,6 +234,10 @@ class ModelCatalogProductExt extends Model {
                     $sql .= " AND LCASE($value) LIKE '" . $this->db->escape(utf8_strtolower($data["filter_$key"])) . "%'";
                 }
             }
+        }
+
+        if (!empty($data['filter_amazon_offers_type'])) {
+            $sql .= " AND p.amazon_offers_type = '" . $this->db->escape(utf8_strtolower($data['filter_amazon_offers_type'])) . "'";
         }
 
         if (!empty($data['filter_seo'])) {

@@ -125,6 +125,17 @@
 									</select>
 								</td>
 								<?php break;
+								case 'amazon_offers_type': ?>
+								<td class="<?php echo $column_info[$col]['align']; ?>">
+									<select name="filter_<?php echo $col; ?>" class="filter <?php echo $col; ?>" style="width:40px;">
+										<option value=""></option>
+										<option value="*"<?php echo (!is_null($filters[$col]) && $filters[$col] == '*') ? ' selected="selected"' : ''; ?>><?php echo $text_none; ?></option>
+										<?php foreach (['A', 'P', 'AP', 'O', 'N'] as $enum) { ?>
+											<option value="<?php echo $enum; ?>"<?php echo (!is_null($filters[$col]) && $enum == $filters[$col]) ? ' selected="selected"' : ''; ?>><?php echo $enum; ?></option>
+										<?php } ?>
+									</select>
+								</td>
+								<?php break;
 								case 'fill_from_amazon': ?>
 								<td class="<?php echo $column_info[$col]['align']; ?>">
 									<select name="filter_<?php echo $col; ?>" class="filter <?php echo $col; ?>">
@@ -354,6 +365,24 @@
 												<i class="fa fa-check"></i> <?php echo $product['amzn_last_offers']; ?>
 											<?php } else { ?>
 												<i class="fa fa-hourglass"></i> ждёт
+											<?php } ?>
+										</td>
+
+										<?php break;
+										case 'amazon_offers_type': ?>
+										<td class="center<?php echo ($column_info[$col]['qe_status']) ? ' ' . $column_info[$col]['qe_type'] : ''; ?>" id="<?php echo $col . "-" . $product['product_id']; ?>">
+											<?php if ($product['amazon_offers_type'] == 'A'){ ?>
+												<i class="fa fa-check" style="color:#32bd38"></i> <span style="color:#32bd38; font-weight:700">A</span>
+											<?php } elseif ($product['amazon_offers_type'] == 'AP') { ?>
+												<i class="fa fa-check" style="color:#32bd38"></i> <span style="color:#32bd38; font-weight:700">AP</span>
+											<?php } elseif ($product['amazon_offers_type'] == 'P') { ?>
+												<i class="fa fa-check" style="color:#32bd38"></i> <span style="color:#32bd38; font-weight:700">P</span>
+											<?php } elseif ($product['amazon_offers_type'] == 'O') { ?>
+												<i class="fa fa-question-circle" style="color:#ff7815"></i> <span style="color:#ff7815; font-weight:700">O</span>
+											<?php } elseif ($product['amazon_offers_type'] == 'N') { ?>
+												<i class="fa fa-exclamation-triangle" style="color:#fa4934"></i> <span style="color:#fa4934; font-weight:700">N</span>
+											<?php } else { ?>
+												<i class="fa fa-question-circle" style="color:#000"></i>
 											<?php } ?>
 										</td>
 
