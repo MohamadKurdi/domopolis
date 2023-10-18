@@ -1262,6 +1262,31 @@ class ControllerDPRainForest extends Controller {
 		}		
 	}
 
+
+	/*
+	Полная переустановка маркеров офферов
+	*/
+	public function fixamazonoffertypesfull(){
+		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFastPriceFull();		
+
+		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
+
+		echoLine('[fixamazonoffertypesfull] Total products: ' . $total);
+		$k = 1;		
+
+		for ($i = 1; $i <= ($iterations+1); $i++){
+			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFastPriceFull(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
+			if ($products){		
+				foreach ($products as $product){
+					echoLine('[fixamazonoffertypesfull] Product ' . $product['product_id'] . ' / ' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
+					
+					$this->rainforestAmazon->offersParser->setAsinOffersType($product['asin']);
+					$k++;	
+				}
+			}	
+		}		
+	}
+
 	/*
 	Перекладывает информацию о товарах в файловый кэш из БД
 	*/
