@@ -1,7 +1,7 @@
 <?php
 class ControllerSettingSetting extends Controller
 {
-    private $error = array();
+    private $error = [];
 
     private $admin_modes = [
         'config_rainforest_asin_deletion_mode' => [
@@ -544,7 +544,7 @@ class ControllerSettingSetting extends Controller
             $this->data['error_encryption'] = '';
         }
         
-        $this->data['breadcrumbs'] = array();
+        $this->data['breadcrumbs'] = [];
         
         $this->data['breadcrumbs'][] = array(
             'text'      => $this->language->get('text_home'),
@@ -963,7 +963,7 @@ class ControllerSettingSetting extends Controller
             $this->data['config_template'] = $this->config->get('config_template');
         }
         
-        $this->data['templates'] = array();
+        $this->data['templates'] = [];
         
         $directories = glob(DIR_CATALOG . 'view/theme/*', GLOB_ONLYDIR);        
         foreach ($directories as $directory) {
@@ -1910,7 +1910,7 @@ class ControllerSettingSetting extends Controller
         } elseif ($this->config->get('config_customer_group_display')) {
             $this->data['config_customer_group_display'] = $this->config->get('config_customer_group_display');
         } else {
-            $this->data['config_customer_group_display'] = array();
+            $this->data['config_customer_group_display'] = [];
         }
         
         if (isset($this->request->post['config_customer_price'])) {
@@ -2060,7 +2060,7 @@ class ControllerSettingSetting extends Controller
         } elseif ($this->config->get('config_odinass_order_status_id')) {
             $this->data['config_odinass_order_status_id'] = $this->config->get('config_odinass_order_status_id');
         } else {
-            $this->data['config_odinass_order_status_id'] = array();
+            $this->data['config_odinass_order_status_id'] = [];
         }
         
         if (isset($this->request->post['config_problem_order_status_id'])) {
@@ -2068,7 +2068,7 @@ class ControllerSettingSetting extends Controller
         } elseif ($this->config->get('config_problem_order_status_id')) {
             $this->data['config_problem_order_status_id'] = $this->config->get('config_problem_order_status_id');
         } else {
-            $this->data['config_problem_order_status_id'] = array();
+            $this->data['config_problem_order_status_id'] = [];
         }
         
         if (isset($this->request->post['config_problem_quality_order_status_id'])) {
@@ -2076,7 +2076,7 @@ class ControllerSettingSetting extends Controller
         } elseif ($this->config->get('config_problem_quality_order_status_id')) {
             $this->data['config_problem_quality_order_status_id'] = $this->config->get('config_problem_quality_order_status_id');
         } else {
-            $this->data['config_problem_quality_order_status_id'] = array();
+            $this->data['config_problem_quality_order_status_id'] = [];
         }
         
         if (isset($this->request->post['config_toapprove_order_status_id'])) {
@@ -2084,7 +2084,7 @@ class ControllerSettingSetting extends Controller
         } elseif ($this->config->get('config_toapprove_order_status_id')) {
             $this->data['config_toapprove_order_status_id'] = $this->config->get('config_toapprove_order_status_id');
         } else {
-            $this->data['config_toapprove_order_status_id'] = array();
+            $this->data['config_toapprove_order_status_id'] = [];
         }
         
         $this->load->model('sale/reject_reason');
@@ -2095,7 +2095,7 @@ class ControllerSettingSetting extends Controller
         } elseif ($this->config->get('config_brandmanager_fail_order_status_id')) {
             $this->data['config_brandmanager_fail_order_status_id'] = $this->config->get('config_brandmanager_fail_order_status_id');
         } else {
-            $this->data['config_brandmanager_fail_order_status_id'] = array();
+            $this->data['config_brandmanager_fail_order_status_id'] = [];
         }
         
         if (isset($this->request->post['config_manager_confirmed_order_status_id'])) {
@@ -2103,7 +2103,7 @@ class ControllerSettingSetting extends Controller
         } elseif ($this->config->get('config_manager_confirmed_order_status_id')) {
             $this->data['config_manager_confirmed_order_status_id'] = $this->config->get('config_manager_confirmed_order_status_id');
         } else {
-            $this->data['config_manager_confirmed_order_status_id'] = array();
+            $this->data['config_manager_confirmed_order_status_id'] = [];
         }
         
         if (isset($this->request->post['config_nodelete_order_status_id'])) {
@@ -2111,7 +2111,7 @@ class ControllerSettingSetting extends Controller
         } elseif ($this->config->get('config_nodelete_order_status_id')) {
             $this->data['config_nodelete_order_status_id'] = $this->config->get('config_nodelete_order_status_id');
         } else {
-            $this->data['config_nodelete_order_status_id'] = array();
+            $this->data['config_nodelete_order_status_id'] = [];
         }
         
         if (isset($this->request->post['config_amazonlist_order_status_id'])) {
@@ -2119,7 +2119,7 @@ class ControllerSettingSetting extends Controller
         } elseif ($this->config->get('config_amazonlist_order_status_id')) {
             $this->data['config_amazonlist_order_status_id'] = $this->config->get('config_amazonlist_order_status_id');
         } else {
-            $this->data['config_amazonlist_order_status_id'] = array();
+            $this->data['config_amazonlist_order_status_id'] = [];
         }
         
         $this->load->model('localisation/order_status');
@@ -2766,7 +2766,7 @@ class ControllerSettingSetting extends Controller
             $this->data['config_seo_url_type'] = 'seo_url';
         }
         
-        $this->data['seo_types'] = array();
+        $this->data['seo_types'] = [];
         $this->data['seo_types'][] = array('type' => 'seo_url', 'name' => $this->language->get('text_seo_url'));
         $this->data['seo_types'][] = array('type' => 'seo_pro', 'name' => $this->language->get('text_seo_pro'));
         
@@ -3179,6 +3179,14 @@ class ControllerSettingSetting extends Controller
             $this->data['config_vk_pixel_body'] = $this->request->post['config_vk_pixel_body'];
         } else {
             $this->data['config_vk_pixel_body'] = $this->config->get('config_vk_pixel_body');
+        }
+
+        if (isset($this->request->post['config_vk_feed_include_manufacturers'])) {
+            $this->data['config_vk_feed_include_manufacturers'] = $this->request->post['config_vk_feed_include_manufacturers'];
+        } elseif ($this->config->get('config_vk_feed_include_manufacturers')) {
+            $this->data['config_vk_feed_include_manufacturers'] = $this->config->get('config_vk_feed_include_manufacturers');
+        } else {
+            $this->data['config_vk_feed_include_manufacturers'] = [];
         }
         
         if (isset($this->request->post['config_gtm_header'])) {
@@ -4781,7 +4789,7 @@ class ControllerSettingSetting extends Controller
         } elseif ($this->config->get('config_ozon_exclude_manufacturers')) {
             $this->data['config_ozon_exclude_manufacturers'] = $this->config->get('config_ozon_exclude_manufacturers');
         } else {
-            $this->data['config_ozon_exclude_manufacturers'] = array();
+            $this->data['config_ozon_exclude_manufacturers'] = [];
         }
 
         if (isset($this->request->post['config_yandex_exclude_manufacturers'])) {
@@ -4789,7 +4797,7 @@ class ControllerSettingSetting extends Controller
         } elseif ($this->config->get('config_yandex_exclude_manufacturers')) {
             $this->data['config_yandex_exclude_manufacturers'] = $this->config->get('config_yandex_exclude_manufacturers');
         } else {
-            $this->data['config_yandex_exclude_manufacturers'] = array();
+            $this->data['config_yandex_exclude_manufacturers'] = [];
         }
 
         $this->data['deprecated_yam_module'] = $this->url->link('feed/yandex_yml', 'token=' . $this->session->data['token'], 'SSL');
@@ -5100,7 +5108,7 @@ class ControllerSettingSetting extends Controller
     
     public function country()
     {
-        $json = array();
+        $json = [];
         
         $this->load->model('localisation/country');
         

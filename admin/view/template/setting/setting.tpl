@@ -8371,7 +8371,7 @@
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">VK пиксель (body)</span></p>
 										<textarea name="config_vk_pixel_body" cols="40" rows="10"><?php echo $config_vk_pixel_body; ?></textarea>
 									</td>	
-									<td width="50%">
+									<td width="20%">
 
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">Включить пиксель</span></p>
 										<select name="config_vk_enable_pixel">
@@ -8393,7 +8393,28 @@
 										<input type="text" name="config_vk_pricelist_id" value="<?php echo $config_vk_pricelist_id; ?>" size="40" />
 
 									</td>
+
+									<td width="30%">
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включить бренды в VK</span></p>
+										<div class="scrollbox" style="height:250px;">
+											<?php $class = 'odd'; ?>
+											<?php foreach ($manufacturers as $manufacturer) { ?>
+												<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+												<div class="<?php echo $class; ?>">
+													<?php if (in_array($manufacturer['manufacturer_id'], $config_vk_feed_include_manufacturers)) { ?>
+														<input id="config_vk_feed_include_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>" class="checkbox" type="checkbox" name="config_vk_feed_include_manufacturers[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" checked="checked" />
+														<label for="config_vk_feed_include_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></label>
+													<?php } else { ?>
+														<input id="config_vk_feed_include_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>" class="checkbox" type="checkbox" name="config_vk_feed_include_manufacturers[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" />
+														<label for="config_vk_feed_include_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></label>
+													<?php } ?>
+												</div>
+											<?php } ?>
+										</div>
+									</td>
 								</tr>
+
+
 							</table>
 
 
