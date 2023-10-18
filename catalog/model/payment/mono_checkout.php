@@ -140,6 +140,11 @@ class ModelPaymentMonoCheckout extends Model
             }
         }
 
+        if ($json['delivery_method'] == 'courier'){
+            $this->db->query("UPDATE `order` SET shipping_address_1     = '" . $this->db->escape($json['delivery_branch_address']) . "' WHERE order_id = '" . (int)$order_info['order_id'] . "'");
+            $this->db->query("UPDATE `order` SET payment_address_1      = '" . $this->db->escape($json['delivery_branch_address']) . "' WHERE order_id = '" . (int)$order_info['order_id'] . "'");            
+        }
+
         switch($json['generalStatus']){
             case 'not_authorized':
             break;
