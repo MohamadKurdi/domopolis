@@ -223,7 +223,7 @@
                         }
                     }
                     
-                    $this->_templateData['products'][] = array(
+                    $this->_templateData['products'][] = [
                     'key'               => isset($product['key']) ? $product['key'] : '',
                     'product_id'        => $product['product_id'],
                     'is_certificate' 	=> $product['is_certificate'],
@@ -246,7 +246,7 @@
                     'old_price' => $old_price,
                     'total'     => $total,
                     'href'      => $this->url->link('product/product', 'product_id=' . $product['product_id'])
-                    );
+                    ];
                     } elseif ($version >= 156) {
                     $profile_description = '';
                     
@@ -280,6 +280,7 @@
                     'thumb'               => $image,
                     'name'                => $product['name'],
                     'model'               => $product['model'],
+                    'manufacturer'        => $product['manufacturer'],
                     'minimum'             => $product['minimum'],
                     'current_in_stock'		    => $product['current_in_stock'],
                     'fully_in_stock'			=> $product['fully_in_stock'],
@@ -305,6 +306,7 @@
                     'is_certificate' 	=> $product['is_certificate'],
                     'thumb'     => $image,
                     'name'      => $product['name'],
+                    'manufacturer'  => $product['manufacturer'],
                     'model'     => $product['model'],
                     'minimum'   => $product['minimum'],
                     'option'    => $option_data,

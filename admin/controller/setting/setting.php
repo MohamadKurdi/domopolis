@@ -3169,6 +3169,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_vk_pricelist_id'] = $this->config->get('config_vk_pricelist_id');
         }
 
+        if (isset($this->request->post['config_vk_feed_only_in_stock'])) {
+            $this->data['config_vk_feed_only_in_stock'] = $this->request->post['config_vk_feed_only_in_stock'];
+        } else {
+            $this->data['config_vk_feed_only_in_stock'] = $this->config->get('config_vk_feed_only_in_stock');
+        }
+
         if (isset($this->request->post['config_vk_pixel_header'])) {
             $this->data['config_vk_pixel_header'] = $this->request->post['config_vk_pixel_header'];
         } else {

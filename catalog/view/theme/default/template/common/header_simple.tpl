@@ -938,7 +938,7 @@
 						</a>
 					</div>
 					
-					<?php if (ADMIN_SESSION_DETECTED && $user) { ?>
+					<?php if (ADMIN_SESSION_DETECTED && !empty($user)) { ?>
 						<div class="header-admin__user">
 							<i class="fas fa-user"></i> <?php echo $user['realname']; ?>
 							<?php if ($user['own_orders']) { ?>

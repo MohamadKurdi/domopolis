@@ -8372,31 +8372,47 @@
 										<textarea name="config_vk_pixel_body" cols="40" rows="10"><?php echo $config_vk_pixel_body; ?></textarea>
 									</td>	
 									<td width="20%">
-
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">Включить пиксель</span></p>
-										<select name="config_vk_enable_pixel">
-											<?php if ($config_vk_enable_pixel) { ?>
-												<option value="1" selected="selected">Включить</option>
-												<option value="0">Отключить</option>
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">Включить пиксель</span></p>
+											<select name="config_vk_enable_pixel">
+												<?php if ($config_vk_enable_pixel) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
 												<?php } else { ?>													
-												<option value="1">Включить</option>
-												<option value="0"  selected="selected">Отключить</option>
-											<? } ?>
-										</select>
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
 
-										<br />
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">VK пиксель ID</span></p>
-										<input type="text" name="config_vk_pixel_id" value="<?php echo $config_vk_pixel_id; ?>" size="40" />
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">VK пиксель ID</span></p>
+											<input type="text" name="config_vk_pixel_id" value="<?php echo $config_vk_pixel_id; ?>" size="40" />
+										</div>
 
-										<br />
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">VK прайслист ID</span></p>
-										<input type="text" name="config_vk_pricelist_id" value="<?php echo $config_vk_pricelist_id; ?>" size="40" />
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">VK прайслист ID</span></p>
+											<input type="text" name="config_vk_pricelist_id" value="<?php echo $config_vk_pricelist_id; ?>" size="40" />
+										</div>
+
+										<div>
+											<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#3F6AD8; color:#FFF">В фиде только наличие</span></p>
+											<select name="config_vk_feed_only_in_stock">
+												<?php if ($config_vk_feed_only_in_stock) { ?>
+													<option value="1" selected="selected">Включить</option>
+													<option value="0">Отключить</option>
+												<?php } else { ?>													
+													<option value="1">Включить</option>
+													<option value="0"  selected="selected">Отключить</option>
+												<? } ?>
+											</select>
+										</div>
 
 									</td>
 
 									<td width="30%">
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включить бренды в VK</span></p>
-										<div class="scrollbox" style="height:250px;">
+										<div class="scrollbox" style="height:350px;">
 											<?php $class = 'odd'; ?>
 											<?php foreach ($manufacturers as $manufacturer) { ?>
 												<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>

@@ -136,7 +136,7 @@
 					
 					
 					$product_query = $this->db->ncquery(
-					"SELECT *, p.image as image,				
+					"SELECT *, p.image as image,			
 					(SELECT price FROM product_price_to_store pp2s WHERE pp2s.product_id = p.product_id AND pp2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price,
 					(SELECT price FROM product_price_national_to_store ppn2s WHERE ppn2s.product_id = p.product_id AND ppn2s.store_id = '" . (int)$this->config->get('config_store_id') . "' LIMIT 1) as store_overload_price_national,
 					m.name as manufacturer
