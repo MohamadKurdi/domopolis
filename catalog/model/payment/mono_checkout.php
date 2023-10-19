@@ -253,9 +253,10 @@ class ModelPaymentMonoCheckout extends Model
             ];
 
             $customer_city = $this->model_tool_simpleapicustom->getAndCheckCurrentCity();
-            if ($customer_city == $this->language->get('default_city_' . $this->config->get('config_country_id'))){
+
+            if ($customer_city && !empty($customer_city['city']) && $customer_city['city'] == $this->language->get('default_city_' . $this->config->get('config_country_id'))){
                 $data['dlv_method_list'][] = 'courier';
-            }
+            }            
 
             $curl = curl_init();
             curl_setopt_array($curl, array(

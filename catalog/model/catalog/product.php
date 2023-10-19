@@ -277,6 +277,7 @@
 						'stock_type'  				=> $stock_data['stock_type'],
 						'stock_text'  				=> $result['stock_text'],						
 						'show_delivery_terms' 		=> $stock_data['show_delivery_terms'],
+						'amazon_offers_type' 		=> $result['amazon_offers_type'],
 						'manufacturer' 				=> $result['manufacturer'],
 						'main_category_id'         	=> $result['main_category_id'],
 						'manufacturer_id'          	=> $result['manufacturer_id'],
@@ -740,6 +741,7 @@
 							'yam_in_feed'		   	   => $query->row['yam_in_feed'],
 							'yam_disable'		   	   => $query->row['yam_disable'],
 							'is_illiquid'		   	   => $query->row['is_illiquid'],
+							'amazon_offers_type'	   => $query->row['amazon_offers_type'],
 							'region_id'				   => $this->config->get('config_googlelocal_code')
 						]; 
 
