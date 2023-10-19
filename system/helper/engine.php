@@ -156,7 +156,7 @@ function prepareEOLArray($string){
 function checkAndFormatMultiAttributes($string, $separator, $type = 'ul'){
 	$result = '';
 
-	$exploded = explode($delimeter, $string);
+	$exploded = explode($separator, $string);
 
 	if (count($exploded) == 1){
 		$result = $string;
