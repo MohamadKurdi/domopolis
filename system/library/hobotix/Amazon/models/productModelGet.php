@@ -437,6 +437,32 @@ class productModelGet extends hoboModel{
 		return $result;
 	}
 
+	public function getTotalProductsWithAsin(){
+		$result = [];
+
+		$sql = "SELECT COUNT(product_id) as total FROM product WHERE asin <> 'INVALID' AND asin <> ''";		
+
+		return $this->db->ncquery($sql)->row['total'];		
+	}	
+
+	public function getProductsWithAsin($start){
+		$result = [];
+
+		$sql = "SELECT * FROM product WHERE asin <> '' AND asin <> 'INVALID' ORDER BY product_id ASC limit " . (int)$start . ", " . (int)\hobotix\RainforestAmazon::generalDBQueryLimit;		
+
+		$query = $this->db->ncquery($sql);
+
+		foreach ($query->rows as $row){
+			$result[] = [
+				'product_id' 			=> $row['product_id'],
+				'amazon_best_price'		=> $row['amazon_best_price'],
+				'asin' 					=> $row['asin']									
+			];
+		}
+
+		return $result;
+	}
+
 	public function getTotalProductsWithFastPrice(){
 		$result = [];
 

@@ -246,7 +246,7 @@ class OffersParser
 		return $query->rows;
 	}
 
-	public function checkIfAsinHasAmazonAndPrimeOffers($asin, $offers = []){
+	public function checkIfAsinHasAmazonAndPrimeOffers($asin, $offers = [], $return_all = false){
 		if (!$offers){
 			$offers = $this->getAmazonOffersForAsinSimple($asin);
 		}
@@ -268,11 +268,21 @@ class OffersParser
 			}
 		}
 
+		if ($return_all){
+			return [
+				'result' => $result,
+				'offers' => $offers,
+			];
+		}
+
 		return $result;
 	}
 
 	public function setAsinOffersType($asin, $offers = []){
-		$result = $this->checkIfAsinHasAmazonAndPrimeOffers($asin, $offers);
+		$result = $this->checkIfAsinHasAmazonAndPrimeOffers($asin, $offers, true);
+
+		$offers = $result['offers'];
+		$result = $result['result'];
 
 		$offers_type = 'O';
 		if ($result['HAS_AMAZON'] && $result['HAS_PRIME']){
@@ -282,7 +292,7 @@ class OffersParser
 		} elseif ($result['HAS_PRIME']){
 			$offers_type = 'P';
 		} else {
-			if (count($offers)){
+			if (count($offers) > 0){
 				$offers_type = 'O';
 			} else {
 				$offers_type = 'N';

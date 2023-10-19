@@ -1267,7 +1267,7 @@ class ControllerDPRainForest extends Controller {
 	Полная переустановка маркеров офферов
 	*/
 	public function fixamazonoffertypesfull(){
-		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithFastPriceFull();		
+		$total = $this->rainforestAmazon->productsRetriever->model_product_get->getTotalProductsWithAsin();		
 
 		$iterations = ceil($total/(int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 
@@ -1275,7 +1275,7 @@ class ControllerDPRainForest extends Controller {
 		$k = 1;		
 
 		for ($i = 1; $i <= ($iterations+1); $i++){
-			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithFastPriceFull(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
+			$products = $this->rainforestAmazon->productsRetriever->model_product_get->getProductsWithAsin(($i-1) * (int)\hobotix\RainforestAmazon::generalDBQueryLimit);
 			if ($products){		
 				foreach ($products as $product){
 					echoLine('[fixamazonoffertypesfull] Product ' . $product['product_id'] . ' / ' . $product['asin'] . ' ' . $i . '/' . $k . '/' . $total);
