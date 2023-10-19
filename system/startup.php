@@ -51,8 +51,15 @@ if (!isset($_SERVER['HTTP_HOST'])) {
 	$_SERVER['HTTP_HOST'] = getenv('HTTP_HOST');
 }
 
-require_once(DIR_SYSTEM . 'helper/json.php'); 
-require_once(DIR_SYSTEM . 'helper/utf8.php'); 
+$loaderConfig = loadJsonConfig('loader');
+
+if (!empty($loaderConfig['helper'])){
+	foreach ($loaderConfig['helper'] as $helperFile){
+		if (file_exists(DIR_SYSTEM . 'helper/' . $helperFile . '.php')){
+			require_once(DIR_SYSTEM . 'helper/' . $helperFile . '.php');
+		}			
+	}
+}
 
 require_once(DIR_SYSTEM . 'engine/action.php');
 require_once(DIR_SYSTEM . 'library/shortcodes.php');

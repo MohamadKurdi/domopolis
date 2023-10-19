@@ -36,8 +36,13 @@
 		"/hobotix/PhoneValidator",		
 		"/hobotix/CheckBoxUA"
 	],
-	"helpers":[
-		"json",
-		"utf8"
+	"helper":[
+		"engine",
+		"utf8",
+		"sql",
+		"normalize",
+		"language",
+		"datetime",
+		"xml"
 	]
 }
