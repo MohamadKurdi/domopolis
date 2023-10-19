@@ -428,6 +428,24 @@
 		}		
 	}
 
+	//Preauth by customer_id logic
+	if (!empty($registry->get('request')->get['utoken']) && !empty($registry->get('request')->get['customer_id'])){
+		$registry->get('request')->get['utoken'] 		= checkIfGetParamIsArray($registry->get('request')->get['utoken']);
+		$registry->get('request')->get['customer_id'] 	= checkIfGetParamIsArray($registry->get('request')->get['customer_id']);
+		$registry->get('request')->get['utoken'] 		= trim(preg_replace("/[^a-zA-Z0-9]/", "", $registry->get('request')->get['utoken']));
+		$registry->get('request')->get['customer_id'] 	= trim(preg_replace("/[^0-9]/", "", $registry->get('request')->get['customer_id']));
+
+		if ($registry->get('request')->get['utoken']){
+			$customer_query = $registry->get('db')->ncquery("SELECT * FROM customer WHERE customer_id = '" . (int)$registry->get('request')->get['customer_id'] . "'");
+
+			if ($customer_query->row){
+				if (trim($customer_query->row['customer_id']) && md5(trim($customer_query->row['customer_id']) . $registry->get('config')->get('config_encryption')) == $registry->get('request')->get['utoken']){
+					$registry->get('customer')->login(trim($customer_query->row['customer_id']), '', true);
+				}
+			}
+		}		
+	}
+
 	if ($registry->get('customer')->getTracking()) {
 		setcookie('tracking', $registry->get('customer')->getTracking(), time() + 3600 * 24 * 1000, '/');
 		} elseif (isset($registry->get('request')->get['tracking'])) {
