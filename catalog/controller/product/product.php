@@ -1876,7 +1876,16 @@ public function index($product_id = false, $just_price = false)
                         $filter_data['exclude_dimension_types'][] = 'all';
                     }
 
-                    $this->data['attribute_groups']         = $this->model_catalog_product->getProductAttributes($this->request->get['product_id'], $filter_data);
+                    $this->data['special_attribute_group_id']   = $this->config->get('config_special_attr_id');
+                    $this->data['attribute_groups']             = $this->model_catalog_product->getProductAttributes($this->request->get['product_id'], $filter_data);
+
+                    if ($this->config->get('mega_filter_settings') && $this->config->get('mega_filter_settings')['attribute_separator']){                    
+                        foreach ($this->data['attribute_groups'] as &$attribute_group){
+                            foreach ($attribute_group['attribute'] as &$attribute){
+                                $attribute['text'] = checkAndFormatMultiAttributes($attribute['text'], $this->config->get('mega_filter_settings')['attribute_separator'], 'ul');
+                            }
+                        }
+                    }
 
                     if ($this->config->get('config_use_separate_table_for_features')){
                         $this->data['attribute_groups_special'] = $this->model_catalog_product->getProductFeatures($this->request->get['product_id']);
