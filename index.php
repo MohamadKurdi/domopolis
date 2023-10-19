@@ -411,6 +411,22 @@
 	$registry->set('bypass_rainforest_caches_and_settings', true);
 	$registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
 	
+	//Preauth by utoken logic
+	if (!empty($registry->get('request')->get['utoken']) && !empty($registry->get('request')->get['utm_term'])){
+		$registry->get('request')->get['utoken'] 	= checkIfGetParamIsArray($registry->get('request')->get['utoken']);
+		$registry->get('request')->get['utm_term'] 	= checkIfGetParamIsArray($registry->get('request')->get['utm_term']);
+		$registry->get('request')->get['utoken'] 	= preg_replace("/[^a-zA-Z0-9]/", "", $registry->get('request')->get['utoken']);
+
+		if ($registry->get('request')->get['utoken']){
+			$customer_query = $registry->get('db')->ncquery("SELECT * FROM customer WHERE utoken = '" . $registry->get('db')->escape($registry->get('request')->get['utoken']) . "'");
+
+			if ($customer_query->row){
+				if (trim($customer_query->row['email']) && md5(trim($customer_query->row['email']) . $registry->get('config')->get('config_encryption')) == $registry->get('request')->get['utoken']){
+					$registry->get('customer')->login(trim($customer_query->row['email']), '', true);
+				}
+			}
+		}		
+	}
 
 	if ($registry->get('customer')->getTracking()) {
 		setcookie('tracking', $registry->get('customer')->getTracking(), time() + 3600 * 24 * 1000, '/');

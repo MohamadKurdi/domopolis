@@ -27,7 +27,7 @@ class ControllerKPMailWizz extends Controller {
 		}
 
 		$this->db->query("UPDATE customer SET email = TRIM(email) WHERE 1");
-		$this->db->query("UPDATE customer SET utoken = md5(md5(concat(email,email))) WHERE 1");
+		$this->db->query("UPDATE customer SET utoken = md5(concat(email, '" . $this->config->get('config_encryption') . "')) WHERE 1");
 		$this->db->query("UPDATE customer c SET mail_status = 'not_mail' WHERE NOT (email LIKE '%@%')");
 
 		$config = new \EmsApi\Config([

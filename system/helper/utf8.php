@@ -48,6 +48,14 @@ function limit_text_by_sentences($text, $max_symbols = 1000) {
 	return $limited_text;
 }
 
+function checkIfGetParamIsArray($param){
+	if (is_array($param)){
+		return '';
+	}
+
+	return $param;
+}
+
 function generateRandomString($length = 50) {
 	$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	$randomString = '';

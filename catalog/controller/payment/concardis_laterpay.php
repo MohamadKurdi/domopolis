@@ -173,10 +173,8 @@
 			
 		}	
 		
-		private function createOrderToken($order_id){
-			
-			return md5(md5(sha1($order_id . 'hmIQeCXDQVFOBDcAkE2gFWM0am4CK5Z4')));
-			
+		private function createOrderToken($order_id){			
+			return md5($order_id . $this->config->get('config_encryption'));			
 		}
 		
 		private function patchConcardisOrder($cc_order_id, $data){

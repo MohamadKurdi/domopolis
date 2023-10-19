@@ -19,18 +19,6 @@
 			<div style="display:none !important; font-size:0 !important; line-height:0 !important;"><?php echo $emailtemplate['preview']; ?></div>
 		<?php } ?>
 
-		<?php
-			$preauth_url = false;
-			if (!empty($customer_id)){
-				$customer = $this->db->non_cached_query("SELECT email FROM customer WHERE customer_id = '" . (int)$customer_id . "' LIMIT 1");
-
-				if ($customer->num_rows){
-					$preauth_url = 'https://kitchen-profi.shop' .'?utm_term='.$customer->row['email'].'&utoken='.md5(md5($customer->row['email'].$customer->row['email']));
-				}
-			}
-		?>
-
-
 		<div id="emailTemplate">
 			<table class="emailStyle<?php echo ucwords($config['style']); ?>" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="<?php echo $config['body_bg_color']; ?>">
 				<?php if($config['head_text'] || isset($config['shadow_top']['length'])): ?>
@@ -376,20 +364,6 @@
 															<?php endif; ?>
 															<?php if(false && $config['page_footer_text']){ ?>
 																<tr><td class="emailMainText"><?php echo $config['page_footer_text']; ?></td></tr>
-															<?php } ?>
-
-															<?php if ($preauth_url) { ?>
-																<tr>
-																	<td class="emailWrapper" bgcolor="<?php echo $config['body_bg_color']; ?>" width="100%" style="padding:10px 0 20px 0;background-color:#fff !important;">
-																		<table class="emailFooter" border="0" cellspacing="0" cellpadding="0" width="100%">
-																			<tr>
-																				<td style="background-color:#fff !important;" class="emailFooterCell" width="100%" align="<?php echo $config['page_align']; ?>" valign="top" bgcolor="<?php echo ($config['footer_section_bg_color']) ? $config['footer_section_bg_color'] : $config['body_bg_color']; ?>">
-																					<a style="text-decoration:underline;   font-size: 16px; padding: 10px; width: 80%;color: #51a881;font-weight: 500;" href="<?php echo($preauth_url); ?>">Перейти в личный кабинет<img align="absmiddle" alt="icon" src="https://kitchen-profi.shop/send/kp/img/right-arrow.png" style="display:inline-block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;vertical-align:middle;margin-left:10px" width="25" /></a>
-																				</td>
-																			</tr>
-																		</table>
-																	</td>
-																</tr>
 															<?php } ?>
 
 														</table>

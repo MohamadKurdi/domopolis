@@ -231,7 +231,7 @@
 			$this->load->model('setting/setting');
 			$storeURL = ($store_id == 0)?HTTP_CATALOG:$this->model_setting_setting->getKeySettingValue('config', 'config_url' , $store_id);
 			
-			return $storeURL . '?utm_term=' . $email. '&utoken=' . md5(md5($email . $email));
+			return $storeURL . '?utm_term=' . $email. '&utoken=' . md5($email . $this->config->get('config_encryption'));
 		}
 
 		public function getCustomerOrderManufacturers($customer_id){

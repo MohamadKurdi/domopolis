@@ -341,8 +341,8 @@
 			echo PHP_EOL;
 			
 			echo '>> Ключ авторизации'  . PHP_EOL;
-			echo 'QUERY:' .  "UPDATE customer SET utoken = md5(md5(concat(email,email))) WHERE 1" . PHP_EOL;
-			$this->db->query("UPDATE customer SET utoken = md5(md5(concat(email,email))) WHERE 1");
+			echo 'QUERY:' .  "UPDATE customer SET utoken = md5(concat(email, '" . $this->config->get('config_encryption') . "')) WHERE 1" . PHP_EOL;
+			$this->db->query("UPDATE customer SET utoken = md5(concat(email, '" . $this->config->get('config_encryption') . "')) WHERE 1");
 			echo PHP_EOL;
 			
 			

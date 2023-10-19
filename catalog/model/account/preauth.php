@@ -5,8 +5,7 @@
 			
 			if (isset($this->request->get['utoken'])){			
 				$this->load->model('account/customer');
-				
-				
+								
 				if (!empty($this->request->get['utm_term']) && is_array($this->request->get['utm_term'])){
 					$this->request->get['utm_term'] = '';
 				}
@@ -30,39 +29,23 @@
 						return $customer_id;
 					}
 				}
-				
-				//Первая проверка - существует ли покупатель в принципе
-				/*	$email = trim($this->request->get['utm_term']); */
-				
-				
-				//	$customer_info = $this->model_account_customer->getCustomerByEmail($email);
+
 				$customer_info = $this->model_account_customer->getCustomerByUtoken($this->request->get['utoken']);		
 				
 				if ($customer_info){				
 					$email = trim($customer_info['email']);
-					
-					//есть такой, проверяем токен
-					if (md5(md5($email.$email)) == $this->request->get['utoken']){	
+
+					if (md5($email.$this->config->get('config_encryption')) == $this->request->get['utoken']){	
 						return $customer_info['email'];					
 					}
 					
 					} else {
+
 					return false;				
 				}
 				
 				} else {
 				return false;			
 			}	
-		}
-		
-		
-		
-		public function generateCoupon(){
-			
-			
-			
-			
-		}
-		
+		}				
 	}
-	

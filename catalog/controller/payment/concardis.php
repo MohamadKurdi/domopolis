@@ -139,7 +139,7 @@
 		
 		private function validateToken(){			
 			if (isset($this->request->get['token']) && isset($this->request->get['order_id'])){				
-				if (md5(md5(sha1($this->request->get['order_id'] . 'hmIQeCXDQVFOBDcAkE2gFWM0am4CK5Z4'))) == $this->request->get['token']){
+				if (md5($this->request->get['order_id'] . $this->config->get('config_encryption')) == $this->request->get['token']){
 					return true;
 				}
 			}

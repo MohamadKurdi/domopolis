@@ -18,6 +18,12 @@ class ControllerSaleFirstOrderAction extends Controller {
 		
 		$query = $this->db->query($sql);
 
+		$query->rows = [[
+			'order_id' => 1111,
+			'email' 	=> 'v.zaichikov@gmail.com',
+			'telephone' => '+380632708881'
+		]];
+
 		if ($query->num_rows){
 			if ($this->config->get('config_firstorder_send_promocode') == '1'){
 				foreach ($query->rows as $order_info){

@@ -255,9 +255,9 @@
 			$query = parse_url($url, PHP_URL_QUERY);						
 			
 			if ($query){
-				$query = '?utm_source=Email&utm_medium=Trigger&utm_campaign=' . $this->triggerType . '&utm_term='. $customer['email'] . '&tracking=' . $this->tracking . '&utoken='.md5(md5($customer['email'].$customer['email'])) . '&' . $query;
+				$query = '?utm_source=Email&utm_medium=Trigger&utm_campaign=' . $this->triggerType . '&utm_term='. $customer['email'] . '&tracking=' . $this->tracking . '&utoken='.md5($customer['email'].$this->config->get('config_encryption')) . '&' . $query;
 				} else {
-				$query = '?utm_source=Email&utm_medium=Trigger&utm_campaign=' . $this->triggerType . '&utm_term='. $customer['email'] . '&tracking=' . $this->tracking . '&utoken='.md5(md5($customer['email'].$customer['email']));
+				$query = '?utm_source=Email&utm_medium=Trigger&utm_campaign=' . $this->triggerType . '&utm_term='. $customer['email'] . '&tracking=' . $this->tracking . '&utoken='.md5($customer['email'].$this->config->get('config_encryption'));
 			}
 			
 			

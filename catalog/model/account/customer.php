@@ -15,7 +15,7 @@
 			
 			$customer_id = $this->db->getLastId();
 			
-			$this->db->non_cached_query("UPDATE customer SET utoken = md5(md5('" . $this->db->escape($data['email'] . $data['email']) . "')) WHERE customer_id = '" . (int)$customer_id . "'"); 
+			$this->db->non_cached_query("UPDATE customer SET utoken = md5(concat(email, '" . $this->config->get('config_encryption') . "')) WHERE customer_id = '" . (int)$customer_id . "'"); 
 			
 			$this->db->non_cached_query("INSERT INTO address SET customer_id = '" . (int)$customer_id . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', company = '" . $this->db->escape($data['company']) . "', company_id = '" . $this->db->escape($data['company_id']) . "', tax_id = '" . $this->db->escape($data['tax_id']) . "', address_1 = '" . $this->db->escape($data['address_1']) . "', address_2 = '" . $this->db->escape($data['address_2']) . "', city = '" . $this->db->escape($data['city']) . "', postcode = '" . $this->db->escape($data['postcode']) . "', country_id = '" . (int)$data['country_id'] . "', zone_id = '" . (int)$data['zone_id'] . "'");
 			
@@ -170,19 +170,16 @@
 			return $query->row;
 		}
 		
-		public function getCustomerByEmail($email) {
-		
+		public function getCustomerByEmail($email) {	
 			if (!trim($email)){
 				return false;
 			}				
 			
 			$query = $this->db->non_cached_query("SELECT * FROM customer WHERE LOWER(email) = '" . $this->db->escape(utf8_strtolower(trim($email))) . "'");			
 			return $query->row;
-			
 		}
 		
 		public function getCustomerIDByEmail($email) {
-		
 			if (!trim($email)){
 				return false;
 			}				
@@ -197,7 +194,6 @@
 		}
 		
 		public function getAllCustomersByEmail($email) {
-		
 			if (!trim($email)){
 				return false;
 			}				
@@ -221,7 +217,7 @@
 			$query = $this->db->non_cached_query("SELECT * FROM customer WHERE LOWER(utoken) = '" . $this->db->escape(utf8_strtolower($utoken)) . "' AND customer_id = '" . (int)$customer_id . "'");
 			
 			if (!$query->num_rows){
-				return ($utoken == md5(md5($customer_id . $customer_id)));
+				return ($utoken == md5($customer_id . $this->config->get('config_encryption')));
 			}
 			
 			return $query->num_rows;
@@ -234,7 +230,6 @@
 		}
 		
 		public function getCustomerByPhone($phone){
-			//only ints
 			$phone = trim(preg_replace("([^0-9])", "", $phone));
 			
 			if (!$phone){

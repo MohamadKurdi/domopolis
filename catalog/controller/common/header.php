@@ -69,12 +69,7 @@
 			}
 			
 			$this->data['show_top_block'] = $show_top_block;
-							
-			$this->load->model('account/preauth');			
-			if ($email = $this->model_account_preauth->CheckPreauth()){	
-				$this->customer->login($email, '', true);					
-			}			
-
+										
 			$this->data['pwa_keys_href'] 	= $this->url->link('kp/pwa/keys');
 			$this->data['pwa_sps_href'] 	= $this->url->link('kp/pwa/sps');
 			$this->data['pwa_spi_href'] 	= $this->url->link('kp/pwa/spi');

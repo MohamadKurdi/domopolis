@@ -12,7 +12,7 @@
 			
 			if (true) {								
 				$codeContents = rtrim($order_info['store_url'], '/') . '/index.php?route=account/order/info&order_id=' . $order_id;
-				$codeContents .= '&utm_term=' . $order_info['email'] . '&customer_id=' . $order_info['customer_id'] . '&utoken=' . md5(md5($order_info['customer_id'] . $order_info['customer_id']));
+				$codeContents .= '&utm_term=' . $order_info['email'] . '&customer_id=' . $order_info['customer_id'] . '&utoken=' . md5($order_info['customer_id'] . $this->config->get('config_encryption'));
 				$codeContents .= '&do_payment=explicit&pay_by=' . $qr_payment_code;
 				
 				if ($currency && in_array($currency, array('EUR', 'RUB', 'UAH'))){
@@ -63,7 +63,7 @@
 			if (true) {			
 				
 				$codeContents = rtrim($order_info['store_url'], '/') . '/index.php?route=account/order/info&order_id=' . $order_id;
-				$codeContents .= '&utm_term=' . $order_info['email'] . '&customer_id=' . $order_info['customer_id'] . '&utoken=' . md5(md5($order_info['customer_id'] . $order_info['customer_id']));
+				$codeContents .= '&utm_term=' . $order_info['email'] . '&customer_id=' . $order_info['customer_id'] . '&utoken=' . md5($order_info['customer_id'] . $this->config->get('config_encryption'));
 				$codeContents .= '&do_payment=explicit&pay_by=' . $qr_payment_code;
 				
 				if ($currency && in_array($currency, array('EUR', 'RUB', 'UAH'))){
@@ -2445,7 +2445,7 @@
 				'concardis_id'			=> isset($order_query->row['concardis_id'])?$order_query->row['concardis_id']:0,
 				'tracker_xml'           => $order_query->row['tracker_xml'],
 				'template'            	=> $order_query->row['template'],
-				'customer_confirm_url'   => '&order_id='.$order_query->row['order_id'].'&confirm='.md5(sin($order_query->row['order_id']+2)).'&utm_term='.$order_query->row['email'].'&utoken='.md5(md5($order_query->row['email'] . $order_query->row['email']))
+				'customer_confirm_url'   => '&order_id='.$order_query->row['order_id'].'&confirm='.md5(sin($order_query->row['order_id']+2)).'&utm_term='.$order_query->row['email'].'&utoken='.md5($order_query->row['email'] . $this->config->get('config_encryption'))
 				);
 				} else {
 				return false;
