@@ -7,6 +7,15 @@ function removeEOLS($s){
 	return $s;
 }
 
+function normalizeForGoogleV2($text){
+	$text = html_entity_decode($text);
+	$text = str_replace('&nbsp;', ' ', $text);
+	$text = str_replace('&amp;', '&', $text);
+	$text = preg_replace("/&#?[a-z0-9]{2,8};/i", "", $text);
+
+	return $text;
+}
+
 function normalizeForGoogle($text){
 	$text = html_entity_decode($text);
 	$text = str_replace('&nbsp;', ' ', $text);

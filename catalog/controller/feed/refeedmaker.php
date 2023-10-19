@@ -1,16 +1,21 @@
 <?php
 class ControllerFeedReFeedMaker extends Controller
 {
-    private $steps = array(0, 100, 500, 1000, 2000, 5000, 7000, 10000, 15000, 20000, 25000, 1000000000);
-    private $limit = 20000;
-    private $exclude_language_id = null;
-    private $language_id = null;
-    private $languages = [];
-    private $urlcode = '';
-    private $eanLog = false;
+    private $steps                  = array(0, 100, 500, 1000, 2000, 5000, 7000, 10000, 15000, 20000, 25000, 1000000000);
+    private $limit                  = 20000;
+    private $exclude_language_id    = null;
+    private $language_id            = null;
+    private $languages              = [];
+    private $urlcode                = '';
+    private $eanLog                 = false;
+    private $attribute_separator    = false;
 
     public function __construct($registry){
         parent::__construct($registry);
+
+        if ($this->config->get('mega_filter_settings') && $this->config->get('mega_filter_settings')['attribute_separator']){             
+            $this->attribute_separator = $this->config->get('mega_filter_settings')['attribute_separator'];
+        }
     }
 
     private function loadSettings($store_id)
@@ -159,7 +164,6 @@ class ControllerFeedReFeedMaker extends Controller
         foreach ($this->registry->get('supported_language_ids') as $store_id => $languages) {
             foreach ($languages as $language_id) {
                 foreach (array(0,1) as $changeID) {
-                    //Пропускаем если язык не исключенных и нужно менять айдишку
                     if ($language_id != $this->registry->get('excluded_language_id') && $changeID) {
                         continue;
                     }
@@ -279,10 +283,8 @@ class ControllerFeedReFeedMaker extends Controller
 
         $language_id = $this->config->get('config_language_id');
         $store_id = $this->config->get('config_store_id');
-
-            //получаем язык и валюту
+            
         foreach (array(0,1) as $changeID) {
-                //Пропускаем если язык не украинский и нужно менять айдишку
             if ($language_id != $this->registry->get('excluded_language_id') && $changeID) {
                 continue;
             }
@@ -393,27 +395,15 @@ class ControllerFeedReFeedMaker extends Controller
         $this->cleanUp();
     }
 
-    private function normalizeForGoogle($text)
-    {
-        $text = html_entity_decode($text);
-        $text = str_replace('&nbsp;', ' ', $text);
-        $text = str_replace('&amp;', '&', $text);
-            //$text = str_replace(' & ', ' and ', $text);
-            //$text = str_replace('&', ' and ', $text);
-        $text = preg_replace("/&#?[a-z0-9]{2,8};/i", "", $text);
-
-        return $text;
-    }
-
     protected function printItem($product, $google_base_category, $changeID = true)
     {
         $output = '';
 
         $output .= '<item>' . PHP_EOL;
-        $output .= '<title><![CDATA[' . $this->normalizeForGoogle($product['manufacturer'] . ' ' . $product['name']) . ']]></title>' . PHP_EOL;
+        $output .= '<title><![CDATA[' . normalizeForGoogleV2($product['manufacturer'] . ' ' . $product['name']) . ']]></title>' . PHP_EOL;
 
         $output .= '<link>' . $this->url->link('product/product', 'product_id=' . $product['product_id'], 'SSL') . '</link>' . PHP_EOL;
-        $output .= '<description><![CDATA[' . $this->normalizeForGoogle(strip_tags(html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8'))) . ']]></description>' . PHP_EOL;
+        $output .= '<description><![CDATA[' . normalizeForGoogleV2(strip_tags(html_entity_decode($product['description'], ENT_QUOTES, 'UTF-8'))) . ']]></description>' . PHP_EOL;
 
         
         $output .= '<g:brand><![CDATA[' . html_entity_decode($product['manufacturer'], ENT_QUOTES, 'UTF-8') . ']]></g:brand>'. PHP_EOL;
@@ -447,7 +437,11 @@ class ControllerFeedReFeedMaker extends Controller
                 $output .= '    <g:product_detail>' . PHP_EOL;
                 $output .= '        <g:section_name><![CDATA[' . $attribute['attribute_group'] . ']]></g:section_name>' . PHP_EOL;
                 $output .= '        <g:attribute_name><![CDATA[' . $attribute['attribute_name'] . ']]></g:attribute_name>' . PHP_EOL;
-                $output .= '        <g:attribute_value><![CDATA[' . $attribute['attribute_value'] . ']]></g:attribute_value>' . PHP_EOL;
+                if ($this->attribute_separator){
+                     $output .= '        <g:attribute_value><![CDATA[' . checkAndFormatMultiAttributes($attribute['text'], $this->attribute_separator, 'comma') . ']]></g:attribute_value>' . PHP_EOL;
+                } else {
+                     $output .= '        <g:attribute_value><![CDATA[' . $attribute['attribute_value'] . ']]></g:attribute_value>' . PHP_EOL;
+                }               
                 $output .= '    </g:product_detail>' . PHP_EOL;
             }
         }
