@@ -600,6 +600,21 @@
 										<br />
 										<span class="help">логика нагружает магазин! если не используется - отключить!</span>	
 									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Описания в списках</span></p>
+										<select type="select" name="config_description_in_lists">
+											<? if ($config_description_in_lists) { ?>
+												<option value="1" selected='selected' >Включить</option>
+												<option value="0" >Отключить</option>
+											<? } else { ?>
+												<option value="1" >Включить</option>
+												<option value="0"  selected='selected' >Отключить</option>
+											<? } ?>       
+										</select>
+										<br />
+										<span class="help">если не отображаются - отключить</span>	
+									</div>
 									
 								</td>
 
@@ -8414,17 +8429,19 @@
 										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включить бренды в VK</span></p>
 										<div class="scrollbox" style="height:350px;">
 											<?php $class = 'odd'; ?>
-											<?php foreach ($manufacturers as $manufacturer) { ?>
-												<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-												<div class="<?php echo $class; ?>">
-													<?php if (in_array($manufacturer['manufacturer_id'], $config_vk_feed_include_manufacturers)) { ?>
-														<input id="config_vk_feed_include_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>" class="checkbox" type="checkbox" name="config_vk_feed_include_manufacturers[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" checked="checked" />
-														<label for="config_vk_feed_include_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></label>
-													<?php } else { ?>
-														<input id="config_vk_feed_include_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>" class="checkbox" type="checkbox" name="config_vk_feed_include_manufacturers[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" />
-														<label for="config_vk_feed_include_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></label>
-													<?php } ?>
-												</div>
+											<?php if ($config_vk_enable_pixel) { ?>
+												<?php foreach ($manufacturers as $manufacturer) { ?>
+													<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+													<div class="<?php echo $class; ?>">
+														<?php if (in_array($manufacturer['manufacturer_id'], $config_vk_feed_include_manufacturers)) { ?>
+															<input id="config_vk_feed_include_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>" class="checkbox" type="checkbox" name="config_vk_feed_include_manufacturers[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" checked="checked" />
+															<label for="config_vk_feed_include_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></label>
+														<?php } else { ?>
+															<input id="config_vk_feed_include_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>" class="checkbox" type="checkbox" name="config_vk_feed_include_manufacturers[]" value="<?php echo $manufacturer['manufacturer_id']; ?>" />
+															<label for="config_vk_feed_include_manufacturers_<?php echo $manufacturer['manufacturer_id']; ?>"><?php echo $manufacturer['name']; ?></label>
+														<?php } ?>
+													</div>
+												<?php } ?>
 											<?php } ?>
 										</div>
 									</td>

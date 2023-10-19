@@ -1597,6 +1597,12 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_product_alsoviewed_enable'] = $this->config->get('config_product_alsoviewed_enable');
         }
+
+        if (isset($this->request->post['config_description_in_lists'])) {
+            $this->data['config_description_in_lists'] = $this->request->post['config_description_in_lists'];
+        } else {
+            $this->data['config_description_in_lists'] = $this->config->get('config_description_in_lists');
+        }
         
         if (isset($this->request->post['config_android_playstore_enable'])) {
             $this->data['config_android_playstore_enable'] = $this->request->post['config_android_playstore_enable'];
