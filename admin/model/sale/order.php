@@ -1,103 +1,44 @@
 <?php
 	class ModelSaleOrder extends Model {		
-		public function generatePaymentQR2($order_id, $qr_payment_code = 'concardis', $return_link = false, $currency = false){
-			$this->load->model('sale/customer');
-			
-			$order_info = $this->getOrder($order_id);
-			$customer_info = $this->model_sale_customer->getCustomer($order_info['customer_id']);
-			
-			if (trim($customer_info['email'])){
-				$order_info['email'] = $customer_info['email'];
-			}
-			
-			if (true) {								
-				$codeContents = rtrim($order_info['store_url'], '/') . '/index.php?route=account/order/info&order_id=' . $order_id;
-				$codeContents .= '&utm_term=' . $order_info['email'] . '&customer_id=' . $order_info['customer_id'] . '&utoken=' . md5($order_info['customer_id'] . $this->config->get('config_encryption'));
-				$codeContents .= '&do_payment=explicit&pay_by=' . $qr_payment_code;
-				
-				if ($currency && in_array($currency, array('EUR', 'RUB', 'UAH'))){
-					$codeContents .= '&cc_code=' . $currency;
-				}	
-				
-				if (!$currency){
-					$currency = 'CUR';
-				}
-				
-				$codeContents = $this->shortAlias->shortenURL($codeContents);
-				
-				if ($return_link){
-					return $codeContents;
-				}
-				
-				$_dir = DIR_EXPORT . 'payment_qr/' . date('Y') . '/' . date('m') . '/' . date('d') . '/';
-				
-				if (!is_dir($_dir)){
-					mkdir($_dir, 0775, $recursive = true);
-				}							
-				
-				$qr_file = $_dir . 'payment_' . $qr_payment_code . '_qr_' . $order_id . $currency . '.png';
-				$qr_link = HTTPS_CATALOG . DIR_EXPORT_NAME . 'payment_qr/' . date('Y') . '/' . date('m') . '/' . date('d') .'/payment_' . $qr_payment_code . '_qr_' . $order_id . $currency . '.png';		
-				
-				$this->load->library('hobotix/QRCodeExtender');
-				$hobotixQR = new \hobotix\QRCodeExtender;
-				$hobotixQR->doQR($codeContents, $qr_file);
+					
+		public function generatePaymentQR($order_id, $code = 'concardis', $currency = false){
+			$paymentLink = $this->generatePaymentLink($order_id, $code = 'concardis', $currency);
 
-				
-				} else {
-				$qr_link = false;
-			}
-			
+			$_dir = DIR_EXPORT . 'payment_qr/' . date('Y') . '/' . date('m') . '/' . date('d') . '/';
+
+			if (!is_dir($_dir)){
+				mkdir($_dir, 0775, $recursive = true);
+			}							
+
+			$qr_file = $_dir . 'payment_' . $code . '_qr_' . $order_id . $currency . '.png';
+			$qr_link = HTTPS_CATALOG . DIR_EXPORT_NAME . 'payment_qr/' . date('Y') . '/' . date('m') . '/' . date('d') .'/payment_' . $code . '_qr_' . $order_id . $currency . '.png';				
+
+			$this->load->library('hobotix/QRCodeExtender');
+			$hobotixQR = new \hobotix\QRCodeExtender;
+			$hobotixQR->doQR($paymentLink, $qr_file);	
+
 			return $qr_link;
 		}
-			
-		public function generatePaymentQR($order_id, $qr_payment_code = 'concardis', $return_link = false, $currency = false){
+
+		public function generatePaymentLink($order_id, $code = 'concardis', $currency = false){
 			$this->load->model('sale/customer');
 			
-			$order_info = $this->getOrder($order_id);
-			$customer_info = $this->model_sale_customer->getCustomer($order_info['customer_id']);
-			
-			if (trim($customer_info['email'])){
-				$order_info['email'] = $customer_info['email'];
+			$order_info 	= $this->getOrder($order_id);
+			$customer_info 	= $this->model_sale_customer->getCustomer($order_info['customer_id']);
+
+			$paymentLink = rtrim($order_info['store_url'], '/') . '/index.php?route=account/order/info&order_id=' . $order_id;
+			$paymentLink .= '&utm_term=' . $order_info['email'] . '&customer_id=' . $order_info['customer_id'] . '&utoken=' . md5($order_info['customer_id'] . $this->config->get('config_encryption'));
+			$paymentLink .= '&do_payment=explicit&pay_by=' . $code;
+
+			if ($currency && in_array($currency, array('EUR', 'RUB', 'UAH'))){
+				$paymentLink .= '&cc_code=' . $currency;
 			}
-			
-			if (true) {			
-				
-				$codeContents = rtrim($order_info['store_url'], '/') . '/index.php?route=account/order/info&order_id=' . $order_id;
-				$codeContents .= '&utm_term=' . $order_info['email'] . '&customer_id=' . $order_info['customer_id'] . '&utoken=' . md5($order_info['customer_id'] . $this->config->get('config_encryption'));
-				$codeContents .= '&do_payment=explicit&pay_by=' . $qr_payment_code;
-				
-				if ($currency && in_array($currency, array('EUR', 'RUB', 'UAH'))){
-					$codeContents .= '&cc_code=' . $currency;
-				}	
-				
-				if (!$currency){
-					$currency = 'CUR';
-				}
-				
-				$codeContents = $this->shortAlias->shortenURL($codeContents);
-				
-				if ($return_link){
-					return $codeContents;
-				}
-				
-				$_dir = DIR_EXPORT . 'payment_qr/' . date('Y') . '/' . date('m') . '/' . date('d') . '/';
-				
-				if (!is_dir($_dir)){
-					mkdir($_dir, 0775, $recursive = true);
-				}							
-				
-				$qr_file = $_dir . 'payment_' . $qr_payment_code . '_qr_' . $order_id . $currency . '.png';
-				$qr_link = HTTPS_CATALOG . DIR_EXPORT_NAME . 'payment_qr/' . date('Y') . '/' . date('m') . '/' . date('d') .'/payment_' . $qr_payment_code . '_qr_' . $order_id . $currency . '.png';				
-				
-				$this->load->library('hobotix/QRCodeExtender');
-				$hobotixQR = new \hobotix\QRCodeExtender;
-				$hobotixQR->doQR($codeContents, $qr_file);	
-				
-				} else {
-				$qr_link = false;
+
+			if (!$currency){
+				$currency = 'CUR';
 			}
-			
-			return $qr_link;
+
+			return $this->shortAlias->shortenURL($paymentLink);
 		}
 		
 		public function recountDiscountsOnProducts($order_id){

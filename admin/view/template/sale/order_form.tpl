@@ -3282,17 +3282,6 @@
 																						<br />
 																							<a class="button" style="width:80%; margin-top:10px;" onclick='swal({ title: "Отправить ссылку клиенту?", text: "<?php echo $payment_links['concardis']['qr_sms'] ?>", type: "warning", showCancelButton: true,  confirmButtonColor: "#F96E64",  confirmButtonText: "Отправить", cancelButtonText: "Отмена",  closeOnConfirm: true }, function() { sendPaymentSMSLinkAjax("<?php echo $payment_links['concardis']['qr_link'] ?>") });'><i class="fa fa-telegram"></i> Отправить SMS</a>
 																					</td>
-
-																					<? if (false && in_array($currency_code, array('RUB'))) { ?>
-																						<td style="padding-right:10px; text-align:center;">
-																							<div style="height:30px"></div>
-																							<div style="background-color:#4ea24e; padding:5px; text-align:center; color:#FFF"><? echo $EUR_FOR_CONCARDIS; ?> EUR</div>
-																							<br />
-																							<img src="<? echo $this->model_sale_order->generatePaymentQR($order_id, 'concardis', false, 'EUR'); ?>" />
-																							<br />
-																							<a style="font-size:12px" href="<? echo $this->model_sale_order->generatePaymentQR($order_id, 'concardis', true, 'EUR'); ?>" ><? echo $this->model_sale_order->generatePaymentQR($order_id, 'concardis', true, 'EUR'); ?></a>
-																						</td>
-																					<? } ?>
 																				<?php } ?>
 																			</tr>
 																		</table>																											

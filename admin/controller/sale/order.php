@@ -1,12 +1,8 @@
 <?php
 	class ControllerSaleOrder extends Controller {
-		private $error = array();
-		private $marketplaces = array(
-		'market.yandex.ru',
-		'm.market.yandex.ru',
-		'hotline.ua',
-		'rozetka.com.ua'
-		);						
+		private $error 				= [];
+		private $marketplaces 		= ['market.yandex.ru', 'm.market.yandex.ru', 'hotline.ua', 'rozetka.com.ua'];
+		private $equiring_methods 	= ['paykeeper', 'pp_express', 'liqpay', 'wayforpay', 'mono', 'concardis'];						
 		
 		public function getCityByIpAddrAjax($ip = false){
 			if ($this->config->get('config_ip_api_key')){
@@ -3866,12 +3862,12 @@
 
 
 			$this->data['payment_links'] = [];
-			foreach (['paykeeper', 'pp_express', 'liqpay', 'wayforpay', 'mono', 'concardis'] as $equiring_method){
+			foreach ($this->equiring_methods as $equiring_method){
 				if ($this->config->get($equiring_method . '_status') || $this->config->get($equiring_method . '_status_fake')){
 					$this->data['payment_links'][$equiring_method] = [
 						'qr_code' => $this->model_sale_order->generatePaymentQR($order_id, $equiring_method),
-						'qr_link' => $this->model_sale_order->generatePaymentQR($order_id, $equiring_method, true),
-						'qr_sms'  => $this->smsAdaptor->getPaymentLinkText($order_info, ['payment_link' => $this->model_sale_order->generatePaymentQR($order_id, $equiring_method, true), 'amount' => $this->getOrderTotalTotal($this->request->get['order_id'])])
+						'qr_link' => $this->model_sale_order->generatePaymentLink($order_id, $equiring_method),
+						'qr_sms'  => $this->smsAdaptor->getPaymentLinkText($order_info, ['payment_link' => $this->model_sale_order->generatePaymentLink($order_id, $equiring_method), 'amount' => $this->getOrderTotalTotal($this->request->get['order_id'])])
 					];
 				}				
 			}
@@ -5669,6 +5665,12 @@
 			} else {
 				$data['partly'] = '';
 				$data['amount'] = $order_info['total_national'];
+			}
+
+			if (in_array($order_info['payment_code'], $equiring_methods)){
+				$data['payment_link'] = $this->model_sale_order->generatePaymentLink($this->request->post['order_id'], $order_info['payment_code']);
+			} else {
+				$data['payment_link'] = '';
 			}
 
 			if (bool_real_stripos($order_info['shipping_code'], 'pickup_advanced')){	
@@ -7742,23 +7744,7 @@
 						$comments[] = nl2br($_maco['comment']);
 					}
 					
-				}
-				
-				
-				if (($order_info['shipping_code'] == 'dostavkaplus.sh2' || $order_info['shipping_code'] == 'dostavkaplus.sh1' || $order_info['shipping_code'] == 'pickup_advanced.point_0' || $order_info['shipping_code'] == 'pickup_advanced.point_1') 
-				&& ($order_info['payment_code'] == 'transfer_plus.1' || $order_info['payment_code'] == 'transfer_plus.6')
-				&& $order_info['payment_secondary_code'] != 'bank_transfer'){
-					
-					if ($order_info['payment_secondary_code']){
-						$qr_link = $this->model_sale_order->generatePaymentQR($order_id, $order_info['payment_secondary_code']);
-						} else {
-						$qr_link = $this->model_sale_order->generatePaymentQR($order_id);
-					}
-					} else {
-					$qr_link = false;
-				}
-				
-				
+				}				
 				
 				$this->data['order'] = array(
 				'order_id'	         => $order_id,
@@ -7785,7 +7771,6 @@
 				'product'            => $product_data,
 				'max_sku_length'     => max($sku_lengths),
 				'voucher'            => $voucher_data,
-				'qr_link'            => $qr_link,
 				'total'              => $real_total_data,
 				'need_sign'          => $this->customerNeedSign($order_info['shipping_code']),
 				'comment'            => $comments,
