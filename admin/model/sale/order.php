@@ -1,5 +1,15 @@
 <?php
 	class ModelSaleOrder extends Model {		
+		private $marketplaces 		= ['market.yandex.ru', 'm.market.yandex.ru', 'hotline.ua', 'rozetka.com.ua'];
+		private $equiring_methods 	= ['paykeeper', 'pp_express', 'liqpay', 'wayforpay', 'mono', 'concardis'];
+
+		public function getMarketplaces(){
+			return $this->marketplaces;
+		}
+
+		public function getEquiringMethods(){
+			return $this->equiring_methods;
+		}
 					
 		public function generatePaymentQR($order_id, $code = 'concardis', $currency = false){
 			$paymentLink = $this->generatePaymentLink($order_id, $code = 'concardis', $currency);
@@ -8,6 +18,10 @@
 
 			if (!is_dir($_dir)){
 				mkdir($_dir, 0775, $recursive = true);
+			}
+
+			if (!$currency){
+				$currency = 'CUR';
 			}							
 
 			$qr_file = $_dir . 'payment_' . $code . '_qr_' . $order_id . $currency . '.png';
@@ -27,15 +41,11 @@
 			$customer_info 	= $this->model_sale_customer->getCustomer($order_info['customer_id']);
 
 			$paymentLink = rtrim($order_info['store_url'], '/') . '/index.php?route=account/order/info&order_id=' . $order_id;
-			$paymentLink .= '&utm_term=' . $order_info['email'] . '&customer_id=' . $order_info['customer_id'] . '&utoken=' . md5($order_info['customer_id'] . $this->config->get('config_encryption'));
+			$paymentLink .= '&customer_id=' . $order_info['customer_id'] . '&utoken=' . md5($order_info['customer_id'] . $this->config->get('config_encryption'));
 			$paymentLink .= '&do_payment=explicit&pay_by=' . $code;
 
 			if ($currency && in_array($currency, array('EUR', 'RUB', 'UAH'))){
 				$paymentLink .= '&cc_code=' . $currency;
-			}
-
-			if (!$currency){
-				$currency = 'CUR';
 			}
 
 			return $this->shortAlias->shortenURL($paymentLink);
@@ -46,9 +56,10 @@
 			$this->load->model('sale/order');
 			
 			$_totals = $this->model_sale_order->getOrderTotals($order_id);
-			$return_filter_data = array(
-			'filter_order_id' => $order_id
-			);
+			$return_filter_data = [
+				'filter_order_id' => $order_id
+			];
+
 			$order_products_return = $this->model_sale_return->getReturns($return_filter_data);
 			$_products = $this->model_sale_order->getOrderProducts($order_id, $with_returns = true);
 		}
@@ -86,8 +97,7 @@
 					return true;
 				} 
 			}
-			
-			
+						
 			return false;			
 		}
 		
@@ -3892,6 +3902,12 @@
 					$sms_data['amount'] = $order_info['total_national'];
 				}
 
+				if (in_array($order_info['payment_code'], $this->getEquiringMethods())){
+					$sms_data['payment_link'] = $this->generatePaymentLink($order_info['order_id'], $order_info['payment_code']);
+				} else {
+					$sms_data['payment_link'] = '';
+				}
+
 				if (bool_real_stripos($order_info['shipping_code'], 'pickup_advanced')){	
 					if ($order_info['store_id'] == 0){
 						$sms_data['pickup_url'] = HTTP_CATALOG . 'pick' . ((int)str_replace('pickup_advanced.point_', '', $order_info['shipping_code']) + 1);
@@ -3905,7 +3921,6 @@
 				$this->smsAdaptor->sendStatusSMSText($order_info, $sms_data);
 
 			} else {
-
 				if (!empty($this->request->post['notify']) && !empty(trim($this->request->post['history_sms_text']))){
 					$this->smsAdaptor->sendSMS(['to' => $order_info['telephone'], 'message' => trim($this->request->post['history_sms_text'])]);
 				}

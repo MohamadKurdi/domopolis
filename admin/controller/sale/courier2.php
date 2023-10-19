@@ -90,7 +90,7 @@ class ControllerSaleCourier2 extends Controller {
 		if ($payment_code && $order_info = $this->model_sale_order->getOrder($order_id)){
 			$params = [		
 				'sender'		=> $this->model_setting_setting->getKeySettingValue('config', 'config_sms_sign', (int)$order_info['store_id']),
-				'text'			=> $this->model_sale_order->generatePaymentQR($order_id, $payment_code, true),
+				'text'			=> $this->model_sale_order->generatePaymentLink($order_id, $payment_code),
 				'phone'			=> preparePhone($telephone),
 				'type' 			=> '2',
 				'datetime' 		=> '',
@@ -392,7 +392,7 @@ class ControllerSaleCourier2 extends Controller {
 						'code'     => 'concardis',
 						'collapse' => false,
 						'qr_image' => $this->model_sale_order->generatePaymentQR($order_id, 'concardis'),
-						'qr_link'  => $this->model_sale_order->generatePaymentQR($order_id, 'concardis', true)
+						'qr_link'  => $this->model_sale_order->generatePaymentLink($order_id, 'concardis')
 					);
 				}
 
@@ -402,7 +402,7 @@ class ControllerSaleCourier2 extends Controller {
 						'code'     => 'liqpay',
 						'collapse' => false,
 						'qr_image' => $this->model_sale_order->generatePaymentQR($order_id, 'liqpay'),
-						'qr_link'  => $this->model_sale_order->generatePaymentQR($order_id, 'liqpay', true)
+						'qr_link'  => $this->model_sale_order->generatePaymentLink($order_id, 'liqpay')
 					);
 				}					
 
@@ -412,7 +412,17 @@ class ControllerSaleCourier2 extends Controller {
 						'code'     => 'wayforpay',
 						'collapse' => false,
 						'qr_image' => $this->model_sale_order->generatePaymentQR($order_id, 'wayforpay'),
-						'qr_link'  => $this->model_sale_order->generatePaymentQR($order_id, 'wayforpay', true)
+						'qr_link'  => $this->model_sale_order->generatePaymentLink($order_id, 'wayforpay')
+					);
+				}
+
+				if ($order_info['currency_code'] == 'UAH' && $this->config->get('mono_status_fake')){
+					$this->data['payments'][] = array(
+						'title'    => '<i class="fa fa-cc-visa"></i> Monobank UAH (Visa / MasterCard)',
+						'code'     => 'mono',
+						'collapse' => false,
+						'qr_image' => $this->model_sale_order->generatePaymentQR($order_id, 'mono'),
+						'qr_link'  => $this->model_sale_order->generatePaymentLink($order_id, 'mono')
 					);
 				}
 
@@ -422,7 +432,7 @@ class ControllerSaleCourier2 extends Controller {
 						'code'     => 'paykeeper',
 						'collapse' => true,
 						'qr_image' => $this->model_sale_order->generatePaymentQR($order_id, 'paykeeper'),
-						'qr_link'  => $this->model_sale_order->generatePaymentQR($order_id, 'paykeeper', true)
+						'qr_link'  => $this->model_sale_order->generatePaymentLink($order_id, 'paykeeper')
 					);
 				}
 

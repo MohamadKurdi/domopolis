@@ -334,6 +334,7 @@ class SmsAdaptor {
 			'{PICKUP_NAME}' => $data['pickup_name'],
 			'{PICKUP_URL}'  => $data['pickup_url'],
 			'{PAYMENT_INFO}'=> $data['payment_info'],
+			'{PAYMENT_LINK}'=> $data['payment_link'],
 			'{SUM}' 		=> $this->currency->format($data['amount'], $order_info['currency_code'], 1),
 			'{SUM_TO_PAY}'  => $this->currency->format($data['amount'], $order_info['currency_code'], 1)	
 		];

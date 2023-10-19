@@ -1214,7 +1214,7 @@
 					if (in_array($order['currency_code'], array('RUB', 'BYN', 'KZT'))){
 						$document['Документ' . $document_counter]['СсылкиДляQRНаОплату']['СсылкаДляQRНаОплату' . $payment_links_counter] = array(
 						'КодПлатежнойСистемы' => 'paykeeper',
-						'КороткаяСсылка'	  => $this->model_sale_order->generatePaymentQR($order_id, 'paykeeper', true)
+						'КороткаяСсылка'	  => $this->model_sale_order->generatePaymentLink($order_id, 'paykeeper')
 						);
 						$payment_links_counter++;						
 					}
@@ -1223,7 +1223,7 @@
 					if (in_array($order['currency_code'], array('RUB', 'EUR'))) {
 						$document['Документ' . $document_counter]['СсылкиДляQRНаОплату']['СсылкаДляQRНаОплату' . $payment_links_counter] = array(
 						'КодПлатежнойСистемы' => 'pp_express',
-						'КороткаяСсылка'	  => $this->model_sale_order->generatePaymentQR($order_id, 'pp_express', true)
+						'КороткаяСсылка'	  => $this->model_sale_order->generatePaymentLink($order_id, 'pp_express')
 						);
 						$payment_links_counter++;
 					}
@@ -1232,16 +1232,25 @@
 					if (in_array($order['currency_code'], array('UAH'))) {
 						$document['Документ' . $document_counter]['СсылкиДляQRНаОплату']['СсылкаДляQRНаОплату' . $payment_links_counter] = array(
 						'КодПлатежнойСистемы' => 'liqpay',
-						'КороткаяСсылка'	  => $this->model_sale_order->generatePaymentQR($order_id, 'liqpay', true)
+						'КороткаяСсылка'	  => $this->model_sale_order->generatePaymentLink($order_id, 'liqpay')
 						);
 						$payment_links_counter++;
 					}
 					
+					//Моно если 'UAH'
+					if (in_array($order['currency_code'], array('UAH'))) {
+						$document['Документ' . $document_counter]['СсылкиДляQRНаОплату']['СсылкаДляQRНаОплату' . $payment_links_counter] = array(
+						'КодПлатежнойСистемы' => 'mono',
+						'КороткаяСсылка'	  => $this->model_sale_order->generatePaymentLink($order_id, 'mono')
+						);
+						$payment_links_counter++;
+					}
+
 					//ЛикПей если 'UAH'
 					if (in_array($order['currency_code'], array('UAH'))) {
 						$document['Документ' . $document_counter]['СсылкиДляQRНаОплату']['СсылкаДляQRНаОплату' . $payment_links_counter] = array(
 						'КодПлатежнойСистемы' => 'wayforpay',
-						'КороткаяСсылка'	  => $this->model_sale_order->generatePaymentQR($order_id, 'wayforpay', true)
+						'КороткаяСсылка'	  => $this->model_sale_order->generatePaymentLink($order_id, 'wayforpay')
 						);
 						$payment_links_counter++;
 					}
@@ -1251,7 +1260,7 @@
 					if (true) {
 						$document['Документ' . $document_counter]['СсылкиДляQRНаОплату']['СсылкаДляQRНаОплату' . $payment_links_counter] = array(
 						'КодПлатежнойСистемы' => 'concardis',
-						'КороткаяСсылка'	  => $this->model_sale_order->generatePaymentQR($order_id, 'concardis', true)
+						'КороткаяСсылка'	  => $this->model_sale_order->generatePaymentLink($order_id, 'concardis')
 						);
 						$payment_links_counter++;
 					}
@@ -1260,7 +1269,7 @@
 					if (in_array($order['currency_code'], array('RUB', 'UAH'))) {
 						$document['Документ' . $document_counter]['СсылкиДляQRНаОплату']['СсылкаДляQRНаОплату' . $payment_links_counter] = array(
 						'КодПлатежнойСистемы' => 'concardiseur',
-						'КороткаяСсылка'	  => $this->model_sale_order->generatePaymentQR($order_id, 'concardis', true, 'EUR')
+						'КороткаяСсылка'	  => $this->model_sale_order->generatePaymentLink($order_id, 'concardis', 'EUR')
 						);
 						$payment_links_counter++;
 					}

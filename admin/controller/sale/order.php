@@ -1,8 +1,6 @@
 <?php
 	class ControllerSaleOrder extends Controller {
-		private $error 				= [];
-		private $marketplaces 		= ['market.yandex.ru', 'm.market.yandex.ru', 'hotline.ua', 'rozetka.com.ua'];
-		private $equiring_methods 	= ['paykeeper', 'pp_express', 'liqpay', 'wayforpay', 'mono', 'concardis'];						
+		private $error 				= [];								
 		
 		public function getCityByIpAddrAjax($ip = false){
 			if ($this->config->get('config_ip_api_key')){
@@ -1475,7 +1473,7 @@
 				'first_referrer'   			=> $result['first_referrer']?str_replace('www.', '', parse_url($this->model_module_referrer->simple_decode( $result['first_referrer'] ),  PHP_URL_HOST)):'Прямой',
 				'last_referrer'   			=> $result['last_referrer']?str_replace('www.', '',parse_url($this->model_module_referrer->simple_decode( $result['last_referrer'] ),  PHP_URL_HOST)):'Прямой',
 				'affiliate' 				=> $this->model_sale_affiliate->getAffiliate($result['affiliate_id']),
-				'is_marketplace'            => in_array($_fr, $this->marketplaces),
+				'is_marketplace'            => in_array($_fr, $this->model_sale_order->getMarketplaces()),
 				'telephone'      			=> $result['telephone'],
 				'fax'     			 		=> $result['fax'],
 				'faxname'     			 	=> $result['faxname'],
@@ -2903,7 +2901,7 @@
 			}
 			
 			$_fr = $order_info['first_referrer']?trim(str_replace('www.', '', parse_url($this->model_module_referrer->simple_decode( $order_info['first_referrer'] ),  PHP_URL_HOST))):'Прямой';
-			if (in_array($_fr, $this->marketplaces) || $order_info['yam']){		
+			if (in_array($_fr, $this->model_sale_order->getMarketplaces()) || $order_info['yam']){		
 				
 				if ($order_info['yam']){
 					$_fr = 'Яндекс.Маркет';
@@ -3676,16 +3674,16 @@
 			$this->load->model('localisation/legalperson');	
 			$this->data['legalpersons'] = array();
 			if (!$this->data['payment_country_id'] && $this->data['shipping_country_id']) {
-				$this->data['legalpersons'] = $this->model_localisation_legalperson->getLegalPersonsByCountryID($this->data['shipping_country_id']);
-				$this->data['cards'] = $this->model_localisation_legalperson->getLegalPersonsByCountryID($this->data['shipping_country_id'], true);
+				$this->data['legalpersons'] 	= $this->model_localisation_legalperson->getLegalPersonsByCountryID($this->data['shipping_country_id']);
+				$this->data['cards'] 			= $this->model_localisation_legalperson->getLegalPersonsByCountryID($this->data['shipping_country_id'], true);
 				$this->data['all_legalpersons'] = $this->model_localisation_legalperson->getAllLegalPersonsByCountryID($this->data['shipping_country_id']);
 				} elseif ($this->data['payment_country_id']) {
-				$this->data['legalpersons'] = $this->model_localisation_legalperson->getLegalPersonsByCountryID($this->data['payment_country_id']);
-				$this->data['cards'] = $this->model_localisation_legalperson->getLegalPersonsByCountryID($this->data['payment_country_id'], true);
+				$this->data['legalpersons'] 	= $this->model_localisation_legalperson->getLegalPersonsByCountryID($this->data['payment_country_id']);
+				$this->data['cards'] 			= $this->model_localisation_legalperson->getLegalPersonsByCountryID($this->data['payment_country_id'], true);
 				$this->data['all_legalpersons'] = $this->model_localisation_legalperson->getAllLegalPersonsByCountryID($this->data['payment_country_id']);
 				} else {
-				$this->data['legalpersons'] = $this->model_localisation_legalperson->getLegalPersonsSimpleOrNot();
-				$this->data['cards'] = $this->model_localisation_legalperson->getLegalPersonsSimpleOrNot(true);
+				$this->data['legalpersons'] 	= $this->model_localisation_legalperson->getLegalPersonsSimpleOrNot();
+				$this->data['cards'] 			= $this->model_localisation_legalperson->getLegalPersonsSimpleOrNot(true);
 				$this->data['all_legalpersons'] = $this->model_localisation_legalperson->getLegalPersons();
 			}											
 			
@@ -3730,8 +3728,7 @@
 				} else {
 				$this->data['card_id'] = '';
 			}
-			
-			
+						
 			//попытка угадать кассу для внесения средств, чтоб поставить ее по умолчанию
 			$this->data['guessed_transaction_legalperson_id'] = 0;
 			if ($this->data['card_id']){
@@ -3862,7 +3859,7 @@
 
 
 			$this->data['payment_links'] = [];
-			foreach ($this->equiring_methods as $equiring_method){
+			foreach ($this->model_sale_order->getEquiringMethods() as $equiring_method){
 				if ($this->config->get($equiring_method . '_status') || $this->config->get($equiring_method . '_status_fake')){
 					$this->data['payment_links'][$equiring_method] = [
 						'qr_code' => $this->model_sale_order->generatePaymentQR($order_id, $equiring_method),
@@ -3874,13 +3871,12 @@
 			
 			if (isset($this->request->post['order_product'])) {
 				$order_products = $this->request->post['order_product'];
-				} elseif (isset($this->request->get['order_id'])) {
+			} elseif (isset($this->request->get['order_id'])) {
 				$order_products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);			
-				} else {
+			} else {
 				$order_products = array();
 			}
-			
-			
+						
 			$this->load->model('catalog/product');
 			$this->load->model('sale/return');
 			
@@ -5667,7 +5663,7 @@
 				$data['amount'] = $order_info['total_national'];
 			}
 
-			if (in_array($order_info['payment_code'], $equiring_methods)){
+			if (in_array($order_info['payment_code'], $this->model_sale_order->getEquiringMethods())){
 				$data['payment_link'] = $this->model_sale_order->generatePaymentLink($this->request->post['order_id'], $order_info['payment_code']);
 			} else {
 				$data['payment_link'] = '';
@@ -6261,8 +6257,8 @@
 					$this->data['error'] = $this->language->get('error_permission');
 				}
 				
-				$order_id = (int)$this->request->get['order_id'];
-				$status_id = (int)$this->request->post['order_status_id'];
+				$order_id 	= (int)$this->request->get['order_id'];
+				$status_id 	= (int)$this->request->post['order_status_id'];
 				
 				if ($this->model_sale_order->getIfOrderClosed($order_id)){
 					$this->data['error'] = 'Заказ закрыт от редактирования!';
