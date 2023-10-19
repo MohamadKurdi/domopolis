@@ -44,15 +44,7 @@
 			'href'      => $this->url->link('common/home'),
 			'separator' => false
 			);
-			
-			//preauth
-			$this->load->model('account/preauth');
-			if (!$this->customer->isLogged()){
-				if ($email = $this->model_account_preauth->CheckPreauth()){
-					$this->customer->login($email, '', true);				
-				}			
-			}
-			
+
 			if (!IS_DEBUG && (!$this->customer->isLogged() || !isset($this->request->get['actiontemplate_id']))){
 				header('Location: ' . $this->url->link('account/login'), true, 301);		
 			}

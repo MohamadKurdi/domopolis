@@ -373,19 +373,11 @@
 		}			
 		
 		public function index() {
-			$this->load->model('account/preauth');
 			$this->load->model('account/order');
 			$this->load->model('tool/user');
 			$this->load->model('tool/image');
 			
 			$this->language->load('account/order');
-			
-			
-			if (!$this->customer->isLogged()){
-				if ($email = $this->model_account_preauth->CheckPreauth()){													
-					$this->customer->login($email, '', true);				
-				}			
-			}
 			
 			if (!$this->customer->isLogged()) {
 				$this->session->data['redirect'] = $this->url->link('account/order', '', 'SSL');
@@ -537,13 +529,7 @@
 			foreach ($this->language->loadRetranslate('account/order') as $translationСode => $translationText){
 				$this->data[$translationСode] = $translationText;
 			}	
-			
-			$this->load->model('account/preauth');
-			if (!empty($order_id) && !empty($this->request->get['do_payment']) && $email = $this->model_account_preauth->CheckPreauth()){					
-				$this->customer->logout();
-				$this->customer->login($email, '', true);				
-			}						
-			
+
 			if (!$this->customer->isLogged()) {
 				$this->session->data['redirect'] = $this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL');				
 				$this->redirect($this->url->link('account/login', '', 'SSL'));
