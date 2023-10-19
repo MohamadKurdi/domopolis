@@ -173,7 +173,7 @@
 			return $query->rows;
 		}		   
 		
-		public function prepareProductToArray($results, $bestsellers = array(), $ajax = false){					
+		public function prepareProductToArray($results, $bestsellers = [], $ajax = false){					
 			$array = [];
 			
 			$dimensions = array(
@@ -238,14 +238,15 @@
 					$is_not_certificate = (strpos($result['location'], 'certificate') === false);
 					
 					$description = '';
-					if ($is_not_certificate){
-						
-						if (mb_strlen($result['description']) > 10){
-							$description = utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 128) . '..';
+
+					if ($this->config->get('config_description_in_lists')){
+						if ($is_not_certificate){						
+							if (mb_strlen($result['description']) > 10){
+								$description = utf8_substr(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8')), 0, 128) . '..';
+							}						
+						} else {
+							$description = html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8');
 						}
-						
-					} else {
-						$description = html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8');
 					}
 					
 					$stock_data = $this->parseProductStockData($result);
@@ -261,6 +262,18 @@
 					if ($this->config->get('ukrcredits_status')){
 						$this->load->model('module/ukrcredits');
 					}
+
+					$amazonData = [];
+					if (ADMIN_SESSION_DETECTED && $this->config->get('config_enable_amazon_specific_modes')){
+						$amazonData = [
+							'asin' 					=> $result['asin'],
+							'amazon_product_link' 	=> $result['amazon_product_link'],
+							'amazon_offers_type' 	=> $result['amazon_offers_type'],
+							'amazon_best_price' 	=> $this->currency->format($result['amazon_best_price'], $this->config->get('config_currency'), 1),
+							'costprice'	   	   		=> $this->currency->format($result['costprice'], $this->config->get('config_currency'), 1),
+							'profitability'	   	   	=> $result['profitability']
+						];
+					}
 					
 					$array[] = array(
 						'new'         				=> $result['new'],
@@ -273,6 +286,7 @@
 						'product_id'  				=> $result['product_id'],
 						'is_certificate'			=> (strpos($result['location'], 'certificate') !== false),
 						'ecommerceData'				=> $ecommerceData,
+						'amazon_data'				=> $amazonData,
 						'current_in_stock' 			=> $result['current_in_stock'],
 						'stock_type'  				=> $stock_data['stock_type'],
 						'stock_text'  				=> $result['stock_text'],						
@@ -664,6 +678,10 @@
 							'mpn'                      => $query->row['mpn'],
 							'asin'                     => $query->row['asin'],
 							'amazon_product_link'      => $query->row['amazon_product_link'],
+							'amazon_offers_type'	   => $query->row['amazon_offers_type'],
+							'amazon_best_price'	   	   => $query->row['amazon_best_price'],
+							'costprice'	   	   		   => $query->row['costprice'],
+							'profitability'	   	   	   => $query->row['profitability'],
 							'location'                 => $query->row['location'],
 							'current_in_stock'		   => $this->config->get('config_warehouse_identifier')?($query->row[$this->config->get('config_warehouse_identifier')]>0):false,
 							'current_in_stock_q'	   => $query->row[$this->config->get('config_warehouse_identifier')],
@@ -741,7 +759,6 @@
 							'yam_in_feed'		   	   => $query->row['yam_in_feed'],
 							'yam_disable'		   	   => $query->row['yam_disable'],
 							'is_illiquid'		   	   => $query->row['is_illiquid'],
-							'amazon_offers_type'	   => $query->row['amazon_offers_type'],
 							'region_id'				   => $this->config->get('config_googlelocal_code')
 						]; 
 

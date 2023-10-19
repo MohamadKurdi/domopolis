@@ -48,7 +48,7 @@ class ControllerProductProduct extends Controller
             $results[$product_id] = $this->model_catalog_product->getProduct($product_id);
         }
 
-        $json = $this->model_catalog_product->prepareProductToArray($results, array(), true);
+        $json = $this->model_catalog_product->prepareProductToArray($results, [], true);
 
         $this->response->setOutput(json_encode($json));
     }
