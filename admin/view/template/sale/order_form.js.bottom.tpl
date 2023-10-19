@@ -777,17 +777,7 @@
 		}
 	});
 //--></script>
-<script type="text/javascript"><!--
-	$('select[name=\'payment\']').bind('change', function() {
-		if (this.value) {
-			$('input[name=\'payment_method\']').attr('value', $('select[name=\'payment\'] option:selected').text());
-			} else {
-			$('input[name=\'payment_method\']').attr('value', '');
-		}
-		
-		$('input[name=\'payment_code\']').attr('value', this.value);
-	});
-	
+<script type="text/javascript"><!--	
 	$('select[name=\'payment_secondary\']').bind('change', function() {
 		if (this.value) {
 			$('input[name=\'payment_secondary_method\']').attr('value', $('select[name=\'payment_secondary\'] option:selected').text());

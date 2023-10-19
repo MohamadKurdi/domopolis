@@ -243,8 +243,21 @@
 				success : function(text){
 					_el.removeClass('loading').addClass('done');
 					console.log(_el.attr('id'));
+
+					if (_el.attr('id') !== 'undefined' && _el.attr('id') == 'payment'){
+						if (_val) {
+							$('input[name=\'payment_method\']').attr('value', $('select[name=\'payment\'] option:selected').text());
+						} else {
+							$('input[name=\'payment_method\']').attr('value', '');
+						}
+		
+						$('input[name=\'payment_code\']').attr('value', _val);
+
+						$('input[name=\'payment_code\']').trigger('change');
+						$('input[name=\'payment_method\']').trigger('change');
+					}
 					
-					if (_el.attr('id') == 'csi_reject'){
+					if (_el.attr('id') !== 'undefined' && _el.attr('id') == 'csi_reject'){
 						if (_val == 1){
 							$('#csi_table').hide();
 							$('#csi_average_result_wrapper').hide();
@@ -254,7 +267,7 @@
 						}						
 					}
 					
-					if (_el.attr('id') == 'legalperson_id'){
+					if (_el.attr('id') !== 'undefined' && _el.attr('id') == 'legalperson_id'){
 						$.ajax({
 							url : 'index.php?route=localisation/legalperson/getLegalPersonAllLimitsAjax&token=<? echo $token; ?>',
 							type : 'POST',
@@ -272,7 +285,7 @@
 					}
 					
 					
-					if (_el.attr('id').indexOf('_mark')){
+					if (_el.attr('id') !== 'undefined' && _el.attr('id').indexOf('_mark')){
 						$.ajax({
 							url : 'index.php?route=sale/order/getOrderCSIAjax&order_id='+ _oid +'&token=<? echo $token; ?>',
 							type : 'GET',
@@ -284,13 +297,13 @@
 						})											
 					}
 					
-					if (_el.attr('id') == 'select_pay_type' && _el.children('option:selected').attr('data-type') == 'cashless'){
+					if (_el.attr('id') !== 'undefined' && _el.attr('id') == 'select_pay_type' && _el.children('option:selected').attr('data-type') == 'cashless'){
 						$('div#div_cashless_info').show();			
 						} else if (_el.attr('id') == 'select_pay_type') {
 						$('div#div_cashless_info').hide();			
 					}
 					
-					if (_el.attr('id') == 'select_pay_type' && _el.children('option:selected').attr('data-type') == 'bank'){
+					if (_el.attr('id') !== 'undefined' && _el.attr('id') == 'select_pay_type' && _el.children('option:selected').attr('data-type') == 'bank'){
 						$('div#div_card_info').show();			
 						} else if (_el.attr('id') == 'select_pay_type') {
 						$('div#div_card_info').hide();			

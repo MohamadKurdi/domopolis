@@ -3054,14 +3054,15 @@
 																		<? } ?>
 																		<tr>
 																			<td class="left"><b><?php echo $entry_payment; ?></b></td>
-																			<td class="left"><select name="payment">
+																			<td class="left">
+																			<select name="payment" class="onchangeedit_direct" id="payment">
 																				<option value=""><?php echo $text_select; ?></option>
 																				<?php if ($payment_code) { ?>
 																					<option value="<?php echo $payment_code; ?>" selected="selected"><?php echo $payment_method; ?></option>
 																				<?php } ?>
 																			</select>
-																			<input type="hidden" name="payment_method" value="<?php echo $payment_method; ?>" />
-																			<input type="hidden" name="payment_code" value="<?php echo $payment_code; ?>" />												
+																			<input type="hidden" class="onchangeedit_direct" name="payment_method" value="<?php echo $payment_method; ?>" />
+																			<input type="hidden" class="onchangeedit_direct" name="payment_code" value="<?php echo $payment_code; ?>" />												
 																			<?php if ($error_payment_method) { ?>
 																				<span class="error"><?php echo $error_payment_method; ?></span>
 																			<?php } ?>
