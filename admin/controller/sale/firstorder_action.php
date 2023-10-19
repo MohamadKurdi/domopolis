@@ -16,13 +16,7 @@ class ControllerSaleFirstOrderAction extends Controller {
 		AND DATE(oh.date_added) = '" . date('Y-m-d', strtotime('-1 day')) . "'
 		AND c.order_good_count = 1";
 		
-		$query = $this->db->query($sql);
-
-		$query->rows = [[
-			'order_id' => 1111,
-			'email' 	=> 'v.zaichikov@gmail.com',
-			'telephone' => '+380632708881'
-		]];
+		$query = $this->db->query($sql);		
 
 		if ($query->num_rows){
 			if ($this->config->get('config_firstorder_send_promocode') == '1'){
