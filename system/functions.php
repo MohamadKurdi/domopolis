@@ -44,7 +44,6 @@ if (!function_exists('loadJsonConfig')){
 if (!function_exists('echoLine')){
 	function echoLine($line, $type = 'l'){
 		if (php_sapi_name() === 'cli'){
-
 			switch ($type) {
 				case 'e':
 				echo "\033[31m$line \033[0m" . PHP_EOL;
@@ -70,7 +69,6 @@ if (!function_exists('echoLine')){
 }
 
 function thisIsAjax($request = false){
-
 	if (!$request){
 		if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
 			return true;
@@ -94,7 +92,6 @@ function isFriendlyURL($url){
 }
 
 function thisIsUnroutedURI($request = false){	
-
 	if (!$request){
 		if (isset($_SERVER['REQUEST_URI'])){
 			if (stripos($_SERVER['REQUEST_URI'], 'index.php?route=') !== false){
@@ -113,13 +110,10 @@ function thisIsUnroutedURI($request = false){
 }
 
 function doNotSetLanguageCookieSession($request = false){
-
 	return (thisIsAjax($request) || thisIsUnroutedURI($request));
-
 }
 
 function error_handler($errno, $errstr, $errfile, $errline) {
-
 	switch ($errno) {
 		case E_NOTICE:
 		case E_USER_NOTICE:
@@ -150,6 +144,5 @@ function error_handler($errno, $errstr, $errfile, $errline) {
 
 	return true;
 }
-
 
 set_error_handler('error_handler');

@@ -55,43 +55,19 @@ $loaderConfig = loadJsonConfig('loader');
 
 if (!empty($loaderConfig['helper'])){
 	foreach ($loaderConfig['helper'] as $helperFile){
-		if (file_exists(DIR_SYSTEM . 'helper/' . $helperFile . '.php')){
-			require_once(DIR_SYSTEM . 'helper/' . $helperFile . '.php');
+		if (file_exists(DIR_SYSTEM . '/helper/' . $helperFile . '.php')){
+			require_once(DIR_SYSTEM . '/helper/' . $helperFile . '.php');
 		}			
 	}
 }
 
-require_once(DIR_SYSTEM . 'engine/action.php');
-require_once(DIR_SYSTEM . 'library/shortcodes.php');
-require_once(DIR_SYSTEM . 'engine/controller.php');
-require_once(DIR_SYSTEM . 'engine/front.php');
-require_once(DIR_SYSTEM . 'engine/loader.php'); 
-require_once(DIR_SYSTEM . 'engine/model.php');
-require_once(DIR_SYSTEM . 'engine/registry.php');
-
-require_once(DIR_SYSTEM . 'library/cache.php');
-require_once(DIR_SYSTEM . 'library/url.php');
-require_once(DIR_SYSTEM . 'library/config.php');
-require_once(DIR_SYSTEM . 'library/db.php');
-require_once(DIR_SYSTEM . 'library/document.php');
-require_once(DIR_SYSTEM . 'library/encryption.php');
-
-if (extension_loaded('imagick')){
-	require_once(DIR_SYSTEM . 'library/imageMagick.php');
-} else {
-	require_once(DIR_SYSTEM . 'library/image.php');
+if (!empty($loaderConfig['startup_libraries'])){
+	foreach ($loaderConfig['startup_libraries'] as $sLibFile){
+		if (file_exists(DIR_SYSTEM . '/' . $sLibFile . '.php')){
+			require_once(DIR_SYSTEM . '/' . $sLibFile . '.php');
+		}			
+	}
 }
-
-require_once(DIR_SYSTEM . 'library/video.php');
-require_once(DIR_SYSTEM . 'library/language.php');
-require_once(DIR_SYSTEM . 'library/log.php');
-require_once(DIR_SYSTEM . 'library/mail.php');
-require_once(DIR_SYSTEM . 'library/pagination.php');
-require_once(DIR_SYSTEM . 'library/request.php');
-require_once(DIR_SYSTEM . 'library/response.php');
-require_once(DIR_SYSTEM . 'library/session.php');
-require_once(DIR_SYSTEM . 'library/template.php');
-require_once(DIR_SYSTEM . 'library/emailtemplate/email_template.php');
 
 if (ini_get('register_globals')) {
 	$globals = array($_REQUEST, $_SESSION, $_SERVER, $_FILES);
