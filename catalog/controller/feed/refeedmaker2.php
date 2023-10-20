@@ -581,9 +581,10 @@ class ControllerFeedReFeedMaker2 extends Controller
                         'filter_not_bad'            => true,
                         'filter_exclude_certs'      => true,
                         'filter_with_variants'      => true,
-                        'filter_get_product_mode'   => 'feed',
-                        'sort'                      => 'p.product_id',
-                        'order'                     => 'ASC'
+                        'filter_get_product_mode'           => 'feed',
+                        'filter_exclude_google_categories'  => true,
+                        'sort'                              => 'p.product_id',
+                        'order'                             => 'ASC'
                     );
 
                     echoLine('[makefeed] Итерация ' . $i . ' из ' . $iterations . ', товары с ' . ($filter['start']) . ' по ' . ($filter['start'] + $filter['limit']));
