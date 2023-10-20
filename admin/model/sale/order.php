@@ -1031,31 +1031,32 @@
 						}
 						
 						$this->db->query("INSERT INTO order_product SET
-						order_product_id = '" . (int)$order_product['order_product_id'] . "', 
-						order_id = '" . (int)$order_id . "', 
-						product_id = '" . (int)$_real_product_id . "', 
-						ao_id = '" . (int)$order_product['ao_id'] . "', 
-						ao_product_id = '" . (int)$order_product['ao_product_id'] . "',
-						name = '" . $this->db->escape($_name) . "', 
-						model = '" . $this->db->escape($order_product['model']) . "', 
-						source = '" . $this->db->escape($order_product['source']) . "',  
-						quantity = '" . (int)$order_product['quantity'] . "', 
-						delivery_num = '" . (int)$order_product['delivery_num'] . "',
-						part_num = '" . $this->db->escape(trim($order_product['part_num'])) . "', 					
-						price = '" . (float)$order_product['price'] . "', 
-						price_national = '" . (float)$order_product['price_national'] . "',
+						order_product_id 	= '" . (int)$order_product['order_product_id'] . "', 
+						order_id 			= '" . (int)$order_id . "', 
+						product_id 			= '" . (int)$_real_product_id . "', 
+						ao_id 				= '" . (int)$order_product['ao_id'] . "', 
+						ao_product_id 		= '" . (int)$order_product['ao_product_id'] . "',
+						name 				= '" . $this->db->escape($_name) . "', 
+						model 				= '" . $this->db->escape($order_product['model']) . "', 
+						source 				= '" . $this->db->escape($order_product['source']) . "',  
+						quantity 			= '" . (int)$order_product['quantity'] . "', 
+						delivery_num 		= '" . (int)$order_product['delivery_num'] . "',
+						part_num 			= '" . $this->db->escape(trim($order_product['part_num'])) . "', 					
+						price 				= '" . (float)$order_product['price'] . "', 
+						price_national 		= '" . (float)$order_product['price_national'] . "',
 						original_price_national = '" . (float)$order_product['original_price_national'] . "',
-						pricewd_national = '" . (float)$order_product['pricewd_national'] . "',
-						from_stock = '" . (int)$order_product['from_stock'] . "',
-						from_bd_gift = '" . (int)$order_product['from_bd_gift'] . "',
-						total = '" . (float)$order_product['total'] . "',
-						total_national = '" . (float)$order_product['total_national'] . "',
-						totalwd_national = '" . (float)$order_product['totalwd_national'] . "',
-						tax = '" . (float)$order_product['tax'] . "', 
-						reward = '" . (int)$order_product['reward'] . "',
-						reward_one = '" . (int)$order_product['reward_one'] . "', 
-						good = '" . (int)$order_product['good'] . "', 
-						taken = '" . (int)$order_product['taken'] . "'");
+						pricewd_national 		= '" . (float)$order_product['pricewd_national'] . "',
+						from_stock 				= '" . (int)$order_product['from_stock'] . "',
+						from_bd_gift 			= '" . (int)$order_product['from_bd_gift'] . "',
+						total 					= '" . (float)$order_product['total'] . "',
+						total_national 			= '" . (float)$order_product['total_national'] . "',
+						totalwd_national 		= '" . (float)$order_product['totalwd_national'] . "',
+						amazon_offers_type 		= '" . $this->db->escape(trim($order_product['amazon_offers_type'])) . "',
+						tax 				= '" . (float)$order_product['tax'] . "', 
+						reward 				= '" . (int)$order_product['reward'] . "',
+						reward_one 			= '" . (int)$order_product['reward_one'] . "', 
+						good 				= '" . (int)$order_product['good'] . "', 
+						taken 				= '" . (int)$order_product['taken'] . "'");
 						
 						$order_product_id = $this->db->getLastId();
 						
@@ -2395,6 +2396,7 @@
 				'ua_logistics'			=> isset($order_query->row['ua_logistics'])?$order_query->row['ua_logistics']:0,
 				'concardis_id'			=> isset($order_query->row['concardis_id'])?$order_query->row['concardis_id']:0,
 				'tracker_xml'           => $order_query->row['tracker_xml'],
+				'amazon_offers_type'    => $order_query->row['amazon_offers_type'],
 				'template'            	=> $order_query->row['template'],
 				'customer_confirm_url'   => '&order_id='.$order_query->row['order_id'].'&confirm='.md5(sin($order_query->row['order_id']+2)).'&utm_term='.$order_query->row['email'].'&utoken='.md5($order_query->row['email'] . $this->config->get('config_encryption'))
 				);
@@ -2415,7 +2417,7 @@
 		}
 		
 		public function getOrders($data = array()) {
-			$sql = "SELECT DISTINCT o.order_id, o.preorder, o.pwa, o.monocheckout, o.yam, o.yam_id, o.yam_shipment_date, o.yam_shipment_id, o.yam_box_id, o.yam_fake, o.yam_status, o.yam_substatus, o.template, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.customer_id, o.tracker_xml, o.shipping_code, o.needs_checkboxua, o.paid_by, o.costprice, o.profitability, ";
+			$sql = "SELECT DISTINCT o.order_id, o.preorder, o.pwa, o.monocheckout, o.yam, o.yam_id, o.yam_shipment_date, o.yam_shipment_id, o.yam_box_id, o.yam_fake, o.yam_status, o.yam_substatus, o.template, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.customer_id, o.tracker_xml, o.shipping_code, o.needs_checkboxua, o.paid_by, o.costprice, o.profitability, o.amazon_offers_type, ";
 
 			if ($this->config->get('ukrcredits_status')){
 				$sql .= " ouc.ukrcredits_order_status, ouc.ukrcredits_order_substatus, ";
@@ -2637,6 +2639,10 @@
 			if (!empty($data['filter_ua_logistics'])) {
 				$sql .= " AND o.ua_logistics = '1'";
 			}
+
+			if (!empty($data['filter_amazon_offers_type'])) {
+				$sql .= " AND o.amazon_offers_type = '" . $this->db->escape($data['filter_amazon_offers_type']) . "'";
+			}
 			
 			if (!empty($data['filter_manager_id'])) {
 				$sql .= " AND o.manager_id = '" . (int)$data['filter_manager_id'] . "'";
@@ -2795,6 +2801,10 @@
 			if (!empty($data['filter_ua_logistics'])) {
 				$sql .= " AND o.ua_logistics = '1'";
 			}
+
+			if (!empty($data['filter_amazon_offers_type'])) {
+				$sql .= " AND o.amazon_offers_type = '" . $this->db->escape($data['filter_amazon_offers_type']) . "'";
+			}
 			
 			if (!empty($data['filter_affiliate_id'])) {
 				$sql .= " AND o.affiliate_id = '" . (int)$data['filter_affiliate_id'] . "'";
@@ -2881,20 +2891,6 @@
 		}
 		
 		public function getOrderProducts($order_id, $with_returns = true, $order_by = 'op.delivery_num, op.name', $delivery_num = false, $no_certificate = false) {			
-			$_sql_addon = '';
-			
-			if ($delivery_num){				
-				$_sql_addon .= " AND op.delivery_num = '" . (int)$delivery_num . "'";				
-			}
-			
-			if (!$with_returns) {
-				$_sql_addon .= " AND is_returned = '0'";				
-			}
-			
-			if ($no_certificate) {
-				$_sql_addon .= " AND (op.product_id NOT IN (SELECT product_id FROM product WHERE model LIKE ('%certificate%')))";				
-			}
-
 			$sql = "SELECT op.*, 
 			p.image, 
 			p.short_name, 
@@ -2909,7 +2905,20 @@
 				$sql .=	" , (SELECT name FROM product_description WHERE product_id = op.product_id AND language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_novaposhta_ua_language')]['language_id'] . "' LIMIT 1) as ua_name ";
 			}
 
-			$sql .= " FROM order_product op LEFT JOIN product p ON op.product_id = p.product_id WHERE order_id = '" . (int)$order_id . "' " . $_sql_addon . " ORDER BY " . $this->db->escape($order_by);	
+			$add = '';			
+			if ($delivery_num){				
+				$add .= " AND op.delivery_num = '" . (int)$delivery_num . "'";				
+			}
+			
+			if (!$with_returns) {
+				$add .= " AND is_returned = '0'";				
+			}
+			
+			if ($no_certificate) {
+				$add .= " AND (op.product_id NOT IN (SELECT product_id FROM product WHERE model LIKE ('%certificate%')))";				
+			}
+
+			$sql .= " FROM order_product op LEFT JOIN product p ON op.product_id = p.product_id WHERE order_id = '" . (int)$order_id . "' " . $add . " ORDER BY " . $this->db->escape($order_by);	
 		
 			$query = $this->db->query($sql);
 			

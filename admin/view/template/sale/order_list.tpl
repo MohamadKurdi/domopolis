@@ -152,8 +152,18 @@
 								<?php } ?>
 							</select>
 						</td>
+
 						<td>							
-							
+							<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
+								<select name="filter_amazon_offers_type" style="width:180px;">
+									<option value="*" <?php if (is_null($filter_amazon_offers_type)) { ?>selected="selected"<? } ?>>Фильтр по офферам</option>
+									<option value="AP" <?php if ($filter_amazon_offers_type == 'AP') { ?>selected="selected"<? } ?>>Amazon + Prime</option>
+									<option value="A" <?php if ($filter_amazon_offers_type == 'A') { ?>selected="selected"<? } ?>>Только Amazon</option>
+									<option value="P" <?php if ($filter_amazon_offers_type == 'P') { ?>selected="selected"<? } ?>>Только Prime</option>
+									<option value="O" <?php if ($filter_amazon_offers_type == 'O') { ?>selected="selected"<? } ?>>Другие поставщики</option>
+									<option value="N" <?php if ($filter_amazon_offers_type == 'N') { ?>selected="selected"<? } ?>>Нету офферов</option>
+								</select>
+							<?php } ?>
 						</td>
 						
 						<td colspan="2">							
@@ -531,6 +541,12 @@
 							</td>
 							<?php } ?>
 
+							<?php if ($this->config->get('config_enable_amazon_specific_modes')){ ?>
+							<td class="right" style="width:20px;">
+								<i class="fa fa-amazon"></i>
+							</td>
+							<?php } ?>
+
 							<td class="right">
 								<?php if ($sort == 'o.total') { ?>
 									<a href="<?php echo $sort_total; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_total; ?></a>
@@ -572,8 +588,7 @@
 										<div style="margin-bottom:5px; padding:4px 7px; font-weight:400; font-size:18px;">
 											<?php echo $order['order_id']; ?>&nbsp;<span style="font-size:12px;" class="add2ticket" data-query="object=order&object_value=<?php echo $order['order_id']; ?>"></span>
 										</div>
-										
-										
+																				
 										<? if ($order['yam'] && $order['yam_id']) { ?>	
 											<div style="margin-bottom:5px; margin-top:5px; padding:4px 7px; font-weight:400; font-size:16px; color:#cf4a61;" >
 												<?php echo $order['yam_id']; ?> <i class="fa fa-yoast" aria-hidden="true"></i> 
@@ -657,13 +672,13 @@
 										</div>
 									<? } ?>
 									
-									<?php if (!$order['yam']) { ?>
+									<?php /* if (!$order['yam']) { ?>
 										<? if ($order['is_opt']) { ?>			    
 											<span style="display:block; margin-top:5px; font-size:10px;">опт</span>				
 											<? } else { ?>			  
 											<span style="display:block; margin-top:5px; font-size:10px;">розница</span>				
 										<? } ?>
-									<?php } ?>
+									<?php } */ ?>
 								</span>
 							</td>
 							<td class="left" style="color: #<?php echo $order['status_txt_color']; ?>;" aria-label="Имя / ID / Email">
@@ -761,7 +776,7 @@
 																	<? } ?>															
 															</div>
 															<div class="ktooltip_product_hidden">
-																<div id="tooltip_product_<? echo $order['order_id']; ?><? echo $product['product_id']; ?><? echo $i; ?>"><a href="<?php echo $product['href']; ?>" target="_blank"><?php echo $product['name']; ?></a></br>
+																<div style="width:300px; height:300px;" id="tooltip_product_<? echo $order['order_id']; ?><? echo $product['product_id']; ?><? echo $i; ?>"><a href="<?php echo $product['href']; ?>" target="_blank"><?php echo $product['name']; ?></a></br>
 																	<div style="width:150px;float:left;"><img src="<?php echo $product['lthumb']; ?>" style="" loading="lazy" /></div>
 																	
 																	<div class="width:160px;float:right;margin-left:10px;padding-top:20px;">
@@ -1098,6 +1113,14 @@
 
 												<br />
 												<span style="display:inline-block;padding:2px 3px; font-size:10px; background:#ff7f00; color:#FFF; white-space:nowrap;"><? echo $order['costprice_national']; ?></span>
+											<?php } ?>											
+										</td>
+									<?php } ?>
+
+									<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
+										<td  class="center" style="width:20px;">
+											<?php if ($order['amazon_offers_type']) { ?>
+												<span style="padding:2px 3px; background-color:#e16a5d; display:inline-block; text-decoration:none;font-size:16px; color:#FFF;"><? echo $order['amazon_offers_type']; ?></span>
 											<?php } ?>
 										</td>
 									<?php } ?>
@@ -1358,6 +1381,14 @@
 		if (filter_payment_method != '*') {
 			url += '&filter_payment_method=' + encodeURIComponent(filter_payment_method);
 		}	
+
+		<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>						
+			var filter_amazon_offers_type = $('select[name=\'filter_amazon_offers_type\']').children("option:selected").val();
+
+			if (filter_amazon_offers_type != '*') {
+				url += '&filter_amazon_offers_type=' + encodeURIComponent(filter_amazon_offers_type);
+			}
+		<?php } ?>
 		
 		var filter_order_status_id = $('select[name=\'filter_order_status_id\']').children("option:selected").val();
 		var filter_order_store_id  = $('select[name=\'filter_order_store_id\']').children("option:selected").val();

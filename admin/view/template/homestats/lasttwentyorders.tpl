@@ -6,6 +6,13 @@
 				<?php foreach ($orders as $order) { ?>
 					<tr>
 						<td  class="right" style="text-align: left;"><?php echo $order['order_id']; ?></td>
+						<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
+							<td  class="center" style="width:20px;">
+								<?php if ($order['amazon_offers_type']) { ?>
+									<span style="padding:2px 3px; background-color:#e16a5d; display:inline-block; text-decoration:none;font-size:14px; color:#FFF;"><? echo $order['amazon_offers_type']; ?></span>
+								<?php } ?>
+							</td>
+						<?php } ?>
 						<td  class="left" style="text-align: left;">
 						<?php if ($this->config->get('config_admin_flags_enable')) { ?>
 							<img src="<?php echo DIR_FLAGS_NAME; ?><? echo mb_strtolower($order['flag']) ?>.png" title="<? echo $order['flag']; ?>" /> 

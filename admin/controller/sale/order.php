@@ -311,6 +311,10 @@
 				if (isset($this->request->get['filter_ua_logistics'])) {
 					$url .= '&filter_ua_logistics=' . $this->request->get['filter_ua_logistics'];
 				}
+
+				if (isset($this->request->get['filter_amazon_offers_type'])) {
+					$url .= '&filter_amazon_offers_type=' . $this->request->get['filter_amazon_offers_type'];
+				}
 				
 				if (isset($this->request->get['sort'])) {
 					$url .= '&sort=' . $this->request->get['sort'];
@@ -512,6 +516,10 @@
 					if (isset($this->request->get['filter_ua_logistics'])) {
 						$url .= '&filter_ua_logistics=' . $this->request->get['filter_ua_logistics'];
 					}
+
+					if (isset($this->request->get['filter_amazon_offers_type'])) {
+						$url .= '&filter_amazon_offers_type=' . $this->request->get['filter_amazon_offers_type'];
+					}
 					
 					if (isset($this->request->get['sort'])) {
 						$url .= '&sort=' . $this->request->get['sort'];
@@ -652,6 +660,10 @@
 				if (isset($this->request->get['filter_ua_logistics'])) {
 					$url .= '&filter_ua_logistics=' . $this->request->get['filter_ua_logistics'];
 				}
+
+				if (isset($this->request->get['filter_amazon_offers_type'])) {
+					$url .= '&filter_amazon_offers_type=' . $this->request->get['filter_amazon_offers_type'];
+				}
 				
 				if (isset($this->request->get['sort'])) {
 					$url .= '&sort=' . $this->request->get['sort'];
@@ -781,6 +793,10 @@
 				
 				if (isset($this->request->get['filter_ua_logistics'])) {
 					$url .= '&filter_ua_logistics=' . $this->request->get['filter_ua_logistics'];
+				}
+
+				if (isset($this->request->get['filter_amazon_offers_type'])) {
+					$url .= '&filter_amazon_offers_type=' . $this->request->get['filter_amazon_offers_type'];
 				}
 				
 				if (isset($this->request->get['sort'])) {
@@ -1003,6 +1019,12 @@
 				} else {
 				$filter_ua_logistics = null;
 			}
+
+			if (isset($this->request->get['filter_amazon_offers_type'])) {
+				$filter_amazon_offers_type = $this->request->get['filter_amazon_offers_type'];
+				} else {
+				$filter_amazon_offers_type = null;
+			}
 			
 			if (isset($this->request->get['sort'])) {
 				$sort = $this->request->get['sort'];
@@ -1135,6 +1157,10 @@
 			if (isset($this->request->get['filter_ua_logistics'])) {
 				$url .= '&filter_ua_logistics=' . $this->request->get['filter_ua_logistics'];
 			}
+
+			if (isset($this->request->get['filter_amazon_offers_type'])) {
+					$url .= '&filter_amazon_offers_type=' . $this->request->get['filter_amazon_offers_type'];
+			}
 			
 			if (isset($this->request->get['sort'])) {
 				$url .= '&sort=' . $this->request->get['sort'];
@@ -1210,6 +1236,7 @@
 			'filter_urgent_buy'      => $filter_urgent_buy,
 			'filter_wait_full'       => $filter_wait_full,
 			'filter_ua_logistics'    => $filter_ua_logistics,
+			'filter_amazon_offers_type' => $filter_amazon_offers_type,
 			'sort'                   => $sort,
 			'order'                  => $order,
 			'start'                  => ($page - 1) * $limit,
@@ -1330,6 +1357,7 @@
 					'order_product_id' => $product['order_product_id'],
 					'order_id'         => $result['order_id'],
 					'product_id'       => $product['product_id'],
+					'amazon_offers_type' => $product['amazon_offers_type'],
 					'from_stock'       => !empty($product['from_stock'])?$product['from_stock']:false,
 					'from_bd_gift'     => !empty($product['from_bd_gift'])?$product['from_bd_gift']:false,
 					'name'    	 	   => $product['name'],
@@ -1454,6 +1482,7 @@
 				'yam_status'              	=> $result['yam_status'],
 				'yam_substatus'           	=> $result['yam_substatus'],
 				'yam_fake'           	  	=> $result['yam_fake'],
+				'amazon_offers_type'           => $result['amazon_offers_type'],
 				'ukrcredits_order_status'      => !empty($result['ukrcredits_order_status'])?$result['ukrcredits_order_status']:false,
 				'ukrcredits_order_substatus'   => !empty($result['ukrcredits_order_substatus'])?$result['ukrcredits_order_substatus']:false,
 				'customer'      			=> $result['customer'],
@@ -1522,6 +1551,7 @@
 				'costprice'				  	=> $this->currency->format($result['costprice'], $this->config->get('config_currency'), 1),
 				'costprice_national'	  	=> $this->currency->format($this->currency->convert($result['costprice'], $this->config->get('config_currency'), $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', $result['store_id'])), $this->config->get('config_regional_currency'), 1),
 				'profitability'			  	=> $result['profitability'],
+				'amazon_offers_type'		=> $result['amazon_offers_type'],
 				'totals'         			=> $totals2,
 				'total_discount'         	=> ($total_discount<0)?$this->currency->format($total_discount, $result['currency_code'], '1'):false,
 				'total_discount_percent'    => ($total_discount<0)?round(($total_discount/$sub_total) * 100, 2):false,
@@ -1716,6 +1746,10 @@
 			if (isset($this->request->get['filter_ua_logistics'])) {
 				$url .= '&filter_ua_logistics=' . $this->request->get['filter_ua_logistics'];
 			}
+
+			if (isset($this->request->get['filter_amazon_offers_type'])) {
+					$url .= '&filter_amazon_offers_type=' . $this->request->get['filter_amazon_offers_type'];
+				}
 			
 			if (isset($this->request->get['filter_manager_id'])) {
 				$url .= '&filter_manager_id=' . $this->request->get['filter_manager_id'];
@@ -1865,6 +1899,10 @@
 			if (isset($this->request->get['filter_ua_logistics'])) {
 				$url .= '&filter_ua_logistics=' . $this->request->get['filter_ua_logistics'];
 			}
+
+			if (isset($this->request->get['filter_amazon_offers_type'])) {
+					$url .= '&filter_amazon_offers_type=' . $this->request->get['filter_amazon_offers_type'];
+				}
 			
 			if (isset($this->request->get['sort'])) {
 				$url .= '&sort=' . $this->request->get['sort'];
@@ -1912,6 +1950,7 @@
 			$this->data['filter_urgent_buy'] 		= $filter_urgent_buy;
 			$this->data['filter_wait_full'] 		= $filter_wait_full;
 			$this->data['filter_ua_logistics'] 		= $filter_ua_logistics;
+			$this->data['filter_amazon_offers_type']= $filter_amazon_offers_type;
 			
 			$this->data['all_managers'] = $this->getAllManagersWhoCanOwnOrders();			
 			$this->data['all_couriers'] = $this->getAllCouriers();
@@ -3907,19 +3946,19 @@
 				'product_id'	=> $order_product_return['product_id'],
 				'to_supplier'	=> $order_product_return['to_supplier'],
 				'product_adminlink' => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $order_product_return['product_id'], 'SSL'),
-				'name'  => $order_product_return['product'],
-				'model'  => $order_product_return['model'],
-				'ean'  => $real_product['ean'],
-				'image'    	    => $this->model_tool_image->resize($real_product['image'], 40, 40),
-				'quantity'		=> $order_product_return['quantity'],
-				'price' => $this->currency->format($order_product_return['price_national'], $order_info['currency_code'], 1),
-				'pricewd_national' => $this->currency->format($order_product_return['pricewd_national'], $order_info['currency_code'], 1),
-				'total' => $this->currency->format($order_product_return['total_national'], $order_info['currency_code'], 1),
-				'totalwd_national' => $this->currency->format($order_product_return['totalwd_national'], $order_info['currency_code'], 1),
-				'status' => $order_product_return['status'],
-				'reason' => $order_product_return['reason'],
-				'date_added' => date('d.m.Y', strtotime($order_product_return['date_added'])),
-				'edit' => $this->url->link('sale/return/info', 'token=' . $this->session->data['token'] . '&return_id=' . $order_product_return['return_id'], 'SSL')
+				'name'  			=> $order_product_return['product'],
+				'model'  			=> $order_product_return['model'],
+				'ean'  				=> $real_product['ean'],
+				'image'    	    	=> $this->model_tool_image->resize($real_product['image'], 40, 40),
+				'quantity'			=> $order_product_return['quantity'],
+				'price' 			=> $this->currency->format($order_product_return['price_national'], $order_info['currency_code'], 1),
+				'pricewd_national' 	=> $this->currency->format($order_product_return['pricewd_national'], $order_info['currency_code'], 1),
+				'total' 			=> $this->currency->format($order_product_return['total_national'], $order_info['currency_code'], 1),
+				'totalwd_national' 	=> $this->currency->format($order_product_return['totalwd_national'], $order_info['currency_code'], 1),
+				'status' 			=> $order_product_return['status'],
+				'reason' 			=> $order_product_return['reason'],
+				'date_added' 		=> date('d.m.Y', strtotime($order_product_return['date_added'])),
+				'edit' 				=> $this->url->link('sale/return/info', 'token=' . $this->session->data['token'] . '&return_id=' . $order_product_return['return_id'], 'SSL')
 				);
 			}
 			
@@ -4764,6 +4803,7 @@
 				'option'           => $order_option,
 				'download'         => $order_download,
 				'quantity'         => $order_product['quantity'],
+				'amazon_offers_type' => $order_product['amazon_offers_type'],
 				'real_product'     => $real_product,
 				'colored_similar'     => $_colored_similar,
 				'quantity_stock'   		=> !empty($real_product['quantity_stock'])?$real_product['quantity_stock']:0,

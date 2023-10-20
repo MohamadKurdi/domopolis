@@ -1475,9 +1475,9 @@
 															
 															&nbsp;&nbsp;<a style="padding-bottom:4px;margin-top:4px;display:inline-block; text-decoration:none;"  onclick="$('#close-related-and-replace-<?php echo $product_row; ?>').show(); $('#td-replace-row-<?php echo $product_row; ?>').load('index.php?route=sale/order/getReplaceProductsAjax&token=<?php echo $token; ?>&order_id=<? echo $order_id; ?>&product_id=<? echo $order_product['product_id']; ?>'); $('#product-replace-row-<?php echo $product_row; ?>').show();"><i class="fa fa-refresh ktooltip_hover" title="Заменители" style="font-size:20px; color:#cf4a61;"></i></a>
 															
-															<?php if ($this->config->get('config_rainforest_enable_api') && !$order_product['amzn_ignore']) { ?>	
+															<?php if ($this->config->get('config_enable_amazon_specific_modes') && !$order_product['amzn_ignore']) { ?>	
 																<?php if ($order_product['ean'] || $order_product['asin']) { ?>
-																	&nbsp;&nbsp;
+																		&nbsp;&nbsp;
 																		<a style="padding-bottom:4px;margin-top:4px;display:inline-block; text-decoration:none;" onclick="$('#close-related-and-replace-<?php echo $product_row; ?>').show(); $('#product-amazon-row-<?php echo $product_row; ?>').show(); $('#td-amazon-row-<?php echo $product_row; ?>').load('index.php?route=kp/amazon/getProductOffers&token=<?php echo $token; ?>&order_id=<? echo $order_id; ?>&product_id=<? echo $order_product['product_id']; ?>');"><i class="fa fa-amazon ktooltip_hover" title="Цены Amazon в базе (возможно, устаревшие)" style="font-size:20px; color:#FF9900;"></i>
 																		</a>
 
@@ -1485,6 +1485,11 @@
 																		&nbsp;&nbsp;
 																		<a style="padding-bottom:4px;margin-top:4px;display:inline-block; text-decoration:none;" onclick="$('#close-related-and-replace-<?php echo $product_row; ?>').show(); $('#product-amazon-row-<?php echo $product_row; ?>').show(); $('#td-amazon-row-<?php echo $product_row; ?>').load('index.php?route=kp/amazon/getProductOffers&token=<?php echo $token; ?>&explicit=1&order_id=<? echo $order_id; ?>&product_id=<? echo $order_product['product_id']; ?>');"><i class="fa fa-amazon ktooltip_hover" title="Обновить и отобразить цены с Amazon" style="font-size:20px; color:#cf4a61;"></i>
 																		</a>
+
+																		<?php if ($order_product['amazon_offers_type']) { ?>
+																		&nbsp;&nbsp;
+																		<span style="padding:4px 3px; background-color:#e16a5d;margin-top:4px;display:inline-block; text-decoration:none;font-size:20px; color:#FFF;"><? echo $order_product['amazon_offers_type']; ?></span>																		
+																		<?php } ?>
 																<?php } ?>
 															<?php } ?>
 															
@@ -1506,7 +1511,7 @@
 
 													</div>
 
-													<?php if ($this->config->get('config_rainforest_enable_api') && !$order_product['amzn_ignore']) { ?>	
+													<?php if ($this->config->get('config_enable_amazon_specific_modes') && !$order_product['amzn_ignore']) { ?>	
 															<?php if ($order_product['ean'] || $order_product['asin']) { ?>
 															<div style="font-size:10px; margin-top:10px;">
 																<i class="fa fa-clock-o"></i> LU: <?php echo date('Y-m-d', strtotime($order_product['amzn_last_offers'])); ?><br />
@@ -1519,7 +1524,7 @@
 																<?php }?>
 															</div>
 															<?php } ?>
-														<?php } ?>
+													<?php } ?>
 													
 													<span id="fast_hbt_preview_<? echo $order_product['product_id']; ?>"></span>
 													<script>
@@ -1544,6 +1549,7 @@
 													<input type="hidden" name="order_product[<?php echo $product_row; ?>][ao_id]" value="<?php echo $order_product['ao_id']; ?>" />
 													<input type="hidden" name="order_product[<?php echo $product_row; ?>][ao_product_id]" value="<?php echo $order_product['ao_product_id']; ?>" />
 													<input type="hidden" name="order_product[<?php echo $product_row; ?>][product_id]" value="<?php echo $order_product['product_id']; ?>" />
+													<input type="hidden" name="order_product[<?php echo $product_row; ?>][amazon_offers_type]" value="<?php echo $order_product['amazon_offers_type']; ?>" />
 													<input type="hidden" name="order_product[<?php echo $product_row; ?>][from_stock]" value="<?php echo (int)$order_product['from_stock']; ?>" id="hidden_from_stock_<?php echo $order_product['order_product_id']; ?>" />
 													<input type="hidden" name="order_product[<?php echo $product_row; ?>][from_bd_gift]" value="<?php echo (int)$order_product['from_bd_gift']; ?>" id="hidden_from_from_bd_gift_<?php echo $order_product['order_product_id']; ?>" />
 													
