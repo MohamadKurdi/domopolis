@@ -85,7 +85,7 @@
 			if ($this->cart->hasProducts() || !empty($this->session->data['vouchers'])) {
 				$this->abandoned();
 				
-				$this->_templateData['simple_blocks'] = array(
+				$this->_templateData['simple_blocks'] = [
                 'customer'         => '',
                 'payment_address'  => '',
                 'shipping_address' => '',
@@ -97,19 +97,7 @@
                 'summary'          => '',
                 'comment'          => '',
                 'payment_form'     => ''
-				);
-				
-				// stupid hack for opencart > 2.0
-				if ($this->simplecheckout->getOpencartVersion() >= 200) {
-					if ($this->simplecheckout->getOpencartVersion() < 220) {
-						$this->tax = new Tax($this->registry);
-						$this->cart = new Cart($this->registry);
-						} else {
-						//$this->tax = new Cart\Tax($this->registry);
-						//$this->cart = new Cart\Cart($this->registry);
-					}
-				}
-				// end
+				];	
 				
 				if ($this->simplecheckout->isPaymentBeforeShipping()) {
 					$this->_templateData['simple_blocks']['payment']  = $this->getChildController('checkout/simplecheckout_payment');
@@ -1144,6 +1132,7 @@
 					'price_national'      => $product['price_national'],
                     'total'      		  => $product['total'],
 					'total_national'      => $product['total_national'],
+					'amazon_offers_type'  => $product['amazon_offers_type'],
                     'tax'        => method_exists($this->tax,'getRate') ? $this->tax->getRate($product['tax_class_id']) : $this->tax->getTax($product['price'], $product['tax_class_id'])
 					);
 				}
@@ -1208,11 +1197,12 @@
                     'quantity'   => $product['quantity'],
                     'subtract'   => $product['subtract'],
                     'price'      => $product['price'],
-					'price_national'      => $product['price_national'],
-                    'total'      => $product['total'],
-					'total_national'      => $product['total_national'],
-                    'tax'        => $this->tax->getTax($product['price'], $product['tax_class_id']),
-                    'reward'     => $product['reward']
+					'price_national'      	=> $product['price_national'],
+                    'total'      			=> $product['total'],
+					'total_national'      	=> $product['total_national'],
+					'amazon_offers_type'  	=> $product['amazon_offers_type'],
+                    'tax'        			=> $this->tax->getTax($product['price'], $product['tax_class_id']),
+                    'reward'     			=> $product['reward']
 					);
 				}
 				

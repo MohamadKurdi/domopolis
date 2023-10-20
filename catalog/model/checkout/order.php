@@ -352,17 +352,19 @@ class ModelCheckoutOrder extends Model {
 				ao_id 			= '" . (int)$product['ao_id'] . "', 
 				ao_product_id 	= '" . (int)$product['ao_product_id'] . "', 
 				name 			= '" . $this->db->escape($product['name']) . "', 
-				model 			= '" . $this->db->escape($product['model']) . "', 
+				model 			= '" . $this->db->escape($product['model']) . "', 				
 				quantity 		= '" . (int)$product['quantity'] . "', 
 				price 			= '" . (float)$product['price'] . "', 
 				price_national 			= '" . (float)$product['price_national'] . "', 
 				original_price_national = '" . (float)$product['price_national'] . "',  
+				amazon_offers_type = '" . $this->db->escape($product['amazon_offers_type']) . "', 
 				total 			= '" . (float)$product['total'] . "', 
 				total_national 	= '" . (float)$product['total_national'] . "', 
 				tax 			= '" . (float)$product['tax'] . "', 
 				reward 			= '" . (int)$product['reward'] . "', 
 				reward_one 		= '" . (int)($product['reward']/$product['quantity']) . "', 
-				from_stock 		= '" . (int)$product['from_stock'] . "'");
+				from_stock 		= '" . (int)$product['from_stock'] . "'"
+			);
 
 
 			$order_product_id = $this->db->getLastId();
@@ -383,47 +385,57 @@ class ModelCheckoutOrder extends Model {
 				$this->db->ncquery("INSERT INTO order_download SET order_id = '" . (int)$order_id . "', order_product_id = '" . (int)$order_product_id . "', name = '" . $this->db->escape($download['name']) . "', filename = '" . $this->db->escape($download['filename']) . "', mask = '" . $this->db->escape($download['mask']) . "', remaining = '" . (int)($download['remaining'] * $product['quantity']) . "'");
 			}
 
-				// Получаем все товары в наборе
 			$this->db->ncquery("DELETE FROM `order_set` WHERE `order_id` = ".(int)$order_id);
 			if ((int)$product['set']) {
 				$productSet = $this->db->ncquery("SELECT ps.`set_id` as sid, s.product_id as psid, ps.product_id as pid, ps.price as prprice, ps.quantity as quantity, p.short_name as name, p.model as model FROM `product_to_set` ps LEFT JOIN `set` s ON (ps.set_id = s.set_id) LEFT JOIN `product` p ON (ps.product_id = p.product_id) WHERE ps.`set_id` = ".(int)$product['set']);
 				foreach ($productSet->rows as $prSet) {
 					$price_national = $this->currency->convert($prSet['prprice'], $this->config->get('config_currency'), $this->config->get('config_regional_currency'));
-					$quantity = $prSet['quantity'];
+					$quantity 		= $prSet['quantity'];
 					$total_national = $price_national * $quantity;
-					$total = $this->currency->convert($total_national, $this->config->get('config_regional_currency'), $this->config->get('config_currency'));
+					$total 			= $this->currency->convert($total_national, $this->config->get('config_regional_currency'), $this->config->get('config_currency'));
 
 					$this->db->ncquery("INSERT INTO `order_set` (`order_id`, `set_id`, `set_product_id`, `price`, `price_national`, `original_price_national`, `quantity`, `total`, `total_national`, `product_id`, `name`, `model`) VALUES ('".(int)$order_id."', '".(int)$product['set']."', '".(int)$product['product_id']."', '".(float)$prSet['prprice']."', '".(float)$price_national."', '".(float)$price_national."', '".(int)$quantity."', '".(float)$total."', '".(float)$total_national."', '".$prSet['pid']."', '".$prSet['name']."', '".$prSet['model']."')");
 				}
 			}
-		}
 
-			//Настройка "получать офферы после заказа"
-		if ($this->config->get('config_rainforest_enable_offers_after_order')){
-			$asin_query = $this->db->ncquery("SELECT asin FROM product WHERE product_id = '" . (int)$product['product_id'] . "'");
-			if ($asin_query->row['asin']){
-				$this->db->ncquery("INSERT IGNORE INTO amzn_product_queue SET asin = '" . $this->db->escape($asin_query->row['asin']) . "', date_added = NOW()");
-			}			
-		}
-
-			//Резервирование товара
-		$this->db->ncquery("UPDATE product SET `" . $this->config->get('config_warehouse_identifier') . "` = (`" . $this->config->get('config_warehouse_identifier') . "` - ". (int)$product['quantity'] .") WHERE product_id = '" . (int)$product['product_id'] . "' AND `" . $this->config->get('config_warehouse_identifier') . "` > 0");
-
-			//Постановка в очередь для яндекс-маркета
-		if ($this->config->get('config_warehouse_identifier') == $this->config->get('config_warehouse_identifier')){
-			if ($this->config->get('config_yam_offer_id_prefix_enable') && $this->config->get('config_yam_offer_id_prefix')){
-				$yam_product_id = $this->config->get('config_yam_offer_id_prefix') . (int)$product['product_id'];
-			} else {
-				$yam_product_id = (int)$product['product_id'];
+			if ($this->config->get('config_rainforest_enable_offers_after_order')){
+				$asin_query = $this->db->ncquery("SELECT asin FROM product WHERE product_id = '" . (int)$product['product_id'] . "'");
+				if ($asin_query->row['asin']){
+					$this->db->ncquery("INSERT IGNORE INTO amzn_product_queue SET asin = '" . $this->db->escape($asin_query->row['asin']) . "', date_added = NOW()");
+				}			
 			}
 
-			$query = $this->db->ncquery("SELECT `" . $this->config->get('config_warehouse_identifier') . "` as stock FROM product WHERE product_id = '" . (int)$product['product_id'] . "'");
+			$this->db->ncquery("UPDATE product SET `" . $this->config->get('config_warehouse_identifier') . "` = (`" . $this->config->get('config_warehouse_identifier') . "` - ". (int)$product['quantity'] .") WHERE product_id = '" . (int)$product['product_id'] . "' AND `" . $this->config->get('config_warehouse_identifier') . "` > 0");
 
-			if ($query->num_rows){
+			if ($this->config->get('config_warehouse_identifier') == $this->config->get('config_warehouse_identifier')){
+				if ($this->config->get('config_yam_offer_id_prefix_enable') && $this->config->get('config_yam_offer_id_prefix')){
+					$yam_product_id = $this->config->get('config_yam_offer_id_prefix') . (int)$product['product_id'];
+				} else {
+					$yam_product_id = (int)$product['product_id'];
+				}
 
-				$this->db->ncquery("INSERT INTO yandex_stock_queue SET yam_product_id = '" . $this->db->escape($yam_product_id) . "', stock = '" . (int)$query->row['stock'] . "' ON DUPLICATE KEY UPDATE stock = '" . (int)$query->row['stock'] . "'");
+				$query = $this->db->ncquery("SELECT `" . $this->config->get('config_warehouse_identifier') . "` as stock FROM product WHERE product_id = '" . (int)$product['product_id'] . "'");
 
-			}								
+				if ($query->num_rows){
+					$this->db->ncquery("INSERT INTO yandex_stock_queue SET yam_product_id = '" . $this->db->escape($yam_product_id) . "', stock = '" . (int)$query->row['stock'] . "' ON DUPLICATE KEY UPDATE stock = '" . (int)$query->row['stock'] . "'");
+				}								
+			}
+		}
+
+		if ($this->config->get('config_enable_amazon_specific_modes')){
+			foreach ($data['products'] as $product) {
+				$amazon_offers_type = '';
+				$amazon_offers_types = ['AP' => 5, 'A' => 4, 'P' => 3, 'O' => 2, 'N' => 1];
+				$amazon_offers_index = 0;
+				if (!empty($product['amazon_offers_type']) && !empty($amazon_offers_types[$product['amazon_offers_type']])){
+					if ($amazon_offers_types[$product['amazon_offers_type']] > $amazon_offers_index){
+						$amazon_offers_index	= $amazon_offers_types[$product['amazon_offers_type']];
+						$amazon_offers_type 	= $product['amazon_offers_type'];
+					}
+				}
+			}
+
+			$this->db->ncquery("UPDATE `order` SET amazon_offers_type = '" . $this->db->escape($amazon_offers_type) . "' WHERE order_id = '" . (int)$order_id . "'");
 		}
 
 		foreach ($data['vouchers'] as $voucher) {

@@ -615,6 +615,7 @@
 						'current_in_stock'		    => (int)($product_query->row[$stock_field_identifier]>0),
 						'fully_in_stock'			=> (int)($product_query->row[$stock_field_identifier] >= $quantity),
 						'amount_in_stock'			=> (int)($product_query->row[$stock_field_identifier]),
+						'amazon_offers_type' 		=> $product_query->row['amazon_offers_type'],
 						'is_certificate'          	=> (strpos($product_query->row['location'], 'certificate') !== false),
 						'is_special_offer'          => $this_is_special_offer,
 						'is_special_offer_present'  => $this_is_special_offer_present,
