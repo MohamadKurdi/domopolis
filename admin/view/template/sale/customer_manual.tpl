@@ -104,8 +104,8 @@
 								</div>
 
 								<div style="margin-top:5px;">
-									<input id="had_not_sent_manual_letter" class="checkbox" type="checkbox" name="had_not_sent_manual_letter" value="1" <?php if ($filter_had_not_sent_manual_letter) print 'checked'; ?>>
-									<label for="had_not_sent_manual_letter" style="color:#ff5656;"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;Не отправляли ручную рассылку</label>
+									<input id="filter_had_not_sent_manual_letter" class="checkbox" type="checkbox" name="filter_had_not_sent_manual_letter" value="1" <?php if ($filter_had_not_sent_manual_letter) print 'checked'; ?>>
+									<label for="filter_had_not_sent_manual_letter" style="color:#ff5656;"><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;Не отправляли ручную рассылку</label>
 								</div>		
 							</td>		
 
@@ -316,7 +316,7 @@
 								</td>
 
 								<td class="center" width="50px">
-									<i class="fa fa-envelope" style="font-size:36px; color:#00AD07; cursor:pointer;" id="btn-send-customer-<?php echo $customer['customer_id']; ?>" data-customer-id="<?php echo $customer['customer_id']; ?>" onclick='swal({ title: "Отправить письмо <?php echo $customer['name']; ?>?", text: "На почту <? echo $customer['email']; ?>", type: "warning", showCancelButton: true,  confirmButtonColor: "#F96E64",  confirmButtonText: "Отправить", cancelButtonText: "Отмена",  closeOnConfirm: true }, function() { send(<?php echo $customer['customer_id']; ?>, <?php echo $customer['language_id']; ?>) });'></i>
+									<i class="fa fa-envelope" style="font-size:36px; color:<?php if ($customer['sent_manual_letter']) { ?>#ff5656<?php } else { ?>#00AD07<?php } ?>; cursor:pointer;" id="btn-send-customer-<?php echo $customer['customer_id']; ?>" data-customer-id="<?php echo $customer['customer_id']; ?>" onclick='swal({ title: "Отправить письмо <?php echo $customer['name']; ?>?", text: "На почту <? echo $customer['email']; ?>", type: "warning", showCancelButton: true,  confirmButtonColor: "#F96E64",  confirmButtonText: "Отправить", cancelButtonText: "Отмена",  closeOnConfirm: true }, function() { send(<?php echo $customer['customer_id']; ?>, <?php echo $customer['language_id']; ?>) });'></i>
 								</td>
 
 								<td class="center" width="50px">
@@ -453,9 +453,11 @@ $(document).ready(function(){
 			url += '&filter_mail_status=*';
 		}
 
-		var had_not_sent_manual_letter = $('input[name=\'had_not_sent_manual_letter\']:checked').val();		
-		if (had_not_sent_manual_letter  !== undefined) {
+		var filter_had_not_sent_manual_letter = $('input[name=\'filter_had_not_sent_manual_letter\']:checked').val();		
+		if (filter_had_not_sent_manual_letter  !== undefined) {
 			url += '&filter_had_not_sent_manual_letter=1';
+		} else {
+			url += '&filter_had_not_sent_manual_letter=0';
 		}
 
 		var filter_nbt_customer = $('input[name=\'filter_nbt_customer\']:checked').val();		
