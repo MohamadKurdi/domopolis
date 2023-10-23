@@ -95,6 +95,7 @@ $_['text_retranslate_88'] = 'Купують разом';
 $_['text_retranslate_89'] = 'Варіант';
 $_['text_retranslate_90'] = 'Кількість';
 
+$_['text_retranslate_related'] = 'З цим товаром також купують';
 
 $_['all_collection'] = 'Вся колекція';
 
