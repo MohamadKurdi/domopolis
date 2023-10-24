@@ -1961,9 +1961,9 @@ public function index($product_id = false, $just_price = false)
                         'h' => $this->config->get('config_image_related_height')
                     );
 
-                    $this->data['products'] = [];
+                    $this->data['related'] = [];
                     $results = $this->model_catalog_product->getProductRelated($this->request->get['product_id']);
-                    $this->data['products'] = $this->model_catalog_product->prepareProductToArray($results);
+                    $this->data['related'] = $this->model_catalog_product->prepareProductToArray($results);
 
                     $this->data['products_similar'] = [];
                     $results = $this->model_catalog_product->getProductSimilar($this->request->get['product_id']);
