@@ -2147,7 +2147,7 @@ public function index($product_id = false, $just_price = false)
                     $this->data['ukrcredits_show_icons'] = $ukrcredits_setting['show_icons'];
 
                     $this->load->model('module/ukrcredits');
-                    $this->data['credits_info'] = $this->model_module_ukrcredits->checkproduct($product_info);           
+                    $this->data['credits_info'] = $this->model_module_ukrcredits->checkproduct($product_info);         
                     
                 //    $this->log->debug($this->data['credits_data']);           
 
