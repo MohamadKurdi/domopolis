@@ -27,7 +27,7 @@ class ModelModuleEmailTemplate extends Model {
 	 * @return array
 	 */
 	public function getTemplate($id, $language_id = null, $keyCleanUp = false){
-		$p = DB_PREFIX;
+		
 		$id = intval($id);
 
 		$query = "SELECT * FROM emailtemplate WHERE `emailtemplate_id` = '{$id}'";
@@ -70,7 +70,7 @@ class ModelModuleEmailTemplate extends Model {
 	 * @return array
 	 */
 	public function getTemplates($data = array()){
-		$p = DB_PREFIX;
+		
 		$cond = array();
 
 		if (isset($data['store_id'])) {
@@ -170,7 +170,7 @@ class ModelModuleEmailTemplate extends Model {
 	 * @return array
 	 */
 	public function getTemplateDescription($data = array(), $limit = null){
-		$p = DB_PREFIX;
+		
 		$cond = array();
 		$query = "SELECT * FROM emailtemplate_description";
 
@@ -200,7 +200,7 @@ class ModelModuleEmailTemplate extends Model {
 	 * Get template shortcodes
 	 */
 	public function getTemplateShortcodes($data, $keyCleanUp = false){
-		$p = DB_PREFIX;
+		
 		$cond = array();
 
 if(is_array($data)){
@@ -428,7 +428,7 @@ if(is_array($data)){
 	 * @return array
 	 */
 	public function getConfig($data, $outputFormatting = false, $keyCleanUp = false){
-		$p = DB_PREFIX;
+		
 		$cond = array();
 
 		if(is_array($data)){
@@ -485,7 +485,7 @@ if(is_array($data)){
 	 * @param array - $data
 	 */
 	public function getConfigs($data = array(), $outputFormatting = false){
-		$p = DB_PREFIX;
+		
 		$cond = array();
 
 		if (isset($data['language_id'])) {
@@ -614,7 +614,7 @@ if(is_array($data)){
 	public function insertTemplateShortCodes($id, $data){
 		$id = intval($id);
 		$cols = EmailTemplateShortCodesDAO::describe();
-		$p = DB_PREFIX;
+		
 		$return = 0;
 
 		$this->db->non_cached_query("DELETE FROM emailtemplate_shortcode WHERE `emailtemplate_id` = '{$id}'");
@@ -658,7 +658,7 @@ if(is_array($data)){
 	 */
 	public function insertLog($data){
 		$cols = EmailTemplateLogsDAO::describe();
-		$p = DB_PREFIX;
+		
 		$logData = array();
 
 		foreach($cols as $col => $type){
@@ -714,7 +714,7 @@ if(is_array($data)){
 	 * @return array
 	 */
 	public function getTemplateLog($data, $keyCleanUp = false){
-		$p = DB_PREFIX;
+		
 		$cond = array();
 
 		if(is_array($data)){
@@ -758,7 +758,7 @@ if(is_array($data)){
 	 * @return int
 	 */
 	public function getLastTemplateLogId(){
-		$p = DB_PREFIX;
+		
 		$query = "SELECT MAX(emailtemplate_log_id) as emailtemplate_log_id FROM `emailtemplate_logs`";
 		$result = $this->db->non_cached_query($query);
 
@@ -774,7 +774,7 @@ if(is_array($data)){
 	 * @return boolean
 	 */
 	public function readTemplateLog($id, $enc){
-		$p = DB_PREFIX;
+		
 		$id = intval($id);
 		$enc = $this->db->escape($enc);
 
