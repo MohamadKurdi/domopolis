@@ -425,11 +425,10 @@ class ModelCheckoutOrder extends Model {
 		if ($this->config->get('config_enable_amazon_specific_modes')){
 			foreach ($data['products'] as $product) {
 				$amazon_offers_type = '';
-				$amazon_offers_types = ['AP' => 5, 'A' => 4, 'P' => 3, 'O' => 2, 'N' => 1];
 				$amazon_offers_index = 0;
-				if (!empty($product['amazon_offers_type']) && !empty($amazon_offers_types[$product['amazon_offers_type']])){
-					if ($amazon_offers_types[$product['amazon_offers_type']] > $amazon_offers_index){
-						$amazon_offers_index	= $amazon_offers_types[$product['amazon_offers_type']];
+				if (!empty($product['amazon_offers_type']) && !empty(\hobotix\RainforestAmazon::amazonOffersTypeSorted[$product['amazon_offers_type']])){
+					if (\hobotix\RainforestAmazon::amazonOffersTypeSorted[$product['amazon_offers_type']] > $amazon_offers_index){
+						$amazon_offers_index	= \hobotix\RainforestAmazon::amazonOffersTypeSorted[$product['amazon_offers_type']];
 						$amazon_offers_type 	= $product['amazon_offers_type'];
 					}
 				}

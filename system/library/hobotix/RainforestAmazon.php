@@ -22,6 +22,9 @@ class RainforestAmazon
 	private $telegramBot;
 	private $tgAlertChatID = null;
 
+	public const amazonOffersType 		= ['AP', 'A', 'P', 'O', 'N'];
+	public const amazonOffersTypeSorted = ['AP' => 5, 'A' => 4, 'P' => 3, 'O' => 2, 'N' => 1];
+
 	/*
 		categoryParserLimit  - сколько отбирать категорий за один запуск
 		categoryRequestLimits - Лимит для парсера категорий, сколько в параллели

@@ -130,7 +130,7 @@
 									<select name="filter_<?php echo $col; ?>" class="filter <?php echo $col; ?>" style="width:40px;">
 										<option value=""></option>
 										<option value="*"<?php echo (!is_null($filters[$col]) && $filters[$col] == '*') ? ' selected="selected"' : ''; ?>><?php echo $text_none; ?></option>
-										<?php foreach (['A', 'P', 'AP', 'O', 'N'] as $enum) { ?>
+										<?php foreach (\hobotix\RainforestAmazon::amazonOffersType as $enum) { ?>
 											<option value="<?php echo $enum; ?>"<?php echo (!is_null($filters[$col]) && $enum == $filters[$col]) ? ' selected="selected"' : ''; ?>><?php echo $enum; ?></option>
 										<?php } ?>
 									</select>
