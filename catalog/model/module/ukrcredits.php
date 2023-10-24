@@ -585,6 +585,8 @@ class ModelModuleUkrcredits extends ModelModuleUkrcreditsMain
 
     public function curlPostWithData($url, $request)
     {
+    	$this->language->load("module/ukrcredits");
+
     	try {
     		$curl = curl_init($url);
     		curl_setopt($curl, CURLOPT_POST, true);
@@ -598,14 +600,14 @@ class ModelModuleUkrcredits extends ModelModuleUkrcreditsMain
     		$curl_errno = curl_errno($curl);
     		$curl_error = curl_error($curl);
     		$aInfo = @curl_getinfo($curl);
-    		curl_close($curl);
-    		$dir = version_compare(VERSION, "2.3", ">=") ? "extension/module" : "module";
-    		$this->language->load($dir . "/ukrcredits");
+    		curl_close($curl);    		    		
+    		
     		if ($curl_errno != 0) {
     			$this->log->write("ukrcredits_privat :: CURL failed " . $curl_error . "(" . $curl_errno . ")");
     			$response = array("errorMessage" => "ukrcredits_privat :: CURL failed " . $curl_error . "(" . $curl_errno . ")", "state" => "FAIL");
     			return $response;
     		}
+
     		if ($aInfo["http_code"] != "200") {
     			$this->log->write("ukrcredits_privat :: HTTP failed " . $aInfo["http_code"] . "(" . $response . ")");
     			$responsem = array("errorMessage" => "ukrcredits_privat :: HTTP failed " . $aInfo["http_code"] . "(" . $response . ")", "state" => "FAIL");
@@ -620,8 +622,9 @@ class ModelModuleUkrcredits extends ModelModuleUkrcreditsMain
 
     public function curlPostWithDataMB($url, $requestDial, $signature)
     {
-    	$type = version_compare(VERSION, "3.0", ">=") ? "payment_" : "";
-    	$setting = $this->config->get($type . "ukrcredits_settings");
+    	$this->language->load("module/ukrcredits");    	
+    	$setting = $this->config->get("ukrcredits_settings");
+
     	try {
     		$ch = curl_init();
     		curl_setopt($ch, CURLOPT_URL, $url);
@@ -635,8 +638,7 @@ class ModelModuleUkrcredits extends ModelModuleUkrcreditsMain
     		$curl_error = curl_error($ch);
     		$aInfo = @curl_getinfo($ch);
     		curl_close($ch);
-    		$dir = version_compare(VERSION, "2.3", ">=") ? "extension/module" : "module";
-    		$this->language->load($dir . "/ukrcredits");
+
     		if ($curl_errno != 0) {
     			$this->log->write("ukrcredits_mb :: CURL failed " . $curl_error . "(" . $curl_errno . ")");
     			$response["message"] = "ukrcredits_mb :: CURL failed " . $curl_error . "(" . $curl_errno . ")";
@@ -646,11 +648,5 @@ class ModelModuleUkrcredits extends ModelModuleUkrcreditsMain
     	} catch (Exception $e) {
     		return false;
     	}
-    }
-
-
-    public function checklicense()
-    {
-        return true;
     }
 }

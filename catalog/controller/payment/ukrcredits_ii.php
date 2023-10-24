@@ -2,9 +2,12 @@
 class ControllerPaymentUkrcreditsIi extends Controller {
 	
     public function index() {		
+    	$this->language->load('module/ukrcredits');
+    	$this->load->model('module/ukrcredits');		
+		$this->load->model('setting/extension');
+
 		$setting = $this->config->get('ukrcredits_settings');
 		$data['ukrcredits_setting'] = $this->config->get('ukrcredits_settings');
-        $this->language->load('module/ukrcredits');
 
 		$data['currency_left'] 	= $this->currency->getSymbolLeft($this->session->data['currency']);
 		$data['currency_right'] = $this->currency->getSymbolRight($this->session->data['currency']);
@@ -29,9 +32,6 @@ class ControllerPaymentUkrcreditsIi extends Controller {
 		if ($partsCount == 24) {
 			$partsCount = $setting['ii_pq'];
 		}
-		
-		$this->load->model('module/ukrcredits');		
-		$this->load->model('setting/extension');
 
 		$total_data = [];					
 		$total 		= 0;
@@ -294,11 +294,11 @@ class ControllerPaymentUkrcreditsIi extends Controller {
 
 				if (($total['code'] != 'sub_total') && ($total['code'] != 'total')) {
 					if ($total['value'] > 0) {
-						$data_deal['products'][] = array(
+						$data_deal['products'][] = [
 							'name' 		=> htmlspecialchars_decode(trim($total['title'])),
 							'count' 	=> 1,
 							'price'    	=> $total['value_national']
-						);
+						];
 						$sumtotal += $total['value_national'];
 					} else {
 						$discount += abs($total['value_national']);
@@ -329,7 +329,7 @@ class ControllerPaymentUkrcreditsIi extends Controller {
 						'count' 	=> $product['quantity'],
 						'price'    	=> $product['price_national'] - $minus
 					);
-					$sumtotal += $product['price_national'] * $product['quantity'];
+					$sumtotal += ($product['price_national'] - $minus) * $product['quantity'];
 				}
             }	
 			
