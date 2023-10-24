@@ -125,7 +125,7 @@ class ControllerPaymentUkrcreditsmb extends Controller {
 
         if ($order_info) {
             $data_deal['store_order_id'] = $order_info['order_id'];
-			$data_deal['client_phone'] = str_replace(['+', '(', ')', '-', ' '], '', $order_info['telephone']);
+			$data_deal['client_phone'] = str_replace(['(', ')', '-', ' '], '', $order_info['telephone']);
 
 			$data_deal['invoice'] = array(
 				'date' 		=> date($this->language->get('yy-m-d'), strtotime($order_info['date_added'])),
@@ -147,7 +147,6 @@ class ControllerPaymentUkrcreditsmb extends Controller {
 			$total = 0;
 			$taxes = $this->cart->getTaxes();
 
-				// Display prices
 			if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
 				$sort_order = array(); 
 
@@ -204,31 +203,31 @@ class ControllerPaymentUkrcreditsmb extends Controller {
 			$minus = $discount / $productquantity;
 
             foreach ($this->cart->getProducts() as $product) {
-				if (($this->currency->format($product['price'], $order_info['currency_code'], $order_info['currency_value'], false) - $minus) <= 0) {
+				if (($product['price_national'] - $minus) <= 0) {
 					$productquantity = $productquantity - $product['quantity'];
 					$data_deal['products'][] = array(
-						'name'     => htmlspecialchars_decode(trim($product['name'])),
-						'count' => $product['quantity'],
-						'sum'    => number_format($this->currency->format($product['price'], $order_info['currency_code'], $order_info['currency_value'], false), 2, '.', '')
+						'name'     	=> htmlspecialchars(trim($product['name'])),
+						'count' 	=> $product['quantity'],
+						'sum'    	=> $product['price_national']
 					);
-					$sumtotal += $this->currency->format($product['price'], $order_info['currency_code'], $order_info['currency_value'], false) * $product['quantity'];
+					$sumtotal += $product['price_national'] * $product['quantity'];
 				}
             }
 
 			$minus = $discount / $productquantity;
-
             foreach ($this->cart->getProducts() as $product) {
-				if (($product['price_national'] - $minus) <= 0) {
+				if (($product['price_national'] - $minus) > 0) {
 					$data_deal['products'][] = array(
-						'name'     	=> htmlspecialchars_decode(trim($product['name'])),
+						'name'     	=> htmlspecialchars(trim($product['name'])),
 						'count' 	=> $product['quantity'],
 						'sum'    	=> $product['price_national'] - $minus
 					);
 					$sumtotal += ($product['price_national'] - $minus) * $product['quantity'];
 				}
-            }	
+            }		
 			
-			$data_deal['total_sum'] = number_format($sumtotal, 2, '.', '');						
+			$data_deal['total_sum'] = $sumtotal;						
+
 			$data_deal['result_callback'] = $this->url->link('payment/ukrcredits_mb/callback', '', 'SSL');;
 
 			$requestDial = json_encode($data_deal);
@@ -252,11 +251,7 @@ class ControllerPaymentUkrcreditsmb extends Controller {
 
 					if (!$this->model_checkout_order->getOrderMb($responseResDeal['order_id'])) {
 						$this->model_checkout_order->setUkrcreditsOrderId($order_info['order_id'], $paymenttype, $responseResDeal['order_id'], $monostatus, $monosubstatus);
-						if (version_compare(VERSION,'2.0','>=')) {
-							$this->model_checkout_order->addOrderHistory($order_info['order_id'], $setting['clientwait_status_id'], $comment);
-						} else {
-							$this->model_checkout_order->confirm($order_info['order_id'], $setting['clientwait_status_id'], $comment, $notify = true);
-						}  
+						$this->model_checkout_order->confirm($order_info['order_id'], $setting['clientwait_status_id'], $comment, $notify = true);
 					}
 					
 				} elseif (isset($responseResDeal['message']) && $responseResDeal['message']) {
@@ -270,10 +265,14 @@ class ControllerPaymentUkrcreditsmb extends Controller {
 
     public function callback() {		
     	$this->language->load('module/ukrcredits');
-        $setting = $this->config->get('ukrcredits_settings');		 
+        $setting = $this->config->get('ukrcredits_settings');	
+
+        $log = new \Log('ukrcredits_mb.txt');	 
         
         $requestPostRaw = file_get_contents('php://input');        
         $requestArr = json_decode(trim($requestPostRaw),true);
+
+        $log->write($requestPostRaw);
 
         $this->load->model('checkout/order');
 		

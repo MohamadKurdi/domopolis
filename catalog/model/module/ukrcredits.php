@@ -345,7 +345,7 @@ class ModelModuleUkrcreditsMain extends Model {
 				$settings_enable_all_products 	= (!$setting['mb_product_allowed'] && !$setting['mb_enabled']);
 
 				$manufacturer_check				= (empty($setting['allowed_mans_mb']) || in_array($product['manufacturer_id'], $setting['allowed_mans_mb']));
-				$category_check					= (empty($setting['allowed_сats_mb']) || in_array($product['main_category_id'], $setting['allowed_сats_mb']));
+				$category_check					= (empty($setting['allowed_сats_mb']) || in_array($product['main_category_id'], $setting['allowed_сats_mb']));				
 
 				if ($stock_status_ok || $credit_enabled_for_product || $settings_enable_all_products){
 					if ($manufacturer_check && $category_check){					
