@@ -30,7 +30,7 @@ class ModelModuleEmailTemplate extends Model {
 		$p = DB_PREFIX;
 		$id = intval($id);
 
-		$query = "SELECT * FROM {$p}emailtemplate WHERE `emailtemplate_id` = '{$id}'";
+		$query = "SELECT * FROM emailtemplate WHERE `emailtemplate_id` = '{$id}'";
 		$result = $this->_fetch($query);
 		$return = ($result->row) ? $result->row : array();
 
@@ -110,9 +110,9 @@ class ModelModuleEmailTemplate extends Model {
 		}
 
 		if (isset($data['language_id']) && $data['language_id'] != 0) {
-			$query = "SELECT e.*, ed.* FROM `{$p}emailtemplate` e LEFT JOIN `{$p}emailtemplate_description` ed ON(ed.emailtemplate_id = e.emailtemplate_id)";
+			$query = "SELECT e.*, ed.* FROM `emailtemplate` e LEFT JOIN `emailtemplate_description` ed ON(ed.emailtemplate_id = e.emailtemplate_id)";
 		} else {
-			$query = "SELECT e.* FROM `{$p}emailtemplate` e";
+			$query = "SELECT e.* FROM `emailtemplate` e";
 		}
 
 		if(!empty($cond)){
@@ -172,7 +172,7 @@ class ModelModuleEmailTemplate extends Model {
 	public function getTemplateDescription($data = array(), $limit = null){
 		$p = DB_PREFIX;
 		$cond = array();
-		$query = "SELECT * FROM {$p}emailtemplate_description";
+		$query = "SELECT * FROM emailtemplate_description";
 
 		if(isset($data['emailtemplate_id'])){
 			$cond[] = "`emailtemplate_id` = '".intval($data['emailtemplate_id'])."'";
@@ -217,14 +217,14 @@ if(is_array($data)){
 			}
 
 			if (isset($data['emailtemplate_key'])) {
-				$result = $this->_fetch("SELECT emailtemplate_id FROM {$p}emailtemplate WHERE emailtemplate_key = '".$this->db->escape($data['emailtemplate_key'])."' AND emailtemplate_default = 1 LIMIT 1");
+				$result = $this->_fetch("SELECT emailtemplate_id FROM emailtemplate WHERE emailtemplate_key = '".$this->db->escape($data['emailtemplate_key'])."' AND emailtemplate_default = 1 LIMIT 1");
 				$cond[] = "es.`emailtemplate_id` = '".intval($result->row['emailtemplate_id'])."'";
 			}
 		} else {
 			$cond[] = "es.`emailtemplate_id` = '".intval($data)."'";
 		}
 
-		$query = "SELECT es.* FROM `{$p}emailtemplate_shortcode` es";
+		$query = "SELECT es.* FROM `emailtemplate_shortcode` es";
 		if(!empty($cond)){
 			$query .= ' WHERE ' . implode(' AND ', $cond);
 		}
@@ -444,7 +444,7 @@ if(is_array($data)){
 			return false;
 		}
 
-		$query = "SELECT * FROM `{$p}emailtemplate_config`";
+		$query = "SELECT * FROM `emailtemplate_config`";
 		if(!empty($cond)){
 			$query .= " WHERE " . implode(" AND ", $cond);
 		}
@@ -522,7 +522,7 @@ if(is_array($data)){
 			$cond[] = "AND ec.`emailtemplate_config_status` = 'ENABLED'";
 		}
 
-		$query = "SELECT ec.* FROM `{$p}emailtemplate_config` ec";
+		$query = "SELECT ec.* FROM `emailtemplate_config` ec";
 		if(!empty($cond)){
 			$query .= ' WHERE ' . ltrim(implode(' ', $cond), 'AND');
 		}
@@ -617,7 +617,7 @@ if(is_array($data)){
 		$p = DB_PREFIX;
 		$return = 0;
 
-		$this->db->non_cached_query("DELETE FROM {$p}emailtemplate_shortcode WHERE `emailtemplate_id` = '{$id}'");
+		$this->db->non_cached_query("DELETE FROM emailtemplate_shortcode WHERE `emailtemplate_id` = '{$id}'");
 
 		foreach($data as $code => $example){
 			if($code == 'emailtemplate' || $code == 'config') continue;
@@ -642,11 +642,11 @@ if(is_array($data)){
 			$inserts = $this->_build_query($cols, $data);
 			if (empty($inserts)) return false;
 
-			$this->db->non_cached_query("INSERT INTO {$p}emailtemplate_shortcode SET ".implode($inserts,", "));
+			$this->db->non_cached_query("INSERT INTO emailtemplate_shortcode SET " . implode(", ", $inserts));
 			$return++;
 		}
 
-		$this->db->non_cached_query("UPDATE {$p}emailtemplate SET `emailtemplate_shortcodes` = '1' WHERE `emailtemplate_id` = '{$id}'");
+		$this->db->non_cached_query("UPDATE emailtemplate SET `emailtemplate_shortcodes` = '1' WHERE `emailtemplate_id` = '{$id}'");
 
 		$this->_deleteCache();
 
@@ -683,7 +683,7 @@ if(is_array($data)){
 		$inserts = $this->_build_query($cols, $logData);
 		if (empty($inserts)) return false;
 
-		$query = "INSERT IGNORE INTO {$p}emailtemplate_logs SET " . implode(',', $inserts);				
+		$query = "INSERT IGNORE INTO emailtemplate_logs SET " . implode(',', $inserts);				
 		$this->db->non_cached_query($query);
 		
 		$email_log_id = $this->db->getLastId();
@@ -730,7 +730,7 @@ if(is_array($data)){
 			return false;
 		}
 
-		$query = "SELECT * FROM `{$p}emailtemplate_logs`";
+		$query = "SELECT * FROM `emailtemplate_logs`";
 		if(!empty($cond)){
 			$query .= " WHERE " . implode(" AND ", $cond);
 		}
@@ -759,7 +759,7 @@ if(is_array($data)){
 	 */
 	public function getLastTemplateLogId(){
 		$p = DB_PREFIX;
-		$query = "SELECT MAX(emailtemplate_log_id) as emailtemplate_log_id FROM `{$p}emailtemplate_logs`";
+		$query = "SELECT MAX(emailtemplate_log_id) as emailtemplate_log_id FROM `emailtemplate_logs`";
 		$result = $this->db->non_cached_query($query);
 
 		return $result->row['emailtemplate_log_id'];
@@ -779,14 +779,14 @@ if(is_array($data)){
 		$enc = $this->db->escape($enc);
 
 		// Update recent read
-		$sql = "UPDATE {$p}emailtemplate_logs SET emailtemplate_log_read_last = NOW() WHERE emailtemplate_log_id = '{$id}' AND emailtemplate_log_enc = '{$enc}'";
+		$sql = "UPDATE emailtemplate_logs SET emailtemplate_log_read_last = NOW() WHERE emailtemplate_log_id = '{$id}' AND emailtemplate_log_enc = '{$enc}'";
 		$this->db->non_cached_query($sql);
 
 		// Should always affected log if everything is correct
 		if($this->db->countAffected() > 0){
 
 			// Update first read only if its empty, we already know enc is correct
-			$sql = "UPDATE {$p}emailtemplate_logs SET emailtemplate_log_read = NOW() WHERE emailtemplate_log_id = '{$id}' AND emailtemplate_log_read IS NULL";
+			$sql = "UPDATE emailtemplate_logs SET emailtemplate_log_read = NOW() WHERE emailtemplate_log_id = '{$id}' AND emailtemplate_log_read IS NULL";
 			$this->db->non_cached_query($sql);
 
 			return true;
