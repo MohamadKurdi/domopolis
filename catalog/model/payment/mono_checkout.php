@@ -9,13 +9,13 @@ class ModelPaymentMonoCheckout extends Model
     public $shipping_mappings = [
         'pickup'    => 'pickup_advanced.point_1',
         'courier'   => 'dostavkaplus.sh2',
-        'np_brnm'  => 'dostavkaplus.sh3'
+        'np_brnm'   => 'dostavkaplus.sh3'
     ];
 
     public $payment_mappings = [
         'card'                  => 'mono',
         'payment_on_delivery'   => 'transfer_plus.6',
-        'part_purchase'         => 'ukrcredits_mb'
+        'part_purchase'         => 'ukrcredits_mb'        
     ];
 
     public function getMethod($address, $total){
@@ -63,7 +63,7 @@ class ModelPaymentMonoCheckout extends Model
             'fax'               => '',
             'passport_serie'    => '', 
             'passport_given'    => '',
-            'birthday'           => '0000-00-00',
+            'birthday'          => '0000-00-00',
             'password'          => rand(9999, 999999),
             'company'           => '',
             'company_id'        => 0,
@@ -205,6 +205,8 @@ class ModelPaymentMonoCheckout extends Model
     public function sendToAPI($requestData){
         $this->load->model('checkout/order');
         $this->load->model('tool/simpleapicustom');
+        $this->load->model('catalog/product');
+        $this->load->model('module/ukrcredits');
 
         $monolog = new Log('monocheckout.txt');
 
@@ -225,10 +227,18 @@ class ModelPaymentMonoCheckout extends Model
         }
 
         $order_info     = $this->model_checkout_order->getOrder($requestData['order_id']);
-        $products_info  = $this->model_checkout_order->getOrderProducts($requestData['order_id']);
+        $order_products = $this->model_checkout_order->getOrderProducts($requestData['order_id']);
 
         $products = [];
-        foreach ($products_info as $product){
+        $can_use_credit = true;
+        foreach ($order_products as $product){
+            $product_info = $this->model_catalog_product->getProduct($product['product_id'], false);
+            $credit_data  = $this->model_module_ukrcredits->checkproduct($product_info);
+
+            if (empty($credit_data['mb'])){
+                $can_use_credit = false;
+            }
+
             $products[] = [
                 'name'          => $product['name'],
                 'code_product'  => $product['product_id'],
@@ -242,18 +252,29 @@ class ModelPaymentMonoCheckout extends Model
                 'order_ref'             => (string)$requestData['order_key'],
                 'amount'                => (float)$order_info['total_national'],
                 'ccy'                   => (int)$currencyDecode,
-                'count'                 => (int)count($products_info),
+                'count'                 => (int)count($order_products),
                 'products'              => $products,
                 'payment_method_list'   => [
-                    'card','payment_on_delivery'
+                    'card',
+                    'payment_on_delivery'
                 ],
                 'dlv_method_list'       => [
                     'np_brnm'
                 ]
             ];
 
-            $customer_city = $this->model_tool_simpleapicustom->getAndCheckCurrentCity();
+            $credit_settings = $this->config->get('ukrcredits_settings');        
+            if (!empty($credit_settings['mb_status']) && $can_use_credit){
+                $data['payment_method_list'][] = 'part_purchase';
 
+                if (!empty($credit_settings['mb_pq'])){
+                    $data['payments_number'] = (int)$credit_settings['mb_pq'];
+                } else {
+                    $data['payments_number'] = 3;
+                }               
+            }
+
+            $customer_city = $this->model_tool_simpleapicustom->getAndCheckCurrentCity();
             if ($customer_city && !empty($customer_city['city']) && $customer_city['city'] == $this->language->get('default_city_' . $this->config->get('config_country_id'))){
                 $data['dlv_method_list'][] = 'courier';
             }            
