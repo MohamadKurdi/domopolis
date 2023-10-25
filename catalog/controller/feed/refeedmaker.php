@@ -438,7 +438,7 @@ class ControllerFeedReFeedMaker extends Controller
                 $output .= '        <g:section_name><![CDATA[' . $attribute['attribute_group'] . ']]></g:section_name>' . PHP_EOL;
                 $output .= '        <g:attribute_name><![CDATA[' . $attribute['attribute_name'] . ']]></g:attribute_name>' . PHP_EOL;
                 if ($this->attribute_separator){
-                     $output .= '        <g:attribute_value><![CDATA[' . checkAndFormatMultiAttributes($attribute['text'], $this->attribute_separator, 'comma') . ']]></g:attribute_value>' . PHP_EOL;
+                     $output .= '        <g:attribute_value><![CDATA[' . checkAndFormatMultiAttributes($attribute['attribute_value'], $this->attribute_separator, 'comma') . ']]></g:attribute_value>' . PHP_EOL;
                 } else {
                      $output .= '        <g:attribute_value><![CDATA[' . $attribute['attribute_value'] . ']]></g:attribute_value>' . PHP_EOL;
                 }               
