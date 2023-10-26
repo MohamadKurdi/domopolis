@@ -484,7 +484,7 @@ class OffersParser
 		];
 	}
 
-	public function reparseOffersToSkip($rfOffers){
+	public function reparseOffersToSkip($rfOffers, $returnBad = false){
 		$rfOffersTMP = [];
 
 		foreach ($rfOffers as $key => $rfOffer){		
@@ -499,18 +499,30 @@ class OffersParser
 
 			if ($supplier){
 				if (!empty($supplier['amzn_coefficient']) && (int)$supplier['amzn_coefficient'] < $this->Suppliers->supplierMinInnerRatingForUse){
+					$rfOffer->setBadReason('SUPPLIER_AMZN_COEFFICIENT_BAD');
 					$addThisOffer = false;
+				}
+
+				if ($this->config->get('config_rainforest_skip_not_native_offers')){
+					if (!empty($supplier['supplier_country'])){
+						if ($supplier['supplier_country'] != $this->config->get('config_rainforest_native_country_code')){
+							$rfOffer->setBadReason('SUPPLIER_COUNTRY_NOT_NATIVE_SKIPPED');
+							$addThisOffer = false;
+						}
+					}
 				}
 			}
 
 			if ((float)$this->config->get('config_rainforest_max_delivery_price') && (float)$rfOffer->getDeliveryAmount() > 0){
 				if ((float)$rfOffer->getDeliveryAmount() > $this->config->get('config_rainforest_max_delivery_price')){
+					$rfOffer->setBadReason('MAX_DELIVERY_PRICE_BAD');
 					$addThisOffer = false;
 				}
 			}
 
 			if ((float)$this->config->get('config_rainforest_max_delivery_price_multiplier') && (float)$rfOffer->getDeliveryAmount() > 0){
 				if ((float)$rfOffer->getDeliveryAmount() > (float)$rfOffer->getPriceAmount() * (float)$this->config->get('config_rainforest_max_delivery_price_multiplier')){
+					$rfOffer->setBadReason('MAX_DELIVERY_PRICE_MULTIPLIER_BAD');
 					$addThisOffer = false;
 				}
 			}
@@ -518,21 +530,28 @@ class OffersParser
 			if ($rfOffer->getDeliveryComments() && $offerDates = $this->parseAmazonDeliveryComment($rfOffer->getDeliveryComments())){
 				if ($this->config->get('config_rainforest_max_delivery_days_for_offer') > 0){
 					if (!empty($offerDates['minDays']) && (int)$offerDates['minDays'] > (int)$this->config->get('config_rainforest_max_delivery_days_for_offer')){
+						$rfOffer->setBadReason('MAX_DELIVERY_DAYS_BAD');
 						$addThisOffer = false;
 					}
 				}
 			}
 
-			if ($rfOffer->getSellerRating50()>0 && $rfOffer->getSellerRating50() < $this->Suppliers->supplierMinRatingForUse){
+			if ((int)$rfOffer->getSellerRating50() > 0 && (float)$rfOffer->getSellerRating50() < (float)$this->Suppliers->supplierMinRatingForUse){
+				$rfOffer->setBadReason('SELLER_RATING_BAD');
 				$addThisOffer = false;
 			}
 
 			if (!$rfOffer->getConditionIsNew() || !self::checkIfOfferReallyIsNew($rfOffer) || !self::checkIfAmazonOfferIsReallyInStock($rfOffer)){
+				$rfOffer->setBadReason('CONDITION_BAD_NOT_NEW');
 				$addThisOffer = false;
 			}
 
 			if ($addThisOffer){
 				$rfOffersTMP[] = $rfOffer;
+			} else {
+				if ($returnBad){
+					$rfOffersTMP[] = $rfOffer;
+				}
 			}
 		}
 

@@ -223,6 +223,7 @@ class ControllerKPAmazon extends Controller {
 		}
 
 		if ($explicit){
+			$bad_offers = [];
 			foreach ($allRfOffers as $rfOffer){
 				if (!empty($rfOffer->getOriginalDataArray()['offer_id'])){
 					$offer_id = $rfOffer->getOriginalDataArray()['offer_id'];
@@ -230,7 +231,6 @@ class ControllerKPAmazon extends Controller {
 					$offer_id = md5(serialize($rfOffer->getOriginalDataArray()));
 				}
 
-				//BuyBoxWinner
 				$buyBoxWinner = false;
 				if (!empty($rfOffer->getOriginalDataArray()['buybox_winner'])){
 					$buyBoxWinner = true;
@@ -242,6 +242,14 @@ class ControllerKPAmazon extends Controller {
 				}
 
 				if (!in_array($offer_id, $good_offers)){
+					$bad_offers[] = $rfOffer;
+				}
+			}
+
+			if ($bad_offers){
+				$bad_offers = $this->rainforestAmazon->offersParser->reparseOffersToSkip($bad_offers, true);
+
+				foreach ($bad_offers as $rfOffer){
 					$this->data['bad_offers'][] = [					
 						'seller' 				=> $rfOffer->getSellerName(),
 						'prime'	 				=> $rfOffer->getIsPrime(),
@@ -264,12 +272,13 @@ class ControllerKPAmazon extends Controller {
 						'positive'				=> (int)$rfOffer->getSellerPositiveRatings100(),
 						'country'				=> $rfOffer->getSellerCountry(),
 						'is_native'				=> $rfOffer->getSellerNative(),
+						'bad_reason'			=> $rfOffer->getBadReason(),
 						'date_added'			=> 'skipped',
 						'link'					=> $rfOffer->getSellerLink()?$rfOffer->getSellerLink():$this->rainforestAmazon->createLinkToAmazonSearchPage($product['asin']),
 						'link2'					=> $this->rainforestAmazon->createLinkToAmazonSearchPage($product['asin'])
 					];
 				}
-			}
+			}			
 		}
 
 		$this->data['amazon_best_price'] 	= $product['amazon_best_price'];

@@ -1411,7 +1411,7 @@
 							</td>
 							<td>
 								<span class="help">
-									<i class="fa fa-info-circle"></i> ISO2-код страны</i>.
+									<i class="fa fa-info-circle"></i> ISO2-код страны. Если включена предыдущая настройка, то этот код необходимо задать, иначе все офферы будут считаться плохими
 									<br />
 									<?php foreach ($supplier_countries as $supplier_country) { ?>
 										<span style="margin-right:5px;"><?php echo $supplier_country; ?></span>
