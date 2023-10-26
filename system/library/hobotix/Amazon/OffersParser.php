@@ -490,9 +490,14 @@ class OffersParser
 		foreach ($rfOffers as $key => $rfOffer){		
 			$addThisOffer = true;
 
-			$this->Suppliers->addSupplier($rfOffer->getSellerName());
+			$this->Suppliers->addSupplier($rfOffer->getSellerName(), $rfOffer->getSellerID());
 
-			if ($supplier = $this->Suppliers->getSupplier($rfOffer->getSellerName())){
+			$supplier = $this->Suppliers->getSupplier($rfOffer->getSellerName(), $rfOffer->getSellerID());
+
+			$rfOffer->setSellerCountry($supplier['supplier_country']);
+			$rfOffer->setSellerNative($supplier['is_native']);
+
+			if ($supplier){
 				if (!empty($supplier['amzn_coefficient']) && (int)$supplier['amzn_coefficient'] < $this->Suppliers->supplierMinInnerRatingForUse){
 					$addThisOffer = false;
 				}
@@ -504,7 +509,6 @@ class OffersParser
 				}
 			}
 
-			//Bad delivery price
 			if ((float)$this->config->get('config_rainforest_max_delivery_price_multiplier') && (float)$rfOffer->getDeliveryAmount() > 0){
 				if ((float)$rfOffer->getDeliveryAmount() > (float)$rfOffer->getPriceAmount() * (float)$this->config->get('config_rainforest_max_delivery_price_multiplier')){
 					$addThisOffer = false;
@@ -670,6 +674,7 @@ class OffersParser
 				conditionTitle 					= '" . $this->db->escape($rfOffer->getConditionTitle()) . "',
 				conditionComments 				= '" . $this->db->escape($rfOffer->getConditionComments()) . "',
 				sellerName 						= '" . $this->db->escape($rfOffer->getSellerName()) . "',
+				sellerID 						= '" . $this->db->escape($rfOffer->getSellerID()) . "',
 				sellerLink 						= '" . $this->db->escape($rfOffer->getSellerLink()) . "',
 				sellerRating50 					= '" . (int)$rfOffer->getSellerRating50() . "',
 				sellerRatingsTotal 				= '" . (int)$rfOffer->getSellerRatingsTotal() . "',
@@ -679,6 +684,8 @@ class OffersParser
 				isBestOffer						= '" . (int)($key == $ratingKeys['maxRatingKey']) . "',
 				offerRating						= '" . (float)$ratingKeys['ratingKeys'][$key] . "',
 				isPrime							= '" . (int)$rfOffer->getIsPrime() . "',
+				offerCountry 					= '" . $this->db->escape($rfOffer->getSellerCountry()) . "',
+				isNativeOffer 					= '" . (int)$rfOffer->getSellerNative() . "',
 				offer_id 						= '" . $this->db->escape($offer_id) . "',
 				date_added						= NOW()");
 		}
@@ -705,7 +712,8 @@ class OffersParser
 				$rfOfferWeight += 30;
 			}
 
-			if ($supplier = $this->Suppliers->getSupplier($rfOffer->getSellerName())){
+			$supplier = $this->Suppliers->getSupplier($rfOffer->getSellerName(), $rfOffer->getSellerID());
+			if ($supplier){
 
 				if (!empty($supplier['amzn_good']) && $supplier['amzn_good']){
 					$rfOfferWeight += 10;

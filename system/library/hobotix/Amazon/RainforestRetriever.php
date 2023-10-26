@@ -5,15 +5,17 @@
 	class RainforestRetriever
 	{
 
-		public $db;	
-		public $config;		
-		public $endpoint;	
+		public $db 			= null;	
+		public $log 		= null;	
+		public $config 		= null;
+		public $endpoint 	= null;
+		public $registry 	= null;
 
-		public $model_catalog_category = null;
-		public $model_catalog_product = null;
-		public $model_product_add = null;
+		public $model_catalog_category 	= null;
+		public $model_catalog_product 	= null;
+		public $model_product_add 		= null;
 
-		public $translateAdaptor = null;
+		public $translateAdaptor 		= null;
 		
 		public $jsonResult = null;
 
@@ -28,7 +30,6 @@
 				$this->translateAdaptor = $registry->get('translateAdaptor');
 			}	
 
-			//models
 			require_once(DIR_SYSTEM . 'library/hobotix/Amazon/models/hoboModel.php');	
 			require_once(DIR_SYSTEM . 'library/hobotix/Amazon/models/productModelEdit.php');
 			require_once(DIR_SYSTEM . 'library/hobotix/Amazon/models/productModelGet.php');
@@ -135,7 +136,7 @@
 			return $localImageDir . $localImageName;
 		}	
 
-		public function parseResponse($response){
+		public function parseResponse($response){			
 			$response = json_decode($response, true);	
 			
 			if (!isset($response['request_info']['success'])){
@@ -162,8 +163,7 @@
 			
 			$data = array_merge($data, $params);
 			$queryString =  http_build_query($data);
-		
-		
+				
 			$ch = curl_init('https://api.rainforestapi.com/request?' . $queryString);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -171,11 +171,13 @@
 			curl_setopt($ch, CURLOPT_TIMEOUT, 100);
 			curl_setopt($ch, CURLOPT_VERBOSE, false);
 			
-			$json = curl_exec($ch);		
+			$response = curl_exec($ch);		
 			curl_close($ch);
-			
-			$this->setJsonResult(json_decode($json, true));
 
+			if ($this->parseResponse($response)){
+				$this->setJsonResult(json_decode($response, true));
+			}
+					
 			return $this;
 		}		
 
