@@ -125,6 +125,23 @@ class Suppliers
 		return '';
 	}
 
+	public function getSellerQuality($sellerData){
+		$sellerQuality = '';
+
+		if (!empty($sellerData['telephone'])){
+			$sellerQuality .= 'T';
+		}
+
+		if (!empty($sellerData['email'])){
+			$sellerQuality .= 'E';
+		}
+
+		if ($sellerQuality){
+			echoLine('[Suppliers::setSellerQuality] Got seller quality: ' . $sellerQuality, 's');
+		}
+
+		return $sellerQuality;		
+	}
 
 	/*
 		Just for backward compatibility

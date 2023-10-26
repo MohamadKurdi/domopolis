@@ -299,9 +299,28 @@ class OffersParser
 			}
 		}
 
-		echoLine('[OffersParser::setAsinOffersType] Set marker type ' . $offers_type . ' for asin ' . $asin, 'i');
-
+		echoLine('[OffersParser::setAsinOffersType] Set amazon_offers_type ' . $offers_type . ' for asin ' . $asin, 'i');
 		$this->db->query("UPDATE product SET amazon_offers_type = '" . $this->db->escape($offers_type) . "' WHERE asin LIKE '" . $this->db->escape($asin) . "'");
+	}
+
+	public function setAsinSellerQuality($asin, $offers){
+		$amazon_seller_quality 		= '';
+		$amazon_seller_quality_idx 	= 0;
+		if ($offers){
+			foreach ($offers as $offer){								
+				if (!empty($offer['sellerQuality'])){					
+					if (!empty(\hobotix\RainforestAmazon::amazonSellerQualitiesSorted[$offer['sellerQuality']])){
+						if (\hobotix\RainforestAmazon::amazonSellerQualitiesSorted[$offer['sellerQuality']] > $amazon_seller_quality_idx){
+							$amazon_seller_quality_idx 	= \hobotix\RainforestAmazon::amazonSellerQualitiesSorted[$offer['sellerQuality']];
+							$amazon_seller_quality 		= $offer['sellerQuality'];
+						}
+					}				
+				}
+			}
+		}
+
+		echoLine('[OffersParser::setAsinSellerQuality] Set amazon_seller_quality ' . ($amazon_seller_quality?$amazon_seller_quality:'NONE') . ' for asin ' . $asin, 'i');
+		$this->db->query("UPDATE product SET amazon_seller_quality = '" . $this->db->escape($amazon_seller_quality) . "' WHERE asin LIKE '" . $this->db->escape($asin) . "'");
 	}
 
 	public function setAmazonOfferDates($amazon_offer_id, $data){
@@ -492,20 +511,21 @@ class OffersParser
 
 			$this->Suppliers->addSupplier($rfOffer->getSellerName(), $rfOffer->getSellerID());
 
-			$supplier = $this->Suppliers->getSupplier($rfOffer->getSellerName(), $rfOffer->getSellerID());
+			$seller = $this->Suppliers->getSupplier($rfOffer->getSellerName(), $rfOffer->getSellerID());
 
-			$rfOffer->setSellerCountry($supplier['supplier_country']);
-			$rfOffer->setSellerNative($supplier['is_native']);
+			$rfOffer->setSellerCountry($seller['supplier_country']);
+			$rfOffer->setSellerNative($seller['is_native']);
+			$rfOffer->setSellerQuality($this->Suppliers->getSellerQuality($seller));
 
-			if ($supplier){
-				if (!empty($supplier['amzn_coefficient']) && (int)$supplier['amzn_coefficient'] < $this->Suppliers->supplierMinInnerRatingForUse){
+			if ($seller){
+				if (!empty($seller['amzn_coefficient']) && (int)$seller['amzn_coefficient'] < $this->Suppliers->supplierMinInnerRatingForUse){
 					$rfOffer->setBadReason('SUPPLIER_AMZN_COEFFICIENT_BAD');
 					$addThisOffer = false;
 				}
 
 				if ($this->config->get('config_rainforest_skip_not_native_offers')){
-					if (!empty($supplier['supplier_country'])){
-						if ($supplier['supplier_country'] != $this->config->get('config_rainforest_native_country_code')){
+					if (!empty($seller['supplier_country'])){
+						if ($seller['supplier_country'] != $this->config->get('config_rainforest_native_country_code')){
 							$rfOffer->setBadReason('SUPPLIER_COUNTRY_NOT_NATIVE_SKIPPED');
 							$addThisOffer = false;
 						}
@@ -671,7 +691,8 @@ class OffersParser
 
 			$arrOffers[] = [
 				'sellerName' 	=> $rfOffer->getSellerName(),
-				'isPrime' 		=> (int)$rfOffer->getIsPrime()
+				'isPrime' 		=> (int)$rfOffer->getIsPrime(),
+				'sellerQuality' => $rfOffer->getSellerQuality()
 			];
 
 			$this->db->query("INSERT INTO product_amzn_offers SET
@@ -698,6 +719,7 @@ class OffersParser
 				sellerRating50 					= '" . (int)$rfOffer->getSellerRating50() . "',
 				sellerRatingsTotal 				= '" . (int)$rfOffer->getSellerRatingsTotal() . "',
 				sellerPositiveRatings100 		= '" . (int)$rfOffer->getSellerPositiveRatings100() . "',
+				sellerQuality 					= '" . $this->db->escape($rfOffer->getSellerQuality()) . "',
 				is_min_price					= '" . (int)($key == $minKey) . "',
 				isBuyBoxWinner					= '" . (int)($buyBoxWinner) . "',
 				isBestOffer						= '" . (int)($key == $ratingKeys['maxRatingKey']) . "',
@@ -710,6 +732,7 @@ class OffersParser
 		}
 
 		$this->setAsinOffersType($asin, $arrOffers);
+		$this->setAsinSellerQuality($asin, $arrOffers);
 	}
 
 	public function calculateOffersRatings($rfOfferList){
@@ -731,19 +754,19 @@ class OffersParser
 				$rfOfferWeight += 30;
 			}
 
-			$supplier = $this->Suppliers->getSupplier($rfOffer->getSellerName(), $rfOffer->getSellerID());
-			if ($supplier){
+			$seller = $this->Suppliers->getSupplier($rfOffer->getSellerName(), $rfOffer->getSellerID());
+			if ($seller){
 
-				if (!empty($supplier['amzn_good']) && $supplier['amzn_good']){
+				if (!empty($seller['amzn_good']) && $seller['amzn_good']){
 					$rfOfferWeight += 10;
 				}
 
-				if (!empty($supplier['amzn_bad']) && $supplier['amzn_bad']){
+				if (!empty($seller['amzn_bad']) && $seller['amzn_bad']){
 					$rfOfferWeight -= 20;
 				}
 
-				if (isset($supplier['amzn_coefficient'])){
-					$rfOfferWeight += (int)($supplier['amzn_coefficient']);
+				if (isset($seller['amzn_coefficient'])){
+					$rfOfferWeight += (int)($seller['amzn_coefficient']);
 				}
 
 			}

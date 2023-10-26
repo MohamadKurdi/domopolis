@@ -12,6 +12,7 @@
 				</td>
 				<td width="30px;"></td>
 				<td width="20px;"></td>
+				<td width="20px;"></td>
 				<td>						
 					<b>Продавец</b>
 				</td>
@@ -89,6 +90,13 @@
 						<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 					<? } ?>
 				</td>
+				<td class="center" width="30px;">
+						<?php if ($offer['quality']) { ?>
+							<small class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF"><?php echo $offer['quality']; ?></small>
+						<? } else { ?>
+							<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+						<? } ?>
+					</td>
 				<td class="left">						
 					<b><?php echo $offer['seller']; ?></b>
 
@@ -204,6 +212,14 @@
 						<? } ?>
 					</td>
 
+					<td class="center" width="30px;">
+						<?php if ($bad_offer['quality']) { ?>
+							<small class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF"><?php echo $bad_offer['quality']; ?></small>
+						<? } else { ?>
+							<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+						<? } ?>
+					</td>
+
 				<td class="left" style="color:#cf4a61">						
 					<b><?php echo $bad_offer['seller']; ?></b>					
 
@@ -243,8 +259,8 @@
 
 				</td>
 				<td style="color:#cf4a61">
-					<?php if ($offer['rating']) { ?>				
-						<?php if ($offer['reviews'] > 500) { ?>
+					<?php if ($bad_offer['reviews']) { ?>				
+						<?php if ($bad_offer['reviews'] > 500) { ?>
 							<span style="color:#4ea24e"><i class="fa fa-edit"></i><?php echo $bad_offer['reviews']; ?></span>
 						<?php } else { ?>
 							<span style="color:#cf4a61"><i class="fa fa-edit"></i><?php echo $bad_offer['reviews']; ?></span>

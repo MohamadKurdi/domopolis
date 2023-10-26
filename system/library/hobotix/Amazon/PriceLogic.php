@@ -988,12 +988,12 @@ class PriceLogic
 	public function setProductNoOffers($asin){
 		if ($this->config->get('config_rainforest_nooffers_action') && $this->config->get('config_rainforest_nooffers_status_id')){
 
-			echoLine('[PriceLogic::setProductNoOffers]' . $asin  . ', товара нет в наличии, установлен статус уточняйте');
+			echoLine('[PriceLogic::setProductNoOffers] ' . $asin  . ', товара нет в наличии, установлен статус уточняйте', 'e');
 			$sql = "UPDATE product SET stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id') . "' ";
 			$sql .= " WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 1 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0)";
 			$this->db->query($sql);		
 
-			echoLine('[PriceLogic::setProductNoOffers]' . $asin  . ', товара нет в наличии, очищены переназначения статусов');
+			echoLine('[PriceLogic::setProductNoOffers] ' . $asin  . ', товара нет в наличии, очищены переназначения статусов', 'e');
 			$sql = "DELETE FROM product_stock_status ";
 			$sql .= " WHERE product_id IN ";
 			$sql .= " (SELECT product_id FROM product WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 1 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0))";
@@ -1002,12 +1002,12 @@ class PriceLogic
 
 		if ($this->config->get('config_rainforest_nooffers_action_for_manual') && $this->config->get('config_rainforest_nooffers_status_id_for_manual')){
 
-			echoLine('[PriceLogic::setProductNoOffers]' . $asin  . ', товара нет в наличии, установлен статус уточняйте');
+			echoLine('[PriceLogic::setProductNoOffers] ' . $asin  . ', товара нет в наличии, установлен статус уточняйте', 'e');
 			$sql = "UPDATE product SET stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id_for_manual') . "' ";
 			$sql .= " WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 0 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0)";
 			$this->db->query($sql);						
 
-			echoLine('[PriceLogic::setProductNoOffers]' . $asin  . ', товара нет в наличии, очищены переназначения статусов');
+			echoLine('[PriceLogic::setProductNoOffers] ' . $asin  . ', товара нет в наличии, очищены переназначения статусов', 'e');
 			$sql = "DELETE FROM product_stock_status ";
 			$sql .= " WHERE product_id IN ";
 			$sql .= " (SELECT product_id FROM product WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 0 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 AND (" . $this->buildStockQueryField() . " = 0))";
@@ -1019,16 +1019,15 @@ class PriceLogic
 		Логика обработки товара, который есть в наличии на Amazon с учётом его наличия на локальных складах
 	*/
 	public function setProductOffers($asin){
-
 		if ($this->config->get('config_rainforest_nooffers_action') && $this->config->get('config_rainforest_nooffers_status_id')){
-			echoLine('[PriceLogic::setProductOffers]' . $asin . ', если статус был переназначен, то мы его возвращаем на в наличии');
+			echoLine('[PriceLogic::setProductOffers] ' . $asin . ', если статус был переназначен, то мы его возвращаем на в наличии', 's');
 			$sql = "UPDATE product SET stock_status_id = '" . (int)$this->config->get('config_stock_status_id') . "' ";
 			$sql .= " WHERE asin = '" . $this->db->escape($asin) . "'  AND added_from_amazon = 1 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 ";
 			$sql .= " AND (stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id') . "' OR stock_status_id = '" . (int)$this->config->get('config_not_in_stock_status_id') ."')";
 
 			$this->db->query($sql);
 
-			echoLine('[PriceLogic::setProductOffers]' . $asin . ', очистили табличку переназначеных статусов, если они были заданы как уточняйте или нету');
+			echoLine('[PriceLogic::setProductOffers] ' . $asin . ', очистили табличку переназначеных статусов, если они были заданы как уточняйте или нету', 's');
 			$sql = "DELETE FROM product_stock_status ";
 			$sql .= " WHERE product_id IN ";
 			$sql .= " (SELECT product_id FROM product WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 1  AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 ";
@@ -1036,22 +1035,21 @@ class PriceLogic
 			$this->db->query($sql);
 		}
 
-		if ($this->config->get('config_rainforest_nooffers_action_for_manual') && $this->config->get('config_rainforest_nooffers_status_id_for_manual')){
-			echoLine('[PriceLogic::setProductOffers]' . $asin . ', если статус был переназначен, то мы его возвращаем на в наличии');
+		if ($this->config->get('config_rainforest_nooffers_action_for_manual') && $this->config->get('config_rainforest_nooffers_status_id_for_manual', 's')){
+			echoLine('[PriceLogic::setProductOffers] ' . $asin . ', если статус был переназначен, то мы его возвращаем на в наличии');
 			$sql = "UPDATE product SET stock_status_id = '" . (int)$this->config->get('config_stock_status_id') . "' ";
 			$sql .= " WHERE asin = '" . $this->db->escape($asin) . "'  AND added_from_amazon = 1 AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 ";
 			$sql .= " AND (stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id') . "' OR stock_status_id = '" . (int)$this->config->get('config_not_in_stock_status_id') ."')";
 
 			$this->db->query($sql);
 
-			echoLine('[PriceLogic::setProductOffers]' . $asin . ', очистили табличку переназначеных статусов, если они были заданы как уточняйте или нету');
+			echoLine('[PriceLogic::setProductOffers] ' . $asin . ', очистили табличку переназначеных статусов, если они были заданы как уточняйте или нету', 's');
 			$sql = "DELETE FROM product_stock_status ";
 			$sql .= " WHERE product_id IN ";
 			$sql .= " (SELECT product_id FROM product WHERE asin = '" . $this->db->escape($asin) . "' AND added_from_amazon = 1  AND is_markdown = 0 AND status = 1 AND amzn_ignore = 0 ";
 			$sql .= "AND (stock_status_id = '" . (int)$this->config->get('config_rainforest_nooffers_status_id') . "' OR stock_status_id = '" . (int)$this->config->get('config_not_in_stock_status_id') ."'))";
 			$this->db->query($sql);
 		}
-
 	}
 
 
