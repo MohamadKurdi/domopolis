@@ -136,6 +136,17 @@
 									</select>
 								</td>
 								<?php break;
+								case 'amazon_seller_quality': ?>
+								<td class="<?php echo $column_info[$col]['align']; ?>">
+									<select name="filter_<?php echo $col; ?>" class="filter <?php echo $col; ?>" style="width:40px;">
+										<option value=""></option>
+										<option value="*"<?php echo (!is_null($filters[$col]) && $filters[$col] == '*') ? ' selected="selected"' : ''; ?>><?php echo $text_none; ?></option>
+										<?php foreach (\hobotix\RainforestAmazon::amazonSellerQualities as $enum) { ?>
+											<option value="<?php echo $enum; ?>"<?php echo (!is_null($filters[$col]) && $enum == $filters[$col]) ? ' selected="selected"' : ''; ?>><?php echo $enum; ?></option>
+										<?php } ?>
+									</select>
+								</td>
+								<?php break;
 								case 'fill_from_amazon': ?>
 								<td class="<?php echo $column_info[$col]['align']; ?>">
 									<select name="filter_<?php echo $col; ?>" class="filter <?php echo $col; ?>">
@@ -385,6 +396,17 @@
 												<i class="fa fa-question-circle" style="color:#000"></i>
 											<?php } ?>
 										</td>
+
+										<?php break;
+										case 'amazon_seller_quality': ?>
+										<td class="center<?php echo ($column_info[$col]['qe_status']) ? ' ' . $column_info[$col]['qe_type'] : ''; ?>" id="<?php echo $col . "-" . $product['product_id']; ?>">
+											<?php if ($product['amazon_seller_quality']){ ?>
+												<i class="fa fa-check" style="color:#32bd38"></i> <span style="color:#32bd38; font-weight:700"><?php echo $product['amazon_seller_quality']; ?></span>											
+											<?php } else { ?>
+												<i class="fa fa-question-circle" style="color:#fa4934"></i>
+											<?php } ?>
+										</td>
+
 
 										<?php break;
 										case 'image': ?>

@@ -237,7 +237,11 @@ class ModelCatalogProductExt extends Model {
         }
 
         if (!empty($data['filter_amazon_offers_type'])) {
-            $sql .= " AND p.amazon_offers_type = '" . $this->db->escape(utf8_strtolower($data['filter_amazon_offers_type'])) . "'";
+            $sql .= " AND p.amazon_offers_type = '" . $this->db->escape($data['filter_amazon_offers_type']) . "'";
+        }
+
+        if (!empty($data['filter_amazon_seller_quality'])) {
+            $sql .= " AND p.amazon_seller_quality = '" . $this->db->escape($data['filter_amazon_seller_quality']) . "'";
         }
 
         if (!empty($data['filter_seo'])) {

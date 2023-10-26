@@ -83,7 +83,8 @@ $_['column_amzn_offers_count']	= 'Офферов<i class="fa fa-amazon"></i>';
 $_['column_fill_from_amazon'] 	= 'Загружать<i class="fa fa-amazon"></i>';
 $_['column_product_offers_count'] 	= 'Заказов';
 $_['column_product_warehouse_count'] 	= 'Склад';
-$_['column_amazon_offers_type'] 	= 'Тип<i class="fa fa-amazon"></i>';
+$_['column_amazon_offers_type'] 	= 'OFRS<i class="fa fa-amazon"></i>';
+$_['column_amazon_seller_quality'] 	= 'SLR<i class="fa fa-amazon"></i>';
 
 $_['column_tag']                = 'Product Tags';
 $_['column_sku']                = 'SKU';

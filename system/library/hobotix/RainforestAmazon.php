@@ -25,7 +25,8 @@ class RainforestAmazon
 	public const amazonOffersType 		= ['AP', 'A', 'P', 'O', 'N'];
 	public const amazonOffersTypeSorted = ['AP' => 5, 'A' => 4, 'P' => 3, 'O' => 2, 'N' => 1];
 
-	public const amazonSellerQualitiesSorted = ['TE' => 3, 'T' => 2, 'E' => 1];
+	public const amazonSellerQualities 			= ['TE', 'T', 'E'];
+	public const amazonSellerQualitiesSorted 	= ['TE' => 3, 'T' => 2, 'E' => 1];
 
 	/*
 		categoryParserLimit  - сколько отбирать категорий за один запуск

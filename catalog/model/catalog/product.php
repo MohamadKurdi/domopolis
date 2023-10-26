@@ -269,6 +269,7 @@
 							'asin' 					=> $result['asin'],
 							'amazon_product_link' 	=> $result['amazon_product_link'],
 							'amazon_offers_type' 	=> $result['amazon_offers_type'],
+							'amazon_seller_quality' => $result['amazon_seller_quality'],
 							'amazon_best_price' 	=> $this->currency->format($result['amazon_best_price'], $this->config->get('config_currency'), 1),
 							'costprice'	   	   		=> $this->currency->format($result['costprice'], $this->config->get('config_currency'), 1),
 							'profitability'	   	   	=> $result['profitability']
@@ -292,6 +293,7 @@
 						'stock_text'  				=> $result['stock_text'],						
 						'show_delivery_terms' 		=> $stock_data['show_delivery_terms'],
 						'amazon_offers_type' 		=> $result['amazon_offers_type'],
+						'amazon_seller_quality' 	=> $result['amazon_seller_quality'],
 						'manufacturer' 				=> $result['manufacturer'],
 						'main_category_id'         	=> $result['main_category_id'],
 						'manufacturer_id'          	=> $result['manufacturer_id'],
@@ -679,6 +681,7 @@
 							'asin'                     => $query->row['asin'],
 							'amazon_product_link'      => $query->row['amazon_product_link'],
 							'amazon_offers_type'	   => $query->row['amazon_offers_type'],
+							'amazon_seller_quality'	   => $query->row['amazon_seller_quality'],
 							'amazon_best_price'	   	   => $query->row['amazon_best_price'],
 							'costprice'	   	   		   => $query->row['costprice'],
 							'profitability'	   	   	   => $query->row['profitability'],
