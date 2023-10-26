@@ -92,7 +92,9 @@
 				<td class="left">						
 					<b><?php echo $offer['seller']; ?></b>
 
-					<?php if ($offer['supplier']) { ?>						
+					<?php if ($offer['supplier']) { ?>		
+						<a href="<?php echo $offer['edit_supplier']; ?>"><i class="fa fa-edit"></i></a>
+
 						<? if ($offer['supplier']['amzn_good']) { ?>+5
 							<small class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">повышенный рейтинг</small>
 						<?php } elseif ($offer['supplier']['amzn_bad']) { ?>
@@ -102,8 +104,16 @@
 						<?php } ?>
 					<?php } ?>
 
-					<?php if ($offer['link']) { ?>
-						<a href="<?php echo $offer['link']; ?>" target="_blank"><i class="fa fa-external-link-square"></i></a>
+					<?php if ($offer['link'] || $offer['supplier']['store_url']) { ?>
+						<div>
+						<?php if ($offer['link']) { ?>						
+							<a href="<?php echo $offer['link']; ?>" target="_blank"><i class="fa fa-external-link-square"></i> offer link</a>
+						<?php } ?>
+
+						<?php if ($offer['supplier']['store_link']) { ?>						
+							<a href="<?php echo $offer['supplier']['store_link']; ?>" target="_blank"><i class="fa fa-external-link-square"></i> store link</a>
+						<?php } ?>
+						</div>
 					<?php } ?>					
 
 				</td>
@@ -174,28 +184,52 @@
 
 		<?php if (!empty($bad_offers)) { ?>
 			<?php foreach ($bad_offers as $bad_offer) { ?>
-				<td colspan="6">
+				<td colspan="4">
 					<small style="display:inline-block; padding:3px 5px; color:#cf4a61"><i class="fa fa-exclamation-triangle"></i> bad offer</span> 
 					<small style="display:inline-block; padding:3px 5px; color:#cf4a61"><i class="fa fa-exclamation-triangle"></i> <?php echo $bad_offer['bad_reason']; ?></span>
 				</td>
+
+				<td class="center" width="30px;">
+						<?php if ($bad_offer['country']) { ?>
+							<?php echo $bad_offer['country']; ?>
+						<? } else { ?>
+							<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+						<? } ?>
+					</td>
+					<td class="center" width="30px;">
+						<?php if ($bad_offer['is_native']) { ?>
+							<i class="fa fa-check-circle" style="color:#51A62D"></i>
+						<? } else { ?>
+							<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+						<? } ?>
+					</td>
+
 				<td class="left" style="color:#cf4a61">						
-					<b><?php echo $bad_offer['seller']; ?></b>
+					<b><?php echo $bad_offer['seller']; ?></b>					
 
 					<?php if ($bad_offer['supplier']) { ?>
-						
+						<a href="<?php echo $bad_offer['edit_supplier']; ?>"><i class="fa fa-edit"></i></a>
+
 						<? if ($bad_offer['supplier']['amzn_good']) { ?>+5
 							<small class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">повышенный рейтинг</small>
-						<?php } elseif ($offer['supplier']['amzn_bad']) { ?>
+						<?php } elseif ($bad_offer['supplier']['amzn_bad']) { ?>
 							<small class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">пониженный рейтинг</small>
-						<?php } elseif ($offer['supplier']['amzn_coefficient']) { ?>
+						<?php } elseif ($bad_offer['supplier']['amzn_coefficient']) { ?>
 							<small class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">рейтинг <?php echo $bad_offer['supplier']['amzn_coefficient']; ?></small>
-						<?php } ?>
-
+						<?php } ?>						
 					<?php } ?>
 
-					<?php if ($bad_offer['link']) { ?>
-						<a href="<?php echo $bad_offer['link']; ?>" target="_blank"><i class="fa fa-external-link-square"></i></a>
-					<?php } ?>					
+					<?php if ($bad_offer['link'] || $bad_offer['supplier']['store_url']) { ?>
+						<div>
+						<?php if ($bad_offer['link']) { ?>						
+							<a href="<?php echo $bad_offer['link']; ?>" target="_blank"><i class="fa fa-external-link-square"></i> offer link</a>
+						<?php } ?>
+
+						<?php if ($bad_offer['supplier']['store_link']) { ?>						
+							<a href="<?php echo $bad_offer['supplier']['store_link']; ?>" target="_blank"><i class="fa fa-external-link-square"></i> store link</a>
+						<?php } ?>
+						</div>
+					<?php } ?>						
 
 				</td>
 				<td class="left" style="color:#cf4a61">
@@ -246,7 +280,7 @@
 				</td>
 
 				<td class="left" style="white-space:nowrap;color:#cf4a61">						
-					<b <?php if ($bad_offer['is_min_price']) { ?>style="color:#4ea24e"<?php } ?>><?php echo $offer['total']; ?></b>
+					<b <?php if ($bad_offer['is_min_price']) { ?>style="color:#4ea24e"<?php } ?>><?php echo $bad_offer['total']; ?></b>
 				</td>
 
 				<td class="left" style="white-space:nowrap;color:#cf4a61">						

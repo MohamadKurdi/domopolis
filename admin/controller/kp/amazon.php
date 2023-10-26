@@ -195,13 +195,17 @@ class ControllerKPAmazon extends Controller {
 		$good_offers = [];
 		foreach ($offers as $offer){
 				$good_offers[] = $offer['offer_id'];
+
+				$supplier = $this->rainforestAmazon->offersParser->Suppliers->getSupplier($offer['sellerName'], $offer['sellerID']);
+
 				$this->data['offers'][] = [					
 					'seller' 				=> $offer['sellerName'],
 					'prime'	 				=> $offer['isPrime'],
 					'buybox_winner'	 		=> $offer['isBuyBoxWinner'],
 					'is_best'				=> $offer['isBestOffer'],
 					'offer_rating'			=> $offer['offerRating'],
-					'supplier'				=> $this->rainforestAmazon->offersParser->Suppliers->getSupplier($offer['sellerName'], $offer['sellerID']),
+					'supplier'				=> $supplier,
+					'edit_supplier' 		=> $supplier?$this->url->link('sale/supplier/update', 'token=' . $this->session->data['token'] . '&supplier_id=' . $supplier['supplier_id']):'',
 					'price'	 				=> $this->currency->format_with_left($offer['priceAmount'], $offer['priceCurrency'], 1),
 					'delivery'	 			=> $this->currency->format_with_left($offer['deliveryAmount'], $offer['deliveryCurrency'], 1),	
 					'total'					=> $this->currency->format_with_left($offer['priceAmount'] + $offer['deliveryAmount'], $offer['priceCurrency'], 1),
@@ -230,17 +234,7 @@ class ControllerKPAmazon extends Controller {
 				} else {
 					$offer_id = md5(serialize($rfOffer->getOriginalDataArray()));
 				}
-
-				$buyBoxWinner = false;
-				if (!empty($rfOffer->getOriginalDataArray()['buybox_winner'])){
-					$buyBoxWinner = true;
-				}
-
-				$offerDates = false;
-				if ($rfOffer->getDeliveryComments()){
-					$offerDates = $this->rainforestAmazon->offersParser->parseAmazonDeliveryComment($rfOffer->getDeliveryComments());
-				}
-
+				
 				if (!in_array($offer_id, $good_offers)){
 					$bad_offers[] = $rfOffer;
 				}
@@ -250,13 +244,26 @@ class ControllerKPAmazon extends Controller {
 				$bad_offers = $this->rainforestAmazon->offersParser->reparseOffersToSkip($bad_offers, true);
 
 				foreach ($bad_offers as $rfOffer){
+					$buyBoxWinner = false;
+					if (!empty($rfOffer->getOriginalDataArray()['buybox_winner'])){
+						$buyBoxWinner = true;
+					}
+
+					$offerDates = false;
+					if ($rfOffer->getDeliveryComments()){
+						$offerDates = $this->rainforestAmazon->offersParser->parseAmazonDeliveryComment($rfOffer->getDeliveryComments());
+					}
+
+					$supplier = $this->rainforestAmazon->offersParser->Suppliers->getSupplier($rfOffer->getSellerName(), $rfOffer->getSellerID());
+
 					$this->data['bad_offers'][] = [					
 						'seller' 				=> $rfOffer->getSellerName(),
 						'prime'	 				=> $rfOffer->getIsPrime(),
 						'buybox_winner'	 		=> $buyBoxWinner,
 						'is_best'				=> false,
 						'offer_rating'			=> 0,
-						'supplier'				=> $this->rainforestAmazon->offersParser->Suppliers->getSupplier($rfOffer->getSellerName(), $rfOffer->getSellerID()),
+						'supplier'				=> $supplier,
+						'edit_supplier' 		=> $supplier?$this->url->link('sale/supplier/update', 'token=' . $this->session->data['token'] . '&supplier_id=' . $supplier['supplier_id']):'',
 						'price'	 				=> $this->currency->format_with_left($rfOffer->getPriceAmount(), $rfOffer->getPriceCurrency(), 1),
 						'delivery'	 			=> $this->currency->format_with_left($rfOffer->getDeliveryAmount(), $rfOffer->getDeliveryCurrency(), 1),	
 						'total'					=> $this->currency->format_with_left($rfOffer->getPriceAmount() + $rfOffer->getDeliveryAmount(), $rfOffer->getPriceCurrency(), 1),
