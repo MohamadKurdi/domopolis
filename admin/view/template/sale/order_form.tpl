@@ -3354,17 +3354,21 @@
 														<td></td>
 														<td class="right">
 															<?php if ($ukrcredits_order_status) { ?>
-																<div>
+																<div>																	
 																	<?php if ($ukrcredits_order_status == 'LOCKED') { ?>
-																		<a id="button-confirm" class="button">Подтвердить</a> <a id="button-cancel" class="button"><?php echo $button_cancel; ?></a>
+																		<a id="button-confirm" class="button" style="font-size:18px; padding:3px 5px; border-radius:5px; border: 2px solid #4ea24e; background:#4ea24e; color:#FFF" >Подтвердить</a> 
+
+																		<a id="button-cancel" class="button" style="font-size:18px; padding:3px 5px; border-radius:5px; border: 2px solid #cf4a61; background:#cf4a61; color:#FFF">Отменить</a>
 																	<?php } ?>
 																	<?php if ($ukrcredits_order_status == 'IN_PROCESS' && $ukrcredits_order_substatus == 'WAITING_FOR_STORE_CONFIRM') { ?>
-																		<a id="button-confirm-mb" class="button">Подтвердить</a> <a id="button-cancel-mb" class="button"><?php echo $button_cancel; ?></a>
+																		<a id="button-confirm-mb" class="button" style="font-size:18px; padding:3px 5px; border-radius:5px; border: 2px solid #4ea24e; background:#4ea24e; color:#FFF">Подтвердить</a> 
+
+																		<a id="button-cancel-mb" class="button" style="font-size:18px; padding:3px 5px; border-radius:5px; border: 2px solid #cf4a61; background:#cf4a61; color:#FFF">Отменить</a>
 																	<?php } ?>
 																	<?php if ($payment_code == 'ukrcredits_mb') { ?>
-																		<a id="button-status-mb" class="button"><i class="fa fa-info"></i> Обновить + инфо о заявке</a>
+																		<a id="button-status-mb" class="button" style="font-size:18px; padding:3px 5px; border-radius:5px; border: 2px solid #FF9900; background:#FF9900; color:#FFF"><i class="fa fa-info"></i> Обновить + инфо о заявке</a>
 																	<?php } else { ?>
-																		<a id="button-status" class="button"><i class="fa fa-info"></i> Обновить + инфо о заявке</a>
+																		<a id="button-status" class="button" style="font-size:18px; padding:3px 5px; border-radius:5px; border: 2px solid #FF9900; background:#FF9900; color:#FFF"><i class="fa fa-info"></i> Обновить + инфо о заявке</a>
 																	<?php } ?>
 																</div>
 

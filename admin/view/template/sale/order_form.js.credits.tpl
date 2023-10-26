@@ -70,11 +70,11 @@ $(document).ready(function(){
                             break;
                         case 'FAIL':
 							$('.success, .warning, .attention').remove();
-                            $('#div-credits').prepend('<div class="alert alert-warning">При подтверждении заказа произошла ошибка: ' + data['message'] + '</div>');
+                            $('#div-credits').prepend('<div class="warning">При подтверждении заказа произошла ошибка: ' + data['message'] + '</div>');
 							break;
                         case 'sys_error':
 							$('.success, .warning, .attention').remove();
-                            $('#div-credits').prepend('<div class="alert alert-warning">При подтверждении заказа произошла ошибка: ' + data['message'] + '</div>');
+                            $('#div-credits').prepend('<div class="warning">При подтверждении заказа произошла ошибка: ' + data['message'] + '</div>');
 							break;
                     }                                 
                }    
@@ -90,15 +90,15 @@ $(document).ready(function(){
             url: 'index.php?route=sale/ukrcredits/cancelhold&token=<?php echo $token; ?>&ukrcredits_order_id=<?php echo $ukrcredits_order_id; ?>&order_id=<?php echo $order_id; ?>&payment_code=<?php echo $payment_code; ?>',
             dataType: 'json',
 			beforeSend: function() {
-				$('.success, .warning, .alert, attention').remove();
-				$('.page-header > div').append('<div class="alert alert-info"> <?php echo $text_wait; ?></div>');
+				$('.success, .warning, .alert, .attention').remove();
+				$('.page-header > div').append('<div class="warning"> <?php echo $text_wait; ?></div>');
 			},
                success: function(data){
 					console.log(data['state']);
                     switch(data['state']){
                         case 'SUCCESS':
 							$('.success, .warning, .alert, .attention').remove();
-                            $('#div-credits').prepend('<div class="alert alert-success">Заказ успешно отменен!</div>');
+                            $('#div-credits').prepend('<div class="success">Заказ успешно отменен!</div>');
 							$('#ukrcredits_order_status').html('CANCELED');
 							$.ajax({
 								url: 'index.php?route=sale/ukrcredits/history&token=<?php echo $token; ?>&order_id=<?php echo $order_id; ?>',
@@ -116,11 +116,11 @@ $(document).ready(function(){
                             break;
                         case 'FAIL':
 							$('.success, .warning, .alert, .attention').remove();
-                            $('#div-credits').prepend('<div class="alert alert-warning">При отмене заказа произошла ошибка: ' + data['message'] + '</div>');
+                            $('#div-credits').prepend('<div class="warning">При отмене заказа произошла ошибка: ' + data['message'] + '</div>');
 							break;
                         case 'sys_error':
 							$('.success, .warning, .alert, .attention').remove();
-                            $('#div-credits').prepend('<div class="alert alert-warning">При отмене заказа произошла ошибка: ' + data['message'] + '</div>');
+                            $('#div-credits').prepend('<div class="warning">При отмене заказа произошла ошибка: ' + data['message'] + '</div>');
 							break;
                     }                                 
                }    
@@ -162,17 +162,17 @@ $(document).ready(function(){
             dataType: 'json',
 			beforeSend: function() {
 				$('.success, .warning, .alert, attention').remove();
-				$('#div-credits').prepend('<div class="alert alert-info"> <?php echo $text_wait; ?></div>');
+				$('#div-credits').prepend('<div class="warning"> <?php echo $text_wait; ?></div>');
 			},
                success: function(data){
 					console.log(data);
 					if (data['message']) {
 						$('.success, .warning, .alert, .attention').remove();
-                        $('#div-credits').prepend('<div class="alert alert-warning">При отмене заказа произошла ошибка: ' + data['message'] + '</div>');
+                        $('#div-credits').prepend('<div class="warning">При отмене заказа произошла ошибка: ' + data['message'] + '</div>');
 					}
 					if (data['order_id']) {
 						$('.success, .warning, .alert, .attention').remove();
-                        $('#div-credits').prepend('<div class="alert alert-success">Статус заказа обновлен: ' + data['state'] + ' / ' + data['order_sub_state'] + '</div>');
+                        $('#div-credits').prepend('<div class="success">Статус заказа обновлен: ' + data['state'] + ' / ' + data['order_sub_state'] + '</div>');
 						$('#ukrcredits_order_status').html(data['state'] + ' / ' + data['order_sub_state']);
 						$('#button-confirm-mb').remove();
 						$('#button-cancel-mb').remove();
@@ -203,17 +203,17 @@ $(document).ready(function(){
             dataType: 'json',
 			beforeSend: function() {
 				$('.success, .warning, .alert, attention').remove();
-				$('#div-credits').prepend('<div class="alert alert-info"> <?php echo $text_wait; ?></div>');
+				$('#div-credits').prepend('<div class="warning"> <?php echo $text_wait; ?></div>');
 			},
                success: function(data){ 
 					console.log(data);
 					if (data['message']) {
 						$('.success, .warning, .alert, .attention').remove();
-                        $('#div-credits').prepend('<div class="alert alert-warning">При подтверждении заказа произошла ошибка: ' + data['message'] + '</div>');
+                        $('#div-credits').prepend('<div class="warning">При подтверждении заказа произошла ошибка: ' + data['message'] + '</div>');
 					}
 					if (data['order_id']) {
 						$('.success, .warning, .alert, .attention').remove();
-                        $('#div-credits').prepend('<div class="alert alert-success">Заказ успешно подтвержден!: ' + data['state'] + ' / ' + data['order_sub_state'] + '</div>');
+                        $('#div-credits').prepend('<div class="success">Заказ успешно подтвержден!: ' + data['state'] + ' / ' + data['order_sub_state'] + '</div>');
 						$('#ukrcredits_order_status').html(data['state'] + ' / ' + data['order_sub_state']);
 						$('#button-confirm-mb').remove();
 						$('#button-cancel-mb').remove();
