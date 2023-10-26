@@ -44,6 +44,7 @@ class ControllerKPAmazon extends Controller {
 		$type 			= trim($this->request->post['type']);
 
 		$compile 		= !empty($this->request->post['compile'])?1:0;
+		$offers 		= !empty($this->request->post['offers'])?1:0;
 
 		if ($type == 'standard'){
 			$type = 'category';
@@ -200,7 +201,7 @@ class ControllerKPAmazon extends Controller {
 					'buybox_winner'	 		=> $offer['isBuyBoxWinner'],
 					'is_best'				=> $offer['isBestOffer'],
 					'offer_rating'			=> $offer['offerRating'],
-					'supplier'				=> $this->rainforestAmazon->offersParser->Suppliers->getSupplier($offer['sellerName']),
+					'supplier'				=> $this->rainforestAmazon->offersParser->Suppliers->getSupplier($offer['sellerName'], $offer['sellerID']),
 					'price'	 				=> $this->currency->format_with_left($offer['priceAmount'], $offer['priceCurrency'], 1),
 					'delivery'	 			=> $this->currency->format_with_left($offer['deliveryAmount'], $offer['deliveryCurrency'], 1),	
 					'total'					=> $this->currency->format_with_left($offer['priceAmount'] + $offer['deliveryAmount'], $offer['priceCurrency'], 1),
@@ -213,6 +214,8 @@ class ControllerKPAmazon extends Controller {
 					'reviews'				=> (int)$offer['sellerRatingsTotal'],
 					'rating'				=> (int)$offer['sellerRating50'] / 10,
 					'positive'				=> (int)$offer['sellerPositiveRatings100'],
+					'country'				=> $offer['offerCountry'],
+					'is_native'				=> $offer['isNativeOffer'],
 					'date_added'			=> date('Y-m-d H:i:s', strtotime($offer['date_added'])),
 					'link'					=> $offer['sellerLink']?$offer['sellerLink']:$this->rainforestAmazon->createLinkToAmazonSearchPage($product['asin']),
 					'link2'					=> $this->rainforestAmazon->createLinkToAmazonSearchPage($offer['asin'])
@@ -245,7 +248,7 @@ class ControllerKPAmazon extends Controller {
 						'buybox_winner'	 		=> $buyBoxWinner,
 						'is_best'				=> false,
 						'offer_rating'			=> 0,
-						'supplier'				=> $this->rainforestAmazon->offersParser->Suppliers->getSupplier($rfOffer->getSellerName()),
+						'supplier'				=> $this->rainforestAmazon->offersParser->Suppliers->getSupplier($rfOffer->getSellerName(), $rfOffer->getSellerID()),
 						'price'	 				=> $this->currency->format_with_left($rfOffer->getPriceAmount(), $rfOffer->getPriceCurrency(), 1),
 						'delivery'	 			=> $this->currency->format_with_left($rfOffer->getDeliveryAmount(), $rfOffer->getDeliveryCurrency(), 1),	
 						'total'					=> $this->currency->format_with_left($rfOffer->getPriceAmount() + $rfOffer->getDeliveryAmount(), $rfOffer->getPriceCurrency(), 1),
@@ -259,6 +262,8 @@ class ControllerKPAmazon extends Controller {
 						'reviews'				=> (int)$rfOffer->getSellerRatingsTotal(),
 						'rating'				=> (int)$rfOffer->getSellerRating50() / 10,
 						'positive'				=> (int)$rfOffer->getSellerPositiveRatings100(),
+						'country'				=> $rfOffer->getSellerCountry(),
+						'is_native'				=> $rfOffer->getSellerNative(),
 						'date_added'			=> 'skipped',
 						'link'					=> $rfOffer->getSellerLink()?$rfOffer->getSellerLink():$this->rainforestAmazon->createLinkToAmazonSearchPage($product['asin']),
 						'link2'					=> $this->rainforestAmazon->createLinkToAmazonSearchPage($product['asin'])

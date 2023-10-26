@@ -22,156 +22,155 @@
 					<thead>
 						<tr>
 							<td width="1" style="text-align: center;"><input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" /></td>
-							<td class="left" width="1">ID</td>
-							<td class="left">Головной</td>
-							<td class="left"><?php if ($sort == 'name') { ?>
-								<a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>"><?php echo $column_name; ?></a>
-							<?php } else { ?>
-								<a href="<?php echo $sort_name; ?>">Поставщик</a>
-								<?php } ?></td>
-								<td class="left">Страна</td>
-								<td class="left">Рынок</td>
-								<td class="left">Сроки в нал</td>
-								<td class="left">Сроки не в нал</td>
-								<td class="left">Хороший</td>
-								<td class="left">Плохой</td>
-								<td class="left">Коэффициент</td>
-								<td class="right"><?php if ($sort == 'sort_order') { ?>
-									<a href="<?php echo $sort_sort_order; ?>" class="<?php echo strtolower($order); ?>">Сортировка</a>
+							<td class="left" width="1">
+								ID
+							</td>
+							<td class="left">
+								<?php if ($sort == 'name') { ?>
+									<a href="<?php echo $sort_name; ?>" class="<?php echo strtolower($order); ?>">Поставщик</a>
 								<?php } else { ?>
-									<a href="<?php echo $sort_sort_order; ?>">Сортировка</a>
-									<?php } ?></td>
-									<td class="right"><?php echo $column_action; ?></td>
-								</tr>
-							</thead>
-							<tbody>
-								<?php if ($suppliers) { ?>
-									<?php foreach ($suppliers as $supplier) { ?>
-										<tr>
-											<td style="text-align: center;"><?php if ($supplier['selected']) { ?>
+									<a href="<?php echo $sort_name; ?>">Поставщик</a>
+								<?php } ?>
+							</td>
+							<td class="left">Страна</td>
+							<td class="left">Native</td>
+							<td class="left">Business Name</td>
+							<td class="left">VAT</td>
+							<td class="left">Телефон</td>
+							<td class="left">Мейл</td>
+							<td class="left">Сроки в нал</td>
+							<td class="left">Сроки не в нал</td>
+							<td class="left">Хороший</td>
+							<td class="left">Плохой</td>
+							<td class="left">Коэффициент</td>
+							<td class="right"><?php if ($sort == 'sort_order') { ?>
+								<a href="<?php echo $sort_sort_order; ?>" class="<?php echo strtolower($order); ?>">Сортировка</a>
+							<?php } else { ?>
+								<a href="<?php echo $sort_sort_order; ?>">Сортировка</a>
+								<?php } ?></td>
+								<td class="right"><?php echo $column_action; ?></td>
+							</tr>
+						</thead>
+						<tbody>
+							<?php if ($suppliers) { ?>
+								<?php foreach ($suppliers as $supplier) { ?>
+									<tr>
+										<td style="text-align: center;">
+											<?php if ($supplier['selected']) { ?>
 												<input type="checkbox" name="selected[]" value="<?php echo $supplier['supplier_id']; ?>" checked="checked" />
 											<?php } else { ?>
 												<input type="checkbox" name="selected[]" value="<?php echo $supplier['supplier_id']; ?>" />
-												<?php } ?></td>
-												<td class="left"><b><?php echo $supplier['supplier_id']; ?></b></td>        
-												<td class="center">
-													<? if (!$supplier['supplier_hassp']) { ?>
-														<span class="status_color" style="background-color:orange;padding:4px 3px; color:#FFF;font-size:10px;"><?php echo $supplier['supplier_parent']; ?></span>
-													<? } else { ?>
-														<span class="status_color" style="padding:4px 3px; background-color:#2c82b8; color:#FFF;font-size:10px;"><?php echo $supplier['supplier_parent']; ?></span>
-													<? } ?>
-												</td>
-												<td class="left">
-													<span style="font-size:16px;"><b><?php echo $supplier['supplier_name']; ?></b></span><br /><span style="font-size:10px;"><?php echo $supplier['supplier_type']; ?></span>
-												</td>
-												<td class="left"><?php echo $supplier['supplier_country']; ?></td>
-												<td class="center" style="padding:8px;">
-													<? if ($supplier['supplier_inner']) { ?>
-														<span class="status_color" style="background-color:orange;padding:4px 3px; color:#FFF;  font-size:10px;">
-															Внутренний
-														</span>
-													<? } else { ?>
-														<span class="status_color" style="background-color:#2c82b8;padding:4px 3px; color:#FFF; font-size:10px;">
-															Внешний
-														</span>
-													<? } ?>
-												</td>
-												<td class="right">
-													<?php if ($supplier['terms_instock']) { ?>
-														<b><?php echo $supplier['terms_instock']; ?> дн.</b>
-													<?php } ?>
-												</td>
-												<td class="right">
-													<?php if ($supplier['terms_outstock']) { ?>
-														<b><?php echo $supplier['terms_outstock']; ?> дн.</b>
-													<?php } ?>
-												</td>
-												<td class="center" style="padding:8px;">
-													<? if ($supplier['amzn_good']) { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Хороший</span>
-													<? } else { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Нейтральный</span>
-													<? } ?>
-												</td>
+											<?php } ?>
+										</td>
+										<td class="left">
+											<b><?php echo $supplier['supplier_id']; ?></b>
+										</td>        
 
-												<td class="center" style="padding:8px;">
-													<? if ($supplier['amzn_bad']) { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Плохой</span>
-													<? } else { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Нейтральный</span>
-													<? } ?>
-												</td>
+										<td class="left">
+											<span style="font-size:16px;"><b><?php echo $supplier['supplier_name']; ?></b></span>
+											<br /><span style="font-size:10px;"><?php echo $supplier['supplier_type']; ?></span>
+											<br /><span style="font-size:10px;"><?php echo $supplier['business_type']; ?></span>
+										</td>
 
-												<td class="center" style="padding:8px;">
-													<span class="status_color" style="display:inline-block; padding:3px 5px; background:black; color:#FFF">
-														<?php if ($supplier['amzn_coefficient']) { ?><?php echo $supplier['amzn_coefficient'] ?><? } elseif ($supplier['amzn_good']) { ?>+10<?php } elseif ($supplier['amzn_bad']) { ?>-20<?php } else { ?>0<?php } ?>
-													</span>
-												</td>
+										<td class="center" style="font-size:11px;">
+											<? if ($supplier['supplier_country']) { ?>
+												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#000; color:#FFF"><?php echo $supplier['supplier_country']; ?></span>
+											<? } else { ?>
+												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+											<? } ?>
+										</td>
 
-												<td class="right"><?php echo $supplier['sort_order']; ?></td>
-												<td class="right"><?php foreach ($supplier['action'] as $action) { ?>
-													<a class="button" href="<?php echo $action['href']; ?>" <? if (isset($action['target'])) { ?>target="<? echo $action['target'] ?>"<? } ?>><?php echo $action['text']; ?></a>
-													<?php } ?></td>
-												</tr>
+										<td class="center">
+											<? if ($supplier['is_native']) { ?>
+												<i class="fa fa-check-circle" style="color:#4ea24e"></i>
+											<? } else { ?>
+												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+											<? } ?>
+										</td>
 
+										<td class="left" style="font-size:11px;">
+											<? if ($supplier['business_name']) { ?>
+												<?php echo $supplier['business_name']; ?>
+											<? } else { ?>
+												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+											<? } ?>
+										</td>
 
-												<? if ($supplier['children']) { ?>
-													<?php foreach ($supplier['children'] as $children) { ?>
-														<tr>
-															<td style="text-align: center;"><?php if ($children['selected']) { ?>
-																<input type="checkbox" name="selected[]" value="<?php echo $supplier['supplier_id']; ?>" checked="checked" />
-															<?php } else { ?>
-																<input type="checkbox" name="selected[]" value="<?php echo $supplier['supplier_id']; ?>" />
-																<?php } ?></td>
-																<td class="left"><b><?php echo $children['supplier_id']; ?></b></td>
-																<td class="center" style="padding:8px;">
-																	<? if ($children['supplier_code']) { ?><span style="padding:4px 3px; background-color:#85B200; color:#FFF;"><?php echo $children['supplier_code']; ?></span>
-																	<? } ?></td>         
-																	<td class="right">
-																		<? if (!$children['supplier_hassp']) { ?>
-																			<span style="border-radius: 2px;padding: 10px 5px;background-color:orange; color:#FFF;"><?php echo $children['supplier_parent']; ?></span>
-																		<? } else { ?>
-																			<span style="border-radius: 2px;padding: 10px 5px;background-color:#2c82b8; color:#FFF;"><?php echo $children['supplier_parent']; ?></span>
-																		<? } ?>
-																	</td>
-																	<td class="left"><span style="font-size:16px;"><?php echo $children['supplier_name']; ?></span><br /><span style="font-size:10px;"><?php echo $children['supplier_type']; ?></span></td>
-																	<td class="left"><?php echo $children['supplier_country']; ?></td>
-																	<td class="center" style="padding:8px;">
-																		<? if ($children['supplier_inner']) { ?>
-																			<span class="status_color_padding" style="background-color:orange; color:#FFF;">
-																				Внутренний рынок
-																			</span>
-																		<? } else { ?>
-																			<span class="status_color_padding" style="background-color:#2c82b8; color:#FFF;">
-																				Внешний рынок
-																			</span>
-																			<? } ?></td>
-																			<td class="right"><?php echo $children['sort_order']; ?></td>
-																			<td class="right"><?php foreach ($children['action'] as $action) { ?>
-																				[ <a href="<?php echo $action['href']; ?>"><?php echo $action['text']; ?></a> ]
-																				<?php } ?></td>
-																			</tr>
-																		<?php } ?>
+										<td class="center" style="padding:8px;">
+											<? if ($supplier['vat_number']) { ?>
+												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#000; color:#FFF"><?php echo $supplier['vat_number']; ?></span>
+											<? } else { ?>
+												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+											<? } ?>
+										</td>
 
+										<td class="center" style="padding:8px;">
+											<? if ($supplier['telephone']) { ?>
+												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00AD07; color:#FFF"><?php echo $supplier['telephone']; ?></span>
+											<? } else { ?>
+												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+											<? } ?>
+										</td>
 
-																	<? } ?>
+										<td class="center" style="padding:8px;">
+											<? if ($supplier['email']) { ?>
+												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00AD07; color:#FFF"><?php echo $supplier['email']; ?></span>
+											<? } else { ?>
+												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+											<? } ?>
+										</td>
 
+										<td class="right">
+											<?php if ($supplier['terms_instock']) { ?>
+												<b><?php echo $supplier['terms_instock']; ?> дн.</b>
+											<?php } ?>
+										</td>
 
-																<?php } ?>
+										<td class="right">
+											<?php if ($supplier['terms_outstock']) { ?>
+												<b><?php echo $supplier['terms_outstock']; ?> дн.</b>
+											<?php } ?>
+										</td>
 
+										<td class="center" style="padding:8px;">
+											<? if ($supplier['amzn_good']) { ?>
+												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Хороший</span>
+											<? } else { ?>
+												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Нейтральный</span>
+											<? } ?>
+										</td>
 
+										<td class="center" style="padding:8px;">
+											<? if ($supplier['amzn_bad']) { ?>
+												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Плохой</span>
+											<? } else { ?>
+												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Нейтральный</span>
+											<? } ?>
+										</td>												
 
+										<td class="center" style="padding:8px;">
+											<span class="status_color" style="display:inline-block; padding:3px 5px; background:black; color:#FFF">
+												<?php if ($supplier['amzn_coefficient']) { ?><?php echo $supplier['amzn_coefficient'] ?><? } elseif ($supplier['amzn_good']) { ?>+10<?php } elseif ($supplier['amzn_bad']) { ?>-20<?php } else { ?>0<?php } ?>
+											</span>
+										</td>
 
-															<?php } else { ?>
-																<tr>
-																	<td class="center" colspan="6"><?php echo $text_no_results; ?></td>
-																</tr>
-															<?php } ?>
-														</tbody>
-													</table>
-												</form>
-												<div class="pagination"><?php echo $pagination; ?></div>
-											</div>
-										</div>
-									</div>
-									<?php echo $footer; ?>
+										<td class="right"><?php echo $supplier['sort_order']; ?></td>
+										<td class="right"><?php foreach ($supplier['action'] as $action) { ?>
+											<a class="button" href="<?php echo $action['href']; ?>" <? if (isset($action['target'])) { ?>target="<? echo $action['target'] ?>"<? } ?>><?php echo $action['text']; ?></a>
+											<?php } ?></td>
+										</tr>
+
+									<?php } ?>
+								<?php } else { ?>
+									<tr>
+										<td class="center" colspan="6"><?php echo $text_no_results; ?></td>
+									</tr>
+								<?php } ?>
+							</tbody>
+						</table>
+					</form>
+					<div class="pagination"><?php echo $pagination; ?></div>
+				</div>
+			</div>
+		</div>
+		<?php echo $footer; ?>

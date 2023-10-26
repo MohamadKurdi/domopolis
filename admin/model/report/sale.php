@@ -10,16 +10,38 @@ class ModelReportSale extends Model {
 		AVG(IF(tmp.total != 0, tmp.total, NULL)) AS avg_total,		
 		COUNT(tmp.order_id) AS `orders`, 
 		SUM(tmp.products) AS products, 
-		SUM(tmp.tax) AS tax, 
-		SUM(tmp.total) AS total FROM (SELECT o.order_id, 
+		SUM(tmp.tax) AS tax, ";
+
+		if ($this->config->get('config_enable_amazon_specific_modes')){
+			foreach (\hobotix\RainforestAmazon::amazonOffersType as $field){
+				$sql .= " SUM(CASE WHEN tmp.amazon_offers_type = '" . $this->db->escape($field) . "' THEN 1 ELSE 0 END)/COUNT(*) * 100 AS pct_" . $field . ", ";
+			}
+		}
+
+		$sql .= " SUM(tmp.total) AS total ";
+		$sql .= " FROM (SELECT o.order_id, 
 		(SELECT SUM(op.quantity) FROM `order_product` op WHERE op.order_id = o.order_id GROUP BY op.order_id) AS products, 
 		(SELECT SUM(ot.value) FROM `order_total` ot WHERE ot.order_id = o.order_id AND ot.code = 'tax' GROUP BY ot.order_id) AS tax, 
-		o.total, o.date_added, o.profitability FROM `order` o"; 
+		o.total, o.date_added, o.profitability, o.amazon_offers_type FROM `order` o";
+
+		if (!empty($data['filter_category_id'])){
+			$sql .= " JOIN order_product op ON o.order_id = op.order_id
+  					JOIN product_to_category ptc ON op.product_id = ptc.product_id
+  					JOIN category_path cp ON ptc.category_id = cp.category_id";
+		} 
 
 		if (!empty($data['filter_order_status_id'])) {
 			$sql .= " WHERE o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
 		} else {
 			$sql .= " WHERE o.order_status_id > '0'";
+		}
+
+		if (!empty($data['filter_category_id'])){
+			$sql .= " AND cp.path_id = '" . (int)$data['filter_category_id'] . "'";
+		}
+
+		if (!empty($data['filter_amazon_offers_type'])) {
+			$sql .= " AND amazon_offers_type = '" . $this->db->escape($data['filter_amazon_offers_type']) . "'";
 		}
 		
 		if (!empty($data['filter_date_start'])) {
@@ -82,24 +104,38 @@ class ModelReportSale extends Model {
 		
 		switch($group) {
 			case 'day';
-				$sql = "SELECT COUNT(DISTINCT DAY(date_added)) AS total FROM `order`";
+				$sql = "SELECT COUNT(DISTINCT DAY(date_added)) AS total FROM `order` o";
 				break;
 			default:
 			case 'week':
-				$sql = "SELECT COUNT(DISTINCT WEEK(date_added)) AS total FROM `order`";
+				$sql = "SELECT COUNT(DISTINCT WEEK(date_added)) AS total FROM `order` o";
 				break;	
 			case 'month':
-				$sql = "SELECT COUNT(DISTINCT MONTH(date_added)) AS total FROM `order`";
+				$sql = "SELECT COUNT(DISTINCT MONTH(date_added)) AS total FROM `order` o";
 				break;
 			case 'year':
-				$sql = "SELECT COUNT(DISTINCT YEAR(date_added)) AS total FROM `order`";
+				$sql = "SELECT COUNT(DISTINCT YEAR(date_added)) AS total FROM `order` o";
 				break;									
 		}
+
+		if (!empty($data['filter_category_id'])){
+			$sql .= " JOIN order_product op ON o.order_id = op.order_id
+  					JOIN product_to_category ptc ON op.product_id = ptc.product_id
+  					JOIN category_path cp ON ptc.category_id = cp.category_id";
+		} 
 		
 		if (!empty($data['filter_order_status_id'])) {
 			$sql .= " WHERE order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
 		} else {
 			$sql .= " WHERE order_status_id > '0'";
+		}
+
+		if (!empty($data['filter_category_id'])){
+			$sql .= " AND cp.path_id = '" . (int)$data['filter_category_id'] . "'";
+		}
+
+		if (!empty($data['filter_amazon_offers_type'])) {
+			$sql .= " AND amazon_offers_type = '" . $this->db->escape($data['filter_amazon_offers_type']) . "'";
 		}
 				
 		if (!empty($data['filter_date_start'])) {
@@ -319,4 +355,3 @@ class ModelReportSale extends Model {
 		return $query->row['total'];	
 	}		
 }
-?>

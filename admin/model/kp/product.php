@@ -76,9 +76,7 @@ class ModelKPProduct extends Model {
 		}
 		
 		return $result;
-
 	}
-
 
 	public function getProductAmazonFullData($asin){
 		
@@ -98,7 +96,6 @@ class ModelKPProduct extends Model {
 
 		return $query->rows;	
 	}
-
 
 	public function reindexElastic($product_ids){
 		$this->load->library('hobotix/ElasticSearch');

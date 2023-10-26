@@ -55,13 +55,22 @@
                                 <span class="help">должен соответствовать ссылке</span>
                             </div>
                         </td>
-                        <td style="width:50%">
+                        <td style="width:40%">
                             <div>
                               <p class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF;">Ссылка с Amazon.de</p><br />
                               <input type="text" id="amazon-category-url" name="url" style="width:90%" placeholder="Перейди на amazon, скопируй и вставь" />
                               <span class="help">любая ссылка листинга на <a href="https://amazon.de/" target="_blank">amazon.de</a>, важно соответствие страницы типу запроса</span>
                           </div>
                       </td>
+                      <td style="width:10%">
+                        <div>
+                            <p class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF;"><i class="fa fa-plus"></i> Офферы</p> <sup style="color:#CF4A61">DEV</sup><br />
+                            <select name="offers">
+                                <option value="1">Да</option>
+                                <option value="0" selected="selected">Нет</option>
+                            </select>
+                        </div>
+                    </td>
                       <td style="width:20%">
                         <div>
                             <p class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF;">category_id</p><br />
@@ -71,7 +80,7 @@
                                 <i class="fa fa-download"></i> category
                             </span>
                         </div>
-                    </td>
+                        </td>
                     <td style="width:10%">
                         <div>
                             <p class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF;">Сортировка</p><br />

@@ -186,7 +186,6 @@ class ControllerSaleSupplier extends Controller {
 				'filter_parent_id' => $result['supplier_id']
 			);
 
-				//level 2
 			$children = array();
 			$children_results = $this->model_sale_supplier->getSuppliers($_data);
 			foreach ($children_results as $children_result) {
@@ -207,28 +206,32 @@ class ControllerSaleSupplier extends Controller {
 				}
 
 				$children[] = array(
-					'supplier_id' 		   => $children_result['supplier_id'],
-					'supplier_name'        => $children_result['supplier_name'],
-					'supplier_code'        => $children_result['supplier_code'],
-					'supplier_type'        => $children_result['supplier_type'],
-					'supplier_parent'      => $_sp,
-					'supplier_hassp'       => $_hassp,
-					'supplier_country'     => $children_result['supplier_country'],
-					'supplier_inner'       => $children_result['supplier_inner'],
-					'supplier_comment'     => $children_result['supplier_comment'],
-					'supplier_m_coef'     => $children_result['supplier_m_coef'],
-					'supplier_l_coef'     => $children_result['supplier_l_coef'],
-					'supplier_n_coef'     => $children_result['supplier_n_coef'],
+					'supplier_id' 		   	=> $children_result['supplier_id'],
+					'supplier_name'        	=> $children_result['supplier_name'],
+					'supplier_code'        	=> $children_result['supplier_code'],
+					'supplier_type'        	=> $children_result['supplier_type'],
+					'supplier_parent'      	=> $_sp,
+					'supplier_hassp'       	=> $_hassp,
+					'supplier_country'     	=> $children_result['supplier_country'],
+					'supplier_inner'       	=> $children_result['supplier_inner'],
+					'supplier_comment'     	=> $children_result['supplier_comment'],
+					'supplier_m_coef'     	=> $children_result['supplier_m_coef'],
+					'supplier_l_coef'     	=> $children_result['supplier_l_coef'],
+					'supplier_n_coef'     	=> $children_result['supplier_n_coef'],
 					'terms_instock'    	 	=> $children_result['terms_instock'],
 					'terms_outstock'     	=> $children_result['terms_outstock'],
 					'amzn_good'     		=> $children_result['amzn_good'],
 					'amzn_bad'     			=> $children_result['amzn_bad'],
-					'amzn_coefficient '     => $children_result['amzn_coefficient'],
-					'sort_order'  		  => $children_result['sort_order'],								
-					'selected'            => isset($this->request->post['selected']) && in_array($children_result['supplier_id'], $this->request->post['selected']),
-					'action'              => $action	
+					'store_link'     		=> $children_result['store_link'],
+					'amazon_seller_id'     	=> $children_result['amazon_seller_id'],
+					'vat_number'     		=> $children_result['vat_number'],
+					'business_type'     	=> $children_result['business_type'],
+					'email'     			=> $children_result['email'],
+					'telephone'     		=> $children_result['telephone'],
+					'sort_order'  		  	=> $children_result['sort_order'],								
+					'selected'            	=> isset($this->request->post['selected']) && in_array($children_result['supplier_id'], $this->request->post['selected']),
+					'action'              	=> $action	
 				);		
-
 			}
 
 
@@ -265,7 +268,15 @@ class ControllerSaleSupplier extends Controller {
 				'terms_outstock'     	=> $result['terms_outstock'],
 				'amzn_good'     		=> $result['amzn_good'],
 				'amzn_bad'     			=> $result['amzn_bad'],
-				'amzn_coefficient' 	=> $result['amzn_coefficient'],
+				'amzn_coefficient' 		=> $result['amzn_coefficient'],
+				'store_link'     		=> $result['store_link'],
+				'amazon_seller_id'     	=> $result['amazon_seller_id'],
+				'vat_number'     		=> $result['vat_number'],
+				'business_name'     	=> $result['business_name'],
+				'business_type'     	=> $result['business_type'],
+				'email'     			=> $result['email'],
+				'telephone'     		=> $result['telephone'],
+				'is_native'     		=> $result['is_native'],
 				'sort_order'  		  => $result['sort_order'],
 				'children'		      => $children,
 				'selected'            => isset($this->request->post['selected']) && in_array($result['supplier_id'], $this->request->post['selected']),
@@ -542,6 +553,37 @@ class ControllerSaleSupplier extends Controller {
 			$this->data['amzn_coefficient'] = $supplier_info['amzn_coefficient'];
 		} else {
 			$this->data['amzn_coefficient'] = 0;
+		}
+
+		if (isset($this->request->post['is_native'])) {
+			$this->data['is_native'] = $this->request->post['is_native'];
+		} elseif (!empty($supplier_info)) {
+			$this->data['is_native'] = $supplier_info['is_native'];
+		} else {
+			$this->data['is_native'] = 0;
+		}
+
+		$amazon_keys_char = [
+			'amazon_seller_id',
+			'store_link',
+			'business_name',
+			'registration_number',
+			'vat_number',
+			'business_type',
+			'about_this_seller',
+			'detailed_information',
+			'telephone',
+			'email'
+		];
+
+		foreach ($amazon_keys_char as $amazon_key_char){
+			if (isset($this->request->post[$amazon_key_char])) {
+				$this->data[$amazon_key_char] = $this->request->post[$amazon_key_char];
+			} elseif (!empty($supplier_info)) {
+				$this->data[$amazon_key_char] = $supplier_info[$amazon_key_char];
+			} else {
+				$this->data[$amazon_key_char] = 0;
+			}
 		}
 
 		if (isset($this->request->post['sort_order'])) {

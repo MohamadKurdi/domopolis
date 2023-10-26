@@ -12,11 +12,14 @@
     <div class="content">
       <table class="form">
         <tr>
-          <td><?php echo $entry_date_start; ?><br/>
+          <td>
+            <p><?php echo $entry_date_start; ?></p>
             <input type="text" name="filter_date_start" value="<?php echo $filter_date_start; ?>" id="date-start" size="12" /></td>
-          <td><?php echo $entry_date_end; ?><br/>
+          <td>
+            <p><?php echo $entry_date_end; ?></p>
             <input type="text" name="filter_date_end" value="<?php echo $filter_date_end; ?>" id="date-end" size="12" /></td>
-          <td><?php echo $entry_group; ?><br/>
+          <td>
+            <p><?php echo $entry_group; ?></p>
             <select name="filter_group">
               <?php foreach ($groups as $groups) { ?>
               <?php if ($groups['value'] == $filter_group) { ?>
@@ -25,8 +28,10 @@
               <option value="<?php echo $groups['value']; ?>"><?php echo $groups['text']; ?></option>
               <?php } ?>
               <?php } ?>
-            </select></td>
-          <td><?php echo $entry_status; ?><br/>
+            </select>
+          </td>
+          <td>
+            <p><?php echo $entry_status; ?></p>
             <select name="filter_order_status_id">
               <option value="0"><?php echo $text_all_status; ?></option>
               <?php foreach ($order_statuses as $order_status) { ?>
@@ -36,7 +41,13 @@
               <option value="<?php echo $order_status['order_status_id']; ?>"><?php echo $order_status['name']; ?></option>
               <?php } ?>
               <?php } ?>
-            </select></td>
+            </select>
+          </td>
+          <td>
+            <p>Категория <span style="border-bottom:1px dashed #CF4A61; cursor:pointer; color:#CF4A61;" onclick="$('#filter_category_path').val(''); $('#filter_category_id').val('0');">очистить</span></p>
+            <input type="text" name="filter_category_path" id="filter_category_path" value="<?php echo $filter_category_path; ?>" placeholder="Автодополнение" size="60" />
+            <input type="number" step="1" name="filter_category_id" id="filter_category_id" value="<?php echo $filter_category_id; ?>" size="9" />
+          </td>
           <td style="text-align: right;"><a onclick="filter();" class="button"><?php echo $button_filter; ?></a></td>
         </tr>
       </table>
@@ -45,15 +56,24 @@
           <tr>
             <td class="left"><?php echo $column_date_start; ?></td>
             <td class="left"><?php echo $column_date_end; ?></td>
-            <td class="right"><?php echo $column_orders; ?></td>
-            <td class="right"><?php echo $column_products; ?></td>
-            <?php if ($this->config->get('config_show_profitability_in_order_list')){ ?>
-                 <td class="right">Минимальная рентабельность</td>
-                 <td class="right">Средняя рентабельность</td>
-                 <td class="right">Максимальная рентабельность</td>
+            <td class="center">Заказов</td>
+
+            <?php if ($this->config->get('config_enable_amazon_specific_modes')){ ?>
+                <?php foreach (\hobotix\RainforestAmazon::amazonOffersType as $type) { ?>
+                    <td class="center" style="width:50px;"><?php echo $type; ?></td>
+                 <?php } ?>
             <?php } ?>
-            <td class="right">Средний чек, <?php echo $this->config->get('config_currency');?></td>
-            <td class="right">Средний чек, <?php echo $this->config->get('config_regional_currency');?></td>
+
+            <td class="center">Товаров</td>
+
+            <?php if ($this->config->get('config_show_profitability_in_order_list')){ ?>
+                 <td class="right">Мин. рентабельность</td>
+                 <td class="right">Ср. рентабельность</td>
+                 <td class="right">Макс рентабельность</td>
+            <?php } ?>
+
+            <td class="right">Ср. чек, <?php echo $this->config->get('config_currency');?></td>
+            <td class="right">Ср. чек, <?php echo $this->config->get('config_regional_currency');?></td>
             <td class="right"><?php echo $column_total; ?>, <?php echo $this->config->get('config_currency');?></td>
             <td class="right"><?php echo $column_total; ?>, <?php echo $this->config->get('config_regional_currency');?></td>
           </tr>
@@ -69,11 +89,19 @@
               <b><?php echo $order['date_end']; ?></b>
             </td>
 
-            <td class="right">
+            <td class="center">
               <span style="display:inline-block;padding:2px 3px; font-size:14px; background:#CF4A61; color:#FFF; white-space:nowrap;"><?php echo $order['orders']; ?></span>
             </td>
 
-            <td class="right">
+            <?php if ($this->config->get('config_enable_amazon_specific_modes')){ ?>
+                <?php foreach (\hobotix\RainforestAmazon::amazonOffersType as $type) { ?>
+                  <td class="center">
+                    <span style="display:inline-block;padding:2px 3px; font-size:14px; background:#e16a5d; color:#FFF; white-space:nowrap;"><?php echo $order['amazon_offers_types'][$type]; ?>%</span>
+                  </td>
+                 <?php } ?>
+            <?php } ?>
+
+            <td class="center">
               <span style="display:inline-block;padding:2px 3px; font-size:14px; background:#FF7815; color:#FFF; white-space:nowrap;"><?php echo $order['products']; ?></span>
             </td>
 
@@ -119,6 +147,41 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+    $('input[name=\'filter_category_path\']').autocomplete({
+      delay: 500,
+      source: function(request, response) {   
+        $.ajax({
+          url: 'index.php?route=catalog/category/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+          dataType: 'json',
+          success: function(json) {
+            json.unshift({
+              'category_id':  0,
+              'name':  '<?php echo $text_none; ?>'
+            });
+            
+            response($.map(json, function(item) {
+              return {
+                label: item.name,
+                value: item.category_id
+              }
+            }));
+          }
+        });
+      },
+      select: function(event, ui) {
+        $('input[name=\'filter_category_path\']').val(ui.item.label);
+        $('input[name=\'filter_category_id\']').val(ui.item.value);
+        
+        return false;
+      },
+      focus: function(event, ui) {
+        return false;
+      }
+    });
+</script> 
+
 <script type="text/javascript"><!--
 function filter() {
 	url = 'index.php?route=report/sale_order&token=<?php echo $token; ?>';
@@ -134,6 +197,12 @@ function filter() {
 	if (filter_date_end) {
 		url += '&filter_date_end=' + encodeURIComponent(filter_date_end);
 	}
+
+  var filter_category_id = $('input[name=\'filter_category_id\']').attr('value');
+  
+  if (filter_category_id) {
+    url += '&filter_category_id=' + encodeURIComponent(filter_category_id);
+  }
 		
 	var filter_group = $('select[name=\'filter_group\']').attr('value');
 	

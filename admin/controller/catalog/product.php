@@ -1382,7 +1382,7 @@ class ControllerCatalogProduct extends Controller {
 						'buybox_winner'	 		=> $offer['isBuyBoxWinner'],
 						'is_best'				=> $offer['isBestOffer'],
 						'offer_rating'			=> $offer['offerRating'],
-						'supplier'				=> $this->rainforestAmazon->offersParser->Suppliers->getSupplier($offer['sellerName']),
+						'supplier'				=> $this->rainforestAmazon->offersParser->Suppliers->getSupplier($offer['sellerName'], $offer['sellerID']),
 						'price'	 				=> $this->currency->format_with_left($offer['priceAmount'], $offer['priceCurrency'], 1),
 						'delivery'	 			=> $this->currency->format_with_left($offer['deliveryAmount'], $offer['deliveryCurrency'], 1),	
 						'total'					=> $this->currency->format_with_left($offer['priceAmount'] + $offer['deliveryAmount'], $offer['priceCurrency'], 1),
@@ -1395,6 +1395,8 @@ class ControllerCatalogProduct extends Controller {
 						'reviews'				=> (int)$offer['sellerRatingsTotal'],
 						'rating'				=> (int)$offer['sellerRating50'] / 10,
 						'positive'				=> (int)$offer['sellerPositiveRatings100'],
+						'country'				=> $offer['offerCountry'],
+						'is_native'				=> $offer['isNativeOffer'],
 						'date_added'			=> date('Y-m-d H:i:s', strtotime($offer['date_added'])),
 						'link'					=> $offer['sellerLink']?$offer['sellerLink']:$this->rainforestAmazon->createLinkToAmazonSearchPage($this->data['asin']),
 					];

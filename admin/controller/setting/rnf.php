@@ -129,6 +129,8 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_delete_no_offers_counter',
 		'config_rainforest_delete_invalid_asins',
 
+		'config_rainforest_delete_invalid_asins',
+
 		'config_rainforest_nooffers_action_for_manual',
 		'config_rainforest_nooffers_quantity_for_manual',
 		'config_rainforest_delete_no_offers_for_manual',
@@ -146,6 +148,10 @@ class ControllerSettingRnf extends Controller {
 		'config_rainforest_max_delivery_price',
 		'config_rainforest_max_delivery_price_multiplier',
 
+		'config_rainforest_skip_not_native_offers',
+		'config_rainforest_native_country_code',
+		'config_rainforest_do_not_skip_countries',
+
 		'config_rainforest_main_formula',
 		'config_rainforest_default_store_id',
 		'config_rainforest_volumetric_max_wc_multiplier'
@@ -160,11 +166,13 @@ class ControllerSettingRnf extends Controller {
 		$this->load->model('localisation/order_status');
 		$this->load->model('localisation/stock_status');
 		$this->load->model('setting/store');			
+		$this->load->model('sale/supplier');
 
 		$this->data['languages'] 		= $this->model_localisation_language->getLanguages();
 		$this->data['order_statuses'] 	= $this->model_localisation_order_status->getOrderStatuses();	
 		$this->data['stock_statuses'] 	= $this->model_localisation_stock_status->getStockStatuses();
 		$this->data['stores'] 			= $this->model_setting_store->getStores();
+		$this->data['supplier_countries'] = $this->model_sale_supplier->getAllSupplierCountryCodes();
 		
 		$this->data['heading_title'] = 'Управление фреймворком Rainforest / Amazon';
 		$this->document->setTitle($this->data['heading_title']);

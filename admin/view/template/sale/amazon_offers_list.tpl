@@ -10,6 +10,8 @@
 				</td>
 				<td width="70px;">					
 				</td>
+				<td width="30px;"></td>
+				<td width="20px;"></td>
 				<td>						
 					<b>Продавец</b>
 				</td>
@@ -73,11 +75,24 @@
 						<span style="color:#4ea24e"><i class="fa fa-sort-amount-asc" style="color:#4ea24e" aria-hidden="true"></i> Цена</span>
 					<?php } ?>
 				</td>
+				<td class="center" width="30px;">
+					<?php if ($offer['country']) { ?>
+						<?php echo $offer['country']; ?>
+					<? } else { ?>
+						<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+					<? } ?>
+				</td>
+				<td class="center" width="30px;">
+					<?php if ($offer['is_native']) { ?>
+						<i class="fa fa-check-circle" style="color:#51A62D"></i>
+					<? } else { ?>
+						<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+					<? } ?>
+				</td>
 				<td class="left">						
 					<b><?php echo $offer['seller']; ?></b>
 
-					<?php if ($offer['supplier']) { ?>
-						
+					<?php if ($offer['supplier']) { ?>						
 						<? if ($offer['supplier']['amzn_good']) { ?>+5
 							<small class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">повышенный рейтинг</small>
 						<?php } elseif ($offer['supplier']['amzn_bad']) { ?>
@@ -85,7 +100,6 @@
 						<?php } elseif ($offer['supplier']['amzn_coefficient']) { ?>
 							<small class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">рейтинг <?php echo $offer['supplier']['amzn_coefficient']; ?></small>
 						<?php } ?>
-
 					<?php } ?>
 
 					<?php if ($offer['link']) { ?>
@@ -163,6 +177,8 @@
 				<td colspan="4">
 					<small style="display:inline-block; padding:3px 5px; color:#cf4a61"><i class="fa fa-exclamation-triangle"></i> bad offer</span>
 				</td>
+				<td width="30px;"></td>
+				<td width="20px;"></td>
 				<td class="left" style="color:#cf4a61">						
 					<b><?php echo $offer['seller']; ?></b>
 

@@ -1373,6 +1373,7 @@
 								</span>
 							</td>
 						</tr>
+
 						<tr>
 							<td class="right">
 								Минимальный рейтинг поставщика Amazon
@@ -1383,6 +1384,38 @@
 							<td>
 								<span class="help">
 									<i class="fa fa-info-circle"></i> Если рейтинг поставщика в внутреннем справочнике менее этого значения, то оффер будет исключен при переборе и установке цен. Внимание: если все офферы товара имеют поставщиков с плохим рейтингом - товар приравнивается к такому, которого нет в наличии. Управление справочником поставщиков и их рейтингами можно найти в разделе <i>Закупка -> Справочник поставщиков</i>.
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Пропускать офферы из не-основных стран
+							</td>
+							<td style="width:50px;" class="center">
+								<input id="config_rainforest_skip_not_native_offers" type="checkbox" class="checkbox" name="config_rainforest_skip_not_native_offers" <? if ($config_rainforest_skip_not_native_offers){ ?> checked="checked" <? } ?> value="1" /><label for="config_rainforest_skip_not_native_offers"></label>
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> Если получилось определить страну поставщика, то эта настройка исключает офферы поставщиков из любой другой страны, кроме заданной ниже</i>.
+								</span>
+							</td>
+						</tr>
+
+						<tr>
+							<td class="right">
+								Основная страна для Amazon
+							</td>
+							<td style="width:50px;" class="center">
+								<input type="text" name="config_rainforest_native_country_code" value="<?php echo $config_rainforest_native_country_code; ?>" size="50" style="width:50px;" />
+							</td>
+							<td>
+								<span class="help">
+									<i class="fa fa-info-circle"></i> ISO2-код страны</i>.
+									<br />
+									<?php foreach ($supplier_countries as $supplier_country) { ?>
+										<span style="margin-right:5px;"><?php echo $supplier_country; ?></span>
+									<?php } ?>
 								</span>
 							</td>
 						</tr>

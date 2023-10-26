@@ -22,21 +22,25 @@
 				<div style="width:100%;">
 					<table class="form">
 						<tr>
-							<td width="25%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Наименование</span></td>
-							<td width="25%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Короткий код</span></td>
-							<td width="25%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Тип поставщика</span></td>
-							
-							<td width="25%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Головной поставщик</span></td>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Наименование</span></td>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Business name</span></td>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Короткий код</span></td>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Тип поставщика</span></td>							
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Головной поставщик</span></td>
 						</tr>
 						
 						<tr style="border-bottom:1px dashed gray">
 							<td>
-								<input type="text" name="supplier_name" value="<?php echo $supplier_name; ?>" style="width:300px" />
-								<br /><span class="help">Читаемое название, для списков и идентификации в админке</span>
+								<input type="text" name="supplier_name" value="<?php echo $supplier_name; ?>" />
+								<br /><span class="help">Читаемое название</span>
 							</td>
 							<td>
-								<input type="text" name="supplier_code" value="<?php echo $supplier_code; ?>" style="width:300px" />
-								<br /><span class="help">К примеру, VBOG (Villeroy & Boch Germany Original) - требуется для некоторых связок</span>
+								<input type="text" name="business_name" value="<?php echo $business_name; ?>" />
+								<br /><span class="help">Юридическое название (Amazon)</span>
+							</td>
+							<td>
+								<input type="text" name="supplier_code" value="<?php echo $supplier_code; ?>" />
+								<br /><span class="help">К примеру, VBOG</span>
 							</td>
 							<td>
 								<? $_a = array(' ', 'Официальный поставщик / производитель', 'Официальный магазин сторонних поставщиков', 'Amazon', 'EBay'); ?>
@@ -45,14 +49,60 @@
 										<option value="<? echo $_s; ?>" <? if ($supplier_type == $_s) { ?>selected="selected" <? } ?>><? echo $_s; ?></option>
 									<? } ?>
 								</select>
-								<br /><span class="help">Тип поставщика. Нигде не используется, но на всякий случай</span>
-							</td>
-							
+								<br /><span class="help">Тип поставщика. Нигде не используется</span>
+							</td>							
 							<td>
 								<input type="hidden" name="supplier_parent_id" value="<?php echo $supplier_parent_id; ?>" style="width:300px" />
-								<input name="supplier_parent" value="<? echo $supplier_parent; ?>" style="width:300px;" />
-								<br /><span class="help">Если это не головной поставщик, то выбери родителя из списка (автоподбор)</span>
+								<input name="supplier_parent" value="<? echo $supplier_parent; ?>" style="width:300px;" placeholder="Автоподбор" />
+								<br /><span class="help">Головной, или родительский</span>
 							</td>
+						</tr>
+					</table>
+
+
+					<table class="form">
+						<tr>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Amazon Seller ID</span></td>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Amazon Registration Number</span></td>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Amazon VAT NUMBER</span></td>
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Amazon Business Type</span></td>	
+							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Ccылка на Amazon</span></td>			
+						</tr>
+
+						<tr style="border-bottom:1px dashed gray">
+							<td>
+								<input type="text" name="amazon_seller_id" value="<?php echo $amazon_seller_id; ?>" />
+
+								<br />
+								<span class="help"><i class="fa fa-info-circle"></i> Seller ID в Amazon</span>
+							</td>
+							<td>
+								<input type="text" name="registration_number" value="<?php echo $registration_number; ?>" />
+
+								<br />
+								<span class="help"><i class="fa fa-info-circle"></i> Registration Number в Amazon</span>
+							</td>
+							<td>
+								<input type="text" name="vat_number" value="<?php echo $vat_number; ?>" />
+
+								<br />
+								<span class="help"><i class="fa fa-info-circle"></i> VAT NUMBER в Amazon</span>
+							</td>
+							<td>
+								<input type="text" name="business_type" value="<?php echo $business_type; ?>" />
+
+								<br />
+								<span class="help"><i class="fa fa-info-circle"></i> Business Type в Amazon</span>
+							</td>
+							<td>
+								<input type="text" name="store_link" value="<?php echo $store_link; ?>" />
+
+								<?php if ($store_link) { ?>
+									<br />
+									<span class="help"><a href="<?php echo $store_link; ?>" target="_blank">открыть ссылку</a></span>
+								<?php } ?>
+							</td>
+
 						</tr>
 					</table>
 
@@ -60,7 +110,7 @@
 						<tr>
 							<td width="33%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Amazon Приоритетный Поставщик</span></td>
 							<td width="33%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Amazon Плохой Поставщик</span></td>
-							<td width="33%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Amazon Произвольный Коэффициент</span></td>							
+							<td width="33%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Amazon Произвольный Коэффициент</span></td>			
 						</tr>
 
 						<tr style="border-bottom:1px dashed gray">
@@ -92,23 +142,42 @@
 								<input type="number" step="1" name="amzn_coefficient" value="<?php echo $amzn_coefficient; ?>" />
 
 								<br />
-								<span class="help"><i class="fa fa-info-circle"></i> если хуй его знает, что выбрать из предыдущих, то введи здесь коэффициент оптимизации или пессимизации рейтинга. Внимание! Для игнорирования офферов поставщика понизь рейтинг меньше 100 (например, -200, -500)</span>
+								<span class="help"><i class="fa fa-info-circle"></i> если нет понимания, что выбрать из предыдущих, то введи здесь коэффициент оптимизации или пессимизации рейтинга. Внимание! Для игнорирования офферов поставщика понизь рейтинг меньше 100 (например, -200, -500)</span>
 							</td>
 						</tr>
-
 					</table>
 					
 					<table class="form">
 						<tr>
-							<td width="25%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Страна</span></td>
-							<td width="25%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Рынок</span></td>
-							<td width="25%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Сортировка</span></td>
-							<td width="25%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Описание / комментарий</span></td>
+							<td width="14%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Страна</span></td>
+							<td width="14%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Телефон</span></td>
+							<td width="14%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Почта</span></td>
+							<td width="14%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Нативный поставщик</span></td>
+							<td width="14%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Рынок</span></td>
+							<td width="14%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Сортировка</span></td>
+							<td width="14%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#00ad07; color:#FFF">Описание / комментарий</span></td>
 						</tr>
 						
 						<tr style="border-bottom:1px dashed gray">
 							<td>
-								<input type="text" name="supplier_country" value="<?php echo $supplier_country; ?>" style="width:300px"  />
+								<input type="text" name="supplier_country" value="<?php echo $supplier_country; ?>"  />
+							</td>
+							<td>
+								<input type="text" name="telephone" value="<?php echo $telephone; ?>"  />
+							</td>
+							<td>
+								<input type="text" name="email" value="<?php echo $email; ?>"  />
+							</td>
+							<td>
+								<select name="is_native">
+									<?php if ($is_native) { ?>
+										<option value="1" selected="selected">Да</option>
+										<option value="0">Нет</option>
+									<?php } else { ?>
+										<option value="1">Да</option>
+										<option value="0" selected="selected">Нет</option>
+									<?php } ?>
+								</select>								
 							</td>
 							<td>
 								<select name="supplier_inner">
@@ -122,11 +191,11 @@
 								</select>
 							</td>
 							<td>
-								<input type="text" name="sort_order" value="<?php echo $sort_order; ?>" size="1" />
+								<input type="number" step="1" name="sort_order" value="<?php echo $sort_order; ?>" size="3" />
 							</td>
 							
 							<td>
-								<textarea name="supplier_comment" style="width:300px" rows="2"><?php echo $supplier_comment; ?></textarea>
+								<textarea name="supplier_comment" cols="50" rows="3"><?php echo $supplier_comment; ?></textarea>
 							</td>
 						</tr>
 					</table>
@@ -139,8 +208,7 @@
 							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Сроки доставки - 1</span></td>
 							<td width="20%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Сроки доставки - 2</span></td>
 						</tr>
-						<tr>
-							
+						<tr>							
 							<td>
 								<input type="text" name="supplier_m_coef" value="<?php echo $supplier_m_coef; ?>" />
 								<br /><span class="help">пока не используется</span>
@@ -166,7 +234,21 @@
 								<br /><span class="help">если нет в наличии у поставщика и на локальном складе, дней от-до, или одно число</span>
 							</td>
 						</tr>
+					</table>
 
+					<table class="form">
+						<tr>
+							<td width="50%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">About this Seller</span></td>
+							<td width="50%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Detailed Information</span></td>
+						</tr>
+						<tr>
+							<td>
+								<textarea name="about_this_seller" style="width:90%" rows="10"><?php echo $about_this_seller; ?></textarea>
+							</td>
+							<td>
+								<textarea name="detailed_information" style="width:90%" rows="10"><?php echo $detailed_information; ?></textarea>
+							</td>
+						</tr>
 					</table>
 				</div>
 				<div style="clear:both;"></div>
