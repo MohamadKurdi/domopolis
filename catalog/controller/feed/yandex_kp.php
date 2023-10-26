@@ -9,7 +9,7 @@ class ControllerFeedYandexKP extends Controller {
 	private $vk_full_path 			= ['vk_feed_{store_id}.xml'];	
 	private $ozon_full_path 		= ['ozon_feed_full_{store_id}.xml'];
 	private $ozon_path 				= ['ozon_feed_{store_id}.xml'];
-	private $priceva_path 			= ['{dir}/{dir}_{brand}_{store_id}.xml'];		
+	private $priceva_path 			= ['priceva_{brand}_{store_id}.xml'];		
 
 	private $supported_currencies 	= array('RUR', 'RUB', 'USD', /* 'BYN', 'KZT', */ 'EUR', 'UAH');	
 	private $local_deliveries_cost 	= ['0' => 400, '1' => 80, '2' => false, '5' => false];
@@ -1053,7 +1053,12 @@ class ControllerFeedYandexKP extends Controller {
 					$products = $this->db->query($sql);	
 
 					$this->setProducts($products->rows)->addPricevaOffers();
-					$this->closeYML()->writeFeed(str_replace(['{brand}', '{dir}'], [$pricevaFeed, $this->config->get('config_priceva_directory_name')], $this->priceva_path[0]));
+
+					if ($this->config->get('config_priceva_directory_name')){
+						$this->closeYML()->writeFeed(str_replace(['{brand}', '{dir}'], [$pricevaFeed, $this->config->get('config_priceva_directory_name')], $this->priceva_path[0]));
+					} else {
+						$this->closeYML()->writeFeed(str_replace(['{brand}'], [$pricevaFeed], $this->priceva_path[0]));
+					}					
 				}
 			}
 		}

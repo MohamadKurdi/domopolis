@@ -12,6 +12,8 @@ class ControllerSettingFeeds extends Controller
         'Yandex Маркет'                     => 'yandex_market_feed',
         'OZON Фид'                          => 'ozon_feed',
         'VKontakte Фид'                     => 'vk_feed',
+
+        'Priceva Фид'                       => 'priceva'
     ];
 
     private $sitemaps = [
