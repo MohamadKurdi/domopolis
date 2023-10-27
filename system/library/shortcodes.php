@@ -1,28 +1,4 @@
 <?php
-/**
- * OpenCart Shortcodes
- * Copyright (c) 2013 qahar
- * http://www.echothemes.com
- * Licensed under the GPLv3 (or later)
- * All rights reserved
- *
- * Based on Shortcode for OpenCart
- * Copyright (c) 2013 RempongSoft
- * http://www.rempongsoft.com
- * All rights reserved
- *
- * Based on WordPress Shortcode
- * Copyright (c) 2003-2013 Wordpress
- * Licensed under the GPLv2 (or later)
- * http://www.wordpress.org/
- * All rights reserved
- *
- *
- * Shortcodes format example:
- * @example [shortcode /]
- * @example [shortcode foo="bar" baz="bing" /]
- * @example [shortcode foo="bar"]content[/shortcode]
- */
 
 class Shortcodes {
 

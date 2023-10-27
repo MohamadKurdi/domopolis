@@ -20,9 +20,13 @@ class Pagination {
 	private $language 		= null;
 
 
-	public function __construct($registry = null){	
+	public function __construct($registry = null, $data = []){	
 		if ($registry){				
 			$this->language = $registry->get('language');							
+		}
+
+		if ($data){
+			$this->setData($data);
 		}
 	}
 
@@ -49,6 +53,8 @@ class Pagination {
 
 		if (!empty($data['text'])){
 			$this->text = trim($data['text']);
+		} elseif ($this->language){
+			$this->text = $this->language->get('text_pagination');
 		}
 
 		if (!empty($data['url'])){
