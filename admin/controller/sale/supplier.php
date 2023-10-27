@@ -323,10 +323,27 @@ class ControllerSaleSupplier extends Controller {
 			$page = 1;
 		}
 
-		if (isset($this->request->get['filter_supplier_name'])) {
-			$filter_supplier_name = $this->request->get['filter_supplier_name'];
-		} else {
-			$filter_supplier_name = null;
+		$filters = [
+			'filter_supplier_name' 		=> null,
+			'filter_supplier_country'	=> null,
+			'filter_rating_from' 		=> null,
+			'filter_reviews_from' 		=> null,
+			'filter_has_telephone' 		=> null,
+			'filter_has_email' 			=> null,
+			'filter_has_vat' 			=> null,
+		];
+
+		$data = [];
+
+		foreach ($filters as $filter => $default_value){
+			if (isset($this->request->get[$filter])) {
+				${$filter} = $this->request->get[$filter];
+			} else {
+				${$filter} = $default_value;
+			}
+
+			$this->data[$filter] = ${$filter};
+			$data[$filter] = ${$filter};
 		}
 
 		$url = '';
@@ -343,8 +360,10 @@ class ControllerSaleSupplier extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		if (isset($this->request->get['filter_supplier_name'])) {
-			$url .= '&filter_supplier_name=' . $this->request->get['filter_supplier_name'];
+		foreach ($filters as $filter => $default_value){
+			if (isset($this->request->get[$filter])) {
+				$url .= '&' . $filter . '=' . urlencode(html_entity_decode($this->request->get[$filter], ENT_QUOTES, 'UTF-8'));
+			}
 		}
 
 		$this->data['breadcrumbs'] = array();
@@ -366,17 +385,13 @@ class ControllerSaleSupplier extends Controller {
 
 		$this->data['suppliers'] = [];
 
-		$data = array(
-			'sort'  				=> $sort,
-			'order' 				=> $order,
-			'start' 				=> ($page - 1) * 50,
-			'limit' 				=> 50,
-			'filter_parent_id' 		=> '0',
-			'filter_supplier_name' 	=> $filter_supplier_name
-		);
+		$data['sort'] 	= $sort;
+		$data['order'] 	= $order;
+		$data['start'] 	= ($page - 1) * 50;
+		$data['limit'] 	= 50;
 
 		$supplier_total = $this->model_sale_supplier->getTotalSuppliers($data);
-		$results 		= $this->model_sale_supplier->getSuppliersMain($data);
+		$results 		= $this->model_sale_supplier->getSuppliers($data);
 
 		foreach ($results as $result) {
 			$child_filter_data = array(
@@ -529,7 +544,6 @@ class ControllerSaleSupplier extends Controller {
 
 		if (isset($this->session->data['success'])) {
 			$this->data['success'] = $this->session->data['success'];
-
 			unset($this->session->data['success']);
 		} else {
 			$this->data['success'] = '';
@@ -574,9 +588,10 @@ class ControllerSaleSupplier extends Controller {
 
 		$this->data['pagination'] = $pagination->render();
 
+		$this->data['token'] = $this->session->data['token'];
+
 		$this->data['sort'] 				= $sort;
 		$this->data['order'] 				= $order;
-		$this->data['filter_supplier_name'] = $filter_supplier_name;
 
 		$this->template = 'sale/supplier_list.tpl';
 		$this->children = [

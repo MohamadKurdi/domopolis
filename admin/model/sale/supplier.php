@@ -285,7 +285,7 @@ class ModelSaleSupplier extends Model {
 		return $query->rows;
 	}
 	
-	public function getSuppliersMain($data = array()) {
+	public function getSuppliersMain($data= []) {
 		$sql = "SELECT * FROM suppliers";
 		
 		$sort_data = array(
@@ -298,6 +298,10 @@ class ModelSaleSupplier extends Model {
 		
 		if (!empty($data['filter_name'])) {
 			$sql .= " AND supplier_name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+		}
+
+		if (!empty($data['filter_supplier_name'])) {
+			$sql .= " AND supplier_name LIKE '%" . $this->db->escape($data['filter_supplier_name']) . "%'";
 		}
 		
 		$sql .= " AND supplier_parent_id = 0";
@@ -343,7 +347,7 @@ class ModelSaleSupplier extends Model {
 		return $query->rows;
 	}
 	
-	public function getSuppliers($data = array()) {
+	public function getSuppliers($data = []) {
 		$sql = "SELECT * FROM suppliers";
 		
 		$sort_data = array(
@@ -355,11 +359,39 @@ class ModelSaleSupplier extends Model {
 		$sql .= " WHERE 1";
 		
 		if (!empty($data['filter_name'])) {
-			$sql .= " AND supplier_name LIKE '%" . $this->db->escape($data['filter_name']) . "%'";
+			$sql .= " AND LOWER(supplier_name) LIKE '%" . $this->db->escape(mb_strtolower($data['filter_name'])) . "%'";
+		}
+
+		if (!empty($data['filter_supplier_name'])) {
+			$sql .= " AND LOWER(supplier_name) LIKE '%" . $this->db->escape(mb_strtolower($data['filter_supplier_name'])) . "%'";
+		}
+
+		if (!empty($data['filter_supplier_country'])) {
+			$sql .= " AND LOWER(supplier_country) LIKE '" . $this->db->escape(mb_strtolower($data['filter_supplier_country'])) . "'";
 		}
 		
 		if (!empty($data['filter_parent_id'])) {
 			$sql .= " AND supplier_parent_id = '" . (int)$data['filter_parent_id'] . "'";
+		}
+
+		if (!empty($data['filter_rating_from'])) {
+			$sql .= " AND rating50 > '" . (int)$data['filter_rating_from'] . "'";
+		}
+
+		if (!empty($data['filter_reviews_from'])) {
+			$sql .= " AND ratings_total > '" . (int)$data['filter_reviews_from'] . "'";
+		}
+
+		if (!empty($data['filter_has_telephone'])) {
+			$sql .= " AND telephone <> ''";
+		}
+
+		if (!empty($data['filter_has_email'])) {
+			$sql .= " AND email <> ''";
+		}
+
+		if (!empty($data['filter_has_number'])) {
+			$sql .= " AND vat_number <> ''";
 		}
 		
 		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
@@ -391,8 +423,46 @@ class ModelSaleSupplier extends Model {
 		return $query->rows;		
 	}
 	
-	public function getTotalSuppliers() {
-		$query = $this->db->query("SELECT COUNT(*) AS total FROM suppliers");
+	public function getTotalSuppliers($data = []) {
+		$sql = "SELECT COUNT(*) AS total FROM suppliers WHERE 1";
+		
+		if (!empty($data['filter_name'])) {
+			$sql .= " AND LOWER(supplier_name) LIKE '%" . $this->db->escape(mb_strtolower($data['filter_name'])) . "%'";
+		}
+
+		if (!empty($data['filter_supplier_name'])) {
+			$sql .= " AND LOWER(supplier_name) LIKE '%" . $this->db->escape(mb_strtolower($data['filter_supplier_name'])) . "%'";
+		}
+
+		if (!empty($data['filter_supplier_country'])) {
+			$sql .= " AND LOWER(supplier_country) LIKE '" . $this->db->escape(mb_strtolower($data['filter_supplier_country'])) . "'";
+		}
+		
+		if (!empty($data['filter_parent_id'])) {
+			$sql .= " AND supplier_parent_id = '" . (int)$data['filter_parent_id'] . "'";
+		}
+
+		if (!empty($data['filter_rating_from'])) {
+			$sql .= " AND rating50 > '" . (int)$data['filter_rating_from'] . "'";
+		}
+
+		if (!empty($data['filter_reviews_from'])) {
+			$sql .= " AND ratings_total > '" . (int)$data['filter_reviews_from'] . "'";
+		}
+
+		if (!empty($data['filter_has_telephone'])) {
+			$sql .= " AND telephone <> ''";
+		}
+
+		if (!empty($data['filter_has_email'])) {
+			$sql .= " AND email <> ''";
+		}
+
+		if (!empty($data['filter_has_number'])) {
+			$sql .= " AND vat_number <> ''";
+		}
+
+		$query = $this->db->query($sql);
 		
 		return $query->row['total'];
 	}

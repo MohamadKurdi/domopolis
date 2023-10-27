@@ -17,6 +17,52 @@
 			<div class="buttons"><a href="<?php echo $insert; ?>" class="button"><?php echo $button_insert; ?></a><a onclick="$('form').submit();" class="button"><?php echo $button_delete; ?></a></div>
 		</div>
 		<div class="content">
+			<table style="width: 100%;">
+				<tbody>
+					<tr class="filter f_top">
+						<td class="left">
+							<p><i class="fa fa-user"></i> Поставщик</p>
+							<input type="text" name="filter_supplier_name" value="<?php echo $filter_supplier_name; ?>" /><br />
+						</td>
+						<td class="left">
+							<p><i class="fa fa-user"></i> Страна</p>
+							<input type="text" name="filter_supplier_country" value="<?php echo $filter_supplier_country; ?>" /><br />
+						</td>
+						<td class="left">
+							<p><i class="fa fa-star"></i> Рейтинг больше чем (*10)</p>
+							<input type="number" step="10" name="filter_rating_from" value="<?php echo $filter_rating_from; ?>" /><br />
+						</td>
+						<td class="left">
+							<p><i class="fa fa-edit"></i> Отзывов больше чем</p>
+							<input type="number" step="10" name="filter_reviews_from" value="<?php echo $filter_reviews_from; ?>" /><br />
+						</td>
+						<td class="left">
+							<div style="margin-top:5px;">
+								<input id="checkbox_14" class="checkbox" type="checkbox" name="filter_has_telephone" <? if ($filter_has_telephone) { ?>checked="checked"<? } ?> value="1" /> 
+								<label for="checkbox_14" style="color:#00AD07;"><i class="fa fa-phone" style="color: #00AD07;"></i>&nbsp;Есть телефон</label>								
+							</div>
+
+							<div style="margin-top:5px;">
+								<input id="checkbox_15" class="checkbox" type="checkbox" name="filter_has_email" <? if ($filter_has_email) { ?>checked="checked"<? } ?> value="1" /> 
+								<label for="checkbox_15" style="color:#00AD07;"><i class="fa fa-envelope" style="color: #00AD07;"></i>&nbsp;Есть почта</label>								
+							</div>
+						</td>
+						<td class="left">
+							<div style="margin-top:5px;">
+								<input id="checkbox_16" class="checkbox" type="checkbox" name="filter_has_vat" <? if ($filter_has_vat) { ?>checked="checked"<? } ?> value="1" /> 
+								<label for="checkbox_16" style="color:#00AD07;"><i class="fa fa-amazon" style="color: #00AD07;"></i>&nbsp;Есть VAT</label>								
+							</div>
+
+						</td>
+						<td align="right">
+							<p>	&#160;</p>
+							<a onclick="filter();" class="button">Фильтр</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="filter_bord"></div>
 			<form action="<?php echo $delete; ?>" method="post" enctype="multipart/form-data" id="form">
 				<table class="list">
 					<thead>
@@ -197,4 +243,49 @@
 				</div>
 			</div>
 		</div>
+
+		<script>
+
+			function filter() {
+				url = 'index.php?route=sale/supplier&token=<?php echo $token; ?>';
+
+				var filter_supplier_name = $('input[name=\'filter_supplier_name\']').prop('value');		
+				if (filter_supplier_name) {
+					url += '&filter_supplier_name=' + encodeURIComponent(filter_supplier_name);
+				}
+
+				var filter_supplier_country = $('input[name=\'filter_supplier_country\']').prop('value');		
+				if (filter_supplier_country) {
+					url += '&filter_supplier_country=' + encodeURIComponent(filter_supplier_country);
+				}
+
+				var filter_rating_from = $('input[name=\'filter_rating_from\']').prop('value');		
+				if (filter_rating_from) {
+					url += '&filter_rating_from=' + encodeURIComponent(filter_rating_from);
+				}
+
+				var filter_reviews_from = $('input[name=\'filter_reviews_from\']').prop('value');		
+				if (filter_reviews_from) {
+					url += '&filter_reviews_from=' + encodeURIComponent(filter_reviews_from);
+				}
+
+				var filter_has_telephone = $('input[name=\'filter_has_telephone\']:checked').val();		
+				if (filter_has_telephone  !== undefined) {
+					url += '&filter_has_telephone=1';
+				}
+
+				var filter_has_email = $('input[name=\'filter_has_email\']:checked').val();		
+				if (filter_has_email  !== undefined) {
+					url += '&filter_has_email=1';
+				}	
+
+				var filter_has_vat = $('input[name=\'filter_has_vat\']:checked').val();		
+				if (filter_has_vat  !== undefined) {
+					url += '&filter_has_vat=1';
+				}			
+
+				location = url;
+			}
+		</script>
+
 		<?php echo $footer; ?>
