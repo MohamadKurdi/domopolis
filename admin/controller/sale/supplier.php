@@ -112,6 +112,198 @@ class ControllerSaleSupplier extends Controller {
 		$this->getList();
 	}
 
+	public function offers(){
+		$this->load->model('sale/supplier');
+		$this->load->model('tool/image');
+
+		if (isset($this->request->get['sort'])) {
+			$sort = $this->request->get['sort'];
+		} else {
+			$sort = 'pao.date_added';
+		}
+
+		if (isset($this->request->get['order'])) {
+			$order = $this->request->get['order'];
+		} else {
+			$order = 'ASC';
+		}
+
+		if (isset($this->request->get['page'])) {
+			$page = $this->request->get['page'];
+		} else {
+			$page = 1;
+		}
+
+		if (isset($this->request->get['amazon_seller_id'])) {
+			$amazon_seller_id = $this->request->get['amazon_seller_id'];
+		} else {
+			$amazon_seller_id = 0;
+		}
+
+		$url = '';
+
+		if (isset($this->request->get['sort'])) {
+			$url .= '&sort=' . $this->request->get['sort'];
+		}
+
+		if (isset($this->request->get['order'])) {
+			$url .= '&order=' . $this->request->get['order'];
+		}
+
+		if (isset($this->request->get['page'])) {
+			$url .= '&page=' . $this->request->get['page'];
+		}
+
+		if (isset($this->request->get['supplier_id'])) {
+			$url .= '&supplier_id=' . $this->request->get['supplier_id'];
+		}
+
+		$this->data['breadcrumbs'] = array();
+
+
+		$this->data['supplier'] = $this->model_sale_supplier->getSupplierByAmazonSellerID($amazon_seller_id);
+		$this->data['heading_title'] 		= $this->language->get('heading_title');
+		if ($this->data['supplier']){
+			$this->data['heading_title'] = 'Офферы поставщика ' . $this->data['supplier']['supplier_name'];
+			$this->document->setTitle($this->data['heading_title']);
+		}
+
+		$this->data['offers'] = [];
+
+		$data = array(
+			'sort'  => $sort,
+			'order' => $order,
+			'start' => ($page - 1) * 50,
+			'limit' => 50,
+			'filter_amazon_seller_id' => $amazon_seller_id
+		);
+
+		$offers_total 	= $this->model_sale_supplier->getTotalSellerOffers($data);
+		$offers 		= $this->model_sale_supplier->getSellerOffers($data);
+
+		foreach ($offers as $offer){
+			if ($offer['image']){
+				$offer['image'] = $this->model_tool_image->resize($offer['image'], 50, 50);
+			}
+
+
+			$action = [];
+
+			if ($offer['product_id']){
+				$action[] = [
+					'text' 		=> '<i class="fa fa-edit"></i>',
+					'target' 	=> '_blank',
+					'href' 		=> $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $offer['product_id'] . $url, 'SSL')
+				];
+
+				$action[] = [
+					'text' 		=> '<i class="fa fa-eye"></i>',
+					'target' 	=> '_blank',
+					'href' 		=> HTTPS_CATALOG . 'index.php?route=product/product&product_id=' . $offer['product_id']
+				];
+			}
+
+			$this->data['offers'][] = [
+				'product_id' 			=> $offer['product_id'],
+				'name' 					=> $offer['name'],
+				'image' 				=> $offer['image'],
+
+				'asin' 					=> $offer['asin'],
+				'seller' 				=> $offer['sellerName'],
+				'prime'	 				=> $offer['isPrime'],
+				'buybox_winner'	 		=> $offer['isBuyBoxWinner'],
+				'is_best'				=> $offer['isBestOffer'],
+				'offer_rating'			=> $offer['offerRating'],
+				'price'	 				=> $this->currency->format_with_left($offer['priceAmount'], $offer['priceCurrency'], 1),
+				'delivery'	 			=> $this->currency->format_with_left($offer['deliveryAmount'], $offer['deliveryCurrency'], 1),	
+				'total'					=> $this->currency->format_with_left($offer['priceAmount'] + $offer['deliveryAmount'], $offer['priceCurrency'], 1),
+				'delivery_fba' 			=> $offer['deliveryIsFba'],
+				'delivery_comment' 		=> $offer['deliveryComments'],
+				'min_days' 				=> $offer['minDays'],
+				'delivery_from' 		=> $offer['deliveryFrom'],
+				'delivery_to' 			=> $offer['deliveryTo'],
+				'is_min_price'			=> $offer['is_min_price'],							
+				'reviews'				=> (int)$offer['sellerRatingsTotal'],
+				'rating'				=> (int)$offer['sellerRating50'] / 10,
+				'positive'				=> (int)$offer['sellerPositiveRatings100'],
+				'quality'				=> $offer['sellerQuality'],
+				'country'				=> $offer['offerCountry'],
+				'is_native'				=> $offer['isNativeOffer'],
+				'date_added'			=> date('Y-m-d H:i:s', strtotime($offer['date_added'])),
+				'link'					=> $offer['sellerLink']?$offer['sellerLink']:$this->rainforestAmazon->createLinkToAmazonSearchPage($product['asin']),
+				'link2'					=> $this->rainforestAmazon->createLinkToAmazonSearchPage($offer['asin']),
+				'action' 				=> $action
+			];
+
+		}
+		
+		$this->data['text_no_results'] 		= $this->language->get('text_no_results');
+		$this->data['column_name'] 			= $this->language->get('column_name');
+		$this->data['column_code'] 			= $this->language->get('column_code');
+		$this->data['column_sort_order'] 	= $this->language->get('column_sort_order');
+		$this->data['column_action'] 		= $this->language->get('column_action');
+
+		if (isset($this->error['warning'])) {
+			$this->data['error_warning'] = $this->error['warning'];
+		} else {
+			$this->data['error_warning'] = '';
+		}
+
+		if (isset($this->session->data['success'])) {
+			$this->data['success'] = $this->session->data['success'];
+
+			unset($this->session->data['success']);
+		} else {
+			$this->data['success'] = '';
+		}
+
+		$url = '';
+
+		if ($order == 'ASC') {
+			$url .= '&order=DESC';
+		} else {
+			$url .= '&order=ASC';
+		}
+
+		if (isset($this->request->get['page'])) {
+			$url .= '&page=' . $this->request->get['page'];
+		}
+
+		$this->data['sort_name'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+		$this->data['sort_code'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=code' . $url, 'SSL');
+
+		$url = '';
+
+		if (isset($this->request->get['sort'])) {
+			$url .= '&sort=' . $this->request->get['sort'];
+		}
+
+		if (isset($this->request->get['order'])) {
+			$url .= '&order=' . $this->request->get['order'];
+		}
+
+		$pagination 		= new Pagination();
+		$pagination->total 	= $offers_total;
+		$pagination->page 	= $page;
+		$pagination->limit 	= 50;
+		$pagination->text 	= $this->language->get('text_pagination');
+		$pagination->url 	= $this->url->link('sale/supplier/offers', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+
+		$this->data['pagination'] = $pagination->render();
+
+		$this->data['sort'] 	= $sort;
+		$this->data['order'] 	= $order;
+		$this->data['amazon_seller_id'] 	= $amazon_seller_id;
+
+		$this->template = 'sale/supplier_offers.tpl';
+		$this->children = array(
+			'common/header',
+			'common/footer'
+		);
+
+		$this->response->setOutput($this->render());
+	}	
+
 	protected function getList() {
 		if (isset($this->request->get['sort'])) {
 			$sort = $this->request->get['sort'];
@@ -131,6 +323,12 @@ class ControllerSaleSupplier extends Controller {
 			$page = 1;
 		}
 
+		if (isset($this->request->get['filter_supplier_name'])) {
+			$filter_supplier_name = $this->request->get['filter_supplier_name'];
+		} else {
+			$filter_supplier_name = null;
+		}
+
 		$url = '';
 
 		if (isset($this->request->get['sort'])) {
@@ -143,6 +341,10 @@ class ControllerSaleSupplier extends Controller {
 
 		if (isset($this->request->get['page'])) {
 			$url .= '&page=' . $this->request->get['page'];
+		}
+
+		if (isset($this->request->get['filter_supplier_name'])) {
+			$url .= '&filter_supplier_name=' . $this->request->get['filter_supplier_name'];
 		}
 
 		$this->data['breadcrumbs'] = array();
@@ -162,23 +364,22 @@ class ControllerSaleSupplier extends Controller {
 		$this->data['insert'] = $this->url->link('sale/supplier/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['delete'] = $this->url->link('sale/supplier/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
-		$this->data['suppliers'] = array();
+		$this->data['suppliers'] = [];
 
 		$data = array(
-			'sort'  => $sort,
-			'order' => $order,
-			'start' => ($page - 1) * 50,
-			'limit' => 50,
-			'filter_parent_id' => '0'
+			'sort'  				=> $sort,
+			'order' 				=> $order,
+			'start' 				=> ($page - 1) * 50,
+			'limit' 				=> 50,
+			'filter_parent_id' 		=> '0',
+			'filter_supplier_name' 	=> $filter_supplier_name
 		);
 
-		$language_total = $this->model_sale_supplier->getTotalSuppliers($data);
-
-		$results = $this->model_sale_supplier->getSuppliersMain($data);
+		$supplier_total = $this->model_sale_supplier->getTotalSuppliers($data);
+		$results 		= $this->model_sale_supplier->getSuppliersMain($data);
 
 		foreach ($results as $result) {
-
-			$_data = array(
+			$child_filter_data = array(
 				'sort'  => $sort,
 				'order' => $order,
 				'start' => ($page - 1) * 50,
@@ -186,8 +387,9 @@ class ControllerSaleSupplier extends Controller {
 				'filter_parent_id' => $result['supplier_id']
 			);
 
-			$children = array();
-			$children_results = $this->model_sale_supplier->getSuppliers($_data);
+			$children = [];
+			$children_results = $this->model_sale_supplier->getSuppliers($child_filter_data);
+
 			foreach ($children_results as $children_result) {
 				$action = array();
 
@@ -235,12 +437,25 @@ class ControllerSaleSupplier extends Controller {
 			}
 
 
-			$action = array();
+			$action = [];
 
-			$action[] = array(
+			$action[] = [
 				'text' => '<i class="fa fa-edit"></i>',
 				'href' => $this->url->link('sale/supplier/update', 'token=' . $this->session->data['token'] . '&supplier_id=' . $result['supplier_id'] . $url, 'SSL')
-			);
+			];
+
+			$action[] = [
+				'text' => '<i class="fa fa-eye"></i>',
+				'href' => $this->url->link('sale/supplier/offers', 'token=' . $this->session->data['token'] . '&amazon_seller_id=' . $result['amazon_seller_id'] . $url, 'SSL')
+			];
+
+			if ($result['store_link']){
+				$action[] = [
+					'text' 		=> '<i class="fa fa-amazon"></i>',
+					'target' 	=> '_blank',
+					'href' 		=> $result['store_link']
+				];
+			}
 
 			if ($result['supplier_parent_id']){
 				$_sp = $this->model_sale_supplier->getSupplier($result['supplier_parent_id']);
@@ -251,7 +466,13 @@ class ControllerSaleSupplier extends Controller {
 				$_hassp = false;
 			}
 
-			$this->data['suppliers'][] = array(
+			if (!empty($result['amazon_seller_id'])){
+				$total_offers = $this->model_sale_supplier->getTotalSellerOffers(['filter_amazon_seller_id' => $result['amazon_seller_id']]);
+			} else {
+				$total_offers = 0;
+			}
+
+			$this->data['suppliers'][] = [
 				'supplier_id' 		   => $result['supplier_id'],
 				'supplier_name'        => $result['supplier_name'],
 				'supplier_code'        => $result['supplier_code'],
@@ -274,14 +495,18 @@ class ControllerSaleSupplier extends Controller {
 				'vat_number'     		=> $result['vat_number'],
 				'business_name'     	=> $result['business_name'],
 				'business_type'     	=> $result['business_type'],
+				'total_offers'     		=> $total_offers,
 				'email'     			=> $result['email'],
 				'telephone'     		=> $result['telephone'],
 				'is_native'     		=> $result['is_native'],
+				'reviews'				=> (int)$result['ratings_total'],
+				'rating'				=> (int)$result['rating50'] / 10,
+				'positive'				=> (int)$result['positive_ratings100'],
 				'sort_order'  		  => $result['sort_order'],
 				'children'		      => $children,
 				'selected'            => isset($this->request->post['selected']) && in_array($result['supplier_id'], $this->request->post['selected']),
 				'action'              => $action	
-			);		
+			];		
 		}
 
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -336,23 +561,28 @@ class ControllerSaleSupplier extends Controller {
 			$url .= '&order=' . $this->request->get['order'];
 		}
 
-		$pagination = new Pagination();
-		$pagination->total = $language_total;
-		$pagination->page = $page;
-		$pagination->limit = 50;
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+		if (isset($this->request->get['filter_supplier_name'])) {
+			$url .= '&filter_supplier_name=' . $this->request->get['filter_supplier_name'];
+		}
+
+		$pagination 		= new Pagination($this->registry, [
+			'total' => $supplier_total,
+			'page' 	=> $page,
+			'limit' => 50,
+			'url'  	=> $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL')
+		]);
 
 		$this->data['pagination'] = $pagination->render();
 
-		$this->data['sort'] = $sort;
-		$this->data['order'] = $order;
+		$this->data['sort'] 				= $sort;
+		$this->data['order'] 				= $order;
+		$this->data['filter_supplier_name'] = $filter_supplier_name;
 
 		$this->template = 'sale/supplier_list.tpl';
-		$this->children = array(
+		$this->children = [
 			'common/header',
 			'common/footer'
-		);
+		];
 
 		$this->response->setOutput($this->render());
 	}
@@ -586,6 +816,22 @@ class ControllerSaleSupplier extends Controller {
 			}
 		}
 
+		$amazon_keys_int = [
+			'rating50',
+			'ratings_total',
+			'positive_ratings100'
+		];
+
+		foreach ($amazon_keys_int as $amazon_key_int){
+			if (isset($this->request->post[$amazon_key_int])) {
+				$this->data[$amazon_key_int] = $this->request->post[$amazon_key_int];
+			} elseif (!empty($supplier_info)) {
+				$this->data[$amazon_key_int] = $supplier_info[$amazon_key_int];
+			} else {
+				$this->data[$amazon_key_int] = 0;
+			}
+		}
+
 		if (isset($this->request->post['sort_order'])) {
 			$this->data['sort_order'] = $this->request->post['sort_order'];
 		} elseif (!empty($supplier_info)) {
@@ -594,51 +840,51 @@ class ControllerSaleSupplier extends Controller {
 			$this->data['sort_order'] = 0;
 		}
 
-		if (isset($supplier_info) && isset($supplier_info['supplier_id'])) {
-			$amazon_totals = $this->model_sale_supplier->getTotalAmazonOrdersComplex($supplier_info['supplier_id']);
-		} else {
-			$amazon_totals = $this->model_sale_supplier->getTotalAmazonOrdersComplex(0);
-		}
-		$amazon_totals['total_sum'] = number_format($amazon_totals['total_sum'], $decimals = 2 , $dec_point = "." , $thousands_sep = ",");
-		$amazon_totals['total_gift_card'] = number_format($amazon_totals['total_gift_card'], $decimals = 2 , $dec_point = "." , $thousands_sep = ",");
-		$amazon_totals['avg_sum'] = number_format($amazon_totals['avg_sum'], $decimals = 2 , $dec_point = "." , $thousands_sep = ",");
-		$amazon_totals['avg_price'] = number_format($amazon_totals['avg_price'], $decimals = 2 , $dec_point = "." , $thousands_sep = ",");
-
-		$this->data['amazon_totals'] = $amazon_totals;
-		if (isset($supplier_info) && isset($supplier_info['supplier_id'])) {
-			$this->data['amazon_link'] = $this->url->link('sale/amazon', 'token=' . $this->session->data['token'] . '&filter_supplier_id=' . $supplier_info['supplier_id'], 'SSL');
-		} else {
-			$this->data['amazon_link'] = false;
+		if (isset($supplier_info) && !empty($supplier_info['amazon_seller_id'])) {
+			$this->data['offers_link'] = $this->url->link('sale/supplier/offers', 'token=' . $this->session->data['token'] . '&amazon_seller_id=' . $supplier_info['amazon_seller_id'], 'SSL');			
 		}
 
-		if (isset($supplier_info) && isset($supplier_info['supplier_id'])) {
-			$amazon_brands = $this->model_sale_supplier->getAmazonBrands($supplier_info['supplier_id']);
-		} else {
-			$amazon_brands = array();
-		}
-		$this->data['amazon_brands'] = array();
-		$this->load->model('catalog/manufacturer');
-		foreach ($amazon_brands as $_brand){
+		// if (isset($supplier_info) && isset($supplier_info['supplier_id'])) {
+		// 	$amazon_totals = $this->model_sale_supplier->getTotalAmazonOrdersComplex($supplier_info['supplier_id']);
+		// } else {
+		// 	$amazon_totals = $this->model_sale_supplier->getTotalAmazonOrdersComplex(0);
+		// }
 
-			if ($_brand['manufacturer_id'] && $this->model_catalog_manufacturer->getManufacturer($_brand['manufacturer_id'])) {
+		// $amazon_totals['total_sum'] = number_format($amazon_totals['total_sum'], $decimals = 2 , $dec_point = "." , $thousands_sep = ",");
+		// $amazon_totals['total_gift_card'] = number_format($amazon_totals['total_gift_card'], $decimals = 2 , $dec_point = "." , $thousands_sep = ",");
+		// $amazon_totals['avg_sum'] = number_format($amazon_totals['avg_sum'], $decimals = 2 , $dec_point = "." , $thousands_sep = ",");
+		// $amazon_totals['avg_price'] = number_format($amazon_totals['avg_price'], $decimals = 2 , $dec_point = "." , $thousands_sep = ",");
 
-				$this->data['amazon_brands'][] = array(
-					'name' 			  	=> $_brand['name'],
-					'manufacturer_id' 	=> $_brand['manufacturer_id'],
-					'adminlink'			=> $this->url->link('catalog/manufacturer/update', 'token=' . $this->session->data['token'] . '&manufacturer_id=' . $_brand['manufacturer_id'], 'SSL'),
-					'sitelink'          => HTTPS_CATALOG . 'index.php?route=product/manufacturer/info&manufacturer_id=' . $_brand['manufacturer_id'],
-					'total_orders' 		=> $_brand['total_orders'],
-					'total_sum' 		=> number_format($_brand['total_sum'], $decimals = 2 , $dec_point = "." , $thousands_sep = ","),
-					'avg_price' 		=> number_format($_brand['avg_price'], $decimals = 2 , $dec_point = "." , $thousands_sep = ","),
-					'total_products'	=> $_brand['total_products']
+		// $this->data['amazon_totals'] = $amazon_totals;
+		// if (isset($supplier_info) && isset($supplier_info['supplier_id'])) {
+		// 	$this->data['amazon_link'] = $this->url->link('sale/amazon', 'token=' . $this->session->data['token'] . '&filter_supplier_id=' . $supplier_info['supplier_id'], 'SSL');
+		// } else {
+		// 	$this->data['amazon_link'] = false;
+		// }
+
+		// if (isset($supplier_info) && isset($supplier_info['supplier_id'])) {
+		// 	$amazon_brands = $this->model_sale_supplier->getAmazonBrands($supplier_info['supplier_id']);
+		// } else {
+		// 	$amazon_brands = array();
+		// }
+		// $this->data['amazon_brands'] = array();
+		// $this->load->model('catalog/manufacturer');
+		// foreach ($amazon_brands as $_brand){
+
+		// 	if ($_brand['manufacturer_id'] && $this->model_catalog_manufacturer->getManufacturer($_brand['manufacturer_id'])) {
+		// 		$this->data['amazon_brands'][] = array(
+		// 			'name' 			  	=> $_brand['name'],
+		// 			'manufacturer_id' 	=> $_brand['manufacturer_id'],
+		// 			'adminlink'			=> $this->url->link('catalog/manufacturer/update', 'token=' . $this->session->data['token'] . '&manufacturer_id=' . $_brand['manufacturer_id'], 'SSL'),
+		// 			'sitelink'          => HTTPS_CATALOG . 'index.php?route=product/manufacturer/info&manufacturer_id=' . $_brand['manufacturer_id'],
+		// 			'total_orders' 		=> $_brand['total_orders'],
+		// 			'total_sum' 		=> number_format($_brand['total_sum'], $decimals = 2 , $dec_point = "." , $thousands_sep = ","),
+		// 			'avg_price' 		=> number_format($_brand['avg_price'], $decimals = 2 , $dec_point = "." , $thousands_sep = ","),
+		// 			'total_products'	=> $_brand['total_products']
 					
-				);	
-
-			}
-
-		}
-
-
+		// 		);	
+		// 	}
+		// }
 
 		$this->data['token'] = $this->session->data['token'];
 

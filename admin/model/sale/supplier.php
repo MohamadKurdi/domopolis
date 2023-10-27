@@ -28,7 +28,10 @@ class ModelSaleSupplier extends Model {
 		detailed_information 	= '" . $this->db->escape($data['detailed_information']) . "',
 		telephone 				= '" . $this->db->escape($data['telephone']) . "',
 		email 					= '" . $this->db->escape($data['email']) . "',
-		is_native 				= '" . (int)$data['is_native'] . "'");
+		is_native 				= '" . (int)$data['is_native'] . "',
+		rating50 				= '" . (int)$data['rating50'] . "',
+		ratings_total 			= '" . (int)$data['ratings_total'] . "',
+		positive_ratings100 	= '" . (int)$data['positive_ratings100'] . "'");
 		
 		$supplier_id = $this->db->getLastId();
 		
@@ -63,17 +66,25 @@ class ModelSaleSupplier extends Model {
 		detailed_information 	= '" . $this->db->escape($data['detailed_information']) . "',
 		telephone 				= '" . $this->db->escape($data['telephone']) . "',
 		email 					= '" . $this->db->escape($data['email']) . "',
-		is_native 				= '" . (int)$data['is_native'] . "'
+		is_native 				= '" . (int)$data['is_native'] . "',
+		rating50 				= '" . (int)$data['rating50'] . "',
+		ratings_total 			= '" . (int)$data['ratings_total'] . "',
+		positive_ratings100 	= '" . (int)$data['positive_ratings100'] . "'
 		WHERE supplier_id = '" . (int)$supplier_id . "'");				
 	}
 	
 	public function deleteSupplier($supplier_id) {
-		$this->db->query("DELETE FROM suppliers WHERE supplier_id = '" . (int)$supplier_id . "'");
-		
+		$this->db->query("DELETE FROM suppliers WHERE supplier_id = '" . (int)$supplier_id . "'");		
 	}
 	
 	public function getSupplier($supplier_id) {
 		$query = $this->db->query("SELECT DISTINCT * FROM suppliers WHERE supplier_id = '" . (int)$supplier_id . "'");
+		
+		return $query->row;
+	}
+
+	public function getSupplierByAmazonSellerID($amazon_seller_id) {
+		$query = $this->db->query("SELECT DISTINCT * FROM suppliers WHERE amazon_seller_id = '" . $this->db->escape($amazon_seller_id) . "'");
 		
 		return $query->row;
 	}
@@ -86,6 +97,60 @@ class ModelSaleSupplier extends Model {
 		} else {
 			return false;			
 		}
+	}
+
+	public function getTotalSellerOffers($data = []){
+		$sql = "SELECT COUNT(*) as total FROM product_amzn_offers WHERE 1";
+
+		if (!empty($data['filter_amazon_seller_id'])){
+			$sql .= " AND sellerID = '" . $this->db->escape($data['filter_amazon_seller_id']) . "'";
+		}
+
+		$query = $this->db->query($sql);
+
+		return $query->row['total'];
+	}
+
+	public function getSellerOffers($data = []){
+		$sql = "SELECT DISTINCT pao.*, p.price, p.product_id, p.profitability, p.image, pd.name FROM product_amzn_offers pao ";
+		$sql .= " LEFT JOIN product p ON (pao.asin = p.asin) ";
+		$sql .= " LEFT JOIN product_description pd ON (p.product_id = pd.product_id AND language_id = '" . (int)$this->config->get('config_language_id') . "') WHERE 1 ";
+
+		if (!empty($data['filter_amazon_seller_id'])){
+			$sql .= " AND sellerID = '" . $this->db->escape($data['filter_amazon_seller_id']) . "'";
+		}
+
+		$sort_data = array(
+			'pao.date_added',
+		);
+			
+		if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
+			$sql .= " ORDER BY " . $data['sort'];
+		} else {
+			$sql .= " ORDER BY asin";
+		}
+
+		if (isset($data['order']) && ($data['order'] == 'DESC')) {
+			$sql .= " DESC";
+		} else {
+			$sql .= " ASC";
+		}
+
+		if (isset($data['start']) || isset($data['limit'])) {
+			if ($data['start'] < 0) {
+				$data['start'] = 0;
+			}
+
+			if ($data['limit'] < 1) {
+				$data['limit'] = 20;
+			}
+
+			$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+		}
+
+		$query = $this->db->query($sql);
+
+		return $query->rows;
 	}
 	
 	public function getTotalAmazonOrders($supplier_id){		
@@ -123,7 +188,6 @@ class ModelSaleSupplier extends Model {
 			return false;
 		}		
 	}
-
 	
 	public function getAllSupplierCountryCodes(){
 		$result = [];
@@ -264,8 +328,7 @@ class ModelSaleSupplier extends Model {
 		
 		$query = $this->db->query($sql);
 		
-		return $query->rows;
-		
+		return $query->rows;		
 	}
 	
 	public function getOPSupply($order_product_id){
@@ -325,8 +388,7 @@ class ModelSaleSupplier extends Model {
 		
 		$query = $this->db->query($sql);
 		
-		return $query->rows;
-		
+		return $query->rows;		
 	}
 	
 	public function getTotalSuppliers() {
