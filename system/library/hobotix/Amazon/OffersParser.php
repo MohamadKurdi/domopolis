@@ -731,6 +731,16 @@ class OffersParser
 				date_added						= NOW()");
 		}
 
+		if ($rfOffer){
+			$rating_data = [
+				'rating50' => $rfOffer->getSellerRating50(), 
+				'ratings_total' => $rfOffer->getSellerRatingsTotal(), 
+				'positive_ratings100' => $rfOffer->getSellerPositiveRatings100()
+			];
+
+			$this->Suppliers->updateSupplierRating($rfOffer->getSellerID(), $rating_data);
+		}
+
 		$this->setAsinOffersType($asin, $arrOffers);
 		$this->setAsinSellerQuality($asin, $arrOffers);
 	}

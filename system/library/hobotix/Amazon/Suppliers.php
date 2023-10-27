@@ -161,6 +161,14 @@ class Suppliers
 		Just for backward compatibility end
 	*/
 
+	public function updateSupplierRating($amazon_seller_id, $data){
+		$this->db->ncquery("UPDATE suppliers SET 
+			rating50 			= '" . (int)$data['rating50'] . "',
+			ratings_total 		= '" . (int)$data['ratings_total'] . "',
+			positive_ratings100	= '" . (int)$data['positive_ratings100'] . "'
+		WHERE amazon_seller_id LIKE '" . $this->db->escape($amazon_seller_id) . "'");
+	}
+
 	public function getSupplierFromDataBase($name, $amazon_seller_id){
 		if ($amazon_seller_id){
 			$query = $this->db->ncquery("SELECT * FROM suppliers WHERE amazon_seller_id LIKE '" . $this->db->escape($amazon_seller_id) . "' LIMIT 1");

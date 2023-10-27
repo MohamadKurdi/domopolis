@@ -583,14 +583,17 @@ class productModelEdit extends hoboModel{
 	}
 
 	public function deleteProductSimple($product_id){
+		echoLine('[productModelEdit::deleteProductSimple] Deleting product: ' . $product_id, 'e');
+
 		foreach ((array)\hobotix\RainforestAmazon::productRelatedTables as $table){
 			$sql = "DELETE FROM `" . $table . "` WHERE product_id = '" . (int)$product_id . "'";
 			$this->db->query($sql);
 		}
 
-		$this->db->query("DELETE FROM product_sponsored WHERE sponsored_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_similar WHERE similar_id = '" . (int)$product_id . "'");
-		$this->db->query("DELETE FROM product_related WHERE related_id = '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_sponsored WHERE sponsored_id 	= '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_similar WHERE similar_id 		= '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product_related WHERE related_id 		= '" . (int)$product_id . "'");
+		$this->db->query("DELETE FROM product WHERE product_id 				= '" . (int)$product_id . "'");
 
 		return $this;
 	}
