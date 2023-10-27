@@ -2,56 +2,26 @@
 	<table class="list">
 		<thead>
 			<tr>
-				<td width="30px;">					
-				</td>
-				<td width="70px;">					
-				</td>
-				<td width="70px;">					
-				</td>
-				<td width="70px;">					
-				</td>
+				<td width="30px;"></td>
+				<td width="70px;"></td>
+				<td width="70px;"></td>
+				<td width="70px;"></td>
 				<td width="30px;"></td>
 				<td width="20px;"></td>
 				<td width="20px;"></td>
-				<td>						
-					<b>Продавец</b>
-				</td>
-				<td>						
-					Рейтинг			
-				</td>
-				<td>						
-					Отзывы			
-				</td>
-				<td>						
-					Цена			
-				</td>
-				<td>						
-					Доставка			
-				</td>
-				<td>						
-					Инфо
-				</td>
-				<td>						
-					Дней			
-				</td>
-				<td>						
-					От			
-				</td>
-				<td>						
-					До			
-				</td>
-				<td>						
-					Итог			
-				</td>
-				<td>						
-					Рейтинг			
-				</td>
-				<td>						
-					Обновлено			
-				</td>	
-				<td>						
-					Линк			
-				</td>																	
+				<td><b>Продавец</b></td>
+				<td>Рейтинг	</td>
+				<td>Отзывы</td>
+				<td>Цена</td>
+				<td>Доставка</td>
+				<td>Инфо</td>
+				<td>Дней</td>
+				<td>От</td>
+				<td>До</td>
+				<td>Итог</td>
+				<td>Рейтинг</td>
+				<td>Обновлено</td>	
+				<td>Линк</td>																	
 			</tr>
 		</thead>
 		<?php foreach ($offers as $offer) { ?>
@@ -96,7 +66,7 @@
 						<? } else { ?>
 							<i class="fa fa-times-circle" style="color:#cf4a61"></i>
 						<? } ?>
-					</td>
+				</td>
 				<td class="left">						
 					<b><?php echo $offer['seller']; ?></b>
 
@@ -136,7 +106,7 @@
 
 				</td>
 				<td>
-					<?php if ($offer['rating']) { ?>				
+					<?php if ($offer['reviews']) { ?>				
 						<?php if ($offer['reviews'] > 500) { ?>
 							<span style="color:#4ea24e"><i class="fa fa-edit"></i><?php echo $offer['reviews']; ?></span>
 						<?php } else { ?>
