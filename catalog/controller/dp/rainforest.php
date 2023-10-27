@@ -50,6 +50,17 @@ class ControllerDPRainForest extends Controller {
 		$this->editfullproductscronl2();
 	}
 
+	public function clearproducts(){
+		$query = $this->db->query("SELECT product_id FROM product WHERE DATE(date_added) = '2023-10-26'");
+
+		echoLine('[ControllerDPRainForest::clearproducts] Total ' . $query->num_rows . ' products', 'i');
+
+		foreach ($query->rows as $row){
+			$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($row['product_id']);
+		}
+
+	}
+
 	public function test_limit_text_by_sentences(){	
 		$query = $this->db->query("SELECT description FROM product_description WHERE length(description)>3000 AND language_id = 26 LIMIT 10");
 
@@ -1286,6 +1297,11 @@ class ControllerDPRainForest extends Controller {
 			}	
 		}		
 	}
+
+	/*
+	Полная переустановка качества селлеров
+	*/
+	
 
 	/*
 	Перекладывает информацию о товарах в файловый кэш из БД

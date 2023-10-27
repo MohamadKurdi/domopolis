@@ -1202,16 +1202,16 @@
 					/*	$this->document->setOgImage($this->data['thumb']); */
 				}												
 				
-				$pagination = new Pagination($this->registry);
-				$pagination->total = $product_total;
-				$pagination->page = $page;
-				$pagination->limit = $limit;
-				$pagination->text = $this->language->get('text_pagination');
-				$pagination->url = $this->url->link('product/category', 'path=' . $this->request->get['path'] . $url . '&page={page}');
+				$pagination 		= new Pagination($this->registry);
+				$pagination->total 	= $product_total;
+				$pagination->page 	= $page;
+				$pagination->limit 	= $limit;
+				$pagination->text 	= $this->language->get('text_pagination');
+				$pagination->url 	= $this->url->link('product/category', 'path=' . $this->request->get['path'] . $url . '&page={page}');
 				
-				$this->data['text_show_more'] = $this->language->get('text_show_more');
-				$this->data['pagination'] = $pagination->render();
-				$this->data['pagination_text'] = $pagination->render_text();
+				$this->data['text_show_more'] 	= $this->language->get('text_show_more');
+				$this->data['pagination'] 		= $pagination->render();
+				$this->data['pagination_text'] 	= $pagination->render_text();
 				
 				$this->data['sort']  = $sort;
 				$this->data['order'] = $order;
