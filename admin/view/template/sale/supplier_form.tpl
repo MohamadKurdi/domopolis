@@ -14,7 +14,12 @@
 				<?php echo $heading_title; ?>
 				<?php if (!empty($supplier_name)) { ?> / <?php echo $supplier_name; ?><?php } ?>
 			</h1>
-			<div class="buttons"><a href="<?php echo $amazon_link; ?>" target="_blank" class="button"><i class="fa fa-amazon"></i></a><a onclick="$('#form').submit();" class="button"><?php echo $button_save; ?></a><a href="<?php echo $cancel; ?>" class="button"><?php echo $button_cancel; ?></a>
+			<div class="buttons">
+				<?php if (!empty($offers_link)) { ?>
+					<a href="<?php echo $offers_link; ?>" class="button"><i class="fa fa-amazon"></i> Посмотреть офферы поставщика</a>
+				<?php } ?>
+				<a onclick="$('#form').submit();" class="button"><?php echo $button_save; ?></a>
+				<a href="<?php echo $cancel; ?>" class="button"><?php echo $button_cancel; ?></a>
 			</div>
 		</div>
 		<div class="content">
@@ -102,7 +107,25 @@
 									<span class="help"><a href="<?php echo $store_link; ?>" target="_blank">открыть ссылку</a></span>
 								<?php } ?>
 							</td>
+						</tr>
+					</table>
 
+					<table class="form">
+						<tr>
+							<td width="33%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Рейтинг50</span></td>
+							<td width="33%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#7F00FF; color:#FFF">Всего отзывов</span></td>
+							<td width="33%"><span class="status_color" style="display:inline-block; padding:3px 5px; background:#ff7815; color:#FFF">Процент позитивных</span></td>							
+						</tr>
+						<tr style="border-bottom:1px dashed gray">
+							<td>
+								<input type="number" step="1" name="rating50" value="<?php echo $rating50; ?>" />
+							</td>
+							<td>
+								<input type="number" step="1" name="ratings_total" value="<?php echo $ratings_total; ?>" />
+							</td>
+							<td>
+								<input type="number" step="1" name="positive_ratings100" value="<?php echo $positive_ratings100; ?>" />
+							</td>
 						</tr>
 					</table>
 

@@ -34,21 +34,24 @@
 							</td>
 							<td class="left">Страна</td>
 							<td class="left">Native</td>
+							<td class="left">Рейтинг</td>
+							<td class="left">Отзывов</td>
+							<td class="left">Офферов</td>
 							<td class="left">Business Name</td>
 							<td class="left">VAT</td>
 							<td class="left">Телефон</td>
 							<td class="left">Мейл</td>
-							<td class="left">Сроки в нал</td>
-							<td class="left">Сроки не в нал</td>
 							<td class="left">Хороший</td>
 							<td class="left">Плохой</td>
 							<td class="left">Коэффициент</td>
-							<td class="right"><?php if ($sort == 'sort_order') { ?>
+							<td class="right">
+								<?php if ($sort == 'sort_order') { ?>
 								<a href="<?php echo $sort_sort_order; ?>" class="<?php echo strtolower($order); ?>">Сортировка</a>
 							<?php } else { ?>
 								<a href="<?php echo $sort_sort_order; ?>">Сортировка</a>
-								<?php } ?></td>
-								<td class="right"><?php echo $column_action; ?></td>
+								<?php } ?>
+							</td>
+							<td class="right"><?php echo $column_action; ?></td>
 							</tr>
 						</thead>
 						<tbody>
@@ -88,6 +91,34 @@
 											<? } ?>
 										</td>
 
+										<td class="center" style="white-space:nowrap;">
+											<?php if ($supplier['rating']) { ?>										
+												<?php if ($supplier['rating'] > 4.5) { ?>
+													<span style="color:#4ea24e"><i class="fa fa-star"></i> <?php echo $supplier['rating']; ?></span>
+												<?php } else { ?>
+													<span style="color:#cf4a61"><i class="fa fa-star"></i> <?php echo $supplier['rating']; ?></span>
+												<?php } ?>		
+											<?php } ?>
+										</td>
+
+										<td class="center" style="white-space:nowrap;">
+											<?php if ($supplier['reviews']) { ?>				
+												<?php if ($supplier['reviews'] > 500) { ?>
+													<span style="color:#4ea24e"><i class="fa fa-edit"></i><?php echo $supplier['reviews']; ?></span>
+												<?php } else { ?>
+													<span style="color:#cf4a61"><i class="fa fa-edit"></i><?php echo $supplier['reviews']; ?></span>
+												<?php } ?>
+											<?php } ?>
+										</td>
+
+										<td class="center">
+											<? if ($supplier['total_offers']) { ?>
+												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#00AD07; color:#FFF"><?php echo $supplier['total_offers']; ?></span>
+											<? } else { ?>
+												<i class="fa fa-times-circle" style="color:#cf4a61"></i>
+											<? } ?>
+										</td>
+
 										<td class="left" style="font-size:11px;">
 											<? if ($supplier['business_name']) { ?>
 												<?php echo $supplier['business_name']; ?>
@@ -120,18 +151,6 @@
 											<? } ?>
 										</td>
 
-										<td class="right">
-											<?php if ($supplier['terms_instock']) { ?>
-												<b><?php echo $supplier['terms_instock']; ?> дн.</b>
-											<?php } ?>
-										</td>
-
-										<td class="right">
-											<?php if ($supplier['terms_outstock']) { ?>
-												<b><?php echo $supplier['terms_outstock']; ?> дн.</b>
-											<?php } ?>
-										</td>
-
 										<td class="center" style="padding:8px;">
 											<? if ($supplier['amzn_good']) { ?>
 												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">Хороший</span>
@@ -154,10 +173,15 @@
 											</span>
 										</td>
 
-										<td class="right"><?php echo $supplier['sort_order']; ?></td>
-										<td class="right"><?php foreach ($supplier['action'] as $action) { ?>
+										<td class="right">
+											<?php echo $supplier['sort_order']; ?>
+										</td>
+
+										<td class="right" width="110px">
+											<?php foreach ($supplier['action'] as $action) { ?>
 											<a class="button" href="<?php echo $action['href']; ?>" <? if (isset($action['target'])) { ?>target="<? echo $action['target'] ?>"<? } ?>><?php echo $action['text']; ?></a>
-											<?php } ?></td>
+											<?php } ?>
+										</td>
 										</tr>
 
 									<?php } ?>
