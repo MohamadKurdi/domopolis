@@ -230,7 +230,7 @@ class ControllerSaleSupplier extends Controller {
 				'country'				=> $offer['offerCountry'],
 				'is_native'				=> $offer['isNativeOffer'],
 				'date_added'			=> date('Y-m-d H:i:s', strtotime($offer['date_added'])),
-				'link'					=> $offer['sellerLink']?$offer['sellerLink']:$this->rainforestAmazon->createLinkToAmazonSearchPage($product['asin']),
+				'link'					=> $offer['sellerLink']?$offer['sellerLink']:$this->rainforestAmazon->createLinkToAmazonSearchPage($offer['asin']),
 				'link2'					=> $this->rainforestAmazon->createLinkToAmazonSearchPage($offer['asin']),
 				'action' 				=> $action
 			];
