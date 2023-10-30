@@ -277,13 +277,13 @@ class ControllerDPRainForest extends Controller {
 
 			if ($check->num_rows){
 				echoLine('[ControllerDPRainForest::cleanofferstablecron] ' . $i . '/' . $query->num_rows . ' Product ' . $row['asin'] . ' exists: ' . $check->row['product_id'], 's');
-				if ($check['amzn_ignore']){
+				if ($check->row['amzn_ignore']){
 					echoLine('[ControllerDPRainForest::cleanofferstablecron] ' . $i . '/' . $query->num_rows . ' Product ' . $row['asin'] . ' is ignored by amzn_ignore: ' . $check->row['product_id'], 'e');
 					$this->db->query("DELETE FROM product_amzn_offers WHERE asin = '" . $row['asin'] . "'");
 				}
 
 				if ($this->config->get('config_rainforest_disable_offers_use_field_ignore_parse')){
-					if ($check['ignore_parse']){
+					if ($check->row['ignore_parse']){
 						echoLine('[ControllerDPRainForest::cleanofferstablecron] ' . $i . '/' . $query->num_rows . ' Product ' . $row['asin'] . ' is ignored by ignore_parse: ' . $check->row['product_id'], 'e');
 						$this->db->query("DELETE FROM product_amzn_offers WHERE asin = '" . $row['asin'] . "'");
 					}
