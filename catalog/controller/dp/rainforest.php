@@ -51,14 +51,13 @@ class ControllerDPRainForest extends Controller {
 	}
 
 	public function clearproducts(){
-		$query = $this->db->query("SELECT product_id FROM product WHERE DATE(date_added) = '2023-10-26'");
+		// $query = $this->db->query("SELECT product_id FROM product WHERE DATE(date_added) = '2023-10-26'");
 
-		echoLine('[ControllerDPRainForest::clearproducts] Total ' . $query->num_rows . ' products', 'i');
+		// echoLine('[ControllerDPRainForest::clearproducts] Total ' . $query->num_rows . ' products', 'i');
 
-		foreach ($query->rows as $row){
-			$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($row['product_id']);
-		}
-
+		// foreach ($query->rows as $row){
+		// 	$this->rainforestAmazon->productsRetriever->model_product_edit->deleteProductSimple($row['product_id']);
+		// }
 	}
 
 	public function test_limit_text_by_sentences(){	
@@ -274,10 +273,22 @@ class ControllerDPRainForest extends Controller {
 
 		$i = 1;		
 		foreach ($query->rows as $row){
-			$check = $this->db->query("SELECT product_id FROM product WHERE asin = '" . $row['asin'] . "' LIMIT 1");
+			$check = $this->db->ncquery("SELECT product_id, amzn_ignore, ignore_parse FROM product WHERE asin = '" . $row['asin'] . "' LIMIT 1");
 
 			if ($check->num_rows){
 				echoLine('[ControllerDPRainForest::cleanofferstablecron] ' . $i . '/' . $query->num_rows . ' Product ' . $row['asin'] . ' exists: ' . $check->row['product_id'], 's');
+				if ($check['amzn_ignore']){
+					echoLine('[ControllerDPRainForest::cleanofferstablecron] ' . $i . '/' . $query->num_rows . ' Product ' . $row['asin'] . ' is ignored by amzn_ignore: ' . $check->row['product_id'], 'e');
+					$this->db->query("DELETE FROM product_amzn_offers WHERE asin = '" . $row['asin'] . "'");
+				}
+
+				if ($this->config->get('config_rainforest_disable_offers_use_field_ignore_parse')){
+					if ($check['ignore_parse']){
+						echoLine('[ControllerDPRainForest::cleanofferstablecron] ' . $i . '/' . $query->num_rows . ' Product ' . $row['asin'] . ' is ignored by ignore_parse: ' . $check->row['product_id'], 'e');
+						$this->db->query("DELETE FROM product_amzn_offers WHERE asin = '" . $row['asin'] . "'");
+					}
+				}
+
 			} else {
 				echoLine('[ControllerDPRainForest::cleanofferstablecron] ' . $i . '/' . $query->num_rows . ' Product ' . $row['asin'] . ' does not exist', 'e');
 				$this->db->query("DELETE FROM product_amzn_offers WHERE asin = '" . $row['asin'] . "'");
