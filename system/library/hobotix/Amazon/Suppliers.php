@@ -254,7 +254,7 @@ class Suppliers
 
 					$is_native 	= $this->checkIfSupplierIsNative($sellerData);
 
-					foreach (['business_name', 'registration_number'] as $key)
+					foreach (['business_name', 'registration_number', 'business_type'] as $key)
 					if (empty($sellerData[$key])){
 						$sellerData[$key] = '';
 					}
