@@ -1395,6 +1395,7 @@ class ControllerCatalogProduct extends Controller {
 						'reviews'				=> (int)$offer['sellerRatingsTotal'],
 						'rating'				=> (int)$offer['sellerRating50'] / 10,
 						'positive'				=> (int)$offer['sellerPositiveRatings100'],
+						'quality'				=> $offer['sellerQuality'],
 						'country'				=> $offer['offerCountry'],
 						'is_native'				=> $offer['isNativeOffer'],
 						'date_added'			=> date('Y-m-d H:i:s', strtotime($offer['date_added'])),
