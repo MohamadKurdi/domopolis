@@ -16,8 +16,6 @@ class BSGWorld {
 
 	public function check($answer){
 		if (!empty($answer['error'])){
-			var_dump($answer);
-
 			echoLine('[BSGWorld::check] Error! ' . $answer['errorDescription'], 'e');
 			return false;
 		}
