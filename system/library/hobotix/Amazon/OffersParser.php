@@ -731,7 +731,7 @@ class OffersParser
 				date_added						= NOW()");
 		}
 
-		if ($rfOffer){
+		if (!empty($rfOffer)){
 			$rating_data = [
 				'rating50' => $rfOffer->getSellerRating50(), 
 				'ratings_total' => $rfOffer->getSellerRatingsTotal(), 
