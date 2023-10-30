@@ -1376,13 +1376,17 @@ class ControllerCatalogProduct extends Controller {
 
 			foreach ($offers as $offer){
 				if ($offer['conditionIsNew']){
+
+					$supplier = $this->rainforestAmazon->offersParser->Suppliers->getSupplier($offer['sellerName'], $offer['sellerID']);
+
 					$this->data['offers'][] = [					
 						'seller' 				=> $offer['sellerName'],
 						'prime'	 				=> $offer['isPrime'],
 						'buybox_winner'	 		=> $offer['isBuyBoxWinner'],
 						'is_best'				=> $offer['isBestOffer'],
 						'offer_rating'			=> $offer['offerRating'],
-						'supplier'				=> $this->rainforestAmazon->offersParser->Suppliers->getSupplier($offer['sellerName'], $offer['sellerID']),
+						'edit_supplier' 		=> $supplier?$this->url->link('sale/supplier/update', 'token=' . $this->session->data['token'] . '&supplier_id=' . $supplier['supplier_id']):'',
+						'supplier'				=> $supplier,
 						'price'	 				=> $this->currency->format_with_left($offer['priceAmount'], $offer['priceCurrency'], 1),
 						'delivery'	 			=> $this->currency->format_with_left($offer['deliveryAmount'], $offer['deliveryCurrency'], 1),	
 						'total'					=> $this->currency->format_with_left($offer['priceAmount'] + $offer['deliveryAmount'], $offer['priceCurrency'], 1),

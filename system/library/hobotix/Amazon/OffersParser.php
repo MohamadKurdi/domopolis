@@ -733,9 +733,9 @@ class OffersParser
 
 		if (!empty($rfOffer)){
 			$rating_data = [
-				'rating50' => $rfOffer->getSellerRating50(), 
-				'ratings_total' => $rfOffer->getSellerRatingsTotal(), 
-				'positive_ratings100' => $rfOffer->getSellerPositiveRatings100()
+				'rating50' 				=> $rfOffer->getSellerRating50(), 
+				'ratings_total' 		=> $rfOffer->getSellerRatingsTotal(), 
+				'positive_ratings100' 	=> $rfOffer->getSellerPositiveRatings100()
 			];
 
 			$this->Suppliers->updateSupplierRating($rfOffer->getSellerID(), $rating_data);
@@ -806,7 +806,7 @@ class OffersParser
 			if ($rfOffer->getSellerRating50()){				
 				$rfOfferWeight += ($rfOffer->getSellerRating50()/10);
 				$rfOfferWeight += ($rfOffer->getSellerRatingsTotal()/100000);
-			}
+			}			
 
 			$ratingKeys[$key] = $rfOfferWeight;
 

@@ -161,8 +161,8 @@ class ControllerSaleSupplier extends Controller {
 		$this->data['breadcrumbs'] = array();
 
 
-		$this->data['supplier'] = $this->model_sale_supplier->getSupplierByAmazonSellerID($amazon_seller_id);
-		$this->data['heading_title'] 		= $this->language->get('heading_title');
+		$this->data['supplier'] 		= $this->model_sale_supplier->getSupplierByAmazonSellerID($amazon_seller_id);
+		$this->data['heading_title'] 	= $this->language->get('heading_title');
 		if ($this->data['supplier']){
 			$this->data['heading_title'] = 'Офферы поставщика ' . $this->data['supplier']['supplier_name'];
 			$this->document->setTitle($this->data['heading_title']);
