@@ -561,6 +561,12 @@ class ControllerSaleSupplier extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
+		foreach ($filters as $filter => $default_value){
+			if (isset($this->request->get[$filter])) {
+				$url .= '&' . $filter . '=' . urlencode(html_entity_decode($this->request->get[$filter], ENT_QUOTES, 'UTF-8'));
+			}
+		}
+
 		$this->data['sort_name'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
 		$this->data['sort_code'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=code' . $url, 'SSL');
 		$this->data['sort_sort_order'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=sort_order' . $url, 'SSL');
@@ -575,8 +581,10 @@ class ControllerSaleSupplier extends Controller {
 			$url .= '&order=' . $this->request->get['order'];
 		}
 
-		if (isset($this->request->get['filter_supplier_name'])) {
-			$url .= '&filter_supplier_name=' . $this->request->get['filter_supplier_name'];
+		foreach ($filters as $filter => $default_value){
+			if (isset($this->request->get[$filter])) {
+				$url .= '&' . $filter . '=' . urlencode(html_entity_decode($this->request->get[$filter], ENT_QUOTES, 'UTF-8'));
+			}
 		}
 
 		$pagination 		= new Pagination($this->registry, [
