@@ -273,7 +273,7 @@ class ControllerDPRainForest extends Controller {
 
 		$i = 1;		
 		foreach ($query->rows as $row){
-			$check = $this->db->ncquery("SELECT product_id, amzn_ignore, ignore_parse FROM product WHERE asin = '" . $row['asin'] . "' LIMIT 1");
+			$check = $this->db->ncquery("SELECT product_id, amzn_ignore, ignore_parse, added_from_amazon FROM product WHERE asin = '" . $row['asin'] . "' LIMIT 1");
 
 			if ($check->num_rows){
 				echoLine('[ControllerDPRainForest::cleanofferstablecron] ' . $i . '/' . $query->num_rows . ' Product ' . $row['asin'] . ' exists: ' . $check->row['product_id'], 's');
@@ -285,6 +285,13 @@ class ControllerDPRainForest extends Controller {
 				if ($this->config->get('config_rainforest_disable_offers_use_field_ignore_parse')){
 					if ($check->row['ignore_parse']){
 						echoLine('[ControllerDPRainForest::cleanofferstablecron] ' . $i . '/' . $query->num_rows . ' Product ' . $row['asin'] . ' is ignored by ignore_parse: ' . $check->row['product_id'], 'e');
+						$this->db->query("DELETE FROM product_amzn_offers WHERE asin = '" . $row['asin'] . "'");
+					}
+				}
+
+				if ($this->config->get('config_rainforest_enable_offers_for_added_from_amazon')){
+					if (isset($check->row['added_from_amazon']) && (int)$check->row['added_from_amazon'] == 0){
+						echoLine('[ControllerDPRainForest::cleanofferstablecron] ' . $i . '/' . $query->num_rows . ' Product ' . $row['asin'] . ' is ignored by added_from_amazon = 0: ' . $check->row['product_id'], 'e');
 						$this->db->query("DELETE FROM product_amzn_offers WHERE asin = '" . $row['asin'] . "'");
 					}
 				}
