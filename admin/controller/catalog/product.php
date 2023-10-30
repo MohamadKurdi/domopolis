@@ -1354,12 +1354,11 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['fill_from_amazon'] = 0;
 		}
 
-			//Данные амазона
 		if ($this->data['asin']){
 			$this->load->model('kp/product');
 			
-			$this->data['amazon_product_link'] = $product_info['amazon_product_link'];
-			$this->data['filled_from_amazon'] = $product_info['filled_from_amazon'];
+			$this->data['amazon_product_link'] 	= $product_info['amazon_product_link'];
+			$this->data['filled_from_amazon'] 	= $product_info['filled_from_amazon'];
 			$this->data['description_filled_from_amazon'] = $product_info['description_filled_from_amazon'];
 
 			$amazon_product_data = $this->model_kp_product->getProductAmazonFullData($this->data['asin']);
@@ -1408,9 +1407,9 @@ class ControllerCatalogProduct extends Controller {
 				}
 			}
 
-			$this->data['amazon_best_price'] = $this->currency->format($product_info['amazon_best_price'], 'EUR', 1);
-			$this->data['amazon_lowest_price'] = $this->currency->format($product_info['amazon_lowest_price'], 'EUR', 1);
-			$this->data['amzn_no_offers_counter'] = $product_info['amzn_no_offers_counter'];
+			$this->data['amazon_best_price'] 		= $this->currency->format($product_info['amazon_best_price'], 'EUR', 1);
+			$this->data['amazon_lowest_price'] 		= $this->currency->format($product_info['amazon_lowest_price'], 'EUR', 1);
+			$this->data['amzn_no_offers_counter'] 	= $product_info['amzn_no_offers_counter'];
 
 		}				
 
@@ -1602,7 +1601,6 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['image'] = '';
 		}
 
-
 		if (isset($this->request->post['image'])) {
 			$this->data['thumb'] = $this->model_tool_image->resize($this->request->post['image'], 100, 100);
 		} elseif (!empty($product_info) && $product_info['image']) {
@@ -1610,87 +1608,48 @@ class ControllerCatalogProduct extends Controller {
 		} else {
 			$this->data['thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
 		}
-
-		/*Additional offer*/
-		$this->data['product_additional_offer'] = [];
+		
 		if (isset($this->request->post['product_additional_offer'])) {
 			$product_additional_offer = $this->request->post['product_additional_offer'];
-			foreach($product_additional_offer as $key=>$product_ao) {
-
-				if(isset($product_ao['ao_product_id'])) {
-					$ao_product = $this->model_catalog_product->getProduct($product_ao['ao_product_id']);
-					if(!empty($ao_product)) {
-						$this->data['product_additional_offer'][$key]['product_ao_name'] = $ao_product['name'];   
-					} else {
-						$this->data['product_additional_offer'][$key]['product_ao_name'] = '';  
-					}
-				} else {
-					$this->data['product_additional_offer'][$key]['product_ao_name'] = '';  
-				}
-
-				$this->data['product_additional_offer'][$key]['product_additional_offer_id'] = $product_ao['product_additional_offer_id'] ? $product_ao['product_additional_offer_id'] : 0;
-				$this->data['product_additional_offer'][$key]['customer_group_id'] = $product_ao['customer_group_id'] ? $product_ao['customer_group_id'] : 0;
-				$this->data['product_additional_offer'][$key]['priority'] = $product_ao['priority'] ? $product_ao['priority'] : '';
-				$this->data['product_additional_offer'][$key]['quantity'] = $product_ao['quantity'] ? $product_ao['quantity'] : 1;
-				$this->data['product_additional_offer'][$key]['ao_product_id'] = $product_ao['ao_product_id'] ? $product_ao['ao_product_id'] : '';
-				$this->data['product_additional_offer'][$key]['price'] = $product_ao['price'];
-				$this->data['product_additional_offer'][$key]['percent'] = $product_ao['percent'];
-				$this->data['product_additional_offer'][$key]['date_start'] = $product_ao['date_start'];
-				$this->data['product_additional_offer'][$key]['date_end'] = $product_ao['date_end'];
-				$this->data['product_additional_offer'][$key]['ao_group'] = $product_ao['ao_group'];
-
-				$this->data['product_additional_offer'][$key]['store_id'] = $product_ao['store_id'];
-
-				$this->data['product_additional_offer'][$key]['image'] = $product_ao['image'] ? $product_ao['image'] : 'no_image.jpg';
-
-				$img_ao = $product_ao['image'] ? $product_ao['image'] : 'no_image.jpg';
-				$this->data['product_additional_offer'][$key]['thumb'] = $this->model_tool_image->resize($img_ao, 100, 100);
-
-				$this->data['product_additional_offer'][$key]['description'] = $product_ao['description'];
-
-			}
-
 		} elseif (isset($this->request->get['product_id'])) {
 			$product_additional_offer = $this->model_catalog_product->getProductAdditionalOffer($this->request->get['product_id']);
+		} else {
+			$product_additional_offer = [];
+		}
 
-			foreach($product_additional_offer as $key => $product_ao) {
-
-				if(isset($product_ao['ao_product_id'])) {
-					$ao_product = $this->model_catalog_product->getProduct($product_ao['ao_product_id']);
-					if(!empty($ao_product)) {
-						$this->data['product_additional_offer'][$key]['product_ao_name'] = $ao_product['name'];   
-					} else {
-						$this->data['product_additional_offer'][$key]['product_ao_name'] = '';  
-					}
+		$this->data['product_additional_offer'] = [];	
+		foreach($product_additional_offer as $key => $product_ao) {
+			if(isset($product_ao['ao_product_id'])) {
+				$ao_product = $this->model_catalog_product->getProduct($product_ao['ao_product_id']);
+				if(!empty($ao_product)) {
+					$this->data['product_additional_offer'][$key]['product_ao_name'] = $ao_product['name'];   
 				} else {
 					$this->data['product_additional_offer'][$key]['product_ao_name'] = '';  
 				}
-
-				$this->data['product_additional_offer'][$key]['product_additional_offer_id'] = $product_ao['product_additional_offer_id'] ? $product_ao['product_additional_offer_id'] : 0;
-				$this->data['product_additional_offer'][$key]['customer_group_id'] = $product_ao['customer_group_id'] ? $product_ao['customer_group_id'] : 0;
-				$this->data['product_additional_offer'][$key]['priority'] = $product_ao['priority'] ? $product_ao['priority'] : '';
-				$this->data['product_additional_offer'][$key]['quantity'] = $product_ao['quantity'] ? $product_ao['quantity'] : 1;
-				$this->data['product_additional_offer'][$key]['ao_product_id'] = $product_ao['ao_product_id'] ? $product_ao['ao_product_id'] : '';
-				$this->data['product_additional_offer'][$key]['price'] = $product_ao['price'];
-				$this->data['product_additional_offer'][$key]['percent'] = $product_ao['percent'];
-				$this->data['product_additional_offer'][$key]['date_start'] = $product_ao['date_start'];
-				$this->data['product_additional_offer'][$key]['date_end'] = $product_ao['date_end'];
-				$this->data['product_additional_offer'][$key]['ao_group'] = $product_ao['ao_group'];
-
-				$this->data['product_additional_offer'][$key]['store_id'] = $this->model_catalog_product->getProductAdditionalOfferStoresByAOID($product_ao['product_additional_offer_id']);
-
-				$this->data['product_additional_offer'][$key]['image'] = $product_ao['image'] ? $product_ao['image'] : 'no_image.jpg';
-
-				$img_ao = $product_ao['image'] ? $product_ao['image'] : 'no_image.jpg';
-				$this->data['product_additional_offer'][$key]['thumb'] = $this->model_tool_image->resize($img_ao, 100, 100);
-
-				$this->data['product_additional_offer'][$key]['description'] = $product_ao['description'];
-
+			} else {
+				$this->data['product_additional_offer'][$key]['product_ao_name'] = '';  
 			}
 
-		} else {
-			$this->data['product_additional_offer'] = [];
-		}
+			$this->data['product_additional_offer'][$key]['product_additional_offer_id'] 	= $product_ao['product_additional_offer_id'] ? $product_ao['product_additional_offer_id'] : 0;
+			$this->data['product_additional_offer'][$key]['customer_group_id'] 				= $product_ao['customer_group_id'] ? $product_ao['customer_group_id'] : 0;
+			$this->data['product_additional_offer'][$key]['priority'] 		= $product_ao['priority'] ? $product_ao['priority'] : '';
+			$this->data['product_additional_offer'][$key]['quantity'] 		= $product_ao['quantity'] ? $product_ao['quantity'] : 1;
+			$this->data['product_additional_offer'][$key]['ao_product_id'] 	= $product_ao['ao_product_id'] ? $product_ao['ao_product_id'] : '';
+			$this->data['product_additional_offer'][$key]['price'] 			= $product_ao['price'];
+			$this->data['product_additional_offer'][$key]['percent'] 		= $product_ao['percent'];
+			$this->data['product_additional_offer'][$key]['date_start'] 	= $product_ao['date_start'];
+			$this->data['product_additional_offer'][$key]['date_end'] 		= $product_ao['date_end'];
+			$this->data['product_additional_offer'][$key]['ao_group'] 		= $product_ao['ao_group'];
+			$this->data['product_additional_offer'][$key]['store_id'] 		= $product_ao['store_id'];
+			$this->data['product_additional_offer'][$key]['description'] 	= $product_ao['description'];
+			$this->data['product_additional_offer'][$key]['image'] 			= $product_ao['image'] ? $product_ao['image'] : 'no_image.jpg';
+
+			if (!$product_ao['image']){
+				$this->data['product_additional_offer'][$key]['thumb'] = $this->model_tool_image->resize($product_ao['image'], 100, 100);
+			} else {
+				$this->data['product_additional_offer'][$key]['thumb'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
+			}							
+		}		
 
 		if (isset($this->request->post['shipping'])) {
 			$this->data['shipping'] = $this->request->post['shipping'];
@@ -1893,7 +1852,6 @@ class ControllerCatalogProduct extends Controller {
 		$this->data['currencies'] = $this->model_localisation_currency->getCurrencies();
 
 		$this->load->model('catalog/profile');
-
 		$this->data['profiles'] = $this->model_catalog_profile->getProfiles();
 
 		if (isset($this->request->post['product_profiles'])) {
@@ -1973,7 +1931,6 @@ class ControllerCatalogProduct extends Controller {
 		}
 
 		$this->load->model('localisation/stock_status');
-
 		$this->data['stock_statuses'] = $this->model_localisation_stock_status->getStockStatuses();
 
 		if (isset($this->request->post['stock_status_id'])) {
@@ -2031,7 +1988,6 @@ class ControllerCatalogProduct extends Controller {
 		} else {
 			$this->data['priceva_disable'] = 0;
 		}
-
 
 		if (isset($this->request->post['yam_disable'])) {
 			$this->data['yam_disable'] = $this->request->post['yam_disable'];
@@ -2111,7 +2067,6 @@ class ControllerCatalogProduct extends Controller {
 		}
 
 		if ($other_variant_products){
-
 			foreach ($other_variant_products as $other_variant_product){
 
 				$this->data['other_variant_products'][] = [
@@ -2126,9 +2081,7 @@ class ControllerCatalogProduct extends Controller {
 					'thumb'				=> $this->model_tool_image->resize($other_variant_product['image'], 50, 50),
 					'link'				=> $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $other_variant_product['product_id'], 'SSL')
 				];
-
 			}
-
 		}
 
 		if (isset($this->request->post['weight'])) {
@@ -2140,7 +2093,6 @@ class ControllerCatalogProduct extends Controller {
 		}
 
 		$this->load->model('localisation/weight_class');
-
 		$this->data['weight_classes'] = $this->model_localisation_weight_class->getWeightClasses();
 
 		if (isset($this->request->post['weight_class_id'])) {
@@ -2184,7 +2136,6 @@ class ControllerCatalogProduct extends Controller {
 		}
 
 		$this->load->model('localisation/length_class');
-
 		$this->data['length_classes'] = $this->model_localisation_length_class->getLengthClasses();
 
 		if (isset($this->request->post['length_class_id'])) {
@@ -2304,12 +2255,10 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->load->model('catalog/collection');
 
-
 		if ($this->data['collection_id']){
 			$this->data['collection'] = $this->model_catalog_collection->getCollectionById($this->data['collection_id']);				
 		}
 
-			// Categories
 		$this->load->model('catalog/category');
 
 		if (isset($this->request->post['product_category'])) {
@@ -2476,8 +2425,6 @@ class ControllerCatalogProduct extends Controller {
 			}
 		}
 
-			//var_dump($this->data['product_options']);
-
 		$this->data['option_values'] = [];
 
 		foreach ($this->data['product_options'] as $product_option) {
@@ -2497,9 +2444,7 @@ class ControllerCatalogProduct extends Controller {
 		}	
 
 		$this->data['product_product_options'] = [];
-
 		foreach ($product_product_options as $product_product_option) {
-
 			$product_product_option_value_data = [];
 
 			foreach ($product_product_option['product_option'] as $product_option_value) {
@@ -2524,7 +2469,6 @@ class ControllerCatalogProduct extends Controller {
 					'special'						  => $special,
 					'sort_order'            		  => $product_option_value['sort_order'],					
 				);
-
 			}
 
 			$this->data['product_product_options'][] = array(
@@ -2547,7 +2491,6 @@ class ControllerCatalogProduct extends Controller {
 		}
 
 		$this->load->model('sale/customer_group');
-
 		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
 
 		if (isset($this->request->post['product_discount'])) {
@@ -2566,7 +2509,6 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['product_specials'] = [];
 		}
 
-			// videos
 		if (isset($this->request->post['product_video'])) {
 			$product_videos = $this->request->post['product_video'];
 		} elseif (isset($this->request->get['product_id'])) {
@@ -2588,8 +2530,6 @@ class ControllerCatalogProduct extends Controller {
 			);
 		}
 
-
-			// Images
 		if (isset($this->request->post['product_image'])) {
 			$product_images = $this->request->post['product_image'];
 		} elseif (isset($this->request->get['product_id'])) {
@@ -2610,7 +2550,6 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
 
-			// Downloads
 		$this->load->model('catalog/download');
 
 		if (isset($this->request->post['product_download'])) {
@@ -2635,19 +2574,21 @@ class ControllerCatalogProduct extends Controller {
 		}
 
 		/* FAproduct */
-		$this -> load -> model('catalog/faproduct');
-		$this -> data['faproduct_facategory_all'] = $this -> model_catalog_faproduct ->getFACategories();
-		if (isset($this -> request -> post['faproduct_facategory'])) {
-			$this -> data['faproduct_facategory'] = [];
-		} elseif (isset($this -> request -> get['product_id'])) {
-			$this -> data['faproduct_facategory'] = $this -> model_catalog_faproduct -> getFAproductCats($this -> request -> get['product_id']);
+		$this->load->model('catalog/faproduct');
+		$this->data['faproduct_facategory_all'] = $this->model_catalog_faproduct ->getFACategories();
+
+		if (isset($this->request->post['faproduct_facategory'])) {
+			$this->data['faproduct_facategory'] = [];
+		} elseif (isset($this->request->get['product_id'])) {
+			$this->data['faproduct_facategory'] = $this->model_catalog_faproduct->getFAproductCats($this->request->get['product_id']);
 		} else {
-			$this -> data['faproduct_facategory'] = [];
+			$this->data['faproduct_facategory'] = [];
 		}
+
 		if (isset($this->request->post['facategory_show'])) {
 			$this->data['facategory_show'] = $this->request->post['facategory_show'];
 		} elseif (isset($product_info)) {
-			$this->data['facategory_show'] = $this->model_catalog_faproduct -> getFAcategoryShow($this->request->get['product_id']);
+			$this->data['facategory_show'] = $this->model_catalog_faproduct->getFAcategoryShow($this->request->get['product_id']);
 		} else {
 			$this->data['facategory_show'] = 0;
 		}
@@ -2779,7 +2720,6 @@ class ControllerCatalogProduct extends Controller {
 				);
 			}
 		}
-
 
 		if (isset($this->request->post['product_also_bought'])) {
 			$products = $this->request->post['product_also_bought'];
@@ -2943,7 +2883,6 @@ class ControllerCatalogProduct extends Controller {
 	}
 
 	public function roundPrices(){
-
 		$this->load->model('kp/price');
 		$affected = $this->model_kp_price->roundPrices();
 
@@ -2951,7 +2890,6 @@ class ControllerCatalogProduct extends Controller {
 	}
 
 	public function setNewPrices(){
-
 		$this->load->model('kp/price');
 		$affected = $this->model_kp_price->setNewPrices();
 
@@ -3096,7 +3034,7 @@ class ControllerCatalogProduct extends Controller {
 
 	public function deleteSourceAjax(){			
 		$product_id = (int)$this->request->get['product_id'];
-		$md5_source = $this->request->get['md5_source'];
+		$md5_source = (string)$this->request->get['md5_source'];
 
 		$source_query = $this->db->query("SELECT source FROM product WHERE product_id = '" . (int)$product_id . "' LIMIT 1");			
 		$sources = explode(PHP_EOL, $source_query->row['source']);
@@ -3114,14 +3052,11 @@ class ControllerCatalogProduct extends Controller {
 		$this->db->query("UPDATE product SET source = '" . $this->db->escape($new_sources) . "' WHERE product_id = '" . (int)$product_id . "'");
 	}
 
-	public function getAmazonPriceAjax(){
-	}
-
 	public function updateProductStockLimitAjax(){
-		$product_id = $this->request->post['product_id'];
-		$type = $this->request->post['type'];
-		$store_id = $this->request->post['store_id'];
-		$value = $this->request->post['value'];
+		$product_id = (int)$this->request->post['product_id'];
+		$store_id 	= (int)$this->request->post['store_id'];
+		$type 		= (string)$this->request->post['type'];
+		$value 		= (string)$this->request->post['value'];
 
 		if ($type == 'min'){
 			$this->db->query("INSERT INTO product_stock_limits (product_id, store_id, min_stock) VALUES ('" .(int)$product_id. "', '" .(int)$store_id. "', '" .(int)$value. "')	ON DUPLICATE KEY UPDATE min_stock = '" .(int)$value. "'");
@@ -3131,14 +3066,4 @@ class ControllerCatalogProduct extends Controller {
 			$this->db->query("INSERT INTO product_stock_limits (product_id, store_id, rec_stock) VALUES ('" .(int)$product_id. "', '" .(int)$store_id. "', '" .(int)$value. "')	ON DUPLICATE KEY UPDATE rec_stock = '" .(int)$value. "'");
 		}
 	}
-
-	public function getByURLPriceAjax(){
-		$url = $this->request->get['url'];
-		$product_id = $this->request->get['product_id'];
-
-		$responce = $this->amazonprice->getPriceByURL($url, $product_id);
-
-		var_dump($responce);
-	}
-
 }

@@ -1174,7 +1174,7 @@
 				$url .= '&page=' . $this->request->get['page'];
 			}
 			
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -1198,7 +1198,7 @@
 			$this->data['fucked_order_total'] = $fucked_order_total;
 			$this->data['fucked_link'] = $this->url->link('sale/order', 'filter_order_status_id=0&token=' . $this->session->data['token'] . $url, 'SSL');
 			
-			$this->data['orders'] = array();
+			$this->data['orders'] = [];
 			
 			if (isset($this->request->get['filter_do_csv']) && ($this->request->get['filter_do_csv'] == 1)){
 				$limit = 10000;
@@ -1249,8 +1249,8 @@
 			
 			$results = $this->model_sale_order->getOrders($data);
 			
-			$result_sums = array();//$this->model_sale_order->getOrdersSums($data);
-			$this->data['result_sums'] = array();
+			$result_sums = [];//$this->model_sale_order->getOrdersSums($data);
+			$this->data['result_sums'] = [];
 			
 			foreach ($result_sums as $result_sum){
 				$this->data['result_sums'][] = $this->currency->format($result_sum['total'], $result_sum['currency_code'], $result_sum['currency_value']);			
@@ -1264,10 +1264,10 @@
 			
 			$this->data['csi_filters'] = $this->model_kp_csi->getCSIOrderStatuses();
 			
-			$cities = array();
+			$cities = [];
 			$countries = $this->model_localisation_country->getCountriesStructuredByID();
 			foreach ($results as $result) {
-				$action = array();
+				$action = [];
 				
 				$action[] = array(
 				'text' => '<i class="fa fa-file-excel-o"></i>',
@@ -1318,13 +1318,12 @@
 					$products = $this->model_sale_order->getOrderProductsListNoGood($result['order_id']);
 				}
 				
-				$order_products = array();			
-				
-				$_order_parties_tmp = array();
+				$order_products 	= [];							
+				$order_parties_tmp 	= [];
 				
 				$zero_price_products = [];
 				foreach ($products as $product) {
-					$option_data = array();
+					$option_data = [];
 					
 					$options = $this->model_sale_order->getOrderOptions($result['order_id'], $product['order_product_id']);
 					
@@ -1345,8 +1344,8 @@
 						}
 					}
 					
-					if (!empty($product['part_num']) && mb_strlen($product['part_num']) > 1 && !in_array($product['part_num'], $_order_parties_tmp)){
-						$_order_parties_tmp[]= $product['part_num'];
+					if (!empty($product['part_num']) && mb_strlen($product['part_num']) > 1 && !in_array($product['part_num'], $order_parties_tmp)){
+						$order_parties_tmp[]= $product['part_num'];
 					}
 					
 					if ($product['price'] == 0){
@@ -1354,27 +1353,27 @@
 					}
 					
 					$order_products[] = array(
-					'order_product_id' => $product['order_product_id'],
-					'order_id'         => $result['order_id'],
-					'product_id'       => $product['product_id'],
-					'amazon_offers_type' => $product['amazon_offers_type'],
-					'from_stock'       => !empty($product['from_stock'])?$product['from_stock']:false,
-					'from_bd_gift'     => !empty($product['from_bd_gift'])?$product['from_bd_gift']:false,
-					'name'    	 	   => $product['name'],
-					'part_num'		   => !empty($product['part_num'])?$product['part_num']:false,
-					'lthumb'    	   => $this->model_tool_image->resize($product['image'], 150, 150),
-					'thumb'    	 	   => $this->model_tool_image->resize($product['image'], 25, 25),
-					'model'    		   => $product['model'],
-					'option'   		   => $option_data,
-					'quantity'		   => $product['quantity'],					
-					'price'    		   => $this->currency->format($product['price_national'], $result['currency_code'], 1),
-					'href'     		   => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL')
+					'order_product_id' 		=> $product['order_product_id'],
+					'order_id'         		=> $result['order_id'],
+					'product_id'       		=> $product['product_id'],
+					'amazon_offers_type'	=> !empty($product['amazon_offers_type'])?$product['amazon_offers_type']:false,
+					'from_stock'       		=> !empty($product['from_stock'])?$product['from_stock']:false,
+					'from_bd_gift'     		=> !empty($product['from_bd_gift'])?$product['from_bd_gift']:false,
+					'name'    	 	   		=> $product['name'],
+					'part_num'		   		=> !empty($product['part_num'])?$product['part_num']:false,
+					'lthumb'    	   		=> $this->model_tool_image->resize($product['image'], 150, 150),
+					'thumb'    	 	   		=> $this->model_tool_image->resize($product['image'], 25, 25),
+					'model'    		  		=> $product['model'],
+					'option'   		   		=> $option_data,
+					'quantity'		   		=> $product['quantity'],					
+					'price'    		   		=> $this->currency->format($product['price_national'], $result['currency_code'], 1),
+					'href'     		   		=> $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $product['product_id'], 'SSL')
 					);
 				}
 				
-				$_order_parties = array();
-				foreach ($_order_parties_tmp as $_partie){					
-					$_order_parties []= array(
+				$order_parties = [];
+				foreach ($order_parties_tmp as $_partie){					
+					$order_parties []= array(
 					'part_num' => $_partie,
 					'href'     => $this->url->link('sale/order', 'filter_order_id=' . $_partie . '&token=' . $this->session->data['token'], 'SSL')				
 					);				
@@ -1395,15 +1394,15 @@
 					}
 				}
 				
-				$_rsct = $this->model_kp_geoip->guessCity($result['shipping_city']);
+				$guessed_shipping_city = $this->model_kp_geoip->guessCity($result['shipping_city']);
 				
-				if ($result['shipping_city'] && !array_key_exists($_rsct, $cities)){
+				if ($result['shipping_city'] && !array_key_exists($guessed_shipping_city, $cities)){
 					if (isset($countries[$result['shipping_country_id']])){
 						$_country_iso2 = $countries[$result['shipping_country_id']]['iso_code_2'];
 						} else {
 						$_country_iso2 = false;
 					}
-					$cities[$_rsct] = $this->model_kp_geoip->getCurrentTimeInCity($_rsct, $_country_iso2);
+					$cities[$guessed_shipping_city] = $this->model_kp_geoip->getCurrentTimeInCity($guessed_shipping_city, $_country_iso2);
 				}
 				
 				$times = $this->processTimes($result['order_id']);	
@@ -1425,7 +1424,7 @@
 				$total_orders = $this->model_sale_order->getTotalOrdersByCustomerId($result['customer_id']);
 				$totals = $this->model_sale_order->getOrderTotals($result['order_id']);							
 				
-				$totals2 = array();
+				$totals2 = [];
 				$total_discount = 0;
 				$sub_total = 0;
 				foreach ($totals as $tmp_total){
@@ -1509,7 +1508,7 @@
 				'store_url'     			=> $result['store_url'],
 				'part_num'         			=> $result['part_num'],
 				'pay_type'         			=> $result['pay_type'],
-				'parties'         			=> $_order_parties,
+				'parties'         			=> $order_parties,
 				'related_orders'         	=> $this->model_sale_order->getRelatedOrders($result['order_id']),
 				'comment'         			=> strip_tags($result['comment']),
 				'last_comment'   			=> $last_comment,
@@ -1520,8 +1519,8 @@
 				'shipping_country_id'     	=> $result['shipping_country_id'],
 				'shipping_country_info'     => isset($countries[$result['shipping_country_id']])?$countries[$result['shipping_country_id']]:false,
 				'shipping_city'     		=> $result['shipping_city'],
-				'current_time'     			=> isset($cities[$_rsct])?$cities[$_rsct]:false,
-				'can_call_now'    			=> isset($cities[$_rsct])?$this->model_kp_geoip->canCallNow($cities[$_rsct]):false,
+				'current_time'     			=> isset($cities[$guessed_shipping_city])?$cities[$guessed_shipping_city]:false,
+				'can_call_now'    			=> isset($cities[$guessed_shipping_city])?$this->model_kp_geoip->canCallNow($cities[$guessed_shipping_city]):false,
 				'payment_method'     		=> $result['payment_method'],
 				'payment_code'     			=> $result['payment_code'],
 				'payment_secondary_method'  => $result['payment_secondary_method'],
@@ -1603,25 +1602,25 @@
 				);
 			}
 			
-			$this->data['heading_title'] = $this->language->get('heading_title');
+			$this->data['heading_title'] 		= $this->language->get('heading_title');
 			
-			$this->data['text_no_results'] = $this->language->get('text_no_results');
-			$this->data['text_missing'] = $this->language->get('text_missing');
+			$this->data['text_no_results'] 		= $this->language->get('text_no_results');
+			$this->data['text_missing'] 		= $this->language->get('text_missing');
 			
-			$this->data['column_order_id'] = $this->language->get('column_order_id');
-			$this->data['column_customer'] = $this->language->get('column_customer');
-			$this->data['column_status'] = $this->language->get('column_status');
-			$this->data['column_total'] = $this->language->get('column_total');
-			$this->data['column_date_added'] = $this->language->get('column_date_added');
+			$this->data['column_order_id'] 		= $this->language->get('column_order_id');
+			$this->data['column_customer'] 		= $this->language->get('column_customer');
+			$this->data['column_status'] 		= $this->language->get('column_status');
+			$this->data['column_total'] 		= $this->language->get('column_total');
+			$this->data['column_date_added'] 	= $this->language->get('column_date_added');
 			$this->data['column_date_modified'] = $this->language->get('column_date_modified');
-			$this->data['column_action'] = $this->language->get('column_action');
+			$this->data['column_action'] 		= $this->language->get('column_action');
 			
-			$this->data['button_invoice'] = $this->language->get('button_invoice');
-			$this->data['button_insert'] = $this->language->get('button_insert');
-			$this->data['button_delete'] = $this->language->get('button_delete');
-			$this->data['button_filter'] = $this->language->get('button_filter');
-			$this->data['button_remove'] = $this->language->get('button_remove');
-			$this->data['button_upload'] = $this->language->get('button_upload');
+			$this->data['button_invoice'] 		= $this->language->get('button_invoice');
+			$this->data['button_insert'] 		= $this->language->get('button_insert');
+			$this->data['button_delete'] 		= $this->language->get('button_delete');
+			$this->data['button_filter'] 		= $this->language->get('button_filter');
+			$this->data['button_remove'] 		= $this->language->get('button_remove');
+			$this->data['button_upload'] 		= $this->language->get('button_upload');
 			
 			$this->data['entry_option'] = $this->language->get('entry_option');
 			
@@ -1748,8 +1747,8 @@
 			}
 
 			if (isset($this->request->get['filter_amazon_offers_type'])) {
-					$url .= '&filter_amazon_offers_type=' . $this->request->get['filter_amazon_offers_type'];
-				}
+				$url .= '&filter_amazon_offers_type=' . $this->request->get['filter_amazon_offers_type'];
+			}
 			
 			if (isset($this->request->get['filter_manager_id'])) {
 				$url .= '&filter_manager_id=' . $this->request->get['filter_manager_id'];
@@ -2252,7 +2251,7 @@
 			'emailtemplate_key' => 'admin.order_update'
 			));
 			
-			$this->data['templates_options'] = array();
+			$this->data['templates_options'] = [];
 			
 			foreach($templates as $row){
 				$label = $row['emailtemplate_label'];
@@ -2504,7 +2503,7 @@
 				$url .= '&page=' . $this->request->get['page'];
 			}
 			
-			$this->data['breadcrumbs'] = array();
+			$this->data['breadcrumbs'] = [];
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -2583,7 +2582,7 @@
 				$this->data['main_order_num'] = false;
 				$linked_orders = $this->model_sale_order->getLinkedOrders((int)$this->request->get['order_id']);
 				
-				$this->data['linked_orders'] = array();
+				$this->data['linked_orders'] = [];
 				if (count($linked_orders) > 0){
 					foreach ($linked_orders as $_linked_order){
 						$this->data['linked_orders'][] = array(
@@ -2630,7 +2629,7 @@
 			$this->data['ip'] = $order_info['ip'];
 			//	$this->data['ip_geoip_full_info'] = $this->model_kp_geoip->getCityByIpAddr(trim($order_info['ip']));
 			
-			$this->data['forwarded_ip'] = array();
+			$this->data['forwarded_ip'] = [];
 			$fw_ips = explode(',', $order_info['forwarded_ip']);			
 			
 			foreach ($fw_ips as $_fip){
@@ -2782,7 +2781,7 @@
 
 
 
-			$this->data['receipts'] = array();
+			$this->data['receipts'] = [];
 			$receipts = $this->model_sale_receipt->getOrders(['filter_order_id' => $this->request->get['order_id']]);
 			
 			$this->data['create_receipt_checkbox'] = $this->url->link('sale/receipt/createOne', 'order_id=' . $this->request->get['order_id'] . '&token=' . $this->session->data['token']);
@@ -3281,7 +3280,7 @@
 			}
 			
 			
-			$this->data['orders_for_csi'] = array();
+			$this->data['orders_for_csi'] = [];
 			foreach ($orders_for_csi = $this->model_kp_csi->getCompletedOrdersWithoutCSI($order_info['customer_id']) as $ofc){
 				$ofco = $this->model_sale_order->getOrder($ofc);
 				
@@ -3383,7 +3382,7 @@
 				} elseif (!empty($order_info)) {
 				$this->data['addresses'] = $this->model_sale_customer->getAddresses($order_info['customer_id']);
 				} else {
-				$this->data['addresses'] = array();
+				$this->data['addresses'] = [];
 			}
 			
 			if (isset($this->request->post['payment_firstname'])) {
@@ -3711,7 +3710,7 @@
 			$this->data['countries'] = $this->model_localisation_country->getCountries();
 			
 			$this->load->model('localisation/legalperson');	
-			$this->data['legalpersons'] = array();
+			$this->data['legalpersons'] = [];
 			if (!$this->data['payment_country_id'] && $this->data['shipping_country_id']) {
 				$this->data['legalpersons'] 	= $this->model_localisation_legalperson->getLegalPersonsByCountryID($this->data['shipping_country_id']);
 				$this->data['cards'] 			= $this->model_localisation_legalperson->getLegalPersonsByCountryID($this->data['shipping_country_id'], true);
@@ -3913,7 +3912,7 @@
 			} elseif (isset($this->request->get['order_id'])) {
 				$order_products = $this->model_sale_order->getOrderProducts($this->request->get['order_id']);			
 			} else {
-				$order_products = array();
+				$order_products = [];
 			}
 						
 			$this->load->model('catalog/product');
@@ -3930,10 +3929,10 @@
 			$order_products_return = $this->model_sale_return->getReturns($return_filter_data);
 			
 			
-			$this->data['order_products'] = array();
-			$this->data['order_products_nogood'] = array();
-			$this->data['order_products_untaken'] = array();
-			$this->data['order_products_return'] = array();			
+			$this->data['order_products'] = [];
+			$this->data['order_products_nogood'] = [];
+			$this->data['order_products_untaken'] = [];
+			$this->data['order_products_return'] = [];			
 			
 			
 			foreach ($order_products_return as $order_product_return){
@@ -3962,7 +3961,7 @@
 				);
 			}
 			
-			$just_product_ids = array();
+			$just_product_ids = [];
 			foreach ($order_products as $order_product) {
 				$just_product_ids[] = $order_product['product_id'];
 			}
@@ -3975,7 +3974,7 @@
 					} elseif (isset($this->request->get['order_id'])) {
 					$order_option = $this->model_sale_order->getOrderOptions($this->request->get['order_id'], $order_product['order_product_id']);
 					} else {
-					$order_option = array();
+					$order_option = [];
 				}
 				
 				if (isset($order_product['order_download'])) {
@@ -3983,7 +3982,7 @@
 					} elseif (isset($this->request->get['order_id'])) {
 					$order_download = $this->model_sale_order->getOrderDownloads($this->request->get['order_id'], $order_product['order_product_id']);
 					} else {
-					$order_download = array();
+					$order_download = [];
 				}
 				
 				if ($order_product['price_national'] > 0){
@@ -4019,7 +4018,7 @@
 					$set_id = (int)$is_set['set_id'];
 					$set_products_results = $this->model_sale_order->getOrderProductsBySet($order_id, $set_id);
 					
-					$set_products = array();
+					$set_products = [];
 					
 					foreach ($set_products_results as $set_product_result){
 						$set_product_info = $this->model_catalog_product->getProduct($set_product_result['product_id']);
@@ -4117,7 +4116,7 @@
 					} elseif (isset($this->request->get['order_id'])) {
 					$order_option = $this->model_sale_order->getOrderOptions($this->request->get['order_id'], $order_product['order_product_id']);
 					} else {
-					$order_option = array();
+					$order_option = [];
 				}
 				
 				if (isset($order_product['order_download'])) {
@@ -4125,7 +4124,7 @@
 					} elseif (isset($this->request->get['order_id'])) {
 					$order_download = $this->model_sale_order->getOrderDownloads($this->request->get['order_id'], $order_product['order_product_id']);
 					} else {
-					$order_download = array();
+					$order_download = [];
 				}
 				
 				if ($order_product['price_national'] > 0){
@@ -4161,7 +4160,7 @@
 					$set_id = (int)$is_set['set_id'];
 					$set_products_results = $this->model_sale_order->getOrderProductsBySet($order_id, $set_id);
 					
-					$set_products = array();
+					$set_products = [];
 					
 					foreach ($set_products_results as $set_product_result){
 						$set_product_info = $this->model_catalog_product->getProduct($set_product_result['product_id']);
@@ -4256,7 +4255,7 @@
 				} elseif (isset($this->request->get['order_id'])) {
 				$this->data['order_totals'] = $this->model_sale_order->getOrderTotals($this->request->get['order_id']);
 				} else {
-				$this->data['order_totals'] = array();
+				$this->data['order_totals'] = [];
 			}
 			
 			foreach ($this->data['order_totals'] as &$order_total_tmp){
@@ -4315,7 +4314,7 @@
 				$this->data['order_has_coupon_is_active'] = ($coupon_active_query->num_rows);
 				
 				} else {
-				$coupon_active_products = array();
+				$coupon_active_products = [];
 				
 				$this->data['order_has_coupon'] = false;
 				$this->data['order_has_coupon_is_active'] = false;
@@ -4341,7 +4340,7 @@
 			
 			if ($order_has_cumulative_discount){
 				if (!isset($scd_discount['excluded_manufacturers'])){
-					$excluded_manufacturers = array();
+					$excluded_manufacturers = [];
 					} else {
 					$excluded_manufacturers = explode(',', str_replace(',,',',',mb_substr($scd_discount['excluded_manufacturers'],0,-1)));
 				}
@@ -4349,7 +4348,7 @@
 				$this->data['order_has_cumulative_discount'] = true;
 				
 				} else {
-				$excluded_manufacturers = array();
+				$excluded_manufacturers = [];
 				$this->data['cumulative_discount_percent'] = false;
 				$this->data['order_has_cumulative_discount'] = false;
 				
@@ -4386,7 +4385,7 @@
 					} elseif (isset($this->request->get['order_id'])) {
 					$order_option = $this->model_sale_order->getOrderOptions($this->request->get['order_id'], $order_product['order_product_id']);
 					} else {
-					$order_option = array();
+					$order_option = [];
 				}
 				
 				if (isset($order_product['order_download'])) {
@@ -4394,7 +4393,7 @@
 					} elseif (isset($this->request->get['order_id'])) {
 					$order_download = $this->model_sale_order->getOrderDownloads($this->request->get['order_id'], $order_product['order_product_id']);
 					} else {
-					$order_download = array();
+					$order_download = [];
 				}
 				
 				$_colored_similar = false;
@@ -4428,7 +4427,7 @@
 					$set_id = (int)$is_set['set_id'];
 					$set_products_results = $this->model_sale_order->getOrderProductsBySet($order_id, $set_id);
 					
-					$set_products = array();
+					$set_products = [];
 					
 					foreach ($set_products_results as $set_product_result){
 						$real_product = $this->model_catalog_product->getProduct($set_product_result['product_id']);
@@ -4506,7 +4505,7 @@
 						}
 						
 						//для закупки
-						$supplies = array();
+						$supplies = [];
 						$supplies = $this->model_sale_supplier->getOPSupplyForSet($set_product_result['order_set_id']);
 						
 						foreach ($supplies as &$_supply){
@@ -4712,7 +4711,7 @@
 				
 				
 				//для закупки
-				$supplies = array();
+				$supplies = [];
 				$supplies = $this->model_sale_supplier->getOPSupply($order_product['order_product_id']);
 				
 				
@@ -4894,7 +4893,7 @@
 				} elseif (isset($this->request->get['order_id'])) {
 				$this->data['order_vouchers'] = $this->model_sale_order->getOrderVouchers($this->request->get['order_id']);
 				} else {
-				$this->data['order_vouchers'] = array();
+				$this->data['order_vouchers'] = [];
 			}
 			
 			$this->load->model('sale/voucher_theme');
@@ -4929,7 +4928,7 @@
 				}
 			}
 			
-			$fixed_discounts = array();
+			$fixed_discounts = [];
 			foreach ($this->data['order_totals'] as &$order_total){
 				if (bool_real_stripos($order_total['title'], 'скидка') && $order_total['value_national'] < 0 && !bool_real_stripos($order_total['title'], '%')){												
 					$_percent = (abs($order_total['value_national']) / $sub_total) * 100;					
@@ -4991,7 +4990,7 @@
 				}
 			}
 			
-			$this->data['courier'] = array();
+			$this->data['courier'] = [];
 			if ($order_info['courier_id']){
 				$this->data['courier'] = array(
 				'name'     => $this->model_user_user->getUserNameById($order_info['courier_id']), 
@@ -5036,7 +5035,7 @@
 				if ($this->data['related_orders']){
 					$this->data['related_order_id'] = implode(',',$this->data['related_orders']);
 					} else {
-					$this->data['related_order_id'] = array();
+					$this->data['related_order_id'] = [];
 				}
 				
 				return $this->data;
@@ -5117,7 +5116,7 @@
 				$order_data['order_id2'] = '';
 				$order_data['order_status_id'] = $this->config->get('config_order_status_id');
 				
-				$totals = array();
+				$totals = [];
 				
 				foreach ($order_data['order_total'] as &$_total){
 					
@@ -5191,7 +5190,7 @@
 		}
 		
 		public function country() {
-			$json = array();
+			$json = [];
 			
 			$this->load->model('localisation/country');
 			
@@ -5383,7 +5382,7 @@
 		public function createInvoiceNo() {
 			$this->language->load('sale/order');
 			
-			$json = array();
+			$json = [];
 			
 			if (!$this->user->hasPermission('modify', 'sale/order')) {
 				$json['error'] = $this->language->get('error_permission');
@@ -5405,7 +5404,7 @@
 		public function addCredit() {
 			$this->language->load('sale/order');
 			
-			$json = array();
+			$json = [];
 			
 			if (!$this->user->hasPermission('modify', 'sale/order')) {
 				$json['error'] = $this->language->get('error_permission');
@@ -5435,7 +5434,7 @@
 		public function removeCredit() {
 			$this->language->load('sale/order');
 			
-			$json = array();
+			$json = [];
 			
 			if (!$this->user->hasPermission('modify', 'sale/order')) {
 				$json['error'] = $this->language->get('error_permission');
@@ -5461,7 +5460,7 @@
 		public function addReward() {
 			$this->language->load('sale/order');
 			
-			$json = array();
+			$json = [];
 			
 			if (!$this->user->hasPermission('modify', 'sale/order')) {
 				$json['error'] = $this->language->get('error_permission');
@@ -5493,7 +5492,7 @@
 		public function removeReward() {
 			$this->language->load('sale/order');
 			
-			$json = array();
+			$json = [];
 			
 			if (!$this->user->hasPermission('modify', 'sale/order')) {
 				$json['error'] = $this->language->get('error_permission');
@@ -5519,7 +5518,7 @@
 		public function addCommission() {
 			$this->language->load('sale/order');
 			
-			$json = array();
+			$json = [];
 			
 			if (!$this->user->hasPermission('modify', 'sale/order')) {
 				$json['error'] = $this->language->get('error_permission');
@@ -5551,7 +5550,7 @@
 		public function removeCommission() {
 			$this->language->load('sale/order');
 			
-			$json = array();
+			$json = [];
 			
 			if (!$this->user->hasPermission('modify', 'sale/order')) {
 				$json['error'] = $this->language->get('error_permission');
@@ -5879,7 +5878,7 @@
 			$this->data['column_comment'] = $this->language->get('column_comment');
 			$this->data['text_no_results'] = $this->language->get('text_no_results');
 			
-			$this->data['histories'] = array();		
+			$this->data['histories'] = [];		
 			
 			$results = $this->model_sale_order->getOrderSmsHistories((int)$this->request->get['order_id'], 0, 40);
 			
@@ -5905,7 +5904,7 @@
 			$this->data['column_comment'] = $this->language->get('column_comment');
 			$this->data['text_no_results'] = $this->language->get('text_no_results');
 			
-			$this->data['histories'] = array();		
+			$this->data['histories'] = [];		
 			
 			$results = $this->model_sale_order->getOrderCourierHistories((int)$this->request->get['order_id'], 0, 40);
 			
@@ -5934,12 +5933,12 @@
 			$this->data['column_comment'] = $this->language->get('column_comment');
 			$this->data['text_no_results'] = $this->language->get('text_no_results');
 			
-			$filter = array();
+			$filter = [];
 			$filter['order_id'] = (int)$this->request->get['order_id'];
 			$filter['limit'] = 100;
 			$filter['order'] = 'DESC';
 			
-			$this->data['histories'] = array();		
+			$this->data['histories'] = [];		
 			$results = $this->model_module_emailtemplate->getTemplateLogs($filter, true, true);
 			
 			$this->data['token'] = $this->session->data['token'];				
@@ -6073,7 +6072,7 @@
 			
 			$results = $this->model_sale_customer->getCustomerCalls($order['customer_id'], $data);
 			
-			$this->data['user_calls'] = array();
+			$this->data['user_calls'] = [];
 			
 			foreach ($results as $result){
 				
@@ -6525,7 +6524,7 @@
 				$page = 1;
 			}
 			
-			$this->data['histories'] = array();
+			$this->data['histories'] = [];
 			
 			$this->data['button_remove'] = $this->language->get('button_remove');			
 			$results = $this->model_sale_order->getOrderHistories2($this->request->get['order_id'], ($page - 1) * 20, 20);
@@ -6638,7 +6637,7 @@
 				$page = 1;
 			}  
 			
-			$this->data['histories'] = array();
+			$this->data['histories'] = [];
 			
 			$results = $this->model_sale_order->getOrderHistories2($this->request->get['order_id'], ($page - 1) * 20, 20);
 			
@@ -6715,7 +6714,7 @@
 				
 				$this->data['text_not_found'] = $this->language->get('text_not_found');
 				
-				$this->data['breadcrumbs'] = array();
+				$this->data['breadcrumbs'] = [];
 				
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_home'),
@@ -6742,7 +6741,7 @@
 		public function upload() {
 			$this->language->load('sale/order');
 			
-			$json = array();
+			$json = [];
 			
 			if ($this->request->server['REQUEST_METHOD'] == 'POST') {
 				if (!empty($this->request->files['file']['name'])) {
@@ -6753,7 +6752,7 @@
 					}
 					
 					// Allowed file extension types
-					$allowed = array();
+					$allowed = [];
 					
 					$filetypes = explode("\n", $this->config->get('config_file_extension_allowed'));
 					
@@ -6766,7 +6765,7 @@
 					}
 					
 					// Allowed file mime types
-					$allowed = array();
+					$allowed = [];
 					
 					$filetypes = explode("\n", $this->config->get('config_file_mime_allowed'));
 					
@@ -7015,7 +7014,7 @@
 				
 				$payment_address = str_replace(array("\r\n", "\r", "\n"), ', ', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), ', ', trim(str_replace($find, $replace, $format))));
 				
-				$product_data = array();
+				$product_data = [];
 				
 				$products = $this->model_sale_order->getOrderProducts($order_id, $with_returns = false);
 				
@@ -7023,13 +7022,13 @@
 				$sub_total = 0;
 				$full_sub_total = 0;
 				$next_sub_total = 0;
-				$sku_lengths = array();
-				$just_product_ids = array();
+				$sku_lengths = [];
+				$just_product_ids = [];
 				foreach ($products as $product) {
 					
 					$just_product_ids[] = $product['product_id'];
 					
-					$option_data = array();
+					$option_data = [];
 					
 					$options = $this->model_sale_order->getOrderOptions($order_id, $product['order_product_id']);
 					
@@ -7131,7 +7130,7 @@
 						$set_id = (int)$is_set['set_id'];
 						$set_products_results = $this->model_sale_order->getOrderProductsBySet($order_id, $set_id);					
 						
-						$set_products = array();
+						$set_products = [];
 						
 						foreach ($set_products_results as $set_product_result){
 							$set_product_info = $this->model_catalog_product->getProduct($set_product_result['product_id']);
@@ -7278,7 +7277,7 @@
 				}
 				
 				
-				$voucher_data = array();
+				$voucher_data = [];
 				$vouchers = $this->model_sale_order->getOrderVouchers($order_id);
 				foreach ($vouchers as $voucher) {
 					$voucher_data[] = array(
@@ -7288,7 +7287,7 @@
 				}
 				
 				$total_data = $this->model_sale_order->getOrderTotals($order_id);
-				$real_total_data = array();
+				$real_total_data = [];
 				
 				//Оплачено на данный момент по заказу
 				$paid_on_current_moment = $this->model_sale_customer->getTransactionTotalNational($order_info['customer_id'], $order_id);
@@ -7720,7 +7719,7 @@
 				if (($to_remove_from_paid_on_current_moment > 0)) {						
 					//предоплата не вписана в итоги заказа, но на счету покупателя есть положительный баланс и мы можем его использовать. to_remove_from_paid_on_current_moment > 0. Если баланс пуст, то это условие и не будет выполнено
 					//мы вставим ее перед окончательным тоталом
-					$total = array();
+					$total = [];
 					
 					$total['title'] = 'Предоплата';
 					$total['code'] = 'transfer_plus_prepayment';
@@ -7746,7 +7745,7 @@
 				}
 				
 				$temp_real_total = $real_total_data;
-				$real_total_data = array();
+				$real_total_data = [];
 				foreach ($temp_real_total as $total){
 					if ($total['code'] == 'total' || $total['text'] != 'nop'){						
 						$total['text'] = number_format(round($total['text']), 2, ',', ' ');
@@ -7770,7 +7769,7 @@
 					$short_shipping_method = 'Самовывоз';
 				}
 				
-				$comments = array();
+				$comments = [];
 				if ($order_info['comment']){
 					$comments[] = trim((EmailTemplate::isHTML($order_info['comment'])) ? html_entity_decode($order_info['comment'], ENT_QUOTES, 'UTF-8') : nl2br($order_info['comment'], true));
 				}
@@ -7971,9 +7970,9 @@
 			
 			$this->load->model('setting/setting');
 			
-			$this->data['orders'] = array();
+			$this->data['orders'] = [];
 			
-			$orders = array();
+			$orders = [];
 			
 			if (isset($this->request->post['selected'])) {
 				$orders = $this->request->post['selected'];
@@ -8073,12 +8072,12 @@
 					
 					$payment_address = str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format))));
 					
-					$product_data = array();
+					$product_data = [];
 					
 					$products = $this->model_sale_order->getOrderProducts($order_id);
 					
 					foreach ($products as $product) {
-						$option_data = array();
+						$option_data = [];
 						
 						$options = $this->model_sale_order->getOrderOptions($order_id, $product['order_product_id']);
 						
@@ -8106,7 +8105,7 @@
 						);
 					}
 					
-					$voucher_data = array();
+					$voucher_data = [];
 					
 					$vouchers = $this->model_sale_order->getOrderVouchers($order_id);
 					
@@ -8534,7 +8533,7 @@
 			'emailtemplate_key' => 'order.admin',
 			);
 			
-			$attachments = array();
+			$attachments = [];
 			if ($order_info['bill_file']){
 				$attachments[] = DIR_BILLS . $order_info['bill_file'];
 			}
@@ -8589,7 +8588,7 @@
 			'emailtemplate_key' => 'order.admin',
 			);
 			
-			$attachments = array();
+			$attachments = [];
 			if ($order_info['bill_file']){
 				$attachments[] = DIR_BILLS . $order_info['bill_file'];
 			}
@@ -8812,8 +8811,8 @@
 			$this->load->model('sale/order');
 			$this->load->model('tool/image');
 			
-			$this->data['products'] = array();
-			$this->data['ao_products'] = array();
+			$this->data['products'] = [];
+			$this->data['ao_products'] = [];
 			
 			$this->data['token'] = $this->session->data['token'];
 			
@@ -8826,7 +8825,7 @@
 			
 			$this->data['main_attributes'] = $this->model_catalog_product->getProductAttributesNamesValuesByLanguage($product_id, $language_id);
 			
-			$this->data['special_attributes'] = array();
+			$this->data['special_attributes'] = [];
 			
 			foreach ($this->data['main_attributes'] as $key => $value){
 				if ($value['group_id'] == $this->config->get('config_special_attr_id')){
@@ -8842,7 +8841,7 @@
 				$special = $this->model_catalog_product->getProductSpecialOne($related_product_id);
 				
 				$main_attributes = $this->model_catalog_product->getProductAttributesNamesValuesByLanguage($related_product_id, $language_id);
-				$special_attributes = array();
+				$special_attributes = [];
 				
 				foreach ($main_attributes  as $key => $value){
 					if ($value['group_id'] == $this->config->get('config_special_attr_id')){
@@ -8884,7 +8883,7 @@
 				}
 				
 				$main_attributes = $this->model_catalog_product->getProductAttributesNamesValuesByLanguage($ao_product['ao_product_id'], $language_id);
-				$special_attributes = array();
+				$special_attributes = [];
 				
 				foreach ($main_attributes  as $key => $value){
 					if ($value['group_id'] == $this->config->get('config_special_attr_id')){
@@ -8924,8 +8923,8 @@
 			$this->load->model('sale/order');
 			$this->load->model('tool/image');
 			
-			$this->data['categories'] = array();
-			$this->data['products'] = array();
+			$this->data['categories'] = [];
+			$this->data['products'] = [];
 			
 			$this->data['token'] = $this->session->data['token'];
 			
@@ -8938,7 +8937,7 @@
 			
 			$this->data['main_attributes'] = $this->model_catalog_product->getProductAttributesNamesValuesByLanguage($product_id, $language_id);
 			
-			$this->data['special_attributes'] = array();
+			$this->data['special_attributes'] = [];
 			
 			foreach ($this->data['main_attributes'] as $key => $value){
 				if ($value['group_id'] == $this->config->get('config_special_attr_id')){
@@ -8949,7 +8948,7 @@
 			
 			//got categories, getting categorie attributes
 			foreach ($categories as $category){
-				$valid_attributes = array();
+				$valid_attributes = [];
 				
 				$category_attributes = $this->model_catalog_category->getAttributesByCategory($category);
 				
@@ -8972,14 +8971,14 @@
 					if ($result_product_ids){
 						$real_category = $this->model_catalog_category->getCategory($category);
 						
-						$products = array();										
+						$products = [];										
 						
 						foreach ($result_product_ids as $result_id){
 							$result = $this->model_catalog_product->getProduct($result_id);
 							$special = $this->model_catalog_product->getProductSpecialOne($result_id);
 							
 							$main_attributes = $this->model_catalog_product->getProductAttributesNamesValuesByLanguage($result_id, $language_id);
-							$special_attributes = array();
+							$special_attributes = [];
 							
 							foreach ($main_attributes  as $key => $value){
 								if ($value['group_id'] == $this->config->get('config_special_attr_id')){
@@ -9072,11 +9071,11 @@
 			
 			if (isset($data['order_product_id']) && isset($data['product_id']) && isset($data['source'])){
 				
-				$sources = array();
+				$sources = [];
 				$source_query = $this->db->query("SELECT source FROM product WHERE product_id = '" . (int)$data['product_id'] . "' LIMIT 1");
 				$sources = explode(PHP_EOL, $source_query->row['source']);
 				$sources[] = $data['source'];
-				$new_sources = array();
+				$new_sources = [];
 				foreach ($sources as $_src){
 					$new_src = trim($_src);
 					if (mb_strlen($new_src) > 2){
@@ -9088,7 +9087,7 @@
 				$this->db->query("UPDATE product SET source = '" . $this->db->escape($sources_string) . "' WHERE product_id = '" . (int)$data['product_id'] . "'");
 				$this->db->query("UPDATE `order_product` SET `source` = '" . $this->db->escape($data['source']) . "' WHERE order_product_id = '" . (int)$data['order_product_id'] . "'");
 				
-				$this->data = array();
+				$this->data = [];
 				$this->data['token'] = $this->session->data['token'];
 				$this->data['order_product']['real_product']['source'] = $sources_string;
 				$this->data['order_product']['real_product']['product_id'] = (int)$data['product_id'];
@@ -9230,7 +9229,7 @@
 				//	return false;
 			}		
 			
-			$result = array();
+			$result = [];
 			
 			$order1c = $this->model_kp_info1c->getOrderTrackerXML($order_id);
 			$order = $this->model_sale_order->getOrder($order_id);
@@ -9268,7 +9267,7 @@
 				$total_product_quantity = 0;
 				$maybe_order_product_id = $this->model_sale_order->tryToFindProductLine(array('order_id' => $order_id, 'product_id' => $product['Код']));
 				
-				$just_names = array();		
+				$just_names = [];		
 				if (isset($product['ВПутиДетально'])){
 					
 					if (!isset($product['ВПутиДетально']['Партия']['Номер'])){
