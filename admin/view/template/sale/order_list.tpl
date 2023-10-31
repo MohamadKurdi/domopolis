@@ -718,21 +718,28 @@
 									
 									<?php if (!$order['yam']) { ?>
 										<?php if ($order['telephone']) { ?>
-											<span style="font-size:14px; line-height:14px;"><?php echo $order['telephone']; ?>
-												<span class='click2call' data-phone="<?php echo $order['telephone']; ?>" <? if ($order['shipping_city'] && $order['current_time']  && !$order['can_call_now']) { ?>style="color:#cf4a61;"<? } ?>></span>
+											<div style="font-size:14px; line-height:18px; margin-bottom:5px;margin-top: 5px;">
+												<b><?php echo $order['telephone']; ?></b>
+												<span class='click2call' data-phone="<?php echo $order['telephone']; ?>" <? if ($order['shipping_city'] && $order['current_time']  && !$order['can_call_now']) { ?>style="color:#cf4a61;"<? } ?>></span>	
+
+												<?php if ($order['do_not_call']) { ?>										
+													<span style="color:#FFF; padding:3px; background-color:#cf4a61; font-weight:700;"><i class="fa fa-microphone-slash" aria-hidden="true"></i>&nbsp;&nbsp;Не перезванивайте мне!</span>
+												<?php } ?>
+											</div>
 											<? } ?>
 											<?php if ($order['fax']) { ?>
-												<br /><span style="font-size:14px; line-height:14px;"><?php echo $order['fax']; ?>
-													<span class='click2call' data-phone="<?php echo $order['fax']; ?>" <? if ($order['shipping_city'] && $order['current_time']  && !$order['can_call_now']) { ?>style="color:#cf4a61;"<? } ?>></span>
+												<div style="font-size:14px; line-height:14px; margin-bottom:5px;margin-top: 5px;">
+													<?php echo $order['fax']; ?>
+													<span class='click2call' data-phone="<?php echo $order['fax']; ?>" <? if ($order['shipping_city'] && $order['current_time']  && !$order['can_call_now']) { ?>style="color:#cf4a61;"<? } ?>>													
 													
 													<? if ($order['faxname']) { ?>
 														<br /><span style="font-size:11px; line-height:13px; display:inline-block; padding:3px; color:#FFF; background-color:grey; margin-bottom:4px;"><?php echo $order['faxname']; ?></span>
 													<? } ?>
-													
+												</div>													
 												<? } ?>
 											<?php } ?>
 											<?php if ($order['shipping_country'] || $order['shipping_city']) { ?>
-												<div style="font-size:12px; line-height:14px;">
+												<div style="font-size:12px; line-height:18px;">
 													<span> 
 														<?php if ($order['shipping_country_info']) { ?>
 															<?php if ($this->config->get('config_admin_flags_enable')) { ?>

@@ -74,13 +74,16 @@
 					<a style="color:#6A6A6A; text-decoration:none;" onclick="go_to_order()"><i class="fa fa-external-link-square" aria-hidden="true"></i></a>
 				</h1>
 				
+				<?php if (!empty($last_invoice['order_invoice_id'])) { ?>
 				<h1 class="ktooltip_hover" title="Посмотреть Чек" style="margin-left:10px; font-size:20px; padding:3px 5px; border-radius:5px; border:2px solid #6A6A6A;">
 					<span style="color:#6A6A6A;" class="view-cheque" data-order_invoice-datetime="<?php echo $last_invoice['datetime']; ?>" data-order_invoice-author="<?php echo $last_invoice['realname']; ?>" data-order_invoice_id="<?php echo $last_invoice['order_invoice_id']; ?>"><i class="fa fa fa-eye"></i> ЧК</span>
 				</h1>
 				
+				
 				<h1 class="ktooltip_hover" title="Печатать Чек" style="margin-left:10px; font-size:20px; padding:3px 5px; border-radius:5px; border:2px solid #6A6A6A;">
 					<span style="color:#6A6A6A;" class="print-cheque" data-order_invoice_id="<?php echo $last_invoice['order_invoice_id']; ?>"><i class="fa fa fa-print"></i> ЧК</span>
 				</h1>
+				<?php } ?>
 				
 				<h1 class="ktooltip_hover" title="Коммерческое предложение" style="margin-left:10px; font-size:20px; padding:3px 5px; border-radius:5px; border:2px solid #6A6A6A;">
 					<a href="<?php echo $xls1_download; ?>" style="color:#6A6A6A; text-decoration:none;"><i class="fa fa-file-excel-o"></i> КП</a>
@@ -944,6 +947,12 @@
 																	<label for="ua_logistics_checkbox"><span style="color:#005BBB; font-weight:700;"><i class="fa fa-bus" aria-hidden="true"></i>&nbsp;Специальная логистика</span></label>	
 																</div>	
 																<?php } ?>
+																<div style="margin-top:7px;">
+																	<input id="do_not_call_checkbox" class="checkbox onchangeedit_direct" type="checkbox" name="do_not_call" value="1" <? if ($do_not_call) { ?>checked="checked"<? } ?> />&nbsp;
+																	<label for="do_not_call_checkbox">
+																		<span style="color:#FFF; padding:3px; background-color:#cf4a61; font-weight:700;"><i class="fa fa-microphone-slash" aria-hidden="true"></i>&nbsp;&nbsp;Не перезванивайте мне!</span>
+																	</label>								
+																</div>
 															</td>										
 															<td>
 																<div>

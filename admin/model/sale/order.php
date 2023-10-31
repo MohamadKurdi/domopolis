@@ -756,6 +756,10 @@
 			if (!isset($data['wait_full'])){
 				$data['wait_full'] = 0;
 			}
+
+			if (!isset($data['do_not_call'])){
+				$data['do_not_call'] = 0;
+			}
 			
 			if (!isset($data['ua_logistics'])){
 				$data['ua_logistics'] = 0;
@@ -844,6 +848,7 @@
 			preorder   				= '" . (int)$data['preorder'] . "',
 			urgent_buy   			= '" . (int)$data['urgent_buy'] . "',
 			wait_full   			= '" . (int)$data['wait_full'] . "',
+			do_not_call   			= '" . (int)$data['do_not_call'] . "',
 			ua_logistics   			= '" . (int)$data['ua_logistics'] . "',
 			needs_checkboxua   		= '" . (int)$data['needs_checkboxua'] . "',
 			concardis_id   			= '" . $this->db->escape($data['concardis_id']) . "'
@@ -2393,6 +2398,7 @@
 				'urgent'				=> isset($order_query->row['urgent'])?$order_query->row['urgent']:0,
 				'urgent_buy'			=> isset($order_query->row['urgent_buy'])?$order_query->row['urgent_buy']:0,
 				'wait_full'				=> isset($order_query->row['wait_full'])?$order_query->row['wait_full']:0,
+				'do_not_call'			=> isset($order_query->row['do_not_call'])?$order_query->row['do_not_call']:0,
 				'ua_logistics'			=> isset($order_query->row['ua_logistics'])?$order_query->row['ua_logistics']:0,
 				'concardis_id'			=> isset($order_query->row['concardis_id'])?$order_query->row['concardis_id']:0,
 				'tracker_xml'           => $order_query->row['tracker_xml'],
@@ -2417,7 +2423,7 @@
 		}
 		
 		public function getOrders($data = array()) {
-			$sql = "SELECT DISTINCT o.order_id, o.preorder, o.pwa, o.monocheckout, o.yam, o.yam_id, o.yam_shipment_date, o.yam_shipment_id, o.yam_box_id, o.yam_fake, o.yam_status, o.yam_substatus, o.template, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.customer_id, o.tracker_xml, o.shipping_code, o.needs_checkboxua, o.paid_by, o.costprice, o.profitability, o.amazon_offers_type, ";
+			$sql = "SELECT DISTINCT o.order_id, o.preorder, o.do_not_call, o.pwa, o.monocheckout, o.yam, o.yam_id, o.yam_shipment_date, o.yam_shipment_id, o.yam_box_id, o.yam_fake, o.yam_status, o.yam_substatus, o.template, CONCAT(o.firstname, ' ', o.lastname) AS customer, o.customer_id, o.tracker_xml, o.shipping_code, o.needs_checkboxua, o.paid_by, o.costprice, o.profitability, o.amazon_offers_type, ";
 
 			if ($this->config->get('ukrcredits_status')){
 				$sql .= " ouc.ukrcredits_order_status, ouc.ukrcredits_order_substatus, ";

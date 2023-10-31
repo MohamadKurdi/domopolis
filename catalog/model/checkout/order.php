@@ -109,18 +109,18 @@ class ModelCheckoutOrder extends Model {
 
 				if (!empty($data['cdek_street'])){
 					$data['shipping_address_1'] = $data['cdek_street'];
-					$data['payment_address_1'] = $data['cdek_street'];
+					$data['payment_address_1'] 	= $data['cdek_street'];
 				}
 
 
 				if (!empty($data['cdek_house_number'])){
 					$data['shipping_address_1'] .= ', д.' . $data['cdek_house_number'];
-					$data['payment_address_1'] .= ', д.' . $data['cdek_house_number'];
+					$data['payment_address_1'] 	.= ', д.' . $data['cdek_house_number'];
 				}
 
 				if (!empty($data['cdek_flat'])){
 					$data['shipping_address_1'] .= ', кв.' . $data['cdek_flat'];
-					$data['payment_address_1'] .= ', кв.' . $data['cdek_flat'];
+					$data['payment_address_1'] 	.= ', кв.' . $data['cdek_flat'];
 				}
 			}
 		}
@@ -130,23 +130,23 @@ class ModelCheckoutOrder extends Model {
 			if (!empty($data['ukrpost_postcode'])){
 
 				if (!empty($data['ukrpost_postcode'])){
-					$data['shipping_postcode'] = $data['ukrpost_postcode'];
-					$data['payment_postcode'] = $data['ukrpost_postcode'];
+					$data['shipping_postcode'] 	= $data['ukrpost_postcode'];
+					$data['payment_postcode'] 	= $data['ukrpost_postcode'];
 				}
 
 				if (!empty($data['cdek_street'])){
 					$data['shipping_address_1'] .= 'ул.' . $data['cdek_street'];
-					$data['payment_address_1'] .= 'ул.' . $data['cdek_street'];
+					$data['payment_address_1'] 	.= 'ул.' . $data['cdek_street'];
 				}
 
 				if (!empty($data['cdek_house_number'])){
 					$data['shipping_address_1'] .= ', д.' . $data['cdek_house_number'];
-					$data['payment_address_1'] .= ', д.' . $data['cdek_house_number'];
+					$data['payment_address_1'] 	.= ', д.' . $data['cdek_house_number'];
 				}
 
 				if (!empty($data['cdek_flat'])){
 					$data['shipping_address_1'] .= ', кв.' . $data['cdek_flat'];
-					$data['payment_address_1'] .= ', кв.' . $data['cdek_flat'];
+					$data['payment_address_1'] 	.= ', кв.' . $data['cdek_flat'];
 				}
 			}
 		}
@@ -156,37 +156,41 @@ class ModelCheckoutOrder extends Model {
 			if (!empty($data['ukrpost_postcode'])){
 
 				if (!empty($data['ukrpost_postcode'])){
-					$data['shipping_postcode'] = $data['ukrpost_postcode'];
-					$data['payment_postcode'] = $data['ukrpost_postcode'];
+					$data['shipping_postcode'] 	= $data['ukrpost_postcode'];
+					$data['payment_postcode'] 	= $data['ukrpost_postcode'];
 				}
 
 				if (!empty($data['cdek_street'])){
 					$data['shipping_address_1'] .= 'ул.' . $data['cdek_street'];
-					$data['payment_address_1'] .= 'ул.' . $data['cdek_street'];
+					$data['payment_address_1'] 	.= 'ул.' . $data['cdek_street'];
 				}
 
 				if (!empty($data['cdek_house_number'])){
 					$data['shipping_address_1'] .= ', д.' . $data['cdek_house_number'];
-					$data['payment_address_1'] .= ', д.' . $data['cdek_house_number'];
+					$data['payment_address_1'] 	.= ', д.' . $data['cdek_house_number'];
 				}
 
 				if (!empty($data['cdek_flat'])){
 					$data['shipping_address_1'] .= ', кв.' . $data['cdek_flat'];
-					$data['payment_address_1'] .= ', кв.' . $data['cdek_flat'];
+					$data['payment_address_1'] 	.= ', кв.' . $data['cdek_flat'];
 				}
 			}
 		}
 
 		if (empty($data['shipping_country_id'])){
 			$this->load->model('localisation/country');				
-			$data['shipping_country_id'] = $this->config->get('config_country_id');
-			$data['shipping_country'] = $this->model_localisation_country->getCountry($data['shipping_country_id'])['name'];
+			$data['shipping_country_id'] 	= $this->config->get('config_country_id');
+			$data['shipping_country'] 		= $this->model_localisation_country->getCountry($data['shipping_country_id'])['name'];
 		}
 
 		if (empty($data['payment_country_id'])){
 			$this->load->model('localisation/country');				
 			$data['payment_country_id'] = $this->config->get('config_country_id');
-			$data['payment_country'] = $this->model_localisation_country->getCountry($data['payment_country_id'])['name'];
+			$data['payment_country'] 	= $this->model_localisation_country->getCountry($data['payment_country_id'])['name'];
+		}
+
+		if (empty($data['do_not_call'])){
+			$data['do_not_call'] = 0;
 		}
 
 		$this->db->ncquery("INSERT INTO `order` SET 
@@ -251,6 +255,7 @@ class ModelCheckoutOrder extends Model {
 			user_agent 				= '" . $this->db->escape($data['user_agent']) . "', 
 			preorder 				= '" . (isset($data['preorder']) ? (int)($data['preorder']) : 0) . "', 
 			accept_language 		= '" . $this->db->escape($data['accept_language']) . "', 
+			do_not_call 			= '" . $this->db->escape($data['do_not_call']) . "',
 			date_added 				= NOW(), 
 			date_added_timestamp 	= UNIX_TIMESTAMP(), 
 			date_modified 			= NOW(), 
@@ -300,9 +305,8 @@ class ModelCheckoutOrder extends Model {
 			}
 		}
 
-		$data['order_id'] = $order_id;
-		$data['customer_id'] = $customer_id;
-
+		$data['order_id'] 		= $order_id;
+		$data['customer_id'] 	= $customer_id;
 
 		if ($customer_id == YANDEX_MARKET_CUSTOMER_ID){
 			$this->db->ncquery("UPDATE `order` SET yam = '1', manager_id = 177 WHERE order_id = '" . (int)$order_id . "'");

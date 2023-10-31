@@ -1533,6 +1533,7 @@
 				'is_reorder'        		=> $this->model_sale_order->thisIsReorder($result['order_id']),
 				'urgent_buy'        		=> $result['urgent_buy'],
 				'wait_full'       			=> $result['wait_full'],
+				'do_not_call'       		=> $result['do_not_call'],
 				'ua_logistics'        		=> $result['ua_logistics'],
 				'closed'        			=> $result['closed'],
 				'salary_paid'        		=> $result['salary_paid'],
@@ -3132,6 +3133,14 @@
 				$this->data['wait_full'] = $order_info['wait_full'];
 				} else {
 				$this->data['wait_full'] = 0;
+			}
+
+			if (isset($this->request->post['do_not_call'])) {
+				$this->data['do_not_call'] = $this->request->post['do_not_call'];
+				} elseif (!empty($order_info)) {
+				$this->data['do_not_call'] = $order_info['do_not_call'];
+				} else {
+				$this->data['do_not_call'] = 0;
 			}
 			
 			if (isset($this->request->post['ua_logistics'])) {
