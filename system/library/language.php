@@ -40,7 +40,6 @@ class Language {
 		}
 
 		return;
-
 	}
 
 	public function setPath($path){

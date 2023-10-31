@@ -1,14 +1,20 @@
 <?php
+
 final class Tax {
 	private $shipping_address;
 	private $payment_address;
 	private $store_address;
 
+	private $config 	= null;
+	private $customer 	= null;
+	private $db 		= null;
+	private $session 	= null;
+
 	public function __construct($registry) {
-		$this->config = $registry->get('config');
+		$this->config 	= $registry->get('config');
 		$this->customer = $registry->get('customer');
-		$this->db = $registry->get('db');	
-		$this->session = $registry->get('session');
+		$this->db 		= $registry->get('db');	
+		$this->session 	= $registry->get('session');
 
 		if (isset($this->session->data['shipping_country_id']) || isset($this->session->data['shipping_zone_id'])) {
 			$this->setShippingAddress($this->session->data['shipping_country_id'], $this->session->data['shipping_zone_id']);

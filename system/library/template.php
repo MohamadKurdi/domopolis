@@ -1,6 +1,7 @@
 <?php
+
 class Template {
-	public $data = array();
+	public $data = [];
 
 	public function fetch($filename) {
 		$file = DIR_TEMPLATE . $filename;

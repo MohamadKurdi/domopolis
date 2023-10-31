@@ -1,7 +1,7 @@
 <?php
 	class Log {
-		private $filename;
-		private $firePHP = null;
+		private $filename 	= '';
+		private $firePHP 	= null;
 		
 		public function __construct($filename = '') {
 			$this->filename = $filename;			
@@ -14,18 +14,22 @@
 		}
 		
 		public function clear() {
-			$file = DIR_LOGS . $this->filename;
+			$file 	= DIR_LOGS . $this->filename;
 			$handle = fopen($file, 'w+');
 			fclose($handle); 
 		}
 		
 		public function write($message) {
-			$file = DIR_LOGS . $this->filename;
-			$handle = fopen($file, 'a+');
-			if (is_resource($handle)){		
-				fwrite($handle, date('Y-m-d G:i:s') . ' - ' . print_r($message, true)  . "\n");			
+			if ($this->filename){
+				$file 	= DIR_LOGS . $this->filename;
+				$handle = fopen($file, 'a+');
+
+				if (is_resource($handle)){		
+					fwrite($handle, date('Y-m-d G:i:s') . ' - ' . print_r($message, true)  . "\n");			
+				}
+
+				fclose($handle); 
 			}
-			fclose($handle); 
 		}
 
 		public function sql($sql, $echo = false){

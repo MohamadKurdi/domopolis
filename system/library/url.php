@@ -1,6 +1,6 @@
 <?php
 class Url {
-    private $url;
+    private $url        = null;
     private $registry   = null;
     private $config     = null;
     private $cache      = null;

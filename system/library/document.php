@@ -3,14 +3,14 @@ class Document {
 	private $title 			= '';
 	private $description 	= '';
 	private $keywords 		= '';
-	private $noindex 		= false;
 	private $robots 		= '';
+	private $noindex 		= false;
 	private $links 			= [];		
 	private $styles 		= [];
 	private $scripts 		= [];
 	private $opengraph 		= [];
 	private $extra_tags 	= [];
-	private $_meta 			= [];
+	private $metadata 		= [];
 	private $robots_meta 	= [];
 	private $hreflangs 		= [];
 
@@ -83,21 +83,21 @@ class Document {
 		return $this->robots;
 	}		
 
-	public function addMeta( $key, $val, $type = 'name' ) {
+	public function addMeta($key, $val, $type = 'name') {
 		if( $val === '' ) return $this;
 
-		$this->_meta[$type . ':' . $key] = array(
+		$this->metadata[$type . ':' . $key] = [
 			$type    => $key,
 			'type'   => $type,
 			'key'    => $key,
 			'content'=> $val
-		);
+		];
 
 		return $this;
 	}
 
 	public function getMeta() {
-		return $this->_meta;
+		return $this->metadata;
 	}
 
 	public function addLink($href, $rel, $hreflang = false) {
@@ -105,11 +105,11 @@ class Document {
 			return;			
 		}
 		
-		$this->links[md5($href.$rel.$hreflang)] = array(
+		$this->links[md5($href.$rel.$hreflang)] = [
 			'href' 		=> $href,
 			'rel'  		=> $rel,
 			'hreflang' 	=> $hreflang
-		);			
+		];			
 	}
 
 	public function getLinks() {	
