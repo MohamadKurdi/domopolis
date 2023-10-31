@@ -78,7 +78,8 @@
         "google/auth": "^1.25",
         "vzaichikov/bsg-php": "dev-master",
         "smsclub/sms-sender": "dev-main",
-        "deeplcom/deepl-php": "^1.4"            
+        "deeplcom/deepl-php": "^1.4",
+        "jbroadway/urlify": "^1.2"            
     },
     "config": {
         "platform-check": false,
