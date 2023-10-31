@@ -374,7 +374,7 @@ class ControllerCatalogProductExt extends Controller {
         $this->data['aqe_list_view_image_height'] = $this->config->get('aqe_list_view_image_height');
 
         $results        = $this->model_catalog_product_ext->getProducts($data);
-        $product_total  = $this->model_catalog_product_ext->getTotalProducts();
+        $product_total  = $this->model_catalog_product_ext->getTotalProducts($data);
 
         $actions = $this->config->get('aqe_catalog_products_actions');
         uasort($actions, 'column_sort');
