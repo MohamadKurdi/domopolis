@@ -114,6 +114,7 @@ function simple_rms($st){
 	$st = str_replace('--','-',$st);
 	$st = str_replace('\'','',$st);
 	$st = str_replace('!','',$st);
+	$st = str_replace('Ø','',$st);
 	return $st;
 }
 

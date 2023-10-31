@@ -6,8 +6,6 @@
 		
 		public function __construct($registry) {
 			parent::__construct($registry);
-			
-			require_once(DIR_SYSTEM . 'library/urlify.php');
 		}
 		
 		public function loadKeywords() {
@@ -612,46 +610,13 @@
 			}
 		}
 		
-		private function rms($st)
-		{
-			$st = str_replace(',','',$st);
-			$st = str_replace('’','',$st);
-			$st = str_replace(' ','-',$st);
-			$st = str_replace('"','',$st);
-			$st = str_replace(')','',$st);
-			$st = str_replace('(','',$st);
-			$st = str_replace('.','',$st);
-			$st = str_replace('+','',$st);
-			$st = str_replace('*','',$st);
-			$st = str_replace('“','',$st);
-			$st = str_replace('”','',$st);
-			$st = str_replace('&quot;','-',$st);
-			$st = str_replace('&amp;','-and-',$st);
-			$st = str_replace('&','-and-',$st);
-			$st = str_replace('«','',$st);
-			$st = str_replace('»','',$st);
-			$st = str_replace('.','',$st);
-			$st = str_replace('/','-',$st);
-			$st = str_replace('\\','-',$st);
-			$st = str_replace('%','-',$st);
-			$st = str_replace('№','-',$st);
-			$st = str_replace('#','-',$st);
-			$st = str_replace('_','-',$st);
-			$st = str_replace('–','-',$st);
-			$st = str_replace('---','-',$st);
-			$st = str_replace('--','-',$st);
-			$st = str_replace('\'','',$st);
-			$st = str_replace('!','',$st);
-			$st = str_replace('Ø','',$st);
-			return $st;
-		}
-		
 		public function urlify($template, $tags) {
-			$keyword = strtr($template, $tags);
-			$keyword = trim(html_entity_decode($this->rms($keyword), ENT_QUOTES, "UTF-8"));
-			$urlify = URLify::filter($keyword);
-			$this->checkDuplicate($urlify);
-			return $urlify;
+			$keyword 	= strtr($template, $tags);
+			$keyword 	= trim(html_entity_decode(simple_rms($keyword), ENT_QUOTES, "UTF-8"));
+			$slug 		= URLify::slug($keyword);
+
+			$this->checkDuplicate($slug);
+			return $slug;
 		}
 		
 		private function parseTemplate($template) {

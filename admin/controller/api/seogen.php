@@ -43,11 +43,10 @@ class ControllerApiSeogen extends Controller {
 
 	public function cron(){
 		$this->load->model('localisation/language');
-		$languages = $this->model_localisation_language->getLanguages();		
-		$config = $this->config->get('seogen');
+		$languages 	= $this->model_localisation_language->getLanguages();		
+		$config 	= $this->config->get('seogen');
 
-		$this->load->model('module/seogen');
-		$this->load->library('urlify');	
+		$this->load->model('module/seogen');		
 
 		foreach ($languages as $language){			
 			$language_id = (int)$language['language_id'];
@@ -89,9 +88,9 @@ class ControllerApiSeogen extends Controller {
 					foreach ($all_news_query->rows as $row){				
 						if (!isset($cae[$row['news_id']])){
 							if ($this->config->get('config_seo_url_from_id')){
-								$keyword = URLify::filter(simple_rms('n' . $row['news_id']), 80, $language['code']);
+								$keyword = URLify::slug(simple_rms('n' . $row['news_id']), 80, $language['code']);
 							} else {
-								$keyword = URLify::filter(simple_rms($row['title']), 80, $language['code']);
+								$keyword = URLify::slug(simple_rms($row['title']), 80, $language['code']);
 							}
 
 
@@ -134,9 +133,9 @@ class ControllerApiSeogen extends Controller {
 					foreach ($all_categories_query->rows as $row){				
 						if (!isset($cae[$row['category_id']])){
 							if ($this->config->get('config_seo_url_from_id')){
-								$keyword = URLify::filter(simple_rms('c' . $row['category_id']), 80, $language['code']);
+								$keyword = URLify::slug(simple_rms('c' . $row['category_id']), 80, $language['code']);
 							} else {
-								$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
+								$keyword = URLify::slug(simple_rms($row['name']), 80, $language['code']);
 							}
 
 							//check for duplicate
@@ -180,9 +179,9 @@ class ControllerApiSeogen extends Controller {
 					foreach ($all_manufacturers_query->rows as $row){				
 						if (!isset($cae[$row['manufacturer_id']])){						
 							if ($this->config->get('config_seo_url_from_id')){
-								$keyword = URLify::filter(simple_rms('m' . $row['manufacturer_id']), 80, $language['code']);
+								$keyword = URLify::slug(simple_rms('m' . $row['manufacturer_id']), 80, $language['code']);
 							} else {
-								$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
+								$keyword = URLify::slug(simple_rms($row['name']), 80, $language['code']);
 							}
 
 							if (in_array($keyword, $cae)){						
@@ -227,9 +226,9 @@ class ControllerApiSeogen extends Controller {
 						if (!isset($cae[$row['information_id']])){
 
 							if ($this->config->get('config_seo_url_from_id')){
-								$keyword = URLify::filter(simple_rms('i' . $row['information_id']), 80, $language['code']);
+								$keyword = URLify::slug(simple_rms('i' . $row['information_id']), 80, $language['code']);
 							} else {
-								$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
+								$keyword = URLify::slug(simple_rms($row['name']), 80, $language['code']);
 							}
 
 
@@ -275,9 +274,9 @@ class ControllerApiSeogen extends Controller {
 						if (!isset($cae[$row['landingpage_id']])){
 
 							if ($this->config->get('config_seo_url_from_id')){
-								$keyword = URLify::filter(simple_rms('lp' . $row['landingpage_id']), 80, $language['code']);
+								$keyword = URLify::slug(simple_rms('lp' . $row['landingpage_id']), 80, $language['code']);
 							} else {
-								$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
+								$keyword = URLify::slug(simple_rms($row['name']), 80, $language['code']);
 							}
 
 							if (in_array($keyword, $cae)){						
@@ -322,9 +321,9 @@ class ControllerApiSeogen extends Controller {
 						if (!isset($cae[$row['information_attribute_id']])){
 							
 							if ($this->config->get('config_seo_url_from_id')){
-								$keyword = URLify::filter(simple_rms('ia' . $row['information_attribute_id']), 80, $language['code']);
+								$keyword = URLify::slug(simple_rms('ia' . $row['information_attribute_id']), 80, $language['code']);
 							} else {
-								$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
+								$keyword = URLify::slug(simple_rms($row['name']), 80, $language['code']);
 							}
 
 							if (in_array($keyword, $cae)){						
@@ -367,9 +366,9 @@ class ControllerApiSeogen extends Controller {
 						if (!isset($cae[$row['actions_id']])){
 
 							if ($this->config->get('config_seo_url_from_id')){
-								$keyword = URLify::filter(simple_rms('a' . $row['actions_id']), 80, $language['code']);
+								$keyword = URLify::slug(simple_rms('a' . $row['actions_id']), 80, $language['code']);
 							} else {
-								$keyword = URLify::filter(simple_rms($row['caption']), 80, $language['code']);
+								$keyword = URLify::slug(simple_rms($row['caption']), 80, $language['code']);
 							}
 
 							if (in_array($keyword, $cae)){						
@@ -411,9 +410,9 @@ class ControllerApiSeogen extends Controller {
 						if (!isset($cae[$row['collection_id']])){
 							//now urlify
 							if ($this->config->get('config_seo_url_from_id')){
-								$keyword = URLify::filter(simple_rms('co' . $row['collection_id']), 80, $language['code']);
+								$keyword = URLify::slug(simple_rms('co' . $row['collection_id']), 80, $language['code']);
 							} else {
-								$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
+								$keyword = URLify::slug(simple_rms($row['name']), 80, $language['code']);
 							}
 
 
@@ -460,9 +459,9 @@ class ControllerApiSeogen extends Controller {
 						if (!isset($cae[$row['product_id']])){
 							//now urlify
 							if ($this->config->get('config_seo_url_from_id')){
-								$keyword = URLify::filter(simple_rms('p' . $row['product_id']), 80, $language['code']);
+								$keyword = URLify::slug(simple_rms('p' . $row['product_id']), 80, $language['code']);
 							} else {
-								$keyword = URLify::filter(simple_rms($row['name']), 80, $language['code']);
+								$keyword = URLify::slug(simple_rms($row['name']), 80, $language['code']);
 							}
 
 							//check for duplicate
