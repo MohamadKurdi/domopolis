@@ -1,12 +1,12 @@
 <?php
 class Affiliate {
-	private $affiliate_id;
-	private $firstname;
-	private $lastname;
-	private $email;
-	private $telephone;
-	private $fax;
-	private $code;
+	private $affiliate_id	= null;
+	private $firstname  	= null;
+	private $lastname  		= null;
+	private $email  		= null;
+	private $telephone 		= null;
+	private $fax  			= null;
+	private $code  			= null;
 
 	public function __construct($registry) {
 		$this->config 	= $registry->get('config');
@@ -19,12 +19,12 @@ class Affiliate {
 
 			if ($affiliate_query->num_rows) {
 				$this->affiliate_id = $affiliate_query->row['affiliate_id'];
-				$this->firstname = $affiliate_query->row['firstname'];
-				$this->lastname = $affiliate_query->row['lastname'];
-				$this->email = $affiliate_query->row['email'];
-				$this->telephone = $affiliate_query->row['telephone'];
-				$this->fax = $affiliate_query->row['fax'];
-				$this->code = $affiliate_query->row['code'];
+				$this->firstname 	= $affiliate_query->row['firstname'];
+				$this->lastname 	= $affiliate_query->row['lastname'];
+				$this->email 		= $affiliate_query->row['email'];
+				$this->telephone 	= $affiliate_query->row['telephone'];
+				$this->fax 			= $affiliate_query->row['fax'];
+				$this->code 		= $affiliate_query->row['code'];
 
 				$this->db->query("UPDATE affiliate SET ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "' WHERE affiliate_id = '" . (int)$this->session->data['affiliate_id'] . "'");
 			} else {
@@ -40,28 +40,28 @@ class Affiliate {
 			$this->session->data['affiliate_id'] = $affiliate_query->row['affiliate_id'];	
 
 			$this->affiliate_id = $affiliate_query->row['affiliate_id'];
-			$this->firstname = $affiliate_query->row['firstname'];
-			$this->lastname = $affiliate_query->row['lastname'];
-			$this->email = $affiliate_query->row['email'];
-			$this->telephone = $affiliate_query->row['telephone'];
-			$this->fax = $affiliate_query->row['fax'];
-			$this->code = $affiliate_query->row['code'];
+			$this->firstname 	= $affiliate_query->row['firstname'];
+			$this->lastname 	= $affiliate_query->row['lastname'];
+			$this->email 		= $affiliate_query->row['email'];
+			$this->telephone 	= $affiliate_query->row['telephone'];
+			$this->fax 			= $affiliate_query->row['fax'];
+			$this->code 		= $affiliate_query->row['code'];
 
 			return true;
-		} else {
-			return false;
 		}
+
+		return false;
 	}
 
 	public function logout() {
 		unset($this->session->data['affiliate_id']);
 
 		$this->affiliate_id = '';
-		$this->firstname = '';
-		$this->lastname = '';
-		$this->email = '';
-		$this->telephone = '';
-		$this->fax = '';
+		$this->firstname 	= '';
+		$this->lastname 	= '';
+		$this->email 		= '';
+		$this->telephone 	= '';
+		$this->fax 			= '';
 	}
 
 	public function isLogged() {
