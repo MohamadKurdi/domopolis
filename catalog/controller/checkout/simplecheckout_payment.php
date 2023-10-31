@@ -177,6 +177,19 @@ class ControllerCheckoutSimpleCheckoutPayment extends SimpleController {
         $this->_templateData['error_payment']     = $this->language->get('error_payment');
         $this->_templateData['has_error_payment'] = false;
 
+        if ($this->config->get('paymentmethoddiscounts_status') && $this->config->get('paymentmethoddiscounts_display_in_description')){
+            $this->load->model('total/paymentmethoddiscounts');
+            $this->language->load('total/paymentmethoddiscounts');
+            
+            foreach ($this->_templateData['payment_methods'] as &$check_payment_method){     
+                $tmp = []; $tmp2 = 0;          
+                $paymentmethoddiscounts_discount = $this->model_total_paymentmethoddiscounts->getTotal($tmp, $tmp2, $tmp, $check_payment_method['code']);
+                if ($paymentmethoddiscounts_discount){
+                    $check_payment_method['description'] .= ('<br /><span class="alert alert-success alert-no-padding">' . sprintf($this->language->get('text_pmd_sum_to_pay'), $paymentmethoddiscounts_discount) . '</span>');
+                }
+            }
+        }
+        
         $this->_templateData['code'] = '';
         $this->_templateData['checked_code'] = '';
 
@@ -223,7 +236,6 @@ class ControllerCheckoutSimpleCheckoutPayment extends SimpleController {
                     break;
                 }
             }
-
         }
 
         if (!empty($this->_templateData['payment_method']['code'])) {
