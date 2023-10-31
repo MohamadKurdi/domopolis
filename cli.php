@@ -136,7 +136,7 @@ if (defined('DB_CONTENT_SYNC') && DB_CONTENT_SYNC){
 	$registry->set('dbcs', false);
 }
 
-$registry->set('cache', 	new Cache());
+$registry->set('cache', 	new Cache(CACHE_DRIVER));
 $registry->set('request', 	new Request());
 $registry->set('session', 	new Session($registry)); $session = $registry->get('session');
 $registry->set('log', 		new Log('php-errors-cli.log'));

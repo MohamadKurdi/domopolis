@@ -185,7 +185,7 @@ $response = new Response();
 $response->addHeader('Content-Type: text/html; charset=utf-8');
 $registry->set('response', $response); 
 
-$cache = new Cache();
+$cache = new Cache(CACHE_DRIVER);
 $registry->set('cache', $cache); 
 
 $registry->set('PageCache', new \hobotix\PageCache(false)); 
