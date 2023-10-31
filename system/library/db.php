@@ -4,11 +4,11 @@ if (!class_exists('DB')){
 	class DB {
 		private $connection;
 		private $mySQLReInitException = ['Error: MySQL server has gone away', 'Error: Deadlock found when trying to get lock'];		
-		private $driver = '';
-		private $hostname = '';
-		private $username = '';
-		private $password = '';
-		private $database = '';
+		private $driver 	= '';
+		private $hostname 	= '';
+		private $username 	= '';
+		private $password 	= '';
+		private $database 	= '';
 
 		private function validateMySQLReINIT($e){
 			foreach ($this->mySQLReInitException as $mySQLReInitException){
@@ -21,7 +21,7 @@ if (!class_exists('DB')){
 		}
 
 		private function createConnection(){
-			$file = DIR_DATABASE . $this->driver . '.php';
+			$file = dirname(__FILE__) . '/database/' . $this->driver . '.php';
 
 			if (file_exists($file)) {
 				require_once($file);
