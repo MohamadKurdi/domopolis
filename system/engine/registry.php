@@ -1,6 +1,6 @@
 <?php
 final class Registry {
-	private $data = array();
+	private $data = [];
 
 	public function get($key) {
 		return (isset($this->data[$key]) ? $this->data[$key] : null);

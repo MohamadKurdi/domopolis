@@ -14,7 +14,7 @@
 			$this->registry->set($key, $value);
 		}
 		
-		public function library($library) {
+		public function library(string $library) {
 			$file = DIR_SYSTEM . 'library/' . $library . '.php';
 			
 			if (file_exists($file)) {
@@ -25,7 +25,7 @@
 			}
 		}
 		
-		public function helper($helper) {
+		public function helper(string $helper) {
 			$file = DIR_SYSTEM . 'helper/' . $helper . '.php';
 			
 			if (file_exists($file)) {
@@ -36,8 +36,8 @@
 			}
 		}
 		
-		public function model($model) {
-			$file  = DIR_APPLICATION . 'model/' . $model . '.php';
+		public function model(string $model, string $load_from = DIR_APPLICATION) {			
+			$file  = $load_from . 'model/' . $model . '.php';
 			$class = 'Model' . preg_replace('/[^a-zA-Z0-9]/', '', $model);
 			
 			if (file_exists($file)) { 
@@ -50,18 +50,8 @@
 			}
 		}
 		
-		public function load_catalog_model($model) {
-			$file  = DIR_CATALOG . 'model/' . $model . '.php';
-			$class = 'Model' . preg_replace('/[^a-zA-Z0-9]/', '', $model);
-			
-			if (file_exists($file)) { 
-				include_once($file);
-				
-				$this->registry->set('model_' . str_replace('/', '_', $model), new $class($this->registry));
-				} else {
-				trigger_error('Error: Could not load model ' . $model . '!');
-				exit();					
-			}
+		public function load_catalog_model(string $model) {
+			$this->model($model, DIR_CATALOG);
 		}
 		
 		public function database($driver, $hostname, $username, $password, $database) {
@@ -79,10 +69,9 @@
 		}
 		
 		public function controller(string $route){
-			$route = preg_replace('/[^a-zA-Z0-9_\/]/', '', $route);	
-			
-			$response = new Response($this->registry);
-			$front = new Front($this->registry);
+			$route 		= preg_replace('/[^a-zA-Z0-9_\/]/', '', $route);				
+			$response 	= new Response($this->registry);
+			$front 		= new Front($this->registry);
 			
 			$front->dispatch(new Action($route), '');
 			
@@ -90,9 +79,9 @@
 		}
 		
 		public function view(string $route, array $data = []): string {
-			$route = preg_replace('/[^a-zA-Z0-9_\/]/', '', $route);			
-			$template = DIR_TEMPLATE . $route . '.twig';
-			$isTwig = true;
+			$route 		= preg_replace('/[^a-zA-Z0-9_\/]/', '', $route);			
+			$template 	= DIR_TEMPLATE . $route . '.twig';
+			$isTwig 	= true;
 			
 			if (!file_exists($template)){
 				$template = DIR_TEMPLATE . $route . '.tpl';
@@ -104,8 +93,8 @@
 			if (file_exists($template)) {				
 				if ($isTwig){
 					$twigLoader = new \Twig\Loader\FilesystemLoader(DIR_TEMPLATE);
-					$twig = new \Twig\Environment($twigLoader);
-					$template = $twig->load($route . '.twig');
+					$twig 		= new \Twig\Environment($twigLoader);
+					$template 	= $twig->load($route . '.twig');
 					
 					return $template->render($data);
 				} else {					
@@ -116,8 +105,7 @@
 					ob_end_clean();
 					
 					return $output;					
-				}
-				
+				}				
 			} else {
 				return '[' . $this->template . '] DOESNT EXIST';
 				trigger_error('Error: Could not load template ' . DIR_TEMPLATE . $this->template . '!');
@@ -127,11 +115,11 @@
 			return $output;
 		}
 		
-		public function config($config) {
+		public function config(string $config) {
 			$this->config->load($config);
 		}
 		
-		public function language($language) {
+		public function language(string $language) {
 			return $this->language->load($language);
 		}		
 	} 					
