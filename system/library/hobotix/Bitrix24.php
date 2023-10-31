@@ -1,18 +1,22 @@
 <?php
+
+namespace  hobotix;
+
 final class Bitrix24 { 	
 
 	private $request;	
+	private $config;
 	private $appsConfig;
 
-	private $bitrixDomain = null;
-	private $bitrixScope = null;
-	private $CLIENT_ID = null;
-	private $CLIENT_SECRET = null;
+	private $bitrixDomain 	= null;
+	private $bitrixScope 	= null;
+	private $CLIENT_ID 		= null;
+	private $CLIENT_SECRET 	= null;
 
 	public function __construct($registry) {			
 		$this->request 	= $registry->get('request');			
 		$this->config 	= $registry->get('config');
-		$this->log 		= new Log('bitrix24-bot.log');
+		$this->log 		= new \Log('bitrix24-bot.log');
 
 		$this->bitrixDomain		= $this->config->get('config_bitrix_bot_domain');
 		$this->bitrixScope 		= $this->config->get('config_bitrix_bot_scope');
@@ -84,7 +88,7 @@ final class Bitrix24 {
 		*/
 			function restCommand($method, array $params = Array(), array $auth = Array(), $authRefresh = true)
 			{
-			
+
 				if (!$auth){	
 					$_tmp = array_values($this->appsConfig);
 					$_auth = $_tmp[0]['AUTH'];
@@ -140,11 +144,11 @@ final class Bitrix24 {
 
 				$queryUrl = 'https://'.$auth['domain'].'/oauth/token/';
 				$queryData = http_build_query($queryParams = array(
-					'grant_type' => 'refresh_token',
-					'client_id' => $this->CLIENT_ID,
+					'grant_type' 	=> 'refresh_token',
+					'client_id' 	=> $this->CLIENT_ID,
 					'client_secret' => $this->CLIENT_SECRET,
 					'refresh_token' => $auth['refresh_token'],
-					'scope' => $auth['scope'],
+					'scope' 		=> $auth['scope'],
 				));						
 
 				$curl = curl_init();
@@ -174,7 +178,4 @@ final class Bitrix24 {
 
 				return $result;
 			}
-
-
-
 		}												

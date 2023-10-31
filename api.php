@@ -344,7 +344,6 @@ $registry->set('response', $response);
 
     //Остальные библиотеки
 $registry->set('document',          new Document());                            
-$registry->set('Bitrix24',          new Bitrix24($registry));
 $registry->set('customer',          new Customer($registry));
 $registry->set('affiliate',         new Affiliate($registry));
 $registry->set('currency',          new Currency($registry));
@@ -354,6 +353,7 @@ $registry->set('length',            new Length($registry));
 $registry->set('cart',              new Cart($registry));
 $registry->set('user',              new User($registry));
 $registry->set('encryption',        new Encryption($registry->get('config')->get('config_encryption')));
+$registry->set('Bitrix24',          new hobotix\Bitrix24($registry));
 $registry->set('smsQueue',          new hobotix\SmsQueue($registry));   
 $registry->set('mAlert',            new hobotix\mAlert($registry)); 
 $registry->set('shortAlias',        new hobotix\shortAlias($registry)); 

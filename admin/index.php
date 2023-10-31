@@ -54,7 +54,7 @@ require_once(DIR_SYSTEM . 'library/user.php');
 require_once(DIR_SYSTEM . 'library/weight.php');
 require_once(DIR_SYSTEM . 'library/length.php');
 require_once(DIR_SYSTEM . 'library/cart.php');
-require_once(DIR_SYSTEM . 'library/Bitrix24.php');
+require_once(DIR_SYSTEM . 'library/hobotix/Bitrix24.php');
 require_once(DIR_SYSTEM . 'library/hobotix/SmsQueue.php');
 require_once(DIR_SYSTEM . 'library/hobotix/PushQueue.php');
 require_once(DIR_SYSTEM . 'library/hobotix/mAlert.php');
@@ -189,7 +189,6 @@ $registry->set('customer_group_id', $registry->get('config')->get('config_custom
 
 $registry->set('url',  				new Url(HTTPS_SERVER, $registry));
 $registry->set('session', 			new Session()); 
-$registry->set('Bitrix24', 			new Bitrix24($registry));
 $registry->set('mobileDetect', 		new \Detection\MobileDetect);
 $registry->set('document', 			new Document()); 		
 $registry->set('currency', 			new Currency($registry));		
@@ -198,6 +197,7 @@ $registry->set('length', 			new Length($registry));
 $registry->set('user', 				new User($registry));
 $registry->set('cart', 				new Cart($registry));
 $registry->set('customer', 			new Customer($registry));
+$registry->set('Bitrix24', 			new hobotix\Bitrix24($registry));
 $registry->set('smsQueue', 			new hobotix\smsQueue($registry));
 $registry->set('pushQueue', 		new hobotix\pushQueue($registry));
 $registry->set('shortAlias', 		new hobotix\shortAlias($registry));
