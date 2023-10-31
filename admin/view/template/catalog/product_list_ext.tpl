@@ -176,13 +176,73 @@
 								<?php break;
 								case 'manufacturer': ?>
 								<td class="<?php echo $column_info[$col]['align']; ?>">
-									<select name="filter_<?php echo $col; ?>" class="filter <?php echo $col; ?>">
-										<option value=""></option>
-										<option value="*"<?php echo (!is_null($filters[$col]) && $filters[$col] == '*') ? ' selected="selected"' : ''; ?>><?php echo $text_none; ?></option>
-										<?php foreach ($manufacturers as $m) { ?>
-											<option value="<?php echo $m['manufacturer_id']; ?>"<?php echo (!is_null($filters[$col]) && $m['manufacturer_id'] == $filters[$col]) ? ' selected="selected"' : ''; ?>><?php echo $m['name']; ?></option>
-										<?php } ?>
-									</select>
+									<input type="text" id="filter_manufacturer_input" name="<?php echo $col; ?>" value="<?php echo (!empty($manufacturer)?$manufacturer:'') ?>" style="width:60px;" />
+									<input type="hidden" id="filter_manufacturer_val" name="filter_<?php echo $col; ?>" value="<?php echo (!is_null($filters[$col])?$filters[$col]:''); ?>" />				
+									<span onclick="$('#filter_manufacturer_input').val(''); $('#filter_manufacturer_val').val('');" style="border-bottom:1px dashed gray; font-size:10px;cursor:pointer;">очистить</span>
+									<script>
+										$('input[name=\'<?php echo $col; ?>\']').autocomplete({
+											delay: 500,
+											source: function(request, response) {
+												$.ajax({
+													url: 'index.php?route=catalog/manufacturer/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+													dataType: 'json',
+													success: function(json) {		
+														response($.map(json, function(item) {
+															return {
+																label: item.name,
+																value: item.manufacturer_id
+															}
+														}));
+													}
+												});
+											}, 
+											select: function(event, ui) {
+												$('input[name=\'<?php echo $col; ?>\']').attr('value', ui.item.label);
+												$('input[name=\'filter_<?php echo $col; ?>\']').attr('value', ui.item.value);
+
+												return false;
+											},
+											focus: function(event, ui) {
+												return false;
+											}
+										});
+									</script>
+								</td>
+								<?php break;
+								case 'category': ?>
+								<td class="<?php echo $column_info[$col]['align']; ?>">
+									<input type="text" id="filter_category_input" name="<?php echo $col; ?>" value="<?php echo (!empty($category)?$category:'') ?>" style="width:60px;" />
+									<input type="hidden" id="filter_category_val" name="filter_<?php echo $col; ?>" value="<?php echo (!is_null($filters[$col])?$filters[$col]:''); ?>" />				
+									<span onclick="$('#filter_category_input').val(''); $('#filter_category_val').val('');" style="border-bottom:1px dashed gray; font-size:10px;cursor:pointer;">очистить</span>
+
+									<script>
+										$('input[name=\'<?php echo $col; ?>\']').autocomplete({
+											delay: 500,
+											source: function(request, response) {
+												$.ajax({
+													url: 'index.php?route=catalog/category/autocomplete&token=<?php echo $token; ?>&filter_name=' +  encodeURIComponent(request.term),
+													dataType: 'json',
+													success: function(json) {		
+														response($.map(json, function(item) {
+															return {
+																label: item.name,
+																value: item.category_id
+															}
+														}));
+													}
+												});
+											}, 
+											select: function(event, ui) {
+												$('input[name=\'<?php echo $col; ?>\']').attr('value', ui.item.label);
+												$('input[name=\'filter_<?php echo $col; ?>\']').attr('value', ui.item.value);
+
+												return false;
+											},
+											focus: function(event, ui) {
+												return false;
+											}
+										});
+									</script>
 								</td>
 								<?php break;
 								case 'store': ?>
@@ -194,18 +254,7 @@
 											<option value="<?php echo $store_id; ?>"<?php echo (!is_null($filters[$col]) && (string)$store_id == $filters[$col]) ? ' selected="selected"' : ''; ?>><?php echo $s['name']; ?></option>
 										<?php } ?>
 									</select>
-								</td>
-								<?php break;
-								case 'category': ?>
-								<td class="<?php echo $column_info[$col]['align']; ?>">
-									<select name="filter_<?php echo $col; ?>" class="filter <?php echo $col; ?>">
-										<option value=""></option>
-										<option value="*"<?php echo (!is_null($filters[$col]) && $filters[$col] == '*') ? ' selected="selected"' : ''; ?>><?php echo $text_none; ?></option>
-										<?php foreach ($categories as $c) { ?>
-											<option value="<?php echo $c['category_id']; ?>"<?php echo (!is_null($filters[$col]) && $c['category_id'] == $filters[$col]) ? ' selected="selected"' : ''; ?>><?php echo $c['name']; ?></option>
-										<?php } ?>
-									</select>
-								</td>
+								</td>								
 								<?php break;
 								case 'length_class': ?>
 								<td class="<?php echo $column_info[$col]['align']; ?>">
@@ -503,7 +552,7 @@
 				
 				<?php } else if ($val['filter']['type'] == 1) { ?>
 				var filter_<?php echo $column; ?> = $('select[name=\'filter_<?php echo $column; ?>\']').attr('value');
-				<?php if (in_array($column, array('manufacturer', 'category', 'tax_class', 'store'))) { ?>
+				<?php if (in_array($column, array('tax_class', 'store'))) { ?>
 					if (filter_<?php echo $column; ?>) {
 						<?php } else { ?>
 						if (filter_<?php echo $column; ?> && filter_<?php echo $column; ?> != '*') {

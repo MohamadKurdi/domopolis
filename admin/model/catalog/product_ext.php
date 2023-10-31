@@ -15,7 +15,7 @@ class ModelCatalogProductExt extends Model {
             }
         }
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS p.*, pd.*";
+        $sql = "SELECT p.*, pd.*";
 
         if (in_array("seo", $columns)) {
             $sql .= ", (SELECT keyword FROM url_alias WHERE query = CONCAT('product_id=', p.product_id)) AS seo";
@@ -327,7 +327,7 @@ class ModelCatalogProductExt extends Model {
         if (isset($data['sort']) && in_array($data['sort'], $sort_data)) {
             $sql .= " ORDER BY " . $data['sort'];
         } else {
-            $sql .= " ORDER BY pd.name";
+            $sql .= " ORDER BY p.product_id";
         }
 
         if (isset($data['order']) && ($data['order'] == 'DESC')) {
@@ -350,13 +350,263 @@ class ModelCatalogProductExt extends Model {
 
         $query = $this->db->query($sql);
 
-        $count = $this->db->query("SELECT FOUND_ROWS() AS count");
-        $this->productCount = ($count->num_rows) ? (int)$count->row['count'] : 0;
-
         return $query->rows;
     }
 
-    public function getTotalProducts() {
+    public function getTotalProducts($data = array()) {
+        $cp_cols = $this->config->get('aqe_catalog_products');
+
+        if (!is_array($cp_cols)) {
+            $columns = array('image', 'name', 'model', 'price', 'quantity', 'status');
+        } else {
+            $columns = array();
+            foreach($cp_cols as $column => $attr) {
+                if ($attr['display'])
+                    $columns[] = $column;
+            }
+        }
+
+        $sql = "SELECT COUNT(DISTINCT p.product_id) AS total ";
+
+        $sql .= " FROM product p LEFT JOIN product_description pd ON (p.product_id = pd.product_id)";
+
+        if (!empty($data['filter_price_special']) && in_array($data['filter_price_special'], array("active", "expired", "future"))) {
+            $sql .= " LEFT JOIN product_special ps ON (ps.product_id = p.product_id)";
+        }
+
+        if (in_array("manufacturer", $columns) && !empty($data['filter_manufacturer'])) {
+            $sql .= " LEFT JOIN manufacturer m ON (m.manufacturer_id = p.manufacturer_id)";
+        }
+
+        if (in_array("filter", $columns)) {
+            $sql .= " LEFT JOIN product_filter p2f ON (p.product_id = p2f.product_id) LEFT JOIN filter_description fd ON (fd.filter_id = p2f.filter_id AND fd.language_id = '" . (int)$this->config->get('config_language_id') . "')";
+        }
+
+        if (in_array("download", $columns)) {
+            $sql .= " LEFT JOIN product_to_download p2d ON (p.product_id = p2d.product_id) LEFT JOIN download_description dd ON (dd.download_id = p2d.download_id AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "')";
+        }
+
+        if (in_array("tax_class", $columns)) {
+            $sql .= " LEFT JOIN tax_class tc ON (tc.tax_class_id = p.tax_class_id)";
+        }
+
+        if (in_array("stock_status", $columns) && !empty($data['filter_stock_status'])) {
+            $sql .= " LEFT JOIN stock_status ss ON (ss.stock_status_id = p.stock_status_id)";
+        }
+
+        if (in_array("length_class", $columns)) {
+            $sql .= " LEFT JOIN length_class lc ON (lc.length_class_id = p.length_class_id) LEFT JOIN length_class_description lcd ON (lcd.length_class_id = lc.length_class_id)";
+        }
+
+        if (in_array("weight_class", $columns)) {
+            $sql .= " LEFT JOIN weight_class wc ON (wc.weight_class_id = p.weight_class_id) LEFT JOIN weight_class_description wcd ON (wcd.weight_class_id = wc.weight_class_id)";
+        }
+
+        if (!empty($data['filter_category'])) {
+            $sql .= " LEFT JOIN product_to_category p2c ON (p.product_id = p2c.product_id)";
+        }
+
+        if (isset($data['filter_store'])) {
+            $sql .= " LEFT JOIN product_to_store p2s ON (p.product_id = p2s.product_id)";
+        }
+
+        $sql .= " WHERE pd.language_id = '" . (int)$this->config->get('config_language_id') . "'";        
+
+        if ($this->config->get('config_enable_amazon_specific_modes') && $this->session->data['config_rainforest_variant_edition_mode']) {
+            if (empty($data['filter_id']) && empty($data['filter_asin'])){
+                $sql .= " AND (p.main_variant_id = '0' OR ISNULL(p.main_variant_id))";
+            }
+        }
+
+        if (in_array("length_class", $columns)) {
+            $sql .= " AND lcd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+        }
+
+        if (in_array("weight_class", $columns)) {
+            $sql .= " AND wcd.language_id = '" . (int)$this->config->get('config_language_id') . "'";
+        }
+
+        $int_filters = array(
+            'tax_class'         => 'p.tax_class_id',
+            'length_class'      => 'p.length_class_id',
+            'weight_class'      => 'p.weight_class_id',
+            'manufacturer'      => 'p.manufacturer_id',
+            'stock_status'      => 'p.stock_status_id',
+            'subtract'          => 'p.subtract',
+            'id'                => 'p.product_id',
+            'main_variant_id'   => 'p.main_variant_id',
+            'status'            => 'p.status',
+            'fill_from_amazon'  => 'p.fill_from_amazon',
+            'filled_from_amazon'=> 'p.filled_from_amazon',
+            'amzn_no_offers'    => 'p.amzn_no_offers',
+            'requires_shipping' => 'p.shipping',
+            );
+
+        foreach ($int_filters as $key => $value) {
+            if (isset($data["filter_$key"]) && !is_null($data["filter_$key"])) {
+                $sql .= " AND $value = '" . (int)$data["filter_$key"] . "'";
+            }
+        }
+
+        $date_filters = array(
+            'date_available'    => 'p.date_available',
+            'date_modified'     => 'p.date_modified',
+            'date_added'        => 'p.date_added',
+            );
+
+        foreach ($date_filters as $key => $value) {
+            if (isset($data["filter_$key"]) && !is_null($data["filter_$key"])) {
+                if ($this->config->get('aqe_interval_filter')) {
+                    $sql .= " AND " . $this->filterInterval($this->db->escape($data["filter_$key"]), $value, true);
+                } else {
+                    $sql .= " AND DATE($value) = DATE('" . $this->db->escape($data["filter_$key"]) . "')";
+                }
+            }
+        }
+
+        $float_interval_filters = array(
+            'length'            => 'p.length',
+            'width'             => 'p.width',
+            'height'            => 'p.height',
+            'weight'            => 'p.weight',
+            'price'             => 'p.price',
+            'price_delayed'     => 'p.price_delayed',
+            'cost'              => 'p.cost',
+            'amazon_best_price' => 'p.amazon_best_price',
+            'costprice'         => 'p.costprice',
+            'amzn_offers_count' => 'p.amzn_offers_count'
+            );
+
+        foreach ($float_interval_filters as $key => $value) {
+            if ($key == "price" && !empty($data['filter_price_special']) && in_array($data['filter_price_special'], array("active", "expired", "future"))) {
+                if ($data['filter_price_special'] == "active") {
+                    $sql .= " AND ((ps.date_start = '0000-00-00' OR ps.date_start < NOW()) AND (ps.date_end = '0000-00-00' OR ps.date_end > NOW()))";
+                } elseif ($data['filter_price_special'] == "expired") {
+                    $sql .= " AND (ps.date_end != '0000-00-00' AND ps.date_end < NOW())";
+                } elseif ($data['filter_price_special'] == "future") {
+                    $sql .= " AND (ps.date_start > NOW() AND ps.date_start != '0000-00-00')";
+                }
+            } else {
+                if (isset($data["filter_$key"]) && !is_null($data["filter_$key"])) {
+                    if ($this->config->get('aqe_interval_filter')) {
+                        $sql .= " AND " . $this->filterInterval($data["filter_$key"], $value);
+                    } else {
+                        $sql .= " AND $value = '" . $this->db->escape($data["filter_$key"]) . "%'";
+                    }
+                }
+            }
+        }
+
+        $int_interval_filters = array(
+            'quantity'      => 'p.quantity',
+            'minimum'       => 'p.minimum',
+            'points'        => 'p.points',
+            'sort_order'    => 'p.sort_order',
+            );
+
+        foreach ($int_interval_filters as $key => $value) {
+            if (isset($data["filter_$key"]) && !is_null($data["filter_$key"])) {
+                if ($this->config->get('aqe_interval_filter')) {
+                    $sql .= " AND " . $this->filterInterval($data["filter_$key"], $value);
+                } else {
+                    $sql .= " AND $value = '" . (int)$data["filter_$key"] . "'";
+                }
+            }
+        }
+
+        if (isset($data["filter_product_offers_count"]) && !is_null($data["filter_product_offers_count"])) {
+            if ($data["filter_product_offers_count"] == 1){
+                $sql .= " AND (SELECT COUNT(o.order_id) FROM order_product op LEFT JOIN `order` o ON o.order_id = op.order_id WHERE o.order_status_id > 0 AND op.product_id = p.product_id) > 0";
+            } else {
+                $sql .= " AND (SELECT COUNT(o.order_id) FROM order_product op LEFT JOIN `order` o ON o.order_id = op.order_id WHERE o.order_status_id > 0 AND op.product_id = p.product_id) = 0";
+            }          
+        }
+
+        if (isset($data["filter_product_warehouse_count"]) && !is_null($data["filter_product_warehouse_count"])) {
+            if ($data["filter_product_warehouse_count"] == 1){
+                $sql .= " AND (`" . $this->config->get('config_warehouse_identifier') . "` + `" . $this->config->get('config_warehouse_identifier') . "_onway`) > 0";
+            } else {
+                $sql .= " AND (`" . $this->config->get('config_warehouse_identifier') . "` + `" . $this->config->get('config_warehouse_identifier') . "_onway`) = 0";
+            }          
+        }
+
+        $anywhere_filters = array(
+            'sku'       => 'p.sku',
+            'asin'      => 'p.asin',
+            'upc'       => 'p.upc',
+            'ean'       => 'p.ean',
+            'jan'       => 'p.jan',
+            'isbn'      => 'p.isbn',
+            'mpn'       => 'p.mpn',
+            'location'  => 'p.location',
+            'name'      => 'pd.name',
+            'model'     => 'p.model',
+            'download'  => 'dd.name',
+            'filter'    => 'fd.name'
+            );
+
+        foreach ($anywhere_filters as $key => $value) {
+            if (!empty($data["filter_$key"])) {
+                if ($this->config->get('aqe_match_anywhere')) {
+                    $sql .= " AND LCASE($value) LIKE '%" . $this->db->escape(utf8_strtolower($data["filter_$key"])) . "%'";
+                } else {
+                    $sql .= " AND LCASE($value) LIKE '" . $this->db->escape(utf8_strtolower($data["filter_$key"])) . "%'";
+                }
+            }
+        }
+
+        if (!empty($data['filter_amazon_offers_type'])) {
+            $sql .= " AND p.amazon_offers_type = '" . $this->db->escape($data['filter_amazon_offers_type']) . "'";
+        }
+
+        if (!empty($data['filter_amazon_seller_quality'])) {
+            $sql .= " AND p.amazon_seller_quality = '" . $this->db->escape($data['filter_amazon_seller_quality']) . "'";
+        }
+
+        if (!empty($data['filter_seo'])) {
+            if ($this->config->get('aqe_match_anywhere')) {
+                $sql .= " AND (SELECT LCASE(keyword) FROM url_alias WHERE query = CONCAT('product_id=', p.product_id)) LIKE '%" . $this->db->escape(utf8_strtolower($data['filter_seo'])) . "%'";
+            } else {
+                $sql .= " AND (SELECT LCASE(keyword) FROM url_alias WHERE query = CONCAT('product_id=', p.product_id)) LIKE '" . $this->db->escape(utf8_strtolower($data['filter_seo'])) . "%'";
+            }
+        }
+
+        if (!empty($data['filter_tag'])) {
+            $sql .= " AND LCASE(pd.tag) LIKE '%" . $this->db->escape(utf8_strtolower($data['filter_tag'])) . "%'";
+        }
+
+        if (isset($data['filter_store'])) {
+            if ($data['filter_store'] == '*')
+                $sql .= " AND p2s.store_id IS NULL";
+            else
+                $sql .= " AND p2s.store_id = '" . (int)$data['filter_store'] . "'";
+        }
+
+        if (!empty($data['filter_category'])) {
+            if (!empty($data['filter_sub_category'])) {
+                $implode_data = array();
+
+                if ($data['filter_category'] == '*')
+                    $implode_data[] = "p2c.category_id IS NULL";
+                else
+                    $implode_data[] = "p2c.category_id IN (SELECT category_id FROM category_path WHERE path_id = '" . (int)$data['filter_category'] . "')";
+                
+
+                $sql .= " AND (" . implode(' OR ', $implode_data) . ")";
+            } else {
+                if ($data['filter_category'] == '*')
+                    $sql .= " AND p2c.category_id IS NULL";
+                else
+                    $sql .= " AND p2c.category_id = '" . (int)$data['filter_category'] . "'";
+            }
+        }
+
+        $query = $this->db->query($sql);
+
+        return $query->row['total'];
+    }
+
+    public function getTotalProducts2() {
         return $this->productCount;
     }
 

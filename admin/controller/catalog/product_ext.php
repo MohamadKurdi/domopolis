@@ -259,19 +259,19 @@ class ControllerCatalogProductExt extends Controller {
         foreach($this->config->get('aqe_catalog_products') as $column => $attr) {
             $filters[$column] = (isset($this->request->get['filter_' . $column])) ? $this->request->get['filter_' . $column] : null;
         }
-        $filters['sub_category'] = (isset($this->request->get['filter_sub_category'])) ? $this->request->get['filter_sub_category'] : $this->config->get('aqe_catalog_products_filter_sub_category');
-        $filters['price_special'] = (isset($this->request->get['filter_price_special'])) ? $this->request->get['filter_price_special'] : '';
+        $filters['sub_category']    = (isset($this->request->get['filter_sub_category'])) ? $this->request->get['filter_sub_category'] : $this->config->get('aqe_catalog_products_filter_sub_category');
+        $filters['price_special']   = (isset($this->request->get['filter_price_special'])) ? $this->request->get['filter_price_special'] : '';
 
         if (isset($this->request->get['sort'])) {
             $sort = $this->request->get['sort'];
         } else {
-            $sort = 'pd.name';
+            $sort = 'p.product_id';
         }
 
         if (isset($this->request->get['order'])) {
             $order = $this->request->get['order'];
         } else {
-            $order = 'ASC';
+            $order = 'DESC';
         }
 
         if (isset($this->request->get['page'])) {
@@ -326,11 +326,9 @@ class ControllerCatalogProductExt extends Controller {
         $this->data['copy']         = $this->url->link('catalog/product_ext/copy', 'token=' . $this->session->data['token'] . $url, 'SSL');
 		$this->data['copynostock']  = $this->url->link('catalog/product_ext/copynostock', 'token=' . $this->session->data['token'] . $url, 'SSL');
         $this->data['delete']       = $this->url->link('catalog/product_ext/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
-
-        $this->data['resize'] = $this->url->link('catalog/product_ext/setpicsize', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $this->data['resize']       = $this->url->link('catalog/product_ext/setpicsize', 'token=' . $this->session->data['token'] . $url, 'SSL');
 
         $this->load->model('setting/store');
-
         $stores = $this->model_setting_store->getStores();
 
         $multistore = count($stores);
@@ -375,8 +373,8 @@ class ControllerCatalogProductExt extends Controller {
         $this->data['aqe_list_view_image_width'] = $this->config->get('aqe_list_view_image_width');
         $this->data['aqe_list_view_image_height'] = $this->config->get('aqe_list_view_image_height');
 
-        $results = $this->model_catalog_product_ext->getProducts($data);
-        $product_total = $this->model_catalog_product_ext->getTotalProducts();
+        $results        = $this->model_catalog_product_ext->getProducts($data);
+        $product_total  = $this->model_catalog_product_ext->getTotalProducts();
 
         $actions = $this->config->get('aqe_catalog_products_actions');
         uasort($actions, 'column_sort');
@@ -399,14 +397,14 @@ class ControllerCatalogProductExt extends Controller {
                             break;
                     }
 
-                    $a['text'] = $this->language->get('txt_' . $attr['short']);
+                    $a['text']  = $this->language->get('txt_' . $attr['short']);
                     $a['title'] = ($act=='edit')?'Открыть':$this->language->get('text_' . $act);
-                    $a['edit'] = $attr['qe_type'];
-                    $a['name'] = $act;
-                    $a['btn'] = $attr['btn'];
-                    $a['hide'] = $attr['hide'];
-                    $a['ref'] = $attr['ref'];
-                    $action[] = $a;
+                    $a['edit']  = $attr['qe_type'];
+                    $a['name']  = $act;
+                    $a['btn']   = $attr['btn'];
+                    $a['hide']  = $attr['hide'];
+                    $a['ref']   = $attr['ref'];
+                    $action[]   = $a;
                 }
             }
 
@@ -430,15 +428,15 @@ class ControllerCatalogProductExt extends Controller {
                 'action'     => $action
             );
             if (!is_array($cp_cols)) {
-                $columns['name'] = $result['name'];
-                $columns['model'] = $result['model'];
-                $columns['price'] = round($result['price'], 2);
-                $columns['special'] = $special;
-                $columns['image'] = $result['image'];
-                $columns['status'] = ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled'));
-                $columns['filled_from_amazon'] = ($result['filled_from_amazon'] ? $this->language->get('text_yes') : $this->language->get('text_no'));
-                $columns['fill_from_amazon'] = ($result['fill_from_amazon'] ? $this->language->get('text_yes') : $this->language->get('text_no'));
-                $columns['quantity'] = $result['quantity'];
+                $columns['name']                = $result['name'];
+                $columns['model']               = $result['model'];
+                $columns['price']               = round($result['price'], 2);
+                $columns['special']             = $special;
+                $columns['image']               = $result['image'];
+                $columns['status']              = ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled'));
+                $columns['filled_from_amazon']  = ($result['filled_from_amazon'] ? $this->language->get('text_yes') : $this->language->get('text_no'));
+                $columns['fill_from_amazon']    = ($result['fill_from_amazon'] ? $this->language->get('text_yes') : $this->language->get('text_no'));
+                $columns['quantity']            = $result['quantity'];
             } else {
                 foreach($cp_cols as $column => $attr) {
                     if ($attr['display']) {
@@ -559,7 +557,6 @@ class ControllerCatalogProductExt extends Controller {
                 }
             }
 
-            //CountVariants
             $columns['variants']                = $this->model_catalog_product->countVariantProducts($result['product_id']);
             $columns['amzn_no_offers_counter']  = $result['amzn_no_offers_counter'];
             $columns['amzn_last_offers']        = ($result['amzn_last_offers'] == '0000-00-00 00:00:00')?false:date('d-m', strtotime($result['amzn_last_offers']));
@@ -595,23 +592,16 @@ class ControllerCatalogProductExt extends Controller {
         $this->data['status_select'] = addslashes(json_encode(array("0" => $this->language->get('text_disabled'), "1" => $this->language->get('text_enabled'))));
         $this->data['yes_no_select'] = addslashes(json_encode(array("0" => $this->language->get('text_no'), "1" => $this->language->get('text_yes'))));
 
-        $this->data['load_data_url'] = html_entity_decode($this->url->link('catalog/product_ext/load_data', 'token=' . $this->session->data['token'], 'SSL'));
-        $this->data['load_popup_url'] = html_entity_decode($this->url->link('catalog/product_ext/load_popup', 'token=' . $this->session->data['token'], 'SSL'));
+        $this->data['load_data_url']    = html_entity_decode($this->url->link('catalog/product_ext/load_data', 'token=' . $this->session->data['token'], 'SSL'));
+        $this->data['load_popup_url']   = html_entity_decode($this->url->link('catalog/product_ext/load_popup', 'token=' . $this->session->data['token'], 'SSL'));
 
         $this->load->model('localisation/language');
         $lang_count = $this->model_localisation_language->getTotalLanguages();
         $this->data['single_lang_editing'] = $this->config->get('aqe_single_language_editing') || ((int)$lang_count == 1);
 
-        if (in_array("manufacturer", $column_order)) {
+        if (!empty($data['filter_manufacturer'])){
             $this->load->model('catalog/manufacturer');
-            $this->data['manufacturers'] = $this->model_catalog_manufacturer->getManufacturers();
-            $m_select = array("0" => $this->language->get('text_none'));
-            foreach ($this->data['manufacturers'] as $m) {
-                $m_select[$m['manufacturer_id']] = $m['name'];
-            }
-            $this->data['manufacturer_select'] = addslashes(json_encode($m_select));
-        } else {
-            $this->data['manufacturer_select'] = addslashes(json_encode(array()));
+            $this->data['manufacturer'] = $this->model_catalog_manufacturer->getManufacturer($data['filter_manufacturer'])['name'];
         }
 
         if (in_array("tax_class", $column_order)) {
@@ -662,15 +652,15 @@ class ControllerCatalogProductExt extends Controller {
             $this->data['weight_class_select'] = addslashes(json_encode(array()));
         }
 
-        if (in_array("category", $column_order)) {
+        if (!empty($data['filter_category'])){
             $this->load->model('catalog/category');
+            $category = $this->model_catalog_category->getCategory($data['filter_category']);
 
-            $category_filter_data = ['filter_status' => 1];
-            if (!empty($data['filter_date_added'])){
-                $category_filter_data['filter_product_date_added'] = $data['filter_date_added'];
-            }
-
-            $this->data['categories'] = $this->model_catalog_category->getCategories($category_filter_data);
+            if (!empty($category['path'])){
+                $this->data['category'] = $category['path'];
+            } else {
+                $this->data['category'] = $category['name'];
+            }            
         }
 
         if (in_array("download", $column_order)) {

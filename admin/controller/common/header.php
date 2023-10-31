@@ -4,6 +4,8 @@ class ControllerCommonHeader extends Controller
 
     protected function index()
     {
+        $this->load->model('report/product');
+
         $this->data['title'] = $this->document->getTitle();
         $this->data['config_title'] = $this->config->get('config_title');
 
@@ -151,8 +153,6 @@ class ControllerCommonHeader extends Controller
 
         $this->data['text_report_adv_sale_order'] = $this->language->get('text_report_adv_sale_order');
 
-
-
         if (!$this->user->isLogged() || !isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])) {
             $this->data['logged'] = '';
 
@@ -164,30 +164,26 @@ class ControllerCommonHeader extends Controller
             $this->data['simple_module'] = $this->url->link('module/simple', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['simple_module_abandoned'] = $this->url->link('module/simple', 'abandoned&token=' . $this->session->data['token'], 'SSL');
 
-            $this->data['home'] = $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['panel'] = $this->url->link('common/panel', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['cronmon'] = $this->url->link('common/cronmon', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['affiliate'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['attribute'] = $this->url->link('catalog/attribute', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['attribute_group'] = $this->url->link('catalog/attribute_group', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['backup'] = $this->url->link('tool/backup', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['report_affiliate_statistics'] = $this->url->link('report/affiliate_statistics', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['report_affiliate_statistics_all'] = $this->url->link('report/affiliate_statistics_all', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['home']             = $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['panel']            = $this->url->link('common/panel', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['cronmon']          = $this->url->link('common/cronmon', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['affiliate']        = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['attribute']        = $this->url->link('catalog/attribute', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['attribute_group']  = $this->url->link('catalog/attribute_group', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['backup']           = $this->url->link('tool/backup', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['report_affiliate_statistics']      = $this->url->link('report/affiliate_statistics', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['report_affiliate_statistics_all']  = $this->url->link('report/affiliate_statistics_all', 'token=' . $this->session->data['token'], 'SSL');
 
-            $this->data['report_reject'] = $this->url->link('report/sale_reject', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['report_marketplace'] = $this->url->link('report/marketplace', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['report_reject']        = $this->url->link('report/sale_reject', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['report_marketplace']   = $this->url->link('report/marketplace', 'token=' . $this->session->data['token'], 'SSL');
 
-            $this->data['masspcategupd'] = $this->url->link('tool/masspcategupd', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['masspdiscoupd'] = $this->url->link('tool/masspdiscoupd', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['shortnames'] = $this->url->link('catalog/shortnames', 'token=' . $this->session->data['token'], 'SSL');
-
-            $this->load->model('report/product');
-            $this->data['total_shortnames_todo'] = $this->model_report_product->getTotalProductsWithNoShortNames();
+            $this->data['masspcategupd']    = $this->url->link('tool/masspcategupd', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['masspdiscoupd']    = $this->url->link('tool/masspdiscoupd', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['shortnames']       = $this->url->link('catalog/shortnames', 'token=' . $this->session->data['token'], 'SSL');            
 
             $this->data['banner'] = $this->url->link('design/banner', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['banner_module'] = $this->url->link('module/banner', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['slideshow_module'] = $this->url->link('module/slideshow', 'token=' . $this->session->data['token'], 'SSL');
-
 
             $this->data['category'] = $this->url->link('catalog/category', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['facategory'] = $this->url->link('catalog/facategory', 'token=' . $this->session->data['token'], 'SSL');

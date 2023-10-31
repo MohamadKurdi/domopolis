@@ -147,10 +147,6 @@
 									<li id="notification" class="header-notifications delayed-load short-delayed-load" data-route='common/home/loadNotifications'>
 									</li>
 
-									<li id="shortnames">
-										<a class="top" href="<? echo $shortnames; ?>"><span class="label label-danger" style="font-size:16px;"><i class="fa fa-eur" ></i> &nbsp;<?php echo $total_shortnames_todo; ?></span></a>		
-									</li>
-
 									<li id="callbacks">
 										<a class="top" href="<? echo $callback; ?>"><span class="label label-danger" style="font-size:16px;"><i class="fa fa-phone-square" ></i> &nbsp;<?php echo $total_callbacks; ?></span></a>		
 									</li>

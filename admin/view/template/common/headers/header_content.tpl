@@ -143,10 +143,6 @@
 										</li>
 
 										<li id="shortnames">
-											<a class="top" href="<? echo $shortnames; ?>"><span class="label label-danger" style="font-size:16px;"><i class="fa fa-edit" ></i>&nbsp;NAMES&nbsp;<?php echo $total_shortnames_todo; ?></span></a>		
-										</li>
-
-										<li id="shortnames">
 											<a class="top" href="<? echo $addasin; ?>"><span class="label label-danger" style="font-size:16px;"><i class="fa fa-refresh" ></i>&nbsp;QUEUE&nbsp;<?php echo $total_product_in_asin_queue; ?></span></a>		
 										</li>
 									</ul>
