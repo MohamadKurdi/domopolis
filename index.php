@@ -513,7 +513,7 @@
 						$adminSessionData = \Hobotix\SessionHandler\SessionHandler::unserialize($adminSessionData);
 
 						if ($adminSessionData && !empty($adminSessionData['user_id'])){							
-							$user_query = $registry->get('db')->non_cached_query("SELECT status, username, dev_template FROM user WHERE user_id = '" . (int)$adminSessionData['user_id'] . "'");
+							$user_query = $registry->get('db')->ncquery("SELECT status, username, dev_template FROM user WHERE user_id = '" . (int)$adminSessionData['user_id'] . "'");
 
 							if ((int)$user_query->row['dev_template'] == 1){
 								header('X-USING-DEV-TEMPLATE: TRUE');

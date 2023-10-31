@@ -7,51 +7,27 @@ define('IS_HTTPS', true);
 define('IS_ADMIN', true);
 header('X-ENGINE-ENTRANCE: INDEX-ADMIN');
 
-set_error_handler('error_handler');
+require_once(dirname(__FILE__) . '/../system/jsonconfig.php');
 
-function loadJsonConfig($config){
-	if (defined('DIR_SYSTEM')){
-		$json = file_get_contents(DIR_SYSTEM . 'config/' . $config . '.json');
-	} else {
-		$json = file_get_contents(dirname(__FILE__) . '/../system/config/' . $config . '.json');
-	}
-
-	return json_decode($json, true);
-}	
-
-function is_cli(){
-	return (php_sapi_name() === 'cli');
-}
-
-function echoLine($line){
-	if (is_cli()){
-		echo $line . PHP_EOL;
+$loaderConfig = loadJsonConfig('loader');
+if (!empty($loaderConfig['preload'])){
+	foreach ($loaderConfig['preload'] as $preloadFile){
+		require_once(dirname(__FILE__) . '/../' . $preloadFile . '.php');
 	}
 }
 
-if (isset($_GET['hello']) && $_GET['hello'] == 'world'){
-	define('IS_DEBUG', true);
-} else {
-	$ipsConfig = loadJsonConfig('ips');
+$FPCTimer = new \hobotix\FPCTimer();
 
-	if (!empty($ipsConfig['debug']) && !empty($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], $ipsConfig['debug'])){
-		define('IS_DEBUG', true);
-	} else {
-		define('IS_DEBUG', false);
-	}
-}
-
-$httpHOST 		= str_replace('www.', '', $_SERVER['HTTP_HOST']);
-$configFiles 	= loadJsonConfig('configs');
+$httpHOST 			= str_replace('www.', '', $_SERVER['HTTP_HOST']);
+$configFiles 		= loadJsonConfig('configs');
 $domainRedirects 	= loadJsonConfig('domainredirect');
 
-//Редиректы доменов, из конфига domainredirect
-	if (isset($domainRedirects[$httpHOST])){		
-		$newLocation = 'https://' . $domainRedirects[$httpHOST] . $_SERVER['REQUEST_URI'];
-		header("HTTP/1.1 301 Moved Permanently"); 
-		header("Location: " . $newLocation); 
-		exit(); 
-	}
+if (isset($domainRedirects[$httpHOST])){		
+	$newLocation = 'https://' . $domainRedirects[$httpHOST] . $_SERVER['REQUEST_URI'];
+	header("HTTP/1.1 301 Moved Permanently"); 
+	header("Location: " . $newLocation); 
+	exit(); 
+}
 
 if (isset($configFiles[$httpHOST])){		
 	if (file_exists($configFiles[$httpHOST])) {
@@ -95,14 +71,14 @@ require_once(DIR_SYSTEM . 'library/hobotix/SimpleProcess.php');
 require_once(DIR_SYSTEM . 'library/hobotix/TranslateAdaptor.php');
 require_once(DIR_SYSTEM . 'library/hobotix/CheckBoxUA.php');		
 
-$registry = new Registry();
-$loader = new Loader($registry);
+$registry 	= new Registry();
+$loader 	= new Loader($registry);
 $registry->set('load', $loader);
 
-$config = new Config();
+$config 	= new Config();
 $registry->set('config', $config);
 
-$log = new Log('php-errors-admin.log');
+$log 		= new Log('php-errors-admin.log');
 $registry->set('log', $log);
 
 $db = new DB(DB_DRIVER, DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
@@ -139,44 +115,6 @@ if (count($configFileExploded = explode('.', $configFile)) == 3){
 	}
 }
 $registry->get('config')->set('config_config_file_prefix', $configFilesPrefix);
-
-
-if (IS_DEBUG){
-	error_reporting (E_ALL);	
-	ini_set('display_errors', 1);
-} else {
-	error_reporting (0);	
-	ini_set('display_errors', 0);
-}
-
-function error_handler($errno, $errstr, $errfile, $errline) {
-	global $log, $config;
-
-	switch ($errno) {
-		case E_NOTICE:
-		case E_USER_NOTICE:
-		$error = 'Notice';
-		break;
-		case E_WARNING:
-		case E_USER_WARNING:
-		$error = 'Warning';
-		break;
-		case E_ERROR:
-		case E_USER_ERROR:
-		$error = 'Fatal Error';
-		break;
-		default:
-		$error = 'Unknown';
-		break;
-	}
-
-	if (IS_DEBUG) {
-		echo '<b>' . $error . '</b>: ' . $errstr . ' in <b>' . $errfile . '</b> on line <b>' . $errline . '</b>';
-	}
-
-	return true;
-}
-
 
 $request = new Request();
 $registry->set('request', $request);
@@ -270,9 +208,11 @@ $registry->set('courierServices', 	new hobotix\CourierServices($registry));
 $registry->set('emailBlackList', 	new hobotix\EmailBlackList($registry));
 $registry->set('openaiAdaptor', 	new hobotix\OpenAIAdaptor($registry));
 $registry->set('translateAdaptor', 	new hobotix\TranslateAdaptor($registry));
-$registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
 $registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
 $registry->set('checkBoxUA', 		new hobotix\CheckBoxUA($registry));
+
+$registry->set('bypass_rainforest_caches_and_settings', true);
+$registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
 
 $controller = new Front($registry);
 

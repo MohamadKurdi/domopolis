@@ -973,6 +973,10 @@ class PriceLogic
 	Логика работы со статусами складов
 	*/
 	public function buildStockQueryField(){
+		if (!$this->storesWarehouses){
+			$this->setStoreSettings();
+		}
+
 		$implode = [];
 		foreach ($this->storesWarehouses as $store_id => $storesWarehouse){
 			$implode[] = $storesWarehouse['config_warehouse_identifier'];
