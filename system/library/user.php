@@ -26,6 +26,21 @@ class User {
 	private $stores = array();
 	private $manager_groups = MANAGER_GROUPS;
 
+	private $exclude_path = [
+		'/admin/index.php?route=api/alerts/getAlert',
+		'/admin/index.php?route=sale/order/country',
+		'/admin/index.php?route=sale/customer/transaction',
+		'/admin/index.php?route=sale/order/invoicehistory',
+		'/admin/index.php?route=sale/order/emailhistory',
+		'/admin/index.php?route=sale/order/getDeliverySMSTextAjax',
+		'/admin/index.php?route=sale/order/callhistory',
+		'/admin/index.php?route=sale/order/smshistory',
+		'/admin/index.php?route=sale/order/ttnhistory',
+		'/admin/index.php?route=module/simple/custom',
+		'/admin/index.php?route=setting/setting/getFPCINFO',
+		'nolog'
+	];
+
 	private $ldap_host 		= null;
 	private $ldap_dn 		= null;
 	private $ldap_domain 	= null;
@@ -41,8 +56,7 @@ class User {
 		$this->ldap_host 	= $this->config->get('config_ldap_host');
 		$this->ldap_domain 	= $this->config->get('config_ldap_domain');
 		$this->ldap_group 	= $this->config->get('config_ldap_group');
-		$this->log 		= new Log('ldap_authorizations.txt');
-
+		$this->log 			= new Log('ldap_authorizations.txt');
 
 		if (isset($this->session->data['user_id'])) {
 			$user_query = $this->db->query("SELECT * FROM user WHERE user_id = '" . (int)$this->session->data['user_id'] . "' AND status = '1'");
@@ -100,7 +114,6 @@ class User {
 	}
 
 	public function login($username, $password) {
-
 		if (mb_strlen($username) < 3){
 			return false;		
 		}
@@ -125,7 +138,6 @@ class User {
 				ini_set('display_errors', 0);
 
 				if($bind = @ldap_bind($ldap, $username . '@' . $this->ldap_domain, $password)){
-
 					$this->log->write($username . ' bind to ' . $this->ldap_domain . ' : ok');
 
 					$filter 		= "(sAMAccountName=" . $username . ")";
@@ -143,7 +155,7 @@ class User {
 					if ($exists_query->rows){
 
 						$_user_id = (int)$exists_query->row['user_id'];						
-						$_data = array(
+						$user_data = [
 							'username'  		=> $username,
 							'firstname' 		=> $firstname,
 							'lastname'  		=> $lastname,
@@ -152,14 +164,14 @@ class User {
 							'status'			=> '1',
 							'ip' 				=> $_SERVER['REMOTE_ADDR'],
 							'password'  		=> $password
-						);						
-						$this->editUser($_user_id, $_data);
+						];						
+						$this->editUser($_user_id, $user_data);
 						$next_user_id = $_user_id;
 
 						$this->log->write($username . ' exist, updated');
 
 					} else {
-						$_data = array(
+						$user_data = [
 							'username'  		=> $username,
 							'firstname' 		=> $firstname,
 							'lastname'  		=> $lastname,
@@ -167,14 +179,14 @@ class User {
 							'internal_pbx_num' => $ipbx,
 							'ip' 				=> $_SERVER['REMOTE_ADDR'],
 							'password'  		=> $password
-						);					
-						$next_user_id = $this->addUser($_data);						
+						];					
+						$next_user_id = $this->addUser($user_data);						
 						$this->log->write($username . ' not exist, created');
 					}
 
 
 					if($this->config->get('adminlog_enable') && $this->config->get('adminlog_hacklog')){
-						$this->db->query("INSERT INTO adminlog SET user_id = '" . (int)$this->user_id . "', `user_name` = '" . $username . "', `action` = 'ldap_login', `allowed` = '1', `url` = '".$this->db->escape($this->db->escape($this->request->server['REQUEST_URI']))."', `ip` = '" . $this->request->server['REMOTE_ADDR'] . "', date = NOW()");																		
+						$this->addToAdminLog('ldap_login', true);																	
 					}										
 
 				} else {
@@ -183,7 +195,7 @@ class User {
 					$next_user_id = 0;
 
 					if($this->config->get('adminlog_enable') && $this->config->get('adminlog_hacklog')){
-						$this->db->query("INSERT INTO adminlog SET user_id = '" . (int)$this->user_id . "', `user_name` = '" . $username . "', `action` = 'ldap_login', `allowed` = '0', `url` = '".$this->db->escape($this->db->escape($this->request->server['REQUEST_URI']))."', `ip` = '" . $this->request->server['REMOTE_ADDR'] . "', date = NOW()");																		
+						$this->addToAdminLog('ldap_login', false);
 					}
 
 					$this->log->write($username . ' bind to ' . $this->ldap_domain . ' : fail : username/password invalid');
@@ -201,34 +213,27 @@ class User {
 					$next_user_id = $user_check_query->row['user_id'];					
 
 				} else {
-
 					if($this->config->get('adminlog_enable') && $this->config->get('adminlog_hacklog')){
-						$this->db->query("INSERT INTO adminlog SET user_id = '" . (int)$this->user_id . "', `user_name` = '" . $username . "', `action` = 'login', `allowed` = '0', `url` = '".$this->db->escape($this->request->server['REQUEST_URI'])."', `ip` = '" . $this->request->server['REMOTE_ADDR'] . "', date = NOW()");
+						$this->addToAdminLog('login', false);
 					}
 
 					return false;
 				}
-
-
 			}
 
 		} else {
-
 			$user_check_query = $this->db->query("SELECT * FROM user WHERE username = '" . $this->db->escape($username) . "' AND (password = SHA1(CONCAT(salt, SHA1(CONCAT(salt, SHA1('" . $this->db->escape($password) . "'))))) OR password = '" . $this->db->escape(md5($password)) . "') AND status = '1'");
 
 			if ($user_check_query->num_rows) {					
 				$next_user_id = $user_check_query->row['user_id'];		
 			}
-
-
 		}
 
 		$user_query = $this->db->query("SELECT * FROM user WHERE user_id = '" . (int)$next_user_id . "'");
 
 		if ($user_query->num_rows) {
 			$this->session->data['user_id'] = $user_query->row['user_id'];
-			$this->is_manager = in_array($user_query->row['user_group_id'], $this->manager_groups);
-
+			$this->is_manager 				= in_array($user_query->row['user_group_id'], $this->manager_groups);
 			$this->user_id 					= $user_query->row['user_id'];
 			$this->fullname 				= $user_query->row['firstname'].' '.$user_query->row['lastname'];
 			$this->is_av 					= $user_query->row['is_av'];
@@ -269,7 +274,7 @@ class User {
 			}
 
 			if($this->config->get('adminlog_enable') && $this->config->get('adminlog_login')){
-				$this->db->query("INSERT INTO adminlog SET user_id = '" . (int)$this->user_id . "', `user_name` = '" . $this->username . "', `action` = 'login', `allowed` = '1', `url` = '".$this->db->escape($this->db->escape($this->request->server['REQUEST_URI']))."', `ip` = '" . $this->request->server['REMOTE_ADDR'] . "', date = NOW()");
+				$this->addToAdminLog('login', true);
 			}
 
 			return true;
@@ -277,7 +282,7 @@ class User {
 		} else {
 
 			if($this->config->get('adminlog_enable') && $this->config->get('adminlog_hacklog')){
-				$this->db->query("INSERT INTO adminlog SET user_id = '" . (int)$this->user_id . "', `user_name` = '" . $username . "', `action` = 'login', `allowed` = '0', `url` = '".$this->db->escape($this->request->server['REQUEST_URI'])."', `ip` = '" . $this->request->server['REMOTE_ADDR'] . "', date = NOW()");
+				$this->addToAdminLog('login', false);
 			}
 
 			return false;
@@ -288,38 +293,24 @@ class User {
 		unset($this->session->data['user_id']);
 
 		if($this->config->get('adminlog_enable') && $this->config->get('adminlog_logout')){
-			$this->db->query("INSERT INTO adminlog SET user_id = '" . (int)$this->user_id . "', `user_name` = '" . $this->username . "', `action` = 'logout', `allowed` = '1', `url` = '".$this->db->escape($this->request->server['REQUEST_URI'])."', `ip` = '" . $this->request->server['REMOTE_ADDR'] . "', date = NOW()");
+			$this->addToAdminLog('logout', true);
 		}
 
 		$this->db->query("UPDATE `user` SET `ip` = '' WHERE user_id = '" . (int)$this->user_id . "'");
 
-		$this->user_id = '';
+		$this->user_id 	= '';
 		$this->username = '';
 
 		session_destroy();
 	}
 
-	private function excludeFromAdminLog($url){
-		$exclude_path = array(
-			'/admin/index.php?route=api/alerts/getAlert',
-			'/admin/index.php?route=sale/order/country',
-			'/admin/index.php?route=sale/customer/transaction',
-			'/admin/index.php?route=sale/order/invoicehistory',
-			'/admin/index.php?route=sale/order/emailhistory',
-			'/admin/index.php?route=sale/order/getDeliverySMSTextAjax',
-			'/admin/index.php?route=sale/order/callhistory',
-			'/admin/index.php?route=sale/order/smshistory',
-			'/admin/index.php?route=sale/order/ttnhistory',
-			'/admin/index.php?route=module/simple/custom',
-			'/admin/index.php?route=setting/setting/getFPCINFO',
-			'nolog'
-		);
-
-		foreach($exclude_path as $excluded_url) {
+	private function excludeFromAdminLog($url){		
+		foreach($this->exclude_path as $excluded_url) {
 			if (strpos($url, $excluded_url) !== false) {					
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -337,14 +328,11 @@ class User {
 					if(($this->config->get('adminlog_access') && $key == "access") || ($this->config->get('adminlog_modify') && $key == "modify") ){
 
 						if (!$this->excludeFromAdminLog($this->request->server['REQUEST_URI'])) {
-
-							$this->db->query("INSERT INTO adminlog SET user_id = '" . (int)$this->user_id . "', `user_name` = '" . $this->username . "', `action` = '".$key."', `allowed` = '".in_array($value, $this->permission[$key])."', `url` = '".$this->db->escape($this->request->server['REQUEST_URI'])."', `ip` = '" . $this->request->server['REMOTE_ADDR'] . "', date = NOW()");
-
+							$this->addToAdminLog($key, in_array($value, $this->permission[$key]));
 						}
 					}
 				}
 			}
-
 
 			return in_array($value, $this->permission[$key]);
 		} else {
@@ -354,16 +342,25 @@ class User {
 			}
 
 			if($this->config->get('adminlog_enable') && ($this->config->get('adminlog_allowed') == 0 || $this->config->get('adminlog_allowed') == 2)){
-				$this->db->query("INSERT INTO adminlog SET user_id = '" . (int)$this->user_id . "', `user_name` = '" . $this->username . "', `action` = '".$key."', `allowed` = '0', `url` = '".$this->db->escape($this->request->server['REQUEST_URI'])."', `ip` = '" . $this->request->server['REMOTE_ADDR'] . "', date = NOW()");
+				$this->addToAdminLog($key, false);
 			}
-
 
 			return false;
 		}
 	}
 
-	private function addUser($data){
+	private function addToAdminLog($action, $allowed){
+		$this->db->query("INSERT INTO adminlog SET 
+			`user_id` 	= '" . (int)$this->user_id . "', 
+			`user_name` = '" . $this->username . "', 
+			`action` 	= '" . $this->db->escape($action) . "', 
+			`allowed` 	= '" . (int)$allowed . "', 
+			`url` 		= '".$this->db->escape($this->request->server['REQUEST_URI'])."', 
+			`ip` 		= '" . $this->request->server['REMOTE_ADDR'] . "', 
+			`date` 		= NOW()");		
+	}
 
+	private function addUser($data){
 		$this->db->query("INSERT INTO `user` SET 
 			username 			= '" . $this->db->escape($data['username']) . "', 
 			salt 				= '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', 
@@ -392,12 +389,19 @@ class User {
 			WHERE user_id 		= '" . (int)$user_id . "'");
 
 		if ($data['password']) {
-			$this->db->query("UPDATE `user` SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' WHERE user_id = '" . (int)$user_id . "'");
+			$this->db->query("UPDATE `user` SET 
+				`salt` 			= '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', 
+				`password` 		= '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "' 
+				WHERE `user_id` = '" . (int)$user_id . "'");
 		}
 	}
 
 	private function editPassword($user_id, $password) {
-		$this->db->query("UPDATE `user` SET salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', code = '' WHERE user_id = '" . (int)$user_id . "'");
+		$this->db->query("UPDATE `user` SET 
+			`salt` 		= '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', 
+			`password` 	= '" . $this->db->escape(sha1($salt . sha1($salt . sha1($password)))) . "', 
+			`code` 		= '' 
+			WHERE `user_id` = '" . (int)$user_id . "'");
 	}
 
 	public function isLogged() {
@@ -443,7 +447,6 @@ class User {
 	public function getIsManager() {
 		return $this->is_manager;
 	}
-
 
 	public function canEditCSI() {
 		return $this->edit_csi;
