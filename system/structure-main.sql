@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 19, 2023 at 03:26 PM
+-- Generation Time: Oct 31, 2023 at 05:23 PM
 -- Server version: 8.0.30
 -- PHP Version: 7.4.30
 
@@ -4448,7 +4448,9 @@ CREATE TABLE `order` (
   `yam_box_id` int NOT NULL,
   `fcheque_link` varchar(1024) NOT NULL,
   `needs_checkboxua` tinyint(1) NOT NULL DEFAULT '0',
-  `paid_by` varchar(64) NOT NULL
+  `paid_by` varchar(64) NOT NULL,
+  `do_not_call` tinyint(1) NOT NULL DEFAULT '0',
+  `amazon_offers_type` varchar(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -4692,6 +4694,7 @@ CREATE TABLE `order_product` (
   `reward` int NOT NULL,
   `reward_one` int NOT NULL,
   `source` varchar(500) NOT NULL,
+  `amazon_offers_type` varchar(3) NOT NULL,
   `from_stock` tinyint(1) NOT NULL DEFAULT '0',
   `from_bd_gift` tinyint(1) NOT NULL DEFAULT '0',
   `is_returned` tinyint(1) NOT NULL DEFAULT '0',
@@ -5526,6 +5529,7 @@ CREATE TABLE `product` (
   `amzn_offers_count` int NOT NULL,
   `amzn_last_offers` datetime NOT NULL COMMENT 'Дата и время последнего обновления офферов Amazon',
   `amazon_offers_type` enum('A','P','AP','O','N') CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
+  `amazon_seller_quality` varchar(5) NOT NULL,
   `amzn_ignore` tinyint(1) NOT NULL COMMENT 'Не обновлять цену с Amazon',
   `amzn_rating` decimal(15,2) NOT NULL,
   `amazon_best_price` decimal(15,4) NOT NULL DEFAULT '0.0000' COMMENT 'Лучший оффер на Amazon',
@@ -5646,15 +5650,19 @@ CREATE TABLE `product_amzn_offers` (
   `conditionTitle` varchar(512) NOT NULL,
   `conditionComments` varchar(512) NOT NULL,
   `sellerName` varchar(512) NOT NULL,
+  `sellerID` varchar(64) NOT NULL,
   `sellerLink` varchar(1024) NOT NULL,
   `sellerRating50` int NOT NULL,
   `sellerRatingsTotal` int NOT NULL,
   `sellerPositiveRatings100` int NOT NULL,
+  `sellerQuality` varchar(5) NOT NULL,
   `date_added` datetime NOT NULL,
   `is_min_price` tinyint(1) NOT NULL,
   `isPrime` tinyint(1) NOT NULL,
   `isBuyBoxWinner` tinyint(1) NOT NULL DEFAULT '0',
   `isBestOffer` tinyint(1) NOT NULL,
+  `isNativeOffer` tinyint(1) NOT NULL DEFAULT '0',
+  `offerCountry` varchar(3) NOT NULL,
   `offerRating` decimal(15,2) NOT NULL,
   `offer_id` varchar(512) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -7413,7 +7421,21 @@ CREATE TABLE `suppliers` (
   `terms_outstock` varchar(32) NOT NULL,
   `amzn_good` tinyint(1) NOT NULL,
   `amzn_bad` tinyint(1) NOT NULL,
-  `amzn_coefficient` int NOT NULL
+  `amzn_coefficient` int NOT NULL,
+  `amazon_seller_id` varchar(255) NOT NULL,
+  `store_link` varchar(512) NOT NULL,
+  `business_name` varchar(512) NOT NULL,
+  `registration_number` varchar(255) NOT NULL,
+  `vat_number` varchar(255) NOT NULL,
+  `business_type` varchar(255) NOT NULL,
+  `about_this_seller` longtext NOT NULL,
+  `detailed_information` longtext NOT NULL,
+  `telephone` varchar(64) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `is_native` tinyint(1) NOT NULL DEFAULT '0',
+  `rating50` int DEFAULT NULL,
+  `ratings_total` int DEFAULT NULL,
+  `positive_ratings100` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- --------------------------------------------------------
@@ -9975,7 +9997,8 @@ ALTER TABLE `order`
   ADD KEY `yam_status` (`yam_status`),
   ADD KEY `yam_substatus` (`yam_substatus`),
   ADD KEY `yam_shipment_id` (`yam_shipment_id`),
-  ADD KEY `monocheckout` (`monocheckout`);
+  ADD KEY `monocheckout` (`monocheckout`),
+  ADD KEY `amazon_offers_type` (`amazon_offers_type`);
 
 --
 -- Indexes for table `order_amazon`
@@ -10457,7 +10480,8 @@ ALTER TABLE `product_amzn_offers`
   ADD KEY `isPrime` (`isPrime`),
   ADD KEY `isBestOffer` (`isBestOffer`),
   ADD KEY `isBuyBoxWinner` (`isBuyBoxWinner`),
-  ADD KEY `minDays` (`minDays`);
+  ADD KEY `minDays` (`minDays`),
+  ADD KEY `isDeOffer` (`isNativeOffer`);
 
 --
 -- Indexes for table `product_anyrelated`
@@ -11326,7 +11350,9 @@ ALTER TABLE `suppliers`
   ADD KEY `1c_uuid` (`1c_uuid`),
   ADD KEY `amzn_good` (`amzn_good`),
   ADD KEY `amzn_bad` (`amzn_bad`),
-  ADD KEY `supplier_type` (`supplier_type`);
+  ADD KEY `supplier_type` (`supplier_type`),
+  ADD KEY `amazon_seller_id` (`amazon_seller_id`),
+  ADD KEY `is_de` (`is_native`);
 
 --
 -- Indexes for table `tax_class`
