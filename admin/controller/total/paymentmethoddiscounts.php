@@ -88,12 +88,16 @@ class ControllerTotalPaymentMethodDiscounts extends Controller {
 		} else {
 			$this->data['paymentmethoddiscounts_status'] = $this->config->get('paymentmethoddiscounts_status');
 		}
+
+		if (isset($this->request->post['paymentmethoddiscounts_display_in_description'])) {
+			$this->data['paymentmethoddiscounts_display_in_description'] = $this->request->post['paymentmethoddiscounts_display_in_description'];
+		} else {
+			$this->data['paymentmethoddiscounts_display_in_description'] = $this->config->get('paymentmethoddiscounts_display_in_description');
+		}
 		
-		$this->load->model('localisation/tax_class');
-		
+		$this->load->model('localisation/tax_class');		
 		$this->data['tax_classes'] = $this->model_localisation_tax_class->getTaxClasses();
-						
-		
+								
 		$this->template = 'total/paymentmethoddiscounts.tpl';
 		$this->children = array(
 			'common/header',

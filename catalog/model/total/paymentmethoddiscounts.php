@@ -1,4 +1,5 @@
 <?php
+
 class ModelTotalPaymentMethodDiscounts extends Model {
 	public function getTotal(&$total_data, &$total, &$taxes) {			
 
@@ -18,13 +19,15 @@ class ModelTotalPaymentMethodDiscounts extends Model {
 				$payment_method = $this->session->data['payment_secondary_method']['title'];
 			}
 
-			$sub_total = $this->cart->getSubTotal();
+			$sub_total 			= $this->cart->getSubTotal();
 			$sub_total_national = $this->cart->getSubTotalInNationalCurrency();
 
 			foreach ($discounts as $discount){
 				$status = true;
 
-				if ($discount['deliveries'] && $exploded = explode(PHP_EOL, $discount['deliveries'])){
+				if ($discount['deliveries']){
+					$exploded = explode(PHP_EOL, $discount['deliveries']);
+
 					$status = false;
 					foreach ($exploded as $line){
 						if (trim($line) == $this->session->data['shipping_method']['code']){
@@ -41,15 +44,15 @@ class ModelTotalPaymentMethodDiscounts extends Model {
 
 					if($discount['znak']){
 						if($discount['mode']) {
-								$number = -$sub_total*$discount['number']/100; // -%
-								$number_national = -$sub_total_national*$discount['number']/100; // -%
+								$number 			= -$sub_total*$discount['number']/100;
+								$number_national 	= -$sub_total_national*$discount['number']/100;
 							} else {
-								$number = -$discount['number']; // -ed
+								$number = -$discount['number'];
 							}
 						}else{
 							if($discount['mode']) { 
-								$number =  $sub_total*$discount['number']/100; // +%
-								$number_national = $sub_total_national*$discount['number']/100; // -%
+								$number 			=  $sub_total*$discount['number']/100;
+								$number_national 	= $sub_total_national*$discount['number']/100;
 							} else { 
 								$number =  $discount['number']; 
 							}
@@ -63,13 +66,12 @@ class ModelTotalPaymentMethodDiscounts extends Model {
 							$coupon_exists = true;
 						}
 												
-						//если есть купон и это скидка то не применять
 						if ($coupon_exists && $number_national < 0){
 							$status = false;			
 						}						
 						
 						if ($status){							
-							$total_data[] = array( 
+							$total_data[] = [
 								'code'       		=> 'paymentmethoddiscounts',
 								'title'      		=> $text,
 								'sub_text' 	 		=> '',
@@ -77,7 +79,7 @@ class ModelTotalPaymentMethodDiscounts extends Model {
 								'value_national'   	=> $this->currency->convert($number_national, $this->config->get('config_regional_currency'), $this->config->get('config_regional_currency')),
 								'value'      		=> $number,
 								'sort_order' 		=> $this->config->get('paymentmethoddiscounts_sort_order')
-							);
+							];
 							
 							if ($discount['tax_class_id']) {
 								$tax_rates = $this->tax->getRates($number, $discount['tax_class_id']);
@@ -94,8 +96,7 @@ class ModelTotalPaymentMethodDiscounts extends Model {
 							$total += $number;	
 							
 						}
-					}
-					
+					}					
 				}
 			}	
 		}
