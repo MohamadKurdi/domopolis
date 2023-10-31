@@ -5,32 +5,17 @@
 		protected $id 			= null;
 		protected $layout 		= null;
 		protected $template 	= null; 
+		protected $output 		= null;
+		protected $minifier 	= null;
 		protected $overrided_template= null;
 		protected $children 	= [];
 		protected $data 		= [];
-		protected $output 		= null;
-		protected $minifier 	= null;
 
 		private $default_template = 'default';
 		
 		public function __construct($registry) {			
 			$this->registry = $registry;
-			$this->config 	= $registry->get('config');
-			
-			if( ! empty( $this->request->get['mfp'] ) ) {
-				preg_match( '/path\[([^]]*)\]/', $this->request->get['mfp'], $mf_matches );
-				
-				if( ! empty( $mf_matches[1] ) ) {
-					$this->request->get['path'] = $mf_matches[1];
-					
-					if( isset( $this->request->get['category_id'] ) || ( isset( $this->request->get['route'] ) && in_array( $this->request->get['route'], array( 'product/search', 'product/special', 'product/manufacturer/info' ) ) ) ) {
-						$mf_matches = explode( '_', $mf_matches[1] );
-						$this->request->get['category_id'] = end( $mf_matches );
-					}
-				}
-				
-				unset( $mf_matches );
-			}
+			$this->config 	= $registry->get('config');			
 		}		
 		
 		public function __get($key) {
@@ -41,7 +26,7 @@
 			$this->registry->set($key, $value);
 		}
 		
-		protected function forward($route, $args = array()) {
+		protected function forward($route, $args = []) {
 			return new Action($route, $args);
 		}
 		
@@ -51,14 +36,13 @@
 			exit();				
 		}
 		
-		protected function getChildData($child, $args = array()) {
+		protected function getChildData($child, $args = []) {
 			$action = new Action($child, $args);
 			
 			if (file_exists($action->getFile())) {
 				require_once($action->getFile());
 				
-				$class = $action->getClass();
-				
+				$class 		= $action->getClass();				
 				$controller = new $class($this->registry);
 				
 				return $controller->{$action->getMethod()}($action->getArgs());
@@ -69,14 +53,13 @@
 			}		
 		}
 		
-		protected function getChild($child, $args = array()) {
+		protected function getChild($child, $args = []) {
 			$action = new Action($child, $args);
 			
 			if (file_exists($action->getFile())) {
 				require_once($action->getFile());
 				
-				$class = $action->getClass();
-				
+				$class 		= $action->getClass();				
 				$controller = new $class($this->registry);
 				
 				$controller->{$action->getMethod()}($action->getArgs());
@@ -88,7 +71,7 @@
 			}		
 		}
 		
-		protected function hasAction($child, $args = array()) {
+		protected function hasAction($child, $args = []) {
 			$action = new Action($child, $args);
 			
 			if (file_exists($action->getFile())) {

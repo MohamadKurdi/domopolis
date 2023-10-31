@@ -463,6 +463,23 @@
 			$registry->get('session')->data['coupon'] = trim($registry->get('request')->get['coupon']);
 		}
 	}
+
+
+	//megafilter implementation moved from engine/controller	
+	if(!empty($registry->get('request')->get['mfp'])) {
+		preg_match('/path\[([^]]*)\]/', $registry->get('request')->get['mfp'], $mf_matches);
+		
+		if( ! empty( $mf_matches[1] ) ) {
+			$registry->get('request')->get['path'] = $mf_matches[1];
+			
+			if( isset($registry->get('request')->get['category_id']) || (isset($registry->get('request')->get['route']) && in_array($registry->get('request')->get['route'], [ 'product/search', 'product/special', 'product/manufacturer/info' ]))) {
+				$mf_matches = explode('_', $mf_matches[1]);
+				$registry->get('request')->get['category_id'] = end($mf_matches);
+			}
+		}
+		
+		unset( $mf_matches );
+	}
 	
 	// Front Controller 
 	$controller = new Front($registry);
