@@ -6,21 +6,21 @@ namespace hobotix;
 class RainforestAmazon
 {
 
-	private $db;	
-	private $config;		
-	private $log;
+	private $db 	= null;	
+	private $config = null;			
+	private $log 	= null;	
 	
 	private $rfRequests = [];
-	public $zipCodes = [];
+	public $zipCodes 	= [];
 
-	private $rfClient;	
-	public $offersParser;
-	public $infoUpdater;
-	public $simpleProductParser;
-	public $paramsTranslator;	
+	private $rfClient 			= null;	
+	public $offersParser 		= null;
+	public $infoUpdater 		= null;
+	public $simpleProductParser = null;
+	public $paramsTranslator 	= null;
 
-	private $telegramBot;
-	private $tgAlertChatID = null;
+	private $telegramBot 	= null;
+	private $tgAlertChatID 	= null;
 
 	public const amazonOffersType 		= ['AP', 'A', 'P', 'O', 'N'];
 	public const amazonOffersTypeSorted = ['AP' => 5, 'A' => 4, 'P' => 3, 'O' => 2, 'N' => 1];

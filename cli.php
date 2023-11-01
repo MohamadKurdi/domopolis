@@ -70,16 +70,16 @@ for ($i=4; $i<=20; $i++){
 		$argv[$i] = trim($argv[$i]);
 
 		if (strpos($argv[$i], 'store_id=') !== false){
-			$store_id = getCliParamValue($argv[$i]);
+			$store_id 		= getCliParamValue($argv[$i]);
 			$allArguments[] = $argv[$i];
 			echoLine('[CLI] Working in store: ' . $store_id, 'i');
 		} elseif (strpos($argv[$i], 'language_code=') !== false){
-			$language_code = getCliParamValue($argv[$i]);
+			$language_code 	= getCliParamValue($argv[$i]);
 			$allArguments[] = $argv[$i];
 			echoLine('[CLI] Working with language: ' . $language_code, 'i');
 		} else {
-			$functionArguments[] = trim($argv[$i]);
-			$allArguments[] = trim($argv[$i]);
+			$functionArguments[] 	= trim($argv[$i]);
+			$allArguments[] 		= trim($argv[$i]);
 		}
 	}
 }
@@ -347,6 +347,13 @@ if (!empty($amazonConfig['domain_1'])){
 
 if (!empty($amazonConfig['zipcode_1'])){			
 	$registry->get('config')->set('config_rainforest_api_zipcode_1', $amazonConfig['zipcode_1']);
+}
+
+if (!empty($amazonConfig['bypass_rainforest_check_controllers'])){	
+	if (in_array($route, $amazonConfig['bypass_rainforest_check_controllers'])){
+		echoLine('Running Rainforest controller with check bypassing: ' . $route, 'e');
+		$registry->get('config')->set('bypass_rainforest_check', true);
+	}
 }
 
 $controller = new Front($registry);

@@ -1,8 +1,8 @@
 <?php
 final class Front {
-	protected $registry;
-	protected $pre_action = [];
-	protected $error;
+	protected $registry  	= null;
+	protected $error		= null;
+	protected $pre_action 	= [];
 
 	public function __construct($registry) {
 		$this->registry = $registry;
