@@ -22,7 +22,6 @@ class ControllerFeedHotlineFeedMaker2 extends Controller
     private $allowedManufacturers       = [];
 
 
-
     public function __construct($registry){
         parent::__construct($registry);
 
@@ -256,13 +255,14 @@ class ControllerFeedHotlineFeedMaker2 extends Controller
             }
 
             $filter = [
-                'filter_category_id'    => $hotline_category['category_id'],
-                'start'                 => 0,
-                'limit'                 => PHP_INT_MAX,
-                'filter_status'         => true,
-                'filter_not_bad'        => true,
-                'filter_return_simple'  => true,
-                'filter_exclude_certs'  => true
+                'filter_category_id'        => $hotline_category['category_id'],
+                'start'                     => 0,
+                'limit'                     => PHP_INT_MAX,
+                'filter_status'             => true,
+                'filter_not_bad'            => true,
+                'filter_return_simple'      => true,
+                'filter_exclude_certs'      => true,
+                'filter_hotline_exclude'    => true
             ];
 
             if ($this->allowedManufacturers){

@@ -1256,6 +1256,10 @@
 			if (!empty($data['filter_quantity'])) {
 				$sql .= " AND p.quantity > 0";
 			}
+
+			if (!empty($data['filter_hotline_exclude'])) {
+				$sql .= " AND p.hotline_exclude = 0";
+			}
 			
 			if (!empty($data['filter_not_bad'])) {
 				$sql .= " AND p.stock_status_id NOT IN (" . $this->config->get('config_not_in_stock_status_id') . ',' . $this->config->get('config_partly_in_stock_status_id') . ")";
@@ -2816,6 +2820,10 @@
 
 			if (!empty($data['filter_quantity'])) {
 				$sql .= " AND p.quantity > 0";
+			}
+
+			if (!empty($data['filter_hotline_exclude'])) {
+				$sql .= " AND p.hotline_exclude = 0";
 			}
 			
 			if (!empty($data['filter_enable_markdown'])) {

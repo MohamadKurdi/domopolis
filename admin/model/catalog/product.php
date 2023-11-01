@@ -101,6 +101,7 @@
 				yam_product_id 		= '" . "',
 				priceva_enable 		= '" . (int)$data['priceva_enable'] . "',
 				priceva_disable 	= '" . (int)$data['priceva_disable'] . "',
+				hotline_disable 	= '" . (int)$data['hotline_disable'] . "',
 				amzn_ignore 		= '" . (int)$data['amzn_ignore'] . "',
 				date_added 			= NOW()");
 			
@@ -616,7 +617,8 @@
 				yam_currency 			= '" . $this->db->escape($data['yam_currency']) . "', 
 				yam_product_id 			= '" . $this->db->escape($this->config->get('config_yam_offer_id_prefix') . $product_id) . "', 
 				priceva_enable 			= '" . (int)$data['priceva_enable'] . "', 
-				priceva_disable 		= '" . (int)$data['priceva_disable'] . "', 
+				priceva_disable 		= '" . (int)$data['priceva_disable'] . "',
+				hotline_disable 		= '" . (int)$data['hotline_disable'] . "',
 				amzn_last_search 		= '" . $this->db->escape($data['amzn_last_search']) . "', 
 				amzn_ignore 			= '" . (int)$data['amzn_ignore'] . "',  
 				fill_from_amazon 		= '" . (int)$data['fill_from_amazon'] . "', 

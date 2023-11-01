@@ -1989,6 +1989,14 @@ class ControllerCatalogProduct extends Controller {
 			$this->data['priceva_disable'] = 0;
 		}
 
+		if (isset($this->request->post['hotline_disable'])) {
+			$this->data['hotline_disable'] = $this->request->post['hotline_disable'];
+		} elseif (!empty($product_info)) {
+			$this->data['hotline_disable'] = $product_info['hotline_disable'];
+		} else {
+			$this->data['hotline_disable'] = 0;
+		}
+
 		if (isset($this->request->post['yam_disable'])) {
 			$this->data['yam_disable'] = $this->request->post['yam_disable'];
 		} elseif (!empty($product_info)) {

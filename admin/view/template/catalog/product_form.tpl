@@ -1357,6 +1357,28 @@
 																				</tr>
 																			</table>	
 																		</div>
+																		<div <?php if ($this->config->get('config_country_id') != 220) { ?> style="display:none"<?php } ?>>
+																		<table class="form">
+																				<tr>																					
+																					<td>
+																						<span class="status_color" style="display:inline-block; padding:3px 5px; background:#FF0000; color:#FFF">Исключить из Hotline</span>
+																					</td>									
+																				</tr>
+																				<tr style="border-bottom:1px dashed gray">
+																					<td style="width:16.6%">
+																						<select name="hotline_disable">
+																							<?php if ($hotline_disable) { ?>
+																								<option value="1" selected="selected"><?php echo $text_enabled; ?></option>
+																								<option value="0"><?php echo $text_disabled; ?></option>
+																							<?php } else { ?>
+																								<option value="1"><?php echo $text_enabled; ?></option>
+																								<option value="0" selected="selected"><?php echo $text_disabled; ?></option>
+																							<?php } ?>
+																						</select>
+																					</td>
+																				</tr>
+																		</table>
+																	</div>
 
 																			<table class="form">
 																				<tr>
@@ -1378,8 +1400,6 @@
 																						<br />
 																						<span class="help">cсылки на страницы, где находится товар на сайтах конкурентов. по одной в строке. Только Украина</span>
 																					</td>	
-
-
 																				</tr>
 																			</table>
 

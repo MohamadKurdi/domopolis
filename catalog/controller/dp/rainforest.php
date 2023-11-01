@@ -4,13 +4,12 @@ class ControllerDPRainForest extends Controller {
 	private $maxSteps = 10;
 	private $categoriesData = null;
 
-	private $iterations = null;
-	private $current_iteration = null;
-	private $current_category = null;
+	private $iterations 		= null;
+	private $current_iteration 	= null;
+	private $current_category 	= null;
 
-	private $existentAsins = [];
-	private $rainforestAmazon = null;
-
+	private $existentAsins 		= [];
+	private $rainforestAmazon 	= null;
 	
 	public function __construct($registry){
 		ini_set('memory_limit', '4G');
@@ -29,9 +28,11 @@ class ControllerDPRainForest extends Controller {
 			die('RNF Category API Workmode not set');
 		}
 
-		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');
-		$this->rainforestAmazon->checkIfPossibleToMakeRequest();
-
+		$this->rainforestAmazon = $this->registry->get('rainforestAmazon');		
+		if (!$this->config->get('bypass_rainforest_check')){
+			$this->rainforestAmazon->checkIfPossibleToMakeRequest();
+		}
+		
 	//	$this->fullFillExistentAsins();
 	}
 
@@ -258,7 +259,7 @@ class ControllerDPRainForest extends Controller {
 	*/
 	public function deletebadfromqueuecron(){
 		if ($this->config->get('config_enable_amazon_specific_modes') && $this->config->get('config_rainforest_enable_add_queue_parser')){
-			echoLine('[ControllerDPRainForest::deletenoofferscron] Cleaning bad queue products!', 'w');
+			echoLine('[ControllerDPRainForest::deletebadfromqueuecron] Cleaning bad queue products!', 'w');
 			$this->db->query("DELETE FROM amzn_add_queue WHERE product_id = '-1'");
 		}
 	}
