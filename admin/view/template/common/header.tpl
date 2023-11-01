@@ -19,13 +19,13 @@
 						
 
 		<link href="<? echo FAVICON; ?>?v=Kmw6bJbGLP" rel="icon" type="image/x-icon" />
-		<link rel="apple-touch-icon" sizes="180x180" href="icon/<?php echo $ICON_DIRECTORY; ?>apple-touch-icon.png?v=Kmw6bJbGLP">
-		<link rel="icon" type="image/png" sizes="32x32" href="icon/<?php echo $ICON_DIRECTORY; ?>favicon-32x32.png?v=Kmw6bJbGLP">
-		<link rel="icon" type="image/png" sizes="194x194" href="icon/<?php echo $ICON_DIRECTORY; ?>favicon-194x194.png?v=Kmw6bJbGLP">
-		<link rel="icon" type="image/png" sizes="192x192" href="icon/<?php echo $ICON_DIRECTORY; ?>android-chrome-192x192.png?v=Kmw6bJbGLP">
-		<link rel="icon" type="image/png" sizes="16x16" href="icon/<?php echo $ICON_DIRECTORY; ?>favicon-16x16.png?v=Kmw6bJbGLP">
-		<link rel="mask-icon" href="icon/<?php echo $ICON_DIRECTORY; ?>safari-pinned-tab.svg?v=Kmw6bJbGLP" color="#55ad7a">
-		<link rel="shortcut icon" href="icon/<?php echo $ICON_DIRECTORY; ?>favicon.ico?v=Kmw6bJbGLP">
+		<link rel="apple-touch-icon" sizes="180x180" href="icon/<?php echo ICON_DIRECTORY; ?>apple-touch-icon.png?v=Kmw6bJbGLP">
+		<link rel="icon" type="image/png" sizes="32x32" href="icon/<?php echo ICON_DIRECTORY; ?>favicon-32x32.png?v=Kmw6bJbGLP">
+		<link rel="icon" type="image/png" sizes="194x194" href="icon/<?php echo ICON_DIRECTORY; ?>favicon-194x194.png?v=Kmw6bJbGLP">
+		<link rel="icon" type="image/png" sizes="192x192" href="icon/<?php echo ICON_DIRECTORY; ?>android-chrome-192x192.png?v=Kmw6bJbGLP">
+		<link rel="icon" type="image/png" sizes="16x16" href="icon/<?php echo ICON_DIRECTORY; ?>favicon-16x16.png?v=Kmw6bJbGLP">
+		<link rel="mask-icon" href="icon/<?php echo ICON_DIRECTORY; ?>safari-pinned-tab.svg?v=Kmw6bJbGLP" color="#55ad7a">
+		<link rel="shortcut icon" href="icon/<?php echo ICON_DIRECTORY; ?>favicon.ico?v=Kmw6bJbGLP">
 		<meta name="apple-mobile-web-app-title" content="<?php echo $this->config->get('config_owner'); ?>">
 		<meta name="application-name" content="<?php echo $this->config->get('config_owner'); ?>">
 		
