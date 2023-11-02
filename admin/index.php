@@ -211,7 +211,9 @@ $registry->set('translateAdaptor', 	new hobotix\TranslateAdaptor($registry));
 $registry->set('pricevaAdaptor', 	new hobotix\PricevaAdaptor($registry));
 $registry->set('checkBoxUA', 		new hobotix\CheckBoxUA($registry));
 
-$registry->set('bypass_rainforest_caches_and_settings', true);
+if (!$registry->get('config')->get('config_enable_amazon_specific_modes')){
+	$registry->set('bypass_rainforest_caches_and_settings', true);
+}
 $registry->set('rainforestAmazon', 	new hobotix\RainforestAmazon($registry));
 
 $controller = new Front($registry);

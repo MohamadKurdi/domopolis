@@ -20,8 +20,7 @@
 				<td>До</td>
 				<td>Итог</td>
 				<td>Рейтинг</td>
-				<td>Обновлено</td>	
-				<td>Линк</td>																	
+				<td>Обновлено</td>																	
 			</tr>
 		</thead>
 		<?php foreach ($offers as $offer) { ?>
@@ -152,10 +151,6 @@
 
 				<td>		
 					<?php echo $offer['date_added']; ?>
-				</td>
-
-				<td>		
-					<a href="<?php echo $offer['link2']; ?>" target="_blank"><i class="fa fa-external-link-square"></i></a>
 				</td>
 			</tr>
 		<?php } ?>
