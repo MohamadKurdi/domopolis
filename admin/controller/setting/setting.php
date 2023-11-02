@@ -17,9 +17,106 @@ class ControllerSettingSetting extends Controller
             'btn_text'  => 'TRNSL'
         ],
     ];
+
+    private $tabs = [
+        'tab-general'      => [
+            'text'  => 'Основное',
+            'icon'  => 'fa-bars',
+            'color' => ''
+        ],
+        'tab-store'        => [
+            'text'  => 'Магазин',
+            'icon'  => 'fa-cogs',
+            'color' => ''
+        ],
+        'tab-terms'        => [
+            'text'  => 'Сроки',
+            'icon'  => 'fa-clock-o',
+            'color' => ''
+        ],
+        'tab-deliveryapis' => [
+            'text'  => 'Доставки',
+            'icon'  => 'fa-truck',
+            'color' => '7F00FF'
+        ],
+        'tab-app'          => [
+            'text'  => 'Приложения',
+            'icon'  => 'fa-mobile',
+            'color' => ''
+        ],
+        'tab-local'        => [
+            'text'  => 'Локализация',
+            'icon'  => 'fa-bars',
+            'color' => ''
+        ],
+        'tab-option'       => [
+            'text'  => 'Опции',
+            'icon'  => 'fa-cogs',
+            'color' => ''
+        ],
+        'tab-kpi'          => [
+            'text'  => 'KPI',
+            'icon'  => 'fa-eur',
+            'color' => ''
+        ],
+        'tab-image'        => [
+            'text'  => 'Картинки',
+            'icon'  => 'fa-bars',
+            'color' => ''
+        ],
+        'tab-mail'         => [
+            'text'  => 'Почта',
+            'icon'  => 'fa-envelope',
+            'color' => ''
+        ],
+        'tab-sms'          => [
+            'text'  => 'SMS',
+            'icon'  => 'fa-mobile',
+            'color' => ''
+        ],
+        'tab-viber'        => [
+            'text'  => 'Viber',
+            'icon'  => 'fa-mobile',
+            'color' => ''
+        ],
+        'tab-server'       => [
+            'text'  => 'Сервер, SEO',
+            'icon'  => 'fa-cogs',
+            'color' => ''
+        ],
+        'tab-telephony'    => [
+            'text'  => 'ATC, LDAP',
+            'icon'  => 'fa-bars',
+            'color' => '7F00FF'
+        ],
+        'tab-social-metrics'=> [
+            'text'  => 'Соцсети, метрики',
+            'icon'  => 'fa-google',
+            'color' => '57AC79'
+        ],
+        'tab-marketplace'  => [
+            'text'  => 'Маркетплейсы',
+            'icon'  => 'fa-bars',
+            'color' => 'red'
+        ],
+        'tab-rainforest'   => [
+            'text'  => 'Rainforest',
+            'icon'  => 'fa-amazon',
+            'color' => '7F00FF'
+        ],
+        'tab-openai'       => [
+            'text'  => 'OpenAI',
+            'icon'  => 'fa-user',
+            'color' => ''
+        ],
+        'tab-apis'         => [
+            'text'  => 'Интеграции',
+            'icon'  => 'fa-bars',
+            'color' => '7F00FF'
+        ]
+    ];
     
-    public function getFPCINFO()
-    {
+    public function getFPCINFO(){
         if (!$this->user->isLogged() || !isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])) {
         } else {
             $this->load->model('setting/setting');
@@ -78,7 +175,7 @@ class ControllerSettingSetting extends Controller
         }
     }
 
-    public function clearMemCache() {
+    public function clearMemCache(){
         if(!isset($this->session->data['token'])) $this->session->data['token'] = '';
 
         if (!$this->config->get('config_enable_highload_admin_mode') || $this->user->getUserGroup() == 1){
@@ -110,8 +207,7 @@ class ControllerSettingSetting extends Controller
         }
     }
 
-    public function setworkmode()
-    {
+    public function setworkmode(){
         $mode = $this->request->get['mode'];
 
         if (!empty($this->admin_modes[$mode])) {
@@ -127,8 +223,7 @@ class ControllerSettingSetting extends Controller
         }
     }
     
-    public function setNoPageCacheMode()
-    {
+    public function setNoPageCacheMode(){
         
         if ($this->user->getUserGroup() == 1) {
             $this->load->model('kp/bitrixBot');
@@ -150,8 +245,7 @@ class ControllerSettingSetting extends Controller
         }
     }
     
-    public function setNoCacheMode()
-    {
+    public function setNoCacheMode(){
         
         if ($this->user->getUserGroup() == 1) {
             $enableNCM = false;
@@ -170,8 +264,7 @@ class ControllerSettingSetting extends Controller
         }
     }
     
-    public function editSettingAjax()
-    {
+    public function editSettingAjax(){
         $store_id   = $this->request->get['store_id'];
         $key        = $this->request->post['key'];
 
@@ -223,6 +316,8 @@ class ControllerSettingSetting extends Controller
             
             $this->redirect($this->url->link('setting/store', 'token=' . $this->session->data['token'], 'SSL'));
         }
+
+        $this->data['tabs'] = $this->tabs;
         
         $this->data['heading_title'] = $this->language->get('heading_title');
         
@@ -3106,12 +3201,18 @@ class ControllerSettingSetting extends Controller
         }
 
         $this->data['viber_order_status_message_image'] = [];
-        foreach ($this->data['config_viber_order_status_message'] as $order_status_id => $config_viber_order_status_message){
-            
-           if ($config_viber_order_status_message['image'] && file_exists(DIR_IMAGE . $config_viber_order_status_message['image']) && is_file(DIR_IMAGE . $config_viber_order_status_message['image'])) {
-                $this->data['viber_order_status_message_image'][$order_status_id] = $this->model_tool_image->resize($config_viber_order_status_message['image'], 200, 200);
-            } else {
-                 $this->data['viber_order_status_message_image'][$order_status_id] = $this->model_tool_image->resize('no_image.jpg', 200, 200);
+
+        if (!empty($this->data['config_viber_order_status_message'])){
+            foreach ($this->data['config_viber_order_status_message'] as $order_status_id => $config_viber_order_status_message){            
+                if ($config_viber_order_status_message['image'] && file_exists(DIR_IMAGE . $config_viber_order_status_message['image']) && is_file(DIR_IMAGE . $config_viber_order_status_message['image'])) {
+                    $this->data['viber_order_status_message_image'][$order_status_id] = $this->model_tool_image->resize($config_viber_order_status_message['image'], 200, 200);
+                } else {
+                    $this->data['viber_order_status_message_image'][$order_status_id] = $this->model_tool_image->resize('no_image.jpg', 200, 200);
+                }
+            }
+        } else {
+            foreach ($this->data['order_statuses'] as $order_status){
+                $this->data['viber_order_status_message_image'][$order_status['order_status_id']] = $this->model_tool_image->resize('no_image.jpg', 200, 200);
             }
         }
 
@@ -4989,6 +5090,40 @@ class ControllerSettingSetting extends Controller
             $this->data['config_clickmap_enable'] = $this->request->post['config_clickmap_enable'];
         } else {
             $this->data['config_clickmap_enable'] = $this->config->get('config_clickmap_enable');
+        }
+
+        $salary_settings = [
+            'config_salary_complete_cancel_percent_params_0',
+            'config_salary_complete_cancel_percent_params_1',
+            'config_salary_complete_cancel_percent_params_2',
+
+            'config_salary_average_confirm_time_params_0',
+            'config_salary_average_confirm_time_params_1',
+            'config_salary_average_confirm_time_params_2',
+
+            'config_salary_average_process_time_params_0',
+            'config_salary_average_process_time_params_1',
+            'config_salary_average_process_time_params_2',
+
+            'config_salary_percentage_params_0',
+            'config_salary_percentage_params_1',
+            'config_salary_percentage_params_2',
+
+            'config_salary_fixed_salary',
+
+            'config_salary_head_percentage_params_0',
+            'config_salary_head_percentage_params_1',
+            'config_salary_head_percentage_params_2',
+
+            'config_salary_head_fixed_salary'
+        ];
+
+        foreach ($salary_settings as $salary_setting) {
+            if (isset($this->request->post[$salary_setting])) {
+                $this->data[$salary_setting] = $this->request->post[$salary_setting];
+            } else {
+                $this->data[$salary_setting] = $this->config->get($salary_setting);
+            }
         }
         
         $this->data['token'] = $this->session->data['token'];
