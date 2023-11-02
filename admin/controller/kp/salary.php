@@ -1321,12 +1321,12 @@ public function countCustomerService($param_filter_month = false, $param_filter_
 
 	$this->data['managers'] = $this->model_user_user->getUsersByGroup(14);
 
-	var_dump($this->data['managers']);
-
 	if (empty($this->request->get['filter_manager']) && !empty($this->data['managers'] && !empty($this->data['managers'][0]))) {
 		$filter_manager = $this->data['managers'][0]['user_id'];
-	} else {
+	} elseif (!empty($this->request->get['filter_manager'])) {
 		$filter_manager = (int)$this->request->get['filter_manager'];
+	} else {
+		$filter_manager = null;
 	}
 
 	if ($param_filter_month) {
