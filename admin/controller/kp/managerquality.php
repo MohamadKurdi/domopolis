@@ -104,18 +104,19 @@
 				if ($period == 'now') {															
 					foreach ($managers as &$manager){
 						$manager['kpi_stats'] = $this->model_kp_work->getManagerLastKPI($manager['user_id']);
+
+						$count = $this->model_kp_work->getCurrentCountOrderStatusForManager($manager['user_id'], $order_status['order_status_id']);						
 						
-						$this->data['order_statuses'][$order_status['order_status_id']]['managers'][] = array(
-							'name' 				=> $manager['realname'],
-							'user_id' 			=> $manager['user_id'],							
-							'href'      		=> $this->url->link('sale/order', 'filter_order_status_id=' . $order_status['order_status_id'] . '&filter_manager_id=' . $manager['user_id'] . '&token=' . $this->session->data['token']),
-							'count'     		=> $this->model_kp_work->getCurrentCountOrderStatusForManager($manager['user_id'], $order_status['order_status_id']),
-							'diff_morning' 		=> ($this->model_kp_work->getCurrentCountOrderStatusForManager($manager['user_id'], $order_status['order_status_id']) - 
-												$this->model_kp_work->getCountOrderStatusForManagerForDate($manager['user_id'], $order_status['order_status_id'], date('Y-m-d'))),
-							'was_today_morning' => $this->model_kp_work->getCountOrderStatusForManagerForDate($manager['user_id'], $order_status['order_status_id'], date('Y-m-d')),
-							'last_order_date'  	=> $this->model_kp_work->getCurrentCountOrderStatusForManager($manager['user_id'], $order_status['order_status_id'])?date('Y-m-d', strtotime($this->model_kp_work->getLastOrderAdditionDate($manager['user_id'], $order_status['order_status_id']))):false,
-							'last_order_date_diff' => (int)((-1) * ceil((strtotime($this->model_kp_work->getLastOrderAdditionDate($manager['user_id'], $order_status['order_status_id'])) - time()) / 86400))
-						);					
+						$this->data['order_statuses'][$order_status['order_status_id']]['managers'][] = [
+							'name' 					=> $manager['realname'],
+							'user_id' 				=> $manager['user_id'],							
+							'href'      			=> $this->url->link('sale/order', 'filter_order_status_id=' . $order_status['order_status_id'] . '&filter_manager_id=' . $manager['user_id'] . '&token=' . $this->session->data['token']),
+							'count'     			=> $count,
+							'diff_morning' 			=> $count - $this->model_kp_work->getCountOrderStatusForManagerForDate($manager['user_id'], $order_status['order_status_id'], date('Y-m-d')),
+							'was_today_morning' 	=> $this->model_kp_work->getCountOrderStatusForManagerForDate($manager['user_id'], $order_status['order_status_id'], date('Y-m-d')),
+							'last_order_date'  		=> $count?date('Y-m-d', strtotime($this->model_kp_work->getLastOrderAdditionDate($manager['user_id'], $order_status['order_status_id']))):false,
+							'last_order_date_diff' 	=> (int)((-1) * ceil((strtotime($this->model_kp_work->getLastOrderAdditionDate($manager['user_id'], $order_status['order_status_id'])) - time()) / 86400))
+						];					
 					}					
 				} else {				
 					foreach ($managers as &$manager){						

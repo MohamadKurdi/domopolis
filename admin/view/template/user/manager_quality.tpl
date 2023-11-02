@@ -187,29 +187,18 @@
 											<? if (isset($manager['diff_morning'])) { ?>
 												<? if ($order_status['order_status']['is_problem']) { ?>
 													<? if ($manager['diff_morning'] >= 0) { ?>
-														<? /* проблемных стало больше */ ?>
-														
 														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">															
 															за сегодня <? echo $manager['diff_morning']; ?>
 														</span>
-														
 														<? } else { ?>
-														<? /* проблемных стало меньше */ ?>	
-														
 														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#4ea24e; color:#FFF">															
 															за сегодня <? echo $manager['diff_morning']; ?>
 														</span>
-														
 													<? } ?>		
 													
-													<? if ($manager['last_order_date']) { ?>														
-														<? if ($manager['last_order_date_diff'] > 42) { ?>														
-															<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#fff;">крайний от <? echo $manager['last_order_date']; ?></span>
-															<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61;  color:#fff;"><? echo $manager['last_order_date_diff']; ?> дн.</span>
-															<? } else { ?>
-															<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56;">крайний от <? echo $manager['last_order_date']; ?></span>
-															<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56;"><? echo $manager['last_order_date_diff']; ?> дн.</span>
-														<? } ?>																												
+													<? if ($manager['last_order_date']) { ?>	
+														<span class="status_color" style="display:inline-block; padding:3px 5px; background:<?php if ($manager['last_order_date_diff'] > $this->config->get('config_kpi_default_filter_count_days_problem')) { ?>#cf4a61<?php } else { ?>#ffaa56<?php } ?>;"><? echo $manager['last_order_date']; ?></span>
+														<span class="status_color" style="display:inline-block; padding:3px 5px; background:<?php if ($manager['last_order_date_diff'] > $this->config->get('config_kpi_default_filter_count_days_problem')) { ?>#cf4a61<?php } else { ?>#ffaa56<?php } ?>;"><? echo $manager['last_order_date_diff']; ?> дн.</span>										
 													<? } ?>
 													
 													<? } else { ?>
@@ -217,19 +206,13 @@
 													<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ccc;">															
 														за сегодня <? echo $manager['diff_morning']; ?>
 													</span>
-													<? if ($manager['last_order_date_diff'] > 42) { ?>														
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#fff;">крайний от <? echo $manager['last_order_date']; ?></span>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61;  color:#fff;"><? echo $manager['last_order_date_diff']; ?> дн.</span>
-														<? } else { ?>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56;">крайний от <? echo $manager['last_order_date']; ?></span>
-														<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56;"><? echo $manager['last_order_date_diff']; ?> дн.</span>
-													<? } ?>
+													<? if ($manager['last_order_date']) { ?>	
+													<span class="status_color" style="display:inline-block; padding:3px 5px; background:<?php if ($manager['last_order_date_diff'] > $this->config->get('config_kpi_default_filter_count_days_problem')) { ?>#cf4a61<?php } else { ?>#ffaa56<?php } ?>;"><? echo $manager['last_order_date']; ?></span>
+													<span class="status_color" style="display:inline-block; padding:3px 5px; background:<?php if ($manager['last_order_date_diff'] > $this->config->get('config_kpi_default_filter_count_days_problem')) { ?>#cf4a61<?php } else { ?>#ffaa56<?php } ?>;"><? echo $manager['last_order_date_diff']; ?> дн.</span>	
+													<? } ?>	
 													
 												<? } ?>
-												
-												
-												
-												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ccc;"><a href="<? echo $manager['href']; ?>" style="text-decoration:none" target="_blank">фильтр</a></span>												
+												<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ccc;"><a href="<? echo $manager['href']; ?>" style="text-decoration:none" target="_blank">фильтр</a></span>										
 											<? } ?>
 											
 											<? if (isset($manager['diff_day'])) { ?>
