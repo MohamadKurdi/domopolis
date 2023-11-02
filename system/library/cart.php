@@ -1180,6 +1180,18 @@
 			
 			return $stock;
 		}
+
+		public function hasFullInStock() {
+			$stock = true;
+			
+			foreach ($this->getProducts() as $product) {
+				if (!$product['fully_in_stock']) {
+					$stock = false;
+				}
+			}
+			
+			return $stock;
+		}
 		
 		public function hasShipping() {
 			return true;
