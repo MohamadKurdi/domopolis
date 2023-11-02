@@ -27,8 +27,10 @@
 					#tabs > a {font-weight:700}
 				</style>
 				<div id="tabs" class="htabs">
-					<?php foreach ($tabs as $tab => $setting) { ?>
-						<a href="#<?php echo $tab; ?>"><span style="color:#<?php echo $setting['color']; ?>;"><i class="fa <?php echo $setting['icon']; ?>"></i> <?php echo $setting['text']; ?></span></a>
+					<?php foreach ($tabs as $tab) { ?>
+						<?php foreach ($tab as $name => $setting) { ?>
+							<a href="#<?php echo $name; ?>"><span style="color:#<?php echo $setting['color']; ?>;"><i class="fa <?php echo $setting['icon']; ?>"></i> <?php echo $setting['text']; ?></span></a>
+						<?php } ?>
 					<?php } ?>			
 					<div class="clr"></div>
 				</div>
@@ -36,12 +38,13 @@
 				<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
 					<input type="hidden" name="store_id" value="0"/>
 					
-					<?php foreach ($tabs as $tab => $setting) { ?>
-						<?php if (file_exists(dirname(__FILE__) . '/settings/' . $tab . '.tpl')) { ?>
-							<?php require_once(dirname(__FILE__) . '/settings/' . $tab . '.tpl'); ?>
+					<?php foreach ($tabs as $tab) { ?>
+						<?php foreach ($tab as $name => $setting) { ?>
+							<?php if (file_exists(dirname(__FILE__) . '/settings/' . $name . '.tpl')) { ?>
+								<?php require_once(dirname(__FILE__) . '/settings/' . $name . '.tpl'); ?>
+							<?php } ?>
 						<?php } ?>
 					<?php } ?>
-
 				</form>
 			</div>
 		</div>

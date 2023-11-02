@@ -18,103 +18,7 @@ class ControllerSettingSetting extends Controller
         ],
     ];
 
-    private $tabs = [
-        'tab-general'      => [
-            'text'  => 'Основное',
-            'icon'  => 'fa-bars',
-            'color' => ''
-        ],
-        'tab-store'        => [
-            'text'  => 'Магазин',
-            'icon'  => 'fa-cogs',
-            'color' => ''
-        ],
-        'tab-terms'        => [
-            'text'  => 'Сроки',
-            'icon'  => 'fa-clock-o',
-            'color' => ''
-        ],
-        'tab-deliveryapis' => [
-            'text'  => 'Доставки',
-            'icon'  => 'fa-truck',
-            'color' => '7F00FF'
-        ],
-        'tab-app'          => [
-            'text'  => 'Приложения',
-            'icon'  => 'fa-mobile',
-            'color' => ''
-        ],
-        'tab-local'        => [
-            'text'  => 'Локализация',
-            'icon'  => 'fa-bars',
-            'color' => ''
-        ],
-        'tab-option'       => [
-            'text'  => 'Опции',
-            'icon'  => 'fa-cogs',
-            'color' => ''
-        ],
-        'tab-kpi'          => [
-            'text'  => 'KPI',
-            'icon'  => 'fa-eur',
-            'color' => ''
-        ],
-        'tab-image'        => [
-            'text'  => 'Картинки',
-            'icon'  => 'fa-bars',
-            'color' => ''
-        ],
-        'tab-mail'         => [
-            'text'  => 'Почта',
-            'icon'  => 'fa-envelope',
-            'color' => ''
-        ],
-        'tab-sms'          => [
-            'text'  => 'SMS',
-            'icon'  => 'fa-mobile',
-            'color' => ''
-        ],
-        'tab-viber'        => [
-            'text'  => 'Viber',
-            'icon'  => 'fa-mobile',
-            'color' => ''
-        ],
-        'tab-server'       => [
-            'text'  => 'Сервер, SEO',
-            'icon'  => 'fa-cogs',
-            'color' => ''
-        ],
-        'tab-telephony'    => [
-            'text'  => 'ATC, LDAP',
-            'icon'  => 'fa-bars',
-            'color' => '7F00FF'
-        ],
-        'tab-social-metrics'=> [
-            'text'  => 'Соцсети, метрики',
-            'icon'  => 'fa-google',
-            'color' => '57AC79'
-        ],
-        'tab-marketplace'  => [
-            'text'  => 'Маркетплейсы',
-            'icon'  => 'fa-bars',
-            'color' => 'red'
-        ],
-        'tab-rainforest'   => [
-            'text'  => 'Rainforest',
-            'icon'  => 'fa-amazon',
-            'color' => '7F00FF'
-        ],
-        'tab-openai'       => [
-            'text'  => 'OpenAI',
-            'icon'  => 'fa-user',
-            'color' => ''
-        ],
-        'tab-apis'         => [
-            'text'  => 'Интеграции',
-            'icon'  => 'fa-bars',
-            'color' => '7F00FF'
-        ]
-    ];
+    
     
     public function getFPCINFO(){
         if (!$this->user->isLogged() || !isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])) {
@@ -317,7 +221,7 @@ class ControllerSettingSetting extends Controller
             $this->redirect($this->url->link('setting/store', 'token=' . $this->session->data['token'], 'SSL'));
         }
 
-        $this->data['tabs'] = $this->tabs;
+        $this->data['tabs'] = loadJSONConfig('setting_tabs');
         
         $this->data['heading_title'] = $this->language->get('heading_title');
         
