@@ -735,7 +735,7 @@
 									</div>
 
 									<div>
-										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включить багфикс Simplecheckout</span></p>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включить багфикс SimpleCheckout</span></p>
 										<select type="select" name="config_enable_form_bugfix_in_simplecheckout">
 											<? if ($config_enable_form_bugfix_in_simplecheckout) { ?>
 												<option value="1" selected='selected' >Да</option>
@@ -747,6 +747,21 @@
 										</select>
 										<br />
 										<span class="help">В случае проблем с некоторыми методами оплаты переводить на подтверждение по-умолчанию</span>											
+									</div>
+
+									<div>
+										<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включить "не перезванивать" в SimpleCheckout</span></p>
+										<select type="select" name="config_enable_do_not_call_in_simplecheckout">
+											<? if ($config_enable_do_not_call_in_simplecheckout) { ?>
+												<option value="1" selected='selected' >Да</option>
+												<option value="0" >Нет</option>
+											<? } else { ?>
+												<option value="1" >Да</option>
+												<option value="0"  selected='selected' >Нет</option>
+											<? } ?>       
+										</select>
+										<br />
+										<span class="help">Для работы логики также нужно создать поле "do_not_call" с типом checkbox</span>											
 									</div>
 								</td>
 
