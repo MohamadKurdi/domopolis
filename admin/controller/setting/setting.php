@@ -643,6 +643,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_enable_do_not_call_in_simplecheckout'] = $this->config->get('config_enable_do_not_call_in_simplecheckout');
         }
 
+        if (isset($this->request->post['config_enable_do_not_call_in_simplecheckout_only_full_in_stock'])) {
+            $this->data['config_enable_do_not_call_in_simplecheckout_only_full_in_stock'] = $this->request->post['config_enable_do_not_call_in_simplecheckout_only_full_in_stock'];
+        } else {
+            $this->data['config_enable_do_not_call_in_simplecheckout_only_full_in_stock'] = $this->config->get('config_enable_do_not_call_in_simplecheckout_only_full_in_stock');
+        }
+
         if (isset($this->request->post['config_ssl'])) {
             $this->data['config_ssl'] = $this->request->post['config_ssl'];
         } else {

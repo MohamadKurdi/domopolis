@@ -616,6 +616,11 @@
             $this->_templateData['display_comment'] 		= $this->simplecheckout->getSettingValue('displayComment', 'summary');
             
             $this->_templateData['config_enable_do_not_call_in_simplecheckout'] 		= $this->config->get('config_enable_do_not_call_in_simplecheckout');
+            if ($this->config->get('config_enable_do_not_call_in_simplecheckout') && $this->config->get('config_enable_do_not_call_in_simplecheckout_only_full_in_stock')){
+            	if (!$this->cart->hasFullInStock()){
+            		$this->_templateData['config_enable_do_not_call_in_simplecheckout'] = false;
+            	}
+            }
             
             if (!is_array($this->_templateData['display_totals'])) {
 				$this->_templateData['display_totals'] = [];

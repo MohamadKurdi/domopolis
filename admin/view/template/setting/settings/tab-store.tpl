@@ -577,6 +577,21 @@
 						<br />
 						<span class="help">Для работы логики также нужно создать поле "do_not_call" с типом checkbox</span>											
 					</div>
+
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Вкл. "не перезванивать" если все в нал.</span></p>
+						<select type="select" name="config_enable_do_not_call_in_simplecheckout_only_full_in_stock">
+							<? if ($config_enable_do_not_call_in_simplecheckout_only_full_in_stock) { ?>
+								<option value="1" selected='selected' >Да</option>
+								<option value="0" >Нет</option>
+							<? } else { ?>
+								<option value="1" >Да</option>
+								<option value="0"  selected='selected' >Нет</option>
+							<? } ?>       
+						</select>
+						<br />
+						<span class="help">Если отключено - то в любом случае</span>											
+					</div>
 				</td>
 
 				<td style="width:18%">
