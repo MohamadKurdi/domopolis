@@ -67,10 +67,38 @@ function days_diff($target){
 	return (int)date_diff(date_create(date('Y-m-d')), date_create($target))->format('%a');
 }
 
+function dateDifference($date_1, $date_2, $differenceFormat = '%a')
+{
+	$datetime1 = date_create($date_1);
+	$datetime2 = date_create($date_2);
+
+	$interval = date_diff($datetime1, $datetime2);
+
+	return $interval->format($differenceFormat);
+}
+
+function dateDiff($date1, $date2)
+{
+	$d = (strtotime($date2)-strtotime($date1))/(60*60*24);
+	if (!round($d)) {
+		$d = 1;
+	} else {
+		$d = round($d);
+	}
+
+	return $d;
+}
 
 function secToHR($seconds) {
+	$hours 		= floor($seconds / 3600);
+	$minutes 	= floor(($seconds / 60) % 60);
+	$seconds 	= $seconds % 60;
+	return $hours > 0 ? "$hours h., $minutes m." : ($minutes > 0 ? "$minutes m., $seconds s. " : "$seconds s.");
+}
+
+function secToHRCyr($seconds) {
 	$hours = floor($seconds / 3600);
 	$minutes = floor(($seconds / 60) % 60);
 	$seconds = $seconds % 60;
-	return $hours > 0 ? "$hours h., $minutes m." : ($minutes > 0 ? "$minutes m., $seconds s. " : "$seconds s.");
+	return $hours > 0 ? "$hours ч., $minutes мин." : ($minutes > 0 ? "$minutes мин., $seconds сек. " : "$seconds сек.");
 }

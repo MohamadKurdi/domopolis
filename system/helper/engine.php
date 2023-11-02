@@ -80,9 +80,7 @@ function addTrackingToHTML($html, $tracking){
 
 			$newHref = $url['scheme'] . '://' . $url['host'] . $url['path'] . '?' . $url['query'];
 			$anchor->setAttribute('href', $newHref);
-
 		}
-
 	}
 
 	$html = $doc->saveHTML(); 
@@ -178,6 +176,67 @@ function checkAndFormatMultiAttributes($string, $separator, $type = 'ul'){
 	return $result;
 }
 
+function countPercentByParam($num, $param_array, $percent_array)
+{
+	if ($num <= $param_array[0]) {
+		return $percent_array[0];
+	}
+
+	if ($num <= $param_array[1]) {
+		return $percent_array[1];
+	}
+
+	return $percent_array[2];
+}
+
+function countValueByParam($num, $param_value, $param_array, $percent_array)
+{
+	if ($param_value <= $param_array[0]) {
+		return ($num / 100) * $percent_array[0];
+	}
+
+	if ($param_value <= $param_array[1]) {
+		return ($num / 100) * $percent_array[1];
+	}
+
+	return ($num / 100) * $percent_array[2];
+}
+
+function tdClass($num, $param1, $param2, $param3)
+{
+
+	if ($num <= $param1) {
+		return '_red';
+	}
+
+	if ($num <= $param2) {
+		return '_orange';
+	}
+
+	if ($num <= $param3) {
+		return '_green';
+	}
+
+	return '_green';
+}
+
+function tdClassRev($num, $param1, $param2, $param3)
+{
+
+	if ($num <= $param1) {
+		return '_green';
+	}
+
+	if ($num <= $param2) {
+		return '_orange';
+	}
+
+	if ($num <= $param3) {
+		return '_red';
+	}
+
+	return '_green';
+}
 
 function array_insert2(&$array, $pos, $insert){
 	$array = array_merge(array_slice($array, 0, $pos), [$insert], array_slice($array, $pos));
