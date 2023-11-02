@@ -7,7 +7,7 @@
     include_once(DIR_SYSTEM . 'library/simple/simple_controller.php');
     
     class ControllerCheckoutSimpleCheckoutSummary extends SimpleController {
-        private $_templateData = array();
+        private $_templateData = [];
         
         private function validateCoupon() {
             $version = $this->simplecheckout->getOpencartVersion();
@@ -153,10 +153,11 @@
             $this->_templateData['button_coupon'] 	= $this->language->get('button_coupon');
             $this->_templateData['button_voucher'] 	= $this->language->get('button_voucher');            
             $this->_templateData['button_update'] 	= $this->language->get('button_update');
+            $this->_templateData['text_do_not_call'] 	= $this->language->get('text_do_not_call');
 			
 			$this->_templateData['text_retranslate_43'] = $this->_templateData['text_retranslate_43'] . ' ' . $this->config->get('config_reward_maxsalepercent') . '%';
             
-            $this->_templateData['products'] = array();
+            $this->_templateData['products'] = [];
             
             $products = $this->cart->getProducts();
             
@@ -171,7 +172,7 @@
 					}
 				}
 				
-				$option_data = array();
+				$option_data = [];
 				
 				foreach ($product['option'] as $option) {
 					if ($version >= 200) {
@@ -326,7 +327,7 @@
 				}
 			}
             
-            $this->_templateData['vouchers'] = array();
+            $this->_templateData['vouchers'] = [];
             
             if (!empty($this->session->data['vouchers'])) {
 				foreach ($this->session->data['vouchers'] as $key => $voucher) {
@@ -338,7 +339,7 @@
 				}
 			}
             
-            $totals = array();
+            $totals = [];
             $total = 0;
             $taxes = $this->cart->getTaxes();
             
@@ -348,10 +349,10 @@
             'total'  => &$total
             );
             
-            $this->_templateData['modules'] = array();
+            $this->_templateData['modules'] = [];
             
             if (($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) {
-				$sort_order = array();
+				$sort_order = [];
 				
 				if ($version < 200 || $version >= 300) {
 					$this->load->model('setting/extension');
@@ -393,7 +394,7 @@
 					}
 				}
 				
-				$sort_order = array();
+				$sort_order = [];
 				
 				foreach ($totals as $key => $value) {
 					$sort_order[$key] = $value['sort_order'];
@@ -423,8 +424,8 @@
 				$max_points_to_use = (int)($sub_total_national * ($this->config->get('config_reward_maxsalepercent') / 100));
 				
 				$this->_templateData['customer_can_use_points'] = (int)$points;
-				$this->_templateData['max_points_to_use'] = $max_points_to_use;
-				$this->_templateData['points'] = $points > $max_points_to_use ? $max_points_to_use : $points;
+				$this->_templateData['max_points_to_use'] 		= $max_points_to_use;
+				$this->_templateData['points'] 					= $points > $max_points_to_use ? $max_points_to_use : $points;
 				
 				if (!$this->cart->canUseRewards()){
 					$this->_templateData['can_not_use_reward_at_all'] = true;
@@ -534,8 +535,8 @@
 				$shipping_address = $this->session->data['simple']['shipping_address'];
 				
 				$shipping_address_format = $this->simplecheckout->getAddressFormat(array(
-				'shipping_code' => !empty($this->session->data['shipping_method']) && !empty($this->session->data['shipping_method']['code']) ? $this->session->data['shipping_method']['code'] : '',
-				'shipping_address_format' => $shipping_address['address_format']
+					'shipping_code' 			=> !empty($this->session->data['shipping_method']) && !empty($this->session->data['shipping_method']['code']) ? $this->session->data['shipping_method']['code'] : '',
+					'shipping_address_format' 	=> $shipping_address['address_format']
 				), 'shipping');
 				
 				if (!empty($shipping_address_format)) {
@@ -607,15 +608,17 @@
 				$this->_templateData['summary_shipping_address'] = trim(str_replace(array("\r\n", "\r", "\n"), '<br />', preg_replace(array("/\s\s+/", "/\r\r+/", "/\n\n+/"), '<br />', trim(str_replace($find, $replace, $format)))));
 			}
             
-            $this->_templateData['display_header'] = $this->simplecheckout->getSettingValue('displayHeader', 'summary');
-            $this->_templateData['display_products'] = $this->simplecheckout->getSettingValue('displayProducts', 'summary');
-            $this->_templateData['display_totals_block'] = $this->simplecheckout->getSettingValue('displayTotalsBlock', 'summary');
-            $this->_templateData['display_totals'] = $this->simplecheckout->getSettingValue('displayTotals', 'summary');
-            $this->_templateData['display_address'] = $this->simplecheckout->getSettingValue('displayAddress', 'summary');
-            $this->_templateData['display_comment'] = $this->simplecheckout->getSettingValue('displayComment', 'summary');
+            $this->_templateData['display_header'] 			= $this->simplecheckout->getSettingValue('displayHeader', 'summary');
+            $this->_templateData['display_products'] 		= $this->simplecheckout->getSettingValue('displayProducts', 'summary');
+            $this->_templateData['display_totals_block'] 	= $this->simplecheckout->getSettingValue('displayTotalsBlock', 'summary');
+            $this->_templateData['display_totals'] 			= $this->simplecheckout->getSettingValue('displayTotals', 'summary');
+            $this->_templateData['display_address'] 		= $this->simplecheckout->getSettingValue('displayAddress', 'summary');
+            $this->_templateData['display_comment'] 		= $this->simplecheckout->getSettingValue('displayComment', 'summary');
+            
+            $this->_templateData['config_enable_do_not_call_in_simplecheckout'] 		= $this->config->get('config_enable_do_not_call_in_simplecheckout');
             
             if (!is_array($this->_templateData['display_totals'])) {
-				$this->_templateData['display_totals'] = array();
+				$this->_templateData['display_totals'] = [];
 			}
             
             if (empty($this->_templateData['display_totals'])) {

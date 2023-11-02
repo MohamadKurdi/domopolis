@@ -22,6 +22,7 @@
 	.row-shipping_address_novaposhta_city_guid{display:none!important;}
 	.row-shipping_address_cdek_city_guid{display:none!important;}
 	.row-shipping_address_cdek_city_fias{display:none!important;}
+	.row-shipping_address_do_not_call{display:none!important;}
     .optWrapper > ul.options > li.opt.disabled {display:none!important;}
     
     .loadingspan {float: right; margin-right: 6px; margin-top: -20px;position: relative;z-index: 2;color: red;}

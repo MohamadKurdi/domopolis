@@ -95,3 +95,4 @@ $_['text_summary']                   = 'Итого';
 $_['text_summary_comment']           = 'Комментарий';
 $_['text_summary_shipping_address']  = 'Адрес доставки';
 $_['text_summary_payment_address']   = 'Адрес оплаты';
+$_['text_do_not_call']   			 = 'Не перезванивайте мне';

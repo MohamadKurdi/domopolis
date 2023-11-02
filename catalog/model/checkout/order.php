@@ -191,7 +191,11 @@ class ModelCheckoutOrder extends Model {
 
 		if (empty($data['do_not_call'])){
 			$data['do_not_call'] = 0;
-		}
+		} elseif (is_array($data['do_not_call'])){
+			if (!empty($data['do_not_call'][0])){
+				$data['do_not_call'] = 1;
+			}
+		}	
 
 		$this->db->ncquery("INSERT INTO `order` SET 
 			invoice_prefix 			= '" . $this->db->escape($data['invoice_prefix']) . "', 

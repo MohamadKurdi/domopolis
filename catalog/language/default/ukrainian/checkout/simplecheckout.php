@@ -94,4 +94,5 @@ $_['text_summary']                   = 'Загальна інформація п
 $_['text_summary_comment']           = 'Коментар';
 $_['text_summary_shipping_address']  = 'Адреса доставки';
 $_['text_summary_payment_address']   = 'Адреса платника';
+$_['text_do_not_call']   			 = 'Не передзвонюйте мені';
 

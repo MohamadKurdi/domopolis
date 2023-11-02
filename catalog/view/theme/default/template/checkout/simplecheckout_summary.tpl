@@ -32,9 +32,7 @@
             <span class="inputs buttons"><a id="simplecheckout_button_cart" data-onclick="reloadAll" class="button btn-primary button_oc btn oct-button"><span class="voucher-code-txt"><?php echo $text_retranslate_17; ?></span></a></span>
 		</div>
 		<?php } ?>	
-	<?php } ?>
-	
-	
+	<?php } ?>	
 	
 	<?php if (isset($modules['reward']) && $customer_can_use_points && $points > 0) { ?>	
 		<?php if($isLogged) { ?>
@@ -144,11 +142,18 @@
 		<?php } ?>
 	<?php } ?>
 	
-    <?php if (!$display_products && $display_totals_block && !empty($display_totals)) { ?>
+	<?php if (!$display_products && $display_totals_block && !empty($display_totals)) { ?>
 		<div class="simplecheckout-summary-totals">
+			<button id="simplecheckout-button-main-confirm" class="btn simplecheckout_button_confirm" <?php if ($block_order) { ?>disabled="disabled"<?php } ?> onclick="doSubmitOrderByFakeButton();"><?php echo $text_retranslate_40; ?>        	
+		</button>
+
+		<?php if ($config_enable_do_not_call_in_simplecheckout) { ?>
+			<div class="checkbox_wrap">
+				<input type="checkbox" id="do_not_call_fake_checkbox" name="do_not_call_fake_checkbox" value="1" /><label for="do_not_call_fake_checkbox"><?php echo $text_do_not_call; ?></label>
+			</div>
 		<?php } ?>
-        <button id="simplecheckout-button-main-confirm" class="btn simplecheckout_button_confirm" <?php if ($block_order) { ?>disabled="disabled"<?php } ?> onclick="doSubmitOrderByFakeButton();"><?php echo $text_retranslate_40; ?></button>
 	</div>
+<?php } ?>
     <?php /* if (!$display_products && $display_totals_block && !empty($display_totals)) { ?>
 		<div id="report_bug_simple">
 			<span class="title"><?php echo $text_retranslate_err1; ?></span>
@@ -165,6 +170,28 @@
 
 
 <script>
+	<?php if ($config_enable_do_not_call_in_simplecheckout) { ?>
+		$(document).ready(function(){
+			if ($('#shipping_address_do_not_call_').prop('checked')){
+				$('#do_not_call_fake_checkbox').prop('checked', 'checked');
+			} else {
+				$('#do_not_call_fake_checkbox').prop('checked', false);
+				$('#do_not_call_fake_checkbox').removeAttr('checked');
+			}
+
+			$('#do_not_call_fake_checkbox').change(function(){
+				if ($('#do_not_call_fake_checkbox').prop('checked')){
+					$('#shipping_address_do_not_call_').prop('checked', 'checked');
+				} else {
+					$('#shipping_address_do_not_call_').prop('checked', false);
+					$('#shipping_address_do_not_call_').removeAttr('checked');
+				}
+
+				console.log($('#shipping_address_do_not_call_').prop('checked'));
+			});
+		});		
+	<?php } ?>
+
 	function doSubmitOrderByFakeButton(){
 		
 		if ($('input[name=\'payment_method_current\']').val() != ''){
