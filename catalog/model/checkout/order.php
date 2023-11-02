@@ -197,6 +197,16 @@ class ModelCheckoutOrder extends Model {
 			}
 		}	
 
+		if ($this->config->get('config_enable_do_not_call_in_simplecheckout_only_full_in_stock')){
+			if (!$this->cart->hasFullInStock()){
+            	$data['do_not_call'] = 0;
+            }
+		}
+
+		if (!$this->config->get('config_enable_do_not_call_in_simplecheckout')){
+			$data['do_not_call'] = 0;
+		}
+
 		$this->db->ncquery("INSERT INTO `order` SET 
 			invoice_prefix 			= '" . $this->db->escape($data['invoice_prefix']) . "', 
 			store_id 				= '" . (int)$data['store_id'] . "', 
