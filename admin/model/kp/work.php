@@ -1,5 +1,15 @@
 <?
 	class ModelKpWork extends Model {
+
+		public function getKPIArrayParams($param){
+			$result = [];
+
+			for ($i = 0; $i <= 2; $i++) {
+				$result[] = (float)$this->config->get('config_kpi_' . $param . '_' . $i);
+			}
+
+			return $result;
+		}
 		
 		public function init(){
 			$this->db->query("INSERT IGNORE INTO user_worktime (`user_id`, `date`) VALUES ('" . (int)$this->user->getID() . "', NOW())");		
@@ -22,15 +32,13 @@
 		}	
 		
 		
-		public function countDays($user_id, $month, $year){
-			
+		public function countDays($user_id, $month, $year){			
 			$query = $this->db->query("SELECT COUNT(*) as total FROM user_worktime WHERE MONTH(date) = '" . (int)$month . "' AND YEAR(date) = '" . (int)$year . "' AND user_id = '" . (int)$user_id . "' AND NOT (ISNULL(worktime_start))");
 			
 			return $query->row['total'];			
 		}
 		
-		public function countFieldSum($user_id, $field, $month, $year){
-			
+		public function countFieldSum($user_id, $field, $month, $year){			
 			if ($user_id){			
 				$query = $this->db->query("SELECT SUM(`" . $this->db->escape($field) . "`) as total FROM user_worktime WHERE MONTH(date) = '" . (int)$month . "' AND YEAR(date) = '" . (int)$year . "' AND user_id = '" . (int)$user_id . "' GROUP BY user_id");
 				} else {
@@ -48,8 +56,7 @@
 			return $query->row['total'];	
 		}
 		
-		public function countTimeDiffSum($user_id, $month, $year){
-			
+		public function countTimeDiffSum($user_id, $month, $year){			
 			$query = $this->db->query("SELECT SUM(TIME_TO_SEC(TIMEDIFF(worktime_finish, worktime_start))) as total FROM user_worktime WHERE MONTH(date) = '" . (int)$month . "' AND YEAR(date) = '" . (int)$year . "' AND user_id = '" . (int)$user_id . "' GROUP BY user_id");
 			
 			
@@ -92,21 +99,19 @@
 			}
 		}
 		
-		public function getCountCancelledOrdersForMonth($manager_id, $month, $year){
-			
-			if ($manager_id){
-				
-				$query = $this->db->query("SELECT COUNT(DISTINCT order_id) as total FROM `order_history` 
+		public function getCountCancelledOrdersForMonth($manager_id, $month, $year){			
+			if ($manager_id){				
+				$sql = "SELECT COUNT(DISTINCT order_id) as total FROM `order_history` 
 				WHERE order_status_id = '" . (int)$this->config->get('config_cancelled_status_id') . "' AND MONTH(date_added) = '" . (int)$month . "' AND YEAR(date_added) = '" . (int)$year . "' 
-				AND order_id IN (SELECT order_id FROM `order` WHERE manager_id = '" . (int)$manager_id . "') ORDER BY order_id ASC");
+				AND order_id IN (SELECT order_id FROM `order` WHERE manager_id = '" . (int)$manager_id . "') ORDER BY order_id ASC";
 				
-				} else {
-				
-				$query = $this->db->query("SELECT COUNT(DISTINCT order_id) as total FROM `order_history` 
+			} else {				
+				$sql = "SELECT COUNT(DISTINCT order_id) as total FROM `order_history` 
 				WHERE order_status_id = '" . (int)$this->config->get('config_cancelled_status_id') . "' AND MONTH(date_added) = '" . (int)$month . "' AND YEAR(date_added) = '" . (int)$year . "' 
-				AND order_id IN (SELECT order_id FROM `order` WHERE manager_id > 0) ORDER BY order_id ASC");
-				
+				AND order_id IN (SELECT order_id FROM `order` WHERE manager_id > 0) ORDER BY order_id ASC";				
 			}
+
+			$query = $this->db->query($sql);
 			
 			if ($query->num_rows && isset($query->row['total'])){
 				return $query->row['total'];
@@ -115,8 +120,7 @@
 			}
 		}
 		
-		public function getCountConfirmedToProcessOrdersForMonth($manager_id, $month, $year){
-			
+		public function getCountConfirmedToProcessOrdersForMonth($manager_id, $month, $year){			
 			$sql = "SELECT COUNT(DISTINCT order_id) as total FROM `order` o WHERE ";
 
 			if ($manager_id) {
@@ -346,9 +350,5 @@
 				} else {
 				return false;
 			}
-		}
-		
-		public function syncUserDBCron(){
-		}
-		
+		}		
 	}									

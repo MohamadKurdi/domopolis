@@ -4996,33 +4996,36 @@ class ControllerSettingSetting extends Controller
             $this->data['config_clickmap_enable'] = $this->config->get('config_clickmap_enable');
         }
 
-        $salary_settings = [
-            'config_salary_complete_cancel_percent_params_0',
-            'config_salary_complete_cancel_percent_params_1',
-            'config_salary_complete_cancel_percent_params_2',
+        $kpi_settings = [
+            'config_kpi_complete_cancel_percent_params_0',
+            'config_kpi_complete_cancel_percent_params_1',
+            'config_kpi_complete_cancel_percent_params_2',
 
-            'config_salary_average_confirm_time_params_0',
-            'config_salary_average_confirm_time_params_1',
-            'config_salary_average_confirm_time_params_2',
+            'config_kpi_average_confirm_time_params_0',
+            'config_kpi_average_confirm_time_params_1',
+            'config_kpi_average_confirm_time_params_2',
 
-            'config_salary_average_process_time_params_0',
-            'config_salary_average_process_time_params_1',
-            'config_salary_average_process_time_params_2',
+            'config_kpi_average_process_time_params_0',
+            'config_kpi_average_process_time_params_1',
+            'config_kpi_average_process_time_params_2',
 
-            'config_salary_percentage_params_0',
-            'config_salary_percentage_params_1',
-            'config_salary_percentage_params_2',
+            'config_kpi_percentage_params_0',
+            'config_kpi_percentage_params_1',
+            'config_kpi_percentage_params_2',
 
-            'config_salary_fixed_salary',
+            'config_kpi_fixed_salary',
 
-            'config_salary_head_percentage_params_0',
-            'config_salary_head_percentage_params_1',
-            'config_salary_head_percentage_params_2',
+            'config_kpi_head_percentage_params_0',
+            'config_kpi_head_percentage_params_1',
+            'config_kpi_head_percentage_params_2',
 
-            'config_salary_head_fixed_salary'
+            'config_kpi_head_fixed_salary',
+
+            'config_kpi_default_filter_count_days',
+            'config_kpi_default_filter_count_days_problem',
         ];
 
-        foreach ($salary_settings as $salary_setting) {
+        foreach ($kpi_settings as $salary_setting) {
             if (isset($this->request->post[$salary_setting])) {
                 $this->data[$salary_setting] = $this->request->post[$salary_setting];
             } else {

@@ -202,17 +202,14 @@
 														
 													<? } ?>		
 													
-													<? if ($manager['last_order_date']) { ?>
-														
+													<? if ($manager['last_order_date']) { ?>														
 														<? if ($manager['last_order_date_diff'] > 42) { ?>														
 															<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#fff;">крайний от <? echo $manager['last_order_date']; ?></span>
 															<span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61;  color:#fff;"><? echo $manager['last_order_date_diff']; ?> дн.</span>
 															<? } else { ?>
 															<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56;">крайний от <? echo $manager['last_order_date']; ?></span>
 															<span class="status_color" style="display:inline-block; padding:3px 5px; background:#ffaa56;"><? echo $manager['last_order_date_diff']; ?> дн.</span>
-														<? } ?>
-														
-														
+														<? } ?>																												
 													<? } ?>
 													
 													<? } else { ?>
