@@ -199,7 +199,7 @@ class ModelCheckoutOrder extends Model {
 
 		if ($this->config->get('config_enable_do_not_call_in_simplecheckout_only_full_in_stock')){
 			if (!$this->cart->hasFullInStock()){
-            	$data['do_not_call'] = 0;
+            //	$data['do_not_call'] = 0;
             }
 		}
 

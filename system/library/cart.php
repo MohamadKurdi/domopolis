@@ -24,6 +24,7 @@
 			if ($registry->get('customer')) {
 				$registry->get('customer')->refrefh($registry);
 			}
+			
 			$this->config 	= $registry->get('config');
 			$this->customer = $registry->get('customer');
 			$this->language = $registry->get('language');

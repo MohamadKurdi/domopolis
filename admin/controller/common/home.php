@@ -252,6 +252,7 @@
 				'costprice_national'	  	=> $this->currency->format($this->currency->convert($result['costprice'], $this->config->get('config_currency'), $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', $result['store_id'])), $this->config->get('config_regional_currency'), 1),
 				'profitability'			  	=> $result['profitability'],
 				'amazon_offers_type'		=> $result['amazon_offers_type'],
+				'do_not_call'				=> $result['do_not_call'],
 				'flag'      				=> $this->model_setting_setting->getKeySettingValue('config', 'config_language', $result['store_id']),
 				'affiliate' 				=> $this->model_sale_affiliate->getAffiliate($result['affiliate_id']),
 				'totals'         			=> $totals2,

@@ -722,7 +722,8 @@
 												<b><?php echo $order['telephone']; ?></b>
 												<span class='click2call' data-phone="<?php echo $order['telephone']; ?>" <? if ($order['shipping_city'] && $order['current_time']  && !$order['can_call_now']) { ?>style="color:#cf4a61;"<? } ?>></span>	
 
-												<?php if ($order['do_not_call']) { ?>										
+												<?php if ($order['do_not_call']) { ?>
+													<br />										
 													<span style="color:#FFF; padding:3px; background-color:#cf4a61; font-weight:700;"><i class="fa fa-microphone-slash" aria-hidden="true"></i>&nbsp;&nbsp;Не перезванивайте мне!</span>
 												<?php } ?>
 											</div>

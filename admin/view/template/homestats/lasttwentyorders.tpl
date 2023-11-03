@@ -19,6 +19,10 @@
 						<?php } ?>
 						<b><?php echo $order['customer']; ?></b>
 
+							<?php if ($order['do_not_call']) { ?>									
+									<span style="color:#FFF; padding:3px; background-color:#cf4a61; font-weight:700;"><i class="fa fa-microphone-slash" aria-hidden="true"></i></span>
+							<?php } ?>
+
 							<div style="clear:both;"></div>
 							<span style="font-size:10px; line-height:13px; <?php if ($order['email_bad']) { ?>color:#ff5656<?php } else { ?>color:#02760e<? } ?>">
 											<? echo $order['email']; ?>
