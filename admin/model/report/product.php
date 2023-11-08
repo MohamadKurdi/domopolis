@@ -6,6 +6,74 @@
 				'quantity_stockM' => '0',
 				);
 
+		public function getProductsOrderedForDates($data = []){
+			$sql = "SELECT DISTINCT op.product_id, 
+				p.asin, 
+				p.image, 
+				p.status, 
+				pd_native_language.name as native_name, 
+				pd_amazon_language.name as amazon_name,
+				pd_native_language.short_name_d as native_short_name, 
+				pd_amazon_language.short_name_d as amazon_short_name
+				FROM `order_product` op
+				LEFT JOIN product p ON (p.product_id = op.product_id)
+				LEFT JOIN `order` o ON (o.order_id = op.order_id) 
+				LEFT JOIN product_description pd_native_language ON (pd_native_language.product_id = op.product_id AND pd_native_language.language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_language')]['language_id'] . "')
+				LEFT JOIN product_description pd_amazon_language ON (pd_amazon_language.product_id = op.product_id AND pd_amazon_language.language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id'] . "')	
+				WHERE 
+				o.order_status_id > 0
+				AND p.status = 1";
+
+			if (!empty($data['filter_date_from'])){
+				$sql .= " AND DATE(o.date_added) >= '" . date('Y-m-d', strtotime($data['filter_date_from'])) . "'";
+			}
+
+			if (!empty($data['filter_date_to'])){
+				$sql .= " AND DATE(o.date_added) <= '" . date('Y-m-d', strtotime($data['filter_date_from'])) . "'";
+			}
+
+			$sql .= " ORDER BY o.date_added DESC, o.order_id DESC";
+
+			if (isset($data['start']) || isset($data['limit'])) {
+				if ($data['start'] < 0) {
+					$data['start'] = 0;
+				}
+				
+				if ($data['limit'] < 1) {
+					$data['limit'] = 20;
+				}
+				
+				$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+			}
+			
+			$query = $this->db->query($sql);
+			
+			return $query->rows;
+		}
+
+		public function getTotalProductsOrderedForDates($data = []){
+			$sql = "SELECT COUNT(DISTINCT op.product_id) as total
+				FROM `order_product` op
+				LEFT JOIN product p ON (p.product_id = op.product_id)
+				LEFT JOIN `order` o ON (o.order_id = op.order_id) 
+				LEFT JOIN product_description pd_native_language ON (pd_native_language.product_id = op.product_id AND pd_native_language.language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_language')]['language_id'] . "')
+				LEFT JOIN product_description pd_amazon_language ON (pd_amazon_language.product_id = op.product_id AND pd_amazon_language.language_id = '" . (int)$this->registry->get('languages')[$this->config->get('config_de_language')]['language_id'] . "')	
+				WHERE 
+				o.order_status_id > 0
+				AND p.status = 1";
+
+			if (!empty($data['filter_date_from'])){
+				$sql .= " AND DATE(o.date_added) >= '" . date('Y-m-d', strtotime($data['filter_date_from'])) . "'";
+			}
+
+			if (!empty($data['filter_date_to'])){
+				$sql .= " AND DATE(o.date_added) <= '" . date('Y-m-d', strtotime($data['filter_date_from'])) . "'";
+			}			
+			
+			$query = $this->db->query($sql);
+			
+			return $query->row['total'];
+		}
 
 		public function getProductsWithNoShortNames($data = []){			
 			$sql = "SELECT DISTINCT op.product_id, 

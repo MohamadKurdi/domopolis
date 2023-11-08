@@ -40,7 +40,7 @@ class ControllerCatalogShortNames extends Controller {
 		$this->data['token'] = $this->session->data['token'];
 
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_home'),
@@ -66,7 +66,7 @@ class ControllerCatalogShortNames extends Controller {
 			'limit' 			=> $this->config->get('config_limit_admin')
 		);
 
-		$this->data['products'] = array();
+		$this->data['products'] = [];
 
 		$product_total 	= $this->model_report_product->getTotalProductsWithNoShortNames($filter_data);			
 		$results 		= $this->model_report_product->getProductsWithNoShortNames($filter_data);
