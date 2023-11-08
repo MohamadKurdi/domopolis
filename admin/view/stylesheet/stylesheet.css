@@ -32,7 +32,7 @@ label{cursor:pointer}
 #menu > ul > li.sfhover > ul{display:block}
 #menu > ul > li > ul > li > ul{display:none}
 #menu > ul > li > ul > li:hover > ul{display:block}
-#menu > ul .top,#menu > ul li li.sfhover{padding:7px;font-size:13px;color:#eee;text-align:center}
+#menu > ul .top,#menu > ul li li.sfhover{padding:7px;font-size:12px;color:#eee;text-align:center}
 #menu > ul ul li{padding:3px 2px 3px 0}
 #menu > ul .selected .top{color:#fff;opacity:1}
 #menu > ul :hover a.top,#menu > ul .sfhover a.top{color:#fff;opacity:1}
