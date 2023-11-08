@@ -1,23 +1,22 @@
 <div id="tab-store">	
 	<h2>Настройки режимов работы админки</h2>
 	<table class="form">
-		<tr>
+		<tr>			
 			<td style="width:15%">
-				<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Режим работы с Amazon</span></p>
-				<select name="config_enable_amazon_specific_modes">
-					<?php if ($config_enable_amazon_specific_modes) { ?>
-						<option value="1" selected="selected">Включить</option>
-						<option value="0">Отключить</option>
-					<?php } else { ?>													
-						<option value="1">Включить</option>
-						<option value="0"  selected="selected">Отключить</option>
-					<? } ?>
-				</select>
-				<br />
-				<span class="help">Если включено, то актуальны режимы ASIN, VAR и TRNSL. В настройках устанавливаются режимы по-умолчанию, далее каждый контент-менеджер переключает их для себя по мере необходимости</span>
-			</td>
-
-			<td style="width:15%">
+				<div style="padding:5px; background-color:pink;">
+					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Режим работы с Amazon</span></p>
+					<select name="config_enable_amazon_specific_modes">
+						<?php if ($config_enable_amazon_specific_modes) { ?>
+							<option value="1" selected="selected">Включить</option>
+							<option value="0">Отключить</option>
+						<?php } else { ?>													
+							<option value="1">Включить</option>
+							<option value="0"  selected="selected">Отключить</option>
+						<? } ?>
+					</select>
+					<br />
+					<span class="help">Если включено, то актуальны режимы ASIN, VAR и TRNSL. В настройках устанавливаются режимы по-умолчанию, далее каждый контент-менеджер переключает их для себя по мере необходимости</span>
+				</div>
 				<div>
 					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">Включить хранение данных в файлах</span></p>
 					<select name="config_enable_amazon_asin_file_cache">
@@ -45,21 +44,6 @@
 					</select>
 					<br />
 					<span class="help">Если включено, то у всех, кроме суперадминистраторов, пропадает возможность сбрасывать кэши</span>
-				</div>
-
-				<div>
-					<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">CSV PP Без брендов</span></p>
-					<select name="config_csvprice_pro_disable_manufacturers">
-						<?php if ($config_csvprice_pro_disable_manufacturers) { ?>
-							<option value="1" selected="selected">Включить</option>
-							<option value="0">Отключить</option>
-						<?php } else { ?>													
-							<option value="1">Включить</option>
-							<option value="0"  selected="selected">Отключить</option>
-						<? } ?>
-					</select>
-					<br />
-					<span class="help">Если производителей более 10к, CSVPP не работает корректно, нужно включить эту опцию</span>
 				</div>
 			</td>
 
@@ -123,8 +107,7 @@
 						</select>
 						<br />
 						<span class="help">показать на главной странице в админке счетчики категорий, товаров и процесса обработки данных, загруженных из amazon</span>
-					</div>
-
+					</div>			
 					<div>
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Загружать Ocfilter в карте товара</span></p>
 						<select name="config_load_ocfilter_in_product">
@@ -139,7 +122,6 @@
 						<br />
 						<span class="help">в случае большого количества атрибутов и их значений оцфильтр ложит карту товара, нужно отключать</span>
 					</div>
-
 					<div>
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Монитор cron на главной</span></p>
 						<select name="config_cron_stats_display_enable">
@@ -215,22 +197,7 @@
 						<br />
 						<span class="help">включает логику привязки шаблонов рассылок и промокодов к менеджерам</span>
 					</div>
-
-					<div>
-						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Рентабельность в заказах</span></p>
-						<select name="config_show_profitability_in_order_list">
-							<?php if ($config_show_profitability_in_order_list) { ?>
-								<option value="1" selected="selected">Включить</option>
-								<option value="0">Отключить</option>
-							<?php } else { ?>													
-								<option value="1">Включить</option>
-								<option value="0"  selected="selected">Отключить</option>
-							<? } ?>
-						</select>
-						<br />
-						<span class="help">показать процент рентабельности по каждому заказу в списках</span>
-					</div>
-
+				
 					<div>
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Синхронизировать названия в заказах</span></p>
 						<select name="config_sync_product_names_in_orders">
@@ -246,7 +213,37 @@
 						<span class="help">при редактировании товара также обновятся названия в заказах, и наоборот</span>
 					</div>
 				</td>
+				<td width="20%">
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Рентабельность в заказах</span></p>
+						<select name="config_show_profitability_in_order_list">
+							<?php if ($config_show_profitability_in_order_list) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+						<br />
+						<span class="help">показать процент рентабельности по каждому заказу в списках</span>
+					</div>
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Закупка Amazon и рентабельность в остатках</span></p>
+						<select name="config_amazon_profitability_in_stocks">
+							<?php if ($config_amazon_profitability_in_stocks) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+						<br />
+						<span class="help">если включено, то показывается закупка и рентабельность Amazon, иначе данные из учетной системы</span>
+					</div>
 
+				</td>
 			</tr>
 		</table>
 
@@ -255,6 +252,21 @@
 		<table class="form">
 			<tr>
 				<td style="width:18%">
+
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#D69241; color:#FFF">CSV PP Без брендов</span></p>
+						<select name="config_csvprice_pro_disable_manufacturers">
+							<?php if ($config_csvprice_pro_disable_manufacturers) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+						<br />
+						<span class="help">Если производителей более 10к, CSVPP не работает корректно, нужно включить эту опцию</span>
+					</div>
 					<div>
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика значений атрибутов</span></p>
 						<select name="config_enable_attributes_values_logic">
@@ -267,7 +279,7 @@
 							<? } ?>
 						</select>
 						<br />
-						<span class="help">Привязка статей и картинок к изображениям атрибутов. логика нагружает админку и магазин! если реально это не используется, пусть будет отключено</span>
+						<span class="help">Привязка статей и картинок к изображениям атрибутов. логика нагружает админку и магазин! если это не используется, пусть будет отключено</span>
 					</div>
 
 					<div>
@@ -282,7 +294,7 @@
 							<? } ?>
 						</select>
 						<br />
-						<span class="help">логика нагружает магазин, если реально это не используется, пусть будет отключено</span>
+						<span class="help"><span style="color:red">логика нагружает магазин!</span> если это не используется, пусть будет отключено</span>
 					</div>
 				</td>
 				<td style="width:18%">
@@ -298,7 +310,7 @@
 							<? } ?>
 						</select>
 						<br />
-						<span class="help">логика нагружает магазин! включить только в случае если товары привязаны друг к другу как опции (не касается товаров с Amazon)</span>
+						<span class="help"><span style="color:red">логика нагружает магазин!</span> включить только в случае если товары привязаны друг к другу как опции (не касается товаров с Amazon)</span>
 					</div>
 
 					<div>
@@ -313,7 +325,7 @@
 							<? } ?>
 						</select>
 						<br />
-						<span class="help">логика нагружает магазин! включить только в случае настроен модуль Статусы товаров и это реально используется</span>
+						<span class="help"><span style="color:red">логика нагружает магазин!</span> включить только в случае настроен модуль Статусы товаров и это используется</span>
 					</div>
 
 					<div>
@@ -328,7 +340,7 @@
 							<? } ?>
 						</select>
 						<br />
-						<span class="help">логика нагружает магазин! включить только в случае если товары привязаны друг к другу как опции и подсчёт цен в каталоге выполняется "от - до"</span>
+						<span class="help"><span style="color:red">логика нагружает магазин!</span> включить только в случае если товары привязаны друг к другу как опции и подсчёт цен в каталоге выполняется "от - до"</span>
 					</div>
 
 					<div>
@@ -343,7 +355,7 @@
 							<? } ?>
 						</select>
 						<br />
-						<span class="help">логика нагружает магазин! включить только в случае если товары привязаны друг к другу как опции и разделяются по "цветовым группам"</span>
+						<span class="help"><span style="color:red">логика нагружает магазин!</span> включить только в случае если товары привязаны друг к другу как опции и разделяются по "цветовым группам"</span>
 					</div>
 				</td>
 				<td style="width:18%">
@@ -389,7 +401,7 @@
 							<? } ?>       
 						</select>
 						<br />
-						<span class="help">логика нагружает магазин! если не используется - отключить!</span>	
+						<span class="help"><span style="color:red">логика нагружает магазин!</span> если не используется - отключить!</span>	
 					</div>
 
 					<div>
@@ -447,11 +459,11 @@
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Режим разработки</span></p>
 						<select type="select" name="config_no_access_enable">
 							<? if ($config_no_access_enable) { ?>
-								<option value="1" selected='selected' >Да</option>
-								<option value="0" >Нет</option>
+								<option value="1" selected='selected' >Включить</option>
+								<option value="0" >Отключить</option>
 							<? } else { ?>
-								<option value="1" >Да</option>
-								<option value="0"  selected='selected' >Нет</option>
+								<option value="1" >Включить</option>
+								<option value="0"  selected='selected' >Отключить</option>
 							<? } ?>       
 						</select>
 						<br />
@@ -471,11 +483,11 @@
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">В брендах только товары</span></p>
 						<select type="select" name="config_show_goods_overload">
 							<? if ($config_show_goods_overload) { ?>
-								<option value="1" selected='selected' >Да</option>
-								<option value="0" >Нет</option>
+								<option value="1" selected='selected' >Включить</option>
+								<option value="0" >Отключить</option>
 							<? } else { ?>
-								<option value="1" >Да</option>
-								<option value="0"  selected='selected' >Нет</option>
+								<option value="1" >Включить</option>
+								<option value="0"  selected='selected' >Отключить</option>
 							<? } ?>       
 						</select>
 						<br />
@@ -486,11 +498,11 @@
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Обязательная цена</span></p>
 						<select type="select" name="config_no_zeroprice">
 							<? if ($config_no_zeroprice) { ?>
-								<option value="1" selected='selected' >Да</option>
-								<option value="0" >Нет</option>
+								<option value="1" selected='selected' >Включить</option>
+								<option value="0" >Отключить</option>
 							<? } else { ?>
-								<option value="1" >Да</option>
-								<option value="0"  selected='selected' >Нет</option>
+								<option value="1" >Включить</option>
+								<option value="0"  selected='selected' >Отключить</option>
 							<? } ?>       
 						</select>
 						<br />
@@ -501,11 +513,11 @@
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Режим изоляции локалей</span></p>
 						<select type="select" name="config_warmode_enable">
 							<? if ($config_warmode_enable) { ?>
-								<option value="1" selected='selected' >Да</option>
-								<option value="0" >Нет</option>
+								<option value="1" selected='selected' >Включить</option>
+								<option value="0" >Отключить</option>
 							<? } else { ?>
-								<option value="1" >Да</option>
-								<option value="0"  selected='selected' >Нет</option>
+								<option value="1" >Включить</option>
+								<option value="0"  selected='selected' >Отключить</option>
 							<? } ?>       
 						</select>
 						<br />
@@ -516,11 +528,11 @@
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Специальный фильтр логистики</span></p>
 						<select type="select" name="config_special_logistics_enable">
 							<? if ($config_special_logistics_enable) { ?>
-								<option value="1" selected='selected' >Да</option>
-								<option value="0" >Нет</option>
+								<option value="1" selected='selected' >Включить</option>
+								<option value="0" >Отключить</option>
 							<? } else { ?>
-								<option value="1" >Да</option>
-								<option value="0"  selected='selected' >Нет</option>
+								<option value="1" >Включить</option>
+								<option value="0"  selected='selected' >Отключить</option>
 							<? } ?>       
 						</select>
 					</div>
@@ -531,11 +543,11 @@
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Отключать пустые категории</span></p>
 						<select type="select" name="config_disable_empty_categories">
 							<? if ($config_disable_empty_categories) { ?>
-								<option value="1" selected='selected' >Да</option>
-								<option value="0" >Нет</option>
+								<option value="1" selected='selected' >Включить</option>
+								<option value="0" >Отключить</option>
 							<? } else { ?>
-								<option value="1" >Да</option>
-								<option value="0"  selected='selected' >Нет</option>
+								<option value="1" >Включить</option>
+								<option value="0"  selected='selected' >Отключить</option>
 							<? } ?>       
 						</select>										
 					</div>
@@ -543,11 +555,11 @@
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включать не-пустые категории</span></p>
 						<select type="select" name="config_enable_non_empty_categories">
 							<? if ($config_enable_non_empty_categories) { ?>
-								<option value="1" selected='selected' >Да</option>
-								<option value="0" >Нет</option>
+								<option value="1" selected='selected' >Включить</option>
+								<option value="0" >Отключить</option>
 							<? } else { ?>
-								<option value="1" >Да</option>
-								<option value="0"  selected='selected' >Нет</option>
+								<option value="1" >Включить</option>
+								<option value="0"  selected='selected' >Отключить</option>
 							<? } ?>       
 						</select>										
 					</div>				
@@ -558,11 +570,11 @@
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Отключить логику быстрого заказа</span></p>
 						<select type="select" name="config_disable_fast_orders">
 							<? if ($config_disable_fast_orders) { ?>
-								<option value="1" selected='selected' >Да</option>
-								<option value="0" >Нет</option>
+								<option value="1" selected='selected' >Включить</option>
+								<option value="0" >Отключить</option>
 							<? } else { ?>
-								<option value="1" >Да</option>
-								<option value="0"  selected='selected' >Нет</option>
+								<option value="1" >Включить</option>
+								<option value="0"  selected='selected' >Отключить</option>
 							<? } ?>       
 						</select>
 						<br />
@@ -573,11 +585,11 @@
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включить багфикс SimpleCheckout</span></p>
 						<select type="select" name="config_enable_form_bugfix_in_simplecheckout">
 							<? if ($config_enable_form_bugfix_in_simplecheckout) { ?>
-								<option value="1" selected='selected' >Да</option>
-								<option value="0" >Нет</option>
+								<option value="1" selected='selected' >Включить</option>
+								<option value="0" >Отключить</option>
 							<? } else { ?>
-								<option value="1" >Да</option>
-								<option value="0"  selected='selected' >Нет</option>
+								<option value="1" >Включить</option>
+								<option value="0"  selected='selected' >Отключить</option>
 							<? } ?>       
 						</select>
 						<br />
@@ -588,11 +600,11 @@
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Включить "не перезванивать" в SimpleCheckout</span></p>
 						<select type="select" name="config_enable_do_not_call_in_simplecheckout">
 							<? if ($config_enable_do_not_call_in_simplecheckout) { ?>
-								<option value="1" selected='selected' >Да</option>
-								<option value="0" >Нет</option>
+								<option value="1" selected='selected' >Включить</option>
+								<option value="0" >Отключить</option>
 							<? } else { ?>
-								<option value="1" >Да</option>
-								<option value="0"  selected='selected' >Нет</option>
+								<option value="1" >Включить</option>
+								<option value="0"  selected='selected' >Отключить</option>
 							<? } ?>       
 						</select>
 						<br />
@@ -603,11 +615,11 @@
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Вкл. "не перезванивать" если все в нал.</span></p>
 						<select type="select" name="config_enable_do_not_call_in_simplecheckout_only_full_in_stock">
 							<? if ($config_enable_do_not_call_in_simplecheckout_only_full_in_stock) { ?>
-								<option value="1" selected='selected' >Да</option>
-								<option value="0" >Нет</option>
+								<option value="1" selected='selected' >Включить</option>
+								<option value="0" >Отключить</option>
 							<? } else { ?>
-								<option value="1" >Да</option>
-								<option value="0"  selected='selected' >Нет</option>
+								<option value="1" >Включить</option>
+								<option value="0"  selected='selected' >Отключить</option>
 							<? } ?>       
 						</select>
 						<br />
@@ -1150,11 +1162,11 @@
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Добавить меню в homepage</span></p>
 						<select type="select" name="config_mmenu_on_homepage">
 							<? if ($config_mmenu_on_homepage) { ?>
-								<option value="1" selected='selected' >Да</option>
-								<option value="0" >Нет</option>
+								<option value="1" selected='selected' >Включить</option>
+								<option value="0" >Отключить</option>
 							<? } else { ?>
-								<option value="1" >Да</option>
-								<option value="0"  selected='selected' >Нет</option>
+								<option value="1" >Включить</option>
+								<option value="0"  selected='selected' >Отключить</option>
 							<? } ?>       
 						</select>
 					</div>
@@ -1162,11 +1174,11 @@
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бренды в мегаменю</span></p>
 						<select type="select" name="config_brands_in_mmenu">
 							<? if ($config_brands_in_mmenu) { ?>
-								<option value="1" selected='selected' >Да</option>
-								<option value="0" >Нет</option>
+								<option value="1" selected='selected' >Включить</option>
+								<option value="0" >Отключить</option>
 							<? } else { ?>
-								<option value="1" >Да</option>
-								<option value="0"  selected='selected' >Нет</option>
+								<option value="1" >Включить</option>
+								<option value="0"  selected='selected' >Отключить</option>
 							<? } ?>       
 						</select>
 					</div>
@@ -1174,11 +1186,11 @@
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бестселлеры в мегаменю</span></p>
 						<select type="select" name="config_bestsellers_in_mmenu">
 							<? if ($config_bestsellers_in_mmenu) { ?>
-								<option value="1" selected='selected' >Да</option>
-								<option value="0" >Нет</option>
+								<option value="1" selected='selected' >Включить</option>
+								<option value="0" >Отключить</option>
 							<? } else { ?>
-								<option value="1" >Да</option>
-								<option value="0"  selected='selected' >Нет</option>
+								<option value="1" >Включить</option>
+								<option value="0"  selected='selected' >Отключить</option>
 							<? } ?>       
 						</select>
 					</div>

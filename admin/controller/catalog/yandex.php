@@ -14,8 +14,7 @@
 			
 			loadAndRenameCatalogModels('controller/yamarket/api.php', '', '');
 			$this->controllerYaMarketApi = new ControllerYaMarketApi($this->registry);
-			
-			//Это блядь лайфхак от бога, просто			
+					
 			loadAndRenameCatalogModels('model/catalog/product.php', 'ModelCatalogProduct', 'ModelCatalogProductCatalog');
 			$this->modelCatalogProduct = new ModelCatalogProductCatalog($this->registry);
 			

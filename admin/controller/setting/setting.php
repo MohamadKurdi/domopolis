@@ -1529,6 +1529,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_amazon_product_stats_enable'] = $this->config->get('config_amazon_product_stats_enable');
         }
 
+        if (isset($this->request->post['config_amazon_profitability_in_stocks'])) {
+            $this->data['config_amazon_profitability_in_stocks'] = $this->request->post['config_amazon_profitability_in_stocks'];
+        } else {
+            $this->data['config_amazon_profitability_in_stocks'] = $this->config->get('config_amazon_profitability_in_stocks');
+        }
+
         if (isset($this->request->post['config_load_ocfilter_in_product'])) {
             $this->data['config_load_ocfilter_in_product'] = $this->request->post['config_load_ocfilter_in_product'];
         } else {
