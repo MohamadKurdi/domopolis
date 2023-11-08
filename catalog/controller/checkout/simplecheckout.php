@@ -17,7 +17,7 @@
 			$this->simplecheckout = SimpleCheckout::getInstance($this->registry, $settingsGroup);
 			
 			if (!$this->customer->isLogged() && $this->simplecheckout->isGuestCheckoutDisabled()) {
-				$this->session->data['redirect'] = $this->url->link('checkout/simplecheckout', '', 'SSL');
+				$this->session->data['redirect'] = $this->url->link('checkout/simplecheckout', '');
 				$this->simplecheckout->redirect($this->url->link('account/login','','SSL'));
 			}
 			
@@ -46,7 +46,7 @@
 			
 			$this->_templateData['breadcrumbs'][] = array(
             'text'      => $this->language->get('heading_title'),
-            'href'      => $this->url->link('checkout/simplecheckout', '', 'SSL'),
+            'href'      => $this->url->link('checkout/simplecheckout', ''),
             'separator' => $this->language->get('text_separator')
 			);
 			
@@ -409,9 +409,9 @@
 					$title = $this->simplecheckout->getInformationTitle($agreement_id);
 					
 					if ($this->simplecheckout->getSettingValue('agreementType') == 2) {
-						$this->_templateData['text_agreements'][$agreement_id] = sprintf($agreement_text, $this->url->link($this->simplecheckout->getInformationRoute($disable_popup), $this->simplecheckout->getAdditionalParams() . 'information_id=' . $agreement_id, 'SSL'), $title, $title);
+						$this->_templateData['text_agreements'][$agreement_id] = sprintf($agreement_text, $this->url->link($this->simplecheckout->getInformationRoute($disable_popup), $this->simplecheckout->getAdditionalParams() . 'information_id=' . $agreement_id), $title, $title);
 						} else {
-						$this->_templateData['text_agreements']['all'] = sprintf($agreement_text, $this->url->link($this->simplecheckout->getInformationRoute($disable_popup), $this->simplecheckout->getAdditionalParams() . 'information_id=' . $agreement_id, 'SSL'), $title, $title);
+						$this->_templateData['text_agreements']['all'] = sprintf($agreement_text, $this->url->link($this->simplecheckout->getInformationRoute($disable_popup), $this->simplecheckout->getAdditionalParams() . 'information_id=' . $agreement_id), $title, $title);
 					}
 					
 					$errors = array();
@@ -428,7 +428,7 @@
 							foreach ($agreements as $agreement_id) {
 								$title = $this->simplecheckout->getInformationTitle($agreement_id);
 								
-								$this->_templateData['text_agreements'][$agreement_id] = sprintf($agreement_text, $this->url->link($this->simplecheckout->getInformationRoute($disable_popup), $this->simplecheckout->getAdditionalParams() . 'information_id=' . $agreement_id, 'SSL'), $title, $title);
+								$this->_templateData['text_agreements'][$agreement_id] = sprintf($agreement_text, $this->url->link($this->simplecheckout->getInformationRoute($disable_popup), $this->simplecheckout->getAdditionalParams() . 'information_id=' . $agreement_id), $title, $title);
 								
 								$errors[$agreement_id] = sprintf($this->language->get('error_agree'), $title);
 							}
@@ -448,7 +448,7 @@
 							foreach ($agreements as $agreement_id) {
 								$title = $this->simplecheckout->getInformationTitle($agreement_id);
 								
-								$links[] = sprintf($agreement_link, $this->url->link($this->simplecheckout->getInformationRoute($disable_popup), $this->simplecheckout->getAdditionalParams() . 'information_id=' . $agreement_id, 'SSL'), $title, $title);
+								$links[] = sprintf($agreement_link, $this->url->link($this->simplecheckout->getInformationRoute($disable_popup), $this->simplecheckout->getAdditionalParams() . 'information_id=' . $agreement_id), $title, $title);
 								
 								$errors[$agreement_id] = sprintf($this->language->get('error_agree'), $title);
 							}

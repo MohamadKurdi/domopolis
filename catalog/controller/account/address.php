@@ -4,7 +4,7 @@
 		
 		public function index() {
 			if (!$this->customer->isLogged()) {
-				$this->session->data['redirect'] = $this->url->link('account/address', '', 'SSL');
+				$this->session->data['redirect'] = $this->url->link('account/address', '');
 				
 				$this->redirect($this->url->link('account/login', '', 'SSL'));
 			}
@@ -20,7 +20,7 @@
 		
 		public function insert() {
 			if (!$this->customer->isLogged()) {
-				$this->session->data['redirect'] = $this->url->link('account/address', '', 'SSL');
+				$this->session->data['redirect'] = $this->url->link('account/address', '');
 				
 				$this->redirect($this->url->link('account/login', '', 'SSL'));
 			}
@@ -44,7 +44,7 @@
 		
 		public function update() {
 			if (!$this->customer->isLogged()) {
-				$this->session->data['redirect'] = $this->url->link('account/address', '', 'SSL');
+				$this->session->data['redirect'] = $this->url->link('account/address', '');
 				
 				$this->redirect($this->url->link('account/login', '', 'SSL'));
 			}
@@ -87,7 +87,7 @@
 		
 		public function delete() {
 			if (!$this->customer->isLogged()) {
-				$this->session->data['redirect'] = $this->url->link('account/address', '', 'SSL');
+				$this->session->data['redirect'] = $this->url->link('account/address', '');
 				
 				$this->redirect($this->url->link('account/login', '', 'SSL'));
 			}
@@ -137,7 +137,7 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),
+			'href'      => $this->url->link('account/account', ''),
 			'separator' => $this->language->get('text_separator')
 			);
 			
@@ -173,13 +173,13 @@
 				'city'		 => $result['city'],
 				'default'	 => $result['default'],
 				'address'    => $result['address_1'],
-				'update'     => $this->url->link('account/address/update', 'address_id=' . $result['address_id'], 'SSL'),
+				'update'     => $this->url->link('account/address/update', 'address_id=' . $result['address_id']),
 				'delete'     => $this->url->link('account/address/delete', 'address_id=' . $result['address_id'], 'SSL')
 				);
 			}
 			
-			$this->data['insert'] = $this->url->link('account/address/insert', '', 'SSL');
-			$this->data['back'] = $this->url->link('account/account', '', 'SSL');
+			$this->data['insert'] = $this->url->link('account/address/insert', '');
+			$this->data['back'] = $this->url->link('account/account', '');
 			
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/address_list.tpl')) {
 				$this->template = $this->config->get('config_template') . '/template/account/address_list.tpl';
@@ -210,26 +210,26 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),
+			'href'      => $this->url->link('account/account', ''),
 			'separator' => $this->language->get('text_separator')
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('account/address', '', 'SSL'),        	
+			'href'      => $this->url->link('account/address', ''),        	
 			'separator' => $this->language->get('text_separator')
 			);
 			
 			if (!isset($this->request->get['address_id'])) {
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_edit_address'),
-				'href'      => $this->url->link('account/address/insert', '', 'SSL'),       		
+				'href'      => $this->url->link('account/address/insert', ''),       		
 				'separator' => $this->language->get('text_separator')
 				);
 				} else {
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_edit_address'),
-				'href'      => $this->url->link('account/address/update', 'address_id=' . $this->request->get['address_id'], 'SSL'),       		
+				'href'      => $this->url->link('account/address/update', 'address_id=' . $this->request->get['address_id']),       		
 				'separator' => $this->language->get('text_separator')
 				);
 			}
@@ -313,9 +313,9 @@
 			}
 			
 			if (!isset($this->request->get['address_id'])) {
-				$this->data['action'] = $this->url->link('account/address/insert', '', 'SSL');
+				$this->data['action'] = $this->url->link('account/address/insert', '');
 				} else {
-				$this->data['action'] = $this->url->link('account/address/update', 'address_id=' . $this->request->get['address_id'], 'SSL');
+				$this->data['action'] = $this->url->link('account/address/update', 'address_id=' . $this->request->get['address_id']);
 			}
 			
 			if (isset($this->request->get['address_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
@@ -438,7 +438,7 @@
 				$this->data['default'] = false;
 			}
 			
-			$this->data['back'] = $this->url->link('account/address', '', 'SSL');
+			$this->data['back'] = $this->url->link('account/address', '');
 			
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/address_form.tpl')) {
 				$this->template = $this->config->get('config_template') . '/template/account/address_form.tpl';

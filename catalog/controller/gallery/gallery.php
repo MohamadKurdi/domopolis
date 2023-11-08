@@ -102,7 +102,7 @@ class ControllerGalleryGallery extends controller{
         ); 
         $this->data['breadcrumbs'][] = array(
             'text'      => $this->data['title'],
-            'href'      => $this->url->link('gallery/gallery', '', 'SSL'),          
+            'href'      => $this->url->link('gallery/gallery', ''),          
             'separator' => $this->language->get('text_separator')
         );
         

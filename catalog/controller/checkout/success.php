@@ -285,7 +285,7 @@
 			);
 			
 			$this->data['breadcrumbs'][] = array(
-			'href'      => $this->url->link('checkout/checkout', '', 'SSL'),
+			'href'      => $this->url->link('checkout/checkout', ''),
 			'text'      => $this->language->get('text_checkout'),
 			'separator' => $this->language->get('text_separator')
 			);	
@@ -298,10 +298,10 @@
 			
 			$this->data['heading_title'] = $this->language->get('heading_title');
 			
-			$this->data['href_account'] = $this->url->link('account/account', '', 'SSL');
+			$this->data['href_account'] = $this->url->link('account/account', '');
 			
 			if ($this->customer->isLogged()) {
-				$this->data['text_message'] = sprintf($this->language->get('text_customer'), $this->url->link('account/account', '', 'SSL'), $this->url->link('account/order', '', 'SSL'), $this->url->link('account/download', '', 'SSL'), $this->url->link('information/contact'));
+				$this->data['text_message'] = sprintf($this->language->get('text_customer'), $this->url->link('account/account', ''), $this->url->link('account/order', ''), $this->url->link('account/download', ''), $this->url->link('information/contact'));
 				} else {
 				$this->data['text_message'] = sprintf($this->language->get('text_guest'), $this->url->link('information/contact'));
 			}

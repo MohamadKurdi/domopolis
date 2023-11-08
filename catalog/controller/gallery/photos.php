@@ -251,12 +251,12 @@ class ControllerGalleryPhotos extends controller{
         ); 
         $this->data['breadcrumbs'][] = array(
             'text'      => $galleres_title[$this->current_language_id],
-            'href'      => $this->url->link('gallery/gallery', '', 'SSL'),          
+            'href'      => $this->url->link('gallery/gallery', ''),          
             'separator' => $this->language->get('text_separator')
         );
         $this->data['breadcrumbs'][] = array(
             'text'      => $album['album_title'],
-            'href'      => $this->url->link('gallery/photos', 'album_id='.$album_id. (($page == 1)? '' : '&page='.$page ).$url, 'SSL'),          
+            'href'      => $this->url->link('gallery/photos', 'album_id='.$album_id. (($page == 1)? '' : '&page='.$page ).$url),          
             'separator' => $this->language->get('text_separator')
         );
 

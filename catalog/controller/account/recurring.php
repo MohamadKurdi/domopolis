@@ -2,7 +2,7 @@
 class ControllerAccountRecurring extends Controller {
 	public function index() {
 		if (!$this->customer->isLogged()) {
-			$this->session->data['redirect'] = $this->url->link('account/order', '', 'SSL');
+			$this->session->data['redirect'] = $this->url->link('account/order', '');
 
 			$this->redirect($this->url->link('account/login', '', 'SSL'));
 		}
@@ -23,7 +23,7 @@ class ControllerAccountRecurring extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),
+			'href'      => $this->url->link('account/account', ''),
 			'separator' => $this->language->get('text_separator')
 		);
 
@@ -35,7 +35,7 @@ class ControllerAccountRecurring extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('account/recurring', $url, 'SSL'),
+			'href'      => $this->url->link('account/recurring', $url),
 			'separator' => $this->language->get('text_separator')
 		);
 
@@ -89,11 +89,11 @@ class ControllerAccountRecurring extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = 10;
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('account/recurring', 'page={page}', 'SSL');
+		$pagination->url = $this->url->link('account/recurring', 'page={page}');
 
 		$this->data['pagination'] = $pagination->render();
 
-		$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
+		$this->data['continue'] = $this->url->link('account/account', '');
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/recurring_list.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/account/recurring_list.tpl';
@@ -124,7 +124,7 @@ class ControllerAccountRecurring extends Controller {
 		}
 
 		if (!$this->customer->isLogged()) {
-			$this->session->data['redirect'] = $this->url->link('account/recurring/info', 'recurring_id=' . $recurring_id, 'SSL');
+			$this->session->data['redirect'] = $this->url->link('account/recurring/info', 'recurring_id=' . $recurring_id);
 
 			$this->redirect($this->url->link('account/login', '', 'SSL'));
 		}
@@ -148,15 +148,15 @@ class ControllerAccountRecurring extends Controller {
 		$profile['transactions'] = $this->model_account_recurring->getProfileTransactions($this->request->get['recurring_id']);
 
 		$profile['created'] = date($this->language->get('date_format_short'), strtotime($profile['created']));
-		$profile['product_link'] = $this->url->link('product/product', 'product_id='.$profile['product_id'], 'SSL');
-		$profile['order_link'] = $this->url->link('account/order/info', 'order_id='.$profile['order_id'], 'SSL');
+		$profile['product_link'] = $this->url->link('product/product', 'product_id='.$profile['product_id']);
+		$profile['order_link'] = $this->url->link('account/order/info', 'order_id='.$profile['order_id']);
 
 		if($profile['status'] == 1 || $profile['status'] == 2){
 			/**
 			 * If the payment profiles payment type has a cancel action then link to that. If not then hide the button.
 			 */
 			if(!empty($profile['payment_code']) && $this->hasAction('payment/' . $profile['payment_code'] . '/recurringCancel') == true && $this->config->get($profile['payment_code'] . '_profile_cancel_status')){
-				$this->data['cancel_link'] = $this->url->link('payment/'.$profile['payment_code'].'/recurringCancel', 'recurring_id='.$this->request->get['recurring_id'], 'SSL');
+				$this->data['cancel_link'] = $this->url->link('payment/'.$profile['payment_code'].'/recurringCancel', 'recurring_id='.$this->request->get['recurring_id']);
 			}else{
 				$this->data['cancel_link'] = '';
 			}
@@ -199,7 +199,7 @@ class ControllerAccountRecurring extends Controller {
 
 			$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_account'),
-				'href'      => $this->url->link('account/account', '', 'SSL'),
+				'href'      => $this->url->link('account/account', ''),
 				'separator' => $this->language->get('text_separator')
 			);
 
@@ -211,13 +211,13 @@ class ControllerAccountRecurring extends Controller {
 
 			$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('heading_title'),
-				'href'      => $this->url->link('account/recurring', $url, 'SSL'),
+				'href'      => $this->url->link('account/recurring', $url),
 				'separator' => $this->language->get('text_separator')
 			);
 
 			$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_recurring'),
-				'href'      => $this->url->link('account/recurring/info', 'recurring_id=' . $this->request->get['recurring_id'] . $url, 'SSL'),
+				'href'      => $this->url->link('account/recurring/info', 'recurring_id=' . $this->request->get['recurring_id'] . $url),
 				'separator' => $this->language->get('text_separator')
 			);
 
@@ -244,7 +244,7 @@ class ControllerAccountRecurring extends Controller {
 			$this->data['button_continue'] = $this->language->get('button_continue');
 			$this->data['button_cancel_profile'] = $this->language->get('button_cancel_profile');
 			$this->data['text_confirm_cancel'] = $this->language->get('text_confirm_cancel');
-			$this->data['continue'] = $this->url->link('account/recurring', '', 'SSL');
+			$this->data['continue'] = $this->url->link('account/recurring', '');
 			$this->data['profile'] = $profile;
 
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/recurring_info.tpl')) {

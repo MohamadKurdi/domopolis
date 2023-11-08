@@ -92,7 +92,7 @@ class ControllerCheckoutShippingMethod extends Controller {
 
 		// Validate if shipping is required. If not the customer should not have reached this page.
 		if (!$this->cart->hasShipping()) {
-			$json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
+			$json['redirect'] = $this->url->link('checkout/checkout', '');
 		}
 
 		// Validate if shipping address has been set.		
@@ -105,7 +105,7 @@ class ControllerCheckoutShippingMethod extends Controller {
 		}
 
 		if (empty($shipping_address)) {								
-			$json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
+			$json['redirect'] = $this->url->link('checkout/checkout', '');
 		}
 
 		// Validate cart has products and has stock.	

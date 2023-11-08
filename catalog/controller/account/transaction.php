@@ -2,7 +2,7 @@
 class ControllerAccountTransaction extends Controller {
 	public function index() {
 		if (!$this->customer->isLogged()) {
-			$this->session->data['redirect'] = $this->url->link('account/transaction', '', 'SSL');
+			$this->session->data['redirect'] = $this->url->link('account/transaction', '');
 
 			$this->redirect($this->url->link('account/login', '', 'SSL'));
 		}
@@ -21,13 +21,13 @@ class ControllerAccountTransaction extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),
+			'href'      => $this->url->link('account/account', ''),
 			'separator' => $this->language->get('text_separator')
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_transaction'),
-			'href'      => $this->url->link('account/transaction', '', 'SSL'),
+			'href'      => $this->url->link('account/transaction', ''),
 			'separator' => $this->language->get('text_separator')
 		);
 
@@ -76,13 +76,13 @@ class ControllerAccountTransaction extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = 20; 
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('account/transaction', 'page={page}', 'SSL');
+		$pagination->url = $this->url->link('account/transaction', 'page={page}');
 
 		$this->data['pagination'] = $pagination->render();
 
 		$this->data['total'] = $this->currency->format($this->customer->getBalanceNational(), $this->config->get('config_regional_currency'), 1);
 
-		$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
+		$this->data['continue'] = $this->url->link('account/account', '');
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/transaction.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/account/transaction.tpl';

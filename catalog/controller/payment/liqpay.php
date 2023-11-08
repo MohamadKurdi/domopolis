@@ -21,8 +21,8 @@ class ControllerPaymentLiqpay extends Controller
 				$description = 'Order #'.$order_id;
 
 				$order_id .= '#'.time();
-				$result_url = $this->url->link('checkout/success', '', 'SSL');
-				$server_url = $this->url->link('payment/liqpay/server', '', 'SSL');
+				$result_url = $this->url->link('checkout/success', '');
+				$server_url = $this->url->link('payment/liqpay/server', '');
 
 				$private_key = $this->config->get('liqpay_private_key');
 				$public_key = $this->config->get('liqpay_public_key');

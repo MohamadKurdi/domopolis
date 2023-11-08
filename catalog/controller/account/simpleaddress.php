@@ -35,7 +35,7 @@ class ControllerAccountSimpleaddress extends SimpleController {
 
         $this->_templateData['breadcrumbs'][] = array(
             'text'      => $this->language->get('text_account'),
-            'href'      => $this->url->link('account/account', '', 'SSL'),
+            'href'      => $this->url->link('account/account', ''),
             'separator' => $this->language->get('text_separator')
         );
 
@@ -96,7 +96,7 @@ class ControllerAccountSimpleaddress extends SimpleController {
             }
 
             if ($this->simpleaddress->isAjaxRequest()) {
-                $this->_templateData['redirect'] = $this->url->link('account/address', '', 'SSL');
+                $this->_templateData['redirect'] = $this->url->link('account/address', '');
             } else {
                 $this->simpleaddress->redirect($this->url->link('account/address','','SSL'));
             }
@@ -183,13 +183,13 @@ class ControllerAccountSimpleaddress extends SimpleController {
 
         $this->_templateData['breadcrumbs'][] = array(
             'text'      => $this->language->get('text_account'),
-            'href'      => $this->url->link('account/account', '', 'SSL'),
+            'href'      => $this->url->link('account/account', ''),
             'separator' => $this->language->get('text_separator')
         );
 
         $this->_templateData['breadcrumbs'][] = array(
             'text'      => $this->language->get('heading_title'),
-            'href'      => $this->url->link('account/address', '', 'SSL'),
+            'href'      => $this->url->link('account/address', ''),
             'separator' => $this->language->get('text_separator')
         );
 
@@ -256,7 +256,7 @@ class ControllerAccountSimpleaddress extends SimpleController {
             }
 
             if ($this->simpleaddress->isAjaxRequest()) {
-               $this->_templateData['redirect'] = $this->url->link('account/address', '', 'SSL');
+               $this->_templateData['redirect'] = $this->url->link('account/address', '');
             } else {
                 $this->simpleaddress->redirect($this->url->link('account/address','','SSL'));
             }

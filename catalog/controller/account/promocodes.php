@@ -5,7 +5,7 @@
 		
 		public function index() {
 			if (!$this->customer->isLogged()) {
-				$this->session->data['redirect'] = $this->url->link('account/promocodes', '', 'SSL');
+				$this->session->data['redirect'] = $this->url->link('account/promocodes', '');
 				$this->redirect($this->url->link('account/login', '', 'SSL'));
 			}
 			

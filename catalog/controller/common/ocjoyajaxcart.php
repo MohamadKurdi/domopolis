@@ -200,7 +200,7 @@ class ControllerCommonOcjoyajaxcart extends Controller {
 
         $this->data['cart'] = $this->url->link('checkout/cart');
 
-        $this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
+        $this->data['checkout'] = $this->url->link('checkout/checkout', '');
 
         $this->load->model('catalog/product');
         $this->data['ajaxcartproducts'] = array();

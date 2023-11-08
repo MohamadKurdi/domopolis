@@ -35,7 +35,7 @@
             
             $this->_templateData['breadcrumbs'][] = array(
             'text'      => $this->language->get('text_account'),
-            'href'      => $this->url->link('account/account', '', 'SSL'),
+            'href'      => $this->url->link('account/account', ''),
             'separator' => $this->language->get('text_separator')
             );
             
@@ -114,7 +114,7 @@
                 }
                 
                 if ($this->simpleedit->isAjaxRequest()) {
-                        $this->_templateData['redirect'] = $this->url->link('account/simpleedit', '', 'SSL');
+                        $this->_templateData['redirect'] = $this->url->link('account/simpleedit', '');
                     } else {
                         $this->simpleedit->redirect($this->url->link('account/simpleedit','','SSL'));
                 }

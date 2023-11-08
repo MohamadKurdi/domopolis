@@ -19,20 +19,20 @@ class ControllerModuleAffiliate extends Controller {
 		
 		$this->data['text_statistics'] = $this->language->get('text_statistics');
 				$this->data['text_orderpayment'] = $this->language->get('text_orderpayment');
-				$this->data['statistics'] = $this->url->link('affiliate/statistics', '', 'SSL');
-				$this->data['orderpayment'] = $this->url->link('affiliate/orderpayment', '', 'SSL');
+				$this->data['statistics'] = $this->url->link('affiliate/statistics', '');
+				$this->data['orderpayment'] = $this->url->link('affiliate/orderpayment', '');
 
 		$this->data['logged'] = $this->affiliate->isLogged();
-		$this->data['register'] = $this->url->link('affiliate/register', '', 'SSL');
-		$this->data['login'] = $this->url->link('affiliate/login', '', 'SSL');
-		$this->data['logout'] = $this->url->link('affiliate/logout', '', 'SSL');
-		$this->data['forgotten'] = $this->url->link('affiliate/forgotten', '', 'SSL');
-		$this->data['account'] = $this->url->link('affiliate/account', '', 'SSL');
-		$this->data['edit'] = $this->url->link('affiliate/edit', '', 'SSL');
-		$this->data['password'] = $this->url->link('affiliate/password', '', 'SSL');
-		$this->data['payment'] = $this->url->link('affiliate/payment', '', 'SSL');
-		$this->data['tracking'] = $this->url->link('affiliate/tracking', '', 'SSL');
-		$this->data['transaction'] = $this->url->link('affiliate/transaction', '', 'SSL');
+		$this->data['register'] = $this->url->link('affiliate/register', '');
+		$this->data['login'] = $this->url->link('affiliate/login', '');
+		$this->data['logout'] = $this->url->link('affiliate/logout', '');
+		$this->data['forgotten'] = $this->url->link('affiliate/forgotten', '');
+		$this->data['account'] = $this->url->link('affiliate/account', '');
+		$this->data['edit'] = $this->url->link('affiliate/edit', '');
+		$this->data['password'] = $this->url->link('affiliate/password', '');
+		$this->data['payment'] = $this->url->link('affiliate/payment', '');
+		$this->data['tracking'] = $this->url->link('affiliate/tracking', '');
+		$this->data['transaction'] = $this->url->link('affiliate/transaction', '');
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/module/affiliate.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/module/affiliate.tpl';

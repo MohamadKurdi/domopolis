@@ -184,7 +184,7 @@
 			$this->data['cart'] = $this->url->link('checkout/cart');
 			$this->data['popupcart'] = $this->url->link('common/popupcart');
 			
-			$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');			
+			$this->data['checkout'] = $this->url->link('checkout/checkout', '');			
 			$this->template = 'module/cart.tpl';
 			
 			$this->response->setOutput($this->render());		

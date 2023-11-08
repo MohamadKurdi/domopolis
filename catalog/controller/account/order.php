@@ -95,7 +95,7 @@
 				'manager_set'     	=> $result['manager_id'],
 				'date_added' 		=> date($this->language->get('date_format_short'), strtotime($result['date_added'])),				
 				'product_count'   	=> ($product_total + $voucher_total),
-				'href'       		=> $this->url->link('account/order/info', 'order_id=' . $result['order_id'], 'SSL'),
+				'href'       		=> $this->url->link('account/order/info', 'order_id=' . $result['order_id']),
 				'payment_code' 		=> $order_info['payment_code'], 
 				'payment_method' 	=> $order_info['payment_method'],
 				'shipping_method' 	=> $order_info['shipping_method'],	
@@ -138,7 +138,7 @@
 		
 		public function completedorderslist(){
 			if (!$this->customer->isLogged()) {
-				$this->session->data['redirect'] = $this->url->link('account/order', '', 'SSL');
+				$this->session->data['redirect'] = $this->url->link('account/order', '');
 				$this->redirect($this->url->link('account/login', '', 'SSL'));
 			}
 			
@@ -161,7 +161,7 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),        	
+			'href'      => $this->url->link('account/account', ''),        	
 			'separator' => $this->language->get('text_separator')
 			);
 			
@@ -195,11 +195,11 @@
 			$pagination->page = $page;
 			$pagination->limit = 10;
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('account/order/completedorderslist', 'page={page}', 'SSL');
+			$pagination->url = $this->url->link('account/order/completedorderslist', 'page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			
-			$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
+			$this->data['continue'] = $this->url->link('account/account', '');
 			
 			$this->template = $this->config->get('config_template') . '/template/account/order_list.tpl';
 									
@@ -217,7 +217,7 @@
 		
 		public function cancelledorderslist(){
 			if (!$this->customer->isLogged()) {
-				$this->session->data['redirect'] = $this->url->link('account/order', '', 'SSL');
+				$this->session->data['redirect'] = $this->url->link('account/order', '');
 				$this->redirect($this->url->link('account/login', '', 'SSL'));
 			}
 			
@@ -240,7 +240,7 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),        	
+			'href'      => $this->url->link('account/account', ''),        	
 			'separator' => $this->language->get('text_separator')
 			);
 			
@@ -273,11 +273,11 @@
 			$pagination->page = $page;
 			$pagination->limit = 10;
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('account/order/cancelledorderslist', 'page={page}', 'SSL');
+			$pagination->url = $this->url->link('account/order/cancelledorderslist', 'page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			
-			$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
+			$this->data['continue'] = $this->url->link('account/account', '');
 			
 			$this->template = $this->config->get('config_template') . '/template/account/order_list.tpl';
 			
@@ -295,7 +295,7 @@
 		
 		public function inprocessorderslist(){
 			if (!$this->customer->isLogged()) {
-				$this->session->data['redirect'] = $this->url->link('account/order', '', 'SSL');
+				$this->session->data['redirect'] = $this->url->link('account/order', '');
 				$this->redirect($this->url->link('account/login', '', 'SSL'));
 			}
 			
@@ -318,7 +318,7 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),        	
+			'href'      => $this->url->link('account/account', ''),        	
 			'separator' => $this->language->get('text_separator')
 			);
 			
@@ -352,11 +352,11 @@
 			$pagination->page = $page;
 			$pagination->limit = 10;
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('account/order/inprocessorderslist', 'page={page}', 'SSL');
+			$pagination->url = $this->url->link('account/order/inprocessorderslist', 'page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			
-			$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
+			$this->data['continue'] = $this->url->link('account/account', '');
 			
 			$this->template = $this->config->get('config_template') . '/template/account/order_list.tpl';
 			
@@ -380,7 +380,7 @@
 			$this->language->load('account/order');
 			
 			if (!$this->customer->isLogged()) {
-				$this->session->data['redirect'] = $this->url->link('account/order', '', 'SSL');
+				$this->session->data['redirect'] = $this->url->link('account/order', '');
 				$this->redirect($this->url->link('account/login', '', 'SSL'));
 			}
 			
@@ -432,7 +432,7 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),        	
+			'href'      => $this->url->link('account/account', ''),        	
 			'separator' => $this->language->get('text_separator')
 			);
 
@@ -459,7 +459,7 @@
 			$pagination->page = $page;
 			$pagination->limit = 10;
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('account/order', 'page={page}', 'SSL');
+			$pagination->url = $this->url->link('account/order', 'page={page}');
 			
 			if (isset($this->session->data['warning'])) {
 				$this->data['error_warning'] = $this->session->data['warning'];
@@ -478,7 +478,7 @@
 			
 			$this->data['pagination'] = $pagination->render();
 			
-			$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
+			$this->data['continue'] = $this->url->link('account/account', '');
 			
 			$this->template = $this->config->get('config_template') . '/template/account/order_list.tpl';
 			
@@ -531,7 +531,7 @@
 			}	
 
 			if (!$this->customer->isLogged()) {
-				$this->session->data['redirect'] = $this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL');				
+				$this->session->data['redirect'] = $this->url->link('account/order/info', 'order_id=' . $order_id);				
 				$this->redirect($this->url->link('account/login', '', 'SSL'));
 			}
 			
@@ -552,13 +552,13 @@
 				
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_account'),
-				'href'      => $this->url->link('account/account', '', 'SSL'),        	
+				'href'      => $this->url->link('account/account', ''),        	
 				'separator' => $this->language->get('text_separator')
 				);
 
 				$this->data['breadcrumbs'][] = array(
 					'text'      => $this->language->get('heading_title'),
-					'href'      => $this->url->link('account/order', '', 'SSL'),        	
+					'href'      => $this->url->link('account/order', ''),        	
 					'separator' => $this->language->get('text_separator')
 				);
 			
@@ -923,9 +923,9 @@
 					if ($this->request->get['pay_by'] == 'concardis'){																	
 						$this->children = array();
 						if (isset($this->request->get['cc_code']) && in_array($this->request->get['cc_code'], array('EUR', 'RUB', 'UAH'))){
-							$this->data['url'] = $this->url->link('payment/concardis_laterpay/laterpay', sprintf('cc_code=%s&order_id=%s&order_tt=%s&order_fl=%s', $this->request->get['cc_code'], $order_info['order_id'], $order_info['total_national'], md5($order_info['firstname'] . $order_info['lastname'])), 'SSL');
+							$this->data['url'] = $this->url->link('payment/concardis_laterpay/laterpay', sprintf('cc_code=%s&order_id=%s&order_tt=%s&order_fl=%s', $this->request->get['cc_code'], $order_info['order_id'], $order_info['total_national'], md5($order_info['firstname'] . $order_info['lastname'])));
 							} else {
-							$this->data['url'] = $this->url->link('payment/concardis_laterpay/laterpay', sprintf('order_id=%s&order_tt=%s&order_fl=%s', $order_info['order_id'], $order_info['total_national'], md5($order_info['firstname'] . $order_info['lastname'])), 'SSL');
+							$this->data['url'] = $this->url->link('payment/concardis_laterpay/laterpay', sprintf('order_id=%s&order_tt=%s&order_fl=%s', $order_info['order_id'], $order_info['total_national'], md5($order_info['firstname'] . $order_info['lastname'])));
 						}
 						
 						$this->children = array(
@@ -1094,7 +1094,7 @@
 					);
 				}
 				
-				$this->data['continue'] = $this->url->link('account/order', '', 'SSL');
+				$this->data['continue'] = $this->url->link('account/order', '');
 				
 				$this->data['button_invoice'] = $this->language->get('button_invoice');
 				
@@ -1106,7 +1106,7 @@
 				), true, true);
 				
 				if ($config['invoice_download'] && $this->config->get('config_complete_status_id') == $order_info['order_status_id']) {
-					$this->data['download_invoice'] = $this->url->link('account/order/invoice', 'order_id='.$order_id, 'SSL');
+					$this->data['download_invoice'] = $this->url->link('account/order/invoice', 'order_id='.$order_id);
 				}
 				
 				if ($order_info['order_status_id'] == $this->config->get('config_confirmed_order_status_id')){
@@ -1188,23 +1188,23 @@
 				
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_account'),
-				'href'      => $this->url->link('account/account', '', 'SSL'),
+				'href'      => $this->url->link('account/account', ''),
 				'separator' => $this->language->get('text_separator')
 				);
 				
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('heading_title'),
-				'href'      => $this->url->link('account/order', '', 'SSL'),
+				'href'      => $this->url->link('account/order', ''),
 				'separator' => $this->language->get('text_separator')
 				);
 				
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_order'),
-				'href'      => $this->url->link('account/order/info', 'order_id=' . $order_id, 'SSL'),
+				'href'      => $this->url->link('account/order/info', 'order_id=' . $order_id),
 				'separator' => $this->language->get('text_separator')
 				);
 				
-				$this->data['continue'] = $this->url->link('account/order', '', 'SSL');
+				$this->data['continue'] = $this->url->link('account/order', '');
 				
 				$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
 				

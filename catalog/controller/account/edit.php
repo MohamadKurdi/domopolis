@@ -4,7 +4,7 @@ class ControllerAccountEdit extends Controller {
 
 	public function index() {
 		if (!$this->customer->isLogged()) {
-			$this->session->data['redirect'] = $this->url->link('account/edit', '', 'SSL');
+			$this->session->data['redirect'] = $this->url->link('account/edit', '');
 
 			$this->redirect($this->url->link('account/login', '', 'SSL'));
 		}
@@ -33,13 +33,13 @@ class ControllerAccountEdit extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),        	
+			'href'      => $this->url->link('account/account', ''),        	
 			'separator' => $this->language->get('text_separator')
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_edit'),
-			'href'      => $this->url->link('account/edit', '', 'SSL'),       	
+			'href'      => $this->url->link('account/edit', ''),       	
 			'separator' => $this->language->get('text_separator')
 		);
 
@@ -86,7 +86,7 @@ class ControllerAccountEdit extends Controller {
 			$this->data['error_telephone'] = '';
 		}	
 
-		$this->data['action'] = $this->url->link('account/edit', '', 'SSL');
+		$this->data['action'] = $this->url->link('account/edit', '');
 
 		if ($this->request->server['REQUEST_METHOD'] != 'POST') {
 			$customer_info = $this->model_account_customer->getCustomer($this->customer->getId());
@@ -132,7 +132,7 @@ class ControllerAccountEdit extends Controller {
 			$this->data['fax'] = '';
 		}
 
-		$this->data['back'] = $this->url->link('account/account', '', 'SSL');
+		$this->data['back'] = $this->url->link('account/account', '');
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/edit.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/account/edit.tpl';

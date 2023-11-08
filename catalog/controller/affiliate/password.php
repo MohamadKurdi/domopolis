@@ -4,7 +4,7 @@ class ControllerAffiliatePassword extends Controller {
 
 	public function index() {
 		if (!$this->affiliate->isLogged()) {
-			$this->session->data['redirect'] = $this->url->link('affiliate/password', '', 'SSL');
+			$this->session->data['redirect'] = $this->url->link('affiliate/password', '');
 
 			$this->redirect($this->url->link('affiliate/login', '', 'SSL'));
 		}
@@ -33,13 +33,13 @@ class ControllerAffiliatePassword extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('affiliate/account', '', 'SSL'),
+			'href'      => $this->url->link('affiliate/account', ''),
 			'separator' => $this->language->get('text_separator')
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('affiliate/password', '', 'SSL'),
+			'href'      => $this->url->link('affiliate/password', ''),
 			'separator' => $this->language->get('text_separator')
 		);
 
@@ -65,7 +65,7 @@ class ControllerAffiliatePassword extends Controller {
 			$this->data['error_confirm'] = '';
 		}
 
-		$this->data['action'] = $this->url->link('affiliate/password', '', 'SSL');
+		$this->data['action'] = $this->url->link('affiliate/password', '');
 
 		if (isset($this->request->post['password'])) {
 			$this->data['password'] = $this->request->post['password'];
@@ -79,7 +79,7 @@ class ControllerAffiliatePassword extends Controller {
 			$this->data['confirm'] = '';
 		}
 
-		$this->data['back'] = $this->url->link('affiliate/account', '', 'SSL');
+		$this->data['back'] = $this->url->link('affiliate/account', '');
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/affiliate/password.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/affiliate/password.tpl';

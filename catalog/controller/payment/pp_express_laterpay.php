@@ -33,8 +33,8 @@
 			$data = array(
 			'METHOD' => 'SetExpressCheckout',
 			'MAXAMT' => $max_amount,
-			'RETURNURL' => $this->url->link('payment/pp_express_laterpay/checkoutReturn', '', 'SSL'),
-			'CANCELURL' => $this->url->link('account/order', '', 'SSL'),
+			'RETURNURL' => $this->url->link('payment/pp_express_laterpay/checkoutReturn', ''),
+			'CANCELURL' => $this->url->link('account/order', ''),
 			'REQCONFIRMSHIPPING' => 0,
 			'NOSHIPPING' => 1,
 			'LOCALECODE' => 'RU',
@@ -117,7 +117,7 @@
 			'TOKEN' => $this->session->data['paypal']['token'],
 			'PAYERID' => $this->session->data['paypal']['payerid'],
 			'METHOD' => 'DoExpressCheckoutPayment',
-			'PAYMENTREQUEST_0_NOTIFYURL' => $this->url->link('payment/pp_express/ipn', '', 'SSL'),
+			'PAYMENTREQUEST_0_NOTIFYURL' => $this->url->link('payment/pp_express/ipn', ''),
 			'RETURNFMFDETAILS' => 1,
 			);
 			

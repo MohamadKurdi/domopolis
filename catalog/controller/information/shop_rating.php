@@ -77,7 +77,7 @@
 			$this->data['text_will_send'] = $this->language->get('text_will_send');
 			$this->data['text_email_desc'] = $this->language->get('text_email_desc');
 			
-			$this->data['action'] = $this->url->link('information/shop_rating', '', 'SSL');
+			$this->data['action'] = $this->url->link('information/shop_rating', '');
 			$url = '';
 			if (isset($this->request->get['page'])) {
 				$page = $this->request->get['page'];
@@ -142,7 +142,7 @@
 			
 			$this->data['form_custom_types'] = $this->model_catalog_shop_rating->getCustomTypes();
 			
-			$this->data['text_login'] = sprintf($this->language->get('text_login_error'), $this->url->link('account/login', '', 'SSL'), $this->url->link('account/register', '', 'SSL'));
+			$this->data['text_login'] = sprintf($this->language->get('text_login_error'), $this->url->link('account/login', ''), $this->url->link('account/register', '', 'SSL'));
 			
 			$this->data['customer_id'] = $this->customer->getId();
 			
@@ -236,7 +236,7 @@
 			$pagination->page = $page;
 			$pagination->limit = $filter_count;
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('information/shop_rating', $url . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('information/shop_rating', $url . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			

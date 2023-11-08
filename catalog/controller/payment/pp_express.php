@@ -5,7 +5,7 @@ class ControllerPaymentPPExpress extends Controller {
 		
 		$this->data['button_continue'] = $this->language->get('button_continue');
 		$this->data['button_confirm'] = $this->language->get('button_confirm');
-		$this->data['button_continue_action'] = $this->url->link('payment/pp_express/checkout', '', 'SSL');
+		$this->data['button_continue_action'] = $this->url->link('payment/pp_express/checkout', '');
 
 		$this->data['continue'] = $this->url->link('checkout/success');
 		/**
@@ -84,7 +84,7 @@ class ControllerPaymentPPExpress extends Controller {
 		$data = array(
 			'METHOD' => 'SetExpressCheckout',
 			'MAXAMT' => $max_amount,
-			'RETURNURL' => $this->url->link('payment/pp_express/expressReturn', '', 'SSL'),
+			'RETURNURL' => $this->url->link('payment/pp_express/expressReturn', ''),
 			'CANCELURL' => $this->url->link('checkout/simplecheckout'),
 			'REQCONFIRMSHIPPING' => 0,
 			'NOSHIPPING' => $shipping,
@@ -475,7 +475,7 @@ class ControllerPaymentPPExpress extends Controller {
 			$this->data['reward'] = '';
 		}
 
-		$this->data['action'] = $this->url->link('payment/pp_express/expressConfirm', '', 'SSL');
+		$this->data['action'] = $this->url->link('payment/pp_express/expressConfirm', '');
 
 		$products = $this->cart->getProducts();
 
@@ -634,7 +634,7 @@ class ControllerPaymentPPExpress extends Controller {
 						}
 
 						$this->data['code'] = $this->session->data['shipping_method']['code'];
-						$this->data['action_shipping'] = $this->url->link('payment/pp_express/shipping', '', 'SSL');
+						$this->data['action_shipping'] = $this->url->link('payment/pp_express/shipping', '');
 					} else {
 						unset($this->session->data['shipping_methods']);
 						unset($this->session->data['shipping_method']);
@@ -729,7 +729,7 @@ class ControllerPaymentPPExpress extends Controller {
 		$this->session->data['payment_methods'] = $method_data;
 		$this->session->data['payment_method'] = $this->session->data['payment_methods']['pp_express'];
 
-		$this->data['action_confirm'] = $this->url->link('payment/pp_express/expressComplete', '', 'SSL');
+		$this->data['action_confirm'] = $this->url->link('payment/pp_express/expressComplete', '');
 
 		$this->data['error_warning'] = '';
 		$this->data['attention'] = '';
@@ -783,12 +783,12 @@ class ControllerPaymentPPExpress extends Controller {
 			}
 
 			if (empty($shipping_address)) {
-				$redirect = $this->url->link('checkout/checkout', '', 'SSL');
+				$redirect = $this->url->link('checkout/checkout', '');
 			}
 
 			// Validate if shipping method has been set.
 			if (!isset($this->session->data['shipping_method'])) {
-				$redirect = $this->url->link('checkout/checkout', '', 'SSL');
+				$redirect = $this->url->link('checkout/checkout', '');
 			}
 		} else {
 			unset($this->session->data['shipping_method']);
@@ -806,7 +806,7 @@ class ControllerPaymentPPExpress extends Controller {
 
 		// Validate if payment method has been set.
 		if (!isset($this->session->data['payment_method'])) {
-			$redirect = $this->url->link('checkout/checkout', '', 'SSL');
+			$redirect = $this->url->link('checkout/checkout', '');
 		}
 
 		// Validate cart has products and has stock.
@@ -1097,7 +1097,7 @@ class ControllerPaymentPPExpress extends Controller {
 				'TOKEN' => $this->session->data['paypal']['token'],
 				'PAYERID' => $this->session->data['paypal']['payerid'],
 				'METHOD' => 'DoExpressCheckoutPayment',
-				'PAYMENTREQUEST_0_NOTIFYURL' => $this->url->link('payment/pp_express/ipn', '', 'SSL'),
+				'PAYMENTREQUEST_0_NOTIFYURL' => $this->url->link('payment/pp_express/ipn', ''),
 				'RETURNFMFDETAILS' => 1,
 			);
 
@@ -1293,8 +1293,8 @@ class ControllerPaymentPPExpress extends Controller {
 		$data = array(
 			'METHOD' => 'SetExpressCheckout',
 			'MAXAMT' => $max_amount,
-			'RETURNURL' => $this->url->link('payment/pp_express/checkoutReturn', '', 'SSL'),
-			'CANCELURL' => $this->url->link('checkout/checkout', '', 'SSL'),
+			'RETURNURL' => $this->url->link('payment/pp_express/checkoutReturn', ''),
+			'CANCELURL' => $this->url->link('checkout/checkout', ''),
 			'REQCONFIRMSHIPPING' => 0,
 			'NOSHIPPING' => 1,
 			'LOCALECODE' => 'RU',
@@ -1360,7 +1360,7 @@ class ControllerPaymentPPExpress extends Controller {
 			'TOKEN' => $this->session->data['paypal']['token'],
 			'PAYERID' => $this->session->data['paypal']['payerid'],
 			'METHOD' => 'DoExpressCheckoutPayment',
-			'PAYMENTREQUEST_0_NOTIFYURL' => $this->url->link('payment/pp_express/ipn', '', 'SSL'),
+			'PAYMENTREQUEST_0_NOTIFYURL' => $this->url->link('payment/pp_express/ipn', ''),
 			'RETURNFMFDETAILS' => 1,
 		);
 

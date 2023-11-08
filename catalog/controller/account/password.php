@@ -4,7 +4,7 @@ class ControllerAccountPassword extends Controller {
 
 	public function index() {
 		if (!$this->customer->isLogged()) {
-			$this->session->data['redirect'] = $this->url->link('account/password', '', 'SSL');
+			$this->session->data['redirect'] = $this->url->link('account/password', '');
 
 			$this->redirect($this->url->link('account/login', '', 'SSL'));
 		}
@@ -33,13 +33,13 @@ class ControllerAccountPassword extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),
+			'href'      => $this->url->link('account/account', ''),
 			'separator' => $this->language->get('text_separator')
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('account/password', '', 'SSL'),
+			'href'      => $this->url->link('account/password', ''),
 			'separator' => $this->language->get('text_separator')
 		);
 
@@ -65,7 +65,7 @@ class ControllerAccountPassword extends Controller {
 			$this->data['error_confirm'] = '';
 		}
 
-		$this->data['action'] = $this->url->link('account/password', '', 'SSL');
+		$this->data['action'] = $this->url->link('account/password', '');
 
 		if (isset($this->request->post['password'])) {
 			$this->data['password'] = $this->request->post['password'];
@@ -79,7 +79,7 @@ class ControllerAccountPassword extends Controller {
 			$this->data['confirm'] = '';
 		}
 
-		$this->data['back'] = $this->url->link('account/account', '', 'SSL');
+		$this->data['back'] = $this->url->link('account/account', '');
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/password.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/account/password.tpl';

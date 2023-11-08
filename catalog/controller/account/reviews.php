@@ -3,7 +3,7 @@ class ControllerAccountReviews extends Controller {
 	
 	public function index() {
     	if (!$this->customer->isLogged()) {
-      		$this->session->data['redirect'] = $this->url->link('account/reviews', '', 'SSL');
+      		$this->session->data['redirect'] = $this->url->link('account/reviews', '');
 
 	  		$this->redirect($this->url->link('account/login', '', 'SSL'));
     	}
@@ -24,7 +24,7 @@ class ControllerAccountReviews extends Controller {
 
       	$this->data['breadcrumbs'][] = array(
         	'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),        	
+			'href'      => $this->url->link('account/account', ''),        	
         	'separator' => $this->language->get('text_separator')
       	);
 		
@@ -91,7 +91,7 @@ class ControllerAccountReviews extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = 10;
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('account/reviews', 'page={page}', 'SSL');
+		$pagination->url = $this->url->link('account/reviews', 'page={page}');
 		
 		$this->data['pagination'] = $pagination->render();
 

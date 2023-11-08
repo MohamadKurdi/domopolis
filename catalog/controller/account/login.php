@@ -112,7 +112,7 @@ class ControllerAccountLogin extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),
+			'href'      => $this->url->link('account/account', ''),
 			'separator' => $this->language->get('text_separator')
 		);			
 
@@ -142,9 +142,9 @@ class ControllerAccountLogin extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-		$this->data['action'] = $this->url->link('account/login', '', 'SSL');
-		$this->data['register'] = $this->url->link('account/register', '', 'SSL');
-		$this->data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
+		$this->data['action'] = $this->url->link('account/login', '');
+		$this->data['register'] = $this->url->link('account/register', '');
+		$this->data['forgotten'] = $this->url->link('account/forgotten', '');
 			
 		if (isset($this->request->post['redirect']) && (strpos($this->request->post['redirect'], $this->config->get('config_url')) !== false || strpos($this->request->post['redirect'], $this->config->get('config_ssl')) !== false)) {
 			$this->data['redirect'] = $this->request->post['redirect'];

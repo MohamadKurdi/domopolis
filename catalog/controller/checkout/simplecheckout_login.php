@@ -85,7 +85,7 @@
 			$this->_templateData['entry_password']                = $this->language->get('entry_password');
 			$this->_templateData['button_login']                  = $this->language->get('button_login');
 			
-			$this->_templateData['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
+			$this->_templateData['forgotten'] = $this->url->link('account/forgotten', '');
 			
 			if (isset($this->request->post['email'])) {
 				$this->_templateData['email'] = trim($this->request->post['email']);

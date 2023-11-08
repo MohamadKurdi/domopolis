@@ -5,7 +5,7 @@ class ControllerAffiliateOrderpayment extends Controller {
     public function index() {
         
         if (!$this->affiliate->isLogged()) {
-            $this->session->data['redirect'] = $this->url->link('affiliate/orderpayment', '', 'SSL');
+            $this->session->data['redirect'] = $this->url->link('affiliate/orderpayment', '');
 
             $this->redirect($this->url->link('affiliate/login', '', 'SSL'));
         }
@@ -36,13 +36,13 @@ class ControllerAffiliateOrderpayment extends Controller {
 
         $this->data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('affiliate/account', '', 'SSL'),
+            'href' => $this->url->link('affiliate/account', ''),
             'separator' => $this->language->get('text_separator')
         );
 
         $this->data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_payment'),
-            'href' => $this->url->link('affiliate/orderpayment', '', 'SSL'),
+            'href' => $this->url->link('affiliate/orderpayment', ''),
             'separator' => $this->language->get('text_separator')
         );
 
@@ -59,7 +59,7 @@ class ControllerAffiliateOrderpayment extends Controller {
         $this->data['button_continue'] = $this->language->get('button_continue');
         $this->data['button_back'] = $this->language->get('button_back');
 
-        $this->data['action'] = $this->url->link('affiliate/orderpayment', '', 'SSL');
+        $this->data['action'] = $this->url->link('affiliate/orderpayment', '');
         $this->data['text_request_balanse'] = $this->language->get('text_request_balanse');
         $this->load->model('affiliate/transaction');
         $this->data['balance'] = $this->currency->format($this->model_affiliate_transaction->getBalance());
@@ -105,7 +105,7 @@ class ControllerAffiliateOrderpayment extends Controller {
             $this->data['error_min'] = '';
         }
         
-        $this->data['back'] = $this->url->link('affiliate/account', '', 'SSL');
+        $this->data['back'] = $this->url->link('affiliate/account', '');
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/affiliate/orderpayment.tpl')) {
             $this->template = $this->config->get('config_template') . '/template/affiliate/orderpayment.tpl';

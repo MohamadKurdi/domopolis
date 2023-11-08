@@ -215,7 +215,7 @@
 				
 				$this->data['cart'] = $this->url->link('checkout/cart');
 				
-				$this->data['checkout'] = $this->url->link('checkout/checkout', '', 'SSL');
+				$this->data['checkout'] = $this->url->link('checkout/checkout', '');
 
 				$this->data['ajaxcartproducts'] = [];
 				$this->data['config_popupcartblocktitle'] = $this->config->get('config_popupcartblocktitle_' . $this->config->get('config_language_id'));

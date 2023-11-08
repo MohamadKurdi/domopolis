@@ -104,7 +104,7 @@
 				$this->data['error_telephone'] = '';
 			}
 			
-			$this->data['action'] = $this->url->link('module/social_auth/register', '', 'SSL');
+			$this->data['action'] = $this->url->link('module/social_auth/register', '');
 			
 			if ($this->request->server['REQUEST_METHOD'] != 'POST') {
 				$customer_info = $this->session->data['social_auth'];
@@ -150,7 +150,7 @@
 				$this->data['social_id'] = '';
 			}
 			
-			$this->data['back'] = $this->url->link('common/home', '', 'SSL');
+			$this->data['back'] = $this->url->link('common/home', '');
 			
 			$this->data['column_left'] = $this->load->controller('common/column_left');
 			$this->data['column_right'] = $this->load->controller('common/column_right');
@@ -391,13 +391,13 @@
 		private function toLoginRegister($customer){
 			
 			if ($this->cart->hasProducts()){
-				$redirect_after = $this->url->link('checkout/cart', '', 'SSL');
+				$redirect_after = $this->url->link('checkout/cart', '');
 				} else {
-				$redirect_after = $this->url->link('account/account', '', 'SSL');
+				$redirect_after = $this->url->link('account/account', '');
 			}
 						
-			$redirect_after_register = $this->url->link('account/simpleedit', '', 'SSL');
-			//$redirect_after_register = $this->url->link('module/social_auth/register', '', 'SSL');
+			$redirect_after_register = $this->url->link('account/simpleedit', '');
+			//$redirect_after_register = $this->url->link('module/social_auth/register', '');
 			
 			if($customer['social_id']){
                 $this->load->model('account/customer');

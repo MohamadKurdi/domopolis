@@ -21,13 +21,13 @@ class ControllerAffiliateLogout extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('affiliate/account', '', 'SSL'),       	
+			'href'      => $this->url->link('affiliate/account', ''),       	
 			'separator' => $this->language->get('text_separator')
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_logout'),
-			'href'      => $this->url->link('affiliate/logout', '', 'SSL'),
+			'href'      => $this->url->link('affiliate/logout', ''),
 			'separator' => $this->language->get('text_separator')
 		);
 

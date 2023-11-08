@@ -62,7 +62,7 @@ class ControllerPaymentShoputilsPsb extends Controller {
 						array(
 							'button_confirm',
 							'instruction'  => nl2br($langdata[$this->config->get('config_language_id')]['instruction']),
-							'continue'     => $this->url->link('checkout/success', '', 'SSL'),
+							'continue'     => $this->url->link('checkout/success', ''),
 							'pay_status'   => ((!$this->config->get('shoputils_psb_laterpay_mode')) || ($this->config->get('shoputils_psb_order_later_status_id') == $this->config->get('shoputils_psb_order_confirm_status_id'))),
 							'action'       => $this->getUrl(),
 							'parameters'   => $this->makeFormPrepay($this->order_id)
@@ -76,7 +76,7 @@ class ControllerPaymentShoputilsPsb extends Controller {
 						array(
 							'button_confirm',
 							'instruction'  => nl2br($langdata[$this->config->get('config_language_id')]['instruction']),
-							'continue'     => $this->url->link('checkout/success', '', 'SSL'),
+							'continue'     => $this->url->link('checkout/success', ''),
 							'pay_status'   => ((!$this->config->get('shoputils_psb_laterpay_mode')) || ($this->config->get('shoputils_psb_order_later_status_id') == $this->config->get('shoputils_psb_order_confirm_status_id'))),
 							'action'       => $this->getUrl(),
 							'parameters'   => $this->makeForm()

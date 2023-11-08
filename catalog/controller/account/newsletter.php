@@ -2,7 +2,7 @@
 	class ControllerAccountNewsletter extends Controller {
 		public function index() {
 			if (!$this->customer->isLogged()) {
-				$this->session->data['redirect'] = $this->url->link('account/newsletter', '', 'SSL');
+				$this->session->data['redirect'] = $this->url->link('account/newsletter', '');
 				
 				$this->redirect($this->url->link('account/login', '', 'SSL'));
 			}
@@ -31,13 +31,13 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),
+			'href'      => $this->url->link('account/account', ''),
 			'separator' => $this->language->get('text_separator')
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_newsletter'),
-			'href'      => $this->url->link('account/newsletter', '', 'SSL'),
+			'href'      => $this->url->link('account/newsletter', ''),
 			'separator' => $this->language->get('text_separator')
 			);
 			
@@ -51,11 +51,11 @@
 			$this->data['button_continue'] = $this->language->get('button_continue');
 			$this->data['button_back'] = $this->language->get('button_back');
 			
-			$this->data['action'] = $this->url->link('account/newsletter', '', 'SSL');
+			$this->data['action'] = $this->url->link('account/newsletter', '');
 			
 			$this->data['newsletter'] = $this->customer->getNewsletter();
 			
-			$this->data['back'] = $this->url->link('account/account', '', 'SSL');
+			$this->data['back'] = $this->url->link('account/account', '');
 			
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/newsletter.tpl')) {
 				$this->template = $this->config->get('config_template') . '/template/account/newsletter.tpl';
@@ -98,7 +98,7 @@
 			);
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_newsletter'),
-			'href'      => $this->url->link('account/newsletter', '', 'SSL'),
+			'href'      => $this->url->link('account/newsletter', ''),
 			'separator' => $this->language->get('text_separator')
 			);
 			

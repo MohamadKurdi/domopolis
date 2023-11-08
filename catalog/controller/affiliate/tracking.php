@@ -2,7 +2,7 @@
 	class ControllerAffiliateTracking extends Controller { 
 		public function index() {
 			if (!$this->affiliate->isLogged()) {
-				$this->session->data['redirect'] = $this->url->link('affiliate/tracking', '', 'SSL');
+				$this->session->data['redirect'] = $this->url->link('affiliate/tracking', '');
 				
 				$this->redirect($this->url->link('affiliate/login', '', 'SSL'));
 			}
@@ -27,13 +27,13 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('affiliate/account', '', 'SSL'),
+			'href'      => $this->url->link('affiliate/account', ''),
 			'separator' => $this->language->get('text_separator')
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('affiliate/tracking', '', 'SSL'),
+			'href'      => $this->url->link('affiliate/tracking', ''),
 			'separator' => $this->language->get('text_separator')
 			);
 			
@@ -83,7 +83,7 @@
 			
 			$this->data['code'] = $this->affiliate->getCode();
 			
-			$this->data['continue'] = $this->url->link('affiliate/account', '', 'SSL');
+			$this->data['continue'] = $this->url->link('affiliate/account', '');
 			
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/affiliate/tracking.tpl')) {
 				$this->template = $this->config->get('config_template') . '/template/affiliate/tracking.tpl';

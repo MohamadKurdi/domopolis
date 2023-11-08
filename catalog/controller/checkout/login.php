@@ -26,7 +26,7 @@ class ControllerCheckoutLogin extends Controller {
 			$this->data['account'] = 'register';
 		}
 		
-		$this->data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
+		$this->data['forgotten'] = $this->url->link('account/forgotten', '');
 		
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/checkout/login.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/checkout/login.tpl';
@@ -43,7 +43,7 @@ class ControllerCheckoutLogin extends Controller {
 		$json = array();
 		
 		if ($this->customer->isLogged()) {
-			$json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');			
+			$json['redirect'] = $this->url->link('checkout/checkout', '');			
 		}
 		
 		if ((!$this->cart->hasProducts() && empty($this->session->data['vouchers'])) || (!$this->cart->hasStock() && !$this->config->get('config_stock_checkout'))) {
@@ -91,7 +91,7 @@ class ControllerCheckoutLogin extends Controller {
 				unset($this->session->data['payment_zone_id']);	
 			}					
 				
-			$json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
+			$json['redirect'] = $this->url->link('checkout/checkout', '');
 		}
 					
 		$this->response->setOutput(json_encode($json));		

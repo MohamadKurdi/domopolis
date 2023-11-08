@@ -4,7 +4,7 @@ class ControllerAffiliateStatistics extends Controller {
 
     public function index() {
         if (!$this->affiliate->isLogged()) {
-            $this->session->data['redirect'] = $this->url->link('affiliate/statistics', '', 'SSL');
+            $this->session->data['redirect'] = $this->url->link('affiliate/statistics', '');
             $this->redirect($this->url->link('affiliate/login', '', 'SSL'));
         }
 
@@ -26,13 +26,13 @@ class ControllerAffiliateStatistics extends Controller {
 
         $this->data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('affiliate/account', '', 'SSL'),
+            'href' => $this->url->link('affiliate/account', ''),
             'separator' => $this->language->get('text_separator')
         );
 
         $this->data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_statistics'),
-            'href' => $this->url->link('affiliate/statistics', '', 'SSL'),
+            'href' => $this->url->link('affiliate/statistics', ''),
             'separator' => $this->language->get('text_separator')
         );
 
@@ -95,7 +95,7 @@ class ControllerAffiliateStatistics extends Controller {
         $this->data['button_continue'] = $this->language->get('button_continue');
         $this->data['button_back'] = $this->language->get('button_back');
 
-        $this->data['action'] = $this->url->link('affiliate/statistics', '', 'SSL');
+        $this->data['action'] = $this->url->link('affiliate/statistics', '');
         $affiliates[] = array();
         if ($this->request->server['REQUEST_METHOD'] != 'POST') {
             $this->load->model('module/statistics');
@@ -122,7 +122,7 @@ class ControllerAffiliateStatistics extends Controller {
         $affiliates['sum_shopping'] = $this->currency->format($affiliates['sum_shopping']);
 
         $this->data['affiliates'] = $affiliates;
-        $this->data['back'] = $this->url->link('affiliate/account', '', 'SSL');
+        $this->data['back'] = $this->url->link('affiliate/account', '');
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/affiliate/statistics.tpl')) {
             $this->template = $this->config->get('config_template') . '/template/affiliate/statistics.tpl';

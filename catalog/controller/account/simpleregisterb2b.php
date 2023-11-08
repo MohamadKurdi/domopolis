@@ -151,13 +151,13 @@ class ControllerAccountSimpleRegisterB2b extends Controller {
 
         $this->data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_account'),
-            'href' => $this->url->link('account/account', '', 'SSL'),
+            'href' => $this->url->link('account/account', ''),
             'separator' => $this->language->get('text_separator')
         );
 
         $this->data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_register'),
-            'href' => $this->url->link('account/simpleregister', '', 'SSL'),
+            'href' => $this->url->link('account/simpleregister', ''),
             'separator' => $this->language->get('text_separator')
         );
 
@@ -193,11 +193,11 @@ class ControllerAccountSimpleRegisterB2b extends Controller {
         $this->data['error_email_confirm']    = $this->language->get('error_email_confirm');
         
 
-        $this->data['action'] = $this->url->link('account/simpleregisterb2b', '', 'SSL');
+        $this->data['action'] = $this->url->link('account/simpleregisterb2b', '');
 		
 
 
-		$this->data['iframe_login'] = $this->url->link('account/loginb2b', '', 'SSL');
+		$this->data['iframe_login'] = $this->url->link('account/loginb2b', '');
 
         $this->data['simple_registration_agreement_checkbox'] = false;
         $this->data['simple_registration_agreement_checkbox_init'] = 0;
@@ -205,10 +205,10 @@ class ControllerAccountSimpleRegisterB2b extends Controller {
         $this->data['text_agree'] = '';
 
         /*------------login-------------------------------------------------------*/
-        $this->data['action_login'] = $this->url->link('account/loginb2b', '', 'SSL');
+        $this->data['action_login'] = $this->url->link('account/loginb2b', '');
         $this->data['entry_email_login'] = $this->language->get('entry_email_login');
         $this->data['entry_password_login'] = $this->language->get('entry_password_login');
-        $this->data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
+        $this->data['forgotten'] = $this->url->link('account/forgotten', '');
         $this->data['text_forgotten'] = $this->language->get('text_forgotten_login');
         $this->data['button_login'] = $this->language->get('button_login');
 

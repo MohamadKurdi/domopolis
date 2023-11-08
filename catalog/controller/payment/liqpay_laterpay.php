@@ -30,8 +30,8 @@
 			$description = 'Заказ #'.$order_id;
 			
 			$order_id .= '#'.time();
-			$result_url = $this->url->link('account/order', '', 'SSL');
-			$server_url = $this->url->link('payment/liqpay/server', '', 'SSL');
+			$result_url = $this->url->link('account/order', '');
+			$server_url = $this->url->link('payment/liqpay/server', '');
 			
 			$private_key = $this->config->get('liqpay_private_key');
 			$public_key = $this->config->get('liqpay_public_key');

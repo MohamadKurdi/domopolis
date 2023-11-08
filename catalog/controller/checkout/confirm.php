@@ -14,12 +14,12 @@ class ControllerCheckoutConfirm extends Controller {
 			}
 
 			if (empty($shipping_address)) {								
-				$redirect = $this->url->link('checkout/checkout', '', 'SSL');
+				$redirect = $this->url->link('checkout/checkout', '');
 			}
 
 			// Validate if shipping method has been set.	
 			if (!isset($this->session->data['shipping_method'])) {
-				$redirect = $this->url->link('checkout/checkout', '', 'SSL');
+				$redirect = $this->url->link('checkout/checkout', '');
 			}
 		} else {
 			unset($this->session->data['shipping_method']);
@@ -36,12 +36,12 @@ class ControllerCheckoutConfirm extends Controller {
 		}	
 
 		if (empty($payment_address)) {
-			$redirect = $this->url->link('checkout/checkout', '', 'SSL');
+			$redirect = $this->url->link('checkout/checkout', '');
 		}			
 
 		// Validate if payment method has been set.	
 		if (!isset($this->session->data['payment_method'])) {
-			$redirect = $this->url->link('checkout/checkout', '', 'SSL');
+			$redirect = $this->url->link('checkout/checkout', '');
 		}
 
 		// Validate cart has products and has stock.	

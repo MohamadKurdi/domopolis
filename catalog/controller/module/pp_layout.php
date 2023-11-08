@@ -24,7 +24,7 @@ class ControllerModulePPLayout extends Controller {
 				$this->template = 'default/template/module/pp_layout.tpl';
 			}
 
-			$this->data['payment_url'] = $this->url->link('payment/pp_express/express', '', 'SSL');
+			$this->data['payment_url'] = $this->url->link('payment/pp_express/express', '');
 
 			$this->render();
 		}

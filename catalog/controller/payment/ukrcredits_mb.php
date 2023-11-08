@@ -20,7 +20,7 @@ class ControllerPaymentUkrcreditsmb extends Controller {
 		$data['text_total'] 	= $this->language->get('text_total');
 		
 		$data['text_success'] 	= $this->language->get('text_success');
-		$data['success'] 		= $this->url->link('checkout/success', '', 'SSL');	
+		$data['success'] 		= $this->url->link('checkout/success', '');	
 		
         $partsCount = 24;
 		foreach ($this->cart->getProducts() as $cart) {
@@ -76,7 +76,7 @@ class ControllerPaymentUkrcreditsmb extends Controller {
 			}
 		}
 
-        $data['action'] = $this->url->link('payment/ukrcredits_mb/sendDataDeal', '', 'SSL');	
+        $data['action'] = $this->url->link('payment/ukrcredits_mb/sendDataDeal', '');	
 		
 		$data['credit'] = array(
 			'type' 			=> $setting['mb_merchantType'],
@@ -109,7 +109,7 @@ class ControllerPaymentUkrcreditsmb extends Controller {
         $json['success'] = TRUE;
  
 		if ($this->request->get['route'] != 'checkout/checkout') {
-           $json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
+           $json['redirect'] = $this->url->link('checkout/checkout', '');
 		}
 
 		$this->response->setOutput(json_encode($json));
@@ -228,7 +228,7 @@ class ControllerPaymentUkrcreditsmb extends Controller {
 			
 			$data_deal['total_sum'] = $sumtotal;						
 
-			$data_deal['result_callback'] = $this->url->link('payment/ukrcredits_mb/callback', '', 'SSL');;
+			$data_deal['result_callback'] = $this->url->link('payment/ukrcredits_mb/callback', '');;
 
 			$requestDial = json_encode($data_deal);
 			

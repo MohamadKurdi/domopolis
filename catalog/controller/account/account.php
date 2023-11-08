@@ -2,7 +2,7 @@
 	class ControllerAccountAccount extends Controller { 
 		public function index() {
 			if (!$this->customer->isLogged()) {
-				$this->session->data['redirect'] = $this->url->link('account/account', '', 'SSL');
+				$this->session->data['redirect'] = $this->url->link('account/account', '');
 				
 				$this->redirect($this->url->link('account/login', '', 'SSL'));
 			}
@@ -40,7 +40,7 @@
 			
 			$customer_info = $this->model_account_customer->getCustomer($this->customer->isLogged());
 			
-			$this->data['get_discount_link'] = $this->url->link('information/information', 'information_id=32', 'SSL');
+			$this->data['get_discount_link'] = $this->url->link('information/information', 'information_id=32');
 			
 			//	$this->load->model('total/shoputils_cumulative_discounts');
 			//	$this->data['current_discount'] = $this->model_total_shoputils_cumulative_discounts->getLoggedCustomerDiscount();
@@ -105,27 +105,27 @@
 			}
 			
 			
-			$this->data['edit'] = $this->url->link('account/edit', '', 'SSL');
-			$this->data['password'] = $this->url->link('account/password', '', 'SSL');
-			$this->data['address'] = $this->url->link('account/address', '', 'SSL');
-			$this->data['wishlist'] = $this->url->link('account/wishlist', '', 'SSL');
-			$this->data['viewed'] = $this->url->link('account/viewed', '', 'SSL');
-			$this->data['order'] = $this->url->link('account/order', '', 'SSL');
-			$this->data['download'] = $this->url->link('account/download', '', 'SSL');
-			$this->data['return'] = $this->url->link('account/return', '', 'SSL');
-			$this->data['transaction'] = $this->url->link('account/transaction', '', 'SSL');
-			$this->data['newsletter'] = $this->url->link('account/newsletter', '', 'SSL');
-			$this->data['recurring'] = $this->url->link('account/recurring', '', 'SSL');
-			$this->data['reviews'] = $this->url->link('account/reviews', '', 'SSL');
-			$this->data['reward'] = $this->url->link('account/reward', '', 'SSL');
+			$this->data['edit'] = $this->url->link('account/edit', '');
+			$this->data['password'] = $this->url->link('account/password', '');
+			$this->data['address'] = $this->url->link('account/address', '');
+			$this->data['wishlist'] = $this->url->link('account/wishlist', '');
+			$this->data['viewed'] = $this->url->link('account/viewed', '');
+			$this->data['order'] = $this->url->link('account/order', '');
+			$this->data['download'] = $this->url->link('account/download', '');
+			$this->data['return'] = $this->url->link('account/return', '');
+			$this->data['transaction'] = $this->url->link('account/transaction', '');
+			$this->data['newsletter'] = $this->url->link('account/newsletter', '');
+			$this->data['recurring'] = $this->url->link('account/recurring', '');
+			$this->data['reviews'] = $this->url->link('account/reviews', '');
+			$this->data['reward'] = $this->url->link('account/reward', '');
 			
 			if ($this->config->get('reward_status')) {
-				$this->data['reward'] = $this->url->link('account/reward', '', 'SSL');
+				$this->data['reward'] = $this->url->link('account/reward', '');
 				} else {
 				$this->data['reward'] = '';
 			}
 			
-			$this->data['reward'] = $this->url->link('account/reward', '', 'SSL');
+			$this->data['reward'] = $this->url->link('account/reward', '');
 			
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/account.tpl')) {
 				$this->template = $this->config->get('config_template') . '/template/account/account.tpl';

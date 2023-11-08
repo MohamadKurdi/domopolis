@@ -33,7 +33,7 @@ class ControllerAccountTracker extends Controller {
 
 			$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_account'),
-				'href'      => $this->url->link('account/account', '', 'SSL'),
+				'href'      => $this->url->link('account/account', ''),
 				'separator' => $this->language->get('text_separator')
 			);
 
@@ -59,7 +59,7 @@ class ControllerAccountTracker extends Controller {
 				$this->data['error_warning'] = '';
 			}
 
-			$this->data['action'] = $this->url->link('account/tracker', '', 'SSL');
+			$this->data['action'] = $this->url->link('account/tracker', '');
 			$this->template = 'account/tracker_login.tpl';
 
 			$this->children = array(

@@ -87,7 +87,7 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),
+			'href'      => $this->url->link('account/account', ''),
 			'separator' => $this->language->get('text_separator')
 			);
 			
@@ -207,9 +207,9 @@
 			}
 			
 			if ($this->cart->hasProducts()) {
-				$this->data['continue'] = $this->url->link('checkout/cart', '', 'SSL');
+				$this->data['continue'] = $this->url->link('checkout/cart', '');
 				} else {
-				$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
+				$this->data['continue'] = $this->url->link('account/account', '');
 			}
 			
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/common/success.tpl')) {

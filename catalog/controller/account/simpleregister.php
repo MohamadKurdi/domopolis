@@ -37,7 +37,7 @@ class ControllerAccountSimpleRegister extends SimpleController {
 
         $this->_templateData['breadcrumbs'][] = array(
             'text'      => $this->language->get('heading_title'),
-            'href'      => $this->url->link('account/simpleregister', '', 'SSL'),
+            'href'      => $this->url->link('account/simpleregister', ''),
             'separator' => $this->language->get('text_separator')
         );
 
@@ -45,7 +45,7 @@ class ControllerAccountSimpleRegister extends SimpleController {
 
         $this->_templateData['heading_title']        = $this->language->get('heading_title');
         $this->_templateData['text_account_already'] = sprintf($this->language->get('text_account_already'), $this->url->link('account/login', '', 'SSL'));
-        $this->_templateData['login_link'] = $this->url->link('account/login', '', 'SSL');
+        $this->_templateData['login_link'] = $this->url->link('account/login', '');
         $this->_templateData['button_continue']      = $this->language->get('button_continue');
         $this->_templateData['text_register_with']      = $this->language->get('text_register_with');
 
@@ -250,9 +250,9 @@ class ControllerAccountSimpleRegister extends SimpleController {
                 $title = $this->simpleregister->getInformationTitle($agreement_id);
                 
                 if ($this->simpleregister->getSettingValue('agreementType') == 2) {
-                    $this->_templateData['text_agreements'][$agreement_id] = sprintf($agreement_text, $this->url->link($this->simpleregister->getInformationRoute($disable_popup), $this->simpleregister->getAdditionalParams() . 'information_id=' . $agreement_id, 'SSL'), $title, $title);
+                    $this->_templateData['text_agreements'][$agreement_id] = sprintf($agreement_text, $this->url->link($this->simpleregister->getInformationRoute($disable_popup), $this->simpleregister->getAdditionalParams() . 'information_id=' . $agreement_id), $title, $title);
                 } else {
-                    $this->_templateData['text_agreements']['all'] = sprintf($agreement_text, $this->url->link($this->simpleregister->getInformationRoute($disable_popup), $this->simpleregister->getAdditionalParams() . 'information_id=' . $agreement_id, 'SSL'), $title, $title);
+                    $this->_templateData['text_agreements']['all'] = sprintf($agreement_text, $this->url->link($this->simpleregister->getInformationRoute($disable_popup), $this->simpleregister->getAdditionalParams() . 'information_id=' . $agreement_id), $title, $title);
                 }
 
                 $errors = array();
@@ -270,7 +270,7 @@ class ControllerAccountSimpleRegister extends SimpleController {
                         foreach ($agreements as $agreement_id) {
                             $title = $this->simpleregister->getInformationTitle($agreement_id);
                             
-                            $this->_templateData['text_agreements'][$agreement_id] = sprintf($agreement_text, $this->url->link($this->simpleregister->getInformationRoute($disable_popup), $this->simpleregister->getAdditionalParams() . 'information_id=' . $agreement_id, 'SSL'), $title, $title);
+                            $this->_templateData['text_agreements'][$agreement_id] = sprintf($agreement_text, $this->url->link($this->simpleregister->getInformationRoute($disable_popup), $this->simpleregister->getAdditionalParams() . 'information_id=' . $agreement_id), $title, $title);
                             
                             $errors[$agreement_id] = sprintf($this->language->get('error_agree'), $title);
                         }
@@ -291,7 +291,7 @@ class ControllerAccountSimpleRegister extends SimpleController {
                         foreach ($agreements as $agreement_id) {
                             $title = $this->simpleregister->getInformationTitle($agreement_id);
                             
-                            $links[] = sprintf($agreement_link, $this->url->link($this->simpleregister->getInformationRoute($disable_popup), $this->simpleregister->getAdditionalParams() . 'information_id=' . $agreement_id, 'SSL'), $title, $title);
+                            $links[] = sprintf($agreement_link, $this->url->link($this->simpleregister->getInformationRoute($disable_popup), $this->simpleregister->getAdditionalParams() . 'information_id=' . $agreement_id), $title, $title);
                             
                             $errors[$agreement_id] = sprintf($this->language->get('error_agree'), $title);
                         }

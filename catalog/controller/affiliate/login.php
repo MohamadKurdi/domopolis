@@ -32,13 +32,13 @@ class ControllerAffiliateLogin extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('affiliate/account', '', 'SSL'),
+			'href'      => $this->url->link('affiliate/account', ''),
 			'separator' => $this->language->get('text_separator')
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_login'),
-			'href'      => $this->url->link('affiliate/login', '', 'SSL'),      	
+			'href'      => $this->url->link('affiliate/login', ''),      	
 			'separator' => $this->language->get('text_separator')
 		);
 
@@ -63,9 +63,9 @@ class ControllerAffiliateLogin extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-		$this->data['action'] = $this->url->link('affiliate/login', '', 'SSL');
-		$this->data['register'] = $this->url->link('affiliate/register', '', 'SSL');
-		$this->data['forgotten'] = $this->url->link('affiliate/forgotten', '', 'SSL');
+		$this->data['action'] = $this->url->link('affiliate/login', '');
+		$this->data['register'] = $this->url->link('affiliate/register', '');
+		$this->data['forgotten'] = $this->url->link('affiliate/forgotten', '');
 
 		if (isset($this->request->post['redirect'])) {
 			$this->data['redirect'] = $this->request->post['redirect'];

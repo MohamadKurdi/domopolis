@@ -12,31 +12,31 @@
 
 			// Мой кабинет
 			$this->data['text_account'] = $this->language->get('text_account');
-			$this->data['account'] = $this->url->link('account/account', '', 'SSL');
+			$this->data['account'] = $this->url->link('account/account', '');
 			$this->data['account_active'] = ($route == 'account/account');
 			
 			// Мои заказы
 			$this->data['text_address'] = $this->language->get('text_address');
-			$this->data['address'] = $this->url->link('account/address', '', 'SSL');
+			$this->data['address'] = $this->url->link('account/address', '');
 			$this->data['address_active'] = ($route == 'account/address');
 			
 			// Мои заказы
 			$this->data['text_order'] = $this->language->get('text_order');
-			$this->data['order'] = $this->url->link('account/order', '', 'SSL');
+			$this->data['order'] = $this->url->link('account/order', '');
 			$this->data['order_active'] = ($route == 'account/order');
 			
 			// Мои бонусы
 			$this->data['text_reward'] = $this->language->get('text_reward');
-			$this->data['reward'] = $this->url->link('account/reward', '', 'SSL');
+			$this->data['reward'] = $this->url->link('account/reward', '');
 			$this->data['reward_active'] = ($route == 'account/reward');
 			
 			$this->data['text_transaction'] = $this->language->get('text_transaction');			
-			$this->data['transaction'] = $this->url->link('account/transaction', '', 'SSL');
+			$this->data['transaction'] = $this->url->link('account/transaction', '');
 			$this->data['transaction_active'] = ($route == 'account/transaction');
 			
 			// Мои промокоды
 			$this->data['text_coupons'] = $this->language->get('text_coupons');
-			$this->data['coupons'] = $this->url->link('account/promocodes', '', 'SSL');
+			$this->data['coupons'] = $this->url->link('account/promocodes', '');
 			$this->data['coupons_active'] = ($route == 'account/promocodes');
 			
 			// Просмотренные
@@ -70,17 +70,17 @@
 			$this->data['text_edit'] = $this->language->get('text_edit');
 			$this->data['text_address'] = $this->language->get('text_address');
 			
-			$this->data['edit'] = $this->url->link('account/edit', '', 'SSL');
+			$this->data['edit'] = $this->url->link('account/edit', '');
 			$this->data['edit_active'] = ($route == 'account/edit');
 			$this->data['edit_active'] = ($route == 'account/simpleedit');
 			
-			$this->data['password'] = $this->url->link('account/password', '', 'SSL');
-			$this->data['address'] = $this->url->link('account/address', '', 'SSL');
+			$this->data['password'] = $this->url->link('account/password', '');
+			$this->data['address'] = $this->url->link('account/address', '');
 			
 			
 			//Выход
 			$this->data['text_logout'] = $this->language->get('text_logout');
-			$this->data['logout'] = $this->url->link('account/logout', '', 'SSL');
+			$this->data['logout'] = $this->url->link('account/logout', '');
 			
 			$this->data['points_active'] = $this->customer->getRewardPoints();
 			$this->data['points_active_formatted'] = $this->currency->formatBonus($this->data['points_active']);

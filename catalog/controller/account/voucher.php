@@ -37,13 +37,13 @@ class ControllerAccountVoucher extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),
+			'href'      => $this->url->link('account/account', ''),
 			'separator' => $this->language->get('text_separator')
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_voucher'),
-			'href'      => $this->url->link('account/voucher', '', 'SSL'),
+			'href'      => $this->url->link('account/voucher', ''),
 			'separator' => $this->language->get('text_separator')
 		);
 
@@ -104,7 +104,7 @@ class ControllerAccountVoucher extends Controller {
 			$this->data['error_amount'] = '';
 		}
 
-		$this->data['action'] = $this->url->link('account/voucher', '', 'SSL');
+		$this->data['action'] = $this->url->link('account/voucher', '');
 
 		if (isset($this->request->post['to_name'])) {
 			$this->data['to_name'] = $this->request->post['to_name'];

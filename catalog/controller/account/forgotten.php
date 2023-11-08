@@ -31,7 +31,7 @@ class ControllerAccountForgotten extends Controller {
 			$template->addData($this->request->post);
 
 			$template->data['password'] = $password;
-			$template->data['account_login'] = $this->url->link('account/login', '', 'SSL');
+			$template->data['account_login'] = $this->url->link('account/login', '');
 			$template->data['account_login_tracking'] = $template->getTracking($template->data['account_login']);
 
 			$mail = new Mail($this->registry); 		
@@ -58,7 +58,7 @@ class ControllerAccountForgotten extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),     	
+			'href'      => $this->url->link('account/account', ''),     	
 			'separator' => $this->language->get('text_separator')
 		);
 
@@ -80,8 +80,8 @@ class ControllerAccountForgotten extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-		$this->data['action'] = $this->url->link('account/forgotten', '', 'SSL');
-		$this->data['back'] = $this->url->link('account/login', '', 'SSL');
+		$this->data['action'] = $this->url->link('account/forgotten', '');
+		$this->data['back'] = $this->url->link('account/login', '');
 
 		$this->template = 'account/forgotten.tpl';
 

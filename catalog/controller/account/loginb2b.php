@@ -116,13 +116,13 @@ class ControllerAccountLoginB2B extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),
+			'href'      => $this->url->link('account/account', ''),
 			'separator' => $this->language->get('text_separator')
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_login'),
-			'href'      => $this->url->link('account/login', '', 'SSL'),      	
+			'href'      => $this->url->link('account/login', ''),      	
 			'separator' => $this->language->get('text_separator')
 		);
 
@@ -150,10 +150,10 @@ class ControllerAccountLoginB2B extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-		$this->data['action'] = $this->url->link('account/loginb2b', '', 'SSL');
-		$this->data['register'] = $this->url->link('account/register', '', 'SSL');
-		$this->data['forgotten'] = $this->url->link('account/forgotten', '', 'SSL');
-		$this->data['registerb2b'] = $this->url->link('account/registerb2b', '', 'SSL');
+		$this->data['action'] = $this->url->link('account/loginb2b', '');
+		$this->data['register'] = $this->url->link('account/register', '');
+		$this->data['forgotten'] = $this->url->link('account/forgotten', '');
+		$this->data['registerb2b'] = $this->url->link('account/registerb2b', '');
 		
 
 		// Added strpos check to pass McAfee PCI compliance test (http://forum.opencart.com/viewtopic.php?f=10&t=12043&p=151494#p151295)

@@ -46,13 +46,13 @@ class ControllerAccountRegister extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),      	
+			'href'      => $this->url->link('account/account', ''),      	
 			'separator' => $this->language->get('text_separator')
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_register'),
-			'href'      => $this->url->link('account/register', '', 'SSL'),      	
+			'href'      => $this->url->link('account/register', ''),      	
 			'separator' => $this->language->get('text_separator')
 		);
 
@@ -173,7 +173,7 @@ class ControllerAccountRegister extends Controller {
 			$this->data['error_zone'] = '';
 		}
 
-		$this->data['action'] = $this->url->link('account/register', '', 'SSL');
+		$this->data['action'] = $this->url->link('account/register', '');
 
 		if (isset($this->request->post['firstname'])) {
 			$this->data['firstname'] = $this->request->post['firstname'];
@@ -315,7 +315,7 @@ class ControllerAccountRegister extends Controller {
 			$information_info = $this->model_catalog_information->getInformation($this->config->get('config_account_id'));
 
 			if ($information_info) {
-				$this->data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/info', 'information_id=' . $this->config->get('config_account_id'), 'SSL'), $information_info['title'], $information_info['title']);
+				$this->data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/info', 'information_id=' . $this->config->get('config_account_id')), $information_info['title'], $information_info['title']);
 			} else {
 				$this->data['text_agree'] = '';
 			}

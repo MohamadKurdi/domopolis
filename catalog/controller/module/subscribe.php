@@ -12,7 +12,7 @@
 			$total = $this->model_account_customer->getTotalCustomersCached();
 			$this->data['text_already_subscribed'] = sprintf($this->data['text_already_subscribed'], $total);
 			
-			$this->data['link_to_account'] = $this->url->link('account/edit', '', 'SSL');
+			$this->data['link_to_account'] = $this->url->link('account/edit', '');
 			
 			$case = 'unsubscribed';
 			

@@ -4,7 +4,7 @@
 		
 		public function index() {
 			if (!$this->affiliate->isLogged()) {
-				$this->session->data['redirect'] = $this->url->link('affiliate/payment', '', 'SSL');
+				$this->session->data['redirect'] = $this->url->link('affiliate/payment', '');
 				
 				$this->redirect($this->url->link('affiliate/login', '', 'SSL'));
 			}
@@ -33,13 +33,13 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('affiliate/account', '', 'SSL'),        	
+			'href'      => $this->url->link('affiliate/account', ''),        	
 			'separator' => $this->language->get('text_separator')
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_payment'),
-			'href'      => $this->url->link('affiliate/payment', '', 'SSL'),       	
+			'href'      => $this->url->link('affiliate/payment', ''),       	
 			'separator' => $this->language->get('text_separator')
 			);
 			
@@ -185,7 +185,7 @@
 			$this->data['button_continue'] = $this->language->get('button_continue');
 			$this->data['button_back'] = $this->language->get('button_back');
 			
-			$this->data['action'] = $this->url->link('affiliate/payment', '', 'SSL');
+			$this->data['action'] = $this->url->link('affiliate/payment', '');
 			
 			if ($this->request->server['REQUEST_METHOD'] != 'POST') {
 				$affiliate_info = $this->model_affiliate_affiliate->getAffiliate($this->affiliate->getId());
@@ -511,7 +511,7 @@
 				$this->data['bank_account_number'] = '';
 			}
 			
-			$this->data['back'] = $this->url->link('affiliate/account', '', 'SSL');
+			$this->data['back'] = $this->url->link('affiliate/account', '');
 			
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/affiliate/payment.tpl')) {
 				$this->template = $this->config->get('config_template') . '/template/affiliate/payment.tpl';

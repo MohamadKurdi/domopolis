@@ -28,7 +28,7 @@ class ControllerAffiliateForgotten extends Controller {
 
 			$template = new EmailTemplate($this->request, $this->registry);
 			$template->data['password'] = $password;
-			$template->data['account_login'] = $this->url->link('affiliate/login', '', 'SSL');
+			$template->data['account_login'] = $this->url->link('affiliate/login', '');
  			$template->data['account_login_tracking'] = $template->getTracking($template->data['account_login']);
 
 			$mail = new Mail($this->registry); 			
@@ -55,13 +55,13 @@ class ControllerAffiliateForgotten extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('affiliate/account', '', 'SSL'),     	
+			'href'      => $this->url->link('affiliate/account', ''),     	
 			'separator' => $this->language->get('text_separator')
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_forgotten'),
-			'href'      => $this->url->link('affiliate/forgotten', '', 'SSL'),       	
+			'href'      => $this->url->link('affiliate/forgotten', ''),       	
 			'separator' => $this->language->get('text_separator')
 		);
 
@@ -81,9 +81,9 @@ class ControllerAffiliateForgotten extends Controller {
 			$this->data['error_warning'] = '';
 		}
 
-		$this->data['action'] = $this->url->link('affiliate/forgotten', '', 'SSL');
+		$this->data['action'] = $this->url->link('affiliate/forgotten', '');
 
-		$this->data['back'] = $this->url->link('affiliate/login', '', 'SSL');
+		$this->data['back'] = $this->url->link('affiliate/login', '');
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/affiliate/forgotten.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/affiliate/forgotten.tpl';

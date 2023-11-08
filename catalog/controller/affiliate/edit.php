@@ -4,7 +4,7 @@ class ControllerAffiliateEdit extends Controller {
 
 	public function index() {
 		if (!$this->affiliate->isLogged()) {
-			$this->session->data['redirect'] = $this->url->link('affiliate/edit', '', 'SSL');
+			$this->session->data['redirect'] = $this->url->link('affiliate/edit', '');
 
 			$this->redirect($this->url->link('affiliate/login', '', 'SSL'));
 		}
@@ -33,13 +33,13 @@ class ControllerAffiliateEdit extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('affiliate/account', '', 'SSL'),        	
+			'href'      => $this->url->link('affiliate/account', ''),        	
 			'separator' => $this->language->get('text_separator')
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_edit'),
-			'href'      => $this->url->link('affiliate/edit', '', 'SSL'),       	
+			'href'      => $this->url->link('affiliate/edit', ''),       	
 			'separator' => $this->language->get('text_separator')
 		);
 
@@ -126,7 +126,7 @@ class ControllerAffiliateEdit extends Controller {
 			$this->data['error_zone'] = '';
 		}
 
-		$this->data['action'] = $this->url->link('affiliate/edit', '', 'SSL');
+		$this->data['action'] = $this->url->link('affiliate/edit', '');
 
 		if ($this->request->server['REQUEST_METHOD'] != 'POST') {
 			$affiliate_info = $this->model_affiliate_affiliate->getAffiliate($this->affiliate->getId());
@@ -240,7 +240,7 @@ class ControllerAffiliateEdit extends Controller {
 
 		$this->data['countries'] = $this->model_localisation_country->getCountries();
 
-		$this->data['back'] = $this->url->link('affiliate/account', '', 'SSL');
+		$this->data['back'] = $this->url->link('affiliate/account', '');
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/affiliate/edit.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/affiliate/edit.tpl';

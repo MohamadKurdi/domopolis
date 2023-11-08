@@ -4,7 +4,7 @@ class ControllerAccountReturn extends Controller {
 
 	public function index() {
 		if (!$this->customer->isLogged()) {
-			$this->session->data['redirect'] = $this->url->link('account/return', '', 'SSL');
+			$this->session->data['redirect'] = $this->url->link('account/return', '');
 
 			$this->redirect($this->url->link('account/login', '', 'SSL'));
 		}
@@ -23,7 +23,7 @@ class ControllerAccountReturn extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),        	
+			'href'      => $this->url->link('account/account', ''),        	
 			'separator' => $this->language->get('text_separator')
 		);
 
@@ -35,7 +35,7 @@ class ControllerAccountReturn extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('account/return', $url, 'SSL'),        	
+			'href'      => $this->url->link('account/return', $url),        	
 			'separator' => $this->language->get('text_separator')
 		);
 
@@ -81,11 +81,11 @@ $pagination = new Pagination();
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get('config_catalog_limit');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('account/history', 'page={page}', 'SSL');
+		$pagination->url = $this->url->link('account/history', 'page={page}');
 
 		$this->data['pagination'] = $pagination->render();
 
-		$this->data['continue'] = $this->url->link('account/account', '', 'SSL');
+		$this->data['continue'] = $this->url->link('account/account', '');
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/return_list.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/account/return_list.tpl';
@@ -115,7 +115,7 @@ $pagination = new Pagination();
 		}
 
 		if (!$this->customer->isLogged()) {
-			$this->session->data['redirect'] = $this->url->link('account/return/info', 'return_id=' . $return_id, 'SSL');
+			$this->session->data['redirect'] = $this->url->link('account/return/info', 'return_id=' . $return_id);
 
 			$this->redirect($this->url->link('account/login', '', 'SSL'));
 		}
@@ -131,13 +131,13 @@ $pagination = new Pagination();
 
 			$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_home'),
-				'href'      => $this->url->link('common/home', '', 'SSL'),
+				'href'      => $this->url->link('common/home', ''),
 				'separator' => false
 			);
 
 			$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_account'),
-				'href'      => $this->url->link('account/account', '', 'SSL'),
+				'href'      => $this->url->link('account/account', ''),
 				'separator' => $this->language->get('text_separator')
 			);
 
@@ -149,13 +149,13 @@ $pagination = new Pagination();
 
 			$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('heading_title'),
-				'href'      => $this->url->link('account/return', $url, 'SSL'),
+				'href'      => $this->url->link('account/return', $url),
 				'separator' => $this->language->get('text_separator')
 			);
 
 			$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_return'),
-				'href'      => $this->url->link('account/return/info', 'return_id=' . $this->request->get['return_id'] . $url, 'SSL'),
+				'href'      => $this->url->link('account/return/info', 'return_id=' . $this->request->get['return_id'] . $url),
 				'separator' => $this->language->get('text_separator')
 			);			
 
@@ -214,7 +214,7 @@ $pagination = new Pagination();
 				);
 			}
 
-			$this->data['continue'] = $this->url->link('account/return', $url, 'SSL');
+			$this->data['continue'] = $this->url->link('account/return', $url);
 
 			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/return_info.tpl')) {
 				$this->template = $this->config->get('config_template') . '/template/account/return_info.tpl';
@@ -245,13 +245,13 @@ $pagination = new Pagination();
 
 			$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_account'),
-				'href'      => $this->url->link('account/account', '', 'SSL'),
+				'href'      => $this->url->link('account/account', ''),
 				'separator' => $this->language->get('text_separator')
 			);
 
 			$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('heading_title'),
-				'href'      => $this->url->link('account/return', '', 'SSL'),
+				'href'      => $this->url->link('account/return', ''),
 				'separator' => $this->language->get('text_separator')
 			);
 
@@ -263,7 +263,7 @@ $pagination = new Pagination();
 
 			$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_return'),
-				'href'      => $this->url->link('account/return/info', 'return_id=' . $return_id . $url, 'SSL'),
+				'href'      => $this->url->link('account/return/info', 'return_id=' . $return_id . $url),
 				'separator' => $this->language->get('text_separator')
 			);
 
@@ -273,7 +273,7 @@ $pagination = new Pagination();
 
 			$this->data['button_continue'] = $this->language->get('button_continue');
 
-			$this->data['continue'] = $this->url->link('account/return', '', 'SSL');
+			$this->data['continue'] = $this->url->link('account/return', '');
 
 			$this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . '/1.1 404 Not Found');
 
@@ -323,13 +323,13 @@ $pagination = new Pagination();
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_account'),
-			'href'      => $this->url->link('account/account', '', 'SSL'),
+			'href'      => $this->url->link('account/account', ''),
 			'separator' => $this->language->get('text_separator')
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('account/return/insert', '', 'SSL'),
+			'href'      => $this->url->link('account/return/insert', ''),
 			'separator' => $this->language->get('text_separator')
 		);
 
@@ -418,7 +418,7 @@ $pagination = new Pagination();
 			$this->data['error_captcha'] = '';
 		}	
 
-		$this->data['action'] = $this->url->link('account/return/insert', '', 'SSL');
+		$this->data['action'] = $this->url->link('account/return/insert', '');
 
 		$this->load->model('account/order');
 
@@ -536,7 +536,7 @@ $pagination = new Pagination();
 			$information_info = $this->model_catalog_information->getInformation($this->config->get('config_return_id'));
 
 			if ($information_info) {
-				$this->data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/info', 'information_id=' . $this->config->get('config_return_id'), 'SSL'), $information_info['title'], $information_info['title']);
+				$this->data['text_agree'] = sprintf($this->language->get('text_agree'), $this->url->link('information/information/info', 'information_id=' . $this->config->get('config_return_id')), $information_info['title'], $information_info['title']);
 			} else {
 				$this->data['text_agree'] = '';
 			}
@@ -550,7 +550,7 @@ $pagination = new Pagination();
 			$this->data['agree'] = false;
 		}
 
-		$this->data['back'] = $this->url->link('account/account', '', 'SSL');
+		$this->data['back'] = $this->url->link('account/account', '');
 
 		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/return_form.tpl')) {
 			$this->template = $this->config->get('config_template') . '/template/account/return_form.tpl';
@@ -586,7 +586,7 @@ $pagination = new Pagination();
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('account/return', '', 'SSL'),
+			'href'      => $this->url->link('account/return', ''),
 			'separator' => $this->language->get('text_separator')
 		);
 

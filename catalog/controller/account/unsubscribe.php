@@ -93,7 +93,7 @@ class ControllerAccountUnsubscribe extends Controller {
 
 
 
-		$this->data['action'] = $this->url->link('account/unsubscribe', '', 'SSL');
+		$this->data['action'] = $this->url->link('account/unsubscribe', '');
 
 		$this->data['text_unsubscribe_text_2'] = sprintf($this->data['text_unsubscribe_text_2'], $this->url->link('account/account/edit', '', 'SSL'));
 

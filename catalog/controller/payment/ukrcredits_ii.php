@@ -73,7 +73,7 @@ class ControllerPaymentUkrcreditsIi extends Controller {
 			}
 		}
 
-        $data['action'] = $this->url->link('payment/ukrcredits_ii/sendDataDeal', '', 'SSL');	
+        $data['action'] = $this->url->link('payment/ukrcredits_ii/sendDataDeal', '');	
 		
 		$data['credit'] = array(
 			'type' 			=> $setting['ii_merchantType'],
@@ -230,7 +230,7 @@ class ControllerPaymentUkrcreditsIi extends Controller {
         $json['success'] = TRUE;
  
 		if ($this->request->get['route'] != 'checkout/checkout') {
-           $json['redirect'] = $this->url->link('checkout/checkout', '', 'SSL');
+           $json['redirect'] = $this->url->link('checkout/checkout', '');
 		}       
 
 		$this->response->setOutput(json_encode($json));
@@ -335,7 +335,7 @@ class ControllerPaymentUkrcreditsIi extends Controller {
 			
 			$data_deal['amount'] = $sumtotal;
 
-            $data_deal['responseUrl'] 	= $this->url->link('payment/ukrcredits_ii/callback', '', 'SSL');
+            $data_deal['responseUrl'] 	= $this->url->link('payment/ukrcredits_ii/callback', '');
             $data_deal['redirectUrl'] 	= $this->url->link('checkout/checkout');
             $data_deal['signature'] 	= $this->generateSignature($data_deal);
         }
