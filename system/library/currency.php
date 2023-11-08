@@ -106,7 +106,7 @@
 			return $this->format($number, $currency, $value, $format = true, $real = false, $real_code = false, true);		
 		}
 		
-		public function format($number, $currency = '', $value = '', $format = true, $real = false, $real_code = false, $left_explicit = false) {
+		public function format($number, $currency = '', $value = '', $format = true, $real = false, $real_code = false, $left_explicit = false, $decimal_overload = false) {
 			if ($currency && $this->has($currency)) {
 				$symbol_left   = $this->currencies[$currency]['symbol_left'];
 				$symbol_right  = $this->currencies[$currency]['symbol_right'];
@@ -117,6 +117,10 @@
 				$decimal_place = $this->currencies[$this->code]['decimal_place'];
 				
 				$currency = $this->code;
+			}
+
+			if ($decimal_overload){
+				$decimal_place = $decimal_overload;
 			}
 			
 			if ($value) {
