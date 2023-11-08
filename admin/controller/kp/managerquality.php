@@ -31,13 +31,13 @@
 			
 			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('text_home'),
-				'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+				'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 				'separator' => false
 			];
 			
 			$this->data['breadcrumbs'][] = [
 				'text'      => $this->language->get('heading_title'),
-				'href'      => $this->url->link('kp/managerquality', 'token=' . $this->session->data['token'], 'SSL'),
+				'href'      => $this->url->link('kp/managerquality', 'token=' . $this->session->data['token']),
 				'separator' => ' :: '
 			];
 			
@@ -53,7 +53,7 @@
 			$this->data['periods'][] 	= [
 				'name' => 'Сейчас',
 				'date' => 'now',
-				'href' => $this->url->link('kp/managerquality', 'period=now&token=' . $this->session->data['token'], 'SSL'),
+				'href' => $this->url->link('kp/managerquality', 'period=now&token=' . $this->session->data['token']),
 			];
 			
 			for ($i = 1; $i <= 14; $i++) {				
@@ -68,7 +68,7 @@
 				$this->data['periods'][] = [
 					'name' => $period_name,
 					'date' => date('Y-m-d', strtotime("-$i day")),
-					'href' => $this->url->link('kp/managerquality', 'period='. date('Y-m-d', strtotime("-$i day")) .'&token=' . $this->session->data['token'], 'SSL'),
+					'href' => $this->url->link('kp/managerquality', 'period='. date('Y-m-d', strtotime("-$i day")) .'&token=' . $this->session->data['token']),
 				];				
 			}
 			

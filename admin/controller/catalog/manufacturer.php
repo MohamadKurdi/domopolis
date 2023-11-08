@@ -150,18 +150,18 @@ class ControllerCatalogManufacturer extends Controller {
 		
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 		
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 		
-		$this->data['insert'] = $this->url->link('catalog/manufacturer/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['delete'] = $this->url->link('catalog/manufacturer/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');	
+		$this->data['insert'] = $this->url->link('catalog/manufacturer/insert', 'token=' . $this->session->data['token'] . $url);
+		$this->data['delete'] = $this->url->link('catalog/manufacturer/delete', 'token=' . $this->session->data['token'] . $url);	
 		
 		$this->data['manufacturers'] = array();
 		
@@ -251,8 +251,8 @@ class ControllerCatalogManufacturer extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 		
-		$this->data['sort_name'] = $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-		$this->data['sort_sort_order'] = $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . '&sort=sort_order' . $url, 'SSL');
+		$this->data['sort_name'] = $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . '&sort=name' . $url);
+		$this->data['sort_sort_order'] = $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . '&sort=sort_order' . $url);
 		
 		$url = '';
 		
@@ -269,7 +269,7 @@ class ControllerCatalogManufacturer extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get('config_admin_limit');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 		
 		$this->data['pagination'] = $pagination->render();
 		
@@ -344,23 +344,23 @@ class ControllerCatalogManufacturer extends Controller {
 		
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 		
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 		
 		if (!isset($this->request->get['manufacturer_id'])) {
-			$this->data['action'] = $this->url->link('catalog/manufacturer/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('catalog/manufacturer/insert', 'token=' . $this->session->data['token'] . $url);
 		} else {
-			$this->data['action'] = $this->url->link('catalog/manufacturer/update', 'token=' . $this->session->data['token'] . '&manufacturer_id=' . $this->request->get['manufacturer_id'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('catalog/manufacturer/update', 'token=' . $this->session->data['token'] . '&manufacturer_id=' . $this->request->get['manufacturer_id'] . $url);
 		}
 		
-		$this->data['cancel'] = $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['cancel'] = $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'] . $url);
 		
 		if (isset($this->request->get['manufacturer_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$manufacturer_info = $this->model_catalog_manufacturer->getManufacturer($this->request->get['manufacturer_id']);

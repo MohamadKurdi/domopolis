@@ -71,9 +71,9 @@ class ControllerSaleCourier2 extends Controller {
 
 		$this->data['username'] = $this->model_user_user->getRealUserNameById($this->user->getId());
 
-		$this->data['getOrderAjaxUrl'] = $this->url->link('sale/courier2/getOrderAjax', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['getOrderAjaxUrl'] = $this->url->link('sale/courier2/getOrderAjax', 'token=' . $this->session->data['token']);
 		$this->data['getOrderAjaxUrl'] = str_replace('&amp;', '&', $this->data['getOrderAjaxUrl']);
-		$this->data['fullUrl'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['fullUrl'] = $this->url->link('sale/order', 'token=' . $this->session->data['token']);
 
 		$this->template="kp/courier2.tpl";
 		$this->response->setOutput($this->render());
@@ -318,10 +318,10 @@ class ControllerSaleCourier2 extends Controller {
 			'первая','вторая','третья','четвертая','пятая','шестая','седьмая','восьмая','девятая'
 		];	
 
-		$this->data['getOrderAjaxUrl'] = $this->url->link('sale/courier2/getOrderAjax', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['getOrderAjaxUrl'] = $this->url->link('sale/courier2/getOrderAjax', 'token=' . $this->session->data['token']);
 		$this->data['getOrderAjaxUrl'] = str_replace('&amp;', '&', $this->data['getOrderAjaxUrl']);
 
-		$this->data['sendPaymentLinkToCustomer'] = $this->url->link('sale/courier2/sendPaymentLinkToCustomer', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['sendPaymentLinkToCustomer'] = $this->url->link('sale/courier2/sendPaymentLinkToCustomer', 'token=' . $this->session->data['token']);
 		$this->data['sendPaymentLinkToCustomer'] = str_replace('&amp;', '&', $this->data['sendPaymentLinkToCustomer']);
 
 
@@ -529,22 +529,22 @@ class ControllerSaleCourier2 extends Controller {
 					$this->data['sent'] = date("Y-m-d");
 				}
 
-				$this->data['updateOrderAjaxUrl'] = $this->url->link('sale/courier2/updateOrderAjax', 'token=' . $this->session->data['token'], 'SSL');
+				$this->data['updateOrderAjaxUrl'] = $this->url->link('sale/courier2/updateOrderAjax', 'token=' . $this->session->data['token']);
 				$this->data['updateOrderAjaxUrl'] = str_replace('&amp;', '&', $this->data['updateOrderAjaxUrl']);
 
-				$this->data['moveToUnTaken'] = $this->url->link('sale/courier2/moveToUnTaken', 'token=' . $this->session->data['token'], 'SSL');
+				$this->data['moveToUnTaken'] = $this->url->link('sale/courier2/moveToUnTaken', 'token=' . $this->session->data['token']);
 				$this->data['moveToUnTaken'] = str_replace('&amp;', '&', $this->data['moveToUnTaken']);
 
-				$this->data['moveToTaken'] = $this->url->link('sale/courier2/moveToTaken', 'token=' . $this->session->data['token'], 'SSL');
+				$this->data['moveToTaken'] = $this->url->link('sale/courier2/moveToTaken', 'token=' . $this->session->data['token']);
 				$this->data['moveToTaken'] = str_replace('&amp;', '&', $this->data['moveToTaken']);
 
-				$this->data['resaveOrderAjax'] = $this->url->link('sale/order/resaveOrder', 'order_id=' . $order_info['order_id'] . '&token=' . $this->session->data['token'], 'SSL');
+				$this->data['resaveOrderAjax'] = $this->url->link('sale/order/resaveOrder', 'order_id=' . $order_info['order_id'] . '&token=' . $this->session->data['token']);
 				$this->data['resaveOrderAjax'] = str_replace('&amp;', '&', $this->data['resaveOrderAjax']);
 
-				$this->data['getDeliverySMSTextAjaxUrl'] = $this->url->link('sale/order/getDeliverySMSTextAjax', 'token=' . $this->session->data['token'], 'SSL');
+				$this->data['getDeliverySMSTextAjaxUrl'] = $this->url->link('sale/order/getDeliverySMSTextAjax', 'token=' . $this->session->data['token']);
 				$this->data['getDeliverySMSTextAjaxUrl'] = str_replace('&amp;', '&', $this->data['getDeliverySMSTextAjaxUrl']);
 
-				$this->data['getStatusSMSTextAjaxUrl'] = $this->url->link('sale/order/getStatusSMSTextAjax', 'token=' . $this->session->data['token'], 'SSL');
+				$this->data['getStatusSMSTextAjaxUrl'] = $this->url->link('sale/order/getStatusSMSTextAjax', 'token=' . $this->session->data['token']);
 				$this->data['getStatusSMSTextAjaxUrl'] = str_replace('&amp;', '&', $this->data['getStatusSMSTextAjaxUrl']);
 
 				$this->data['payment_must'] = $payment_must = mb_stripos($order_info['payment_method'], 'при получении') || mb_stripos($order_info['payment_method'], 'при доставке');

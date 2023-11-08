@@ -91,18 +91,18 @@ class ControllerSaleSmsSending extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('sale/sms_sending', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('sale/sms_sending', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 				
-                $this->data['cancel'] = $this->url->link('sale/sms_sending', 'token=' . $this->session->data['token'], 'SSL');
-                $this->data['correct'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
+                $this->data['cancel'] = $this->url->link('sale/sms_sending', 'token=' . $this->session->data['token']);
+                $this->data['correct'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token']);
 		
 		$this->load->model('setting/store');
 		

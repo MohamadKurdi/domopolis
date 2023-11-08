@@ -54,27 +54,27 @@ class ControllerModuleProductQuantity extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_module'),
-			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
-		$this->data['tab_action_settings'] = $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['tab_action_css'] = $this->url->link('module/' . $this->_name . '/css', 'token=' . $this->session->data['token'], 'SSL');	
-		$this->data['tab_action_about'] = $this->url->link('module/' . $this->_name . '/about', 'token=' . $this->session->data['token'], 'SSL');		
+		$this->data['tab_action_settings'] = $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token']);
+		$this->data['tab_action_css'] = $this->url->link('module/' . $this->_name . '/css', 'token=' . $this->session->data['token']);	
+		$this->data['tab_action_about'] = $this->url->link('module/' . $this->_name . '/about', 'token=' . $this->session->data['token']);		
 		
-		$this->data['back'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['back'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']);
 		$this->data['token'] = $this->session->data['token'];
 		$this->data['_name'] = $this->_name;
 		
@@ -99,7 +99,7 @@ class ControllerModuleProductQuantity extends Controller {
 			$this->redirect($this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'));
 		}
 		
-		$this->data['action'] = $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token']);
 		$this->data['token'] = $this->session->data['token'];
 		
 		$this->data['settings'] = $this->model_setting_setting->getSetting( $this->_name . '_settings' );
@@ -131,7 +131,7 @@ class ControllerModuleProductQuantity extends Controller {
 			$this->redirect($this->url->link('module/' . $this->_name . '/css', 'token=' . $this->session->data['token'], 'SSL'));
 		}
 		
-		$this->data['action'] = $this->url->link('module/' . $this->_name . '/css', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('module/' . $this->_name . '/css', 'token=' . $this->session->data['token']);
 		$this->data['token'] = $this->session->data['token'];
 		
 		$this->data['css'] = $this->model_setting_setting->getSetting( $this->_name . '_css' );

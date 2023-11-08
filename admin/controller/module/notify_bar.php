@@ -23,19 +23,19 @@ class ControllerModuleNotifyBar extends Controller {
 
   		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_module'),
-			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 
   		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('module/notify_bar', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('module/notify_bar', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 
@@ -47,8 +47,8 @@ class ControllerModuleNotifyBar extends Controller {
 
 		$this->data['no_image'] = $this->model_tool_image->resize($this->config->get('config_noimage'), 100, 100);
 
-   		$this->data['action'] = $this->url->link('module/notify_bar', 'token=' . $this->session->data['token'], 'SSL');	
-		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
+   		$this->data['action'] = $this->url->link('module/notify_bar', 'token=' . $this->session->data['token']);	
+		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']);
 		$this->data['notify_bar'] = [];
 		
 		if (isset($this->request->post['notify_bar'])) {

@@ -150,13 +150,13 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('report/buyanalyze', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('report/buyanalyze', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 			);
 			
@@ -477,8 +477,8 @@
 				'product_stocks_waits' => $product_stocks_waits,
 				'chart'         => $chart,
 				'product_stock_limits_structured' => $product_stock_limits_structured,
-				'adminlink'        => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'], 'SSL'),
-				'filter_orders'        => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_product_id=' . $result['product_id'], 'SSL'),
+				'adminlink'        => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id']),
+				'filter_orders'        => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_product_id=' . $result['product_id']),
 				);
 				
 				
@@ -497,7 +497,7 @@
 				$url .= '&page=' . $this->request->get['page'];
 			}
 			
-			$this->data['reset'] = $this->url->link('report/buyanalyze/reset', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['reset'] = $this->url->link('report/buyanalyze/reset', 'token=' . $this->session->data['token'] . $url);
 			$this->data['token'] = $this->session->data['token'];
 			
 			
@@ -555,8 +555,8 @@
 				$url .= '&order=ASC';
 			}
 			
-			$this->data['sort_cart'] = $this->url->link('report/buyanalyze', 'token=' . $this->session->data['token'] . '&sort=cart' . $url, 'SSL');
-			$this->data['sort_bought'] = $this->url->link('report/buyanalyze', 'token=' . $this->session->data['token'] . '&sort=bought' . $url, 'SSL');
+			$this->data['sort_cart'] = $this->url->link('report/buyanalyze', 'token=' . $this->session->data['token'] . '&sort=cart' . $url);
+			$this->data['sort_bought'] = $this->url->link('report/buyanalyze', 'token=' . $this->session->data['token'] . '&sort=bought' . $url);
 			
 			if (isset($this->session->data['success'])) {
 				$this->data['success'] = $this->session->data['success'];
@@ -629,7 +629,7 @@
 			$pagination->page = $page;
 			$pagination->limit = $this->config->get('config_admin_limit');
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('report/buyanalyze',  'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('report/buyanalyze',  'token=' . $this->session->data['token'] . $url . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			

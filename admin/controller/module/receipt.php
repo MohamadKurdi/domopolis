@@ -43,25 +43,25 @@ class ControllerModuleReceipt extends Controller {
 
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
+			'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_module'),
-			'href' => $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL'),
+			'href' => $this->url->link('extension/module', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
 		$data['breadcrumbs'][] = array(
 			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('module/receipt', 'token=' . $this->session->data['token'], 'SSL'),
+			'href' => $this->url->link('module/receipt', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
-		$data['action'] = $this->url->link('module/receipt', 'token=' . $this->session->data['token'], 'SSL');
+		$data['action'] = $this->url->link('module/receipt', 'token=' . $this->session->data['token']);
 		$data['receipt_list'] = $this->url->link('sale/receipt', 'token=' . $this->session->data['token'], true);
-		$data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
+		$data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token']);
 		$data['cron_path'] = DIR_SYSTEM . 'library/checkbox_api/cron.php';
 				
         $data_fields = [

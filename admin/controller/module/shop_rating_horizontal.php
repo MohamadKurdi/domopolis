@@ -64,23 +64,23 @@ class ControllerModuleShopRatingHorizontal extends Controller {
 
         $this->data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
             'separator' => false
         );
-        $this->data['action'] = $this->url->link('module/shop_rating_horizontal', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['action'] = $this->url->link('module/shop_rating_horizontal', 'token=' . $this->session->data['token']);
 
-        $this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']);
 
         if (!isset($this->request->get['module_id'])) {
             $this->data['breadcrumbs'][] = array(
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('module/shop_rating_horizontal', 'token=' . $this->session->data['token'], 'SSL'),
+                'href' => $this->url->link('module/shop_rating_horizontal', 'token=' . $this->session->data['token']),
                 'separator' => ' :: '
             );
         } else {
             $this->data['breadcrumbs'][] = array(
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('module/shop_rating_horizontal', 'token=' . $this->session->data['token'] . '&module_id=' . $this->request->get['module_id'], 'SSL'),
+                'href' => $this->url->link('module/shop_rating_horizontal', 'token=' . $this->session->data['token'] . '&module_id=' . $this->request->get['module_id']),
                 'separator' => ' :: '
             );
         }

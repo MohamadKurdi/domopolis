@@ -61,13 +61,13 @@ class ControllerReportSaleTax extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('report/sale_tax', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('report/sale_tax', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
@@ -169,7 +169,7 @@ class ControllerReportSaleTax extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get('config_admin_limit');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('report/sale_tax', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('report/sale_tax', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 
 		$this->data['pagination'] = $pagination->render();
 

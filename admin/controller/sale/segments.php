@@ -272,19 +272,19 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => 'Настройки сегментации',
-			'href'      => $this->url->link('sale/segments', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('sale/segments', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 			);
 			
-			$this->data['insert'] = $this->url->link('sale/segments/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-			$this->data['delete'] = $this->url->link('sale/segments/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');	
-			$this->data['deletestats'] = $this->url->link('sale/segments/deletestats', 'token=' . $this->session->data['token'] . $url, 'SSL');	
+			$this->data['insert'] = $this->url->link('sale/segments/insert', 'token=' . $this->session->data['token'] . $url);
+			$this->data['delete'] = $this->url->link('sale/segments/delete', 'token=' . $this->session->data['token'] . $url);	
+			$this->data['deletestats'] = $this->url->link('sale/segments/deletestats', 'token=' . $this->session->data['token'] . $url);	
 			
 			$this->data['segments'] = array();
 			
@@ -417,8 +417,8 @@
 				$url .= '&page=' . $this->request->get['page'];
 			}
 			
-			$this->data['sort_name'] = $this->url->link('sale/segments', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-			$this->data['sort_sort_order'] = $this->url->link('sale/segments', 'token=' . $this->session->data['token'] . '&sort=sort_order' . $url, 'SSL');
+			$this->data['sort_name'] = $this->url->link('sale/segments', 'token=' . $this->session->data['token'] . '&sort=name' . $url);
+			$this->data['sort_sort_order'] = $this->url->link('sale/segments', 'token=' . $this->session->data['token'] . '&sort=sort_order' . $url);
 			
 			$url = '';
 			
@@ -435,7 +435,7 @@
 			$pagination->page = $page;
 			$pagination->limit = $this->config->get('config_admin_limit');
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('sale/segments', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('sale/segments', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();				
 			
@@ -500,24 +500,24 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => 'Настройки сегментации',
-			'href'      => $this->url->link('sale/segments', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('sale/segments', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 			);
 			
 			
 			if (!isset($this->request->get['segment_id'])) {
-				$this->data['action'] = $this->url->link('sale/segments/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+				$this->data['action'] = $this->url->link('sale/segments/insert', 'token=' . $this->session->data['token'] . $url);
 				} else {
-				$this->data['action'] = $this->url->link('sale/segments/update', 'token=' . $this->session->data['token'] . '&segment_id=' . $this->request->get['segment_id'] . $url, 'SSL');
+				$this->data['action'] = $this->url->link('sale/segments/update', 'token=' . $this->session->data['token'] . '&segment_id=' . $this->request->get['segment_id'] . $url);
 			}
 			
-			$this->data['cancel'] = $this->url->link('sale/segments', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['cancel'] = $this->url->link('sale/segments', 'token=' . $this->session->data['token'] . $url);
 			
 			
 			
@@ -532,7 +532,7 @@
 					
 				}
 				
-				$this->data['view_link'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_segment_id=' . $this->data['segment_id'], 'SSL');
+				$this->data['view_link'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_segment_id=' . $this->data['segment_id']);
 				
 			}
 			

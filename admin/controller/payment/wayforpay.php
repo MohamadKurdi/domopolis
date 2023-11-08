@@ -14,7 +14,7 @@ class ControllerPaymentWayforpay extends Controller
 		$this->load->model('setting/store');
 
         $this->data['stores'] = $this->model_setting_store->getStores();  
-		$this->data['action_without_store'] = $this->url->link('payment/wayforpay', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action_without_store'] = $this->url->link('payment/wayforpay', 'token=' . $this->session->data['token']);
 		
 		if (isset($this->request->get['store_id'])) {
             $this->data['store_id'] = $this->request->get['store_id'];
@@ -29,7 +29,7 @@ class ControllerPaymentWayforpay extends Controller
 			$store_id = 0;			
 		}
 		
-		$this->data['action'] = $this->url->link('payment/wayforpay', 'store_id=' . $this->data['store_id'] . '&token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('payment/wayforpay', 'store_id=' . $this->data['store_id'] . '&token=' . $this->session->data['token']);
 
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
             $this->model_setting_setting->editSetting('wayforpay', $this->request->post, $store_id);
@@ -64,18 +64,18 @@ class ControllerPaymentWayforpay extends Controller
 
         $this->data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('common/home', 'token=' . $this->session->data['token']),
             'separator' => false
         );
 
         $this->data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_payment'),
-            'href' => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('extension/payment', 'token=' . $this->session->data['token']),
             'separator' => ' :: '
         );
 
-    //    $this->data['action'] = $this->url->link('payment/wayforpay', 'token=' . $this->session->data['token'], 'SSL');
-        $this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+    //    $this->data['action'] = $this->url->link('payment/wayforpay', 'token=' . $this->session->data['token']);
+        $this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token']);
         
         $wayforpay_config = $this->model_setting_setting->getSetting('wayforpay', $this->data['store_id']);
 

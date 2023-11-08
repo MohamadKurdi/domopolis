@@ -177,7 +177,7 @@ class ControllerModuleOCAAB extends Controller {
 	private function getLink($a, $b) {
 		$route = $a . '/' . $b;
 		if ($this->getVersion() >= 150) {
-			return $this->url->link($route, 'token=' . $this->session->data['token'], 'SSL');
+			return $this->url->link($route, 'token=' . $this->session->data['token']);
 		} else {
 			return HTTPS_SERVER . 'index.php?route=' . $route . '&token=' . $this->session->data['token']; 
 		}

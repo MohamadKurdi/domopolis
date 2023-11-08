@@ -5,7 +5,7 @@ class ControllerCommonCronMon extends Controller {
 		$file = $this->request->get['file'];
 
 		$this->simpleProcess->dropPidFile($file);
-		$url = $this->url->link('common/cronmon', 'token=' . $this->session->data['token'], 'SSL');
+		$url = $this->url->link('common/cronmon', 'token=' . $this->session->data['token']);
 
 		$this->response->redirect(str_replace('&amp;','&',$url));
 	}
@@ -19,7 +19,7 @@ class ControllerCommonCronMon extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => 'Монитор cron',
-			'href'      => $this->url->link('common/cronmon', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/cronmon', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 

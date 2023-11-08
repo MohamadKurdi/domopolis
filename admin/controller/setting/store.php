@@ -91,18 +91,18 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('setting/store', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('setting/store', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 			);
 			
-			$this->data['insert'] = $this->url->link('setting/store/insert', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['delete'] = $this->url->link('setting/store/delete', 'token=' . $this->session->data['token'], 'SSL');	
+			$this->data['insert'] = $this->url->link('setting/store/insert', 'token=' . $this->session->data['token']);
+			$this->data['delete'] = $this->url->link('setting/store/delete', 'token=' . $this->session->data['token']);	
 			
 			$this->data['stores'] = array();
 			
@@ -412,13 +412,13 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('setting/store', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('setting/store', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 			);
 			
@@ -431,12 +431,12 @@
 			}
 			
 			if (!isset($this->request->get['store_id'])) {
-				$this->data['action'] = $this->url->link('setting/store/insert', 'token=' . $this->session->data['token'], 'SSL');
+				$this->data['action'] = $this->url->link('setting/store/insert', 'token=' . $this->session->data['token']);
 				} else {
-				$this->data['action'] = $this->url->link('setting/store/update', 'token=' . $this->session->data['token'] . '&store_id=' . $this->request->get['store_id'], 'SSL');
+				$this->data['action'] = $this->url->link('setting/store/update', 'token=' . $this->session->data['token'] . '&store_id=' . $this->request->get['store_id']);
 			}
 			
-			$this->data['cancel'] = $this->url->link('setting/store', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['cancel'] = $this->url->link('setting/store', 'token=' . $this->session->data['token']);
 			
 			if (isset($this->request->get['store_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 				$this->load->model('setting/setting');

@@ -147,18 +147,18 @@ class ControllerDesignLayout extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
-		$this->data['insert'] = $this->url->link('design/layout/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['delete'] = $this->url->link('design/layout/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['insert'] = $this->url->link('design/layout/insert', 'token=' . $this->session->data['token'] . $url);
+		$this->data['delete'] = $this->url->link('design/layout/delete', 'token=' . $this->session->data['token'] . $url);
 
 		$this->data['layouts'] = array();
 
@@ -225,7 +225,7 @@ class ControllerDesignLayout extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['sort_name'] = $this->url->link('design/layout', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+		$this->data['sort_name'] = $this->url->link('design/layout', 'token=' . $this->session->data['token'] . '&sort=name' . $url);
 
 		$url = '';
 
@@ -242,7 +242,7 @@ class ControllerDesignLayout extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get('config_admin_limit');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 
 		$this->data['pagination'] = $pagination->render();
 
@@ -302,23 +302,23 @@ class ControllerDesignLayout extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
 		if (!isset($this->request->get['layout_id'])) { 
-			$this->data['action'] = $this->url->link('design/layout/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('design/layout/insert', 'token=' . $this->session->data['token'] . $url);
 		} else {
-			$this->data['action'] = $this->url->link('design/layout/update', 'token=' . $this->session->data['token'] . '&layout_id=' . $this->request->get['layout_id'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('design/layout/update', 'token=' . $this->session->data['token'] . '&layout_id=' . $this->request->get['layout_id'] . $url);
 		}
 
-		$this->data['cancel'] = $this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['cancel'] = $this->url->link('design/layout', 'token=' . $this->session->data['token'] . $url);
 
 		if (isset($this->request->get['layout_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$layout_info = $this->model_design_layout->getLayout($this->request->get['layout_id']);

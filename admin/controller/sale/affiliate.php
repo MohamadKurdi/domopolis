@@ -332,19 +332,19 @@
 				
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_home'),
-				'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),       		
+				'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),       		
 				'separator' => false
 				);
 				
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('heading_title'),
-				'href'      => $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+				'href'      => $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . $url),
 				'separator' => ' :: '
 				);
 				
-				$this->data['approve'] = $this->url->link('sale/affiliate/approve', 'token=' . $this->session->data['token'] . $url, 'SSL');
-				$this->data['insert'] = $this->url->link('sale/affiliate/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-				$this->data['delete'] = $this->url->link('sale/affiliate/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+				$this->data['approve'] = $this->url->link('sale/affiliate/approve', 'token=' . $this->session->data['token'] . $url);
+				$this->data['insert'] = $this->url->link('sale/affiliate/insert', 'token=' . $this->session->data['token'] . $url);
+				$this->data['delete'] = $this->url->link('sale/affiliate/delete', 'token=' . $this->session->data['token'] . $url);
 				
 				$this->data['affiliates'] = array();
 				
@@ -460,11 +460,11 @@
 					$url .= '&page=' . $this->request->get['page'];
 				}
 				
-				$this->data['sort_name'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-				$this->data['sort_email'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . '&sort=a.email' . $url, 'SSL');
-				$this->data['sort_status'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . '&sort=a.status' . $url, 'SSL');
-				$this->data['sort_approved'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . '&sort=a.approved' . $url, 'SSL');
-				$this->data['sort_date_added'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . '&sort=a.date_added' . $url, 'SSL');
+				$this->data['sort_name'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . '&sort=name' . $url);
+				$this->data['sort_email'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . '&sort=a.email' . $url);
+				$this->data['sort_status'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . '&sort=a.status' . $url);
+				$this->data['sort_approved'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . '&sort=a.approved' . $url);
+				$this->data['sort_date_added'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . '&sort=a.date_added' . $url);
 				
 				$url = '';
 				
@@ -501,7 +501,7 @@
 				$pagination->page = $page;
 				$pagination->limit = $this->config->get('config_admin_limit');
 				$pagination->text = $this->language->get('text_pagination');
-				$pagination->url = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+				$pagination->url = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 				
 				$this->data['pagination'] = $pagination->render();
 				
@@ -722,23 +722,23 @@
 				
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_home'),
-				'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+				'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 				'separator' => false
 				);
 				
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('heading_title'),
-				'href'      => $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+				'href'      => $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . $url),
 				'separator' => ' :: '
 				);
 				
 				if (!isset($this->request->get['affiliate_id'])) {
-					$this->data['action'] = $this->url->link('sale/affiliate/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+					$this->data['action'] = $this->url->link('sale/affiliate/insert', 'token=' . $this->session->data['token'] . $url);
 					} else {
-					$this->data['action'] = $this->url->link('sale/affiliate/update', 'token=' . $this->session->data['token'] . '&affiliate_id=' . $this->request->get['affiliate_id'] . $url, 'SSL');
+					$this->data['action'] = $this->url->link('sale/affiliate/update', 'token=' . $this->session->data['token'] . '&affiliate_id=' . $this->request->get['affiliate_id'] . $url);
 				}
 				
-				$this->data['cancel'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . $url, 'SSL');
+				$this->data['cancel'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'] . $url);
 				
 				if (isset($this->request->get['affiliate_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 					$affiliate_info = $this->model_sale_affiliate->getAffiliate($this->request->get['affiliate_id']);
@@ -1406,7 +1406,7 @@
 				$pagination->page = $page;
 				$pagination->limit = $this->config->get('config_admin_limit');
 				$pagination->text = $this->language->get('text_pagination');
-				$pagination->url = $this->url->link('sale/affiliate/transaction', 'token=' . $this->session->data['token'] . '&affiliate_id=' . $this->request->get['affiliate_id'] . '&page={page}', 'SSL');
+				$pagination->url = $this->url->link('sale/affiliate/transaction', 'token=' . $this->session->data['token'] . '&affiliate_id=' . $this->request->get['affiliate_id'] . '&page={page}');
 				
 				$this->data['pagination'] = $pagination->render();
 				

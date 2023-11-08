@@ -324,13 +324,13 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => 'Лист ожидания',
-			'href'      => $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token'] . $url, 'SSL'),       		
+			'href'      => $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token'] . $url),       		
 			'separator' => ' :: '
 			);
 			
@@ -451,7 +451,7 @@
 				'special'    			=> $special?($this->currency->format($special, $this->config->get('config_currency'), 1)):false,
 				'special_national' 		=> $special?($this->currency->format($special, $order_currency)):false,
 				'price_in_order'	 	=> $this->currency->format($result['price_in_order'], $order_currency, 1),
-				'product_filter_url' 	=> $this->url->link('catalog/waitlist', 'filter_product_id='.$result['product_id'].'&token=' . $this->session->data['token'], 'SSL'),
+				'product_filter_url' 	=> $this->url->link('catalog/waitlist', 'filter_product_id='.$result['product_id'].'&token=' . $this->session->data['token']),
 				'image'      			=> $image,
 				'quantity'   			=> $result['quantity'],
 				'total_quantity' 		=> $total_quantity,
@@ -464,15 +464,15 @@
 				'status'     			=> ($result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled')),
 				'selected'  			=> isset($this->request->post['selected']) && in_array($result['product_id'], $this->request->post['selected']),
 				
-				'admin_product_url' 	=> $this->url->link('catalog/product/update', 'product_id='.$result['product_id'].'&token=' . $this->session->data['token'], 'SSL'),
+				'admin_product_url' 	=> $this->url->link('catalog/product/update', 'product_id='.$result['product_id'].'&token=' . $this->session->data['token']),
 				'admin_order_url' 		=> $result['order_id']?$this->url->link('sale/order/update', 'order_id=' . $result['order_id'] . '&token=' . $this->session->data['token'], 'SSL'):false,
-				'admin_filter_url' 		=> $this->url->link('catalog/waitlist', 'filter_order_id=' . $result['order_id']  .'&token=' . $this->session->data['token'], 'SSL'),
+				'admin_filter_url' 		=> $this->url->link('catalog/waitlist', 'filter_order_id=' . $result['order_id']  .'&token=' . $this->session->data['token']),
 				'admin_customer_filter_url' => $order['customer_id']?$this->url->link('catalog/waitlist', 'filter_customer_id=' . $order['customer_id'] . '&token=' . $this->session->data['token'], 'SSL'):false,
 				
 				'customer_total_products' 	=> $total_customer_products,
 				'customer_total_orders' 	=> $total_customer_orders,
 				
-				'admin_customer_url' => $this->url->link('sale/customer/update', 'customer_id='.$order['customer_id'].'&token=' . $this->session->data['token'], 'SSL'),
+				'admin_customer_url' => $this->url->link('sale/customer/update', 'customer_id='.$order['customer_id'].'&token=' . $this->session->data['token']),
 				);
 			}
 			
@@ -538,18 +538,18 @@
 				$url .= '&page=' . $this->request->get['page'];
 			}
 			
-			$this->data['delete'] = $this->url->link('catalog/waitlist/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
-			$this->data['createneworder'] = $this->url->link('catalog/waitlist/createneworder', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['delete'] = $this->url->link('catalog/waitlist/delete', 'token=' . $this->session->data['token'] . $url);
+			$this->data['createneworder'] = $this->url->link('catalog/waitlist/createneworder', 'token=' . $this->session->data['token'] . $url);
 			
 			$this->data['button_delete'] = $this->language->get('button_delete');		
 			$this->data['button_filter'] = $this->language->get('button_filter');
 			
-			$this->data['sort_name'] = $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
-			$this->data['sort_model'] = $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url, 'SSL');
-			$this->data['sort_price'] = $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token'] . '&sort=p.price' . $url, 'SSL');
-			$this->data['sort_quantity'] = $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token'] . '&sort=p.quantity' . $url, 'SSL');
-			$this->data['sort_status'] = $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url, 'SSL');
-			$this->data['sort_order'] = $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url, 'SSL');
+			$this->data['sort_name'] = $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url);
+			$this->data['sort_model'] = $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url);
+			$this->data['sort_price'] = $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token'] . '&sort=p.price' . $url);
+			$this->data['sort_quantity'] = $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token'] . '&sort=p.quantity' . $url);
+			$this->data['sort_status'] = $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url);
+			$this->data['sort_order'] = $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url);
 			
 			$this->data['token'] = $this->session->data['token'];
 			
@@ -605,7 +605,7 @@
 			$pagination->page = $page;
 			$pagination->limit = $this->config->get('config_admin_limit');
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			

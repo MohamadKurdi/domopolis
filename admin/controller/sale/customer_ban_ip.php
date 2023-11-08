@@ -147,18 +147,18 @@ class ControllerSaleCustomerBanIp extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('sale/customer_ban_ip', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('sale/customer_ban_ip', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
-		$this->data['insert'] = $this->url->link('sale/customer_ban_ip/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['delete'] = $this->url->link('sale/customer_ban_ip/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['insert'] = $this->url->link('sale/customer_ban_ip/insert', 'token=' . $this->session->data['token'] . $url);
+		$this->data['delete'] = $this->url->link('sale/customer_ban_ip/delete', 'token=' . $this->session->data['token'] . $url);
 
 		$this->data['customer_ban_ips'] = array();
 
@@ -185,7 +185,7 @@ class ControllerSaleCustomerBanIp extends Controller {
 				'customer_ban_ip_id' => $result['customer_ban_ip_id'],
 				'ip'                 => $result['ip'],
 				'total'              => $result['total'],
-				'customer'           => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_ip=' . $result['ip'], 'SSL'),
+				'customer'           => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_ip=' . $result['ip']),
 				'selected'           => isset($this->request->post['selected']) && in_array($result['customer_ban_ip_id'], $this->request->post['selected']),
 				'action'             => $action
 			);
@@ -228,7 +228,7 @@ class ControllerSaleCustomerBanIp extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['sort_ip'] = $this->url->link('sale/customer_ban_ip', 'token=' . $this->session->data['token'] . '&sort=ip' . $url, 'SSL');
+		$this->data['sort_ip'] = $this->url->link('sale/customer_ban_ip', 'token=' . $this->session->data['token'] . '&sort=ip' . $url);
 
 		$url = '';
 
@@ -245,7 +245,7 @@ class ControllerSaleCustomerBanIp extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get('config_admin_limit');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('sale/customer_ban_ip', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('sale/customer_ban_ip', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 
 		$this->data['pagination'] = $pagination->render();
 
@@ -299,23 +299,23 @@ class ControllerSaleCustomerBanIp extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('sale/customer_ban_ip', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('sale/customer_ban_ip', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
 		if (!isset($this->request->get['customer_ban_ip_id'])) {
-			$this->data['action'] = $this->url->link('sale/customer_ban_ip/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('sale/customer_ban_ip/insert', 'token=' . $this->session->data['token'] . $url);
 		} else {
-			$this->data['action'] = $this->url->link('sale/customer_ban_ip/update', 'token=' . $this->session->data['token'] . '&customer_ban_ip_id=' . $this->request->get['customer_ban_ip_id'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('sale/customer_ban_ip/update', 'token=' . $this->session->data['token'] . '&customer_ban_ip_id=' . $this->request->get['customer_ban_ip_id'] . $url);
 		}
 
-		$this->data['cancel'] = $this->url->link('sale/customer_ban_ip', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['cancel'] = $this->url->link('sale/customer_ban_ip', 'token=' . $this->session->data['token'] . $url);
 
 		if (isset($this->request->get['customer_ban_ip_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$customer_ban_ip_info = $this->model_sale_customer_ban_ip->getCustomerBanIp($this->request->get['customer_ban_ip_id']);

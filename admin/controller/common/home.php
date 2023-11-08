@@ -48,7 +48,7 @@
 			$this->load->model('sale/callback');
 			$this->data['total_callbacks'] = $this->model_sale_callback->getOpenedCallBacks();
 			
-			$this->data['callback'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['callback'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token']);
 			$this->data['text_callback'] = $this->language->get('text_callback');
 			
 			$this->load->model('catalog/review');
@@ -63,20 +63,20 @@
 			$this->data['total_waitlist_ready'] = $this->model_catalog_product->getTotalProductsWaitList(array('filter_supplier_has' => 1));
 			$this->data['total_waitlist_prewaits'] = $this->model_catalog_product->getProductsWaitListTotalPreWaits();
 			
-			$this->data['product'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['product'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token']);
 			if ($this->config->get('admin_quick_edit_status') && $this->config->get('aqe_catalog_products_status') && isset($this->session->data['token'])) {
-				$this->data['product'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'], 'SSL');
+				$this->data['product'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token']);
 			}
-			$this->data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['return'] = $this->url->link('sale/return', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['waitlist'] = $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['stocks'] = $this->url->link('catalog/stocks', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['waitlist_ready'] = $this->url->link('catalog/waitlist', 'filter_supplier_has=1&token=' . $this->session->data['token'], 'SSL');
-			$this->data['waitlist_pre'] = $this->url->link('catalog/waitlist', 'filter_prewait=1&token=' . $this->session->data['token'], 'SSL');
-			$this->data['review'] = $this->url->link('catalog/review', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['affiliate'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token'], 'SSL');	
-			$this->data['shortnames'] = $this->url->link('catalog/shortnames', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token']);
+			$this->data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token']);
+			$this->data['return'] = $this->url->link('sale/return', 'token=' . $this->session->data['token']);
+			$this->data['waitlist'] = $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token']);
+			$this->data['stocks'] = $this->url->link('catalog/stocks', 'token=' . $this->session->data['token']);
+			$this->data['waitlist_ready'] = $this->url->link('catalog/waitlist', 'filter_supplier_has=1&token=' . $this->session->data['token']);
+			$this->data['waitlist_pre'] = $this->url->link('catalog/waitlist', 'filter_prewait=1&token=' . $this->session->data['token']);
+			$this->data['review'] = $this->url->link('catalog/review', 'token=' . $this->session->data['token']);
+			$this->data['affiliate'] = $this->url->link('sale/affiliate', 'token=' . $this->session->data['token']);	
+			$this->data['shortnames'] = $this->url->link('catalog/shortnames', 'token=' . $this->session->data['token']);
 			
 			$this->template = 'homestats/headernotifications.tpl';
 			
@@ -398,26 +398,26 @@
 			$this->data['total_products_double_asin']			= $this->model_catalog_product->getTotalProductsWithDoubleAsin();
 
 			$this->data['total_products_invalid_asin']			= $this->model_catalog_product->getTotalProductsWithInvalidAsin();
-			$this->data['filter_total_products_invalid_asin'] 	= $this->url->link('catalog/product_ext', 'filter_asin=INVALID&token=' . $this->session->data['token'], 'SSL');
+			$this->data['filter_total_products_invalid_asin'] 	= $this->url->link('catalog/product_ext', 'filter_asin=INVALID&token=' . $this->session->data['token']);
 
 			$this->data['total_products'] 					= formatLongNumber($this->model_catalog_product->getTotalProductsSimple(), $format);
 			$this->data['total_products_no_variants']		= formatLongNumber($this->model_catalog_product->getTotalProductsSimpleNoVariants(), $format);
 
 			$this->data['total_product_enabled'] 			= formatLongNumber($this->model_catalog_product->getTotalProducts(['filter_status' => 1]));
-			$this->data['filter_total_products_enabled'] 	= $this->url->link('catalog/product_ext', 'filter_status=1&token=' . $this->session->data['token'], 'SSL');
+			$this->data['filter_total_products_enabled'] 	= $this->url->link('catalog/product_ext', 'filter_status=1&token=' . $this->session->data['token']);
 
 
 			$this->data['total_product_parsed'] 			= formatLongNumber($this->model_catalog_product->getTotalProductsFilled(), $format);
 			$this->data['total_product_need_to_be_parsed'] 	= formatLongNumber($this->model_catalog_product->getTotalProductsNeedToBeFilled(), $format);
-			$this->data['filter_total_product_parsed'] 		= $this->url->link('catalog/product_ext', 'filter_filled_from_amazon=1&token=' . $this->session->data['token'], 'SSL');
+			$this->data['filter_total_product_parsed'] 		= $this->url->link('catalog/product_ext', 'filter_filled_from_amazon=1&token=' . $this->session->data['token']);
 
 			$this->data['total_products_in_tech'] 			= $this->model_catalog_product->getTotalProducts(['filter_category_id' => $this->config->get('config_rainforest_default_technical_category_id')]);
-			$this->data['filter_total_products_in_tech'] 	= $this->url->link('catalog/product_ext', 'filter_category=' . $this->config->get('config_rainforest_default_technical_category_id') . '&token=' . $this->session->data['token'], 'SSL');
+			$this->data['filter_total_products_in_tech'] 	= $this->url->link('catalog/product_ext', 'filter_category=' . $this->config->get('config_rainforest_default_technical_category_id') . '&token=' . $this->session->data['token']);
 
 			$this->data['total_product_in_queue']				= $this->model_report_product->getCountWaitingInASINQueue();
 			$this->data['total_product_in_variants_queue']		= $this->model_report_product->getCountWaitingInVariantsQueue();
 			$this->data['total_products_in_queue_today']		= $this->model_report_product->getCountAddedTodayInASINQueue();
-			$this->data['filter_product_in_queue']				= $this->url->link('catalog/addasin', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['filter_product_in_queue']				= $this->url->link('catalog/addasin', 'token=' . $this->session->data['token']);
 
 			$this->data['total_product_got_offers']				= formatLongNumber($this->model_catalog_product->getTotalProductsGotOffers(), $format);
 			
@@ -431,15 +431,15 @@
 			$this->data['total_product_got_offers_yesterday']	= formatLongNumber($this->model_catalog_product->getTotalProductsGotOffersByDate(date('Y-m-d', strtotime('-1 day'))), $format);
 
 			$this->data['total_product_have_offers']			= formatLongNumber($this->model_catalog_product->getTotalProductsHaveOffers(), $format);
-			$this->data['filter_total_product_have_offers'] 	= $this->url->link('catalog/product_ext', 'filter_stock_status=' . $this->config->get('config_stock_status_id') . '&token=' . $this->session->data['token'], 'SSL');
+			$this->data['filter_total_product_have_offers'] 	= $this->url->link('catalog/product_ext', 'filter_stock_status=' . $this->config->get('config_stock_status_id') . '&token=' . $this->session->data['token']);
 			$this->data['total_product_have_no_offers']			= formatLongNumber($this->model_catalog_product->getTotalProductsHaveNoOffers(), $format);
-			$this->data['filter_total_product_have_no_offers'] 	= $this->url->link('catalog/product_ext', 'filter_stock_status=' . $this->config->get('config_rainforest_nooffers_status_id') . '&token=' . $this->session->data['token'], 'SSL');
+			$this->data['filter_total_product_have_no_offers'] 	= $this->url->link('catalog/product_ext', 'filter_stock_status=' . $this->config->get('config_rainforest_nooffers_status_id') . '&token=' . $this->session->data['token']);
 
 			$this->data['total_products_added_today'] 			= formatLongNumber($this->model_catalog_product->getTotalProductsAdded(date('Y-m-d')), $format);
-			$this->data['filter_total_products_added_today'] 	= $this->url->link('catalog/product_ext', 'filter_date_added=' . date('Y-m-d') . '&token=' . $this->session->data['token'], 'SSL');
+			$this->data['filter_total_products_added_today'] 	= $this->url->link('catalog/product_ext', 'filter_date_added=' . date('Y-m-d') . '&token=' . $this->session->data['token']);
 
 			$this->data['total_products_added_yesterday'] 			= formatLongNumber($this->model_catalog_product->getTotalProductsAdded(date('Y-m-d', strtotime('-1 day'))), $format);
-			$this->data['filter_total_products_added_yesterday'] 	= $this->url->link('catalog/product_ext', 'filter_date_added=' . date('Y-m-d', strtotime('-1 day')) . '&token=' . $this->session->data['token'], 'SSL');
+			$this->data['filter_total_products_added_yesterday'] 	= $this->url->link('catalog/product_ext', 'filter_date_added=' . date('Y-m-d', strtotime('-1 day')) . '&token=' . $this->session->data['token']);
 
 			$this->data['total_products_added_week'] 				= formatLongNumber($this->model_catalog_product->getTotalProductsAdded(['from' => date('Y-m-d', strtotime('-1 week')), 'to' => date('Y-m-d')]), $format);
 			$this->data['total_products_added_month'] 				= formatLongNumber($this->model_catalog_product->getTotalProductsAdded(['from' => date('Y-m-d', strtotime('-1 month')), 'to' => date('Y-m-d')]), $format);
@@ -640,7 +640,7 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
@@ -650,21 +650,21 @@
 			$this->data['managers'] = $this->model_user_user->getUsersByGroups(array(12, 19), true);
 			
 			// Для _sales
-			$this->data['order_url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['fucked_link_url'] = $this->url->link('sale/order', 'filter_order_status_id=0&token=' . $this->session->data['token'], 'SSL');
+			$this->data['order_url'] = $this->url->link('sale/order', 'token=' . $this->session->data['token']);
+			$this->data['fucked_link_url'] = $this->url->link('sale/order', 'filter_order_status_id=0&token=' . $this->session->data['token']);
 			
 			$this->load->model('setting/store');
 			$this->load->model('sale/order');
 			$this->load->model('localisation/country');					
 			
-			$this->data['waitlist_url'] = $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['parties_url'] = $this->url->link('catalog/parties', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['stocks_url'] = $this->url->link('catalog/stocks', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['sale_return_url'] = $this->url->link('sale/return', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['sale_coupon_url'] = $this->url->link('sale/coupon', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['customer_url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['customer_group_url'] = $this->url->link('sale/customer_group', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['callback_url'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['waitlist_url'] = $this->url->link('catalog/waitlist', 'token=' . $this->session->data['token']);
+			$this->data['parties_url'] = $this->url->link('catalog/parties', 'token=' . $this->session->data['token']);
+			$this->data['stocks_url'] = $this->url->link('catalog/stocks', 'token=' . $this->session->data['token']);
+			$this->data['sale_return_url'] = $this->url->link('sale/return', 'token=' . $this->session->data['token']);
+			$this->data['sale_coupon_url'] = $this->url->link('sale/coupon', 'token=' . $this->session->data['token']);
+			$this->data['customer_url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token']);
+			$this->data['customer_group_url'] = $this->url->link('sale/customer_group', 'token=' . $this->session->data['token']);
+			$this->data['callback_url'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token']);
 			$this->load->model('sale/callback');
 			$this->data['total_callbacks'] = $this->model_sale_callback->getOpenedCallBacks();
 			
@@ -681,36 +681,36 @@
 			}
 			
 			// Для _content
-			$this->data['keyworder_link'] = $this->url->link('module/keyworder', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['category_link'] = $this->url->link('catalog/category', 'token=' . $this->session->data['token'], 'SSL');		
-			$this->data['batch_editor_link'] = $this->url->link('module/batch_editor', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['banner_url'] = $this->url->link('module/mattimeobanner', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['csv_pro_url'] = $this->url->link('module/csvprice_pro', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['information_link'] = $this->url->link('catalog/information', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['lp_link'] = $this->url->link('catalog/landingpage', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['faq_url'] = $this->url->link('module/faq_system', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['shortnames'] = $this->url->link('catalog/shortnames', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['keyworder_link'] = $this->url->link('module/keyworder', 'token=' . $this->session->data['token']);
+			$this->data['category_link'] = $this->url->link('catalog/category', 'token=' . $this->session->data['token']);		
+			$this->data['batch_editor_link'] = $this->url->link('module/batch_editor', 'token=' . $this->session->data['token']);
+			$this->data['banner_url'] = $this->url->link('module/mattimeobanner', 'token=' . $this->session->data['token']);
+			$this->data['csv_pro_url'] = $this->url->link('module/csvprice_pro', 'token=' . $this->session->data['token']);
+			$this->data['information_link'] = $this->url->link('catalog/information', 'token=' . $this->session->data['token']);
+			$this->data['lp_link'] = $this->url->link('catalog/landingpage', 'token=' . $this->session->data['token']);
+			$this->data['faq_url'] = $this->url->link('module/faq_system', 'token=' . $this->session->data['token']);
+			$this->data['shortnames'] = $this->url->link('catalog/shortnames', 'token=' . $this->session->data['token']);
 
-			$this->data['product'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['product'] = $this->url->link('catalog/product', 'token=' . $this->session->data['token']);
             if ($this->config->get('admin_quick_edit_status') && $this->config->get('aqe_catalog_products_status') && isset($this->session->data['token'])) {
-                $this->data['product'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'], 'SSL');
+                $this->data['product'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token']);
             }
-			$this->data['addasin'] = $this->url->link('catalog/addasin', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['product_deletedasin'] = $this->url->link('report/product_deletedasin', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['addasin'] = $this->url->link('catalog/addasin', 'token=' . $this->session->data['token']);
+			$this->data['product_deletedasin'] = $this->url->link('report/product_deletedasin', 'token=' . $this->session->data['token']);
 			
 			// Модули товаров
-			$this->data['module_product_alsopurchased'] = $this->url->link('module/alsopurchased', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['module_product_bestseller'] = $this->url->link('module/bestseller', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['module_product_featured'] = $this->url->link('module/featured', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['module_product_latest'] = $this->url->link('module/latest', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['module_product_faproduct'] = $this->url->link('module/faproduct', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['module_product_featuredreview'] = $this->url->link('module/featuredreview', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['module_product_alsopurchased'] = $this->url->link('module/alsopurchased', 'token=' . $this->session->data['token']);
+			$this->data['module_product_bestseller'] = $this->url->link('module/bestseller', 'token=' . $this->session->data['token']);
+			$this->data['module_product_featured'] = $this->url->link('module/featured', 'token=' . $this->session->data['token']);
+			$this->data['module_product_latest'] = $this->url->link('module/latest', 'token=' . $this->session->data['token']);
+			$this->data['module_product_faproduct'] = $this->url->link('module/faproduct', 'token=' . $this->session->data['token']);
+			$this->data['module_product_featuredreview'] = $this->url->link('module/featuredreview', 'token=' . $this->session->data['token']);
 			
-			$this->data['mreport_ttnscan'] = $this->url->link('report/mreports', 'report=ttnscan&token=' . $this->session->data['token'], 'SSL');
-			$this->data['mreport_needtocall'] = $this->url->link('report/mreports', 'report=needtocall&token=' . $this->session->data['token'], 'SSL');
-			$this->data['mreport_nopaid'] = $this->url->link('report/mreports', 'report=nopaid&token=' . $this->session->data['token'], 'SSL');
-			$this->data['mreport_minusscan'] = $this->url->link('report/mreports', 'report=minusscan&token=' . $this->session->data['token'], 'SSL');
-			$this->data['mreport_forgottencart'] = $this->url->link('report/mreports', 'report=forgottencart&token=' . $this->session->data['token'], 'SSL');
+			$this->data['mreport_ttnscan'] = $this->url->link('report/mreports', 'report=ttnscan&token=' . $this->session->data['token']);
+			$this->data['mreport_needtocall'] = $this->url->link('report/mreports', 'report=needtocall&token=' . $this->session->data['token']);
+			$this->data['mreport_nopaid'] = $this->url->link('report/mreports', 'report=nopaid&token=' . $this->session->data['token']);
+			$this->data['mreport_minusscan'] = $this->url->link('report/mreports', 'report=minusscan&token=' . $this->session->data['token']);
+			$this->data['mreport_forgottencart'] = $this->url->link('report/mreports', 'report=forgottencart&token=' . $this->session->data['token']);
 			
 			
 			$this->template = 'common/home.tpl';

@@ -99,17 +99,17 @@ class ControllerModuleReferrer extends Controller {
         }
 
         $this->data['breadcrumbs'] = array();
-        $this->data['breadcrumbs'][] = array('text' => $this->language->get('text_home'), 'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'), 'separator' => false);
+        $this->data['breadcrumbs'][] = array('text' => $this->language->get('text_home'), 'href' => $this->url->link('common/home', 'token=' . $this->session->data['token']), 'separator' => false);
         $this->data['breadcrumbs'][] = array(
             'text'      => $this->language->get('text_module'),
-            'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+            'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
             'separator' => ' :: '
         );
-        $this->data['breadcrumbs'][] = array('text' => $this->language->get('heading_title'), 'href' => $this->url->link('module/referrer', 'token=' . $this->session->data['token'] . $url, 'SSL'), 'separator' => ' :: ');
+        $this->data['breadcrumbs'][] = array('text' => $this->language->get('heading_title'), 'href' => $this->url->link('module/referrer', 'token=' . $this->session->data['token'] . $url), 'separator' => ' :: ');
 
-        $this->data['insert'] = $this->url->link('module/referrer/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $this->data['delete'] = $this->url->link('module/referrer/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $this->data['save'] = $this->url->link('module/referrer/update', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $this->data['insert'] = $this->url->link('module/referrer/insert', 'token=' . $this->session->data['token'] . $url);
+        $this->data['delete'] = $this->url->link('module/referrer/delete', 'token=' . $this->session->data['token'] . $url);
+        $this->data['save'] = $this->url->link('module/referrer/update', 'token=' . $this->session->data['token'] . $url);
 
         $this->data['patterns'] = array();
 
@@ -178,9 +178,9 @@ class ControllerModuleReferrer extends Controller {
             $url .= '&page=' . $this->request->get['page'];
         }
 
-        $this->data['sort_name'] = $this->url->link('module/referrer', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-        $this->data['sort_url_param'] = $this->url->link('module/referrer', 'token=' . $this->session->data['token'] . '&sort=url_mask' . $url, 'SSL');
-        $this->data['sort_url_mask'] = $this->url->link('module/referrer', 'token=' . $this->session->data['token'] . '&sort=url_param' . $url, 'SSL');
+        $this->data['sort_name'] = $this->url->link('module/referrer', 'token=' . $this->session->data['token'] . '&sort=name' . $url);
+        $this->data['sort_url_param'] = $this->url->link('module/referrer', 'token=' . $this->session->data['token'] . '&sort=url_mask' . $url);
+        $this->data['sort_url_mask'] = $this->url->link('module/referrer', 'token=' . $this->session->data['token'] . '&sort=url_param' . $url);
 
         $url = '';
 
@@ -197,7 +197,7 @@ class ControllerModuleReferrer extends Controller {
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_admin_limit');
         $pagination->text = $this->language->get('text_pagination');
-        $pagination->url = $this->url->link('module/referrer', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('module/referrer', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 
         $this->data['pagination'] = $pagination->render();
 

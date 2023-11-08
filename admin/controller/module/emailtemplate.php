@@ -39,14 +39,14 @@ class ControllerModuleEmailtemplate extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
-		$this->data['action'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'], 'SSL');
-		$this->data['cancel'] = $this->url->link('extension/module', 'token='.$this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token']);
+		$this->data['cancel'] = $this->url->link('extension/module', 'token='.$this->session->data['token']);
 
-		$this->data['config_url'] = $this->url->link('module/emailtemplate/config', 'token='.$this->session->data['token'] . '&id=1', 'SSL');
-		$this->data['templates_url'] = $this->url->link('module/emailtemplate/templates', 'token='.$this->session->data['token'], 'SSL');
-		$this->data['test_url'] = $this->url->link('module/emailtemplate/test', 'token='.$this->session->data['token'], 'SSL');
-		$this->data['logs_url'] = $this->url->link('module/emailtemplate/logs', 'token='.$this->session->data['token'], 'SSL');
-		$this->data['language_url'] = $this->url->link('module/emailtemplate/language_files', 'token='.$this->session->data['token'].'&id='.$this->config->get('config_language_id'), 'SSL');
+		$this->data['config_url'] = $this->url->link('module/emailtemplate/config', 'token='.$this->session->data['token'] . '&id=1');
+		$this->data['templates_url'] = $this->url->link('module/emailtemplate/templates', 'token='.$this->session->data['token']);
+		$this->data['test_url'] = $this->url->link('module/emailtemplate/test', 'token='.$this->session->data['token']);
+		$this->data['logs_url'] = $this->url->link('module/emailtemplate/logs', 'token='.$this->session->data['token']);
+		$this->data['language_url'] = $this->url->link('module/emailtemplate/language_files', 'token='.$this->session->data['token'].'&id='.$this->config->get('config_language_id'));
 		$this->data['support_url'] = '';
 
 		/*$classVQMod = new ReflectionClass('VQMod');
@@ -70,7 +70,7 @@ class ControllerModuleEmailtemplate extends Controller {
 			$i++;
 		}
 
-		$this->data['new_template'] = $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token'], 'SSL');
+		$this->data['new_template'] = $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token']);
 
 		$this->_template_list();
 
@@ -398,13 +398,13 @@ class ControllerModuleEmailtemplate extends Controller {
 		$this->data['total'] = $total;
 
 		foreach(array('subject', 'to', 'from',  'sent', 'read', 'store', 'emailtemplate') as $var){
-			$this->data['sort_'.$var] = $this->url->link('module/emailtemplate/logs', 'token='.$this->session->data['token'] . '&sort=' . $var . $url, 'SSL');
+			$this->data['sort_'.$var] = $this->url->link('module/emailtemplate/logs', 'token='.$this->session->data['token'] . '&sort=' . $var . $url);
 		}
 
-		$link = $this->url->link('module/emailtemplate/logs', 'token='.$this->session->data['token'] . $url . '&page={page}', 'SSL');
+		$link = $this->url->link('module/emailtemplate/logs', 'token='.$this->session->data['token'] . $url . '&page={page}');
 		$this->data['pagination'] = $this->_renderPagination($link, $page, $total, $limit, 'select');
 
-		$this->data['action'] = $this->url->link('module/emailtemplate/logs', 'token='.$this->session->data['token'] . $url, 'SSL');
+		$this->data['action'] = $this->url->link('module/emailtemplate/logs', 'token='.$this->session->data['token'] . $url);
 
 		if (isset($this->request->get['page'])) {
 			$url .= '&page=' . $this->request->get['page'];
@@ -412,8 +412,8 @@ class ControllerModuleEmailtemplate extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 		$this->data['url_params'] = $url;
-		$this->data['action'] = $this->url->link('module/emailtemplate/logs', 'token='.$this->session->data['token'] . $url, 'SSL');
-		$this->data['cancel'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('module/emailtemplate/logs', 'token='.$this->session->data['token'] . $url);
+		$this->data['cancel'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token']);
 
 		$this->data['logs'] = array();
 
@@ -445,7 +445,7 @@ class ControllerModuleEmailtemplate extends Controller {
 			if($row['emailtemplate_id']){
 				$row['emailtemplate'] = $this->model_module_emailtemplate->getTemplate($row['emailtemplate_id'], $this->config->get('config_language_id'), true);
 				if($row['emailtemplate']){
-					$row['emailtemplate']['url_edit'] = $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token'] . '&id=' . $row['emailtemplate_id'], 'SSL');
+					$row['emailtemplate']['url_edit'] = $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token'] . '&id=' . $row['emailtemplate_id']);
 				}
 			}
 
@@ -459,14 +459,14 @@ class ControllerModuleEmailtemplate extends Controller {
 				$customer = $this->model_sale_customer->getCustomer($row['customer_id']);
 				if($customer){
 					$row['customer'] = $customer;
-					$row['customer']['url_edit'] = $this->url->link('sale/customer/update', 'token='.$this->session->data['token'] . '&customer_id=' . $row['customer_id'], 'SSL');
+					$row['customer']['url_edit'] = $this->url->link('sale/customer/update', 'token='.$this->session->data['token'] . '&customer_id=' . $row['customer_id']);
 				}
 			} else {
 				$customer = $this->model_sale_customer->getCustomerByEmail($row['to']);
 				if($customer){
 					$row['customer'] = $customer;
 					$row['customer_id'] = $customer['customer_id'];
-					$row['customer']['url_edit'] = $this->url->link('sale/customer/update', 'token='.$this->session->data['token'] . '&customer_id=' . $row['customer_id'], 'SSL');
+					$row['customer']['url_edit'] = $this->url->link('sale/customer/update', 'token='.$this->session->data['token'] . '&customer_id=' . $row['customer_id']);
 				}
 			}
 
@@ -790,8 +790,8 @@ class ControllerModuleEmailtemplate extends Controller {
 			'params' => '&id='.$this->data['id']
 		)));
 
-		$this->data['action'] = $this->url->link('module/emailtemplate/language_files', 'token='.$this->session->data['token'] . '&id=' . $this->data['id'], 'SSL');
-		$this->data['cancel'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('module/emailtemplate/language_files', 'token='.$this->session->data['token'] . '&id=' . $this->data['id']);
+		$this->data['cancel'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token']);
 
 		switch($this->data['type']){
 			case 'admin':
@@ -928,8 +928,8 @@ class ControllerModuleEmailtemplate extends Controller {
 			)
 		));
 
-		$this->data['action'] = $this->url->link('module/emailtemplate/language_file', 'token='.$this->session->data['token'].'&file='.$this->data['file'].'&type='.$this->data['type'], 'SSL');
-		$this->data['cancel'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('module/emailtemplate/language_file', 'token='.$this->session->data['token'].'&file='.$this->data['file'].'&type='.$this->data['type']);
+		$this->data['cancel'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token']);
 
 		# Load language
 		$language = new Language($language);
@@ -1078,8 +1078,8 @@ class ControllerModuleEmailtemplate extends Controller {
 			)
 		), false);
 
-		$this->data['action'] = $this->url->link('module/emailtemplate/installer', 'token='.$this->data['token'], 'SSL');
-		$this->data['cancel'] = $this->url->link('extension/module', 'token='.$this->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('module/emailtemplate/installer', 'token='.$this->data['token']);
+		$this->data['cancel'] = $this->url->link('extension/module', 'token='.$this->data['token']);
 
 		$this->data['install_cleanup'] = false;
 
@@ -1142,11 +1142,11 @@ class ControllerModuleEmailtemplate extends Controller {
 		$this->load->model('sale/customer_group');
 
 		$this->data['token'] = $this->session->data['token'];
-		$this->data['action'] = $this->url->link('module/emailtemplate/config', 'token='.$this->session->data['token'] . '&id=' . $this->data['emailtemplate_config_id'], 'SSL');
+		$this->data['action'] = $this->url->link('module/emailtemplate/config', 'token='.$this->session->data['token'] . '&id=' . $this->data['emailtemplate_config_id']);
 		if($this->data['emailtemplate_config_id'] != 1){
-			$this->data['action_delete'] = $this->url->link('module/emailtemplate/config_delete', 'token='.$this->session->data['token'] . '&id=' . $this->data['emailtemplate_config_id'], 'SSL');
+			$this->data['action_delete'] = $this->url->link('module/emailtemplate/config_delete', 'token='.$this->session->data['token'] . '&id=' . $this->data['emailtemplate_config_id']);
 		}
-		$this->data['cancel'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token']);
 
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
 		$this->data['stores'] = $this->model_module_emailtemplate->getStores();
@@ -1199,9 +1199,9 @@ class ControllerModuleEmailtemplate extends Controller {
 				$item['emailtemplate_config_modified'] = '';
 			}
 
-			$item['action'] = $this->url->link('module/emailtemplate/config', 'token='.$this->session->data['token'] . '&id=' . $item['emailtemplate_config_id'], 'SSL');
+			$item['action'] = $this->url->link('module/emailtemplate/config', 'token='.$this->session->data['token'] . '&id=' . $item['emailtemplate_config_id']);
 			if($item['emailtemplate_config_id'] != 1){
-				$item['action_delete'] = $this->url->link('module/emailtemplate/config_delete', 'token='.$this->session->data['token'] . '&id=' . $item['emailtemplate_config_id'], 'SSL');
+				$item['action_delete'] = $this->url->link('module/emailtemplate/config_delete', 'token='.$this->session->data['token'] . '&id=' . $item['emailtemplate_config_id']);
 			}
 
 			# Clean up column names
@@ -1263,16 +1263,16 @@ class ControllerModuleEmailtemplate extends Controller {
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
 
-		$this->data['sort_name'] = $this->url->link('module/emailtemplate/config', 'token='.$this->session->data['token'] . '&sort=name' . $url, 'SSL');
-		$this->data['sort_modified'] = $this->url->link('module/emailtemplate/config', 'token='.$this->session->data['token'] . '&sort=modified' . $url, 'SSL');
-		$this->data['sort_language'] = $this->url->link('module/emailtemplate/config', 'token='.$this->session->data['token'] . '&sort=language' . $url, 'SSL');
-		$this->data['sort_store'] = $this->url->link('module/emailtemplate/config', 'token='.$this->session->data['token'] . '&sort=store' . $url, 'SSL');
-		$this->data['sort_customer_group'] = $this->url->link('module/emailtemplate/config', 'token='.$this->session->data['token'] . '&sort=customer_group' . $url, 'SSL');
+		$this->data['sort_name'] = $this->url->link('module/emailtemplate/config', 'token='.$this->session->data['token'] . '&sort=name' . $url);
+		$this->data['sort_modified'] = $this->url->link('module/emailtemplate/config', 'token='.$this->session->data['token'] . '&sort=modified' . $url);
+		$this->data['sort_language'] = $this->url->link('module/emailtemplate/config', 'token='.$this->session->data['token'] . '&sort=language' . $url);
+		$this->data['sort_store'] = $this->url->link('module/emailtemplate/config', 'token='.$this->session->data['token'] . '&sort=store' . $url);
+		$this->data['sort_customer_group'] = $this->url->link('module/emailtemplate/config', 'token='.$this->session->data['token'] . '&sort=customer_group' . $url);
 
 
 		$result = $this->db->query("SELECT `order_id` FROM `" . DB_PREFIX . "order` WHERE `store_id` = '{$store_id}' AND (`language_id` = '{$language_id}' OR `language_id` > 0) AND order_status_id > '0' ORDER BY `order_id` DESC LIMIT 1");
 		if($result->row){
-			$this->data['invoice_preview'] = $this->url->link('module/emailtemplate/preview_invoice', 'token='.$this->session->data['token'] . '&order_id='.$result->row['order_id'], 'SSL');
+			$this->data['invoice_preview'] = $this->url->link('module/emailtemplate/preview_invoice', 'token='.$this->session->data['token'] . '&order_id='.$result->row['order_id']);
 			$this->data['preview_order_id'] = $result->row['order_id'];
 		} else {
 			$this->data['error_preview'] = $this->language->get('error_preview_order');
@@ -1508,8 +1508,8 @@ class ControllerModuleEmailtemplate extends Controller {
 				'status'      	=> $item['emailtemplate_status'],
 				'default'      	=> $item['emailtemplate_default'],
 				'shortcodes'    => $item['emailtemplate_shortcodes'],
-				'action'		=> $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token'] . '&id=' . $item['emailtemplate_id'], 'SSL'),
-				'action_delete' => $this->url->link('module/emailtemplate/delete_template', 'token='.$this->session->data['token'] . '&id=' . $item['emailtemplate_id'], 'SSL'),
+				'action'		=> $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token'] . '&id=' . $item['emailtemplate_id']),
+				'action_delete' => $this->url->link('module/emailtemplate/delete_template', 'token='.$this->session->data['token'] . '&id=' . $item['emailtemplate_id']),
 				'selected'	  	=> isset($this->request->post['selected']) && in_array($item['emailtemplate_id'], $this->request->post['selected'])
 			);
 
@@ -1550,18 +1550,18 @@ class ControllerModuleEmailtemplate extends Controller {
 			$url .= '&page=' . $data['page'];
 		}
 
-		$this->data['template_delete'] = $this->url->link('module/emailtemplate/delete_template', 'token='.$this->session->data['token'], 'SSL');
+		$this->data['template_delete'] = $this->url->link('module/emailtemplate/delete_template', 'token='.$this->session->data['token']);
 
-		$this->data['sort_label'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=label' . $url, 'SSL');
-		$this->data['sort_key'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=key' . $url, 'SSL');
-		$this->data['sort_template'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=template' . $url, 'SSL');
-		$this->data['sort_shortcodes'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=shortcodes' . $url, 'SSL');
-		$this->data['sort_default'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=default' . $url, 'SSL');
-		$this->data['sort_modified'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=modified' . $url, 'SSL');
-		$this->data['sort_content'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=content' . $url, 'SSL');
-		$this->data['sort_status'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=status' . $url, 'SSL');
-		$this->data['sort_store'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=store' . $url, 'SSL');
-		$this->data['sort_customer_group'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=customer_group' . $url, 'SSL');
+		$this->data['sort_label'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=label' . $url);
+		$this->data['sort_key'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=key' . $url);
+		$this->data['sort_template'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=template' . $url);
+		$this->data['sort_shortcodes'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=shortcodes' . $url);
+		$this->data['sort_default'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=default' . $url);
+		$this->data['sort_modified'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=modified' . $url);
+		$this->data['sort_content'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=content' . $url);
+		$this->data['sort_status'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=status' . $url);
+		$this->data['sort_store'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=store' . $url);
+		$this->data['sort_customer_group'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . '&sort=customer_group' . $url);
 
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
@@ -1574,7 +1574,7 @@ class ControllerModuleEmailtemplate extends Controller {
 			$url .= '&order=' . $data['order'];
 		}
 
-		$link = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . $url . '&page={page}', 'SSL');
+		$link = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'] . $url . '&page={page}');
 		$this->data['pagination'] = $this->_renderPagination($link, $page, $templates_total, $limit);
 
 		$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
@@ -1625,7 +1625,7 @@ class ControllerModuleEmailtemplate extends Controller {
 				'code' 	   => $item['emailtemplate_shortcode_code'],
 				'type' 	   => $item['emailtemplate_shortcode_type'],
 				'example'  => $item['emailtemplate_shortcode_example'],
-				'url_edit'  => $this->url->link('module/emailtemplate/template_shortcode', 'token='.$this->session->data['token'].'&id='.$item['emailtemplate_shortcode_id'], 'SSL'),
+				'url_edit'  => $this->url->link('module/emailtemplate/template_shortcode', 'token='.$this->session->data['token'].'&id='.$item['emailtemplate_shortcode_id']),
 				'selected' => isset($this->request->post['selected']) && in_array($item['emailtemplate_shortcode_id'], $this->request->post['selected'])
 			);
 
@@ -1642,10 +1642,10 @@ class ControllerModuleEmailtemplate extends Controller {
 			$url .= '&id='.$this->request->get['id'];
 		}
 
-		$this->data['sort_code'] = $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token'] . '&sort=code' . $url, 'SSL');
-		$this->data['sort_example'] = $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token'] . '&sort=example' . $url, 'SSL');
+		$this->data['sort_code'] = $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token'] . '&sort=code' . $url);
+		$this->data['sort_example'] = $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token'] . '&sort=example' . $url);
 
-		$this->data['shortcodes_delete'] = $this->url->link('module/emailtemplate/delete_shortcode', 'token='.$this->session->data['token'] . '&id='.$this->request->get['id'], 'SSL');
+		$this->data['shortcodes_delete'] = $this->url->link('module/emailtemplate/delete_shortcode', 'token='.$this->session->data['token'] . '&id='.$this->request->get['id']);
 
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
@@ -1667,10 +1667,10 @@ class ControllerModuleEmailtemplate extends Controller {
 		$this->data['token'] = $this->session->data['token'];
 
 		if (isset($this->request->get['id'])) {
-			$this->data['action'] = $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token'] . '&id=' . $this->request->get['id'], 'SSL');
+			$this->data['action'] = $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token'] . '&id=' . $this->request->get['id']);
 
 			if($this->request->get['id'] != 1){
-				$this->data['action_delete'] = $this->url->link('module/emailtemplate/delete_template', 'token='.$this->session->data['token'] . '&id='.$this->request->get['id'], 'SSL');
+				$this->data['action_delete'] = $this->url->link('module/emailtemplate/delete_template', 'token='.$this->session->data['token'] . '&id='.$this->request->get['id']);
 			}
 
 			$emailtemplate = $this->model_module_emailtemplate->getTemplate($this->request->get['id'], 0);
@@ -1704,7 +1704,7 @@ class ControllerModuleEmailtemplate extends Controller {
 					$this->data['default_emailtemplate_id'] = $templates[0]['emailtemplate_id'];
 				}
 
-				$this->data['template_default_url'] = $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token'] . '&id='.$this->data['default_emailtemplate_id'], 'SSL');
+				$this->data['template_default_url'] = $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token'] . '&id='.$this->data['default_emailtemplate_id']);
 			}
 
 			$this->_template_list(array(
@@ -1722,14 +1722,14 @@ class ControllerModuleEmailtemplate extends Controller {
 				}
 			}
 
-			$this->data['new_template'] = $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token'] . '&key=' . $emailtemplate['emailtemplate_key'], 'SSL');
+			$this->data['new_template'] = $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token'] . '&key=' . $emailtemplate['emailtemplate_key']);
 
 			$this->_breadcrumbs(array('heading_template' => array(
 				'link' => 'module/emailtemplate/template',
 				'params' => '&id='.$this->request->get['id']
 			)));
 		} else {
-			$this->data['action'] = $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token'], 'SSL');
+			$this->data['action'] = $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token']);
 
 			$this->data['insertMode'] = true;
 
@@ -1756,8 +1756,8 @@ class ControllerModuleEmailtemplate extends Controller {
 		}
 		$this->_setTitle($title);
 
-		$this->data['cancel'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token'], 'SSL');
-		$this->data['css_url'] = $this->url->link('module/emailtemplate/css', 'token='.$this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('module/emailtemplate', 'token='.$this->session->data['token']);
+		$this->data['css_url'] = $this->url->link('module/emailtemplate/css', 'token='.$this->session->data['token']);
 
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
 
@@ -1856,7 +1856,7 @@ class ControllerModuleEmailtemplate extends Controller {
 
 		$this->data['token'] = $this->session->data['token'];
 
-		$this->data['action'] = $this->url->link('module/emailtemplate/template_shortcode', 'token='.$this->session->data['token'] . '&id=' . $this->request->get['id'], 'SSL');
+		$this->data['action'] = $this->url->link('module/emailtemplate/template_shortcode', 'token='.$this->session->data['token'] . '&id=' . $this->request->get['id']);
 
 		$shortcodes = $this->model_module_emailtemplate->getTemplateShortcodes(array('emailtemplate_shortcode_id' => $this->request->get['id']));
 		$shortcode = $shortcodes[0];
@@ -1868,7 +1868,7 @@ class ControllerModuleEmailtemplate extends Controller {
 
 		$this->_setTitle($this->language->get('heading_template_shortcode') . ' - ' . $shortcode['emailtemplate_shortcode_code']);
 
-		$this->data['cancel'] = $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token'] . '&id=' . $shortcode['emailtemplate_id'], 'SSL');
+		$this->data['cancel'] = $this->url->link('module/emailtemplate/template', 'token='.$this->session->data['token'] . '&id=' . $shortcode['emailtemplate_id']);
 
 		$this->data['shortcode'] = array();
 		$cols = EmailTemplateShortCodesDAO::describe();
@@ -1934,7 +1934,7 @@ class ControllerModuleEmailtemplate extends Controller {
 		foreach ($bc_map as $name => $item) {
 			$bc[]= array(
 				'text'      => $this->language->get($name),
-				'href'      => $this->url->link($item['link'], 'token='.$this->session->data['token'] . (isset($item['params']) ? $item['params'] : ''), 'SSL'),
+				'href'      => $this->url->link($item['link'], 'token='.$this->session->data['token'] . (isset($item['params']) ? $item['params'] : '')),
 				'separator' => isset($item['separator']) ? $item['separator'] : ' :: '
 			);
 		}
@@ -2212,7 +2212,7 @@ class ControllerModuleEmailtemplate extends Controller {
 
 	private function _link($link, $isAdmin = false){
 		if($isAdmin){
-			return $this->url->link($link, 'token='.$this->session->data['token'], 'SSL');
+			return $this->url->link($link, 'token='.$this->session->data['token']);
 		} else {
 			if($this->config->get('config_secure') && defined('HTTPS_SERVER') && defined('HTTPS_CATALOG')){
 				return str_replace(HTTPS_SERVER, HTTPS_CATALOG, $this->url->link($link, '', 'SSL'));

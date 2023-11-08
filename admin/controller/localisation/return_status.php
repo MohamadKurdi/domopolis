@@ -147,18 +147,18 @@ class ControllerLocalisationReturnStatus extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('localisation/return_status', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('localisation/return_status', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
-		$this->data['insert'] = $this->url->link('localisation/return_status/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['delete'] = $this->url->link('localisation/return_status/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');	
+		$this->data['insert'] = $this->url->link('localisation/return_status/insert', 'token=' . $this->session->data['token'] . $url);
+		$this->data['delete'] = $this->url->link('localisation/return_status/delete', 'token=' . $this->session->data['token'] . $url);	
 
 		$this->data['return_statuses'] = array();
 
@@ -225,7 +225,7 @@ class ControllerLocalisationReturnStatus extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['sort_name'] = $this->url->link('localisation/return_status', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
+		$this->data['sort_name'] = $this->url->link('localisation/return_status', 'token=' . $this->session->data['token'] . '&sort=name' . $url);
 
 		$url = '';
 
@@ -242,7 +242,7 @@ class ControllerLocalisationReturnStatus extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get('config_admin_limit');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('localisation/return_status', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('localisation/return_status', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 
 		$this->data['pagination'] = $pagination->render();
 
@@ -296,23 +296,23 @@ class ControllerLocalisationReturnStatus extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('localisation/return_status', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('localisation/return_status', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
 		if (!isset($this->request->get['return_status_id'])) {
-			$this->data['action'] = $this->url->link('localisation/return_status/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('localisation/return_status/insert', 'token=' . $this->session->data['token'] . $url);
 		} else {
-			$this->data['action'] = $this->url->link('localisation/return_status/update', 'token=' . $this->session->data['token'] . '&return_status_id=' . $this->request->get['return_status_id'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('localisation/return_status/update', 'token=' . $this->session->data['token'] . '&return_status_id=' . $this->request->get['return_status_id'] . $url);
 		}
 
-		$this->data['cancel'] = $this->url->link('localisation/return_status', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['cancel'] = $this->url->link('localisation/return_status', 'token=' . $this->session->data['token'] . $url);
 
 		$this->load->model('localisation/language');
 

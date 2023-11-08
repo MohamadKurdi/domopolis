@@ -10,13 +10,13 @@ class ControllerLocalisationOrderBottomForms extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => 'Редактирование шаблонов подтверждения заказа',
-			'href'      => $this->url->link('localisation/order_bottom_forms', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('localisation/order_bottom_forms', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 		
@@ -48,7 +48,7 @@ class ControllerLocalisationOrderBottomForms extends Controller {
 			$this->data['text_to_edit'] = false;
 		}
 		
-		$this->data['action'] = $this->url->link('localisation/order_bottom_forms/save', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('localisation/order_bottom_forms/save', 'token=' . $this->session->data['token']);
 		
 		$this->data['token'] = $this->session->data['token'];
 		

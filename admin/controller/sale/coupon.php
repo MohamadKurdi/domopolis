@@ -149,18 +149,18 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('sale/coupon', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('sale/coupon', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 			);
 			
-			$this->data['insert'] = $this->url->link('sale/coupon/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-			$this->data['delete'] = $this->url->link('sale/coupon/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['insert'] = $this->url->link('sale/coupon/insert', 'token=' . $this->session->data['token'] . $url);
+			$this->data['delete'] = $this->url->link('sale/coupon/delete', 'token=' . $this->session->data['token'] . $url);
 			
 			$this->data['coupons'] = array();
 			
@@ -235,7 +235,7 @@
 			$this->data['column_status'] = $this->language->get('column_status');
 			$this->data['column_action'] = $this->language->get('column_action');		
 			$this->data['button_insert_tracking'] = $this->language->get('button_insert_tracking');
-			$this->data['inserttracking'] = $this->url->link('sale/coupon/inserttracking', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['inserttracking'] = $this->url->link('sale/coupon/inserttracking', 'token=' . $this->session->data['token'] . $url);
 			$this->data['button_insert'] = $this->language->get('button_insert');
 			$this->data['button_delete'] = $this->language->get('button_delete');
 			
@@ -391,23 +391,23 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('sale/coupon', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('sale/coupon', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 			);
 			
 			if (!isset($this->request->get['coupon_id'])) {
-				$this->data['action'] = $this->url->link('sale/coupon/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+				$this->data['action'] = $this->url->link('sale/coupon/insert', 'token=' . $this->session->data['token'] . $url);
 				} else {
-				$this->data['action'] = $this->url->link('sale/coupon/update', 'token=' . $this->session->data['token'] . '&coupon_id=' . $this->request->get['coupon_id'] . $url, 'SSL');
+				$this->data['action'] = $this->url->link('sale/coupon/update', 'token=' . $this->session->data['token'] . '&coupon_id=' . $this->request->get['coupon_id'] . $url);
 			}
 			
-			$this->data['cancel'] = $this->url->link('sale/coupon', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['cancel'] = $this->url->link('sale/coupon', 'token=' . $this->session->data['token'] . $url);
 			
 			if (isset($this->request->get['coupon_id']) && (!$this->request->server['REQUEST_METHOD'] != 'POST')) {
 				$coupon_info = $this->model_sale_coupon->getCoupon($this->request->get['coupon_id']);
@@ -823,7 +823,7 @@
 			$pagination->total = $history_total;
 			$pagination->page = $page;
 			$pagination->limit = 10; 
-			$pagination->url = $this->url->link('sale/coupon/history', 'token=' . $this->session->data['token'] . '&coupon_id=' . $this->request->get['coupon_id'] . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('sale/coupon/history', 'token=' . $this->session->data['token'] . '&coupon_id=' . $this->request->get['coupon_id'] . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			
@@ -917,20 +917,20 @@
 			
 			$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('sale/coupon', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('sale/coupon', 'token=' . $this->session->data['token'] . $url),
       		'separator' => ' :: '
 			);
 			
-			$this->data['action'] = $this->url->link('sale/coupon/inserttracking', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('sale/coupon/inserttracking', 'token=' . $this->session->data['token'] . $url);
 			
 			
-			$this->data['cancel'] = $this->url->link('sale/coupon', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['cancel'] = $this->url->link('sale/coupon', 'token=' . $this->session->data['token'] . $url);
 			
 			if (isset($this->request->get['coupon_id']) && (!$this->request->server['REQUEST_METHOD'] != 'POST')) {
 				$coupon_info = $this->model_sale_coupon->getCoupon($this->request->get['coupon_id']);

@@ -42,7 +42,7 @@ class ControllerCommonReset extends Controller {
 
 			$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_reset'),
-				'href'      => $this->url->link('common/reset', '', 'SSL'),
+				'href'      => $this->url->link('common/reset', ''),
 				'separator' => $this->language->get('text_separator')
 			);
 
@@ -68,9 +68,9 @@ class ControllerCommonReset extends Controller {
 				$this->data['error_confirm'] = '';
 			}
 
-			$this->data['action'] = $this->url->link('common/reset', 'code=' . $code, 'SSL');
+			$this->data['action'] = $this->url->link('common/reset', 'code=' . $code);
 
-			$this->data['cancel'] = $this->url->link('common/login', '', 'SSL');
+			$this->data['cancel'] = $this->url->link('common/login', '');
 
 			if (isset($this->request->post['password'])) {
 				$this->data['password'] = $this->request->post['password'];

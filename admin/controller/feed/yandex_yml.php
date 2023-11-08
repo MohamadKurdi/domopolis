@@ -109,26 +109,26 @@ class ControllerFeedYandexYml extends Controller {
 		$this->data['breadcrumbs'] = array();
 
 		$this->data['breadcrumbs'][] = array(
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'text'      => $this->language->get('text_home'),
 			'separator' => FALSE
 		);
 
 		$this->data['breadcrumbs'][] = array(
-			'href'      => $this->url->link('extension/feed', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/feed', 'token=' . $this->session->data['token']),
 			'text'      => $this->language->get('text_feed'),
 			'separator' => ' :: '
 		);
 
 		$this->data['breadcrumbs'][] = array(
-			'href'      => $this->url->link('feed/yandex_yml', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('feed/yandex_yml', 'token=' . $this->session->data['token']),
 			'text'      => $this->language->get('heading_title'),
 			'separator' => ' :: '
 		);
 
-		$this->data['action'] = $this->url->link('feed/yandex_yml', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('feed/yandex_yml', 'token=' . $this->session->data['token']);
 
-		$this->data['cancel'] = $this->url->link('extension/feed', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('extension/feed', 'token=' . $this->session->data['token']);
 
 		if (isset($this->request->post['yandex_yml_status'])) {
 			$this->data['yandex_yml_status'] = $this->request->post['yandex_yml_status'];
@@ -251,7 +251,7 @@ class ControllerFeedYandexYml extends Controller {
 		}
 
 		//++++ Для вкладки аттрибутов ++++
-		$this->data['tab_attributes_description'] = str_replace('%attr_url%', $this->url->link('catalog/attribute', 'token=' . $this->session->data['token'], 'SSL'), $this->language->get('tab_attributes_description'));
+		$this->data['tab_attributes_description'] = str_replace('%attr_url%', $this->url->link('catalog/attribute', 'token=' . $this->session->data['token']), $this->language->get('tab_attributes_description'));
 		$this->data['entry_attributes'] = $this->language->get('entry_attributes');
 		$this->data['entry_adult'] = $this->language->get('entry_adult');
 		$this->data['entry_manufacturer_warranty'] = $this->language->get('entry_manufacturer_warranty');

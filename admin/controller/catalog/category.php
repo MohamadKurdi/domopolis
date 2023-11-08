@@ -181,8 +181,8 @@ class ControllerCatalogCategory extends Controller {
 		static $href_action = null;
 
 		if ($href_category === null) {
-			$href_category = $this->url->link('catalog/category', 'token=' . $this->session->data['token'] . '&path=', 'SSL');
-			$href_action = $this->url->link('catalog/category/update', 'token=' . $this->session->data['token'] . '&category_id=', 'SSL');
+			$href_category = $this->url->link('catalog/category', 'token=' . $this->session->data['token'] . '&path=');
+			$href_action = $this->url->link('catalog/category/update', 'token=' . $this->session->data['token'] . '&category_id=');
 		}
 
 		$url = '';
@@ -280,10 +280,10 @@ class ControllerCatalogCategory extends Controller {
 					'overload_max_wc_multiplier' 		=> $result['overload_max_wc_multiplier'],
 					'overload_max_multiplier' 			=> $result['overload_max_multiplier'],
 					'overload_ignore_volumetric_weight' => $result['overload_ignore_volumetric_weight'],
-					'filter'					=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_category=' . $result['category_id'], 'SSL'),
-					'filter_filled'				=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_filled_from_amazon=1&filter_category=' . $result['category_id'], 'SSL'),
-					'filter_has_price'			=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_price=>0&filter_category=' . $result['category_id'], 'SSL'),
-					'filter_enabled'			=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_status=1&filter_category=' . $result['category_id'], 'SSL'),
+					'filter'					=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_category=' . $result['category_id']),
+					'filter_filled'				=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_filled_from_amazon=1&filter_category=' . $result['category_id']),
+					'filter_has_price'			=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_price=>0&filter_category=' . $result['category_id']),
+					'filter_enabled'			=> $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&filter_status=1&filter_category=' . $result['category_id']),
 					'level'						=> (!empty($result['level']))?($result['level'] - 2):false,		
 					'alternate_name' 			=> $result['alternate_name'],
 					'image'       				=> $image,
@@ -352,23 +352,23 @@ class ControllerCatalogCategory extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/category', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('catalog/category', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
-		$this->data['insert'] 		= $this->url->link('catalog/category/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['delete'] 		= $this->url->link('catalog/category/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['repair'] 		= $this->url->link('catalog/category/repair', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['rollup'] 		= $this->url->link('catalog/category/rollup', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['hidedisabled'] = $this->url->link('catalog/category/hidedisabled', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['simpleview'] 	= $this->url->link('catalog/category/simpleview', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['rollup_all'] 	= $this->url->link('catalog/category/rollup_all', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['insert'] 		= $this->url->link('catalog/category/insert', 'token=' . $this->session->data['token'] . $url);
+		$this->data['delete'] 		= $this->url->link('catalog/category/delete', 'token=' . $this->session->data['token'] . $url);
+		$this->data['repair'] 		= $this->url->link('catalog/category/repair', 'token=' . $this->session->data['token'] . $url);
+		$this->data['rollup'] 		= $this->url->link('catalog/category/rollup', 'token=' . $this->session->data['token'] . $url);
+		$this->data['hidedisabled'] = $this->url->link('catalog/category/hidedisabled', 'token=' . $this->session->data['token'] . $url);
+		$this->data['simpleview'] 	= $this->url->link('catalog/category/simpleview', 'token=' . $this->session->data['token'] . $url);
+		$this->data['rollup_all'] 	= $this->url->link('catalog/category/rollup_all', 'token=' . $this->session->data['token'] . $url);
 
 		$this->data['rollup_enabled'] 		= !empty($this->session->data['category_rollup']);
 		$this->data['hidedisabled_enabled'] = !empty($this->session->data['category_hidedisabled']);
@@ -427,7 +427,7 @@ class ControllerCatalogCategory extends Controller {
 			$pagination->page 	= $page;
 			$pagination->limit 	= $this->config->get('config_admin_limit');
 			$pagination->text 	= $this->language->get('text_pagination');
-			$pagination->url 	= $this->url->link('catalog/category', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+			$pagination->url 	= $this->url->link('catalog/category', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 
 			$this->data['pagination'] = $pagination->render();
 
@@ -488,7 +488,7 @@ class ControllerCatalogCategory extends Controller {
 		$this->data['text_yes'] = $this->language->get('text_yes');
 		$this->data['text_no'] = $this->language->get('text_no');
 
-		$this->data['categoryocshop'] = $this->url->link('catalog/categoryocshop', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['categoryocshop'] = $this->url->link('catalog/categoryocshop', 'token=' . $this->session->data['token']);
 
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
@@ -506,23 +506,23 @@ class ControllerCatalogCategory extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/category', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('catalog/category', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
 		if (!isset($this->request->get['category_id'])) {
-			$this->data['action'] = $this->url->link('catalog/category/insert', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['action'] = $this->url->link('catalog/category/insert', 'token=' . $this->session->data['token']);
 		} else {
-			$this->data['action'] = $this->url->link('catalog/category/update', 'token=' . $this->session->data['token'] . '&category_id=' . $this->request->get['category_id'], 'SSL');
+			$this->data['action'] = $this->url->link('catalog/category/update', 'token=' . $this->session->data['token'] . '&category_id=' . $this->request->get['category_id']);
 		}
 
-		$this->data['cancel'] = $this->url->link('catalog/category', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('catalog/category', 'token=' . $this->session->data['token']);
 
 		if (isset($this->request->get['category_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$category_info = $this->model_catalog_category->getCategory($this->request->get['category_id']);			

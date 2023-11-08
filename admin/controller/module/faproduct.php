@@ -83,26 +83,26 @@ class ControllerModuleFAproduct extends Controller {
   		$this->data['breadcrumbs'] = array();
 
    		$this->data['breadcrumbs'][] = array(
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
        		'text'      => $this->language->get('text_home'),
       		'separator' => FALSE
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_module'),
-			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('faproduct', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('faproduct', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
-		$this->data['action'] = $this->url->link('module/faproduct', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('module/faproduct', 'token=' . $this->session->data['token']);
 		
-		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']);
 
 		$this->data['modules'] = array();
 		

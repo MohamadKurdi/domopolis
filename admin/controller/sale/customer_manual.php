@@ -225,7 +225,7 @@
 					'manufacturers'	 => $customer_manufacturers,
 					'collections'	 => $customer_collections,
 					'preauth_url'    => $this->model_sale_customer->getCustomerPreauthLink($result['email'], $result['store_id']),
-					'customer_href'  => $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
+					'customer_href'  => $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url),
 					'action'         => $action
 				);
 			}
@@ -250,7 +250,7 @@
 			$pagination->page 		= $page;
 			$pagination->limit 		= $this->limit;
 			$pagination->text 		= $this->language->get('text_pagination');
-			$pagination->url 		= $this->url->link('sale/customer_manual', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+			$pagination->url 		= $this->url->link('sale/customer_manual', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 

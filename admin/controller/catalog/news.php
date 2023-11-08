@@ -155,25 +155,25 @@ class ControllerCatalogNews extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . $url),
       		'separator' => ' :: '
    		);
 		
-		$this->data['insert'] = $this->url->link('catalog/news/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['insert'] = $this->url->link('catalog/news/insert', 'token=' . $this->session->data['token'] . $url);
 		
-		$this->data['npages'] = $this->url->link('module/news', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['npages'] = $this->url->link('module/news', 'token=' . $this->session->data['token']);
 		
-		$this->data['tocomments'] = $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['tocomments'] = $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token']);
 		
-		$this->data['delete'] = $this->url->link('catalog/news/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');	
+		$this->data['delete'] = $this->url->link('catalog/news/delete', 'token=' . $this->session->data['token'] . $url);	
 		
-		$this->data['copy'] = $this->url->link('catalog/news/copy', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['copy'] = $this->url->link('catalog/news/copy', 'token=' . $this->session->data['token'] . $url);
 		
 		$this->data['text_articles'] = $this->language->get('text_articles');
 		
@@ -260,11 +260,11 @@ class ControllerCatalogNews extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 		
-		$this->data['sort_title'] = $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . '&sort=nd.title' . $url, 'SSL');
+		$this->data['sort_title'] = $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . '&sort=nd.title' . $url);
 		
-		$this->data['sort_author'] = $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . '&sort=na.name' . $url, 'SSL');
+		$this->data['sort_author'] = $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . '&sort=na.name' . $url);
 		                            
-		$this->data['sort_sort_order'] = $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . '&sort=n.sort_order' . $url, 'SSL');
+		$this->data['sort_sort_order'] = $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . '&sort=n.sort_order' . $url);
 		                                 
 		$url = '';
 		if (isset($this->request->get['sort'])) {
@@ -278,7 +278,7 @@ class ControllerCatalogNews extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = 30; 
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . '&page={page}' . $url, 'SSL');;
+		$pagination->url = $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . '&page={page}' . $url);;
 		$this->data['pagination'] = $pagination->render();
 		$this->data['sort'] = $sort;
 		$this->data['order'] = $order;
@@ -380,13 +380,13 @@ class ControllerCatalogNews extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . $url),
       		'separator' => ' :: '
    		);
 		
@@ -400,13 +400,13 @@ class ControllerCatalogNews extends Controller {
 			$url .= '&order=' . $this->request->get['order'];
 		}
 		if (!isset($this->request->get['news_id'])) {
-			$this->data['action'] = $this->url->link('catalog/news/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('catalog/news/insert', 'token=' . $this->session->data['token'] . $url);
 			
 		} else {
-			$this->data['action'] = $this->url->link('catalog/news/update', 'token=' . $this->session->data['token'] . '&news_id=' . $this->request->get['news_id'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('catalog/news/update', 'token=' . $this->session->data['token'] . '&news_id=' . $this->request->get['news_id'] . $url);
 		                  
 		}
-		$this->data['cancel'] = $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['cancel'] = $this->url->link('catalog/news', 'token=' . $this->session->data['token'] . $url);
 		
 		if ((isset($this->request->get['news_id'])) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$news_info = $this->model_catalog_news->getNewsStory($this->request->get['news_id']);

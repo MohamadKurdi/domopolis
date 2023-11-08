@@ -203,13 +203,13 @@
 			$this->data['breadcrumbs'] = array();
 			
 			$this->data['breadcrumbs'][] = array(
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'text'      => $this->language->get('text_home'),
 			'separator' => FALSE
 			);
 			
 			$this->data['breadcrumbs'][] = array(
-			'href'      => $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token']),
 			'text'      => $this->language->get('heading_title'),
 			'separator' => ' :: '
 			);
@@ -220,9 +220,9 @@
 				if (isset($this->request->get[$key])) $url .= '&' . $key .'=' . $this->request->get[$key];
 			}
 			
-			$this->data['insert'] = $this->url->link('catalog/ocfilter/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-			$this->data['delete'] = $this->url->link('catalog/ocfilter/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
-			$this->data['ocfilter_page']  = $this->url->link('catalog/ocfilter/page', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['insert'] = $this->url->link('catalog/ocfilter/insert', 'token=' . $this->session->data['token'] . $url);
+			$this->data['delete'] = $this->url->link('catalog/ocfilter/delete', 'token=' . $this->session->data['token'] . $url);
+			$this->data['ocfilter_page']  = $this->url->link('catalog/ocfilter/page', 'token=' . $this->session->data['token']);
 			
 			$this->data['options'] = array();
 			
@@ -314,11 +314,11 @@
 				$url .= '&order=ASC';
 			}
 			
-			$this->data['sort_name'] = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'] . '&sort=ood.name' . $url, 'SSL');
-			$this->data['sort_type'] = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'] . '&sort=oo.type' . $url, 'SSL');
-			$this->data['sort_category_id'] = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'] . '&sort=oo2c.category_id' . $url, 'SSL');
-			$this->data['sort_status'] = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'] . '&sort=oo.status' . $url, 'SSL');
-			$this->data['sort_order'] = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'] . '&sort=oo.sort_order' . $url, 'SSL');
+			$this->data['sort_name'] = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'] . '&sort=ood.name' . $url);
+			$this->data['sort_type'] = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'] . '&sort=oo.type' . $url);
+			$this->data['sort_category_id'] = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'] . '&sort=oo2c.category_id' . $url);
+			$this->data['sort_status'] = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'] . '&sort=oo.status' . $url);
+			$this->data['sort_order'] = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'] . '&sort=oo.sort_order' . $url);
 			
 			$url = '';
 			
@@ -331,7 +331,7 @@
 			$pagination->page = $page;
 			$pagination->limit = 25;
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			
@@ -389,13 +389,13 @@
 			$this->data['breadcrumbs'] = array();
 			
 			$this->data['breadcrumbs'][] = array(
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'text'      => $this->language->get('text_home'),
 			'separator' => FALSE
 			);
 			
 			$this->data['breadcrumbs'][] = array(
-			'href'      => $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token']),
 			'text'      => $this->language->get('heading_title'),
 			'separator' => ' :: '
 			);
@@ -407,12 +407,12 @@
 			}
 			
 			if (!isset($this->request->get['option_id'])) {
-				$this->data['action'] = $this->url->link('catalog/ocfilter/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+				$this->data['action'] = $this->url->link('catalog/ocfilter/insert', 'token=' . $this->session->data['token'] . $url);
 				} else {
-				$this->data['action'] = $this->url->link('catalog/ocfilter/update', 'token=' . $this->session->data['token'] . '&option_id=' . $this->request->get['option_id'] . $url, 'SSL');
+				$this->data['action'] = $this->url->link('catalog/ocfilter/update', 'token=' . $this->session->data['token'] . '&option_id=' . $this->request->get['option_id'] . $url);
 			}
 			
-			$this->data['cancel'] = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['cancel'] = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'] . $url);
 			
 			$this->load->model('localisation/language');
 			$this->data['languages'] = $this->model_localisation_language->getLanguages();
@@ -429,7 +429,7 @@
 				$this->data['name'] = $option_description;
 				
 				$this->data['breadcrumbs'][] = array(
-				'href'      => $this->url->link('catalog/ocfilter/update', 'token=' . $this->session->data['token'] . '&option_id=' . $this->request->get['option_id'], 'SSL'),
+				'href'      => $this->url->link('catalog/ocfilter/update', 'token=' . $this->session->data['token'] . '&option_id=' . $this->request->get['option_id']),
 				'text'      => $option_description[$this->config->get('config_language_id')]['name'],
 				'separator' => ' :: '
 				);
@@ -566,26 +566,26 @@
 			$this->data['breadcrumbs']   = array();
 			
 			$this->data['breadcrumbs'][] = array(
-			'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href' => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'text' => $this->language->get('text_home'),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
-			'href' => $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'], 'SSL'),
+			'href' => $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token']),
 			'text' => 'Фильтр товаров OCFilter',
 			'separator' => ' :: '
 			);
 			
 			$this->data['breadcrumbs'][] = array(
-			'href' => $this->url->link('catalog/ocfilter/page', 'token=' . $this->session->data['token'], 'SSL'),
+			'href' => $this->url->link('catalog/ocfilter/page', 'token=' . $this->session->data['token']),
 			'text' => 'SEO Страницы OCFilter',
 			'separator' => ' :: '
 			);
 			
-			$this->data['insert']  = $this->url->link('catalog/ocfilter/insertPage', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['delete']  = $this->url->link('catalog/ocfilter/deletePage', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['cancel'] = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['insert']  = $this->url->link('catalog/ocfilter/insertPage', 'token=' . $this->session->data['token']);
+			$this->data['delete']  = $this->url->link('catalog/ocfilter/deletePage', 'token=' . $this->session->data['token']);
+			$this->data['cancel'] = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token']);
 			
 			$this->data['pages'] = array();
 			
@@ -634,7 +634,7 @@
 			$pagination->page   = $page;
 			$pagination->limit  = 20;
 			$pagination->text   = $this->language->get('text_pagination');
-			$pagination->url    = $this->url->link('catalog/ocfilter/page', 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
+			$pagination->url    = $this->url->link('catalog/ocfilter/page', 'token=' . $this->session->data['token'] . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			
@@ -659,30 +659,30 @@
 			$this->data['breadcrumbs']   = array();
 			
 			$this->data['breadcrumbs'][] = array(
-			'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href' => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'text' => $this->language->get('text_home'),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
-			'href' => $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'], 'SSL'),
+			'href' => $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token']),
 			'text' => 'Фильтр товаров OCFilter',
 			'separator' => ' :: '
 			);
 			
 			$this->data['breadcrumbs'][] = array(
-			'href' => $this->url->link('catalog/ocfilter/page', 'token=' . $this->session->data['token'], 'SSL'),
+			'href' => $this->url->link('catalog/ocfilter/page', 'token=' . $this->session->data['token']),
 			'text' => 'SEO Страницы OCFilter',
 			'separator' => ' :: '
 			);
 			
 			if (!isset($this->request->get['ocfilter_page_id'])) {
-				$this->data['action'] = $this->url->link('catalog/ocfilter/insertPage', 'token=' . $this->session->data['token'], 'SSL');
+				$this->data['action'] = $this->url->link('catalog/ocfilter/insertPage', 'token=' . $this->session->data['token']);
 				} else {
-				$this->data['action'] = $this->url->link('catalog/ocfilter/updatePage', 'token=' . $this->session->data['token'] . '&ocfilter_page_id=' . $this->request->get['ocfilter_page_id'], 'SSL');
+				$this->data['action'] = $this->url->link('catalog/ocfilter/updatePage', 'token=' . $this->session->data['token'] . '&ocfilter_page_id=' . $this->request->get['ocfilter_page_id']);
 			}
 			
-			$this->data['cancel'] = $this->url->link('catalog/ocfilter/page', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['cancel'] = $this->url->link('catalog/ocfilter/page', 'token=' . $this->session->data['token']);
 			
 			if (isset($this->request->get['ocfilter_page_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 				$page_info = $this->model_catalog_ocfilter->getPage($this->request->get['ocfilter_page_id']);

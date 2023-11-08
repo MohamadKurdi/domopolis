@@ -148,18 +148,18 @@ class ControllerCatalogLandingpage extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/landingpage', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('catalog/landingpage', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
-		$this->data['insert'] = $this->url->link('catalog/landingpage/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['delete'] = $this->url->link('catalog/landingpage/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');	
+		$this->data['insert'] = $this->url->link('catalog/landingpage/insert', 'token=' . $this->session->data['token'] . $url);
+		$this->data['delete'] = $this->url->link('catalog/landingpage/delete', 'token=' . $this->session->data['token'] . $url);	
 
 		$this->data['landingpages'] = array();
 
@@ -229,8 +229,8 @@ class ControllerCatalogLandingpage extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['sort_title'] = $this->url->link('catalog/landingpage', 'token=' . $this->session->data['token'] . '&sort=id.title' . $url, 'SSL');
-		$this->data['sort_sort_order'] = $this->url->link('catalog/landingpage', 'token=' . $this->session->data['token'] . '&sort=i.sort_order' . $url, 'SSL');
+		$this->data['sort_title'] = $this->url->link('catalog/landingpage', 'token=' . $this->session->data['token'] . '&sort=id.title' . $url);
+		$this->data['sort_sort_order'] = $this->url->link('catalog/landingpage', 'token=' . $this->session->data['token'] . '&sort=i.sort_order' . $url);
 
 		$url = '';
 
@@ -247,7 +247,7 @@ class ControllerCatalogLandingpage extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get('config_admin_limit');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('catalog/landingpage', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('catalog/landingpage', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 
 		$this->data['pagination'] = $pagination->render();
 
@@ -323,23 +323,23 @@ class ControllerCatalogLandingpage extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),     		
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),     		
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/landingpage', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('catalog/landingpage', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
 		if (!isset($this->request->get['landingpage_id'])) {
-			$this->data['action'] = $this->url->link('catalog/landingpage/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('catalog/landingpage/insert', 'token=' . $this->session->data['token'] . $url);
 		} else {
-			$this->data['action'] = $this->url->link('catalog/landingpage/update', 'token=' . $this->session->data['token'] . '&landingpage_id=' . $this->request->get['landingpage_id'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('catalog/landingpage/update', 'token=' . $this->session->data['token'] . '&landingpage_id=' . $this->request->get['landingpage_id'] . $url);
 		}
 
-		$this->data['cancel'] = $this->url->link('catalog/landingpage', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['cancel'] = $this->url->link('catalog/landingpage', 'token=' . $this->session->data['token'] . $url);
 
 		if (isset($this->request->get['landingpage_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$landingpage_info = $this->model_catalog_landingpage->getlandingpage($this->request->get['landingpage_id']);

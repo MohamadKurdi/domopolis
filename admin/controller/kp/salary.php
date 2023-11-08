@@ -345,13 +345,13 @@ class ControllerKPSalary extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('kp/salary', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('kp/salary', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
@@ -536,7 +536,7 @@ class ControllerKPSalary extends Controller {
 				$total_process_time += dateDiff($times['date_accepted'], $times['date_closed']);
 
 				if (isset($this->session->data['token'])) {
-					$_url = $this->url->link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . $_rorder['order_id'], 'SSL');
+					$_url = $this->url->link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . $_rorder['order_id']);
 				} else {
 					$_url = false;
 				}
@@ -1097,13 +1097,13 @@ class ControllerKPSalary extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('kp/salary', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('kp/salary', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
@@ -1201,7 +1201,7 @@ class ControllerKPSalary extends Controller {
 						'date_added' => date('Y.m.d', strtotime($_rorder['date_added'])),
 						'date_closed' => date('Y.m.d', strtotime($order_result['date_added'])),
 						'salary_paid' => (int)$_rorder['salary_paid'],
-						'url'    => $this->url->link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . $_rorder['order_id'], 'SSL'),
+						'url'    => $this->url->link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . $_rorder['order_id']),
 						'total'    => $ototal,
 						'total_text'  => $this->currency->format($ototal, $_rorder['currency_code'], 1)
 					);

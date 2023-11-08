@@ -23,13 +23,13 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => 'Выгрузка заказов для учета',
-			'href'      => $this->url->link('kp/orderexport', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('kp/orderexport', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 			);
 			

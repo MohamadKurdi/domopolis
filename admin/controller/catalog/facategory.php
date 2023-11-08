@@ -75,18 +75,18 @@ class ControllerCatalogFACategory extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/facategory', 'token=' . $this->session->data['token'] . '&path=', 'SSL'),
+			'href'      => $this->url->link('catalog/facategory', 'token=' . $this->session->data['token'] . '&path='),
       		'separator' => ' :: '
    		);
 									
-		$this->data['insert'] = $this->url->link('catalog/facategory/insert', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['delete'] = $this->url->link('catalog/facategory/delete', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['insert'] = $this->url->link('catalog/facategory/insert', 'token=' . $this->session->data['token']);
+		$this->data['delete'] = $this->url->link('catalog/facategory/delete', 'token=' . $this->session->data['token']);
 
 		$fa_arr = $this->model_catalog_faproduct->getFACategories();
 
@@ -95,7 +95,7 @@ class ControllerCatalogFACategory extends Controller {
 				$this->data['facategories'][] = array(
 						'facategory_id' => $fa['facategory_id'],
 						'name'        => $fa['name'],
-						'href'        => $this->url->link('catalog/facategory/update', 'token=' . $this->session->data['token'] . '&facategory_id='.$fa['facategory_id'], 'SSL'),
+						'href'        => $this->url->link('catalog/facategory/update', 'token=' . $this->session->data['token'] . '&facategory_id='.$fa['facategory_id']),
 						'text'		  => $this->language->get('change')
 					);		
 			}
@@ -164,23 +164,23 @@ class ControllerCatalogFACategory extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/category', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('catalog/category', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
 		if (!isset($this->request->get['facategory_id'])) {
-			$this->data['action'] = $this->url->link('catalog/facategory/insert', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['action'] = $this->url->link('catalog/facategory/insert', 'token=' . $this->session->data['token']);
 		} else {
-			$this->data['action'] = $this->url->link('catalog/facategory/update', 'token=' . $this->session->data['token'] . '&facategory_id=' . $this->request->get['facategory_id'], 'SSL');
+			$this->data['action'] = $this->url->link('catalog/facategory/update', 'token=' . $this->session->data['token'] . '&facategory_id=' . $this->request->get['facategory_id']);
 		}
 		
-		$this->data['cancel'] = $this->url->link('catalog/facategory', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('catalog/facategory', 'token=' . $this->session->data['token']);
 
 		if (isset($this->request->get['facategory_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
       		$this->data['facategory_description'] = $this->model_catalog_faproduct->getFACategory($this->request->get['facategory_id']);

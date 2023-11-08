@@ -190,27 +190,27 @@ class ControllerModuleSet extends Controller {
 	
 		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 	
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_module'),
-			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 	
 		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 	
-		$this->data['sets'] = $this->url->link('module/set/listing', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['sets'] = $this->url->link('module/set/listing', 'token=' . $this->session->data['token']);
 	
-		$this->data['action'] = $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token']);
 	
-		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']);
 	
 		$this->data['modules'] = array();
 	
@@ -397,32 +397,32 @@ class ControllerModuleSet extends Controller {
 		$this->data['breadcrumbs'] = array();
 	
 		$this->data['breadcrumbs'][] = array(
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'text'      => $this->language->get('text_home'),
 			'separator' => false
 		);
         
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_module'),
-			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
            
 		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);                   
 	
 		$this->data['breadcrumbs'][] = array(
-			'href'      => $this->url->link('module/set/listing', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('module/set/listing', 'token=' . $this->session->data['token'] . $url),
 			'text'      => $this->language->get('heading_listing'),
 			'separator' => ' :: '
 		);
 	
-		$this->data['module'] = $this->url->link('module/set', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['insert'] = $this->url->link('module/set/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['delete'] = $this->url->link('module/set/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['module'] = $this->url->link('module/set', 'token=' . $this->session->data['token']);
+		$this->data['insert'] = $this->url->link('module/set/insert', 'token=' . $this->session->data['token'] . $url);
+		$this->data['delete'] = $this->url->link('module/set/delete', 'token=' . $this->session->data['token'] . $url);
         $this->data['token']  = $this->session->data['token'];
         
         $url = '';       
@@ -453,7 +453,7 @@ class ControllerModuleSet extends Controller {
 			$url .= '&order=ASC';
 		}        
                 
-        $this->data['sort_name'] = $this->url->link('module/set/listing', 'token=' . $this->session->data['token'] . '&sort=sd.name' . $url, 'SSL');       
+        $this->data['sort_name'] = $this->url->link('module/set/listing', 'token=' . $this->session->data['token'] . '&sort=sd.name' . $url);       
 	
 		$this->load->model('tool/image');
 	
@@ -525,7 +525,7 @@ class ControllerModuleSet extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get('config_admin_limit');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('module/set/listing', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('module/set/listing', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 			
 		$this->data['pagination'] = $pagination->render();
         
@@ -659,43 +659,43 @@ class ControllerModuleSet extends Controller {
 		$this->data['breadcrumbs'] = array();
 	
 		$this->data['breadcrumbs'][] = array(
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'text'      => $this->language->get('text_home'),
 			'separator' => false
 		);
 	
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_module'),
-			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
            
 		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);                   
 	
 		$this->data['breadcrumbs'][] = array(
-			'href'      => $this->url->link('module/set/listing', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('module/set/listing', 'token=' . $this->session->data['token'] . $url),
 			'text'      => $this->language->get('heading_listing'),
 			'separator' => ' :: '
 		);
         
 		$this->data['breadcrumbs'][] = array(
-			'href'      => $this->url->link('module/set/listing', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('module/set/listing', 'token=' . $this->session->data['token'] . $url),
 			'text'      => $this->language->get('heading_setsedit'),
 			'separator' => ' :: '
 		);
                 
 	
 		if (!isset($this->request->get['set_id'])) {
-			$this->data['action'] = $this->url->link('module/set/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('module/set/insert', 'token=' . $this->session->data['token'] . $url);
 		} else {
-			$this->data['action'] = $this->url->link('module/set/update', 'token=' . $this->session->data['token'] . $url . '&set_id=' . $this->request->get['set_id'], 'SSL');
+			$this->data['action'] = $this->url->link('module/set/update', 'token=' . $this->session->data['token'] . $url . '&set_id=' . $this->request->get['set_id']);
 		}
 	
-		$this->data['cancel'] = $this->url->link('module/set/listing', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['cancel'] = $this->url->link('module/set/listing', 'token=' . $this->session->data['token'] . $url);
 	
 		if ((isset($this->request->get['set_id'])) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$set_info = $this->model_catalog_set->getSet($this->request->get['set_id']);

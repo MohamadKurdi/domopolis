@@ -28,7 +28,7 @@ class ControllerModuleRedirectManager extends Controller {
 		$version = $this->data['version'] = (!defined('VERSION')) ? 140 : (int)substr(str_replace('.', '', VERSION), 0, 3);
 		
 		$this->data = array_merge($this->data, $this->load->language($this->type . '/' . $this->name));
-		$this->data['exit'] = $this->makeURL('extension/' . $this->type, 'token=' . $token, 'SSL');
+		$this->data['exit'] = $this->makeURL('extension/' . $this->type, 'token=' . $token);
 		$this->load->model('setting/setting');
 		
 		// non-standard
@@ -93,17 +93,17 @@ class ControllerModuleRedirectManager extends Controller {
 		
 		$breadcrumbs = array();
 		$breadcrumbs[] = array(
-			'href'		=> $this->makeURL('common/home', 'token=' . $token, 'SSL'),
+			'href'		=> $this->makeURL('common/home', 'token=' . $token),
 			'text'		=> $this->language->get('text_home'),
 			'separator' => false
 		);
 		$breadcrumbs[] = array(
-			'href'		=> $this->makeURL('extension/' . $this->type, 'token=' . $token, 'SSL'),
+			'href'		=> $this->makeURL('extension/' . $this->type, 'token=' . $token),
 			'text'		=> $this->language->get('standard_' . $this->type),
 			'separator' => ' :: '
 		);
 		$breadcrumbs[] = array(
-			'href'		=> $this->makeURL($this->type . '/' . $this->name, 'token=' . $token, 'SSL'),
+			'href'		=> $this->makeURL($this->type . '/' . $this->name, 'token=' . $token),
 			'text'		=> $this->language->get('heading_title'),
 			'separator' => ' :: '
 		);
@@ -132,7 +132,7 @@ class ControllerModuleRedirectManager extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $limit;
 		$pagination->text = $this->data['text_pagination'];
-		$pagination->url = $this->makeURL($this->type . '/' . $this->name, 'token=' . $token . '&sort=' . $this->data['sort'] . '&order=' . $this->data['order'] . '&page={page}', 'SSL');
+		$pagination->url = $this->makeURL($this->type . '/' . $this->name, 'token=' . $token . '&sort=' . $this->data['sort'] . '&order=' . $this->data['order'] . '&page={page}');
 		$this->data['pagination'] = $pagination->render();
 		// end
 		

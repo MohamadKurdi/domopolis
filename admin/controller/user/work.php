@@ -26,7 +26,7 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
@@ -54,7 +54,7 @@
 				$this->data['periods'][] = array(
 				'name' => $_name,
 				'date' =>  date('Y-m-d', strtotime("-$i day")),
-				'href' => $this->url->link('user/work', 'period='. date('Y-m-d', strtotime("-$i day")) .'&token=' . $this->session->data['token'], 'SSL'),
+				'href' => $this->url->link('user/work', 'period='. date('Y-m-d', strtotime("-$i day")) .'&token=' . $this->session->data['token']),
 				);				
 			}
 			

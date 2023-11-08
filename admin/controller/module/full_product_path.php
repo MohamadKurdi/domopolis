@@ -50,25 +50,25 @@ class ControllerModuleFullProductPath extends Controller {
 
    		$data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_module'),
-			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
    		$data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('module_title'),
-			'href'      => $this->url->link('module/full_product_path', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('module/full_product_path', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
-		$data['action'] = $this->url->link('module/full_product_path', 'token=' . $this->session->data['token'], 'SSL');
+		$data['action'] = $this->url->link('module/full_product_path', 'token=' . $this->session->data['token']);
 		
-		$data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
+		$data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']);
 		
 		// full product path - start
 		

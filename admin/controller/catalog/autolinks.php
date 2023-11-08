@@ -31,7 +31,7 @@ class ControllerCatalogAutoLinks extends Controller {
 		$this->data['button_save'] = $this->language->get('button_save');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 		
-		$this->data['cancel'] = $this->url->link('catalog/autolinks', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('catalog/autolinks', 'token=' . $this->session->data['token']);
 
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
@@ -43,18 +43,18 @@ class ControllerCatalogAutoLinks extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => 'Auto Links',
-			'href'      => $this->url->link('catalog/autolinks', 'token=' . $this->session->data['token'], 'SSL'),       		
+			'href'      => $this->url->link('catalog/autolinks', 'token=' . $this->session->data['token']),       		
       		'separator' => ' :: '
    		);
 		
    					
-		$this->data['action'] = $this->url->link('catalog/autolinks', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('catalog/autolinks', 'token=' . $this->session->data['token']);
 		
 		$this->data['autolinks'] = array();
 		

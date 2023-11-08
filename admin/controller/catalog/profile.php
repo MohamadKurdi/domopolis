@@ -18,13 +18,13 @@ class ControllerCatalogProfile extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/profile', 'token=' . $this->session->data['token'], 'SSL'),       		
+			'href'      => $this->url->link('catalog/profile', 'token=' . $this->session->data['token']),       		
 			'separator' => ' :: '
 		);
 
@@ -46,7 +46,7 @@ class ControllerCatalogProfile extends Controller {
 			$action = array();
 
 			$action[] = array(
-				'href' => $this->url->link('catalog/profile/update', 'token=' . $this->session->data['token'] . '&profile_id=' . $profile['profile_id'], 'SSL'),
+				'href' => $this->url->link('catalog/profile/update', 'token=' . $this->session->data['token'] . '&profile_id=' . $profile['profile_id']),
 				'name' => $this->language->get('text_edit'),
 			);
 
@@ -58,9 +58,9 @@ class ControllerCatalogProfile extends Controller {
 			);
 		}
 
-		$this->data['insert'] = $this->url->link('catalog/profile/insert', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['copy'] = $this->url->link('catalog/profile/copy', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['delete'] = $this->url->link('catalog/profile/delete', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['insert'] = $this->url->link('catalog/profile/insert', 'token=' . $this->session->data['token']);
+		$this->data['copy'] = $this->url->link('catalog/profile/copy', 'token=' . $this->session->data['token']);
+		$this->data['delete'] = $this->url->link('catalog/profile/delete', 'token=' . $this->session->data['token']);
 
 		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
@@ -130,23 +130,23 @@ class ControllerCatalogProfile extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/profile', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('catalog/profile', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
 		if (!isset($this->request->get['profile_id'])) {
-			$this->data['action'] = $this->url->link('catalog/profile/insert', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['action'] = $this->url->link('catalog/profile/insert', 'token=' . $this->session->data['token']);
 		} else {
-			$this->data['action'] = $this->url->link('catalog/profile/update', 'token=' . $this->session->data['token'] . '&profile_id=' . $this->request->get['profile_id'], 'SSL');
+			$this->data['action'] = $this->url->link('catalog/profile/update', 'token=' . $this->session->data['token'] . '&profile_id=' . $this->request->get['profile_id']);
 		}
 
-		$this->data['cancel'] = $this->url->link('catalog/profile', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('catalog/profile', 'token=' . $this->session->data['token']);
 
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 		$this->data['button_save'] = $this->language->get('button_save');

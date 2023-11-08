@@ -79,18 +79,18 @@ class ControllerCatalogNauthor extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/nauthor', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('catalog/nauthor', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
-		$this->data['insert'] = $this->url->link('catalog/nauthor/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['delete'] = $this->url->link('catalog/nauthor/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');	
+		$this->data['insert'] = $this->url->link('catalog/nauthor/insert', 'token=' . $this->session->data['token'] . $url);
+		$this->data['delete'] = $this->url->link('catalog/nauthor/delete', 'token=' . $this->session->data['token'] . $url);	
 
 		$this->data['nauthors'] = array();
 
@@ -186,23 +186,23 @@ class ControllerCatalogNauthor extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/nauthor', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('catalog/nauthor', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
 		if (!isset($this->request->get['nauthor_id'])) {
-			$this->data['action'] = $this->url->link('catalog/nauthor/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('catalog/nauthor/insert', 'token=' . $this->session->data['token'] . $url);
 		} else {
-			$this->data['action'] = $this->url->link('catalog/nauthor/update', 'token=' . $this->session->data['token'] . '&nauthor_id=' . $this->request->get['nauthor_id'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('catalog/nauthor/update', 'token=' . $this->session->data['token'] . '&nauthor_id=' . $this->request->get['nauthor_id'] . $url);
 		}
 
-		$this->data['cancel'] = $this->url->link('catalog/nauthor', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['cancel'] = $this->url->link('catalog/nauthor', 'token=' . $this->session->data['token'] . $url);
 
 		if (isset($this->request->get['nauthor_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$nauthor_info = $this->model_catalog_nauthor->getAuthor($this->request->get['nauthor_id']);

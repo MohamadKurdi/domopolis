@@ -62,7 +62,7 @@
 				$this->data['success'] = '';
 			}
 			
-			$this->data['action'] = $this->url->link('common/login', '', 'SSL');
+			$this->data['action'] = $this->url->link('common/login', '');
 			
 			if (isset($this->request->post['username'])) {
 				$this->data['username'] = $this->request->post['username'];
@@ -102,13 +102,13 @@
 					$url .= http_build_query($this->request->get);
 				}
 				
-				$this->data['redirect'] = $this->url->link($route, $url, 'SSL');
+				$this->data['redirect'] = $this->url->link($route, $url);
 				} else {
 				$this->data['redirect'] = '';	
 			}
 			
 			if ($this->config->get('config_password') && false) {
-				$this->data['forgotten'] = $this->url->link('common/forgotten', '', 'SSL');
+				$this->data['forgotten'] = $this->url->link('common/forgotten', '');
 				} else {
 				$this->data['forgotten'] = '';
 			}

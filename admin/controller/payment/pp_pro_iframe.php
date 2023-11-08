@@ -91,25 +91,25 @@ class ControllerPaymentPPProIframe extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),       		
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),       		
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_payment'),
-			'href'      => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/payment', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('payment/pp_pro_iframe', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('payment/pp_pro_iframe', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
-		$this->data['action'] = $this->url->link('payment/pp_pro_iframe', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('payment/pp_pro_iframe', 'token=' . $this->session->data['token']);
 
-		$this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token']);
 
 		if (isset($this->request->post['pp_pro_iframe_sig'])) {
 			$this->data['pp_pro_iframe_sig'] = $this->request->post['pp_pro_iframe_sig'];
@@ -290,27 +290,27 @@ class ControllerPaymentPPProIframe extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('payment/pp_pro_iframe', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('payment/pp_pro_iframe', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_refund'),
-			'href'      => $this->url->link('payment/pp_pro_iframe/refund', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('payment/pp_pro_iframe/refund', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
 		//button actions
-		$this->data['action'] = $this->url->link('payment/pp_pro_iframe/doRefund', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('payment/pp_pro_iframe/doRefund', 'token=' . $this->session->data['token']);
 
 		if (isset($this->request->get['order_id'])) {
-			$this->data['cancel'] = $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] , 'SSL');
+			$this->data['cancel'] = $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] );
 		} else {
 			$this->data['cancel'] = '';
 		}
@@ -582,19 +582,19 @@ class ControllerPaymentPPProIframe extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('payment/pp_pro_iframe', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('payment/pp_pro_iframe', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_transaction'),
-			'href'      => $this->url->link('payment/pp_pro_iframe/viewTransaction', 'token=' . $this->session->data['token'] . '&transaction_id=' . $this->request->get['transaction_id'], 'SSL'),
+			'href'      => $this->url->link('payment/pp_pro_iframe/viewTransaction', 'token=' . $this->session->data['token'] . '&transaction_id=' . $this->request->get['transaction_id']),
 			'separator' => ' :: '
 		);
 
@@ -602,13 +602,13 @@ class ControllerPaymentPPProIframe extends Controller {
 		$transaction = array_map('urldecode', $transaction);
 
 		$this->data['transaction'] = $transaction;
-		$this->data['view_link'] = $this->url->link('payment/pp_pro_iframe/viewTransaction', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['view_link'] = $this->url->link('payment/pp_pro_iframe/viewTransaction', 'token=' . $this->session->data['token']);
 		$this->data['token'] = $this->session->data['token'];
 
 		$this->document->setTitle($this->language->get('text_transaction'));
 
 		if (isset($this->request->get['order_id'])) {
-			$this->data['back'] = $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'], 'SSL');
+			$this->data['back'] = $this->url->link('sale/order/info', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id']);
 		} else {
 			$this->data['back'] = '';
 		}
@@ -841,9 +841,9 @@ class ControllerPaymentPPProIframe extends Controller {
 
 			$this->data['transactions'] = array();
 
-			$this->data['view_link'] = $this->url->link('payment/pp_pro_iframe/viewTransaction', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['refund_link'] = $this->url->link('payment/pp_pro_iframe/refund', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['resend_link'] = $this->url->link('payment/pp_pro_iframe/resend', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['view_link'] = $this->url->link('payment/pp_pro_iframe/viewTransaction', 'token=' . $this->session->data['token']);
+			$this->data['refund_link'] = $this->url->link('payment/pp_pro_iframe/refund', 'token=' . $this->session->data['token']);
+			$this->data['resend_link'] = $this->url->link('payment/pp_pro_iframe/resend', 'token=' . $this->session->data['token']);
 
 			if ($paypal_order) {
 				$captured = number_format($this->model_payment_pp_pro_iframe->totalCaptured($paypal_order['paypal_iframe_order_id']), 2);
@@ -864,14 +864,14 @@ class ControllerPaymentPPProIframe extends Controller {
 						'payment_type' => $transaction['payment_type'],
 						'payment_status' => $transaction['payment_status'],
 						'pending_reason' => $transaction['pending_reason'],
-						'view' => $this->url->link('payment/pp_pro_iframe/viewTransaction', 'token=' . $this->session->data['token'] . "&transaction_id=" . $transaction['transaction_id'] . '&order_id=' . $this->request->get['order_id'], 'SSL'),
-						'refund' => $this->url->link('payment/pp_pro_iframe/refund', 'token=' . $this->session->data['token'] . "&transaction_id=" . $transaction['transaction_id'] . "&order_id=" . $this->request->get['order_id'], 'SSL'),
-						'resend' => $this->url->link('payment/pp_pro_iframe/resend', 'token=' . $this->session->data['token'] . "&paypal_iframe_order_transaction_id=" . $transaction['paypal_iframe_order_transaction_id'], 'SSL'),
+						'view' => $this->url->link('payment/pp_pro_iframe/viewTransaction', 'token=' . $this->session->data['token'] . "&transaction_id=" . $transaction['transaction_id'] . '&order_id=' . $this->request->get['order_id']),
+						'refund' => $this->url->link('payment/pp_pro_iframe/refund', 'token=' . $this->session->data['token'] . "&transaction_id=" . $transaction['transaction_id'] . "&order_id=" . $this->request->get['order_id']),
+						'resend' => $this->url->link('payment/pp_pro_iframe/resend', 'token=' . $this->session->data['token'] . "&paypal_iframe_order_transaction_id=" . $transaction['paypal_iframe_order_transaction_id']),
 					);
 				}
 			}
 
-			$this->data['reauthorise_link'] = $this->url->link('payment/pp_pro_iframe/reauthorise', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['reauthorise_link'] = $this->url->link('payment/pp_pro_iframe/reauthorise', 'token=' . $this->session->data['token']);
 
 			$this->template = 'payment/pp_pro_iframe_order.tpl';
 			$this->response->setOutput($this->render());

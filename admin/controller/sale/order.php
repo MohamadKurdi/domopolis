@@ -20,7 +20,7 @@
 		public function customAddressFields($data) {
 			$this->load->model('tool/simplecustom');
 			
-			$this->data['simple_action'] = $this->url->link('kp/customer/dadataCustomFields', 'token=' . $this->session->data['token'] . '&set=' . $data['set'] . '&type=' . $data['type'] . '&id=' . $data['id'], 'SSL');
+			$this->data['simple_action'] = $this->url->link('kp/customer/dadataCustomFields', 'token=' . $this->session->data['token'] . '&set=' . $data['set'] . '&type=' . $data['type'] . '&id=' . $data['id']);
 			
 			$this->data['button_save'] = $this->language->get('button_save');
 			
@@ -1178,25 +1178,25 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 			);
 			
-			$this->data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['insert'] = $this->url->link('sale/order/insert', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['delete'] = $this->url->link('sale/order/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token']);
+			$this->data['insert'] = $this->url->link('sale/order/insert', 'token=' . $this->session->data['token']);
+			$this->data['delete'] = $this->url->link('sale/order/delete', 'token=' . $this->session->data['token'] . $url);
 			
 			
 			$data = array('filter_order_status_id' => 0);
 			$fucked_order_total = $this->model_sale_order->getTotalOrders($data);
 			$this->data['fucked_order_total'] = $fucked_order_total;
-			$this->data['fucked_link'] = $this->url->link('sale/order', 'filter_order_status_id=0&token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['fucked_link'] = $this->url->link('sale/order', 'filter_order_status_id=0&token=' . $this->session->data['token'] . $url);
 			
 			$this->data['orders'] = [];
 			
@@ -1490,8 +1490,8 @@
 				'template'      			=> $result['template'],
 				'general_tracker_status' 	=> ($result['order_status_id'] == 2 && $result['tracker_xml'])?$this->model_kp_order->parseTracker($result['order_id'], $result['tracker_xml']):false,
 				'is_on_pickpoint' 			=> (mb_stripos($result['shipping_code'], 'pickup_advanced') !== false),
-				'customer_href' 			=> $this->url->link('sale/customer/update', 'customer_id='.$result['customer_id'].'&token=' . $this->session->data['token'], 'SSL'),
-				'customer_pl' 				=> $this->url->link('sale/customer/printlist', 'customer_id='.$result['customer_id'].'&token=' . $this->session->data['token'], 'SSL'),
+				'customer_href' 			=> $this->url->link('sale/customer/update', 'customer_id='.$result['customer_id'].'&token=' . $this->session->data['token']),
+				'customer_pl' 				=> $this->url->link('sale/customer/printlist', 'customer_id='.$result['customer_id'].'&token=' . $this->session->data['token']),
 				'customer_id'   			=> $result['customer_id'],
 				'customer_info' 			=> $this->model_sale_customer->getCustomer($result['customer_id']),
 				'customer_has_birthday'  	=> $this->model_sale_customer->customerHasBirthday($result['customer_id']),
@@ -1570,7 +1570,7 @@
 				'courier_color'             => $courier_color,
 				'can_get_csi' 				=> $this->model_kp_csi->canGetCSI($result['order_status_id']),
 				'orders_without_csi'    	=> $this->model_kp_csi->getCompletedOrdersWithoutCSI($result['customer_id']),
-				'orders_without_csi_fltr' 	=> $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_customer=' . $result['customer_id'], 'SSL'),
+				'orders_without_csi_fltr' 	=> $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_customer=' . $result['customer_id']),
 				'csi_reject'      		 	=> $result['csi_reject'],
 				'csi_average'      		 	=> $result['csi_average'],
 				'nbt_csi'      		 	 	=> $result['nbt_csi'],
@@ -1596,8 +1596,8 @@
 				'reward_used'   			=> $result['reward_used']?$this->currency->formatNegativeBonus($result['reward_used'], true):false,
 				'total_customer_orders' 	=> $total_orders,
 				'total_customer_orders_txt' => morphos\Russian\NounPluralization::pluralize($total_orders, 'заказ'),
-				'total_customer_orders_a' 	=> $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_customer=' . $result['customer_id'], 'SSL'),
-				'total_customer_orders_n_a' => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_customer=' . $result['customer'], 'SSL'),
+				'total_customer_orders_a' 	=> $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_customer=' . $result['customer_id']),
+				'total_customer_orders_n_a' => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&filter_customer=' . $result['customer']),
 				'reject_reason' 			=> ($result['reject_reason_id'] > 0)?$this->model_sale_reject_reason->getRejectReasonName($result['reject_reason_id']):false,
 				'action'        			=> $action
 				);
@@ -1773,13 +1773,13 @@
 				$url .= '&page=' . $this->request->get['page'];
 			}
 			
-			$this->data['sort_order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.order_id' . $url, 'SSL');
-			$this->data['sort_customer'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=customer' . $url, 'SSL');
-			$this->data['sort_status'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
-			$this->data['sort_total'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.total' . $url, 'SSL');
-			$this->data['sort_date_added'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.date_added' . $url, 'SSL');
-			$this->data['sort_date_modified'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.date_modified' . $url, 'SSL');
-			$this->data['sort_manager_id'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.manager_id' . $url, 'SSL');
+			$this->data['sort_order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.order_id' . $url);
+			$this->data['sort_customer'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=customer' . $url);
+			$this->data['sort_status'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=status' . $url);
+			$this->data['sort_total'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.total' . $url);
+			$this->data['sort_date_added'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.date_added' . $url);
+			$this->data['sort_date_modified'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.date_modified' . $url);
+			$this->data['sort_manager_id'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . '&sort=o.manager_id' . $url);
 			
 			$url = '';
 			
@@ -1917,7 +1917,7 @@
 			$pagination->page = $page;
 			$pagination->limit = $this->config->get('config_admin_limit');
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			
@@ -2281,12 +2281,12 @@
 				$this->data['last_invoice']['realname'] = '';
 			}
 			
-            $this->data['templates_action'] = $this->url->link('module/emailtemplate/fetch_template', 'output=comment&token='.$this->session->data['token'], 'SSL');
+            $this->data['templates_action'] = $this->url->link('module/emailtemplate/fetch_template', 'output=comment&token='.$this->session->data['token']);
 			
-			$this->data['pdf_download'] = $this->url->link('module/emailtemplate/preview_invoice', 'token='.$this->session->data['token'].'&order_id='.$order_id, 'SSL');
+			$this->data['pdf_download'] = $this->url->link('module/emailtemplate/preview_invoice', 'token='.$this->session->data['token'].'&order_id='.$order_id);
 			
-			$this->data['xls1_download'] = $this->url->link('report/export_xls/createProductsInvoiceWithImage', 'token=' . $this->session->data['token'] . '&order_id=' . $order_id, 'SSL');
-			$this->data['xls2_download'] = $this->url->link('report/export_xls/createProductsInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $order_id, 'SSL');
+			$this->data['xls1_download'] = $this->url->link('report/export_xls/createProductsInvoiceWithImage', 'token=' . $this->session->data['token'] . '&order_id=' . $order_id);
+			$this->data['xls2_download'] = $this->url->link('report/export_xls/createProductsInvoice', 'token=' . $this->session->data['token'] . '&order_id=' . $order_id);
 			//EMAILTEMPLATE
 			
 			if (isset($this->error['warning'])) {
@@ -2508,43 +2508,43 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 			);
 			
 			if (!isset($this->request->get['order_id'])) {
-				$this->data['action'] = $this->url->link('sale/order/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+				$this->data['action'] = $this->url->link('sale/order/insert', 'token=' . $this->session->data['token'] . $url);
 				} else {
-				$this->data['action'] = $this->url->link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . $url, 'SSL');
+				$this->data['action'] = $this->url->link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . $url);
 			}
 			
-			$this->data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
-			$this->data['cancel'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url, 'SSL');	
+			$this->data['invoice'] = $this->url->link('sale/order/invoice', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id']);
+			$this->data['cancel'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'] . $url);	
 			
 			$this->data['token'] = $this->session->data['token'];
 			
 			if(isset($this->request->get['order_id'])){
-				$this->data['url_resend'] = $this->url->link('sale/order/resend', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
+				$this->data['url_resend'] = $this->url->link('sale/order/resend', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id']);
 				$this->data['button_resend'] = $this->language->get('button_resend');
 			}
 			
 			if(isset($this->request->get['order_id'])){
-				$this->data['url_resendadmin'] = $this->url->link('sale/order/resendadmin', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
+				$this->data['url_resendadmin'] = $this->url->link('sale/order/resendadmin', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id']);
 				$this->data['button_resendadmin'] = $this->language->get('button_resendadmin');
 			}
 			
 			if(isset($this->request->get['order_id'])){
-				$this->data['url_neworder'] = $this->url->link('sale/order/neworder', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');				
+				$this->data['url_neworder'] = $this->url->link('sale/order/neworder', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id']);				
 			}
 			
 			if(isset($this->request->get['order_id'])){
-				$this->data['url_mailpreview'] = $this->url->link('sale/order/showMailPreview', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');			
+				$this->data['url_mailpreview'] = $this->url->link('sale/order/showMailPreview', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id']);			
 			}
 			
 			if ($order_info['total_national'] > 0){
@@ -2575,7 +2575,7 @@
 			if ($order_info['order_id2']){
 				$_oid2 = explode('-', $order_info['order_id2']);
 				$_oid2 = (int)$_oid2[0];
-				$this->data['main_order_href'] = $this->url->link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . $_oid2, 'SSL');			
+				$this->data['main_order_href'] = $this->url->link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . $_oid2);			
 				$this->data['main_order_num'] = $_oid2;
 				$this->data['linked_orders'] = false;
 				} else {
@@ -2587,7 +2587,7 @@
 				if (count($linked_orders) > 0){
 					foreach ($linked_orders as $_linked_order){
 						$this->data['linked_orders'][] = array(
-						'href' => $this->url->link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$_linked_order['order_id'], 'SSL'),
+						'href' => $this->url->link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$_linked_order['order_id']),
 						'order_id' => (int)$_linked_order['order_id'],
 						'order_id2' => $_linked_order['order_id2']
 						);
@@ -3065,7 +3065,7 @@
 			$this->data['customer_groups'] = $this->model_sale_customer_group->getCustomerGroups();
 			
 			if ($order_info['customer_id']) {
-				$this->data['customer_link'] = $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . (int)$order_info['customer_id'], 'SSL');
+				$this->data['customer_link'] = $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . (int)$order_info['customer_id']);
 				} else {
 				$this->data['customer_link'] = false;
 			}
@@ -3953,7 +3953,7 @@
 				'reorder_id' 	=> $order_product_return['reorder_id']?$order_product_return['reorder_id']:'',
 				'product_id'	=> $order_product_return['product_id'],
 				'to_supplier'	=> $order_product_return['to_supplier'],
-				'product_adminlink' => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $order_product_return['product_id'], 'SSL'),
+				'product_adminlink' => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $order_product_return['product_id']),
 				'name'  			=> $order_product_return['product'],
 				'model'  			=> $order_product_return['model'],
 				'ean'  				=> $real_product['ean'],
@@ -4042,7 +4042,7 @@
 						'quantity'         => $set_product_result['quantity'],
 						'price_national'   => $set_product_result['price_national'],
 						'total_national'   => $set_product_result['total_national'],
-						'adminlink'        => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $set_product_result['product_id'], 'SSL'),
+						'adminlink'        => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $set_product_result['product_id']),
 						);
 					}
 					
@@ -4107,7 +4107,7 @@
 				'tax'              => $order_product['tax'],
 				'reward'           => $order_product['reward'],
 				'waitlist'		   => $order_product['waitlist'],
-				'adminlink'        => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $order_product['product_id'], 'SSL'),
+				'adminlink'        => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $order_product['product_id']),
 				'set' 			   => $set_products,
 				'ao_id' 			=> $order_product['ao_id'],
 				'ao_product_id' 	=> $order_product['ao_product_id'],
@@ -4184,7 +4184,7 @@
 						'quantity'         => $set_product_result['quantity'],
 						'price_national'   => $set_product_result['price_national'],
 						'total_national'   => $set_product_result['total_national'],
-						'adminlink'        => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $set_product_result['product_id'], 'SSL'),
+						'adminlink'        => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $set_product_result['product_id']),
 						);
 					}
 					
@@ -4249,7 +4249,7 @@
 				'tax'              => $order_product['tax'],
 				'reward'           => $order_product['reward'],
 				'waitlist'		   => $order_product['waitlist'],
-				'adminlink'        => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $order_product['product_id'], 'SSL'),
+				'adminlink'        => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $order_product['product_id']),
 				'set' 			   => $set_products,
 				'ao_id' 			=> $order_product['ao_id'],
 				'ao_product_id' 	=> $order_product['ao_product_id'],
@@ -4565,7 +4565,7 @@
 						'buy_max_coef'		=> $buy_max_coef,
 						'buy_max_price'		=> $buy_max_price,
 						'real_difference'	=> $real_difference,
-						'adminlink'        => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $set_product_result['product_id'], 'SSL'),
+						'adminlink'        => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $set_product_result['product_id']),
 						);
 					}
 					
@@ -4868,7 +4868,7 @@
 				'points_used_total' 	=> $points_used_total,	
 				'points_used_one_txt' 	=> $points_used_one_txt,	
 				'points_used_total_txt' => $points_used_total_txt,	
- 				'adminlink'        	=> $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $order_product['product_id'], 'SSL'),
+ 				'adminlink'        	=> $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $order_product['product_id']),
 				'product_waitlist_href' => $this->url->link('catalog/waitlist', 'filter_product_id='.$order_product['product_id'].'&token='.$this->session->data['token']),
 				'set' => $set_products,						
 				'ao_id' => $order_product['ao_id'],	
@@ -4972,10 +4972,10 @@
 			$this->data['tip_left'] = $order_info['total_national'] - $this->data['tip_full'];
 			$this->data['tip_left_txt'] = $this->currency->format($this->data['tip_left'], $order_info['currency_code'], 1);
 			
-			$this->data['changemanager_url'] = $this->url->link('sale/order/changeManagerAjax', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id'], 'SSL');
+			$this->data['changemanager_url'] = $this->url->link('sale/order/changeManagerAjax', 'token=' . $this->session->data['token'] . '&order_id=' . (int)$this->request->get['order_id']);
 			
-			$this->data['goodproduct_link'] =$this->url->link('sale/order/setGoodProduct', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['takenproduct_link'] =$this->url->link('sale/order/setTakenProduct', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['goodproduct_link'] =$this->url->link('sale/order/setGoodProduct', 'token=' . $this->session->data['token']);
+			$this->data['takenproduct_link'] =$this->url->link('sale/order/setTakenProduct', 'token=' . $this->session->data['token']);
 			
 			$this->load->model('user/user');
 			$this->data['managers'] = $this->model_user_user->getUsersByGroup(12, true);
@@ -6564,7 +6564,7 @@
 			$pagination->page = $page;
 			$pagination->limit = 20;
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('sale/order/history', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('sale/order/history', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			
@@ -6671,7 +6671,7 @@
 			$pagination->page = $page;
 			$pagination->limit = 20; 
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('sale/order/history', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('sale/order/history', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			
@@ -6727,13 +6727,13 @@
 				
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_home'),
-				'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+				'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 				'separator' => false
 				);
 				
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('heading_title'),
-				'href'      => $this->url->link('error/not_found', 'token=' . $this->session->data['token'], 'SSL'),
+				'href'      => $this->url->link('error/not_found', 'token=' . $this->session->data['token']),
 				'separator' => ' :: '
 				);
 				

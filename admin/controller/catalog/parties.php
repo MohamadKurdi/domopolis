@@ -111,13 +111,13 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => 'Закупочные партии товаров',
-			'href'      => $this->url->link('catalog/parties', 'token=' . $this->session->data['token'] . $url, 'SSL'),       		
+			'href'      => $this->url->link('catalog/parties', 'token=' . $this->session->data['token'] . $url),       		
 			'separator' => ' :: '
 			);
 			
@@ -282,12 +282,12 @@
 			$this->data['button_delete'] = $this->language->get('button_delete');		
 			$this->data['button_filter'] = $this->language->get('button_filter');
 			
-			$this->data['sort_name'] = $this->url->link('catalog/parties', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
-			$this->data['sort_model'] = $this->url->link('catalog/parties', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url, 'SSL');
-			$this->data['sort_price'] = $this->url->link('catalog/parties', 'token=' . $this->session->data['token'] . '&sort=p.price' . $url, 'SSL');
-			$this->data['sort_quantity'] = $this->url->link('catalog/parties', 'token=' . $this->session->data['token'] . '&sort=p.quantity' . $url, 'SSL');
-			$this->data['sort_status'] = $this->url->link('catalog/parties', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url, 'SSL');
-			$this->data['sort_order'] = $this->url->link('catalog/parties', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url, 'SSL');
+			$this->data['sort_name'] = $this->url->link('catalog/parties', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url);
+			$this->data['sort_model'] = $this->url->link('catalog/parties', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url);
+			$this->data['sort_price'] = $this->url->link('catalog/parties', 'token=' . $this->session->data['token'] . '&sort=p.price' . $url);
+			$this->data['sort_quantity'] = $this->url->link('catalog/parties', 'token=' . $this->session->data['token'] . '&sort=p.quantity' . $url);
+			$this->data['sort_status'] = $this->url->link('catalog/parties', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url);
+			$this->data['sort_order'] = $this->url->link('catalog/parties', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url);
 			
 			$this->data['token'] = $this->session->data['token'];
 			
@@ -312,7 +312,7 @@
 			$pagination->page = $page;
 			$pagination->limit = 5;
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('catalog/parties', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('catalog/parties', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			

@@ -69,25 +69,25 @@ class ControllerPaymentPPPro extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_payment'),
-			'href'      => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/payment', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('payment/pp_pro', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('payment/pp_pro', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
-		$this->data['action'] = $this->url->link('payment/pp_pro', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('payment/pp_pro', 'token=' . $this->session->data['token']);
 
-		$this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token']);
 
 		if (isset($this->request->post['pp_pro_username'])) {
 			$this->data['pp_pro_username'] = $this->request->post['pp_pro_username'];

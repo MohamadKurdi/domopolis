@@ -147,18 +147,18 @@ class ControllerCatalogNcomments extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'] . $url),
       		'separator' => ' :: '
    		);
 							
-		$this->data['insert'] = $this->url->link('catalog/ncomments/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['delete'] = $this->url->link('catalog/ncomments/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');	
+		$this->data['insert'] = $this->url->link('catalog/ncomments/insert', 'token=' . $this->session->data['token'] . $url);
+		$this->data['delete'] = $this->url->link('catalog/ncomments/delete', 'token=' . $this->session->data['token'] . $url);	
 
 		$this->data['ncomments'] = array();
 
@@ -202,7 +202,7 @@ class ControllerCatalogNcomments extends Controller {
 		$this->data['column_status'] = $this->language->get('column_status');
 		$this->data['column_date_added'] = $this->language->get('column_date_added');
 		$this->data['column_action'] = $this->language->get('column_action');	
-        $this->data['npages'] = $this->url->link('catalog/news', 'token=' . $this->session->data['token'], 'SSL');		
+        $this->data['npages'] = $this->url->link('catalog/news', 'token=' . $this->session->data['token']);		
 		$this->data['gotonpages'] = $this->language->get('gotonpages');
 		$this->data['button_insert'] = $this->language->get('button_insert');
 		$this->data['button_delete'] = $this->language->get('button_delete');
@@ -233,10 +233,10 @@ class ControllerCatalogNcomments extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 		
-		$this->data['sort_product'] = $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'] . '&sort=bd.name' . $url, 'SSL');
-		$this->data['sort_author'] = $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'] . '&sort=n.author' . $url, 'SSL');
-		$this->data['sort_status'] = $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'] . '&sort=n.status' . $url, 'SSL');
-		$this->data['sort_date_added'] = $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'] . '&sort=n.date_added' . $url, 'SSL');
+		$this->data['sort_product'] = $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'] . '&sort=bd.name' . $url);
+		$this->data['sort_author'] = $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'] . '&sort=n.author' . $url);
+		$this->data['sort_status'] = $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'] . '&sort=n.status' . $url);
+		$this->data['sort_date_added'] = $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'] . '&sort=n.date_added' . $url);
 		
 		$url = '';
 
@@ -253,7 +253,7 @@ class ControllerCatalogNcomments extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get('config_admin_limit');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 			
 		$this->data['pagination'] = $pagination->render();
 
@@ -337,23 +337,23 @@ class ControllerCatalogNcomments extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'] . $url),
       		'separator' => ' :: '
    		);
 										
 		if (!isset($this->request->get['ncomment_id'])) { 
-			$this->data['action'] = $this->url->link('catalog/ncomments/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('catalog/ncomments/insert', 'token=' . $this->session->data['token'] . $url);
 		} else {
-			$this->data['action'] = $this->url->link('catalog/ncomments/update', 'token=' . $this->session->data['token'] . '&ncomment_id=' . $this->request->get['ncomment_id'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('catalog/ncomments/update', 'token=' . $this->session->data['token'] . '&ncomment_id=' . $this->request->get['ncomment_id'] . $url);
 		}
 		
-		$this->data['cancel'] = $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['cancel'] = $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'] . $url);
 
 		$this->data['token'] = $this->session->data['token'];
 

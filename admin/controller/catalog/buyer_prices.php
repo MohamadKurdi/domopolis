@@ -23,13 +23,13 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => 'Массовая проверка цен',
-			'href'      => $this->url->link('catalog/buyer_prices', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('catalog/buyer_prices', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 			);
 			

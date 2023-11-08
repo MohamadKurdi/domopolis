@@ -53,25 +53,25 @@ class ControllerModuleFAQSystem extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_module'),
-			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('module/faq_system', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('module/faq_system', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
-		$this->data['action'] = $this->url->link('module/faq_system', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('module/faq_system', 'token=' . $this->session->data['token']);
 		
-		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']);
 		
 		
 		
@@ -107,8 +107,8 @@ class ControllerModuleFAQSystem extends Controller {
 		$this->language->load('module/faq_system');
 		$this->load->model('module/faq_system');
 		
-		$this->data['insert'] = $this->url->link('catalog/category/insert', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['delete'] = $this->url->link('catalog/category/delete', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['insert'] = $this->url->link('catalog/category/insert', 'token=' . $this->session->data['token']);
+		$this->data['delete'] = $this->url->link('catalog/category/delete', 'token=' . $this->session->data['token']);
 		
 		$this->data['categories'] = array();
 		
@@ -272,8 +272,8 @@ class ControllerModuleFAQSystem extends Controller {
 		$this->language->load('module/faq_system');
 		$this->load->model('module/faq_system');
 		
-		$this->data['insert'] = $this->url->link('catalog/category/insert', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['delete'] = $this->url->link('catalog/category/delete', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['insert'] = $this->url->link('catalog/category/insert', 'token=' . $this->session->data['token']);
+		$this->data['delete'] = $this->url->link('catalog/category/delete', 'token=' . $this->session->data['token']);
 		
 		$this->data['questions'] = array();
 		

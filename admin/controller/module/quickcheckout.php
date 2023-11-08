@@ -134,7 +134,7 @@ class ControllerModuleQuickcheckout extends Controller {
 
 		$this->data['text_social_login_required'] = $this->language->get('text_social_login_required');
 		$this->data['text_social_login_edit'] = $this->language->get('text_social_login_edit');
-		$this->data['link_social_login_edit'] = $this->url->link('module/d_social_login', 'token=' . $this->session->data['token'] . '&store_id='.$store_id, 'SSL');
+		$this->data['link_social_login_edit'] = $this->url->link('module/d_social_login', 'token=' . $this->session->data['token'] . '&store_id='.$store_id);
 		$this->data['text_socila_login_style'] = $this->language->get('text_socila_login_style');
 		$this->data['text_icons'] = $this->language->get('text_icons');
 		$this->data['text_small'] = $this->language->get('text_small');
@@ -279,9 +279,9 @@ class ControllerModuleQuickcheckout extends Controller {
 		$this->data['button_remove'] = $this->language->get('button_remove');
 		
 		$this->data['tab_module'] = $this->language->get('tab_module');
-		$this->data['action'] = $this->url->link('module/quickcheckout', 'token=' . $this->session->data['token'] . '&store_id='.$store_id, 'SSL');
-		$this->data['module_link'] = $this->url->link('module/quickcheckout', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('module/quickcheckout', 'token=' . $this->session->data['token'] . '&store_id='.$store_id);
+		$this->data['module_link'] = $this->url->link('module/quickcheckout', 'token=' . $this->session->data['token']);
+		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']);
 
 
 		if (!file_exists(DIR_CATALOG.'../vqmod/xml/vqmod_extra_positions.xml')) {
@@ -302,19 +302,19 @@ class ControllerModuleQuickcheckout extends Controller {
   		$this->data['breadcrumbs'] = array();
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_module'),
-			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title_main'),
-			'href'      => $this->url->link('module/quickcheckout', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('module/quickcheckout', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		

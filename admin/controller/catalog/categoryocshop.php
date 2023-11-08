@@ -112,22 +112,22 @@ class ControllerCatalogCategoryOcShop extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/category', 'token=' . $this->session->data['token'] . '&path=', 'SSL'),
+			'href'      => $this->url->link('catalog/category', 'token=' . $this->session->data['token'] . '&path='),
 			'separator' => ' :: '
 		);
 
-		$this->data['insert'] = $this->url->link('catalog/category/insert', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['delete'] = $this->url->link('catalog/category/delete', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['repair'] = $this->url->link('catalog/category/repair', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['insert'] = $this->url->link('catalog/category/insert', 'token=' . $this->session->data['token']);
+		$this->data['delete'] = $this->url->link('catalog/category/delete', 'token=' . $this->session->data['token']);
+		$this->data['repair'] = $this->url->link('catalog/category/repair', 'token=' . $this->session->data['token']);
 		
-		$this->data['enabled'] = $this->url->link('catalog/category/enable', 'token=' . $this->session->data['token'], 'SSL');
-        $this->data['disabled'] = $this->url->link('catalog/category/disable', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['enabled'] = $this->url->link('catalog/category/enable', 'token=' . $this->session->data['token']);
+        $this->data['disabled'] = $this->url->link('catalog/category/disable', 'token=' . $this->session->data['token']);
 
 		if (isset($this->request->get['path'])) {
 			if ($this->request->get['path'] != '') {
@@ -241,23 +241,23 @@ class ControllerCatalogCategoryOcShop extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/category', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('catalog/category', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
 		if (!isset($this->request->get['category_id'])) {
-			$this->data['action'] = $this->url->link('catalog/category/insert', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['action'] = $this->url->link('catalog/category/insert', 'token=' . $this->session->data['token']);
 		} else {
-			$this->data['action'] = $this->url->link('catalog/category/update', 'token=' . $this->session->data['token'] . '&category_id=' . $this->request->get['category_id'], 'SSL');
+			$this->data['action'] = $this->url->link('catalog/category/update', 'token=' . $this->session->data['token'] . '&category_id=' . $this->request->get['category_id']);
 		}
 
-		$this->data['cancel'] = $this->url->link('catalog/category', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('catalog/category', 'token=' . $this->session->data['token']);
 
 		if (isset($this->request->get['category_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$category_info = $this->model_catalog_category->getCategory($this->request->get['category_id']);
@@ -663,8 +663,8 @@ class ControllerCatalogCategoryOcShop extends Controller {
 		static $href_action = null;
 
 		if ($href_category === null) {
-			$href_category = $this->url->link('catalog/categoryocshop', 'token=' . $this->session->data['token'] . '&path=', 'SSL');
-			$href_action = $this->url->link('catalog/category/update', 'token=' . $this->session->data['token'] . '&category_id=', 'SSL');
+			$href_category = $this->url->link('catalog/categoryocshop', 'token=' . $this->session->data['token'] . '&path=');
+			$href_action = $this->url->link('catalog/category/update', 'token=' . $this->session->data['token'] . '&category_id=');
 		}
 
 		$results = $this->model_catalog_category->getCategoriesByParentId($parent_id);

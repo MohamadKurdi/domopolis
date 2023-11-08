@@ -151,17 +151,17 @@ class ControllerCatalogStocks extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/stocks/stockDynamics', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('catalog/stocks/stockDynamics', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
-		$this->data['backhref'] = $this->url->link('catalog/stocks', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['backhref'] = $this->url->link('catalog/stocks', 'token=' . $this->session->data['token']);
 
 		$this->data['token'] = $this->session->data['token'];
 
@@ -202,13 +202,13 @@ class ControllerCatalogStocks extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/stocks', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('catalog/stocks', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
@@ -244,7 +244,7 @@ class ControllerCatalogStocks extends Controller {
 
 		foreach ($stores as $store){
 			if ($this->model_setting_setting->getKeySettingValue('config', 'config_warehouse_identifier_local', $store['store_id']) == $this->model_setting_setting->getKeySettingValue('config', 'config_warehouse_identifier', $store['store_id'])){		
-				$store['href'] = $this->url->link('catalog/stocks', 'store_id=' . $store['store_id'] . '&token=' . $this->session->data['token'], 'SSL');
+				$store['href'] = $this->url->link('catalog/stocks', 'store_id=' . $store['store_id'] . '&token=' . $this->session->data['token']);
 				$this->data['stores'][] = $store;
 			}			
 		}
@@ -347,7 +347,7 @@ class ControllerCatalogStocks extends Controller {
 		$this->data['filter_by_brand'] = $filter_by_brand;
 		$this->data['filter_sort'] = $filter_sort;
 
-		$this->data['dynamics_href'] = $this->url->link('catalog/stocks/stockDynamics', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['dynamics_href'] = $this->url->link('catalog/stocks/stockDynamics', 'token=' . $this->session->data['token']);
 
 		$this->template = 'catalog/stocks.tpl';
 		$this->children = array(

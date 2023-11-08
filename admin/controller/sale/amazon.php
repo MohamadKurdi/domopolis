@@ -125,13 +125,13 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->data['heading_title'],
-			'href'      => $this->url->link('sale/amazon', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('sale/amazon', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 			);
 			
@@ -198,7 +198,7 @@
 					$real_products = array();
 					foreach ($rp as &$r){
 						$r['sitelink'] = HTTPS_CATALOG . 'index.php?route=product/product&product_id='.$r['product_id'];
-						$r['adminlink'] = $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $r['product_id'], 'SSL');
+						$r['adminlink'] = $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $r['product_id']);
 						
 						if ($r['image']) {
 							$r['aimage'] = $this->model_tool_image->resize($r['image'], 50, 50);
@@ -216,7 +216,7 @@
 					}
 					
 					foreach ($_orders as &$o){
-						$o['adminlink'] = $this->url->link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . $o['order_id'], 'SSL');
+						$o['adminlink'] = $this->url->link('sale/order/update', 'token=' . $this->session->data['token'] . '&order_id=' . $o['order_id']);
 					}
 					
 					$do_add = true;
@@ -240,12 +240,12 @@
 					if ($do_add) {
 						$deliveries[$product['delivery_num']]['products'][] = array(
 						'asin' => $product['asin'],
-						'filter_asin' => $this->url->link('sale/amazon', 'token=' . $this->session->data['token'] . '&filter_asin=' . $product['asin'], 'SSL'),
+						'filter_asin' => $this->url->link('sale/amazon', 'token=' . $this->session->data['token'] . '&filter_asin=' . $product['asin']),
 						'name' => $product['name'],
 						'image' => $image,
 						'supplier' => $product['supplier'],
-						'filter_supplier_id' => $this->url->link('sale/amazon', 'token=' . $this->session->data['token'] . '&filter_supplier_id=' . $product['supplier_id'], 'SSL'),
-						'supplier_editlink' => $this->url->link('sale/supplier/update', 'token=' . $this->session->data['token'] . '&supplier_id=' . $product['supplier_id'], 'SSL'),
+						'filter_supplier_id' => $this->url->link('sale/amazon', 'token=' . $this->session->data['token'] . '&filter_supplier_id=' . $product['supplier_id']),
+						'supplier_editlink' => $this->url->link('sale/supplier/update', 'token=' . $this->session->data['token'] . '&supplier_id=' . $product['supplier_id']),
 						'real_products' => $real_products,
 						'quantity' => $product['quantity'],
 						'orders'   => $_orders,
@@ -261,7 +261,7 @@
 				$this->data['orders'][] = array(
 				'amazon_id' => $result['amazon_id'],
 				'date_added' => date('d.m.Y', strtotime($result['date_added'])),
-				'filter_date_added' => $this->url->link('sale/amazon', 'token=' . $this->session->data['token'] . '&filter_date_added=' . $result['date_added'].'&filter_date_added_to=' . $result['date_added'], 'SSL'),
+				'filter_date_added' => $this->url->link('sale/amazon', 'token=' . $this->session->data['token'] . '&filter_date_added=' . $result['date_added'].'&filter_date_added_to=' . $result['date_added']),
 				'total'      => number_format($result['total'], $decimals = 2 , $dec_point = "." , $thousands_sep = ","),
 				'gift_card'      => number_format($result['gift_card'], $decimals = 2 , $dec_point = "." , $thousands_sep = ","),
 				'selected'      => isset($this->request->post['selected']) && in_array($result['order_id'], $this->request->post['selected']),	
@@ -281,8 +281,8 @@
 					$url .= "&$filter=" . $this->request->get[$filter];
 				}
 			}
-			$this->data['sort_total'] = $this->url->link('sale/amazon', 'token=' . $this->session->data['token'] . '&sort=total' . $url, 'SSL');
-			$this->data['sort_date_added'] = $this->url->link('sale/amazon', 'token=' . $this->session->data['token'] . '&sort=date_added' . $url, 'SSL');
+			$this->data['sort_total'] = $this->url->link('sale/amazon', 'token=' . $this->session->data['token'] . '&sort=total' . $url);
+			$this->data['sort_date_added'] = $this->url->link('sale/amazon', 'token=' . $this->session->data['token'] . '&sort=date_added' . $url);
 			
 			//pagination
 			$url = '';
@@ -297,7 +297,7 @@
 			$pagination->page = $page;
 			$pagination->limit = 50;
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('sale/amazon', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('sale/amazon', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			

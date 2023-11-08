@@ -399,25 +399,25 @@ class ControllerModuleAdminQuickEdit extends Controller {
 
         $this->data['breadcrumbs'][] = array(
             'text'      => $this->language->get('text_home'),
-            'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+            'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
             'separator' => false
         );
 
         $this->data['breadcrumbs'][] = array(
             'text'      => $this->language->get('text_module'),
-            'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+            'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
             'separator' => ' :: '
         );
 
         $this->data['breadcrumbs'][] = array(
             'text'      => $this->language->get('heading_title'),
-            'href'      => $this->url->link('module/admin_quick_edit', 'token=' . $this->session->data['token'], 'SSL'),
+            'href'      => $this->url->link('module/admin_quick_edit', 'token=' . $this->session->data['token']),
             'separator' => ' :: '
         );
 
-        $this->data['action'] = $this->url->link('module/admin_quick_edit', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['action'] = $this->url->link('module/admin_quick_edit', 'token=' . $this->session->data['token']);
 
-        $this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']);
 
         $this->data['update_url'] = html_entity_decode($this->url->link('module/admin_quick_edit/update', 'token=' . $this->session->data['token'], 'SSL'));
 

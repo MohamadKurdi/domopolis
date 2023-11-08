@@ -11,13 +11,13 @@ class ControllerExtensionExtendedModule extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('modules_heading_title'),
-			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
@@ -53,7 +53,7 @@ class ControllerExtensionExtendedModule extends Controller {
 		$this->load->model('setting/extension');
 		
 		// Links
-		$this->data['settings_href'] = $this->url->link('extension/extended_module/settings', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['settings_href'] = $this->url->link('extension/extended_module/settings', 'token=' . $this->session->data['token']);
 		
 		$this->load->model('setting/setting');
 		
@@ -232,19 +232,19 @@ class ControllerExtensionExtendedModule extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('modules_heading_title'),
-			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('settings_heading_title'),
-			'href'      => $this->url->link('extension/extended_module/settings', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/extended_module/settings', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
@@ -299,10 +299,10 @@ class ControllerExtensionExtendedModule extends Controller {
 		$this->load->model('setting/extension');
 		
 		// Links
-		$this->data['settings_href'] = $this->url->link('extension/extended_module/settings', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['settings_href'] = $this->url->link('extension/extended_module/settings', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['cancel_href'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['reset_href'] = $this->url->link('extension/extended_module/reset', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['settings_href'] = $this->url->link('extension/extended_module/settings', 'token=' . $this->session->data['token']);
+		$this->data['settings_href'] = $this->url->link('extension/extended_module/settings', 'token=' . $this->session->data['token']);
+		$this->data['cancel_href'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']);
+		$this->data['reset_href'] = $this->url->link('extension/extended_module/reset', 'token=' . $this->session->data['token']);
 		
 		$em_data = $this->model_setting_setting->getSetting('extended_module');
 		

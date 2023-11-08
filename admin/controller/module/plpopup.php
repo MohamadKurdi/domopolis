@@ -205,25 +205,25 @@ class ControllerModuleplpopup extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_module'),
-			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('module/plpopup', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('module/plpopup', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
-		$this->data['action'] = $this->url->link('module/plpopup', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('module/plpopup', 'token=' . $this->session->data['token']);
 		
-		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']);
 		
 		$this->data['config_plpopup_headtop'] = isset($this->request->post['config_plpopup_headtop']) ? $this->request->post['config_plpopup_headtop'] : $this->config->get('config_plpopup_headtop');
 		$this->data['config_plpopupheadtop'] = isset($this->request->post['config_plpopupheadtop']) ? $this->request->post['config_plpopupheadtop'] : $this->config->get('config_plpopupheadtop');

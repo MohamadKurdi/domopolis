@@ -36,7 +36,7 @@ class ControllerCommonSeogen extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_seogen'),
-			'href'      => $this->url->link('common/seogen', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/seogen', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 

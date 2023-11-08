@@ -13,7 +13,7 @@
 
 			$this->data['token'] = $this->session->data['token'];
 
-			$this->data['queue'] 	= $this->url->link('catalog/addasin',  'token=' . $this->session->data['token'], 'SSL');
+			$this->data['queue'] 	= $this->url->link('catalog/addasin',  'token=' . $this->session->data['token']);
 
 			if (isset($this->session->data['error'])) {
 				$this->data['error_warning'] = $this->session->data['error'];				
@@ -275,8 +275,8 @@
 				$url .= '&filter_user_id=' . $this->request->get['filter_user_id'];
 			}
 						
-			$this->data['delete'] = $this->url->link('catalog/addasin/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
-			$this->data['add'] = $this->url->link('catalog/addasin/add', 'token=' . $this->session->data['token'] . $url, 'SSL');			
+			$this->data['delete'] = $this->url->link('catalog/addasin/delete', 'token=' . $this->session->data['token'] . $url);
+			$this->data['add'] = $this->url->link('catalog/addasin/add', 'token=' . $this->session->data['token'] . $url);			
 			
 			if (isset($this->session->data['error'])) {
 				$this->data['error_warning'] = $this->session->data['error'];				
@@ -319,7 +319,7 @@
 				'page' 		=>	$page,
 				'limit'		=> 	100,
 				'text' 		=>	$this->language->get('text_pagination'),
-				'url'		=> 	$this->url->link('catalog/addasin',  'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL'),
+				'url'		=> 	$this->url->link('catalog/addasin',  'token=' . $this->session->data['token'] . $url . '&page={page}'),
 			]);
 
 			$this->data['filter_asin'] 		= $filter_asin;
@@ -339,9 +339,9 @@
 				$url .= '&filter_user_id=' . $this->request->get['filter_user_id'];
 			}
 
-			$this->data['filter_problems_href'] 	= $this->url->link('catalog/addasin',  'token=' . $this->session->data['token'] . $url . '&filter_problems=1', 'SSL');	
+			$this->data['filter_problems_href'] 	= $this->url->link('catalog/addasin',  'token=' . $this->session->data['token'] . $url . '&filter_problems=1');	
 
-			$this->data['amazon'] 	= $this->url->link('catalog/addasin/amazon',  'token=' . $this->session->data['token'], 'SSL');			
+			$this->data['amazon'] 	= $this->url->link('catalog/addasin/amazon',  'token=' . $this->session->data['token']);			
 
 
 			$this->template = 'catalog/addasin.tpl';

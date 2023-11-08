@@ -73,18 +73,18 @@ class ControllerCatalogncategory extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/ncategory', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('catalog/ncategory', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 									
-		$this->data['insert'] = $this->url->link('catalog/ncategory/insert', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['delete'] = $this->url->link('catalog/ncategory/delete', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['insert'] = $this->url->link('catalog/ncategory/insert', 'token=' . $this->session->data['token']);
+		$this->data['delete'] = $this->url->link('catalog/ncategory/delete', 'token=' . $this->session->data['token']);
 		
 		$this->data['ncategories'] = array();
 		
@@ -192,23 +192,23 @@ class ControllerCatalogncategory extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/ncategory', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('catalog/ncategory', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
 		if (!isset($this->request->get['ncategory_id'])) {
-			$this->data['action'] = $this->url->link('catalog/ncategory/insert', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['action'] = $this->url->link('catalog/ncategory/insert', 'token=' . $this->session->data['token']);
 		} else {
-			$this->data['action'] = $this->url->link('catalog/ncategory/update', 'token=' . $this->session->data['token'] . '&ncategory_id=' . $this->request->get['ncategory_id'], 'SSL');
+			$this->data['action'] = $this->url->link('catalog/ncategory/update', 'token=' . $this->session->data['token'] . '&ncategory_id=' . $this->request->get['ncategory_id']);
 		}
 		
-		$this->data['cancel'] = $this->url->link('catalog/ncategory', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('catalog/ncategory', 'token=' . $this->session->data['token']);
 
 		$this->data['token'] = $this->session->data['token'];
 

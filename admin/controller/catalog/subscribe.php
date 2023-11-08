@@ -147,13 +147,13 @@ class ControllerCatalogSubscribe extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href' => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href' => $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
@@ -162,11 +162,11 @@ class ControllerCatalogSubscribe extends Controller {
 		$this->data['module_install'] = $this->model_catalog_subscribe->tableExists();
 
 		if ($this->data['module_install']) {
-			$this->data['send'] = $this->url->link('catalog/subscribe/send', 'token=' . $this->session->data['token'] . $url, 'SSL');
-			$this->data['email'] = $this->url->link('catalog/subscribe/email', 'token=' . $this->session->data['token'] . $url, 'SSL');
-			$this->data['authorization'] = $this->url->link('catalog/subscribe/authorizationEmail', 'token=' . $this->session->data['token'] . $url, 'SSL');
-			$this->data['insert'] = $this->url->link('catalog/subscribe/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-			$this->data['delete'] = $this->url->link('catalog/subscribe/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['send'] = $this->url->link('catalog/subscribe/send', 'token=' . $this->session->data['token'] . $url);
+			$this->data['email'] = $this->url->link('catalog/subscribe/email', 'token=' . $this->session->data['token'] . $url);
+			$this->data['authorization'] = $this->url->link('catalog/subscribe/authorizationEmail', 'token=' . $this->session->data['token'] . $url);
+			$this->data['insert'] = $this->url->link('catalog/subscribe/insert', 'token=' . $this->session->data['token'] . $url);
+			$this->data['delete'] = $this->url->link('catalog/subscribe/delete', 'token=' . $this->session->data['token'] . $url);
 
 			$this->data['subscribers'] = array();
 
@@ -236,8 +236,8 @@ class ControllerCatalogSubscribe extends Controller {
 				$url .= '&page=' . $this->request->get['page'];
 			}
 
-			$this->data['sort_email'] = $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token'] . '&sort=email' . $url, 'SSL');
-			$this->data['sort_status'] = $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token'] . '&sort=status' . $url, 'SSL');
+			$this->data['sort_email'] = $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token'] . '&sort=email' . $url);
+			$this->data['sort_status'] = $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token'] . '&sort=status' . $url);
 
 			$url = '';
 
@@ -254,7 +254,7 @@ class ControllerCatalogSubscribe extends Controller {
 			$pagination->page = $page;
 			$pagination->limit = $this->config->get('config_admin_limit');
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 
 			$this->data['pagination'] = $pagination->render();
 
@@ -315,23 +315,23 @@ class ControllerCatalogSubscribe extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href' => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href' => $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
 		if (!isset($this->request->get['subscribe_id'])) {
-			$this->data['action'] = $this->url->link('catalog/subscribe/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('catalog/subscribe/insert', 'token=' . $this->session->data['token'] . $url);
 		} else {
-			$this->data['action'] = $this->url->link('catalog/subscribe/update', 'token=' . $this->session->data['token'] . '&subscribe_id=' . $this->request->get['subscribe_id'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('catalog/subscribe/update', 'token=' . $this->session->data['token'] . '&subscribe_id=' . $this->request->get['subscribe_id'] . $url);
 		}
 
-		$this->data['cancel'] = $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['cancel'] = $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token'] . $url);
 
 		if (isset($this->request->get['subscribe_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$subscribe_info = $this->model_catalog_subscribe->getSubscribe($this->request->get['subscribe_id']);
@@ -456,13 +456,13 @@ class ControllerCatalogSubscribe extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href' => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href' => $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
@@ -476,9 +476,9 @@ class ControllerCatalogSubscribe extends Controller {
 
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
 
-		$this->data['action'] = $this->url->link('catalog/subscribe/authorizationEmail', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('catalog/subscribe/authorizationEmail', 'token=' . $this->session->data['token']);
 
-		$this->data['cancel'] = $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token']);
 
 		$this->template = 'catalog/subscribe_mail_authorization.tpl';
 		$this->children = array(
@@ -543,13 +543,13 @@ class ControllerCatalogSubscribe extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href' => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href' => $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
@@ -563,9 +563,9 @@ class ControllerCatalogSubscribe extends Controller {
 
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
 
-		$this->data['action'] = $this->url->link('catalog/subscribe/email', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('catalog/subscribe/email', 'token=' . $this->session->data['token']);
 
-		$this->data['cancel'] = $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('catalog/subscribe', 'token=' . $this->session->data['token']);
 
 		$this->template = 'catalog/subscribe_mail.tpl';
 		$this->children = array(

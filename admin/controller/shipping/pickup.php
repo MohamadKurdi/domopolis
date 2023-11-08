@@ -41,25 +41,25 @@ class ControllerShippingPickup extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_shipping'),
-			'href'      => $this->url->link('extension/shipping', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/shipping', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('shipping/pickup', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('shipping/pickup', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
-		$this->data['action'] = $this->url->link('shipping/pickup', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('shipping/pickup', 'token=' . $this->session->data['token']);
 
-		$this->data['cancel'] = $this->url->link('extension/shipping', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('extension/shipping', 'token=' . $this->session->data['token']);
 
 		if (isset($this->request->post['pickup_geo_zone_id'])) {
 			$this->data['pickup_geo_zone_id'] = $this->request->post['pickup_geo_zone_id'];

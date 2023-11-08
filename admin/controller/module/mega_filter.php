@@ -84,18 +84,18 @@ class ControllerModuleMegaFilter extends Controller {
 		$this->data['tab_active'] = $tab;
 		
 		// linki zakładek
-		$this->data['tab_layout_link']		= $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['tab_attributes_link']	= $this->url->link('module/' . $this->_name . '/attributes', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['tab_options_link']		= $this->url->link('module/' . $this->_name . '/options', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['tab_layout_link']		= $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token']);
+		$this->data['tab_attributes_link']	= $this->url->link('module/' . $this->_name . '/attributes', 'token=' . $this->session->data['token']);
+		$this->data['tab_options_link']		= $this->url->link('module/' . $this->_name . '/options', 'token=' . $this->session->data['token']);
 		if( $this->hasFilters() ) {
-			$this->data['tab_filters_link']		= $this->url->link('module/' . $this->_name . '/filters', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['tab_filters_link']		= $this->url->link('module/' . $this->_name . '/filters', 'token=' . $this->session->data['token']);
 		}
-		$this->data['tab_settings_link']	= $this->url->link('module/' . $this->_name . '/settings', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['tab_about_link']		= $this->url->link('module/' . $this->_name . '/about', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['tab_settings_link']	= $this->url->link('module/' . $this->_name . '/settings', 'token=' . $this->session->data['token']);
+		$this->data['tab_about_link']		= $this->url->link('module/' . $this->_name . '/about', 'token=' . $this->session->data['token']);
 		
 		// linki
-		$this->data['action']	= $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['back']		= $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action']	= $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token']);
+		$this->data['back']		= $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']);
 		$this->data['_name']	= $this->_name;
 		
 		// okruszki
@@ -103,19 +103,19 @@ class ControllerModuleMegaFilter extends Controller {
 		
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_module'),
-			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
@@ -831,10 +831,10 @@ class ControllerModuleMegaFilter extends Controller {
 		
 		////////////////////////////////////////////////////////////////////////
 		
-		$this->data['action_ldv']			= $this->url->link('module/' . $this->_name . '/ldv', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['action_save_data']		= $this->url->link('module/' . $this->_name . '/save_data', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['action_get_data']		= $this->url->link('module/' . $this->_name . '/get_data', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['action_remove_data']	= $this->url->link('module/' . $this->_name . '/remove_data', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action_ldv']			= $this->url->link('module/' . $this->_name . '/ldv', 'token=' . $this->session->data['token']);
+		$this->data['action_save_data']		= $this->url->link('module/' . $this->_name . '/save_data', 'token=' . $this->session->data['token']);
+		$this->data['action_get_data']		= $this->url->link('module/' . $this->_name . '/get_data', 'token=' . $this->session->data['token']);
+		$this->data['action_remove_data']	= $this->url->link('module/' . $this->_name . '/remove_data', 'token=' . $this->session->data['token']);
 				
 		$this->response->setOutput( $this->render() );
 	}
@@ -940,7 +940,7 @@ class ControllerModuleMegaFilter extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('module/mega_filter/ldv', 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('module/mega_filter/ldv', 'token=' . $this->session->data['token'] . '&page={page}');
 			
 		$this->data['pagination'] = $pagination->render();
 		
@@ -1002,7 +1002,7 @@ class ControllerModuleMegaFilter extends Controller {
 		$config = $this->config->get($this->_name . '_attribs');
 		$limit = 100;//$this->config->get('config_admin_limit');
 		
-		$this->data['action']	= $this->url->link('module/' . $this->_name . '/attributes', 'token=' . $this->session->data['token'] . '&page=' . $page, 'SSL');
+		$this->data['action']	= $this->url->link('module/' . $this->_name . '/attributes', 'token=' . $this->session->data['token'] . '&page=' . $page);
 		
 		if( $this->request->server['REQUEST_METHOD'] == 'POST' && $this->checkPermission() ) {
 			$this->load->model('setting/setting');
@@ -1060,17 +1060,17 @@ class ControllerModuleMegaFilter extends Controller {
 		$this->data['attribs'] = $config;
 		$this->data['languages'] = $this->model_localisation_language->getLanguages();
 		$this->data['attribGroups'] = $this->model_catalog_attribute_group->getAttributeGroups(array());
-		$this->data['action_attribs_by_group'] = $this->url->link('module/' . $this->_name . '/getAttribsByGroupAsJson', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['action_values_by_attrib'] = $this->url->link('module/' . $this->_name . '/getAttribsValuesByAttribAsJson', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['action_attribs_save'] = $this->url->link('module/' . $this->_name . '/attribsSave', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['action_attribs_reset'] = $this->url->link('module/' . $this->_name . '/attribsReset', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action_attribs_by_group'] = $this->url->link('module/' . $this->_name . '/getAttribsByGroupAsJson', 'token=' . $this->session->data['token']);
+		$this->data['action_values_by_attrib'] = $this->url->link('module/' . $this->_name . '/getAttribsValuesByAttribAsJson', 'token=' . $this->session->data['token']);
+		$this->data['action_attribs_save'] = $this->url->link('module/' . $this->_name . '/attribsSave', 'token=' . $this->session->data['token']);
+		$this->data['action_attribs_reset'] = $this->url->link('module/' . $this->_name . '/attribsReset', 'token=' . $this->session->data['token']);
 		
 		$pagination = new Pagination();
 		$pagination->total = $this->model_catalog_attribute->getTotalAttributes();
 		$pagination->page = $page;
 		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('module/mega_filter/attributes', 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('module/mega_filter/attributes', 'token=' . $this->session->data['token'] . '&page={page}');
 			
 		$this->data['pagination'] = $pagination->render();
 		
@@ -1364,7 +1364,7 @@ class ControllerModuleMegaFilter extends Controller {
 		$config = $this->config->get($this->_name . '_options');
 		$limit = 100;//$this->config->get('config_admin_limit');
 		
-		$this->data['action']	= $this->url->link('module/' . $this->_name . '/options', 'token=' . $this->session->data['token'] . '&page=' . $page, 'SSL');
+		$this->data['action']	= $this->url->link('module/' . $this->_name . '/options', 'token=' . $this->session->data['token'] . '&page=' . $page);
 		
 		if( $this->request->server['REQUEST_METHOD'] == 'POST' && $this->checkPermission() ) {
 			$this->load->model('setting/setting');
@@ -1405,7 +1405,7 @@ class ControllerModuleMegaFilter extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('module/mega_filter/options', 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('module/mega_filter/options', 'token=' . $this->session->data['token'] . '&page={page}');
 			
 		$this->data['pagination'] = $pagination->render();
 		
@@ -1471,7 +1471,7 @@ class ControllerModuleMegaFilter extends Controller {
 		$config = $this->config->get($this->_name . '_filters');
 		$limit = 100;//$this->config->get('config_admin_limit');
 		
-		$this->data['action']	= $this->url->link('module/' . $this->_name . '/filters', 'token=' . $this->session->data['token'] . '&page=' . $page, 'SSL');
+		$this->data['action']	= $this->url->link('module/' . $this->_name . '/filters', 'token=' . $this->session->data['token'] . '&page=' . $page);
 		
 		if( $this->request->server['REQUEST_METHOD'] == 'POST' && $this->checkPermission() ) {
 			$this->load->model('setting/setting');
@@ -1513,7 +1513,7 @@ class ControllerModuleMegaFilter extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $limit;
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('module/mega_filter/filters', 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('module/mega_filter/filters', 'token=' . $this->session->data['token'] . '&page={page}');
 			
 		$this->data['pagination'] = $pagination->render();
 		
@@ -1601,8 +1601,8 @@ class ControllerModuleMegaFilter extends Controller {
 	public function settings() {
 		$this->_init( 'settings' );
 		
-		$this->data['action']	= $this->url->link('module/' . $this->_name . '/settings', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['action_clear_cache']	= $this->url->link('module/' . $this->_name . '/clearcache', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action']	= $this->url->link('module/' . $this->_name . '/settings', 'token=' . $this->session->data['token']);
+		$this->data['action_clear_cache']	= $this->url->link('module/' . $this->_name . '/clearcache', 'token=' . $this->session->data['token']);
 		
 		$this->data['settings'] = $this->config->get($this->_name . '_settings');
 		
@@ -1765,11 +1765,11 @@ class ControllerModuleMegaFilter extends Controller {
 		$this->_init( 'about' );
 		
 		$this->data['ext_version'] = $this->_version;
-		$this->data['action']	= $this->url->link('module/' . $this->_name . '/about', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action']	= $this->url->link('module/' . $this->_name . '/about', 'token=' . $this->session->data['token']);
 		
 		if( $this->config->get('mfilter_plus_version') ) {
 			$this->data['plus_version'] = $this->config->get('mfilter_plus_version');
-			$this->data['action_rebuild_index'] = $this->data['action']	= $this->url->link('module/' . $this->_name . '/installprogress', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['action_rebuild_index'] = $this->data['action']	= $this->url->link('module/' . $this->_name . '/installprogress', 'token=' . $this->session->data['token']);
 		}
 		
 		$this->response->setOutput( $this->render() );
@@ -1801,8 +1801,8 @@ class ControllerModuleMegaFilter extends Controller {
 		
 		$this->_init( 'installprogress' );
 		
-		$this->data['progress_action'] = $this->url->link('module/' . $this->_name.'/installprogress', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['main_action'] = $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['progress_action'] = $this->url->link('module/' . $this->_name.'/installprogress', 'token=' . $this->session->data['token']);
+		$this->data['main_action'] = $this->url->link('module/' . $this->_name, 'token=' . $this->session->data['token']);
 		
 		$this->response->setOutput( $this->render() );
 	}

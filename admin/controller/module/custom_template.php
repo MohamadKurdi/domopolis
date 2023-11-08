@@ -69,7 +69,7 @@ class ControllerModuleCustomTemplate extends Controller {
         $this->data['stores'][] = array('store_id' => 0, 'name' => 'По умолчанию');
 
        
-		$this->data['action_without_store'] = $this->url->link('module/custom_template', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action_without_store'] = $this->url->link('module/custom_template', 'token=' . $this->session->data['token']);
 		
 		$this->data['categories'] = $this->model_catalog_category->getCategories(0);
 		$this->data['informations'] = $this->model_catalog_information->getInformations();
@@ -125,7 +125,7 @@ class ControllerModuleCustomTemplate extends Controller {
 			$this->data['modules'] = array();			
 		}
 
-		$this->data['check_rights'] = $this->url->link('module/custom_template/check_file', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['check_rights'] = $this->url->link('module/custom_template/check_file', 'token=' . $this->session->data['token']);
 		$this->data['template_dir'] = DIR_CATALOG.'view'.DIRECTORY_SEPARATOR.'theme'.DIRECTORY_SEPARATOR.$this->config->get('config_template').DIRECTORY_SEPARATOR;
 		$this->data['js_entry_template'] = $this->jsAddSlashes(sprintf($this->data['entry_template'], $this->data['template_dir']));
 
@@ -141,25 +141,25 @@ class ControllerModuleCustomTemplate extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_module'),
-			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('module_heading_title'),
-			'href'      => $this->url->link('module/custom_template', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('module/custom_template', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
-		$this->data['action'] = $this->url->link('module/custom_template' ,'store_id=' . $this->data['store_id'] . '&token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('module/custom_template' ,'store_id=' . $this->data['store_id'] . '&token=' . $this->session->data['token']);
 		
-		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']);
 				
 		$this->template = 'module/custom_template.tpl';
 		$this->children = array(

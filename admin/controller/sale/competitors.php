@@ -50,13 +50,13 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('sale/competitors', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('sale/competitors', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 			);
 					
@@ -114,9 +114,9 @@
 				$url .= '&page=' . $this->request->get['page'];
 			}
 			
-			$this->data['sort_name'] = $this->url->link('sale/competitors', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-			$this->data['sort_code'] = $this->url->link('sale/competitors', 'token=' . $this->session->data['token'] . '&sort=code' . $url, 'SSL');
-			$this->data['sort_sort_order'] = $this->url->link('sale/competitors', 'token=' . $this->session->data['token'] . '&sort=sort_order' . $url, 'SSL');
+			$this->data['sort_name'] = $this->url->link('sale/competitors', 'token=' . $this->session->data['token'] . '&sort=name' . $url);
+			$this->data['sort_code'] = $this->url->link('sale/competitors', 'token=' . $this->session->data['token'] . '&sort=code' . $url);
+			$this->data['sort_sort_order'] = $this->url->link('sale/competitors', 'token=' . $this->session->data['token'] . '&sort=sort_order' . $url);
 			
 			$url = '';
 			
@@ -133,7 +133,7 @@
 			$pagination->page = $page;
 			$pagination->limit = 50;
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('sale/competitors', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('sale/competitors', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			

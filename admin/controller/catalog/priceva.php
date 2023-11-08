@@ -534,7 +534,7 @@ class ControllerCatalogPriceva extends Controller {
 				'quantity_stockwait'   				=> $quantity_stockwait,
 				
 				'selected'   => isset($this->request->post['selected']) && in_array($result['product_id'], $this->request->post['selected']),
-				'edit' 		 => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'] . $url, 'SSL'),
+				'edit' 		 => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'] . $url),
 				'view'		 => HTTPS_CATALOG . 'index.php?route=product/product&product_id=' . $result['product_id'], 
 				
 			);
@@ -646,11 +646,11 @@ class ControllerCatalogPriceva extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['sort_name'] = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
-		$this->data['sort_model'] = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url, 'SSL');
-		$this->data['sort_price'] = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . '&sort=p.price' . $url, 'SSL');
-		$this->data['sort_quantity'] = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . '&sort=p.quantity_stockM' . $url, 'SSL');
-		$this->data['sort_order'] = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url, 'SSL');
+		$this->data['sort_name'] = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url);
+		$this->data['sort_model'] = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url);
+		$this->data['sort_price'] = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . '&sort=p.price' . $url);
+		$this->data['sort_quantity'] = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . '&sort=p.quantity_stockM' . $url);
+		$this->data['sort_order'] = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url);
 
 
 		$url = '';
@@ -740,7 +740,7 @@ class ControllerCatalogPriceva extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get('config_admin_limit');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 
 		$this->data['pagination'] = $pagination->render();
 
@@ -770,10 +770,10 @@ class ControllerCatalogPriceva extends Controller {
 			$url .= '&order=' . $this->request->get['order'];
 		}
 
-		$this->data['href_filter_is_illiquid'] = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . '&filter_is_illiquid=1' . $url, 'SSL');
-		$this->data['href_filter_show_without_links'] = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . '&filter_show_without_links=1' . $url, 'SSL');
-		$this->data['href_competitor_stock_kitchenprofi_not_stock'] = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . '&filter_competitor_stock_all=1&filter_kitchenprofi_not_stock=1' . $url, 'SSL');
-		$this->data['href_any_competitor_stock_kitchenprofi_not_stock'] = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . '&filter_competitor_stock=1&filter_kitchenprofi_not_stock=1' . $url, 'SSL');
+		$this->data['href_filter_is_illiquid'] = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . '&filter_is_illiquid=1' . $url);
+		$this->data['href_filter_show_without_links'] = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . '&filter_show_without_links=1' . $url);
+		$this->data['href_competitor_stock_kitchenprofi_not_stock'] = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . '&filter_competitor_stock_all=1&filter_kitchenprofi_not_stock=1' . $url);
+		$this->data['href_any_competitor_stock_kitchenprofi_not_stock'] = $this->url->link('catalog/priceva', 'token=' . $this->session->data['token'] . '&filter_competitor_stock=1&filter_kitchenprofi_not_stock=1' . $url);
 
 		$this->data['filter_name'] 						= $filter_name;
 		$this->data['filter_store_id'] 					= $filter_store_id;

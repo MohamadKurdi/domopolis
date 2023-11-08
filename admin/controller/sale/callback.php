@@ -155,18 +155,18 @@
 			
 			$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get($this->language->get('heading_title')),
-			'href'      => $this->url->link('sale/callback', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('sale/callback', 'token=' . $this->session->data['token'] . $url),
       		'separator' => ' :: '
 			);
 			
-			$this->data['insert'] = $this->url->link('sale/callback/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-			$this->data['delete'] = $this->url->link('sale/callback/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');	
+			$this->data['insert'] = $this->url->link('sale/callback/insert', 'token=' . $this->session->data['token'] . $url);
+			$this->data['delete'] = $this->url->link('sale/callback/delete', 'token=' . $this->session->data['token'] . $url);	
 			
 			$this->data['callbacks'] = array();
 			
@@ -181,7 +181,7 @@
 			$results = $this->model_sale_callback->getCallbacks($data);
 			
 			foreach ($results as $result) {				
-				$action = $this->url->link('sale/callback/update', 'token=' . $this->session->data['token'] . '&callback_id=' . $result['call_id'] . $url, 'SSL');
+				$action = $this->url->link('sale/callback/update', 'token=' . $this->session->data['token'] . '&callback_id=' . $result['call_id'] . $url);
 				
 				if ($result['status_id'] == '0'){
 					$status = $this->language->get('status_wait');
@@ -300,10 +300,10 @@
 			if (isset($this->request->get['page'])) {
 				$url .= '&page=' . $this->request->get['page'];
 			}
-			$this->data['sort_call_id'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token'] . '&sort=call_id' . $url, 'SSL');		
-			$this->data['sort_name'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-			$this->data['sort_telephone'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token'] . '&sort=telephone' . $url, 'SSL');
-			$this->data['sort_username'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token'] . '&sort=username' . $url, 'SSL');
+			$this->data['sort_call_id'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token'] . '&sort=call_id' . $url);		
+			$this->data['sort_name'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token'] . '&sort=name' . $url);
+			$this->data['sort_telephone'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token'] . '&sort=telephone' . $url);
+			$this->data['sort_username'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token'] . '&sort=username' . $url);
 			
 			$url = '';
 			
@@ -320,14 +320,14 @@
 			$pagination->page = $page;
 			$pagination->limit = $this->config->get('config_admin_limit');
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('sale/callback', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('sale/callback', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			
 			$this->data['sort'] = $sort;
 			$this->data['order'] = $order;
 			
-			$this->data['update'] = $this->url->link('sale/callback/update_batch', 'token=' . $this->session->data['token'] . $url, 'SSL');	
+			$this->data['update'] = $this->url->link('sale/callback/update_batch', 'token=' . $this->session->data['token'] . $url);	
 			
 			$this->template = 'sale/callback_list.tpl';
 			$this->children = array(
@@ -396,20 +396,20 @@
 			
 			$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
 			);
 			$url = '';
 			
 			$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('sale/callback', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('sale/callback', 'token=' . $this->session->data['token'] . $url),
       		'separator' => ' :: '
 			);
 			
-			$this->data['action'] = $this->url->link('sale/callback/update', 'token=' . $this->session->data['token'] . '&callback_id=' . $this->request->get['callback_id'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('sale/callback/update', 'token=' . $this->session->data['token'] . '&callback_id=' . $this->request->get['callback_id'] . $url);
 			
-			$this->data['cancel'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['cancel'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token'] . $url);
 			
 			$this->data['token'] = $this->session->data['token'];
 			

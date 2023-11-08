@@ -41,13 +41,13 @@
 			$this->data['breadcrumbs'] = array();
 			
 			$this->data['breadcrumbs'][] = array(
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'text'      => $this->language->get('text_home'),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
-			'href'      => $this->url->link('report/customer_online', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('report/customer_online', 'token=' . $this->session->data['token'] . $url),
 			'text'      => $this->language->get('heading_title'),
 			'separator' => ' :: '
 			);
@@ -129,7 +129,7 @@
 			$pagination->total = $customer_total;
 			$pagination->page = $page;
 			$pagination->limit = 20; 
-			$pagination->url = $this->url->link('report/customer_online', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('report/customer_online', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			

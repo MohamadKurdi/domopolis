@@ -53,12 +53,12 @@ class ControllerReportExportXLS extends Controller{
 		$this->data['breadcrumbs'] 		= array();
    		$this->data['breadcrumbs'][] 	= array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('report/export_xls', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('report/export_xls', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 
@@ -77,7 +77,7 @@ class ControllerReportExportXLS extends Controller{
 		$this->data['entry_date_start'] = $this->language->get('entry_date_start');
 		$this->data['entry_date_end'] 	= $this->language->get('entry_date_end');
 		$this->data['entry_status']		= $this->language->get('entry_status');
-		$this->data['button_export'] 	= $this->url->link('report/export_xls/export', 'token=' . $this->session->data['token'] . $url . '&order=all', 'SSL');
+		$this->data['button_export'] 	= $this->url->link('report/export_xls/export', 'token=' . $this->session->data['token'] . $url . '&order=all');
 		$this->data['button_filter'] 	= $this->language->get('button_filter');
 
 

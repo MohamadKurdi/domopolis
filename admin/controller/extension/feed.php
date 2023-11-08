@@ -9,13 +9,13 @@ class ControllerExtensionFeed extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('extension/feed', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/feed', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 

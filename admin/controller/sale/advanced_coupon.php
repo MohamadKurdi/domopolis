@@ -153,18 +153,18 @@ class ControllerSaleAdvancedCoupon extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('sale/advanced_coupon', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('sale/advanced_coupon', 'token=' . $this->session->data['token'] . $url),
       		'separator' => ' :: '
    		);
 							
-		$this->data['insert'] = $this->url->link('sale/advanced_coupon/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['delete'] = $this->url->link('sale/advanced_coupon/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['insert'] = $this->url->link('sale/advanced_coupon/insert', 'token=' . $this->session->data['token'] . $url);
+		$this->data['delete'] = $this->url->link('sale/advanced_coupon/delete', 'token=' . $this->session->data['token'] . $url);
 		
 		$this->data['advanced_coupons'] = array();
 
@@ -503,23 +503,23 @@ class ControllerSaleAdvancedCoupon extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('sale/advanced_coupon', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('sale/advanced_coupon', 'token=' . $this->session->data['token'] . $url),
       		'separator' => ' :: '
    		);
 									
 		if (!isset($this->request->get['advanced_coupon_id'])) {
-			$this->data['action'] = $this->url->link('sale/advanced_coupon/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('sale/advanced_coupon/insert', 'token=' . $this->session->data['token'] . $url);
 		} else {
-			$this->data['action'] = $this->url->link('sale/advanced_coupon/update', 'token=' . $this->session->data['token'] . '&advanced_coupon_id=' . $this->request->get['advanced_coupon_id'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('sale/advanced_coupon/update', 'token=' . $this->session->data['token'] . '&advanced_coupon_id=' . $this->request->get['advanced_coupon_id'] . $url);
 		}
 		
-		$this->data['cancel'] = $this->url->link('sale/advanced_coupon', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['cancel'] = $this->url->link('sale/advanced_coupon', 'token=' . $this->session->data['token'] . $url);
   		
   		$this->data['token'] = $this->session->data['token'];
 		
@@ -1072,7 +1072,7 @@ class ControllerSaleAdvancedCoupon extends Controller {
 		$pagination->total = $history_total;
 		$pagination->page = $page;
 		$pagination->limit = 10; 
-		$pagination->url = $this->url->link('sale/advanced_coupon/history', 'token=' . $this->session->data['token'] . '&advanced_coupon_id=' . $this->request->get['advanced_coupon_id'] . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('sale/advanced_coupon/history', 'token=' . $this->session->data['token'] . '&advanced_coupon_id=' . $this->request->get['advanced_coupon_id'] . '&page={page}');
 			
 		$this->data['pagination'] = $pagination->render();
 		

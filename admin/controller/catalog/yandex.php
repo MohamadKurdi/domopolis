@@ -533,9 +533,9 @@
 				'yam_product_id' 						=> $result['yam_product_id'],
 				
 				'selected'   => isset($this->request->post['selected']) && in_array($result['product_id'], $this->request->post['selected']),
-				'edit' 		 => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'] . $url, 'SSL'),
+				'edit' 		 => $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'] . $url),
 				'view'		 => HTTPS_CATALOG . 'index.php?route=product/product&product_id=' . $result['product_id'], 
-				'hideOrShow' => $this->url->link('catalog/yandex/hideshow', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'], 'SSL'),
+				'hideOrShow' => $this->url->link('catalog/yandex/hideshow', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id']),
 				
 				'yam_href'   => 'https://partner.market.yandex.ru/supplier/' . $this->config->get('config_yam_fbs_campaign_id') . '/assortment/offer-card?offerId=' .  $result['yam_product_id'],
 				
@@ -624,11 +624,11 @@
 				$url .= '&page=' . $this->request->get['page'];
 			}
 			
-			$this->data['sort_name'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
-			$this->data['sort_model'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url, 'SSL');
-			$this->data['sort_price'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&sort=p.price' . $url, 'SSL');
-			$this->data['sort_quantity'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&sort=p.quantity_stockM' . $url, 'SSL');
-			$this->data['sort_order'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url, 'SSL');
+			$this->data['sort_name'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url);
+			$this->data['sort_model'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url);
+			$this->data['sort_price'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&sort=p.price' . $url);
+			$this->data['sort_quantity'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&sort=p.quantity_stockM' . $url);
+			$this->data['sort_order'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url);
 			
 			
 			$this->load->model('catalog/manufacturer');
@@ -683,7 +683,7 @@
 			$pagination->page = $page;
 			$pagination->limit = $this->config->get('config_admin_limit');
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			
@@ -707,11 +707,11 @@
 				$url .= '&order=' . $this->request->get['order'];
 			}
 			
-			$this->data['href_filter_is_illiquid'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&filter_is_illiquid=1' . $url, 'SSL');
-			$this->data['href_filter_buybox_failed'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&filter_buybox_failed=1' . $url, 'SSL');	
-			$this->data['href_filter_notinfeed'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&filter_notinfeed=1' . $url, 'SSL');
-			$this->data['href_filter_yam_hidden'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&filter_yam_hidden=1' . $url, 'SSL');
-			$this->data['href_filter_yam_not_created'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&filter_yam_not_created=1' . $url, 'SSL');
+			$this->data['href_filter_is_illiquid'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&filter_is_illiquid=1' . $url);
+			$this->data['href_filter_buybox_failed'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&filter_buybox_failed=1' . $url);	
+			$this->data['href_filter_notinfeed'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&filter_notinfeed=1' . $url);
+			$this->data['href_filter_yam_hidden'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&filter_yam_hidden=1' . $url);
+			$this->data['href_filter_yam_not_created'] = $this->url->link('catalog/yandex', 'token=' . $this->session->data['token'] . '&filter_yam_not_created=1' . $url);
 			
 			$this->data['filter_name'] 				= $filter_name;
 			$this->data['filter_priceva_category'] 	= $filter_priceva_category;

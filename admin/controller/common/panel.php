@@ -9,7 +9,7 @@ class ControllerCommonPanel extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => 'Панель магазина',
-			'href'      => $this->url->link('common/panel', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/panel', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 

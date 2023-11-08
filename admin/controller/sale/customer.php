@@ -1373,19 +1373,19 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 			);
 			
-			$this->data['approve'] 	= $this->url->link('sale/customer/approve', 'token=' . $this->session->data['token'] . $url, 'SSL');
-			$this->data['insert'] 	= $this->url->link('sale/customer/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-			$this->data['delete'] 	= $this->url->link('sale/customer/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['approve'] 	= $this->url->link('sale/customer/approve', 'token=' . $this->session->data['token'] . $url);
+			$this->data['insert'] 	= $this->url->link('sale/customer/insert', 'token=' . $this->session->data['token'] . $url);
+			$this->data['delete'] 	= $this->url->link('sale/customer/delete', 'token=' . $this->session->data['token'] . $url);
 			
 			$this->load->model('localisation/country');
 			$this->data['countries'] = $this->model_localisation_country->getCountries();
@@ -1551,12 +1551,12 @@
 				'ip'             => $result['ip'],
 				'date_added'     => date($this->language->get('date_format_short'), strtotime($result['date_added'])),
 				'selected'       => isset($this->request->post['selected']) && in_array($result['customer_id'], $this->request->post['selected']),
-				'letter_href'    => $this->url->link('sale/customer/printlist', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
+				'letter_href'    => $this->url->link('sale/customer/printlist', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url),
 				'preauth_url'    => $this->model_sale_customer->getCustomerPreauthLink($result['email'], $result['store_id']),
 				'mail_status'    => $result['mail_status'],
 				'mail_opened'    => $result['mail_opened'],
 				'mail_clicked'   => $result['mail_clicked'],
-				'customer_href'  => $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url, 'SSL'),
+				'customer_href'  => $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $result['customer_id'] . $url),
 				'has_push'       => $result['has_push'],
 				'cron_sent'      => $result['cron_sent'],
 				'printed2912'    => $result['printed2912'],
@@ -1756,16 +1756,16 @@
 				$url .= '&page=' . $this->request->get['page'];
 			}
 			
-			$this->data['sort_name'] 			= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-			$this->data['sort_email'] 			= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url, 'SSL');
-			$this->data['sort_customer_group'] 	= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=customer_group' . $url, 'SSL');
-			$this->data['sort_status'] 			= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url, 'SSL');
-			$this->data['sort_approved'] 		= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.approved' . $url, 'SSL');
-			$this->data['sort_ip'] 				= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url, 'SSL');
-			$this->data['sort_date_added'] 		= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
-			$this->data['export_to_csv'] 		= $this->url->link('sale/customer/getCSV', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url, 'SSL');
-			$this->data['export_to_csv_gc'] 	= $this->url->link('sale/customer/getCSV', 'token=' . $this->session->data['token'] . '&sort=c.date_added&gc_format=1' . $url, 'SSL');
-			$this->data['export_to_csv_viber'] 	= $this->url->link('sale/customer/getCSV', 'token=' . $this->session->data['token'] . '&sort=c.date_added&viber_format=1&filter_custom_filter=hasviberphone' . $url, 'SSL');
+			$this->data['sort_name'] 			= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=name' . $url);
+			$this->data['sort_email'] 			= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.email' . $url);
+			$this->data['sort_customer_group'] 	= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=customer_group' . $url);
+			$this->data['sort_status'] 			= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.status' . $url);
+			$this->data['sort_approved'] 		= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.approved' . $url);
+			$this->data['sort_ip'] 				= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.ip' . $url);
+			$this->data['sort_date_added'] 		= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url);
+			$this->data['export_to_csv'] 		= $this->url->link('sale/customer/getCSV', 'token=' . $this->session->data['token'] . '&sort=c.date_added' . $url);
+			$this->data['export_to_csv_gc'] 	= $this->url->link('sale/customer/getCSV', 'token=' . $this->session->data['token'] . '&sort=c.date_added&gc_format=1' . $url);
+			$this->data['export_to_csv_viber'] 	= $this->url->link('sale/customer/getCSV', 'token=' . $this->session->data['token'] . '&sort=c.date_added&viber_format=1&filter_custom_filter=hasviberphone' . $url);
 			
 			$url = '';
 			
@@ -1917,11 +1917,11 @@
 				$url .= '&page=' . $this->request->get['page'];
 			}
 			
-			$this->data['filter_no_verified_address'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&filter_custom_filter=noverifiedaddress', 'SSL');
-			$this->data['filter_no_passport_url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&filter_custom_filter=nopassport', 'SSL');
-			$this->data['filter_no_discount_url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&filter_custom_filter=nodiscount', 'SSL');
-			$this->data['filter_birthday_month'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&filter_birthday_from='.date('m-d').'&filter_birthday_to='.date('m-d', strtotime("+1 month")), 'SSL');
-			$this->data['filter_birthday_week'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&filter_birthday_from='.date('m-d').'&filter_birthday_to='.date('m-d', strtotime("+1 week")), 'SSL');
+			$this->data['filter_no_verified_address'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&filter_custom_filter=noverifiedaddress');
+			$this->data['filter_no_passport_url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&filter_custom_filter=nopassport');
+			$this->data['filter_no_discount_url'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&filter_custom_filter=nodiscount');
+			$this->data['filter_birthday_month'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&filter_birthday_from='.date('m-d').'&filter_birthday_to='.date('m-d', strtotime("+1 month")));
+			$this->data['filter_birthday_week'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&filter_birthday_from='.date('m-d').'&filter_birthday_to='.date('m-d', strtotime("+1 week")));
 			
 			$url = '';
 			
@@ -2074,7 +2074,7 @@
 			$pagination->page 		= $page;
 			$pagination->limit 		= $this->config->get('config_admin_limit');
 			$pagination->text 		= $this->language->get('text_pagination');
-			$pagination->url 		= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+			$pagination->url 		= $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			
@@ -2467,23 +2467,23 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 			);
 			
 			if (!isset($this->request->get['customer_id'])) {
-				$this->data['action'] = $this->url->link('sale/customer/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+				$this->data['action'] = $this->url->link('sale/customer/insert', 'token=' . $this->session->data['token'] . $url);
 				} else {
-				$this->data['action'] = $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . $url, 'SSL');
+				$this->data['action'] = $this->url->link('sale/customer/update', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . $url);
 			}
 			
-			$this->data['cancel'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url, 'SSL');			
+			$this->data['cancel'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . $url);			
 			$this->data['letter_href'] = !empty($this->request->get['customer_id'])?$this->url->link('sale/customer/printlist', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'], 'SSL'):'';
 			
 			$this->data['mail_status']	= '';
@@ -2817,7 +2817,7 @@
 					'ip'         => $result['ip'],
 					'total'      => $this->model_sale_customer->getTotalCustomersByIp($result['ip']),
 					'date_added' => date('d/m/y', strtotime($result['date_added'])),
-					'filter_ip'  => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_ip=' . $result['ip'], 'SSL'),
+					'filter_ip'  => $this->url->link('sale/customer', 'token=' . $this->session->data['token'] . '&filter_ip=' . $result['ip']),
 					'ban_ip'     => $ban_ip_total
 					);
 				}
@@ -2953,13 +2953,13 @@
 				
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('text_home'),
-				'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+				'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 				'separator' => false
 				);
 				
 				$this->data['breadcrumbs'][] = array(
 				'text'      => $this->language->get('heading_title'),
-				'href'      => $this->url->link('error/not_found', 'token=' . $this->session->data['token'], 'SSL'),
+				'href'      => $this->url->link('error/not_found', 'token=' . $this->session->data['token']),
 				'separator' => ' :: '
 				);
 				
@@ -3169,7 +3169,7 @@
 			$pagination->page = $page;
 			$pagination->limit = 30;
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('sale/customer/history', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('sale/customer/history', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			
@@ -3266,7 +3266,7 @@
 			$pagination->page = $page;
 			$pagination->limit = 20;
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('sale/customer/transaction', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('sale/customer/transaction', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			
@@ -3463,7 +3463,7 @@
 			$pagination->page = $page;
 			$pagination->limit = 10;
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('sale/customer/transactionorder', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('sale/customer/transactionorder', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			
@@ -3588,7 +3588,7 @@
 			$pagination->page = $page;
 			$pagination->limit = 50;
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('sale/customer/reward', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('sale/customer/reward', 'token=' . $this->session->data['token'] . '&customer_id=' . $this->request->get['customer_id'] . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 			

@@ -133,13 +133,13 @@ class ControllerCatalogActions extends Controller {
 
 		$this->data['breadcrumbs'] = array();
 
-		$this->data['breadcrumbs'][] = array('text' => $this->language->get('text_home'), 'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'), 'separator' => false);
+		$this->data['breadcrumbs'][] = array('text' => $this->language->get('text_home'), 'href' => $this->url->link('common/home', 'token=' . $this->session->data['token']), 'separator' => false);
 
-		$this->data['breadcrumbs'][] = array('text' => $this->language->get('heading_title'), 'href' => $this->url->link('catalog/actions', 'token=' . $this->session->data['token'] . $url, 'SSL'), 'separator' => ' :: ');
+		$this->data['breadcrumbs'][] = array('text' => $this->language->get('heading_title'), 'href' => $this->url->link('catalog/actions', 'token=' . $this->session->data['token'] . $url), 'separator' => ' :: ');
 
-		$this->data['insert'] = $this->url->link('catalog/actions/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['delete'] = $this->url->link('catalog/actions/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['setting'] = $this->url->link('catalog/actions/setting', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['insert'] = $this->url->link('catalog/actions/insert', 'token=' . $this->session->data['token'] . $url);
+		$this->data['delete'] = $this->url->link('catalog/actions/delete', 'token=' . $this->session->data['token'] . $url);
+		$this->data['setting'] = $this->url->link('catalog/actions/setting', 'token=' . $this->session->data['token'] . $url);
 
 		$this->data['actionss'] = array();
 
@@ -234,8 +234,8 @@ class ControllerCatalogActions extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['sort_caption'] = $this->url->link('catalog/actions', 'token=' . $this->session->data['token'] . '&sort=nd.caption' . $url, 'SSL');
-		$this->data['sort_date_start'] = $this->url->link('catalog/actions', 'token=' . $this->session->data['token'] . '&sort=n.date_start' . $url, 'SSL');
+		$this->data['sort_caption'] = $this->url->link('catalog/actions', 'token=' . $this->session->data['token'] . '&sort=nd.caption' . $url);
+		$this->data['sort_date_start'] = $this->url->link('catalog/actions', 'token=' . $this->session->data['token'] . '&sort=n.date_start' . $url);
 
 		$url = '';
 
@@ -252,7 +252,7 @@ class ControllerCatalogActions extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get('config_admin_limit');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('catalog/actions', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('catalog/actions', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 
 		$this->data['pagination'] = $pagination->render();
 
@@ -353,16 +353,16 @@ class ControllerCatalogActions extends Controller {
 
 		$this->data['breadcrumbs'] = array();
 
-		$this->data['breadcrumbs'][] = array('text' => $this->language->get('text_home'), 'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'), 'separator' => false);
+		$this->data['breadcrumbs'][] = array('text' => $this->language->get('text_home'), 'href' => $this->url->link('common/home', 'token=' . $this->session->data['token']), 'separator' => false);
 
-		$this->data['breadcrumbs'][] = array('text' => $this->language->get('heading_title'), 'href' => $this->url->link('catalog/actions', 'token=' . $this->session->data['token'] . $url, 'SSL'), 'separator' => ' :: ');
+		$this->data['breadcrumbs'][] = array('text' => $this->language->get('heading_title'), 'href' => $this->url->link('catalog/actions', 'token=' . $this->session->data['token'] . $url), 'separator' => ' :: ');
 
 		if (!isset($this->request->get['actions_id'])) {
-			$this->data['action'] = $this->url->link('catalog/actions/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('catalog/actions/insert', 'token=' . $this->session->data['token'] . $url);
 		} else {
-			$this->data['action'] = $this->url->link('catalog/actions/update', 'token=' . $this->session->data['token'] . '&actions_id=' . $this->request->get['actions_id'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('catalog/actions/update', 'token=' . $this->session->data['token'] . '&actions_id=' . $this->request->get['actions_id'] . $url);
 		}
-		$this->data['cancel'] = $this->url->link('catalog/actions', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['cancel'] = $this->url->link('catalog/actions', 'token=' . $this->session->data['token'] . $url);
 
 		$this->data['actions_id'] = 0;
 
@@ -697,12 +697,12 @@ class ControllerCatalogActions extends Controller {
 
 		$this->data['breadcrumbs'] = array();
 
-		$this->data['breadcrumbs'][] = array('text' => $this->language->get('text_home'), 'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'), 'separator' => false);
+		$this->data['breadcrumbs'][] = array('text' => $this->language->get('text_home'), 'href' => $this->url->link('common/home', 'token=' . $this->session->data['token']), 'separator' => false);
 
-		$this->data['breadcrumbs'][] = array('text' => $this->language->get('heading_title'), 'href' => $this->url->link('catalog/actions', 'token=' . $this->session->data['token'] . $url, 'SSL'), 'separator' => ' :: ');
+		$this->data['breadcrumbs'][] = array('text' => $this->language->get('heading_title'), 'href' => $this->url->link('catalog/actions', 'token=' . $this->session->data['token'] . $url), 'separator' => ' :: ');
 
-		$this->data['action'] = $this->url->link('catalog/actions/setting', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['cancel'] = $this->url->link('catalog/actions', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['action'] = $this->url->link('catalog/actions/setting', 'token=' . $this->session->data['token'] . $url);
+		$this->data['cancel'] = $this->url->link('catalog/actions', 'token=' . $this->session->data['token'] . $url);
 
 		$actions_setting = $this->config->get('actions_setting');
 

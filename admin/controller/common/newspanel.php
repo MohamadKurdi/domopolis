@@ -27,27 +27,27 @@ class ControllerCommonNewspanel extends Controller {
 			$this->data['success'] = '';
 		}
 
-		$this->data['nmod'] = $this->url->link('module/news', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['nmod'] = $this->url->link('module/news', 'token=' . $this->session->data['token']);
 
-		$this->data['ncmod'] = $this->url->link('module/ncategory', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['ncmod'] = $this->url->link('module/ncategory', 'token=' . $this->session->data['token']);
 		
-		$this->data['npages'] = $this->url->link('catalog/news', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['npages'] = $this->url->link('catalog/news', 'token=' . $this->session->data['token']);
 		
-		$this->data['nauthor'] = $this->url->link('catalog/nauthor', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['nauthor'] = $this->url->link('catalog/nauthor', 'token=' . $this->session->data['token']);
 		
-		$this->data['ncategory'] = $this->url->link('catalog/ncategory', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['ncategory'] = $this->url->link('catalog/ncategory', 'token=' . $this->session->data['token']);
 		
-		$this->data['tocomments'] = $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token'], 'SSL');	
+		$this->data['tocomments'] = $this->url->link('catalog/ncomments', 'token=' . $this->session->data['token']);	
 		
 		$this->data['validatingblog'] = $this->checkForStuff();
 		
-		$this->data['adddb'] = $this->url->link('common/newspanel/install', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['adddb'] = $this->url->link('common/newspanel/install', 'token=' . $this->session->data['token']);
 		
-		$this->data['updb'] = $this->url->link('common/newspanel/upgradev3', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['updb'] = $this->url->link('common/newspanel/upgradev3', 'token=' . $this->session->data['token']);
 		
-		$this->data['updb2'] = $this->url->link('common/newspanel/upgradev4', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['updb2'] = $this->url->link('common/newspanel/upgradev4', 'token=' . $this->session->data['token']);
 		
-		$this->data['updb3'] = $this->url->link('common/newspanel/upgradev5', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['updb3'] = $this->url->link('common/newspanel/upgradev5', 'token=' . $this->session->data['token']);
 		
 		if ($this->checkForStuff() == "ok") {
 			$this->data['total_coments'] = $this->model_catalog_ncomments->getTotalComments(); 

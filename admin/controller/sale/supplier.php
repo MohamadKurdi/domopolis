@@ -269,8 +269,8 @@ class ControllerSaleSupplier extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['sort_name'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-		$this->data['sort_code'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=code' . $url, 'SSL');
+		$this->data['sort_name'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=name' . $url);
+		$this->data['sort_code'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=code' . $url);
 
 		$url = '';
 
@@ -287,7 +287,7 @@ class ControllerSaleSupplier extends Controller {
 		$pagination->page 	= $page;
 		$pagination->limit 	= 50;
 		$pagination->text 	= $this->language->get('text_pagination');
-		$pagination->url 	= $this->url->link('sale/supplier/offers', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+		$pagination->url 	= $this->url->link('sale/supplier/offers', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 
 		$this->data['pagination'] = $pagination->render();
 
@@ -370,18 +370,18 @@ class ControllerSaleSupplier extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
-		$this->data['insert'] = $this->url->link('sale/supplier/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['delete'] = $this->url->link('sale/supplier/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['insert'] = $this->url->link('sale/supplier/insert', 'token=' . $this->session->data['token'] . $url);
+		$this->data['delete'] = $this->url->link('sale/supplier/delete', 'token=' . $this->session->data['token'] . $url);
 
 		$this->data['suppliers'] = [];
 
@@ -567,9 +567,9 @@ class ControllerSaleSupplier extends Controller {
 			}
 		}
 
-		$this->data['sort_name'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=name' . $url, 'SSL');
-		$this->data['sort_code'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=code' . $url, 'SSL');
-		$this->data['sort_sort_order'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=sort_order' . $url, 'SSL');
+		$this->data['sort_name'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=name' . $url);
+		$this->data['sort_code'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=code' . $url);
+		$this->data['sort_sort_order'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . '&sort=sort_order' . $url);
 
 		$url = '';
 
@@ -659,23 +659,23 @@ class ControllerSaleSupplier extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),      		
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),      		
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . $url, 'SSL'),      		
+			'href'      => $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . $url),      		
 			'separator' => ' :: '
 		);
 
 		if (!isset($this->request->get['supplier_id'])) {
-			$this->data['action'] = $this->url->link('sale/supplier/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('sale/supplier/insert', 'token=' . $this->session->data['token'] . $url);
 		} else {
-			$this->data['action'] = $this->url->link('sale/supplier/update', 'token=' . $this->session->data['token'] . '&supplier_id=' . $this->request->get['supplier_id'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('sale/supplier/update', 'token=' . $this->session->data['token'] . '&supplier_id=' . $this->request->get['supplier_id'] . $url);
 		}
 
-		$this->data['cancel'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['cancel'] = $this->url->link('sale/supplier', 'token=' . $this->session->data['token'] . $url);
 
 		if (isset($this->request->get['supplier_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$supplier_info = $this->model_sale_supplier->getSupplier($this->request->get['supplier_id']);
@@ -864,7 +864,7 @@ class ControllerSaleSupplier extends Controller {
 		}
 
 		if (isset($supplier_info) && !empty($supplier_info['amazon_seller_id'])) {
-			$this->data['offers_link'] = $this->url->link('sale/supplier/offers', 'token=' . $this->session->data['token'] . '&amazon_seller_id=' . $supplier_info['amazon_seller_id'], 'SSL');			
+			$this->data['offers_link'] = $this->url->link('sale/supplier/offers', 'token=' . $this->session->data['token'] . '&amazon_seller_id=' . $supplier_info['amazon_seller_id']);			
 		}
 
 		// if (isset($supplier_info) && isset($supplier_info['supplier_id'])) {
@@ -880,7 +880,7 @@ class ControllerSaleSupplier extends Controller {
 
 		// $this->data['amazon_totals'] = $amazon_totals;
 		// if (isset($supplier_info) && isset($supplier_info['supplier_id'])) {
-		// 	$this->data['amazon_link'] = $this->url->link('sale/amazon', 'token=' . $this->session->data['token'] . '&filter_supplier_id=' . $supplier_info['supplier_id'], 'SSL');
+		// 	$this->data['amazon_link'] = $this->url->link('sale/amazon', 'token=' . $this->session->data['token'] . '&filter_supplier_id=' . $supplier_info['supplier_id']);
 		// } else {
 		// 	$this->data['amazon_link'] = false;
 		// }
@@ -898,7 +898,7 @@ class ControllerSaleSupplier extends Controller {
 		// 		$this->data['amazon_brands'][] = array(
 		// 			'name' 			  	=> $_brand['name'],
 		// 			'manufacturer_id' 	=> $_brand['manufacturer_id'],
-		// 			'adminlink'			=> $this->url->link('catalog/manufacturer/update', 'token=' . $this->session->data['token'] . '&manufacturer_id=' . $_brand['manufacturer_id'], 'SSL'),
+		// 			'adminlink'			=> $this->url->link('catalog/manufacturer/update', 'token=' . $this->session->data['token'] . '&manufacturer_id=' . $_brand['manufacturer_id']),
 		// 			'sitelink'          => HTTPS_CATALOG . 'index.php?route=product/manufacturer/info&manufacturer_id=' . $_brand['manufacturer_id'],
 		// 			'total_orders' 		=> $_brand['total_orders'],
 		// 			'total_sum' 		=> number_format($_brand['total_sum'], $decimals = 2 , $dec_point = "." , $thousands_sep = ","),

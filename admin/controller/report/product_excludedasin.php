@@ -179,9 +179,9 @@
 				$url .= '&filter_text=' . $this->request->get['filter_text'];
 			}
 						
-			$this->data['delete'] 		= $this->url->link('report/product_excludedasin/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
-			$this->data['save'] 		= $this->url->link('report/product_excludedasin/add', 'token=' . $this->session->data['token'] . $url, 'SSL');			
-			$this->data['deleted_asins'] 	= $this->url->link('report/product_deletedasin', 'token=' . $this->session->data['token'] . $url, 'SSL');	
+			$this->data['delete'] 		= $this->url->link('report/product_excludedasin/delete', 'token=' . $this->session->data['token'] . $url);
+			$this->data['save'] 		= $this->url->link('report/product_excludedasin/add', 'token=' . $this->session->data['token'] . $url);			
+			$this->data['deleted_asins'] 	= $this->url->link('report/product_deletedasin', 'token=' . $this->session->data['token'] . $url);	
 			
 			if (isset($this->session->data['error'])) {
 				$this->data['error_warning'] = $this->session->data['error'];
@@ -206,7 +206,7 @@
 			$pagination->page = $page;
 			$pagination->limit = $this->config->get('config_admin_limit');
 			$pagination->text = $this->language->get('text_pagination');
-			$pagination->url = $this->url->link('report/product_excludedasin',  'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+			$pagination->url = $this->url->link('report/product_excludedasin',  'token=' . $this->session->data['token'] . $url . '&page={page}');
 			
 			$this->data['pagination'] = $pagination->render();
 

@@ -123,7 +123,7 @@ class ControllerCatalogShortNames extends Controller {
 		$pagination->page 	= $page;
 		$pagination->limit 	= $this->config->get('config_admin_limit');
 		$pagination->text 	= $this->language->get('text_pagination');
-		$pagination->url 	= $this->url->link('catalog/shortnames',  'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
+		$pagination->url 	= $this->url->link('catalog/shortnames',  'token=' . $this->session->data['token'] . '&page={page}');
 
 		$this->data['pagination'] = $pagination->render();
 

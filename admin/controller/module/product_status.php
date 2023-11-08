@@ -31,24 +31,24 @@ class ControllerModuleProductStatus extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href' => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_module'),
-			'href' => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+			'href' => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('module/product_status', 'token=' . $this->session->data['token'], 'SSL'),
+			'href' => $this->url->link('module/product_status', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
-		$this->data['action_settings'] = $this->url->link('module/product_status', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action_settings'] = $this->url->link('module/product_status', 'token=' . $this->session->data['token']);
+		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']);
 
 		if (isset($this->request->post['product_status_options'])) {
 			$this->data['options'] = $this->request->post['product_status_options'];
@@ -104,12 +104,12 @@ class ControllerModuleProductStatus extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get('config_admin_limit');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('module/product_status', 'token=' . $this->session->data['token'] . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('module/product_status', 'token=' . $this->session->data['token'] . '&page={page}');
 
 		$this->data['pagination'] = $pagination->render();
 
-		$this->data['insert'] = $this->url->link('module/product_status/insert', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['delete'] = $this->url->link('module/product_status/delete', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['insert'] = $this->url->link('module/product_status/insert', 'token=' . $this->session->data['token']);
+		$this->data['delete'] = $this->url->link('module/product_status/delete', 'token=' . $this->session->data['token']);
 	}
 
 	public function insert() {
@@ -188,23 +188,23 @@ class ControllerModuleProductStatus extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get('text_home'),
-			'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href' => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('module/product_status', 'token=' . $this->session->data['token'], 'SSL'),
+			'href' => $this->url->link('module/product_status', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
 		if (!isset($this->request->get['status_id'])) {
-			$this->data['action'] = $this->url->link('module/product_status/insert', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['action'] = $this->url->link('module/product_status/insert', 'token=' . $this->session->data['token']);
 		} else {
-			$this->data['action'] = $this->url->link('module/product_status/update', 'token=' . $this->session->data['token'] . '&status_id=' . $this->request->get['status_id'], 'SSL');
+			$this->data['action'] = $this->url->link('module/product_status/update', 'token=' . $this->session->data['token'] . '&status_id=' . $this->request->get['status_id']);
 		}
 
-		$this->data['cancel'] = $this->url->link('module/product_status', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('module/product_status', 'token=' . $this->session->data['token']);
 
 		$this->data['token'] = $this->session->data['token'];
 

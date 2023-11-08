@@ -596,19 +596,19 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . $url, 'SSL'),       		
+			'href'      => $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . $url),       		
 			'separator' => ' :: '
 		);
 
-		$this->data['insert'] = $this->url->link('catalog/product/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['copy'] = $this->url->link('catalog/product/copy', 'token=' . $this->session->data['token'] . $url, 'SSL');	
-		$this->data['delete'] = $this->url->link('catalog/product/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['insert'] = $this->url->link('catalog/product/insert', 'token=' . $this->session->data['token'] . $url);
+		$this->data['copy'] = $this->url->link('catalog/product/copy', 'token=' . $this->session->data['token'] . $url);	
+		$this->data['delete'] = $this->url->link('catalog/product/delete', 'token=' . $this->session->data['token'] . $url);
 
 		$this->data['products'] = [];
 
@@ -746,12 +746,12 @@ class ControllerCatalogProduct extends Controller {
 			$url .= '&page=' . urlencode(html_entity_decode($this->request->get['page'], ENT_QUOTES, 'UTF-8'));
 		}
 
-		$this->data['sort_name'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url, 'SSL');
-		$this->data['sort_model'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url, 'SSL');
-		$this->data['sort_price'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&sort=p.price' . $url, 'SSL');
-		$this->data['sort_quantity'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&sort=p.quantity' . $url, 'SSL');
-		$this->data['sort_status'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url, 'SSL');
-		$this->data['sort_order'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url, 'SSL');
+		$this->data['sort_name'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&sort=pd.name' . $url);
+		$this->data['sort_model'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&sort=p.model' . $url);
+		$this->data['sort_price'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&sort=p.price' . $url);
+		$this->data['sort_quantity'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&sort=p.quantity' . $url);
+		$this->data['sort_status'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&sort=p.status' . $url);
+		$this->data['sort_order'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&sort=p.sort_order' . $url);
 
 		$url = '';
 
@@ -800,7 +800,7 @@ class ControllerCatalogProduct extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get('config_admin_limit');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 
 		$this->data['pagination'] = $pagination->render();
 
@@ -1069,23 +1069,23 @@ class ControllerCatalogProduct extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
 		if (!isset($this->request->get['product_id'])) {
-			$this->data['action'] = $this->url->link('catalog/product/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('catalog/product/insert', 'token=' . $this->session->data['token'] . $url);
 		} else {
-			$this->data['action'] = $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $this->request->get['product_id'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $this->request->get['product_id'] . $url);
 		}
 
-		$this->data['cancel'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['cancel'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . $url);
 
 		if (isset($this->request->get['product_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$product_info = $this->model_catalog_product->getProduct($this->request->get['product_id']);

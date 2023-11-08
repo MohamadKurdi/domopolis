@@ -72,29 +72,29 @@
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_module'),
-			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 			);
 			
 			$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title_module'),
-			'href'      => $this->url->link('module/ocfilter', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('module/ocfilter', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 			);
 			
-			$this->data['save'] = $this->url->link('module/ocfilter', 'token=' . $this->session->data['token'], 'SSL');
-			$this->data['apply'] = $this->url->link('module/ocfilter', 'token=' . $this->session->data['token'] . '&apply', 'SSL');
+			$this->data['save'] = $this->url->link('module/ocfilter', 'token=' . $this->session->data['token']);
+			$this->data['apply'] = $this->url->link('module/ocfilter', 'token=' . $this->session->data['token'] . '&apply');
 			
-			$this->data['install'] = $this->url->link('module/ocfilter/install', 'update=1&token=' . $this->session->data['token'], 'SSL');
+			$this->data['install'] = $this->url->link('module/ocfilter/install', 'update=1&token=' . $this->session->data['token']);
 			
-			$this->data['reinstall'] = $this->url->link('module/ocfilter', 'update=1&token=' . $this->session->data['token'], 'SSL');
-			$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
+			$this->data['reinstall'] = $this->url->link('module/ocfilter', 'update=1&token=' . $this->session->data['token']);
+			$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']);
 			
 			$this->data['token'] = $this->session->data['token'];
 			

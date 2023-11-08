@@ -14,9 +14,9 @@ class ControllerModuleHtmlBlock extends Controller {
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
 			
 			if ($this->request->post['apply']) {
-				$url = $this->url->link('module/html_block', 'token=' . $this->session->data['token'], 'SSL');
+				$url = $this->url->link('module/html_block', 'token=' . $this->session->data['token']);
 			} else {
-				$url = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
+				$url = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']);
 			}
 			
 			unset($this->request->post['apply']);
@@ -139,25 +139,25 @@ class ControllerModuleHtmlBlock extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_module'),
-			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
    		$this->data['breadcrumbs'][] = array(
        		'text'      => strip_tags($this->language->get('heading_title')),
-			'href'      => $this->url->link('module/html_block', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('module/html_block', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
-		$this->data['action'] = $this->url->link('module/html_block', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
-		$this->data['clear_cache'] = $this->url->link('module/html_block/clear_cache', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('module/html_block', 'token=' . $this->session->data['token']);
+		$this->data['cancel'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token']);
+		$this->data['clear_cache'] = $this->url->link('module/html_block/clear_cache', 'token=' . $this->session->data['token']);
 		
 		$this->data['modules'] = array();
 		

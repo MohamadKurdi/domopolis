@@ -32,7 +32,7 @@ class ControllerSettingSetting extends Controller
 
             if ($this->config->get('config_amazon_product_stats_enable')) {
                 $this->data['totalProducts'] = formatLongNumber($this->model_catalog_product->getTotalProducts());
-                $this->data['product_ext'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'], 'SSL');
+                $this->data['product_ext'] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token']);
 
                 if ($this->config->get('config_rainforest_default_technical_category_id')) {
                     $this->data['totalProductsInTechnicalCategory'] = formatLongNumber($this->model_catalog_product->getTotalProducts(['filter_category_id' => $this->config->get('config_rainforest_default_technical_category_id')]));
@@ -43,7 +43,7 @@ class ControllerSettingSetting extends Controller
             if ($this->config->get('config_enable_amazon_specific_modes')) {
                 foreach ($this->admin_modes as $mode => $mode_config) {
                     $this->data[$mode] = isset($this->session->data[$mode])?$this->session->data[$mode]:0;
-                    $this->data['set_' . $mode] = $this->url->link('setting/setting/setworkmode', 'token=' . $this->session->data['token'] . '&mode=' . $mode, 'SSL');
+                    $this->data['set_' . $mode] = $this->url->link('setting/setting/setworkmode', 'token=' . $this->session->data['token'] . '&mode=' . $mode);
                 }
             }
 
@@ -51,9 +51,9 @@ class ControllerSettingSetting extends Controller
 
             
             if (!$this->config->get('config_enable_highload_admin_mode') || $this->user->getUserGroup() == 1){
-                $this->data['clearMemCache'] = $this->url->link('setting/setting/clearMemCache', 'token=' . $this->session->data['token'], 'SSL');                    
+                $this->data['clearMemCache'] = $this->url->link('setting/setting/clearMemCache', 'token=' . $this->session->data['token']);                    
 
-                $this->data['noPageCacheModeLink'] = $this->url->link('setting/setting/setNoPageCacheMode', 'token=' . $this->session->data['token'], 'SSL');
+                $this->data['noPageCacheModeLink'] = $this->url->link('setting/setting/setNoPageCacheMode', 'token=' . $this->session->data['token']);
                 $this->data['noPageCacheMode'] = file_exists(DIR_CACHE . PAGECACHE_DIR . 'nopagecache');
 
                 if ($this->data['noPageCacheMode']) {
@@ -63,12 +63,12 @@ class ControllerSettingSetting extends Controller
                 $this->data['noPageCacheModeTTL'] = $this->PageCache->getTTL();
             }
 
-            $this->data['panelLink'] = $this->url->link('common/panel', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['panelLink'] = $this->url->link('common/panel', 'token=' . $this->session->data['token']);
        //     $this->data['serverResponceTime'] = $this->PageCache->getServerResponceTime();
             $this->data['redisMem']             = $this->PageCache->getRedisInfo();
             $this->data['pageCacheInfo']        = $this->PageCache->getPageCacheInfo();
             $this->data['refeedsCount']         = $this->PageCache->getReFeedsCount();
-            $this->data['refeedsCountLink']     = $this->url->link('setting/feeds', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['refeedsCountLink']     = $this->url->link('setting/feeds', 'token=' . $this->session->data['token']);
 
             
             $this->template = 'common/cachebuttons.tpl';
@@ -545,13 +545,13 @@ class ControllerSettingSetting extends Controller
         
         $this->data['breadcrumbs'][] = array(
             'text'      => $this->language->get('text_home'),
-            'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+            'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
             'separator' => false
         );
         
         $this->data['breadcrumbs'][] = array(
             'text'      => $this->language->get('heading_title'),
-            'href'      => $this->url->link('setting/setting', 'token=' . $this->session->data['token'], 'SSL'),
+            'href'      => $this->url->link('setting/setting', 'token=' . $this->session->data['token']),
             'separator' => ' :: '
         );
         
@@ -563,9 +563,9 @@ class ControllerSettingSetting extends Controller
             $this->data['success'] = '';
         }
         
-        $this->data['action'] = $this->url->link('setting/setting', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['action'] = $this->url->link('setting/setting', 'token=' . $this->session->data['token']);
         
-        $this->data['cancel'] = $this->url->link('setting/store', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['cancel'] = $this->url->link('setting/store', 'token=' . $this->session->data['token']);
         
         $this->data['token'] = $this->session->data['token'];
         
@@ -3789,7 +3789,7 @@ class ControllerSettingSetting extends Controller
             $this->data['config_rainforest_asin_deletion_mode'] = $this->config->get('config_rainforest_asin_deletion_mode');
         }
 
-        $this->data['product_deletedasin'] = $this->url->link('report/product_deletedasin', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['product_deletedasin'] = $this->url->link('report/product_deletedasin', 'token=' . $this->session->data['token']);
 
         if (isset($this->request->post['config_rainforest_variant_edition_mode'])) {
             $this->data['config_rainforest_variant_edition_mode'] = $this->request->post['config_rainforest_variant_edition_mode'];
@@ -4828,8 +4828,8 @@ class ControllerSettingSetting extends Controller
             $this->data['config_yandex_exclude_manufacturers'] = [];
         }
 
-        $this->data['deprecated_yam_module'] = $this->url->link('feed/yandex_yml', 'token=' . $this->session->data['token'], 'SSL');
-        $this->data['deprecated_hotline_module'] = $this->url->link('feed/hotline_yml', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['deprecated_yam_module'] = $this->url->link('feed/yandex_yml', 'token=' . $this->session->data['token']);
+        $this->data['deprecated_hotline_module'] = $this->url->link('feed/hotline_yml', 'token=' . $this->session->data['token']);
         
         if (isset($this->request->post['config_yam_enable_category_tree'])) {
             $this->data['config_yam_enable_category_tree'] = $this->request->post['config_yam_enable_category_tree'];

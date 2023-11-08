@@ -38,25 +38,25 @@ class ControllerTotalAdditionaloffer extends Controller {
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
       		'separator' => false
    		);
 
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('text_total'),
-			'href'      => $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('extension/total', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
    		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('total/additionaloffer', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('total/additionaloffer', 'token=' . $this->session->data['token']),
       		'separator' => ' :: '
    		);
 		
-		$this->data['action'] = $this->url->link('total/additionaloffer', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['action'] = $this->url->link('total/additionaloffer', 'token=' . $this->session->data['token']);
 		
-		$this->data['cancel'] = $this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL');
+		$this->data['cancel'] = $this->url->link('extension/total', 'token=' . $this->session->data['token']);
 
 		if (isset($this->request->post['additionaloffer_status'])) {
 			$this->data['additionaloffer_status'] = $this->request->post['additionaloffer_status'];

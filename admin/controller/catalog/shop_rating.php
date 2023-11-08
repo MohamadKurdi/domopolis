@@ -96,15 +96,15 @@
             
             $this->data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token']),
             'separator' => false
             );
-            $this->data['action'] = $this->url->link('catalog/shop_rating', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['action'] = $this->url->link('catalog/shop_rating', 'token=' . $this->session->data['token']);
             
-            $this->data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['change_status'] = $this->url->link('catalog/shop_rating/status', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['view_rate_link'] = $this->url->link('catalog/shop_rating/viewRate', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['create_custom_type_url'] = $this->url->link('catalog/shop_rating/custom_types', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['cancel'] = $this->url->link('extension/module', 'token=' . $this->session->data['token']);
+            $this->data['change_status'] = $this->url->link('catalog/shop_rating/status', 'token=' . $this->session->data['token']);
+            $this->data['view_rate_link'] = $this->url->link('catalog/shop_rating/viewRate', 'token=' . $this->session->data['token']);
+            $this->data['create_custom_type_url'] = $this->url->link('catalog/shop_rating/custom_types', 'token=' . $this->session->data['token']);
             
             
             $this->data['ratings'] = $this->model_catalog_shop_rating->getAllRatings();
@@ -117,7 +117,7 @@
             
             $this->data['breadcrumbs'][] = array(
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('catalog/shop_rating', 'token=' . $this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('catalog/shop_rating', 'token=' . $this->session->data['token']),
             'separator' => ' :: '
             );
             
@@ -319,35 +319,35 @@
             
             $this->data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token'], 'SSL'),
+            'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['token']),
             'separator' => ''
             );
-            $this->data['action'] = $this->url->link('catalog/shop_rating/viewRate', 'token=' . $this->session->data['token'].'&rating_id='.$rate_id, 'SSL');
+            $this->data['action'] = $this->url->link('catalog/shop_rating/viewRate', 'token=' . $this->session->data['token'].'&rating_id='.$rate_id);
             
-            $this->data['cancel'] = $this->url->link('catalog/shop_rating', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['cancel'] = $this->url->link('catalog/shop_rating', 'token=' . $this->session->data['token']);
             
-            $this->data['change_status_url'] = $this->url->link('catalog/shop_rating/status', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['change_status_url'] = $this->url->link('catalog/shop_rating/status', 'token=' . $this->session->data['token']);
             
             if (!isset($this->request->get['module_id'])) {
                 $this->data['breadcrumbs'][] = array(
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('catalog/shop_rating', 'token=' . $this->session->data['token'], 'SSL'),
+                'href' => $this->url->link('catalog/shop_rating', 'token=' . $this->session->data['token']),
                 'separator' => ' :: '
                 );
                 $this->data['breadcrumbs'][] = array(
                 'text' => $this->language->get('heading_title_view').$rate_id,
-                'href' => $this->url->link('catalog/shop_rating/viewRate', 'token=' . $this->session->data['token']. '&rating_id=' . $rate_id, 'SSL'),
+                'href' => $this->url->link('catalog/shop_rating/viewRate', 'token=' . $this->session->data['token']. '&rating_id=' . $rate_id),
                 'separator' => ' :: '
                 );
                 } else {
                 $this->data['breadcrumbs'][] = array(
                 'text' => $this->language->get('heading_title'),
-                'href' => $this->url->link('catalog/shop_rating/', 'token=' . $this->session->data['token'] . '&module_id=' . $this->request->get['module_id'], 'SSL'),
+                'href' => $this->url->link('catalog/shop_rating/', 'token=' . $this->session->data['token'] . '&module_id=' . $this->request->get['module_id']),
                 'separator' => ' :: '
                 );
                 $this->data['breadcrumbs'][] = array(
                 'text' => $this->language->get('heading_title_view').$rate_id,
-                'href' => $this->url->link('catalog/shop_rating/viewRate', 'token=' . $this->session->data['token'] .'&rating_id=' . $rate_id. '&module_id=' . $this->request->get['module_id'], 'SSL'),
+                'href' => $this->url->link('catalog/shop_rating/viewRate', 'token=' . $this->session->data['token'] .'&rating_id=' . $rate_id. '&module_id=' . $this->request->get['module_id']),
                 'separator' => ' :: '
                 );
             }

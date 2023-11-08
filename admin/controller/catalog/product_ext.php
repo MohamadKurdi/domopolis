@@ -312,21 +312,21 @@ class ControllerCatalogProductExt extends Controller {
 
         $this->data['breadcrumbs'][] = array(
             'text'      => $this->language->get('text_home'),
-            'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+            'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
             'separator' => false
         );
 
         $this->data['breadcrumbs'][] = array(
             'text'      => $this->language->get('heading_title'),
-            'href'      => $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+            'href'      => $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . $url),
             'separator' => ' :: '
         );
 
-        $this->data['insert']       = $this->url->link('catalog/product/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $this->data['copy']         = $this->url->link('catalog/product_ext/copy', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['copynostock']  = $this->url->link('catalog/product_ext/copynostock', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $this->data['delete']       = $this->url->link('catalog/product_ext/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $this->data['resize']       = $this->url->link('catalog/product_ext/setpicsize', 'token=' . $this->session->data['token'] . $url, 'SSL');
+        $this->data['insert']       = $this->url->link('catalog/product/insert', 'token=' . $this->session->data['token'] . $url);
+        $this->data['copy']         = $this->url->link('catalog/product_ext/copy', 'token=' . $this->session->data['token'] . $url);
+		$this->data['copynostock']  = $this->url->link('catalog/product_ext/copynostock', 'token=' . $this->session->data['token'] . $url);
+        $this->data['delete']       = $this->url->link('catalog/product_ext/delete', 'token=' . $this->session->data['token'] . $url);
+        $this->data['resize']       = $this->url->link('catalog/product_ext/setpicsize', 'token=' . $this->session->data['token'] . $url);
 
         $this->load->model('setting/store');
         $stores = $this->model_setting_store->getStores();
@@ -388,7 +388,7 @@ class ControllerCatalogProductExt extends Controller {
 
                     switch ($act) {
                         case 'edit':
-                            $a['href'] = $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'] . $url, 'SSL');
+                            $a['href'] = $this->url->link('catalog/product/update', 'token=' . $this->session->data['token'] . '&product_id=' . $result['product_id'] . $url);
                             break;
                         case 'view':
                             $a['click'] = HTTP_CATALOG . 'index.php?route=product/product&product_id=' . $result['product_id'];
@@ -707,7 +707,7 @@ class ControllerCatalogProductExt extends Controller {
 
         $this->data['sorts'] = array();
         foreach($this->config->get('aqe_catalog_products') as $column => $attr) {
-            $this->data['sorts'][$column] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&sort=' . $attr['sort'] . $url, 'SSL');
+            $this->data['sorts'][$column] = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . '&sort=' . $attr['sort'] . $url);
         }
 
         $url = '';
@@ -738,7 +738,7 @@ class ControllerCatalogProductExt extends Controller {
         $pagination->page = $page;
         $pagination->limit = $this->config->get('config_admin_limit');
         $pagination->text = $this->language->get('text_pagination');
-        $pagination->url = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+        $pagination->url = $this->url->link('catalog/product_ext', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 
         $this->data['pagination'] = $pagination->render();
 

@@ -424,7 +424,7 @@ class ControllerSaleReceipt extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $receipt_limit;
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('sale/receipt', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('sale/receipt', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 
 		$data['pagination'] = $pagination->render();
 

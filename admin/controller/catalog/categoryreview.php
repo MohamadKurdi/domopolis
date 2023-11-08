@@ -147,21 +147,21 @@ class ControllerCatalogCategoryreview extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
-		$this->data['insert'] = $this->url->link('catalog/categoryreview/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
-		$this->data['delete'] = $this->url->link('catalog/categoryreview/delete', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['insert'] = $this->url->link('catalog/categoryreview/insert', 'token=' . $this->session->data['token'] . $url);
+		$this->data['delete'] = $this->url->link('catalog/categoryreview/delete', 'token=' . $this->session->data['token'] . $url);
 
-		$this->data['enabled'] = $this->url->link('catalog/categoryreview/enable', 'token=' . $this->session->data['token'] . $url, 'SSL');
-        $this->data['disabled'] = $this->url->link('catalog/categoryreview/disable', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['enabled'] = $this->url->link('catalog/categoryreview/enable', 'token=' . $this->session->data['token'] . $url);
+        $this->data['disabled'] = $this->url->link('catalog/categoryreview/disable', 'token=' . $this->session->data['token'] . $url);
 
 		$this->data['categoryreviews'] = array();
 
@@ -239,11 +239,11 @@ class ControllerCatalogCategoryreview extends Controller {
 			$url .= '&page=' . $this->request->get['page'];
 		}
 
-		$this->data['sort_category'] = $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'] . '&sort=сd.name' . $url, 'SSL');
-		$this->data['sort_author'] = $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'] . '&sort=cr.author' . $url, 'SSL');
-		$this->data['sort_rating'] = $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'] . '&sort=cr.rating' . $url, 'SSL');
-		$this->data['sort_status'] = $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'] . '&sort=cr.status' . $url, 'SSL');
-		$this->data['sort_date_added'] = $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'] . '&sort=cr.date_added' . $url, 'SSL');
+		$this->data['sort_category'] = $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'] . '&sort=сd.name' . $url);
+		$this->data['sort_author'] = $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'] . '&sort=cr.author' . $url);
+		$this->data['sort_rating'] = $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'] . '&sort=cr.rating' . $url);
+		$this->data['sort_status'] = $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'] . '&sort=cr.status' . $url);
+		$this->data['sort_date_added'] = $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'] . '&sort=cr.date_added' . $url);
 
 		$url = '';
 
@@ -260,7 +260,7 @@ class ControllerCatalogCategoryreview extends Controller {
 		$pagination->page = $page;
 		$pagination->limit = $this->config->get('config_admin_limit');
 		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'] . $url . '&page={page}', 'SSL');
+		$pagination->url = $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 
 		$this->data['pagination'] = $pagination->render();
 
@@ -344,23 +344,23 @@ class ControllerCatalogCategoryreview extends Controller {
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
-			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+			'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
 			'separator' => false
 		);
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('heading_title'),
-			'href'      => $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'] . $url, 'SSL'),
+			'href'      => $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'] . $url),
 			'separator' => ' :: '
 		);
 
 		if (!isset($this->request->get['categoryreview_id'])) { 
-			$this->data['action'] = $this->url->link('catalog/categoryreview/insert', 'token=' . $this->session->data['token'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('catalog/categoryreview/insert', 'token=' . $this->session->data['token'] . $url);
 		} else {
-			$this->data['action'] = $this->url->link('catalog/categoryreview/update', 'token=' . $this->session->data['token'] . '&categoryreview_id=' . $this->request->get['categoryreview_id'] . $url, 'SSL');
+			$this->data['action'] = $this->url->link('catalog/categoryreview/update', 'token=' . $this->session->data['token'] . '&categoryreview_id=' . $this->request->get['categoryreview_id'] . $url);
 		}
 
-		$this->data['cancel'] = $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'] . $url, 'SSL');
+		$this->data['cancel'] = $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'] . $url);
 
 		if (isset($this->request->get['categoryreview_id']) && ($this->request->server['REQUEST_METHOD'] != 'POST')) {
 			$categoryreview_info = $this->model_catalog_categoryreview->getCategoryreview($this->request->get['categoryreview_id']);

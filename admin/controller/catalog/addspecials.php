@@ -14,13 +14,13 @@
             
             $this->data['breadcrumbs'][] = array(
             'text'      => $this->language->get('text_home'),
-            'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+            'href'      => $this->url->link('common/home', 'token=' . $this->session->data['token']),
             'separator' => false
             );
             
             $this->data['breadcrumbs'][] = array(
             'text'      => $this->language->get('heading_title'),
-            'href'      => $this->url->link('catalog/addspecials', 'token=' . $this->session->data['token'], 'SSL'),
+            'href'      => $this->url->link('catalog/addspecials', 'token=' . $this->session->data['token']),
             'separator' => ' :: '
             );
             
@@ -84,8 +84,8 @@
             $this->load->model('tool/image');
             $this->data['no_image'] = $this->model_tool_image->resize('no_image.jpg', 100, 100);
             
-            $this->data['add_additional_offer'] = $this->url->link('catalog/addspecials/add_additional_offer', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['del_specials'] = $this->url->link('catalog/addspecials/del_specials', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['add_additional_offer'] = $this->url->link('catalog/addspecials/add_additional_offer', 'token=' . $this->session->data['token']);
+            $this->data['del_specials'] = $this->url->link('catalog/addspecials/del_specials', 'token=' . $this->session->data['token']);
             
             // Получаем все спец-предложения
             $sql = "SELECT 
