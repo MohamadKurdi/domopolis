@@ -8,11 +8,11 @@ class ControllerToolReceiptLog extends Controller {
 
 		$data['heading_title'] = 'CheckBox ' . $this->language->get('heading_title');
 		
-		$data['text_list'] = $this->language->get('text_list');
-		$data['text_confirm'] = $this->language->get('text_confirm');
+		$data['text_list'] 		= $this->language->get('text_list');
+		$data['text_confirm'] 	= $this->language->get('text_confirm');
 
-		$data['button_download'] = $this->language->get('button_download');
-		$data['button_clear'] = $this->language->get('button_clear');
+		$data['button_download'] 	= $this->language->get('button_download');
+		$data['button_clear'] 		= $this->language->get('button_clear');
 
 		if (isset($this->session->data['error'])) {
 			$data['error_warning'] = $this->session->data['error'];
@@ -26,7 +26,6 @@ class ControllerToolReceiptLog extends Controller {
 
 		if (isset($this->session->data['success'])) {
 			$data['success'] = $this->session->data['success'];
-
 			unset($this->session->data['success']);
 		} else {
 			$data['success'] = '';
@@ -42,7 +41,7 @@ class ControllerToolReceiptLog extends Controller {
 
 		$data['breadcrumbs'][] = array(
 			'text' => 'CheckBox програмний РРО',
-			'href' => $this->url->link('sale/receipt', 'token=' . $this->session->data['token'], true),
+			'href' => $this->url->link('sale/receipt', 'token=' . $this->session->data['token']),
 			'separator' => ' :: '
 		);
 
@@ -52,9 +51,9 @@ class ControllerToolReceiptLog extends Controller {
 			'separator' => ' :: '
 		);
 
-		$data['download'] = $this->url->link('tool/receipt_log/download', 'token=' . $this->session->data['token'], true);
-		$data['backup_receipt_tables'] = $this->url->link('tool/receipt_log/backup_receipt_tables', 'token=' . $this->session->data['token'], true);
-		$data['clear'] = $this->url->link('tool/receipt_log/clear', 'token=' . $this->session->data['token'], true);
+		$data['download'] 				= $this->url->link('tool/receipt_log/download', 'token=' . $this->session->data['token'], true);
+		$data['backup_receipt_tables'] 	= $this->url->link('tool/receipt_log/backup_receipt_tables', 'token=' . $this->session->data['token'], true);
+		$data['clear'] 					= $this->url->link('tool/receipt_log/clear', 'token=' . $this->session->data['token'], true);
 
 		$data['log'] = '';
 		$file = DIR_LOGS . 'checkbox.log';
@@ -87,11 +86,6 @@ class ControllerToolReceiptLog extends Controller {
 				$data['log'] = file_get_contents($file, FILE_USE_INCLUDE_PATH, null);
 			}
 		}
-
-		 
-
-		#$this->response->setOutput($this->load->view('tool/log', $data));
-
 
 		$data['column_left'] = '';
 
