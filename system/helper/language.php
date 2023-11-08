@@ -79,12 +79,14 @@ function getFreeDeliveryInfo($shippingSettings){
 }
 
 function getUkrainianPluralWord($number, $titles, $show_number = false) {
-	if( is_string( $titles ) )
+	if( is_string( $titles ) ){
 		$titles = preg_split( '/, */', $titles );
+	}		
 
-	if( empty( $titles[2] ) )
+	if(empty($titles[2]) && !empty($titles[1])){
 		$titles[2] = $titles[1];
-
+	}
+	
 	$cases = [ 2, 0, 1, 1, 1, 2 ];
 
 	$intnum = abs( (int) strip_tags( $number ) );
@@ -92,6 +94,10 @@ function getUkrainianPluralWord($number, $titles, $show_number = false) {
 	$title_index = ( $intnum % 100 > 4 && $intnum % 100 < 20 )
 	? 2
 	: $cases[ min( $intnum % 10, 5 ) ];
+
+	if (empty($titles[ $title_index ])){
+		return ( $show_number ? "$number " : '' );
+	}
 
 	return ( $show_number ? "$number " : '' ) . $titles[ $title_index ];
 }	
