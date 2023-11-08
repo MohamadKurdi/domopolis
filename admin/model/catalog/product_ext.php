@@ -644,6 +644,11 @@ class ModelCatalogProductExt extends Model {
                 $result = $this->db->query("UPDATE product SET " . $column . "_id = '" . (int)$value . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
             else if (in_array($column, array('name', 'tag')))
                 $result = $this->db->query("UPDATE product_description SET " . $column . " = '" . $this->db->escape($value) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$lang_id . "'");
+
+                if ($column == 'name'){
+                    $this->model_catalog_product->syncProductNamesInOrders($product_id, $lang_id, $value);
+                }
+
             else
                 $result = $this->db->query("UPDATE product SET " . $column . " = '" . (float)$value . "', date_modified = NOW() WHERE product_id = '" . (int)$product_id . "'");
         } else if ($column == 'seo') {

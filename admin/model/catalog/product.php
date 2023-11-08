@@ -801,7 +801,6 @@
 								$this->db->query($sql);
 							}
 						}
-
 					}				
 				}			
 			}
@@ -1276,6 +1275,8 @@
 
 			$this->load->model('kp/content');
 			$this->model_kp_content->addContent(['action' => 'edit', 'entity_type' => 'product', 'entity_id' => $product_id]);
+
+			$this->syncProductNamesInOrders($product_id);
 			
 			return (int)$product_id;
 		}
@@ -1431,6 +1432,52 @@
 			return $this;
 		}
 
+		public function syncProductNamesInOrders($product_id, $language_id = false, $name = false){
+			if ($this->config->get('config_sync_product_names_in_orders')){
+				if ($language_id){
+					if ($name){
+						$sql = "UPDATE order_product SET name = '" . $this->db->escape($name) . "' WHERE product_id = '" . (int)$product_id . "' AND order_id IN (SELECT o.order_id FROM `order` o WHERE DATE(o.date_added) >= '" . date('Y-m-d', strtotime('-3 month')) . "' AND language_id = '" . (int)$language_id . "')";
+
+						$this->db->query($sql);
+					} else {
+						$descriptions 	= $this->getProductDescriptions($product_id);
+						$orders_query 	= $this->db->query("SELECT order_product_id FROM `order_product` op LEFT JOIN `order` o ON (op.order_id = o.order_id) WHERE op.product_id = '" . (int)$product_id . "' AND DATE(o.date_added) >= '" . date('Y-m-d', strtotime('-3 month')) . "' AND language_id = '" . (int)$language_id . "'");
+
+						foreach ($orders_query->rows as $row){
+							if (!empty($descriptions[$language_id])){
+								$name = $descriptions[$language_id]['name'];
+
+								$sql = "UPDATE `order_product` SET name = '" . $this->db->escape($name) . "' WHERE order_product_id = '" . (int)$row['order_product_id'] . "'";				
+								$this->db->query($sql);
+							}								
+						}
+					}
+				} else {
+					$descriptions 	= $this->getProductDescriptions($product_id);
+					$orders_query 	= $this->db->query("SELECT order_product_id, language_id FROM `order_product` op LEFT JOIN `order` o ON (op.order_id = o.order_id) WHERE op.product_id = '" . (int)$product_id . "' AND DATE(o.date_added) >= '" . date('Y-m-d', strtotime('-3 month')) . "'");
+
+					foreach ($orders_query->rows as $row){
+						if (!empty($descriptions[$row['language_id']])){
+							$name = $descriptions[$row['language_id']]['name'];
+						} else {
+							$name = $descriptions[$this->config->get('config_language_id')]['name'];
+						}			
+
+						$sql = "UPDATE `order_product` SET name = '" . $this->db->escape($name) . "' WHERE order_product_id = '" . (int)$row['order_product_id'] . "'";				
+						$this->db->query($sql);
+					}
+				}				
+			}				
+		}
+
+		public function syncProductNamesFromOrders($product_id, $language_id, $name){
+			if ($this->config->get('config_sync_product_names_in_orders')){
+				$this->db->query("UPDATE product_description SET name = '" . $this->db->escape($name) . "' WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
+
+				$this->syncProductNamesInOrders($product_id);
+			}
+		}
+
 		public function deleteProductSimple($product_id){
 			foreach ((array)\hobotix\RainforestAmazon::productRelatedTables as $table){
 				$sql = "DELETE FROM `" . $table . "` WHERE product_id = '" . (int)$product_id . "'";
@@ -1442,7 +1489,7 @@
 
 			$this->db->query("DELETE FROM product_sponsored WHERE sponsored_id = '" . (int)$product_id . "'");
 			$this->db->query("DELETE FROM product_similar WHERE similar_id = '" . (int)$product_id . "'");
-		}
+		}		
 
 		public function deleteImageCache($image){
 			if (!$this->config->get('config_delete_products_images_enable')){

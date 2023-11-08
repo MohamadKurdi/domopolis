@@ -576,6 +576,7 @@
 		public function editOrder($order_id, $data, $do_not_check_closed = false) {
 			$this->load->model('localisation/country');
 			$this->load->model('localisation/zone');
+			$this->load->model('catalog/product');
 			
 			if (!$do_not_check_closed) {
 				if ($this->getIfOrderClosed($order_id)){
@@ -682,20 +683,8 @@
 			if ($data['pay_equire'] || $data['pay_equire2'] || $data['pay_equirePP'] || $data['pay_equireLQP'] || $data['pay_equireWPP'] || $data['pay_equireMono'] || $data['pay_equireCP']){
 				$data['pay_type'] = 'Банковской картой';
 			}
-			
-			//uploading a bill file		
-			$allowed_file = array(
-			'doc',
-			'docx',
-			'xls',
-			'xlsx',
-			'txt',
-			'pdf',
-			'rtf',
-			'png',
-			'jpg',
-			'jpeg'
-			);
+				
+			$allowed_file = ['doc','docx','xls','xlsx','txt','pdf','rtf','png','jpg','jpeg'];
 			
 			if (isset($_FILES['bill_file']) && isset($_FILES['bill_file']['name']) && mb_strlen($_FILES['bill_file']['name']) > 0){	
 				setlocale(LC_ALL, "ru_RU.UTF-8");
@@ -707,7 +696,6 @@
 				
 				$file_ext = array_pop(explode(".", basename($_FILES['bill_file']['name'])));
 				if (in_array($file_ext, $allowed_file)){
-					//$new_filename = 'bill_info_' . $order_id .'_'. substr(md5(time), 0, 5) . '.'.$file_ext;
 					$new_filename = str_replace(' ','_',basename($_FILES['bill_file']['name']));
 					$uploadfile = DIR_BILLS . $new_filename;			
 					move_uploaded_file($_FILES['bill_file']['tmp_name'], $uploadfile);
@@ -728,7 +716,6 @@
 				
 				$file_ext = array_pop(explode(".", basename($_FILES['bill_file2']['name'])));
 				if (in_array($file_ext, $allowed_file)){
-					//$new_filename = 'bill_info_' . $order_id .'_'. substr(md5(time), 0, 5) . '.'.$file_ext;
 					$new_filename2 = str_replace(' ','_',basename($_FILES['bill_file2']['name']));
 					$uploadfile = DIR_BILLS . $new_filename2;			
 					move_uploaded_file($_FILES['bill_file2']['tmp_name'], $uploadfile);
@@ -737,8 +724,7 @@
 				} else {
 				$bill_file2 = '';
 			}
-			
-			//пересчет статуса заказа
+
 			$data['order_status_id'] = $this->getOrderLastHistory($order_id);
 			
 			if (!isset($data['urgent'])){
@@ -910,34 +896,34 @@
 				
 				if ($address_id > 0){
 					$this->db->query("UPDATE `address` SET 
-					firstname = '" . $this->db->escape($data['firstname']) . "', 
-					lastname = '" . $this->db->escape($data['lastname']) . "', 
-					company = '" . $this->db->escape($data['payment_company']) . "',
-					address_1 = '" . $this->db->escape($data['payment_address_1']) . "', 
-					address_2 = '" . $this->db->escape($data['payment_address_2']) . "', 
-					city = '" . $this->db->escape($data['payment_city']) . "', 
-					postcode = '" . $this->db->escape($data['payment_postcode']) . "',
-					country_id = '" . (int)$data['payment_country_id'] . "',
-					zone_id = '" . (int)$data['payment_zone_id'] . "' 
-					WHERE address_id = '" . (int)$address_id . "'");
-					} else {
+						firstname = '" . $this->db->escape($data['firstname']) . "', 
+						lastname = '" . $this->db->escape($data['lastname']) . "', 
+						company = '" . $this->db->escape($data['payment_company']) . "',
+						address_1 = '" . $this->db->escape($data['payment_address_1']) . "', 
+						address_2 = '" . $this->db->escape($data['payment_address_2']) . "', 
+						city = '" . $this->db->escape($data['payment_city']) . "', 
+						postcode = '" . $this->db->escape($data['payment_postcode']) . "',
+						country_id = '" . (int)$data['payment_country_id'] . "',
+						zone_id = '" . (int)$data['payment_zone_id'] . "' 
+						WHERE address_id = '" . (int)$address_id . "'");
+				} else {
 					$this->db->query("INSERT INTO `address` SET 
-					firstname = '" . $this->db->escape($data['firstname']) . "', 
-					lastname = '" . $this->db->escape($data['lastname']) . "', 
-					company = '" . $this->db->escape($data['payment_company']) . "',
-					address_1 = '" . $this->db->escape($data['payment_address_1']) . "', 
-					address_2 = '" . $this->db->escape($data['payment_address_2']) . "', 
-					city = '" . $this->db->escape($data['payment_city']) . "', 
-					postcode = '" . $this->db->escape($data['payment_postcode']) . "',
-					country_id = '" . (int)$data['payment_country_id'] . "',
-					zone_id = '" . (int)$data['payment_zone_id'] . "',
-					customer_id = '" . (int)$data['customer_id'] . "'"
+						firstname = '" . $this->db->escape($data['firstname']) . "', 
+						lastname = '" . $this->db->escape($data['lastname']) . "', 
+						company = '" . $this->db->escape($data['payment_company']) . "',
+						address_1 = '" . $this->db->escape($data['payment_address_1']) . "', 
+						address_2 = '" . $this->db->escape($data['payment_address_2']) . "', 
+						city = '" . $this->db->escape($data['payment_city']) . "', 
+						postcode = '" . $this->db->escape($data['payment_postcode']) . "',
+						country_id = '" . (int)$data['payment_country_id'] . "',
+						zone_id = '" . (int)$data['payment_zone_id'] . "',
+						customer_id = '" . (int)$data['customer_id'] . "'"
 					);
 					$address_id = $this->db->getLastId();
 					
 					$this->db->query("UPDATE `customer` SET 
-					address_id = '" . (int)$address_id . "' 		
-					WHERE customer_id = '" . (int)$data['customer_id'] . "'");
+						address_id = '" . (int)$address_id . "' 		
+						WHERE customer_id = '" . (int)$data['customer_id'] . "'");
 				}
 			}
 			
@@ -962,12 +948,9 @@
 				}			
 			}
 			
-			
-			//get main shop currency
 			$this->load->model('setting/setting');
 			$main_currency = $this->model_setting_setting->getKeySettingValue('config', 'config_currency', (int)$data['store_id']);
-			
-			
+						
 			if (isset($data['order_product'])) {
 				$sub_total = 0;
 				$just_product_ids = array();
@@ -975,70 +958,66 @@
 				foreach ($data['order_product'] as $order_product) {
 					
 					$just_product_ids[] = (int)$order_product['product_id'];
-					
-					if (true /*заглушка после хороших товаров*/){	
-						
-						if ($order_product['price_national'] != ''){				
-							$order_product['price'] = $this->currency->convert($order_product['price_national'], $data['currency_code'], $main_currency);				
-							} else {
-							$order_product['price_national'] = 	$this->currency->convert($order_product['price'], $main_currency, $data['currency_code']);
+
+					if ($order_product['price_national'] != ''){				
+						$order_product['price'] = $this->currency->convert($order_product['price_national'], $data['currency_code'], $main_currency);				
+					} else {
+						$order_product['price_national'] = 	$this->currency->convert($order_product['price'], $main_currency, $data['currency_code']);
+					}
+
+					if ($order_product['total_national'] != ''){	
+						$order_product['total'] = $this->currency->convert($order_product['total_national'], $data['currency_code'], $main_currency);
+					} else {
+						$order_product['total_national'] = 	$this->currency->convert($order_product['total'], $main_currency, $data['currency_code']);
+					}
+
+					$order_product['total'] 			= $order_product['price'] * $order_product['quantity'];
+					$order_product['total_national'] 	= $order_product['price_national'] * $order_product['quantity'];
+
+					$sub_total += $order_product['total_national'];
+
+					$_name = str_replace(array('"', "'", "&quot;", "&quot"),array("","","",""),$order_product['name']);
+
+					if (isset($original_prices[(int)$order_product['order_product_id']])){
+						$order_product['original_price_national'] = $original_prices[(int)$order_product['order_product_id']];
+					}				
+
+					if (!isset($order_product['original_price_national']) || (int)$order_product['original_price_national'] == 0 || !$order_product['original_price_national']){
+						$order_product['original_price_national'] = $order_product['price_national'];
+					}
+
+					$check_stock_query = $this->db->query("SELECT stock_product_id FROM product WHERE product_id = '" . (int)$order_product['product_id'] . "'");
+					if ($check_stock_query->row && isset($check_stock_query->row['stock_product_id']) && $check_stock_query->row['stock_product_id'] > 0){
+						$real_product_id = $check_stock_query->row['stock_product_id'];
+					} else {
+						$real_product_id = (int)$order_product['product_id'];
+					}
+
+					if ($order_product['source']) {
+						$sources = array();
+						$source_query = $this->db->query("SELECT source FROM product WHERE product_id = '" . (int)$real_product_id . "' LIMIT 1");
+						$sources = explode(PHP_EOL, $source_query->row['source']);
+						$sources[] = $order_product['source'];
+						foreach ($sources as &$source){
+							$source = trim($source);
 						}
-						
-						if ($order_product['total_national'] != ''){	
-							$order_product['total'] = $this->currency->convert($order_product['total_national'], $data['currency_code'], $main_currency);
-							} else {
-							$order_product['total_national'] = 	$this->currency->convert($order_product['total'], $main_currency, $data['currency_code']);
-						}
-						
-						/* AZAZA */
-						$order_product['total'] = $order_product['price'] * $order_product['quantity'];
-						$order_product['total_national'] = $order_product['price_national'] * $order_product['quantity'];
-						
-						$sub_total += $order_product['total_national'];
-						
-						$_name = str_replace(array('"', "'", "&quot;", "&quot"),array("","","",""),$order_product['name']);
-						
-						if (isset($original_prices[(int)$order_product['order_product_id']])){
-							$order_product['original_price_national'] = $original_prices[(int)$order_product['order_product_id']];
-						}				
-						
-						if (!isset($order_product['original_price_national']) || (int)$order_product['original_price_national'] == 0 || !$order_product['original_price_national']){
-							$order_product['original_price_national'] = $order_product['price_national'];
-						}
-						
-						$check_stock_query = $this->db->query("SELECT stock_product_id FROM product WHERE product_id = '" . (int)$order_product['product_id'] . "'");
-						if ($check_stock_query->row && isset($check_stock_query->row['stock_product_id']) && $check_stock_query->row['stock_product_id'] > 0){
-							$_real_product_id = $check_stock_query->row['stock_product_id'];
-							} else {
-							$_real_product_id = (int)$order_product['product_id'];
-						}
-						
-						//update product sources
-						if ($order_product['source']) {
-							$sources = array();
-							$source_query = $this->db->query("SELECT source FROM product WHERE product_id = '" . (int)$_real_product_id . "' LIMIT 1");
-							$sources = explode(PHP_EOL, $source_query->row['source']);
-							$sources[] = $order_product['source'];
-							foreach ($sources as &$_src){
-								$_src = trim($_src);
-							}
-							$sources = array_unique($sources, SORT_STRING);
-							$sources = implode(PHP_EOL, $sources);
-							$this->db->query("UPDATE product SET source = '" . $this->db->escape($sources) . "' WHERE product_id = '" . (int)$_real_product_id . "'");
-						}
-						
+						$sources = array_unique($sources, SORT_STRING);
+						$sources = implode(PHP_EOL, $sources);
+						$this->db->query("UPDATE product SET source = '" . $this->db->escape($sources) . "' WHERE product_id = '" . (int)$real_product_id . "'");
+					}
+
 						//Если на задано количество бонусов на один товар, то мы его пересчитаем
 						//Если же задано, то у нас реверсивная логика, на случай изменения
-						if (!empty($order_product['reward_one'])){
-							$order_product['reward'] = $order_product['reward_one'] * $order_product['quantity'];
-							} else {
-							$order_product['reward_one'] = (int)($order_product['reward'] / $order_product['quantity']);
-						}
-						
-						$this->db->query("INSERT INTO order_product SET
+					if (!empty($order_product['reward_one'])){
+						$order_product['reward'] = $order_product['reward_one'] * $order_product['quantity'];
+					} else {
+						$order_product['reward_one'] = (int)($order_product['reward'] / $order_product['quantity']);
+					}
+
+					$this->db->query("INSERT INTO order_product SET
 						order_product_id 	= '" . (int)$order_product['order_product_id'] . "', 
 						order_id 			= '" . (int)$order_id . "', 
-						product_id 			= '" . (int)$_real_product_id . "', 
+						product_id 			= '" . (int)$real_product_id . "', 
 						ao_id 				= '" . (int)$order_product['ao_id'] . "', 
 						ao_product_id 		= '" . (int)$order_product['ao_product_id'] . "',
 						name 				= '" . $this->db->escape($_name) . "', 
@@ -1062,34 +1041,30 @@
 						reward_one 			= '" . (int)$order_product['reward_one'] . "', 
 						good 				= '" . (int)$order_product['good'] . "', 
 						taken 				= '" . (int)$order_product['taken'] . "'");
-						
-						$order_product_id = $this->db->getLastId();
-						
-						$this->db->query("UPDATE product SET quantity = (quantity - " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");
-						
-						// $this->load->model('localisation/language');
-						// $languageDeId = $this->model_localisation_language->getLanguageByCode($this->config->get('config_de_language'));
-						// $this->db->query("UPDATE product_description SET name = '" . $this->db->escape($order_product['name']) . "' WHERE product_id = '" . (int)$order_product['product_id'] . "' AND name <> '' AND language_id <> '".(int)$languageDeId."'");
-						
-						if (isset($order_product['order_option'])) {
-							foreach ($order_product['order_option'] as $order_option) {
-								$this->db->query("INSERT INTO order_option SET order_option_id = '" . (int)$order_option['order_option_id'] . "', order_id = '" . (int)$order_id . "', order_product_id = '" . (int)$order_product_id . "', product_option_id = '" . (int)$order_option['product_option_id'] . "', product_option_value_id = '" . (int)$order_option['product_option_value_id'] . "', name = '" . $this->db->escape($order_option['name']) . "', `value` = '" . $this->db->escape($order_option['value']) . "', `type` = '" . $this->db->escape($order_option['type']) . "'");
-								
-								
-								$this->db->query("UPDATE product_option_value SET quantity = (quantity - " . (int)$order_product['quantity'] . ") WHERE product_option_value_id = '" . (int)$order_option['product_option_value_id'] . "' AND subtract = '1'");
-							}
+
+					$order_product_id = $this->db->getLastId();
+
+					$this->db->query("UPDATE product SET quantity = (quantity - " . (int)$order_product['quantity'] . ") WHERE product_id = '" . (int)$order_product['product_id'] . "' AND subtract = '1'");	
+
+					$this->model_catalog_product->syncProductNamesFromOrders($real_product_id, $data['language_id'], $order_product['name']);
+
+					if (isset($order_product['order_option'])) {
+						foreach ($order_product['order_option'] as $order_option) {
+							$this->db->query("INSERT INTO order_option SET order_option_id = '" . (int)$order_option['order_option_id'] . "', order_id = '" . (int)$order_id . "', order_product_id = '" . (int)$order_product_id . "', product_option_id = '" . (int)$order_option['product_option_id'] . "', product_option_value_id = '" . (int)$order_option['product_option_value_id'] . "', name = '" . $this->db->escape($order_option['name']) . "', `value` = '" . $this->db->escape($order_option['value']) . "', `type` = '" . $this->db->escape($order_option['type']) . "'");
+
+
+							$this->db->query("UPDATE product_option_value SET quantity = (quantity - " . (int)$order_product['quantity'] . ") WHERE product_option_value_id = '" . (int)$order_option['product_option_value_id'] . "' AND subtract = '1'");
 						}
-						
-						if (isset($order_product['order_download'])) {
-							foreach ($order_product['order_download'] as $order_download) {
-								$this->db->query("INSERT INTO order_download SET order_download_id = '" . (int)$order_download['order_download_id'] . "', order_id = '" . (int)$order_id . "', order_product_id = '" . (int)$order_product_id . "', name = '" . $this->db->escape($order_download['name']) . "', filename = '" . $this->db->escape($order_download['filename']) . "', mask = '" . $this->db->escape($order_download['mask']) . "', remaining = '" . (int)$order_download['remaining'] . "'");
-							}
+					}
+
+					if (isset($order_product['order_download'])) {
+						foreach ($order_product['order_download'] as $order_download) {
+							$this->db->query("INSERT INTO order_download SET order_download_id = '" . (int)$order_download['order_download_id'] . "', order_id = '" . (int)$order_id . "', order_product_id = '" . (int)$order_product_id . "', name = '" . $this->db->escape($order_download['name']) . "', filename = '" . $this->db->escape($order_download['filename']) . "', mask = '" . $this->db->escape($order_download['mask']) . "', remaining = '" . (int)$order_download['remaining'] . "'");
 						}
 					}
 				}
 			}
 			
-			//delete unexistent set products
 			$this->db->query("DELETE FROM order_set WHERE set_product_id NOT IN (SELECT product_id FROM order_product WHERE order_id = '" . (int)$order_id . "') AND (set_product_id NOT IN (SELECT product_id FROM order_product_nogood WHERE order_id = '" . (int)$order_id . "')) AND order_id = '" . (int)$order_id . "'"); 
 			
 			$this->db->query("DELETE FROM order_voucher WHERE order_id = '" . (int)$order_id . "'"); 

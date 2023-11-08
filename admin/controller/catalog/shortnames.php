@@ -139,6 +139,7 @@ class ControllerCatalogShortNames extends Controller {
 
 	public function write(){		
 		$this->load->model('module/seogen');
+		$this->load->model('catalog/product');
 
 		if ($this->user->hasPermission('modify', 'catalog/product')) {
 			if ($this->request->method == 'POST'){
@@ -151,6 +152,8 @@ class ControllerCatalogShortNames extends Controller {
 				if ($this->request->data['name'] == 'full'){
 
 					$this->db->query("UPDATE product_description SET name = '" . $this->db->escape($this->request->data['text']) . "' WHERE product_id = '" . (int)$this->request->data['product_id'] . "' AND language_id = '" . (int)$this->request->data['language_id'] . "'");
+
+					$this->model_catalog_product->syncProductNamesInOrders($this->request->data['product_id'], $this->request->data['language_id'], $this->request->data['text']);
 
 					$this->model_module_seogen->urlifyProduct($this->request->data['product_id'], $this->request->data['language_id']);
 
@@ -165,7 +168,6 @@ class ControllerCatalogShortNames extends Controller {
 							}
 						}						
 					}					
-
 
 				} elseif ($this->request->data['name'] == 'short') {
 

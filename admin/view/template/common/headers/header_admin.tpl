@@ -136,7 +136,7 @@
 							<div class="user-name-1" style="float:left; color:#000; font-weight:700; padding-left:20px;">
 								<i class="fa fa-user-o icon_header hidden-xs"></i>
 								<div style="display: inline-block;"><? echo $this->user->getUserFullName(); ?> (<? echo $this->user->getUserName(); ?>) <a style="color:#788084" href="<?php echo $logout; ?>"><b><i class="fa fa-external-link"></i></b></a>
-								<span class="hidden-xs"><br /><? echo $this->user->getUserGroupName(); ?></span>
+								<span class="hidden-xs"><br /><?php if ($this->user->getId() == 6) { ?>Властелин Домополиса<?php } else { ?><? echo $this->user->getUserGroupName(); ?><?php } ?></span>
 								</div>
 							</div>
 						<? } ?>	
