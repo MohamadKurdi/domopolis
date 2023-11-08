@@ -6,7 +6,7 @@ class Url {
     private $cache      = null;
     private $db         = null;
 
-    private $rewrite = array();
+    private $rewrite = [];
 
     public function __construct($url, $registry = false) {
         if ($registry && is_object($registry)){

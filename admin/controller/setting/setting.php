@@ -3893,13 +3893,11 @@ class ControllerSettingSetting extends Controller
             $this->data['config_rainforest_enable_sponsored_adding'] = $this->config->get('config_rainforest_enable_sponsored_adding');
         }
 
-
         if (isset($this->request->post['config_rainforest_enable_similar_to_consider_adding'])) {
             $this->data['config_rainforest_enable_similar_to_consider_adding'] = $this->request->post['config_rainforest_enable_similar_to_consider_adding'];
         } else {
             $this->data['config_rainforest_enable_similar_to_consider_adding'] = $this->config->get('config_rainforest_enable_similar_to_consider_adding');
         }
-
 
         if (isset($this->request->post['config_rainforest_enable_view_to_purchase_adding'])) {
             $this->data['config_rainforest_enable_view_to_purchase_adding'] = $this->request->post['config_rainforest_enable_view_to_purchase_adding'];
@@ -3943,13 +3941,11 @@ class ControllerSettingSetting extends Controller
             $this->data['config_rainforest_enable_sponsored_parsing'] = $this->config->get('config_rainforest_enable_sponsored_parsing');
         }
 
-
         if (isset($this->request->post['config_rainforest_enable_similar_to_consider_parsing'])) {
             $this->data['config_rainforest_enable_similar_to_consider_parsing'] = $this->request->post['config_rainforest_enable_similar_to_consider_parsing'];
         } else {
             $this->data['config_rainforest_enable_similar_to_consider_parsing'] = $this->config->get('config_rainforest_enable_similar_to_consider_parsing');
         }
-
 
         if (isset($this->request->post['config_rainforest_enable_view_to_purchase_parsing'])) {
             $this->data['config_rainforest_enable_view_to_purchase_parsing'] = $this->request->post['config_rainforest_enable_view_to_purchase_parsing'];
@@ -4181,7 +4177,6 @@ class ControllerSettingSetting extends Controller
             } else {
                 $this->data['config_rainforest_main_formula_max_' . $crmfc] = $this->config->get('config_rainforest_main_formula_max_' . $crmfc);
             }
-
         }
 
         if (isset($this->request->post['config_rainforest_supplierminrating'])) {
