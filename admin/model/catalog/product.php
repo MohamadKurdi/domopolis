@@ -1289,7 +1289,7 @@
 				
 				$data = $query->row;			
 				$data['viewed'] = '0';
-				$data['keyword'] = array();
+				$data['keyword'] = [];
 				$data['status'] = '0';
 				
 				$data = array_merge($data, array('product_attribute' 	=> $this->getProductAttributes($product_id)));
@@ -1334,9 +1334,9 @@
 			
 			if ($options->num_rows > 1){
 				
-				$prices = array();
-				$specials = array();
-				$all = array();
+				$prices = [];
+				$specials = [];
+				$all = [];
 				foreach ($options->rows as $option){
 					
 					if ($product = $this->getProductPrice($option['this_is_product_id'])){
@@ -1352,7 +1352,7 @@
 					}
 				}
 				
-				$tmp = array();					
+				$tmp = [];					
 				if (min($all) < min($prices)){
 					//Это означает, что у нас есть скидка и мы можем ее вывести
 					$tmp['price']['min'] = min($prices);
@@ -1973,7 +1973,7 @@
 		public function getProductAdditionalOfferGroups() {
 			$query = $this->db->query("SELECT DISTINCT ao_group FROM product_additional_offer ORDER BY priority, price");
 			
-			$results = array();				
+			$results = [];				
 			
 			foreach ($query->rows as $row){
 				$results[] = $row['ao_group'];
@@ -1991,7 +1991,7 @@
 		public function getProductAdditionalOfferStoresByAOID($product_additional_offer_id) {
 			$query = $this->db->query("SELECT * FROM product_additional_offer_to_store WHERE product_additional_offer_id = '" . (int)$product_additional_offer_id . "'");						
 			
-			$store_data = array();
+			$store_data = [];
 			
 			foreach ($query->rows as $row){
 				$store_data[] = $row['store_id'];
@@ -2315,7 +2315,7 @@
 		}
 		
 		public function getProductDescriptions($product_id) {
-			$product_description_data = array();
+			$product_description_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product_description WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -2352,7 +2352,7 @@
 		}
 		
 		public function getProductCategories($product_id) {
-			$product_category_data = array();
+			$product_category_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product_to_category WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -2364,7 +2364,7 @@
 		}
 		
 		public function getProductFilters($product_id) {
-			$product_filter_data = array();
+			$product_filter_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product_filter WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -2382,12 +2382,12 @@
 		}
 		
 		public function getProductAttributes($product_id) {
-			$product_attribute_data = array();
+			$product_attribute_data = [];
 			
 			$product_attribute_query = $this->db->query("SELECT attribute_id FROM product_attribute WHERE product_id = '" . (int)$product_id . "' GROUP BY attribute_id");
 			
 			foreach ($product_attribute_query->rows as $product_attribute) {
-				$product_attribute_description_data = array();
+				$product_attribute_description_data = [];
 				
 				$product_attribute_description_query = $this->db->query("SELECT * FROM product_attribute WHERE product_id = '" . (int)$product_id . "' AND attribute_id = '" . (int)$product_attribute['attribute_id'] . "'");
 				
@@ -2405,12 +2405,12 @@
 		}
 
 		public function getProductFeatures($product_id) {			
-			$product_feature_data = array();
+			$product_feature_data = [];
 			
 			$product_feature_query = $this->db->query("SELECT feature_id FROM product_feature WHERE product_id = '" . (int)$product_id . "' GROUP BY feature_id");
 			
 			foreach ($product_feature_query->rows as $product_feature) {
-				$product_feature_description_data = array();
+				$product_feature_description_data = [];
 				
 				$product_feature_description_query = $this->db->query("SELECT * FROM product_feature WHERE product_id = '" . (int)$product_id . "' AND feature_id = '" . (int)$product_feature['feature_id'] . "'");
 				
@@ -2428,7 +2428,7 @@
 		}
 		
 		public function getProductAttributesByLanguage($product_id, $language_id) {
-			$attributes = array();
+			$attributes = [];
 			
 			$query = $this->db->query("SELECT attribute_id, text FROM product_attribute WHERE product_id = '" . (int)$product_id . "' AND language_id = '" . (int)$language_id . "'");
 			
@@ -2440,7 +2440,7 @@
 		}
 		
 		public function getProductAttributesNamesValuesByLanguage($product_id, $language_id) {
-			$attributes = array();
+			$attributes = [];
 			
 			$query = $this->db->query("SELECT a.attribute_group_id, ad.name, pa.attribute_id, pa.text FROM product_attribute pa LEFT JOIN attribute_description ad ON (pa.attribute_id = ad.attribute_id) LEFT JOIN attribute a ON (ad.attribute_id = a.attribute_id) WHERE pa.product_id = '" . (int)$product_id . "' AND pa.language_id = '" . (int)$language_id . "' AND ad.language_id = '" . (int)$language_id . "' ORDER BY ad.name");
 			
@@ -2480,7 +2480,7 @@
 			
 			$query = $this->db->query($sql);
 			
-			$result = array();
+			$result = [];
 			foreach ($query->rows as $row){
 				$result[] = $row['product_id'];
 			}
@@ -2494,12 +2494,12 @@
 		}
 		
 		public function getProductOptions($product_id) {
-			$product_option_data = array();
+			$product_option_data = [];
 			
 			$product_option_query = $this->db->query("SELECT * FROM `product_option` po LEFT JOIN `option` o ON (po.option_id = o.option_id) LEFT JOIN `option_description` od ON (o.option_id = od.option_id) WHERE po.product_id = '" . (int)$product_id . "' AND od.language_id = '" . (int)$this->config->get('config_language_id') . "'");
 			
 			foreach ($product_option_query->rows as $product_option) {
-				$product_option_value_data = array();	
+				$product_option_value_data = [];	
 				
 				$product_option_value_query = $this->db->query("SELECT * FROM product_option_value WHERE product_option_id = '" . (int)$product_option['product_option_id'] . "'");
 				
@@ -2613,7 +2613,7 @@
 		public function getStockStatuses($product_id){
 			$query = $this->db->query("SELECT * FROM product_stock_status WHERE product_id = '" . (int)$product_id . "'");
 			
-			$product_stock_statuses = array();
+			$product_stock_statuses = [];
 			foreach ($query->rows as $row){
 				$product_stock_statuses[$row['store_id']] = $row['stock_status_id'];				
 			}
@@ -2651,7 +2651,7 @@
 		public function getProductStorePrices($product_id){
 			$query = $this->db->query("SELECT * FROM product_price_to_store WHERE product_id = '" . (int)$product_id . "'");
 			
-			$product_prices_to_store = array();
+			$product_prices_to_store = [];
 			foreach ($query->rows as $row){
 				$product_prices_to_store[$row['store_id']] = $row;				
 			}
@@ -2662,7 +2662,7 @@
 		public function getProductStorePricesYam($product_id){
 			$query = $this->db->query("SELECT * FROM product_price_national_to_yam WHERE product_id = '" . (int)$product_id . "'");
 			
-			$product_price_national_to_yam = array();
+			$product_price_national_to_yam = [];
 			foreach ($query->rows as $row){
 				$product_price_national_to_yam[$row['store_id']] = $row;			
 			}
@@ -2673,7 +2673,7 @@
 		public function getProductStorePricesNational($product_id){
 			$query = $this->db->query("SELECT * FROM product_price_national_to_store WHERE product_id = '" . (int)$product_id . "'");
 			
-			$product_prices_national_to_store = array();
+			$product_prices_national_to_store = [];
 			foreach ($query->rows as $row){
 				$product_prices_national_to_store[$row['store_id']] = $row;			
 			}
@@ -2689,7 +2689,7 @@
 		public function getProductStockLimits($product_id){
 			$query = $this->db->query("SELECT * FROM product_stock_limits WHERE product_id = '" . (int)$product_id . "'");
 			
-			$product_stock_limits = array();
+			$product_stock_limits = [];
 			
 			if ($query->num_rows) {
 				foreach ($query->rows as $row){
@@ -2752,7 +2752,7 @@
 		}
 		
 		public function getProductDownloads($product_id) {
-			$product_download_data = array();
+			$product_download_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product_to_download WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -2764,7 +2764,7 @@
 		}
 		
 		public function getProductStores($product_id) {
-			$product_store_data = array();
+			$product_store_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product_to_store WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -2776,7 +2776,7 @@
 		}
 		
 		public function getProductLayouts($product_id) {
-			$product_layout_data = array();
+			$product_layout_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product_to_layout WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -2805,7 +2805,7 @@
 		
 		//Сопутствующие, стоковая логика, амазон frequently_bought_together
 		public function getProductRelated($product_id) {
-			$product_related_data = array();
+			$product_related_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product_related WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -2818,7 +2818,7 @@
 
 		//Похожие, амазон compare_with_similar
 		public function getProductSimilar($product_id) {
-			$product_similar_data = array();
+			$product_similar_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product_similar WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -2831,7 +2831,7 @@
 
 		//Спонсоред, sponsored_products
 		public function getProductSponsored($product_id) {
-			$product_sponsored_data = array();
+			$product_sponsored_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product_sponsored WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -2844,7 +2844,7 @@
 
 		//Похожие, амазон similar_to_consider
 		public function getProductSimilarToConsider($product_id) {
-			$product_similar_data = array();
+			$product_similar_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product_similar_to_consider WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -2857,7 +2857,7 @@
 
 		//Купили после просмотра, амазон view_to_purchase
 		public function getProductViewToPurchase($product_id) {
-			$product_view_to_purchase_data = array();
+			$product_view_to_purchase_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product_view_to_purchase WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -2870,7 +2870,7 @@
 
 		//Также просматривали, амазон also_viewed
 		public function getProductAlsoViewed($product_id) {
-			$product_also_viewed_data = array();
+			$product_also_viewed_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product_also_viewed WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -2883,7 +2883,7 @@
 		
 		//Также купили, амазон also_bought
 		public function getProductAlsoBought($product_id) {
-			$product_also_bought_data = array();
+			$product_also_bought_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product_also_bought WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -2896,7 +2896,7 @@
 
 		//Купить по внешнему виду, амазон shop_by_look
 		public function getProductShopByLook($product_id) {
-			$product_shop_by_look_data = array();
+			$product_shop_by_look_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product_shop_by_look WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -2908,7 +2908,7 @@
 		}
 
 		public function getProductChild($product_id) {
-			$product_child_data = array();
+			$product_child_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product_child WHERE product_id = '" . (int)$product_id . "'");
 			
@@ -2920,7 +2920,7 @@
 		}
 		
 		public function getProductRelatedWithoutNotIsStock($product_id) {
-			$product_related_data = array();
+			$product_related_data = [];
 			
 			$query = $this->db->query("SELECT * FROM product_related pr
 			LEFT JOIN product p ON (pr.related_id = p.product_id) 
@@ -3289,13 +3289,13 @@
 		}	
 		
 		public function getProductProductOptions($product_id) {
-			$product_option_data = array();
+			$product_option_data = [];
 			
 			$product_option_query = $this->db->query("SELECT * FROM product_product_option ppo LEFT JOIN category_description cd ON (ppo.category_id = cd.category_id) WHERE ppo.product_id = '" . (int)$product_id . "' AND cd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY ppo.sort_order");
 			
 			foreach ($product_option_query->rows as $product_option) {
 				
-				$product_option_value_data = array();
+				$product_option_value_data = [];
 				
 				$product_option_value_query = $this->db->query("SELECT ppov.*, pd.name, p.image, p.price FROM product_product_option_value ppov LEFT JOIN product p ON (ppov.product_option_id = p.product_id) LEFT JOIN product_description pd ON (p.product_id = pd.product_id) WHERE ppov.product_product_option_id = '" . (int)$product_option['product_product_option_id'] . "' AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "' ORDER BY ppov.sort_order");
 				
@@ -3371,8 +3371,7 @@
 		public function getProductStocks($data = array()){
 			
 			$this->load->model('localisation/language');			
-			$language_id = $this->model_localisation_language->getLanguageByCode($this->config->get('config_de_language'));
-			
+			$language_id = $this->model_localisation_language->getLanguageByCode($this->config->get('config_de_language'));			
 			
 			$sql = "SELECT 
 			p.product_id,
@@ -3384,10 +3383,16 @@
 			COUNT(op.order_id) as total_p_in_orders,
 			SUM(op.quantity) as total_q_in_orders,
 			p.model, 
+			p.sku, 
 			p.ean,
 			p.asin,
 			p.tnved,
+			p.amazon_offers_type,
+			p.amazon_best_price,
+			p.amazon_seller_quality,
 			p.actual_cost, 
+			p.costprice,
+			p.profitability,
 			quantity_stock, 
 			quantity_stockM, 
 			quantity_stockK,
@@ -3443,12 +3448,9 @@
 					
 				}
 			}
-			
-			
-			$query = $this->db->query($sql);
-			
-			return $query->rows;
-			
+						
+			$query = $this->db->query($sql);			
+			return $query->rows;			
 		}
 		
 		public function getStockTotals($warehouse_identifier){
@@ -3460,11 +3462,11 @@
 		
 		public function getStockDynamics($warehouse_identifier, $range){
 		
-		$data = array();
+		$data = [];
 		
-		$data['total_p_count'] = array();
-		$data['total_q_count'] = array();
-		$data['xaxis'] = array();
+		$data['total_p_count'] = [];
+		$data['total_q_count'] = [];
+		$data['xaxis'] = [];
 		
 		$data['total_p_count']['label'] = 'Количество товаров';
 		$data['total_q_count']['label'] = 'Количество единиц, шт.';

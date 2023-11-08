@@ -1,13 +1,16 @@
 <?
 class ControllerCatalogStocks extends Controller {
+	private $modelCatalogProduct = null;
 
 	public function index() {
 		$this->document->setTitle('Наличие по складам свободных остатков');
 		$this->data['heading_title'] = 'Наличие по складам свободных остатков';
 
+		loadAndRenameCatalogModels('model/catalog/product.php', 'ModelCatalogProduct', 'ModelCatalogProductCatalog');
+		$this->modelCatalogProduct = new ModelCatalogProductCatalog($this->registry);
+
 		$this->getList();
 	}
-
 
 	public function clearAllSpecials(){
 		$this->db->query("TRUNCATE product_special");
@@ -44,7 +47,6 @@ class ControllerCatalogStocks extends Controller {
 		$this->db->query($sql);
 		$count = $this->db->countAffected();		
 
-		//Это неликвид, то удаляем товары БЕЗ продаж
 		if (!$liquid){
 			$sql = "DELETE FROM product_special WHERE store_id = '" . (int)$store_id . "' AND product_id IN (";
 			$sql .= " SELECT product_id FROM product WHERE status = 1 AND is_markdown = 0 AND is_virtual = 0 AND `" . $stock_field . "` > 0 AND product_id NOT IN  (";
@@ -61,7 +63,6 @@ class ControllerCatalogStocks extends Controller {
 
 
 		if (!$only_delete){
-			//Добавление
 			$sql = "INSERT INTO product_special( `product_id`, `priority`, `price`, `store_id`, `currency_scode`, `date_start`, `date_end`, `set_by_stock`, `set_by_stock_illiquid`, `date_settled_by_stock` ) ";
 			$sql .= " SELECT product_id, 100, ROUND(price - price * " . (float)($percent/100) . "), '" . (int)$store_id . "', 'EUR', '0000-00-00', '0000-00-00',";
 
@@ -147,7 +148,7 @@ class ControllerCatalogStocks extends Controller {
 		$this->document->setTitle('Динамика расхода товара с остатков');
 		$this->data['heading_title'] = 'Динамика расхода товара с остатков';
 
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -195,10 +196,8 @@ class ControllerCatalogStocks extends Controller {
 
 		$this->document->setTitle('Наличие по складам свободных остатков');
 		$this->data['heading_title'] = 'Наличие по складам свободных остатков';
-		$this->data['token'] = $this->session->data['token'];
 
-
-		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'] = [];
 
 		$this->data['breadcrumbs'][] = array(
 			'text'      => $this->language->get('text_home'),
@@ -251,12 +250,11 @@ class ControllerCatalogStocks extends Controller {
 
 		$this->load->model('catalog/manufacturer');
 		$manufacturers = $this->model_catalog_manufacturer->getManufacturers();
-		$this->data['manufacturers'] = array();
+		$this->data['manufacturers'] = [];
 
 
-		$this->data['stock_last_sync'] = date('d.m.Y в H:i:s', strtotime($this->model_kp_product->getLastUpdate()));
+		$this->data['stock_last_sync'] 	= date('d.m.Y в H:i:s', strtotime($this->model_kp_product->getLastUpdate()));
 		$this->data['stock_identifier'] = $stock_identifier = $this->model_setting_setting->getKeySettingValue('config', 'config_warehouse_identifier_local', $store_id);
-
 		$this->data['current_currency'] = $this->model_setting_setting->getKeySettingValue('config', 'config_regional_currency', $store_id);
 
 		$filter_data = [
@@ -269,85 +267,141 @@ class ControllerCatalogStocks extends Controller {
 		$results = $this->model_catalog_product->getProductStocks($filter_data);
 
 		if (!$filter_by_brand){
-			$this->data['stocks']['Без группировки по бренду'] = array();
+			$this->data['stocks']['Без группировки по бренду'] = [];
 		}
 
 		$this->data['total_amount'] = 0;
 		$this->data['total_items'] = 0;
 
-		foreach ($results as $result){
-			$costs = $this->model_kp_product->getProductCosts($result['product_id']);
-
-			if (!empty($costs[$store_id])){
-				$result['cost'] 			= $this->currency->format_with_left($costs[$store_id]['cost'], 'EUR', 1);	
-				$result['cost_national']	= $this->currency->format_with_left($costs[$store_id]['cost'], $this->data['current_currency']);	
-
-				$this->data['total_amount'] += ($costs[$store_id]['cost'] * $result[$this->data['stock_identifier']]);
-
-				$result['min_sale_price'] 	= $this->currency->format_with_left($costs[$store_id]['min_sale_price'], 'EUR', 1);
-				$result['min_sale_price_national']	= $this->currency->format_with_left($costs[$store_id]['min_sale_price'], $this->data['current_currency']);
-			}
-
-			$result['actual_cost'] = $this->currency->format_with_left($result['actual_cost'], 'EUR', 1);	
-			$result['actual_cost_national'] = $this->currency->format_with_left($result['actual_cost'], $this->data['current_currency']);	
-
-			$this->data['total_items'] += $result[$this->data['stock_identifier']];
-
-
-			if (!$result['manufacturer_name']){
-				$result['manufacturer_name'] = 'Unknown';
-			}
-
-			$result['image'] = $this->model_tool_image->resize($result['image'], 50, 50);
-
-			if ($filter_by_brand){
-
-				if (!isset($this->data['stocks'][$result['manufacturer_name']])){
-					$this->data['stocks'][$result['manufacturer_name']] = array();
-
-					$this->data['counts'][$result['manufacturer_name']] = array(
-						'total_items' => 0,
-						'total_amount' => 0,
-					);
+		if ($this->config->get('config_amazon_profitability_in_stocks')){
+			foreach ($results as $result){
+				$product_info 			= $this->modelCatalogProduct->getProduct($result['product_id'], false);
+				$result['front_price'] 	= $this->currency->format_with_left($product_info['price'], $this->data['current_currency']);
+				
+				$result['front_special'] = false;
+				if ((float)$product_info['special']) {
+					$result['front_special'] = $this->currency->format_with_left($product_info['special'], $this->data['current_currency']);
 				}
 
-				$this->data['stocks'][$result['manufacturer_name']][] = $result;	
-				$this->data['counts'][$result['manufacturer_name']]['total_items'] += $result[$this->data['stock_identifier']];
+				$result['cost'] 			= $this->currency->format_with_left($result['costprice'], 'EUR', 1);	
+				$result['cost_national']	= $this->currency->format_with_left($result['costprice'], $this->data['current_currency']);	
+
+				if (!empty($result['costprice'])){				
+					$this->data['total_amount'] += ($result['costprice'] * $result[$this->data['stock_identifier']]);
+				}
+
+				$result['actual_cost'] 			= $this->currency->format_with_left($result['costprice'], 'EUR', 1);	
+				$result['actual_cost_national'] = $this->currency->format_with_left($result['costprice'], $this->data['current_currency']);	
+
+				$result['amazon_best_price'] 			= $this->currency->format_with_left($result['amazon_best_price'], 'EUR', 1);
+				$result['amazon_best_price_national'] 	= $this->currency->format_with_left($result['amazon_best_price'], $this->data['current_currency']);						
+
+				$this->data['total_items'] += $result[$this->data['stock_identifier']];
+				if (!$result['manufacturer_name']){
+					$result['manufacturer_name'] = 'Unknown';
+				}
+
+				$result['image'] = $this->model_tool_image->resize($result['image'], 50, 50);
+
+				if ($filter_by_brand){
+					if (!isset($this->data['stocks'][$result['manufacturer_name']])){
+						$this->data['stocks'][$result['manufacturer_name']] = [];
+
+						$this->data['counts'][$result['manufacturer_name']] = array(
+							'total_items' => 0,
+							'total_amount' => 0,
+						);
+					}
+
+					$this->data['stocks'][$result['manufacturer_name']][] = $result;	
+					$this->data['counts'][$result['manufacturer_name']]['total_items'] += $result[$this->data['stock_identifier']];
+
+					if (!empty($result['costprice'])){
+						$this->data['counts'][$result['manufacturer_name']]['total_amount'] += ($result['costprice'] * $result[$this->data['stock_identifier']]);
+					}					
+
+					$this->data['counts'][$result['manufacturer_name']]['total_amount_in_eur'] 		= $this->currency->format_with_left($this->data['counts'][$result['manufacturer_name']]['total_amount'], 'EUR', 1);
+					$this->data['counts'][$result['manufacturer_name']]['total_amount_by_inner'] 	= $this->currency->format_with_left($this->data['counts'][$result['manufacturer_name']]['total_amount'], $this->data['current_currency']);
+					$this->data['counts'][$result['manufacturer_name']]['total_amount_by_real'] 	= $this->currency->format_with_left($this->currency->real_convert($this->data['counts'][$result['manufacturer_name']]['total_amount'], 'EUR', $this->data['current_currency'], true), $this->data['current_currency'], 1);
+
+				} else {
+					$this->data['stocks']['Без группировки по бренду'][] = $result;
+				}
+
+				$this->data['manufacturers'][$result['manufacturer_id']] = [
+					'manufacturer_id' => $result['manufacturer_id'],
+					'name' => $result['manufacturer_name']
+				];
+			}
+		} else {
+			foreach ($results as $result){
+				$costs = $this->model_kp_product->getProductCosts($result['product_id']);
 
 				if (!empty($costs[$store_id])){
-					$this->data['counts'][$result['manufacturer_name']]['total_amount'] += ($costs[$store_id]['cost'] * $result[$this->data['stock_identifier']]);
+					$result['cost'] 			= $this->currency->format_with_left($costs[$store_id]['cost'], 'EUR', 1);	
+					$result['cost_national']	= $this->currency->format_with_left($costs[$store_id]['cost'], $this->data['current_currency']);	
+
+					$this->data['total_amount'] += ($costs[$store_id]['cost'] * $result[$this->data['stock_identifier']]);
+
+					$result['min_sale_price'] 			= $this->currency->format_with_left($costs[$store_id]['min_sale_price'], 'EUR', 1);
+					$result['min_sale_price_national']	= $this->currency->format_with_left($costs[$store_id]['min_sale_price'], $this->data['current_currency']);
 				}
 
-				$this->data['counts'][$result['manufacturer_name']]['total_amount_in_eur'] = $this->currency->format_with_left($this->data['counts'][$result['manufacturer_name']]['total_amount'], 'EUR', 1);
+				$result['actual_cost'] = $this->currency->format_with_left($result['actual_cost'], 'EUR', 1);	
+				$result['actual_cost_national'] = $this->currency->format_with_left($result['actual_cost'], $this->data['current_currency']);	
 
-				$this->data['counts'][$result['manufacturer_name']]['total_amount_by_inner'] = $this->currency->format_with_left($this->data['counts'][$result['manufacturer_name']]['total_amount'], $this->data['current_currency']);
+				$this->data['total_items'] += $result[$this->data['stock_identifier']];
+				if (!$result['manufacturer_name']){
+					$result['manufacturer_name'] = 'Unknown';
+				}
 
-				$this->data['counts'][$result['manufacturer_name']]['total_amount_by_real'] = $this->currency->format_with_left($this->currency->real_convert($this->data['counts'][$result['manufacturer_name']]['total_amount'], 'EUR', $this->data['current_currency'], true), $this->data['current_currency'], 1);
+				$result['image'] = $this->model_tool_image->resize($result['image'], 50, 50);
 
-			} else {
+				if ($filter_by_brand){
+					if (!isset($this->data['stocks'][$result['manufacturer_name']])){
+						$this->data['stocks'][$result['manufacturer_name']] = [];
 
-				$this->data['stocks']['Без группировки по бренду'][] = $result;
+						$this->data['counts'][$result['manufacturer_name']] = array(
+							'total_items' => 0,
+							'total_amount' => 0,
+						);
+					}
 
+					$this->data['stocks'][$result['manufacturer_name']][] = $result;	
+					$this->data['counts'][$result['manufacturer_name']]['total_items'] += $result[$this->data['stock_identifier']];
+
+					if (!empty($costs[$store_id])){
+						$this->data['counts'][$result['manufacturer_name']]['total_amount'] += ($costs[$store_id]['cost'] * $result[$this->data['stock_identifier']]);
+					}
+
+					$this->data['counts'][$result['manufacturer_name']]['total_amount_in_eur'] 		= $this->currency->format_with_left($this->data['counts'][$result['manufacturer_name']]['total_amount'], 'EUR', 1);
+					$this->data['counts'][$result['manufacturer_name']]['total_amount_by_inner'] 	= $this->currency->format_with_left($this->data['counts'][$result['manufacturer_name']]['total_amount'], $this->data['current_currency']);
+					$this->data['counts'][$result['manufacturer_name']]['total_amount_by_real'] 	= $this->currency->format_with_left($this->currency->real_convert($this->data['counts'][$result['manufacturer_name']]['total_amount'], 'EUR', $this->data['current_currency'], true), $this->data['current_currency'], 1);
+
+				} else {
+					$this->data['stocks']['Без группировки по бренду'][] = $result;
+				}
+
+				$this->data['manufacturers'][$result['manufacturer_id']] = [
+					'manufacturer_id' => $result['manufacturer_id'],
+					'name' => $result['manufacturer_name']
+				];
 			}
 
-			$this->data['manufacturers'][$result['manufacturer_id']] = [
-				'manufacturer_id' => $result['manufacturer_id'],
-				'name' => $result['manufacturer_name']
-			];
 
-		}
+		}		
 
-		$this->data['total_amount_eur'] = $this->currency->format_with_left($this->data['total_amount'], 'EUR', 1);
-		$this->data['total_amount_by_inner'] = $this->currency->format_with_left($this->data['total_amount'], $this->data['current_currency']);
+		$this->data['total_amount_eur'] 		= $this->currency->format_with_left($this->data['total_amount'], 'EUR', 1);
+		$this->data['total_amount_by_inner'] 	= $this->currency->format_with_left($this->data['total_amount'], $this->data['current_currency']);
+		$this->data['total_amount_by_real'] 	= $this->currency->format_with_left($this->currency->real_convert($this->data['total_amount'], 'EUR', $this->data['current_currency'], true), $this->data['current_currency'], 1);
 
-		$this->data['total_amount_by_real'] = $this->currency->format_with_left($this->currency->real_convert($this->data['total_amount'], 'EUR', $this->data['current_currency'], true), $this->data['current_currency'], 1);
+		$this->data['identifier'] 				= $this->data['stock_identifier'];
+		$this->data['filter_manufacturer_id'] 	= $filter_manufacturer_id;
+		$this->data['filter_by_brand'] 			= $filter_by_brand;
+		$this->data['filter_sort'] 				= $filter_sort;
 
-		$this->data['identifier'] = $this->data['stock_identifier'];
-		$this->data['filter_manufacturer_id'] = $filter_manufacturer_id;
-		$this->data['filter_by_brand'] = $filter_by_brand;
-		$this->data['filter_sort'] = $filter_sort;
-
-		$this->data['dynamics_href'] = $this->url->link('catalog/stocks/stockDynamics', 'token=' . $this->session->data['token']);
+		$this->data['dynamics_href'] 	= $this->url->link('catalog/stocks/stockDynamics', 'token=' . $this->session->data['token']);
+		$this->data['token'] 			= $this->session->data['token'];
 
 		$this->template = 'catalog/stocks.tpl';
 		$this->children = array(
@@ -356,10 +410,5 @@ class ControllerCatalogStocks extends Controller {
 		);
 
 		$this->response->setOutput($this->render());
-
 	}
-
-
-
-
 }		
