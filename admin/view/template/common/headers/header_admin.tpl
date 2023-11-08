@@ -229,13 +229,7 @@
 						
 						
 						<ul class="right">
-							<li id="dashboard"><a href="<?php echo $home; ?>" class="top"><i class="fa fa-home icon_menu"></i><?php echo $text_dashboard; ?></a></li>
-							<li id="panel">
-								<a class="top" href="<?php echo $panel; ?>"><i class="fa fa-bell icon_menu"></i>Панель</a>
-							</li>
-							<li id="cronmon">
-								<a class="top" href="<?php echo $cronmon; ?>"><i class="fa fa-refresh icon_menu"></i>Cron</a>
-							</li>
+							<li id="dashboard"><a href="<?php echo $home; ?>" class="top"><i class="fa fa-home icon_menu"></i><?php echo $text_dashboard; ?></a></li>							
 							<? if ($this->user->getIsAV()) { ?>
 								<li id="worktime"><a class="top"><i class="fa fa-eye icon_menu"></i>Работа</a>
 									<ul>
@@ -251,15 +245,9 @@
 						<li id="catalog"><a class="top"><i class="fa fa-bars icon_menu"></i><?php echo $text_catalog; ?></a>
 							<ul>
 								<li><a class="home_icon_style" href="<?php echo $category; ?>"><i class="fa fa-minus"></i><span><?php echo $text_category; ?></span></a></li>								
-								<li><a class="home_icon_style" href="<?php echo $product; ?>"><i class="fa fa-cubes"></i><span><?php echo $text_product; ?></span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $shortnames; ?>"><i class="fa fa-amazon"></i><span>Экспортные названия</span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $product; ?>"><i class="fa fa-cubes"></i><span><?php echo $text_product; ?></span></a></li>								
 								<li><a class="home_icon_style" href="<?php echo $addasin; ?>"><i class="fa fa-amazon"></i><span>Добавление по ASIN</span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $product_deletedasin; ?>"><i class="fa fa-amazon"></i><span>Исключенные ASIN</span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $ocfilter; ?>"><i class="fa fa-cubes"></i><span><?php echo $text_ocfilter; ?> <sup style="color:red">DEV</sup></span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $ocfilter_page; ?>"><i class="fa fa-cubes"></i><span>Посадочные страницы <sup style="color:red">DEV</sup></span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $batch_editor_link; ?>"><i class="fa fa-pencil-square-o"></i><span>Batch Editor v.023</span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $batch_editor_link2; ?>"><i class="fa fa-pencil-square-o"></i><span>Batch Editor v.047</span></a></li>								
-								<li><a class="home_icon_style" href="<?php echo $filter; ?>"><i class="fa fa-filter"></i><span><?php echo $text_filter; ?></span></a></li>        
+								<li><a class="home_icon_style" href="<?php echo $product_deletedasin; ?>"><i class="fa fa-amazon"></i><span>Исключенные ASIN</span></a></li>     
 								<li><a class="home_icon_style parent"><i class="fa fa-file-text-o"></i><span><?php echo $text_attribute; ?></span></a>
 									<ul>
 										<li><a href="<?php echo $attribute; ?>"><?php echo $text_attribute; ?></a></li>
@@ -272,7 +260,20 @@
 								<li><a class="home_icon_style" href="<?php echo $collections_link; ?>"><i class="fa fa-linode"></i><span>Коллекции</span></a></li>								
 								<li><a class="home_icon_style" href="<?php echo $keyworder_link; ?>"><i class="fa fa-exchange"></i><span>Связка производитель/категория</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $sets_link; ?>"><i class="fa fa-window-restore"></i><span>Комплекты товаров</span></a></li>								
-								<li><a class="home_icon_style" href="<?php echo $facategory; ?>"><i class="fa fa-diamond"></i><span><?php echo $text_facategory; ?></span></a></li>								
+								<li><a class="home_icon_style" href="<?php echo $facategory; ?>"><i class="fa fa-diamond"></i><span><?php echo $text_facategory; ?></span></a></li>	
+								<li><a class="home_icon_style" href="<?php echo $ocfilter; ?>"><i class="fa fa-cubes"></i><span><?php echo $text_ocfilter; ?> <sup style="color:red">DEV</sup></span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $ocfilter_page; ?>"><i class="fa fa-cubes"></i><span>Посадочные страницы <sup style="color:red">DEV</sup></span></a></li>							
+								<li><a class="home_icon_style" href="<?php echo $filter; ?>"><i class="fa fa-filter"></i><span><?php echo $text_filter; ?> <sup style="color:red">DEV</sup></span></a></li>   							
+							</ul>
+						</li>
+						<li id="editors"><a class="top"><i class="fa fa-edit icon_menu"></i>Редактор</a>
+							<ul>
+								<li><a class="home_icon_style" href="<?php echo $shortnames; ?>"><i class="fa fa-edit"></i><span>Экспортные названия</span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $shortnames2; ?>"><i class="fa fa-edit"></i><span>Названия из заказов <sup style="color:red">(NEW)</sup></span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $batch_editor_link; ?>"><i class="fa fa-pencil-square-o"></i><span>Batch Editor v.023</span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $batch_editor_link2; ?>"><i class="fa fa-pencil-square-o"></i><span>Batch Editor v.047</span></a></li>
+								<li><a class="home_icon_style" href="<?php echo $csvpricelink; ?>"><i class="fa fa-cubes"></i><span>CSV IMPORT/EXPORT</span></a></li>		
+
 							</ul>
 						</li>
 						<li id="information"><a class="top"><i class="fa fa-info icon_menu"></i>Инфо</a>
@@ -300,30 +301,12 @@
 						
 						<li id="sale"><a class="top"><i class="fa fa-handshake-o icon_menu"></i><?php echo $text_sale; ?></a>
 							<ul>
-								<li><a class="home_icon_style" href="<?php echo $order; ?>"><i class="fa fa-cart-arrow-down"></i><span><?php echo $text_order; ?></span></a></li>														
-								
-								<li><a class="home_icon_style parent"><i class="fa fa fa-bar-chart"></i><span>Отчеты</span></a>
-									<ul>
-										<li><a href="<?php echo $report_reject; ?>"><i class="fa fa-bar-chart"></i> Причины отмен</a></li>
-										<li><a href="<?php echo $report_marketplace; ?>"><i class="fa fa-bar-chart"></i> Маркетплейсы</a></li>
-									</ul>
-								</li>
-								
+								<li><a class="home_icon_style" href="<?php echo $order; ?>"><i class="fa fa-cart-arrow-down"></i><span><?php echo $text_order; ?></span></a></li>						
 								<? if ($fucked_order_total > 0) { ?>
 									<li><a class="home_icon_style" href="<? echo $fucked_link; ?>"><i class="fa fa-cart-plus"></i><span>Незавершенные заказы <span style="color:#cf4a61;">(<? echo $fucked_order_total; ?>)</span></span></a></li>
 								<? } ?>
 								<li><a class="home_icon_style" href="<? echo $callback; ?>"><i class="fa fa-phone"></i><span>Обратные звонки <span style="color:#cf4a61;">(<? echo $total_callbacks; ?>)</span></span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $return; ?>"><i class="fa fa-refresh"></i><span><?php echo $text_return; ?></span></a></li>
-								<li><a class="home_icon_style parent"><i class="fa fa-users"></i><span><?php echo $text_customer; ?></span></a>
-									<ul>
-										<li><a href="<?php echo $customer; ?>"><i class="fa fa-list-ol"></i> <?php echo $text_customer; ?></a></li>
-										<li><a href="<?php echo $customer_group; ?>"><i class="fa fa-newspaper-o"></i> <?php echo $text_customer_group; ?></a></li>
-										<li><a href="<?php echo $customer_manual; ?>"><i class="fa fa-phone"></i> Обзвон клиентов</a></li>
-										<li><a href="<?php echo $segments_link; ?>"><i class="fa fa-bar-chart"></i> Настройка сегментации</a></li>
-										<li><a href="<?php echo $actiontemplate; ?>"><i class="fa fa-envelope-o"></i> Шаблоны регулярных рассылок</a></li>
-										<li><a href="<?php echo $customer_ban_ip; ?>"><i class="fa fa-refresh"></i> <?php echo $text_customer_ban_ip; ?></a></li>
-									</ul>
-								</li>
 								<li><a class="home_icon_style" href="<?php echo $user_sip; ?>"><i class="fa fa-list-ol"></i><span>История телефонных звонков</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $coupon; ?>"><i class="fa fa-barcode"></i><span>Промокоды</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $addspecials; ?>"><i class="fa fa-clone"></i><span>Спецпредложения</span></a></li>
@@ -334,11 +317,19 @@
 										<li><a href="<?php echo $voucher; ?>"><?php echo $text_voucher; ?></a></li>
 										<li><a href="<?php echo $voucher_theme; ?>"><?php echo $text_voucher_theme; ?></a></li>
 									</ul>
-								</li>							
-								
+								</li>															
 							</ul>
 						</li>
-						
+						<li id="customer"><a class="top"><i class="fa fa-users icon_menu"></i>Клиенты</a>
+							<ul>
+								<li><a class="home_icon_style" href="<?php echo $customer; ?>"><i class="fa fa-list-ol"></i> <?php echo $text_customer; ?></a></li>
+								<li><a class="home_icon_style" href="<?php echo $customer_group; ?>"><i class="fa fa-newspaper-o"></i> <?php echo $text_customer_group; ?></a></li>
+								<li><a class="home_icon_style" href="<?php echo $customer_manual; ?>"><i class="fa fa-phone"></i> Обзвон клиентов</a></li>
+								<li><a class="home_icon_style" href="<?php echo $segments_link; ?>"><i class="fa fa-bar-chart"></i> Настройка сегментации</a></li>
+								<li><a class="home_icon_style" href="<?php echo $actiontemplate; ?>"><i class="fa fa-envelope-o"></i> Шаблоны регулярных рассылок</a></li>
+								<li><a class="home_icon_style" href="<?php echo $customer_ban_ip; ?>"><i class="fa fa-refresh"></i> <?php echo $text_customer_ban_ip; ?></a></li>
+							</ul>
+						</li>
 						<li id="buyer"><a class="top"><i class="fa fa-eur icon_menu" aria-hidden="true"></i>Закупка</a>
 							<ul>
 								<li><a class="home_icon_style" href="<?php echo $waitlist; ?>"><i class="fa fa-clock-o"></i><span>Лист ожидания</span></a></li> 
@@ -428,13 +419,7 @@
 								<li><a class="home_icon_style" href="<?php echo $seo_snippet_link; ?>"><i class="fa fa-sitemap"></i><span>Microdata v2</span></a></li>
 							</ul>
 						</li>
-
-						<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
-						<li id="rnf">
-							<a class="top" href="<?php echo $rnf; ?>"><i class="fa fa-amazon icon_menu"></i>Rainforest</a>
-						</li>
-						<?php } ?>
-
+						
 						<li id="system"><a class="top"><i class="fa fa-cogs icon_menu"></i><?php echo $text_system; ?></a>
 							<ul>
 								<li><a class="home_icon_style"  href="<?php echo $panel; ?>"><i class="fa fa-server"></i><span>Панель</span></a></li>
@@ -485,13 +470,14 @@
 								<li><a class="home_icon_style" href="<?php echo $setting; ?>"><i class="fa fa-cog"></i><span><?php echo $text_setting; ?></span></a></li>
 								<li><a class="home_icon_style" href="<? echo $adminlog_url; ?>"><i class="fa fa-user"></i><span>Журнал доступа</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $error_log; ?>"><i class="fa fa-bars"></i><span>Журналы системы</span></a></li>								
-								<li><a class="home_icon_style" href="<?php echo $translator; ?>"><i class="fa fa-language"></i><span>Перевод языковых файлов</span></a></li>
-								<li><a class="home_icon_style" href="<?php echo $csvpricelink; ?>"><i class="fa fa-cubes"></i><span>CSV IMPORT/EXPORT</span></a></li>								
+								<li><a class="home_icon_style" href="<?php echo $translator; ?>"><i class="fa fa-language"></i><span>Перевод языковых файлов</span></a></li>															
 							</ul>
 						</li>							   
 						<li id="reports"><a class="top"><i class="fa fa-area-chart icon_menu"></i><?php echo $text_reports; ?></a>
 							<ul>		
 								<li><a class="home_icon_style" href="<?php echo $report_product_viewed; ?>"><i class="fa fa-eye"></i><span>Отчет просмотров</span></a></li>
+								<li><a href="<?php echo $report_reject; ?>"><i class="fa fa-bar-chart"></i> Причины отмен</a></li>
+								<li><a href="<?php echo $report_marketplace; ?>"><i class="fa fa-bar-chart"></i> Маркетплейсы</a></li>
 								<li><a class="home_icon_style" href="<?php echo $mreport_minusscan ?>"><i class="fa fa-exclamation"></i><span>Проверка счетов</span></a></li>
 								<li><a class="parent home_icon_style"><i class="fa fa-database"></i><span><?php echo $text_sale; ?></span></a>
 									<ul>											
@@ -525,6 +511,17 @@
 									</ul>
 								</li>
 							</ul>
+						</li>
+						<?php if ($this->config->get('config_enable_amazon_specific_modes')) { ?>
+						<li id="rnf">
+							<a class="top" href="<?php echo $rnf; ?>"><i class="fa fa-amazon icon_menu"></i>Rainforest</a>
+						</li>
+						<?php } ?>
+						<li id="cronmon">
+							<a class="top" href="<?php echo $cronmon; ?>"><i class="fa fa-refresh icon_menu"></i>Cron</a>
+						</li>
+						<li id="panel">
+							<a class="top" href="<?php echo $panel; ?>"><i class="fa fa-bell icon_menu"></i>Монитор</a>
 						</li>
 						<li id="store"><a href="<?php echo $store; ?>" target="_blank" class="top"><i class="fa fa-share icon_menu"></i><?php echo $text_front; ?></a>
 							<ul>

@@ -5,8 +5,11 @@ class ControllerCommonHeader extends Controller
     protected function index()
     {
         $this->load->model('report/product');
+        $this->load->model('sale/callback');
+        $this->load->model('setting/store');
+        $this->load->model('sale/order');
 
-        $this->data['title'] = $this->document->getTitle();
+        $this->data['title']        = $this->document->getTitle();
         $this->data['config_title'] = $this->config->get('config_title');
 
         $this->data['base'] = HTTPS_SERVER;
@@ -28,21 +31,19 @@ class ControllerCommonHeader extends Controller
         $this->document->addScript('view/javascript/tootipster/js/tooltipster.bundle.min.js');
         $this->document->addScript('view/javascript/rateyo/jquery.rateyo.min.js');
 
-        $this->data['description'] = $this->document->getDescription();
-        $this->data['keywords'] = $this->document->getKeywords();
-        $this->data['links'] = $this->document->getLinks();
-        $this->data['styles'] = $this->document->getStyles();
-        $this->data['scripts'] = $this->document->getScripts();
-        $this->data['lang'] = $this->language->get('code');
-        $this->data['direction'] = $this->language->get('direction');
+        $this->data['description']  = $this->document->getDescription();
+        $this->data['keywords']     = $this->document->getKeywords();
+        $this->data['links']        = $this->document->getLinks();
+        $this->data['styles']       = $this->document->getStyles();
+        $this->data['scripts']      = $this->document->getScripts();
+        $this->data['lang']         = $this->language->get('code');
+        $this->data['direction']    = $this->language->get('direction');
 
         $this->load->language('common/facommon');
         $this->data['text_facategory'] = $this->language->get('fagroups');
 
         $this->language->load('common/header');
-
         $this->data['heading_title'] = $this->language->get('heading_title');
-
         $this->data['text_affiliate'] = $this->language->get('text_affiliate');
         $this->data['text_report_affiliate_statistics'] = $this->language->get('text_report_affiliate_statistics');
         $this->data['text_report_affiliate_statistics_all'] = $this->language->get('text_report_affiliate_statistics_all');
@@ -180,63 +181,62 @@ class ControllerCommonHeader extends Controller
             $this->data['masspcategupd']    = $this->url->link('tool/masspcategupd', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['masspdiscoupd']    = $this->url->link('tool/masspdiscoupd', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['shortnames']       = $this->url->link('catalog/shortnames', 'token=' . $this->session->data['token'], 'SSL');            
+            $this->data['shortnames2']      = $this->url->link('catalog/shortnames2', 'token=' . $this->session->data['token'], 'SSL');    
 
-            $this->data['banner'] = $this->url->link('design/banner', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['banner_module'] = $this->url->link('module/banner', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['banner']           = $this->url->link('design/banner', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['banner_module']    = $this->url->link('module/banner', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['slideshow_module'] = $this->url->link('module/slideshow', 'token=' . $this->session->data['token'], 'SSL');
 
-            $this->data['category'] = $this->url->link('catalog/category', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['facategory'] = $this->url->link('catalog/facategory', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['country'] = $this->url->link('localisation/country', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['coupon'] = $this->url->link('sale/coupon', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['courier_face'] = $this->url->link('sale/courier', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['courier_face2'] = $this->url->link('sale/courier2', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['currency'] = $this->url->link('localisation/currency', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['customer'] = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['customer_manual'] = $this->url->link('sale/customer_manual', 'token=' . $this->session->data['token'], 'SSL');            
-            $this->data['customer_fields'] = $this->url->link('sale/customer_field', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['customer_group'] = $this->url->link('sale/customer_group', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['customer_ban_ip'] = $this->url->link('sale/customer_ban_ip', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['custom_field'] = $this->url->link('design/custom_field', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['download'] = $this->url->link('catalog/download', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['error_log'] = $this->url->link('tool/error_log', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['feed'] = $this->url->link('extension/feed', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['seo_feeds'] = $this->url->link('setting/feeds', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['filter'] = $this->url->link('catalog/filter', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['geo_zone'] = $this->url->link('localisation/geo_zone', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['information'] = $this->url->link('catalog/information', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['review_category'] = $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['landingpage'] = $this->url->link('catalog/landingpage', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['actiontemplate'] = $this->url->link('catalog/actiontemplate', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['information_attribute'] = $this->url->link('catalog/information_attribute', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['language'] = $this->url->link('localisation/language', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['legalperson'] = $this->url->link('localisation/legalperson', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['layout'] = $this->url->link('design/layout', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['logout'] = $this->url->link('common/logout', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['contact'] = $this->url->link('sale/contact', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['manager'] = $this->url->link('extension/manager', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['manufacturer'] = $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['module'] = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['option'] = $this->url->link('catalog/option', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['ocfilter'] = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['ocfilter_page'] = $this->url->link('catalog/ocfilter/page', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['ocfilter_module'] = $this->url->link('module/ocfilter', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['megafilter_module'] = $this->url->link('module/mega_filter', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['category']         = $this->url->link('catalog/category', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['facategory']       = $this->url->link('catalog/facategory', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['country']          = $this->url->link('localisation/country', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['coupon']           = $this->url->link('sale/coupon', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['courier_face']     = $this->url->link('sale/courier', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['courier_face2']    = $this->url->link('sale/courier2', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['currency']         = $this->url->link('localisation/currency', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['customer']         = $this->url->link('sale/customer', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['customer_manual']  = $this->url->link('sale/customer_manual', 'token=' . $this->session->data['token'], 'SSL');            
+            $this->data['customer_fields']  = $this->url->link('sale/customer_field', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['customer_group']   = $this->url->link('sale/customer_group', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['customer_ban_ip']  = $this->url->link('sale/customer_ban_ip', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['custom_field']     = $this->url->link('design/custom_field', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['download']         = $this->url->link('catalog/download', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['error_log']        = $this->url->link('tool/error_log', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['feed']             = $this->url->link('extension/feed', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['seo_feeds']        = $this->url->link('setting/feeds', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['filter']           = $this->url->link('catalog/filter', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['geo_zone']         = $this->url->link('localisation/geo_zone', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['information']      = $this->url->link('catalog/information', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['review_category']  = $this->url->link('catalog/categoryreview', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['landingpage']      = $this->url->link('catalog/landingpage', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['actiontemplate']   = $this->url->link('catalog/actiontemplate', 'token=' . $this->session->data['token'], 'SSL');           
+            $this->data['language']         = $this->url->link('localisation/language', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['legalperson']      = $this->url->link('localisation/legalperson', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['layout']           = $this->url->link('design/layout', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['logout']           = $this->url->link('common/logout', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['contact']          = $this->url->link('sale/contact', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['manager']          = $this->url->link('extension/manager', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['manufacturer']     = $this->url->link('catalog/manufacturer', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['module']           = $this->url->link('extension/extended_module', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['option']           = $this->url->link('catalog/option', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['ocfilter']         = $this->url->link('catalog/ocfilter', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['ocfilter_page']    = $this->url->link('catalog/ocfilter/page', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['ocfilter_module']          = $this->url->link('module/ocfilter', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['megafilter_module']        = $this->url->link('module/mega_filter', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['information_attribute']    = $this->url->link('catalog/information_attribute', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['order'] = $this->url->link('sale/order', 'token=' . $this->session->data['token'], 'SSL');
 
-            $this->data['sale_checkbox'] = $this->url->link('sale/receipt', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['module_checkbox'] = $this->url->link('module/receipt', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['log_checkbox'] = $this->url->link('tool/receipt_log', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['sale_checkbox']    = $this->url->link('sale/receipt', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['module_checkbox']  = $this->url->link('module/receipt', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['log_checkbox']     = $this->url->link('tool/receipt_log', 'token=' . $this->session->data['token'], 'SSL');
 
-            $this->data['addspecials'] = $this->url->link('catalog/addspecials', 'token='.$this->session->data['token'], 'SSL');
-            $this->data['labelmaker'] = $this->url->link('module/labelmaker', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['notify_bar'] = $this->url->link('module/notify_bar', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['actions'] = $this->url->link('catalog/actions', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['addspecials']      = $this->url->link('catalog/addspecials', 'token='.$this->session->data['token'], 'SSL');
+            $this->data['labelmaker']       = $this->url->link('module/labelmaker', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['notify_bar']       = $this->url->link('module/notify_bar', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['actions']          = $this->url->link('catalog/actions', 'token=' . $this->session->data['token'], 'SSL');
+            
+            $this->data['fucked_order_total'] = $this->model_sale_order->getTotalOrders(['filter_order_status_id' => '0']);
 
-            $data = array('filter_order_status_id' => '0');
-            $this->load->model('sale/order');
-            $fucked_order_total = $this->model_sale_order->getTotalOrders($data);
-            $this->data['fucked_order_total'] = $fucked_order_total;
             $this->data['fucked_link'] = $this->url->link('sale/order', 'filter_order_status_id=0&token=' . $this->session->data['token'], 'SSL');
 
             $this->data['report_adv_sale_order'] = $this->url->link('report/adv_sale_order', 'token=' . $this->session->data['token'], 'SSL');
@@ -400,36 +400,26 @@ class ControllerCommonHeader extends Controller
             $this->data['mod_special'] = $this->url->link('module/special', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['mod_customproduct'] = $this->url->link('module/customproduct', 'token=' . $this->session->data['token'], 'SSL');
             $this->data['sets_link'] = $this->url->link('module/set', 'token=' . $this->session->data['token'], 'SSL');                                
-            $this->data['token'] = $this->session->data['token'];
 
-            $this->data['paypal_express'] = $this->url->link('payment/pp_express', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['paypal_express_search'] = $this->url->link('payment/pp_express/search', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['recurring_profile'] = $this->url->link('sale/recurring', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['paypal_express']           = $this->url->link('payment/pp_express', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['paypal_express_search']    = $this->url->link('payment/pp_express/search', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['recurring_profile']        = $this->url->link('sale/recurring', 'token=' . $this->session->data['token'], 'SSL');
 
-            $this->load->model('sale/callback');
-            $this->data['total_callbacks'] = $this->model_sale_callback->getOpenedCallBacks();
+            $this->data['total_callbacks']  = $this->model_sale_callback->getOpenedCallBacks();
 
-            $this->data['callback'] = $this->url->link('sale/callback', 'token=' . $this->session->data['token'], 'SSL');
-            $this->data['text_callback'] = $this->language->get('text_callback');
+            $this->data['callback']         = $this->url->link('sale/callback', 'token=' . $this->session->data['token'], 'SSL');
+            $this->data['text_callback']    = $this->language->get('text_callback');
 
             $this->load->model('catalog/product');
-            $this->data['total_waitlist_ready'] = $this->model_catalog_product->getTotalProductsWaitList(array('filter_supplier_has' => 1));
-            $this->data['total_waitlist_prewaits'] = $this->model_catalog_product->getProductsWaitListTotalPreWaits();
+            $this->data['total_waitlist_ready']     = $this->model_catalog_product->getTotalProductsWaitList(array('filter_supplier_has' => 1));
+            $this->data['total_waitlist_prewaits']  = $this->model_catalog_product->getProductsWaitListTotalPreWaits();
 
             $this->load->model('localisation/currency');
             $currencies = $this->model_localisation_currency->getCurrencies();
 
             //count EUR TO UAH
             foreach ($currencies as $currency) {
-                if ($currency['code']  == 'KZT') {
-                    $this->data['KZTEUR'] = number_format($currency['value'], 2, '.', ' ') . ' кзт.';
-                } elseif ($currency['code']  == 'UAH') {
-                    $this->data['UAHEUR'] = number_format($currency['value'], 2, '.', ' ') . ' грн.';
-                } elseif ($currency['code']  == 'BYN') {
-                    $this->data['BYREUR'] = number_format($currency['value'], 2, '.', ' ') . ' быр.';
-                } elseif ($currency['code']  == 'RUB') {
-                    $this->data['RUBEUR'] = number_format($currency['value'], 2, '.', ' ') . ' руб.';
-                }
+                $this->data[$currency['code'] . 'EUR'] = $this->currency->format($currency['value'], $currency['code'], 1, true, false, false, true, 2);             
             }
 
             //try to determine currency for order
@@ -490,14 +480,11 @@ class ControllerCommonHeader extends Controller
             if ($this->user->getID()) {
                 $this->data['kpi_stats'] = $this->model_kp_work->getManagerLastKPI($this->user->getID());
             }
+        
+            $this->data['stores'] = [];
+            $results = $this->model_setting_store->getStores();
 
             $this->data['token'] = $this->session->data['token'];
-
-
-            $this->data['stores'] = array();
-
-            $this->load->model('setting/store');
-            $results = $this->model_setting_store->getStores();
 
             foreach ($results as $result) {
                 $this->data['stores'][] = array(
@@ -507,17 +494,12 @@ class ControllerCommonHeader extends Controller
             }
         }
 
-
+        $this->template = 'common/header.tpl';
         if ($template_prefix = $this->user->getTemplatePrefix()) {
-            if (file_exists(DIR_TEMPLATE . 'common/headers/header'.$template_prefix.'.tpl')) {
-                $this->template = 'common/headers/header'.$template_prefix.'.tpl';
-            } else {
-                $this->template = 'common/header.tpl';
+            if (file_exists(DIR_TEMPLATE . 'common/headers/header' . $template_prefix . '.tpl')) {
+                $this->template = 'common/headers/header' . $template_prefix . '.tpl';
             }
-        } else {
-            $this->template = 'common/header.tpl';
         }
-
 
         $this->render();
     }

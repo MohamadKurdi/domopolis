@@ -202,24 +202,10 @@
 								<li id="user_content"><a class="top" href="<?php echo $user_content; ?>"><i class="fa fa-clock-o icon_menu"  aria-hidden="true"></i><span>Работа</span></a></li>
 								<li id="catalog"><a class="top"><i class="fa fa-bars icon_menu"></i><?php echo $text_catalog; ?></a>
 									<ul>
-										<li><a class="home_icon_style" href="<?php echo $category; ?>"><i class="fa fa-minus"></i><span><?php echo $text_category; ?></span></a></li>									
-										<li><a class="home_icon_style" href="<?php echo $product; ?>"><i class="fa fa-cubes"></i><span><?php echo $text_product; ?></span></a></li>
-										<li><a class="home_icon_style" href="<?php echo $shortnames; ?>"><i class="fa fa-amazon"></i><span>Экспортные названия  <sup style="color:red">(NEW)</sup></span></a></li>
-										<li><a class="home_icon_style" href="<?php echo $addasin; ?>"><i class="fa fa-amazon"></i><span>Добавление по ASIN  <sup style="color:red">(NEW)</sup></span></a></li>
-										<li><a class="home_icon_style" href="<?php echo $product_deletedasin; ?>"><i class="fa fa-amazon"></i><span>Исключенные ASIN</span></a></li>
-										<li><a class="home_icon_style" href="<?php echo $ocfilter; ?>"><i class="fa fa-cubes"></i><span><?php echo $text_ocfilter; ?> <sup style="color:red">(DEV)</sup></span></a></li>
-										<li><a class="home_icon_style" href="<?php echo $ocfilter_page; ?>"><i class="fa fa-cubes"></i><span>Посадочные страницы <sup style="color:red">(DEV)</sup></span></a></li>
-										<li><a class="home_icon_style parent"><i class="fa fa-spinner"></i><span>Обработки</span></a>
-											<ul>
-												<li><a href="<?php echo $masspcategupd; ?>">Категории</a></li>
-												<li><a href="<?php echo $masspdiscoupd; ?>">Скидки</a></li>
-											</ul>
-										</li>
-										<li><a class="home_icon_style" href="<?php echo $product_parser; ?>"><i class="fa fa-info-circle"></i><span>Результаты парсера</span></a></li>
-										<li><a class="home_icon_style" href="<?php echo $batch_editor_link; ?>"><i class="fa fa-pencil-square-o"></i><span>Batch Editor v.023</span></a></li>
-										<li><a class="home_icon_style" href="<?php echo $batch_editor_link2; ?>"><i class="fa fa-pencil-square-o"></i><span>Batch Editor v.047</span></a></li>
-
-										<li><a class="home_icon_style" href="<?php echo $filter; ?>"><i class="fa fa-filter"></i><span><?php echo $text_filter; ?></span></a></li>
+										<li><a class="home_icon_style" href="<?php echo $category; ?>"><i class="fa fa-minus"></i><span><?php echo $text_category; ?></span></a></li>								
+										<li><a class="home_icon_style" href="<?php echo $product; ?>"><i class="fa fa-cubes"></i><span><?php echo $text_product; ?></span></a></li>								
+										<li><a class="home_icon_style" href="<?php echo $addasin; ?>"><i class="fa fa-amazon"></i><span>Добавление по ASIN</span></a></li>
+										<li><a class="home_icon_style" href="<?php echo $product_deletedasin; ?>"><i class="fa fa-amazon"></i><span>Исключенные ASIN</span></a></li>     
 										<li><a class="home_icon_style parent"><i class="fa fa-file-text-o"></i><span><?php echo $text_attribute; ?></span></a>
 											<ul>
 												<li><a href="<?php echo $attribute; ?>"><?php echo $text_attribute; ?></a></li>
@@ -227,17 +213,25 @@
 											</ul>
 										</li>
 										<li><a class="home_icon_style" href="<?php echo $option; ?>"><i class="fa fa-sliders"></i><span><?php echo $text_option; ?></span></a></li>
-										<li>
-											<a class="home_icon_style" href="<?php echo $manufacturer; ?>"><i class="fa fa-barcode"></i><span>Бренды</span></a>             
-										</li>
-
-										<li><a class="home_icon_style" href="<?php echo $countrybrands_link; ?>"><i class="fa fa-flag"></i><span>Бренды по странам <sup style="color:red">(NEW)</sup></span></a>
-										</li>
-
-										<li><a class="home_icon_style" href="<?php echo $collections_link; ?>"><i class="fa fa-linode"></i><span>Коллекции</span></a></li>									
+										<li><a class="home_icon_style" href="<?php echo $manufacturer; ?>"><i class="fa fa-barcode"></i><span>Бренды</span></a></li>								
+										<li><a class="home_icon_style" href="<?php echo $countrybrands_link; ?>"><i class="fa fa-flag"></i><span>Бренды по странам</span></a></li>								
+										<li><a class="home_icon_style" href="<?php echo $collections_link; ?>"><i class="fa fa-linode"></i><span>Коллекции</span></a></li>								
 										<li><a class="home_icon_style" href="<?php echo $keyworder_link; ?>"><i class="fa fa-exchange"></i><span>Связка производитель/категория</span></a></li>
-										<li><a class="home_icon_style" href="<?php echo $sets_link; ?>"><i class="fa fa-window-restore"></i><span>Комплекты товаров</span></a></li>
-										<li><a class="home_icon_style" href="<?php echo $facategory; ?>"><i class="fa fa-diamond"></i><span><?php echo $text_facategory; ?></span></a></li>
+										<li><a class="home_icon_style" href="<?php echo $sets_link; ?>"><i class="fa fa-window-restore"></i><span>Комплекты товаров</span></a></li>								
+										<li><a class="home_icon_style" href="<?php echo $facategory; ?>"><i class="fa fa-diamond"></i><span><?php echo $text_facategory; ?></span></a></li>	
+										<li><a class="home_icon_style" href="<?php echo $ocfilter; ?>"><i class="fa fa-cubes"></i><span><?php echo $text_ocfilter; ?> <sup style="color:red">DEV</sup></span></a></li>
+										<li><a class="home_icon_style" href="<?php echo $ocfilter_page; ?>"><i class="fa fa-cubes"></i><span>Посадочные страницы <sup style="color:red">DEV</sup></span></a></li>							
+										<li><a class="home_icon_style" href="<?php echo $filter; ?>"><i class="fa fa-filter"></i><span><?php echo $text_filter; ?> <sup style="color:red">DEV</sup></span></a></li>   							
+									</ul>
+								</li>
+								<li id="editors"><a class="top"><i class="fa fa-edit icon_menu"></i>Редактор</a>
+									<ul>
+										<li><a class="home_icon_style" href="<?php echo $shortnames; ?>"><i class="fa fa-edit"></i><span>Экспортные названия</span></a></li>
+										<li><a class="home_icon_style" href="<?php echo $shortnames2; ?>"><i class="fa fa-edit"></i><span>Названия из заказов <sup style="color:red">(NEW)</sup></span></a></li>
+										<li><a class="home_icon_style" href="<?php echo $batch_editor_link; ?>"><i class="fa fa-pencil-square-o"></i><span>Batch Editor v.023</span></a></li>
+										<li><a class="home_icon_style" href="<?php echo $batch_editor_link2; ?>"><i class="fa fa-pencil-square-o"></i><span>Batch Editor v.047</span></a></li>
+										<li><a class="home_icon_style" href="<?php echo $csvpricelink; ?>"><i class="fa fa-cubes"></i><span>CSV IMPORT/EXPORT</span></a></li>		
+
 									</ul>
 								</li>
 								<li id="information"><a class="top"><i class="fa fa-info icon_menu"></i>Инфо</a>
