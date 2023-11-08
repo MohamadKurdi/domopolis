@@ -230,19 +230,35 @@
 						<br />
 						<span class="help">показать процент рентабельности по каждому заказу в списках</span>
 					</div>
+
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Синхронизировать названия в заказах</span></p>
+						<select name="config_sync_product_names_in_orders">
+							<?php if ($config_sync_product_names_in_orders) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+						<br />
+						<span class="help">при редактировании товара также обновятся названия в заказах, и наоборот</span>
+					</div>
 				</td>
 
 			</tr>
 		</table>
-		<h2>Настройки режимов работы фронта</h2>
+
+		<h2>Отключение неиспользуемых блоков логики</h2>
+
 		<table class="form">
-			<tr>	
-				
+			<tr>
 				<td style="width:18%">
 					<div>
-						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Single store mode</span></p>
-						<select name="config_single_store_enable">
-							<?php if ($config_single_store_enable) { ?>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика значений атрибутов</span></p>
+						<select name="config_enable_attributes_values_logic">
+							<?php if ($config_enable_attributes_values_logic) { ?>
 								<option value="1" selected="selected">Включить</option>
 								<option value="0">Отключить</option>
 							<?php } else { ?>													
@@ -251,22 +267,7 @@
 							<? } ?>
 						</select>
 						<br />
-						<span class="help">отключает привязки многих сущностей к табличкам *_to_store. включать только в случае 1 база = 1 магазин</span>
-					</div>
-
-					<div>
-						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><img src="<?php echo DIR_FLAGS_NAME; ?>de.png" title="de" />Flags in admin</span></p>
-						<select name="config_admin_flags_enable">
-							<?php if ($config_admin_flags_enable) { ?>
-								<option value="1" selected="selected">Включить</option>
-								<option value="0">Отключить</option>
-							<?php } else { ?>													
-								<option value="1">Включить</option>
-								<option value="0"  selected="selected">Отключить</option>
-							<? } ?>
-						</select>
-						<br />
-						<span class="help">отображать или нет флаги в админке</span>
+						<span class="help">Привязка статей и картинок к изображениям атрибутов. логика нагружает админку и магазин! если реально это не используется, пусть будет отключено</span>
 					</div>
 
 					<div>
@@ -283,30 +284,7 @@
 						<br />
 						<span class="help">логика нагружает магазин, если реально это не используется, пусть будет отключено</span>
 					</div>
-					<div>
-						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF;">Монобрендовый магазин</span></p>
-						<select name="config_monobrand" style=" width:150px;">
-							<option value="0">Нет</option>
-						</select>	
-						<br />
-						<span class="help">настройка, позволяющая работать без списка брендов (не используется)</span>
-					</div>
-					<div>
-						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика значений атрибутов</span></p>
-						<select name="config_enable_attributes_values_logic">
-							<?php if ($config_enable_attributes_values_logic) { ?>
-								<option value="1" selected="selected">Включить</option>
-								<option value="0">Отключить</option>
-							<?php } else { ?>													
-								<option value="1">Включить</option>
-								<option value="0"  selected="selected">Отключить</option>
-							<? } ?>
-						</select>
-						<br />
-						<span class="help">Привязка статей и картинок к изображениям атрибутов. логика нагружает админку и магазин! если реально это не используется, пусть будет отключено</span>
-					</div>
 				</td>
-
 				<td style="width:18%">
 					<div>
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Логика товаров-опций</span></p>
@@ -368,7 +346,6 @@
 						<span class="help">логика нагружает магазин! включить только в случае если товары привязаны друг к другу как опции и разделяются по "цветовым группам"</span>
 					</div>
 				</td>
-
 				<td style="width:18%">
 					<div>
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Загрузки в товарах</span></p>
@@ -428,10 +405,67 @@
 						</select>
 						<br />
 						<span class="help">если не отображаются - отключить</span>	
-					</div>
-					
+					</div>					
 				</td>
+			</tr>
+		</table>
 
+
+		<h2>Настройки режимов работы фронта</h2>
+		<table class="form">
+			<tr>					
+				<td style="width:18%">
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Single store mode</span></p>
+						<select name="config_single_store_enable">
+							<?php if ($config_single_store_enable) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+						<br />
+						<span class="help">отключает привязки многих сущностей к табличкам *_to_store. включать только в случае 1 база = 1 магазин</span>
+					</div>
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF"><img src="<?php echo DIR_FLAGS_NAME; ?>de.png" title="de" />Flags in admin</span></p>
+						<select name="config_admin_flags_enable">
+							<?php if ($config_admin_flags_enable) { ?>
+								<option value="1" selected="selected">Включить</option>
+								<option value="0">Отключить</option>
+							<?php } else { ?>													
+								<option value="1">Включить</option>
+								<option value="0"  selected="selected">Отключить</option>
+							<? } ?>
+						</select>
+						<br />
+						<span class="help">отображать или нет флаги в админке</span>
+					</div>							
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Режим разработки</span></p>
+						<select type="select" name="config_no_access_enable">
+							<? if ($config_no_access_enable) { ?>
+								<option value="1" selected='selected' >Да</option>
+								<option value="0" >Нет</option>
+							<? } else { ?>
+								<option value="1" >Да</option>
+								<option value="0"  selected='selected' >Нет</option>
+							<? } ?>       
+						</select>
+						<br />
+						<span class="help">Если включено, фронт будет закрыт 403 кодом в случае, если сессия админки не определена</span>	
+					</div>			
+					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF;">Монобрендовый магазин</span></p>
+						<select name="config_monobrand" style=" width:150px;">
+							<option value="0">Нет</option>
+						</select>	
+						<br />
+						<span class="help">настройка, позволяющая работать без списка брендов (не используется)</span>
+					</div>					
+				</td>
 				<td style="width:18%">
 					<div>
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">В брендах только товары</span></p>
@@ -490,21 +524,6 @@
 							<? } ?>       
 						</select>
 					</div>
-
-					<div>
-						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Режим разработки</span></p>
-						<select type="select" name="config_no_access_enable">
-							<? if ($config_no_access_enable) { ?>
-								<option value="1" selected='selected' >Да</option>
-								<option value="0" >Нет</option>
-							<? } else { ?>
-								<option value="1" >Да</option>
-								<option value="0"  selected='selected' >Нет</option>
-							<? } ?>       
-						</select>
-						<br />
-						<span class="help">Если включено, фронт будет закрыт 403 кодом в случае, если сессия админки не определена</span>	
-					</div>
 				</td>
 
 				<td style="width:20%">
@@ -531,8 +550,10 @@
 								<option value="0"  selected='selected' >Нет</option>
 							<? } ?>       
 						</select>										
-					</div>
+					</div>				
+				</td>
 
+				<td style="width:18%">
 					<div>
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Отключить логику быстрого заказа</span></p>
 						<select type="select" name="config_disable_fast_orders">
@@ -592,10 +613,6 @@
 						<br />
 						<span class="help">Если отключено - то в любом случае</span>											
 					</div>
-				</td>
-
-				<td style="width:18%">
-					
 				</td>
 
 			</tr>

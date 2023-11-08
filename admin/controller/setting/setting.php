@@ -17,8 +17,6 @@ class ControllerSettingSetting extends Controller
             'btn_text'  => 'TRNSL'
         ],
     ];
-
-    
     
     public function getFPCINFO(){
         if (!$this->user->isLogged() || !isset($this->request->get['token']) || !isset($this->session->data['token']) || ($this->request->get['token'] != $this->session->data['token'])) {
@@ -3771,6 +3769,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_show_profitability_in_order_list'] = $this->request->post['config_show_profitability_in_order_list'];
         } else {
             $this->data['config_show_profitability_in_order_list'] = $this->config->get('config_show_profitability_in_order_list');
+        }
+
+        if (isset($this->request->post['config_sync_product_names_in_orders'])) {
+            $this->data['config_sync_product_names_in_orders'] = $this->request->post['config_sync_product_names_in_orders'];
+        } else {
+            $this->data['config_sync_product_names_in_orders'] = $this->config->get('config_sync_product_names_in_orders');
         }
 
         if (isset($this->request->post['config_enable_amazon_asin_file_cache'])) {
