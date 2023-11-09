@@ -11,7 +11,30 @@
 			
 			$customer_group_info = $this->model_account_customer_group->getCustomerGroup($customer_group_id);
 			
-			$this->db->non_cached_query("INSERT INTO customer SET language_id = '".intval($this->config->get('config_language_id'))."', store_id = '" . (int)$this->config->get('config_store_id') . "', firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', birthday = '" . $this->db->escape(date('Y-m-d',strtotime($data['birthday']))) . "', email = '" . $this->db->escape($data['email']) . "', passport_serie = '" . $this->db->escape($data['passport_serie']) . "', passport_given = '" . $this->db->escape($data['passport_given']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', newsletter = '" . (isset($data['newsletter']) ? (int)$data['newsletter'] : 1) . "', viber_news = '" . (isset($data['viber_news']) ? (int)$data['viber_news'] : 1) . "', newsletter_news = '" . (isset($data['newsletter_news']) ? (int)$data['newsletter_news'] : 1) . "', newsletter_personal = '" . (isset($data['newsletter_personal']) ? (int)$data['newsletter_personal'] : 1) . "', customer_group_id = '" . (int)$customer_group_id . "', ip = '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', status = '1', approved = '" . (int)!$customer_group_info['approval'] . "', date_added = NOW()");
+			$this->db->non_cached_query("INSERT INTO customer SET 
+				language_id 	= '" . (int)$this->config->get('config_language_id') . "', 
+				store_id 		= '" . (int)$this->config->get('config_store_id') . "', 
+				firstname 		= '" . $this->db->escape($data['firstname']) . "', 
+				lastname 		= '" . $this->db->escape($data['lastname']) . "', 
+				birthday 		= '" . $this->db->escape(date('Y-m-d',strtotime($data['birthday']))) . "', 
+				birthday_date 	= '" . $this->db->escape(date('d',strtotime($data['birthday']))) . "',
+				birthday_month 	= '" . $this->db->escape(date('m',strtotime($data['birthday']))) . "',
+				email 			= '" . $this->db->escape($data['email']) . "', 
+				passport_serie 	= '" . $this->db->escape($data['passport_serie']) . "', 
+				passport_given 	= '" . $this->db->escape($data['passport_given']) . "', 
+				telephone 		= '" . $this->db->escape($data['telephone']) . "', 
+				fax 			= '" . $this->db->escape($data['fax']) . "', 
+				salt 			= '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', 
+				password 		= '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', 
+				newsletter 		= '" . (isset($data['newsletter']) ? (int)$data['newsletter'] : 1) . "', 
+				viber_news 		= '" . (isset($data['viber_news']) ? (int)$data['viber_news'] : 1) . "', 
+				newsletter_news 		= '" . (isset($data['newsletter_news']) ? (int)$data['newsletter_news'] : 1) . "', 
+				newsletter_personal 	= '" . (isset($data['newsletter_personal']) ? (int)$data['newsletter_personal'] : 1) . "', 
+				customer_group_id 		= '" . (int)$customer_group_id . "', 
+				ip 			= '" . $this->db->escape($this->request->server['REMOTE_ADDR']) . "', 
+				status 		= '1', 
+				approved 	= '" . (int)!$customer_group_info['approval'] . "', 
+				date_added 	= NOW()");
 			
 			$customer_id = $this->db->getLastId();
 			
@@ -29,10 +52,10 @@
 			
 			$template->addData($data); 
 			
-			$template->data['newsletter'] = $this->language->get((isset($data['newsletter']) && $data['newsletter'] == 1) ? 'text_yes' : 'text_no');
-			$template->data['account_login'] = $this->url->link('account/login', 'email=' . $data['email'], 'SSL');
-			$template->data['account_login_tracking'] = $template->getTracking($template->data['account_login']);
-			$template->data['customer_group'] = (isset($customer_group_info['name'])) ? $customer_group_info['name'] : '';
+			$template->data['newsletter'] 				= $this->language->get((isset($data['newsletter']) && $data['newsletter'] == 1) ? 'text_yes' : 'text_no');
+			$template->data['account_login'] 			= $this->url->link('account/login', 'email=' . $data['email']);
+			$template->data['account_login_tracking'] 	= $template->getTracking($template->data['account_login']);
+			$template->data['customer_group'] 			= (isset($customer_group_info['name'])) ? $customer_group_info['name'] : '';
 			
 			$this->load->model('account/address');
 			$customer_address = $this->model_account_address->getAddressNotLoggedIn($address_id, $customer_id);
@@ -45,8 +68,7 @@
 				$template->data['customer_text'] = $this->language->get('text_login');
 			}
 			
-			$subject = sprintf($this->language->get('text_subject'), $this->config->get('config_name'));
-			
+			$subject = sprintf($this->language->get('text_subject'), $this->config->get('config_name'));			
 			$message = sprintf($this->language->get('text_welcome'), $this->config->get('config_name')) . "\n\n";
 			
 			if (!$customer_group_info['approval']) {
@@ -60,25 +82,17 @@
 			$message .= $this->language->get('text_thanks') . "\n";
 			$message .= $this->config->get('config_name');
 			
-			//        print $data['email']."<br>";
-			//        print $message;
-			//        exit();
-			
 			$mail = new Mail($this->registry); 		
 			$mail->setTo($data['email']);
 			$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
 			$mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
 			$template->load('customer.register');
 			
-			$mail = $template->hook($mail);
-			
-			$mail->send();
-			
+			$mail = $template->hook($mail);			
+			$mail->send();			
 			$template->sent();
 			
-			// Send to main admin email if new account email is enabled
-			if ($this->config->get('config_account_mail')) {
-				
+			if ($this->config->get('config_account_mail')) {				
 				if((isset($customer_group_info['approval']) && $customer_group_info['approval']) || $this->config->get('config_customer_approval')){
 					$template->data['text_approve'] = $this->language->get('text_approve');
 					$template->data['account_approve'] = (defined('HTTP_ADMIN') ? HTTP_ADMIN : HTTP_SERVER.'admin/') . 'index.php?route=sale/customer&filter_approved=0';
@@ -125,7 +139,18 @@
 		
 		public function editCustomer($data) {
 			
-			$this->db->non_cached_query("UPDATE customer SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', birthday = '" . $this->db->escape(date('Y-m-d',strtotime($data['birthday']))) . "', email = '" . $this->db->escape($data['email']) . "', passport_serie = '" . $this->db->escape($data['passport_serie']) . "', passport_given = '" . $this->db->escape($data['passport_given']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "' WHERE customer_id = '" . (int)$this->customer->getId() . "'");
+			$this->db->non_cached_query("UPDATE customer SET 
+				firstname 		= '" . $this->db->escape($data['firstname']) . "', 
+				lastname 		= '" . $this->db->escape($data['lastname']) . "', 
+				birthday 		= '" . $this->db->escape(date('Y-m-d',strtotime($data['birthday']))) . "', 
+				birthday_date 	= '" . $this->db->escape(date('d',strtotime($data['birthday']))) . "',
+				birthday_month 	= '" . $this->db->escape(date('m',strtotime($data['birthday']))) . "',
+				email 			= '" . $this->db->escape($data['email']) . "', 
+				passport_serie 	= '" . $this->db->escape($data['passport_serie']) . "', 
+				passport_given 	= '" . $this->db->escape($data['passport_given']) . "', 
+				telephone 		= '" . $this->db->escape($data['telephone']) . "', 
+				fax 			= '" . $this->db->escape($data['fax']) . "' 
+				WHERE customer_id = '" . (int)$this->customer->getId() . "'");
 			
 			$this->customer->addToEMAQueue();
 		}

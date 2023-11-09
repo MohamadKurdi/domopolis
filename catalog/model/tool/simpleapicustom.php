@@ -492,4 +492,25 @@
 			
 			return $values; 
 		}
+
+
+		public function ifCustomerHasBirtday($birthday){
+			if ($this->customer->isLogged()){
+				$query = $this->db->ncquery("SELECT birthday FROM customer WHERE customer_id = '" . (int)$this->customer->getId() . "' LIMIT 1");
+				
+				if (!empty($query->row['birthday'])){
+					if ($query->row['birthday'] == '0000-00-00'){
+						return true;
+					} elseif (date('Y-m-d', strtotime($query->row['birthday'])) == date('Y-m-d', strtotime($birthday))){
+						return true;
+					} else {
+						return false;
+					}
+				}
+
+				return true;
+			} else {
+				return false;
+			}
+		}
 }                                            							
