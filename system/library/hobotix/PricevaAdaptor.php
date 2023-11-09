@@ -73,24 +73,23 @@ final class PricevaAdaptor
 	}
 
 	private function recalculateDiscountOnProduct(&$source){
-
 		if (!empty($source->discount) && (float)$source->discount){
 
-			echoLine('Скидка: ' . $source->discount);
-			echoLine('Цена: ' . $source->price);
+			echoLine('[PricevaAdaptor::recalculateDiscountOnProduct]: Found discount: ' . $source->discount, 's');
+			echoLine('[PricevaAdaptor::recalculateDiscountOnProduct]: Found price:' . $source->price, 's');
 
 			if ($source->discount_type == 1){
-				$tmp = $source->price;
-				$source->price += $source->discount;
-				$source->discount = $tmp;
+				$tmp 				= $source->price;
+				$source->price 		+= $source->discount;
+				$source->discount 	= $tmp;
 			}
 
 			if ($source->discount_type == 0){
 
 			}
 
-			echoLine('Новая скидка: ' . $source->discount);
-			echoLine('Новая цена: ' . $source->price);
+			echoLine('[PricevaAdaptor::recalculateDiscountOnProduct] New discount: ' . $source->discount, 'w');
+			echoLine('[PricevaAdaptor::recalculateDiscountOnProduct] New price: ' . $source->price, 'w');
 		}
 
 		return $source;
@@ -101,7 +100,7 @@ final class PricevaAdaptor
 
 		foreach ($products as $product){
 			
-			echoLine('[PricevaAdaptor] Товар ' . $product->client_code . ', ' . $product->name);
+			echoLine('[PricevaAdaptor::updateProductData] Product: ' . $product->client_code . ', ' . $product->name . 'i');
 
 			$this->db->query("INSERT INTO priceva_data SET
 				store_id 			= '" . (int)$store_id . "',
@@ -128,8 +127,13 @@ final class PricevaAdaptor
 
 			$competitors = [];	
 			if (!empty($product->sources)){			
-
 				foreach ($product->sources as $source){
+					if (!$source->active){
+						echoLine('[PricevaAdaptor::updateProductData] New inactive source found: ' . $source->url , 'e');
+					} else {
+						echoLine('[PricevaAdaptor::updateProductData] New active source found: ' . $source->url , 's');
+					}
+					
 
 					$source = $this->recalculateDiscountOnProduct($source);
 
@@ -151,14 +155,11 @@ final class PricevaAdaptor
 						discount_type 		= '" . (int)(!empty($source->discount_type)?$source->discount_type:'0') . "'");
 
 						$competitors[] = $source->url;
-
 					}					
 			}
 
 			$this->addCompetitorURLS($store_id, $product->client_code, $competitors);			
 
 			}
-
 		}
-
 	}

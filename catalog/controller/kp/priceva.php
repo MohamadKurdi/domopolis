@@ -1,8 +1,8 @@
 <?php
 
 class ControllerKPPriceva extends Controller {	
-	private $pricevaAPIS = [];
-	private $stores = [0,1,2,5];	
+	private $pricevaAPIS 	= [];
+	private $stores 		= [0,1,2,5];	
 	private $pricevaAdaptor = null;
 
 
@@ -14,37 +14,28 @@ class ControllerKPPriceva extends Controller {
 		parent::__construct($registry);
 
 		if ($this->config->get('config_priceva_enable_api')){
-
 			$this->pricevaAdaptor = new \hobotix\PricevaAdaptor($registry);
-
 			foreach ($this->stores as $store_id){
-
 				if ($apiKey = $this->config->get('config_priceva_api_key_' . $store_id)){
 
 					try{
 						$this->pricevaAPIS[$store_id] = new Priceva\PricevaAPI($apiKey);
 						$this->pricevaAPIS[$store_id]->main_ping();
 					}catch( \Exception $e ){
-						echoLine('[PRICEVA] Ошибка на стадии PING');
+						echoLine('[ControllerKPPriceva] Error at PING stage, exiting', 'e');
 						die($e->getMessage());
 					}
 				}
 			}
-
 		} else {
-
-			die('Please enable API in settings');
-
+			echoLine('[ControllerKPPriceva] Priceva API is not enabled, exiting', 'e');
 		}
 	}
 
 	private function sleepRand(){
-
 		$sec = mt_rand($this->sleeps[0], $this->sleeps[1]);
-		echoLine('[PRICEVA] Спим: ' . $sec);
+		echoLine('[ControllerKPPriceva::sleepRand] Sleeping for: ' . $sec . ' sec, due to restrictions', 'w');
 		sleep($sec);
-
-
 	}
 
 
@@ -81,8 +72,8 @@ class ControllerKPPriceva extends Controller {
 			if ($apiKey = $this->config->get('config_priceva_api_key_' . $store_id)){
 				$this->pricevaAdaptor->cleanTables($store_id);
 
-				echoLine('[PRICEVA] Магазин: ' . $store_id . ', key: ' . $apiKey);
-				echoLine('[PRICEVA] Страница: ' . $filters[ 'page' ]);
+				echoLine('[ControllerKPPriceva::cron] Working in store: ' . $store_id . ', key: ' . $apiKey, 'i');
+				echoLine('[ControllerKPPriceva::cron] Working at page: ' . $filters[ 'page' ] , 'i');
 
 				$reports = $this->pricevaAPIS[$store_id]->product_list($filters, $sources);
 				$count = $total_count = (int)$reports->get_result()->pagination->pages_cnt;
@@ -90,7 +81,7 @@ class ControllerKPPriceva extends Controller {
 				$products = $reports->get_result()->objects;
 				$this->pricevaAdaptor->updateProductData($store_id, $products);
 
-				echoLine('[PRICEVA] Всего страниц: ' . $count);
+				echoLine('[ControllerKPPriceva::cron] Pages total: ' . $count, 'i');
 				$this->sleepRand();
 
 				while( $count > 1 ){
@@ -98,7 +89,7 @@ class ControllerKPPriceva extends Controller {
 						$count--;
 						$filters[ 'page' ] = $filters[ 'page' ] + 1;
 
-						echoLine('[PRICEVA] Страница: ' . $filters[ 'page' ]);
+						echoLine('[ControllerKPPriceva::cron] : Working at page: ' . $filters[ 'page' ] , 'i');
 						$reports = $this->pricevaAPIS[$store_id]->product_list($filters, $sources);
 
 						$products = $reports->get_result()->objects;
@@ -107,8 +98,7 @@ class ControllerKPPriceva extends Controller {
 						$this->sleepRand();
 						
 					} catch (\Priceva\PricevaException $e){
-
-						echoLine('[PRICEVA] Ошибка: ' . $e->getMessage());												
+						echoLine('[ControllerKPPriceva::cron] Got PricevaException: ' . $e->getMessage(), 'e');												
 						$count++;
 						if ($count > $total_count){
 							$count = 1;							
@@ -116,12 +106,9 @@ class ControllerKPPriceva extends Controller {
 						$filters[ 'page' ] = $filters[ 'page' ] - 1;
 
 						$this->sleepRand();
-
 					}		
 				}
-
 			}
 		}
-
 	}
 }
