@@ -71,6 +71,20 @@
         <?php if ($redirect) { ?>
             <input type="hidden" id="simple_redirect_url" value="<?php echo $redirect ?>">
         <?php } ?>
+
+        <?php if ($birthday_logic_is_used) { ?>
+            <?php if (!empty($text_birthday_reward)) { ?>
+                <script>
+                    $('input#edit_birthday').parent('.field-input').parent('.row-edit_birthday').children('.field-label').append('<span class="alert alert-success alert-no-padding"><?php echo $text_birthday_reward; ?></span>');
+                </script>
+            <?php } ?>
+            <?php if ($birthday_is_already_set) { ?>
+                <script>
+                    $('input#edit_birthday').attr('disabled', 'disabled');
+                    $('.simplecheckout-rule-group[data-for=edit_birthday]').children('.simplecheckout-rule').show();
+                </script>
+            <?php } ?>
+        <?php } ?>
     </form>
 <?php if (!$ajax && !$popup && !$as_module) { ?>
 </div>

@@ -120,7 +120,15 @@
                 }
             }
             
-            //    $this->document->addScript('catalog/view/javascript/simplepage.js');
+            $this->_templateData['birthday_logic_is_used']  = $this->simpleedit->isFieldUsed('birthday');
+            $this->_templateData['birthday_is_already_set'] = $this->customer->getBirthday();
+            $this->_templateData['text_birthday_alert']     = $this->language->get('text_birthday_alert');
+
+            if ($this->config->get('rewardpoints_birthday')){
+                $this->_templateData['text_birthday_reward']    = sprintf($this->language->get('text_birthday_reward'), $this->currency->format($this->config->get('rewardpoints_birthday'), $this->currency->getCode(), 1));
+            } else {
+                $this->_templateData['text_birthday_reward']    = false;
+            }            
             
             $this->_templateData['ajax']                = $this->simpleedit->isAjaxRequest();
             $this->_templateData['additional_path']     = $this->simpleedit->getAdditionalPath();
