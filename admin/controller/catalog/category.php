@@ -1395,7 +1395,7 @@ class ControllerCatalogCategory extends Controller {
 				'filter_name' 	=> trim($this->request->get['filter_name']),
 				'filter_final' 	=> true,
 				'start'       	=> 0,
-				'limit'       	=> 20
+				'limit'       	=> 30
 			);
 
 			$results = $this->model_catalog_category->getCategories($data);
@@ -1428,7 +1428,7 @@ class ControllerCatalogCategory extends Controller {
 			$data = array(
 				'filter_name' => trim($this->request->get['filter_name']),
 				'start'       => 0,
-				'limit'       => 20
+				'limit'       => 30
 			);
 
 			$results = $this->model_catalog_category->getCategories($data);

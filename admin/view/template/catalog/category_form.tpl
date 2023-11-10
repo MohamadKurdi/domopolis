@@ -1222,10 +1222,15 @@
 						</tr>
 						<tr>
 							<td><?php echo $entry_image; ?></td>
-							<td valign="top"><div class="image"><img src="<?php echo $thumb; ?>" alt="" id="thumb" />
-								<input type="hidden" name="image" value="<?php echo $image; ?>" id="image" />
+							<td valign="top">
+							<div class="image">
+								<img src="<?php echo $thumb; ?>" alt="" id="thumb" />
 								<br />
-							<a onclick="image_upload('image', 'thumb');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb').attr('src', '<?php echo $no_image; ?>'); $('#image').attr('value', '');"><?php echo $text_clear; ?></a></div></td>
+								<input type="text" name="image" value="<?php echo $image; ?>" id="image" />
+								<br />
+								<a onclick="image_upload('image', 'thumb');"><?php echo $text_browse; ?></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a onclick="$('#thumb').attr('src', '<?php echo $no_image; ?>'); $('#image').attr('value', '');"><?php echo $text_clear; ?></a>
+							</div>
+							</td>
 						</tr>
 						<tr>
 							<td><?php echo $entry_top; ?></td>

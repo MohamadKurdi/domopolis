@@ -661,8 +661,16 @@ class ModelCatalogProductExt extends Model {
             $this->db->query("DELETE FROM product_to_category WHERE product_id = '" . (int)$product_id . "'");
 
             if (isset($data['p_c'])) {
-                foreach ((array)$data['p_c'] as $category_id) {
-                    $this->db->query("INSERT INTO product_to_category SET product_id = '" . (int)$product_id . "', category_id = '" . (int)$category_id . "'");
+                if (!is_array($data['p_c'])){
+                   $data['p_c'] = [$data['p_c']];
+                }
+
+                if (count($data['p_c']) == 1){
+                    $this->db->query("INSERT INTO product_to_category SET product_id = '" . (int)$product_id . "', category_id = '" . (int)$data['p_c'][0] . "', main_category = 1");
+                } else {
+                    foreach ($data['p_c'] as $category_id) {
+                        $this->db->query("INSERT INTO product_to_category SET product_id = '" . (int)$product_id . "', category_id = '" . (int)$category_id . "'");
+                    }                
                 }
             }
             $result = 1;

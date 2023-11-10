@@ -2100,7 +2100,7 @@
 																			<?php $class = 'odd'; ?>
 																			<?php foreach ($products_similar as $product_similar) { ?>
 																				<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
-																				<div id="product-similar<?php echo $product_related['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product_similar['name']; ?><img src="view/image/delete.png" alt="" />
+																				<div id="product-similar<?php echo $product_similar['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product_similar['name']; ?><img src="view/image/delete.png" alt="" />
 																					<input type="hidden" name="product_similar[]" value="<?php echo $product_similar['product_id']; ?>" />
 																				</div>
 																			<?php } ?>
