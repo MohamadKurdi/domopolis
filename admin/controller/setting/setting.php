@@ -202,12 +202,7 @@ class ControllerSettingSetting extends Controller
         $this->response->setOutput($sql);
     }
         
-    public function index()
-    {
-        $this->language->load('setting/setting');
-        
-        $this->document->setTitle($this->language->get('heading_title'));
-        
+    public function index(){
         $this->load->model('setting/setting');
         
         if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
@@ -220,164 +215,9 @@ class ControllerSettingSetting extends Controller
         }
 
         $this->data['tabs'] = loadJSONConfig('setting_tabs');
-        
-        $this->data['heading_title'] = $this->language->get('heading_title');
-        
-        $this->data['text_select'] = $this->language->get('text_select');
-        $this->data['text_none'] = $this->language->get('text_none');
-        $this->data['text_yes'] = $this->language->get('text_yes');
-        $this->data['text_no'] = $this->language->get('text_no');
-        $this->data['text_items'] = $this->language->get('text_items');
-        $this->data['text_product'] = $this->language->get('text_product');
-        $this->data['text_voucher'] = $this->language->get('text_voucher');
-        $this->data['text_tax'] = $this->language->get('text_tax');
-        $this->data['text_account'] = $this->language->get('text_account');
-        $this->data['text_checkout'] = $this->language->get('text_checkout');
-        $this->data['text_stock'] = $this->language->get('text_stock');
-        $this->data['text_affiliate'] = $this->language->get('text_affiliate');
-        $this->data['text_return'] = $this->language->get('text_return');
-        $this->data['text_image_manager'] = $this->language->get('text_image_manager');
-        $this->data['text_browse'] = $this->language->get('text_browse');
-        $this->data['text_clear'] = $this->language->get('text_clear');
-        $this->data['text_shipping'] = $this->language->get('text_shipping');
-        $this->data['text_payment'] = $this->language->get('text_payment');
-        $this->data['text_mail'] = $this->language->get('text_mail');
-        $this->data['text_smtp'] = $this->language->get('text_smtp');
-        
-        $this->data['entry_name'] = $this->language->get('entry_name');
-        $this->data['entry_owner'] = $this->language->get('entry_owner');
-        $this->data['entry_address'] = $this->language->get('entry_address');
-        $this->data['entry_email'] = $this->language->get('entry_email');
-        $this->data['entry_telephone'] = $this->language->get('entry_telephone');
-        $this->data['entry_fax'] = $this->language->get('entry_fax');
-        $this->data['entry_title'] = $this->language->get('entry_title');
-        $this->data['entry_meta_description'] = $this->language->get('entry_meta_description');
-        $this->data['entry_layout'] = $this->language->get('entry_layout');
-        $this->data['entry_template'] = $this->language->get('entry_template');
-        $this->data['entry_country'] = $this->language->get('entry_country');
-        $this->data['entry_zone'] = $this->language->get('entry_zone');
-        $this->data['entry_language'] = $this->language->get('entry_language');
-        $this->data['entry_admin_language'] = $this->language->get('entry_admin_language');
-        $this->data['entry_currency'] = $this->language->get('entry_currency');
-        $this->data['entry_currency_auto'] = $this->language->get('entry_currency_auto');
-        $this->data['entry_length_class'] = $this->language->get('entry_length_class');
-        $this->data['entry_weight_class'] = $this->language->get('entry_weight_class');
-        $this->data['entry_catalog_limit'] = $this->language->get('entry_catalog_limit');
-        $this->data['entry_admin_limit'] = $this->language->get('entry_admin_limit');
-        $this->data['entry_product_count'] = $this->language->get('entry_product_count');
-        $this->data['entry_review'] = $this->language->get('entry_review');
-        $this->data['entry_download'] = $this->language->get('entry_download');
-        $this->data['entry_voucher_min'] = $this->language->get('entry_voucher_min');
-        $this->data['entry_voucher_max'] = $this->language->get('entry_voucher_max');
-        $this->data['entry_tax'] = $this->language->get('entry_tax');
-        $this->data['entry_vat'] = $this->language->get('entry_vat');
-        $this->data['entry_tax_default'] = $this->language->get('entry_tax_default');
-        $this->data['entry_tax_customer'] = $this->language->get('entry_tax_customer');
-        $this->data['entry_customer_online'] = $this->language->get('entry_customer_online');
-        $this->data['entry_customer_group'] = $this->language->get('entry_customer_group');
-        $this->data['entry_customer_group_display'] = $this->language->get('entry_customer_group_display');
-        $this->data['entry_customer_price'] = $this->language->get('entry_customer_price');
-        $this->data['entry_account'] = $this->language->get('entry_account');
-        $this->data['entry_cart_weight'] = $this->language->get('entry_cart_weight');
-        $this->data['entry_guest_checkout'] = $this->language->get('entry_guest_checkout');
-        $this->data['entry_checkout'] = $this->language->get('entry_checkout');
-        $this->data['entry_order_edit'] = $this->language->get('entry_order_edit');
-        $this->data['entry_invoice_prefix'] = $this->language->get('entry_invoice_prefix');
-        $this->data['entry_order_status'] = $this->language->get('entry_order_status');
-        $this->data['entry_complete_status'] = $this->language->get('entry_complete_status');
-        $this->data['entry_stock_display'] = $this->language->get('entry_stock_display');
-        $this->data['entry_stock_warning'] = $this->language->get('entry_stock_warning');
-        $this->data['entry_stock_checkout'] = $this->language->get('entry_stock_checkout');
-        $this->data['entry_stock_status'] = $this->language->get('entry_stock_status');
-        $this->data['entry_affiliate'] = $this->language->get('entry_affiliate');
-        $this->data['entry_commission'] = $this->language->get('entry_commission');
-        $this->data['entry_return'] = $this->language->get('entry_return');
-        $this->data['entry_return_status'] = $this->language->get('entry_return_status');
-        $this->data['entry_logo'] = $this->language->get('entry_logo');
-        $this->data['entry_icon'] = $this->language->get('entry_icon');
-        $this->data['entry_image_category'] = $this->language->get('entry_image_category');
-        $this->data['entry_image_thumb'] = $this->language->get('entry_image_thumb');
-        $this->data['entry_image_popup'] = $this->language->get('entry_image_popup');
-        $this->data['entry_image_product'] = $this->language->get('entry_image_product');
-        $this->data['entry_image_additional'] = $this->language->get('entry_image_additional');
-        $this->data['entry_image_related'] = $this->language->get('entry_image_related');
-        $this->data['entry_image_compare'] = $this->language->get('entry_image_compare');
-        $this->data['entry_image_wishlist'] = $this->language->get('entry_image_wishlist');
-        $this->data['entry_image_cart'] = $this->language->get('entry_image_cart');
-        $this->data['entry_ftp_host'] = $this->language->get('entry_ftp_host');
-        $this->data['entry_ftp_port'] = $this->language->get('entry_ftp_port');
-        $this->data['entry_ftp_username'] = $this->language->get('entry_ftp_username');
-        $this->data['entry_ftp_password'] = $this->language->get('entry_ftp_password');
-        $this->data['entry_ftp_root'] = $this->language->get('entry_ftp_root');
-        $this->data['entry_ftp_status'] = $this->language->get('entry_ftp_status');
-        $this->data['entry_mail_protocol'] = $this->language->get('entry_mail_protocol');
-        $this->data['entry_mail_parameter'] = $this->language->get('entry_mail_parameter');
-        $this->data['entry_smtp_host'] = $this->language->get('entry_smtp_host');
-        $this->data['entry_smtp_username'] = $this->language->get('entry_smtp_username');
-        $this->data['entry_smtp_password'] = $this->language->get('entry_smtp_password');
-        $this->data['entry_smtp_port'] = $this->language->get('entry_smtp_port');
-        $this->data['entry_smtp_timeout'] = $this->language->get('entry_smtp_timeout');
-        $this->data['entry_alert_mail'] = $this->language->get('entry_alert_mail');
-        $this->data['entry_account_mail'] = $this->language->get('entry_account_mail');
-        $this->data['entry_alert_emails'] = $this->language->get('entry_alert_emails');
-        $this->data['entry_fraud_detection'] = $this->language->get('entry_fraud_detection');
-        $this->data['entry_fraud_key'] = $this->language->get('entry_fraud_key');
-        $this->data['entry_fraud_score'] = $this->language->get('entry_fraud_score');
-        $this->data['entry_fraud_status'] = $this->language->get('entry_fraud_status');
-        $this->data['entry_secure'] = $this->language->get('entry_secure');
-        $this->data['entry_shared'] = $this->language->get('entry_shared');
-        $this->data['entry_robots'] = $this->language->get('entry_robots');
-        $this->data['entry_file_extension_allowed'] = $this->language->get('entry_file_extension_allowed');
-        $this->data['entry_file_mime_allowed'] = $this->language->get('entry_file_mime_allowed');
-        $this->data['entry_maintenance'] = $this->language->get('entry_maintenance');
-        $this->data['entry_password'] = $this->language->get('entry_password');
-        $this->data['entry_encryption'] = $this->language->get('entry_encryption');
-        $this->data['entry_seo_url'] = $this->language->get('entry_seo_url');
-        $this->data['entry_seo_url_type'] = $this->language->get('entry_seo_url_type');
-        $this->data['entry_seo_url_include_path'] = $this->language->get('entry_seo_url_include_path');
-        $this->data['entry_seo_url_postfix'] = $this->language->get('entry_seo_url_postfix');
-        $this->data['entry_seo_url'] = $this->language->get('entry_seo_url');
-        $this->data['entry_compression'] = $this->language->get('entry_compression');
-        $this->data['entry_error_display'] = $this->language->get('entry_error_display');
-        $this->data['entry_error_log'] = $this->language->get('entry_error_log');
-        $this->data['entry_error_filename'] = $this->language->get('entry_error_filename');
-        $this->data['entry_google_analytics'] = $this->language->get('entry_google_analytics');
-        
-        $this->data['entry_sms_send_new_order_status']  = $this->language->get('entry_sms_send_new_order_status');
-        $this->data['entry_sms_new_order_status_message'] = $this->language->get('entry_sms_new_order_status_message');
-        
-        $this->data['entry_sms_send_new_order'] = $this->language->get('entry_sms_send_new_order');
-        $this->data['entry_sms_new_order_message'] = $this->language->get('entry_sms_new_order_message');
-        
-        $this->load->model('localisation/order_status');
-        $this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
-        
-        $this->data['entry_sms_gatename'] = $this->language->get('entry_sms_gatename');
-        $this->data['entry_sms_to'] = $this->language->get('entry_sms_to');
-        $this->data['entry_sms_from'] = $this->language->get('entry_sms_from');
-        $this->data['entry_sms_message'] = $this->language->get('entry_sms_message');
-        $this->data['entry_sms_gate_username'] = $this->language->get('entry_sms_gate_username');
-        $this->data['entry_sms_gate_password'] = $this->language->get('entry_sms_gate_password');
-        $this->data['entry_sms_alert'] = $this->language->get('entry_sms_alert');
-        $this->data['entry_sms_copy'] = $this->language->get('entry_sms_copy');
-        $this->data['entry_sms_prkey'] = $this->language->get('entry_sms_prkey');
-        $this->data['entry_sms_pukey'] = $this->language->get('entry_sms_pukey');
-        
-        $this->data['button_save'] = $this->language->get('button_save');
-        $this->data['button_cancel'] = $this->language->get('button_cancel');
-        
-        $this->data['tab_general'] = $this->language->get('tab_general');
-        $this->data['tab_store'] = $this->language->get('tab_store');
-        $this->data['tab_local'] = $this->language->get('tab_local');
-        $this->data['tab_option'] = $this->language->get('tab_option');
-        $this->data['tab_image'] = $this->language->get('tab_image');
-        $this->data['tab_ftp'] = $this->language->get('tab_ftp');
-        $this->data['tab_mail'] = $this->language->get('tab_mail');
-        $this->data['tab_fraud'] = $this->language->get('tab_fraud');
-        $this->data['tab_server'] = $this->language->get('tab_server');
-        
-        $this->data['tab_sms'] = $this->language->get('tab_sms');
-        
+
+        $this->data += $this->language->load('setting/setting');
+        $this->document->setTitle($this->data['heading_title']);        
         
         if (isset($this->error['warning'])) {
             $this->data['error_warning'] = $this->error['warning'];
@@ -2992,6 +2832,18 @@ class ControllerSettingSetting extends Controller
         } else {
             $this->data['config_sms_payment_link'] = $this->config->get('config_sms_payment_link');
         }
+
+        if (isset($this->request->post['config_sms_birthday_greeting_enabled'])) {
+            $this->data['config_sms_birthday_greeting_enabled'] = $this->request->post['config_sms_birthday_greeting_enabled'];
+        } else {
+            $this->data['config_sms_birthday_greeting_enabled'] = $this->config->get('config_sms_birthday_greeting_enabled');
+        }
+        
+        if (isset($this->request->post['config_sms_birthday_greeting'])) {
+            $this->data['config_sms_birthday_greeting'] = $this->request->post['config_sms_birthday_greeting'];
+        } else {
+            $this->data['config_sms_birthday_greeting'] = $this->config->get('config_sms_birthday_greeting');
+        }
         
         if (isset($this->request->post['config_sms_send_new_order_status'])) {
             $this->data['config_sms_send_new_order_status'] = $this->request->post['config_sms_send_new_order_status'];
@@ -3088,6 +2940,12 @@ class ControllerSettingSetting extends Controller
             'config_viber_firstorder_image',
             'config_viber_firstorder_button_text',
             'config_viber_firstorder_button_url',
+
+            'config_viber_birthday_greeting_enabled',
+            'config_viber_birthday_greeting',
+            'config_viber_birthday_greeting_image',
+            'config_viber_birthday_greeting_button_text',
+            'config_viber_birthday_greeting_button_url'
         ];
         
         foreach ($viberkeys as $viberkey) {
@@ -5055,8 +4913,7 @@ class ControllerSettingSetting extends Controller
         $this->response->setOutput($this->render());
     }
     
-    protected function validate()
-    {
+    protected function validate(){
         if (!$this->user->hasPermission('modify', 'setting/setting')) {
             $this->error['warning'] = $this->language->get('error_permission');
         }
@@ -5160,8 +5017,7 @@ class ControllerSettingSetting extends Controller
         }
     }
     
-    public function template()
-    {
+    public function template(){
         if (isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'))) {
             $server = HTTPS_CATALOG;
         } else {
@@ -5177,8 +5033,7 @@ class ControllerSettingSetting extends Controller
         $this->response->setOutput('<img src="' . $image . '" alt="" title="" style="border: 1px solid #EEEEEE;" />');
     }
     
-    public function country()
-    {
+    public function country(){
         $json = [];
         
         $this->load->model('localisation/country');

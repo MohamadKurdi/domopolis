@@ -226,13 +226,13 @@
 		<td style="width:50%">
 			<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бонусов за установку приложения</span></p>
 			<input type="text" name="rewardpoints_appinstall" value="<?php echo $rewardpoints_appinstall; ?>" size="5" />
-			<span class="help">количество бонусов в национальной валюте, начисляемое при установке приложения, код APPINSTALL_POINTS_ADD,бонусы с этим кодом могут быть начислены только один раз одному покупателю</span>
+			<span class="help">количество бонусов в национальной валюте, начисляемое при установке приложения, код <b>APPINSTALL_POINTS_ADD</b>,бонусы с этим кодом могут быть начислены только один раз одному покупателю</span>
 		</td>
 		
 		<td style="width:50%">
 			<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бонусов на день рождения</span></p>
 			<input type="text" name="rewardpoints_birthday" value="<?php echo $rewardpoints_birthday; ?>" size="5" />
-			<span class="help">количество бонусов в национальной валюте, начисляемое на день рождения, код BIRTHDAY_POINTS_ADD, бонусы с этим кодом могут быть начислены не чаще чем раз в 365 дней</span>
+			<span class="help">количество бонусов в национальной валюте, начисляемое на день рождения, код <b>BIRTHDAY_GREETING_REWARD</b>, бонусы с этим кодом могут быть начислены не чаще чем раз в 365 дней</span>
 		</td>
 	</tr>
 </table>

@@ -349,5 +349,19 @@
 					<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_payment_link" value="<?php echo $config_sms_payment_link; ?>" />
 				</td>
 			</tr>
+
+			<tr>
+				<td style="width:200px;">
+					<span class="status_color" style="text-align: left; background: #43B02A; color: #FFF; ?>;">
+						Поздравление с днем рождения
+					</span>
+				</td>
+				<td style="width:50px" class="center">
+					<input class="checkbox" type="checkbox" name="config_sms_birthday_greeting_enabled" id="config_sms_birthday_greeting_enabled"<?php if ($config_sms_birthday_greeting_enabled) { echo ' checked="checked"'; }?>/><label for="config_sms_birthday_greeting_enabled"></label>
+				</td>
+				<td style="padding:5px;">
+					<input type="text" size="200" style="width:90%; font-size:16px; padding:5px;" name="config_sms_birthday_greeting" value="<?php echo $config_sms_birthday_greeting; ?>" />
+				</td>
+			</tr>
 		</table>
 	</div>
