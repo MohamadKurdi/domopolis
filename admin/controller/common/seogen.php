@@ -288,29 +288,29 @@ class ControllerCommonSeogen extends Controller {
 		
 		if ($prosto == '1') {
 		
-			$query = $this->db->query("SELECT `manufacturer_id`, `name` FROM `" . DB_PREFIX . "manufacturer`");
+			$query = $this->db->query("SELECT `manufacturer_id`, `name` FROM `manufacturer`");
 
 			foreach ($query->rows as $row) {
-				$query_alias = $this->db->query("SELECT `url_alias_id`, `query`, `keyword` FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'manufacturer_id=".((int)$row['manufacturer_id'])."'");
+				$query_alias = $this->db->query("SELECT `url_alias_id`, `query`, `keyword` FROM `url_alias` WHERE `query` = 'manufacturer_id=".((int)$row['manufacturer_id'])."'");
 
 				if ($query_alias->num_rows) {
-					$this->db->query("UPDATE " . DB_PREFIX . "url_alias SET keyword = '".$this->db->escape($this->seo($row['name']))."' WHERE query = 'manufacturer_id=".((int)$row['manufacturer_id'])."';");
+					$this->db->query("UPDATE url_alias SET keyword = '".$this->db->escape($this->seo($row['name']))."' WHERE query = 'manufacturer_id=".((int)$row['manufacturer_id'])."';");
 				} else {
-					$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias (query,keyword) VALUES ('manufacturer_id=".((int)$row['manufacturer_id'])."','".$this->db->escape($this->seo($row['name']))."');");
+					$this->db->query("INSERT INTO url_alias (query,keyword) VALUES ('manufacturer_id=".((int)$row['manufacturer_id'])."','".$this->db->escape($this->seo($row['name']))."');");
 				}
 			}		
 		
 		} elseif ($prosto == '0') {
 		
-			$query = $this->db->query("SELECT `manufacturer_id`, `name` FROM `" . DB_PREFIX . "manufacturer`");
+			$query = $this->db->query("SELECT `manufacturer_id`, `name` FROM `manufacturer`");
 
 			foreach ($query->rows as $row) {
-				$query_alias = $this->db->query("SELECT `url_alias_id`, `query`, `keyword` FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'manufacturer_id=".((int)$row['manufacturer_id'])."'");
+				$query_alias = $this->db->query("SELECT `url_alias_id`, `query`, `keyword` FROM `url_alias` WHERE `query` = 'manufacturer_id=".((int)$row['manufacturer_id'])."'");
 
 				if ($query_alias->num_rows) {
 					
 				} else {
-					$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias (query,keyword) VALUES ('manufacturer_id=".((int)$row['manufacturer_id'])."','".$this->db->escape($this->seo($row['name']))."');");
+					$this->db->query("INSERT INTO url_alias (query,keyword) VALUES ('manufacturer_id=".((int)$row['manufacturer_id'])."','".$this->db->escape($this->seo($row['name']))."');");
 				}
 			}
 		}
@@ -403,29 +403,29 @@ class ControllerCommonSeogen extends Controller {
 		
 		if ($prosto == '1') {
 		
-			$query = $this->db->query("SELECT `information_id`, `title` FROM `" . DB_PREFIX . "information_description`");
+			$query = $this->db->query("SELECT `information_id`, `title` FROM `information_description`");
 
 			foreach ($query->rows as $row) {
-				$query_alias = $this->db->query("SELECT `url_alias_id`, `query`, `keyword` FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'information_id=".((int)$row['information_id'])."'");
+				$query_alias = $this->db->query("SELECT `url_alias_id`, `query`, `keyword` FROM `url_alias` WHERE `query` = 'information_id=".((int)$row['information_id'])."'");
 				
 				if ($query_alias->num_rows) {
-					$this->db->query("UPDATE " . DB_PREFIX . "url_alias SET keyword = '".$this->db->escape($this->seo($row['title']))."' WHERE query = 'information_id=".((int)$row['information_id'])."';");
+					$this->db->query("UPDATE url_alias SET keyword = '".$this->db->escape($this->seo($row['title']))."' WHERE query = 'information_id=".((int)$row['information_id'])."';");
 				} else {
-					$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias (query,keyword) VALUES ('information_id=".((int)$row['information_id'])."','".$this->db->escape($this->seo($row['title']))."');");
+					$this->db->query("INSERT INTO url_alias (query,keyword) VALUES ('information_id=".((int)$row['information_id'])."','".$this->db->escape($this->seo($row['title']))."');");
 				}
 			}		
 		
 		} elseif ($prosto == '0') {
 		
-			$query = $this->db->query("SELECT `information_id`, `title` FROM `" . DB_PREFIX . "information_description`");
+			$query = $this->db->query("SELECT `information_id`, `title` FROM `information_description`");
 
 			foreach ($query->rows as $row) {
-				$query_alias = $this->db->query("SELECT `url_alias_id`, `query`, `keyword` FROM `" . DB_PREFIX . "url_alias` WHERE `query` = 'information_id=".((int)$row['information_id'])."'");
+				$query_alias = $this->db->query("SELECT `url_alias_id`, `query`, `keyword` FROM `url_alias` WHERE `query` = 'information_id=".((int)$row['information_id'])."'");
 				
 				if ($query_alias->num_rows) {
 					
 				} else {
-					$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias (query,keyword) VALUES ('information_id=".((int)$row['information_id'])."','".$this->db->escape($this->seo($row['title']))."');");
+					$this->db->query("INSERT INTO url_alias (query,keyword) VALUES ('information_id=".((int)$row['information_id'])."','".$this->db->escape($this->seo($row['title']))."');");
 				}
 			}
 		}
@@ -484,31 +484,31 @@ class ControllerCommonSeogen extends Controller {
 		
 		if ($prosto == '1') {
 		
-			$query = $this->db->query("SELECT category_id,name FROM " . DB_PREFIX . "category_description;");
+			$query = $this->db->query("SELECT category_id,name FROM category_description;");
 
 			foreach ($query->rows as $row) {
 							
-				$query_alias = $this->db->query("SELECT url_alias_id,query,keyword FROM " . DB_PREFIX . "url_alias WHERE query = 'category_id=".((int)$row['category_id'])."';");
+				$query_alias = $this->db->query("SELECT url_alias_id,query,keyword FROM url_alias WHERE query = 'category_id=".((int)$row['category_id'])."';");
 				
 				if ($query_alias->num_rows) {
-					$this->db->query("UPDATE " . DB_PREFIX . "url_alias SET keyword = '".$this->db->escape($this->seo($row['name']))."' WHERE query = 'category_id=".((int)$row['category_id'])."';");
+					$this->db->query("UPDATE url_alias SET keyword = '".$this->db->escape($this->seo($row['name']))."' WHERE query = 'category_id=".((int)$row['category_id'])."';");
 				} else {
-					$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias (query,keyword) VALUES ('category_id=".((int)$row['category_id'])."','".$this->db->escape($this->seo($row['name']))."');");
+					$this->db->query("INSERT INTO url_alias (query,keyword) VALUES ('category_id=".((int)$row['category_id'])."','".$this->db->escape($this->seo($row['name']))."');");
 				} 
 			}		
 		
 		} elseif ($prosto == '0') {
 		
-			$query = $this->db->query("SELECT category_id,name FROM " . DB_PREFIX . "category_description;");
+			$query = $this->db->query("SELECT category_id,name FROM category_description;");
 
 			foreach ($query->rows as $row) {
 							
-				$query_alias = $this->db->query("SELECT url_alias_id,query,keyword FROM " . DB_PREFIX . "url_alias WHERE query = 'category_id=".((int)$row['category_id'])."';");
+				$query_alias = $this->db->query("SELECT url_alias_id,query,keyword FROM url_alias WHERE query = 'category_id=".((int)$row['category_id'])."';");
 				
 				if ($query_alias->num_rows) {
 					
 				} else {
-					$this->db->query("INSERT INTO " . DB_PREFIX . "url_alias (query,keyword) VALUES ('category_id=".((int)$row['category_id'])."','".$this->db->escape($this->seo($row['name']))."');");
+					$this->db->query("INSERT INTO url_alias (query,keyword) VALUES ('category_id=".((int)$row['category_id'])."','".$this->db->escape($this->seo($row['name']))."');");
 				} 
 			}
 		}
@@ -591,4 +591,3 @@ class ControllerCommonSeogen extends Controller {
 		}
 	}
 }
-?>

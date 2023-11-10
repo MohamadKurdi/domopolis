@@ -5,22 +5,7 @@ class ControllerModuleRedirectManager extends Controller {
 	private $type = 'module';
 	private $name = 'redirect_manager';
 	
-	public function index() {
-		// non-standard
-		$sql = "CREATE TABLE IF NOT EXISTS `" . DB_PREFIX . "redirect` (";
-		$sql .= " `redirect_id` int(11) NOT NULL AUTO_INCREMENT,";
-		$sql .= " `active` tinyint(1) NOT NULL DEFAULT '0',";
-		$sql .= " `from_url` text COLLATE utf8_bin NOT NULL,";
-		$sql .= " `to_url` text COLLATE utf8_bin NOT NULL,";
-		$sql .= " `response_code` int(3) NOT NULL DEFAULT '301',";
-		$sql .= " `date_start` date NOT NULL DEFAULT '0000-00-00',";
-		$sql .= " `date_end` date NOT NULL DEFAULT '0000-00-00',";
-		$sql .= " `times_used` int(5) NOT NULL DEFAULT '0',";
-		$sql .= " PRIMARY KEY (`redirect_id`)";
-		$sql .= ") ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin";
-		$this->db->query($sql);
-		// end
-		
+	public function index() {		
 		$this->data['type'] = $this->type;
 		$this->data['name'] = $this->name;
 		
@@ -49,14 +34,10 @@ class ControllerModuleRedirectManager extends Controller {
 			));
 			
 			if (!empty($this->request->get['delall'])) {
-				$this->db->query("TRUNCATE `" . DB_PREFIX . "redirect`");
+				$this->db->query("TRUNCATE `redirect`");
 			} else {
 				if (!empty($this->request->post['data'])) {
 					foreach ($this->request->post['data'] as $key => $value) {
-					/*	
-						$from_url = (strpos($value['from_url'], 'http://') === 0 || strpos($value['from_url'], 'https://') === 0) ? $value['from_url'] : 'http://' . $value['from_url'];
-						$to_url = (strpos($value['to_url'], 'http://') === 0 || strpos($value['to_url'], 'https://') === 0) ? $value['to_url'] : 'http://' . $value['to_url'];
-					*/	
 						$sql = ($key < 0) ? "INSERT INTO `" : "UPDATE `";
 						$sql .= DB_PREFIX . "redirect` SET";
 						$sql .= " active = '" . (int)$value['active'] . "',";
@@ -72,20 +53,18 @@ class ControllerModuleRedirectManager extends Controller {
 					}
 				}
 				if (!empty($this->request->post['deleted'])) {
-					$this->db->query("DELETE FROM `" . DB_PREFIX . "redirect` WHERE redirect_id = '" . implode("' OR redirect_id = '", $this->request->post['deleted']) . "'");
+					$this->db->query("DELETE FROM `redirect` WHERE redirect_id = '" . implode("' OR redirect_id = '", $this->request->post['deleted']) . "'");
 				}
 			}
 			
 			if (!empty($this->request->get['resetall'])) {
-				$this->db->query("UPDATE `" . DB_PREFIX . "redirect` SET times_used = '0'");
+				$this->db->query("UPDATE `redirect` SET times_used = '0'");
 			}
 			
 			if (!empty($this->request->get['import'])) {
 				$this->importCSV();
 			}
-			
-	/*		file_put_contents(DIR_LOGS.'clearthinking.txt',date('Y-m-d H:i:s')."\t".$this->request->server['REMOTE_ADDR']."\t".serialize($this->request->post[$this->name.'_status'])."\n",FILE_APPEND|LOCK_EX);
-	*/
+
 			$this->session->data['success'] = $this->data['standard_success'];
 			$this->redirect(isset($this->request->get['exit']) ? $this->data['exit'] : $this->makeURL($this->type . '/' . $this->name, 'token=' . $token . '&sort=' . $this->data['sort'] . '&order=' . $this->data['order'] . '&page=' . $page, 'SSL'));
 			// end
@@ -112,20 +91,20 @@ class ControllerModuleRedirectManager extends Controller {
 		$this->data['success'] = (isset($this->session->data['success'])) ? $this->session->data['success'] : '';
 		unset($this->session->data['success']);
 		
-		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "setting WHERE `group` = '" . $this->db->escape($this->name) . "' ORDER BY `key` ASC");
+		$query = $this->db->query("SELECT * FROM setting WHERE `group` = '" . $this->db->escape($this->name) . "' ORDER BY `key` ASC");
 		foreach ($query->rows as $setting) {
 			$value = isset($this->request->post[$setting['key']]) ? $this->request->post[$setting['key']] : $setting['value'];
 			$this->data[$setting['key']] = (is_string($value) && strpos($value, 'a:') === 0) ? unserialize($value) : $value;
 		}
 		
 		// non-standard
-		$results = $this->db->query("SELECT * FROM `" . DB_PREFIX . "redirect` ORDER BY " . $this->data['sort'] . " " . $this->data['order'] . " LIMIT " . (($page-1) * $limit) . "," . $limit);
+		$results = $this->db->query("SELECT * FROM `redirect` ORDER BY " . $this->data['sort'] . " " . $this->data['order'] . " LIMIT " . (($page-1) * $limit) . "," . $limit);
 		$this->data['results'] = $results->rows;
 		
 		$this->data['token'] = $token;
 		
 		
-		$all_results = $this->db->query("SELECT COUNT(*) AS total FROM `" . DB_PREFIX . "redirect`");
+		$all_results = $this->db->query("SELECT COUNT(*) AS total FROM `redirect`");
 		
 		$pagination = new Pagination();
 		$pagination->total = $all_results->row['total'];
@@ -201,7 +180,7 @@ class ControllerModuleRedirectManager extends Controller {
 		header('Content-Disposition: attachment; filename=' . $this->name . '.csv');
 		header('Content-Transfer-Encoding: binary');
 		
-		$results = $this->db->query("SELECT * FROM `" . DB_PREFIX . "redirect` ORDER BY redirect_id ASC");
+		$results = $this->db->query("SELECT * FROM `redirect` ORDER BY redirect_id ASC");
 		echo implode(',', array_keys($results->row)) . "\n";
 		foreach ($results->rows as $result) {
 			echo implode(',', str_replace('"', '%22', $result)) . "\n";
@@ -228,8 +207,7 @@ class ControllerModuleRedirectManager extends Controller {
 				times_used = " . (int)$col[7] . "
 			";
 			
-			$this->db->query("INSERT INTO `" . DB_PREFIX . "redirect` SET " . $redirect_id . $sql . " ON DUPLICATE KEY UPDATE " . $sql);
+			$this->db->query("INSERT INTO `redirect` SET " . $redirect_id . $sql . " ON DUPLICATE KEY UPDATE " . $sql);
 		}
 	}
 }
-?>
