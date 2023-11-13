@@ -73,7 +73,6 @@ class ControllerPaymentMono extends Controller
         $this->response->setOutput($this->render());
     }
 
-
     public function laterpay(){
         if (!$this->validateLaterpay()){
             $this->redirect('account/order');
@@ -288,10 +287,18 @@ class ControllerPaymentMono extends Controller
                     $profile_id = 0;
                 }
 
-                $temp_cart = $this->session->data['cart'];                 
-                unset($this->session->data['cart']);
-                $this->cart->add($product_id, $quantity, $option, $profile_id);
+                if (!empty($this->session->data['cart'])){
+                    $temp_cart = $this->session->data['cart'];
+                    unset($this->session->data['cart']);
+                }
+                
+                 if (!empty($this->session->data['shipping_method'])){
+                    $temp_shipping_method = $this->session->data['shipping_method'];
+                    unset($this->session->data['shipping_method']);
+                }
+                
 
+                $this->cart->add($product_id, $quantity, $option, $profile_id);
                 $cart_key = $this->cart->makeCartKey($product_id, $option, $profile_id, false, false);      
 
                 $order_id = $this->model_checkout_order->addOrderSimple(['monocheckout' => 1]);
@@ -302,7 +309,14 @@ class ControllerPaymentMono extends Controller
                 $monolog->write('[ControllerPaymentMono::checkoutorder] Added Order: ' . $order_id);                
 
                 $this->cart->remove($cart_key);
-                $this->session->data['cart'] = $temp_cart;
+
+                if (!empty($temp_cart)){
+                    $this->session->data['cart'] = $temp_cart;    
+                }
+
+                if (!empty($temp_shipping_method)){
+                    $this->session->data['shipping_method'] = $temp_shipping_method;    
+                }                
 
                 try {
                     $result = $this->model_payment_mono_checkout->sendToAPI(['order_id' => $order_id, 'order_key' => $secretKey]);

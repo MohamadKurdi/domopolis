@@ -180,6 +180,13 @@ class ModelPaymentMonoCheckout extends Model
 
                 if ($json['payment_method'] != 'payment_on_delivery' && $json['payment_status'] == 'success'){
                     $this->model_checkout_order->update($order_info['order_id'], $this->config->get('mono_order_success_status_id'), $this->language->get('text_status_success'), $notify = true);
+
+                    if ($this->config->get('mono_checkbox_enable')){
+                        $this->load->library('hobotix/CheckBoxUA');
+                        $checkBoxAPI = new hobotix\CheckBoxUA($this->registry);
+                        $checkBoxAPI->setOrderNeedCheckbox($OrderInfo['OrderId']);
+                        $checkBoxAPI->setOrderPaidBy($OrderInfo['OrderId'], 'mono');
+                    }
                 }
                 
             }
