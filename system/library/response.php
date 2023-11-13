@@ -168,6 +168,45 @@ class Response {
   	return $this;
   }
 
+  /**
+   * Set CSV response
+   *
+   * @param array $data data
+   * @param array $header header line
+   * @param string $filename
+   * @param string $charset
+   *
+   * @return Response object for chaining  
+   */
+  public function outputCSV(array $data, array $header = [], string $filename = '', string $charset = "utf-8"):void {
+    set_time_limit(1000);
+    ini_set('memory_limit','4G');
+
+    if (!$filename){
+      $filename = HTTP_DOMAIN . '_csv_export_' . date('Y_m_d') . '.csv';
+    } else {
+      $filename = HTTP_DOMAIN . $filename . date('Y_m_d') . '.csv';
+    }
+
+    if (!$header){
+      $header = array_keys($data[0]);
+    }
+
+    header("Content-Type: text/csv charset=$charset"); 
+    header("Content-Disposition: attachment; filename=$filename");
+    header("Pragma: no-cache");
+    header("Expires: 0");
+
+    $output = fopen('php://output', 'w');   
+    fputcsv($output, $header);    
+
+    foreach ($data as $line){   
+      fputcsv($output, $line);
+    }
+
+    fclose($output);
+  } 
+
 
   /**
    * Set response output
