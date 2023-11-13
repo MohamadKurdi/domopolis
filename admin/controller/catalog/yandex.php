@@ -361,7 +361,7 @@
 				
 				$market_data = $this->model_kp_yandex->getYandexMarketAdditionalData($result['product_id']);
 
-				if (!$market_data){
+				if ($market_data){
 					$yam_real_price = $this->currency->format_with_left($market_data['yam_real_price'], $this->config->get('config_regional_currency'), 1);
 				} else {
 					$yam_real_price = 0;
@@ -461,11 +461,11 @@
 				
 				
 				if ((float)$product_info['yam_special_national']) {
-					if ((float)$product_info['yam_special_national'] != $market_data['yam_real_price']){
+					if (!empty($market_data['yam_real_price']) && (float)$product_info['yam_special_national'] != $market_data['yam_real_price']){
 						$problem = true;
 					}
 					} else {
-					if ((float)$product_info['yam_price_national'] != $market_data['yam_real_price']){
+					if (!empty($market_data['yam_real_price']) && (float)$product_info['yam_price_national'] != $market_data['yam_real_price']){
 						$problem = true;
 					}	
 				}

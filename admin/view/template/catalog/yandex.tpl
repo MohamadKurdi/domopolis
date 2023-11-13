@@ -18,11 +18,7 @@
 			</style>
 			
 			<div class="buttons" style="padding-top:10px;padding-left:10px;">
-				<a class="button <?php if (!empty($filter_buybox_failed)) { ?>active<? } ?>"  href="<?php echo $href_filter_buybox_failed; ?>"><i class="fa fa-exclamation-triangle"></i>  BBOX <?php if ($total_buybox_failed) { ?>(<?php echo $total_buybox_failed; ?>)<?php } ?></a>
-				
-				<a class="button <?php if (!empty($filter_defaultoffer_failed)) { ?>active<? } ?>"  href="<?php echo $href_filter_defaultoffer_failed; ?>"><i class="fa fa-exclamation-triangle"></i> DEFAULT <?php if ($total_defaultoffer_failed) { ?>(<?php echo $total_defaultoffer_failed; ?>)<?php } ?></a>	
-				
-				<a class="button <?php if (!empty($filter_minpricemarket_failed)) { ?>active<? } ?>"  href="<?php echo $href_filter_minpricemarket_failed; ?>"><i class="fa fa-exclamation-triangle"></i> MIN_PRICE <?php if ($total_minpricemarket_failed) { ?>(<?php echo $total_minpricemarket_failed; ?>)<?php } ?></a>
+				<a class="button <?php if (!empty($filter_buybox_failed)) { ?>active<? } ?>"  href="<?php echo $href_filter_buybox_failed; ?>"><i class="fa fa-exclamation-triangle"></i>  BBOX <?php if ($total_buybox_failed) { ?>(<?php echo $total_buybox_failed; ?>)<?php } ?></a>			
 				
 				<a class="button <?php if (!empty($filter_is_illiquid)) { ?>active<? } ?>" href="<?php echo $href_filter_is_illiquid; ?>"><i class="fa fa-exclamation-triangle"></i> Нлквд <?php if ($total_not_liquid) { ?>(<?php echo $total_not_liquid; ?>)<?php } ?></a>
 				
