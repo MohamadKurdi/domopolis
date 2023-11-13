@@ -6,8 +6,7 @@
 			<h2>Оплата заказа #<? echo $order_id; ?></h2>
 		</div>
 		<div style="text-align:center; margin-top:10px; width:400px; margin:auto;">
-			<div id="widget-container" style="width:400px; height:700px; overflow:hidden; text-align: center;padding-top: 150px;">
-				<i class="fas fa-spinner fa-spin" style="font-size:32px"></i>
+			<div id="widget-container" style="width:400px; height:700px; overflow:hidden; text-align: center;padding-top: 10px;">
 			</div>
 		</div>
 	</div>			
@@ -44,7 +43,6 @@
 		optionalParameters.initCallback = initCallback;
 		optionalParameters.products = ["creditcard"];
 		optionalParameters.language = "en";
-		//optionalParameters.customStyleId = "customstyle_qdxnyzokmk";
 		optionalParameters.hidePayButton = false;
 		optionalParameters.redirectUser = true;
 		optionalParameters.hideTitleIcons = false;

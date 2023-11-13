@@ -3,16 +3,7 @@
 	class ControllerPaymentConcardisLaterpay extends Controller
 	{
 		
-		/**
-			* Index action
-			*
-			* @return void
-		*/
-		protected function index()
-		{
-			
-			
-			
+		protected function index(){
 		}
 		
 		public function laterpay_index(){
@@ -28,7 +19,7 @@
 			
 			$this->load->model('checkout/order');
 			
-			$order_id = (int)$this->request->get['order_id'];
+			$order_id 	= (int)$this->request->get['order_id'];
 			$order_info = $this->model_checkout_order->getOrder($order_id);
 			
 			$currency_code = $this->config->get('config_regional_currency');
@@ -41,23 +32,20 @@
 				}
 			}						
 			
-			if ($currency_code == 'EUR') {
-				
+			if ($currency_code == 'EUR') {				
 				if ($this->config->get('config_regional_currency') == 'EUR'){
 					$order_to_pay_converted = round($this->currency->real_convert($order_info['total_national'], $order_info['currency_code'], 'EUR', true), 2) * 100;
-					} else {
+				} else {
 					$order_to_pay_converted = round($this->currency->makeDiscountOnNumber($this->currency->real_convert($order_info['total_national'], $order_info['currency_code'], 'EUR', true), 3), 2) * 100;
 				}
 				$currency_code = 'EUR';
-				} elseif ($currency_code == 'RUB'){
-				
+			} elseif ($currency_code == 'RUB'){				
 				$order_to_pay_converted = round($this->currency->real_convert($order_info['total_national'], $order_info['currency_code'], 'RUB', true), 2) * 100;
 				$currency_code = 'RUB';				
-				} elseif ($currency_code == 'UAH'){
-				
+			} elseif ($currency_code == 'UAH'){				
 				$order_to_pay_converted = round($this->currency->real_convert($order_info['total_national'], $order_info['currency_code'], 'UAH', true), 2) * 100;
 				$currency_code = 'UAH';
-				} else {
+			} else {
 				$order_to_pay_converted = round($this->currency->makeDiscountOnNumber($this->currency->real_convert($order_info['total_national'], $order_info['currency_code'], 'EUR', true), 3), 2) * 100;
 				$currency_code = 'EUR';
 			}
@@ -69,85 +57,79 @@
 				
 				$this->data['TRANSACTION_DEBIT_PENDING'] = false;
 				if (isset($cc_order['lastOperation']) && $cc_order['lastOperation'] == 'TRANSACTION_DEBIT_PENDING'){
-					$this->data['TRANSACTION_DEBIT_PENDING'] = true;
-					$this->data['lastOperation'] = $cc_order['lastOperation'];
+					$this->data['TRANSACTION_DEBIT_PENDING'] 	= true;
+					$this->data['lastOperation'] 				= $cc_order['lastOperation'];
 				}
 				
 				if (($cc_order['status'] == 'CLOSED')  && !$cc_order['capturedAmount']){
-					//уже были оплаты, но неуспешные, надо создавать новый заказ
-					
-					//подготовка данных платежа
-					$data = array(
-					"initialAmount" => (int)$order_to_pay_converted,
-					"currency" => $currency_code,
-					"transactionType" => "DEBIT",
-					"merchantOrderId" => "#$order_id-" . mb_substr(md5(time()), 0, 4),
-					"description" => "Оплата по заказу #$order_id",
-					"async" => array(
-					"successUrl" => HTTPS_SERVER . 'index.php?route=payment/concardis/success&order_id=' . $order_id . '&token=' . $this->createOrderToken($order_id),
-					"failureUrl" => HTTPS_SERVER . 'index.php?route=payment/concardis/fail&order_id=' . $order_id . '&token=' . $this->createOrderToken($order_id),
-					"cancelUrl" => 	HTTPS_SERVER . 'index.php?route=payment/concardis/cancel&order_id=' . $order_id . '&token=' . $this->createOrderToken($order_id),
-					"notifications" => array(
-					array(
-					"notificationUrn" => HTTPS_SERVER . 'index.php?route=payment/concardis/callback',
-					"notificationState" => array("CREATED", "UPDATED")
-					)
-					)
-					)
-					);
+					$data = [
+						"initialAmount" 	=> (int)$order_to_pay_converted,
+						"currency" 			=> $currency_code,
+						"transactionType" 	=> "DEBIT",
+						"merchantOrderId" 	=> "#$order_id-" . mb_substr(md5(time()), 0, 4),
+						"description" 		=> "Оплата по заказу #$order_id",
+						"async" 			=> [
+							"successUrl" 	=> 	$this->config->get('config_ssl') . 'index.php?route=payment/concardis/success&order_id=' . $order_id . '&token=' . $this->createOrderToken($order_id),
+							"failureUrl" 	=>	$this->config->get('config_ssl') . 'index.php?route=payment/concardis/fail&order_id=' . $order_id . '&token=' . $this->createOrderToken($order_id),
+							"cancelUrl" 	=> 	$this->config->get('config_ssl') . 'index.php?route=payment/concardis/cancel&order_id=' . $order_id . '&token=' . $this->createOrderToken($order_id),
+							"notifications" => [
+								[
+									"notificationUrn" 	=> $this->config->get('config_ssl') . 'index.php?route=payment/concardis/callback',
+									"notificationState" => ["CREATED", "UPDATED"]
+								]
+							]
+						]
+					];
 					
 					$cc_order_id = $this->createConcardisOrder($data);				
 					
 					} elseif ((($cc_order['status'] == 'CREATED')  && !$cc_order['capturedAmount']) || ((int)$order_to_pay_converted != $cc_order['initialAmount'])) {
-					
-					//подготовка данных платежа
-					$data = array(
-					"initialAmount" => (int)$order_to_pay_converted,
-					"currency" => $currency_code,
-					"transactionType" => "DEBIT",
-					"merchantOrderId" => "#$order_id",
-					"description" => "Оплата по заказу #$order_id",
-					"async" => array(
-					"successUrl" => HTTPS_SERVER . 'index.php?route=payment/concardis/success&order_id=' . $order_id . '&token=' . $this->createOrderToken($order_id),
-					"failureUrl" => HTTPS_SERVER . 'index.php?route=payment/concardis/fail&order_id=' . $order_id . '&token=' . $this->createOrderToken($order_id),
-					"cancelUrl" => 	HTTPS_SERVER . 'index.php?route=payment/concardis/cancel&order_id=' . $order_id . '&token=' . $this->createOrderToken($order_id),
-					"notifications" => array(
-					array(
-					"notificationUrn" => HTTPS_SERVER . 'index.php?route=payment/concardis/callback',
-					"notificationState" => array("CREATED", "UPDATED")
-					)
-					)
-					)
-					);
+
+						$data = [
+							"initialAmount" 	=> (int)$order_to_pay_converted,
+							"currency" 			=> $currency_code,
+							"transactionType" 	=> "DEBIT",
+							"merchantOrderId" 	=> "#$order_id",
+							"description" 		=> "Оплата по заказу #$order_id",
+							"async" => [
+								"successUrl" 	=> $this->config->get('config_ssl') . 'index.php?route=payment/concardis/success&order_id=' . $order_id . '&token=' . $this->createOrderToken($order_id),
+								"failureUrl" 	=> $this->config->get('config_ssl') . 'index.php?route=payment/concardis/fail&order_id=' . $order_id . '&token=' . $this->createOrderToken($order_id),
+								"cancelUrl" 	=> 	$this->config->get('config_ssl') . 'index.php?route=payment/concardis/cancel&order_id=' . $order_id . '&token=' . $this->createOrderToken($order_id),
+								"notifications" => [
+									[
+										"notificationUrn" 	=> $this->config->get('config_ssl') . 'index.php?route=payment/concardis/callback',
+										"notificationState" => ["CREATED", "UPDATED"]
+									]
+								]
+							]
+						];
 					
 					$cc_order_id = $this->patchConcardisOrder($cc_order_id, $data);				
 				}
 				
 				
 				} else {
+
+					$data = [
+						"initialAmount" 	=> (int)$order_to_pay_converted,
+						"currency" 			=> $currency_code,
+						"transactionType" 	=> "DEBIT",
+						"merchantOrderId" 	=> "#$order_id",
+						"description" 		=> "Оплата по заказу #$order_id",
+						"async" => [
+							"successUrl" 	=> $this->config->get('config_ssl') . 'index.php?route=payment/concardis/success&order_id=' . $order_id . '&token=' . $this->createOrderToken($order_id),
+							"failureUrl" 	=> $this->config->get('config_ssl') . 'index.php?route=payment/concardis/fail&order_id=' . $order_id . '&token=' . $this->createOrderToken($order_id),
+							"cancelUrl" 	=> 	$this->config->get('config_ssl') . 'index.php?route=payment/concardis/cancel&order_id=' . $order_id . '&token=' . $this->createOrderToken($order_id),
+							"notifications" => [
+								[
+									"notificationUrn" 	=> $this->config->get('config_ssl') . 'index.php?route=payment/concardis/callback',
+									"notificationState" => array("CREATED", "UPDATED")
+								]
+							]
+						]
+					];
 				
-				//подготовка данных платежа
-				$data = array(
-				"initialAmount" => (int)$order_to_pay_converted,
-				"currency" => $currency_code,
-				"transactionType" => "DEBIT",
-				"merchantOrderId" => "#$order_id",
-				"description" => "Оплата по заказу #$order_id",
-				"async" => array(
-				"successUrl" => HTTPS_SERVER . 'index.php?route=payment/concardis/success&order_id=' . $order_id . '&token=' . $this->createOrderToken($order_id),
-				"failureUrl" => HTTPS_SERVER . 'index.php?route=payment/concardis/fail&order_id=' . $order_id . '&token=' . $this->createOrderToken($order_id),
-				"cancelUrl" => 	HTTPS_SERVER . 'index.php?route=payment/concardis/cancel&order_id=' . $order_id . '&token=' . $this->createOrderToken($order_id),
-				"notifications" => array(
-				array(
-				"notificationUrn" => HTTPS_SERVER . 'index.php?route=payment/concardis/callback',
-				"notificationState" => array("CREATED", "UPDATED")
-				)
-				)
-				)
-				);
-				
-				$cc_order_id = $this->createConcardisOrder($data);
-				
+					$cc_order_id = $this->createConcardisOrder($data);				
 			}
 			
 			$this->setOrderConcardisID($order_id, $cc_order_id);			
@@ -161,14 +143,8 @@
 			'common/footer/simplefooter',
 			);		
 			
-			$this->document->setTitle('Оплата Concardis PayEngine');
-			
-			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/concardis_laterpay.tpl')) {
-				$this->template = $this->config->get('config_template') . '/template/payment/concardis_laterpay.tpl';
-				} else {
-				$this->template = 'default/template/payment/concardis_laterpay.tpl';
-			}
-			
+			$this->document->setTitle('Оплата Concardis PayEngine');			
+			$this->template = 'payment/concardis_laterpay.tpl';			
 			$this->response->setOutput($this->render());
 			
 		}	
@@ -178,14 +154,11 @@
 		}
 		
 		private function patchConcardisOrder($cc_order_id, $data){
-			
-			//отправляем
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, "https://api.payengine.de/v1/orders/" . $cc_order_id);
 			curl_setopt($ch, CURLOPT_USERPWD, $this->config->get('concardis_email') . ":" . $this->config->get('concardis_secret'));  
 			curl_setopt($ch, CURLOPT_HEADER, 0);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			//			curl_setopt($ch, CURLOPT_POST, 1);
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
 			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data)); 
 			curl_setopt($ch, CURLOPT_HTTPHEADER,  array('Content-Type: application/json')); 
@@ -198,14 +171,10 @@
 			curl_close($ch);
 			
 			$decoded_responce = json_decode($response, true);		
-			
-			$this->log->debug('PATCHING ORDER ' . $response);
-			
-			if (isset($decoded_responce['orderId']) && $decoded_responce['orderId']){
-				
+					
+			if (isset($decoded_responce['orderId']) && $decoded_responce['orderId']){				
 				$cc_order_id = $decoded_responce['orderId'];
-				} else {
-				
+			} else {				
 				$cc_order_id = false;
 			}
 			
@@ -213,8 +182,6 @@
 		}
 		
 		private function createConcardisOrder($data, $once = false){
-			
-			//отправляем
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, "https://api.payengine.de/v1/orders/");
 			curl_setopt($ch, CURLOPT_USERPWD, $this->config->get('concardis_email') . ":" . $this->config->get('concardis_secret'));  
@@ -231,40 +198,26 @@
 			$response = curl_exec($ch);
 			curl_close($ch);
 			
-			$decoded_responce = json_decode($response, true);
+			$decoded_responce = json_decode($response, true);					
 			
-			$this->log->debug('CREATING ORDER ' . $response);	
-
-
-			
-			if (isset($decoded_responce['orderId']) && $decoded_responce['orderId']){
-				
+			if (isset($decoded_responce['orderId']) && $decoded_responce['orderId']){				
 				$cc_order_id = $decoded_responce['orderId'];
-				} elseif (isset($decoded_responce['errors']) && isset($decoded_responce['errors'][0]) && isset($decoded_responce['errors'][0]['code']) && $decoded_responce['errors'][0]['code'] == 12255 && $decoded_responce['errors'][0]['field'] == 'merchantOrderId'){
-				
-				//ситуация когда заказ создан, но почему-то пропал идентификатор в базе
-				
-				$this->log->debug('DUPLICATE, CREATING NEW ORDER ' . $response);
-				
+			} elseif (isset($decoded_responce['errors']) && isset($decoded_responce['errors'][0]) && isset($decoded_responce['errors'][0]['code']) && $decoded_responce['errors'][0]['code'] == 12255 && $decoded_responce['errors'][0]['field'] == 'merchantOrderId'){								
 				if (!$once){
 					$_data = $data;
 					$_data['merchantOrderId'] .= "-" . mb_substr(md5(time()), 0, 4);
 					$cc_order_id = $this->createConcardisOrder($_data, true);
 				}
 				
-				} else {
-				
-				$cc_order_id = false;
-				
+			} else {				
+				$cc_order_id = false;				
 			}
 			
 			return $cc_order_id;
 			
 		}
 		
-		private function getConcardisOrder($cc_order_id){
-			
-			
+		private function getConcardisOrder($cc_order_id){						
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, "https://api.payengine.de/v1/orders/" . $cc_order_id . "");
 			curl_setopt($ch, CURLOPT_USERPWD, $this->config->get('concardis_email') . ":" . $this->config->get('concardis_secret'));  
@@ -282,26 +235,17 @@
 			$this->log->debug('GETTING ORDER ' . $response);
 			$this->log->debug(json_decode($response, true));
 			
-			return json_decode($response, true);
-			
+			return json_decode($response, true);			
 		}
 		
-		private function getOrderConcardisID($order_id){
-			
+		private function getOrderConcardisID($order_id){			
 			$query = $this->db->non_cached_query("SELECT concardis_id FROM `order` WHERE order_id = '" . (int)$order_id . "'");
 			
-			if ($query->num_rows && $query->row['concardis_id']){
-				
-				$this->log->debug('ORDER EXISTS IN DB, ID: ' . $query->row['concardis_id']);
-				
+			if ($query->num_rows && $query->row['concardis_id']){							
 				return $query->row['concardis_id'];
-				} else {
-				
-				$this->log->debug('ORDER NOT EXISTS IN DB');
-				
+				} else {							
 				return false;
-			}
-			
+			}			
 		}
 		
 		private function setOrderConcardisID($order_id, $cc_order_id){
@@ -321,7 +265,5 @@
 				}
 			}
 			return true;
-		}											
-		
-		
+		}															
 	}																				
