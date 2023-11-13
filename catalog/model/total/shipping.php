@@ -1,9 +1,9 @@
 <?php
 class ModelTotalShipping extends Model {
 	public function getTotal(&$total_data, &$total, &$taxes) {
-		if ($this->cart->hasShipping() && isset($this->session->data['shipping_method'])) {
-			
-			$this->load->language('shipping/dostavkaplus');
+		$this->load->language('shipping/dostavkaplus');
+
+		if ($this->cart->hasShipping() && isset($this->session->data['shipping_method'])) {			
 			if ($this->session->data['shipping_method']['text'] == $this->language->get('text_free')){
 				$text = $this->currency->format($this->session->data['shipping_method']['cost']);				
 			} else {
@@ -32,7 +32,7 @@ class ModelTotalShipping extends Model {
 			}
 			
 			if (!empty($this->session->data['shipping_method']) && !empty($this->session->data['shipping_method']['cost']) && is_numeric($this->session->data['shipping_method']['cost'])){
-			$total += $this->session->data['shipping_method']['cost'];
+				$total += $this->session->data['shipping_method']['cost'];
 			}
 		}			
 	}
