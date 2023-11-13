@@ -215,8 +215,6 @@ class ControllerSaleReceipt extends Controller {
 			'limit'                   		=> $receipt_limit
 		);
 
-		
-
 		$receipt_total 	= $this->model_sale_receipt->getTotalOrders($filter_data);
 		$results 		= $this->model_sale_receipt->getOrders($filter_data);
 
@@ -1005,8 +1003,6 @@ class ControllerSaleReceipt extends Controller {
 			exit();
         }
 
-        $this->load->library('Timer');
-
         $interval = new \hobotix\Interval('23:00' . '-' . '01:00');
         if ($interval->isNow()){
         	echoLine('[ControllerSaleReceipt::cron] NOT ALLOWED TIME ' . date('H:i'), 'e');
@@ -1044,12 +1040,20 @@ class ControllerSaleReceipt extends Controller {
 	                	echoLine('[ControllerSaleReceipt::cron] Shift is opened with ID: ' . $new_shift['id'], 's');                   
 	                    $current_shifts = $this->checkBoxUA->getShifts();
 	                    sleep(1);
+	                } else {
+	                	echoLine('[ControllerSaleReceipt::cron] Shift does not open! Exiting due to error!', 'e'); 
+	                	die();
 	                }
 
             	} else { 
-            		echoLine('[ControllerSaleReceipt::cron] Shift does not open! Exiting due to error!', 'i'); 
+            		echoLine('[ControllerSaleReceipt::cron] Shift does not open! Exiting due to error!', 'e'); 
             		return; 
 				}    	       
+            }            
+
+            if (empty($current_shifts['id'])){
+            	echoLine('[ControllerSaleReceipt::cron] Shift does not open! Exiting due to error!', 'e'); 
+	             die();
             }
 
             echoLine('[ControllerSaleReceipt::cron] Working in shift ' . $current_shifts['id'], 'e');     

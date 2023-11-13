@@ -6,24 +6,29 @@ class CheckBoxUA {
     protected $base_url         = 'https://api.checkbox.in.ua/api/v1/';
     protected $x_client_name    = 'Hobotix OC 1.5';
 
-    protected $login;
-    protected $password;
-    protected $access_token;
-    protected $x_license_key = '';
-    protected $date;
-    protected $timeout = 25;
+    protected $login            = null;
+    protected $password         = null;
+    protected $access_token     = null;
+    protected $x_license_key    = null;
+    protected $date             = null;
+    protected $timeout          = 25;
+    protected $taxes            = null;
+    protected $is_dev_mode      = false;
     protected $original_product_sum = 0;
-    protected $taxes;
-    protected $is_dev_mode;
+
+    private $db         = null;
+    private $cache      = null;
+    private $config     = null;
+    private $currency   = null;
 
     public $method = "POST";
     private $error = [];    
 
 
     public function __construct($registry) {
-        $this->cache = $registry->get('cache');
-        $this->config = $registry->get('config');
-        $this->db = $registry->get('db');
+        $this->cache    = $registry->get('cache');
+        $this->config   = $registry->get('config');
+        $this->db       = $registry->get('db');
         $this->currency = $registry->get('currency');
     }
 
