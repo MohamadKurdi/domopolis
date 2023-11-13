@@ -1183,6 +1183,18 @@
 						</select>
 					</div>
 					<div>
+						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бренды на главной</span></p>
+						<select type="select" name="config_brands_on_homepage">
+							<? if ($config_brands_on_homepage) { ?>
+								<option value="1" selected='selected' >Включить</option>
+								<option value="0" >Отключить</option>
+							<? } else { ?>
+								<option value="1" >Включить</option>
+								<option value="0"  selected='selected' >Отключить</option>
+							<? } ?>       
+						</select>
+					</div>
+					<div>
 						<p><span class="status_color" style="display:inline-block; padding:3px 5px; background:#cf4a61; color:#FFF">Бестселлеры в мегаменю</span></p>
 						<select type="select" name="config_bestsellers_in_mmenu">
 							<? if ($config_bestsellers_in_mmenu) { ?>

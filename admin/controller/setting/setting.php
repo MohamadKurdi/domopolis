@@ -976,6 +976,12 @@ class ControllerSettingSetting extends Controller
             $this->data['config_brands_in_mmenu'] = $this->config->get('config_brands_in_mmenu');
         }
 
+        if (isset($this->request->post['config_brands_on_homepage'])) {
+            $this->data['config_brands_on_homepage'] = $this->request->post['config_brands_on_homepage'];
+        } else {
+            $this->data['config_brands_on_homepage'] = $this->config->get('config_brands_on_homepage');
+        }
+
         if (isset($this->request->post['config_bestsellers_in_mmenu'])) {
             $this->data['config_bestsellers_in_mmenu'] = $this->request->post['config_bestsellers_in_mmenu'];
         } else {

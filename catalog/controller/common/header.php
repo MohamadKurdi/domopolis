@@ -7,8 +7,7 @@
 			if (isset($this->request->get[$this->top_block_id])){
 				$this->session->data[$this->top_block_id] = '1';
 			}	
-		}
-				
+		}				
 		
 		protected function simpleheader(){								
 			$this->index('common/header_simple');			
@@ -95,8 +94,6 @@
 					}
 				}
 			}			
-			
-			$server = $this->config->get('config_ssl');
 
 			if (isset($this->session->data['error']) && !empty($this->session->data['error'])) {
 				$this->data['error'] = $this->session->data['error'];
@@ -105,7 +102,7 @@
 				$this->data['error'] = '';
 			}
 						
-			$this->data['base'] 		= $server;
+			$this->data['base'] 		= $this->config->get('config_ssl');
 			$this->data['description'] 	= $this->document->getDescription();
 			$this->data['keywords'] 	= $this->document->getKeywords();
 			$this->data['opengraphs'] 	= $this->document->getOpenGraphs();		
@@ -217,7 +214,7 @@
 							
 			$this->data['noindex'] = $this->document->isNoindex();
 			if ($this->config->get('config_icon') && file_exists(DIR_IMAGE . $this->config->get('config_icon'))) {
-				$this->data['icon'] = $server . DIR_IMAGE_NAME . $this->config->get('config_icon');
+				$this->data['icon'] = $this->config->get('config_ssl') . DIR_IMAGE_NAME . $this->config->get('config_icon');
 				} else {
 				$this->data['icon'] = '';
 			}									
@@ -227,7 +224,7 @@
 			}
 			
 			if ($this->config->get('config_logo') && file_exists(DIR_IMAGE . $this->config->get('config_logo'))) {
-				$this->data['logo'] = $server . DIR_IMAGE_NAME . $this->config->get('config_logo');
+				$this->data['logo'] = $this->config->get('config_ssl') . DIR_IMAGE_NAME . $this->config->get('config_logo');
 				} else {
 				$this->data['logo'] = '';
 			}		
