@@ -351,7 +351,7 @@
 										<li><a href="<?php echo $customer_group; ?>"><?php echo $text_customer_group; ?></a></li>	   
 									</ul>
 								</li>																
-							<?php /* Это неиспользуется ниразу
+							<?php /*
 								<li><a class="home_icon_style" href="<?php echo $buyerprices; ?>"><i class="fa fa-exchange"></i><span>Проверка цен по ASIN / EAN</span></a></li>
 								<li><a class="home_icon_style" href="<?php echo $amazonorder; ?>"><i class="fa fa-amazon"></i><span>Заказы поставщикам на Amazon.de</span></a></li>
 							*/ ?>
@@ -384,9 +384,9 @@
 								<li>
 									<a class="home_icon_style parent"><i class="fa fa-check"></i><span>CheckBOX ПРРО</span></a>
 									<ul>
-										<li><a href="<?php echo $sale_checkbox; ?>"><i class="fa fa-check"></i> Sale</a></li>
-										<li><a href="<?php echo $module_checkbox; ?>"><i class="fa fa-check"></i> Module</a></li>
-										<li><a href="<?php echo $log_checkbox; ?>"><i class="fa fa-check"></i> Log</a></li>
+										<li><a href="<?php echo $sale_checkbox; ?>"><i class="fa fa-check"></i> Продажи/Чеки</a></li>
+										<li><a href="<?php echo $module_checkbox; ?>"><i class="fa fa-check"></i> Настройки</a></li>
+										<li><a href="<?php echo $log_checkbox; ?>"><i class="fa fa-check"></i> Журнал</a></li>
 									</ul>
 								</li>	
 								<?php } ?>		
@@ -480,19 +480,15 @@
 								<li><a href="<?php echo $report_marketplace; ?>"><i class="fa fa-bar-chart"></i> Маркетплейсы</a></li>
 								<li><a class="home_icon_style" href="<?php echo $mreport_minusscan ?>"><i class="fa fa-exclamation"></i><span>Проверка счетов</span></a></li>
 								<li><a class="parent home_icon_style"><i class="fa fa-database"></i><span><?php echo $text_sale; ?></span></a>
-									<ul>											
-										<li><a href="<?php echo $report_adv_sale_order ?>">Универсальный отчет</a></li>
-										<li><a href="<?php echo $report_adv_product_purchased; ?>">Универсальный отчет по товарам</a></li> 
+									<ul>																					 
 										<li><a href="<?php echo $report_sale_order; ?>"><?php echo $text_report_sale_order; ?></a></li>
+										<li><a href="<?php echo $report_product_purchased; ?>">Товары</a></li>
 										<li><a href="<?php echo $report_sale_tax; ?>"><?php echo $text_report_sale_tax; ?></a></li>
 										<li><a href="<?php echo $report_sale_shipping; ?>"><?php echo $text_report_sale_shipping; ?></a></li>
 										<li><a href="<?php echo $report_sale_return; ?>"><?php echo $text_report_sale_return; ?></a></li>
 										<li><a href="<?php echo $report_sale_coupon; ?>"><?php echo $text_report_sale_coupon; ?></a></li>
-									</ul>
-								</li>
-								<li><a class="parent home_icon_style"><i class="fa fa-cubes"></i><span><?php echo $text_product; ?></span></a>
-									<ul>										
-										<li><a href="<?php echo $report_product_purchased; ?>"><?php echo $text_report_product_purchased; ?></a></li>
+										<li><a href="<?php echo $report_adv_sale_order ?>">Универсальный отчет <span style="color:red"><i class="fa fa-question"></i></span></a></li>
+										<li><a href="<?php echo $report_adv_product_purchased; ?>">Универсальный отчет по товарам  <span style="color:red"><i class="fa fa-question"></i></span></a></li>
 									</ul>
 								</li>
 								<li><a class="parent home_icon_style"><i class="fa fa-users"></i><span><?php echo $text_customer; ?></span></a>
