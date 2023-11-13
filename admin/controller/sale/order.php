@@ -1977,16 +1977,13 @@
 				header("Expires: 0");
 				
 				$file = fopen('php://output', 'w');
-				$header = array(
-				'Заказ', 'Статус', 'Дата добавления', 'Страна', 'Покупатель', 'EMAIL', 'Телефон');
+				$header = ['Заказ', 'Статус', 'Дата добавления', 'Страна', 'Покупатель', 'EMAIL', 'Телефон'];
 				
 				fputcsv($file, $header);
 				
-				foreach ($this->data['orders'] as $fe_order){
-					
+				foreach ($this->data['orders'] as $fe_order){					
 					$line = array($fe_order['order_id'], $fe_order['status'], $fe_order['date_added'], $fe_order['shipping_country'], $fe_order['customer'], $fe_order['email'], $fe_order['telephone']);
-					fputcsv($file, $line);
-					
+					fputcsv($file, $line);					
 				}
 				
 				fclose($file);

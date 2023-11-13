@@ -326,7 +326,6 @@
 			return $query->row['total'];
 		}
 
-
 		public function deleteDeletedASIN($asin) {			
 			if (trim($asin)){
 				$this->db->query("DELETE FROM deleted_asins WHERE asin = '" . $this->db->escape($asin) . "'");
@@ -597,7 +596,43 @@
 		}
 		
 		public function getPurchased($data = []) {
-			$sql = "SELECT op.name, op.model, SUM(op.quantity) AS quantity, SUM(op.total + op.total * op.tax / 100) AS total FROM order_product op LEFT JOIN `order` o ON (op.order_id = o.order_id)";
+			$this->load->model('localisation/language');			
+			$language_id = $this->model_localisation_language->getLanguageByCode($this->config->get('config_de_language'));	
+
+			$sql = "SELECT 
+				op.name as op_name, 
+				op.model,
+				pd.name,
+				p.status,
+				pdde.name as de_name,
+				(SELECT category_id FROM product_to_category WHERE product_id = op.product_id ORDER BY main_category DESC LIMIT 1) as main_category_id,
+				p.manufacturer_id, 
+				m.name as manufacturer_name,
+				p.asin,
+				p.amazon_offers_type,
+				p.amazon_best_price,
+				p.costprice,
+				p.amazon_seller_quality,
+				p.profitability,
+				p.image,
+				p.ean,
+				p.asin,
+				p.sku,
+				p.product_id,
+				SUM(op.quantity) AS quantity, 
+				COUNT(op.order_id) AS orders,
+				SUM(op.total + op.total * op.tax / 100) AS total 
+				FROM order_product op 
+				JOIN product p ON (op.product_id = p.product_id)
+				LEFT JOIN product_description pd ON (p.product_id = pd.product_id AND pd.language_id = '" . (int)$this->config->get('config_language_id') . "')
+				LEFT JOIN product_description pdde ON (p.product_id = pdde.product_id AND pdde.language_id = '" . (int)$language_id . "')
+				LEFT JOIN manufacturer m ON (p.manufacturer_id = m.manufacturer_id)
+				LEFT JOIN `order` o ON (op.order_id = o.order_id)";
+
+			if (!empty($data['filter_category_id'])){
+				$sql .= " JOIN product_to_category ptc ON op.product_id = ptc.product_id
+					JOIN category_path cp ON ptc.category_id = cp.category_id";
+			} 
 			
 			if (!empty($data['filter_order_status_id'])) {
 				$sql .= " WHERE o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -612,19 +647,73 @@
 			if (!empty($data['filter_date_end'])) {
 				$sql .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
 			}
+
+			if (!empty($data['filter_manufacturer_id'])) {
+				$sql .= " AND p.manufacturer_id = '" . $this->db->escape($data['filter_manufacturer_id']) . "'";
+			}
+
+			if (!empty($data['filter_category_id'])){
+				$sql .= " AND cp.path_id = '" . (int)$data['filter_category_id'] . "'";
+			}
+
+			if (!empty($data['filter_amazon_offers_type'])) {
+				$sql .= " AND p.amazon_offers_type = '" . $this->db->escape($data['filter_amazon_offers_type']) . "'";
+			}
+
+			if (!empty($data['filter_amazon_seller_quality'])) {
+				$sql .= " AND p.amazon_seller_quality = '" . $this->db->escape($data['filter_amazon_seller_quality']) . "'";
+			}
 			
-			$sql .= " GROUP BY op.model ORDER BY total DESC";
+			$sql .= " GROUP BY op.product_id";
+
+			if (!empty($data['filter_sort'])){
+				switch($data['filter_sort']){
+					case 'quantity-desc':
+						$sql .= " ORDER BY quantity DESC";
+						break;
+
+					case 'quantity-asc':
+						$sql .= " ORDER BY quantity ASC";
+						break;
+
+					case 'total-desc':
+						$sql .= " ORDER BY total DESC";
+						break;
+
+					case 'total-desc':
+						$sql .= " ORDER BY total ASC";
+						break;
+
+					case 'manufacturer':
+						$sql .= " ORDER BY p.manufacturer_id DESC";
+						break;
+
+					case 'name-desc':
+						$sql .= " ORDER BY pd.name DESC";
+						break;
+
+					case 'name-asc':
+						$sql .= " ORDER BY pd.name ASC";
+						break;
+
+					default: 
+						$sql .= " ORDER BY quantity DESC";
+						break;
+				}
+			} else {
+				$sql .= " ORDER BY quantity DESC";
+			}
 			
 			if (isset($data['start']) || isset($data['limit'])) {
 				if ($data['start'] < 0) {
 					$data['start'] = 0;
 				}			
 				
-				if ($data['limit'] < 1) {
-					$data['limit'] = 20;
+				if ($data['limit'] > $this->config->get('config_admin_limit')) {
+					$data['limit'] = $this->config->get('config_admin_limit');
 				}	
 				
-				$sql .= " LIMIT " . (int)$data['start'] . "," . (int)$data['limit'];
+				$sql .= " LIMIT " . (int)$data['start'] . ", " . (int)$data['limit'];
 			}
 			
 			$query = $this->db->query($sql);
@@ -633,7 +722,15 @@
 		}
 		
 		public function getTotalPurchased($data) {
-			$sql = "SELECT COUNT(DISTINCT op.model) AS total FROM `order_product` op LEFT JOIN `order` o ON (op.order_id = o.order_id)";
+			$sql = "SELECT COUNT(DISTINCT op.model) AS total 
+			FROM `order_product` op 
+			JOIN `product` p ON (op.product_id = p.product_id)
+			LEFT JOIN `order` o ON (op.order_id = o.order_id)";
+
+			if (!empty($data['filter_category_id'])){
+				$sql .= " JOIN product_to_category ptc ON op.product_id = ptc.product_id
+					JOIN category_path cp ON ptc.category_id = cp.category_id";
+			} 
 			
 			if (!empty($data['filter_order_status_id'])) {
 				$sql .= " WHERE o.order_status_id = '" . (int)$data['filter_order_status_id'] . "'";
@@ -647,6 +744,22 @@
 			
 			if (!empty($data['filter_date_end'])) {
 				$sql .= " AND DATE(o.date_added) <= '" . $this->db->escape($data['filter_date_end']) . "'";
+			}
+
+			if (!empty($data['filter_manufacturer_id'])) {
+				$sql .= " AND p.manufacturer_id = '" . $this->db->escape($data['filter_manufacturer_id']) . "'";
+			}
+
+			if (!empty($data['filter_category_id'])){
+				$sql .= " AND cp.path_id = '" . (int)$data['filter_category_id'] . "'";
+			}
+
+			if (!empty($data['filter_amazon_offers_type'])) {
+				$sql .= " AND p.amazon_offers_type = '" . $this->db->escape($data['filter_amazon_offers_type']) . "'";
+			}
+
+			if (!empty($data['filter_amazon_seller_quality'])) {
+				$sql .= " AND p.amazon_seller_quality = '" . $this->db->escape($data['filter_amazon_seller_quality']) . "'";
 			}
 			
 			$query = $this->db->query($sql);
@@ -981,8 +1094,7 @@
 			}			
 		}
 				
-		public function getProductStockWaits($product_id){
-			
+		public function getProductStockWaits($product_id){			
 			$query = $this->db->query("SELECT * FROM product_stock_waits WHERE product_id = '" . (int)$product_id . "'");
 			
 			

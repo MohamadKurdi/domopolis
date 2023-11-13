@@ -226,7 +226,7 @@
 										<span style="font-size:11px; display:inline-block; float:left; padding:3px; color:#FFF; background-color:#4ea24e;"><?php echo $product['product_id']; ?></span>
 
 										<?php if ($product['asin']) { ?>
-											<span style="font-size:11px; display:inline-block; float:left; padding:3px; color:#FFF; background-color:#FF9900;"><?php echo $product['asin']; ?></span>	
+											 <span style="font-size:11px; display:inline-block; float:left; padding:3px; color:#FFF; background-color:#<?php if ($product['asin'] == 'INVALID') { ?>CF4A61<?php } else { ?>FF9900<?php } ?>;"><?php echo $product['asin']; ?></span> 
 										<?php } ?>
 
 										<?php if ($product['ean']) { ?>
@@ -330,7 +330,9 @@
 								<?php } ?>
 
 								<td class="center" nowrap style="whitespace:nowrap">
-									<a class="button" href="<? echo $this->url->link('catalog/product/update', 'product_id='.$product['product_id'].'&token=' . $this->session->data['token'], 'SSL') ?>" style="text-decoration:none;" target="_blank" /><i class="fa fa-edit"></i></a>&nbsp;&nbsp;<a class="button" href="<? echo HTTPS_CATALOG . 'index.php?route=product/product&product_id='.$product['product_id']; ?>" style="text-decoration:none;" target="_blank" /><i class="fa fa-eye"></i></a>	
+									<a class="button" href="<? echo $this->url->link('catalog/product/update', 'product_id='.$product['product_id'].'&token=' . $this->session->data['token'], 'SSL') ?>" style="text-decoration:none;" target="_blank" /><i class="fa fa-edit"></i></a>&nbsp;&nbsp;
+									<a class="button" href="<? echo HTTPS_CATALOG . 'index.php?route=product/product&product_id='.$product['product_id']; ?>" style="text-decoration:none;" target="_blank" /><i class="fa fa-eye"></i>
+									</a>	
 								</td>
 							</tr>	
 						<?php } ?>

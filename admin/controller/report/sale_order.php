@@ -193,12 +193,12 @@ class ControllerReportSaleOrder extends Controller {
 			$url .= '&filter_category_id=' . $this->request->get['filter_category_id'];
 		}
 
-		$pagination = new Pagination();
-		$pagination->total = $order_total;
-		$pagination->page = $page;
-		$pagination->limit = $this->config->get('config_admin_limit');
-		$pagination->text = $this->language->get('text_pagination');
-		$pagination->url = $this->url->link('report/sale_order', 'token=' . $this->session->data['token'] . $url . '&page={page}');
+		$pagination 		= new Pagination();
+		$pagination->total 	= $order_total;
+		$pagination->page 	= $page;
+		$pagination->limit 	= $this->config->get('config_admin_limit');
+		$pagination->text 	= $this->language->get('text_pagination');
+		$pagination->url 	= $this->url->link('report/sale_order', 'token=' . $this->session->data['token'] . $url . '&page={page}');
 
 		$this->data['pagination'] = $pagination->render();		
 

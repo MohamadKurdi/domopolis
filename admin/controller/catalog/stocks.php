@@ -248,10 +248,7 @@ class ControllerCatalogStocks extends Controller {
 			}			
 		}
 
-		$this->load->model('catalog/manufacturer');
-		$manufacturers = $this->model_catalog_manufacturer->getManufacturers();
 		$this->data['manufacturers'] = [];
-
 
 		$this->data['stock_last_sync'] 	= date('d.m.Y в H:i:s', strtotime($this->model_kp_product->getLastUpdate()));
 		$this->data['stock_identifier'] = $stock_identifier = $this->model_setting_setting->getKeySettingValue('config', 'config_warehouse_identifier_local', $store_id);
