@@ -41,7 +41,7 @@ class ModelTotalPaymentMethodDiscounts extends Model {
 			foreach ($discounts as $discount){
 				$status = true;
 
-				if ($discount['deliveries']){
+				if (!empty($discount['deliveries'])){
 					$exploded = explode(PHP_EOL, $discount['deliveries']);
 
 					$status = false;
